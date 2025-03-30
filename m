@@ -1,295 +1,224 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49C44C81;
-	Sun, 30 Mar 2025 04:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8569D4C80
+	for <platform-driver-x86@vger.kernel.org>; Sun, 30 Mar 2025 05:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743310561; cv=none; b=KP+0Zi7deBr+tTCKo3nfvNnuYHypVh+bTKCQUbAttwTjnk8ru5QOsUj9TFZe0z90K4JsZjQsieDK/7dJA7RN/j4Rj+VvVEizNA8DZpArVYPi6MwpvwBjs7oATYmiAFdv803a0YSCa1sFE0UudLl/Sk/mCM6X0UDUAe+bFBFRgh8=
+	t=1743311967; cv=none; b=Bd3CzfjYWKQ78Uw3Y0GLVyzSozei3SVchifzHS4ZhZlnmQ1PnE+dJEFISqGAqFBK7X52KhEj3jDPjGt5DA7k15e4beCbEapmIfFdcEIf/pj63fRXzp+OulsqeefJ7Je7w6O30s5puG+GqS12wRPlAX7HmATBQC81h/ednbdnqj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743310561; c=relaxed/simple;
-	bh=oHy7Ye8IqZV3d0Or+KpI9E/66LDLMYMHDdrOfxXygng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F8Zi5bcxVyQZjNUwEw9iXypJfClBzjh1h5li1IzLcJNrMSe0eh6jxbC0oF83nfV3mjaAiri3pVMyx8TcXUTcCepvu9rBuzyqvrsJ8HqLBJAZScUX8FXghUYK0p+wiRa5MqNaq2awlAs4mm9yyRZg+4JJheBKHa+/+VgqqAYlgbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UujCr3Mc; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743311967; c=relaxed/simple;
+	bh=nPQZ1NLQ+M58mczlQ+1oFaVayuWA0Qei6+XzCaVfIHU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=pdqkoJeyX8M+SvqMFnPPqosIcmj7BDvSbvkWROKFdSwnfbrEKhTRkWKVX25EkXiWNDfYPpZrpZTH2o5+esM2LP5KGf5W+AWEvVN9r7t9nG/GlDUZvFG0XYaX//k9l0dvDNkN9goFZ2AY8d9HkFYxyL9YeQZDb4TxB4Bd9Rq6Hhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=tometzki.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=WC+wbYoe; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tometzki.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UujCr3Mc"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6ed16ce246bso17467806d6.3;
-        Sat, 29 Mar 2025 21:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="WC+wbYoe"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso1638093241.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Mar 2025 22:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743310558; x=1743915358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KfE4vJc/WRoYibC2xAR9RDLdvUaTXwprDAx9rPA0kRs=;
-        b=UujCr3Mc7AM5JhBT24HIzs+r6YOs2uVIBXNpe5Bfk7iJSfXy/OguquuuaoC1u621rd
-         ixugb5UvaeUvdiJTfYolEnK3vSwQOogFTiJSlG5MRkpNBtNON3orYx0zV8ebXse+xREr
-         XvUGZjx8ak5ePIrNs4/O6fN6aY1i7DpkKTOZXzAJTN2gHycfGva5qNqe4KRFYUzyG1Gr
-         BMudmN3L8ngpwkY/xRWdZfZM7G/fwE53EL2ZOu3vAX0iC6aUIsw36zvfsAMDxGLzf830
-         zKYgpVPjeYM5/+t5Ht/u1Iylg2tDHhmwXmCrUHc/nOer0RlxQUgcNo+8CegSaq9TBgKC
-         azhw==
+        d=riscv-rocks.de; s=google; t=1743311964; x=1743916764; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wydS+q5Y7PErTfGeOZj7r0n099cHl32Sx4KGlihwfho=;
+        b=WC+wbYoeHY5NIfFwyUkLlZkV/WO5CIdWsYIaglA7hSFNGg9hF0OfmryjZmmMJIYCNS
+         ZeFn98joQoyEs9ART3+97dBhth7Km+87f/qrwJM/2RQPiN8/MX9Ay5wa4UnfD2GIHiRg
+         bqmd7YhPKhDek3gwILWDU5HHVveLRY9YiBh8YAmajFNerPwbZbhLtYvL+HdLOmfDN2HT
+         mfH+piLcyqv0BijL6HOMc/on+aXa7f1BxxwpmWA/pkfhJe5lW36sGhhSPw/zceCWC3HL
+         6KOTcYMAn0g0Z0PXI8Qubu3BRXLh8yX0u84An5HYM/DvIlqqz/GlEUO5VW8YGbmd5zDN
+         Uppw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743310558; x=1743915358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KfE4vJc/WRoYibC2xAR9RDLdvUaTXwprDAx9rPA0kRs=;
-        b=n+WIQz4VAzaJVhlzBym7xpN+CH3OjtSXCOjm/5eLyKjOw95SEl5dsM2ZSd9xoluvJT
-         kXZnOe/MfMyj3bFVTi7hDTpLlK2nKB+iS3+DXeTyGEac2RRy8x0QGZ6VZY2NCBPJUPM4
-         FEZTjq2rp4swfRVYnq1ILMaSKFsjs4H1TybmVjIxh6azM8T28HjviMcZLubDf5LmOCK6
-         vagSkqd/1sFxyjNaWOXoB6OKajvSCBJ1BS8ZKvMMqv46GP9WR2lnX7wrm40UFNzhme5l
-         5tVqY+RMHBNu1eUB878eXml+XyV9hKK35BsZtwMxXR5Een3KsMdDqUo1RcKXVLC/qd5i
-         8zpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYMbw/fCE/qLmuXFshanlOUYa1lx8AxWoyrPQyl8TGavmK76zbU60qIY6sLpHHcWk/VU2BNU9Fd8WCBOxOZVfQp7qghw==@vger.kernel.org, AJvYcCWUgT1ySm0wCUxYbqlsqkU8X3LRDaL4pUgLegfRkLWVf9Bq9jcZmtAT21l3FlW8c1kZK0db0MKrWPg=@vger.kernel.org, AJvYcCX0W5vGOZhQmJSiuTHvgCkHS628SqVhTxXhVfdAqY31p3lMGMVIVwdvEx03D9cNxwesJ1wF4Ji9/OotJsXr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHxS3l1uBxLRJE7hxkfjQCeLkYCmohAWqhQkZInoh86EQdWDZx
-	PuySZw9OjdhOQbHGoD0LI77iq4oCP4/64RWHc5BHFtpcb17Zua64DoCz93Hhca2SiY8oDuuL+ML
-	SkhXIVKiBlajPCPQLze6+quT2zjOF9CO0PvcjXA==
-X-Gm-Gg: ASbGncubsxqVuMT+c9GaQELMsOc5liqKvSpb1bnJ+qPzw5sVK5PKUiQKPw6efpk0KIz
-	9fzFV1G6ONoU44cpVPHBDDRIX1oS5WTmjoharh/+pwNVO8XGdNzW1e3L4g3bVOKoVtNwcIwGP5U
-	MEQSWTi1pzi/nAF8JYMRn0jWOS90Q=
-X-Google-Smtp-Source: AGHT+IEsNfpalShVKT/dqnjVDWZcbbzpsgORyZCsuidVwFVu5P70Bwk06h1v/3FglfXOybFofS1uqDYA0R5nrBvylIU=
-X-Received: by 2002:a05:6214:1253:b0:6e8:f598:f9ee with SMTP id
- 6a1803df08f44-6eed624aaf7mr85127406d6.38.1743310558490; Sat, 29 Mar 2025
- 21:55:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743311964; x=1743916764;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wydS+q5Y7PErTfGeOZj7r0n099cHl32Sx4KGlihwfho=;
+        b=elOZYWwtDAVDflWYcp+Tan0RtEaIIwXT+hSrnNv/XjvdemyqrNIXXVXxXrmtTGGFSO
+         Yq3Erk8BagKPENulqksBdQGxhHQgB4sS4YTaqpff+woyYgsuHHDuV+w8/yNe8QJFKKuH
+         oDWO3jqi2Z1H80s3GlxUgKYiOyzbdCKopu1Rad2NGzWlQkSIJCCv4xPcZ5WeonYO/zDb
+         Zc87IjznCzMCH0jFRCBuVOJbP68GAWqG0rZ9VfzL+j/KzJOaPbHD3hP1laQhFx44x4FH
+         OyqA40OUNgDyLHkaDeciJyd2U2OmQR4O3Z4Yu9v+5Emu32PkBxnm01XFMJONvwrLknUH
+         W/Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU39hVreJoukGjjh3IRcAyJ42BvAFHTJ0cS0GH5Fp5sycZbVqKohv0DskMkd83CVBHD+l8CFDSCSq8lDLiZkuPeyOCa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUo1n36pznG/qP5SenhYkgYcBjd2Lx/RKQaBXKJ/4oGSpwlmYJ
+	+WWZUS1kfHu4znjjtBfj8jGQrsqKQrKi93oP4aXHSM1cjimPzXLB/TN3Z7D138WhBGjji6/mVjx
+	JAF025UB9TFS7GhYv9+nCdX891Ixb12TVQpDBnhuRfedL/YV075FhdbkM
+X-Gm-Gg: ASbGncueU+Ms+toJy2L6WAu50GGuXAQgGEC8WvbxDz5c1vue0qJMwbhddhxTcuIX+qJ
+	Vf4H5J2gr4VLsSQsrSW/Yx8KVhKyIa3bYcdJsGlKojhmdNREzajOH/mi7WMlrNhgVOdtKF+Rwir
+	iUfqxUscm4jwMtF1YzaHQdcOBuH02jPUQ0H18VaVc7qqPsbcTkNX4zukR11pHKuE5GVBhu
+X-Google-Smtp-Source: AGHT+IF0xvVvgdeorD9IT+Dkc2B4F3ZSL+B/miv/lZXoktKpPZ/5q6iktduqzvbN7k8nJKODUuCVQWW3dpChcYv0MYM=
+X-Received: by 2002:a05:6102:8029:b0:4c1:7a08:9279 with SMTP id
+ ada2fe7eead31-4c6d38d9fcfmr2910866137.15.1743311964327; Sat, 29 Mar 2025
+ 22:19:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
- <20250317144326.5850-3-derekjohn.clark@gmail.com> <24e1ed43-9095-4489-9b21-4d619fc5d62b@gmx.de>
-In-Reply-To: <24e1ed43-9095-4489-9b21-4d619fc5d62b@gmx.de>
-From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Sat, 29 Mar 2025 21:55:47 -0700
-X-Gm-Features: AQ5f1JqwdzicyAxi8VqXmUeqdXIT7Ll0dA3SEIgI5DxBFKlMUu4-41kxPclrmio
-Message-ID: <CAFqHKT=kh2ortTJAZo0CuBuXStmnQUdZLi2aH0OS+q2EV77kAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6 RESEND] platform/x86: Add lenovo-wmi-helpers
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>, 
-	Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, "Cody T . -H . Chiu" <codyit@gmail.com>, 
-	John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Damian Tometzki <damian@riscv-rocks.de>
+Date: Sun, 30 Mar 2025 07:19:13 +0200
+X-Gm-Features: AQ5f1Jori5-AGVUE446kbiBAdYqYUZ7aoiSFzOBDzZd_gWhgjZqLgUo8syP3Xy4
+Message-ID: <CAL=B37kdL1orSQZD2A3skDOevRXBzF__cJJgY_GFh9LZO3FMsw@mail.gmail.com>
+Subject: Kernel Null Pointer Dereference on Fedora with thinkpad_acpi
+To: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 5:41=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 17.03.25 um 15:43 schrieb Derek J. Clark:
->
-> > Adds documentation for all new lenovo-wmi drivers.
-> >
-> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > ---
-> > v4:
-> >   - Changed namespace to LENOVO_WMI_HELPERS from LENOVO_WMI.
-> >   - Changed filenames to lenovo-wmi-helpers from lenovo-wmi.
-> >   - Removed structs and functions implemented by other drivers.
-> > ---
-> >   MAINTAINERS                               |  2 +
-> >   drivers/platform/x86/Kconfig              |  4 ++
-> >   drivers/platform/x86/Makefile             |  1 +
-> >   drivers/platform/x86/lenovo-wmi-helpers.c | 64 ++++++++++++++++++++++=
-+
-> >   drivers/platform/x86/lenovo-wmi-helpers.h | 24 +++++++++
-> >   5 files changed, 95 insertions(+)
-> >   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
-> >   create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 675f4b26426d..3a370a18b806 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -13164,6 +13164,8 @@ L:    platform-driver-x86@vger.kernel.org
-> >   S:  Maintained
-> >   F:  Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> >   F:  Documentation/wmi/devices/lenovo-wmi-other.rst
-> > +F:   drivers/platform/x86/lenovo-wmi-helpers.c
-> > +F:   drivers/platform/x86/lenovo-wmi-helpers.h
-> >
-> >   LENOVO WMI HOTKEY UTILITIES DRIVER
-> >   M:  Jackie Dong <xy-jackie@139.com>
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 43407e76476b..bece1ba61417 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -459,6 +459,10 @@ config IBM_RTL
-> >        state =3D 0 (BIOS SMIs on)
-> >        state =3D 1 (BIOS SMIs off)
-> >
-> > +config LENOVO_WMI_HELPERS
-> > +     tristate
-> > +     depends on ACPI_WMI
-> > +
-> >   config IDEAPAD_LAPTOP
-> >       tristate "Lenovo IdeaPad Laptop Extras"
-> >       depends on ACPI
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-> > index 650dfbebb6c8..5a9f4e94f78b 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
-> >   obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yogabook.o
-> >   obj-$(CONFIG_YT2_1380)              +=3D lenovo-yoga-tab2-pro-1380-fa=
-stcharger.o
-> >   obj-$(CONFIG_LENOVO_WMI_CAMERA)     +=3D lenovo-wmi-camera.o
-> > +obj-$(CONFIG_LENOVO_WMI_HELPERS)     +=3D lenovo-wmi-helpers.o
-> >
-> >   # Intel
-> >   obj-y                               +=3D intel/
-> > diff --git a/drivers/platform/x86/lenovo-wmi-helpers.c b/drivers/platfo=
-rm/x86/lenovo-wmi-helpers.c
-> > new file mode 100644
-> > index 000000000000..36d553502223
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi-helpers.c
-> > @@ -0,0 +1,64 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Lenovo Legion WMI helpers driver. The Lenovo Legion WMI interface i=
-s
-> > + * broken up into multiple GUID interfaces that require cross-referenc=
-es
-> > + * between GUID's for some functionality. The "Custom Method" interfac=
-e is a
-> > + * legacy interface for managing and displaying CPU & GPU power and hw=
-mon
-> > + * settings and readings. The "Other Mode" interface is a modern inter=
-face
-> > + * that replaces or extends the "Custom Method" interface methods. The
-> > + * "Gamezone" interface adds advanced features such as fan profiles an=
-d
-> > + * overclocking. The "Lighting" interface adds control of various stat=
-us
-> > + * lights related to different hardware components. Each of these driv=
-ers
-> > + * uses a common procedure to get data fro the WMI interface, enumerat=
-ed here.
-> > + *
-> > + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + *
-> > + */
-> > +
-> > +#include <linux/wmi.h>
->
-> Hi,
->
-> please also include linux/acpi.h, linux/cleanup.h, linux/errno.h, linux/m=
-odule.h and linux/export.h.
->
+Hi together,
 
-Acked all include requests for the series.
+I encountered a kernel crash on a Lenovo ThinkPad (BIOS N32ET95W 1.71)
+running Fedora with kernel 6.15 (merge window) 7f2ff7b62617. The issue
+is a NULL pointer dereference during initialization of the
+thinkpad_acpi module. The crash occurs in kobject_get() while handling
+RFKill device registration (tpacpi_new_rfkill =E2=86=92 rfkill_register =E2=
+=86=92
+device_add).
+With kernel 6.14 system boot=C2=B4s fine
 
-> > +#include "lenovo-wmi-helpers.h"
-> > +
-> > +/*
->
-> Please make sure that the doc comments are valid kernel doc comments, see=
- https://docs.kernel.org/doc-guide/kernel-doc.html
-> for details. For example please make sure that the comments start with a =
-"/**".
+Let me know if further logs or debugging info are needed. Below the short d=
+ump
 
-Will do, thanks
+Mar 29 17:43:16.173712 fedora kernel: thinkpad_acpi: Disabling
+thinkpad-acpi brightness events by default...
+Mar 29 17:43:16.175636 fedora kernel: ACPI: bus type thunderbolt registered
+Mar 29 17:43:16.179626 fedora kernel: BUG: kernel NULL pointer
+dereference, address: 000000000000004c
+Mar 29 17:43:16.179689 fedora kernel: #PF: supervisor read access in kernel=
+ mode
+Mar 29 17:43:16.180235 fedora kernel: #PF: error_code(0x0000) - not-present=
+ page
+Mar 29 17:43:16.180290 fedora kernel: PGD 0 P4D 0
+Mar 29 17:43:16.180325 fedora kernel: Oops: Oops: 0000 [#1] SMP NOPTI
+Mar 29 17:43:16.180340 fedora kernel: CPU: 6 UID: 0 PID: 1015 Comm:
+(udev-worker) Not tainted 6.14.0 #355 PREEMPT(lazy)
+Mar 29 17:43:16.180449 fedora kernel: Hardware name: LENOVO
+20XWCTO1WW/20XWCTO1WW, BIOS N32ET95W (1.71 ) 10/24/2024
+Mar 29 17:43:16.180469 fedora kernel: RIP: 0010:kobject_get+0xd/0x70
+Mar 29 17:43:16.180491 fedora kernel: Code: 66 66 2e 0f 1f 84 00 00 00
+00 00 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e
+fa 53 48 89 fb 48 85 ff 74 1f <f6> 47 3c 01 74 22 48 8d 7b 38 b8 01
+00>
+Mar 29 17:43:16.180506 fedora kernel: RSP: 0018:ffffd3d200b5f750
+EFLAGS: 00010202
+Mar 29 17:43:16.180523 fedora kernel: RAX: ffff8ebbc10fac00 RBX:
+0000000000000010 RCX: 0000000000000000
+Mar 29 17:43:16.180534 fedora kernel: RDX: 0000000000000000 RSI:
+ffffffff9aebafa0 RDI: 0000000000000010
+Mar 29 17:43:16.180547 fedora kernel: RBP: ffff8ebbd49f4b88 R08:
+0000000000000100 R09: 0000000000000000
+Mar 29 17:43:16.180559 fedora kernel: R10: ffffd3d200b5f760 R11:
+0000000000000008 R12: 0000000000000010
+Mar 29 17:43:16.180573 fedora kernel: R13: ffff8ebbc8b12388 R14:
+ffffffffc14a7500 R15: 0000000000000000
+Mar 29 17:43:16.180587 fedora kernel: FS:  00007f1aa7c15040(0000)
+GS:ffff8ebf72546000(0000) knlGS:0000000000000000
+Mar 29 17:43:16.180606 fedora kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+Mar 29 17:43:16.180630 fedora kernel: CR2: 000000000000004c CR3:
+0000000113948001 CR4: 0000000000f70ef0
+Mar 29 17:43:16.180642 fedora kernel: PKRU: 55555554
+Mar 29 17:43:16.180654 fedora kernel: Call Trace:
+Mar 29 17:43:16.180664 fedora kernel:  <TASK>
+Mar 29 17:43:16.180676 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180688 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180704 fedora kernel:  ? show_trace_log_lvl+0x1d2/0x2f0
+Mar 29 17:43:16.180712 fedora kernel:  ? device_add+0x8f/0x6e0
+Mar 29 17:43:16.180724 fedora kernel:  ? __die_body.cold+0x8/0x12
+Mar 29 17:43:16.180739 fedora kernel:  ? page_fault_oops+0x146/0x180
+Mar 29 17:43:16.180748 fedora kernel:  ? exc_page_fault+0x7e/0x1a0
+Mar 29 17:43:16.180758 fedora kernel:  ? asm_exc_page_fault+0x26/0x30
+Mar 29 17:43:16.180769 fedora kernel:  ? __pfx_klist_children_get+0x10/0x10
+Mar 29 17:43:16.180781 fedora kernel:  ? kobject_get+0xd/0x70
+Mar 29 17:43:16.180792 fedora kernel:  device_add+0x8f/0x6e0
+Mar 29 17:43:16.180804 fedora kernel:  rfkill_register+0xbc/0x2c0 [rfkill]
+Mar 29 17:43:16.180813 fedora kernel:  tpacpi_new_rfkill+0x185/0x230
+[thinkpad_acpi]
+Mar 29 17:43:16.180826 fedora kernel:  ibm_init+0x66/0x2a0 [thinkpad_acpi]
+Mar 29 17:43:16.180840 fedora kernel:
+tpacpi_pdriver_probe+0x160/0x250 [thinkpad_acpi]
+Mar 29 17:43:16.180852 fedora kernel:  platform_probe+0x41/0xa0
+Mar 29 17:43:16.180887 fedora kernel:  really_probe+0xdb/0x340
+Mar 29 17:43:16.180900 fedora kernel:  ? pm_runtime_barrier+0x55/0x90
+Mar 29 17:43:16.180912 fedora kernel:  ? __pfx___driver_attach+0x10/0x10
+Mar 29 17:43:16.180920 fedora kernel:  __driver_probe_device+0x78/0x140
+Mar 29 17:43:16.180932 fedora kernel:  driver_probe_device+0x1f/0xa0
+Mar 29 17:43:16.180942 fedora kernel:  __driver_attach+0xb8/0x1d0
+Mar 29 17:43:16.180954 fedora kernel:  bus_for_each_dev+0x82/0xd0
+Mar 29 17:43:16.180966 fedora kernel:  bus_add_driver+0x12f/0x210
+Mar 29 17:43:16.180976 fedora kernel:  driver_register+0x72/0xd0
+Mar 29 17:43:16.180988 fedora kernel:  __platform_driver_probe+0x45/0x90
+Mar 29 17:43:16.180999 fedora kernel:  __platform_create_bundle+0xe7/0x100
+Mar 29 17:43:16.181011 fedora kernel:  ?
+__pfx_tpacpi_pdriver_probe+0x10/0x10 [thinkpad_acpi]
+Mar 29 17:43:16.181025 fedora kernel:  ?
+__pfx_thinkpad_acpi_module_init+0x10/0x10 [thinkpad_acpi]
+Mar 29 17:43:16.181035 fedora kernel:
+thinkpad_acpi_module_init+0x37e/0x430 [thinkpad_acpi]
+Mar 29 17:43:16.181045 fedora kernel:  do_one_initcall+0x58/0x300
+Mar 29 17:43:16.181053 fedora kernel:  do_init_module+0x82/0x240
+Mar 29 17:43:16.181065 fedora kernel:  init_module_from_file+0x8b/0xe0
+Mar 29 17:43:16.181073 fedora kernel:  idempotent_init_module+0x113/0x310
+Mar 29 17:43:16.181083 fedora kernel:  __x64_sys_finit_module+0x67/0xc0
+Mar 29 17:43:16.181093 fedora kernel:  do_syscall_64+0x7f/0x170
+Mar 29 17:43:16.181103 fedora kernel:  ? syscall_exit_to_user_mode+0x1d5/0x=
+210
+Mar 29 17:43:16.181112 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181124 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181135 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181144 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181152 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181163 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181173 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181182 fedora kernel:  ? seq_read_iter+0x20e/0x480
+Mar 29 17:43:16.181198 fedora kernel:  ? vfs_read+0x29b/0x370
+Mar 29 17:43:16.181217 fedora kernel:  ? __seccomp_filter+0x41/0x4e0
+Mar 29 17:43:16.181233 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181250 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181264 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181280 fedora kernel:  ? do_syscall_64+0x8c/0x170
+Mar 29 17:43:16.181292 fedora kernel:  ?
+syscall_exit_to_user_mode_prepare+0x14a/0x180
+Mar 29 17:43:16.181316 fedora kernel:  ? syscall_exit_to_user_mode+0x10/0x2=
+10
+Mar 29 17:43:16.181331 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181341 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181351 fedora kernel:  ? clear_bhb_loop+0x35/0x90
+Mar 29 17:43:16.181360 fedora kernel:  entry_SYSCALL_64_after_hwframe+0x76/=
+0x7e
+Mar 29 17:43:16.181372 fedora kernel: RIP: 0033:0x7f1aa84c5a8d
+Mar 29 17:43:16.181381 fedora kernel: Code: ff c3 66 2e 0f 1f 84 00 00
+00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2
+4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d
+4b>
+Mar 29 17:43:16.181392 fedora kernel: RSP: 002b:00007ffe5ca79bc8
+EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+Mar 29 17:43:16.181406 fedora kernel: RAX: ffffffffffffffda RBX:
+00005610a8c7deb0 RCX: 00007f1aa84c5a8d
+Mar 29 17:43:16.181419 fedora kernel: RDX: 0000000000000000 RSI:
+00007f1aa7b88965 RDI: 0000000000000032
+Mar 29 17:43:16.181431 fedora kernel: RBP: 00007ffe5ca79c80 R08:
+0000000000000000 R09: 00007ffe5ca79c30
+Mar 29 17:43:16.181441 fedora kernel: R10: 0000000000000000 R11:
+0000000000000246 R12: 0000000000020000
+Mar 29 17:43:16.181448 fedora kernel: R13: 00005610a8c7f880 R14:
+00007f1aa7b88965 R15: 0000000000000000
+Mar 29 17:43:16.181458 fedora kernel:  </TASK>
+Mar 29 17:43:16.181472 fedora kernel: Modules linked in: cfg80211(+)
+thunderbolt(+) thinkpad_acpi(+) igen6_edac intel_soc_dts_iosf
+platform_profile snd soundcore int3403_thermal int340x_thermal_zone
+soc_button_>
+Mar 29 17:43:16.181784 fedora kernel: CR2: 000000000000004c
+Mar 29 17:43:16.181806 fedora kernel: ---[ end trace 0000000000000000 ]---
 
-> It would also be nice if you actually describe the purpose of each functi=
-on.
-
-I can do that.
-
-> > + * lwmi_dev_evaluate_method() - Helper function to call wmidev_evaluat=
-e_method
-> > + * for Lenovo WMI device method calls that return an ACPI integer.
-> > + * @wdev: Pointer to the WMI device to be called.
-> > + * @instance: Instance of the called method.
-> > + * @method_id: WMI Method ID for the method to be called.
-> > + * @buf: Buffer of all arguments for the given method_id.
-> > + * @size: Length of the buffer.
-> > + * @retval: Pointer for the return value to be assigned.
-> > + *
-> > + * Returns: 0, or an error.
-> > + */
-> > +int lwmi_dev_evaluate_method(struct wmi_device *wdev, u8 instance,
-> > +                          u32 method_id, unsigned char *buf, size_t si=
-ze,
-> > +                          u32 *retval)
-> > +{
-> > +     struct acpi_buffer input =3D { size, buf };
->
-> Reverse X-mas tree declaration order please.
->
-Acked
-
-Thanks,
-Derek
-
-
-> Thanks,
-> Armin Wolf
->
-> > +     struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > +     union acpi_object *ret_obj __free(kfree) =3D NULL;
-> > +     acpi_status status;
-> > +
-> > +     status =3D wmidev_evaluate_method(wdev, instance, method_id, &inp=
-ut,
-> > +                                     &output);
-> > +
-> > +     if (ACPI_FAILURE(status))
-> > +             return -EIO;
-> > +
-> > +     if (retval) {
-> > +             ret_obj =3D output.pointer;
-> > +             if (!ret_obj)
-> > +                     return -ENODATA;
-> > +
-> > +             if (ret_obj->type !=3D ACPI_TYPE_INTEGER)
-> > +                     return -ENXIO;
-> > +
-> > +             *retval =3D (u32)ret_obj->integer.value;
-> > +     }
-> > +     return 0;
-> > +};
-> > +EXPORT_SYMBOL_NS_GPL(lwmi_dev_evaluate_method, "LENOVO_WMI_HELPERS");
-> > +
-> > +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> > +MODULE_DESCRIPTION("Lenovo WMI Helpers Driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/platform/x86/lenovo-wmi-helpers.h b/drivers/platfo=
-rm/x86/lenovo-wmi-helpers.h
-> > new file mode 100644
-> > index 000000000000..7e0d7870790e
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/lenovo-wmi-helpers.h
-> > @@ -0,0 +1,24 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later
-> > + *
-> > + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> > + *
-> > + */
-> > +#include <linux/notifier.h>
-> > +#include <linux/platform_profile.h>
-> > +
-> > +#ifndef _LENOVO_WMI_HELPERS_H_
-> > +#define _LENOVO_WMI_HELPERS_H_
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/wmi.h>
-> > +
-> > +struct wmi_method_args_32 {
-> > +     u32 arg0;
-> > +     u32 arg1;
-> > +};
-> > +
-> > +int lwmi_dev_evaluate_method(struct wmi_device *wdev, u8 instance,
-> > +                          u32 method_id, unsigned char *buf, size_t si=
-ze,
-> > +                          u32 *retval);
-> > +
-> > +#endif /* !_LENOVO_WMI_HELPERS_H_ */
+Best regards
+Damian
