@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C9B233120;
-	Mon, 31 Mar 2025 14:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB3C23C38C;
+	Mon, 31 Mar 2025 14:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743432909; cv=none; b=qk+t6sK4M9rLremeTjZAwZLbW6R77uDiIEYQPAG8b1IJLd1W2FJAwwe9T5Ioh/SpcWGmpoPc3jJlwXTAbgmLeNSquOxzWvWFvoxHyYD9RewU1EFki53mO/RPWPxcTAx6esuz8G5mBEpjLpefuO2TfSGyLCHXu1hQPm2+jTdknc0=
+	t=1743432960; cv=none; b=ehg6vU6j72goM9qua+VPUMyTJrht4n3cEXeF9FKwGUFV4xgBv9Idij1Wy5sIAr9UGKMzOslFta06ybPcQJM3iQcOKrXtR/NN/MBuUWJvsrhEg51/Js8C9KjpRVFeVk1M9k0YY8qQketFLdpxpMRZxTMzdCmcu59eb3hHfetBGmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743432909; c=relaxed/simple;
-	bh=6W97gUxC1i3/IIv7TYBBVZoZFV6otn8YTHabZQR4WHM=;
+	s=arc-20240116; t=1743432960; c=relaxed/simple;
+	bh=NuQi7sGKwuKY+hUiEudtXjgQ66TKKxCP3gmGJjW7KEE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n7xc5IFNQNXtxV/eKXGkIKIhimVtUFAYF5NgxfceUkDrk7jbJ8GJ+IM3ZtuX7nm8iJhaUP6wd+8KIcIRtlA7d17eSfTZmN2kIAPIsQ0ASWNyPx179ZbMh988oGT6gu7dST555JOe/gYOsCFDFQuO0PDXV8fSsWFvX10Tt/zNpLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Upxca9Ui; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bLht0p31KWO535xgghxFyDvhWgI3GrXLby8vuVjnmtAGhtAi2pncupmGnWjECSxfMT49PM3Wd9Qw5reGMtsbooldgp825sofgVl08poOWD8lvKqKBdL899LXnmgjhCEnXQKoVGxSrzxpXYYVOABX2aKrK8gtVMXhmrh+iDENNYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUYhGH61; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Upxca9Ui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D061C4CEE3;
-	Mon, 31 Mar 2025 14:55:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUYhGH61"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58963C4CEE4;
+	Mon, 31 Mar 2025 14:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743432909;
-	bh=6W97gUxC1i3/IIv7TYBBVZoZFV6otn8YTHabZQR4WHM=;
+	s=k20201202; t=1743432960;
+	bh=NuQi7sGKwuKY+hUiEudtXjgQ66TKKxCP3gmGJjW7KEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Upxca9UiXOFMRIEuE1Rv6jdV1d8Xkf6dhiaBgVHeIUA5f8k7ps9ZUqeJ88h2sTWCf
-	 vF8k7CLj81fx8Tsl4iqfS7s3UTdJqB6aQnMt3yA3zHMncNgMwmN+1WBVsHBsCF1Gcm
-	 qlkSwOPNFHBp44N2Jvdmv9BT28HkZHlUU3K3U5MC9XSEgmVq2oYec1d7os8V5PNV1h
-	 M4k+GCsy5Meh1lOenn8k8tFGiC0Oydp59JrvgiP1VXcMClD3OsV6X5eynK0xHxP6n+
-	 Ao0O0y45U/1lKElHfi2FvCvreWaZzfryhmML/DcBX0iMc0HBLvGbqaWtP6rds/kSYc
-	 bIkU+UT+HRi6Q==
+	b=LUYhGH61uXqB7uf9KnWvFH78Knt5h1ZtwXlBcAsSaYCl1VVmWjDi4zC3ls1owjtq0
+	 VHE+5Cusb6OZVald4bZUSdmckN4+ACJ6r19YBMZKEsc6ZTuCCYZ1lEH0Fa6rZjLs2S
+	 oOMs6PWOWC5Na3y43foHmfWIEHdMGSeKYPioTmJfRv5xTiDbL327o9eV7rISiC/kD3
+	 97jMxyGPf/AOY/cwrwsBd+sN+9JGFkfFVkAJNvj/HPjSR38auvND/36/Y1OCyx+i4i
+	 KwflmkYoK30PKG7tnP/lV5/McLE/u4IRTbp/V33N2gyHeO5D4KWrVzYdg4yPd8X739
+	 Aixm2YiMVORvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 24/24] platform/x86: x86-android-tablets: Add select POWER_SUPPLY to Kconfig
-Date: Mon, 31 Mar 2025 10:54:04 -0400
-Message-Id: <20250331145404.1705141-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 23/23] platform/x86: x86-android-tablets: Add select POWER_SUPPLY to Kconfig
+Date: Mon, 31 Mar 2025 10:55:09 -0400
+Message-Id: <20250331145510.1705478-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331145404.1705141-1-sashal@kernel.org>
-References: <20250331145404.1705141-1-sashal@kernel.org>
+In-Reply-To: <20250331145510.1705478-1-sashal@kernel.org>
+References: <20250331145510.1705478-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,7 +49,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
+X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
 From: Hans de Goede <hdegoede@redhat.com>
@@ -80,11 +80,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
-index a67bddc430075..193da15ee01ca 100644
+index 88d9e8f2ff24e..c98dfbdfb9dda 100644
 --- a/drivers/platform/x86/x86-android-tablets/Kconfig
 +++ b/drivers/platform/x86/x86-android-tablets/Kconfig
-@@ -10,6 +10,7 @@ config X86_ANDROID_TABLETS
- 	depends on ACPI && EFI && PCI
+@@ -8,6 +8,7 @@ config X86_ANDROID_TABLETS
+ 	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB && PMIC_OPREGION
  	select NEW_LEDS
  	select LEDS_CLASS
 +	select POWER_SUPPLY
