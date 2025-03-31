@@ -1,267 +1,523 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68681215062
-	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Mar 2025 17:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743443374; cv=fail; b=YbrL97K1nupReBI/PxXcJadJhRASAf6EnAfNC9cbkrvx5vEJulHCL/D6OOEcbdwoAd6x7+NpySeqL2DZQB8qZvhGeaM22XiQQ/bPUSg5bm9LrIcgBDRjCv0EiyyPStVU0NYpkEsg4gNtJ3+5Pp7ZDt1SWRIvwHt6nEr3Y80pYMI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743443374; c=relaxed/simple;
-	bh=6l/w8x41a6FbthVdJsNxYVW6OfX0ktXt9RxqLlLxm1Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jG0xPKeA1L8nXDOeZkZkbPmQwWZpz4vEBQTgtqCyo6WLOWOrhF4tAQJtLPtiAiAa33Sa4w1nSe6KEdzo45sSELP410BZ84eoThiwkgOAQIKvnJa4yKqRHnz7fUOoDZff16CufV/1Xq3ymep7KRaYoKdy2warWzUk3HTflOrzOdU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DLwVHhQw; arc=fail smtp.client-ip=40.107.244.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D17145A03;
+	Mon, 31 Mar 2025 18:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743445184; cv=none; b=GVLLOP9wfiFeObDMWQRykZUFp8JHxpN7jcbqlwTr3cQDbwZQB0fVJE8WdI+Mg2Gn6E0VSa5y22NCQBCOdNHas6dYjZYNpV9h/xbh117jTs+xu/TTUf1DqpIdy2n7Ienwg5OKnEZ+dp5ngdE3K++myLWYIBLmejBLucKetORyIlg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743445184; c=relaxed/simple;
+	bh=K+QgmfJsO0OjaZWI+/qq/0kHoL6g+AOr0+YME7U0/aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFh5TE1Wdu6e6vSs7mF+XNcuamueOO3RabbkFb4TJoCLVXZZO+wr9Z5RXhJ49BvtSMfbYspyh9OayGHBN9yV+eOj1BS9lm9zFUqvKelaYAXsZIPcYKqg99LMe6KdDbsqlPBIOtLXsOmVax2kw3H9Ruh47T1cZEf3+b27UnRHZko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=c2/drjjl; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DLwVHhQw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QDJDIyV5J0y1IqRiqD704vZaJqc4yuJTW/LhDLWz3Inhz3FrhvBNZyX+MOQ+Z3vE7lsAaURYU8jUOMOImkFNLmO30fWfWKSccZyfhPVdhrRo1GTjXxrAJEifVRvIgPQho5sdaUiQd3Wm/aqaV9UUyg6pxfXDyEWqu4MwO6BksVK0qgBFFwb8fPbwW0TNWojXxzQaVYV7MLqXZ2gzPXRj+NEAibVV0keGayYoLQpYVXyTFtY1/fQ+gEyH/Ze45sfcMCgXMut9XKkUjKBbKCGs6WdRFepzfa1WCAsuQNOU+Z2b9I70Kzet9G/7PJblzOUdrmZvmw6NI7v3asnElo87MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=utYMOMTcYt45FlryGcUmXnQCT1N84ildYixzDtD8dac=;
- b=lU6Z983jUiOvjdTiZib6ZCNJ6H8iymu5CTRsOEpPmFS6MEzWpvWIjY2VHUubnfdDpGGCApVqeYmS4mZmiYVzbblBLC3NymcGnuHcmLULQHHbxpJFTECooFQ7leeIfPSs/Zm2W0OyP4HmE/33aN+u0YLaUPJOFvAh2sW1AI1s2Yrwv2qU7stu/B89TSokR4cSSV8KtIsQ71GvSrfIm9ymhsYNn86pnbycjXueW/DP5JLjoEQVyrGLm0VHRzlfmmr25YPXgqKuKOVjtVgXKKILRpMC91ZIBBTAq/og3R7tXPnOo8bVz4SilpRfA+GwlUHCPvo/t3C9o4qU0JecTzd7sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utYMOMTcYt45FlryGcUmXnQCT1N84ildYixzDtD8dac=;
- b=DLwVHhQwINC9ZcWOYRsAX3FsvGXNYtPKtKGLGSr5uh26WzdTOpMYYslPWCMKCafgLeysnhE6YzB+IqFCTEMsKYRJImf/XchkGhYsKaBqoPnxqmWFYWLJ6+z50VPYP+iQl5sj8Nh0lAQRWSQjFDsK4/fv3lBKuqTIBYpQnIw3gBM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
- 2025 17:49:29 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
- 17:49:28 +0000
-Message-ID: <edc8986d-3414-4bc8-8aeb-9465b148ab35@amd.com>
-Date: Mon, 31 Mar 2025 12:49:26 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd: pmf: Use meta + L for screen lock
- command
-To: Mario Limonciello <superm1@kernel.org>, Armin Wolf <W_Armin@gmx.de>,
- Shyam-sundar.S-k@amd.com, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org
-References: <20250321193052.2973537-1-superm1@kernel.org>
- <3b7c719f-8aa6-424f-92a0-e2cf05b12ca0@gmx.de>
- <fe47758a-ca42-41b0-92bd-4ac86e1d0a3b@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <fe47758a-ca42-41b0-92bd-4ac86e1d0a3b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR13CA0030.namprd13.prod.outlook.com
- (2603:10b6:806:130::35) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="c2/drjjl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743445179;
+	bh=K+QgmfJsO0OjaZWI+/qq/0kHoL6g+AOr0+YME7U0/aM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c2/drjjlwIeOBOfT/MBHaMnF2V9+plrh14mtiU+c2NAxwV+jbiEh7XuysZQESNgUq
+	 WgsbKanpyGybU5JKAy/B9jxsX5v3H2xl56Tg+MmqeUvdLf6OO7BOrWCgSPAJSaeWbK
+	 GYcnLNTMAWOdBw/EJ5Ldx8SGzxcGuIevyZfBUTSQ=
+Date: Mon, 31 Mar 2025 20:19:39 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: =?utf-8?B?TWljaGHFgiBLb3BlxIc=?= <michal.kopec@3mdeb.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	tomasz.pakula.oficjalny@gmail.com, jdelvare@suse.com, linux@roeck-us.net, 
+	platform-driver-x86@vger.kernel.org, piotr.krol@3mdeb.com, maciej.pijanowski@3mdeb.com, 
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] platform/x86: Introduce dasharo-acpi platform
+ driver
+Message-ID: <7d3bca66-2753-485b-b587-83c36de07960@t-8ch.de>
+References: <20250331150353.127067-1-michal.kopec@3mdeb.com>
+ <20250331150353.127067-2-michal.kopec@3mdeb.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB6591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2703377b-c488-4229-f73c-08dd707c61ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OFFveHh3bTIzL3p2NjNRYWZ2alhSQy9zRHA4aFVZM2ZWU08rWWhPMDY4T0R4?=
- =?utf-8?B?TkhqbXFBbDdzcmJ6MGFubitRbkxURlBCSm5qRlJYaFdRTkZidlR0azhSVTNK?=
- =?utf-8?B?M1JuOHlBdWdBMHFuelNvYTZaZUZ3ZHVzNEZUaU1PR0w5VXNVbE5iVGlFTlZC?=
- =?utf-8?B?OXBWVUxUZlltMzc1TUZTalVPN2lxMlFDdkpZSDNSSytRdU5jMWVoQXJuWWZW?=
- =?utf-8?B?NnZRMllXamNXekNkOU8xdWNzQ0FscldkcTBwN0xnZm5kTHd6dFdjMXFySllM?=
- =?utf-8?B?eXFXS3J4S2dKZWJreGNRYkdEOE9CVC81SjlHaFdGUzM0Zm1saGdPRUY3REdY?=
- =?utf-8?B?RUR3RXFQY2NEaUxiYjZVM3pPSzhmWmVoSDdubWVYblJXUnR2S01YOVlWQ3JU?=
- =?utf-8?B?RkVXWXFvaHhTQkk1QTA1bzkzbTVWMG5haGp2ZHZhOG92NTNNWjJoS0l4d3Ex?=
- =?utf-8?B?NVlXdHN5dklGZmFGdnllMnVrbXgxVk9Wb2Z1QXhqMDNsRmNJdFN2R0VsTjN4?=
- =?utf-8?B?bGNIWVMzM1NsVjNRRStHOVlKZXJlSnlTUTFpTkVjK3BscjRUZjBGNDI2UU0z?=
- =?utf-8?B?TUdXUEt2aTBvUm1ScEovVFJOeHNVa001ZGpKR1hLakFTVWNtRUdxZzhlM3Bt?=
- =?utf-8?B?VldLL1EwaUdRczBxdysxMG9VMGVGcWpKYkhpNkk5b2ZVeVJuRnpmRE9udnRl?=
- =?utf-8?B?S21PRjVmdlFudUgyam85K013MUZVNXV6ODdhMGFTSlNabjU4ZDIvbmVnNm9J?=
- =?utf-8?B?RC9ZM1JTcGVIdi96bC9SRjNLazJCZnJLMmZMRmZUS3EvWmRDaHFlbjd3NEdO?=
- =?utf-8?B?YlQ0b1BXN21ZQzk4ckdSejFLTk5FUS9FWWN5WlBnUmZUU3ZVUEpVVklHVDRO?=
- =?utf-8?B?eldKY2ZSRnFFNHFYUlFTOGxTb0FYMGFyRWlGWUVDVktncEVEMitXOHlOMC92?=
- =?utf-8?B?Q25PVUVaZytTSzR3VStQVmRHa2s2UVl6VTczWDIzWk9tbkNrWVB5UEpFRGl6?=
- =?utf-8?B?ZWRjU25XT1BNeVYyRGRMV2VWVGtFMGRHK3B2RldpQmt5ZG1xRXMyT1ViOUhm?=
- =?utf-8?B?VTErREl1QWpoZS9LNDAxNGJkUUlHRUc5c1FPNkJVbmwyeDEybFBrdFVDOHdI?=
- =?utf-8?B?ZlBMdmhsaS9vNTE3NjR4WmIreEUvTEtJMnZ2bitTNFlkV25nekN3Wm8wRmw3?=
- =?utf-8?B?TzVLbEpTUkJCanQ4Yzh4NnNVRWx2Q0ZDUmRXN2U5NlBSdjBnclIzTDJEcnMv?=
- =?utf-8?B?U0ZPU2UxcWlrOExXT1VRL1RsS28yNU8rZEU1QXk2Ymx2Q2NFUVhMZGtsend3?=
- =?utf-8?B?bmthRXRUaHkvdkl1c3Q1VFQ3UDBHRnczVkxrR1hjYksxcjRMNmdHSEUyNDAx?=
- =?utf-8?B?RWlHYnhDV3g4SWp0SXpjRkJ4bjkvYnpjaE9XbXJuWlFveVhTNjdDU2JjcVVE?=
- =?utf-8?B?d1FFcm5Ma3ZuUWFpMDdkczJTUmhpejNyeGU5T1VXRWNOR1lGdmd5UlB0b0hI?=
- =?utf-8?B?bnNCY0V2TUZOT3ZrcEIzSFdqcWxEWjFNVXg2dklWczFoOGhDeUFDYklxL1Zq?=
- =?utf-8?B?QUVadnZ0QWxZV3dwZmpRcnJpTXJLK3MzNE9qbUl0YW5nTklKMjRpUFduM3JF?=
- =?utf-8?B?MW1ZNE5xUjhDakxkZXUzY0FQOEtXQVZBQUJZc09ISVAvWU44cGRnWW9pOGZ2?=
- =?utf-8?B?cTMzN0lvM2R5TkV6RURHbjhwMllvYlBubThBUG4zMytLT25zNTEvNyt0N3JO?=
- =?utf-8?B?TDNYTWZGWUd3dkI1cXRnc3o5QzRNUnFyd1UwZUVnL3J4UmEwbzA4azN6K2FC?=
- =?utf-8?B?d05lTGx4eXFmTktiQndRcWM5TWJEckFiR3RhY28vQktFV3pXd1NOc2NVOW5C?=
- =?utf-8?B?dmN1L2ZTRDBMK0UwR0NOUjR3NjBZeHEzL1lNNXpud2ZKYStzOWkwU0R3U3hX?=
- =?utf-8?Q?YApJ7yGffMc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cnBmQVdhTVhYQzBuZkRYOVJJUmFVYmYwV3JMR0RITGFranlCUHpzZkwySWdM?=
- =?utf-8?B?L1dSblpGYVJDQ21nNk5ITkF1N2dvNXlSMzlEb05sMFpoZDBRZndJTzlMczI0?=
- =?utf-8?B?cmVWdDNJOWNUOTVvSjAzclg0UzBQdlZBK3F3b1ZDMjJJUzZOdjB1eHRtUk1u?=
- =?utf-8?B?L2lLNGgzZDlwc0hSSHRvL2xNWXY1UHFRb2hmcTlZRGlUdWRMMlBHdUh1ZlUz?=
- =?utf-8?B?N1hUak5DVXJaVEpianM0VUoyZlZiT2lSTVBpaUFDS1dYaEQzQVBxYjQrVGI2?=
- =?utf-8?B?bFdQNUUycThpNlA0Y3BHT0wza01HcjlmUk9MUG9VWU5LYjV0ZUEyck8yVFY3?=
- =?utf-8?B?NEY4TkJKRFljNDYrZndSMjNVYXFLd3dBYVh6TUpHN1FvaFd3d0t2QmZMcEw2?=
- =?utf-8?B?UVNNbXlTOFk4ZE9uWkZCbVM0d21aZW9sZkI3bkhuNE4zY1RxMC9LYmV0YVE1?=
- =?utf-8?B?T1p4OVJlSGlYcWFSNVZLclR2UENrL0VEN2ZSZHhzSTNUWnEweDA0MkQzK3lG?=
- =?utf-8?B?MmVTZVAzc2hUNVRFUzVZb2lsYnJpRUdqS1hPdkF6Z1JXZXRlU3R5MDRVQy93?=
- =?utf-8?B?ZStJT0RtT3Z0VG9QU2hmWDY0czJqUy9BWXdqNnpDRmhFclRHV0g0ZW1Oei80?=
- =?utf-8?B?OWk3VHBMS1ZjVE1DakovZTFvRnlzRTg3Rng2OERPNEZ1aEZ0dDBCV2JrNFZB?=
- =?utf-8?B?dkFabVpMN2kyeGpVdGZxUFJiOTdrL1IzdGRoN254SVFyUjV5NllJTlFrNlB1?=
- =?utf-8?B?YjVrb1YxeUVtNEpXOVRPYWtRWmxNSFJNQkpIMTRHNkxXTVhYTUtvbWl1V0gr?=
- =?utf-8?B?MUF5REFRR3cxVkFWNE1ncEMrMEpjemgzczN5My9SUDNnNGJ5RExmRkR3YWYr?=
- =?utf-8?B?emhpU1BwY25nUnVJc1JQazFZOEVEL0ZiY2NZVGNGckl6RXcwNVg3dXRSU0Zv?=
- =?utf-8?B?WkRNZXVxSEhVYTQ5cmY4Z1p1SEpteElOUjJkdTRuMUU3VHBXdi9BTDBUR3FZ?=
- =?utf-8?B?cEUxbU9LWG9aY2ZWbFRqbVA0OElYdElKeld6RXE1eHIyUkhhb1hNN21DMTBm?=
- =?utf-8?B?Z3RlU1ErVGxGN1Y0RVU0bytXaDFCNFlmc0UzQWwwTEFmcTlFWklxZ0xZTk9S?=
- =?utf-8?B?UW9kVlBKaml2QklmSXE4Z05FQTkxVHZpem00dW1sd2pVd0dXdUVvelVNN0hp?=
- =?utf-8?B?UzM5cTlFUXdhbVhtNDlOMVl6Ym9GK0JWa050dkFuYkhZNTMvM3VwNHZ4RW1Q?=
- =?utf-8?B?WU1MelY4N05KL0NPa01PeDhxbjVoUUdIUWRteFdTWWlVL1VORXl3Z3JSaXhi?=
- =?utf-8?B?NmhYenU3eTVWUEE3eDJ1czRFeWlIZ0NkamJMUy9GaERUUGIvUHh5V1ZPSjZ6?=
- =?utf-8?B?VWhoWDVxQlpudjB1SSt1NlhTRFcwUStORnlkd2EvUlVpYUF4QnZrQWRKUmtT?=
- =?utf-8?B?U0FrRUhiTmc1WE1aeVBQUlpUWXpxYndRUXkraWFaVzFXZzhmMEF0T3BZZHJ6?=
- =?utf-8?B?bHpnaFl0b25kdGlrQXdCVVcvbVJ4K0drV2ZHMUI2RE1MdkNXL1dCeUJiVDln?=
- =?utf-8?B?T1JkeXFzRHlvUm5PdUhxS25GcnV1RUp3WG94ZVFnazVsL3JKZGYra09ieWFN?=
- =?utf-8?B?NGFJTTU3OSszaU84VXBhVExPQXF3UURLSFh6WDRGV2RkazhzbHkyZXEyUmpt?=
- =?utf-8?B?SUNqMi9nN29IS0toTVlaUXl3dXF3SmxqV2doRWRPY2NYVmxtTFpmY09xWGo2?=
- =?utf-8?B?NkY2S2RESmtENmpsbllyMTBUeVVRWXhJMXlmYWdCTzlZaE1UYVdvbml5QnRZ?=
- =?utf-8?B?WENBa2tiTWZtUGV5MTJOSFJTaklPZGlwUkZ1ZHQ0WHB5U255L0x4TTYyNzFV?=
- =?utf-8?B?YlJtYU9TWFVxL0tiRkcxU3Jlc2tKdjQ5ZU5oUGZ0ck5tSGZBN01wNSt6ZXhQ?=
- =?utf-8?B?eHdrSmVpQmFTQkFKaEVKR1FZZzlrRlQ1dnZBWm5rclAvSCtsZUJRZFhwbGw1?=
- =?utf-8?B?bXpBSDg4bDZrRDhibklUUDZJdFJwWVFJc1k2YXlBR2JaTkNBdTc3UU1Kd04y?=
- =?utf-8?B?cmdjUlhRR1JOeVRueDZIOWpyM1duRWJ0UCtCdXd3cGVyUWZwTHJqYkRxYjht?=
- =?utf-8?Q?Ms5YXhL0/FI5x8HSScGm1myo6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2703377b-c488-4229-f73c-08dd707c61ee
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 17:49:28.0113
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /87T19MSa7c8WNSZGxKi80Zzp96AlgYwPwN5wiFICwBQ9p5GvzbWxkPJDgWpEFAfovq3Dvpd6Z81qF89uELArw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250331150353.127067-2-michal.kopec@3mdeb.com>
 
-On 3/21/2025 5:25 PM, Mario Limonciello wrote:
-> 
-> 
-> On 3/21/25 16:16, Armin Wolf wrote:
->> Am 21.03.25 um 20:30 schrieb Mario Limonciello:
->>
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> In practice userspace software doesn't react to KEY_SCREENLOCK by
->>> default.  So any time that the PMF policies would suggest to lock
->>> the screen (for example from an HPD sensor event) userspace isn't
->>> configured to do it properly.
->>>
->>> However userspace is configured for meta + L as this is the default
->>> in the ecosystem. Adjust the PMF driver to send meta + L.
->>
->> Hi,
->>
->> KEY_SCREENLOCK is used by other drivers too, so it would make sense
->> to instead add support for KEY_SCREENLOCK to the userspace software
->> instead of having this workaround inside the driver.
-> 
-> Right; that's actually that's the first thing I looked at when I came to 
-> this issue.
-> 
-> I had "expected" GNOME for example to work with KEY_SCREENLOCK, but even 
-> when you program it to do so it doesn't work.
-> 
-> https://gitlab.gnome.org/GNOME/mutter/-/issues/3990
-> 
-> The ecosystem has moved to META + L.  My last employer (Dell) I remember 
-> there was a FN + F key that would issue a screen lock.  It had a 
-> silkscreen of a lock symbol.
-> How did it work?  Not KEY_SCREENLOCK - it emulated META + L.
-> 
-> This is what works in Windows, GNOME and KDE.  So I am of the opinion 
-> that KEY_SCREENLOCK is likely a dinosaur that doesn't really exist anymore.
-> 
+Hi Michał,
 
-FWIW, I found an aftermarket keyboard (Logitech Ergo K860 [1]) that has 
-a "lock" key.
-
-It also emits a KEY_LEFTMETA combination when this key is pressed and 
-works by default in GNOME as well with no changes.
-
--event11  DEVICE_ADDED            Logitech ERGO K860 
-seat0 default group7  cap:kp left scroll-nat scroll-button
-
--event11  KEYBOARD_KEY            +4.191s       KEY_LEFTMETA (125) pressed
-  event11  KEYBOARD_KEY            +4.231s       *** (-1) pressed
-  event11  KEYBOARD_KEY            +4.374s       *** (-1) released
-  event11  KEYBOARD_KEY            +4.412s       KEY_LEFTMETA (125) released
-
-[1] https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009166
-
->>
->> Also please add a comment explaining what meta + L is supposed to 
->> achieve.
->>
+On 2025-03-31 17:03:53+0200, Michał Kopeć wrote:
+> Introduce a driver for devices running Dasharo firmware. The driver
+> supports thermal monitoring using a new ACPI interface in Dasharo. The
+> initial version supports monitoring fan speeds, fan PWM duty cycles and
+> system temperatures as well as determining which specific interfaces are
+> implemented by firmware.
 > 
-> Sure if we can align on doing this I will spin a V2 with a comment 
-> better explaining the situation.
+> It has been tested on a NovaCustom laptop running pre-release Dasharo
+> firmware, which implements fan and thermal monitoring for the CPU and
+> the discrete GPU, if present.
 > 
->> Thanks,
->> Armin Wolf
->>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>>   drivers/platform/x86/amd/pmf/tee-if.c | 11 +++++++++--
->>>   1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/ 
->>> platform/ x86/amd/pmf/tee-if.c
->>> index 8c88769ea1d87..2c00f2baeec7b 100644
->>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->>> @@ -151,7 +151,13 @@ static void amd_pmf_apply_policies(struct 
->>> amd_pmf_dev *dev, struct ta_pmf_enact_
->>>                   amd_pmf_update_uevents(dev, KEY_SUSPEND);
->>>                   break;
->>>               case 2:
->>> -                amd_pmf_update_uevents(dev, KEY_SCREENLOCK);
->>> +                input_report_key(dev->pmf_idev, KEY_LEFTMETA, 1);
->>> +                input_report_key(dev->pmf_idev, KEY_L, 1);
->>> +                input_sync(dev->pmf_idev);
->>> +                input_report_key(dev->pmf_idev, KEY_L, 0);
->>> +                input_sync(dev->pmf_idev);
->>> +                input_report_key(dev->pmf_idev, KEY_LEFTMETA, 0);
->>> +                input_sync(dev->pmf_idev);
->>>                   break;
->>>               default:
->>>                   dev_err(dev->dev, "Invalid PMF policy system state: 
->>> %d\n", val);
->>> @@ -422,8 +428,9 @@ static int amd_pmf_register_input_device(struct 
->>> amd_pmf_dev *dev)
->>>       dev->pmf_idev->phys = "amd-pmf/input0";
->>>
->>>       input_set_capability(dev->pmf_idev, EV_KEY, KEY_SLEEP);
->>> -    input_set_capability(dev->pmf_idev, EV_KEY, KEY_SCREENLOCK);
->>>       input_set_capability(dev->pmf_idev, EV_KEY, KEY_SUSPEND);
->>> +    input_set_capability(dev->pmf_idev, EV_KEY, KEY_L);
->>> +    input_set_capability(dev->pmf_idev, EV_KEY, KEY_LEFTMETA);
->>>
->>>       err = input_register_device(dev->pmf_idev);
->>>       if (err) {
-> 
+> Signed-off-by: Michał Kopeć <michal.kopec@3mdeb.com>
 
+One issue in the MAINTAINERS entry, otherwise only a few nitpicks.
+With MAINTAINERS fixed:
+
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+
+> ---
+>  MAINTAINERS                         |   7 +
+>  drivers/platform/x86/Kconfig        |  10 +
+>  drivers/platform/x86/Makefile       |   3 +
+>  drivers/platform/x86/dasharo-acpi.c | 357 ++++++++++++++++++++++++++++
+>  4 files changed, 377 insertions(+)
+>  create mode 100644 drivers/platform/x86/dasharo-acpi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 00e94bec401e..4122d9e28308 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6404,6 +6404,13 @@ F:	net/ax25/ax25_out.c
+>  F:	net/ax25/ax25_timer.c
+>  F:	net/ax25/sysctl_net_ax25.c
+>  
+> +DASHARO ACPI PLATFORM DRIVER
+> +M:	Michał Kopeć <michal.kopec@3mdeb.com>
+> +L:	platform-driver-x86@vger.kernel.org
+
+Not needed, it will be picked up from the subsystem entry.
+
+> +S:	Maintained
+> +W:	https://docs.dasharo.com/
+> +F:	platform/x86/dasharo_acpi.c
+
+Wrong path and filename.
+
+> +
+>  DATA ACCESS MONITOR
+>  M:	SeongJae Park <sj@kernel.org>
+>  L:	damon@lists.linux.dev
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0258dd879d64..8168c5274a08 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1060,6 +1060,16 @@ config LENOVO_WMI_CAMERA
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called lenovo-wmi-camera.
+>  
+> +config DASHARO_ACPI
+> +	tristate "Dasharo ACPI Platform Driver"
+> +	depends on ACPI
+> +	depends on HWMON
+> +	help
+> +	  This driver provides HWMON support for devices running Dasharo
+> +	  firmware.
+> +
+> +	  If you have a device with Dasharo firmware, choose Y or M here.
+> +
+>  source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>  
+>  config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index e1b142947067..3ca53ae01d93 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -110,6 +110,9 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+>  # Inspur
+>  obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
+>  
+> +# Dasharo
+> +obj-$(CONFIG_DASHARO_ACPI)	+= dasharo-acpi.o
+> +
+>  # Laptop drivers
+>  obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+>  obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+> diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
+> new file mode 100644
+> index 000000000000..a8728e3537f9
+> --- /dev/null
+> +++ b/drivers/platform/x86/dasharo-acpi.c
+> @@ -0,0 +1,357 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Dasharo ACPI Driver
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/kernel.h>
+
+Try to avoid linux/kernel.h it includes a huge amount of transitive
+dependencies. Somehow I missed this in v3.
+
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/types.h>
+> +#include <linux/units.h>
+> +
+> +enum dasharo_feature {
+> +	DASHARO_FEATURE_TEMPERATURE = 0,
+> +	DASHARO_FEATURE_FAN_PWM,
+> +	DASHARO_FEATURE_FAN_TACH,
+> +	DASHARO_FEATURE_MAX,
+
+No trailing comma after sentinel elements.
+It prevents accidental misorderings.
+
+> +};
+> +
+> +enum dasharo_temperature {
+> +	DASHARO_TEMPERATURE_CPU_PACKAGE = 0,
+> +	DASHARO_TEMPERATURE_CPU_CORE,
+> +	DASHARO_TEMPERATURE_GPU,
+> +	DASHARO_TEMPERATURE_BOARD,
+> +	DASHARO_TEMPERATURE_CHASSIS,
+> +	DASHARO_TEMPERATURE_MAX,
+> +};
+> +
+> +enum dasharo_fan {
+> +	DASHARO_FAN_CPU = 0,
+> +	DASHARO_FAN_GPU,
+> +	DASHARO_FAN_CHASSIS,
+> +	DASHARO_FAN_MAX,
+> +};
+> +
+> +#define MAX_GROUPS_PER_FEAT 8
+> +
+> +static const char * const dasharo_group_names[DASHARO_FEATURE_MAX][MAX_GROUPS_PER_FEAT] = {
+> +	[DASHARO_FEATURE_TEMPERATURE] = {
+> +		[DASHARO_TEMPERATURE_CPU_PACKAGE] = "CPU Package",
+> +		[DASHARO_TEMPERATURE_CPU_CORE] = "CPU Core",
+> +		[DASHARO_TEMPERATURE_GPU] = "GPU",
+> +		[DASHARO_TEMPERATURE_BOARD] = "Board",
+> +		[DASHARO_TEMPERATURE_CHASSIS] = "Chassis",
+> +	},
+> +	[DASHARO_FEATURE_FAN_PWM] = {
+> +		[DASHARO_FAN_CPU] = "CPU",
+> +		[DASHARO_FAN_GPU] = "GPU",
+> +		[DASHARO_FAN_CHASSIS] = "Chassis",
+> +	},
+> +	[DASHARO_FEATURE_FAN_TACH] = {
+> +		[DASHARO_FAN_CPU] = "CPU",
+> +		[DASHARO_FAN_GPU] = "GPU",
+> +		[DASHARO_FAN_CHASSIS] = "Chassis",
+> +	},
+> +};
+> +
+> +struct dasharo_capability {
+> +	unsigned int group;
+> +	unsigned int index;
+> +	char name[16];
+> +};
+> +
+> +#define MAX_CAPS_PER_FEAT 24
+> +
+> +struct dasharo_data {
+> +	struct platform_device *pdev;
+> +	int caps_found[DASHARO_FEATURE_MAX];
+> +	struct dasharo_capability capabilities[DASHARO_FEATURE_MAX][MAX_CAPS_PER_FEAT];
+> +};
+> +
+> +static int dasharo_get_feature_cap_count(struct dasharo_data *data, enum dasharo_feature feat, int cap)
+> +{
+> +	struct acpi_object_list obj_list;
+> +	union acpi_object obj[2];
+> +	acpi_handle handle;
+> +	acpi_status status;
+> +	u64 count;
+> +
+> +	obj[0].type = ACPI_TYPE_INTEGER;
+> +	obj[0].integer.value = feat;
+> +	obj[1].type = ACPI_TYPE_INTEGER;
+> +	obj[1].integer.value = cap;
+> +	obj_list.count = 2;
+> +	obj_list.pointer = &obj[0];
+> +
+> +	handle = ACPI_HANDLE(&data->pdev->dev);
+> +	status = acpi_evaluate_integer(handle, "GFCP", &obj_list, &count);
+> +	if (!ACPI_SUCCESS(status))
+
+There is also ACPI_FAILURE()
+
+> +		return -ENODEV;
+> +
+> +	return count;
+> +}
+> +
+> +static int dasharo_read_channel(struct dasharo_data *data, char *method, enum dasharo_feature feat, int channel, long *value)
+> +{
+> +	struct acpi_object_list obj_list;
+> +	union acpi_object obj[2];
+> +	acpi_handle handle;
+> +	acpi_status status;
+> +	u64 val;
+> +
+> +	obj[0].type = ACPI_TYPE_INTEGER;
+> +	obj[0].integer.value = data->capabilities[feat][channel].group;
+> +	obj[1].type = ACPI_TYPE_INTEGER;
+> +	obj[1].integer.value = data->capabilities[feat][channel].index;
+> +	obj_list.count = 2;
+> +	obj_list.pointer = &obj[0];
+> +
+> +	handle = ACPI_HANDLE(&data->pdev->dev);
+> +	status = acpi_evaluate_integer(handle, method, &obj_list, &val);
+> +	if (!ACPI_SUCCESS(status))
+> +		return -ENODEV;
+> +
+> +	*value = val;
+> +	return 0;
+> +}
+> +
+> +static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +			      u32 attr, int channel, long *val)
+> +{
+> +	struct dasharo_data *data = dev_get_drvdata(dev);
+> +	long value;
+> +	int ret;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		ret = dasharo_read_channel(data, "GTMP", DASHARO_FEATURE_TEMPERATURE, channel, &value);
+> +		if (ret < 0)
+> +			return ret;
+> +		else
+> +			*val = value * MILLIDEGREE_PER_DEGREE;
+
+Could be shorter:
+
+if (!ret)
+	*val = ...
+
+> +		break;
+> +	case hwmon_fan:
+> +		ret = dasharo_read_channel(data, "GFTH", DASHARO_FEATURE_FAN_TACH, channel, &value);
+> +		if (ret < 0)
+> +			return ret;
+> +		else
+> +			*val = value;
+> +		break;
+> +	case hwmon_pwm:
+> +		ret = dasharo_read_channel(data, "GFDC", DASHARO_FEATURE_FAN_PWM, channel, &value);
+> +		if (ret < 0)
+> +			return ret;
+> +		else
+> +			*val = value;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dasharo_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+> +				     u32 attr, int channel, const char **str)
+> +{
+> +	struct dasharo_data *data = dev_get_drvdata(dev);
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel < data->caps_found[DASHARO_FEATURE_TEMPERATURE])
+> +			*str = data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].name;
+> +		break;
+> +	case hwmon_fan:
+> +		if (channel < data->caps_found[DASHARO_FEATURE_FAN_TACH])
+> +			*str = data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].name;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static umode_t dasharo_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
+> +					u32 attr, int channel)
+> +{
+> +	const struct dasharo_data *data = drvdata;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel < data->caps_found[DASHARO_FEATURE_TEMPERATURE])
+> +			return 0444;
+> +		break;
+> +	case hwmon_pwm:
+> +		if (channel < data->caps_found[DASHARO_FEATURE_FAN_PWM])
+> +			return 0444;
+> +		break;
+> +	case hwmon_fan:
+> +		if (channel < data->caps_found[DASHARO_FEATURE_FAN_TACH])
+> +			return 0444;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hwmon_ops dasharo_hwmon_ops = {
+> +	.is_visible = dasharo_hwmon_is_visible,
+> +	.read_string = dasharo_hwmon_read_string,
+> +	.read = dasharo_hwmon_read,
+> +};
+> +
+> +// Max 24 capabilities per feature
+> +static const struct hwmon_channel_info * const dasharo_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(fan,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL,
+> +		HWMON_F_INPUT | HWMON_F_LABEL),
+> +	HWMON_CHANNEL_INFO(temp,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL,
+> +		HWMON_T_INPUT | HWMON_T_LABEL),
+> +	HWMON_CHANNEL_INFO(pwm,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT,
+> +		HWMON_PWM_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
+> +	.ops = &dasharo_hwmon_ops,
+> +	.info = dasharo_hwmon_info,
+> +};
+> +
+> +static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
+> +{
+> +	struct dasharo_capability *cap;
+> +	int cap_count = 0;
+> +	int count;
+> +
+> +	for (int group = 0; group < MAX_GROUPS_PER_FEAT; ++group) {
+> +		count = dasharo_get_feature_cap_count(data, feat, group);
+> +
+> +		if (count <= 0)
+> +			continue;
+> +
+> +		for (unsigned int i = 0; i < count && cap_count < ARRAY_SIZE(data->capabilities[feat]); ++i) {
+> +			cap = &data->capabilities[feat][cap_count];
+> +			cap->group = group;
+> +			cap->index = i;
+> +			scnprintf(cap->name, sizeof(cap->name), "%s %d", dasharo_group_names[feat][group], i);
+> +			cap_count++;
+> +		}
+> +	}
+> +	data->caps_found[feat] = cap_count;
+> +}
+> +
+> +static int dasharo_probe(struct platform_device *pdev)
+> +{
+> +	struct dasharo_data *data;
+> +	struct device *hwmon;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +	data->pdev = pdev;
+> +
+> +	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
+> +		dasharo_fill_feature_caps(data, i);
+> +
+> +	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
+> +		"dasharo_acpi", data, &dasharo_hwmon_chip_info, NULL);
+> +
+> +	if (IS_ERR(hwmon)) {
+> +		dev_err(&pdev->dev, "Could not register Dasharo hwmon device\n");
+> +		return PTR_ERR(hwmon);
+
+Use dev_err_probe() here. Or don't log anything and just return
+PTR_ERR_OR_ZERO(hwmon);
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id dasharo_device_ids[] = {
+> +	{"DSHR0001", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, dasharo_device_ids);
+> +
+> +static struct platform_driver dasharo_driver = {
+> +	.driver = {
+> +		.name = "dasharo-acpi",
+> +		.acpi_match_table = dasharo_device_ids,
+> +	},
+> +	.probe = dasharo_probe,
+> +};
+> +module_platform_driver(dasharo_driver);
+> +
+> +MODULE_DESCRIPTION("Dasharo ACPI Driver");
+> +MODULE_AUTHOR("Michał Kopeć <michal.kopec@3mdeb.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.49.0
+> 
+> 
