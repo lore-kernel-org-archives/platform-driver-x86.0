@@ -1,184 +1,496 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 4.mo560.mail-out.ovh.net (4.mo560.mail-out.ovh.net [87.98.172.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721D2204F6E;
-	Tue,  1 Apr 2025 14:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816181FC0F3
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Apr 2025 10:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=87.98.172.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743518642; cv=none; b=JHmnvdHaFAqmMlv/d20zudcv1apjiJVN3l1cYKeYczs+LLLhiqWUj0hxTsV78LuHi57vbr+EZQyoMpc0kgQLJwlf/XQ7FYk1y/adMwa/3/erwRyngvCN21iSHR6n7Y/vlS+1xt2BIWizKq2ncsHNgz8yM4W8ee5B51CmurEw+jU=
+	t=1743590298; cv=none; b=Y+VCz2/UBZOMBrj4G1B4k77tL/uSK0GeUVDSHB/evEIuepHVYF0wUQAdcNVUe+IEbnlx//CbRmnv++pRX9wK1RnnDkp9KmnmDLpCrRqQwtdtXNrta5Su/fc1oYW3Z7TXunnCDaHWYrhhGTirPKH27+yNH2/kOM8LFzmvdqbmmGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743518642; c=relaxed/simple;
-	bh=Ox/5eYi4GlhBdnBXV0M9N+R+ObV+LJoTiX5br973HpQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tEMu8dpiZkPqYL8KJyrUFw4iVpsJDE2SOTC4NJzhlVXgUQOymfBsGyaRG4LcVG1yKlnosqppKWYtU/CYfWfyGjfu3BEyZV48QWggXZHHfnCX+pG5kX8b7G3UAL9qLoAIgNlbiOD6JmmTQZkI+RMR1CSHrc12vQ4siZwxMyiAOnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XIuyo36o; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743590298; c=relaxed/simple;
+	bh=dUIkoGkrAC4dQ/0VLREEY7PQQks0gtch95GOJ0qWd3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KHZtc1XGSPvtVbJU6RqJ2Ls12ii2VHh0t0+2NIhHgudArft5WhvFTtxCp2zY8ZYaGT20vr242KGO044+TF98smjG6dHFHkhnyQiV+QSsGUHYkEiMjS6aknCE5cPJrYBTNQ4kIaVjQwMIa8aXmRm6AgCgnemy4vzkxIPeUITIEZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=BCwo5Xpd; arc=none smtp.client-ip=87.98.172.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIuyo36o"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fb0f619dso105887615ad.1;
-        Tue, 01 Apr 2025 07:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743518637; x=1744123437; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=spmdYh5iTMHiWJde+8Fl/6vRQmlnAOCyfRLFHTdbiq4=;
-        b=XIuyo36oJCpnd31Y+oRB9/mOM/F1pbrNOKoVF7qHmnu9ycC/aJMePzbm2mScq9IhsI
-         kvtF5xbanFxolljmlBC+gwxM2/XXwq8OB9ujIQ7WUxS1mDcWi+2lVM8bMp7UGfuZkSfp
-         8EEhJjqPiN5d3fulkGHkldUGQrcgCDok3YckDNaev75vZQ0ycljmUuD9Ef3V0LqVQTXk
-         i6UA5sBCtXMhZ2m4PtRi+ZXsRs8cQpx22POUTF3MWCyNCBY2o5fJxwPNh75KjgFNmV+C
-         tzk1VGqo62Npx8jeG3/B6o1kn05Ggvf5RLO7l5HmBedYSMmNjLSD3cXleXmCF/q9v2rJ
-         TLUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743518637; x=1744123437;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=spmdYh5iTMHiWJde+8Fl/6vRQmlnAOCyfRLFHTdbiq4=;
-        b=Hg2ZTOyWcfCyomEiNfotQubckG15OlksM8z69sBmtfSezjVwFlaYUVOYMXfrUrq6U8
-         Lr7tTkaLlek08LlH5DvRHy6LvMd71bCJoJoQmG1WB0ziRxPp8PNQAdwlw4mMdKKL1po0
-         SehrSABBJDMaBkqQY5hWoDBYmkx1SePW+6BdOuQDrOCm74ImDJub4l60qFnYX8kHGK49
-         PGlWvk/JsDsk+BfoRUQCJEjdzdyEt6RTT6r1P8xdhSQ/eVOLPrVnscVeaJfSXg1LjUjm
-         SYbWBdfLLWaACmbSTruECHbfAPryqyW7doEm3cWa+q/50vhvDaCIuzjR3AG0ApkVLO6t
-         vWRA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7gbJ+r9PY9kqKK6YDDIEu4Svd9dM3vZmPSQQW8CHHt7LkVa2u2pmcCfLjkfrJUop2UJImc3sHnuuo89I=@vger.kernel.org, AJvYcCVVrT/OLKzI70UY7JBJRfG50SG1CwnsuQsOC7bQEHQ83u2ChHauyI2eE8kLJLOVzjHqQYM7DAHVzIaYsJM8o8WcFzKIJQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlOq2fZEKlo2Jj/+3DUatt/JAZuPF9H9ktnf+Ocer1ZG50OKTa
-	3IugPN/6pQdoRKXst0nNqm+Gc9FwlrFYg53xzsb1u7rpDXm+OBo8mtUW9g==
-X-Gm-Gg: ASbGncskHL7TaWyDsMANlLAuKMPAy8G5atry9f26KODkM+3t8LPaiyrDcM8S2TZTX3f
-	rsjIjbLbhJIN9CQ5oqe+40mNr9p8aGDqhfsDUQl37C4GXSczxclrzNie7UaOPk7NMobiqT3WnJK
-	B5dH14aS9Se5ygBv55G9nsXYANp5TFpEj6Jy07EGYElodaH13nRq4zUo4k5xHMgFc78bX1BhlUR
-	tiiNroqAtkjC7P8GiCRwn8WbECt+mGNLcKSIsk3kppsHtfQeQOFLr3GFLEcAG3uCHVxti7O52u5
-	kSJIs8hdbWp+O5rviwYHEleeKLsBPxY8uNFHyg==
-X-Google-Smtp-Source: AGHT+IGsbUh6DxXIIDAIc+hYNcWrRaxqqBY9nNJl1ZK31CCY9lO+b/4ITi+8JpWodsXphv4cIkxwaA==
-X-Received: by 2002:a17:902:ce12:b0:226:3781:379d with SMTP id d9443c01a7336-2295c0ed130mr48778565ad.33.1743518637565;
-        Tue, 01 Apr 2025 07:43:57 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1db99esm89014855ad.159.2025.04.01.07.43.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 07:43:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="BCwo5Xpd"
+Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.140.166])
+	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4ZSLtP73txz1hWr
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Apr 2025 10:38:05 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-dpvsw (unknown [10.111.174.60])
+	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id B7D571FEB7;
+	Wed,  2 Apr 2025 10:38:04 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.96])
+	by ghost-submission-5b5ff79f4f-dpvsw with ESMTPSA
+	id QkQENooT7WfaGQAAFHTgiw:T2
+	(envelope-from <michal.kopec@3mdeb.com>); Wed, 02 Apr 2025 10:38:04 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-96R001035ca41d-e4c1-4c94-ac44-a9b42edb4470,
+                    5FCBFF1DCA98F7E0201DF243E115F3AF9CF69AF3) smtp.auth=michal.kopec@3mdeb.com
+X-OVh-ClientIp:213.192.77.249
+From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	tomasz.pakula.oficjalny@gmail.com,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: platform-driver-x86@vger.kernel.org,
+	piotr.krol@3mdeb.com,
+	maciej.pijanowski@3mdeb.com,
+	michal.kopec@3mdeb.com,
+	linux-hwmon@vger.kernel.org,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: [PATCH v5 1/1] platform/x86: Introduce dasharo-acpi platform driver
+Date: Wed,  2 Apr 2025 12:37:46 +0200
+Message-ID: <20250402103746.92575-2-michal.kopec@3mdeb.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250402103746.92575-1-michal.kopec@3mdeb.com>
+References: <20250402103746.92575-1-michal.kopec@3mdeb.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Apr 2025 11:43:54 -0300
-Message-Id: <D8VDRV58EWSK.MKGI5JBD8RX6@gmail.com>
-Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, "Hans de Goede"
- <hdegoede@redhat.com>, "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- <ibm-acpi-devel@lists.sourceforge.net>,
- <platform-driver-x86@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>, "Damian
- Tometzki" <damian@riscv-rocks.de>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix NULL pointer
- dereferences while probing
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250330-thinkpad-fix-v1-1-4906b3fe6b74@gmail.com>
- <455d5e7d-6f1e-a0a0-773b-85c26418bf54@linux.intel.com>
-In-Reply-To: <455d5e7d-6f1e-a0a0-773b-85c26418bf54@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 1408782259875941650
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeehgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepofhitghhrghlucfmohhpvggtuceomhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpeegjefhhfdtgeeuleethedvkeejkeejvddvhfeftefhueefhffhheeileeivdfffeenucffohhmrghinhepuggrshhhrghrohdrtghomhenucfkphepuddvjedrtddrtddruddpvddufedrudelvddrjeejrddvgeelpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeitdgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=5ZGjYM9dNTmV8zogi7rzAjbqe1FTPJTPKVhPYuuMzI8=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1743590286; v=1;
+ b=BCwo5Xpd4DooJRPVaqFLQph1kLx50RxQdizFUxoUTTTYYKN5h77nu6ckk5vWW0/SAwVkgmht
+ GOhqKN4PoObGildjKAqvC0xc1SELv8WMU5DOngHsapKu1g6KCKC+DkMxst5xgcK4g5I47W6/ut3
+ 4ATWVNkwrerw4+arRg1sXMILQxwV59AiWjvTMAPppyMPCy0jxs6ygN+KN6vF/4OjA6MBn5TXapK
+ 5mGlTQmzNgcA2+d14DJ0A+p30uCjPW/LZWCtGQiJkHhn8PqAwdbkxBYxVjx4kkkwZW3/0rOWeVF
+ GFp1qN62118St0qmcE9zlGd2yxVV1aaq4YjR6mYl0PMuA==
 
-Hi Ilpo,
+Introduce a driver for devices running Dasharo firmware. The driver
+supports thermal monitoring using a new ACPI interface in Dasharo. The
+initial version supports monitoring fan speeds, fan PWM duty cycles and
+system temperatures as well as determining which specific interfaces are
+implemented by firmware.
 
-On Tue Apr 1, 2025 at 8:24 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 30 Mar 2025, Kurt Borja wrote:
->
->> Some subdrivers make use of the global reference tpacpi_pdev during
->> initialization, which is called from the platform driver's probe.
->> However, after
->>=20
->> commit 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initia=
-lization to tpacpi_pdriver's probe.")
->>=20
->
-> Next time, please include these into the paragraph flow normally obeying=
-=20
-> the normal paragraph formatting. I changed them in this case.
+It has been tested on a NovaCustom laptop running pre-release Dasharo
+firmware, which implements fan and thermal monitoring for the CPU and
+the discrete GPU, if present.
 
-Thanks, won't happen next time.
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: Michał Kopeć <michal.kopec@3mdeb.com>
+---
+ MAINTAINERS                         |   6 +
+ drivers/platform/x86/Kconfig        |  10 +
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/dasharo-acpi.c | 345 ++++++++++++++++++++++++++++
+ 4 files changed, 364 insertions(+)
+ create mode 100644 drivers/platform/x86/dasharo-acpi.c
 
->
->> this variable is only properly initialized *after* probing and this can
->> result in a NULL pointer dereference.
->>=20
->> In order to fix this without reverting the commit, register the platform
->> bundle in two steps, first create and initialize tpacpi_pdev, then
->> register the driver synchronously with platform_driver_probe(). This way
->> the benefits of commit 38b9ab80db31 are preserved.
->>=20
->> Additionally,
->>=20
->> commit 43fc63a1e8f6 ("platform/x86: thinkpad_acpi: Move HWMON initializa=
-tion to tpacpi_hwmon_pdriver's probe")
->>=20
->> introduced a similar problem, however tpacpi_sensors_pdev is only used
->> once inside the probe, so replace the global reference with the one
->> given by the probe.
->>=20
->> Reported-by: Damian Tometzki <damian@riscv-rocks.de>
->> Closes: https://lore.kernel.org/r/CAL=3DB37kdL1orSQZD2A3skDOevRXBzF__cJJ=
-gY_GFh9LZO3FMsw@mail.gmail.com/
->> Fixes: 38b9ab80db31 ("platform/x86: thinkpad_acpi: Move subdriver initia=
-lization to tpacpi_pdriver's probe.")
->> Fixes: 43fc63a1e8f6 ("platform/x86: thinkpad_acpi: Move HWMON initializa=
-tion to tpacpi_hwmon_pdriver's probe")
->> Tested-by: Damian Tometzki <damian@riscv-rocks.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->
-> Applied to the review-ilpo-fixes branch.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 00e94bec401e..6d2e0909ac63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6404,6 +6404,12 @@ F:	net/ax25/ax25_out.c
+ F:	net/ax25/ax25_timer.c
+ F:	net/ax25/sysctl_net_ax25.c
+ 
++DASHARO ACPI PLATFORM DRIVER
++M:	Michał Kopeć <michal.kopec@3mdeb.com>
++S:	Maintained
++W:	https://docs.dasharo.com/
++F:	drivers/platform/x86/dasharo_acpi.c
++
+ DATA ACCESS MONITOR
+ M:	SeongJae Park <sj@kernel.org>
+ L:	damon@lists.linux.dev
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0258dd879d64..8168c5274a08 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1060,6 +1060,16 @@ config LENOVO_WMI_CAMERA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called lenovo-wmi-camera.
+ 
++config DASHARO_ACPI
++	tristate "Dasharo ACPI Platform Driver"
++	depends on ACPI
++	depends on HWMON
++	help
++	  This driver provides HWMON support for devices running Dasharo
++	  firmware.
++
++	  If you have a device with Dasharo firmware, choose Y or M here.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e1b142947067..3ca53ae01d93 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -110,6 +110,9 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+ # Inspur
+ obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
+ 
++# Dasharo
++obj-$(CONFIG_DASHARO_ACPI)	+= dasharo-acpi.o
++
+ # Laptop drivers
+ obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
+new file mode 100644
+index 000000000000..bf7e24b7e7cb
+--- /dev/null
++++ b/drivers/platform/x86/dasharo-acpi.c
+@@ -0,0 +1,345 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Dasharo ACPI Driver
++ */
++
++#include <linux/acpi.h>
++#include <linux/hwmon.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/types.h>
++#include <linux/units.h>
++
++enum dasharo_feature {
++	DASHARO_FEATURE_TEMPERATURE = 0,
++	DASHARO_FEATURE_FAN_PWM,
++	DASHARO_FEATURE_FAN_TACH,
++	DASHARO_FEATURE_MAX
++};
++
++enum dasharo_temperature {
++	DASHARO_TEMPERATURE_CPU_PACKAGE = 0,
++	DASHARO_TEMPERATURE_CPU_CORE,
++	DASHARO_TEMPERATURE_GPU,
++	DASHARO_TEMPERATURE_BOARD,
++	DASHARO_TEMPERATURE_CHASSIS,
++	DASHARO_TEMPERATURE_MAX
++};
++
++enum dasharo_fan {
++	DASHARO_FAN_CPU = 0,
++	DASHARO_FAN_GPU,
++	DASHARO_FAN_CHASSIS,
++	DASHARO_FAN_MAX
++};
++
++#define MAX_GROUPS_PER_FEAT 8
++
++static const char * const dasharo_group_names[DASHARO_FEATURE_MAX][MAX_GROUPS_PER_FEAT] = {
++	[DASHARO_FEATURE_TEMPERATURE] = {
++		[DASHARO_TEMPERATURE_CPU_PACKAGE] = "CPU Package",
++		[DASHARO_TEMPERATURE_CPU_CORE] = "CPU Core",
++		[DASHARO_TEMPERATURE_GPU] = "GPU",
++		[DASHARO_TEMPERATURE_BOARD] = "Board",
++		[DASHARO_TEMPERATURE_CHASSIS] = "Chassis",
++	},
++	[DASHARO_FEATURE_FAN_PWM] = {
++		[DASHARO_FAN_CPU] = "CPU",
++		[DASHARO_FAN_GPU] = "GPU",
++		[DASHARO_FAN_CHASSIS] = "Chassis",
++	},
++	[DASHARO_FEATURE_FAN_TACH] = {
++		[DASHARO_FAN_CPU] = "CPU",
++		[DASHARO_FAN_GPU] = "GPU",
++		[DASHARO_FAN_CHASSIS] = "Chassis",
++	},
++};
++
++struct dasharo_capability {
++	unsigned int group;
++	unsigned int index;
++	char name[16];
++};
++
++#define MAX_CAPS_PER_FEAT 24
++
++struct dasharo_data {
++	struct platform_device *pdev;
++	int caps_found[DASHARO_FEATURE_MAX];
++	struct dasharo_capability capabilities[DASHARO_FEATURE_MAX][MAX_CAPS_PER_FEAT];
++};
++
++static int dasharo_get_feature_cap_count(struct dasharo_data *data, enum dasharo_feature feat, int cap)
++{
++	struct acpi_object_list obj_list;
++	union acpi_object obj[2];
++	acpi_handle handle;
++	acpi_status status;
++	u64 count;
++
++	obj[0].type = ACPI_TYPE_INTEGER;
++	obj[0].integer.value = feat;
++	obj[1].type = ACPI_TYPE_INTEGER;
++	obj[1].integer.value = cap;
++	obj_list.count = 2;
++	obj_list.pointer = &obj[0];
++
++	handle = ACPI_HANDLE(&data->pdev->dev);
++	status = acpi_evaluate_integer(handle, "GFCP", &obj_list, &count);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	return count;
++}
++
++static int dasharo_read_channel(struct dasharo_data *data, char *method, enum dasharo_feature feat, int channel, long *value)
++{
++	struct acpi_object_list obj_list;
++	union acpi_object obj[2];
++	acpi_handle handle;
++	acpi_status status;
++	u64 val;
++
++	obj[0].type = ACPI_TYPE_INTEGER;
++	obj[0].integer.value = data->capabilities[feat][channel].group;
++	obj[1].type = ACPI_TYPE_INTEGER;
++	obj[1].integer.value = data->capabilities[feat][channel].index;
++	obj_list.count = 2;
++	obj_list.pointer = &obj[0];
++
++	handle = ACPI_HANDLE(&data->pdev->dev);
++	status = acpi_evaluate_integer(handle, method, &obj_list, &val);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	*value = val;
++	return 0;
++}
++
++static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			      u32 attr, int channel, long *val)
++{
++	struct dasharo_data *data = dev_get_drvdata(dev);
++	long value;
++	int ret;
++
++	switch (type) {
++	case hwmon_temp:
++		ret = dasharo_read_channel(data, "GTMP", DASHARO_FEATURE_TEMPERATURE, channel, &value);
++		if (!ret)
++			*val = value * MILLIDEGREE_PER_DEGREE;
++		break;
++	case hwmon_fan:
++		ret = dasharo_read_channel(data, "GFTH", DASHARO_FEATURE_FAN_TACH, channel, &value);
++		if (!ret)
++			*val = value;
++		break;
++	case hwmon_pwm:
++		ret = dasharo_read_channel(data, "GFDC", DASHARO_FEATURE_FAN_PWM, channel, &value);
++		if (!ret)
++			*val = value;
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
++static int dasharo_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
++				     u32 attr, int channel, const char **str)
++{
++	struct dasharo_data *data = dev_get_drvdata(dev);
++
++	switch (type) {
++	case hwmon_temp:
++		if (channel < data->caps_found[DASHARO_FEATURE_TEMPERATURE])
++			*str = data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].name;
++		break;
++	case hwmon_fan:
++		if (channel < data->caps_found[DASHARO_FEATURE_FAN_TACH])
++			*str = data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].name;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static umode_t dasharo_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
++					u32 attr, int channel)
++{
++	const struct dasharo_data *data = drvdata;
++
++	switch (type) {
++	case hwmon_temp:
++		if (channel < data->caps_found[DASHARO_FEATURE_TEMPERATURE])
++			return 0444;
++		break;
++	case hwmon_pwm:
++		if (channel < data->caps_found[DASHARO_FEATURE_FAN_PWM])
++			return 0444;
++		break;
++	case hwmon_fan:
++		if (channel < data->caps_found[DASHARO_FEATURE_FAN_TACH])
++			return 0444;
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static const struct hwmon_ops dasharo_hwmon_ops = {
++	.is_visible = dasharo_hwmon_is_visible,
++	.read_string = dasharo_hwmon_read_string,
++	.read = dasharo_hwmon_read,
++};
++
++// Max 24 capabilities per feature
++static const struct hwmon_channel_info * const dasharo_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(fan,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL,
++		HWMON_F_INPUT | HWMON_F_LABEL),
++	HWMON_CHANNEL_INFO(temp,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL,
++		HWMON_T_INPUT | HWMON_T_LABEL),
++	HWMON_CHANNEL_INFO(pwm,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT,
++		HWMON_PWM_INPUT),
++	NULL
++};
++
++static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
++	.ops = &dasharo_hwmon_ops,
++	.info = dasharo_hwmon_info,
++};
++
++static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
++{
++	struct dasharo_capability *cap;
++	int cap_count = 0;
++	int count;
++
++	for (int group = 0; group < MAX_GROUPS_PER_FEAT; ++group) {
++		count = dasharo_get_feature_cap_count(data, feat, group);
++
++		if (count <= 0)
++			continue;
++
++		for (unsigned int i = 0; i < count && cap_count < ARRAY_SIZE(data->capabilities[feat]); ++i) {
++			cap = &data->capabilities[feat][cap_count];
++			cap->group = group;
++			cap->index = i;
++			scnprintf(cap->name, sizeof(cap->name), "%s %d", dasharo_group_names[feat][group], i);
++			cap_count++;
++		}
++	}
++	data->caps_found[feat] = cap_count;
++}
++
++static int dasharo_probe(struct platform_device *pdev)
++{
++	struct dasharo_data *data;
++	struct device *hwmon;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++	data->pdev = pdev;
++
++	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
++		dasharo_fill_feature_caps(data, i);
++
++	hwmon = devm_hwmon_device_register_with_info(&pdev->dev,
++		"dasharo_acpi", data, &dasharo_hwmon_chip_info, NULL);
++
++	return PTR_ERR_OR_ZERO(hwmon);
++}
++
++static const struct acpi_device_id dasharo_device_ids[] = {
++	{"DSHR0001", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, dasharo_device_ids);
++
++static struct platform_driver dasharo_driver = {
++	.driver = {
++		.name = "dasharo-acpi",
++		.acpi_match_table = dasharo_device_ids,
++	},
++	.probe = dasharo_probe,
++};
++module_platform_driver(dasharo_driver);
++
++MODULE_DESCRIPTION("Dasharo ACPI Driver");
++MODULE_AUTHOR("Michał Kopeć <michal.kopec@3mdeb.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.49.0
 
-Thank you!
-
->
->> ---
->> Hi all,
->>=20
->> The commit message is pretty self-explanatory. I have one question
->> though. As you can see in the crash dump of the original report:
->>=20
->> Mar 29 17:43:16.180758 fedora kernel:  ? asm_exc_page_fault+0x26/0x30
->> Mar 29 17:43:16.180769 fedora kernel:  ? __pfx_klist_children_get+0x10/0=
-x10
->> Mar 29 17:43:16.180781 fedora kernel:  ? kobject_get+0xd/0x70
->> Mar 29 17:43:16.180792 fedora kernel:  device_add+0x8f/0x6e0
->> Mar 29 17:43:16.180804 fedora kernel:  rfkill_register+0xbc/0x2c0 [rfkil=
-l]
->> Mar 29 17:43:16.180813 fedora kernel:  tpacpi_new_rfkill+0x185/0x230 [th=
-inkpad_acpi]
->>=20
->> The NULL dereference happens in device_add(), inside rfkill_register().
->> This bothers me because, as you can see here:
->>=20
->>  1198                 atp_rfk->rfkill =3D rfkill_alloc(name,
->>  1199                                                 &tpacpi_pdev->dev,
->>  1200                                                 rfktype,
->>  1201                                                 &tpacpi_rfk_rfkill=
-_ops,
->>  1202                                                 atp_rfk);
->>=20
->> the NULL deference happens in line 1199, inside tpacpi_new_rfkill(). I
->> think this disagreement might be due to compile time optimizations?
->
-> How did you map it to line numbers? Is it just about difference in the=20
-> compiled binaries that results in different line numbers?
-
-Oh - I just manually followed the dump trace in search of the first
-instance of a NULL derefence. If I understand correctly, inside
-thinkpad_acpi we do reach rfkill_register(), which is line
-
- 1227         res =3D rfkill_register(atp_rfk->rfkill);
-
-and I imagine the RIP happens when device_add() tries to get a reference
-to the parent of the allocated rfkill device. But it's weird because we
-shouldn't even reach 1227, as the NULL deref first happens at 1199.
-
-NULL deref is UB so I guess it makes sense?
-
-BTW I got all these line numbers using the base commit.
-
---=20
- ~ Kurt
