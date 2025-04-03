@@ -1,88 +1,72 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C22CA6;
-	Thu,  3 Apr 2025 04:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1202719CCEC
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Apr 2025 05:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743653368; cv=none; b=FSmWhHxGZ20M9lIe0j7it1hGKI7Z629ywx+Idvp6i923qSxE8BUm5PzQX1FTGSeQnusVe6IFWqMukIwFesAMHilvfuXFgW4c8prwSU1eBJHHIfZ4Dto9ZBpAhMYb/onoQh69lO90Ov0KHPMFetG4NCRdoGcdfxm9IrLnAkBtwAQ=
+	t=1743658417; cv=none; b=TobqMulmWO06klakZhnqQqnxs6FSvWnJbtbJwpAG3Wucd72eIQ3i4LdUgB2+WX1zBOvAhTryUeail5qHaldOagoNYB/ANf8tvVmZf7ENXWc6UoPFpJTzcZktNWIHRiNW0MRphXIcd2r2N5cB+YwEtkpDhI3Xn5cTWLQ0VFkjMtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743653368; c=relaxed/simple;
-	bh=c2RkKwq3/C/0PD/gh+liCMQ5jVdJrrvUA8Of0RdApvA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=chI0rLTNlQ5vR3EIVvun620t7vqKjAaIxfVWBNj7yxNXi1yFBuAbNwpgUqNnCOWaB7eopcELp0Wm+Yc4fy9iMauyItAFizec+awZtHUxcZfktiFy/F1UFq3Hkeb5A+ycEZZVkFKuasvgApXQ+ybYNjzSGPGC0zWyAsGaRjfGer4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arp242.net; spf=pass smtp.mailfrom=arp242.net; dkim=pass (2048-bit key) header.d=arp242.net header.i=@arp242.net header.b=LwBKeQUV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xgiUBazu; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arp242.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arp242.net
+	s=arc-20240116; t=1743658417; c=relaxed/simple;
+	bh=64tpOsCSu851Tm3qmFwxaUEUBcvnVdEjZLiLFeuR8hQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jr1oNCTT73P3SzDTkGzmaRnc5z068eH5cwtBe1vCahoFao5ZmUtrGsFd3gB0bdq7R4ruL8udcufxtyHIU6OHJjkVQ165TIo0itl4ZYcYyIHkzCxCVtqX2N8ew2Tv9gVjKOXynmv0TubEYIF+Agy2aiAYIi/bjrMhQPOWsL+Gc4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODCEbPof; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arp242.net header.i=@arp242.net header.b="LwBKeQUV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xgiUBazu"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1AF0111401D9;
-	Thu,  3 Apr 2025 00:09:24 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Thu, 03 Apr 2025 00:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arp242.net; h=cc
-	:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1743653364; x=1743739764; bh=ObwGaDyomkVUjntLDINpY
-	n/EaMWFq6k3+MIClMLrR24=; b=LwBKeQUVXQG1C7A8On7rdlGjAvMH9Djxt9j/d
-	GpVx+F+muL+aSiQHJHhFbmzSLssFr6aOp8VegxJZF8J7jQiRYr8FpNxwPK+q74Q4
-	th0CcCF/k/JhKjSkHY8vbnxmRYxEv6OoVn/WopBu7tZdwSGJnGPVyxOzwfjz3591
-	dRAWRkdRbZpCWne44UJvsFbuX/PwU86gpSWIPoq1jXwZFZANr4JbvQEyfRyYr9i9
-	HT5B5tgVfa4jJLy7X34V9jGxeL1xLo5roiCvtAhMTEXxFfv7sV/aSv1CCDjyBdBj
-	zezarRNagZpzfsYNzZLWSxa2dEBks1yVyGE5rQMvmhy724hJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743653364; x=1743739764; bh=ObwGaDyomkVUjntLDINpYn/EaMWFq6k3+MI
-	ClMLrR24=; b=xgiUBazuCL6ORVu0QyjEE3G5qmOfWSI9a/PUryaCN1/wNjFWemz
-	k9IABBknS7lTJEF6mp8OnrXdR+jtcyC75bx5KQqbgwYiK0LFrU3SoZtdh5hN9fTB
-	nw9QqEzCvyJcK/oV5M0fe6CKDs7+yT2KVE8Qos0Rcw4f+/6zPInP3i0W/xtNAYsJ
-	ZH8hfwTrBJSbAIKdVjcEpNBH2ICnSH0LlaZmrpUT6h5tQDaJS7Hje5Ky29UrjpIi
-	cA9Wj13ysRFbPEXLFZ90/jeIpA5ES+U8yCATrP89eYXMNpbFlqODABAnE4uTtbEp
-	QXIrzZu0o9RWyjimoLYrrvgJsu60Q2Rhzmg==
-X-ME-Sender: <xms:8wnuZ9NfAHHXVmcV9tkCnmhrVUKfIAPaQuXT7ye_aYb4Bi8RHCUU1A>
-    <xme:8wnuZ_96ugsLu4IjL9htLucRm5l-kq2IHyC2LLZ9L1QvRV0FbRvSqAo6z2WCC0NBh
-    dVR2GosXVDPMzjvlg>
-X-ME-Received: <xmr:8wnuZ8TQWwUbzHIAr4USOY5JsSHxgkw0XnfGHeHLlAwUGhQuu_sHTQEqq7s2wQosbayqAM1uY4bBcGWCNFgF5M-PthrCCb0NHiBIgBRwJwpc-OH35wRIGEoKK3vleKn->
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeejheeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecu
-    hfhrohhmpeforghrthhinhcuvfhouhhrnhhoihhjuceomhgrrhhtihhnsegrrhhpvdegvd
-    drnhgvtheqnecuggftrfgrthhtvghrnheptdehteekieeffefhjedvteeffeevleekhefh
-    veettdeufffhfeeuvdehtdfguddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhgrrhhtihhnsegrrhhpvdegvddrnhgvthdpnhgspghrtghp
-    thhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhtihhnsegrrh
-    hpvdegvddrnhgvthdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphht
-    thhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhord
-    hjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghm
-    qdgrtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprh
-    gtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:8wnuZ5tnO3evJPBjdPWIeXSzuwmSgGlgvjY91zuZwmE4hagw43q3PA>
-    <xmx:8wnuZ1cjiEyBf8gvGTU_Ji41CJhKotAkncuZK6VQjDF2JvR8zovA1g>
-    <xmx:8wnuZ13S0WzAbwdPfC6bCthplg_yZ3X5spepJvOyOjH-Nez1T_WwPQ>
-    <xmx:8wnuZx-xr94YlQJKcOcj0y1F9iHhNySz252z2JiNRS_CTi6X8rWDIw>
-    <xmx:9AnuZz7WiTNm0trX80mv8-A-E_bsVuhfxes_LCp9PjHOd0NWYqGMnYKR>
-Feedback-ID: i27f8409c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 3 Apr 2025 00:09:22 -0400 (EDT)
-From: Martin Tournoij <martin@arp242.net>
-To: Martin Tournoij <martin@arp242.net>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODCEbPof"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b98acaadso462683b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Apr 2025 22:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743658415; x=1744263215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dWJv5oRfGpcdT3oNJyuapUxcfcU/e/rM/U1wGsQvEJo=;
+        b=ODCEbPofih5vBe/l/q6zVV857Fb8TogRS9wZmreOaAPh0+HIDRWLHqJPnr9WdJfChf
+         C9eQ/wrjJpeN46S+emk6wNzVk6kZ0DUYkqkgcnCuKWz49lbazUaN2aCEuUFWRO6D0vs4
+         FjybNn46a+iyyXhiY60A/aVJ64LiKhBaVyGNFuuM4NLgqKMPaV6ivjgrqoDhraz6oKyV
+         dVh97feTOZ9JAvoLv677jiepgJnDJT+w6PovRiyu44z4EaCagzolOrq89PEzmI/ai67x
+         JDLd3+Ruht0DBcVr43IuWsZEAHEIGG5UANmPqcmqGp+/kOoBJtRtu8a4Wi2aMqEVMs4V
+         VkIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743658415; x=1744263215;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dWJv5oRfGpcdT3oNJyuapUxcfcU/e/rM/U1wGsQvEJo=;
+        b=WJkc0BQWki35nqK/y38n4qpAp+YmJLfnYvN2jYeTAD95av7Tvfo2JJcLkYFk1MtUlM
+         g2DGFDFJCsdVOH315NTcPvuNhxrVKL0cz4RsGIicmR4B/skjpHR8T65vp/gI6FTO+Fzb
+         BXqD2Xla8dbc7VAAXOnaKDJu6MruWyEIZCtmYNLdEab3mNpknkw/Fiw4pZ6R5wMplvgS
+         8KsmrIpFJEdkNMIGvZbrKuMjpq7OFX6k9V0E2nzucPRv4rajeRKUqK0PAsjwaI11EOhd
+         YNcRwpuDieilv1TlDUiNbBx9NFa4fExaqmwf0m1BiK0G37xRVUvvWSsUXTFA58yOaeka
+         8Qyg==
+X-Gm-Message-State: AOJu0YxrzI5L0piVFUiT2GKraysNnMJ7dPw4zTvJh2+g212/j8IK5b1Y
+	Q1QgR1Cq9pTjXSQXZdzpst/KvfUL511zeDUZREL0iSpNjGPk9hsD
+X-Gm-Gg: ASbGncstanU6t2rNwGsahVh/7oalAlcCmrESQmMHBs9j6dVqU76XLxun0efc0nLAAJ/
+	di12ggERE3giQ4GYlVOFxi+tTX28c3W8yRS9v62lJeY6oVMIivDAv5xwmGUGm1Km5wUy/zqpH5W
+	Qwg0WYpm2EORoCRUc1i6ncxiDFV8O0ebPUwi8FgLkNX5Z8rATGO6VdF35IeIrz/K2/xyq3XU268
+	6aQokZqWNgpqHS3r6S9Ej0TdnA6c/8kgemohVHme6uxuKnetg+omDDmrrHLNAbm0An9Rhvxqg+m
+	K9XkMtIgpogrnQ5cvHJhP3GNyHfv0KGLbV3nqyc0ZbqDcRZdSw8zjmaes8+ZGDNQ37CJanmTvKe
+	BKWYdTrhll9F9bPFYCHodnrArlVEkNW2hy4x+TbzYhMcZegc=
+X-Google-Smtp-Source: AGHT+IH67+eaOowG/Ie5nUPnrEDoJYCtXe4BvXGrbNHAkWeP7NtJmiON1E0cpgdC+TDNHi/3NBcfjA==
+X-Received: by 2002:a05:6a21:99a3:b0:1f5:7873:3041 with SMTP id adf61e73a8af0-200e4c1d3a6mr8055558637.18.1743658415089;
+        Wed, 02 Apr 2025 22:33:35 -0700 (PDT)
+Received: from nitin-ThinkPad-X1-2-in-1-Gen-9.. (127.37.178.217.static.user.transix.jp. [217.178.37.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e7deasm551614b3a.170.2025.04.02.22.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 22:33:34 -0700 (PDT)
+From: Nitin Joshi <nitjoshi@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org,
 	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add charging indicator to the list of safe LEDs
-Date: Thu,  3 Apr 2025 05:08:46 +0100
-Message-ID: <20250403040846.7834-1-martin@arp242.net>
-X-Mailer: git-send-email 2.49.0
+	njoshi1@lenovo.com,
+	mpearson-lenovo@squebb.ca,
+	Nitin Joshi <nitjoshi@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey for camera shutter switch
+Date: Thu,  3 Apr 2025 14:31:27 +0900
+Message-ID: <20250403053127.4777-1-nitjoshi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -91,41 +75,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add "tpacpi:orange:batt" and "tpacpi:green:batt" to the list of safe
-LEDs. These LEDs are next to the charging port and indicate the status:
-"tpacpi:orange:batt" when charging the battery, and "tpacpi:green:batt"
-when it's near full (typically white these days, not green).
+New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
+has new shortcut on F9 key i.e to switch camera shutter and it
+send a new 0x131b hkey event when F9 key is pressed.
 
-I don't see why it would be unsafe to enable/disable these LEDs: the
-only thing you lose is a LED telling you if the battery is charging or
-full. These indicators are informational and not critical
-
-I got a new x13 a few months ago; on my old x280 the firmware would
-automatically turn off the light once charging stopped, but on more
-recent models it always stays on unless I disable it. I need to compile
-a custom kernel now just for that, which is rather a pain. So I would
-like to propose to expose these options.
-
-Tested on my x280 and x13 Gen 4 AMD.
-
-Signed-off-by: Martin Tournoij <martin@arp242.net>
+This commit adds support for new hkey 0x131b.
+Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/thinkpad_acpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 0384cf311878..edf7c97aeef9 100644
+index 0384cf311878..80f77f9c7a58 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5518,7 +5518,7 @@ static const char * const tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
- 	"tpacpi::unknown_led3",
- 	"tpacpi::thinkvantage",
- };
--#define TPACPI_SAFE_LEDS	0x1481U
-+#define TPACPI_SAFE_LEDS	0x1487U
- 
- static inline bool tpacpi_is_led_restricted(const unsigned int led)
- {
+@@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
+ 						   * directly in the sparse-keymap.
+ 						   */
+ 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
++	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
+ 	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
+ 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
+ 	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
+@@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
+ 	 * after switching to sparse keymap support. The mappings above use translated
+ 	 * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
+ 	 */
++	{ KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
+ 	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
+ 	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
+ 	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
 -- 
-2.49.0
+2.43.0
 
