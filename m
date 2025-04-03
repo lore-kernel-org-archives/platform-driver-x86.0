@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337552E3385;
-	Thu,  3 Apr 2025 10:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450F51DF975;
+	Thu,  3 Apr 2025 11:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677648; cv=none; b=djxrzf6ZZzL9jaV9orazBeeWuUNyYji0coW6ta8L0O1ns5PyJu0AWec/E4lo7/X5hmohUSwzlcGTvVAhMkhE++eRFRSxirNN3AVqbd476fyyqvREF5JBNny0R4SerBoo+9PrV/cWhnsS2tTzffo+O/GyTfYh7kZe4jAfEj3Q4OM=
+	t=1743678075; cv=none; b=NAgQoNFI3sEY3hgn80bN6ukA9ViwxS0o5juXnIoaPMSnAWEhZnAdiaaQl/X3pd8C3AcAJ+g2htT4cLXLQ1akBCkG2JhQMUDxWnpCZbulLGAXsAl/JZRt9h28vO2JQR9A/+BuHkA955JPuf3bBEEXDfF9DU7c0dbapLzrsF6uuvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677648; c=relaxed/simple;
-	bh=HL2bZeN/6TrOkvPvEDWvjU2rnNHuuFI0DJdwxDFEfpQ=;
+	s=arc-20240116; t=1743678075; c=relaxed/simple;
+	bh=WjKn5Ft50bkDAgGzKhNHOlAwAuzRWcLtV657VipXF3k=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i7RX9XtfgVzO41xIQGaed2cve8zAJUtAlOul32sHg1Jz9s0SYjX2EcRDzEduyzt7sisgIKLyyQxyxrqaYwvxHtGzmykB2BENDUDSQDgc1KU0yf0yWBOR97ZMYdGsK5lvmhl19bXNaor/u7mZSrYaWRpaOzvEapSuwvleGanfAQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxLsZ69Z; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version:Content-Type; b=iZuwFcjF5rphbqWrvB8fKX1f8tfuPOuF9jhDjsNBnGuSLn7TABL3PUQxUBvywMQR7AvbJwILawuKksQcy+aItXA/ao9g8Cv9296hHnAXEq78jZtuyoRzsbnpkaJkN7xCSrpyoU05y8OSJEv5DcLaLmKx2KZqHOh36qNMCmn9bv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=doDflvhw; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxLsZ69Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="doDflvhw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743677647; x=1775213647;
+  t=1743678073; x=1775214073;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HL2bZeN/6TrOkvPvEDWvjU2rnNHuuFI0DJdwxDFEfpQ=;
-  b=fxLsZ69ZQuXNqWczYBVh8FWa4j8pNYkCOaviXxqfEv3k/FQHl2bO9W5G
-   5Wwvdmalmkt8yo/lpQUd8G0oNfCIH2tVPwxB8XaXRdBdc5H9LqKtThRWr
-   LuDngDVZ/ZKBtJcNm4nlnrU2pXkY44h9u9YyjIc7LapF45iKBMCYYknLf
-   jqj6Dg1oB8f8hLfV2GWUycmNA9k9NpZpf1lJ0SltbWW0leIOmghpdQemF
-   EEiOm7JZFgMvL4AE1gWhjXExD4iVTNFj4UrJ2W7QtA5UcWtROIY6BsZeY
-   kFPuXcVmPWXKQx127vRf4pyRJ3tjtNvs3xJSH+RnFWFm/V/ORNY3ltkOS
-   A==;
-X-CSE-ConnectionGUID: bjb5qYENSiKB3O9S1s5rFg==
-X-CSE-MsgGUID: dRlBPgRnQBOw11var4MHQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44791483"
+  bh=WjKn5Ft50bkDAgGzKhNHOlAwAuzRWcLtV657VipXF3k=;
+  b=doDflvhwHjj6v8dL4upMZtjNQ7Kn+J6TtMcqG8ZZ3EVxOCDNs0PPN/td
+   sA1R7fqODCn0/J5LFz2Hz5F1ickwInTgjke/uUD0Rd66vpzYWi8bAw99Z
+   MjvVwa0PfMitBXxforotQdAFZ1vBarpn3u1K3SWOHhhthZuHLY/m4S9a+
+   VXYifIrt/sXu7/auYKv7TlnOyLbU5V/nw2t4irs2ar2TR8+ArB7FEMB+z
+   OdaUJnxKhr3XdrQQasE5N46seW5/tB4cMJb14znHT5rSoaQsQzQK26X/m
+   2V5DFlOTjzklK1DyQ0Hv9yGLBAVDx+zBzoMsWj2DV4F+mdztHLyfeZfhY
+   g==;
+X-CSE-ConnectionGUID: lx17ApQVSea5d7LUizKxzw==
+X-CSE-MsgGUID: EsxBxmSSTbaXAr9bYaYC1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45219521"
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44791483"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:54:05 -0700
-X-CSE-ConnectionGUID: oxi6xKPlS/ClIRGIeX+iFA==
-X-CSE-MsgGUID: O7/WCy3ATK6shXcHXXc5XQ==
+   d="scan'208";a="45219521"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:01:12 -0700
+X-CSE-ConnectionGUID: unhoSeMDSICr7iPwhg5Iew==
+X-CSE-MsgGUID: EKA112bwQaSIOpec3ME2tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127483765"
+   d="scan'208";a="131099993"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:54:01 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:01:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Apr 2025 13:53:58 +0300 (EEST)
+Date: Thu, 3 Apr 2025 14:01:05 +0300 (EEST)
 To: Derek John Clark <derekjohn.clark@gmail.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
     Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
@@ -55,64 +55,55 @@ cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
     "Cody T . -H . Chiu" <codyit@gmail.com>, 
     John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 6/6 RESEND] platform/x86: Add Lenovo Gamezone WMI
- Driver
-In-Reply-To: <CAFqHKTk30hV5UuXjpfHs_0CT=5cfbPkiW4im4uHO4dC=9d9AqQ@mail.gmail.com>
-Message-ID: <345fc20a-5658-3c1d-3c3d-cfb3b2e31a3c@linux.intel.com>
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com> <20250317144326.5850-7-derekjohn.clark@gmail.com> <be11f12b-d610-6130-180a-476d7958f2b9@linux.intel.com> <CAFqHKTk30hV5UuXjpfHs_0CT=5cfbPkiW4im4uHO4dC=9d9AqQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6 RESEND] platform/x86: Add Lenovo Capability Data
+ 01 WMI Driver
+In-Reply-To: <CAFqHKTmPChKu935zrHJWX1jF9mMg3kb5GFBQ=ogy66LnO6bfQA@mail.gmail.com>
+Message-ID: <ef3078d2-4ab5-9d5f-e1ba-42f595b3dd48@linux.intel.com>
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com> <20250317144326.5850-5-derekjohn.clark@gmail.com> <9138d1c8-0713-e28a-3cdf-590b3f4e9449@linux.intel.com> <CAFqHKTmPChKu935zrHJWX1jF9mMg3kb5GFBQ=ogy66LnO6bfQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1685862956-1743677638=:1302"
+Content-Type: multipart/mixed; boundary="8323328-773067350-1743678065=:1302"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1685862956-1743677638=:1302
+--8323328-773067350-1743678065=:1302
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Wed, 2 Apr 2025, Derek John Clark wrote:
 
-> On Thu, Mar 27, 2025 at 6:56=E2=80=AFAM Ilpo J=C3=A4rvinen
+> On Thu, Mar 27, 2025 at 5:56=E2=80=AFAM Ilpo J=C3=A4rvinen
 > <ilpo.jarvinen@linux.intel.com> wrote:
 > >
 > > On Mon, 17 Mar 2025, Derek J. Clark wrote:
 > >
-> > > Adds lenovo-wmi-gamezone driver which provides the Lenovo Gamezone WM=
-I
-> > > interface that comes on Lenovo "Gaming Series" hardware. Provides ACP=
-I
-> > > platform profiles over WMI.
+> > > Adds lenovo-wmi-capdata01 driver which provides the
+> > > LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
+> > > enabled hardware. Provides an interface for querying if a given
+> > > attribute is supported by the hardware, as well as its default_value,
+> > > max_value, min_value, and step increment.
 > > >
 > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> >
-> > This has a few similar nits I flagged for the other patches but I won't
-> > mark them here again but please go through the patches to find similar
-> > cases.
-> >
 > > > ---
 > > > v4:
-> > > - Add notifier blocks for the Events and Other Mode drivers.
-> > > - Remove notifier block chain head and all reference to Thermal Mode
-> > >   Event GUID.
-> > > - Add header for Gamezone specific structs and functions.
-> > > - Various fixes from review.
+> > >  - Make driver data a private struct, remove references from Other Mo=
+de
+> > >    driver.
+> > >  - Don't cache data at device initialization. Instead, on component b=
+ind,
+> > >    cache the data on a member variable of the Other Mode driver data
+> > >    passed as a void pointer.
+> > >  - Add header file for capdata01 structs.
+> > >  - Add new struct to pass capdata01 array data and array length to Ot=
+her
+> > >    Mode.
 > > > v3:
-> > > - Use notifier chain to report platform profile changes to any
-> > >   subscribed drivers.
-> > > - Adds THERMAL_MODE_EVENT GUID and .notify function to trigger notifi=
-er
-> > >   chain.
-> > > - Adds support for Extreme Mode profile on supported hardware, as wel=
-l
-> > >   as a DMI quirk table for some devices that report extreme mode vers=
-ion
-> > >   support but so not have it fully implemented.
-> > > - Update to include recent changes to platform-profile.
+> > > - Add as component to lenovo-wmi-other driver.
 > > > v2:
 > > > - Use devm_kmalloc to ensure driver can be instanced, remove global
 > > >   reference.
@@ -121,58 +112,211 @@ ion
 > > > - Use guard(mutex) in all mutex instances, global mutex.
 > > > - Use pr_fmt instead of adding the driver name to each pr_err.
 > > > - Remove noisy pr_info usage.
-> > > - Rename gamezone_wmi to lenovo_wmi_gz_priv and gz_wmi to priv.
-> > > - Remove GZ_WMI symbol exporting.
+> > > - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
+> > > - Use list to get the lenovo_wmi_cd01_priv instance in
+> > >   lenovo_wmi_capdata01_get as none of the data provided by the macros
+> > >   that will use it can pass a member of the struct for use in
+> > >   container_of.
 > > > ---
-> > >  MAINTAINERS                                |   2 +
-> > >  drivers/platform/x86/Kconfig               |  13 +
-> > >  drivers/platform/x86/Makefile              |   1 +
-> > >  drivers/platform/x86/lenovo-wmi-gamezone.c | 380 +++++++++++++++++++=
+> > >  MAINTAINERS                                 |   2 +
+> > >  drivers/platform/x86/Kconfig                |   4 +
+> > >  drivers/platform/x86/Makefile               |   1 +
+> > >  drivers/platform/x86/lenovo-wmi-capdata01.c | 136 ++++++++++++++++++=
 ++
-> > >  drivers/platform/x86/lenovo-wmi-gamezone.h |  18 +
-> > >  5 files changed, 414 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
-> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+> > >  drivers/platform/x86/lenovo-wmi-capdata01.h |  29 +++++
+> > >  5 files changed, 172 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
 > > >
-
-> > > diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.h b/drivers/pla=
-tform/x86/lenovo-wmi-gamezone.h
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 6dde75922aaf..56ead241a053 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -13164,6 +13164,8 @@ L:    platform-driver-x86@vger.kernel.org
+> > >  S:   Maintained
+> > >  F:   Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> > >  F:   Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > +F:   drivers/platform/x86/lenovo-wmi-capdata01.c
+> > > +F:   drivers/platform/x86/lenovo-wmi-capdata01.h
+> > >  F:   drivers/platform/x86/lenovo-wmi-events.c
+> > >  F:   drivers/platform/x86/lenovo-wmi-events.h
+> > >  F:   drivers/platform/x86/lenovo-wmi-helpers.c
+> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+> > > index 13b8f4ac5dc5..64663667f0cb 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
+> > >       tristate
+> > >       depends on ACPI_WMI
+> > >
+> > > +config LENOVO_WMI_DATA01
+> > > +     tristate
+> > > +     depends on ACPI_WMI
+> > > +
+> > >  config IDEAPAD_LAPTOP
+> > >       tristate "Lenovo IdeaPad Laptop Extras"
+> > >       depends on ACPI
+> > > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Mak=
+efile
+> > > index fc039839286a..7a35c77221b7 100644
+> > > --- a/drivers/platform/x86/Makefile
+> > > +++ b/drivers/platform/x86/Makefile
+> > > @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
+> > >  obj-$(CONFIG_YOGABOOK)               +=3D lenovo-yogabook.o
+> > >  obj-$(CONFIG_YT2_1380)               +=3D lenovo-yoga-tab2-pro-1380-=
+fastcharger.o
+> > >  obj-$(CONFIG_LENOVO_WMI_CAMERA)      +=3D lenovo-wmi-camera.o
+> > > +obj-$(CONFIG_LENOVO_WMI_DATA01)      +=3D lenovo-wmi-capdata01.o
+> > >  obj-$(CONFIG_LENOVO_WMI_EVENTS)      +=3D lenovo-wmi-events.o
+> > >  obj-$(CONFIG_LENOVO_WMI_HELPERS)     +=3D lenovo-wmi-helpers.o
+> > >
+> > > diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/pl=
+atform/x86/lenovo-wmi-capdata01.c
 > > > new file mode 100644
-> > > index 000000000000..ac536803160b
+> > > index 000000000000..b6876611ffd9
 > > > --- /dev/null
-> > > +++ b/drivers/platform/x86/lenovo-wmi-gamezone.h
-> > > @@ -0,0 +1,18 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-or-later
+> > > +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
+> > > @@ -0,0 +1,136 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * LENOVO_CAPABILITY_DATA_01 WMI data block driver.
+> >
+> > Add a empty comment line here, you might want to rephrase the opening o=
+f
+> > the paragraph after splitting these apart.
+> >
+> > > This interface provides
+> > > + * information on tunable attributes used by the "Other Mode" WMI in=
+terface,
+> > > + * including if it is supported by the hardware, the default_value, =
+max_value,
+> > > + * min_value, and step increment.
 > > > + *
 > > > + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> > > + *
 > > > + */
 > > > +
-> > > +#ifndef _LENOVO_WMI_GAMEZONE_H_
-> > > +#define _LENOVO_WMI_GAMEZONE_H_
+> > > +#include <linux/cleanup.h>
+> > > +#include <linux/component.h>
+> > > +#include <linux/container_of.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/gfp_types.h>
+> > > +#include <linux/types.h>
+> > > +#include <linux/wmi.h>
+> >
+> > Add an empty line here please.
+> >
+> > > +#include "lenovo-wmi-capdata01.h"
 > > > +
-> > > +enum thermal_mode {
-> > > +     SMARTFAN_MODE_QUIET =3D 0x01,
-> > > +     SMARTFAN_MODE_BALANCED =3D 0x02,
-> > > +     SMARTFAN_MODE_PERFORMANCE =3D 0x03,
-> > > +     SMARTFAN_MODE_EXTREME =3D 0xE0, /* Ver 6+ */
-> > > +     SMARTFAN_MODE_CUSTOM =3D 0xFF,
+> > > +/* Interface GUIDs */
+> > > +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3=
+BE018154"
+> > > +
+> > > +struct lwmi_cd01_priv {
+> > > +     struct wmi_device *wdev;
 > > > +};
 > > > +
-> > > +#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
-> > >
+> > > +/*
+> > > + * lenovo_cd01_component_bind() - On master bind, caches all capabil=
+ity data on
+> > > + * the master device.
 > >
-> > Are these going the be used by other .c files?
+> > Is this "On master bind" something that the caller should be doing? IMO=
+,
+> > that would belong to description paragraph instead of the function
+> > summary.
 > >
 >=20
-> They are used across different c files in this series. The
-> lenovo-wmi-other driver uses every header.
+> Acked
+>=20
+> > > + * @cd01_dev: Pointer to the capability data 01 parent device.
+> > > + * @om_dev: Pointer to the other mode parent device.
+> > > + * @data: capdata01_list object pointer to return the capability dat=
+a with.
+> > > + *
+> > > + * Returns: 0, or an error.
+> >
+> > Return:
+> >
+> > > + */
+> > > +static int lenovo_cd01_component_bind(struct device *cd01_dev,
+> > > +                                   struct device *om_dev, void *data=
+)
+> > > +{
+> > > +     struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
+> > > +     int count, idx;
+> > > +
+> > > +     if (!priv)
+> > > +             return -ENODEV;
+> > > +
+> > > +     count =3D wmidev_instance_count(priv->wdev);
+> > > +
+> > > +     if (count =3D=3D 0)
+> > > +             return -EINVAL;
+> > > +
+> > > +     ((struct cd01_list *)data)->count =3D count;
+> >
+> > Please create a local variable with the correct type and since data is
+> > void *, you don't need to cast it while assigning to that local variabl=
+e.
+> >
+>=20
+> This will be reworked a bit with Armin's suggestions.
+>=20
+> > > +     ((struct cd01_list *)data)->data =3D devm_kmalloc_array(om_dev,=
+ count,
+> > > +                                                           sizeof(st=
+ruct capdata01 *),
+> >
+> > sizeof() should preferrably take the type directly from ->data (with th=
+e
+> > correct amount of * chars).
+> >
+>=20
+> With Armin's suggestion I'll be using struct_size, but I'll note this
+> for future reference, thanks.
+>=20
+> > > +                                                           GFP_KERNE=
+L);
+> > > +     if (!data)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     for (idx =3D 0; idx < count; idx++) {
+> > > +             union acpi_object *ret_obj __free(kfree) =3D NULL;
+> > > +
+> > > +             ret_obj =3D wmidev_block_query(priv->wdev, idx);
+> > > +             if (!ret_obj) {
+> > > +                     ((struct cd01_list *)data)->data[idx] =3D NULL;
+> > > +                     continue;
+> > > +             }
+> > > +             if (ret_obj->type !=3D ACPI_TYPE_BUFFER) {
+> > > +                     ((struct cd01_list *)data)->data[idx] =3D NULL;
+> > > +                     continue;
+> > > +             }
+> > > +
+> > > +             if (ret_obj->buffer.length !=3D sizeof(struct capdata01=
+)) {
+> >
+> > You could consider joining these 3 if()s with || to avoid having to
+> > repeat the NULL assignment and continue.
+> >
+>=20
+> devm_kzalloc will take care of the NULL assignment going forward. for
+> !ret_obj, should I return an error here instead? It seems like a
+> problem if that fails.
 
-Oh, how can this then be the last patch of the series???
+Sure, if you think something is an indication of a bigger problem that=20
+requires giving up.
 
-Won't the build fail before this patch for lenovo-wmi-other.c?
+
+BTW, in general (not related to this particular comment), you don't have=20
+reply/ack those review comments you're going to implement as I suggested.=
+=20
+I trust you to make the changes you don't contest :-).
+
+That way, we can focus on the points that need further discussion.
 
 --=20
  i.
 
---8323328-1685862956-1743677638=:1302--
+--8323328-773067350-1743678065=:1302--
