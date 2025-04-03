@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C0726AFB;
-	Thu,  3 Apr 2025 01:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F60746E;
+	Thu,  3 Apr 2025 01:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743644421; cv=none; b=TYsZglw4J1rmLKcB5DQX13A0RyYm3JSP7fReCMo2fR4udvDEQLOcDxz3MbDTfBEj33IIC70QUTfZH5s4F4nigthbHUyfhzWdFTJw2cb8xgLxmlRGQLTgOdR/Qae/QVZo9Egl+IUgiFwxnJlDjAHcU1HRBNxR8+T4K+paLopv+KY=
+	t=1743644940; cv=none; b=eF2pOADwvN1xpF9G5UInPc674iOR2YJ6/nogisrKpiMUx2FdQs8CXPfk+wnWZSrykaZYPGWYMbgu4cCvogf5TGEBZQtr3bHBxiojB4RLDCuHNpgYZsAESQHB6nPvI1tAr+PaPW5Q+0m/4eYknGm2rlW9kQdKxrX+wGyerq4mreM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743644421; c=relaxed/simple;
-	bh=s7u5mxYYwl1wKTrRuYQxaYNX/EYu1N1SvhKWLrv7dHI=;
+	s=arc-20240116; t=1743644940; c=relaxed/simple;
+	bh=05swC2QjNYjm9AtP7yNjsgW48VrmyZjYyOS2lFzaiXM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYr1FRXHf9TD+Q3OUbt4hPkZfsjFitvr8piVMRQHu68RM1XUZh+2WX+FeFOscQTXmthZ1n7jvja3SvI5Czi9QLdjZ9G8VddRmTd1dF9+4cHWb2PmnOK58kVU16BLetl0LirEP3w4xjtGtSS4cidCucyBQUwNqH+B3lUY8LklYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LPMaM1Lv; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=Ifv0+Z7W3AO6KYcD7RAZRkaPkTPxlsz4Ljd4WRbFPKrHQo5XO8r3gRzvLtzptphRb2rSqom7I/qjyqab5/tmF3zlTea2hk5KikmnWxp08iZBE/JX6CKm7FIh1ZVna0NaoOJV26sNNSsdj/dHjAkAT3z+lmbFIxu0je940iF6h20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DLoZbvoB; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LPMaM1Lv"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DLoZbvoB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1743644414; x=1744249214; i=w_armin@gmx.de;
-	bh=M5+t7lkNn4b/GQ6zRwlMxmsQuZeGUjKsZmFP+02dGW8=;
+	s=s31663417; t=1743644927; x=1744249727; i=w_armin@gmx.de;
+	bh=05swC2QjNYjm9AtP7yNjsgW48VrmyZjYyOS2lFzaiXM=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=LPMaM1LvWh2qrW04mzwaxrCtQMStbrnR/d91+AAmI1jjRLGCYimMUNN1mZMA78xh
-	 lIkqj0Z2LOeVjF/2IapeVzCt4KEWdLY9dMlfyLlUW6kXZes4rqUGgjrn/0jkeSQAA
-	 Eh+R011LbJcH9SgexAYb/nn11hKBFRe5iuPuojtvvRFo5qxrLAjtuyZscPoPq+oTK
-	 M4ZZNhf5dxoqKp6CcxMjP00c9zsj5SDyEdYJTKZtXIbBbV/+A7+0Ac+l2Qgvf8cTW
-	 NpMUz4o7V5ENvgKYV1i6nFybJS++AVJHgwjVe04U8HfWS0ZPJ8tZBbDPYMxFpkToi
-	 MXgvPV87ZVV+SsghXg==
+	b=DLoZbvoBUBIXD2ucDF/b3amaPq72NSUFnp1kkEvrvI/F7qWT5wcqYje4jyV1fLVs
+	 S3gLvi0Idk67b9BXukI7YZeuqZl+Z6nud93oPgvPzz6AX3c/iyjod1zsNdbO56jWH
+	 HEgK1f0ehwyzS4MJBms+bfISjPpHIo419HNxH8oIyDsl+C0Yax1myZhVhoyL6Innj
+	 5NE70v0vdVLNOF9nz7a3gPyWYSxxRYh4dZuUTRRhp3qVzW63Tb4TJs/7Bi0B+gQnc
+	 +ZAHfUvOrImXIF01b2RsEtqbFgN76Ij0UT33PwcURzOh192UzPdbK6yR3mKJT0HQG
+	 kAV7zsOPkLS9wUu5MA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MGyxN-1tw0gX1mQl-008hKK; Thu, 03
- Apr 2025 03:40:14 +0200
-Message-ID: <d5920e7b-2e5e-4958-b7e4-5e1395aa0e24@gmx.de>
-Date: Thu, 3 Apr 2025 03:40:12 +0200
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MatVh-1tOtCX34VH-00i9kt; Thu, 03
+ Apr 2025 03:48:46 +0200
+Message-ID: <b52d9855-6433-4487-b006-34eeca8e2e9d@gmx.de>
+Date: Thu, 3 Apr 2025 03:48:44 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,309 +43,202 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6 RESEND] platform/x86: Add Lenovo Capability Data 01
- WMI Driver
-To: Derek John Clark <derekjohn.clark@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
- <20250317144326.5850-5-derekjohn.clark@gmail.com>
- <de122cb5-e245-43e9-8bd7-2fcff1426203@gmx.de>
- <CAFqHKT=6iKG4UmF2-PUESCDDnLcgzon5Z3UqJd+vNrXLXf9CSQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86/amd: pmf: Use meta + L for screen lock
+ command
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mario Limonciello <superm1@kernel.org>, Shyam-sundar.S-k@amd.com,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, dmitry.torokhov@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+References: <20250321193052.2973537-1-superm1@kernel.org>
+ <3b7c719f-8aa6-424f-92a0-e2cf05b12ca0@gmx.de>
+ <fe47758a-ca42-41b0-92bd-4ac86e1d0a3b@kernel.org>
+ <edc8986d-3414-4bc8-8aeb-9465b148ab35@amd.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAFqHKT=6iKG4UmF2-PUESCDDnLcgzon5Z3UqJd+vNrXLXf9CSQ@mail.gmail.com>
+In-Reply-To: <edc8986d-3414-4bc8-8aeb-9465b148ab35@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nMbbHgZ5reRVKq8WBdcBxnwSH7sBiwiIpHoaNGAlm2o0DnyHSds
- lPpLGO7Z4CGDhc+KSU3i5pgWx17VB+zFH3Mz/glwe7N+yh+AzibVWFhObm1fTTOWs4rs8hu
- n+FHCcJv7KwGZm4Ij9KqSKoeQD+kmbwcjz5BnYd7SWvoV7OoxWNOhCOsuGkipnIpynQPfHc
- Z2mukPoZWP8SRxvjRExew==
+X-Provags-ID: V03:K1:l8AYG8rQyFxf1burcqIPx0zR48SSezxFj0M8YHIk8YmipdxIQtZ
+ EEFC1o0GSFTFBlFSJI84wabB4PYAlPyg5lIMutWOBJWy+107+3rFVF3wnGeh1N+XT4bzrsn
+ Iqv81NLV+YNmBvmX/Io5PqmKX5odIrj7WPdZMSeNbfVSEPbH9QpdOZ42KG/bHPHjXBpZFMU
+ GujEx5uS8vlLMMH9E6inA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jGIiQEI7ogs=;BSrLYf6Sb8LxqJapn9T8oN5Iu6O
- qaZgJb/GQV3XkPSRlRAsDCpUBt2pkNWQDOZ70PNReTwRCASxrgZjtSbSPzwrL5PPyr576Mhtk
- 94XP7kGLMSv7qw8Od5CmF2T3JsQXa/yfBuXDCtbDa/meb52VK1HkdHzvONJemYapO4mjU53aX
- pZ3VPIF3/VxPsFpS4opCVyiLDBTy0cT9CLxA3g6nLpmMa5Y25CglpIBPm/tVLJdTeXKXoHzsP
- bnAxz3u6i+FOL6xu/DPL2F6G1A9vFWQYRS+l33PpbptDLeK32Xp+SIFNb8PjoPr42XQCdMN9W
- 6xrXtQg7KeoYTz4oM3x4D3lqoogmRjp/tZFnc4dOksS15UHLwR5e1wecSJ+frQmmiX88UhQxR
- WFKQ2T4YXtQ6nQxAgWEjXy6WbhxTjomNQ7tbnk0F7Zc91rfgKOujLRg7s5gBu4TNyKYxiJpxG
- TV8upn9oK/Ylg/g9IiNiOHqRnO36bVCPNVEmbH55US2YoljTdoTzfdXCRR4E5J2A5p29788yQ
- gZejcGqoatQFVQhb5AEb6MYcW7+iK1sU+7Q6OrECEfScLsRzpERdhCgQ9G7ds5QPD78mHWcfK
- qFf1iFPMdXISLnFPLmZ2pQHD3dQq7zxbRejMMG4sX3SjrkC1QtHW4mfQ9DlUgyECwfmUNdnAl
- HDOlLulsUh7ko13+lx6BBFdtCqKTnZmwH396jS8mGuG3+BACNnbkM0wfz2uayiewoG3oWKvIQ
- VCipO/qKXxB43seV94AO5gtlMJh4pPI3YQJWaijasOF+FeRd46VOvkA2KWMdKN+DqbZsgvCUw
- C+vq3iWNUeCTHc2aJqm2kbxC4Lvj9CkW6UuLjlCTiHoS7aLOrtJ8QWuRl5mZ3TnWWO0wQEKml
- SfRxqI9jBc/+A1uoJlRQebThrn4SUW3a8Gr+/5DZDr5dUyfh7xAxldG0V7LnjOnhNSLdz5AS4
- mLOLImiFEKAdJTGghOxQr4iPa/pD2mdRvtVhJ4AwHtbBUoeEz010bF3EVGIh6KvBJ+fHXajHU
- 9JxUDxkaK4a/SSLHywRWo6baIdSZBtmODQ6tKf2dsmDgM6masLX2F4ZWEABFobG2iYyjCnGPV
- JPgPe8ytG2eDSWSkVIg9G3r4jsET1Iq3ohePd/aVimPqRfdF634Hgq2x79AHt5Tx59nOYdOyb
- XgHIskAhfDhscCNQNCpNo2wNlRh60Chq4M0QG+60hbtBnXggd4Ph0TL9dB34bqj7g6r1mujge
- GIgVIQZtF6MtIHZELlyWcTZq+oCiTA0pkuXpGjKsl9g1dKFzxWoAkUHFE9DdfQ0yKEtuo/ytS
- 77hE5vdTbx/nkprUlA5Fb9bwv0c+F7rKGOnraDtmZ9CRaXxTjv3jsbM8KCa7SIPEeW6hEBGeK
- CNo6Ba5ChASmTRcU6SHIzuuFICAniSz/eUf7Jas4R/xFRwGzPIVbEWVcp476H3BSFogw7PK3F
- 2pDzgMsdPEn85H4cIQgpGMVtfUv0=
+UI-OutboundReport: notjunk:1;M01:P0:T4efxM2u/eA=;jx7mrWbmFLwRaFe7wBQlTAt24uI
+ tk14q6aFb8Yn/ORt1eAoJfkwZ66JR+3ZHjbZ5FLosYGpu3Fs1zKYs+DbihqlahjwU7MV9GFr2
+ fu9WcQd+qfzPiuNn8f7HsoR6wXfsoYXVkT0a+t2qFNSZCShNL3mdoxgCx80g8J4RDcn+zFByz
+ lwuj+Fqmu2I6QvB3t1b01vWtRNGg7YczFb8OoPLq3lX2HOgTifcV/n/TILenpHptQps1Dj6ia
+ AKIzR9fwvLXrn0dTN1g3zttmhCfYefCwPGPcq2M/GeOiqqnoz0ZibQiNjTMho+Mwuj1zhxpBg
+ n6wTFHJb/bMWD50wuGpCJrITVVuXPxylZLBpbcAYJzdTaNoFP3Y99PRVkw7miA0PRjDKoKNQx
+ iZ57JL2g/ZJKY2XAhEvCer9D5xJ5KnzoRBVTtLjyE1o0v6CWOeTbOsBq0Z1ddQI75CbdwSM/Y
+ anLepsvuv/Hal2Jd5QjWFvBf+t6jl+BrEZ5xelHqGc0pDDnfy0ce9ofDVYk3459ppdARXAiph
+ 0JgTQzw9MKPiEmojUnm2Q2UfIGSKsoC4SSmgdCiPvnAr2tsAMEfJ3M4/jQ4baiX0n2+cH88Gm
+ HLYJOFIt3NOTpz5kmH1QoqtNcBQUyBYsh2pePcFRHsUb7H4xC231frG1bojOKWzawnQ9gyzIP
+ 0Kl4+H8a1PVpTIqtADzTcdv8nFcBiAWSjrt0uJ7LHWDwCtvmqzwkeIn7l1WKnBB2XOhy51Ssf
+ 61m96nPx6ykhsdDhUjLi4WMP6tSbY32QZ6E9RF9IcZKjVBf9xSTS90vsRiAjJ2ObWUWOhGkzS
+ qWHnT8EkrnBvgXelZrEuP5DEB8n2PGrL/WYvPp76xU/KsYC9jFuVv/79jKwemQz6T1N1NWJFr
+ lhi8ot++Dpq2Gh9bSJdkEJWhKcavnP/MocTtJSxWFDIvKaLxA6t3FXjHHc0Kgdr55nSLPpqab
+ 1Hs47MNwCfO/psHNbZgy9GIfHaai7xGrqqvlrd182RlR9UIT61zMXt/3O9pydWrMpa1aspWzM
+ 5XyttXc4XrcEIf07538Z8iyti2/0WZfeuw4V4xoh4D3Fp53UbRhfQJIwhbJzndtuPECZXoW5r
+ 6DDrioRE8cQ4epnkBy2Y4HQOekHtU7O8+Tbc5rcV3/0CFfnuFBGDIYGiliszFWkxCX9yC8Hwz
+ KF//91SMKHfKj6S1KxZJFLjo+LixwwjP2pt0m2WOAlJElTcbvFATPPrDOP3VQrwbGwiKjd55e
+ 63jwVwFx8PdJLGzRzgIXk/GHtFUcWUqJE/+d5/JwS1eKnI1hOZHue+7xxxZvAXu/i2OWL1i8y
+ Jobntwpy6oho6GsxXAEMsv5NZSYDi1izBgeBklY5KGD2OsDD+UHZZ95tzU+B0R2GmQwpYoGND
+ MgLPkxXjTYBdzjv98lpDq9zZJjn09ZEpUjl24oqj8Ju+GpYsjAxkzlWOwhI7QjM4ijKgXxXuG
+ AbhBhlR80T75Tra/cwGXrA6vYI4w=
 
-Am 02.04.25 um 22:47 schrieb Derek John Clark:
+Am 31.03.25 um 19:49 schrieb Mario Limonciello:
 
-> On Wed, Mar 26, 2025 at 6:29=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 17.03.25 um 15:43 schrieb Derek J. Clark:
+> On 3/21/2025 5:25 PM, Mario Limonciello wrote:
 >>
->>> Adds lenovo-wmi-capdata01 driver which provides the
->>> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
->>> enabled hardware. Provides an interface for querying if a given
->>> attribute is supported by the hardware, as well as its default_value,
->>> max_value, min_value, and step increment.
+>>
+>> On 3/21/25 16:16, Armin Wolf wrote:
+>>> Am 21.03.25 um 20:30 schrieb Mario Limonciello:
 >>>
->>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->>> ---
->>> v4:
->>>    - Make driver data a private struct, remove references from Other M=
-ode
->>>      driver.
->>>    - Don't cache data at device initialization. Instead, on component =
-bind,
->>>      cache the data on a member variable of the Other Mode driver data
->>>      passed as a void pointer.
->>>    - Add header file for capdata01 structs.
->>>    - Add new struct to pass capdata01 array data and array length to O=
-ther
->>>      Mode.
->>> v3:
->>> - Add as component to lenovo-wmi-other driver.
->>> v2:
->>> - Use devm_kmalloc to ensure driver can be instanced, remove global
->>>     reference.
->>> - Ensure reverse Christmas tree for all variable declarations.
->>> - Remove extra whitespace.
->>> - Use guard(mutex) in all mutex instances, global mutex.
->>> - Use pr_fmt instead of adding the driver name to each pr_err.
->>> - Remove noisy pr_info usage.
->>> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
->>> - Use list to get the lenovo_wmi_cd01_priv instance in
->>>     lenovo_wmi_capdata01_get as none of the data provided by the macro=
-s
->>>     that will use it can pass a member of the struct for use in
->>>     container_of.
->>> ---
->>>    MAINTAINERS                                 |   2 +
->>>    drivers/platform/x86/Kconfig                |   4 +
->>>    drivers/platform/x86/Makefile               |   1 +
->>>    drivers/platform/x86/lenovo-wmi-capdata01.c | 136 +++++++++++++++++=
-+++
->>>    drivers/platform/x86/lenovo-wmi-capdata01.h |  29 +++++
->>>    5 files changed, 172 insertions(+)
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> In practice userspace software doesn't react to KEY_SCREENLOCK by
+>>>> default.=C2=A0 So any time that the PMF policies would suggest to loc=
+k
+>>>> the screen (for example from an HPD sensor event) userspace isn't
+>>>> configured to do it properly.
+>>>>
+>>>> However userspace is configured for meta + L as this is the default
+>>>> in the ecosystem. Adjust the PMF driver to send meta + L.
 >>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 6dde75922aaf..56ead241a053 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -13164,6 +13164,8 @@ L:    platform-driver-x86@vger.kernel.org
->>>    S:  Maintained
->>>    F:  Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->>>    F:  Documentation/wmi/devices/lenovo-wmi-other.rst
->>> +F:   drivers/platform/x86/lenovo-wmi-capdata01.c
->>> +F:   drivers/platform/x86/lenovo-wmi-capdata01.h
->>>    F:  drivers/platform/x86/lenovo-wmi-events.c
->>>    F:  drivers/platform/x86/lenovo-wmi-events.h
->>>    F:  drivers/platform/x86/lenovo-wmi-helpers.c
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
-ig
->>> index 13b8f4ac5dc5..64663667f0cb 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
->>>        tristate
->>>        depends on ACPI_WMI
+>>> Hi,
 >>>
->>> +config LENOVO_WMI_DATA01
->>> +     tristate
->>> +     depends on ACPI_WMI
->>> +
->>>    config IDEAPAD_LAPTOP
->>>        tristate "Lenovo IdeaPad Laptop Extras"
->>>        depends on ACPI
->>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Make=
-file
->>> index fc039839286a..7a35c77221b7 100644
->>> --- a/drivers/platform/x86/Makefile
->>> +++ b/drivers/platform/x86/Makefile
->>> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
->>>    obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yogabook.o
->>>    obj-$(CONFIG_YT2_1380)              +=3D lenovo-yoga-tab2-pro-1380-=
-fastcharger.o
->>>    obj-$(CONFIG_LENOVO_WMI_CAMERA)     +=3D lenovo-wmi-camera.o
->>> +obj-$(CONFIG_LENOVO_WMI_DATA01)      +=3D lenovo-wmi-capdata01.o
->>>    obj-$(CONFIG_LENOVO_WMI_EVENTS)     +=3D lenovo-wmi-events.o
->>>    obj-$(CONFIG_LENOVO_WMI_HELPERS)    +=3D lenovo-wmi-helpers.o
->>>
->>> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/pla=
-tform/x86/lenovo-wmi-capdata01.c
->>> new file mode 100644
->>> index 000000000000..b6876611ffd9
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
->>> @@ -0,0 +1,136 @@
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>> +/*
->>> + * LENOVO_CAPABILITY_DATA_01 WMI data block driver. This interface pr=
-ovides
->>> + * information on tunable attributes used by the "Other Mode" WMI int=
-erface,
->>> + * including if it is supported by the hardware, the default_value, m=
-ax_value,
->>> + * min_value, and step increment.
->>> + *
->>> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
->>> + */
->>> +
->>> +#include <linux/cleanup.h>
->>> +#include <linux/component.h>
->>> +#include <linux/container_of.h>
->>> +#include <linux/device.h>
->>> +#include <linux/gfp_types.h>
->>> +#include <linux/types.h>
->>> +#include <linux/wmi.h>
->>> +#include "lenovo-wmi-capdata01.h"
->> Hi,
+>>> KEY_SCREENLOCK is used by other drivers too, so it would make sense
+>>> to instead add support for KEY_SCREENLOCK to the userspace software
+>>> instead of having this workaround inside the driver.
 >>
->> please also include linux/acpi.h, linux/export.h and linux/module.h.
+>> Right; that's actually that's the first thing I looked at when I came
+>> to this issue.
 >>
->>> +
->>> +/* Interface GUIDs */
->>> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3B=
-E018154"
->>> +
->>> +struct lwmi_cd01_priv {
->>> +     struct wmi_device *wdev;
->>> +};
->>> +
->>> +/*
->> /* -> /**
+>> I had "expected" GNOME for example to work with KEY_SCREENLOCK, but
+>> even when you program it to do so it doesn't work.
 >>
->>> + * lenovo_cd01_component_bind() - On master bind, caches all capabili=
-ty data on
->>> + * the master device.
->>> + * @cd01_dev: Pointer to the capability data 01 parent device.
->>> + * @om_dev: Pointer to the other mode parent device.
->>> + * @data: capdata01_list object pointer to return the capability data=
- with.
->>> + *
->>> + * Returns: 0, or an error.
->>> + */
->>> +static int lenovo_cd01_component_bind(struct device *cd01_dev,
->>> +                                   struct device *om_dev, void *data)
->>> +{
->>> +     struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
->>> +     int count, idx;
->>> +
->>> +     if (!priv)
->>> +             return -ENODEV;
->> This check is unnecessary, please drop.
+>> https://gitlab.gnome.org/GNOME/mutter/-/issues/3990
 >>
-> Acked
+>> The ecosystem has moved to META + L.=C2=A0 My last employer (Dell) I
+>> remember there was a FN + F key that would issue a screen lock. It
+>> had a silkscreen of a lock symbol.
+>> How did it work?=C2=A0 Not KEY_SCREENLOCK - it emulated META + L.
+>>
+>> This is what works in Windows, GNOME and KDE.=C2=A0 So I am of the opin=
+ion
+>> that KEY_SCREENLOCK is likely a dinosaur that doesn't really exist
+>> anymore.
+>>
 >
->>> +
->>> +     count =3D wmidev_instance_count(priv->wdev);
->>> +
->>> +     if (count =3D=3D 0)
->>> +             return -EINVAL;
->> The WMI driver core already ensures that WMI devices with 0 instances a=
-re
->> rejected. Please drop this check.
->>
-> Good to know, thanks.
+> FWIW, I found an aftermarket keyboard (Logitech Ergo K860 [1]) that
+> has a "lock" key.
 >
->>> +
->>> +     ((struct cd01_list *)data)->count =3D count;
->>> +     ((struct cd01_list *)data)->data =3D devm_kmalloc_array(om_dev, =
-count,
->>> +                                                           sizeof(str=
-uct capdata01 *),
->>> +                                                           GFP_KERNEL=
-);
->> Two things:
->>
->>    - using a local variable with a type of struct cd01_list * results i=
-n cleaner source code here
->>
->>    - using devres is not possible inside the component callbacks, since=
- the lifetime of the component
->>      device is not necessarily tied to the lifetime of the underlying d=
-evice.
->>
->> I suggest you move the whole WMI data querying into lwmi_cd01_probe(), =
-because then you can keep using
->> devres.
->>
-> Doing this in probe() puts the list on lwmi_cd01_priv. Should I copy
-> that data on bind, or pass back a pointer to the cd01 device struct
-> and use an exported function on cd01 and dev_get_drvdata to access
-> priv->list->data[idx] when needed? I prefer the latter as this avoids
-> needing to do devm memory allocation in component/master binds, then I
-> can check for NULL when accessing and clear the pointer on
-> master_unbind to avoid calling to a removed device driver.
-
-Passing a pointer is OK, but please only pass a pointer to the struct cd01=
-_list itself,
-not the full cd01 device struct. Maybe you can also add a comment explaini=
-ng that this
-pointer will become invalid when unbinding from the component.
-
-Explicitly NULL-ing this pointer upon unbinding seems unnecessary to me.
-
-> (snip)
+> It also emits a KEY_LEFTMETA combination when this key is pressed and
+> works by default in GNOME as well with no changes.
 >
->>> +struct cd01_list {
->>> +     struct capdata01 **data;
->>> +     int count;
->>> +};
->> In order to save memory you could try something like this:
->>
->> struct cd01_list {
->>          size_t count;
->>          struct capdata01 data[];
->> };
->>
->> This way you
->>
->> 1. Avoid the memory fragmentation resulting from multiple memory alloca=
-tions.
->>
->> 2. Omit two pointers when accessing the data.
->>
->> You can use struct_size() from linux/overflow.h to calculate the size o=
-f such
->> an array with a trailing flexible array.
->>
->> Thanks,
->> Armin Wolf
->>
-> I think I have this part working in my branch. Using devm_kzalloc also
-> allows me to omit manually setting NULL in a few cases, which is
-> cleaner. Is it preferred to use struct_size() directly in the
-> devm_kzalloc call, or create a separate `size` variable to set the
-> result to and pass that into the function?
+> -event11=C2=A0 DEVICE_ADDED=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 Logitech ERGO K860 seat0 default
+> group7=C2=A0 cap:kp left scroll-nat scroll-button
 >
-> - Derek
+> -event11=C2=A0 KEYBOARD_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 +4.191s=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 KEY_LEFT=
+META (125)
+> pressed
+> =C2=A0event11=C2=A0 KEYBOARD_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 +4.231s=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 **=
+* (-1) pressed
+> =C2=A0event11=C2=A0 KEYBOARD_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 +4.374s=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 **=
+* (-1) released
+> =C2=A0event11=C2=A0 KEYBOARD_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 +4.412s=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 KE=
+Y_LEFTMETA (125)
+> released
 >
-In most cases using struct_size() directly inside the devm_kzalloc() call =
-is preferred.
+> [1] https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-00916=
+6
+>
+Interesting, i CCed the input maintainer so that he can decide whether to =
+keep KEY_SCREENLOCK or replace it
+with meta + L. Maybe the input subsystem could provide a generic meta + L =
+emulation for KEY_SCREENLOCK?
 
 Thanks,
 Armin Wolf
 
->>> +
->>> +int lwmi_cd01_match(struct device *dev, void *data);
->>> +
->>> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
+>>>
+>>> Also please add a comment explaining what meta + L is supposed to
+>>> achieve.
+>>>
+>>
+>> Sure if we can align on doing this I will spin a V2 with a comment
+>> better explaining the situation.
+>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>> =C2=A0 drivers/platform/x86/amd/pmf/tee-if.c | 11 +++++++++--
+>>>> =C2=A0 1 file changed, 9 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/
+>>>> platform/ x86/amd/pmf/tee-if.c
+>>>> index 8c88769ea1d87..2c00f2baeec7b 100644
+>>>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+>>>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>>>> @@ -151,7 +151,13 @@ static void amd_pmf_apply_policies(struct
+>>>> amd_pmf_dev *dev, struct ta_pmf_enact_
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 amd_pmf_update_uevents(dev, KEY_SUSPEND)=
+;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 case 2:
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 amd_pmf_update_uevents(dev, KEY_SCREENLOCK);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(dev->pmf_idev, KEY_LEFTMETA, 1);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(dev->pmf_idev, KEY_L, 1);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(dev->pmf_idev);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(dev->pmf_idev, KEY_L, 0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(dev->pmf_idev);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(dev->pmf_idev, KEY_LEFTMETA, 0);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(dev->pmf_idev);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 default:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev->dev, "Invalid PMF policy sy=
+stem
+>>>> state: %d\n", val);
+>>>> @@ -422,8 +428,9 @@ static int amd_pmf_register_input_device(struct
+>>>> amd_pmf_dev *dev)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev->pmf_idev->phys =3D "amd-pmf/input=
+0";
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_set_capability(dev->pmf_idev, EV=
+_KEY, KEY_SLEEP);
+>>>> -=C2=A0=C2=A0=C2=A0 input_set_capability(dev->pmf_idev, EV_KEY, KEY_S=
+CREENLOCK);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_set_capability(dev->pmf_idev, EV=
+_KEY, KEY_SUSPEND);
+>>>> +=C2=A0=C2=A0=C2=A0 input_set_capability(dev->pmf_idev, EV_KEY, KEY_L=
+);
+>>>> +=C2=A0=C2=A0=C2=A0 input_set_capability(dev->pmf_idev, EV_KEY, KEY_L=
+EFTMETA);
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D input_register_device(dev->pmf=
+_idev);
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>
+>
+>
