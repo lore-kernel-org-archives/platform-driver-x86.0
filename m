@@ -1,226 +1,272 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2046.outbound.protection.outlook.com [40.107.236.46])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F9E224AFB;
-	Mon,  7 Apr 2025 06:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007769; cv=fail; b=BeKMRUMiwrn2YDOZ5E+6JR7WSlWIj/ItHJg4moNmtlDinWiIYXNQykehiD6uHtgl/QywiH4MBtKbCabXBjEKe/zv1U1oh1Jd6qE6W89kcvWkbW7SsjUy2hgI0/kwQGaHV6oOswZOVp6JUAY1QUJeO+yf+Zl1eA/So8AV5+cIzCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007769; c=relaxed/simple;
-	bh=CxnfXg87LtES7IGPShyCGXRhymnQDs8YwGeYKhwNccA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=f4gngQ98LsU3hLUdaassOIzV6hSdaTSeVeWCHqgiTvBUf89ZebDmA7MYC3+zunha1mzfyAmEsYbKkcamdaB6tLUjlhHK5lgSpwAB3paO5Q05Gw2K/rA85S0nUyQR6K+f+Ir8b6c+FVLk7G3ZmKOB4S5yodnifg+lYvfIp8iQQoM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3jAmZzXu; arc=fail smtp.client-ip=40.107.236.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BF922A4DA
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 09:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744017629; cv=none; b=lzOJTs7zSUaXBs9E3xgbG46r/YIre9ljCwjsFe5rXIAQkfWIA7LAHdf28wvfbNARrXD32w4P5HaY/uU33jczibkteJDG1e8sIkJ9eaoWrX+NEhcpyBoA4nTy6eTvFMnmthsD3WOp2KSZVGqc7Y1Se+Witd4mjQK4ynpmRCmTP+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744017629; c=relaxed/simple;
+	bh=YB6W7mg4Pq6IV+aVWU9iVQNr6cHPpg4WQGf+PdB1u7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k9F6nx6Y5ih+JImr2e0JhbL/ScBGoF1pmENbANZSngcqNhXlsvWK76i39BipMI/m/30i9yVHqQQWeKTXDdjfSlgoL9IjzXVULpPHVaHA/n6kXApHwJ0tH3Sa7HMXcd6NcKAn1+e85Ljg13MXZ8fVMrmM51Dszq/+nOkWfG4/AZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bj1TLEG9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3jAmZzXu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lM2lpW4JtdZqEfkGaXumKZiTSwriLkE76aBEhHluF4A6GNAbhE88ZTZPr3CWobPnuHS/XvMfQWPHT6KjzcI5Qqhv8dSvuYqzRSNx+gpqi93ZKw+Nfr8aT3wwvnGCkJH/NaHcZMlqiHI6Ixw35oSto6iIO5zTiO7UGELIeGmpLWumnxcUMM21Zgs/ceh/fPbqNBGw0UWlW5SERUdFakXSceEN/M0zJrO2pVDA4sX/5QoGlewdu07DCPK7/1P8NwlxeMHCezQvzDE14YdWodgRTGodYo4kJxAWwkqtVJbSa7INTJn47zn9DnGRxBLS9d0zf6zrMTJdFNcStZ730kbGHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1sSX9nBOmplvVDMYVof3YUbxlLmHdUdoWE11fSALXwk=;
- b=wNM8kCZ4NsAbL08EXWAV56bSuy6FnlwrXIjVZAS9GO8h+ub+YVmEn5G6xLEFHu1nB6JpizP23/eo6JxacFV4cHr57VlkQCFQUVC5B4wg8PJLu84Dz1i2qQPmWSpHi7zXWWQNjsNP101WoQMO/hauOGdhdcvogF5Yp58RldpwoMyj3ttfinkEX8eVsh3WLrb+9SFmdHLWB5urxwnBkOGI1dODeoolIEZOamz7rHAjasMSseItiMTh7wKUMPnDgbmEqixJ7CMq6iK5RK3LZDw+ghIdskbyHmDTKo54UI4ZdyRC/RvmWDI/omuqNTTOWvx4rUrVj6SWKZwLjBWbBJrlGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1sSX9nBOmplvVDMYVof3YUbxlLmHdUdoWE11fSALXwk=;
- b=3jAmZzXuwBCzlPA9/1+InV7BYe9CTQcu3JH/gp3uVyXsEw8FkSleTB6sQekxwStmSNvYfBLswy2RyxevZPHGJaf2HHPgyzcZ+OiUKqC8fxVCbhC+IhC5UPa3knGRNR23sZn3WOvhxcwdlS0eMGkX21iW+lqT8Y7Ob8Ae59j08+k=
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by SA1PR12MB7038.namprd12.prod.outlook.com (2603:10b6:806:24d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
- 2025 06:36:01 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
- 06:36:01 +0000
-From: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>
-To: Christian Heusel <christian@heusel.eu>, "Limonciello, Mario"
-	<Mario.Limonciello@amd.com>, Patil Rajesh <Patil.Reddy@amd.com>,
-	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hdegoede@redhat.com>, "linux@frame.work"
-	<linux@frame.work>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>
-Subject: RE: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
- Desktop
-Thread-Topic: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
- Desktop
-Thread-Index: AQHbpZay7zR81Bhb00SU6pRyxcmz4LOXwezg
-Date: Mon, 7 Apr 2025 06:36:01 +0000
-Message-ID:
- <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
-References: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
-In-Reply-To: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ActionId=74559179-d48e-4f27-bdba-4ef7e7ba8976;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=0;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=true;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
- Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2025-04-07T06:35:10Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Tag=10,
- 0, 1, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR12MB5176:EE_|SA1PR12MB7038:EE_
-x-ms-office365-filtering-correlation-id: 619c4843-8447-4a06-eace-08dd759e76b6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?MttFLwGVFS9FREwP8aAWby3Z2r45x3NyLkh+JiGrcom2nWNkhpvD85ViPk?=
- =?iso-8859-1?Q?0z10SDX8ejqOTEq6Mu0c7tx404IuwY2HIqv16zHLBVOciC+WZwV0EwBfjs?=
- =?iso-8859-1?Q?YaBKV/fxPmQCvQATMIkweQ76YbUeau8QhRFDpV2EbUjO2TMey6246Xm+PS?=
- =?iso-8859-1?Q?zeO0ycAsIdjyrr3rn2n3bdERoUWs8F5X99oW6YqGysdO0uHze7K8fcqcrp?=
- =?iso-8859-1?Q?hzGi/uGzFbPDxLJqRXs5VphmO0YR/ZxvTVl6F3Wlu7kELtmw8Kd3518RZy?=
- =?iso-8859-1?Q?pA5WLHtq6sPHLqq5ZwI86Lzhefsnra1mgjL0+DdTrjEJMGZxBo+4JSQLEv?=
- =?iso-8859-1?Q?QI2nkAHGP3yezDk33adOC+5ybUhWzMXnNOU0WpTWOJwKAxPPZmpiKvZFq5?=
- =?iso-8859-1?Q?lZTabzp0K2ZSiKuj/nSACfaiLgyOG8BQE90t71viyxEzQDvw6KB95QLt2b?=
- =?iso-8859-1?Q?V0mkvzrU1UQk6/5LU2J8u8n248+39zy1SO0WyUzYyHN65mIyAM4NdioH9r?=
- =?iso-8859-1?Q?mm/D/x8iPyvZmmA5cZ/KVhgSjmmsX239jwgr2Yhr240kxiLT1+pAFxKr5n?=
- =?iso-8859-1?Q?DEoO7dyGtUGoX3PfAmUZeS8VJvqi+KMH8g56NHdQ+qGJNnrTlCHtLF7Zsy?=
- =?iso-8859-1?Q?z7dFnNQ/6kkhVWqWA6KLSLX1x2QhncPgp/HOZeK6cxNOiagvmudymWFKLn?=
- =?iso-8859-1?Q?0tgFHOHOuT/On7YsTd7+rLE1W9/lF3G0jAtUbVus+OSD/J6tq2E57LE3Tw?=
- =?iso-8859-1?Q?7s8nxlWOVpkENlDpS+MdQ1lEQ2tBUWAILCjRKrl0TEKbdJU8z0Q29yI749?=
- =?iso-8859-1?Q?7qGbTp/WJXV/ognHmjAvHSj1NVib5AmeBcKhsspLhdB1ZDwwF+7PwMrJBf?=
- =?iso-8859-1?Q?KKammJroRhTFtfb6JVP2pYuMZD7aBTMDzbOjTre1tz/MSLilQgUI2xzDgR?=
- =?iso-8859-1?Q?70mR3WEPbKnEcpfuIuxXcvgLJFni5ohzOcydo4ag3c49m6Gb+KP0k5OvcB?=
- =?iso-8859-1?Q?zRaDFYAIrquAU7vVJ0fIj8PDUszt065XNJwsbVbAt0LK4CGoR0bwkoyjZf?=
- =?iso-8859-1?Q?BYONiAw4YuuwVqQrGaCZSBGE1MgEHh18UFq9znVHqfEixiczs/POB9iT2N?=
- =?iso-8859-1?Q?stSyaOR4221AransJaIxviiOkAQHB6EoD2kPrPiv8273mKgXk5xgBp/6/w?=
- =?iso-8859-1?Q?DZKeP1LohMgtVvvnVKi3rdjD62FtyGJQspwC/dmXdrcJxrNQy2uoX4T2Pg?=
- =?iso-8859-1?Q?wSqiinMqsxSSngT+VaY7JPFBpmY5bLjSGWEfDCrNEGI15/f2LdftQTYczu?=
- =?iso-8859-1?Q?2SE6T+O+9AtiRyZygPrrlAYqycKu0hwp8ay4O1CP1KOggOj4YbGrth+RzO?=
- =?iso-8859-1?Q?sZdwo75OVq6H64A/9jGLmvvzr4VOnXpCuQ+861UdvvXtbWCz5DeKxC/fQG?=
- =?iso-8859-1?Q?kucOJQzTCqcHE7U0s8QNzpPnX3BMaTJDPLmxoeWbwEQpXfrQvfpw2XWr39?=
- =?iso-8859-1?Q?MpxWu5ae8TgXgskvvEFBP/wBlF8hrLSlOvt1ILeQP/uQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?NLEME2sn7xF1AxJ5xjXD7fquLRhZbbxmcd6BH+uHBBiKB9ttET+71ZCoX1?=
- =?iso-8859-1?Q?FmJ9XhcC8EfnFqxaX0MSqeCc3ssapXxVgZecjq+eHqK7ogZjgjW5eN4Y8M?=
- =?iso-8859-1?Q?cc/QT1YSSOaHvAcqEUFyns1PbZQtC1b0WWd7Hax6fciMLdzHiHDPN9mNMn?=
- =?iso-8859-1?Q?mRIFVQcUpOROJ6hKQkdHJ8pMFKgWcvjuzJrj8ZND7E57EO4NQCTkzoZkuS?=
- =?iso-8859-1?Q?dB9x4vHmodPZ6kpFCvuRTQX5OWECAleGzLTmMm4mmzFQIPy4Qyi3trjkYH?=
- =?iso-8859-1?Q?DB4sUwkk8iVuf3/TmHxZouJRLuPwJzGUWr4YjoZVdmZThHEWIDfk0dXvj+?=
- =?iso-8859-1?Q?OCxarKnMyqr+LTUspmLf1qE07Xf12bEAOuD9R/j8ZrkErOyVBSYS94cWV3?=
- =?iso-8859-1?Q?GjcdGkz+kvhxitW5OH15IA/k9ZPQ/dNPhRh0GnBeXLUS8n3oDwVCHca+UU?=
- =?iso-8859-1?Q?3PqBw3DCxm3FnJbtpDxFZmkV2Tm4bEf4olBp6Yqj3yNJYLMQhGqQ3m0Ffp?=
- =?iso-8859-1?Q?huoP2E6h2HFAztQCMLNWz4HG8cK2XIPJJi8s0khSc7tgo2d/Xt2AAE23m6?=
- =?iso-8859-1?Q?rciyt2RhQqQ2ZsuKB+aC4lrpo93Mmsr/a1PS3/KgJb5AMKNUl4ViFd0TYa?=
- =?iso-8859-1?Q?ToejsuQpEymSunCPG10d1dSvMC5fvXZ/NDO56ebU/vL543g0ApMv4JrxTQ?=
- =?iso-8859-1?Q?i5YfaX6YCCbaWsHKBv4wv2vHzCbeC1CccaPBI82FI7GPUByYXlSBgRFHvL?=
- =?iso-8859-1?Q?sxvl6nlaQD8Osgetex7oODS9h3aAXl17/j02zxHEzVhYLRBCoKTXkn3a2v?=
- =?iso-8859-1?Q?HxVX2PBOoEJtwLrwvF2uDehtSN6J3ym3J0i/CIh93xQDEjRxaI9s4IcIXe?=
- =?iso-8859-1?Q?KotWYCkaiGw/pKxQHoYnCouRdECtzohElaOL4t0QLj+PDwQnHCttDG+nGm?=
- =?iso-8859-1?Q?JaNQvhjAmUVq2bDRGhHnhoT+MQ31O1UP768NyN8w6t46JwhSoDHMjNxdrB?=
- =?iso-8859-1?Q?QDb2/vAgiX5GSgUbuFnbIhXoXUN1WyZxjvtWEJWDBxFJkaXoI63XPh5L63?=
- =?iso-8859-1?Q?wmNviVc+Mip9rfLOawuIu9tPvlSuSOec+ScWivx7NHx580qD6qpG3ENC33?=
- =?iso-8859-1?Q?ajly1YO88jCNnpxob2FdelVe2e8r4Isz+bvigfPOEjikuilul9ubjmn+kP?=
- =?iso-8859-1?Q?ZQCN5xmkCiWWiqnHy/9F4NbyFULzy6UXbEG6H1KoTld/1CX7xnt/4/0oDe?=
- =?iso-8859-1?Q?Pp3h4sXzj+CwY1m7vz+fgZQyJMLPFfDtIjvY3U259mikfHHVYd9iXqtP5u?=
- =?iso-8859-1?Q?aHmGyOOTUSou7bsVnohdie42sd1WaZS5yx9YNx+u1zsDJvigp+E6934ri7?=
- =?iso-8859-1?Q?xxFEprMVknCOBScC1+wR3V3QCOePq3CoD5CcuKh8z8zFF29t1FKFhN0Q0R?=
- =?iso-8859-1?Q?rqkoYpCB7VjlgHKBNGCjo817NM6Xjwfx9crYxfP/AZk06UbQU62k76b3aP?=
- =?iso-8859-1?Q?5vfgQMeS6WBcTPo9E7b5PhESWtN/Q4ZwH5xPP8592FZx89/ntj4dSxm4hk?=
- =?iso-8859-1?Q?F9Nw23tIEjltdAhSZLObIU3cZ66UENXTMV2xhyZGTq+NBQVelsn/Mp5ZWW?=
- =?iso-8859-1?Q?bOR15k+GpQRy0=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bj1TLEG9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744017626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8Qs8KcXAF4f0doxUY4H/fSiKaQVdSlpO2HeH4zSkiEw=;
+	b=Bj1TLEG9J2bWMWnQwIl6H6hJ/gIuotszkB3G6gYJj0iFLCF7oIkFpHpHu7oSIR3mFayaD4
+	hhw4bB99ErKKC4npaMVRuoX5LKeFARRcTdjuGbE8YMgDJnQcY5ePO7SPU/nDH8BoXv5z4c
+	y18P8se/0kcc+btQ064FDYZ6M9XG3tQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-573-K6j__idMM-2W-TI8j4tAdA-1; Mon,
+ 07 Apr 2025 05:20:23 -0400
+X-MC-Unique: K6j__idMM-2W-TI8j4tAdA-1
+X-Mimecast-MFC-AGG-ID: K6j__idMM-2W-TI8j4tAdA_1744017622
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 14BDB1800257;
+	Mon,  7 Apr 2025 09:20:22 +0000 (UTC)
+Received: from x1.redhat.com (unknown [10.45.225.6])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 082FD1809B67;
+	Mon,  7 Apr 2025 09:20:19 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: x86-android-tablets: Add "9v" to Vexia EDU ATLA 10 tablet symbols
+Date: Mon,  7 Apr 2025 11:20:15 +0200
+Message-ID: <20250407092017.273124-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 619c4843-8447-4a06-eace-08dd759e76b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 06:36:01.3010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: POHlftX7PlaHmaS2QVRk12v6V8q0vFFMu9dhvr7EJDJ01ss94ciT14aK2xHDZ/6NcGc59L48KG/nmPdkbOXECA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7038
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-[Public]
+The Vexia EDU ATLA 10 tablet comes in 2 different versions with
+significantly different mainboards. The only outward difference is that
+the charging barrel on one is marked 5V and the other is marked 9V.
 
-Hi,
+Both need to be handled by the x86-android-tablets code. Add 9v to
+the symbols for the existing support for the 9V Vexia EDU ATLA 10 tablet
+symbols to prepare for adding support for the 5V version.
 
-The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from the "/li=
-b/firmware/amdtee" folder, which is causing the issue. This is because ther=
-e have been some last-minute modifications to the TA firmware, and as a res=
-ult, the firmware has not yet been updated. I will inform you once the upda=
-ted TA firmware is available, so you can provide your feedback at that time=
-.
+All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/
 
-Thanks,
-Shyam
-
------Original Message-----
-From: Christian Heusel <christian@heusel.eu>
-Sent: Saturday, April 5, 2025 00:50
-To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Limonciello, Mario <Mario=
-.Limonciello@amd.com>; Patil Rajesh <Patil.Reddy@amd.com>; Ilpo J=E4rvinen =
-<ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>; linux@frame.work; platform-driver-=
-x86@vger.kernel.org; linux-kernel@vger.kernel.org; regressions@lists.linux.=
-dev
-Subject: [REGRESSION][BISECTED] Firmware load error for TEE on Framework De=
-sktop
-
-Hello everyone,
-
-I have recently noticed an issue on the Framework Desktop where the followi=
-ng error pops up in dmesg after upgrading to any version beyond
-v6.14:
-
-[   12.136102] tee tee0: Direct firmware load for /amdtee/f29bb3d9-bd66-544=
-1-afb88acc2b2b60d6.bin failed with error -2
-[   12.141252] input: HD-Audio Generic HDMI/DP,pcm=3D8 as /devices/pci0000:=
-00/0000:00:08.1/0000:c1:00.1/sound/card0/input8
-[   12.141601] failed to load firmware /amdtee/f29bb3d9-bd66-5441-afb88acc2=
-b2b60d6.bin
-[   12.141843] input: HD-Audio Generic HDMI/DP,pcm=3D9 as /devices/pci0000:=
-00/0000:00:08.1/0000:c1:00.1/sound/card0/input9
-[   12.142005] failed to copy TA binary
-[   12.185200] Failed to open TEE session err:0x0, rc:-12
-[   12.185202] amd-pmf AMDI0105:00: Failed to open TA session (-12)
-
-I have subsequently bisected the issue within the mainline kernel tree to t=
-he following commit:
-
-    376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibilit=
-y with new PMF-TA")
-
-The error is still present in the latest mainline release 6.14 and sadly te=
-sting a revert is not trivially possible due to conflicts.
-
-I also noticed that there is a commit with a fixes tag for the one we have =
-bisected to, but it's included in the same release and therefore does not s=
-eem to fix the issue at hand:
-
-    5b1122fc4995 ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_=
-pc()")
-
-I have attached a dmesg output from a good boot and one from the 6.14 where=
- the failure occurs. I'm happy to test any debug patches or provide more in=
-formation if needed.
-
-Greeting,
-Chris
-
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+ .../platform/x86/x86-android-tablets/dmi.c    |  2 +-
+ .../platform/x86/x86-android-tablets/other.c  | 64 +++++++++----------
+ .../x86-android-tablets/x86-android-tablets.h |  2 +-
+ 3 files changed, 34 insertions(+), 34 deletions(-)
 
-#regzbot introduced: 376a8c2a1443
-#regzbot title: x86/amd/pmf: Error on firmware load for TEE
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 3e5fa3b6e2fd..e43d482b17a3 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -187,7 +187,7 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+ 			/* Above strings are too generic, also match on BIOS date */
+ 			DMI_MATCH(DMI_BIOS_DATE, "08/25/2014"),
+ 		},
+-		.driver_data = (void *)&vexia_edu_atla10_info,
++		.driver_data = (void *)&vexia_edu_atla10_9v_info,
+ 	},
+ 	{
+ 		/* Whitelabel (sold as various brands) TM800A550L */
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index 1d93d9edb23f..74dcac8d19d7 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -599,62 +599,62 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+ };
+ 
+ /*
+- * Vexia EDU ATLA 10 tablet, Android 4.2 / 4.4 + Guadalinex Ubuntu tablet
++ * Vexia EDU ATLA 10 tablet 9V, Android 4.2 + Guadalinex Ubuntu tablet
+  * distributed to schools in the Spanish Andalucía region.
+  */
+ static const char * const crystal_cove_pwrsrc_psy[] = { "crystal_cove_pwrsrc" };
+ 
+-static const struct property_entry vexia_edu_atla10_ulpmc_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_ulpmc_props[] = {
+ 	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", crystal_cove_pwrsrc_psy),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_ulpmc_node = {
+-	.properties = vexia_edu_atla10_ulpmc_props,
++static const struct software_node vexia_edu_atla10_9v_ulpmc_node = {
++	.properties = vexia_edu_atla10_9v_ulpmc_props,
+ };
+ 
+-static const char * const vexia_edu_atla10_accel_mount_matrix[] = {
++static const char * const vexia_edu_atla10_9v_accel_mount_matrix[] = {
+ 	"0", "-1", "0",
+ 	"1", "0", "0",
+ 	"0", "0", "1"
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_accel_props[] = {
+-	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", vexia_edu_atla10_accel_mount_matrix),
++static const struct property_entry vexia_edu_atla10_9v_accel_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", vexia_edu_atla10_9v_accel_mount_matrix),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_accel_node = {
+-	.properties = vexia_edu_atla10_accel_props,
++static const struct software_node vexia_edu_atla10_9v_accel_node = {
++	.properties = vexia_edu_atla10_9v_accel_props,
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_touchscreen_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_touchscreen_props[] = {
+ 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
+ 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_touchscreen_node = {
+-	.properties = vexia_edu_atla10_touchscreen_props,
++static const struct software_node vexia_edu_atla10_9v_touchscreen_node = {
++	.properties = vexia_edu_atla10_9v_touchscreen_props,
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_pmic_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_pmic_props[] = {
+ 	PROPERTY_ENTRY_BOOL("linux,register-pwrsrc-power_supply"),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_pmic_node = {
+-	.properties = vexia_edu_atla10_pmic_props,
++static const struct software_node vexia_edu_atla10_9v_pmic_node = {
++	.properties = vexia_edu_atla10_9v_pmic_props,
+ };
+ 
+-static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initconst = {
++static const struct x86_i2c_client_info vexia_edu_atla10_9v_i2c_clients[] __initconst = {
+ 	{
+ 		/* I2C attached embedded controller, used to access fuel-gauge */
+ 		.board_info = {
+ 			.type = "vexia_atla10_ec",
+ 			.addr = 0x76,
+ 			.dev_name = "ulpmc",
+-			.swnode = &vexia_edu_atla10_ulpmc_node,
++			.swnode = &vexia_edu_atla10_9v_ulpmc_node,
+ 		},
+ 		.adapter_path = "0000:00:18.1",
+ 	}, {
+@@ -679,7 +679,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "kxtj21009",
+ 			.addr = 0x0f,
+ 			.dev_name = "kxtj21009",
+-			.swnode = &vexia_edu_atla10_accel_node,
++			.swnode = &vexia_edu_atla10_9v_accel_node,
+ 		},
+ 		.adapter_path = "0000:00:18.5",
+ 	}, {
+@@ -688,7 +688,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "hid-over-i2c",
+ 			.addr = 0x38,
+ 			.dev_name = "FTSC1000",
+-			.swnode = &vexia_edu_atla10_touchscreen_node,
++			.swnode = &vexia_edu_atla10_9v_touchscreen_node,
+ 		},
+ 		.adapter_path = "0000:00:18.6",
+ 		.irq_data = {
+@@ -703,7 +703,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "intel_soc_pmic_crc",
+ 			.addr = 0x6e,
+ 			.dev_name = "intel_soc_pmic_crc",
+-			.swnode = &vexia_edu_atla10_pmic_node,
++			.swnode = &vexia_edu_atla10_9v_pmic_node,
+ 		},
+ 		.adapter_path = "0000:00:18.7",
+ 		.irq_data = {
+@@ -715,7 +715,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 	}
+ };
+ 
+-static const struct x86_serdev_info vexia_edu_atla10_serdevs[] __initconst = {
++static const struct x86_serdev_info vexia_edu_atla10_9v_serdevs[] __initconst = {
+ 	{
+ 		.ctrl.pci.devfn = PCI_DEVFN(0x1e, 3),
+ 		.ctrl_devname = "serial0",
+@@ -723,7 +723,7 @@ static const struct x86_serdev_info vexia_edu_atla10_serdevs[] __initconst = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
++static struct gpiod_lookup_table vexia_edu_atla10_9v_ft5416_gpios = {
+ 	.dev_id = "i2c-FTSC1000",
+ 	.table = {
+ 		GPIO_LOOKUP("INT33FC:00", 60, "reset", GPIO_ACTIVE_LOW),
+@@ -731,12 +731,12 @@ static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table * const vexia_edu_atla10_gpios[] = {
+-	&vexia_edu_atla10_ft5416_gpios,
++static struct gpiod_lookup_table * const vexia_edu_atla10_9v_gpios[] = {
++	&vexia_edu_atla10_9v_ft5416_gpios,
+ 	NULL
+ };
+ 
+-static int __init vexia_edu_atla10_init(struct device *dev)
++static int __init vexia_edu_atla10_9v_init(struct device *dev)
+ {
+ 	struct pci_dev *pdev;
+ 	int ret;
+@@ -760,13 +760,13 @@ static int __init vexia_edu_atla10_init(struct device *dev)
+ 	return 0;
+ }
+ 
+-const struct x86_dev_info vexia_edu_atla10_info __initconst = {
+-	.i2c_client_info = vexia_edu_atla10_i2c_clients,
+-	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_i2c_clients),
+-	.serdev_info = vexia_edu_atla10_serdevs,
+-	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_serdevs),
+-	.gpiod_lookup_tables = vexia_edu_atla10_gpios,
+-	.init = vexia_edu_atla10_init,
++const struct x86_dev_info vexia_edu_atla10_9v_info __initconst = {
++	.i2c_client_info = vexia_edu_atla10_9v_i2c_clients,
++	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_9v_i2c_clients),
++	.serdev_info = vexia_edu_atla10_9v_serdevs,
++	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_9v_serdevs),
++	.gpiod_lookup_tables = vexia_edu_atla10_9v_gpios,
++	.init = vexia_edu_atla10_9v_init,
+ 	.use_pci = true,
+ };
+ 
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 63a38a0069ba..2204bbaf2ed5 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -127,7 +127,7 @@ extern const struct x86_dev_info nextbook_ares8_info;
+ extern const struct x86_dev_info nextbook_ares8a_info;
+ extern const struct x86_dev_info peaq_c1010_info;
+ extern const struct x86_dev_info whitelabel_tm800a550l_info;
+-extern const struct x86_dev_info vexia_edu_atla10_info;
++extern const struct x86_dev_info vexia_edu_atla10_9v_info;
+ extern const struct x86_dev_info xiaomi_mipad2_info;
+ extern const struct dmi_system_id x86_android_tablet_ids[];
+ 
+-- 
+2.49.0
+
