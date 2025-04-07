@@ -1,119 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C1C1FF1C5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503911FECBE;
 	Mon,  7 Apr 2025 15:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039521; cv=none; b=mURT3BII6Ri2h/RinywTnqOhzxZW71M5L0Pe1rZj8qqhEWMxKq7pqEGRrNygZSHMjhsN+kLZ8sp7SfuHalo2nCLrDiquAlil28wrAwxPgAEA6jSGM89PYq+45hUZmKbt8vjDeup2NADDtE5QSFZT8KR3b4aONl/094LN9t7RRKc=
+	t=1744039523; cv=none; b=Emvn8LnyJWK2NDy1NmMxWCcbifkj/21ZuXn3w4ZSlRjxbaSeygIM5rR+v+BG+SD0ApEyF76U9FjpHPva3rbrruefapZRRInowsLB0mliD8YjR5ffY9m9XDWOkTevQx9GR0lHxu4XSeMxUeyVce3/M1wrpa3WCwp75zD9bn0dwwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039521; c=relaxed/simple;
-	bh=+dMDlk4/IugJw2FDppkeJkwdLYA9dxFtsb2IakkQXsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J67jw+SjiaKruM/SxYaSXiHItgzEe1lQGv8cetWA8CygPRWknMkJANZ8Bibo0BzQozj8KGTd8AInk41YgtZ3uPB6sVrigz/mF0+Y/Ym2ym/2aDD38T4Oh4/G2KFXdq7+Njv8fPg8eOXhj6hV1z91JrZrDxI8pVtTGll2ZjIrEbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ode2WNyx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744039523; c=relaxed/simple;
+	bh=i2YZeY6p6Z8HjBwsBVkeEQexhzv4IAQu+D5budl7Hcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bf62HJRilq2OL7GraQ7kuTdXrij6CfXeOwDwNJ3m2XItq8+F56m6bd2ryaS77HZZU8oxeh9Z4COuSExy53ToaYWEBZXRb0itpVtzGt7Uwn23ZpT4crqd48nd98+JRByXvusDuPk7+s2yC40TY54T+uIeoElE8I4PUa4EuLRBu/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NP6R5bzK; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ode2WNyx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4457AC4CEDD;
-	Mon,  7 Apr 2025 15:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744039520;
-	bh=+dMDlk4/IugJw2FDppkeJkwdLYA9dxFtsb2IakkQXsc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ode2WNyxkKEnIxnZrfS6AEdU2DYqhY7zUEQtKeDaResOV7MrXscXgVYRcUrWAJQEw
-	 tPoFBQYXn5oR0mjAJet5ll21ZR4ZNG4kvkiQmaY/vojJXOyJdCnAr5AY69v9xhdXco
-	 f8APHPT9dMI8nPyIitdkEcJlgCQNkZLajjU8oQk9LBRpviUhHhgfPSq2Sy+vJiNWcM
-	 98RRyXN54X9a+aNEDMjv1m7G+a5Z63SCiCiKWAvmp9QG6tnvlKJ+SKMlfEH86nNuzX
-	 gX3WuVbidN57VfVHNMS0kuWFA6jPjMKcM/qoBpaSCJpHz96X9NVchvMSWNSpv8/1jV
-	 2sp5QbEU3OenQ==
-Message-ID: <392938bb-24b8-4873-ba89-aacf2c404499@kernel.org>
-Date: Mon, 7 Apr 2025 10:25:19 -0500
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NP6R5bzK"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 01CAD4435E;
+	Mon,  7 Apr 2025 15:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744039513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C+288TQHz/GPgYGRfWaMfUb21za5S/wfcZHMyy8gMHA=;
+	b=NP6R5bzKYU8MJAzvnPUFV7bmDpGyZrOE8h3lOYnSkYZH1Q44bnCkFQrB+OXGLGQRiknGe/
+	DZ4mcAcAGPmD5IqzMSPaFBsfZLTC5V/xB7LfbcXXTeIuFb1uidamSqXkLlzbYXYr5LJnmv
+	T52QXvaZqMsGjBDibuFG2Dfku/XJESP3A9tEbFoRgEV+1me5Bu2XHRxVaPaHPcw7eHO0dp
+	EaMfDXnpOztU4GlNq2OQ39u/p/S63ejPFkrXmldq4Tw2e2htSauQuQDNX3qQJja9FZW9zY
+	5MoUPGHnVULyeFtzc33r86NWcTKKWFILFvD/FCPHK8S228Hbp2R4wX7S3IFoMw==
+Date: Mon, 7 Apr 2025 17:25:06 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 13/34] drm/bridge: ti-sn65dsi86: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250407172506.13c2c34a@bootlin.com>
+In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
+References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+	<20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: amd: pmf: Fix STT limits
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com,
- Hans de Goede <hdegoede@redhat.com>, Yijun Shen <Yijun.Shen@dell.com>,
- stable@vger.kernel.org, Yijun Shen <Yijun_Shen@Dell.com>,
- platform-driver-x86@vger.kernel.org
-References: <20250407133645.783434-1-superm1@kernel.org>
- <60e43790-bbeb-29b3-dcf1-7311439e15cc@linux.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <60e43790-bbeb-29b3-dcf1-7311439e15cc@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghom
+ hdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: herve.codina@bootlin.com
 
-On 4/7/2025 10:19 AM, Ilpo Järvinen wrote:
-> On Mon, 7 Apr 2025, Mario Limonciello wrote:
-> 
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> On some platforms it has been observed that STT limits are not being applied
->> properly causing poor performance as power limits are set too low.
->>
->> STT limits that are sent to the platform are supposed to be in Q8.8
->> format.  Convert them before sending.
->>
->> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
->> Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
->> Cc: stable@vger.kernel.org
->> Tested-By: Yijun Shen <Yijun_Shen@Dell.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v2:
->>   * Handle cases for auto-mode, cnqf, and sps as well
->> ---
->>   drivers/platform/x86/amd/pmf/auto-mode.c | 4 ++--
->>   drivers/platform/x86/amd/pmf/cnqf.c      | 4 ++--
->>   drivers/platform/x86/amd/pmf/sps.c       | 8 ++++----
->>   drivers/platform/x86/amd/pmf/tee-if.c    | 4 ++--
->>   4 files changed, 10 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
->> index 02ff68be10d01..df37f8a84a007 100644
->> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
->> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
->> @@ -120,9 +120,9 @@ static void amd_pmf_set_automode(struct amd_pmf_dev *dev, int idx,
->>   	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pwr_ctrl->sppt_apu_only, NULL);
->>   	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_min, NULL);
->>   	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
->> -			 pwr_ctrl->stt_skin_temp[STT_TEMP_APU], NULL);
->> +			 pwr_ctrl->stt_skin_temp[STT_TEMP_APU] << 8, NULL);
-> 
-> Hi Mario,
-> 
-> Could we add some helper on constructing the fixed-point number from the
-> integer part as this magic shifting makes the intent somewhat harder to
-> follow just by reading the code itself?
-> 
-> I hoped that include/linux/ would have had something for this but it seems
-> generic fixed-point helpers are almost non-existing except for very
-> specific use cases such as averages so maybe add a helper only for this
-> driver for now as this will be routed through fixes branch so doing random
-> things i include/linux/ might not be preferrable and would require larger
-> review audience.
-> 
-> What I mean for general helpers is that it would be nice to have something
-> like DECLARE_FIXEDPOINT() similar to DECLARE_EWMA() macro (and maybe a
-> signed variant too) which creates a few helper functions for the given
-> name prefix. It seems there's plenty of code which would benefit from such
-> helpers and would avoid the need to comment the fixed-point operations
-> (not to speak of how many of such ops likely lack the comment). So at
-> least keep that in mind for naming the helpers so the conversion to
-> a generic helper could be done smoothly.
-> 
+Hi Luca,
 
-Do I follow right that you mean something like this?
+On Mon, 07 Apr 2025 16:23:28 +0200
+Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
-static inline u32 amd_pmf_convert_q88 (u32 val)
-{
-	return val << 8;
-}
+> This is the new API for allocating DRM bridges.
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
+Reviewed-by: Herve Codina <herve.codina@bootlin.com>
 
+Best regards,
+Hervé
