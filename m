@@ -1,131 +1,90 @@
-Received: from 7.mo583.mail-out.ovh.net (7.mo583.mail-out.ovh.net [178.32.124.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46652140E3C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 15:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.124.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EBA1F754E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 15:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039285; cv=none; b=G9ghGNsX8w2gtMODa8TTfdh+cxHjELyiB8Asiab7KmAYJiOfmhD9TQf7uwv1TFWHiq6iU5Y6QGBwFG7poYdymUL7fYRliZdD/ThixX9hJKu735XLfNLgFeDWwwIe1/7P7jn+R0qU/GF5BNXV544kdF2BdRJQ6nrDX8crxghJDiQ=
+	t=1744039458; cv=none; b=IBpbSESSGlwcyruHlaCSUpYBqU7Xcf3qo2ylqr2jpzIfn/lzMTPBP2nT4S6McSkVyV529kuaBlheyN+k/cWS2qdUr2MOziYg6q5l9YNJZdINf6u2NCIHUPXvrtDFd7bl0QUngdJK5DAYlf0naYjxw3zUpx3zFFXEDeCI4wRTAGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039285; c=relaxed/simple;
-	bh=ri/Q71c6p0NfoGvBcO9l27Ztt6As2I80kAoK2yHHV3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a8+XPciHjl1aOLi+7iwET590dlUIVk4kXt7JjYPr5KYq6xnSzBaBkUY7VIDOQLGp62HjA45J4r8nupR/GJSktKzGsuPSnrHZvWU//oZYdI6vu82XXKiwWF9IechtjYy9HFtk33VUbprMjIQ7AtEtmrDxhGbBezcd4vqyHyEw6Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=f9U1/uqC; arc=none smtp.client-ip=178.32.124.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	s=arc-20240116; t=1744039458; c=relaxed/simple;
+	bh=bGwcxgJ5xPsKO+720mSNK35hGvXFfiCjKaX9VUo7n6Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sqxhHG+DB8s6cHjYOwb2n8KiHNjsvo4DYIcihGNOEhKr7JnO+WwAL7MVnmlt0bRyhYGBlWwgvwSuVowb8AzbYkn0ckL63fswMT0vqxxt4nqVjPBBoC8TvM5KtPgHlagOXaUX0XvOzcGIUvCoFlHgeDLvTSkX3gAHAgVmpnaAXN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjouDqhk; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="f9U1/uqC"
-Received: from director9.ghost.mail-out.ovh.net (unknown [10.108.25.23])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4ZWTdC3Yfhz1Ryk
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 12:52:31 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-kfbdm (unknown [10.108.42.198])
-	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 090071FEC8;
-	Mon,  7 Apr 2025 12:52:29 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.99])
-	by ghost-submission-5b5ff79f4f-kfbdm with ESMTPSA
-	id v4jKLY3K82fdGgAAEArC2g
-	(envelope-from <michal.kopec@3mdeb.com>); Mon, 07 Apr 2025 12:52:29 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-99G00366dd81de-80f8-4d6f-ba43-ad97daa944b4,
-                    49FEA267915985A1F78C17A329F0406DF60E39EF) smtp.auth=michal.kopec@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	tomasz.pakula.oficjalny@gmail.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net
-Cc: platform-driver-x86@vger.kernel.org,
-	piotr.krol@3mdeb.com,
-	maciej.pijanowski@3mdeb.com,
-	michal.kopec@3mdeb.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH v7 0/1] platform/x86: Introduce dasharo-acpi platform driver
-Date: Mon,  7 Apr 2025 14:52:09 +0200
-Message-ID: <20250407125210.215794-1-michal.kopec@3mdeb.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjouDqhk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744039457; x=1775575457;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bGwcxgJ5xPsKO+720mSNK35hGvXFfiCjKaX9VUo7n6Q=;
+  b=fjouDqhkdyt0lC2bqfJo/B+Gq0ZPhZq74blnicmIfS+MQocuFjoBb0rj
+   Bjkd1eRXr4WdL9sDtI5byaGgz0OTjo4rdqt1UjfXpWs5bYFe5IguPJj60
+   I0x5ppghv1yEwsT/S+BA4Z9qs6TCV3LJluCNuCxOkbHnhk3VwprHsL3kE
+   TIIlmaPfMDQgOQUW7RJcqwB45CktUDoQJ+ox3p2qswBCf7YORe0KkAQIG
+   COtq/sJ3j2wt5iqv8wzvUyS2Va6iCaN7YVzX6Ruwk8ksG0lCqNzStkPj5
+   DFXpWHM2uZdzNrngkwsYtPXLro7M2vBUTngmUBX2fuSzGxOPtUxnGnKc6
+   w==;
+X-CSE-ConnectionGUID: Fuhs+YksS0eDVWTdiQxPiQ==
+X-CSE-MsgGUID: N/tbdLItRi27pP16duTVcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49284429"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="49284429"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:24:16 -0700
+X-CSE-ConnectionGUID: cQ2N6GL4Tvu9LDxIWxg5zg==
+X-CSE-MsgGUID: afHeb/rURGWTbtOYHa/LDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127856521"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:24:15 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Apr 2025 18:24:12 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86: x86-android-tablets: Add "9v" to Vexia
+ EDU ATLA 10 tablet symbols
+In-Reply-To: <ba58d467-1525-496b-b8ba-b14aa04307a1@redhat.com>
+Message-ID: <6268e571-1422-c020-4445-bd20b683b003@linux.intel.com>
+References: <20250407092017.273124-1-hdegoede@redhat.com> <Z_OoouVSgw1xOpur@smile.fi.intel.com> <ba58d467-1525-496b-b8ba-b14aa04307a1@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 14595884920276716953
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtvdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeenucfhrhhomhepofhitghhrghlucfmohhpvggtuceomhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpeduledtfffgueeugfffieeivdfhfeeutdfhffeigedttdefheektedvgefgueeugfenucfkphepuddvjedrtddrtddruddpvddufedrudelvddrjeejrddvgeelpdefjedrheelrddugedvrdelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfegmpdhmohguvgepshhmthhpohhuth
-DKIM-Signature: a=rsa-sha256; bh=aA5fdCb3DjkZEhHkgEsxx15UGiq5j/wbfgoVeM7TrIM=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1744030351; v=1;
- b=f9U1/uqC/Np8G3fAEdN6Rd/1cVl2u7OeIUbklA+aw41bx2AWY5FSTSw0L9fa7yZFy9S8OUpm
- eWxevyP8hGoZezhRHeOPtObXl7/b4G2DN5BAI3x7nyeRmdCVXsB0jlfieLp2oHF02Kb2WaDBdhs
- qJF/TTEFdWNbel/xk4GAuPPM1VQtd0cOI0fIh7feW0SXXStkyY0B1Hq9fqd18kJW4Gfo6sCZ0Jy
- 26AvhjOkmnolxX3HslVcDREnGXcPtn9wagXNCh7Ac5ONDf3F5Z/h4NWhAZVqpu3PuZaaUTKPK+n
- cJvNnHdgRzKZtKBRk1uAlkwrebYEouHYy1x1CIhQyqTIg==
+Content-Type: text/plain; charset=US-ASCII
 
-Introduce a driver for devices running Dasharo firmware. The driver
-supports thermal monitoring using a new ACPI interface in Dasharo. The
-initial version supports monitoring fan speeds, fan PWM duty cycles and
-system temperatures as well as determining which specific interfaces are
-implemented by firmware.
+On Mon, 7 Apr 2025, Hans de Goede wrote:
+> On 7-Apr-25 12:27, Andy Shevchenko wrote:
+> > On Mon, Apr 07, 2025 at 11:20:15AM +0200, Hans de Goede wrote:
+> >> The Vexia EDU ATLA 10 tablet comes in 2 different versions with
+> >> significantly different mainboards. The only outward difference is that
+> >> the charging barrel on one is marked 5V and the other is marked 9V.
+> >>
+> >> Both need to be handled by the x86-android-tablets code. Add 9v to
+> >> the symbols for the existing support for the 9V Vexia EDU ATLA 10 tablet
+> >> symbols to prepare for adding support for the 5V version.
+> >>
+> >> All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/
+> > 
+> > And period :-)
+> > 
+> > All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/.
+> 
+> It feels a bit silly to send a v2 just to add a period to the commit msg.
+> 
+> Ilpo do you want me to send a v2 of this series?
 
-It has been tested on a NovaCustom laptop running pre-release Dasharo
-firmware, which implements fan and thermal monitoring for the CPU and
-the discrete GPU, if present.
-
-Changes in v2:
-- Remove redundant copyright information
-- Turn dasharo_fill_* functions into single dasharo_fill_feature_caps
-  function
-- Code style fixes
-- Turn large if / else blocks into switch / case
-- Fix possible positive return values in hwmon read handler
-- Change while loops to for loops
-- Add local variable for data->sensors[data->sensors_count] in
-  dasharo_fill_feature_caps
-- Replace snprintf with scnprintf per Ilpo's review
-- Keep the "ok" path silent
-
-Changes in V3:
-- Simplify dasharo_read_value_by_cap_idx arguments and rename to
-  dasharo_read_channel
-
-Changes in V4:
-- Remove unnecessary linebreaks
-- Simplify naming of variables
-- Constify zone lookup table
-- Remove unneeded includes
-- Switch to platform_device API
-- Remove unneeded driver remove handler
-- Add myself to MAINTAINERS
-
-Changes in V5:
-- Fix up the MAINTAINERS entry
-- Use PTR_ERR_OR_ZERO for the hwmon pointer in the register func
-- Simplify if blocks in dasharo_hwmon_read
-- Use ACPI_FAILURE instead of !ACPI_SUCCESS
-
-Changes in V6:
-- Validate input parameters in dasharo_read_channel
-- Add default return code in dasharo_hwmon_read
-- Return error if invalid channel is requested in hwmon_read_string
-- Add missing include for ARRAY_SIZE
-- Align line continuations in dasharo_probe
-
-Changes in V7:
-- Use cap count for bound checking in dasharo_read_channel
-
-Michał Kopeć (1):
-  platform/x86: Introduce dasharo-acpi platform driver
-
- MAINTAINERS                         |   6 +
- drivers/platform/x86/Kconfig        |  10 +
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/dasharo-acpi.c | 357 ++++++++++++++++++++++++++++
- 4 files changed, 376 insertions(+)
- create mode 100644 drivers/platform/x86/dasharo-acpi.c
+No, you don't have to send a new version because of that. I'll try to 
+remember to add the period there while applying but I won't have regrets 
+if I fail to remember it, TBH. :-)
 
 -- 
-2.49.0
+ i.
 
