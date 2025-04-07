@@ -1,203 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2051.outbound.protection.outlook.com [40.107.237.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCA32459CF
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 13:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032281; cv=none; b=h/zcG4V9qfwQFrFXvAjCrvCS0ZK367x/LJ26LilMa5SJVN+pwgtovODzBzpnw8WWles4rVbMJobCxc25GLukt0umoMiFnpacWnrbUdpxAqsMKhlzaDI3R10SMqNMTof2+rWosVZm0/q7y9JnQLVAJOuaum/OCURWDuWb8NAXPx8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032281; c=relaxed/simple;
-	bh=XzZjhiXfpQeRJuraZUqVQzuYDaFJmF/I/sWScZWqTdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=inv67Qly2VeylcLLE0jhstUqPOjfpFFmB2nITPCAxOlc9K31R5Qbfm2S/y5q5U3/d1jGvHidwfbEieraDUYvHUor9Ywwd0Vqv2V+fsjllUn94T7ThKf0NlxEVRLF4cRlf+1PfAvMuFaS/tHZJOyHbEJe+06LieQsZpA2SnhWkic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cCgtjoPw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E17253F13;
+	Mon,  7 Apr 2025 13:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744032378; cv=fail; b=PvoigoU/4VUrXSW9rzo0wcU72arTBxv+ZJNF6N6pAsJj+fNvGDZwSnODquTKuyO/Zts/v4Qxrqu7YKt5h16RR8frBayKi1GcLFBxP3SAWaGLh+Lj/Jp3RJ0Ge0Eg9BZiVjHmHN0nmGcvhX28ejaELjg5JaODhMhqZ+KH+psL4WA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744032378; c=relaxed/simple;
+	bh=NM0/nFihtua0SgiJ1JXphu4GBoCcLMGOa5v0WGAKN1c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=anOPEzIsD97bT/rMjBBQ805PdgxyVp7R/yI5L3Tb7opskbzQH5T5a8kZxaytrRIbra4YJRq3/Gs0F0FoPSJuYxmcLvX7AWK6seQynsUR++9d2YRsP3NbidsqWxwyo2NtY1rCPWxkS/DgpHgUm08QQSH77yRy82Io+JEyXjrsONw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=b8wx4H8z; arc=fail smtp.client-ip=40.107.237.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cCgtjoPw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744032278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpR5IP3ceQm23S+jJkguK/w2FLK0Q+5rUcmXH3zvLb0=;
-	b=cCgtjoPwQwnrnAVkWOPwrw3TsjhtaaAZmc6cGnts1TBgAguhqTun90lHQl4ftcr+3yA8zT
-	EjEsP5KsBRDcIz3mFnlcLc35V9tcAJ0mTaUNG5pS5xwa9pGsSd93YnwAf8l3pV5fYRn2Zt
-	ZmJQpzieMaglkN0LriE0/ewWxa5lqes=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-kSWy2ug5NsWT3DU4k95jnA-1; Mon, 07 Apr 2025 09:24:36 -0400
-X-MC-Unique: kSWy2ug5NsWT3DU4k95jnA-1
-X-Mimecast-MFC-AGG-ID: kSWy2ug5NsWT3DU4k95jnA_1744032274
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so34003025e9.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Apr 2025 06:24:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744032274; x=1744637074;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpR5IP3ceQm23S+jJkguK/w2FLK0Q+5rUcmXH3zvLb0=;
-        b=gdFXz71VxrhwGdS8UR6s0k0UwmzSA0cU6N8RDfA+zbZp4aMuCA5iQc0oZvHCRg8hXP
-         kVpnD5DfJmBKdh9IxdkIlLx158KWnLYVphvfLw7c9Q7aSV+zXZ2nSasf+Pyp3meyhStE
-         rKWGJnqGOCbZBsNo2jmaXBCaIAHzX5RI3gK10Ip/ee4lvw41wy15/xbU1EfZl78zJGac
-         KlU/0xbv4iuZ2T1wceEFLv909c5WlQqR5j+pmbG5XXajBkNwmo5ucDPGRw//YSgHqO1d
-         Z7uffIgiyiTgRyleQTyUN1REnO5TuKdlu0hiiSqzBRw+hohd4rNZhIb2wtvp3ITtHtb/
-         QW2Q==
-X-Gm-Message-State: AOJu0YxRi/YzBl1oNTSnXDDzYroNhkQmsNseutspLRTffGdy3hzCY/eC
-	WH0pB3820NzwF7b9KlU0+Mf5LAectd0W8ajNohoMchfFYxa1tJYLRQ9QMse+0WxAZQI1b2MLIBH
-	R+dWLM2wC7Ai6rnjeuKkuih8Um9B0JOa/tBJlL6+dFKvNR+NwVsgTzt+NOEY4s+dx8gdCAJI=
-X-Gm-Gg: ASbGncv3UCZOKcSVlsjwvb7c+CwHJyhqEC4utCuEO0ZsP9BFnD7o7H2cXeQti9wMxFY
-	4EAdh4xqke2zM8bMIx7k5fmOBAFUrftjMKLUSLcAZp5/9TG/MpfiHeH9gK13OsWJ2YtAJrXKq5A
-	Kq1HDUqi9YjZFx7kiHIuiIZRRbTXqAgBCKGdHps1yVHRhKdwpnJFfJ4c+KZF7bPa7OZOuzhr9GV
-	kZM/ItzE7X8o3yFKR5Oeony8kQk6I13elaJ2SaNbbkKPzhJEtEWogP4dkYAMW73FV/+106mmrfQ
-	djyoyoeYrzuY5C2LyAM=
-X-Received: by 2002:a05:600c:1e0f:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-43ee0769282mr59967905e9.21.1744032274353;
-        Mon, 07 Apr 2025 06:24:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSQueWUiJuKXQEqtLstyahcc3tPrRf+Tqf2y4kZcS/ArCR5BraphVoOvD8hrZTNkd6ytinyA==
-X-Received: by 2002:a05:600c:1e0f:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-43ee0769282mr59967775e9.21.1744032273997;
-        Mon, 07 Apr 2025 06:24:33 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba3c4sm12302528f8f.59.2025.04.07.06.24.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 06:24:33 -0700 (PDT)
-Message-ID: <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
-Date: Mon, 7 Apr 2025 15:24:32 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="b8wx4H8z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BYZVmqfLQKlNU85u94gCjFBouK4PyAoqjBXiFIii7iFLyFcC4Q2bIAtV0REQspQeRjIJzwKfpwU0SHJJRPo4OPpkwNJnTLhsJ2tcyC8Vy6c6eR1cbRBdIcWmjSE6OZ0J5Qy2P++4hNFzXyZZYPTpBKphvErfyTe8xe/FNFZykSVMmTAJEibGIkqZGOHAqXyTE7jeuGKIrrPiSI6s8EVL4bSvnLZAh1KqYzk3/NhHyM/ndZzd/mmiPQKW2bqTl2U+qJ7fpSVq3STsz7fZctxrA4dllX7cMdF4b/Bc4iI7x6PIC00z7T3dJISgs+qI9xL5YsvJuqrjPmSmsywyruBwcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Jjlc9YKryFCoScj7PIdlCQo7Mc0hJ9cD24e2hV+UHZA=;
+ b=aBDUUES1O5li7xLiPXKY+yuV2icK4e0arkWjGSqLF9ua95kKKl8q+F3k4RaTZrMCWxpu/5p6bFmhboshftmMkRWMcfH+5jI7GhVvzEddciHUOEqgUVzBUO2iHUd1X2KilZ+Qeg18u1nFA7Kwgeo0hVQTtxWmIYMZ0G0n4ZwcjiGI7UH9ywK5d7RqjrtZyt+0fd6Rjv3eQ8xEIIe4nanjCk4TBvbyWwfT/0CyXyo6UsdXys/f2lJbgfcMfZ7YQzv2vtbz0OKNOhZMh5oDi2Z76ts2q6D/DKRaNuegklmxlH8MHT9icp6m4RicAYJ6sf8ZfubWp31yJidVQWXwVJAUiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jjlc9YKryFCoScj7PIdlCQo7Mc0hJ9cD24e2hV+UHZA=;
+ b=b8wx4H8z8wnUHpZXxoJCdFYKHYTLT32cCc+fjH0rm1KNXucTPMKfDk7mXc0y8EUaWZXWvLXWd6IovxJGGK4HvpEu1K3U8kXpLM/A14t2P4eYbmq9+Regmns9cfKpoabYNRIZr/WOWMQ9GYPOOhG/w0O83xtS3CmeX23xLh2MRqyBmz0A7uNgQuJtSygIQvGMdZDrqpV3beMJOzfM9lUMT7py4IuY0Ibc6HTLnPOre0HKR7F21O2FHs1HVH0a3ZT6kGM6PgAjV5H/8LyPp3qWwTki6FxHNKbjrkXUcW3irNRDPbsoisEptz+YkGLapPSkgaaWiK6oihmjpFyVsGls8Q==
+Received: from CH0PR03CA0070.namprd03.prod.outlook.com (2603:10b6:610:cc::15)
+ by PH7PR12MB8014.namprd12.prod.outlook.com (2603:10b6:510:27c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 13:26:09 +0000
+Received: from CH2PEPF00000146.namprd02.prod.outlook.com
+ (2603:10b6:610:cc:cafe::6) by CH0PR03CA0070.outlook.office365.com
+ (2603:10b6:610:cc::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.35 via Frontend Transport; Mon,
+ 7 Apr 2025 13:26:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CH2PEPF00000146.mail.protection.outlook.com (10.167.244.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Mon, 7 Apr 2025 13:26:08 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 7 Apr 2025
+ 06:26:01 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 7 Apr 2025 06:26:01 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Mon, 7 Apr
+ 2025 06:26:01 -0700
+From: David Thompson <davthompson@nvidia.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+	<vadimp@nvidia.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	David Thompson <davthompson@nvidia.com>
+Subject: [PATCH] mlxbf-bootctl: use sysfs_emit_at() in secure_boot_fuse_state_show()
+Date: Mon, 7 Apr 2025 13:25:58 +0000
+Message-ID: <20250407132558.2418719-1-davthompson@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey
- for camera shutter switch
-To: Nitin Joshi <nitjoshi@gmail.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net,
- Nitin Joshi1 <njoshi1@lenovo.com>
-References: <20250403053127.4777-1-nitjoshi@gmail.com>
- <dbb95bde-8163-4799-8414-c60ba1c69aa5@redhat.com>
- <cf577f4d-ebfe-4b23-b918-2d59d9e81271@gmail.com>
- <f3f53d44-379a-42a4-9638-9e8532a83624@redhat.com>
- <0b0f51ab-667e-4497-8f24-2b9433427d1c@gmail.com>
- <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
- <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000146:EE_|PH7PR12MB8014:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78e09503-9c28-461a-f404-08dd75d7c1e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?u1Bh2gDEUL2Ctj/6DWnF159x+OLu5FpQQ165a/J8+c6NjkkPDHeTfeEZX7m7?=
+ =?us-ascii?Q?Wekaa8pZj8hbyEUvOtdPII83709jT3XfduhGlK7GgFuVtnAoy8x6egq/Mtyl?=
+ =?us-ascii?Q?qS6GpOO9IxVhXLKRDaYH1UCRxHLBE68uuTSTxJlReTgBel5zS2g8a+0fu7Qz?=
+ =?us-ascii?Q?laNePa3ScozAi5Cp5DkwcqMhy+2QqqKB9kGBE7obisxGqKeQ6KXthXpJ72F+?=
+ =?us-ascii?Q?NruZr4Hcc+4Io9hatJkfVJomuUK/mElQYn63WEzdWwjiXp59qmO13OXWTiI1?=
+ =?us-ascii?Q?yplaZ/j24DwVn+wRd8Fc86YxuzF5ozcZXH3lG4c4rQOoVVysq+RCNouCw2VL?=
+ =?us-ascii?Q?kQNVzgCtOMLBQA7BQ3F5UMneufM3fTwyDevBkEz6LwvWAKKzrgWMeimnuUIe?=
+ =?us-ascii?Q?cfjLB162eFcmIssDZWWz46ZPne4SnlWKg9xUT/ITPy9JsCUZsd+El1SH8QQA?=
+ =?us-ascii?Q?xCp9lndKxFgqCs+BreyYHJaSu7QAC1Dmn3ja/JGRHa97W0eUat4dL/GLaoFj?=
+ =?us-ascii?Q?Tx0XSpmbvQksElr5iR1buKmcNpUahPLYJ2PImHpPZSM6rGqVdM4bzl7UiF58?=
+ =?us-ascii?Q?j8o9nJ1fe+3JYQv6th4UT7z87aKKA35wGK5GD4HJzZEOJLPp1+CnMPUZ5BHJ?=
+ =?us-ascii?Q?esDHnGLVcwegt941CN56QYhudC4D1acAT1cmT8Z1nT0YhkDbZYlFZema93qY?=
+ =?us-ascii?Q?xNTA9onutG4jp4xpu+Bq1Mp+ca5gtCiunE87oHdHqgHBJ259FDmBiHXSzUiD?=
+ =?us-ascii?Q?NgVg1JWL97GfmygdDEwct79B5J9+Po/z40IlJ2acIxXqN6WCvvhoXsQl+I0F?=
+ =?us-ascii?Q?e9lgpmPRqh1h4j5YkSFAHp2ACAAu4ks+qrYCdkU1yjgzxqF/FxnDA+8+mD7x?=
+ =?us-ascii?Q?OTAHUfranqmBQ+xnK/SbwMwWamKTPeJyauUrKQgY2IzZRKzlhsm+9ADgExtt?=
+ =?us-ascii?Q?YqYYx+nrFIgxL2IMMBM8PwZgTay6R6//RI1j02u9xc00u1TP4xrw88PCdgRc?=
+ =?us-ascii?Q?eVGzq6Q647sFMfIzaw/I25047q10xDTWJhg7yJlIpLJdq/4P1LriiNQZOjpg?=
+ =?us-ascii?Q?YyIH5Hul/iQ++N5jdOMyCz1CqcLp3Q1akLNyzTBNxTNpDVroUPHi6s6Uyaic?=
+ =?us-ascii?Q?qahpW1cbaJPjBArCZJ70iBZrAz0qECK9hvdpLGd8VMPL0d0fh5hBtIhAFXOS?=
+ =?us-ascii?Q?l8Sf/r5UOB2FX/LyXVQHbqnBoPbkWX2CKgti4u7Zbsa2GEQ/SWlLn73MIM4a?=
+ =?us-ascii?Q?sDvszhM5TTLVdNZ6OyxKp5bXREtFX71ByTMAfI9S3bzOKxdS1udrL5qsXNVh?=
+ =?us-ascii?Q?0BTtwwkpkdGx2Aii7cViTJarY5hlJ47wIQKZmrRXd9zSQBEJbDuzFYdiiPkU?=
+ =?us-ascii?Q?iFqX+I6iDaYYEH8dD+uE1MvG2LLpJTSX+SiXk3MbcjWmx/kKc8j0ROZvoB8Q?=
+ =?us-ascii?Q?gqAEDOrIlCQSSxxLPtcH75/hvkCJafKvs1WrxvjNbBUerqNODpzjspMNLsi4?=
+ =?us-ascii?Q?yc+8bKN1HjqB5ek=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:26:08.6210
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78e09503-9c28-461a-f404-08dd75d7c1e2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000146.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8014
 
-Hi Nitin,
+A warning is seen when running the latest kernel on a BlueField SOC:
+[251.512704] ------------[ cut here ]------------
+[251.512711] invalid sysfs_emit: buf:0000000003aa32ae
+[251.512720] WARNING: CPU: 1 PID: 705264 at fs/sysfs/file.c:767 sysfs_emit+0xac/0xc8
 
-On 7-Apr-25 05:27, Nitin Joshi wrote:
-> Hello Mark,
-> 
-> On 4/5/25 04:23, Mark Pearson wrote:
->> Hi Nitin,
->>
->> On Fri, Apr 4, 2025, at 5:02 AM, Nitin Joshi wrote:
->>> Hello Hans,
->>>
->>> On 4/4/25 16:25, Hans de Goede wrote:
->>>> Hi Nitin,
->>>>
->>>> On 4-Apr-25 8:44 AM, Nitin Joshi wrote:
->>>>> Hello Hans,
->>>>>
->>>>> Thank you for reviewing patch.
->>>>>
->>>>> On 4/3/25 19:34, Hans de Goede wrote:
->>>>>> Hi Nitin,
->>>>>>
->>>>>> On 3-Apr-25 7:31 AM, Nitin Joshi wrote:
->>>>>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
->>>>>>> has new shortcut on F9 key i.e to switch camera shutter and it
->>>>>>> send a new 0x131b hkey event when F9 key is pressed.
->>>>>>>
->>>>>>> This commit adds support for new hkey 0x131b.
->>>>>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
->>>>>>
->>>>>> Does the EC also actually enable/disable the camera in response to
->>>>>> this new hotkey, or is this purely a request to userspace / the OS
->>>>>> to enable/disable the camera
->>>>> Enable/disable is actually being done by EC. Camera enablement for these products are still in testing phase.
->>>>> ?
->>>>
->>>> Ok, I assume we can also get the state (enabled vs disabled)
->>>> e.g. from the event? In that case the events should be reported using
->>>> EV_SW, SW_CAMERA_LENS_COVER and we should also get the initial
->>>> state and set the switch to the initial state before registering
->>>> the input device.
->>> Enable/Disable status will be determine in IPU side which receives
->>> notification from EC. So, the only way to determine the status would be
->>> to determine the status in IPU side.
->>> So, purpose of this patch will only to avoid "unhandled hkey event"
->>> error from thinkpad_acpi driver.
->>> Please let me know, if i am missing something.
+The warning is triggered because the mlxbf-bootctl driver invokes
+"sysfs_emit()" with a buffer pointer that is not aligned to the
+start of the page. The driver should instead use "sysfs_emit_at()"
+to support non-zero offsets into the destination buffer.
 
-We don't want to just avoid the "unhandled hkey event" message,
-we also want to send an event to userspace that the camera has
-been enabled or disabled, including information if it is
-being enabled or being disabled. This way userspace can show an OSD
-indicating that the camera has been enabled/disabled similar to how
-we do this when e.g. the mic is muted.
+Fixes: 9886f575de5a ("platform/mellanox: mlxbf-bootctl: use sysfs_emit() instead of sprintf()")
 
-This must be reported to userspace using SW_CAMERA_LENS_COVER, which is
-what all kernel code which reports camera shutter state
-(be it a true shutter or hw blacking out of the image) is using now.
+Signed-off-by: David Thompson <davthompson@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-bootctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Or maybe the IPU6 driver itself can report SW_CAMERA_LENS_COVER,
-assuming the IPU6 driver also receives an event when the camera
-shutter status changes ?
-
->> I hadn't thought about this - but we need to be able to track the status to make sure (eventually) that the right status gets displayed in userspace. It would be bad if it was out of sync with the IPU.
->>
->> Is the initial status always going to be disabled, or do we need a mechanism from Intel to probe the current status?
-> 
-> I need to check regarding this but AFAIK, we don't have any other mechanism to probe current status. Also , there was some security concern involved in this which i need to clarify.
-
-I don't see how userspace knowing if the shutter is in open/closed
-state impacts security. Userspace still cannot control the shutter.
-
-Regards,
-
-Hans
-
-
-
-
->>>>>>> ---
->>>>>>>     drivers/platform/x86/thinkpad_acpi.c | 2 ++
->>>>>>>     1 file changed, 2 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>> index 0384cf311878..80f77f9c7a58 100644
->>>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
->>>>>>>                                * directly in the sparse-keymap.
->>>>>>>                                */
->>>>>>>         TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
->>>>>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->>>>>>>         TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint doubletap on/off */
->>>>>>>         TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform profile in 2024 systems */
->>>>>>>         TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform profile in 2025 + systems */
->>>>>>> @@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
->>>>>>>          * after switching to sparse keymap support. The mappings above use translated
->>>>>>>          * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
->>>>>>>          */
->>>>>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
->>>>>>>         { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
->>>>>>>         { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
->>>>>>>         { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->>>>>>
->>>>>
->>>>
-> 
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index b95dcb8d483c..c18a5b96de5c 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -333,9 +333,9 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
+ 			else
+ 				status = valid ? "Invalid" : "Free";
+ 		}
+-		buf_len += sysfs_emit(buf + buf_len, "%d:%s ", key, status);
++		buf_len += sysfs_emit_at(buf, buf_len, "%d:%s ", key, status);
+ 	}
+-	buf_len += sysfs_emit(buf + buf_len, "\n");
++	buf_len += sysfs_emit_at(buf, buf_len, "\n");
+ 
+ 	return buf_len;
+ }
+-- 
+2.43.2
 
