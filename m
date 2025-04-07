@@ -1,193 +1,183 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BC31FCFD3;
-	Mon,  7 Apr 2025 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069922040B7;
+	Mon,  7 Apr 2025 15:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039672; cv=none; b=bswnRZuVtOQXcPrTThzmYfJgeGEJm8evqH4RarMheH+22nWSuFYqclAXHUGMc3kBiVGediePhtAVt8OSFfqy08Wf7AtBEM0z80cA4XNtJTZvyTm25kzGYGhbQYUWFnb9UP/YXsW0zkj//RYTTjEJ2vakCyDvBRkiojzwjkXSUmA=
+	t=1744040835; cv=none; b=aAW0kdqHvr9VYoZ7JwFGsFvD24M0zxWaTwr+k/lnYXiNfZIkN588igF2bmSGHXy71FIo+CxvThHJb5Y8j7iQ0xeUbut0ZYW269vGX2KYSHHzAKTvn4CkPyWTehsiz5a+IDh8w5QMPPog4S/eBafrn8vN1oG9dtB4b4QuJTnkXO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039672; c=relaxed/simple;
-	bh=ft5fAVeWE1b1HKhaLeGcIb2VFYMlP13maxhipyRumJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZY2Xu1OM3QMHWceYmnS7TTCp5/YBiXwM1XWu86slA+7PA7qxkW4nGhj0c1fHD4YOkWfaQgr7A5pWQAfBbcoX6hC/V5WepP4bcnb0iYzRBkju6U7KBtt8v+RKSHMjgVscSQIn1xci7wdCMFH0jF7JB6NkuhwM+w6idGENVpzJQQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LBZvLE2G; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744040835; c=relaxed/simple;
+	bh=UaUZsRHa5EOc2Zin6lFK+DuGV7ZjbYiHEDzEp+CB8p4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=C6+TdGoXA1pKCf+azY9kEssaX/YekmfRWye4IVNRUyiL/hXEmSr7yP02n8m6hMx1eLSPxGHUqmiqL+KM3VbLF+oEnZEpYDEq/q8rpj7x0g3RAAO2LWnbi5/7GBStu4K09q1rnIj2CHEa9uXRfFvm71z42wEjOo/Wxy+6EQNleEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fInOwzLx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LBZvLE2G"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 72646431EA;
-	Mon,  7 Apr 2025 15:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744039667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WgX6S64ngnXsjU0lQPqeLHBfnA+UnbXv6BjQk1oGXZU=;
-	b=LBZvLE2G+afaVJ2bwhuBl1x1YRR/aqaZ2Xm5yU+xaLjjIqM+WbNAKPx85Swnqti9EdXmCR
-	jxm3gIWcOaG1co2jTwQSHLMwRfa/o37ZW3TL5sERhaicxQw3i4iyp8UcVcTXkH1w4KSGdk
-	Y19KevZYjLYHr3HXXP8AducFPd1YdMFTPsJeGctmaMWsKIGeEO+n7SDKrX8kxYN5Z1gWgI
-	+UT+rfLgfI9oZV+al0AMr7X1Hj0w9CZsV0S3DJwxwGrF5CvYlrRAnPH725fFHTQ9VF1+RR
-	KAa03YipbyuRmYOv8qQstJ9OZTNaCvUkN6DRY2d/JonMQilxNjXgv50w/l7c9A==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	=?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>,
-	Hui Pu <Hui.Pu@gehealthcare.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	dri-devel@lists.freedesktop.org,
-	asahi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 34/34] drm/bridge: panel: convert to devm_drm_bridge_alloc() API
-Date: Mon,  7 Apr 2025 17:27:39 +0200
-Message-ID: <20250407-drm-bridge-convert-to-alloc-api-v1-34-42113ff8d9c0@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fInOwzLx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744040834; x=1775576834;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UaUZsRHa5EOc2Zin6lFK+DuGV7ZjbYiHEDzEp+CB8p4=;
+  b=fInOwzLxoQYX3fmjUKyMYMo3tjM36BZH4K3wKfpuZF0L8AYCCXSsKM5R
+   oWinCfNr4Rd1/qJijGDBiA6ntshjAeKf3nI8K+wcDSZhY95S/asuQq0R4
+   UlvDI+Nhw74HeGAhjRZkdZXUdF5vK5WiI/dttQAfLAMEigB2xwE3CcSt4
+   WZolNeiIJtdWAWXmVfdBKkcQVnAoJ9u+O0/aRm4UtNf5ifPYuLB9IhNUU
+   y+QvIRcd2g6pMjgEj+t4NUM4OtNUdrksCfBMaZ80b97pDZ3wH2citqj9k
+   JBBg1m8pryi/Q9TJ2vIxAOnijrWSEK+uD2OQXsp64n4PAywyCaik6ZgOk
+   w==;
+X-CSE-ConnectionGUID: A0DONvGDRTWrUX1LMcqQLA==
+X-CSE-MsgGUID: b/YqlXlfSyK6EKvM0xaogA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="62982306"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="62982306"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:47:13 -0700
+X-CSE-ConnectionGUID: jD+96N+KS7CMEJsYM+TmMQ==
+X-CSE-MsgGUID: u+7ADUAjR8WPUu7E0qPIJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127872061"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:47:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Apr 2025 18:47:06 +0300 (EEST)
+To: Mario Limonciello <superm1@kernel.org>
+cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
+    Hans de Goede <hdegoede@redhat.com>, Yijun Shen <Yijun.Shen@dell.com>, 
+    stable@vger.kernel.org, Yijun Shen <Yijun_Shen@Dell.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: amd: pmf: Fix STT limits
+In-Reply-To: <392938bb-24b8-4873-ba89-aacf2c404499@kernel.org>
+Message-ID: <333df1fe-b9d7-9396-240d-e586a9f4088a@linux.intel.com>
+References: <20250407133645.783434-1-superm1@kernel.org> <60e43790-bbeb-29b3-dcf1-7311439e15cc@linux.intel.com> <392938bb-24b8-4873-ba89-aacf2c404499@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.14.2
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtheegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtoffgsehtkeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudffiefgvdfftdffkeejjefhffduleejleeuieetieetgeehtefhjedtgeegieegnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihrdhfrhhithiirdgsohigpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvp
- dhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: multipart/mixed; boundary="8323328-1266864523-1744040826=:936"
 
-This is the new API for allocating DRM bridges.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The devm lifetime management of this driver is peculiar. The underlying
-device for the panel_bridge is the panel, and the devm lifetime is tied the
-panel device (panel->dev). However the panel_bridge allocation is not
-performed by the panel driver, but rather by a separate entity (typically
-the previous bridge in the encoder chain).
+--8323328-1266864523-1744040826=:936
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thus when that separate entoty is destroyed, the panel_bridge is not
-removed automatically by devm, so it is rather done explicitly by calling
-drm_panel_bridge_remove(). This is the function that does devm_kfree() the
-panel_bridge in current code, so update it as well to put the bridge
-reference instead.
+On Mon, 7 Apr 2025, Mario Limonciello wrote:
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
+> On 4/7/2025 10:19 AM, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 7 Apr 2025, Mario Limonciello wrote:
+> >=20
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > >=20
+> > > On some platforms it has been observed that STT limits are not being
+> > > applied
+> > > properly causing poor performance as power limits are set too low.
+> > >=20
+> > > STT limits that are sent to the platform are supposed to be in Q8.8
+> > > format.  Convert them before sending.
+> > >=20
+> > > Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> > > Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Poli=
+cy
+> > > Binary")
+> > > Cc: stable@vger.kernel.org
+> > > Tested-By: Yijun Shen <Yijun_Shen@Dell.com>
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > ---
+> > > v2:
+> > >   * Handle cases for auto-mode, cnqf, and sps as well
+> > > ---
+> > >   drivers/platform/x86/amd/pmf/auto-mode.c | 4 ++--
+> > >   drivers/platform/x86/amd/pmf/cnqf.c      | 4 ++--
+> > >   drivers/platform/x86/amd/pmf/sps.c       | 8 ++++----
+> > >   drivers/platform/x86/amd/pmf/tee-if.c    | 4 ++--
+> > >   4 files changed, 10 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c
+> > > b/drivers/platform/x86/amd/pmf/auto-mode.c
+> > > index 02ff68be10d01..df37f8a84a007 100644
+> > > --- a/drivers/platform/x86/amd/pmf/auto-mode.c
+> > > +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
+> > > @@ -120,9 +120,9 @@ static void amd_pmf_set_automode(struct amd_pmf_d=
+ev
+> > > *dev, int idx,
+> > >   =09amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false,
+> > > pwr_ctrl->sppt_apu_only, NULL);
+> > >   =09amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_mi=
+n,
+> > > NULL);
+> > >   =09amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> > > -=09=09=09 pwr_ctrl->stt_skin_temp[STT_TEMP_APU], NULL);
+> > > +=09=09=09 pwr_ctrl->stt_skin_temp[STT_TEMP_APU] << 8, NULL);
+> >=20
+> > Hi Mario,
+> >=20
+> > Could we add some helper on constructing the fixed-point number from th=
+e
+> > integer part as this magic shifting makes the intent somewhat harder to
+> > follow just by reading the code itself?
+> >=20
+> > I hoped that include/linux/ would have had something for this but it se=
+ems
+> > generic fixed-point helpers are almost non-existing except for very
+> > specific use cases such as averages so maybe add a helper only for this
+> > driver for now as this will be routed through fixes branch so doing ran=
+dom
+> > things i include/linux/ might not be preferrable and would require larg=
+er
+> > review audience.
+> >=20
+> > What I mean for general helpers is that it would be nice to have someth=
+ing
+> > like DECLARE_FIXEDPOINT() similar to DECLARE_EWMA() macro (and maybe a
+> > signed variant too) which creates a few helper functions for the given
+> > name prefix. It seems there's plenty of code which would benefit from s=
+uch
+> > helpers and would avoid the need to comment the fixed-point operations
+> > (not to speak of how many of such ops likely lack the comment). So at
+> > least keep that in mind for naming the helpers so the conversion to
+> > a generic helper could be done smoothly.
+> >=20
+>=20
+> Do I follow right that you mean something like this?
+>=20
+> static inline u32 amd_pmf_convert_q88 (u32 val)
 
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-To: David Airlie <airlied@gmail.com>
-To: Simona Vetter <simona@ffwll.ch>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-To: Robert Foss <rfoss@kernel.org>
-To: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-To: Jonas Karlman <jonas@kwiboo.se>
-To: Jernej Skrabec <jernej.skrabec@gmail.com>
-To: Jagan Teki <jagan@amarulasolutions.com>
-To: Shawn Guo <shawnguo@kernel.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-To: Pengutronix Kernel Team <kernel@pengutronix.de>
-To: Fabio Estevam <festevam@gmail.com>
-To: Douglas Anderson <dianders@chromium.org>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Paul Kocialkowski <paulk@sys-base.io>
-Cc: Dmitry Baryshkov <lumag@kernel.org>
-Cc: Hervé Codina <herve.codina@bootlin.com>
-Cc: Hui Pu <Hui.Pu@gehealthcare.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: asahi@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-Cc: chrome-platform@lists.linux.dev
-Cc: imx@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-amlogic@lists.infradead.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: freedreno@lists.freedesktop.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
----
- drivers/gpu/drm/bridge/panel.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+As with the ewma example, the operation should be the last part. And we'd=
+=20
+probably want to have some common prefix for all those to make it obvious=
+=20
+it's fixed-point related, so lets say e.g.:
 
-diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-index 79b009ab9396048eac57ad47631a902e949d77c6..ddd1e91970d09b93aa64f50cd9155939a12a2c6f 100644
---- a/drivers/gpu/drm/bridge/panel.c
-+++ b/drivers/gpu/drm/bridge/panel.c
-@@ -287,15 +287,14 @@ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
- 	if (!panel)
- 		return ERR_PTR(-EINVAL);
- 
--	panel_bridge = devm_kzalloc(panel->dev, sizeof(*panel_bridge),
--				    GFP_KERNEL);
--	if (!panel_bridge)
--		return ERR_PTR(-ENOMEM);
-+	panel_bridge = devm_drm_bridge_alloc(panel->dev, struct panel_bridge, bridge,
-+					     &panel_bridge_bridge_funcs);
-+	if (IS_ERR(panel_bridge))
-+		return (void *)panel_bridge;
- 
- 	panel_bridge->connector_type = connector_type;
- 	panel_bridge->panel = panel;
- 
--	panel_bridge->bridge.funcs = &panel_bridge_bridge_funcs;
- 	panel_bridge->bridge.of_node = panel->dev->of_node;
- 	panel_bridge->bridge.ops = DRM_BRIDGE_OP_MODES;
- 	panel_bridge->bridge.type = connector_type;
-@@ -327,7 +326,7 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
- 	panel_bridge = drm_bridge_to_panel_bridge(bridge);
- 
- 	drm_bridge_remove(bridge);
--	devm_kfree(panel_bridge->panel->dev, bridge);
-+	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
- }
- EXPORT_SYMBOL(drm_panel_bridge_remove);
- 
+fixp_amd_pmf_q88_from_integer()
 
--- 
-2.49.0
+I'm not entirely sure though if we really need per driver in the prefix at=
+=20
+all as fixed-points are more general concept than a single driver/hw. So=20
+if it's only used for temperature, maybe just fixp_temp_q88_from_integer()=
+=20
+or even just fixp_q88_from_integer(), Q8.8 should really be the same for=20
+all users, shouldn't it, so the last one would seem okay too to me=20
+(although I'm not sure what people in general will think of that).
 
+I suspect ..._from_int() isn't good name for operation because "int" is a=
+=20
+type in C but it would be shorted than from_integer.
+
+> {
+> =09return val << 8;
+> }
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-1266864523-1744040826=:936--
