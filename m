@@ -1,194 +1,85 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3101DED6B;
-	Mon,  7 Apr 2025 14:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5AE1FF5FB
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 14:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035911; cv=none; b=ey80UAUcJfJ8KUER6DLOwPtaCMHvrdwdewbeQu0DQ47/KJlbV0qpHmncdCkBk20z5dSeiWGkc7dBtqdeBCXMvyiJ5lsolWVI6+YHkeo3yv+ij3sQ6Oa1aPedDt8Hk781CTEpEa0JfnqE1YuMmm12pszmFEfeS8dEvr2FI1OupNQ=
+	t=1744035913; cv=none; b=o/GYT8oM4sMg4UZ97nnvfgqv/UqPSSdso8Jv/kj5XccCBngAMiOqc915xDkv5+oyOXQreheD384OpP5tG6T6GoertHioJfNzvirbiawnb3a+yS5cq+FHZIF84WlurcOTorW/jHSaiooNdDZ+8DEBqmEwGTPkpTg8YC3GRg8BhGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035911; c=relaxed/simple;
-	bh=XkCOmt2Z/h1ynfDFsjCaC0n2vendjBldaaqhNxRJceo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TqXYcxBmyAtOkNRTXKphe9mC8Rf50NbyS3YMWbAFEWwlhnNpf0+C1BIammAY1hKxLkHsUVNk8hE+0WZtemKyq9UjPPO4GczIBMMhJdg7GGBzJCOBbDxg06hRUfFQt2L/26zXjKcWr2xtNqet/RgqvMCAN0c1/hlQcQFPh3rUJQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TrPhd/9y; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TrPhd/9y"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B675143281;
-	Mon,  7 Apr 2025 14:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744035907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=41vTHyL+V115rpzV8yiJOSt8o1/SbibksvBOkcYUztI=;
-	b=TrPhd/9yx/uz+Jqhl6cevPGe1U4iJYU/GtPYsROsV9SszFY7WzMHdKyCFM32TgMqsvJp5S
-	bTOwqvj7B8cNjD2QoNzqZkZ4k2B/tZ3NSugTR0mh2kVtaTk24SAli1yaHhVuCuGSTxKvCS
-	NQ1MyEwid5p0Dx2ztEIFOoXPsRnx7sivyEv7jc26iVzSFwtn/HuVFCYSlVnu/38P9xMMoH
-	bIMowGNR6DiM6Wsc5v7EbAJVZ+mZYrSZXtHzJpGm4Xp+xzR1DK0vNcLRcHoTDc1TGjoY5d
-	iOCTdFprFCIN145qsTw+uPPlChnIW3Dhoxw0P65R7Fl5vYfdak6BesuQ3m7Gng==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 07 Apr 2025 16:23:36 +0200
-Subject: [PATCH 21/34] drm/omap: dss: hdmi4: convert to
- devm_drm_bridge_alloc() API
+	s=arc-20240116; t=1744035913; c=relaxed/simple;
+	bh=hdqi2dfXH73MRPUuywUmchGns0gALCfAquzFJIgXhz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUTq9LooyR1S/JceAl5ziW6Oa5vxZZXVhdRSYq+Io4mQgsPLacYuIjThZM6goYY2icxCikjNF7gqDxx9GxDJWugas+ONox/BIWNtQ0OARzXmHIc0h3x2K1Dc2B+a1pQHDcKthcIEQROPGEJHYkbI04OFN7sxfgzaYGpUhvZBJz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 2ljTVzqFSsySgcTBdY5fuA==
+X-CSE-MsgGUID: BnsRqgIWQDCMBYumOgnBPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49080332"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="49080332"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:25:10 -0700
+X-CSE-ConnectionGUID: YbcOzC1pR7a85qCdbpLvzg==
+X-CSE-MsgGUID: rXHd4S5BQWm8LhyQVwyv1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="133178613"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:25:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u1nPO-0000000A5sy-2Qkc;
+	Mon, 07 Apr 2025 17:25:06 +0300
+Date: Mon, 7 Apr 2025 17:25:06 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86: x86-android-tablets: Add "9v" to Vexia
+ EDU ATLA 10 tablet symbols
+Message-ID: <Z_PgQvvcZjZ-4fTS@smile.fi.intel.com>
+References: <20250407092017.273124-1-hdegoede@redhat.com>
+ <Z_OoouVSgw1xOpur@smile.fi.intel.com>
+ <ba58d467-1525-496b-b8ba-b14aa04307a1@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-21-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Douglas Anderson <dianders@chromium.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedukeenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegvddprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvr
- hhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba58d467-1525-496b-b8ba-b14aa04307a1@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is the new API for allocating DRM bridges.
+On Mon, Apr 07, 2025 at 03:49:26PM +0200, Hans de Goede wrote:
+> On 7-Apr-25 12:27, Andy Shevchenko wrote:
+> > On Mon, Apr 07, 2025 at 11:20:15AM +0200, Hans de Goede wrote:
+> >> The Vexia EDU ATLA 10 tablet comes in 2 different versions with
+> >> significantly different mainboards. The only outward difference is that
+> >> the charging barrel on one is marked 5V and the other is marked 9V.
+> >>
+> >> Both need to be handled by the x86-android-tablets code. Add 9v to
+> >> the symbols for the existing support for the 9V Vexia EDU ATLA 10 tablet
+> >> symbols to prepare for adding support for the 5V version.
+> >>
+> >> All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/
+> > 
+> > And period :-)
+> > 
+> > All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/.
+> 
+> It feels a bit silly to send a v2 just to add a period to the commit msg.
 
-Switching from a non-devm to a devm allocation allows removing the kfree()
-in the remove function and in the probe error management code, and as a
-consequence to simplify the code flow by removing now unnecessary gotos.
+I agree, it can be tweaked whilst applying, but I'm not the one in charge here
+:-)
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
----
-
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
----
- drivers/gpu/drm/omapdrm/dss/hdmi4.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-index a3b22952fdc32b5899dae82d413108c5c0a1c3c8..3cd612af24498b057c33eaecb3d43c8df76cd23e 100644
---- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-+++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-@@ -505,7 +505,6 @@ static const struct drm_bridge_funcs hdmi4_bridge_funcs = {
- 
- static void hdmi4_bridge_init(struct omap_hdmi *hdmi)
- {
--	hdmi->bridge.funcs = &hdmi4_bridge_funcs;
- 	hdmi->bridge.of_node = hdmi->pdev->dev.of_node;
- 	hdmi->bridge.ops = DRM_BRIDGE_OP_EDID;
- 	hdmi->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
-@@ -761,9 +760,9 @@ static int hdmi4_probe(struct platform_device *pdev)
- 	int irq;
- 	int r;
- 
--	hdmi = kzalloc(sizeof(*hdmi), GFP_KERNEL);
--	if (!hdmi)
--		return -ENOMEM;
-+	hdmi = devm_drm_bridge_alloc(&pdev->dev, struct omap_hdmi, bridge, &hdmi4_bridge_funcs);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
- 
- 	hdmi->pdev = pdev;
- 
-@@ -774,25 +773,24 @@ static int hdmi4_probe(struct platform_device *pdev)
- 
- 	r = hdmi4_probe_of(hdmi);
- 	if (r)
--		goto err_free;
-+		return r;
- 
- 	r = hdmi_wp_init(pdev, &hdmi->wp, 4);
- 	if (r)
--		goto err_free;
-+		return r;
- 
- 	r = hdmi_phy_init(pdev, &hdmi->phy, 4);
- 	if (r)
--		goto err_free;
-+		return r;
- 
- 	r = hdmi4_core_init(pdev, &hdmi->core);
- 	if (r)
--		goto err_free;
-+		return r;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
- 		DSSERR("platform_get_irq failed\n");
--		r = -ENODEV;
--		goto err_free;
-+		return -ENODEV;
- 	}
- 
- 	r = devm_request_threaded_irq(&pdev->dev, irq,
-@@ -800,7 +798,7 @@ static int hdmi4_probe(struct platform_device *pdev)
- 			IRQF_ONESHOT, "OMAP HDMI", hdmi);
- 	if (r) {
- 		DSSERR("HDMI IRQ request failed\n");
--		goto err_free;
-+		return r;
- 	}
- 
- 	hdmi->vdda_reg = devm_regulator_get(&pdev->dev, "vdda");
-@@ -808,7 +806,7 @@ static int hdmi4_probe(struct platform_device *pdev)
- 		r = PTR_ERR(hdmi->vdda_reg);
- 		if (r != -EPROBE_DEFER)
- 			DSSERR("can't get VDDA regulator\n");
--		goto err_free;
-+		return r;
- 	}
- 
- 	pm_runtime_enable(&pdev->dev);
-@@ -827,8 +825,6 @@ static int hdmi4_probe(struct platform_device *pdev)
- 	hdmi4_uninit_output(hdmi);
- err_pm_disable:
- 	pm_runtime_disable(&pdev->dev);
--err_free:
--	kfree(hdmi);
- 	return r;
- }
- 
-@@ -841,8 +837,6 @@ static void hdmi4_remove(struct platform_device *pdev)
- 	hdmi4_uninit_output(hdmi);
- 
- 	pm_runtime_disable(&pdev->dev);
--
--	kfree(hdmi);
- }
- 
- static const struct of_device_id hdmi_of_match[] = {
+> Ilpo do you want me to send a v2 of this series?
 
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
