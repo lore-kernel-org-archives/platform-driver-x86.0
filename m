@@ -1,166 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E98C215079;
-	Mon,  7 Apr 2025 16:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48B120371F;
+	Mon,  7 Apr 2025 17:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044436; cv=none; b=uRyVsYhOFUY6e4BkWufRh7grUkklsCH3yERq0cffVPTbuEbrO34gb/gf6P4ZgDh6Xhw6Ul69f5NLIb2ooXePQHkLOFzT1nICaUML1aghfiDbKyEV4H+9MNV56ZK0FNM7TVp61yPgxlynGvreyqAuQ+BxUvZonEvzqKf5ndqA8G8=
+	t=1744045733; cv=none; b=BOVLz9UQ9gfIUwsZbKiivdkVFZaN8qNKnLI4pw6uZAZKJLJZrD4s0A3v9Kb2tHt/JL+iROM6ERnVMBcu48lH33GRf0xm4CERvlcQ97wnJ2aHpUGSRh7nLeimi2fPabzMJy6lmC6TuqrYFQtmt7ba7PGYwba+Iz3UfUxkachUFOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044436; c=relaxed/simple;
-	bh=d/9rF2v6gxz+aVjjloTd50bAqLAn569sdN/hKyUhniA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sAffc7/MaB8h9oVid+spP9sowiKCUiBzIXVPrPiYwAAtP6trHn3vsQNPLWX3XZMHrt2PiTQrfPvebvAHZizyt1h/Vlgd2KDxGBevmvcFsy8axP4pw8eMHGZjop+3Phe+9kBmdW4EUM9TH1/ZYjqDyGalJxThxLJzcIxTVqbx6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YK7Ze1ul; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1744045733; c=relaxed/simple;
+	bh=VqC0gfQpUdwBMUNFwXYIIN11f43l0CgIeOiIwf8U8C8=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=E34lQf/QhCCJ4ndRC2MTTczGFxoO6K5ndmU/T05Ty2n3HnD5bDhq6Z153eSAJtm7DFn5ZN7b7lzh0d1uBNaSXiVhJ0b4X9uxiXrurOKfkg6tkiNMYumKLf0UC8CjDKZDUeL2qTpccqvlr+2jdQBgkkiFxSXXCbKPmT2kC9JU5XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mgyQJi9r; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YK7Ze1ul"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mgyQJi9r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744044434; x=1775580434;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=d/9rF2v6gxz+aVjjloTd50bAqLAn569sdN/hKyUhniA=;
-  b=YK7Ze1ulO3IPQJIf1oveqFe8p2IG/YiclFxHNSbFlgcWECdQV31TO0HU
-   5CGp7fVZ8/7oVnpr3HR8tTRuKpgw7/zxf0KISObSVDTK1ronrgWpQnSL7
-   JHM6+ambKdgIDL+XQMkc188fwPg1AW0sHLA7c5xSLLehtVLPS/oaNJXic
-   a3rnZMCJjMyrhFmxBjRJXHz2wjL7jnp0iq1DjAJ3C1kmLILSet70IuFaK
-   Z7RNx3v2+BHV78iKU/w1OB9pM2sxGwEgky0jPk3EZCtfwR9QjupNg+tRB
-   8v1rn+kkelZTCp81bvVCP+No9ZKCApIjFz1w42kqK+w8KpjdTFTASU2vQ
-   A==;
-X-CSE-ConnectionGUID: YKW7OwGrSCChaKFcr57O+w==
-X-CSE-MsgGUID: P6pQb+gtToKAn45TPgM4Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45533291"
+  t=1744045732; x=1775581732;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VqC0gfQpUdwBMUNFwXYIIN11f43l0CgIeOiIwf8U8C8=;
+  b=mgyQJi9rMvb1TSrNge00Gm/wZzQQT6Rh/bJts7PK2Ofks5r6naoggKtt
+   yQglQQyZpMb/eLIpVgNKd1b2jPQsqeMbqWJNwxNJFUVF+5D3cTiXwvrT4
+   iGJgbl87CSsZAzcaezpOBUNtp2qs+klAOgZ2q4eMEZ2ScAJKn8yxm2V02
+   D4G9f9ayiDSlrRBG2ut4yp9g2EOAFcjqmjMzul7Dcnov8x29X+UbqA5Uy
+   DgoeJREw/99lLEEBXw8CAiLruOJuaNNbXc2XuHvo8sQ0MX2+fDxaT3/Sw
+   XLL4rhx7qpYww98JebOo8tHGIvuFXgJIlOtZK5wSb++xQ/m02MeFNkuAc
+   g==;
+X-CSE-ConnectionGUID: InXoTXBeTYuxhH3dCueydg==
+X-CSE-MsgGUID: XTfeWK/GS/SEGtgEUZH8wQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45347690"
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45533291"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:47:13 -0700
-X-CSE-ConnectionGUID: dEMeJzZ7RJaZ+YDO48bYaw==
-X-CSE-MsgGUID: yioqSJnkQC+IzOwpsUAeHQ==
+   d="scan'208";a="45347690"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:08:51 -0700
+X-CSE-ConnectionGUID: Pl/JhWbxRWmQqVICCDelQQ==
+X-CSE-MsgGUID: vcK/BNsTRgiMtntE37fklQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127767783"
+   d="scan'208";a="132742013"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:47:02 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:08:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 7 Apr 2025 19:46:59 +0300 (EEST)
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-    Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-    Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-    Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-    Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, 
-    Douglas Anderson <dianders@chromium.org>, 
-    Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Anusha Srivatsa <asrivats@redhat.com>, 
-    Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
-    =?ISO-8859-15?Q?Herv=E9_Codina?= <herve.codina@bootlin.com>, 
-    Hui Pu <Hui.Pu@gehealthcare.com>, 
-    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-    dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
-    LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev, 
-    imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-    linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-    linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 02/34] platform: arm64: acer-aspire1-ec: convert to
- devm_drm_bridge_alloc() API
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-2-42113ff8d9c0@bootlin.com>
-Message-ID: <a9000632-a6d1-d369-c317-9ee73aa645dc@linux.intel.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com> <20250407-drm-bridge-convert-to-alloc-api-v1-2-42113ff8d9c0@bootlin.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Mattia Dongili <malattia@linux.it>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Herton Ronaldo Krzesinski <herton@canonical.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH 1/1] platform/x86: Use strscpy()/scnprintf() with acpi_device_name/class()
+Date: Mon,  7 Apr 2025 20:08:38 +0300
+Message-Id: <20250407170839.2153-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1316811861-1744044419=:936"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Replace strcpy() and sprintf() for acpi_device_name/class() targets
+with safer variant. In one case, scnprintf() is necessary but the
+rest can use strscpy().
 
---8323328-1316811861-1744044419=:936
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/platform/x86/eeepc-laptop.c     |  4 ++--
+ drivers/platform/x86/panasonic-laptop.c |  4 ++--
+ drivers/platform/x86/sony-laptop.c      |  4 ++--
+ drivers/platform/x86/thinkpad_acpi.c    |  6 +++---
+ drivers/platform/x86/topstar-laptop.c   |  4 ++--
+ drivers/platform/x86/xo15-ebook.c       | 10 +++-------
+ 6 files changed, 14 insertions(+), 18 deletions(-)
 
-On Mon, 7 Apr 2025, Luca Ceresoli wrote:
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index f52fbc4924d4..d1908815f5a2 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -1370,8 +1370,8 @@ static int eeepc_acpi_add(struct acpi_device *device)
+ 	if (!eeepc)
+ 		return -ENOMEM;
+ 	eeepc->handle = device->handle;
+-	strcpy(acpi_device_name(device), EEEPC_ACPI_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), EEEPC_ACPI_CLASS);
++	strscpy(acpi_device_name(device), EEEPC_ACPI_DEVICE_NAME);
++	strscpy(acpi_device_class(device), EEEPC_ACPI_CLASS);
+ 	device->driver_data = eeepc;
+ 	eeepc->device = device;
+ 
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 2987b4db6009..255317e6fec8 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -1033,8 +1033,8 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	pcc->handle = device->handle;
+ 	pcc->num_sifr = num_sifr;
+ 	device->driver_data = pcc;
+-	strcpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
+-	strcpy(acpi_device_class(device), ACPI_PCC_CLASS);
++	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
++	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
+ 
+ 	result = acpi_pcc_init_input(pcc);
+ 	if (result) {
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 3197aaa69da7..59f184f7c72f 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -3157,7 +3157,7 @@ static int sony_nc_add(struct acpi_device *device)
+ 	struct sony_nc_value *item;
+ 
+ 	sony_nc_acpi_device = device;
+-	strcpy(acpi_device_class(device), "sony/hotkey");
++	strscpy(acpi_device_class(device), "sony/hotkey");
+ 
+ 	sony_nc_acpi_handle = device->handle;
+ 
+@@ -4677,7 +4677,7 @@ static int sony_pic_add(struct acpi_device *device)
+ 	struct sony_pic_irq *irq, *tmp_irq;
+ 
+ 	spic_dev.acpi_dev = device;
+-	strcpy(acpi_device_class(device), "sony/hotkey");
++	strscpy(acpi_device_class(device), "sony/hotkey");
+ 	sony_pic_detect_device_type(&spic_dev);
+ 	mutex_init(&spic_dev.lock);
+ 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0384cf311878..519ce3cf9ed0 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -835,9 +835,9 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
+ 	}
+ 
+ 	ibm->acpi->device->driver_data = ibm;
+-	sprintf(acpi_device_class(ibm->acpi->device), "%s/%s",
+-		TPACPI_ACPI_EVENT_PREFIX,
+-		ibm->name);
++	scnprintf(acpi_device_class(ibm->acpi->device),
++		  sizeof(acpi_device_class(ibm->acpi->device)),
++		  "%s/%s", TPACPI_ACPI_EVENT_PREFIX, ibm->name);
+ 
+ 	status = acpi_install_notify_handler(*ibm->acpi->handle,
+ 			ibm->acpi->type, dispatch_acpi_notify, ibm);
+diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
+index 20df1ebefc30..53fc2b364552 100644
+--- a/drivers/platform/x86/topstar-laptop.c
++++ b/drivers/platform/x86/topstar-laptop.c
+@@ -296,8 +296,8 @@ static int topstar_acpi_add(struct acpi_device *device)
+ 	if (!topstar)
+ 		return -ENOMEM;
+ 
+-	strcpy(acpi_device_name(device), "Topstar TPSACPI");
+-	strcpy(acpi_device_class(device), TOPSTAR_LAPTOP_CLASS);
++	strscpy(acpi_device_name(device), "Topstar TPSACPI");
++	strscpy(acpi_device_class(device), TOPSTAR_LAPTOP_CLASS);
+ 	device->driver_data = topstar;
+ 	topstar->device = device;
+ 
+diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
+index df2bf1c58523..cb02222c978c 100644
+--- a/drivers/platform/x86/xo15-ebook.c
++++ b/drivers/platform/x86/xo15-ebook.c
+@@ -84,7 +84,6 @@ static int ebook_switch_add(struct acpi_device *device)
+ 	const struct acpi_device_id *id;
+ 	struct ebook_switch *button;
+ 	struct input_dev *input;
+-	char *name, *class;
+ 	int error;
+ 
+ 	button = kzalloc(sizeof(struct ebook_switch), GFP_KERNEL);
+@@ -99,9 +98,6 @@ static int ebook_switch_add(struct acpi_device *device)
+ 		goto err_free_button;
+ 	}
+ 
+-	name = acpi_device_name(device);
+-	class = acpi_device_class(device);
+-
+ 	id = acpi_match_acpi_device(ebook_device_ids, device);
+ 	if (!id) {
+ 		dev_err(&device->dev, "Unsupported hid\n");
+@@ -109,12 +105,12 @@ static int ebook_switch_add(struct acpi_device *device)
+ 		goto err_free_input;
+ 	}
+ 
+-	strcpy(name, XO15_EBOOK_DEVICE_NAME);
+-	sprintf(class, "%s/%s", XO15_EBOOK_CLASS, XO15_EBOOK_SUBCLASS);
++	strscpy(acpi_device_name(device), XO15_EBOOK_DEVICE_NAME);
++	strscpy(acpi_device_class(device), XO15_EBOOK_CLASS "/" XO15_EBOOK_SUBCLASS);
+ 
+ 	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", id->id);
+ 
+-	input->name = name;
++	input->name = acpi_device_name(device);
+ 	input->phys = button->phys;
+ 	input->id.bustype = BUS_HOST;
+ 	input->dev.parent = &device->dev;
 
-> This is the new API for allocating DRM bridges.
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->=20
-> ---
->=20
-> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/arm64/acer-aspire1-ec.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/arm64/acer-aspire1-ec.c b/drivers/platform/=
-arm64/acer-aspire1-ec.c
-> index 958fe1bf5f85bb69ac7962f217de9f0b40cde9a1..438532a047e68799ac53a16a4=
-c813fc16be997b9 100644
-> --- a/drivers/platform/arm64/acer-aspire1-ec.c
-> +++ b/drivers/platform/arm64/acer-aspire1-ec.c
-> @@ -452,9 +452,9 @@ static int aspire_ec_probe(struct i2c_client *client)
->  =09int ret;
->  =09u8 tmp;
-> =20
-> -=09ec =3D devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> -=09if (!ec)
-> -=09=09return -ENOMEM;
-> +=09ec =3D devm_drm_bridge_alloc(dev, struct aspire_ec, bridge, &aspire_e=
-c_bridge_funcs);
-> +=09if (IS_ERR(ec))
-> +=09=09return PTR_ERR(ec);
-> =20
->  =09ec->client =3D client;
->  =09i2c_set_clientdata(client, ec);
-> @@ -497,7 +497,6 @@ static int aspire_ec_probe(struct i2c_client *client)
->  =09fwnode =3D device_get_named_child_node(dev, "connector");
->  =09if (fwnode) {
->  =09=09INIT_WORK(&ec->work, aspire_ec_bridge_update_hpd_work);
-> -=09=09ec->bridge.funcs =3D &aspire_ec_bridge_funcs;
->  =09=09ec->bridge.of_node =3D to_of_node(fwnode);
->  =09=09ec->bridge.ops =3D DRM_BRIDGE_OP_HPD;
->  =09=09ec->bridge.type =3D DRM_MODE_CONNECTOR_USB;
+base-commit: 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+-- 
+2.39.5
 
-Hi Luca,
-
-It took a while to locate where the code for the new helper is. I suggest=
-=20
-if you need send another version of the series directly linking to the=20
-commit in the cover letter so that it won't take multiple hoops to find it=
-=20
-if one wants to review the code and is not having all drm trees easily at=
-=20
-hand. Here it is for the benefit of other pdx86 people:
-
-https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b71=
-5ea3d1ba537ef2da95eec
-
-
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
-I assume you want this to go through the drm tree where the helper already=
-=20
-is?
-
---=20
- i.
-
---8323328-1316811861-1744044419=:936--
