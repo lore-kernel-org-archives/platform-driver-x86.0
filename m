@@ -1,343 +1,198 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69AF204F7C;
-	Mon,  7 Apr 2025 14:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9D71F76D3;
+	Mon,  7 Apr 2025 15:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035944; cv=none; b=k7TdAVhocH8m/lVj/EfKTviPNiaSJc6O4+pj3F8dpXd8pCriQ8FEZI6sNVnIPLVl+Ge7oqc0Y6uGe9+Hv9etVhFYbaLJqjpDk/VCT9CR+dcFADJ+AajzrYEOCvReFWzwMtOgf62PeDN6jytDp+NinYJihe7Pb4sVb51YW5CD+gg=
+	t=1744039194; cv=none; b=qRG+qM4ppp08/iTV4n7xAYu/yUIJi6wNVVs/WV2ShQLiWqc8KWiLwzaECBbVzApj4O9FK5Le9cc+M36173IHqFRdBJuuX74jUHdR25cemyGxhZC/6/nHPODmtUVsWddNGK/Lv60JmBeNV+3E6bwLgZf3M48Gyan4pYTXtdz/p8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035944; c=relaxed/simple;
-	bh=rbzilaqVuyHoMPv7ZhAr8kUXXPHqxFNlXlBe7MkiJCw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mbjvx5RzPAuR0FAw0GieZUaKkDXSBQs2D1COxQOaPwyYHDArLgoFMLIhWXxT75i73yX+yxgjjbuusMw3hApO2Pz3NiPDLKprMgYgTWGbfaiV220LVyMh0bO25SP1RV7Oxtsl85jYAdVS3ddDnJjyk2Sxi6/WTzp4/knvdWCv1VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lM7vJvKv; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744039194; c=relaxed/simple;
+	bh=Uv8tsfdGNY/eBUeej0wD8UqHXmEaL3zCsQGg2SVHWOE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MyR2xsMUeOxrvvOFNh3F8hAiW8Ai+0d7kxORAaI4T+uXqiQrNVN6A9S1ta1DJV2er8LPkJYR4d2u0UKF+qxqXIggjYzqvCm9RgU21mAAl1XGUM7iDwd041SiEAgzJr5QIPNQBl2aTVw6iSCIk0/sutHVv2Y1XBJyYT0XZO8wEGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KJAsLIQI; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lM7vJvKv"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1AB77442B9;
-	Mon,  7 Apr 2025 14:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744035940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ebgCpKb0JBnNyBzMJIKOLuwJd1meFjjT61fyzD63fBQ=;
-	b=lM7vJvKvBKYwHDIqNg9m3hu0vb4jPOkECMiAsXsESARSvZnpOjIAjGzvaM/5i+nq9n2SBO
-	YtBRrm574LAiOzMnAO9HrNMZCkEiSROPGlWsfHDWPfz7V3XlGeVEkBKILnpY1GccdFEMi8
-	sRYEC1xRJvmvyR14c6t/p5Qf/OjP2RRZLItT+jnl8JtWHtkU+g+ofusmSAsKDsQwH4/BCi
-	a7nm6y0DFtMvOvar/IHOpkQaeTruncyAbMr4BIib0lywGqvCIiy+subPgADw/GmsCc1woM
-	oXvYIgNRYfImNH0cyIFRsSap2efDKkLC44W4+1kLi78zA+IKX+2yFUMWLh2W3g==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 07 Apr 2025 16:23:46 +0200
-Subject: [PATCH 31/34] drm/bridge: imx8*-ldb: convert to
- devm_drm_bridge_alloc() API
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KJAsLIQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744039192; x=1775575192;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Uv8tsfdGNY/eBUeej0wD8UqHXmEaL3zCsQGg2SVHWOE=;
+  b=KJAsLIQIedyRSFWJgOEzFFZTvIpXfJ6+7jXDtopGvTO95yfA5uTJla+y
+   Q3nFnPbWhhZHTplV4Flx4hUkBXBK8yKVrhEp7P7PEje7pXjhS5saOqITP
+   wXgYPHyi4efKrpkIdZZFwuUYAwp17zftTP20tZkHumQ2ewJsXO3wg0KyU
+   PW03vBeJSVsaDdE+j5WkCmV3D+3CqSkjGRW/YxN6OYE/Uz8zwZJiQiQKI
+   Hp0GlETXex3Q7qzwW1di+h9lstSbqxSGCOjmustnEiFm3vQHWWE654p2d
+   +IgqgKXm5LrjnXqUcY6t12tC1RHEPpnrQTVJAyH7qvjPDlpIB5zoNv+sW
+   w==;
+X-CSE-ConnectionGUID: plyvz2FpSqqKvWhC/7HgFA==
+X-CSE-MsgGUID: RRXk32zOTtuC60zYkpLCBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49283581"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="49283581"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:19:51 -0700
+X-CSE-ConnectionGUID: f0+4JNQCQrGunD0Q19cLUw==
+X-CSE-MsgGUID: Hkl9TmMHRUGBXL5vAfxwiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="151179868"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:19:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Apr 2025 18:19:46 +0300 (EEST)
+To: Mario Limonciello <superm1@kernel.org>
+cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
+    Hans de Goede <hdegoede@redhat.com>, Yijun Shen <Yijun.Shen@dell.com>, 
+    stable@vger.kernel.org, Yijun Shen <Yijun_Shen@Dell.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: amd: pmf: Fix STT limits
+In-Reply-To: <20250407133645.783434-1-superm1@kernel.org>
+Message-ID: <60e43790-bbeb-29b3-dcf1-7311439e15cc@linux.intel.com>
+References: <20250407133645.783434-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-31-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Douglas Anderson <dianders@chromium.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Liu Ying <victor.liu@nxp.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedvieenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegvddprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvr
- hhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
 
-This is the new API for allocating DRM bridges.
+On Mon, 7 Apr 2025, Mario Limonciello wrote:
 
-These two drivers are tangled together by the ldb_add_bridge_helper(), so
-they are converted at once.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> On some platforms it has been observed that STT limits are not being applied
+> properly causing poor performance as power limits are set too low.
+> 
+> STT limits that are sent to the platform are supposed to be in Q8.8
+> format.  Convert them before sending.
+> 
+> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
+> Cc: stable@vger.kernel.org
+> Tested-By: Yijun Shen <Yijun_Shen@Dell.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v2:
+>  * Handle cases for auto-mode, cnqf, and sps as well
+> ---
+>  drivers/platform/x86/amd/pmf/auto-mode.c | 4 ++--
+>  drivers/platform/x86/amd/pmf/cnqf.c      | 4 ++--
+>  drivers/platform/x86/amd/pmf/sps.c       | 8 ++++----
+>  drivers/platform/x86/amd/pmf/tee-if.c    | 4 ++--
+>  4 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
+> index 02ff68be10d01..df37f8a84a007 100644
+> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
+> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
+> @@ -120,9 +120,9 @@ static void amd_pmf_set_automode(struct amd_pmf_dev *dev, int idx,
+>  	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pwr_ctrl->sppt_apu_only, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_min, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -			 pwr_ctrl->stt_skin_temp[STT_TEMP_APU], NULL);
+> +			 pwr_ctrl->stt_skin_temp[STT_TEMP_APU] << 8, NULL);
 
-They also have a similar design, each embedding an array of channels in
-their main struct, and each channel embeds a drm_bridge. This prevents
-dynamic, refcount-based deallocation of the bridges.
+Hi Mario,
 
-To make the new, dynamic bridge allocation possible:
+Could we add some helper on constructing the fixed-point number from the 
+integer part as this magic shifting makes the intent somewhat harder to 
+follow just by reading the code itself?
 
- * change the array of channels into an array of channel pointers
- * allocate each channel using devm_drm_bridge_alloc()
- * adapt ldb_add_bridge_helper() to not set the funcs pointer
-   (now done by devm_drm_bridge_alloc())
- * adapt the code wherever using the channels
+I hoped that include/linux/ would have had something for this but it seems 
+generic fixed-point helpers are almost non-existing except for very 
+specific use cases such as averages so maybe add a helper only for this 
+driver for now as this will be routed through fixes branch so doing random 
+things i include/linux/ might not be preferrable and would require larger 
+review audience.
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
----
-
-Cc: Liu Ying <victor.liu@nxp.com>
----
- drivers/gpu/drm/bridge/imx/imx-ldb-helper.c |  4 +---
- drivers/gpu/drm/bridge/imx/imx-ldb-helper.h |  3 +--
- drivers/gpu/drm/bridge/imx/imx8qm-ldb.c     | 32 ++++++++++++++++++-----------
- drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c    | 20 ++++++++++++------
- 4 files changed, 36 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/imx/imx-ldb-helper.c b/drivers/gpu/drm/bridge/imx/imx-ldb-helper.c
-index 61347f6ec33d906264f7e06902b0d915d263f3f8..6149ba141a389a04b3c347a67f13e049328c07ff 100644
---- a/drivers/gpu/drm/bridge/imx/imx-ldb-helper.c
-+++ b/drivers/gpu/drm/bridge/imx/imx-ldb-helper.c
-@@ -190,8 +190,7 @@ int ldb_find_next_bridge_helper(struct ldb *ldb)
- }
- EXPORT_SYMBOL_GPL(ldb_find_next_bridge_helper);
- 
--void ldb_add_bridge_helper(struct ldb *ldb,
--			   const struct drm_bridge_funcs *bridge_funcs)
-+void ldb_add_bridge_helper(struct ldb *ldb)
- {
- 	struct ldb_channel *ldb_ch;
- 	int i;
-@@ -203,7 +202,6 @@ void ldb_add_bridge_helper(struct ldb *ldb,
- 			continue;
- 
- 		ldb_ch->bridge.driver_private = ldb_ch;
--		ldb_ch->bridge.funcs = bridge_funcs;
- 		ldb_ch->bridge.of_node = ldb_ch->np;
- 
- 		drm_bridge_add(&ldb_ch->bridge);
-diff --git a/drivers/gpu/drm/bridge/imx/imx-ldb-helper.h b/drivers/gpu/drm/bridge/imx/imx-ldb-helper.h
-index 38a8a54b37a60e1be942aaa60b1d1bc375a7a131..de187e3269996d284ecad451dd857271056812e1 100644
---- a/drivers/gpu/drm/bridge/imx/imx-ldb-helper.h
-+++ b/drivers/gpu/drm/bridge/imx/imx-ldb-helper.h
-@@ -88,8 +88,7 @@ int ldb_init_helper(struct ldb *ldb);
- 
- int ldb_find_next_bridge_helper(struct ldb *ldb);
- 
--void ldb_add_bridge_helper(struct ldb *ldb,
--			   const struct drm_bridge_funcs *bridge_funcs);
-+void ldb_add_bridge_helper(struct ldb *ldb);
- 
- void ldb_remove_bridge_helper(struct ldb *ldb);
- 
-diff --git a/drivers/gpu/drm/bridge/imx/imx8qm-ldb.c b/drivers/gpu/drm/bridge/imx/imx8qm-ldb.c
-index 524aac751359f5cd377807508cbeeb6a597529e1..47aa65938e6a521cd6f111535f6feb3920a0dfb7 100644
---- a/drivers/gpu/drm/bridge/imx/imx8qm-ldb.c
-+++ b/drivers/gpu/drm/bridge/imx/imx8qm-ldb.c
-@@ -47,7 +47,7 @@ struct imx8qm_ldb_channel {
- struct imx8qm_ldb {
- 	struct ldb base;
- 	struct device *dev;
--	struct imx8qm_ldb_channel channel[MAX_LDB_CHAN_NUM];
-+	struct imx8qm_ldb_channel *channel[MAX_LDB_CHAN_NUM];
- 	struct clk *clk_pixel;
- 	struct clk *clk_bypass;
- 	int active_chno;
-@@ -107,7 +107,7 @@ static int imx8qm_ldb_bridge_atomic_check(struct drm_bridge *bridge,
- 
- 	if (is_split) {
- 		imx8qm_ldb_ch =
--			&imx8qm_ldb->channel[imx8qm_ldb->active_chno ^ 1];
-+			imx8qm_ldb->channel[imx8qm_ldb->active_chno ^ 1];
- 		imx8qm_ldb_set_phy_cfg(imx8qm_ldb, di_clk, is_split, true,
- 				       phy_cfg);
- 		ret = phy_validate(imx8qm_ldb_ch->phy, PHY_MODE_LVDS, 0, &opts);
-@@ -158,7 +158,7 @@ imx8qm_ldb_bridge_mode_set(struct drm_bridge *bridge,
- 
- 	if (is_split) {
- 		imx8qm_ldb_ch =
--			&imx8qm_ldb->channel[imx8qm_ldb->active_chno ^ 1];
-+			imx8qm_ldb->channel[imx8qm_ldb->active_chno ^ 1];
- 		imx8qm_ldb_set_phy_cfg(imx8qm_ldb, di_clk, is_split, true,
- 				       phy_cfg);
- 		ret = phy_configure(imx8qm_ldb_ch->phy, &opts);
-@@ -226,13 +226,13 @@ static void imx8qm_ldb_bridge_atomic_enable(struct drm_bridge *bridge,
- 	}
- 
- 	if (is_split) {
--		ret = phy_power_on(imx8qm_ldb->channel[0].phy);
-+		ret = phy_power_on(imx8qm_ldb->channel[0]->phy);
- 		if (ret)
- 			DRM_DEV_ERROR(dev,
- 				      "failed to power on channel0 PHY: %d\n",
- 				      ret);
- 
--		ret = phy_power_on(imx8qm_ldb->channel[1].phy);
-+		ret = phy_power_on(imx8qm_ldb->channel[1]->phy);
- 		if (ret)
- 			DRM_DEV_ERROR(dev,
- 				      "failed to power on channel1 PHY: %d\n",
-@@ -261,12 +261,12 @@ static void imx8qm_ldb_bridge_atomic_disable(struct drm_bridge *bridge,
- 	ldb_bridge_disable_helper(bridge);
- 
- 	if (is_split) {
--		ret = phy_power_off(imx8qm_ldb->channel[0].phy);
-+		ret = phy_power_off(imx8qm_ldb->channel[0]->phy);
- 		if (ret)
- 			DRM_DEV_ERROR(dev,
- 				      "failed to power off channel0 PHY: %d\n",
- 				      ret);
--		ret = phy_power_off(imx8qm_ldb->channel[1].phy);
-+		ret = phy_power_off(imx8qm_ldb->channel[1]->phy);
- 		if (ret)
- 			DRM_DEV_ERROR(dev,
- 				      "failed to power off channel1 PHY: %d\n",
-@@ -412,7 +412,7 @@ static int imx8qm_ldb_get_phy(struct imx8qm_ldb *imx8qm_ldb)
- 	int i, ret;
- 
- 	for (i = 0; i < MAX_LDB_CHAN_NUM; i++) {
--		imx8qm_ldb_ch = &imx8qm_ldb->channel[i];
-+		imx8qm_ldb_ch = imx8qm_ldb->channel[i];
- 		ldb_ch = &imx8qm_ldb_ch->base;
- 
- 		if (!ldb_ch->is_available)
-@@ -448,6 +448,14 @@ static int imx8qm_ldb_probe(struct platform_device *pdev)
- 	if (!imx8qm_ldb)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < MAX_LDB_CHAN_NUM; i++) {
-+		imx8qm_ldb->channel[i] =
-+			devm_drm_bridge_alloc(dev, struct imx8qm_ldb_channel, base.bridge,
-+					      &imx8qm_ldb_bridge_funcs);
-+		if (IS_ERR(imx8qm_ldb->channel[i]))
-+			return PTR_ERR(imx8qm_ldb->channel[i]);
-+	}
-+
- 	imx8qm_ldb->clk_pixel = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(imx8qm_ldb->clk_pixel)) {
- 		ret = PTR_ERR(imx8qm_ldb->clk_pixel);
-@@ -473,7 +481,7 @@ static int imx8qm_ldb_probe(struct platform_device *pdev)
- 	ldb->ctrl_reg = 0xe0;
- 
- 	for (i = 0; i < MAX_LDB_CHAN_NUM; i++)
--		ldb->channel[i] = &imx8qm_ldb->channel[i].base;
-+		ldb->channel[i] = &imx8qm_ldb->channel[i]->base;
- 
- 	ret = ldb_init_helper(ldb);
- 	if (ret)
-@@ -499,12 +507,12 @@ static int imx8qm_ldb_probe(struct platform_device *pdev)
- 		}
- 
- 		imx8qm_ldb->active_chno = 0;
--		imx8qm_ldb_ch = &imx8qm_ldb->channel[0];
-+		imx8qm_ldb_ch = imx8qm_ldb->channel[0];
- 		ldb_ch = &imx8qm_ldb_ch->base;
- 		ldb_ch->link_type = pixel_order;
- 	} else {
- 		for (i = 0; i < MAX_LDB_CHAN_NUM; i++) {
--			imx8qm_ldb_ch = &imx8qm_ldb->channel[i];
-+			imx8qm_ldb_ch = imx8qm_ldb->channel[i];
- 			ldb_ch = &imx8qm_ldb_ch->base;
- 
- 			if (ldb_ch->is_available) {
-@@ -525,7 +533,7 @@ static int imx8qm_ldb_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, imx8qm_ldb);
- 	pm_runtime_enable(dev);
- 
--	ldb_add_bridge_helper(ldb, &imx8qm_ldb_bridge_funcs);
-+	ldb_add_bridge_helper(ldb);
- 
- 	return ret;
- }
-diff --git a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-index d4f3492ca5abf65a3327d7fa62214832946eb218..5d272916e200980f7253a032701dcd990e0e34f2 100644
---- a/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-+++ b/drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c
-@@ -44,7 +44,7 @@ struct imx8qxp_ldb_channel {
- struct imx8qxp_ldb {
- 	struct ldb base;
- 	struct device *dev;
--	struct imx8qxp_ldb_channel channel[MAX_LDB_CHAN_NUM];
-+	struct imx8qxp_ldb_channel *channel[MAX_LDB_CHAN_NUM];
- 	struct clk *clk_pixel;
- 	struct clk *clk_bypass;
- 	struct drm_bridge *companion;
-@@ -410,7 +410,7 @@ static const struct drm_bridge_funcs imx8qxp_ldb_bridge_funcs = {
- static int imx8qxp_ldb_set_di_id(struct imx8qxp_ldb *imx8qxp_ldb)
- {
- 	struct imx8qxp_ldb_channel *imx8qxp_ldb_ch =
--			 &imx8qxp_ldb->channel[imx8qxp_ldb->active_chno];
-+			 imx8qxp_ldb->channel[imx8qxp_ldb->active_chno];
- 	struct ldb_channel *ldb_ch = &imx8qxp_ldb_ch->base;
- 	struct device_node *ep, *remote;
- 	struct device *dev = imx8qxp_ldb->dev;
-@@ -456,7 +456,7 @@ imx8qxp_ldb_check_chno_and_dual_link(struct ldb_channel *ldb_ch, int link)
- static int imx8qxp_ldb_parse_dt_companion(struct imx8qxp_ldb *imx8qxp_ldb)
- {
- 	struct imx8qxp_ldb_channel *imx8qxp_ldb_ch =
--			 &imx8qxp_ldb->channel[imx8qxp_ldb->active_chno];
-+			 imx8qxp_ldb->channel[imx8qxp_ldb->active_chno];
- 	struct ldb_channel *ldb_ch = &imx8qxp_ldb_ch->base;
- 	struct ldb_channel *companion_ldb_ch;
- 	struct device_node *companion;
-@@ -586,6 +586,14 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
- 	if (!imx8qxp_ldb)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < MAX_LDB_CHAN_NUM; i++) {
-+		imx8qxp_ldb->channel[i] =
-+			devm_drm_bridge_alloc(dev, struct imx8qxp_ldb_channel, base.bridge,
-+					      &imx8qxp_ldb_bridge_funcs);
-+		if (IS_ERR(imx8qxp_ldb->channel[i]))
-+			return PTR_ERR(imx8qxp_ldb->channel[i]);
-+	}
-+
- 	imx8qxp_ldb->clk_pixel = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(imx8qxp_ldb->clk_pixel)) {
- 		ret = PTR_ERR(imx8qxp_ldb->clk_pixel);
-@@ -611,7 +619,7 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
- 	ldb->ctrl_reg = 0xe0;
- 
- 	for (i = 0; i < MAX_LDB_CHAN_NUM; i++)
--		ldb->channel[i] = &imx8qxp_ldb->channel[i].base;
-+		ldb->channel[i] = &imx8qxp_ldb->channel[i]->base;
- 
- 	ret = ldb_init_helper(ldb);
- 	if (ret)
-@@ -627,7 +635,7 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
- 	}
- 
- 	for (i = 0; i < MAX_LDB_CHAN_NUM; i++) {
--		imx8qxp_ldb_ch = &imx8qxp_ldb->channel[i];
-+		imx8qxp_ldb_ch = imx8qxp_ldb->channel[i];
- 		ldb_ch = &imx8qxp_ldb_ch->base;
- 
- 		if (ldb_ch->is_available) {
-@@ -660,7 +668,7 @@ static int imx8qxp_ldb_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, imx8qxp_ldb);
- 	pm_runtime_enable(dev);
- 
--	ldb_add_bridge_helper(ldb, &imx8qxp_ldb_bridge_funcs);
-+	ldb_add_bridge_helper(ldb);
- 
- 	return 0;
- }
+What I mean for general helpers is that it would be nice to have something 
+like DECLARE_FIXEDPOINT() similar to DECLARE_EWMA() macro (and maybe a 
+signed variant too) which creates a few helper functions for the given 
+name prefix. It seems there's plenty of code which would benefit from such 
+helpers and would avoid the need to comment the fixed-point operations 
+(not to speak of how many of such ops likely lack the comment). So at 
+least keep that in mind for naming the helpers so the conversion to
+a generic helper could be done smoothly.
 
 -- 
-2.49.0
+ i.
 
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -			 pwr_ctrl->stt_skin_temp[STT_TEMP_HS2], NULL);
+> +			 pwr_ctrl->stt_skin_temp[STT_TEMP_HS2] << 8, NULL);
+>  
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
+>  		apmf_update_fan_idx(dev, config_store.mode_set[idx].fan_control.manual,
+> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
+> index bc8899e15c914..6a5ecc05961d9 100644
+> --- a/drivers/platform/x86/amd/pmf/cnqf.c
+> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
+> @@ -81,9 +81,9 @@ static int amd_pmf_set_cnqf(struct amd_pmf_dev *dev, int src, int idx,
+>  	amd_pmf_send_cmd(dev, SET_SPPT, false, pc->sppt, NULL);
+>  	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pc->sppt_apu_only, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pc->stt_min, NULL);
+> -	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, pc->stt_skin_temp[STT_TEMP_APU],
+> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, pc->stt_skin_temp[STT_TEMP_APU] << 8,
+>  			 NULL);
+> -	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, pc->stt_skin_temp[STT_TEMP_HS2],
+> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, pc->stt_skin_temp[STT_TEMP_HS2] << 8,
+>  			 NULL);
+>  
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
+> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+> index d3083383f11fb..ec10db1bfa5ec 100644
+> --- a/drivers/platform/x86/amd/pmf/sps.c
+> +++ b/drivers/platform/x86/amd/pmf/sps.c
+> @@ -198,9 +198,9 @@ static void amd_pmf_update_slider_v2(struct amd_pmf_dev *dev, int idx)
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+>  			 apts_config_store.val[idx].stt_min_limit, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -			 apts_config_store.val[idx].stt_skin_temp_limit_apu, NULL);
+> +			 apts_config_store.val[idx].stt_skin_temp_limit_apu << 8, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -			 apts_config_store.val[idx].stt_skin_temp_limit_hs2, NULL);
+> +			 apts_config_store.val[idx].stt_skin_temp_limit_hs2 << 8, NULL);
+>  }
+>  
+>  void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+> @@ -217,9 +217,9 @@ void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+>  		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+>  				 config_store.prop[src][idx].stt_min, NULL);
+>  		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU], NULL);
+> +				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU] << 8, NULL);
+>  		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2], NULL);
+> +				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2] << 8, NULL);
+>  	} else if (op == SLIDER_OP_GET) {
+>  		amd_pmf_send_cmd(dev, GET_SPL, true, ARG_NONE, &table->prop[src][idx].spl);
+>  		amd_pmf_send_cmd(dev, GET_FPPT, true, ARG_NONE, &table->prop[src][idx].fppt);
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index d6a871f0d8ff2..7096923107929 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -142,7 +142,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_APU:
+>  			if (dev->prev_data->stt_skintemp_apu != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, val << 8, NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_APU: %u\n", val);
+>  				dev->prev_data->stt_skintemp_apu = val;
+>  			}
+> @@ -150,7 +150,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_HS2:
+>  			if (dev->prev_data->stt_skintemp_hs2 != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, val << 8, NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_HS2: %u\n", val);
+>  				dev->prev_data->stt_skintemp_hs2 = val;
+>  			}
+> 
