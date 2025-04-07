@@ -1,185 +1,207 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC95288A5
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Apr 2025 03:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743996604; cv=none; b=Zq2Cpd2g9RjFpObvwIfOReF6OBGKIqXv2A+pN8dWD/A8bk4697nzHBOI583sBFbM+LFeYie/rkKkcVb36xu7vY2/67iPzwskh0Q/mE4/MRlSik/i0rx3+wL9qG/eVs4cwRO5G2e7BrwmRDjmJ2F0GiejfCWO6W5nNumAGKzeX40=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743996604; c=relaxed/simple;
-	bh=CaU7NbeQkz4hreCpH8FrsCBQN3WCvEAW7jXBqizon5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZeHlg8By/gbPvnzThol842w+thG0AU+8xC8txI5/pVae3zsf3ZtTml67SdfJU+uSHnVjiA81yKATWRqxk3wccEkrJJu4ylJnom4N/EJi/cxCmiOqNzesiE0HB/b0Xwxo2dtfThS0vwcqv3nPN8fjvlo+YHY4ghtkvlBLHEtnreY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFzc9nVQ; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3240115E5C2;
+	Mon,  7 Apr 2025 06:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744007102; cv=fail; b=cZj7vddCnpKozLOoidKQYH8MVg49bYZPRcI1y+bKyGGuV6A8C84BfHEe/nd4uTNt2Cx1n1KY3wmcj6jJV2IJ4sk5RQOT11OEFBCJShA1mfxRKQXdbQRDxLO5wcc3m0lwpNSMWjD4k4fJfEQxjwEGIEbj1CQKoSYJjX8XHX0dB7o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744007102; c=relaxed/simple;
+	bh=afbXTWdSaeJbk4N8TD+F/Nat3n4BuoKp0dUuwALJvVM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fOXb2VLL2hBW3baqekDm0qH7HnI/v1ssekJUGUl76T4ou58xJx8MVR5Za087cUmryQmH0KCZsBF+eyTD6ABb6watZITR5uYcPYbBeJmdhTog6Jbc/x5zTx1H3IB1uHyJI85+7OSZipMIT/q8cR23YB9AfKFL7NghXfTA3Kfn+sQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oPMAx/vW; arc=fail smtp.client-ip=40.107.220.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFzc9nVQ"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227a8cdd241so43595205ad.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Apr 2025 20:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743996602; x=1744601402; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=imYotGVS6Vr5WIIQVsWM+1SkX6AOoAjFRdt5bDtgeAA=;
-        b=iFzc9nVQ7foA2SouN8tSZyIr+gE0lgEFzLFN+Qml0DjCBUdh2pbVoVcSNpsWdxLyTl
-         ucE1Vczou6dEt38IsWYjoV90Dv5ezIGp9JIPyncbV4CSyQX4F0yA6oT10mGIaIZMWYeE
-         OofrRQaUn1yiFoH/XOvv2jrLMfQKSg073aD8NhkOjiFEpSh5sI3GULRWCEMDv/fbJclB
-         Afa8DxpsPbQWSUmfKUj2pfuAujPQeP1O8Ubk9ww0he+LEjBhNZTIkftP3rcza0qO45Fo
-         piK5kdswP1PpmjcJEj/u3nyEdZ+HZq1Q53xavKL7xnSdz09QjRS5BhqIDOM4FPcZiKMT
-         DU6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743996602; x=1744601402;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=imYotGVS6Vr5WIIQVsWM+1SkX6AOoAjFRdt5bDtgeAA=;
-        b=YZIHQzl2tZ/6SDoKy0vXLUROpSdOQvLjNVcsw26YruO+wIHac+mBNxQGE7Yr1ES3E+
-         nmvK8Lav/T9HtzIlEtRxIOUeQ1PIV5I449g0kuEDiaaSMK8O+RnNEa7YB6vlwtZ6Gr68
-         qd8GUqDpaIiGwMy45AjxrgKTsgX0tm4mR0qzoZiIpCKzCVOSyUXzfNT0RLuhE0We6Mut
-         r9Er4BXGXnqxdQAJ9f3gP+ZGN93eqn7jGzVQBijk42hZ0HJpm04Qg3x+VVFK/gRLs8qr
-         Ao2AEthIeFWwOAcuvuVUihgN75R1lNZ08LVjWmHWPAuf7HpU5b4r+gn9KK+TpdKjTyWr
-         gJVw==
-X-Gm-Message-State: AOJu0YxJjDNySyOUTi3Jkhgq5yGAClO61/iRVENRTlZrq5XY29HiCypJ
-	artbxjW3+EYjQee+UXxmv03KyT3bAIQbefKcTCRbFJaG0nSB1a2dOuph4XHdc/E=
-X-Gm-Gg: ASbGncuoChjURJ2I4EVXdqbztiSFM3vA5woeL5U8BNRXUCTlrLN7teM4Id67ylTtImj
-	5F/7Mh5m1pHe8EivagW8CeiZGOzge5lpSpB4m/qe0HbQ8Y8MCn12jj3TTPmOJOaUh3NpVJhJB7/
-	+BNA0M8Sk/4bsqCLo74RjPgjRJnxhfDB9M797ysqkmCr1zsr6X2HLivAaT8PzN2tVh62zaPBVaI
-	JcWCCv4rc1fsNtq6gEFUOeXi3goNK99CcsrvN+RwwgXkb7FtAMwItroHJMymBbGFrJgsF5vqDoM
-	UR8tBy404z9LJplGCGFqWqWOgIh3S+2YSwgQ8U4blVwdp+4dmg+HqM09zeF3d3oPtXVgkJjOGBl
-	ExdtwzCvWSeTElF0MLBTHo5k=
-X-Google-Smtp-Source: AGHT+IGpd5kyXByBDCnGlQVEDq/p/wnpbCK/Z++eVKnowoCaNU7ucIEMCb8a/Oceb/YU+4ngrxPz+Q==
-X-Received: by 2002:a17:902:e805:b0:223:501c:7581 with SMTP id d9443c01a7336-22a95511e49mr102986155ad.16.1743996601712;
-        Sun, 06 Apr 2025 20:30:01 -0700 (PDT)
-Received: from [10.131.178.61] (zz20234032476F6CA7C6.userreverse.dion.ne.jp. [111.108.167.198])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297877286dsm70483915ad.216.2025.04.06.20.29.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 20:30:01 -0700 (PDT)
-Message-ID: <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
-Date: Mon, 7 Apr 2025 12:27:42 +0900
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oPMAx/vW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Lp0v2dNonZ4exoWDr0Qqpq2GMXr1gYWQ2Dn9xKCVINgEy8CVxh0SsHM/k08fOCTohPPT5P4y8bOgYqgNekysBAIrQjrcUdBEHtNLNi1CGlhO+RwZUDz+5ik5pMnEp+NPwMmjStsfGWsqM7XzumCVsy2NiGUFlA6RsDLg+HQhJILk17Lg4MfbKJarVT1akTuUlfVzE9nisZ2bCj8Goyja5pPVQ7BuumosWD8vnyAIvCb7Hy7hvRMTZMnSJ+UJB0R4TVuYOSA7hw/jGUxsxbJftUdcRiiNjWa8q9QueqqiezcQfCDHA+bVD+wauX67m8QqIStDprCdQdtIEIlw3B/C2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DmP5yYCx0YUV+QfsRqTXFxB+u8nvU+H78hG1hBFB8JU=;
+ b=Jr6Mb3XcwK+mKQoanlYLtohSLdLvYKTPjBXHCpxEHnIp9qojSSs8neiOQbCoswaJ2Y/JucuW+xx0pWPmZexsKmcj5a7RDqqiGCW8PWD213nf5kvIjOw2tfHd5934oOZDcVkaQ8nsU7YiN9R85RCR7bVX/SAMATwgO8zFZeh7ztEchRMTAdjhTuzRLSsuONZ9edHNZiIbtZohcFXdxXzqBPQJBKRhWi0L+1NND4izyICm1IAWu9MYrU7oZndwC21wwjVtbR9U7Kya/qtH1+wtODOGyrGYaQjTd3DlYJSK5LELy209ZHVxMBH5CXqHHMKFQ9LSycO499m3EAMil2301A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DmP5yYCx0YUV+QfsRqTXFxB+u8nvU+H78hG1hBFB8JU=;
+ b=oPMAx/vWeR4xvZZTmNQMk2YV2u94L53ZmmSBPuWKM6LABiVsGd3iJJ0MhzQXyUZ063xFuJfTcEt8qBJGJ6Xj4BNSnUViY1xk3UUON/JVyJA22dzxJuW9+I0L1cwGwfSLGWEn8QWNkxXhGcRgH5j0eXl9qcGZs8geFZA+ydyp7Wk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by DM4PR12MB7719.namprd12.prod.outlook.com (2603:10b6:8:101::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Mon, 7 Apr
+ 2025 06:24:56 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
+ 06:24:56 +0000
+Message-ID: <cc87bf39-967f-4b2b-b4fd-9d9c450e2457@amd.com>
+Date: Mon, 7 Apr 2025 11:54:50 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: amd: pmf: Fix STT limits
+To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: Yijun Shen <Yijun.Shen@dell.com>, stable@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250403031106.1266090-1-superm1@kernel.org>
+Content-Language: en-US
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20250403031106.1266090-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0218.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::10) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey
- for camera shutter switch
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net,
- Nitin Joshi1 <njoshi1@lenovo.com>
-References: <20250403053127.4777-1-nitjoshi@gmail.com>
- <dbb95bde-8163-4799-8414-c60ba1c69aa5@redhat.com>
- <cf577f4d-ebfe-4b23-b918-2d59d9e81271@gmail.com>
- <f3f53d44-379a-42a4-9638-9e8532a83624@redhat.com>
- <0b0f51ab-667e-4497-8f24-2b9433427d1c@gmail.com>
- <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
-Content-Language: en-US
-From: Nitin Joshi <nitjoshi@gmail.com>
-In-Reply-To: <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DM4PR12MB7719:EE_
+X-MS-Office365-Filtering-Correlation-Id: 425df250-a6d0-461e-ec62-08dd759cea01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a09WS3dSd0N1M2RybUdPV2NFNjVFWUhFWWF3cnN3VElicXVCaDJ6MVIvaFZL?=
+ =?utf-8?B?NzJwenRhNHhhNmp3enUwc3kvT1RQdGY1KzREMmxGaWpmVS9oeXVhYnpzUGFB?=
+ =?utf-8?B?RncwanMxaS9pZm1DMW1PYWQ4SDkrK3puOERGQ2xXU1hCM2lRNXlpY0psc1Z0?=
+ =?utf-8?B?WENQSlBKWThUZUZxOVlkVkxSaXEreFNqS3MxOThWVnpySFQrczM0STdRRzZF?=
+ =?utf-8?B?S2o3aS95SmN3enB3SVNvMFVSMktiemxaVXBVWHprWTZvQ2ptUHliUzByUFMy?=
+ =?utf-8?B?NU10T2VJdTkyWE51NUFVc3NUdnhrZmtqbG5yTnB2SWFSUTlPaDVuektkZXFv?=
+ =?utf-8?B?S1dHM3IxTTQyYWZhQ1czcWVrVU1KY01UWjZodFdZTktXQ2NiN3g3SWhVZ3VP?=
+ =?utf-8?B?dmpUZHpRODVMckNoR1JDWFBlYzZEYjkvTVhUbHc0MXJHbjdWdURLQ2xGZmp5?=
+ =?utf-8?B?SjhTdS9rQ1pUaU15WEY1cWZYUm1QeG9rK204RjJmWitVd0hCbHlJRFJNcllP?=
+ =?utf-8?B?UDN6bDRMNytWUnpZdHdrNncxQUtsN3VFR2NwUTRjODg4Y3pmZGNQdmtNSVo3?=
+ =?utf-8?B?NWlPTTZWSmU3ZEF3eDljaXhoVFlaVEk0QStybTZQWm5nZ244MzBiNXNoTGxX?=
+ =?utf-8?B?T0ZYZSttc0drU1YrUmlDTHBQNHpJVjNRU2lpL0xDZHUrZ0tZTFVEWnBtRFZ6?=
+ =?utf-8?B?cXZNM0pkZTJ3aktkcFplcEJBWGlqKzlLUGtSVmRjQWdMUkQvWk1OQWZyYWxN?=
+ =?utf-8?B?QlpBWUQwb1duYVVTNktXbC9sdXpFbnlZaTg1SkFkaTA2ZmcvbzV1eWVKR2xr?=
+ =?utf-8?B?eThmbFVpY2tqVHp1UTZscy9JYUFEdWg3c1NRNzlwWkpOeU40MGFidkRKWHkx?=
+ =?utf-8?B?NGlVeHZIK1ZaS1JvdUhVQ1dHa1hoVllINHd3NHl2RnpHc2VwNDRwUTJreldw?=
+ =?utf-8?B?M3RVaG1ZVUJFVjVzR2NwZTlqYzJPdzZmU3BQaEtaT1F6SEF0UlE4eGhaUHR5?=
+ =?utf-8?B?WEFuVjI4a3BjR2lzK1lkRS9TM0FuMUU3TEZwanNxcml4WnozMFFHT1B0SmR3?=
+ =?utf-8?B?ajFtd0ZIVDNSbmZiS09mblYzWE5kbTEyWEU2WVJtNzRLZ1lsWjVnNnQ2WDg4?=
+ =?utf-8?B?b29XMTNZVmI1K0dlSXFLbDJjZllwQlpWZXdDY0FWRFZXdkMvZERzOVRyWnYy?=
+ =?utf-8?B?bUNGZVFFM0FPYkN3TmJOYnlad21iRGNVbEJnb0tLL1hEdmN4SkZHcWJXUGV1?=
+ =?utf-8?B?bmk1NnplSENUd2c1NGRlS1NsRllHNFJxVy9WSTM5cmVlNkd5dDRPU2hIdC9D?=
+ =?utf-8?B?d1BXaXhldFBvbldReS9tNldPcUxyVDNzZDYxQXhrYmtJdUNtbzZEU1M0SGh4?=
+ =?utf-8?B?NjZuZVZBN0VkR2hUZE1UNmxjckt2dzZjQ0Z2Wk1KUFdJWUc5Qm9VTXNuaFRO?=
+ =?utf-8?B?dkhROEhoMEhxckorVTc4emQ5cjRWcTJkTE5XdnNwMFI2cDdTN3oxQUpzcjNt?=
+ =?utf-8?B?SWk4V1g2QmcrdVhlZERzZTlad2F0MmNFSnVWTisvVDlUQ3VndGQzL014a1JK?=
+ =?utf-8?B?QlArc3kxb1V4MXZoZzhDeDFvdnROb1AyNTZ4K0xGdkZtdEl5Vzc5VS9TTlI4?=
+ =?utf-8?B?aVo5clF4elFqL3pqTFNndUc4S0pYdHBrNmZUVXV4N1VQSjJRQVUvRFYwL1h0?=
+ =?utf-8?B?NjFBQWJTZnc4WDJBTWNmdHAvTHJYUngwNTZDUHlMTFJ4T2p0VzNWOUJTaVBT?=
+ =?utf-8?B?T0R4K3hNUWE5cE1zajVxMWhBWTEwM2FKalN2MWZMcHcweEthZUowem1OZVZZ?=
+ =?utf-8?B?azc0S0pBSkM2SnBOVmNSK1B3aE5aUVZLcDEvQ05XUnpybFYxWEVNWERXUGVK?=
+ =?utf-8?Q?IIOv9WozfMiO1?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Rmw2SXk1c0g1V3dYZjdNdFc3eTRlU3VZRzlCWENrZGM5UUZxWnBtK2ZQNld3?=
+ =?utf-8?B?Q0tXQjBlK1dwOFVXVkJBcmwwOGIzRGZrTHBuV0p3WUQ1VU9jbjRkcml4YjR3?=
+ =?utf-8?B?TU5jWXdGWnQxTVF6N0dPdHBVR0tLNk11QzJvVlNKMnhOWjBNc0JzYVFheEFm?=
+ =?utf-8?B?LzdxOExaN0hvY2ZYZ28vRVNqSzdoNVVmcnF4dUcxMmRMalIxalRvRkR0eTNt?=
+ =?utf-8?B?U3Mxa1FsZzFGYmJXRXRQZ1V3VXhTN2VpMlJraGRzcUdGeTJUZ2h0Z0dEQ01z?=
+ =?utf-8?B?TDJGWmNaRUI0UVNkMGFFMSs1OWNpcHVNVEpTV1piL1E2U2tBdFpucnNGck9j?=
+ =?utf-8?B?dStjVmgzeUZST2s5S1BvdEkzTTlBSjBUMmx5OW5WaGpXZVZ5NUNiM3V0b1BR?=
+ =?utf-8?B?YzI2MzBjdVFpWFNGL1lNZVVnSWtLeWVxNy96WTJRdktTVktrVVB0UjBqWW9R?=
+ =?utf-8?B?N3hQYnpVZUhKYTZHN2JEZ3QvNWVHeERxL3VwVW1qQWRFM1FXQ21HbmU3VzNF?=
+ =?utf-8?B?WGlHT1o1WUcwdHQ1T20xMmUwSnZRbzVneGxmaFJFeCtYL1J2dG0vSzZxTWtp?=
+ =?utf-8?B?OG9ldmZGYjVweDViWGg5YWpFSE1RRy95ZmswTUJvRElxMWJRR3ZUS1JyZlQ3?=
+ =?utf-8?B?YTVFVnUwNTdCalhuT2FPWFlXejlwRVlVbE1hUjFhYytuOEY2RFBlSk1oeUhw?=
+ =?utf-8?B?U1BObXFkZ1BZdnA2bDQwdUNMZTVQSlNYQmlBcmFWVnlUSld6WW03bTdYLzli?=
+ =?utf-8?B?QzF4N3habitRS01oM3R6TWhlbEExcXdSOThoWnJnbnQ5S0Q5eXczYkRVWFVn?=
+ =?utf-8?B?UWo2bmhCSFcvN0pSbUIvVGlyZS9nek00aUE2SjdZTzRxMzdmM05wRFRpU013?=
+ =?utf-8?B?MlpzL1hzblFsY3ExZWxCWmRORHAwNzk1SlJQQzdNRmkycTlkeVIvZ0sySmM4?=
+ =?utf-8?B?V1dJYjZZZHRxa0FZNVcyTkVRSGl2VUdqU1FibUo3NkJFaTY0Qnk3N1lXbm9p?=
+ =?utf-8?B?YzRKWkZZTS8yeWU0eENBUEQyUTM4R29saWw3VjdlZTR2VzBSVzZhU3lidVV4?=
+ =?utf-8?B?cGF1eVdXTjh1WHIyRXVHNDIyM01WTm5YVmY5R2F0aGlLODRIOFBjNmN4VHZ6?=
+ =?utf-8?B?ZWRRYVBtRm1Yd1hNUk1CNndUTHh2R21nVDNUUGlIVXY3WUoraWU0bGFCenJs?=
+ =?utf-8?B?U3lic1FiMVdxM0xZUTJ4Wm1hUEtsZHRoWGpiUEtTSDY2ZEthaGZXOGdlNzdo?=
+ =?utf-8?B?enQ0Q05CdkNuVU1FdStVNHBpa29JcEtYMlBTdXh1YnBZYTNnL094UXIxS2tH?=
+ =?utf-8?B?WDFCd3YyenVBSXVEaUwzVkMzZFpEak9wcUR5R05lNklrWUN2TEVIYVAxVlJm?=
+ =?utf-8?B?dG1JSFB2WmZEcmdzU0d4ZEpNK0p4d2ZtWXowcGo4bmczN0s3YWRJWWp4Zksz?=
+ =?utf-8?B?RXhmVmxCK2F6Z3ladWJYTXhhTTVBUHloVzJhejVpa3RrSkZGM0FUUENNMXZ2?=
+ =?utf-8?B?VWcrZ1kzQlFtWGxwbDBubkZPcmtMdSs3cUs0MDNNQ2JwZVVOV1IvQkw3eWNw?=
+ =?utf-8?B?U0xlMUJQR1B2UDRMVmszQmhDNTkyS3R3dGVpRGFXemhlc1BTcnFCNW9GL1pu?=
+ =?utf-8?B?cDc0U3dOMTR0ajJIK1M4eG9maGtyOSttTEhPZEFYSnZNUUc2TXRIeHNBSGhM?=
+ =?utf-8?B?eHJUeDZ2R0pEamZJNzg2VElTa25KMVRGMEpZeUFULzBYVXZQSmxyVHorWGdM?=
+ =?utf-8?B?MjZOeVJVS3BmZVdYZFdwT3dFQkJtRi8zaEtMd3lvVlpibFVDa2FQcmZxUnBx?=
+ =?utf-8?B?V3ZlaDFoZ0EvZkRPWUluU2NMQk53YWxmK2J5U2YvRUY2OElDTElldTZFRE1h?=
+ =?utf-8?B?T2RsRFJucjkwSkJpVVA4cVNISzNCWm5telpnRVpZUXgxWUVQelF0NkNpcjI5?=
+ =?utf-8?B?dUJ6THAzTW1NNHZ1bzdkTld4V3ZSc0hxbWhEeW4xSDRaQnFmT2g0eUU4V2Z4?=
+ =?utf-8?B?UFUwSUY3Ny9FMFlwWFh4UHhyb3Z3TkFYWEJ4blZ3Rk9mVlZRWXlTWEo5R1Fy?=
+ =?utf-8?B?ZVllYVNCc2krbU9GT0JSbWw2QmxPcWRTZzZrZGFkcWZtQWVpTWhkN1hVNCsx?=
+ =?utf-8?Q?0U8fwkQIjG9sNFRQaJRqx/vX6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 425df250-a6d0-461e-ec62-08dd759cea01
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 06:24:56.0762
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eD0czVe+mEeqTB/NMz7ViVFsey1dUlehR5RaIlPg8wVMUI1dQNtxQue+c8VzuHxu+oByHz3XCWc2CWTCmgKixQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7719
 
-Hello Mark,
 
-On 4/5/25 04:23, Mark Pearson wrote:
-> Hi Nitin,
-> 
-> On Fri, Apr 4, 2025, at 5:02 AM, Nitin Joshi wrote:
->> Hello Hans,
->>
->> On 4/4/25 16:25, Hans de Goede wrote:
->>> Hi Nitin,
->>>
->>> On 4-Apr-25 8:44 AM, Nitin Joshi wrote:
->>>> Hello Hans,
->>>>
->>>> Thank you for reviewing patch.
->>>>
->>>> On 4/3/25 19:34, Hans de Goede wrote:
->>>>> Hi Nitin,
->>>>>
->>>>> On 3-Apr-25 7:31 AM, Nitin Joshi wrote:
->>>>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
->>>>>> has new shortcut on F9 key i.e to switch camera shutter and it
->>>>>> send a new 0x131b hkey event when F9 key is pressed.
->>>>>>
->>>>>> This commit adds support for new hkey 0x131b.
->>>>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
->>>>>
->>>>> Does the EC also actually enable/disable the camera in response to
->>>>> this new hotkey, or is this purely a request to userspace / the OS
->>>>> to enable/disable the camera
->>>> Enable/disable is actually being done by EC. Camera enablement for these products are still in testing phase.
->>>> ?
->>>
->>> Ok, I assume we can also get the state (enabled vs disabled)
->>> e.g. from the event? In that case the events should be reported using
->>> EV_SW, SW_CAMERA_LENS_COVER and we should also get the initial
->>> state and set the switch to the initial state before registering
->>> the input device.
->> Enable/Disable status will be determine in IPU side which receives
->> notification from EC. So, the only way to determine the status would be
->> to determine the status in IPU side.
->> So, purpose of this patch will only to avoid "unhandled hkey event"
->> error from thinkpad_acpi driver.
->> Please let me know, if i am missing something.
->>
-> 
-> I hadn't thought about this - but we need to be able to track the status to make sure (eventually) that the right status gets displayed in userspace. It would be bad if it was out of sync with the IPU.
-> 
-> Is the initial status always going to be disabled, or do we need a mechanism from Intel to probe the current status?
 
-I need to check regarding this but AFAIK, we don't have any other 
-mechanism to probe current status. Also , there was some security 
-concern involved in this which i need to clarify.
+On 4/3/2025 08:41, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Mark
-Thanks & Regards,
-Nitin Joshi
+> On some platforms it has been observed that STT limits are not being applied
+> properly causing poor performance as power limits are set too low.
+> 
+> STT limits that are sent to the platform are supposed to be in Q8.8
+> format.  Convert them before sending.
+> 
+> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 5d513161d7302..9a51258df0564 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -123,7 +123,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_APU:
+>  			if (dev->prev_data->stt_skintemp_apu != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, val << 8, NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_APU: %u\n", val);
+>  				dev->prev_data->stt_skintemp_apu = val;
+>  			}
+> @@ -131,7 +131,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_HS2:
+>  			if (dev->prev_data->stt_skintemp_hs2 != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, val << 8, NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_HS2: %u\n", val);
+>  				dev->prev_data->stt_skintemp_hs2 = val;
+>  			}
 
-> 
->>>
->>> Regards,
->>>
->>> Hans
->>>
->> Thanks & Regards,
->> Nitin Joshi
->>>
->>>
->>>
->>>>>> ---
->>>>>>     drivers/platform/x86/thinkpad_acpi.c | 2 ++
->>>>>>     1 file changed, 2 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>>>> index 0384cf311878..80f77f9c7a58 100644
->>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
->>>>>>                                * directly in the sparse-keymap.
->>>>>>                                */
->>>>>>         TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
->>>>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->>>>>>         TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint doubletap on/off */
->>>>>>         TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform profile in 2024 systems */
->>>>>>         TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform profile in 2025 + systems */
->>>>>> @@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
->>>>>>          * after switching to sparse keymap support. The mappings above use translated
->>>>>>          * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
->>>>>>          */
->>>>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
->>>>>>         { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
->>>>>>         { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
->>>>>>         { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->>>>>
->>>>
->>>
+Thanks! can you please amend this across all other places like:
+amd_pmf_set_automode(), amd_pmf_set_cnqf(),
+amd_pmf_update_slider_v2(), amd_pmf_update_slider()
+
+Thanks,
+Shyam
+
 
