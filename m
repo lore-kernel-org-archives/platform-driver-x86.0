@@ -1,96 +1,115 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503911FECBE;
-	Mon,  7 Apr 2025 15:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C271FECD7;
+	Mon,  7 Apr 2025 15:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039523; cv=none; b=Emvn8LnyJWK2NDy1NmMxWCcbifkj/21ZuXn3w4ZSlRjxbaSeygIM5rR+v+BG+SD0ApEyF76U9FjpHPva3rbrruefapZRRInowsLB0mliD8YjR5ffY9m9XDWOkTevQx9GR0lHxu4XSeMxUeyVce3/M1wrpa3WCwp75zD9bn0dwwA=
+	t=1744039656; cv=none; b=GN2ARGSDvy96Er3P0oRWusXVLobzOLRpuKJb+fLbSJ9M4OB9EDv5YwESHPabbcjGehgW+uhkGzs24ftSyhIMO2iGOVhWfkuly+HLhYEYcXKQWUrCjsNV1JFmv6aKXTwniAfo0OEW00bo1427H9LUTSEnrBorFfGdTZhxFysGyUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039523; c=relaxed/simple;
-	bh=i2YZeY6p6Z8HjBwsBVkeEQexhzv4IAQu+D5budl7Hcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bf62HJRilq2OL7GraQ7kuTdXrij6CfXeOwDwNJ3m2XItq8+F56m6bd2ryaS77HZZU8oxeh9Z4COuSExy53ToaYWEBZXRb0itpVtzGt7Uwn23ZpT4crqd48nd98+JRByXvusDuPk7+s2yC40TY54T+uIeoElE8I4PUa4EuLRBu/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NP6R5bzK; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744039656; c=relaxed/simple;
+	bh=u2II3i2hdzG9z+TnFhyJj9+LpYjrMkHbTOoqlXB+GUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQYE/IbWRBL4aKTnORsGLCrajuRKEbVPhK/6PItACGsQUIU0Isl5hWzRiV9NzP+svmqhKgQGlXi+wI3S2yQskZNHx5l9TK7fFvpA9TdNNjVn3E9Tug7bF/iC6rxL8C4qZtYVYbGFhtd/u+Tpo9gPjsmwyosnTgZbpaZ3Y6MBvrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzKf8q6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NP6R5bzK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 01CAD4435E;
-	Mon,  7 Apr 2025 15:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744039513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+288TQHz/GPgYGRfWaMfUb21za5S/wfcZHMyy8gMHA=;
-	b=NP6R5bzKYU8MJAzvnPUFV7bmDpGyZrOE8h3lOYnSkYZH1Q44bnCkFQrB+OXGLGQRiknGe/
-	DZ4mcAcAGPmD5IqzMSPaFBsfZLTC5V/xB7LfbcXXTeIuFb1uidamSqXkLlzbYXYr5LJnmv
-	T52QXvaZqMsGjBDibuFG2Dfku/XJESP3A9tEbFoRgEV+1me5Bu2XHRxVaPaHPcw7eHO0dp
-	EaMfDXnpOztU4GlNq2OQ39u/p/S63ejPFkrXmldq4Tw2e2htSauQuQDNX3qQJja9FZW9zY
-	5MoUPGHnVULyeFtzc33r86NWcTKKWFILFvD/FCPHK8S228Hbp2R4wX7S3IFoMw==
-Date: Mon, 7 Apr 2025 17:25:06 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 13/34] drm/bridge: ti-sn65dsi86: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250407172506.13c2c34a@bootlin.com>
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-	<20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzKf8q6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305D2C4CEDD;
+	Mon,  7 Apr 2025 15:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744039656;
+	bh=u2II3i2hdzG9z+TnFhyJj9+LpYjrMkHbTOoqlXB+GUU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QzKf8q6S7mjY9zeeFEU7G6QDykS1W98rJbHIon67hHqAcuYoXT5KORPCSHKEdEhEz
+	 EKRu3O727NngRu/ug4YMOqz/EYNKBKVeQB5EpnA/5wOK0uErEqIJAg0P16qm/fmE4k
+	 hjM8eD/JgDUU8oeUzO7qoY8lv3wpnRUQD06pSJQbRln5RF5WyVaPeX9Pkn29cDGIQH
+	 3tPsk5Obt+QppUNeqGoje9q5byy/avmdvDLho4E87K03o6bcvzuwGnPZoHebmpVv39
+	 qmHEgjFpoe+0XT1Qi9hqSduPUvLzpmjw/XF3U5ctEjkSsZc7hKPSR0ozYloOXnprzI
+	 KwAXYYSl8R9Lw==
+From: Mario Limonciello <superm1@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	linux-kernel@vger.kernel.org (open list),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH 1/2] Input: Add a helper for reporting a screen lock key sequence
+Date: Mon,  7 Apr 2025 10:27:04 -0500
+Message-ID: <20250407152705.1222469-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghom
- hdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Luca,
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-On Mon, 07 Apr 2025 16:23:28 +0200
-Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
+In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+to lock the screen. Modern hardware [2] also sends this sequence of
+events for keys with a silkscreen for screen lock.
 
-> This is the new API for allocating DRM bridges.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+Introduced a helper input_report_lock_sequence() for drivers to utilize
+if they want to send this sequence.
 
-Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
+Link: https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009166 [2]
+Suggested-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/input/input.c | 20 ++++++++++++++++++++
+ include/linux/input.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
-Best regards,
-Hervé
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index ec4346f20efdd..dfeace85c4710 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -508,6 +508,26 @@ void input_copy_abs(struct input_dev *dst, unsigned int dst_axis,
+ }
+ EXPORT_SYMBOL(input_copy_abs);
+ 
++/**
++ * input_report_lock_sequence - Report key combination to lock the screen
++ * @dev: input device
++ *
++ * Key combination used in the PC industry since Windows 7 for locking display
++ * is META + L. This is also used in GNOME and KDE by default.
++ * See https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
++ */
++void input_report_lock_sequence(struct input_dev *dev)
++{
++	input_report_key(dev, KEY_LEFTMETA, 1);
++	input_report_key(dev, KEY_L, 1);
++	input_sync(dev);
++	input_report_key(dev, KEY_L, 0);
++	input_sync(dev);
++	input_report_key(dev, KEY_LEFTMETA, 0);
++	input_sync(dev);
++}
++EXPORT_SYMBOL(input_report_lock_sequence);
++
+ /**
+  * input_grab_device - grabs device for exclusive use
+  * @handle: input handle that wants to own the device
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 7d7cb0593a63e..16f7bef12f1c1 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -492,6 +492,8 @@ void input_set_abs_params(struct input_dev *dev, unsigned int axis,
+ void input_copy_abs(struct input_dev *dst, unsigned int dst_axis,
+ 		    const struct input_dev *src, unsigned int src_axis);
+ 
++void input_report_lock_sequence(struct input_dev *dev);
++
+ #define INPUT_GENERATE_ABS_ACCESSORS(_suffix, _item)			\
+ static inline int input_abs_get_##_suffix(struct input_dev *dev,	\
+ 					  unsigned int axis)		\
+-- 
+2.43.0
+
