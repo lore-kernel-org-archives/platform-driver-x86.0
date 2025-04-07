@@ -1,110 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346AC23C8C7;
-	Mon,  7 Apr 2025 11:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AAF23A98A;
+	Mon,  7 Apr 2025 11:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025923; cv=none; b=PivqZ0mlVxC85jQ4OC9vnLRcTgy53q5CvHIYKupYwji0qckmEeStj2hp/kFB33oYXbxikAHT8kt48hmy+UqPiUGbndVPqPC+KrJ+GAISb/PO53ZvKI8qiC7gs0rqNymFktbL8joIPKQrbqqSJkEPAU1KMBw3UCtObRCM++9ktoo=
+	t=1744026680; cv=none; b=jqbhJHGNea98kiblJYVFTh79nkki6w0KamRZfG8UbM+zvvmqlroawsM4l6a8Jisb47l3ldHWVZr73i97LXfF4xwX2HWfS5WUkR3k73wbeLiQtjZgX3ggqlGOcTmyjAm7bqoI0qGvldSgLXVXV/ywPhYyd5jhAG+5oG/ob4oTO7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025923; c=relaxed/simple;
-	bh=FipsQrVxRRzx0gAaWn73bIQfIwQBi/3bfri3Exj8TG8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Z2i2gnuHsDvasKwqTgVX1HmVM9zhrQm0QWxahk0CgHwu0uOn1Eknlno6IIKTBVpE/63qfOGz1svt+9iBZlc8D/n/J2buBhmQwXZAKt1FLfnqGAitP8/iFUC23LaJxIv1C/noVCc0ZQaffQvYEbN+07I0blJfDgD97iinf/fkeKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MVdj2ZZn; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1744026680; c=relaxed/simple;
+	bh=Ik3s3Zrm66CWBd2uHsVOVNJBfGhDtUFb3oOjqByk5iE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Vrk4k1OY/J1FCjTPVmZzNhBUP60FoyUQvH0uIwVTNuKOPzWCduP6PjF4Ct2EuEZz0FUFjJlEhP7YG6hJA3UNBD9MgEXqcBWeRrlme7rYfeWgaeyRGjIV1hAiKvKOeiCMQ8WTADeDgK6038QbvCywCM49QcjB71bDNqwOWhXd3L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nm5H3CY4; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MVdj2ZZn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nm5H3CY4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744025922; x=1775561922;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FipsQrVxRRzx0gAaWn73bIQfIwQBi/3bfri3Exj8TG8=;
-  b=MVdj2ZZnUJZnMM/impXe43KlDuiRp9WDyNreI5F2ZvmoOZ8zmWyDBGBk
-   7T6jUUoIsU7RisMPRKMO8yoLyDxwMVa/JY0Jg05KvEWryTLkcOS7wqB23
-   fngSSLWPjk0/8ju8Vg9WC5FFPKmyQKtk9AXhwi1uxbpEhXfAh/lR3AzH8
-   ACW4CqEQyUJeB+13I24fy9hMT7F3UON0tiEHI8+qcoiA+fWx4N2qnCeUX
-   tiq7lOqSBG2z4oWjWgO0e2FHWReMnUQtMp95AG8Ti/LgnSRBL85u4JfYT
-   4+HPTh0OtObDT//xFQX/nociTzp9KFafiUfx/u2vrZTOETUyE7xWScatw
+  t=1744026679; x=1775562679;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=Ik3s3Zrm66CWBd2uHsVOVNJBfGhDtUFb3oOjqByk5iE=;
+  b=nm5H3CY4J342u68AgyUFtBy01/evPR15S9NGIqSRGWOrnWaq/Ra7BB+J
+   2rAbiZCwqUjRpftQ4tJ530TfIsM0XI1q3lyijZwPRC4k68n+7pM6aElEn
+   pj2+vh5H9oGni76ApAgnESyOm9qmjBd0q27f66gFTcdu9aY0iHXpDffVc
+   emdK7Kk4euaTVPBnISDKS9HI4bRsaAmgCLEnBsHGBPc1dT4mOgE9czeaS
+   E6Q/pTUgKgHJK3yhSxjw2gsRyErIzGqTWciqlCAIAIqDM07VTqUNGU755
+   fUwZa3M59fX2GjyIZU4J506mVc4wXBaGXVoDPIH3Rp5YOl+6Oc5J2GF8g
    g==;
-X-CSE-ConnectionGUID: KC86cfQ4Q9mqV1mnU1RTWA==
-X-CSE-MsgGUID: lfy9t3RlQ/+g7AoH+pW2AA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45425423"
+X-CSE-ConnectionGUID: 3nPEeTzxTE2ud3CeNYMSeQ==
+X-CSE-MsgGUID: VXxQDtMuQryrou8ncbOAOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45499628"
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45425423"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 04:38:41 -0700
-X-CSE-ConnectionGUID: bnG+Jrf1Tdui82kFHrQwIQ==
-X-CSE-MsgGUID: DSVfj0YUSBuCD3/pALeA1A==
+   d="scan'208";a="45499628"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 04:51:19 -0700
+X-CSE-ConnectionGUID: WImpXkGZRc6sKC/XWFNbfg==
+X-CSE-MsgGUID: ffyjnnGDQ267Y9MuZMaxKg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127814613"
+   d="scan'208";a="132071774"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 04:38:37 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 04:51:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 7 Apr 2025 14:38:31 +0300 (EEST)
-To: Wentao Liang <vulab@iscas.ac.cn>
-cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
-    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add error handling for
- tpacpi_check_quirks
-In-Reply-To: <20250402143807.3650-1-vulab@iscas.ac.cn>
-Message-ID: <6850403a-dba8-2334-50f7-76cda9e9685f@linux.intel.com>
-References: <20250402143807.3650-1-vulab@iscas.ac.cn>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ David E Box <david.e.box@linux.intel.com>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250313085526.1439092-1-yong.liang.choong@linux.intel.com>
+References: <20250313085526.1439092-1-yong.liang.choong@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86: intel_pmc_ipc: add option to build
+ without ACPI
+Message-Id: <174402667086.2623.12054422494397087928.b4-ty@linux.intel.com>
+Date: Mon, 07 Apr 2025 14:51:10 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, 2 Apr 2025, Wentao Liang wrote:
+On Thu, 13 Mar 2025 16:55:26 +0800, Choong Yong Liang wrote:
 
-> In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
-> to be checked. The battery should not be hooked if there is no matched
-> battery information in quirk table.
+> Introduce a configuration option that allows users to build the
+> intel_pmc_ipc driver without ACPI support. This is useful for
+> systems where ACPI is not available or desired.
 > 
-> Add an error check and return -ENODEV immediately if the device fail
-> the check.
+> Based on the discussion from the patch [1], it was necessary to
+> provide this option to accommodate specific use cases.
 > 
-> Fixes: 1a32ebb26ba9 ("platform/x86: thinkpad_acpi: Support battery quirk")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 2cfb2ac3f465..a3227f60aa43 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9969,11 +9969,15 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
->  
->  static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
->  {
-> +	unsigned long r;
-> +
->  	memset(&battery_info, 0, sizeof(battery_info));
->  
-> -	tp_features.battery_force_primary = tpacpi_check_quirks(
-> +	r = tp_features.battery_force_primary = tpacpi_check_quirks(
+> [...]
 
-Please don't do a double assignment. You can assign r to 
-tp_features.battery_force_primary after the if check.
 
->  					battery_quirk_table,
->  					ARRAY_SIZE(battery_quirk_table));
-> +	if (!r)
-> +		return -ENODEV;
->  
->  	battery_hook_register(&battery_hook);
->  	return 0;
-> 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
--- 
+The list of commits applied:
+[1/1] platform/x86: intel_pmc_ipc: add option to build without ACPI
+      commit: d8455a63f731b4f585acc4d49fd7ad78db63b3d0
+
+--
  i.
 
