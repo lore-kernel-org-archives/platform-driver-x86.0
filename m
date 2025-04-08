@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D7626988E;
-	Tue,  8 Apr 2025 12:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD45269AE4;
+	Tue,  8 Apr 2025 12:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114186; cv=none; b=Ny9q8m6aZy7Bxwfeleh6ean518myO4zmj8cAZZJ9ChkCVG5zbUeylw9IPOFoMe4A6Us8Ca4sAE62NGLar8BfPCn66ypli3k3I22RXSsbEpDdOwXfpVj4ijBp69l1KyTRDQewSLLf8GoAsCoct6ELZzVth5cbBP+sE53f7V1jM1M=
+	t=1744114560; cv=none; b=BjzuH0xaiUzQtKcFypEiKLgD7/PxOdB33nvea2iNJ/lrKtxVLOlnxctt/ao2YPs60aCHKF+Nv4pq9e5XjS2/Mv6jdZl51kdrT8l7mKGYrBek1aAuIC3s7UGrihknEMK4JqHfFJqIVRi2iW5fpEhufiNuz/6vpxNBZgw3h89KxCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114186; c=relaxed/simple;
-	bh=vmw4qXLEXSar//LeQlOCAoG3Ftnj1yKaLNkaXGlmaeI=;
+	s=arc-20240116; t=1744114560; c=relaxed/simple;
+	bh=0At7IzwdatWGZBhdK9Dv1ozq8/63R2hw8yDEq6H5d7g=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CiRM11wU1AbJNq1h7eXUg6uj1Vj3C1OiFEagJGJhZPTNEPwZIh3b+dDg8TXOK4FfmcH7mo2wZcramV3BSlg/1Z7kyAXG+lRXxbulWJT0i1xlpn/QXbXM35XhCoSUftnuceRyg3H6Yk0ygV7lK6eBqvNIgGOR3G6lU9uQ37RdrXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3ZQ1kq3; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=ATllasZ8vMopjI++Y80TTNfWYsJnxoe8bCJy/eXCIAtl+CAjWWHRttLWazaMPLcOLlPGktBhPh1HdfLqS4upfo32cSAy3hpLyasbohmvLlse+DPWGW5LsbiVO93W38iDdQusdFX0gwfSp1kUomW3P39R+I3cDakxtGFK2FjnXp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ABdse7Ux; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3ZQ1kq3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ABdse7Ux"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744114184; x=1775650184;
+  t=1744114558; x=1775650558;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=vmw4qXLEXSar//LeQlOCAoG3Ftnj1yKaLNkaXGlmaeI=;
-  b=l3ZQ1kq3aBP4Beaz6lNL4cGeUYnOyb218tivY1Eyltwp89nTnD1Aco0a
-   Zj3hwgaN+f14WwyKzqB5ip3vKNkeVQlDwJW1ub/ZTkr1FqJyiF2i53FXD
-   +TlQDp9ZDNjWN3D799rw8kn0Uz6tnCVU6kK8niYtpmFza+5OllD+Tz6Hs
-   buy4YeaxufWGyAMCCkXLSe4vF8Ar1KzNPklNpm/n0Os8+rZfZMNRs9Lky
-   Er6W8otpLeyyg1aitTX70kmREwylHGuxinsvGOw/s6C68FjRokBjIWx03
-   lwNC97M0EA/euDAL0o6hiq6oYhfhew61rbGGm9dBTzzcZtZHaKUKBkz0m
-   g==;
-X-CSE-ConnectionGUID: MMkH3oNQSd2hvU6p4rQbbw==
-X-CSE-MsgGUID: NIfwIzxhTW+8dMAkuKOopg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="62944306"
+  bh=0At7IzwdatWGZBhdK9Dv1ozq8/63R2hw8yDEq6H5d7g=;
+  b=ABdse7UxQZJ4Zi5fZSqMFzTxirookbxQDfKYdMFUqe+Qh+x1+jrWIagJ
+   p/CWRf/Hm0S2OnOK6/dY0BOMN6uSCbued9OdTG2D+uaVtvp5TzdTMmTjq
+   UvTFCgWAe9BO6mIkdL3UgOGFYk6G43p7MTLJ+ghNE4B2wIxHLS5aawy22
+   cUkuOKSF8OWA1Ll1B5uHK/2qlY2gv25mGjqvKL1t0iHrhnJ/sJsV/pzJP
+   2cDNpmnC8hH07XNF//zVcSzAm7aUM6QypmeIywcbygCcSybPvzZ2ymsFi
+   S2C6y4kaGW7Sye3+0+nG5DRaCDSdtrA2ubWFPnEcobJ6B+9th/nyqXR0u
+   A==;
+X-CSE-ConnectionGUID: i4wsa2yARUi20GMtvOBeRw==
+X-CSE-MsgGUID: EgQvmsjFSYGgdYgPeGLoug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="62945043"
 X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="62944306"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:09:43 -0700
-X-CSE-ConnectionGUID: JeQ9WJ0FSsuAcX3B/mFn4w==
-X-CSE-MsgGUID: +Ch64BGAS0ujjR8aA1Vaww==
+   d="scan'208";a="62945043"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:15:57 -0700
+X-CSE-ConnectionGUID: tX5oH5FaT6CZwQ54XW+SAw==
+X-CSE-MsgGUID: 1KzW7T8WS3m8zK1CA5ghJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="133460324"
+   d="scan'208";a="128773776"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:09:38 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:15:51 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 8 Apr 2025 15:09:34 +0300 (EEST)
+Date: Tue, 8 Apr 2025 15:15:48 +0300 (EEST)
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
     Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
@@ -58,7 +58,7 @@ cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
     Mario Limonciello <mario.limonciello@amd.com>
 Subject: Re: [PATCH v5 2/6] platform/x86: Add lenovo-wmi-helpers
 In-Reply-To: <20250408012815.1032357-3-derekjohn.clark@gmail.com>
-Message-ID: <1bf0e01a-9619-5cf2-72ff-6bb557654cce@linux.intel.com>
+Message-ID: <a1eb6081-74ed-6413-9534-42e1d38ed96e@linux.intel.com>
 References: <20250408012815.1032357-1-derekjohn.clark@gmail.com> <20250408012815.1032357-3-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -104,6 +104,12 @@ On Mon, 7 Apr 2025, Derek J. Clark wrote:
 >  F:	Documentation/wmi/devices/lenovo-wmi-other.rst
 > +F:	drivers/platform/x86/lenovo-wmi-helpers.c
 > +F:	drivers/platform/x86/lenovo-wmi-helpers.h
+
+You can use a wildcard so you don't need to give .c and .h separately.
+
+-- 
+ i.
+
 >  
 >  LENOVO WMI HOTKEY UTILITIES DRIVER
 >  M:	Jackie Dong <xy-jackie@139.com>
@@ -182,11 +188,6 @@ On Mon, 7 Apr 2025, Derek J. Clark wrote:
 > + * retval pointer.
 > + *
 > + * Return: 0 on success, or on error.
-
-The second part either has a typo (on -> an ?) or is grammaritically 
-incomplete (what is returned on error ?). Although I think if it's the 
-first option, it should say e.g. "an error code." not just "an error."
-
 > + */
 > +int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
 > +			  unsigned char *buf, size_t size, u32 *retval)
@@ -246,7 +247,3 @@ first option, it should say e.g. "an error code." not just "an error."
 > +
 > +#endif /* !_LENOVO_WMI_HELPERS_H_ */
 > 
-
--- 
- i.
-
