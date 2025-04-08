@@ -1,130 +1,110 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1801288CC;
-	Tue,  8 Apr 2025 02:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8716815A8;
+	Tue,  8 Apr 2025 05:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744080606; cv=none; b=D9NU7SD+ANqwg919O+axTnz48bd6ikiOopjNh0p5EmPgSLkVzem+eQEPk83XVvO1uuFVdod10nIA0NPfk6uptguf2Oq8j4S4OBp0bg1EE52+efh1gAPT+Qx3raSu4L6jG4I+ssYS0LCgb4H5NdSgl5iOFW1ByMdm55EzCqVgO2w=
+	t=1744088931; cv=none; b=TcG9Svsq1NpnExPZ/peVTY4iz1AAT3MEedHvsAuJ1RJU4rCgX0N5D1kqQbLCT6ZvxWyR8MagyneGP5VO6GEM6kVDuHQhWnSDeVkYpnPQi9bq1FbNukM+ia8GwjtmcaaRHPxURx7aDbDr5HFsGBB6zz8gq+ffhYezfB+PiFiBmIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744080606; c=relaxed/simple;
-	bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e3yYQPMBwY4CtUNJUsEfpz+4x976JazWoapeTHLe2Dii8HwfZ3/Y60UJzBD0t6tpU6CUOtuBBUrjL/2fRnYWGTPovaoGW1mH5VjAZCSIAOWS+TrORbzNfh3YRTOzh5GpzquWO+1USxWtmLQaS9YDTW/MhfgEQigKTMrtrgGcLME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwVoAonN; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1744088931; c=relaxed/simple;
+	bh=dCFVXM4MfrbSjUno3IMYIAuWzWR5SEzGsM9gbJlGky8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=L9gBZ202P3Iu+UdIDD885/BwGzJAwb9UgefZJWksHcMTDVTV2O9c44wkLgbI1cy29cGY4dvmsf1xJtPWbg/iJ4BbrXr2oOj4Os1ZxiKuxsnHMwtCJ7h9bYshaWNuyqZvFlMIexYGw77Iq+hY9LHeuaIQFxs1atUP+vyuaUiQ6as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgtXyY3r; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwVoAonN"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so4818809b3a.1;
-        Mon, 07 Apr 2025 19:50:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgtXyY3r"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4016653b3a.1;
+        Mon, 07 Apr 2025 22:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744080604; x=1744685404; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
-        b=QwVoAonNG7ydmRGUiYeqnJIvp29AWleIAnXWsDCgxB/uGhOVBYB3DQztenncDXVH+m
-         95YL7OhDSIvVZhOtr8A4J1Dtyv4CzVt6nacEKvGRNMBG6B5ozo2ufwioKfZKYxVkLEDh
-         snxA3cx0lpu0tr9KDc88hCJyl49boZ4sk5fGJztd7NRqA4lOqig70z/xPMvXQShLOKuA
-         3+bJrVBculVRmZC9EbHXU49RJB1vJzEFchyj6JMnUq+9/SGClTo09OmsZ0p2ox1srr2L
-         8qlpcU8/qPq7FFo/nPySAP5jbUpswFtu3GzkCbzkEzLJZI79GAg+nOld4q5yvDvDx+Xe
-         KpIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744080604; x=1744685404;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744088930; x=1744693730; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
-        b=SY7zSTKr61NI9+aE8Qd6/sYQXo2za8KI6Of+seO8U7R5oWDPs1+6GLCMUdcosSWZG+
-         uTHMAcnTKyFie2p56cSFQh/X+NarsnywFd/2ulcYLT3BQWLT29Z8GayNcdJknFZvZ3YF
-         +MSNr0EFfuGrMeaQtwbohaxkbOBheC3PJ4S15J82iw1L2qrXN/gXAkG3lkRM/OwEfq2W
-         i0Yr7Ge6PDcFFjIp1ucDpCmhUceuP9kfxT/7jHB03pwOjfAaTqzb5EmPuekJtw9sn51R
-         ZrZLAw6x93KPc2vjJMCoitjFuo11vqr+TLEVC6gjFOgKpt3FI6V6qNX5fMdKElkHa7zA
-         K6eA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMoVs+nM9DeD+5b8FuqD0VG9+XtAl1BddOD0hSKyA0RGoN58+Ze4WLbOrW/6MnVtg1zMr5hYNw13M=@vger.kernel.org, AJvYcCUXGgT1NWfzV7gbZ3VSrv5oDOycKSp4rCV0v3/KFka77+3VfVBUb+k1TWklpanpNOpkQonyOqwDg0v2BiCCMAyWDK6Row==@vger.kernel.org, AJvYcCXhTptESZ4Vu4+7bBwRB07e7/DgPL4Wb5iHwqqdLe3UAcO+84HwRsQoIcIQjrtdsHw4smAIrV3yf4wHyOFW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzedviien23t/sW4X3vKncpraKPcWlTa8RT1zSsHQ9U3UkMYH4E
-	q5nUqWaoVu+YW37uHz8d187WkAW1Sac6qpYLPzwdBvUZrq5oTJLx
-X-Gm-Gg: ASbGnct5ByKh7puBXnVTQKazq3nWUglsk5aG0SZrewOoh+fZ4O7qy0e1eH+KzZpVvAE
-	hN0SKQ3vWycJuW4w4uyvnUvJrMQ+l6v1gcem1Fs7OEvVSF4UpVmNS76RSJueXbVdzhpUD91hooC
-	w9lyRfw4a6hjPBN6KS3vFVstPyyLU1QjEY464Gd0MeCEH4InNvrmknkdft5hZgbw82JmY3U+Hsu
-	JS5GiR6bNDbVGTFXO2kQOS+jw0BJ2D4LNgYOAMWVMn9KWKbS5bQB5S2SDN3nrZ+70thmPC0FnrK
-	p8cwYwPG0YPQWFszXjaiTkswvBDO18+p9whAArcTlnrJxxkWwpS6elc=
-X-Google-Smtp-Source: AGHT+IGK5tUXHAlmfULfhwp1g4yLp0i/9elCRhY3So2bgspe0qrtj9S4q7rbiEKjVFgicIz8ng8r4A==
-X-Received: by 2002:a05:6a21:8cc6:b0:1fd:f46c:fb42 with SMTP id adf61e73a8af0-201047339c6mr28279180637.31.1744080603933;
-        Mon, 07 Apr 2025 19:50:03 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9c62739a8sm7231602a12.64.2025.04.07.19.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 19:50:02 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 9A9A9420A696; Tue, 08 Apr 2025 09:50:00 +0700 (WIB)
-Date: Tue, 8 Apr 2025 09:50:00 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v5 1/6] platform/x86: Add lenovo-wmi-* driver
- Documentation
-Message-ID: <Z_SO2AkhedcuHeOe@archie.me>
-References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
- <20250408012815.1032357-2-derekjohn.clark@gmail.com>
+        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
+        b=CgtXyY3raixh2clH8bli8QJpy/JslcaqX5dZATjlcFIxNfJcAilj4O/3qV19OZXuP6
+         3BWpRjhvc1s5iRHINnLjcvbwPN/Vr4EwDg1RCAigrGVlSZYkRWEH8KFrWt2ymOnJAyGj
+         J+/7MFN/UZYvkR5iw/KUDghfE2IYYNFtM6G4HcFPFGNeWKmBqy5eLmmZ1vFTKovus/3N
+         Ns+HaNXTgRCux0/8fBW1gvRgrSiZnSBTxrpk82lqjTzuUuodWCOA0Ss09k3Tvbvub08p
+         RuJKKzn+2Tj7a/NfiUIZdjJGuzoObmr5YG1HGZJczBCM/jA+L0vogna4OQ2irTWAT92w
+         r0lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744088930; x=1744693730;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
+        b=sPXl0Cd5yZRKqvjMzI2xqN4t32jQekMxkGLtowROT33kvALsZEOSPWdHF1eoTOyYro
+         Rc9bwS9hWk1Ogl1hqb6YnMPnpMtnsZ70FPL5f4iCf+V0uF7DWkgl9tBDYJkQULiZEGa5
+         N67lUyEyjGAedWF/6NugwsneEaWm7AxXeGOnfOPiT6JSijM85PvujWP1wwA7jeleDx9O
+         IVR1EFw5LV/YpfHTAqHYVk7ePnAGm4BJOL406wnL9qMihm8Bn5CJPTYQNtaJ3e0dz0Zg
+         Wdfmqlq4Ez2AAp+RZV/VHCfLS0TEnY+wItucbgZtMbgm8565TIaSy7N3ugYXSG7AQU5I
+         izYg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7hefeHhx72U4DPdfKLK3Ri8y2fPojsgCtLjX90ADq1BfPwB9aBZG5ibyMsM4YTYNHkcN4syUA@vger.kernel.org, AJvYcCUGwbDF76yf6f3/vgfs8eLvY2qSft0Cm4OjFzY88nuNVZgBXywmlxvuzhmw1q+IpR/XrkWrfBqPf2OR8kI=@vger.kernel.org, AJvYcCUM6gjif6+zEJOq5+A+yrOLd4rP4EYi1GKrRZeG6j0wlyzTKy/qCfNpawfNQsPrmgivtH7XqrM8FY9kwypvz6H2IsOS/w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYgug/a42dicfJCaWW1utSaH/P1bLb6Xnemviw1TuLN9uORYrq
+	P3CYlZ3CF2ResqCXetJtkk9GdlE39CDhTMW8P0vJ2A3XKjzatPZN
+X-Gm-Gg: ASbGncui/S4isNXnuJB2qpQM2f4qv03dF1SQ+VgmnyuNt+w/jIz67sXiQ8uOEXOnG32
+	Nwsmz0ff/hMml8eIgBJ3wbSftQQFQBjLRA5sDO6Q5nhby8xPZguXVE0G4iQ9re3rWTdefvhB1+Z
+	Pc+krZIJkx4ISh/aXMA5ENgOFJBHqv89p7F2a61x/isqeJOxnvTd4jeSLstJWVngkChpirjV8RP
+	jtoHm1cDuqlNqt5xPkFotfHaLD4jGG0XLxyE/9S4a2WTmhb2eJh+RWSOsOflGETps2nv+h+0347
+	F8Pw4ZmgQOYZdyTxyGKLPy14qwcr5CCGzG0pEg==
+X-Google-Smtp-Source: AGHT+IFMc8CTv5CM3QidabaC1+gT5QWZSr42z0RwSRQhSmgrztIdQxQEbgnOQHx7t1YCG0VrCQGQGA==
+X-Received: by 2002:a05:6a00:1411:b0:732:5164:3cc with SMTP id d2e1a72fcca58-739e711fcf5mr19489473b3a.19.1744088929480;
+        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1b87sm9871932b3a.16.2025.04.07.22.08.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HZiyhvZc60l0G0IJ"
-Content-Disposition: inline
-In-Reply-To: <20250408012815.1032357-2-derekjohn.clark@gmail.com>
-
-
---HZiyhvZc60l0G0IJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 08 Apr 2025 02:08:45 -0300
+Message-Id: <D90ZXBE1FIMF.2DV3D7QERNFMR@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Wentao Liang" <vulab@iscas.ac.cn>, <hmh@hmh.eng.br>,
+ <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] platform/x86: thinkpad-acpi: Add error check for
+ tpacpi_check_quirks
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250408013950.2634-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250408013950.2634-1-vulab@iscas.ac.cn>
 
-On Mon, Apr 07, 2025 at 06:28:10PM -0700, Derek J. Clark wrote:
-> +Balanced-Performance
-> +~~~~~~~~~~~~~~~~~~~~
-> +Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
-> +enabled in their BIOS. For these devices, the performance platform profi=
-le
-> +will correspond to the BIOS Extreme Mode, while the balanced-performance
-> +platform profile will correspond to the BIOS Performance mode. For legacy
-> +devices, the performance platform profile will correspond with the BIOS
-> +Performance mode. For some newer devices the "Extreme Mode" profile is
-> +incomplete in the BIOS and setting it will cause undefined behavior. A
-> +BIOS bug quirk table is provided to ensure these devices cannot set
-> +"Extreme Mode" from the driver.
-s/will correspond/corresponds to/
+Hi Wentao,
 
-Thanks.
+On Mon Apr 7, 2025 at 10:39 PM -03, Wentao Liang wrote:
+> In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
+> to be checked. The battery should not be hooked if there is no matched
+> battery information in quirk table.
+
+Why is this the case? What problem is this fixing?
+
+It seems only a few devices are listed in battery_quirk_table, and the
+comment above it suggests it is just a fixup:
+
+	/*
+	 * Individual addressing is broken on models that expose the
+	 * primary battery as BAT1.
+	 */
+
+Furthermore, I looked at uses of this quirk in the code and it's absence
+doesn't seem critical.
+
+>
+> Add an error check and return -ENODEV immediately if the device fail
+> the check.
+
+I bring this up because it has the potential to cause a regression on a
+lot of devices.
 
 --=20
-An old man doll... just what I always wanted! - Clara
-
---HZiyhvZc60l0G0IJ
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SO2AAKCRD2uYlJVVFO
-o59yAP9Su2TBW33AvsAIPJ1o6NJs5L2hZcTeVxtxQXxyvkRmVwEAkMvgXYDZ9Qsz
-cWnog2KyZKoSej6dBqln6RS7bBEWTw8=
-=KunM
------END PGP SIGNATURE-----
-
---HZiyhvZc60l0G0IJ--
+ ~ Kurt
