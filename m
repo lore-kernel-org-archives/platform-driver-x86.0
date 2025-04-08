@@ -1,110 +1,179 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2084.outbound.protection.outlook.com [40.107.94.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8716815A8;
-	Tue,  8 Apr 2025 05:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744088931; cv=none; b=TcG9Svsq1NpnExPZ/peVTY4iz1AAT3MEedHvsAuJ1RJU4rCgX0N5D1kqQbLCT6ZvxWyR8MagyneGP5VO6GEM6kVDuHQhWnSDeVkYpnPQi9bq1FbNukM+ia8GwjtmcaaRHPxURx7aDbDr5HFsGBB6zz8gq+ffhYezfB+PiFiBmIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744088931; c=relaxed/simple;
-	bh=dCFVXM4MfrbSjUno3IMYIAuWzWR5SEzGsM9gbJlGky8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=L9gBZ202P3Iu+UdIDD885/BwGzJAwb9UgefZJWksHcMTDVTV2O9c44wkLgbI1cy29cGY4dvmsf1xJtPWbg/iJ4BbrXr2oOj4Os1ZxiKuxsnHMwtCJ7h9bYshaWNuyqZvFlMIexYGw77Iq+hY9LHeuaIQFxs1atUP+vyuaUiQ6as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgtXyY3r; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54F925F78F;
+	Tue,  8 Apr 2025 06:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744094390; cv=fail; b=ZxXFAhm04CEFU4bWyOalS1sjUUtnXwTIXvqW1MKYn6zC37WATfppa6M3L6XkPQiMvKd2eUvNtVF8YC5Zl6eUg9QhvaC1Sb9lPSlKlxAhcIYv/L+XwuMneyU0FndX/dbtVEBmr7GrDheoTUSzPqltRtmvlkFnXjamVyBt6jWuo8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744094390; c=relaxed/simple;
+	bh=cmlLM/HJTbP5uwElDJ4ig+n/E+t4LSGoapuwWSaps9g=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ibSJCBFhORz6L3n+Ho6BTeAdzUYis/arYkm3JZTzzIpeBKSInZxFM1nwUz6RCJGFZmZNYT1Uv03UEPNluNQn8pPWEdzBXj8d+NWFyu2bBUJxjvpjIZg/Di3oV/WKb/dhmWvoQ21XtOWq9U9ypixrraVtANUCfzQloPruVK8XNeQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xEPfJ/N9; arc=fail smtp.client-ip=40.107.94.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgtXyY3r"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4016653b3a.1;
-        Mon, 07 Apr 2025 22:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744088930; x=1744693730; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
-        b=CgtXyY3raixh2clH8bli8QJpy/JslcaqX5dZATjlcFIxNfJcAilj4O/3qV19OZXuP6
-         3BWpRjhvc1s5iRHINnLjcvbwPN/Vr4EwDg1RCAigrGVlSZYkRWEH8KFrWt2ymOnJAyGj
-         J+/7MFN/UZYvkR5iw/KUDghfE2IYYNFtM6G4HcFPFGNeWKmBqy5eLmmZ1vFTKovus/3N
-         Ns+HaNXTgRCux0/8fBW1gvRgrSiZnSBTxrpk82lqjTzuUuodWCOA0Ss09k3Tvbvub08p
-         RuJKKzn+2Tj7a/NfiUIZdjJGuzoObmr5YG1HGZJczBCM/jA+L0vogna4OQ2irTWAT92w
-         r0lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744088930; x=1744693730;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
-        b=sPXl0Cd5yZRKqvjMzI2xqN4t32jQekMxkGLtowROT33kvALsZEOSPWdHF1eoTOyYro
-         Rc9bwS9hWk1Ogl1hqb6YnMPnpMtnsZ70FPL5f4iCf+V0uF7DWkgl9tBDYJkQULiZEGa5
-         N67lUyEyjGAedWF/6NugwsneEaWm7AxXeGOnfOPiT6JSijM85PvujWP1wwA7jeleDx9O
-         IVR1EFw5LV/YpfHTAqHYVk7ePnAGm4BJOL406wnL9qMihm8Bn5CJPTYQNtaJ3e0dz0Zg
-         Wdfmqlq4Ez2AAp+RZV/VHCfLS0TEnY+wItucbgZtMbgm8565TIaSy7N3ugYXSG7AQU5I
-         izYg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7hefeHhx72U4DPdfKLK3Ri8y2fPojsgCtLjX90ADq1BfPwB9aBZG5ibyMsM4YTYNHkcN4syUA@vger.kernel.org, AJvYcCUGwbDF76yf6f3/vgfs8eLvY2qSft0Cm4OjFzY88nuNVZgBXywmlxvuzhmw1q+IpR/XrkWrfBqPf2OR8kI=@vger.kernel.org, AJvYcCUM6gjif6+zEJOq5+A+yrOLd4rP4EYi1GKrRZeG6j0wlyzTKy/qCfNpawfNQsPrmgivtH7XqrM8FY9kwypvz6H2IsOS/w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYgug/a42dicfJCaWW1utSaH/P1bLb6Xnemviw1TuLN9uORYrq
-	P3CYlZ3CF2ResqCXetJtkk9GdlE39CDhTMW8P0vJ2A3XKjzatPZN
-X-Gm-Gg: ASbGncui/S4isNXnuJB2qpQM2f4qv03dF1SQ+VgmnyuNt+w/jIz67sXiQ8uOEXOnG32
-	Nwsmz0ff/hMml8eIgBJ3wbSftQQFQBjLRA5sDO6Q5nhby8xPZguXVE0G4iQ9re3rWTdefvhB1+Z
-	Pc+krZIJkx4ISh/aXMA5ENgOFJBHqv89p7F2a61x/isqeJOxnvTd4jeSLstJWVngkChpirjV8RP
-	jtoHm1cDuqlNqt5xPkFotfHaLD4jGG0XLxyE/9S4a2WTmhb2eJh+RWSOsOflGETps2nv+h+0347
-	F8Pw4ZmgQOYZdyTxyGKLPy14qwcr5CCGzG0pEg==
-X-Google-Smtp-Source: AGHT+IFMc8CTv5CM3QidabaC1+gT5QWZSr42z0RwSRQhSmgrztIdQxQEbgnOQHx7t1YCG0VrCQGQGA==
-X-Received: by 2002:a05:6a00:1411:b0:732:5164:3cc with SMTP id d2e1a72fcca58-739e711fcf5mr19489473b3a.19.1744088929480;
-        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1b87sm9871932b3a.16.2025.04.07.22.08.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xEPfJ/N9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b5O176tbLB4u4v06Ng/veZaKNj3dG7K34vQwi4YqzC0RFnFUyGQ2cCbAxU+zvry0lRJhP0zCyZv38CCPcrYm2V/Iuoh9RPdxtTwKhneiWyxYNnhb0m2WfcyPFb75rgjA/DtclXKCqma1BbOnyU5cJ7OSrOXbtzxUJhPkim4jv0z6kjjQIcyB34OyHE5oyWVpDcgShVk7t0os1oWFEf5vv70AsE6R5IOgmmU2aKMNNGvFZv7ZWageZ+AiJibxyUPHu6o1EkaRVS/CyoBJAKZsKNTzHV0eL8WN8SIy2bsjKGendvx059CAV4VkAYJUB0VD2gbn8jYheOPMxpnP98qAZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MPZHVo+7vgxDL6MIF9DZKvN83bA9ngAUx5V2WATL5K0=;
+ b=p/EdHC8MAc2LZ4RVXhnwAJ6VZUAr4aJ1q1Zqww7xYHguyOSXSjD1Zk77hUY2bcAejYHnejNgJzABQArcMY7VyPGe1XLrkFmOZniams/vdkChy8dkvi2aVPMTSLm88LTSyZ3HSVhTPkvLkBa0OuDqhLRVPKFSl02JQvLHQ+MYfVJ54PZW0Uqeih5dhrcYkDNtWLf6vgClkACzEahHY81sZ9nRprOuXG1WjW+wdwaRlLCWyliEttWb0EwP3ZXH5+pa9my6+QQSE2ncuJmUZhXVrp42uUxqYXkt16D9Qt0iKuiR4vhRNMCkkHXAutqE4Qx7jAU9Cbb3UA2Yk60sKGO3Bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MPZHVo+7vgxDL6MIF9DZKvN83bA9ngAUx5V2WATL5K0=;
+ b=xEPfJ/N9vwU1vIeIxDmxbW2GUdb0Aw5IYF40R4DK1F9d49LrfKeTw10ndnJio70rAIVKHDn7OZyuXvLz8AUtuv+XJ0+gs1MSkr7b+eJoVa6yBJVzff/javQcM3i25IAlE8nSqmfXedsH3bugL60qKWWwTisrv3ehqDlS2mUSmXM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by SA1PR12MB6824.namprd12.prod.outlook.com (2603:10b6:806:25f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 8 Apr
+ 2025 06:39:46 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 06:39:45 +0000
+Message-ID: <04163fd5-30f9-4415-8bdf-1b480dac650c@amd.com>
+Date: Tue, 8 Apr 2025 12:09:40 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/x86: amd: pmf: Fix STT limits
+To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: Yijun Shen <Yijun.Shen@dell.com>, stable@vger.kernel.org,
+ Yijun Shen <Yijun_Shen@Dell.com>, platform-driver-x86@vger.kernel.org
+References: <20250407181915.1482450-1-superm1@kernel.org>
+Content-Language: en-US
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20250407181915.1482450-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0044.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:271::14) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Apr 2025 02:08:45 -0300
-Message-Id: <D90ZXBE1FIMF.2DV3D7QERNFMR@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Wentao Liang" <vulab@iscas.ac.cn>, <hmh@hmh.eng.br>,
- <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-Cc: <ibm-acpi-devel@lists.sourceforge.net>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: thinkpad-acpi: Add error check for
- tpacpi_check_quirks
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250408013950.2634-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250408013950.2634-1-vulab@iscas.ac.cn>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|SA1PR12MB6824:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0baf60ea-0b9c-4a63-044a-08dd766826ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QlZvZFl6VFBHTEJzTXJwRHFZdE5nc1F0UGIzajBRQi9zcGc1K3I1dFNRSXls?=
+ =?utf-8?B?WUJIeVMrVnhvbEhMMU1uazRCeFJVR1JhNWFSSTU1eTNsdnV2blFadUlLc1hs?=
+ =?utf-8?B?QVhKQ09GdDNYcm1iYndZTHV0R2w3UEJZR0FQVUVXNGpzTXBXQzB0bTVFZHNG?=
+ =?utf-8?B?ZlZWWG1KRGl2TkpRenRKOWhvOVZRZzhkZ2JtQzFrM0Y2Z2ZUR0Q2ZUNyWkw2?=
+ =?utf-8?B?WUdzbWFza3RkWWpBUjJQeU83ci9TRlZCa1hDZVUvVXF2WjhTRUg1S3FQYWln?=
+ =?utf-8?B?QUs2UXB3ZG44NEMraERnS29IcUxtcEpqbGdtWHp0MVlMd3hBckVzYjZTWHR0?=
+ =?utf-8?B?bGxQeU0zaXkxQzNuSXAzcTN4WERaSWZ1M1JSVjdzZ2RacnVwU1E1aFcxNEFH?=
+ =?utf-8?B?RE1MOStmcitkblVnYXc2SlV6eHpjZjRsa1Yvb1RuSVBUZUgxVkxYNi92bjVO?=
+ =?utf-8?B?eGtmUklrR3lsemFaMkRObTVIWFYzRW56cCt4QVBzczdZNTc4R2V4TXJ0Z3pn?=
+ =?utf-8?B?QVl1eTAxZFhjUENGdU9QRkdhY2x3K1hLM3hGTjBEbkFlbkRTaXRGK2pITXg3?=
+ =?utf-8?B?Ymd3cDlkVTd0RnRJZnNiL21UcStrSHhhSjkxWXZZYytnRXl3M0tORTQ2MkFw?=
+ =?utf-8?B?bC85b2JWemtPNnJqNTB1NnFvY1d1TW1aeXd3enJCdjBkYjM3VFNCdkw1SFVC?=
+ =?utf-8?B?ZHpkZTBWd1FkYlpQUlZkMVNMbG50eDMzblQ2clZKTks4OG5ONkhFYVhNMVJT?=
+ =?utf-8?B?Z3JXR2tRNnA5QytuK1Bpc1RqMFhyZnlscEdDZUdRYVlkSm5QdDVndER0alZo?=
+ =?utf-8?B?cVpMVkhBMFNabUM5Qmh5Skd2dGFvQjRFNm05SGVvZ1NVdUVraU1NeXR2cndv?=
+ =?utf-8?B?RHJ0SStsR25xM0o3cGJGUWxHMmZWbkx3YkRMcGZRQTMwZXFxUnY3d1A2czJw?=
+ =?utf-8?B?dkxPS1g1Z0Nzclk4UW9PNG1sRmRjNnYyV2lmcmdNTHFweUx2SzgyWHFsa1Zh?=
+ =?utf-8?B?S2p3d0ZGbE9BQ0x6alZMWEIzSEs0RU1ZZE9DOEVPRDFPZUJ4ejAxN1c0QXBt?=
+ =?utf-8?B?WTNzZEZsZ1ltbUd4N1VORHkvMFo1bVg4TkRYVVpycUdVTHBwbElLcEJlT1hm?=
+ =?utf-8?B?dm1keTdUUkZHTFNPWVBlS0xDTVlpeFRETlNsYTc4bVdML0FtNEs1V1NrTG1W?=
+ =?utf-8?B?bENldWpSTDlqT3pHbWhUcXY2NG9NcHdnUUhLSW9Va0o2VWxIUk4zQ3FraGVi?=
+ =?utf-8?B?Y3I4aTVsMXQ3VjcrcVlSbWpXbExSa2VYRHFsTjRPUW1OKzViR0VVSEZkZzFL?=
+ =?utf-8?B?TnAwb2lQR3h6TGFuSUVUQndKNW1ZMG5wUkRSS2NhdlY2QUtlcEgweWpwenJQ?=
+ =?utf-8?B?dDJlemxqQ3RrWHpzeW1NMG9zSGxTWkowakUzaGtpV0taZGxMMDZrd0M5RE5X?=
+ =?utf-8?B?bWhxZkdZcGp3dzMxQXVyT3h1azNhbEIwNVJXMHl2N3ptUHphK3lZcFZ1M2do?=
+ =?utf-8?B?UW9LbnE0VjdLVU5GdVVjdEJrLzFsT2N4bmdXSE5JbnB2VE1GSnBvbGlvMmZp?=
+ =?utf-8?B?czEzU0N5WDVUZVpFVEYvWHE1ckM1U0dYQ2d4RkEyTDFoU0RFU3FwT0ZSdEV1?=
+ =?utf-8?B?VE9mamRoeVhHZWpQZkpHZm16M2F6ekdsamZKejM5L3ZVVUxYdWZWNXYxTUJJ?=
+ =?utf-8?B?R2N2QUZqQlpWUlBVVXNiZVRyWDVpTmpzQ2k5TENiN09Sa1hZUGhYUVRkNUdS?=
+ =?utf-8?B?THV1MXRaSVZHaFdDZ1EyTHRYc1BVWFpGNnNGbXNiNDAxOVIrYnY3dFVPNHFT?=
+ =?utf-8?B?RVk4WGdneVJOTStHazZPdHlhc0NnWVZQaDJjbDlTQTNVMkFFVzRJeXpiQmZD?=
+ =?utf-8?Q?7mefGFugSgCHo?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YjEvUUFOMWt3Q25zUVlnSEZvMHVyWjhhbGdVbTZmMXp3cHZDdVE3RVdkLzkr?=
+ =?utf-8?B?YnpyYkFJdWh2OGg1SXBpTDJPcng4eE5ieGc4NEphKzI0TkF0d2VGdE9IYXEw?=
+ =?utf-8?B?K1FlelFwaHllcHVaTjVTRmNVeFlKMXpqbXJKMmFoSmJwSmpMMmRtZk5iYjRC?=
+ =?utf-8?B?QTRIZGREZGE0cjAwOVVQNno0elNSUm5teXFWNEtsVGFpMUIvNUgvZFFLampp?=
+ =?utf-8?B?Y3RCRStxYTdlTGk3SHhXVDJOSVB3WG1CREZsU3hkVWlpN2NPTlU0U0NFYXds?=
+ =?utf-8?B?QkRRT1BDL0N1T1VnS1ZvL3pSMU5SSmQ5UjM3Q1FjVUJEN2ZYOWtHR2NuczF3?=
+ =?utf-8?B?V0NNdjBrc2xpUzV6eDY2TysySXFNZXdqeDQyQmdiTk1ockdwZUh0RnBLSDJt?=
+ =?utf-8?B?Ti9Sd2Z5ZE5idndJTXRPOHJqN1BMZmhHamFQVUFabHFDUnpJWnVsM1Z0RVhv?=
+ =?utf-8?B?SmRsUU01RnNFSVYvUDhuUVlZWGh2TFF1Q0ptNTJOcjMvRHRaUytCSmNTMHh6?=
+ =?utf-8?B?eFVNUkFwT085WVg1bnJ4dEc2Z2xLa3MrUVl2S0Y4WmZhVFhXOVRFdHphMnpi?=
+ =?utf-8?B?MUNFWmRmMkJPZ3ZDdjJuK1BBYlRpbEppU3dkb1R4YzBTUEp1YnU0WnpqOERL?=
+ =?utf-8?B?VHJXVWw4WmltY1VZeFc5dFV6cUY4b1UyWmI0Mnc2YjZvS2xLUERzLzhBL1kz?=
+ =?utf-8?B?eHRCMDN0UGJ2TXRYaDBIcTZLUHIvVk96K0s1SnNvWldRajllMENEQ3hmTytF?=
+ =?utf-8?B?ZjNHTko1aHRCOEZLZW1melFXZ0wzV2MwY1JPcStya0NNSUtKN01NalVLTlBF?=
+ =?utf-8?B?K2ZhMUJCZ0N6T21kK244ekVaSTJzWW04cm9OVzROZGtwb3BvVHM0YWxaQ2hZ?=
+ =?utf-8?B?aHdjTDNKS0ZxQjByQ2lXOHR6TzlOeHdBcDBiNFRucEtmUGpEVlpEb21maHJy?=
+ =?utf-8?B?ZzZCV3lqTlc0VlYxYjQ0WU14cGd1WHU1dmQxWnVQclBqTzJtc2pZZk5PTEFt?=
+ =?utf-8?B?TitYZ040ZGZyVm80U2M4VmVPYXdQQ0lLVENWSysrSGU4b3dMSHZZbGoyYnkv?=
+ =?utf-8?B?VmJFTG54ODRkVUdUdVgvdisxbjFQUlM2NDlicHhGbldCL3JIWFVhYTZPM0dQ?=
+ =?utf-8?B?UlVsc1VHZWNOTDZBeHdaVnRyUWY2dTR4OWpCbzBHRnZiTU1qWFBhOGVVNXhS?=
+ =?utf-8?B?T3hxRXdENXBMamEwWmE5TDNybXlhaUNzeW9MOU9WRGl3b3pVem5kODVsUFJT?=
+ =?utf-8?B?SFp1TVhDdmM3WU5GdUtKbzRERHlSMC9FMmFDNnc5K2krTjJ6aS9Xc0Y3cEV5?=
+ =?utf-8?B?ZG9SWE5aNno2YUduR09kejBYckt4S0E0N2w5L2hXMG1iS000Y2JXQTFaV0ly?=
+ =?utf-8?B?SVEzcDJadWtLU0lsTndMcjRQTHRaNWRFN3lOcHZ6ZEkxajNHWSsyRTV0L3FP?=
+ =?utf-8?B?ZEs0QVlteXgwNmZrek05ZlZ2cFA2bzBZWWpkc1hCWWwvOFRQN3NzRzhNRWx4?=
+ =?utf-8?B?aUJRQnNhSGxob1JMWVFSVjlmaDRkUndxcDRRVWFPblp3ZlB6aW9uQlhYdXVO?=
+ =?utf-8?B?dnlrMmNVTHhudW9ZelhXL0lWdW00QWVIalg3a2h3a0VVMWdxOTNjRlZ1TjlS?=
+ =?utf-8?B?QWMrUldSc04raFBtblJHemlCaUttamE2KzVsRGRwRCtCMlRCVlVKMFFBSmgz?=
+ =?utf-8?B?dUxFWUhVekd6MHV2TmtFYnI2ZWdkRnVRSThmb3J2MTJKSXo0NDBaMXBiMUhH?=
+ =?utf-8?B?QjhqQ2RPYndYSmZvRGlXMjgwYjcxYVFKeVVFWE1IQ2R0VlNwTGltTGZJd0Jh?=
+ =?utf-8?B?UURnQ2VPeTZUcFVtYTNrdGNwMklVVDFjWkdZZWtPajZhVmtZOGN0QnhUQkVF?=
+ =?utf-8?B?djE0d2dLc013Vk5Jajlnbmw5Z0ZKdGppMzdQWmMzMlRieWJ5ait5elZwZHdi?=
+ =?utf-8?B?YUh6emR3ZWlXUTNPZlJvQnFEMU9TNy9mRUdRK21yQzlRRHVNMWc3RXdBbXhC?=
+ =?utf-8?B?aWgvYVN4NURGQmUycEdYZ0JRRzA2VHJuS2xLaU01dFNOKzFpWW5BV0pGTlFl?=
+ =?utf-8?B?ZFByTFNHM25WTTM4RExsNnMvTGswZXhEd2daZDI0b1B2UThGM3R3TTdyZFZQ?=
+ =?utf-8?Q?5yanc2atrh8H70WRiR6x1zkYq?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0baf60ea-0b9c-4a63-044a-08dd766826ca
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 06:39:45.7776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qRbRuToDhHKQopGUQsKKGtl1Iyz1m+fB5UsA+yzSV1k6y7llZX17RrV6v0zS/q1QEYOtn3VT3COPR0pXdPOYng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6824
 
-Hi Wentao,
 
-On Mon Apr 7, 2025 at 10:39 PM -03, Wentao Liang wrote:
-> In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
-> to be checked. The battery should not be hooked if there is no matched
-> battery information in quirk table.
 
-Why is this the case? What problem is this fixing?
+On 4/7/2025 23:48, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> On some platforms it has been observed that STT limits are not being
+> applied properly causing poor performance as power limits are set too low.
+> 
+> STT limits that are sent to the platform are supposed to be in Q8.8
+> format.  Convert them before sending.
+> 
+> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
+> Cc: stable@vger.kernel.org
+> Tested-by: Yijun Shen <Yijun_Shen@Dell.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-It seems only a few devices are listed in battery_quirk_table, and the
-comment above it suggests it is just a fixup:
+Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-	/*
-	 * Individual addressing is broken on models that expose the
-	 * primary battery as BAT1.
-	 */
+Thanks,
+Shyam
 
-Furthermore, I looked at uses of this quirk in the code and it's absence
-doesn't seem critical.
-
->
-> Add an error check and return -ENODEV immediately if the device fail
-> the check.
-
-I bring this up because it has the potential to cause a regression on a
-lot of devices.
-
---=20
- ~ Kurt
