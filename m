@@ -1,90 +1,129 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6BB111A8;
-	Tue,  8 Apr 2025 01:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4775879CF;
+	Tue,  8 Apr 2025 02:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744076430; cv=none; b=inVxLvLgWfBHLWzFvUHO88jP/rwVXCF2SsI2W8fHf8VP6N3dMTXil38UUd2GkO6MOn75ZNn3zNadg5fWEjrCbMzBmk/B0qyImpVZQub11F0IVHo3KhK1NlLcxJcMnCS5F949H/A3jYIvCSiR8CKSZXHrS2mUnLybB9s9PbKI9U8=
+	t=1744080225; cv=none; b=I9hbe/s3RoH2BT/sQziBgbF3Qwy0xmXf4IxtedeI1tjxvd6IbDW3W6cg6/oO6HlibiBXNjgbLu6x2QfEyPBBanP2CCvEC3vVB2y4/+MnzNav6YWO88hImvGB2GH71aO/o8r59BToGX5GoWzP8tn23zjGdWRf7BAC25+J+RQfWRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744076430; c=relaxed/simple;
-	bh=t2vUgc0ZPQzWVJuqxXQVUykXnXAnaCjBlTo5/l65u/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K7GawTcaQBXAY7o3gGV5xanUnpKzg5rgnKmmAi7EX5+DS5DYNj+ZzBsQTJEz9rBxF48WBfjKZQUhxX5jtOKwLtkOMPw73JBZIyTwz9MeYUUZofaWLff+cSh5vIh1W+5Q6X02cIRxJFzzpUh/HHOgvn13CfcaH/jLvpDmqNiaLYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAB3Gvt5fvRnhHkKBw--.2111S2;
-	Tue, 08 Apr 2025 09:40:15 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
+	s=arc-20240116; t=1744080225; c=relaxed/simple;
+	bh=uMJrwov1IZxKFW0XGBsQ/tzJB+eGUEzjRoiJvWFEqXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtcRUUg5/RgKY5r7Pw8ZFdueRgWlNSuUaohS0oPTYBrLyQpBVW/4O9sRBsS/rkjFIUbYh9HQzlQguFnlmOucBKsRGp005y5nIa+f+40x6YNM0w/wUyiIBYPhznH79xh7a9W9gOsin3RkgGS6qF80zaNS/lcnsI676jzn6GerNRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lp91UWfr; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lp91UWfr"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376dd56f60so3634476b3a.3;
+        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744080221; x=1744685021; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
+        b=lp91UWfr+DF23Ka7wsqWg0hJ2xKNR6NYpgEYTbvUGwbgBnUXUGo4kM8TDQSti6FiDz
+         NF/lShOGXhMGKlOgbBjOlGzrgGpbpJFKI6PPBJNilxh14BxK5iKdDo11odovv4LrS8Lr
+         V5Bto+a+ynRVJCzddstjPCaf8Ki6DsuzW5PTpGYyHT68cjJXB07CCcIprXxsiibxyS8k
+         XguMPCfH++F7MxFno0yCkB7akQSqW1B7cw4oQGdBNneR35B9ySY/3zx4SnvCzDIiHeXw
+         Lwhcp9GMuc9s4kuhVypU8HsSKbztSrhs7+kKx4kRRyIL0KIdj8qXtJvZwuOFaSqv22Me
+         6RMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744080221; x=1744685021;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
+        b=VqupIZHcITmtiV73ISbVpd5XFYM4x7zocUbbat1JtC3gO5+06pZJKLWJwmZCkmHjzq
+         ODUEUIfYAzhQUQp4yi/kPmGpDrXW97WcU6gCv62GpPJBImkzW/tZfVFJwVCJr7Pp33FM
+         omWBd1tN3lU8jCehitXPexgSMUFEkPcPf41VTUuiU1Aui76WEPWImHaJt4VvKoVudnQf
+         27MtOvj4cL0wRfnikYtlmSNCBC1GlNr49lVMyEfg0JWAVAwuCHz9D6kQwgs1MHjcH8zt
+         oceOGQWQvrfUixEpDxR+pcSsbGxp1ZuG2eNNzzyKCrb214jQqSzIIQTQn7jetjueX/PL
+         a+LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkqM3k2Zifie7TI+KqabWi16lw7KSX+Co1M7AefnMbPoETeXK/cKpSbKcZ6M4AhefzPCZFm3TD9X0=@vger.kernel.org, AJvYcCWMcJ+8eOQrDEzmoseY0jlx25qEDcmBbicqgzjYeTsF1/Vlz9iyCvFrXV5eWqsz1Ks5c8Sr8LB77u6d1pMYCgsXWCyVAQ==@vger.kernel.org, AJvYcCX1LIOf1j4jnaNAcPGxv6ulvJf4ziUPp26VADgazu5DIIs3AP+alDjfk8S1EwWn65PlzhlGhjuWS+xgyA+N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAm7b28n2eIpYtmE4uDq4aIniQMIV2EytbaHQ0CPc8q6TLfW0g
+	3hAUE816kzTHFLQ5sVF8XXXiWdY1qOLdfniYGU9S6y9KETfT4w9n
+X-Gm-Gg: ASbGncuwWY2dIpUM2Xs7zHR9Nl7X0o41AFAjgiqEKLHgzFalKZy8RFE9h4J7nwQx5dQ
+	gcLxnfjZT+I38dYXCAUVL+87csDES8RcoJ81r1/JWmlw67Ym3cmw3ZIZrhgQ7z+jTXiN9TzFkM2
+	PhRJsMmLK2ZmTMOjkTeLQg8wWRYGJCbQZiWKz9APS7dZ/ke03Xo2Rmz4mv9qNPocyccIoon3YJW
+	sX8w1Nc5cVreTacIs/vaYHMCh6Y0kq7yaKegABY3NTgo6jfUnpipcByUTAZN5kDpMtSk/IYskTE
+	cc1zbc3KJtDQo54eGocCSQGXm0am2VhdQ1KnseY27m6e
+X-Google-Smtp-Source: AGHT+IGYJY3Vw8eQZB3fM7nHVZhinPtXWjfzVKGVrZd+aXEvu0+KorEQ0ZkcCaKU6jpo7PFAEqoaVw==
+X-Received: by 2002:a05:6a00:188a:b0:739:3f55:b23f with SMTP id d2e1a72fcca58-739e703c33bmr19565974b3a.14.1744080221174;
+        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f36besm9307315b3a.72.2025.04.07.19.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 19:43:40 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 00674420A696; Tue, 08 Apr 2025 09:43:36 +0700 (WIB)
+Date: Tue, 8 Apr 2025 09:43:36 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] platform/x86: thinkpad-acpi: Add error check for tpacpi_check_quirks
-Date: Tue,  8 Apr 2025 09:39:50 +0800
-Message-ID: <20250408013950.2634-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 1/6] platform/x86: Add lenovo-wmi-* driver
+ Documentation
+Message-ID: <Z_SNWC4zWC3hoXef@archie.me>
+References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
+ <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAB3Gvt5fvRnhHkKBw--.2111S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1kXr1xKryDGrW3ur13CFg_yoWkuFg_KF
-	1fuFnrXryIkw1ayF1UKr93ury7WFZagF48Xa17tr9Iqr95XrZrXryY9rykCw48WrW0kFyD
-	Cw4qy347KryakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
-	UI43ZEXa7VUbkR67UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0GA2f0dv0jBwAAsy
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5GXWb2ZFP6f/j9R0"
+Content-Disposition: inline
+In-Reply-To: <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 
-In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
-to be checked. The battery should not be hooked if there is no matched
-battery information in quirk table.
 
-Add an error check and return -ENODEV immediately if the device fail
-the check.
+--5GXWb2ZFP6f/j9R0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 1a32ebb26ba9 ("platform/x86: thinkpad_acpi: Support battery quirk")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v3: Fix error code
-v2: Fix double assignment error
+On Mon, Apr 07, 2025 at 06:28:10PM -0700, Derek J. Clark wrote:
+> +LENOVO WMI DRIVERS
+> +M:	Derek J. Clark <derekjohn.clark@gmail.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> +F:	Documentation/wmi/devices/lenovo-wmi-other.rst
+> +
 
- drivers/platform/x86/thinkpad_acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+I get a new Sphinx htmldocs warning:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 2cfb2ac3f465..ab538bf53716 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9974,6 +9974,8 @@ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
- 	tp_features.battery_force_primary = tpacpi_check_quirks(
- 					battery_quirk_table,
- 					ARRAY_SIZE(battery_quirk_table));
-+	if (!tp_features.battery_force_primary)
-+		return -ENODEV;
- 
- 	battery_hook_register(&battery_hook);
- 	return 0;
--- 
-2.42.0.windows.2
+MAINTAINERS:29601: WARNING: unknown document: '../wmi/devices/lenovo-wmi-ot=
+her' [ref.doc]
 
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--5GXWb2ZFP6f/j9R0
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SNUQAKCRD2uYlJVVFO
+o93UAPoCWyKkA+MUDv8s3SY4BWwFsI0SKZz9E5UV6iJfRcbAjAD/S9TXAkttDxWn
+FU2BVXhtWYb0RI3K7q5pcftRmfoBqQc=
+=Ltuz
+-----END PGP SIGNATURE-----
+
+--5GXWb2ZFP6f/j9R0--
