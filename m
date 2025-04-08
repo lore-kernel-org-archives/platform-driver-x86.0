@@ -1,64 +1,64 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4775879CF;
-	Tue,  8 Apr 2025 02:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1801288CC;
+	Tue,  8 Apr 2025 02:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744080225; cv=none; b=I9hbe/s3RoH2BT/sQziBgbF3Qwy0xmXf4IxtedeI1tjxvd6IbDW3W6cg6/oO6HlibiBXNjgbLu6x2QfEyPBBanP2CCvEC3vVB2y4/+MnzNav6YWO88hImvGB2GH71aO/o8r59BToGX5GoWzP8tn23zjGdWRf7BAC25+J+RQfWRQ=
+	t=1744080606; cv=none; b=D9NU7SD+ANqwg919O+axTnz48bd6ikiOopjNh0p5EmPgSLkVzem+eQEPk83XVvO1uuFVdod10nIA0NPfk6uptguf2Oq8j4S4OBp0bg1EE52+efh1gAPT+Qx3raSu4L6jG4I+ssYS0LCgb4H5NdSgl5iOFW1ByMdm55EzCqVgO2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744080225; c=relaxed/simple;
-	bh=uMJrwov1IZxKFW0XGBsQ/tzJB+eGUEzjRoiJvWFEqXs=;
+	s=arc-20240116; t=1744080606; c=relaxed/simple;
+	bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GtcRUUg5/RgKY5r7Pw8ZFdueRgWlNSuUaohS0oPTYBrLyQpBVW/4O9sRBsS/rkjFIUbYh9HQzlQguFnlmOucBKsRGp005y5nIa+f+40x6YNM0w/wUyiIBYPhznH79xh7a9W9gOsin3RkgGS6qF80zaNS/lcnsI676jzn6GerNRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lp91UWfr; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=e3yYQPMBwY4CtUNJUsEfpz+4x976JazWoapeTHLe2Dii8HwfZ3/Y60UJzBD0t6tpU6CUOtuBBUrjL/2fRnYWGTPovaoGW1mH5VjAZCSIAOWS+TrORbzNfh3YRTOzh5GpzquWO+1USxWtmLQaS9YDTW/MhfgEQigKTMrtrgGcLME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwVoAonN; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lp91UWfr"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376dd56f60so3634476b3a.3;
-        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwVoAonN"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so4818809b3a.1;
+        Mon, 07 Apr 2025 19:50:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744080221; x=1744685021; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744080604; x=1744685404; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
-        b=lp91UWfr+DF23Ka7wsqWg0hJ2xKNR6NYpgEYTbvUGwbgBnUXUGo4kM8TDQSti6FiDz
-         NF/lShOGXhMGKlOgbBjOlGzrgGpbpJFKI6PPBJNilxh14BxK5iKdDo11odovv4LrS8Lr
-         V5Bto+a+ynRVJCzddstjPCaf8Ki6DsuzW5PTpGYyHT68cjJXB07CCcIprXxsiibxyS8k
-         XguMPCfH++F7MxFno0yCkB7akQSqW1B7cw4oQGdBNneR35B9ySY/3zx4SnvCzDIiHeXw
-         Lwhcp9GMuc9s4kuhVypU8HsSKbztSrhs7+kKx4kRRyIL0KIdj8qXtJvZwuOFaSqv22Me
-         6RMg==
+        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
+        b=QwVoAonNG7ydmRGUiYeqnJIvp29AWleIAnXWsDCgxB/uGhOVBYB3DQztenncDXVH+m
+         95YL7OhDSIvVZhOtr8A4J1Dtyv4CzVt6nacEKvGRNMBG6B5ozo2ufwioKfZKYxVkLEDh
+         snxA3cx0lpu0tr9KDc88hCJyl49boZ4sk5fGJztd7NRqA4lOqig70z/xPMvXQShLOKuA
+         3+bJrVBculVRmZC9EbHXU49RJB1vJzEFchyj6JMnUq+9/SGClTo09OmsZ0p2ox1srr2L
+         8qlpcU8/qPq7FFo/nPySAP5jbUpswFtu3GzkCbzkEzLJZI79GAg+nOld4q5yvDvDx+Xe
+         KpIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744080221; x=1744685021;
+        d=1e100.net; s=20230601; t=1744080604; x=1744685404;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
-        b=VqupIZHcITmtiV73ISbVpd5XFYM4x7zocUbbat1JtC3gO5+06pZJKLWJwmZCkmHjzq
-         ODUEUIfYAzhQUQp4yi/kPmGpDrXW97WcU6gCv62GpPJBImkzW/tZfVFJwVCJr7Pp33FM
-         omWBd1tN3lU8jCehitXPexgSMUFEkPcPf41VTUuiU1Aui76WEPWImHaJt4VvKoVudnQf
-         27MtOvj4cL0wRfnikYtlmSNCBC1GlNr49lVMyEfg0JWAVAwuCHz9D6kQwgs1MHjcH8zt
-         oceOGQWQvrfUixEpDxR+pcSsbGxp1ZuG2eNNzzyKCrb214jQqSzIIQTQn7jetjueX/PL
-         a+LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkqM3k2Zifie7TI+KqabWi16lw7KSX+Co1M7AefnMbPoETeXK/cKpSbKcZ6M4AhefzPCZFm3TD9X0=@vger.kernel.org, AJvYcCWMcJ+8eOQrDEzmoseY0jlx25qEDcmBbicqgzjYeTsF1/Vlz9iyCvFrXV5eWqsz1Ks5c8Sr8LB77u6d1pMYCgsXWCyVAQ==@vger.kernel.org, AJvYcCX1LIOf1j4jnaNAcPGxv6ulvJf4ziUPp26VADgazu5DIIs3AP+alDjfk8S1EwWn65PlzhlGhjuWS+xgyA+N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAm7b28n2eIpYtmE4uDq4aIniQMIV2EytbaHQ0CPc8q6TLfW0g
-	3hAUE816kzTHFLQ5sVF8XXXiWdY1qOLdfniYGU9S6y9KETfT4w9n
-X-Gm-Gg: ASbGncuwWY2dIpUM2Xs7zHR9Nl7X0o41AFAjgiqEKLHgzFalKZy8RFE9h4J7nwQx5dQ
-	gcLxnfjZT+I38dYXCAUVL+87csDES8RcoJ81r1/JWmlw67Ym3cmw3ZIZrhgQ7z+jTXiN9TzFkM2
-	PhRJsMmLK2ZmTMOjkTeLQg8wWRYGJCbQZiWKz9APS7dZ/ke03Xo2Rmz4mv9qNPocyccIoon3YJW
-	sX8w1Nc5cVreTacIs/vaYHMCh6Y0kq7yaKegABY3NTgo6jfUnpipcByUTAZN5kDpMtSk/IYskTE
-	cc1zbc3KJtDQo54eGocCSQGXm0am2VhdQ1KnseY27m6e
-X-Google-Smtp-Source: AGHT+IGYJY3Vw8eQZB3fM7nHVZhinPtXWjfzVKGVrZd+aXEvu0+KorEQ0ZkcCaKU6jpo7PFAEqoaVw==
-X-Received: by 2002:a05:6a00:188a:b0:739:3f55:b23f with SMTP id d2e1a72fcca58-739e703c33bmr19565974b3a.14.1744080221174;
-        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
+        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
+        b=SY7zSTKr61NI9+aE8Qd6/sYQXo2za8KI6Of+seO8U7R5oWDPs1+6GLCMUdcosSWZG+
+         uTHMAcnTKyFie2p56cSFQh/X+NarsnywFd/2ulcYLT3BQWLT29Z8GayNcdJknFZvZ3YF
+         +MSNr0EFfuGrMeaQtwbohaxkbOBheC3PJ4S15J82iw1L2qrXN/gXAkG3lkRM/OwEfq2W
+         i0Yr7Ge6PDcFFjIp1ucDpCmhUceuP9kfxT/7jHB03pwOjfAaTqzb5EmPuekJtw9sn51R
+         ZrZLAw6x93KPc2vjJMCoitjFuo11vqr+TLEVC6gjFOgKpt3FI6V6qNX5fMdKElkHa7zA
+         K6eA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMoVs+nM9DeD+5b8FuqD0VG9+XtAl1BddOD0hSKyA0RGoN58+Ze4WLbOrW/6MnVtg1zMr5hYNw13M=@vger.kernel.org, AJvYcCUXGgT1NWfzV7gbZ3VSrv5oDOycKSp4rCV0v3/KFka77+3VfVBUb+k1TWklpanpNOpkQonyOqwDg0v2BiCCMAyWDK6Row==@vger.kernel.org, AJvYcCXhTptESZ4Vu4+7bBwRB07e7/DgPL4Wb5iHwqqdLe3UAcO+84HwRsQoIcIQjrtdsHw4smAIrV3yf4wHyOFW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzedviien23t/sW4X3vKncpraKPcWlTa8RT1zSsHQ9U3UkMYH4E
+	q5nUqWaoVu+YW37uHz8d187WkAW1Sac6qpYLPzwdBvUZrq5oTJLx
+X-Gm-Gg: ASbGnct5ByKh7puBXnVTQKazq3nWUglsk5aG0SZrewOoh+fZ4O7qy0e1eH+KzZpVvAE
+	hN0SKQ3vWycJuW4w4uyvnUvJrMQ+l6v1gcem1Fs7OEvVSF4UpVmNS76RSJueXbVdzhpUD91hooC
+	w9lyRfw4a6hjPBN6KS3vFVstPyyLU1QjEY464Gd0MeCEH4InNvrmknkdft5hZgbw82JmY3U+Hsu
+	JS5GiR6bNDbVGTFXO2kQOS+jw0BJ2D4LNgYOAMWVMn9KWKbS5bQB5S2SDN3nrZ+70thmPC0FnrK
+	p8cwYwPG0YPQWFszXjaiTkswvBDO18+p9whAArcTlnrJxxkWwpS6elc=
+X-Google-Smtp-Source: AGHT+IGK5tUXHAlmfULfhwp1g4yLp0i/9elCRhY3So2bgspe0qrtj9S4q7rbiEKjVFgicIz8ng8r4A==
+X-Received: by 2002:a05:6a21:8cc6:b0:1fd:f46c:fb42 with SMTP id adf61e73a8af0-201047339c6mr28279180637.31.1744080603933;
+        Mon, 07 Apr 2025 19:50:03 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f36besm9307315b3a.72.2025.04.07.19.43.39
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9c62739a8sm7231602a12.64.2025.04.07.19.50.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 19:43:40 -0700 (PDT)
+        Mon, 07 Apr 2025 19:50:02 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id 00674420A696; Tue, 08 Apr 2025 09:43:36 +0700 (WIB)
-Date: Tue, 8 Apr 2025 09:43:36 +0700
+	id 9A9A9420A696; Tue, 08 Apr 2025 09:50:00 +0700 (WIB)
+Date: Tue, 8 Apr 2025 09:50:00 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
@@ -76,7 +76,7 @@ Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
 	Mario Limonciello <mario.limonciello@amd.com>
 Subject: Re: [PATCH v5 1/6] platform/x86: Add lenovo-wmi-* driver
  Documentation
-Message-ID: <Z_SNWC4zWC3hoXef@archie.me>
+Message-ID: <Z_SO2AkhedcuHeOe@archie.me>
 References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
  <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 Precedence: bulk
@@ -86,44 +86,45 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5GXWb2ZFP6f/j9R0"
+	protocol="application/pgp-signature"; boundary="HZiyhvZc60l0G0IJ"
 Content-Disposition: inline
 In-Reply-To: <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 
 
---5GXWb2ZFP6f/j9R0
+--HZiyhvZc60l0G0IJ
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Apr 07, 2025 at 06:28:10PM -0700, Derek J. Clark wrote:
-> +LENOVO WMI DRIVERS
-> +M:	Derek J. Clark <derekjohn.clark@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> +F:	Documentation/wmi/devices/lenovo-wmi-other.rst
-> +
-
-I get a new Sphinx htmldocs warning:
-
-MAINTAINERS:29601: WARNING: unknown document: '../wmi/devices/lenovo-wmi-ot=
-her' [ref.doc]
+> +Balanced-Performance
+> +~~~~~~~~~~~~~~~~~~~~
+> +Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
+> +enabled in their BIOS. For these devices, the performance platform profi=
+le
+> +will correspond to the BIOS Extreme Mode, while the balanced-performance
+> +platform profile will correspond to the BIOS Performance mode. For legacy
+> +devices, the performance platform profile will correspond with the BIOS
+> +Performance mode. For some newer devices the "Extreme Mode" profile is
+> +incomplete in the BIOS and setting it will cause undefined behavior. A
+> +BIOS bug quirk table is provided to ensure these devices cannot set
+> +"Extreme Mode" from the driver.
+s/will correspond/corresponds to/
 
 Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---5GXWb2ZFP6f/j9R0
+--HZiyhvZc60l0G0IJ
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SNUQAKCRD2uYlJVVFO
-o93UAPoCWyKkA+MUDv8s3SY4BWwFsI0SKZz9E5UV6iJfRcbAjAD/S9TXAkttDxWn
-FU2BVXhtWYb0RI3K7q5pcftRmfoBqQc=
-=Ltuz
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SO2AAKCRD2uYlJVVFO
+o59yAP9Su2TBW33AvsAIPJ1o6NJs5L2hZcTeVxtxQXxyvkRmVwEAkMvgXYDZ9Qsz
+cWnog2KyZKoSej6dBqln6RS7bBEWTw8=
+=KunM
 -----END PGP SIGNATURE-----
 
---5GXWb2ZFP6f/j9R0--
+--HZiyhvZc60l0G0IJ--
