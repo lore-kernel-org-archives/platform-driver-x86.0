@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB101EFF9F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33EB1EFF9F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744311578; cv=none; b=dB4gkDtr4s6PmkWq9LkX2+F9rTyuFQ1v0z4gmcJRJmLg9m4g8x8yd9NFNJ1LMGQ3n4atSS04u0+wfwK3yPkHlGsGD5OBK1zGvFkoCzn6agXPiPt/JkNYs5EW0ORRIWuNUmkdXPojmPKGgusuzsIuwIxf/bGOzSQ3TUFRsvRrezg=
+	t=1744311587; cv=none; b=cYiJ6tNs+x1R7mYXmAiXkIAaV6L3x7yxW/p116fkobPP8P6Rwy9tYdlAJq3P1YBD1Tmf5a+P1c6IoMxDmMq+ZegC8S26KVr1vvP34EIO2ItLGUEAZefG25YIyvRYL3uNJO2sWQ+ONtFrEqGgSfX0n5uzu2+ZwrcLc3sRSUUlLD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744311578; c=relaxed/simple;
-	bh=gKejzeqBQ34YhQ+fJ8dA3w1KobGWnqoy9QZlD0yYJ6M=;
+	s=arc-20240116; t=1744311587; c=relaxed/simple;
+	bh=KFE6HcVDUsKtIMTq5VP8qHH9rUTzBMMvH3ZU4shdvqg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J55Ow6r6eFUmOOB5je+paRfXXZonvv4wL/ewNwwOvMzP9IqwJSB3Xz1vq5bEPIp6wCyoP/lKuJY2Yp+zh8wxozryLzJjMaZYGSwXbmzxuE1JzWStlbpR3HAjsOmHjs5pyDRXyr8YrTnXKjLpGphf6EGJkPowA0xZYbINGwCYPUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwY6Zpl6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=SmrhcILA+J7D5AXixu+5XVC0ou15yKlfV4okqIkpyB2PfqZfN6QrvclgAHzcFTkzoef7BtrrVSHVQBt04VxhxVylsteT/SzFNym6dH+eK1igPBjPA4auIhuAHTRRHth384uVNsmpeh4TrePzV+r8NhQhT+P7s0+2qUvNrgXu8ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkkiY0fH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwY6Zpl6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D528C4CEDD
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:59:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkkiY0fH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 495D7C4CEDD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744311577;
-	bh=gKejzeqBQ34YhQ+fJ8dA3w1KobGWnqoy9QZlD0yYJ6M=;
+	s=k20201202; t=1744311587;
+	bh=KFE6HcVDUsKtIMTq5VP8qHH9rUTzBMMvH3ZU4shdvqg=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fwY6Zpl66KnY7vszMSlYNbcC/KQjAEOTtBrPeFBQRe6YMqiWV3RTKdYeTBxavKb5L
-	 Mf4N7ZCvo82k3gYMA+RV4TYnlOjTVATLyC/BQEDVwO5r+Qp+JmgkbdgTXgC1eOzFv+
-	 VLbTxURU2lpI1oR4k/8joc6uQVqpWNNmiKUCwRGSamyDgUp/HTNgioVVCcI9Oe9MSs
-	 awTnMxJinWklKhCBnbkAL8Dl18nb6HnVQA+6BMNM/nFv2Zj+sXuXamy5+aIGmfQk9N
-	 BnYKuEFQ5YE4iTzRxY3xj7bJumPo2c3Fy3s1oXRRK3yei4v7HMDq3PEEvuvNCBx6sF
-	 KXCW9qr4fbFQg==
+	b=LkkiY0fHpAtpqSuIFl0ET2RKjosf7Wvp9/fBYlFemTx8gNjCy5/j1zcZuKAGCKq8L
+	 PKYznmoYKFzBGk8DA/ssW2ZTulf4hH3lsIFTMwA5niNkuIHGiBLHHQt3xw60RIepSA
+	 vN3asHb3q2CXPgKx5ckSJZcvaYip3Isq7zmdu39ev4puUWT/QXIa53MFblYDKoPF36
+	 O5HWx98wW9iEt12qT2DPwE6Of2467h8HJJdvuaTJNAB2Gxl+bLAYwsrY3/7JkoEWeE
+	 DSBdr9FWRNdHexSntD4raUkHMYBSx3Le/Am2Y1AuFqZEZ50j+jk9GRlSx9u0gcIkn9
+	 hU3F1wfMt/b+w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 58020C41614; Thu, 10 Apr 2025 18:59:37 +0000 (UTC)
+	id 35857C41614; Thu, 10 Apr 2025 18:59:47 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Thu, 10 Apr 2025 18:59:33 +0000
+Date: Thu, 10 Apr 2025 18:59:43 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-eiu1FWFtly@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-218305-215701-iD1ceNM1iU@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,22 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #88 from Daniel Mewes (mail@dmewes.com) ---
-I'm not 100% sure if this is what you had in mind (let me know if not),
-but this is what I did:
-
-1. Ran the script with a suspend time of 30s without performing any of
-the reproduction steps (I did this while on BAT - the measured power
-consumption looks high at 9W, but I think the 30s is not enough to
-measure a reliable value)
-
-2. Ran the script with a suspend time of 30s, and performed the
-reproduction steps that used to trigger the race condition *while the
-script had suspended my laptop*.
-
-Both runs were done with the kernel that has your patch with
-msleep(2500). Let me know if you wanted me to test any other
-constellation.
+--- Comment #89 from Daniel Mewes (mail@dmewes.com) ---
+Created attachment 307953
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307953&action=3Dedit
+s2idle_report-on_bat_without_reproduction_steps.txt
 
 --=20
 You may reply to this email to add a comment.
