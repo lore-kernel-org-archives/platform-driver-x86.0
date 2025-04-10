@@ -1,203 +1,93 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2A81F12FB;
-	Thu, 10 Apr 2025 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466AA19DF99;
+	Thu, 10 Apr 2025 20:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744314313; cv=none; b=nInk7Lny3SZG9bFikScBi21wLTk4o4osR5KFgLsTrXOwAQ5gry32Y/h+Pre3IMS6PQMsM+O0tmv+kRGpg54tWyfx/z3ep2eFWB1yPxnwI4JYgsZsv6Q/dOAnzSlXYsL04Me1lQXVwMWeT0yb8uYZI7r4ljJWmHNvwBrxgwvz6/s=
+	t=1744315338; cv=none; b=qtjVguppqXXPfyB2GGZc9D7WYMKGHACIri+tkYWgn6GCxdBxaUh7S1p5ts0mFR2mNeTsUa1KO84LKwhNUv3+jlbny9vIFzBUS1LSrHV6BfpYAd4ggKTM6phVOxAz/7vxlXgWmmPFsbFlD6PL7udQSYa7cbEuSBz0xUjTmocT2YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744314313; c=relaxed/simple;
-	bh=nYuYtFWEsen9f2D7ItDfNNjWzV+yKZLxUypDQA+DWlk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B2S59ISvGr/658nCKLgNqoSkWTeiRGOu8+vE3wJcdNJPbS71nxImX26rjH/tR6yMFyduL3mNWo9wYqw+wtnQKNIGMNPskHEit9Q6U8cAmmKcdKGbRlx0Hm+GlQX2UYFHHbPyEBSV6P8uzMwRGoM+uPPV5/fuvi291qSKw/P0h8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=P7XuaM/z; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1744315338; c=relaxed/simple;
+	bh=sbiJCE73U885kOZ2/LQ9Zkp6JvO2nK74WGrxsvwKbs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CaZQTeqWgAXOt7xNNdkr6DcBrK+A96etISO3EhKYzg2e+bUWf1lH0l0d2pYO7lod88Era3tlHlBUq5N5UjQWjVTMZ+TClaOswAFORcjH/vHqDRMQoXi33bTOvezvaz17bp75KIlrcq6W7DswAfCMVWEjYk7sRl1WA8rT9civpwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6qWwP2K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="P7XuaM/z"
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id A25F12E09463;
-	Thu, 10 Apr 2025 22:39:22 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1744313963;
-	bh=FOGdZqRgrRfjCXzxKmtyNviIBZYCEd5J8vC9FJL0iik=;
-	h=Received:From:Subject:To;
-	b=P7XuaM/zM6DP0rEWAXZcH2n1hCr3kvjNBcEgCE6nnOntDxpAE4leGK0lFuNfOeI/p
-	 Yjuh/Uc/8BM5v1U8GMGwtHdhJ2rpEttLlhBlGHXg84vtKRb4KrXT5N3Im3OxbmYj6O
-	 CCTTE4Rto/aVkjzNR41ZSyk6pLPunrQTSXO8Z8SA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f178.google.com with SMTP id
- 38308e7fff4ca-30effbfaf4aso11471611fa.3;
-        Thu, 10 Apr 2025 12:39:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU88GyfGnBKRBYviP7AWW10zoib5yT5F9OdTWm1TV6CEaCf+pfW2+yOPfqLGQY+z7uT94ksrxmBaQ5tCaNv@vger.kernel.org,
- AJvYcCXxp7K8KvuyELcnGgL3oEqp5lSoWMzSGUZIeo0m2BGHJkvx5tFzBOlAwi/4/QCQAhaHvob2Gekqn94d4A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGjpOb4PSvU6ayMLI0RWoQA63Bc3nrc18hHdigx7O8vkbc8NGD
-	OS28ys2volO8Ybb4uBKd3kHiOEUWtRQQxeNoeU1WDS0iyGReRnXg1+jY2hi+dWg7EYJU24QtUyd
-	UywPUst5W9zYqLMI3qN2WXVf8C2c=
-X-Google-Smtp-Source: 
- AGHT+IEepTHsF241IzEilHxJsf/PKafP8ocYWw9ljd0ITH+/epE0kwn561dq9fLGrkwW9h8DsARHPA4q+CGzK5B2XLI=
-X-Received: by 2002:a05:651c:12ca:b0:30b:9813:b00e with SMTP id
- 38308e7fff4ca-30facc202a3mr12439491fa.24.1744313961756; Thu, 10 Apr 2025
- 12:39:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6qWwP2K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15E69C4CEDD;
+	Thu, 10 Apr 2025 20:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744315337;
+	bh=sbiJCE73U885kOZ2/LQ9Zkp6JvO2nK74WGrxsvwKbs0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q6qWwP2Kr03GOIaLSne5ITkRqyvduv9B1zzDuoKBgwNZFJ8jcK8b+29yEkLofOubY
+	 7Mf5DYp939Vfaf8fjqTZu32wUSMU5j3KhirfhtlVLJRI4VMB5027TV0j+IR4NoVRos
+	 7gU6gRBS4nmTgeIUlznmd6ymdQ0O2/IEqFaxh97gC6A/b6FoqLNMA0gy8DPNkIeTmL
+	 S29B3Owr/G7ipQb+zMio80yapmWK2j6JxQ7ljZOoAph2fdDdczUjGPuyPJbwxyYlu4
+	 bWExaq+b+7zGIg+htKttKOsStGaPYfk1J3lYYflYBi0xfU+HJsDj47HYVGr0gw92sC
+	 Q18ty0Y3umuxg==
+From: Mario Limonciello <superm1@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER)
+Subject: [PATCH v3 0/4] AMD Zen debugging documentation
+Date: Thu, 10 Apr 2025 15:01:58 -0500
+Message-ID: <20250410200202.2974062-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184601.10990-1-lkml@antheas.dev>
- <20250325184601.10990-11-lkml@antheas.dev>
- <648a1d1f-a222-480a-aec9-ab3e0cf790a1@ljones.dev>
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-In-Reply-To: 
- <CAGwozwFrbspt+OfzaCR1B98Z=1GFS6nTdnVpWFeb71aLJLBUxQ@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 10 Apr 2025 21:39:08 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwGqy344a_hr=2sKOiB3zUN36M12nOKp4_JpUuhW-pYBXA@mail.gmail.com>
-X-Gm-Features: ATxdqUHqeB-knh3wXRj4IY16EpcxPgWnylWSLpRJ0qODGgQdGYA57RGvwYyQHxk
-Message-ID: 
- <CAGwozwGqy344a_hr=2sKOiB3zUN36M12nOKp4_JpUuhW-pYBXA@mail.gmail.com>
-Subject: Re: [PATCH v5 10/11] HID: asus: add RGB support to the ROG Ally units
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174431396302.30498.17323684915039915382@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Mar 2025 at 09:52, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> On Mon, 31 Mar 2025 at 00:11, Luke D. Jones <luke@ljones.dev> wrote:
-> >
-> > On 26/03/25 07:45, Antheas Kapenekakis wrote:
-> > > Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
-> > >
-> > > Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > ---
-> > >   drivers/hid/hid-asus.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > > index c135c9ff87b74..fa8ec237efe26 100644
-> > > --- a/drivers/hid/hid-asus.c
-> > > +++ b/drivers/hid/hid-asus.c
-> > > @@ -1424,10 +1424,10 @@ static const struct hid_device_id asus_devices[] = {
-> > >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
-> > > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
-> > > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
-> > >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> > >           USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
-> > >         QUIRK_ROG_CLAYMORE_II_KEYBOARD },
-> >
-> > Hi Antheas,
-> >
-> > I have some good news for you, ASUS got back to me, there *is* a way to
-> > get the feature level of a keyboard.
-> >
-> > ## 2.2. Configuration command
-> >
-> > In order to confirm what functions are the USB device supported, host
-> > retrieves the
-> > configuration information by feature report method. Therefore, the
-> > firmware has to
-> > return the data (byte 0x06~) to the host.
-> >
-> > ### 2.2.1. Set feature
-> >
-> > | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> > |-----------|-----------|----------|----------|------------|---------|
-> > | Report ID | OP code   | Addr_L   | Addr_H   | Read ROM   | Length  |
-> > | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-> >
-> > ### 2.2.2. Get feature
-> >
-> > | Byte 0    | Byte 1    | Byte 2   | Byte 3   | Byte 4     | Byte 5  |
-> > |-----------|-----------|----------|----------|------------|---------|
-> > | Report ID | 0x05      | 0x20     | 0x31     | 0x00       | 0x08    |
-> >
-> > **Byte 6**
-> > - 0x00: KB, 1-zone with single color
->
-> Nice find. The asus-hid driver already implements this and checks for
-> 0x00 to bail the backlight.
->
-> So that check should be removed as it does not work with single color
-> keyboards and instead checked for 2,3,4 to enable RGB.
->
-> This also means removing the RGB check and getting global support in one go.
->
-> Antheas
->
-> > - 0x01: KB, QWERASD-partition
-> > - 0x02: KB, 4-zone with RGB
-> > - 0x03: KB, Per-key with RGB
-> > - 0x04: KB, 1-zone with RGB
-> > - Other: reserved
-> >
-> > **Byte 7(keyboard language)**
-> > - 0x01: US
-> > - 0x02: UK
-> > - 0x03: JP
-> > - Other: reserved
-> >
-> > I've not done anything with this myself yet, circumstances last week
-> > weren't great for me. If you implement this in driver I will ensure I
-> > get it tested as I have both single colour and rgb laptops.
-> >
-> > What i *do* know is:
-> >
-> > - 0x00: KB, 1-zone with single color
-> > - 0x01: KB, QWERASD-partition
-> > These can be standard kb_backlight
-> >
-> > - 0x02: KB, 4-zone with RGB
-> > - 0x03: KB, Per-key with RGB
-> > - 0x04: KB, 1-zone with RGB
-> > These work with the regular EC-mode RGB command for static/solid colour
-> > and you don't need to worry about zone/per-key. It would be good to
-> > document those as defines or enum or something for future.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Let's start slowly getting back into this.
+Introduce documentation for debugging some issues on AMD zen hardware.
+As one of the debugging techniques read and add information for
+S5_RESET_STATUS register.
 
-Ok, the lightbar of the Z13 returns:
-5a05203100080100010423000100060214020000000000000153550000000000
+v3:
+ * Introduce patches to have a common define for a register base used
+   in 3 different places.
+ * Take into account feedback on how to show S5_RESET_STATUS info
 
-And the keyboard returns:
-5a052031000801000004250501002e0000000000000000000000000000000000
+Mario Limonciello (3):
+  Documentation: Add AMD Zen debugging document
+  i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd_node.h
+  platform/x86/amd: pmc: use FCH_PM_BASE definition
 
-That is 01 for both the lightbar and keyboard when it comes to zone
-(QWERASD) and 00/undefined when it comes to keyboard?
+Yazen Ghannam (1):
+  x86/CPU/AMD: Print the reason for the last reset
 
-Now, if they meant byte 6 _after_ the header:
-5a0520310008 01 00 01 04 23 00 01 00060214020000000000000153550000000000
-5a0520310008 01 00 00 04 25 05 01 002e0000000000000000000000000000000000
+ Documentation/admin-guide/amd/index.rst   | 312 ++++++++++++++++++++++
+ Documentation/admin-guide/amd/resume.svg  |   4 +
+ Documentation/admin-guide/amd/suspend.svg |   4 +
+ Documentation/admin-guide/index.rst       |   1 +
+ arch/x86/include/asm/amd_node.h           |   3 +
+ arch/x86/kernel/cpu/amd.c                 |  51 ++++
+ drivers/i2c/busses/i2c-piix4.c            |  12 +-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c |   5 +-
+ 8 files changed, 385 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/admin-guide/amd/index.rst
+ create mode 100644 Documentation/admin-guide/amd/resume.svg
+ create mode 100644 Documentation/admin-guide/amd/suspend.svg
 
-It is still inconclusive
+-- 
+2.43.0
 
-So I am unsure what to make of this
-
-Antheas
-
-> > Hope this helps.
-> >
-> > Cheers,
-> > Luke.
