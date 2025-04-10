@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2974503B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C624503B
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744308111; cv=none; b=ZyODurs4sz+5s+uZ0nEpq5kcAuGT7APUwOg9Yzc9ZBH/SBcQNR6VrExHzBlhkoeNPZ2uHX7tUbVXunZo4Zuk96O6Whi94njI4mKBnIa2z613SPSpRTXaj0l4iFjn6jT79ZAcGf2aBsGjUfu+eCXW1ZS03nBZspGbmZNQo4KsXns=
+	t=1744308336; cv=none; b=bY6wu46n9v+9DF9Qgr1XgthxgCVRixewfxS6hkyw9TguObU7lZyfHj/T6FOTb2w79VQ8T6WGKsvGQzGgSIbgnquiePPF29zS07z8pQh1wdc1lCMV4dvA/Wwwkb9c+AIpLzYvlNXDemzAc+KmuySB9DiHNY/Ky7IRs85sUHikZbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744308111; c=relaxed/simple;
-	bh=OAjREGArxhMhmUMa4ixoo6fsIhQzOfzYrtoACI1h7TQ=;
+	s=arc-20240116; t=1744308336; c=relaxed/simple;
+	bh=VdumDuoQJfFD+jqgM6xf2UTpbmSBBigi0twti2UT3Q4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HSqvFrFS//xMtToKC2c89n2FTtIFCDnBpZeIa018zNPuh+/Pk10XTdgf1MR8xbT27oKYu0ioloUVSoK3v3PQKvgi4r77G++xtCW/MCxrOUt6yVKBHnY4Wjwyr8w7l4OQO3Hi7XTfJUwG8sr0Ay31EdSgX1LKqu50bFiz0tRyuw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aw/Xt3F8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=BDyDnya1GPOI0YXgqs1dbJrtGnVLcK/4BKC4gItWXL9urGuK6W56UYrKWFqmlnAc6kXtcrii04XprbNhnyJOFkkwm58cqKw9Jxggpk7NkquCzrX4N9I55J71DCM6RDfhNUhm9zRWJXj19uRWF2C5Pgd4hANg54yDf8yiBRay4Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbIj6cp7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aw/Xt3F8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 06F45C4CEEB
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:01:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbIj6cp7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6950EC4CEEB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Apr 2025 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744308111;
-	bh=OAjREGArxhMhmUMa4ixoo6fsIhQzOfzYrtoACI1h7TQ=;
+	s=k20201202; t=1744308335;
+	bh=VdumDuoQJfFD+jqgM6xf2UTpbmSBBigi0twti2UT3Q4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=aw/Xt3F8udY1u074tMPmVMzOPONB54c82z9244oACapHHyCglKpFFCSrSzxBcEWGn
-	 /OC7jp30WfRNTqWhKXhJG4C1CkBbqDE+/If05WIcxWGKwjnvTLMyP44Me5dQnoiJZo
-	 LlUrPoY2WQDh8sY+JG31WqVmh+tX0FsH+c4UF6qGMCW5QVFZ771ly90hsGHfGkC4YM
-	 VbdZlAtdd2TKPHXh9ZGcR9aJB9c7dIw3kLz3fw68GNuGUi9Z1nTr3UPpRV1lpflSfv
-	 cMsNBwtykJiszHw3+/m3BEwQyINvPoEl7L27/tU91QZeDy9fYQ3LABHanM3+FoGo8l
-	 JwvgP5eAyK9Zg==
+	b=TbIj6cp7MVX8HzQtwqCAdo/iY+5b48JY/qklORhjZrQ7udTERZXPc7gR2J+zRXfQ3
+	 1tL0nh0kwal1VgngITiRMX2egOtMPeLbomQJdSTe4Nu49DeSjONJ9DGyuXP8DhZpO4
+	 m0oyE1SsbnmCG1jfhODgogSEQGRp7F5wrjD/ef+4WoZc5p6aO/fF9r5AY7zLHhkJ/F
+	 8rSy+xRnuqZI7UAZP3IBy3j+m6xSrD3T6Zmh3t53y0RVzISBi9GQf+wjfY8qcCEbc+
+	 H+MU2hRig9233WTfzxZbKj6/1RKJw2s+YaPxfYR3dV4iyi8NaZ14s90vTQ+W7XbfLr
+	 JfNpEF8EbQheg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id F0C83CAB780; Thu, 10 Apr 2025 18:01:50 +0000 (UTC)
+	id 5A756C53BC9; Thu, 10 Apr 2025 18:05:35 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Thu, 10 Apr 2025 18:01:50 +0000
+Date: Thu, 10 Apr 2025 18:05:35 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mail@dmewes.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-218305-215701-WQ7LHH8mO4@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-e2gKJUY68v@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,35 +64,13 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Daniel Mewes (mail@dmewes.com) changed:
+--- Comment #85 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+For other $REASONS I'm planning to increase that time generically.  So I'm
+really happy to hear it helps with this issue too.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |mail@dmewes.com
-
---- Comment #84 from Daniel Mewes (mail@dmewes.com) ---
-I've been experiencing the same issue on my HP ZBook Power 11g a (with AMD
-Ryzen 9 PRO 8945HS) on both Linux 6.8.12 and also 6.11.0 (with Ubuntu patch=
-es).
-
-In particular, the variant of this issue that reproduces reliably for me is:
-1. Laptop on AC
-2. Suspend
-3. While suspended, unplug AC, wait a few seconds
-4. While still suspended, reconnect AC
-5. Wake up laptop
-6. CPU frequency no longer exceeds 544 MHz until I unplug and/or replug AC
-again
-
-I've tried your patch Mario that enables the sleep for all CPUs, but I was
-still able to reproduce the issue.
-However, I then updated it to sleep for 100-200ms (instead of the 10-20) as=
- you
-had suggested and I'm no longer seeing the issue.
-
-So it appears that this is a valid workaround until HP fixes their firmware=
- (if
-ever). Thanks so much for investigating this Mario and figuring out a fix!
+can you please try to change it to msleep(2500)?  Is everything still OK wi=
+th
+that?
 
 --=20
 You may reply to this email to add a comment.
