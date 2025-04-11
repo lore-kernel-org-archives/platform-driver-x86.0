@@ -1,96 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F4F238C2A;
-	Fri, 11 Apr 2025 12:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DCC2367A3;
+	Fri, 11 Apr 2025 12:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744374261; cv=none; b=JUXmIe8EZTKPopSDyiZGw9tZXvYV+wFxzoICqI4xFE0M5hMHqTH1SJtVI1XJgD531NoOqMD2npZX78ZSjQh1jlNV/ngZfVbqFibDUqC9x4fCJB6BgwagTs6jGg+7jEz8/F8CYi03JsS2ITTPlewomhy8Pp0AwSnBsDQk+Ei94l0=
+	t=1744375874; cv=none; b=lwod2oU6l5U73cVjJNy7pZ19eVf0lBpRNLe3xkX6u4UjdEZP0TQQBvuMWz6vxoi8jIjSkW4ZXdeZPP51wyuSlhOyIHpZ5n0DNe66jcOEP/tLIqdc8K0CLyNOH6048FiVJdty53lvpNjDiT6djJIDr7mtxKUfpyAAlhW3QV77Snw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744374261; c=relaxed/simple;
-	bh=S59TFiOW1DePHAWC3F9WhmM5KQEnPbDT4zMu7GL6Ehg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QQaVWxw2YK3Mz510aGfnk4r2JMJwIKfueiaIn/kU9RVLP1lY7sSn7AJiR5vtzdg6+p4UwJcX5bXIY7u6Pq++zWVJY+nZx2qF+A8+PQrKr8nFVUbfuzv+mMljjpncVqmnfs1/2Jx+wMCIDxmxSrfWn7mSA4nYMh/0k733WvUIFwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmRn1HD4; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744375874; c=relaxed/simple;
+	bh=Zd9X6ms2PPVaSWHPxKlkLmz3Y+dnMS8sn0rcTdN+2GU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZEsIj4/iPfyVtGgJTcpjY36jQ5BmGrE13UvADkvPgwKUu7fHr1NyIzO9XTJyBDk/cUR8kYT7mfVKG2JJDwI6TKdc33I33x47iLRCmI6mFZDJmhZbvUBomzaDMQmtxfIBPoL5+eHzvbEpAckiHjAk8nv8HhDNrA1qHVVXB9kRTzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Kn1uGhdW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmRn1HD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744374260; x=1775910260;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=S59TFiOW1DePHAWC3F9WhmM5KQEnPbDT4zMu7GL6Ehg=;
-  b=LmRn1HD43iJIk9CrghBHQBWdgIADC5mLaMQ8dGp+k4xzXnH/xlT+Ya2u
-   UrvA/UE1ZqfvQnoj5A1YDbKRhet7iyEXrxVSyTY3bh4s90x+BTEXTC8Ny
-   pmA9yn7n9Eq7d3Knib4mKmX7eAT1elA1iC5o8ZCQxEvTZXrXvBu1YO/yh
-   kFxz4PrpmPVw610HVpEdTGUya8BQEN3vkRT6tiPIA87VsMwysiZbJslsa
-   xHC3IzBnf5EQKSYqdE1HqV6olhUfN2mJV7G7Ej8t/LL6XJ87H6NzxDwfV
-   68pjcTSkMHmLKmofmJ7mekSy9TpSz+q00ZtI+mSxMwQpb8MfU/oclEZlM
-   A==;
-X-CSE-ConnectionGUID: ckMafwVIRjGksIiAi9wQ0g==
-X-CSE-MsgGUID: 2S8g26LpSQWbzpsY5CK5rQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45937052"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="45937052"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 05:24:19 -0700
-X-CSE-ConnectionGUID: sXORNplpRYaBWPQXPCkAnA==
-X-CSE-MsgGUID: eGCbsX8+TiWJ9EleIvRBTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="133942448"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 05:24:15 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
- Peter Korsgaard <peter.korsgaard@barco.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-platform-x86-v1-0-6f67e76a722c@linaro.org>
-References: <20250408-gpiochip-set-rv-platform-x86-v1-0-6f67e76a722c@linaro.org>
-Subject: Re: [PATCH 0/3] platform/x86: convert GPIO chips to using new
- value setters
-Message-Id: <174437425146.3859.1859602845128430744.b4-ty@linux.intel.com>
-Date: Fri, 11 Apr 2025 15:24:11 +0300
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Kn1uGhdW"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2CEE240E0244;
+	Fri, 11 Apr 2025 12:42:26 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9j4WOiKffMp4; Fri, 11 Apr 2025 12:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744375342; bh=sM1Z4uPV8IsYPQ9EeFvzo3tn29PTCDuLZ44Imz8+4eY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kn1uGhdWpCzTeqFESFnAJ8uZQHcy2SugAeQyzqGTi6fbzlaw3JsjNugqcm2On3Grd
+	 yxIm/YCx/+VsHnOOISoCvGChQKyAGXFA7LnPijvsP77NjiHMBTxtJlGzTKtPUul3+l
+	 c8IzEAhoz7u/l9IZucXgXR9QLa+XMQY/RIUmwqod6ctTXbn5BPEgrwkHfw7IFImKgZ
+	 8aEObKb5nn8KMnc6t42h2jJ3dZOKRCIgqdGFbD8GDEZ5vShMu/xsSr7JC8rTlwodhx
+	 ZSJrf9GhJ4HmmcQEFLYRaSaOeKSh2nn+Fzfz1wbcuPdqQ+ryohv4iBX/kkn5ZrjhpP
+	 iYhCuMeh0Xjtex3NZhGl1FskDl8FXVzqd3rk8cjYnO4uHnNAjWFzJPkTRJXugCc0Ba
+	 PjGdguFZoiIWuJdc+OVIn10IGMKHMh45d0gAS2hKEpx+5p/+4CJq/GuJy+rZM8uVrK
+	 AN1xT8R2xTCQeq6I3LJMYxikXHsDUj+u8IOm7Ai9gpSG+bwE1zQyZmHOAi4y1qHFJ9
+	 VOpT6n4QuXE6WSCDUWuuahSyxY0rSnR2pJREeJae+XIgro7cMhw1rlmua8rKq9X1H2
+	 RLyha3OtCjyB1Z80QGpUTCdgVYaBCI6cQTU93q7z2ol+uguyExoakgT91aO/qxLkoi
+	 CywBM/0zUMYsII/uN+dsMISc=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EC9B440E01FF;
+	Fri, 11 Apr 2025 12:42:03 +0000 (UTC)
+Date: Fri, 11 Apr 2025 14:41:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+Message-ID: <20250411124157.GDZ_kOFfsGgY4zUXA5@fat_crate.local>
+References: <20250410200202.2974062-1-superm1@kernel.org>
+ <20250410200202.2974062-3-superm1@kernel.org>
+ <20250411114908.GLZ_kBtN94h79EEN6j@fat_crate.local>
+ <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dc564c29-38fc-4b9d-8b1c-c6f890b2333c@kernel.org>
 
-On Tue, 08 Apr 2025 09:19:52 +0200, Bartosz Golaszewski wrote:
-
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> all the x86 platform GPIO controllers.
+On Fri, Apr 11, 2025 at 07:09:56AM -0500, Mario Limonciello wrote:
+> I was aiming for a header that we would conceivably use in all these places
+> anyway.
 > 
-> 
+> Can you suggest a more fitting existing header?  A new one felt too heavy
+> for a single register define.
 
+No, the logic is: put it in the *right* header. Not in the "whatever-works"
+header.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+So you can easily add a
 
-The list of commits applied:
-[1/3] platform/x86: barco-p50: use new GPIO line value setter callbacks
-      commit: 29ba3b6037dcf73f0fc563611ea81669fb2a3f37
-[2/3] platform/x86: int0002: use new GPIO line value setter callbacks
-      commit: e0071ad2ee0bf09a06e650cb5d697e6c8a7ca827
-[3/3] platform/x86: silicom: use new GPIO line value setter callbacks
-      commit: 88f67f2a99f061cb938812db3deb965504cf5c5c
+arch/x86/include/asm/platform.h
 
---
- i.
+header which contains exactly platform stuff. And FCH sounds like a platform
+thing to me. Or at least southbridge or whatever that thing is called now. It
+certainly ain't part of the CPU so platform should be more fitting.
 
+Unless someone has a better idea...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
