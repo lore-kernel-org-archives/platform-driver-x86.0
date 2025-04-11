@@ -1,209 +1,229 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AACD2980A8
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Apr 2025 09:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF72238C0D;
+	Fri, 11 Apr 2025 10:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744362295; cv=none; b=X5toEf4AAG1RA3t5IaTRzs4Nb7rAOfLwJARuaiNj9rbGFZ/fqSIr6SNxFQu20kBgl5q5VV0nK+chdq42UAf5JBjHCYx69FUD3uDIuC4hoI56mV78fNc5lhv4g2KxMOElM9xP7iMl9G2cVCOXod6igl7SUns9AodJTvwmi5lZ7BU=
+	t=1744365790; cv=none; b=lkZ3j3h+zNbb07H1j9hd8UGx8AgDBH7cYLP5D4L9oQMEf0ClpZrsfh+KEKXr38/L0YfmK1Kc5O62PF1nINLB9vX56R2fe4cR6aw/f04Cq0kL1c0gg+vF6ddhjSV0r63M348YxP27Kb/tBQzTsJMxqzuuhV9kpRd/R2fVz4yvJ1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744362295; c=relaxed/simple;
-	bh=KFO3BDVhpvS+l3rn6mb+9gfxN5lLzHhWxQU19VNMRxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TNRr2PtUtITWGtKgkxsVosayOMmx7U53eWcrZl0464f0KhvBJvGrlkN8XzavNyaEnarTXxP85uXXXcG8qlDL7+VjBbIOCXxEHDnCknpAFOz47LYa6OyhBsf0MxXRK7WS07F8OdoyhAFxH5H36bddc2QldUGu7X9BoVvmoR4ZBBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvFMe4US; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744365790; c=relaxed/simple;
+	bh=J6OeqQNRvvSrkRJ6nriZOb1mLK+7fVoElxaexjCvEC8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BxzfQ3TZkTb9ATsy/HXmF21ajp3WKSBAO+XYexoW8yhQjV8pYrFe+/EU1zR/bVARVKQFnd0Kw2lhXmPUaXDnJRITVfyaJWyE8qRCNmm+rqqXoBuk3F1TfW42LCuw7WOcXhly/AxvOVk0mbFFsnupYMf30oWptDwWpdpE6MiOy1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nR7ed3OE; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvFMe4US"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5568355ffso151523485a.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Apr 2025 02:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744362291; x=1744967091; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bYcJIR4aAuR5lVMMqkgn0XJNd1hlz2S9ObgYWC7XAYA=;
-        b=YvFMe4USVRTVZmudbSivW1gweEphbNqfuv9t60h2bfpYO0GtXJ1fu3jeAQ/pPM+rPt
-         lHo1IEy9zzj9j9DobMMfpcBM+wqFNAssMtEjkhy2qSkAVsmGmBcYg49ZgUw187YTmmGG
-         VKk/5u+tMw9CGyLgh2baaEBkqfIbT12yTbPNpVxrsdQt9KpeLLoAsIkwEQa58NtKrYuO
-         rvMzDYlkOtBK5KxPmLL0uA3lON0w4AH6JSz9KJZW3CZRCt4QNxf1U23PYRhL0WNHx6Aj
-         T/2RKqL5odGwAl4cEw2XH8tnziNC+lzkbuZkrwPkPT07IqAGIaQfTkerVykdBISsH4nX
-         zdgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744362291; x=1744967091;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bYcJIR4aAuR5lVMMqkgn0XJNd1hlz2S9ObgYWC7XAYA=;
-        b=w4BZ+KuL0w3ISkdSiPGqyTph7FUcGl0SMTgkddjE6mo63mO7eMt6/s1S8ofXR3eN26
-         QQ8gKXU2oZ4smrYdXKXdUuc+c4gEM7b7F03Snb5g5e4+ftbYBRMg0g4/w3GY82rxFgPI
-         hgsQ6Pv3BYNvFiZdl+guN4T0HZKFu8Oilp34BX0Jk12TNYVnxxrGVezjGD0D/yzzWPVt
-         Mwc4AAMrQikZClFZ4H4e6gLx0NMDGgDkMNac3BuNXtn82rKY1qObFpWYhi+CZydPSRyI
-         AuFhXeiF/P0B0b1g9bm7gGA6NuZLhqi1l67dkmMTRtYTiGbwzqsFmDDMf5PY7wHcw+ji
-         siTw==
-X-Gm-Message-State: AOJu0Yxd8erYo0W+e2xLhUjw98Z/rB6D/CYpdFx1v3mr8wQCYqJk6Ev+
-	HwbOnGFTQ/nWyy/sirhl5BZ/dZj2/Qpkh1RpOsTQVfITg28Zi9Uy
-X-Gm-Gg: ASbGncsWknQnWiHtDV7jl4W+2tlG5ldFvVk7ogDQ2nR5MKvEFWWfxjNtnzID+rnN0nH
-	UUReATaQdUZnfWZO7DVqxfZ2LJjXl7e6Dtr0Id5vMj7wvZCRSAsxQecj2BmVVpucuVM79fNBN5Y
-	/zuVGDGCqGcFWJGcmbjavinEp1cBn/bHOyTpNV96gUvo55xcUbuP9jsQ1e5Fa0XVFWJEJzrUOs8
-	18wQoJ757xhmucgG+iYtvFAD9ARNoSbH96Omcbd7sNKkvIXy/DGbDb5nJNLv0EX97u7AXjnZwAJ
-	yvnqOc1MBsaJCTnb4k7arb2WkVz4YHEU/YABLHlogOaV4qdnEwQPzBAWlfbsuqLVI9pf7Mss2sK
-	EiGd0Hj1IvmeknKrcsFQ=
-X-Google-Smtp-Source: AGHT+IEPWBDjZxLgX93/KYwK13hnjOGFdO72L0gh5NZ2mkf4rp46U8wAEFGzBK74Ry3vKpH0ytavrw==
-X-Received: by 2002:a05:620a:8009:b0:7c5:3d85:728f with SMTP id af79cd13be357-7c7af0e2355mr387913085a.25.1744362291065;
-        Fri, 11 Apr 2025 02:04:51 -0700 (PDT)
-Received: from [10.131.178.61] (zz20234032476F6CA7C6.userreverse.dion.ne.jp. [111.108.167.198])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0de38sm231678785a.102.2025.04.11.02.04.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Apr 2025 02:04:50 -0700 (PDT)
-Message-ID: <414df5c8-738a-4941-a8af-06b466958389@gmail.com>
-Date: Fri, 11 Apr 2025 18:02:31 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nR7ed3OE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744365789; x=1775901789;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=J6OeqQNRvvSrkRJ6nriZOb1mLK+7fVoElxaexjCvEC8=;
+  b=nR7ed3OEDyEQmaqePVYjsh1lQHspgmmg6mvIze5XccVXvV3fKoMFeHxg
+   hJSlJTADlMd5rL0bYzX1IeOXgrKkxrM9AzJQeWIqhrfpYkBfhcrDZ5t0p
+   ZuFv395OrwIW20BGecxyfzn0z10kIVQFms/CWMCf1YqcQQRJBrfKYKwdJ
+   QzOAt6qhk6upkwUI4KD4YAYzHHbIQqP9AEDVnM4QTBW0n3WsySlnXDFVD
+   +hBHsKwmflZpMQwzU5yAxwKTyzJdh43Yvi+oEwLINW2SmC6liFtAsgNE+
+   vKPcRt6bEryVK9NFJFj/JqWgByjB8kqyCbpvaIL+FBMPtsaAj/RAocjPT
+   g==;
+X-CSE-ConnectionGUID: RxJ6uXOGTOyHwIb93QheNA==
+X-CSE-MsgGUID: 1BiuMBf1QZaGC/7I0HDDag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68399662"
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="68399662"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:08 -0700
+X-CSE-ConnectionGUID: Gho7LCKDQmeVk9R7lfB3zQ==
+X-CSE-MsgGUID: Wof1yPShQgO9Ew0s0jPpUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
+   d="scan'208";a="134136088"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 03:03:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Apr 2025 13:03:01 +0300 (EEST)
+To: Mario Limonciello <superm1@kernel.org>
+cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
+    Hans de Goede <hdegoede@redhat.com>, Yijun Shen <Yijun.Shen@dell.com>, 
+    stable@vger.kernel.org, Yijun Shen <Yijun_Shen@Dell.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: amd: pmf: Fix STT limits
+In-Reply-To: <20250407181915.1482450-1-superm1@kernel.org>
+Message-ID: <8bab41c3-2c66-9dd4-fe9c-af7a250928bc@linux.intel.com>
+References: <20250407181915.1482450-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey
- for camera shutter switch
-To: Hans de Goede <hdegoede@redhat.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net,
- Nitin Joshi1 <njoshi1@lenovo.com>
-References: <20250403053127.4777-1-nitjoshi@gmail.com>
- <dbb95bde-8163-4799-8414-c60ba1c69aa5@redhat.com>
- <cf577f4d-ebfe-4b23-b918-2d59d9e81271@gmail.com>
- <f3f53d44-379a-42a4-9638-9e8532a83624@redhat.com>
- <0b0f51ab-667e-4497-8f24-2b9433427d1c@gmail.com>
- <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
- <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
- <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
-Content-Language: en-US
-From: Nitin Joshi <nitjoshi@gmail.com>
-In-Reply-To: <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hello Hans,
+On Mon, 7 Apr 2025, Mario Limonciello wrote:
 
-Thank you for your comments.
-I am still confirming details and Sorry, its taking some time .
-I will reply below message after confirming.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> On some platforms it has been observed that STT limits are not being
+> applied properly causing poor performance as power limits are set too low.
+> 
+> STT limits that are sent to the platform are supposed to be in Q8.8
+> format.  Convert them before sending.
+> 
+> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+> Fixes: 7c45534afa443 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
+> Cc: stable@vger.kernel.org
+> Tested-by: Yijun Shen <Yijun_Shen@Dell.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v3:
+>  * Add a helper with a generic name (so it can be easily be moved to library
+>    code in the future)
 
-Thanks & Regards,
-Nitin Joshi
+I've applied this to review-ilpo-fixes branch. In the end, I decided to 
+rename from ..._from_integer() to _fromint() which matches some drm 
+usage in context of fixed point integers and is shorter.
 
-On 4/7/25 22:24, Hans de Goede wrote:
-> Hi Nitin,
-> 
-> On 7-Apr-25 05:27, Nitin Joshi wrote:
->> Hello Mark,
->>
->> On 4/5/25 04:23, Mark Pearson wrote:
->>> Hi Nitin,
->>>
->>> On Fri, Apr 4, 2025, at 5:02 AM, Nitin Joshi wrote:
->>>> Hello Hans,
->>>>
->>>> On 4/4/25 16:25, Hans de Goede wrote:
->>>>> Hi Nitin,
->>>>>
->>>>> On 4-Apr-25 8:44 AM, Nitin Joshi wrote:
->>>>>> Hello Hans,
->>>>>>
->>>>>> Thank you for reviewing patch.
->>>>>>
->>>>>> On 4/3/25 19:34, Hans de Goede wrote:
->>>>>>> Hi Nitin,
->>>>>>>
->>>>>>> On 3-Apr-25 7:31 AM, Nitin Joshi wrote:
->>>>>>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
->>>>>>>> has new shortcut on F9 key i.e to switch camera shutter and it
->>>>>>>> send a new 0x131b hkey event when F9 key is pressed.
->>>>>>>>
->>>>>>>> This commit adds support for new hkey 0x131b.
->>>>>>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
->>>>>>>
->>>>>>> Does the EC also actually enable/disable the camera in response to
->>>>>>> this new hotkey, or is this purely a request to userspace / the OS
->>>>>>> to enable/disable the camera
->>>>>> Enable/disable is actually being done by EC. Camera enablement for these products are still in testing phase.
->>>>>> ?
->>>>>
->>>>> Ok, I assume we can also get the state (enabled vs disabled)
->>>>> e.g. from the event? In that case the events should be reported using
->>>>> EV_SW, SW_CAMERA_LENS_COVER and we should also get the initial
->>>>> state and set the switch to the initial state before registering
->>>>> the input device.
->>>> Enable/Disable status will be determine in IPU side which receives
->>>> notification from EC. So, the only way to determine the status would be
->>>> to determine the status in IPU side.
->>>> So, purpose of this patch will only to avoid "unhandled hkey event"
->>>> error from thinkpad_acpi driver.
->>>> Please let me know, if i am missing something.
-> 
-> We don't want to just avoid the "unhandled hkey event" message,
-> we also want to send an event to userspace that the camera has
-> been enabled or disabled, including information if it is
-> being enabled or being disabled. This way userspace can show an OSD
-> indicating that the camera has been enabled/disabled similar to how
-> we do this when e.g. the mic is muted.
-> 
-> This must be reported to userspace using SW_CAMERA_LENS_COVER, which is
-> what all kernel code which reports camera shutter state
-> (be it a true shutter or hw blacking out of the image) is using now.
-> 
-> Or maybe the IPU6 driver itself can report SW_CAMERA_LENS_COVER,
-> assuming the IPU6 driver also receives an event when the camera
-> shutter status changes ?
-> 
->>> I hadn't thought about this - but we need to be able to track the status to make sure (eventually) that the right status gets displayed in userspace. It would be bad if it was out of sync with the IPU.
->>>
->>> Is the initial status always going to be disabled, or do we need a mechanism from Intel to probe the current status?
->>
->> I need to check regarding this but AFAIK, we don't have any other mechanism to probe current status. Also , there was some security concern involved in this which i need to clarify.
-> 
-> I don't see how userspace knowing if the shutter is in open/closed
-> state impacts security. Userspace still cannot control the shutter.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
->>>>>>>> ---
->>>>>>>>      drivers/platform/x86/thinkpad_acpi.c | 2 ++
->>>>>>>>      1 file changed, 2 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> index 0384cf311878..80f77f9c7a58 100644
->>>>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
->>>>>>>>                                 * directly in the sparse-keymap.
->>>>>>>>                                 */
->>>>>>>>          TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
->>>>>>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->>>>>>>>          TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint doubletap on/off */
->>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform profile in 2024 systems */
->>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform profile in 2025 + systems */
->>>>>>>> @@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
->>>>>>>>           * after switching to sparse keymap support. The mappings above use translated
->>>>>>>>           * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
->>>>>>>>           */
->>>>>>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
->>>>>>>>          { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
->>>>>>>>          { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
->>>>>>>>          { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->>>>>>>
->>>>>>
->>>>>
->>
-> 
+-- 
+ i.
 
+> ---
+>  drivers/platform/x86/amd/pmf/auto-mode.c |  4 ++--
+>  drivers/platform/x86/amd/pmf/cnqf.c      |  8 ++++----
+>  drivers/platform/x86/amd/pmf/core.c      | 14 ++++++++++++++
+>  drivers/platform/x86/amd/pmf/pmf.h       |  1 +
+>  drivers/platform/x86/amd/pmf/sps.c       | 12 ++++++++----
+>  drivers/platform/x86/amd/pmf/tee-if.c    |  6 ++++--
+>  6 files changed, 33 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
+> index 02ff68be10d01..1400ac70c52d1 100644
+> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
+> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
+> @@ -120,9 +120,9 @@ static void amd_pmf_set_automode(struct amd_pmf_dev *dev, int idx,
+>  	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pwr_ctrl->sppt_apu_only, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_min, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -			 pwr_ctrl->stt_skin_temp[STT_TEMP_APU], NULL);
+> +			 fixp_q88_from_integer(pwr_ctrl->stt_skin_temp[STT_TEMP_APU]), NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -			 pwr_ctrl->stt_skin_temp[STT_TEMP_HS2], NULL);
+> +			 fixp_q88_from_integer(pwr_ctrl->stt_skin_temp[STT_TEMP_HS2]), NULL);
+>  
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
+>  		apmf_update_fan_idx(dev, config_store.mode_set[idx].fan_control.manual,
+> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
+> index bc8899e15c914..3cde8a5de64a9 100644
+> --- a/drivers/platform/x86/amd/pmf/cnqf.c
+> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
+> @@ -81,10 +81,10 @@ static int amd_pmf_set_cnqf(struct amd_pmf_dev *dev, int src, int idx,
+>  	amd_pmf_send_cmd(dev, SET_SPPT, false, pc->sppt, NULL);
+>  	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pc->sppt_apu_only, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pc->stt_min, NULL);
+> -	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, pc->stt_skin_temp[STT_TEMP_APU],
+> -			 NULL);
+> -	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, pc->stt_skin_temp[STT_TEMP_HS2],
+> -			 NULL);
+> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> +			 fixp_q88_from_integer(pc->stt_skin_temp[STT_TEMP_APU]), NULL);
+> +	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> +			 fixp_q88_from_integer(pc->stt_skin_temp[STT_TEMP_HS2]), NULL);
+>  
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
+>  		apmf_update_fan_idx(dev,
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index a2cb2d5544f5b..5209996eba674 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -176,6 +176,20 @@ static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
+>  	dev_dbg(dev->dev, "AMD_PMF_REGISTER_MESSAGE:%x\n", value);
+>  }
+>  
+> +/**
+> + * fixp_q88_from_integer: Convert integer to Q8.8
+> + * @val: input value
+> + *
+> + * Converts an integer into binary fixed point format where 8 bits
+> + * are used for integer and 8 bits are used for the decimal.
+> + *
+> + * Return: unsigned integer converted to Q8.8 format
+> + */
+> +u32 fixp_q88_from_integer(u32 val)
+> +{
+> +	return val << 8;
+> +}
+> +
+>  int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32 *data)
+>  {
+>  	int rc;
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index e6bdee68ccf34..2865e0a70b43d 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -777,6 +777,7 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
+>  int apmf_os_power_slider_update(struct amd_pmf_dev *dev, u8 flag);
+>  int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer);
+>  int amd_pmf_notify_sbios_heartbeat_event_v2(struct amd_pmf_dev *dev, u8 flag);
+> +u32 fixp_q88_from_integer(u32 val);
+>  
+>  /* SPS Layer */
+>  int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
+> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+> index d3083383f11fb..dfc5285b681f7 100644
+> --- a/drivers/platform/x86/amd/pmf/sps.c
+> +++ b/drivers/platform/x86/amd/pmf/sps.c
+> @@ -198,9 +198,11 @@ static void amd_pmf_update_slider_v2(struct amd_pmf_dev *dev, int idx)
+>  	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+>  			 apts_config_store.val[idx].stt_min_limit, NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -			 apts_config_store.val[idx].stt_skin_temp_limit_apu, NULL);
+> +			 fixp_q88_from_integer(apts_config_store.val[idx].stt_skin_temp_limit_apu),
+> +			 NULL);
+>  	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -			 apts_config_store.val[idx].stt_skin_temp_limit_hs2, NULL);
+> +			 fixp_q88_from_integer(apts_config_store.val[idx].stt_skin_temp_limit_hs2),
+> +			 NULL);
+>  }
+>  
+>  void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+> @@ -217,9 +219,11 @@ void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+>  		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
+>  				 config_store.prop[src][idx].stt_min, NULL);
+>  		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> -				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU], NULL);
+> +				 fixp_q88_from_integer(config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU]),
+> +				 NULL);
+>  		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> -				 config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2], NULL);
+> +				 fixp_q88_from_integer(config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2]),
+> +				 NULL);
+>  	} else if (op == SLIDER_OP_GET) {
+>  		amd_pmf_send_cmd(dev, GET_SPL, true, ARG_NONE, &table->prop[src][idx].spl);
+>  		amd_pmf_send_cmd(dev, GET_FPPT, true, ARG_NONE, &table->prop[src][idx].fppt);
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index a1e43873a07b0..22d48048f9d01 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -123,7 +123,8 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_APU:
+>  			if (dev->prev_data->stt_skintemp_apu != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
+> +						 fixp_q88_from_integer(val), NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_APU: %u\n", val);
+>  				dev->prev_data->stt_skintemp_apu = val;
+>  			}
+> @@ -131,7 +132,8 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  
+>  		case PMF_POLICY_STT_SKINTEMP_HS2:
+>  			if (dev->prev_data->stt_skintemp_hs2 != val) {
+> -				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false, val, NULL);
+> +				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
+> +						 fixp_q88_from_integer(val), NULL);
+>  				dev_dbg(dev->dev, "update STT_SKINTEMP_HS2: %u\n", val);
+>  				dev->prev_data->stt_skintemp_hs2 = val;
+>  			}
+> 
