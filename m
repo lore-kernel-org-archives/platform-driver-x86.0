@@ -1,142 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880A338FAD;
-	Fri, 11 Apr 2025 15:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5F9284B33;
+	Fri, 11 Apr 2025 21:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744385429; cv=none; b=krvGZZq1A+zJbxmDZHAFfVgZ0kl+LuvrBEx5euQM/L9GTYQEsgissc26XRCs6tRLHOpEXmZFxTQLJxeDWB5kuDHIVC/phRIWusLLkM/qlZBVMxPOmr0D/9S2Qr52v5YsoiJSOhSIKqjucoXoobnUxIVCtknauLN0RtR/GrLFmCE=
+	t=1744406162; cv=none; b=f2gtl2phIyEXcIFxkduMMDr4JT3ck/bmb71PcpZ+Vv691DtMeM3+REbygurA3SucJmWLh/I1jyxlclkjS39cCNMQyWl4EA8k8xxVrngciLZaDEtidalW0fH9Cxzl+UsDCofPCjN0YI+OfkNxXOJM47qIIBhcs4JG6JZCYWyPUQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744385429; c=relaxed/simple;
-	bh=ceFpHSmg7DtGgF8kgC03aZJ7RA1jPrdtiFPTWPJTh+4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=acV+RmItygJduL0kU2ZEFbT4H32GNAh7DKJX+t9JR1YGhsr2LOkAMlZHMMccSuwqsDsryVmrrZ6IQjSRDKAwSDgky+DtMlVs4TgQtL2nwxihk7ZBcHn6UuKIXCZTTbbynPah72yKG45Fzxu7rZ94jki+mn4mrEDBHM76W342A74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPvV0iC+; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744406162; c=relaxed/simple;
+	bh=2vnAEWZkA42wh2oIp2t/KaSx2CHjm7tWA5x5tdHlG70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sfWyNOeT49Fr+9QGizmo8qA+MDpqXsi0oVLAPILsg+u1+d4tTuPJRUH4kwW/JzXOHiyEADqS/09PE8m80Qf9+ItlSRurrPXTan59ToLUukWumqQjHWHAE7gMBvsbrh51PPjIwGmaSsc374wZtpAfTdJ176if0hiNLWK7IzpD3LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvcJFGQm; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPvV0iC+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvcJFGQm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744385427; x=1775921427;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ceFpHSmg7DtGgF8kgC03aZJ7RA1jPrdtiFPTWPJTh+4=;
-  b=HPvV0iC+QPfhLLSLrLLv9j1jV+e/c8lUPhFcXgo0AnGz1O3DT672zjxV
-   HUTZQ6/G1EIo6cApt84Ug93oXNPSATi7GKoP3I8LOzvBVQT76vqfB0n2q
-   yXcIbsf7Q7VIXvAQThb8EMKgYMGX2BKiIOY83KHFlO8aGYjQV3pGjGTMi
-   dwVfPmmrjEWPiQ9ZJcaP2jyhlwKHvJswRyCm5lls6oGwHqCz2hRbQaROR
-   ascUW4OGCHnzMzCeUPd3A3Sg+ayVb0AOzygY7X3ljWI7HYNWrBB1IoOK/
-   R6LV5SQ05ci6IzWBkXC6lzAZ5WhKirZy4BjfaUrWjaqAHhYtBWQJGF7A2
-   Q==;
-X-CSE-ConnectionGUID: eNpYV1aPTuOh8oIbFIW8hg==
-X-CSE-MsgGUID: X17jGYEPRNK1SiFmJwy/bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="63485790"
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="63485790"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:30:26 -0700
-X-CSE-ConnectionGUID: /YRv8toyQZqPVbbB+pEJMA==
-X-CSE-MsgGUID: RCoc+ZhwSoy+fC74571Mgw==
+  t=1744406161; x=1775942161;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2vnAEWZkA42wh2oIp2t/KaSx2CHjm7tWA5x5tdHlG70=;
+  b=VvcJFGQmQ8H0CodMrcXovUSBgJKtf+wBCNNBAxTDM/mYbqcKrHmLTZC/
+   nlXfki1G11eUVa51BD5sQYwZCRT4tzs1rP6m/gfkr8raFc6xv+1lqwodC
+   JvP12JAK4C5N9Ruaca8tnrgjMusQ6ud+FkEVoySM9AAKB3kIn/sgX6yPp
+   t8URurajncv89Jr6crIDJjVNmo0nsmUQ6vXoZVxz5Wd1MIg+D6DHC5EkG
+   sjRXXGvoBsjDfgYa0X/kZj8IMv/pZNCIFBjpb984pWPz/Dzx1eh/JES/2
+   ZQpNWjlVInIDVBEJoBjY8w4pJah7N/YLTdPh0mxJ2FAuwl6YloDMKsiiB
+   A==;
+X-CSE-ConnectionGUID: MUs8LDCgTTONAsGIYtF/EQ==
+X-CSE-MsgGUID: Gc0gBUKyS7a/TUSZvPhhxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11401"; a="45858068"
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="45858068"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 14:16:01 -0700
+X-CSE-ConnectionGUID: cx2nNfxiSY+MhvwZfP+VeA==
+X-CSE-MsgGUID: Q2dsqUdWQtqq92q2eTODlQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,205,1739865600"; 
-   d="scan'208";a="134093530"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.51])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 08:30:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Apr 2025 18:30:17 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, 
-    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
-    Derek J Clark <derekjohn.clark@gmail.com>, 
-    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
-    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
-    Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org, 
-    sre@kernel.org, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, 
-    hdegoede@redhat.com, mario.limonciello@amd.com
-Subject: Re: [PATCH v8 01/14] hwmon: (oxp-sensors) Distinguish the X1
- variants
-In-Reply-To: <20250322103606.680401-2-lkml@antheas.dev>
-Message-ID: <a2ff773b-fb41-4d02-6f4d-8d8db7a7a28f@linux.intel.com>
-References: <20250322103606.680401-1-lkml@antheas.dev> <20250322103606.680401-2-lkml@antheas.dev>
+X-IronPort-AV: E=Sophos;i="6.15,206,1739865600"; 
+   d="scan'208";a="129150774"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 11 Apr 2025 14:15:56 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u3Lj7-000BNy-2s;
+	Fri, 11 Apr 2025 21:15:53 +0000
+Date: Sat, 12 Apr 2025 05:15:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"(maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd_node.h
+Message-ID: <202504120432.0F8lOF3k-lkp@intel.com>
+References: <20250410200202.2974062-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1590340832-1744385417=:944"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410200202.2974062-3-superm1@kernel.org>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Mario,
 
---8323328-1590340832-1744385417=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+kernel test robot noticed the following build errors:
 
-On Sat, 22 Mar 2025, Antheas Kapenekakis wrote:
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on andi-shyti/i2c/i2c-host tip/master linus/master v6.15-rc1 next-20250411]
+[cannot apply to bp/for-next tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Currently, the oxp-sensors driver fuzzy matches the X1 variants. Luckily,
-> X1 and X1 mini share most hardware features so this works. However, they
-> are completely different product lines, and there is an expectation that
-> OneXPlayer will release more devices in the X1 line that may have
-> differences.
->=20
-> Therefore, distinguish the 3 devices that currently exist in the market.
-> These are the OneXPlayer X1 AMD and Intel variants, and the X1 mini which
-> only has an AMD variant. As far as registers go, all three support the
-> current driver functionality.
->=20
-> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/hwmon/oxp-sensors.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-> index 83730d9318240..5a4230ad3757e 100644
-> --- a/drivers/hwmon/oxp-sensors.c
-> +++ b/drivers/hwmon/oxp-sensors.c
-> @@ -205,7 +205,28 @@ static const struct dmi_system_id dmi_table[] =3D {
->  =09{
->  =09=09.matches =3D {
->  =09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> -=09=09=09DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 i"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 mini"),
-> +=09=09},
-> +=09=09.driver_data =3D (void *)oxp_x1,
-> +=09},
-> +=09{
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +=09=09=09DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
->  =09=09},
->  =09=09.driver_data =3D (void *)oxp_x1,
->  =09},
->=20
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/Documentation-Add-AMD-Zen-debugging-document/20250411-040641
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250410200202.2974062-3-superm1%40kernel.org
+patch subject: [PATCH v3 2/4] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd_node.h
+config: arm-randconfig-001-20250412 (https://download.01.org/0day-ci/archive/20250412/202504120432.0F8lOF3k-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250412/202504120432.0F8lOF3k-lkp@intel.com/reproduce)
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504120432.0F8lOF3k-lkp@intel.com/
 
---=20
- i.
+All errors (new ones prefixed by >>):
 
---8323328-1590340832-1744385417=:944--
+>> drivers/i2c/busses/i2c-piix4.c:24:10: fatal error: 'asm/amd_node.h' file not found
+      24 | #include <asm/amd_node.h>
+         |          ^~~~~~~~~~~~~~~~
+   1 error generated.
+
+
+vim +24 drivers/i2c/busses/i2c-piix4.c
+
+    23	
+  > 24	#include <asm/amd_node.h>
+    25	#include <linux/module.h>
+    26	#include <linux/moduleparam.h>
+    27	#include <linux/pci.h>
+    28	#include <linux/kernel.h>
+    29	#include <linux/delay.h>
+    30	#include <linux/stddef.h>
+    31	#include <linux/ioport.h>
+    32	#include <linux/i2c.h>
+    33	#include <linux/i2c-smbus.h>
+    34	#include <linux/slab.h>
+    35	#include <linux/dmi.h>
+    36	#include <linux/acpi.h>
+    37	#include <linux/io.h>
+    38	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
