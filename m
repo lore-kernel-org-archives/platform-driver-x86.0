@@ -1,50 +1,50 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E870F2957A1;
-	Mon, 14 Apr 2025 13:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737F32820D4;
+	Mon, 14 Apr 2025 14:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744639100; cv=none; b=G5BWKzc8L5VmLkXEmlqwGVRh62MKRhXtL4JjMZtz4eXcXrNcvhR09rhjMKOstO37WMS0c1j41fYhVrykuTSP++tV0HtIuaPv3i6W59bUq9p1/c7rfwUlOIZMZAvLFzSieP1EKmmvyCv4+9DswsffsiOpYt5C2xOEJHfIdvDvvik=
+	t=1744639505; cv=none; b=k25R2H663RJPtN/Go/+wPZXmF8G/HMNZzkffrddi0ww5E8Z9Ioz1UU9diru6pr18iMpzRCqGLZSITF/NN0iAfLNrbBLDpDko6TKMKTCWzdHD9Y+FDFQeg2f6+pbkXHGGL1jpi13hCTCLcV1LERjj3I3WGXh4sbBmOrq3qgt+eVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744639100; c=relaxed/simple;
-	bh=d/7DVfX/MMhP9cx7igxz0Z9JfAH3blgdoVXTbJ2cJ6Y=;
+	s=arc-20240116; t=1744639505; c=relaxed/simple;
+	bh=/4ocoLvf4S8bhG2FxJMmMl4doxS3PVW64uGPLox8axQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UD6UUjBTrK0qw2OijpVK14AXTpH8Ovesyl4tmcrfRPtGHSlTyrZLkWQ0u858qm0KNeuYqJnXOBx9/RW4UCT3BduLemzXfvrysEPSApe/btvFvtaALIJapDIGBNiZahJfgU/TJF9LqMEUhSw4qPPCKXHloZVTuqrDYkMW3kut5/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LzTJDwqN; arc=none smtp.client-ip=212.227.15.19
+	 MIME-Version; b=jROJrO7Gt7m5DbRZHs1jw91Gl9pMlzmqrFjhXVLVa9tD6hMZtto4unAJditbLouO0QvghfZGIqKquMo1V5qIkeLvxFdFe8LUwAmInIJR/I5M9wHMdwo93sXsV4naNqEinOaiR0EjG1wUm711fe2IQCsprOhoszEq+6pPVHAsv/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=scX/tRZA; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LzTJDwqN"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="scX/tRZA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744639090; x=1745243890; i=w_armin@gmx.de;
-	bh=sFO8lXXKZyi2PMPz1mu2Pazgg7iVLSJumakleqIEFUI=;
+	s=s31663417; t=1744639500; x=1745244300; i=w_armin@gmx.de;
+	bh=MvP0U8fmpFwBQqte82N05PcRTzTzpZHT4tUaFTJQPj8=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=LzTJDwqNPVeEpMRzLpL7ls60IwKj1U5So5yCT39S9TcpdLGe7fUVy3MkwTMUDgDG
-	 HhO5fn0vKQv8WiAORxNy8R+TERMiJQvOhpdKBfUobA9joD66wGdvZxfdbFZV7WSXr
-	 idaeMoEC006icAjxPCZRTTH8mn6/zm0GhNKoWd52M9HDlOk5HhsNYK9fSNk4DMo66
-	 daQ5Uh6sxZ6HDM7EAD7sO7f8cpSEgnEYAjl+l8Mb7Epmn5Xqzjk32e284JJABKYCV
-	 ij95DxdaL6mrq1qCZqwACehGI1NHikUWwq4edO87OdkCj2tHLlsky7WxXwy+nZFFw
-	 Izi0v0Aw+bv1wF4h/A==
+	b=scX/tRZAPhfBP/fWF6HjfDOgPtUUdwogN8yWJppU3lEaAxEuV8OaU01lXIgbUBDF
+	 ntqPaiJLgdoTWMUJRt/DN/hLLXsr2esOcwa17s+gUqhHld1APv6z35B4evXWcJFnG
+	 3KiWF10vJohp3o4SZznFheceyg5Fz+WJMfJW3mF7Qct9yLC1Ey/4jcbK3q9KVvD2B
+	 hX634paBxwb3qF/f0ShoNpE6yu6++DHs//kLbcKdM0CByTTIG2Y4fHZ70AJuOyx02
+	 IhAxLQLLC+qpEmj2MDjzxj+jkjFs0atsAcXqlfCDMRQVs04ZSwqw+K6mFnPjvoi5z
+	 9AQ4PwZJJkW5jaAUEg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MiJZE-1tQIXX2iOc-00pB55; Mon, 14 Apr 2025 15:58:10 +0200
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MAfUo-1ttN921KG0-004a8c; Mon, 14 Apr 2025 16:05:00 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	lkml@antheas.dev
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: msi-wmi-platform: Workaround a ACPI firmware bug
-Date: Mon, 14 Apr 2025 15:57:59 +0200
-Message-Id: <20250414135759.6920-2-W_Armin@gmx.de>
+Subject: [PATCH v3 2/2] platform/x86: msi-wmi-platform: Workaround a ACPI firmware bug
+Date: Mon, 14 Apr 2025 16:04:53 +0200
+Message-Id: <20250414140453.7691-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414135759.6920-1-W_Armin@gmx.de>
-References: <20250414135759.6920-1-W_Armin@gmx.de>
+In-Reply-To: <20250414140453.7691-1-W_Armin@gmx.de>
+References: <20250414140453.7691-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,33 +52,33 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8tlIa64fiSiI8ftfeg2qQg4VINAH/WvEYzDZHdImxu3uueEC1uY
- fuBfbqSme2/AkFRByJpPXcY0ZLf+lqaOWEd1CHDqQkGYFJ62u6nHtqt0SU2j82hcuS+f82K
- 5TEBSFKj7aPlFFxjr/WRhIwxMSnohD0UA/C9P9nFG2uL6ILvO1U/Iw+6YPKv4LMehaHTjgg
- Gj6/KaJnj+Sl+iG8sR08g==
+X-Provags-ID: V03:K1:XXKSQDY1Fs8CNtEEcKvY0XcGO/PIKjZONhMvXIanGrxob8zMabk
+ JT3JrK2QMd2TxQENteweYmKoiP2R+7KT38Vlyyh1WQTlJeTlz/jQEW04a1XdJ9TmNS4FOq2
+ w9m1PNPyz3y5QirAoLkosWvjqNC8ijQT3Qgdbv+SSZyX2OwYJtqAlUOJsVdcc1OUeryG8Im
+ 0RMrC0dIOW6uQX38Wm2Fw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yMd9wlZ+kqY=;HVyHx5Usq1/L+r8mWLroOw6UIPK
- UYD5rXg4qmJOgpj4ZWL82vhS+218ubcVIiTqF7ktfATdXytBRQ8KewbrOraQaBH9R26cpiCA9
- URluW0pnkO0ByaIh3kSciInpmj4KO8lsVx4aKr8x9ZqJQBa7KLRdfImE60TgJ3aojOcdHc+gH
- 08ZgCIyvG01Ic3w+rZbuTekp7Ly4FwCJ1fkC681KRYkEq9XUGHRZ8kC4mstxliMxu3Fr9QJfg
- 06gGlPJVhBT8kghiriUHO80zmqzRObuUFmzlSujlGzXpQMnOYqQlSfSx8bBsrJsHb1R+jr7t+
- wZw7jYlrmrKMORml0H8q3kOKdnyRcY8V1oZ83oe0e/cgWKqCngb0cqna5vLz65Lz8GXMfqOg5
- PPM4ntqu7s8WZff1ajc61TmSoL2e8TaDLQj3uGK8GNSc4MiKe4eb7PHuxIje3EizESbKaZQ00
- 7odG1UHwQvwPGhVhWsdXn5Ou+3VXisHWW/OJZksgv2mn0qNNjR8XTNjJKHpn4tG8/Veh0VjE8
- xRdF6kwBivts+vbP5DzoOWcRLxDio4JwgWBEk0H5SnfvC2xqwpFExMrddqPtELYC/DyenLhba
- pZO+BN9IbrmEKEKhi3l2oLkPbrnn5bgaJqm7EnAW5HNU9inSb6n4x9Yl4Cfgj5fKZkJjQL0lo
- 0WiqPpeE2BGNcIHBTJJ3oAGakWL3WXgdIOzkYrJ2bz60BDwpwKqu7DupyUb8Xik6oClUG4leE
- QhnYIOzwvxnOVL//RhIiZTMgMw3Mg0i0X/SjRX3C7ZKOo/xp08BxhaO01pUx6PdD+t0gEygOd
- m0YXxNzrOWuggmVGDENxMhIBDnJKvKnuEJLkgShQGSw80XyPWq/YnshOwHqqdnANDgLXvnWE0
- qVW+AFuij+iH5zh7+OpZQQu2fCkZ29+UD0eE3LmJK/h8xZ6uXK6n6KOCWYB1dyb1Ny0MvJh80
- pAUxVEowFJDBH5UFBYKE9D5XaNaoGMKwrtuqZjBQqVjeP+16Axd06fkQ3xujnY8JSmDRnTUod
- zBHBXAJ4WIeeiibK1/sp7TPLbnyd6jxgExgTR7jycq/+h4wXmV0uUT/DRTr3rI/vevLubomzz
- lPAt86aeqQE5vycfY6jgguUpI7gskp7MYgK+7D7+89gM17I/JCRWuIOFo/AKdUFb2+x27JHXe
- 2JBIwIf6yrPc3Fc8SsHNzgYeLQMVDrxyU2GbNSNO92jGPoIp1hT1xmGJQE1Zu6IeSyFXIdAA3
- fRojIxQrJqcmG8URXkxVcMOVoRBOxRuQjdHHWH88eOjliSijEcavYEjVc9+dFdWmWunG5KWLR
- 6jcHY8XjG6uwhDBHKVL4wHCAzPTehWjvw7nfopkvyce9K9utLoFcLYpmaHuftBdmha1AqGyIV
- qxOTuwPIhkizJ21nzZs4+1rYVVRPIfNh8jAcpbebm3103/F17pFEuZqSBGj/zA0CFLwP8HeLb
- G8pzEM7txzLmnlCHgU2k0ZjbjWGA=
+UI-OutboundReport: notjunk:1;M01:P0:iInYpDG3F0s=;+H7/605fpbIUxqqSlUhA+/nlmOA
+ ZhF9OJN4VzsWuy6zRdLLdxMYm+c4/9feoSZfMAsDP424UcQfG+alhh/bNiyerGXlXcbEnBUX9
+ jlgjRwPqlfJ96KJHdRCQ29RTXZsIU9xhVPTS9I6hHSywpF92YVdxCgSyHGFq8ceJGiVM372f4
+ LbJyP6nbrWnhRYbCkyh22HRnB2hqr8l/F+kpjDNfBWkWS6zLSqW4e/6DR8C95x9jmw1zM9fjf
+ aFeXo1Ud3a5YQ+kcqlsFeV1g3eY5eQZsrcMn1xlYOD3ymNMBYagQi1iEKV0+hbvZYDlSs/QIW
+ TpcF0Yt+dT+4WUKH9WrESfW5+6xvrqia8BzjBh+yj70QpSTyhMcsjvJ+xyNcSSXBP5cX6ywvp
+ VSJtKHAHK7GTEUmp0p7MEzU08m6VeWfUj2dqnwCXmjKnDtW8NjE/kN2V4ceurCF3CVjNj/sDI
+ Pb4cttXFDB6OG+rN9zC/9giJZkUJ9ZQeM9Dr5ColWyAQZABUdBHcPpe3Ehw+yoQHjA+7/ywPz
+ ssKrFqmcHBTArIO2k4vhiJjoCKCq8wguSNE2z0U31LW7HybV5LUWdAPlQKK4XYLH7tQRd4qtG
+ LENGyHm6/M6xQsnWL+gqZbfwT3/nVAfD7bMGc5AB8ZZCSPxE6b1XujAfiasyIyI3wQyETkoZE
+ eKK2UPet9LR0Ty05/mJuUN0ETyRPnIcF0BCxhx1/3YzoJ3Nmi+a/XBtnjV6nkKmcCegslHaGI
+ G3qt0gAMRCMfCspiAX6FeBalmrFZENHJRbpkZdu0Zt6BRz9vum5wi505Nmg7yZlsV9x6OL7dX
+ nw5Mk46LiMwo2eZ2i9RRLoYt3tbeGcO4XgOrEPXPRZnN3vXulUPmbtTgfr45FmAVM2EDxVYiN
+ pI3kAsI3Hx06dCD+3t1/U5HgnxVL+2JYBpUUeXFWrEy/7NGB3LNZmj4/tCgt0oRgS/85sXYOQ
+ Cf7njvytjf4BHQFh4ifiitXDRGNM/iBl1FDN9JziwwcPtqKn3e3Lna9WyEZWWpJbueJcCu+iq
+ Qltu2WgFGWahXoMTS65YSm40LPTcOZKzbtPaNambo7zP6vYd3pNjLLa8+fIYRHCP9Q6//4EBe
+ CartpTKAxwxBtEKBmVzyAsCTShonNGpx8K0QdFLe72h8SSIbqy7oRu8bR1kO4hOPcvjCkTY5+
+ dUvJR8o60DpbCvItY3VMHzgGlFyJtcml//2WqAbvK+FjSzaBEKa4pwj2PkYBt7BP+v2GJgG1P
+ C2/JVEHqxtmkLaxKXEAfgBF6ZfjiMfyxU7dKd9km0Dl8ccS3nbcaBBHdlavxnwYdBTTmcl4ai
+ 5Qdzvn/0TMa0Ta8XuQ01KR6zcJae+e9FrWza8O0IwNMd6R5BSnpsUB5f4v0xgsSEAXIclgBwq
+ +FbWGzI8bQ/67+NSh79kcV+1ZCRIr5/Jm/LXKO+MQ5ri4O72pV6cJ8/Ubk0EzSVKKqMWEBHrm
+ sVnj7aDf3FeZsue61NWdOvUOIaILkedvdgkNCRDyXk6HYICdV
 
 The ACPI byte code inside the ACPI control method responsible for
 handling the WMI method calls uses a global buffer for constructing
@@ -90,12 +90,17 @@ buffer.
 
 Fix this by serializing the WMI method calls using a mutex.
 
+Cc: <stable@vger.kernel.org> # 6.x.x: 609e303: platform/x86: msi-wmi-platf=
+orm: Rename "data" variable
 Fixes: 9c0beb6b29e7 ("platform/x86: wmi: Add MSI WMI Platform driver")
 Tested-by: Antheas Kapenekakis <lkml@antheas.dev>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
+Changes since v2:
+ - add necessary tag for stable
+
 Changes since v1:
- - move variable renaming into a separate patch
+ - split variable renaming into separate patch
 =2D--
  .../wmi/devices/msi-wmi-platform.rst          |  4 +
  drivers/platform/x86/msi-wmi-platform.c       | 91 ++++++++++++-------
