@@ -1,246 +1,334 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2128.outbound.protection.outlook.com [40.107.255.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BECA27587B;
-	Tue, 15 Apr 2025 06:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700096; cv=none; b=m2RjvlI8dGRjrOgq2qo7pCm4PrypSB4agLOVtnmAhuIC4If4CXWsEYf4iAQCDvi5TNV/upkQxiTDMsXA0azjG7tBiKPJ+XbGCI+HugtADAP/NnHjIHlnFDNrLvltDg8Lf2uM9R/yb2m2B5cth2xjt+vkOmlyJMWaRVKLUzWT+sk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744700096; c=relaxed/simple;
-	bh=otczYa1ghEak+qqgPZ6Ve17y269l2h98GsBiXGcj3Fs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VaXL9jVS3BRmY1AVquZoQSL2DDBdWL2fAMM+ddulork9JwVBHW/PXer3E8WPyfbGu9KE2LbiwlLdC0BBG3S7npCceiwMiNcRi0l3NVCxyh3fdA4diO3zUNPtYsKBPJ5mOuPUD+nLYTK694lcyZRvn117SU6y7bwM2CtszQFtoOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OijRX4xz; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB1827FD68;
+	Tue, 15 Apr 2025 10:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744712627; cv=fail; b=TYTEgzCp62dlOH3nrSQs81TWwsctU090jcZX6egt5vrmYX8RQKfQhFLnug68AcQLNU7ngpngtnYAHb5X1b6vJJI5iWkdcis4i0+5CSV7o4XrS8WR18kRr5T5+RJLwT64Pmg2LePBpxQNX8IqhdGe149wuTXn1D2yxC/vNbf9tOY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744712627; c=relaxed/simple;
+	bh=D4AOTUIbSqN6YXvvQCLcm91hakbTY5dO3+ptfyGSuA0=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YZLLbCI3OpDTVIqW+SFNcb94wTJZoJUnH4Ku9G+2Xvle3gSPsEP3rGWyB7/EG+HOcO2spyF8Xg0aOV5tgEmVpGLC61onB5diLF7gMiqrzttVUoGuc9+1eeooxkFvbk5QRvCqC/K8phWT+HpRxRLty07sZLmyns/YxSy+MFH7GNo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=mdaiMj47; arc=fail smtp.client-ip=40.107.255.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OijRX4xz"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so44082721fa.2;
-        Mon, 14 Apr 2025 23:54:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="mdaiMj47"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fMRWso0OUBaYFXWGdQ6uCP8NTWUjyQNXrBFWtnMPj4ImDALwMAUIJDx4AdBncfStjcwtIceHCBZSFBButoyZLRMi6I9lfIft1a4sjW9F8ua/Iz0/HirrSHESVzAitPbAGNtiI/bVasr8ivTgbQ5T75gf4BqarjhFF5f/JC8kyf660If+pQ6zwMJ0Nks6YjIjuV4OoyMVH0q5kcutFVppRjcWyO6+BBhbIgf/m/EO8g/NrvJ0G02EEM9EupMX5/SoeAo3ulgb+dj3M7kZ/CKaylFN2iPuH7YGE7OKKK04ptmJvzJslkp0k5deLGpY7DVH1UF8MMIodfbIBUHo6X04NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UP5UpMTBO//Zk19oEG1+bx8VpIDCQOJuq+cv51oGSDg=;
+ b=AuEWDI9Zv8exo/7jtJ61MEAX7FTs3Lsnjofgbx9GIgmPhxcMgeIW0yehNRBsy3PEyx5CrgOzFO+1IlHGXajtjk51BWu0A6PDyMCqJM5uQWujrn1weUDndVMQnT3OPvjfDMxe8qR/6H/GUeT4993SbVpD3MrzTRH+u3/I/E4N40gF6j4EU9xkpLsi8gi9IiG1b2+qNA7u3EImaPu5ZwUU2yXlDa/ACdXmgx1rVEObpDj6wwAyc8Ij01WlGKRDBmIGRVlpFDI8ChRr5DerQEyAFzhXdLpdwyB34xcRNg1CUNKvXZjmaWaYtar6PtPaMkBhVdafKBnVkrmRY/lZh3yxQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
+ header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744700092; x=1745304892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2THuqnnjpaeGK3L+ZcHQ6pVri6WkM/B5U621pyeSAeA=;
-        b=OijRX4xzE1s3qQWGiR3kuncCF6vJvzW7KkGukIdcVDx0wHgj8RkEZEHmud3gc0pPr0
-         Sbmpi1ZJ69SuZELQvXWBO7W2nICHXOEv5kTOXEO4G9oN2IxEyR9EmA3VZxy0Kc1dAEu5
-         NV/83kr+1CmkU1jRJNhl2633zA6sVlkKNF/8iwogYICCKS2rUOj072ZKFJrHT8ITn+fB
-         9sKGYs+JBVAXZ1RSuA/3y6hVB+9cWYOQdAnqglsIgcZeDYzKvvrCd+SXGyVHF722WePd
-         Muul9ZLADoaOnE+UZkeH/cu92mSaZunmYCWallgGUaGmFDLudifU6ktqJmlrqUvJhed/
-         poGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744700092; x=1745304892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2THuqnnjpaeGK3L+ZcHQ6pVri6WkM/B5U621pyeSAeA=;
-        b=QsA+cm1HkAQFpzyPNsMF0movAnACDa7JKORPvJy0k3hE0ywsdtgPi7Wj2aLAdsSfP6
-         VLxZgMuoUjocM9eDbHwRZJ9wdFEqnLOfYSPYC2VZRaXADzRaLwdrRnJPs5CwV/E+riSr
-         Wk4pDqeh0z4Z6m+On1bWGU55hfH/PkQJbvrS2xH9WwDz27Dic4au2N4TLB63Bihhqpu+
-         ydTNNpA6k/GLLljPKKNajrdRYMPzhTpJugWm/Te0FCRhg5uD8OkCY+EZsircfj8KfTdg
-         aL1cOvtwMcq4+sV2P2r7OZadj3r5bI6xIYtQSupSy6Vq5/fYYULZEsc/6EJ//+Z0AeaR
-         qk9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVqIEJ5wfHSYAr/plNxz5NjSr/m06hXFXaazwjoiUPeqv1fDOkuv/+2ZSdUicJwjWnPHWljUbbReLbWumTXub+InHKBeQ==@vger.kernel.org, AJvYcCWoApVrhm0+UNgk9uYBq3L9cVOQ4hPi+Ppy3vMOgvC26krHCPIs19gTNICt78eEmCA6qke2cI1iYCGKQjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyAP+LpQEw+66TrpxeyENDwWPobDKgk8G5WhOi+N3tsli9YDxX
-	NejCFSIKkk6FtAgCCDrtXE2dB0DiqDi7JfsJvAVZj9A3hmfwsAavjMYK8CKgY6ZH3uqTRKEYcKD
-	5ICRvIHKMjJTbvD+cqGY+Xx+FAgM=
-X-Gm-Gg: ASbGncu8y06UG22TAzejHC/SYhQUSV9MVVpmmYpe69tqgmX6ODMPQh2AOhjEBcmfyNA
-	TdRnd8mPoTGvAMnXbkgInxaKm5GGIQGmLkiJhNESNL13WwBcOEOD4d4CQAXKlb27ueuOBEMFnYh
-	4UH+1z/rCzOolcP84n/zmzJQ==
-X-Google-Smtp-Source: AGHT+IFAbvuR21DIztnhuL0l3222BeT4W2KZCRfgDNpf5QWXiSJQymbLDiT8gigzr/0cN+mDSfsulSKa5POqR3x76nI=
-X-Received: by 2002:a05:651c:1515:b0:307:9555:dc5e with SMTP id
- 38308e7fff4ca-310499d1599mr52119541fa.3.1744700091727; Mon, 14 Apr 2025
- 23:54:51 -0700 (PDT)
+ d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UP5UpMTBO//Zk19oEG1+bx8VpIDCQOJuq+cv51oGSDg=;
+ b=mdaiMj47lsiMQoLlxVJ8yYYWzVbVXx8uOfO2lcmySqT88Oi4rmsOvytMAHIZmvYhGjZQjbIvAOgXLb+DCEXtzIP6nc5cSwKspA0d8dVuHgOZS5fdnrnOXpSe7ID2H7+i1ilPpe+sknKhreVwtuU1s8o8VOLmp20i2Uq0gtvQMHfVckvJSbyqmXSDwd2tXEILAWJfKyxWImlXe2QEmT5PneDPhjhM03yf2e+yd35FntVNiorlEK4V009N00TEODIoqb9J+sKKnb+v4GJ3aWKuDeHC7lKIBusUgiqA0FywHrsBgVlvwaYQGaBWTbEq9QCbWcQ+Qpw6KkRHbLx1Ou/k1A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=portwell.com.tw;
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+ by OSQPR06MB7109.apcprd06.prod.outlook.com (2603:1096:604:2a1::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Tue, 15 Apr
+ 2025 10:23:37 +0000
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224%3]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 10:23:35 +0000
+Message-ID: <38b1900f-0027-4342-a5a7-a78b179a6a51@portwell.com.tw>
+Date: Tue, 15 Apr 2025 18:23:30 +0800
+User-Agent: Mozilla Thunderbird
+From: jesse huang <jesse.huang@portwell.com.tw>
+Subject: Re: [PATCH v3] platform/x86: portwell-ec: Add GPIO and WDT driver for
+ Portwell EC
+To: Guenter Roeck <linux@roeck-us.net>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, wim@linux-watchdog.org, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, jay.chen@canonical.com
+References: <d6b14c26-e70b-4edb-8661-b213e3fed9d4@portwell.com.tw>
+ <475693ed-d11c-024a-c9f3-a270ab5b68a3@linux.intel.com>
+ <a24155a3-281b-433d-9964-eedc40ae2bf8@roeck-us.net>
+Content-Language: en-US
+In-Reply-To: <a24155a3-281b-433d-9964-eedc40ae2bf8@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PS2PR03CA0007.apcprd03.prod.outlook.com
+ (2603:1096:300:5b::19) To KL1PR06MB6395.apcprd06.prod.outlook.com
+ (2603:1096:820:e7::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414092132.40369-1-shouyeliu@gmail.com> <1feb5888-5ec8-67aa-9775-e1bea6b8b9fe@linux.intel.com>
- <f673452d7afc4419120f2cdb32e5033c35f22229.camel@linux.intel.com>
-In-Reply-To: <f673452d7afc4419120f2cdb32e5033c35f22229.camel@linux.intel.com>
-From: liu shouye <shouyeliu@gmail.com>
-Date: Tue, 15 Apr 2025 14:54:40 +0800
-X-Gm-Features: ATxdqUGj1yNhUoVoGrEdPQ1vFpN9Q44lqcabNjqRD9KtUy2IYKuMJLVrh98hNJw
-Message-ID: <CAAscG3W+QpD8xqo3qB_u2ViuUA6-_VsBT3GExU-DakDZJwtN8Q@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: fix inconsistent state on
- init failure
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|OSQPR06MB7109:EE_
+X-MS-Office365-Filtering-Correlation-Id: 735c672b-33fe-4d69-e482-08dd7c0793fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q0gzS0Jla0Q5MmFCZDY4MUg3MVZZbjVTVUZTWUtYbXp4NFkxR3NndDJjTmZB?=
+ =?utf-8?B?dlptSGZrQko3NkQxczFwclVPWExZMEp1YWd4MUxDblZvNDlDcW5nTXNhRW84?=
+ =?utf-8?B?RnFoeFNXYmkrY3kxNmlJTXYyR2dQY2svZHRjOUozQzdjb21QWmVla1Y1QVdz?=
+ =?utf-8?B?b1d1ODRiQlJ5YzViUGg5ZDczS29oK3lzaWllcGY0QlZ3V2RmWFJSdFBvdTNS?=
+ =?utf-8?B?VytoeHlHaHYrbyt4QjZXSUJuMW92Q2gwOW1naEF5WDRpWVh6ODhmbGhFUE0w?=
+ =?utf-8?B?UUloTmNERHhrcWkzTTZUdkY2N0w3TTdZNjViL2hlMGE1RFZRejlCTk1aSkpK?=
+ =?utf-8?B?b09LdnBjY2hxbmFGZWRTTWVHT3pmckZnbEhmL3EreFlCVGdvbU41ekY5aWFs?=
+ =?utf-8?B?SS9mR0tTV2RMMmZ6VUUzNktHQS9YeGRtOWRGa0NsQy9RbEk3QzZzUDUwc0lj?=
+ =?utf-8?B?YTZFRVdodHN6UGRvZUZ4TzkxL05OMkcwRG8zMTZqUlJmL0ZXSDBIeFBtTWxJ?=
+ =?utf-8?B?T2twVnNjNm5lZkdmVlR5ZSs0NnhKMi8zYnJrZmR1aXV0ZmhoS0FNWElBVmJE?=
+ =?utf-8?B?YnBFVm1xTk4xWXFpS1cxTWZrcCtubTNkOHFudE1HUG11UXIydGhWSVFydGd5?=
+ =?utf-8?B?ODBoQThuYVU1dFlaSndnVk9QVzhaQWhYbkc3Yi8zc1ZkaEdZL3NTUDFOd0Ja?=
+ =?utf-8?B?MlpuVThhVjh5VlhUVFgySEtiV1hvZ00vNFFXaytuWVJjOFJpelIrTWRldUE0?=
+ =?utf-8?B?UlgyTnp2bkZNVU5oWGtqUDRkQU9XMm1URTcwWHlkRi84QWFlRmxRRTJJTFVO?=
+ =?utf-8?B?MEIvYTZGa3hveTJtQkRYZTNLTUdqS0lhQWE5OXl6aEZIdlFvVmtoeUpEUWE0?=
+ =?utf-8?B?TVlkUlN0NjcwMUYyUFFZT1dzQUlpa3dTSEJkdzFiUVczQnA1RkpiN0ZmSUtr?=
+ =?utf-8?B?K1dYbStTQ1laRWRiL1F0alFpT3hUQWJScFhQUmpjbGVJaU1yWHRWUWY5UVI3?=
+ =?utf-8?B?T0hrU1U2anBvZHlOREhLR2xJbE5CT2tMbkNreXVqYTBnUjRJMElycUFBZS9U?=
+ =?utf-8?B?czhxTktqVjBzQWJYdEYwMXlrZkxORFk1c2RyL1JJWUlUQ0tmT1oyQzFyS3g0?=
+ =?utf-8?B?Z3NUUkMydkR3b2YxV0owTERmOGo4VERYcDk0MkNURHV4MnpERkl3VmwyOWN0?=
+ =?utf-8?B?VU5obHYrZUZIQy9MWlJlckt4aklsVFZTLzRJYnprbll2NmxrQlRPU09PUitW?=
+ =?utf-8?B?bU5zOG9aSjl2S0txcVI2YXFRczBnR1Qyd0p0NnUwVjBRY2hMYUMrSHhpSVha?=
+ =?utf-8?B?WGYrOHNNVURwdjRVckROMnlxaE5aMzh2cnBlaXlqVEVxcDF2c1B0K3JFcmZ4?=
+ =?utf-8?B?bDE0dlBoSGNSNmFuelN1eG83VWVod2I1WDZNY3FPTWJQNXMxcTBMODlyLzRK?=
+ =?utf-8?B?aE96ZXdjcmpHdWZXbWs0bzJBb3IzYnFGYnlhVkpSQ3lnZHNLNlRhNS9ZZG91?=
+ =?utf-8?B?UXZIbHNITW9LTC9LZjNzbEd6ZmRaNlI3WnVyM3FlMGpnMjdMWmhIalFYZGxy?=
+ =?utf-8?B?d1hhSzNQRkxhejJPSkpFd2prMXk4dmw2c3dGcEE4KzRWR0gxNVZtR256djBp?=
+ =?utf-8?B?OGErcTYwZC9RWi9heUNVOW9icEdrQzJHVUtSV2g3T1hsckZUYjlpTE0vc1hu?=
+ =?utf-8?B?UDA0TllwTUpqdkVETFo5RldzRTE0dnk4SW5GVGlpMW5NY2tkY1QybTc2Wjl2?=
+ =?utf-8?B?bCtRdTY1UEhHd0EyK09YeSt6SHFlNlN4YkIrV0tObWVqM0RXcnhZMXRCVTNZ?=
+ =?utf-8?B?MDdhaXpFVk54MEVpRmZkOEQ1YThNSitVQ2x3Qm5hdnhKbkQ2ZUNCVTNYcFU3?=
+ =?utf-8?B?eGxja2luNVVxN0R6NklTWEwvejJwVWcya3NwUVd6N0tKRTVocFlxSUxEdjF4?=
+ =?utf-8?Q?f3S0caIZ2Oo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NGg2YWk1dTYzL2tJMU01ZTFaenlOcldNOG9SRFk5Qjg4SHIvR0Y5dDRNQkZ3?=
+ =?utf-8?B?a0pZRnNuYVVXRzI4c2NuUnNkSmNEdW0zdXpicEhBeDVzcGgzUityL2M0anBK?=
+ =?utf-8?B?eW1aRnEyWTNwTzQ5VVR2YjZFMjV1allRdWJYVmtEWWs2N0lNMWZtekhLVmVi?=
+ =?utf-8?B?MUlkdU5acTZrTUdGN09wdVlDMUQ0dG9QVFdwSFowdW1ZY013Q0dtS1o0dytj?=
+ =?utf-8?B?ZUtSZ2h4MXpGM25TNGFyZVBWNzVacHd0MjdRcW5qRDlMd0NVYVZkTWk2c3No?=
+ =?utf-8?B?Z3hpOUdpbjYxd1IvdUtDRSsrRVpGdEZZYk1BbnFCUkRsTDZ0VVk5QWxsRXZE?=
+ =?utf-8?B?clZ2cDJ0M3owbnV6cEljQTJWRC8xdy9nUXgwTmZ0Vm55QldTbFhKeW1NcTJR?=
+ =?utf-8?B?M25VcGJoOTdhNVpERWlUVFdXOTlPbnV6a1hpR0w5OFlQWCtmaUc3UjZDQ1VN?=
+ =?utf-8?B?UU5yT2VPa2lvMFJjcTVyOTNYR2JrQVpjd2pjbC9tYjRheGlVUkpUbG5hRUlJ?=
+ =?utf-8?B?TnQycHRRL29MeSt4THRKaHpSUjhXWDlHamUrQ1JGMzNxbFFoTFM0UUwzclJR?=
+ =?utf-8?B?N1hFUk50ZkdTalBvSkRRRWdJeG5nWVFwZ1ZjWlRVazhVcXJUSktKL2hTTkVo?=
+ =?utf-8?B?WklSZ0thYTFMYXM1U1QvM2taRkdsVW5qN0NGV1F5blpXeTVEdDc3TjB5TnlW?=
+ =?utf-8?B?ZFZJbWtFV1hFODR3cWJpSUZQNnVETHZnamhHUEFnVnpFcW1rdkFYNENoWW16?=
+ =?utf-8?B?YnkvWjVwZDNnMFhqOUp0QlpkZHRBd21adXM3alBnRS9Xc3R0WDdQK0V4b0NC?=
+ =?utf-8?B?WjVGaVdsZHRYKzBCbEhUS3lrZ09HV0dRREJ2eU1tSlhNQ0FRdmVvVGozVnV2?=
+ =?utf-8?B?MDllY1hJS1poWE9NVHpCY1dEQzljT3NhUWV0NXFMbXpPb1hmUVB4Z0kvU2dx?=
+ =?utf-8?B?ME5CV3BBTExMdGR1TWN6QkM0aVJ4Y2t5RFA1WlRjd1d3VUVsNHZPUEx1WVZu?=
+ =?utf-8?B?Ulk4WXFBeUwxTVpxakprc0ptRDd5OHhJdmVCNjZDOUI3bnM3aWUrbjU5VEJi?=
+ =?utf-8?B?eDhpUzFFN29yYjlWVzBXUEZvVlhRYi96YXlpSm9Bc2pWWHU3czB2NXBDa0Zr?=
+ =?utf-8?B?REk5dXZuZzIweE0wUllWcjlBVGtaZGpxeDJlN0lJU0QvbjhtSXIwYW16VDg3?=
+ =?utf-8?B?aENRTXQvU0MvNkY0U3BNaml5NFNCcWgwcGpnV2ZNMHJyZGN2SytmUkp4VWxL?=
+ =?utf-8?B?Njg1U2ZqSzZBaHBONmZMV0h3V1FEWjlKVmlURTdrMlczdDF1ZGpoOWo0Mzhl?=
+ =?utf-8?B?U2Nid2RpZ0krOUtDRTB2REM5aitxQ2VzN25KQnZUak0rK2txSzlGQ3pobCs4?=
+ =?utf-8?B?MXFqejQ5WGxKbUVKeXNuZ3FLY29JOGpINzBFR0I5V3B5ZktWbFIyU0pIdGtl?=
+ =?utf-8?B?My9iazBKemJWVTJrK3EveTIvWDFNaFRnVkQvRVZXRklHVnBsSmN2TkxSUnF5?=
+ =?utf-8?B?YkZaeHNUbmRmT2NpZjg5WEhrN1pIcmoya0V6RkZ3MGNuRzd3d001UGNLbGlr?=
+ =?utf-8?B?akFFWDNXT0NWZnZ6Y2NrODF0R2R3cDVyNHdRK3FCQlFlQXVXOEYrNVc4dDlY?=
+ =?utf-8?B?S01DdmRsaU1sODVKeHB6RXdOdUJnQ01EcGt4VUhHMCs3dU12K1k4bE5xT0RI?=
+ =?utf-8?B?NExHYUpLZGpGTk1xUFFOVkRtL1BvNGU2UFdmYzdzelBReGduZVA1dVlWYjhM?=
+ =?utf-8?B?SWtBZkNrV0FqWTFWcVNubVNDSkJvcEZzZGFuMEpCNU5nK0xyYkdQTFlwYkRw?=
+ =?utf-8?B?cGVXc1BYSDZLd29uUUpoNG1EZE44b3RVY1dGby8xQlE1WWZ1UU5NMjVFbVRZ?=
+ =?utf-8?B?WTNkbEthcGErUUVvUjZxSS9vQnYxQnhFcE5SaUtkMElSTjdmRnFPT1kyRkFi?=
+ =?utf-8?B?cUsrTFN2c2ZXT3ZrUVc1b1ZOZFB2YjhGTlJGZUF1a3VGaGhUVjVLdXJWdEk2?=
+ =?utf-8?B?cGd4dmVXdHNQNklRUytjWW5IRTdnZ1RHRkVnNU1vN0lrdm43SUw3eHV6K1dt?=
+ =?utf-8?B?cC9kQjY0OU82WHdZUit6c1lwMmJjb2dUNVIrRDJMSXJadlB3bW9JQlQwdkor?=
+ =?utf-8?B?S1ZmWEk0UXJ5Zks1NGJJb3JrY3NpSERLSGRFdndMMFhMcno1Z1F5OFM5YTlZ?=
+ =?utf-8?B?Q2c9PQ==?=
+X-OriginatorOrg: portwell.com.tw
+X-MS-Exchange-CrossTenant-Network-Message-Id: 735c672b-33fe-4d69-e482-08dd7c0793fc
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 10:23:35.0681
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jk6cOcG2T4BG0EVFNZLGM+7i3RN/GDOwjkBKHFpPdiaO7ig1aA3YGPRUXygI472LUNuHZHje3JA8pBzRxN9ggAJkxPMDuIpH6XXgF/yKUQA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR06MB7109
 
-srinivas pandruvada <srinivas.pandruvada@linux.intel.com> =E4=BA=8E2025=E5=
-=B9=B44=E6=9C=8815=E6=97=A5=E5=91=A8=E4=BA=8C 00:08=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Mon, 2025-04-14 at 13:41 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 14 Apr 2025, shouyeliu wrote:
-> >
-> > > When uncore_event_cpu_online() fails to initialize a control CPU
-> > > (e.g.,
-> > > due to memory allocation failure or uncore_freq_add_entry()
-> > > errors),
-> > > the code leaves stale entries in uncore_cpu_mask after that online
-> > > CPU
-> > > will not try to call uncore_freq_add_entry, resulting in no sys
-> > > interface.
-> >
-> > Please add () after any name that refers to a C function (you're not
-> > even
-> > being consistent here as you had it in some cases but not here).
-ok,I will modify it in the next version
-> >
-> > Please try to split the very long sentence a bit and make it more
-> > obvious
-> > what causes what as the current wording is a bit vague, did you mean:
-> > uncore_event_cpu_online() will not call uncore_freq_add_entry() for
-> > another CPU that is being onlined or something along those lines?
-> >
-> > Will this change work/matter? Documentation/core-api/cpu_hotplug.rst
-> > says
-> > about cpuhp_setup_state():
-> >
-> > "If a callback fails for CPU N then the teardown callback for CPU
-> >  0 .. N-1 is invoked to rollback the operation. The state setup
-> > fails,
-> >  the callbacks for the state are not installed and in case of dynamic
-> >  allocation the allocated state is freed."
-> >
->
-> Yes, cpuhp_setup_state() will fail and which will result in clean up.
-> So any fail of any fail uncore_event_cpu_online() will result in no sys
-> entries.
->
-> I think here the intention is to keep sys entries, which will not
-> happen with this patch.
->
-> For confirmation on 6.14 kernel, I forced failure on CPU 10:
->
-> [595799.696873] intel_uncore_init
-> [595799.700102] uncore_event_cpu_online cpu:0
-> [595799.704240] uncore_event_cpu_online cpu:1
-> [595799.708360] uncore_event_cpu_online cpu:2
-> [595799.712505] uncore_event_cpu_online cpu:3
-> [595799.716633] uncore_event_cpu_online cpu:4
-> [595799.720755] uncore_event_cpu_online cpu:5
-> [595799.724953] uncore_event_cpu_online cpu:6
-> [595799.729158] uncore_event_cpu_online cpu:7
-> [595799.733409] uncore_event_cpu_online cpu:8
-> [595799.737674] uncore_event_cpu_online cpu:9
-> [595799.741954] uncore_event_cpu_online cpu:10
-> [595799.746134] Force CPU 10 to fail online
-> [595799.750182] uncore_event_cpu_offline cpu:0
-> [595799.754508] uncore_event_cpu_offline cpu:1
-> [595799.758834] uncore_event_cpu_offline cpu:2
-> [595799.763238] uncore_event_cpu_offline cpu:3
-> [595799.767558] uncore_event_cpu_offline cpu:4
-> [595799.771832] uncore_event_cpu_offline cpu:5
-> [595799.776178] uncore_event_cpu_offline cpu:6
-> [595799.780506] uncore_event_cpu_offline cpu:7
-> [595799.784862] uncore_event_cpu_offline cpu:8
-> [595799.789247] uncore_event_cpu_offline cpu:9
-> [595799.793540] intel_uncore_init cpuhp_setup_state failed
-> [595799.798776] intel_uncore_init failed
->
->
-> Thanks,
-> Srinivas
-Registering the CPU hot-plug callback function during booting can be
-handled correctly. I think the problem occurs during runtime.
-The original code may have problems when the CPU hot-plug modifies the
-management CPU during runtime:
-Assume that the CPUs of package 1 are 8-15, and the uncore driver has
-been registered at boot time;
-1. Offline all CPU No.8-15
-2. Try online CPU No. 8, the code executes cpumask_set_cpu()
-successfully, but fails in the uncore_freq_add_entry() process. At
-this time, the mark of CPU No. 8 is added to uncore_cpu_mask, but no
-sys interface is generated,cpu No.8 online fails;
-3. Try online CPU No. 8 again, cpumask_any_and() judges success, and
-the CPU No.8 online is successful at this time;
-4. Assume that the attempt to online CPU No. 9-15 is successful at
-this time, but there is no sys interface =E2=80=94=E2=80=94=E2=80=94=E2=80=
-=94unexpected behavior 1.
-5. Offline CPU No. 9-15, and offline No.8, will eventually call
-uncore_freq_remove_die_entry()=E2=80=94=E2=80=94=E2=80=94=E2=80=94unexpecte=
-d behavior 2 is generated,
-which may cause a crash.
->
->
->
-> > >
-> >
-> > Fixes tag?
-> >
-> > > Signed-off-by: shouyeliu <shouyeliu@gmail.com>
-> >
-> > The correct format for tags is documented in
-> > Documentation/process/5.Posting.rst:
-> >
-> > tag: Full Name <email address>
-ok,I will modify it in the next version
-> >
-> > > ---
-> > >  .../x86/intel/uncore-frequency/uncore-frequency.c    | 12
-> > > ++++++++----
-> > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > index 40bbf8e45fa4..1de0a4a9d6cd 100644
-> > > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > @@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned
-> > > int cpu)
-> > >  {
-> > >     struct uncore_data *data;
-> > >     int target;
-> > > +   int ret;
-> > >
-> > >     /* Check if there is an online cpu in the package for
-> > > uncore MSR */
-> > >     target =3D cpumask_any_and(&uncore_cpu_mask,
-> > > topology_die_cpumask(cpu));
-> > >     if (target < nr_cpu_ids)
-> > >             return 0;
-> > >
-> > > -   /* Use this CPU on this die as a control CPU */
-> > > -   cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > > -
-> > >     data =3D uncore_get_instance(cpu);
-> > >     if (!data)
-> > >             return 0;
-> > > @@ -163,7 +161,13 @@ static int uncore_event_cpu_online(unsigned
-> > > int cpu)
-> > >     data->die_id =3D topology_die_id(cpu);
-> > >     data->domain_id =3D UNCORE_DOMAIN_ID_INVALID;
-> > >
-> > > -   return uncore_freq_add_entry(data, cpu);
-> > > +   ret =3D uncore_freq_add_entry(data, cpu);
-> > > +   if (!ret) {
-> > > +           /* Use this CPU on this die as a control CPU */
-> > > +           cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > > +   }
-> > > +
-> > > +   return ret;
-> >
-> > Please reverse to logic such that you return early on error, which is
-> > the
-> > usual error handling pattern.
-ok,I will modify it in the next version
-> >
-> > >  }
-> > >
-> > >  static int uncore_event_cpu_offline(unsigned int cpu)
-> > >
-> >
->
+Hi Ilpo, Guenter,
+
+Thanks for your reviews and detailed comments. Please see my replies inline below.
+
+
+On 10/04/2025 8:25 pm, Guenter Roeck wrote:
+> On 4/10/25 05:07, Ilpo Jarvinen wrote:
+>> On Thu, 10 Apr 2025, Yen-Chi Huang wrote:
+>>
+>> +#define PORTWELL_EC_IOSPACE 0xe300
+>> +#define PORTWELL_EC_IOSPACE_LEN 0x100
+> 
+> SZ_256 + add #include for it.
+
+Will fix in v4 and include <linux/sizes.h>.
+
+>> +#define PORTWELL_WDT_EC_CONFIG_ADDR 0x06
+>> +#define PORTWELL_WDT_CONFIG_ENABLE 0x1
+>> +#define PORTWELL_WDT_CONFIG_DISABLE 0x0
+> 
+> Align values.
+
+Will align all definitions in v4
+
+>> +#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 15300 //255*60secs
+> 
+> Move the formula from the comment to the define itself. While doing so, 
+> you need to add () around it and add spaces around *.
+
+Will use `(255 * 60)` in v4.
+
+>> +MODULE_PARM_DESC(force, "Force loading ec driver without checking DMI boardname");
+> 
+> EC
+> 
+
+Will capitalize "EC" in v4.
+
+>> +/* GPIO functions*/
+> 
+> Missing space. Please check all your comments as the one above seems to 
+> have the same lack of space at the end.
+
+Will review all comments and ensure consistent spacing.
+
+>> +	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
+> 
+> Add empty line here.
+
+Will add the missing empty line in v4.
+
+>> +static int pwec_wdt_trigger(struct watchdog_device *wdd)
+[...]
+> Is this write until timeout matches the one written typical thing for 
+> watchdog drivers, or is there something specific to this HW you should 
+> comment + note in the changelog so it is recorded for future readers of 
+> this code?
+
+> No, this is absolutely not typical, and it has nothing to do with watchdog
+> drivers in the first place. If the code was in drivers/watchdog/ I'd
+> request a detailed comment explaining why it is needed.
+> 
+> Guenter
+
+I will remove the retry loop. It was originally a workaround for an old EC firmware bug and is no longer needed.
+
+> I'd add empty line here.
+> Unnecessary else.
+
+Will remove in v4 along with the retry logic.
+
+>> +static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+> Add empty line here.
+> Add empty line hre
+
+Will add the missing empty lines.
+
+>> +static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
+>> +{
+>> +	u8 min, sec;
+>> +
+>> +	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
+>> +	sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
+> 
+> Does the HW "lock" sec value in place after min is read or do you need to 
+> consider the possibility of these values getting updated while you're 
+> reading them and the driver reading sec after it has wrapped?
+
+Will fix by double-read and comparison in v4. The EC firmware team confirmed that the registers are not latched.
+
+> Add an empty line here.
+
+Will fix in v4.
+
+>> +static struct watchdog_device ec_wdt_dev = {
+>> +	.info = &(struct watchdog_info){
+>> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+>> +	.identity = "Portwell EC Watchdog",
+> 
+> Please indent the inner struct correctly.
+
+Will fix indentation in v4.
+
+>> +	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
+> 
+> return !strcmp() ? 0 : -ENODEV;
+
+Will simplify the return expression.
+
+>> +static int pwec_probe(struct platform_device *pdev)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!devm_request_region(&pdev->dev, PORTWELL_EC_IOSPACE,
+>> +				PORTWELL_EC_IOSPACE_LEN, dev_name(&pdev->dev))) {
+>> +		pr_err("I/O region 0xE300-0xE3FF busy\n");
+> 
+> Use dev_err() instead of pr_err().
+> 
+> I'd use the defines while printing the region's address.
+> 
+
+>> +		pr_err("failed to register Portwell EC Watchdog\n");
+> 
+> Watchdog -> watchdog ?
+
+Will lowercase "Watchdog" in v4
+
+>> +static struct platform_driver pwec_driver = {
+>> +	.driver = {
+>> +		.name = "portwell-ec",
+>> +	},
+>> +	.probe = pwec_probe
+> 
+> Add comma. In general, the comma is to be left out only from a 
+> terminator entry that is used by some types of arrays.
+
+Will add the missing comma in v4.
+
+>> +	if (!force) {
+>> +		if (!dmi_check_system(pwec_dmi_table)) {
+>> +			pr_info("unsupported platform\n");
+> 
+> This will be unnecessary noise for most systems.
+> 
+>> +			return -ENODEV;
+>> +		}
+>> +	}
+> 
+> I think logically you should do it in a slightly different order:
+> 
+> 	if (!dmi_check_system(...)) {
+> 		if (!force)
+> 			return -ENODEV;
+> 		pr_warn("...\n");
+> 	}
+
+Will rework the logic and remove the dummy message.
+
+>> +	pwec_dev = platform_device_register_simple("portwell-ec", -1, NULL, 0);
+> 
+> If this fails, you need to unroll the other register.
+
+Will add `platform_driver_unregister()` on failure in v4.
+
+Thanks again for your feedback. I will address all comments in v4.
+
+Best regards,  
+Yen-Chi Huang
