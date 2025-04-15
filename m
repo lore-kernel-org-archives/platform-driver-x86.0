@@ -1,666 +1,1375 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37D0204F73;
-	Tue, 15 Apr 2025 18:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A851F542E;
+	Tue, 15 Apr 2025 18:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744742090; cv=none; b=le0Hg0DAm5RbvaqnzGDTtCMv7e95CC0SHNJvNfFHWBsdLNUft+uFTWk6v2zsJVSlOcGJcFIsSgPDFyx04M4pOenRnJORyJGkr/3DE5nzW57AJx9B+NNkEUwQcLGyTKfhlDdtbc1YqlSBSvmE555GtZm3Ct+2r4k40O1KvitI3DM=
+	t=1744742367; cv=none; b=ZAcRBsCX7Rvmpm0YVmZUzS/Rgj3840VB/DPpsExZFyEaUGsukgkdtreKOvuQFDHeC8tOmzkXzZTSSuS+8rySBd+6PV0QCF0pBPkqDURGodiMwq+iLLsG16K0I2jy/A036XH29pxLCzscqXr4icB4GrXy3DtGK+QUZVi1F7Ehay4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744742090; c=relaxed/simple;
-	bh=phhOH0q2hHPBnUv6NFlJqx2VhoLlKGwu7IiM+a11e9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YlHODBgJ+iZijs7lVHVEhzjdI6qX9MksKELoy0NhEo4sEPosb8hk61darW7z/HWlFvqaycOR0GGgdjkhxGD4Jlt8Qj688cUMroh7NxtbktXdtR6Ordemhdns5unZMZh/Qbw+C1c0LkhaVQBWCYIOosfyXKnMaSwk2YeCwR1mnp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAeo6kPZ; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744742367; c=relaxed/simple;
+	bh=IHu6kXYGvyO4yqRxMp3TUzOdXv7b/XZReFqwsTTZW9A=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=m6VflNkya24uTAtlx0fFcN1oKS2Z/PRrtXBmMAO3HE5bqsVmw9rVxyHtQ02PrISpLKXkWQ++GecasvPmcPe7ontmTBRXbl+r0hBi0gX9tuk276qaaqq1u1lQvgu6y3CM9bFnQKlJ7lPASHHubJmI6ZhPzLtXyC5VIDu2WsvtjIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RHw2vUvX; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAeo6kPZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744742088; x=1776278088;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=phhOH0q2hHPBnUv6NFlJqx2VhoLlKGwu7IiM+a11e9g=;
-  b=IAeo6kPZy/S8XJw4K4WS/n7hBBRO3xd/LB57RbeYLmXlIv7cq9gPoQv1
-   X9gs1NmhEYjYOKRdqrr8h0rCm/q7fvgla4LuetLGEPMwCnJE6/EIWWTG2
-   Xwk42nScnqxhE8TDVCiyz+uu1TIQU2b1F7KMpARHgB5Hsgi84Wqnk9NA+
-   HcTc9wYrFeh3DUFAJY8z/+LtekJvee8F9YGdY3l4tVCntjI7ddJVa+eqc
-   TNgYLjzSGIqQq2n9NG5bOPqQ88yNcXLKxbZX63cMqooUe0XXxCTCBLn1t
-   mfXb+KVKlZFRu/naMZywsjRv/LSjZbfnR1HV0MZjavEfYNLHuDqulMJl8
-   A==;
-X-CSE-ConnectionGUID: e7QqFRyLQVG5tbFVctMcEA==
-X-CSE-MsgGUID: zzBUoS3VTtGp75U0+DucIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="71661879"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="71661879"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:34:46 -0700
-X-CSE-ConnectionGUID: GJuN+CmHR0Gvzqoxs+yVcA==
-X-CSE-MsgGUID: 1c42Nr3aRwaqJS/VV2Jo5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="129974800"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.246.161.122]) ([10.246.161.122])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:34:44 -0700
-Message-ID: <7a1144b5-f3fa-4c30-afc6-e02f79cc113d@linux.intel.com>
-Date: Tue, 15 Apr 2025 11:34:43 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHw2vUvX"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223fb0f619dso64602435ad.1;
+        Tue, 15 Apr 2025 11:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744742364; x=1745347164; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=knPWDZ2uLLo1Zcvn+6PW5Ao7CxFehpzDQIJPXXt8xN8=;
+        b=RHw2vUvXDUqKY5eQtTHDeVy7AFxlWY9wsmHx+8hwkV3+VpbcJ0ojkYlQ7TFIdKSuo6
+         mLBTEeTwMlK0+s6Mdc4p/Hs2lQWXjtX4zYqNEGY1V5vhWphSDGmXB0NmjuhuPPHd3bHA
+         jO9Gkk2QwqINac5cgFmQZ8guEXzsKGa5xtxQV9Y5c4apx57hF1l81Nt3cgJW3II2fQ6n
+         fgbuWmA/qobiVOvj6+9UxH2AAF5MV2w+SBFGkVuyZulNwPuclbKkzoOS74BJrShmYU1V
+         6gQwl1xOOjd+0ypkwPcCubrCOsisIxSxckc5w1uCVYYAXMNJOrXzWipV5LJaKaEPH0Lg
+         Zb8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744742364; x=1745347164;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=knPWDZ2uLLo1Zcvn+6PW5Ao7CxFehpzDQIJPXXt8xN8=;
+        b=xLAkmfiUCz2AyE7Ip1ZRtMSz2X3lMCt3nsSYV/4NYx4cOvLw2B9F+OorACV2zuOfyN
+         GR56CXqn9g+FPuvlAO/jj0/OdBtoeOu054KE6ETSWvQRTgQiViAkx1y14IM9bBfXoeek
+         50t/adHXWhOKxSAl5oC2rp4f8x6YtEAD6TIM0WIPYS2YKsIhRrYa744zO1itC8g9w2as
+         0lRgf1fq6Vi6yf9LopQTOqMHNmlmqlh7owarepmLxPyK1VR3JIzu1O4KfIRoHBYQgSTM
+         nzPwWN8Q7GvKwcQoOhqluHvRN4kU1BRgTV1XSV/8evMvZIctpAUGWDD8qHbgLZou74BL
+         SWbA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/kpoo8rQe3GmF1su3dI1GXwQ/VnLz/MNQnw0pxpYnOaffnJfrBSXseNg+740hzjIKgYkGFyOTiVYgcKT2@vger.kernel.org, AJvYcCX4PP8revZvS+iB4ZoT1YnF3ip0rvoh3oftbhG6p7BxHLoSG4SJNXBTVwYYE1N13NqfmjNTDuJcZKM=@vger.kernel.org, AJvYcCXWsAs5q0Cu7k+a1vv7CJyjwDXoXdT9sVLIVeXeyExJ00/bPC2iUXoQMmZs3tOLaWVmwVA6HJa/ES7daNko4N8D8M8RCA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSfbraVE3NYx+FKSprCUV1idlqew7HWyp9EbFrz/9PKeWABUTa
+	zrqrkpS1PI8TH5iWLTkhtLpzZqiH5PiyParOVSD6DOtwknXh/UYT
+X-Gm-Gg: ASbGncsqj/p6xm3VptgxuoqbRz/cigqan5lJSvOajl7cAWmfqYAoDh+AhKNPNgmkPMG
+	/kdTi2G8HtrDBHSQIZACKhaf+E1OIWLxb4ClvpsDHw8GzTA6tR4QhNSKak46q1csjiCwZ86ihBZ
+	yVHKBVKVj9xIRvsf2Hy13duosWv7dA66idLZOmUglL3vD3OgPT05MqoKM7wDYmeABmFw6BqmyXB
+	F6+dE/wCcZ/wkY+yo9wYNKWh0kliHf7DIjxdu6lYHlYf9RW3CuhQdT82NBfc8bCmWBqV13Gvatc
+	J2eJcSf87fW5MnHVLgeBTRwEHPz4+YOA7p/5WO6bp6nSA4C0n32wHOE8DMPcRgNwuR9+
+X-Google-Smtp-Source: AGHT+IGSXYwo6728/Gmmug8oAyZtJSpqMmcmLXkF+WYgKF/BrvXlHKeBLF0yrx1hE54MDXyuyU1HPQ==
+X-Received: by 2002:a17:903:2a8e:b0:223:501c:7576 with SMTP id d9443c01a7336-22c318cb0d6mr3710905ad.12.1744742363875;
+        Tue, 15 Apr 2025 11:39:23 -0700 (PDT)
+Received: from [127.0.0.1] ([203.105.74.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8c69bsm121254405ad.72.2025.04.15.11.39.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 11:39:23 -0700 (PDT)
+Date: Wed, 16 Apr 2025 03:39:24 +0900
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
+ Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
+User-Agent: Thunderbird for Android
+In-Reply-To: <CAFqHKTniVCD-Yqu0=PyZd0yezMYVaiNx_adn7sjmw4kXx0QaiQ@mail.gmail.com>
+References: <20250408012815.1032357-1-derekjohn.clark@gmail.com> <20250408012815.1032357-7-derekjohn.clark@gmail.com> <097d5f0e-b7e5-a528-1eff-5f7aceacbbca@linux.intel.com> <CAFqHKTniVCD-Yqu0=PyZd0yezMYVaiNx_adn7sjmw4kXx0QaiQ@mail.gmail.com>
+Message-ID: <687AAA12-14D7-4DA3-A469-425955AAEDEC@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/8] platform/x86:intel/pmc: Create Intel PMC SSRAM
- Telemetry driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20250409191056.15434-1-xi.pardee@linux.intel.com>
- <20250409191056.15434-8-xi.pardee@linux.intel.com>
- <19b37c3a-7ba7-92c3-caba-f5ceb759d712@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <19b37c3a-7ba7-92c3-caba-f5ceb759d712@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo,
 
-Thanks for the comments. My response are inline.
 
-On 4/11/2025 6:00 AM, Ilpo Järvinen wrote:
-> On Wed, 9 Apr 2025, Xi Pardee wrote:
+On Fri, Apr 11, 2025, 07:54 Derek John Clark <derekjohn=2Eclark@gmail=2Eco=
+m>=20
+wrote:
+
+> On Tue, Apr 8, 2025 at 5:50=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo=2Ejarvinen@linux=2Eintel=2Ecom> wrote:
+> >
+> > On Mon, 7 Apr 2025, Derek J=2E Clark wrote:
+> >
+> > > Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" =
+WMI
+> > > interface that comes on some Lenovo "Gaming Series" hardware=2E Prov=
+ides=20
+> a
+> > > firmware-attributes class which enables the use of tunable knobs for=
+=20
+> SPL,
+> > > SPPT, and FPPT=2E
+> > >
+> > > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+> > > ---
+> > > v5:
+> > > - Switch from locally storing capability data list to storing a poin=
+ter
+> > >   from the capability data interface=2E
+> > > - Add portion of Gamezone driver that relies on the exported functio=
+ns
+> > >   of this driver=2E
+> > > - Properly initialize IDA and use it for naming the firmware-attribu=
+tes
+> > >   path=2E
+> > > - Rename most defines to clearly indicate they are from this driver=
+=2E
+> > > - Misc fixes from v4 review=2E
+> > > v4:
+> > > - Treat Other Mode as a notifier chain head, use the notifier chain =
+to
+> > >   get the current mode from Gamezone=2E
+> > > - Add header file for Other Mode specific structs and finctions=2E
+> > > - Use component master bind to cache the capdata01 array locally=2E
+> > > - Drop all reference to external driver private data structs=2E
+> > > - Various fixes from review=2E
+> > > v3:
+> > > - Add notifier block and store result for getting the Gamezone=20
+> interface
+> > >   profile changes=2E
+> > > - Add driver as master component of capdata01 driver=2E
+> > > - Use FIELD_PREP where appropriate=2E
+> > > - Move macros and associated functions out of lemovo-wmi=2Eh that ar=
+e=20
+> only
+> > >   used by this driver=2E
+> > > v2:
+> > > - Use devm_kmalloc to ensure driver can be instanced, remove global
+> > >   reference=2E
+> > > - Ensure reverse Christmas tree for all variable declarations=2E
+> > > - Remove extra whitespace=2E
+> > > - Use guard(mutex) in all mutex instances, global mutex=2E
+> > > - Use pr_fmt instead of adding the driver name to each pr_err=2E
+> > > - Remove noisy pr_info usage=2E
+> > > - Rename other_method_wmi to lenovo_wmi_om_priv and om_wmi to priv=
+=2E
+> > > - Use list to get the lenovo_wmi_om_priv instance in some macro
+> > >   called functions as the data provided by the macros that use it
+> > >   doesn't pass a member of the struct for use in container_of=2E
+> > > - Do not rely on GameZone interface to grab the current fan mode=2E
+> > > ---
+> > >  MAINTAINERS                                |   2 +
+> > >  drivers/platform/x86/Kconfig               |  15 +
+> > >  drivers/platform/x86/Makefile              |   1 +
+> > >  drivers/platform/x86/lenovo-wmi-gamezone=2Ec |  35 ++
+> > >  drivers/platform/x86/lenovo-wmi-other=2Ec    | 677 ++++++++++++++++=
++++++
+> > >  drivers/platform/x86/lenovo-wmi-other=2Eh    |  16 +
+> > >  6 files changed, 746 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-other=2Ec
+> > >  create mode 100644 drivers/platform/x86/lenovo-wmi-other=2Eh
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 49deb8ea4ea7=2E=2E0416afd997a0 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -13172,6 +13172,8 @@ F:   =20
+> drivers/platform/x86/lenovo-wmi-gamezone=2Ec
+> > >  F:   drivers/platform/x86/lenovo-wmi-gamezone=2Eh
+> > >  F:   drivers/platform/x86/lenovo-wmi-helpers=2Ec
+> > >  F:   drivers/platform/x86/lenovo-wmi-helpers=2Eh
+> > > +F:   drivers/platform/x86/lenovo-wmi-other=2Ec
+> > > +F:   drivers/platform/x86/lenovo-wmi-other=2Eh
+> > >
+> > >  LENOVO WMI HOTKEY UTILITIES DRIVER
+> > >  M:   Jackie Dong <xy-jackie@139=2Ecom>
+> > > diff --git a/drivers/platform/x86/Kconfig=20
+> b/drivers/platform/x86/Kconfig
+> > > index aaa1a69c10ca=2E=2Ebe5ab24960b5 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -485,6 +485,21 @@ config LENOVO_WMI_DATA01
+> > >       tristate
+> > >       depends on ACPI_WMI
+> > >
+> > > +config LENOVO_WMI_TUNING
+> > > +     tristate "Lenovo Other Mode WMI Driver"
+> > > +     depends on ACPI_WMI
+> > > +     select FW_ATTR_CLASS
+> > > +     select LENOVO_WMI_DATA01
+> > > +     select LENOVO_WMI_EVENTS
+> > > +     select LENOVO_WMI_HELPERS
+> > > +     help
+> > > +       Say Y here if you have a WMI aware Lenovo Legion device and=
+=20
+> would like to use the
+> > > +       firmware_attributes API to control various tunable settings=
+=20
+> typically exposed by
+> > > +       Lenovo software in Windows=2E
+> > > +
+> > > +       To compile this driver as a module, choose M here: the modul=
+e=20
+> will
+> > > +       be called lenovo-wmi-other=2E
+> > > +
+> > >  config IDEAPAD_LAPTOP
+> > >       tristate "Lenovo IdeaPad Laptop Extras"
+> > >       depends on ACPI
+> > > diff --git a/drivers/platform/x86/Makefile=20
+> b/drivers/platform/x86/Makefile
+> > > index 60058b547de2=2E=2Ef3e64926a96b 100644
+> > > --- a/drivers/platform/x86/Makefile
+> > > +++ b/drivers/platform/x86/Makefile
+> > > @@ -73,6 +73,7 @@ obj-$(CONFIG_LENOVO_WMI_DATA01)     +=3D=20
+> lenovo-wmi-capdata01=2Eo
+> > >  obj-$(CONFIG_LENOVO_WMI_EVENTS)      +=3D lenovo-wmi-events=2Eo
+> > >  obj-$(CONFIG_LENOVO_WMI_GAMEZONE)    +=3D lenovo-wmi-gamezone=2Eo
+> > >  obj-$(CONFIG_LENOVO_WMI_HELPERS)     +=3D lenovo-wmi-helpers=2Eo
+> > > +obj-$(CONFIG_LENOVO_WMI_TUNING)      +=3D lenovo-wmi-other=2Eo
+> > >
+> > >  # Intel
+> > >  obj-y                                +=3D intel/
+> > > diff --git a/drivers/platform/x86/lenovo-wmi-gamezone=2Ec=20
+> b/drivers/platform/x86/lenovo-wmi-gamezone=2Ec
+> > > index 2e6d5e7faadf=2E=2E9c80561f931c 100644
+> > > --- a/drivers/platform/x86/lenovo-wmi-gamezone=2Ec
+> > > +++ b/drivers/platform/x86/lenovo-wmi-gamezone=2Ec
+> > > @@ -22,6 +22,7 @@
+> > >  #include "lenovo-wmi-events=2Eh"
+> > >  #include "lenovo-wmi-gamezone=2Eh"
+> > >  #include "lenovo-wmi-helpers=2Eh"
+> > > +#include "lenovo-wmi-other=2Eh"
+> > >
+> > >  #define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
+> > >
+> > > @@ -49,6 +50,34 @@ static struct quirk_entry quirk_no_extreme_bug =
+=3D {
+> > >       =2Eextreme_supported =3D false,
+> > >  };
+> > >
+> > > +/**
+> > > + * lwmi_gz_mode_call() - Call method for lenovo-wmi-other driver=20
+> notifier=2E
+> > > + *
+> > > + * @nb: The notifier_block registered to lenovo-wmi-other driver=2E
+> > > + * @cmd: The event type=2E
+> > > + * @data: Thermal mode enum pointer pointer for returning the therm=
+al=20
+> mode=2E
+> > > + *
+> > > + * For LWMI_GZ_GET_THERMAL_MODE, retrieve the current thermal mode=
+=2E
+> > > + *
+> > > + * Return: Notifier_block status=2E
+> > > + */
+> > > +static int lwmi_gz_mode_call(struct notifier_block *nb, unsigned lo=
+ng=20
+> cmd,
+> > > +                          void *data)
+> > > +{
+> > > +     enum thermal_mode **mode =3D data;
+> > > +     struct lwmi_gz_priv *priv;
+> > > +
+> > > +     priv =3D container_of(nb, struct lwmi_gz_priv, mode_nb);
+> > > +
+> > > +     switch (cmd) {
+> > > +     case LWMI_GZ_GET_THERMAL_MODE:
+> > > +             **mode =3D priv->current_mode;
+> > > +             return NOTIFY_STOP;
+> > > +     default:
+> > > +             return NOTIFY_DONE;
+> > > +     }
+> > > +}
+> > > +
+> > >  /**
+> > >   * lwmi_gz_event_call() - Call method for lenovo-wmi-events driver=
+=20
+> notifier=2E
+> > >   * block call chain=2E
+> > > @@ -347,6 +376,11 @@ static int lwmi_gz_probe(struct wmi_device *wde=
+v,=20
+> const void *context)
+> > >       if (ret)
+> > >               return ret;
+> > >
+> > > +     priv->mode_nb=2Enotifier_call =3D lwmi_gz_mode_call;
+> > > +     ret =3D devm_lwmi_om_register_notifier(&wdev->dev, &priv->mode=
+_nb);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > >       return 0;
+> > >  }
+> > >
+> > > @@ -369,6 +403,7 @@ module_wmi_driver(lwmi_gz_driver);
+> > >
+> > >  MODULE_IMPORT_NS("LENOVO_WMI_EVENTS");
+> > >  MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+> > > +MODULE_IMPORT_NS("LENOVO_WMI_OTHER");
+> > >  MODULE_DEVICE_TABLE(wmi, lwmi_gz_id_table);
+> > >  MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
+> > >  MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
+> > > diff --git a/drivers/platform/x86/lenovo-wmi-other=2Ec=20
+> b/drivers/platform/x86/lenovo-wmi-other=2Ec
+> > > new file mode 100644
+> > > index 000000000000=2E=2E342883a90270
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/lenovo-wmi-other=2Ec
+> > > @@ -0,0 +1,677 @@
+> > > +// SPDX-License-Identifier: GPL-2=2E0-or-later
+> > > +/*
+> > > + * Lenovo Other Mode WMI interface driver=2E
+> > > + *
+> > > + * This driver uses the fw_attributes class to expose the various W=
+MI=20
+> functions
+> > > + * provided by the "Other Mode" WMI interface=2E This enables CPU a=
+nd=20
+> GPU power
+> > > + * limit as well as various other attributes for devices that fall=
+=20
+> under the
+> > > + * "Gaming Series" of Lenovo laptop devices=2E Each attribute expos=
+ed=20
+> by the
+> > > + * "Other Mode"" interface has a corresponding Capability Data stru=
+ct=20
+> that
+> > > + * allows the driver to probe details about the attribute such as i=
+f=20
+> it is
+> > > + * supported by the hardware, the default_value, max_value,=20
+> min_value, and step
+> > > + * increment=2E
+> > > + *
+> > > + * These attributes typically don't fit anywhere else in the sysfs=
+=20
+> and are set
+> > > + * in Windows using one of Lenovo's multiple user applications=2E
+> > > + *
+> > > + * Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Eco=
+m>
+> > > + */
+> > > +
+> > > +#include <linux/acpi=2Eh>
+> > > +#include <linux/bitfield=2Eh>
+> > > +#include <linux/cleanup=2Eh>
+> > > +#include <linux/component=2Eh>
+> > > +#include <linux/container_of=2Eh>
+> > > +#include <linux/device=2Eh>
+> > > +#include <linux/export=2Eh>
+> > > +#include <linux/gfp_types=2Eh>
+> > > +#include <linux/idr=2Eh>
+> > > +#include <linux/kobject=2Eh>
+> > > +#include <linux/module=2Eh>
+> > > +#include <linux/notifier=2Eh>
+> > > +#include <linux/platform_profile=2Eh>
+> > > +#include <linux/types=2Eh>
+> > > +#include <linux/wmi=2Eh>
+> > > +
+> > > +#include "lenovo-wmi-capdata01=2Eh"
+> > > +#include "lenovo-wmi-events=2Eh"
+> > > +#include "lenovo-wmi-gamezone=2Eh"
+> > > +#include "lenovo-wmi-helpers=2Eh"
+> > > +#include "lenovo-wmi-other=2Eh"
+> > > +#include "firmware_attributes_class=2Eh"
+> > > +
+> > > +#define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3=
+B"
+> > > +
+> > > +#define LWMI_DEVICE_ID_CPU 0x01
+> > > +
+> > > +#define LWMI_FEATURE_ID_CPU_SPPT 0x01
+> > > +#define LWMI_FEATURE_ID_CPU_SPL 0x02
+> > > +#define LWMI_FEATURE_ID_CPU_FPPT 0x03
+> >
+> > Align values in every define group=2E
+> >
+> > > +
+> > > +#define LWMI_TYPE_ID_NONE 0x00
+> > > +
+> > > +#define LWMI_FEATURE_VALUE_GET 17
+> > > +#define LWMI_FEATURE_VALUE_SET 18
+> > > +
+> > > +#define LWMI_ATTR_DEV_ID_MASK GENMASK(31, 24)
+> > > +#define LWMI_ATTR_FEAT_ID_MASK GENMASK(23, 16)
+> > > +#define LWMI_ATTR_MODE_ID_MASK GENMASK(15, 8)
+> > > +#define LWMI_ATTR_TYPE_ID_MASK GENMASK(7, 0)
+> > > +
+> > > +#define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
+> > > +
+> > > +static BLOCKING_NOTIFIER_HEAD(om_chain_head);
+> > > +static DEFINE_IDA(lwmi_om_ida);
+> > > +
+> > > +enum attribute_property {
+> > > +     DEFAULT_VAL,
+> > > +     MAX_VAL,
+> > > +     MIN_VAL,
+> > > +     STEP_VAL,
+> > > +     SUPPORTED,
+> > > +};
+> > > +
+> > > +struct lwmi_om_priv {
+> > > +     struct component_master_ops *ops;
+> > > +     /* *cd01_list is only valid after master bind and while=20
+> capdata01 exists */
+> > > +     struct cd01_list *cd01_list;
+> > > +     struct device *fw_attr_dev;
+> > > +     struct kset *fw_attr_kset;
+> > > +     struct notifier_block nb;
+> > > +     struct wmi_device *wdev;
+> > > +     int ida_id;
+> > > +};
+> > > +
+> > > +struct tunable_attr_01 {
+> > > +     struct capdata01 *capdata;
+> > > +     struct device *dev;
+> > > +     u32 feature_id;
+> > > +     u32 device_id;
+> > > +     u32 type_id;
+> > > +};
+> > > +
+> > > +struct tunable_attr_01 ppt_pl1_spl =3D { =2Edevice_id =3D=20
+> LWMI_DEVICE_ID_CPU,
+> > > +                                    =2Efeature_id =3D=20
+> LWMI_FEATURE_ID_CPU_SPL,
+> > > +                                    =2Etype_id =3D LWMI_TYPE_ID_NON=
+E };
+> > > +struct tunable_attr_01 ppt_pl2_sppt =3D { =2Edevice_id =3D=20
+> LWMI_DEVICE_ID_CPU,
+> > > +                                     =2Efeature_id =3D=20
+> LWMI_FEATURE_ID_CPU_SPPT,
+> > > +                                     =2Etype_id =3D LWMI_TYPE_ID_NO=
+NE };
+> > > +struct tunable_attr_01 ppt_pl3_fppt =3D { =2Edevice_id =3D=20
+> LWMI_DEVICE_ID_CPU,
+> > > +                                     =2Efeature_id =3D=20
+> LWMI_FEATURE_ID_CPU_FPPT,
+> > > +                                     =2Etype_id =3D LWMI_TYPE_ID_NO=
+NE };
+> > > +
+> > > +struct capdata01_attr_group {
+> > > +     const struct attribute_group *attr_group;
+> > > +     struct tunable_attr_01 *tunable_attr;
+> > > +};
+> > > +
+> > > +/**
+> > > + * lwmi_om_register_notifier() - Add a notifier to the blocking=20
+> notifier chain
+> > > + * @nb: The notifier_block struct to register
+> > > + *
+> > > + * Call blocking_notifier_chain_register to register the notifier=
+=20
+> block to the
+> > > + * lenovo-wmi-other driver notifer chain=2E
+> > > + *
+> > > + * Return: 0 on success, %-EEXIST on error=2E
+> > > + */
+> > > +int lwmi_om_register_notifier(struct notifier_block *nb)
+> > > +{
+> > > +     return blocking_notifier_chain_register(&om_chain_head, nb);
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER")=
+;
+> > > +
+> > > +/**
+> > > + * lwmi_om_unregister_notifier() - Remove a notifier from the=20
+> blocking notifier
+> > > + * chain=2E
+> > > + * @nb: The notifier_block struct to register
+> > > + *
+> > > + * Call blocking_notifier_chain_unregister to unregister the notifi=
+er=20
+> block from the
+> > > + * lenovo-wmi-other driver notifer chain=2E
+> > > + *
+> > > + * Return: 0 on success, %-ENOENT on error=2E
+> > > + */
+> > > +int lwmi_om_unregister_notifier(struct notifier_block *nb)
+> > > +{
+> > > +     return blocking_notifier_chain_unregister(&om_chain_head, nb);
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER=
+");
+> > > +
+> > > +/**
+> > > + * devm_lwmi_om_unregister_notifier() - Remove a notifier from the=
+=20
+> blocking
+> > > + * notifier chain=2E
+> > > + * @data: Void pointer to the notifier_block struct to register=2E
+> > > + *
+> > > + * Call lwmi_om_unregister_notifier to unregister the notifier bloc=
+k=20
+> from the
+> > > + * lenovo-wmi-other driver notifer chain=2E
+> > > + *
+> > > + * Return: 0 on success, %-ENOENT on error=2E
+> > > + */
+> > > +static void devm_lwmi_om_unregister_notifier(void *data)
+> > > +{
+> > > +     struct notifier_block *nb =3D data;
+> > > +
+> > > +     lwmi_om_unregister_notifier(nb);
+> > > +}
+> > > +
+> > > +/**
+> > > + * devm_lwmi_om_register_notifier() - Add a notifier to the blockin=
+g=20
+> notifier
+> > > + * chain=2E
+> > > + * @dev: The parent device of the notifier_block struct=2E
+> > > + * @nb: The notifier_block struct to register
+> > > + *
+> > > + * Call lwmi_om_register_notifier to register the notifier block to=
+=20
+> the
+> > > + * lenovo-wmi-other driver notifer chain=2E Then add=20
+> devm_lwmi_om_unregister_notifier
+> > > + * as a device managed ation to automatically unregister the notifi=
+er=20
+> block
+> > > + * upon parent device removal=2E
+> > > + *
+> > > + * Return: 0 on success, or on error=2E
+> > > + */
+> > > +int devm_lwmi_om_register_notifier(struct device *dev,
+> > > +                                struct notifier_block *nb)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     ret =3D lwmi_om_register_notifier(nb);
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     return devm_add_action_or_reset(dev,=20
+> devm_lwmi_om_unregister_notifier,
+> > > +                                     nb);
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(devm_lwmi_om_register_notifier,=20
+> "LENOVO_WMI_OTHER");
+> > > +
+> > > +/**
+> > > + * lwmi_om_notifier_call() - Call functions for the notifier call=
+=20
+> chain=2E
+> > > + * @mode: Pointer to a thermal mode enum to retrieve the data from=
+=2E
+> > > + *
+> > > + * Call blocking_notifier_call_chain to retrieve the thermal mode=
+=20
+> from the
+> > > + * lenovo-wmi-gamezone driver=2E
+> > > + *
+> > > + * Return: 0 on success, or on error=2E
+> > > + */
+> > > +static int lwmi_om_notifier_call(enum thermal_mode *mode)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     ret =3D blocking_notifier_call_chain(&om_chain_head,=20
+> LWMI_GZ_GET_THERMAL_MODE, &mode);
+> > > +     if ((ret & ~NOTIFY_STOP_MASK) !=3D NOTIFY_OK)
+> > > +             return -EINVAL;
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/* Attribute Methods */
+> > > +
+> > > +/**
+> > > + * int_type_show() - Emit the data type for an integer attribute
+> > > + * @kobj: Pointer to the driver object=2E
+> > > + * @kobj_attribute: Pointer to the attribute calling this function=
+=2E
+> > > + * @buf: The buffer to write to=2E
+> > > + *
+> > > + * Return: Number of characters written to buf=2E
+> > > + */
+> > > +static ssize_t int_type_show(struct kobject *kobj, struct=20
+> kobj_attribute *kattr,
+> > > +                          char *buf)
+> > > +{
+> > > +     return sysfs_emit(buf, "integer\n");
+> > > +}
+> > > +
+> > > +/**
+> > > + * attr_capdata01_get - Get the data of the specified attribute
+> > > + * @tunable_attr: The attribute to be populated=2E
+> > > + *
+> > > + * Retrieves the capability data 01 struct pointer for the given
+> > > + * attribute for its specified thermal mode=2E
+> > > + *
+> > > + * Return: Either a pointer to capability data, or NULL=2E
+> > > + */
+> > > +static struct capdata01 *attr_capdata01_get_data(struct lwmi_om_pri=
+v=20
+> *priv,
+> > > +                                              u32 attribute_id)
+> > > +{
+> > > +     int idx;
+> > > +
+> > > +     for (idx =3D 0; idx < priv->cd01_list->count; idx++) {
+> >
+> > The convention for loop variables that count from 0 upwards is to use
+> > unsigned type=2E
+> >
+> > > +             if (priv->cd01_list->data[idx]=2Eid !=3D attribute_id)
+> > > +                     continue;
+> > > +             return &priv->cd01_list->data[idx];
+> > > +     }
+> > > +     return NULL;
+> > > +}
+> > > +
+> > > +/**
+> > > + * attr_capdata01_show() - Get the value of the specified attribute=
+=20
+> property
+> > > + *
+> > > + * @kobj: Pointer to the driver object=2E
+> > > + * @kobj_attribute: Pointer to the attribute calling this function=
+=2E
+> > > + * @buf: The buffer to write to=2E
+> > > + * @tunable_attr: The attribute to be read=2E
+> > > + * @prop: The property of this attribute to be read=2E
+> > > + *
+> > > + * Retrieves the given property from the capability data 01 struct=
+=20
+> for the
+> > > + * specified attribute's "custom" thermal mode=2E This function is=
+=20
+> intended
+> > > + * to be generic so it can be called from any integer attributes=20
+> "_show"
+> > > + * function=2E
+> > > + *
+> > > + * If the WMI is success the sysfs attribute is notified=2E
+> >
+> > Add comma after success=2E
+> >
+> > > + *
+> > > + * Return: Either number of characters written to buf, or an error=
+=2E
+> > > + */
+> > > +static ssize_t attr_capdata01_show(struct kobject *kobj,
+> > > +                                struct kobj_attribute *kattr, char=
+=20
+> *buf,
+> > > +                                struct tunable_attr_01 *tunable_att=
+r,
+> > > +                                enum attribute_property prop)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->de=
+v);
+> > > +     struct capdata01 *capdata;
+> > > +     u32 attribute_id;
+> > > +     int value;
+> > > +
+> > > +     attribute_id =3D
+> > > +             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,=20
+> tunable_attr->device_id) |
+> > > +             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK,=20
+> tunable_attr->feature_id) |
+> > > +             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK,=20
+> LWMI_GZ_THERMAL_MODE_CUSTOM) |
+> > > +             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK,=20
+> tunable_attr->type_id);
+> > > +
+> > > +     capdata =3D attr_capdata01_get_data(priv, attribute_id);
+> > > +
+> > > +     if (!capdata)
+> > > +             return -ENODEV;
+> > > +
+> > > +     switch (prop) {
+> > > +     case DEFAULT_VAL:
+> > > +             value =3D capdata->default_value;
+> > > +             break;
+> > > +     case MAX_VAL:
+> > > +             value =3D capdata->max_value;
+> > > +             break;
+> > > +     case MIN_VAL:
+> > > +             value =3D capdata->min_value;
+> > > +             break;
+> > > +     case STEP_VAL:
+> > > +             value =3D capdata->step;
+> > > +             break;
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +     return sysfs_emit(buf, "%d\n", value);
+> > > +}
+> > > +
+> > > +/**
+> > > + * att_current_value_store() - Set the current value of the given=
+=20
+> attribute
+> > > + * @kobj: Pointer to the driver object=2E
+> > > + * @kobj_attribute: Pointer to the attribute calling this function=
+=2E
+> > > + * @buf: The buffer to read from, this is parsed to `int` type=2E
+> > > + * @count: Required by sysfs attribute macros, pass in from the=20
+> callee attr=2E
+> > > + * @tunable_attr: The attribute to be stored=2E
+> > > + *
+> > > + * Sets the value of the given attribute when operating under the=
+=20
+> "custom"
+> > > + * smartfan profile=2E The current smartfan profile is retrieved fr=
+om=20
+> the
+> > > + * lenovo-wmi-gamezone driver and error is returned if the result i=
+s=20
+> not
+> > > + * "custom"=2E This function is intended to be generic so it can be=
+=20
+> called from
+> > > + * any integer attribute's "_store" function=2E The integer to be s=
+ent=20
+> to the WMI
+> > > + * method is range checked and an error is returned if out of range=
+=2E
+> > > + *
+> > > + * If the value is valid and WMI is success, then the sysfs attribu=
+te=20
+> is
+> > > + * notified=2E
+> > > + *
+> > > + * Return: Either count, or an error=2E
+> > > + */
+> > > +static ssize_t attr_current_value_store(struct kobject *kobj,
+> > > +                                     struct kobj_attribute *kattr,
+> > > +                                     const char *buf, size_t count,
+> > > +                                     struct tunable_attr_01=20
+> *tunable_attr)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->de=
+v);
+> > > +     struct wmi_method_args_32 args;
+> > > +     struct capdata01 *capdata;
+> > > +     enum thermal_mode mode;
+> > > +     u32 attribute_id;
+> > > +     u32 value;
+> > > +     int err;
+> > > +
+> > > +     err =3D lwmi_om_notifier_call(&mode);
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
+> > > +             return -EBUSY;
+> > > +
+> > > +     attribute_id =3D
+> > > +             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,=20
+> tunable_attr->device_id) |
+> >
+> > Just combine this to the previous line and realign the ones below=2E
+> >
+> > > +             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK,=20
+> tunable_attr->feature_id) |
+> > > +             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> > > +             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK,=20
+> tunable_attr->type_id);
+> > > +
+> > > +     capdata =3D attr_capdata01_get_data(priv, attribute_id);
+> > > +
+> > > +     if (!capdata)
+> > > +             return -ENODEV;
+> > > +
+> > > +     err =3D kstrtouint(buf, 10, &value);
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     if (value < capdata->min_value || value > capdata->max_value)
+> > > +             return -EINVAL;
+> > > +
+> > > +     args=2Earg0 =3D attribute_id;
+> > > +     args=2Earg1 =3D value;
+> > > +
+> > > +     err =3D lwmi_dev_evaluate_int(priv->wdev, 0x0,=20
+> LWMI_FEATURE_VALUE_SET,
+> > > +                                 (unsigned char *)&args,=20
+> sizeof(args), NULL);
+> > > +
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     return count;
+> > > +};
+> > > +
+> > > +/**
+> > > + * attr_current_value_show() - Get the current value of the given=
+=20
+> attribute
+> > > + * @kobj: Pointer to the driver object=2E
+> > > + * @kobj_attribute: Pointer to the attribute calling this function=
+=2E
+> > > + * @buf: The buffer to write to=2E
+> > > + * @tunable_attr: The attribute to be read=2E
+> > > + *
+> > > + * Retrieves the value of the given attribute for the current=20
+> smartfan profile=2E
+> > > + * The current smartfan profile is retrieved from the=20
+> lenovo-wmi-gamezone driver=2E
+> > > + * This function is intended to be generic so it can be called from=
+=20
+> any integer
+> > > + * attribute's "_show" function=2E
+> > > + *
+> > > + * If the WMI is success the sysfs attribute is notified=2E
+> > > + *
+> > > + * Return: Either number of characters written to buf, or an error=
+=2E
+> > > + */
+> > > +static ssize_t attr_current_value_show(struct kobject *kobj,
+> > > +                                    struct kobj_attribute *kattr,=
+=20
+> char *buf,
+> > > +                                    struct tunable_attr_01=20
+> *tunable_attr)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->de=
+v);
+> > > +     struct wmi_method_args_32 args;
+> > > +     enum thermal_mode mode;
+> > > +     u32 attribute_id;
+> > > +     int retval;
+> > > +     int err;
+> > > +
+> > > +     err =3D lwmi_om_notifier_call(&mode);
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     attribute_id =3D
+> > > +             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,=20
+> tunable_attr->device_id) |
+> >
+> > Ditto=2E
+> >
+> > > +             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK,=20
+> tunable_attr->feature_id) |
+> > > +             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> > > +             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK,=20
+> tunable_attr->type_id);
+> > > +
+> > > +     args=2Earg0 =3D attribute_id;
+> > > +
+> > > +     err =3D lwmi_dev_evaluate_int(priv->wdev, 0x0,=20
+> LWMI_FEATURE_VALUE_GET,
+> > > +                                 (unsigned char *)&args, sizeof(arg=
+s),
+> > > +                                 &retval);
+> > > +
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     return sysfs_emit(buf, "%d\n", retval);
+> > > +}
+> > > +
+> > > +/* Lenovo WMI Other Mode Attribute macros */
+> > > +#define __LWMI_ATTR_RO(_func, _name)                               =
+  =20
+> \
+> > > +     {                                                             =
+\
+> > > +             =2Eattr =3D { =2Ename =3D __stringify(_name), =2Emode =
+=3D 0444 }, \
+> > > +             =2Eshow =3D _func##_##_name##_show,                   =
+    \
+> > > +     }
+> > > +
+> > > +#define __LWMI_ATTR_RO_AS(_name, _show)                            =
+ =20
+>  \
+> > > +     {                                                             =
+\
+> > > +             =2Eattr =3D { =2Ename =3D __stringify(_name), =2Emode =
+=3D 0444 }, \
+> > > +             =2Eshow =3D _show,                                    =
+    \
+> > > +     }
+> > > +
+> > > +#define __LWMI_ATTR_RW(_func, _name) \
+> > > +     __ATTR(_name, 0644, _func##_##_name##_show,=20
+> _func##_##_name##_store)
+> > > +
+> > > +/* Shows a formatted static variable */
+> > > +#define __LWMI_ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)         =
+  =20
+>          \
+> > > +     static ssize_t _attrname##_##_prop##_show(                    =
+ =20
+>        \
+> > > +             struct kobject *kobj, struct kobj_attribute *kattr, ch=
+ar=20
+> *buf) \
+> > > +     {                                                             =
+  =20
+>       \
+> > > +             return sysfs_emit(buf, _fmt, _val);                   =
+  =20
+>       \
+> > > +     }                                                             =
+  =20
+>       \
+> > > +     static struct kobj_attribute attr_##_attrname##_##_prop =3D   =
+    =20
+>       \
+> > > +             __LWMI_ATTR_RO(_attrname, _prop)
+> > > +
+> > > +/* Attribute current value read/write */
+> > > +#define __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname)              =
+ =20
+>           \
+> > > +     static ssize_t _attrname##_current_value_store(               =
+  =20
+>       \
+> > > +             struct kobject *kobj, struct kobj_attribute *kattr,   =
+  =20
+>       \
+> > > +             const char *buf, size_t count)                        =
+ =20
+>        \
+> > > +     {                                                             =
+  =20
+>       \
+> > > +             return attr_current_value_store(kobj, kattr, buf,=20
+> count,       \
+> > > +                                             &_attrname);          =
+ =20
+>        \
+> > > +     }                                                             =
+  =20
+>       \
+> > > +     static ssize_t _attrname##_current_value_show(                =
+ =20
+>        \
+> > > +             struct kobject *kobj, struct kobj_attribute *kattr, ch=
+ar=20
+> *buf) \
+> > > +     {                                                             =
+  =20
+>       \
+> > > +             return attr_current_value_show(kobj, kattr, buf,=20
+> &_attrname);  \
+> > > +     }                                                             =
+  =20
+>       \
+> > > +     static struct kobj_attribute attr_##_attrname##_current_value =
+=3D =20
+>       \
+> > > +             __LWMI_ATTR_RW(_attrname, current_value)
+> > > +
+> > > +/* Attribute property read only */
+> > > +#define __LWMI_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)      =
+ =20
+>           \
+> > > +     static ssize_t _attrname##_##_prop##_show(                    =
+ =20
+>        \
+> > > +             struct kobject *kobj, struct kobj_attribute *kattr, ch=
+ar=20
+> *buf) \
+> > > +     {                                                             =
+  =20
+>       \
+> > > +             return attr_capdata01_show(kobj, kattr, buf,=20
+> &_attrname,       \
+> > > +                                        _prop_type);               =
+  =20
+>       \
+> > > +     }                                                             =
+  =20
+>       \
+> > > +     static struct kobj_attribute attr_##_attrname##_##_prop =3D   =
+    =20
+>       \
+> > > +             __LWMI_ATTR_RO(_attrname, _prop)
+> > > +
+> > > +#define LWMI_ATTR_GROUP_TUNABLE_CAP01(_attrname, _fsname, _dispname=
+) =20
+>     \
+> > > +     __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname);                =
+ =20
+>   \
+> > > +     __LWMI_TUNABLE_RO_CAP01(default_value, _attrname, DEFAULT_VAL)=
+; =20
+>  \
+> > > +     __LWMI_ATTR_SHOW_FMT(display_name, _attrname, "%s\n",=20
+> _dispname); \
+> > > +     __LWMI_TUNABLE_RO_CAP01(max_value, _attrname, MAX_VAL);       =
+  =20
+>  \
+> > > +     __LWMI_TUNABLE_RO_CAP01(min_value, _attrname, MIN_VAL);       =
+  =20
+>  \
+> > > +     __LWMI_TUNABLE_RO_CAP01(scalar_increment, _attrname, STEP_VAL)=
+; =20
+>  \
+> > > +     static struct kobj_attribute attr_##_attrname##_type =3D      =
+   =20
+>   \
+> > > +             __LWMI_ATTR_RO_AS(type, int_type_show);               =
+  =20
+>  \
+> > > +     static struct attribute *_attrname##_attrs[] =3D {            =
+   =20
+>   \
+> > > +             &attr_##_attrname##_current_value=2Eattr,             =
+    =20
+>  \
+> > > +             &attr_##_attrname##_default_value=2Eattr,             =
+    =20
+>  \
+> > > +             &attr_##_attrname##_display_name=2Eattr,              =
+   =20
+>   \
+> > > +             &attr_##_attrname##_max_value=2Eattr,                 =
+    =20
+>  \
+> > > +             &attr_##_attrname##_min_value=2Eattr,                 =
+    =20
+>  \
+> > > +             &attr_##_attrname##_scalar_increment=2Eattr,          =
+   =20
+>   \
+> > > +             &attr_##_attrname##_type=2Eattr,                      =
+   =20
+>   \
+> > > +             NULL,                                                 =
+  =20
+>  \
+> > > +     };                                                            =
+ =20
+>   \
+> > > +     static const struct attribute_group _attrname##_attr_group =3D=
+ { =20
+>   \
+> > > +             =2Ename =3D _fsname, =2Eattrs =3D _attrname##_attrs   =
+          =20
+>  \
+> > > +     }
+> > > +
+> > > +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
+> > > +                           "Set the CPU sustained power limit");
+> > > +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
+> > > +                           "Set the CPU slow package power tracking=
+=20
+> limit");
+> > > +LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
+> > > +                           "Set the CPU fast package power tracking=
+=20
+> limit");
+> > > +
+> > > +static struct capdata01_attr_group cd01_attr_groups[] =3D {
+> > > +     { &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
+> > > +     { &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
+> > > +     { &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
+> > > +     {},
+> > > +};
+> > > +
+> > > +/**
+> > > + * lwmi_om_fw_attr_add() - Register all firmware_attributes_class=
+=20
+> members
+> > > + * @priv: The Other Mode driver data=2E
+> > > + *
+> > > + * Return: Either 0, or an error=2E
+> > > + */
+> > > +static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+> > > +{
+> > > +     unsigned int i;
+> > > +     int err;
+> > > +
+> > > +     priv->ida_id =3D ida_alloc(&lwmi_om_ida, GFP_KERNEL);
+> > > +     if (priv->ida_id < 0)
+> > > +             return priv->ida_id;
+> > > +
+> > > +     priv->fw_attr_dev =3D device_create(&firmware_attributes_class=
+,=20
+> NULL,
+> > > +                                       MKDEV(0, 0), NULL, "%s-%u",
+> > > +                                       LWMI_OM_FW_ATTR_BASE_PATH,
+> > > +                                       priv->ida_id);
+> > > +     if (IS_ERR(priv->fw_attr_dev)) {
+> >
+> > Add include for IS_ERR()=2E
+> >
+> > > +             err =3D PTR_ERR(priv->fw_attr_dev);
+> > > +             goto err_free_ida;
+> > > +     }
+> > > +
+> > > +     priv->fw_attr_kset =3D kset_create_and_add("attributes", NULL,=
+=20
+> &priv->fw_attr_dev->kobj);
+> > > +     if (!priv->fw_attr_kset) {
+> > > +             err =3D -ENOMEM;
+> > > +             goto err_destroy_classdev;
+> > > +     }
+> > > +
+> > > +     for (i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
+> >
+> > Add include for ARRAY_SIZE()=2E
+> >
+> > > +             err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,=
+=20
+> cd01_attr_groups[i]=2Eattr_group);
+> > > +             if (err)
+> > > +                     goto err_remove_groups;
+> > > +
+> > > +             cd01_attr_groups[i]=2Etunable_attr->dev =3D &priv->wde=
+v->dev;
+> > > +     }
+> > > +     return 0;
+> > > +
+> > > +err_remove_groups:
+> > > +     while (i--)
+> > > +             sysfs_remove_group(&priv->fw_attr_kset->kobj,=20
+> cd01_attr_groups[i]=2Eattr_group);
+> > > +
+> > > +     kset_unregister(priv->fw_attr_kset);
+> > > +
+> > > +err_destroy_classdev:
+> > > +     device_unregister(priv->fw_attr_dev);
+> > > +
+> > > +err_free_ida:
+> > > +     ida_free(&lwmi_om_ida, priv->ida_id);
+> > > +     return err;
+> > > +}
+> > > +
+> > > +/**
+> > > + * lwmi_om_fw_attr_remove() - Unregister all capability data=20
+> attribute groups
+> > > + * @priv: the lenovo-wmi-other driver data=2E
+> > > + */
+> > > +static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
+> > > +{
+> > > +     for (unsigned int i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - =
+1;=20
+> i++)
+> > > +             sysfs_remove_group(&priv->fw_attr_kset->kobj,=20
+> cd01_attr_groups[i]=2Eattr_group);
+> > > +
+> > > +     kset_unregister(priv->fw_attr_kset);
+> > > +     device_unregister(priv->fw_attr_dev);
+> > > +}
+> > > +
+> > > +/**
+> > > + * lwmi_om_master_bind() - Bind all components of the other mode=20
+> driver
+> > > + * @dev: The lenovo-wmi-other driver basic device=2E
+> > > + *
+> > > + * Call component_bind_all to bind the lenovo-wmi-capdata01 driver =
+to=20
+> the
+> > > + * lenovo-wmi-other master driver=2E On success, assign the capabil=
+ity=20
+> data 01
+> > > + * list pointer to the driver data struct for later access=2E This=
+=20
+> pointer
+> > > + * is only valid while the capdata01 interface exists=2E Finally,=
+=20
+> register all
+> > > + * firmware attribute groups=2E
+> > > + *
+> > > + * Return: 0 on success, or an error=2E
+> > > + */
+> > > +static int lwmi_om_master_bind(struct device *dev)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> > > +     struct cd01_list *tmp_list;
+> > > +     int ret;
+> > > +
+> > > +     ret =3D component_bind_all(dev, &tmp_list);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     priv->cd01_list =3D tmp_list;
+> > > +
+> > > +     if (!priv->cd01_list)
+> > > +             return -ENODEV;
+> > > +
+> > > +     return lwmi_om_fw_attr_add(priv);
+> > > +}
+> > > +
+> > > +/**
+> > > + * lwmi_om_master_unbind() - Unbind all components of the other mod=
+e=20
+> driver
+> > > + * @dev: The lenovo-wmi-other driver basic device
+> > > + *
+> > > + * Unregister all capability data attribute groups=2E Then call
+> > > + * component_unbind_all to unbind the lenovo-wmi-capdata01 driver=
+=20
+> from the
+> > > + * lenovo-wmi-other master driver=2E Finally, free the IDA for this=
+=20
+> device=2E
+> > > + */
+> > > +static void lwmi_om_master_unbind(struct device *dev)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> > > +
+> > > +     lwmi_om_fw_attr_remove(priv);
+> > > +     component_unbind_all(dev, NULL);
+> > > +}
+> > > +
+> > > +static const struct component_master_ops lwmi_om_master_ops =3D {
+> > > +     =2Ebind =3D lwmi_om_master_bind,
+> > > +     =2Eunbind =3D lwmi_om_master_unbind,
+> > > +};
+> > > +
+> > > +static int lwmi_other_probe(struct wmi_device *wdev, const void=20
+> *context)
+> > > +{
+> > > +     struct component_match *master_match =3D NULL;
+> > > +     struct lwmi_om_priv *priv;
+> > > +
+> > > +     priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> > > +     if (!priv)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     priv->wdev =3D wdev;
+> > > +     dev_set_drvdata(&wdev->dev, priv);
+> > > +
+> > > +     component_match_add(&wdev->dev, &master_match, lwmi_cd01_match=
+,=20
+> NULL);
+> > > +     if (IS_ERR(master_match))
+> > > +             return PTR_ERR(master_match);
+> > > +
+> > > +     return component_master_add_with_match(&wdev->dev,=20
+> &lwmi_om_master_ops,
+> > > +                                            master_match);
+> > > +}
+> > > +
+> > > +static void lwmi_other_remove(struct wmi_device *wdev)
+> > > +{
+> > > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> > > +
+> > > +     component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> > > +     ida_free(&lwmi_om_ida, priv->ida_id);
+> > > +}
+> > > +
+> > > +static const struct wmi_device_id lwmi_other_id_table[] =3D {
+> > > +     { LENOVO_OTHER_MODE_GUID, NULL },
+> > > +     {}
+> > > +};
+> > > +
+> > > +static struct wmi_driver lwmi_other_driver =3D {
+> > > +     =2Edriver =3D {
+> > > +             =2Ename =3D "lenovo_wmi_other",
+> > > +             =2Eprobe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> > > +     },
+> > > +     =2Eid_table =3D lwmi_other_id_table,
+> > > +     =2Eprobe =3D lwmi_other_probe,
+> > > +     =2Eremove =3D lwmi_other_remove,
+> > > +     =2Eno_singleton =3D true,
+> > > +};
+> > > +
+> > > +module_wmi_driver(lwmi_other_driver);
+> > > +
+> > > +MODULE_IMPORT_NS("LENOVO_WMI_CD01");
+> > > +MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+> > > +MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
+> > > +MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
+> > > +MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
+> > > +MODULE_LICENSE("GPL");
+> > > diff --git a/drivers/platform/x86/lenovo-wmi-other=2Eh=20
+> b/drivers/platform/x86/lenovo-wmi-other=2Eh
+> > > new file mode 100644
+> > > index 000000000000=2E=2E49bc3521e184
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/lenovo-wmi-other=2Eh
+> > > @@ -0,0 +1,16 @@
+> > > +/* SPDX-License-Identifier: GPL-2=2E0-or-later */
+> > > +
+> > > +/* Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Eco=
+m> */
+> > > +
+> > > +#ifndef _LENOVO_WMI_OTHER_H_
+> > > +#define _LENOVO_WMI_OTHER_H_
+> > > +
+> > > +struct device;
+> > > +struct notifier_block;
+> > > +
+> > > +int lwmi_om_register_notifier(struct notifier_block *nb);
+> > > +int lwmi_om_unregister_notifier(struct notifier_block *nb);
+> > > +int devm_lwmi_om_register_notifier(struct device *dev,
+> > > +                                struct notifier_block *nb);
+> > > +
+> > > +#endif /* !_LENOVO_WMI_OTHER_H_ */
+> >
+> > Overall, the series still has lots of nits still to address (please lo=
+ok
+> > for similar cases I've marked as I surely didn't mark each instance)=
+=2E
+> > But logicwise, the code is easy to read, feels understandable, and I
+> > couldn't find any big issues=2E Good work so far! :-)
+> >
+> > --
+> >  i=2E
+> >
+> Thanks Ilpo, I'll take a look at these in the coming days-=2E
 >
->> Convert ssram device related functionalities to a new driver named Intel
->> PMC SSRAM Telemetry driver. Modify PMC Core driver to use API exported by
->> the driver to discover and achieve devid and PWRMBASE address information
->> for each available PMC. PMC Core driver needs to get PCI device when
->> reading from telemetry regions.
->>
->> The new SSRAM driver binds to the SSRAM device and provides the following
->> functionalities:
->> 1. Look for and register telemetry regions available in SSRAM device.
->> 2. Provide devid and PWRMBASE address information for the corresponding
->>     PMCs.
->>
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
-> I took patches 1-6 into review-ilpo-next now, but please consider the
-> making the changes I suggested to 1/8 as separate patches.
+> There is something that was just brought up to me from Xino at Lenovo
+> after some internal testing that I wasn't aware of, and it needs to be
+> addressed=2E I want to discuss a way ahead before I add it to v6=2E
 >
-> This one has a few things that should be addressed before inclusion.
-
-The changes in 1/8 will be included in the next version.
-
+> Essentially, there was an assumption that the capability data is
+> static once the device initializes, which is why back in v1 it was
+> discussed to cache the data=2E This assumption was wrong; the capability
+> data for max value changes depending on if AC or DC is being used to
+> power the device, with the DC values being lower=2E The BIOS will
+> automatically throttle any values that exceed the DC limits upon a
+> change in status, so we don't need to account for this event in other
+> mode directly, but we do need to re-cache the data blocks when there
+> is an ACPI_AC_NOTIFY_STATUS event=2E This will allow us to both report
+> accurate information, and prevent setting values that exceed the power
+> draw limit of the battery after the event, which could be possible=2E
 >
->> ---
->>   drivers/platform/x86/intel/pmc/Kconfig        |  14 ++
->>   drivers/platform/x86/intel/pmc/Makefile       |   8 +-
->>   drivers/platform/x86/intel/pmc/core.c         |  80 +++++++----
->>   drivers/platform/x86/intel/pmc/core.h         |   7 -
->>   .../platform/x86/intel/pmc/ssram_telemetry.c  | 132 ++++++++++++------
->>   .../platform/x86/intel/pmc/ssram_telemetry.h  |  35 +++++
->>   6 files changed, 198 insertions(+), 78 deletions(-)
->>   create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
->>
->> diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
->> index d2f651fbec2c..f5fb1bdc266e 100644
->> --- a/drivers/platform/x86/intel/pmc/Kconfig
->> +++ b/drivers/platform/x86/intel/pmc/Kconfig
->> @@ -8,6 +8,7 @@ config INTEL_PMC_CORE
->>   	depends on PCI
->>   	depends on ACPI
->>   	depends on INTEL_PMT_TELEMETRY
->> +	select INTEL_PMC_SSRAM_TELEMETRY
->>   	help
->>   	  The Intel Platform Controller Hub for Intel Core SoCs provides access
->>   	  to Power Management Controller registers via various interfaces. This
->> @@ -24,3 +25,16 @@ config INTEL_PMC_CORE
->>   		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
->>   		- Low Power Mode registers (Tigerlake and beyond)
->>   		- PMC quirks as needed to enable SLPS0/S0ix
->> +
->> +config INTEL_PMC_SSRAM_TELEMETRY
->> +	tristate
->> +	help
->> +	  The PMC SSRAM device contains counters structured in Intel Platform
->> +	  Monitoring Techology (PMT) telemetry regions. The driver  provides
->> +	  API to expose information of PMCs available in the platform. This
->> +	  driver also looks for and register telemetry regions so they would
->> +	  be available for read through sysfs and Intel PMT API.
->> +
->> +	  The driver needs INTEL_VSEC driver to register for telemetry regions.
->> +	  This requirement has been fulfilled by INTEL_PMC_CORE driver which
->> +	  selects INTEL_PMC_SSRAM_TELEMETRY driver.
-> ???
+> My plan is (in Capability data driver):
 >
-> INTEL_PMC_CORE does not select/depend on INTEL_VSEC. I know it "works"
-> indirectly through INTEL_PMT_TELEMETRY but a) this Kconfig help text
-> is wrong/misleading, b) the way the dependencies are arranged seems
-> fragile to me.
+> - Use the _setup function in _probe to call two new functions that are
+> essentially the current _setup broken apart=2E The first (_allocate)
+> will only run during _setup and will get the wmi block device count
+> and allocate the list struct, and the second (_cache)  will loop
+> through all the data blocks and copy the data to the list struct=2E
+> - Subscribe to the register_acpi_notifier with a new notifier block in
+> _probe, and in a new notify_call function run the _cache function upon
+> ACPI_AC_NOTIFY_STATUS events=2E
 >
-> What prevents user from enabling INTEL_PMC_SSRAM_TELEMETRY without
-> INTEL_PMC_CORE? This will likely blow up a randconfig build at some
-> point when stars happen to align right.
+> The main problem I see is that we will need to guard the access to the
+> cd01_list now, as it could have async read/write=2E Since we are passing
+> a pointer to that data to another driver I see two possible solutions
+> to that:
+> - Share a mutex between the two drivers=2E
+> - Do all lookups of the capability data in the capability data driver
+> and pass pointers back to the other mode driver=2E
 >
-> Should the help text just be removed? I mean, shouldn't this be selected
-> by INTEL_PMC_CORE and never should be chosen on its own by the user?
-
-INTEL_PMC_SSRAM_TELEMETRY driver uses intel_vsec_register() provided by 
-the INTEL_VSEC driver to register telem endpoints. INTEL_VSEC driver 
-does provide an inline version of the API to use when INTEL_VSEC config 
-is not set.
-
-#if IS_ENABLED(CONFIG_INTEL_VSEC)
-void intel_vsec_register(struct pci_dev *pdev,
-              struct intel_vsec_platform_info *info);
-#else
-static inline void intel_vsec_register(struct pci_dev *pdev,
-                        struct intel_vsec_platform_info *info)
-{
-}
-#endif
-#endif
-
-This inline version is not returning error currently and it can be 
-changed to return -ENODEV. INTEL_PMC_SSRAM_TELEMETRY can fail the probe 
-function when intel_vsec_register() returns error. In this way, 
-INTEL_PMC_SSRAM_TELEMETRY does not depends on INTEL_VSEC and randconfig 
-build will pass.
-
-The help text for INTEL_PMC_SSRAM_TELEMETRY will be removed in next 
-version.
-
->> diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
->> index e842647d3ced..5f68c8503a56 100644
->> --- a/drivers/platform/x86/intel/pmc/Makefile
->> +++ b/drivers/platform/x86/intel/pmc/Makefile
->> @@ -3,8 +3,12 @@
->>   # Intel x86 Platform-Specific Drivers
->>   #
->>   
->> -intel_pmc_core-y			:= core.o ssram_telemetry.o spt.o cnp.o \
->> -					   icl.o tgl.o adl.o mtl.o arl.o lnl.o ptl.o
->> +intel_pmc_core-y			:= core.o spt.o cnp.o icl.o \
->> +					   tgl.o adl.o mtl.o arl.o lnl.o ptl.o
->>   obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
->>   intel_pmc_core_pltdrv-y			:= pltdrv.o
->>   obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
->> +
->> +# Intel PMC SSRAM driver
->> +intel_pmc_ssram_telemetry-y		+= ssram_telemetry.o
->> +obj-$(CONFIG_INTEL_PMC_SSRAM_TELEMETRY)	+= intel_pmc_ssram_telemetry.o
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index a53a7677122c..26c1c75b709a 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -29,6 +29,7 @@
->>   #include <asm/tsc.h>
->>   
->>   #include "core.h"
->> +#include "ssram_telemetry.h"
->>   #include "../pmt/telemetry.h"
->>   
->>   /* Maximum number of modes supported by platfoms that has low power mode capability */
->> @@ -1354,7 +1355,7 @@ static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *m
->>   	return 0;
->>   }
->>   
->> -static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
->> +static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct pci_dev *pcidev)
->>   {
->>   	struct telem_endpoint *ep;
->>   	const u8 *lpm_indices;
->> @@ -1371,7 +1372,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
->>   	if (!guid)
->>   		return -ENXIO;
->>   
->> -	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
->> +	ep = pmt_telem_find_and_register_endpoint(pcidev, guid, 0);
->>   	if (IS_ERR(ep)) {
->>   		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
->>   			PTR_ERR(ep));
->> @@ -1455,27 +1456,30 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
->>   	return ret;
->>   }
->>   
->> -static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
->> +static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev, int func)
->>   {
->> +	struct pci_dev *pcidev;
->>   	unsigned int i;
->> -	int ret;
->> +	int ret = 0;
->>   
->> -	if (!pmcdev->ssram_pcidev)
->> +	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
->> +	if (!pcidev)
->>   		return -ENODEV;
->>   
->>   	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
->>   		if (!pmcdev->pmcs[i])
->>   			continue;
->>   
->> -		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
->> +		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i], pcidev);
->>   		if (ret)
->> -			return ret;
->> +			break;
-> DEFINE_FREE for pci_dev_put exists so you can do __free(pci_dev_put), so
-> you can use cleanup.h to handle the cleanup and keep returning directly
-> from here.
-
-Will change to use _free from cleanup.h in next version.
-
+> I personally prefer option 2=2E I can pass the existing list pointer to
+> an exported function from the capability data driver and use its
+> global mutex to iterate through it=2E I could also change the pointer
+> passed in _bind to a device pointer, then pass it back in the exported
+> function and use dev_get_data to access the private drvdata in the
+> capability data driver, but Armin was against this previously so I'm
+> unsure about it=2E I think the example i915 driver does store pointers
+> to devices so I'm unsure why this wouldn't be preferable now, as it
+> would prevent access to the data outside a guard in all contexts=2E
 >
->>   	}
->>   
->> -	return 0;
->> +	pci_dev_put(pcidev);
->> +	return ret;
->>   }
->>   
->> -const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
->> +static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
->>   {
->>   	for (; list->map; ++list)
->>   		if (devid == list->devid)
->> @@ -1484,23 +1488,32 @@ const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
->>   	return NULL;
->>   }
->>   
->> -int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
->> -		     const struct pmc_reg_map *reg_map, unsigned int pmc_index)
->> +static int pmc_core_pmc_add(struct pmc_dev *pmcdev, unsigned int pmc_index)
->> +
->>   {
->> -	struct pmc *pmc = pmcdev->pmcs[pmc_index];
->> +	struct pmc_ssram_telemetry pmc_ssram_telemetry;
->> +	const struct pmc_reg_map *map;
->> +	struct pmc *pmc;
->> +	int ret;
->> +
->> +	ret = pmc_ssram_telemetry_get_pmc_info(pmc_index, &pmc_ssram_telemetry);
->> +	if (ret)
->> +		return ret;
->>   
->> -	if (!pwrm_base)
->> +	map = pmc_core_find_regmap(pmcdev->regmap_list, pmc_ssram_telemetry.devid);
->> +	if (!map)
->>   		return -ENODEV;
->>   
->> -	/* Memory for primary PMC has been allocated in core.c */
->> +	pmc = pmcdev->pmcs[pmc_index];
->> +	/* Memory for primary PMC has been allocated */
->>   	if (!pmc) {
->>   		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
->>   		if (!pmc)
->>   			return -ENOMEM;
->>   	}
->>   
->> -	pmc->map = reg_map;
->> -	pmc->base_addr = pwrm_base;
->> +	pmc->map = map;
->> +	pmc->base_addr = pmc_ssram_telemetry.base_addr;
->>   	pmc->regbase = ioremap(pmc->base_addr, pmc->map->regmap_length);
->>   
->>   	if (!pmc->regbase) {
->> @@ -1513,6 +1526,20 @@ int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
->>   	return 0;
->>   }
->>   
->> +static int pmc_core_ssram_get_reg_base(struct pmc_dev *pmcdev)
->> +{
->> +	int ret;
->> +
->> +	ret = pmc_core_pmc_add(pmcdev, PMC_IDX_MAIN);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pmc_core_pmc_add(pmcdev, PMC_IDX_IOE);
->> +	pmc_core_pmc_add(pmcdev, PMC_IDX_PCH);
->> +
->> +	return 0;
->> +}
->> +
->>   /*
->>    * When supported, ssram init is used to achieve all available PMCs.
->>    * If ssram init fails, this function uses legacy method to at least get the
->> @@ -1530,10 +1557,18 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->>   	ssram = pmc_dev_info->regmap_list != NULL;
->>   	if (ssram) {
->>   		pmcdev->regmap_list = pmc_dev_info->regmap_list;
->> -		ret = pmc_core_ssram_init(pmcdev, pmc_dev_info->pci_func);
->> +		ret = pmc_core_ssram_get_reg_base(pmcdev);
->> +		/*
->> +		 * EAGAIN error code indicates Intel PMC SSRAM Telemetry driver
->> +		 * has not finished probe and PMC info is not available yet. Try
->> +		 * again later.
->> +		 */
->> +		if (ret == -EAGAIN)
->> +			return -EPROBE_DEFER;
->> +
->>   		if (ret) {
->>   			dev_warn(&pmcdev->pdev->dev,
->> -				 "ssram init failed, %d, using legacy init\n", ret);
->> +				 "Failed to get PMC info from SSRAM, %d, using legacy init\n", ret);
->>   			ssram = false;
->>   		}
->>   	}
->> @@ -1550,7 +1585,7 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->>   		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
->>   
->>   	if (ssram)
->> -		return pmc_core_ssram_get_lpm_reqs(pmcdev);
->> +		return pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
->>   
->>   	return 0;
->>   }
->> @@ -1639,15 +1674,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
->>   	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
->>   		struct pmc *pmc = pmcdev->pmcs[i];
->>   
->> -		if (pmc)
->> +		if (pmc && pmc->regbase)
->>   			iounmap(pmc->regbase);
->>   	}
->>   
->> -	if (pmcdev->ssram_pcidev) {
->> -		pci_dev_put(pmcdev->ssram_pcidev);
->> -		pci_disable_device(pmcdev->ssram_pcidev);
->> -	}
->> -
->>   	if (pmcdev->punit_ep)
->>   		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
->>   
->> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
->> index c3b07075d017..e136d18b1d38 100644
->> --- a/drivers/platform/x86/intel/pmc/core.h
->> +++ b/drivers/platform/x86/intel/pmc/core.h
->> @@ -413,7 +413,6 @@ struct pmc {
->>    * struct pmc_dev - pmc device structure
->>    * @devs:		pointer to an array of pmc pointers
->>    * @pdev:		pointer to platform_device struct
->> - * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
->>    * @crystal_freq:	crystal frequency from cpuid
->>    * @dbgfs_dir:		path to debugfs interface
->>    * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
->> @@ -433,7 +432,6 @@ struct pmc_dev {
->>   	struct pmc *pmcs[MAX_NUM_PMC];
->>   	struct dentry *dbgfs_dir;
->>   	struct platform_device *pdev;
->> -	struct pci_dev *ssram_pcidev;
->>   	unsigned int crystal_freq;
->>   	int pmc_xram_read_bit;
->>   	struct mutex lock; /* generic mutex lock for PMC Core */
->> @@ -510,12 +508,7 @@ void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
->>   void pmc_core_punit_pmt_init(struct pmc_dev *pmcdev, u32 guid);
->>   void pmc_core_set_device_d3(unsigned int device);
->>   
->> -int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func);
->> -
->>   int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
->> -const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid);
->> -int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
->> -		     const struct pmc_reg_map *reg_map, unsigned int pmc_index);
->>   
->>   extern struct pmc_dev_info spt_pmc_dev;
->>   extern struct pmc_dev_info cnp_pmc_dev;
->> diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
->> index 7b8443092b20..232263008030 100644
->> --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
->> +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
->> @@ -1,19 +1,18 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   /*
->> - * This file contains functions to handle discovery of PMC metrics located
->> - * in the PMC SSRAM PCI device.
->> + * Intel PMC SSRAM TELEMETRY PCI Driver
->>    *
->>    * Copyright (c) 2023, Intel Corporation.
->> - * All Rights Reserved.
->> - *
->>    */
->>   
->>   #include <linux/cleanup.h>
->>   #include <linux/intel_vsec.h>
->>   #include <linux/pci.h>
->> +#include <linux/types.h>
->>   #include <linux/io-64-nonatomic-lo-hi.h>
->>   
->>   #include "core.h"
->> +#include "ssram_telemetry.h"
->>   
->>   #define SSRAM_HDR_SIZE		0x100
->>   #define SSRAM_PWRM_OFFSET	0x14
->> @@ -23,12 +22,14 @@
->>   #define SSRAM_IOE_OFFSET	0x68
->>   #define SSRAM_DEVID_OFFSET	0x70
->>   
->> -DEFINE_FREE(pmc_core_iounmap, void __iomem *, if (_T) iounmap(_T))
->> +DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_T))
->> +
->> +static struct pmc_ssram_telemetry *pmc_ssram_telems;
->> +static bool device_probed;
->>   
->>   static void
->> -pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
->> +pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64 ssram_base, void __iomem *ssram)
->>   {
->> -	struct pci_dev *pcidev = pmcdev->ssram_pcidev;
->>   	struct intel_vsec_platform_info info = {};
->>   	struct intel_vsec_header *headers[2] = {};
->>   	struct intel_vsec_header header;
->> @@ -57,7 +58,7 @@ pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
->>   	info.caps = VSEC_CAP_TELEMETRY;
->>   	info.headers = headers;
->>   	info.base_addr = ssram_base;
->> -	info.parent = &pmcdev->pdev->dev;
->> +	info.parent = &pcidev->dev;
->>   
->>   	intel_vsec_register(pcidev, &info);
->>   }
->> @@ -68,19 +69,14 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
->>   }
->>   
->>   static int
->> -pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, unsigned int pmc_idx, u32 offset)
->> +pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, unsigned int pmc_idx, u32 offset)
->>   {
->> -	struct pci_dev *ssram_pcidev = pmcdev->ssram_pcidev;
->> -	void __iomem __free(pmc_core_iounmap) *tmp_ssram = NULL;
->> -	void __iomem __free(pmc_core_iounmap) *ssram = NULL;
->> -	const struct pmc_reg_map *map;
->> +	void __iomem __free(pmc_ssram_telemetry_iounmap) * tmp_ssram = NULL;
->> +	void __iomem __free(pmc_ssram_telemetry_iounmap) * ssram = NULL;
->>   	u64 ssram_base, pwrm_base;
->>   	u16 devid;
->>   
->> -	if (!pmcdev->regmap_list)
->> -		return -ENOENT;
->> -
->> -	ssram_base = ssram_pcidev->resource[0].start;
->> +	ssram_base = pcidev->resource[0].start;
-> pci_resource_start()
-Will change in next version.
+> As far as I'm aware, the only way to share a mutex would be to point
+> to the private data between the two drivers, but I fully admit I could
+> be wrong about that=2E I'm waiting for comments before proceeding
+> further=2E
 >
->>   	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
->>   	if (!tmp_ssram)
->>   		return -ENOMEM;
->> @@ -107,45 +103,93 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, unsigned int pmc_idx, u32 offset)
->>   	devid = readw(ssram + SSRAM_DEVID_OFFSET);
->>   
->>   	/* Find and register and PMC telemetry entries */
->> -	pmc_add_pmt(pmcdev, ssram_base, ssram);
->> +	pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
->>   
->> -	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
->> -	if (!map)
->> +	pmc_ssram_telems[pmc_idx].devid = devid;
->> +	pmc_ssram_telems[pmc_idx].base_addr = pwrm_base;
->> +
->> +	return 0;
->> +}
->> +
->> +int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
->> +				     struct pmc_ssram_telemetry *pmc_ssram_telemetry)
->> +{
->> +	/*
->> +	 * PMCs are discovered in probe function. If this function is called before
->> +	 * probe function complete, the result would be invalid. Use device_probed
->> +	 * variable to avoid this case. Return -EAGAIN to inform the consumer to call
->> +	 * again later.
->> +	 */
->> +	if (!device_probed)
->> +		return -EAGAIN;
->> +
->> +	/*
->> +	 * Memory barrier is used to ensure the correct read order between
->> +	 * device_probed variable and PMC info.
->> +	 */
->> +	smp_rmb();
->> +	if (pmc_idx >= MAX_NUM_PMC)
->> +		return -EINVAL;
->> +
->> +	if (!pmc_ssram_telems || !pmc_ssram_telems[pmc_idx].devid)
->>   		return -ENODEV;
->>   
->> -	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
->> +	pmc_ssram_telemetry->devid = pmc_ssram_telems[pmc_idx].devid;
->> +	pmc_ssram_telemetry->base_addr = pmc_ssram_telems[pmc_idx].base_addr;
->> +	return 0;
->>   }
->> +EXPORT_SYMBOL_GPL(pmc_ssram_telemetry_get_pmc_info);
->>   
->> -int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func)
->> +static int intel_pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
->>   {
->> -	struct pci_dev *pcidev;
->>   	int ret;
->>   
->> -	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
->> -	if (!pcidev)
->> -		return -ENODEV;
->> +	pmc_ssram_telems = devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems) * MAX_NUM_PMC,
->> +					GFP_KERNEL);
->> +	if (!pmc_ssram_telems) {
->> +		ret = -ENOMEM;
->> +		goto probe_finish;
->> +	}
->>   
->>   	ret = pcim_enable_device(pcidev);
->> -	if (ret)
->> -		goto release_dev;
->> -
->> -	pmcdev->ssram_pcidev = pcidev;
->> +	if (ret) {
->> +		dev_dbg(&pcidev->dev, "failed to enable PMC SSRAM device\n");
->> +		goto probe_finish;
->> +	}
->>   
->> -	ret = pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_MAIN, 0);
->> +	ret = pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_MAIN, 0);
->>   	if (ret)
->> -		goto disable_dev;
->> -
->> -	pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
->> -	pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
->> -
->> -	return 0;
->> -
->> -disable_dev:
->> -	pmcdev->ssram_pcidev = NULL;
->> -	pci_disable_device(pcidev);
->> -release_dev:
->> -	pci_dev_put(pcidev);
->> -
->> +		goto probe_finish;
->> +
->> +	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
->> +	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
->> +
->> +probe_finish:
->> +	/*
->> +	 * Memory barrier is used to ensure the correct write order between PMC info
->> +	 * and device_probed variable.
->> +	 */
->> +	smp_wmb();
->> +	device_probed = true;
->>   	return ret;
->>   }
->> +
->> +static const struct pci_device_id intel_pmc_ssram_telemetry_pci_ids[] = {
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM) },
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCS) },
->> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCM) },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(pci, intel_pmc_ssram_telemetry_pci_ids);
->> +
->> +static struct pci_driver intel_pmc_ssram_telemetry_driver = {
->> +	.name = "intel_pmc_ssram_telemetry",
->> +	.id_table = intel_pmc_ssram_telemetry_pci_ids,
->> +	.probe = intel_pmc_ssram_telemetry_probe,
->> +};
->> +module_pci_driver(intel_pmc_ssram_telemetry_driver);
->> +
->>   MODULE_IMPORT_NS("INTEL_VSEC");
->> +MODULE_AUTHOR("Xi Pardee <xi.pardee@intel.com>");
->> +MODULE_DESCRIPTION("Intel PMC SSRAM Telemetry driver");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.h b/drivers/platform/x86/intel/pmc/ssram_telemetry.h
->> new file mode 100644
->> index 000000000000..459a29efebea
->> --- /dev/null
->> +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.h
->> @@ -0,0 +1,35 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Intel PMC SSRAM Telemetry PCI Driver Header File
->> + *
->> + * Copyright (c) 2024, Intel Corporation.
->> + */
->> +
->> +#ifndef PMC_SSRAM_H
->> +#define PMC_SSRAM_H
->> +
->> +/**
->> + * struct pmc_ssram_telemetry - Structure to keep pmc info in ssram device
->> + * @devid:		device id of the pmc device
->> + * @base_addr:		contains PWRM base address
->> + */
->> +struct pmc_ssram_telemetry {
->> +	u16 devid;
->> +	u64 base_addr;
->> +};
->> +
->> +/**
->> + * pmc_ssram_telemetry_get_pmc_info() - Get a PMC devid and base_addr information
->> + * @pmc_idx:               Index of the PMC
->> + * @pmc_ssram_telemetry:   pmc_ssram_telemetry structure to store the PMC information
->> + *
->> + * Return:
->> + * * 0           - Success
->> + * * -EAGAIN     - Probe function has not finished yet. Try again.
->> + * * -EINVAL     - Invalid pmc_idx
->> + * * -ENODEV     - PMC device is not available
->> + */
-> Usually, the function kernel doc is where the code is. This is not an end
-> of the world but it's even less likely the kerneldoc and code will keep in
-> synch if they reside in different files so preferrably put it into the .c
-> file.
-
-Will move it in ssram_telemetry.c in next version.
-
-Thanks!
-
-Xi
-
+> Thank you,
+> - Derek
 >
->> +int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
->> +				     struct pmc_ssram_telemetry *pmc_ssram_telemetry);
->> +
->> +#endif /* PMC_SSRAM_H */
->>
+
+Ilpo/Armin,
+
+Any thoughts on this? I've successfully tested passing the device pointer =
+for capability data to other mode and retrieving the accurate data when nee=
+ded; re-caching on ACPI AC change events=2E It seems to work well this way =
+and I'm able to contain the mutex in a single driver this way=2E I'd like a=
+ bit more than tacit approval of the concept before submitting the next ver=
+sion to avoid more unnecessary iterations if possible=2E
+
+Thanks,
+Derek
