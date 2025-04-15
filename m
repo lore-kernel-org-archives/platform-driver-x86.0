@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16002C1781
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Apr 2025 15:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4919D136349
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Apr 2025 15:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729212; cv=none; b=W9llEmK1vFW8pTENqWt4OcZ7v39iiLvFyDXLPUaR7m3nTIb4mhbegqKeLh/zSkf1xolpHP9eRPJEGzpMSYzxR6+ioTP2oUaa1Sq3MHxedHrn2ifutYNmOuyxIrQ2a0sZbFaptkvtTK7J8NhIRAgycblbH2YpFHr6n9+dDwM7npg=
+	t=1744729365; cv=none; b=VQV94MRm/KJCUGm1JgfW+s+eq3ejewz6B+V+f4j779deMMbzXdl4m3laVOwacIASLgtwCP/SwjoWB49KkOx3y/xeyis6BzjSYOl8MK69xudo3gzbAgF0zsBClzp6sxL5yp1RZzXDfdgYLFBn/oFEzFun0dX23NwhyecJkF5RaKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729212; c=relaxed/simple;
-	bh=Bf7EAW93QoCRFlQqHaQ5uVoS2rI4rVCbRyblV0CJZP8=;
+	s=arc-20240116; t=1744729365; c=relaxed/simple;
+	bh=GvUwK03zFTBqyUgpxF1kw7gHyjizLputrp+Hg8GMsow=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pmUgi1KSlHj/DvmpWJbrRvJwc/3mIFOD9vcaeox7Tc20R54pUGA2i3g7MhjK/idDnlJU7+jTuaUZDNVuHK0wFELvcN9XJikmujFCnD2Bvllr3gs17vLypiklWU1Pg7MSVTsdFCLcGKXnS6oPG3ZhnM9RedWRbFNt2rLTeCHSiTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azao2IAN; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=nxsW3IHAfhCLAg8sgrC5DtcumJPKfPZER7EmDcbKOPB37RA8AncNAGOIfC5uPhGCE6M/cb211YcssXLzaYhutORjISSIJD5kDVJwuyMsDEvdRBYGc9Qn7rxIT9FjnVjvV8w+Ie0UTYIyp/+lEppqqXiIaN5nsO+rhsWi/rmiHAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ptcc0JfF; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azao2IAN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ptcc0JfF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744729210; x=1776265210;
+  t=1744729363; x=1776265363;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Bf7EAW93QoCRFlQqHaQ5uVoS2rI4rVCbRyblV0CJZP8=;
-  b=azao2IANfVeZqCtsYnRfEq8ppV+mAvq9HWyr6wgX8luql/6KuqSGEcyj
-   zQHw811SnsfQwvvz1/h8/zsBMrpwaoH3x6GXUj31/K24gKQe03O1YZEbH
-   JHv/85mQjAayA/Oq2lwlg5rACkpcJk5Bp1ia1mUNdkcz+It0mrIigqzDh
-   /x1v7ss9njpIVKdpVkZGIs6gMDqc8kRC/C8OPtgR96+0MBoaaEiEnuITZ
-   QKdBHgIJTNCgD/Tt4c93QI7vYPD+EIUguzA6Nx4tKSxbAhDp7V7A7unYr
-   Zovn9zHp6BXqRaIuE6BP3paK7AW4/OAETa5RLNlqILpPgzr+v2/gXdsql
+  bh=GvUwK03zFTBqyUgpxF1kw7gHyjizLputrp+Hg8GMsow=;
+  b=Ptcc0JfF14+ZsXEEbOav6AghSXB06qHeCK8kfVh+xbsUUrUfhFpKqAOL
+   K470sIhZnE5+QnpwblYbZCFAhDrEl8YJpdPgF1YfXt/+pT2imnmGligMo
+   QowzrI7U6cdmloKY4Dkc+b4Omju/b6FI5UDc3a6mAB5ApLSCHwlDZ7ozv
+   icUfEF/K6m3pnVFwwtrarOIKc+JYE6jMLMq/9XbDwU8Sv8ZpllEJOb97E
+   WXFagDQjaMgIblYWn0HoH3fErw0rfOa244NUqWu84NqUSDMsPxzqq53sO
+   HPNK5ZMVt0rcoIelmVrbPq2MH6URnhpPpo7XTxIpcTBAOrDZYiN27chii
    A==;
-X-CSE-ConnectionGUID: K0MhMmUMSUCT3YtWkYHl5g==
-X-CSE-MsgGUID: B5iDprP/QDK7uuHyslYmEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="48941446"
+X-CSE-ConnectionGUID: v/StZvLUTeO8iPhn15lT2g==
+X-CSE-MsgGUID: b9S1gPK4QP6MK5pnHCSQEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="33860638"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="48941446"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:00:09 -0700
-X-CSE-ConnectionGUID: tiFfY84RTA+UFFyJXsYn4g==
-X-CSE-MsgGUID: huO4XH83SE+bQgF/8pqYDg==
+   d="scan'208";a="33860638"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:02:42 -0700
+X-CSE-ConnectionGUID: uLml/KFHQK6UmGW6yaVHZA==
+X-CSE-MsgGUID: jsniAd4nQsyOnCaJevzz4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="131118303"
+   d="scan'208";a="134249541"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:00:05 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:02:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Apr 2025 18:00:02 +0300 (EEST)
+Date: Tue, 15 Apr 2025 18:02:36 +0300 (EEST)
 To: Vadim Pasternak <vadimp@nvidia.com>
 cc: Hans de Goede <hdegoede@redhat.com>, michaelsh@nvidia.com, 
     crajank@nvidia.com, fradensky@nvidia.com, oleksandrs@nvidia.com, 
     platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH platform-next v8 6/7] platform: mellanox: nvsw-sn2200:
- Add support for new system flavour
-In-Reply-To: <20250412091843.33943-7-vadimp@nvidia.com>
-Message-ID: <63a14a9c-86f9-9ee6-0b0c-470cc0e0a9b9@linux.intel.com>
-References: <20250412091843.33943-1-vadimp@nvidia.com> <20250412091843.33943-7-vadimp@nvidia.com>
+Subject: Re: [PATCH platform-next v8 7/7] Documentation/ABI: Add new attribute
+ for mlxreg-io sysfs interfaces
+In-Reply-To: <20250412091843.33943-8-vadimp@nvidia.com>
+Message-ID: <08d67714-9657-bd4f-1fdf-58fe69483f72@linux.intel.com>
+References: <20250412091843.33943-1-vadimp@nvidia.com> <20250412091843.33943-8-vadimp@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,221 +64,143 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sat, 12 Apr 2025, Vadim Pasternak wrote:
 
-> Add support for SN2201 system flavour, which is fitting OCP rack
-> form-factor and feeded from external power source through the rack
-> standard busbar interface.
-> 
-> Validate system type through DMI decode.
-> For new system flavour:
-> - Skip internal power supply configuration.
-> - Attach power hotswap device.
+> Add documentation for the new attributes:
+> - Request and response for access to protetced flashes:
+>   "global_wp_request", "global_wp_response".
+>   Only for systems equipped with BMC - grant can be provided only by
+>   BMC in case its security policy allows to grant access.
+> - Request to unlock ASICs, which has been shutdown due-to ASIC thermal
+>   event: "shutdown_unlock".
+> - Data processor Units (DPU) boot progress: "boot_progress".
+> - DPU reset causes: "reset_aux_pwr_or_reload", "reset_dpu_thermal",
+>   "reset_from_main_board".
+> - Reset control for DPU components: "perst_rst", "phy_rst", "tpm_rst",
+>   "usbphy_rst".
+> - DPU Unified Fabric Manager upgrade - "ufm_upgrade".
+> - Hardware Id of Data Process Unit board - "dpu_id".
 > 
 > Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 > Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 > ---
->  drivers/platform/mellanox/nvsw-sn2201.c | 110 +++++++++++++++++++++++-
->  1 file changed, 107 insertions(+), 3 deletions(-)
+> v7->v8
+> Added by Vadim:
+> - Fix dates.
+> v5->v6
+> Comments pointed out by Ilpo:
+> - Fix dates.
+> ---
+>  .../ABI/stable/sysfs-driver-mlxreg-io         | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
 > 
-> diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
-> index 451d64c35c23..6f643e6ddb99 100644
-> --- a/drivers/platform/mellanox/nvsw-sn2201.c
-> +++ b/drivers/platform/mellanox/nvsw-sn2201.c
-> @@ -6,6 +6,7 @@
->   */
+> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> index 2cdfd09123da..acc0c9a9ac29 100644
+> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> @@ -715,3 +715,99 @@ Description:	This file shows 1 in case the system reset happened due to the
+>  		switch board.
 >  
->  #include <linux/device.h>
-> +#include <linux/dmi.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> @@ -104,6 +105,9 @@
->  	| NVSW_SN2201_CPLD_AGGR_PSU_MASK_DEF \
->  	| NVSW_SN2201_CPLD_AGGR_PWR_MASK_DEF \
->  	| NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF)
-> +#define NVSW_SN2201_CPLD_AGGR_BUSBAR_MASK_DEF \
-> +	(NVSW_SN2201_CPLD_AGGR_ASIC_MASK_DEF \
-> +	| NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF)
->  
->  #define NVSW_SN2201_CPLD_ASIC_MASK		GENMASK(3, 1)
->  #define NVSW_SN2201_CPLD_PSU_MASK		GENMASK(1, 0)
-> @@ -132,6 +136,7 @@
->   * @cpld_devs: I2C devices for cpld;
->   * @cpld_devs_num: number of I2C devices for cpld;
->   * @main_mux_deferred_nr: I2C adapter number must be exist prior creating devices execution;
-> + * @ext_pwr_source: 1 if system powered by external power supply; 0 - by internal;
->   */
->  struct nvsw_sn2201 {
->  	struct device *dev;
-> @@ -152,6 +157,7 @@ struct nvsw_sn2201 {
->  	struct mlxreg_hotplug_device *cpld_devs;
->  	int cpld_devs_num;
->  	int main_mux_deferred_nr;
-> +	u8 ext_pwr_source;
-
-Why is this u8? Wouldn't bool make more sense?
-
->  };
->  
->  static bool nvsw_sn2201_writeable_reg(struct device *dev, unsigned int reg)
-> @@ -522,6 +528,35 @@ struct mlxreg_core_hotplug_platform_data nvsw_sn2201_hotplug = {
->  	.mask = NVSW_SN2201_CPLD_AGGR_MASK_DEF,
->  };
->  
-> +static struct mlxreg_core_item nvsw_sn2201_busbar_items[] = {
-> +	{
-> +		.data = nvsw_sn2201_fan_items_data,
-> +		.aggr_mask = NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF,
-> +		.reg = NVSW_SN2201_FAN_PRSNT_STATUS_OFFSET,
-> +		.mask = NVSW_SN2201_CPLD_FAN_MASK,
-> +		.count = ARRAY_SIZE(nvsw_sn2201_fan_items_data),
-> +		.inversed = 1,
-> +		.health = false,
-> +	},
-> +	{
-> +		.data = nvsw_sn2201_sys_items_data,
-> +		.aggr_mask = NVSW_SN2201_CPLD_AGGR_ASIC_MASK_DEF,
-> +		.reg = NVSW_SN2201_ASIC_STATUS_OFFSET,
-> +		.mask = NVSW_SN2201_CPLD_ASIC_MASK,
-> +		.count = ARRAY_SIZE(nvsw_sn2201_sys_items_data),
-> +		.inversed = 1,
-> +		.health = false,
-> +	},
-> +};
+>  		The file is read only.
 > +
-> +static
-> +struct mlxreg_core_hotplug_platform_data nvsw_sn2201_busbar_hotplug = {
-> +	.items = nvsw_sn2201_items,
-> +	.count = ARRAY_SIZE(nvsw_sn2201_busbar_items),
-> +	.cell = NVSW_SN2201_SYS_INT_STATUS_OFFSET,
-> +	.mask = NVSW_SN2201_CPLD_AGGR_BUSBAR_MASK_DEF,
-> +};
-> +
->  /* SN2201 static devices. */
->  static struct i2c_board_info nvsw_sn2201_static_devices[] = {
->  	{
-> @@ -557,6 +592,9 @@ static struct i2c_board_info nvsw_sn2201_static_devices[] = {
->  	{
->  		I2C_BOARD_INFO("pmbus", 0x40),
->  	},
-> +	{
-> +		I2C_BOARD_INFO("lm5066i", 0x15),
-> +	},
->  };
->  
->  /* SN2201 default static board info. */
-> @@ -607,6 +645,58 @@ static struct mlxreg_hotplug_device nvsw_sn2201_static_brdinfo[] = {
->  	},
->  };
->  
-> +/* SN2201 default basbar static board info. */
-> +static struct mlxreg_hotplug_device nvsw_sn2201_busbar_static_brdinfo[] = {
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[0],
-> +		.nr = NVSW_SN2201_MAIN_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[1],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[2],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[3],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[4],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH3_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[5],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[6],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[7],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[8],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH6_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[9],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH6_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[10],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH7_NR,
-> +	},
-> +	{
-> +		.brdinfo = &nvsw_sn2201_static_devices[11],
-> +		.nr = NVSW_SN2201_MAIN_MUX_CH1_NR,
-> +	},
-> +};
-> +
->  /* LED default data. */
->  static struct mlxreg_core_data nvsw_sn2201_led_data[] = {
->  	{
-> @@ -981,7 +1071,10 @@ static int nvsw_sn2201_config_init(struct nvsw_sn2201 *nvsw_sn2201, void *regmap
->  	nvsw_sn2201->io_data = &nvsw_sn2201_regs_io;
->  	nvsw_sn2201->led_data = &nvsw_sn2201_led;
->  	nvsw_sn2201->wd_data = &nvsw_sn2201_wd;
-> -	nvsw_sn2201->hotplug_data = &nvsw_sn2201_hotplug;
-> +	if (nvsw_sn2201->ext_pwr_source)
-> +		nvsw_sn2201->hotplug_data = &nvsw_sn2201_busbar_hotplug;
-> +	else
-> +		nvsw_sn2201->hotplug_data = &nvsw_sn2201_hotplug;
->  
->  	/* Register IO access driver. */
->  	if (nvsw_sn2201->io_data) {
-> @@ -1198,12 +1291,18 @@ static int nvsw_sn2201_config_pre_init(struct nvsw_sn2201 *nvsw_sn2201)
->  static int nvsw_sn2201_probe(struct platform_device *pdev)
->  {
->  	struct nvsw_sn2201 *nvsw_sn2201;
-> +	const char *sku;
->  	int ret;
->  
->  	nvsw_sn2201 = devm_kzalloc(&pdev->dev, sizeof(*nvsw_sn2201), GFP_KERNEL);
->  	if (!nvsw_sn2201)
->  		return -ENOMEM;
->  
-> +	/* Validate system powering type. */
-> +	sku = dmi_get_system_info(DMI_PRODUCT_SKU);
-> +	if (!strcmp(sku, "HI168"))
+> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_request
+> +Date:		April 2025
+> +KernelVersion:	6.15
 
-Will one entry suffice or should this be table based right from the start?
-
-> +		nvsw_sn2201->ext_pwr_source = 1;
-> +
->  	nvsw_sn2201->dev = &pdev->dev;
->  	platform_set_drvdata(pdev, nvsw_sn2201);
->  	ret = platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
-> @@ -1214,8 +1313,13 @@ static int nvsw_sn2201_probe(struct platform_device *pdev)
->  	nvsw_sn2201->main_mux_deferred_nr = NVSW_SN2201_MAIN_MUX_DEFER_NR;
->  	nvsw_sn2201->main_mux_devs = nvsw_sn2201_main_mux_brdinfo;
->  	nvsw_sn2201->cpld_devs = nvsw_sn2201_cpld_brdinfo;
-> -	nvsw_sn2201->sn2201_devs = nvsw_sn2201_static_brdinfo;
-> -	nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_static_brdinfo);
-> +	if (nvsw_sn2201->ext_pwr_source) {
-> +		nvsw_sn2201->sn2201_devs = nvsw_sn2201_busbar_static_brdinfo;
-> +		nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_busbar_static_brdinfo);
-> +	} else {
-> +		nvsw_sn2201->sn2201_devs = nvsw_sn2201_static_brdinfo;
-> +		nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_static_brdinfo);
-> +	}
->  
->  	return nvsw_sn2201_config_pre_init(nvsw_sn2201);
->  }
-> 
-
-Unrelated to this patch, .acpi_match_table is misindented in this file.
+I really wish we wouldn't need to do this... Once again, these are 
+outdated.
 
 -- 
  i.
 
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	This file when written 1 activates request to allow access to
+> +		the write protected flashes. Such request can be performed only
+> +		for system equipped with BMC (Board Management Controller),
+> +		which can grant access to protected flashes. In case BMC allows
+> +		access - it will respond with "global_wp_response". BMC decides
+> +		regarding time window of granted access. After granted window is
+> +		expired, BMC will change value back to 0.
+> +		Default value is 0.
+> +
+> +		The file is read/write.
+> +
+> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_response
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	This file, when set 1, indicates that access to protected
+> +		flashes have been granted to host CPU by BMC.
+> +		Default value is 0.
+> +
+> +		The file is read only.
+> +
+> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/shutdown_unlock
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak vadimp@nvidia.com
+> +Description:	When ASICs are getting overheated, system protection
+> +		hardware mechanism enforces system reboot. After system
+> +		reboot ASICs come up in locked state. To unlock ASICs,
+> +		this file should be written 1
+> +		Default value is 0.
+> +
+> +		The file is read/write.
+> +
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/boot_progress
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	These files show the Data Process Unit board boot progress
+> +		state. Valid states are:
+> +		- 4 : OS starting.
+> +		- 5 : OS running.
+> +		- 6 : Low-Power Standby.
+> +
+> +		The file is read only.
+> +
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/dpu_id
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	This file shows hardware Id of Data Process Unit board.
+> +
+> +		The file is read only.
+> +
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_aux_pwr_or_reload
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_dpu_thermal
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_from_main_board
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	These files show the Data Process Unit board reset cause, as
+> +		following: reset due to power auxiliary outage or power reload, reset
+> +		due to thermal shutdown, reset due to request from main board.
+> +		Value 1 in file means this is reset cause, 0 - otherwise. Only one of
+> +		the above causes could be 1 at the same time, representing only last
+> +		reset cause.
+> +
+> +		The files are read only.
+> +
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/perst_rst
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/phy_rst
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/tpm_rst
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/usbphy_rst
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	These files allow to reset hardware components of Data Process
+> +		Unit board. Respectively PCI, Ethernet PHY, TPM and USB PHY
+> +		resets.
+> +		Default values for all the attributes is 1. Writing 0 will
+> +		cause reset of the related component.
+> +
+> +		The files are read/write.
+> +
+> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/ufm_upgrade
+> +Date:		April 2025
+> +KernelVersion:	6.15
+> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> +Description:	These files show status of Unified Fabric Manager upgrade.
+> +		state. 0 - means upgrade is done, 1 - otherwise.
+> +
+> +		The file is read only.
+> 
