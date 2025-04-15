@@ -1,119 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D70297A68;
-	Tue, 15 Apr 2025 13:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3262413AA53;
+	Tue, 15 Apr 2025 14:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723347; cv=none; b=J5GHL28e4ymcdM8auiDlKsPJXq4lWljdZ8fiE6f4kKunYUhrX4ehUb8RaDiZyVR6c6jDtAQbMKvGgu60poCbLXU9bvi14Mb+8dtUD2NGrHBmg5JDsQGH64p6GhQRi8Mi37OQF9qBx8AkoPEE5miLzKSWfH/KArO84iJEmBkpFXQ=
+	t=1744726375; cv=none; b=OBviH2To+vAfzdyiOrKawCP2Ian1A6/9xKRCOzeAGIswf0nYGp6q+VkzXA/u94ORBFtp0xQ/DoRjfG2ciqtUMK6ZzjRRDOp/FEoZ5XdC05r1EchH3zQFSoF+7RzEoUSBGlPdYEviEtGFcB1OYAwIf8sj7eAK219yrdVZUscQB/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723347; c=relaxed/simple;
-	bh=RRW47R1L7/5mlFWx4w8Iz2jOualfmecSBafClG5oO7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o53wxbpHFQKcssLJibyC6ypMGvidzUKtvOnvJE4lTkIyHRy0no3Lw/hIkq2AjaSrqrgEPUh5n8Z2gPRm3Vao+el1M1BmTcPFMoFtN3XlQV1t3Lo459y4sLhUNsmoLIaTSQ/ImD2RjmhdQAO0z97GJin5XD6C7RzV8ZdFuR/m4yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EZ43ARME; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744726375; c=relaxed/simple;
+	bh=tPsF5KmvU8YLuirrBM+XJ6P5LFS3RlhTuzc6LYXAh6E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VprsxCiZGzYMERyj3eUb6v/i4bGP4P4xi+mvrmX1T9shAGPXs4O7O/LPP4OOIscpY0PTAZeYXbjj8jIDGodSGYhAY5eRc4AWDsJVy5B4SPLikCPL/0kXvRQnWXwdSSu7EMFQoBgZeL7SfruSKiRBhm8kpLfauy+Xhb/LFT8uppY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eHgBPy63; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EZ43ARME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF09C4CEDD;
-	Tue, 15 Apr 2025 13:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744723346;
-	bh=RRW47R1L7/5mlFWx4w8Iz2jOualfmecSBafClG5oO7w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EZ43ARME0oN0cZwYNSw0w8v/oqZQVtsnKvLPa+61dXAl0xfbNV5WsjKmuwtYuqoWa
-	 l70CaLBbqw3lS1d6ftYnd0AdLEFRyxwRR+DBeVImrTw1HKryvX9nWAHdx2PRVrekSU
-	 0xPfp3YvGyuZ8Toq9mhyEA90JZvkFS5z9EL1gm1Y=
-Date: Tue, 15 Apr 2025 15:22:24 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Douglas Anderson <dianders@chromium.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-clk@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v4 1/8] driver core: auxiliary bus: add device creation
- helpers
-Message-ID: <2025041506-unrented-props-6226@gregkh>
-References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
- <20250218-aux-device-create-helper-v4-1-c3d7dfdea2e6@baylibre.com>
- <2025021938-swan-facedown-e96a@gregkh>
- <1jecxtwpr4.fsf@starbuckisacylon.baylibre.com>
- <2025041508-remix-plasma-cd47@gregkh>
- <1j8qo1woxd.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eHgBPy63"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744726374; x=1776262374;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=tPsF5KmvU8YLuirrBM+XJ6P5LFS3RlhTuzc6LYXAh6E=;
+  b=eHgBPy63c6YkOMaX2GCamIgVBOFDiKfLPuqOCnrZKfup+0BDUQSA4NDI
+   CWReIpvD6+Vi8xXxDdKFW/u6s9FRMyWf7/8H9v8vKgLiOzOqQKkSZGl3p
+   9TNyetljXa6ppsFVQn4ZmEa0YYdUUcMGXrvNJNFC1+EF3aBM6AiKPFpiW
+   yBxGjTLhCWUFBwUiNhfu8n0hTl76pQuVuxCbf4aUkbEY7x6STMeqT4P7b
+   IeSCEtanjJF0sPeargjVx+QX8yrGlzSgT0fWHJT5DX4+m3X9id+VCmEoB
+   xuURaTGr8iW8wsdkW+e/z4VpByvQ4yffEfA9BXXnFcH04AFhNvN2dhVJS
+   A==;
+X-CSE-ConnectionGUID: 1YFjE3jXSGygYEMFtaVi/A==
+X-CSE-MsgGUID: BHvqSi3aT92LAAVLcc1xkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="45950321"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45950321"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 07:08:49 -0700
+X-CSE-ConnectionGUID: GMRC9y8OTLW/T6cjFAE8dQ==
+X-CSE-MsgGUID: 87LF8UZRRJOt69b1SMku4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130156434"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 07:08:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20250411-awcc-support-v1-0-09a130ec4560@gmail.com>
+References: <20250411-awcc-support-v1-0-09a130ec4560@gmail.com>
+Subject: Re: [PATCH 0/2] platform/x86: alienware-wmi-wmax: Extend support
+ to more laptops
+Message-Id: <174472612155.1885.731492109641946522.b4-ty@linux.intel.com>
+Date: Tue, 15 Apr 2025 17:08:41 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1j8qo1woxd.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Tue, Apr 15, 2025 at 03:10:38PM +0200, Jerome Brunet wrote:
-> On Tue 15 Apr 2025 at 14:59, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Tue, Apr 15, 2025 at 02:52:47PM +0200, Jerome Brunet wrote:
-> >> On Wed 19 Feb 2025 at 15:20, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >> 
-> >> > On Tue, Feb 18, 2025 at 08:29:46PM +0100, Jerome Brunet wrote:
-> >> >> Add helper functions to create a device on the auxiliary bus.
-> >> >> 
-> >> >> This is meant for fairly simple usage of the auxiliary bus, to avoid having
-> >> >> the same code repeated in the different drivers.
-> >> >> 
-> >> >> Suggested-by: Stephen Boyd <sboyd@kernel.org>
-> >> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> >> >
-> >> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> 
-> >> Hey Greg,
-> >> 
-> >> Do you need me to do something else on this topic ?
-> >
-> > I don't know what tree it is going through, do you?  If you want me to
-> > take in the driver-core tree, just let me know.
-> 
-> For patch #1, I think driver-core would be appropriate, unless there is
-> something more specific for the auxiliary device support ?
-> 
-> I'll wait for this sink into an rc1, then resubmit the different driver
-> changes to the appropriate tree, no rush.
+On Fri, 11 Apr 2025 11:14:34 -0300, Kurt Borja wrote:
 
-Ok, will take just the first one then, thanks.
+> This two patches are based on the pdx86/fixes branch.
+> 
+> To: Hans de Goede <hdegoede@redhat.com>
+> To: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> To: Armin Wolf <W_Armin@gmx.de>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Dell.Client.Kernel@dell.com
+> Cc: linux-kernel@vger.kernel.org
+> 
+> [...]
 
-greg k-h
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/2] platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1
+      commit: 5ff79cabb23a2f14d2ed29e9596aec908905a0e6
+[2/2] platform/x86: alienware-wmi-wmax: Extend support to more laptops
+      commit: 202a861205905629c5f10ce0a8358623485e1ae9
+
+--
+ i.
+
