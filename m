@@ -1,110 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D771DDC3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Apr 2025 18:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A770722EE5;
+	Tue, 15 Apr 2025 00:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744656945; cv=none; b=qRQ25vtCb5uFoGRtBmIemz+mrON2IFFsjOAzYySdLjnNvDQDoqzaazJGUCgz16WFyJEZ2iCjYoFM02Ielt1F7HNJAFeV/vswD8mIFHJ28sILV1OWGTgweho/bPzsRFNagHP0bpkIj/rjpHR7jlVsoSop7X1QB1U1ExOlJ0CAtvI=
+	t=1744676829; cv=none; b=CJGSiAR4vbjqA/omrgE5YQ7WWiO9BWomS+sJh3Qt/Wz2akR4SAsYk7qVBrYGvlyFMWjKqQvJBDIej4eXkwEmMPPdKrDT+9hVBxpfJAzFGifWRxhWvZzHf4pIoreODhk1Fp6UBwho4anav1UWEHAGykCZiuctSC2dMKD9x/KS0RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744656945; c=relaxed/simple;
-	bh=jv0lb2w5Y14cMCa+SLFO36ht9UF75rnB928VxYN/In0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U1Jy/vomcicpfQnjeunKRFd9PMjYBYFx4QziZAcw4bfJvkHm1bbfEjYRkWtZYtnNjB5dwB8W4A0x66XqlDDf3JRiwedHInLk9DRuJ8pmc86eyLrH07RxG3WbBKrI4jgphesG+8fy3oNUYKEj0r8+/lNKM0CZumpIkJBo1T6/2zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s21qCRrv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744676829; c=relaxed/simple;
+	bh=VDrgLWXQk8FiV60XkK5+r/FpnVo7AmyeJHgjunrOGqI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PltIH5Cmbx08oWWRmYDXVhAz7PoGohRk++N6blBB8jNWfDHvQ3Qaq9zfallqObN63i8KXGQSUYR5MP3eEP78WgdYssqXwEcSHIcb0e7iuWw8rXU5nvPu+FCx6kux64vXO4RL+fMNNY1UgN8UCZUUxCd/q3f9riyKQ/xjCCl1Y1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6M1XjD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s21qCRrv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7539EC4CEEE
-	for <platform-driver-x86@vger.kernel.org>; Mon, 14 Apr 2025 18:55:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6M1XjD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E8DC4CEE2;
+	Tue, 15 Apr 2025 00:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744656944;
-	bh=jv0lb2w5Y14cMCa+SLFO36ht9UF75rnB928VxYN/In0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=s21qCRrvobgYpmSXgKWOnyOo5VdWSh19xMh4HLD4Su2pL5vmWh8TThm8ov/nzRvA2
-	 De1MO88/g2mYNjmVuvO2vC4ThU6OVh4mzM5Cog7yVcj6vUphhzd12bTdbXU5iZwVq7
-	 zpJD54llm7GOsEvxc7M5m6FkHENyzc6ZBB7gAkprCWrowBK+pCU9CWNRe48APuskHj
-	 zzC+l42UpeI13UTYO4oNQ5//5+Du7+eoqVMJ5BiRrng+I+pWPmJzPxCxPNWGiV2MIc
-	 g+EroGcYZ3k2LGopplu0ruRMKguPqXFqEI+UGoKZqtGuyFPO73lX1yvDiIqpTb1r2r
-	 tJtaCHprpO0xA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6CDBCC4160E; Mon, 14 Apr 2025 18:55:44 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date: Mon, 14 Apr 2025 18:55:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-204807-215701-6UYJqjoH06@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1744676829;
+	bh=VDrgLWXQk8FiV60XkK5+r/FpnVo7AmyeJHgjunrOGqI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S6M1XjD2/2UKgoB4q5rK2dKcAs4hmcZ/FWUuJ21hraF6Lcpsvi8luBmZFc9ZmA2Bv
+	 iN6Sr5GPRtIlyyI+NJxjRs0FrkGzvk9qYc+Qn3gY1k+y4uZuuffLsPIHa3Z3l9n6YO
+	 k2cCIuuYcZ+uQqiUcJcWerHTwWRcMEo4hxXO6UiHlYYh9gz4sNsaxSEdNnpPVdY94B
+	 sawIjcZaNX+CuudHx4hZYrKCD7R0WlsGe9UFbMWkIn2YERWGWeNLo0wqTbZ4KmM/DN
+	 nAm6dOx1RhCek29pdhlSwmPt2SgcevVTTEGziKiN67bww5wH9SU3VDAmA7cHTrWz8Y
+	 alInemLFb0Kjw==
+From: Mario Limonciello <superm1@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER)
+Subject: [PATCH v4 0/5] AMD Zen debugging documentation
+Date: Mon, 14 Apr 2025 19:26:53 -0500
+Message-ID: <20250415002658.1320419-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Denis Pauk (pauk.denis@gmail.com) changed:
+Introduce documentation for debugging some issues on AMD zen hardware.
+As one of the debugging techniques read and add information for
+S5_RESET_STATUS register.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #304223|0                           |1
-        is obsolete|                            |
+v4:
+ * Move documentation file
+ * Feedback on documentation (see patch)
+ * Move headers to fch.h
+ * Use suggestion from Ingo about the loop for patch 5
+ * Add patch for lkp failure
 
---- Comment #346 from Denis Pauk (pauk.denis@gmail.com) ---
-Created attachment 307964
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307964&action=3Dedit
-Asus WMI for nct6775 v6.14 base (2025.04.14)
+Mario Limonciello (4):
+  Documentation: Add AMD Zen debugging document
+  i2c: piix4: Depends on X86
+  i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd/fch.h
+  platform/x86/amd: pmc: use FCH_PM_BASE definition
 
-(In reply to stonetek from comment #345)
-> (In reply to Denis Pauk from comment #344)
-> > Previously i had checked build with steps like, clone
-> > git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git, checkout
-> v6.3
-> >  * apply patch from #327, add "DMI_MATCH_ASUS_WMI_BOARD("MAXIMUS VIII
-> GENE",
-> > &acpi_board_ILPC_MUTEX)," to asus_wmi_info_table, build new kernel with
-> > instructions from
-> > https://github.com/asus-wmi-boards-sensors/asus-board-dsdt?tab=3Dreadme=
--ov-
-> > file#kernel-build
->=20
-> Could you please rebase on a more recent kernel? Thanks for your effort
+Yazen Ghannam (1):
+  x86/CPU/AMD: Print the reason for the last reset
 
+ Documentation/arch/x86/amd-debugging.rst  | 312 ++++++++++++++++++++++
+ Documentation/arch/x86/index.rst          |   1 +
+ Documentation/arch/x86/resume.svg         |   4 +
+ Documentation/arch/x86/suspend.svg        |   4 +
+ arch/x86/include/asm/amd/fch.h            |  14 +
+ arch/x86/kernel/cpu/amd.c                 |  64 +++++
+ drivers/i2c/busses/Kconfig                |   2 +-
+ drivers/i2c/busses/i2c-piix4.c            |  18 +-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c |   3 +-
+ 9 files changed, 411 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/arch/x86/amd-debugging.rst
+ create mode 100644 Documentation/arch/x86/resume.svg
+ create mode 100644 Documentation/arch/x86/suspend.svg
+ create mode 100644 arch/x86/include/asm/amd/fch.h
 
-Thank you!
+-- 
+2.43.0
 
-Updated patch rebased over v6.14 kernel release, only build is tested.
-
-Additionally code has support for
-G15CE,
-Pro WS TRX50-SAGE WIFI,
-Pro WS WRX90E-SAGE SE.
-
-If you have such boards, please share result of testing.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
