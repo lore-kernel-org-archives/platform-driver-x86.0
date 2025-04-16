@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2551B960
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Apr 2025 12:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E989386334
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Apr 2025 12:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807260; cv=none; b=MxdPE6nW/OTuq0Ps+I/OIuRIzdmB62Qye0ESnd19LiuXBgetPIWBno4u75s1C6WrtTbDiCtABH23cSGfDsX76Rq3H93HE03iZRjXVGdapd55dPc0VGl56KDurjzw4qNvRA9KvWTe0zKROdb4SQVbL+ymrskIh798bELkjLbyU4k=
+	t=1744807268; cv=none; b=CG1+Tjnrlzc8SC5aC7MsTyYZ+X84lGj8/yuIgZrTHRlhIWDqDMQTni4QpPuVZ9w1Tqh9X+AWIP+jrsD27+1Ji6zxaeqd5Ug8yHxAYWdf7ht+6Zb3h/VN1h7L+UYXdmEL6SnAWfIEi2trOIxg5AS+STC6QA6THVWQeT2RGgS9gYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807260; c=relaxed/simple;
-	bh=DF9uLVCmcppGaYrzAQ/097853xSxX5JBUgPcUUDVnAI=;
+	s=arc-20240116; t=1744807268; c=relaxed/simple;
+	bh=nVnBfmspl+DON/YD3BIcEG78H4IhwBM2t0pL72M0Zjc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uFbmL6slhkFkIl62iZcOA/7/DThlLHYOw+74wWTmDy4gfNFuZ7W2NXASFZueUkq5A3D7R0G7dwmbD8dozwu5FtD5p0DIRDA5amL4xA8bwyGPi8Mt49hp5RKOjf3jfF9z/YtR8Mkox4vRSSde6nb0KIhsEJSHSoSUCihhebM/JEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MS82Zqgj; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=LZLdaBOkFF0kj4itFRx9lmxMlHiyXuj2HkG/YKVAlnceCvz866rZ8HOwbATDMwgmQOLXzWknHThBPRpbkSKNAS8K4Pay9TeTASwdwIUp9YKnn5zYmoyKTaRsfJUFv/RSGiaaZA3HfjL6jLqlppop/FxswX6Z2y6PGoCfc29wkgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EajfQF7J; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MS82Zqgj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EajfQF7J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744807257;
+	s=mimecast20190719; t=1744807262;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nqvRoUOS45eqYZyUu/oyin/hyEkH6Sk3qKL5WSi0Vdk=;
-	b=MS82Zqgjr7nqti3jlheoZi86LuON9AaFy5nDfZJBikUXxcZZAUbxCHl4wXRFv7fRCZxCRM
-	FDCdjBy6rNXoqpQ3wi41TR1s9bwLadcxtiMxpMdtGu4lYgmUpH7uIkAy5OfBNz1nurvsal
-	pAxvQrUYK4hcc66RVj55GExlzOS9FeE=
+	bh=XlHtPHUZ660q5i4ytAKPVW+2iA+L4bNpvIUVcx+G3mQ=;
+	b=EajfQF7JY8hoi13BkcA+/wvXsOWfMjWfil7O5ItvVBuj2BP/++Kcqm2cnigfIZrbniwEJX
+	c/k7AurTZCEOW3arLF0YYCxuMSNgdC/KYuQorcp5Tv/JNC7BF8onRMVSEosc/SjMD4mQ3I
+	Un15LQfMmoC/6oJKFla4B8++2XIB42I=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-htXx4iO6O4yelGN8L-zuRQ-1; Wed,
- 16 Apr 2025 08:40:54 -0400
-X-MC-Unique: htXx4iO6O4yelGN8L-zuRQ-1
-X-Mimecast-MFC-AGG-ID: htXx4iO6O4yelGN8L-zuRQ_1744807252
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-wm1i2jF8OZKOPVGdqXU6Kg-1; Wed,
+ 16 Apr 2025 08:40:58 -0400
+X-MC-Unique: wm1i2jF8OZKOPVGdqXU6Kg-1
+X-Mimecast-MFC-AGG-ID: wm1i2jF8OZKOPVGdqXU6Kg_1744807256
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3300518004A9;
-	Wed, 16 Apr 2025 12:40:52 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3297E180087A;
+	Wed, 16 Apr 2025 12:40:56 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.44.34.142])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A6F1E195608D;
-	Wed, 16 Apr 2025 12:40:48 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ADEEE195608D;
+	Wed, 16 Apr 2025 12:40:52 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>
@@ -54,9 +54,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Duane <duanek@chorus.net>,
 	platform-driver-x86@vger.kernel.org,
 	linux-media@vger.kernel.org
-Subject: [PATCH v3 1/9] platform/x86: int3472: Add skl_int3472_register_clock() helper
-Date: Wed, 16 Apr 2025 14:40:29 +0200
-Message-ID: <20250416124037.90508-2-hdegoede@redhat.com>
+Subject: [PATCH v3 2/9] platform/x86: int3472: Stop setting a supply-name for GPIO regulators
+Date: Wed, 16 Apr 2025 14:40:30 +0200
+Message-ID: <20250416124037.90508-3-hdegoede@redhat.com>
 In-Reply-To: <20250416124037.90508-1-hdegoede@redhat.com>
 References: <20250416124037.90508-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -68,106 +68,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-skl_int3472_register_dsm_clock() and skl_int3472_register_gpio_clock() are
-80% the same code. Factor out the common code into a new
-skl_int3472_register_clock() helper.
+The supply_name field is not mandatory and is supposed to be set to
+the name of another regulator when it is known that the regulator being
+registered is supplied by that other regulator.
+
+Having a regulator supplying the regulator which is being registered does
+not apply to the INT3472 GPIO regulator, stop setting a supply_name.
 
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- .../x86/intel/int3472/clk_and_regulator.c     | 57 +++++--------------
- 1 file changed, 13 insertions(+), 44 deletions(-)
+ drivers/platform/x86/intel/int3472/clk_and_regulator.c | 3 ---
+ drivers/platform/x86/intel/int3472/common.h            | 5 +----
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 16e36ac0a7b4..837990af24fe 100644
+index 837990af24fe..40434591dd0b 100644
 --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
 +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -118,7 +118,7 @@ static const struct clk_ops skl_int3472_clock_ops = {
- 	.recalc_rate = skl_int3472_clk_recalc_rate,
- };
+@@ -256,12 +256,9 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 	snprintf(int3472->regulator.regulator_name,
+ 		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
+ 		 acpi_dev_name(int3472->adev));
+-	snprintf(int3472->regulator.supply_name,
+-		 GPIO_REGULATOR_SUPPLY_NAME_LENGTH, "supply-0");
  
--int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
-+static int skl_int3472_register_clock(struct int3472_discrete_device *int3472)
- {
- 	struct acpi_device *adev = int3472->adev;
- 	struct clk_init_data init = {
-@@ -127,12 +127,6 @@ int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
- 	};
- 	int ret;
+ 	int3472->regulator.rdesc = INT3472_REGULATOR(
+ 						int3472->regulator.regulator_name,
+-						int3472->regulator.supply_name,
+ 						&int3472_gpio_regulator_ops);
  
--	if (int3472->clock.cl)
--		return 0; /* A GPIO controlled clk has already been registered */
--
--	if (!acpi_check_dsm(adev->handle, &img_clk_guid, 0, BIT(1)))
--		return 0; /* DSM clock control is not available */
--
- 	init.name = kasprintf(GFP_KERNEL, "%s-clk", acpi_dev_name(adev));
- 	if (!init.name)
- 		return -ENOMEM;
-@@ -161,51 +155,26 @@ int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
- 	return ret;
- }
+ 	int3472->regulator.gpio = gpio;
+diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+index 145dec66df64..72ef222629b6 100644
+--- a/drivers/platform/x86/intel/int3472/common.h
++++ b/drivers/platform/x86/intel/int3472/common.h
+@@ -27,17 +27,15 @@
+ #define INT3472_MAX_SENSOR_GPIOS				3
  
-+int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int3472)
-+{
-+	if (int3472->clock.cl)
-+		return 0; /* A GPIO controlled clk has already been registered */
-+
-+	if (!acpi_check_dsm(int3472->adev->handle, &img_clk_guid, 0, BIT(1)))
-+		return 0; /* DSM clock control is not available */
-+
-+	return skl_int3472_register_clock(int3472);
-+}
-+
- int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3472,
- 				    struct gpio_desc *gpio)
- {
--	struct clk_init_data init = {
--		.ops = &skl_int3472_clock_ops,
--		.flags = CLK_GET_RATE_NOCACHE,
--	};
--	int ret;
--
- 	if (int3472->clock.cl)
- 		return -EBUSY;
+ #define GPIO_REGULATOR_NAME_LENGTH				21
+-#define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
+ #define GPIO_REGULATOR_SUPPLY_MAP_COUNT				2
  
- 	int3472->clock.ena_gpio = gpio;
+ #define INT3472_LED_MAX_NAME_LEN				32
  
--	init.name = kasprintf(GFP_KERNEL, "%s-clk",
--			      acpi_dev_name(int3472->adev));
--	if (!init.name)
--		return -ENOMEM;
--
--	int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
--
--	int3472->clock.clk_hw.init = &init;
--	int3472->clock.clk = clk_register(&int3472->adev->dev,
--					  &int3472->clock.clk_hw);
--	if (IS_ERR(int3472->clock.clk)) {
--		ret = PTR_ERR(int3472->clock.clk);
--		goto out_free_init_name;
--	}
--
--	int3472->clock.cl = clkdev_create(int3472->clock.clk, NULL,
--					  int3472->sensor_name);
--	if (!int3472->clock.cl) {
--		ret = -ENOMEM;
--		goto err_unregister_clk;
--	}
--
--	kfree(init.name);
--	return 0;
--
--err_unregister_clk:
--	clk_unregister(int3472->clock.clk);
--out_free_init_name:
--	kfree(init.name);
--
--	return ret;
-+	return skl_int3472_register_clock(int3472);
- }
+ #define CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET			86
  
- void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
+-#define INT3472_REGULATOR(_name, _supply, _ops)			\
++#define INT3472_REGULATOR(_name, _ops)				\
+ 	(const struct regulator_desc) {				\
+ 		.name = _name,					\
+-		.supply_name = _supply,				\
+ 		.type = REGULATOR_VOLTAGE,			\
+ 		.ops = _ops,					\
+ 		.owner = THIS_MODULE,				\
+@@ -82,7 +80,6 @@ struct int3472_discrete_device {
+ 		/* SUPPLY_MAP_COUNT * 2 to make room for second sensor mappings */
+ 		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
+ 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+-		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+ 		struct gpio_desc *gpio;
+ 		struct regulator_dev *rdev;
+ 		struct regulator_desc rdesc;
 -- 
 2.49.0
 
