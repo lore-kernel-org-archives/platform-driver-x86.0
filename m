@@ -1,64 +1,65 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2074.outbound.protection.outlook.com [40.107.212.74])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7253D18E743;
-	Thu, 17 Apr 2025 16:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDC72561BD;
+	Thu, 17 Apr 2025 16:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744908504; cv=fail; b=SsYWDmlbQ6PUh4eincdjQInrTsxjSiHTYUw16ilElpDgQA8M6yq21tOP1MhHg9EsRiO0vNciNoNd9NDEztXTVR/TpUzNHy5W75R5mlcWfD2LSB2r4cOZUPVAV6LFMdu79tm9JoIwcYY6iCOVmeryJZfWVhCf25PhdVNtJNjLi94=
+	t=1744908833; cv=fail; b=Upk+8WoD0CKP1dhspZJk58D7DMqPT1KdF6EJ6YnP24hlhdY2agEy9DDL9gih0nxD4id1qd6ChU8NLHkyvc8WukL7ceT55nGtdGSNRKaGXmA0TCUefxrSHvsIXVW4AHv5eiUGSViD8Pzu+R9VYTeYbdWKMry4edNAZr85hg5ydSU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744908504; c=relaxed/simple;
-	bh=3dm7JxqEfDtkTDm7QGJWYYYtrVkcWZhBir2I81MN43c=;
+	s=arc-20240116; t=1744908833; c=relaxed/simple;
+	bh=aFVXyRCWOXPAW5c9Mil4gg7Bxe6qqfFysOO6fKMN/S8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cSKWQ6DcxSCdarBJgFhc9rq32/dxAU0RhWly85IHv9SZmJqXE54H13vwYrWyAxwfdYYrGYiYfRGA3MYR6V1PT+H2plQTsUoenhuUf52ZAm7/CikYdDUKQQSWcn25iWaFrEUVJfzIwMWBxYFDvYegaUPNwRcSSPsRW9F4AHJRuWI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CkFADRRo; arc=fail smtp.client-ip=40.107.212.74
+	 Content-Type:MIME-Version; b=DB4lT+l35cyDHerpDaNk4IZqkY92+fYMs7XfENOUWk0fJU+cKRVmPxEOqV3mBWvJ6kWj0TX2w6fs/6CrT1mzj9JYFoJDEyf10WOldzWR9qVwRzBX8Gkqe8XCGh6f1659MvZnZ8xqN1NaC4PVVy52H5ZrMDipe5y/2q/Nv1Jz2Ug=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yLLUOEyK; arc=fail smtp.client-ip=40.107.243.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CkFADRRo"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yLLUOEyK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rw6sbO+IgPR9SMue/rHi4TY86yYX39QuKmK3lV3yCZZmapVdxFjmdm0r1sGMH67RYemscsTS1EurAN5zfm8xrPjUVV+YABydkMJ85NRNlsor+YasvyFNQeKOXV+OvoyWbbCFRthJdiMfgPSZIjAb3NgG06bqjnKdCGl5U1zD+8frq3wKKmbnkqE7LUNym2omc0Eng3yJc9+fUqtN6jY7YCnCI6aiEYWWxlibY10KVPRNSt+BLvv/KQZMJ3joqLW7n0vP4E+qB0+PJSE+vL9D023W27oea6gUaErXOnG2fbOIjS9dmqeeE9Wbbh77I5xpP4qOTv5gesV1rVA1AcDaWA==
+ b=j+FZuY10rChkwSQkBTI8sg8Xqdazc+N45D05fGxAOSlwoZzT/8xX8AdG3tllzrQq9mfVN5RoQd8coKjA8y4y8fdF1LfDErCx/RF0Ji7RXoBay0oC5e+lkWLJWxnekzto4Z+Dpq+BIZpsMaz9MtYSgQAxRCk5IGGishw0X+y2DdC7KDweh/OSs9cK1xV8sEv6cMlD35n+LBbLCtMAzgycLZV5/2pJQpz+f2Z9mkFGSt8wKTxqw9q2+AKf5URURm0Ue1L8xXX2SX8N/d+6+/AzZrhWSCDykindSJeR9VVRmr7cG0Y4NEalVd8DKEiuhrYvzc60qWfK4c4loMBkmV4CaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KceYi8rMtRvDmBg7iMAw4bWO49rEt5s73kB6g/BqMb0=;
- b=dyc2WuIn1Synnp3zVvcGyjszuG+8MllMCAkhRU4Bz72LU4NGuauPhaWU5muCt+O1nTpD7Be3Rezi7oAcxMU6tQVITZlc1xirp7vRjWzPbx1irlg1KPC5eaqpfUAyVzK+yseVtKU0MW88PyWz9hA37M+lfOJf2fjewYwdffvrXeNitMObOhvyykxZu8IBUdpvHKWNaSlwmIIOvwb+Yk6diilwyNTJ3DGNwzfQ1w9Vd+v/2lxz6rL1fVqzV+kUyALyK3XObghYpbwoFhkBbvP3SiVk/pEFV6dMD/WOux1J8aQ/p9eqw6yY2vu7M0naFH8OkxtjY4sfU9unCH9vHuz1ag==
+ bh=Uh24SQwF2V6ThSgtVWF0aFzK5cIQogZIFVXeg7JCmDc=;
+ b=vd+Kydgxb3nq85RuqaZva1SjsDfzGIiIMjhwsWNonruJryBhdP8SW0SBJXMEHjLWVqV3/393PbL7x/9Mmac458nZeMU4SLbGtMoAyoy4YI2cXDBCNtovYIHY6uoUSe+ahmb21DFR6ZnP/NQQpuNtND0qkvDhAixCDPVRlHYMiVaXPlLDNqh7xWh6SAEcC9+hx7rcqXPZeYgARkmVyTllseuPqGlIER5hNumCAyyxkJNsCtDm8szU2ubMW0gy4jseQqwviMNNxpoOLIrlKtXWnHbvNYSY7M5lsw2YSMziHGHDaswuPlVrZOi/GbhuQgl3zbi+fxanGv9nRqvI9U4sDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KceYi8rMtRvDmBg7iMAw4bWO49rEt5s73kB6g/BqMb0=;
- b=CkFADRRoYqp/TnjY8+3BdC4aDVaUxnznKXTWYCN9pOwrmJ0eEbazaOb4oodviah7poV6goMfeXQjqs/qqD/SEZE+X+lWtvW5+hviDQfo9FEFnerUdaAzKo8zxqTREWjmagCtUg/1R/GnR4FYn+M1SCutfotvqmwVNPPDDz0SAN4=
+ bh=Uh24SQwF2V6ThSgtVWF0aFzK5cIQogZIFVXeg7JCmDc=;
+ b=yLLUOEyKail2ughdenoTgXIfYbT68OYTbLxbgHrlDjBrxSJtAm7uTC3ceF6dAsTar9LkRmiW3HbM5dAMZoXLlXROOMHgiaWN0M1/wgbJLVOxA5J3RZktW5NvknQV0fSJ1nL8VlBc5MUKkiDf8UG3y9qijgOeBUHsO9Ns97x0rxs=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
- by CH1PPFDAD84AB72.namprd12.prod.outlook.com (2603:10b6:61f:fc00::627) with
+ by SJ2PR12MB7847.namprd12.prod.outlook.com (2603:10b6:a03:4d2::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Thu, 17 Apr
- 2025 16:48:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
+ 2025 16:53:46 +0000
 Received: from CY5PR12MB6429.namprd12.prod.outlook.com
  ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
  ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8655.021; Thu, 17 Apr 2025
- 16:48:19 +0000
-Message-ID: <42e6ba7a-6a6f-4400-b4ee-4992f67f9ff8@amd.com>
-Date: Thu, 17 Apr 2025 12:48:17 -0400
+ 16:53:46 +0000
+Message-ID: <4c1fe9b6-4081-426a-82ca-59276bd5f300@amd.com>
+Date: Thu, 17 Apr 2025 12:53:44 -0400
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6] platform/x86: Add AMD ISP platform config for OV05C10
-To: Armin Wolf <W_Armin@gmx.de>, Pratap Nirujogi <pratap.nirujogi@amd.com>,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250416191411.1482060-1-pratap.nirujogi@amd.com>
- <9c657496-05b4-49c6-b24c-57be45ef8cc1@gmx.de>
 Content-Language: en-GB
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de,
+ mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com,
+ gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+References: <20250416191411.1482060-1-pratap.nirujogi@amd.com>
+ <1ae7245f-54e3-8fef-db0a-43479ed514b3@linux.intel.com>
 From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <9c657496-05b4-49c6-b24c-57be45ef8cc1@gmx.de>
+In-Reply-To: <1ae7245f-54e3-8fef-db0a-43479ed514b3@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQZPR01CA0192.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8b::13) To CY5PR12MB6429.namprd12.prod.outlook.com
+X-ClientProxiedBy: YT4PR01CA0433.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10d::13) To CY5PR12MB6429.namprd12.prod.outlook.com
  (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,105 +68,104 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|CH1PPFDAD84AB72:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41eb0db2-f375-43d8-e4dc-08dd7dcfa85d
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|SJ2PR12MB7847:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7b53611-2564-4c01-2ebf-08dd7dd06b17
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bEVaTDltSlJUYzdWQkJJdHV4ckNnaS9MblNlQzB0TE9kWDdOSTNaS296Q0Jv?=
- =?utf-8?B?Tit6akNSS285N1M0THlnTGdzM3EvaXNhK1lXK0VsUkYwV3ZiQ3dwSEEra0Y2?=
- =?utf-8?B?OEJHZE5kTWFmdkh6bmhFOFhFdlNQdXVEMGM1ZndGdkM0eVR5V2MwMm0xQ2ky?=
- =?utf-8?B?UUdYdzZ1SWpyTXpqdnUwdTYwbjZndWhJYjd2WkpZQXRaZ09iRnRpMkZCQ0hz?=
- =?utf-8?B?MDVyYmh1VFFKTzV1Nmc2aVJEM2NLSWI1R2VRd3BpaUNGRmFIVEhGa1hXb04z?=
- =?utf-8?B?SVRQbG9wUko3RjN5M0lkVTRzbWl6Mno2eWdBc1M5ZHlDbEp0N0ZjMG9OeUNP?=
- =?utf-8?B?YnJpRkN0ZUxMcTFmWHJLaEVWSWE2anNtQUNrNWRMa0lJcUNjbVhBQVh0bFJR?=
- =?utf-8?B?S3NDRlhVVFRaY2cxTTFMeTQ1elNSb1ZhUXRyR085VVN3aUt2N2pzWUhpbjI2?=
- =?utf-8?B?K0ZVaWk5dXEvS2hEaGtZZG1UdFB5MURqejFwSG94dHNYRGRxTlROMlhsR3l3?=
- =?utf-8?B?Rm1uZVVzV0VWWFkwKzJKNGFxamlwZERFZERhTmVFckNaZGFYdHRlTGJEcHFv?=
- =?utf-8?B?aHhKNmFtdnpzUEd3TTFkaitIN2w2bGRkYXh5bEFGVnptRW01SXJ6ZzNETzY1?=
- =?utf-8?B?ckJyS3BjUy9FSlhHeFFtcDdtVU1iT21lR0tpYlhIalFmMmxNRHJZdmpkZjJq?=
- =?utf-8?B?VVI5bS9LeWJ1Q2dHR0toWW1OemNEMnpsQk5kNSt2Y3JGZjd5aTh1eWJuS3lH?=
- =?utf-8?B?WGZsSzg1OFlxMW5FUTIxb0kyOFR6ZjMvSUdXZFZzY0VIQTZiS3pCbC84enZT?=
- =?utf-8?B?VkhvUE9VS1REdjlYRDg1R2VaQnNpRkVNTTdLb0FOYzFmNVVFdVdJbFBMWnlo?=
- =?utf-8?B?UjlXelpqQkh6Skh2MzhKcmphczBtdHNLdXl0NklYalRHOW9PQnJNUkUvV2pH?=
- =?utf-8?B?b09SMXliVGdLcGNCdFVsZGFDejg2U2ppeVdodGRpNHZyMEQ2TkF3cDRYanNy?=
- =?utf-8?B?OVJsS0lnYmd3SlNkU1VNMnIxY1I3RVVhOG0rYWtqSVlRTDdMVnlPTFhyNUVT?=
- =?utf-8?B?YU1PMGJxWmMwUWRFc3BDNXJCa3F4QXE0Uy9zUmxCb0lVNUllZ1FXZTkyK0x1?=
- =?utf-8?B?QXdGNk9vbmUrd1F5MndLb01aa29VM3ZIRXlGZmp4UjNjSDBXWitZdWI0NExo?=
- =?utf-8?B?L3BGcUFXa1h0UTVDT29sZWJ2QThoang5VXI4L1BFSVBqLy84RHNoYllrTlZq?=
- =?utf-8?B?QzJCVTBIQlZEUmJjZ3o5RDBhSW1VWE5ZMVhJWjRHZ0NUWExpWGU1eE5YdS85?=
- =?utf-8?B?Z241djZVM1NBWHprSnpvWUZkWUJHQ3ZMZU1rN202QmVVb253anFCL20xWFEx?=
- =?utf-8?B?K3ExRmlpWGs2NjVNRnUza052b2NLYVJNYkZHa3ZacSt4MmUycHl4VmNDZ1Zt?=
- =?utf-8?B?VjFucC9jZ3UxZjVhM0hwK0pUc3ZnWHMwdldmZS85Z1VKdkJjbU5UY3ZWb2hv?=
- =?utf-8?B?V3F4L0o2OUFhWHBrRGh3d2VRcStycDJ6VVFuZElNZTcwV0JsSzRkTk9vVW1R?=
- =?utf-8?B?a3V4dzFGR1hyUzJlYnhaUFM0N1haOXJmMnNKT2lFMDZQdkdBV2lqZnpiK0I1?=
- =?utf-8?B?UDQzd3hrTkIzVzlLMklCNEVGZUNSUm5aRlNiSXNhUFYrTVRDcjJFRG9PQnY2?=
- =?utf-8?B?dlA2YnZaSTlLOElzYkZEYmhMK0pDd2pZcS80aGRiUVNzUTFvMWc2dkJaMTVq?=
- =?utf-8?B?cHF1YXNXMzdNcDNYbXdIWlNPTm9Kc0pRcFk0Y0F6bUJ1Qk9LdFFLZ0FKQkg2?=
- =?utf-8?B?Yk8wTkQyQVJWR1h6S09VazhVRlhWWU52TGRTSTJxMktPMXJJakJ6TTEyN0Fk?=
- =?utf-8?B?enAwY0lhSXhKVktsalM4cXd0RERpK3A4K0lxNTQrb1RaSVk4azVjWWc3ZGtP?=
- =?utf-8?Q?uAB1fWH4MAw=3D?=
+	=?utf-8?B?RWRUaDNndUFjb0VrNllCRjBQVUljbHhGcXpLdUVPV0c0S1EvMHpKeEhoaEFD?=
+ =?utf-8?B?U01rMXNjcmNVaStuK0h6bkJ2SHA3YUVXYXNUUHFMelYvem5oeCtiSGhHOVZT?=
+ =?utf-8?B?M3krRlZCRnlMUUZQNGV4Y1h5MnFLd1VuNjQ1c0hjMVM3RC9HOVc4L2w3UkpP?=
+ =?utf-8?B?TWx3ZFRJRGpTSVJ5em9wMXpSbXNUYytOR0hYcnRBNzlCSEZyNnJXUGlqdEp2?=
+ =?utf-8?B?V1g3NFdVVE1OVlZVaXYySGIrN2lRemJiSDVPMGtTMGRvZUJNTzJGMHM3T1BG?=
+ =?utf-8?B?M1dNeWlCT2tvankwelpnL3dEbTZUNlJ0Z21JQjJZOGgvS1dtQVVFSTkxTHNk?=
+ =?utf-8?B?b3NzcUFqcm1IbnJmNnRjZ1lDenZ1Q1o0UXJOejROUEI4VmhPd3N3T2UzeFpD?=
+ =?utf-8?B?Qm5qN1NuT0l3T1dNT2JFTUprQ2FtVWtPTUdKK3pSVGR3Z2hiNi9aUWlValFV?=
+ =?utf-8?B?SHczNWxwdW01a2NsRlBGMWM2ZkR3TG9obEdqYTJDZHI1OEQyNzFCSUhyeEs2?=
+ =?utf-8?B?VlEyUmxScGV0MnlMWlhjNmR3dEFlTzluZjVwL3FBZmRnTW9OanhIcTYyL1Vw?=
+ =?utf-8?B?VTRLYW5TTjU4OTA0WUtOanRIYjlaK0pmM0FnelNQU3Y1RGhiWXVPeVZWRldO?=
+ =?utf-8?B?dmI3a2prZExyclBHVXc4Z2FQL2s4cTBSMi9zWXF2aFZhTEhxcTFWOW9JK1BJ?=
+ =?utf-8?B?amVzVUxvVTdsNG9XM2VFMW1OTHpCZEp5clhDZ3FTQ2RJRkxWb29CTS93NE02?=
+ =?utf-8?B?TCtCTEd6Rk5KOE5HYUd3a09tZTRidEdmL2NOUHBTN3d5b0JNNllPUkwyd1E4?=
+ =?utf-8?B?Q0xQeXMyeVBuMnJMbEFIS0ZCTzhURHhUblRlcFl4dkF4QWl0UzRsMWI3emF6?=
+ =?utf-8?B?bjZ2cW1YNWhlMzIrMG5NYVEydmE2SklLSWRBaSsxdHEvNk56S0dpcWNhbk9m?=
+ =?utf-8?B?UTQ4Y0Q2WkxUUkxJUG8wMG83Y083ODdvZCttYTlLWWMwZ3RtenZRTVJXZ2VR?=
+ =?utf-8?B?ZDlxRjQ4K2hRRmVTcUNPNW9rUEYzRE0wdXFlTExVOWJOb1loem8vVzFiWlI5?=
+ =?utf-8?B?dXdvUFU4TDB2T3YrVS92cVJEWnFSQjVxcWNOWVhCOExtUWk2aCtNdG5PeU0z?=
+ =?utf-8?B?RXIwdjlrTXp1R3Z0T0JsUDVBVzB0V0orQmNhVW45TWZtTFFEWG1sRXEyTmQy?=
+ =?utf-8?B?ckVxdVVNMm5TYTlHQkFpQUJhMk5DQ1JiaGNnb3oyTktQbkFOT2VEZDc5aE1z?=
+ =?utf-8?B?MFlnQ3BFbkZVWEtJRjNxaytQenpSZUYzaUQxUjZNcnpiY21FcThYSlZWekVB?=
+ =?utf-8?B?MXFlVXdDVzNLL0JNT21Vdk0reGV4R3piM3lMUVdKVmdsQ05vbzlUUnN1RXZB?=
+ =?utf-8?B?eDFYUU5iUlp6Vjk0bmc3Z0g4ejV4Q1V5T3IrUVZTV3N4bDVqNmMrTVpXVmJF?=
+ =?utf-8?B?NU9ydCtYL0w3a0JFaitGOHZBRkJYTVBhY3NnTmxXOUp0bjZKRmZURVlWaUZy?=
+ =?utf-8?B?R2l4bUdWdWdWZ21GV3lOZHZKRitubW9vdHFhQWdxSHl6aDRNZm5wWE03S2hz?=
+ =?utf-8?B?WTBrUnZNZWZIelQ1cnR3VmFTQTZIc3Zod1c1ZnFlRVpPc0pOaERsZWJBbkU0?=
+ =?utf-8?B?T3FYNEJuWURtQnhKa1Z0ZytUS0ZEQWxQKzBDa3F1Nnhza0xISDcvQitpbE9N?=
+ =?utf-8?B?UjgzbUl2dU9TK1RCbzR3VjYxc1RCemFSN3IzeEROV0RMYlBVSXI2bktiaUNq?=
+ =?utf-8?B?SjNoeWVaZkNjSGY2bHV2YUI5cTdPOGVMdFA3cDNGVWwrbHdZTzRCdjhCdjRO?=
+ =?utf-8?B?SFZheEllMFkySllFd2lHTm1GeThkY2hrQ0NtQjZSSEIvL1daRU9CbkRjbnhY?=
+ =?utf-8?B?Vkxwdlk0bzJDZXhRTG51WUY2M0ZreUcxM01jV2NtalZiakMwNFF3TG9GQWE2?=
+ =?utf-8?Q?RVUb9nH7C1Y=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WElkeklzZjZiQmFTNGpiR2trVWJqV1EyYkpMZmo2cjAvaGZQanZuNk9sVTBE?=
- =?utf-8?B?TmFRSjR5WHJNdy9KRHRIcmNhbUtQNmU5ekRqeDBzSFlCTVpvVDVLWFdyTm9z?=
- =?utf-8?B?cWt0UlphZnNNQkZXTGlGMjgySDVjemtQZlJ2aWNOS0RSMEU4SmljWGtaSExN?=
- =?utf-8?B?c0xhQ0Z5cStrTDF2SER0RHZCeVhYd1J5WE9FcDlKeHlvUElhZVlha3dFd3RS?=
- =?utf-8?B?bVpMZ056M2JhTWFmckNEaUljYVRDZWdjL2M3ZTcvYVp5a20zYXhwUTFaL1hB?=
- =?utf-8?B?RDEyQUZEU0Fva3ZrUVcxV0xwZXdDa1QzYU95SjcvYUtoNHdrVFNxUk8vSnJM?=
- =?utf-8?B?ZTJaMHIzazZRMWUySi9VWDJUOHZndU0rTTNUaXgvNnk3SUk0QnJZdWNVMVVG?=
- =?utf-8?B?a2ozWGZ3YmRsT0ttL3ByWXVrNjA1em9JRGxQTENTSm5VbklEN1czenBENUVW?=
- =?utf-8?B?blVlYWRJYkZuOThrUTZoOWRGZVJtQXdRVFJnNnFaN3VuRmx3UWlrZVRnMVI2?=
- =?utf-8?B?MTNwMnQ0Vzlxd0pha0FneXNxQ1IvRXBjLy9vcHZMclMzZU5SN1diMHQ1ZUds?=
- =?utf-8?B?b0tpRzJZTGFDRXAzdzVQT0lVMW1pUGxKeDZRalNzeVgzeVllMURhTFQ0bHhs?=
- =?utf-8?B?OHBBdThHRVJKaEZka0dSWUtiNWRWd0VqRGYzVWxDeVk3bGxxMXo2VkJkbTJY?=
- =?utf-8?B?b1RxQ3phT0R2M21vdE1VQm5EMjZ6T0lnYVRyVWk5RG9BSDgwWEo1V0Y4MjlN?=
- =?utf-8?B?VnRRR3FJMkY2akY0Q1hLSlZML3VUd2lQMk1uS2lMU0J5Z0N6Q2NOWG4rVFJh?=
- =?utf-8?B?a1FqeHBGK0toN0lab2F2bXQweXgxRUxWWW5DbUZVaXhNRVRRTCtPcGhlNVRP?=
- =?utf-8?B?TmVZMHJOMXZTRE1nVjgwb09IaVpndnNUMGZIWFJ4a3FaZWZtYXQ3VTBVK1lh?=
- =?utf-8?B?RDZrVHhiQ21zM0RnaktUQ0dwNk16d0hVSndNUHlXeWxaeWk1dUdzeCtXclEv?=
- =?utf-8?B?VFNqSDEyK0J5NHZUR3RMaUdWQ01QZkVZYWxOS3pta01SM3JicXFrOXoxL0gx?=
- =?utf-8?B?QVJUamxKTU92T0duUXZUVWdNbk9PNjZUMmN4U080S1BzSm42MzlLSVptU2hJ?=
- =?utf-8?B?eWt4L3lMTWhTV1BXK2c4TFJic3ZNUElNK1ZDaTF4K2JXR3RpWU5NY2FNOEZ3?=
- =?utf-8?B?SGlkb2dFQU1DYUhtVE1zdEpFRWF3cUxkL0FUekVzMThBUkJIUkxPQkFNTWFE?=
- =?utf-8?B?MUdxcjh4WUZKeTVsSklKKzcvVFpzcmNiZGtNVDg3OCtadmpKNE90QTZTQmxh?=
- =?utf-8?B?bUE3UUdGV3JKSHJSR1RtMXI5NFQyOW9zRTVzY21ETlprcjh0UW1uaGlHYUtj?=
- =?utf-8?B?cERXdlJjZFRZTktqM3FRbzRsZGdrbWptYzBBL000aC9GZU9EK042QU1iUWFt?=
- =?utf-8?B?Y0hrampPVVZLa3F5WWExdnJydDVyV3A1Q3N3ZktLckFxZU1peGx1OGR3TXYr?=
- =?utf-8?B?djRnY3JpNUwyOHJnZzNpYnpaNlArajNxNkNqRmdzYVZrTWY5MWNJcXZjT0FI?=
- =?utf-8?B?akc0dU8zT2VFNEtmK2xNcVVFNnIxcEhPVERNYkdWalU1R29QUS9hWXltbU1z?=
- =?utf-8?B?dHY4RzFGYjdNU09TYnFRN2NXOEZ3L21JbEt2OEJBejdrR1lHMmZXZ2ZHTU1h?=
- =?utf-8?B?L1dDOUUxVUdGaFJFRlBBRStZb2ZDazhGM3lCeUs0bGp0SWlzRnRNS2dpdmpP?=
- =?utf-8?B?aVZweTFTLzVCYnNQUERFbGlnKzVPZ0NmZGd6T1AzY0JVTklLMlgxdGJzTVhy?=
- =?utf-8?B?cTFlQzR0akhaRWdRU0E4d3Rvc0lnRTUzQ3g0ejBhd0ZKWDVXNWhkTWtUb05B?=
- =?utf-8?B?KzV2OG5ZeVlUM2h6Uk9GZW1sQi9vK3pnU2FUN1N0em5zU3NPV0l0VjJvcmZ3?=
- =?utf-8?B?OEs4bC9YMit5OTFNejkrbjVSYkIwUDhvMldSSitCY09NQ3BUMWd5Qm5rWjdw?=
- =?utf-8?B?clFYaE5OTlBpcTd3TVVQTDFwMkVoRzRQOGNLLzlGWWRya1RPTCtpL2FxQzhw?=
- =?utf-8?B?RWZSOGtvQnhndzlLTEdnSDBvdXV2eHluT0hyZFJGYjlTa2ZoUGtQNTdrOG5D?=
- =?utf-8?Q?SEJXXJn2PphHL12qtoPbSjCH6?=
+	=?utf-8?B?UENtUTJZMmVoOTFNUjlGZ2ZQUWJjTEhMNU5tdktBaDdSVHQvbEc4dUpEMXZq?=
+ =?utf-8?B?UTYyb0NxZnp3cVIwRzRqMEdGZGhPN3RTamhSZWxHTlQzMVJ0blZOUDU5YjVV?=
+ =?utf-8?B?TkRST2NjTDdkMG55a2QyN3duUmUrRWE0VDduMXpDMU9PVDFBM1E5OWUvMlh2?=
+ =?utf-8?B?NXFxQUZIUHByb0xFaHpvOUpvbHJzSWd6S0lmSkduOWorQ2V5WEFLcHhQN0lT?=
+ =?utf-8?B?K1hGVDF3a0pua281TlJ1eGhSNDFIdjJOYXlIZ25NRWl5Uk1lSWY1cXhzY0xx?=
+ =?utf-8?B?VEVUT3U3UkhBS1hIVjAwVVY4VDNjTVczdnIvdkgzMXRGOFk4U3Y2aGNhM1J6?=
+ =?utf-8?B?Z2JJamhUWTVCVnExTGtERWU1U3ljcEpML01EaTRCanczY3JIbVZMYTMvTHNJ?=
+ =?utf-8?B?NEV2YkNvZVc2eFN6TGxWRUZWYnFYdDlBaklya3pSQkRGQUlqK21vdy9VOXdM?=
+ =?utf-8?B?UE4yM2lRZ2VxWFlZWVc2Y1VkYTdFdTl2N3lmUXdSN0s5ZlpPdjFxTThLblE5?=
+ =?utf-8?B?cWZiNFY5ditEcDZOdXhHMWl3d1RxY0pETXdlV2g1S0N4UjYxN2doV2ZxTmlK?=
+ =?utf-8?B?YUNPeFNUbXVTbHRBOFNZQzhYY0YyNXZzay9uWlk1L2dYUGhmbndWc3ZJN1Fj?=
+ =?utf-8?B?RHltc3MxK0xWUDRCVkRHNnVweWFmVk05Rm5RQnMwakVldTgzTGQwQXg4UlNB?=
+ =?utf-8?B?Z1lwai9MeGdYTmoxLzdzRzFucXlOVGxJdEpKK3hTSmw2NHg5QzF3T2lSK0h1?=
+ =?utf-8?B?S0ZZSjhtQzNXeXN5d21DWk5PWk81eDRXYnVnYVo3VnVreUpIb0lyc3NEQ3Ev?=
+ =?utf-8?B?Q0JzTm9XWnVUNHdVUEJlZEVYejRHQWx4aFJLd3JTL0ZVOTdCWnV1TVV4anJG?=
+ =?utf-8?B?em5GcU12UStpYnNWRStYZlNxNUlhZTh0THZ5TXl6Vkw2RFk4eFRGN1NFeDd3?=
+ =?utf-8?B?MzE5MzQxVDBCVXorWWVRVElGcklITUpSVy9tWjNXZXRSaXc2eVBaRHdpVkwy?=
+ =?utf-8?B?ekFvamIveG4rRXFLRjk4RUZIU1YzaTJPZGxzbVRMV0IwdDFxMk10ZjAvaDFq?=
+ =?utf-8?B?Nm1iYTZicFVCY3Z1RXIxRXRsMzNLSWZuK2JTUjVqS0t6alB3aENNZzBtakI1?=
+ =?utf-8?B?dWNwRnBTakFYMmw2T255ZHJBTXZRWFRkb1hveWNMUU5mb3UxYkg0N0lFVmZ3?=
+ =?utf-8?B?cjIrbDNBTjdNSGdWNVlQbjQwRzM0dlY0aVZBKzdBa29HbzVvSU5vSy9OL0hW?=
+ =?utf-8?B?WDVoMEJ3WUd2L1VMdnJ6NTR5bC9GdTgydXhrek5BZmNtODlzcGtwNTZ6Nm5K?=
+ =?utf-8?B?ZXhaTkdWV1I0YVRyWDFYUk1uSzV5bjhFZE5zUGRkdXNIeUl4QmtCSnpLWGVV?=
+ =?utf-8?B?UlhtZHFhQ1RtZXV1RFhHMFIyN3RlbFM1Z0VhL0dhWmVjRmlxanlyZU1FOXpM?=
+ =?utf-8?B?MVcxNnphL09ZZEVJakxPZmR3Um95Wk82MmhWOTJVa1lUb205UDV3NmRVTmRX?=
+ =?utf-8?B?R2RPeURaZlBLL3k2T1dLcDdlTnI0cCtqVWZYY3ZpQUFkbjV3UFFDRmY4b0Vj?=
+ =?utf-8?B?dlNIMGNid0M0ckwrRWdLemZqeGl5OGZVN2lNQXVwc1pnRTlYY3hoUjVGNmFn?=
+ =?utf-8?B?UFMxUXgvYkI3ekZ6VUwvalc5cUxCY1BNR0dsSGVzZC9rWEppTmQ4MU04dEZj?=
+ =?utf-8?B?b25ocmlvYmxHcWx4N1BFTzFsQk9NWGdmTG1aMjZ0NnhFbUEvdjU0SDFxdFVi?=
+ =?utf-8?B?bkowaTFsc2plKzUvYWJvYk9rbGNYb1IyMC80OWgzamlFTjJWYVdMVHZZN1Z1?=
+ =?utf-8?B?WHZPeGUyRnV2eWtYYm5pbUhtdkZxdWZMZ0h1NFdUcnhIT1kvNHRpaW8vYTVJ?=
+ =?utf-8?B?ZHdQN2o0OEVQQURsaFp1bHhmNDc5cmFGMEJ1OTA3TlF5bzdGZ0JGM2FPdCtS?=
+ =?utf-8?B?NGc4Nk5HeU9MQmZzMkE1YnY0b3dJRE9yeVA3OXlvVkdRKy92QkNDTCtsYTFq?=
+ =?utf-8?B?dzUyK0Z0T29kNjY3NjJHNFI5WDljamVFakJxVG90aUFZSjFQZm1pVHo5N3dz?=
+ =?utf-8?B?NDVpdmNmdzNDN1RXbFlKZEZGN3RGUlZLU0k1TVl2bXh4ZXkvU252ZVc1dncr?=
+ =?utf-8?Q?sWwLfSntKxBlNUtNZO59RhlVa?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41eb0db2-f375-43d8-e4dc-08dd7dcfa85d
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7b53611-2564-4c01-2ebf-08dd7dd06b17
 X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 16:48:19.5066
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 16:53:46.1766
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Cmo3BVaIEPSTSNRkljFQg3lP1nSZzRgk6CoUY1oHNqMHivC7NJu3mcvDJTM1MIav2WtiTu3dwITNQDJnWiobQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFDAD84AB72
+X-MS-Exchange-CrossTenant-UserPrincipalName: AQqHMK4bDk5v6ryncy7eU3oBfahwmfeNif12IFr7e5r5rPKr2ghntCtwXzoPV3epyAngDBsqzJuJA4fFGVL8gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7847
 
-Hi Armin,
+Hi Ilpo,
 
-On 4/16/2025 7:22 PM, Armin Wolf wrote:
-> Caution: This message originated from an External Source. Use proper 
-> caution when opening attachments, clicking links, or responding.
+On 4/17/2025 5:29 AM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 > 
 > 
-> Am 16.04.25 um 21:13 schrieb Pratap Nirujogi:
+> On Wed, 16 Apr 2025, Pratap Nirujogi wrote:
 > 
 >> ISP device specific configuration is not available in ACPI. Add
 >> swnode graph to configure the missing device properties for the
@@ -186,46 +186,41 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> * Use i2c_client_has_driver() to validate i2c client handle
 >> * Address other cosmetic errors
 >>
->>   drivers/platform/x86/amd/Kconfig    |  11 ++
->>   drivers/platform/x86/amd/Makefile   |   1 +
->>   drivers/platform/x86/amd/amd_isp4.c | 278 ++++++++++++++++++++++++++++
->>   3 files changed, 290 insertions(+)
->>   create mode 100644 drivers/platform/x86/amd/amd_isp4.c
+>>   drivers/platform/x86/amd/Kconfig    |  11 ++
+>>   drivers/platform/x86/amd/Makefile   |   1 +
+>>   drivers/platform/x86/amd/amd_isp4.c | 278 ++++++++++++++++++++++++++++
+>>   3 files changed, 290 insertions(+)
+>>   create mode 100644 drivers/platform/x86/amd/amd_isp4.c
 >>
->> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/ 
->> amd/Kconfig
+>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
 >> index c3e086ea64fc..ec755b5fc93c 100644
 >> --- a/drivers/platform/x86/amd/Kconfig
 >> +++ b/drivers/platform/x86/amd/Kconfig
 >> @@ -32,3 +32,14 @@ config AMD_WBRF
 >>
->>         This mechanism will only be activated on platforms that 
->> advertise a
->>         need for it.
+>>          This mechanism will only be activated on platforms that advertise a
+>>          need for it.
 >> +
 >> +config AMD_ISP_PLATFORM
->> +     tristate "AMD ISP4 platform driver"
->> +     depends on I2C && X86_64 && ACPI && AMD_ISP4
->> +     help
->> +       Platform driver for AMD platforms containing image signal 
->> processor
->> +       gen 4. Provides camera sensor module board information to allow
->> +       sensor and V4L drivers to work properly.
+>> +     tristate "AMD ISP4 platform driver"
+>> +     depends on I2C && X86_64 && ACPI && AMD_ISP4
+>> +     help
+>> +       Platform driver for AMD platforms containing image signal processor
+>> +       gen 4. Provides camera sensor module board information to allow
+>> +       sensor and V4L drivers to work properly.
 >> +
->> +       This driver can also be built as a module.  If so, the module
->> +       will be called amd_isp4.
->> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/ 
->> amd/Makefile
+>> +       This driver can also be built as a module.  If so, the module
+>> +       will be called amd_isp4.
+>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
 >> index c6c40bdcbded..b0e284b5d497 100644
 >> --- a/drivers/platform/x86/amd/Makefile
 >> +++ b/drivers/platform/x86/amd/Makefile
->> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
->>   obj-$(CONFIG_AMD_HSMP)              += hsmp/
->>   obj-$(CONFIG_AMD_PMF)               += pmf/
->>   obj-$(CONFIG_AMD_WBRF)              += wbrf.o
->> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp4.o
->> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/ 
->> x86/amd/amd_isp4.c
+>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
+>>   obj-$(CONFIG_AMD_HSMP)               += hsmp/
+>>   obj-$(CONFIG_AMD_PMF)                += pmf/
+>>   obj-$(CONFIG_AMD_WBRF)               += wbrf.o
+>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp4.o
+>> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
 >> new file mode 100644
 >> index 000000000000..9d1abbcc915f
 >> --- /dev/null
@@ -244,36 +239,36 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> +#include <linux/property.h>
 >> +#include <linux/units.h>
 >> +
->> +#define AMDISP_OV05C10_I2C_ADDR              0x10
->> +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
->> +#define AMDISP_OV05C10_HID           "OMNI5C10"
->> +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
->> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
+>> +#define AMDISP_OV05C10_I2C_ADDR              0x10
+>> +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
+>> +#define AMDISP_OV05C10_HID           "OMNI5C10"
+>> +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
+>> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
 >> +
 >> +/*
 >> + * AMD ISP platform definition to configure the device properties
 >> + * missing in the ACPI table.
 >> + */
 >> +struct amdisp_platform {
->> +     const char *name;
->> +     u8 i2c_addr;
->> +     u8 max_num_swnodes;
->> +     struct i2c_board_info board_info;
->> +     struct notifier_block i2c_nb;
->> +     struct i2c_client *i2c_dev;
->> +     const struct software_node **swnodes;
+>> +     const char *name;
+>> +     u8 i2c_addr;
+>> +     u8 max_num_swnodes;
+>> +     struct i2c_board_info board_info;
+>> +     struct notifier_block i2c_nb;
+>> +     struct i2c_client *i2c_dev;
+>> +     const struct software_node **swnodes;
 >> +};
 >> +
 >> +/* Top-level OV05C10 camera node property table */
 >> +static const struct property_entry ov05c10_camera_props[] = {
->> +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
->> +     { }
+>> +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+>> +     { }
 >> +};
 >> +
 >> +/* Root AMD ISP OV05C10 camera node definition */
 >> +static const struct software_node camera_node = {
->> +     .name = AMDISP_OV05C10_HID,
->> +     .properties = ov05c10_camera_props,
+>> +     .name = AMDISP_OV05C10_HID,
+>> +     .properties = ov05c10_camera_props,
 >> +};
 >> +
 >> +/*
@@ -281,8 +276,8 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> + * ports node for OV05C10.
 >> + */
 >> +static const struct software_node ports = {
->> +     .name = "ports",
->> +     .parent = &camera_node,
+>> +     .name = "ports",
+>> +     .parent = &camera_node,
 >> +};
 >> +
 >> +/*
@@ -290,8 +285,8 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> + * port node for OV05C10.
 >> + */
 >> +static const struct software_node port_node = {
->> +     .name = "port@",
->> +     .parent = &ports,
+>> +     .name = "port@",
+>> +     .parent = &ports,
 >> +};
 >> +
 >> +/*
@@ -299,7 +294,7 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> + * remote endpoint node for OV05C10.
 >> + */
 >> +static const struct software_node remote_ep_isp_node = {
->> +     .name = AMDISP_OV05C10_REMOTE_EP_NAME,
+>> +     .name = AMDISP_OV05C10_REMOTE_EP_NAME,
 >> +};
 >> +
 >> +/*
@@ -307,37 +302,36 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> + * OV05C10 endpoint.
 >> + */
 >> +static const struct software_node_ref_args ov05c10_refs[] = {
->> +     SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+>> +     SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
 >> +};
 >> +
 >> +/* OV05C supports one single link frequency */
 >> +static const u64 ov05c10_link_freqs[] = {
->> +     925 * HZ_PER_MHZ,
+>> +     925 * HZ_PER_MHZ,
 >> +};
 >> +
 >> +/* OV05C supports only 2-lane configuration */
 >> +static const u32 ov05c10_data_lanes[] = {
->> +     1,
->> +     2,
+>> +     1,
+>> +     2,
 >> +};
 >> +
 >> +/* OV05C10 endpoint node properties table */
 >> +static const struct property_entry ov05c10_endpoint_props[] = {
->> +     PROPERTY_ENTRY_U32("bus-type", 4),
->> +     PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
->> +                                  ARRAY_SIZE(ov05c10_data_lanes)),
->> +     PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", 
->> ov05c10_link_freqs,
->> +                                  ARRAY_SIZE(ov05c10_link_freqs)),
->> +     PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
->> +     { }
+>> +     PROPERTY_ENTRY_U32("bus-type", 4),
+>> +     PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+>> +                                  ARRAY_SIZE(ov05c10_data_lanes)),
+>> +     PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
+>> +                                  ARRAY_SIZE(ov05c10_link_freqs)),
+>> +     PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+>> +     { }
 >> +};
 >> +
 >> +/* AMD ISP endpoint node definition */
 >> +static const struct software_node endpoint_node = {
->> +     .name = "endpoint",
->> +     .parent = &port_node,
->> +     .properties = ov05c10_endpoint_props,
+>> +     .name = "endpoint",
+>> +     .parent = &port_node,
+>> +     .properties = ov05c10_endpoint_props,
 >> +};
 >> +
 >> +/*
@@ -351,182 +345,165 @@ On 4/16/2025 7:22 PM, Armin Wolf wrote:
 >> +#define NUM_SW_NODES 5
 >> +
 >> +static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
->> +     &camera_node,
->> +     &ports,
->> +     &port_node,
->> +     &endpoint_node,
->> +     &remote_ep_isp_node,
->> +     NULL
+>> +     &camera_node,
+>> +     &ports,
+>> +     &port_node,
+>> +     &endpoint_node,
+>> +     &remote_ep_isp_node,
+>> +     NULL
 >> +};
 >> +
 >> +/* OV05C10 specific AMD ISP platform configuration */
 >> +static const struct amdisp_platform amdisp_ov05c10_platform_config = {
->> +     .name = AMDISP_OV05C10_PLAT_NAME,
->> +     .board_info = {
->> +             .dev_name = "ov05c10",
->> +             I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
->> +     },
->> +     .i2c_addr = AMDISP_OV05C10_I2C_ADDR,
->> +     .max_num_swnodes = NUM_SW_NODES,
->> +     .swnodes = ov05c10_nodes,
+>> +     .name = AMDISP_OV05C10_PLAT_NAME,
+>> +     .board_info = {
+>> +             .dev_name = "ov05c10",
+>> +             I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
+>> +     },
+>> +     .i2c_addr = AMDISP_OV05C10_I2C_ADDR,
+>> +     .max_num_swnodes = NUM_SW_NODES,
+>> +     .swnodes = ov05c10_nodes,
 >> +};
 >> +
 >> +static const struct acpi_device_id amdisp_sensor_ids[] = {
->> +     { AMDISP_OV05C10_HID },
->> +     { }
+>> +     { AMDISP_OV05C10_HID },
+>> +     { }
 >> +};
 >> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
 >> +
 >> +static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
 >> +{
->> +     return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+>> +     return !strcmp(adap->owner->name, "i2c_designware_amdisp");
 >> +}
 >> +
->> +static void instantiate_isp_i2c_client(struct amdisp_platform 
->> *ov05c10, struct i2c_adapter *adap)
+>> +static void instantiate_isp_i2c_client(struct amdisp_platform *ov05c10, struct i2c_adapter *adap)
 >> +{
->> +     struct i2c_board_info *info = &ov05c10->board_info;
->> +     struct i2c_client *i2c_dev;
+>> +     struct i2c_board_info *info = &ov05c10->board_info;
+>> +     struct i2c_client *i2c_dev;
 >> +
->> +     if (ov05c10->i2c_dev)
->> +             return;
+>> +     if (ov05c10->i2c_dev)
+>> +             return;
 >> +
->> +     if (!info->addr) {
->> +             dev_err(&adap->dev, "invalid i2c_addr 0x%x detected\n", 
->> ov05c10->i2c_addr);
->> +             return;
->> +     }
+>> +     if (!info->addr) {
+>> +             dev_err(&adap->dev, "invalid i2c_addr 0x%x detected\n", ov05c10->i2c_addr);
+>> +             return;
+>> +     }
 >> +
->> +     i2c_dev = i2c_new_client_device(adap, info);
->> +     if (!i2c_client_has_driver(i2c_dev)) {
-> 
-> Hi,
-> 
-> i think you meant to use IS_ERR() here instead of i2c_client_has_driver().
-> 
-sure, will revert to IS_ERR() check in V7.
-
->> +             dev_err(&adap->dev, "error %pe registering isp 
->> i2c_client\n", i2c_dev);
->> +             return;
->> +     }
->> +     ov05c10->i2c_dev = i2c_dev;
+>> +     i2c_dev = i2c_new_client_device(adap, info);
+>> +     if (!i2c_client_has_driver(i2c_dev)) {
+>> +             dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev);
+>> +             return;
+>> +     }
+>> +     ov05c10->i2c_dev = i2c_dev;
 >> +}
 >> +
 >> +static int isp_i2c_bus_notify(struct notifier_block *nb,
->> +                           unsigned long action, void *data)
+>> +                           unsigned long action, void *data)
 >> +{
->> +     struct amdisp_platform *ov05c10 = container_of(nb, struct 
->> amdisp_platform, i2c_nb);
->> +     struct device *dev = data;
->> +     struct i2c_client *client;
->> +     struct i2c_adapter *adap;
+>> +     struct amdisp_platform *ov05c10 = container_of(nb, struct amdisp_platform, i2c_nb);
+>> +     struct device *dev = data;
+>> +     struct i2c_client *client;
+>> +     struct i2c_adapter *adap;
 >> +
->> +     switch (action) {
->> +     case BUS_NOTIFY_ADD_DEVICE:
->> +             adap = i2c_verify_adapter(dev);
->> +             if (!adap)
->> +                     break;
->> +             if (is_isp_i2c_adapter(adap))
->> +                     instantiate_isp_i2c_client(ov05c10, adap);
->> +             break;
->> +     case BUS_NOTIFY_REMOVED_DEVICE:
->> +             client = i2c_verify_client(dev);
->> +             if (!client)
->> +                     break;
->> +             if (ov05c10->i2c_dev == client) {
->> +                     dev_dbg(&client->adapter->dev, "amdisp 
->> i2c_client removed\n");
->> +                     ov05c10->i2c_dev = NULL;
->> +             }
->> +             break;
->> +     default:
->> +             break;
->> +     }
+>> +     switch (action) {
+>> +     case BUS_NOTIFY_ADD_DEVICE:
+>> +             adap = i2c_verify_adapter(dev);
+>> +             if (!adap)
+>> +                     break;
+>> +             if (is_isp_i2c_adapter(adap))
+>> +                     instantiate_isp_i2c_client(ov05c10, adap);
+>> +             break;
+>> +     case BUS_NOTIFY_REMOVED_DEVICE:
+>> +             client = i2c_verify_client(dev);
+>> +             if (!client)
+>> +                     break;
+>> +             if (ov05c10->i2c_dev == client) {
+>> +                     dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
+>> +                     ov05c10->i2c_dev = NULL;
+>> +             }
+>> +             break;
+>> +     default:
+>> +             break;
+>> +     }
 >> +
->> +     return NOTIFY_DONE;
+>> +     return NOTIFY_DONE;
 >> +}
 >> +
->> +static struct amdisp_platform *prepare_amdisp_platform(const struct 
->> amdisp_platform *src)
+>> +static struct amdisp_platform *prepare_amdisp_platform(const struct amdisp_platform *src)
 >> +{
->> +     struct amdisp_platform *isp_ov05c10;
->> +     const struct software_node **sw_nodes;
->> +     struct i2c_board_info *info;
->> +     int ret;
+>> +     struct amdisp_platform *isp_ov05c10;
+>> +     const struct software_node **sw_nodes;
+>> +     struct i2c_board_info *info;
+>> +     int ret;
 >> +
->> +     isp_ov05c10 = kmemdup(src, sizeof(*isp_ov05c10), GFP_KERNEL);
->> +     if (!isp_ov05c10)
->> +             return ERR_PTR(-ENOMEM);
+>> +     isp_ov05c10 = kmemdup(src, sizeof(*isp_ov05c10), GFP_KERNEL);
+>> +     if (!isp_ov05c10)
+>> +             return ERR_PTR(-ENOMEM);
+>> +
+>> +     info = &isp_ov05c10->board_info;
+>> +
+>> +     sw_nodes = (const struct software_node **)src->swnodes;
 > 
-> Please allocate a fresh instance of amd_platform using devm_kzalloc() 
-> and perform the initialization
-> there. Using kmemdup() means that we waste memory by having a useless 
-> struct amd_platform in memory.
+> Did you forget to remove this cast?
 > 
-Thanks. Will update using devm_kzalloc() inplace of kmemdup() in V7.
+Oops, sorry I missed this one. Will fix it in V7. Thank you.
 
-> Thanks,
-> Armin Wolf
+> --
+>   i.
 > 
+>> +     ret = software_node_register_node_group(sw_nodes);
+>> +     if (ret)
+>> +             goto error_free_platform;
 >> +
->> +     info = &isp_ov05c10->board_info;
+>> +     info->swnode = src->swnodes[0];
 >> +
->> +     sw_nodes = (const struct software_node **)src->swnodes;
->> +     ret = software_node_register_node_group(sw_nodes);
->> +     if (ret)
->> +             goto error_free_platform;
->> +
->> +     info->swnode = src->swnodes[0];
->> +
->> +     return isp_ov05c10;
+>> +     return isp_ov05c10;
 >> +
 >> +error_free_platform:
->> +     kfree(isp_ov05c10);
->> +     return ERR_PTR(ret);
+>> +     kfree(isp_ov05c10);
+>> +     return ERR_PTR(ret);
 >> +}
 >> +
 >> +static int amd_isp_probe(struct platform_device *pdev)
 >> +{
->> +     struct amdisp_platform *ov05c10;
->> +     int ret;
+>> +     struct amdisp_platform *ov05c10;
+>> +     int ret;
 >> +
->> +     ov05c10 = prepare_amdisp_platform(&amdisp_ov05c10_platform_config);
->> +     if (IS_ERR(ov05c10))
->> +             return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
->> +                                  "failed to prepare AMD ISP platform 
->> fwnode\n");
+>> +     ov05c10 = prepare_amdisp_platform(&amdisp_ov05c10_platform_config);
+>> +     if (IS_ERR(ov05c10))
+>> +             return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
+>> +                                  "failed to prepare AMD ISP platform fwnode\n");
 >> +
->> +     ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
->> +     ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
->> +     if (ret)
->> +             goto error_free_platform;
+>> +     ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
+>> +     ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
+>> +     if (ret)
+>> +             goto error_free_platform;
 >> +
->> +     platform_set_drvdata(pdev, ov05c10);
->> +     return 0;
+>> +     platform_set_drvdata(pdev, ov05c10);
+>> +     return 0;
 >> +
 >> +error_free_platform:
->> +     kfree(ov05c10);
->> +     return ret;
+>> +     kfree(ov05c10);
+>> +     return ret;
 >> +}
 >> +
 >> +static void amd_isp_remove(struct platform_device *pdev)
 >> +{
->> +     struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
+>> +     struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
 >> +
->> +     bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
->> +     i2c_unregister_device(ov05c10->i2c_dev);
->> +     software_node_unregister_node_group(ov05c10->swnodes);
->> +     kfree(ov05c10);
+>> +     bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
+>> +     i2c_unregister_device(ov05c10->i2c_dev);
+>> +     software_node_unregister_node_group(ov05c10->swnodes);
+>> +     kfree(ov05c10);
 >> +}
 >> +
 >> +static struct platform_driver amd_isp_platform_driver = {
->> +     .driver = {
->> +             .name                   = AMD_ISP_PLAT_DRV_NAME,
->> +             .acpi_match_table       = amdisp_sensor_ids,
->> +     },
->> +     .probe  = amd_isp_probe,
->> +     .remove = amd_isp_remove,
+>> +     .driver = {
+>> +             .name                   = AMD_ISP_PLAT_DRV_NAME,
+>> +             .acpi_match_table       = amdisp_sensor_ids,
+>> +     },
+>> +     .probe  = amd_isp_probe,
+>> +     .remove = amd_isp_remove,
 >> +};
 >> +
 >> +module_platform_driver(amd_isp_platform_driver);
@@ -535,4 +512,5 @@ Thanks. Will update using devm_kzalloc() inplace of kmemdup() in V7.
 >> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
 >> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
 >> +MODULE_LICENSE("GPL");
+>>
 
