@@ -1,64 +1,63 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2060.outbound.protection.outlook.com [40.107.94.60])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4311D24886A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 13:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8052F24
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 13:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744895705; cv=fail; b=uXcm4UYvkHrQ/FQ9iGtr3GwkaWP70TXQp/+GcR+9EBwiN2uQPpPE4Q3R3L1rxPfDhE6IAw7xToGQ3oFIPHbD6Y7SwfHPjqr0vBTNvHWiD6F4HWTnEH1w057qs8KqyrRBXzburZiCuEO4P5kmDvaw1581Iz13DUOK2nSq96TfUD8=
+	t=1744895965; cv=fail; b=uNp0yMC3pZ8ynIyhDAzAeEbwIaCZvdQvzABx9jKajpLtbeoPYDSbIMfG95l5ICd3veEQPLbMFNb8ctK52RoXmupeAoZMToHwkO35KuJwCRxp4ZVnLfN9p/85af8HST2iWufHJ+7CtakOQHf/oT3tiQ8IbTjW8VBYZF6Wiz51ddI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744895705; c=relaxed/simple;
-	bh=E5rk/kKWx5oViBKMgDxYoY5jg2X9kkYOdrdQqG1DK7g=;
-	h=Message-ID:Date:From:Subject:References:To:Cc:In-Reply-To:
-	 Content-Type:MIME-Version; b=RfQVgbFT3gsX/+PPbznmJOUp4OqIL1cwG7nMoLolEfE06d+lScmpmv2utGfHD0k5WjdC3bKKTtVLheZCYjtP06UOV8xe2PkJlBtGYYjv9MbIPQ/nWjdNA1KwczDSZIekLBS72V9EYP+KkFy1JV5lXfq2fj7MHsPVYA5JNXwqroY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SFW4U/H7; arc=fail smtp.client-ip=40.107.94.60
+	s=arc-20240116; t=1744895965; c=relaxed/simple;
+	bh=CJLCXtEm9bAY6OD5cczgbgRYUN8OiCPSOuix6xFOJ2s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SJTnYjLjsk5VDuB9TOSETAv0xSaNeh0cvrec3ipR2T2U4foFRj9f5vxEkN/QDWA81aSPAdqYBnq7OBPe6Bdn8ZdrMAyNXlmsKy2fdZu/QCNXgmGtm7jgk3jgzTT0XoPu8pEjnhWCUJhhudnesB5q/xAWZBUxY7XmvVtQge3tOIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I+O0tZ3J; arc=fail smtp.client-ip=40.107.243.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SFW4U/H7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I+O0tZ3J"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BguZeglE7hets7GiuS9SqCNkfKXCYEnJ5D8WT+hqFq15xuFwiTGVydn5vjwYxsqWsGosw+OZtYtxEu44kLxX7Gm/iXhXSu7FwTMIXXuqjP4dX61HBo9pXt2Yqwy6s6+tqalNOxJ9+jKYxWqEPCMptvSzLqi13+PZFytNBznoEHMrE81wdiVQi4EEY/VnwJvyIl5aDmAhemhWRE7WrWwQJpZ8UModnjAhAIqGoR5nlvmHp6aj8pAFZbwEljgwHnJ/uw/CDYC7jDgLRO0h7YTqHub3rksPAv3k2DslqETBFcp7vnRkQix+qjQ6tVP2tpS/Qj3weiT0hqBDCD/VwG41mA==
+ b=M0/0UDkgD0wiyMRUNT4Cspverg3wXVfKA+ouw0WYivqx0W2q0d7SAsRiuau/2jc9qOTq1LNE0nWluSsVNXO2NN4ORsvm+O9wBLvQ/u9nNB6IEZC6kJSVDv09WOpT2jS7eZG2aI/WNQN0hWrOKFWeaMKLhsCFMWgVYFsNsOIcwSPpMPeR0bpJOhiJzh3YoLw/QLSUQcEaFbPWMIys05yELqzowHp4XDocVyqxyIvN11iJgmNk5hhtP7vaHXwT5N9rqELfbL/eniluN3Hn3hsFbvDz+X45sHU0bUT1qNKsOTpAVZeiDb9n5WhjGNug5gj4T2Rnv+DqJAbeZqdwEgZ4BA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l7jICaBtHBRSqr4wsH6v1pdgehZhSnIu64B6U8YauwY=;
- b=CMx/1zSvZj/2VIfCe6egqeJYPgwpNYF6GfttZQsfHzVcx2EAPrstpCqPLyawYoDQwsfMm4xu69zwdBDQZuqfpWDBhgJNu9Pi/497hyOr+BTazIHfz+1C5ON6B2Z/Sdp8Qv6Rk6NDp+KCCAvd2a87znfTE5W699F9DCs1Md7fG8yWVe8OPCSuz4kxeEkDykpXewxyeFAgy980H/FPp/oIHIEAVrBT1GM5SoLi0WJ/GjV9ZHhpqEMUpVvIUmJPDEH7xmLyzSFIJvzl6PZYMY6BA99ZDbF318OMEU39T0iN4wTPVVnovNghKyyTepVoZIcg+C4E+1TRoXTotLLdzZ4sdg==
+ bh=1xwQ+y1JrmXsr7tgPagrUAhHs+hHmxg+4fOgfYy3iAA=;
+ b=LaPxfqsMSflUMQy+DU6DuJOF77h8ZZ6ol4WbIUib8bH4RdtJlD1iXXa0SiJg1sY/BTJoWwUlDB0hrpZT0kilHOE6bp6UF2MIEgDA7+Yf8HFCfuLYl8WXWLryq0TMpMKjSZUbwpZoj3ias0T92HE5pIffL/X11Du5gWWdnLf5fE1TsZJAwIp190/Y9ljuXdWXz9qXUkQwmFYtVbnBgPTKenOgvfCemR74jhXN7PYXpQX4yd1cc5Gikyx2l4AArF3CQgjpwogzjw/JalkKC3P3TvmKyRPmAofFHEHa45Gj5vQUTe1dENfAR4qz8OQRG9D0O1Ec3Ob4iZ83/fc5ptioYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7jICaBtHBRSqr4wsH6v1pdgehZhSnIu64B6U8YauwY=;
- b=SFW4U/H7UOr+FquoSIsFQ7TF7FCAluj1YzYx0VOq6P8u28we4FW5YnCtFQBK+69VrF+1dp3GuWrZfIV4fM4rumbZwbQvRjuyuaG+o6fv5Mm0I5dW7dbmlgNsi4+Af7Ew9P5or5CLnSa0WCsqlPOc8l1GyxNlOamVnMHyEM0euK8=
+ bh=1xwQ+y1JrmXsr7tgPagrUAhHs+hHmxg+4fOgfYy3iAA=;
+ b=I+O0tZ3J+l7QHNKnJyMxgLOf+kqLAA4cSTkOTl/JOmrFyNtJw4ASdALBnll908BogtN9TuxK70fawZSRSKbvdPU5Ab6HOiETLBaNKWCGPc8w6bzJJCEv4w2yWvjQ4C6NwDxSKuHDAk4UhXgq88MchfqCSTPLHooP0NsnAV9j2zY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by DM6PR12MB4402.namprd12.prod.outlook.com (2603:10b6:5:2a5::18) with
+ by CH2PR12MB4325.namprd12.prod.outlook.com (2603:10b6:610:a9::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 17 Apr
- 2025 13:15:00 +0000
+ 2025 13:19:15 +0000
 Received: from LV2PR12MB5966.namprd12.prod.outlook.com
  ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
  ([fe80::7c1b:5fa1:7929:fd81%6]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
- 13:15:00 +0000
-Message-ID: <ceec4b79-eb14-4326-b3d4-ec46626ed72c@amd.com>
-Date: Thu, 17 Apr 2025 18:44:55 +0530
+ 13:19:15 +0000
+Message-ID: <153de5f7-6d87-4fa5-9d8a-14ebcb69516d@amd.com>
+Date: Thu, 17 Apr 2025 18:49:11 +0530
 User-Agent: Mozilla Thunderbird
-From: Suma Hegde <Suma.Hegde@amd.com>
-Subject: Re: [v2 3/3] platform/x86/amd/hsmp: acpi: Add sysfs files to show
- HSMP telemetry
-References: <20250325060457.3643613-1-suma.hegde@amd.com>
- <20250325060457.3643613-3-suma.hegde@amd.com>
- <ef159e97-6ae9-0646-2488-c2ecacad2243@linux.intel.com>
-Content-Language: en-US
+Subject: Re: [v2 2/3] platform/x86/amd/hsmp: Report power using hwmon sensors
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
  Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-In-Reply-To: <ef159e97-6ae9-0646-2488-c2ecacad2243@linux.intel.com>
+References: <20250325060457.3643613-1-suma.hegde@amd.com>
+ <20250325060457.3643613-2-suma.hegde@amd.com>
+ <1919f8c8-941d-d1bc-d9cf-cea8554a6fdc@linux.intel.com>
+Content-Language: en-US
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <1919f8c8-941d-d1bc-d9cf-cea8554a6fdc@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN4PR01CA0065.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26c::10) To LV2PR12MB5966.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN4P287CA0124.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:2b2::10) To LV2PR12MB5966.namprd12.prod.outlook.com
  (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,589 +66,400 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|DM6PR12MB4402:EE_
-X-MS-Office365-Filtering-Correlation-Id: 20b916a5-8ba3-4efd-2030-08dd7db1dba3
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|CH2PR12MB4325:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11119d43-9fe1-41e4-9169-08dd7db27393
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eHpmSEpUOHRza0JuVTFiQk5KOGIvaHZmbnpoekpyRUFFZjNsNnowUXBBMTFU?=
- =?utf-8?B?NXhwUkhhbWlPVVFRVVhTK3k2QW14RlpYMWc2dGRDYWIxS0RaZUZaVEQraWZV?=
- =?utf-8?B?eHpNY3Y3K214R3JnYUZhQ3crYXg2SUdlMitONUt3cllTTEdRRmpqQXFHWG5j?=
- =?utf-8?B?cmdMdTEwSjFkeWdIdzVuL1RZZlA4NTg1WWdRNEU3T1BjbDd6Nnhwb0w4U2NF?=
- =?utf-8?B?NklHM3E2b2RHc3JGN0F0VHJqR0dsYTVtdmlNWERZZS8wU0FGWm5PemtrOFlB?=
- =?utf-8?B?QzM2NXd5QzdTWUd5d2ZWb3VSTmJ5Uk52aHJyNUtyOVhTMkhKTkdpQ1hWZWpT?=
- =?utf-8?B?TzdvMlR4Q0JoNnJrRDh1VFFDVXMyUlBzdjlXN2ZEdk5ZZDBvQ09GWFYyem5v?=
- =?utf-8?B?NDFTN09Ebk0zdWNZVFZnTHJrY0dCZWs4UFRCRkYxYWpDR3oxVzdSK3M3UE9n?=
- =?utf-8?B?ck9Idm44WjVRYTRkcm5PbXQ4cmVDS1c4OFR5MUZmSE0zQzl5U3lhNFU2Sk5l?=
- =?utf-8?B?dWs2NFdJbG83MHpyTTFMdXJhZ2RqellNcXVSTmlnRGQxREdOekhuRDBDTDZh?=
- =?utf-8?B?MXpCcDFXQk43aUhxVE02RzVPY1lZdHJjdWZhOXNrZ2pQbVpHb1NZNnJrOEZR?=
- =?utf-8?B?bVhpK2lrSVFxb05MZmZXVDhraUNLaXE2KzlYRHg3Tk5zY3FZeUI3VEZwNVdl?=
- =?utf-8?B?N2JBdVNWYmIvM0g0WlpNVWdMem5ERGVjQ0xSenhDbGk5MGcxZ3RTWWVzTTZk?=
- =?utf-8?B?T01wb3JrMVhjN3E0d25yOVg2RGZqVkJCZFB4b0JmTmZGRlc3cldhOWtOZEV3?=
- =?utf-8?B?b1Bia081YW1iT25iWG1OOUtUK2t3ZCtMN3RtQmxIamhmUmMyVW9XUGRVblpq?=
- =?utf-8?B?WEppVG9GRUJKaHEzUEMzeFpFVmpHeTJkV0J6ejhOVm1vUjVWYlN1Nk1HMkRx?=
- =?utf-8?B?ZTVDbVAxbk1DVnNTOVFyU0RjQThidTNxREdnemFZbGhoMGJVUXJteTFVOGVy?=
- =?utf-8?B?T1N1UGFtUnYzWlF6eTREbm1kUnltWmJDNUJLdmtYMjNGYS9tWkVRRXkzR29D?=
- =?utf-8?B?OEpvcVBqTjZkTERZMVZ4cWM0NnYyYU1temNFTzdrSlN1YU8yNGFnRjJLK1F6?=
- =?utf-8?B?aTgwRmhKWUNqSHkwblc2MGg0YmNtVElZaFgrTG9ianhVbUdQVHRSN2JoTVAx?=
- =?utf-8?B?Vmd1TTZ5Y2FacWxNbCttSlpnYzBJcnNWUHVLaGpvdEFCd2RYUVZ6TFhJSWIr?=
- =?utf-8?B?OG5hSGVhOW93YmpNMEFDMmU0RkIzbWIrbVQzSXpUbVo1WTA5VTF6T2YyUEYv?=
- =?utf-8?B?aE5ISHFHWFAxWGZhOHFzUm0xenJtL3dBeDU5bExNaUowanUzVndSZU9rWUE4?=
- =?utf-8?B?Q2F2cyt4aWF5RmF4c3hRUjV4TTNoVWJzWStEaHAxUU9xTGFUekg2VjdFWDM4?=
- =?utf-8?B?U0JaWXBPVGQxdURyMDRiK01FWGREZ0YrdHQ2SXpqRGRoYTRiQkNYYVBJSHZh?=
- =?utf-8?B?R2N4c2s1VDJvd1A1b3NCWkxKWW9CVWlKd24xM1k0RGZrOWk4NWozM3hWMlFu?=
- =?utf-8?B?ajRuOU1EelJ6RXlDR3k1c1pXckY3blEzYkpTalZTNkNtKys5R2J3UUh5RXdu?=
- =?utf-8?B?MlUzWGt1ZU9PMGhPWXU3UFl1L1FhenBrU0x1K01IbkRNNUt1cTdMeXUwbERn?=
- =?utf-8?B?Uno0TFpNN3l2R09INnRCdWxkN1U3dDQ4cTZXeUJlN2xYY1JObWdMcmVsWkRn?=
- =?utf-8?B?VmVZby93Zjg5bDlSZHMvYXVCcVNLTlAxaU1rNU5sWEd6S1Z0SHVQM0p2VVdY?=
- =?utf-8?B?blBOQ0pjT1NHSXdURDcwdktJbTFJVy9YRHdVZnVxZ01PUmwyelhoNWhKeFFz?=
- =?utf-8?B?ZU9pTXpBNlpOcmZIdVg3YTQ3SEZ0UVBaNE1nMUNyUnQvUFFYRW1lNEFvcWJp?=
- =?utf-8?Q?hxn+Mzc95B4=3D?=
+	=?utf-8?B?dGRMaHpCSUJOUnkra2pmR1d6bHB3cDBlaHR0bm5HVzViMFptYlVpaVNCcU9C?=
+ =?utf-8?B?WFY4TXRPZys1SmRXdUVNb1ZHZS94alRwb0VRNERvdTZhdGhET0VmbHNxMGU5?=
+ =?utf-8?B?dTh3Z2FicCtNbEdKZUNncXJia0pCSlBYQWRSOUs5RVNMczRScXR2bC8wTXhC?=
+ =?utf-8?B?dkJlRHNFS0Rsa1dMbFlWa3BmTi8waC9zK1AxM0xKbU1xblErSDUvd2hCWi8y?=
+ =?utf-8?B?SnNOb3JMbkRVaW1PZ2xPanZ2MlJhVlpYZGFpQXNiaFRDOFJidFBwM3dVcmNM?=
+ =?utf-8?B?dFZXeVJTWlN3UVFWNCtXL3Z2cFlCdVVXeVVRUmFNanpZRGszaEYzZ2E5WWxO?=
+ =?utf-8?B?a3hja2tSUlN0SVNReTA4cnFCQUhVbHJabGJNSjdlM2ptN3lGZ1cyV2RWSWRU?=
+ =?utf-8?B?NEx3OG1jSkNKaVh1VTMvaW1NNE10Ty9RQW5rZVdFOStybDg1MW95c21zaElW?=
+ =?utf-8?B?WTEzY2k3NjZldlVYeEZDVE5yanNVZDVhMDNVcVRXZ3RJUndEcW9WSnQ2c3E3?=
+ =?utf-8?B?Wm1weWV3MTdmejNXWUY3NXhKWFIrOUhZOUhaUE0rbnI5ckJSM3dpaVNuSkRG?=
+ =?utf-8?B?MENqUEIxLzVBSFBoUE1EMkZIYmV6KzdKMnNkUWpZU1Y5OVVyU29LaUdMdkUr?=
+ =?utf-8?B?TGcydUZYZXZwRWIzTnFPaVdveFlIclVlMlFuTmIwNWJMb2ZPNDBFc3VVaDVO?=
+ =?utf-8?B?cGhDVlZuNS8xL0tHV3k1cVVMZEI1aXozaForKzdsUVdseG0rTVpmTkJJajNv?=
+ =?utf-8?B?VkFOVnBJRDJlMDFFWTlrd0NSVnJ3dkUwWkRxQXErRW9kWlJ0ZUNYT0t6Q0lk?=
+ =?utf-8?B?bzJPN3JvcWswWUJ6a1pIMm45L21Ga3N2UUxPanNCY0ljdmwxYys2ODg5TzN3?=
+ =?utf-8?B?TDZCT244Z1NFSFM2TU5RVWg4dThVYTJyZXg5aUhKcytqT2hGd1NiK2M2eE5S?=
+ =?utf-8?B?R1RXK1NRcVZCR2xHZWM3OEdqRmk4eXo0TUxSbkgxbW1QVm5SaVNtaXQ3OWc0?=
+ =?utf-8?B?SFBIVkNYNnJVYnl5NDE0cnQ0anMybEdwNXhNaU0rUDZkM013eDdyOE5OaUJ1?=
+ =?utf-8?B?eHZvQU5ndDIvK2hPNHB2L0ZHOUZPbm51WFJ3c1gyRlNTQkoxUVVFZ1ZNQUlj?=
+ =?utf-8?B?eFBicS9qVkRNaW9jSHNJRTRaSW5kTWV4VDZiOE9pM0p2OFJjR1ZmYzdET0p4?=
+ =?utf-8?B?emYwWXhaQU93UGptMWNScFQ3bkNFN0kvTGwzRVZ3UzNaQUFPYndHSW94UkVq?=
+ =?utf-8?B?bWNpaE1sczJySWZkY0JIYTl0bC9hSFY0cU44Z250d1dQY24ydDVBSnRyV3V6?=
+ =?utf-8?B?VEhhWkVQNVM2RGlDdHJXRVlVck51N1ZXNDdvUjRzanBzUm1UWDZhd3lUSjEy?=
+ =?utf-8?B?WXJFbUdLZ2ZCN1M3eC9XNXI2RXplOWp4Q3pkR0xLZmFKcGhzdFpFcUhwcElw?=
+ =?utf-8?B?eHdycEM0ZjZCMGkzaldQZy9OcUxDbWpYVHVJeVdUUExaMW8zSmhqb1RHMVdl?=
+ =?utf-8?B?WGVpOG9HdnZDekRDVDBPKy9HdG9qY2pJSE9kWWtOMmdKR0t0ZTFNb1BNeXZJ?=
+ =?utf-8?B?S3Qva2ppVjEyWjlxYUZxN0pKZTd0UVVaaHZQN2pqcmRRcHJQK2I1aHV6VlZD?=
+ =?utf-8?B?Qm9ZbW5WRzBRaWgwSUpxbDg4LzBaOVJiZDlDNmw3alB0SVdkTWR5Nm42d1BH?=
+ =?utf-8?B?UFlkdy9mck16NGVvZ0hRL0VMVktFcEFENTk4VHgwNWxoTkRFdzZwbC9DSUVB?=
+ =?utf-8?B?WkJmd0tjZjJoa3FFYTc3YTVNaGtKbHZzc2JVaVgvMzN5a2NSeEw2M1E1WEtO?=
+ =?utf-8?B?VW1pY1NrdEUyVnl3QkMzejFJWHlsOE5ZRWtiMnVEaTV1YkhuQi9IRjA1c1Fp?=
+ =?utf-8?B?SlFxMW8zeGJrd0srRklCM081NG8zWEYrVlJYaTVWOTJWUmdqb3A4V0R6TVlR?=
+ =?utf-8?Q?6YcMoYi86Ho=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFg5MjVpTmNpYXphbVBvdWxlZE9JSU4xVlJUTmVRNlJCUzF2QVh4L2wyRUlK?=
- =?utf-8?B?N25KbDdqNTdKTS9CbFlKMkNSTWFkeFRPWDhaQmVBSC82RUlra0tZUC92N1J5?=
- =?utf-8?B?c0Z5eDRVL0VwYUJSQjVoQitNTlpEYW5HUHpTelFxNXd5OU9md1N1NmZvTXYy?=
- =?utf-8?B?Ym5kUXNjSmtKWldlMHc3T2p4dkpOMUwzNnlFbGN4NjNWVVh6Lyt2MkVtVlJ3?=
- =?utf-8?B?WjBLVWNSMHJRV1UvRy9OcTNQS3k2U3ZzaURueTBxbEkwQ25JOVg4WjdTV01t?=
- =?utf-8?B?ZWdpRHlRZGgwWjlTU1VBcjhCSU8zNTFXZzUydUlGNXVqamtabnZFZ284L0pZ?=
- =?utf-8?B?TDJBUURsdy9OMkNKWW9ZKzQxRm4xZXpkN3J1Zm1mUHZjMVBiWGp6MFV1L3d0?=
- =?utf-8?B?RjdGajRKWE1RZ2s2bldlNVFtNkN4SFB4SXZzT05VSFkyWmQ5RXZJMElQS1Fn?=
- =?utf-8?B?MUJIRVd4Qk1aWnp1TzhyVEhGZ1NBa1N2dTlRRVJseXdwdTdmbm9TQ3lQUFJH?=
- =?utf-8?B?SUw3YTdGcnpmVXR3K3RwczlHMkpQYXo1R0FEemF6MUhNT3Y5d1hCU3JiMU5r?=
- =?utf-8?B?RCtiUjN5ZEtIWkxYWHNPRThhRVpxMVN1SVFmd2Q5dGNEQTJLbmh1SXNqTkJw?=
- =?utf-8?B?eld6aFVnSlF3TnA2MTVtOWp6ZEFWM1daU3dpRzlpek1uK2g1ekxQRlNFcUJE?=
- =?utf-8?B?REpwUlZnV2M3V2ZRczZiNmNRVkJJZlFMQTBsd0tXTThRU0I5bDMrSFpJaUdi?=
- =?utf-8?B?K08xZXFLYkZSdGsvZk9KZU9BSzBGM3dycXFlOEpvQkpVSnp0ZnBtRml0OTZ3?=
- =?utf-8?B?ak9uV1M5NzA5d0FLdElzTHBZQUVsWDRUYVJrNXkxMkp5R1pXVmlKN2doQm9t?=
- =?utf-8?B?b00rOFRMbHpvTmpkY1c4TDBveGFzTVRhckV2cUlLZE95L0hBeGozZCtlVE5z?=
- =?utf-8?B?eHAzelB4bG1hNjdKT2tDendLNm1MNkVMQ1c4bEVnNjBCNDlrSC9JTURRQUls?=
- =?utf-8?B?YmJzVCtERGx5ZW9MQjAwL2lGNzJja0MrbVVuVzFWb0FvQjN6emhrMGNiOEFC?=
- =?utf-8?B?K1N3b1ZJOGFlK3NQc0ZNaUQvdis4dGFEVFdvVUM0c2ZhTTFTMnZyVFpxZ3dR?=
- =?utf-8?B?UFZkS0lydk9WYnkzOWdtb21UYmVvcmZmd1gvK285VFRhdmgyRnROSGhuTWR1?=
- =?utf-8?B?K0JLQ3dyY1l5WGh0VDA3S3lOeTNIRTZ0RkhjVjhNUFY2L28wU2pIT0tOdzhr?=
- =?utf-8?B?YXYwK2pEZHZvRWNESEZBeHJOWWJGdnQrN0U2bk9WRDZwVEpVVGsvWU9OSUxp?=
- =?utf-8?B?MUFleUZkZVgydEdnbkt3YnFzV3RuWkNCLzhob25IUzk5aUc4WnA4SldrU1VB?=
- =?utf-8?B?OHNHdllVN2JRR1FyY1daVGZaNnJJWE5ZT2VvVFdjb252clI1UjhwNWd4WFFH?=
- =?utf-8?B?TnlnajFQWHJBalFqam1NZmtnczM5Z29wMW54RlhEWnFxMU9LNEZlRTZtZVlZ?=
- =?utf-8?B?cVZIQTZnMXZIRkdtZFJySEM0dkh2cEFjd0ExVjI0RWQxbXJ0N2dhanJzeDZY?=
- =?utf-8?B?L0Nzc2NOR3RZbFZJZlladUhXZmNCSXpURW9nQzNPNytPTGRRb2xzTkN4VVA0?=
- =?utf-8?B?TC9MeWsraXl2djlOemJUK3RPSmxGazJlUVZZRmMveEovaVJqOUx5aUg0ZzRW?=
- =?utf-8?B?OFVQWFVJMmUrenFTN1UxUG5iMG1LZ28rZGsvNlc2NW1XQmFTVjNEdnprUVpP?=
- =?utf-8?B?Z241eC96UTVUamxoMWVjQ0ZxM2svQTgrc29vcWZ3ZFlXaHZVNHVmRUFDdWFI?=
- =?utf-8?B?R3d2NGlzbWhKTGdwOEtzYUNkcVlkdTUwa3Z2WklML3czWWI5SGFWUkZCcnFD?=
- =?utf-8?B?M3hqVWkwRDFPVWRrSjhGQlB6U1drVlJrZ2kyRFdJekVkbkxMWEVYU1pNSTQ5?=
- =?utf-8?B?N2tVU0c1NEl3bmlpNkhNa1EzaGFnL0RVVTRFQzNpRjF6bEcwRDlGMWZla1pO?=
- =?utf-8?B?TXhsNXB4b0JXeXhERzFDOXkwcjNrQ3hpaW5VOWlEaDdncHdkS2wwZ0ZtOEp3?=
- =?utf-8?B?OVd6MlpYRkJ1MS9NZy9Gcy8yWFgxOFpHNUJjR0Q2cHVhK25RV2pxZk9zZE1C?=
- =?utf-8?Q?9NF+1ELI9Ibyp/Sw+NNBYuJHg?=
+	=?utf-8?B?S0NDVUF3N1VFOVJzUGZDSmUvaTdkQVRyckEwbDU2dkQwbmorMW44UnZ0YUlo?=
+ =?utf-8?B?WHFMU3ZWTzFiV1BkZ3UwNHlzM1IreGpPcWl4NVg2Vm1UREtTRjJpUTE2VUVU?=
+ =?utf-8?B?U2lqODdFeHVoeDNydlU5elhCVVVkT3FmUmxmekNPbTdBL1pOcTNES3BrM2Zx?=
+ =?utf-8?B?YTJHWTEvdk9oVG90ZkJZWFQ1TGVxUEdNbVpidThySnYwZ3drWWljc1pDdmJE?=
+ =?utf-8?B?bDJCK2tHaWQ0RTdmZzMyYU5mUFcyYkIzeTZPVEt4UE5aOVBFbms3TGNiWngx?=
+ =?utf-8?B?ZkRPZVBGcHY4VVNkUWx2NnZNSzNidGd4cTlRUnlvUmNWUEdWUU5ibWkzUzFo?=
+ =?utf-8?B?V1k4aW1ENW1sUk1HTVJGTzZ2aGluWmlUakJJNnZnOFVEYlNoU2liRjFEMmJj?=
+ =?utf-8?B?bHdFM2lFanhaSTR2bHc0b3NQUmFaUSt3bGQ5K3lUbHdSQTE4K3YwaVQ1a0tL?=
+ =?utf-8?B?NzBlNHFXUUNQMlp0Q1JOV0VGWkQ0Y1V2S2JLTDBtMlZucUZsMkR2RFhZL3Uv?=
+ =?utf-8?B?aW5tZUVUZlpRMzM2WWQ0NTlMZk9ieGhPOFZ3QkN0T3pvUmF4bVYxc0U5bXM5?=
+ =?utf-8?B?ZWRSVVN2bHNXc09nZCs4cElyNS9TK0k2UmNzRk9aUHhLeDNsaHJaQ0tBSHli?=
+ =?utf-8?B?RGFHLys1Z3hKcUVxR0o4MVVna0t6MWc4MUJnSXYzLy9kamNTeXhKS2MwbjVQ?=
+ =?utf-8?B?RVFoUW5IMnZtWW1SWCtzd3ZUaXpGakFwL2tVRERwcmc3OC9KVEI2QTVrWEla?=
+ =?utf-8?B?UVFGaEVrVzhlbTBpcUtzcWswQ3N5TjcrY0lMQ3pLZDNqVEVCeDg0RE9PVUxL?=
+ =?utf-8?B?ejk4c3VpRUFPYndtNlQvUlFnSWlBekl3cDVSdXA4eG83cW5WdlUzd2pna1Vh?=
+ =?utf-8?B?djJjcFFRbzN3M054aTZxWFdUL1lJQWNSeUNYcVpsM3RvLytnK2EyNnJyQjVT?=
+ =?utf-8?B?aExjbVEvMzZIOVZGR3F0N003bXZCM2c0c1g0bWRnOXFoZGc3SHFBSUd5Y3pZ?=
+ =?utf-8?B?QkhlVzMzNXFhcndTMXNzNGJFbmJ6Z3gzaHMyZGlNWkZiUW1WV0FNMVBWSEo1?=
+ =?utf-8?B?UEhVRGgxTVU0eG5QWG02RHBWWHN2Y0FQMlRvbTJncW1GNFRmYlNLS1ZjUWZl?=
+ =?utf-8?B?ZGk4aTF5QXVSLy94V05ReFNZRG9UM0NmaFFLRGVvRDlRSUxiTDNCOEZoSTQy?=
+ =?utf-8?B?NHg2NCtBMGlTbDRVL2ErWnJFcmhzeFo3UlpiV3lIc3IyMGtTOWZuRm56cTlV?=
+ =?utf-8?B?NC9jMVgwR2J6eUh1RzdhUDE0V0VHdVlhY0VrN2lXWEFsTzAzcWpGVEl4ejh0?=
+ =?utf-8?B?UHAyM2pDdWNiNFFpMmpBUDdKU01td0cxZ0FPUTJWNTRxSHZVbGpjalJjSDZk?=
+ =?utf-8?B?WEtSZ09GMzBSOUl6QVM2MVJObldrMVdMdjdINVRiNEZIRUU0UjhkNmx0SUdu?=
+ =?utf-8?B?R3o2dGc2K2k2bHdnOElUMzdMWkNzMCtSaldqcnpKM0RBd1B6R01OOHp0R3hw?=
+ =?utf-8?B?OE1FVkFDRE9wYW04d1lnNjIrM01tdVBsR05GaUExT1NmUTkxbFQzYk5PeDFQ?=
+ =?utf-8?B?Zmk2TDNWVVA4UmVsR3E4SWUwbTdEQXdlcTNjUStXVWJVQ09oWXJ0eUZLYTJJ?=
+ =?utf-8?B?TjlBaTRlUFlkTXhZVUI0cXFkZ2F3aHNzY0huVHBNWlBnUDNsQnZlN1JIcWRV?=
+ =?utf-8?B?Mk5BdFNFRHN1MEc3WFRGRzIvQ1RKWDJOZTFsSlhuUmE4aG9pZm94amRVL3Rt?=
+ =?utf-8?B?QUpxN2NLbW5KTjlwYzlDQWpuZlo0YlhPWllORW05eDFxVDNmdERjdkROU2FG?=
+ =?utf-8?B?YlZBMEE2QzhKSVdnUVJKblFzMXRKUUQxbThiS0NVa3oyVnp4NkdoaUNrNEMr?=
+ =?utf-8?B?OXh2ZDRvNlMwL0pxL09pQnl4MEdMMFdkQ0NpK04rZXRBcUZDSUJvdWI4OUww?=
+ =?utf-8?B?a2V5Z0o1a3hzY2FkVGRWY1lYRHU0a0pFTm5jQ2E0LzFzUURjYk5IalJUK0Rq?=
+ =?utf-8?B?NmZjYlNYS2xGZnRiZ1JOOUUxaTNleVppbkFybUU2WTFXVzk1bDU0Ry92TlBE?=
+ =?utf-8?B?TG5ITjdVYXE2QkVrMkJVL1ErLzlTQ0tuYmxqNnlvbG5RTGZVZ3RaYWNCVzZC?=
+ =?utf-8?Q?9++BmrdksiSVHmdEKAULUstjx?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20b916a5-8ba3-4efd-2030-08dd7db1dba3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11119d43-9fe1-41e4-9169-08dd7db27393
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 13:15:00.6568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 13:19:15.6320
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dPuYnFniuPekNn+c1lOirY5WWk8umfoRclnXIIzQUkF2ZbkfkIB5iLY0o13HcL2wIIbB+dlwpMt3tr6LtSyzjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4402
+X-MS-Exchange-CrossTenant-UserPrincipalName: fHle9uN+OJqhUdpwLoNyek8fWJ3AiMFvZVTGpBmV+TdHMuhgHu5cSv5+OsK98cwnNPFDUXIEex7d5ULYUeHpsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4325
 
 Hi Ilpo,
 
-On 4/11/2025 4:33 PM, Ilpo Järvinen wrote:
+On 4/11/2025 3:55 PM, Ilpo Järvinen wrote:
 > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 >
 >
 > On Tue, 25 Mar 2025, Suma Hegde wrote:
 >
->> Make frequently fetched telemetry available via sysfs interface.
+>> Expose power reading and power limits via hwmon power sensors.
 >>
->> Create following sysfs files per acpi device node.
->> * c0_residency_input
->> * prochot_status
->> * smu_fw_version
->> * protocol_version
->> * ddr_max_bw(GB/s)
->> * ddr_utilised_bw_input(GB/s)
->> * ddr_utilised_bw_perc_input(%)
->> * mclk_input(MHz)
->> * fclk_input(MHz)
->> * clk_fmax(MHz)
->> * clk_fmin(MHz)
->> * cclk_freq_limit_input(MHz)
->> * pwr_current_active_freq_limit(MHz)
->> * pwr_current_active_freq_limit_source
->>
->> Signed-off-by: Suma Hegde<suma.hegde@amd.com>
->> Reviewed-by: Naveen Krishna Chatradhi<naveenkrishna.chatradhi@amd.com>
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 >> ---
 >> Changes since v1:
->> 1. Add linux/bitops.h
->> 2. Define DDR_MAX_BW, DDR_UTIL_BW DDR_UTIL_BW_PERC FW_VER_MAJOR FW_VER_MINOR FW_VER_DEBUG FMAX
->>     FMIN FREQ_LIMIT FREQ_SRC_IND and use them in functions.
->> 3. Return early in hsmp_msg_get_nargs()
->> 4. Change while loop to for loop in hsmp_freq_limit_source_show()
->> 5. Correct the GENMASK size in hsmp_ddr_util_bw_show()[bit 19:8, instead
->>     of bit 20:8]
+>> 1. Move hsmp_create_sensor() call to init_acpi() in acpi.c and init_platform_device() in plat.c
+>> 2. Pass u16 as parameter instead of void * in hsmp_create_sensor()
+>> 3. Change dev_err() print after hsmp_create_sensor()
+>> 4. Add CONFIG_HWMON dependency in Makefile
+>> 5. Add #if IS_REACHABLE(CONFIG_HWMON) condition check in hsmp.h
+>> 6. Remove hsmp_hwmon struct in hsmp.h and add hwmon_channel_info and hwmon_chip_info to
+>>     hwmon.c file as static variables
+>> 7. Change argument to devm_hwmon_device_register_with_info()
+>> 8. Remove hsmp_create_power_sensor() and define power info statically. Instead of multiple channel,
+>>     use single channel with different attributes.
+>> 9. Replace switch with if in hsmp_hwmon_is_visble()
+>> 10. Remove referencing channel related code in hsmp_hwmon_read() and add code for attribute checking.
+>> 11. Replace switch with if in hsmp_hwmon_read()
+>> 12. Remove hsmp_hwmon_read_label().
+>> 13. Update hsmp_hwmon_write() to remove switch and code related to channel
+>> 14. Remove int-ll64.h header
+>> 15. Update the documentation
 >>
->>   Documentation/arch/x86/amd_hsmp.rst  |  31 +++-
->>   drivers/platform/x86/amd/hsmp/acpi.c | 259 +++++++++++++++++++++++++++
->>   drivers/platform/x86/amd/hsmp/hsmp.c |  21 +++
->>   drivers/platform/x86/amd/hsmp/hsmp.h |   1 +
->>   4 files changed, 305 insertions(+), 7 deletions(-)
+>>   Documentation/arch/x86/amd_hsmp.rst    |  10 ++
+>>   drivers/platform/x86/amd/hsmp/Makefile |   1 +
+>>   drivers/platform/x86/amd/hsmp/acpi.c   |   4 +
+>>   drivers/platform/x86/amd/hsmp/hsmp.h   |  11 ++-
+>>   drivers/platform/x86/amd/hsmp/hwmon.c  | 124 +++++++++++++++++++++++++
+>>   drivers/platform/x86/amd/hsmp/plat.c   |   5 +
+>>   6 files changed, 154 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/platform/x86/amd/hsmp/hwmon.c
 >>
 >> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
->> index 1d7b159a35d5..45a209fd5861 100644
+>> index 2fd917638e42..1d7b159a35d5 100644
 >> --- a/Documentation/arch/x86/amd_hsmp.rst
 >> +++ b/Documentation/arch/x86/amd_hsmp.rst
->> @@ -71,6 +71,25 @@ Note: lseek() is not supported as entire metrics table is read.
->>   Metrics table definitions will be documented as part of Public PPR.
->>   The same is defined in the amd_hsmp.h header.
+>> @@ -117,6 +117,16 @@ for socket with ID00 is given below::
+>>                }
 >>
->> +2. HSMP telemetry sysfs files
->> +
->> +Following sysfs file are available at /sys/devices/platform/AMDI0097:0X/.
->> +
->> +* c0_residency_input : percentage of cores in C0 state
->> +* prochot_status :  reports 1 if socket is in prochot, 0 otherwhile
-> otherwise
->
-> What's "prochot" ?
-
-prochot is a condition where processor is at thermal threshold value.
-
-I will add this explanation in the document.
-
->> +* smu_fw_version : SMU firmware version
->> +* protocol_version : HSMP interface version
->> +* ddr_max_bw : theoretical maximum ddr bw in GB/s
-> Please capitalize comments and documentation properly.
->
->> +* ddr_utilised_bw_input: current utilized ddr bw in GB/s
->> +* ddr_utilised_bw_perc_input(%): Percentage of current utilized ddr bw
->> +* mclk_input : memory clock in MHz
->> +* fclk_input: fabric clock in MHz
->> +* clk_fmax : max frequency of socket in MHz
->> +* clk_fmin : min frequency of socket in MHz
->> +* cclk_freq_limit_input : core clock frequency limit per socket in MHz
->> +* pwr_current_active_freq_limit: current active frequency limit of socket in MHz
-> Is that "active" a meaningful word in this or would just current frequency
-> limit suffice?
-The term "active" is included to ensure consistency with the processor 
-reference manual.
->> +* pwr_current_active_freq_limit_source: source of current active frequency limit
->> +
->>   ACPI device object format
->>   =========================
->>   The ACPI object format expected from the amd_hsmp driver
->> @@ -119,13 +138,11 @@ for socket with ID00 is given below::
 >>
->>   HSMP HWMON interface
->>   ==================
->> -HSMP power sensors are registered with hwmon interface.
->> -
->> -One hwmon directory is created for each socket and following files with 0444 permission are created
->> -inside the hwmon directory.
->> -- power1_input
->> -- power1_cap_max
->> -- power1_cap
->> +HSMP power sensors are registered with hwmon interface. One hwmon directory is created for each
->> +socket and following files are created inside the hwmon directory.
-> Please fold documentation paragraphs at 80 chars.
->
->> +- power1_input(read only)
->> +- power1_cap_max(read only)
->> +- power1_cap(read, write)
-> Don't these need space in before (?
->
+>> +HSMP HWMON interface
+>> +==================
+>> +HSMP power sensors are registered with hwmon interface.
+>> +
+>> +One hwmon directory is created for each socket and following files with 0444 permission are created
+>> +inside the hwmon directory.
+>> +- power1_input
+>> +- power1_cap_max
+>> +- power1_cap
+>> +
 >>   An example
 >>   ==========
+>>
+>> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
+>> index 0759bbcd13f6..ce8342e71f50 100644
+>> --- a/drivers/platform/x86/amd/hsmp/Makefile
+>> +++ b/drivers/platform/x86/amd/hsmp/Makefile
+>> @@ -6,6 +6,7 @@
+>>
+>>   obj-$(CONFIG_AMD_HSMP)                       += hsmp_common.o
+>>   hsmp_common-y                                := hsmp.o
+>> +hsmp_common-$(CONFIG_HWMON)          += hwmon.o
+>>   obj-$(CONFIG_AMD_HSMP_PLAT)          += amd_hsmp.o
+>>   amd_hsmp-y                           := plat.o
+>>   obj-$(CONFIG_AMD_HSMP_ACPI)          += hsmp_acpi.o
 >> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
->> index abbb680b9c71..803da111a034 100644
+>> index 0c54c91b5f1a..abbb680b9c71 100644
 >> --- a/drivers/platform/x86/amd/hsmp/acpi.c
 >> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
->> @@ -13,6 +13,7 @@
->>   #include <asm/amd_nb.h>
+>> @@ -281,6 +281,10 @@ static int init_acpi(struct device *dev)
+>>                        dev_err(dev, "Failed to init metric table\n");
+>>        }
 >>
->>   #include <linux/acpi.h>
->> +#include <linux/bitops.h>
->>   #include <linux/device.h>
->>   #include <linux/dev_printk.h>
->>   #include <linux/ioport.h>
->> @@ -36,6 +37,11 @@
->>
->>   static struct hsmp_plat_device *hsmp_pdev;
->>
->> +struct hsmp_sys_attr {
->> +     struct device_attribute dattr;
->> +     u32 msg_id;
->> +};
->> +
->>   static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->>                              u32 *value, bool write)
->>   {
->> @@ -243,6 +249,214 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
->>        return 0;
->>   }
->>
->> +static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
->> +                                          struct attribute *attr, int id)
->> +{
->> +     return attr->mode;
->> +}
->> +
->> +#define to_hsmp_sys_attr(__attr) container_of(__attr, struct hsmp_sys_attr, dattr)
->> +
->> +static ssize_t hsmp_msg_resp32_show(struct device *dev, struct device_attribute *attr,
->> +                                 char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
-> Reverse logic and handle the error first. Only on very special occassions
-> can it be done the other way around but the normal principle is check
-> error and early return.
->
->> +             return sysfs_emit(buf, "%u\n", data);
->> +
->> +     return ret;
->> +}
->> +
->> +#define DDR_MAX_BW(data)     FIELD_GET(GENMASK(31, 20), data)
->> +#define DDR_UTIL_BW(data)    FIELD_GET(GENMASK(19, 8), data)
->> +#define DDR_UTIL_BW_PERC(data)       FIELD_GET(GENMASK(7, 0), data)
->> +#define FW_VER_MAJOR(data)   FIELD_GET(GENMASK(23, 16), data)
->> +#define FW_VER_MINOR(data)   FIELD_GET(GENMASK(15, 8), data)
->> +#define FW_VER_DEBUG(data)   FIELD_GET(GENMASK(7, 0), data)
->> +#define FMAX(data)           FIELD_GET(GENMASK(31, 16), data)
->> +#define FMIN(data)           FIELD_GET(GENMASK(15, 0), data)
->> +#define FREQ_LIMIT(data)     FIELD_GET(GENMASK(31, 16), data)
->> +#define FREQ_SRC_IND(data)   FIELD_GET(GENMASK(15, 0), data)
->> +
->> +static ssize_t hsmp_ddr_max_bw_show(struct device *dev, struct device_attribute *attr,
->> +                                 char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)DDR_MAX_BW(data));
-> Why are these cast necessary?
-Since FIELD_GET() returns an unsigned long type, I used a cast to avoid 
-compiler warning.
-> I'd prefer naming the fields instead of making them function like macros
-> and using FIELD_GET() here.
->
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_ddr_util_bw_show(struct device *dev, struct device_attribute *attr,
->> +                                  char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)DDR_UTIL_BW(data));
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_ddr_util_bw_perc_show(struct device *dev, struct device_attribute *attr,
->> +                                       char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)DDR_UTIL_BW_PERC(data));
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_msg_fw_ver_show(struct device *dev, struct device_attribute *attr,
->> +                                 char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u.%u.%u\n", (u32)FW_VER_MAJOR(data),
->> +                               (u32)FW_VER_MINOR(data), (u32)FW_VER_DEBUG(data));
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_fclk_show(struct device *dev, struct device_attribute *attr,
->> +                           char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data[2];
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", data[0]);
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_mclk_show(struct device *dev, struct device_attribute *attr,
->> +                           char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data[2];
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", data[1]);
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_clk_fmax_show(struct device *dev, struct device_attribute *attr,
->> +                               char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)FMAX(data));
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_clk_fmin_show(struct device *dev, struct device_attribute *attr,
->> +                               char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)FMIN(data));
->> +
->> +     return ret;
->> +}
->> +
->> +static ssize_t hsmp_freq_limit_show(struct device *dev, struct device_attribute *attr,
->> +                                 char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret)
->> +             return sysfs_emit(buf, "%u\n", (u32)FREQ_LIMIT(data));
->> +
->> +     return ret;
->> +}
->> +
->> +static const char * const freqlimit_srcnames[] = {
->> +     "cHTC-Active",
->> +     "PROCHOT",
->> +     "TDC limit",
->> +     "PPT Limit",
->> +     "OPN Max",
->> +     "Reliability Limit",
->> +     "APML Agent",
->> +     "HSMP Agent"
-> Add comma.
->
->> +};
->> +
->> +static ssize_t hsmp_freq_limit_source_show(struct device *dev, struct device_attribute *attr,
->> +                                        char *buf)
->> +{
->> +     struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
->> +     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> +     u32 index = 0;
-> Either use unsigned int or size_t. u32 is not the right type for this.
->
-> Also, why you need to initialize it??
->
->> +     int len = 0;
->> +     u16 src_ind;
->> +     u32 data;
->> +     int ret;
->> +
->> +     ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
->> +     if (!ret) {
-> Please handle error first and return early.
->
->> +             src_ind = (u16)FREQ_SRC_IND(data);
-> This casting seems overkill.
->
->> +             for (index = 0; index < ARRAY_SIZE(freqlimit_srcnames); index++) {
->> +                     if (src_ind == 0)
->> +                             break;
->> +                     if ((src_ind & 1) == 1)
-> Unnecessary == 1, and then unnecessary parenthesis.
->
->> +                             len += sysfs_emit_at(buf, len, "%s ", freqlimit_srcnames[index]);
-> This will output an extra " " at the end.
->
->> +                     src_ind = src_ind >> 1;
->> +             }
->> +             len += sysfs_emit_at(buf, len, "\n");
->> +             return len;
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->>   static int init_acpi(struct device *dev)
->>   {
->>        u16 sock_ind;
->> @@ -285,6 +499,8 @@ static int init_acpi(struct device *dev)
->>        if (ret)
->>                dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
->>
->> +     dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
+>> +     ret = hsmp_create_sensor(dev, sock_ind);
+>> +     if (ret)
+>> +             dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
 >> +
 >>        return ret;
 >>   }
 >>
->> @@ -299,9 +515,52 @@ static const struct bin_attribute *hsmp_attr_list[] = {
->>        NULL
->>   };
->>
->> +#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)  \
->> +static struct hsmp_sys_attr hattr_##_name = {                \
->> +     .dattr = __ATTR(_name, _mode, _show, NULL),     \
->> +     .msg_id = _msg_id                               \
->> +}
->> +
->> +HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
->> +HSMP_DEV_ATTR(prochot_status, HSMP_GET_PROC_HOT, hsmp_msg_resp32_show, 0444);
->> +HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444);
->> +HSMP_DEV_ATTR(protocol_version, HSMP_GET_PROTO_VER, hsmp_msg_resp32_show, 0444);
->> +HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444);
->> +HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444);
->> +HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444);
->> +HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_perc_show, 0444);
->> +HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444);
->> +HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444);
->> +HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444);
->> +HSMP_DEV_ATTR(clk_fmin, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmin_show, 0444);
->> +HSMP_DEV_ATTR(pwr_current_active_freq_limit, HSMP_GET_SOCKET_FREQ_LIMIT,
->> +           hsmp_freq_limit_show, 0444);
->> +HSMP_DEV_ATTR(pwr_current_active_freq_limit_source, HSMP_GET_SOCKET_FREQ_LIMIT,
->> +           hsmp_freq_limit_source_show, 0444);
->> +
->> +static struct attribute *hsmp_dev_attr_list[] = {
->> +     &hattr_c0_residency_input.dattr.attr,
->> +     &hattr_prochot_status.dattr.attr,
->> +     &hattr_smu_fw_version.dattr.attr,
->> +     &hattr_protocol_version.dattr.attr,
->> +     &hattr_cclk_freq_limit_input.dattr.attr,
->> +     &hattr_ddr_max_bw.dattr.attr,
->> +     &hattr_ddr_utilised_bw_input.dattr.attr,
->> +     &hattr_ddr_utilised_bw_perc_input.dattr.attr,
->> +     &hattr_fclk_input.dattr.attr,
->> +     &hattr_mclk_input.dattr.attr,
->> +     &hattr_clk_fmax.dattr.attr,
->> +     &hattr_clk_fmin.dattr.attr,
->> +     &hattr_pwr_current_active_freq_limit.dattr.attr,
->> +     &hattr_pwr_current_active_freq_limit_source.dattr.attr,
->> +     NULL,
->> +};
->> +
->>   static const struct attribute_group hsmp_attr_grp = {
->>        .bin_attrs_new = hsmp_attr_list,
->> +     .attrs = hsmp_dev_attr_list,
->>        .is_bin_visible = hsmp_is_sock_attr_visible,
->> +     .is_visible = hsmp_is_sock_dev_attr_visible,
->>   };
->>
->>   static const struct attribute_group *hsmp_groups[] = {
->> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
->> index 8c05e1415820..65d37605bf88 100644
->> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
->> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
->> @@ -229,6 +229,27 @@ int hsmp_send_message(struct hsmp_message *msg)
->>   }
->>   EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
->>
->> +int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 n)
->> +{
->> +     struct hsmp_message msg = { 0 };
->> +     int ret;
->> +     int i;
-> unsigned int.
->
->> +
->> +     if (!data)
->> +             return -EINVAL;
->> +     msg.msg_id = msg_id;
->> +     msg.sock_ind = sock_ind;
->> +     msg.response_sz = n;
->> +
->> +     ret = hsmp_send_message(&msg);
->> +     if (!ret) {
-> Please return early on errors.
->
->> +             for (i = 0; i < n; i++)
->> +                     data[i] = msg.args[i];
->> +     }
->> +     return ret;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(hsmp_msg_get_nargs, "AMD_HSMP");
->> +
->>   int hsmp_test(u16 sock_ind, u32 value)
->>   {
->>        struct hsmp_message msg = { 0 };
 >> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
->> index 0063904904ed..febc1672bd65 100644
+>> index 3dee0bb684c7..0063904904ed 100644
 >> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
 >> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
->> @@ -74,4 +74,5 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
->>        return 0;
->>   }
->>   #endif
->> +int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 n);
->>   #endif /* HSMP_H */
+>> @@ -12,6 +12,7 @@
 >>
-> I'm pretty sure I've commented some of similar cases against your other
-> patches in the past. I'd appreciate if you try to take such coding style
-> comments always into account in future patches too so we don't end up
-> going back and forth on trivialities like that.
+>>   #include <linux/compiler_types.h>
+>>   #include <linux/device.h>
+>> +#include <linux/hwmon.h>
+>>   #include <linux/miscdevice.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/semaphore.h>
+>> @@ -26,7 +27,7 @@
+>>   #define HSMP_CDEV_NAME               "hsmp_cdev"
+>>   #define HSMP_DEVNODE_NAME    "hsmp"
+>>
+>> -#define DRIVER_VERSION               "2.4"
+>> +#define DRIVER_VERSION               "2.5"
+>>
+>>   struct hsmp_mbaddr_info {
+>>        u32 base_addr;
+>> @@ -65,4 +66,12 @@ int hsmp_misc_register(struct device *dev);
+>>   int hsmp_get_tbl_dram_base(u16 sock_ind);
+>>   ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
+>>   struct hsmp_plat_device *get_hsmp_pdev(void);
+>> +#if IS_REACHABLE(CONFIG_HWMON)
+>> +int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+>> +#else
+>> +int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+>> +{
+>> +     return 0;
+>> +}
+> Does this even compile with the extra semicolon?!? In any case, put the
+> stub's code right after the function:
 >
-> It might be helpful if you try to "review" your own patch before sending
-> them out to see if you missed something (it might surprise how many issues
-> you will end up catching by simply looking through your own changes before
-> sending them, at least I find many issues that way from my own patches).
+> int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
 >
+>> +#endif
+>>   #endif /* HSMP_H */
+>> diff --git a/drivers/platform/x86/amd/hsmp/hwmon.c b/drivers/platform/x86/amd/hsmp/hwmon.c
+>> new file mode 100644
+>> index 000000000000..98b1d66f491d
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/hsmp/hwmon.c
+>> @@ -0,0 +1,124 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * AMD HSMP hwmon support
+>> + * Copyright (c) 2025, AMD.
+>> + * All Rights Reserved.
+>> + *
+>> + * This file provides hwmon implementation for HSMP interface.
+>> + */
+>> +
+>> +#include <asm/amd_hsmp.h>
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/hwmon.h>
+>> +
+>> +#include "hsmp.h"
+>> +
+>> +#define HSMP_HWMON_NAME              "amd_hsmp_hwmon"
+>> +
+>> +static int hsmp_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>> +                         u32 attr, int channel, long val)
+>> +{
+>> +     u16 sock_ind = (uintptr_t)dev_get_drvdata(dev);
+> Casting to intermediate type serves no purpose so why not cast directly to
+> u16?
+
+I included uintptr_t instaed of u16 to resolve the below mentioned 
+compiler warning.
+
+"warning: cast from pointer to integer of different size 
+[-Wpointer-to-int-cast]"
+
+>
+>> +
+> Remove extra line.
+>
+>> +     struct hsmp_message msg = { 0 };
+>
+> {} is enough to initialize.
+>
+>> +
+>> +     if (type != hwmon_power)
+>> +             return -EOPNOTSUPP;
+> Add #include.
+>
+>> +
+>> +     if (attr != hwmon_power_cap)
+>> +             return -EOPNOTSUPP;
+>> +
+>> +     msg.num_args = 1;
+>> +     msg.args[0] = val;
+>> +     msg.msg_id = HSMP_SET_SOCKET_POWER_LIMIT;
+>> +     msg.sock_ind = sock_ind;
+>> +     return hsmp_send_message(&msg);
+>> +}
+>> +
+>> +static int hsmp_hwmon_read(struct device *dev,
+>> +                        enum hwmon_sensor_types type,
+>> +                        u32 attr, int channel, long *val)
+>> +{
+>> +     u16 sock_ind = (uintptr_t)dev_get_drvdata(dev);
+>> +     struct hsmp_message msg = { 0 };
+> Remove double cast and {}.
+>
+>> +     int ret;
+>> +
+>> +     if (type != hwmon_power)
+>> +             return -EOPNOTSUPP;
+>> +
+>> +     msg.sock_ind = sock_ind;
+>> +     msg.response_sz = 1;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_power_input:
+>> +             msg.msg_id = HSMP_GET_SOCKET_POWER;
+>> +             break;
+>> +     case hwmon_power_cap:
+>> +             msg.msg_id = HSMP_GET_SOCKET_POWER_LIMIT;
+>> +             break;
+>> +     case hwmon_power_cap_max:
+>> +             msg.msg_id = HSMP_GET_SOCKET_POWER_LIMIT_MAX;
+>> +             break;
+>> +     default:
+>> +             return -EOPNOTSUPP;
+>> +     }
+>> +
+>> +     ret = hsmp_send_message(&msg);
+>> +     if (!ret)
+>> +             *val = msg.args[0];
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static umode_t hsmp_hwmon_is_visble(const void *data,
+>> +                                 enum hwmon_sensor_types type,
+>> +                                 u32 attr, int channel)
+>> +{
+>> +     if (type != hwmon_power)
+>> +             return 0;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_power_input:
+>> +             return 0444;
+>> +     case hwmon_power_cap:
+>> +             return 0644;
+>> +     case hwmon_power_cap_max:
+>> +             return 0444;
+>> +     default:
+>> +             return 0;
+>> +     }
+>> +
+>> +     return 0;
+> Is this line required by some stupid checker???
+I will remove it. checkpatch is not giving any warning .
+>
+>> +}
+>> +
+>> +static const struct hwmon_ops hsmp_hwmon_ops = {
+>> +     .read = hsmp_hwmon_read,
+>> +     .is_visible = hsmp_hwmon_is_visble,
+>> +     .write  = hsmp_hwmon_write,
+>> +};
+>> +
+>> +static const struct hwmon_channel_info * const hsmp_info[] = {
+>> +     HWMON_CHANNEL_INFO(power, HWMON_P_INPUT | HWMON_P_CAP | HWMON_P_CAP_MAX),
+>> +     NULL
+>> +};
+>> +
+>> +static const struct hwmon_chip_info hsmp_chip_info = {
+>> +     .ops = &hsmp_hwmon_ops,
+>> +     .info = hsmp_info
+>> +};
+>> +
+>> +int hsmp_create_sensor(struct device *dev, u16 sock_ind)
+>> +{
+>> +     struct device *hwmon_dev;
+>> +
+>> +     hwmon_dev = devm_hwmon_device_register_with_info(dev, HSMP_HWMON_NAME,
+>> +                                                      (void *)(uintptr_t)(sock_ind),
+> Double casting seems pointless here as well. And sock_ind doesn't need
+> parenthesis either.
+Added this double casting to avoid compiler warning.
+>> +                                                      &hsmp_chip_info,
+>> +                                                      NULL);
+>> +     if (IS_ERR(hwmon_dev))
+>> +             return PTR_ERR(hwmon_dev);
+>> +
+>> +     return 0;
+> There's some err helper for this PTR_ERR_OR_ZERO() (IIRC). You also need
+> to add #include for it (same would have applied to IS_ERR / PTR_ERR).
+>
+>> +}
+>> +EXPORT_SYMBOL_NS(hsmp_create_sensor, "AMD_HSMP");
+>> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+>> index 63034408985c..63a5d31341e1 100644
+>> --- a/drivers/platform/x86/amd/hsmp/plat.c
+>> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+>> @@ -200,6 +200,11 @@ static int init_platform_device(struct device *dev)
+>>                        if (ret)
+>>                                dev_err(dev, "Failed to init metric table\n");
+>>                }
+>> +
+>> +             /* Register with hwmon interface for reporting power */
+>> +             ret = hsmp_create_sensor(dev, i);
+>> +             if (ret)
+>> +                     dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
+>>        }
+>>
+>>        return 0;
+>>
 > --
 >   i.
 
