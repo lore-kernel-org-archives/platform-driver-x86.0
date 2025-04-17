@@ -1,151 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB3C20C497
-	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 10:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C671DE3C8;
+	Thu, 17 Apr 2025 10:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744887399; cv=none; b=O3Cw9fHJfrNCStfS/CpvTf9TsVu7hK8kEYw09dLGdazGkLFnsGCLV3MdYor5caLvwedW6/6HgQvl3ffgDJeCjG9ohL3YryqadKh1e/RE6LaYVxmHvjXIUlUQfKJ2m1ohMMAqadbQ05SVkD7m6N0ll3WnIFivIe9mSaFov6t7fMU=
+	t=1744887447; cv=none; b=m7OzJH9vKy3hl1KfQY69pufQ0UoNDg5oeuTl+lKNY1UVSuKIL4ChZLfVrUqrnrFW7Rc69is+sZVENWkoaITqzC9ePg3TnDruKPyulSC16FiQ4RBv6N1aV7LmOfOvBLMKS/vTztEpBp7rqJLrk3fSxL4FrS69/V3/SQgDVW9pbew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744887399; c=relaxed/simple;
-	bh=OCmUAMA/YPG4/piPLikliDWqIc+OBinUCTsW1Z00VPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MBQ9ADWja5nUYCDR8MZagEPy7QuYWJag9XEI+zjdboQuET6uVF1ClFKWzDlqr+satfB+px9HaVsA1aXpZhZO6XXUIKOB7ET/R5EoqcGFb2yjEefDoN+6T7jb4cBc5E7sDshYhoHEQIAvDfcseh1uOkWmxfGz+hQmjDJG/E5G1xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XK/9L/jf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744887447; c=relaxed/simple;
+	bh=hFOa2BS0aExJdAHSEfdu2JskXGSCCJ6rQUiOk0oimqM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XKYjfmUCdF7Jx3zvir1WELsup8JlWWBTCJguc0QEEBw9ho4DHyQPU6kaejSG4ejXODMgooEyEI2qDKU6G+gqs276NaR/pblOo0+KY3LHLqD9/dhSNQC4OGtvp7Vht2h42/+Im6/RXvmxDf9O9g8aGPkM18y4LOGx3ojihi9AC0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d01UBAQe; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XK/9L/jf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744887396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OL4LXzPm34hXOvIhRoRU6GuEFCM/KQvC81H1MT67IUk=;
-	b=XK/9L/jfi8aBu2M2S8va97XSCbtpjfUfaSgE39yzP2eukwk+d9XEe9EVZ/OqHOvitxylmp
-	fPgEFKCg7oQI02p2+M4ZGx5EnVgAu9yptURyFc8Ewyh1P8JPsLGJdg7jtwDcGkKPXgqxbm
-	CPvAKAvDHZbMD0Ml+vfVuz0XDtdzA8s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-211-22iJpUgsPaWi4WHZnKdmkA-1; Thu, 17 Apr 2025 06:56:35 -0400
-X-MC-Unique: 22iJpUgsPaWi4WHZnKdmkA-1
-X-Mimecast-MFC-AGG-ID: 22iJpUgsPaWi4WHZnKdmkA_1744887395
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acb67aad0e2so21062366b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 03:56:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744887394; x=1745492194;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OL4LXzPm34hXOvIhRoRU6GuEFCM/KQvC81H1MT67IUk=;
-        b=Um03A3gFgzHDL8/00XUZzk08GQSDzbXARKHxfdamrK1aXMUU1Ouzm98xpSKJHOnLsH
-         leP9GJcDpCgRiE14I/WrkExFERgjDAD4HZwn1Qsd1H4wYHB/sxMO4znesZM1aSYjYQ+3
-         /6tt6H7XsKWlKQ3ypgA5YGhWA/Qqk3lw3/fzy50zvYAPwnhla3E+PCo4Z0lPXPVsHa2v
-         oIRxV51j7kUvNaFRbcYCGdmwZ2Ey3N158ayxKONEec7xrQ50jlHAih9e1Z0mghnVjX0E
-         q+0oc4OgdzQDmkNZ0577Gio+mf3M35zz1LjExwTsmj3NYKyvGg51m8q/VNKfw25KoSS0
-         WSdg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7lGt9SB/hEBy6Ly19ybPFfMFAQivkEyszw2Kt1RNkMpRtgkOLG4m3Hz3gqtAEma/kN4m05AWlZqIRvpdBAmcp0skx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdbAXXY/gD3UrBlVoNhLrtVFboDq/f35sUniQKKUBfdNquJPKe
-	X7sWQ1vYKlEpj+fbdXVKLVgaAd0VYDl1jVsu8LewoyWSuDc8Jf66ipcG6nzc38/OOw0FrgBgpTi
-	gBSp7bM47qrbOJ1vwz9YUU/p7hPYP9K2zGPc7u0N1fGOQHkrJE3w2jnzrxwHUrRcy0woseT4=
-X-Gm-Gg: ASbGncsEJm6rRAnHtwHiWMDxvSRLncBHTflG4CHzJjl/tnI+y4C2v6ihsD4MMv631t3
-	BdXIl7szDDLOCLjsU5Ow43+E//tPEfuc1nVp4tLSn78nlxOAuSZHE6vnTqp7BXenO5C8xkHMqmO
-	F2YBK//9yNEY/wicfSYr+Kqsnz5AWRZcNbX6PdgscxfLLr1dGJtHQ5g9B/ZGVde5MGWLlg0ax0E
-	+2Fw06MUdJ/azVcW9ehaKbdeZl8DXWh0UMATbmD+odiLHLrwro4KPIkbL0obZl6hZBGsx0hjoZ4
-	UMTZwJnZehN9SP6VaUybRqq7jk3bTPEshuqRTIEcX9xcxDCG2JkfV2NohIHl2lCtWEswgbxgZFC
-	+SX3Ic5LXWV5bNdFDq9/TFgAx/BgzFab+sQfJEuTLlXh7EVtg+a2UGbCucKtBow==
-X-Received: by 2002:a17:906:c14a:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-acb5a0f3217mr166983066b.15.1744887394559;
-        Thu, 17 Apr 2025 03:56:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmXTLIs/C0jJL0/J6bYVdeeI9w2VhQAAKyxIIwhTpF7usa+7Gx9STkCC5W2ZRIwAo0FesEkQ==
-X-Received: by 2002:a17:906:c14a:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-acb5a0f3217mr166981566b.15.1744887394189;
-        Thu, 17 Apr 2025 03:56:34 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ab3ecsm271784266b.131.2025.04.17.03.56.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 03:56:33 -0700 (PDT)
-Message-ID: <b019b2c4-0c2e-4ba2-bfa3-83fab7fd415f@redhat.com>
-Date: Thu, 17 Apr 2025 12:56:32 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d01UBAQe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744887445; x=1776423445;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=hFOa2BS0aExJdAHSEfdu2JskXGSCCJ6rQUiOk0oimqM=;
+  b=d01UBAQeH64UC23PtBF8AejbYpjd3FHT3Ba9fdaGvsAP0z6QdmEtRlrZ
+   63dJMytO7UzTU9avUY1n4OUmBzlvLU5X/WP65xVpKDfMu44nbI1XJiDu3
+   eb0Uy2bk3/HrY79A1JzEEqaLWcAFgSTxgz6nRTX6Z7CthCyWaDnI4Gokw
+   Dkci7gZ3XboDOqwKpfqb3YFqaKh5Xw13TsoQrW8hN24JrZlp7egL9ayVm
+   isTT/IhQZbIf8+6/pF+skla2Y8SDHVREc2fq+7xaSyFyBjJtwXrEtO4Vk
+   yo9AZJwj2w0g1u9PJcha4ZfbkFtJpmWIXVUP1XxwsPYLdcpOJfHls7IO1
+   Q==;
+X-CSE-ConnectionGUID: uBe6ZhEMR8Sh32+DRJ0RkQ==
+X-CSE-MsgGUID: Sw4Uj+kHRueLZwb0fyrKVg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46479183"
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="46479183"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 03:57:24 -0700
+X-CSE-ConnectionGUID: v/7bF07rTAuPdWrC31WDEg==
+X-CSE-MsgGUID: PTVWmvVNT+upn4DkBReWGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,218,1739865600"; 
+   d="scan'208";a="131304273"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 03:57:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 17 Apr 2025 13:57:19 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix uninitialized
+ variable due to bad error handling
+In-Reply-To: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
+Message-ID: <14424f02-c800-a482-4d23-fd05f61cec82@linux.intel.com>
+References: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 8/9] platform/x86: int3472: Add handshake pin support
-To: Andy Shevchenko <andy@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Dan Scally <djrscally@gmail.com>, Alan Stern <stern@rowland.harvard.edu>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
- Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>,
- platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250416124037.90508-1-hdegoede@redhat.com>
- <20250416124037.90508-9-hdegoede@redhat.com>
- <Z__z_G21Ro2jGDkP@smile.fi.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Z__z_G21Ro2jGDkP@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Andy,
+On Wed, 16 Apr 2025, Kurt Borja wrote:
 
-On 16-Apr-25 8:16 PM, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 02:40:36PM +0200, Hans de Goede wrote:
->> New Intel Meteor Lake based laptops with IPU6 cameras have a new type 0x12
->> pin defined in the INT3472 sensor companion device which describes
->> the sensor's GPIOs.
->>
->> This pin is primarily used on designs with a Lattice FPGA chip which is
->> capable of running the sensor independently of the main CPU for features
->> like presence detection. This pin needs to be driven high to make the FPGA
->> run the power-on sequence of the sensor. After driving the pin high,
->> the FPGA "firmware" needs 25ms to complete the power-on sequence.
->>
->> Add support for this modelling the handshake pin as a GPIO driven "dvdd"
->> regulator with a 25 ms enable time. This model was chosen because:
->>
->> 1. Sensor chips don't have a handshake pin, so we need to abstract this
->>    in some way which does not require modification to the sensor drivers,
->>    sensor drivers using the bulk-regulator API to get avdd + vddio + dvdd
->>    is normal. So this will work to get the right value set to the handshake
->>    pin without requiring sensor driver modifications.
->>
->> 2. Sensors typically wait only a small time for the sensor to power-on
->>    after de-asserting reset. Not the 25ms the Lattice chip requires.
->>    Using the regulator framework's enable_time allows hiding the need for
->>    this delay from the sensor drivers.
+> wmax_thermal_information() may also return -ENOMSG, which would leave
+> `id` uninitialized in thermal_profile_probe.
 > 
-> ...
+> Reorder and modify logic to catch all errors.
 > 
->>  			if (ret)
->>  				err_msg = "Failed to map regulator to sensor\n";
->>  
->> +			break;
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/r/Z_-KVqNbD9ygvE2X@stanley.mountain
+> Fixes: 27e9e6339896 ("platform/x86: alienware-wmi: Refactor thermal control methods")
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> Hi all,
 > 
->> +			if (ret)
->> +				err_msg = "Failed to map regulator to sensor\n";
->> +
->>  			break;
+> @Ilpo: This will definitely conflict with the for-next branch when
+> merging.
+
+Okay, thanks for the heads up (I'll eventually merge fixes into for-next
+once I merge this fix).
+
+> Also, the fixes tag references a commit from before the split (same
+> series though), but ofc this fix is meant to be applied on top of it
+> (fixes branch). Is this ok or would it be better to change the fixes
+> tag to the "split" commit?
+
+Pointing to the correct commit is preferred.
+
+It doesn't look very likely that the series would be "split" such that 
+only a part of it appears in a specific stable kernel so the difference 
+shouldn't matter anyway.
+
+In general, stable people would just send you a notification if something 
+cannot be backported to some stable version due to a conflict, and they'd 
+depend on you to submit the amended backport anyway so it's not much extra 
+"work" for them if something ends up conflicting. (And I don't think your 
+inbox would be exactly filling from stable notifications unlike mine --- 
+one of those joys of being a subsystem maintainer).
+
+-- 
+ i.
+
+> ---
+>  drivers/platform/x86/dell/alienware-wmi-wmax.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> As discussed this might be changed to have the same format string with supplied
-> name as a parameter.
-
-That does not work well, since this just stores a string to pass to
-dev_err_probe() later.
-
-So instead I've just gone with 2 unique errors for v4.
-
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> index 3d3014b5adf046c94c1ebf39a0e28a92622b40d6..b8e71f06fdde347573bff5c27a9ba53a0efcacae 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -607,12 +607,10 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+>  	for (u32 i = 0; i < sys_desc[3]; i++) {
+>  		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
+>  					       i + first_mode, &out_data);
+> -
+> -		if (ret == -EIO)
+> -			return ret;
+> -
+>  		if (ret == -EBADRQC)
+>  			break;
+> +		if (ret)
+> +			return ret;
+>  
+>  		if (!is_wmax_thermal_code(out_data))
+>  			continue;
 > 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
-Thank you.
-
-Regards,
-
-Hans
-
-
-
+> ---
+> base-commit: fcf27a6a926fd9eeba39e9c3fde43c9298fe284e
+> change-id: 20250416-smatch-fix-d1191e2514f5
+> 
+> Best regards,
+> 
