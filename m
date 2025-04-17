@@ -1,222 +1,331 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466BA254840;
-	Thu, 17 Apr 2025 17:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382CC255E23;
+	Thu, 17 Apr 2025 17:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909227; cv=none; b=sPZhwiBryjLoDaeQXI6b8QDuKVUrq2zFd1hAEbNpPe52bWmJGY1Eub46x+Noa/9f0UA1EeTiWlHzDLOKouaGaTYFZDVe1lQGZYls6PzLTT8Wg6vw5gte2zIWnh8/2bYgZn2nqvaBJl3sw6pX2IHjeGF6ogGEyd1qms0muXljQc8=
+	t=1744912410; cv=none; b=VdMGzyCwWH3QPl3u3clXncUFZdxNmO2VMZSEWOzuQ4aJ4nsEhPtvTsCrRvumV6d2w9UF+cMnmweJpBbj9nM8xbAJ+NeTTmkDTk/INrc5BlFM4DMHdL15hexQObE0DtPClTi04J4RtB1mUuwNw5Nkk6SJ7H56t/Xjv6kQTiFzTZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909227; c=relaxed/simple;
-	bh=j59LvdPcdSSaggSdypS7MpNAXq5tHl3BNvsDiB/3LXc=;
+	s=arc-20240116; t=1744912410; c=relaxed/simple;
+	bh=zpPGTn9jBq6dlXLi2aKAfFOf1S875AgtFgpT+dNjwe8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CoskCqkEvBDfXZ0Lt9ltAZyoqV17JAP9cBV315bc8btF0Q457BQjHTbt3B0OC3Cx9mvCdHQrZIeQhyJO7bHpMeNU84AB1PFb8wDsceTl9qLoPsBfU9yxlk99LmXKbWycen9f8cdM53yDgZVwyoWvwXKT63DDx2fcxAxgqVIaNxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IE4aIZQD; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=OKxGUYHD/UgEaKgHgj6esaVwhRtZ9sLCFry4i+7r5iKuPEjGi/KQraj8ADdufVS0xIT+w8lF/6iBMjqa5fuxSuAPxiTF8gvdVDsPlQoB9a5CK7MF/tytbRwmBruKKuzfYqqs791gnqLGBuaQU8PQ+c6z4DXk6IgMcKuc+hnyS0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=bSaSMj3n; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IE4aIZQD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744909225; x=1776445225;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=j59LvdPcdSSaggSdypS7MpNAXq5tHl3BNvsDiB/3LXc=;
-  b=IE4aIZQDlMwO13jmDxB8P60R4aVfoDavdr0cOEGOTfcFB7IQOB94Rb/Q
-   s9Pw+S67YpqEs7PkJUeDZ/n1yKsQ2bBmNmIaqANpbUyF+Nr7h+RxHZlXF
-   lLrzlKNAbvNZJd+wgGF0R/NcF+qj5o6IU6t9Hf6bPtxovpVyjFbub4g1z
-   xnsBETDNLRaxHMFuije76eiYfNfi2ekIu+8qalPnawyw7snNcRVWa5/8O
-   GT/qDalrK0gnEVl24kcAQYYgAatd4pxY6v4UhNrNvRyQlUxSjirYbh5Nf
-   ap2fk4fETiM7PjQF+nCLMmNhJV32UTv8grwWqZo4THJcd2OWkhl4JOH3z
-   g==;
-X-CSE-ConnectionGUID: ZmSQE6q2QF2qDrm0Wf32JA==
-X-CSE-MsgGUID: cYzOk0IHR4Oqertzcj+e9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57896208"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57896208"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 10:00:23 -0700
-X-CSE-ConnectionGUID: mCYYlD+rRRuSrMfT5j8iyw==
-X-CSE-MsgGUID: 7M/wPTY4QCmxxS3R/NjNmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="131411700"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by fmviesa010.fm.intel.com with ESMTP; 17 Apr 2025 10:00:23 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="bSaSMj3n"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id D4E7B2E0895C;
+	Thu, 17 Apr 2025 20:53:22 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1744912404;
+	bh=5krtJAQ2Hs3Msl2turSRVjSkxAaMpQ5x31o5h0mc8ag=; h=From:To:Subject;
+	b=bSaSMj3nl7wrP1gi03SdKUxIuOVWEGwnJEnh7MEoGhY5KOwYYa8VSsD1WnnHVK4dE
+	 RIPuiKHbhGErUclgatM5JTbdeQcsTkKiGPgj+cMHzFHJlr2wLZ+uYiwFs2E7kyteCt
+	 59/utkRZuS3KRUiiZG+7AoNmzPv/OjgYnUdY3wLA=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/2] platform/x86: ISST: Support SST-PP revision 2
-Date: Thu, 17 Apr 2025 10:00:11 -0700
-Message-ID: <20250417170011.1243858-3-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250417170011.1243858-1-srinivas.pandruvada@linux.intel.com>
-References: <20250417170011.1243858-1-srinivas.pandruvada@linux.intel.com>
+	sre@kernel.org,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	mario.limonciello@amd.com,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v9 03/15] platform/x86: oxpec: Move hwmon/oxp-sensors to
+ platform/x86
+Date: Thu, 17 Apr 2025 19:52:58 +0200
+Message-ID: <20250417175310.3552671-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250417175310.3552671-1-lkml@antheas.dev>
+References: <20250417175310.3552671-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174491240451.24806.15948022686644251336@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-SST PP revision 2 added fabric 1 P0, P1 and Pm frequencies. Export them
-by using a new IOCTL ISST_IF_GET_PERF_LEVEL_FABRIC_INFO. This IOCTL
-requires platforms with SST PP revision 2 or higher.
+The EC of OneXPlayer devices used to only control the fan.
+This is no longer the case, with the EC of OneXPlayer gaining
+additional functionality (turbo button, turbo led, battery controls).
 
-To accommodate potential future increases in fabric count and avoid ABI
-changes, support is extended for up to 8 fabrics.
+As it will be beneficial from a complexity perspective
+to retain this driver as a single unit, move it out
+of hwmon, and into platform/x86. Also, remove the
+hwmon documentation to prepare moving it to
+Documentation/ABI/.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+While at it, add myself to the maintainer's file.
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- .../intel/speed_select_if/isst_tpmi_core.c    | 66 +++++++++++++++++++
- include/uapi/linux/isst_if.h                  | 26 ++++++++
- 2 files changed, 92 insertions(+)
+ Documentation/hwmon/index.rst                 |  2 +-
+ Documentation/hwmon/oxp-sensors.rst           | 89 -------------------
+ MAINTAINERS                                   |  7 +-
+ drivers/hwmon/Kconfig                         | 11 ---
+ drivers/hwmon/Makefile                        |  1 -
+ drivers/platform/x86/Kconfig                  | 12 +++
+ drivers/platform/x86/Makefile                 |  3 +
+ .../oxp-sensors.c => platform/x86/oxpec.c}    | 10 +--
+ 8 files changed, 24 insertions(+), 111 deletions(-)
+ delete mode 100644 Documentation/hwmon/oxp-sensors.rst
+ rename drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} (98%)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index bc4089d3d421..b868ea0ce8f6 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1016,6 +1016,7 @@ static int isst_if_set_perf_feature(void __user *argp)
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index f0ddf6222c44d..a86f7aa9006e6 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -189,7 +189,7 @@ Hardware Monitoring Kernel Drivers
+    nzxt-kraken3
+    nzxt-smart2
+    occ
+-   oxp-sensors
++   oxpec
+    pc87360
+    pc87427
+    pcf8591
+diff --git a/Documentation/hwmon/oxp-sensors.rst b/Documentation/hwmon/oxp-sensors.rst
+deleted file mode 100644
+index 581c4dafbfa13..0000000000000
+--- a/Documentation/hwmon/oxp-sensors.rst
++++ /dev/null
+@@ -1,89 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0-or-later
+-
+-Kernel driver oxp-sensors
+-=========================
+-
+-Authors:
+-    - Derek John Clark <derekjohn.clark@gmail.com>
+-    - Joaquín Ignacio Aramendía <samsagax@gmail.com>
+-
+-Description:
+-------------
+-
+-Handheld devices from OneNetbook, AOKZOE, AYANEO, And OrangePi provide fan
+-readings and fan control through their embedded controllers.
+-
+-Currently supports OneXPlayer devices, AOKZOE, AYANEO, and OrangePi
+-handheld devices. AYANEO devices preceding the AIR and OneXPlayer devices
+-preceding the Mini A07 are not supportable as the EC model is different
+-and do not have manual control capabilities.
+-
+-Some OneXPlayer and AOKZOE models have a toggle for changing the behaviour
+-of the "Turbo/Silent" button of the device. It will change the key event
+-that it triggers with a flip of the `tt_toggle` attribute. See below for
+-boards that support this function.
+-
+-Supported devices
+------------------
+-
+-Currently the driver supports the following handhelds:
+-
+- - AOKZOE A1
+- - AOKZOE A1 PRO
+- - AYANEO 2
+- - AYANEO 2S
+- - AYANEO AIR
+- - AYANEO AIR 1S
+- - AYANEO AIR Plus (Mendocino)
+- - AYANEO AIR Pro
+- - AYANEO Flip DS
+- - AYANEO Flip KB
+- - AYANEO Geek
+- - AYANEO Geek 1S
+- - AYANEO KUN
+- - OneXPlayer 2
+- - OneXPlayer 2 Pro
+- - OneXPlayer AMD
+- - OneXPlayer mini AMD
+- - OneXPlayer mini AMD PRO
+- - OneXPlayer OneXFly
+- - OneXPlayer X1 A
+- - OneXPlayer X1 i
+- - OneXPlayer X1 mini
+- - OrangePi NEO-01
+-
+-"Turbo/Silent" button behaviour toggle is only supported on:
+- - AOK ZOE A1
+- - AOK ZOE A1 PRO
+- - OneXPlayer 2
+- - OneXPlayer 2 Pro
+- - OneXPlayer mini AMD (only with updated alpha BIOS)
+- - OneXPlayer mini AMD PRO
+- - OneXPlayer OneXFly
+- - OneXPlayer X1 A
+- - OneXPlayer X1 i
+- - OneXPlayer X1 mini
+-
+-Sysfs entries
+--------------
+-
+-The following attributes are supported:
+-
+-fan1_input
+-  Read Only. Reads current fan RPM.
+-
+-pwm1_enable
+-  Read Write. Enable manual fan control. Write "1" to set to manual, write "0"
+-  to let the EC control de fan speed. Read this attribute to see current status.
+-
+-pwm1
+-  Read Write. Read this attribute to see current duty cycle in the range [0-255].
+-  When pwm1_enable is set to "1" (manual) write any value in the range [0-255]
+-  to set fan speed.
+-
+-tt_toggle
+-  Read Write. Read this attribute to check the status of the turbo/silent
+-  button behaviour function. Write "1" to activate the switch and "0" to
+-  deactivate it. The specific keycodes and behaviour is specific to the device
+-  both with this function on and off. This attribute is attached to the platform
+-  driver and not to the hwmon driver (/sys/devices/platform/oxp-platform/tt_toggle)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c59316109e3f8..e584c1a25449a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18013,12 +18013,13 @@ S:	Maintained
+ F:	drivers/mtd/nand/onenand/
+ F:	include/linux/mtd/onenand*.h
  
- #define SST_PP_INFO_10_OFFSET	80
- #define SST_PP_INFO_11_OFFSET	88
-+#define SST_PP_INFO_12_OFFSET	96
+-ONEXPLAYER FAN DRIVER
++ONEXPLAYER PLATFORM EC DRIVER
++M:	Antheas Kapenekakis <lkml@antheas.dev>
+ M:	Derek John Clark <derekjohn.clark@gmail.com>
+ M:	Joaquín Ignacio Aramendía <samsagax@gmail.com>
+-L:	linux-hwmon@vger.kernel.org
++L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/hwmon/oxp-sensors.c
++F:	drivers/platform/x86/oxpec.c
  
- #define SST_PP_P1_SSE_START	0
- #define SST_PP_P1_SSE_WIDTH	8
-@@ -1068,6 +1069,15 @@ static int isst_if_set_perf_feature(void __user *argp)
- #define SST_PP_CORE_RATIO_PM_FABRIC_START	48
- #define SST_PP_CORE_RATIO_PM_FABRIC_WIDTH	8
+ ONIE TLV NVMEM LAYOUT DRIVER
+ M:	Miquel Raynal <miquel.raynal@bootlin.com>
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index f91f713b0105d..5fd93aad2d6df 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1795,17 +1795,6 @@ config SENSORS_NZXT_SMART2
  
-+#define SST_PP_CORE_RATIO_P0_FABRIC_1_START	0
-+#define SST_PP_CORE_RATIO_P0_FABRIC_1_WIDTH	8
-+
-+#define SST_PP_CORE_RATIO_P1_FABRIC_1_START	8
-+#define SST_PP_CORE_RATIO_P1_FABRIC_1_WIDTH	8
-+
-+#define SST_PP_CORE_RATIO_PM_FABRIC_1_START	16
-+#define SST_PP_CORE_RATIO_PM_FABRIC_1_WIDTH	8
-+
- static int isst_if_get_perf_level_info(void __user *argp)
- {
- 	struct isst_perf_level_data_info perf_level;
-@@ -1167,6 +1177,59 @@ static int isst_if_get_perf_level_info(void __user *argp)
- 	return 0;
- }
+ source "drivers/hwmon/occ/Kconfig"
  
-+static int isst_if_get_perf_level_fabric_info(void __user *argp)
-+{
-+	struct isst_perf_level_fabric_info perf_level_fabric;
-+	struct tpmi_per_power_domain_info *power_domain_info;
-+	int start = SST_PP_CORE_RATIO_P0_FABRIC_START;
-+	int width = SST_PP_CORE_RATIO_P0_FABRIC_WIDTH;
-+	int offset = SST_PP_INFO_11_OFFSET;
-+	int i;
-+
-+	if (copy_from_user(&perf_level_fabric, argp, sizeof(perf_level_fabric)))
-+		return -EFAULT;
-+
-+	power_domain_info = get_instance(perf_level_fabric.socket_id,
-+					 perf_level_fabric.power_domain_id);
-+	if (!power_domain_info)
-+		return -EINVAL;
-+
-+	if (perf_level_fabric.level > power_domain_info->max_level)
-+		return -EINVAL;
-+
-+	if (power_domain_info->pp_header.feature_rev < 2)
-+		return -EINVAL;
-+
-+	if (!(power_domain_info->pp_header.level_en_mask & BIT(perf_level_fabric.level)))
-+		return -EINVAL;
-+
-+	/* For revision 2, maximum number of fabrics is 2 */
-+	perf_level_fabric.max_fabrics = 2;
-+
-+	for (i = 0; i < perf_level_fabric.max_fabrics; i++) {
-+		_read_pp_level_info("p0_fabric_freq_mhz", perf_level_fabric.p0_fabric_freq_mhz[i],
-+				    perf_level_fabric.level, offset, start, width,
-+				    SST_MUL_FACTOR_FREQ)
-+		start += width;
-+
-+		_read_pp_level_info("p1_fabric_freq_mhz", perf_level_fabric.p1_fabric_freq_mhz[i],
-+				    perf_level_fabric.level, offset, start, width,
-+				    SST_MUL_FACTOR_FREQ)
-+		start += width;
-+
-+		_read_pp_level_info("pm_fabric_freq_mhz", perf_level_fabric.pm_fabric_freq_mhz[i],
-+				    perf_level_fabric.level, offset, start, width,
-+				    SST_MUL_FACTOR_FREQ)
-+		offset = SST_PP_INFO_12_OFFSET;
-+		start = 0;
-+	}
-+
-+	if (copy_to_user(argp, &perf_level_fabric, sizeof(perf_level_fabric)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- #define SST_PP_FUSED_CORE_COUNT_START	0
- #define SST_PP_FUSED_CORE_COUNT_WIDTH	8
+-config SENSORS_OXP
+-	tristate "OneXPlayer EC fan control"
+-	depends on ACPI_EC
+-	depends on X86
+-	help
+-		If you say yes here you get support for fan readings and control over
+-		OneXPlayer handheld devices. Only OneXPlayer mini AMD handheld variant
+-		boards are supported.
+-
+-		Can also be built as a module. In that case it will be called oxp-sensors.
+-
+ config SENSORS_PCF8591
+ 	tristate "Philips PCF8591 ADC/DAC"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 766c652ef22be..e3468d024ff39 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -183,7 +183,6 @@ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
+ obj-$(CONFIG_SENSORS_NZXT_KRAKEN2) += nzxt-kraken2.o
+ obj-$(CONFIG_SENSORS_NZXT_KRAKEN3) += nzxt-kraken3.o
+ obj-$(CONFIG_SENSORS_NZXT_SMART2) += nzxt-smart2.o
+-obj-$(CONFIG_SENSORS_OXP) += oxp-sensors.o
+ obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
+ obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
+ obj-$(CONFIG_SENSORS_PCF8591)	+= pcf8591.o
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 43407e76476b5..739740c4bb535 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1201,6 +1201,18 @@ config SEL3350_PLATFORM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called sel3350-platform.
  
-@@ -1453,6 +1516,9 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
- 	case ISST_IF_GET_PERF_LEVEL_INFO:
- 		ret = isst_if_get_perf_level_info(argp);
- 		break;
-+	case ISST_IF_GET_PERF_LEVEL_FABRIC_INFO:
-+		ret = isst_if_get_perf_level_fabric_info(argp);
-+		break;
- 	case ISST_IF_GET_PERF_LEVEL_CPU_MASK:
- 		ret = isst_if_get_perf_level_mask(argp);
- 		break;
-diff --git a/include/uapi/linux/isst_if.h b/include/uapi/linux/isst_if.h
-index 0df1a1c3caf4..8197a4800604 100644
---- a/include/uapi/linux/isst_if.h
-+++ b/include/uapi/linux/isst_if.h
-@@ -375,6 +375,30 @@ struct isst_perf_level_data_info {
- 	__u16 trl_freq_mhz[TRL_MAX_LEVELS][TRL_MAX_BUCKETS];
- };
- 
-+#define MAX_FABRIC_COUNT	8
++config OXP_EC
++	tristate "OneXPlayer EC platform control"
++	depends on ACPI_EC
++	depends on HWMON
++	depends on X86
++	help
++		Enables support for the platform EC of OneXPlayer and AOKZOE
++		handheld devices. This includes fan speed, fan controls, and
++		disabling the default TDP behavior of the device. Due to legacy
++		reasons, this driver also provides hwmon functionality to Ayaneo
++		devices and the OrangePi Neo.
 +
-+/**
-+ * struct isst_perf_level_fabric_info - Structure to get SST-PP fabric details
-+ * @socket_id:		Socket/package id
-+ * @power_domain_id:	Power Domain id
-+ * @level:		SST-PP level for which caller wants to get information
-+ * @max_fabrics:	Count of fabrics in resonse
-+ * @p0_fabric_freq_mhz: Fabric (Uncore) maximum frequency
-+ * @p1_fabric_freq_mhz: Fabric (Uncore) TDP frequency
-+ * @pm_fabric_freq_mhz: Fabric (Uncore) minimum frequency
-+ *
-+ * Structure used to get information on frequencies for fabrics.
-+ */
-+struct isst_perf_level_fabric_info {
-+	__u8 socket_id;
-+	__u8 power_domain_id;
-+	__u16 level;
-+	__u16 max_fabrics;
-+	__u16 p0_fabric_freq_mhz[MAX_FABRIC_COUNT];
-+	__u16 p1_fabric_freq_mhz[MAX_FABRIC_COUNT];
-+	__u16 pm_fabric_freq_mhz[MAX_FABRIC_COUNT];
-+};
-+
- /**
-  * struct isst_perf_level_cpu_mask - Structure to get SST-PP level CPU mask
-  * @socket_id:	Socket/package id
-@@ -471,5 +495,7 @@ struct isst_turbo_freq_info {
- #define ISST_IF_GET_BASE_FREQ_INFO	_IOR(ISST_IF_MAGIC, 14, struct isst_base_freq_info *)
- #define ISST_IF_GET_BASE_FREQ_CPU_MASK	_IOR(ISST_IF_MAGIC, 15, struct isst_perf_level_cpu_mask *)
- #define ISST_IF_GET_TURBO_FREQ_INFO	_IOR(ISST_IF_MAGIC, 16, struct isst_turbo_freq_info *)
-+#define ISST_IF_GET_PERF_LEVEL_FABRIC_INFO _IOR(ISST_IF_MAGIC, 17,\
-+						struct isst_perf_level_fabric_info *)
+ endif # X86_PLATFORM_DEVICES
  
- #endif
+ config P2SB
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 650dfbebb6c8c..38ffc4c98e786 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -154,3 +154,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
+ 
+ # SEL
+ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
++
++# OneXPlayer
++obj-$(CONFIG_OXP_EC)			+= oxpec.o
+diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/platform/x86/oxpec.c
+similarity index 98%
+rename from drivers/hwmon/oxp-sensors.c
+rename to drivers/platform/x86/oxpec.c
+index f7a64fbc8f33e..dc3a0871809cd 100644
+--- a/drivers/hwmon/oxp-sensors.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -1,11 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*
+- * Platform driver for OneXPlayer, AOKZOE, AYANEO, and OrangePi Handhelds
+- * that expose fan reading and control via hwmon sysfs.
+- *
+- * Old OXP boards have the same DMI strings and they are told apart by
+- * the boot cpu vendor (Intel/AMD). Of these older models only AMD is
+- * supported.
++ * Platform driver for OneXPlayer and AOKZOE devices. For the time being,
++ * it also exposes fan controls for AYANEO, and OrangePi Handhelds via
++ * hwmon sysfs.
+  *
+  * Fan control is provided via pwm interface in the range [0-255].
+  * Old AMD boards use [0-100] as range in the EC, the written value is
+@@ -16,6 +13,7 @@
+  *
+  * Copyright (C) 2022 Joaquín I. Aramendía <samsagax@gmail.com>
+  * Copyright (C) 2024 Derek J. Clark <derekjohn.clark@gmail.com>
++ * Copyright (C) 2025 Antheas Kapenekakis <lkml@antheas.dev>
+  */
+ 
+ #include <linux/acpi.h>
 -- 
-2.48.1
+2.49.0
 
