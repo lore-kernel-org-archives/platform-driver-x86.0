@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E500922DFB2
-	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 10:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB3C20C497
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 10:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744886940; cv=none; b=NApsNNYAIRB6vHJGkq7OBUHDPPtj3WIbPZ5qxUNzAK661HwFZKySHvlLdDFyDnNo2LfvyodVU1UWk3XaL02LnzNwRjLpMQuvz7bnmpaKQ/blmfZm7N0D/kjD2foHKDM2DcISuwNA7z42gAl7A1Gx413Qz7RX3PUXUelBOmjzJL4=
+	t=1744887399; cv=none; b=O3Cw9fHJfrNCStfS/CpvTf9TsVu7hK8kEYw09dLGdazGkLFnsGCLV3MdYor5caLvwedW6/6HgQvl3ffgDJeCjG9ohL3YryqadKh1e/RE6LaYVxmHvjXIUlUQfKJ2m1ohMMAqadbQ05SVkD7m6N0ll3WnIFivIe9mSaFov6t7fMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744886940; c=relaxed/simple;
-	bh=U/xu7g/tpiSu6tYud1zSIanwoZzW3itFHEiQEEE1/PA=;
+	s=arc-20240116; t=1744887399; c=relaxed/simple;
+	bh=OCmUAMA/YPG4/piPLikliDWqIc+OBinUCTsW1Z00VPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aRPpXFlB8jlsl47Ap/D+gcnR1y2SzowWQZ871fPvq8/Ra4C88L7Sfqg/fib7IPuknBMAYd04Ed2ZPHepWnlKzXUHc/uYbEv4FdaK1FGZc5KhfKxpA64xR9M/U/e9ejs5jweGa1/BHWJcQbJjAs+yC91wYiFlWTpMHLB/3kCSBdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cz7pvpMn; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=MBQ9ADWja5nUYCDR8MZagEPy7QuYWJag9XEI+zjdboQuET6uVF1ClFKWzDlqr+satfB+px9HaVsA1aXpZhZO6XXUIKOB7ET/R5EoqcGFb2yjEefDoN+6T7jb4cBc5E7sDshYhoHEQIAvDfcseh1uOkWmxfGz+hQmjDJG/E5G1xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XK/9L/jf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cz7pvpMn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XK/9L/jf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744886937;
+	s=mimecast20190719; t=1744887396;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XHCAXS4O6jNna+NuRjPkc2qWIFeJXBPms5Egizd4OVI=;
-	b=Cz7pvpMneVpkNN/46AW7KOypZJGYMOd+xrHC27IMKvOJoM+ONMr3dX2+McFLQhyj6V9GJx
-	jwj/TIUxIbzKuadMWkH3NcS/jeaf2EH2u0639ZhK6ZIcVcO5KfNU/PyziNTzuAKMJBc/Fv
-	juKTMEHGE/pSVjN83nQVb4pdD2nEqVs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=OL4LXzPm34hXOvIhRoRU6GuEFCM/KQvC81H1MT67IUk=;
+	b=XK/9L/jfi8aBu2M2S8va97XSCbtpjfUfaSgE39yzP2eukwk+d9XEe9EVZ/OqHOvitxylmp
+	fPgEFKCg7oQI02p2+M4ZGx5EnVgAu9yptURyFc8Ewyh1P8JPsLGJdg7jtwDcGkKPXgqxbm
+	CPvAKAvDHZbMD0Ml+vfVuz0XDtdzA8s=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-227--nq3a4YnPIWYzN9fYmPEYg-1; Thu, 17 Apr 2025 06:48:56 -0400
-X-MC-Unique: -nq3a4YnPIWYzN9fYmPEYg-1
-X-Mimecast-MFC-AGG-ID: -nq3a4YnPIWYzN9fYmPEYg_1744886935
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac79e4764e5so45249366b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 03:48:56 -0700 (PDT)
+ us-mta-211-22iJpUgsPaWi4WHZnKdmkA-1; Thu, 17 Apr 2025 06:56:35 -0400
+X-MC-Unique: 22iJpUgsPaWi4WHZnKdmkA-1
+X-Mimecast-MFC-AGG-ID: 22iJpUgsPaWi4WHZnKdmkA_1744887395
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acb67aad0e2so21062366b.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 03:56:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744886935; x=1745491735;
+        d=1e100.net; s=20230601; t=1744887394; x=1745492194;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XHCAXS4O6jNna+NuRjPkc2qWIFeJXBPms5Egizd4OVI=;
-        b=doenXrhv3Jx84IKl6IIR0UkEA3HUfM7ySvVicUt0SYVdtEtrQ6RdlIQrZnNMaFy0Ns
-         2BZmjNPRGUJwoV9weSVULi1Mzl5vTuNLlZiDXmZjhyTrGXwF2P8XcLEowxvfqbOIe6AY
-         fCihTmefdEFXHFtoapAwezSARw8PQe7b7qiMD6tdl/53mJ1e+7lqrPaZgJFi1Bjk9ZZD
-         365cTvXLr6Vm37LlWe/CbUpD+9dNZ9rysLaY+Fd/W/ffdjRPtLF0e4xsgRhaJDRW8vfu
-         E7+o8hUXO/Xiw9+XUAMM0SC5o3v1nsva2Z9cVokIfVErMZNSLWnhfzdz/CK+y1j+ebHB
-         /Yvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEtfu3RZSHY9g6ft3Sbt6POZNNkkwhW1I6AOmSBO+3blKCuY4PNNqZxoGt+logTErq8zz6mKAUAuKiKe1e+FXRzlkx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfK5c0tCQExpBITIqSjh9AOpXgGenYe849NzIwLZkA3ol5wlJb
-	CxdMdYJkB9ApEJ7hzIaovMJfcn4r+X2yImBwI6K6YTP0jDYRZYyqMAxzUh0ZWwRzM8QX2fK4VdS
-	r8n8yvaPnk9O4u+Pd01pUOaxepqPVH65gif1TWuRHRbPA2nRp2EHFMy/aKfHlfhs7xZL5nFs=
-X-Gm-Gg: ASbGnct+dCIUH1BGI/kcU1iYoks0Bsgg4HshvhQkxpO7CbKfttxHa6yN5lxm+lIxT31
-	eoD07yN9KhnUBU8yAOMJK6MlzTmcYtl8Zu9oCiN/9FxDN3HEOJxlDTT1N+KophS+438pfIJa8Py
-	4YdBlczZAhztabi0/sdr/Jm6AFgMeIRrTpX9c8zw8LRmapQ3ZXAd/B+fY1D3BU6tge2ak2dl7zl
-	ayOacFyg0w++9AdhIemyHy9U5z5AOcBM4cnGMBoEEdVB4yy3ulcwTvB/wOJDCVXMk8MkrbPNvrw
-	9fyXljrCCbobY00ndZfEwiwrqjT9GQCVtR+/+RGdyzJZy4tGL0N1I8WLRKAyX/ZzFpPNZVuXkrR
-	BHrknljnz4JMqFm0IAlx7DDLzdDxLNfFMmQEqMjZU5O8sZ/QeTPimGwuzGP3RBg==
-X-Received: by 2002:a17:907:db02:b0:acb:168e:c257 with SMTP id a640c23a62f3a-acb42963a55mr517749766b.26.1744886934777;
-        Thu, 17 Apr 2025 03:48:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvyoFCzYeQl53sz+VlHt368Wv/+PY39/vYwvSEoPT3GrqVpbziUWDay7AbmSHvsQT9fkpHBw==
-X-Received: by 2002:a17:907:db02:b0:acb:168e:c257 with SMTP id a640c23a62f3a-acb42963a55mr517747666b.26.1744886934390;
-        Thu, 17 Apr 2025 03:48:54 -0700 (PDT)
+        bh=OL4LXzPm34hXOvIhRoRU6GuEFCM/KQvC81H1MT67IUk=;
+        b=Um03A3gFgzHDL8/00XUZzk08GQSDzbXARKHxfdamrK1aXMUU1Ouzm98xpSKJHOnLsH
+         leP9GJcDpCgRiE14I/WrkExFERgjDAD4HZwn1Qsd1H4wYHB/sxMO4znesZM1aSYjYQ+3
+         /6tt6H7XsKWlKQ3ypgA5YGhWA/Qqk3lw3/fzy50zvYAPwnhla3E+PCo4Z0lPXPVsHa2v
+         oIRxV51j7kUvNaFRbcYCGdmwZ2Ey3N158ayxKONEec7xrQ50jlHAih9e1Z0mghnVjX0E
+         q+0oc4OgdzQDmkNZ0577Gio+mf3M35zz1LjExwTsmj3NYKyvGg51m8q/VNKfw25KoSS0
+         WSdg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7lGt9SB/hEBy6Ly19ybPFfMFAQivkEyszw2Kt1RNkMpRtgkOLG4m3Hz3gqtAEma/kN4m05AWlZqIRvpdBAmcp0skx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdbAXXY/gD3UrBlVoNhLrtVFboDq/f35sUniQKKUBfdNquJPKe
+	X7sWQ1vYKlEpj+fbdXVKLVgaAd0VYDl1jVsu8LewoyWSuDc8Jf66ipcG6nzc38/OOw0FrgBgpTi
+	gBSp7bM47qrbOJ1vwz9YUU/p7hPYP9K2zGPc7u0N1fGOQHkrJE3w2jnzrxwHUrRcy0woseT4=
+X-Gm-Gg: ASbGncsEJm6rRAnHtwHiWMDxvSRLncBHTflG4CHzJjl/tnI+y4C2v6ihsD4MMv631t3
+	BdXIl7szDDLOCLjsU5Ow43+E//tPEfuc1nVp4tLSn78nlxOAuSZHE6vnTqp7BXenO5C8xkHMqmO
+	F2YBK//9yNEY/wicfSYr+Kqsnz5AWRZcNbX6PdgscxfLLr1dGJtHQ5g9B/ZGVde5MGWLlg0ax0E
+	+2Fw06MUdJ/azVcW9ehaKbdeZl8DXWh0UMATbmD+odiLHLrwro4KPIkbL0obZl6hZBGsx0hjoZ4
+	UMTZwJnZehN9SP6VaUybRqq7jk3bTPEshuqRTIEcX9xcxDCG2JkfV2NohIHl2lCtWEswgbxgZFC
+	+SX3Ic5LXWV5bNdFDq9/TFgAx/BgzFab+sQfJEuTLlXh7EVtg+a2UGbCucKtBow==
+X-Received: by 2002:a17:906:c14a:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-acb5a0f3217mr166983066b.15.1744887394559;
+        Thu, 17 Apr 2025 03:56:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmXTLIs/C0jJL0/J6bYVdeeI9w2VhQAAKyxIIwhTpF7usa+7Gx9STkCC5W2ZRIwAo0FesEkQ==
+X-Received: by 2002:a17:906:c14a:b0:abf:48df:bf07 with SMTP id a640c23a62f3a-acb5a0f3217mr166981566b.15.1744887394189;
+        Thu, 17 Apr 2025 03:56:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cdeba02sm277157366b.69.2025.04.17.03.48.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1ab3ecsm271784266b.131.2025.04.17.03.56.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 03:48:53 -0700 (PDT)
-Message-ID: <b9d8244a-df90-4bd2-bfd4-3539b4ad6d5e@redhat.com>
-Date: Thu, 17 Apr 2025 12:48:53 +0200
+        Thu, 17 Apr 2025 03:56:33 -0700 (PDT)
+Message-ID: <b019b2c4-0c2e-4ba2-bfa3-83fab7fd415f@redhat.com>
+Date: Thu, 17 Apr 2025 12:56:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,123 +74,78 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-To: Mario Limonciello <superm1@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250417013722.435751-1-superm1@kernel.org>
+Subject: Re: [PATCH v3 8/9] platform/x86: int3472: Add handshake pin support
+To: Andy Shevchenko <andy@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Dan Scally <djrscally@gmail.com>, Alan Stern <stern@rowland.harvard.edu>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
+ Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>,
+ platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250416124037.90508-1-hdegoede@redhat.com>
+ <20250416124037.90508-9-hdegoede@redhat.com>
+ <Z__z_G21Ro2jGDkP@smile.fi.intel.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250417013722.435751-1-superm1@kernel.org>
+In-Reply-To: <Z__z_G21Ro2jGDkP@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mario,
+Hi Andy,
 
-On 17-Apr-25 3:37 AM, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+On 16-Apr-25 8:16 PM, Andy Shevchenko wrote:
+> On Wed, Apr 16, 2025 at 02:40:36PM +0200, Hans de Goede wrote:
+>> New Intel Meteor Lake based laptops with IPU6 cameras have a new type 0x12
+>> pin defined in the INT3472 sensor companion device which describes
+>> the sensor's GPIOs.
+>>
+>> This pin is primarily used on designs with a Lattice FPGA chip which is
+>> capable of running the sensor independently of the main CPU for features
+>> like presence detection. This pin needs to be driven high to make the FPGA
+>> run the power-on sequence of the sensor. After driving the pin high,
+>> the FPGA "firmware" needs 25ms to complete the power-on sequence.
+>>
+>> Add support for this modelling the handshake pin as a GPIO driven "dvdd"
+>> regulator with a 25 ms enable time. This model was chosen because:
+>>
+>> 1. Sensor chips don't have a handshake pin, so we need to abstract this
+>>    in some way which does not require modification to the sensor drivers,
+>>    sensor drivers using the bulk-regulator API to get avdd + vddio + dvdd
+>>    is normal. So this will work to get the right value set to the handshake
+>>    pin without requiring sensor driver modifications.
+>>
+>> 2. Sensors typically wait only a small time for the sensor to power-on
+>>    after de-asserting reset. Not the 25ms the Lattice chip requires.
+>>    Using the regulator framework's enable_time allows hiding the need for
+>>    this delay from the sensor drivers.
 > 
-> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
-> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
-> to lock the screen. Modern hardware [2] also sends this sequence of
-> events for keys with a silkscreen for screen lock.
+> ...
 > 
-> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
-> emitted by driver to META + L.
+>>  			if (ret)
+>>  				err_msg = "Failed to map regulator to sensor\n";
+>>  
+>> +			break;
 > 
-> Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
-> Link: https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009166 [2]
-> Suggested-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v3:
->  * Emulation in the input core instead
+>> +			if (ret)
+>> +				err_msg = "Failed to map regulator to sensor\n";
+>> +
+>>  			break;
 > 
->  drivers/input/Kconfig |  8 ++++++++
->  drivers/input/input.c | 19 +++++++++++++++++++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/input/Kconfig b/drivers/input/Kconfig
-> index 88ecdf5218ee9..ffb4163fe315f 100644
-> --- a/drivers/input/Kconfig
-> +++ b/drivers/input/Kconfig
-> @@ -174,6 +174,14 @@ config INPUT_APMPOWER
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called apm-power.
->  
-> +config INPUT_SCREENLOCK_EMULATION
-> +	bool "Pass KEY_SCREENLOCK as META + L"
-> +	help
-> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
-> +	  META + L.
-> +
-> +	  If unsure, say Y.
-> +
->  comment "Input Device Drivers"
->  
->  source "drivers/input/keyboard/Kconfig"
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index dfeace85c4710..08a857cea0c5d 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
->  	}
->  }
->  
-> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
-> +					int value)
-> +{
-> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
-> +	input_handle_event(dev, type, KEY_L, value);
-> +}
-> +
->  /**
->   * input_event() - report new input event
->   * @dev: device that generated the event
-> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
->  {
->  	if (is_event_supported(type, dev->evbit, EV_MAX)) {
->  		guard(spinlock_irqsave)(&dev->event_lock);
-> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
-> +		if (code == KEY_SCREENLOCK) {
-> +			handle_screenlock_as_meta_l(dev, type, value);
-> +			return;
-> +		}
-> +#endif
->  		input_handle_event(dev, type, code, value);
->  	}
->  }
-> @@ -2134,6 +2147,12 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
->  
->  	switch (type) {
->  	case EV_KEY:
-> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
-> +		if (code == KEY_SCREENLOCK) {
-> +			__set_bit(KEY_L, dev->keybit);
-> +			__set_bit(KEY_LEFTMETA, dev->keybit);
-> +		}
+> As discussed this might be changed to have the same format string with supplied
+> name as a parameter.
 
-Shouldn't there be a "break;" inside the if?
+That does not work well, since this just stores a string to pass to
+dev_err_probe() later.
 
-Since KEY_SCREENLOCK events will never get reported when
-CONFIG_INPUT_SCREENLOCK_EMULATION is set, I think it would
-be netter to not set it in dev->keybit ?
+So instead I've just gone with 2 unique errors for v4.
+
+> 
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+Thank you.
 
 Regards,
 
 Hans
 
 
-
-
-> +#endif
->  		__set_bit(code, dev->keybit);
->  		break;
->  
 
