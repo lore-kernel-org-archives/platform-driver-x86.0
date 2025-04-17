@@ -1,73 +1,74 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF689366;
-	Thu, 17 Apr 2025 03:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E00191F95
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 07:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744860300; cv=none; b=bLhtHs77sXY47dcmsLxXMbRORWn58sGemDgEtWVaxv/ls4ER7SLVfe5Dm3R/l0Acx4u+C2DB5R5lQg07NEEIaQk7AM3/JAc7J3dB6JJqrw/Dmyj1HBVqTDtTc3KAqHSkqSTOV+c/XcSYjOQ4RqXufrZmSR6Oi4vc/KCXdIPD5Zs=
+	t=1744876362; cv=none; b=XCRNer1ubm9xqyUAgjLI6c87UMPTbKs2E08b3r5yrQtG9/zBvmlPeT/8rUe2oXYe9irmJUqMeqDRD1BuMbEYCcM+A0SVXPaNI1JqGHPEUDcpGnMwB0ZR5e0g7rM8WJugzZbmMPtSb8yAnJELi05iZ5YnsUhrZ4jsn8Mfo1u3qug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744860300; c=relaxed/simple;
-	bh=fb3d8VX6ohYfanNtyOhFEEPPWcIA2WkivXA2C8+k5iU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lEA9HHB2UYqIh5dxuq/diNjC+W2cWvzW4RngbQ+II3hTX6S60F1PG7J0meTfNjemXwbR+f5B/MdFc667AkL9lt06RyqRmv8RpTm01i7QkxtsbrrC09zDZID/q+LvwFqarPLExSpiNfOlDdJzvj/5RB7+u65g4B3BrWWx6WknizM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MDHiRckF; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744876362; c=relaxed/simple;
+	bh=jgYEQR/CMvM1QLqc8LJB3Y0zD6umdnkq3sJIRc1ppUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+xqGkXndQn7WJXueLfuHp0vtP+Da2426zyRk3yX8t2Ih57gqhn/R8IhGOo8zFSDJmmMKy1u3Xwq/A9xmhYcGogQD4fGmVXGokHMGJtC727Rbq27dgawD+3klFAIyq6Jw6z0Z0xF1RKavCkNpBuedLgbmW5QSwx+DvGyLjdI6a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iHCyCJGM; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDHiRckF"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff64550991so162913a91.0;
-        Wed, 16 Apr 2025 20:24:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iHCyCJGM"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54989702b36so102718e87.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Apr 2025 00:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744860298; x=1745465098; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744876359; x=1745481159; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=R52UzM/+K9VKmjAtqNDjFGDJ0Wy7+MuhwjxN+bw4A+g=;
-        b=MDHiRckFaW+018fY/3VOP0lnQbW81qUcVL7w+bDo13lsz+tvfzhGbW1BAQxkTj5rq6
-         ieqcNeifHAxCuzuliZiKl7RtOIk6MV1xqmpDjGUvR/1Wf+cDpYwSdYd9MKZKa1jSkcsl
-         eMEjX0XeqtH2R3XeNOM3OZD8hQ30nn+qcQmCYk6MzYKycj4FeH2cO2UMwnB6kHp/oKAN
-         jaQ7RkhqV0Ves/LrHAV6zu9GguRtZ+0bcnxipVFV7GfAHat9LCKknnH1nVXa1szUgTjG
-         K2zdS8crluLsOa4rixwaOwoe/cTGhJLrO1t3O8ZyVsjDevk7OcYPBVjDIW/wVCf+ded8
-         UZzg==
+        bh=ZMSnHiDuLiHAtM0smyVAG+glICjNKIJrdV+6F8Gol3U=;
+        b=iHCyCJGMoxSlWqQyj/QkStH04LYOU/c6bq9C2tMz1Y3ZqZgEUEDeIKhuDrwSMWzohV
+         eoTCn2wdZ58iwievZdKXP0w5BSfoUnj7aFRPa0bhQIeZy8JJuqpff7dDILfUH+zOs0tz
+         7pJ4l8MDw5nSveez+uP0/Ipcy+w2ITWZpiqzH8Ov2/WPUr2Br2jXb+P7xFX1GAPBFTCa
+         M/21B4OpDdiLaJQCxuq0kaLFR+gboc/MAnEt9q3Et8qXLf+gpV9Ka8wEOA5GLx/9NXOz
+         83jLerp0OnGgiXsxuFs7rVPHIkIcuvx71MFt+qcWfN0IXRquD0swEXC6Cgmlzi8EsWXE
+         F/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744860298; x=1745465098;
+        d=1e100.net; s=20230601; t=1744876359; x=1745481159;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=R52UzM/+K9VKmjAtqNDjFGDJ0Wy7+MuhwjxN+bw4A+g=;
-        b=HhKfCdfec7J62V1gKPIA1xYfcr7hrdBP9JD0ZlD6LKNzDUsR1touyq5RoyeksAn2Us
-         UZJfD+m0vn40lItnsew9DpT3D08JXHoLyvzvU0dfIAJMLy9L0nufZl200pC7zJXchjPP
-         DxlDyRtS31WwGE/8SN+XCR8fW9HZTBl8jGTaI7fh4GEjnlp1N7pOGlolE5aLcCBZ8HPf
-         cY7GptYZepYgLIqCzBYPL+4eaJCLa1S+IkUBg2OgUKT+rXj70DbzRaJatCw4PXu0cIp4
-         gYNFTXqswLDjUA740/pdxPxjA9I+pvPyPJx5uem+BzdiW6Bt9yTg/SAgy5f+trBOlXaO
-         r+Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9ksYU00fcT7U8ma2X0uDAYD9nR2U+jKQHmU1fc68qbiQJ/nVWYriMtxk7maToglUuO2SsWFK6lUuIYtM=@vger.kernel.org, AJvYcCXt7HSL29fizAJ08gUIKKSFN9D4qIET11GCvSodwaZMxVhkWUMUgvV+/yXR5l22girc6AdPBod9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9WfZ14bSgctGFtGpa/QTNiT4NB3Yd9ZIsrfAv4V1qgedfhjih
-	dQNN5LV4LxGI86u6mWnvrX+MSJ3+Z4lkV7fAbgElAeALvGGBgZXwcl75uGFKmf3W+XXf
-X-Gm-Gg: ASbGncvl6cL7pAAqiwwUmiuQgEK5+KN5FuLGtZeLxRrbrZtx84pKC9tmSsEUL3X/Wlm
-	55bQ9w7fJtADmEx0zWTtmKrO12cU5HfOXA/RB68+zU6N3GDE8myerjFAuuqAcuYdivdTQ5jftEM
-	9RxLTEnwUIKeAFbUIBOiEHmABjiFmX42I9blpW1IaZSdEI+1F/fNlwZjKsLFroDitxiRz7YD+0t
-	zS5LTzBxjBTpE8uHeiOLn3ME5w5dxerDdAW5phtv/jAnMfzLzw8vsQufuqnWZwnwd3oUpMBZh7G
-	4eQnahwhyK8OQ8JjTFbNbc/ZE+oJrb4UANFuJ/JNxD1RV2hH4tfjFDCupCcTyk/H1ONyKbMhMKh
-	2Bqc=
-X-Google-Smtp-Source: AGHT+IG4y8rKinLRtHLpPT6GEZmsIefCooQtcwjx3m0C6SxkQFiEk5lsiFMoBinpNlRHPxXuAzqo3A==
-X-Received: by 2002:a17:90b:2b4b:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-30863f19154mr6673105a91.10.1744860297962;
-        Wed, 16 Apr 2025 20:24:57 -0700 (PDT)
-Received: from SHOUYELIU-MC0.tencent.com ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30861212fa6sm2495710a91.27.2025.04.16.20.24.55
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 16 Apr 2025 20:24:57 -0700 (PDT)
-From: shouyeliu <shouyeliu@gmail.com>
-To: srinivas.pandruvada@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Shouye Liu <shouyeliu@tencent.com>
-Subject: [PATCH v3] platform/x86/intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-Date: Thu, 17 Apr 2025 11:23:21 +0800
-Message-Id: <20250417032321.75580-1-shouyeliu@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+        bh=ZMSnHiDuLiHAtM0smyVAG+glICjNKIJrdV+6F8Gol3U=;
+        b=hyHv6NSMdopH8vFZFl4sewm2FDmiehlV3sWHW45dI3vOz9edvDBSjD+k8rMr3rCJr9
+         A2GSgvHSkz9vSRNBcuqTHhYmKyT3jj//W5Fm3kedjrmewybXWk2Z/Ko573OGVPMea3d0
+         NZL8wTlYt+G5emKvqUmNb8xkF7H9OoRvm9nWmbml0IlgG8FdXGLENIgUcOsIf0clLERu
+         iUINcSaHQ2L+SzcB7sdb/Pz3aw6ltu+KWdT7t7Ib787nUSeC6k7U5ykUBVo2BsuVVrcc
+         PQ/iuKBfrjFHruPWigJjhg0C/lB19aOPPQSZd+GpKY81L6Ij+jmLmpqbMIAVLiCtAX5h
+         awvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfhY6DAntdGHKv9mzh7XmCLzQeFctydqDi8O4UcQG9R0LHTqEeHD53IBmZ7+iVrdxCEPwjnKnZNjcxlU+yUB2PUzgm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJRrHx0bFTdTePLPVo4cfoaVYJBu1A4tDO3+YwmMgPM/0N+6Z5
+	2aTNCoe+ecq5ZEGv4vCLSYdajY7OjTA6W2jxrMK8M0pGCJeJd/7By03OrPZq9G9boGSizGvae1O
+	M
+X-Gm-Gg: ASbGncsET9Vk9Fv+afQ9sKAjA7r47jMkE9DXcngZXRZBv0W4qJOmXO7FwSxJhi40V1O
+	qLMsWrY7X1KnfDb7nJdfI0a6AVm+Xcp3wDxJ13Q9He/JNnHUGJM/SZvsDdW2AXEh1UIjWrIgHy9
+	lOetI9OW+BAz1JQq7FapEFgvkSWv9SY+/dR9CB/iJjj0Dq5qBDha7M/4rQz6sfLhvRlrT/9iBiG
+	ygtF3ToUhAMGQJG1sko2erniwue/HpvcICCRPwDbUs8wm9k42t3ziUwPRs1FIhgZgz2+h93zTQM
+	qnO34kqSVxeAGMqomXYZwixCArbTLoDeeC0VKfLx2F/R4llLEUMkoz0YnOWx0l+7iNVYYBOfjOv
+	t0y0tNw==
+X-Google-Smtp-Source: AGHT+IHB4jQhQTTFHjUKBspn82NOI75eRRcHHbv5F89JQH4b2AzbEMH2AEUaXUx/aXMiln+9GOMQbw==
+X-Received: by 2002:a05:6000:1ac5:b0:391:319c:193f with SMTP id ffacd0b85a97d-39ee900296dmr630621f8f.13.1744876010118;
+        Thu, 17 Apr 2025 00:46:50 -0700 (PDT)
+Received: from kuoka.. (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cb29sm19265954f8f.76.2025.04.17.00.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 00:46:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] platform: Do not enable by default during compile testing
+Date: Thu, 17 Apr 2025 09:46:47 +0200
+Message-ID: <20250417074648.81528-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -76,67 +77,60 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Shouye Liu <shouyeliu@tencent.com>
+Enabling the compile test should not cause automatic enabling of all
+drivers, but only allow to choose to compile them.
 
-In certain situations, the sysfs for uncore may not be present when all
-CPUs in a package are offlined and then brought back online after boot.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-This issue can occur if there is an error in adding the sysfs entry due
-to a memory allocation failure. Retrying to bring the CPUs online will
-not resolve the issue, as the uncore_cpu_mask is already set for the
-package before the failure condition occurs.
-
-This issue does not occur if the failure happens during module
-initialization, as the module will fail to load in the event of any
-error.
-
-To address this, ensure that the uncore_cpu_mask is not set until the
-successful return of uncore_freq_add_entry().
-
-Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and enumeration part")
-Signed-off-by: Shouye Liu <shouyeliu@tencent.com>
-Cc: stable@vger.kernel.org
 ---
- .../x86/intel/uncore-frequency/uncore-frequency.c   | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index 40bbf8e45fa4..bdee5d00f30b 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned int cpu)
- {
- 	struct uncore_data *data;
- 	int target;
-+	int ret;
+For longer rationale:
+https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
+---
+ drivers/platform/arm64/Kconfig    | 2 +-
+ drivers/platform/surface/Kconfig  | 2 +-
+ drivers/platform/x86/dell/Kconfig | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+index 0abe5377891b..06288aebc559 100644
+--- a/drivers/platform/arm64/Kconfig
++++ b/drivers/platform/arm64/Kconfig
+@@ -6,7 +6,7 @@
+ menuconfig ARM64_PLATFORM_DEVICES
+ 	bool "ARM64 Platform-Specific Device Drivers"
+ 	depends on ARM64 || COMPILE_TEST
+-	default y
++	default ARM64
+ 	help
+ 	  Say Y here to get to see options for platform-specific device drivers
+ 	  for arm64 based devices, primarily EC-like device drivers.
+diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+index b629e82af97c..f775c6ca1ec1 100644
+--- a/drivers/platform/surface/Kconfig
++++ b/drivers/platform/surface/Kconfig
+@@ -6,7 +6,7 @@
+ menuconfig SURFACE_PLATFORMS
+ 	bool "Microsoft Surface Platform-Specific Device Drivers"
+ 	depends on ARM64 || X86 || COMPILE_TEST
+-	default y
++	default y if ARM64 || X86
+ 	help
+ 	  Say Y here to get to see options for platform-specific device drivers
+ 	  for Microsoft Surface devices. This option alone does not add any
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index f8a0dffcaab7..641276753bfa 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -171,7 +171,7 @@ config DELL_SMBIOS_SMM
  
- 	/* Check if there is an online cpu in the package for uncore MSR */
- 	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
- 	if (target < nr_cpu_ids)
- 		return 0;
- 
--	/* Use this CPU on this die as a control CPU */
--	cpumask_set_cpu(cpu, &uncore_cpu_mask);
--
- 	data = uncore_get_instance(cpu);
- 	if (!data)
- 		return 0;
-@@ -163,7 +161,14 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 	data->die_id = topology_die_id(cpu);
- 	data->domain_id = UNCORE_DOMAIN_ID_INVALID;
- 
--	return uncore_freq_add_entry(data, cpu);
-+	ret = uncore_freq_add_entry(data, cpu);
-+	if (ret)
-+		return ret;
-+
-+	/* Use this CPU on this die as a control CPU */
-+	cpumask_set_cpu(cpu, &uncore_cpu_mask);
-+
-+	return 0;
- }
- 
- static int uncore_event_cpu_offline(unsigned int cpu)
+ config DELL_SMO8800
+ 	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
+-	default m
++	default m if ACPI
+ 	depends on I2C
+ 	depends on ACPI || COMPILE_TEST
+ 	help
 -- 
-2.19.1
+2.45.2
 
