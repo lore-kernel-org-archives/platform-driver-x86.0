@@ -1,130 +1,185 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FE313C914
-	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Apr 2025 14:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E162F433C4;
+	Fri, 18 Apr 2025 15:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744985261; cv=none; b=sLK7EagohrhNuUoRa2pqyeKTzpUzYyGllSM1po4c2j3Jr7uowwZgUeSp8CKx4NS7uNeW8C7dluKkJB6cR1zAHkQ9HNpRvxBDXlGxqnqSdxX7bSvcQMUy+yBAMKWHNceOK8NKy2zBxCZW4iQlwNUAChKWUr1QaKtgvuDbhgDMYGY=
+	t=1744991237; cv=none; b=KbUnGpbaronpVdRqCo+Ac1GBiipblt+9J/SB7zBqS01X8ZmnGmlSdWNVbboLF+xzCfamXMUrCCB+0VOhlodfPyRMWM44GFdDlaTiF/bxJXeGNKebmWNi90JIsmW5MVhlH3xtAqKqEWhLpyj+jEpVokJQ8A6ldU9o7V90Vzz7mdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744985261; c=relaxed/simple;
-	bh=XuOo9Ik7S02zDvGyFDMl1tQesRYdIo9cyadjRKde298=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G8RRBAfKA1FPOi7rW5ZIjZzWWFwe81A1Qh4z2W2BYCh08f3QCrK1zkMMh+MFWUKMKTYqAn+ln8iRlL3GzFj3kVy5xH5+MVygeFPNVnDznby/tqX2dj5m1w64bcRxNg9XLqkDhaqD4usdTsHE7wO6kPkNdd9o9aHey2zFNbkMlK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=noa-labs.com; spf=pass smtp.mailfrom=noa-labs.com; dkim=pass (2048-bit key) header.d=noa-labs.com header.i=@noa-labs.com header.b=Su3SCbsG; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=noa-labs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=noa-labs.com
+	s=arc-20240116; t=1744991237; c=relaxed/simple;
+	bh=ljtZdhVx1NWC3HJMyyyutP+jGnQR0uETb3O+HtvTPj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ks3gCd4ZcHkNdXhrGHMU/SELWpbX9mnvC8HYFmgqev7TaIBTLSTDKtwDBRlxnFb6h9W1X5A06NCWTjTWMNMexJawkcJQLXPfcshvLB7UIe7Qd8T7zUaqv2vaZQNRJBu2QZi1+ushzhF6lUD3uACiHskRQo86mKQgYPBCTNKkKJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=NvHUlHsw; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=noa-labs.com header.i=@noa-labs.com header.b="Su3SCbsG"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b03bc416962so1296048a12.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Apr 2025 07:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=noa-labs.com; s=google; t=1744985259; x=1745590059; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6USpUWrLnzYBA8TX/R2FhcDlF2SxThWgxs+Y+F81H4=;
-        b=Su3SCbsGcQbY7vtwKAxIfBKTDskD3b4pymOKzKlFcngDNGx4oYAhuBTET9iBnv2xzv
-         UAOG0pLifglan9LuNJ/mUKl0ZgHOrvk8cxpSw5sIqPgT+2cbnZQHFSw8fhcHq0oqMm9t
-         l62pYplFExy+Uj/nVeN40tgV18OpKREYKjoI63BscOlU996dZiL97/JGhTqhHlX+Xi2d
-         UT5zHGg7DQbmff8M0aHWfF9lCtTrsR/HanPkSRWepSF/IEgtZGw/C8zsMUcAmWQdbktS
-         9ZX/MAgmPYEU8XMoqRFDYm9BlbMzjXaKqK3SG5kBbAZ8vegcq2BV6X5mMDpSBafc0gtJ
-         ylfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744985259; x=1745590059;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p6USpUWrLnzYBA8TX/R2FhcDlF2SxThWgxs+Y+F81H4=;
-        b=Dg3uuZojb6pNUQ6+B/CnHX8zsgeNpwERQQBwybwkZXBC29iv3xLEel/VQXEmVu+YgL
-         a34WdI0yafYolcKvywVmQiNqolPjbJ3h9nJPfUW+QSDgAhMc6uegGLj4qtCrXWQJtH7Q
-         xmv+3nN0glGcI4630cQvjuOLcZ4300OqwG0ingX/OHpJobcaXsQKDSXjoX2biYZ0DjR5
-         1Q+DELWZvbbZvzdi6MPQK1Tllcaz8I7pEa1mDnQMU6ASOyql4tHtnujefWuKAO2XJD+Z
-         ARsToFyjSKc6V//t619IhLHsbaKj6rtIvir29QzaMedggD6g/AAs4Ju/20CWxmLG337y
-         3rVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGnAmmtRPWB9X2dgDW13wh8lRBjKmkaRaRulOpiv2qJTTwiBv6WdhNr0ASwbhrHGwZWabPz0F+9+R3F2Kv07dlqULY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG1fLRC1qeKFRVvGoc922kiBYm9nsbJlSVHShVT8RUUhfAmu5g
-	z5tEcZnJrNBJ3a2tfbqmpSoyxEWA+irex3vKlZMsYS15WeFCA8j4EbZaMntqCEY=
-X-Gm-Gg: ASbGnctKfoPa9h5AOGvjtR0qORHty16SDUPl3Pq/efIgQ59oTnxmHwUlRIU2NiYmC43
-	up0lNLdiCct4W9nKfIiVyAGHkIN113SHeTFjj2qJWs1E0C9G0bx0mrT9LWM9DiyJT0zWD2obXdD
-	KJMMzMdItUtcP4BvWjgaMm2rh9K+/XFQAGOJY+NCuF42mAusFXZJrM97DRaEcQj10/B4XFnU7OV
-	HQP1la6y1EUa7WuR1yjLn2Oo9zI9fZznlcWenKKnrX/5TpV4DqeqHdUB34DogDEFBwj0UlhtaWg
-	yctN1uPpivJFhbJ4B72p7WGy1BpU4Nf3S3P9zdK5pUCha7EKynw=
-X-Google-Smtp-Source: AGHT+IGDY4A9qWVhPK/5IuBpCCh8ZbiLJgCXTlCV4KF8CYpImkCVO65Sak+LmHjYWOza2thoGrE4rg==
-X-Received: by 2002:a17:903:41c7:b0:215:b1a3:4701 with SMTP id d9443c01a7336-22c5359b5damr40639295ad.13.1744985258844;
-        Fri, 18 Apr 2025 07:07:38 -0700 (PDT)
-Received: from localhost.localdomain ([103.23.40.103])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22c50bdaca6sm17167465ad.9.2025.04.18.07.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 07:07:38 -0700 (PDT)
-From: Pavel Nikulin <pavel@noa-labs.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pavel Nikulin <pavel@noa-labs.com>
-Subject: [PATCH] platform/x86: asus-wmi: Disable OOBE state after resume from hibernation
-Date: Fri, 18 Apr 2025 20:06:08 +0600
-Message-ID: <20250418140706.1691-1-pavel@noa-labs.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="NvHUlHsw"
+Received: from [10.0.0.185] (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id CBCA2166DE1;
+	Fri, 18 Apr 2025 17:47:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1744991229;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Bo6UctOCByawq/NUEF4WT0SFikMlGprjPQI+knN6Nhc=;
+	b=NvHUlHswA1YUpiAW4VANqoxbrkNOXcBH7voyLT8/P4+45V7V4b1szQgJ5BK9h6g80v+/+I
+	f+npHFBwbhlSnTD5VEvKEGQIVoZP21PGIynOEZN+5U4sQsRwV+CbiQ4KVq2nbfxWi2Otpq
+	AOTUbqbanHBUCjl1zg5vxSM7LTFDo1c=
+Message-ID: <3947c142-2b6f-4e12-9424-7593865af7fe@ixit.cz>
+Date: Fri, 18 Apr 2025 17:47:09 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] platform/x86: int3472: Add handshake pin support
+To: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: Dan Scally <djrscally@gmail.com>, Alan Stern <stern@rowland.harvard.edu>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
+ Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>,
+ platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250417111337.38142-1-hdegoede@redhat.com>
+Content-Language: en-US
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <20250417111337.38142-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-ASUS firmware resets OOBE state during S4 suspend, so the keyboard blinks during resume from hibernation. This patch disables OOBE state after resume from hibernation.
+For the series,
 
-Signed-off-by: Pavel Nikulin <pavel@noa-labs.com>
----
- drivers/platform/x86/asus-wmi.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Tested-by: David Heidelberg <david@ixit.cz>  # Dell Latitude 9440
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 38ef778e8c19..0c697b46f436 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -304,6 +304,7 @@ struct asus_wmi {
- 
- 	u32 kbd_rgb_dev;
- 	bool kbd_rgb_state_available;
-+	bool oobe_state_available;
- 
- 	u8 throttle_thermal_policy_mode;
- 	u32 throttle_thermal_policy_dev;
-@@ -1826,7 +1827,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
- 
--	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_OOBE)) {
-+	if (asus->oobe_state_available) {
- 		/*
- 		 * Disable OOBE state, so that e.g. the keyboard backlight
- 		 * works.
-@@ -4723,6 +4724,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
-+	asus->oobe_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_OOBE);
- 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
- 						&& dmi_check_system(asus_ally_mcu_quirk);
- 
-@@ -4970,6 +4972,13 @@ static int asus_hotk_restore(struct device *device)
- 	}
- 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
- 		kbd_led_update(asus);
-+	if (asus->oobe_state_available) {
-+		/*
-+		 * Disable OOBE state, so that e.g. the keyboard backlight
-+		 * works.
-+		 */
-+		asus_wmi_set_devstate(ASUS_WMI_DEVID_OOBE, 1, NULL);
-+	}
- 
- 	if (asus_wmi_has_fnlock_key(asus))
- 		asus_wmi_fnlock_update(asus);
+Thank you!
+David
+
+On 17/04/2025 13:13, Hans de Goede wrote:
+> Hi All,
+> 
+> New Intel Meteor Lake based laptops with IPU6 cameras have a new type 0x12
+> pin defined in the INT3472 sensor companion device which describes
+> the sensor's GPIOs.
+> 
+> This pin is primarily used on designs with a Lattice FPGA chip which is
+> capable of running the sensor independently of the main CPU for features
+> like presence detection. This pin needs to be driven high to make the FPGA
+> run the power-on sequence of the sensor. After driving the pin high
+> the FPGA "firmware" needs 25ms to comlpete the power-on sequence.
+> 
+> This series implements support for this by modelling the handshake GPIO
+> as a GPIO driven 'dvdd' regulator with an enable-time of 25 ms, also see:
+> 
+> https://lore.kernel.org/platform-driver-x86/59f672c3-6d87-4ec7-9b7f-f44fe2cce934@redhat.com/
+> 
+> Patch   1   Is an unrelated cleanup which I had lying around
+> Patches 2-8 Prepare + Implement the handshake GPIO
+> Patch   9   Is a small patch adding some extra debugging to GPIO remapping
+> 
+> Changes in v4:
+> - Add Andy's Reviewed-by to a few more patches
+> - At static_assert(GPIO_REGULATOR_SUPPLY_MAP_COUNT == 2) since the code
+>    assumes that
+> - Use unique error messages for power-enable vs handshake
+>    skl_int3472_register_regulator() failures
+> - Drop setting of constraints.enable_time. enable_time already gets set
+>    in struct regulator_desc (missed left-over from an older patch version)
+> 
+> Changes in v3:
+> - Add Andy's Reviewed-by to a few more patches
+> - Some comment & commit-message tweaks
+> - Add comment explaining value of 12 in GPIO_REGULATOR_NAME_LENGTH
+> - Add a comment to int3472/common.h explaining where the 2 ms comes from
+> - s/n_regulators/n_regulator_gpios/
+> 
+> Changes in v2:
+> - Add Andy's Reviewed-by to patches 1-3
+> - Address Andy's review remarks on patch 5
+> - Add 2 Tested-by tags to patch 8/9
+> 
+> This series applies on top of Torvald's latest master, for testing with
+> 6.14 this patch needs to be cherry-picked first:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?id=81b251c66bdfe263fb5e7a16838512ddaeed77df
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Hans de Goede (9):
+>    platform/x86: int3472: Add skl_int3472_register_clock() helper
+>    platform/x86: int3472: Stop setting a supply-name for GPIO regulators
+>    platform/x86: int3472: Drop unused gpio field from struct
+>      int3472_gpio_regulator
+>    platform/x86: int3472: Rework AVDD second sensor quirk handling
+>    platform/x86: int3472: Make regulator supply name configurable
+>    platform/x86: int3472: Avoid GPIO regulator spikes
+>    platform/x86: int3472: Prepare for registering more than 1 GPIO
+>      regulator
+>    platform/x86: int3472: Add handshake pin support
+>    platform/x86: int3472: Debug log when remapping pins
+> 
+>   drivers/platform/x86/intel/int3472/Makefile   |   3 +-
+>   .../x86/intel/int3472/clk_and_regulator.c     | 167 ++++++------------
+>   drivers/platform/x86/intel/int3472/common.h   |  57 ++++--
+>   drivers/platform/x86/intel/int3472/discrete.c |  41 ++++-
+>   .../x86/intel/int3472/discrete_quirks.c       |  22 +++
+>   5 files changed, 158 insertions(+), 132 deletions(-)
+>   create mode 100644 drivers/platform/x86/intel/int3472/discrete_quirks.c
+> 
+
 -- 
-2.49.0
+David Heidelberg
 
