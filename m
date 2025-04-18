@@ -1,138 +1,162 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D4A252900;
-	Fri, 18 Apr 2025 07:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F4E1D86D6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 18 Apr 2025 07:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744960069; cv=none; b=oYAYd50kdWaS79famc1i0ZE0aLCG9DQr4ZyigZV4Sy9jhch2FDKKWg+pJg3MkjedBfYUTKgNDA+PgE+MUXq+4GQQpFiJFujbdbWBE8o+jDRFAnBPzW5lUMoP+FbNMkvuWXPvxDCV1LqkT+K++H1OuRs1eR+WAqkUYi8BoqyG2HQ=
+	t=1744960702; cv=none; b=XvbkuwSNZ7t1K9xl6ExG6+CrASzS4vOvMq7hJ76crBHmfturVL2xUbK4LuzEr7MDhGGXqNejjW7R6TiVoNUSLlqZgyRkErto1a7UA/14TghJVrVBO4GE6bc+vQkvJicyRkXz7WffEf7BJ/hpUjsRLY19OQDLQYGOdlwhnr8vsaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744960069; c=relaxed/simple;
-	bh=cto9DbEuEGyqEZmtGwIiTP7CgzV3QxgjQjozuyiK460=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kwkkoWVqPU5ZIRxlqqn2ALTkqfehbHxuL1l/P2Aay2/ePKrHTGD1KHzdp81yEYP0MIRUcJIbXRyXCBPY6n3u5vdzQ6vK0/8O9Bhkwf1+0ZpMMUEYKw7IgeJbw6Lp7YQY2LPa6C3ZlWU1yInUia15tBb6PCzN9QGJJn6GcsFZ5QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dC2qsBGk; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744960702; c=relaxed/simple;
+	bh=UxxJbI70WFUZO2h44e3ERkdZpKJKIdNmQ8xjFJN5Aq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tx++Dx86a5OIL7KB7Q00jxXr3TjfS8iv345vzFCUfhm5mEzjky4FDWDZp0O0+QSJBYiSJCP0+hJI4zFMH2lBtpGbusIp2R0J2xcAH83BN6OaGnUIXL2EnJ0hjjihh8Gx65vL5EHwg3yt4ahnPnu6xsr4jnyFAb4MzcMuC5PIkQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CgbAIxTi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dC2qsBGk"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso923152f8f.1;
-        Fri, 18 Apr 2025 00:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744960066; x=1745564866; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
-        b=dC2qsBGkgtgJEUDAzQIaSANSXXBYtYTAzQAbBK55UY9aLo5Dl/6iV1qx2EJMcXTo6b
-         d9xZG7yQy0w2Pm+au6aPeoUgjuEF+BUukFYWwE5PTffW8jW67I7tHaEGaaMprezfIUaE
-         dz+YomY2HajBvlaEgxlhSlNaGaMgQUByPpHSAdF7c+IdX4ONPvooV8SE4KcJkZJBVZsm
-         UxTSP6Ag114GUfkeCRY67APA30ycXUOu1qcBvsHLT7qjiC1A44L/CCVHQ8KMWY4AQFLW
-         cbdf2vAGzlvSuCfKmwtXUHpS3BkfiI7BC+PZ1a2tHrNbcKoC2SCi7RUwT8/rK58jAEk3
-         MWcw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgbAIxTi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744960699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SBvOY+KIVYCWmz8ChQpOOnAPgtwHKhjsmW1X1/QP+K8=;
+	b=CgbAIxTiQZNNirhaNzEyDZx98m3yH6tar/7HfzLo8nLRCuVuLzVNHyz9oaWS0u8nQsUAqg
+	wROcYcTakITVCj+HCyXyxwoxHesU4c1uEgFTk1B0Rccr4rLvwyfR0S0jWiV4trYOP3CiRf
+	bQxUbj2ynt3d/1Cw3nBI6qUIjL4EgtM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-346-Thyc5lFgPqKAo4bWWVDy-w-1; Fri, 18 Apr 2025 03:18:17 -0400
+X-MC-Unique: Thyc5lFgPqKAo4bWWVDy-w-1
+X-Mimecast-MFC-AGG-ID: Thyc5lFgPqKAo4bWWVDy-w_1744960696
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e5d9682f6eso1454981a12.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Apr 2025 00:18:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744960066; x=1745564866;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bPJExcUU4HBEusxIHavNs8We88ebopcHgFYpLqHEIIM=;
-        b=xTg1afMTWn2jKoJm8A36wto2yJD4RrjRD0qrqRqZMAVSEe+MnyCZUJ/Hu+oZ4kG1rd
-         eEOz7hwN+MtKNbbeuh5JyQgLzSYLjLmt6XgAmqaBY71uPvu/VZeo1rIJDBt45k1Tx6yR
-         WGj8zO2ToKTxtAK1ArSwb+AIkXP02nGiVneF0oLGTuyw9Qop/oxV8dt9Ouhf6+ceu3HS
-         jCaqkWhb9F2dCnvIQ9DvmBOsIvtt0M4FErzJnbEekHyz1RqAQnLXEYrnQfJr6zCUy/nj
-         bANGD15LTxeyCinJjPJdJUQoeDRdpvlxJy9Rs3jDcCk3K0ZGdcVVzQTp0Rx/MpKHB/Gx
-         HbCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXY0Q+ulpU8EoFVLXIvYgKHV+l2QKT44JkpDSafFuMnO5P/mP6LDV6moHnkStPIYC/m+RmFRrzbKmIdn9V5ovaUX5haAQ==@vger.kernel.org, AJvYcCXymWT8j8f7fIgglW4igH9+uThqvBYwb0CBV9xYb8Ihj1c9PEu6RnKLY0IY23HeIJ8zjv7oSqO/IrG1mNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA7S6qJxKKpO97xGlYhRpouEjjwZcHM041w5FJCMLOGp7l/suv
-	eJZ9/6Nc4NNQ1K8vjHVj9j6gyNag1NqUDXVw9DheFFMyKNepOgcy
-X-Gm-Gg: ASbGncv6gUSUGgU6jc4YGRgcOTVuIehmmnA1Us3OBUF8Qv5Z05rl5fYco4ka3+2MrJ7
-	qnN9NpZbxbOQWGDBHjTqTX7oQkFcusYLMnnVJ+Dh036OEn1SfE9H213sFQ+ml/io0lQMGqpcBdA
-	Oc+Z3ew7OAVsoVrNEdMhJZwdNlhnPH7+AUp1LIsuqN2CXQc+0+rYc7i3XF48rZxENigSYRZbTmv
-	3JDJt/CTTjCQbH0nNfKKSGBWH+KH2xrGjQ8xHADgwcBoaDVBDQ7y+n1eiVa9oSvb9I4UCmO1cDc
-	i2rINUQnnjWTYDmZCo6rx0GPAVsD3GWP55JCCvSbMKjpoAlYFRWiTbKqA5V0Yk0=
-X-Google-Smtp-Source: AGHT+IGDq4sZuN8N7f1md7Q3cfJ2tfosrjrd2INgNCTnVnZEBHzWNRKx1iKPfpn3pc6GDQ8nOIDC1g==
-X-Received: by 2002:a5d:47cb:0:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39efba6d8fbmr1046133f8f.34.1744960066107;
-        Fri, 18 Apr 2025 00:07:46 -0700 (PDT)
-Received: from pop-os.fri1.uni-lj.si ([2001:1470:fffd:32ff:cf9b:b36d:7c92:ffea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aa100sm11131855e9.7.2025.04.18.00.07.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 00:07:45 -0700 (PDT)
-From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-To: ikepanhc@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
-Subject: [PATCHv6] platform/x86: ideapad-laptop: added support for some new buttons
-Date: Fri, 18 Apr 2025 09:07:38 +0200
-Message-Id: <20250418070738.7171-1-gasper.nemgar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1744960696; x=1745565496;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SBvOY+KIVYCWmz8ChQpOOnAPgtwHKhjsmW1X1/QP+K8=;
+        b=VT30P86cl/yQWx0Rh0+5D3JYFrrtfQ+w7miMH0k9rP986LljOCTh6gpFJiI44Wrrb1
+         sPM7cJBFqAZPh24jgn2MWkzlRPv4JA6qt/lxIUJlN9+pUKxS9SIqAPkCcq4tRt98SBX7
+         TWi18/D5W4Dy32IhEif0E4Iv+cZSo14RHGeWBXTDobg/66fGBJ/PN8rat3louaRhsWEc
+         Lh1JOeEptmmaNVRv4hl2+uKDWGVi/iLG4KvgrTdaRTaO3JFVkcymg/GcZ3X7Z1nOVE9H
+         DgwM/o11yOXl55H7oAOZW/uziSN53DadZTFAjLeRJ6ZarV3aclx3OtUOvpc8UplIn0Vy
+         84OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvhgbQ3ic50mHB+UCPqWuOR7LJO6S+smDuVDcQZIh2yykKbyw9SgpA3A56exqGYmdfDq9N4Si0Hl8PK6AozUKJnddQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZhEvC8BAYwWuVgP+veBctDcHFAqGFElXV9RbPlxJkSOYnASzD
+	F1+AYHExDBzyARmWegKXEJoCr4Wyzc8++1cQS1v6+F0HgRXYKQezBECun8nlbxGGifROCoH/RA5
+	OsuGfYZK3f86V0v5DrWE3M49hLITkybGbSwl+qzKQPLCcm0zoY7FVslMWEoBwsuA0McOTNkI=
+X-Gm-Gg: ASbGncsTdRhdKAPkXjyzzAOUborEU1T6bS6aZbIUa2XYAUPbuhA6NGXc6NJ7Hlo3iPX
+	9JdSBNH6G84UA88NhJsUyhILtgGTZgVrhP/WCBJ12qCnKfAKMZR5ZnbR5fFsa67rzJjIxEzzmEo
+	dwz4shDuX0f92sKVpr1eCNP/qVfJEtkdLOVLXaBD7L/VE2ac3y7ye3sPMNup0XUjfvCsp/Txo+F
+	iXY+YTHjTMjjT9NbYCBZqR1bXNTXYaMc2zVlS2PmOyPHJivGsbHGONLwKu6JOB34g447d7/E625
+	i2slczdBPlcNYhTyjVU0oxijiRv5rQGRJ+Zzx26nl/CqNRGfkGGdEYwWoC+KO4iElYg/5xr1C63
+	d1qaNAz06Aq9luoM+i7ce8kXhtt3HxoQVh3nUvkS09LhrkS80Q3R73R18q30dtA==
+X-Received: by 2002:a17:907:868f:b0:ac7:33d0:db1 with SMTP id a640c23a62f3a-acb74b360cbmr157295766b.13.1744960696279;
+        Fri, 18 Apr 2025 00:18:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtrkvjZyXXYQsQnfrUeZMnIU+8sJdRtJSwGgDibzeN+FprjKwSINxCeKLSZg8mXKUc2RXXIg==
+X-Received: by 2002:a17:907:868f:b0:ac7:33d0:db1 with SMTP id a640c23a62f3a-acb74b360cbmr157292866b.13.1744960695878;
+        Fri, 18 Apr 2025 00:18:15 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6efadd68sm85263766b.185.2025.04.18.00.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 00:18:15 -0700 (PDT)
+Message-ID: <1d6d1ff1-7290-4c41-8f2d-6fb07f8d7efb@redhat.com>
+Date: Fri, 18 Apr 2025 09:18:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6] platform/x86: ideapad-laptop: added support for some
+ new buttons
+To: =?UTF-8?Q?Ga=C5=A1per_Nemgar?= <gasper.nemgar@gmail.com>,
+ ikepanhc@gmail.com
+Cc: ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250418070738.7171-1-gasper.nemgar@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250418070738.7171-1-gasper.nemgar@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Added entries to unsupported wmi codes in ideapad_keymap[]
-and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+Hi,
 
-Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
----
-Changes in v6:
- - Minor changes like typos
-Changes in v5:
- - Changed performance button to KE_KEY 
-Changes in v4:
- - Changed performace button to KE_IGNORE
-Changes in v3:
- - Minor changes
-Changes in v2:
- - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
- - Added performence toggle in wmi_notify()
-Changes in v1:
- - Added codes for buttons on laptop(performance, star, ...)
----
- drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On 18-Apr-25 9:07 AM, Gašper Nemgar wrote:
+> Added entries to unsupported wmi codes in ideapad_keymap[]
+> and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
+> 
+> Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 17a09b778..532efb9d1 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Specific to some newer models */
- 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
- 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-+	/* Star- (User Assignable Key) */
-+	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-+	/* Eye */
-+	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
-+	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
-+	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-+	/* shift + prtsc */
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
- 	{ KE_END },
- };
-@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
- 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
- 			data->integer.value);
- 
-+		/* performance button triggered by 0x3d */
-+		if (data->integer.value == 0x3d) {
-+			if (priv->dytc) {
-+				platform_profile_cycle();
-+				break;
-+			}
-+		}
-+
- 		/* 0x02 FnLock, 0x03 Esc */
- 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
- 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
--- 
-2.34.1
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+> Changes in v6:
+>  - Minor changes like typos
+> Changes in v5:
+>  - Changed performance button to KE_KEY 
+> Changes in v4:
+>  - Changed performace button to KE_IGNORE
+> Changes in v3:
+>  - Minor changes
+> Changes in v2:
+>  - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+>  - Added performence toggle in wmi_notify()
+> Changes in v1:
+>  - Added codes for buttons on laptop(performance, star, ...)
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 17a09b778..532efb9d1 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+>  	/* Specific to some newer models */
+>  	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+>  	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> +	/* Star- (User Assignable Key) */
+> +	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> +	/* Eye */
+> +	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+> +	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
+> +	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> +	/* shift + prtsc */
+> +	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> +	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+> +	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+>  
+>  	{ KE_END },
+>  };
+> @@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+>  		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+>  			data->integer.value);
+>  
+> +		/* performance button triggered by 0x3d */
+> +		if (data->integer.value == 0x3d) {
+> +			if (priv->dytc) {
+> +				platform_profile_cycle();
+> +				break;
+> +			}
+> +		}
+> +
+>  		/* 0x02 FnLock, 0x03 Esc */
+>  		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+>  			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
 
