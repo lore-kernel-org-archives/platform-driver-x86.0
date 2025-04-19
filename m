@@ -1,71 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AF615A85E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Apr 2025 08:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20EF1C3F0C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Apr 2025 09:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745053172; cv=none; b=ctiuS+ibDDkUAIQgf3Sce/IJ5c2hFExHzLz9RMPBFRoX4JlB0wqm68vOlWf4gq6zJSCu0YbScT++phizFVvsNBdlnh3ShMdzrc4h6t4dQG2I/HA8cxkkxCx2YYybXKFP3igkr4UW2siypju+LdWX/eQPEWgJWdiJyEWabbA0WLY=
+	t=1745053262; cv=none; b=rKC/1Gt+2ROMQ5CO40mG3706IVgENydeNjCcc+JpAM+p30Pfj4kibRzzIi8AoGQnZwDReEJaLTmNxZPje8nWA443vqIcGbbL18ZaOrP9M2MUyrVnOuikcLrgQCNKhhLkRqXI+PHfIDeKUL+8n/ZpaPosfALocSxxZpQ2DXrlb8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745053172; c=relaxed/simple;
-	bh=vtNBkvxfWXy3BO16p0VqqKfNnZBrVsoToeLjB2oVokg=;
+	s=arc-20240116; t=1745053262; c=relaxed/simple;
+	bh=Afa7DtkpR1H867LKVqQ+2mYAAsCrm/hqfEOwSdi/xr4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uYBr9PUE9Iee4aG9MwKw2oUT1tsd39vCYdJSuec2t/TV345K2VDP91MC17a9af/AZakZbIlnoIS2JXQY+rgr3cWqb5jzptYsBeHNeuO75mstUjAXtxwWHSQ7zJTxs+O8nz5EPkJRYvVxZqq02M7bmPWvBpClEZfcKm+goKy3j18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DlHgvO3t; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=ebplIpWOrVzK8oq9Xh5/Ir3vPWe6zQOGMKZNit9lozU/RI/kBF8Pq7dErBbNlxqY47PqryVpfdIXriAfPYDx4P6tGCmNgXiaxp3wj4/pWjrMYUs6zXHwy8exqz0Mf0chRAA6Z0LXswWwWgURYJQtRFI0UYv8+5xU1FCOLA6+frg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PAxOF1N4; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DlHgvO3t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAxOF1N4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745053169;
+	s=mimecast20190719; t=1745053259;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4s6C3YA2vdk0xkc81ayMjzu+l7t6iT9CF85GPW20pxc=;
-	b=DlHgvO3tKKJVCNfPnYzZlrKmF6eg6l/il2yHyaBvJWXoDQhhFoDt5sF/7sVCL8QwoRE2HH
-	JWLP7rahk7QoPeqzkM6RuxzxgB1aQRftGHc9Dj9inwU8YPWR8mTcMDLOScuStWOVa48byl
-	K7aJsgOPHaY+ALZfiken2T2awgZB2fU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=cfRQFnOp2abxMYKTcV4kSnderRUR49x/VL105gem5OE=;
+	b=PAxOF1N47JVCmHGWD1LecrIN3xn8kGBW3VR7zPdpATQGnQvzyJk/PxK75FifD771Xma9Mg
+	TAtoyAy54CDQn/MbpyYaEuRW0zDiSp8xZbqMZFpyXkeFQIwfAXbbEup0rYk3qsaXqZo+lB
+	SrSZLfZQ4xdNkaRAUSn+OHk7gwLo9ig=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-436-rMAl6aaoOxCFFUXQyEfXdw-1; Sat, 19 Apr 2025 04:59:27 -0400
-X-MC-Unique: rMAl6aaoOxCFFUXQyEfXdw-1
-X-Mimecast-MFC-AGG-ID: rMAl6aaoOxCFFUXQyEfXdw_1745053166
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac6b047c0dcso195473466b.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 19 Apr 2025 01:59:27 -0700 (PDT)
+ us-mta-147-rzyCLXPdP-qcWjebRq2G6g-1; Sat, 19 Apr 2025 05:00:57 -0400
+X-MC-Unique: rzyCLXPdP-qcWjebRq2G6g-1
+X-Mimecast-MFC-AGG-ID: rzyCLXPdP-qcWjebRq2G6g_1745053256
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acb5a03afdcso180046666b.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 19 Apr 2025 02:00:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745053166; x=1745657966;
+        d=1e100.net; s=20230601; t=1745053256; x=1745658056;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4s6C3YA2vdk0xkc81ayMjzu+l7t6iT9CF85GPW20pxc=;
-        b=a2pdr7N3i7GCHui4z6oDQ+2l2GC37qMP+q3pacbaaL147X0lms67f4VdaN1ppWpdQ1
-         kg1XyChOFvQUISedXHh219caP78UrjztoX0Z/Qc/UOsfgnMqJm3nzrAACVL7+W6Da9Ei
-         ViJcjNxkxondD1w+6K2FD8Tv7y1ZFFfBeayGo6eefxnJ4XsMn57HWyzjxU6mLu+58xvX
-         0/oGkrUAdpQ9CDWqOWBvv2VIu8gWRNE59w4bUy0DXWAEEyKVML44Cvh4YFJsvvRgEjCY
-         KcujCE8jTe9OzlcqMVuEaYkmoH0Pk+9kIuMJs0R/9zMeQ9eIbphJSB9YHmcrbuAJ08Sp
-         MR2g==
-X-Gm-Message-State: AOJu0YyX5l9vpHpbgl6spoUe8ALsWGxUCr19IhgJH2H2ZxbxeYjLf9J6
-	IeKAftxHeRhPyy2LshggpaA67WCS1fVpY6u00V6UXYQQfkCP/fx6ar3t2qFrTMJr/p8otJEPIhD
-	YMqKVf1Dd5xeACN7Yz/24rklHB2TrFMuclm3OAyy7LWSm9ysYWU2JSAk+30KO/AIPppvvbnc=
-X-Gm-Gg: ASbGncvz/EZeK+0fMHfJ2Z8rN2mweSJb3dmwQBN/FWKmmb9hh1PoeRjBz8Ao4tMg+8h
-	oAZqs/IF0Lf/Jk9gr3V1/GZehxhkH0wefqYr79aM2EnTpbElVAwnH2bSLqM6C4h/0GrPzvXUAKO
-	OCoNPxBtSMKFRP5vP7kz7E5xikOpSLgtFmagSpD2WEPIAMTkRY+feUS5FCzq3ztexqwJp8yhXF4
-	dZB20cdi1FpSiITjSoUBK9sOo931BGzrQ6kNjsMfF73CzCrEYQ/h4H46at6Bl2jz/UST6ud3zQb
-	u/dCoWdnzdG8sVi/dC1Iv9aY9f3aL2uehonJjB+A+sIuW5kLJyunGkc/jbb5Rx9hiMIpaavJlxF
-	zsqAh/vn/P4v6BGqavLlA6MORnqysAOL/SFC6SJREljR75s6dC3Leaa8qj3CSzA==
-X-Received: by 2002:a17:907:9712:b0:ac7:738c:996f with SMTP id a640c23a62f3a-acb74b1a154mr447194466b.15.1745053166061;
-        Sat, 19 Apr 2025 01:59:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFG9qpcyq0lr5368qu8UaOu/8MsP9HRlxQVx2muUnK2TO9/tnLcc4AOVGauXbxVLPL/aIVF+A==
-X-Received: by 2002:a17:907:9712:b0:ac7:738c:996f with SMTP id a640c23a62f3a-acb74b1a154mr447193766b.15.1745053165708;
-        Sat, 19 Apr 2025 01:59:25 -0700 (PDT)
+        bh=cfRQFnOp2abxMYKTcV4kSnderRUR49x/VL105gem5OE=;
+        b=aYTPn25LZr94W9P8yLTOPi8YNM9OTSgxxzz/D6ks3oZgQHnVS9KgCRkPDi/kLY01qi
+         B2Tlcwky4BIXOQw9xuiG5u3rr0hDo1MTPaExTOvX9Ut/zLCij+rko2u+fGqR/BmY0n1N
+         QSXEb/izzIkt+qdW8GmEGLDd7HV947gzTZKwAV5SWMi6LsxW1h+VwOLWTugaUfnM4Mkl
+         9z8mAglcd0g+bcbrjtVR33opnKfIZgDLiRW5j4P5ImHKECKxtlEAE0zehVDFceab2frE
+         /f4yxKrin3RTvdtdRfXp7M7vR6f3w12gfCuE7K3JfOj2v+SwsZhMrnCCTYZzhqhIo5UL
+         5wAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsVsD2dSJUJaR5dQtnHa35HIMBE4pIPQ1QPpC8kUlB4odVTsBYYTe+w+gaZuexPYgFGIQHFfkxNeB8d+vroKfulzex@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa4LunklBnxmW2MWe6wxC3YwDj0mJsMtjkmE32UQCL4LQE+/Un
+	Wotpruh5DtjeQJf7hQmwhaOnOc/tlnBbChUYLi9/uGPmKM1rauTm1+6Y2Aq94BGgSHI7n14ifHM
+	0tHKKbYgn/iQggGa45tG7bDK/8MCZ2BFsbcjTu/mEFpnz5na2EAVbUT2/ZKDtE9iWG2I2Q18=
+X-Gm-Gg: ASbGncvCnF2we66sz3leX+en8mBBO3i8edk554r3g92mNxuHgU9GRgoAnJ+EME8JlsN
+	IO7xi2dZSHfQhxdabnyoUlzJkp1RaNDMUF6aUcaNDBmC3ii4DAHiFcPUbO4DPRyWzS4KxqrxlB2
+	Xn9+DS1NKXHbzJBS7tuny2Vq1mJiKOHZcyPh8cIjgjCg4vm2kc/ngA8uhMXmr0ODV0RFFkroD5+
+	NZUCSopXaz980KLlsI7fXtsf25apd90uhxznVBZE78MfOdUHIKhxi3lio/UcYndnnEAfiadTL+9
+	jfOFyya4hka8Xz2nZDSo9VHdwL4751HRUg2E9b8qkLX3blB2xD8H1rWZz5XDnlmLgvrLowUW/jz
+	fkiPWJtF5ZnNrfD4bxVuvryxreJsJ61JYH7jDBRtBwM9sUH5reG5zbuumTJb+qg==
+X-Received: by 2002:a17:907:3f16:b0:ac7:322c:fd0c with SMTP id a640c23a62f3a-acb74d655c0mr461975266b.40.1745053256130;
+        Sat, 19 Apr 2025 02:00:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7KopLoMEM0G0CmKtJ3Op2+yxp2bKNQnrsAm22X1QFsjO9mFtWsvnH/c1QljWzoCxgg5PbLA==
+X-Received: by 2002:a17:907:3f16:b0:ac7:322c:fd0c with SMTP id a640c23a62f3a-acb74d655c0mr461973066b.40.1745053255759;
+        Sat, 19 Apr 2025 02:00:55 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc703sm236409166b.94.2025.04.19.01.59.24
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4befesm238341366b.65.2025.04.19.02.00.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Apr 2025 01:59:24 -0700 (PDT)
-Message-ID: <8c0d9751-767f-4e8e-bbf1-bbab89c1b8c9@redhat.com>
-Date: Sat, 19 Apr 2025 10:59:24 +0200
+        Sat, 19 Apr 2025 02:00:55 -0700 (PDT)
+Message-ID: <60715d85-48b4-4066-8a9a-c8d2b62ebb45@redhat.com>
+Date: Sat, 19 Apr 2025 11:00:54 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,94 +74,38 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG?] platform/x86/amd/hsmp: Create separate ACPI, plat and
- common drivers
-To: Gregory Price <gourry@gourry.net>, Suma Hegde <suma.hegde@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20241021111428.2676884-1-suma.hegde@amd.com>
- <20241021111428.2676884-8-suma.hegde@amd.com>
- <aALZxvHWmphNL1wa@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH] platform/x86/amd/hsmp: change driver name from amd_hsmp
+ to hsmp_acpi
+To: Gregory Price <gourry@gourry.net>, platform-driver-x86@vger.kernel.org
+Cc: naveenkrishna.chatradhi@amd.com, carlos.bilbao@kernel.org,
+ ilpo.jarvinen@linux.intel.com, suma.hegde@amd.com,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250419025026.1555230-1-gourry@gourry.net>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <aALZxvHWmphNL1wa@gourry-fedora-PF4VCD3F>
+In-Reply-To: <20250419025026.1555230-1-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gregory,
+Hi,
 
-On 19-Apr-25 1:01 AM, Gregory Price wrote:
-> On Mon, Oct 21, 2024 at 11:14:25AM +0000, Suma Hegde wrote:
->> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> ... snip ...
->> +#define DRIVER_NAME		"amd_hsmp"
-> ... snip ...
->> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
->> +#define DRIVER_NAME		"amd_hsmp"
+On 19-Apr-25 4:50 AM, Gregory Price wrote:
+> The amd_hsmp and hsmp_acpi drivers fail to load together (whichever
+> is loaded second, fails) because they have the same DRIVER_NAME.
 > 
-> Hi,
+> Change hsmp_acpi DRIVER_NAME from amd_hsmp to hsmp_acpi.
 > 
-> From looking around this patch, the code seems to suggest that these
-> drivers should not be mutually exclusive, but we are seeing an error
-> when attempting to load them both - apparently because they both use the
-> same driver name.
-> 
-> Was this intended, or should the DRIVER_NAME="hsmp_acpi" for acpi.c?
+> Link: https://lore.kernel.org/all/20241021111428.2676884-8-suma.hegde@amd.com/
+> Fixes: 7d3135d16356f ("platform/x86/amd/hsmp: Create separate ACPI, plat and common drivers")
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-These drivers are mutually exclusive in the sense that only one of
-them should actually bind to the hw.
+Thanks, patch looks good to me:
 
-Looking at the code this seems not to be guaranteed though ...
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-drivers/platform/x86/amd/hsmp/plat.c has:
-
-static int __init hsmp_plt_init(void)
-{
-        int ret = -ENODEV;
-
-        if (!legacy_hsmp_support()) {
-                pr_info("HSMP is not supported on Family:%x model:%x\n",
-                        boot_cpu_data.x86, boot_cpu_data.x86_model);
-                return ret;
-        }
-
-	...
-
-So loading that module should fail on AMD CPUs which fail the
-legacy_hsmp_support() check. Which checks CPU family and model.
-
-Since you are seeing the error you are reporting the system you
-are testing on does pass that test.
-
-Question, did you manually load hsmp_acpi, or did that auto-load?
-
-Or a totally different way to ask the same thing, do you have
-any AMDI0097:0? devices under /sys/bus/platform/devices ?
-
-ATM it seems that the plat.c code assumes that on hw where
-legacy_hsmp_support() returns true there will never be an
-AMDI0097:0? device which I'm not sure is a safe assumption
-to make.
-
-IMHO besides the "if (!legacy_hsmp_support())" check,
-hsmp_plt_init() should also do:
-
-        if (acpi_dev_present("AMDI0097", NULL, -1))
-                return -ENODEV;
-
-leaving the HSMP handling up to the hsmp_acpi driver
-when an AMDI0097:0? device is present.
-
-Note that the identical driver-name is still an issue even
-with this check, because if both checks pass a user could
-still manually load hsmp_acpi and get the driver name conflict
-error.
-
-Another issue with the driver seems to be that hsmp_acpi_probe()
-relies on hsmp_pdev->is_probed to only do some initialization
-once, but that is_probed flag is not protected by a mutex,
-so when async probing is used 2 hsmp_acpi_probe() calls can
-race and make a mess of things.
+Note as mention in my reply to your other email, there do seem
+to be some other potential issues with the pair of drivers which
+need to be addressed. But this patch is good to have regardless.
 
 Regards,
 
@@ -170,18 +115,20 @@ Hans
 
 
 > ---
+>  drivers/platform/x86/amd/hsmp/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index e981d45e1c12..871724995897 100644
+> index 444b43be35a2..a9c24502d3d2 100644
 > --- a/drivers/platform/x86/amd/hsmp/acpi.c
 > +++ b/drivers/platform/x86/amd/hsmp/acpi.c
 > @@ -26,7 +26,7 @@
-> 
+>  
 >  #include "hsmp.h"
-> 
-> -#define DRIVER_NAME            "amd_hsmp"
-> +#define DRIVER_NAME            "hsmp_acpi"
->  #define DRIVER_VERSION         "2.3"
->  #define ACPI_HSMP_DEVICE_HID   "AMDI0097"
-> 
+>  
+> -#define DRIVER_NAME		"amd_hsmp"
+> +#define DRIVER_NAME		"hsmp_acpi"
+>  #define DRIVER_VERSION		"2.3"
+>  #define ACPI_HSMP_DEVICE_HID	"AMDI0097"
+>  
 
