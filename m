@@ -1,206 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8688F21420B;
-	Mon, 21 Apr 2025 21:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FBC29CE8
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Apr 2025 00:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745269872; cv=none; b=etmb4bxVh2o22ITdHMjxUxHv+XkcyHdpDGpPkjglCsClraLWe9m0sQ6VE5C+eNfrzo+e4A6nYUVSk7F6Nr2ZOgHOqMXHSxpIBrY0J0Goj/jfAMLxOTr+f2Ul1quamLP4zBHq1GM29O4Wzah4ms56K3c+JaZ3lC3ACfErQS+sN4A=
+	t=1745283178; cv=none; b=GXnVaBoffUTjtPSIzXN3BVuOQ4i/FwEAZLVv5aOYiM6UpS1JT/f9DQT5De1Ps+J+8KB1GaEjLQ/fnCulgZCgE6QtBH9wMeTTIcZsYyxm4MOZ8ppvOnshnSFFvYEU4N37tTOLvkymk5bfjMRH2PavbjpOxbQ65ODCk1mwqweqgLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745269872; c=relaxed/simple;
-	bh=dQTo2auo7YYe6bQD+dMhfbjfL+qqQOgNTyTqgNyA/K8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O4UpTLD27ExEUTsgZFyoNdU1JYA3ky2qOc2Hm/xdy9Vct0jTGH+JYUGplRjChz+FGjhpIEf6rPAGM59EZ48IbUN+Z64iKbloVEH4adLmbCbLVZF01b/wl4udU+h/W1Ozj2dijnltW3UbED9G/k3KzYPsFB+LO9V3sM4WUGoh+TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPTt+w6R; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745283178; c=relaxed/simple;
+	bh=Yo7aaZ/s3fYpK7MumPJyYCmlSE9frBLBWheEciJzLdQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nqNypD5O4KlF1T+Px8kyFgQojadATBRb2WHrDFh2nyuPh9ikaiYehMcOWK2Onf+B2XMjnorumYHSyKxmUBGPRs5+eFUMTd4ZWmEOcPmkzzLqQI8xuFwbkkLxoV+jO1eZgYLu4DkfxbmTADyB7wLzHJI7ulDq8L0Wckm3x51/8cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dalEnrLX; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPTt+w6R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745269871; x=1776805871;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=dQTo2auo7YYe6bQD+dMhfbjfL+qqQOgNTyTqgNyA/K8=;
-  b=WPTt+w6RDkERifuPrKOE4LR0Dcit7LjWAgZm6QGDdR3D1m8KfzEKuQy8
-   eZPdwe15IrHtLcr7zCBY3EA8feshY9IxVyppwDvo1e0GUBJNLeW4gqnNc
-   QXKzmNpjsQPXY8LskQjoSMl462MVnxWIHRBzo8dQWpOAwgk84fvyYdDIW
-   SKwfb0ieUCtbdfehEzqIhrrfdWhe565z/8IMEoefe7QZtlW1MiZ8uQ6PT
-   NBD0nH+4FzyuYnjR/HZ7goxFf1h/9ZjcBFu3y9ZUsYrM9ov38BjBM4x8t
-   PfULMlVfdxkjwDMVyFSuKHe+fc7vHevxTzwHy5q1tZ3zbwlBUJisi8uGi
-   w==;
-X-CSE-ConnectionGUID: f44SpKKpSnOhC6nkVC8VPg==
-X-CSE-MsgGUID: U9pOP4DKQ/G+9O9Aw3K3wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="58189458"
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="58189458"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:06 -0700
-X-CSE-ConnectionGUID: JcWcA1vhQp2pcmb1nrbeDw==
-X-CSE-MsgGUID: ZI4WE/ckS4aAGDRDxoniVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="136912174"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.220.165])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:04 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v4 4/4] platform/x86:intel/pmc: Improve pmc_core_get_lpm_req()
-Date: Mon, 21 Apr 2025 14:10:57 -0700
-Message-ID: <20250421211100.687250-5-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250421211100.687250-1-xi.pardee@linux.intel.com>
-References: <20250421211100.687250-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dalEnrLX"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33677183so51729995ad.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Apr 2025 17:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745283176; x=1745887976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KhA46i4NvncAy739SddsXsokTeQ1b36oumx1o4vAmkc=;
+        b=dalEnrLXgk1urPqxFskrK7vlROIQkyGUHUH58q6iEXKGO76Qb3d0u3hVPtxE7KF7TR
+         5mxB8gGFDOTM6amtflYQyPmBSAKNqIeldCzGbE8rzS2H1noJo+0Q+ic4Hj0CpLfw7EB2
+         ZqMqkfRMxLSOmpRmaobYZZcT0IG2KNT4RclzJ1Istpa92cuEVtpQ3dSmpdUWh17EasZR
+         vwEJfrD4aptADYgtOun17/7PyTGrs4exZ+iRgnjRWfHCoyrwBcM42tbMOCKxTl2Uddl0
+         ISWa1hIU4E9V3mNlkXP+gn9ldNSu71tIwuoGCkTs30qPTQkgQn2raWFo+yuNUCPhGDNR
+         y6fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745283176; x=1745887976;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KhA46i4NvncAy739SddsXsokTeQ1b36oumx1o4vAmkc=;
+        b=S6ESohKLb7K6rbXm8sX69N1d6UHQ6ujAPpL3ovgQXwSeHQ8Zmq5ECYPrA7SmcYdzKe
+         MTLjd7LbPK3V0sST3tDGBmLpbjB2bYUsyrb8SKMjuQRLO6JWQ7wYAYY+EeXN6viwR+GW
+         B1kZf9iv0bytI8xIDkJvWCHQY7IjJeGCPQFzkGwf8TKeTOD+eijY7yQEvfzheDIeITIr
+         jdkA1VUGWzuezjCcfVpYeCfy+VXhgAxz/V+71NvTu+LKxoYoOZI02byfvkdF7zuJEAe+
+         XkNB7i0uqgFlDhvU8XYfoChN+YCoiB1fJ1jfDRb6ijnb8nmBCib3N1NFEr3zj3WjwFrB
+         zgLg==
+X-Gm-Message-State: AOJu0YwX8GjknrIEAsVrRwwMI1VNaZ8p0UMb6LTF62G7vI1sYIySS0y9
+	DGbvIToevJeptXRMD6I711oJtvG8TIkiOyZ0KY+lwPFctlipdxUC
+X-Gm-Gg: ASbGncs0jWK2GHfn9f8ar90CTqYr72ylpSHlSIvdSTsrBsJSZ83oth9klAJDfHq/4mK
+	+6Jy4P2yQrXND+QiovE29hA/q+xaZyL9W13ThczO0tjd6P12JaLV+jkwI2TlS+/8sFAIw6hPUTK
+	GSRv8kAv5uEs20VdQBPEEQp+P+P+HdlxrXEKCgDsg6c0p0pC6bhyq3jsLotwG4HEsFVcrWeO7BR
+	HDCfhaLubHaFbPWPh/MrUs5rxZLjx0eJCcarknO4eFzyeEJOqApOw8mPBBBwhuBGTdWrK3xtmMh
+	Rcjn23ZJq07GpczrHHl+PmE5z4fZSYIs7xJvdutOjhGpVu1x7bwQiLy2/d+ZSpXfLIgtD16N38b
+	vNPqf4ir9yjn5rjUq6g==
+X-Google-Smtp-Source: AGHT+IEijrG0Uw/FAmk4RfCD0IIxcV2jcncL168EGdAHuLmPLYcLjMP9SHYcLVwF2BEbzr+XAfX5lg==
+X-Received: by 2002:a17:902:db03:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22c5360dc1emr170449355ad.37.1745283175740;
+        Mon, 21 Apr 2025 17:52:55 -0700 (PDT)
+Received: from [192.168.0.5] (127.37.178.217.static.user.transix.jp. [217.178.37.127])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e0feb14sm8305610a91.35.2025.04.21.17.52.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Apr 2025 17:52:55 -0700 (PDT)
+Message-ID: <efc8ad1f-9fe9-4ba1-9013-e9f758da3ffc@gmail.com>
+Date: Tue, 22 Apr 2025 09:50:39 +0900
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey
+ for camera shutter switch
+To: Hans de Goede <hdegoede@redhat.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net,
+ Nitin Joshi1 <njoshi1@lenovo.com>
+References: <20250403053127.4777-1-nitjoshi@gmail.com>
+ <dbb95bde-8163-4799-8414-c60ba1c69aa5@redhat.com>
+ <cf577f4d-ebfe-4b23-b918-2d59d9e81271@gmail.com>
+ <f3f53d44-379a-42a4-9638-9e8532a83624@redhat.com>
+ <0b0f51ab-667e-4497-8f24-2b9433427d1c@gmail.com>
+ <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
+ <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
+ <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
+Content-Language: en-US
+From: Nitin Joshi <nitjoshi@gmail.com>
+In-Reply-To: <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Minor improvements on pmc_core_get_lpm_req().
-1. Move the long comment to be above the function
-2. Use %pe to print error pointer
-3. Remove unneeded devm_kfree call
+Hello Hans,
 
-These changes improves the code maintainability.
+On 4/7/25 22:24, Hans de Goede wrote:
+> Hi Nitin,
+> 
+> On 7-Apr-25 05:27, Nitin Joshi wrote:
+>> Hello Mark,
+>>
+>> On 4/5/25 04:23, Mark Pearson wrote:
+>>> Hi Nitin,
+>>>
+>>> On Fri, Apr 4, 2025, at 5:02 AM, Nitin Joshi wrote:
+>>>> Hello Hans,
+>>>>
+>>>> On 4/4/25 16:25, Hans de Goede wrote:
+>>>>> Hi Nitin,
+>>>>>
+>>>>> On 4-Apr-25 8:44 AM, Nitin Joshi wrote:
+>>>>>> Hello Hans,
+>>>>>>
+>>>>>> Thank you for reviewing patch.
+>>>>>>
+>>>>>> On 4/3/25 19:34, Hans de Goede wrote:
+>>>>>>> Hi Nitin,
+>>>>>>>
+>>>>>>> On 3-Apr-25 7:31 AM, Nitin Joshi wrote:
+>>>>>>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
+>>>>>>>> has new shortcut on F9 key i.e to switch camera shutter and it
+>>>>>>>> send a new 0x131b hkey event when F9 key is pressed.
+>>>>>>>>
+>>>>>>>> This commit adds support for new hkey 0x131b.
+>>>>>>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
+>>>>>>>
+>>>>>>> Does the EC also actually enable/disable the camera in response to
+>>>>>>> this new hotkey, or is this purely a request to userspace / the OS
+>>>>>>> to enable/disable the camera
+>>>>>> Enable/disable is actually being done by EC. Camera enablement for these products are still in testing phase.
+>>>>>> ?
+>>>>>
+>>>>> Ok, I assume we can also get the state (enabled vs disabled)
+>>>>> e.g. from the event? In that case the events should be reported using
+>>>>> EV_SW, SW_CAMERA_LENS_COVER and we should also get the initial
+>>>>> state and set the switch to the initial state before registering
+>>>>> the input device.
+>>>> Enable/Disable status will be determine in IPU side which receives
+>>>> notification from EC. So, the only way to determine the status would be
+>>>> to determine the status in IPU side.
+>>>> So, purpose of this patch will only to avoid "unhandled hkey event"
+>>>> error from thinkpad_acpi driver.
+>>>> Please let me know, if i am missing something.
+> 
+> We don't want to just avoid the "unhandled hkey event" message,
+> we also want to send an event to userspace that the camera has
+> been enabled or disabled, including information if it is
+> being enabled or being disabled. This way userspace can show an OSD
+> indicating that the camera has been enabled/disabled similar to how
+> we do this when e.g. the mic is muted.
+> 
+> This must be reported to userspace using SW_CAMERA_LENS_COVER, which is
+> what all kernel code which reports camera shutter state
+> (be it a true shutter or hw blacking out of the image) is using now.
+Thank you for your comments , Understood.
+I have received ASL method to get camera shutter state. I am modifying 
+code and will send next version of this patch soon. We will report 
+status from this driver only.
+> 
+> Or maybe the IPU6 driver itself can report SW_CAMERA_LENS_COVER,
+> assuming the IPU6 driver also receives an event when the camera
+> shutter status changes ?
+Please ignore my comment regarding IPU as we will report enable/disable 
+from thinkpad_acpi driver only.
+Although i need to confirm it but i came to know that "shutter closed" 
+icon will be displayed in Camera View via IPU, when shutter is disable.
+> 
+>>> I hadn't thought about this - but we need to be able to track the status to make sure (eventually) that the right status gets displayed in userspace. It would be bad if it was out of sync with the IPU.
+>>>
+>>> Is the initial status always going to be disabled, or do we need a mechanism from Intel to probe the current status?
+>>
+>> I need to check regarding this but AFAIK, we don't have any other mechanism to probe current status. Also , there was some security concern involved in this which i need to clarify.
+> 
+> I don't see how userspace knowing if the shutter is in open/closed
+> state impacts security. Userspace still cannot control the shutter.
+Ack
+> 
+> Regards,
+> 
+> Hans
+Thanks & Regards,
+Nitin Joshi
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 91 +++++++++++++--------------
- 1 file changed, 45 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index e09a97564398..6f092b00b030 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1355,6 +1355,50 @@ static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *m
- 	return 0;
- }
- 
-+/*
-+ * This function retrieves low power mode requirement data from PMC Low
-+ * Power Mode (LPM) table.
-+ *
-+ * In telemetry space, the LPM table contains a 4 byte header followed
-+ * by 8 consecutive mode blocks (one for each LPM mode). Each block
-+ * has a 4 byte header followed by a set of registers that describe the
-+ * IP state requirements for the given mode. The IP mapping is platform
-+ * specific but the same for each block, making for easy analysis.
-+ * Platforms only use a subset of the space to track the requirements
-+ * for their IPs. Callers provide the requirement registers they use as
-+ * a list of indices. Each requirement register is associated with an
-+ * IP map that's maintained by the caller.
-+ *
-+ * Header
-+ * +----+----------------------------+----------------------------+
-+ * |  0 |      REVISION              |      ENABLED MODES         |
-+ * +----+--------------+-------------+-------------+--------------+
-+ *
-+ * Low Power Mode 0 Block
-+ * +----+--------------+-------------+-------------+--------------+
-+ * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+ * +----+--------------+-------------+-------------+--------------+
-+ * |  2 |           LPM0 Requirements 0                           |
-+ * +----+---------------------------------------------------------+
-+ * |    |                  ...                                    |
-+ * +----+---------------------------------------------------------+
-+ * | 29 |           LPM0 Requirements 27                          |
-+ * +----+---------------------------------------------------------+
-+ *
-+ * ...
-+ *
-+ * Low Power Mode 7 Block
-+ * +----+--------------+-------------+-------------+--------------+
-+ * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+ * +----+--------------+-------------+-------------+--------------+
-+ * | 60 |           LPM7 Requirements 0                           |
-+ * +----+---------------------------------------------------------+
-+ * |    |                  ...                                    |
-+ * +----+---------------------------------------------------------+
-+ * | 87 |           LPM7 Requirements 27                          |
-+ * +----+---------------------------------------------------------+
-+ *
-+ */
- static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct pci_dev *pcidev)
- {
- 	struct telem_endpoint *ep;
-@@ -1374,8 +1418,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct
- 
- 	ep = pmt_telem_find_and_register_endpoint(pcidev, guid, 0);
- 	if (IS_ERR(ep)) {
--		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
--			PTR_ERR(ep));
-+		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %pe", ep);
- 		return -EPROBE_DEFER;
- 	}
- 
-@@ -1387,49 +1430,6 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct
- 		goto unregister_ep;
- 	}
- 
--	/*
--	 * PMC Low Power Mode (LPM) table
--	 *
--	 * In telemetry space, the LPM table contains a 4 byte header followed
--	 * by 8 consecutive mode blocks (one for each LPM mode). Each block
--	 * has a 4 byte header followed by a set of registers that describe the
--	 * IP state requirements for the given mode. The IP mapping is platform
--	 * specific but the same for each block, making for easy analysis.
--	 * Platforms only use a subset of the space to track the requirements
--	 * for their IPs. Callers provide the requirement registers they use as
--	 * a list of indices. Each requirement register is associated with an
--	 * IP map that's maintained by the caller.
--	 *
--	 * Header
--	 * +----+----------------------------+----------------------------+
--	 * |  0 |      REVISION              |      ENABLED MODES         |
--	 * +----+--------------+-------------+-------------+--------------+
--	 *
--	 * Low Power Mode 0 Block
--	 * +----+--------------+-------------+-------------+--------------+
--	 * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
--	 * +----+--------------+-------------+-------------+--------------+
--	 * |  2 |           LPM0 Requirements 0                           |
--	 * +----+---------------------------------------------------------+
--	 * |    |                  ...                                    |
--	 * +----+---------------------------------------------------------+
--	 * | 29 |           LPM0 Requirements 27                          |
--	 * +----+---------------------------------------------------------+
--	 *
--	 * ...
--	 *
--	 * Low Power Mode 7 Block
--	 * +----+--------------+-------------+-------------+--------------+
--	 * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
--	 * +----+--------------+-------------+-------------+--------------+
--	 * | 60 |           LPM7 Requirements 0                           |
--	 * +----+---------------------------------------------------------+
--	 * |    |                  ...                                    |
--	 * +----+---------------------------------------------------------+
--	 * | 87 |           LPM7 Requirements 27                          |
--	 * +----+---------------------------------------------------------+
--	 *
--	 */
- 	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
- 	pmc_for_each_mode(mode, pmcdev) {
- 		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
-@@ -1442,7 +1442,6 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct
- 			if (ret) {
- 				dev_err(&pmcdev->pdev->dev,
- 					"couldn't read Low Power Mode requirements: %d\n", ret);
--				devm_kfree(&pmcdev->pdev->dev, pmc->lpm_req_regs);
- 				goto unregister_ep;
- 			}
- 			++req_offset;
--- 
-2.43.0
+> 
+> 
+> 
+> 
+>>>>>>>> ---
+>>>>>>>>      drivers/platform/x86/thinkpad_acpi.c | 2 ++
+>>>>>>>>      1 file changed, 2 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>>>>>>>> index 0384cf311878..80f77f9c7a58 100644
+>>>>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>>>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>>>>>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
+>>>>>>>>                                 * directly in the sparse-keymap.
+>>>>>>>>                                 */
+>>>>>>>>          TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
+>>>>>>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
+>>>>>>>>          TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint doubletap on/off */
+>>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform profile in 2024 systems */
+>>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform profile in 2025 + systems */
+>>>>>>>> @@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
+>>>>>>>>           * after switching to sparse keymap support. The mappings above use translated
+>>>>>>>>           * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
+>>>>>>>>           */
+>>>>>>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
+>>>>>>>>          { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
+>>>>>>>>          { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
+>>>>>>>>          { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
+>>>>>>>
+>>>>>>
+>>>>>
+>>
+> 
 
