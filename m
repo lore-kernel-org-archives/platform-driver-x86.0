@@ -1,60 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43FE2D0270;
-	Tue, 22 Apr 2025 21:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972C21C9EF;
+	Tue, 22 Apr 2025 23:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357692; cv=none; b=RJgLRZfzeT2j9kF3TJJYnD3vKUMh42caVyaLyPPGGwyBgS4SG/id7Cl6mKzYU4h8OklHbzuOi/lhaQKr7xl5S3Krk+QSsnigGS4p7JDcMFTYvC883oQgU/j7LjUPJgngWe3grZyVKBH7FBXRDq+NMWTWiNkvqgz5HNlXik/pCJc=
+	t=1745365717; cv=none; b=PvP/PypnF1QkdVQ4YEhZB9pbldjfvWwDxyI7y58I6AEQYzFzlCfygCN3qGxpMSE7P7lMeepNqllM4vGkh+lVFRftKGKMki0zl1ghAi5aZ26HTrIHs72a+CtoC/jnzzVl2XC8GzwUSqiVTM0Ah1YDOMFvzhzZG2wzA/NbCNY215Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357692; c=relaxed/simple;
-	bh=R6FrB2qp+1Ei30aaidxlel0iYIgtEEa1jY/++eIlYFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kBsWh5o3v0SRQa2OGfWMDWW+knlFPis656DqgK69m9jRNJDoCzABv6bjgWwSmLy5CnnUUR7l87yGdCrzeTzrfYsb4yIpvRkFZmMVxjOJbEWf4HY0i7kDWorLwPt2/rqjfTqDq43aOpFuK3u6qotCoVVBy9lO10LPTJCFP4oJXWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCSGszV5; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745365717; c=relaxed/simple;
+	bh=yhJoZqKamDM9YbH2t7wFeFCnHoO5y9lfY+ztHV+833k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=joAQecw7M+pQ819lqnVCUt8pKdgsx7tNnt2rJSwgoc8ADFae9Jhfuycoeo/jOzRzsfmY8SWMLxwi3qqucrSsTbGsShlJxgiFWZDk4IoaEtKBCtz2+ud5ijkuJsEuePMS0REspw/iLPhWbDjAWcpI2v7g4kugral58m7vdMAbuJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThSsRDHn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCSGszV5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745357690; x=1776893690;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R6FrB2qp+1Ei30aaidxlel0iYIgtEEa1jY/++eIlYFU=;
-  b=JCSGszV5GRHBCj4g0wbKYt41S7NPOJp5Lkqzn1VmjuOQr4VaMWJekqwz
-   BORnHVMObFcjTXTy17Vyb6+K+QqvMbbf7j60dQ8YWg1AUaWGxlTD7z9//
-   RqXOmcfr8v3/fun9nxQB6X8Lb8HHk1s25cESROmcvehQxQkjhruO+U2Zb
-   0OW+Pgg/gvsmQCWp55Lebn62frlr6oIb8HdmxYqjQDcIYjGYjpuGCqkyi
-   53jqwFbeCfTGq5dxfqHA4m5oFvXTaz0ZE0sdmDU8SHaOdWKHx+SNKKgrQ
-   f7K+K/B6IscsPCdLheN4t34M+jnIvRCN27QdfRka3hdi0/hP0mr19TPbO
-   Q==;
-X-CSE-ConnectionGUID: ZYFAP8CaTF+jihCeI1RXLQ==
-X-CSE-MsgGUID: 7eTpE/NrRF6X+zvkFqK/tQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46053993"
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="46053993"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 14:34:44 -0700
-X-CSE-ConnectionGUID: x9tepe3xQ06Dm5U13/zE9g==
-X-CSE-MsgGUID: ELCZjOfFShGFxyA9z+7Hhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="133070687"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by orviesa008.jf.intel.com with ESMTP; 22 Apr 2025 14:34:43 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 5/5] Documentation: admin-guide: pm: Add documentation for die_id
-Date: Tue, 22 Apr 2025 14:34:27 -0700
-Message-ID: <20250422213427.1943328-6-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
-References: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThSsRDHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9C3C4CEEC;
+	Tue, 22 Apr 2025 23:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745365717;
+	bh=yhJoZqKamDM9YbH2t7wFeFCnHoO5y9lfY+ztHV+833k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ThSsRDHnXz49Mao1Xb444ViRY71NWAzHVsLHgSkMrh8YrjdXxJyaeE9lBZD22zvTB
+	 LTFL8VNQL/sJveyglWi3dQemCzXcu4Ahfsz6eGukk4y7efNg1iJXDry2YBWCvJPbnN
+	 c08aM29WW9F0zvFj+HQ2WEpGkQ3u1Wp7EPTyVhTGBZ4Q+2ekOe0pkcHvd//6GN++XX
+	 LMKBW4PI7jb24QR6iYx4faM7KErRjnK/DuQEkBnZm906iNtMf+0y83ZqQ7rI6cqe6R
+	 ymog9ZaiszM5t0sKqkuvQ7KH+nYRGDnAJE1i4xyAGIcKKnxmjqrwXg0EntUA/D7hBD
+	 HaN/iyyiF2YEQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER)
+Subject: [PATCH v5 0/5] AMD Zen debugging documentation
+Date: Tue, 22 Apr 2025 18:48:25 -0500
+Message-ID: <20250422234830.2840784-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,29 +56,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add documentation to describe die_id attribute.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../admin-guide/pm/intel_uncore_frequency_scaling.rst        | 5 +++++
- 1 file changed, 5 insertions(+)
+Introduce documentation for debugging some issues on AMD zen hardware.
+As one of the debugging techniques read and add information for
+S5_RESET_STATUS register.
 
-diff --git a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-index 84608dad84bd..689aca8bf9e1 100644
---- a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-+++ b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-@@ -91,6 +91,11 @@ Attributes in each directory:
- ``domain_id``
- 	This attribute is used to get the power domain id of this instance.
- 
-+``die_id``
-+	This attribute is used to get the Linux die id of this instance.
-+	This attributes is only present for domains with core agents and
-+        when the CPUID leaf 0x1f presents die ID.
-+
- ``fabric_cluster_id``
- 	This attribute is used to get the fabric cluster id of this instance.
- 
+Mario Limonciello (4):
+  Documentation: Add AMD Zen debugging document
+  i2c: piix4: Depends on X86
+  i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd/fch.h
+  platform/x86/amd: pmc: use FCH_PM_BASE definition
+
+Yazen Ghannam (1):
+  x86/CPU/AMD: Print the reason for the last reset
+
+ Documentation/arch/x86/amd-debugging.rst  | 362 ++++++++++++++++++++++
+ Documentation/arch/x86/index.rst          |   1 +
+ Documentation/arch/x86/resume.svg         |   4 +
+ Documentation/arch/x86/suspend.svg        |   4 +
+ arch/x86/include/asm/amd/fch.h            |  14 +
+ arch/x86/kernel/cpu/amd.c                 |  64 ++++
+ drivers/i2c/busses/Kconfig                |   2 +-
+ drivers/i2c/busses/i2c-piix4.c            |  18 +-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c |   3 +-
+ 9 files changed, 461 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/arch/x86/amd-debugging.rst
+ create mode 100644 Documentation/arch/x86/resume.svg
+ create mode 100644 Documentation/arch/x86/suspend.svg
+ create mode 100644 arch/x86/include/asm/amd/fch.h
+
 -- 
-2.48.1
+2.43.0
 
