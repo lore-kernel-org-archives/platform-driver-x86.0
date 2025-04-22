@@ -1,191 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BC61F417A;
-	Tue, 22 Apr 2025 02:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7351D1EE7A5;
+	Tue, 22 Apr 2025 07:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288173; cv=none; b=o908aKixYF3RNcD/9Cthw/XpZsRjlQ5kn5vFvNWyKUs8E8KiQgnwv98gCKRpvPVy8sVE2ZYQylBF6xI3b1h1tv9Mn/6hy7nabzT2J8P+t2aiZu9SAburnhAKp/53JW7SY3X2oDf+Dk0spcxWXVGsGwR/ldN45qI+MnNKevi0MwI=
+	t=1745308434; cv=none; b=WSnNb+ikj9YD4atJ7mZAvZ5fyOSst97P6gSeQdRVZ/JABQGOi7EUVhXJW0vvW+qyxuGxlUhTkpWpTCpXgAHSEAiDuKycqo9jGU7NcAB4iqEEnb0sVc3mmIUHwPlXQYKj38zOZHrY+63hzBZCkQXgObJ/4TSRq2zMTu9mTluE9Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288173; c=relaxed/simple;
-	bh=kygCTmGby2i1yzcr9GJEPqO+Vs51RKPbzGu5q7bUEfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DpwDH0F3dWGC9JUPLsEPEt2d9CKv+hoxia7PpdvBabGC1o4TaVUwNS0vneBa6cybc8TNocoyWvpnYkbm9+x4EkSHrtpaO+ZXJzB1R2O2VmLDdbfMlnTatXl5y0gEOQnwIV+hRH5716Ov8Q5GzGOZudA5qNcgRgO0aOoIKq/mnIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7jjjwPk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745308434; c=relaxed/simple;
+	bh=KCeJDEVanpGwD284gJqmiMG/ZwTIY9BSla3RMw56SeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s5mFsOkWJqDYwLjXvn24VDeB571kuneiRkO3BojLcAypMSuuQ80HQbILnAveRwqhnsBrNu6ohx8oYCaLfRevJvRxBTzsFeA+OZag4Xi8Fv+oFVMjd2RAitsQ6XaXfCy61jdXAfCi3mfvqEc0/xEVuQHR6pgU8yOxCpT+jjukFsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=alNfBm/j; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7jjjwPk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A78C4CEEC;
-	Tue, 22 Apr 2025 02:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288173;
-	bh=kygCTmGby2i1yzcr9GJEPqO+Vs51RKPbzGu5q7bUEfM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J7jjjwPkf9hgFfMPbqSN1IUJR+tuH4RQusx0OuvhF39noitgY2YU2tHBpZRPLcJZO
-	 aJnzYWQ+sJJycRvyropHRkmkKpwIXT9mFE0kWqzigbXoWzo4VyGMS0pkSufb5xbDhw
-	 li8Dkp41YzfnmmVct7Z6cuTNuykbyKhGRI2/8dG6mmPy2ftpa8GVZjQPD31KncGTkr
-	 szBQ8Qc3GRBAG0++SOYqEc3MMboaeyX2XyWbGXXwWDnJN3JPw4fommNOLEtAbeNsNk
-	 IpY/Gu4mPuRWzoZJHtMxLYcdVa3GdthDO5XQSrQbwSJhiTwGMwXuKjcv+eoFFqsCIh
-	 0IN6G2pJ6uZIQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 11/30] platform/x86: x86-android-tablets: Add Vexia Edu Atla 10 tablet 5V data
-Date: Mon, 21 Apr 2025 22:15:31 -0400
-Message-Id: <20250422021550.1940809-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
-References: <20250422021550.1940809-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alNfBm/j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745308434; x=1776844434;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KCeJDEVanpGwD284gJqmiMG/ZwTIY9BSla3RMw56SeA=;
+  b=alNfBm/jSXwPOSusPxYIofGZUzbH5ZVJvtxnkL0e23pS1Bjp1S+M/eWL
+   4G2SlBZcTSuUpekNbWCHS94K4z8pq7T3fnZnlJrvbvRvycQukN4TJXl2D
+   SukAcUDUe1DObjM0Ca8rm69ntHO6O8zwCn0XIaasl+n5vkO4CBKsUe2Z/
+   Gi2qbDCr0D0tzSEfGu8RDx1oWFyz8YQMvBCQ/S682oUQ2wII0djZ6PYxX
+   h25CD9EgZkjsUO4/B7DbvpWxcljHAygsR/ggtPoy6sIM1WVZN69pUofre
+   27yUcB8mXDqB1qVYWY8w11i5LuJgvW9IGsZZO4qL3j6klm8G3EHGM+qlu
+   w==;
+X-CSE-ConnectionGUID: 4C3u8mQOTXCVLwKnRI0egQ==
+X-CSE-MsgGUID: Rlhd6RF8STa3XaQtbN3crg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="47037073"
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="47037073"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 00:53:53 -0700
+X-CSE-ConnectionGUID: xmEp82KeT0mwB1aXlnMs/g==
+X-CSE-MsgGUID: lO0CqNO5QCWZWn46D+Bs0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="155111165"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 00:53:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u78Rw-0000000EfKN-41dH;
+	Tue, 22 Apr 2025 10:53:48 +0300
+Date: Tue, 22 Apr 2025 10:53:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Saranya Gopal <saranya.gopal@intel.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel: hid: Add Pantherlake support
+Message-ID: <aAdLDBK6h0rrs6Ht@smile.fi.intel.com>
+References: <20250421041332.830136-1-saranya.gopal@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421041332.830136-1-saranya.gopal@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Mon, Apr 21, 2025 at 09:43:32AM +0530, Saranya Gopal wrote:
+> Add Pantherlake ACPI device ID to the Intel HID driver.
+> While there, clean up the device ID table to remove the ", 0" parts.
 
-[ Upstream commit 59df54c67be3e587e4217bddd793350fbe8f5feb ]
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The Vexia EDU ATLA 10 tablet comes in 2 different versions with
-significantly different mainboards. The only outward difference is that
-the charging barrel on one is marked 5V and the other is marked 9V.
-
-Both are x86 ACPI tablets which ships with Android x86 as factory OS.
-with a DSDT which contains a bunch of I2C devices which are not actually
-there, causing various resource conflicts. Enumeration of these is skipped
-through the acpi_quirk_skip_i2c_client_enumeration().
-
-Extend the existing support for the 9V version by adding support for
-manually instantiating the I2C devices which are actually present on
-the 5V version by adding the necessary device info to
-the x86-android-tablets module.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20250407092017.273124-2-hdegoede@redhat.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../platform/x86/x86-android-tablets/dmi.c    | 12 ++++
- .../platform/x86/x86-android-tablets/other.c  | 60 +++++++++++++++++++
- .../x86-android-tablets/x86-android-tablets.h |  1 +
- 3 files changed, 73 insertions(+)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
-index e43d482b17a35..278c6d151dc49 100644
---- a/drivers/platform/x86/x86-android-tablets/dmi.c
-+++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-@@ -179,6 +179,18 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		},
- 		.driver_data = (void *)&peaq_c1010_info,
- 	},
-+	{
-+		/* Vexia Edu Atla 10 tablet 5V version */
-+		.matches = {
-+			/* Having all 3 of these not set is somewhat unique */
-+			DMI_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-+			/* Above strings are too generic, also match on BIOS date */
-+			DMI_MATCH(DMI_BIOS_DATE, "05/14/2015"),
-+		},
-+		.driver_data = (void *)&vexia_edu_atla10_5v_info,
-+	},
- 	{
- 		/* Vexia Edu Atla 10 tablet 9V version */
- 		.matches = {
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index 74dcac8d19d72..f7bd9f863c85e 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -598,6 +598,66 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
- 	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
- };
- 
-+/*
-+ * Vexia EDU ATLA 10 tablet 5V, Android 4.4 + Guadalinex Ubuntu tablet
-+ * distributed to schools in the Spanish Andalucía region.
-+ */
-+static const struct property_entry vexia_edu_atla10_5v_touchscreen_props[] = {
-+	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
-+	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
-+	{ }
-+};
-+
-+static const struct software_node vexia_edu_atla10_5v_touchscreen_node = {
-+	.properties = vexia_edu_atla10_5v_touchscreen_props,
-+};
-+
-+static const struct x86_i2c_client_info vexia_edu_atla10_5v_i2c_clients[] __initconst = {
-+	{
-+		/* kxcjk1013 accelerometer */
-+		.board_info = {
-+			.type = "kxcjk1013",
-+			.addr = 0x0f,
-+			.dev_name = "kxcjk1013",
-+		},
-+		.adapter_path = "\\_SB_.I2C3",
-+	}, {
-+		/*  touchscreen controller */
-+		.board_info = {
-+			.type = "hid-over-i2c",
-+			.addr = 0x38,
-+			.dev_name = "FTSC1000",
-+			.swnode = &vexia_edu_atla10_5v_touchscreen_node,
-+		},
-+		.adapter_path = "\\_SB_.I2C4",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_APIC,
-+			.index = 0x44,
-+			.trigger = ACPI_LEVEL_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}
-+};
-+
-+static struct gpiod_lookup_table vexia_edu_atla10_5v_ft5416_gpios = {
-+	.dev_id = "i2c-FTSC1000",
-+	.table = {
-+		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
-+static struct gpiod_lookup_table * const vexia_edu_atla10_5v_gpios[] = {
-+	&vexia_edu_atla10_5v_ft5416_gpios,
-+	NULL
-+};
-+
-+const struct x86_dev_info vexia_edu_atla10_5v_info __initconst = {
-+	.i2c_client_info = vexia_edu_atla10_5v_i2c_clients,
-+	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_5v_i2c_clients),
-+	.gpiod_lookup_tables = vexia_edu_atla10_5v_gpios,
-+};
-+
- /*
-  * Vexia EDU ATLA 10 tablet 9V, Android 4.2 + Guadalinex Ubuntu tablet
-  * distributed to schools in the Spanish Andalucía region.
-diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-index 2204bbaf2ed5a..dcf8d49e3b5f4 100644
---- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-+++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-@@ -127,6 +127,7 @@ extern const struct x86_dev_info nextbook_ares8_info;
- extern const struct x86_dev_info nextbook_ares8a_info;
- extern const struct x86_dev_info peaq_c1010_info;
- extern const struct x86_dev_info whitelabel_tm800a550l_info;
-+extern const struct x86_dev_info vexia_edu_atla10_5v_info;
- extern const struct x86_dev_info vexia_edu_atla10_9v_info;
- extern const struct x86_dev_info xiaomi_mipad2_info;
- extern const struct dmi_system_id x86_android_tablet_ids[];
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
