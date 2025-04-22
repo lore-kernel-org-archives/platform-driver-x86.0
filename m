@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974642367DD;
-	Tue, 22 Apr 2025 21:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B5C25CC59;
+	Tue, 22 Apr 2025 21:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357691; cv=none; b=tHeXZCOD4oR/gXYEsS5tWAMnREV3u2+19CmamaUWzMOwc3S9B+iHrl5tqTmPHdVv4zfLnvMBod25npjm7FmDKW5b5M0eePPWBel3HtmmQFMYBg5PhTXin7uugvipb3wnmpZO7ucGC0JvQ+Xp/GFdQYrgUF+Rzx8cYIzubO4a7f8=
+	t=1745357692; cv=none; b=q1pFRPw3kKXdxp7vEwYle9sgMDPeKve5k8BkkSv/PWSA77qGfmnnpM6rKFPM499eSMCmyvUfcqT1QnCKCF7NFiCRUyp5o4aNweg56WD6GxK5ZOVpV3gUrz7BzEc+4MABNgnOdB67v8PWYi3upkJ8VYpiC8lcQIXPPcSs5vt/uIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357691; c=relaxed/simple;
-	bh=9GMeuB9mJ/lPm2uKvwnURLZmlBjEMNOi4xuyEYZbGaE=;
+	s=arc-20240116; t=1745357692; c=relaxed/simple;
+	bh=Lsz0SmSLHBuNAOhBY+Z7GEFPJPrtXYFlVmulYacxyns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uv+Pk/DXryxOOcc+9mMqSqlp6t2oQxvEH7qn96tdNc603je4CDE0Px2Cf6j9zAT5nTl420i40DbrN1oD+fECuiFEp5GWpjNqdHpbFdGcrHLfh3zvU65rzAO2XKrhiAUeDX0QPOs673CRO8I7gRrtmb++TDo4orpAzbnMiRLXIJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m65mttTY; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=GvpHmnaEQst2lWd9zpZi+a1jgDAzY+SnfsohTwl3gzqr4u/QfJuj75HH/LYewbxus1q3/l07DsUIQ2rL8NSblSDjN3CD34Bxlo/kNd4qI0sg9zkrS3iZ5TNv72LSHYT4BNJO553v7V5or7UgGefBAQrKxBr6AMd/CymnTO50QB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RpJd7j2w; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m65mttTY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RpJd7j2w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1745357689; x=1776893689;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9GMeuB9mJ/lPm2uKvwnURLZmlBjEMNOi4xuyEYZbGaE=;
-  b=m65mttTYZRC1Dbfx4qQdBA4tPksfgygLd4WMIAm3jPJTYnt8209RAtnO
-   ITPVd/LkBN+oWF2EJW6ceM/DKPEatK1dqRHKGI6c6JVt7p818jieW/rqr
-   SBVJ8JYekMNxJr/VkZq6r2IeftTIsVdnt8DxIovrdDKqQmLNMiBnKfD11
-   UIpkRU6kiZfnQsulaZ9buXPXSV1cYsFb3OltABKcKj4bOq84AbR7VaGJi
-   bzqgpyScr8lHV7plEiPajqy1v66W6pe0ODqgtr7bLdIzYtdpHsF2LHW8k
-   B6pVWNjNraU5LuCyVItFU34cbsWcwlbSR/iVBikbpAZGsk4umIPSBxpzL
+  bh=Lsz0SmSLHBuNAOhBY+Z7GEFPJPrtXYFlVmulYacxyns=;
+  b=RpJd7j2wfpmDHFy09wSh6MIYglgEaHlSPgNuFyW+BiSx4ZdYHnO8oFLa
+   8LtsjwP3zd2nPicu4QF9FvuRx+lsflGp25Ud8dWfGuVzZnOByvNwySFkN
+   +xSy135c1XRiPXbUrde1xAcs4QFwVe/vvfpv82RQ3zownutkDW558dLOX
+   +/pjqP4FsSp+DtKQuYU7hRQgMScN4UwV2kRe+bweUeS4LKIf/7Hmnp9mb
+   mN/oYllL1jFeV97sffzNUWdzmEZL3JSaFfuHkW/fVHkN3fiAIh/zE0lDD
+   VlMaW7HI2urRyMukac0KeYHCHYC5OkMG9GUzet8Vmly7E/O7V9JnkuLIw
    A==;
-X-CSE-ConnectionGUID: hc81iJehTPa8cuhaBp0sbA==
-X-CSE-MsgGUID: +Oz6jsaMTYadUwcnKRzz2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46053992"
+X-CSE-ConnectionGUID: PdHx6LhUSD6cLEXir8jCzg==
+X-CSE-MsgGUID: II1W1QLqTyyPOjFFf8dgUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46053990"
 X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="46053992"
+   d="scan'208";a="46053990"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 14:34:44 -0700
-X-CSE-ConnectionGUID: 2BfDzHwyQsWlvRCFTucZmQ==
-X-CSE-MsgGUID: jbaBDCRkTwCHC9TeVJ16mw==
+X-CSE-ConnectionGUID: ZZ/6caK2SeyVT2FnRkQcMg==
+X-CSE-MsgGUID: LEtV1NOXToucSih3/zmnhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="133070686"
+   d="scan'208";a="133070685"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
   by orviesa008.jf.intel.com with ESMTP; 22 Apr 2025 14:34:43 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -49,9 +49,9 @@ To: hdegoede@redhat.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 4/5] platform/x86/intel-uncore-freq: Add attributes to show die_id
-Date: Tue, 22 Apr 2025 14:34:26 -0700
-Message-ID: <20250422213427.1943328-5-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 3/5] platform/x86/intel: power-domains: Add interface to get Linux die ID
+Date: Tue, 22 Apr 2025 14:34:25 -0700
+Message-ID: <20250422213427.1943328-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
 References: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
@@ -63,148 +63,110 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For domains with agents to control cores (compute dies) show matching
-Linux CPU die ID. Linux CPU ID is a logical die ID, so this may not match
-physical die ID or domain_id. So, a mapping is required to get Linux CPU
-die ID. This attribute is only presented when CPUID enumerates die ids.
+The die ID in the Linux topology sysfs is a logical identifier that
+differs from the one presented in CPUID leaf 0x1F or via MSR 0x54.
 
-This attribute can be used by orchestration software like Kubernetes to
-target specific dies for uncore frequency control.
+Introduce an interface that returns the Linux CPU die ID based on a
+given package ID and power domain ID. This mapping is stored during the
+CPU online callback in an array.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../uncore-frequency-common.c                 |  7 +++++
- .../uncore-frequency-common.h                 |  4 ++-
- .../uncore-frequency/uncore-frequency-tpmi.c  | 28 +++++++++++++++++++
- 3 files changed, 38 insertions(+), 1 deletion(-)
+ .../platform/x86/intel/tpmi_power_domains.c   | 34 ++++++++++++++++---
+ .../platform/x86/intel/tpmi_power_domains.h   |  1 +
+ 2 files changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index cfa3039a0e39..3411d33e5f13 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -142,6 +142,8 @@ show_uncore_attr(elc_high_threshold_enable,
- 		 UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE);
- show_uncore_attr(elc_floor_freq_khz, UNCORE_INDEX_EFF_LAT_CTRL_FREQ);
+diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
+index 2f01cd22a6ee..9aaebd74a2af 100644
+--- a/drivers/platform/x86/intel/tpmi_power_domains.c
++++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+@@ -74,6 +74,8 @@ static enum cpuhp_state tpmi_hp_state __read_mostly;
  
-+show_uncore_attr(die_id, UNCORE_INDEX_DIE_ID);
+ static cpumask_t *tpmi_power_domain_mask;
+ 
++static u16 *domain_die_map;
 +
- #define show_uncore_data(member_name)					\
- 	static ssize_t show_##member_name(struct kobject *kobj,	\
- 					   struct kobj_attribute *attr, char *buf)\
-@@ -203,6 +205,11 @@ static int create_attr_group(struct uncore_data *data, char *name)
- 		data->uncore_attrs[index++] = &data->package_id_kobj_attr.attr;
- 		init_attribute_ro(agent_types);
- 		data->uncore_attrs[index++] = &data->agent_types_kobj_attr.attr;
-+		if (topology_max_dies_per_package() > 1 &&
-+		    data->agent_type_mask & AGENT_TYPE_CORE) {
-+			init_attribute_ro(die_id);
-+			data->uncore_attrs[index++] = &data->die_id_kobj_attr.attr;
-+		}
- 	}
+ /* Lock to protect tpmi_power_domain_mask and tpmi_cpu_hash */
+ static DEFINE_MUTEX(tpmi_lock);
  
- 	data->uncore_attrs[index++] = &data->max_freq_khz_kobj_attr.attr;
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-index 197ca2ad327f..9e4d7f44a41f 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -87,7 +87,8 @@ struct uncore_data {
- 	struct kobj_attribute elc_high_threshold_enable_kobj_attr;
- 	struct kobj_attribute elc_floor_freq_khz_kobj_attr;
- 	struct kobj_attribute agent_types_kobj_attr;
--	struct attribute *uncore_attrs[14];
-+	struct kobj_attribute die_id_kobj_attr;
-+	struct attribute *uncore_attrs[15];
- };
+@@ -152,6 +154,15 @@ cpumask_t *tpmi_get_power_domain_mask(int cpu_no)
+ }
+ EXPORT_SYMBOL_NS_GPL(tpmi_get_power_domain_mask, "INTEL_TPMI_POWER_DOMAIN");
  
- #define UNCORE_DOMAIN_ID_INVALID	-1
-@@ -100,6 +101,7 @@ enum uncore_index {
- 	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD,
- 	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
- 	UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
-+	UNCORE_INDEX_DIE_ID,
- };
- 
- int uncore_freq_common_init(int (*read)(struct uncore_data *data, unsigned int *value,
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 70415d80773c..adcf992e4ff0 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -26,6 +26,7 @@
- #include <linux/module.h>
- #include <linux/intel_tpmi.h>
- 
-+#include "../tpmi_power_domains.h"
- #include "uncore-frequency-common.h"
- 
- #define	UNCORE_MAJOR_VERSION		0
-@@ -49,6 +50,7 @@ struct tpmi_uncore_cluster_info {
- 	bool root_domain;
- 	bool elc_supported;
- 	u8 __iomem *cluster_base;
-+	u16 cdie_id;
- 	struct uncore_data uncore_data;
- 	struct tpmi_uncore_struct *uncore_root;
- };
-@@ -376,6 +378,9 @@ static void uncore_set_agent_type(struct tpmi_uncore_cluster_info *cluster_info)
- /* Callback for sysfs read for TPMI uncore values. Called under mutex locks. */
- static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncore_index index)
++int tpmi_get_linux_die_id(int pkg_id, int domain_id)
++{
++	if (pkg_id >= topology_max_packages() || domain_id >= MAX_POWER_DOMAINS)
++		return -EINVAL;
++
++	return domain_die_map[pkg_id * MAX_POWER_DOMAINS + domain_id];
++}
++EXPORT_SYMBOL_NS_GPL(tpmi_get_linux_die_id, "INTEL_TPMI_POWER_DOMAIN");
++
+ static int tpmi_get_logical_id(unsigned int cpu, struct tpmi_cpu_info *info)
  {
-+	struct tpmi_uncore_cluster_info *cluster_info;
-+	int ret;
-+
- 	switch (index) {
- 	case UNCORE_INDEX_MIN_FREQ:
- 	case UNCORE_INDEX_MAX_FREQ:
-@@ -390,6 +395,16 @@ static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncor
- 	case UNCORE_INDEX_EFF_LAT_CTRL_FREQ:
- 		return read_eff_lat_ctrl(data, value, index);
+ 	u64 data;
+@@ -189,6 +200,9 @@ static int tpmi_cpu_online(unsigned int cpu)
+ 	cpumask_set_cpu(cpu, &tpmi_power_domain_mask[index]);
+ 	hash_add(tpmi_cpu_hash, &info->hnode, info->punit_core_id);
  
-+	case UNCORE_INDEX_DIE_ID:
-+		cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
-+		ret = tpmi_get_linux_die_id(cluster_info->uncore_data.package_id,
-+					    cluster_info->cdie_id);
-+		if (ret < 0)
-+			return ret;
++	domain_die_map[info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id] =
++			topology_die_id(cpu);
 +
-+		*value = ret;
-+		return 0;
-+
- 	default:
- 		break;
- 	}
-@@ -439,6 +454,16 @@ static void remove_cluster_entries(struct tpmi_uncore_struct *tpmi_uncore)
- 	}
+ 	return 0;
  }
  
-+static void set_cdie_id(int domain_id, struct tpmi_uncore_cluster_info *cluster_info,
-+		       struct intel_tpmi_plat_info *plat_info)
-+{
-+
-+	cluster_info->cdie_id = domain_id;
-+
-+	if (plat_info->cdie_mask && cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE)
-+		cluster_info->cdie_id = domain_id + ffs(plat_info->cdie_mask) - 1;
-+}
-+
- #define UNCORE_VERSION_MASK			GENMASK_ULL(7, 0)
- #define UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK	GENMASK_ULL(15, 8)
- #define UNCORE_CLUSTER_OFF_MASK			GENMASK_ULL(7, 0)
-@@ -586,6 +611,8 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 			cluster_info->uncore_data.domain_id = i;
- 			cluster_info->uncore_data.cluster_id = j;
+@@ -212,17 +226,28 @@ static int __init tpmi_init(void)
+ 	if (!tpmi_power_domain_mask)
+ 		return -ENOMEM;
  
-+			set_cdie_id(i, cluster_info, plat_info);
++	domain_die_map = kcalloc(size_mul(topology_max_packages(), MAX_POWER_DOMAINS),
++				 sizeof(*domain_die_map), GFP_KERNEL);
++	if (!domain_die_map)
++		goto free_domain_mask;
 +
- 			cluster_info->uncore_root = tpmi_uncore;
+ 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+ 				"platform/x86/tpmi_power_domains:online",
+ 				tpmi_cpu_online, NULL);
+-	if (ret < 0) {
+-		kfree(tpmi_power_domain_mask);
+-		return ret;
+-	}
++	if (ret < 0)
++		goto free_domain_map;
  
- 			if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) >= UNCORE_ELC_SUPPORTED_VERSION)
-@@ -659,5 +686,6 @@ module_auxiliary_driver(intel_uncore_aux_driver);
+ 	tpmi_hp_state = ret;
  
- MODULE_IMPORT_NS("INTEL_TPMI");
- MODULE_IMPORT_NS("INTEL_UNCORE_FREQUENCY");
-+MODULE_IMPORT_NS("INTEL_TPMI_POWER_DOMAIN");
- MODULE_DESCRIPTION("Intel TPMI UFS Driver");
- MODULE_LICENSE("GPL");
+ 	return 0;
++
++free_domain_map:
++	kfree(domain_die_map);
++
++free_domain_mask:
++	kfree(tpmi_power_domain_mask);
++
++	return ret;
+ }
+ module_init(tpmi_init)
+ 
+@@ -230,6 +255,7 @@ static void __exit tpmi_exit(void)
+ {
+ 	cpuhp_remove_state(tpmi_hp_state);
+ 	kfree(tpmi_power_domain_mask);
++	kfree(domain_die_map);
+ }
+ module_exit(tpmi_exit)
+ 
+diff --git a/drivers/platform/x86/intel/tpmi_power_domains.h b/drivers/platform/x86/intel/tpmi_power_domains.h
+index e35750dd9273..2fd0dd7afbd2 100644
+--- a/drivers/platform/x86/intel/tpmi_power_domains.h
++++ b/drivers/platform/x86/intel/tpmi_power_domains.h
+@@ -14,5 +14,6 @@ int tpmi_get_linux_cpu_number(int package_id, int die_id, int punit_core_id);
+ int tpmi_get_punit_core_number(int cpu_no);
+ int tpmi_get_power_domain_id(int cpu_no);
+ cpumask_t *tpmi_get_power_domain_mask(int cpu_no);
++int tpmi_get_linux_die_id(int pkg_id, int domain_id);
+ 
+ #endif
 -- 
 2.48.1
 
