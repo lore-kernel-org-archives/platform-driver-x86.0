@@ -1,214 +1,273 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FBC29CE8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Apr 2025 00:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AE81F2BA1;
+	Tue, 22 Apr 2025 02:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745283178; cv=none; b=GXnVaBoffUTjtPSIzXN3BVuOQ4i/FwEAZLVv5aOYiM6UpS1JT/f9DQT5De1Ps+J+8KB1GaEjLQ/fnCulgZCgE6QtBH9wMeTTIcZsYyxm4MOZ8ppvOnshnSFFvYEU4N37tTOLvkymk5bfjMRH2PavbjpOxbQ65ODCk1mwqweqgLA=
+	t=1745288172; cv=none; b=Q6lq8MpQv1ouhI7sV0s5eTPowjF8Nr+iWLZVgQ0oXuHX7uGzQ1bv6tRGj+CZpX7dTrNLBCUtCQsdps4atvV/GSOZA709EqCWOLqBiyMbhBzCImuIbyNZsMs0IHsmJ0qwlJu16A2RDX4lYQgP8iaO5GP2FrggQDeTtTZFMFPYm7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745283178; c=relaxed/simple;
-	bh=Yo7aaZ/s3fYpK7MumPJyYCmlSE9frBLBWheEciJzLdQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqNypD5O4KlF1T+Px8kyFgQojadATBRb2WHrDFh2nyuPh9ikaiYehMcOWK2Onf+B2XMjnorumYHSyKxmUBGPRs5+eFUMTd4ZWmEOcPmkzzLqQI8xuFwbkkLxoV+jO1eZgYLu4DkfxbmTADyB7wLzHJI7ulDq8L0Wckm3x51/8cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dalEnrLX; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745288172; c=relaxed/simple;
+	bh=M/Vh5PrH5sWiUm5Qrjy+xXnQol6blThEU2beFMWc1OE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oFt+ynlcstyDsbDsIGz7TAuZnLvKDindHr+ZUbIxOnyqHRvwy9xY6+HPzVrC/RifBjp0UPYAg6UVqXafOAv7tM+O8+dmaWoGgT/AL+QmfxuJYtcYaBRzGWmOipfa7G8vKuNpEnCZnWYuFI9xlUWikEYS/FfsF/Z4xMoxyTiy8ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLCfZwff; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dalEnrLX"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33677183so51729995ad.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Apr 2025 17:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745283176; x=1745887976; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KhA46i4NvncAy739SddsXsokTeQ1b36oumx1o4vAmkc=;
-        b=dalEnrLXgk1urPqxFskrK7vlROIQkyGUHUH58q6iEXKGO76Qb3d0u3hVPtxE7KF7TR
-         5mxB8gGFDOTM6amtflYQyPmBSAKNqIeldCzGbE8rzS2H1noJo+0Q+ic4Hj0CpLfw7EB2
-         ZqMqkfRMxLSOmpRmaobYZZcT0IG2KNT4RclzJ1Istpa92cuEVtpQ3dSmpdUWh17EasZR
-         vwEJfrD4aptADYgtOun17/7PyTGrs4exZ+iRgnjRWfHCoyrwBcM42tbMOCKxTl2Uddl0
-         ISWa1hIU4E9V3mNlkXP+gn9ldNSu71tIwuoGCkTs30qPTQkgQn2raWFo+yuNUCPhGDNR
-         y6fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745283176; x=1745887976;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KhA46i4NvncAy739SddsXsokTeQ1b36oumx1o4vAmkc=;
-        b=S6ESohKLb7K6rbXm8sX69N1d6UHQ6ujAPpL3ovgQXwSeHQ8Zmq5ECYPrA7SmcYdzKe
-         MTLjd7LbPK3V0sST3tDGBmLpbjB2bYUsyrb8SKMjuQRLO6JWQ7wYAYY+EeXN6viwR+GW
-         B1kZf9iv0bytI8xIDkJvWCHQY7IjJeGCPQFzkGwf8TKeTOD+eijY7yQEvfzheDIeITIr
-         jdkA1VUGWzuezjCcfVpYeCfy+VXhgAxz/V+71NvTu+LKxoYoOZI02byfvkdF7zuJEAe+
-         XkNB7i0uqgFlDhvU8XYfoChN+YCoiB1fJ1jfDRb6ijnb8nmBCib3N1NFEr3zj3WjwFrB
-         zgLg==
-X-Gm-Message-State: AOJu0YwX8GjknrIEAsVrRwwMI1VNaZ8p0UMb6LTF62G7vI1sYIySS0y9
-	DGbvIToevJeptXRMD6I711oJtvG8TIkiOyZ0KY+lwPFctlipdxUC
-X-Gm-Gg: ASbGncs0jWK2GHfn9f8ar90CTqYr72ylpSHlSIvdSTsrBsJSZ83oth9klAJDfHq/4mK
-	+6Jy4P2yQrXND+QiovE29hA/q+xaZyL9W13ThczO0tjd6P12JaLV+jkwI2TlS+/8sFAIw6hPUTK
-	GSRv8kAv5uEs20VdQBPEEQp+P+P+HdlxrXEKCgDsg6c0p0pC6bhyq3jsLotwG4HEsFVcrWeO7BR
-	HDCfhaLubHaFbPWPh/MrUs5rxZLjx0eJCcarknO4eFzyeEJOqApOw8mPBBBwhuBGTdWrK3xtmMh
-	Rcjn23ZJq07GpczrHHl+PmE5z4fZSYIs7xJvdutOjhGpVu1x7bwQiLy2/d+ZSpXfLIgtD16N38b
-	vNPqf4ir9yjn5rjUq6g==
-X-Google-Smtp-Source: AGHT+IEijrG0Uw/FAmk4RfCD0IIxcV2jcncL168EGdAHuLmPLYcLjMP9SHYcLVwF2BEbzr+XAfX5lg==
-X-Received: by 2002:a17:902:db03:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22c5360dc1emr170449355ad.37.1745283175740;
-        Mon, 21 Apr 2025 17:52:55 -0700 (PDT)
-Received: from [192.168.0.5] (127.37.178.217.static.user.transix.jp. [217.178.37.127])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e0feb14sm8305610a91.35.2025.04.21.17.52.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 17:52:55 -0700 (PDT)
-Message-ID: <efc8ad1f-9fe9-4ba1-9013-e9f758da3ffc@gmail.com>
-Date: Tue, 22 Apr 2025 09:50:39 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLCfZwff"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367D2C4CEE4;
+	Tue, 22 Apr 2025 02:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745288172;
+	bh=M/Vh5PrH5sWiUm5Qrjy+xXnQol6blThEU2beFMWc1OE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PLCfZwffvAq1WC0jUZv6l4AMjFVTzCcIkQfLN5bVWUo8G9P/gxLcNxFRyDgu/zZsP
+	 +ZLvdN//4S2SnqbltnGJeHL44jrNkNKALdFk9XblP0/BhYZeOL/FTcUL9AL30BxTkr
+	 wCOJWWNp1Vsp8nQ5T4r4Ue8o8BNn+wU44HI19VakZycdUMiSVyf0d/ptTbfOLaoWFx
+	 pUYcFqM9ybBrs+cLLc7otX5rxI8P9fuVqh7kjBpaE0+kGCzjXPrEzrwC98+8Ex747k
+	 e6a8pzq/AhK51asDVnK+eqxrydQq5Mos5hdkOuY842wHUKGzM1OjajDRZZrZ9ritsp
+	 hEEu5y1vwWihQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 10/30] platform/x86: x86-android-tablets: Add "9v" to Vexia EDU ATLA 10 tablet symbols
+Date: Mon, 21 Apr 2025 22:15:30 -0400
+Message-Id: <20250422021550.1940809-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
+References: <20250422021550.1940809-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add support for new hotkey
- for camera shutter switch
-To: Hans de Goede <hdegoede@redhat.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net,
- Nitin Joshi1 <njoshi1@lenovo.com>
-References: <20250403053127.4777-1-nitjoshi@gmail.com>
- <dbb95bde-8163-4799-8414-c60ba1c69aa5@redhat.com>
- <cf577f4d-ebfe-4b23-b918-2d59d9e81271@gmail.com>
- <f3f53d44-379a-42a4-9638-9e8532a83624@redhat.com>
- <0b0f51ab-667e-4497-8f24-2b9433427d1c@gmail.com>
- <255bb094-ad3a-4711-866f-659b2687c929@app.fastmail.com>
- <f9256d26-6d74-4526-8ec8-3ea7edd01792@gmail.com>
- <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
-Content-Language: en-US
-From: Nitin Joshi <nitjoshi@gmail.com>
-In-Reply-To: <c56025c9-da1a-428f-b5cf-4c3f0f9f51d6@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.3
 Content-Transfer-Encoding: 8bit
 
-Hello Hans,
+From: Hans de Goede <hdegoede@redhat.com>
 
-On 4/7/25 22:24, Hans de Goede wrote:
-> Hi Nitin,
-> 
-> On 7-Apr-25 05:27, Nitin Joshi wrote:
->> Hello Mark,
->>
->> On 4/5/25 04:23, Mark Pearson wrote:
->>> Hi Nitin,
->>>
->>> On Fri, Apr 4, 2025, at 5:02 AM, Nitin Joshi wrote:
->>>> Hello Hans,
->>>>
->>>> On 4/4/25 16:25, Hans de Goede wrote:
->>>>> Hi Nitin,
->>>>>
->>>>> On 4-Apr-25 8:44 AM, Nitin Joshi wrote:
->>>>>> Hello Hans,
->>>>>>
->>>>>> Thank you for reviewing patch.
->>>>>>
->>>>>> On 4/3/25 19:34, Hans de Goede wrote:
->>>>>>> Hi Nitin,
->>>>>>>
->>>>>>> On 3-Apr-25 7:31 AM, Nitin Joshi wrote:
->>>>>>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
->>>>>>>> has new shortcut on F9 key i.e to switch camera shutter and it
->>>>>>>> send a new 0x131b hkey event when F9 key is pressed.
->>>>>>>>
->>>>>>>> This commit adds support for new hkey 0x131b.
->>>>>>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
->>>>>>>
->>>>>>> Does the EC also actually enable/disable the camera in response to
->>>>>>> this new hotkey, or is this purely a request to userspace / the OS
->>>>>>> to enable/disable the camera
->>>>>> Enable/disable is actually being done by EC. Camera enablement for these products are still in testing phase.
->>>>>> ?
->>>>>
->>>>> Ok, I assume we can also get the state (enabled vs disabled)
->>>>> e.g. from the event? In that case the events should be reported using
->>>>> EV_SW, SW_CAMERA_LENS_COVER and we should also get the initial
->>>>> state and set the switch to the initial state before registering
->>>>> the input device.
->>>> Enable/Disable status will be determine in IPU side which receives
->>>> notification from EC. So, the only way to determine the status would be
->>>> to determine the status in IPU side.
->>>> So, purpose of this patch will only to avoid "unhandled hkey event"
->>>> error from thinkpad_acpi driver.
->>>> Please let me know, if i am missing something.
-> 
-> We don't want to just avoid the "unhandled hkey event" message,
-> we also want to send an event to userspace that the camera has
-> been enabled or disabled, including information if it is
-> being enabled or being disabled. This way userspace can show an OSD
-> indicating that the camera has been enabled/disabled similar to how
-> we do this when e.g. the mic is muted.
-> 
-> This must be reported to userspace using SW_CAMERA_LENS_COVER, which is
-> what all kernel code which reports camera shutter state
-> (be it a true shutter or hw blacking out of the image) is using now.
-Thank you for your comments , Understood.
-I have received ASL method to get camera shutter state. I am modifying 
-code and will send next version of this patch soon. We will report 
-status from this driver only.
-> 
-> Or maybe the IPU6 driver itself can report SW_CAMERA_LENS_COVER,
-> assuming the IPU6 driver also receives an event when the camera
-> shutter status changes ?
-Please ignore my comment regarding IPU as we will report enable/disable 
-from thinkpad_acpi driver only.
-Although i need to confirm it but i came to know that "shutter closed" 
-icon will be displayed in Camera View via IPU, when shutter is disable.
-> 
->>> I hadn't thought about this - but we need to be able to track the status to make sure (eventually) that the right status gets displayed in userspace. It would be bad if it was out of sync with the IPU.
->>>
->>> Is the initial status always going to be disabled, or do we need a mechanism from Intel to probe the current status?
->>
->> I need to check regarding this but AFAIK, we don't have any other mechanism to probe current status. Also , there was some security concern involved in this which i need to clarify.
-> 
-> I don't see how userspace knowing if the shutter is in open/closed
-> state impacts security. Userspace still cannot control the shutter.
-Ack
-> 
-> Regards,
-> 
-> Hans
-Thanks & Regards,
-Nitin Joshi
+[ Upstream commit 3343b086c7035222c24956780ea4423655cad6d2 ]
 
-> 
-> 
-> 
-> 
->>>>>>>> ---
->>>>>>>>      drivers/platform/x86/thinkpad_acpi.c | 2 ++
->>>>>>>>      1 file changed, 2 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> index 0384cf311878..80f77f9c7a58 100644
->>>>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>>>>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
->>>>>>>>                                 * directly in the sparse-keymap.
->>>>>>>>                                 */
->>>>>>>>          TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
->>>>>>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->>>>>>>>          TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint doubletap on/off */
->>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform profile in 2024 systems */
->>>>>>>>          TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform profile in 2025 + systems */
->>>>>>>> @@ -3271,6 +3272,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
->>>>>>>>           * after switching to sparse keymap support. The mappings above use translated
->>>>>>>>           * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
->>>>>>>>           */
->>>>>>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
->>>>>>>>          { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
->>>>>>>>          { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
->>>>>>>>          { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->>>>>>>
->>>>>>
->>>>>
->>
-> 
+The Vexia EDU ATLA 10 tablet comes in 2 different versions with
+significantly different mainboards. The only outward difference is that
+the charging barrel on one is marked 5V and the other is marked 9V.
+
+Both need to be handled by the x86-android-tablets code. Add 9v to
+the symbols for the existing support for the 9V Vexia EDU ATLA 10 tablet
+symbols to prepare for adding support for the 5V version.
+
+All this patch does is s/vexia_edu_atla10_info/vexia_edu_atla10_9v_info/.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20250407092017.273124-1-hdegoede@redhat.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../platform/x86/x86-android-tablets/dmi.c    |  2 +-
+ .../platform/x86/x86-android-tablets/other.c  | 64 +++++++++----------
+ .../x86-android-tablets/x86-android-tablets.h |  2 +-
+ 3 files changed, 34 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 3e5fa3b6e2fdf..e43d482b17a35 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -187,7 +187,7 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+ 			/* Above strings are too generic, also match on BIOS date */
+ 			DMI_MATCH(DMI_BIOS_DATE, "08/25/2014"),
+ 		},
+-		.driver_data = (void *)&vexia_edu_atla10_info,
++		.driver_data = (void *)&vexia_edu_atla10_9v_info,
+ 	},
+ 	{
+ 		/* Whitelabel (sold as various brands) TM800A550L */
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index 1d93d9edb23f4..74dcac8d19d72 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -599,62 +599,62 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+ };
+ 
+ /*
+- * Vexia EDU ATLA 10 tablet, Android 4.2 / 4.4 + Guadalinex Ubuntu tablet
++ * Vexia EDU ATLA 10 tablet 9V, Android 4.2 + Guadalinex Ubuntu tablet
+  * distributed to schools in the Spanish Andalucía region.
+  */
+ static const char * const crystal_cove_pwrsrc_psy[] = { "crystal_cove_pwrsrc" };
+ 
+-static const struct property_entry vexia_edu_atla10_ulpmc_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_ulpmc_props[] = {
+ 	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", crystal_cove_pwrsrc_psy),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_ulpmc_node = {
+-	.properties = vexia_edu_atla10_ulpmc_props,
++static const struct software_node vexia_edu_atla10_9v_ulpmc_node = {
++	.properties = vexia_edu_atla10_9v_ulpmc_props,
+ };
+ 
+-static const char * const vexia_edu_atla10_accel_mount_matrix[] = {
++static const char * const vexia_edu_atla10_9v_accel_mount_matrix[] = {
+ 	"0", "-1", "0",
+ 	"1", "0", "0",
+ 	"0", "0", "1"
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_accel_props[] = {
+-	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", vexia_edu_atla10_accel_mount_matrix),
++static const struct property_entry vexia_edu_atla10_9v_accel_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", vexia_edu_atla10_9v_accel_mount_matrix),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_accel_node = {
+-	.properties = vexia_edu_atla10_accel_props,
++static const struct software_node vexia_edu_atla10_9v_accel_node = {
++	.properties = vexia_edu_atla10_9v_accel_props,
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_touchscreen_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_touchscreen_props[] = {
+ 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
+ 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_touchscreen_node = {
+-	.properties = vexia_edu_atla10_touchscreen_props,
++static const struct software_node vexia_edu_atla10_9v_touchscreen_node = {
++	.properties = vexia_edu_atla10_9v_touchscreen_props,
+ };
+ 
+-static const struct property_entry vexia_edu_atla10_pmic_props[] = {
++static const struct property_entry vexia_edu_atla10_9v_pmic_props[] = {
+ 	PROPERTY_ENTRY_BOOL("linux,register-pwrsrc-power_supply"),
+ 	{ }
+ };
+ 
+-static const struct software_node vexia_edu_atla10_pmic_node = {
+-	.properties = vexia_edu_atla10_pmic_props,
++static const struct software_node vexia_edu_atla10_9v_pmic_node = {
++	.properties = vexia_edu_atla10_9v_pmic_props,
+ };
+ 
+-static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initconst = {
++static const struct x86_i2c_client_info vexia_edu_atla10_9v_i2c_clients[] __initconst = {
+ 	{
+ 		/* I2C attached embedded controller, used to access fuel-gauge */
+ 		.board_info = {
+ 			.type = "vexia_atla10_ec",
+ 			.addr = 0x76,
+ 			.dev_name = "ulpmc",
+-			.swnode = &vexia_edu_atla10_ulpmc_node,
++			.swnode = &vexia_edu_atla10_9v_ulpmc_node,
+ 		},
+ 		.adapter_path = "0000:00:18.1",
+ 	}, {
+@@ -679,7 +679,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "kxtj21009",
+ 			.addr = 0x0f,
+ 			.dev_name = "kxtj21009",
+-			.swnode = &vexia_edu_atla10_accel_node,
++			.swnode = &vexia_edu_atla10_9v_accel_node,
+ 		},
+ 		.adapter_path = "0000:00:18.5",
+ 	}, {
+@@ -688,7 +688,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "hid-over-i2c",
+ 			.addr = 0x38,
+ 			.dev_name = "FTSC1000",
+-			.swnode = &vexia_edu_atla10_touchscreen_node,
++			.swnode = &vexia_edu_atla10_9v_touchscreen_node,
+ 		},
+ 		.adapter_path = "0000:00:18.6",
+ 		.irq_data = {
+@@ -703,7 +703,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 			.type = "intel_soc_pmic_crc",
+ 			.addr = 0x6e,
+ 			.dev_name = "intel_soc_pmic_crc",
+-			.swnode = &vexia_edu_atla10_pmic_node,
++			.swnode = &vexia_edu_atla10_9v_pmic_node,
+ 		},
+ 		.adapter_path = "0000:00:18.7",
+ 		.irq_data = {
+@@ -715,7 +715,7 @@ static const struct x86_i2c_client_info vexia_edu_atla10_i2c_clients[] __initcon
+ 	}
+ };
+ 
+-static const struct x86_serdev_info vexia_edu_atla10_serdevs[] __initconst = {
++static const struct x86_serdev_info vexia_edu_atla10_9v_serdevs[] __initconst = {
+ 	{
+ 		.ctrl.pci.devfn = PCI_DEVFN(0x1e, 3),
+ 		.ctrl_devname = "serial0",
+@@ -723,7 +723,7 @@ static const struct x86_serdev_info vexia_edu_atla10_serdevs[] __initconst = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
++static struct gpiod_lookup_table vexia_edu_atla10_9v_ft5416_gpios = {
+ 	.dev_id = "i2c-FTSC1000",
+ 	.table = {
+ 		GPIO_LOOKUP("INT33FC:00", 60, "reset", GPIO_ACTIVE_LOW),
+@@ -731,12 +731,12 @@ static struct gpiod_lookup_table vexia_edu_atla10_ft5416_gpios = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table * const vexia_edu_atla10_gpios[] = {
+-	&vexia_edu_atla10_ft5416_gpios,
++static struct gpiod_lookup_table * const vexia_edu_atla10_9v_gpios[] = {
++	&vexia_edu_atla10_9v_ft5416_gpios,
+ 	NULL
+ };
+ 
+-static int __init vexia_edu_atla10_init(struct device *dev)
++static int __init vexia_edu_atla10_9v_init(struct device *dev)
+ {
+ 	struct pci_dev *pdev;
+ 	int ret;
+@@ -760,13 +760,13 @@ static int __init vexia_edu_atla10_init(struct device *dev)
+ 	return 0;
+ }
+ 
+-const struct x86_dev_info vexia_edu_atla10_info __initconst = {
+-	.i2c_client_info = vexia_edu_atla10_i2c_clients,
+-	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_i2c_clients),
+-	.serdev_info = vexia_edu_atla10_serdevs,
+-	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_serdevs),
+-	.gpiod_lookup_tables = vexia_edu_atla10_gpios,
+-	.init = vexia_edu_atla10_init,
++const struct x86_dev_info vexia_edu_atla10_9v_info __initconst = {
++	.i2c_client_info = vexia_edu_atla10_9v_i2c_clients,
++	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_9v_i2c_clients),
++	.serdev_info = vexia_edu_atla10_9v_serdevs,
++	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_9v_serdevs),
++	.gpiod_lookup_tables = vexia_edu_atla10_9v_gpios,
++	.init = vexia_edu_atla10_9v_init,
+ 	.use_pci = true,
+ };
+ 
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 63a38a0069bae..2204bbaf2ed5a 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -127,7 +127,7 @@ extern const struct x86_dev_info nextbook_ares8_info;
+ extern const struct x86_dev_info nextbook_ares8a_info;
+ extern const struct x86_dev_info peaq_c1010_info;
+ extern const struct x86_dev_info whitelabel_tm800a550l_info;
+-extern const struct x86_dev_info vexia_edu_atla10_info;
++extern const struct x86_dev_info vexia_edu_atla10_9v_info;
+ extern const struct x86_dev_info xiaomi_mipad2_info;
+ extern const struct dmi_system_id x86_android_tablet_ids[];
+ 
+-- 
+2.39.5
 
