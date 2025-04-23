@@ -1,136 +1,131 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4957327933E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 14:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261BE27D796;
+	Wed, 23 Apr 2025 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417940; cv=none; b=jjVNrExFSq8X8lxj7pyH/H+DEPLk8FZNfJUpiFLmDao00LL/Q0BlC8Lj7hUYBfRVS3E7KJj6OJOnBx0uuGWCbx/rH1ht0/lRM1v6D+TlojGXvb+XuJB/4JbAbZBJFzikqBDDlSjLY3gzQUSF0w/N/55Z8blGmdH2O72ZI7iMMOY=
+	t=1745418206; cv=none; b=IRbssUNYX7bi3CXH8TyMWmdZtM2qHPD2yLWjaEGVPDwGbTZ5tlZ9MN7rSOV40H/V4PelaSWawqppjIqQCCvkPHxY0tS844R6EAzsXyziYqkjjD0ZET62bo53NU3/94trXrrYPc8M1ffuFZOUB8sR7BBSDohyhtzbag4Uq45VQGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417940; c=relaxed/simple;
-	bh=5L7XCeeN/ka2ZgaxFwfE8MEMF/cmOCXAIeUoqGY/JOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8BvmTGPjjMcvMJaHXhj28qoEcfj5qWVHrplIQ2VI2W+uBRqvMKFKCJP8DgcSGNes+FA7Q8Sj8uq+PQXCFAX78TcBRMLgTOcBSbwmx2KPcz3brlb5+kH869f8JaPVr8+4dpc5uIaPhlvEJL+js2p55JgkTuuLoM2eGbsGsTV7UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=BAOFkM/f; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1745418206; c=relaxed/simple;
+	bh=tHTpVzk3+ZEiX7ugvs6Lfw0ZYGNXah6++b74fB/6rjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=disE8QbSbIJB3yLbVR/6yYUNYPCvCcQRFUlWo1r5yB1J4vgJv9wFLB1dI0bVczQkogZe4B4nTrN0EnYh1+vo/eZQ1u/Z5LOUtw7YhSZjN5kV9/Vuhso7pHS8qavmFHKmvn0iUvNPuG4+FPPJGRtbRy92NZ2lVMp+4axteVHlzGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eRQYpTkD; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="BAOFkM/f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1745417932; x=1746022732; i=christian@heusel.eu;
-	bh=5L7XCeeN/ka2ZgaxFwfE8MEMF/cmOCXAIeUoqGY/JOY=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BAOFkM/fZeEo4lrR0HNqXqKcAYcLUm48xZIm1tLsaejWI+8oAx1KSxUZAGfmwLcY
-	 rtPi7FNOf9NpD8VTJd01Mv19fvSC+vSrMPKq4wmyDEVVnqvWdqTt8Txery5q3u6gi
-	 K+rqjnSMjscgyhnV7lN05NLtBooQW2UcEm0dwbL/CXypsJrN5PEzjxqQna2m1yNBW
-	 Ml+W0d1IsK/Nn/LU5pJBa0+Juhrve7MFfirip46nfMandHEq/VAIfYSgrU35JWtJ4
-	 ukusjG4snXTtCV6yxbflaboU0mkmkCnmY+6O2LHUPMFm9KK//T0iszza2q7d0hHs+
-	 MuzZjsmfH9qPVYAxMg==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([147.142.58.71]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MlwBh-1uqFG11qOB-00h9nm; Wed, 23 Apr 2025 16:13:18 +0200
-Date: Wed, 23 Apr 2025 16:13:16 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, Patil.Reddy@amd.com, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drivers/platform/x86/amd: pmf: Check for invalid
- Smart PC Policies
-Message-ID: <88dcaa8b-4ab5-4284-aabf-7ef3a5caea7f@heusel.eu>
-References: <20250423132002.3984997-1-superm1@kernel.org>
- <20250423132002.3984997-3-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eRQYpTkD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745418203; x=1776954203;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tHTpVzk3+ZEiX7ugvs6Lfw0ZYGNXah6++b74fB/6rjw=;
+  b=eRQYpTkD1NNSet+2k0Vsnvvte6NGx7KkKsTe6cma+rUSTgA0QBcmX064
+   uD+u1iPYvrL964sUoG0dv6ZWK+Ygs0mpWRW08PYBwTm465xXgnT2xzpTi
+   lS9sllYwl9Po3UsayuriFCFip6mqioL1fVrvFl4rzXXtF1IQMOVxgs5st
+   mC8sEurL3GoqDfpZeN00BT2YEfeHZBob0G43n9VZJtDLlZ+2u5J3hPG3g
+   pNlO+v9JmVyQGOpNoMhhUQQEABmvnrew9ZlNuKb5Vgmeg9bqUcRZ7nLAg
+   DBMDixKgDsljAzErG0qM4B31BunPAORXPv+HM6O/jZc0cJqe9qKM4QGrN
+   Q==;
+X-CSE-ConnectionGUID: NJ/JbyQgTUq7ro6eX2Ef+Q==
+X-CSE-MsgGUID: oxPb7izqT/yglRb7KDiO1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="50675723"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="50675723"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:23:22 -0700
+X-CSE-ConnectionGUID: VF+QowvpTNSFO2erE2BvIw==
+X-CSE-MsgGUID: 7Ac1XyxrR7yxEiIKXp/Eaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="137190592"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:23:20 -0700
+Message-ID: <163061d6-d0fe-466d-909b-195ddf208211@intel.com>
+Date: Wed, 23 Apr 2025 07:23:18 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="blv3iqc6ol6eblid"
-Content-Disposition: inline
-In-Reply-To: <20250423132002.3984997-3-superm1@kernel.org>
-X-Provags-ID: V03:K1:mlTV/kyD3PJE9RHzFA3hANcmuFwGASXXeQwDMaAlxM19y3MNzko
- p4hjiQpLQxKr2wpBmotRANmXFSQ4gR9kRkJFZ5dSx5HlKYi4fMGt/qST47362EFNHU0/UgF
- hY5b/2s7UowUoyWKwlb5bz7uOSrQvJvQfNfv0jj0cWFEZz6Jw/Jl5wKyaRAqQnfxkNPbfFD
- fMawsTh4V34D3kB4kqg2w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j8BwWOtJ1YU=;0URovkY7x48hp0lbaEcBvtb3YjX
- uYIXgn0D+/G/Yk+tIRovnrfFyzJFHbfMxpeO379rNo5t3/MqktBTGvl4YDAXKWEWSsfp2BcdY
- uMYstMjfZrZUX9MyXPb/gmzUzYJsKWSRzG1PUJfwojHCTwWyPUQTFI8HSbrPfkWQjEL0T6VIF
- 6BsnXQKJX4LT+hznK9ia41APF/wwSid62apTfTmCXcYNy00SZRrR9felmtMqP+DtTFb/oZwsv
- MYo4zc6jusiaHfIEaLrNfbkZiBPH6llTvf3whuO+l6+PZdWNHWCqn3AEJfQpsJasuYV1F2dMy
- fOi50fFwBXkgvVnq0f2p4iGKdVt3j4ODs4mxu6qxC8TqZWCuULKexRvp1P4Ene1ExE6dargXx
- VJRONZNYY0NsDdLWTxHix6qaqplRiaRHxT39GlIKMzuCV1PSsOsN4sIpSp5xSrj+mptwn0CbS
- jvlwP1k1fbJvt4IoCevyDCLbI66+hvN+a/HEZG6FdghKPmxCJxfhUlo7xeHd8LGwqQI7UWpXE
- eug4ImYu1czDRKRn+X3TOc72ncJX+xvRLECFx2wyzSn+MGJlKIwemEZ5FypJ0dUOna7P27bBB
- z607qIebNdzz2lQzfWqQwAz7C2/EsEerRcPvS+Tru0KuirhmV1q34S4ZPeFhJrk/5c0FVTlkB
- +09T1DzrscywgOns/WDiraGQ3qmcQqhAYKIKk4nwP/2EVkpD0gwCORv/ndTYml74p7TAx2OWm
- 1XLLlfdMufMGuNxH2UWBZ/SghvZWoLB1kujN0KzCqMgd/R/FvsWo7HDDINpySd0E2IrbwF1P7
- bbAkNGW8O7ojscKzteTM3ipAN9FrEzjs8m8FUs/FAw9AxKTzdP/G+YcHrnMQ7b3gv5vz5ToBp
- UE2isjRDtFj4pF3veO9K268Y99F+y+EEmyoxmwxiAIO3+bXNMnsFch7e0kzgWdGYZl0Yok6aG
- T1wztpXtdEdH5wjrGCAZ3wL68Pb/vHW2LePhPl39cqoky5JmWCyE4R8Ev5+OMj5yKsKk9ez1i
- GnPNYJbQKsE5yoiQl1noL6Enw3I3AoopBQ0SbSdIvmGy8f669P+QjLxtITlZ1fk0tnGOH0XMV
- r6YdwitNa1FwR6Nu8kd1i56mK1tCxhg4TSFedZxpYnDYrlUTxLetC38uZeDtzIYG+vnWAS3xG
- rgnGyZMoJUcqiRjuIYWbri5qApItAZ1z0Oo9V7ePKhaqlAFOMkk+j8ByY2lCBghocR4OI2oPE
- O+lO8BMcM+VqH84xSW8HcH9/ZZ9TLGYIS7VmhuYUEyf9fNDhGTK40s6+Saru0oq9JRpSxbo7t
- Za6C6AwKuKt9D7+JXns84JFO9dU3DI3oVjowIXMpcOY2da7Y3Kqa2iO3julugtSfg6dM9omdg
- CQZ8M0C457hOzYgQjJj3fI9dUcLj1BMPbIrDE=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 02/34] x86/msr: Remove rdpmc()
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+ seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-3-xin@zytor.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250422082216.1954310-3-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/22/25 01:21, Xin Li (Intel) wrote:
+> rdpmc() is not used anywhere, remove it.
 
---blv3iqc6ol6eblid
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/2] drivers/platform/x86/amd: pmf: Check for invalid
- Smart PC Policies
-MIME-Version: 1.0
+I'm not sure it was *ever* used (at least since git started). Thanks for
+finding this.
 
-On 25/04/23 08:18AM, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->=20
-> commit 376a8c2a14439 ("platform/x86/amd/pmf: Update PMF Driver for
-> Compatibility with new PMF-TA") added support for platforms that support
-> an updated TA, however it also exposed a number of platforms that although
-> they have support for the updated TA don't actually populate a policy
-> binary.
->=20
-> Add an explicit check that the policy binary isn't empty before
-> initializing the TA.
->=20
-> Reported-by: Christian Heusel <christian@heusel.eu>
-> Closes: https://lore.kernel.org/platform-driver-x86/ae644428-5bf2-4b30-81=
-ba-0b259ed3449b@heusel.eu/
-> Fixes: 376a8c2a14439 ("platform/x86/amd/pmf: Update PMF Driver for Compat=
-ibility with new PMF-TA")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-Tested-by: Christian Heusel <christian@heusel.eu>
-
-Thanks for the quick fix!
-
---blv3iqc6ol6eblid
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmgI9XwACgkQwEfU8yi1
-JYWISw//cth3ExCyfJYEnFEClDPT2HW4oWn9HBynDfew+tcrxObthK0pYfO3BDE7
-ZiwTOZBlopa8aY4wyndGg8/MeyPfHGmZZfp133GoPMR6O9u0J3AUUw2BfSB6BcY9
-I/FaMWUpziHIJXJbrDxbtY+DjV30eFyvLs3Fcw1wKeTDzTlkPlomz4qa1B2S7fnn
-sOS3nVUEqJzZ9zXT3at1gLhJZ3n6a1qEUmxHiRyfpRI69hFpF3xypGeFcalkVsRP
-fGd5XVonRga5zrE5vqqiosHb76e6xZBMJ8t9jWQJUQKmtDcm2V2DcvLcuB/780u2
-sklJv8rP4LE6Mgx4Pvzg4jPSjYsJ61wGOt6zPmjXO5+Sh8Rut8moU2sl5d194Zq2
-bJXkCgeAZRU5Af3J6GN0e2Lf9FzXQ5jW+u1CyD3y+/wlJ/+6iuyRdq2U5R/7xRw3
-QkhQ7XBuhntFJbXBfbXOrcFRzyefpEQAhmXzDUNewuuRuaiD21EeBlxpwyoHe3BE
-45v49WIYtBOg7bUcuTCh8YiL9IfDz+1nxwvEe/+0ZLEPAVy+Xi2EqbSXX9NWAG76
-esqmcSEDmiZnMAeN7a5igdRCLOYNCHkxnWMOMypYxtZCjbhDW1AqTKglj89x0Rgj
-CsZZcnxqRPdzXed3NVW26xbjGxXgfAZI3dRLtAutxN4XmJRl+D8=
-=RBHL
------END PGP SIGNATURE-----
-
---blv3iqc6ol6eblid--
