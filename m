@@ -1,173 +1,193 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD392701B5;
-	Wed, 23 Apr 2025 09:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5B22566DA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 09:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745400528; cv=none; b=pORcwe7OPLEKwzN0vQimRV/3TAax5zfJC+ISP2m6LhbiW35rlaQ3PRBFlUX9wU5IHR5p9khUKWjyj7tgZh9Bp7i0FmGiwsteZJ77R08U6PQfzEQH9qw0oK43e079VSfUmBi2ZuzEZxGLXUm6FPVdHxMjQxEmOeuXi1G8AdQvjD0=
+	t=1745401354; cv=none; b=Wfa/cMmaWhU/KPGGX2hPaj1Y0/Vk9sdSQ1TvKVB4nFFVw3YTgn3czz7gjgfysScKzXVKQQGhcD5gSS2QS3VaznUEPDUctxd/AuhPJZBeLiIewqqzd66a7f84ApP7bovIq6X82RsBMjRhhRkz9qyOOzPf4IQR35JJ4FtED4NpJdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745400528; c=relaxed/simple;
-	bh=+EYVuYrtu0aOqe3lbGO7b9PG5zqWh+Kau/58q5Ikx7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SiqJAvCjPomS4sFbbZsaZrXnie+44uUS1W9DkZ8drnHCb3FDPGo7J+hd443HMoXUHPKJVrkH/DAxRQyf0/Ke/WIbRIXKIeUS4clA6JXMrzUTfs8mYfzqNsZ2UOFpaf1SSkbhgYBvGDiYKtX0vb5GkPpFu52sFWHbRS4a4fPxQvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=UmIumy9c; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745401354; c=relaxed/simple;
+	bh=j67p8aB7XPW1vhL19sO5+IekjmlqK3mvJGCsTpP0/HI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qYfhUDPM85OwKqBIHUUa7BbcQk/b39CRDuUkgohjSsY9jPi0EkDmOyFYkBlD8Nyn5UNjekLB8Z/iLvpfr1uvYCDGsooxeYr48lPQTc5PLapLGn9hI52pWro5X4ZrZOl4k/Td1MHPoVC/719IrkEwOMDKt6P3M+YdwJNRPxWW9+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WAbgPw+C; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UmIumy9c"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53N9RlMD3219913
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 02:27:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53N9RlMD3219913
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745400470;
-	bh=ljTCYrwFB4jWmVUKcnZoEtS1ENJ4as2xI12Y2XbkMGU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UmIumy9ccUWtp5ZpbFY6Ho9GgYRlVSRySL3D0+L6jUnzCuWo+VAXnfIYm+WcNWHcr
-	 3vdBJ+wwDthlqUfiIoaN3DvHPiYn4gb/+Mbw6citZ1Nn3xuBxFNqKSFdRNvSlmfDHg
-	 sgDUE/YJgzJJyaLCEhkxOt4S6E7bN3HrTuYY85xE4DOyVvo6Ap2JfPnfbPyl+GWU88
-	 BCLMSAjhGktSUoCdwdyy/ZS83Z3KwNGZuWXVpY05BNcjcn6RiyoIM0nH70HIaJUZTW
-	 sxPrQvxiLK2+ljs3l/mZq4cz6GbUS+eJfVvDu2BEsKu2EVOjGnH6pzErQiG0qnjLGr
-	 yA9/DCpyDaO8g==
-Message-ID: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
-Date: Wed, 23 Apr 2025 02:27:46 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WAbgPw+C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745401352; x=1776937352;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=j67p8aB7XPW1vhL19sO5+IekjmlqK3mvJGCsTpP0/HI=;
+  b=WAbgPw+CE+nRpLeJdK5tnvxZoseLBxSBF2dErX8V+CkB9wZ7GaH8LGqh
+   UWy9vrY1mtwRCCU7rBZrBcewgaX9FDCLwJOYgT/2+p2bq0gxHtuVYWLI7
+   5gbxiteI3hLeNoj8zuBDJCu2Y4RNASldZ1Gvj5QANuKitVKv1K2KqbMMn
+   3krekkSDWbm6cNz1cVr5j86YnIjTFmHzIHaDRzPFw2nYKW4uCMznYoZ9D
+   sHE2eQMPZPr39usQdm+ijv2j4c7xoqXr9/kRCkZ8zyBagzbriynyCKFxU
+   eRVGqiUwy+w7wjsggI7KwBR3rdKU56YQQDbw6WDLPRVyRZo2lhEePuIEq
+   A==;
+X-CSE-ConnectionGUID: /6VM1sSYQoCO2dNvjV71rg==
+X-CSE-MsgGUID: yibYFfr5Sp631kLpFIc/Sw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46868914"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="46868914"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 02:42:32 -0700
+X-CSE-ConnectionGUID: VOZAyAIdR72B6DkJszl2nw==
+X-CSE-MsgGUID: GIB9cFV8Tl2Dc1oPtrHLtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="163325914"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 02:42:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 23 Apr 2025 12:42:26 +0300 (EEST)
+To: Nitin Joshi <nitjoshi@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    ibm-acpi-devel@lists.sourceforge.net, njoshi1@lenovo.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v2] platform/x86: thinkpad-acpi: Add support for new
+ hotkey for  camera shutter switch
+In-Reply-To: <20250423055130.9146-1-nitjoshi@gmail.com>
+Message-ID: <669674a9-935b-78a7-0556-ec597ce2b1a5@linux.intel.com>
+References: <20250423055130.9146-1-nitjoshi@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
- native_rdmsrq() uses
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-11-xin@zytor.com> <aAexLqjhKncFyw2V@google.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aAexLqjhKncFyw2V@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 4/22/2025 8:09 AM, Sean Christopherson wrote:
-> On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
->> __rdmsr() is the lowest level primitive MSR read API, and its direct
->> use is NOT preferred.
-> 
-> Doesn't mean it's wrong.
+On Wed, 23 Apr 2025, Nitin Joshi wrote:
 
-I wouldn't go so far as to claim that it's wrong :-)
+> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
+> has new shortcut on F9 key i.e to switch camera shutter and it
+> send a new 0x131b hkey event when F9 key is pressed.
+> 
+> This commit adds support for new hkey 0x131b.
+> 
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
+> ---
+> Changes in v2:
+> 
+> * Added ASL method to get camera shutter status and send it to userspace.
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 43 +++++++++++++++++++++++++++-
+>  1 file changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 5790095c175e..80b02e8538e8 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
+>  						   * directly in the sparse-keymap.
+>  						   */
+>  	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
+> +	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
+>  	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
+>  	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
+>  	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
+> @@ -2250,6 +2251,25 @@ static void tpacpi_input_send_tabletsw(void)
+>  	}
+>  }
+>  
+> +static int get_camera_shutter(void)
+> +{
+> +	acpi_handle gces_handle;
+> +	int output;
+> +
+> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GCES", &gces_handle))) {
+> +		/* Platform doesn't support GCES */
 
->> Use its wrapper function native_rdmsrq() instead.
+Drop this as it's unnecessary/very obvious.
 
-The current code exhibits a somewhat haphazard use of MSR APIs, so I
-wanted to clarify which API to employ in specific situations with
-verbose function naming.
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!acpi_evalf(gces_handle, &output, NULL, "dd", 0))
+> +		return -EIO;
+> +
+> +	if (output & BIT(31))
 
-Here is an example that Boris had to fix the use of MSR APIs:
+Please use a named define instead of using BIT(31) directly as it improves 
+code readability a lot.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f980f9c31a923e9040dee0bc679a5f5b09e61f40
+> +		return -ENODEV;
+> +
+> +	return output;
+> +}
+> +
+>  static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
+>  {
+>  	bool known_ev;
+> @@ -3272,6 +3292,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
+>  	 * after switching to sparse keymap support. The mappings above use translated
+>  	 * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
+>  	 */
+> +	{ KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
+>  	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
+>  	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
+>  	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
+> @@ -3303,7 +3324,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  	const struct key_entry *keymap;
+>  	bool radiosw_state  = false;
+>  	bool tabletsw_state = false;
+> -	int hkeyv, res, status;
+> +	int hkeyv, res, status, camera_shutter_state;
+>  
+>  	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+>  			"initializing hotkey subdriver\n");
+> @@ -3467,6 +3488,13 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  	if (res)
+>  		return res;
+>  
+> +	camera_shutter_state = get_camera_shutter();
+> +	if (camera_shutter_state >= 0) {
+> +		input_set_capability(tpacpi_inputdev, EV_SW, SW_CAMERA_LENS_COVER);
+> +		input_report_switch(tpacpi_inputdev,
+> +				SW_CAMERA_LENS_COVER, camera_shutter_state);
 
-> 
-> ...
-> 
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 1547bfacd40f..e73c1d5ba6c4 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -380,7 +380,7 @@ static __always_inline void vmx_disable_fb_clear(struct vcpu_vmx *vmx)
->>   	if (!vmx->disable_fb_clear)
->>   		return;
->>   
->> -	msr = __rdmsr(MSR_IA32_MCU_OPT_CTRL);
->> +	msr = native_rdmsrq(MSR_IA32_MCU_OPT_CTRL);
->>   	msr |= FB_CLEAR_DIS;
->>   	native_wrmsrq(MSR_IA32_MCU_OPT_CTRL, msr);
->>   	/* Cache the MSR value to avoid reading it later */
->> @@ -7307,7 +7307,7 @@ void noinstr vmx_spec_ctrl_restore_host(struct vcpu_vmx *vmx,
->>   		return;
->>   
->>   	if (flags & VMX_RUN_SAVE_SPEC_CTRL)
->> -		vmx->spec_ctrl = __rdmsr(MSR_IA32_SPEC_CTRL);
->> +		vmx->spec_ctrl = native_rdmsrq(MSR_IA32_SPEC_CTRL);
-> 
-> And what guarantees that native_rdmsrq() won't have tracing?  Ugh, a later patch
-> renames native_rdmsrq() => native_rdmsrq_no_trace().
-> 
-> I really don't like this.  It makes simple and obvious code:
-> 
-> 	vmx->spec_ctrl = __rdmsr(MSR_IA32_SPEC_CTRL);
-> 
-> so much harder to read:
-> 
-> 	vmx->spec_ctrl = native_rdmsrq_no_trace(MSR_IA32_SPEC_CTRL);
-> 
-> and does so in a way that is difficult to review, e.g. I have to peek ahead to
-> understand that this is even ok.
-> 
-> I strongly prefer that we find a way to not require such verbose APIs, especially
-> if KVM ends up using native variants throughout.  Xen PV is supposed to be the
-> odd one out, yet native code is what suffers.  Blech.
+The second parameter fits on the previous line.
 
-Will try to figure out how to name the APIs.
+> +	}
+> +
+>  	if (tp_features.hotkey_wlsw) {
+>  		input_set_capability(tpacpi_inputdev, EV_SW, SW_RFKILL_ALL);
+>  		input_report_switch(tpacpi_inputdev,
+> @@ -3633,6 +3661,8 @@ static void adaptive_keyboard_s_quickview_row(void)
+>  /* 0x1000-0x1FFF: key presses */
+>  static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+>  {
+> +	int camera_shutter_state;
+> +
+>  	/* Never send ACPI netlink events for original hotkeys (hkey: 0x1001 - 0x1020) */
+>  	if (hkey >= TP_HKEY_EV_ORIG_KEY_START && hkey <= TP_HKEY_EV_ORIG_KEY_END) {
+>  		*send_acpi_ev = false;
+> @@ -3643,6 +3673,17 @@ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+>  			return true;
+>  	}
+>  
+> +	camera_shutter_state = get_camera_shutter();
+> +	if (hkey == TP_HKEY_EV_CAMERASHUTTER_TOGGLE && (camera_shutter_state >= 0)) {
+> +		mutex_lock(&tpacpi_inputdev_send_mutex);
+> +
+> +		input_report_switch(tpacpi_inputdev,
+> +			SW_CAMERA_LENS_COVER, camera_shutter_state);
+> +		input_sync(tpacpi_inputdev);
+> +
+> +		mutex_unlock(&tpacpi_inputdev_send_mutex);
+> +	}
+> +
+>  	return tpacpi_input_send_key(hkey, send_acpi_ev);
+>  }
+>  
+> 
 
-One reason I chose verbose names is that short names are in use and
-renaming needs to touch a lot of files (and not fun at all).
-
-Thanks!
-     Xin
+-- 
+ i.
 
