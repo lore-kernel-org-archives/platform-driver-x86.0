@@ -1,114 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60ADC1A8401;
-	Wed, 23 Apr 2025 13:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745D1FF5F3;
+	Wed, 23 Apr 2025 13:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416379; cv=none; b=Krep/E2jgpzrVMQ0PEjM8sXs47kokX6DUJpo+gG2g9xvAZRNf7hZAvxiyxR5OB5BsjD20DXU3OsF+okhu8HNMlEaF52IzI7RPF/P57kzGCinTsJJQfX/5ifPRKawXlO+g/R82pzT+nakRf824zzew1b0E53x5fXZeafXqntQIC4=
+	t=1745416704; cv=none; b=QO40tdsib+UqpgTkZdrfB7j3W9H1UoOPKTIFION1T6nEndsx3hxxWn3Fg2WHoHtUgeOfMEwZp7QoTX2V1fimZSqd0COLuIzIK9nFeye+1JRWptMTEC2P6MYycAF2VMSsPcufB76iyOqNOR2tyTgncDFP0yPKNL/fthzKN6LPr0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416379; c=relaxed/simple;
-	bh=Tx/ug54lKiJM6dSAtkIrdL/FzrV2DTw6PSXKQN8n3jo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QaePPBcs9I9N0tKjhjBrvEdQub9z/FXcbpScigHaBVoNmhi2LVACDvg0t0Cs8uCTf3iAhZ6nkwsER6XtBlzcjvyqsecaO9XfoJBvfc71eNr82R7tybcy3WSIiBMQPoypWKYyYCEwcpKUVONziViP6HcBVqREK+vyyT/vIevDYDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AtB2lW/y; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1745416704; c=relaxed/simple;
+	bh=7q4zdAA6cjvoH7A+eF42XPOlNQyB4KuhTMmsqPLrA4Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JgjS3PbIhzdDSD3G807YJ7khZ02FJBi/28i4Q0Ngj48OiKQXVd83lRZs3BdUMEAVXCLiil6a9T6QGfPTAPGsgUqB0NRfIXgo41LWN85cGAmZ0QNseJ7ChhZTZA/E64BJe2jGzDOTOFMwUEDXVKdrVhcz3a9QltcHLilw3ZIrNY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l87FAavc; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AtB2lW/y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l87FAavc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745416379; x=1776952379;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Tx/ug54lKiJM6dSAtkIrdL/FzrV2DTw6PSXKQN8n3jo=;
-  b=AtB2lW/yuhQfMYfxnyEnIh01uT+zFIsdmueu3sMwM0yV2DRIAgDBQ9v3
-   SPSyWWCi94fokyC42UoGWl2x1f0nGadTOGG6Y5aVEqzMs63aG3kNAb+h8
-   LM87e7ybV8X0PBkZSlZAoKIGmlqPCuq0oETNH40pN4yPskqm0gqhdeDQv
-   1gOu9sfBZaMNPHqEo29B9Url8dFG0plbTnXBUdJAXt93DdIq1yxlL0bSg
-   am21Sfo8aETCKmpx8f1pNXYUTs5EMt6q/z51FtaOduXqX5df+Wcfc0cD8
-   NMBCGJvUvZVjgnHRcstKPw94V+Lx9ZpI5Ri1xfiwLRQBXB/jd+uWYtimO
+  t=1745416702; x=1776952702;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=7q4zdAA6cjvoH7A+eF42XPOlNQyB4KuhTMmsqPLrA4Q=;
+  b=l87FAavcmxZxR3m2+Mafh+bkKVveWtaxPdxG8K8CrJM65M9Ohi4kldRE
+   r69NAela8sN+1AoB/hoGbUBRePEsv7gN6RXLrRqCUiFtw1vDxrpLekLy5
+   dvP05DtLQwiUcf7U2ctTuPnTrQggChsq2y8OwPsFLoTefNzpwmy8wUG3J
+   bIUiS0GrrSvhXlpsorp1ILQqBjiREZ5KsiA0w1a1XZ3Ip1jcHJnWzkvu2
+   fzbW/xVIz1ftnJCCb6vEj/o1eGOHaxVQNPzw2P77jEqm3suBL36e1ti2U
+   mSnwmVDiarfUWAkJ9mjWXtgOBmzD83Q5C6S79/5zW6cGBtTEASJq/9Esn
    w==;
-X-CSE-ConnectionGUID: h9RHlDtrSD61g+iR3R5qOQ==
-X-CSE-MsgGUID: rD2l4eeURJOh+bwgIFXlBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46245458"
+X-CSE-ConnectionGUID: nEgbwwYoRLOHrSCeNMFAUQ==
+X-CSE-MsgGUID: u0yJRMmQTFWH4FgES/Z9vg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="50810404"
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="46245458"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:52:58 -0700
-X-CSE-ConnectionGUID: U2Niu++rT2acv9S+huh7dQ==
-X-CSE-MsgGUID: +9/glV+CR06JlEBRGzU3TA==
+   d="scan'208";a="50810404"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:58:21 -0700
+X-CSE-ConnectionGUID: WNr3micBRmO2tdbeiNfmqw==
+X-CSE-MsgGUID: jb0IVUnFRIen1MpHXdGKsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132203491"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.228])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:52:57 -0700
-Message-ID: <381befc68d7ee003c9903c3b16472513e1a5a0eb.camel@linux.intel.com>
-Subject: Re: [PATCH 5/5] Documentation: admin-guide: pm: Add documentation
- for die_id
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 23 Apr 2025 06:52:57 -0700
-In-Reply-To: <7b09613c-2aba-469f-bc33-358b787e29b0@oracle.com>
-References: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
-	 <20250422213427.1943328-6-srinivas.pandruvada@linux.intel.com>
-	 <7b09613c-2aba-469f-bc33-358b787e29b0@oracle.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+   d="scan'208";a="132852073"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:58:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 23 Apr 2025 16:58:15 +0300 (EEST)
+To: Andy Shevchenko <andy@kernel.org>
+cc: Hans de Goede <hdegoede@redhat.com>, Dan Scally <djrscally@gmail.com>, 
+    Alan Stern <stern@rowland.harvard.edu>, 
+    Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>, 
+    Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>, 
+    platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 5/9] platform/x86: int3472: Make regulator supply name
+ configurable
+In-Reply-To: <aAErdSgr_F8L7Sgw@smile.fi.intel.com>
+Message-ID: <09254093-8962-3d53-bf56-78eebb23fdd5@linux.intel.com>
+References: <20250417111337.38142-1-hdegoede@redhat.com> <20250417111337.38142-6-hdegoede@redhat.com> <aAErdSgr_F8L7Sgw@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 2025-04-23 at 14:40 +0530, ALOK TIWARI wrote:
->=20
->=20
-> On 23-04-2025 03:04, Srinivas Pandruvada wrote:
-> > +``die_id``
-> > +	This attribute is used to get the Linux die id of this
-> > instance.
-> > +	This attributes is only present for domains with core
-> > agents and
->=20
-> typo attributes ->attribute
+On Thu, 17 Apr 2025, Andy Shevchenko wrote:
 
-Thanks for the catch. Will update in next rev.
+> On Thu, Apr 17, 2025 at 01:13:33PM +0200, Hans de Goede wrote:
+> > This is a preparation patch for registering multiple regulators, which
+> > requires a different supply-name for each regulator. Make supply-name
+> > a parameter to skl_int3472_register_regulator() and use con-id to set it
+> > so that the existing int3472_gpio_map remapping can be used with it.
+> > 
+> > Since supply-name is a parameter now, drop the fixed
+> > skl_int3472_regulator_map_supplies[] array and instead add lower- and
+> > upper-case mappings of the passed-in supply-name to the regulator.
+> 
+> With a comment and static_assert() LGTM now,
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
--Srinivas
+Hi Andy,
 
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 when the CPUID leaf 0x1f pr=
-esents die ID.
-> > +
-> > =C2=A0 ``fabric_cluster_id``
-> > =C2=A0=C2=A0	This attribute is used to get the fabric cluster id of
-> > this instance.
-> > =C2=A0=20
->=20
->=20
-> Thanks,
-> Alok
+In the lack of context what this refers to exactly, can you confirm those 
+are already present so no updates are required to v4? Thanks.
+
+-- 
+ i.
 
