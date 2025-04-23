@@ -1,89 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745D1FF5F3;
-	Wed, 23 Apr 2025 13:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B068F40;
+	Wed, 23 Apr 2025 13:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416704; cv=none; b=QO40tdsib+UqpgTkZdrfB7j3W9H1UoOPKTIFION1T6nEndsx3hxxWn3Fg2WHoHtUgeOfMEwZp7QoTX2V1fimZSqd0COLuIzIK9nFeye+1JRWptMTEC2P6MYycAF2VMSsPcufB76iyOqNOR2tyTgncDFP0yPKNL/fthzKN6LPr0I=
+	t=1745416759; cv=none; b=oRu6z/Dv0GI5mxRGdQfF9SnABrdG681aNnWoRswmAUe+rhSvNK6+OpY5TgzfMbCiyM/sKkP91G7g5zSSjrEYlM9u5F2hP1ZfHQEKGUlAXHlbhl/tiw+QtPI8Pjgl45yO7cdouU9ALqv0swJrqk/lOQYCFQ/0GO/8SfMu1uFtikY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416704; c=relaxed/simple;
-	bh=7q4zdAA6cjvoH7A+eF42XPOlNQyB4KuhTMmsqPLrA4Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JgjS3PbIhzdDSD3G807YJ7khZ02FJBi/28i4Q0Ngj48OiKQXVd83lRZs3BdUMEAVXCLiil6a9T6QGfPTAPGsgUqB0NRfIXgo41LWN85cGAmZ0QNseJ7ChhZTZA/E64BJe2jGzDOTOFMwUEDXVKdrVhcz3a9QltcHLilw3ZIrNY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l87FAavc; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745416759; c=relaxed/simple;
+	bh=NhZ1vBbFXojhftlTCOQYWC/5h37cFDUHJEpCdlmm0N8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+Uz1lh8seHJ3so8SAq0+0BJygVNjrmqYTrODyOIgTiwLoXmovhrJyFBmsYWmpfPNAGTTLIYetCTvjqYy59qCOOVqRqgqFRrjbmVDKkFyEIhjCDubKOxeIeQM4zIOAseBcrCgIJoJMakzWBvxhu8w2MB0W5CEBXBK3OudjHWiIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bomU381D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l87FAavc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745416702; x=1776952702;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7q4zdAA6cjvoH7A+eF42XPOlNQyB4KuhTMmsqPLrA4Q=;
-  b=l87FAavcmxZxR3m2+Mafh+bkKVveWtaxPdxG8K8CrJM65M9Ohi4kldRE
-   r69NAela8sN+1AoB/hoGbUBRePEsv7gN6RXLrRqCUiFtw1vDxrpLekLy5
-   dvP05DtLQwiUcf7U2ctTuPnTrQggChsq2y8OwPsFLoTefNzpwmy8wUG3J
-   bIUiS0GrrSvhXlpsorp1ILQqBjiREZ5KsiA0w1a1XZ3Ip1jcHJnWzkvu2
-   fzbW/xVIz1ftnJCCb6vEj/o1eGOHaxVQNPzw2P77jEqm3suBL36e1ti2U
-   mSnwmVDiarfUWAkJ9mjWXtgOBmzD83Q5C6S79/5zW6cGBtTEASJq/9Esn
-   w==;
-X-CSE-ConnectionGUID: nEgbwwYoRLOHrSCeNMFAUQ==
-X-CSE-MsgGUID: u0yJRMmQTFWH4FgES/Z9vg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="50810404"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="50810404"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:58:21 -0700
-X-CSE-ConnectionGUID: WNr3micBRmO2tdbeiNfmqw==
-X-CSE-MsgGUID: jb0IVUnFRIen1MpHXdGKsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132852073"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:58:18 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 23 Apr 2025 16:58:15 +0300 (EEST)
-To: Andy Shevchenko <andy@kernel.org>
-cc: Hans de Goede <hdegoede@redhat.com>, Dan Scally <djrscally@gmail.com>, 
-    Alan Stern <stern@rowland.harvard.edu>, 
-    Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>, 
-    Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>, 
-    platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] platform/x86: int3472: Make regulator supply name
- configurable
-In-Reply-To: <aAErdSgr_F8L7Sgw@smile.fi.intel.com>
-Message-ID: <09254093-8962-3d53-bf56-78eebb23fdd5@linux.intel.com>
-References: <20250417111337.38142-1-hdegoede@redhat.com> <20250417111337.38142-6-hdegoede@redhat.com> <aAErdSgr_F8L7Sgw@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bomU381D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB9BC4CEE2;
+	Wed, 23 Apr 2025 13:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745416759;
+	bh=NhZ1vBbFXojhftlTCOQYWC/5h37cFDUHJEpCdlmm0N8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bomU381D3RpToifcppftVNrm7pvaJTvfLO6AK/a8Oic3Mj32t+RyouYTtLdDiBu0P
+	 PTET8PjeASUd0Zw/bvPCNXBHi2AAMZTXGyuTDWVA40oOtISEjNu3aNEPbg26XtLq8n
+	 xtU3Knue497ZXlWj/fE5zlecN9LKdwUV/FCsxqko=
+Date: Wed, 23 Apr 2025 15:59:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kurt Borja <kuurtb@gmail.com>, Lyndon Sanche <lsanche@lyndeno.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+Message-ID: <2025042314-grub-savage-3894@gregkh>
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
+ <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
+ <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
+ <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
 
-On Thu, 17 Apr 2025, Andy Shevchenko wrote:
-
-> On Thu, Apr 17, 2025 at 01:13:33PM +0200, Hans de Goede wrote:
-> > This is a preparation patch for registering multiple regulators, which
-> > requires a different supply-name for each regulator. Make supply-name
-> > a parameter to skl_int3472_register_regulator() and use con-id to set it
-> > so that the existing int3472_gpio_map remapping can be used with it.
-> > 
-> > Since supply-name is a parameter now, drop the fixed
-> > skl_int3472_regulator_map_supplies[] array and instead add lower- and
-> > upper-case mappings of the passed-in supply-name to the regulator.
+On Wed, Apr 23, 2025 at 03:44:56PM +0200, Hans de Goede wrote:
+> Hi Ilpo,
 > 
-> With a comment and static_assert() LGTM now,
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> On 23-Apr-25 3:27 PM, Ilpo Järvinen wrote:
+> > On Fri, 11 Apr 2025, Kurt Borja wrote:
+> > 
+> >> Use a faux device parent for registering the platform_profile instead of
+> >> a "fake" platform device.
+> >>
+> >> The faux bus is a minimalistic, single driver bus designed for this
+> >> purpose.
+> > 
+> > Hi Kurt, Hans & Greg,
+> > 
+> > I'm not sure about this change. So dell-pc not a platform device but
+> > a "fake".
+> 
+> Arguably the dell-pc driver does not need a struct device at all,
+> since it just exports /sys/firmware/acpi/platform_profile sysfs
+> interface by using the relevant Dell SMBIOS interfaces for this.
+> 
+> As such maybe we should just completely get rid of the whole
+> struct device here?
+> 
+> If we do decide to keep the struct device, then since the struct device
+> seems to just be there to tie the lifetime of the platform_profile
+> handler to, I guess that calling it a faux device is fair.
+> 
+> > I'm not saying this is wrong, but feel I'm a bit just lost where the 
+> > dividing line is.
+> 
+> In this case it seems to be clear that this is a faux device,
+> but I do agree that sometimes the line can be a bit blurry.
 
-Hi Andy,
+If a device needs access to platform resources, then it is a platform
+device.  If not, then it is not.  Not too complex :)
 
-In the lack of context what this refers to exactly, can you confirm those 
-are already present so no updates are required to v4? Thanks.
+But (you knew there was a but), many drivers want to detach their
+ability to create a device, and have a driver bind to them, in a
+different "place" in the kernel.  For many of those, they have (ab)used
+the platform driver/device api to achieve this, despite them not being a
+platform device at all.  For these, we can't convert them directly to
+use faux bus, as it's not as simple of a conversion and in some places,
+doesn't work well.  So let's leave those alone for now, but not take any
+more of them going forward in the future.
 
--- 
- i.
+hope this helps,
 
+greg k-h
