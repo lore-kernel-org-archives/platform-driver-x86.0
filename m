@@ -1,189 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158EF5028C;
-	Wed, 23 Apr 2025 13:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19D01A0BFA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 13:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745414893; cv=none; b=UX3Wvj1v/hZChAKyodVLOIceKRCxT2irpNB2hOWQufDfOPELr7w9C3qABrNDzyFI48LrF3vwzMVu+SpJfqGrkfLcGMR0YY89wegPyovb6Ce0FUho1QGRQK5KeYHV8HKJOFM/+E+CcwLVgSB98VxyW4cwysKJHJdOYv+Q95YXryQ=
+	t=1745415435; cv=none; b=RCF0qbckb3tCpgQ6/GjxcurZF2YUBQsuEm2WDwsa58iLBiP39AvHg/4gN/M8KfVe1aV1ndhqqk6G/V+uFsVCQcyCai/AvTC9O5NpZpUsIEpX1nuc5kbsL1l91dOuaOb29xJmLx1EwTPZX33lx8Oi1yy/4KIAfokHoUpGWREkhs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745414893; c=relaxed/simple;
-	bh=ABrt+tLW6DKLly55/N1HDO65voBFEDLmFiSoBdQCQOs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qRKuf0wVnuamF/CMSx932stcd2xAwo6iS0d5lZkHeQCs2fdQRquM4N2GD5GORcohj9oXBBuViRqPyhtSWZXJy6lIhiTyUotn/ww3GdAmedQgqaFtjvBT3ki2nOGOqTi0I59dpXd6i71b71r5FS9ILtccsuKFUV7Sxq3W5j0ZDgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TB5j24xL; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745415435; c=relaxed/simple;
+	bh=dXr0vdvJSE4CQmBa2fTuILJV/L6G5HpSxSHQ49PKVqY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PXpLq4EDHWqhEvcevBKFVRuTvClHoAcav68EWGHLWbcMb4f0t/qc6qXBl748FD4Lhuu08ZyHwmNPengRBJQPyq9I6yMjSOnZxl5JOBSZI7SHCRszKVIwY/ofAfLphETfZgxcg2FwdxkAzSESYE+KZhQjCOaKQJeauy4cwALIIcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT0JZxbk; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TB5j24xL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745414891; x=1776950891;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ABrt+tLW6DKLly55/N1HDO65voBFEDLmFiSoBdQCQOs=;
-  b=TB5j24xLwSpt7YRAa5H7lgHGvaih8semZjUmrQeDlBVk1APDGp+uejBQ
-   QvQdKPXdQfRv8mgoX7B6m+PVe9KsyUznij73zoftLlB+vZ47sCfkhQ2zL
-   ZPnSkkZfwXxVG9K6C6bBW3wYN2WDrtIeNUPev515Kd+xLqLJgrYe5vunj
-   KGT7k6BExsmX5Z1TcgHQzM1TyOJFxB0g+VVE3Ps7ixuy8yuozpYfAy3VZ
-   j48pT6o87U5aZTF/v8sS5n7Aq0wH2/7hzkvLpNAd8i3B1kPpp2jWl4rgQ
-   vjlF8qa50vz9cjrKrOtRiTAQh7rb1sP8Ex63UN/NY+UyyMipHGx7jT+3o
-   g==;
-X-CSE-ConnectionGUID: I8F+sc43T7qLB9vzDfLDbA==
-X-CSE-MsgGUID: olh9n8LySXCG4mDMk6tg6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58382242"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="58382242"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:28:00 -0700
-X-CSE-ConnectionGUID: KGNbnPf5Q8aOAdffGGvN5A==
-X-CSE-MsgGUID: lGeB6RSJRn+f3YqeTZhqzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132303521"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:27:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 23 Apr 2025 16:27:37 +0300 (EEST)
-To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Lyndon Sanche <lsanche@lyndeno.ca>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
-In-Reply-To: <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
-Message-ID: <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
-References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com> <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT0JZxbk"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30828f9af10so13580990a91.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 06:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745415433; x=1746020233; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
+        b=nT0JZxbkLOWuAaq4nDpqtJy0UU3fVSwyW/pnNNBGYtoYR/+veEUbsw1SW7uJkXUY9+
+         O8RFZ5mI3iZ/bhFeyS6mpQMMAXezkdZIzt5lXK/oKDFsuDimPPcn2I6rOaU8XnWilwy4
+         Qflh7jQ/97QLXGCjRrnvUz0MJpppmkyoylDcvcx1GHi73/C77pzsSBWavAJzDCuOl8Vu
+         Bx69HB/Nd+cusCL5TPzdZ2tLrS0aQKRNqjrAQAhL7fNktV8FmsgyGiJ37d7CE0puVmjy
+         sSKyhx/48E0CSccNslHjG8NDhKl65lvTaigTuvvrWJaiU24iVs3SZBs7noSsvJEIf+mE
+         70Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745415433; x=1746020233;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
+        b=pDN88jTslTeYKUOqC0J8KswCOu3bjb25LZvqHSyX8z/ydthtellwtCLOeIPK9DCIzJ
+         2waN2VzkttBlejjPmtCAn6nN2N5/pQ6b0dt4DqEBSfTVavfAP+JyI6rpXLPcOEjbmoLU
+         c61uEz/6Lc0jlYehcp4mxynqqU4U8QgD1z4RUoyVz9VtiqxyAwxPOCK8BzHS8spIucEe
+         kwD7R3RtSgW8ZPIDwZH3+AQ+sGmxe8otAa9+ZP/vG6qp31ZTVqhXHr05izg84Y2ZqePG
+         a6xntqU7BFZFyaJDPtYM1zI5/sekzTG1eQgIg9ek/uucQ2oHPE6wyt2dDzM5LNQLAAqD
+         QTdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaOQqAVVpvXVUNzcYLF2+ozabEXD7KWAuknau7+W9m7Q1+F3GfpJ47gioxyw2WYvVLNeFk+NdZH/oYlQvAtkB7QYz4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZMjnd3DVnor1a8iV1uYFEJ0z8H6bdnY8J+jDVaNlY695KXy/6
+	ELPOh/R2PEqWd+zLrkNIQCGBJcMPPUBenHLK5AW+fAveR1Gn8clMS9umDPMQAihD3gr5rfPcIPN
+	PzA==
+X-Google-Smtp-Source: AGHT+IEWS42km52dkYFlmcKZWmN1wttg5SPG3JN+o4kIB9LzXEDLrbHh1gdrPp7a64YZSw75FwPTF5N3xvo=
+X-Received: from pjur12.prod.google.com ([2002:a17:90a:d40c:b0:308:867e:1ced])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:2ee:9b2c:3253
+ with SMTP id 98e67ed59e1d1-3087bbc9333mr25668631a91.30.1745415432973; Wed, 23
+ Apr 2025 06:37:12 -0700 (PDT)
+Date: Wed, 23 Apr 2025 06:37:11 -0700
+In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
+ <aAexLqjhKncFyw2V@google.com> <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+Message-ID: <aAjtBxzvRgNt4Uzr@google.com>
+Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
+ native_rdmsrq() uses
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
+	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
+	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 11 Apr 2025, Kurt Borja wrote:
-
-> Use a faux device parent for registering the platform_profile instead of
-> a "fake" platform device.
+On Wed, Apr 23, 2025, Xin Li wrote:
+> On 4/22/2025 8:09 AM, Sean Christopherson wrote:
+> > I strongly prefer that we find a way to not require such verbose APIs, especially
+> > if KVM ends up using native variants throughout.  Xen PV is supposed to be the
+> > odd one out, yet native code is what suffers.  Blech.
 > 
-> The faux bus is a minimalistic, single driver bus designed for this
-> purpose.
-
-Hi Kurt, Hans & Greg,
-
-I'm not sure about this change. So dell-pc not a platform device but
-a "fake".
-
-I'm not saying this is wrong, but feel I'm a bit just lost where the 
-dividing line is. Is it just because this driver only happens to call
-dell_send_request(), etc., not contains that low-level access code within? 
-Or is that dell-smbios "fake" too?
-
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/dell/dell-pc.c | 46 +++++++++++--------------------------
->  1 file changed, 13 insertions(+), 33 deletions(-)
+> Will try to figure out how to name the APIs.
 > 
-> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
-> index 794924913be0c6f13ed4aed8b01ffd21f1d34dea..48cc7511905a62d2828e3a7b593b3d2dae893e34 100644
-> --- a/drivers/platform/x86/dell/dell-pc.c
-> +++ b/drivers/platform/x86/dell/dell-pc.c
-> @@ -13,18 +13,18 @@
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/bits.h>
-> +#include <linux/device/faux.h>
->  #include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_profile.h>
-> -#include <linux/platform_device.h>
->  #include <linux/slab.h>
->  
->  #include "dell-smbios.h"
->  
-> -static struct platform_device *platform_device;
-> +static struct faux_device *dell_pc_fdev;
->  static int supported_modes;
->  
->  static const struct dmi_system_id dell_device_table[] __initconst = {
-> @@ -246,7 +246,7 @@ static const struct platform_profile_ops dell_pc_platform_profile_ops = {
->  	.profile_set = thermal_platform_profile_set,
->  };
->  
-> -static int thermal_init(void)
-> +static int dell_pc_faux_probe(struct faux_device *fdev)
->  {
->  	struct device *ppdev;
->  	int ret;
-> @@ -258,51 +258,31 @@ static int thermal_init(void)
->  	if (ret < 0)
->  		return ret;
->  
-> -	platform_device = platform_device_register_simple("dell-pc", PLATFORM_DEVID_NONE, NULL, 0);
-> -	if (IS_ERR(platform_device))
-> -		return PTR_ERR(platform_device);
-> +	ppdev = devm_platform_profile_register(&fdev->dev, "dell-pc", NULL,
-> +					       &dell_pc_platform_profile_ops);
->  
-> -	ppdev = devm_platform_profile_register(&platform_device->dev, "dell-pc",
-> -					       NULL, &dell_pc_platform_profile_ops);
-> -	if (IS_ERR(ppdev)) {
-> -		ret = PTR_ERR(ppdev);
-> -		goto cleanup_platform_device;
-> -	}
-> -
-> -	return 0;
-> -
-> -cleanup_platform_device:
-> -	platform_device_unregister(platform_device);
-> -
-> -	return ret;
-> +	return PTR_ERR_OR_ZERO(ppdev);
->  }
->  
-> -static void thermal_cleanup(void)
-> -{
-> -	platform_device_unregister(platform_device);
-> -}
-> +static const struct faux_device_ops dell_pc_faux_ops = {
-> +	.probe = dell_pc_faux_probe,
-> +};
->  
->  static int __init dell_init(void)
->  {
-> -	int ret;
-> -
->  	if (!dmi_check_system(dell_device_table))
->  		return -ENODEV;
->  
-> -	ret = thermal_init();
-> -	if (ret)
-> -		goto fail_thermal;
-> +	dell_pc_fdev = faux_device_create("dell-pc", NULL, &dell_pc_faux_ops);
-> +	if (!dell_pc_fdev)
-> +		return -ENODEV;
->  
->  	return 0;
-> -
-> -fail_thermal:
-> -	thermal_cleanup();
-> -	return ret;
->  }
->  
->  static void __exit dell_exit(void)
->  {
-> -	thermal_cleanup();
-> +	faux_device_destroy(dell_pc_fdev);
->  }
->  
->  module_init(dell_init);
-> 
-> 
+> One reason I chose verbose names is that short names are in use and
+> renaming needs to touch a lot of files (and not fun at all).
 
--- 
- i.
+Yeah, I've looked at modifying rdmsrl() to "return" a value more than once, and
+ran away screaming every time.
 
+But since you're already doing a pile of renames, IMO this is the perfect time to
+do an aggressive cleanup.
