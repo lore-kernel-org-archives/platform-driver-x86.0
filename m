@@ -1,108 +1,75 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002EA27CCFA
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 14:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AFA283680;
+	Wed, 23 Apr 2025 15:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418523; cv=none; b=Uw4mpqAHGDY1oiLUWo2TIuvcqbcQJufjRtJYiKwcMQP0xk4b53GtmIK8EME8CO9xJfBcwcAL/bQawsnizNUfnJ54s+LRYEXD2JistJPQct9qYPZX//rBxc4sMLObhBrfEdF/uVh+zzKAcAYrNS5h4HFN7jyLxiQBImVbvduI2vY=
+	t=1745420551; cv=none; b=hq589xpgK1WPbtjKkpMDaRI3fSTjBBVrFU2Xci6QD3Fj+tuoqiMkxTkb6FmJ6tdNgYBZCz9ribq8p0A2mjfFuwfx3cRPD687eCvy3X3MV7U+u4IKtc3/waDQwdS6uuf/BIXN/CD6qcDWIXYzJedmn2TZFaqbOZQaAUdqeZGM6bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418523; c=relaxed/simple;
-	bh=olgEi8hkKOP25EqBnRGPkbqDG4k0ZvkVsXbAyxVuiMs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hitDm7YBwXP9HGFp1BnSNPe6HYLiCUxxuBc7NV5BqzQFvKuTUAd1zrtsLLcLZ6ahGmnzzt2Gzbxn9jgiPpOxN12g61aYYaWfnncyv8NUAwjQDCNHxaa6vhU2UsvfICLkI4DP4pZ/NW728nsy+owehkEsJ/zzLd1u+3rVDQk8ZNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZbhweNAj; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745420551; c=relaxed/simple;
+	bh=9lbS6NFVV60cvSDLK1COpVDjjL2o/3HjYKEkjhk3J7g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VcBMaHPHwFJ/0agEZmb3zleTQ0Mur1gwgxfP3xyQndco/qTAWC5J2dDFLf2X6C1qjYH0x42UTuYnN3DuVGxZT+645muslvwv95sNMboTuQ0CIAVPkRxRXGlmp/5Ib9S4771/9vH2dTMQ113ZzaTV59XL0keCmAwsqr+aGVYddcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=SNHD406j; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZbhweNAj"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b0ae9e87fe2so801478a12.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 07:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745418521; x=1746023321; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=40rtvLOwDeuUbiOuCoW1t5olyX8gz8CZJ5ahJ10eU+w=;
-        b=ZbhweNAj3oT2cEITBANR85a+3AC9Kt8YpgVC+0pS/UdzooqO2KwBAg8PnRDG2w+8V8
-         qLox6rQ6BGUGoe3b/N5PTjmCpYwAoHz1scAtDySO/OO++U+IIv/fCY/b2WTSqa4ICql1
-         WiIiDOMpIhKQ3+58D9U7phiYIB7CsXdaZox63CJKsMLu08KEtuOwmEvM+ddRmi5Pjhgh
-         kSOrUE9BxdriaP9tjWEYTWIkAfttmZeIiL0RgKlYphs6LmDQ2TlevtGepgZwoacX5Tx8
-         Egys+nSCqTDinlziB4MkKZqQgUmV+WE37wRkdZq4JtNRtANFxJucZbcim1uDIP9NEFhi
-         FVOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745418521; x=1746023321;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=40rtvLOwDeuUbiOuCoW1t5olyX8gz8CZJ5ahJ10eU+w=;
-        b=BLzTlO4net5ZBlZ47q9pOYpIM3m7I215kfKbVZrSCgY2ToX1xffgzGvxZ+9JO/lvW8
-         jMRtUEtbhFicdsHEjl38l9Vdf66LdMV/IDGJBoUiuwi4Ku5nFEVKpHxwDj8U4A9yy281
-         9vZLOcI2XhRnDh4nSFjP9Jy7vdZds+PaJ0yk8oOs7GXfzoDVvpCPVDdVD3r9GZbMqnF8
-         qCPcFcHTa1/NwQGgEG4KO/ygSRBXLQVnvYFUWoV6zEZA/hIydu7abq2abrNofldrw2mT
-         U8HmdOB4m74jUCOA0WiPzxdVaJXwhef+VsYzxy5/XzpMpGGDxR2inZonswUvGVLw1zK5
-         vhuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxoTm8r1gHmwBM/ffbT2+gVVEIROZy6DtNO6JspBCS6z5sAtsaminC+A8NEzU5RLDj6YkJ6H7o6+h1cwRL0nNubk9k@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuZKVlbyt8MBQUP6VmhgQ0yDUaKzBKjq1FzlsBZGC/n4JVS4TW
-	5T0ZiT7cDC9ZJ/uwORMQLPfDeuiUZvCLoQfC+QqqomSUx8RRblxRRuaLtADNMHktZyNVeCHlJnf
-	8YA==
-X-Google-Smtp-Source: AGHT+IEHFWhYz0oAsCQCzYVGgs17eJ2RdOv2pA+CJ/89PxdUza1pyAyGtkAfHJad1QU5DCSNGF6B8Gtgtdo=
-X-Received: from pjxx4.prod.google.com ([2002:a17:90b:58c4:b0:301:1ea9:63b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c2cd:b0:2fa:21d3:4332
- with SMTP id 98e67ed59e1d1-309df187b6dmr4574319a91.12.1745418521285; Wed, 23
- Apr 2025 07:28:41 -0700 (PDT)
-Date: Wed, 23 Apr 2025 07:28:39 -0700
-In-Reply-To: <20250422082216.1954310-4-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="SNHD406j"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4394441A9F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1745420543; bh=9lbS6NFVV60cvSDLK1COpVDjjL2o/3HjYKEkjhk3J7g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=SNHD406j0r3aIOywKru2rdq7LfbtVgjFedfUnDQk+k5a/1t3bfZ9m+iEj3XruX3as
+	 UtUPGFucvAYGkadqdNQLYDQshEV+BeqgCMdnTyf9pgxmZzTv+Ec4SRnF76NCaP+s2A
+	 heUVD9luRT+tEZd2GTSHKm4X/luQa1XdfyAX1QTS845oVVtimSowCxnpO50UyceLM5
+	 S8mGUjLTUz5p42vrgdtSZBDE8RVZYcB9Egjir7os5NCg023o3BF0zN6G/vptyYn4D4
+	 yFJvR8HMvyM6mVkTD9RJsQ3ixOtuRb/QJdGEs9N/uzmnn2cAttz307cDv0HPUEoIeI
+	 uv7VJTAGzh2Ng==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 4394441A9F;
+	Wed, 23 Apr 2025 15:02:23 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, Ilpo
+ =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Yazen Ghannam
+ <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H .
+ Peter Anvin" <hpa@zytor.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, "open list:DOCUMENTATION"
+ <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC"
+ <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER"
+ <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 0/5] AMD Zen debugging documentation
+In-Reply-To: <20250422234830.2840784-1-superm1@kernel.org>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+Date: Wed, 23 Apr 2025 09:02:22 -0600
+Message-ID: <87frhysyyp.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-4-xin@zytor.com>
-Message-ID: <aAj5F9IZXG7MB0ai@google.com>
-Subject: Re: [RFC PATCH v2 03/34] x86/msr: Rename rdpmcl() to rdpmcq()
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->  arch/x86/events/amd/uncore.c              |  2 +-
->  arch/x86/events/core.c                    |  2 +-
->  arch/x86/events/intel/core.c              |  4 ++--
->  arch/x86/events/intel/ds.c                |  2 +-
->  arch/x86/include/asm/msr.h                |  2 +-
->  arch/x86/include/asm/paravirt.h           |  2 +-
->  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 12 ++++++------
->  7 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index f231e1078e51..b9933ab3116c 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-> @@ -152,7 +152,7 @@ static void amd_uncore_read(struct perf_event *event)
->  	if (hwc->event_base_rdpmc < 0)
->  		rdmsrq(hwc->event_base, new);
->  	else
-> -		rdpmcl(hwc->event_base_rdpmc, new);
-> +		rdpmcq(hwc->event_base_rdpmc, new);
+Mario Limonciello <superm1@kernel.org> writes:
 
-Now that rdpmc() is gone, i.e. rdpmcl/rdpmcq() is the only helper, why not simply
-rename rdpmcl() => rdpmc()?  I see no point in adding a 'q' qualifier; it doesn't
-disambiguate anything and IMO is pure noise.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> Introduce documentation for debugging some issues on AMD zen hardware.
+> As one of the debugging techniques read and add information for
+> S5_RESET_STATUS register.
+
+I've been assuming that this work will go through the x86 tree; please
+let me know if you'd like me to pick it up instead.
+
+Thanks,
+
+jon
