@@ -1,248 +1,189 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31CE14EC60
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 13:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158EF5028C;
+	Wed, 23 Apr 2025 13:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745414509; cv=none; b=hcx3Fs95+MJcJbsUm3gSJ4ySObpL8gY/yuZw64VgpSLiI/mGUY9qwj7w9trghJKb7689Xx9os2udu7eQ4S3zaiuWYNLLlUsZkJka6Z/TtRdS/3xGTFy0FMsbSmvH8P1ky85eroD22DwAV4DiXrHIAv9xh0+j9Cc2Da27YJqPNKo=
+	t=1745414893; cv=none; b=UX3Wvj1v/hZChAKyodVLOIceKRCxT2irpNB2hOWQufDfOPELr7w9C3qABrNDzyFI48LrF3vwzMVu+SpJfqGrkfLcGMR0YY89wegPyovb6Ce0FUho1QGRQK5KeYHV8HKJOFM/+E+CcwLVgSB98VxyW4cwysKJHJdOYv+Q95YXryQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745414509; c=relaxed/simple;
-	bh=SR//9/l2qpPxvpnWxAU5jh0mbw+MoUF7oToIpdgCbbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WYBqtqfo9eHZ1rX88WrMkfwtS7IoY+ez1NgpJerXnzpNXSw5SMTNi/eFjH7e3RbJyKHab6FbQ0MsHx+mi/+jcjJt5BB5Iy/4xW9dki6NXAPHA0RdzJDXRx7psm4yQM9+nWR7q/uGyVNdV3qEHXizfHi1XJzRd6WBlvMSFqGzuB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mx2xTTea; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745414893; c=relaxed/simple;
+	bh=ABrt+tLW6DKLly55/N1HDO65voBFEDLmFiSoBdQCQOs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qRKuf0wVnuamF/CMSx932stcd2xAwo6iS0d5lZkHeQCs2fdQRquM4N2GD5GORcohj9oXBBuViRqPyhtSWZXJy6lIhiTyUotn/ww3GdAmedQgqaFtjvBT3ki2nOGOqTi0I59dpXd6i71b71r5FS9ILtccsuKFUV7Sxq3W5j0ZDgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TB5j24xL; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mx2xTTea"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22d95f0dda4so35301745ad.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Apr 2025 06:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745414506; x=1746019306; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mW+rRTc0kapcy4GIf8Vzg3oX62su+ta5GqZpvNFjk4w=;
-        b=mx2xTTeaLvPVDU0YmQTJICMjxuyATd0zWpj119zfi+1b2zz9sQhAh0i39LWAVFFAQG
-         9sizVPTP95ZrFjs6bTtn2TRsIorrwpDxbJQoyz/o0p8C9d9h2449UsHEU0ZdFWvLWcwX
-         kga4i2Q7W9MfwQYn3zs7tc23WXg0Wli4yNmQNO05aaTr/77pq3aW2K0VBZCAEUmmyfFm
-         K9kHbBP5aYL5X7mMdSFc4+4Kos/lo836GE8sDPA2FxP/rYmN1bH1v3XzG3sKGB1T+LFG
-         tfVOxCXtRdjVLMbj8j3qJvPTz3MBV4w/6tZUAphg1y76NagUfM/0OrYVLWJsy2jhnkf0
-         UC1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745414506; x=1746019306;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mW+rRTc0kapcy4GIf8Vzg3oX62su+ta5GqZpvNFjk4w=;
-        b=CnC27EoHSx/ev6BJQ4oQjzYk/qBxiDZS4SUglLZ6yEifLZywSyJZI45mqXiI4ufoa4
-         Xi938NYhvvHPE1jvJhWAWijG/GNv37bwpyJYcEhenwzDYW8LWssw5UHw4kkV7whtu/Zn
-         q+ejkY7BJhLbh3liaxsVcEh9RmabuioaSDl4jTrAHZpvd52OQAZwT8y30fk1GAPR5yVP
-         aYWY+JSqTtEMVcY6TGGEsGkAP/DNNnaONllzTGa+9FnOVkuOE6WgNzF17DleHY8uctpW
-         sd7nxeHqPA9bVXiN0FhJmSC2DHceOfXdejlTYr/oHh4OFl8rukaaaKoY2Hn6K/YUsibA
-         5B7A==
-X-Gm-Message-State: AOJu0YwI6Oezc3/AYAyT5CAt6t75kRCkW3zS18aUJnxNn0NV8jY5istg
-	S+VZmrPcD5Mp4atoLF7xSCLBuXhKblQ1/RfRyT9uHOD8A4BlPLlJ
-X-Gm-Gg: ASbGnctcHi+J+/Y71raOArfDxvDzcmDHcyrFK/XyC1rvG1TRS8vSF55IaI0IrJMBkVA
-	wGlqIIm+koESCog/cBl16u2xK9aqK0LAsRcgxoOVXk7FE9TM9Hm9nRpEMVB/+z58/flHV8JTdnC
-	Lz7c5qkMEv72vrKsnRCCxvu6177CYN4WJWMA1y53rZxTYbH02PxlRDarVlreWawcHR0So4WbTNh
-	ZmQgr5lOh0gDqzQnJuaTO1BYjVAK6mAT/CxrrzA9Rf6LosV4oZBrUuikgjHDR+JBoexKUp+7LHP
-	h+alyCWeL9V+XqaVgZchPCijgUJA8276x/WmQCb/M8nhhiwhACBeOvOg9UDg+uKxfQWnQ81RZKw
-	EHX1gW5w=
-X-Google-Smtp-Source: AGHT+IFnzk8+cUDeAHijHK+txsJvqKtcOqeTOihS9pLeavgSoXnJANlNvG6+WXagr/MCz1wrwJTZ+A==
-X-Received: by 2002:a17:902:db01:b0:223:501c:7581 with SMTP id d9443c01a7336-22c535a4e39mr276640025ad.16.1745414505896;
-        Wed, 23 Apr 2025 06:21:45 -0700 (PDT)
-Received: from [192.168.0.5] (127.37.178.217.static.user.transix.jp. [217.178.37.127])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fde883sm103071205ad.242.2025.04.23.06.21.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 06:21:45 -0700 (PDT)
-Message-ID: <74aca503-0c9d-4720-b433-24549c845f9f@gmail.com>
-Date: Wed, 23 Apr 2025 22:19:27 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TB5j24xL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745414891; x=1776950891;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ABrt+tLW6DKLly55/N1HDO65voBFEDLmFiSoBdQCQOs=;
+  b=TB5j24xLwSpt7YRAa5H7lgHGvaih8semZjUmrQeDlBVk1APDGp+uejBQ
+   QvQdKPXdQfRv8mgoX7B6m+PVe9KsyUznij73zoftLlB+vZ47sCfkhQ2zL
+   ZPnSkkZfwXxVG9K6C6bBW3wYN2WDrtIeNUPev515Kd+xLqLJgrYe5vunj
+   KGT7k6BExsmX5Z1TcgHQzM1TyOJFxB0g+VVE3Ps7ixuy8yuozpYfAy3VZ
+   j48pT6o87U5aZTF/v8sS5n7Aq0wH2/7hzkvLpNAd8i3B1kPpp2jWl4rgQ
+   vjlF8qa50vz9cjrKrOtRiTAQh7rb1sP8Ex63UN/NY+UyyMipHGx7jT+3o
+   g==;
+X-CSE-ConnectionGUID: I8F+sc43T7qLB9vzDfLDbA==
+X-CSE-MsgGUID: olh9n8LySXCG4mDMk6tg6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58382242"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="58382242"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:28:00 -0700
+X-CSE-ConnectionGUID: KGNbnPf5Q8aOAdffGGvN5A==
+X-CSE-MsgGUID: lGeB6RSJRn+f3YqeTZhqzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132303521"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:27:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 23 Apr 2025 16:27:37 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Lyndon Sanche <lsanche@lyndeno.ca>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+In-Reply-To: <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
+Message-ID: <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com> <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: thinkpad-acpi: Add support for new
- hotkey for camera shutter switch
-To: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
- ibm-acpi-devel@lists.sourceforge.net, njoshi1@lenovo.com,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20250423055130.9146-1-nitjoshi@gmail.com>
- <191aad89-689c-4d34-ac8c-274e13fd6936@redhat.com>
-Content-Language: en-US
-From: Nitin Joshi <nitjoshi@gmail.com>
-In-Reply-To: <191aad89-689c-4d34-ac8c-274e13fd6936@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hello Hans,
+On Fri, 11 Apr 2025, Kurt Borja wrote:
 
-Thank you for review.
+> Use a faux device parent for registering the platform_profile instead of
+> a "fake" platform device.
+> 
+> The faux bus is a minimalistic, single driver bus designed for this
+> purpose.
 
-On 4/23/25 21:57, Hans de Goede wrote:
-> Hi Nitin,
+Hi Kurt, Hans & Greg,
+
+I'm not sure about this change. So dell-pc not a platform device but
+a "fake".
+
+I'm not saying this is wrong, but feel I'm a bit just lost where the 
+dividing line is. Is it just because this driver only happens to call
+dell_send_request(), etc., not contains that low-level access code within? 
+Or is that dell-smbios "fake" too?
+
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/dell-pc.c | 46 +++++++++++--------------------------
+>  1 file changed, 13 insertions(+), 33 deletions(-)
 > 
-> On 23-Apr-25 7:51 AM, Nitin Joshi wrote:
->> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
->> has new shortcut on F9 key i.e to switch camera shutter and it
->> send a new 0x131b hkey event when F9 key is pressed.
->>
->> This commit adds support for new hkey 0x131b.
->>
->> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
->> ---
->> Changes in v2:
->>
->> * Added ASL method to get camera shutter status and send it to userspace.
-> 
-> Thank you for the new version, overall this looks good,
-> one small remark below.
-> 
-> 
->> ---
->>   drivers/platform/x86/thinkpad_acpi.c | 43 +++++++++++++++++++++++++++-
->>   1 file changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index 5790095c175e..80b02e8538e8 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
->>   						   * directly in the sparse-keymap.
->>   						   */
->>   	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
->> +	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->>   	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
->>   	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
->>   	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
->> @@ -2250,6 +2251,25 @@ static void tpacpi_input_send_tabletsw(void)
->>   	}
->>   }
->>   
->> +static int get_camera_shutter(void)
->> +{
->> +	acpi_handle gces_handle;
->> +	int output;
->> +
->> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GCES", &gces_handle))) {
->> +		/* Platform doesn't support GCES */
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (!acpi_evalf(gces_handle, &output, NULL, "dd", 0))
->> +		return -EIO;
->> +
->> +	if (output & BIT(31))
->> +		return -ENODEV;
->> +
->> +	return output;
->> +}
->> +
->>   static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
->>   {
->>   	bool known_ev;
->> @@ -3272,6 +3292,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
->>   	 * after switching to sparse keymap support. The mappings above use translated
->>   	 * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
->>   	 */
->> +	{ KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
->>   	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
->>   	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
->>   	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->> @@ -3303,7 +3324,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->>   	const struct key_entry *keymap;
->>   	bool radiosw_state  = false;
->>   	bool tabletsw_state = false;
->> -	int hkeyv, res, status;
->> +	int hkeyv, res, status, camera_shutter_state;
->>   
->>   	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
->>   			"initializing hotkey subdriver\n");
->> @@ -3467,6 +3488,13 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->>   	if (res)
->>   		return res;
->>   
->> +	camera_shutter_state = get_camera_shutter();
->> +	if (camera_shutter_state >= 0) {
->> +		input_set_capability(tpacpi_inputdev, EV_SW, SW_CAMERA_LENS_COVER);
->> +		input_report_switch(tpacpi_inputdev,
->> +				SW_CAMERA_LENS_COVER, camera_shutter_state);
->> +	}
->> +
->>   	if (tp_features.hotkey_wlsw) {
->>   		input_set_capability(tpacpi_inputdev, EV_SW, SW_RFKILL_ALL);
->>   		input_report_switch(tpacpi_inputdev,
->> @@ -3633,6 +3661,8 @@ static void adaptive_keyboard_s_quickview_row(void)
->>   /* 0x1000-0x1FFF: key presses */
->>   static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
->>   {
->> +	int camera_shutter_state;
->> +
->>   	/* Never send ACPI netlink events for original hotkeys (hkey: 0x1001 - 0x1020) */
->>   	if (hkey >= TP_HKEY_EV_ORIG_KEY_START && hkey <= TP_HKEY_EV_ORIG_KEY_END) {
->>   		*send_acpi_ev = false;
->> @@ -3643,6 +3673,17 @@ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
->>   			return true;
->>   	}
->>   
->> +	camera_shutter_state = get_camera_shutter();
-> 
-> Doing this on every hotkey_notify_hotkey() seems wasteful /
-> inefficient. I suggest to move this inside the if, like this:
-Ack , Thanks for pointing this out. I will modify it.
-> 
-> 	if (hkey == TP_HKEY_EV_CAMERASHUTTER_TOGGLE) {
-> 		camera_shutter_state = get_camera_shutter();
-> 		if (camera_shutter_state < 0) {
-> 			pr_err("Error retrieving camera shutter state after shutter event\n");
-> 			return true;
-> 		}
-> 
-> 		mutex_lock(&tpacpi_inputdev_send_mutex);
-> 
-> 		input_report_switch(tpacpi_inputdev,
-> 		...
-> 
->> +	if (hkey == TP_HKEY_EV_CAMERASHUTTER_TOGGLE && (camera_shutter_state >= 0)) {
->> +		mutex_lock(&tpacpi_inputdev_send_mutex);
->> +
->> +		input_report_switch(tpacpi_inputdev,
->> +			SW_CAMERA_LENS_COVER, camera_shutter_state);
->> +		input_sync(tpacpi_inputdev);
->> +
->> +		mutex_unlock(&tpacpi_inputdev_send_mutex);
+> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
+> index 794924913be0c6f13ed4aed8b01ffd21f1d34dea..48cc7511905a62d2828e3a7b593b3d2dae893e34 100644
+> --- a/drivers/platform/x86/dell/dell-pc.c
+> +++ b/drivers/platform/x86/dell/dell-pc.c
+> @@ -13,18 +13,18 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+>  #include <linux/bits.h>
+> +#include <linux/device/faux.h>
+>  #include <linux/dmi.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_profile.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  
+>  #include "dell-smbios.h"
+>  
+> -static struct platform_device *platform_device;
+> +static struct faux_device *dell_pc_fdev;
+>  static int supported_modes;
+>  
+>  static const struct dmi_system_id dell_device_table[] __initconst = {
+> @@ -246,7 +246,7 @@ static const struct platform_profile_ops dell_pc_platform_profile_ops = {
+>  	.profile_set = thermal_platform_profile_set,
+>  };
+>  
+> -static int thermal_init(void)
+> +static int dell_pc_faux_probe(struct faux_device *fdev)
+>  {
+>  	struct device *ppdev;
+>  	int ret;
+> @@ -258,51 +258,31 @@ static int thermal_init(void)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	platform_device = platform_device_register_simple("dell-pc", PLATFORM_DEVID_NONE, NULL, 0);
+> -	if (IS_ERR(platform_device))
+> -		return PTR_ERR(platform_device);
+> +	ppdev = devm_platform_profile_register(&fdev->dev, "dell-pc", NULL,
+> +					       &dell_pc_platform_profile_ops);
+>  
+> -	ppdev = devm_platform_profile_register(&platform_device->dev, "dell-pc",
+> -					       NULL, &dell_pc_platform_profile_ops);
+> -	if (IS_ERR(ppdev)) {
+> -		ret = PTR_ERR(ppdev);
+> -		goto cleanup_platform_device;
+> -	}
+> -
+> -	return 0;
+> -
+> -cleanup_platform_device:
+> -	platform_device_unregister(platform_device);
+> -
+> -	return ret;
+> +	return PTR_ERR_OR_ZERO(ppdev);
+>  }
+>  
+> -static void thermal_cleanup(void)
+> -{
+> -	platform_device_unregister(platform_device);
+> -}
+> +static const struct faux_device_ops dell_pc_faux_ops = {
+> +	.probe = dell_pc_faux_probe,
+> +};
+>  
+>  static int __init dell_init(void)
+>  {
+> -	int ret;
+> -
+>  	if (!dmi_check_system(dell_device_table))
+>  		return -ENODEV;
+>  
+> -	ret = thermal_init();
+> -	if (ret)
+> -		goto fail_thermal;
+> +	dell_pc_fdev = faux_device_create("dell-pc", NULL, &dell_pc_faux_ops);
+> +	if (!dell_pc_fdev)
+> +		return -ENODEV;
+>  
+>  	return 0;
+> -
+> -fail_thermal:
+> -	thermal_cleanup();
+> -	return ret;
+>  }
+>  
+>  static void __exit dell_exit(void)
+>  {
+> -	thermal_cleanup();
+> +	faux_device_destroy(dell_pc_fdev);
+>  }
+>  
+>  module_init(dell_init);
 > 
 > 
-> I believe you should add a "return true" after the unlock to avoid this
-> code from triggering later:
-> 
->                  if (!known_ev) {
->                          pr_notice("unhandled HKEY event 0x%04x\n", hkey);
->                          pr_notice("please report the conditions when this event happened to %s
->                                    TPACPI_MAIL);
-> 		}
-> 
-> and also to avoid needlessly going through hotkey_notify_hotkey();
-> 
-Thanks for pointing this out. I have already modified it and will send 
-updated patch soon.
->> +	}
->> +
->>   	return tpacpi_input_send_key(hkey, send_acpi_ev);
->>   }
-> 
-> Regards,
-> 
-> Hans
-Thanks & Regards,
-Nitin Joshi
-> 
-> 
-> 
+
+-- 
+ i.
 
