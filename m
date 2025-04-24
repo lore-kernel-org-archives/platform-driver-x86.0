@@ -1,162 +1,90 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D0E14F9EB;
-	Thu, 24 Apr 2025 15:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0A1805B;
+	Thu, 24 Apr 2025 15:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507928; cv=none; b=f67fAfih1sdbHwMUc6y+fhvn9WjZc5GMju2eJ4Q3DmdjvXHzfHulkSrjpaVgEUz5RZk56VwSfMtz709VCcJa/JjcOK+qpU3wAjhLspGc3XUVENOqNmdKKtx8/flAjSuG1riWl3tI7Eo6/c/99iqIfjuRiEPaO1++huZr4FHxIs4=
+	t=1745510335; cv=none; b=fpegwjEk4S/QdObmfAcAXIVztP6rajaZ6U7rzwMxnayB+N3kPJOhnIXRe9rwm9V48c/H7iOKGMiUwFpAUQ8mGuajCQGyR0uKJTkutXvbzcXUlfmpLZZ4iKvgYWAke8VNENKHByDnHkfS4YyaqeRYtgXgj584n8l35lmBpIBF160=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507928; c=relaxed/simple;
-	bh=Cfwo3zn+LUVCR2Nba2kjhqU4b8JvbapZ+dJDwNIQvR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EpAfHHM/cZW7QZDcODT5v0gXgGQUq9JGpQnUL0jhw5qEFqJ3uxspALMaQT6hra1eHfVdreNJzdhQRVZRFYMCvUXs+zH/Rs2a3P1+iZzGqNOQmTdRiApqYiXlpAcvye58xJPlbxrLFaQhvgd6N4CLZtLGe84wVeDr+SCL2c+w8Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FtyAuiP8; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745510335; c=relaxed/simple;
+	bh=eJFkFffhcbeDBBA0kOMtPz5wF3uo+4JXiBmQfdEyYGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vB2iR2XG3CfISUTDafkFz1hReLdrqOaZTstT7hEACLS+O7xENN/dadJXl9g9q0myWVODHFVCArpNih/sBxnROJnbS9vbXagG3raFCq7LmRlLuY1xhstWHzs0iCMrgLF3YXiYVwfGCsnEfAlxmLlVlXIy5FzHnYWhTb2gZS/PPW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paqWNiCU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FtyAuiP8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4481743B2E;
-	Thu, 24 Apr 2025 15:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745507923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8IVmwrk7aGTZcp/7NN8zrGIfqqXduX0J3M9hpB/pHPA=;
-	b=FtyAuiP8ARUUv2xs4PPtC4FuRrb5XYgrq7nTPDnp6BcGNmDvjt3hiUhZJ4gakGWOTMm285
-	izxLY19qRdbJgJHFDSKAmWuF147STQIQIY3Vvwl7qEaG7qJvaXjNpLiY9Vfya0P+MRrZDU
-	AaSSvmPNKnk2zfXYGcIo6csHPDBpesNfnl+mfWjAWossSdTGC2MKU8egwvpd6GBwyGo54M
-	fRZ/GwgbtAhX6Rj0x9SRnbLCNylZJ2rKp10NgYWNfJY6XoWyZWuZlAVflEcsvXYf2Mdzcj
-	OQ1uc5DdEPbXp2iO9ebp0rO3bbg1DWD4/1SRv2zche6VhM3c2W8AAxGm0SHemw==
-Date: Thu, 24 Apr 2025 17:18:38 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
- =?UTF-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu
- <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 34/34] drm/bridge: panel: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250424171838.21a95d80@booty>
-In-Reply-To: <20250408-thankful-husky-of-weather-355cae@houat>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-	<20250407-drm-bridge-convert-to-alloc-api-v1-34-42113ff8d9c0@bootlin.com>
-	<20250408-thankful-husky-of-weather-355cae@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paqWNiCU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E3FC4CEE3;
+	Thu, 24 Apr 2025 15:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745510334;
+	bh=eJFkFffhcbeDBBA0kOMtPz5wF3uo+4JXiBmQfdEyYGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=paqWNiCUlCeU+xEIkBRi1KMIGIo72dekIVNFBglJCFGgzzyWGt/D69BmDf1YcCQ3O
+	 LTqE1CkooTA86vT3BIi8uE8d6JU+yd1AXlNbrSMPkXjq8EZyJA07CgtH/v6rvmNi1P
+	 R+caiUO8PJPrGv5Aem1J8yYl1MiVdII5fxTUBnkPwD6LKx/uhS/7FF4vmeVWSrK/5R
+	 HnROmeIqIEk76g20Qh5JTzC4w7D47LJovXW/nualNxpZpF/ah6BUFylXU4eE5g55UK
+	 P9gq1wgbiE+JE3o3v+e7ZZHLasnsUgB1BuOBB8MPbJuf79t2SAn9h94e/6R7kOpqfB
+	 xKlWbToSmkmgg==
+Date: Thu, 24 Apr 2025 17:58:48 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 0/5] AMD Zen debugging documentation
+Message-ID: <aApfuIX5T5brIdsL@gmail.com>
+References: <20250422234830.2840784-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
- hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422234830.2840784-1-superm1@kernel.org>
 
-Hi Maxime,
 
-On Tue, 8 Apr 2025 17:51:08 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
+* Mario Limonciello <superm1@kernel.org> wrote:
 
-> Hi,
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> On Mon, Apr 07, 2025 at 05:27:39PM +0200, Luca Ceresoli wrote:
-> > This is the new API for allocating DRM bridges.
-> > 
-> > The devm lifetime management of this driver is peculiar. The underlying
-> > device for the panel_bridge is the panel, and the devm lifetime is tied the
-> > panel device (panel->dev). However the panel_bridge allocation is not
-> > performed by the panel driver, but rather by a separate entity (typically
-> > the previous bridge in the encoder chain).
-> > 
-> > Thus when that separate entoty is destroyed, the panel_bridge is not
-> > removed automatically by devm, so it is rather done explicitly by calling
-> > drm_panel_bridge_remove(). This is the function that does devm_kfree() the
-> > panel_bridge in current code, so update it as well to put the bridge
-> > reference instead.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
-[...]
-
-> > --- a/drivers/gpu/drm/bridge/panel.c
-> > +++ b/drivers/gpu/drm/bridge/panel.c
-> > @@ -287,15 +287,14 @@ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
-> >  	if (!panel)
-> >  		return ERR_PTR(-EINVAL);
-> >  
-> > -	panel_bridge = devm_kzalloc(panel->dev, sizeof(*panel_bridge),
-> > -				    GFP_KERNEL);
-> > -	if (!panel_bridge)
-> > -		return ERR_PTR(-ENOMEM);
-> > +	panel_bridge = devm_drm_bridge_alloc(panel->dev, struct panel_bridge, bridge,
-> > +					     &panel_bridge_bridge_funcs);
-> > +	if (IS_ERR(panel_bridge))
-> > +		return (void *)panel_bridge;
-> >  
-> >  	panel_bridge->connector_type = connector_type;
-> >  	panel_bridge->panel = panel;
-> >  
-> > -	panel_bridge->bridge.funcs = &panel_bridge_bridge_funcs;
-> >  	panel_bridge->bridge.of_node = panel->dev->of_node;
-> >  	panel_bridge->bridge.ops = DRM_BRIDGE_OP_MODES;
-> >  	panel_bridge->bridge.type = connector_type;
-> > @@ -327,7 +326,7 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
-> >  	panel_bridge = drm_bridge_to_panel_bridge(bridge);
-> >  
-> >  	drm_bridge_remove(bridge);
-> > -	devm_kfree(panel_bridge->panel->dev, bridge);
-> > +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
-> >  }
-> >  EXPORT_SYMBOL(drm_panel_bridge_remove);  
+> Introduce documentation for debugging some issues on AMD zen hardware.
+> As one of the debugging techniques read and add information for
+> S5_RESET_STATUS register.
 > 
-> I'm fine with it on principle, but as a temporary measure.
+> Mario Limonciello (4):
+>   Documentation: Add AMD Zen debugging document
+>   i2c: piix4: Depends on X86
+>   i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd/fch.h
+>   platform/x86/amd: pmc: use FCH_PM_BASE definition
 > 
-> Now that we have the panel allocation function in place, we can just
-> allocate a bridge for each panel and don't need drm_panel_bridge_add_*
-> at all.
-> 
-> As I was saying before, it doesn't need to happen right now, or before
-> the rest of your work for hotplug goes in. But this needs to be tackled
-> at some point.
+> Yazen Ghannam (1):
+>   x86/CPU/AMD: Print the reason for the last reset
 
-I totally agree this needs to be handled eventually, and also to get
-there in steps.
+So it looks like there's no new objections/feedback, and to
+get the ball rolling, I've applied these 3 preparatory patches
+to tip:x86/platform, to get them tested more widely:
 
-The current status of this driver is not ideal, so I paid attention to
-not make it unnecessarily worse when writing this patch. Do you think
-the current patch is OK for the next step? I'm going to send v2 in a
-few hours, so don't hesitate to mention any improvements you deem
-necessary.
+   i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86
+   i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>
+   platform/x86/amd/pmc: Use FCH_PM_BASE definition
 
-Luca
+Thanks,
 
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+	Ingo
