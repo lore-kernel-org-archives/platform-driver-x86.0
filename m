@@ -1,90 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0A1805B;
-	Thu, 24 Apr 2025 15:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84D227FD4D;
+	Thu, 24 Apr 2025 16:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745510335; cv=none; b=fpegwjEk4S/QdObmfAcAXIVztP6rajaZ6U7rzwMxnayB+N3kPJOhnIXRe9rwm9V48c/H7iOKGMiUwFpAUQ8mGuajCQGyR0uKJTkutXvbzcXUlfmpLZZ4iKvgYWAke8VNENKHByDnHkfS4YyaqeRYtgXgj584n8l35lmBpIBF160=
+	t=1745511871; cv=none; b=HIvFwnGOpRbVLpGRhQDpioyds+tl4O4Qm/va4OtNJG/vsFTwVYNdwGGeVFf/4PIuLT7FGX1oGcIrXuxtzrWHwZZlqsv8B57U6juRmH29NkVnMYiNjyTkhpScReaEbTfQEjm+oXEtLY5HttLPxtl9W9gydHQayrZje5s6XQVqWnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745510335; c=relaxed/simple;
-	bh=eJFkFffhcbeDBBA0kOMtPz5wF3uo+4JXiBmQfdEyYGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vB2iR2XG3CfISUTDafkFz1hReLdrqOaZTstT7hEACLS+O7xENN/dadJXl9g9q0myWVODHFVCArpNih/sBxnROJnbS9vbXagG3raFCq7LmRlLuY1xhstWHzs0iCMrgLF3YXiYVwfGCsnEfAlxmLlVlXIy5FzHnYWhTb2gZS/PPW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paqWNiCU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745511871; c=relaxed/simple;
+	bh=BD0rbbcQBosHnEWQRHYAiP3S3Q7nvbpUWkLFOcOiKeY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=qCBNiBZ0KreJV2Ge/D+D80+5NxcQlo4u7mzFtHc1FVTNF++r92bzTfjDIi7cGTgDFvMzpWeHuYfc0Rld8+4c1kqAhLzRYu786k9+4gQcWrQYGi4xi2gdnbwJCN734RrUSRfSF90v2AeRWndQoCF2bDvVcdt8lzjQD38Txm2HdbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ylYBYr7Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gDK9Efao; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paqWNiCU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E3FC4CEE3;
-	Thu, 24 Apr 2025 15:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745510334;
-	bh=eJFkFffhcbeDBBA0kOMtPz5wF3uo+4JXiBmQfdEyYGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=paqWNiCUlCeU+xEIkBRi1KMIGIo72dekIVNFBglJCFGgzzyWGt/D69BmDf1YcCQ3O
-	 LTqE1CkooTA86vT3BIi8uE8d6JU+yd1AXlNbrSMPkXjq8EZyJA07CgtH/v6rvmNi1P
-	 R+caiUO8PJPrGv5Aem1J8yYl1MiVdII5fxTUBnkPwD6LKx/uhS/7FF4vmeVWSrK/5R
-	 HnROmeIqIEk76g20Qh5JTzC4w7D47LJovXW/nualNxpZpF/ah6BUFylXU4eE5g55UK
-	 P9gq1wgbiE+JE3o3v+e7ZZHLasnsUgB1BuOBB8MPbJuf79t2SAn9h94e/6R7kOpqfB
-	 xKlWbToSmkmgg==
-Date: Thu, 24 Apr 2025 17:58:48 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 0/5] AMD Zen debugging documentation
-Message-ID: <aApfuIX5T5brIdsL@gmail.com>
-References: <20250422234830.2840784-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ylYBYr7Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gDK9Efao"
+Date: Thu, 24 Apr 2025 16:24:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745511867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=em8INSWLcouZFS0+cA2aEIG0/3qdxMZPeI+TnHxZrgc=;
+	b=ylYBYr7Ql30KCUKxzjV5sElixKBPCoP/9UOuULPy07ntHMTfWbWLzRrQ5yKBfuKBNvFvQk
+	2/37uryqCvASGPIV3P/oXyn201LH48cCei14Q5s1yBKKGlPIp1DEmApPyxcYGrFzfeEV+E
+	IG92L+TlB7lkJA1by1VufDp3cgcOUY0uG1Pd3CON7rQMut8oqYx58GnOjKlf7Kk65NO66h
+	UoUvcKAj0Y3yen2hxCuCIvg8odomZ7lBOpht4Bz8SkWwx3b4LH+sNm9eFKcx7e1nXorS99
+	kvt0oHA8sDkZg/JK/EHAax84b272RE7dfXy+eMdBl3Pl6yVMbgfjELbkGreELw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745511867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=em8INSWLcouZFS0+cA2aEIG0/3qdxMZPeI+TnHxZrgc=;
+	b=gDK9EfaoL1CfGgHwRAp8Nu7AMD2zZRzLvRpDhkcNZ65GGW3XoZIQxc8TVfvs7dsIcvB0T6
+	VpW9ud9fioC3bhCg==
+From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/platform] platform/x86/amd/pmc: Use FCH_PM_BASE definition
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, platform-driver-x86@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250422234830.2840784-5-superm1@kernel.org>
+References: <20250422234830.2840784-5-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422234830.2840784-1-superm1@kernel.org>
+Message-ID: <174551186263.31282.837973831112893685.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+The following commit has been merged into the x86/platform branch of tip:
 
-* Mario Limonciello <superm1@kernel.org> wrote:
+Commit-ID:     0fbe08e78dfd4a680806132673c520f0fc5f84d9
+Gitweb:        https://git.kernel.org/tip/0fbe08e78dfd4a680806132673c520f0fc5=
+f84d9
+Author:        Mario Limonciello <mario.limonciello@amd.com>
+AuthorDate:    Tue, 22 Apr 2025 18:48:29 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 24 Apr 2025 17:55:18 +02:00
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Introduce documentation for debugging some issues on AMD zen hardware.
-> As one of the debugging techniques read and add information for
-> S5_RESET_STATUS register.
-> 
-> Mario Limonciello (4):
->   Documentation: Add AMD Zen debugging document
->   i2c: piix4: Depends on X86
->   i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd/fch.h
->   platform/x86/amd: pmc: use FCH_PM_BASE definition
-> 
-> Yazen Ghannam (1):
->   x86/CPU/AMD: Print the reason for the last reset
+platform/x86/amd/pmc: Use FCH_PM_BASE definition
 
-So it looks like there's no new objections/feedback, and to
-get the ball rolling, I've applied these 3 preparatory patches
-to tip:x86/platform, to get them tested more widely:
+The s2idle MMIO quirk uses a scratch register in the FCH.
+Adjust the code to clarify that.
 
-   i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86
-   i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>
-   platform/x86/amd/pmc: Use FCH_PM_BASE definition
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: platform-driver-x86@vger.kernel.org
+Link: https://lore.kernel.org/r/20250422234830.2840784-5-superm1@kernel.org
+---
+ arch/x86/include/asm/amd/fch.h            | 1 +
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-	Ingo
+diff --git a/arch/x86/include/asm/amd/fch.h b/arch/x86/include/asm/amd/fch.h
+index 28972bd..01ee15b 100644
+--- a/arch/x86/include/asm/amd/fch.h
++++ b/arch/x86/include/asm/amd/fch.h
+@@ -7,5 +7,6 @@
+ /* Register offsets from PM base: */
+ #define FCH_PM_DECODEEN			0x00
+ #define FCH_PM_DECODEEN_SMBUS0SEL	GENMASK(20, 19)
++#define FCH_PM_SCRATCH			0x80
+=20
+ #endif /* _ASM_X86_AMD_FCH_H_ */
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86=
+/amd/pmc/pmc-quirks.c
+index b4f4972..b706b1f 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -11,6 +11,7 @@
+ #include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
++#include <asm/amd/fch.h>
+=20
+ #include "pmc.h"
+=20
+@@ -20,7 +21,7 @@ struct quirk_entry {
+ };
+=20
+ static struct quirk_entry quirk_s2idle_bug =3D {
+-	.s2idle_bug_mmio =3D 0xfed80380,
++	.s2idle_bug_mmio =3D FCH_PM_BASE + FCH_PM_SCRATCH,
+ };
+=20
+ static struct quirk_entry quirk_spurious_8042 =3D {
