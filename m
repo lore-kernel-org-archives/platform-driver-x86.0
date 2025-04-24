@@ -1,110 +1,172 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64C28A1F9;
-	Thu, 24 Apr 2025 17:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7175E27FD79
+	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 17:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517098; cv=none; b=rE5kcYSuRgDaoD8DKO+VCUQe9UG3iZL0GEuQFg7/lTwnScFVtgH5jJfjJtnVzXdiIldhHirVZN1VmE8+pCfS2jDuXhv/QJEngX2bTY+JZwxHbqI2SE9ZQ/pCsImsBKubZr4OPCtFn+Y+nsd0MfZ11McjFHhF5BWvdntNga9QuxY=
+	t=1745517164; cv=none; b=o9zy+38y8IgOzA6t1h8ZIPlmqY/K9GA8SBwxj+2746YtSPivWwM65bvtoarvfNS0JG1K7xPODdQVfpNauQek9LRXCHZ0mDXrja+JEHW80sO20egaoS2o+ufkLxeYvn49PXpAdTdnsUoRFZjjHFL2aRP9EXyuc0odGRbMZkvcwsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517098; c=relaxed/simple;
-	bh=vRUzZpZGFJolMKWVih6pSIskaMZx/C9W0RbkMI/WUL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKlpA4b/4oDwkQ8qJSMnIiazcrirqlLRcfTpbrAt9Ekx3oePVrKE53pHbCdcp9WAP2qC5w+e7k2Yad4ygOUjQc3hU2WharHFDxjNp2SI7O9516ni97Q0iJbdw67JV72FuQsc6hWFV3VIESrpK00nP5xQnyfVKW73bx8DYl+mr6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BVFv6Rd/; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745517164; c=relaxed/simple;
+	bh=in/uL8u7VhAKZDPtqN8K+nas84ARnIndg6yHmqotLB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulR67K33nCXhP2tEAta2bgpl9TUvKsYtnLFepT0KfOphzYTrh4hnkt2Ezmr4aiE6BYFfYooVwiYvf/svR2flGiE6IUJUN/8Sy42ugW2OGS9mWLEmxDV69jrtwBdy0mU+JCwb0EWUHk406iNMsOwyb2Ay8NT7ZCFJKWxelrIQr4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aaoxEOyw; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BVFv6Rd/"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OHooUY1383060
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 24 Apr 2025 10:50:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OHooUY1383060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745517053;
-	bh=vRUzZpZGFJolMKWVih6pSIskaMZx/C9W0RbkMI/WUL4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BVFv6Rd/IQ4J/PYHV3nN9oqAwGme4iFBImZRL6GTcMhgw7NYKI28t7uuoVpBh6PKp
-	 Qy2xaOL92iZPXBKZt18DClDdHu3Cu26OIl4X3wCxR6sP5IvdC0f2A7gL/3A2OrpX9K
-	 vBDJPG7XgmIA8lWPglrxwu2BGk3JKhEvcr6RSlKe2FpGUDSIGQIrDKIZmZn49EaoYL
-	 ADBESCC4Zsb4bWa7wGLDCdPOl+K3TeEVWdgeOHMFTdiA2wKrluDoC86oJ/ps6iqrBb
-	 f6WH3cQT18xQO9Bmnlmpr31eZorHV057tP0mCCdH9T/XCtwTZdzP0kYWRlcnS5Uvqb
-	 Rvudk3Z8FPKfA==
-Message-ID: <b90ead3b-75fd-464f-aa93-5afdc7ee0f02@zytor.com>
-Date: Thu, 24 Apr 2025 10:50:50 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aaoxEOyw"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso13668666d6.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 10:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745517161; x=1746121961; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YlaX2v98AuQ5nYcPvQ53Jj+P2vIqITznNn40IIDGwq0=;
+        b=aaoxEOyw2HxqcNxknTLH/7Es2baH08WfU3HIJork6C9EvvCLNyWbnrn0DmiOVYMfcm
+         Ly8ayPOoGjPfpvslDMJd1Md2eFJJ8ETYI1KGqyp99B2otQQvVlJEKczJRzZMuRUy4n69
+         EiIC63BelEeaPukHXQMvBnT0x4HtUrcHkfXZeXsUPPiAzzvnR5DFzGrJ1PlqE8LNAAB6
+         ta2IETThyIVObpkwZs3Wd1yT0eXVO32XsLrH46/JPQYHetzTxIGkLMIHpTUXlCsouwEq
+         j0UYXki6PAFR9AByxCdNSEMkVJwpZAKnTIYVJqoo2PrF7SSnNjli40qIqMLnZYON4bfT
+         TGVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745517161; x=1746121961;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YlaX2v98AuQ5nYcPvQ53Jj+P2vIqITznNn40IIDGwq0=;
+        b=rq+ClTJRZBViGe+iQ+esvQQ29G/Av+jpTcLwcOavu3py5bez3+7WCj3u7k/RoiCxWU
+         3KoI0zhUzEi8w2JQyxjpD8WTKfzZEXZK4DpH82vIszEu8VuolQXiS+qxaPR7rMcnCrv9
+         RFyyb6MeerdWvhZHFB4scWWgAsz7/Bu8NX5MGRHF109jT8n5CMnb3zv09EgTLLAV9Z6D
+         zTVhf06pyE4nPLt8HJo9kSWFsN1yg+ihKvKhAuAwo5Vmaj1100HqlwRD9ShP08c/Zv4P
+         usbX0mEzWFAwNiQCgh4fiiDQA2fV0VJDwQBUKug+R2AILLAsjVXEx7Ec2tTK1iESflWi
+         GYEg==
+X-Gm-Message-State: AOJu0YyuZNXUyA3hFE2TlCIl/md2/ELKOcLS7SeUQI6zurW0Zfo+MHL6
+	v4uOqdsy1X6mhUzkC/jT6EgOH8boHbpc5VZwlOO8ELPz4kd/vtk0OZXxL/3kfH4=
+X-Gm-Gg: ASbGncvN+KX3jruqtQ2uEbg6hxEldcZojAW6ZW+NXBvSvdH4wq7D7jwhNSmapiqAvyJ
+	MVtBoNuF23Er7T7BdL0XcYNnWDjmvSBQLvNYrjRq5VIAEafjG45NsJkYJ7Fvt0u/PJlNFIG63lI
+	TSJeCgCkY1KW7D0EzqJP8xa8vymzcdURsQ6XJVEgIRPlq+i3lGyakB3Or+mwmDm5KUPaPxhR6HG
+	fqzfOMLYjPHw2AaZwTffiX8ONyYQRvHeeey6dPyOLq/rNT1yTfpoUSzSlmY1w13D846XXXw3Qn6
+	wg1UJLK1kSQkd4YeIxsOGPkSxGcXpJGbOEv+wNk0TeB21EqtNWeXrzhiIpEmlDN8tmhC2eTfTxr
+	gsTkgUZYC+CPPEqoqPnYS3eE=
+X-Google-Smtp-Source: AGHT+IEZ0TpKaljlTc0VwYKHGwhfQ8N9tuGicg3cmH+p+sFuBIGn+wLBiXXHQWBPhhiDsY/Q5YhxWg==
+X-Received: by 2002:a05:6214:21c6:b0:6e8:9086:261 with SMTP id 6a1803df08f44-6f4c94a6feamr9081566d6.3.1745517161167;
+        Thu, 24 Apr 2025 10:52:41 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aaf5e9sm11818086d6.99.2025.04.24.10.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 10:52:40 -0700 (PDT)
+Date: Thu, 24 Apr 2025 13:52:39 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Suma Hegde <suma.hegde@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [PATCH] platform/x86/amd/hsmp: Check for hsmp ACPI device
+Message-ID: <aAp6Z2DLJdqcLoYE@gourry-fedora-PF4VCD3F>
+References: <20250424062544.4122901-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 13/34] x86/xen/msr: Remove the error pointer
- argument from set_reg()
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-14-xin@zytor.com>
- <7c7de4be-e8d0-45b9-9212-186d79e95512@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <7c7de4be-e8d0-45b9-9212-186d79e95512@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424062544.4122901-1-suma.hegde@amd.com>
 
-On 4/24/2025 3:11 AM, Jürgen Groß wrote:
-> set_seg(), please (further up, too).
+On Thu, Apr 24, 2025 at 06:25:44AM +0000, Suma Hegde wrote:
+> If the hsmp ACPI device entry exists, allow the hsmp_acpi driver to manage
+> the hsmp and return error from plat.c.
+> 
+> amd_hsmp and hsmp_acpi are intended to be mutually exclusive drivers and
+> this check for availability of hsmp ACPI device is necessary to ensure
+> this.
+> 
+> Also, support both platform device-based and ACPI-based probing for
+> family 0x1A models 0x00 to 0x0F, implement only ACPI-based probing
+> for family 0x1A, models 0x10 to 0x1F. Return false from
+> legacy_hsmp_support() for this platform.
+> This aligns with the condition check in is_f1a_m0h().
+> 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> ---
+> This patch should be rebased on below patch by Gregory Price.
+> https://lore.kernel.org/platform-driver-x86/60715d85-48b4-4066-8a9a-c8d2b62ebb45@redhat.com/T/#t
 
-Good catch, thanks a lot!
+Just roll my patch into this and add
+
+Link: https://lore.kernel.org/platform-driver-x86/aALZxvHWmphNL1wa@gourry-fedora-PF4VCD3F/
+Fixes: 7d3135d163 ("platform/x86/amd/hsmp: Create separate ACPI, plat and common drivers")
+Co-developed-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Gregory Price <gourry@gourry.net>
+
+should make the pick up easier, and they both deal with the same patch.
+
+
+
+> 
+>  drivers/platform/x86/amd/hsmp/acpi.c | 1 -
+>  drivers/platform/x86/amd/hsmp/hsmp.h | 1 +
+>  drivers/platform/x86/amd/hsmp/plat.c | 6 +++++-
+>  3 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index 088cb2416d7e..eaae044e4f82 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -29,7 +29,6 @@
+>  
+>  #define DRIVER_NAME		"hsmp_acpi"
+>  #define DRIVER_VERSION		"2.3"
+> -#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
+>  
+>  /* These are the strings specified in ACPI table */
+>  #define MSG_IDOFF_STR		"MsgIdOffset"
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+> index af8b21f821d6..d58d4f0c20d5 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+> @@ -23,6 +23,7 @@
+>  
+>  #define HSMP_CDEV_NAME		"hsmp_cdev"
+>  #define HSMP_DEVNODE_NAME	"hsmp"
+> +#define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+>  
+>  struct hsmp_mbaddr_info {
+>  	u32 base_addr;
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index b9782a078dbd..81931e808bbc 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -11,6 +11,7 @@
+>  
+>  #include <asm/amd_hsmp.h>
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/build_bug.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> @@ -266,7 +267,7 @@ static bool legacy_hsmp_support(void)
+>  		}
+>  	case 0x1A:
+>  		switch (boot_cpu_data.x86_model) {
+> -		case 0x00 ... 0x1F:
+> +		case 0x00 ... 0x0F:
+>  			return true;
+>  		default:
+>  			return false;
+> @@ -288,6 +289,9 @@ static int __init hsmp_plt_init(void)
+>  		return ret;
+>  	}
+>  
+> +	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
+> +		return -ENODEV;
+> +
+>  	hsmp_pdev = get_hsmp_pdev();
+>  	if (!hsmp_pdev)
+>  		return -ENOMEM;
+> -- 
+> 2.25.1
+> 
