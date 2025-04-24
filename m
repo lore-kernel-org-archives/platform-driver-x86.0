@@ -1,65 +1,64 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DC21FA261
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 08:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9AC1FA261
+	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 08:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745482467; cv=none; b=odXd4nWb6/Xj+dWPWLnG4bbOhsDcXL2Y23DtKrwmMZeLRmICH96Do+/UD5DG1e0ujt8gl8E8HctTXxLecU4/hbHGR1JPueSAS+nG+T/4DaIULNURP9+XZ4iWlKKSNF8N4kHQ1u+McaUOECTxirvExETDUJXdGlq1jAEv3fLbRd0=
+	t=1745482500; cv=none; b=O5yMsN/V/8ZLCUkGNWTtXOz0JTMELVH89nuP7LuoyFNClqnkJ3yWv+XMgAbRiMUncLoddP+esNra0fUdc/IrhO497J4xj/LR0ELvD/6z70eiqbPfbiCRCyFBaNMrMNDik/HSKIvPrQiy7tp6s0DnAQGfnKUxbwWGBKrDU29dHHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745482467; c=relaxed/simple;
-	bh=008EJSG/phqGVPmxi0nDH3NCIHBvP55QLSxmr4tKYHM=;
+	s=arc-20240116; t=1745482500; c=relaxed/simple;
+	bh=KJRMi4yzcR0iKa6PSevbJ2oAgKHnd96ORClJH4szsfs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W8V9Emy9daREXB+aSzbdGKKmQm2VoVvk5aio7zcTqL+YG5y7mFbhlCzlLm+BQaPvgFe24Jmdk741bdA9sWnuofubJ539lQzuOZTzHFXMhOB23wp9JBokhjxRw+YHntKQaZSFGXbkteFuaqNn+vTOjET42TkmMh0rpsXRBm2LOa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g5ipNrlQ; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=FkvRpOgDGLthIJtDjUcrsCUYNNZBRNTdON15cuCzQlikf1+x9QCLFAM9CG77CZObZfmckZlWbM+jLu1zn+3iMBfd4zPLFq/MtM9SdldlGy3oDi4dpFxiGMOXobcYRVi36pRz3FZvOdFg3vSvOdaPOblzERcFg1oi4GhQ7Dd3Ll0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irqxnjhL; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g5ipNrlQ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so2784635e9.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 01:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irqxnjhL"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227cf12df27so6861055ad.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 01:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745482463; x=1746087263; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=008EJSG/phqGVPmxi0nDH3NCIHBvP55QLSxmr4tKYHM=;
-        b=g5ipNrlQnbWNQDx5PIdtRQxcoYaTUktowF593eplhxCKnKvGsx8xL5Io9JUFqMREuH
-         uifLo70GGibNxkA8BZJteNwZ6EAF6s3nY8zDad3SPCPDHIW8oJyJtj9ld22kl1EUa7/q
-         Lq1uEOedlXyJ23cirzmv3C2OhC5i7BWJ9jmtvolAe7r3Pk+oDVHQQqFcu1K6F0Ym2RYk
-         XNmFokhCNHR0lp3MdXn/d2pua9jvTf3BLD4icK36KM7xmjCMjXw6Btf/U1t7BPZNU1mu
-         n7zr9HdwCu+uMliMO3ktz7yD82fUwnl47w0KptodS04C/vn7at/8RzvBzNPnfB/xHfev
-         zt8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745482463; x=1746087263;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+        d=gmail.com; s=20230601; t=1745482498; x=1746087298; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=008EJSG/phqGVPmxi0nDH3NCIHBvP55QLSxmr4tKYHM=;
-        b=pXVQp1BYKV9t2Q4SRCWUnB5l7IcKC/5Jf6NC5OH530qBMfkqwVhHiMd3eqDWC+AUrl
-         oGFGtNxQuAq4SHulBQqnlj162x8HCgsn9e+bdXvZlbvOx+2aoB/yZLx0w90SX2rHxQAG
-         IqvZsqO9UToKHNDDyb4BnZFvt3VV9DrRs+rcaXSlF8rBuTg0OCo8hC/1xeh+vLM35Gws
-         RrlD1eOqt09Oc3NdoXLo7ncLoWuNOqL/rSkILRkofdWmoyUiPGfW9+ZILq7q8HL21s/8
-         TbrYQXFACF160p6VcsztTnsytlQJmiamE2tiHHEEFiRMk72M6s6RTQu8NsuoZQI8vLOb
-         +RbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXifOJLLI7xfjnlZVSJDLpvfZnYgNs9IqhxPpwIxyIsR+QLFwzq59/yBfDvsPzdJ6+P+zH13O3YrV3YXNDvADwC2Osk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1M8yjCt7QTE0dWKkhRUJbuhiVyA3YgPIbvscjmqAhQCjI1xJW
-	m4Phf9/YTIfBdXF2vSRhkH4c2NHJkqSkMgCmSPYVsOwZCyQvF6hgGni6T63daKI=
-X-Gm-Gg: ASbGnct7e4/pIC+7gnsgldkgtITz/oFhfkWQge+bL+FAZLVvhi11TXEy/mC/6laAE/b
-	VT9FlZZwQW6uEgsWKHtqM0/qCats8WDNa38qiJcRwgecnYimQgzqqAJm6t5icoKCc44EX6q1M/e
-	rMQ2MNMMX8sOkibuTp+oKvObIlNigHKFK3NsXKqnB3UbhtQ1Ov3+As6ml3ARN6ilokDRxU2enq1
-	ltBWnCOcqT4Twr9JIOU1y/FoOWvVddU98vnWReGgQG7P86bZfjWJqhhOIXLckpw/rnox8u3Le/Z
-	+RonxglpzXmjn21QdDw0t5mtW7ebadv6MKoE7Fw+MVVQEVEmcj5Cq1F3zve75mFP5Wy0WJYfwvw
-	2GJw2gHHV3qv1EyXWzbwla2XCOxkhbe79f+jH++M8WNZOXegdW+aBaJ6Ua6NoT7TsSw==
-X-Google-Smtp-Source: AGHT+IFyv2kCFIwtSgJfhMLoeL4umabM8GMXtTutcFH/tZ4GaYnDHHb5JDeYCLMrA1sChvoEPbh09w==
-X-Received: by 2002:a05:600c:1d03:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-4409bd2225dmr12614855e9.12.1745482462951;
-        Thu, 24 Apr 2025 01:14:22 -0700 (PDT)
-Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2bfa93sm10528525e9.37.2025.04.24.01.14.21
+        bh=GY8Yn852fAdpDCmPtEtmJUkwdtU/HFDJFtbr8/jkc2k=;
+        b=irqxnjhLAHBrDg4jo+6Dar/lsGZOtyf97E51n96GFgEwznjbVJ/x/JafTO08AB/GPv
+         KGbWVJvGxnhHySRS99JhPFOYwGoD8ULg7SF4O1/C9gWY7wwYLMfHeXb4F2HtsijapIVy
+         AHd6zYSY8twD+8MzoUmjBdyDATj1tYdOvZDuiozChfjG649C37rpy8B/2yfyoxJvH/W/
+         9M4uE/iYaJyJa8RQuGzQrTwKzVhv4Ko09ydO/6UweVWqs5PBXXJogCozCOe34gG8cnRd
+         tIft8WVc4CTuRqSjVHJTazPfjpaz5igafR8MBF7BQFeoeCJUOMvXbn8phUY+3vPOWW/5
+         S2ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745482498; x=1746087298;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GY8Yn852fAdpDCmPtEtmJUkwdtU/HFDJFtbr8/jkc2k=;
+        b=qhDTciXP13Tu/pOuc9LlLdMPAkulSjFdQ5TgA0YKI9lNr6ZDQgdZEmIrNrz4RAbom7
+         Ix4wBAW+Flyz48IwBYGh64SYaOkOxuvG/QHx9UrGRDqc7/BCg5Za96nJQ1P9l7gLGMph
+         f/6FalF9EBXufcXcgvTUDoOpE9icfFctKuJF3xZNQtjXvA1APqpfNKi/x227BvDSe/Qr
+         TQj1diUGl564xCq6Az1bgKymQTwSJFYVe90Sgy3X6K8NL5wKYzsVPyJJEEajyaTeWKgB
+         saaHToEEnbVwlImcZFITcsFOv3tOGRKq3bg3zLPKOXTM9OuMvxF3GV7GFyqi53d+6ytX
+         +ROA==
+X-Gm-Message-State: AOJu0YxtyOagvbLfKBfntVmkLy3sB3M3di9nogJpJDARlrVERilSsM4s
+	NFwfaUWJeuigPWOWpLRegQAsD1jb7QlTAqIw/K2KNuLSQL0TCJQI
+X-Gm-Gg: ASbGnctuUirwUGYuhHhnUEchOb7wge8V+axJdNAOpwFMtwpHEKzD4AZosHnCF0tr2Wa
+	tAEj3n7yTe07xyjR4Zsu7cpWbOCKv16lPJIyftxv5aNvZ3gtE+h1Ky5aG86PzfG7AvM0iewYmTW
+	czv/06+37FCA+tPF+gqkuQC4TtnN7AYZiz+GqPsbK//OcTAG3CXe2HYZ93ESg/zslf48osUz6h0
+	zDIIGeg3Xx30DX7zuF9+0CPw/us9aI4N2SvwfIclV7rYUfmRGZfTDX1YMTTU4eRlbi5XZoktcsH
+	0qSPeazFPyXqJqUl/T9MariPYpPVFgB0VKt+n2XUXN8MNNzslS4FmxHx/7mhjZRRisPZ5Cs2Jd/
+	X+4N4OpUSPi/jN7SiPg==
+X-Google-Smtp-Source: AGHT+IHmgMyPnMb0JYRBxbEaNhGWfNOVB7kcihxuFFYlO1Y6HYp7unDxv6p0q14GQUBJm+Xp9ZLP4A==
+X-Received: by 2002:a17:903:3c64:b0:215:6c5f:d142 with SMTP id d9443c01a7336-22db4957f83mr20749085ad.20.1745482497934;
+        Thu, 24 Apr 2025 01:14:57 -0700 (PDT)
+Received: from [192.168.0.5] (127.37.178.217.static.user.transix.jp. [217.178.37.127])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7b50sm7313145ad.130.2025.04.24.01.14.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 01:14:22 -0700 (PDT)
-Message-ID: <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
-Date: Thu, 24 Apr 2025 10:14:20 +0200
+        Thu, 24 Apr 2025 01:14:57 -0700 (PDT)
+Message-ID: <63008847-719e-4a60-b33c-5a7d53068a1c@gmail.com>
+Date: Thu, 24 Apr 2025 17:12:41 +0900
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,206 +66,176 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
- <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
+Subject: Re: [PATCH v3] platform/x86: thinkpad-acpi: Add support for new
+ hotkey for camera shutter switch
+To: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, njoshi1@lenovo.com,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+References: <20250423133912.16334-1-nitjoshi@gmail.com>
+ <045d37f5-259c-4553-8257-51ab6fc43534@redhat.com>
 Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------VMSl19Ws92VaJ19wHUdCoQEK"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------VMSl19Ws92VaJ19wHUdCoQEK
-Content-Type: multipart/mixed; boundary="------------0vp5F0mv6hCcRHQUu1aj0a9v";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
- <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
-In-Reply-To: <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
-
---------------0vp5F0mv6hCcRHQUu1aj0a9v
-Content-Type: multipart/mixed; boundary="------------0yeVN4sI0bLxwrBqbg5RE1SY"
-
---------------0yeVN4sI0bLxwrBqbg5RE1SY
+From: Nitin Joshi <nitjoshi@gmail.com>
+In-Reply-To: <045d37f5-259c-4553-8257-51ab6fc43534@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 
-T24gMjQuMDQuMjUgMTA6MDYsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMy8yMDI1IDk6MDUg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+Pj4gSXQncyBub3QgYSBtYWpvciBjaGFuZ2Us
-IGJ1dCB3aGVuIGl0IGlzIHBhdGNoZWQgdG8gdXNlIHRoZSBpbW1lZGlhdGUgZm9ybSBNU1Ig
-DQo+Pj4gd3JpdGUgaW5zdHJ1Y3Rpb24sIGl0J3Mgc3RyYWlnaHRmb3J3YXJkbHkgc3RyZWFt
-bGluZWQuDQo+Pg0KPj4gSXQgc2hvdWxkIGJlIHJhdGhlciBlYXN5IHRvIHN3aXRjaCB0aGUg
-Y3VycmVudCB3cm1zci9yZG1zciBwYXJhdmlydCBwYXRjaGluZw0KPj4gbG9jYXRpb25zIHRv
-IHVzZSB0aGUgcmRtc3Ivd3Jtc3IgaW5zdHJ1Y3Rpb25zIGluc3RlYWQgb2YgZG9pbmcgYSBj
-YWxsIHRvDQo+PiBuYXRpdmVfKm1zcigpLg0KPj4NCj4+IFRoZSBjYXNlIG9mIHRoZSBuZXcg
-aW1tZWRpYXRlIGZvcm0gY291bGQgYmUgaGFuZGxlZCB0aGUgc2FtZSB3YXkuDQo+IA0KPiBB
-Y3R1YWxseSwgdGhhdCBpcyBob3cgd2UgZ2V0IHRoaXMgcGF0Y2ggd2l0aCB0aGUgZXhpc3Rp
-bmcgYWx0ZXJuYXRpdmVzDQo+IGluZnJhc3RydWN0dXJlLsKgIEFuZCB3ZSB0b29rIGEgc3Rl
-cCBmdXJ0aGVyIHRvIGFsc28gcmVtb3ZlIHRoZSBwdl9vcHMNCj4gTVNSIEFQSXMuLi4NCg0K
-QW5kIHRoaXMgaXMgd2hhdCBJJ20gcXVlc3Rpb25pbmcuIElNSE8gdGhpcyBhcHByb2FjaCBp
-cyBhZGRpbmcgbW9yZQ0KY29kZSBieSByZW1vdmluZyB0aGUgcHZfb3BzIE1TUl9BUElzIGp1
-c3QgYmVjYXVzZSAicHZfb3BzIGlzIGJhZCIuIEFuZA0KSSBiZWxpZXZlIG1vc3QgcmVmdXNh
-bCBvZiBwdl9vcHMgaXMgYmFzZWQgb24gbm8gbG9uZ2VyIHZhbGlkIHJlYXNvbmluZy4NCg0K
-PiBJdCBsb29rcyB0byBtZSB0aGF0IHlvdSB3YW50IHRvIGFkZCBhIG5ldyBmYWNpbGl0eSB0
-byB0aGUgYWx0ZXJuYXRpdmVzDQo+IGluZnJhc3RydWN0dXJlIGZpcnN0Pw0KDQpXaHkgd291
-bGQgd2UgbmVlZCBhIG5ldyBmYWNpbGl0eSBpbiB0aGUgYWx0ZXJuYXRpdmVzIGluZnJhc3Ry
-dWN0dXJlPw0KDQoNCkp1ZXJnZW4NCg==
---------------0yeVN4sI0bLxwrBqbg5RE1SY
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Hello Hans,
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On 4/23/25 22:47, Hans de Goede wrote:
+> Hi,
+> 
+> On 23-Apr-25 3:39 PM, Nitin Joshi wrote:
+>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
+>> has new shortcut on F9 key i.e to switch camera shutter and it
+>> send a new 0x131b hkey event when F9 key is pressed.
+>>
+>> This commit adds support for new hkey 0x131b.
+>>
+>> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
+>> ---
+>> Changes in v3:
+>> * Avoid wasteful get_camera_shutter() calls and Minor changes based on review comments to make
+>>    code more readable.
+>> Changes in v2:
+>> * Added ASL method to get camera shutter status and send it to userspace.
+>> ---
+>>   drivers/platform/x86/thinkpad_acpi.c | 46 +++++++++++++++++++++++++++-
+>>   1 file changed, 45 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 5790095c175e..0b011dcfc626 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
+>>   						   * directly in the sparse-keymap.
+>>   						   */
+>>   	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
+>> +	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
+>>   	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
+>>   	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
+>>   	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
+>> @@ -2250,6 +2251,25 @@ static void tpacpi_input_send_tabletsw(void)
+>>   	}
+>>   }
+>>   
+>> +#define GCES_METHOD_ERR BIT(31)
+> 
+> Does this bit really indicate an error ? From other vendors
+> this often is a device-not-present bit and the bit being set
+> would mean in this case that there is no camera-shutter on
+> the laptop we're running on.
+> 
+> This also matches with the -ENODEV return.
+> 
+> If this indeed is a device-not-present bit then this define
+> should be renamed to match that.
+> 
+This BIT being set would mean there is no camera shutter.
+So, shall i change name to "#define DEVICE_NOT_PRESENT BIT(31)"
+OR
+I can just replace "METHOD_ERR" with "DEVICE_NOT_PRESENT" in below enum 
+and replace all METHOD_ERR in this file to "DEVICE_NOT_PRESENT":
+enum {
+	/* Error condition bit */
+	METHOD_ERR = BIT(31),
+};
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+I may have missed something but I think for consistency, its better to 
+rename METHOD_ERR. if its OK, i can modify like this in another patch 
+for this change.
 
---------------0yeVN4sI0bLxwrBqbg5RE1SY--
+> 
+>> +static int get_camera_shutter(void)
+>> +{
+>> +	acpi_handle gces_handle;
+>> +	int output;
+>> +
+>> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GCES", &gces_handle)))
+>> +		return -ENODEV;
+>> +
+>> +	if (!acpi_evalf(gces_handle, &output, NULL, "dd", 0))
+>> +		return -EIO;
+>> +
+>> +	if (output & GCES_METHOD_ERR)
+>> +		return -ENODEV;
+>> +
+>> +	return output;
+>> +}
+>> +
+>>   static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
+>>   {
+>>   	bool known_ev;
+>> @@ -3272,6 +3292,7 @@ static const struct key_entry keymap_lenovo[] __initconst = {
+>>   	 * after switching to sparse keymap support. The mappings above use translated
+>>   	 * scancodes to preserve uAPI compatibility, see tpacpi_input_send_key().
+>>   	 */
+>> +	{ KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, { KEY_CAMERA_ACCESS_TOGGLE } },
+>>   	{ KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, similar to old ThinkPad key */
+>>   	{ KE_KEY, 0x1320, { KEY_LINK_PHONE } },
+>>   	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
+>> @@ -3303,7 +3324,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>>   	const struct key_entry *keymap;
+>>   	bool radiosw_state  = false;
+>>   	bool tabletsw_state = false;
+>> -	int hkeyv, res, status;
+>> +	int hkeyv, res, status, camera_shutter_state;
+>>   
+>>   	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+>>   			"initializing hotkey subdriver\n");
+>> @@ -3467,6 +3488,12 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>>   	if (res)
+>>   		return res;
+>>   
+>> +	camera_shutter_state = get_camera_shutter();
+>> +	if (camera_shutter_state >= 0) {
+>> +		input_set_capability(tpacpi_inputdev, EV_SW, SW_CAMERA_LENS_COVER);
+>> +		input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, camera_shutter_state);
+>> +	}
+>> +
+>>   	if (tp_features.hotkey_wlsw) {
+>>   		input_set_capability(tpacpi_inputdev, EV_SW, SW_RFKILL_ALL);
+>>   		input_report_switch(tpacpi_inputdev,
+>> @@ -3633,6 +3660,8 @@ static void adaptive_keyboard_s_quickview_row(void)
+>>   /* 0x1000-0x1FFF: key presses */
+>>   static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+>>   {
+>> +	int camera_shutter_state;
+>> +
+>>   	/* Never send ACPI netlink events for original hotkeys (hkey: 0x1001 - 0x1020) */
+>>   	if (hkey >= TP_HKEY_EV_ORIG_KEY_START && hkey <= TP_HKEY_EV_ORIG_KEY_END) {
+>>   		*send_acpi_ev = false;
+>> @@ -3643,6 +3672,21 @@ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+>>   			return true;
+>>   	}
+>>   
+>> +	if (hkey == TP_HKEY_EV_CAMERASHUTTER_TOGGLE) {
+>> +		camera_shutter_state = get_camera_shutter();
+>> +		if (camera_shutter_state < 0) {
+>> +			pr_err("Error retrieving camera shutter state after shutter event\n");
+>> +			return true;
+>> +		}
+>> +		mutex_lock(&tpacpi_inputdev_send_mutex);
+>> +
+>> +		input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, camera_shutter_state);
+>> +		input_sync(tpacpi_inputdev);
+>> +
+>> +		mutex_unlock(&tpacpi_inputdev_send_mutex);
+>> +		return true;
+>> +	}
+>> +
+>>   	return tpacpi_input_send_key(hkey, send_acpi_ev);
+>>   }
+>>   
+> 
+> Otherwise this looks good to me now.
+> 
+> Regards,
+> 
+> Hans
+Thanks & Regards,
+Nitin Joshi
+> 
+> 
 
---------------0vp5F0mv6hCcRHQUu1aj0a9v--
-
---------------VMSl19Ws92VaJ19wHUdCoQEK
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJ8twFAwAAAAAACgkQsN6d1ii/Ey8k
-sgf/bXb/yPNEYKqkydqe/bdDkpvmLpSFUpdHMovM4PRMGt6zioNmVWczEr+IQ53jJEK1EgOrz1V5
-CSe5GF6AQ52FukYXR+nsdEhvJ3SQbHcC1jjQ0KBbi7qxCIl5hNUVmyEEjIxdE5u2TPCMWxoot6t1
-yNRYVLJOfCGc+rtLzkqT+DCZhmL5bJV7aHjBV/gGYMQs5mZvFWky2orA31cQd87ZQ01sJsXhSyK5
-kyPT2DLGT2EUSFgkADIATsccYzDmoFGHujoktt1Dvy7KAp5Ij89J1F9z/bJPieoeXbxYM6WgXK6i
-mL8fdLmqdHH+xIxH3Fw7vjbOQPVv3Q5NLHeDBr80mQ==
-=oHe8
------END PGP SIGNATURE-----
-
---------------VMSl19Ws92VaJ19wHUdCoQEK--
