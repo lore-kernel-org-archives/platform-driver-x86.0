@@ -1,205 +1,224 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2041.outbound.protection.outlook.com [40.107.94.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916A620B20A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Apr 2025 06:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475975; cv=fail; b=WXAi2kqMab84WlPubsXSHq8Aw5l94Lz4AF6mXETU0waqDAY8YfQkgWPbMysTexy/Q2FIT61pehHVbEPC1DtuvfcBgUdfEJ7YRmh6gR/4msah7WMdAyTPgVNzRt0Di9A9c2BMFVQ4m7iCUDJrr/1G4IrTfK0GD7vHJBQ0LqxsV98=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475975; c=relaxed/simple;
-	bh=hqll8oRITyLUCl5PtoPclkqpbWupOQ874NciKmgxMKA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tIlSmw9zgAI5zfPjyCdDaeWih/VwMMAfhvmYsccrPUtDHB5ZLL0Uz1IxgrENZlxZfGsQwcVt6g8F/MmvBTZW6gYoeqnc76yEN/E8HkGhX8TyQXziAGfj6pz9EKmEQmBbtGx2eZaG+iBwJ7OHlMy/JQmwvhPJ+yPQ9/lLqrfBnkU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o7WVfbdu; arc=fail smtp.client-ip=40.107.94.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0E19CCEA;
+	Thu, 24 Apr 2025 06:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745476434; cv=none; b=PckO/jjVo20UONbbDxSVPbxaLHBocQtGQx+hUlTZqKsIUbSte3UoZ65IzaLVDlkoMBcPki6QDUIlhU/Wx3R5DfU02kP7NyJBJ220fScJ9CxiSXHHs56FzvhzZ+q3WXZ7L9CmEle+3HPtQkFQry6JvfW9cZnPwbgnUwdz22RCkvs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745476434; c=relaxed/simple;
+	bh=dcxOn/nuTpss+vf24oXBlr34cv3+AgMg/89LV6ad5rM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TguzyjdlRYpyypXyh4QUvrvtNBCfYKkjtbEMK/0nzZUX5u513PJQOkTmS4FuqpjpqMMLcQWvVOAiN5DmhvKBqoB1SXzIwEj1xoXcVVYQzA42EdGavwq3N894EfUsXKQ2ctQa7fwbdwz2vPtLt4uubZNIwIJLHV/KQady6rYldR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d9Tmj1Ln; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o7WVfbdu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qo/wkxHjIM2Cig2OOfEMi7BTRvNc1kfydACcc4fuPIu1qF+OEZyB5yJJ/yZyflV2fph43lulUWRgj8yDaJG0JFu49fi2xDcns2pqbqS0t9F7LAGZ/3mZ+Ffff9f3ZbyRxu7QuSwcZqMQrCClKd63jH1OjEhxC8E54DqcXXLVvFIqr9PhFy7tDf3dNAt3El07ozuD+ed25RHvLqFk79sElmu7IHFDdMRu+9mu3RceUvAxEOtJ1Co7Rp48TTSHv1k1tEH8e6YOu3lY5gOMufKGtqaj032vcW9KjWsokrodAvwN7L73PF5wt+xayuV6wRKfB7MN+KlJOw0JTINskX153A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t7L8lrBzryASFCWquV/PleTU+0wDYrs6+zpGTsw8BPM=;
- b=dqbkWFX7JKbqklE91nXT8u0dqfzewUSf3BP4f+U2lTJJlhvw3lp9QwFo1KqbIMjEhw6yUVmzUwuOLA0EGFJj78aYOmUOQcxcEFu0P4EHVFy3Arn5YdqPuoJhoYqT2uLhlS4aj05jECZLaBL3x77E4X653i/cCn5AR55i9Ad8zrcj0XKco4/Sj7WgWcSbvewY7LdHqeSOpewUWMoRnVu9GqYU2aGPbzHEicm1uB/CqSZx9xUdMMfXE33B6mwUyZ5ttAXnEKjCmmufFdkUEgCyRULjyvKY2h9/GLrZt6n+A8iZyYGqPzdeb9VyTObKdg/ypMj31s84QrbUMVo1A3s8Dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t7L8lrBzryASFCWquV/PleTU+0wDYrs6+zpGTsw8BPM=;
- b=o7WVfbduCeiD+xD+Vw1O0FWDRRbp1/au0+b3jPf2TzMgwKLQPKobiSSHqrujkGaf349rPfyd4lvyqnyOTztd3Qn/z6Rx3fvrvXUd7acYFbtFpVGqDq1noysfeh74LdzQMTpziaXKTaI9smiTG0trZL2A/iR5d7NCh8lkoDRqb6M=
-Received: from MW4PR04CA0138.namprd04.prod.outlook.com (2603:10b6:303:84::23)
- by DS7PR12MB8251.namprd12.prod.outlook.com (2603:10b6:8:e3::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.23; Thu, 24 Apr 2025 06:26:08 +0000
-Received: from SJ1PEPF000023CD.namprd02.prod.outlook.com
- (2603:10b6:303:84:cafe::b0) by MW4PR04CA0138.outlook.office365.com
- (2603:10b6:303:84::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Thu,
- 24 Apr 2025 06:26:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023CD.mail.protection.outlook.com (10.167.244.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 06:26:07 +0000
-Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 01:26:04 -0500
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
-	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
-	<naveenkrishna.chatradhi@amd.com>
-Subject: [PATCH] platform/x86/amd/hsmp: Check for hsmp ACPI device
-Date: Thu, 24 Apr 2025 06:25:44 +0000
-Message-ID: <20250424062544.4122901-1-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d9Tmj1Ln"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745476432; x=1777012432;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dcxOn/nuTpss+vf24oXBlr34cv3+AgMg/89LV6ad5rM=;
+  b=d9Tmj1LnQP9hx66yDS6p8glM4v/kq94XcF1sxC/aAvR91xyy4tJ+J2QP
+   qpEVmOZKrirDlBd0Za96P28j8Q4H2kLk2chbF+PwbPt3u/j5Il0yPnUte
+   WfSjkje9MkPX46sLkjidfG9wEgPo/kJ/aThqvgdRR9RLzQlTQBeH/3iXM
+   Ll7egNGKwyjLOAXGECBHUTgJExXBYpJK3QeEaLcWtg+/hvEmu0yx2a55p
+   yYy1g6OkFMA58JQznGkzpwwwrPmv7ZyHHyosO9TYGQT0/AEWSvVVpMknQ
+   xGZZ1ZeXi66cRiJa2PAsxZXlV0TaYHZDkRpephhm1uYf/1j72MBA6MMKO
+   w==;
+X-CSE-ConnectionGUID: uh33JJM0TIKbNwp+P2uWIQ==
+X-CSE-MsgGUID: 5cQyryPySRKKPU1udgZxkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47226706"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="47226706"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:33:51 -0700
+X-CSE-ConnectionGUID: l3lwgHW4RvWGJqWYsXT+Ow==
+X-CSE-MsgGUID: x4fuAgz/TQeaZNeRxG6fQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="163563116"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:33:39 -0700
+Message-ID: <7c44da88-72bb-4d1f-9f38-bf0e7e79b7a0@linux.intel.com>
+Date: Thu, 24 Apr 2025 14:33:35 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CD:EE_|DS7PR12MB8251:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5082e2fd-5b49-41b2-a1df-08dd82f8e60a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ld86cuKUh3jix5bN4AOMVsl/edCBbwnFCJhruwXDgFlcDThmoj/y1vlHahUr?=
- =?us-ascii?Q?U67IGHfz+Hxlu43fZeyUFj8wpJpdGuPQsebiehYV+QjiC4oGvirLwpI+PJJr?=
- =?us-ascii?Q?ncwBu7hIspMeCYGamoz9YfcWdIC5GGi+0tyFdZurp6SGM3oVJOs47jpPy0N2?=
- =?us-ascii?Q?AXNliUy6HHbH6j/m2xHlpIcENzggTzrKv4+Lrj081yiB9xpAeI0Gsf8jRksC?=
- =?us-ascii?Q?Ob0GamuZtQ9j/VBtCO6cR7N3YO/OAGsjw1ZWhTdSZorhUt/HW4EcRn6IcEQ4?=
- =?us-ascii?Q?/KTjTkTX51jU945ezBiAmyWwXRUVlTsMJr4ydpUpN935SBZG812jKzbGlELB?=
- =?us-ascii?Q?FBulYBLjVOY2DGrUqoTmPUAVbP0hTn8D+U9QLy/YGzGujZIBGpFPzPgrPVgU?=
- =?us-ascii?Q?TllAygYgsH+cxKZOJYNKSRwDxDzywERYIo1BWVjej6VKXziooCm5ZqiM4Mgn?=
- =?us-ascii?Q?ncEfL74Uc1moiBwNR8OVJ+KM3AWchLRA3YeaE3q6u/gW4ieSHPs87ND65Y62?=
- =?us-ascii?Q?ESkk5xsQ/jb/ZPFQrG0rlbr4zc1UqeeqyKCUtHEDU5yWXKj16Z0NSBFTO0Q3?=
- =?us-ascii?Q?mDwbHtTmMDbS7FKZO/JPwTnshO2YL0TBCfh/Y7cZCrEAk5dgV2S5MzRPekGG?=
- =?us-ascii?Q?MK4jEbwdNDNTODwqvoH4tpgWaOfHrltC8nZVBsCfkPOivlJtcMoUQ8VTLmnb?=
- =?us-ascii?Q?sTC//HHbq6FPzM0oGOVS1tG1kegsrA6xwhi08nQKq/jRb6DnLsd8CPrJKpbt?=
- =?us-ascii?Q?PQOt5a/2M2l6yZfm4pcc7S8o6H0NjdXmUDlao5oRnGHr4DQZy/lGintuSLDs?=
- =?us-ascii?Q?UKLpdlUuuu1dMVdwC8bBgWpFiJoGTqEhttcXi1ss/JmnQkZ35mQZMbDt7+aj?=
- =?us-ascii?Q?nS8pg/vHfAAtJ6+XRW4JKZWqHCikgymput7cP3xiHatqWIYRMzImwhODiy4t?=
- =?us-ascii?Q?heDxJQRvK6z7LZdNzVlly+kopLHdhYhOd24rNOaVRAw4ij3L/zGuyh8+F9HX?=
- =?us-ascii?Q?hTpA4Su0HCrzAgdgjCRbeONfeSm2zPvDiUv1GwH9JPXBhuvRdJbGxD1s/rhB?=
- =?us-ascii?Q?0/ajjheG3wzMbmI6mqa4FEB+p4QHzeZFi3rEUtxlMQ6l2rc4FVWSwoGIR9QC?=
- =?us-ascii?Q?HqG+sgmFh1QIlLXp94F5V5np/W50s4xHU6DEr88bkL33Y6zc4gtg11PAmyiz?=
- =?us-ascii?Q?A8nBob7Us/G1DrCTFgjMXFswzZqlr3GQKj1+ITlnKv5h+2URiTFCK7UQCJHp?=
- =?us-ascii?Q?TGtDuQuuefesUhtbEzlItG2jwx6QghdbqTn+SSsnIBFEZ0VdXqbyzfmIiLfb?=
- =?us-ascii?Q?tLtFAsZ7HOL5NzQ6RZAiERSf6nznNHSEpblRLfzgNwQzdYa/AZ1e8rQ+mCNj?=
- =?us-ascii?Q?KnVDdgTm0POG9a7pJOGYR6qIF+ECG3WEj+ZofJXmi4yVMvLYrBXSj562S1fg?=
- =?us-ascii?Q?7dz4eVMkWBsg/FWRHGSrEplkT3ejTmgo4zkhEypdEbrRIH8XRcFkeOuR983W?=
- =?us-ascii?Q?K9brLJ/jP6r3mTVDBYRD84PYHMjb9R1zhtY0?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 06:26:07.8058
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5082e2fd-5b49-41b2-a1df-08dd82f8e60a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023CD.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8251
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+ seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250422082216.1954310-13-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-If the hsmp ACPI device entry exists, allow the hsmp_acpi driver to manage
-the hsmp and return error from plat.c.
 
-amd_hsmp and hsmp_acpi are intended to be mutually exclusive drivers and
-this check for availability of hsmp ACPI device is necessary to ensure
-this.
+On 4/22/2025 4:21 PM, Xin Li (Intel) wrote:
+> As pmu_msr_{read,write}() are now wrappers of pmu_msr_chk_emulated(),
+> remove them and use pmu_msr_chk_emulated() directly.
+>
+> While at it, convert the data type of MSR index to u32 in functions
+> called in pmu_msr_chk_emulated().
+>
+> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> ---
+>  arch/x86/xen/enlighten_pv.c | 17 ++++++++++-------
+>  arch/x86/xen/pmu.c          | 24 ++++--------------------
+>  arch/x86/xen/xen-ops.h      |  3 +--
+>  3 files changed, 15 insertions(+), 29 deletions(-)
+>
+> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> index 1418758b57ff..b5a8bceb5f56 100644
+> --- a/arch/x86/xen/enlighten_pv.c
+> +++ b/arch/x86/xen/enlighten_pv.c
+> @@ -1089,8 +1089,9 @@ static void xen_write_cr4(unsigned long cr4)
+>  static u64 xen_do_read_msr(unsigned int msr, int *err)
+>  {
+>  	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
+> +	bool emulated;
+>  
+> -	if (pmu_msr_read(msr, &val, err))
+> +	if (pmu_msr_chk_emulated(msr, &val, true, &emulated) && emulated)
 
-Also, support both platform device-based and ACPI-based probing for
-family 0x1A models 0x00 to 0x0F, implement only ACPI-based probing
-for family 0x1A, models 0x10 to 0x1F. Return false from
-legacy_hsmp_support() for this platform.
-This aligns with the condition check in is_f1a_m0h().
+ah, here it is.
 
-Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
----
-This patch should be rebased on below patch by Gregory Price.
-https://lore.kernel.org/platform-driver-x86/60715d85-48b4-4066-8a9a-c8d2b62ebb45@redhat.com/T/#t
+Could we merge this patch and previous patch into a single patch? It's
+unnecessary to just modify the pmu_msr_read()/pmu_msr_write() in previous
+patch and delete them immediately. It just wastes the effort.
 
- drivers/platform/x86/amd/hsmp/acpi.c | 1 -
- drivers/platform/x86/amd/hsmp/hsmp.h | 1 +
- drivers/platform/x86/amd/hsmp/plat.c | 6 +++++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 088cb2416d7e..eaae044e4f82 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -29,7 +29,6 @@
- 
- #define DRIVER_NAME		"hsmp_acpi"
- #define DRIVER_VERSION		"2.3"
--#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
- 
- /* These are the strings specified in ACPI table */
- #define MSG_IDOFF_STR		"MsgIdOffset"
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index af8b21f821d6..d58d4f0c20d5 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -23,6 +23,7 @@
- 
- #define HSMP_CDEV_NAME		"hsmp_cdev"
- #define HSMP_DEVNODE_NAME	"hsmp"
-+#define ACPI_HSMP_DEVICE_HID    "AMDI0097"
- 
- struct hsmp_mbaddr_info {
- 	u32 base_addr;
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index b9782a078dbd..81931e808bbc 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -11,6 +11,7 @@
- 
- #include <asm/amd_hsmp.h>
- 
-+#include <linux/acpi.h>
- #include <linux/build_bug.h>
- #include <linux/device.h>
- #include <linux/module.h>
-@@ -266,7 +267,7 @@ static bool legacy_hsmp_support(void)
- 		}
- 	case 0x1A:
- 		switch (boot_cpu_data.x86_model) {
--		case 0x00 ... 0x1F:
-+		case 0x00 ... 0x0F:
- 			return true;
- 		default:
- 			return false;
-@@ -288,6 +289,9 @@ static int __init hsmp_plt_init(void)
- 		return ret;
- 	}
- 
-+	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
-+		return -ENODEV;
-+
- 	hsmp_pdev = get_hsmp_pdev();
- 	if (!hsmp_pdev)
- 		return -ENOMEM;
--- 
-2.25.1
-
+>  		return val;
+>  
+>  	if (err)
+> @@ -1133,6 +1134,7 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  			     unsigned int high, int *err)
+>  {
+>  	u64 val;
+> +	bool emulated;
+>  
+>  	switch (msr) {
+>  	case MSR_FS_BASE:
+> @@ -1162,12 +1164,13 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  	default:
+>  		val = (u64)high << 32 | low;
+>  
+> -		if (!pmu_msr_write(msr, val)) {
+> -			if (err)
+> -				*err = native_write_msr_safe(msr, low, high);
+> -			else
+> -				native_write_msr(msr, low, high);
+> -		}
+> +		if (pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated)
+> +			return;
+> +
+> +		if (err)
+> +			*err = native_write_msr_safe(msr, low, high);
+> +		else
+> +			native_write_msr(msr, low, high);
+>  	}
+>  }
+>  
+> diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+> index 95caae97a394..afb02f43ee3f 100644
+> --- a/arch/x86/xen/pmu.c
+> +++ b/arch/x86/xen/pmu.c
+> @@ -128,7 +128,7 @@ static inline uint32_t get_fam15h_addr(u32 addr)
+>  	return addr;
+>  }
+>  
+> -static inline bool is_amd_pmu_msr(unsigned int msr)
+> +static bool is_amd_pmu_msr(u32 msr)
+>  {
+>  	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+>  	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+> @@ -194,8 +194,7 @@ static bool is_intel_pmu_msr(u32 msr_index, int *type, int *index)
+>  	}
+>  }
+>  
+> -static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+> -				  int index, bool is_read)
+> +static bool xen_intel_pmu_emulate(u32 msr, u64 *val, int type, int index, bool is_read)
+>  {
+>  	uint64_t *reg = NULL;
+>  	struct xen_pmu_intel_ctxt *ctxt;
+> @@ -257,7 +256,7 @@ static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+>  	return false;
+>  }
+>  
+> -static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
+> +static bool xen_amd_pmu_emulate(u32 msr, u64 *val, bool is_read)
+>  {
+>  	uint64_t *reg = NULL;
+>  	int i, off = 0;
+> @@ -298,8 +297,7 @@ static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
+>  	return false;
+>  }
+>  
+> -static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+> -				 bool *emul)
+> +bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul)
+>  {
+>  	int type, index = 0;
+>  
+> @@ -313,20 +311,6 @@ static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+>  	return true;
+>  }
+>  
+> -bool pmu_msr_read(u32 msr, u64 *val)
+> -{
+> -	bool emulated;
+> -
+> -	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+> -}
+> -
+> -bool pmu_msr_write(u32 msr, u64 val)
+> -{
+> -	bool emulated;
+> -
+> -	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
+> -}
+> -
+>  static u64 xen_amd_read_pmc(int counter)
+>  {
+>  	struct xen_pmu_amd_ctxt *ctxt;
+> diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+> index a1875e10be31..fde9f9d7415f 100644
+> --- a/arch/x86/xen/xen-ops.h
+> +++ b/arch/x86/xen/xen-ops.h
+> @@ -271,8 +271,7 @@ void xen_pmu_finish(int cpu);
+>  static inline void xen_pmu_init(int cpu) {}
+>  static inline void xen_pmu_finish(int cpu) {}
+>  #endif
+> -bool pmu_msr_read(u32 msr, u64 *val);
+> -bool pmu_msr_write(u32 msr, u64 val);
+> +bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul);
+>  int pmu_apic_update(uint32_t reg);
+>  u64 xen_read_pmc(int counter);
+>  
