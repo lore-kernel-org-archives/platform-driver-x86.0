@@ -1,132 +1,115 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84D227FD4D;
-	Thu, 24 Apr 2025 16:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E8214226;
+	Thu, 24 Apr 2025 17:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511871; cv=none; b=HIvFwnGOpRbVLpGRhQDpioyds+tl4O4Qm/va4OtNJG/vsFTwVYNdwGGeVFf/4PIuLT7FGX1oGcIrXuxtzrWHwZZlqsv8B57U6juRmH29NkVnMYiNjyTkhpScReaEbTfQEjm+oXEtLY5HttLPxtl9W9gydHQayrZje5s6XQVqWnA=
+	t=1745517083; cv=none; b=KuTkVq6JKBpykfoDfi9+iwQ+s3A/lZFodBAg5rkqYw3SSDuFspcejTVK2yiI4HfA5ZP40P5nojl+I/QqQ1/Xs/4/09aZMQXV2gZlCmMAjSTktdXnA07qxS0a/zIUVwRz1Z56WaM+KTwM+Nwi18mPplffhzh6oKzAzlrZWRowce0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511871; c=relaxed/simple;
-	bh=BD0rbbcQBosHnEWQRHYAiP3S3Q7nvbpUWkLFOcOiKeY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qCBNiBZ0KreJV2Ge/D+D80+5NxcQlo4u7mzFtHc1FVTNF++r92bzTfjDIi7cGTgDFvMzpWeHuYfc0Rld8+4c1kqAhLzRYu786k9+4gQcWrQYGi4xi2gdnbwJCN734RrUSRfSF90v2AeRWndQoCF2bDvVcdt8lzjQD38Txm2HdbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ylYBYr7Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gDK9Efao; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745517083; c=relaxed/simple;
+	bh=gvbYniVbuVocg2kp9+4ascSzdv/YlycfcP4FMoMbya4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uTlPznozpSVQjTnG8cVpKI4wNHFkJy6+udEdqBz0ZJuHdVY4t1OYsXBCYSf9eg0rJHlDfTiSkEoLK1AqxNPQhcT/YrOn7gOCx/FmRnUdPu5Co/sL2OxZpu8TrKr5M/nQnSHq9tTxmTPgJf1YqhJgut/C75N3FwziPQZnLYuGX4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qmcxq/0p; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ylYBYr7Q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gDK9Efao"
-Date: Thu, 24 Apr 2025 16:24:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745511867;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=em8INSWLcouZFS0+cA2aEIG0/3qdxMZPeI+TnHxZrgc=;
-	b=ylYBYr7Ql30KCUKxzjV5sElixKBPCoP/9UOuULPy07ntHMTfWbWLzRrQ5yKBfuKBNvFvQk
-	2/37uryqCvASGPIV3P/oXyn201LH48cCei14Q5s1yBKKGlPIp1DEmApPyxcYGrFzfeEV+E
-	IG92L+TlB7lkJA1by1VufDp3cgcOUY0uG1Pd3CON7rQMut8oqYx58GnOjKlf7Kk65NO66h
-	UoUvcKAj0Y3yen2hxCuCIvg8odomZ7lBOpht4Bz8SkWwx3b4LH+sNm9eFKcx7e1nXorS99
-	kvt0oHA8sDkZg/JK/EHAax84b272RE7dfXy+eMdBl3Pl6yVMbgfjELbkGreELw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745511867;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=em8INSWLcouZFS0+cA2aEIG0/3qdxMZPeI+TnHxZrgc=;
-	b=gDK9EfaoL1CfGgHwRAp8Nu7AMD2zZRzLvRpDhkcNZ65GGW3XoZIQxc8TVfvs7dsIcvB0T6
-	VpW9ud9fioC3bhCg==
-From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] platform/x86/amd/pmc: Use FCH_PM_BASE definition
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, platform-driver-x86@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250422234830.2840784-5-superm1@kernel.org>
-References: <20250422234830.2840784-5-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qmcxq/0p"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OHo0ch1382184
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 10:50:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OHo0ch1382184
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745517004;
+	bh=s//FslW+O7Kn/IezyVBmG0EeFGCYGlqoMCN23p8kepQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qmcxq/0pRXzN/V+n0zvhvv/OoLvqqvKKiVDhNOGC1sz6osmqDDUYrR+tqqy3ga/u7
+	 JZpvT18GGm7u7JMxdWjZSYChBiJHXKChUd2j3U39ORZs5MDVb4G7VtVtmZRcbpeLMt
+	 m3iEcT7ggWGzwceuQ2WNjjW5bkmHSlTac6xC2kFMvWFQzV9xA4ABxyzXK56cpGvVXB
+	 Z2GE+XuHwAbGxdx+vxfyvWePtTx/85Pa22tSKDMjJILyluCkPpeG0HBau04zqCZjI0
+	 PP1ixyRBjfPn514E7EZwguUuURA8RzDzTFyQbM8I27ftfQ+nYl+1piEjuJAyk3NecS
+	 iN/TMRiJOd+JA==
+Message-ID: <ca088501-2fbe-4a32-b191-04f7be6a2713@zytor.com>
+Date: Thu, 24 Apr 2025 10:49:59 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174551186263.31282.837973831112893685.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+ <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/platform branch of tip:
+On 4/24/2025 3:05 AM, Jürgen Groß wrote:
+> 
+> May I suggest to get rid of the "emul" parameter of pmu_msr_chk_emulated()?
+> It has no real value, as pmu_msr_chk_emulated() could easily return 
+> false in
+> the cases where it would set *emul to false.
 
-Commit-ID:     0fbe08e78dfd4a680806132673c520f0fc5f84d9
-Gitweb:        https://git.kernel.org/tip/0fbe08e78dfd4a680806132673c520f0fc5=
-f84d9
-Author:        Mario Limonciello <mario.limonciello@amd.com>
-AuthorDate:    Tue, 22 Apr 2025 18:48:29 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 24 Apr 2025 17:55:18 +02:00
+Good idea!
 
-platform/x86/amd/pmc: Use FCH_PM_BASE definition
-
-The s2idle MMIO quirk uses a scratch register in the FCH.
-Adjust the code to clarify that.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lore.kernel.org/r/20250422234830.2840784-5-superm1@kernel.org
----
- arch/x86/include/asm/amd/fch.h            | 1 +
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/amd/fch.h b/arch/x86/include/asm/amd/fch.h
-index 28972bd..01ee15b 100644
---- a/arch/x86/include/asm/amd/fch.h
-+++ b/arch/x86/include/asm/amd/fch.h
-@@ -7,5 +7,6 @@
- /* Register offsets from PM base: */
- #define FCH_PM_DECODEEN			0x00
- #define FCH_PM_DECODEEN_SMBUS0SEL	GENMASK(20, 19)
-+#define FCH_PM_SCRATCH			0x80
-=20
- #endif /* _ASM_X86_AMD_FCH_H_ */
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86=
-/amd/pmc/pmc-quirks.c
-index b4f4972..b706b1f 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -11,6 +11,7 @@
- #include <linux/dmi.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-+#include <asm/amd/fch.h>
-=20
- #include "pmc.h"
-=20
-@@ -20,7 +21,7 @@ struct quirk_entry {
- };
-=20
- static struct quirk_entry quirk_s2idle_bug =3D {
--	.s2idle_bug_mmio =3D 0xfed80380,
-+	.s2idle_bug_mmio =3D FCH_PM_BASE + FCH_PM_SCRATCH,
- };
-=20
- static struct quirk_entry quirk_spurious_8042 =3D {
+The function type is a bit of weird but I didn't think of change it.
