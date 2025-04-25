@@ -1,512 +1,183 @@
-Received: from 4.mo575.mail-out.ovh.net (4.mo575.mail-out.ovh.net [46.105.59.63])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14DC1C7019
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 11:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.59.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3360F1DFDAB;
+	Fri, 25 Apr 2025 11:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745581133; cv=none; b=F/yQuwnZbAMjHVI2vcnYRfiDIbZCcogeQxwg2edk5H73J1KyyX4hkB8wITCWp4XQsqtVZD9QL4MxYXE43enAEbjJGN56LgCKY/UkHy/doKVQQhzzgvEbGV01HVIbyQ50ECQv7ZENTA2CEJAVZAQHsefjFF9BWciXrqucQCC3q8Y=
+	t=1745581857; cv=none; b=h1y5IhxkNyVOrYQGBn1QxDgxw2d3hB3HtnNKdhzf3M8mF0vdZQfBZGBEZfeXOk5aFcG2G+/+6UCdLpu3GDkez4NPkeVjmi5DVvWSsWS9JMO3MzGmCzC/GaZ9WU36RyMJUdf3UnNQs5xVx9czGadAAvrUYu2K59QWJARYPEMk3o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745581133; c=relaxed/simple;
-	bh=0XbM/qYtsHC48/hF2CVmxd3BhXxbAL4AaEBrj+UaMCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uhV/2OQMVNqJlaJK+3S0k/u0eSrCRmjHJccAf5ZpsaOxwMUGBX/qI8E9rgMoeB1yotVSE7LP/TR75rANxyC+KkstqPp18M97qyKUsuzC2jbz9MUfqh6wX5gFlu/rJFcRyLbiOTAJCuSw+fDevmJcvFqtWaK5iZacD38DnVm6MFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=Jwa0ipwD; arc=none smtp.client-ip=46.105.59.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	s=arc-20240116; t=1745581857; c=relaxed/simple;
+	bh=jp7CW0jMip0mu96ZaPV8aWGPcKtayqBYqfPssR5Wm4s=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Tukg9FC5fwx1yOdqqxk+MCr2V827qqa6fwNyAf4lW4ib9jMfqwydl0/xQ10gR+H+z15wkIHTu3OgFQstdoZ83zWwqC7h66W4ctne4Lt/yBigPuoHgrDIyDVx6Mqh6vuI9/cSUcK1gtOhtnTUsItF/7XRyTFcy4qSpSamvpaJ7LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SE14gzRi; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="Jwa0ipwD"
-Received: from director8.ghost.mail-out.ovh.net (unknown [10.109.176.118])
-	by mo575.mail-out.ovh.net (Postfix) with ESMTP id 4ZkVmf07zWz1rr6
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 11:22:09 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-tf4sx (unknown [10.110.164.115])
-	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id C7B701FE80;
-	Fri, 25 Apr 2025 11:22:08 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.96])
-	by ghost-submission-5b5ff79f4f-tf4sx with ESMTPSA
-	id Aq1wBF9wC2jbfgAAIqE1SQ:T2
-	(envelope-from <michal.kopec@3mdeb.com>); Fri, 25 Apr 2025 11:22:08 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-96R001f5c0d59a-6191-43ff-b744-3be2a60ed502,
-                    189BF360F9312264DCAC3AB77C65C4FB1C0F3093) smtp.auth=michal.kopec@3mdeb.com
-X-OVh-ClientIp:213.192.77.249
-From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	tomasz.pakula.oficjalny@gmail.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net
-Cc: platform-driver-x86@vger.kernel.org,
-	piotr.krol@3mdeb.com,
-	maciej.pijanowski@3mdeb.com,
-	michal.kopec@3mdeb.com,
-	linux-hwmon@vger.kernel.org,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH v8 1/1] platform/x86: Introduce dasharo-acpi platform driver
-Date: Fri, 25 Apr 2025 13:21:47 +0200
-Message-ID: <20250425112147.69308-2-michal.kopec@3mdeb.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425112147.69308-1-michal.kopec@3mdeb.com>
-References: <20250425112147.69308-1-michal.kopec@3mdeb.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SE14gzRi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745581856; x=1777117856;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jp7CW0jMip0mu96ZaPV8aWGPcKtayqBYqfPssR5Wm4s=;
+  b=SE14gzRiEcQHfFxlXkCbQAhVM1ob0oyYHAd3MDGeJuQkDNtrXpQ+Jf0i
+   cqE7kHqWGuokLqv5OSxWgoNxuO0To8twOUJKlJ5DSXwzmvniemPvogL28
+   aXZ7DW7Gox4G3rM08aqVeweWcnb5C1KckZ5N6mvB91xcUyI00akuwURg5
+   Txk1mvN+ZGeNk9rZksAyBVTaxv6v2m9QNLjNuu3QTruMcgSk9jemZDOIz
+   IPgC7YX9HjAn/iKeA0VPOHem2IMldevHErLD4M1tONln+FfB8j48nu77f
+   FxIR36Ynm2XiICJW9ZVZlYv4YmFzPJRctuVQAcm3uz7X2O+5dxitz3ERB
+   g==;
+X-CSE-ConnectionGUID: 9IjN1KjwT2ixd1KsHps7sA==
+X-CSE-MsgGUID: E42F9viVSzG+fPN4j3rezA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="58229731"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="58229731"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 04:50:55 -0700
+X-CSE-ConnectionGUID: ufGcPR41RJKwjBYFn69uhw==
+X-CSE-MsgGUID: u3EHhBF6RAWtbpyvWd9knQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133198696"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 04:50:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 14:50:47 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Lyndon Sanche <lsanche@lyndeno.ca>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+In-Reply-To: <D9FJYO87PWNU.1296TXH1IPP66@gmail.com>
+Message-ID: <9773453e-83ac-de8d-ca53-d9af6f4f9b93@linux.intel.com>
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com> <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com> <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com> <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com> <D9E5H5B9X448.12FJT48775C50@gmail.com>
+ <3ae149b5-a936-45b4-8887-eb7cde1ee4b0@redhat.com> <310fae71-d3b7-51b8-6012-c73b2ba7e282@linux.intel.com> <D9FJYO87PWNU.1296TXH1IPP66@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 8097753607649234194
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredtjeenucfhrhhomhepofhitghhrghlucfmohhpvggtuceomhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpeegjefhhfdtgeeuleethedvkeejkeejvddvhfeftefhueefhffhheeileeivdfffeenucffohhmrghinhepuggrshhhrghrohdrtghomhenucfkphepuddvjedrtddrtddruddpvddufedrudelvddrjeejrddvgeelpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejhegmpdhmohguvgepshhmthhpohhuth
-DKIM-Signature: a=rsa-sha256; bh=RQnNlVdD/qXGrOd4loupBjwjnbdTZKTNqoph06Dadrw=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1745580130; v=1;
- b=Jwa0ipwDk0niNkfgyXG0JG8M65b9m3Cv2Yrx7PkjZ87wXjrBTLvDtN7ONAUxLZ561c1QQELB
- EYWsppdAAgJYT72moQWEpkA28+enIABDqw6lPs6j+VCAL3hzqDBSquQhxXAiHZFA2iX9XTmgYDu
- itWIYLhLTcv2vIy3vSgusejFYcIs8H2fzSVqOEg2uA05tICwVqQZ9ZUhz2TpOtwhIjQPDTDClDk
- lm96jdKCVWBXaFVPbShHnEaf2T3EqeIgP4Ojio5WVDit37SfBhDg9zvDaWV4mKNVa3vwQzGfQax
- AZBsINJGVDETyZ+FXEL2Jtu94nBWBfmV7Vgli1JQ0Tz0Q==
+Content-Type: multipart/mixed; boundary="8323328-111214098-1745581847=:950"
 
-Introduce a driver for devices running Dasharo firmware. The driver
-supports thermal monitoring using a new ACPI interface in Dasharo. The
-initial version supports monitoring fan speeds, fan PWM duty cycles and
-system temperatures as well as determining which specific interfaces are
-implemented by firmware.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-It has been tested on a NovaCustom laptop running pre-release Dasharo
-firmware, which implements fan and thermal monitoring for the CPU and
-the discrete GPU, if present.
+--8323328-111214098-1745581847=:950
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Michał Kopeć <michal.kopec@3mdeb.com>
----
- MAINTAINERS                         |   6 +
- drivers/platform/x86/Kconfig        |  10 +
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/dasharo-acpi.c | 360 ++++++++++++++++++++++++++++
- 4 files changed, 379 insertions(+)
- create mode 100644 drivers/platform/x86/dasharo-acpi.c
+On Fri, 25 Apr 2025, Kurt Borja wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00e94bec401e..6d2e0909ac63 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6404,6 +6404,12 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DASHARO ACPI PLATFORM DRIVER
-+M:	Michał Kopeć <michal.kopec@3mdeb.com>
-+S:	Maintained
-+W:	https://docs.dasharo.com/
-+F:	drivers/platform/x86/dasharo_acpi.c
-+
- DATA ACCESS MONITOR
- M:	SeongJae Park <sj@kernel.org>
- L:	damon@lists.linux.dev
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0258dd879d64..8168c5274a08 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1060,6 +1060,16 @@ config LENOVO_WMI_CAMERA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called lenovo-wmi-camera.
- 
-+config DASHARO_ACPI
-+	tristate "Dasharo ACPI Platform Driver"
-+	depends on ACPI
-+	depends on HWMON
-+	help
-+	  This driver provides HWMON support for devices running Dasharo
-+	  firmware.
-+
-+	  If you have a device with Dasharo firmware, choose Y or M here.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e1b142947067..3ca53ae01d93 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -110,6 +110,9 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- # Inspur
- obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
- 
-+# Dasharo
-+obj-$(CONFIG_DASHARO_ACPI)	+= dasharo-acpi.o
-+
- # Laptop drivers
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
-diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
-new file mode 100644
-index 000000000000..f10f52e44641
---- /dev/null
-+++ b/drivers/platform/x86/dasharo-acpi.c
-@@ -0,0 +1,360 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Dasharo ACPI Driver
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/array_size.h>
-+#include <linux/hwmon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+enum dasharo_feature {
-+	DASHARO_FEATURE_TEMPERATURE = 0,
-+	DASHARO_FEATURE_FAN_PWM,
-+	DASHARO_FEATURE_FAN_TACH,
-+	DASHARO_FEATURE_MAX
-+};
-+
-+enum dasharo_temperature {
-+	DASHARO_TEMPERATURE_CPU_PACKAGE = 0,
-+	DASHARO_TEMPERATURE_CPU_CORE,
-+	DASHARO_TEMPERATURE_GPU,
-+	DASHARO_TEMPERATURE_BOARD,
-+	DASHARO_TEMPERATURE_CHASSIS,
-+	DASHARO_TEMPERATURE_MAX
-+};
-+
-+enum dasharo_fan {
-+	DASHARO_FAN_CPU = 0,
-+	DASHARO_FAN_GPU,
-+	DASHARO_FAN_CHASSIS,
-+	DASHARO_FAN_MAX
-+};
-+
-+#define MAX_GROUPS_PER_FEAT 8
-+
-+static const char * const dasharo_group_names[DASHARO_FEATURE_MAX][MAX_GROUPS_PER_FEAT] = {
-+	[DASHARO_FEATURE_TEMPERATURE] = {
-+		[DASHARO_TEMPERATURE_CPU_PACKAGE] = "CPU Package",
-+		[DASHARO_TEMPERATURE_CPU_CORE] = "CPU Core",
-+		[DASHARO_TEMPERATURE_GPU] = "GPU",
-+		[DASHARO_TEMPERATURE_BOARD] = "Board",
-+		[DASHARO_TEMPERATURE_CHASSIS] = "Chassis",
-+	},
-+	[DASHARO_FEATURE_FAN_PWM] = {
-+		[DASHARO_FAN_CPU] = "CPU",
-+		[DASHARO_FAN_GPU] = "GPU",
-+		[DASHARO_FAN_CHASSIS] = "Chassis",
-+	},
-+	[DASHARO_FEATURE_FAN_TACH] = {
-+		[DASHARO_FAN_CPU] = "CPU",
-+		[DASHARO_FAN_GPU] = "GPU",
-+		[DASHARO_FAN_CHASSIS] = "Chassis",
-+	},
-+};
-+
-+struct dasharo_capability {
-+	unsigned int group;
-+	unsigned int index;
-+	char name[16];
-+};
-+
-+#define MAX_CAPS_PER_FEAT 24
-+
-+struct dasharo_data {
-+	struct platform_device *pdev;
-+	int caps_found[DASHARO_FEATURE_MAX];
-+	struct dasharo_capability capabilities[DASHARO_FEATURE_MAX][MAX_CAPS_PER_FEAT];
-+};
-+
-+static int dasharo_get_feature_cap_count(struct dasharo_data *data, enum dasharo_feature feat, int cap)
-+{
-+	struct acpi_object_list obj_list;
-+	union acpi_object obj[2];
-+	acpi_handle handle;
-+	acpi_status status;
-+	u64 count;
-+
-+	obj[0].type = ACPI_TYPE_INTEGER;
-+	obj[0].integer.value = feat;
-+	obj[1].type = ACPI_TYPE_INTEGER;
-+	obj[1].integer.value = cap;
-+	obj_list.count = 2;
-+	obj_list.pointer = &obj[0];
-+
-+	handle = ACPI_HANDLE(&data->pdev->dev);
-+	status = acpi_evaluate_integer(handle, "GFCP", &obj_list, &count);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
-+	return count;
-+}
-+
-+static int dasharo_read_channel(struct dasharo_data *data, char *method, enum dasharo_feature feat, int channel, long *value)
-+{
-+	struct acpi_object_list obj_list;
-+	union acpi_object obj[2];
-+	acpi_handle handle;
-+	acpi_status status;
-+	u64 val;
-+
-+	if (feat > ARRAY_SIZE(data->capabilities))
-+		return -EINVAL;
-+
-+	if (channel > data->caps_found[feat])
-+		return -EINVAL;
-+
-+	obj[0].type = ACPI_TYPE_INTEGER;
-+	obj[0].integer.value = data->capabilities[feat][channel].group;
-+	obj[1].type = ACPI_TYPE_INTEGER;
-+	obj[1].integer.value = data->capabilities[feat][channel].index;
-+	obj_list.count = 2;
-+	obj_list.pointer = &obj[0];
-+
-+	handle = ACPI_HANDLE(&data->pdev->dev);
-+	status = acpi_evaluate_integer(handle, method, &obj_list, &val);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
-+	*value = val;
-+	return 0;
-+}
-+
-+static int dasharo_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			      u32 attr, int channel, long *val)
-+{
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+	long value;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		ret = dasharo_read_channel(data, "GTMP", DASHARO_FEATURE_TEMPERATURE, channel, &value);
-+		if (!ret)
-+			*val = value * MILLIDEGREE_PER_DEGREE;
-+		break;
-+	case hwmon_fan:
-+		ret = dasharo_read_channel(data, "GFTH", DASHARO_FEATURE_FAN_TACH, channel, &value);
-+		if (!ret)
-+			*val = value;
-+		break;
-+	case hwmon_pwm:
-+		ret = dasharo_read_channel(data, "GFDC", DASHARO_FEATURE_FAN_PWM, channel, &value);
-+		if (!ret)
-+			*val = value;
-+		break;
-+	default:
-+		return -ENODEV;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int dasharo_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+				     u32 attr, int channel, const char **str)
-+{
-+	struct dasharo_data *data = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (channel >= data->caps_found[DASHARO_FEATURE_TEMPERATURE])
-+			return -EINVAL;
-+
-+		*str = data->capabilities[DASHARO_FEATURE_TEMPERATURE][channel].name;
-+		break;
-+	case hwmon_fan:
-+		if (channel >= data->caps_found[DASHARO_FEATURE_FAN_TACH])
-+			return -EINVAL;
-+
-+		*str = data->capabilities[DASHARO_FEATURE_FAN_TACH][channel].name;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static umode_t dasharo_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+					u32 attr, int channel)
-+{
-+	const struct dasharo_data *data = drvdata;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (channel < data->caps_found[DASHARO_FEATURE_TEMPERATURE])
-+			return 0444;
-+		break;
-+	case hwmon_pwm:
-+		if (channel < data->caps_found[DASHARO_FEATURE_FAN_PWM])
-+			return 0444;
-+		break;
-+	case hwmon_fan:
-+		if (channel < data->caps_found[DASHARO_FEATURE_FAN_TACH])
-+			return 0444;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops dasharo_hwmon_ops = {
-+	.is_visible = dasharo_hwmon_is_visible,
-+	.read_string = dasharo_hwmon_read_string,
-+	.read = dasharo_hwmon_read,
-+};
-+
-+// Max 24 capabilities per feature
-+static const struct hwmon_channel_info * const dasharo_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(fan,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL,
-+		HWMON_F_INPUT | HWMON_F_LABEL),
-+	HWMON_CHANNEL_INFO(temp,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL,
-+		HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(pwm,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT,
-+		HWMON_PWM_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info dasharo_hwmon_chip_info = {
-+	.ops = &dasharo_hwmon_ops,
-+	.info = dasharo_hwmon_info,
-+};
-+
-+static void dasharo_fill_feature_caps(struct dasharo_data *data, enum dasharo_feature feat)
-+{
-+	struct dasharo_capability *cap;
-+	int cap_count = 0;
-+	int count;
-+
-+	for (int group = 0; group < MAX_GROUPS_PER_FEAT; ++group) {
-+		count = dasharo_get_feature_cap_count(data, feat, group);
-+		if (count <= 0)
-+			continue;
-+
-+		for (unsigned int i = 0; i < count; ++i) {
-+			if (cap_count >= ARRAY_SIZE(data->capabilities[feat]))
-+				break;
-+
-+			cap = &data->capabilities[feat][cap_count];
-+			cap->group = group;
-+			cap->index = i;
-+			scnprintf(cap->name, sizeof(cap->name), "%s %d",
-+				  dasharo_group_names[feat][group], i);
-+			cap_count++;
-+		}
-+	}
-+	data->caps_found[feat] = cap_count;
-+}
-+
-+static int dasharo_probe(struct platform_device *pdev)
-+{
-+	struct dasharo_data *data;
-+	struct device *hwmon;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+	data->pdev = pdev;
-+
-+	for (unsigned int i = 0; i < DASHARO_FEATURE_MAX; ++i)
-+		dasharo_fill_feature_caps(data, i);
-+
-+	hwmon = devm_hwmon_device_register_with_info(&pdev->dev, "dasharo_acpi", data,
-+						     &dasharo_hwmon_chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon);
-+}
-+
-+static const struct acpi_device_id dasharo_device_ids[] = {
-+	{"DSHR0001", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, dasharo_device_ids);
-+
-+static struct platform_driver dasharo_driver = {
-+	.driver = {
-+		.name = "dasharo-acpi",
-+		.acpi_match_table = dasharo_device_ids,
-+	},
-+	.probe = dasharo_probe,
-+};
-+module_platform_driver(dasharo_driver);
-+
-+MODULE_DESCRIPTION("Dasharo ACPI Driver");
-+MODULE_AUTHOR("Michał Kopeć <michal.kopec@3mdeb.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+> On Thu Apr 24, 2025 at 8:57 AM -03, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 23 Apr 2025, Hans de Goede wrote:
+> >> On 23-Apr-25 6:14 PM, Kurt Borja wrote:
+> >> > On Wed Apr 23, 2025 at 10:44 AM -03, Hans de Goede wrote:
+> >> >> On 23-Apr-25 3:27 PM, Ilpo J=C3=A4rvinen wrote:
+> >> >>> On Fri, 11 Apr 2025, Kurt Borja wrote:
+> >> >>>
+> >> >>>> Use a faux device parent for registering the platform_profile ins=
+tead of
+> >> >>>> a "fake" platform device.
+> >> >>>>
+> >> >>>> The faux bus is a minimalistic, single driver bus designed for th=
+is
+> >> >>>> purpose.
+> >> >>>
+> >> >>> Hi Kurt, Hans & Greg,
+> >> >>>
+> >> >>> I'm not sure about this change. So dell-pc not a platform device b=
+ut
+> >> >>> a "fake".
+> >> >>
+> >> >> Arguably the dell-pc driver does not need a struct device at all,
+> >> >> since it just exports /sys/firmware/acpi/platform_profile sysfs
+> >> >> interface by using the relevant Dell SMBIOS interfaces for this.
+> >> >>
+> >> >> As such maybe we should just completely get rid of the whole
+> >> >> struct device here?
+> >> >>
+> >> >> If we do decide to keep the struct device, then since the struct de=
+vice
+> >> >> seems to just be there to tie the lifetime of the platform_profile
+> >> >> handler to, I guess that calling it a faux device is fair.
+> >> >=20
+> >> > I think it's important to mention that a parent device is required t=
+o
+> >> > register a platform profile, see [1].
+> >>=20
+> >> Ah ok, that is new, I guess that was changed with the new support
+> >> for registering multiple platform-profile handlers.
+> >>=20
+> >> > I guess we could get away with removing the device altogether from h=
+ere,
+> >> > but that would require to find another suitable parent device. The
+> >> > obvious choice would be the `dell-smbios` device, however that would
+> >> > require exporting it in the first place.
+> >> >=20
+> >> > For some reason, exporting devices doesn't seem right to me, so IMO =
+a
+> >> > faux device is a good choice here.
+> >>=20
+> >> Agreed.
+> >>=20
+> >> > Another solution that would make more sense, lifetime wise, is to tu=
+rn
+> >> > this into an aux driver and let `dell-smbios` create the matching au=
+x
+> >> > device.
+> >
+> > Well, that was what caused part of my confusion / uncertainty here as
+> > I could see that aux bus between these two drivers. Obviously, it's not=
+=20
+> > there currently but conceptually this relationship looks what full-blow=
+n=20
+> > aux bus was supposed to solve.
+> >
+> > The other part was that as per Greg's simple classification, certainly=
+=20
+> > this driver needs to access platform resources. BUT, that access is rou=
+ted=20
+> > through another driver which is a case his answer/classification did no=
+t=20
+> > cover.
+>=20
+> Perhaps it didn't cover it because, as you mentioned, this falls under
+> the aux bus use cases.
+>=20
+> >
+> >> > I could do this, but I think it's overly complicated.
+> >>
+> >> Yes that does seem overly complicated, lets just go with the faux
+> >> device.
+> >
+> > Okay. In part, this was also to check whether replacing full-blown aux =
+bus=20
+> > with faux should be considered another kind of "abuse". I've no problem=
+=20
+> > with accepting faux for cases like this as I see these as policy /=20
+> > convention decision more than one being right and another wrong. :-)
+>=20
+> Now that you put it that way, I guess this still is kind of "abusive",
+> but is still an improvement over creating a full platform device.
+>=20
+> Nevertheless, although this driver do access platform resources, it does
+> it completely detached from the "dell-smbios" device. The only use of
+> the platform device here was `&pdev->dev` :p
 
+Perhaps "completely detached" is just a synonym for the common assumption=
+=20
+that there can be only one and abuse of statics, which are generally=20
+frowned upon but also commonly used in platform drivers regardless. So=20
+there are these caveats in that supposed complete detatchedness.
+
+But yeah, in some case it makes things easier.
+
+--=20
+ i.
+
+--8323328-111214098-1745581847=:950--
