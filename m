@@ -1,139 +1,135 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 16.mo561.mail-out.ovh.net (16.mo561.mail-out.ovh.net [188.165.56.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC3A2594B4;
-	Fri, 25 Apr 2025 11:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C52241668
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 11:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.56.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579933; cv=none; b=iNHzg7KV9aIaKVD9ozzzkpw4EtXMDinaWgXJ1WgS4z/JQAzIEpe38De24XIninf2MXxjZif8jYpu4Tx1kfF/Q8GxjHtAKuLUhnZORDh+6OgJYVEwtYmXZd/CSNGaQXkv020wNAt4rE6t7ZaRZqGJrzrNKY9tnzbjqXA3GPpYmNs=
+	t=1745580143; cv=none; b=FWQ8yL8xKICG0K80H8AIW0MWXPEFW7vkmzG8DU0ruqAyRtfRxBWEeQpV+NjWsrUk2RD+kTqJ/qzc1eexUjJITIqVmk0tkWIwJ0YorQt/BJNvRzkXHk0gNd5V+V1tM594wbu9hg7bejEp66QWeMS2eOBj8cZysIUn9UJp+Jty3NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579933; c=relaxed/simple;
-	bh=T7PKyVUt3crhS062wcPX6RuQLioSxyB4opN5XxKCgAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wx50jAkU5BEXkFCTBFqVUxM5LO0TqagfUgt/0XLmtW7xhEIn7Z9H84gIyy5BgFuh/n8t1AKqNtUKNyuG6S12r+IJAH+LRIBjNZXAAPkpegxqifMYYVD1TcUTg4msVhtavdAJ0r9XypIzwT8PxBUKTKT6akI5kp8xirgoT55q6/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=gN9XDfXO; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1745580143; c=relaxed/simple;
+	bh=1tBiExbO/dqP9Y43zSGXcf1iO42e1kbQ/zg5CeWF7Qc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XlymaDF6OgV+XutPut4RnndGRuDokviwF+aRidsRu9bQnbqlFParuQQ0nuoQ/OzLgBlIofUMOw/1g7+MzTfNa6HElpLBKjt7grlzpSvfF8C37LJG51zdzw4H5ScDESdLHrBt5zVP2H5tvrWUBZFUS1PvneivXpdFG2+UuukKLZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=T8Iaa2PJ; arc=none smtp.client-ip=188.165.56.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="gN9XDfXO"
-Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 4DF772E028F6;
-	Fri, 25 Apr 2025 14:18:48 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1745579929;
-	bh=EOM7xb1wc43oU0lf5rEDD2j76CA4sncrvzR8q1EepOk=; h=From:To:Subject;
-	b=gN9XDfXO9bZuksSsw7C9sWYvNPOBsB77UZG1AoldwsHpf3RsJacLdDwCOxqYqiS+o
-	 C9HcCfuMGURG2GWy8WDQEWwLryfHeISXzXqmvquLiiHfOiyENWtNc99prITGsoQsQe
-	 Tvrg4ba7t6hVZrdU9D/N6b0yKzDVYr4tj4KkLo+o=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
+	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="T8Iaa2PJ"
+Received: from director8.ghost.mail-out.ovh.net (unknown [10.109.140.35])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4ZkVmc5GLNz1WBq
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 11:22:08 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-tf4sx (unknown [10.110.164.115])
+	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 4E8B91FE7E;
+	Fri, 25 Apr 2025 11:22:07 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.96])
+	by ghost-submission-5b5ff79f4f-tf4sx with ESMTPSA
+	id Aq1wBF9wC2jbfgAAIqE1SQ
+	(envelope-from <michal.kopec@3mdeb.com>); Fri, 25 Apr 2025 11:22:07 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-96R00148a07b6e-124c-464c-bd2d-5114462cf9c1,
+                    189BF360F9312264DCAC3AB77C65C4FB1C0F3093) smtp.auth=michal.kopec@3mdeb.com
+X-OVh-ClientIp:213.192.77.249
+From: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>
+To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v10 16/16] platform/x86: oxpec: Convert defines to using tabs
-Date: Fri, 25 Apr 2025 13:18:21 +0200
-Message-ID: <20250425111821.88746-17-lkml@antheas.dev>
+	tomasz.pakula.oficjalny@gmail.com,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: platform-driver-x86@vger.kernel.org,
+	piotr.krol@3mdeb.com,
+	maciej.pijanowski@3mdeb.com,
+	michal.kopec@3mdeb.com,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v8 0/1] platform/x86: Introduce dasharo-acpi platform driver
+Date: Fri, 25 Apr 2025 13:21:46 +0200
+Message-ID: <20250425112147.69308-1-michal.kopec@3mdeb.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
-References: <20250425111821.88746-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174557992913.23354.14997138938371653254@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-Ovh-Tracer-Id: 8097472130927955353
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvvdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeenucfhrhhomhepofhitghhrghlucfmohhpvggtuceomhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpeduledtfffgueeugfffieeivdfhfeeutdfhffeigedttdefheektedvgefgueeugfenucfkphepuddvjedrtddrtddruddpvddufedrudelvddrjeejrddvgeelpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhhitghhrghlrdhkohhpvggtseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeiudgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=EIesLx6eJsuvXKzvGp2e9K8hauzF2VkB0WHxEx/C4CA=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1745580128; v=1;
+ b=T8Iaa2PJg5vZkoFdio7iW0nt+gPmX9YKSCgpDTJ2L/B0Z4wHUtHXWF4YzgCBlSikRbbLstju
+ TcSKN6Wwm+HApzYzqjNF1LhsEO1GNvqRoY92bSt7KeLI0K0q0SsAVTt2LQmMadmp+LKltxIcnPo
+ mHLWVWMmEql3UF7FJEJv1ZofptzVMocGsnM9INYA7xopDsWSYNCTbNirMN84SsKVZnV1L35kf1e
+ TftEiBPCvOWsO0nTEiTADxW1hSsIf7Hacv15P28EL7WD6BoL4UBMnjkfhURzmIzDI6NsgJPYsE0
+ pyU7MWIl3UiG5PPu1EHonBO+L7LsOoriwkomOt/3ImkWQ==
 
-The defines used spaces previously. Convert all of them to use tabs.
+Introduce a driver for devices running Dasharo firmware. The driver
+supports thermal monitoring using a new ACPI interface in Dasharo. The
+initial version supports monitoring fan speeds, fan PWM duty cycles and
+system temperatures as well as determining which specific interfaces are
+implemented by firmware.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/oxpec.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+It has been tested on a NovaCustom laptop running pre-release Dasharo
+firmware, which implements fan and thermal monitoring for the CPU and
+the discrete GPU, if present.
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 692a6d6d08316..a07ba9c2fe4f5 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -64,36 +64,36 @@ static enum oxp_board board;
- static struct device *oxp_dev;
- 
- /* Fan reading and PWM */
--#define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
--#define OXP_2_SENSOR_FAN_REG           0x58 /* Fan reading is 2 registers long */
--#define OXP_SENSOR_PWM_ENABLE_REG      0x4A /* PWM enable is 1 register long */
--#define OXP_SENSOR_PWM_REG             0x4B /* PWM reading is 1 register long */
--#define PWM_MODE_AUTO                  0x00
--#define PWM_MODE_MANUAL                0x01
-+#define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
-+#define OXP_2_SENSOR_FAN_REG		0x58 /* Fan reading is 2 registers long */
-+#define OXP_SENSOR_PWM_ENABLE_REG	0x4A /* PWM enable is 1 register long */
-+#define OXP_SENSOR_PWM_REG		0x4B /* PWM reading is 1 register long */
-+#define PWM_MODE_AUTO			0x00
-+#define PWM_MODE_MANUAL			0x01
- 
- /* OrangePi fan reading and PWM */
--#define ORANGEPI_SENSOR_FAN_REG        0x78 /* Fan reading is 2 registers long */
--#define ORANGEPI_SENSOR_PWM_ENABLE_REG 0x40 /* PWM enable is 1 register long */
--#define ORANGEPI_SENSOR_PWM_REG        0x38 /* PWM reading is 1 register long */
-+#define ORANGEPI_SENSOR_FAN_REG		0x78 /* Fan reading is 2 registers long */
-+#define ORANGEPI_SENSOR_PWM_ENABLE_REG	0x40 /* PWM enable is 1 register long */
-+#define ORANGEPI_SENSOR_PWM_REG		0x38 /* PWM reading is 1 register long */
- 
- /* Turbo button takeover function
-  * Different boards have different values and EC registers
-  * for the same function
-  */
--#define OXP_TURBO_SWITCH_REG           0xF1 /* Mini Pro, OneXFly, AOKZOE */
--#define OXP_2_TURBO_SWITCH_REG         0xEB /* OXP2 and X1 */
--#define OXP_MINI_TURBO_SWITCH_REG      0x1E /* Mini AO7 */
-+#define OXP_TURBO_SWITCH_REG		0xF1 /* Mini Pro, OneXFly, AOKZOE */
-+#define OXP_2_TURBO_SWITCH_REG		0xEB /* OXP2 and X1 */
-+#define OXP_MINI_TURBO_SWITCH_REG	0x1E /* Mini AO7 */
- 
--#define OXP_MINI_TURBO_TAKE_VAL        0x01 /* Mini AO7 */
--#define OXP_TURBO_TAKE_VAL             0x40 /* All other models */
-+#define OXP_MINI_TURBO_TAKE_VAL		0x01 /* Mini AO7 */
-+#define OXP_TURBO_TAKE_VAL		0x40 /* All other models */
- 
--#define OXP_TURBO_RETURN_VAL           0x00 /* Common return val */
-+#define OXP_TURBO_RETURN_VAL		0x00 /* Common return val */
- 
- /* X1 Turbo LED */
--#define OXP_X1_TURBO_LED_REG           0x57
-+#define OXP_X1_TURBO_LED_REG		0x57
- 
--#define OXP_X1_TURBO_LED_OFF           0x01
--#define OXP_X1_TURBO_LED_ON            0x02
-+#define OXP_X1_TURBO_LED_OFF		0x01
-+#define OXP_X1_TURBO_LED_ON		0x02
- 
- /* Battery extension settings */
- #define EC_CHARGE_CONTROL_BEHAVIOURS	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
+Changes in v2:
+- Remove redundant copyright information
+- Turn dasharo_fill_* functions into single dasharo_fill_feature_caps
+  function
+- Code style fixes
+- Turn large if / else blocks into switch / case
+- Fix possible positive return values in hwmon read handler
+- Change while loops to for loops
+- Add local variable for data->sensors[data->sensors_count] in
+  dasharo_fill_feature_caps
+- Replace snprintf with scnprintf per Ilpo's review
+- Keep the "ok" path silent
+
+Changes in V3:
+- Simplify dasharo_read_value_by_cap_idx arguments and rename to
+  dasharo_read_channel
+
+Changes in V4:
+- Remove unnecessary linebreaks
+- Simplify naming of variables
+- Constify zone lookup table
+- Remove unneeded includes
+- Switch to platform_device API
+- Remove unneeded driver remove handler
+- Add myself to MAINTAINERS
+
+Changes in V5:
+- Fix up the MAINTAINERS entry
+- Use PTR_ERR_OR_ZERO for the hwmon pointer in the register func
+- Simplify if blocks in dasharo_hwmon_read
+- Use ACPI_FAILURE instead of !ACPI_SUCCESS
+
+Changes in V6:
+- Validate input parameters in dasharo_read_channel
+- Add default return code in dasharo_hwmon_read
+- Return error if invalid channel is requested in hwmon_read_string
+- Add missing include for ARRAY_SIZE
+- Align line continuations in dasharo_probe
+
+Changes in V7:
+- Use cap count for bound checking in dasharo_read_channel
+
+Changes in V8:
+- Fix line breaks over 100 chars
+- Remove unneeded empty line
+
+Michał Kopeć (1):
+  platform/x86: Introduce dasharo-acpi platform driver
+
+ MAINTAINERS                         |   6 +
+ drivers/platform/x86/Kconfig        |  10 +
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/dasharo-acpi.c | 360 ++++++++++++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 drivers/platform/x86/dasharo-acpi.c
+
 -- 
 2.49.0
 
