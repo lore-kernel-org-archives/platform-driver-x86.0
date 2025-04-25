@@ -1,276 +1,264 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A467623A566
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 09:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572003; cv=none; b=b6QAXqWqfgvlaIugVO+Cwktt26BczoTzKrXW0d8jRStAxMhrIpexpxT79on7Si/wO55uTLyTZow9/q+8RRJu1yxG1sjhil2hVFj55W6AhpY3ysXRbmffAcei1s0pt76GSoHS9xsRWMPMuiuh73j5S34U85fsT3RNtF+htuW330Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572003; c=relaxed/simple;
-	bh=qXwqZO7iXuLExXZP5h5E9JU/fSPWN15AGwchjFkcE9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nohJSNtzyk17DDqKO5uvQDyhpyXtwBVEZUwsKxdRwJu6hmYLuxhjUnan8DvRCNvqCra7Q9OR+daMwjjF6aOrv0FSNtg8KxSonE7Ty7rJqLrDzCO8TR1KGXfCWuWIqWpipXEWAUWrFA5LZUl5johCN3jao/+21PGaIErLt+uF4jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=atYsYoGS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164FE2356A0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 09:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745573004; cv=fail; b=B7gjnRw23ut0pMFYqDFQKRe48kAI/PV6rnM444Pnwwy7GHOJRNNDqSSn0WodKhEiAgubU6xAXnNxbNAZokiGUX6PVXD5xHH62uS3V58BOBcVyCslIGPYoRJSL4uQuYbrPjtJGc1YO7b8cwbUApSHYLNk12dUGug8EP3M8Oa0LVI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745573004; c=relaxed/simple;
+	bh=pwNYTg6V01VLjqVjrK6EmLDk4N6+a5e7ISH7e4N5wrU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GO569nYAIEUNZQRqBH6uHDuHZTz9pGq1+xTC2XhOK8Q+UYfCUz4eM9Tv4DBBCJEyD8ozAJixYyoYuLgPtL8IeMLr5lpnd9jBVL02RjHAVbJvzWc3J77pAH/H4dX6w+GbEvu/uACfoZYPcr117VxO7CxgzNgJgbPyppWz8qZoss4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FrbcNuLP; arc=fail smtp.client-ip=40.107.93.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atYsYoGS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745572000;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L3JygN5w0NRyNqKtFl4fxhFdkm9X9GcLXmTdGsxzhj8=;
-	b=atYsYoGS75AYr3vXR8UG/3dts5p/bg4gpCfgv+ZXdaM6g++nhdYyM91TIxRHEphR+tpZxs
-	oEaKv5/n8eEySh+K2BDB3q5OjhhitAz4OeXbUreTQgu8W3+i9ZI7ThCtxzPHiqNcXpX8M4
-	1/s/j1Ml6Gf5HYQ6g933pRXwjOk36ho=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-269-eTS5UePuPU-gTiGGjOXPAQ-1; Fri, 25 Apr 2025 05:06:38 -0400
-X-MC-Unique: eTS5UePuPU-gTiGGjOXPAQ-1
-X-Mimecast-MFC-AGG-ID: eTS5UePuPU-gTiGGjOXPAQ_1745571998
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5f435440ea1so1753161a12.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 02:06:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745571997; x=1746176797;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L3JygN5w0NRyNqKtFl4fxhFdkm9X9GcLXmTdGsxzhj8=;
-        b=tC9jX2oV0lcMe/gvaj9GXf3G4ZsrOTyu4Ztwj9+SkiiBxIYnhkywVcCgTX9Y0/AJ00
-         woFMTFwHiG2iXBVn/g5U3tRgu/nMuSAYmIFUxQcA/wvJ8x5YklMEi+TRHGbobuHAUMJ6
-         R7lKAycA63tef0zP85kljcqlQgbaBCwlIWlt+Ykw9D32tHfLz/zx7FoPj+pk9GjMEQ7z
-         aD0OeiYni43SaGG6P4T4nIKYgusHbJBwlF2Jgm+7UnAQ/i88vJwYbyeIbYp8sCBGfWiS
-         +6P/K4c9yvHzV3/jjn3cwDG/L4OBfGycOEJAnL7Oi4NWriviDcDktPqIjefWHsj195fn
-         0eJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYqie8HI6ctmeJeZ9nUoszlzM1GVWH1dBmCQQsiOg61/ZwPlDxQlviuA8Sv/F/U/SDqP/xqTPISMugkTtQSZyXoUuc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKJwrSZVhrQHx4XEhBF69o+XenF+Dpw1U5KUcFvSEGWTkBtINT
-	Z5BN3YSTc3U4wZZCjDIDb1S3R5OGfE+t4Z1tZXnieiYzF87syer8z++reyHcQ7T97uD4lJsduX4
-	i11seJoNOK24oQic+zecOXCqHH4P3MAvjNneGvlc9N2KK+BU6IAMLqBqMyX5eT2HciI1rmVg=
-X-Gm-Gg: ASbGncvLeui+cv27HHduRK4vfzplSB5O028R6oUvx3zZJbYGme/JVdC2sQ5R/o8wvld
-	9i7gFqwY0cbwNJ3pR5b7mTOUZ+uyFmnsS7SD+d2AvajUayJVDR0Nw8Rqmb0qjPndBrB9G5HI4YC
-	wOVwTpQFa8E47RKPF9A/wkm5BBF3pmWmcQUZeJkCCPFCqN9p9Ume41Z+fO6OxJ+y/bjagb2RtZM
-	hJ0BC23Qy0YoLKm7s/upUxiwaugR75ezlU++RRV6KZOmtmhfyOiaR4Cvhfb59HrkBLGAAL1920I
-	/tnHHWhely6kZ6OcjVsdu81Ys50VBptFIHXS+ELE7pIipOszVTvK1dMvEKVRp3qn77mKxXkjW04
-	tiQ5i1lgH8bsKgbcuDQB5MmEuqUMpPXOGkdj7/bEwvzsOMXWbYmNh14Q08Qawnw==
-X-Received: by 2002:a05:6402:13d2:b0:5e4:b874:3df7 with SMTP id 4fb4d7f45d1cf-5f723639b3emr1251998a12.25.1745571997597;
-        Fri, 25 Apr 2025 02:06:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGUK6I3lvAm20D1H4HmGgLbFF87jVyJ0+5yk6FdGYj2RV/1Ij+Y4N7ZMHE4WZh3AlMehB1PmQ==
-X-Received: by 2002:a05:6402:13d2:b0:5e4:b874:3df7 with SMTP id 4fb4d7f45d1cf-5f723639b3emr1251975a12.25.1745571997187;
-        Fri, 25 Apr 2025 02:06:37 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7013fec3csm988113a12.19.2025.04.25.02.06.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 02:06:36 -0700 (PDT)
-Message-ID: <81dfad68-6ce6-4eea-a1a6-fa1a5c03d92d@redhat.com>
-Date: Fri, 25 Apr 2025 11:06:35 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FrbcNuLP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GBjjmfZpvk8AyyRSRfMBCaKsNLdh47CILB9k0vC44qXKozzuFFJeY8spIFpiQ/hfxVwjDeujJ+xr4xl4DoVfxCu+cOOhRSWIugM6Xkmqo4WBQn9RZDOkDgJi1XfnLFBPfMmYe9zYqYBxCFghfY4pLiRc1LIwCBrqkxidCBInUT4NMSI3P6bgtGflO8rVgwtLnpHddZ9khXah++LzaZx1U6sOyfNXZV0hNxac9Gt4HUI2a2Ae0z5AZYyyzH/lIcRlwuMkDg8CT7LWH95r4YzaxPJsMWuPnWz5dEXTK7nZMpEAy83MBO5GE072sibz88AST8QnorYE1/TG/87jT4fI3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jwcFcjQWzEs7DL0sPGwQueFIfvmuEV1J//Wm5kIQRAM=;
+ b=mWxNcskg79XQcOEbAL3LEtwF5LwJMMwLrV+MgodYeSlmQtVTAcmSLrmMwAgi0qrF+x+oPbCNoj6Wp8D0xAMYWbt2E4P1qCYOI6ZcQtQcRxPsulvwEnUhAPBqkI/jC1AWE+ItAn91kB1KK88LH7kG0Yfg+LCWkct4/VWuqesint+urtpZxQWUsV88bwIE6Q+rxVP0zlMVc5LLCFg5QbmNfb3eOMrd1Bhm+niL4IZ4Kf1J/SUtFeeaq1YGte5MjAdXKbUw4+xNdDfaf8Ex6SRdIestrP46/us0SaGfupDbNMPOKnCSxlJS7T+jHgRVCCBbxvT8ww99uPsUAUVcerXEpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jwcFcjQWzEs7DL0sPGwQueFIfvmuEV1J//Wm5kIQRAM=;
+ b=FrbcNuLPXFUixRhv76KNSdGhKJsJ9GhQiqnmqqnSAfU/UAXsv+i9VwN3fOixcGrZdosY13+ofhQxIDPDjk3eZCUKbEPi4/m3DlzxE3rU7gv6WqzcgExsey1qzaj2ryEJN+nxsPbIgeeWyZsGBGrIXLc9oC2rPwBpUsJ7BpvbQLg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by CY8PR12MB7611.namprd12.prod.outlook.com (2603:10b6:930:9b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.26; Fri, 25 Apr
+ 2025 09:23:19 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81%6]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
+ 09:23:19 +0000
+Message-ID: <c6972a3f-8715-4a87-96a6-7fb346852c4b@amd.com>
+Date: Fri, 25 Apr 2025 14:53:14 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/hsmp: Check for hsmp ACPI device
+To: Gregory Price <gourry@gourry.net>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+References: <20250424062544.4122901-1-suma.hegde@amd.com>
+ <aAp6Z2DLJdqcLoYE@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <aAp6Z2DLJdqcLoYE@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0058.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::17) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/9] platform/x86: int3472: Make regulator supply name
- configurable
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Dan Scally <djrscally@gmail.com>,
- Alan Stern <stern@rowland.harvard.edu>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Hao Yao <hao.yao@intel.com>,
- Bingbu Cao <bingbu.cao@intel.com>, Duane <duanek@chorus.net>,
- platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250417111337.38142-1-hdegoede@redhat.com>
- <20250417111337.38142-6-hdegoede@redhat.com>
- <dfe0cbe6-c268-2fca-4b06-1013151633c9@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <dfe0cbe6-c268-2fca-4b06-1013151633c9@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|CY8PR12MB7611:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c884058-08ac-4d0f-c37a-08dd83dad11c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QXdLUjl3UjlWMkYyakpMWU5vdVAxSGtZd052YW5hcjNDTXBIKzF3dE1iekd5?=
+ =?utf-8?B?Z1MvcFBGUWU1K3RjQzN4dFgwdmEvUWNhbWk5TnFDTjlyU3FESmQxS1V0clZQ?=
+ =?utf-8?B?V2RlZXhGSmtsbVdHem9yQlRZZHJJa085T0VDRVZtamZadEVhK2JJOFgzUHBa?=
+ =?utf-8?B?VXFJTGxIU0RtWVE3NVpUM3IyS1BFR2hIU1IxTythS3c4L2dhTDk0NUQycVpq?=
+ =?utf-8?B?WWV6QWJHaHQ0NWViRDZPeEpmZzByWUlubklwWDliQTlQb1hBdHRvVjRxbXFX?=
+ =?utf-8?B?eHNiOUFKRnY0aEVqVkUzVEdRQTZPT0FOMFV1eWNTZVFYRlJoakJRTGZhdXJj?=
+ =?utf-8?B?eDVOaXdud3ZtZVU4MHZHcENycDR2MEFvOVE5cXdrTWhwOUxPWTJ3TVFpT1Fk?=
+ =?utf-8?B?ZGRKbE83L01ONllVTVQ1VS9jdVdGQjhNbHpEbEpPQ3ROYlBPQ28vMEdyaDRZ?=
+ =?utf-8?B?NEZoeVowb0szVmIzSldZNkZCa2t0ZFRsNENMejFXaHJnWEUzY2ZSWUkzUlRP?=
+ =?utf-8?B?b2dINmdVL1lFVHBjY3RmYlZFSHRzSk9tbWFtbnBERE5TTDJ6MVpzN1BQYTlx?=
+ =?utf-8?B?R1p5V1NLQVhseVpURDU1TnF2Y3lnRjJjdEJXaGV0SDJhSExlZ0YrWnZNTCs0?=
+ =?utf-8?B?bWVTZ1RITTczSDBYU2UrYVRKVVEwcWpJejNhMDU1K1hUd2g3TXdXTW05c2lh?=
+ =?utf-8?B?bys5L3dTQ3NES2VWMFl3UEU0SUMvZ203RUQ2dFp1OVFONWZhYlNDd1FYazBK?=
+ =?utf-8?B?YWgwanpvQUtHTmUvTEtyaWU4eWZtRS9pSjRlcS95bWZtSW1qTHNPbE82WCtt?=
+ =?utf-8?B?bmtxbkZ5a2NJcE5RcUtzTHdGUTFwaFRwT3M2UCtnVGMvYUVkSzdNNVVFMGpr?=
+ =?utf-8?B?bjFEaGFtQXNqOHNvWDFBZkl4M3VOWDdtbnBCS0psdVJjdVdrbUxKMmwvNG8x?=
+ =?utf-8?B?TjhjbDh1NUNwV0lSM3NDTmRjQUZVL3BzM1lLZ2l5eExOdE94RFVOTXQvQ3pQ?=
+ =?utf-8?B?RXlvSTc2Z21oUGd3VHdTN1lla3hTUFlOSjk1LzlqQ0V4Mk1TaEQvM2dYVlVQ?=
+ =?utf-8?B?bTk5SUM2MmZVeU1Fc29TcmQ4WlpGVHlEN0tnL0w2Q1dYa2NxM0EyVENVWVpK?=
+ =?utf-8?B?cG1yYno3eWliaHl3YmdFMGNDUWJORCtHcHJQRDdqNmhWK3RkTmlUOHVmSWlp?=
+ =?utf-8?B?Rm50M1YrY1EvN0k4eDNGS2tJZFI5cGpPd28yL0dnRUQ5dDRPaURJbTVLbG9R?=
+ =?utf-8?B?OEdOTDBjWWVzdXVNQ1ZwUktIV3ZVRzhjYWZhVXdQYW8wbnhDUldianhGWVBy?=
+ =?utf-8?B?dFQ2djRYMm13eEVBZWovRHRSK0ZobXZGUjViQ0ZRWE54dnZOTGorby9vWC9z?=
+ =?utf-8?B?TzZXVXVjeG9nc3FJZ2hIazIyNkNpSWdrRXNxUHRzU0hkenNXeHVLN2toMHVB?=
+ =?utf-8?B?NE1Ta3NpMmFkTFdndEltVUZkdlJMRlZ4Y0MrUGxsNmRnejQ3b2EwUTg5RHpx?=
+ =?utf-8?B?d1FDRE1rUkI0MFV4cWRlZWhVMUdha1ZZdHVxWWNIZGYzOUI2U0RVMS9kbE1v?=
+ =?utf-8?B?WEp0cnNYb2pGaDNGTmVEdStibVE4WEZxUkVCVXBVMFdqSlRoUVp1OUdzT2xy?=
+ =?utf-8?B?NUpDZEZzODZkbnNhZzByYnlESlJtWkxsZjEwUmRGV2dzbEtxM3BRNDAvbHFV?=
+ =?utf-8?B?RmdUTC9xeVhDVHZBTFZnQmJPRVQzMklRMXVUcGJ3WGJTZ3U1Mk1CL05nRGp5?=
+ =?utf-8?B?MkJZRGRBbHU0TW1ObjkvdVBQYVJ0azhTVGhWbnFlUzd3R0NkUm94ajl0bzM5?=
+ =?utf-8?B?UVJKcUxwK29vcEtwbTF3UjZMOHFjYjBYZVJxVEZ1blBXOEsxUXdTQ3ppR3hy?=
+ =?utf-8?B?Z2tES3pGekNKS3kxU2FQakhXeHR6V3JlbFdacG8wV1RwMDd6MjRycTNDS1g0?=
+ =?utf-8?Q?7Q/Ia5uC8IA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2g4MUZSd1A3TWZ2ZGUycEJBcmJhM2llUG1iaDdweTU2dkpmQUZOR2gxcU0x?=
+ =?utf-8?B?YktTLzRBNWpMeDdkVjlkdUFyOG5DMS9MT2ZUT3lraGprTVhnaS9WVzhZaHJw?=
+ =?utf-8?B?OVg0YXA3YWt1Q0dZV0p2U3VVTGR1amdSbzkzRk5iTCtjVktwUlNxNjB0MzQ4?=
+ =?utf-8?B?RGFuOHB4LzdzWEltTmdVRExnbVhVM2ttd3dUQTBMSlk2Tm5TZjAxYzdreW1v?=
+ =?utf-8?B?SkJTN2pDUVJ1bXJnemZ4MDFkNTdONHZjeWtUUzVJSS9HZGhoUjVydUhhWExL?=
+ =?utf-8?B?Q21OSlhwOWR2QkRjSUFMVVNLeU5wbnpPQ09obHcxYkd5NmlrL1VEQjlUWkxh?=
+ =?utf-8?B?K1hidlg5bWt4T3RLTmlTUVZYcGQzVWYwdVlQR1JOeFoyaGZiWUFlbHpwVEpa?=
+ =?utf-8?B?UDNGcG5laGJJL2p3ekE4aHMyS25vdDd3YzJQSnZsbGZmVVhHN2IzbS9pOENQ?=
+ =?utf-8?B?WStUOVZ5ZUtSY2ZLVUVib0hHMFF3bWFGa1VIQUFHdmhuU0VzTG5md3FvcHNY?=
+ =?utf-8?B?YktoT2pvb3BlUGRiamhiR0twZ3ljTCtHUGZpRjI0bFNLMndJR1MxRDc4Tm5B?=
+ =?utf-8?B?Z2NzQTRhQi9DdjVYUWtpZmpJTHU3YUpoYm1kTVdpVEVxZnlLRU9JRGp1WnZI?=
+ =?utf-8?B?ZlY1TlQxVU5GaHhVYzRlYzdwdFQ1MVJwYmFVQzZqeHlDaDFkUWpEblJKKzBu?=
+ =?utf-8?B?Mk5tMXhmbTNjUzFZaUhkZXlNK2xYUHlYTWt0VkdzU2tVQ01tczFxV3hJQWYr?=
+ =?utf-8?B?Tzc4VlAzQVp1WWpuQVI5bGhsUGNHNXlES2JOSUJtVDdQRHZQQzQvZCt6b3JB?=
+ =?utf-8?B?UkMyck40bm04YUpkQVZZMW1FNzYvcnZINGZEcm1zR1JOV3owc1lkekRyQkQ0?=
+ =?utf-8?B?NkRXYzJIcVJQSElSZldXOGNCOFl1eHFJLzYwQ2tMRlh1ck56MThHOHB4NFJl?=
+ =?utf-8?B?NGxybWVWV0ZFSThSODJkVHFRZE5OYUJjaHNZY05mdkZhOVA2Wm96QzNlYVZo?=
+ =?utf-8?B?VjVMRXAwbFpWMWoyVk9mekExVVJwWGlKODE5OEFOQUc3TGRTdDNsN1ovNlpH?=
+ =?utf-8?B?ZGZBL01meDRlbVRSN2dvQXg0SlhMNXJUM09EMTlNZUxOQWUwaUtSaEQ3c0Fv?=
+ =?utf-8?B?S0dPa3pEK1hHRllEeG5vbDY0Z0k5NmtqNm96aUpGSHFMSjF3Yy8vdG1LZ2d0?=
+ =?utf-8?B?czRuK3JpYk5Qd1h0UkdDMk1ZOTQwR3AxS25Nd1J5VTlIdDBtSHNqa1Z3MEpD?=
+ =?utf-8?B?Y2pqQ09Dampkdi9JZU1NMFcvaU4yT2JvL3E0end1MGp3a1pmR3RxTW9jQmlI?=
+ =?utf-8?B?a3dFdFpJVVNHZDU4SnJ0aXhZSUdmK2J6VFYva3RBaDAwamJHcjMyTU5GT2NS?=
+ =?utf-8?B?VVNhb003dndkbUIycEtDNGUvczN4M2MwdHUwMjBUdkE2UHNxTFYyMHFDbGdX?=
+ =?utf-8?B?ZGFZb21lTENCY3lkWjhENFhKZG5FQ0l6Mjl0aWV1c3NpYUt1Q2pvUmRkSzdB?=
+ =?utf-8?B?MElmSzZSbUZQVExTN0dXdytXODE3WFRZN0JQeUdWTWswWjdnS25GS2R6NmRo?=
+ =?utf-8?B?UHkzUEllVDVwNXl0K2JBcGRURWMvaVFFNXU5dVd5WnVPbC8zUm9YajluNEpz?=
+ =?utf-8?B?WUZ6eTBGaUczT2VrV1JHb0ZuZ1hrZ3ZWRnpydE9jV3BtRm55U2NaV0hBQWZH?=
+ =?utf-8?B?ZXZpNitIMXdBSGt2NGxWazBVdE5HbnNSLy9aekRweHREV2phcC9xTThaL0s2?=
+ =?utf-8?B?UkZleWRlSHZmZHd2djV0WFU4aldFbnNRNTRxV2dZam1VU3I1R3RBZ1QwQm1B?=
+ =?utf-8?B?YndrcTNWdzNQZWdCOEZnSXJvYjEyNVJSS1lYMm82RTFENE84Q2dPVm03bkxH?=
+ =?utf-8?B?TUpkSTMvcTg0dlk5QnZzRDRjaUhIMHhuaHVKaTVyUlpSMHZOT2EvVHVGYXgy?=
+ =?utf-8?B?a0pTcUdaYVBLNEtRWVRjcU5Uc0x6Qlc3aDl1eDgweDJZclpHUm9IazJJZ3FB?=
+ =?utf-8?B?bW9qV29PZGhsb29MK3AvaG15Qk1nWkRaWVVNdlpFTkEzd2JkcTdhbnkwcXps?=
+ =?utf-8?B?YWdYYkhzcGZVaUtDQlNDT1ExaWgraEx1MlAxS3JWM0FuODl1c2IwNjZGYWdm?=
+ =?utf-8?Q?X2QdPMjZ1dBvnd3/kOUZHdBDI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c884058-08ac-4d0f-c37a-08dd83dad11c
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 09:23:19.3724
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1+pisosA8O2wAFbxSIcRdeCXeklTmFbmL2dbkHiMAzNAZRZw6P53+QaU2/lFUZqKXaJMmTh0CLtViywt/ugLQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7611
 
-Hi,
+Hi Gregory,
 
-On 24-Apr-25 4:06 PM, Ilpo Järvinen wrote:
-> On Thu, 17 Apr 2025, Hans de Goede wrote:
-> 
->> This is a preparation patch for registering multiple regulators, which
->> requires a different supply-name for each regulator. Make supply-name
->> a parameter to skl_int3472_register_regulator() and use con-id to set it
->> so that the existing int3472_gpio_map remapping can be used with it.
+
+On 4/24/2025 11:22 PM, Gregory Price wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Thu, Apr 24, 2025 at 06:25:44AM +0000, Suma Hegde wrote:
+>> If the hsmp ACPI device entry exists, allow the hsmp_acpi driver to manage
+>> the hsmp and return error from plat.c.
 >>
->> Since supply-name is a parameter now, drop the fixed
->> skl_int3472_regulator_map_supplies[] array and instead add lower- and
->> upper-case mappings of the passed-in supply-name to the regulator.
+>> amd_hsmp and hsmp_acpi are intended to be mutually exclusive drivers and
+>> this check for availability of hsmp ACPI device is necessary to ensure
+>> this.
 >>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> Also, support both platform device-based and ACPI-based probing for
+>> family 0x1A models 0x00 to 0x0F, implement only ACPI-based probing
+>> for family 0x1A, models 0x10 to 0x1F. Return false from
+>> legacy_hsmp_support() for this platform.
+>> This aligns with the condition check in is_f1a_m0h().
+>>
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 >> ---
->> Changes in v4:
->> - At static_assert(GPIO_REGULATOR_SUPPLY_MAP_COUNT == 2) since the code
->>   assumes that
+>> This patch should be rebased on below patch by Gregory Price.
+>> https://lore.kernel.org/platform-driver-x86/60715d85-48b4-4066-8a9a-c8d2b62ebb45@redhat.com/T/#t
+> Just roll my patch into this and add
+Ok, I will merge your changes into this,  add below lines and send v2.
+>
+> Link: https://lore.kernel.org/platform-driver-x86/aALZxvHWmphNL1wa@gourry-fedora-PF4VCD3F/
+> Fixes: 7d3135d163 ("platform/x86/amd/hsmp: Create separate ACPI, plat and common drivers")
+> Co-developed-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+>
+> should make the pick up easier, and they both deal with the same patch.
+>
+>
+>
+>>   drivers/platform/x86/amd/hsmp/acpi.c | 1 -
+>>   drivers/platform/x86/amd/hsmp/hsmp.h | 1 +
+>>   drivers/platform/x86/amd/hsmp/plat.c | 6 +++++-
+>>   3 files changed, 6 insertions(+), 2 deletions(-)
 >>
->> Changes in v3:
->> - Add comment explaining value of 12 in GPIO_REGULATOR_NAME_LENGTH
->> - Some other comment / commitmsg tweaks
+>> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+>> index 088cb2416d7e..eaae044e4f82 100644
+>> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+>> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+>> @@ -29,7 +29,6 @@
 >>
->> Changes in v2:
->> - Use E2BIG instead of EOVERFLOW for too long supply-names
->> ---
->>  .../x86/intel/int3472/clk_and_regulator.c     | 50 ++++++++-----------
->>  drivers/platform/x86/intel/int3472/common.h   |  8 ++-
->>  drivers/platform/x86/intel/int3472/discrete.c |  4 +-
->>  3 files changed, 31 insertions(+), 31 deletions(-)
+>>   #define DRIVER_NAME          "hsmp_acpi"
+>>   #define DRIVER_VERSION               "2.3"
+>> -#define ACPI_HSMP_DEVICE_HID "AMDI0097"
 >>
->> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> index 374a99dea7d1..b7a1abc2919c 100644
->> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> @@ -185,42 +185,37 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
->>  	clk_unregister(int3472->clock.clk);
->>  }
->>  
->> -/*
->> - * The INT3472 device is going to be the only supplier of a regulator for
->> - * the sensor device. But unlike the clk framework the regulator framework
->> - * does not allow matching by consumer-device-name only.
->> - *
->> - * Ideally all sensor drivers would use "avdd" as supply-id. But for drivers
->> - * where this cannot be changed because another supply-id is already used in
->> - * e.g. DeviceTree files an alias for the other supply-id can be added here.
->> - *
->> - * Do not forget to update GPIO_REGULATOR_SUPPLY_MAP_COUNT when changing this.
->> - */
->> -static const char * const skl_int3472_regulator_map_supplies[] = {
->> -	"avdd",
->> -	"AVDD",
->> -};
->> -
->> -static_assert(ARRAY_SIZE(skl_int3472_regulator_map_supplies) ==
->> -	      GPIO_REGULATOR_SUPPLY_MAP_COUNT);
->> -
->>  int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
->>  				   struct gpio_desc *gpio,
->> +				   const char *supply_name,
->>  				   const char *second_sensor)
->>  {
->>  	struct regulator_init_data init_data = { };
->> +	struct int3472_gpio_regulator *regulator;
->>  	struct regulator_config cfg = { };
->>  	int i, j;
->>  
->> -	for (i = 0, j = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
->> -		int3472->regulator.supply_map[j].supply = skl_int3472_regulator_map_supplies[i];
->> -		int3472->regulator.supply_map[j].dev_name = int3472->sensor_name;
->> +	if (strlen(supply_name) >= GPIO_SUPPPLY_NAME_LENGTH) {
->> +		dev_err(int3472->dev, "supply-name '%s' length too long\n", supply_name);
->> +		return -E2BIG;
->> +	}
->> +
->> +	regulator = &int3472->regulator;
->> +	string_upper(regulator->supply_name_upper, supply_name);
->> +
->> +	/* The below code assume that map-count is 2 (upper- and lower-case) */
->> +	static_assert(GPIO_REGULATOR_SUPPLY_MAP_COUNT == 2);
->> +
->> +	for (i = 0, j = 0; i < GPIO_REGULATOR_SUPPLY_MAP_COUNT; i++) {
->> +		const char *supply = i ? regulator->supply_name_upper : supply_name;
->> +
->> +		regulator->supply_map[j].supply = supply;
->> +		regulator->supply_map[j].dev_name = int3472->sensor_name;
->>  		j++;
->>  
->>  		if (second_sensor) {
->> -			int3472->regulator.supply_map[j].supply =
->> -				skl_int3472_regulator_map_supplies[i];
->> -			int3472->regulator.supply_map[j].dev_name = second_sensor;
->> +			regulator->supply_map[j].supply = supply;
->> +			regulator->supply_map[j].dev_name = second_sensor;
->>  			j++;
->>  		}
->>  	}
->> @@ -229,9 +224,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
->>  	init_data.consumer_supplies = int3472->regulator.supply_map;
->>  	init_data.num_consumer_supplies = j;
->>  
->> -	snprintf(int3472->regulator.regulator_name,
->> -		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
->> -		 acpi_dev_name(int3472->adev));
->> +	snprintf(regulator->regulator_name, sizeof(regulator->regulator_name), "%s-%s",
->> +		 acpi_dev_name(int3472->adev), supply_name);
->>  
->>  	int3472->regulator.rdesc = INT3472_REGULATOR(
->>  						int3472->regulator.regulator_name,
->> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
->> index 3728f3864a84..b750a309ee16 100644
->> --- a/drivers/platform/x86/intel/int3472/common.h
->> +++ b/drivers/platform/x86/intel/int3472/common.h
->> @@ -26,7 +26,11 @@
->>  #define INT3472_PDEV_MAX_NAME_LEN				23
->>  #define INT3472_MAX_SENSOR_GPIOS				3
->>  
->> -#define GPIO_REGULATOR_NAME_LENGTH				21
->> +/* E.g. "avdd\0" */
->> +#define GPIO_SUPPPLY_NAME_LENGTH				5
-> 
-> FYI, I've fixed this typo for you while applying to the review-ilpo-next 
-> branch.
-
-Thank you, I completely missed the triple PPP in there until you pointed
-it out. I just copy pasted the same mistake everywhere :)
-
-Regards,
-
-Hans
-
-
-
-
->> +/* 12 chars for acpi_dev_name() + "-", e.g. "ABCD1234:00-" */
->> +#define GPIO_REGULATOR_NAME_LENGTH				(12 + GPIO_SUPPPLY_NAME_LENGTH)
->> +/* lower- and upper-case mapping */
->>  #define GPIO_REGULATOR_SUPPLY_MAP_COUNT				2
->>  
->>  #define INT3472_LED_MAX_NAME_LEN				32
->> @@ -85,6 +89,7 @@ struct int3472_discrete_device {
->>  	struct int3472_gpio_regulator {
->>  		/* SUPPLY_MAP_COUNT * 2 to make room for second sensor mappings */
->>  		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
->> +		char supply_name_upper[GPIO_SUPPPLY_NAME_LENGTH];
->>  		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
->>  		struct regulator_dev *rdev;
->>  		struct regulator_desc rdesc;
->> @@ -129,6 +134,7 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
->>  
->>  int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
->>  				   struct gpio_desc *gpio,
->> +				   const char *supply_name,
->>  				   const char *second_sensor);
->>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
->>  
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index cbf39459bdf0..f6dae82739e5 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -188,7 +188,7 @@ static void int3472_get_con_id_and_polarity(struct acpi_device *adev, u8 *type,
->>  		*gpio_flags = GPIO_ACTIVE_HIGH;
->>  		break;
->>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->> -		*con_id = "power-enable";
->> +		*con_id = "avdd";
->>  		*gpio_flags = GPIO_ACTIVE_HIGH;
->>  		break;
->>  	default:
->> @@ -311,7 +311,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>  
->>  			break;
->>  		case INT3472_GPIO_TYPE_POWER_ENABLE:
->> -			ret = skl_int3472_register_regulator(int3472, gpio,
->> +			ret = skl_int3472_register_regulator(int3472, gpio, con_id,
->>  							     int3472->quirks.avdd_second_sensor);
->>  			if (ret)
->>  				err_msg = "Failed to map regulator to sensor\n";
+>>   /* These are the strings specified in ACPI table */
+>>   #define MSG_IDOFF_STR                "MsgIdOffset"
+>> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+>> index af8b21f821d6..d58d4f0c20d5 100644
+>> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+>> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+>> @@ -23,6 +23,7 @@
 >>
-> 
+>>   #define HSMP_CDEV_NAME               "hsmp_cdev"
+>>   #define HSMP_DEVNODE_NAME    "hsmp"
+>> +#define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+>>
+>>   struct hsmp_mbaddr_info {
+>>        u32 base_addr;
+>> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+>> index b9782a078dbd..81931e808bbc 100644
+>> --- a/drivers/platform/x86/amd/hsmp/plat.c
+>> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+>> @@ -11,6 +11,7 @@
+>>
+>>   #include <asm/amd_hsmp.h>
+>>
+>> +#include <linux/acpi.h>
+>>   #include <linux/build_bug.h>
+>>   #include <linux/device.h>
+>>   #include <linux/module.h>
+>> @@ -266,7 +267,7 @@ static bool legacy_hsmp_support(void)
+>>                }
+>>        case 0x1A:
+>>                switch (boot_cpu_data.x86_model) {
+>> -             case 0x00 ... 0x1F:
+>> +             case 0x00 ... 0x0F:
+>>                        return true;
+>>                default:
+>>                        return false;
+>> @@ -288,6 +289,9 @@ static int __init hsmp_plt_init(void)
+>>                return ret;
+>>        }
+>>
+>> +     if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
+>> +             return -ENODEV;
+>> +
+>>        hsmp_pdev = get_hsmp_pdev();
+>>        if (!hsmp_pdev)
+>>                return -ENOMEM;
+>> --
+>> 2.25.1
+
+Thanks and Regards,
+
+Suma
 
