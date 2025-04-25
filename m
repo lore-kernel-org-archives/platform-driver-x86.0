@@ -1,135 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2CE13633F;
-	Fri, 25 Apr 2025 15:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888DC19E7FA;
+	Fri, 25 Apr 2025 16:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595937; cv=none; b=G7x8Ax74kaDgySNTz5Jlsoih9DAeesVDV66WKndj0XUSO+RllSNntMUVYDSLa5i68Tbb4T8uuyDJoHabqy8efQq5m4AeMzLe+mc3Dl+hLeb15HsD4Um3tI0O5/FlygD8jPpITqN8RsR+EUCtw3dVl0Oh16WLh9W21VH+Elda+Eg=
+	t=1745598599; cv=none; b=rZtN40BwhCm0OXuHbrOta2mAuHc6TEMFfesRNkJT4fhqxZu/ftE0zRyzJeWgSEhAJbl4NXSXEFRI6uOtbl1Wgg7+rH1iTliY4mwQ1q6pM+THz8Ix4/7rdklMW9IWqb+Y6Vhy6l2dQ5CBOFrQM5hPjOpQXZ6JI5Ro8BRrZhVBzS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595937; c=relaxed/simple;
-	bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oURIrzB+ARE3FVQLxz8dnOYU14uCYJjSvVX3nqn4tRxl4sqIg0d9GcdrQHWP+8ijFC1LA/zQonMzi39gEDovU/vlRJprrAMSpCqMIjZbdqwKMDMh4/q7CcalYhhgFQ/04fC+JnOFHmm7ZJ6T/QR933JkOJ7LdY0XGkJrf978+fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dRNB0hzB; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745598599; c=relaxed/simple;
+	bh=VeIFEZPzptyxK0aweTFRev1zaQWjdMOGLjt9qd/lfs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W+SdwZAg+11PqG3CzjPF8gef0q5ij2CIBtvdGRb9Fv6y/EKZPMi2H/BsLlnLgOa7GvivnMW0nQg5EaPX2LtukTgqYI8e7vM6qEHnhrVXBwyZhKE7MDDMqOeSM9/CrvkFMw9NkR5f79oSfE1K9eun2JQlWqKMjYQhblKSgUslp9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0Gcn+8m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dRNB0hzB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745595936; x=1777131936;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
-  b=dRNB0hzB9VSEVZTN6uSQdKcHqikDg35+hrmD9RswM0sJg7VLq7vXflvN
-   L1reVIaspl2ar5jsCDPfpN7akAbFhLGghWw+pCn19pxVTEbDg12AsoN6N
-   O6iyX/zUQKQvZtktFX2jk7eJYafaN86bT+ROFbbafcHQha1t0OhXLKs5p
-   W4k/Hcovc41OunM9OT7Hr9Q1XDHwhBS6NIRM9c6ZZzzY4mdcLEvIudGeo
-   UYRwmAL+8O3spijxoiIPhcZNqx2AO5dl0pJegz89Q+YcbAn4diomQZ1Jc
-   hAlzIA8q1wKOcSE2RV7O6gnp0NSBmt5HQG7wN/HZr61mIeUmmbAlXpmwn
-   w==;
-X-CSE-ConnectionGUID: 7bCgJpPqRiefXyfn2jXtMQ==
-X-CSE-MsgGUID: bMKMOgZ8RAGO3vxuOpGwsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="50928849"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="50928849"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:35 -0700
-X-CSE-ConnectionGUID: zVyTiGS+Tp27oRIuRu3o/Q==
-X-CSE-MsgGUID: FTR+bshYRAKz5gvHmp9NIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133870388"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Apr 2025 18:45:18 +0300 (EEST)
-To: "Xin Li (Intel)" <xin@zytor.com>
-cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
-    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
-    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
-    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-    dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to
- <asm/tsc.h>
-In-Reply-To: <20250425083442.2390017-2-xin@zytor.com>
-Message-ID: <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
-References: <20250425083442.2390017-1-xin@zytor.com> <20250425083442.2390017-2-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0Gcn+8m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2EEC4CEE4;
+	Fri, 25 Apr 2025 16:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745598599;
+	bh=VeIFEZPzptyxK0aweTFRev1zaQWjdMOGLjt9qd/lfs0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O0Gcn+8mzypG2k50DgEwM7QrvxgTRqLW8l64qoj+8cFJinWa6cJ5vsNeaYS/Z3FE+
+	 nvp1VvMBQALpd9DKU6HAHL8pA8zfnHP+2K/tCeVlhIRJxhJFUDEw2DBmhaL1D6LV0O
+	 TXEL9RjudLHRfzI1hQkRJ0VcQkwab5m6a6x8kTImLjAKzIjqijyo1FYOCoGZ1/I5NP
+	 WZ1J++UsQ84MaFha4sLA1i6dK6b1PnGyLQSFV3bw4Udi2uo1HzgkVyQ7qT1UXtLRlA
+	 rYvbgH9HqDVAaXymCi/gqLiQf6c3Vz5jgpkowhLTRb77CeRDdCt6w4M7DVlMwbU8ct
+	 iFHKoMDm8P6KQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	linux-kernel@vger.kernel.org (open list),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK with META + L
+Date: Fri, 25 Apr 2025 11:29:48 -0500
+Message-ID: <20250425162949.2021325-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Apr 2025, Xin Li (Intel) wrote:
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-> For some reason, there are some TSC-related functions in the MSR
-> header even though there is a tsc.h header.
-> 
-> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
-> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
-> Consequently, <asm/msr.h> must be included in several source files
-> that previously did not require it.
->
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
-> 
-> Change in v3:
-> * Add a problem statement to the changelog (Dave Hansen).
-> ---
+In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+to lock the screen. Modern hardware [2] also sends this sequence of
+events for keys with a silkscreen for screen lock.
 
->  drivers/platform/x86/intel/pmc/cnp.c          |  1 +
->  .../intel/speed_select_if/isst_if_common.c    |  1 +
->  drivers/platform/x86/intel/turbo_max_3.c      |  1 +
+Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+emitted by driver to META + L.
 
-Hi,
+Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
+Link: https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009166 [2]
+Suggested-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v4:
+ * Add a break to avoid the device actually supporting KEY_SCREENLOCK
+---
+ drivers/input/Kconfig |  8 ++++++++
+ drivers/input/input.c | 20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-To me this looks really a random set of source files, maybe it helped some 
-build success but it's hard for me to review this because there are still 
-cases that depend on indirect include chains.
-
-Could you just look into solving all missing msr.h includes instead 
-as clearly some are still missing after 3 pre-existing ones and you adding 
-it into 3 files:
-
-$ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
-drivers/platform/x86/intel/ifs/core.c
-drivers/platform/x86/intel/ifs/load.c
-drivers/platform/x86/intel/ifs/runtest.c
-drivers/platform/x86/intel/pmc/cnp.c
-drivers/platform/x86/intel/pmc/core.c
-drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-drivers/platform/x86/intel/tpmi_power_domains.c
-drivers/platform/x86/intel/turbo_max_3.c
-drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-drivers/platform/x86/intel_ips.c
-
-$ git grep -e 'msr.h' -l drivers/platform/x86/
-drivers/platform/x86/intel/pmc/core.c
-drivers/platform/x86/intel/tpmi_power_domains.c
-drivers/platform/x86/intel_ips.c
-
-I'd also prefer the patch(es) adding missing includes be in a different 
-patch.
-
+diff --git a/drivers/input/Kconfig b/drivers/input/Kconfig
+index 88ecdf5218ee9..ffb4163fe315f 100644
+--- a/drivers/input/Kconfig
++++ b/drivers/input/Kconfig
+@@ -174,6 +174,14 @@ config INPUT_APMPOWER
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called apm-power.
+ 
++config INPUT_SCREENLOCK_EMULATION
++	bool "Pass KEY_SCREENLOCK as META + L"
++	help
++	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
++	  META + L.
++
++	  If unsure, say Y.
++
+ comment "Input Device Drivers"
+ 
+ source "drivers/input/keyboard/Kconfig"
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index dfeace85c4710..983e3c0f88e5f 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
+ 	}
+ }
+ 
++static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
++					int value)
++{
++	input_handle_event(dev, type, KEY_LEFTMETA, value);
++	input_handle_event(dev, type, KEY_L, value);
++}
++
+ /**
+  * input_event() - report new input event
+  * @dev: device that generated the event
+@@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
+ {
+ 	if (is_event_supported(type, dev->evbit, EV_MAX)) {
+ 		guard(spinlock_irqsave)(&dev->event_lock);
++#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
++		if (code == KEY_SCREENLOCK) {
++			handle_screenlock_as_meta_l(dev, type, value);
++			return;
++		}
++#endif
+ 		input_handle_event(dev, type, code, value);
+ 	}
+ }
+@@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
+ 
+ 	switch (type) {
+ 	case EV_KEY:
++#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
++		if (code == KEY_SCREENLOCK) {
++			__set_bit(KEY_L, dev->keybit);
++			__set_bit(KEY_LEFTMETA, dev->keybit);
++			break;
++		}
++#endif
+ 		__set_bit(code, dev->keybit);
+ 		break;
+ 
 -- 
- i.
+2.43.0
 
