@@ -1,103 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4522F3BE;
-	Fri, 25 Apr 2025 10:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E668242D9B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 10:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578689; cv=none; b=CrDa6PYCh2qzZMdDCaI7Aey5JXdI/402aixyI5Vh4zX6SWFr1SYcGElgoAIQfI6Ooar6IO3rZDSNu2MdM/cyFjhG1gQReBs6jwTZgLyCArQvnQfXIBzB4/ViaiULWURyC4Zmd48wJ3W8DehmgX1KJdOEthPQPDxA/gDutEPCkXg=
+	t=1745578710; cv=none; b=u6hKlrCvdzKhuo50fnKpohFBml19/Pxc3tUWG40UQI+LtdiPLUmzTmBJKjiFQyLZzUSQcqQTYB7ueaEwYcf0dx5jZoSmMkb3quGGTxdd8qbvSAfnOy0dzL+MVIcX02F/NFt8tw7cnWMkTlx98cjhcaRkMA6WSjxTuFH1PFN+RVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578689; c=relaxed/simple;
-	bh=4Wn7tH9mtEyjm/uMupHTDegpcB+IXg7Sq+ep6rcVgSY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jpTwB+z1QITGDHGCFfMYdlqA0VICWIJhrmVyDbXLLByfShQBuizasKUsw8Om/pp1zCY2A/VrqtgaI2nGCg9oMVLQaPrSQGsanNNONVMPyCTr+RPRJW7EAfF7QmtFVG6n2VgDsHoA0PnNfP3pCG+zK7Q9ftaCnOml9lLOnBpXhY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k685Zw1u; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745578710; c=relaxed/simple;
+	bh=xLDn0Tb/Cb3Swpcf3Nkm6pIuZ/uGK86dO2awK/koiaM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iV6dPd4noMbIS50EPX6YOenjV66b3sUPyTlvpK5vbd4uBlSKAFfJcXpkocZOxj1LCt0qFNfJ/9/BUjK7sUgk/QmzScPQXn8Y9oMZEZvHiIyDBxqWCiNpHoAOoK6NusBUqAJovT8RAYH/HsekgmuWpYKIpuxm6TRKo63/vE4CrZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lcfc.corp-partner.google.com; spf=pass smtp.mailfrom=lcfc.corp-partner.google.com; dkim=pass (2048-bit key) header.d=lcfc-corp-partner-google-com.20230601.gappssmtp.com header.i=@lcfc-corp-partner-google-com.20230601.gappssmtp.com header.b=rvnLDfIf; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lcfc.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lcfc.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k685Zw1u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745578688; x=1777114688;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4Wn7tH9mtEyjm/uMupHTDegpcB+IXg7Sq+ep6rcVgSY=;
-  b=k685Zw1uqN7TvSxVWP0lnvqZ0oLq7yJnIgxDgyanHAPsH6N9upRyqlcM
-   P/YlgBsMCB3AhAkFVjt93jWeZNcX58BXLOdjxRtrNVCneyR7r3aDQOUmy
-   WWiqSEuNHSIlUt6ViNIvPeNw+VwB/fPnEzVhQejIu/n5oRLWeVGlwszi3
-   tZBN6faWGbkFQl1WuAKhKQ0tPS7LoOJ2jjTIKSPLIKxC7ZZULBRkze+4J
-   8DzzENK9hno1NzeO8kWfEC8MjftOBBMVolK8zQWGmQNWcXl6jVlyRq/Sk
-   lQC5AmFl6ih44Yvc+vYp5jrmzbyNqjeggwb+2awqQDqK8zMnS7y4wlBQC
-   w==;
-X-CSE-ConnectionGUID: gfawOh2XS1eueu1zi2hiyw==
-X-CSE-MsgGUID: C75WOvpYRZuhugzbq4DQ1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57879073"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="57879073"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:58:07 -0700
-X-CSE-ConnectionGUID: oo8HXNhmTfCk2oNGOF8L6Q==
-X-CSE-MsgGUID: CpDbRpwAR9WvQna2kn5dmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133381856"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:58:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Apr 2025 13:57:56 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: corbet@lwn.net, bhelgaas@google.com, kuurtb@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, vkoul@kernel.org, 
-    yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
-    sanyog.r.kale@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, dakr@kernel.org, 
-    dan.j.williams@intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    Dell.Client.Kernel@dell.com, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 4/7] pci: doe: Replace sysfs visibility macro
-In-Reply-To: <20250423175040.784680-5-david.e.box@linux.intel.com>
-Message-ID: <8d261613-60d3-8825-e073-1b39daadc29a@linux.intel.com>
-References: <20250423175040.784680-1-david.e.box@linux.intel.com> <20250423175040.784680-5-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=lcfc-corp-partner-google-com.20230601.gappssmtp.com header.i=@lcfc-corp-partner-google-com.20230601.gappssmtp.com header.b="rvnLDfIf"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7369ce5d323so1619933b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Apr 2025 03:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lcfc-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1745578707; x=1746183507; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CL4GUiT5fbCVEgjjh5GO/CMbN+iFWhXsnOF5Al/SGjs=;
+        b=rvnLDfIfGtT0ve1AY44Uy3olwyh19KCWnkbIMDO7bZfKFFcKtgnRMGjQ/tE8csBbOJ
+         Dp44k0qCPQNTMMkImlLFkU+pVixudEG1dnjsfgFCLTm6dIRC/QD6ymCnsBnPbLOJ2HL9
+         bSfboHHoFuf3SONmUKShdMh1GV2E6+dlv5QZREdcPJ5EP+sut5Gi1e/W1WyCSbPprSnp
+         ernDmo8K7zkpuRuXYVygnAmJ8MV/WYGyFWUbbO6lI+G0er0oAamd6Dli9nFM0LzwhuX4
+         HKGrcRvHGg7ttUYni61EH+yVpV4dgdDgl2Axjqu2Djx3P4vYWl/VcuhqVKaZLB+tfGPg
+         cRew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745578707; x=1746183507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CL4GUiT5fbCVEgjjh5GO/CMbN+iFWhXsnOF5Al/SGjs=;
+        b=gBto56xheDGkyHGxbZJARwOdsziSnMvC0B+MUieE1n4+100qlMyZwRkXsFuxqGuhpA
+         MSeqCvc9bZNhaO1BzRogd2MY7keUKbZKe5CY6Ypx8XtrxoOtcFUSxevfQKdtu4YJ3+jt
+         ng52BqoKRalpgMo9JGtRyqDtImVpI924lcvDdpr8nEqRohynboUGReStNNPHv/E/NKob
+         f3W8VvW0QpXs0yA5qEu916j6LRwBzvnMrIea+Zu0k9lg5iBOjq/tKbgD+MQ6JFIeufwZ
+         /H6FoQpcwicLMcICucWWLe3ZuyASpO0i/LHD0mDSxtUQOvSC0zhfLJNFPYNgjyBtS+Jl
+         6Csg==
+X-Gm-Message-State: AOJu0YwjarfLsq2Ou3Z0xwK4W6S7qy7Qw77iFjWqvdruUIJcG/Mt0dQy
+	1cec074xspRAeXCXNz/gdRPG8eQkOCtXdwVMipfN31JbeUXgud5pGk7TpClPj7aECv0/TXHsuiC
+	2jfpfFA==
+X-Gm-Gg: ASbGncvMRoN7Bu1OfyK4mkrA9rUI+nKw6J8+xaEq4IosbLa65xxB2/S68oU+Nz8hTM7
+	k7pwkVMDlbj+Li65uuRV8czsFev2XymIl30o2pL7Jxt6XtfDdIeResx3LSu2iAZ6Oy44YPjXqOL
+	+gOpSvOMRy3uJBhHM0fEEaPdgrB5wh3tGrARBEE3vUoxZ02QhgF3NpG6JAPwwZ8u9I2qSKw2Kz8
+	30v7a6PLBhrhjpbLJMH9CBh44eDr1o7p7mbJ+XqmfysQW2XUKPPetV2zudOvTblu/uRfju1Rc6L
+	2ns2kMhCJ9YyStaymDehfQHoRx1Tylt9nbyyEPg6QajWz3aYfw7cwifWtOQtxp/2DLSFtTdAhgf
+	bXQJMu7zNP5qeb1EX8z2iXfZgDQ==
+X-Google-Smtp-Source: AGHT+IH0dA/IkZvFcO+56poSvwEFwT+v1pAO6NoIaOkc49CSbdZFIu08OG6EPlpiLB7+JcYO8sBIuA==
+X-Received: by 2002:a05:6a00:80f:b0:730:75b1:7219 with SMTP id d2e1a72fcca58-73fd74c7b87mr2464918b3a.12.1745578707176;
+        Fri, 25 Apr 2025 03:58:27 -0700 (PDT)
+Received: from alvin-x13.. (211-21-152-94.hinet-ip.hinet.net. [211.21.152.94])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25962f61sm2872450b3a.74.2025.04.25.03.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 03:58:26 -0700 (PDT)
+From: Alvin1 Chen <alvin1.chen@lcfc.corp-partner.google.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Alvin1 Chen <alvin1.chen@lcfc.corp-partner.google.com>
+Subject: [PATCH] drm/panel: samsung-atna33xc20: extend msleep in atana33xc20_disable to avoid glitch
+Date: Fri, 25 Apr 2025 18:58:22 +0800
+Message-Id: <20250425105822.4061016-1-alvin1.chen@lcfc.corp-partner.google.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Apr 2025, David E. Box wrote:
+samsung-atna40ct03 encouters glitch when powering off, extend msleep
+in atana33xc20_disable to 40 can avoid this symptom.
 
-> Replace deprecated DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() call with the new
-> DEFINE_SYSFS_GROUP_VISIBILITY() helper for the pci_doe_features_sysfs group
-> in drivers/pci/doe.c.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/pci/doe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index aae9a8a00406..18b355506dc1 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -119,7 +119,7 @@ static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
->  
->  	return !xa_empty(&pdev->doe_mbs);
->  }
-> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
-> +DEFINE_SYSFS_GROUP_VISIBILITY(pci_doe_features_sysfs)
+Change-Id: I4d052621d3c3e0fdae0ac472fe5da151f46be237
+Signed-off-by: Alvin1 Chen <alvin1.chen@lcfc.corp-partner.google.com>
+---
+ drivers/gpu/drm/panel/panel-samsung-atna33xc20.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hi David,
-
-Is it intentional to not have semicolon at the end?
-
->  const struct attribute_group pci_doe_sysfs_group = {
->  	.name	    = "doe_features",
-> 
-
+diff --git a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c b/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
+index 9a482a744b8c..87a4e1c47aaa 100644
+--- a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
++++ b/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
+@@ -154,10 +154,10 @@ static int atana33xc20_disable(struct drm_panel *panel)
+ 	p->el3_was_on = true;
+ 
+ 	/*
+-	 * Sleeping 20 ms here (after setting the GPIO) avoids a glitch when
++	 * Sleeping 40 ms here (after setting the GPIO) avoids a glitch when
+ 	 * powering off.
+ 	 */
+-	msleep(20);
++	msleep(40);
+ 
+ 	return 0;
+ }
 -- 
- i.
+2.34.1
 
