@@ -1,132 +1,142 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4221188733;
-	Sat, 26 Apr 2025 09:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4F12B73;
+	Sat, 26 Apr 2025 13:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745661424; cv=none; b=CUJ6NMzwI9WgrOK37wkBQMmwmaGRuImlQlsNYuAmvrKZKcmvXRwyNwx8Ua6j30i+z2Ayj5L2DA0G3kXqm7NaFyj4Jl01DphF9J+JjoIOPifNU8fSZslmqVF03PyM37NGSL/ZJKk2ioowZdcnfbzzu5ImWrmaI3cDMpBbleXOvbI=
+	t=1745672416; cv=none; b=At8aoJt8vhSaMMlKEkaLT79RtCSjB0Tcwrs/N1sSWnJ+JcziABCsi7aDtDvZPuz+KTJb+dmOqjnzOHDzj6wImy6Nr/CYGAAPXvR/6hV/L0AYuussT6TtMxSHu6gRd/Ytig7hvwRBgYMWti/9ltQsA/PKbPcpozRRuRmDOy9y2yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745661424; c=relaxed/simple;
-	bh=MDU1hpe7MUhDbj+7Jlmd85zleSl3IuJZRAxiCiOb1Do=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qelgne6RFPg0Frt1kdvM6G0R34Ny+S0DCTDWI22f2W78TYShx2GZdSYBzpmgyPoDR8xmZgiJIsRrc+0JPBZkooJmf7FmtiTplCYT/XWJLScdwHNu3dYE77y9zyDG5bj0cgZ/iByzp4QZRE00t7EAWpOS3K7bms2w2Ox0noMmf2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=glHtuqf/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PjpL5ksX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745672416; c=relaxed/simple;
+	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ctwCC81eSunxlG3w+20csBbAi/yWm7cfObXsjeIcHbO8rku7eCu2/6bGCTeffnh+i48KsJTLlEOXEq8NCDgPpAL6yKWSveDyyaSjbQ58Iom2OrR+L0dolaLOtSQPW6PXceX29f7VDhfJfumXZMg4YVWjYOAAPFSLRX9cX6SqNsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSiYylpS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="glHtuqf/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PjpL5ksX"
-Date: Sat, 26 Apr 2025 09:56:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745661420;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSvpJ+vgMGaPtX3iAQ6Li5JL/KPVeJOe4vWv5mn23dc=;
-	b=glHtuqf//h+4hFZTaEgSjdHUK0ltujqo/4LAoA/5vNs9C8q4XKTFtY0pVuLG52tcyLtaAa
-	fQB8lJ9eDmH3pmcXwW6qJnnEfbRujY6KUwrNzVbYCylBX4FfJhxsRYFDB3eU12X5HiVDWB
-	lP2RrhDhWNTtToqMcSIAMM4/zuYsvyEh3xTn/gA9ttq45jocSd+JR21ZFGDo/rz1nFajOP
-	Y+wGVTHk9/dNWaBdEcSe/BVEG/uuz7TTEXgFrdnHEIN45E9970r1k1ddPB/XS5KCdRaESN
-	wIhwlEqryA9h9KrMnBs7gWJmFhwmQx7/S9ybUbIfcGiFUYyb+5Gq4Xc8QhWvUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745661420;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DSvpJ+vgMGaPtX3iAQ6Li5JL/KPVeJOe4vWv5mn23dc=;
-	b=PjpL5ksXP7VIctjbugH4VJ/u6Gn52V7ktemouRljY/drmLxnrSjQcY8VItf+qDQVst0qSq
-	puZ88gn++YPpOQBA==
-From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] platform/x86/amd/pmc: Use FCH_PM_BASE definition
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, platform-driver-x86@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250422234830.2840784-5-superm1@kernel.org>
-References: <20250422234830.2840784-5-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSiYylpS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9175FC4CEE2;
+	Sat, 26 Apr 2025 13:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745672414;
+	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SSiYylpSkUnY4vU6FWLD53bdXMb8K4/xbF7keJtMniGrZGt2QiNuvhYRbGDO/HQUN
+	 vlYEBODjW3cBYi96AG3GAj90UeBQ1b7HILIdpyE3fL44wJ/DfVgelqT7PbruguU+J9
+	 qZ2U865ygnV6yy/ww/ig75AMri4siLaNKsthxbx/+Rl5n1LHdB+CDWY+JUrGd6hNCv
+	 K5AGmSzjgDuRNqQjaf2x6Pm1zhIPciPP4aMUdhTJO1ekR8r+ZYxEVMFMS6pZIrBvRM
+	 zFvnbjkA+zbB9MLt+ygHX2RpPDJXrHyd/SdOzCg6rcPd4QB6W/RNHhgArjHZuxXLo8
+	 ub2zW177r8Nxw==
+Message-ID: <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+Date: Sat, 26 Apr 2025 08:00:09 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174566141546.31282.9421067258808557948.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     7094702a9e6d1256f1444ceff7be97414db51dbb
-Gitweb:        https://git.kernel.org/tip/7094702a9e6d1256f1444ceff7be97414db=
-51dbb
-Author:        Mario Limonciello <mario.limonciello@amd.com>
-AuthorDate:    Tue, 22 Apr 2025 18:48:29 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 26 Apr 2025 11:41:16 +02:00
 
-platform/x86/amd/pmc: Use FCH_PM_BASE definition
+On 4/26/25 03:15, Pavel Machek wrote:
+> On Fri 2025-04-25 11:29:48, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>> to lock the screen. Modern hardware [2] also sends this sequence of
+>> events for keys with a silkscreen for screen lock.
+>>
+>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+>> emitted by driver to META + L.
+> 
+> Fix gnome and kde, do not break kernel...
 
-The s2idle MMIO quirk uses a scratch register in the FCH.
-Adjust the code to clarify that.
+I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lore.kernel.org/r/20250422234830.2840784-5-superm1@kernel.org
----
- arch/x86/include/asm/amd/fch.h            | 1 +
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+That's going to break modern hardware lockscreen keys.  They've all 
+obviously moved to META+L because that's what hardware today uses.
 
-diff --git a/arch/x86/include/asm/amd/fch.h b/arch/x86/include/asm/amd/fch.h
-index 28972bd..01ee15b 100644
---- a/arch/x86/include/asm/amd/fch.h
-+++ b/arch/x86/include/asm/amd/fch.h
-@@ -7,5 +7,6 @@
- /* Register offsets from PM base: */
- #define FCH_PM_DECODEEN			0x00
- #define FCH_PM_DECODEEN_SMBUS0SEL	GENMASK(20, 19)
-+#define FCH_PM_SCRATCH			0x80
-=20
- #endif /* _ASM_X86_AMD_FCH_H_ */
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86=
-/amd/pmc/pmc-quirks.c
-index b4f4972..b706b1f 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -11,6 +11,7 @@
- #include <linux/dmi.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-+#include <asm/amd/fch.h>
-=20
- #include "pmc.h"
-=20
-@@ -20,7 +21,7 @@ struct quirk_entry {
- };
-=20
- static struct quirk_entry quirk_s2idle_bug =3D {
--	.s2idle_bug_mmio =3D 0xfed80380,
-+	.s2idle_bug_mmio =3D FCH_PM_BASE + FCH_PM_SCRATCH,
- };
-=20
- static struct quirk_entry quirk_spurious_8042 =3D {
+That's also what earlier versions of my series tried to change just 
+amd-pmf over to use, but Armin Wolf said this should be done in the 
+input subsystem for all drivers instead.
+
+> 									Pavel
+> 
+>>   
+>> +config INPUT_SCREENLOCK_EMULATION
+>> +	bool "Pass KEY_SCREENLOCK as META + L"
+>> +	help
+>> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
+>> +	  META + L.
+>> +
+>> +	  If unsure, say Y.
+>> +
+>>   comment "Input Device Drivers"
+>>   
+>>   source "drivers/input/keyboard/Kconfig"
+>> diff --git a/drivers/input/input.c b/drivers/input/input.c
+>> index dfeace85c4710..983e3c0f88e5f 100644
+>> --- a/drivers/input/input.c
+>> +++ b/drivers/input/input.c
+>> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
+>>   	}
+>>   }
+>>   
+>> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
+>> +					int value)
+>> +{
+>> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
+>> +	input_handle_event(dev, type, KEY_L, value);
+>> +}
+>> +
+>>   /**
+>>    * input_event() - report new input event
+>>    * @dev: device that generated the event
+>> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
+>>   {
+>>   	if (is_event_supported(type, dev->evbit, EV_MAX)) {
+>>   		guard(spinlock_irqsave)(&dev->event_lock);
+>> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+>> +		if (code == KEY_SCREENLOCK) {
+>> +			handle_screenlock_as_meta_l(dev, type, value);
+>> +			return;
+>> +		}
+>> +#endif
+>>   		input_handle_event(dev, type, code, value);
+>>   	}
+>>   }
+>> @@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
+>>   
+>>   	switch (type) {
+>>   	case EV_KEY:
+>> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+>> +		if (code == KEY_SCREENLOCK) {
+>> +			__set_bit(KEY_L, dev->keybit);
+>> +			__set_bit(KEY_LEFTMETA, dev->keybit);
+>> +			break;
+>> +		}
+>> +#endif
+>>   		__set_bit(code, dev->keybit);
+>>   		break;
+>>   
+> 
+
