@@ -1,186 +1,102 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0E41A5B8C;
-	Sat, 26 Apr 2025 17:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4872D18991E;
+	Sat, 26 Apr 2025 18:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745688624; cv=none; b=me9Gvk+wPVxqVAjeCrS00PkI/N6ZpWS5G4GRF0rQkz4ypFfAVofmk35CMiC6hIdp4gslSkjx4IrQfwy0mtJbMsX8ZU2L+83AZ+jF1pEkGn1uXGOsFGZbLhr84cSMVnZ48FmnGgLnTcUu3Bg/i2nQmT5DQPbV3CQrQMHSxkoF0Yg=
+	t=1745692896; cv=none; b=Tusz3uFidvuv9CytbBClFwoyzGvLIVUMxVrqzqHildtaYSjHzVdey3au2k+GakQRB1UYMW7ghu4o5o5QWW9J1jBbfqWV0LO3MAiNilS9h9nTjXG4Ju9X+D9vHxN7BjcHSKWAnRwdj534C8m1PKQd68B6z+LgyOFZ/vL52CrAwFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745688624; c=relaxed/simple;
-	bh=3rqsMKtWYDv+r8R4qstirUguRIBQx1JjmyO2tayz8yM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B+1XP8lU59/bXJc6gOO0HgoPo+zUnTR76Sfg7bQN2mzgSHCMc2UbNnc/dTP5t+s5hOjVK+SYv6Wp2AqXxXnxoGuKr8Mqg1wz8/cgqIIPsX3EH5K7v2Zljl0lxJmmDqiTOE6rkZWS2PKg5GZDyNqwIGCLlti+5aGsAGm89LP5MOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=3RUMcQOc; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1745692896; c=relaxed/simple;
+	bh=cWWR0wPjTvKc8YdwgJuVjbWX6EEWZoqzcJztRbMXrv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=poLHdGrdwTpm4aoNmw8LlEfO1i6/pbLk+23wm803EgV6x2VcLEWxrx8t/yWd92U958bX0s3LUBE6aonm2PIUIvpkIUlHCIaxsVTgajBwDewZRSRKyhmEJ9Hx7Ljz2TDcl/bwzur3ArOXDpyrI9dxfTS1ws5sw+pz9YK219rsUWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=BICfrT6b; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="3RUMcQOc"
-Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8b6a:d000:ae13:99fc:9070:c966])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 58D5E2E02AAA;
-	Sat, 26 Apr 2025 20:30:12 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1745688613;
-	bh=x9LFsdTOoazevFIUaxIYSzwUMDS93xWcqV9TosqY6No=; h=From:To:Subject;
-	b=3RUMcQOcp8YeJVwekq6EOoyoBjgDwfz+L7QxR/TcQvf+tTCq9WWjNHo5e1WH1Gu9k
-	 IOwCuZndVzqyAOArqFS9c2x0IZWmRvLfhnbNI2pfNzdqydWO+kfm1ng0t/iIS+zoMS
-	 vOi1Wx6xm03qCg2qaqKuZWFIkoMOQkf5esAlOMkg=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a02:2149:8b6a:d000:ae13:99fc:9070:c966) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="BICfrT6b"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id B2A1C1C00B2; Sat, 26 Apr 2025 20:41:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745692889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z+N3ikL+7LB9ZULui0uMCjjk+tz0nXeU8sd/76ilCcg=;
+	b=BICfrT6bPQuvZEW/YMVE8V8V2L0vWZSdNwPe6QD9qKUQqzk+T5sWsxKlvv7Ub/w7YEJiR8
+	C7KpnT3UaQ9jt8CpowQ6NgHdRU3a6Zt4ZfMB+C0sVVUlvlP4Svc9mm+7r5T9cSNCmmHwnk
+	zZGg7mrJJ1psj4V3NS+QTGZfxjQZCRQ=
+Date: Sat, 26 Apr 2025 20:41:29 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Eileen <eileen@one-netbook.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>,
-	Joshua Tam <csinaction@pm.me>
-Subject: [PATCH v1 2/2] platform/x86: oxpec: Add support for the OneXPlayer G1
-Date: Sat, 26 Apr 2025 19:29:55 +0200
-Message-ID: <20250426172955.13957-3-lkml@antheas.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250426172955.13957-1-lkml@antheas.dev>
-References: <20250426172955.13957-1-lkml@antheas.dev>
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174568861309.7707.203268381697569054@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2piM8uojtVCsJ8y+"
+Content-Disposition: inline
+In-Reply-To: <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
 
-The OneXPlayer G1 is a new clamshell formfactor by OneXPlayer.
-It has the same registers as an OneXPlayer X1, with the only
-difference being the lack of a turbo led.
 
-Tested-by: Joshua Tam <csinaction@pm.me>
-Suggested-by: Joshua Tam <csinaction@pm.me>
-Signed-off-by: Joshua Tam <csinaction@pm.me>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/oxpec.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+--2piM8uojtVCsJ8y+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 86ac32eadd6ef..93e923b24feb6 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -58,6 +58,7 @@ enum oxp_board {
- 	oxp_mini_amd_a07,
- 	oxp_mini_amd_pro,
- 	oxp_x1,
-+	oxp_g1,
- };
- 
- static enum oxp_board board;
-@@ -241,6 +242,20 @@ static const struct dmi_system_id dmi_table[] = {
- 		},
- 		.driver_data = (void *)oxp_fly,
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
-+		},
-+		.driver_data = (void *)oxp_g1,
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 i"),
-+		},
-+		.driver_data = (void *)oxp_g1,
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-@@ -337,6 +352,7 @@ static umode_t tt_toggle_is_visible(struct kobject *kobj,
- 	case oxp_mini_amd_a07:
- 	case oxp_mini_amd_pro:
- 	case oxp_x1:
-+	case oxp_g1:
- 		return attr->mode;
- 	default:
- 		break;
-@@ -370,6 +386,7 @@ static ssize_t tt_toggle_store(struct device *dev,
- 		break;
- 	case oxp_2:
- 	case oxp_x1:
-+	case oxp_g1:
- 		reg = OXP_2_TURBO_SWITCH_REG;
- 		mask = OXP_TURBO_TAKE_VAL;
- 		break;
-@@ -414,6 +431,7 @@ static ssize_t tt_toggle_show(struct device *dev,
- 		break;
- 	case oxp_2:
- 	case oxp_x1:
-+	case oxp_g1:
- 		reg = OXP_2_TURBO_SWITCH_REG;
- 		mask = OXP_TURBO_TAKE_VAL;
- 		break;
-@@ -502,6 +520,7 @@ static bool oxp_psy_ext_supported(void)
- {
- 	switch (board) {
- 	case oxp_x1:
-+	case oxp_g1:
- 	case oxp_fly:
- 		return true;
- 	default:
-@@ -640,6 +659,7 @@ static int oxp_pwm_enable(void)
- 	case oxp_mini_amd_a07:
- 	case oxp_mini_amd_pro:
- 	case oxp_x1:
-+	case oxp_g1:
- 		return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_MANUAL);
- 	default:
- 		return -EINVAL;
-@@ -666,6 +686,7 @@ static int oxp_pwm_disable(void)
- 	case oxp_mini_amd_a07:
- 	case oxp_mini_amd_pro:
- 	case oxp_x1:
-+	case oxp_g1:
- 		return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_AUTO);
- 	default:
- 		return -EINVAL;
-@@ -692,6 +713,7 @@ static int oxp_pwm_read(long *val)
- 	case oxp_mini_amd_a07:
- 	case oxp_mini_amd_pro:
- 	case oxp_x1:
-+	case oxp_g1:
- 		return read_from_ec(OXP_SENSOR_PWM_ENABLE_REG, 1, val);
- 	default:
- 		return -EOPNOTSUPP;
-@@ -720,6 +742,7 @@ static int oxp_pwm_fan_speed(long *val)
- 		return read_from_ec(ORANGEPI_SENSOR_FAN_REG, 2, val);
- 	case oxp_2:
- 	case oxp_x1:
-+	case oxp_g1:
- 		return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
- 	case aok_zoe_a1:
- 	case aya_neo_2:
-@@ -753,6 +776,7 @@ static int oxp_pwm_input_write(long val)
- 		return write_to_ec(ORANGEPI_SENSOR_PWM_REG, val);
- 	case oxp_2:
- 	case oxp_x1:
-+	case oxp_g1:
- 		/* scale to range [0-184] */
- 		val = (val * 184) / 255;
- 		return write_to_ec(OXP_SENSOR_PWM_REG, val);
-@@ -792,6 +816,7 @@ static int oxp_pwm_input_read(long *val)
- 		break;
- 	case oxp_2:
- 	case oxp_x1:
-+	case oxp_g1:
- 		ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
- 		if (ret)
- 			return ret;
--- 
-2.49.0
+Hi!
 
+> > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+> > > to be. Modern versions of Windows [1], GNOME and KDE support "META" +=
+ "L"
+> > > to lock the screen. Modern hardware [2] also sends this sequence of
+> > > events for keys with a silkscreen for screen lock.
+> > >=20
+> > > Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+> > > emitted by driver to META + L.
+> >=20
+> > Fix gnome and kde, do not break kernel...
+>=20
+> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+>=20
+> That's going to break modern hardware lockscreen keys.  They've all
+> obviously moved to META+L because that's what hardware today uses.
+
+Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+screen locking, no?
+
+Best regards,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--2piM8uojtVCsJ8y+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaA0o2QAKCRAw5/Bqldv6
+8rGtAJwNrCGnvNF3FHcCSgpuIF8lM+a1CwCfev0NWDap259Nrt29hHFaErNz0nQ=
+=c8R+
+-----END PGP SIGNATURE-----
+
+--2piM8uojtVCsJ8y+--
