@@ -1,120 +1,151 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927761A83F5;
-	Sat, 26 Apr 2025 07:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A728C1A256E;
+	Sat, 26 Apr 2025 08:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745653289; cv=none; b=YmAGAR4IXnEOStJrUtXWupjFnJR6RHPiRx15XV5yeUkOXtv6nJVtoLIW1kyxf+NA4uhQ7MMUh52R1TuP3l7bV9+00+1BMwN2aCaUrT90vUyVd5Izmcg31lEDOqNVcUO1sdF3N0i4StaAWVPELYD9A/EjQZBtGpvGJdXuC7nSd8U=
+	t=1745655322; cv=none; b=r3A37zDF1K8RpZ/bekoCE7wlbrNQZnkaBN3+1uOZ4xi8UvXOOnmU1S2HPumgVWdLJK7ZG4gb7ogxuxRHeEZj6JVbT/Z6QOO+8nvUkyzB2uwNMuAq3lWAzTHEkV1RYvDWAFibk2keNHs7NZMX9+ucdThcqV6Bex+5r3M+UefDvYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745653289; c=relaxed/simple;
-	bh=hS1jPAiEqHUvDMPkv5Lj+oeUpVA95gPZF2GujwJl4JY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ExcYtYeac3hhvXdhD3qtxPE2fV9AVcLmJFl5yZgio0+4c6z8LPGz0I9dT1mZTYt3KHusO4diWjjB3S7EFlKKue9JLTtJvrHLdsGCScNtqB51fIeoL9sRskLKfkhz1QRjGvmuX9Of0XGIW7n6iGZlTFcjGodKb+qUkUntaXbCM3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bvhYUcCC; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745655322; c=relaxed/simple;
+	bh=7hCpdRrHPG5AnrvBhsmUCpwkT+h/yAAlPnblQqDEZqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKwiuK/LLUO55Yw0lu8ySL8lwRUFisVTPicwYfpInDMnltjeqnIWJ69zpSwWe6TFdHv9Ou9ueaQvxLbEZfc4iI3TfWId6TpyJ1S8FS+NnAl8KQc+JqXDpHjklWD5ZtZl+KKNhfWgqKOtfE1TgXxugJWZqveEq/1bYSqZOg7SSE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FiOHQD92; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bvhYUcCC"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53Q7eZXY4077669
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 26 Apr 2025 00:40:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53Q7eZXY4077669
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745653241;
-	bh=EnzZeIbi73Uf9UHrFp1u6oVId+aFUuWUYzex7VH6YZ8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bvhYUcCCrcNPHPHMfra8pagGFHBS1eIdachPY1j/LcLKf75gVtMgjo4Z3lxW/Nwx8
-	 K3abxiwtE5S6sAYo2Z6xAFmeJAbufNq9L8ADk5XuAUJ+H1tQ3G+X0J9m0VZjBLaA+s
-	 5n4Z890DiCiOntXIwifwugz7hNqwSnsVHa6YIIwsPaR3Ir9ZolFZmCw+gTKQ62dE4J
-	 YecUoTzxNgG+BOaBljb6+z0Do/A8o3VQ615cdunTjaM57EXYYspTWEBwIZzokrA2Wq
-	 9fiFpIsxxWxYHBZiB5dJyiIoZFVhM3/ZEzW/zA5+lZDd3b8R/C+bYjqUDXonYDLCCo
-	 u8/14ZBKTETHw==
-Message-ID: <3a25ce15-f95c-41c9-8f8a-3b01cffc95e5@zytor.com>
-Date: Sat, 26 Apr 2025 00:40:34 -0700
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FiOHQD92"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id A08B91C00B2; Sat, 26 Apr 2025 10:15:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745655316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k53jycQ1Z1Eu66/LQMNEr9yLtX94D7f7ZDVDMYc63pY=;
+	b=FiOHQD92UDWxgvy+h8JIRPjndClKxi/cQcGvDS8O8GUrf2YR/o3mh7/4pHG2/t3HQZzMu6
+	xJlhRjqiltiNVV5QsxpT9E3mTgsjGE+ogMsug8ZAHTPLcoyJ9wHmvTtVCrcBy9cRzs+6K7
+	adcerje2Cq0OTBU0rgDxcCM0p0Y+uDA=
+Date: Sat, 26 Apr 2025 10:15:16 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+References: <20250425162949.2021325-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/14] x86/xen/msr: Remove pmu_msr_{read,write}()
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250425083442.2390017-1-xin@zytor.com>
- <20250425083442.2390017-11-xin@zytor.com>
- <04d47f21-6183-42d5-bc18-f23a8c3c2009@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <04d47f21-6183-42d5-bc18-f23a8c3c2009@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i07FpDtmzUu2qUCx"
+Content-Disposition: inline
+In-Reply-To: <20250425162949.2021325-1-superm1@kernel.org>
 
-On 4/25/2025 3:08 AM, Jürgen Groß wrote:
-> 
-> Can you please remove the two "else" instances above? With directly 
-> returning
-> form the "if" clause they are no longer needed.
 
-I thought about it but forgot to do it later.
+--i07FpDtmzUu2qUCx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> With that you can add my:
-> 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+On Fri 2025-04-25 11:29:48, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+> to lock the screen. Modern hardware [2] also sends this sequence of
+> events for keys with a silkscreen for screen lock.
+>=20
+> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+> emitted by driver to META + L.
 
-Thanks a lot!
+Fix gnome and kde, do not break kernel...
+									Pavel
+
+> =20
+> +config INPUT_SCREENLOCK_EMULATION
+> +	bool "Pass KEY_SCREENLOCK as META + L"
+> +	help
+> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
+> +	  META + L.
+> +
+> +	  If unsure, say Y.
+> +
+>  comment "Input Device Drivers"
+> =20
+>  source "drivers/input/keyboard/Kconfig"
+> diff --git a/drivers/input/input.c b/drivers/input/input.c
+> index dfeace85c4710..983e3c0f88e5f 100644
+> --- a/drivers/input/input.c
+> +++ b/drivers/input/input.c
+> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
+>  	}
+>  }
+> =20
+> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned =
+int type,
+> +					int value)
+> +{
+> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
+> +	input_handle_event(dev, type, KEY_L, value);
+> +}
+> +
+>  /**
+>   * input_event() - report new input event
+>   * @dev: device that generated the event
+> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
+>  {
+>  	if (is_event_supported(type, dev->evbit, EV_MAX)) {
+>  		guard(spinlock_irqsave)(&dev->event_lock);
+> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+> +		if (code =3D=3D KEY_SCREENLOCK) {
+> +			handle_screenlock_as_meta_l(dev, type, value);
+> +			return;
+> +		}
+> +#endif
+>  		input_handle_event(dev, type, code, value);
+>  	}
+>  }
+> @@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, u=
+nsigned int type, unsigned int
+> =20
+>  	switch (type) {
+>  	case EV_KEY:
+> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+> +		if (code =3D=3D KEY_SCREENLOCK) {
+> +			__set_bit(KEY_L, dev->keybit);
+> +			__set_bit(KEY_LEFTMETA, dev->keybit);
+> +			break;
+> +		}
+> +#endif
+>  		__set_bit(code, dev->keybit);
+>  		break;
+> =20
+
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--i07FpDtmzUu2qUCx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyWFAAKCRAw5/Bqldv6
+8uhKAKCjfvAZFk7Uua0kfLuXA45ZnzJbnQCcD/rUkXDBqsEQKK8A86UKF0DFdzA=
+=OY5R
+-----END PGP SIGNATURE-----
+
+--i07FpDtmzUu2qUCx--
