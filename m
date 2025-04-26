@@ -1,77 +1,87 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F887A13A;
-	Sat, 26 Apr 2025 08:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB02221FC1;
+	Sat, 26 Apr 2025 09:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655720; cv=none; b=rXlvoCanXfsIWTwkMcEsESu8uNkunwdJ1MNssKpVWmCwO2sfdV8c1plzZ200RnSQtWiuKhvWwjv9GZ+IBLpjgVLVd6QdFmrWPFDk54sOcYXbHy1zWUy/q9fZ70IQm5y9fTcqVl+zJyfGfYtNvboQXsO3aOREftIDQhpwI5jo2iU=
+	t=1745660548; cv=none; b=GKUzfJvxjAjLuWHPb+297696R1UQcah1PZRVfYpaMXqtnCEjgrh5FmVzEEx1JC+y9osn6qEesTX4kHaFFzh4rrUvJLMyvEBMB33xn15hLc8nhR0KcmuifSE9bMKbPzFKgR2496seWnfcaW+oT2Nw3vGVmIayPmjkhx734sdGSVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655720; c=relaxed/simple;
-	bh=fzKR/ufsieUr8oxDbrm52cAQXJCN5hqEVmsE660kjTY=;
+	s=arc-20240116; t=1745660548; c=relaxed/simple;
+	bh=GKYZDfmT8vrfb5LgauTuj6xSdhIuzi1Ln9+BvIpR6bo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgIScswQbd/V+h6jgdJSbJ4fgcKk/kOuH5+5ljoupzbps9w2WbwZWOjijGAMZjLPqnCZSlAZOPxe42CNZA6RYfEnrPopuzRG3BneXFDcSMB6e6p1TkVV7i/u8YxmRuEeFFdcgnUewhDEtA9Ft+hrYpLbG17Tdkp4/8DQRFVegT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=CsIqNmuk; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=XxAiduClbKrAB9HXBukOtzecW8QKb/D2k9u+9rmBQDDKZyMpVFzQ2Ish6l4S3gXIl7iC1sHu1DCMK7HA43thL6+5AnlDs4Xr2uWe5NmfcbM216qHuKs08E2n+lUkdHjn2xngKKHu2CY1KLEySp80emX3Tb6clu842Ry7T+qNs/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVGFN06B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="CsIqNmuk"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id B08771C00B2; Sat, 26 Apr 2025 10:21:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1745655715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LApoH+hql5fj1iVHW98H1KX0KFIlCyUgfPPdG8y5U20=;
-	b=CsIqNmuk+1cL+vSLFfS8Yo8Df+lDCHwfh2SLlM9P9vUO1YUyMNgI9tUrg34KbVHm94j5bk
-	Z/yCELdKcV8u+6UVEsgTHHudiVA/0lwXIzC/ACMqgLWj+eKgB1QfmDynLS0rTUybrzPrnt
-	GoYJ8w0KtzzkJuNNlfFecfODwwUcFQY=
-Date: Sat, 26 Apr 2025 10:21:55 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v9 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <aAyXo7m8pvJc258V@duo.ucw.cz>
-References: <20250425210043.342288-1-wse@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVGFN06B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A36B7C4CEE2;
+	Sat, 26 Apr 2025 09:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745660547;
+	bh=GKYZDfmT8vrfb5LgauTuj6xSdhIuzi1Ln9+BvIpR6bo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rVGFN06BVpXQADF0McOYueFwHEJhzWz636+kIlsGWOMDkbla7J9iRT6MOM5btu29t
+	 7hrzRp906EFlYVTlOPXUuC1W62smXtLsaIzA8HaccyZjb/y5kRttqFLrTM/DtGyroV
+	 +vsQ0YDjmUTeSZOXRfRA9nNUoSfUCuBj8NtLlv6Fi79bKQmIQ/fUTbOEQohxgwWqDd
+	 Tb6IGOpyh63YdXZWl0MaGfBiu1PyWpxd0x+I3NNXULnzYTUmCrJIWsf9vb9fucFp8f
+	 JS4ufPR9XO2Ub+4CWmtXMWYjzLHwDnViIosaVAQ2wDJ9mj96tB9cuWRrlOnuJfN7H7
+	 RIaV/e4EOKamA==
+Date: Sat, 26 Apr 2025 11:42:21 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+Message-ID: <aAyqfaz4-_9qOG-x@gmail.com>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-3-superm1@kernel.org>
+ <qqrff4zx6eyoyppx3bmsujl4vzhmlwi2dldhoxxikkspmlbiiz@sabqjmjekv7w>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hIDcK2E21PriQdgi"
-Content-Disposition: inline
-In-Reply-To: <20250425210043.342288-1-wse@tuxedocomputers.com>
-
-
---hIDcK2E21PriQdgi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <qqrff4zx6eyoyppx3bmsujl4vzhmlwi2dldhoxxikkspmlbiiz@sabqjmjekv7w>
 
-On Fri 2025-04-25 22:53:28, Werner Sembach wrote:
-> Note that I'm away from my work PC for the next week so expect my next
-> response the monday after.
 
-Forgot to cc LED lists. NAK.
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+* Andi Shyti <andi.shyti@kernel.org> wrote:
 
---hIDcK2E21PriQdgi
-Content-Type: application/pgp-signature; name="signature.asc"
+> Hi,
+> 
+> On Tue, Apr 22, 2025 at 06:48:27PM -0500, Mario Limonciello wrote:
+> > From: Mario Limonciello <mario.limonciello@amd.com>
+> > 
+> > PIIX4 and compatible controllers are only for X86. As some headers are
+> > being moved into x86 specific headers PIIX4 won't compile on non-x86.
+> > 
+> > Suggested-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> OK, so these are going through x86, at the end.
 
------BEGIN PGP SIGNATURE-----
+Yeah, if you don't mind. There's a later x86 patch (5/5) that depends 
+on the new header.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyXowAKCRAw5/Bqldv6
-8gUEAKDBAqA2i2qckGriCTQPP5bcc13XwQCgreLCTnH1AIIW6wFVtURQfyXmj3o=
-=ns29
------END PGP SIGNATURE-----
+> Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
---hIDcK2E21PriQdgi--
+Thanks! I've added your acks to the commits.
+
+	Ingo
