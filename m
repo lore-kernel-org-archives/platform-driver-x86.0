@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50A627701;
-	Sun, 27 Apr 2025 01:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAD12288EA;
+	Sun, 27 Apr 2025 01:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745715715; cv=none; b=o9WFlgY411MAnJPld0hlrxyxkFIVnPX/Nm4R1xKL8ce7xFoVlN1aNRV65cJzt7PjPcD3dQLWXAFcyC57YbO4myJkG2NHty2pZoEyDHtIckYQNbNkuDSgNUvPU8ab2OERze4PXAz5KPHNH5juY6DN6ZFxk8I8yyXg+h30Vd8Olag=
+	t=1745716085; cv=none; b=XETS8W8p1+OpuZxj0Mleen5CW2LtN0J60GLqOI1mJIp1sUA6vGL2duI2/jBoyr/ARPdVjgHjV4BNOpf32NXwLcMH0imLnNTTUE7fyD3PUH1NL9t3vxENXD9ElMvChVwvMSD+PUcrGjDgzgVF2G4RoWLEOnPzK7OZQZyzgimL7xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745715715; c=relaxed/simple;
-	bh=vqv9v5rnXCwKtxgPMuiYpT31DWaAoWEmgfzycSL4NrY=;
+	s=arc-20240116; t=1745716085; c=relaxed/simple;
+	bh=Eg83GBAPa8swUL/mhgXWbev1gNQmfsjgXb00ZfYlWDw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j0SQ2DxoKk2H1bE1KFvDEhUM7ZFkcGWlvXgZmk7VtYqUmH6LN6LGE4uBi+Nu0VVLXserXElSdUExytGpLY2g/q5PjH8qainH/ZvIPzvjbWvu0AE5zMsSGSLoeZlinnlIDj4dm4HLUrYGLSr8TwCNXY9YXYJWbgpmRNvArI9VjIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hjkRDDXl; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=c5vHRNKo0ZF3iJioi8mRq/fH/xZTPl4UJrg4ZOB4cLJ4A3Oy/e9JY7r5+PyIXEcTcU2GdyQIUNFjrupAMHasKoqecObI4v9+0MEUTmcA4eclcbTm4RK8/Sx0zZ7Oy0ogvdQbubGR0lpcgT20fjS+ZaJljU5FYS7LPZchPdx32JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YT1S2MB+; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hjkRDDXl"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YT1S2MB+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745715680; x=1746320480; i=w_armin@gmx.de;
-	bh=qQyyQoQJzg4RBslZ28Rdjxme2SssleAe9fm+ndnG0RE=;
+	s=s31663417; t=1745716070; x=1746320870; i=w_armin@gmx.de;
+	bh=phRj6pqNADKZGNhDA+KKR1JUG3P3sbdGaOjVlUaE1UM=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=hjkRDDXlQmsRE3a2UmBMLmql0KX2gihMlTGE6z0tUG0cx29VGOhFhHg9y/R/1aDs
-	 5RPZIdYgOX7xB2zHSxG1NuzoikHWEhuuerTywYOQP38Pc/kXPFizs9GXgi6Mwx0+B
-	 owGe5HuYDJS9zMSyEtx9BJ/+HlNLdEx4twIZP902FNbrS3DDB9tFw01qszdz1uGIF
-	 Aht8tFIjuJCgrQHSdbkKzHRlJE6fn2d3OkiqKvI/2p510d7okJS+3rllRPINgitz/
-	 D6xcdfCRPJvz5MQr+g9/Lc/65AjRV7hQsaPI8A17U8MuhKaQA/9wcVx16o5txPr3T
-	 SBODY9SI5iUCXZ96sg==
+	b=YT1S2MB+kTyZTUrv/fZopX39124a4/lLWjtVwY5mQGTKrhBIUPTh3ybqEbJKXr1H
+	 mu8pPQPRV4HKHcdtEbl9J4dx/33B+GM9zW+6+pNwnUn7i7eGNuqgP12AcpDAArAJ8
+	 d6mrlX/J0QGr1qgDM+Nm9lrpMArCKswUu1xBbbCn5fE1uTUHKtNTtzNADtOnBuynB
+	 NvbKge7TxAfWT0ynLZJnMTsDRbA22IhBRjblVlMXEeUXvD4niZZHUKgjbfTaDee9/
+	 vMvozReDuSzSZIO3PzkM6NrQN+oY+ckAA86tf2zv4Y3WnQrfYdao7RZmLQnYNgMkg
+	 FB+872dMtTPsO0GEPw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPog5-1uVCjr1oN1-00Tc59; Sun, 27
- Apr 2025 03:01:20 +0200
-Message-ID: <4e18573b-c07d-47c5-a601-cda4b28482f6@gmx.de>
-Date: Sun, 27 Apr 2025 03:01:17 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0oBr-1v2cRn2QhJ-013Dzq; Sun, 27
+ Apr 2025 03:07:50 +0200
+Message-ID: <e10a3487-f768-4873-a468-7bd2160a325a@gmx.de>
+Date: Sun, 27 Apr 2025 03:07:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,259 +43,285 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] Documentation: wmi: alienware-wmi: Add GPIO control
- documentation
+Subject: Re: [PATCH 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO debug
+ methods
 To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Gabriel Marcano <gabemarcano@yahoo.com>,
  platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
  linux-kernel@vger.kernel.org
 References: <20250423-awcc-gpio-v1-0-160a11bc3f9a@gmail.com>
- <20250423-awcc-gpio-v1-2-160a11bc3f9a@gmail.com>
+ <20250423-awcc-gpio-v1-1-160a11bc3f9a@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250423-awcc-gpio-v1-2-160a11bc3f9a@gmail.com>
+In-Reply-To: <20250423-awcc-gpio-v1-1-160a11bc3f9a@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Nm0o7oEWGx24ERkFp+MJm8KgwzDN0bDqDR+0P+yPuRsnoaX/x78
- OJVCgYBjLPKFLFtd0wsr+nmZjf0uGX4mQDgEiQpaa4F0eqXn+QnLXkBSGIvkv6eqAP/ZMWr
- Q3AqwukzGFg+ZA72ikG8C7/XU0QNRfnnfu+TmUwKEXM/a5Y1s/yaw4WKPwdW+QfIprtYUMj
- RfBQAIcowz/CExHo5WnYA==
+X-Provags-ID: V03:K1:juidhLbjNmFhA8uMamFSTJmvanlNPcW3U9ZrzLdW+fWHOEBCzYv
+ CVVDoZP8/ZHB8dIYxqXblCEiHYhNMmDBw9zk4WASV/FrvbQHStDdxbV+1209XWFQaKeHp3b
+ NJZg3gYxKDxmkqU2xt0jyxN9zbBHxUlmlYWUKQcomjd9BSmZnuU70Mo1FW4iCXil7tDuQee
+ eFq/xDpq0x2wM6zEkg/tQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:u4WAabhoNRQ=;eSvXBCrTD/nMPslKjoIoK4E57ie
- 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
- cq0uUgAnywZBZ+L8h3CsaFDTQ
+UI-OutboundReport: notjunk:1;M01:P0:1y+1vTDUyA0=;6VeXIoZatnROQnud0bM+J9HuAyW
+ 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
+ musQ=
 
 Am 23.04.25 um 09:49 schrieb Kurt Borja:
 
-> Add documentation for the GPIO control methods.
+> Devices with the AWCC interface come with a USB RGB-lighting STM32 MCU,
+> which has two GPIO pins with debug capabilities:
 >
+>   - Device Firmware Update mode (DFU)
+>   - Negative Reset (NRST)
+>
+> The WMAX device has methods to toggle or read the state of these GPIO
+> pins. Expose these methods through DebugFS, hidden behind an unsafe
+> module parameter to avoid common users from toying with these without
+> consideration.
+>
+> Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
 > Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 > ---
->   Documentation/wmi/devices/alienware-wmi.rst | 85 +++++++++++++++++++++=
-++++++--
->   1 file changed, 81 insertions(+), 4 deletions(-)
+>   drivers/platform/x86/dell/alienware-wmi-wmax.c | 116 +++++++++++++++++=
++++++++-
+>   1 file changed, 115 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation=
-/wmi/devices/alienware-wmi.rst
-> index 79238051b18bc5de9b502325017cd5c5fcf41748..8751199834b8e2a3a4abf2b7=
-35e4ac6067d93c6d 100644
-> --- a/Documentation/wmi/devices/alienware-wmi.rst
-> +++ b/Documentation/wmi/devices/alienware-wmi.rst
-> @@ -231,6 +231,77 @@ WMI method MemoryOCControl([in] uint32 arg2, [out] =
-uint32 argr)
->   AWCC supports memory overclocking, but this method is very intricate a=
-nd has
->   not been deciphered yet.
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-wmax.c
+> index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..2e83be02d7c5f8ca8176f1ec=
+39d9929790da0844 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -38,6 +38,9 @@
+>   #define AWCC_METHOD_GET_FAN_SENSORS		0x13
+>   #define AWCC_METHOD_THERMAL_INFORMATION		0x14
+>   #define AWCC_METHOD_THERMAL_CONTROL		0x15
+> +#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
+> +#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
+> +#define AWCC_METHOD_READ_GPIO_STATUS		0x22
+>   #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
 >  =20
-> +GPIO control Methods
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Alienware and Dell G Series devices with the AWCC interface, usually ha=
-ve an
+>   #define AWCC_FAILURE_CODE			0xFFFFFFFF
+> @@ -65,6 +68,10 @@ static bool force_gmode;
+>   module_param_unsafe(force_gmode, bool, 0);
+>   MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile =
+is selected");
+>  =20
+> +static bool gpio_debug;
+> +module_param_unsafe(gpio_debug, bool, 0);
+> +MODULE_PARM_DESC(gpio_debug, "Exposes GPIO debug methods to DebugFS");
 
 Hi,
 
-please remove the comma.
+personally i thing that you can drop this module parameter. People using D=
+ebugFS should
+already know that they need to be careful.
 
-> +embedded STM32 RGB lighting controller with USB/HID capabilities. It's =
-vendor ID
-> +is `187c` while it's product ID may vary from model to model.
-> +
-> +The control of two GPIO pins of this MCU is exposed as WMI methods for =
-debugging
-> +purposes.
-> +
-> ++--------------+-------------------------------------------------------=
-=2D------+
-> +| Pin          | Description                                           =
-       |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| 0            | Device Firmware Update (DFU) mode pin.                =
-       |
-> +|              |                                                       =
-       |
-> +|              | **HIGH**: Enables DFU mode on next MCU boot.          =
-       |
-> +|              |                                                       =
-       |
-> +|              | **LOW**: Disables DFU mode on next MCU boot. (default)=
-       |
-> ++--------------+-------------------------------------------------------=
-=2D------+
-> +| 1            | Negative Reset (NRST) pin.                            =
-       |
-> +|              |                                                       =
-       |
-> +|              | **HIGH**: Turn on MCU. (default)                      =
-       |
-> +|              |                                                       =
-       |
-> +|              | **LOW**: Turn off MCU.                                =
-       |
-> ++--------------+-------------------------------------------------------=
-=2D------+
-> +
-> +See :ref:`acknowledgements` for more information on this MCU.
-> +
-> +.. warning::
-> +   The following methods are only exposed to DebugFS if the ``gpio_debu=
-g``
-> +   unsafe module parameter is set, as you could end up bricking the MCU=
-.
-> +
-> +WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| 0x00               | Set the Device Firmware Update     | - Byte 1: P=
-in      |
-> +|                    | (DFU) pin status.                  |   status   =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| 0x01               | Set the Negative Reset (NRST) pin  | - Byte 1: P=
-in      |
-> +|                    | status.                            |   status   =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-
-Maybe it would be better if you just explain that the operation byte selec=
-ts the GPIO pin to toggle.
+Other than that:
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
 > +
-> +WMI method ReadTotalofGPIOs([out] uint32 argr)
-> +----------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| 0x00               | Get the total number of GPIOs.     | - None     =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +
-> +WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| 0x00               | Get the Device Firmware Update     | - None     =
-        |
-> +|                    | (DFU) pin status.                  |            =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| 0x01               | Get the Negative Reset (NRST) pin  | - None     =
-        |
-> +|                    | status.                            |            =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-
-Same as above.
-
-Thanks,
-Armin Wolf
-
-> +
-> +.. warning::
-> +   There known firmware bug in some laptops where reading the status of=
- a pin
-> +   also flips it.
-> +
->   Other information Methods
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
+>   struct awcc_quirks {
+>   	bool hwmon;
+>   	bool pprof;
+> @@ -217,6 +224,11 @@ enum AWCC_TEMP_SENSOR_TYPES {
+>   	AWCC_TEMP_SENSOR_GPU			=3D 0x06,
+>   };
 >  =20
-> @@ -239,10 +310,16 @@ WMI method ReadChassisColor([out] uint32 argr)
->  =20
->   Returns the chassis color internal ID.
->  =20
-> +.. _acknowledgements:
+> +enum AWCC_GPIO_PINS {
+> +	AWCC_GPIO_PIN_DFU			=3D 0x00,
+> +	AWCC_GPIO_PIN_NRST			=3D 0x01,
+> +};
 > +
->   Acknowledgements
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>   enum awcc_thermal_profile {
+>   	AWCC_PROFILE_USTT_BALANCED,
+>   	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
+> @@ -571,6 +583,38 @@ static int awcc_thermal_information(struct wmi_devi=
+ce *wdev, u8 operation, u8 ar
+>   	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args,=
+ out);
+>   }
 >  =20
-> -Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
-> -`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting =
-and
-> -testing some of this device's functionality, making it possible to gene=
-ralize
-> -this driver.
-> +Kudos to
+> +static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 s=
+tatus)
+> +{
+> +	struct wmax_u32_args args =3D {
+> +		.operation =3D pin,
+> +		.arg1 =3D status,
+> +		.arg2 =3D 0,
+> +		.arg3 =3D 0,
+> +	};
+> +	u32 out;
 > +
-> +* `AlexIII <https://github.com/AlexIII/tcc-g15>`_
-> +* `T-Troll <https://github.com/T-Troll/alienfx-tools/>`_
-> +* `Gabriel Marcano <https://gabriel.marcanobrady.family/blog/2024/12/16=
-/dell-g5-5505-se-acpi-or-figuring-out-how-to-reset-the-rgb-controller/>`_
+> +	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &o=
+ut);
+> +}
 > +
-> +for documenting and testing some of this device's functionality, making=
- it
-> +possible to generalize this driver.
+> +static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
+> +{
+> +	struct wmax_u32_args args =3D {};
+> +
+> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, cou=
+nt);
+> +}
+> +
+> +static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *=
+status)
+> +{
+> +	struct wmax_u32_args args =3D {
+> +		.operation =3D pin,
+> +		.arg1 =3D 0,
+> +		.arg2 =3D 0,
+> +		.arg3 =3D 0,
+> +	};
+> +
+> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, sta=
+tus);
+> +}
+> +
+>   static int awcc_game_shift_status(struct wmi_device *wdev, u8 operatio=
+n,
+>   				  u32 *out)
+>   {
+> @@ -1318,6 +1362,63 @@ static int awcc_debugfs_pprof_data_read(struct se=
+q_file *seq, void *data)
+>   	return 0;
+>   }
+>  =20
+> +static int awcc_debugfs_total_gpios_read(struct seq_file *seq, void *da=
+ta)
+> +{
+> +	struct device *dev =3D seq->private;
+> +	struct wmi_device *wdev =3D to_wmi_device(dev);
+> +	u32 count;
+> +	int ret;
+> +
+> +	ret =3D awcc_read_total_gpios(wdev, &count);
+> +	if (ret)
+> +		return ret;
+> +
+> +	seq_printf(seq, "%u\n", count);
+> +
+> +	return 0;
+> +}
+> +
+> +static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
+> +{
+> +	unsigned long pin =3D debugfs_get_aux_num(seq->file);
+> +	struct wmi_device *wdev =3D seq->private;
+> +	u32 status;
+> +	int ret;
+> +
+> +	ret =3D awcc_read_gpio_status(wdev, pin, &status);
+> +	if (ret)
+> +		return ret;
+> +
+> +	seq_printf(seq, "%u\n", status);
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t awcc_gpio_pin_write(struct file *file, const char __user=
+ *buf,
+> +				   size_t count, loff_t *ppos)
+> +{
+> +	unsigned long pin =3D debugfs_get_aux_num(file);
+> +	struct seq_file *seq =3D file->private_data;
+> +	struct wmi_device *wdev =3D seq->private;
+> +	bool status;
+> +	int ret;
+> +
+> +	if (!ppos || *ppos)
+> +		return -EINVAL;
+> +
+> +	ret =3D kstrtobool_from_user(buf, count, &status);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D awcc_fwup_gpio_control(wdev, pin, status);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +
+> +DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
+> +
+>   static void awcc_debugfs_remove(void *data)
+>   {
+>   	struct dentry *root =3D data;
+> @@ -1327,7 +1428,7 @@ static void awcc_debugfs_remove(void *data)
+>  =20
+>   static void awcc_debugfs_init(struct wmi_device *wdev)
+>   {
+> -	struct dentry *root;
+> +	struct dentry *root, *gpio_ctl;
+>   	char name[64];
+>  =20
+>   	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wde=
+v->dev));
+> @@ -1344,6 +1445,19 @@ static void awcc_debugfs_init(struct wmi_device *=
+wdev)
+>   		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
+>   					    awcc_debugfs_pprof_data_read);
+>  =20
+> +	if (gpio_debug) {
+> +		gpio_ctl =3D debugfs_create_dir("gpio_ctl", root);
+> +
+> +		debugfs_create_devm_seqfile(&wdev->dev, "total_gpios", gpio_ctl,
+> +					    awcc_debugfs_total_gpios_read);
+> +		debugfs_create_file_aux_num("dfu_pin", 0644, gpio_ctl, wdev,
+> +					    AWCC_GPIO_PIN_DFU,
+> +					    &awcc_gpio_pin_fops);
+> +		debugfs_create_file_aux_num("nrst_pin", 0644, gpio_ctl, wdev,
+> +					    AWCC_GPIO_PIN_NRST,
+> +					    &awcc_gpio_pin_fops);
+> +	}
+> +
+>   	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
+>   }
+>  =20
 >
