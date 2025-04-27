@@ -1,120 +1,315 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAE71C6FFA;
-	Sun, 27 Apr 2025 06:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D672A79F2;
+	Sun, 27 Apr 2025 06:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745734242; cv=none; b=C4Kv3Fq+pWpbdqGYB0af5u/YBMO58RZlt9B60KkGOEbRway6t03NCalQhi9FUDEdvF3wPIUd3xjo0T3YXL5PCYXLhP/j2iHcddI0KxCYAAP0Fz6bbNb/BnSJH/OrlBEpZBNvPHSRh3cdxbcvcf/8Hbt9j6EsBjnUGfOH12IFmxI=
+	t=1745734898; cv=none; b=s6Ic616r1Je4E5LBb5atRwmOjzz4wU2+mrBt9jKWSY1WosN5GCLWDQ0/DWTG7m62WPJVn+YwzkBQtjxJevGcUSbv5nvg7hF1nqxgQWAuaZZ+68qLFFn4c7SX+nCj9G/NKpQhptoHCYBU9o0BIyjwpaG8fAGrGuVZ79WsMb98JTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745734242; c=relaxed/simple;
-	bh=vdsODpVoF4YdSqvnPZlYoCUv0rxMIVC7vPQyys2/Gmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Chn1WdskbjxBd0dlgIMyP+P9jHpMpaCqfbChmTAbpIe4L2Y7n8X1u80+PR7K3SuMrKsu89NSAZt/OjTwtiguUgYve0jQwoY4W/HKXfFOEwbfO7TSPxvILxVNS9V8/msnoBrZu4K3ZXRC6lvv7p0Jj5uzeoI25xlT1/eY26SyHQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=HcQk6BVv; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1745734898; c=relaxed/simple;
+	bh=MQZrMoCO1OAuwTL/n9V+JzZCsfVeC4aTqtoOU5uCMWg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=U48+laEt7nC2cUCEevCaCqQAkR68RSLC6hL7XyXwitFHbPQgk/LTlalnWQE5pJ1GukPu0A5fNe25P7wTtTg1qJAx8Gw2Zhst6/6E+YqE0m9cqhCXiXHYLq4Wa0MNYKgqi8DrQ9XSp+0UvR8GUwQDDnZgnjxK+ucCtpWqURtRfdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmJo7uxl; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="HcQk6BVv"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id D82CA1C00B2; Sun, 27 Apr 2025 08:10:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1745734236;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7+UKRv0LlLVrHcnwlixHJZ6sKOpPhYxJTAue1dbgF+c=;
-	b=HcQk6BVvvKqzpWi+/J0tKVsnymtnurbxjHdp+0v7xf8Ysju3AvAjVHS+rS/4q29KerAFZX
-	sKPAr15OHMnn2vVa3nYJG8RKZE0d7EAVLx7XWOrX3WrXz3yNWP2kE/36Y4HZGmyNqBKZdh
-	SL0393wmjzPULR4dC/7/Ozc37yUqjEA=
-Date: Sun, 27 Apr 2025 08:10:36 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-Message-ID: <aA3KXNCKKH17mb+a@duo.ucw.cz>
-References: <20250425162949.2021325-1-superm1@kernel.org>
- <aAyWFI+o/kU9hDVs@duo.ucw.cz>
- <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
- <aA0o2SWGtd/iMYM2@duo.ucw.cz>
- <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmJo7uxl"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736b34a71a1so4397283b3a.0;
+        Sat, 26 Apr 2025 23:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745734896; x=1746339696; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+d11Mg8FjxGgjpOSABbPHxId1G+yHMmgIgF8dt7mqRw=;
+        b=GmJo7uxl3sxtuPiuYdN16euj5IrCaqapREUAqJ3nEQ6Qv/rKJEHLuoOSBHqHJgZxgC
+         8PuPeHQfydFOFXKe+zrkr1ygNj7+QFccPmF1LdMxisxJtLCIB4wbKjnjv20UMhr3nncJ
+         Z8DQvw8mGzHwJB5CoLsomD3F+o8MptGbsHuUIXg6NsKlU/7JC0zIyDGizRb2gJWF9I3a
+         aSKIY4gK90gmbG9kzWl8Kt9YKvc9RWE+lj5uRyu+YAEVnymbbIYOKdAMWZs/sA93vFtu
+         Pp9E8Tg/n7JfEz/jdPmP0P0J/wKBKEB0U6VV+PZUubFkeJTM58js2z3RzsVdem/YGVB7
+         NIOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745734896; x=1746339696;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+d11Mg8FjxGgjpOSABbPHxId1G+yHMmgIgF8dt7mqRw=;
+        b=cOUIUlCTuHVmH2s7j20zSwcSFNE9/Et+v3Myy6KqnlU5sRNnaJ9909FGobPZg/y2rk
+         Pas6sWNaqb6u6wWi5IQMJqmhQIB87c8Mg814SUFPk/ORpqNB28PYlXjwNeebheYltH54
+         EUxJQAMImpX9rY7Om1GtsJ/Mn8cTT63t1473ric4pgHZPWUX9CwViR4I6PgcqY+Gb/mr
+         L5kcBlgXv0p/uYtg36NdRMdBSZXKBXsvzCmShFDnFpRSzlHAsV+rCuSN4lRQsvPEQQzy
+         RrDXbDH4Ljc+xl1N/RvJUC6fI2wOR+TJ/XxOH+OmtdfuD5OsGrRSZlJTj3K9SFosNHhO
+         DMOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYPNpPcnGQPklIOwHzpV6mrwtawcAgv2ldL9PamZGi0uJiTR77Sgj2TubJsrDC5pgRP5lsYpGfaK1OVKY=@vger.kernel.org, AJvYcCWgoyIZ54tt7IA/875WIsCTU0LN7YbqPkbgXPKt3iKt+lzsNDbqho2WGWRNwoPotpOOHwTEcK5OA5qC2rJV0BBSA980zA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4vHghxVp5YZJWv6u8zl8SSa7+5Bagmfr8t47TVj/H7Doht7I/
+	CZl1VQP79dsXdCgq7a2qvIywTSUgCEvNWd0/ZmkS0Ql9qgs4V5nq
+X-Gm-Gg: ASbGncudQIZURyYnmCJmWbfBviH5j8B3gxFLqhk5dRzaW/hrHbVKtZNj804j6Hn/AJN
+	FAaHDkez9BlCBFniRGJOuxGfFRBlASR05xGzBt3y4E+MbYmctryJfPHN1WJv57iwl8eXNnn9N2t
+	UMghSCgoYUQesJijKTFvQvCUrRpBwDfQ2lhdd83NHrsnkpHBDZMVUxiPawSLCqbZKZgGcIXCq8Z
+	SfZlTGXHC/kXmuLPUn24e7sDuOMwgcBvvVAJhXiVX9AVorqN1n6PsByVKIiPZd5+4o418M/GbNY
+	3olyPSXDw3eNW2I+oqohZwT/N0AO1I+R7g==
+X-Google-Smtp-Source: AGHT+IEsnLW50BlD5CyWfjGErwIhZiqFOFsbAEVBkMxkkFB5fZqdp0yMeMY7uSSO6CKrkslG6IWHIA==
+X-Received: by 2002:a05:6a20:c90d:b0:1f5:5b2a:f629 with SMTP id adf61e73a8af0-2046a6930a2mr7066159637.30.1745734896214;
+        Sat, 26 Apr 2025 23:21:36 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a0f1sm5905750b3a.137.2025.04.26.23.21.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 23:21:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DmgUZx/QP4T2HwRh"
-Content-Disposition: inline
-In-Reply-To: <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
-
-
---DmgUZx/QP4T2HwRh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 27 Apr 2025 03:21:33 -0300
+Message-Id: <D9H7DEEL3415.3HLF6NNF4EYCF@gmail.com>
+Cc: "Gabriel Marcano" <gabemarcano@yahoo.com>,
+ <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO debug
+ methods
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250423-awcc-gpio-v1-0-160a11bc3f9a@gmail.com>
+ <20250423-awcc-gpio-v1-1-160a11bc3f9a@gmail.com>
+ <e10a3487-f768-4873-a468-7bd2160a325a@gmx.de>
+In-Reply-To: <e10a3487-f768-4873-a468-7bd2160a325a@gmx.de>
 
-Hi!
+On Sat Apr 26, 2025 at 10:07 PM -03, Armin Wolf wrote:
+> Am 23.04.25 um 09:49 schrieb Kurt Borja:
+>
+>> Devices with the AWCC interface come with a USB RGB-lighting STM32 MCU,
+>> which has two GPIO pins with debug capabilities:
+>>
+>>   - Device Firmware Update mode (DFU)
+>>   - Negative Reset (NRST)
+>>
+>> The WMAX device has methods to toggle or read the state of these GPIO
+>> pins. Expose these methods through DebugFS, hidden behind an unsafe
+>> module parameter to avoid common users from toying with these without
+>> consideration.
+>>
+>> Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>   drivers/platform/x86/dell/alienware-wmi-wmax.c | 116 +++++++++++++++++=
++++++++-
+>>   1 file changed, 115 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-wmax.c
+>> index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..2e83be02d7c5f8ca8176f1ec=
+39d9929790da0844 100644
+>> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> @@ -38,6 +38,9 @@
+>>   #define AWCC_METHOD_GET_FAN_SENSORS		0x13
+>>   #define AWCC_METHOD_THERMAL_INFORMATION		0x14
+>>   #define AWCC_METHOD_THERMAL_CONTROL		0x15
+>> +#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
+>> +#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
+>> +#define AWCC_METHOD_READ_GPIO_STATUS		0x22
+>>   #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
+>>  =20
+>>   #define AWCC_FAILURE_CODE			0xFFFFFFFF
+>> @@ -65,6 +68,10 @@ static bool force_gmode;
+>>   module_param_unsafe(force_gmode, bool, 0);
+>>   MODULE_PARM_DESC(force_gmode, "Forces G-Mode when performance profile =
+is selected");
+>>  =20
+>> +static bool gpio_debug;
+>> +module_param_unsafe(gpio_debug, bool, 0);
+>> +MODULE_PARM_DESC(gpio_debug, "Exposes GPIO debug methods to DebugFS");
+>
+> Hi,
 
-> > > > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it =
-used
-> > > > > to be. Modern versions of Windows [1], GNOME and KDE support "MET=
-A" + "L"
-> > > > > to lock the screen. Modern hardware [2] also sends this sequence =
-of
-> > > > > events for keys with a silkscreen for screen lock.
-> > > > >=20
-> > > > > Introduced a new Kconfig option that will change KEY_SCREENLOCK w=
-hen
-> > > > > emitted by driver to META + L.
-> > > >=20
-> > > > Fix gnome and kde, do not break kernel...
-> > >=20
-> > > I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
-> > >=20
-> > > That's going to break modern hardware lockscreen keys.  They've all
-> > > obviously moved to META+L because that's what hardware today uses.
-> >=20
-> > Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
-> > screen locking, no?
->=20
-> This was actually the first path I looked down before I even started the
-> kernel patch direction for this problem.
->=20
-> GNOME doesn't support assigning more than one shortcut key for an action.
+Hi Armin,
 
-So if I want to start calculator on meta+c on internal keyboard, and
-have calculator button on USB keyboard, I'm out of luck?
+>
+> personally i thing that you can drop this module parameter. People using =
+DebugFS should
+> already know that they need to be careful.
 
-Sounds that should be fixed :-).
+I sure hope so. I know I was not careful when I started tinkering :p
 
-Alternatively, you can just turn KEY_SCREENLOCK into META+L inside
-Gnome.
+I agree though, I'll drop it and follow your documentation suggestions.
 
-BR,
-									Pavel
+>
+> Other than that:
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+Thanks a lot!
+
 --=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+ ~ Kurt
 
---DmgUZx/QP4T2HwRh
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>> +
+>>   struct awcc_quirks {
+>>   	bool hwmon;
+>>   	bool pprof;
+>> @@ -217,6 +224,11 @@ enum AWCC_TEMP_SENSOR_TYPES {
+>>   	AWCC_TEMP_SENSOR_GPU			=3D 0x06,
+>>   };
+>>  =20
+>> +enum AWCC_GPIO_PINS {
+>> +	AWCC_GPIO_PIN_DFU			=3D 0x00,
+>> +	AWCC_GPIO_PIN_NRST			=3D 0x01,
+>> +};
+>> +
+>>   enum awcc_thermal_profile {
+>>   	AWCC_PROFILE_USTT_BALANCED,
+>>   	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
+>> @@ -571,6 +583,38 @@ static int awcc_thermal_information(struct wmi_devi=
+ce *wdev, u8 operation, u8 ar
+>>   	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args,=
+ out);
+>>   }
+>>  =20
+>> +static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 s=
+tatus)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>> +		.operation =3D pin,
+>> +		.arg1 =3D status,
+>> +		.arg2 =3D 0,
+>> +		.arg3 =3D 0,
+>> +	};
+>> +	u32 out;
+>> +
+>> +	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &o=
+ut);
+>> +}
+>> +
+>> +static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
+>> +{
+>> +	struct wmax_u32_args args =3D {};
+>> +
+>> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, cou=
+nt);
+>> +}
+>> +
+>> +static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *=
+status)
+>> +{
+>> +	struct wmax_u32_args args =3D {
+>> +		.operation =3D pin,
+>> +		.arg1 =3D 0,
+>> +		.arg2 =3D 0,
+>> +		.arg3 =3D 0,
+>> +	};
+>> +
+>> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, sta=
+tus);
+>> +}
+>> +
+>>   static int awcc_game_shift_status(struct wmi_device *wdev, u8 operatio=
+n,
+>>   				  u32 *out)
+>>   {
+>> @@ -1318,6 +1362,63 @@ static int awcc_debugfs_pprof_data_read(struct se=
+q_file *seq, void *data)
+>>   	return 0;
+>>   }
+>>  =20
+>> +static int awcc_debugfs_total_gpios_read(struct seq_file *seq, void *da=
+ta)
+>> +{
+>> +	struct device *dev =3D seq->private;
+>> +	struct wmi_device *wdev =3D to_wmi_device(dev);
+>> +	u32 count;
+>> +	int ret;
+>> +
+>> +	ret =3D awcc_read_total_gpios(wdev, &count);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	seq_printf(seq, "%u\n", count);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
+>> +{
+>> +	unsigned long pin =3D debugfs_get_aux_num(seq->file);
+>> +	struct wmi_device *wdev =3D seq->private;
+>> +	u32 status;
+>> +	int ret;
+>> +
+>> +	ret =3D awcc_read_gpio_status(wdev, pin, &status);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	seq_printf(seq, "%u\n", status);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t awcc_gpio_pin_write(struct file *file, const char __user=
+ *buf,
+>> +				   size_t count, loff_t *ppos)
+>> +{
+>> +	unsigned long pin =3D debugfs_get_aux_num(file);
+>> +	struct seq_file *seq =3D file->private_data;
+>> +	struct wmi_device *wdev =3D seq->private;
+>> +	bool status;
+>> +	int ret;
+>> +
+>> +	if (!ppos || *ppos)
+>> +		return -EINVAL;
+>> +
+>> +	ret =3D kstrtobool_from_user(buf, count, &status);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret =3D awcc_fwup_gpio_control(wdev, pin, status);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return count;
+>> +}
+>> +
+>> +DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
+>> +
+>>   static void awcc_debugfs_remove(void *data)
+>>   {
+>>   	struct dentry *root =3D data;
+>> @@ -1327,7 +1428,7 @@ static void awcc_debugfs_remove(void *data)
+>>  =20
+>>   static void awcc_debugfs_init(struct wmi_device *wdev)
+>>   {
+>> -	struct dentry *root;
+>> +	struct dentry *root, *gpio_ctl;
+>>   	char name[64];
+>>  =20
+>>   	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wde=
+v->dev));
+>> @@ -1344,6 +1445,19 @@ static void awcc_debugfs_init(struct wmi_device *=
+wdev)
+>>   		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
+>>   					    awcc_debugfs_pprof_data_read);
+>>  =20
+>> +	if (gpio_debug) {
+>> +		gpio_ctl =3D debugfs_create_dir("gpio_ctl", root);
+>> +
+>> +		debugfs_create_devm_seqfile(&wdev->dev, "total_gpios", gpio_ctl,
+>> +					    awcc_debugfs_total_gpios_read);
+>> +		debugfs_create_file_aux_num("dfu_pin", 0644, gpio_ctl, wdev,
+>> +					    AWCC_GPIO_PIN_DFU,
+>> +					    &awcc_gpio_pin_fops);
+>> +		debugfs_create_file_aux_num("nrst_pin", 0644, gpio_ctl, wdev,
+>> +					    AWCC_GPIO_PIN_NRST,
+>> +					    &awcc_gpio_pin_fops);
+>> +	}
+>> +
+>>   	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
+>>   }
+>>  =20
+>>
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaA3KXAAKCRAw5/Bqldv6
-8s2IAJ9jY4h4zq6eODq20aJxzo1bXLE6/wCgmfoW2tJuEV1zMrev3d+6r4JZpX0=
-=6yuk
------END PGP SIGNATURE-----
-
---DmgUZx/QP4T2HwRh--
