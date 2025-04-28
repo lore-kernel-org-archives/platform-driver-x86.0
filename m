@@ -1,263 +1,179 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488692BD04;
-	Mon, 28 Apr 2025 02:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745806019; cv=fail; b=R4QkKNUZwh/LI96E6HIv23cVrzovhpepe2XonEgR5aXvgyW1D8BaikT3axZ28HIHjpW5cpV9XKlb/kVCWpdoixxILCTyFnD/z/dIJrNvVNN8M4Do2kkieFBucyL9GYaLh9tlYQiNME3WfsInb9nv9fVfDQv3EtMeBFTH8eR4jY4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745806019; c=relaxed/simple;
-	bh=D5i6iJ0yrlUYv1qpnQ9jgMylYvmfU0TYJbNdn2Lb5bQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ea0DF68MyewY2gv+X/SoCMB2HdGZ9lHpAN3Fklr9MMeCriZNNQX38Uwzv4KJVzWncwInGdcQgdETVeNzHMJV7QlkSQb6zPDMisxcALsDKrmxiPjwTMjInle39+qL1olPOSDIELPZJkSU4AWcEcFEtA8UW0vAskFCbbM6cuolmqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mNcVsyFT; arc=fail smtp.client-ip=40.107.94.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BD923DE;
+	Mon, 28 Apr 2025 05:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745818229; cv=none; b=NFYRY8UUUW8FrvFNunSSEWckEaORLnjqqyrySlPkkjOW6Tb6gnkLcu85DswYskm2702z9gwSq0z/12IttEBdSUhFGyXKTDivM+wyPTRU7vRlUnb7zv4PZKX4cTOXiv89pin4Bhwr/X4SQ2wLsWd4Cju/o8/v/gUPu9VKyH/AZL0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745818229; c=relaxed/simple;
+	bh=RV+6d3vBAxJN1ELCPGKND9EjSArrhTlq6/VIyBYsyZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHEeQXtGEoPIxsNVwStW5ruyTb189J4Qhmz+Bt6AILbSi9aFmWh1vcCeXLm26E99K4dhs5zqt/TX+yvEMz2LT6w7E3i7/idXyqhyukwP8+MIcXfJ2cYdu+lWv0lmGutbun91+tfYUHqlk39q3CqG4xSk2sUSL2UDhhSVcAcnCkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrlKUGxm; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mNcVsyFT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qe3z0nfg3UB80DialPpoJ4QUgtWIb09cqroVz3SeId7LTV2t09b/Kds7wJSvqeSyYkMzYUPj/9CuCmqBF3ZC2hzPcjHiNqcQsv6qN0EtVS3Zyc31F7iPOOk7Y3us3SOsWTuJIYOBvnXvlZt2XhW02L/CY4DMDnnxBOERKlTrnEem5A/kQ5YVY1VVh2/4ynQP52L8+CqS3NWTahkvpidrp5TWBMLtrTpbMRd8nEpg0xRF6ofQTHoPuZHzuQ7oJ4cjSNo49QYZnsevut8Dg17lMj0SqwfykQaAyFVGmExJFvPWz2sRKxnX+1ZLSqBWKoXBlnyDgjH/8C8qZTJFLyQ1Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v70nU81XU2xh3FGjFmhv97qtrYCgLNJsD5MXcQOn+10=;
- b=kGQKpanWBxZg7Zgvo9Bneu5B5AvHt1Kv+/JpASmfk2Fj2A1zSKM2y5JLO0brfEgPnLZ/A/BiJp4S0VFOMrcO1Cbi/zdMnQQQ4wniQ8ZrNWfyiBax7Dt3jlOPGbgTIJ4Xy86c3x6Iz9C2OWlpliNcptn7ZOigoT4/dBJnPZzAKIdewayxh6/X6+ciNEHAj62fGXItUc69gdnDzGi1+hkFsPQFsI5wHtRN2nBiEUQLHmhUBL8u+s3LMpMqTsQ9jhL65PZfvhgnMwGfEL/Na5bvQaRBi0D6NXY+qYnollfphHytpfEZ+QkWsifDmVS31ByehS/V6d+pBwtqh/vr3QiD/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v70nU81XU2xh3FGjFmhv97qtrYCgLNJsD5MXcQOn+10=;
- b=mNcVsyFTSMARaagVuhO9Aokz6RzjuKcVzlIdIGnHVlX/jSmWzVQXxHwFYN6xJ2LOOtLl8ot9LQ2yKMy9LK6VEqy7bPD/R+nSI6CQL/5/Ol/v8jX+c3b/ZuFLO51zOxv+okAia8/XUZvclRfrIhH2jo8SREXcIhX48xTfrBBhsY4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CY8PR12MB7415.namprd12.prod.outlook.com (2603:10b6:930:5d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 02:06:54 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 02:06:54 +0000
-Message-ID: <a2747306-447c-432a-a926-e9d0473d9a0e@amd.com>
-Date: Sun, 27 Apr 2025 21:06:52 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: EC: Fix CPU frequency limitation on AMD platforms
- after suspend/resume
-To: "M. Bergo" <marcusbergo@gmail.com>, mark.pearson@lenovo.com
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- rafael@kernel.org, lenb@kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <f5dd019ad4506.2100bf0f83374@gmail.com>
- <445f6320-698f-4d29-8556-665366668e4d@gmail.com>
- <b6fc4e66-b35a-41ce-a633-db3d660b88a2@amd.com>
- <106bd256-2c08-463f-8498-b68f2d5ccaca@amd.com>
- <9de18953-3f6d-447a-8274-c953bae64039@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <9de18953-3f6d-447a-8274-c953bae64039@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR11CA0141.namprd11.prod.outlook.com
- (2603:10b6:806:131::26) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrlKUGxm"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3016629a12.3;
+        Sun, 27 Apr 2025 22:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745818227; x=1746423027; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxEmjasGq7pyNh4crl/y6uvWlzIOvpEG1gyWf0NOUEw=;
+        b=GrlKUGxm3kEye54RNH45cP8QfNlvzDTWE72/8/sfCCn4nm8TTvvhJWmrUZDgSZ9+ad
+         qzdE5Ht26F8l3RwiHycI9+ybGz2A5SeFbUxMIkd40mQMQXMLe7WRBkxaMSnBCKRXzOIA
+         fHb4sCqk2O5bIow35TlSIZ4S/KuSVWGArtX18KYHjM/4BEVSKiZi420rMCpS3V4TvOO9
+         nb8eXgmBuZz/GMjNTbqM+HhJIsHvIgEwr1JReseArksuEWOA7Uv2jO6UUHqujX2c5k42
+         HKCc2gR8lVxuNddnB2ptwKaGuQ70B9midGnFYonnB3BAnGcZj9A2l7yUE5YSDsmlvjxk
+         8IEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745818227; x=1746423027;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GxEmjasGq7pyNh4crl/y6uvWlzIOvpEG1gyWf0NOUEw=;
+        b=ODd/tk60ksPHtAVBfZbl6I1E4O4zSWjf8Jz0aeiCd7Qu7A4eYlTWw2AIG20p9N9xOr
+         RK/emU64z3VIpBbZYghAbdI+IIRJJ48ZuAVrMRkwZ+k85JXGEWsAvzHWauofQRF4uRGy
+         kHDkbX4UmMdh+aUQowiSP3T/emzmm7bSadzvG3dGc+O1OsA+U4NnFtnWpTTwGaQppJBc
+         BoR3pKsFLBaZ36osqVObhksJi74vKPokMO/9HNYbu3tlr0eOln6qUBMsKeWyouTsbjT/
+         8XCKeXRDPHNWXUEIWtbyFAsM5qvEEc7pacqAzmeBC1EsWp8JMl4Rwt+KOLNH2X+Crlnu
+         /YHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVF01ct7ISKZCJcs7Tea5oRqmeJadYVtbqU95uAXZu6Py1XQ9GNz2yHYglQf8s9fmvAy/DCNEeRriKQIiGP@vger.kernel.org, AJvYcCXNgm1CmGatvrv7/tCeeqp/1+QFl8DEiWTmvPimDizuDdoXXxGnR3bgcj5YTsulov+b7YLCB0a5r5BiuSuRyMyp6C7kgw==@vger.kernel.org, AJvYcCXZdC5hKdJc0bHN/n2ry9sCKZ/mjXGBoh/a5CdJ2W2LqEwYW7pMiti/BtX2K7LUeGr+6uEaemC8xy+0XQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB7JpQTiINgNenR4RlsqD9PY4z6c9jjvmJ+4/NQl1pliryR9al
+	KQ1m6OuD8sBnG4cZsvieygAxnvBES3Yl1ftZr2nLCstReOBF05ib
+X-Gm-Gg: ASbGncvCjh333dFF+/j0ImSNc8IrA7w1+0+ogaVWngBBrA4//DQe+01ASshu2uW/oG8
+	9mo7HnJj5MOgV4i737LK1ii4B403vghtHOVIjjQ+kauC3tV+0gIa6ECSE3u4mXR41G+80dZ6O1j
+	4i8nyoSrv+ZOEiSs2VxEKP7QI7x8MCo08EVDVoL+Rm5tEjXfrd7VKDqSxqPEHx4FPmgkUs6JzbZ
+	yn4hhzqiUKPcrxi3hlif675wnJBxPpZ2WMrB1Bt4T8W50kPs92jqkyHgaTIHKSu0PosZKD+IKbF
+	HJX9IBdT+HMQHv5Nngohcrpk83vFEJDPy1JCEsiO
+X-Google-Smtp-Source: AGHT+IFxeCckgDAxwSP5wKRWrr/r2XG1A/wLGdPDm4FZKGt8MDYuIBQVnSfXYlzvxngWGiR/7mDiOw==
+X-Received: by 2002:a05:6a20:2d22:b0:1f5:82ae:69d1 with SMTP id adf61e73a8af0-2045b754682mr15117186637.20.1745818227473;
+        Sun, 27 Apr 2025 22:30:27 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941eecsm7327900b3a.54.2025.04.27.22.30.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 22:30:26 -0700 (PDT)
+Date: Sun, 27 Apr 2025 22:30:24 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+ <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+ <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
+ <aA3KXNCKKH17mb+a@duo.ucw.cz>
+ <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CY8PR12MB7415:EE_
-X-MS-Office365-Filtering-Correlation-Id: 58e0bb9f-6ab8-47eb-64a3-08dd85f958aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YUlyNGZXU0UxNUI4VGRvbitNRmJwclNYUFNoOHJmeFZPanZxelFjNjJsbHpG?=
- =?utf-8?B?L1hhUXZsSHZNS1lOL0ltenlmTkZRdkUyRFUwK2s1ODFIcGs3Y1pNMk1Tc00x?=
- =?utf-8?B?eTFuRnZ6THFDQmR4cHdreFhtdUU4SG81SnEvOVhINXBWMWYyT0h3Ymg4NHFV?=
- =?utf-8?B?QXVTdCtsS3VNQ0dIcFA0RmlsSlFybWxiUkFNenlVckVaMS9XZmZTV1Y0UTN3?=
- =?utf-8?B?TUdkZ2NvYlBUS1RDTDN0SHZwMklNM25JMGRObTd6T1Q3cWhVRnJKVlJPSUQv?=
- =?utf-8?B?NFhuU0pRdmQyeXBFdGcrVFFUeTRKMk83Y0pEQm5YM2hLYzJXVHUyRnJ1cDli?=
- =?utf-8?B?cjB0VWNJK1k0azdSNitxWk5DSnFLK21Vb3J6TmhiSkRUbmYzdVZ0L245ZlI4?=
- =?utf-8?B?ZDlFMXduKzkvc1FmaWN1UTM5YzZkV1JyTG00QXlUaFR4OGFYdEtzbjc2MmFB?=
- =?utf-8?B?T21aNWpoZWxucUtQV1NRNG5iUUR2Q2JURWVkVFBKNGxkSjdWNCsvNGxPUmxs?=
- =?utf-8?B?bm1ieTJrU1pwNmZuRlEyV0lJcDF3TTF6TFExU3ZLY2NRSUsxY0FwZlRIL2li?=
- =?utf-8?B?TmF6aE5DZ1pEMTBrL2o2MGJtSGJqWEg3T2hVQzFnU3phQVB6RnVBM2JGNGU0?=
- =?utf-8?B?ZExCcXBDVFhNbS9nK1pabTdjRnJwVW4rOGtGUEw3N28yMGVjaFUvQXRwM2dq?=
- =?utf-8?B?ZDJLZFFwZVloWHVGem5ObGFUekZ1bVZrWXVsWHdWUm04U1cwSVh5NDhZclRo?=
- =?utf-8?B?MWFWTjJRdzZSTUp0RHFDQVhyclNLa3I2dWRmcjdNMEQ5dk0vUnFnZ3BNWDFL?=
- =?utf-8?B?K2NQQmRmZVlqQUtKSmZMaER0NEpVVEdPUnJrc25DTGd3cGpBR01tY1YyV0JN?=
- =?utf-8?B?QTZ0L0xDaVhKVmsvQStGK25nbjRDbGFpbTBMSE5oYUVWWWJxSG9hMFpIejBH?=
- =?utf-8?B?QTF1eXpEeVZpeUtSWDg3QlMxajBkcnpzbVZ2eHNjRVNhbWloYThvc00rWnNp?=
- =?utf-8?B?c2E0NitITmQ4U0JTRlc5elAvN1VJMHA2by9UUndDNW13MU42Y1Jxb2E3TllQ?=
- =?utf-8?B?ckN4SW9ieU12QTUzZDFwSXJnQmJrdlBma1FRQk9MN2h5WTd2SHVMMTkvQk4x?=
- =?utf-8?B?ZHBIekZqRk1VbmlLNXlkSW5tUHZYRkFtRFZaa0FNWno3NWlMcWUzaE8yekd0?=
- =?utf-8?B?Rms0ZWFqZnpxcUtxZEIvUmZQSHVnNjc0UDVMeDV3UnJKMTJxME1sT2tQU2lq?=
- =?utf-8?B?UFAzN3RudmxIVlE4MVpydldOY3BHMHYwTGlHeE1IMUtmVlYrZmhYdDBSMldn?=
- =?utf-8?B?NUNDUStXOXlJelBmVVI1eWR5am1CMFZzNTVZUmhaYU9aUWNYUnduM2RFMnhr?=
- =?utf-8?B?RTM0VnN3N0ZSNDRack9nbUJreFdMRjZLY3dRbVdTeVJMSmlXTDRlS1F5Q2NR?=
- =?utf-8?B?cUpnMWw0Vll5Tjh6RkFPQiswNkk1c09tcGJqZlZHRTNJOXFJUXR0NjlTU0lX?=
- =?utf-8?B?Tlc2N2RIOFAzNmV1ZkEzelhUam1hdzNrRTE3N3dDTFBCek5rNVdsek1DUmhB?=
- =?utf-8?B?aWNpR0JNNHphK25TMFg0NzdsbXYrOFpMRlRCSU80YzQ3Y1J3bmZOcE9jd0hU?=
- =?utf-8?B?czlza3ZiTU5zQ3cyOVJFbm9Vdnl5ZWdqei9PNWNJaHRrYVE3cDJxQWUwZGVl?=
- =?utf-8?B?THJoMng4Ri9zcWloZlJiS1lTY1VMQzNXa1NnR3JPUmI2ckppWCtjRVQ5SVg3?=
- =?utf-8?B?N2thd1pzY1lTZUE3TmU0bXVHSUhHMnVmcElOaUp2KzlyOTVzS2JMc3JocWE3?=
- =?utf-8?B?blFFTGttbGszUU8xMFErY3VrckZHaTlDWDRiVnhtQ2htays1RHV5dm5wY0tS?=
- =?utf-8?Q?tdl6zqiWSvKRH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VVZzdkFIV3VFNGlVTXRhcm9OTHdPV0I1V285dnJhdnQvUjJYZGJCdzRvaG5W?=
- =?utf-8?B?ZDg4MkdPdjN2TFlGQVNKWXVHRVJPdGozQmtCN1d1M3B4TkdNSDZJQ013VGg1?=
- =?utf-8?B?cUhDUW5ZVmZ3KzJmejN3Y3JUM0V3OXN5aXprUjhpVk5ROTVaR1RzT0lsTm82?=
- =?utf-8?B?TXh3ODhtMTJRTHdTd29tT0k2M2JRNUMzSzdBWkkxYm1nQnlUd2hDRFF1UWdX?=
- =?utf-8?B?VnpwZUJramsrQVFTMVZWVjVNUFRDWHhTdWkzL2RJTU9OMStYemJGeGpGd3Va?=
- =?utf-8?B?R0ovNVNNbEZVL0lHcnJUM0FrR2t4dnpackcyS1J0N2RsZ1NYN2hUVzFJc0dV?=
- =?utf-8?B?THBDNng0bUcxZ3ozdlhRNndhazUrclpMQ201Mm5XMVovMmpZbXh1ZkM2ck9N?=
- =?utf-8?B?MDdkTXJpSVYxTXhsTk5Ub1pZem5WM3lxSSs5cDNqZjNhdklPbjNOY2N0RzZp?=
- =?utf-8?B?cmU4TnhpT2hyQ252UmUvTUtld0NWUjRvS1FuQWZGWjIvWld5Qi9YcFIwUTQ2?=
- =?utf-8?B?Vm9DQ2crbHZaTzMydFZxK0FwYjkxemFIVWxaa2ZPb0VJNTdHbXlObEYyZDV6?=
- =?utf-8?B?OGxLdlFqNFpqYWx3QVk2VEhHNFExcytRdDM0UElpSWMyRmFwUFhsazRkdldG?=
- =?utf-8?B?QWh4SWgrSG9VQ2RyYVlQcjl5R2UyUnB0N2oxb0JsY01iUVIyRUZLWkg5NGZE?=
- =?utf-8?B?Q2tVczFuN1hISVJmenRzallETEZEem1FMzluS0tMeFZuaWJCWWszVW1IZkNO?=
- =?utf-8?B?enIvZjhHNDZSTWc4RFduaEYzNXR6OW5LbWs5NmV5cXpxakN3TlFiQkF3VEM5?=
- =?utf-8?B?WGdkWGVYS3grSW1NK0hIVWgyM3NUMnV3ZjBSWDNSUHhLMThlTjQxZUtXTlpv?=
- =?utf-8?B?YWtUYXh5MUxheUs4MGg5MThTTTF2UVYyS2IwVWE5bmVYa2pLK2RpNVFFUzh3?=
- =?utf-8?B?ZkQ2N2hqYkhKOGcyZGdOMTRjY0ZSRlNwaDZrRVN2L0FHcTBaUW5BdmRmN1hq?=
- =?utf-8?B?Q0FNVWVSSGlIZnpLWVFsUW1iVXd2VTA1TG9uU2lMNEdxNkRWYjFHazdaSjNk?=
- =?utf-8?B?bGNuYUFCSzR4Wjh1T3ROUFRDc1JibCtvZmxBZk5ja2Rwc0hGcW9Ic3BRMjVZ?=
- =?utf-8?B?d0V2RUQzQ3JKajZyZ2xGV0dCODlmWnZGYkVHMFJJNmYzSGQ0RHc3a20zWk04?=
- =?utf-8?B?NU4yNlV3dTFENXVaNTd3L2dYUG9OMTVuWE1zK1RCd1VzYlIxdjBPNEEzTDh0?=
- =?utf-8?B?WUJHbi9TTFZXRDNUUDVnRHRWWk5odFRnY0R5a1g0cEMwMDdQcllNbThVK2Rx?=
- =?utf-8?B?eHM4cnB3eTRjYk04QXhhMHFhOHNIcEcrR0xtaThtMTBTZDRFTktsbGZpdThB?=
- =?utf-8?B?b0ZwVzhId0pra01kcFo4ZFdrTUZFdVBueml4SllXN0ZvR2xpQktWazhNR1pp?=
- =?utf-8?B?ZitJZU5RQmVRZStzbUd6TG1HK2FVdFptaGl4SkxTSTRuZUtlNUhoNUcvbDJy?=
- =?utf-8?B?V3RyN05JRUx0L3NEbmhRcnoyQ29lSGlxczJyOFF5ZVh3QlR3VmhiSEdVbUJ0?=
- =?utf-8?B?Rk15cnF1d3ZLejNWemRHR3pNTm1iSC9XSExIRUJCRmFveE5BeVVzVVk2QzNW?=
- =?utf-8?B?ajUwVUJJV2dMSnFxY1lpaDcxdnlYUURONUVXWnk3a2lvNndqKzFKdk1hR1Zr?=
- =?utf-8?B?QkZZUFZOY0ZTYm1SZ3FXc2h6RCtkRU1sbVlMc2VvYmxIWnJYUnZJclJTNXlh?=
- =?utf-8?B?djYzU2pBM3VBOHlsTGdydWw4eFl1SW9GZVZoczQ2K2dOZ1kwSXZLVm5lN1JX?=
- =?utf-8?B?NTBMVE5hVUxrZmJWVW5oRTF1eTlDY1Q4YTJWdWxtV2NUZ1ZJWWRzSkE5VU9z?=
- =?utf-8?B?cmRqWC9vMDFPUEZQbHZSTDV0ZFFRZWw2dDJXbkNUM1BYZVlZK1VLQVhyMVpB?=
- =?utf-8?B?aitsVjA3NzlSbnpQWXcwL00zSkVlVm85TWh4TFh2Ymk3eEoyajJ5dVdYMHpL?=
- =?utf-8?B?eHdkZG9mY20yWldvdUlwL08rUXB3VUZ6MEdDVnBBWlFJUDA1WUZYWDVsclZF?=
- =?utf-8?B?ODZWamxQSmhoRU5DWmRZZWdlb05vaHNTQTVhMXVvaUNCL3ppYU9tZHZuUlBu?=
- =?utf-8?Q?AkrqPbwuZFjtEfxYLF/ZK/cYS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58e0bb9f-6ab8-47eb-64a3-08dd85f958aa
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 02:06:53.9340
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VqDVt0ThZMLo3i7MqlILgZinm6EJ/xJOhDDNC0/h+Owzxiw2NekDNCawwE61tMaNaqPnY4HyQlgqetHIJpdYqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7415
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
 
-On 4/27/2025 1:34 PM, M. Bergo wrote:
-> It does make it work fine for me, I saw the clock/timing interference 
-> and this sane this problem for Lenovo as well.
+Apologies for extended absence...
 
-Huh?  I think you have a typo; but I don't know what you actually meant.
+On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
+> 
+> 
+> On 4/27/25 01:10, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > > > > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+> > > > > > > to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+> > > > > > > to lock the screen. Modern hardware [2] also sends this sequence of
+> > > > > > > events for keys with a silkscreen for screen lock.
+> > > > > > > 
+> > > > > > > Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+> > > > > > > emitted by driver to META + L.
+> > > > > > 
+> > > > > > Fix gnome and kde, do not break kernel...
+> > > > > 
+> > > > > I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+> > > > > 
+> > > > > That's going to break modern hardware lockscreen keys.  They've all
+> > > > > obviously moved to META+L because that's what hardware today uses.
 
-So you're saying the timing patch helps your system as well?
+Vendors do all kind of weird things. They want to ship their
+peripherals here and now and they do not care of shortcuts will change a
+few years down the road.
 
-Thanks,
+FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
+do not emit any shortcurts. Anything that is "Woks with Chromebooks"
+will use KEY_SCREENLOCK.
+
+
+> > > > 
+> > > > Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+> > > > screen locking, no?
+
+KDE by default recognizes Meta+L combination (which used to be
+Alt+Ctrl+L), Screensaver key, and allows users to define their custom
+shortcuts.
+
+I also wonder how many other DEs beside Gnome do not recognize
+KEY_SCREENLOCK.
+
+> > > 
+> > > This was actually the first path I looked down before I even started the
+> > > kernel patch direction for this problem.
+> > > 
+> > > GNOME doesn't support assigning more than one shortcut key for an action.
+> > 
+> > So if I want to start calculator on meta+c on internal keyboard, and
+> > have calculator button on USB keyboard, I'm out of luck?
+> 
+> Yeah AFAICT that's the case.
+> 
+> > 
+> > Sounds that should be fixed :-).
+> 
+> GNOME is commonly known to try to have a very simplistic UX instead of
+> exposing more knobs and buttons.
+> 
+> Adding support for multiple key combinations in a UX means convincing the
+> GNOME design team to support this, followed by actual changes.
+
+So there is a simple and wrong way of fixing this (introducing a
+hardcoded combination for  shortcut du jour in the kernel) and
+complicated one of making one of poplar DEs behave better and be more
+flexible. We will not be adding the wrong one to the kernel.
+
+If someone wants to do this kind of translation they are free to have a
+tiny uinput daemon.
 
 > 
-> On 4/24/25 11:11 AM, Mario Limonciello wrote:
->> On 4/19/2025 1:03 PM, Mario Limonciello wrote:
->>> On 4/19/2025 4:28 AM, M. Bergo wrote:
->>>>  From 881e57c87b9595c186c2ca7e6d35d0a52c1a10c2 Mon Sep 17 00:00:00 2001
->>>> From: Marcus Bergo <marcusbergo@gmail.com>
->>>> Date: Sat, 19 Apr 2025 05:19:05 -0300
->>>> Subject: [PATCH] ACPI: EC: Fix CPU frequency limitation on AMD 
->>>> platforms after
->>>>   suspend/resume
->>>>
->>>> Several AMD-based laptop models (Lenovo P15v Gen 3, P16v Gen 1, HP 
->>>> EliteBook 845 G10)
->>>> experience a CPU frequency limitation issue where the processor gets 
->>>> stuck at
->>>> approximately 544MHz after resuming from suspend when the power cord 
->>>> is unplugged
->>>> during sleep. This issue makes the systems practically unusable 
->>>> until a full
->>>> power cycle is performed.
->>>>
->>>> The root cause was traced to commit b5539eb5ee70 ("ACPI: EC: Fix
->>>> acpi_ec_dispatch_gpe()") which restored the behavior of clearing the 
->>>> GPE
->>>> in acpi_ec_dispatch_gpe() function to prevent GPE storms. While this 
->>>> fix is
->>>> necessary for most platforms to prevent excessive power consumption 
->>>> during
->>>> suspend-to-idle, it causes problems on certain AMD platforms by 
->>>> interfering
->>>> with the EC's ability to properly restore power management settings 
->>>> after resume.
->>>>
->>>> This patch implements a targeted workaround that:
->>>> 1. Adds DMI-based detection for affected AMD platforms
->>>> 2. Adds a function to check if we're in suspend-to-idle mode
->>>> 3. Modifies the acpi_ec_dispatch_gpe() function to handle AMD 
->>>> platforms specially:
->>>>     - For affected AMD platforms during suspend-to-idle, it advances 
->>>> the
->>>>       transaction without clearing the GPE status bit
->>>>     - For all other platforms, it maintains the existing behavior of 
->>>> clearing
->>>>       the GPE status bit
->>>>
->>>> Testing was performed on a Lenovo P16v Gen 1 with AMD Ryzen 7 PRO 
->>>> 7840HS and
->>>> confirmed that:
->>>> 1. Without the patch, the CPU frequency is limited to 544MHz after the
->>>>   suspend/unplug/resume sequence
->>>> 2. With the patch applied, the CPU properly scales up to its maximum 
->>>> frequency
->>>>     (5.1GHz) after the same sequence
->>>> 3. No regressions were observed in other EC functionality (battery 
->>>> status,
->>>>     keyboard backlight, etc.)
->>>> 4. Multiple suspend/resume cycles with different power states were 
->>>> tested
->>>>     without issues
->>>>
->>>> The patch was also verified not to affect the behavior on Intel- 
->>>> based systems,
->>>> ensuring that the GPE storm prevention remains effective where needed.
->>>>
->>>> Fixes: b5539eb5ee70 ("ACPI: EC: Fix acpi_ec_dispatch_gpe()")
->>>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=218557
->>>> Reported-by: Mark Pearson <mark.pearson@lenovo.com>
->>>> Signed-off-by: Marcus Bergo <marcusbergo@gmail.com>
->>>
->>> Great finding with this being a potential root cause of this behavior 
->>> (at least from a Linux perspective).
->>>
->>> Although this helps, I'm not really a fan of the tech debt 
->>> accumulated by needing to quirk this on a system by system basis as a 
->>> bandage.
->>>
->>> At least for HP someone said that this commit happens to help them 
->>> for the same issue you're describing:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform- 
->>> drivers- x86.git/commit/? 
->>> h=fixes&id=9f5595d5f03fd4dc640607a71e89a1daa68fd19d
->>>
->>> That was surprising to me, but it must be changing the timing of some 
->>> of the code running in HP's EC.  Since you happen to have a Lenovo 
->>> system does it happen to help the Lenovo EC too?
->>>
->>> Mark, comments please?
->>>
->> Someone just reported that the timing delay patch helped their Lenovo 
->> system as well.  Can you see if it helps you too?
+> > 
+> > Alternatively, you can just turn KEY_SCREENLOCK into META+L inside
+> > Gnome.
+> > 
+> > BR,
+> > 									Pavel
+> 
+> Or I can just go back to changing this locally in the PMF driver and it
+> works everywhere without needing to convince every userspace to make a
+> change to add special mappings.
+> 
+> As there isn't appetite from input maintainers to have a mapping in the
+> input layer I think I'll go that direction for a v5.
 
+I think this would be a mistake. I'll mention that on the other posting.
+
+Thanks.
+
+-- 
+Dmitry
