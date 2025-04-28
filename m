@@ -1,283 +1,149 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE1126A090;
-	Mon, 28 Apr 2025 12:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EA716A94A;
+	Mon, 28 Apr 2025 13:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844518; cv=none; b=qRZkheXDCKG4JVizCpMqAus5NCy6TooSAHRXuJQUlKS3kdkCJoWlVxccH2Om2waufEL+hLwn6cTsAeiOkG/wWJWlgyke3HrNaA8eI5i3qpvlIxIHI6tRIRbK/s/YcGmhX9NtmOG9saAzubDIrVmEza6TY9ecaPgpe+5MrfNwo7o=
+	t=1745848249; cv=none; b=eg+W+MAvuz55iDSGKlHd8HZ+ThpROSosrRQWXipnsQWyqye9aMyPnvGQ6EXzxjuTm/Suf1wPQeQUi9hpIgyZvf5qC/hyscjFmGsoAVTpo0vplXk0cnVQHd+9hAhoM4uwrrINv+Cyu6ckSOHpeKrap7GEVhqpjqKqACUI8yy5aew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844518; c=relaxed/simple;
-	bh=s255zXB24TqA3Y+zoiO/+Y0nEh6Xr32oQ9F74dLBBfw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=K37UWe1XVcqq/R+NfcYkrAY1+oUefFvBsxIDVdeZkTAeSZNAZLKg7Zap13wrmzHg3v3lGBTxvIhk21Ha/FAKi7wfsQ+UBnRqG2U7PqXCxsixRmsAiaawCzQdEn0uyXIqX54avBQi1uaAqXYCYbdqH/dfRorkE8gqHiPByYyAaSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=bWe9+8mW reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745848249; c=relaxed/simple;
+	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p7G6ojXaBywmoebNP+WeimC83MiXtfiESTczHhBoKAmofeesmV3zW3STDeOBAdlTURoXmzPt+2C6V9spDy0KZSvGCOnho0FHCu2LU5Tde3ro8BoGfwtgep+SenfIaQTNJTVi1nMoqMCZ6sIu66YlpFClZHHXEd7A4iE1vXj8tio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WffDrwpx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="bWe9+8mW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=LMrRcIEPY7Q9w3xDE5e0552Sq4/nmQzTOdECWk3BTP8=; b=b
-	We9+8mW+I4hT/nzFKdxG+p/vbuilXDf9o2+aUBFkKPR79bqEtQJdE/sC+9PEXb00
-	ga8AgCzUSARhAkaTPAuttd2gETbO3T7O2cNjufquY2Aa9FZem8KEG4nbeaBxM0+0
-	zerUAdGVSg/Mvpp05YVkVKp7TcNjpPAOF1Mreokx5o=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-137 (Coremail) ; Mon, 28 Apr 2025 20:44:03 +0800
- (CST)
-Date: Mon, 28 Apr 2025 20:44:03 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-	"Maxime Ripard" <mripard@kernel.org>,
-	"Thomas Zimmermann" <tzimmermann@suse.de>,
-	"David Airlie" <airlied@gmail.com>,
-	"Simona Vetter" <simona@ffwll.ch>,
-	"Andrzej Hajda" <andrzej.hajda@intel.com>,
-	"Neil Armstrong" <neil.armstrong@linaro.org>,
-	"Robert Foss" <rfoss@kernel.org>,
-	"Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>,
-	"Jonas Karlman" <jonas@kwiboo.se>,
-	"Jernej Skrabec" <jernej.skrabec@gmail.com>,
-	"Jagan Teki" <jagan@amarulasolutions.com>,
-	"Shawn Guo" <shawnguo@kernel.org>,
-	"Sascha Hauer" <s.hauer@pengutronix.de>,
-	"Pengutronix Kernel Team" <kernel@pengutronix.de>,
-	"Fabio Estevam" <festevam@gmail.com>,
-	"Douglas Anderson" <dianders@chromium.org>,
-	"Chun-Kuang Hu" <chunkuang.hu@kernel.org>,
-	"Krzysztof Kozlowski" <krzk@kernel.org>,
-	"Anusha Srivatsa" <asrivats@redhat.com>,
-	"Paul Kocialkowski" <paulk@sys-base.io>,
-	"Dmitry Baryshkov" <lumag@kernel.org>,
-	"Hui Pu" <Hui.Pu@gehealthcare.com>,
-	"Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
-	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	"Adam Ford" <aford173@gmail.com>,
-	"Adrien Grassein" <adrien.grassein@gmail.com>,
-	"Aleksandr Mishin" <amishin@t-argos.ru>,
-	"Andy Yan" <andy.yan@rock-chips.com>,
-	"AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
-	"Benson Leung" <bleung@chromium.org>,
-	"Biju Das" <biju.das.jz@bp.renesas.com>,
-	"Christoph Fritz" <chf.fritz@googlemail.com>,
-	"Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>,
-	"Detlev Casanova" <detlev.casanova@collabora.com>,
-	"Dharma Balasubiramani" <dharma.b@microchip.com>,
-	"Guenter Roeck" <groeck@chromium.org>,
-	"Heiko Stuebner" <heiko@sntech.de>,
-	"Jani Nikula" <jani.nikula@intel.com>, "Janne Grunau" <j@jannau.net>,
-	"Jerome Brunet" <jbrunet@baylibre.com>,
-	"Jesse Van Gavere" <jesseevg@gmail.com>,
-	"Kevin Hilman" <khilman@baylibre.com>,
-	"Kieran Bingham" <kieran.bingham+renesas@ideasonboard.com>,
-	"Liu Ying" <victor.liu@nxp.com>,
-	"Manikandan Muralidharan" <manikandan.m@microchip.com>,
-	"Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
-	"Matthias Brugger" <matthias.bgg@gmail.com>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>,
-	"Phong LE" <ple@baylibre.com>,
-	"Sasha Finkelstein" <fnkl.kernel@gmail.com>,
-	"Sugar Zhang" <sugar.zhang@rock-chips.com>,
-	"Sui Jingfeng" <sui.jingfeng@linux.dev>,
-	"Tomi Valkeinen" <tomi.valkeinen+renesas@ideasonboard.com>,
-	"Vitalii Mordan" <mordan@ispras.ru>
-Subject: Re:[PATCH v2 01/34] drm: convert many bridge drivers from
- devm_kzalloc() to devm_drm_bridge_alloc() API
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
-X-NTES-SC: AL_Qu2fB/Sfu0ov5SWabOkfmkcVgOw9UcO5v/Qk3oZXOJF8jBLo1zItdntMFln1/t+OJCOIkReYbzJI9MlIe6VRY6sPQCdyBIxAX351AVpDhuQrhQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WffDrwpx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 468BBC4CEE4;
+	Mon, 28 Apr 2025 13:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745848249;
+	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WffDrwpxJBR6sKe7djK8zG6L8beJGTvRL4uFGMOX1XekZO84Dxt9hvuAWYcgr9Itm
+	 A5dwuBOIIL8YW/4CjUCZQ27q8j4D2zB63rTtoQyu+JdnAedvhKC6Cuv8ecr9XCaaWy
+	 nV8z3N+ZYF307mIcNoSZ92Y9b9be9khlhIyELyRd6B9ncNmyt+e4XyfV9c6ezfeR1F
+	 kL9abguIPcPmGI7D0T46UDgLG5nHV2Amvx8icDl8J5iU+wPIe0DRzQo8idTR4EP5XH
+	 twJr30Hib0vtMvop1V/Umo8tsd/3FcKdtCslh7t52sk9x/LDRp6o/WT6H5YB5D0Vat
+	 FSxRc1nt83GFQ==
+Message-ID: <a7e82a84-2610-4132-90a8-42b371f57fb0@kernel.org>
+Date: Mon, 28 Apr 2025 08:50:46 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <656e493e.a551.1967c6d0c53.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iSgvCgAXHxgTeA9o84ahAA--.15978W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hM9XmgPbkX+9wACsl
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+ <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+ <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
+ <aA3KXNCKKH17mb+a@duo.ucw.cz>
+ <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
+ <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+ <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGkgLAoKQXQgMjAyNS0wNC0yNSAwMjo1OTowOCwgIkx1Y2EgQ2VyZXNvbGkiIDxsdWNhLmNlcmVz
-b2xpQGJvb3RsaW4uY29tPiB3cm90ZToKPmRldm1fZHJtX2JyaWRnZV9hbGxvYygpIGlzIHRoZSBu
-ZXcgQVBJIHRvIGJlIHVzZWQgZm9yIGFsbG9jYXRpbmcgKGFuZAo+cGFydGlhbGx5IGluaXRpYWxp
-emluZykgYSBwcml2YXRlIGRyaXZlciBzdHJ1Y3QgZW1iZWRkaW5nIGEgc3RydWN0Cj5kcm1fYnJp
-ZGdlLgo+Cj5Gb3IgbWFueSBkcml2ZXJzIGhhdmluZyBhIHNpbXBsZSBjb2RlIGZsb3cgaW4gdGhl
-IHByb2JlIGZ1bmN0aW9uLCB0aGlzCj5jb21taXQgZG9lcyBhIG1hc3MgY29udmVyc2lvbiBhdXRv
-bWF0aWNhbGx5IHdpdGggdGhlIGZvbGxvd2luZyBzZW1hbnRpYwo+cGF0Y2guIFRoZSBjaGFuZ2Vz
-IGhhdmUgYmVlbiByZXZpZXdlZCBtYW51YWxseSBmb3IgY29ycmVjdG5lc3MgYXMgd2VsbCBhcwo+
-dG8gZmluZCBhbnkgZmFsc2UgcG9zaXRpdmVzLgo+Cj4gIEBACj4gIHR5cGUgVDsKPiAgaWRlbnRp
-ZmllciBDOwo+ICBpZGVudGlmaWVyIEJSOwo+ICBleHByZXNzaW9uIERFVjsKPiAgZXhwcmVzc2lv
-biBGVU5DUzsKPiAgQEAKPiAgLVQgKkM7Cj4gICtUICpDOwo+ICAgLi4uCj4gICgKPiAgLUMgPSBk
-ZXZtX2t6YWxsb2MoREVWLCAuLi4pOwo+ICAtaWYgKCFDKQo+ICAtICAgIHJldHVybiAtRU5PTUVN
-Owo+ICArQyA9IGRldm1fZHJtX2JyaWRnZV9hbGxvYyhERVYsIFQsIEJSLCBGVU5DUyk7Cj4gICtp
-ZiAoSVNfRVJSKEMpKQo+ICArICAgICByZXR1cm4gUFRSX0VSUihDKTsKPiAgfAo+ICAtQyA9IGRl
-dm1fa3phbGxvYyhERVYsIC4uLik7Cj4gIC1pZiAoIUMpCj4gIC0gICAgcmV0dXJuIEVSUl9QVFIo
-LUVOT01FTSk7Cj4gICtDID0gZGV2bV9kcm1fYnJpZGdlX2FsbG9jKERFViwgVCwgQlIsIEZVTkNT
-KTsKPiAgK2lmIChJU19FUlIoQykpCj4gICsgICAgIHJldHVybiBQVFJfRVJSKEMpOwo+ICApCj4g
-ICAuLi4KPiAgLUMtPkJSLmZ1bmNzID0gRlVOQ1M7Cj4KPlNpZ25lZC1vZmYtYnk6IEx1Y2EgQ2Vy
-ZXNvbGkgPGx1Y2EuY2VyZXNvbGlAYm9vdGxpbi5jb20+Cj4KPi0tLQo+Cj5DYzogQWRhbSBGb3Jk
-IDxhZm9yZDE3M0BnbWFpbC5jb20+Cj5DYzogQWRyaWVuIEdyYXNzZWluIDxhZHJpZW4uZ3Jhc3Nl
-aW5AZ21haWwuY29tPgo+Q2M6IEFsZWtzYW5kciBNaXNoaW4gPGFtaXNoaW5AdC1hcmdvcy5ydT4K
-PkNjOiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj5DYzogQW5nZWxvR2lvYWNj
-aGlubyBEZWwgUmVnbm8gPGFuZ2Vsb2dpb2FjY2hpbm8uZGVscmVnbm9AY29sbGFib3JhLmNvbT4K
-PkNjOiBCZW5zb24gTGV1bmcgPGJsZXVuZ0BjaHJvbWl1bS5vcmc+Cj5DYzogQmlqdSBEYXMgPGJp
-anUuZGFzLmp6QGJwLnJlbmVzYXMuY29tPgo+Q2M6IENocmlzdG9waCBGcml0eiA8Y2hmLmZyaXR6
-QGdvb2dsZW1haWwuY29tPgo+Q2M6IENyaXN0aWFuIENpb2NhbHRlYSA8Y3Jpc3RpYW4uY2lvY2Fs
-dGVhQGNvbGxhYm9yYS5jb20+Cj5DYzogRGV0bGV2IENhc2Fub3ZhIDxkZXRsZXYuY2FzYW5vdmFA
-Y29sbGFib3JhLmNvbT4KPkNjOiBEaGFybWEgQmFsYXN1YmlyYW1hbmkgPGRoYXJtYS5iQG1pY3Jv
-Y2hpcC5jb20+Cj5DYzogR3VlbnRlciBSb2VjayA8Z3JvZWNrQGNocm9taXVtLm9yZz4KPkNjOiBI
-ZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Q2M6IEphbmkgTmlrdWxhIDxqYW5pLm5p
-a3VsYUBpbnRlbC5jb20+Cj5DYzogSmFubmUgR3J1bmF1IDxqQGphbm5hdS5uZXQ+Cj5DYzogSmVy
-b21lIEJydW5ldCA8amJydW5ldEBiYXlsaWJyZS5jb20+Cj5DYzogSmVzc2UgVmFuIEdhdmVyZSA8
-amVzc2VldmdAZ21haWwuY29tPgo+Q2M6IEtldmluIEhpbG1hbiA8a2hpbG1hbkBiYXlsaWJyZS5j
-b20+Cj5DYzogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJv
-YXJkLmNvbT4KPkNjOiBMaXUgWWluZyA8dmljdG9yLmxpdUBueHAuY29tPgo+Q2M6IE1hbmlrYW5k
-YW4gTXVyYWxpZGhhcmFuIDxtYW5pa2FuZGFuLm1AbWljcm9jaGlwLmNvbT4KPkNjOiBNYXJ0aW4g
-Qmx1bWVuc3RpbmdsIDxtYXJ0aW4uYmx1bWVuc3RpbmdsQGdvb2dsZW1haWwuY29tPgo+Q2M6IE1h
-dHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+Cj5DYzogUGhpbGlwcCBaYWJl
-bCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KPkNjOiBQaG9uZyBMRSA8cGxlQGJheWxpYnJlLmNv
-bT4KPkNjOiBTYXNoYSBGaW5rZWxzdGVpbiA8Zm5rbC5rZXJuZWxAZ21haWwuY29tPgo+Q2M6IFN1
-Z2FyIFpoYW5nIDxzdWdhci56aGFuZ0Byb2NrLWNoaXBzLmNvbT4KPkNjOiBTdWkgSmluZ2Zlbmcg
-PHN1aS5qaW5nZmVuZ0BsaW51eC5kZXY+Cj5DYzogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2Vp
-bmVuK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPkNjOiBWaXRhbGlpIE1vcmRhbiA8bW9yZGFu
-QGlzcHJhcy5ydT4KPgo+Q2hhbmdlZCBpbiB2MjoKPi0gYWRkZWQgbWlzc2luZyBQVFJfRVJSKCkg
-aW4gdGhlIHNlY29uZCBzcGF0Y2ggYWx0ZXJuYXRpdmUKPi0tLQo+IGRyaXZlcnMvZ3B1L2RybS9h
-ZHAvYWRwLW1pcGkuYyAgICAgICAgICAgICAgICAgICAgICB8ICA4ICsrKystLS0tCj4gZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MTFfZHJ2LmMgICAgICAgIHwgIDkgKysrKy0t
-LS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeC1hbng3OHh4LmMg
-IHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hdXgtYnJpZGdlLmMgICAg
-ICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hdXgt
-aHBkLWJyaWRnZS5jICAgICAgICAgICAgIHwgIDkgKysrKystLS0tCj4gZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9jYWRlbmNlL2NkbnMtbWhkcDg1NDYtY29yZS5jIHwgIDggKysrKy0tLS0KPiBkcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL2NoaXBvbmUtaWNuNjIxMS5jICAgICAgICAgICAgfCAgOSArKysr
-LS0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Nocm9udGVsLWNoNzAzMy5jICAgICAgICAg
-ICAgfCAgOCArKysrLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY3Jvcy1lYy1hbng3Njg4
-LmMgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZnNs
-LWxkYi5jICAgICAgICAgICAgICAgICAgICB8ICA3ICsrKy0tLS0KPiBkcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL2lteC9pbXgtbGVnYWN5LWJyaWRnZS5jICAgICAgfCAgOSArKysrLS0tLS0KPiBkcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL2lteC9pbXg4bXAtaGRtaS1wdmkuYyAgICAgICAgfCAxMCArKysr
-LS0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9pbXgvaW14OHF4cC1waXhlbC1saW5rLmMg
-ICAgIHwgIDggKysrKy0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2lteC9pbXg4cXhwLXB4
-bDJkcGkuYyAgICAgICAgfCAgOCArKysrLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvaXRl
-LWl0NjI2My5jICAgICAgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvaXRlLWl0NjUwNS5jICAgICAgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+IGRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvaXRlLWl0NjYxMjEuYyAgICAgICAgICAgICAgICB8ICA5ICsr
-KystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbG9udGl1bS1sdDg5MTJiLmMgICAgICAg
-ICAgICB8ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbG9udGl1bS1sdDky
-MTEuYyAgICAgICAgICAgICB8ICA4ICsrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9s
-b250aXVtLWx0OTYxMS5jICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9sdmRzLWNvZGVjLmMgICAgICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4g
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9taWNyb2NoaXAtbHZkcy5jICAgICAgICAgICAgIHwgIDgg
-KysrKy0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kuYyAgICAgICAgICAgICAg
-ICAgICAgfCAgOCArKysrLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFyYWRlLXBzODYy
-Mi5jICAgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-cGFyYWRlLXBzODY0MC5jICAgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1
-L2RybS9icmlkZ2Uvc2lpOTIzNC5jICAgICAgICAgICAgICAgICAgICB8ICA5ICsrKystLS0tLQo+
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAuYyAgICAgICAgICAgICAgICB8ICA5
-ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2ltcGxlLWJyaWRnZS5jICAgICAg
-ICAgICAgICB8IDEwICsrKystLS0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lz
-L2R3LWhkbWktcXAuYyAgICAgICAgfCAgOCArKysrLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlk
-Z2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyAgICAgICB8ICA4ICsrKystLS0tCj4gZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaTIuYyAgICAgIHwgIDggKysrKy0tLS0K
-PiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RjMzU4NzYyLmMgICAgICAgICAgICAgICAgICAgfCAg
-OSArKysrLS0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RjMzU4NzY0LmMgICAgICAgICAg
-ICAgICAgICAgfCAgOSArKysrLS0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RjMzU4NzY4
-LmMgICAgICAgICAgICAgICAgICAgfCAgOSArKysrLS0tLS0KPiBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3RjMzU4Nzc1LmMgICAgICAgICAgICAgICAgICAgfCAgOSArKysrLS0tLS0KPiBkcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL3RoYzYzbHZkMTAyNC5jICAgICAgICAgICAgICAgfCAgOCArKysrLS0t
-LQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktZGxwYzM0MzMuYyAgICAgICAgICAgICAgICB8
-ICA5ICsrKystLS0tLQo+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktdGRwMTU4LmMgICAgICAg
-ICAgICAgICAgICB8ICA4ICsrKystLS0tCj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0
-MTAuYyAgICAgICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS90aS10cGQxMnMwMTUuYyAgICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcC5jICAgICAgICAgICAgICAgICAgIHwgIDkgKysrKy0t
-LS0tCj4gZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyAgICAgICAgICAgICAgICAg
-IHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAg
-ICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19oZG1pLmMgICAgICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJt
-L21lc29uL21lc29uX2VuY29kZXJfY3Zicy5jICAgICAgICAgIHwgMTIgKysrKysrLS0tLS0tCj4g
-ZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2VuY29kZXJfZHNpLmMgICAgICAgICAgIHwgMTIg
-KysrKysrLS0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2VuY29kZXJfaGRtaS5j
-ICAgICAgICAgIHwgMTIgKysrKysrLS0tLS0tCj4gZHJpdmVycy9ncHUvZHJtL3JlbmVzYXMvcmNh
-ci1kdS9yY2FyX2x2ZHMuYyAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gZHJpdmVycy9ncHUvZHJt
-L3JlbmVzYXMvcnotZHUvcnpnMmxfbWlwaV9kc2kuYyAgICAgIHwgMTAgKysrKy0tLS0tLQo+IDQ5
-IGZpbGVzIGNoYW5nZWQsIDIwMSBpbnNlcnRpb25zKCspLCAyMzcgZGVsZXRpb25zKC0pCj4KCi4u
-Li4uLgoKPiAKPkBAIC0yMDIsOSArMjAzLDYgQEAgc3RhdGljIGludCBzaW1wbGVfYnJpZGdlX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gCWlmIChJU19FUlIoc2JyaWRnZS0+
-ZW5hYmxlKSkKPiAJCXJldHVybiBkZXZfZXJyX3Byb2JlKCZwZGV2LT5kZXYsIFBUUl9FUlIoc2Jy
-aWRnZS0+ZW5hYmxlKSwKPiAJCQkJICAgICAiVW5hYmxlIHRvIHJldHJpZXZlIGVuYWJsZSBHUElP
-XG4iKTsKPi0KPi0JLyogUmVnaXN0ZXIgdGhlIGJyaWRnZS4gKi8KPi0Jc2JyaWRnZS0+YnJpZGdl
-LmZ1bmNzID0gJnNpbXBsZV9icmlkZ2VfYnJpZGdlX2Z1bmNzOwo+IAlzYnJpZGdlLT5icmlkZ2Uu
-b2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOwo+IAlzYnJpZGdlLT5icmlkZ2UudGltaW5ncyA9
-IHNicmlkZ2UtPmluZm8tPnRpbWluZ3M7Cj4gCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLXFwLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
-bm9wc3lzL2R3LWhkbWktcXAuYwo+aW5kZXggNWU1ZjhjMmY5NWJlMWY1YzQ2MzNmMTA5M2IxN2Ew
-MGY5NDI1YmIzNy4uOWIxZGZkYjVlN2VlNTI4Yzg3NmMwMTkxNmM5ODIxZDU1MGNhZDY3OSAxMDA2
-NDQKPi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS1xcC5jCj4r
-KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWktcXAuYwo+QEAgLTEw
-NDUsOSArMTA0NSwxMCBAQCBzdHJ1Y3QgZHdfaGRtaV9xcCAqZHdfaGRtaV9xcF9iaW5kKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPiAJ
-fQo+IAo+LQloZG1pID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpoZG1pKSwgR0ZQX0tFUk5F
-TCk7Cj4tCWlmICghaGRtaSkKPi0JCXJldHVybiBFUlJfUFRSKC1FTk9NRU0pOwo+KwloZG1pID0g
-ZGV2bV9kcm1fYnJpZGdlX2FsbG9jKGRldiwgc3RydWN0IGR3X2hkbWlfcXAsIGJyaWRnZSwKPisJ
-CQkJICAgICAmZHdfaGRtaV9xcF9icmlkZ2VfZnVuY3MpOwo+KwlpZiAoSVNfRVJSKGhkbWkpKQo+
-KwkJcmV0dXJuIFBUUl9FUlIoaGRtaSk7CgogICAgICAgICAgIFRoaXMgc2hvdWxkIHJldHVybiBo
-ZG1pIG9yIEVSUl9DQVNUKGhkbWkpOwoKCj4gCj4gCWhkbWktPmRldiA9IGRldjsKPiAKPkBAIC0x
-MDczLDcgKzEwNzQsNiBAQCBzdHJ1Y3QgZHdfaGRtaV9xcCAqZHdfaGRtaV9xcF9iaW5kKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gCQlyZXR1cm4gRVJSX1BUUihyZXQpOwo+IAo+IAlo
-ZG1pLT5icmlkZ2UuZHJpdmVyX3ByaXZhdGUgPSBoZG1pOwo+LQloZG1pLT5icmlkZ2UuZnVuY3Mg
-PSAmZHdfaGRtaV9xcF9icmlkZ2VfZnVuY3M7Cj4gCWhkbWktPmJyaWRnZS5vcHMgPSBEUk1fQlJJ
-REdFX09QX0RFVEVDVCB8Cj4gCQkJICAgRFJNX0JSSURHRV9PUF9FRElEIHwKPiAJCQkgICBEUk1f
-QlJJREdFX09QX0hETUkgfAo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lu
-b3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHct
-bWlwaS1kc2kuYwo+aW5kZXggYjA4YWRhOTIwYTUwMWQ2YTYyZjM5NTgxOTQ0YTg3MDE5ZjVlNWMx
-NS4uODc4ODYyMzViOGQzYTg1ZTA3MTFmNzc2M2QwNDhhZDllZWZkMTU5YSAxMDA2NDQKPi0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+KysrIGIvZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jCj5AQCAtMTE5NCw5ICsx
-MTk0LDEwIEBAIF9fZHdfbWlwaV9kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-diwKPiAJc3RydWN0IGR3X21pcGlfZHNpICpkc2k7Cj4gCWludCByZXQ7Cj4gCj4tCWRzaSA9IGRl
-dm1fa3phbGxvYyhkZXYsIHNpemVvZigqZHNpKSwgR0ZQX0tFUk5FTCk7Cj4tCWlmICghZHNpKQo+
-LQkJcmV0dXJuIEVSUl9QVFIoLUVOT01FTSk7Cj4rCWRzaSA9IGRldm1fZHJtX2JyaWRnZV9hbGxv
-YyhkZXYsIHN0cnVjdCBkd19taXBpX2RzaSwgYnJpZGdlLAo+KwkJCQkgICAgJmR3X21pcGlfZHNp
-X2JyaWRnZV9mdW5jcyk7Cj4rCWlmIChJU19FUlIoZHNpKSkKPisJCXJldHVybiBQVFJfRVJSKGRz
-aSk7CgoKVGhpcyBzaG91ZCByZXR1cm4gZHNpIG9yIEVSUl9DQVNUKGRzaSk7Cj4gCj4gCWRzaS0+
-ZGV2ID0gZGV2Owo+IAlkc2ktPnBsYXRfZGF0YSA9IHBsYXRfZGF0YTsKPkBAIC0xMjY1LDcgKzEy
-NjYsNiBAQCBfX2R3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYs
-Cj4gCX0KPiAKPiAJZHNpLT5icmlkZ2UuZHJpdmVyX3ByaXZhdGUgPSBkc2k7Cj4tCWRzaS0+YnJp
-ZGdlLmZ1bmNzID0gJmR3X21pcGlfZHNpX2JyaWRnZV9mdW5jczsKPiAJZHNpLT5icmlkZ2Uub2Zf
-bm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOwo+IAo+IAlyZXR1cm4gZHNpOwo+ZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kyLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpMi5jCj5pbmRleCBjNzZmNWYyZTc0
-ZDE0YmQzNzJmOTY5YzZjNzgzMmFhNTdmODA3NzJiLi45ZjY5NGY3MmI1MjE5MTJmNWQ0YWY0NmYy
-ZGYyZmMwZmUzZjc3NmVhIDEwMDY0NAo+LS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
-cHN5cy9kdy1taXBpLWRzaTIuYwo+KysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5
-cy9kdy1taXBpLWRzaTIuYwo+QEAgLTkxNCw5ICs5MTQsMTAgQEAgX19kd19taXBpX2RzaTJfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAJc3RydWN0IGR3X21pcGlfZHNpMiAq
-ZHNpMjsKPiAJaW50IHJldDsKPiAKPi0JZHNpMiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
-ZHNpMiksIEdGUF9LRVJORUwpOwo+LQlpZiAoIWRzaTIpCj4tCQlyZXR1cm4gRVJSX1BUUigtRU5P
-TUVNKTsKPisJZHNpMiA9IGRldm1fZHJtX2JyaWRnZV9hbGxvYyhkZXYsIHN0cnVjdCBkd19taXBp
-X2RzaTIsIGJyaWRnZSwKPisJCQkJICAgICAmZHdfbWlwaV9kc2kyX2JyaWRnZV9mdW5jcyk7Cj4r
-CWlmIChJU19FUlIoZHNpMikpCj4rCQlyZXR1cm4gUFRSX0VSUihkc2kyKTsKClRoaXMgc2hvdWxk
-IHJldHVybiBkc2kyIG9yIEVSUl9DQVNUKGRpczIpOwoKPiAKPiAJZHNpMi0+ZGV2ID0gZGV2Owo+
-IAlkc2kyLT5wbGF0X2RhdGEgPSBwbGF0X2RhdGE7Cj5AQCAtOTgxLDcgKzk4Miw2IEBAIF9fZHdf
-bWlwaV9kc2kyX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gCX0KPiAKPiAJ
-ZHNpMi0+YnJpZGdlLmRyaXZlcl9wcml2YXRlID0gZHNpMjsKPi0JZHNpMi0+YnJpZGdlLmZ1bmNz
-ID0gJmR3X21pcGlfZHNpMl9icmlkZ2VfZnVuY3M7Cj4gCWRzaTItPmJyaWRnZS5vZl9ub2RlID0g
-cGRldi0+ZGV2Lm9mX25vZGU7Cj4gCj4gCXJldHVybiBkc2kyOwo+Cj4gCS8qIEluaXQgaG9zdCBk
-ZXZpY2UgKi8KPgo+LS0gCj4yLjQ5LjAK
+On 4/28/2025 12:51 AM, Dmitry Torokhov wrote:
+> On Sun, Apr 27, 2025 at 10:30:24PM -0700, Dmitry Torokhov wrote:
+>> Apologies for extended absence...
+>>
+>> On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
+>>>
+>>>
+>>> On 4/27/25 01:10, Pavel Machek wrote:
+>>>> Hi!
+>>>>
+>>>>>>>>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>>>>>>>>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>>>>>>>>> to lock the screen. Modern hardware [2] also sends this sequence of
+>>>>>>>>> events for keys with a silkscreen for screen lock.
+>>>>>>>>>
+>>>>>>>>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+>>>>>>>>> emitted by driver to META + L.
+>>>>>>>>
+>>>>>>>> Fix gnome and kde, do not break kernel...
+>>>>>>>
+>>>>>>> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+>>>>>>>
+>>>>>>> That's going to break modern hardware lockscreen keys.  They've all
+>>>>>>> obviously moved to META+L because that's what hardware today uses.
+>>
+>> Vendors do all kind of weird things. They want to ship their
+>> peripherals here and now and they do not care of shortcuts will change a
+>> few years down the road.
+>>
+>> FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
+>> do not emit any shortcurts. Anything that is "Woks with Chromebooks"
+>> will use KEY_SCREENLOCK.
+>>
+>>
+>>>>>>
+>>>>>> Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+>>>>>> screen locking, no?
+>>
+>> KDE by default recognizes Meta+L combination (which used to be
+>> Alt+Ctrl+L), Screensaver key, and allows users to define their custom
+>> shortcuts.
+>>
+>> I also wonder how many other DEs beside Gnome do not recognize
+>> KEY_SCREENLOCK.
+> 
+> So I poked around Gnome a bit. According to the gnome-settings-daemon
+> source code KEY_SCREENLOCK should be recognized. It is set up as
+> "screensaver-static" key which is hidden and shoudl not be changed by
+> user:
+> 
+> https://github.com/GNOME/gnome-settings-daemon/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in#L504
+> 
+>      <key name="screensaver-static" type="as">
+>        <default>['XF86ScreenSaver']</default>
+>        <summary>Lock screen</summary>
+>        <description>Static binding to lock the screen.</description>
+>      </key>
+> 
+> 
+> 
+>>
+>>>>>
+>>>>> This was actually the first path I looked down before I even started the
+>>>>> kernel patch direction for this problem.
+>>>>>
+>>>>> GNOME doesn't support assigning more than one shortcut key for an action.
+> 
+> It sure does even if it is not shown in UI. Poke around with
+> dconf-editor and look in /org/gnome/settings-daemon/plugins/media-keys/
+> and you will see plenty of "*-static" keys with multiple
+> keycodes/shortcuts assigned.
+> 
+> "touchpad-toggle-static" - ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
+> "rotate-video-lock-static" - ['<Super>o', 'XF86RotationLockToggle']
+> 
+> and so on...
+> 
+> Maybe Gnome broke screen lock key in recent release?
+> 
+> Thanks.
+> 
+
+Thanks for your feedback and looking into what GNOME is doing.  It sure 
+/sounds/ like this should have worked with no kernel changes and GNOME 
+has a bug with the lock screen key.
+
+I'll abandon the kernel series.
