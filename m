@@ -1,202 +1,86 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C4827A911;
-	Mon, 28 Apr 2025 16:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FC828BA8A;
+	Mon, 28 Apr 2025 17:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858064; cv=none; b=Mms5IfFIfarjxhqpJPgwaM9KUWso023a04/qlaDKOzzGuR5xAjuBIoMbwBfSWywhYcKX91ul1l+vJr1FOJqszWCQZDtJhvZNBYI5cYhUdig8qzLu+PCq7vYw/WquK6Q91Hvy7XzWiNWU3Xm9gr4Z/kWd4CTOL9xFfE5Fc/Wy32U=
+	t=1745859813; cv=none; b=ggl1mR9aWOvLMhwMuJA1Ak/MamaoIiaVytQMGGwQsmuqXGMCQf5QpCDF/TvTcbRSsIQWR4UGiV+zFiFdBt81wTLNytjX/n9vgl+89Zw9Xj8iRFyGtUYdXLxiH58MN4e13fkbnSN4kpNOpVg3ZKOmdCcvS3r82Hnwnfna6kd9pFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858064; c=relaxed/simple;
-	bh=XWL8UolMeNZmPHHotkwGV8h0TGYlW+ze8mtg/kLlngg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BN9+zEaAx4wJj9rvWGWrfCFvOt+uLygC6hjPTZvjfOP2sCD3mmKlyjBGFrKDWE5wYZy9vnDWLW7QvvHNR7yC9BBWWPjWLQ43H3mr0QcT7MiggKkGB6F0r+zndcedKRK8Bzl6B3ui+TddAtLOxQ4u8WMUXVTnOYy+D3mkbP5532M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A5vI5CPA; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745859813; c=relaxed/simple;
+	bh=3NyzGHI0Yu5Pn9IcjSsWG3teBLgkWEFF8HiBKretWI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UjpgT47Iy4y7d2DDT0d3xpNdBDqxPgGrTsZzd0wiFqa6mT5zemHJQKthvb0FMAgw/XUejddGItRQ/nsT0OVI/bMBSAAoLY8C8wAAdM/UsC6QrID5ubr0ZQHMqV7Q+qft7aSbm66Et2IDagecnjnnjn/HkU+ztjQe4OgEg8iar9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bft7YcrI; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A5vI5CPA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F39DA43962;
-	Mon, 28 Apr 2025 16:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745858053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+W4uodyxoQUQ7gTcLqHUOqlDvIcEkj4yx+1gWHy3Mc=;
-	b=A5vI5CPAhG7Ec31vAslCrct99yDYQUT4yEVpjGag1L5A3ypdDOeM06X6a2NpNi4YWnE6mC
-	2NyQNklaS4GH5N+Y0O0KorENjPo6XmIKRUe43hr2bljZ9KcS30qPhwmXIPUFXXOTPm5XIu
-	n26mA6Au7+KoHn580KonEgnc/bZs1s5A97JkVcqC4ISpJzXNYjj+t+twS22sMPY2EzjhQZ
-	iio59hjvBN4KHAeTHadmXNHM9e/08/R+WKLujQCoy1O7rhd/OkZ8uYxTFLAP+7H0ewrqHT
-	6PMrAxpgk6up77rZyTiJAqPjC9S4tcckhsI1eEGu3LR+due+PAeNxJSMadl6Qw==
-Date: Mon, 28 Apr 2025 18:33:58 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com, Adam Ford <aford173@gmail.com>,
- Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
- <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
- Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
- <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
- Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>, Detlev Casanova
- <detlev.casanova@collabora.com>, Dharma Balasubiramani
- <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
- Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
- Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
- Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
- <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
- <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
- Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
- <mordan@ispras.ru>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
- <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Dmitry
- Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, "Rob Herring (Arm)"
- <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>, Pin-yen Lin
- <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia
- <a-bhatia1@ti.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian
- Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>, Peter
- Senna Tschudin <peter.senna@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Herve Codina <herve.codina@bootlin.com>, Alim
- Akhtar <alim.akhtar@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kyungmin
- Park <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Bjorn Andersson <quic_bjorande@quicinc.com>,
- Marijn Suijten <marijn.suijten@somainline.org>, Rob Clark
- <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Helge Deller
- <deller@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>,
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre
- <yannick.fertre@foss.st.com>, =?UTF-8?B?TWHDrXJh?= Canal
- <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Alain Volmat
- <alain.volmat@foss.st.com>, Raphael Gallais-Pou <rgallaispou@gmail.com>,
- Michal Simek <michal.simek@amd.com>
-Subject: Re: [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-Message-ID: <20250428183358.4d28ca6a@booty>
-In-Reply-To: <20250428-colossal-fiery-alpaca-8c5fee@houat>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<20250428172457.23e23df5@booty>
-	<20250428-colossal-fiery-alpaca-8c5fee@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bft7YcrI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745859811; x=1777395811;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3NyzGHI0Yu5Pn9IcjSsWG3teBLgkWEFF8HiBKretWI0=;
+  b=Bft7YcrIInHiwO5PHP3OjcXKX0do0mpnArKprKsg5FrlJ92CL2w6WBcc
+   l8LnHtgT5Tk7BICMKcKlIBLDW+aDbqy34b+yyK4XBQE0ms9ntokGRjNWK
+   FLVyVE2YYw2R1Sor6TRnoJ9nstrlUPhTTZK4zDX/1H2Yb8c306NxuK+N5
+   WgPldsgk1oWItpNEULjhfyrsfc/EDdRXDs5/9BzK/TKKjRbajBNXYed8m
+   iegR3kbpPpKpiYV01dvNApBsgDSqgeNhC7cs8mwST32S9fgZC45OvRFwn
+   opK4WyY1LXfx6s5xir7d9ScJOYy6VJeX+mg9QgHY1fiIQMzZr1k/VeoOL
+   w==;
+X-CSE-ConnectionGUID: 7nj+yKINTDmCr2Vu88F/lA==
+X-CSE-MsgGUID: IOpbfcC/RVicj6Qll4DiyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58111434"
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="58111434"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 10:03:25 -0700
+X-CSE-ConnectionGUID: xa3gxVrOSw+TPdKlQRQ81A==
+X-CSE-MsgGUID: deAUh0DvSZGmgMmW3FjmQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="133309594"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by orviesa009.jf.intel.com with ESMTP; 28 Apr 2025 10:03:25 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 0/5] intel-uncore-freq: Add agent_types and die_id attributes
+Date: Mon, 28 Apr 2025 10:03:11 -0700
+Message-ID: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedugeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfetudeugfehheeliefhjeejuddvledtuddttdevledthfehgeeugfetheekgfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtkedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmr
- ghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Maxime,
+Add two new attributes, so that orchestration software like Kubernetes can
+target specific dies and agents for uncore frequency control.
 
-On Mon, 28 Apr 2025 17:42:46 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
+v2:
+In patch 5/5 fix grammar as reported by Alok Tiwari
 
-> On Mon, Apr 28, 2025 at 05:24:57PM +0200, Luca Ceresoli wrote:
-> > Hi Maxime, other DRM maintainers,
-> >=20
-> > On Thu, 24 Apr 2025 20:59:07 +0200
-> > Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
-> >  =20
-> > > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize=
- a DRM
-> > > bridge, and the only one supported from now on. It is also necessary =
-for
-> > > implementing reference counting and thus needed to support removal of
-> > > bridges from a still existing DRM pipeline without use-after-free.
-> > >=20
-> > > This series converts all DRM bridges to the new API.
-> > >=20
-> > > Patch 1 uses a coccinelle semantic patch to mass-convert some of those
-> > > drivers -- thanks Maxime for having suggested the patch that served a=
-s a
-> > > starting point for me. I was unable to come up with a better patch
-> > > converting more drivers though, so I converted all others manually. M=
-ost of
-> > > them were trivial. I left the non-trivial ones at the end of the seri=
-es to
-> > > help reviewers know where to look at more carefully.
-> > >=20
-> > > Due to the large number of touched files, the list of recipients gene=
-rated
-> > > by get_maintainers (b4 actually) was huge, 60~70 people (not counting
-> > > mailing lists), so I took the liberty of trimming the list as reasona=
-bly as
-> > > I could to DRM maintainers and frequent contributors, and added all o=
-ther
-> > > recipients individually per-patch. I hope this is fine. Don't hesitat=
-e to
-> > > suggest more people which should be Cc-ed in a future series, or a be=
-tter
-> > > Cc policy.
-> > >=20
-> > > Current plan and status of the DRM bridge refcounting work:
-> > >=20
-> > >  A. =E2=9C=94 add new alloc API and refcounting -> (now in drm-misc-n=
-ext)
-> > >  B. =E2=9E=9C convert all bridge drivers to new API (this series)
-> > >  C. =E2=80=A6 documentation, kunit tests, debugfs improvements (v1 un=
-der discussion)
-> > >  D. after (B), add get/put to drm_bridge_add/remove() + attach/detech=
-()
-> > >  E. after (B), convert accessors; this is a large work and can be done
-> > >     in chunks =20
-> >
-> > Maintaining this long series is quite painful. Do you think at least
-> > patches with a R-by or T-by tag could be merged before I send v3, so
-> > we can relieve the maintenance effort, mail servers, and everybody's
-> > inboxes? =20
->=20
-> Yes?
->=20
-> What's stopping you though? You have at least a colleague that can apply
-> them, and you could just as well apply for commit rights yourself.
+Srinivas Pandruvada (5):
+  platform/x86/intel-uncore-freq: Add attributes to show agent types
+  Documentation: admin-guide: pm: Add documentation for agent_types
+  platform/x86/intel: power-domains: Add interface to get Linux die ID
+  platform/x86/intel-uncore-freq: Add attributes to show die_id
+  Documentation: admin-guide: pm: Add documentation for die_id
 
-OK, thanks. Will do.
+ .../pm/intel_uncore_frequency_scaling.rst     | 10 ++++
+ .../platform/x86/intel/tpmi_power_domains.c   | 34 +++++++++--
+ .../platform/x86/intel/tpmi_power_domains.h   |  1 +
+ .../uncore-frequency-common.c                 | 31 ++++++++++
+ .../uncore-frequency-common.h                 | 19 ++++++-
+ .../uncore-frequency/uncore-frequency-tpmi.c  | 56 +++++++++++++++++++
+ 6 files changed, 146 insertions(+), 5 deletions(-)
 
-The reason I haven't done it is this policy in DRM still appears a bit
-unusual to me, but if it works for DRM I'm OK with it. Only, in case of
-doubt, I didn't want to risk abusing of the commit rights.
+-- 
+2.48.1
 
-Best regards,
-Luca
-
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
