@@ -1,215 +1,81 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AA8156C40
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Apr 2025 15:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B54714EC5B;
+	Mon, 28 Apr 2025 16:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855128; cv=none; b=jaD0/1igBwlfggxUMGzuWm1TcwrUE6aXO/q3s3iG3//ct58lA/7VCYbV6Aq7Lj4Z0/s2fjcQWQU6k2CtjmeXZxOq/2HgWdBliPDY5x9aBXARuQpfvRegR9Lk4owfsSdYnx8HST7rHU/hxJjyuIjyMSqrw4ONo7q6eR1epMBu7RQ=
+	t=1745856855; cv=none; b=RmyX4V7MuV03Wg0x8TzUdDUjmL14giuRKn4lANJHc7jMrqkxw86FIJwC+fF4ItPF/290fK1m56AhPlm1oGtUkJisOUqWqQP9zc0OLwWuEAa1WuvnV9ldb3htvQy9tDLJArEKfBDmOz5GENlkGckoHOMaN33cMIqdkZP09GKBVfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855128; c=relaxed/simple;
-	bh=dwgYOym45oyNAdQ44afULSTNmEmOJnzMpDMS/yioqQY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rz7xKM5Vq5dX4kCn3SdWBxmTBmSr0SjsT2L+FLo4HzK6hTzglymbaXbVGmtBhGCtI4dU6J8jSBnqubhJeD+xYBV/XD4B/pVXM88Yrz0XeKlIXxJ/tDTF/KdAVv2LEeXvNHz6sHDvjw3dRJC8VjCFUcRfgtdnKJBBhSFJryGYAYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=j5baIypc; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1745856855; c=relaxed/simple;
+	bh=dieXJtGrsIb7S0Z/o5b2skI3aa8C+cWrhhwXmEj18w4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hWIJ/x+O3suYHqyc4x3EzeJIa4GUP9lT6oOpoXoPU5/C1++7NZ6vzIYFNvThTZzH3Wd/ZAwq48fPgzmk2h/AQnHGmvh/WIuU4nTusKSrIpyRL1hoL6WcYfaCN2ThwB4fNBXqPGzb9XfBkl52QZ2T3JUFg+26d0k+PPiEPZnQDvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaZyEU+a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="j5baIypc"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e6df1419f94so3843035276.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Apr 2025 08:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1745855125; x=1746459925; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
-        b=j5baIypc9i0K05RdO5/l5gRBUgEUeMq61cNw9dtP/9FCbgmHNBsKy/Pcm4Zi9BnPNy
-         9HbzMAY0RVj+QjPwlII6QHZ7j0Mr1QZDok24o0gYW/2wfZp9KNHYpwwgwUhFgC/eZ87h
-         keJnKSsoArCQlrOJ6ScrhmbW1LBGFbQFrXQDQiV75U2OfHNaHrUWYrTWBJiKzoLgkXnS
-         J9/ceWK/yk/dAvGSjomzx1g5KJ9E3VMVl1QuiCRccA102Ege/PyOy4xibceml3NB8QmX
-         9ek86APh13k3BUAxhwWuKq4nff+TEW/qsOfm8HiKAbGWjPCHJ6EEbRQmdfU6t02MadpI
-         QMUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855125; x=1746459925;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
-        b=B5S6FKEn7KbbZ2tTFdrY4dI0sGjIyQgAFvFgI+tg7rzZeZ/jd0tH/qFurOzBPfj2F2
-         AVAbmvBHqPC1dpYoHigwoQ9tCQbYQfmJ4HuWvID9kwtZsxdOx7Fh//an8he+C9i3P+s/
-         CLSIiLcJk4ncM6ZcH9QpDiGLL20g9ytvvgwZ3Eh+SEYWob1L/hkJPdIxaJ0Xwy5y0Lhq
-         XlNlhmABfejeD2+Q6pWlt7zY+dQ0tMyqodL05f/aQDbfU9HG638Y/72H+6ZJ1FyjIEek
-         rkrEa7EblrnBpYfPSlISSjjMJQva+SvGu7VyZ4/LzPEe6yARa+ajbeFKwPhYdUJ39+D7
-         CwGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHA+0vT6tA57OWowuLQUiyaQWLWGjueid3r1dh+TdR9yDkpl1x/Sq32VhsKAjY4irwyLPiMNdKSibhK3W2xMbeyUAC@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqpOlnkAqWh25909bbtLsr8Jezh23JKPJYIC/cwLCsCCFANsGm
-	muAZZFQ2HKos9LlSra4RNOJ1qWib22ysYJfWNaEVUISjXF9b1Vs+0IKmV9sNzD0+0Fqqt5iVgBy
-	c9MvcCYRvu0FNzYHnlTHHoFHQgAc4+8DejGuTvA==
-X-Gm-Gg: ASbGnct/sTJcqI3sPyQ9EPkzMT3H2HJDSKBkmv+Whct4Ulo/dNnQIyN1fvqlY7Re5RB
-	52bzUIDjuKEi3yRL5q6kctx/nIxwPPqwgpMDmTBnJKtD6/GDJx8IIgIgFo2dUnkcJRPt+2JUKy2
-	CeX85AEtmxDj7tcVDLUqV7zYhJtevkl3RNc4wA4frnhrjkwYK+TKdr3lbUina4vfM=
-X-Google-Smtp-Source: AGHT+IEF9MSlc844cuGTIRN/jaSQKExcmjeU1UeJwf54mw2x30vI+iBpqqWrdgOqbrjU+FD8mBfkUxmgGRAbgf2Y+6M=
-X-Received: by 2002:a05:6902:2701:b0:e72:d88e:7a9a with SMTP id
- 3f1490d57ef6-e73500e777emr136870276.45.1745855124717; Mon, 28 Apr 2025
- 08:45:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaZyEU+a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C3DC4CEE4;
+	Mon, 28 Apr 2025 16:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745856854;
+	bh=dieXJtGrsIb7S0Z/o5b2skI3aa8C+cWrhhwXmEj18w4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aaZyEU+ave1e6P7101soHdSaiB3jtUwSkxF2MqNcRUCnSi5RvjV34OoRqVvrZQmZC
+	 EL9LSSPOCGHLT7U8lDmj5xaCrZiqkKZd8lg4wmomn+ndjJ4fD7qCW/1dbgZOfxWuD0
+	 yJyyxYsGP56eeJGjepr/XCphxMq1cJy/IOYja5GWbgmc2LjeUamaUZfkPyzK//siBU
+	 5WB2Folb7/dJtPFkqJfgXHkq4rdT2MjwkbudqINKQ/ownhjiCiVy35Y1acfZ0Sevzj
+	 73m2vS6TOZXh+5zXCJLRJI07RBrXegkOqCIbmbXp8/kG+nVdi9RkJjK6FqWep5QqfX
+	 RhT2uwGofrOjw==
+Message-ID: <9d8abfc3-062e-4566-bf2f-42881ad36402@kernel.org>
+Date: Mon, 28 Apr 2025 11:14:09 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
-In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 28 Apr 2025 16:45:08 +0100
-X-Gm-Features: ATxdqUF8zRJ18UCRRqpYogjOFDok1I-AvafpDPPJcxH-STXodhofR9H1CLM8tQg
-Message-ID: <CAPY8ntDwK0DZ6sThryDRBUgjTb+muNHtRNp+LohTs6+FWeB5TQ@mail.gmail.com>
-Subject: Re: [PATCH v2 27/34] drm/vc4: convert to devm_drm_bridge_alloc() API
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] AMD Zen debugging documentation
+To: Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <87frhysyyp.fsf@trenco.lwn.net>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <87frhysyyp.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Apr 2025 at 20:01, Luca Ceresoli <luca.ceresoli@bootlin.com> wro=
-te:
->
-> This is the new API for allocating DRM bridges.
->
-> This driver already implements refcounting of the struct vc4_dsi, which
-> embeds struct drm_bridge. Now this is a duplicate of the refcounting
-> implemented by the DRM bridge core, so convert the vc4_dsi_get/put() call=
-s
-> into drm_bridge_get/put() calls and get rid of the driver-specific
-> refcounting implementation.
->
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+On 4/23/2025 10:02 AM, Jonathan Corbet wrote:
+> Mario Limonciello <superm1@kernel.org> writes:
+> 
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> Introduce documentation for debugging some issues on AMD zen hardware.
+>> As one of the debugging techniques read and add information for
+>> S5_RESET_STATUS register.
+> 
+> I've been assuming that this work will go through the x86 tree; please
+> let me know if you'd like me to pick it up instead.
+> 
+> Thanks,
+> 
+> jon
 
-Acked-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+I think that's probably easier, patch 5 needs patch 1.
 
-Thanks.
-
-> ---
->
-> Cc: "Ma=C3=ADra Canal" <mcanal@igalia.com>
-> Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
->
-> Changed in v2:
-> - fix error code checking
-> ---
->  drivers/gpu/drm/vc4/vc4_dsi.c | 34 +++++-----------------------------
->  1 file changed, 5 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.=
-c
-> index efc6f6078b026764c59cfb2a33b28a88b7018c3a..458e5d9879645f18bcbcaeeb7=
-1b5f1038f9581da 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -552,8 +552,6 @@ struct vc4_dsi {
->         struct vc4_encoder encoder;
->         struct mipi_dsi_host dsi_host;
->
-> -       struct kref kref;
-> -
->         struct platform_device *pdev;
->
->         struct drm_bridge *out_bridge;
-> @@ -1622,29 +1620,11 @@ static void vc4_dsi_dma_chan_release(void *ptr)
->         dsi->reg_dma_chan =3D NULL;
->  }
->
-> -static void vc4_dsi_release(struct kref *kref)
-> -{
-> -       struct vc4_dsi *dsi =3D
-> -               container_of(kref, struct vc4_dsi, kref);
-> -
-> -       kfree(dsi);
-> -}
-> -
-> -static void vc4_dsi_get(struct vc4_dsi *dsi)
-> -{
-> -       kref_get(&dsi->kref);
-> -}
-> -
-> -static void vc4_dsi_put(struct vc4_dsi *dsi)
-> -{
-> -       kref_put(&dsi->kref, &vc4_dsi_release);
-> -}
-> -
->  static void vc4_dsi_release_action(struct drm_device *drm, void *ptr)
->  {
->         struct vc4_dsi *dsi =3D ptr;
->
-> -       vc4_dsi_put(dsi);
-> +       drm_bridge_put(&dsi->bridge);
->  }
->
->  static int vc4_dsi_bind(struct device *dev, struct device *master, void =
-*data)
-> @@ -1655,7 +1635,7 @@ static int vc4_dsi_bind(struct device *dev, struct =
-device *master, void *data)
->         struct drm_encoder *encoder =3D &dsi->encoder.base;
->         int ret;
->
-> -       vc4_dsi_get(dsi);
-> +       drm_bridge_get(&dsi->bridge);
->
->         ret =3D drmm_add_action_or_reset(drm, vc4_dsi_release_action, dsi=
-);
->         if (ret)
-> @@ -1810,15 +1790,12 @@ static int vc4_dsi_dev_probe(struct platform_devi=
-ce *pdev)
->         struct device *dev =3D &pdev->dev;
->         struct vc4_dsi *dsi;
->
-> -       dsi =3D kzalloc(sizeof(*dsi), GFP_KERNEL);
-> -       if (!dsi)
-> -               return -ENOMEM;
-> +       dsi =3D devm_drm_bridge_alloc(&pdev->dev, struct vc4_dsi, bridge,=
- &vc4_dsi_bridge_funcs);
-> +       if (IS_ERR(dsi))
-> +               return PTR_ERR(dsi);
->         dev_set_drvdata(dev, dsi);
->
-> -       kref_init(&dsi->kref);
-> -
->         dsi->pdev =3D pdev;
-> -       dsi->bridge.funcs =3D &vc4_dsi_bridge_funcs;
->  #ifdef CONFIG_OF
->         dsi->bridge.of_node =3D dev->of_node;
->  #endif
-> @@ -1836,7 +1813,6 @@ static void vc4_dsi_dev_remove(struct platform_devi=
-ce *pdev)
->         struct vc4_dsi *dsi =3D dev_get_drvdata(dev);
->
->         mipi_dsi_host_unregister(&dsi->dsi_host);
-> -       vc4_dsi_put(dsi);
->  }
->
->  struct platform_driver vc4_dsi_driver =3D {
->
-> --
-> 2.49.0
->
+Can you drop a tag for patch 1 and patch 5 (from doc perspective) so 
+that Ingo can pull them through?
