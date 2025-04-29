@@ -1,234 +1,155 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6B124A047;
-	Tue, 29 Apr 2025 17:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95545242D73;
+	Tue, 29 Apr 2025 17:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947687; cv=none; b=Lya/z+p2Mc/kSt4iTO807Tfd7avahWjl2yOC0MDenTS32/ilsaBrgALAU9g0hClDWFmM8Ep5ZzqMI0k+29KC+1PTXNMBzoMcBYP7jybdbfxtAurs62AAgqCiYRAt+HsrZAxsC64ebnj/ZBgHBc6k51HkC2kyQ+kl6aKaP4cUyAw=
+	t=1745947786; cv=none; b=JVXMPpqtQwqXfH8YvwTjHzVif4NfIMe+NucvwL+bznWhaebD6TcKTN3Z2/hAO/DqBRJc0oNnk+4EBG/baX36znZSzMkdhqz8nnfkLQDizqLO4v7PqDGc19nZh9fKlfQDpUGSGMvEN+BblhY5NIBb24waO75xybul1mNw8MvvD2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947687; c=relaxed/simple;
-	bh=PVYVePB1lbPvKBWI8S6NDXuosqAzYQbVsfIh1jwWuVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sHqfE4g0jqTWml/auAgjmvHzh43eo6mH2vkxi8Ioki2/vmXRMjjAQAK0cFZpvA85XiI4hPSk5jiexPKDqONtZ4BJaxqnIHmQGBQAh7v8VOFhqjmxKW3mBrmGqXUzLNFPx7MvwoGJ0uZCkLaO0JIgOCavdCo/RJzI1CfdRM99Oyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dl5+1MRV; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745947786; c=relaxed/simple;
+	bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=g+i9hHOHPtl4xCzTqu3tYFEiVwohNUv41WyPXuT+Pq9NTY1wM9wWM9reF90kZbqkHYtysVC9sMPp3spMsLYwL27fI7EhgHCTdyPrnZ6o+EPegK4byU+xtx0PhhikZcknvDiogOI+bs7A47FuR1ZCLNXK7nIjKMbv1XhjhgF2VJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnQ/yhe4; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dl5+1MRV"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53THR949509822
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 29 Apr 2025 10:27:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53THR949509822
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745947632;
-	bh=bi2Aevh2QzYHJjU5ZT4PV0lJuEojRhQww5I9NeYJf50=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dl5+1MRV352QgdzCN55c3h5YzJsglVUunIeznoTZvR86tIRDHDduoKYAilNdy8UVy
-	 OEGai/Yt9OZDvSPgIzIhkxcj5ShG9kvXTjGlJ2zesdY1/FbO18R7e2/VTEIl7GKjaO
-	 xK07wa+p3OMX38teq7q76S09I4+Yz7Pt2REmAngLro9casDIXZcpeegj2EJx1I2ig2
-	 0/6ceuNx+bbiqR41148AXDkYgIeIfISQrjLKScf+66Hnx0A5RHGDmj07zcwLcWBYtD
-	 nuOvbzvclQP9Rcm7KE8EOSlR4rY0H6lR8tUdU/bUWP3YHocv+vO11bc0h3sHbn5MNb
-	 tpVmjIEc6McWQ==
-Message-ID: <7df3c16b-9353-4f30-a13b-1f0eb8563e69@zytor.com>
-Date: Tue, 29 Apr 2025 10:27:09 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnQ/yhe4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745947786; x=1777483786;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
+  b=fnQ/yhe4DL6HOEln7OHLsYulC6SjwkG3idsdSEWzRmgKFRAidqZwix0a
+   fmjKaEfbvw6jWs8PvrGYFzhrvRemcVdBcUeKCIYH6cShYv1iGd0Q3uWEU
+   ZARR+UScz7uJ9ZkgmuXs9OpiVUexuRon4AcYAPdSxDQ7tFHuPE5O041Ha
+   hh7uG6T+7uX/FEWVs+5gkXhXCCfN85zL4V0FRpJK2KhRqPtQ7B1V4LTSP
+   nBWVaUQ7GXsi1gV57LRNdJilvzc3Ac2fXSki3Xs4wMtVs+jso1vQm8wzW
+   00v7cgMwAOmCaF54RZxmJUPPYf8xaO8l3qZfziN7lnCql9/N9orMdMctl
+   w==;
+X-CSE-ConnectionGUID: A540W1YGSIu5Wa5hQslO2g==
+X-CSE-MsgGUID: FIhZjxk2QR2jGx2XBoQmMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="57784002"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="57784002"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:45 -0700
+X-CSE-ConnectionGUID: 1MxlXQjRSVSOFrgzSDqt1w==
+X-CSE-MsgGUID: qcN81ltcTty7e55AGrlXng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="137905858"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.167])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:44 -0700
+Message-ID: <07604feedc23ae2b404f8e9c0cfc1c19e2eb27e8.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86: ISST: Support SST-TF revision 2
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Tue, 29 Apr 2025 10:29:44 -0700
+In-Reply-To: <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
+References: <20250417170011.1243858-1-srinivas.pandruvada@linux.intel.com>
+	 <20250417170011.1243858-2-srinivas.pandruvada@linux.intel.com>
+	 <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 4/29/2025 2:45 AM, Ilpo Järvinen wrote:
-> On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
-> 
->> For some reason, there are some TSC-related functions in the MSR
->> header even though there is a tsc.h header.
->>
->> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
->> to <asm/tsc.h> and to eventually eliminate the inclusion of
->> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
->> reference definitions from <asm/msr.h>.
->>
->> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
->> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
->> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> ---
->>
->> Change in v4:
->> *) Add missing includes in a different patch (Ilpo Järvinen).
->> *) Add all necessary direct inclusions for msr.h (Ilpo Järvinen).
->>
->> Change in v3:
->> * Add a problem statement to the changelog (Dave Hansen).
->> ---
->>   arch/x86/events/msr.c                                         | 3 +++
->>   arch/x86/events/perf_event.h                                  | 1 +
->>   arch/x86/events/probe.c                                       | 2 ++
-> 
-> Under arch/x86/events/ a few files seem to be missing the include?
-> 
->>   arch/x86/hyperv/ivm.c                                         | 1 +
-> 
-> Also under hyperv/ not all files are covered but I'm a bit hesitant to
-> suggest a change there since I'm not sure if they (hypervisors) do
-> something special w.r.t. msr.
-> 
->>   arch/x86/include/asm/fred.h                                   | 1 +
->>   arch/x86/include/asm/microcode.h                              | 2 ++
->>   arch/x86/include/asm/mshyperv.h                               | 1 +
->>   arch/x86/include/asm/msr.h                                    | 1 +
->>   arch/x86/include/asm/suspend_32.h                             | 1 +
->>   arch/x86/include/asm/suspend_64.h                             | 1 +
->>   arch/x86/include/asm/switch_to.h                              | 2 ++
-> 
-> arch/x86/kernel/acpi/ ?
-> acrh/x86/kernel/cet.c ?
-> ...
-> 
-> There seem to be quite many under arch/x86/ that still don't have it, I
-> didn't list them all as there were so many after this point.
-> 
-> But that's up to x86 maintainers how throughout they want you to be.
-> 
-> This command may be helpful to exclude the files which already have the
-> include so you can focus on the ones that may still be missing it:
-> 
-> git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
-> 
->>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
->>   arch/x86/kernel/fpu/xstate.h                                  | 1 +
->>   arch/x86/kernel/hpet.c                                        | 1 +
->>   arch/x86/kernel/process_64.c                                  | 1 +
->>   arch/x86/kernel/trace_clock.c                                 | 2 +-
->>   arch/x86/kernel/tsc_sync.c                                    | 1 +
->>   arch/x86/lib/kaslr.c                                          | 2 +-
->>   arch/x86/mm/mem_encrypt_identity.c                            | 1 +
->>   arch/x86/realmode/init.c                                      | 1 +
->>   drivers/acpi/acpi_extlog.c                                    | 1 +
->>   drivers/acpi/processor_perflib.c                              | 1 +
->>   drivers/acpi/processor_throttling.c                           | 3 ++-
->>   drivers/char/agp/nvidia-agp.c                                 | 1 +
->>   drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
->>   drivers/crypto/ccp/sev-dev.c                                  | 1 +
->>   drivers/edac/amd64_edac.c                                     | 1 +
->>   drivers/edac/ie31200_edac.c                                   | 1 +
->>   drivers/edac/mce_amd.c                                        | 1 +
->>   drivers/hwmon/hwmon-vid.c                                     | 4 ++++
->>   drivers/idle/intel_idle.c                                     | 1 +
->>   drivers/misc/cs5535-mfgpt.c                                   | 1 +
->>   drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
->>   drivers/platform/x86/intel/ifs/core.c                         | 1 +
->>   drivers/platform/x86/intel/ifs/load.c                         | 1 +
->>   drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
->>   drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
->>   drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
->>   drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
->>   .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
->>   drivers/powercap/intel_rapl_common.c                          | 1 +
->>   drivers/powercap/intel_rapl_msr.c                             | 1 +
->>   .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
->>   drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
->>   drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
->>   drivers/video/fbdev/geode/display_gx.c                        | 1 +
->>   drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
->>   drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
-> 
-> Under drivers/ this looked pretty complete. Nice work.
-> 
-> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
+On Tue, 2025-04-29 at 17:23 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Thu, 17 Apr 2025, Srinivas Pandruvada wrote:
+>=20
+> > SST-TF revision 2 supports a higher number of cores per bucket, as
+> > the
+> > current limit of 256 cores may be insufficient. To accommodate
+> > this, a
+> > new offset, "SST_TF_INFO-8," is introduced, allowing for a higher
+> > core
+> > count. Utilize this offset instead of the current "SST_TF_INFO-1"
+> > offset,
+> > based on SST-TF revision 2 or higher, and if there is a non-zero
+> > core
+> > count in any bucket.
+> >=20
+...
 
-Thanks a lot!
+> > +	if (feature_rev >=3D 2) {
+> > +		bool valid =3D false;
+> > +
+> > +		for (i =3D 0; i < SST_TF_INFO_8_BUCKETS; ++i) {
+> > +			_read_tf_level_info("bucket_*_mod_count",
+> > turbo_freq.bucket_core_counts[i],
+> > +					=C2=A0=C2=A0=C2=A0 turbo_freq.level,
+> > SST_TF_INFO_8_OFFSET,
+> > +					=C2=A0=C2=A0=C2=A0 SST_TF_NUM_MOD_0_WIDTH
+> > * i, SST_TF_NUM_MOD_0_WIDTH,
+> > +					=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
+> > +
+> > +			if (!valid &&
+> > turbo_freq.bucket_core_counts[i])
+>=20
+> I'd just drop !valid from this check.
+>=20
+> > +				valid =3D true;
+> > +		}
+> > +
+> > +		if (valid)
+>=20
+>=20
+> Should this be named instead to something like has_tf_info_8 ? (As
+> this is=20
+> not really valid/invalid check but whether this new info exists or
+> not.)
+We can.
 
+Thanks,
+Srinivas
 
-> 
-> I also noticed these files might not need to include msr.h:
-> 
-> drivers/cpufreq/elanfreq.c
-> drivers/cpufreq/sc520_freq.c
-> drivers/accel/habanalabs/common/habanalabs_ioctl.c
-> 
-> ...so if you want, you may consider optionally adding a cleanup patch to
-> remove the include from them.
-> 
->> --- a/drivers/video/fbdev/geode/gxfb_core.c
->> +++ b/drivers/video/fbdev/geode/gxfb_core.c
->> @@ -30,6 +30,7 @@
->>   #include <linux/cs5535.h>
->>   
->>   #include <asm/olpc.h>
->> +#include <asm/msr.h>
-> 
-> In wrong order.
->>   
->>   #include "gxfb.h"
-> 
+>=20
+> > +			goto done_core_count;
+> > +	}
+> > +
+> > =C2=A0	for (i =3D 0; i < TRL_MAX_BUCKETS; ++i)
+> > =C2=A0		_read_tf_level_info("bucket_*_core_count",
+> > turbo_freq.bucket_core_counts[i],
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 turbo_freq.level,
+> > SST_TF_INFO_1_OFFSET,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_TF_NUM_CORE_0_WIDTH * i,
+> > SST_TF_NUM_CORE_0_WIDTH,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
+> > =C2=A0
+> > +
+> > +done_core_count:
+> > +
+> > =C2=A0	if (copy_to_user(argp, &turbo_freq, sizeof(turbo_freq)))
+> > =C2=A0		return -EFAULT;
+> > =C2=A0
+> >=20
+>=20
 
-I am more than happy to send v4A to address all your comments.
