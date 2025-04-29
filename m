@@ -1,125 +1,336 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB95252912
-	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 20:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957532; cv=none; b=fET2HHQ4uZ0YlwxOYMFXKXRQftYjBGg8c/FmmpbgCi8/sPEp3GRx5m7W2ieDu4cTwHO/0zCHpgp5BTKw1n/Q50/fAdu9PHWsVJdHyT3F1aOMARqmqrvib4n1YXJh/8rv4GPL8kGlakde2qP8geJtWJoU8kmO6eAg1Af6lt1uLHE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957532; c=relaxed/simple;
-	bh=xj5XU8sYPGD84j0jqneTPtP0NmiFZ9+JyyzWk7jzS5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BT7akCCKO/hmLCwg++qVmKrMU95mEaVwbYjCG7kzguoM+2qWvbWp+0OdWE3DuFPjcB+K3D8XslVUBc43S2W31dJNfzl5eSBIHXRuZDoNP59Imbo1td7830mkQe6R6vxaNDkSX6Y1jGzEaRsawZxJaJVqn7ep4cSPBeyS6N8hpCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=eRwF6IsX; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04FF26ACD;
+	Tue, 29 Apr 2025 20:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745957642; cv=fail; b=bb5stX3ByajXAfNFotpMlQN2EpIsmJFGg3qeq9PQtxJWzzjCkpQl8/ea7GFMcf0oQovMxMtoS3qvYxEXJN0RkTd5AqrXOwJT3jNgdBIX+w+aeFcQSubqcMMcEXHlsormQqDDvUVOJynhmKcLJjU6I8y+KF/a1P4dbnByX2+A1KI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745957642; c=relaxed/simple;
+	bh=pAPt4ijRWyMYK+8+7PQGW7iR74MMRzVj2SFzIBZGFtE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=H2CCBkfsU+ifmAKb9EB8YA731i3EOMFNG14amvnhLy2qFnhLkuM45qrIckeB23RATejizM801NbZ+0ZnD2OILV9ZT5/kOz29NIDECzJncNSSqJNXSLMMm5zuAXNAFNiHbLGgbLwBQh2ZLb7tXOclwbHcr0gFWa5DMp9HL1rknGs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oXIPjgbl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=b1suL1PG; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="eRwF6IsX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745957528; x=1746562328; i=w_armin@gmx.de;
-	bh=xj5XU8sYPGD84j0jqneTPtP0NmiFZ9+JyyzWk7jzS5s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=eRwF6IsXUYR05cTnPKzOTTDT5tTGaAlV+hT6/oqk6NmObOHitgc2y6YAumSF5DDR
-	 SlozFx0Bu3nxzdIr0NI1Bypq1k2edSPo09wW8A+ks8QiXBQH35XmkjSumQohMOlcK
-	 oBurt1w4/CowVef6L99Ny7JWw6O0lw0Dr6FQ3CM0BbEFcHwsCVqT+Bc29RB/DFKtm
-	 x95rmOf5HenbwfBWNsDc+4TQ8+dcDq2inSepfAbBQA5J1Yd89xQBJGKFFRxtkcFY0
-	 5tbnsNN9mhf3wdbN+GZ0C4UQNAfPNBVAwMTdCFWs82K2D0esFE9+OB42le14OVhw+
-	 bfn/wlu/EeMXy3yR2w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MY68T-1uYuiI2cSj-00NWiq; Tue, 29
- Apr 2025 22:12:07 +0200
-Message-ID: <b658e3dc-5561-42ff-a866-e17aa41db64b@gmx.de>
-Date: Tue, 29 Apr 2025 22:12:05 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oXIPjgbl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="b1suL1PG"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TJq5DM032052;
+	Tue, 29 Apr 2025 20:13:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=G3NU3IrMvtBl7kR00DBfEMj2vKPyWV51G+ACZt3OLMg=; b=
+	oXIPjgbl/Tv69cp1+VIyCNwyUriP48xAhkMsb5oJ+zbsqfQsHl5rtz81RAgCIIvF
+	uPdMAWrmA3JoE9ZQ/HHqKjgsUd1lILjuKboivTvflRumSDzc/4HS8oOz0rQzA5A5
+	hAqpWWzovV0HcewbBAsw1uPljbcS0yKRG1cZOPQuUkPkQF5UNuSGH2iestWpU+ls
+	4CEoQaFEt/fOjKfguKF7LdXcoYy/3LAoG4X15rgasUz62ilAZi0sRFaoGlu1Xa9x
+	h/0/H96Itu9fMa9StlRoLV0El9ZpfqRWmbZGN9Yu5q9dU3UAYF/HJz+7eMoW86Cv
+	NfPM8WVG3k+kpOclr56wRQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b5a3r17h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 20:13:44 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53TIUMIG035447;
+	Tue, 29 Apr 2025 20:13:43 GMT
+Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazlp17011030.outbound.protection.outlook.com [40.93.14.30])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxa5fhd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 20:13:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nlXmu4ZRPiAZ+uAXOyQrtnRPVxy7bFZ1VyqYdRwvptmeGSmY1kkRYWW1cTS+DE9ZymBYZBxuNFnJX+Cmya/YbGctXAIPSc+/Vf7xpinGH6cV17+yMaPAvkDV/Dlef5euMp4c3SR76oUJ1gTA4SUS8hwZVc/w+MAj4eYiTbn6KBwW9s8bjKGuetBFbwLOVVQVNALs93wirhd5Ph+5XyI+NvQqLDKYn9hD7p6GNibiS6M9Oo1gHrth2gFCj/Nt8rRP87xVIzhNjk/vzdDJ7WsGn01Uh0itS7nJ0OPbKuyMnQbTpOvh6PXXGW+cFNU2XMWmWMBGefifVMFAXD5LI39AHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G3NU3IrMvtBl7kR00DBfEMj2vKPyWV51G+ACZt3OLMg=;
+ b=GMhuGLC01yAQ1VbWS5AuUHY3joX4sUErRoVX/RvQdj2hqtaqqGe0sT9cEe7Z1EVJxFSw+YIgjbZuyASDgSHEvJrRlDmpz1xVl9RxokoTF4/oJ3B8OqoL+dL+4RUeAKcIuXkb7u0nlZ7VK6apoDHBlLryo3jbgF9IQcaaLe3QDQ0wcyUsiTzRu5ytacd2fGpMYF2rrV7mTvWZaoFMap8g4xtnMP4eo2ko1Whc6YAHzbvOt/on2IyUXahOp1w5pnAIk9p4B3GHvkvagRGm8dpCegSA2AdYMS8KGkiLVdARmJFkCMQNEqjhjWDBsazQDNEDAawYSYMB+MtHAcx34tNuNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G3NU3IrMvtBl7kR00DBfEMj2vKPyWV51G+ACZt3OLMg=;
+ b=b1suL1PG5LbNhvq36XC3xx+Btr5TcDRkeEE7vaAydG3bqq8QTUAMbWdRfE1ghwVzA7RMUvszgI9wG302wZqhPsL+1HqsuSm5x5j00/+44Gaxhmok9pVswMZQ2iF3fEZGABZ8W2TXKZzj01bsLcmW2yRugrYz8yfIFXbsq61otyY=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by CO1PR10MB4595.namprd10.prod.outlook.com (2603:10b6:303:98::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Tue, 29 Apr
+ 2025 20:13:20 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 20:13:20 +0000
+Message-ID: <625dd9b6-0015-4ced-8659-66755695ecd6@oracle.com>
+Date: Wed, 30 Apr 2025 01:43:10 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 6/6] platform/x86: Add Lenovo WMI Other Mode Driver
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+        Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>,
+        Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
+        Mia Shao <shaohz1@lenovo.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        "Cody T . -H . Chiu" <codyit@gmail.com>,
+        John Martens <johnfanv2@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250428012029.970017-1-derekjohn.clark@gmail.com>
+ <20250428012029.970017-7-derekjohn.clark@gmail.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250428012029.970017-7-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0108.apcprd02.prod.outlook.com
+ (2603:1096:4:92::24) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: thinkpad_acpi: Unhandled HKEY event when toggling GNOME charging
- states
-To: debarbos@redhat.com
-Cc: hmh@hmh.eng.br, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.org,
- Mark Pearson <markpearson@lenovo.com>
-References: <aBA4PyT3YdKaPFdn@debarbos-thinkpadt14gen5.rmtusma.csb>
- <ad09634e-e6a4-48af-9e02-345ffa866474@gmx.de>
- <aBDAZO7fR0FGTJ5Y@debarbos-thinkpadt14gen5.rmtusma.csb>
- <d7756075-0133-4511-9a9c-2971a3e5071a@gmx.de>
- <aBEVi3hsxCQGUm4R@debarbos-thinkpadt14gen5.rmtusma.csb>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <aBEVi3hsxCQGUm4R@debarbos-thinkpadt14gen5.rmtusma.csb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:lYdzTtB0gtV3Wjw2qzLiekugiMq7RFnefdsnALywulCW5Y3eQ3Q
- sLDakjH0nYBXOkpvjHsV2AjrFkntkwhgYfjbB05dJ8tsr71XTcMUHqlFNuoTCGgegcDuTve
- BypH4g2PSwNeMrWHLGtvzL6s98Qz3iviswc7s54WR3l8lhjG+N2jTeV7sfLotHoIYFZVaSo
- GzSob6mS4a6Nj6eH+IsdQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lwLPfODCniA=;de5tYEEpIpC02uIQ+uAFMbh2Zcx
- yIeplJ6Uo9DoJ7/3ETLJKZ1gQOSfFLCi5XOHC6uXnvv4dASFPg4XnMtdQ77LEJx6ywLKqR36F
- M56LKE2z8pOoP0wW8FP7HK9EAIrrpIwPT6Ay090VfXfkOPYozl5pQroOCzwx6znm5zn1PXjUD
- lvXrcNPO422LeAK8VHlEOnFdrwuKldttFoKxIR17ZgYlm52hdLboWpVSnvWUUH12mURBexuhM
- CnwDCeDENBiFNSHJiEhaE3XauBbTUs25Ezm0wKmrkaeLW7a0xTRMHJfUlyRvLjJb5UDoIs23I
- nLSHizXf1PUFtyxvLTKNcqbgD5WqM9DYYVgP6FoHrX3660VTW+bAKUpphidR5RE71aVHkLwW3
- X4/uhgJ2d8swOhT6We6scNts59CchnyEB1LATH0VL5iZcH8UOETA9INWzw9ajf13fTkVdibLn
- sjDd6JNaG6VPA2G5/Ck2SYMCSK+5PnI4SWTgdFeP/9lM9cGTiptwlk9Pf0CMr+0IH+vV2R7LC
- sdsxMI21A2GuFZmsQX1zM7ZbXeyNsj1QaucEa7WB1I9F2ESVT8xmZchNyBqi1PtlNTE7urMJJ
- 3m7NFKBJYhYZe/YqoBa6IKSLb4aCfQox301Xrx/IYZBYDBuqdg2uUrGcnVX0jsaZm0Ea7G+GP
- S66e/aCA4BTDIjPZ+VrGQPg7VY4zhV+bGgK4YBRtC+HNYrBZB8Z579vDtnwi1qX8ICTajU2O8
- 3IxrNkSIzGDxjUAYsbWncCAJeXt9Bd8qJTTkEA3nx0CIe/JxifYNGmXU6BhSd1rzxwkIIH8ka
- zzNKXB8bLF02FDycNl2Latbl9G5DHvtT8JAJqh3iEXJuaRw28wYVnxxT7PNM9nOC2D+7iLYj2
- kKZaZuVlFcaZIlT1+9gYUiLXFmPbByaBWsUvSE2x3tN8TikjcmqETn7yFEx1t4WAixcGbToUq
- 67wZb8PVd5jStoTk2TfqQVWyWhCjfxfwLHNK9ItBlc3IUerRUKcOy777tPZZSvXrbDR7PtoRN
- 2Bgveul7NbIMvXHwckBtubwnwKSwKTgO3vF8HuiMi5FhnrOHzo4nvPYsI8mt/kG8LEV3lpPPg
- 4OgNyE1IamxhHfiYwLn/UMMHMA3EDDEHDdswoQ8WFCTabYTXk4W/vPQjHzZQlu9t05XtuOhLa
- cZ5zWW0E+VkXqdOqmVUuUJI+o+Kam4C3OSOriNW4RLdu9zanu7FC8eXgr60NZurS/VZ76Ljh8
- 2X5L0Jot0+ihXy7O0sPoO4+34tgouuenD8anh4uQVpBhHYUMdGMfo1goenV8UWbi/b3SCVFQ7
- J/qH2TgFW6nw6yOjWu2pCxC6wLFLz36mcGMSSPuo05uYm1amZna1atTh80eOO3/DR3ZGwcodx
- MywT/0V4SdswEJDHAvSofX812azXulOPk5khQOQNWmW/exiU0GAfFk52lhk59/4A5o0gxveyM
- 2T8IhshKG9+9/3IK2bnFeCAUgpoOOlJgWrV+4SUn14VRLH4xcjkNZzrQGhsSOkIDiJ8HlaVuW
- FIklD7PJf3LvOBpZ7eEyxRneDHH2g3VBYJbJ2D0dcRcVOXT087MnucimUP7CQAUM/fayf5yCN
- dsDbdMV9Rxz4BDbaXsnPpqmWq5siOtlVkKNj+sY5GBVmjpgMzOkHvaJ4PmZgu0Rp+WKDoB6qC
- jarxZ6o/kwUr8Mm9dthworHCHWWgWK6/glSu5IowO8r0R3Iat9YLFbkOY2iXWzFkOx6/RVOUZ
- m5DmMIX7EXQV+6LiGJm0Oem5HEZVJrF4sY9oe1jIliDvgn+JeJ5BwxGbsfdXvhUT2aVUl85UY
- Lw4QqrGGr8IYKXa6QRebZqTYGDBO20B+n9TMEJCOrNaioERtOQsodQuqU6GHjBRTpL1tqTRjl
- evUPxVYT7iQf3QUH93E3khvDbTS1Vu2eIPbQGXZ2ByZcyrZAym3lgDK1nXwXihPKP6LUDF8y1
- eAiqXfXuGsddpF2DPVTjDTxzmyUANCaKY8l8Eb3VCNtciHk3cmGvIMstR+I4zFa2Qu3FaNJvh
- xKIkte38lHP8tqHQWnAeBok/Qwqv1U4U2NQXkm6G0IF2q8O5/qKhoJ3JHDU8hGLdJ9jMBr4ll
- KXsuWDk8Qc9nGi6wgxtr0ooaTyLgrTcOjh91jwgK4RqabdeGiLJ5WW1dGG2PDz1UCv5+Lq+l4
- 6PBp38Vb3aMfiX+7UEAYbHQtorZumqHyNvPhnkvDEenslOSpMDN+/zhSsvNA4dLKotALVRKO5
- xFSMs5NWshKsLM/Gfk5Yjb1aJsJ4vzKaJ/w926BlJ96VpJMl00G2gA4EmkBDKp6KIvHHc62Km
- mGC9G/ALXH5oU88mPLdnPeHx5hb3w6aAd3pkT67O/Ebj0pTBfaWjPXhGkbF0wsSb6gZRc6P4f
- VQMUiebca1WdBqU0u8ZKiPRidePT8tAhDiC+2ledroCj2iu55qk2nLkbnmyQdArfjTZoi2TKj
- Qgcpob3s/mxCFq38vpK1tHfePTbM022NMBuY5dMPHv20t2u0Ssw6bE95K4swY5Tz9j/wrDe3f
- /7k6+IfBli1UaGaPPldIkEOGVqaKeh2sC1gEhBRmng11sJMi52axrB2IgmNzbhTeNcmOjkTZ+
- 9y7L3Lte67gIvd2Hafb+iJfTjo0X0FLHn5HfdtFDSDwVouWe98mSEbJnnUBg9DLpg39gtsMBg
- I1CdSjoPXAVpqmZo8KGi6NHgRaY957QHmx5b7MBsn5DNEsKRy7l/7Dtc45yzDqJ3vRm2QV6Ka
- N7D/bJfUaAOghCH4xC5aq4F+1KoAZSR21FtHvxLfIVt3glHeGpc46lFH2aqma/SwpeT+5Oabc
- tm2WQd8Xp9y5o8OvZoBON3l2FjNNIOzcHXtpjk2RpcQVGHodRB1zmdoOrRMt6DKtDu86opSpn
- nGSCM4/59kbsJ/JVkjfp75Dn+PVCyrz5NVqZIDHTfDTre5utXa2Yan86aCgUBqMWa9MYF/45P
- D/UuPAqM5pSepAEnRU+5ABJJqoLLYYkrrBx5QENfI+L7UMjciH5A
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|CO1PR10MB4595:EE_
+X-MS-Office365-Filtering-Correlation-Id: df9be8fc-0c89-4864-f06a-08dd875a48db
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RWl0RWxOdnA2dDUxWWpoQ1crTWFEUHdCbXFQazlSYk1IU1M0UWZ2Z2lMNkgw?=
+ =?utf-8?B?VDd1bnZsU3Mzalh3Z0k2K0oyRVozK3RTRE1KWFNYcFQ4M1hNT01Nd050TFhx?=
+ =?utf-8?B?VVRGNnoyTVZ0QmNnMGJEVVU2SkJhdURSRTVXcFlOdUE2QUROOUZaN3FNNWFh?=
+ =?utf-8?B?VC83SFdnc2VVVmdSQUFWZXUrMEIrMC9iOUFYY2tRNGZMeGpvaS9yVzZYQ0Jy?=
+ =?utf-8?B?Z2x6d013cG9TWlBCM0xWMzlubGpIWVdxSUI5NGpnQ1h3b2hYYmtMRlRrVU01?=
+ =?utf-8?B?M0VVQVdDSWNPcDBOSXRFejFrdkxOc1RiQnczMFJqRExKRnMwWnJsWUVzQ2ZF?=
+ =?utf-8?B?N2NDMGdFTDlwNEN1dmlYeTZROG1BbW14SUFzeisrMlFxVkNPT0xuV09HOGNs?=
+ =?utf-8?B?WElzalR6Sk1kQzJnSno4c0t2VjJWTDAvK0RHRTUxRlpZRGx5MUF5b0VySHNl?=
+ =?utf-8?B?VVlmQzFPMC9POHp1UFFpMC9aTmFjbjhEbjJodFgxbEw5a0ZWOFI3N2EzdGpm?=
+ =?utf-8?B?ZVBKUG0wU09jOUlHbDZkYVpGUlgrbzJzamR4VnJVM3JjdjdZMnRTK1lOdklF?=
+ =?utf-8?B?emlZNWlGVlVxZG1Ha0lWMWxNSTFWM3RlMlNPVFFvSUsrWXFoRW51OWxVd2ZF?=
+ =?utf-8?B?bEpiRmtxKzVuRTVYNis1eU9RSDRFTDJPL2FSaE9vNllGalVONldIUlVSMlNE?=
+ =?utf-8?B?UUtJRWY0dE1BbXB5Qk55SEdteWpsOFUzNFR6aXlUWndhZkRVNjhZY2VpZStX?=
+ =?utf-8?B?ZXNHbUZKZktBcVd2QjF6NVJEK2Jqb2ZhZjRIZTBxdjJZdVpNaDcxZTNmanZB?=
+ =?utf-8?B?ZjJ0emZXZ0gzajE2a0lZSmhBNTBpNVFlR1BSaERNTlhHbFNaQzc4c25MRVRi?=
+ =?utf-8?B?M0FGNTRzWXlMb3JPWTFjTDNZeFBnZjRnUGhtYVJCQ1B6eDlqRjIrUWVzMTJS?=
+ =?utf-8?B?VUx0WUNpU2dBUlNnK3JPNE9SczNYWHhDWFdZWFI5ZGd5a1NZTFV2NjhEaG1w?=
+ =?utf-8?B?Qm9qR3IrOHVXUFV2YjFERGhJTU85WUVkSnpabTdHU1A4VlhIOHVOSWozZGdm?=
+ =?utf-8?B?THlRalNjZmlkdXAybU8rdW9EYU9mNFcrWnZXSXdnbU9xakEwcG5CS1BuR1Av?=
+ =?utf-8?B?c1UrZ1ZFRy9yYnRHQUo1R1VDaExJc1ZLeCswTGora1JkV0RDMFlOWWRvcmxC?=
+ =?utf-8?B?UnFjQS9Fa1FwTHRNTWJRT2taWUJiaFlBWjE3T2FYN2thVDc0UFpsUlZkZ3Q1?=
+ =?utf-8?B?UjViMXEvTFpzTTFIQW8vbkZkMzVFS2tnaEhDczQxQjlYQTU2U2pGT3M3Yms0?=
+ =?utf-8?B?QTRwT2lvQ0p3ZUNNZGJVSTNTQTNFMU0rdFNRVFd3Z2s3L2pBWDcybDIwTnQ1?=
+ =?utf-8?B?ZnVESmhVSjlMd0FmbUFscU1oL2NCdDNCQWpuRnJKUHdCRGpXUDZLQXFPc0c1?=
+ =?utf-8?B?MzFoQ2xSV3pHRURSTUwvRGZQbUUyWjhYbWwrUWhEcUxvUjY5N2lTcmZTbFI3?=
+ =?utf-8?B?QXBHNkV4T1pITFpQT2lwZmVmelE1VUtaTWJNS2pIRi9aTnRQQmE1eEtDSDR0?=
+ =?utf-8?B?b0lLTGFqUU5SMXc0bEp0T3JmRTBQM3lweDJyMGdDb3l6eW0zTjhLRWJzdjRM?=
+ =?utf-8?B?cUNRcjk5Qll6M3J1VmpIdFpLcVFLcndhSmlJUmpGWnNZOGJEeGJza1NmamMz?=
+ =?utf-8?B?Y3NqMmdTSk91VXZ3ZWdPd0I0RzR6aXJTNTUwYnE0OEdITUNLeWZzOHZHYytN?=
+ =?utf-8?B?cXVlaHJoVjdSWU90dlcwUi85Vlk5bVAycVB6L2xvSVQ1anlLUGFzQi9hanhB?=
+ =?utf-8?B?OEQ0aXJpeW5uMHFNcFBsams5dDZodUlBeHlOR0NYMExWTVNLdkJTbHlnSXV6?=
+ =?utf-8?B?NkdoRWp5d3BTQzlTWGtSVlNkRWxqTmlaZ21HeHpGNlFxY1R2ZURIVEo5R2R5?=
+ =?utf-8?Q?VqQ9ZB/lM/8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aklWMW1ESnpHWTlKYmFUcGFMV01lRzVDa1ByVWp2WCs3V3AraVFJd2ZXaWd4?=
+ =?utf-8?B?dVpTbGh5a3U3QnpnZStGTXh6MERsVUZab0NlMjVLWWhpSFFEVDhSZGhwTkZq?=
+ =?utf-8?B?VmROcTY3L3ljRE9NT0lGdFE5dS9YTEE5MkVrYzZMMmNxMTRHc0VVdExzWmgw?=
+ =?utf-8?B?dWU3TnNkZUJTeGNDOURibTk0YnowTkF3ZlJYZWhPOVVpMkZRVmhtYjUvSTJY?=
+ =?utf-8?B?ZWRybHJQUFRaaU1ZRWsxYy8wdlBTQWZ2dno0R3UvYVFxKzBjZXYyZE5KcFBD?=
+ =?utf-8?B?OGJwSzQ1Y2JoSzZuRHhwaXRpeFJVOXVzK3RxQjhpVWdzcE91SDNrY3hHUnlI?=
+ =?utf-8?B?RGhqUDMrU3dHbXNXWjBOcHJLS2wwQXVPNDl2NmRJd3lDakhIU2V0WGhMZThF?=
+ =?utf-8?B?R21heHRrTFV3Y1lhSW9TcFcxb3BNMHdvK3pWbUxtSkFaUlJNcnFOMnFBWjFX?=
+ =?utf-8?B?VUNGVkZPUFRCejdEM0JyWkhYWktLbU1CQ1p5U0ZEVndDMTF5RFkvWkM2YU5j?=
+ =?utf-8?B?b041ZW53VUQxdXVSOXYzVHRjUXhsSlNBUkN2Q1Ztd0U5THcwVHRidzRXSEQ1?=
+ =?utf-8?B?ZEcrMmtpS3h0Z3N6VDJjVGRyaFcyODY2OGlpL2tMdUJXQWxidHVITDZiaDVB?=
+ =?utf-8?B?OGNKeW9LOGRhaW5QZ0hQUFNWRXVnOHMrVlhrZk13Kzk1MEt0dDhpdGZKWWlE?=
+ =?utf-8?B?TFc1SDJEWWt5YW4yS1lub2hPTXJhbG1EOE9wbFZjTVF3d29USUJUeE9kaVdy?=
+ =?utf-8?B?cmNJdWhiamxOd21lSTNKWmtnSkxtZHhQVkZ4SFQ5Z0NPbWNNTlprWHBNdWl5?=
+ =?utf-8?B?NEVUOXFENDVVbFd5dnFWUVloOVhCTTVkelZmQ2hQM2hRS295WElBTnJyVjFx?=
+ =?utf-8?B?dmJFNnhrRXpUUXVJSmxDOVd5dlJsbVlqYVFKb0U0Z3M1MnNzUnZUUmxqSUdl?=
+ =?utf-8?B?T1VYcHZqRTlwVmRYS0dPNmc0dGNxMVg3QUxvbFAvdC8zZkFPUWhIL2dhZXg3?=
+ =?utf-8?B?a25UT0lPVzd1cjNjUHJrUDFWTHpPS0pkSERUelRsYm5jMUhYcE9aU0wrek1w?=
+ =?utf-8?B?bkhGU05qYmQ1ODhBMC92TGo1bU4rZlJkYVZPNE1wZHc3RFVqWE1hbG4rYW0x?=
+ =?utf-8?B?Tm53UlBGdlFwSTlsSm90dU81UGlBdSt4RFlBNjd1Z0dEWmV3NEJ4Ylc0QTJj?=
+ =?utf-8?B?SjlMY3dhV3JITGhLZU00RHFXUTBkdGl4bzNXRmtiRVBRaHIyVVZmYWc3TjNP?=
+ =?utf-8?B?KzRLRW9OcCtpWWF5akxPSlVabXZmT0FRKzlJS2RreXpKQklLZTEvZm1MYjhJ?=
+ =?utf-8?B?SGc0dzVaaGhxSmVpcWVHQkRnOGxveld4Q3VQTkVVQVE4djFobnkxQkFveG5P?=
+ =?utf-8?B?S3o4NlhXekZ6Y0Y0K3U4dHhGbkxyMkJwbWxkN25Mait1TnhwLzJDR2FJNGRa?=
+ =?utf-8?B?eUI3RkZ6UlN4NHBleUxnM0k4enN2SlF4Q1dsVzRxOGVlRXFZRHVCR3huUjZK?=
+ =?utf-8?B?ZnlkT1Z3VGZXK2hGdHRyWjIwcXl3TmJtT3dKM0c1MWNQU1FDdGs2b1hhcDJt?=
+ =?utf-8?B?bDNKR2dRc0VlRkQvcVk3N1psY0luWGFMK0RmUFN4OGJtYU9HWXYvT3FIdS90?=
+ =?utf-8?B?cHVMM0pjY2pmOXJ2T0VQYXIxeitvT0RUczJYRkR1bmFFc05mS09TK1U4WkRl?=
+ =?utf-8?B?UEl4VjIxNmwrM2NrUXJqTTdONXNsL1BzWDRCR0NJcDFYOGd0NWNvSHJsd2RY?=
+ =?utf-8?B?clJTOWVHRll3UUlPMkFTZHpHcjdWcmN3ZTdkaUtMdTBvLzFhVFV5WDdvaXQ2?=
+ =?utf-8?B?cFNJSTRQMFBKMkx4SHV1UTkwZi9tUHEzbTA2Ui80T2dabnFKWklVcHdVeEE2?=
+ =?utf-8?B?VmNhS2hkMTlBbzZEUTNSc1E2dmMxcjBsMk8zN3Q1UkplK2VUNVBuVmgzTGFm?=
+ =?utf-8?B?SXdqR3NRcGJESW1LeHF2ZCs1dDc3elBkY0NCK3lITzJUc2dwTlVJRWZmTmlv?=
+ =?utf-8?B?b0V2M09UclZhbCs0WUUxbWt4TTRUM1hOSURJM3JNZnpNT0todmNXVDhTUElE?=
+ =?utf-8?B?OUp0TkNYK29EN1FWcE8zeFVGN2szZTlTclRNREdjK2Y3WHIzZU8wQTJ2Q0pF?=
+ =?utf-8?B?cFNaYkN1MHgvNmxSZ1Q3dGxBL3liNEIvZlBJRStLYWNsNVErZ05nbGVZQ0NO?=
+ =?utf-8?B?M2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	y9bmY4i+NX5CyPlOKZk9HTwmuAONley4alnxNGK1AAWcjUkTqiEJE94uFJHqW71oY5VtDZ/4EEo3MDJ/IvwtZtEw3sB63O3hFWFTi2TNQm9szmN+phEh0M6qoZoXJ67rmYpc7QKPnpWum//wXsNdExzl6Oqwp6zfVtTSfSXeWofRn0kpp92jGZCy/lFP+QfZ9Jn+AVvDCNPLPuAqirnvN9JLxhZ5YZ5hfc1C2wK3aekviGGFO3oEQUe8xW4b77oj9yleaoZMFX+HE+ztLakh12fN2czpguwbC7ITOYUflYZtN23AS9juoeAW5OWJRzyxWFmHoCuxc91TUWGQLDR1mpX/XHZFKLoQcESljhc7TZrj7UZXkGShgd/OzXIRggpVJtXJ2Ua08Rvs9bEhqbDHXc7gUEUgvWZYy2665i6vDGD4W7ZHnAm1SGyrel0MrOFI+VrHJqUL7iUfmfHNqPdTGK4ARdCkq+qdOifwPoWF4V+lVOBLagk/qlgpOaSGwQ3tJhoowDbVeHPEdOxJEpOqe9sS34Xj0vzkklUt0wGRGt3znv45ZNO6x5/bKNkMtZgGonqHAqlhk11zBNJRhFgeRFaOzY9B79QvjckU7pTsmxs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df9be8fc-0c89-4864-f06a-08dd875a48db
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 20:13:19.9150
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B2LDtE6z86lko51/L5aoZeDaqFSuD1c4U5DbHW5UIhYlIRPdpIrvcg9ckwxwnMxz+188HngUrPgZJj30ztXBg5Te1ABf1Vo2TUk+sITqUls=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4595
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2504290149
+X-Proofpoint-GUID: oLuD8fIcadhS-h0O2DqHxCXMF_OJoi5z
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDE0OSBTYWx0ZWRfX3HBmoxSWqOM+ dueFORayMqwuvgWNspGSJqfE1ecx8//vW+Su5E+3TeZ5/WZwHou5OnitLoT8xrnUuVDQ9e6JaWp X2CvYjfWtbUyET+sD2nnr++OtIvRuhdNTrwuRWCen431C9cyqi7edar9CjZMYGvCeIbqgfdz6/E
+ iJxfUakor2mCzk2dUtPYYyqc9hl9BbVJ8h4Yu7x1E3ENda2gz7PmdkAPJ21sLZb3OGA652erEF9 XhtghoPWvUlIC5wujr9ARsErB96iyKJK4HJsr8vqaUBYzVdRf5ML7gqhe+2K1SEk7DToQ4P+Ghz qYGBF4WBJzO/Rqnd/d9apuVT2LoRjipPnltCOOYrGhFxdRmxxZK9F9gSmLiORIvzxSKKs1yE34z hQlu2w0q
+X-Proofpoint-ORIG-GUID: oLuD8fIcadhS-h0O2DqHxCXMF_OJoi5z
+X-Authority-Analysis: v=2.4 cv=fO853Yae c=1 sm=1 tr=0 ts=681132f8 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=pGLkceISAAAA:8 a=mAfOFuHhF6l8wEcQ58cA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14638
 
-Am 29.04.25 um 20:08 schrieb Derek Barbosa:
 
-> Of course. I will label the two scenarios as Scenario 1 & Scenario 2
-> respectively.
->
-> Scenario 1 (below 80%):
->
-> Battery roughly at 75%
 
-I see, interesting. I CCed Mark Pearson, he works with Lenovo and maybe has some additional
-info regarding this unknown 0x6013 event.
+On 28-04-2025 06:48, Derek J. Clark wrote:
+> Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" WMI
+> interface that comes on some Lenovo "Gaming Series" hardware. Provides a
+> firmware-attributes class which enables the use of tunable knobs for SPL,
+> SPPT, and FPPT.
+> 
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> +++ b/drivers/platform/x86/lenovo-wmi-other.c
+> @@ -0,0 +1,655 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo Other Mode WMI interface driver.
+> + *
+> + * This driver uses the fw_attributes class to expose the various WMI functions
+> + * provided by the "Other Mode" WMI interface. This enables CPU and GPU power
+> + * limit as well as various other attributes for devices that fall under the
+> + * "Gaming Series" of Lenovo laptop devices. Each attribute exposed by the
+> + * "Other Mode"" interface has a corresponding Capability Data struct that
+
+typo "Other Mode"" -> "Other Mode"
+
+> + * allows the driver to probe details about the attribute such as if it is
+> + * supported by the hardware, the default_value, max_value, min_value, and step
+> + * increment.
+> + *
+> + * These attributes typically don't fit anywhere else in the sysfs and are set
+> + * in Windows using one of Lenovo's multiple user applications.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+[clip]
+> +
+> +/**
+> + * lwmi_om_register_notifier() - Add a notifier to the blocking notifier chain
+> + * @nb: The notifier_block struct to register
+> + *
+> + * Call blocking_notifier_chain_register to register the notifier block to the
+> + * lenovo-wmi-other driver notifer chain.
+
+typo notifer -> notifier
+
+> + *
+> + * Return: 0 on success, %-EEXIST on error.
+> + */
+> +int lwmi_om_register_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&om_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
+> +
+> +/**
+> + * lwmi_om_unregister_notifier() - Remove a notifier from the blocking notifier
+> + * chain.
+> + * @nb: The notifier_block struct to register
+> + *
+> + * Call blocking_notifier_chain_unregister to unregister the notifier block from the
+> + * lenovo-wmi-other driver notifer chain.
+> + *
+> + * Return: 0 on success, %-ENOENT on error.
+> + */
+> +int lwmi_om_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&om_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER");
+> +
+> +/**
+> + * devm_lwmi_om_unregister_notifier() - Remove a notifier from the blocking
+> + * notifier chain.
+> + * @data: Void pointer to the notifier_block struct to register.
+> + *
+> + * Call lwmi_om_unregister_notifier to unregister the notifier block from the
+> + * lenovo-wmi-other driver notifer chain.
+
+typo notifer -> notifier
+
+> + *
+> + * Return: 0 on success, %-ENOENT on error.
+> + */
+> +static void devm_lwmi_om_unregister_notifier(void *data)
+> +{
+> +	struct notifier_block *nb = data;
+> +
+> +	lwmi_om_unregister_notifier(nb);
+> +}
+> +
+> +/**
+> + * devm_lwmi_om_register_notifier() - Add a notifier to the blocking notifier
+> + * chain.
+> + * @dev: The parent device of the notifier_block struct.
+> + * @nb: The notifier_block struct to register
+> + *
+> + * Call lwmi_om_register_notifier to register the notifier block to the
+> + * lenovo-wmi-other driver notifer chain. Then add devm_lwmi_om_unregister_notifier
+
+typo notifer -> notifier
+
+> + * as a device managed ation to automatically unregister the notifier block
+
+typo ation
+
+> + * upon parent device removal.
+> + *
+> + * Return: 0 on success, or on error.
+> + */
+> +int devm_lwmi_om_register_notifier(struct device *dev,
+> +				   struct notifier_block *nb)
+> +{
+> +	int ret;
+> +
+> +	ret = lwmi_om_register_notifier(nb);
+> +	if (ret < 0)
+> +		return ret;
+> +
+
 
 Thanks,
-Armin Wolf
+Alok
+
+
+
 
