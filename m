@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9493F1DAC81;
-	Tue, 29 Apr 2025 15:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A1A21ADC2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 15:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938929; cv=none; b=P1D9CxsEQ2p0WIbgvfssqUUE4R0MqOyiSKT3VqniWzZc18z1mGSP2kp9ZSl6f5P3UBLWu1SCWY3vrUuOMfraUnYCJ/J1qvE/rsYkcosu7sKLBtdRQtWfLiDXB1SGgLOTByy+Is6S4fkT+Po/2UYA/L8xq7U3tNuPYVdHkLHnZz8=
+	t=1745939028; cv=none; b=PhsEub47qVe11w+pqPCCbm/7oX4q0EOfo2Ihh5H3r7aSpGT4Hl49FGqXEa9XXqrdR/5/DGZgJDMoCDVl3Le6onu5OuSIgTojlY7yXMC5ceGPom5mqV5eCfLB8SYLpkS9a9MHy09UuU86DLJ7B4OoiDbEe2P61gA1yocIOVkhURg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938929; c=relaxed/simple;
-	bh=CXyUkgUJ+Frrj1lxE9e4nGDb9q3jnTeEzXMZBRjwMCg=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=W2y+QM7Bo9zwMT/NFhoMlyZlwbSrk+DgJIXZEDmlYkoGr1qX85sqo/na+W+sqMc7lEgIFVCdCqbfZVP5r8EKDtlZdJ8luxaA5gt+ylwb1WjTOt8TcvcLv3FHUxKohlYt1GP2vAqbP187UKfnXv+i3latYhLvAlNsA8kfoy6LdWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+iIImQ/; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1745939028; c=relaxed/simple;
+	bh=4Ioti+KOXo9jXs59B0HzHQNKA05gNUmWBW9zCfnx54c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=cTC8Y5iiB3wwWWtfqhTA5ahJwA7hlwVYRbCwhJx647piuw1f1vadJnb5sYj1g7BG+cDFxgyuC0MUgNOAsk7/PRVlAH4X13VLtBERt9SPLPhyt2dLPjTakcx0EfPZ95jDfdnJGk9FXPCzrAMtA4R14Mp/0ri7NumEOWl5x1Z55ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c895exFX; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+iIImQ/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c895exFX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745938928; x=1777474928;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=CXyUkgUJ+Frrj1lxE9e4nGDb9q3jnTeEzXMZBRjwMCg=;
-  b=B+iIImQ/Z9lcY5nh4eHyvgssFqYPVaX3BYw5jgWY27pa0PUUoFonrNDJ
-   S8XDiirlgKMdVVbeFiX40j3RwHga47+sg8D82srYITgFyM2y25Wi/tGkW
-   6i4fNYRL0QuVl8ZIg9ayOr46gK+PB/shbLskOoATXklRglE9QQd1XBx4I
-   YQSbcv7V3q4XfI1wQU3hQGdFEEoz/mbnh1z3eEnffHnC8ZMB4Q7mxDhrH
-   v9DkOLVn8x7GY/hi8030XYdX2u+kXYfzprXBsCfYyLJh+OTeILJdU+QFB
-   gLjyiS+MhgqfCbnhIFGruQmWS/3+PbNzlKs0AFewb/ee/vah6wpZol9+w
-   A==;
-X-CSE-ConnectionGUID: KIJNvFzNQZy43ju3TGvjbA==
-X-CSE-MsgGUID: 7OEtgm0qQamXjbey17zZZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="35179160"
+  t=1745939027; x=1777475027;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=4Ioti+KOXo9jXs59B0HzHQNKA05gNUmWBW9zCfnx54c=;
+  b=c895exFXzi05IB2mIrcQ7YAUVO7XsRQpuc9ZYSsBi0zz5sVuau01QaW2
+   Fa/ZEMEq/ROf4ybwEe/e9wGVHr+KF0CIvEdufosTpXHtRkiTMfzMTGnP4
+   oOYfb0pLnZf7dkHgfoPhLLwQxgQNeC4sy/BXSUTgvY0GT5md00YJnlAmh
+   LqJDHNvdmYVScEAfYUG3S70l2GbehB6R+UYBHEnBMErn88SYFRB6SEFhT
+   ZXmcEmfrS47b3T3C8xDabJNTiLxWYw+s4VxV9+wFwVDCkTPi23dTkciQn
+   tMO2BfMyBRsvwwK59LRjrzUsI+E9LtTPzDwhko0vtsHqJPAubHW42FUVH
+   Q==;
+X-CSE-ConnectionGUID: 2IjrxDzCQXCAcas1isGcLQ==
+X-CSE-MsgGUID: 6F2t86wlS22Bj4jabnGodA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="46683895"
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="35179160"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:02:07 -0700
-X-CSE-ConnectionGUID: lhuL/3jCRTGBN9KfmEd2Hg==
-X-CSE-MsgGUID: QaAvmvplT1SptIJiB9729w==
+   d="scan'208";a="46683895"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:03:46 -0700
+X-CSE-ConnectionGUID: cRlQGJ7nTomZrAAUVgsRiA==
+X-CSE-MsgGUID: +1XS6qJ7Qzybx0V4SQveYQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="138833173"
+   d="scan'208";a="139039898"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:02:03 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:03:44 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
- Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <20250425195237.493129-1-xi.pardee@linux.intel.com>
-References: <20250425195237.493129-1-xi.pardee@linux.intel.com>
-Subject: Re: [PATCH v5 0/5] Create Intel PMC SSRAM Telemetry driver
-Message-Id: <174593891838.4147.15233566963314671509.b4-ty@linux.intel.com>
-Date: Tue, 29 Apr 2025 18:01:58 +0300
+To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
+Cc: hdegoede@redhat.com, 
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Gregory Price <gourry@gourry.net>
+In-Reply-To: <20250425102357.266790-1-suma.hegde@amd.com>
+References: <20250425102357.266790-1-suma.hegde@amd.com>
+Subject: Re: [v2] platform/x86/amd/hsmp: Make amd_hsmp and hsmp_acpi as
+ mutually exclusive drivers
+Message-Id: <174593901935.4398.15276215453608364449.b4-ty@linux.intel.com>
+Date: Tue, 29 Apr 2025 18:03:39 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,39 +64,29 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 25 Apr 2025 12:52:28 -0700, Xi Pardee wrote:
+On Fri, 25 Apr 2025 10:23:57 +0000, Suma Hegde wrote:
 
-> This patch series removes the SSRAM support from Intel PMC Core driver
-> and creates a separate PCI driver for SSRAM device. The new Intel PMC
-> SSRAM driver provides the following functionalities:
+> amd_hsmp and hsmp_acpi are intended to be mutually exclusive drivers and
+> amd_hsmp is for legacy platforms. To achieve this, it is essential to
+> check for the presence of the ACPI device in plat.c. If the hsmp ACPI
+> device entry is found, allow the hsmp_acpi driver to manage the hsmp
+> and return an error from plat.c.
 > 
-> 1. Search and store the PMC information in a structure, including PWRMBASE
-> address and devid for each available PMC. Then Intel PMC Core driver
-> achieves the PMC information using the API provided by the new driver.
-> 2. Search and register Intel Platform Monitoring Techology telemetry
-> regions so they would by available for read through sysfs and Intel PMT
-> API. Intel PMC Core driver can achieve Low Power Mode requirement
-> information from a telemetry region registered by the new driver.
+> Additionally, rename the driver from amd_hsmp to hsmp_acpi to prevent
+> "Driver 'amd_hsmp' is already registered, aborting..." error in case
+> both drivers are loaded simultaneously.
 > 
 > [...]
 
 
 Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/5] platform/x86:intel/vsec: Change return type of intel_vsec_register
-      commit: f6347ba78ad48eef2a79d2063d77a32d015c58af
-[2/5] platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
-      commit: f3d766cced899fa626e3f6f6ace43e16061ea19e
-[3/5] platform/x86:intel/pmc: Use devm for mutex_init
-      commit: 95350cbf5c4b7453d15990ad776b7b101fd6a290
-[4/5] platform/x86:intel/pmc: Move error handling to init function
-      commit: 75c7b75459efeb5b600d99421f3d08f485d33896
-[5/5] platform/x86:intel/pmc: Improve pmc_core_get_lpm_req()
-      commit: a946156129a6adb702dff43111c1d8cdab4f9362
+[1/1] platform/x86/amd/hsmp: Make amd_hsmp and hsmp_acpi as mutually exclusive drivers
+      commit: 0581d384f344ed0a963dd27cbff3c7af80c189e7
 
 --
  i.
