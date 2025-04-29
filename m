@@ -1,161 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C022676FE;
-	Tue, 29 Apr 2025 08:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1322A2820DD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 08:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915150; cv=none; b=lOiD0DWACPKtFc1ObnC5O/zokFLyhSI6KIL2jCqBRXtA64vok3HQ9aVwqvZ1ecNk2keS/W/J/zwgmGFhzSBN1KB5yMY5fXnRkRPDl6HUXGZIgyCr+1lTA/9bFRNBnzTBo6AkoLMh+HefafLu12RI0/hsjzNe/UzX0HMqeMlVAaQ=
+	t=1745916057; cv=none; b=Qg0a96yTYWYEets8w9Rc2G8XnpY7rFvDe3yj4EPROHPEhpqY6OP+V5k+cJ6h0KB6GQXxp1A32MX+rhxNf6Bo24pVR586r7XzNfsGKj0ndQyKtMbjXoJR4M97de5xy9vts1CODvjJgYwAtquvNOrOW4I7NqKNJbsW5HwBoTmA1Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915150; c=relaxed/simple;
-	bh=QgHt0DPwveKMPa/0IK3wVRz2UaQ2kbL35RtctM7eAlQ=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=HOIcD4+rroodqVHiHukwoDwSMgD4DanfXLwdyxCrT0uKE0o8X6jESMvFIpiDxgx4foUuGBvV5io/wlQIuNNY/7G4UjOVK2IHcwhXLEjlSH6ZLJd0US7iDTlK1cLVU+9vGY3A7g+mcFtBQXSmAoYMutb+xu8nhOdjsUFzEtmVd6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfmfVgS7; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745916057; c=relaxed/simple;
+	bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EhTIIafaMccgihbAIq1ZcouR4SBi7EQ+df9UqX04X3SbUSpw0K+td1A8u9LZ7t1sJaL4Tpxpc8VM9zhN+ppvvE03M78CcC294cPISPf1L8gRW+S4hOdbyM3VQSpHWK5rxcbyA50aL6wATZ11MxGQ/SkHA2TjTy6pAK2to/aFYcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ansbdwJx; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfmfVgS7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745915149; x=1777451149;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QgHt0DPwveKMPa/0IK3wVRz2UaQ2kbL35RtctM7eAlQ=;
-  b=DfmfVgS7vpoWMULFvilfPebXl7qt10w+ZApAcg5JjZDqehH0yPcnXs8J
-   i8JEQcI1KgvKjYl7oT5oydHXQ1DnRGg3l+6A+zE0s3vPBqulExOqTjorF
-   mrRkAxZgaeQWXr7kzMlJ/my7KTrthQWNRSS1obITWPAORgs7CwsrzGo6O
-   cTl0QF7aeqGbqKim9XXdqKtRzo/yqHQh3eR0/PzwhTAbs0eP9TU6DUqga
-   9rgRkOVZ+zi6Fw9JtZRjc78FdOPcnnGbBbuvLzEPoAOCje/220VSBQEyt
-   y/5Z1aUgDf4IHm/HPv01U/na9+5/X8f73H/2btvWQoqaijrW/RGo7pBzO
-   g==;
-X-CSE-ConnectionGUID: rhN2uuSLS6SfJqild0JhPg==
-X-CSE-MsgGUID: iOL/VQsPTQmuo9OOHZFDvA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47663910"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="47663910"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:25:48 -0700
-X-CSE-ConnectionGUID: RDGw6uRNQtOe2o0wnDCcqg==
-X-CSE-MsgGUID: 9rGvZ+rjR92jwWhushJNEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134270744"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:25:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Tue, 29 Apr 2025 11:24:34 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.15-4
-Message-ID: <pdx86-pr-20250429112434-323291040@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ansbdwJx"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3106217268dso54204121fa.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 01:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745916052; x=1746520852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+        b=ansbdwJxsueyefFM/ctUcCC6V8SAelIg4fyKH0DNmeisPkebKtqXUHrNQVqfENhfvo
+         /+xit3qJOdMQNIxjRfKCjBsxY2jgxaKdC9yYi5qsMAbJn/zV1cYNMbu/w4+loB87L643
+         DH0iVgtbCj6WQeJ0sbJ7sNEfSrSsGMP1adYk92DE/R/9ycX53FcJURUwQsxFhMD6m4Ai
+         T+HRIAFJccEWJbCk8+vatZJzmsTisFrWvgBUure1gbQ0+JaJ9Of4s58IKYvHqEa8LScR
+         UCmvWxEUobYTFF9R4MH7dqF8MXy9MWi4sSVnogYjOCJV9F0dCattldNwJT0oODZa8Tnd
+         BmBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745916052; x=1746520852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+        b=AGyx/EQLji1C8ESe9Px8RQHuoVSNc+IPCm2LWiwZ0RFzPW7BGhHKLprK9yomyJp603
+         z9u2Zk4x/4q7DoGrsPM/RTteQAQ0ilQPHra56ruTxZFeJamfEYyGy0JOAe94ECTqT6ha
+         hh/DiQRlpFgNzXoRJ8M2dM/m9T5+NhDrdF0igUdTAM6ubbPa4EpIcUjzQZaiOhEBj63+
+         +jr6GaYIDuCU1qyr4VeeDW5dHcKHZjdgb2Xw8eg9jAlzAOLVAwARUfAbdtbiiF5oYwpa
+         raer6klRtN9i3wgKncqaq6OBNYgMN0zNMOWDALw0gEULR7IAsEcDC+X2ulDZ2TlluMmA
+         WCmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqmZOuwHhgP8Fp0CVmBXoHva6wgM+cL9Y5fEDzA3JOeQ4KGOmg+uD1tf7zLlCkIW3mEhB0lZatDvdBDK5lkWPZmRgp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvsukTK46Um2wPUOSV6tEnIdLj/4KlYjdzR7lggWjzdnNFJCvf
+	drLF0oXJJzdy/kCG2Ns8CidBwx4oks6ggdYyKjNimea840nBCl95C8r40zlHA1YuAoTG4/4aObM
+	EU3j6Qbl9nkTKLZUUcKcnWyFDRtzVOKpBYjl2nQ==
+X-Gm-Gg: ASbGncsa0fSD7bj147rJkTOV8NMBvlr3Ce+ENCg29f/3ouDPiJnUvbCCHvlBUL8HP1E
+	rmOjrdasIJLvLGDMNrivGr+NjiIiE1BSeIufaB+pkboSpKva/K12wVTP/ntn3HlOiuoAKvP4dwQ
+	xyUDBxp1RnvGF0Gh5RDpOZqQ==
+X-Google-Smtp-Source: AGHT+IEUiqYB296CVrwZ+xxBw7BC+pTcJa/x+6Bu5GNB2EvNhnBwa7BLSUJNRUMp+Ehtf1mLBoE9JSmzpMhMYJBukms=
+X-Received: by 2002:a2e:bc0b:0:b0:30d:894a:a538 with SMTP id
+ 38308e7fff4ca-31d34b6c243mr8766341fa.21.1745916052135; Tue, 29 Apr 2025
+ 01:40:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-15-8f91a404d86b@bootlin.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-15-8f91a404d86b@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Apr 2025 10:40:41 +0200
+X-Gm-Features: ATxdqUEhPh2HxY_cKMawBJnfuogL8n7jPhFvg8U9jTR5km8hYrNkb1VPdIYXtGQ
+Message-ID: <CACRpkdZt8zem0hFUiq3-Z1feNZHRh3R=Y0cEtK=pVt=bJ9Qf1g@mail.gmail.com>
+Subject: Re: [PATCH v2 15/34] drm/mcde: convert to devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Thu, Apr 24, 2025 at 9:00=E2=80=AFPM Luca Ceresoli <luca.ceresoli@bootli=
+n.com> wrote:
 
-Here is a platform-drivers-x86 fixes PR for v6.15.
+> This is the new API for allocating DRM bridges.
+>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Fixes and new HW support
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-- amd/pmc: Require at least 2.5 seconds between HW sleep cycles
-
-- alienware-wmi-wmax:
-  - Add support for Alienware m15 R7
-  - Fix error handling to avoid uninitialized variable
-
-- asus-wmi: Disable OOBE state also on resume
-
-- ideapad-laptop: Support a few new buttons
-
-- intel/hid: Add Panther Lake support
-
-- intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
-Regards, i.
-
-
-The following changes since commit baf2f2c2b4c8e1d398173acd4d2fa9131a86b84e:
-
-  platform/x86: msi-wmi-platform: Workaround a ACPI firmware bug (2025-04-16 11:15:22 +0300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-4
-
-for you to fetch changes up to 02c6e43397c39edd0c172859bf8c851b46be09a8:
-
-  platform/x86: ideapad-laptop: add support for some new buttons (2025-04-23 13:05:26 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.15-4
-
-Fixes and new HW support
-
-- amd/pmc: Require at least 2.5 seconds between HW sleep cycles
-
-- alienware-wmi-wmax:
-  - Add support for Alienware m15 R7
-  - Fix error handling to avoid uninitialized variable
-
-- asus-wmi: Disable OOBE state also on resume
-
-- ideapad-laptop: Support a few new buttons
-
-- intel/hid: Add Panther Lake support
-
-- intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
-The following is an automated shortlog grouped by driver:
-
-alienware-wmi-wmax:
- -  Add support for Alienware m15 R7
- -  Fix uninitialized variable due to bad error handling
-
-amd: pmc:
- -  Require at least 2.5 seconds between HW sleep cycles
-
-asus-wmi:
- -  Disable OOBE state after resume from hibernation
-
-ideapad-laptop:
- -  add support for some new buttons
-
-intel: hid:
- -  Add Pantherlake support
-
-intel-uncore-freq:
- -  Fix missing uncore sysfs during CPU hotplug
-
-----------------------------------------------------------------
-Gašper Nemgar (1):
-      platform/x86: ideapad-laptop: add support for some new buttons
-
-Kurt Borja (2):
-      platform/x86: alienware-wmi-wmax: Fix uninitialized variable due to bad error handling
-      platform/x86: alienware-wmi-wmax: Add support for Alienware m15 R7
-
-Mario Limonciello (1):
-      platform/x86/amd: pmc: Require at least 2.5 seconds between HW sleep cycles
-
-Pavel Nikulin (1):
-      platform/x86: asus-wmi: Disable OOBE state after resume from hibernation
-
-Saranya Gopal (1):
-      platform/x86/intel: hid: Add Pantherlake support
-
-Shouye Liu (1):
-      platform/x86/intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
- drivers/platform/x86/amd/pmc/pmc.c                  |  7 +++----
- drivers/platform/x86/asus-wmi.c                     | 11 ++++++++++-
- drivers/platform/x86/dell/alienware-wmi-wmax.c      | 14 ++++++++++----
- drivers/platform/x86/ideapad-laptop.c               | 16 ++++++++++++++++
- drivers/platform/x86/intel/hid.c                    | 21 +++++++++++----------
- .../x86/intel/uncore-frequency/uncore-frequency.c   | 13 +++++++++----
- 6 files changed, 59 insertions(+), 23 deletions(-)
+Yours,
+Linus Walleij
