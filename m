@@ -1,37 +1,64 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBD12C10A9;
-	Tue, 29 Apr 2025 12:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C1521ABC2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 13:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930518; cv=none; b=Nz7xXfddpYVdcs7HG7nvwsUQ32EsmN4skjk2X6BcL3CH/DF44orYwCe55XMrSwVFwZqhGcBmecDDwRmsXTrcR/X+hckd/pyzUn0dMyvcLoJ8p7j10nhzCzTFnBVQYlaZ2fr0Fo1xYZLxCRMfDju6RkYBEWP2wJmvRk1jDxdlKTI=
+	t=1745933230; cv=none; b=hthWb/294k1Dy5GrT+DvZQF07cNSUxraxfFv+t1iv9aLvpmJ76lT8EBJl2dfKszYBENfDgBOwWF9Ai1usx6RRvGkpvRK0RQfqjFnB5zy+gyCeeR3+6Odb7dYQQqMetHnhhZcEw0bosRldGXTPgKwx5+eKm8oP51Jh553aJrfpGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930518; c=relaxed/simple;
-	bh=XCnhP92FnLnRCYUyO2bvDnBsIp+W3m98fC3Wecogt0k=;
+	s=arc-20240116; t=1745933230; c=relaxed/simple;
+	bh=A4XD87qqt1s+PSnA4mrOVxeek4aOhNOKsuXjxllV2KY=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Fwv10/nQ/s7TIMcJSx7QrLJf/RleBF+UU4Nqff6p1sgQfRYzy5Bt7LPPJPXVihUS+HpLfefCjkktJFL46N5vi6ffJMqR+odXC9OF5n2He3oS8vZyFiYqe391KiPpvln4RwWd5nViqSo5F+SXVd3I8Re6PQ3q8Vmapz0achKO7u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fsC7jfN2; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 In-Reply-To:Content-Type; b=mBY0aGtiT0ILCBAbWVMS12++2x67yKb72Uon0AbvE+t+E+sNSfp5lytPDI44RZk+m5h8mgR2/sRvppIJzAwzW9IL5idqLcPWKo1HIuC9qlQAVh527MMA7m99vZJ7IKT+pDjInvBFCeVJDy2yitHehUhNj5i6vloBNOTDHmI1FKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPErvh4t; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fsC7jfN2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 868F21FCE7;
-	Tue, 29 Apr 2025 12:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745930513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+hOrEAhno7m4cQKlwlJmGm8Rj/tVEl/GuIX19J6c9EU=;
-	b=fsC7jfN2Zzf6DQkEjpRic8pWM7yzcLOC/nuVX8wuoLYV8lJ6JT8vJzjRggXFLv3DaY5M+g
-	bKS9DTcgGQb6UFWXFJadK88/OXkYFQ0U257kEblOQ+ZHiUU6v4GoGzvtCq8PumjxlHSYuc
-	27ApFm3NfD1iUBHANI+nm1UTwLeB63hANnKucJ5eLvejapXSWgCWmG0dssIzqyuKQ59h5S
-	HslL9buypFCZSx47sMrgoblrGoGYuvWptn/IPXPm1+L43A8deYah1v6XYWbtfzGRyj0VMv
-	1J9LTFX3WHkiEUsuimis6TvaKT2VKjtodkvxzEc8KB6E/9Pu/RNom5r5TdqJLg==
-Message-ID: <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
-Date: Tue, 29 Apr 2025 14:41:42 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPErvh4t"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736b98acaadso5688284b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Apr 2025 06:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745933228; x=1746538028; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PK3ZA6c1hSpEgTODEEYzFX0k9QeCfxYBZZ/WZQ/BZ+M=;
+        b=mPErvh4tj/oFR9GcH339k1rjO9N6nAuWzybJNVJj49AwdwNWb/+xqA6LBMdLhavell
+         PohPvR8iVfv0C/UC8vEJBWF/bPrww7QBtquzz9RfAgq4JOQVp6VkA+6urswPA56yfwNv
+         WzuA7xvPDjGIkmCgJVOz3I8bxjxMMZmetJCF+q8dvFCgXDWv4GHo2JJcucaC1pn0QdeP
+         8KKPTI/GdlkjGs8GcGqtRNGoGb480HMVbNjA/w/HSqihaVPK4VpbPNAnhmrgatWAh0gd
+         6RG2zKSLD9nA1YEdcvL1qMIBB/xClfMex9ncn1vfmtsMqTH7XLC3dSDcV8AYBv1/rHr3
+         zOtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745933228; x=1746538028;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PK3ZA6c1hSpEgTODEEYzFX0k9QeCfxYBZZ/WZQ/BZ+M=;
+        b=A70i153WiMxEu5HbA1naQkFmHyoecZd/0mxIeqtvqRxPtHxJuKi6AUESetzPFvvSzL
+         4p/g7/Xh/2mjec0CDAKwsi6TYXldwYPHBz3m8AkoQDv9HRAvePOVzRXf28GvzMQdSaM0
+         i6EG2s3zQEqJQkPKy4QnqqqPPz172j2D2R2Wcbj2ZneZfgTxXavoMZjdIMWJnTwnmfKB
+         coGU5TDKV1kSwuuDNQh4QB1+XGXV4AZUlfjr88G+XDn2XLLQ7AlpYecdYkwsaOQBGXmo
+         RIyxJT7uVAwyuJVHqXSlhIWtBdtDarwkC7881RgejvIvCPL/2Q8iXn2iBlghElGSVkEx
+         blLw==
+X-Gm-Message-State: AOJu0Yz7ToEL0eNkdl/Oonmi41pNZt187mWz8tqgk58WrZI5CUYSSvjd
+	OpxfDZB+5zmtb9HGxVZ/wKeEkNVXhW3xEjh0z5F5w/oGevcQsgbb
+X-Gm-Gg: ASbGnct8km1Kif7pVAwoHXCUeqlJd6z6lZhmb1jcKdO09gtyrGe897y5JPjq0EC0MiP
+	NRMVUQNB4BjYk7M5zzPEfYCsVki+/vyMyLq8eC40OvoF6r+UyCJvVtNahxRX7xcH7xSS6p3SPTB
+	P1QG5gdKxJ+Ug7LoWBd8QsaJbkSKO45oZtfq4s4+uNkJiD5plWXZomnHUE6diJFoi4L5gUuQkK9
+	SG3u4aCRtMSwiSvFuS5PW+mnEft05qVSSDPqDem18ch59OWYHT4bnGn43dmWLEulO8eQpUYi0et
+	n3dnFa9SLEuZrTxEBgQwrWThzZ9wEpJQgN3RtawFrkrcF/ZoonI/86ZLPt9pD/PxScmtJKOsjR6
+	1YW+f20I=
+X-Google-Smtp-Source: AGHT+IGdpULXW0cdGa3Vfmt9ZXSyT/KatEMJQ8noXZH/YJJI61B1npweolK6fQD7uega0j+GDLpqGQ==
+X-Received: by 2002:a05:6a00:3990:b0:736:a7ec:a366 with SMTP id d2e1a72fcca58-7402942b04bmr3738924b3a.9.1745933227868;
+        Tue, 29 Apr 2025 06:27:07 -0700 (PDT)
+Received: from [192.168.0.5] (127.37.178.217.static.user.transix.jp. [217.178.37.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9d308sm10183198b3a.147.2025.04.29.06.27.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 06:27:07 -0700 (PDT)
+Message-ID: <a89e5fbf-6d03-4b00-a693-cb9e12e7942b@gmail.com>
+Date: Tue, 29 Apr 2025 22:24:49 +0900
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,220 +66,209 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>,
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
- Hui Pu <Hui.Pu@gehealthcare.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
- Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>,
- Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
- Christoph Fritz <chf.fritz@googlemail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Dharma Balasubiramani <dharma.b@microchip.com>,
- Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
- Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
- Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>,
- Kevin Hilman <khilman@baylibre.com>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
- Liu Ying <victor.liu@nxp.com>,
- Manikandan Muralidharan <manikandan.m@microchip.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
- Sasha Finkelstein <fnkl.kernel@gmail.com>,
- Sugar Zhang <sugar.zhang@rock-chips.com>,
- Sui Jingfeng <sui.jingfeng@linux.dev>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Vitalii Mordan <mordan@ispras.ru>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
- <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
- Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>,
- Martyn Welch <martyn.welch@collabora.co.uk>,
- Peter Senna Tschudin <peter.senna@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Herve Codina
- <herve.codina@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
- Seung-Woo Kim <sw0312.kim@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Bjorn Andersson <quic_bjorande@quicinc.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
- Helge Deller <deller@gmx.de>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Philippe Cornu <philippe.cornu@foss.st.com>,
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
- Yannick Fertre <yannick.fertre@foss.st.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Alain Volmat <alain.volmat@foss.st.com>,
- Raphael Gallais-Pou <rgallaispou@gmail.com>,
- Michal Simek <michal.simek@amd.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+Subject: Re: [PATCH v3] platform/x86: thinkpad-acpi: Add support for new
+ hotkey for camera shutter switch
+From: Nitin Joshi <nitjoshi@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, njoshi1@lenovo.com,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+References: <20250423133912.16334-1-nitjoshi@gmail.com>
+ <045d37f5-259c-4553-8257-51ab6fc43534@redhat.com>
+ <63008847-719e-4a60-b33c-5a7d53068a1c@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+In-Reply-To: <63008847-719e-4a60-b33c-5a7d53068a1c@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekjeefjeevtedvgfeiueeuudegudetvdejvdeujeelhfefvdevkeduheettedtveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtledprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpt
- hhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: louis.chauvet@bootlin.com
 
+Hello Hans, Ilpo,
 
-
-Le 29/04/2025 à 11:27, Louis Chauvet a écrit :
+On 4/24/25 17:12, Nitin Joshi wrote:
+> Hello Hans,
 > 
-> On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
->> devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
->> bridge, and the only one supported from now on. It is also necessary for
->> implementing reference counting and thus needed to support removal of
->> bridges from a still existing DRM pipeline without use-after-free.
+> On 4/23/25 22:47, Hans de Goede wrote:
+>> Hi,
 >>
->> This series converts all DRM bridges to the new API.
+>> On 23-Apr-25 3:39 PM, Nitin Joshi wrote:
+>>> New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
+>>> has new shortcut on F9 key i.e to switch camera shutter and it
+>>> send a new 0x131b hkey event when F9 key is pressed.
+>>>
+>>> This commit adds support for new hkey 0x131b.
+>>>
+>>> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
+>>> ---
+>>> Changes in v3:
+>>> * Avoid wasteful get_camera_shutter() calls and Minor changes based 
+>>> on review comments to make
+>>>    code more readable.
+>>> Changes in v2:
+>>> * Added ASL method to get camera shutter status and send it to 
+>>> userspace.
+>>> ---
+>>>   drivers/platform/x86/thinkpad_acpi.c | 46 +++++++++++++++++++++++++++-
+>>>   1 file changed, 45 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/ 
+>>> x86/thinkpad_acpi.c
+>>> index 5790095c175e..0b011dcfc626 100644
+>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>> @@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
+>>>                              * directly in the sparse-keymap.
+>>>                              */
+>>>       TP_HKEY_EV_AMT_TOGGLE        = 0x131a, /* Toggle AMT on/off */
+>>> +    TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera 
+>>> Shutter */
+>>>       TP_HKEY_EV_DOUBLETAP_TOGGLE    = 0x131c, /* Toggle trackpoint 
+>>> doubletap on/off */
+>>>       TP_HKEY_EV_PROFILE_TOGGLE    = 0x131f, /* Toggle platform 
+>>> profile in 2024 systems */
+>>>       TP_HKEY_EV_PROFILE_TOGGLE2    = 0x1401, /* Toggle platform 
+>>> profile in 2025 + systems */
+>>> @@ -2250,6 +2251,25 @@ static void tpacpi_input_send_tabletsw(void)
+>>>       }
+>>>   }
+>>> +#define GCES_METHOD_ERR BIT(31)
 >>
->> [...]
+>> Does this bit really indicate an error ? From other vendors
+>> this often is a device-not-present bit and the bit being set
+>> would mean in this case that there is no camera-shutter on
+>> the laptop we're running on.
+>>
+>> This also matches with the -ENODEV return.
+>>
+>> If this indeed is a device-not-present bit then this define
+>> should be renamed to match that.
+>>
+> This BIT being set would mean there is no camera shutter.
+> So, shall i change name to "#define DEVICE_NOT_PRESENT BIT(31)"
+> OR
+> I can just replace "METHOD_ERR" with "DEVICE_NOT_PRESENT" in below enum 
+> and replace all METHOD_ERR in this file to "DEVICE_NOT_PRESENT":
+> enum {
+>      /* Error condition bit */
+>      METHOD_ERR = BIT(31),
+> };
 > 
-> Applied, thanks!
+> I may have missed something but I think for consistency, its better to 
+> rename METHOD_ERR. if its OK, i can modify like this in another patch 
+> for this change.
 > 
-> [02/34] platform: arm64: acer-aspire1-ec: convert to devm_drm_bridge_alloc() API
->          commit: 411465d35bc56877c33e2498ac697acfcf484e6b
-> [03/34] drm/bridge: analogix-anx6345: convert to devm_drm_bridge_alloc() API
->          commit: 53ddeb25159781b029fda404226af600e76f975f
-> [06/34] drm/bridge: display-connector: convert to devm_drm_bridge_alloc() API
->          commit: 4e90a3d96a6185e143041273f9867a1092dd4a71
-> [07/34] drm/bridge: lt9611uxc: convert to devm_drm_bridge_alloc() API
->          commit: 6287ffd9eff6eea65865e64b9d4c45e115fa5ecf
-> [11/34] drm/bridge: dw-hdmi: convert to devm_drm_bridge_alloc() API
->          commit: ed6987b674185873ebed7a619a646da6dd1a78fa
-> [12/34] drm/bridge: tda998x: convert to devm_drm_bridge_alloc() API
->          commit: 7fe58bf1a9a24b533875c262a3222581a3f759e4
-> [13/34] drm/bridge: ti-sn65dsi86: convert to devm_drm_bridge_alloc() API
->          commit: a4754ae9cfa76fbce79f023c268a5bac56f36321
-> [14/34] drm/exynos: mic: convert to devm_drm_bridge_alloc() API
->          commit: 91c5c7b5bb2dd09b43b025bce6d790d3c79f4518
 
-Hello all,
+Sorry to bother you !
+Please let me know your comments regarding any modification needed for 
+this patch?
+Thank you !
 
-I made a mistake while applying those patches. Instead of taking 
-2-3,11-13,15-18,27,31, I took 2-3,11-18,27,31, which includes the patch 14.
+Thanks & Regards,
+Nitin Joshi
 
-This patch is not R-by/A-by/SoB by non-Bootlin people. For me, the patch 
-is correct, it does not break the build nor generate warnings.
-
-What should I do? Is my SoB sufficient, or should I revert the patch and 
-wait for R/A-by before taking it again?
-
-Sorry for this,
-Louis Chauvet
-
-> [15/34] drm/mcde: convert to devm_drm_bridge_alloc() API
->          commit: 40c25b9ec641f43ba17c7b788ac16ec23f8daaa8
-> [16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
->          commit: b2aabe5c6b65516d88214aba4b12ce2ca78bac6c
-> [17/34] drm/msm/dsi: convert to devm_drm_bridge_alloc() API
->          commit: fffc8847743e45604c4478f554d628481b985556
-> [18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
->          commit: e11532be87e437648521a8ed5358c56df11933b4
-> [27/34] drm/vc4: convert to devm_drm_bridge_alloc() API
->          commit: 9545c91ed75ff65e114761a7729de0e1b440aec6
-> [31/34] drm/bridge: imx8*-ldb: convert to devm_drm_bridge_alloc() API
->          commit: e74b84cd83962e357329a695ba348b3dfe37395c
+>>
+>>> +static int get_camera_shutter(void)
+>>> +{
+>>> +    acpi_handle gces_handle;
+>>> +    int output;
+>>> +
+>>> +    if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GCES", 
+>>> &gces_handle)))
+>>> +        return -ENODEV;
+>>> +
+>>> +    if (!acpi_evalf(gces_handle, &output, NULL, "dd", 0))
+>>> +        return -EIO;
+>>> +
+>>> +    if (output & GCES_METHOD_ERR)
+>>> +        return -ENODEV;
+>>> +
+>>> +    return output;
+>>> +}
+>>> +
+>>>   static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
+>>>   {
+>>>       bool known_ev;
+>>> @@ -3272,6 +3292,7 @@ static const struct key_entry keymap_lenovo[] 
+>>> __initconst = {
+>>>        * after switching to sparse keymap support. The mappings above 
+>>> use translated
+>>>        * scancodes to preserve uAPI compatibility, see 
+>>> tpacpi_input_send_key().
+>>>        */
+>>> +    { KE_KEY, TP_HKEY_EV_CAMERASHUTTER_TOGGLE, 
+>>> { KEY_CAMERA_ACCESS_TOGGLE } },
+>>>       { KE_KEY, 0x131d, { KEY_VENDOR } }, /* System debug info, 
+>>> similar to old ThinkPad key */
+>>>       { KE_KEY, 0x1320, { KEY_LINK_PHONE } },
+>>>       { KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, 
+>>> { KEY_PROG4 } },
+>>> @@ -3303,7 +3324,7 @@ static int __init hotkey_init(struct 
+>>> ibm_init_struct *iibm)
+>>>       const struct key_entry *keymap;
+>>>       bool radiosw_state  = false;
+>>>       bool tabletsw_state = false;
+>>> -    int hkeyv, res, status;
+>>> +    int hkeyv, res, status, camera_shutter_state;
+>>>       vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+>>>               "initializing hotkey subdriver\n");
+>>> @@ -3467,6 +3488,12 @@ static int __init hotkey_init(struct 
+>>> ibm_init_struct *iibm)
+>>>       if (res)
+>>>           return res;
+>>> +    camera_shutter_state = get_camera_shutter();
+>>> +    if (camera_shutter_state >= 0) {
+>>> +        input_set_capability(tpacpi_inputdev, EV_SW, 
+>>> SW_CAMERA_LENS_COVER);
+>>> +        input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, 
+>>> camera_shutter_state);
+>>> +    }
+>>> +
+>>>       if (tp_features.hotkey_wlsw) {
+>>>           input_set_capability(tpacpi_inputdev, EV_SW, SW_RFKILL_ALL);
+>>>           input_report_switch(tpacpi_inputdev,
+>>> @@ -3633,6 +3660,8 @@ static void 
+>>> adaptive_keyboard_s_quickview_row(void)
+>>>   /* 0x1000-0x1FFF: key presses */
+>>>   static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+>>>   {
+>>> +    int camera_shutter_state;
+>>> +
+>>>       /* Never send ACPI netlink events for original hotkeys (hkey: 
+>>> 0x1001 - 0x1020) */
+>>>       if (hkey >= TP_HKEY_EV_ORIG_KEY_START && hkey <= 
+>>> TP_HKEY_EV_ORIG_KEY_END) {
+>>>           *send_acpi_ev = false;
+>>> @@ -3643,6 +3672,21 @@ static bool hotkey_notify_hotkey(const u32 
+>>> hkey, bool *send_acpi_ev)
+>>>               return true;
+>>>       }
+>>> +    if (hkey == TP_HKEY_EV_CAMERASHUTTER_TOGGLE) {
+>>> +        camera_shutter_state = get_camera_shutter();
+>>> +        if (camera_shutter_state < 0) {
+>>> +            pr_err("Error retrieving camera shutter state after 
+>>> shutter event\n");
+>>> +            return true;
+>>> +        }
+>>> +        mutex_lock(&tpacpi_inputdev_send_mutex);
+>>> +
+>>> +        input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, 
+>>> camera_shutter_state);
+>>> +        input_sync(tpacpi_inputdev);
+>>> +
+>>> +        mutex_unlock(&tpacpi_inputdev_send_mutex);
+>>> +        return true;
+>>> +    }
+>>> +
+>>>       return tpacpi_input_send_key(hkey, send_acpi_ev);
+>>>   }
+>>
+>> Otherwise this looks good to me now.
+>>
+>> Regards,
+>>
+>> Hans
+> Thanks & Regards,
+> Nitin Joshi
+>>
+>>
 > 
-> Best regards,
-
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
