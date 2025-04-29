@@ -1,305 +1,192 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023085.outbound.protection.outlook.com [52.101.127.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7C1B0430;
-	Tue, 29 Apr 2025 00:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745886999; cv=none; b=O+NZfaVvz6UZMgEmgF9mcd5kHHClIOjkktDuyIx9BIAKw1k/8BQXtPm9kKOfJgf/2oloY+tU/TBj6i8YZAL1szWCLfXp03AtyoklboGtcfakszwA/mwpHADZCmemAuTBDJr9g2pTe+o1LzP+OvoyYN+kxgLIlsIlG2AQm8Movf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745886999; c=relaxed/simple;
-	bh=VyAaQCwVTKyodHJbWRjjuyUH6q3W1KuHvM58oNnwBqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I4iq/PdqRz2elQAUZuu8Vfbhar1gEMWhbqRfixluCwFmz7e/5hUrdl4FufXvpaBugyPumeK7V3g/XwfKlhR3RToCM/Dm9Q7L7UKmgvNY9wIH/p49zrkwxnVkVXTGKAJHhhSrIaHcTHgTmt10iSISCEFi7MMRfEy++Rk1yJki8ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bsKvdV1x; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6864812CDBE;
+	Tue, 29 Apr 2025 02:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745892196; cv=fail; b=KK+fb614vMV6L0bsQhwOQTxCQmWq8t9cJw70mlMVaorAsoWmE+ZwjqkIMFHhNgGanVdgO/Dk+DTysgwBH4zGvmHn1LxmoHlBkHEBsgE4IX9FkWU49wsK1fQyQfqIduNYX/fp8oWaN5Xv0xMncwPrjFpWNQm5eSwM8LwiaS6sPMc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745892196; c=relaxed/simple;
+	bh=oSdhqxRuDq4I9e/87HiUwvgdK25Z4xqyZDa9/DlDCCI=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OFJSRxUXRmMm/c5gXtWtq2Hy93bhC8Hh9QC8HoeqClz3kDmR8pikVpL+VaGqsfgJkOopuu2POwpsMIUb/+l3c8XYriNnzJ8quZq06ySxvyeRXiP+0E4J8qgXKFC+Fzb84Oh3eYHGQf5xXBICKHTahvYDrlYUMQo2BFVBEhD8bBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=J2THgwAL; arc=fail smtp.client-ip=52.101.127.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bsKvdV1x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745886985; x=1746491785; i=w_armin@gmx.de;
-	bh=9Y2WQZ77zZCI4KFEbSyvqglWHM2SvgIsYOScYy2OBxs=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=bsKvdV1xY0ERV8GTqjS2/I7Rv2vXX2rqt+GAoCJA05Lt+vocH0MryefS8Xwu6BbZ
-	 Q3Sx/wGWsOnjdK0l8Bn+NaqSeUcvNxy6MYO+Xtuxg6ftW8wxzPZICl0Ok7vSCJaT3
-	 I/v+Am0xpD6+jzsbY9MzTTUS8JQ4L7Ki5+WyKVeCKZ1QVL3E6ReN+YY6hlgTP+/wC
-	 fsE6JsP8L6bsGDvJhk6wJ9HaGyLk53rzNszAvKmTRwmlPNuDL7lQ3ztOe0fTuZ64r
-	 yK1FeXO7iXQzkCw6E/KhaModpVLG6d2v+d6YsG5XEOHD5i11hIX5R8qTFN/GR21nk
-	 uMTL7q53//Ha4kL4Fw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MGyxX-1uEnlb2rUh-00AUOd; Tue, 29 Apr 2025 02:36:24 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: sre@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] platform/x86: dell-ddv: Expose the battery health to userspace
-Date: Tue, 29 Apr 2025 02:36:06 +0200
-Message-Id: <20250429003606.303870-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429003606.303870-1-W_Armin@gmx.de>
-References: <20250429003606.303870-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="J2THgwAL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Re7P4o5XSKVhKZHZhLHiMYQDvjRH80MayPX7zVRPYKJDeDk1bY3SaraZOQGX5/ZBCszM/Cldct0Xx80hQHfYki228wHjggGXXkKYDvb78uX4KckVH1qyABC9ipcvf3EcaTmtc6audISqXqEJs13FKbVxnJmP5tz8FneSqBwe+ZBRTeFuFvHYlmkzFNzcajb43z0UvcvbjoOBQE3yS2/o0u443eGz/Pf6hKIGfIUBAD8INOPeE9j8aaDZ3utqvvnI2RFgRgD5i/vPLYca3+Hnzbq4LEBJfcy8tfHFOf8lII3878RaBru99J89mx8fj0SvJt+QHNmtCz8tRO0sBKOQQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2qGHdO7s87lZCzz6jVzY0YwewfZXPyXouf2ITlfeSsU=;
+ b=lgSqjFh5UMGSGxRUeWD2lUW0QbxNi2C76cL6ntekL8KxPa4Ik2x/doe4gaUqG+SO167JV5vW9c+uxo3MnMxpr3ZD+HhkChRX81EdeWxFVXtsHdAlTphGeWJalvPN3SF4kw5MnsiThQM+ptGBBaygzKyUnqHAzFC9g4EU1GX9EE4oP4w3EjXsODT0LjPo59xCdw/dHu+tSSTR6EruIgImLYSA70h6yAJXpYsbDQBAxKNMjPPJNJeHxrN4SJ15w7VGJqYEPUF/uGcE/dIAhK7Fdb+Xzy94zCSeOPjhlXLMAjgc3L00D4BG8DM00XRiQ+qiHshrX1cGtLrVOAggnFlwag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
+ header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2qGHdO7s87lZCzz6jVzY0YwewfZXPyXouf2ITlfeSsU=;
+ b=J2THgwALCzKVL6oJjaiDaUQYUm/RLRK5ZeG2T5HO/qda/yBxQTsZixgiF1BJpED9I92DxBHmD+AYU4MMqgleT4gpwpSzxOiGtvWnZ8E0+MlnVXHgnV1clFwaQwe7KMFmA5MzVYMWBIEWR+oaCapM22toD733OG6TsNZ8aT1mC21xfRvbU0vGlkMjQMGsFfT3Dh+bsZZoDzLNTnEaqSdtfNvtoX+Hv05TxttVVXW1KutPnjBvYkO1d6w3rjWM2f8ZHnmu7tioXbcxXDpPHd11ychYQiT7ILP1lKN5SBQmCNq8kcr6kS0uH/H+7PgePJRWgrnWx1A7IpcfWZggNU6Hlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=portwell.com.tw;
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+ by TYZPR06MB6281.apcprd06.prod.outlook.com (2603:1096:400:425::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Tue, 29 Apr
+ 2025 02:03:08 +0000
+Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
+ ([fe80::9235:5570:71b3:224%5]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 02:03:08 +0000
+Message-ID: <7abab768-359e-4067-9587-6ca6caabc7f9@portwell.com.tw>
+Date: Tue, 29 Apr 2025 10:03:04 +0800
+User-Agent: Mozilla Thunderbird
+From: jesse huang <jesse.huang@portwell.com.tw>
+Subject: Re: [PATCH v5] platform/x86: portwell-ec: Add GPIO and WDT driver for
+ Portwell EC
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, brgl@bgdev.pl,
+ wim@linux-watchdog.org, linux@roeck-us.net, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, jay.chen@canonical.com
+References: <3fc723de-c7e9-4a03-852b-93d5538847d7@portwell.com.tw>
+ <CACRpkdZKuiR7jaa-gsVTc=w64yhXv_Pny9u_zOkHDjcyXaXSeA@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CACRpkdZKuiR7jaa-gsVTc=w64yhXv_Pny9u_zOkHDjcyXaXSeA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TPYP295CA0034.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:7::14) To KL1PR06MB6395.apcprd06.prod.outlook.com
+ (2603:1096:820:e7::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QDUPF2bWhumT0YXmQVYjFCcbqylL2H/aMBOY5pvk+5mgRilIw4R
- T1Gs9KeKKNbOXTT6lABMCGHIe6LYFjBDBZTrJQvVSuQej+mVoNKkBl42Ef3tIs9shAjdBDL
- zpVY076K+KaAyoqQumSzrutJvN31noTnpwwDK8Ekww9QojvdpFXI/NyExGswjBX0D6jJimp
- yjWmIfUd5n8qp/4HpJz2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:odmEQe451D4=;qBGKT834AgQ51PkQU9kdOhBWDbZ
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|TYZPR06MB6281:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b5cc680-ee47-45ee-ac70-08dd86c1fc8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WGZlbWdyQTdHV1FXLy9xbllqQytnN3hoZmdUNEc5NEs3cU9hbVpvWU85cHM4?=
+ =?utf-8?B?emlCdlRLaXZDTnVDVEo0SnNOdHBnTmowSWxpVkgrSDkvRktVRVhHTmczeU02?=
+ =?utf-8?B?ZEFDK2ViVGZSWmNLWHRsLy91QU4rcGVCRVFHSHR1bzNzR0ZGOUNKNzVwYUt0?=
+ =?utf-8?B?d0tBTlFHMzIrRHI1RUJwSXR1OFpFYncwd0pXZVhZdUs5eVpNb2pVcVdRM3ll?=
+ =?utf-8?B?NDFYeU1idThyVGRWSEtRL1BSU21YVXd3U2ZzMnRRaGR5K01kdlA2MXM3N0RV?=
+ =?utf-8?B?NmdVdGxCd05aOURVdXpsSUpMSHZ5UXZlbEJUK0tsTHdaY01TamI0OFg0OU1T?=
+ =?utf-8?B?SEJyZkRuUC9VZXBFY1YvTzlZV2FiUDRHS1pXOUY5STRXUksxdTBJZ3YxeVlW?=
+ =?utf-8?B?QWl5d2UxaU5aWXZtVDAvYkV3aFdnRWVxV0xKZnpUSXBLN3BQZXFHTEdrWjNt?=
+ =?utf-8?B?WURiZ0I3UzlReXhsWDNDeWI3VWU3bEdBQ3RsWGU4WDM5cldIa09XcEZNQms0?=
+ =?utf-8?B?TzdNZmZOaTd1WCtBRkVIdXRieUVlLzhic3R0OEdCR09CU3JZNUV2Y01oTUFu?=
+ =?utf-8?B?SkFQQjg2WUhXYnNsUjNtVFZ4T1JlY3hLYW8rTitGZ1Iwd3ZzeDhTNkd0cE8w?=
+ =?utf-8?B?ZFlEcXgyOVpzT3pVSnR2T3BwOWEyQWdyYUxybWFwV3BwMWNlazRFWjlQUWtV?=
+ =?utf-8?B?L1RQZFhYOVQxMm4yWFl4NW5JbEh0SXlZR2JGM1NQeGVtOFYzbjR1QWhkbzRV?=
+ =?utf-8?B?VjF5cm5pZGoyRzBLbVlEaXFrZTM1OTh3WlJ4amYwYkp0bG1pZy9NTmo2NXFm?=
+ =?utf-8?B?aUFCdUJYeFJqT2Mrend3Zlh2U08wdm15SnhWMWo5c1ZzZnUzakxIRGgrck5l?=
+ =?utf-8?B?bjd4NHNGNnRwZXBCd2RralJaalMwVVpRd1lQK016T29WYjAwTmgrSE44bkZ4?=
+ =?utf-8?B?TW44Tm9VVkU3bGljZlJXdGVvZ3ZpazVYNDhQUVdPeFZvY2JFM0V1QTVGdko5?=
+ =?utf-8?B?aG1SeFdpMitMS3ZUSHUzRlcwcHhIV0JqNm50T2dhVkVTdlpQQnRoU3FGQTlx?=
+ =?utf-8?B?emdRbnozSVZKdnhXS0loMmZTaDFaTnZmQnd3Q3puSlZ6WjE4WWdXM05DOWJM?=
+ =?utf-8?B?TVdmTk5ZemFZdHR5SzluVVdwSzdsTzh1aWJWeVJNdUJxbVV4a0ZHSVFCSDJV?=
+ =?utf-8?B?ZHJCYjdvMWl4QnJ4MUg5M1ZOMTI5SkZtNEh2alZ2SUhGcnQ3Yk45d0VnTk52?=
+ =?utf-8?B?YTladUZWWnEydm94a0dJOFFaYXkrU2pYb0krelF4VlpURmwrdFcwWFZzREQ2?=
+ =?utf-8?B?WVVlNVQrc0R0K0pRSjg5M25aS1JBaXJ3WXpobklFQjQxT3Y2VjJYYWIrajVF?=
+ =?utf-8?B?RWhJSjcrL05Wa2N3RXJScVB1WUpqRk5KNHNQT0RmbER2SXZEWi8zd21jTUZV?=
+ =?utf-8?B?Uk1XcGh0ZTIxQzEzcHBNQTFsd2xFajFwVjdReG16OWR2U08rQjc5YW1xeTY1?=
+ =?utf-8?B?SEx3ciszOGhROTdhTTNEbjdNR1FxUWdNTUY1R2w5ZVlqUFY1b3lYRnFSRzRp?=
+ =?utf-8?B?QTVtRmNBTUhiQkxoL09aVU1sYlpYT0lCc2lTbUs2elVTakVoMWI0NlRvYlhj?=
+ =?utf-8?B?djNJWmxBd3QyTHkvdXF2N3RBbVRiVUFDTjNxeTNmRnFXVUdkYTRmRmx4a2Rz?=
+ =?utf-8?B?bHJ2a3c3REw5KzBLQ095RFdMYjRNR2VSQnV4RkcycTdSamdwY2JabVg4blIw?=
+ =?utf-8?B?cGRKRjJNVklhWFVSTGdUK1VvclVOYmJYMXpldXROazUrRStaMVo4U3U5Wjk3?=
+ =?utf-8?B?OXNwTEtDc3lxRmxaTmpEV2EwZVNPL09DY3g0b25NcFdiSXF1U3U1MUh3RHRz?=
+ =?utf-8?B?U2JLbkZqMzVQU0xQbjh6d2FHWXI2ZEt0T1hEbkRETERwVk5oWGh6T0NiVkRa?=
+ =?utf-8?Q?DV0xEP/pMtM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QStJT3pJTmRwQ3o0TFM5ajg1Z3JhL2Rzand3aVRYWm9tb2svcmZvejdkV2JM?=
+ =?utf-8?B?eisyNXNPcVM4T3dZdGhtazduVmdlRVdtVzJnaDNPNGxzNFUySXlLWWszdXpJ?=
+ =?utf-8?B?OURrcElNWnhsV244K2ZYaUV3aWFHYW9vYk1BemdiVUpudHRlNXRXZTVVR0Y0?=
+ =?utf-8?B?U2xrZHUrVFBhamU1OCtWRHkrMjhZaUJJaXZ5TVJEOWM2em9DL1hnaG0xNEtV?=
+ =?utf-8?B?eUM2bkdwblBrN3FBSjcxNmVqMG93UmlTYlZHUFE5d1p5MjE4blBTNWNBeXlz?=
+ =?utf-8?B?dENRc3BOSlBHaHh6OGJOdXUraTF2VEovaGRSb1ovdlRTeDRaa3NJak40K25J?=
+ =?utf-8?B?NXJCS0JyNVVDbU16TER1MUJTaGZvbXJ0QW9uYUI3OGc5SmN3a3ZyZTMvL0pM?=
+ =?utf-8?B?S08rWU1JbjQ2ZzFGR3dKeE1xMHRhUjQxT1VJNWJvbmp6T3l4amRBeTNqS1Mv?=
+ =?utf-8?B?YUpQa3dPbWNkN09mMzVxQk52QkpZR092Yy9KcEhtem42allOaVphK0htdU5Q?=
+ =?utf-8?B?V3FGeGpjV01DME1CenFQd24vYTZMMWI2Rk90LzAzR2wySjNFbmhKd0JRcXFQ?=
+ =?utf-8?B?OFdJaTE2VDhib3VrTkF4ZWJnaEE1WHR2SFpPVDZzWTZiYkRRSVdDTE9tNVd0?=
+ =?utf-8?B?TFc1clpVdkxOL1RsdlFUd2txK3JwTDAzQTNoZjYwbDZYTXV1YTViMlprazFm?=
+ =?utf-8?B?Y1RYS2NQNGJKamVIUWRjMm5HbXplakt4WE9GRDlVd042THhLYUJqTFhDOGJ2?=
+ =?utf-8?B?WldNRC85NlFWbGRnY1NRby9BVGJOZ3ZnWk9UemRmcHA3K0xyMHFEeFB1aVhU?=
+ =?utf-8?B?NUJRRFdoTENxWStSVmU2TUxVdUt4aDVsTjEvWVhJOVlka3JGd1NZV3lmeFhT?=
+ =?utf-8?B?MlpqTGZLZTM2a05zSkNqRDMxM1JzL2k4b3BlSkZKakFVUTRzbWVIVXhwQUZw?=
+ =?utf-8?B?cE02RnNUU2RJZkZCOERxY25VMStRZVdKVEFzeTVLTWVnQmFDQzNzVllscGsz?=
+ =?utf-8?B?R0ZwMWNrZVpUdEtzeXUwMkhUN29MdE80ZnFwdzJvcWEzVkpEWXRPN3FIMU51?=
+ =?utf-8?B?NVNFVnBJRnUzQWhRaUxWNWlRNDl5ZjZDdUw5TDRsUng2VE1tY2hNQmRKeWhP?=
+ =?utf-8?B?TnBzZkRlMGJETmZHRFl3SWFIK0JTcklWbWFmM09GWmt1cHpCM2tFTk1LYnBv?=
+ =?utf-8?B?OWh5Uml5Z3pUZVI0WnNXK1l1OE1ldGZWU2RMdlRpTlc2YlpaSGtkVEJjTTFw?=
+ =?utf-8?B?cGY3QTVzbVRITjUyNytoK01WWXhQWCs1bnBwaXRsd3RWdW92QmtZalFkUHpW?=
+ =?utf-8?B?VUY2SlBkTmFmdk5SNU5TM1IzbW1FWnpMWWYycnVqWVFtRlF4MFhBdVpjanBp?=
+ =?utf-8?B?K3o1eVJaK2pzOFp1TlYydXJwK0FEMC9KYS9kMTlYYmdkbWpXT1ErUW9zNlRz?=
+ =?utf-8?B?RGpwbFB3Z2V3SCtsdTRYd3NMSG9Xckp0QjQ4WTZadXd1N1VsdC9RT1VCVUFB?=
+ =?utf-8?B?WFhWeVhqMDF0SXBBQzNtdkFoZ1ZMaHE0TW95ZWp2UUpVanloaFRnNFdsbVll?=
+ =?utf-8?B?MHBFZmMrSEVhVElLT0tWKzNnbDZmQmthZCtMK2FMYk5Ic05vTnZiQm0rekpY?=
+ =?utf-8?B?Qm13U0x3eHpkMUl4UWQ3NUdKU01qcVV0MFl3eFh0S2pUWlNmRXN3SVR3dkJC?=
+ =?utf-8?B?SGZ0Z1lreUphZEZkSHlLZTM2RzFicHlXY1FsUWtqOTZrRUJla3p0bVNuZlNJ?=
+ =?utf-8?B?WEpLcnpTN0pKeXYrcjhKNmZuV3Aya1pEVTUySlpwVUZnY1BCbVRjRkVlc3N3?=
+ =?utf-8?B?cjh3ejRtWXNKVWVhdG55dE1taVd6WDFhOXZsUGxQMTJ4TW41Q0MxL2JRTlh4?=
+ =?utf-8?B?YjJ2UXF2YW9sOTFBMHY5a0ozTEtGeXFoRjRyS0x6SjZ6TmlxbjR0MDBXQ0FL?=
+ =?utf-8?B?NmZJQUxkOVUvSXJHNGRycTR5NmlwS25hYlpMK3lEZHEzUDFOdnQxVFdnYk9Q?=
+ =?utf-8?B?NWhydjJBSVNIdWJ6REV1bVpjSTRreEZKSURiRjVvNEZiS2grUUlncWFMSXdS?=
+ =?utf-8?B?clg2SUlldUxTRnJjbFp2SW96clJlbG8xZm1wbEpjOEx2NERYeERVMEdPZlVL?=
+ =?utf-8?B?OFlpeTBkVWRTODVvblM1OHhVTHlDZXg1STVnV0MweHZuUmlKc0N2MHNiTDBT?=
+ =?utf-8?B?V3c9PQ==?=
+X-OriginatorOrg: portwell.com.tw
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b5cc680-ee47-45ee-ac70-08dd86c1fc8d
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 02:03:08.3024
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6vhX24x0FLPaNinY2fRto8ZTIbOt9bju7rBfRV3tlbb9huecBm8aTTPaZDPyt1CrUBfVc0nuic91HjlWP596pnz8gJ6R1aJQPg/eS2eN5QY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6281
 
-The health of a given battery is exposed over the Dell DDV WMI
-interface using the "BatteryManufactureAceess" WMI method. The
-resulting data contains, among other data, the health status of
-the battery.
+Hi Linus,
 
-Expose this value to userspace using the power supply extension
-interface.
+Thank you for your review and for the Reviewed-by tag.
 
-Tested on a Dell Inspiron 3505.
+I will use BIT macro in v6.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/wmi/devices/dell-wmi-ddv.rst | 35 ++++++++-
- drivers/platform/x86/dell/dell-wmi-ddv.c   | 89 ++++++++++++++++++++++
- 2 files changed, 123 insertions(+), 1 deletion(-)
+Best regards,
+Yen-Chi Huang
 
-diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wm=
-i/devices/dell-wmi-ddv.rst
-index 41c553d5c77d..109d4c5c922e 100644
-=2D-- a/Documentation/wmi/devices/dell-wmi-ddv.rst
-+++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
-@@ -150,7 +150,40 @@ Returns the voltage flow of the battery in mV as an u=
-16.
- WMI method BatteryManufactureAccess()
- -------------------------------------
-=20
--Returns a manufacture-defined value as an u16.
-+Returns the health status of the battery as a u16.
-+The health status encoded in the following manner:
-+
-+ - the third nibble contains the general failure mode
-+ - the fourth nibble contains the specific failure code
-+
-+Valid failure modes are:
-+
-+ - permanent failure (``0x9``)
-+ - overheat failure (``0xa``)
-+ - overcurrent failure (``0xb``)
-+
-+All other failure modes are to be considered normal.
-+
-+The following failure codes are valid for a permanent failure:
-+
-+ - fuse blown (``0x0``)
-+ - cell imbalance (``0x1``)
-+ - overvoltage (``0x2``)
-+ - fet failure (``0x3``)
-+
-+The last two bits of the failure code are to be ignored when the battery
-+signals a permanent failure.
-+
-+The following failure codes a valid for a overheat failure:
-+
-+ - overheat at start of charging (``0x5``)
-+ - overheat during charging (``0x7``)
-+ - overheat during discharging (``0x8``)
-+
-+The following failure codes are valid for a overcurrent failure:
-+
-+ - overcurrent during charging (``0x6``)
-+ - overcurrent during discharging (``0xb``)
-=20
- WMI method BatteryRelativeStateOfCharge()
- -----------------------------------------
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 8bd3ff76bb91..cb4e0c1b908e 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -47,6 +47,26 @@
- #define SBS_MANUFACTURE_MONTH_MASK	GENMASK(8, 5)
- #define SBS_MANUFACTURE_DAY_MASK	GENMASK(4, 0)
-=20
-+#define MA_FAILURE_MODE_MASK			GENMASK(11, 8)
-+#define MA_FAILURE_MODE_PERMANENT		0x9
-+#define MA_FAILURE_MODE_OVERHEAT		0xA
-+#define MA_FAILURE_MODE_OVERCURRENT		0xB
-+
-+#define MA_PERMANENT_FAILURE_CODE_MASK		GENMASK(13, 12)
-+#define MA_PERMANENT_FAILURE_FUSE_BLOWN		0x0
-+#define MA_PERMANENT_FAILURE_CELL_IMBALANCE	0x1
-+#define MA_PERMANENT_FAILURE_OVERVOLTAGE	0x2
-+#define MA_PERMANENT_FAILURE_FET_FAILURE	0x3
-+
-+#define MA_OVERHEAT_FAILURE_CODE_MASK		GENMASK(15, 12)
-+#define MA_OVERHEAT_FAILURE_START		0x5
-+#define MA_OVERHEAT_FAILURE_CHARGING		0x7
-+#define MA_OVERHEAT_FAILURE_DISCHARGING		0x8
-+
-+#define MA_OVERCURRENT_FAILURE_CODE_MASK	GENMASK(15, 12)
-+#define MA_OVERCURRENT_FAILURE_CHARGING		0x6
-+#define MA_OVERCURRENT_FAILURE_DISCHARGING	0xB
-+
- #define DELL_EPPID_LENGTH	20
- #define DELL_EPPID_EXT_LENGTH	23
-=20
-@@ -749,6 +769,72 @@ static ssize_t eppid_show(struct device *dev, struct =
-device_attribute *attr, cha
- 	return ret;
- }
-=20
-+static int dell_wmi_ddv_get_health(struct dell_wmi_ddv_data *data, u32 in=
-dex,
-+				   union power_supply_propval *val)
-+{
-+	u32 value, code;
-+	int ret;
-+
-+	ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_MANUFACT=
-URER_ACCESS, index,
-+					 &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (FIELD_GET(MA_FAILURE_MODE_MASK, value)) {
-+	case MA_FAILURE_MODE_PERMANENT:
-+		code =3D FIELD_GET(MA_PERMANENT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_PERMANENT_FAILURE_FUSE_BLOWN:
-+			val->intval =3D POWER_SUPPLY_HEALTH_BLOWN_FUSE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_CELL_IMBALANCE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_CELL_IMBALANCE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_OVERVOLTAGE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_FET_FAILURE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_DEAD;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown permanent failure code %u\n=
-",
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	case MA_FAILURE_MODE_OVERHEAT:
-+		code =3D FIELD_GET(MA_OVERHEAT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_OVERHEAT_FAILURE_START:
-+		case MA_OVERHEAT_FAILURE_CHARGING:
-+		case MA_OVERHEAT_FAILURE_DISCHARGING:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERHEAT;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown overheat failure code %u\n"=
-,
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	case MA_FAILURE_MODE_OVERCURRENT:
-+		code =3D FIELD_GET(MA_OVERCURRENT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_OVERCURRENT_FAILURE_CHARGING:
-+		case MA_OVERCURRENT_FAILURE_DISCHARGING:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERCURRENT;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown overcurrent failure code %u=
-\n",
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	default:
-+		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
-+		return 0;
-+	}
-+}
-+
- static int dell_wmi_ddv_get_manufacture_date(struct dell_wmi_ddv_data *da=
-ta, u32 index,
- 					     enum power_supply_property psp,
- 					     union power_supply_propval *val)
-@@ -808,6 +894,8 @@ static int dell_wmi_ddv_get_property(struct power_supp=
-ly *psy, const struct powe
- 		return ret;
-=20
- 	switch (psp) {
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		return dell_wmi_ddv_get_health(data, index, val);
- 	case POWER_SUPPLY_PROP_TEMP:
- 		ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_TEMPERA=
-TURE, index,
- 						 &value);
-@@ -829,6 +917,7 @@ static int dell_wmi_ddv_get_property(struct power_supp=
-ly *psy, const struct powe
- }
-=20
- static const enum power_supply_property dell_wmi_ddv_properties[] =3D {
-+	POWER_SUPPLY_PROP_HEALTH,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_MANUFACTURE_YEAR,
- 	POWER_SUPPLY_PROP_MANUFACTURE_MONTH,
-=2D-=20
-2.39.5
+On 23/04/2025 4:38 pm, Linus Walleij wrote:
+(...)
 
+>> +static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>> +{
+>> +       return (pwec_read(PORTWELL_GPIO_VAL_REG) & (1 << offset)) ? 1 : 0;
+> I would use BIT(offset) instead of open-coding (1 << offset) in all of these
+> instances.
+> 
+> The main reason we use it is that the BIT() macro hardwires U (unsigned)
+> to the parameter so no mistakes can be made (even if you have
+> no mistakes here obviously, it's a good habit).
+> 
+> Either way this is not a big deal so:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Yours,
+> Linus Walleij
+> 
