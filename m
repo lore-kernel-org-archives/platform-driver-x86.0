@@ -1,136 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DD57E0E8;
-	Wed, 30 Apr 2025 07:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737AD1C8632;
+	Wed, 30 Apr 2025 08:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999936; cv=none; b=ZF4OkJiSBnNqDkwbuDYG3G0Qn4XPa686whil2zh4FJ9cjDJSjKiTQifq29pPZDiXSfFXeLHLJHcHme/ejvWzzwHnwHNrK+Im5azgp43qid/ke5oAyRSymQ45qVG1DM2ztEh9WVGre24bfC55JNrroGw+jE+LpWhBSSyHHrOc42g=
+	t=1746000498; cv=none; b=fu5+cx3s34/hvTcGKz3aT4DezLHVkfb4j5aoxFKaD+7JPtycVFWM8ABEEU2yKo+FvU1eHfWUch6Eyro271PKv2Hpy9s5Dub9nE3KoTG73p6sPnErzYwDBZSMTy98deHt6m5UfVQ5GZmfPHYy4oZ8o7HZWU+vScE9DWazv2wRQqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999936; c=relaxed/simple;
-	bh=cFRX/7ymuu4ViXj4PKPJ9YpybId6+ipgWQoROgASOJQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k1tSO8sisFdkeOxqJYkpa9xQw83DEdUnlxl2c18MSVAnePclXSCa4uOoyqvp75ZFTwo1J3E626T+dnMbIkerqAselkP4oLRV9iX4ehuTJKjCO1XY3BWcdqDrp086AtKJ7OU/t10vY+cfS6i1ggaz/0hQhzGzAeeJwP8Op+/D6e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azgecay1; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746000498; c=relaxed/simple;
+	bh=pCUgXguQq1vRA4bGkjweAQOtL40q6Ryp+ab88vmfA3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvIWHujZr0v8dVsJDJUybpMrEchawOQDA6pHYoNPYQuTbVBL5zwf4Dx0TqcjO7s3kN0u/L9MAGWFn424NfL+fb01RSRNKYygXFMMYbcsdvsD03HlqH+ia4te/Isf6C5eLJhnQoJCk59U2SNS7T854ex8jxFPx8b30kZ7U/Euz34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEhvhvQH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azgecay1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745999936; x=1777535936;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cFRX/7ymuu4ViXj4PKPJ9YpybId6+ipgWQoROgASOJQ=;
-  b=azgecay1vhWBJBWkVjjI5Vd2C3PKcCYygtEB3rIF+5UKSmBKUMLqVnT4
-   mx8LHLAfuZmAJc358oml3ZD+N4IivpVXvXAIJChuKU51yvgrzEJvPId7p
-   0V/+pas+JFvTY3ykbe7rcx6FA2DxP/o92ktsT9xcSPWaqcojtnUfIsSDt
-   K1UVbaTi19arOWWRi04k4QH4vWPKOdCPgtUobsUjZy27Ai7ExcX+2NuYI
-   CxYvej+PJBsPX0aL2SL+P7OC5QWnXmOnv0WrFHcS1GC1zShMr1+/pg/Pn
-   ZBFN21Br6mnIAyA00u8wJhPRBfOJaQmOitwGysggDOjNt7ZoXUvtRDgw4
-   A==;
-X-CSE-ConnectionGUID: ZLpbKMHzSNG3FnziXKEH7A==
-X-CSE-MsgGUID: 9Pw2j40MTzmDU5trgfiUyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47797783"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="47797783"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 00:58:44 -0700
-X-CSE-ConnectionGUID: BKh+t8mQQ/OXxMR7awRQaQ==
-X-CSE-MsgGUID: BjhmomkHSFu9QPm1D3FwEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="165143575"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 00:58:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 30 Apr 2025 10:58:35 +0300 (EEST)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
-    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
-    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    "Cody T . -H . Chiu" <codyit@gmail.com>, 
-    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] platform/x86: Add Lenovo WMI Gamezone Driver
-In-Reply-To: <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com>
-Message-ID: <1108c3ac-4815-814d-82b0-2ba74311d883@linux.intel.com>
-References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-6-derekjohn.clark@gmail.com> <a18175cc-3513-4621-9d8d-e9556ede1022@oracle.com> <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEhvhvQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C6EC4CEE9;
+	Wed, 30 Apr 2025 08:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746000498;
+	bh=pCUgXguQq1vRA4bGkjweAQOtL40q6Ryp+ab88vmfA3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PEhvhvQHG4rVvDgSY5YEAlvFdlFIjPoEwklqHK2oVDFFscI9oOnH22AFxtXXETEug
+	 iHnVYvMe+t+mjmLvvnbJk0leb+R0US2frAqv3Vo0Rnx1IyUcFzc8Xz+JP/Vc4AgrWv
+	 c48oqzjYkbO2MbC5RCNzUEKgl16x3n093ezpE/HgkfVb2/a5ZQ/gaNtVmMRl6YrsgT
+	 Ek//OIPQJU/El1by4jlyMox7RQIViSupPPfGsNTCUePuh0N0KYiCkq3fsOplC3fn9+
+	 O9mkEGg517iIKGWX+UDcBJI+SdNy3IDIcjLt6YoA/frBd8zWVSzwqyzDqDrFOqkQvK
+	 BJdFA6k3dyQZw==
+Date: Wed, 30 Apr 2025 10:08:14 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>, 
+	Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>, 
+	Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung <bleung@chromium.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Christoph Fritz <chf.fritz@googlemail.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Detlev Casanova <detlev.casanova@collabora.com>, 
+	Dharma Balasubiramani <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>, 
+	Kevin Hilman <khilman@baylibre.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Liu Ying <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>, 
+	Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, 
+	Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+	Vitalii Mordan <mordan@ispras.ru>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>, 
+	Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>, 
+	Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin <peter.senna@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Herve Codina <herve.codina@bootlin.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Bjorn Andersson <quic_bjorande@quicinc.com>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Helge Deller <deller@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>, 
+	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre <yannick.fertre@foss.st.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Alain Volmat <alain.volmat@foss.st.com>, 
+	Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek <michal.simek@amd.com>
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250430-arrogant-marmoset-of-justice-92ced3@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+ <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="o2svn3fbdbsdr4ij"
+Content-Disposition: inline
+In-Reply-To: <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
 
-On Tue, 29 Apr 2025, Derek J. Clark wrote:
 
-> 
-> 
-> On April 28, 2025 9:39:55 PM PDT, ALOK TIWARI <alok.a.tiwari@oracle.com> wrote:
-> >
-> >
-> >On 28-04-2025 06:48, Derek J. Clark wrote:
-> >> + * Determine if the extreme thermal mode is supported by the hardware.
-> >> + * Anything version 5 or lower does not. For devices wuth a version 6 or
-> >
-> >typo wuth
-> >
-> >> + * greater do a DMI check, as some devices report a version that supports
-> >> + * extreme mode but have an incomplete entry in the BIOS. To ensure this
-> >> + * cannot be set, quirk them to prevent assignment.
-> >> + *
-> >> + * Return: int.
-> >
-> >The function returns int.
-> >But logically it's returning boolean false, true
-> 
-> I may have overdone it by removing all bools after the v5 review as I 
-> interpreted Ilpo's comment to mean I shouldn't return any bool c types. 
-> I'll wait for them to weigh in before changing this back.
+--o2svn3fbdbsdr4ij
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-Hi Derek,
+On Tue, Apr 29, 2025 at 02:41:42PM +0200, Louis Chauvet wrote:
+> Le 29/04/2025 =E0 11:27, Louis Chauvet a =E9crit=A0:
+> >=20
+> > On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
+> > > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize=
+ a DRM
+> > > bridge, and the only one supported from now on. It is also necessary =
+for
+> > > implementing reference counting and thus needed to support removal of
+> > > bridges from a still existing DRM pipeline without use-after-free.
+> > >=20
+> > > This series converts all DRM bridges to the new API.
+> > >=20
+> > > [...]
+> >=20
+> > Applied, thanks!
+> >=20
+> > [02/34] platform: arm64: acer-aspire1-ec: convert to devm_drm_bridge_al=
+loc() API
+> >          commit: 411465d35bc56877c33e2498ac697acfcf484e6b
+> > [03/34] drm/bridge: analogix-anx6345: convert to devm_drm_bridge_alloc(=
+) API
+> >          commit: 53ddeb25159781b029fda404226af600e76f975f
+> > [06/34] drm/bridge: display-connector: convert to devm_drm_bridge_alloc=
+() API
+> >          commit: 4e90a3d96a6185e143041273f9867a1092dd4a71
+> > [07/34] drm/bridge: lt9611uxc: convert to devm_drm_bridge_alloc() API
+> >          commit: 6287ffd9eff6eea65865e64b9d4c45e115fa5ecf
+> > [11/34] drm/bridge: dw-hdmi: convert to devm_drm_bridge_alloc() API
+> >          commit: ed6987b674185873ebed7a619a646da6dd1a78fa
+> > [12/34] drm/bridge: tda998x: convert to devm_drm_bridge_alloc() API
+> >          commit: 7fe58bf1a9a24b533875c262a3222581a3f759e4
+> > [13/34] drm/bridge: ti-sn65dsi86: convert to devm_drm_bridge_alloc() API
+> >          commit: a4754ae9cfa76fbce79f023c268a5bac56f36321
+> > [14/34] drm/exynos: mic: convert to devm_drm_bridge_alloc() API
+> >          commit: 91c5c7b5bb2dd09b43b025bce6d790d3c79f4518
+>=20
+> Hello all,
+>=20
+> I made a mistake while applying those patches. Instead of taking
+> 2-3,11-13,15-18,27,31, I took 2-3,11-18,27,31, which includes the patch 1=
+4.
+>=20
+> This patch is not R-by/A-by/SoB by non-Bootlin people. For me, the patch =
+is
+> correct, it does not break the build nor generate warnings.
+>=20
+> What should I do? Is my SoB sufficient, or should I revert the patch and
+> wait for R/A-by before taking it again?
 
-That is certainly a misinterpretation.
+It's worse: just like msm, it was never supposed to be applied in
+drm-misc, exynos has its own git tree.
 
-It's perfectly fine to return bool from a function. If there's no good 
-reason e.g. because of some API that requires int return, booleans should 
-be returned as bool.
+Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
+following patch, and it going through drm-misc?
 
-I was trying to say your kerneldoc said "Return: bool" for a function that 
-returns int. Both "bool" and "int" are C types so there was a contradition 
-in that, which is what I tried to point out. Please write "boolean" if you 
-refer to a boolean which is not "bool" typed (but consider what was said 
-above and if the type too can be changed to bool in that case).
+https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-=
+v2-14-8f91a404d86b@bootlin.com/
 
--- 
- i.
+If not, we'll revert.
 
-> >> + */
-> >> +static int lwmi_gz_extreme_supported(int profile_support_ver)
-> >> +{
-> >> +	const struct dmi_system_id *dmi_id;
-> >> +	struct quirk_entry *quirks;
-> >> +
-> >> +	if (profile_support_ver < 6)
-> >> +		return false;
-> >> +
-> >> +	dmi_id = dmi_first_match(fwbug_list);
-> >> +	if (!dmi_id)
-> >> +		return true;
-> >> +
-> >> +	quirks = dmi_id->driver_data;
-> >> +	return quirks->extreme_supported;
-> >> +}
-> >
-> >Thank,
-> >Alok
-> 
-> Thanks,
-> - Derek
-> 
+Maxime
+
+--o2svn3fbdbsdr4ij
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBHaaAAKCRAnX84Zoj2+
+dnenAYDBZr6cr88AokBU5IxJIO545Bob3jJW0+AX0AYDOu8icKftnZn/muxH1K/2
+mlgois4Bf2nfOosRvUT+FqHEb3CHJCluDubGG9J2EVzCRjRyMKIJ+yKyJ5VGB4cE
+N6ZGUBWZvg==
+=3YXQ
+-----END PGP SIGNATURE-----
+
+--o2svn3fbdbsdr4ij--
