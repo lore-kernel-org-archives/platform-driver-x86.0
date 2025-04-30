@@ -1,521 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DC325B1D2
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Apr 2025 13:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E30BE5E;
+	Wed, 30 Apr 2025 15:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019549; cv=none; b=YMO3ES3SrmNBwl4Ejsb7FXSZJh8b3NUdDv1oWxrZiJ5P5+sG0tdFyr8Sc8dBsT0gmyivLaAABLLfve+PKpjM1xzPO7JtgyPzcpPrGwLXMFJawRuQLg1sGgSzk9KuwGPw5nKaEUNpqSB1MwoJyk255g4Ji31RbH9MZBVZkoVDpuU=
+	t=1746027023; cv=none; b=g7kYlkEF52N8Ezty4RocuptxUlJ+AHW77eVasiwcGYQV87NtJbQhKvayUjhu2Zmd//bi8eWHDpbCHaqOlYMc5y2VCRsKxUdbzPTWR1Cf6QVhaOtkrEkDVsyUhZeEUICFsHZUhKnQ7vVuMs+Frvc3eR+Ko2tTFEVtNsS8Ot8CDsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019549; c=relaxed/simple;
-	bh=CKY9kNTqqtJrRrKLITRN9IGgBUBj/J3f1uRJqhwF8eM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iaAWg8rcCXyOwvSytwYWDyQ2SWW2ar8+3T37ZsZBuCs77VdsVF75PKP3HDeL8P5ZPFSA+86zdCn5jFjGv7fxDwn+eoQa1FrGEmDshljr+wPVZpkv+QaPe5R5hBqSs0CV26ciRkECltq+vl6NF/DhbzJZPXvsQFazvP1iyzLuaBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m2bkAJ8L; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746027023; c=relaxed/simple;
+	bh=9SV4DX19yoCfEzYYIGO1BCfqztvYjLvOFhRKhsU6oAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pKkGgSFdmk+5aJYI6ygULw75Lu7wt15QxBRHy0OunF0/64SedQBVEgVF6Si5AraL33lJdRUb6Bsl0JfK4GV5fvKluu44nJv6LG2Uo0KAqM0e1Gh7R9rBKE11pTjSJtyR8YCsFAx6iVpi34O2eQ+zog+l9KZdxJ4XXD65ecjvBow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Uir+I69Q; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m2bkAJ8L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746019547; x=1777555547;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=CKY9kNTqqtJrRrKLITRN9IGgBUBj/J3f1uRJqhwF8eM=;
-  b=m2bkAJ8L8M1AIxHw5kDb8wwjj2kkWLXhPx4l8cKW6acviWsXE/68+5Kp
-   Go4z5EdtRq38g/rJMZW32n+pCm8YcjFL9XCvFdLY/TVnqCQhx3fJL1BPu
-   WTiuY2/C5CGeuDqEtzRY47ENMw5Iy7CQkaXb/y7A5YardZGQ713P97ZHm
-   9qRouITvxq+uR3klWJpe7l+uY4b9+22vkvsAc0heI/HxnYSKOnzMO+mDN
-   i8sHpWHrQlIhEWl1nOdlQmZQUop0ojgNBuwtKw7FXRJd2NqT07Smxb7UH
-   lYTlqu/Mjb5007EV250GrK80bGrhCPwVOw71iGMoDD+ecw5SmAnurwNr7
-   Q==;
-X-CSE-ConnectionGUID: SPD5ljZlT9WVSMMFMIwK7w==
-X-CSE-MsgGUID: z/rGoILWR3+upZFdsd/ELA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="58312048"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="58312048"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 06:25:45 -0700
-X-CSE-ConnectionGUID: IeS8ROCsTUWlK/XTNcG/Ig==
-X-CSE-MsgGUID: nGbpp0MJQ/6HdtQCQOpbaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="165208622"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 06:25:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 30 Apr 2025 16:25:40 +0300 (EEST)
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v3 3/3] platform/x86/amd/hsmp: acpi: Add sysfs files to display
- HSMP telemetry
-In-Reply-To: <20250430123819.1289068-3-suma.hegde@amd.com>
-Message-ID: <c07146fb-6eea-a06b-32de-ba364b25308c@linux.intel.com>
-References: <20250430123819.1289068-1-suma.hegde@amd.com> <20250430123819.1289068-3-suma.hegde@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Uir+I69Q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 755091FCE8;
+	Wed, 30 Apr 2025 15:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746027019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MWTikn/fQ2RO7hkcmPhgG/ZXL82CYY7laDHZMAqZbk4=;
+	b=Uir+I69QY6ooynZyuoSsowjneB2XH3l3Jk31xfvPk7NfkeG0T4UNGi5tZv+hSgbjL48SIT
+	9a/pXrag0U0RuVm9Y+XN1GZ5Ka+8SLhalf7X5Lp3hvzRqzhczzNO2E5VpaxWuLITE/ZUBu
+	f4bSIVCD3keI9rqPgY0L8j76IhX1bQsYC1pUyone7YHiu4mB/uk93Z5Xy8StTQtsjvNNXt
+	SVrVpp3+N8Fbq+6rC5hT95fFKdIUe2vOip5g5CiLSuDbzMUGQJ6OOpBxLVqT56Lyz/sqxM
+	KcEaKhuNA1cWG2UBLpWqeFrSV9D2KwzRaYA3mEAqSXFsbNlDzr8QJvYjPNsKwA==
+Message-ID: <207e2908-62ce-470f-9077-c5709d3e1a6a@bootlin.com>
+Date: Wed, 30 Apr 2025 17:30:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski
+ <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
+ Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
+ Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>,
+ Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Christoph Fritz <chf.fritz@googlemail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Dharma Balasubiramani <dharma.b@microchip.com>,
+ Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
+ Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
+ Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Liu Ying <victor.liu@nxp.com>,
+ Manikandan Muralidharan <manikandan.m@microchip.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
+ Sasha Finkelstein <fnkl.kernel@gmail.com>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Vitalii Mordan <mordan@ispras.ru>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
+ <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
+ Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>,
+ Martyn Welch <martyn.welch@collabora.co.uk>,
+ Peter Senna Tschudin <peter.senna@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Herve Codina
+ <herve.codina@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
+ Seung-Woo Kim <sw0312.kim@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+ Helge Deller <deller@gmx.de>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+ <sdiwpe7nnhud3fvkgijjbfyenlwpchbxgehyxmsy7c5loo257h@hkfcawkjrlhd>
+ <efcf3798-9ac1-42a7-8a12-24d931cbf771@bootlin.com>
+ <20250430-scorpion-of-majestic-argument-7f59b4@houat>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250430-scorpion-of-majestic-argument-7f59b4@houat>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejtdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefftdduueetheejledvkeetjeekudfhffduvdeugfevfeeifeehieffjeetfefgveenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepleekpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughmihhtrhihrdgsrghrhihshhhkohhvsehoshhsrdhquhgrlhgtohhmmhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmp
+ dhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Wed, 30 Apr 2025, Suma Hegde wrote:
 
-> Make frequently fetched telemetry available via sysfs. These parameters
-> do not fit in hwmon sensor model, hence make them available via sysfs.
+
+Le 30/04/2025 à 12:39, Maxime Ripard a écrit :
+> On Wed, Apr 30, 2025 at 10:21:48AM +0200, Louis Chauvet wrote:
+>>
+>>
+>> Le 29/04/2025 à 16:42, Dmitry Baryshkov a écrit :
+>>> On Tue, Apr 29, 2025 at 11:27:51AM +0200, Louis Chauvet wrote:
+>>>>
+>>>> On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
+>>>>> devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
+>>>>> bridge, and the only one supported from now on. It is also necessary for
+>>>>> implementing reference counting and thus needed to support removal of
+>>>>> bridges from a still existing DRM pipeline without use-after-free.
+>>>>>
+>>>>> This series converts all DRM bridges to the new API.
+>>>>>
+>>>>> [...]
+>>>>
+>>>> Applied, thanks!
+>>>>
+>>>
+>>> [...]
+>>>
+>>>> [16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
+>>>>           commit: b2aabe5c6b65516d88214aba4b12ce2ca78bac6c
+>>>> [17/34] drm/msm/dsi: convert to devm_drm_bridge_alloc() API
+>>>>           commit: fffc8847743e45604c4478f554d628481b985556
+>>>> [18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
+>>>>           commit: e11532be87e437648521a8ed5358c56df11933b4
+>>>
+>>> Why? These drivers are explicitly handled outside of drm-misc. Please be
+>>> more careful next time.
+>>>
+>>
+>> Sorry, I was not aware that msm also have his own repository.
+>>
+>> TBH, I was not aware that other repositories existed for drm (I should have
+>> looked at MAINTAINERS, it is totally my fault). DIM and doc[1] only list
+>> drm, drm-misc, drm-xe, drm-intel, so I just tough "intel is special", not
+>> "drm is divided in many repositories".
 > 
-> Create following sysfs files per acpi device node.
-> * c0_residency_input
-> * prochot_status
-> * smu_fw_version
-> * protocol_version
-> * ddr_max_bw(GB/s)
-> * ddr_utilised_bw_input(GB/s)
-> * ddr_utilised_bw_perc_input(%)
-> * mclk_input(MHz)
-> * fclk_input(MHz)
-> * clk_fmax(MHz)
-> * clk_fmin(MHz)
-> * cclk_freq_limit_input(MHz)
-> * pwr_current_active_freq_limit(MHz)
-> * pwr_current_active_freq_limit_source
+> It's mentioned in the drm-misc section:
 > 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> ---
-> Changes since v2:
-> 1. Change commit mesage and description
-> 2. Update documentation
-> 3. Remove hwmon related documentation changes from this patch
-> 4. Define FIELD_GET_U32, use it everywhere where casting to u32 is needed
-> 5. Define masks and use FIELD_GET() directly instead of defining function like
->    macros
-> 6. Return early on error cases from all the functions
-> 7. Add comma after hsmp agent in freqlimit_srcnames[]
-> 8. Make index as int in hsmp_freq_limit_source_show(), remove
->    unnecessary intialization and change the printing format
-> 9. Change int i to unsigned int i and return early on error in
->    hsmp_msg_get_nargs()
-> 11. Change n to num_args in hsmp_msg_get_nargs()
-> 12. Change __attr to _attr in to_hsmp_sys_attr()
-> 13. Change "%u" to "%lu" in sysfs_emit to avoid compiler warnings
+> https://drm.pages.freedesktop.org/maintainer-tools/repositories/drm-misc.html
 > 
-> Changes since v1:
-> 1. Add linux/bitops.h
-> 2. Define DDR_MAX_BW, DDR_UTIL_BW DDR_UTIL_BW_PERC FW_VER_MAJOR FW_VER_MINOR FW_VER_DEBUG FMAX
->    FMIN FREQ_LIMIT FREQ_SRC_IND and use them in functions.
-> 3. Return early in hsmp_msg_get_nargs()
-> 4. Change while loop to for loop in hsmp_freq_limit_source_show()
-> 5. Correct the GENMASK size in hsmp_ddr_util_bw_show()[bit 19:8, instead
->    of bit 20:8]
-> 
->  Documentation/arch/x86/amd_hsmp.rst  |  22 +++
->  drivers/platform/x86/amd/hsmp/acpi.c | 260 +++++++++++++++++++++++++++
->  drivers/platform/x86/amd/hsmp/hsmp.c |  23 +++
->  drivers/platform/x86/amd/hsmp/hsmp.h |   1 +
->  4 files changed, 306 insertions(+)
-> 
-> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index 3ef3e0a71df9..a094f55c10b0 100644
-> --- a/Documentation/arch/x86/amd_hsmp.rst
-> +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -71,6 +71,28 @@ Note: lseek() is not supported as entire metrics table is read.
->  Metrics table definitions will be documented as part of Public PPR.
->  The same is defined in the amd_hsmp.h header.
->  
-> +2. HSMP telemetry sysfs files
-> +
-> +Following sysfs files are available at /sys/devices/platform/AMDI0097:0X/.
-> +
-> +* c0_residency_input: Percentage of cores in C0 state.
-> +* prochot_status: Reports 1 if the processor is at thermal threshold value,
-> +  0 otherwise.
-> +* smu_fw_version: SMU firmware version.
-> +* protocol_version: HSMP interface version.
-> +* ddr_max_bw: Theoretical maximum DDR bandwidth in GB/s.
-> +* ddr_utilised_bw_input: Current utilized DDR bandwidth in GB/s.
-> +* ddr_utilised_bw_perc_input(%): Percentage of current utilized DDR bandwidth.
-> +* mclk_input: Memory clock in MHz.
-> +* fclk_input: Fabric clock in MHz.
-> +* clk_fmax: Maximum frequency of socket in MHz.
-> +* clk_fmin: Minimum frequency of socket in MHz.
-> +* cclk_freq_limit_input: Core clock frequency limit per socket in MHz.
-> +* pwr_current_active_freq_limit: Current active frequency limit of socket
-> +  in MHz.
-> +* pwr_current_active_freq_limit_source: Source of current active frequency
-> +  limit.
-> +
->  ACPI device object format
->  =========================
->  The ACPI object format expected from the amd_hsmp driver
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 93b413e0a6e6..4807f3992633 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -12,6 +12,7 @@
->  #include <asm/amd_hsmp.h>
->  
->  #include <linux/acpi.h>
-> +#include <linux/bitops.h>
+>> This repository consists mostly of the core drm code as well as DRM
+>> drivers that do not have a dedicated repository.
+ >
+> Feel free to send a patch to improve the doc. If you missed it, someone
+> else will.
 
-If this is for GENMASK(), use linux/bits.h.
+Done : 
+https://gitlab.freedesktop.org/drm/maintainer-tools/-/merge_requests/77#c304368de02d740ca751f5812ddcd0cfac40d162
 
->  #include <linux/device.h>
->  #include <linux/dev_printk.h>
->  #include <linux/ioport.h>
-> @@ -36,6 +37,11 @@
->  
->  static struct hsmp_plat_device *hsmp_pdev;
->  
-> +struct hsmp_sys_attr {
-> +	struct device_attribute dattr;
-> +	u32 msg_id;
-> +};
-> +
->  static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->  			      u32 *value, bool write)
->  {
-> @@ -243,6 +249,215 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
->  	return 0;
->  }
->  
-> +static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
-> +					     struct attribute *attr, int id)
-> +{
-> +	return attr->mode;
-> +}
-> +
-> +#define to_hsmp_sys_attr(_attr) container_of(_attr, struct hsmp_sys_attr, dattr)
-> +
-> +static ssize_t hsmp_msg_resp32_show(struct device *dev, struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%u\n", data);
-> +}
-> +
-> +#define DDR_MAX_BW_MASK		GENMASK(31, 20)
-> +#define DDR_UTIL_BW_MASK	GENMASK(19, 8)
-> +#define DDR_UTIL_BW_PERC_MASK	GENMASK(7, 0)
-> +#define FW_VER_MAJOR_MASK	GENMASK(23, 16)
-> +#define FW_VER_MINOR_MASK	GENMASK(15, 8)
-> +#define FW_VER_DEBUG_MASK	GENMASK(7, 0)
-> +#define FMAX_MASK		GENMASK(31, 16)
-> +#define FMIN_MASK		GENMASK(15, 0)
-> +#define FREQ_LIMIT_MASK		GENMASK(31, 16)
-> +#define FREQ_SRC_IND_MASK	GENMASK(15, 0)
-> +
-> +static ssize_t hsmp_ddr_max_bw_show(struct device *dev, struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_MAX_BW_MASK, data));
+I added more details for the push process, clarified the existing drm 
+repositories and added a small check in dim to warn user if the pushed 
+commits does not belong to the targeted brach.
 
-Missing include for FIELD_GET().
-
-> +}
-> +
-> +static ssize_t hsmp_ddr_util_bw_show(struct device *dev, struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_UTIL_BW_MASK, data));
-> +}
-> +
-> +static ssize_t hsmp_ddr_util_bw_perc_show(struct device *dev, struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_UTIL_BW_PERC_MASK, data));
-> +}
-> +
-> +static ssize_t hsmp_msg_fw_ver_show(struct device *dev, struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu.%lu.%lu\n",
-> +			  FIELD_GET(FW_VER_MAJOR_MASK, data),
-> +			  FIELD_GET(FW_VER_MINOR_MASK, data),
-> +			  FIELD_GET(FW_VER_DEBUG_MASK, data));
-> +}
-> +
-> +static ssize_t hsmp_fclk_show(struct device *dev, struct device_attribute *attr,
-> +			      char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data[2];
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%u\n", data[0]);
-> +}
-> +
-> +static ssize_t hsmp_mclk_show(struct device *dev, struct device_attribute *attr,
-> +			      char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data[2];
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%u\n", data[1]);
-> +}
-> +
-> +static ssize_t hsmp_clk_fmax_show(struct device *dev, struct device_attribute *attr,
-> +				  char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(FMAX_MASK, data));
-> +}
-> +
-> +static ssize_t hsmp_clk_fmin_show(struct device *dev, struct device_attribute *attr,
-> +				  char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(FMIN_MASK, data));
-> +}
-> +
-> +static ssize_t hsmp_freq_limit_show(struct device *dev, struct device_attribute *attr,
-> +				    char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%lu\n", FIELD_GET(FREQ_LIMIT_MASK, data));
-> +}
-> +
-> +static const char * const freqlimit_srcnames[] = {
-> +	"cHTC-Active",
-> +	"PROCHOT",
-> +	"TDC limit",
-> +	"PPT Limit",
-> +	"OPN Max",
-> +	"Reliability Limit",
-> +	"APML Agent",
-> +	"HSMP Agent",
-> +};
-> +
-> +static ssize_t hsmp_freq_limit_source_show(struct device *dev, struct device_attribute *attr,
-> +					   char *buf)
-> +{
-> +	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
-> +	struct hsmp_socket *sock = dev_get_drvdata(dev);
-> +	unsigned int index;
-> +	int len = 0;
-> +	u16 src_ind;
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	src_ind = FIELD_GET(FREQ_SRC_IND_MASK, data);
-> +	for (index = 0; index < ARRAY_SIZE(freqlimit_srcnames); index++) {
-
-Missing include for ARRAY_SIZE.
-
-> +		if (!src_ind)
-> +			break;
-> +		if (src_ind & 1)
-> +			len += sysfs_emit_at(buf, len, "%s\n", freqlimit_srcnames[index]);
-> +		src_ind = src_ind >> 1;
-
-		src_ind >>= 1;
-
-> +	}
-> +	return len;
-> +}
-> +
->  static int init_acpi(struct device *dev)
->  {
->  	u16 sock_ind;
-> @@ -285,6 +500,8 @@ static int init_acpi(struct device *dev)
->  	if (ret)
->  		dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
->  
-> +	dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
-> +
->  	return ret;
->  }
->  
-> @@ -299,9 +516,52 @@ static const struct bin_attribute *hsmp_attr_list[] = {
->  	NULL
->  };
->  
-> +#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)	\
-> +static struct hsmp_sys_attr hattr_##_name = {		\
-> +	.dattr = __ATTR(_name, _mode, _show, NULL),	\
-> +	.msg_id = _msg_id,				\
-> +}
-> +
-> +HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
-> +HSMP_DEV_ATTR(prochot_status, HSMP_GET_PROC_HOT, hsmp_msg_resp32_show, 0444);
-> +HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444);
-> +HSMP_DEV_ATTR(protocol_version, HSMP_GET_PROTO_VER, hsmp_msg_resp32_show, 0444);
-> +HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444);
-> +HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444);
-> +HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444);
-> +HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_perc_show, 0444);
-> +HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444);
-> +HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444);
-> +HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444);
-> +HSMP_DEV_ATTR(clk_fmin, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmin_show, 0444);
-> +HSMP_DEV_ATTR(pwr_current_active_freq_limit, HSMP_GET_SOCKET_FREQ_LIMIT,
-> +	      hsmp_freq_limit_show, 0444);
-> +HSMP_DEV_ATTR(pwr_current_active_freq_limit_source, HSMP_GET_SOCKET_FREQ_LIMIT,
-> +	      hsmp_freq_limit_source_show, 0444);
-> +
-> +static struct attribute *hsmp_dev_attr_list[] = {
-> +	&hattr_c0_residency_input.dattr.attr,
-> +	&hattr_prochot_status.dattr.attr,
-> +	&hattr_smu_fw_version.dattr.attr,
-> +	&hattr_protocol_version.dattr.attr,
-> +	&hattr_cclk_freq_limit_input.dattr.attr,
-> +	&hattr_ddr_max_bw.dattr.attr,
-> +	&hattr_ddr_utilised_bw_input.dattr.attr,
-> +	&hattr_ddr_utilised_bw_perc_input.dattr.attr,
-> +	&hattr_fclk_input.dattr.attr,
-> +	&hattr_mclk_input.dattr.attr,
-> +	&hattr_clk_fmax.dattr.attr,
-> +	&hattr_clk_fmin.dattr.attr,
-> +	&hattr_pwr_current_active_freq_limit.dattr.attr,
-> +	&hattr_pwr_current_active_freq_limit_source.dattr.attr,
-> +	NULL,
-
-Don't add comma to terminators.
-
-> +};
-> +
->  static const struct attribute_group hsmp_attr_grp = {
->  	.bin_attrs_new = hsmp_attr_list,
-> +	.attrs = hsmp_dev_attr_list,
->  	.is_bin_visible = hsmp_is_sock_attr_visible,
-> +	.is_visible = hsmp_is_sock_dev_attr_visible,
->  };
->  
->  static const struct attribute_group *hsmp_groups[] = {
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 3df34d7436a9..6f605409cc02 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -228,6 +228,29 @@ int hsmp_send_message(struct hsmp_message *msg)
->  }
->  EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
->  
-> +int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args)
-> +{
-> +	struct hsmp_message msg = { 0 };
-
-{} is enough to initialize.
-
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +	msg.msg_id = msg_id;
-> +	msg.sock_ind = sock_ind;
-> +	msg.response_sz = num_args;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < num_args; i++)
-> +		data[i] = msg.args[i];
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_msg_get_nargs, "AMD_HSMP");
-> +
->  int hsmp_test(u16 sock_ind, u32 value)
->  {
->  	struct hsmp_message msg = { 0 };
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 02eeebfcb165..027db8e1de12 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -69,4 +69,5 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
->  #else
->  int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
->  #endif
-> +int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
->  #endif /* HSMP_H */
-> 
+> Maxime
 
 -- 
- i.
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
