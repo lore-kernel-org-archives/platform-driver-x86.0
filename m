@@ -1,107 +1,127 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BB31311AC;
-	Wed, 30 Apr 2025 19:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C70E4C8E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Apr 2025 19:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746041964; cv=none; b=uJ0ohZ0LjrVAn5t35eoz666esCgLu2RYH8uwTOCC0qLW2dQHUAkh1nga2x7fjn2irDiPGytTrjF5Wvb6tZ7XtsIiMbmaNoa2OWu6BPF1MpzT54q0K6NGbCz8/8JY1G5t+nY0WrHK1+GdknED7ykCoDKVr49VzQiwqji3gXEnHUI=
+	t=1746042348; cv=none; b=sclteq7iuFca/BrwhCP1OuL1l6Ip5Q89sffyPA+FsH7bdAtiuPQr6TWk+kUssdaM0E2icskPi5HaPQ3zXJxXPbg8NWdvmnzpiCQUDGZw+LHMjgDvJ5k59pGzGf5qXvU+YMEXubE2qy3FPrCs5lbW9eVPw9ZmK1qipJYi9ROn07w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746041964; c=relaxed/simple;
-	bh=dlNXOcS3mPmuaWRyF1GDszM8rv/KZApIPqIK9uyAltM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDSYGJKPFrCAPlag30ZZPZMrSxJ/k8YiYJHLzolC0giyj2ryImQ3UIqNlr3OV9x+pYZVKhkHdEPgm50phWRk24T/EnIfRCLXNbx9EhnrFAHP1X2KNxnFuoySPF+AluhWVeYNnEA2N1KJcJNoZhIjPACAH5OqW0WO8/bjNU6H5f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NKUO1YoM; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746042348; c=relaxed/simple;
+	bh=hveVJ52GhSz5APaPE9E0An4NWJnbVYsuketVG4cbQMg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uq1+eluJftK9R5Z/FHCC0E+l5/JhbY8Kr5V82MctX/pihZJe0yTO76LBrMpHTj6DuRvlM0VtRTsjDBcekS+hN1ZzIf2cZ5pmAXjNlbBTBjch8ZZHVuxiZ0lNuFQQNA2FbbK+ab2IVn96mAyTNMvQYXwGt9sy/TFbIwhKVkjfdPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=hsrqrpbt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Os18IlEC; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NKUO1YoM"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F400540E016E;
-	Wed, 30 Apr 2025 19:39:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZcdKoyjG8eAE; Wed, 30 Apr 2025 19:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746041956; bh=YFLxSoXeKy8FgOW8J6YT6rsVJGkCNHNn3z8jsXjYpWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NKUO1YoMDix/mtf6wFucYAZjRhybjmJRI/AMPrtmspSYz3dBtMci9CYA1sLbRhIgE
-	 HINSeA8Az0SSXFv22VSHpnnH0V/jzDzNEDnpyYnbMXSyKykWS9aG6PkuYsXUmstgea
-	 xIKi4Vb/Y6xJkSSNqAKtBSB182hycY7sH1+LowVXVUYXu987zZSBYeapmTKfxOVrES
-	 myQmzHZyRImisvLWmAX21bYk8mpHGcHiFNGeZ2er0zgRbG5Z6+aAveJz4FK8/4U7fN
-	 IOUPIepyYwiN2fwQJj1G8r5J0W3TD0trk7sbkjhkZFzkVlbxMcdhPw2U3gMNLGAuEJ
-	 VbzYciXP5+EF7JUJrQxZKFX+LxFjemX8jRdHXC9R0ymZ7Pit9BCWk6gy27itct2QGZ
-	 /pbPbQ60gV60366V0XFS2YTunMSFX1kzn8ljCFXuNYbLO4ENMospo3WrowrdaQCQZf
-	 ZmUI8Wi8MIpJ9hTvmFjA8B2OG9tGrgXjlCrBpxtq0RADDX74hTF4+t+dHqIMlXKnX+
-	 WRmkVDIyY5ewhGX+BuBNbNO7eXA+UZIdgcyvId1zfewQkEmtB/YeBcmw2qOPyjGE1q
-	 6kDzg39DMK5JUbNlNfPP9nWIPsZeKGqqJfwUADHk0xbjbChhfmF4lSRUhqMowX81z+
-	 uGGPBLj3eCut2vQIDd1MLBuk=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AD77D40E015E;
-	Wed, 30 Apr 2025 19:38:57 +0000 (UTC)
-Date: Wed, 30 Apr 2025 21:38:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
-Message-ID: <20250430193851.GHaBJ8S3MrRAp7fcHl@fat_crate.local>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-6-superm1@kernel.org>
- <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
- <e80be47b-5f8d-409c-8c3d-cd1af46944d0@kernel.org>
- <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
- <35bae46e-3b57-438a-a561-c93868120dcb@kernel.org>
- <20250430192538.GGaBJ5MuS4CEKa4kIX@fat_crate.local>
- <4bf62335-2e67-43c5-b2dc-4b0bed0521ed@kernel.org>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="hsrqrpbt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Os18IlEC"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D43711140267;
+	Wed, 30 Apr 2025 15:45:43 -0400 (EDT)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-12.internal (MEProxy); Wed, 30 Apr 2025 15:45:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1746042343;
+	 x=1746128743; bh=8mPLpqSmxmKWfwCeDR+2xH6dEFIQatWnt6A9nBRwfRU=; b=
+	hsrqrpbtv1Cl+WIieCAZo3seASiQilsvSLyF50px/iYhiBUlHi7owyHVe8WgcXeG
+	NpiUXwoJkCB12kzyL5FH31nw5qS2i0U06L4crgWCVBH7Gb6D652KEqdwkMn5xV0D
+	OyxQ2j3KIO+0Z/jy+hOusiU36o98m8fjgAqmTvSFJXaYidyyha/d/hLjGlndIplp
+	8QmQrI/pPMnbmLl7gYqgxiekI4gBvRJOvmZqg7X0DLc619UdeXJNRDX30DxV7mss
+	ldhZHy2LYj7/afDCrXa03Q8xruKGGc4/xW5jQb0pv7cU6fSorGbegfcq2z58XI26
+	KO7WsRcU9h3hhbQfvhGdGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746042343; x=
+	1746128743; bh=8mPLpqSmxmKWfwCeDR+2xH6dEFIQatWnt6A9nBRwfRU=; b=O
+	s18IlECwMZRlhusaSycnPU7mR29vC7ReABxZoCb6VD/QY6M+voHi64B0yshETjd4
+	Wj4pGgNSIDscaKBfMjBUEQtpm19NZdYKr1LiuuZOnpnhe6vy9Gt/YGFsVVKYnzFU
+	ZqWISUPs4chAOOMWBi9FRN2KllEdLUrPleQ6M5fAbF13+kV80Z8Fp9XcTLVTfsNe
+	Dl16wBiZTHe3HELqI+9oN6Ns3N9SeT56AftySG26SIw5brRmP0BGqC+UIP4qKhjy
+	pYNtwnhgBDS9wrg1FCHaTtZBJTzbLZXBTjXs18OxihtAU3pEmpalEgxtd7+KKhZY
+	kW7T7BWVCbZAzVze9lj6w==
+X-ME-Sender: <xms:5n0SaCFIurvTPsyxtdq-fZzbnto9_ZFjSU01I6VABPnFnl_ZMaBxMg>
+    <xme:5n0SaDV4gK_QYgSIsLw8zznFwo9gx0j23jz90tHD6ScEl4nMabAj66rMx7QoI5RGk
+    bkoVdQBjnA-NlDEIaw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejheejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlh
+    gvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeeh
+    tdehtdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhho
+    vhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehhmhhh
+    sehhmhhhrdgvnhhgrdgsrhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlih
+    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepuggvsggrrhgsohhssehrvgguhhgr
+    thdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhorhhg
+X-ME-Proxy: <xmx:5n0SaMIk7-MZTKf_e2yXXGFVVCACQ85xBe6i-b2X1BtmejRhSx8pMg>
+    <xmx:5n0SaMFelEuIdg8ntXAEWRyqvnwXC_Zzyad7pLSJ7entdxEbQWNU7Q>
+    <xmx:5n0SaIWCfW_vAW5nSOFPewsA5RVB3H8FMVaalMoKQI5G2Oame6sDzA>
+    <xmx:5n0SaPOsNmXDAjQLDEjXOl7lkIfk9lC_mVw1TB-15_6AqCHjH5XM-Q>
+    <xmx:530SaKKuQBds0RsRFyTQGa4z1a7BxomE35ERfyqlPkMWTJFkDwMSmrXs>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A569E3C0068; Wed, 30 Apr 2025 15:45:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4bf62335-2e67-43c5-b2dc-4b0bed0521ed@kernel.org>
+X-ThreadId: T82500c9561b4d815
+Date: Wed, 30 Apr 2025 15:45:22 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Armin Wolf" <W_Armin@gmx.de>, debarbos@redhat.com
+Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.org
+Message-Id: <0344362d-66b0-4001-b115-65dbda31a149@app.fastmail.com>
+In-Reply-To: <b658e3dc-5561-42ff-a866-e17aa41db64b@gmx.de>
+References: <aBA4PyT3YdKaPFdn@debarbos-thinkpadt14gen5.rmtusma.csb>
+ <ad09634e-e6a4-48af-9e02-345ffa866474@gmx.de>
+ <aBDAZO7fR0FGTJ5Y@debarbos-thinkpadt14gen5.rmtusma.csb>
+ <d7756075-0133-4511-9a9c-2971a3e5071a@gmx.de>
+ <aBEVi3hsxCQGUm4R@debarbos-thinkpadt14gen5.rmtusma.csb>
+ <b658e3dc-5561-42ff-a866-e17aa41db64b@gmx.de>
+Subject: Re: thinkpad_acpi: Unhandled HKEY event when toggling GNOME charging states
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 02:32:44PM -0500, Mario Limonciello wrote:
-> This would work, but would still need to track if "no" known bits were set
-> to emit an "unknown" message.
-> 
-> So the loops end up being for() and check a bit or while (true) and
-> find_next_bit() and otherwise identical.
-> 
-> At that point does it really buy much more than the while (true) approach
-> and find_next_bit()?
+Hi
 
-I have the requirements now, thanks. Lemme hack it up tomorrow, on a clear
-head.
+On Tue, Apr 29, 2025, at 4:12 PM, Armin Wolf wrote:
+> Am 29.04.25 um 20:08 schrieb Derek Barbosa:
+>
+>> Of course. I will label the two scenarios as Scenario 1 & Scenario 2
+>> respectively.
+>>
+>> Scenario 1 (below 80%):
+>>
+>> Battery roughly at 75%
+>
+> I see, interesting. I CCed Mark Pearson, he works with Lenovo and maybe 
+> has some additional
+> info regarding this unknown 0x6013 event.
+>
 
-Thx.
+Looks like it is 'EVENT_SMART_OVERNIGHT_CHARGE_CLIP_CHANGED'. I'll need to check with the team in Japan what this actually means.
+It's golden week this week, so Japan is off - will update when I hear back from them.
 
+Do you see the event continuously or just when changing the setting (I don't have this platform on hand to test myself)
 
--- 
-Regards/Gruss,
-    Boris.
+Mark
 
-https://people.kernel.org/tglx/notes-about-netiquette
+PS - switched to my more open-source friendly mpearson-lenovo,squebb,ca email address. The Lenovo one is not very good....
