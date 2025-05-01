@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F060D11187
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 May 2025 11:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BC519A
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 May 2025 11:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746098789; cv=none; b=mK4PON2SU2z6WzffByqPL4G1V1juFY6+sgN2MJzzeysj8fnUTpQ95rPH2CCtTiph/tfjCO0A9BV/RLOeuFWMgh0aBCpgJiy0Ayf7pPpp84bXCuGSYmymxRHYy1o/ZVjrn6NxIBGRxf/kOCjf4HZRnU6vcOxSEHs3fGkUYzdjUvY=
+	t=1746099400; cv=none; b=dzsoVw3OdhvNeZqfKwhcH8a5mvmw5R1qQLIbQ2SpodW4zo2XYZFB4nRLH041AtRNfdWxLRHvur5m6gYzmoT2F37fIs2kMegOkpY83H4FFxyVgV71Lqcq0Sq8qqk5XRfHvR62h+KIUm4XSN2AyneZIxfS3dTc2XR+nhee6o73yQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746098789; c=relaxed/simple;
-	bh=aeiMyU+wNWec2l05WK3PC4X44GnebXXbExI1ypvrumQ=;
+	s=arc-20240116; t=1746099400; c=relaxed/simple;
+	bh=7lzgUfENsHZFKLMjYe3ZCjW8cELVWaQrRDqS9Blvjl8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l5lj61HeBObhEQLfyzQ1jjdWwcbi995Yz+5JVo+J7aQmiYZzDjchN+jgPaotPwbiwKFrUiYbffeLCcLjIXfS0Pty5V0QNPMpv7K3r6u2S7OnMZugAXT8DIjnsNGT+infIQYvZx6YFYD7zQZT7AHWHl1C0Wtf1vT+1EOyZ9ynprY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qkmcq8Ik; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=NFYZovSLZ2IZtHCh41KTP1izG2PrWPGlmPM9ajjQiwzXKOMUxozzBDa0uhSst32FW5XseYBrABxS1nZUIbWlQ/T9iGejD36rY7Ue2pyRU6+ZVluPhrHgmQGkUckxfpXfOOVPEjiS9ZYaTbg+CbDd0ry3rkGaEWd3knjWmUnIc84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs1YNE1Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qkmcq8Ik"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55B6EC4CEE4
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 May 2025 11:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs1YNE1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 69C5CC4CEED
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 May 2025 11:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746098788;
-	bh=aeiMyU+wNWec2l05WK3PC4X44GnebXXbExI1ypvrumQ=;
+	s=k20201202; t=1746099399;
+	bh=7lzgUfENsHZFKLMjYe3ZCjW8cELVWaQrRDqS9Blvjl8=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Qkmcq8IkQqe1Us6k96Mur8Trwwkbyo6kFKPM+sRsjhz2ko4RfeV9b7E3mfrGw0MK5
-	 GTNRZyhtp/uBgtG8W2x8SH1EmxRdt00wZf48QlHBAnWgl2wtgOocPoymsoXiQKj0wn
-	 41bg50bEAF4VLQFSqPefg+s8YC6VahsOnskc2wHGt+2En6oXSz0mE4BniyvBySgGP3
-	 Cyekb3728XNTi6c6j5ijWEYIQEJeMl6T6Mm9BVcaHHUFlq9FjOr133M9OLVWGg77OB
-	 GpQnfPKoEfgrsETIUTRIH8HGcnbYymcFp+AdY0PteWz2L1/Fj6juCKIO95rSenH/bb
-	 +8RQObu2yZTbQ==
+	b=Gs1YNE1YIN5o51v34zyP4uyvUOtYkI1f5Hb5RryQQKETyiexMBCuzEagAuAVFLJmL
+	 xJsuxp+Ck8LXnyOu2b1NpWTiZ59ypEzREd0saGsDaJ8iv9lkjMHNDNjIhYRT2GyAuD
+	 zOdDWgpPcwxv0ls4bOvS9npNW60lPFCbqpPu7fesBPVpwikN8lo1VAXmvcQZcUzaVp
+	 LnL6J5zfLyu/Meqr7lY4ww5K29sjx+grN1pD3aoLidN/niciyC1uWcDnTRODDh4pTV
+	 mp+4uLR6KuLcbNOHQVPxTfx5QeFBb+QTZsm71kASipMq92vAtFTQd8DN+4gM4SVLjJ
+	 +QZsP9hdIq7DQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4739EC3279F; Thu,  1 May 2025 11:26:28 +0000 (UTC)
+	id 64CC7C3279F; Thu,  1 May 2025 11:36:39 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 219786] asus-wmi: WLAN is permanently soft-blocked on S5406SA,
  but can still connect to networks
-Date: Thu, 01 May 2025 11:26:28 +0000
+Date: Thu, 01 May 2025 11:36:39 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-219786-215701-BbcScpQQSW@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-219786-215701-N7JUpg5OUD@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-219786-215701@https.bugzilla.kernel.org/>
 References: <bug-219786-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,19 +64,16 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D219786
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
+--- Comment #9 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Created attachment 308064
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308064&action=3Dedit
+[PATCH] platform/x86: asus-wmi: Fix wlan_ctrl_by_user detection
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
+I think this patch should fix things.
 
---- Comment #8 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-bugreporter23 thank you for your work on debugging this.
-
-I think that I know what the problem is, let me write and attach a patch wh=
-ich
-should fix this.
+If you are seeing this problem, please give this patch a try. See your
+distributions documentation for how to build a local kernel with a patch
+applied.
 
 --=20
 You may reply to this email to add a comment.
