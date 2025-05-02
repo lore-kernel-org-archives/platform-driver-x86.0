@@ -1,349 +1,584 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344BD19F464;
-	Fri,  2 May 2025 15:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD61822A4F8;
+	Fri,  2 May 2025 15:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200927; cv=none; b=Vxdv17GA53YApcRk6FcDmq7ccPkdNeOZ+uynX3Kd0iYN4plY0hDG+SnAJsYUALZesqflctc1CrzTgrk6tz4DRo/cPt4qsdPkS2u/G7mJZS59J5/4KFSY6uj8rflvb3iIrfGucn8v3AkYFsAPMTN2MKdwus9wwEdGw1BcLHbjAsw=
+	t=1746201122; cv=none; b=Zn4LxPLViS/8ihUncD0A8FTCEMqhbGzMa+UjSdLN0L2egAZ6i/aikjOg+rBWN+2LOMiJnXMla8VixraJ4MhwKaIqQ9y7G5gv23TCjjuMZqhNivnYGyPA1oyftduL5VYkUJ8N3uAr2WUhJ/32UIV1qmZYMYL5ZpRLmvZmjTyINwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200927; c=relaxed/simple;
-	bh=mP5AS04TcizErRTZJv6rfHissbP7jezQD250An5julU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=he2Gg8pOdUahqkkRQa7ECo///f6LdrP4m+s5uNcoXiLhDI6R4V6bHl3LDds+3R1Uk0ysetQgYPKYJNlc7MmW2+Lv/nLwj+dECR+aV/PSLDrXaJU+4k9oBSipqo7A1HlcUyy1bBIGLOGAVslVtM/Up8dpX7dzvP3y/3wnRLaPjuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YodJNQ9p; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1746201122; c=relaxed/simple;
+	bh=pJggKYMcXKVM8/K7YfPQN6f8hWqTSwe9ExOItLif1bw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=IktahVVxfhlE48KBpQmd/xvaWeWlYkoaYLSfQUy+Ysh6tDcUMp/S2aItu1yNdMr2VadauGGc/IFuqs7sOAVsjv7y5Wh9gUD8Wp5GzwKp1iW3ZfIwb3alLREZr4h7ranc4H5F3aK2ziSOle8Ucw6bplKvpmOHKwDFZcItJW7aSYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkcqRnn8; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YodJNQ9p"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7403f3ece96so3106473b3a.0;
-        Fri, 02 May 2025 08:48:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkcqRnn8"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1496098a12.1;
+        Fri, 02 May 2025 08:52:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746200925; x=1746805725; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xk4svxxZUEpAVs1r4kwm1XdNSaKAUXHR5V+kAkQVJAI=;
-        b=YodJNQ9pPuLL4OpyfvcdiV4lN0sbFpr6N2Fs84B9o8qxiWtN9HZfLgTlKjEBok4hn6
-         IXdzjYoIo9HjFTEbfTfXVLr6o5yc7rktTehM9cXBsJ/gFY96abUfLElPZuRlaNiuZVtp
-         FNIjVqmGeDS03nkti+1Br+sI4UM4oQRxKCJX7Mr4qvTwIZyfUMBpG21Kmy8QvCif+y8Z
-         ZmwEp4XJytKLUazvFDCTG0vHDY7QHKgDC2wRzDbc92VKX/cHXlaBNWPMu2F3Ul4qwqCD
-         Hc/RT52YcAtH6t5CmMxHlkqIfNIqBhGuL8/wKKvt/5afIanxUtpGVEfNFuXeJDI/ypkk
-         MlNg==
+        d=gmail.com; s=20230601; t=1746201120; x=1746805920; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K/M5vDk+UKb6rsRBh/L+Hf81YD4rGeGAYZff+Q+1MrE=;
+        b=EkcqRnn8hIOPWrCAi7zMF3eN2R9bYk3ltynIVmhANIYYq1rypj+EO3lyeKcNoyGCip
+         zhpfmaRmeRwyTyCsmhhsas0PZHFow+X1vawX/EhGKC6B+l5geiuLTTeGmKYS9HyC+0SV
+         f/Y30gylNs4z9nLHQKvzxX3N8rvBtPdAUk11xZAwxHWJaCoV9CI48dibKTmBmKeoUVc8
+         QVqX3a2hCQUDKvDwyOMLXnX0ZHgjwiNSjBx5OURka0qrN1YzRHlkaHb8pYaukm371jhx
+         b7TOTC+35oUP07CEwWmssBdGZFyIrUCqB2IC8QH9iGIjBCytnF1K7crx1cLrQvu45Bjn
+         7XDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200925; x=1746805725;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xk4svxxZUEpAVs1r4kwm1XdNSaKAUXHR5V+kAkQVJAI=;
-        b=bel6RPx8FOFR4+Xc140owN7CC4deK6B8dZF0/mTj09aqbpG1JrM4SDOmnYUHTZrsFU
-         4QmrEiXfrLpy/Dk0bnje68csyqOmBT3Drykf+QB6uS/XKKafdtqjfBecD7ukDcFrk5Zv
-         Eowx9/38Yw2oWs2TXYCSU5hM9tUjsx1tTX9yiHKX8vH+HjRMytL5QINtj+4voqQE/+c1
-         Sl3v2IGhy8ZbuOMmj7AelVO6d35D1IOvGaTZLyogUNx3L8/q9dPb5jXXMJzELicRAbBK
-         6QqodPoOSSWd8RDkJhDtgp1M11EI6Bq4jyKPYW073vCAcFaxiYRP5Fi3yoyuwZHI0Ttn
-         9sfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIG+0o2298inRHRxiKHEyXzMSDnEVr4zwWqsNVbH7acdOXe026vx9x5rKsm4/g8o3UnCkQg3YCAcb79r7iLqMVQrOZMA==@vger.kernel.org, AJvYcCXj/cF4oYv4ZE+/QZkXHTNXfeWTcSuliDwAP8ngZy/Yt9SreRpEgpkfz9kHpRX/lRsj32EnFFSQBQi+2CA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8q3Rr1oMjoFnB27Z5du57zyMh9Va6x/SYyiPLZcB3JPwl1ezy
-	jfYg7Sqneeapw0spjzP2GpC+zJLEZqQjRzunB+CQIgPic2R4emFcyfUS1g==
-X-Gm-Gg: ASbGnctsnH4z00cjEkreymjqyKf3gmrDGg/oYBQSMSnFRio9u8b0EiwQkS4ZfanqBpa
-	ObJN0OUpwZPK4r7dDVrU8qRYwHXPp2Q4OLdCfHLVrxOq6ZgQ8AsxAYSP4W3s0uh3SQLVM5MlpnE
-	tTE+YKGLSYBKCF+F0LKRS6kezg1z/iC3aBH/ojT0nkpuGkZqkL4d3lhCxqWwzDebosPOdMmOZ58
-	12oB014eRDzMIZxwT9bOyqh4rgYg7pV/mQYHNAM9/0SVd0Geeh6BM3tiQVJKcxQsUbIEb/OTUvQ
-	shguCVnkoUfLX8NsKMcXnEixuZA3wFoUiA==
-X-Google-Smtp-Source: AGHT+IEpwvOVCuVWiYXlWYRp3tCadcUCKaI8F9pfqzXMq8eEdoBOoVaJ/1U7XrW3MtPC+S2TZFskDw==
-X-Received: by 2002:a05:6a00:32ca:b0:736:3be3:3d76 with SMTP id d2e1a72fcca58-74058aedda8mr4206271b3a.17.1746200925179;
-        Fri, 02 May 2025 08:48:45 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbbafesm1788537b3a.54.2025.05.02.08.48.30
+        d=1e100.net; s=20230601; t=1746201120; x=1746805920;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K/M5vDk+UKb6rsRBh/L+Hf81YD4rGeGAYZff+Q+1MrE=;
+        b=p7qJzFeb9hsf+AATxZHlBGuTFIO7st8mef5m5EI23OD6xHnFJeNbhiws04Y1lkVxwi
+         BPCCAbbguehQ/iWpI3EaJAPgOqGoawiKXStE0MCTFS4S2Lsf0mS0mTn7DcimoH3TkDxc
+         HUPB33zm49TY0IsY/Qw3xDWRc4KmxlKnuGbXFtX2dInBBzXzN6QN0sxc1NKpdr19olHu
+         LGaS382YyQ/cwcCxFljY5HGesDbnYnPRvPHBVO4Ee1jJze4uTKX72cP+wFXF0Jh2VmK+
+         QY0BCOASjfQU9/U8BvA6Q2c6hQn2D8b7LxQRvZY2kx3nqLwCvPiy6W5Zq1cwxrI5OGOy
+         NsYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIVSG7RTl0lnmHEpxtNGolMfszFP+NpEjv0iSKjXM8OVrrjQuxEEFfyWKnTl8kfZmmQOFURjyD0gXagbAIHieTDAxkfw==@vger.kernel.org, AJvYcCW0VK0h3Hx5ephQZ9Ez3l5YvUUUo0bLMipjFjAswQF9yPM0vF8Xoo+Uvw9mjjInTYShrh09FhF0KC7ZVB+F@vger.kernel.org, AJvYcCWzsPLXw7UDZ/d3JJZY64dCBrNFdT0goS6qQSErjNV7P/CT4ilGZlCJon2u3fFVKv9TXymyY1I+rCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3phvkKpcwtBmpsnnkuh11p+Z2gZRDY/Tv/yBcZ1HyD3TMa3dp
+	0VYjFbjn6C8OoQ9mzSJhzuG6c8NWSmsyCrzMgjblIrCI5raYnYuw
+X-Gm-Gg: ASbGnctvEqrCs/Lb+YklEZZFFJPHi13TzLKYPGfY8oKSygBYRKtx8ERIber0WplJqaK
+	R/J0RJD18cIgdlsQalXCM8cmiFOIeme2hcw2/B5OnRp5WJLHu3v7WkIYKg7L6KiWV7xi49tEwBL
+	qoDnPA/7HTRDlDFh+2BXfacpWO53tG12Sjey3G66gzxHtimg3tn4x2CjTdfZOXtweC9s3guRPwp
+	rRV+Z0qZ6ogBrB2Ba8taSX8fJURopIyx9KRu26GxSz0vkTAN95mZ41Q/czD+yarrROhn1HA50Qu
+	oz5G1Af8yFjPRNDP+AZYyLtNGzPyVR3maxmHjHviMrL+Va0=
+X-Google-Smtp-Source: AGHT+IF6RQ4Q+o1kYE7jobyJH7wD/JO0AoDQKbSaNv7gINDhEyMucnZxjqCZUb0VUzLrEG8eEb2cTg==
+X-Received: by 2002:a17:90b:4fc2:b0:2ee:8430:b831 with SMTP id 98e67ed59e1d1-30a4e558b91mr5590741a91.2.1746201119847;
+        Fri, 02 May 2025 08:51:59 -0700 (PDT)
+Received: from ?IPv6:::1? ([2607:fb91:1e3:45a4:ad2:fe58:51fc:b286])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e97eesm9219635ad.71.2025.05.02.08.51.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 08:48:44 -0700 (PDT)
+        Fri, 02 May 2025 08:51:59 -0700 (PDT)
+Date: Fri, 02 May 2025 08:51:57 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_4/6=5D_platform/x86=3A_Add?=
+ =?US-ASCII?Q?_Lenovo_WMI_Capability_Data_01_Driver?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <a339b4b5-c7ca-4875-adb8-183539be563f@gmx.de>
+References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-5-derekjohn.clark@gmail.com> <a339b4b5-c7ca-4875-adb8-183539be563f@gmx.de>
+Message-ID: <20FEC2FF-775F-49F5-9DAA-4641C73B0367@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 02 May 2025 12:48:30 -0300
-Message-Id: <D9LSK7PPIU4V.1Q5FXYODQ170H@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Gabriel Marcano" <gabemarcano@yahoo.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO
- debug methods
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250502-awcc-gpio-v3-0-ea9a932d1124@gmail.com>
- <20250502-awcc-gpio-v3-1-ea9a932d1124@gmail.com>
- <aab2237f-d32e-b335-56d3-144274849edf@linux.intel.com>
-In-Reply-To: <aab2237f-d32e-b335-56d3-144274849edf@linux.intel.com>
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Fri May 2, 2025 at 9:45 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 2 May 2025, Kurt Borja via B4 Relay wrote:
+
+
+On May 1, 2025 7:18:40 PM PDT, Armin Wolf <W_Armin@gmx=2Ede> wrote:
+>Am 28=2E04=2E25 um 03:18 schrieb Derek J=2E Clark:
 >
->> From: Kurt Borja <kuurtb@gmail.com>
+>> Adds lenovo-wmi-capdata01 driver which provides the
+>> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
+>> enabled hardware=2E Provides an interface for querying if a given
+>> attribute is supported by the hardware, as well as its default_value,
+>> max_value, min_value, and step increment=2E
 >>=20
->> Devices with the AWCC interface come with a USB RGB-lighting STM32 MCU,
->> which has two GPIO pins with debug capabilities:
->>=20
->>  - Device Firmware Update mode (DFU)
->>  - Negative Reset (NRST)
->>=20
->> The WMAX device has methods to toggle or read the state of these GPIO
->> pins. Expose these methods through DebugFS, hidden behind an unsafe
->> module parameter to avoid common users from toying with these without
->> consideration.
->>=20
->> Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
+>> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
 >> ---
->>  Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
->>  drivers/platform/x86/dell/alienware-wmi-wmax.c  | 105 +++++++++++++++++=
-++++++-
->>  2 files changed, 123 insertions(+), 2 deletions(-)
+>> v6:
+>>   - Recache capabiltiy data on ACPI AC events to ensure accutare
+>>     max_value=2E
+>>   - Fix typos and rewordings from v5 review=2E
+>> v5:
+>>   - Return to cache at device initialization=2E On component bind, pass=
+ a
+>>     pointer to lenovo-wmi-other=2E
+>>   - Fixes from v4 review=2E
+>> v4:
+>>   - Make driver data a private struct, remove references from Other Mod=
+e
+>>     driver=2E
+>>   - Don't cache data at device initialization=2E Instead, on component =
+bind,
+>>     cache the data on a member variable of the Other Mode driver data
+>>     passed as a void pointer=2E
+>>   - Add header file for capdata01 structs=2E
+>>   - Add new struct to pass capdata01 array data and array length to Oth=
+er
+>>     Mode=2E
+>> v3:
+>> - Add as component to lenovo-wmi-other driver=2E
+>> v2:
+>> - Use devm_kmalloc to ensure driver can be instanced, remove global
+>>    reference=2E
+>> - Ensure reverse Christmas tree for all variable declarations=2E
+>> - Remove extra whitespace=2E
+>> - Use guard(mutex) in all mutex instances, global mutex=2E
+>> - Use pr_fmt instead of adding the driver name to each pr_err=2E
+>> - Remove noisy pr_info usage=2E
+>> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv=2E
+>> - Use list to get the lenovo_wmi_cd01_priv instance in
+>>    lenovo_wmi_capdata01_get as none of the data provided by the macros
+>>    that will use it can pass a member of the struct for use in
+>>    container_of=2E
+>>   MAINTAINERS                                 |   1 +
+>>   drivers/platform/x86/Kconfig                |   4 +
+>>   drivers/platform/x86/Makefile               |   1 +
+>>   drivers/platform/x86/lenovo-wmi-capdata01=2Ec | 272 +++++++++++++++++=
++++
+>>   drivers/platform/x86/lenovo-wmi-capdata01=2Eh |  29 +++
+>>   5 files changed, 307 insertions(+)
+>>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Ec
+>>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Eh
 >>=20
->> diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documenta=
-tion/ABI/testing/debugfs-alienware-wmi
->> index 48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5..c7f525d6baac962be8278060=
-8f8da5c0368600cc 100644
->> --- a/Documentation/ABI/testing/debugfs-alienware-wmi
->> +++ b/Documentation/ABI/testing/debugfs-alienware-wmi
->> @@ -42,3 +42,23 @@ Description:
->>  		details.
->> =20
->>  		RO
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 2b4b06e81192=2E=2E1b22e41cc730 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13164,6 +13164,7 @@ L:	platform-driver-x86@vger=2Ekernel=2Eorg
+>>   S:	Maintained
+>>   F:	Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
+>>   F:	Documentation/wmi/devices/lenovo-wmi-other=2Erst
+>> +F:	drivers/platform/x86/lenovo-wmi-capdata01=2E*
+>>   F:	drivers/platform/x86/lenovo-wmi-events=2E*
+>>   F:	drivers/platform/x86/lenovo-wmi-helpers=2E*
+>>   diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+>> index 13b8f4ac5dc5=2E=2E64663667f0cb 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
+>>   	tristate
+>>   	depends on ACPI_WMI
+>>   +config LENOVO_WMI_DATA01
+>> +	tristate
+>> +	depends on ACPI_WMI
 >> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/total=
-_gpios
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		Total number of GPIO pins reported by the device.
+>>   config IDEAPAD_LAPTOP
+>>   	tristate "Lenovo IdeaPad Laptop Extras"
+>>   	depends on ACPI
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
+ile
+>> index fc039839286a=2E=2E7a35c77221b7 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi=2Eo
+>>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook=2Eo
+>>   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger=2E=
+o
+>>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera=2Eo
+>> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+=3D lenovo-wmi-capdata01=2Eo
+>>   obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events=2Eo
+>>   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers=2Eo
+>>   diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Ec b/drivers/=
+platform/x86/lenovo-wmi-capdata01=2Ec
+>> new file mode 100644
+>> index 000000000000=2E=2E841d4a37249b
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Ec
+>> @@ -0,0 +1,272 @@
+>> +// SPDX-License-Identifier: GPL-2=2E0-or-later
+>> +/*
+>> + * Lenovo Capability Data 01 WMI Data Block driver=2E
+>> + *
+>> + * Lenovo Capability Data 01 provides information on tunable attribute=
+s used by
+>> + * the "Other Mode" WMI interface=2E The data includes if the attribut=
+e is
+>> + * supported by the hardware, the default_value, max_value, min_value,=
+ and step
+>> + * increment=2E Each attibute has multiple pages, one for each of the =
+thermal
+>> + * modes managed by the Gamezone interface=2E
+>> + *
+>> + * Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>> + */
 >> +
->> +		RO
+>> +#include <linux/acpi=2Eh>
+>> +#include <linux/cleanup=2Eh>
+>> +#include <linux/component=2Eh>
+>> +#include <linux/container_of=2Eh>
+>> +#include <linux/device=2Eh>
+>> +#include <linux/export=2Eh>
+>> +#include <linux/gfp_types=2Eh>
+>> +#include <linux/module=2Eh>
+>> +#include <linux/notifier=2Eh>
+>> +#include <linux/overflow=2Eh>
+>> +#include <linux/types=2Eh>
+>> +#include <linux/wmi=2Eh>
 >> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/pinX
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		This file controls GPIO pin X status.
+>> +#include "lenovo-wmi-capdata01=2Eh"
 >> +
->> +		See Documentation/wmi/devices/alienware-wmi.rst for details.
+>> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE=
+018154"
 >> +
->> +		RW
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
->> index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..2bf9d85426b8f2cc5482be48=
-050c81f9b6a30d00 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> @@ -38,6 +38,9 @@
->>  #define AWCC_METHOD_GET_FAN_SENSORS		0x13
->>  #define AWCC_METHOD_THERMAL_INFORMATION		0x14
->>  #define AWCC_METHOD_THERMAL_CONTROL		0x15
->> +#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
->> +#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
->> +#define AWCC_METHOD_READ_GPIO_STATUS		0x22
->>  #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
->> =20
->>  #define AWCC_FAILURE_CODE			0xFFFFFFFF
->> @@ -281,6 +284,8 @@ struct awcc_priv {
->>  	struct device *hwdev;
->>  	struct awcc_fan_data **fan_data;
->>  	unsigned long temp_sensors[AWCC_ID_BITMAP_LONGS];
+>> +#define ACPI_AC_NOTIFY_STATUS 0x80
 >> +
->> +	u32 gpio_count;
->>  };
->> =20
->>  static const enum platform_profile_option awcc_mode_to_platform_profile=
-[AWCC_PROFILE_LAST] =3D {
->> @@ -571,6 +576,38 @@ static int awcc_thermal_information(struct wmi_devi=
-ce *wdev, u8 operation, u8 ar
->>  	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, =
-out);
->>  }
->> =20
->> +static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 s=
-tatus)
+>> +static DEFINE_MUTEX(list_mutex);
+>
+>Hi,
+>
+>why not moving this mutex inside struct cd01_list?
+>
+
+I can do that=2E Is that preferable over adding it to priv?
+
+>> +
+>> +struct lwmi_cd01_priv {
+>> +	struct notifier_block acpi_nb; /* ACPI events */
+>> +	struct wmi_device *wdev;
+>> +	struct cd01_list *list;
+>> +};
+>> +
+>> +/**
+>> + * lwmi_cd01_component_bind() - Bind component to master device=2E
+>> + * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device=
+=2E
+>> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device=2E
+>> + * @data: capdata01_list object pointer used to return the capability =
+data=2E
+>> + *
+>> + * On lenovo-wmi-other's master bind, provide a pointer to the local c=
+apdata01
+>> + * list=2E This is used to call lwmi_cd01_get_data to look up attribut=
+e data
+>> + * from the lenovo-wmi-other driver=2E
+>> + *
+>> +:* Return: 0 on success, or an error code=2E
+>> + */
+>> +static int lwmi_cd01_component_bind(struct device *cd01_dev,
+>> +				    struct device *om_dev, void *data)
 >> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D status,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +	u32 out;
+>> +	struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
+>> +	struct cd01_list **cd01_list =3D data;
 >> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &o=
-ut);
->> +}
+>> +	if (!priv->list)
+>> +		return -ENODEV;
 >> +
->> +static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
->> +{
->> +	struct wmax_u32_args args =3D {};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, cou=
-nt);
->> +}
->> +
->> +static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *=
-status)
->> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D 0,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, sta=
-tus);
->> +}
->> +
->>  static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation=
-,
->>  				  u32 *out)
->>  {
->> @@ -1318,6 +1355,47 @@ static int awcc_debugfs_pprof_data_read(struct se=
-q_file *seq, void *data)
->>  	return 0;
->>  }
->> =20
->> +static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
->> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(seq->file);
->> +	struct wmi_device *wdev =3D seq->private;
->> +	u32 status;
->> +	int ret;
->> +
->> +	ret =3D awcc_read_gpio_status(wdev, pin, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	seq_printf(seq, "%u\n", status);
+>> +	*cd01_list =3D priv->list;
 >> +
 >> +	return 0;
 >> +}
 >> +
->> +static ssize_t awcc_gpio_pin_write(struct file *file, const char __user=
- *buf,
->> +				   size_t count, loff_t *ppos)
+>> +static const struct component_ops lwmi_cd01_component_ops =3D {
+>> +	=2Ebind =3D lwmi_cd01_component_bind,
+>> +};
+>> +
+>> +/**
+>> + * lwmi_cd01_get_data - Get the data of the specified attribute
+>> + * @dev: The lenovo-wmi-capdata01 parent device=2E
+>> + * @tunable_attr: The attribute to be populated=2E
+>> + *
+>> + * Retrieves the capability data 01 struct pointer for the given
+>> + * attribute for its specified thermal mode=2E
+>> + *
+>> + * Return: Either a pointer to capability data, or NULL=2E
+>> + */
+>> +struct capdata01 *lwmi_cd01_get_data(struct cd01_list *list, u32 attri=
+bute_id)
 >> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(file);
->> +	struct seq_file *seq =3D file->private_data;
->> +	struct wmi_device *wdev =3D seq->private;
->> +	bool status;
->> +	int ret;
+>> +	u8 idx;
 >> +
->> +	if (!ppos || *ppos)
->> +		return -EINVAL;
+>> +	guard(mutex)(&list_mutex);
+>> +	for (idx =3D 0; idx < list->count; idx++) {
+>> +		if (list->data[idx]=2Eid !=3D attribute_id)
+>> +			continue;
+>> +		return &list->data[idx];
+>
+>This might cause issues should lwmi_cd01_cache() be called when the calle=
+r of this function
+>currently accesses the returned data=2E
+>
+>Maybe it would make sense to simply copy the struct capdata01? It is rath=
+er small, so the overhead
+>would be negligible=2E
+>
+>I envision something like this:
+>
+>int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct c=
+apdata01 *output);
+>
+>In this case the resulting capdata is copied into "output"=2E
+>
+
+I can make this work=2E I assume memcpy is preferred=2E Should I make the =
+source pointer a devm kmalloc before it's sent or use the stack?
+
+>> +	}
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD01");
 >> +
->> +	ret =3D kstrtobool_from_user(buf, count, &status);
->> +	if (ret)
->> +		return ret;
+>> +/**
+>> + * lwmi_cd01_setup() - Cache all WMI data block information
+>> + * @priv: lenovo-wmi-capdata01 driver data=2E
+>> + *
+>> + * Loop through each WMI data block and cache the data=2E
+>> + *
+>> + * Return: 0 on success, or an error=2E
+>> + */
+>> +static int lwmi_cd01_cache(struct lwmi_cd01_priv *priv)
+>> +{
+>> +	int idx;
 >> +
->> +	ret =3D awcc_fwup_gpio_control(wdev, pin, status);
->> +	if (ret)
->> +		return ret;
+>> +	guard(mutex)(&list_mutex);
+>> +	for (idx =3D 0; idx < priv->list->count; idx++) {
+>> +		union acpi_object *ret_obj __free(kfree) =3D NULL;
 >> +
->> +	return count;
+>> +		ret_obj =3D wmidev_block_query(priv->wdev, idx);
+>> +		if (!ret_obj)
+>> +			return -ENODEV;
+>> +
+>> +		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
+>> +		    ret_obj->buffer=2Elength < sizeof(priv->list->data[idx]))
+>> +			continue;
+>> +
+>> +		memcpy(&priv->list->data[idx], ret_obj->buffer=2Epointer,
+>> +		       ret_obj->buffer=2Elength);
+>> +	}
+>> +
+>> +	return 0;
 >> +}
 >> +
->> +DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
+>> +/**
+>> + * lwmi_cd01_alloc() - Allocate a cd01_list struct in drvdata
+>> + * @priv: lenovo-wmi-capdata01 driver data=2E
+>> + *
+>> + * Allocate a cd01_list struct large enough to contain data from all W=
+MI data
+>> + * blocks provided by the interface=2E
+>> + *
+>> + * Return: 0 on success, or an error=2E
+>> + */
+>> +static int lwmi_cd01_alloc(struct lwmi_cd01_priv *priv)
+>> +{
+>> +	struct cd01_list *list;
+>> +	size_t list_size;
+>> +	int count;
 >> +
->>  static void awcc_debugfs_remove(void *data)
->>  {
->>  	struct dentry *root =3D data;
->> @@ -1327,11 +1405,15 @@ static void awcc_debugfs_remove(void *data)
->> =20
->>  static void awcc_debugfs_init(struct wmi_device *wdev)
->>  {
->> -	struct dentry *root;
->> -	char name[64];
->> +	struct awcc_priv *priv =3D dev_get_drvdata(&wdev->dev);
->> +	struct dentry *root, *gpio_ctl;
->> +	char pin_name[8], name[64];
->> +	u32 gpio_count;
+>> +	count =3D wmidev_instance_count(priv->wdev);
+>> +	list_size =3D struct_size(list, data, count);
+>> +
+>> +	guard(mutex)(&list_mutex);
+>> +	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
+>> +	if (!list)
+>> +		return -ENOMEM;
+>> +
+>> +	list->count =3D count;
+>> +	priv->list =3D list;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * lwmi_cd01_setup() - Cache all WMI data block information
+>> + * @priv: lenovo-wmi-capdata01 driver data=2E
+>> + *
+>> + * Allocate a cd01_list struct large enough to contain data from all W=
+MI data
+>> + * blocks provided by the interface=2E Then loop through each data blo=
+ck and
+>> + * cache the data=2E
+>> + *
+>> + * Return: 0 on success, or an error code=2E
+>> + */
+>> +static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
+>> +{
 >> +	int ret;
->> =20
->>  	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wdev=
-->dev));
->>  	root =3D debugfs_create_dir(name, NULL);
->> +	gpio_ctl =3D debugfs_create_dir("gpio_ctl", root);
->> =20
->>  	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
->>  				    awcc_debugfs_system_description_read);
->> @@ -1344,6 +1426,25 @@ static void awcc_debugfs_init(struct wmi_device *=
-wdev)
->>  		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
->>  					    awcc_debugfs_pprof_data_read);
->> =20
->> +	ret =3D awcc_read_total_gpios(wdev, &gpio_count);
->> +	if (ret) {
->> +		dev_dbg(&wdev->dev, "Failed to get total GPIO Pin count\n");
->> +		goto out_add_action;
->> +	} else if (gpio_count > AWCC_MAX_RES_COUNT) {
->> +		dev_dbg(&wdev->dev, "Reported GPIO Pin count may be corrupted: %u\n",=
- gpio_count);
->> +		goto out_add_action;
->> +	}
 >> +
->> +	priv->gpio_count =3D gpio_count;
->> +	debugfs_create_u32("total_gpios", 0444, gpio_ctl, &priv->gpio_count);
+>> +	ret =3D lwmi_cd01_alloc(priv);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +	for (unsigned int i =3D 0; i < gpio_count; i++) {
->> +		scnprintf(pin_name, sizeof(pin_name), "pin%u", i);
+>> +	return lwmi_cd01_cache(priv);
+>> +}
+>> +
+>> +/**
+>> + * lwmi_cd01_notifier_call() - Call method for lenovo-wmi-capdata01 dr=
+iver notifier=2E
+>> + * block call chain=2E
+>> + * @nb: The notifier_block registered to lenovo-wmi-events driver=2E
+>> + * @action: Unused=2E
+>> + * @data: The ACPI event=2E
+>> + *
+>> + * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_p=
+rofile
+>> + * of a change=2E
+>> + *
+>> + * Return: notifier_block status=2E
+>> + */
+>> +static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned=
+ long action,
+>> +				   void *data)
+>> +{
+>> +	struct acpi_bus_event *event =3D (struct acpi_bus_event *)data;
 >
-> Hi,
+>Unnecessary cast, please drop=2E
 >
-> This might trigger a warning from the compiler that the resulting string=
+>> +	struct lwmi_cd01_priv *priv;
+>> +	int ret;
+>> +
+>> +
+>> +	priv =3D container_of(nb, struct lwmi_cd01_priv, acpi_nb);
+>> +
+>> +	switch (event->type) {
+>> +	case ACPI_AC_NOTIFY_STATUS:
+>
+>You should also check the the "device_class" of the ACPI event (search fo=
+r ACPI_AC_CLASS)
+>because "type" is not guaranteed to be unique between different events=2E
+>
+
+Good to know, thanks=2E
+
+
+Ack all below=2E
 =20
-> might not fit into pin_name. Did you check the warnings?
+Thanks,
+Derek
 
-Hi Ilpo,
-
-W=3D1 currently throws no warnings.
-
-gpio_count does not exceed AWCC_MAX_RES_COUNT (16) so it should fit into
-`pin_name` right?
-
-Anyway, to avoid this we can reuse `name[]` here instead.
-
---=20
- ~ Kurt
-
->
->> +		debugfs_create_file_aux_num(pin_name, 0644, gpio_ctl, wdev, i,
->> +					    &awcc_gpio_pin_fops);
->> +	}
+>> +		ret =3D lwmi_cd01_cache(priv);
+>> +		if (ret)
+>> +			return NOTIFY_BAD;
 >> +
->> +out_add_action:
->>  	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
->>  }
->> =20
->>=20
->>=20
+>> +		return NOTIFY_OK;
+>> +	default:
+>> +		return NOTIFY_DONE;
+>> +	}
+>> +}
+>> +
+>> +static int lwmi_cd01_probe(struct wmi_device *wdev, const void *contex=
+t)
+>> +
+>> +{
+>> +	struct lwmi_cd01_priv *priv;
+>> +	int ret;
+>> +
+>> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	priv->wdev =3D wdev;
+>> +	dev_set_drvdata(&wdev->dev, priv);
+>> +
+>> +	ret =3D lwmi_cd01_setup(priv);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	priv->acpi_nb=2Enotifier_call =3D lwmi_cd01_notifier_call;
+>> +	register_acpi_notifier(&priv->acpi_nb);
+>> +
+>> +	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
+>
+>You need to unregister the ACPI notifier when component_add() fails=2E
+>
+>> +}
+>> +
+>> +static void lwmi_cd01_remove(struct wmi_device *wdev)
+>> +{
+>> +	component_del(&wdev->dev, &lwmi_cd01_component_ops);
+>
+>Same as above=2E You could use devm_add_action_or_reset() to fix both cas=
+es=2E
+>
+>> +}
+>> +
+>> +static const struct wmi_device_id lwmi_cd01_id_table[] =3D {
+>> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
+>> +	{}
+>> +};
+>> +
+>> +static struct wmi_driver lwmi_cd01_driver =3D {
+>> +	=2Edriver =3D {
+>> +		=2Ename =3D "lenovo_wmi_cd01",
+>> +		=2Eprobe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+>> +	},
+>> +	=2Eid_table =3D lwmi_cd01_id_table,
+>> +	=2Eprobe =3D lwmi_cd01_probe,
+>> +	=2Eremove =3D lwmi_cd01_remove,
+>> +	=2Eno_singleton =3D true,
+>> +};
+>> +
+>> +/**
+>> + * lwmi_cd01_match() - Match rule for the master driver=2E
+>> + * @dev: Pointer to the capability data 01 parent device=2E
+>> + * @data: Unused void pointer for passing match criteria=2E
+>> + *
+>> + * Return: int=2E
+>> + */
+>> +int lwmi_cd01_match(struct device *dev, void *data)
+>> +{
+>> +	return dev->driver =3D=3D &lwmi_cd01_driver=2Edriver;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
+>> +
+>> +module_wmi_driver(lwmi_cd01_driver);
+>> +
+>> +MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
+>> +MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
+>> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Eh b/drivers/pl=
+atform/x86/lenovo-wmi-capdata01=2Eh
+>> new file mode 100644
+>> index 000000000000=2E=2Eed4f3d86464d
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Eh
+>> @@ -0,0 +1,29 @@
+>> +/* SPDX-License-Identifier: GPL-2=2E0-or-later */
+>> +
+>> +/* Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom> =
+*/
+>> +
+>> +#ifndef _LENOVO_WMI_CAPDATA01_H_
+>> +#define _LENOVO_WMI_CAPDATA01_H_
+>> +
+>> +#include <linux/types=2Eh>
+>> +
+>> +struct device;
+>> +
+>> +struct capdata01 {
+>> +	u32 id;
+>> +	u32 supported;
+>> +	u32 default_value;
+>> +	u32 step;
+>> +	u32 min_value;
+>> +	u32 max_value;
+>> +};
+>> +
+>> +struct cd01_list {
+>> +	u8 count;
+>> +	struct capdata01 data[];
+>> +};
+>
+>Since client driver are not directly accessing this struct anyway please =
+keep its definition private
+>and only provide an incomplete definition in this header:
+>
+>	struct cd01_list *;
+>
+>Thanks,
+>Armin Wolf
+>
+>> +
+>> +struct capdata01 *lwmi_cd01_get_data(struct cd01_list *list, u32 attri=
+bute_id);
+>> +int lwmi_cd01_match(struct device *dev, void *data);
+>> +
+>> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
 
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaBTpUAAKCRAWYEM49J/U
-ZqoIAQCv01mmsojPgQITXeQ0yZXK+Ut0wHt8bUQ7YwkBhv+sEwD4nA6RixZlAJS4
-MZd2bP9Ps2wypq66mDNVH6JbN+ClCw==
-=Umvk
------END PGP SIGNATURE-----
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616--
+- Derek
