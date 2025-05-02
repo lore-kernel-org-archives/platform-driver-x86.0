@@ -1,116 +1,93 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDF119D891;
-	Fri,  2 May 2025 08:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4589522D789;
+	Fri,  2 May 2025 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175642; cv=none; b=ITU4YuqEPl6EAiqqC3ynwKMplCq/JLWTtuS69CEzYPHmfJRzMIZiJGshVFBzmG987JFPLG3A/7v20QLzhzAaRDpVeeXD9zc+xI8LwAKfaTDCWyyj/NV3/U613IDLDdc7RlkDRm8dXQu2B42lZmA3OoT8ia/GtYtGa2osgjC611M=
+	t=1746175957; cv=none; b=SS2R6N7HECSKz1Wecb2THWN6pjD/cIiDk3D0lQCV42RQ0eSTvagUAda3lh61L7CCY30GSU3aDqmxiJQj4EPJV0WpoCdvvdPT3HEqoVZO3GcsgewpBdaTbjinvJnhtV121s+mcQf20pePoueALSm9GscBGvZ+881A+3UYoHssZ+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175642; c=relaxed/simple;
-	bh=9jBEmF43nusgTr6KyTmUAJm0NR2nhBaGOUcA3wtOdK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KcMolMnSQSgAFBfFYFmnYA7kkxrMCu8AMNRl5J6RrLrbxFxPetH1Iti8Ett3NlpDzV3A2OY5WLxpmIH8O5Is3ZvkwT//o/sQPo3r2Fhq40UvHoJiOWoFKtKdTJ6+vecdgE2kpRDSRG1N/Yn22sWeQA43wnxmxPDBA4gik3Szaww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ayhuehes; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1746175957; c=relaxed/simple;
+	bh=SxBjkp/J5NNckAueMrQukPtaJ3IgnM76Ll+NdIUNXIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfSRfmC+stH6QESYjsTOt9lSx0tYRU2wUa7Dw4EvtuigoHYt96TzL5Rz4xapizo/oNFprUNWsU9vzoqaNIs7e/mhk/Zgm9Qib+bouqLmRjXMG9/eKrBA7XWEgQUmNywaMJpkUT1cZlvqEd1mSpiHc9Rez3g2lmChG0jKUr4ESys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ1UtPGa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ayhuehes"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 7CF532E08A45;
-	Fri,  2 May 2025 11:47:03 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1746175625;
-	bh=ohQ4wDME3+jOfuoNUWNuty5n8n/agiEfl/vn/jqYItw=;
-	h=Received:From:Subject:To;
-	b=AyhuehesFwovsPSmR0MZyoajTVTni2qhfxW79mnN8YToxlRWDmJJBV0IghempDIt5
-	 WcMMsTieq/Eiiqx6VAprgIR1wTaeSqM+YmJg4Bexcm9Bfttzeq7u+8L1PX9MKuzesI
-	 rWLGXwZSkEindfsVPjfwa2Cah+hxn3rFhHI866Sc=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-30db1bc464dso15256371fa.0;
-        Fri, 02 May 2025 01:47:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUJpjb3GOKGsRjLO8EbwOVnurMkxC2pSpvzArouscXIlko06xsFYS9YEFZCiJUjCozWz1lMpadK79VhSqjh@vger.kernel.org,
- AJvYcCVe9M0f0CoEOJTEwtXiUwNMaulCYvgfzyzqfxPR+O2YtEGoNeb7Y6nJC76sQWTyGmJIy1ItEVgQLqoobx7dDJW8VVxIpQ==@vger.kernel.org,
- AJvYcCXmhjZbrQKVYjl0FbhvUC9iP/YRgkP/5sC+yetLlQTlB5BAmRsiz1fvBMLciraWHHeSg25UhzIEtVGSNlXrmNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP6x0m8MRq8Oa+HxC/+0xS1X9blFYk6RDRTxDGi26++3/Auf//
-	fEmZg69mePFyBRhpO/JnfhaZVoYlBeIRHV/fq+paS4qxUuPVKrurMc1FofnGq0aDo9oHFDHis7x
-	IghiD6tRnf5ncDemivspXbJpEDcA=
-X-Google-Smtp-Source: 
- AGHT+IF2KuGQUkaQynK7BvHDDgcmIvf+dtrqh24xlrv01gfQDql9QFAC3rjArY5rugDsp4TPyfbzCFjBGU71NHrcUUE=
-X-Received: by 2002:a05:651c:543:b0:30b:cb10:3a20 with SMTP id
- 38308e7fff4ca-320c5be287emr5435431fa.32.1746175622620; Fri, 02 May 2025
- 01:47:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ1UtPGa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD4BC4CEE4;
+	Fri,  2 May 2025 08:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746175956;
+	bh=SxBjkp/J5NNckAueMrQukPtaJ3IgnM76Ll+NdIUNXIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CJ1UtPGazPk6ZEG0HwcxHRuFOiH/JR3XBtmKJLiHP/jshRcy9Arm4mvyGtimOvgTy
+	 OmBKdXEFyjZ8BZMwd8D5Yrhyf1bz+OVbfKouNV2DcQM8RRSV+d8/qkqc9y00t15W+1
+	 79vLoiUJcrIIg1H9/yghIFiGnP5DFIedHMd4MJHdsNaPcS8RGk10pBZFuSDnIKldZI
+	 i66CAPb8L+3qEo576w8fnUHJl5uZTEiJZdpOmBXZziTwORlH5NpUwvvKUbp9Waeu+E
+	 Y/YctucrsKzRC6TBuMOLWKYkj+excCXHWTN55BMKpApl0iGcZF2wL5SK+lxFB1I13T
+	 UP3Jz5dY9bM3g==
+Date: Fri, 2 May 2025 10:52:26 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+Message-ID: <aBSHyo-pu7K_CfpI@gmail.com>
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBSE71VKfBlQg_fZ@stanley.mountain>
-In-Reply-To: <aBSE71VKfBlQg_fZ@stanley.mountain>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 2 May 2025 10:46:51 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFcLKRZv9_cGacJSEmOZ30CaQzS75_Vfb1DDWaNBXUvzg@mail.gmail.com>
-X-Gm-Features: ATxdqUFHSB-iugiUyjDoWuzAutbINVAvgH5CdPUAvbLxfNlUcPpwyQ8n87sJuWg
-Message-ID: 
- <CAGwozwFcLKRZv9_cGacJSEmOZ30CaQzS75_Vfb1DDWaNBXUvzg@mail.gmail.com>
-Subject: Re: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
- oxp_psy_ext_set_prop()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174617562406.8474.1202650304836171656@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427092027.1598740-3-xin@zytor.com>
 
-On Fri, 2 May 2025 at 10:40, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> The "val->intval" variable is an integer which comes from the user.  This
-> code has an upper bounds check but the lower bounds check was
-> accidentally omitted.  The write_to_ec() take a u8 value as a parameter
-> so negative values would be truncated to positive values in the 0-255
-> range.
->
-> Return -EINVAL if the user passes a negative value.
->
-> Fixes: 202593d1e86b ("platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer")
 
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+* Xin Li (Intel) <xin@zytor.com> wrote:
+
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
+> 
+> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
+> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
+> 
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+> --- a/arch/x86/include/asm/tsc.h
+> +++ b/arch/x86/include/asm/tsc.h
+> @@ -7,7 +7,81 @@
+>  
+>  #include <asm/cpufeature.h>
+>  #include <asm/processor.h>
+> -#include <asm/msr.h>
+
+Note that in the tip:x86/msr commit I've applied today I've 
+intentionally delayed the removal of this header dependency, to reduce 
+the probability of breaking -next today or in the near future.
+
+We can remove that now superfluous header dependency in a future patch.
 
 Thanks,
-Antheas
 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/platform/x86/oxpec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index 4b48f4571b09..de70ca7e8493 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -582,7 +582,7 @@ static int oxp_psy_ext_set_prop(struct power_supply *psy,
->
->         switch (psp) {
->         case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-> -               if (val->intval > 100)
-> +               if (val->intval < 0 || val->intval > 100)
->                         return -EINVAL;
->                 return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
->         case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-> --
-> 2.47.2
->
+	Ingo
