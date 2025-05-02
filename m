@@ -1,93 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4589522D789;
-	Fri,  2 May 2025 08:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA382343AF;
+	Fri,  2 May 2025 12:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175957; cv=none; b=SS2R6N7HECSKz1Wecb2THWN6pjD/cIiDk3D0lQCV42RQ0eSTvagUAda3lh61L7CCY30GSU3aDqmxiJQj4EPJV0WpoCdvvdPT3HEqoVZO3GcsgewpBdaTbjinvJnhtV121s+mcQf20pePoueALSm9GscBGvZ+881A+3UYoHssZ+I=
+	t=1746189428; cv=none; b=FbBNadpOz1WUZg7rzlFocrp4Rwu/5itXJ5Pp5eGXE7ofNV9t41qJR7Vy2KVwOG/RjgY93mUlWl0baNs4B8sgTjyjnbln6CuqT2ZBOE8TUYSpkpovP+bjeGiH8OdusHQ6Eo+Gd9ZzzOWJ330ehoCldRUbm4Xj2nGBlqCJmrFLuF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175957; c=relaxed/simple;
-	bh=SxBjkp/J5NNckAueMrQukPtaJ3IgnM76Ll+NdIUNXIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nfSRfmC+stH6QESYjsTOt9lSx0tYRU2wUa7Dw4EvtuigoHYt96TzL5Rz4xapizo/oNFprUNWsU9vzoqaNIs7e/mhk/Zgm9Qib+bouqLmRjXMG9/eKrBA7XWEgQUmNywaMJpkUT1cZlvqEd1mSpiHc9Rez3g2lmChG0jKUr4ESys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ1UtPGa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746189428; c=relaxed/simple;
+	bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Bu9uZ1cl9kQvFmQQM7MrwpQ8bXnSysqDP1awFBSq2ZFS+krc9lP8emH2ZUtt6EeJzlUmoNBAKDmcIWiHy4/+gbU+GRPDfF+itLCoXuIPgb10kRGavBWF6tqM2aokna7ge4KiC9KB5Ilz2l5CUiqcY99ETVqpepj+8JVd6q0xKes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6jeTHPK; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ1UtPGa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD4BC4CEE4;
-	Fri,  2 May 2025 08:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746175956;
-	bh=SxBjkp/J5NNckAueMrQukPtaJ3IgnM76Ll+NdIUNXIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CJ1UtPGazPk6ZEG0HwcxHRuFOiH/JR3XBtmKJLiHP/jshRcy9Arm4mvyGtimOvgTy
-	 OmBKdXEFyjZ8BZMwd8D5Yrhyf1bz+OVbfKouNV2DcQM8RRSV+d8/qkqc9y00t15W+1
-	 79vLoiUJcrIIg1H9/yghIFiGnP5DFIedHMd4MJHdsNaPcS8RGk10pBZFuSDnIKldZI
-	 i66CAPb8L+3qEo576w8fnUHJl5uZTEiJZdpOmBXZziTwORlH5NpUwvvKUbp9Waeu+E
-	 Y/YctucrsKzRC6TBuMOLWKYkj+excCXHWTN55BMKpApl0iGcZF2wL5SK+lxFB1I13T
-	 UP3Jz5dY9bM3g==
-Date: Fri, 2 May 2025 10:52:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
-Message-ID: <aBSHyo-pu7K_CfpI@gmail.com>
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-3-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6jeTHPK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746189427; x=1777725427;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
+  b=f6jeTHPK0LWnujIO9ISmaL7LGXOaICj0G5wObnI2+9ZOJhPZ/50X4F3A
+   xC+10j5SpBJgl2kE1lSejg2rDvNQjkFHbrIQl++NlSqLb3thgyNqMNlWI
+   /W13ydP5tfkaUAtHuyPucz7nSiGxvtx+Mjz3qYicod5bkEwrfr4SkfbaD
+   4FgJVQ4lsjRWS7jxj+0MhsutneO3tUFqGMuL9fyZKXxT2EPZG6DTn+RcA
+   wZMO9BmDGbdteykhJx8/25wbbdLl2MLFXjWxIQWKd/trTN/rLn6z4qWF3
+   STJaozE8tI9Z3FdUVFfJpj/yzo4tN53aAsgk6LTXKefAswWTtgsnwWX3x
+   Q==;
+X-CSE-ConnectionGUID: znjMJG8PSuSw+13tgxOC/g==
+X-CSE-MsgGUID: tIZh7qIQQ0apiqJPZk5CmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58078335"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58078335"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:05 -0700
+X-CSE-ConnectionGUID: vGEnkxCiQ76ZBLd4Ck/A8Q==
+X-CSE-MsgGUID: GWlg6MNVT0etXQpnNGIIDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134528571"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.135])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 May 2025 15:36:58 +0300 (EEST)
+To: Randy Dunlap <rdunlap@infradead.org>
+cc: LKML <linux-kernel@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/mellanox: MLXREG_DPU depends on I2C
+In-Reply-To: <20250502001622.674263-1-rdunlap@infradead.org>
+Message-ID: <150c0b1b-8845-db78-39d3-388d3ca79613@linux.intel.com>
+References: <20250502001622.674263-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427092027.1598740-3-xin@zytor.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1411073070-1746189394=:958"
+Content-ID: <20731f71-4262-d7d5-77e4-e0926c256de4@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-* Xin Li (Intel) <xin@zytor.com> wrote:
+--8323328-1411073070-1746189394=:958
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <5e401ceb-7dc3-8190-71ca-be626e46298f@linux.intel.com>
 
-> For some reason, there are some TSC-related functions in the MSR
-> header even though there is a tsc.h header.
-> 
-> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
-> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
-> 
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Thu, 1 May 2025, Randy Dunlap wrote:
 
-> --- a/arch/x86/include/asm/tsc.h
-> +++ b/arch/x86/include/asm/tsc.h
-> @@ -7,7 +7,81 @@
->  
->  #include <asm/cpufeature.h>
->  #include <asm/processor.h>
-> -#include <asm/msr.h>
+> WARNING: unmet direct dependencies detected for REGMAP_I2C
+>   Depends on [m]: I2C [=3Dm]
+>   Selected by [y]:
+>   - MLXREG_DPU [=3Dy] && MELLANOX_PLATFORM [=3Dy]
+>=20
+> Without the dependency, REGMAP_I2C=3Dy since MLXREG_DPU=3Dy.
+> Since CONFIG_I2C=3Dm, this causes many (> 230) unmet dependency warnings.
+> E.g.:
+>   Selected by [m]:
+>   - EEPROM_AT24 [=3Dm] && I2C [=3Dm] && SYSFS [=3Dy]
+>   - SERIAL_MAX310X [=3Dm] && TTY [=3Dy] && HAS_IOMEM [=3Dy] && SPI_MASTER=
+ [=3Dy] && I2C [=3Dm]
+>   - PINCTRL_AW9523 [=3Dm] && PINCTRL [=3Dy] && OF [=3Dy] && I2C [=3Dm]
+>   - PINCTRL_CY8C95X0 [=3Dm] && PINCTRL [=3Dy] && I2C [=3Dm]
+>   - GPIO_FXL6408 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - GPIO_DS4520 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - GPIO_PCA953X [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - IP5XXX_POWER [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>   - BATTERY_CW2015 [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>   - CHARGER_SBS [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>=20
+> Fixes: 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial support =
+for Nvidia DPU")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Vadim Pasternak <vadimp@nvidia.com>
+> Cc: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> ---
+>  drivers/platform/mellanox/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> --- linux-next-20250501.orig/drivers/platform/mellanox/Kconfig
+> +++ linux-next-20250501/drivers/platform/mellanox/Kconfig
+> @@ -29,6 +29,7 @@ config MLX_PLATFORM
+> =20
+>  config MLXREG_DPU
+>  =09tristate "Nvidia Data Processor Unit platform driver support"
+> +=09depends on I2C
+>  =09select REGMAP_I2C
+>  =09help
+>  =09  This driver provides support for the Nvidia BF3 Data Processor Unit=
+s,
+>=20
 
-Note that in the tip:x86/msr commit I've applied today I've 
-intentionally delayed the removal of this header dependency, to reduce 
-the probability of breaking -next today or in the near future.
+Thanks for the patch but the review-ilpo-next branch already has this=20
+fixed, just waiting for lkp to build test it until it propagates into=20
+for-next.
 
-We can remove that now superfluous header dependency in a future patch.
-
-Thanks,
-
-	Ingo
+--=20
+ i.
+--8323328-1411073070-1746189394=:958--
