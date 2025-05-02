@@ -1,66 +1,56 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCF41B87C9
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 May 2025 08:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D3426772A;
+	Fri,  2 May 2025 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746172881; cv=none; b=A/z+cExkxT5SMN8KvLiWBJKR8jJWtWqyIfIW3EH9n2CyniC/X6TrTk6hXkRUpt6/Thp4RpZhgdtausB9O4Yc9wth0YlmYsRfWlYinJfoHq/NAW+4vL4Y3MQ/wuqyO/KMrzFA5tNwZiF3+jChHY0jqIiYh/v30Yrb864cg7swnhw=
+	t=1746172957; cv=none; b=SsNGsBRXJZfNjBj2nlca3vZEuGbvN3I7SRrrLrzOeaE3tp8BZn43mf1SWIYNiu04HBLXibI4LRyX2YHVuLX70JMLW1Idv8qEOVu4OzWnPJQgHvdR6Kolvxin3w+DWKsBLBjGGMEe99ljp3HGaBSmm5f8l3HwQGKv1nkdRYM889U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746172881; c=relaxed/simple;
-	bh=WfExcOfg9M/vaOyXBzwlC/uhU2SVXhHxfVkiPUQFRgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RWpDxXknrwp1Qog0aeMTkFZZsvWyzRoBh6O9Uh5lu7tjjzTbPXSIwWlQjn+wsIQomb6k/+vMeeWmhS9HFKzgmwoIq8cQWarWNtM6D439bTezPWTBFQxJ4oQvjK5hGDUMsNL1HaoC7pjF6xySOtUz0UdF7RqrQVF2gwjIUUNbNW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XKzY4mPD; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746172957; c=relaxed/simple;
+	bh=VrP6FYMiM8APrbbiFFr3vwipUq0BMzeGXIdgg8yPKw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCHlu1zSYY41ig/48LvnpO9otB1H8qnK5lJAz2V6++HLw/UNq3c6aR9r71UgJfjDGbsy+AtpDOc80YBA+a7cdxtk3Xv3w2GG7KlqKU8a5xw35u3t9UPtw39myLGqHMyXhxviHVio+U1AdfuDH/o+ZZtfR1jfVUXrKkoKQxEE3Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o40ruDpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XKzY4mPD"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso6826805e9.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 May 2025 01:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746172878; x=1746777678; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CFceC/GPf+ZTGzTTnC7qUDjawZyy/N170c6R52bA7y0=;
-        b=XKzY4mPDn2CGtVkie6ZQezdxdfZzIZ0MG0vT8HA4mKKFsW5JVnu2yOFSU4qew4g4ji
-         ml8qOwAHgPrrrndpE3R4zvQ9GP5TFv6Su0K8HLCaX6cxc7SBNIJpVumuIPo/mTR3/WeO
-         4P3hGac5YSKtVlOdzh3DNA2upkB+Iy77r+ZKaRrjB830bUYK4d5JW7XIkreg3C9kOm1T
-         3qti6fqGOvqUcUZayteS0A6JOlZW36bEE7cwpo7XmYN1xMveRGWR5rQqZANKgqHhX8nU
-         6v8I0QME1NZMBvMPSQuXQJ9qpU4USHkvXXxX+oQqQYOPuhd0Ns/KqNC0aOegLpUG+lXy
-         VYCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746172878; x=1746777678;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CFceC/GPf+ZTGzTTnC7qUDjawZyy/N170c6R52bA7y0=;
-        b=HMQ3ffFF1y0bc4HXy1XrsKvFFMzYn5IWVmx+rayukuJ8lQYdhpn+ag+rDUUA5sGWuy
-         VvE7Qn4WjLpYjiGg//KozdyvXR61QinmY6NdE5M2VmY8eNEXl6RlY9U6cnAof0sBCOXd
-         1YsWL5oQSDBfIUhZC7qTKFYxsRDT/nxDaYGioqYk2mc1xF7hgKGOWE92WgRmom0QN+VN
-         l6Z6rvxYHLIXt+fEE7oxpLUJP4to+mUHADYf+k22BVmxpvIAwfsIZH+d5guiTNcRWRIh
-         tsC/atqcT/vjghLcLo7QohO3Cr9YPwdEngRm6mdtHtd/vaBdiBdqScRCF841L+3qd4Rw
-         VFZw==
-X-Gm-Message-State: AOJu0YxXWcRzaFblY6IvbYO9XNdHPffGHgynmBkP7uJbzbQr7L4l//1O
-	7XIJ1sVjUh3ncROZu//DUylm8PWJ8pRKQ35u1pPh1RqMkGVGFOUouNLyRsj2NGE=
-X-Gm-Gg: ASbGncvSr2bZdes7UJ0z/ksffqdKLqIb/OeCM10Y3bJ/2eo5ZKpqQqUyNx5grDxorVr
-	cqFGbsbIrqeBhbaM8rDxeyPynFu0w0Yd1OWpyp70dRl1NVXmiWReMVg3C8r9ijgbQoQ+zRwV3gW
-	EBLIAHinl3P8A+rmcxHKHMY5rh4ek5uXskfhhDGK8icpoIg8sru4rVigfu4Gkg2MdEdPLxas1hq
-	ZZqgSpVGEd/RQIze6IA77F/IN25pu+2s2YWu6h4bDu86MzhAG8TobrqQtTG17xJua0ZFacr5lyg
-	tdKVtI1B7rdU/nNPyOM1g1xaQwiEwfY9OxVQyzDIFWC4YQ==
-X-Google-Smtp-Source: AGHT+IFWzQcdY+o1+M/YzvJbBLflZFaskEGjN0rwPm/sgHwIJc/CH17VT5uAmTKSBUWOmmBRpIMDdQ==
-X-Received: by 2002:a05:6000:4212:b0:39c:1258:2dc7 with SMTP id ffacd0b85a97d-3a099af253bmr1129659f8f.56.1746172877815;
-        Fri, 02 May 2025 01:01:17 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae0cd6sm1406890f8f.5.2025.05.02.01.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 01:01:17 -0700 (PDT)
-Date: Fri, 2 May 2025 11:01:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Vadim Pasternak <vadimp@nvidia.com>
-Cc: platform-driver-x86@vger.kernel.org
-Subject: [bug report] platform/mellanox: mlxreg-dpu: Add initial support for
- Nvidia DPU
-Message-ID: <aBR7yX-KeZW6L3lX@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o40ruDpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE92BC4CEE4;
+	Fri,  2 May 2025 08:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746172956;
+	bh=VrP6FYMiM8APrbbiFFr3vwipUq0BMzeGXIdgg8yPKw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o40ruDpdxuzYi5SlPXBVO3KE83CyehxDNrNO/541PgVjFTDFgkp9ttfsSywwoC2Xi
+	 deyF+fk2wjQxxc5XQRBVm8Bmt2O6KE/EWUyWPBtkP4DjmRVUsgvwR4qUU7TcNGYno2
+	 LrsDSCZuBZAWl/LYiTehIFOfFP/Ile60POceUApHmDdzreBk3ZrpTs99IMSeErgzEI
+	 qcVRENdvjn60dt64quynSDl7VztBTPTl/yjYLXHI6ByaM4mPy/wh1yniu8zkGauz6l
+	 KWZFS4mxzAp7qh9gzlauN/px1lSmL30l6NU2jcy73WKeezA7wFlGHek2h34pt4xuBA
+	 QpbqWIpAjreaA==
+Date: Fri, 2 May 2025 10:02:26 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+Message-ID: <aBR8EoYkxaFHwZN2@gmail.com>
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,101 +59,56 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250427092027.1598740-3-xin@zytor.com>
 
-Hello Vadim Pasternak,
 
-Commit 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial
-support for Nvidia DPU") from Apr 21, 2025 (linux-next), leads to the
-following Smatch static checker warning:
+* Xin Li (Intel) <xin@zytor.com> wrote:
 
-    drivers/platform/mellanox/mlxreg-dpu.c:539 mlxreg_dpu_probe()
-    warn: refcount leak 'data->hpdev.adapter->dev.kobj.kref.refcount.refs.counter': lines='539'
+> index 94408a784c8e..13335a130edf 100644
+> --- a/arch/x86/include/asm/tsc.h
+> +++ b/arch/x86/include/asm/tsc.h
+> @@ -7,7 +7,81 @@
+>  
+>  #include <asm/cpufeature.h>
+>  #include <asm/processor.h>
+> -#include <asm/msr.h>
+> +
+> +/*
+> + * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+> + * constraint has different meanings. For i386, "A" means exactly
+> + * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+> + * it means rax *or* rdx.
+> + */
+> +#ifdef CONFIG_X86_64
+> +/* Using 64-bit values saves one instruction clearing the high half of low */
+> +#define DECLARE_ARGS(val, low, high)	unsigned long low, high
+> +#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
+> +#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
+> +#else
+> +#define DECLARE_ARGS(val, low, high)	u64 val
+> +#define EAX_EDX_VAL(val, low, high)	(val)
+> +#define EAX_EDX_RET(val, low, high)	"=A" (val)
+> +#endif
 
-    drivers/platform/mellanox/mlxreg-dpu.c:565 mlxreg_dpu_probe()
-    warn: passing a valid pointer to 'PTR_ERR'
+Meh, this patch creates a duplicate copy of DECLARE_ARGS() et al in 
+<asm/tsc.h> now:
 
-drivers/platform/mellanox/mlxreg-dpu.c
-    522 static int mlxreg_dpu_probe(struct platform_device *pdev)
-    523 {
-    524         struct mlxreg_core_data *data;
-    525         struct mlxreg_dpu *mlxreg_dpu;
-    526         void *regmap;
-    527         int err;
-    528 
-    529         data = dev_get_platdata(&pdev->dev);
-    530         if (!data || !data->hpdev.brdinfo)
-    531                 return -EINVAL;
-    532 
-    533         data->hpdev.adapter = i2c_get_adapter(data->hpdev.nr);
-    534         if (!data->hpdev.adapter)
-    535                 return -EPROBE_DEFER;
+ arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+ arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) u64 val
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+ arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) u64 val
+ arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:#undef DECLARE_ARGS
 
-This should call i2c_put_adapter() before returning.
+Which was both an undeclared change, bloats the code, causes various 
+problems, and is totally unnecessary to boot.
 
-    536 
-    537         mlxreg_dpu = devm_kzalloc(&pdev->dev, sizeof(*mlxreg_dpu), GFP_KERNEL);
-    538         if (!mlxreg_dpu)
-    539                 return -ENOMEM;
-    540 
-    541         /* Create device at the top of DPU I2C tree. */
-    542         data->hpdev.client = i2c_new_client_device(data->hpdev.adapter,
-    543                                                    data->hpdev.brdinfo);
-    544         if (IS_ERR(data->hpdev.client)) {
-    545                 dev_err(&pdev->dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
-    546                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
-    547                 err = PTR_ERR(data->hpdev.client);
-    548                 goto i2c_new_device_fail;
-    549         }
-    550 
-    551         regmap = devm_regmap_init_i2c(data->hpdev.client, &mlxreg_dpu_regmap_conf);
-    552         if (IS_ERR(regmap)) {
-    553                 dev_err(&pdev->dev, "Failed to create regmap for client %s at bus %d at addr 0x%02x\n",
-    554                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
-    555                 err = PTR_ERR(regmap);
-    556                 goto devm_regmap_init_i2c_fail;
-    557         }
-    558 
-    559         /* Sync registers with hardware. */
-    560         regcache_mark_dirty(regmap);
-    561         err = regcache_sync(regmap);
-    562         if (err) {
-    563                 dev_err(&pdev->dev, "Failed to sync regmap for client %s at bus %d at addr 0x%02x\n",
-    564                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
---> 565                 err = PTR_ERR(regmap);
+Please don't do that ...
 
-Copy and paste.  "err" was already an error code.  Delete this line.
+Thanks,
 
-    566                 goto regcache_sync_fail;
-    567         }
-    568 
-    569         mlxreg_dpu->data = data;
-    570         mlxreg_dpu->dev = &pdev->dev;
-    571         platform_set_drvdata(pdev, mlxreg_dpu);
-    572 
-    573         err = mlxreg_dpu_config_init(mlxreg_dpu, regmap, data, data->hpdev.brdinfo->irq);
-    574         if (err)
-    575                 goto mlxreg_dpu_config_init_fail;
-    576 
-    577         return err;
-    578 
-    579 mlxreg_dpu_config_init_fail:
-    580 regcache_sync_fail:
-    581 devm_regmap_init_i2c_fail:
-
-I would really encourage people to use names which reflect what
-the fuction or goto does instead of where the function is called from
-etc.
-
-err_unregister:
-
-    582         i2c_unregister_device(data->hpdev.client);
-    583 i2c_new_device_fail:
-
-err_i2c_put:
-
-    584         i2c_put_adapter(data->hpdev.adapter);
-    585         return err;
-    586 }
-
-regards,
-dan carpenter
+	Ingo
