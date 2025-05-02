@@ -1,57 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDEB19D891;
-	Fri,  2 May 2025 08:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399728828
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 May 2025 08:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174623; cv=none; b=KZBlj1XRBYAKyhRy/UsblUD+hbUp/l27NPZEvgK8I0in3verkqk9BRxL0PsNtWGMx+P7R7gAUSvMwSzL9qvxH/NE3zyKGe136hlgeTE0MbRK5o1yz0AU62eAdPiHF+if8qjxsJXyDJifkuZqc2EJy/qgy79c+rPfAzIbUD7R9jI=
+	t=1746175223; cv=none; b=GcQcIAWwZ7alD5Ty/MyrZU/SK2xofTp1mZjOY0VkicMAu6HjMJ/NkBlNzh3m3rNFmYXmLsamYhGGU5f5YP/BiHa1eo9OoyuEaa4whpNSeRhWbYvwqKbYb9VZe/iKbGmOrjKRfwF8JShhTEdAmoGLXDEYTlisxROXrxmKkK/ikH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174623; c=relaxed/simple;
-	bh=XJ/fOLSZPcDhzbn7SBomjY3ra1ercNwGTwdTApCpr4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brY3400eAxSuk/zowbNfnpHI3c9CVRv2qjSxRPEMq4fTPbLU6RsYvl+a5++wwLNj+WdQvAl4VxiKFs1pF8meCC1zsjD49yNmZdXtCjaNlxyiLCDmajVAE4wk35YjzCpRIZ9qNlzUCO9AOw1ziIDqX7aEfzUjlp6h7kmETpo2UJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsCcumy8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746175223; c=relaxed/simple;
+	bh=4GwIMV2g6kYQJfYrG026JnY99HzIdumMHujNiN5PFkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SyeZLDmuw14f244jW1JbD3hwrrBPSqN8fYPyj97h+6yJE+GN1xrPEfbfpM4xBVt3iNyV0gq5FPFRvr2UX/MdGiYehBMxIsZDSWUmVCCy5d3hj25V/g0YXcVbUOHV48D+ov+xxqTQfBvjoSnQRjq1E3TPccaro+5ko1+y9vpBjAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e59c++Xo; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsCcumy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BD6C4CEEE;
-	Fri,  2 May 2025 08:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746174621;
-	bh=XJ/fOLSZPcDhzbn7SBomjY3ra1ercNwGTwdTApCpr4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CsCcumy8yvL+I8c/Q+4FCgid3SiZumzGsXHXwXMdYu5Pb//5a+dPYvjCYyRD0S7xR
-	 8OsobySDrVsqsSztegV67tmw+EzZy4UOm+uiwwLSOqz/aq7BngmEF9jCSpd5akyoGf
-	 jMaLyfr2RqTyi2jyDa2H7KelSZY5d/1QPDkg1pXrmQa9gQSSLPwb/gIIrSfO435Of0
-	 0gqTeWxKfMi1jh6+Z8xUkVFzHKvRcUa/gyVx5VK12AAAxHeKAUA7qDytqmewnPFkw4
-	 90zUASti8CLXJfv7JW3XsRHfW5jf8FmECPis1Q3MnBN6EE6TFStJAALK1mkZJmFN08
-	 ftBTm+oNzkoJA==
-Date: Fri, 2 May 2025 10:30:11 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v4 10/15] x86/xen/msr: Remove calling
- native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
-Message-ID: <aBSCk5phiMYO_B6T@gmail.com>
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-11-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e59c++Xo"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1183689f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 May 2025 01:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746175219; x=1746780019; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dfPxHK34iqz0YjaqRlpXE1B0HpLY07y212OEUguH+Us=;
+        b=e59c++Xolau9uKv5LXFDx7H/lPOQPzpuTp6hpnqxJpjBP3r/6dkH7pML7nyqFlfn7l
+         Jk9/LaWBFyRpGjwX+0y252PGjgU0fHW9O+EAnDdsKcS+/ptq/AcWcAXVvAtbdsIJDb7Y
+         vVomeIxKb7xYf/rNXMt1cj7WsGh8vVB7QzHDCZ+ab6x10LRy3eE4MyAFi+5k84PIfmI0
+         ONasA/QKpHbEb98VZfvj2oGw0VVNU00wT6jhsF0ZuXm2QBT1NFCNA52O0JedBVmOzIjz
+         K0U9JrMW1BJxHD3SeCos7d84A6Rb2oW0ayxKd0j7Y5nZSDVcmFYB0qTbolcKsLYoFZvC
+         7sfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746175219; x=1746780019;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dfPxHK34iqz0YjaqRlpXE1B0HpLY07y212OEUguH+Us=;
+        b=gEr92htXI7+QB5++IrjuTC54rlwQR6mE0gV1anFRv52ZdPpkuggh9N2MstWPyp8oby
+         qOQ5JoLAbkbvqvrFPj//jj5v6gLh+tHD0QTcZunk3pJmzDSLImSdPgJeILMOc5dyarTW
+         vy8u6JvARikJ6MNIh5TDNWZObZvDs3rjQaUcgYmqkorsdWHsByZKHt1j8e9iUh25N1wK
+         Fk4BWW2xwuufeJgzM4a6RNXVJ7PMtaZW1vI4w3Xea5j32vHhwhsFCZ9Or5UYN2ZNoz2V
+         G19Q1jrIxhJ8FT3/djo0/h4paYwxYBcuNlo3TsyQT5VFnAnuuH9MFihyJlG4m3vcbb5n
+         Twvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXd1urSy8GyBr1lf5NQuxmKoWaRBwmZHhDZvBq/rCklHkeHNwl7xB0mNlLOXWomOQ9alSGXGtnKJ3FFSc6NxOft6lcD@vger.kernel.org
+X-Gm-Message-State: AOJu0YylfM+bdWLVMyhXPfaadB6kAMfe7c5l2j4xOx9bW/KunPq0ssQB
+	5SvZFcAog7UKxEbSKaeCaZu78kiuuq/5ABt2LwUeW3wyJKPo9hYZxts75S7okRk=
+X-Gm-Gg: ASbGncvr7hOBMTVIRPcc6vmLb9ODAO2S0IsD1+H063HcRy2k2wFPEwJZoBYvIpx/9I0
+	gchjGC9irsL114HwVADClsXa7GRPGqa4ECuEF1vL+kTVK+Zz5kMIB0jrcgAtyJAJbl9ERW/EFAT
+	xfXqkb1EqtIcF+xz2xkvTCySpQsHUIunI/BBeO5Yu/aL7icHp9GXG2wC4367LefViWKPCJI7Na0
+	UWKp+5xrgOZUIcGBOj6v9VfcHzts6ZiTc3dIDOLANiwhlMXuyiqzIePPPkG+PzaW5aqnUn512P+
+	ob5ifgOCgzOI5vKMizFXyM9nQGWB4+epVeZAMWKWdoK5+w==
+X-Google-Smtp-Source: AGHT+IHreIZwzg9TVSTEmBpk2mrA1QNuEKFUEw+ZtdCxQ4dopKGMwZ9mLqKa2D9lb6EAzaR8gqchzg==
+X-Received: by 2002:a05:6000:1446:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-3a099ad46a2mr1385443f8f.9.1746175219587;
+        Fri, 02 May 2025 01:40:19 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099b0f118sm1482225f8f.78.2025.05.02.01.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:40:18 -0700 (PDT)
+Date: Fri, 2 May 2025 11:40:15 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>,
+	=?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
+ oxp_psy_ext_set_prop()
+Message-ID: <aBSE71VKfBlQg_fZ@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,36 +76,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427092027.1598740-11-xin@zytor.com>
+X-Mailer: git-send-email haha only kidding
 
+The "val->intval" variable is an integer which comes from the user.  This
+code has an upper bounds check but the lower bounds check was
+accidentally omitted.  The write_to_ec() take a u8 value as a parameter
+so negative values would be truncated to positive values in the 0-255
+range.
 
-* Xin Li (Intel) <xin@zytor.com> wrote:
+Return -EINVAL if the user passes a negative value.
 
-> hpa found that pmu_msr_write() is actually a completely pointless
-> function [1]: all it does is shuffle some arguments, then calls
-> pmu_msr_chk_emulated() and if it returns true AND the emulated flag
-> is clear then does *exactly the same thing* that the calling code
-> would have done if pmu_msr_write() itself had returned true.  And
-> pmu_msr_read() does the equivalent stupidity.
-> 
-> Remove the calls to native_{read,write}_msr{,_safe}() within
-> pmu_msr_{read,write}().  Instead reuse the existing calling code
-> that decides whether to call native_{read,write}_msr{,_safe}() based
-> on the return value from pmu_msr_{read,write}().  Consequently,
-> eliminate the need to pass an error pointer to pmu_msr_{read,write}().
-> 
-> While at it, refactor pmu_msr_write() to take the MSR value as a u64
-> argument, replacing the current dual u32 arguments, because the dual
-> u32 arguments were only used to call native_write_msr{,_safe}(), which
-> has now been removed.
-> 
-> [1]: https://lore.kernel.org/lkml/0ec48b84-d158-47c6-b14c-3563fd14bcc4@zytor.com/
-> 
-> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Sign-off-by: Xin Li (Intel) <xin@zytor.com>
+Fixes: 202593d1e86b ("platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/platform/x86/oxpec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-'Sign-off-by' is not a proper SOB tag, I've changed it to Signed-off-by.
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 4b48f4571b09..de70ca7e8493 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -582,7 +582,7 @@ static int oxp_psy_ext_set_prop(struct power_supply *psy,
+ 
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
+-		if (val->intval > 100)
++		if (val->intval < 0 || val->intval > 100)
+ 			return -EINVAL;
+ 		return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
+ 	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+-- 
+2.47.2
 
-Thanks,
-
-	Ingo
