@@ -1,339 +1,169 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51C5253324;
-	Fri,  2 May 2025 07:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCF41B87C9
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 May 2025 08:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171413; cv=none; b=BqIkP5s85BZTo4L+z83QDJcEV2sN7aNyYbCJF45JPFKtk/tVaoA1cmnq08Pr0tMpKriHpRX0ajVzJbpPBKuxevtl5jaDC7ezhZKDQgD6HU/eIoKvounO5elxMRwJiFqrY4u/KxMCT0yWGN8JAc27cfFsuWCkOfgrw0wP6Mrex6Y=
+	t=1746172881; cv=none; b=A/z+cExkxT5SMN8KvLiWBJKR8jJWtWqyIfIW3EH9n2CyniC/X6TrTk6hXkRUpt6/Thp4RpZhgdtausB9O4Yc9wth0YlmYsRfWlYinJfoHq/NAW+4vL4Y3MQ/wuqyO/KMrzFA5tNwZiF3+jChHY0jqIiYh/v30Yrb864cg7swnhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171413; c=relaxed/simple;
-	bh=roFlnpVaOkJRnUKk2TAT4NVwJTBwEKsaK9SclVDAaME=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=PNhxyi+K4jLfIr9gUoI+QMhcAF8QyH3R6kIWGVHdXeLQbKNxHV4l7RK6693CHHUz2CCrUz4TjrwcbJtoBjHOAhNce5xpGv/G3W2UlkgjnTWvdqJnnFMHoMB6+BBgrgxnZ5irwLKvBxyGxiIJFRFWD9wntgDa+FTbfbxWhhF3j/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O2KLyeLK; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746172881; c=relaxed/simple;
+	bh=WfExcOfg9M/vaOyXBzwlC/uhU2SVXhHxfVkiPUQFRgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RWpDxXknrwp1Qog0aeMTkFZZsvWyzRoBh6O9Uh5lu7tjjzTbPXSIwWlQjn+wsIQomb6k/+vMeeWmhS9HFKzgmwoIq8cQWarWNtM6D439bTezPWTBFQxJ4oQvjK5hGDUMsNL1HaoC7pjF6xySOtUz0UdF7RqrQVF2gwjIUUNbNW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XKzY4mPD; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2KLyeLK"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224191d92e4so17825595ad.3;
-        Fri, 02 May 2025 00:36:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XKzY4mPD"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso6826805e9.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 May 2025 01:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746171411; x=1746776211; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3fqjEGtmGoJf2sbtZ/i9zfGJzB3lbn9+UF5slCDp0fc=;
-        b=O2KLyeLKQ/bhl1MQEGDGJTveIw7IuhZRDHBRS/NqxgOh1OZsg4sQ6/3+/HvFgcMm4g
-         c16rJQt6aPovGL52R1KFiqyBhBz6o6Pc+F+IX9lPckHrr7LikNR2cZGvzz9gANodZAxz
-         +ngtm69bTg9FINcqGxQOfEuAKN2j25iTkt/kzaP3b0Zyn2upO8Fm5SIQkjIQUr3z20TQ
-         WCZWtT0FsGXrIW0TtlMvq3wwFepcRehIjn/HAmAk2K1A03ipzASCXeX/Ptysjg+Yj3Wj
-         DvAsfMIynVAi4+9jXXdzZXctjCqGqxCFXLiNQi0rMvI9nZZelIQ4R2y3CEJh6UmbH8f+
-         4UyA==
+        d=linaro.org; s=google; t=1746172878; x=1746777678; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CFceC/GPf+ZTGzTTnC7qUDjawZyy/N170c6R52bA7y0=;
+        b=XKzY4mPDn2CGtVkie6ZQezdxdfZzIZ0MG0vT8HA4mKKFsW5JVnu2yOFSU4qew4g4ji
+         ml8qOwAHgPrrrndpE3R4zvQ9GP5TFv6Su0K8HLCaX6cxc7SBNIJpVumuIPo/mTR3/WeO
+         4P3hGac5YSKtVlOdzh3DNA2upkB+Iy77r+ZKaRrjB830bUYK4d5JW7XIkreg3C9kOm1T
+         3qti6fqGOvqUcUZayteS0A6JOlZW36bEE7cwpo7XmYN1xMveRGWR5rQqZANKgqHhX8nU
+         6v8I0QME1NZMBvMPSQuXQJ9qpU4USHkvXXxX+oQqQYOPuhd0Ns/KqNC0aOegLpUG+lXy
+         VYCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171411; x=1746776211;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3fqjEGtmGoJf2sbtZ/i9zfGJzB3lbn9+UF5slCDp0fc=;
-        b=EV3bU6otg1qaYFK2LJkGb7ZGawQfQrUfkHQyHlC2Iw5+Tg0+HfuTVQlYkjng3VZeYO
-         fRMcRRivZ+Yq6uC/lHM8gevAZNZ4z+ymDW+VrTt61VKU4fgDyioWEgzUMEDxa+uaY/tg
-         k23qb4tcA0XgvSwlEZplQYHOxjNPPEqzf90t7m+DE48hCTddz7Mr3kPO0XpgCC4zCTK0
-         k/XzH64BdtdSLhP0EkLc/4q4bddvMtzBgxskjnr34hJs8uPYaY6VyJG5Eo3ivPoeDESR
-         86JcjzJrI9mquWFV5xVGgrDLnffu04YvdZDHGWOy6+g5CwA2FE1T0Q/74uttjf/vt7YU
-         VIeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG2oc0H4KNFyd3tw3de/ZyDKcppjR56wyPhxvGKkUvofy018Dkj2uMt7fBGj63h9xDaqhvSBcKXws2kw0=@vger.kernel.org, AJvYcCXG83OWv2x6/QGzIPU89HMeuRwrUUgzX6rkgy+FS4Pr897QGhBCKIORVN1g/F2ERn4Lqcm+dFPOhB4sMeF+n99ZXX5JvA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaAxjwC/6EGeh3ooB61b4JqmDkNSkxB4VcTEW+cz1JzYw+wmHX
-	lKcZt5Bile/kI9pTSuIKYXEMdDMyu4RqytjTZTTxqwdqAo5dqC1x
-X-Gm-Gg: ASbGncvGUJ/YuHUzenYxEd70tTg62orJCw/OmtI8VuwHLayRxPXyqql3lpH+NpbeDAC
-	puqCbiDcRlrzJQkITh6Ur9w2268+qpaG1JUFxk4eXlVpptV99mdAQoEnjc/G4n5OqHoQ1mY1DaE
-	EVtFbC7kup4XSryUZMr/R9wzmWvYowyG3Oj02Sb/TTciceijI1QlEgbs8Bsuxrrm49eJDcgYLOR
-	W+QTHRqRTCS657atEEnPryTSdItOTHl8GcfF0e8bVuhB0yL/0qAs6XJXX2wezgnVGeNcXA8UHYT
-	Uxqzi3YQeFynmiBPwdXnqyKPp/kAy3+RgQ==
-X-Google-Smtp-Source: AGHT+IG/4H+GqeLnM2l4L6jewkwUSurUhYTiaRifBzDge4EGNYHqSABVhAH8TjJ+b8YVWT8qHxEMkQ==
-X-Received: by 2002:a17:903:1aef:b0:224:2384:5b40 with SMTP id d9443c01a7336-22e10329baamr35199505ad.24.1746171410809;
-        Fri, 02 May 2025 00:36:50 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150eae99sm1241925ad.19.2025.05.02.00.36.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 00:36:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746172878; x=1746777678;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CFceC/GPf+ZTGzTTnC7qUDjawZyy/N170c6R52bA7y0=;
+        b=HMQ3ffFF1y0bc4HXy1XrsKvFFMzYn5IWVmx+rayukuJ8lQYdhpn+ag+rDUUA5sGWuy
+         VvE7Qn4WjLpYjiGg//KozdyvXR61QinmY6NdE5M2VmY8eNEXl6RlY9U6cnAof0sBCOXd
+         1YsWL5oQSDBfIUhZC7qTKFYxsRDT/nxDaYGioqYk2mc1xF7hgKGOWE92WgRmom0QN+VN
+         l6Z6rvxYHLIXt+fEE7oxpLUJP4to+mUHADYf+k22BVmxpvIAwfsIZH+d5guiTNcRWRIh
+         tsC/atqcT/vjghLcLo7QohO3Cr9YPwdEngRm6mdtHtd/vaBdiBdqScRCF841L+3qd4Rw
+         VFZw==
+X-Gm-Message-State: AOJu0YxXWcRzaFblY6IvbYO9XNdHPffGHgynmBkP7uJbzbQr7L4l//1O
+	7XIJ1sVjUh3ncROZu//DUylm8PWJ8pRKQ35u1pPh1RqMkGVGFOUouNLyRsj2NGE=
+X-Gm-Gg: ASbGncvSr2bZdes7UJ0z/ksffqdKLqIb/OeCM10Y3bJ/2eo5ZKpqQqUyNx5grDxorVr
+	cqFGbsbIrqeBhbaM8rDxeyPynFu0w0Yd1OWpyp70dRl1NVXmiWReMVg3C8r9ijgbQoQ+zRwV3gW
+	EBLIAHinl3P8A+rmcxHKHMY5rh4ek5uXskfhhDGK8icpoIg8sru4rVigfu4Gkg2MdEdPLxas1hq
+	ZZqgSpVGEd/RQIze6IA77F/IN25pu+2s2YWu6h4bDu86MzhAG8TobrqQtTG17xJua0ZFacr5lyg
+	tdKVtI1B7rdU/nNPyOM1g1xaQwiEwfY9OxVQyzDIFWC4YQ==
+X-Google-Smtp-Source: AGHT+IFWzQcdY+o1+M/YzvJbBLflZFaskEGjN0rwPm/sgHwIJc/CH17VT5uAmTKSBUWOmmBRpIMDdQ==
+X-Received: by 2002:a05:6000:4212:b0:39c:1258:2dc7 with SMTP id ffacd0b85a97d-3a099af253bmr1129659f8f.56.1746172877815;
+        Fri, 02 May 2025 01:01:17 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae0cd6sm1406890f8f.5.2025.05.02.01.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:01:17 -0700 (PDT)
+Date: Fri, 2 May 2025 11:01:13 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Vadim Pasternak <vadimp@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [bug report] platform/mellanox: mlxreg-dpu: Add initial support for
+ Nvidia DPU
+Message-ID: <aBR7yX-KeZW6L3lX@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 04:36:47 -0300
-Message-Id: <D9LI3QJTLK0T.2D8JGFI6XRJD4@gmail.com>
-Cc: "Gabriel Marcano" <gabemarcano@yahoo.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO
- debug methods
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250427-awcc-gpio-v2-0-c731373b5d02@gmail.com>
- <20250427-awcc-gpio-v2-1-c731373b5d02@gmail.com>
- <a9ca01aa-5be8-4cdf-a109-f7ccd766bcf8@gmx.de>
-In-Reply-To: <a9ca01aa-5be8-4cdf-a109-f7ccd766bcf8@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu May 1, 2025 at 10:37 PM -03, Armin Wolf wrote:
-> Am 27.04.25 um 08:24 schrieb Kurt Borja via B4 Relay:
->
->> From: Kurt Borja <kuurtb@gmail.com>
->>
->> Devices with the AWCC interface come with a USB RGB-lighting STM32 MCU,
->> which has two GPIO pins with debug capabilities:
->>
->>   - Device Firmware Update mode (DFU)
->>   - Negative Reset (NRST)
->>
->> The WMAX device has methods to toggle or read the state of these GPIO
->> pins. Expose these methods through DebugFS, hidden behind an unsafe
->> module parameter to avoid common users from toying with these without
->> consideration.
->>
->> Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>   Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
->>   drivers/platform/x86/dell/alienware-wmi-wmax.c  | 108 ++++++++++++++++=
-+++++++-
->>   2 files changed, 127 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documenta=
-tion/ABI/testing/debugfs-alienware-wmi
->> index 48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5..d20b8627ac5f1528396549a8=
-1481e26889bc410e 100644
->> --- a/Documentation/ABI/testing/debugfs-alienware-wmi
->> +++ b/Documentation/ABI/testing/debugfs-alienware-wmi
->> @@ -42,3 +42,23 @@ Description:
->>   		details.
->>  =20
->>   		RO
->> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/total=
-_gpios
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		Total number of GPIO pins reported by the device.
->> +
->> +		RO
->> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/<pin_=
-name>_pin
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		This file controls <pin_name> status.
->> +
->> +		See Documentation/wmi/devices/alienware-wmi.rst for details.
->> +
->> +		RW
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
->> index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..8e682427580a629f48530d7c=
-926db4587352c04c 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> @@ -38,6 +38,9 @@
->>   #define AWCC_METHOD_GET_FAN_SENSORS		0x13
->>   #define AWCC_METHOD_THERMAL_INFORMATION		0x14
->>   #define AWCC_METHOD_THERMAL_CONTROL		0x15
->> +#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
->> +#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
->> +#define AWCC_METHOD_READ_GPIO_STATUS		0x22
->>   #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
->>  =20
->>   #define AWCC_FAILURE_CODE			0xFFFFFFFF
->> @@ -217,6 +220,11 @@ enum AWCC_TEMP_SENSOR_TYPES {
->>   	AWCC_TEMP_SENSOR_GPU			=3D 0x06,
->>   };
->>  =20
->> +enum AWCC_GPIO_PINS {
->> +	AWCC_GPIO_PIN_DFU			=3D 0x00,
->> +	AWCC_GPIO_PIN_NRST			=3D 0x01,
->> +};
->> +
->>   enum awcc_thermal_profile {
->>   	AWCC_PROFILE_USTT_BALANCED,
->>   	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
->> @@ -571,6 +579,38 @@ static int awcc_thermal_information(struct wmi_devi=
-ce *wdev, u8 operation, u8 ar
->>   	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args,=
- out);
->>   }
->>  =20
->> +static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 s=
-tatus)
->> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D status,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +	u32 out;
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &o=
-ut);
->> +}
->> +
->> +static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
->> +{
->> +	struct wmax_u32_args args =3D {};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, cou=
-nt);
->> +}
->> +
->> +static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *=
-status)
->> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D 0,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, sta=
-tus);
->> +}
->> +
->>   static int awcc_game_shift_status(struct wmi_device *wdev, u8 operatio=
-n,
->>   				  u32 *out)
->>   {
->> @@ -1318,6 +1358,63 @@ static int awcc_debugfs_pprof_data_read(struct se=
-q_file *seq, void *data)
->>   	return 0;
->>   }
->>  =20
->> +static int awcc_debugfs_total_gpios_read(struct seq_file *seq, void *da=
-ta)
->> +{
->> +	struct device *dev =3D seq->private;
->> +	struct wmi_device *wdev =3D to_wmi_device(dev);
->> +	u32 count;
->> +	int ret;
->> +
->> +	ret =3D awcc_read_total_gpios(wdev, &count);
->> +	if (ret)
->> +		return ret;
->> +
->> +	seq_printf(seq, "%u\n", count);
->> +
->> +	return 0;
->> +}
->> +
->> +static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
->> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(seq->file);
->> +	struct wmi_device *wdev =3D seq->private;
->> +	u32 status;
->> +	int ret;
->> +
->> +	ret =3D awcc_read_gpio_status(wdev, pin, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	seq_printf(seq, "%u\n", status);
->> +
->> +	return 0;
->> +}
->> +
->> +static ssize_t awcc_gpio_pin_write(struct file *file, const char __user=
- *buf,
->> +				   size_t count, loff_t *ppos)
->> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(file);
->> +	struct seq_file *seq =3D file->private_data;
->> +	struct wmi_device *wdev =3D seq->private;
->> +	bool status;
->> +	int ret;
->> +
->> +	if (!ppos || *ppos)
->> +		return -EINVAL;
->> +
->> +	ret =3D kstrtobool_from_user(buf, count, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D awcc_fwup_gpio_control(wdev, pin, status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return count;
->> +}
->> +
->> +DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
->> +
->>   static void awcc_debugfs_remove(void *data)
->>   {
->>   	struct dentry *root =3D data;
->> @@ -1327,7 +1424,7 @@ static void awcc_debugfs_remove(void *data)
->>  =20
->>   static void awcc_debugfs_init(struct wmi_device *wdev)
->>   {
->> -	struct dentry *root;
->> +	struct dentry *root, *gpio_ctl;
->>   	char name[64];
->>  =20
->>   	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wde=
-v->dev));
->> @@ -1344,6 +1441,15 @@ static void awcc_debugfs_init(struct wmi_device *=
-wdev)
->>   		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
->>   					    awcc_debugfs_pprof_data_read);
->>  =20
->> +	gpio_ctl =3D debugfs_create_dir("gpio_ctl", root);
->> +
->> +	debugfs_create_devm_seqfile(&wdev->dev, "total_gpios", gpio_ctl,
->> +				    awcc_debugfs_total_gpios_read);
->> +	debugfs_create_file_aux_num("dfu_pin", 0644, gpio_ctl, wdev,
->> +				    AWCC_GPIO_PIN_DFU, &awcc_gpio_pin_fops);
->> +	debugfs_create_file_aux_num("nrst_pin", 0644, gpio_ctl, wdev,
->> +				    AWCC_GPIO_PIN_NRST, &awcc_gpio_pin_fops);
->
-> I just noticed: what happens if the total number of GPIOs is greater than=
-/lower than 2?
->
-> Maybe you could instead name the debugfs files pinX with X being the pin =
-number. Then you just
-> have to create the debugfs files inside a for loop.
->
-> What do you thing?
+Hello Vadim Pasternak,
 
-Hi Armin,
+Commit 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial
+support for Nvidia DPU") from Apr 21, 2025 (linux-next), leads to the
+following Smatch static checker warning:
 
-I was a bit reluctant when I first made the patch because I wanted to
-keep things simple.
+    drivers/platform/mellanox/mlxreg-dpu.c:539 mlxreg_dpu_probe()
+    warn: refcount leak 'data->hpdev.adapter->dev.kobj.kref.refcount.refs.counter': lines='539'
 
-I haven't seen any laptop with a GPIO count \neq 2, however some
-ACPI implementations of this method don't handle invalid values very
-well, so I'll take this approach just in case.
+    drivers/platform/mellanox/mlxreg-dpu.c:565 mlxreg_dpu_probe()
+    warn: passing a valid pointer to 'PTR_ERR'
 
-Thanks for your comments!
+drivers/platform/mellanox/mlxreg-dpu.c
+    522 static int mlxreg_dpu_probe(struct platform_device *pdev)
+    523 {
+    524         struct mlxreg_core_data *data;
+    525         struct mlxreg_dpu *mlxreg_dpu;
+    526         void *regmap;
+    527         int err;
+    528 
+    529         data = dev_get_platdata(&pdev->dev);
+    530         if (!data || !data->hpdev.brdinfo)
+    531                 return -EINVAL;
+    532 
+    533         data->hpdev.adapter = i2c_get_adapter(data->hpdev.nr);
+    534         if (!data->hpdev.adapter)
+    535                 return -EPROBE_DEFER;
 
---=20
- ~ Kurt
+This should call i2c_put_adapter() before returning.
 
->
-> Thanks,
-> Armin Wolf
->
->> +
->>   	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
->>   }
->>  =20
->>
+    536 
+    537         mlxreg_dpu = devm_kzalloc(&pdev->dev, sizeof(*mlxreg_dpu), GFP_KERNEL);
+    538         if (!mlxreg_dpu)
+    539                 return -ENOMEM;
+    540 
+    541         /* Create device at the top of DPU I2C tree. */
+    542         data->hpdev.client = i2c_new_client_device(data->hpdev.adapter,
+    543                                                    data->hpdev.brdinfo);
+    544         if (IS_ERR(data->hpdev.client)) {
+    545                 dev_err(&pdev->dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
+    546                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
+    547                 err = PTR_ERR(data->hpdev.client);
+    548                 goto i2c_new_device_fail;
+    549         }
+    550 
+    551         regmap = devm_regmap_init_i2c(data->hpdev.client, &mlxreg_dpu_regmap_conf);
+    552         if (IS_ERR(regmap)) {
+    553                 dev_err(&pdev->dev, "Failed to create regmap for client %s at bus %d at addr 0x%02x\n",
+    554                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
+    555                 err = PTR_ERR(regmap);
+    556                 goto devm_regmap_init_i2c_fail;
+    557         }
+    558 
+    559         /* Sync registers with hardware. */
+    560         regcache_mark_dirty(regmap);
+    561         err = regcache_sync(regmap);
+    562         if (err) {
+    563                 dev_err(&pdev->dev, "Failed to sync regmap for client %s at bus %d at addr 0x%02x\n",
+    564                         data->hpdev.brdinfo->type, data->hpdev.nr, data->hpdev.brdinfo->addr);
+--> 565                 err = PTR_ERR(regmap);
 
+Copy and paste.  "err" was already an error code.  Delete this line.
+
+    566                 goto regcache_sync_fail;
+    567         }
+    568 
+    569         mlxreg_dpu->data = data;
+    570         mlxreg_dpu->dev = &pdev->dev;
+    571         platform_set_drvdata(pdev, mlxreg_dpu);
+    572 
+    573         err = mlxreg_dpu_config_init(mlxreg_dpu, regmap, data, data->hpdev.brdinfo->irq);
+    574         if (err)
+    575                 goto mlxreg_dpu_config_init_fail;
+    576 
+    577         return err;
+    578 
+    579 mlxreg_dpu_config_init_fail:
+    580 regcache_sync_fail:
+    581 devm_regmap_init_i2c_fail:
+
+I would really encourage people to use names which reflect what
+the fuction or goto does instead of where the function is called from
+etc.
+
+err_unregister:
+
+    582         i2c_unregister_device(data->hpdev.client);
+    583 i2c_new_device_fail:
+
+err_i2c_put:
+
+    584         i2c_put_adapter(data->hpdev.adapter);
+    585         return err;
+    586 }
+
+regards,
+dan carpenter
