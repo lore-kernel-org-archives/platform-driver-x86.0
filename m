@@ -1,28 +1,28 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2042.outbound.protection.outlook.com [40.107.244.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811D970807
-	for <platform-driver-x86@vger.kernel.org>; Sun,  4 May 2025 16:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264051E1DF2
+	for <platform-driver-x86@vger.kernel.org>; Sun,  4 May 2025 16:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746377755; cv=fail; b=CRROYUrL6RgtCrshDN4B7Te6XNjg1CEy5Sb6jcD9rn4l9KSbGXy/JhVITb8dCK+etRiWYBf0dSnYOI30rjVn5KBTTDrOFOsKEZ0Ac0oyHUB57WRiepJd1dZ8o8iLmo8vBt588MmPPXglbx/1LJ0DV7t2/UsPBmGnT4H183AK3mg=
+	t=1746377759; cv=fail; b=fNYpgvvK9GJV7ngwJJVjH5Y2YBZ0gcNe0SYqes060hgtpEBzbK1Z0iTxagojVQZnV/WV9bSk8ZaHP4DVOdeXgzGYeAzDiW4qXiPcAb5Ga1dEwLrkjuO0HTJAHoPT+ju0rHwh/RMCHR/kQapuMp/tc6T4g7ww/mUsoXJIm/4Dvks=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746377755; c=relaxed/simple;
-	bh=l/04IqgRFJ849ahnIO98eqAebQ3tducPAoNhfvJRjD0=;
+	s=arc-20240116; t=1746377759; c=relaxed/simple;
+	bh=D3UQiTT45bbfcLwopEIJ58xnuuex/EGBb9dPOTFaTmk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lWdbcRL8soadCKZ+J2wlOAcZ4a3tKkSO8G3XlKgLPCvUOyDH6ZvIURuTkBzYd3bcRgt40dxKaz/jkYu7R1ohh9Kks6ClLkxWGRM2HZv+Ic9S2BltDXxa/enIQsgGvCuSQdmgwlw2GA+/+ol0mtP/vO7Oeh94jLgHmvL8zwh9AMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sVX6ZTjD; arc=fail smtp.client-ip=40.107.92.76
+	 MIME-Version:Content-Type; b=YiqlP/V/bVzXp114PbOoYtCciVn6ksVlyCkJYCV/C9R/Sdz1l1L4141KqwJElm4/DLAZdtZknRAkd1z5Je8Z9gra2BhaA779N3+YXfIlzmP/lUCC4/5SqnNeZXKN6LgTgIFZUnqk3CC2Bu1NxubTKBH9GIGLdrtpshZk0C6B8AU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=czBtg/3I; arc=fail smtp.client-ip=40.107.244.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sVX6ZTjD"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="czBtg/3I"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HFMynIIGTyRd2Lh+ImegAMe/KvGFxbEZ4IATvp9Rz2fKjxvE6VTvi4ZLGzoFQ3JFuzS74IjeBVvJgOjTScXOK/nnKFuSriey0X8G8o1NeoUldWGS3TcykH//6XZpiufVFZ8szUSE9SV3gHPloPSCrg/UhV9vOXhqJZC18eTzDDROv8C13U8cCEOdAEeA9Qzg2qgK6VSMZUr7tEeDzUrxvufdDlT/dijvuX/SXZyFvQSlRIzhK1vsoxbM9fLIrZVFezi6CKYoHvEMph3ybXDWRkEKWAO4K7sFrNgrlNX/yiu5TDaJWBVF+HanefvMlMfhbf3nZ/S0OrDDrUksy+E9cQ==
+ b=df9lqtpp2AHGb3fBhvK1K7ju6BjfRyqaaqSrd+9vlTIzd8IBy7MRdAQt7r6bHgcBq9DXuccT4IDMFhuyTX6MXLlDGM2JtN63oQQnMFfY4wAtElsQH4BkvuCDWvUhrJOqbjP889BX9dlSFsKnTFT4deDnsve0C304nM/WBYWTeGd61sMSdBnfR7TRkAv3Y+vglAKJOrAsh/ULRhn2/6/y0+cARKWCnvquIrzuVCtV9g2VIccz1jaDfmBp4SHungZ6/pkR/HZtZK6wukYY1WZiEFRd7VhskP94JMfqRLSyVcrrLf0k2isJ1o9nKJrsYZiJJT9aAdcS5D6eS9QQ0Hlj/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+3taaf5qFaXI9vzsxJ/+BgkpJDnmzTDtR7aw0NB4LyA=;
- b=YbYZC0mlHChhZGVQWrsNA7NQ5qHDYAgQCqHbpddg/+J9wq6qIsYF29Gyf9xFlMbOXTrwOuuExfEsbc/EWz0FBlJr2N5t/7uVqktxXdMOt9jnddwtRtHHcKq7Oyscnv37GWGRmtyKKcbMdhPZLrT+odokJeaeDASwtGkHgSfFQU0y49eHtenErbDWtOOGdInGTnMxzvfVD5YPhKmlEjCfuGxDOaCPekNepjbk1qpBEWVOGeNHZzDgPbUOjYCRA2ZcYsYWBMaI6umMT9T2CJL4TeUgl5wo1eS9c6tpnDE4P2hpg+ECqwykQjl7DffUd+3k0ePebKiJgihCkIuyePVlvw==
+ bh=U1a85hXetGYNtaQ4g/oh8qTfmr5Gq90vqLn7zFLebk0=;
+ b=IFFRJTlSK0CkwIl0G1O/wHyRWvTQGhekPLDEKUBuUcawzgtMByPIBYSyGuXUWoUT6sDGr9wmT5RuHYfOGsX8KPou1FEGSVqhVNMQ9g5zbZkUk8xQmgcArJu3Xw82DgbpLEWLraqcQj2jePAmVqadEqsbahk/vWQALSIpRT6X7S9aaLIZ3cjIBCRNYZiiVAzlKo4TtQFZD9Yn2MQhif+PKTMLdT1/7PNUZ9whP+/w0XVBm83NFOnPNFlxjRggTN8Iol1ONz9javLJNjvB+h3qZlDTl/BUHMIb+lrSRnHABgZVVsPv6jaFe9icbRH0M0wyUKnqQukFOK+uNbJpc0PMKQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+3taaf5qFaXI9vzsxJ/+BgkpJDnmzTDtR7aw0NB4LyA=;
- b=sVX6ZTjD2+8xY0XLK6iPvX8T1C9YRst/d2i9HqNRB+PQYosPN9iDXqIWWkDHrA0O5iyqJJ+05D4TinEd0NeEu8zXTx7oH1Nc437Deha80+XIQYOOWbZyPNJzO9lrLcCLA1LW2sYmsq6fq5zrLE1WozjVA1t+yZvKI9p2EZ2MN6N1kILv0GUnxV+vni1N1+u6Jk4aRYBNeBvLHBj4fb6Mf/hyY/65+xoFRUpGs9JbJtMtsCgrd+CGM70s+5KykQQr3vpbhuEshZo1FswB6eSJuM4h7rF/J6AAIpF1SKK+1JxiGmTibC7aXPz+vYyGZCmSR7ZtUxSuTgXLISjygalYXA==
-Received: from PH7P223CA0014.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::24)
- by SN7PR12MB8820.namprd12.prod.outlook.com (2603:10b6:806:341::5) with
+ bh=U1a85hXetGYNtaQ4g/oh8qTfmr5Gq90vqLn7zFLebk0=;
+ b=czBtg/3IGd9Oytb5TJ8oS5OzVnV608/JjTnyFwwE+A3lbEMm9kw+JGRhkyx84v8YlOCm6JTLjWlvtixVro6rjcsxjJ2Rhdz7uFl4w8U652rFoujO2RIGZFAzerLwGzlee9CA1abDxoSxDYIBPbnsr+Sa2mwWOQOskrVFZK2Md2jCo7fKDoUvya86CiJda3WZF/F7iLsbtnUVwIYUdtkQg+egawX7YRPLlanY/jsT3b5zqs2lDcBMq4HzdKlcWssWaooCqNaPWtgzPx+O0dlGKyf9McpsYR4ue4gE5RBJy2nrW2FmkjzNBVx0h+TEcLorcSMMJVMiVRa8mWlyt05/sw==
+Received: from DM6PR02CA0164.namprd02.prod.outlook.com (2603:10b6:5:332::31)
+ by SJ1PR12MB6338.namprd12.prod.outlook.com (2603:10b6:a03:455::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Sun, 4 May
- 2025 16:55:47 +0000
-Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
- (2603:10b6:510:338:cafe::a8) by PH7P223CA0014.outlook.office365.com
- (2603:10b6:510:338::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.26 via Frontend Transport; Sun,
- 4 May 2025 16:55:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Sun, 4 May
+ 2025 16:55:51 +0000
+Received: from CY4PEPF0000EE32.namprd05.prod.outlook.com
+ (2603:10b6:5:332:cafe::7c) by DM6PR02CA0164.outlook.office365.com
+ (2603:10b6:5:332::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.29 via Frontend Transport; Sun,
+ 4 May 2025 16:55:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,28 +49,28 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.118.233 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ CY4PEPF0000EE32.mail.protection.outlook.com (10.167.242.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Sun, 4 May 2025 16:55:47 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ 15.20.8722.18 via Frontend Transport; Sun, 4 May 2025 16:55:50 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
  (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 4 May 2025
- 09:55:35 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by drhqmail201.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ 09:55:38 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by drhqmail203.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 4 May
- 2025 09:55:34 -0700
+ 2025 09:55:38 -0700
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Sun, 4 May 2025 09:55:32 -0700
+ 15.2.1544.14; Sun, 4 May 2025 09:55:35 -0700
 From: Vadim Pasternak <vadimp@nvidia.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <michaelsh@nvidia.com>, <alok.a.tiwari@oracle.com>,
 	<platform-driver-x86@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next v11 1/2] platform: mellanox: nvsw-sn2200: Add support for new system flavour
-Date: Sun, 4 May 2025 19:55:06 +0300
-Message-ID: <20250504165507.9003-2-vadimp@nvidia.com>
+Subject: [PATCH platform-next v11 2/2] Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+Date: Sun, 4 May 2025 19:55:07 +0300
+Message-ID: <20250504165507.9003-3-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20250504165507.9003-1-vadimp@nvidia.com>
 References: <20250504165507.9003-1-vadimp@nvidia.com>
@@ -86,271 +86,194 @@ X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|SN7PR12MB8820:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07058607-401e-4ad5-3434-08dd8b2c844f
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE32:EE_|SJ1PR12MB6338:EE_
+X-MS-Office365-Filtering-Correlation-Id: 843ad303-c643-41ef-067f-08dd8b2c86a1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ekm5DC9aUTxItDETp30pJ01cjVabmTAqiovotfuFBNcUVK3d15d/KP+4EOxo?=
- =?us-ascii?Q?X8t3yu70Gu4zwwbG9HarHOCD3al+Ds0PnQkmSVfeRFWM0fV2cbJVRob8r2LA?=
- =?us-ascii?Q?+VsSauA3JQueDB1E40208pNbSv8lQfsX0DjeSRL5GuX8xDPfASgyNWfsVk7i?=
- =?us-ascii?Q?UksQkMPhhnoVch5IV8zCa6PzsmXVt5WmxzXroFJ++qmx3DzMqb5tl6lKehqb?=
- =?us-ascii?Q?SIdxTg2U6ojOnvu0nP5xefpJ5HOqzPtv8nPbA/t74DiKeu6cSI8xyT2PrLa0?=
- =?us-ascii?Q?CQzh459ILTIFryzER2XPH7NVP3utIPPb6bKOzMRepqzrrRVqV2gZl7kn0rXi?=
- =?us-ascii?Q?QhZTcgupQ4o5LGcBaK1ZJjpgKwTSip5DoqXdjoVxe972goUW9JLuc0cToZnv?=
- =?us-ascii?Q?+6DWaFLtUigZk2gROnbkPFpsw1PzZzgVTpTVuPg+cTl+dTq5IPFO5F0+7AEk?=
- =?us-ascii?Q?qPOSOlnjSssYkpYEdMp18dJV0Be4nzX0SHb2tD57R/3qfxJa6X4/gBQ+Xqvq?=
- =?us-ascii?Q?hqlwdanZH2Tivfgdx9c+ZSUjsM6kNsXA6xaKpCdWVwzEk/TqBIMKW9s/RqfU?=
- =?us-ascii?Q?ulpeRXIhIAD4gegxYzX/w+4QXg5RYkqKnWVlifxIDskSu0qW+IgvHmizLQnZ?=
- =?us-ascii?Q?uXX1xgukml5NHNEKI445ZyVySIkuxPlnjBUZEuBZgH6uWkkyt4gYCTyy9gMB?=
- =?us-ascii?Q?eQaqmUJd+ofcB7fi+uIyu2jszqatJJryqjm+BDATZUzTltnV4FvkY07JiJgu?=
- =?us-ascii?Q?o0lXI2vPWp6BPk/i/vmoubFgI2hCpxTBmMifcDCJI7JzXd0YT+RJ6q9FCM6Q?=
- =?us-ascii?Q?O5stB256T+OK20mYUcfEquqybKnGTwbMnqxUKZp7l5pW8+wcAdzRw/5j5Y89?=
- =?us-ascii?Q?HqmnUfj47AyFl1Ej8gFBs+2QdGipOKFrQ2NSuSi3tzQ+2HR5fd4KsC23UQSR?=
- =?us-ascii?Q?ljyb0bYS9fNuExPhWOEgsCvWFiPB+jyYscWrCy63xDb4V2u1Y2O8nn/qbd6t?=
- =?us-ascii?Q?N5U3PiGQAK9tghFU6a+DBVqaBsbzN0n6fTlZDXTJWyrzl8VCW9GQtRFMZYXe?=
- =?us-ascii?Q?vgfDB1bHHhjTfUoUoFT7U1rD7UPs3oap7d2IMX3I0QAFFlJ+IXU00zDx8GNQ?=
- =?us-ascii?Q?bw3O3X8m2sKDvMvQRfjh6O+kbnXNfFvzF2N/BvS23752rexzkfEkIa+YXJsH?=
- =?us-ascii?Q?ox2wPiF5k5zs3aN5a9qsnqI0gOyLVyRA4mqaQsWp8h9X1nKM1bDyXt++4qXH?=
- =?us-ascii?Q?zQ/KMCICExv2F5gT/PyvrjUDrK68/O/xX0Lm9OSnhkv+WY0TgseAyslTY/3x?=
- =?us-ascii?Q?+oy68WX/N/mpWU7kkq+1Fo+WT3kPoKAuZMLO80mHnoP3Opn9EgpFFJz24koO?=
- =?us-ascii?Q?9zeTrUXdF7HZG2mkZnfL5a9mOKHBIWqHHkCPsINwGq+pz1FhwJrDsY6DpQbE?=
- =?us-ascii?Q?4P8f+wRg3WEt7gROYakTmJsRRjNbl6I6QzPyOiNzoNeQgCubAQolMBk6l7Xg?=
- =?us-ascii?Q?YguJDzvjR0TIk2Sn2CeeWMDaFxr1obhCN2x3?=
+	=?us-ascii?Q?RQohArIcu/y4P12wbpSdRykHq4VMbkJZd51zJ3k/F2b94V2u+eA6jaj3ZcQ2?=
+ =?us-ascii?Q?zs/dTwoO6JyFygy1XPGKuDidWEU5D2E9JO2lILjmkYHRNIliGitOPg9JVKEH?=
+ =?us-ascii?Q?bW17Kzc7+ySYYIhjoeXsRxev1g8wfppQZzkIxjYwhg2DX0CFkEZ0FFdjfjwE?=
+ =?us-ascii?Q?72DrgVQXcKWXWbXhvT2DeoO+dX18MVpAVgxOoppLEreRDbY4T5dqQi6Eq938?=
+ =?us-ascii?Q?5SNW4rGZD8uSUvbYFUf9PjcGPce804+8C5pdudLPnCCT4t2fEIZzFOz74aNN?=
+ =?us-ascii?Q?bcZ84+RfsksM8hoxBPZ+6nSzeg/SgbhVRGqUCjNE7K51EERG3Zo+E7WS4vgI?=
+ =?us-ascii?Q?nCpbENnJwYkAVM8mJ7+TUYeAoltcblKF/yjHSDFswIyKnJvnzUbTj3bBchC4?=
+ =?us-ascii?Q?xXLq0oRdjqXEU+hIiBaohHUI+luJoCKKP+GtxquR/HIsi7XTWE8mQ6we4y1F?=
+ =?us-ascii?Q?3c8/5W0J/LeS+JLV4GlfBL5dXl211MiGuiU4g7wfxD2uPIGHk8MLczsHUyiN?=
+ =?us-ascii?Q?4FFqY/BvWAJAERvYPzJdb7/c/wNUX7WYHPEbvZUCKjHtku+2Dgc81ifSURnO?=
+ =?us-ascii?Q?IW328AYL/FEI5CNDfcyQnFaMpu+DX8hiM0smzIEy/t2/QC+ypDIVrJhXx3za?=
+ =?us-ascii?Q?57gujeiWHe0GkT7oTgfy5PBrfhlc77ejSBCLCXdO1o8jRBKqPN+7t2SwQ4jq?=
+ =?us-ascii?Q?uRgRJA6rIYjvXrfeL3/k4DsV11dJ1op01+4baxUx7UjB9QX2/jcHxTEnrvC8?=
+ =?us-ascii?Q?Uu7GuUUx0TMXtLJStFXYCtZqYEELuKoZ7XLPVxwLIIvejHZ7d4BpIz0l5zfv?=
+ =?us-ascii?Q?fSkBbrhOatZ2p0th6urorp/Q+kSp05rt1cnYc1uempJUC1456M8yGyUT5Drt?=
+ =?us-ascii?Q?NHUa0zF+o8fL10hMWS4oJxXKkkXr5qFrMGP2WmXHS4F9KRq8A0Y1IXWb6WOa?=
+ =?us-ascii?Q?eh4sjpA4g5NaNzfcrC5b5cQKM64UaBpTpPu5JrlQTf+ofhvN3maQOqhzidhh?=
+ =?us-ascii?Q?hdcRIcXz35u81k052yB7tXZECNX2Duoswutgt6+lXb1B0JN2Fp5nSjzrpMp6?=
+ =?us-ascii?Q?d6a1R8DYQlBuVwgsF6ZVeYiiqW1Y2PUgnxzeYEaIP6VFRH1kcs/oKJ3pi4XQ?=
+ =?us-ascii?Q?7CzqoUcaZo2BWXgcf8rK6YKkdq0mA2jjNLNWg1Nj0RRCQ0SMlkPs40hCCBW4?=
+ =?us-ascii?Q?Z1jZ/L6cz0/N1sTWUxXl9w3Cv+F8mdl0sWRSgE3iBZU9UEsMStgzr8yc9ICR?=
+ =?us-ascii?Q?eaJnk65d/cHlffmlYMewoVt71aKA1dF/45XXGlauwrvSfxE1h0qu/SPDXX+n?=
+ =?us-ascii?Q?o3GTdVrjOsrDonyOgyC/tQBAL+o10QzeWd3/sSqhuvQzTzPg8zQ5haE7EQGT?=
+ =?us-ascii?Q?8lSnSIQunSeMJ4BBxAsPX2tqnqyE6CMweGRs45wlc53C4tsEY3ZwS01il3Vj?=
+ =?us-ascii?Q?1B2tGCefIHHrxxhrngqQT9oGYRhnwfVDskOlBB5JtSH/W/bNwkgACB+OzkJ6?=
+ =?us-ascii?Q?sEuN/i+UqGuXCTv94QssNfGg+tW9W7MsscZq?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2025 16:55:47.0025
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2025 16:55:50.9330
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07058607-401e-4ad5-3434-08dd8b2c844f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 843ad303-c643-41ef-067f-08dd8b2c86a1
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE31.namprd05.prod.outlook.com
+	CY4PEPF0000EE32.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8820
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6338
 
-Add support for SN2201 system flavour, which is fitting OCP rack
-form-factor and feeded from external power source through the rack
-standard busbar interface.
-
-Validate system type through DMI decode.
-For new system flavour:
-- Skip internal power supply configuration.
-- Attach power hotswap device.
+Add documentation for the new attributes:
+- Request and response for access to protetced flashes:
+  "global_wp_request", "global_wp_response".
+  Only for systems equipped with BMC - grant can be provided only by
+  BMC in case its security policy allows to grant access.
+- Request to unlock ASICs, which has been shutdown due-to ASIC thermal
+  event: "shutdown_unlock".
+- Data processor Units (DPU) boot progress: "boot_progress".
+- DPU reset causes: "reset_aux_pwr_or_reload", "reset_dpu_thermal",
+  "reset_from_main_board".
+- Reset control for DPU components: "perst_rst", "phy_rst", "tpm_rst",
+  "usbphy_rst".
+- DPU Unified Fabric Manager upgrade - "ufm_upgrade".
+- Hardware Id of Data Process Unit board - "dpu_id".
 
 Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 ---
-v10->v11
+v10->v11:
 Comments pointed out by Alok:
-Fix typos in comments.
-v9->v10
-Fix kernel test robot worning:
-- Check 'sku' is not NULL.
-v8->v9
+- Add angle brackets for e-mail contact.
+- Break big sentence for reset cause description.
+v8->v9:
 Comments pointed out by Ilpo:
-- Use 'bool' for 'ext_pwr_source'.
-Notes from Vadim:
-- Only one specific SKU uses external power - no neeed for table.
-- 'acpi_match_table' misindent will be fixed in separate patch.
+- Fix dates.
+v7->v8
+Added by Vadim:
+- Fix dates.
+v5->v6
+Comments pointed out by Ilpo:
+- Fix dates.
 ---
- drivers/platform/mellanox/nvsw-sn2201.c | 110 +++++++++++++++++++++++-
- 1 file changed, 107 insertions(+), 3 deletions(-)
+ .../ABI/stable/sysfs-driver-mlxreg-io         | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
-index d0e5a18c0303..8c31189a94dd 100644
---- a/drivers/platform/mellanox/nvsw-sn2201.c
-+++ b/drivers/platform/mellanox/nvsw-sn2201.c
-@@ -6,6 +6,7 @@
-  */
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index 2cdfd09123da..f59461111221 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -715,3 +715,101 @@ Description:	This file shows 1 in case the system reset happened due to the
+ 		switch board.
  
- #include <linux/device.h>
-+#include <linux/dmi.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -104,6 +105,9 @@
- 	| NVSW_SN2201_CPLD_AGGR_PSU_MASK_DEF \
- 	| NVSW_SN2201_CPLD_AGGR_PWR_MASK_DEF \
- 	| NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF)
-+#define NVSW_SN2201_CPLD_AGGR_BUSBAR_MASK_DEF \
-+	(NVSW_SN2201_CPLD_AGGR_ASIC_MASK_DEF \
-+	| NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF)
- 
- #define NVSW_SN2201_CPLD_ASIC_MASK		GENMASK(3, 1)
- #define NVSW_SN2201_CPLD_PSU_MASK		GENMASK(1, 0)
-@@ -132,6 +136,7 @@
-  * @cpld_devs: I2C devices for cpld;
-  * @cpld_devs_num: number of I2C devices for cpld;
-  * @main_mux_deferred_nr: I2C adapter number must be exist prior creating devices execution;
-+ * @ext_pwr_source: true if system powered by external power supply; false - by internal;
-  */
- struct nvsw_sn2201 {
- 	struct device *dev;
-@@ -152,6 +157,7 @@ struct nvsw_sn2201 {
- 	struct mlxreg_hotplug_device *cpld_devs;
- 	int cpld_devs_num;
- 	int main_mux_deferred_nr;
-+	bool ext_pwr_source;
- };
- 
- static bool nvsw_sn2201_writeable_reg(struct device *dev, unsigned int reg)
-@@ -522,6 +528,35 @@ struct mlxreg_core_hotplug_platform_data nvsw_sn2201_hotplug = {
- 	.mask = NVSW_SN2201_CPLD_AGGR_MASK_DEF,
- };
- 
-+static struct mlxreg_core_item nvsw_sn2201_busbar_items[] = {
-+	{
-+		.data = nvsw_sn2201_fan_items_data,
-+		.aggr_mask = NVSW_SN2201_CPLD_AGGR_FAN_MASK_DEF,
-+		.reg = NVSW_SN2201_FAN_PRSNT_STATUS_OFFSET,
-+		.mask = NVSW_SN2201_CPLD_FAN_MASK,
-+		.count = ARRAY_SIZE(nvsw_sn2201_fan_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+	{
-+		.data = nvsw_sn2201_sys_items_data,
-+		.aggr_mask = NVSW_SN2201_CPLD_AGGR_ASIC_MASK_DEF,
-+		.reg = NVSW_SN2201_ASIC_STATUS_OFFSET,
-+		.mask = NVSW_SN2201_CPLD_ASIC_MASK,
-+		.count = ARRAY_SIZE(nvsw_sn2201_sys_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+};
+ 		The file is read only.
 +
-+static
-+struct mlxreg_core_hotplug_platform_data nvsw_sn2201_busbar_hotplug = {
-+	.items = nvsw_sn2201_items,
-+	.count = ARRAY_SIZE(nvsw_sn2201_busbar_items),
-+	.cell = NVSW_SN2201_SYS_INT_STATUS_OFFSET,
-+	.mask = NVSW_SN2201_CPLD_AGGR_BUSBAR_MASK_DEF,
-+};
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_request
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	This file when written 1 activates request to allow access to
++		the write protected flashes. Such request can be performed only
++		for system equipped with BMC (Board Management Controller),
++		which can grant access to protected flashes. In case BMC allows
++		access - it will respond with "global_wp_response". BMC decides
++		regarding time window of granted access. After granted window is
++		expired, BMC will change value back to 0.
++		Default value is 0.
 +
- /* SN2201 static devices. */
- static struct i2c_board_info nvsw_sn2201_static_devices[] = {
- 	{
-@@ -557,6 +592,9 @@ static struct i2c_board_info nvsw_sn2201_static_devices[] = {
- 	{
- 		I2C_BOARD_INFO("pmbus", 0x40),
- 	},
-+	{
-+		I2C_BOARD_INFO("lm5066i", 0x15),
-+	},
- };
- 
- /* SN2201 default static board info. */
-@@ -607,6 +645,58 @@ static struct mlxreg_hotplug_device nvsw_sn2201_static_brdinfo[] = {
- 	},
- };
- 
-+/* SN2201 default busbar static board info. */
-+static struct mlxreg_hotplug_device nvsw_sn2201_busbar_static_brdinfo[] = {
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[0],
-+		.nr = NVSW_SN2201_MAIN_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[1],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[2],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[3],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH0_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[4],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH3_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[5],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[6],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[7],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH5_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[8],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH6_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[9],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH6_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[10],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH7_NR,
-+	},
-+	{
-+		.brdinfo = &nvsw_sn2201_static_devices[11],
-+		.nr = NVSW_SN2201_MAIN_MUX_CH1_NR,
-+	},
-+};
++		The file is read/write.
 +
- /* LED default data. */
- static struct mlxreg_core_data nvsw_sn2201_led_data[] = {
- 	{
-@@ -981,7 +1071,10 @@ static int nvsw_sn2201_config_init(struct nvsw_sn2201 *nvsw_sn2201, void *regmap
- 	nvsw_sn2201->io_data = &nvsw_sn2201_regs_io;
- 	nvsw_sn2201->led_data = &nvsw_sn2201_led;
- 	nvsw_sn2201->wd_data = &nvsw_sn2201_wd;
--	nvsw_sn2201->hotplug_data = &nvsw_sn2201_hotplug;
-+	if (nvsw_sn2201->ext_pwr_source)
-+		nvsw_sn2201->hotplug_data = &nvsw_sn2201_busbar_hotplug;
-+	else
-+		nvsw_sn2201->hotplug_data = &nvsw_sn2201_hotplug;
- 
- 	/* Register IO access driver. */
- 	if (nvsw_sn2201->io_data) {
-@@ -1198,12 +1291,18 @@ static int nvsw_sn2201_config_pre_init(struct nvsw_sn2201 *nvsw_sn2201)
- static int nvsw_sn2201_probe(struct platform_device *pdev)
- {
- 	struct nvsw_sn2201 *nvsw_sn2201;
-+	const char *sku;
- 	int ret;
- 
- 	nvsw_sn2201 = devm_kzalloc(&pdev->dev, sizeof(*nvsw_sn2201), GFP_KERNEL);
- 	if (!nvsw_sn2201)
- 		return -ENOMEM;
- 
-+	/* Validate system powering type - only HI168 SKU supports external power. */
-+	sku = dmi_get_system_info(DMI_PRODUCT_SKU);
-+	if (sku && !strcmp(sku, "HI168"))
-+		nvsw_sn2201->ext_pwr_source = true;
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/global_wp_response
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	This file, when set 1, indicates that access to protected
++		flashes have been granted to host CPU by BMC.
++		Default value is 0.
 +
- 	nvsw_sn2201->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, nvsw_sn2201);
- 	ret = platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
-@@ -1214,8 +1313,13 @@ static int nvsw_sn2201_probe(struct platform_device *pdev)
- 	nvsw_sn2201->main_mux_deferred_nr = NVSW_SN2201_MAIN_MUX_DEFER_NR;
- 	nvsw_sn2201->main_mux_devs = nvsw_sn2201_main_mux_brdinfo;
- 	nvsw_sn2201->cpld_devs = nvsw_sn2201_cpld_brdinfo;
--	nvsw_sn2201->sn2201_devs = nvsw_sn2201_static_brdinfo;
--	nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_static_brdinfo);
-+	if (nvsw_sn2201->ext_pwr_source) {
-+		nvsw_sn2201->sn2201_devs = nvsw_sn2201_busbar_static_brdinfo;
-+		nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_busbar_static_brdinfo);
-+	} else {
-+		nvsw_sn2201->sn2201_devs = nvsw_sn2201_static_brdinfo;
-+		nvsw_sn2201->sn2201_devs_num = ARRAY_SIZE(nvsw_sn2201_static_brdinfo);
-+	}
- 
- 	return nvsw_sn2201_config_pre_init(nvsw_sn2201);
- }
++		The file is read only.
++
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/shutdown_unlock
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	When ASICs are getting overheated, system protection
++		hardware mechanism enforces system reboot. After system
++		reboot ASICs come up in locked state. To unlock ASICs,
++		this file should be written 1
++		Default value is 0.
++
++		The file is read/write.
++
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/boot_progress
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	These files show the Data Process Unit board boot progress
++		state. Valid states are:
++		- 4 : OS starting.
++		- 5 : OS running.
++		- 6 : Low-Power Standby.
++
++		The file is read only.
++
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/dpu_id
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	This file shows hardware Id of Data Process Unit board.
++
++		The file is read only.
++
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_aux_pwr_or_reload
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_dpu_thermal
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/reset_from_main_board
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	These files expose the cause of the most recent reset of the Data
++		Processing Unit (DPU) board. The possible causes are:
++		- Power auxiliary outage or power reload.
++		- Thermal shutdown.
++		- Reset request from the main board.
++		Value 1 in file means this is reset cause, 0 - otherwise. Only one of
++		the above causes could be 1 at the same time, representing only last
++		reset cause.
++
++		The files are read only.
++
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/perst_rst
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/phy_rst
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/tpm_rst
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/usbphy_rst
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	These files allow to reset hardware components of Data Process
++		Unit board. Respectively PCI, Ethernet PHY, TPM and USB PHY
++		resets.
++		Default values for all the attributes is 1. Writing 0 will
++		cause reset of the related component.
++
++		The files are read/write.
++
++What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/*-00**/mlxreg-io.*/hwmon/hwmon*/ufm_upgrade
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	Vadim Pasternak <vadimp@nvidia.com>
++Description:	These files show status of Unified Fabric Manager upgrade.
++		state. 0 - means upgrade is done, 1 - otherwise.
++
++		The file is read only.
 -- 
 2.44.0
 
