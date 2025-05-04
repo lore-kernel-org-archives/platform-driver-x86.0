@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4233E7;
-	Sun,  4 May 2025 02:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864213F9C5;
+	Sun,  4 May 2025 02:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746324696; cv=none; b=JBDOnB3sgfdqGbFfYAwxnOajFlksuU/Sq1yJnWdjEoCI9vs74UGbEtKDekdikS0OogVK52VmLimP1kafXWfs7fRaBIDGAVQJ+KQUmqO/DOOhzHvgT+Dl+oQstYB+swmnLSs3pCUE7msTjrkmD/jV8BRcaEhJiqBRPizeQf20ayY=
+	t=1746325131; cv=none; b=gBIooXxJ9Zq39uwM9OtLNk11zgnW5lXohDq0wuOCwrlJQCVSzNIz/BbH81/rY0T2AqyBNIQvC2+nF2SGA87uveKYRxFyVHjiPdtAwpHSn6d8ETjc4c+o0KU1rftUS3AirGNL9T+pzBXsHapgV604o3dxh8TvAW2r/TL6gSfIYcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746324696; c=relaxed/simple;
-	bh=rP7ZaULZ8dw3cDdxNiWGLBzpnBtXryMiqg7avkZ4nsU=;
+	s=arc-20240116; t=1746325131; c=relaxed/simple;
+	bh=bIqcHm9oZPE2+ERKOZxCA7KGOZfmixRICFMbx9YEVnI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=itzcgHWM7Awz1XRATZ0Nba8PoJtcoogAxvfRZWzfKtIBltHvDlM+4W+kkpFAzapNOWhPZu6tULQYwIFvVrYq1OoKKdihyh5pTUxgz8+IV5dj4EQZcyzfjepUXyAOOtY7LiwcO3cwJ3v7T2z0uRMPP2Psyy9O9J318YVl/xADHDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FsSvkXHl; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=qFjRSxPChTUzifX9BmGtbwS/tO1xyzwqIetF+vo9PtVr0JulZvweb+Q1spYAjuqiJ0uqBQQ401TQR0hIan9VslpuahC3u6Vsdz+VanCVFB7lSLQ1x22xOnaaYpc/sjbVGUzuFmPI3jSRLsftkW7O71+ozwSBQahXfbk9u5pR1l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QF9orq3f; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FsSvkXHl"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QF9orq3f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1746324684; x=1746929484; i=w_armin@gmx.de;
-	bh=HYdrFLaX2JRl1WWxsnw2rdzRTapFF52eFctfYhWjKJE=;
+	s=s31663417; t=1746325126; x=1746929926; i=w_armin@gmx.de;
+	bh=tmjIWsowaDtARrOXOAkiN2I0yQuLV5R9BxAnfMQz3iI=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=FsSvkXHllB2U8lvIGAzZnNiJenBd31OJT0MAiWG0FU4VyDQeRxazRZp/BALDMZ0h
-	 0nE2ePPMrLmmY/diI236/H1pDVjjoBMXRyTfbkVdX5s5N2uqkqJic93JKJaXSzDNv
-	 ycP6muIG6lcKXRo7AmNYrcUqjp1oHDoeaAYPICvr+ftQBLvCzlp0hywlayWAC3Ccg
-	 3HqJkE3X4t5LJCOYH/6XtMFZm9NDVc5CK6z+AsCiU9+PU7CKeNwncbwFYn4IYlwrm
-	 TiPG5TiVzWDDa/c9m4OxkVbhnBKkWtDxgq8X2c30n8Mpi5HQ26t4BXUvDtzfJ4Xky
-	 8tLKDOZLdX5t+MlckA==
+	b=QF9orq3filp9tgqj4gSc2cy+UpQqHHhADFdiwzCB/FhjONyKBlFHYDnz0G+IJxRi
+	 zLFOgVBdeajeruula0rLLeNxEBYgCcWXImeKuOG4brttQwuzAIKNh36jxu/9b3JfK
+	 7M0OPQ9Vjmt3fi40ycQrmix+f57/nULKBEWHVWf1tWiGhAnOIahj7OsRHhBvmeQ3I
+	 yq1k9nu3j4XHHR8dtIiPhg7ROiM7wSVhwQzIpaLoBxL3QJIs1mytwXW0hNbGDUrqN
+	 0QGKEbr2BqAFcYHCfW/A0g7NDKf6pslVopytUnBU1yMvR1iye20joHh0cNxlmOoI7
+	 xaMysjTuX27GGUEb8g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTRR0-1ucqm00aaa-00Sa0z; Sun, 04
- May 2025 04:11:24 +0200
-Message-ID: <2d640cdf-0347-4283-a5b1-880f6b7e1f85@gmx.de>
-Date: Sun, 4 May 2025 04:11:21 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLzBj-1uTCwJ0x5V-00KYgr; Sun, 04
+ May 2025 04:18:46 +0200
+Message-ID: <b8f05aba-1f99-4268-9f6b-36b77087cf5b@gmx.de>
+Date: Sun, 4 May 2025 04:18:43 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,422 +43,547 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10] platform/x86: Add AMD ISP platform config for OV05C10
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, mario.limonciello@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250503002448.3753937-1-pratap.nirujogi@amd.com>
+Subject: Re: [PATCH v7 4/6] platform/x86: Add Lenovo Capability Data 01 WMI
+ Driver
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250503000142.1190354-1-derekjohn.clark@gmail.com>
+ <20250503000142.1190354-5-derekjohn.clark@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250503002448.3753937-1-pratap.nirujogi@amd.com>
+In-Reply-To: <20250503000142.1190354-5-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3FuNMU6jbbl5LpXmIt6QObM50KijcXpZxgJIr/SzxppFJ02/XLC
- En7vNhGR/ZfE1RztRif40yfipskzrEvzetdQVk1oUyuXJU0uTtYejnaCIpXO+5xyGzzGWpe
- XE+JK+rn4iJcCnnnVZ4KmYDHkyOylnkQFcX6fXPzjeMvu221s/V6aDxaMLOI/qJdY/bcosq
- bD8yVMGQTuplSpRNyl1Dg==
+X-Provags-ID: V03:K1:f4wLqKiF25+bbwAT5HWR/HgSX6Z+AWZaosDllcw4yfMIerbHeAZ
+ PXbIfNtvsJweVVRakgCIU6pD1t042bnqTjUJzG36c2Fxd+DGctdGWncp4uNqGaXELtNXc9A
+ P+hlQnBlXcOusE4rAleFFtTJuH0jzQEwcmitL/RdH4V//ihnOsFtqrFabrbylQ1caU3x7RH
+ TzygOZqItCTxB8D1LKQuQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QuwXcvBsgEM=;hqo3Bt4WgxGZjyhsUW9q6J7dagW
- 1rg9pjYH3j7Xvi2hFKCAjhOR5WNz6BjW6PUT3A4JFYOcc5HLQKGlGxQMc205mWR8Ntp5dfnhQ
- qldTqcS9se3tQxDBFKDTZJ+1LdqhcEflA6rhz6R2SN4jR8IVr8HLeYUCR3FfV5ICq5x/8viwR
- n93RV5QNsKgiRKNE8XlHXHIH0b8s3eovdrrcZQPilAPyOOcMnBo120SNSVvpn/ZuYYISvja3s
- exOLyVaYm9GrcQdKeS+25FUcPl34Ecv9k7B76ieikbcuyr9F8FfiJFiSsUcmyzStcCGyVYPZB
- Hj8X4CdW8e+MSDw9qW3PtEiEXUqXyAL74rzO0PCJaSzMsvgs4z1eVeFMv1iUEcvVBTC6Wvvjz
- /6OgmBINQpJTNT3eaDltlazzojdE1s16QXarROfbwq2dTynQQdtMFFhqcfZEw8WPo9BPh31A+
- FQKyAly3iyxsZedYFDRhUEzfdLJ4ldfps6W0CoFd+JPcilbbjRyxSG/VcWvE+IefRa8iOtIRc
- 6u14t8vtewbhYKbvqbXtsNde1LdQZI3MSPPq8bRTCw9i5xDVN7cCOdG8VLvwfIpo8dZsrqTg6
- ZMraahp2mzjQHM9ULkkRP+vIChmCmleeQG6KBJUuI6Zi0zWJ/JlsSASn5rmwNvA2eVLwBgqDg
- fCMEB0zqmZ/4LeZJEpGEaKq1AgrAAxY/6VGK5KpwbGYfxZJx3FjQ0th8x11jJnaSYmSmPHszJ
- gUrgY/tWPEu8ltPeMfGTnv1lG9LcIIY1z2xKOCKS2HKKwPwBkD9louSratW8gvT2dl6ESuW8Q
- RiQUSEW/DLWVa9f0V4SNZNKqRypXA8oIFDo3yui6byfTcnAaO/MIBjYnZFRRMiK24sWmuEWYk
- Qgntn/rneo10+ANJtCNzCMWX+adoyfpuoL4tIfhk5IQcKVI6EYr2/GxuNFRka6WiQzeEYEIh8
- AXvU5r61jw/Ti40BtSAGii+IFA9v7MC9ZDoVKpx0W8DGZrE58lQq/zQEbqrxpYk2ZHukMrhG2
- z+Hb2h1gUs311ZxW+s5odb6YKkKpdRyDJpqUKFtpk5spoYsP6/GeXYWzdnJ/iwAPPPDNXdhOW
- RBI84YlW5Kker10ARHCzBbMBj/CpxCY6oCXRJwVs+hpJFEUXT9YbVTYDcDmWZDKys10I/Rkgf
- M/YdKHssnUyFRhC4lmqEGj+2asngk1AwPus/WbZlXPrq9wp5qHRdgfS/cq/uWDKrVNImCi7UU
- alM5hvgIt+/x5GvldhMNJqy9ZHZQl+8oJtkRXtcOLuc72QhB6PiNObDff2J/kNasp+kM25M56
- /4Y3OVk1YuoY0glWGX+8SXzvotr42zyJkjI/1CPgJBBwWckT/cad8N+mKQUleBk8q2BIE0jrl
- H7dDZufZyRJRBABcPJ/KQL7TiSyeJ2IlodSuNyxTHd3yQbt5n6EeLxuc4nPaUIGLmBjwmeYV1
- 9VnV5c1kI2hIIBea1PTEvBixMqaasio/sYoGDxVzxe8DYyvQWNswyuqRQ7w/vmKTGXxnNyacV
- RPJSVvaTsqFz0LFsi/vE4tB0DEt4+iu4mUv7ksLjrmcvT5kFanqKxuNZv2txguxdO4bPH31KG
- xO+40pmVtGiRD8jW48a85PeTUwU+dsWmUsJb/66SJ9bVKi57X/jqJUAQYGByK1QEW+8WpGpvm
- pjAdcwEueE5SnTEwor6LgkSJ9VtIUTXn3Bxt7zu7o9vNSarnko7ormOzlEIL3Og9+4bGz+Nbd
- TZgrqzcmrt1VGIYtkorso/ThpYE9XtNNl7VHtypmSkxeOM0AtwpF3LnG4uxua9HJigujEqybB
- yPVhglx5cZUDU+pKkYGA8WEEpf6xe4zd6nC8xbzkGGIipHSGMBuRGQ3ggM9Dle04794K8ueuL
- xDCqYXVCWjt1ANiDTlqgnsCnM++5g/GVl7DQv8r+4rp4a9/UZgkcRfjY0uKVXzjBVfCi7Y5iR
- R/LY631louZ7mcVRb0p0TPvqBw9yvjNcdhryEWE+uMJKsJI5SML8hlsVfZhIn0PBYhtzv5CBB
- ejFRAsOG1n0jtN8WVi9rav7JFMhOu5WoL0ZaDw60Xcz4ZqP1/LhtgR6Tzfhvg/rLl+YJdkmgq
- fnCItDUV8ZQ5R6IWtzByqioYehjtVGcs8+GfCG25KIbaMCQ8zMI1xk0S0m9N9oS0TU8cq+WRZ
- OQ/FXUk5GiZOdPyDe9EyKHI3KL3OMlksm17dgrRwNuSq+iMM+gQdYNytRjqIM32w50nvcNkxo
- LwsKeOtyC66nVTLSZJbWKLiiGgi5oC1sE9QegkJWosqULYFTLnzK4DiSBBdGkA7H/MNQrV8FX
- nzQarqGKlUNZFbzR02qCeUaLdJGORjVmx1o0DGaYt1WjyqpqD/tluQPKAmIFcjoc0GAYVMmjW
- JxL/F52U9myiM0azs7EaaND9i/eRTmOcX3ipoNW2b4BeKudZ41IqLE6oiFBBGn4qvMGpSFnug
- fkBZ+PxeQaShALoA2DYwOcbUZn/ADJVM6NXor1JpGy+dh0bGDWsD4dLUHBSS5679exwQiChu7
- qR0Y+igQULZJ9jGLtipCB51PexDjaMX4xDx+QDKvl8RqHv+hxxEHCEqgDhXNH4y+Rx3M5FQFE
- 9H+cRtuptCj/fNueaul0K/PB4NJlcjkTvt8P6UBXLhxRUJLpTpBMPdUJAmA9MBaQeh9OBAxbP
- 58lUoBAoocL6jgyofCTXlW8yUEiKZWxrH6lHlpXK+jp7wWhvztaz0JMW6rGthLnY0/Eu0h4q8
- TgRFk8LuSWgttpLQt8vrWS3SE2igUxl7D3ehECevdAT+uXgUP/0rMZj+M82xKyv2vpje7Tkks
- OlqJrHAahdJGeHb8U46gxlYBFMA8w5hLhof+qQvjOVILu8cRdUwVXO3RA9nF9XSsh5vv/E2tm
- xAY6A5f9DPxI5aO2AObRJdlg82fvn2HZ8mNA70WwfD7UfOhgRbhd1UUw1ZJvP+mZKxq+EbYOm
- UL1L6SHAHRTwu3xE9O936C/muSf4sMd7FlSyGXdi3W1/1l4Sn7RQG+ULNhJjK/MHjbzd+JOvn
- LCLyiKhsA7WLY8UH/uMnx7IwiBwlO2/TSG26wPvF9Ox
+UI-OutboundReport: notjunk:1;M01:P0:c3XH437lfcE=;xI2bE6F0jLq3AXdnXIz3IIDzxr7
+ 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
 
-Am 03.05.25 um 02:24 schrieb Pratap Nirujogi:
+Am 03.05.25 um 02:01 schrieb Derek J. Clark:
 
-> ISP device specific configuration is not available in ACPI. Add
-> swnode graph to configure the missing device properties for the
-> OV05C10 camera device supported on amdisp platform.
+> Adds lenovo-wmi-capdata01 driver which provides the
+> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
+> enabled hardware. Provides an interface for querying if a given
+> attribute is supported by the hardware, as well as its default_value,
+> max_value, min_value, and step increment.
 >
-> Add support to create i2c-client dynamically when amdisp i2c
-> adapter is available.
->
-> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> --
+> v7:
+>   - Do memcpy instead of returning pointer in lwmi_cd01_get_data.
+>   - Put list mutex inside lwmi_cd01_priv struct.
+>   - Unregister from acpi events on dev remove.
+>   - Fix typos.
+> v6:
+>   - Recache capabiltiy data on ACPI AC events to ensure accutare
+>     max_value.
+>   - Fix typos and rewordings from v5 review.
+> v5:
+>   - Return to cache at device initialization. On component bind, pass a
+>     pointer to lenovo-wmi-other.
+>   - Fixes from v4 review.
+> v4:
+>   - Make driver data a private struct, remove references from Other Mode
+>     driver.
+>   - Don't cache data at device initialization. Instead, on component bin=
+d,
+>     cache the data on a member variable of the Other Mode driver data
+>     passed as a void pointer.
+>   - Add header file for capdata01 structs.
+>   - Add new struct to pass capdata01 array data and array length to Othe=
+r
+>     Mode.
+> v3:
+> - Add as component to lenovo-wmi-other driver.
+> v2:
+> - Use devm_kmalloc to ensure driver can be instanced, remove global
+>    reference.
+> - Ensure reverse Christmas tree for all variable declarations.
+> - Remove extra whitespace.
+> - Use guard(mutex) in all mutex instances, global mutex.
+> - Use pr_fmt instead of adding the driver name to each pr_err.
+> - Remove noisy pr_info usage.
+> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
+> - Use list to get the lenovo_wmi_cd01_priv instance in
+>    lenovo_wmi_capdata01_get as none of the data provided by the macros
+>    that will use it can pass a member of the struct for use in
+>    container_of.
 > ---
-> Changes v9 -> v10:
+>   MAINTAINERS                                 |   1 +
+>   drivers/platform/x86/Kconfig                |   4 +
+>   drivers/platform/x86/Makefile               |   1 +
+>   drivers/platform/x86/lenovo-wmi-capdata01.c | 301 ++++++++++++++++++++
+>   drivers/platform/x86/lenovo-wmi-capdata01.h |  25 ++
+>   5 files changed, 332 insertions(+)
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
 >
-> * Remove i2c_board_info->addr check in instantiate_isp_i2c_client().
-> * Update mutex protection regions as suggested in the review feedback.
-> * Switch to devm_mutex_init() and skip mutex_destroy calls.
->
->   drivers/platform/x86/amd/Kconfig    |  11 ++
->   drivers/platform/x86/amd/Makefile   |   1 +
->   drivers/platform/x86/amd/amd_isp4.c | 277 ++++++++++++++++++++++++++++
->   3 files changed, 289 insertions(+)
->   create mode 100644 drivers/platform/x86/amd/amd_isp4.c
->
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd=
-/Kconfig
-> index c3e086ea64fc..152a68a470e8 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -32,3 +32,14 @@ config AMD_WBRF
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2b4b06e81192..1b22e41cc730 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13164,6 +13164,7 @@ L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+>   F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>   F:	Documentation/wmi/devices/lenovo-wmi-other.rst
+> +F:	drivers/platform/x86/lenovo-wmi-capdata01.*
+>   F:	drivers/platform/x86/lenovo-wmi-events.*
+>   F:	drivers/platform/x86/lenovo-wmi-helpers.*
 >  =20
->   	  This mechanism will only be activated on platforms that advertise a
->   	  need for it.
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 13b8f4ac5dc5..64663667f0cb 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
+>   	tristate
+>   	depends on ACPI_WMI
+>  =20
+> +config LENOVO_WMI_DATA01
+> +	tristate
+> +	depends on ACPI_WMI
 > +
-> +config AMD_ISP_PLATFORM
-> +	tristate "AMD ISP4 platform driver"
-> +	depends on I2C && X86_64 && ACPI
-> +	help
-> +	  Platform driver for AMD platforms containing image signal processor
-> +	  gen 4. Provides camera sensor module board information to allow
-> +	  sensor and V4L drivers to work properly.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called amd_isp4.
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/am=
-d/Makefile
-> index c6c40bdcbded..b0e284b5d497 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+=3D pmc/
->   obj-$(CONFIG_AMD_HSMP)		+=3D hsmp/
->   obj-$(CONFIG_AMD_PMF)		+=3D pmf/
->   obj-$(CONFIG_AMD_WBRF)		+=3D wbrf.o
-> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+=3D amd_isp4.o
-> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/=
-amd/amd_isp4.c
+>   config IDEAPAD_LAPTOP
+>   	tristate "Lenovo IdeaPad Laptop Extras"
+>   	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index fc039839286a..7a35c77221b7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+>   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger.o
+>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+=3D lenovo-wmi-capdata01.o
+>   obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events.o
+>   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers.o
+>  =20
+> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/platf=
+orm/x86/lenovo-wmi-capdata01.c
 > new file mode 100644
-> index 000000000000..336ac3da2041
+> index 000000000000..419b51f7f7c3
 > --- /dev/null
-> +++ b/drivers/platform/x86/amd/amd_isp4.c
-> @@ -0,0 +1,277 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
+> @@ -0,0 +1,301 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 > +/*
-> + * AMD ISP platform driver for sensor i2-client instantiation
+> + * Lenovo Capability Data 01 WMI Data Block driver.
 > + *
-> + * Copyright 2025 Advanced Micro Devices, Inc.
+> + * Lenovo Capability Data 01 provides information on tunable attributes=
+ used by
+> + * the "Other Mode" WMI interface. The data includes if the attribute i=
+s
+> + * supported by the hardware, the default_value, max_value, min_value, =
+and step
+> + * increment. Each attibute has multiple pages, one for each of the the=
+rmal
+> + * modes managed by the Gamezone interface.
+> + *
+> + * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
 > + */
 > +
-> +#include <linux/i2c.h>
+> +#include "linux/printk.h"
+> +#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/component.h>
+> +#include <linux/container_of.h>
+> +#include <linux/device.h>
+> +#include <linux/export.h>
+> +#include <linux/gfp_types.h>
 > +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/units.h>
+> +#include <linux/mutex.h>
+> +#include <linux/mutex_types.h>
+> +#include <linux/notifier.h>
+> +#include <linux/overflow.h>
+> +#include <linux/types.h>
+> +#include <linux/wmi.h>
 > +
-> +#define AMDISP_OV05C10_I2C_ADDR		0x10
-> +#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
-> +#define AMDISP_OV05C10_HID		"OMNI5C10"
-> +#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
-> +#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
+> +#include "lenovo-wmi-capdata01.h"
 > +
-> +/*
-> + * AMD ISP platform definition to configure the device properties
-> + * missing in the ACPI table.
-> + */
-> +struct amdisp_platform {
-> +	struct i2c_board_info board_info;
-> +	struct notifier_block i2c_nb;
-> +	struct i2c_client *i2c_dev;
-> +	struct mutex lock; /* protects i2c client creation */
+> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE0=
+18154"
+> +
+> +#define ACPI_AC_CLASS "ac_adapter"
+> +#define ACPI_AC_NOTIFY_STATUS 0x80
+> +
+> +struct lwmi_cd01_priv {
+> +	struct notifier_block acpi_nb; /* ACPI events */
+> +	struct wmi_device *wdev;
+> +	struct cd01_list *list;
 > +};
 > +
-> +/* Top-level OV05C10 camera node property table */
-> +static const struct property_entry ov05c10_camera_props[] =3D {
-> +	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-> +	{ }
+> +struct cd01_list {
+> +	struct mutex list_mutex; /* list R/W mutex */
+> +	u8 count;
+> +	struct capdata01 data[];
 > +};
 > +
-> +/* Root AMD ISP OV05C10 camera node definition */
-> +static const struct software_node camera_node =3D {
-> +	.name =3D AMDISP_OV05C10_HID,
-> +	.properties =3D ov05c10_camera_props,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Ports node definition. No properties defined for
-> + * ports node for OV05C10.
-> + */
-> +static const struct software_node ports =3D {
-> +	.name =3D "ports",
-> +	.parent =3D &camera_node,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Port node definition. No properties defined for
-> + * port node for OV05C10.
-> + */
-> +static const struct software_node port_node =3D {
-> +	.name =3D "port@",
-> +	.parent =3D &ports,
-> +};
-> +
-> +/*
-> + * Remote endpoint AMD ISP node definition. No properties defined for
-> + * remote endpoint node for OV05C10.
-> + */
-> +static const struct software_node remote_ep_isp_node =3D {
-> +	.name =3D AMDISP_OV05C10_REMOTE_EP_NAME,
-> +};
-> +
-> +/*
-> + * Remote endpoint reference for isp node included in the
-> + * OV05C10 endpoint.
-> + */
-> +static const struct software_node_ref_args ov05c10_refs[] =3D {
-> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
-> +};
-> +
-> +/* OV05C supports one single link frequency */
-> +static const u64 ov05c10_link_freqs[] =3D {
-> +	925 * HZ_PER_MHZ,
-> +};
-> +
-> +/* OV05C supports only 2-lane configuration */
-> +static const u32 ov05c10_data_lanes[] =3D {
-> +	1,
-> +	2,
-> +};
-> +
-> +/* OV05C10 endpoint node properties table */
-> +static const struct property_entry ov05c10_endpoint_props[] =3D {
-> +	PROPERTY_ENTRY_U32("bus-type", 4),
-> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
-> +				     ARRAY_SIZE(ov05c10_data_lanes)),
-> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
-> +				     ARRAY_SIZE(ov05c10_link_freqs)),
-> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
-> +	{ }
-> +};
-> +
-> +/* AMD ISP endpoint node definition */
-> +static const struct software_node endpoint_node =3D {
-> +	.name =3D "endpoint",
-> +	.parent =3D &port_node,
-> +	.properties =3D ov05c10_endpoint_props,
-> +};
-> +
-> +/*
-> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
-> + * fixed to align with the structure that v4l2 expects for successful
-> + * endpoint fwnode parsing.
+> +/**
+> + * lwmi_cd01_component_bind() - Bind component to master device.
+> + * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device.
+> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
+> + * @data: capdata01_list object pointer used to return the capability d=
+ata.
 > + *
-> + * It is only the node property_entries that will vary for each platfor=
-m
-> + * supporting different sensor modules.
+> + * On lenovo-wmi-other's master bind, provide a pointer to the local ca=
+pdata01
+> + * list. This is used to call lwmi_cd01_get_data to look up attribute d=
+ata
+> + * from the lenovo-wmi-other driver.
+> + *
+> +:* Return: 0 on success, or an error code.
 > + */
-> +#define NUM_SW_NODES 5
-> +
-> +static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] =3D =
-{
-> +	&camera_node,
-> +	&ports,
-> +	&port_node,
-> +	&endpoint_node,
-> +	&remote_ep_isp_node,
-> +	NULL
-> +};
-> +
-> +static const struct acpi_device_id amdisp_sensor_ids[] =3D {
-> +	{ AMDISP_OV05C10_HID },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-> +
-> +static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+> +static int lwmi_cd01_component_bind(struct device *cd01_dev,
+> +				    struct device *om_dev, void *data)
 > +{
-> +	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-> +}
+> +	struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
+> +	struct cd01_list **cd01_list =3D data;
 > +
-> +static void instantiate_isp_i2c_client(struct amdisp_platform *ov05c10,=
- struct i2c_adapter *adap)
-> +{
-> +	struct i2c_board_info *info =3D &ov05c10->board_info;
-> +	struct i2c_client *i2c_dev;
-> +
-> +	guard(mutex)(&ov05c10->lock);
-> +
-> +	if (ov05c10->i2c_dev)
-> +		return;
-> +
-> +	i2c_dev =3D i2c_new_client_device(adap, info);
-> +	if (IS_ERR(i2c_dev)) {
-> +		dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev=
-);
-> +		return;
-> +	}
-> +	ov05c10->i2c_dev =3D i2c_dev;
-> +}
-> +
-> +static int isp_i2c_bus_notify(struct notifier_block *nb,
-> +			      unsigned long action, void *data)
-> +{
-> +	struct amdisp_platform *ov05c10 =3D container_of(nb, struct amdisp_pla=
-tform, i2c_nb);
-> +	struct device *dev =3D data;
-> +	struct i2c_client *client;
-> +	struct i2c_adapter *adap;
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		adap =3D i2c_verify_adapter(dev);
-> +		if (!adap)
-> +			break;
-> +		if (is_isp_i2c_adapter(adap))
-> +			instantiate_isp_i2c_client(ov05c10, adap);
-> +		break;
-> +	case BUS_NOTIFY_REMOVED_DEVICE:
-> +		client =3D i2c_verify_client(dev);
-> +		if (!client)
-> +			break;
-> +
-> +		scoped_guard(mutex, &ov05c10->lock) {
-> +			if (ov05c10->i2c_dev =3D=3D client) {
-> +				dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
-> +				ov05c10->i2c_dev =3D NULL;
-> +			}
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct amdisp_platform *prepare_amdisp_platform(struct device *d=
-ev)
-> +{
-> +	struct amdisp_platform *isp_ov05c10;
-> +	int ret;
-> +
-> +	isp_ov05c10 =3D devm_kzalloc(dev, sizeof(*isp_ov05c10), GFP_KERNEL);
-> +	if (!isp_ov05c10)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	devm_mutex_init(dev, &isp_ov05c10->lock);
+> +	if (!priv->list)
+> +		return -ENODEV;
 
 Hi,
 
-you should check the return value of devm_mutex_init().
+can priv->list ever be NULL after initialization?
 
-With that being fixed:
+> +
+> +	*cd01_list =3D priv->list;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct component_ops lwmi_cd01_component_ops =3D {
+> +	.bind =3D lwmi_cd01_component_bind,
+> +};
+> +
+> +/**
+> + * lwmi_cd01_get_data - Get the data of the specified attribute
+> + * @dev: The lenovo-wmi-capdata01 parent device.
+> + * @tunable_attr: The attribute to be found.
+> + * @output: Pointer to a capdata01 struct to return the data.
+> + *
+> + * Retrieves the capability data 01 struct pointer for the given
+> + * attribute for its specified thermal mode.
+> + *
+> + * Return: 0 on success, or -EINVAL.
+> + */
+> +int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct=
+ capdata01 *output)
+> +{
+> +	u8 idx;
+> +
+> +	guard(mutex)(&list->list_mutex);
+> +	for (idx =3D 0; idx < list->count; idx++) {
+> +		if (list->data[idx].id !=3D attribute_id)
+> +			continue;
+> +		memcpy(output, &list->data[idx], sizeof(list->data[idx]));
+> +		return 0;
+> +	};
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD01");
+> +
+> +/**
+> + * lwmi_cd01_setup() - Cache all WMI data block information
+> + * @priv: lenovo-wmi-capdata01 driver data.
+> + *
+> + * Loop through each WMI data block and cache the data.
+> + *
+> + * Return: 0 on success, or an error.
+> + */
+> +static int lwmi_cd01_cache(struct lwmi_cd01_priv *priv)
+> +{
+> +	int idx;
+> +
+> +	guard(mutex)(&priv->list->list_mutex);
+> +	for (idx =3D 0; idx < priv->list->count; idx++) {
+> +		union acpi_object *ret_obj __free(kfree) =3D NULL;
+> +
+> +		ret_obj =3D wmidev_block_query(priv->wdev, idx);
+> +		if (!ret_obj)
+> +			return -ENODEV;
+> +
+> +		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
+> +		    ret_obj->buffer.length < sizeof(priv->list->data[idx]))
+> +			continue;
+> +
+> +		memcpy(&priv->list->data[idx], ret_obj->buffer.pointer,
+> +		       ret_obj->buffer.length);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * lwmi_cd01_alloc() - Allocate a cd01_list struct in drvdata
+> + * @priv: lenovo-wmi-capdata01 driver data.
+> + *
+> + * Allocate a cd01_list struct large enough to contain data from all WM=
+I data
+> + * blocks provided by the interface.
+> + *
+> + * Return: 0 on success, or an error.
+> + */
+> +static int lwmi_cd01_alloc(struct lwmi_cd01_priv *priv)
+> +{
+> +	struct cd01_list *list;
+> +	size_t list_size;
+> +	int count;
+> +
+> +	count =3D wmidev_instance_count(priv->wdev);
+> +	list_size =3D struct_size(list, data, count);
+> +
+> +	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
+> +	if (!list)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&list->list_mutex);
+
+Please use devm_mutex_init() here.
+
+> +	list->count =3D count;
+> +	priv->list =3D list;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * lwmi_cd01_setup() - Cache all WMI data block information
+> + * @priv: lenovo-wmi-capdata01 driver data.
+> + *
+> + * Allocate a cd01_list struct large enough to contain data from all WM=
+I data
+> + * blocks provided by the interface. Then loop through each data block =
+and
+> + * cache the data.
+> + *
+> + * Return: 0 on success, or an error code.
+> + */
+> +static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret =3D lwmi_cd01_alloc(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return lwmi_cd01_cache(priv);
+> +}
+> +
+> +/**
+> + * lwmi_cd01_notifier_call() - Call method for lenovo-wmi-capdata01 dri=
+ver notifier.
+> + * block call chain.
+> + * @nb: The notifier_block registered to lenovo-wmi-events driver.
+> + * @action: Unused.
+> + * @data: The ACPI event.
+> + *
+> + * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_pr=
+ofile
+> + * of a change.
+> + *
+> + * Return: notifier_block status.
+> + */
+> +static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned =
+long action,
+> +				   void *data)
+> +{
+> +	struct acpi_bus_event *event =3D data;
+> +	struct lwmi_cd01_priv *priv;
+> +	int ret;
+> +
+> +	if (strcmp(event->device_class, ACPI_AC_CLASS) !=3D 0)
+> +		return NOTIFY_DONE;
+> +
+> +	priv =3D container_of(nb, struct lwmi_cd01_priv, acpi_nb);
+> +
+> +	switch (event->type) {
+> +	case ACPI_AC_NOTIFY_STATUS:
+> +		ret =3D lwmi_cd01_cache(priv);
+> +		if (ret)
+> +			return NOTIFY_BAD;
+> +
+> +		return NOTIFY_OK;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +}
+> +
+> +/**
+> + * lwmi_cd01_unregister() - Unregister the cd01 ACPI notifier_block.
+> + * @data: The ACPI event notifier_block to unregister.
+> + */
+> +static void lwmi_cd01_unregister(void *data)
+> +{
+> +	struct notifier_block *acpi_nb =3D data;
+> +
+> +	unregister_acpi_notifier(acpi_nb);
+> +}
+> +
+> +static int lwmi_cd01_probe(struct wmi_device *wdev, const void *context=
+)
+> +
+> +{
+> +	struct lwmi_cd01_priv *priv;
+> +	int ret;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->wdev =3D wdev;
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	ret =3D lwmi_cd01_setup(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->acpi_nb.notifier_call =3D lwmi_cd01_notifier_call;
+> +
+> +	ret =3D register_acpi_notifier(&priv->acpi_nb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister, &priv->acpi=
+_nb);
+
+Please check the return value of devm_add_action_or_reset() here.
+
+With those issues being fixed:
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-> +	isp_ov05c10->board_info.dev_name =3D "ov05c10";
-> +	strscpy(isp_ov05c10->board_info.type, "ov05c10", I2C_NAME_SIZE);
-> +	isp_ov05c10->board_info.addr =3D AMDISP_OV05C10_I2C_ADDR;
 > +
-> +	ret =3D software_node_register_node_group(ov05c10_nodes);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	isp_ov05c10->board_info.swnode =3D ov05c10_nodes[0];
-> +
-> +	return isp_ov05c10;
+> +	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
 > +}
 > +
-> +static int try_to_instantiate_i2c_client(struct device *dev, void *data=
-)
+> +static void lwmi_cd01_remove(struct wmi_device *wdev)
 > +{
-> +	struct amdisp_platform *ov05c10 =3D (struct amdisp_platform *)data;
-> +	struct i2c_adapter *adap =3D i2c_verify_adapter(dev);
-> +
-> +	if (!ov05c10 || !adap)
-> +		return 0;
-> +	if (!adap->owner)
-> +		return 0;
-> +
-> +	if (is_isp_i2c_adapter(adap))
-> +		instantiate_isp_i2c_client(ov05c10, adap);
-> +
-> +	return 0;
+> +	component_del(&wdev->dev, &lwmi_cd01_component_ops);
 > +}
 > +
-> +static int amd_isp_probe(struct platform_device *pdev)
-> +{
-> +	struct amdisp_platform *ov05c10;
-> +	int ret;
-> +
-> +	ov05c10 =3D prepare_amdisp_platform(&pdev->dev);
-> +	if (IS_ERR(ov05c10))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
-> +				     "failed to prepare AMD ISP platform fwnode\n");
-> +
-> +	ov05c10->i2c_nb.notifier_call =3D isp_i2c_bus_notify;
-> +	ret =3D bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-> +	if (ret)
-> +		goto error_unregister_sw_node;
-> +
-> +	/* check if adapter is already registered and create i2c client instan=
-ce */
-> +	i2c_for_each_dev((void *)ov05c10, try_to_instantiate_i2c_client);
-> +
-> +	platform_set_drvdata(pdev, ov05c10);
-> +	return 0;
-> +
-> +error_unregister_sw_node:
-> +	software_node_unregister_node_group(ov05c10_nodes);
-> +	return ret;
-> +}
-> +
-> +static void amd_isp_remove(struct platform_device *pdev)
-> +{
-> +	struct amdisp_platform *ov05c10 =3D platform_get_drvdata(pdev);
-> +
-> +	bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-> +	i2c_unregister_device(ov05c10->i2c_dev);
-> +	software_node_unregister_node_group(ov05c10_nodes);
-> +}
-> +
-> +static struct platform_driver amd_isp_platform_driver =3D {
-> +	.driver	=3D {
-> +		.name			=3D AMD_ISP_PLAT_DRV_NAME,
-> +		.acpi_match_table	=3D amdisp_sensor_ids,
-> +	},
-> +	.probe	=3D amd_isp_probe,
-> +	.remove	=3D amd_isp_remove,
+> +static const struct wmi_device_id lwmi_cd01_id_table[] =3D {
+> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
+> +	{}
 > +};
 > +
-> +module_platform_driver(amd_isp_platform_driver);
+> +static struct wmi_driver lwmi_cd01_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo_wmi_cd01",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lwmi_cd01_id_table,
+> +	.probe =3D lwmi_cd01_probe,
+> +	.remove =3D lwmi_cd01_remove,
+> +	.no_singleton =3D true,
+> +};
 > +
-> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
+> +/**
+> + * lwmi_cd01_match() - Match rule for the master driver.
+> + * @dev: Pointer to the capability data 01 parent device.
+> + * @data: Unused void pointer for passing match criteria.
+> + *
+> + * Return: int.
+> + */
+> +int lwmi_cd01_match(struct device *dev, void *data)
+> +{
+> +	return dev->driver =3D=3D &lwmi_cd01_driver.driver;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
+> +
+> +module_wmi_driver(lwmi_cd01_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
+> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
 > +MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.h b/drivers/platf=
+orm/x86/lenovo-wmi-capdata01.h
+> new file mode 100644
+> index 000000000000..bd06c5751f68
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.h
+> @@ -0,0 +1,25 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +
+> +/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
+> +
+> +#ifndef _LENOVO_WMI_CAPDATA01_H_
+> +#define _LENOVO_WMI_CAPDATA01_H_
+> +
+> +#include <linux/types.h>
+> +
+> +struct device;
+> +struct cd01_list;
+> +
+> +struct capdata01 {
+> +	u32 id;
+> +	u32 supported;
+> +	u32 default_value;
+> +	u32 step;
+> +	u32 min_value;
+> +	u32 max_value;
+> +};
+> +
+> +int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct=
+ capdata01 *output);
+> +int lwmi_cd01_match(struct device *dev, void *data);
+> +
+> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
