@@ -1,270 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F44026F452;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F2C1B07AE;
+	Mon,  5 May 2025 20:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470634; cv=none; b=mwbLEK5ly8TSWcRiUEa7JPvHOD+XuctJKftTzA0yeR0oph9HzvLnWEn/x+hIogEDH/XlF2e6GITnmVox227Va3AWJ8QLU+KZrNfWak2kqd8KyLuQZDMy6PzEKC5LTHFOYGF+AiQ4u1CR8jnGGw4P4ddjFDsS9/sOUpic+UqgWqk=
+	t=1746476861; cv=none; b=BOTInNqBfP8lf4AVD3cB5A1Amlbj+IPGDjvaUDKzpsJsoOWGAREeurU7bJnSlLS2p8IG9PqKXEeY/VXKJsWnhiah+2oVCKiRCuYc+AClM7X77d0gwKyAgnY/pVZcSvAp8/2v9P1spP5JmdbSIQKTdZN2YHYAB+OfEETHTFLccT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470634; c=relaxed/simple;
-	bh=CuRxJAOhQzgohcnuM+vUajXfQDkofrkBv5Cgo+Zuu2k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zj672kq8pKKXYQl5cuZMV3xWmU/hQMzJ4QSgNZIjhZTIFWpbSrEe0XVfwGjnnZTqPnsAVaxx7EPHHrtYLIHa6B1t9Ok5L6I6wTyYyS0hbfVL5XDROTVMC7/49KSOxY9/6Pjgok6N2tV+abj5fG8aKz6Dw12+xvF7sF0QFiNFY+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJYqhdlH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746476861; c=relaxed/simple;
+	bh=GZI/2kXleNIKAhFS6SRpG5Ac7biLKJWtwxngru8qIYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e/5hxFlioBHIjtFMQWhvcibIZGjAMZjIQmq1bONgA0B60NQy4XkBt9RIYPB1BcnJUZihS9GmhNO1uhFDbZpsqf5TbR+tVn8XSwVmLIxGJnZq3MbtkYTYoJr4JfeXKWKyVaWWTWRvzCYZyptw7bB1CHguAeKPDb8M3Rt2ezqgovo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmn94N9G; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJYqhdlH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 15EF1C4CEEE;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746470634;
-	bh=CuRxJAOhQzgohcnuM+vUajXfQDkofrkBv5Cgo+Zuu2k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HJYqhdlHYsZhlOHYpbO1jTCCtYZIKQSxAoR3eg3q+dVeve3wg318royNg5M6WdCGl
-	 rOQPb/Do5/2CAe9IGy5c2SzeBJbBYtmqomBPL5bRvrC0WBCSIwoUeLqrei6frR6vEk
-	 /FHFAYc86M4OiO3GPZ7nVNVKUA63sKzb4Yv2xCherfydalqWjN1Gesz9f4ZqHiGNaS
-	 zCgQafzCchd0u+gCxqoXIkIuMbKjuHuhIweZUDCAGbp3+8pty7brzkdiOKcFSUKpc6
-	 STug1w3tQ8JZ8wy/MwSwbCqWG99F7iWs3fad1/SHOKti/yL1XDn7TFsQI4pcrtkZBh
-	 d6CbYaYCMO6zg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08160C3ABAA;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
-From: Kurt Borja via B4 Relay <devnull+kuurtb.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 15:43:31 -0300
-Subject: [PATCH v4 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO debug
- methods
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmn94N9G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746476860; x=1778012860;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GZI/2kXleNIKAhFS6SRpG5Ac7biLKJWtwxngru8qIYg=;
+  b=kmn94N9GHfdRaMYP1LOoellP7lNAsMVMyHKcZxxFS7dXVt2QcfHwwJrt
+   zfvdwQrOZx04604drG+U/SQIO/RwdrdM0r8pgA/eAl0Ji3kt3piCnJlFG
+   c7PawjvUEJ5Iot0N/s8pHF4Xpmi0vqUIenkD7gu1gXqMOMJhVGrslVI9h
+   iZjPMxxGNsHp2SlC+wGQ58QYw8kc+WMx7AZpx2A/ayiIxi3aFYZ+ctPSf
+   C72gaucnazE3bKubVUm/G++8+B2y3FYq0wcHK3LPFg9Zutr6knV+KzEkj
+   nJdOPRyWzDQOWFKIZCFFGHxYRValfoq3LxKZsoueTx2Hdgh9d7RFmBr3M
+   A==;
+X-CSE-ConnectionGUID: z1+8rSfSSAGQ68+OuiMZXQ==
+X-CSE-MsgGUID: ZJ+bcq2kTBiTGabBiwAZwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48244513"
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="48244513"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 13:27:26 -0700
+X-CSE-ConnectionGUID: hhvept1FQmqpbiyFFDwP5g==
+X-CSE-MsgGUID: AfXkKI65RxyAUMgMUcnJyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="166429633"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by fmviesa001.fm.intel.com with ESMTP; 05 May 2025 13:27:24 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Do Not Restore SST MSRs on CPU Online Operation
+Date: Mon,  5 May 2025 13:27:22 -0700
+Message-ID: <20250505202722.1048675-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-awcc-gpio-v4-1-edda44c3a0dc@gmail.com>
-References: <20250505-awcc-gpio-v4-0-edda44c3a0dc@gmail.com>
-In-Reply-To: <20250505-awcc-gpio-v4-0-edda44c3a0dc@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Gabriel Marcano <gabemarcano@yahoo.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6088; i=kuurtb@gmail.com;
- h=from:subject:message-id;
- bh=VhjdIaye3R/a9OKG1gJhjtj9h7gjZ1ZcB47ONQBNzIg=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmSbC9S2+9uPXe29UrO75VfZ6or8vtsND3z7GfwKs4r6
- lwtNhdfdJSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBEDiUy/A/aqK1kWPHkZ2LV
- qp3vXtxS2/kxwPH/x/x5M9vqzu8RceVm+B8j8Pz5l4kPl8kyHHqRP0t/a3TmT5+frZNmFqmXWyo
- xKvABAA==
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
-X-Endpoint-Received: by B4 Relay for kuurtb@gmail.com/default with
- auth_id=387
-X-Original-From: Kurt Borja <kuurtb@gmail.com>
-Reply-To: kuurtb@gmail.com
+Content-Transfer-Encoding: 8bit
 
-From: Kurt Borja <kuurtb@gmail.com>
+During CPU offline/online operations, the hardware retains MSR settings.
+Even if all CPUs are offlined, the package does not lose its MSR
+settings.
 
-Expose GPIO control methods present on the AWCC interface through
-DebugFS.
+Therefore, it is unnecessary to restore MSRs which are modified during
+the online operation, and this extra step can be removed.
 
-These models come with an RGB lighting STM32 MCU, which usually has two
-GPIO pins with debug capabilities:
-
- - Pin 0: Device Firmware Update mode (DFU)
- - Pin 1: Negative Reset (NRST)
-
-Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
- drivers/platform/x86/dell/alienware-wmi-wmax.c  | 104 +++++++++++++++++++++++-
- 2 files changed, 123 insertions(+), 1 deletion(-)
+ .../intel/speed_select_if/isst_if_common.c    | 21 -------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documentation/ABI/testing/debugfs-alienware-wmi
-index 48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5..c7f525d6baac962be82780608f8da5c0368600cc 100644
---- a/Documentation/ABI/testing/debugfs-alienware-wmi
-+++ b/Documentation/ABI/testing/debugfs-alienware-wmi
-@@ -42,3 +42,23 @@ Description:
- 		details.
- 
- 		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/total_gpios
-+Date:		May 2025
-+KernelVersion:	6.16
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		Total number of GPIO pins reported by the device.
-+
-+		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/pinX
-+Date:		May 2025
-+KernelVersion:	6.16
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file controls GPIO pin X status.
-+
-+		See Documentation/wmi/devices/alienware-wmi.rst for details.
-+
-+		RW
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index f3ad47c9edfac47fae181046acae2190e388306c..f0e6a36abc278d95059dfc007414894dee79b587 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -38,6 +38,9 @@
- #define AWCC_METHOD_GET_FAN_SENSORS		0x13
- #define AWCC_METHOD_THERMAL_INFORMATION		0x14
- #define AWCC_METHOD_THERMAL_CONTROL		0x15
-+#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
-+#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
-+#define AWCC_METHOD_READ_GPIO_STATUS		0x22
- #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
- 
- #define AWCC_FAILURE_CODE			0xFFFFFFFF
-@@ -281,6 +284,8 @@ struct awcc_priv {
- 	struct device *hwdev;
- 	struct awcc_fan_data **fan_data;
- 	unsigned long temp_sensors[AWCC_ID_BITMAP_LONGS];
-+
-+	u32 gpio_count;
- };
- 
- static const enum platform_profile_option awcc_mode_to_platform_profile[AWCC_PROFILE_LAST] = {
-@@ -571,6 +576,38 @@ static int awcc_thermal_information(struct wmi_device *wdev, u8 operation, u8 ar
- 	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, out);
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 31239a93dd71..3c4198ce17f2 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -198,25 +198,6 @@ void isst_resume_common(void)
  }
+ EXPORT_SYMBOL_GPL(isst_resume_common);
  
-+static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 status)
-+{
-+	struct wmax_u32_args args = {
-+		.operation = pin,
-+		.arg1 = status,
-+		.arg2 = 0,
-+		.arg3 = 0,
-+	};
-+	u32 out;
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &out);
-+}
-+
-+static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
-+{
-+	struct wmax_u32_args args = {};
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, count);
-+}
-+
-+static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *status)
-+{
-+	struct wmax_u32_args args = {
-+		.operation = pin,
-+		.arg1 = 0,
-+		.arg2 = 0,
-+		.arg3 = 0,
-+	};
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, status);
-+}
-+
- static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation,
- 				  u32 *out)
- {
-@@ -1317,6 +1354,47 @@ static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *data)
+-static void isst_restore_msr_local(int cpu)
+-{
+-	struct isst_cmd *sst_cmd;
+-	int i;
+-
+-	mutex_lock(&isst_hash_lock);
+-	for (i = 0; i < ARRAY_SIZE(punit_msr_white_list); ++i) {
+-		if (!punit_msr_white_list[i])
+-			break;
+-
+-		hash_for_each_possible(isst_hash, sst_cmd, hnode,
+-				       punit_msr_white_list[i]) {
+-			if (!sst_cmd->mbox_cmd_type && sst_cmd->cpu == cpu)
+-				wrmsrl_safe(sst_cmd->cmd, sst_cmd->data);
+-		}
+-	}
+-	mutex_unlock(&isst_hash_lock);
+-}
+-
+ /**
+  * isst_if_mbox_cmd_invalid() - Check invalid mailbox commands
+  * @cmd: Pointer to the command structure to verify.
+@@ -434,8 +415,6 @@ static int isst_if_cpu_online(unsigned int cpu)
+ set_punit_id:
+ 	isst_cpu_info[cpu].punit_cpu_id = data;
+ 
+-	isst_restore_msr_local(cpu);
+-
  	return 0;
  }
  
-+static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
-+{
-+	unsigned long pin = debugfs_get_aux_num(seq->file);
-+	struct wmi_device *wdev = seq->private;
-+	u32 status;
-+	int ret;
-+
-+	ret = awcc_read_gpio_status(wdev, pin, &status);
-+	if (ret)
-+		return ret;
-+
-+	seq_printf(seq, "%u\n", status);
-+
-+	return 0;
-+}
-+
-+static ssize_t awcc_gpio_pin_write(struct file *file, const char __user *buf,
-+				   size_t count, loff_t *ppos)
-+{
-+	unsigned long pin = debugfs_get_aux_num(file);
-+	struct seq_file *seq = file->private_data;
-+	struct wmi_device *wdev = seq->private;
-+	bool status;
-+	int ret;
-+
-+	if (!ppos || *ppos)
-+		return -EINVAL;
-+
-+	ret = kstrtobool_from_user(buf, count, &status);
-+	if (ret)
-+		return ret;
-+
-+	ret = awcc_fwup_gpio_control(wdev, pin, status);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
-+
- static void awcc_debugfs_remove(void *data)
- {
- 	struct dentry *root = data;
-@@ -1326,8 +1404,11 @@ static void awcc_debugfs_remove(void *data)
- 
- static void awcc_debugfs_init(struct wmi_device *wdev)
- {
--	struct dentry *root;
-+	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
-+	struct dentry *root, *gpio_ctl;
-+	u32 gpio_count;
- 	char name[64];
-+	int ret;
- 
- 	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wdev->dev));
- 	root = debugfs_create_dir(name, NULL);
-@@ -1343,6 +1424,27 @@ static void awcc_debugfs_init(struct wmi_device *wdev)
- 		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
- 					    awcc_debugfs_pprof_data_read);
- 
-+	ret = awcc_read_total_gpios(wdev, &gpio_count);
-+	if (ret) {
-+		dev_dbg(&wdev->dev, "Failed to get total GPIO Pin count\n");
-+		goto out_add_action;
-+	} else if (gpio_count > AWCC_MAX_RES_COUNT) {
-+		dev_dbg(&wdev->dev, "Reported GPIO Pin count may be incorrect: %u\n", gpio_count);
-+		goto out_add_action;
-+	}
-+
-+	gpio_ctl = debugfs_create_dir("gpio_ctl", root);
-+
-+	priv->gpio_count = gpio_count;
-+	debugfs_create_u32("total_gpios", 0444, gpio_ctl, &priv->gpio_count);
-+
-+	for (unsigned int i = 0; i < gpio_count; i++) {
-+		scnprintf(name, sizeof(name), "pin%u", i);
-+		debugfs_create_file_aux_num(name, 0644, gpio_ctl, wdev, i,
-+					    &awcc_gpio_pin_fops);
-+	}
-+
-+out_add_action:
- 	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
- }
- 
-
 -- 
 2.49.0
-
 
