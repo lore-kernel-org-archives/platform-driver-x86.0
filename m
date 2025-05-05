@@ -1,154 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F251B3F3D;
-	Mon,  5 May 2025 06:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E17136E37;
+	Mon,  5 May 2025 07:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746426210; cv=none; b=j+8XNFp0Z+vFmOxQf+VXF9yJth1pSH5lzAdcIjm6xDFABa0e92QcysmbQ05Fufd4ysRnedSegK6bb1y3T4gdXADFsw+T/G+QF4k3nOUS5+bDIz43g/kdY5FrHzi4lUcUazt3pNp1Ls0WFkT0ileetQu18kapoF/sJ1Fjw+TLc+k=
+	t=1746430293; cv=none; b=YSaL1qhAGiaNXWZN+9IjIAkKDm87L7A7uRlscw6cKoFGNYvQrr5EbT694Retke74eMb/eTdNpjYGKtqNqe063goydHtmkQAA2BGVvfDiLfm59aBYEiR7eixVyh16WZh57UxPeCIvuhNfQPwxpQwTKRHFpSeNe7TZ8sNm0hREtOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746426210; c=relaxed/simple;
-	bh=blz46dfKcTkqUU1mdHuxtQzWM8gPcsEOF9yJwSPZQjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WL6b36FCJTB8qWp9zY0SMsz9ioQJ3xEqxrfvskUQDBDbeLnV/qLcfFxVP4IN88WglI23yE3WLmsrgpkoEWGnGKBseA3NHBKmhDIfBodXOilxFQZZoEgK6//UDbfd8mnYsd3kH4B+ApIahIob46N+SW0VGSH83xhQ33uGRNzCZVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koamshTJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746430293; c=relaxed/simple;
+	bh=Mia/6VlHw5H79UAsyq5sOlhQsmih26rtUgQ342pP3aA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c1jnPB+fcUNIYK9Un3gUdK9ZnWf7nUqD3BmECeKyTQvRrgVM6ZC/R41RIk+/L7QwJU3U2fXsOhlxiYX12Rl7r+8E1e4piF7nb6cbuX8coWT439Q/QguzS6h68OweYqJPC0DOQpyjUwAaKoHJdscfq2RrKdYP85OcCU04FHVlq4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VcDnuSoI; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koamshTJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076EFC4CEE4;
-	Mon,  5 May 2025 06:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746426209;
-	bh=blz46dfKcTkqUU1mdHuxtQzWM8gPcsEOF9yJwSPZQjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=koamshTJSZ1WF/eCcwZGiyDpkwsaCADLfvS3QwjV5PotkB/YOwWC8XyuJVSsdLCIk
-	 /4Jtd7bMz2vmYsMNWmf/X4Sis4kqCPIcH2Wo9nzKbUDCdEWEjPm99kDdRKffgOIfVC
-	 GO8aK9v8GOt73LRnb9Tey6JAPxRlvzcCyhCmmdVLeIQZNUJGxNU4jtNLGVqIHj+dbm
-	 MEpwGnq7vCW5rHYuMgB1xOP/tAAjfa3OIH4mb6zlf/o2UpzxgLckv3VDuOX+zXChXs
-	 TEqMARo/LYFzdXeUg1+VrFmrPwI3ZjNDFpR2bMvYWKsJuqvZsxTYKkHx5l6dtCp9Kp
-	 s2eAL5PrUzyBg==
-Date: Mon, 5 May 2025 08:23:26 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
-	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250505-beneficial-fossa-of-weather-67c676@houat>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
- <20250428-wild-condor-of-defiance-cadf60@houat>
- <20250428172516.79058e22@booty>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VcDnuSoI"
+Received: from [10.6.0.9] (host-88-217-226-44.customer.m-online.net [88.217.226.44])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 913782FC0052;
+	Mon,  5 May 2025 09:23:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1746429830;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=07oOkTCvQFL5GUAR5rE5mpJ+wpoj6c+pTk7+hEK1LDg=;
+	b=VcDnuSoIuWKV/CeeXL2natKA2xc8NaDrR5D9AD/uk068SL9cB+1x0uHznpmi9VRav1iyGB
+	qRUB5ZaqrUfY65WGya0+X9QaQCzpXRqbJwGKAnI6GhtQSAgKQCSbe+rwvCzXYUBvb83GqV
+	J+wcSMaFLEhtrPU1kmjslMk/CnxIK+w=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <a1000849-6744-4362-a998-1eaa80adbf86@tuxedocomputers.com>
+Date: Mon, 5 May 2025 09:23:49 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="fxb23j2izsboyssh"
-Content-Disposition: inline
-In-Reply-To: <20250428172516.79058e22@booty>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+To: Pavel Machek <pavel@ucw.cz>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250423153804.64395-1-wse@tuxedocomputers.com>
+ <aAyWs6XJXc4g1lDb@duo.ucw.cz>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <aAyWs6XJXc4g1lDb@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
---fxb23j2izsboyssh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
- devm_drm_bridge_alloc() API
-MIME-Version: 1.0
+Am 26.04.25 um 10:17 schrieb Pavel Machek:
+> On Wed 2025-04-23 17:33:09, Werner Sembach wrote:
+>> @Ilpos you can ignore my small question from my last e-mail. The spec file
+>> of the firmware wants the struct to be zeroed (albeit it does also work if
+>> not) so I implemented it like that.
+> You forgot to cc me.
+>
+> Anyway, lets not do this. Kernel should have real interfaces, not
+> crazy tables to emulate Microsoft interface noone else uses.
 
-On Mon, Apr 28, 2025 at 05:25:16PM +0200, Luca Ceresoli wrote:
-> Hi Maxime,
->=20
-> On Mon, 28 Apr 2025 13:39:23 +0200
-> Maxime Ripard <mripard@kernel.org> wrote:
->=20
-> > On Thu, Apr 24, 2025 at 10:05:49PM +0200, Luca Ceresoli wrote:
-> > > This is the new API for allocating DRM bridges.
-> > >=20
-> > > The devm lifetime management of this driver is peculiar. The underlyi=
-ng
-> > > device for the panel_bridge is the panel, and the devm lifetime is ti=
-ed the
-> > > panel device (panel->dev). However the panel_bridge allocation is not
-> > > performed by the panel driver, but rather by a separate entity (typic=
-ally
-> > > the previous bridge in the encoder chain).
-> > >=20
-> > > Thus when that separate entoty is destroyed, the panel_bridge is not
-> > > removed automatically by devm, so it is rather done explicitly by cal=
-ling
-> > > drm_panel_bridge_remove(). This is the function that does devm_kfree(=
-) the
-> > > panel_bridge in current code, so update it as well to put the bridge
-> > > reference instead.
-> > >=20
-> > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com> =20
-> >=20
-> > This looks fine, but we need a TODO entry to clean this up later on, and
-> > a comment on devm_drm_put_bridge that this is inherently unsafe and
-> > must not be used.
->=20
-> Ah, I see, OK.
->=20
-> Quick draft:
->=20
->  /**
->   * devm_drm_put_bridge - Release a bridge reference obtained via devm
->   * @dev: device that got the bridge via devm
->   * @bridge: pointer to a struct drm_bridge obtained via devm
->   *
->   * Same as drm_bridge_put() for bridge pointers obtained via devm functi=
-ons
->   * such as devm_drm_bridge_alloc().
-> + *
-> + * This function is a temporary workaround and MUST NOT be used. Manual
-> + * handling of bridge lifetime is inherently unsafe.
->   */
+The HID standard is not a "Microsoft interface noone else uses."
 
-That part looks good to me
+Best regards,
 
-> and:
->=20
-> -	devm_kfree(panel_bridge->panel->dev, bridge);
-> +       /* TODO remove this after reworking panel_bridge lifetime */
-> +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
->  }
->=20
-> Does it look good enough?
+Werner
 
-That too, but I was talking about an entry in
-https://www.kernel.org/doc/html/latest/gpu/todo.html
-
-Maxime
-
---fxb23j2izsboyssh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBhZWgAKCRAnX84Zoj2+
-dmbVAX4gMY0F9VXdFsIIKKBjn5Ev2tMwW+uv6doEaqoNJIEat9dVa/bvOYl9n6tm
-ZNZ29HABeQEtltAKrypsuFB4FFzNPiZADC9MB5moran2psvsF2a1chXqCjrK2xyp
-FQXpVqx4qw==
-=pRS+
------END PGP SIGNATURE-----
-
---fxb23j2izsboyssh--
+>
+> NAK.
+>
+> 									Pavel
