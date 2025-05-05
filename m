@@ -1,231 +1,314 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C562C20AF9C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 May 2025 11:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E392822330F;
+	Mon,  5 May 2025 12:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446349; cv=none; b=rOycKf72McOE7umSpseFDVX4QNPwYlAeSR0+USe1bIMKNTtycURZs0TXkJgxVaWcjCGl3RGdp9s5PD8DgnN2NK7iP7cEzjPQH4bgrS880yEiu/vpsmoQaevT8z0KMWxZnsjuUARnytnv8XYHnYR48X/S+A6j1MY697BFavAtxgI=
+	t=1746446708; cv=none; b=Qe0ihOmvyUar/N8Iqjd17p59uC6XaTL/CDO9xlCDhFBX6BE9aiLeDpu0cXvs/uO3lmnIztaaJ210Uk9vezfbHU0sx6YT/EzZhSGHJ4cABReLm4+meqU5v1p3pwB1JRr0OVV05HbSBtEu3mT4Z+TPaXs+T5dMFmQjojgwYzJ3OKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446349; c=relaxed/simple;
-	bh=FGuR2WBMXMvdjCd1ovjlhudh3LWd/ZGssire864V+jY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDMeYNRszVR7TaJLhmhomXCZ+v35ACJVGcoJRhHQ+uT4VB67ODH7uDzNZho+UHXwchM2zM2Kk2ZN6vwI5vmGaJfp4hJNTOSxdQ/SqQEqKHdZtzMPIFhtLwQTVwBImDwtxEXdd36VqdZRuZnBbDpzT3J4kd99aKBqrSW2fF3JOtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IzwHVUWj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746446708; c=relaxed/simple;
+	bh=ftZh6TKo9+W+imfi7WNfcJBEgK/zvIp5wBxTBAO8JFE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ng8YqY5MRD8zB6JJD9hRC5iEIFgzTTj+hSuIOftbpgBPLhFXnFPTyo88kFeFG6EsVQOA4a+WSqlUsi0g/3WrGI/lTA4XHaxPeoZVsPabEnyZOR2Bdu1CGVevwsINeKxsloyxTDRND2ZEnjyB4OP5kAnwirVxCC5wbjkrtGFgUUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xukvo/L7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IzwHVUWj"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NL1EM005776
-	for <platform-driver-x86@vger.kernel.org>; Mon, 5 May 2025 11:59:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Fc5osDce5Ixp5n1NZs7mSFVdO0qDnEBm9TZBSOSJaog=; b=IzwHVUWjTSN2aTmN
-	0IPLo//J+Zxdxh8FtBA8UKJ7kvNC6g+mk1Nyx6JgENgjB7iSAWdxaJe0sbw/06Yx
-	rI0moqbfIK7VFeEzrfag5tOCxAtPLGtRISnnrU3EugHQbuhuTQ1mLn3Qo9ujWUvy
-	fLWLGqdXGl1rq9M9oukIM0trKrsS9nx9J8rSek+aOFY11cmZ7bwh/xlxKMwI8ME0
-	XZwDaJgrzDkUw3ksftk4vxB6U2C162O2dy0nV66qHrYinprt9IRxBdaiAyl1MUWx
-	BJ6yPf5iJzQmpNkxalDBL/TejWUfJFCxnAFOX2Jvul5ILCohX2ayaf4tIxsw5iUu
-	QL/3Aw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbc5c05h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 05 May 2025 11:59:06 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7caef20a527so423785a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 May 2025 04:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746446345; x=1747051145;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fc5osDce5Ixp5n1NZs7mSFVdO0qDnEBm9TZBSOSJaog=;
-        b=qowKbDhkIHokkuoahtIbQ+z2O81KPoaUJ/8jwp3XHtT8p2oM8piB3gGBl1Ri2L278S
-         Kq9WLpaP4JWHYPdu36+HBB2WjNYOzbKDMfR0CzMCEPDHEGw/eZn/oMS70rJjfakFEUWB
-         r8S2Gu/qh6JqQ9D7rUlRnvn9jN+ePCpzXNwdWTJtlRyd8iXZlZoX02vwRurh929Wmshu
-         aLnsiQozrWMYBDM9SP3A74kbJ6WxXUvOsthlT1Z7I9t3Y72vEjGmlCrgnf6zBY7vaE/1
-         bPXWy+WaJ+er5jqGHxAfj0Le7adcAF93o7r/P+EPv/qwKQxrvJOWlqvKKyoMVYKF1zE0
-         c0jw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIhnVJCBoHif9cNVq4+aM379NYkwo6I4vHCZWBcq0IQ5Ii5K36LET4gn2kr8LGD6lxTxPzsA+9ob4FB28p9cz50H6E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6XG8v2imi2SBZmntbCob/oiDmgYS8Fj5aQF9oRQvO/6T/rESk
-	MByESA48NnT22fiUb3PzRdBXxVH23K8Jv9YJXpCIOy2D+OQn0ymSSZi+rPViPPJHjAGt+PJPle3
-	7pT3lzW47PqG7VmV2kx4hBORHSGiMj1Rajy2wyc7pN6oriQNo10/r1RijOB0Lfjy1a5rEKC0H
-X-Gm-Gg: ASbGncu4JPfBoTnYZ+uGvGdVwVyyeJ1NAhNu5qAwrDsyxxNl1isQAl23njU423DpIEc
-	JArJlBw3pZpkxrkhYwd+UuXIqBxFWVvAYLTb3db0Llv7gWORm5L2KEggpKUxOuMBgaXR0H5/PT3
-	RC9RZqCsE0J9r/pqEXp8Vmb2PzrSN1PIdojjFOIOo76qiBLyfyU8LBQKSMtuzIIcYJ5F01NhaRs
-	rL7Xpj/JMpXcFPwMFDKpN0N1WOzbdFftzz6wm8xoD9u9gSMXSs57w9RzOErr6MYb6vo0PhpW2kK
-	7M0MMhUiXu2fbJEHNg3fsNXh4aPfE92JPgKVvWCpx5ndNxVSuuur1bmr8Lr6Dt10NkHGBcVH3/Q
-	w0R/xaE4GEhgYnXZyQzaumf5Sd0M4HqVpgwA4LF8Hq0HKKaGrBd0i+J+3hBMdPL6xQdOl
-X-Received: by 2002:a05:620a:4001:b0:7c5:9a37:c418 with SMTP id af79cd13be357-7cae3b1604amr1093370385a.51.1746446344930;
-        Mon, 05 May 2025 04:59:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxsMcGBcuXzdzsMZLmfG4jCCth/aIBhqNnJlAxtHNCdoHctJUXgi2+jH+zw6iGwmYPEzBLZg==
-X-Received: by 2002:a05:620a:4001:b0:7c5:9a37:c418 with SMTP id af79cd13be357-7cae3b1604amr1093364085a.51.1746446344392;
-        Mon, 05 May 2025 04:59:04 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:671:42db:aca9:2ffd:84bc:ddc5? (2001-14bb-671-42db-aca9-2ffd-84bc-ddc5.rev.dnainternet.fi. [2001:14bb:671:42db:aca9:2ffd:84bc:ddc5])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c8d40sm1695574e87.98.2025.05.05.04.58.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 04:59:03 -0700 (PDT)
-Message-ID: <9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
-Date: Mon, 5 May 2025 14:58:58 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xukvo/L7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746446707; x=1777982707;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ftZh6TKo9+W+imfi7WNfcJBEgK/zvIp5wBxTBAO8JFE=;
+  b=Xukvo/L7Ptg23eV0VHDl54BusXrBsYbwh8a0MjepCnQH971Am3+Njdeb
+   pqEpFKQKZ+W99FBShH5Z1E6Y2t7+0xTeOP6fAVdFhYeHLTGhfCBKMISD/
+   nGf4L5fJmM41lGh/kg5Z3J88ZQZpKsXFwV9nvvaordBEx5GFz3Txt4n/U
+   hBUEcoWbwHbX706XRoxQBRG6y36qD8TARxmEAl82OSlzhbsM5FIofxw7b
+   8enIbyTASurvHGY1s0zn/vneRGU0s5eEuK342iidi59aSuuITZt8Jw23K
+   3ayVDC3r+KtuVnsYBaehy1XYbFlWcaQ+o+YohBkDsN4KO4aslrBeG6r4m
+   A==;
+X-CSE-ConnectionGUID: XoMyeaieTFOsNFH+bIXj1g==
+X-CSE-MsgGUID: +laki70jTj209HzGqSRM3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="70555765"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="70555765"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:05:06 -0700
+X-CSE-ConnectionGUID: 2VW5DpuERNufmn+6vRDtfg==
+X-CSE-MsgGUID: WeupW2oJRnyu8Jf6Cxl/Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="158450381"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.68])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:05:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 5 May 2025 15:04:59 +0300 (EEST)
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+cc: malattia@linux.it, Hans de Goede <hdegoede@redhat.com>, hverkuil@xs4all.nl, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/sony-laptop: Remove unused sony laptop
+ camera code
+In-Reply-To: <20250505005539.336183-1-linux@treblig.org>
+Message-ID: <bbd883e2-7615-c37b-3a6a-acddd76bf3ad@linux.intel.com>
+References: <20250505005539.336183-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Inki Dae
- <inki.dae@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-        Louis Chauvet <louis.chauvet@bootlin.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson
- <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anusha Srivatsa
- <asrivats@redhat.com>,
-        Paul Kocialkowski <paulk@sys-base.io>,
-        Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Adam Ford <aford173@gmail.com>,
-        Adrien Grassein <adrien.grassein@gmail.com>,
-        Aleksandr Mishin <amishin@t-argos.ru>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Christoph Fritz <chf.fritz@googlemail.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Detlev Casanova <detlev.casanova@collabora.com>,
-        Dharma Balasubiramani <dharma.b@microchip.com>,
-        Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
-        Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesse Van Gavere <jesseevg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Manikandan Muralidharan <manikandan.m@microchip.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-        Vitalii Mordan <mordan@ispras.ru>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-        "Rob Herring (Arm)" <robh@kernel.org>,
-        Hsin-Te Yuan
- <yuanhsinte@chromium.org>,
-        Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
-        Aradhya Bhatia <a-bhatia1@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Ian Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>,
-        Peter Senna Tschudin <peter.senna@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Herve Codina
- <herve.codina@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark <robdclark@gmail.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
- <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
- <20250430-arrogant-marmoset-of-justice-92ced3@houat>
- <20250505130648.22ec8716@booty>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250505130648.22ec8716@booty>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: AxpMZVJ_HmyIHcegh7Ejjgibe8gt3r3u
-X-Authority-Analysis: v=2.4 cv=O7Y5vA9W c=1 sm=1 tr=0 ts=6818a80a cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=H8qqLt0gxxJlsNWwv3EA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: AxpMZVJ_HmyIHcegh7Ejjgibe8gt3r3u
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDExNCBTYWx0ZWRfX0LIPtj//ojTR
- zbsCK6t4yIb0a49dbvdhUZ1LMvO/g4n6bU/cK2xulX5expwMekl4ikgq9y9HUHOor3+QIGe8uPr
- rA1noKSC2bRLvGReGp03J+YRY2fg9b4E3BwH0pc1TD6KVRa90/o9nQhjt4l0Vjr8ZbEax+jUjDf
- Mi0do0loULFJ58yTOYveU4RElpV83VFcRcXv7QRTbbWZlOUOh6nvIlOl0F2ZQ2H8d9G08WZ7By7
- VtmLBpt30xmRUVB+VwPJ0tTLHANycDxSG6LTjDUUXIAxLDWx3Tm++Wf9HqeB1N5SBUtquWEvwL6
- kYX4BnMOM+CyInbYh0Ca1NN7q4A9F4ids61At13cwURGX1rBVvZQHn750D/Pno6+190KXAKuGg5
- VKHzVrTtjlwrFe5g057Kz5ZVv6EhYknflaN5d90auRRGwwpi6v9gAGJTU6tZ2TFIAshZ1r6f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 phishscore=0 bulkscore=0
- impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050114
+Content-Type: text/plain; charset=US-ASCII
 
-On 05/05/2025 14:06, Luca Ceresoli wrote:
-> Inki, Kyungmin, Seung-Woo, Alim,
-> 
-> On Wed, 30 Apr 2025 10:08:14 +0200
-> Maxime Ripard <mripard@kernel.org> wrote:
-> 
->> Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
->> following patch, and it going through drm-misc?
->>
->> https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
->>
->> If not, we'll revert.
-> 
-> Did you have a chance to have a look at the patch mentioned by Maxime?
-> 
-> It was applied to drm-misc-next by mistake. Not your mistake of course,
-> but now it's there so if you don't reply anything it will have to be
-> reverted, and then sent again to go through all the review process to
-> be hopefully re-applied in the future.
-> 
-> If you agree with keeping it in drm-misc-next, that would be less noise
-> for everybody.
-> 
-> I'm going to send v3 very soon, so it would be good to decide what to
-> do before that.
+On Mon, 5 May 2025, linux@treblig.org wrote:
 
-For the record: even though I'm not happy with msm-related patches going 
-through drm-misc without additional ack from our side, I think reverting 
-those and reapplying them later will create a bigger mess. So, I'm fine 
-with keeping drm/msm/* bridged patches in.
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> commit ba47652ba655 ("media: meye: remove this deprecated driver")
+> removed the meye driver but left behind the code in sony-laptop.c
+> which that driver used to call.
+> 
+> Remove the sony_pic_camera_command() function, and the set of
+> defines (SONY_PIC_COMMAND_*) in a header used for the interface
+> and the static helpers it called.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  MAINTAINERS                        |   1 -
+>  drivers/platform/x86/sony-laptop.c | 135 -----------------------------
+>  include/linux/sony-laptop.h        |  39 ---------
+>  3 files changed, 175 deletions(-)
+>  delete mode 100644 include/linux/sony-laptop.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2aed76827090..6c865b5d8fae 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22671,7 +22671,6 @@ W:	http://www.linux.it/~malattia/wiki/index.php/Sony_drivers
+>  F:	Documentation/admin-guide/laptops/sony-laptop.rst
+>  F:	drivers/char/sonypi.c
+>  F:	drivers/platform/x86/sony-laptop.c
+> -F:	include/linux/sony-laptop.h
+>  
+>  SOPHGO DEVICETREES and DRIVERS
+>  M:	Chen Wang <unicorn_wang@outlook.com>
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index b52390fbd743..4efd0d7031a5 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -48,7 +48,6 @@
+>  #include <linux/acpi.h>
+>  #include <linux/slab.h>
+>  #include <linux/sonypi.h>
+> -#include <linux/sony-laptop.h>
+>  #include <linux/rfkill.h>
+>  #ifdef CONFIG_SONYPI_COMPAT
+>  #include <linux/poll.h>
+> @@ -3619,22 +3618,6 @@ static u8 sony_pic_call2(u8 dev, u8 fn)
+>  	return v1;
+>  }
+>  
+> -static u8 sony_pic_call3(u8 dev, u8 fn, u8 v)
+> -{
+> -	u8 v1;
+> -
+> -	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+> -	outb(dev, spic_dev.cur_ioport->io1.minimum + 4);
+> -	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+> -	outb(fn, spic_dev.cur_ioport->io1.minimum);
+> -	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+> -	outb(v, spic_dev.cur_ioport->io1.minimum);
+> -	v1 = inb_p(spic_dev.cur_ioport->io1.minimum);
+> -	dprintk("sony_pic_call3(0x%.2x - 0x%.2x - 0x%.2x): 0x%.4x\n",
+> -			dev, fn, v, v1);
+> -	return v1;
+> -}
+> -
+>  /*
+>   * minidrivers for SPIC models
+>   */
+> @@ -3754,124 +3737,6 @@ static void sony_pic_detect_device_type(struct sony_pic_dev *dev)
+>  #define SONYPI_CAMERA_REVISION 			8
+>  #define SONYPI_CAMERA_ROMVERSION 		9
+>  
+> -static int __sony_pic_camera_ready(void)
+> -{
+> -	u8 v;
+> -
+> -	v = sony_pic_call2(0x8f, SONYPI_CAMERA_STATUS);
+> -	return (v != 0xff && (v & SONYPI_CAMERA_STATUS_READY));
+> -}
+> -
+> -static int __sony_pic_camera_off(void)
+> -{
+> -	if (!camera) {
+> -		pr_warn("camera control not enabled\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE,
+> -				SONYPI_CAMERA_MUTE_MASK),
+> -			ITERATIONS_SHORT);
+> -
+> -	if (spic_dev.camera_power) {
+> -		sony_pic_call2(0x91, 0);
+> -		spic_dev.camera_power = 0;
+> -	}
+> -	return 0;
+> -}
+> -
+> -static int __sony_pic_camera_on(void)
+> -{
+> -	int i, j, x;
+> -
+> -	if (!camera) {
+> -		pr_warn("camera control not enabled\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	if (spic_dev.camera_power)
+> -		return 0;
+> -
+> -	for (j = 5; j > 0; j--) {
+> -
+> -		for (x = 0; x < 100 && sony_pic_call2(0x91, 0x1); x++)
+> -			msleep(10);
+> -		sony_pic_call1(0x93);
+> -
+> -		for (i = 400; i > 0; i--) {
+> -			if (__sony_pic_camera_ready())
+> -				break;
+> -			msleep(10);
+> -		}
+> -		if (i)
+> -			break;
+> -	}
+> -
+> -	if (j == 0) {
+> -		pr_warn("failed to power on camera\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTROL,
+> -				0x5a),
+> -			ITERATIONS_SHORT);
+> -
+> -	spic_dev.camera_power = 1;
+> -	return 0;
+> -}
+> -
+> -/* External camera command (exported to the motion eye v4l driver) */
+> -int sony_pic_camera_command(int command, u8 value)
+> -{
+> -	if (!camera)
+> -		return -EIO;
+> -
+> -	mutex_lock(&spic_dev.lock);
+> -
+> -	switch (command) {
+> -	case SONY_PIC_COMMAND_SETCAMERA:
+> -		if (value)
+> -			__sony_pic_camera_on();
+> -		else
+> -			__sony_pic_camera_off();
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERABRIGHTNESS:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_BRIGHTNESS, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERACONTRAST:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTRAST, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERAHUE:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_HUE, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERACOLOR:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_COLOR, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERASHARPNESS:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_SHARPNESS, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERAPICTURE:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE, value),
+> -				ITERATIONS_SHORT);
+> -		break;
+> -	case SONY_PIC_COMMAND_SETCAMERAAGC:
+> -		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_AGC, value),
+> -				ITERATIONS_SHORT);
+
+Hi,
+
+Shouldn't sony_pic_call3() be removed too? AFAICT, all users are gone 
+after this removal?
+
+And what about SONYPI_CAMERA_* ? Also SONYPI_DIRECTION_BACKWARDS that is 
+among the CAMERA defs seems unused.
 
 -- 
-With best wishes
-Dmitry
+ i.
+
+
+> -		break;
+> -	default:
+> -		pr_err("sony_pic_camera_command invalid: %d\n", command);
+> -		break;
+> -	}
+> -	mutex_unlock(&spic_dev.lock);
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL(sony_pic_camera_command);
+> -
+>  /* gprs/edge modem (SZ460N and SZ210P), thanks to Joshua Wise */
+>  static void __sony_pic_set_wwanpower(u8 state)
+>  {
+> diff --git a/include/linux/sony-laptop.h b/include/linux/sony-laptop.h
+> deleted file mode 100644
+> index 1e3c92feea6e..000000000000
+> --- a/include/linux/sony-laptop.h
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef _SONYLAPTOP_H_
+> -#define _SONYLAPTOP_H_
+> -
+> -#include <linux/types.h>
+> -
+> -#ifdef __KERNEL__
+> -
+> -/* used only for communication between v4l and sony-laptop */
+> -
+> -#define SONY_PIC_COMMAND_GETCAMERA		 1	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERA		 2
+> -#define SONY_PIC_COMMAND_GETCAMERABRIGHTNESS	 3	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERABRIGHTNESS	 4
+> -#define SONY_PIC_COMMAND_GETCAMERACONTRAST	 5	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERACONTRAST	 6
+> -#define SONY_PIC_COMMAND_GETCAMERAHUE		 7	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERAHUE		 8
+> -#define SONY_PIC_COMMAND_GETCAMERACOLOR		 9	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERACOLOR		10
+> -#define SONY_PIC_COMMAND_GETCAMERASHARPNESS	11	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERASHARPNESS	12
+> -#define SONY_PIC_COMMAND_GETCAMERAPICTURE	13	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERAPICTURE	14
+> -#define SONY_PIC_COMMAND_GETCAMERAAGC		15	/* obsolete */
+> -#define SONY_PIC_COMMAND_SETCAMERAAGC		16
+> -#define SONY_PIC_COMMAND_GETCAMERADIRECTION	17	/* obsolete */
+> -#define SONY_PIC_COMMAND_GETCAMERAROMVERSION	18	/* obsolete */
+> -#define SONY_PIC_COMMAND_GETCAMERAREVISION	19	/* obsolete */
+> -
+> -#if IS_ENABLED(CONFIG_SONY_LAPTOP)
+> -int sony_pic_camera_command(int command, u8 value);
+> -#else
+> -static inline int sony_pic_camera_command(int command, u8 value) { return 0; }
+> -#endif
+> -
+> -#endif	/* __KERNEL__ */
+> -
+> -#endif /* _SONYLAPTOP_H_ */
+> 
