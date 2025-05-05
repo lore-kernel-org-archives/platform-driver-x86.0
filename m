@@ -1,193 +1,171 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C0192580
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 May 2025 15:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034125DCF0;
+	Mon,  5 May 2025 15:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457341; cv=none; b=aYyXGatZQCzzC3U3ypjelQwI3Al7YDDL19aGDnf5CMWPxIqdscP4t+YX3nZepkLDKR+t/4GhcjCej3cTjFKcRrtZLjQvjDhD7EXtal+0jaCL+7WtAozolJZgC5gv+QBmMiTn6iKtsjJEKxiTD452a8Go4sfebT1m/qAmOA5vV5c=
+	t=1746458437; cv=none; b=SfOo9zjgPPxR3YbW0npFR6qCdMI7zIZwmrBN50ygtBz2i71qugRZYpx17OgwlMn+6ioPeZPDosnPUzsSdBr7ZoEh+uk55j1klEbWC4EH8hre3d6b6mdBDYQNrUCQaETuzhh/Odz5m1IskNI97I0sc83JMUJvYBuqnbdF/0o59/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457341; c=relaxed/simple;
-	bh=WG2C79iYLpYk5QOXfriAT9Bi91qZ3VBPRQSuXKVp3KE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QAESVRAnTGRCYhN/NZn5Pz5IM8Cg1qhiTRHLRgTFX55Poq+zKgXIKsfzWh0MIet1orGHpNBOsRq5W4eSDjL/3S2LMMFK6FeWAP7iAeuJxzBJ+P9yL0mvZGtbSoUa7D6KL8VdoX2WrGX//G0y9F0hnSPP/UPFCX1wGc4jIS7QVyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2aEZF4h; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746458437; c=relaxed/simple;
+	bh=D5Leh3G4aTBuCxDXyMcG1WOmnl8u7g/BYtrATwoG8R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eWJHRh1IVvESHiAhiOZrnhlseamK9t+gYcXMplADbXENqm+mXnG6jAdlukSIy+7AD8GVK8XeLVmbkccrOiH3+y9L1cjYmEl87vv5LvNmsnGNy5QsQPAt1zPgmf7e2o5oYTGnFyM+akT45apqxm703/i80d4Ru//4vljr5rEcj8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IsYdCFfo; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2aEZF4h"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso6163640b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 May 2025 08:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746457335; x=1747062135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V6yGuW8BR0PciYSktpZ92vqN5OVhzfVd+WKgX8I0EpE=;
-        b=R2aEZF4h1ATlkOdc81xey788iUnrp+Io0+Z2bNpa11q+8QKQTkWNFKYKsYhA9FxucR
-         uT+tSbr4hNwVz8yiw3f1A8iBwWsHZ7dFIENY1fSzehiXUuoU19JkG9k4OsaNN7bfdgho
-         QmjlpfkkKIZ28jvvOYuej5jB4odUmE/wNHBcTxc0AFeeWaBEOEEbqp51qmVhSy8mu+yI
-         STzozG6WettsJyzRvpA93TzXZK9/IGwoX/KDb5stzeSXiPoPGRBW09t3I4mCjlPYmQRm
-         I708cedSrsYvPQ17b7bDeXodPjZ5XnIYCgbZbEk815TwFMYyAgEKfT5s4QXZKoc7b2Ii
-         kExw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746457335; x=1747062135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V6yGuW8BR0PciYSktpZ92vqN5OVhzfVd+WKgX8I0EpE=;
-        b=KT1IfoNEerxsBdD/JVYt1uy/mSWVHNeWWHpRN3V+F2pLRM8UF7nUK1BwSCoAvmxOuG
-         G404Ms/IgsP3MkQeKztmVyoeHZ/jp+681eXawcfxhW32DUHO08D+lTtQoPzrCgKIVhOZ
-         cTaUFbvZF6DelUYmaYB9vWA4/svd2KT0cbnz2KRty8nyiTlrmHFBbdP+Z4VW+N4Q/mdA
-         S3TTzxTr5YvDrxxvNHvrvyoG2UQS0zSGaz2be+mZZja3sr0yqbHh1LHPlluvfBkJPrvr
-         dfrJWpGxjJzFZYzs78cIMdkvdkcxQXtN81NlMly2XMraW6jzqlpkG6EO8NZTYt2OTHq2
-         WFyg==
-X-Gm-Message-State: AOJu0Yx+FKwq4hniq9sLmQaEqW4F1IVymBGB+wZ8Y3ajNPNpEAWJhwRi
-	y4m1lQo6IxAErhNlP8Xesl8D+aq0CbFmBOEPisbq913aLu5QBwXT
-X-Gm-Gg: ASbGncvedRNM/jpcmMMeg5hUXcMP8N/uqflVyVEBcLi5GPE1EBrxmw9imP7xVIxfDiq
-	ThC/pFP4PFJNRh8dAXfkNGsYr5/0qmkxurfttd8MCzQqEedLKaKSIKTybVzw48KPVS42o+8i5No
-	a0AjrabEODyTY4vBUGfwhbzOhlERUg6I6WOZXFskg+TerWDMyMtxmKo0LK3P52LyumDClEIXjG8
-	3hHwYB1G48P3wfeu74iPs4P6ixvu04PrKwjDbhXjZ9tpSf0udQBALI+BL+lPDUSaeZUCydpM1Cu
-	xKBhwwOZ/TlpBfaH1eIHwtNQe5RoXEb6Lf+yF2icS6X+JbGPIiOYpS7d0MltQUcoqvwUCVkEd4O
-	S0kx25WRQgh/z5dRcB1xhMtBJx6cD
-X-Google-Smtp-Source: AGHT+IHugqt4tDsPKUidUvY9R0DFha+pPS2TuRrpdrakO0pYx9BF8/eXiMnHyWm89dq7lpwuyjL+xg==
-X-Received: by 2002:a17:90b:4c51:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-30a5ae10effmr15093637a91.9.1746457334420;
-        Mon, 05 May 2025 08:02:14 -0700 (PDT)
-Received: from ubuntu-ThinkPad-X9-14-Gen-1.. (127.37.178.217.static.user.transix.jp. [217.178.37.127])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3471f323sm13058746a91.7.2025.05.05.08.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 08:02:14 -0700 (PDT)
-From: Nitin Joshi <nitjoshi@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	njoshi1@lenovo.com,
-	Nitin Joshi <nitjoshi@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: [PATCH v6] platform/x86: thinkpad-acpi: Add support for new hotkey for  camera shutter switch
-Date: Tue,  6 May 2025 00:01:52 +0900
-Message-ID: <20250505150152.27968-1-nitjoshi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IsYdCFfo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 389214398E;
+	Mon,  5 May 2025 15:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746458432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u9TG3OmSzS8fUS1eTfStK5VQAKwBeZ4see00hs7EtDk=;
+	b=IsYdCFfoHd/qOi+gYYbWTZx9rAYgOwGSN0Eo0YXJnG9B/edlJPMStRCvc+FLKq4wqI/fPT
+	1o0tp81lbGpBiMxcF7EkxBNQLTJ4AW8TE1s3h+3Ao+ryG1FR1N7lvwzYWEpMgHLMK1rp98
+	XLYJTZyxXDkzfobqUvTulr2czf0EOlP64GFNT5AXkWvxB73odvQWCI/huAFffxIc01O/x+
+	jInLvozRhnoxnrD5dAmxc9jlW2nmyCQlvuE4hqgOHFPF/9cYlCwYazKn2p5pp5dpHdAi5j
+	SFvCWFSAfDRERL7wOxHamZgj6g3QGMXJO/fr/76NFpGY1qnmq1cAlxnaFpAo5A==
+Date: Mon, 5 May 2025 17:20:27 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250505172027.25af7721@booty>
+In-Reply-To: <20250505-beneficial-fossa-of-weather-67c676@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
+	<20250428-wild-condor-of-defiance-cadf60@houat>
+	<20250428172516.79058e22@booty>
+	<20250505-beneficial-fossa-of-weather-67c676@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedugeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefkedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
+ hepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-New Lenovo Thinkpad models, e.g. the 'X9-14 Gen 1' and 'X9-15 Gen 1'
-has new shortcut on F9 key i.e to switch camera shutter and it
-send a new 0x131b hkey event when F9 key is pressed.
+On Mon, 5 May 2025 08:23:26 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-This commit adds support for new hkey 0x131b.
+> On Mon, Apr 28, 2025 at 05:25:16PM +0200, Luca Ceresoli wrote:
+> > Hi Maxime,
+> > 
+> > On Mon, 28 Apr 2025 13:39:23 +0200
+> > Maxime Ripard <mripard@kernel.org> wrote:
+> >   
+> > > On Thu, Apr 24, 2025 at 10:05:49PM +0200, Luca Ceresoli wrote:  
+> > > > This is the new API for allocating DRM bridges.
+> > > > 
+> > > > The devm lifetime management of this driver is peculiar. The underlying
+> > > > device for the panel_bridge is the panel, and the devm lifetime is tied the
+> > > > panel device (panel->dev). However the panel_bridge allocation is not
+> > > > performed by the panel driver, but rather by a separate entity (typically
+> > > > the previous bridge in the encoder chain).
+> > > > 
+> > > > Thus when that separate entoty is destroyed, the panel_bridge is not
+> > > > removed automatically by devm, so it is rather done explicitly by calling
+> > > > drm_panel_bridge_remove(). This is the function that does devm_kfree() the
+> > > > panel_bridge in current code, so update it as well to put the bridge
+> > > > reference instead.
+> > > > 
+> > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>    
+> > > 
+> > > This looks fine, but we need a TODO entry to clean this up later on, and
+> > > a comment on devm_drm_put_bridge that this is inherently unsafe and
+> > > must not be used.  
+> > 
+> > Ah, I see, OK.
+> > 
+> > Quick draft:
+> > 
+> >  /**
+> >   * devm_drm_put_bridge - Release a bridge reference obtained via devm
+> >   * @dev: device that got the bridge via devm
+> >   * @bridge: pointer to a struct drm_bridge obtained via devm
+> >   *
+> >   * Same as drm_bridge_put() for bridge pointers obtained via devm functions
+> >   * such as devm_drm_bridge_alloc().
+> > + *
+> > + * This function is a temporary workaround and MUST NOT be used. Manual
+> > + * handling of bridge lifetime is inherently unsafe.
+> >   */  
+> 
+> That part looks good to me
+> 
+> > and:
+> > 
+> > -	devm_kfree(panel_bridge->panel->dev, bridge);
+> > +       /* TODO remove this after reworking panel_bridge lifetime */
+> > +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
+> >  }
+> > 
+> > Does it look good enough?  
+> 
+> That too, but I was talking about an entry in
+> https://www.kernel.org/doc/html/latest/gpu/todo.html
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Nitin Joshi <nitjoshi@gmail.com>
----
-Changes in v6:
-* Fix sparse error.
-Changes in v5:
-* Incorporated review comments for consistency.
-Changes in v4:
-* Renamed macro from METHOD_ERR to GCES_NO_SHUTTER_DEVICE.
-Changes in v3:
-* Avoid wasteful get_camera_shutter() calls and Minor changes based on review comments to make
-  code more readable.
-Changes in v2:
-* Added ASL method to get camera shutter status and send it to userspace.
----
- drivers/platform/x86/thinkpad_acpi.c | 43 +++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+Ah, sure!
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5790095c175e..080063395082 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -182,6 +182,7 @@ enum tpacpi_hkey_event_t {
- 						   * directly in the sparse-keymap.
- 						   */
- 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
-+	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
- 	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
- 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
- 	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
-@@ -2250,6 +2251,25 @@ static void tpacpi_input_send_tabletsw(void)
- 	}
- }
- 
-+#define GCES_NO_SHUTTER_DEVICE BIT(31)
-+
-+static int get_camera_shutter(void)
-+{
-+	acpi_handle gces_handle;
-+	int output;
-+
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GCES", &gces_handle)))
-+		return -ENODEV;
-+
-+	if (!acpi_evalf(gces_handle, &output, NULL, "dd", 0))
-+		return -EIO;
-+
-+	if (output & GCES_NO_SHUTTER_DEVICE)
-+		return -ENODEV;
-+
-+	return output;
-+}
-+
- static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
- {
- 	bool known_ev;
-@@ -3303,7 +3323,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	const struct key_entry *keymap;
- 	bool radiosw_state  = false;
- 	bool tabletsw_state = false;
--	int hkeyv, res, status;
-+	int hkeyv, res, status, camera_shutter_state;
- 
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
- 			"initializing hotkey subdriver\n");
-@@ -3467,6 +3487,12 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	if (res)
- 		return res;
- 
-+	camera_shutter_state = get_camera_shutter();
-+	if (camera_shutter_state >= 0) {
-+		input_set_capability(tpacpi_inputdev, EV_SW, SW_CAMERA_LENS_COVER);
-+		input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, camera_shutter_state);
-+	}
-+
- 	if (tp_features.hotkey_wlsw) {
- 		input_set_capability(tpacpi_inputdev, EV_SW, SW_RFKILL_ALL);
- 		input_report_switch(tpacpi_inputdev,
-@@ -11161,6 +11187,8 @@ static struct platform_driver tpacpi_hwmon_pdriver = {
-  */
- static bool tpacpi_driver_event(const unsigned int hkey_event)
- {
-+	int camera_shutter_state;
-+
- 	switch (hkey_event) {
- 	case TP_HKEY_EV_BRGHT_UP:
- 	case TP_HKEY_EV_BRGHT_DOWN:
-@@ -11236,6 +11264,19 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
- 		else
- 			dytc_control_amt(!dytc_amt_active);
- 
-+		return true;
-+	case TP_HKEY_EV_CAMERASHUTTER_TOGGLE:
-+		camera_shutter_state = get_camera_shutter();
-+		if (camera_shutter_state < 0) {
-+			pr_err("Error retrieving camera shutter state after shutter event\n");
-+			return true;
-+		}
-+		mutex_lock(&tpacpi_inputdev_send_mutex);
-+
-+		input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, camera_shutter_state);
-+		input_sync(tpacpi_inputdev);
-+
-+		mutex_unlock(&tpacpi_inputdev_send_mutex);
- 		return true;
- 	case TP_HKEY_EV_DOUBLETAP_TOGGLE:
- 		tp_features.trackpoint_doubletap = !tp_features.trackpoint_doubletap;
+I queued this for v3, if you have better suggestions don't hesitate to
+let me know:
+
+-----8<-----
+
+Remove devm_drm_put_bridge()
+----------------------------
+
+Due to how the panel bridge handles the drm_bridge object lifetime, special
+care must be taken to dispose of the drm_bridge object when the
+panel_bridge is removed. This is currently managed using
+devm_drm_put_bridge(), but that is an unsafe, temporary workaround. To fix
+that, the DRM panel lifetime needs to be reworked. After the rework is
+done, remove devm_drm_put_bridge() and the TODO in drm_panel_bridge_remove().
+
+Contact: Maxime Ripard <mripard@kernel.org>,
+         Luca Ceresoli <luca.ceresoli@bootlin.com>
+
+Level: Intermediate
+
+-----8<-----
+
+Luca
+
 -- 
-2.43.0
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
