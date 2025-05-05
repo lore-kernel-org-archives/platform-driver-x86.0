@@ -1,59 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4827817993;
-	Mon,  5 May 2025 12:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3471119D8BC;
+	Mon,  5 May 2025 12:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447769; cv=none; b=kV/0I1MjcqCpPGVSwzE9/XcG2BGVq9+PYF/cSfd15RU2jo3MIeZZIbBSumg8+O9PJ3e9gD7qDGRZehJbOnc8NTnS0juDtcXleJThwdTIqe/Dxrs9rKhJCakF/f/3y1LdEsGes1FCeXdsKD0sDN0DbUNJKrAHmLVE+ybFcbiN9tw=
+	t=1746448336; cv=none; b=jgji4T2UtqOZBUWHa8j8XEz1XqXRIqV1GW96ZVlqs0EQ59A0nTXdpbZ5jb6dF6Fc/8JIKHzavAF6qbysUmQiXJV2jkX3SZkptxmxP3Wc03HhReOYhYHu6JESF1+T27I5A7e5rIFVj9rXBFkV25bc18o/TMAmuP5U6wj2jIx88k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447769; c=relaxed/simple;
-	bh=Y8ybWUoyZGMkPfg1A2YJrkLyMIN3pzE8FSiuDN0etOE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cR0JJYdr2BNHSXxwwiexSy8/K/dioPykiSgHKMSuea8a9C+gA67pFakMvmlytUDC7TLfUDqSM1gQtVEbwcTawUpT/eobWB8oEA3NZmKvZ1ET7wehNreVe8MY2Gsp25nv/SCJTS27tGu5H4HYNGYEEbTWPvJNOKdabxPJVkMd5iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZBpVUGK; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746448336; c=relaxed/simple;
+	bh=rOFXNGK/YYhTjToGtlEYHoOHEbfgPKtZr83pi5WLFVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=exwv6th1GvqurmKBdltWUX+4QRh07vAr6eE6J93ihNraVmmYlr3YJ+dkDyUlxTGa9LaGobZJlVPgbijWmsQVw5NDBNRD+dmCmJD6cVbL2nK4O2SDuINYFkPHyLimaAx2VxMHCILiLvLvsb6hPVaGfQ18BfqwTZ8cFToHSV0TcHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hjAbYQVe; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZBpVUGK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746447767; x=1777983767;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Y8ybWUoyZGMkPfg1A2YJrkLyMIN3pzE8FSiuDN0etOE=;
-  b=fZBpVUGK7HwxLbafyknepESXrMNZplsGjW0Tl9ZnJicCYYIvWHqmpRFQ
-   golqul0Af9j/uChih2zWLRJBIpcFPJq0QYkT5pSrwHWOg7zyUVyCbCMdf
-   kyzmhWO4Zio4p7baEzc2MfvcH6Zpygw8dcGh33RswHRwcLyKrK1NuYibB
-   i68vFRekKmqx0en/VzpqiPVJRtMTQ5WbN4wEl6hYY9f6df/SkDteqQQFk
-   yiY9T7bbCPz0Mi1h5EQSJQhmsD7WquQghX92vOrLo6w4WFpFBG3CbW7wA
-   QwaxFhhFnS0hlT7Gz9TNqf+GPLaZvmpgtO9iPFpDyKObVy5ZLT6FJSC/b
-   w==;
-X-CSE-ConnectionGUID: mOtvbLdcT1uW05VzcDGd4g==
-X-CSE-MsgGUID: 5iJgjcJ3TyCEjRQ5i9rkhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="51706556"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="51706556"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:22:45 -0700
-X-CSE-ConnectionGUID: EhktSXioRkilbp+oZQALmw==
-X-CSE-MsgGUID: TF2r7xXfRiySogHX9A5sAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="166156824"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.68])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:22:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 5 May 2025 15:22:39 +0300 (EEST)
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] power: supply: core: Add additional health status
- values
-In-Reply-To: <wla5mfgblecq7tiiangrzxv32yjhiru4h6i7nnmn3qvvl6o3ht@j7rbgete42u7>
-Message-ID: <8cb0e0f7-a48e-5770-0c82-f0a75ed23d66@linux.intel.com>
-References: <20250429003606.303870-1-W_Armin@gmx.de> <wla5mfgblecq7tiiangrzxv32yjhiru4h6i7nnmn3qvvl6o3ht@j7rbgete42u7>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hjAbYQVe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B6D95439CF;
+	Mon,  5 May 2025 12:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746448330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t8GmbzWzwjKBF6Grm3MhKIQ4eVv3NPu5Y9A5XIPvDcA=;
+	b=hjAbYQVeSBenLJHyzNnH+29VE8aQu5NdvGcBu901d4KAVGGIH73+xJRtOkMBvPMxod408f
+	46cJ1FSSVEaihm6e4YRyxwK6H9vqKbZsH6FeNdjG6qHuFuPEj6MXQaHOvyeCuws3FaQ4ZJ
+	tyEO3Rm3oNF8VG/6gKRuTcpBY8uLXdkn1k8zdS9iBbYepUeyI1mPnliHP5HbYAMf8SxYgc
+	gh87HvhVyGIZKypBQt9lGmUGqhDD0V6ogc/9QAW1FprShOP2PTeLVdqhZJSU2GFelqS2IN
+	VCutWhQebpQ3qtFA8QsGOMpeGLhJbitY4xZjYFl5bgwg7lvllwMgOkM9Yioomg==
+Date: Mon, 5 May 2025 14:31:58 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Inki Dae <inki.dae@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Maxime Ripard <mripard@kernel.org>, Louis
+ Chauvet <louis.chauvet@bootlin.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com, Adam Ford <aford173@gmail.com>,
+ Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
+ <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
+ <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
+ Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
+ <cristian.ciocaltea@collabora.com>, Detlev Casanova
+ <detlev.casanova@collabora.com>, Dharma Balasubiramani
+ <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
+ Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
+ Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
+ Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
+ <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
+ <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
+ Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
+ <mordan@ispras.ru>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, "Rob
+ Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>,
+ Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
+ Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>, Martyn Welch
+ <martyn.welch@collabora.co.uk>, Peter Senna Tschudin
+ <peter.senna@gmail.com>, Russell King <linux@armlinux.org.uk>, Herve Codina
+ <herve.codina@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Bjorn Andersson
+ <quic_bjorande@quicinc.com>, Marijn Suijten
+ <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250505143158.75541d7c@booty>
+In-Reply-To: <9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+	<832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
+	<20250430-arrogant-marmoset-of-justice-92ced3@houat>
+	<20250505130648.22ec8716@booty>
+	<9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,84 +109,55 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelgedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovhesohhsshdrqhhurghltghomhhmrdgtohhmpdhrtghpthhtohepihhnkhhirdgurggvsehsrghmshhunhhgrdgtohhmpdhrtghpt
+ hhtohepkhihuhhnghhmihhnrdhprghrkhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehsfidtfeduvddrkhhimhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegrlhhimhdrrghkhhhtrghrsehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Wed, 30 Apr 2025, Sebastian Reichel wrote:
-> On Tue, Apr 29, 2025 at 02:36:03AM +0200, Armin Wolf wrote:
-> > Some batteries can signal when an internal fuse was blown. In such a
-> > case POWER_SUPPLY_HEALTH_DEAD is too vague for userspace applications
-> > to perform meaningful diagnostics.
+Hi Dmitry,
+
+On Mon, 5 May 2025 14:58:58 +0300
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+
+> On 05/05/2025 14:06, Luca Ceresoli wrote:
+> > Inki, Kyungmin, Seung-Woo, Alim,
 > > 
-> > Additionally some batteries can also signal when some of their
-> > internal cells are imbalanced. In such a case returning
-> > POWER_SUPPLY_HEALTH_UNSPEC_FAILURE is again too vague for userspace
-> > applications to perform meaningful diagnostics.
+> > On Wed, 30 Apr 2025 10:08:14 +0200
+> > Maxime Ripard <mripard@kernel.org> wrote:
+> >   
+> >> Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
+> >> following patch, and it going through drm-misc?
+> >>
+> >> https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
+> >>
+> >> If not, we'll revert.  
 > > 
-> > Add new health status values for both cases.
+> > Did you have a chance to have a look at the patch mentioned by Maxime?
 > > 
-> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > It was applied to drm-misc-next by mistake. Not your mistake of course,
+> > but now it's there so if you don't reply anything it will have to be
+> > reverted, and then sent again to go through all the review process to
+> > be hopefully re-applied in the future.
+> > 
+> > If you agree with keeping it in drm-misc-next, that would be less noise
+> > for everybody.
+> > 
+> > I'm going to send v3 very soon, so it would be good to decide what to
+> > do before that.  
 > 
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> For the record: even though I'm not happy with msm-related patches going 
+> through drm-misc without additional ack from our side, I think reverting 
+> those and reapplying them later will create a bigger mess. So, I'm fine 
+> with keeping drm/msm/* bridged patches in.
 
-Hi Sebastian,
+That was my understanding of your previous e-mail, but thanks for
+having made it explicit.
 
-Is it okay with you I take this through pdx86 tree?
+Luca
 
---
- i.
-
-> 
-> -- Sebastian
-> 
-> > ---
-> > Changes since v1:
-> >  - rename "Fuse blown" to "Blown fuse"
-> >  - rename "Cell imbalanced" to "Cell imbalance"
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-power | 2 +-
-> >  drivers/power/supply/power_supply_sysfs.c   | 2 ++
-> >  include/linux/power_supply.h                | 2 ++
-> >  3 files changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> > index 2a5c1a09a28f..be8be54b183d 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-power
-> > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > @@ -456,7 +456,7 @@ Description:
-> >  			      "Over voltage", "Under voltage", "Unspecified failure", "Cold",
-> >  			      "Watchdog timer expire", "Safety timer expire",
-> >  			      "Over current", "Calibration required", "Warm",
-> > -			      "Cool", "Hot", "No battery"
-> > +			      "Cool", "Hot", "No battery", "Blown fuse", "Cell imbalance"
-> >  
-> >  What:		/sys/class/power_supply/<supply_name>/precharge_current
-> >  Date:		June 2017
-> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> > index edb058c19c9c..2703ed1dd943 100644
-> > --- a/drivers/power/supply/power_supply_sysfs.c
-> > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > @@ -110,6 +110,8 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
-> >  	[POWER_SUPPLY_HEALTH_COOL]		    = "Cool",
-> >  	[POWER_SUPPLY_HEALTH_HOT]		    = "Hot",
-> >  	[POWER_SUPPLY_HEALTH_NO_BATTERY]	    = "No battery",
-> > +	[POWER_SUPPLY_HEALTH_BLOWN_FUSE]	    = "Blown fuse",
-> > +	[POWER_SUPPLY_HEALTH_CELL_IMBALANCE]	    = "Cell imbalance",
-> >  };
-> >  
-> >  static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
-> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > index 888824592953..69df3a452918 100644
-> > --- a/include/linux/power_supply.h
-> > +++ b/include/linux/power_supply.h
-> > @@ -71,6 +71,8 @@ enum {
-> >  	POWER_SUPPLY_HEALTH_COOL,
-> >  	POWER_SUPPLY_HEALTH_HOT,
-> >  	POWER_SUPPLY_HEALTH_NO_BATTERY,
-> > +	POWER_SUPPLY_HEALTH_BLOWN_FUSE,
-> > +	POWER_SUPPLY_HEALTH_CELL_IMBALANCE,
-> >  };
-> >  
-> >  enum {
-> > -- 
-> > 2.39.5
-> > 
-> 
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
