@@ -1,44 +1,45 @@
-Received: from mail73.out.titan.email (mail73.out.titan.email [3.216.99.53])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3951E22FC
-	for <platform-driver-x86@vger.kernel.org>; Sun,  4 May 2025 17:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CF217A31E;
+	Mon,  5 May 2025 00:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746378083; cv=none; b=FJcij4rEQ6DuuNDUyTUhpJiBg6X56X4cMSILm9YKv0hp634Uqg4M14bEcUIrvqZ4IToA1mbua3phzyL1V5fyNf6EuRkbLvk6/FbXuPkaqit/KwOcGdMRbN1izJAi9Vg1brlvZlS/vDl7w9UJclpGT/Pb2H+c3c8mU6gCBscffV8=
+	t=1746406561; cv=none; b=fyIGvIuu2x/xPFHfbacPhXL/7Fe4Wk6P49QwtF+/EGcpLpcMSIsJbixOePRuSsQyVC++hyT2LNg3BGLYGNpPZ9UbjeIfb5i2PbkvTI5mJ6GRJlGxQGypqOHZllhG8ocykAP6xJMvoNJD4jkNmzh0wQFuqx3RALUHF60J+QdcRJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746378083; c=relaxed/simple;
-	bh=VGy2bVJvnII8gFCvBTLW0BiEPlMwoT8ZwRAzAEkvjPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TcrF7fTQ3MVvrsbS7QCCRMcHcDTODs5boYx703273uj9RPXqVDjMaNM1ORK8QetWPW7OD40XhWlyA4g2ZrKPDShxo4cFjgePlddar9d+DqQPzmlt5jDWYtoWiePnmEJK1B9SG7ghBuILVqvEH9Y1Og5wBGQAwUU06JAPaklixb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0atlas.com; spf=pass smtp.mailfrom=0atlas.com; dkim=pass (1024-bit key) header.d=0atlas.com header.i=@0atlas.com header.b=j8nyjKpg; arc=none smtp.client-ip=3.216.99.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0atlas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0atlas.com
+	s=arc-20240116; t=1746406561; c=relaxed/simple;
+	bh=ImwZpAyK9a06VG5KtpooQqA66DFsHMPgTKcK9ntc8B8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hB44TnTgRC4J0VNCyvlwHA5sgFCJEHrwSYbEjnvRPIC5mtH8IRCBUOTOwO4Fg/tCD2GZqsrCumAFTE8GDNBSGqdWjKJmzM6TvFN9kfm3ae5iXbJTbzOqwhABlusbVud5+u9UsK/O9VKEtKimUQlpX42xePAc3yQSZfHb71jjS3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rT1wPwvo; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=0atlas.com header.i=@0atlas.com header.b="j8nyjKpg"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 1EA586016A;
-	Sun,  4 May 2025 16:55:21 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=0EKTRc7dcouGTgN1LxVdoVGOZgM+VQUzaLOlEeX1N2M=;
-	c=relaxed/relaxed; d=0atlas.com;
-	h=cc:subject:message-id:to:mime-version:from:date:from:to:cc:subject:date:message-id:in-reply-to:reply-to:references;
-	q=dns/txt; s=titan3; t=1746377721; v=1;
-	b=j8nyjKpg8VUX7RtRkiCKdxKpKZ2SV7PMPM1w5OZtCr2iBhL/6udumb5PhTMnigBFX24Ay6BT
-	pHPPbNwBM/Yzsbh4GtDXVe0bg7k4LShZXt3iPJfK8wNp+B7+wneHDEYLkjbvX+uo5dwK+DiwQxi
-	jCqZMPShWNu9KD7wRG0JeeoY=
-Received: from laviux.. (n219079102104.netvigator.com [219.79.102.104])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 0122560117;
-	Sun,  4 May 2025 16:55:17 +0000 (UTC)
-Feedback-ID: :johnchau@0atlas.com:0atlas.com:flockmailId
-From: John Chau <johnchau@0atlas.com>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: ibm-acpi-devel@lists.sourceforge.net,
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rT1wPwvo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=8tvb66wwireoDnKEYmAITJ2Fw0oT3tpDZumoZ1GwT2k=; b=rT1wPwvoI+7LCnzp
+	rpsR7vIPeZPp5LUGkxTqjP/z8GN4Sp+9XrIuEZ9Q1QhrHc4ZmrYLNJL0yOfpOBOeeKG8P+RoKPIxR
+	9C1unYf7fz+KpX/034cO8UPZZPGUgSJvyMJsJcALqdxGZI/C/foVD4PhNIJyBIYBAg94/h6V+TrNX
+	aSDuZArjp8MtGmOvhrw/BEjbWUp2foPl5EIiN1rMBRrB5kkG/rnVpz4X0n/Pbw9sS6Trt+iT9Etcp
+	Niykg8MYXar8mJoKiYgtFwWYMn8YfiW4JYsKCPUnWH71cDB8+GNTgdHU9sD/EJF8QH0hyaoVc+PUK
+	64T+wlEqWWiikwlb/A==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uBk7Q-001Lvo-0z;
+	Mon, 05 May 2025 00:55:40 +0000
+From: linux@treblig.org
+To: malattia@linux.it,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: hverkuil@xs4all.nl,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	John Chau <johnchau@0atlas.com>
-Subject: [PATCH] Make thinkpad_acpi to support also NEC Lavie X1475JAS
-Date: Mon,  5 May 2025 01:55:13 +0900
-Message-ID: <20250504165513.295135-1-johnchau@0atlas.com>
-X-Mailer: git-send-email 2.43.0
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] platform/x86/sony-laptop: Remove unused sony laptop camera code
+Date: Mon,  5 May 2025 01:55:39 +0100
+Message-ID: <20250505005539.336183-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -46,56 +47,242 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1746377720964137638.5242.26633778875609042@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=O7TDvA9W c=1 sm=1 tr=0 ts=68179bf8
-	a=iJ4LEHJSImB6z5Afb8xgNg==:117 a=iJ4LEHJSImB6z5Afb8xgNg==:17
-	a=CEWIc4RMnpUA:10 a=2z1OXlWFAAAA:8 a=5olU5vRNAAAA:8
-	a=aeDjl3ZlLZUCWRMWLv8A:9 a=SNRPda0NjyR9MlWdJ_lJ:22
-	a=PF5gbd1S6XIqBhKP7f6D:22
 
-This patch changes get_thinkpad_model_data in thinkpad_acpi.c
-to check for additional vendor name "NEC" in order to support
-NEC Lavie X1475JAS notebook (and perhaps more).
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-The reason of this works with minimal changes is because NEC
-Lavie X1475JAS is a Thinkpad inside. ACPI dumps reveals its
-OEM ID to be "LENOVO", BIOS version "R2PET30W" matches typical
-Lenovo BIOS version, the existence of HKEY of LEN0268, with DMI
-fw string is "R2PHT24W".
+commit ba47652ba655 ("media: meye: remove this deprecated driver")
+removed the meye driver but left behind the code in sony-laptop.c
+which that driver used to call.
 
-I compiled and tested with my own machine, attached the dmesg
-below as proof of work:
-[    6.288932] thinkpad_acpi: ThinkPad ACPI Extras v0.26
-[    6.288937] thinkpad_acpi: http://ibm-acpi.sf.net/
-[    6.288938] thinkpad_acpi: ThinkPad BIOS R2PET30W (1.11 ), EC R2PHT24W
-[    6.307000] thinkpad_acpi: radio switch found; radios are enabled
-[    6.307030] thinkpad_acpi: This ThinkPad has standard ACPI backlight brightness control, supported by the ACPI video driver
-[    6.307033] thinkpad_acpi: Disabling thinkpad-acpi brightness events by default...
-[    6.320322] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
-[    6.371963] thinkpad_acpi: secondary fan control detected & enabled
-[    6.391922] thinkpad_acpi: battery 1 registered (start 0, stop 85, behaviours: 0x7)
-[    6.398375] input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/input13
+Remove the sony_pic_camera_command() function, and the set of
+defines (SONY_PIC_COMMAND_*) in a header used for the interface
+and the static helpers it called.
 
-Signed-off-by: John Chau <johnchau@0atlas.com>
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS                        |   1 -
+ drivers/platform/x86/sony-laptop.c | 135 -----------------------------
+ include/linux/sony-laptop.h        |  39 ---------
+ 3 files changed, 175 deletions(-)
+ delete mode 100644 include/linux/sony-laptop.h
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5790095c175e..92b21e49faf6 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11478,6 +11478,8 @@ static int __must_check __init get_thinkpad_model_data(
- 		tp->vendor = PCI_VENDOR_ID_IBM;
- 	else if (dmi_name_in_vendors("LENOVO"))
- 		tp->vendor = PCI_VENDOR_ID_LENOVO;
-+	else if (dmi_name_in_vendors("NEC"))
-+		tp->vendor = PCI_VENDOR_ID_LENOVO;
- 	else
- 		return 0;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2aed76827090..6c865b5d8fae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22671,7 +22671,6 @@ W:	http://www.linux.it/~malattia/wiki/index.php/Sony_drivers
+ F:	Documentation/admin-guide/laptops/sony-laptop.rst
+ F:	drivers/char/sonypi.c
+ F:	drivers/platform/x86/sony-laptop.c
+-F:	include/linux/sony-laptop.h
  
+ SOPHGO DEVICETREES and DRIVERS
+ M:	Chen Wang <unicorn_wang@outlook.com>
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index b52390fbd743..4efd0d7031a5 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -48,7 +48,6 @@
+ #include <linux/acpi.h>
+ #include <linux/slab.h>
+ #include <linux/sonypi.h>
+-#include <linux/sony-laptop.h>
+ #include <linux/rfkill.h>
+ #ifdef CONFIG_SONYPI_COMPAT
+ #include <linux/poll.h>
+@@ -3619,22 +3618,6 @@ static u8 sony_pic_call2(u8 dev, u8 fn)
+ 	return v1;
+ }
+ 
+-static u8 sony_pic_call3(u8 dev, u8 fn, u8 v)
+-{
+-	u8 v1;
+-
+-	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+-	outb(dev, spic_dev.cur_ioport->io1.minimum + 4);
+-	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+-	outb(fn, spic_dev.cur_ioport->io1.minimum);
+-	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
+-	outb(v, spic_dev.cur_ioport->io1.minimum);
+-	v1 = inb_p(spic_dev.cur_ioport->io1.minimum);
+-	dprintk("sony_pic_call3(0x%.2x - 0x%.2x - 0x%.2x): 0x%.4x\n",
+-			dev, fn, v, v1);
+-	return v1;
+-}
+-
+ /*
+  * minidrivers for SPIC models
+  */
+@@ -3754,124 +3737,6 @@ static void sony_pic_detect_device_type(struct sony_pic_dev *dev)
+ #define SONYPI_CAMERA_REVISION 			8
+ #define SONYPI_CAMERA_ROMVERSION 		9
+ 
+-static int __sony_pic_camera_ready(void)
+-{
+-	u8 v;
+-
+-	v = sony_pic_call2(0x8f, SONYPI_CAMERA_STATUS);
+-	return (v != 0xff && (v & SONYPI_CAMERA_STATUS_READY));
+-}
+-
+-static int __sony_pic_camera_off(void)
+-{
+-	if (!camera) {
+-		pr_warn("camera control not enabled\n");
+-		return -ENODEV;
+-	}
+-
+-	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE,
+-				SONYPI_CAMERA_MUTE_MASK),
+-			ITERATIONS_SHORT);
+-
+-	if (spic_dev.camera_power) {
+-		sony_pic_call2(0x91, 0);
+-		spic_dev.camera_power = 0;
+-	}
+-	return 0;
+-}
+-
+-static int __sony_pic_camera_on(void)
+-{
+-	int i, j, x;
+-
+-	if (!camera) {
+-		pr_warn("camera control not enabled\n");
+-		return -ENODEV;
+-	}
+-
+-	if (spic_dev.camera_power)
+-		return 0;
+-
+-	for (j = 5; j > 0; j--) {
+-
+-		for (x = 0; x < 100 && sony_pic_call2(0x91, 0x1); x++)
+-			msleep(10);
+-		sony_pic_call1(0x93);
+-
+-		for (i = 400; i > 0; i--) {
+-			if (__sony_pic_camera_ready())
+-				break;
+-			msleep(10);
+-		}
+-		if (i)
+-			break;
+-	}
+-
+-	if (j == 0) {
+-		pr_warn("failed to power on camera\n");
+-		return -ENODEV;
+-	}
+-
+-	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTROL,
+-				0x5a),
+-			ITERATIONS_SHORT);
+-
+-	spic_dev.camera_power = 1;
+-	return 0;
+-}
+-
+-/* External camera command (exported to the motion eye v4l driver) */
+-int sony_pic_camera_command(int command, u8 value)
+-{
+-	if (!camera)
+-		return -EIO;
+-
+-	mutex_lock(&spic_dev.lock);
+-
+-	switch (command) {
+-	case SONY_PIC_COMMAND_SETCAMERA:
+-		if (value)
+-			__sony_pic_camera_on();
+-		else
+-			__sony_pic_camera_off();
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERABRIGHTNESS:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_BRIGHTNESS, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERACONTRAST:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTRAST, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERAHUE:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_HUE, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERACOLOR:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_COLOR, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERASHARPNESS:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_SHARPNESS, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERAPICTURE:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	case SONY_PIC_COMMAND_SETCAMERAAGC:
+-		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_AGC, value),
+-				ITERATIONS_SHORT);
+-		break;
+-	default:
+-		pr_err("sony_pic_camera_command invalid: %d\n", command);
+-		break;
+-	}
+-	mutex_unlock(&spic_dev.lock);
+-	return 0;
+-}
+-EXPORT_SYMBOL(sony_pic_camera_command);
+-
+ /* gprs/edge modem (SZ460N and SZ210P), thanks to Joshua Wise */
+ static void __sony_pic_set_wwanpower(u8 state)
+ {
+diff --git a/include/linux/sony-laptop.h b/include/linux/sony-laptop.h
+deleted file mode 100644
+index 1e3c92feea6e..000000000000
+--- a/include/linux/sony-laptop.h
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _SONYLAPTOP_H_
+-#define _SONYLAPTOP_H_
+-
+-#include <linux/types.h>
+-
+-#ifdef __KERNEL__
+-
+-/* used only for communication between v4l and sony-laptop */
+-
+-#define SONY_PIC_COMMAND_GETCAMERA		 1	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERA		 2
+-#define SONY_PIC_COMMAND_GETCAMERABRIGHTNESS	 3	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERABRIGHTNESS	 4
+-#define SONY_PIC_COMMAND_GETCAMERACONTRAST	 5	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERACONTRAST	 6
+-#define SONY_PIC_COMMAND_GETCAMERAHUE		 7	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERAHUE		 8
+-#define SONY_PIC_COMMAND_GETCAMERACOLOR		 9	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERACOLOR		10
+-#define SONY_PIC_COMMAND_GETCAMERASHARPNESS	11	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERASHARPNESS	12
+-#define SONY_PIC_COMMAND_GETCAMERAPICTURE	13	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERAPICTURE	14
+-#define SONY_PIC_COMMAND_GETCAMERAAGC		15	/* obsolete */
+-#define SONY_PIC_COMMAND_SETCAMERAAGC		16
+-#define SONY_PIC_COMMAND_GETCAMERADIRECTION	17	/* obsolete */
+-#define SONY_PIC_COMMAND_GETCAMERAROMVERSION	18	/* obsolete */
+-#define SONY_PIC_COMMAND_GETCAMERAREVISION	19	/* obsolete */
+-
+-#if IS_ENABLED(CONFIG_SONY_LAPTOP)
+-int sony_pic_camera_command(int command, u8 value);
+-#else
+-static inline int sony_pic_camera_command(int command, u8 value) { return 0; }
+-#endif
+-
+-#endif	/* __KERNEL__ */
+-
+-#endif /* _SONYLAPTOP_H_ */
 -- 
-2.43.0
+2.49.0
 
