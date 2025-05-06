@@ -1,372 +1,259 @@
-Received: from sender3-op-o12.zoho.com (sender3-op-o12.zoho.com [136.143.184.12])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D84E26FA5F;
-	Tue,  6 May 2025 18:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746557755; cv=pass; b=Ye5XHLn9KTWHdpOEvg3th1ScBFTxYGJnLEEYp8PQFxeL8M/fU4lKcdJuHnIbz0M2fkchc+7I1MenCESoZnP8YHXlB2POxmQ4FhUmETT/WI0bijMuZPgOELjbt/MDG2Gr5+dkpXADLyuE/ijfQQriALTDDmJkKCsoAXHXiZnyYJc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746557755; c=relaxed/simple;
-	bh=+V9c9P+XLCP6epmmMfl8cUF9PvnqAjKBYuDSNlAXMnQ=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=R/OrplYLGbm1oa3v/0TUlEF29nbWiMBVXnD9F+ckR2pfPFquyuqvTJHOSWyPsS0BYWhLWo1F15ydr37tKIm+CQ6zgf/q/gCrRaTcTX+sYlg2gRoofY0kndjBrP5TJCBjsTbchM2jYEcxvOj3ejo5EV4X7LgmFYFWxvmR9mM031M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=nOUSIUtr; arc=pass smtp.client-ip=136.143.184.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668264B1E7A;
+	Tue,  6 May 2025 20:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746564459; cv=none; b=LZHg5zGWdZ/GOKIgCIbiigxyOAmr8kw++U/UdVbzOWUOhHXtmhp2Wtz1Hu4FPW1ytxxYTjaVV8iasDp+5pfgC9a7Y0b8XonSbd90Lq9VVnb+2NiCwcx8uhAe7ABprMDHtDalnvrCe6LtyHB9tN3+V9mZCD8UHVh+7rfv2k0ifYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746564459; c=relaxed/simple;
+	bh=a6MsCRIUCeUj744FbiHdP5+JJu9CUko6eqpiqgbQ4ds=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WTZBkZmEZh+K5ZMWPmjkIFFzMxIAChten6Wcd3und2BuVDG8efrmEX5+FlW+yOfGW06epVet1hYOyFtATod6mLM6GRpC5xbdyS3PK3mpcxn5dFwyR6zp4UvrOn3dyHfA+lQmYDe0xXxiRRK8MX6t4JHegRQNQE9Yre6Xm2siWWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I68mv2SZ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="nOUSIUtr"
-ARC-Seal: i=1; a=rsa-sha256; t=1746557727; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KwnPEahn9G+egIp0b5+OMaSwG/q5yfrWq88d17l9bkWBIgXCQWegMoiTcP3SVOqdd8k/IGx/csVmeCrlRgxTc0E2kcf3+hSJvvFVhWgcSCm+1Zh26FPNhChg2mjRmltcm6g++Clh4Mi93lV9IWqrR4hEd3KhubS96fmThG7NsnE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746557727; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=50LGUANZtRF4CAXc8c+CQnUyp7TR6CVRCU2iSaAz4DA=; 
-	b=T+yV+qPOi6R3UBycJ/rhxomsUnQmRnwYnIrQHcAM1SymG1+pZWq7f0Jxv/76FiiPav0z1JgWmrKqSwpJbHIAEZeZRo3L+UqqnsT3OQSeJVUaYfayi/ZXY/lx9DKg2cb0EoUoro92LWX5ktCyzIQbH81oWu/KLL2MHKRQ94CRBrw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746557727;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=50LGUANZtRF4CAXc8c+CQnUyp7TR6CVRCU2iSaAz4DA=;
-	b=nOUSIUtryZBqY9eUXNksP7xQTW20G0nnAx1CS+i9EHNg8B3TlDn2jWpdt5HBijy4
-	hnRwN0rXS+8iyezH/UakgakxX5ZkC4ZVaFuV5pyVJ8eBvKkJgY19euzohriRfx21yXk
-	+sgFONWR+EfUf7vAuZSDU5xBZ6e7aQ+cLW3/Fy7w=
-Received: by mx.zohomail.com with SMTPS id 1746557723958215.91670959458827;
-	Tue, 6 May 2025 11:55:23 -0700 (PDT)
-Message-ID: <d71e1b74a583cf2651658151751c578218861032.camel@rong.moe>
-Subject: Re: [PATCH] platform/x86/amd/pmc: Declare quirk_spurious_8042 for
- MECHREVO Wujie 14XA (GX4HRXL)
-From: Rong Zhang <i@rong.moe>
-To: Mingcong Bai <jeffbai@aosc.io>, Mario Limonciello
-	 <mario.limonciello@amd.com>, Runhua He <hua@aosc.io>, 
-	platform-driver-x86@vger.kernel.org
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Xinhui Yang <cyan@cyano.uk>, Yemu
- Lu	 <prcups@krgm.moe>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de
- Goede	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <0c355c40-defa-4486-a89a-39f1ad3aba03@aosc.io>
-References: <20250506112514.446784-1-hua@aosc.io>
-	 <f7200e0f-d6d5-4fb8-9701-3f97d1ab64fa@amd.com>
-	 <0c355c40-defa-4486-a89a-39f1ad3aba03@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 May 2025 02:54:18 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I68mv2SZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA1D1439D4;
+	Tue,  6 May 2025 20:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746564447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RriJ3sQZL+/jAERO13sfWtP2FOfOc3okEQg5B7FnAeQ=;
+	b=I68mv2SZI/aGxHCIIcxXbjxxCbHWE9FzDtUtW4PEabsIrho1orzLQHyqR3AJklkXW4/0dS
+	sHotiUtnhB37DGcdh4NYEpar2pikiAW6HTYv6TIrN84SPWuBG8+xkiYWGDI06C2IrQ6ogR
+	QEZfsdyh/gBXzyxBU6I46Qn7ke+tHyGu4UC1rv5tEOBv61wdugOUnlQfQ6wAbRndu7RuwR
+	e6tObBPlpuwkypnH5/quJLTO/9FUmfvGMJGlxu/nMapt7Mz08+7BIwiLIchjrKyUveptAn
+	jJ7yDtYArwX8GIIYPRKbfbYPujq44+9hObwSCtfPOkZ15Ae8r3K9ETKKDMJTLA==
+Date: Tue, 6 May 2025 22:47:20 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250506224720.5cbcf3e1@booty>
+In-Reply-To: <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
+	<553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
+	<20250430112944.1b39caab@booty>
+	<f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.1-1 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepvhhitghtohhrrdhlihhusehngihprdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hi all,
+Hello Liu,
 
-On Tue, 2025-05-06 at 22:02 +0800, Mingcong Bai wrote:
-> Hi Mario,
->=20
-> =E5=9C=A8 2025/5/6 21:29, Mario Limonciello =E5=86=99=E9=81=93:
-> > On 5/6/2025 6:25 AM, Runhua He wrote:
+thanks for your further feedback.
 
-[...]
+On Tue, 6 May 2025 10:24:18 +0800
+Liu Ying <victor.liu@nxp.com> wrote:
 
-> > > I have only matched the motherboard model, as the same chassis and
-> > > motherboard (GX4HRXL) combination may be used under different product
-> > > names.
+> On 04/30/2025, Luca Ceresoli wrote:
+> > Hello Liu,  
+> 
+> Hi Luca,
+> 
+> > 
+> > On Tue, 29 Apr 2025 10:10:55 +0800
+> > Liu Ying <victor.liu@nxp.com> wrote:
+> >   
+> >> Hi,
+> >>
+> >> On 04/25/2025, Luca Ceresoli wrote:  
+> >>> This is the new API for allocating DRM bridges.
+> >>>
+> >>> This driver embeds an array of channels in the main struct, and each
+> >>> channel embeds a drm_bridge. This prevents dynamic, refcount-based
+> >>> deallocation of the bridges.
+> >>>
+> >>> To make the new, dynamic bridge allocation possible:
+> >>>
+> >>>  * change the array of channels into an array of channel pointers
+> >>>  * allocate each channel using devm_drm_bridge_alloc()
+> >>>  * adapt the code wherever using the channels
+> >>>
+> >>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>  
+> > 
+> > [...]
+> >   
+> >>> @@ -345,8 +351,8 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
+> >>>  free_child:
+> >>>  	of_node_put(child);
+> >>>  
+> >>> -	if (i == 1 && pc->ch[0].next_bridge)
+> >>> -		drm_bridge_remove(&pc->ch[0].bridge);
+> >>> +	if (i == 1 && pc->ch[0]->next_bridge)    
+> >>
+> >> Since this patch makes pc->ch[0] and pc->ch[1] be allocated separately,
+> >> pc->ch[0] could be NULL if channel0 is not available, hence a NULL pointer
+> >> dereference here...  
+> > 
+> > See below for this.
+> >   
+> >>> +		drm_bridge_remove(&pc->ch[0]->bridge);
+> >>>  
+> >>>  	pm_runtime_disable(dev);
+> >>>  	return ret;
+> >>> @@ -359,7 +365,7 @@ static void imx8qxp_pc_bridge_remove(struct platform_device *pdev)
+> >>>  	int i;
+> >>>  
+> >>>  	for (i = 0; i < 2; i++) {
+> >>> -		ch = &pc->ch[i];
+> >>> +		ch = pc->ch[i];
+> >>>  
+> >>>  		if (!ch->is_available)    
+> >>
+> >> ...and here too.  
+> > 
+> > This is indeed a bug, I should have checked the pointer for being
+> > non-NULL.
+> > 
+> > Looking at that more closely, I think the is_available flag can be
+> > entirely removed now. The allocation itself (ch != NULL) now is
+> > equivalent. Do you think my reasoning is correct?
+> > 
+> > Ouch! After writing the previous paragraph I realized you proposed this
+> > a few lines below! OK, removing is_available. :)
+> > 
+> > [...]
+> >   
+> >> On top of this patch series, this issue doesn't happen if I apply the below
+> >> change:  
+> > 
+> > [...]
+> >   
+> >> @@ -351,7 +349,7 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
+> >>  free_child:
+> >>         of_node_put(child);
+> >>  
+> >> -       if (i == 1 && pc->ch[0]->next_bridge)
+> >> +       if (i == 1 && pc->ch[0])
+> >>                 drm_bridge_remove(&pc->ch[0]->bridge);  
+> > 
+> > Unrelated to this patch, but as I looked at it more in depth now, I'm
+> > not sure this whole logic is robust, even in the original code.
+> > 
+> > The 'i == 1' check here seems to mean "if some error happened when
+> > handling channel@1, that means channel@0 was successfully initialized,
+> > so let's clean up channel 0".
+> > 
+> > However my understanding of the bindings is that device tree is allowed
+> > to have the channel@1 node before the channel@0 node (or even channel@1
+> > without channel@0, but that's less problematic here).
+> > 
+> > In such case (channel@1 before channel@0), this would happen:
+> > 
+> >  1. alloc and init ch[1], all OK
+> >  2. alloc and init ch[0], an error happens
+> >     (e.g. of_graph_get_remote_node() fails)
+> > 
+> > So we'd reach the free_child: label, and we should call
+> > drm_bridge_remove() for ch[1]->bridge, but there's no code to do that.
+> > 
+> > To be robust in such a case, I think both channels need to be checked
+> > independently, as the status of one does not imply the status of the
+> > other. E.g.:
+> > 
+> >   for (i = 0; i < 2; i++)
+> >       if (pc->ch[i] && pc->ch[i]->next_bridge)
+> >           drm_bridge_remove(&pc->ch[i]->bridge);
+> > 
+> > (which is similar to what .remove() does after the changes discussed in
+> > this thread, and which I have queued for v3)
+> > 
+> > What's your opinion? Do you think I missed anything?  
+> 
+> The pixel combiner DT node would be added in imx8-ss-dc{0,1}.dtsi, please
+> see the case for imx8-ss-dc0.dtsi introduced by an in-flight patch[1].  As
+> channel@{0,1} child nodes always exist(DT overlay cannot effectively delete
+> any of them) and channel@0 always comes first, there is no problematic case.
 
-Runhua's statement is *only* correct to a certain extent. (see below)
+I'm not questioning what existing and future dts files (will) contain,
+and surely I don't see a good reason someone would write channel@1
+before channel@0.
 
-> > > Suggested-by: Mingcong Bai <jeffbai@aosc.io>
-> > > Suggested-by: Xinhui Yang <cyan@cyano.uk>
-> > > Suggested-by: Rong Zhang <i@rong.moe>
-> > > Fixes: a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard wakeup o=
-n=20
-> > > AMD Framework 13")
-> > > Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4166
-> > > Cc: Mario Limonciello <mario.limonciello@amd.com>
-> > > Link: https://zhuanldan.zhihu.com/p/730538041
-> > > Tested-by: Yemu Lu <prcups@krgm.moe>
-> > > Signed-off-by: Runhua He <hua@aosc.io>
-> > > ---
-> > > =C2=A0 drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
-> > > =C2=A0 1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/=20
-> > > platform/x86/amd/pmc/pmc-quirks.c
-> > > index b4f49720c87f..e01012d5ecd0 100644
-> > > --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> > > +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> > > @@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] =
-=3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 },
-> > > +=C2=A0=C2=A0=C2=A0 {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "MECHREVO Wuji=
-e 14 Series (GX4HRXL)",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver_data =3D &quirk_s=
-purious_8042,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 D=
-MI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
-> >=20
-> > This feels like it might be too wide.=C2=A0 Could we match a system ven=
-dor as=20
-> > well?
->=20
-> Possibly. There are two known system vendors using this motherboard -=20
-> TongFang and MECHREVO (MECHREVO is a marque owned by TongFang).
+My point is:
 
-There are plain "GX4HRXL" and "WUJIE14-GX4HRXL". Their BIOS/firmware
-are different - this difference is not just about marketing.
+ - the bindings _allow_ channel1 before channel@0
+ - the error management code after the free_child label won't work
+   correctly if channel1 is before channel@0 in the device tree
 
-Runhua's statement only applies to plain "GX4HRXL", which is not his
-model. All seen editions are:
-   - Juno GX4HRXL [1]
-   - TongFang GX4HRXL [2]
+IOW the driver is not robust against all legal device tree descriptions,
+and it could be easily made robust using the example code in my
+previous e-mail (quoted a few lines above).
 
-Comparing [1] and [2]:
+If you agree about this I'll be happy to send a patch doing that change.
+If you think I'm wrong, I won't fight a battle. This topic is
+orthogonal to the change I'm introducing in this patch, and I can
+continue the conversion independently from this discussion.
 
-   diff --git a/juno b/tongfang
-   index 88a71da..c6846eb 100644
-   --- a/juno
-   +++ b/tongfang
-   @@ -1,4 +1,4 @@
-   -# dmidecode 3.6
-   +# dmidecode 3.5
-    Getting SMBIOS data from sysfs.
-    SMBIOS 3.5.0 present.
-    Table at 0x9A92D000.
-   @@ -28,7 +28,7 @@ BIOS Information
-   =20
-    Handle 0x0001, DMI type 1, 27 bytes
-    System Information
-   -	Manufacturer: Juno
-   +	Manufacturer: TongFang
-    	Product Name: GX4HRXL
-    	Version: Standard
-    	Serial Number: --
-    [... SO-DIMM and PCIe ...]
+> > Thanks for taking the time to dig into this!  
+> 
+> After looking into this patch and patch 31(though I've already provided my A-b)
+> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
+> should have the same life time with the embedded DRM bridges, because for
+> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
+> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
+> the life time for the embedded channel/bridge structures only, but not for the
+> main structures.  What do you think ?
 
+I see you concern, but I'm sure the change I'm introducing is not
+creating the problem you are concerned about.
 
-As for "WUJIE14-GX4HRXL", the only model I've seen is:
-   - MECHREVO WUJIE14XA [3]
+The key aspect is that my patch is merely changing the lifetime of the
+_allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
+the bridge is removed from its encoder chain and it is completely not
+reachable, both before and after my patch. With my patch it is not
+freed immediately, but it's just a piece of "wasted" memory that is
+still allocated until elsewhere in the kernel there are pointers to it,
+to avoid use-after-free.
 
-Comparing [2] and [3]:
+With this explanation, do you think my patch is correct (after fixing
+the bug we already discussed of course)?
 
-   diff --git a/tongfang b/mechrevo
-   index c6846eb..0f132a2 100644
-   --- a/tongfang
-   +++ b/mechrevo
-   @@ -1,13 +1,13 @@
-   -# dmidecode 3.5
-   +# dmidecode 3.6
-    Getting SMBIOS data from sysfs.
-    SMBIOS 3.5.0 present.
-   -Table at 0x9A92D000.
-   +Table at 0x9A92C000.
-   =20
-    Handle 0x0000, DMI type 0, 26 bytes
-    BIOS Information
-    	Vendor: American Megatrends International, LLC.
-   -	Version: N.1.14PCS05
-   -	Release Date: 10/24/2024
-   +	Version: N.1.14MRO19
-   +	Release Date: 01/17/2025
-    	Address: 0xF0000
-    	Runtime Size: 64 kB
-    	ROM Size: 32 MB
-   @@ -23,24 +23,24 @@ BIOS Information
-    		BIOS boot specification is supported
-    		Targeted content distribution is supported
-    		UEFI is supported
-   -	BIOS Revision: 1.5
-   -	Firmware Revision: 1.39
-   +	BIOS Revision: 1.19
-   +	Firmware Revision: 2.8
-   =20
-    Handle 0x0001, DMI type 1, 27 bytes
-    System Information
-   -	Manufacturer: TongFang
-   -	Product Name: GX4HRXL
-   +	Manufacturer: MECHREVO
-   +	Product Name: WUJIE14XA
-    	Version: Standard
-    	Serial Number: --
-    	UUID: --
-    	Wake-up Type: Power Switch
-   -	SKU Number: 0001
-   -	Family: HPT
-   +	SKU Number: WUJIE14
-   +	Family: Mechrevo WUJIE Series
-   =20
-    Handle 0x0002, DMI type 2, 15 bytes
-    Base Board Information
-   -	Manufacturer: TongFang
-   -	Product Name: GX4HRXL
-   +	Manufacturer: MECHREVO
-   +	Product Name: WUJIE14-GX4HRXL
-    	Version: Standard
-    	Serial Number: --
-    	Asset Tag: --
-   @@ -54,7 +54,7 @@ Base Board Information
-   =20
-    Handle 0x0003, DMI type 3, 22 bytes
-    Chassis Information
-   -	Manufacturer: Standard
-   +	Manufacturer: MECHREVO
-    	Type: Notebook
-    	Lock: Not Present
-    	Version: Standard
-   @@ -88,7 +88,7 @@ OEM Strings
-    	String 8: Standard
-    	String 9: Standard
-    	String 10: Standard
-   -	String 11: FBM-GX4HRXL0177PCS
-   +	String 11: FGM-GX4HRXL0202101
-    	String 12: GX4HRXL
-    	String 13: Standard
-    	String 14: Standard
-   @@ -122,11 +122,11 @@ Unknown Type
-    Handle 0x000A, DMI type 45, 26 bytes
-    Firmware Inventory Information
-    	Firmware Component Name: BIOS Firmware
-   -	Firmware Version: N.1.14PCS05
-   -	Firmware ID: D968671D-72E2-5CA3-9E09-0E48EA102BDC
-   -	Release Date: 10/24/2024
-   +	Firmware Version: N.1.14MRO19
-   +	Firmware ID: 0145F8DC-000F-5BDE-8ACB-8AD00CAE8FFE
-   +	Release Date: 01/17/2025
-    	Manufacturer: Standard
-   -	Lowest Supported Firmware Version: N.1.14PCS05
-   +	Lowest Supported Firmware Version: N.1.14MRO19
-    	Image Size: 32 MB
-    	Characteristics:
-    		Updatable: Yes
-    [... PCIe ...]
+Best regards,
+Luca
 
-
-Look for BIOS versions whose release dates are the closest between the
-two [4] [5]:
-
-   diff --git a/tongfang-1.13 b/mechrevo-1.13
-   index 3970b9a..a617bbc 100644
-   --- a/tongfang-1.13
-   +++ b/mechrevo-1.13
-   @@ -1,13 +1,13 @@
-    # dmidecode 3.6
-    Getting SMBIOS data from sysfs.
-    SMBIOS 3.5.0 present.
-   -Table at 0x9A92D000.
-   +Table at 0x9A92C000.
-   =20
-    Handle 0x0000, DMI type 0, 26 bytes
-    BIOS Information
-    	Vendor: American Megatrends International, LLC.
-   -	Version: N.1.13PCS03
-   -	Release Date: 09/06/2024
-   +	Version: N.1.13MRO14
-   +	Release Date: 08/19/2024
-    	Address: 0xF0000
-    	Runtime Size: 64 kB
-    	ROM Size: 32 MB
-   @@ -23,24 +23,24 @@ BIOS Information
-    		BIOS boot specification is supported
-    		Targeted content distribution is supported
-    		UEFI is supported
-   -	BIOS Revision: 1.3
-   -	Firmware Revision: 1.33
-   +	BIOS Revision: 1.14
-   +	Firmware Revision: 1.32
-    [...]
-   @@ -88,7 +88,7 @@ OEM Strings
-    	String 8: Standard
-    	String 9: Standard
-    	String 10: Standard
-   -	String 11: FBM-GX4HRXL0177PCS
-   +	String 11: FGM-GX4HRXL0167102
-    	String 12: GX4HRXL
-    	String 13: Standard
-    	String 14: Standard
-   @@ -122,11 +122,11 @@ Unknown Type
-    Handle 0x000A, DMI type 45, 26 bytes
-    Firmware Inventory Information
-    	Firmware Component Name: BIOS Firmware
-   -	Firmware Version: N.1.13PCS03
-   -	Firmware ID: D968671D-72E2-5CA3-9E09-0E48EA102BDC
-   -	Release Date: 09/06/2024
-   +	Firmware Version: N.1.13MRO14
-   +	Firmware ID: 0145F8DC-000F-5BDE-8ACB-8AD00CAE8FFE
-   +	Release Date: 08/19/2024
-    	Manufacturer: Standard
-   -	Lowest Supported Firmware Version: N.1.13PCS03
-   +	Lowest Supported Firmware Version: N.1.13MRO14
-    	Image Size: 32 MB
-    	Characteristics:
-    		Updatable: Yes
-    [...]
-
-
-Three bits here hint that these two variants are not completely
-identical:
-   - BIOS/firmware updates are not synced.
-   - Different characters in their BIOS version strings, i.e., PCS vs MRO.
-   - FBM-GX4HRXL0177PCS vs FGM-GX4HRXL0202101 vs FGM-GX4HRXL0167102.
-
-I guess these two variants were developed by two different teams
-(global/China) that shared some common codebase. The difference is
-probably because of the divergence of pre-installed software to
-manipulate BIOS options in Windows. I highly suspect the broken EC
-state machine is related to such software.
-
-[1]: https://linux-hardware.org/?probe=3D22e1f510a2&log=3Ddmidecode
-[2]: https://linux-hardware.org/?probe=3D0475501c8c&log=3Ddmidecode
-[3]: https://linux-hardware.org/?probe=3Dd9af608109&log=3Ddmidecode
-[4]: https://linux-hardware.org/?probe=3D599c1edc57&log=3Ddmidecode
-[5]: https://linux-hardware.org/?probe=3D7c2e3b925b&log=3Ddmidecode
-
-> See: https://linux-hardware.org/?probe=3D6783d8fc06
-
-This is TongFang GX4HRXL and uses a different BIOS then Runhua's as
-mentioned above.
-
-> Runhua, maybe we could make two entries here?
-
-Since this is a platform firmware bug, and given the information we
-have, is it too soon to say plain "GX4HRXL" suffers from the same bug?
-
-I agree with Mario here, but in a slightly different manner, i.e.,
-narrowing the DMI_BOARD_NAME match down to "WUJIE14-GX4HRXL".
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index b4f49720c87f..2e3f6fc67c56 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] =3D {
- 			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
- 		}
- 	},
-+	{
-+		.ident =3D "MECHREVO Wujie 14X (GX4HRXL)",
-+		.driver_data =3D &quirk_spurious_8042,
-+		.matches =3D {
-+			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
-+		}
-+	},
- 	{}
- };
-
-Note on `s/14 Series/14X/': while glancing linux-hardware.org, I found
-Wujie 14 Series includes 14, 14S, 14 Pro, 14XA. They are all disparate
-from each other. 14X is 14XA's marketing name.
-
-> Best Regards,
-> Mingcong Bai
-
-Regards,
-Rong
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
