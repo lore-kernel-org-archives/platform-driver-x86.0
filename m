@@ -1,46 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2068.outbound.protection.outlook.com [40.107.92.68])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2085.outbound.protection.outlook.com [40.107.212.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE34221F3D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209331B042E
 	for <platform-driver-x86@vger.kernel.org>; Tue,  6 May 2025 10:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.68
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526584; cv=fail; b=F1RdwEN4BGOaq3YTKicbLLfqmJ0yWmfIITo2PBhSkUbPuw13iKVCgleNIChPllXC3oVeuIMTzzzGceOqWmKUqDKnkPBG3CWX0SFv495/4icNPj5Gj11SZ5lpNHJlE09nVcHfcDfIJHWQDonoDPPMtaH6X7u2E4OvOKIhDGsR0oM=
+	t=1746526585; cv=fail; b=pYSxBnvFV21UqNdumUiaak+aYZH2iAZHSBsXHHLVsevg9tKhAtWsRkW+vOxXVkSwnN4bRynwUSi/m1a6UcUyCb9KEYiDl+D13+AqkgAvCR6ZPKNqX03I/t4CxxQv/VHmutPjZmMs2XTvcx3h6lqTIMDagqZqVm0lv6H75XEfAuw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526584; c=relaxed/simple;
-	bh=Bg7PQ8jbgAwSrQ4f0zQGni7AQ9u221wdgnc0xr0q9b4=;
+	s=arc-20240116; t=1746526585; c=relaxed/simple;
+	bh=Klm2oB/pqGAk1soIRvuwcDDqUFt3w+cBsBOBdx3RjS8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s/flI7ba8oKygWFL7J06P8GdB5wqJ+osVod3MauE5HMJ/33bW5jZRK8KGXvdKOlRNXLX6k40SQMzx8/aHQysGS3wwwzJsLoUAtr7at8/dAPZ+iNFyetTjTBpMelq35pFRMtzqs8Sxd0IBVeJLyj0xKuZtTyKd2rteZku4nRvK40=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZDYE/P/N; arc=fail smtp.client-ip=40.107.92.68
+	 MIME-Version:Content-Type; b=C+YCBgUX33xnyNC791JU951snE0Iv8fgwaZoZ9Z4R7lLSn73XifTPoLzRDyq8lhM+mNHyrhCt9PzMj8/zhXhT7rnRPiww/osMJH4oalsHu8NPmeVTdv3+m8yzRmEFX5ID57axsLj9eNKWeNoc+NJLxUhrTq3yMzkyiDqqIlDptY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5RE5Ail7; arc=fail smtp.client-ip=40.107.212.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZDYE/P/N"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5RE5Ail7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=scpd8mnsq4In1cXbcdq4ZE8Ef3NKE0YJ+obaW2iudCkSu3Q25bNM+LRbKW0XqvmXhIVQitmA8tVPozniOFY6nqB250wlBv8Q+xb+Z0yGU5E4TZwcrse9PbCcrzM7qyJ0qbXDIK/zBs4jjpZl5HhaG/BL+hTU+MGS5r+Ko0p8NDBQ0bCmp7n6+ldvrQVDnpbMvjJUua0KBZv/6yOeSJHfjZd6e9r9VntHw0JP68hkeIPkWDP31MIP01pPnUKGrqUM+rzkZ4w8iAkShfkhWMk7yjfiIbeQo3I35il4RHMx8LGJjGfZ/oE7olGdG38v5y6L3+8/6VgRUaQ1LUbiUdwWzA==
+ b=DJNgx3I5Cc67No5950tnjDJMZkCuErVR3awuAZskipcz5Grj5PKAPtGC70W/SzMU+mUFMuSigwNUYnpHmiALFhXcO+yI4w9QRr3RZtuvKxkZ7ULgdi8IM6uqvFEDeTqPjURmdEtTDFPgl/BnD8LqaKSv2RKIqWaDuskMc+/dRx+RUdF4CpeIKg7KykxTl4in0eUafOPkmy0H+40R8SR+Q9Z3ESNTAUi/70/CuhUDhverhXpFbTo0qRhRjaUhNN0+gzo/i2dJxwvlDgaYCNTb2r8mww8opeJ1xE/T/FIYnnM+ynUloe2xzd2OtJaHuv/UA+UG8eB6p1gTEv03XeMq7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=veQxF0HgUbTwBQDumVqk7vTINMf7HXENummElN6sLeA=;
- b=CgshPh+YRbcFZQXh4kLqOzsaaj7oqX4NzbjoVPvajZk8Q0+ef4Te5B+t4O1U/jFnlny0Ee/3kzNV4I7oNrfQEpVAy3ZXahhBhL0unyHPSFSkz+oARy/ZPCik0XmbKAR1KvC30y5wYUobRjpriWkVW8VhdUtokDAkHN4NGZ4eNzV1QALg0n8kNr3uF2Vr9qnfsf9SwAE39G9U/uAtVr2QgS268wWwrOo0Tn9CCvrUuDeDKxYPMNkwshbNDFCf5PSo3IFMcGCLGNZvbJXzvFlSGI6NmYyOBAOxs7UoMRtxf44KmFjMosCGj5r8rQsciqNu3HKbz1NfJvO3n83HOtDzzg==
+ bh=5N6fuO7WdMYWqNrM6NVkgAraWOZDFsYVUdfEjGKDZbc=;
+ b=pqZcM2xU3KLysnDTV8kFR72Fh36mVa4PltUlfWmDpPVrzKsHqkNEIoBDuvxk7u+qOlOFz5x96S51y+I+cKSCdJbESTY0EsUDbbaZ5zAxnUilFcFqNt1Fy5/pwyTGVC6Ree3XMBHdChkh6BnZU4B7RZE6DhP8mAPcZhjwO0b0DdhZXnXK2bIdCgwp+eAtES5hm0+J9KijHk2sl4nHhhXV/rb5a2pZ7i68Es1U6QggM1rP3uAXNTEcqttZh8IGD0d7AHc3JJqPUyJ/ct2aFUfRhVQ5/2tDLDyQ5OPcoWVk4y8Us+h0hdaMq9YPlBN5D5GFkBXvPrsTYN79VVFmFh+pxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=veQxF0HgUbTwBQDumVqk7vTINMf7HXENummElN6sLeA=;
- b=ZDYE/P/N9AFjUMEEB4Q200cH8FNe71gZW7bRVbVQOudX+Qhb44AMTW8cVahk4Mm9TqOBnpz6Nddig3sKOU+rdIv71cZRDq9eBDHUPltIiaJZcv1zo2+fB+1U+4vpMRDhOiQRrbapXkNNv1PpRNWMIqyWvZG5ZpqGqBp/VtIoHIQ=
-Received: from SA0PR11CA0126.namprd11.prod.outlook.com (2603:10b6:806:131::11)
- by PH8PR12MB6868.namprd12.prod.outlook.com (2603:10b6:510:1cb::22) with
+ bh=5N6fuO7WdMYWqNrM6NVkgAraWOZDFsYVUdfEjGKDZbc=;
+ b=5RE5Ail7kXOvzEzB6Gj2S3p2poja8skuftyY0V7ZifrqM10VjiVY2v7lniKMNycfIXJ90PmpG7MD5MbawIb4vU/sDuwf3d3cNrJXEHDLc2IC8Z5ud13TqyngTYUUEAnE716sR6Fe2GkN/XuLXSSKKEnIqd5f540mUzbrPwvDyy8=
+Received: from SN1PR12CA0056.namprd12.prod.outlook.com (2603:10b6:802:20::27)
+ by IA1PR12MB8286.namprd12.prod.outlook.com (2603:10b6:208:3f8::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 10:16:14 +0000
-Received: from SA2PEPF00003F67.namprd04.prod.outlook.com
- (2603:10b6:806:131:cafe::18) by SA0PR11CA0126.outlook.office365.com
- (2603:10b6:806:131::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Tue,
- 6 May 2025 10:16:14 +0000
+ 2025 10:16:18 +0000
+Received: from SA2PEPF00003F63.namprd04.prod.outlook.com
+ (2603:10b6:802:20:cafe::e0) by SN1PR12CA0056.outlook.office365.com
+ (2603:10b6:802:20::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Tue,
+ 6 May 2025 10:16:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F67.mail.protection.outlook.com (10.167.248.42) with Microsoft
+ SA2PEPF00003F63.mail.protection.outlook.com (10.167.248.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 10:16:14 +0000
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 10:16:17 +0000
 Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 05:16:11 -0500
+ 2025 05:16:13 -0500
 From: Suma Hegde <suma.hegde@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
 	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
 	<naveenkrishna.chatradhi@amd.com>
-Subject: [v4 2/3] platform/x86/amd/hsmp: Report power via hwmon sensors
-Date: Tue, 6 May 2025 10:15:41 +0000
-Message-ID: <20250506101542.200811-2-suma.hegde@amd.com>
+Subject: [v4 3/3] platform/x86/amd/hsmp: acpi: Add sysfs files to display HSMP telemetry
+Date: Tue, 6 May 2025 10:15:42 +0000
+Message-ID: <20250506101542.200811-3-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250506101542.200811-1-suma.hegde@amd.com>
 References: <20250506101542.200811-1-suma.hegde@amd.com>
@@ -78,327 +78,496 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F67:EE_|PH8PR12MB6868:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8da5b4f0-df39-4c6f-5304-08dd8c870818
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F63:EE_|IA1PR12MB8286:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9bbe4bb0-f946-4766-5b10-08dd8c870a72
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fXm7KB+MKDnDdwwbXxG9qIGmfXiEfTP/RyRJ/h8tUFALDyxnQH0DHEThh6qR?=
- =?us-ascii?Q?dbb6PeZ/cm+p0W9WD5bIEI6ukGZBM4kV1ZU7X36v9TV7fSPMOV3hwYcyDToB?=
- =?us-ascii?Q?BcFta+2YjfNIcujNeC/ZI0q7ipi4UcJIFs4XCxZISRT5gsO+QuWz5epjomnf?=
- =?us-ascii?Q?2j/BDVSlRd+NsQEvdZYzJIexvnttMBMrNX65n9gsIKSKdNURefXeVK26uiMU?=
- =?us-ascii?Q?/sxoW7NTSwZ+A8ZArlvVCMhgb4ozDhDY8NeaROuQvgib47A2e1hipb8+NKQ1?=
- =?us-ascii?Q?xvEIm90bGwrNPPmPNmmhPNp8tB1RqbXr+1JHFIiWQw7i7mKtgOQXams6bzd/?=
- =?us-ascii?Q?Hkg/QWr1PLJhhHLMufrlCuBuQBTK6WDH4YNHpmNdlGyDG01b/2MW4CrQfzG2?=
- =?us-ascii?Q?Gb11wDyEAn/GXoQ12oQv887sAJDaPq7gU0JXH/hkrQ8kUYKbYS1J7EsPG7+H?=
- =?us-ascii?Q?dxhQFq4kCOJmA4WEHPy8mgfM5PvdRwQIo/a++3H+bHGITxGbPdXDhoLQR3wo?=
- =?us-ascii?Q?PlC5mVdsQHBYoFi5U26sDj2ssKQ/XJfqY3q2zNJxHULUfzZJaCMj7W99mY6a?=
- =?us-ascii?Q?jpkM9dEOUsUDvailbmisZPF7VVJqMSPFaJ5lyCIgQn2JPJ7bJmb/sEqlNOoS?=
- =?us-ascii?Q?R5YdufNEya3FQecHiJWbDlnUAXlwsqNK6HZ6dkwzi4CNyriAgYVwHiD2zHyg?=
- =?us-ascii?Q?JSXwu+YloGT3DTKQlAGZ2vaOieN+hsf+023A+gDhGvCdfh4gIe5gXBPfyxNR?=
- =?us-ascii?Q?ApxGGnzv0fPjpTG2oZylCnyP7wcjEEsNn2AALMUxOMMLJC/X8cSakwjYbdxj?=
- =?us-ascii?Q?+9eFTgXHcB9vSSUW03ggNqGDdyF3LDOivALZqUIHH6tdkloODiO9bGebTtV8?=
- =?us-ascii?Q?Ev3CkDRDCB9kP4QuIgX8lC5hHchUzCQShov+VGBUycT038wgzvK5xCCU/tgE?=
- =?us-ascii?Q?XPlp0Na2dHFjQeOcFGWllduoAV7iZkRf3bzywyDbh3luZy2VxdAw9W1Tdi43?=
- =?us-ascii?Q?KQc9EDSnUq/xkW43Ko5PgPtFYlPOkrGgMXThcGxPn+8mxln9Jne+D8j2C3m7?=
- =?us-ascii?Q?kyAX6JlAPrbZDgH2aSQsU13bH3J5Y41fGnd17c7+hqPjcIn8Dn3BP5iIRnJ7?=
- =?us-ascii?Q?elR6PXssA48DZrhfwoXs5t9pu/PiRbAArkEwBZwmPD/H3gfe1rzLDO3oAH0D?=
- =?us-ascii?Q?ilw7bWH0c6GKcIOaYACbxOljcZy9qrfqU4e1tr8w+qh/FsVVTASzWM+J68AC?=
- =?us-ascii?Q?8vLZkBD+VJ2UIdx+5aZR5rGEM05I+YeqjHc/6j7cS3VoUJAtRidzZ4pG8ZDb?=
- =?us-ascii?Q?XP4PKxcHw8QE2ENH9iBE7NpfRCyjogb2GP4eMMvDzFHBsQfKcxu5KnS6O3Ag?=
- =?us-ascii?Q?7aLYSzbdhh98WMaULuEZUylKW7sgWEkl0iZwu7ipqc+42GhMz1UD6xuITjid?=
- =?us-ascii?Q?giLzIWx3CDxMwEVnCH1Hfjrcyko9TsKnVbLJDpE9FnpBVNYVAr3VRsZwyEqp?=
- =?us-ascii?Q?jcr6dM8K7i9tvaLRi4k6FI6Q9Cm43hR1sKVb?=
+	=?us-ascii?Q?Q5Xl4vhRS3RoB65FMZ+Zz/aKMTu6odMBNWkOab89TtPdzZXdbDK1Swn57COi?=
+ =?us-ascii?Q?qrd453XZR8+WDXJL+vbNa7Asx7HGXS7o9AS0K3y6abkly17xSGoluCp7eReo?=
+ =?us-ascii?Q?ruevpnve4uqvwTuYb7wZwR41cMG1t5aS4n9EcKlWWQxHfRQIW1GsfPNT7Aaz?=
+ =?us-ascii?Q?Wir0LN+I2XNkJa+OPyxlBjd4GW78iZsSRvPA+GabkCi7VFkrYds4eb6JLekk?=
+ =?us-ascii?Q?+qXFphcc5d4NnmmcioPfbBn7dZm14rltX8lQOc9MLkeR29QXvPtMo5sMS2zg?=
+ =?us-ascii?Q?D4TroexSGajGjOnfeIHKxifr3+D8WJhOSR1mlQr8A7MzBhVsCAQYvFEgxTXE?=
+ =?us-ascii?Q?aAv5MUEvtfokIPfUt3dI6kQKxbTcL18FXyQ2EGOJ2xH6GvIxVaPemoti5pzL?=
+ =?us-ascii?Q?C2Djk93S3RlFVxVlS/st1Fa9Zi9J7Lz7vqYicBwqwMmo60IdR/ng7N6Vxymn?=
+ =?us-ascii?Q?QbZxmtsuNSX0YT7zNTHDEHtLz2HA43XoYRX2Ie6x0BmFwwSKmO3usnHDAm4q?=
+ =?us-ascii?Q?mbiN/EMsGDZKmPApDXx3WP1fH1sUkx1w4a8E3M74Mb5Ud7BUU1YAkpezLKzu?=
+ =?us-ascii?Q?i17eul9vwTCelmBXF62/DIPmJaIg25sJXVjaV44hMqXG0jrHD1BZDzHjl484?=
+ =?us-ascii?Q?IDYco3OOqx54Vonfv/Hw+xy86Dc9WDsPQiBYQaH2tB3lbKhLjzCKIiwnspK8?=
+ =?us-ascii?Q?idFULm4lIrk9UtDW9PCbRc6phwMDhuElMYDMdKZqKouR5xYj6V0dDV6TJw5T?=
+ =?us-ascii?Q?h8WVsAcBVv0R5Kxh8HeA3DffYwklWUeYurwkwgvAGtW7lkdQzoBTPmlSMZJ2?=
+ =?us-ascii?Q?VegMv+vtIokO2xxcKR6nk8cBGIH+Rwn0q4GpyDCsEruCsCam1INyobZVpIBZ?=
+ =?us-ascii?Q?icsd+1Ejx6qc3NkeaFy3WK6OiCsFSoisF6EdRDWdkk6iqyi6Sb5cT2XOsePu?=
+ =?us-ascii?Q?xAQDTg/AWsC9PSORmfZ+cD5kWYNCq0btyYmT+1/wLuC0G74jLZbUj8wr1oQ4?=
+ =?us-ascii?Q?JZj/F5X1vQYKzKjIjtWoLL/WY+Z0E4BSWnQ5nDKH+MtbUt5dhoA96HLM5GAX?=
+ =?us-ascii?Q?v08DgKVhgdJ9xAd3uOmow5cmzJYFqAnBseq5dj8rAJxQFe6lFJ3ICul9qT1n?=
+ =?us-ascii?Q?PNjGzZD98VIHuYBg+pewPkb5fPKrgGq0/F/hpNatgkwMu6dpfmTSfZGyxW+P?=
+ =?us-ascii?Q?yrz88va17YY7RPWrhTEI2n/OTCvcT7UTDLAQZeLyz9ZD50NkI4E9IgYg8sSc?=
+ =?us-ascii?Q?FyjjCF9UP3xj1ht6w4hkr/5lMLu8EvnQqQLj8EoXUzhJlIE0YMcbN4YZ5vWF?=
+ =?us-ascii?Q?5KcSrtTV24azuc5azpavEXEzXdb/y/vCubng4llv+pkDUJvYmI70dWf4VGtZ?=
+ =?us-ascii?Q?sWy4jvicmcNG86yVLAmw9okFBSCn/AK937unMkza6nx/RZFprNUpkaiGfjAc?=
+ =?us-ascii?Q?3RzfU5kGTuZz5bWOSBeo+VbcunB8gY9rRtkiXBJkuvgUmxwqa5e/19FBXVjV?=
+ =?us-ascii?Q?KpwRtkMf2DRTf0+ww6KbMoNVFnjhz2bQGRqG?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 10:16:14.0026
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 10:16:17.9472
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8da5b4f0-df39-4c6f-5304-08dd8c870818
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bbe4bb0-f946-4766-5b10-08dd8c870a72
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F67.namprd04.prod.outlook.com
+	SA2PEPF00003F63.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6868
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8286
 
-Expose power reading and power limits via hwmon power sensors.
+Make frequently fetched telemetry available via sysfs. These parameters
+do not fit in hwmon sensor model, hence make them available via sysfs.
+
+Create following sysfs files per acpi device node.
+* c0_residency_input
+* prochot_status
+* smu_fw_version
+* protocol_version
+* ddr_max_bw(GB/s)
+* ddr_utilised_bw_input(GB/s)
+* ddr_utilised_bw_perc_input(%)
+* mclk_input(MHz)
+* fclk_input(MHz)
+* clk_fmax(MHz)
+* clk_fmin(MHz)
+* cclk_freq_limit_input(MHz)
+* pwr_current_active_freq_limit(MHz)
+* pwr_current_active_freq_limit_source
 
 Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 ---
 Changes since v3:
-Use MICROWATT_PER_MILLIWATT and include units.h
+1. include array_size.h
+2. include bitfield.h and bits.h
+3. Remove bitops.h
+4. Remove comma from terminator
+5. Change { 0 } to {} for initializing struct hsmp_message
+6. Change src_ind = src_ind >> 1 to src_ind >>= 1;
 
 Changes since v2:
-1. Remove hwmon related documentation content from patch 3 and add that content
-   in this patch. Add space before starting paranthesis in power1_xxx,
-   remove extra blank line before HSMP HWMON interface section.
-2. Remove double semicolon at the end of hsmp_create_sensor()
-3. Place hsmp_create_sensor() stub's code right after the function
-4. Include err.h and types.h header files in hwmon.c
-5. Initialize struct hsmp_message using {} instead of {0} everywhere
-6. Convert power value to milli watt before writing it to SMU
-7. Remove return 0 from hsmp_hwmon_is_visble()
-8. Multiply power value by 1000 before sending it back to hwmon
-   subsystem
-9. Add semicolon after hsmp_info in hsmp_chip_info declaration
-10.Replace IS_ERR() with PTR_ERR_OR_ZERO()
-11. uintptr_t is retained to avoid compiler warning
-12. remove parenthesis around sock_ind parameter in
-    devm_hwmon_device_register_with_info()
+1. Change commit mesage and description
+2. Update documentation
+3. Remove hwmon related documentation changes from this patch
+4. Define FIELD_GET_U32, use it everywhere where casting to u32 is needed
+5. Define masks and use FIELD_GET() directly instead of defining function like
+   macros
+6. Return early on error cases from all the functions
+7. Add comma after hsmp agent in freqlimit_srcnames[]
+8. Make index as int in hsmp_freq_limit_source_show(), remove
+   unnecessary intialization and change the printing format
+9. Change int i to unsigned int i and return early on error in
+   hsmp_msg_get_nargs()
+11. Change n to num_args in hsmp_msg_get_nargs()
+12. Change __attr to _attr in to_hsmp_sys_attr()
+13. Change "%u" to "%lu" in sysfs_emit to avoid compiler warnings
 
 Changes since v1:
-1. Move hsmp_create_sensor() call to init_acpi() in acpi.c and init_platform_device() in plat.c
-2. Pass u16 as parameter instead of void * in hsmp_create_sensor()
-3. Change dev_err() print after hsmp_create_sensor()
-4. Add CONFIG_HWMON dependency in Makefile
-5. Add #if IS_REACHABLE(CONFIG_HWMON) condition check in hsmp.h
-6. Remove hsmp_hwmon struct in hsmp.h and add hwmon_channel_info and hwmon_chip_info to
-   hwmon.c file as static variables
-7. Change argument to devm_hwmon_device_register_with_info()
-8. Remove hsmp_create_power_sensor() and define power info statically. Instead of multiple channel,
-   use single channel with different attributes.
-9. Replace switch with if in hsmp_hwmon_is_visble()
-10. Remove referencing channel related code in hsmp_hwmon_read() and add code for attribute checking.
-11. Replace switch with if in hsmp_hwmon_read()
-12. Remove hsmp_hwmon_read_label().
-13. Update hsmp_hwmon_write() to remove switch and code related to channel
-14. Remove int-ll64.h header
-15. Update the documentation
+1. Add linux/bitops.h
+2. Define DDR_MAX_BW, DDR_UTIL_BW DDR_UTIL_BW_PERC FW_VER_MAJOR FW_VER_MINOR FW_VER_DEBUG FMAX
+   FMIN FREQ_LIMIT FREQ_SRC_IND and use them in functions.
+3. Return early in hsmp_msg_get_nargs()
+4. Change while loop to for loop in hsmp_freq_limit_source_show()
+5. Correct the GENMASK size in hsmp_ddr_util_bw_show()[bit 19:8, instead
+   of bit 20:8]
 
- Documentation/arch/x86/amd_hsmp.rst    |   8 ++
- drivers/platform/x86/amd/hsmp/Makefile |   1 +
- drivers/platform/x86/amd/hsmp/acpi.c   |   4 +
- drivers/platform/x86/amd/hsmp/hsmp.h   |   8 +-
- drivers/platform/x86/amd/hsmp/hwmon.c  | 121 +++++++++++++++++++++++++
- drivers/platform/x86/amd/hsmp/plat.c   |   5 +
- 6 files changed, 146 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/amd/hsmp/hwmon.c
+ Documentation/arch/x86/amd_hsmp.rst  |  22 +++
+ drivers/platform/x86/amd/hsmp/acpi.c | 262 +++++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.c |  23 +++
+ drivers/platform/x86/amd/hsmp/hsmp.h |   1 +
+ 4 files changed, 308 insertions(+)
 
 diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index 2fd917638e42..3ef3e0a71df9 100644
+index 3ef3e0a71df9..a094f55c10b0 100644
 --- a/Documentation/arch/x86/amd_hsmp.rst
 +++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -116,6 +116,14 @@ for socket with ID00 is given below::
- 			})
- 		}
+@@ -71,6 +71,28 @@ Note: lseek() is not supported as entire metrics table is read.
+ Metrics table definitions will be documented as part of Public PPR.
+ The same is defined in the amd_hsmp.h header.
  
-+HSMP HWMON interface
-+====================
-+HSMP power sensors are registered with the hwmon interface. A separate hwmon
-+directory is created for each socket and the following files are generated
-+within the hwmon directory.
-+- power1_input (read only)
-+- power1_cap_max (read only)
-+- power1_cap (read, write)
- 
- An example
- ==========
-diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
-index 0759bbcd13f6..ce8342e71f50 100644
---- a/drivers/platform/x86/amd/hsmp/Makefile
-+++ b/drivers/platform/x86/amd/hsmp/Makefile
-@@ -6,6 +6,7 @@
- 
- obj-$(CONFIG_AMD_HSMP)			+= hsmp_common.o
- hsmp_common-y				:= hsmp.o
-+hsmp_common-$(CONFIG_HWMON)		+= hwmon.o
- obj-$(CONFIG_AMD_HSMP_PLAT)		+= amd_hsmp.o
- amd_hsmp-y				:= plat.o
- obj-$(CONFIG_AMD_HSMP_ACPI)		+= hsmp_acpi.o
++2. HSMP telemetry sysfs files
++
++Following sysfs files are available at /sys/devices/platform/AMDI0097:0X/.
++
++* c0_residency_input: Percentage of cores in C0 state.
++* prochot_status: Reports 1 if the processor is at thermal threshold value,
++  0 otherwise.
++* smu_fw_version: SMU firmware version.
++* protocol_version: HSMP interface version.
++* ddr_max_bw: Theoretical maximum DDR bandwidth in GB/s.
++* ddr_utilised_bw_input: Current utilized DDR bandwidth in GB/s.
++* ddr_utilised_bw_perc_input(%): Percentage of current utilized DDR bandwidth.
++* mclk_input: Memory clock in MHz.
++* fclk_input: Fabric clock in MHz.
++* clk_fmax: Maximum frequency of socket in MHz.
++* clk_fmin: Minimum frequency of socket in MHz.
++* cclk_freq_limit_input: Core clock frequency limit per socket in MHz.
++* pwr_current_active_freq_limit: Current active frequency limit of socket
++  in MHz.
++* pwr_current_active_freq_limit_source: Source of current active frequency
++  limit.
++
+ ACPI device object format
+ =========================
+ The ACPI object format expected from the amd_hsmp driver
 diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 12f4950afcd9..93b413e0a6e6 100644
+index 93b413e0a6e6..e9075b129213 100644
 --- a/drivers/platform/x86/amd/hsmp/acpi.c
 +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -281,6 +281,10 @@ static int init_acpi(struct device *dev)
- 			dev_err(dev, "Failed to init metric table\n");
- 	}
+@@ -12,6 +12,9 @@
+ #include <asm/amd_hsmp.h>
  
-+	ret = hsmp_create_sensor(dev, sock_ind);
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
++#include <linux/bits.h>
++#include <linux/bitfield.h>
+ #include <linux/device.h>
+ #include <linux/dev_printk.h>
+ #include <linux/ioport.h>
+@@ -36,6 +39,11 @@
+ 
+ static struct hsmp_plat_device *hsmp_pdev;
+ 
++struct hsmp_sys_attr {
++	struct device_attribute dattr;
++	u32 msg_id;
++};
++
+ static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+ 			      u32 *value, bool write)
+ {
+@@ -243,6 +251,215 @@ static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+ 	return 0;
+ }
+ 
++static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
++					     struct attribute *attr, int id)
++{
++	return attr->mode;
++}
++
++#define to_hsmp_sys_attr(_attr) container_of(_attr, struct hsmp_sys_attr, dattr)
++
++static ssize_t hsmp_msg_resp32_show(struct device *dev, struct device_attribute *attr,
++				    char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
 +	if (ret)
-+		dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", data);
++}
++
++#define DDR_MAX_BW_MASK		GENMASK(31, 20)
++#define DDR_UTIL_BW_MASK	GENMASK(19, 8)
++#define DDR_UTIL_BW_PERC_MASK	GENMASK(7, 0)
++#define FW_VER_MAJOR_MASK	GENMASK(23, 16)
++#define FW_VER_MINOR_MASK	GENMASK(15, 8)
++#define FW_VER_DEBUG_MASK	GENMASK(7, 0)
++#define FMAX_MASK		GENMASK(31, 16)
++#define FMIN_MASK		GENMASK(15, 0)
++#define FREQ_LIMIT_MASK		GENMASK(31, 16)
++#define FREQ_SRC_IND_MASK	GENMASK(15, 0)
++
++static ssize_t hsmp_ddr_max_bw_show(struct device *dev, struct device_attribute *attr,
++				    char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_MAX_BW_MASK, data));
++}
++
++static ssize_t hsmp_ddr_util_bw_show(struct device *dev, struct device_attribute *attr,
++				     char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_UTIL_BW_MASK, data));
++}
++
++static ssize_t hsmp_ddr_util_bw_perc_show(struct device *dev, struct device_attribute *attr,
++					  char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(DDR_UTIL_BW_PERC_MASK, data));
++}
++
++static ssize_t hsmp_msg_fw_ver_show(struct device *dev, struct device_attribute *attr,
++				    char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu.%lu.%lu\n",
++			  FIELD_GET(FW_VER_MAJOR_MASK, data),
++			  FIELD_GET(FW_VER_MINOR_MASK, data),
++			  FIELD_GET(FW_VER_DEBUG_MASK, data));
++}
++
++static ssize_t hsmp_fclk_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data[2];
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", data[0]);
++}
++
++static ssize_t hsmp_mclk_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data[2];
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, data, 2);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", data[1]);
++}
++
++static ssize_t hsmp_clk_fmax_show(struct device *dev, struct device_attribute *attr,
++				  char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(FMAX_MASK, data));
++}
++
++static ssize_t hsmp_clk_fmin_show(struct device *dev, struct device_attribute *attr,
++				  char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(FMIN_MASK, data));
++}
++
++static ssize_t hsmp_freq_limit_show(struct device *dev, struct device_attribute *attr,
++				    char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%lu\n", FIELD_GET(FREQ_LIMIT_MASK, data));
++}
++
++static const char * const freqlimit_srcnames[] = {
++	"cHTC-Active",
++	"PROCHOT",
++	"TDC limit",
++	"PPT Limit",
++	"OPN Max",
++	"Reliability Limit",
++	"APML Agent",
++	"HSMP Agent",
++};
++
++static ssize_t hsmp_freq_limit_source_show(struct device *dev, struct device_attribute *attr,
++					   char *buf)
++{
++	struct hsmp_sys_attr *hattr = to_hsmp_sys_attr(attr);
++	struct hsmp_socket *sock = dev_get_drvdata(dev);
++	unsigned int index;
++	int len = 0;
++	u16 src_ind;
++	u32 data;
++	int ret;
++
++	ret = hsmp_msg_get_nargs(sock->sock_ind, hattr->msg_id, &data, 1);
++	if (ret)
++		return ret;
++
++	src_ind = FIELD_GET(FREQ_SRC_IND_MASK, data);
++	for (index = 0; index < ARRAY_SIZE(freqlimit_srcnames); index++) {
++		if (!src_ind)
++			break;
++		if (src_ind & 1)
++			len += sysfs_emit_at(buf, len, "%s\n", freqlimit_srcnames[index]);
++		src_ind >>= 1;
++	}
++	return len;
++}
++
+ static int init_acpi(struct device *dev)
+ {
+ 	u16 sock_ind;
+@@ -285,6 +502,8 @@ static int init_acpi(struct device *dev)
+ 	if (ret)
+ 		dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
+ 
++	dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
 +
  	return ret;
  }
  
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index 7877cb97993b..02eeebfcb165 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -12,6 +12,7 @@
+@@ -299,9 +518,52 @@ static const struct bin_attribute *hsmp_attr_list[] = {
+ 	NULL
+ };
  
- #include <linux/compiler_types.h>
- #include <linux/device.h>
-+#include <linux/hwmon.h>
- #include <linux/miscdevice.h>
- #include <linux/pci.h>
- #include <linux/semaphore.h>
-@@ -25,7 +26,7 @@
- #define HSMP_DEVNODE_NAME	"hsmp"
- #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
- 
--#define DRIVER_VERSION		"2.4"
-+#define DRIVER_VERSION		"2.5"
- 
- struct hsmp_mbaddr_info {
- 	u32 base_addr;
-@@ -63,4 +64,9 @@ int hsmp_misc_register(struct device *dev);
- int hsmp_get_tbl_dram_base(u16 sock_ind);
- ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
- struct hsmp_plat_device *get_hsmp_pdev(void);
-+#if IS_REACHABLE(CONFIG_HWMON)
-+int hsmp_create_sensor(struct device *dev, u16 sock_ind);
-+#else
-+int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
-+#endif
- #endif /* HSMP_H */
-diff --git a/drivers/platform/x86/amd/hsmp/hwmon.c b/drivers/platform/x86/amd/hsmp/hwmon.c
-new file mode 100644
-index 000000000000..7ffb61e0ef62
---- /dev/null
-+++ b/drivers/platform/x86/amd/hsmp/hwmon.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD HSMP hwmon support
-+ * Copyright (c) 2025, AMD.
-+ * All Rights Reserved.
-+ *
-+ * This file provides hwmon implementation for HSMP interface.
-+ */
-+
-+#include <asm/amd_hsmp.h>
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+#include "hsmp.h"
-+
-+#define HSMP_HWMON_NAME		"amd_hsmp_hwmon"
-+
-+static int hsmp_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, long val)
-+{
-+	u16 sock_ind = (uintptr_t)dev_get_drvdata(dev);
-+	struct hsmp_message msg = {};
-+
-+	if (type != hwmon_power)
-+		return -EOPNOTSUPP;
-+
-+	if (attr != hwmon_power_cap)
-+		return -EOPNOTSUPP;
-+
-+	msg.num_args = 1;
-+	msg.args[0] = val / MICROWATT_PER_MILLIWATT;
-+	msg.msg_id = HSMP_SET_SOCKET_POWER_LIMIT;
-+	msg.sock_ind = sock_ind;
-+	return hsmp_send_message(&msg);
++#define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)	\
++static struct hsmp_sys_attr hattr_##_name = {		\
++	.dattr = __ATTR(_name, _mode, _show, NULL),	\
++	.msg_id = _msg_id,				\
 +}
 +
-+static int hsmp_hwmon_read(struct device *dev,
-+			   enum hwmon_sensor_types type,
-+			   u32 attr, int channel, long *val)
-+{
-+	u16 sock_ind = (uintptr_t)dev_get_drvdata(dev);
-+	struct hsmp_message msg = {};
-+	int ret;
++HSMP_DEV_ATTR(c0_residency_input, HSMP_GET_C0_PERCENT, hsmp_msg_resp32_show, 0444);
++HSMP_DEV_ATTR(prochot_status, HSMP_GET_PROC_HOT, hsmp_msg_resp32_show, 0444);
++HSMP_DEV_ATTR(smu_fw_version, HSMP_GET_SMU_VER, hsmp_msg_fw_ver_show, 0444);
++HSMP_DEV_ATTR(protocol_version, HSMP_GET_PROTO_VER, hsmp_msg_resp32_show, 0444);
++HSMP_DEV_ATTR(cclk_freq_limit_input, HSMP_GET_CCLK_THROTTLE_LIMIT, hsmp_msg_resp32_show, 0444);
++HSMP_DEV_ATTR(ddr_max_bw, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_max_bw_show, 0444);
++HSMP_DEV_ATTR(ddr_utilised_bw_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_show, 0444);
++HSMP_DEV_ATTR(ddr_utilised_bw_perc_input, HSMP_GET_DDR_BANDWIDTH, hsmp_ddr_util_bw_perc_show, 0444);
++HSMP_DEV_ATTR(fclk_input, HSMP_GET_FCLK_MCLK, hsmp_fclk_show, 0444);
++HSMP_DEV_ATTR(mclk_input, HSMP_GET_FCLK_MCLK, hsmp_mclk_show, 0444);
++HSMP_DEV_ATTR(clk_fmax, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmax_show, 0444);
++HSMP_DEV_ATTR(clk_fmin, HSMP_GET_SOCKET_FMAX_FMIN, hsmp_clk_fmin_show, 0444);
++HSMP_DEV_ATTR(pwr_current_active_freq_limit, HSMP_GET_SOCKET_FREQ_LIMIT,
++	      hsmp_freq_limit_show, 0444);
++HSMP_DEV_ATTR(pwr_current_active_freq_limit_source, HSMP_GET_SOCKET_FREQ_LIMIT,
++	      hsmp_freq_limit_source_show, 0444);
 +
-+	if (type != hwmon_power)
-+		return -EOPNOTSUPP;
-+
-+	msg.sock_ind = sock_ind;
-+	msg.response_sz = 1;
-+
-+	switch (attr) {
-+	case hwmon_power_input:
-+		msg.msg_id = HSMP_GET_SOCKET_POWER;
-+		break;
-+	case hwmon_power_cap:
-+		msg.msg_id = HSMP_GET_SOCKET_POWER_LIMIT;
-+		break;
-+	case hwmon_power_cap_max:
-+		msg.msg_id = HSMP_GET_SOCKET_POWER_LIMIT_MAX;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = hsmp_send_message(&msg);
-+	if (!ret)
-+		*val = msg.args[0] * MICROWATT_PER_MILLIWATT;
-+
-+	return ret;
-+}
-+
-+static umode_t hsmp_hwmon_is_visble(const void *data,
-+				    enum hwmon_sensor_types type,
-+				    u32 attr, int channel)
-+{
-+	if (type != hwmon_power)
-+		return 0;
-+
-+	switch (attr) {
-+	case hwmon_power_input:
-+		return 0444;
-+	case hwmon_power_cap:
-+		return 0644;
-+	case hwmon_power_cap_max:
-+		return 0444;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static const struct hwmon_ops hsmp_hwmon_ops = {
-+	.read = hsmp_hwmon_read,
-+	.is_visible = hsmp_hwmon_is_visble,
-+	.write	= hsmp_hwmon_write,
-+};
-+
-+static const struct hwmon_channel_info * const hsmp_info[] = {
-+	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT | HWMON_P_CAP | HWMON_P_CAP_MAX),
++static struct attribute *hsmp_dev_attr_list[] = {
++	&hattr_c0_residency_input.dattr.attr,
++	&hattr_prochot_status.dattr.attr,
++	&hattr_smu_fw_version.dattr.attr,
++	&hattr_protocol_version.dattr.attr,
++	&hattr_cclk_freq_limit_input.dattr.attr,
++	&hattr_ddr_max_bw.dattr.attr,
++	&hattr_ddr_utilised_bw_input.dattr.attr,
++	&hattr_ddr_utilised_bw_perc_input.dattr.attr,
++	&hattr_fclk_input.dattr.attr,
++	&hattr_mclk_input.dattr.attr,
++	&hattr_clk_fmax.dattr.attr,
++	&hattr_clk_fmin.dattr.attr,
++	&hattr_pwr_current_active_freq_limit.dattr.attr,
++	&hattr_pwr_current_active_freq_limit_source.dattr.attr,
 +	NULL
 +};
 +
-+static const struct hwmon_chip_info hsmp_chip_info = {
-+	.ops = &hsmp_hwmon_ops,
-+	.info = hsmp_info,
-+};
-+
-+int hsmp_create_sensor(struct device *dev, u16 sock_ind)
-+{
-+	struct device *hwmon_dev;
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, HSMP_HWMON_NAME,
-+							 (void *)(uintptr_t)sock_ind,
-+							 &hsmp_chip_info,
-+							 NULL);
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
-+}
-+EXPORT_SYMBOL_NS(hsmp_create_sensor, "AMD_HSMP");
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index 4f03fdf988c1..0881d7e01936 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -189,6 +189,11 @@ static int init_platform_device(struct device *dev)
- 			if (ret)
- 				dev_err(dev, "Failed to init metric table\n");
- 		}
-+
-+		/* Register with hwmon interface for reporting power */
-+		ret = hsmp_create_sensor(dev, i);
-+		if (ret)
-+			dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
- 	}
+ static const struct attribute_group hsmp_attr_grp = {
+ 	.bin_attrs_new = hsmp_attr_list,
++	.attrs = hsmp_dev_attr_list,
+ 	.is_bin_visible = hsmp_is_sock_attr_visible,
++	.is_visible = hsmp_is_sock_dev_attr_visible,
+ };
  
- 	return 0;
+ static const struct attribute_group *hsmp_groups[] = {
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 3df34d7436a9..1f0cda87b6e6 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -228,6 +228,29 @@ int hsmp_send_message(struct hsmp_message *msg)
+ }
+ EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
+ 
++int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args)
++{
++	struct hsmp_message msg = {};
++	unsigned int i;
++	int ret;
++
++	if (!data)
++		return -EINVAL;
++	msg.msg_id = msg_id;
++	msg.sock_ind = sock_ind;
++	msg.response_sz = num_args;
++
++	ret = hsmp_send_message(&msg);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < num_args; i++)
++		data[i] = msg.args[i];
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(hsmp_msg_get_nargs, "AMD_HSMP");
++
+ int hsmp_test(u16 sock_ind, u32 value)
+ {
+ 	struct hsmp_message msg = { 0 };
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index 02eeebfcb165..027db8e1de12 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -69,4 +69,5 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+ #else
+ int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
+ #endif
++int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
+ #endif /* HSMP_H */
 -- 
 2.25.1
 
