@@ -1,325 +1,200 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012037.outbound.protection.outlook.com [52.101.66.37])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A53E30036A;
-	Tue,  6 May 2025 02:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B254207DE2
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 May 2025 10:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498209; cv=fail; b=aCLUvutsx0Ncq/NSN+zD9Xc6u4ohpecUD3CjeEeOB/Kp9S4RRVFwbkzPPylMXiTSiLlJ4FvM6TjfSI1+aSaFQUlDlIFtzoaPK7N9hnOdymfuoLCqfFdKESlMZ/vauewEAQjDdagau9RumWyd9/rYbSWa2W31CApURNJqP7nB5yA=
+	t=1746526584; cv=fail; b=LN1mYw0DmezHZOdgXiKJrSbdlyfrj7CfJbdq/SbZmkwGcHRvTsnnUFfs6egElhQstBjDq8LbgS0nF/TamuzjyMzo1yCyH7ZD1biegJjJt1u+QuNNQbLLuL5lKuiUb3DioiEImcZyLYU0I3JQ0T7YdOZ0pBgjyzOK6bK8BvXCyb8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498209; c=relaxed/simple;
-	bh=1z7D/zDbpqQBxeBFViBNQ7b+o8XvFvzYXtAoIneIvcY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TXWDN/HY76RsDinro+WNqZRVVRqpxZYiUAcJGprm6I/1hBD3PNY8TjohKFVcuPLuASVBu5Ms4xKx+wYmM4XMogHHszkn3Uy//rXbk0UYPfe+6YU/nLt1kJbi9yLmPozIlDqkl7gUifonTZ1kZjSGDa/DldqCdQWi/z0fvr1WOww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=MGa1Acnp; arc=fail smtp.client-ip=52.101.66.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1746526584; c=relaxed/simple;
+	bh=Vlnas/GlFc7SjiS8GJu9VPSooRkixdoayIP1xECFE0Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lRVImDtn0P2ueHq6IIvjAzW4jF8j1kq+dkkLLk//8UnQ0Z+1gC3ikLj1Zzran50eg+Bt5nqTGgMAF7hfy+/PbC2DIN/xAq/GK6+4ptkdBt2J0afPKXMXJ1s5WO74Flb5MDTqi3qENwb2L28ktth3Xxi2HFX6PgwrXRpfOwHC8m4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IMtTxCun; arc=fail smtp.client-ip=40.107.94.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="MGa1Acnp"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IMtTxCun"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XDaoqgEWgjyfSw/rB7H7hI7OvHydC/4EzkKF+wodstKmfWkTXWG6Vm5kSflbV9g17T0trNip9XJWcBmIbeGM2upOrwcsE3atnjWzzjbCPstL22XrhOViWRRaF6S/LoqUEIcZVUsWT3K/2uqiVssvdPODLAjG8jhVTDhlG0xZQKumLDg+5NBXpqIphe5dkeebgXYWTOe2p0ZjVJ9Kbd3SIUhV4FGb+7ZeiwK7kN4wQvjLYicUzagfUFy60OOgzaHEThG7U3T3GZ9/rLMvjL1nvEwKLr1ChJXRjs2Vbf5VrvBTSfFqcXTq5oHhWXMUFkb8wdr9A+bHBHGAlzZffX0DiA==
+ b=E2JSOzRG5Ev6VEtGaAE3rbDmLs24z0zGEgEsefwNaowtCuSSFMLwjKH3mF+RQhJPAD+QF5OFsMPruuvyn5SifolyIl9fFExRraY57folw3kWcz1dOTq+kxmGgVASAmW+Yh/Yr4NwZPmSNAjeRawvXOMV8EvdKuZEUQ8DId7DDcxRt1Huc9PgncvD8MLd7M9YcWZeIiHSnU+Xad12PGvoT/F4QWG8w4k5kYqc7LPJKO9Zyq7KoHihx4wWGV9giQm8upkFTP6IMQmyT2IvMRhTBRZkUwYCCaI6PjiVWvme8tC8gUMnlH71ZuCQjZA7W19a9MKlDbmBOq1lO4zu9tzPaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=63b9Aunr8opOU4+8ybjrFTZV2qklprm0iPPtYTehS40=;
- b=lK9mxmjFxUQplUjrg/1aTVxY8IlFdBP8CIQm3UExl8sXUT8Y4q2psH2NqdpDhIKHBXMiH226lkIbN/A8rI+q7ee89K1kT9P7dwfpYBirtdpLamYidpZVFxwswtXOiw3o9G89+1D9M7SnTHfv9Fnnct2nwTQ1YaKx0hJ1MuVxQsr4SjphQdD5I3u6HVmBThUaM19GzxgOAaDN8LbZX4N9U2nBAzbUvkzJlMTHFj4muMkmOUQV5DQgvXQqQTx0Yo1mdVRYkYmyUf69J8Ihww1qXdX2KqywaL+IFTUAmWbPRFHQ7y3Hq1BaHOODAK3PawE2FjrM6Ae8E2ooR+BeCSZjQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=WCn8aP+ORIViixZ6kNyCeNbT9FEv1izvZpTOLBGAhos=;
+ b=sXhn5D6gsli+MDh38YMCrnOsAKjh+Vk7QAV3VZ/+uGwRz5Mp2oN0frBTNRcpJWXfsDuGZR5MuPFhiLZIv/T+cwZ5PGIo0COH0rmxsuGiWLpF7W5D35Ss9e6VQx2oJKXF3X85lf12Zd73P93Tix5QqENWfVMo0mL43FcwS8j+rL921ZpTHLoxNqqvLQLKPUwWqZVfwl/tHmAZdWD9oAvtXxSv5m/nv8vvDMhWE/SKZlyEIVKXU6ydfeSye19DAP7yuWLStYa53wd4YGR1fnK1YcothPR6RpHrb0SqyZ1QIcb2HE/QZAjkcSBZNYKZFtZjjjYwTMv+fPqD6pdbYYwYOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=63b9Aunr8opOU4+8ybjrFTZV2qklprm0iPPtYTehS40=;
- b=MGa1Acnpxa1YUxn0JeMOGaDDNSDAP0j9d80xA4kNPGtDKAIU3mwDAK0TEvjnJeVxdmuwFX/xXotQtQnPdbG/tC84vgou4D4tNReLww8slsnl+trg0U0ESgZxdOCd8fPlgaz1AjLRw2k2GLIZXEuYpCPuRkO2kJhZzrysDmLpRUtjUewIATn8EyT3LT3ncy49HBkSSizfjyM0qD/3TgHrTpKZYloWzGPcb+KdaVMs4Ek00EYgs3JM/NoLS13wk0rtcHNaryO3h213MkEmk9EMU9/g+CllnrPdvg8ncBu7B7UHspr1Jczqp8WlTYDnKJ8u4yS+3coViT/qId847oywRw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by PA4PR04MB9223.eurprd04.prod.outlook.com (2603:10a6:102:2a2::15) with
+ bh=WCn8aP+ORIViixZ6kNyCeNbT9FEv1izvZpTOLBGAhos=;
+ b=IMtTxCunbKehOq589UKvikQNnuj46D1DH1rJyqy48iCAYWNV/WXfHz1w54NTSRWQUS+pxBztI4WOfd4VKsQg+NmakZ8A2CVZlZJl2GwtmDOuJrV4l21JWE0JmRF47t+1Bbx7VTznMr/F9aEMttOn3QrBxPQpk+IbwD/DjYOp+fE=
+Received: from SA9PR13CA0148.namprd13.prod.outlook.com (2603:10b6:806:27::33)
+ by SJ0PR12MB7035.namprd12.prod.outlook.com (2603:10b6:a03:47c::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 02:23:23 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%4]) with mapi id 15.20.8699.026; Tue, 6 May 2025
- 02:23:22 +0000
-Message-ID: <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
-Date: Tue, 6 May 2025 10:24:18 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
- devm_drm_bridge_alloc() API
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa
- <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>,
- Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
- <553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
- <20250430112944.1b39caab@booty>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <20250430112944.1b39caab@booty>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR06CA0003.apcprd06.prod.outlook.com
- (2603:1096:4:186::14) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
+ 2025 10:16:12 +0000
+Received: from SA2PEPF00003F62.namprd04.prod.outlook.com
+ (2603:10b6:806:27:cafe::3e) by SA9PR13CA0148.outlook.office365.com
+ (2603:10b6:806:27::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Tue,
+ 6 May 2025 10:16:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00003F62.mail.protection.outlook.com (10.167.248.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 10:16:11 +0000
+Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 05:16:09 -0500
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
+	<naveenkrishna.chatradhi@amd.com>
+Subject: [v4 1/3] platform/x86/amd/hsmp: Use a single DRIVER_VERSION for all hsmp modules
+Date: Tue, 6 May 2025 10:15:40 +0000
+Message-ID: <20250506101542.200811-1-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|PA4PR04MB9223:EE_
-X-MS-Office365-Filtering-Correlation-Id: e11c5380-bd1a-484a-07d4-08dd8c44f8eb
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F62:EE_|SJ0PR12MB7035:EE_
+X-MS-Office365-Filtering-Correlation-Id: 877cc029-0987-4868-5d45-08dd8c8706ca
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013|13003099007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?di9meTl0cmhuNno2azdPN2k0YkZ5STNyMk94OTRTT2grWTJWQjRGazEreG5x?=
- =?utf-8?B?aWx1RWVaUTU4Q2t5M0JpeXZGVVd1MTc3N2JuVkZlanByQ3RxRFZhWFdqQXBI?=
- =?utf-8?B?NmdQTy9hL0NRNmJPWEc3TDhSS2FHc0p2WFdJc3R4bURwTVZxV1VhVzhPUmFI?=
- =?utf-8?B?elBHTGJQaHVEVTBSdG1XMkVFSlhYYzlpU1V5UHAzWDBDM1VpbjlhQjdBK2ov?=
- =?utf-8?B?TmlRSkgvU0RaQWJMSktKV3JoaUsvSFQ1SDVpV0IyeW4yd3ErZmk1cWhyanlB?=
- =?utf-8?B?d1pEcE9SV0RNYm5vUEdYSXA4d0JDTzMrV1crelhSWi9ETnNERVpkWGN2ekk2?=
- =?utf-8?B?QlhpZ1NsUElDVlZLdGFLd3NMcVMwOXh1VWtPMk1mTkdHbnp6cmFFQ2xhVzFY?=
- =?utf-8?B?aFdrUjlEUzVCVG5oUU5UcWpPWU1YNHl5SWxBSjRZVkx2YzdEYmI2dWVaMGNj?=
- =?utf-8?B?b0I1VlRMWWMzWGFmV1h3OXNVYzMwQmZBL2FMS2Jtc0dUdVdaeEtxcS9aZWU4?=
- =?utf-8?B?N0FNUjVoSURzMFBjMG9reHE3bTFoZHBuclB5bVpZVGhHMG9CNFJWUGlNTE1T?=
- =?utf-8?B?aldDbWRPV0x2Vm8zOVh2R3F6TjR5bHB2VVJVZ3pWUFpVdXR4UVRlV0Fwb0p2?=
- =?utf-8?B?clRjYlplQVBMWktjdXFKUGZtSThZZFAwK0d3S0kwM20veTVkaFNXWElCdUNu?=
- =?utf-8?B?ZjIzbWNIWmY3eVVlRm1EajlWenNYVlFiTGkyQmw0bXJTc1BWZDFFN0hZWERy?=
- =?utf-8?B?bVNrWlI3Zk5NcVdKVEdqVDZPek8rTG5FSnE1NWdPWXdxRlJrVjA1WWRKQXlz?=
- =?utf-8?B?UmREaW5YSkFQaVU3bzc4dUt2YkhiVzZzT0Q0dEgydWhINjBYNXBtYXhFdHVF?=
- =?utf-8?B?RThRViswcHAxdDdvR3J5cVltNWdjS3FKL3pzYjRrOHBjNjZpVVlUaFVIYWVT?=
- =?utf-8?B?cElyb1hGR1ZMRGVZOElJOGd0eGw0QkYxU2pBT21IUDAyQ0J4STRDbFNxb3R0?=
- =?utf-8?B?VEVtWkM0ekYvNGtJbmpNWGt1OHNtSTQ1VGE3c1hWcnkycWJkVjI3TEVNYmcy?=
- =?utf-8?B?ejZJWWphR2pmUlZ0dFFUaTJ1NEUrbFE5WmlKQ0xqOG4yRS9hZW1yMDByZ0RG?=
- =?utf-8?B?cyt4eFA2a1BrbEkyc3VNSmFZUTFzMlBaamFwRnMzNFVKSVRhV3lLQlk2QUVL?=
- =?utf-8?B?MXVjZm92NDVYRnlCV1FtaFg3Zi93NHp0akZEL1oraUpCc3dtY200WGRsTGdM?=
- =?utf-8?B?cGxWQXgrKzl1MzNJVUVDYWlQMWFUOE9nZ29jcTVBVHI5cWdZOVQwT3lndE5Y?=
- =?utf-8?B?NUJabnFKUEFZRnJvOEdabCtxR0I4MWJwU0EyekZ0b25sSzFBVGNDUkZmTGRr?=
- =?utf-8?B?a292azYwQUgrUWRqZWloU1hNY0tIcjBTQzFLY0daR0w3T1poYktYQkJvZXNY?=
- =?utf-8?B?YkpIYjlSUEJObkNOYm5hVWYxSzZOTEtzWkdPTjliOEhXYlVIMHN3ZzhNeDNU?=
- =?utf-8?B?MFZ0b25mUTloV1VtUXA0ODZZOTZaZVA0U01xdytiYkNuNy9ZUTV2a3c1U2hy?=
- =?utf-8?B?RWRXTmhYTlpuVGdGT0lOZHMrMmFIbWluQ0hEWWx1ZUhjWVFrQmpRbVI2TFo0?=
- =?utf-8?B?U1dNVlJzUWNKYWJkN203M3dlYWNWMDUyOG40RGJHZGY0WDhSWUxvTHNoNUVP?=
- =?utf-8?B?Z0MybTBJTXNNOWh1YjAya3hWb0xDNUcvU2xjTVhYWHY2bUlWM1RqeXhka0ww?=
- =?utf-8?B?c3BORGw0VURXZ2IxMmtOajA4NGJGVDdwTndTSDV3VVdwOGNmRTBIeUp1Ny9N?=
- =?utf-8?B?eE9ZcEdjYmxXTjZYRGw4R3RhNVBuNndqeko1ajROWmVZOEdPbzdEN3ZvSzhF?=
- =?utf-8?B?eHFCeHBxOUFCb25qS2ZrcTZsRE5ndks0QWhCYkMraXoxeWRzN3BXUUg0WUJG?=
- =?utf-8?Q?6kyeynkRelI=3D?=
+	=?us-ascii?Q?OVTjgktDQGxcKh958aMV2qtsNJHbPz6KCBhvK3qlvg+8mSWLhLLvL3g00zAa?=
+ =?us-ascii?Q?LTX5YuC2XApJCC+nhHjcyRH68Vgj1Bj5Or2XWVD2A9NA3Mb6ImD9Q6sHovUc?=
+ =?us-ascii?Q?vRyAHqVyHELve+atYuk/z6uBgxSqUAzt9l/PPI9OcTwDzrya0rJjui02b9R0?=
+ =?us-ascii?Q?Va4as8zj0RwzrbdC+lTTP+CkwQSEXpnfYb75zYFzThEfwC3SeBoeFWMJZ64C?=
+ =?us-ascii?Q?TzH8sXdeNzTVrQfbrfs2Fi16P3q6VpWLb/+Ln4/daJwHrW6Mlm2k1Q2KwB7L?=
+ =?us-ascii?Q?6MXdlN65KqS+Eh1RVfQKB+7Ft3OJnxnzHK7GxPFL/fodAy0P2XeCai5KsJIC?=
+ =?us-ascii?Q?fOFq4sXZVeQ9pXyvDTbFh3sTBXBP69wHYVmcUVazVVERYVkahdKqVLuL3uDz?=
+ =?us-ascii?Q?O5t3k1QUCJ8LISHzacxUalMn4FTq2KezMVQPwg3HmWd9nx4LJddVfFWBQA+2?=
+ =?us-ascii?Q?cZGjjsLQ3tjzc8Z3Sm45hEBfidJ+m5edekomKslMd5a1xUIFW0eSCmp96p4V?=
+ =?us-ascii?Q?77+9/pZaZ5meWjJ2bto+ubL3PD4tbT86t/Bo+2dL427TDuNyXKf+hb0jaaBg?=
+ =?us-ascii?Q?A9bliN5tPQT6D9BvIJY99CoFAwaVM5pjvmjhGwm0ShQcf7XT8738DrIm3nHZ?=
+ =?us-ascii?Q?fztXJREFxihhTQkD0IGgkaH7AnHP5tQm8kmSVmShvhyFvE3GV0SV62pkcW3/?=
+ =?us-ascii?Q?JtRlIharzeCcAQM1UYJOEy5yhkUFqWL7BQZGo57RIrx4COpEWEGcuHfhPRnU?=
+ =?us-ascii?Q?/DVXOCjBQ25sf5OzsCMtvqHQoFcnq3GOiAhTz3bjvbhAzx6WnkSmiDyThJxW?=
+ =?us-ascii?Q?s8BBmbEptQUN5nBVxQt1PYxTrSQk7VwPMnhwWi4f6XMD1UYVuWC1czTylsHa?=
+ =?us-ascii?Q?cu+4N748axlSLnGqfpiXpo9JVzanWTmmP7Zuia6XBOZFXc2PXmep4wTceLXh?=
+ =?us-ascii?Q?zmNoyMAnynNO7pogbalRT8Id3B13vtKU/UEBDLJRJXd1N05KEIGtstcYzdh7?=
+ =?us-ascii?Q?TvbmxHtVORZSSKKskBnghPyc+Oa0SYrbBNTBSnvTyD3wUBLHjVSFKTvtj4Qy?=
+ =?us-ascii?Q?C5bGnh/nlC4VufCrmN1/NY1f51ft2SB9SqOwVMUm0UNRC8utO44e/YDTOlHl?=
+ =?us-ascii?Q?Mq1/qeTRV7XWrWaCEJGKTAQSgeo2Ee8BOVtBntyBaFf/0JmphHpEb5Ye1PEZ?=
+ =?us-ascii?Q?B+oUC8vaQNi1iac797uKZqWpSqoPxpMz2aj3q3WF229gdR0AmswYS0Nhg3K0?=
+ =?us-ascii?Q?lG97fPa2NyrtUJhCYXq+EHa5rF+/Nxto103YUwVfxs9IE+cFuJFhf1w+WZH7?=
+ =?us-ascii?Q?Fk4+qJYzrno3p1LdqWDQidD80x5ylJ3PLQWxa7ZZVrtuFlP7+PVK6nylEVuq?=
+ =?us-ascii?Q?Fr05Zbk+z827Aq+IN4anW5I3OFNLjgwQve27AHlKygJ0lVNknFxQogS4VYWo?=
+ =?us-ascii?Q?FlFtq8PKG2qc7L/c4OmabzH6sukXYj7YMsPRtOVHPDsSkBKnV/+P/rCRGZwm?=
+ =?us-ascii?Q?Qaw5mhML+0NttTk=3D?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?QkdjUzBrYm4xZThrUXpMNk93WjJTTDFUUko3Si9rd1RMeXlNREFrdjJ6TXJp?=
- =?utf-8?B?U1hBL3lyZ1prNlh5M3pwd2l2SUVXVGplWmdDRnZhYWMySjBVeGxkOXNGOUJC?=
- =?utf-8?B?ckc5TjNpMzQ0Yi83MGNaeTFGZXlnR1cyLzM4K2dIZ3FRMkpTSk9BUjRXR2lQ?=
- =?utf-8?B?eElMdTIwRWpqcnpuNUdwci84L0w0OUhxNUJweWJxMDBrbEltcGt3U0FKUC9Y?=
- =?utf-8?B?ZlVzSU1uQm83RzBOeWFhUGZzR2V0QXZqQVBRVlJjMnFBalBWK21EWVA3STAy?=
- =?utf-8?B?UFcxZmpUeEt3cFhUNUd6QXFOZEVKZTE0bWl2QW5IR2kzOFMvcEowd1pRVDR6?=
- =?utf-8?B?NFhQdW1VZXoxV0VIdWRHaERDdjFMNEd3UjlrQ21BODNWbnJWTW04Z2pBajRY?=
- =?utf-8?B?Njk0QWRCd1RQZmoycHZDOUZiYzY2eWEraVpmanBXSjdEa21zempFVElmS2sr?=
- =?utf-8?B?K1N6QTlRcVgrR1Brc2VzRSt6MTNBWGRMamRKT0R4b0NIUlRhQi9ubVlBSjR4?=
- =?utf-8?B?Y29yaXY3cGV4VXQvcldqcy9ZT29BVDZIeXhmYWFVdy9WVXdqVXBzdXptNVBQ?=
- =?utf-8?B?RnRJaGdwc2tRRkhnSWtRTDlHSFk1WGVCN094WVY0TVA3cEFGWGg1VE9ZckEw?=
- =?utf-8?B?djhHeVo1eEE3Nk1aaHc4cWw0dDUzWExkbWtpclZMYmQxRG03YVVtVHJLN0pH?=
- =?utf-8?B?M0Q1N1NXeWFscmg5M3lqaENUWmVyalZEYUdyL2ZMMUxvWlNNaFJJRUw4Tjlk?=
- =?utf-8?B?S1FoSTdsOE80ZCtmb25kYm5JVHJiN1NDUm1WTFZoclpUTkh5Rk1zS21paXlP?=
- =?utf-8?B?cU1FUC9uMmFtNG9tVzFuOVRtaDR2cmpCL3pqclVQSW51S1JORHJrVjJCV2NU?=
- =?utf-8?B?Ung5RHZMU1ArbWR3K09yUWdDQTR0RFJpVTU3M3daM1BxVjBvaWlWMjRPYmpk?=
- =?utf-8?B?RHdnUE9DT25GUEFXNlEra3FSSnB3RHQvU3ZyL0gvZDV2ZVBLUmozMEtLQncy?=
- =?utf-8?B?ZDlPS2ZNOFZ3LysvSmU1VkwzcVV2MFhTNDV2am94eUN3WnVqRU53R01rbUtZ?=
- =?utf-8?B?amVxM2gvRzZPOVV1UGtrdXRDL3BTcUdrVlBRL0NnVWFVUXRxWWJ6YnFvQ3d1?=
- =?utf-8?B?bmtaWTUyU1FnbVpncVgxYWNRU2pib1JQc0thQkxFNGpWak9QdW9UdlgrTS84?=
- =?utf-8?B?T1Bsckd5T3lLN0lkWmsydVJ2blJCWS93bi9YSVU1WjdTMGxyeDVmQU94SjZV?=
- =?utf-8?B?bkxDMTN6cWlsMmVrc2VkejlZejZHZTRVV2tpVHJ6Mm5YR2Q1ejkzT3ZtR1pZ?=
- =?utf-8?B?M09OWmlzSWtUMWdPOTFoT1FTS2VENHd5TGlpcnF2OG5QZ2ErUk52TGsvT3F2?=
- =?utf-8?B?YWt5Y3luQmhqdWJ1WkxLZXZZVGRXdDJkOXArL1NsV29ENFJHWm14TkpqVHE5?=
- =?utf-8?B?YS90aTlyelloNFZmSHFEV3IvWVJVNThlTTZlRkZGOVRnWUtjOTZhRVZvbmVQ?=
- =?utf-8?B?cmNJWnp1VndUaGhqNTZEZUthRk9LdHBJYWFtd2RQL0V3TGN1MUNYY1NUSFhZ?=
- =?utf-8?B?cmdpZmxsN0Ywc2NjcXphZmd5cWg3SHpRL2h4dyt0LzRhcWxhOFFaNFIvbnQ5?=
- =?utf-8?B?V3lsc0NSYWpHRndWTWZiSXRCdmV0OUY0NWEvcTAyYjRlQXppNUhmdnFKQTNz?=
- =?utf-8?B?NU5IK25RbzRKNVZQVkQ1V2hzdzdUUlNHTU12dDZ1MERaY1RXNUFmVFA4a1No?=
- =?utf-8?B?aGdoOGd6STRkL2ZGYWVFWXJibzhNc2Y1WGNDRWFxcWh0QVBuK2lETmgvWmJ3?=
- =?utf-8?B?WjBjNGVxWWlwWVo0cDVQSThtM1kyR2dpd0xvMU14RlVzRElyVTN5WVBsSVVo?=
- =?utf-8?B?V2RqTDZJaWU4ZWgwNjY4YWF2cW02ZlpYYU1mYXBoQS9TbXNPdURma01FRmtP?=
- =?utf-8?B?anpncDNFVTE4dS8zOVVoOVBtQ0xraHVwWS9SWDZPZ1U5TEIvRWtoaHA1cWJE?=
- =?utf-8?B?aWdGaVFzall5bWJ4WDVWZ3dxUiszanltS29UL1lSMUNmNUtNeVc2MEVlL2hI?=
- =?utf-8?B?bGlKd0VFOThGUk9LT08xY2pJRTlscWp0a0twbHAwTTc4dHo2dXJKc05LQTZo?=
- =?utf-8?Q?TXPOCszcRt+Zb5Jz8Y/x0VPyS?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e11c5380-bd1a-484a-07d4-08dd8c44f8eb
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 02:23:21.9794
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 10:16:11.8179
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uUp1VcJJNpJskboapS7NuaShR20VTVbnHdxV7uJ7Q1ku2ku9Jw63SRw3TL7rd6/mvfxcqQQBrbKtozT5Kmfabg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9223
+X-MS-Exchange-CrossTenant-Network-Message-Id: 877cc029-0987-4868-5d45-08dd8c8706ca
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F62.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7035
 
-On 04/30/2025, Luca Ceresoli wrote:
-> Hello Liu,
+Use a single DRIVER_VERSION for the plat, hsmp and acpi modules,
+as all these modules are connected to a common functionality.
 
-Hi Luca,
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+---
+Changes since v3:
+None
 
-> 
-> On Tue, 29 Apr 2025 10:10:55 +0800
-> Liu Ying <victor.liu@nxp.com> wrote:
-> 
->> Hi,
->>
->> On 04/25/2025, Luca Ceresoli wrote:
->>> This is the new API for allocating DRM bridges.
->>>
->>> This driver embeds an array of channels in the main struct, and each
->>> channel embeds a drm_bridge. This prevents dynamic, refcount-based
->>> deallocation of the bridges.
->>>
->>> To make the new, dynamic bridge allocation possible:
->>>
->>>  * change the array of channels into an array of channel pointers
->>>  * allocate each channel using devm_drm_bridge_alloc()
->>>  * adapt the code wherever using the channels
->>>
->>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> 
-> [...]
-> 
->>> @@ -345,8 +351,8 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
->>>  free_child:
->>>  	of_node_put(child);
->>>  
->>> -	if (i == 1 && pc->ch[0].next_bridge)
->>> -		drm_bridge_remove(&pc->ch[0].bridge);
->>> +	if (i == 1 && pc->ch[0]->next_bridge)  
->>
->> Since this patch makes pc->ch[0] and pc->ch[1] be allocated separately,
->> pc->ch[0] could be NULL if channel0 is not available, hence a NULL pointer
->> dereference here...
-> 
-> See below for this.
-> 
->>> +		drm_bridge_remove(&pc->ch[0]->bridge);
->>>  
->>>  	pm_runtime_disable(dev);
->>>  	return ret;
->>> @@ -359,7 +365,7 @@ static void imx8qxp_pc_bridge_remove(struct platform_device *pdev)
->>>  	int i;
->>>  
->>>  	for (i = 0; i < 2; i++) {
->>> -		ch = &pc->ch[i];
->>> +		ch = pc->ch[i];
->>>  
->>>  		if (!ch->is_available)  
->>
->> ...and here too.
-> 
-> This is indeed a bug, I should have checked the pointer for being
-> non-NULL.
-> 
-> Looking at that more closely, I think the is_available flag can be
-> entirely removed now. The allocation itself (ch != NULL) now is
-> equivalent. Do you think my reasoning is correct?
-> 
-> Ouch! After writing the previous paragraph I realized you proposed this
-> a few lines below! OK, removing is_available. :)
-> 
-> [...]
-> 
->> On top of this patch series, this issue doesn't happen if I apply the below
->> change:
-> 
-> [...]
-> 
->> @@ -351,7 +349,7 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
->>  free_child:
->>         of_node_put(child);
->>  
->> -       if (i == 1 && pc->ch[0]->next_bridge)
->> +       if (i == 1 && pc->ch[0])
->>                 drm_bridge_remove(&pc->ch[0]->bridge);
-> 
-> Unrelated to this patch, but as I looked at it more in depth now, I'm
-> not sure this whole logic is robust, even in the original code.
-> 
-> The 'i == 1' check here seems to mean "if some error happened when
-> handling channel@1, that means channel@0 was successfully initialized,
-> so let's clean up channel 0".
-> 
-> However my understanding of the bindings is that device tree is allowed
-> to have the channel@1 node before the channel@0 node (or even channel@1
-> without channel@0, but that's less problematic here).
-> 
-> In such case (channel@1 before channel@0), this would happen:
-> 
->  1. alloc and init ch[1], all OK
->  2. alloc and init ch[0], an error happens
->     (e.g. of_graph_get_remote_node() fails)
-> 
-> So we'd reach the free_child: label, and we should call
-> drm_bridge_remove() for ch[1]->bridge, but there's no code to do that.
-> 
-> To be robust in such a case, I think both channels need to be checked
-> independently, as the status of one does not imply the status of the
-> other. E.g.:
-> 
->   for (i = 0; i < 2; i++)
->       if (pc->ch[i] && pc->ch[i]->next_bridge)
->           drm_bridge_remove(&pc->ch[i]->bridge);
-> 
-> (which is similar to what .remove() does after the changes discussed in
-> this thread, and which I have queued for v3)
-> 
-> What's your opinion? Do you think I missed anything?
+This patch is rebased on https://lore.kernel.org/platform-driver-x86/20250425102357.266790-1-suma.hegde@amd.com/T/#u
 
-The pixel combiner DT node would be added in imx8-ss-dc{0,1}.dtsi, please
-see the case for imx8-ss-dc0.dtsi introduced by an in-flight patch[1].  As
-channel@{0,1} child nodes always exist(DT overlay cannot effectively delete
-any of them) and channel@0 always comes first, there is no problematic case.
+Changes since v2:
+Update the commit message and description
 
-> 
-> Thanks for taking the time to dig into this!
+Changes since v1:
+None
 
-After looking into this patch and patch 31(though I've already provided my A-b)
-more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
-should have the same life time with the embedded DRM bridges, because for
-example the clk_apb clock in struct imx8qxp_pc would be accessed by the
-imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
-the life time for the embedded channel/bridge structures only, but not for the
-main structures.  What do you think ?
+ drivers/platform/x86/amd/hsmp/acpi.c | 1 -
+ drivers/platform/x86/amd/hsmp/hsmp.c | 2 --
+ drivers/platform/x86/amd/hsmp/hsmp.h | 2 ++
+ drivers/platform/x86/amd/hsmp/plat.c | 1 -
+ 4 files changed, 2 insertions(+), 4 deletions(-)
 
-> 
-> Best regards,
-> Luca
-> 
-
-[1] https://lore.kernel.org/dri-devel/20250414035028.1561475-17-victor.liu@nxp.com/
-
+diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+index eaae044e4f82..12f4950afcd9 100644
+--- a/drivers/platform/x86/amd/hsmp/acpi.c
++++ b/drivers/platform/x86/amd/hsmp/acpi.c
+@@ -28,7 +28,6 @@
+ #include "hsmp.h"
+ 
+ #define DRIVER_NAME		"hsmp_acpi"
+-#define DRIVER_VERSION		"2.3"
+ 
+ /* These are the strings specified in ACPI table */
+ #define MSG_IDOFF_STR		"MsgIdOffset"
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index a3ac09a90de4..3df34d7436a9 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -32,8 +32,6 @@
+ #define HSMP_WR			true
+ #define HSMP_RD			false
+ 
+-#define DRIVER_VERSION		"2.4"
+-
+ /*
+  * When same message numbers are used for both GET and SET operation,
+  * bit:31 indicates whether its SET or GET operation.
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index d58d4f0c20d5..7877cb97993b 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -25,6 +25,8 @@
+ #define HSMP_DEVNODE_NAME	"hsmp"
+ #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+ 
++#define DRIVER_VERSION		"2.4"
++
+ struct hsmp_mbaddr_info {
+ 	u32 base_addr;
+ 	u32 msg_id_off;
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index 81931e808bbc..4f03fdf988c1 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -24,7 +24,6 @@
+ #include "hsmp.h"
+ 
+ #define DRIVER_NAME		"amd_hsmp"
+-#define DRIVER_VERSION		"2.3"
+ 
+ /*
+  * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
 -- 
-Regards,
-Liu Ying
+2.25.1
+
