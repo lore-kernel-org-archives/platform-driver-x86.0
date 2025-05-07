@@ -1,117 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98772221DA5
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 07:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFCA72603
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 09:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604344; cv=none; b=ouIFKS8+OpAh4sJTEiXvTuHFlvqWLuEYrtwiZQ3ydvmzzXTfq5DLapoC/IJQVYZeRTIEFKmOzPzPqODIdHKHVVWst+bDmGduPR2Dz9jQCdaf634iyBkMIKXG8wEhPOTY/8PQ9ciwQ38/lmh3nvq8uRIP8l1VexrWPqEdxvGjYQU=
+	t=1746611070; cv=none; b=UjJ37OMD+uMXkA2nhqEVfzpvTidnP3ZOYuwTsVCDUkx8FqP5RuGgr+inpAmXuA99ah1FtvCzZBNFIJRJM2FEMeH1IknLQ2x6qpUuy3luECfdXG1IRiv+GcYXMIcyhNWwn+TjgMnV6R1CMuon4QOWzx468ZyGIk0e9Z8R77WaNr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604344; c=relaxed/simple;
-	bh=Si1QvVZW2cyZhFItNCPhnZgDqOaPxdjxwEHoeO/uyhQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RH7xGymCkJoNdlR1QXoP6Od7LvE3Fie/YpZN/px+45TSp1nOkUrr3UZdiZtqBGRm+ayV50GjfUybNWS7iHegD/EKhVSN+CiZHM1jwTQFAfGzbOtd30JuJTZDJK/2ilfYmF6ukpXCxgZQ1Zo0ZWSSXacprmxAqDiGZIsK8fuvNqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SqLtbziP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746611070; c=relaxed/simple;
+	bh=GIQW8AYp2zTLa7LP5kebVBxoyjPi3nRkx+fuBLguc1g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hgyUicN9JnktaA9khkykStzzfPCjhQMsh11yFfOZ8vn4maiTonlitTFC7rSI2CnTzkqi8QjYxNxd/r8HRqGx6/3WgViWCOe3ewtgq3eGztAkBqrdKwAm9fnUSl5A6OJDAJpKtbYpT7/aehiPy+bpOMIB7pVlifB3aeBKU0bPKKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VL0XZgPb; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqLtbziP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746604341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
-	b=SqLtbziPMsHpbi+WccSRywb7PaxvQ2fwHGBYBAJAxRG7QIx6rGksgiarDREw8CSMQYfzx1
-	048LB2gASVXOTJTu6OtfBgy5YaPdYPFwQsdJGyBA0rNTz63TgFBxliU7clG9DYhS3P4chM
-	WtMJvGMcr1HD8JZkr7ObARLNZ3ea14A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-3-WSJa5m5nO82zes01H4Q6Ww-1; Wed, 07 May 2025 03:52:20 -0400
-X-MC-Unique: WSJa5m5nO82zes01H4Q6Ww-1
-X-Mimecast-MFC-AGG-ID: WSJa5m5nO82zes01H4Q6Ww_1746604339
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-440667e7f92so39111845e9.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2025 00:52:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746604339; x=1747209139;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
-        b=SIGGvcNmlkbFzEE1lSEjdqhZNFIxFzzk2ktM2KqnWRygR1g0QSTerSobS2tOXcS9o7
-         oNwqrhgTVjYfYwaX39P7YsWjXIXDXF0Fo8j5QBu3JzKNmkcATQPfpUlc9tfT2g2RqK5w
-         afKK8dWJA+iK0i4H59YhCZi86GDdnxvOEWqf2sZIxBHShaw0XIoqVSuBPRpM3ULJ+f/f
-         MPC1qxFDMWB6ilU/ccCpscGRy7FrwM4nVcMzP7sEe8SpvW4IpALH39JwKLAFYs2PM7Cp
-         jBb5B5oyL0bKKnXDUZqh1U2lz2hbkiAzoiTmUooXWVs+L1f/8vIi6EWgl+iACTMY5uth
-         mywQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWHmyObWFA40rwmeSVeENa8D0o34EhLpve+D/Qg5OxWDP2FiLk9IA67/mxiyb7GyJwTacARM1OLvC4LIwcc8GhZsAD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn4bxdJCo454FlT5DULjWvbkGtzXgJA07uXMwS/rcaA8/SueCh
-	rKSvQsdp5cujV3fhVqGjoSedp52cwQ5jxCM57g+xogoKsnX1sDUf5309Ucqu8wBtiDUrhwzscbA
-	M2OBQ4ePOskzhhBRBQnFWttJ3sUuII+00dU4X5kS/K+y8MQcEpvTXNubcGWTkWtPJNEQpuYM=
-X-Gm-Gg: ASbGncs1xDm8cqKAUrArdu2k+HOxNgqvZzOoLhZur2g+pq7OO6Nk6NkE40y5zi4YDxa
-	TCwVy3+FwMzQQYwEn0eFfFzBifpETfnhkQ1fQN+lxuVc2tamGqtdVrK7IFgb8YRFJCpm8+qnWhy
-	92ndSeWHQPqm9AND7Nw1WM54EN7axanGD914mlaHLnfafpjE7ztwzqBHjGs+F5SAjVGo24V8YN6
-	9cFEcAbgyrZfRNMaX7p6OW6ZGOoc6TIVH4a+FJVobBHhDW5mzeutGaUA58KUQNBhu+up/XBA7Lp
-	zLnXdFKJ2Sf9XUVPJ73gL/KMFlQMGTp32miFOw0RAbB17amlab2vV/PGwg==
-X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543285e9.30.1746604339056;
-        Wed, 07 May 2025 00:52:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6bbFfoJUlE32ZpjhY8SNYfXA9NoideZRSClq3CU4H3TaCkDCmJ5dagaVohFcNt3ifY5S59g==
-X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543005e9.30.1746604338689;
-        Wed, 07 May 2025 00:52:18 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a802csm21562885e9.39.2025.05.07.00.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:52:18 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: rectify file entry in DASHARO ACPI PLATFORM DRIVER
-Date: Wed,  7 May 2025 09:52:05 +0200
-Message-ID: <20250507075214.36729-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VL0XZgPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746611069; x=1778147069;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GIQW8AYp2zTLa7LP5kebVBxoyjPi3nRkx+fuBLguc1g=;
+  b=VL0XZgPbOMtYfccccwNZVuy+P9m0wWkFq+weuqUvD7XgtaKIZneD1bSH
+   FOj/PQ+0rtWUligQfrFsjCFLCdOfmL0qadXe33ecpWhsWl9eyf2PztvIF
+   fvBPAUZd95z5DsnGZVgoJfw3mJONl2q+8aIWi6r5gSyNDh2thNl+NvNXL
+   uRluFD5stT4Xt8A2Yv7fLaggNr0CCx8AJudaYZkbZ5IpmRY82NKRK9U/k
+   08oDamGApYNDrK5CzK007L1IhXNISXKzjxoOSbE8snxG/W3nz5p1JZL+4
+   flgbKHEiSIFijQN57qDWqrI4YplvJQD3zH1S2EWxednfyvQK0V47K1YFM
+   g==;
+X-CSE-ConnectionGUID: CFx91S+1QX2yVRUuV1KugQ==
+X-CSE-MsgGUID: IU0Hd2unSuGbM1FVXBr7Eg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48341123"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="48341123"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:44:28 -0700
+X-CSE-ConnectionGUID: ElrxZsEDTAGyNW8NFtJEmQ==
+X-CSE-MsgGUID: V8Jpu4hhS0uxmBv/y0rFgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="136425436"
+Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:44:26 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 7 May 2025 12:44:22 +0300 (EEST)
+To: Mario Limonciello <superm1@kernel.org>
+cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
+    Hans de Goede <hdegoede@redhat.com>, dan.carpenter@linaro.org, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/amd: pmf: Use device managed
+ allocations
+In-Reply-To: <20250507020838.2962896-1-superm1@kernel.org>
+Message-ID: <b10d7dcd-4026-b06a-f278-b7d46b6a0fee@linux.intel.com>
+References: <20250507020838.2962896-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Tue, 6 May 2025, Mario Limonciello wrote:
 
-Commit 2dd40523b7e2 ("platform/x86: Introduce dasharo-acpi platform
-driver") adds the platform driver drivers/platform/x86/dasharo-acpi.c and
-a new file entry referring to the non-existent file
-drivers/platform/x86/dasharo_acpi.c in section DASHARO ACPI PLATFORM DRIVER
-rather than referring to the file added with this commit.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> If setting up smart PC fails for any reason then this can lead to
+> a double free when unloading amd-pmf.  This is because dev->buf was
+> freed but never set to NULL and is again freed in amd_pmf_remove().
+> 
+> To avoid subtle allocation bugs in failures leading to a double free
+> change all allocations into device managed allocations.
+> 
+> Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Correct commit message with correct offending function root cause
+>  * Switch to device managed allocations.
+> 
+>  drivers/platform/x86/amd/pmf/core.c   |  3 +--
+>  drivers/platform/x86/amd/pmf/tee-if.c | 30 ++++++++-------------------
+>  2 files changed, 10 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 96821101ec773..395c011e837f1 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -280,7 +280,7 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
+>  			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
+>  		}
+>  
+> -		dev->buf = kzalloc(dev->mtable_size, GFP_KERNEL);
+> +		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size, GFP_KERNEL);
+>  		if (!dev->buf)
+>  			return -ENOMEM;
+>  	}
+> @@ -493,7 +493,6 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>  	mutex_destroy(&dev->lock);
+>  	mutex_destroy(&dev->update_mutex);
+>  	mutex_destroy(&dev->cb_mutex);
+> -	kfree(dev->buf);
+>  }
+>  
+>  static const struct attribute_group *amd_pmf_driver_groups[] = {
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index d3bd12ad036ae..50c082a78cd9e 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -532,13 +532,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+>  	if (IS_ERR(dev->policy_base)) {
+>  		ret = PTR_ERR(dev->policy_base);
+> -		goto err_free_dram_buf;
+> +		goto err_cancel_work;
+>  	}
+>  
+> -	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+> +	dev->policy_buf = devm_kzalloc(dev->dev, dev->policy_sz, GFP_KERNEL);
 
-Adjust the file reference to the intended file.
+Hi Mario,
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Isn't ->policy_buf freed and another allocated in amd_pmf_get_pb_data() 
+and this patch lacks any changes around there?? That switch of the buffer 
+has been the reason why I've not suggested using devm_*() for earlier for 
+it.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 34a55e3ff863..82e7b053ea76 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6576,7 +6576,7 @@ DASHARO ACPI PLATFORM DRIVER
- M:	Michał Kopeć <michal.kopec@3mdeb.com>
- S:	Maintained
- W:	https://docs.dasharo.com/
--F:	drivers/platform/x86/dasharo_acpi.c
-+F:	drivers/platform/x86/dasharo-acpi.c
- 
- DATA ACCESS MONITOR
- M:	SeongJae Park <sj@kernel.org>
+Please check all related code to the pointers you're changing if there 
+are other similar traps you have not taken into account.
+
+>  	if (!dev->policy_buf) {
+>  		ret = -ENOMEM;
+> -		goto err_free_dram_buf;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> @@ -546,21 +546,21 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (!amd_pmf_pb_valid(dev)) {
+>  		dev_info(dev->dev, "No Smart PC policy present\n");
+>  		ret = -EINVAL;
+> -		goto err_free_policy;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	amd_pmf_hex_dump_pb(dev);
+>  
+> -	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+> +	dev->prev_data = devm_kzalloc(dev->dev, sizeof(*dev->prev_data), GFP_KERNEL);
+>  	if (!dev->prev_data) {
+>  		ret = -ENOMEM;
+> -		goto err_free_policy;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+>  		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
+>  		if (ret)
+> -			goto err_free_prev_data;
+> +			goto err_cancel_work;
+>  
+>  		ret = amd_pmf_start_policy_engine(dev);
+>  		switch (ret) {
+> @@ -575,7 +575,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  		default:
+>  			ret = -EINVAL;
+>  			amd_pmf_tee_deinit(dev);
+> -			goto err_free_prev_data;
+> +			goto err_cancel_work;
+>  		}
+>  
+>  		if (status)
+> @@ -584,7 +584,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  
+>  	if (!status && !pb_side_load) {
+>  		ret = -EINVAL;
+> -		goto err_free_prev_data;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	if (pb_side_load)
+> @@ -600,12 +600,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (pb_side_load && dev->esbin)
+>  		amd_pmf_remove_pb(dev);
+>  	amd_pmf_tee_deinit(dev);
+> -err_free_prev_data:
+> -	kfree(dev->prev_data);
+> -err_free_policy:
+> -	kfree(dev->policy_buf);
+> -err_free_dram_buf:
+> -	kfree(dev->buf);
+>  err_cancel_work:
+>  	cancel_delayed_work_sync(&dev->pb_work);
+>  
+> @@ -621,11 +615,5 @@ void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
+>  		amd_pmf_remove_pb(dev);
+>  
+>  	cancel_delayed_work_sync(&dev->pb_work);
+> -	kfree(dev->prev_data);
+> -	dev->prev_data = NULL;
+> -	kfree(dev->policy_buf);
+> -	dev->policy_buf = NULL;
+> -	kfree(dev->buf);
+> -	dev->buf = NULL;
+>  	amd_pmf_tee_deinit(dev);
+>  }
+> 
+
 -- 
-2.49.0
+ i.
 
