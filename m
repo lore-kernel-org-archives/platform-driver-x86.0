@@ -1,53 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461908C1E
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 01:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746582106; cv=none; b=MiR0lPYgbshHxod+wqbUsaKd5UVZu2SBtqEfa1Y2MQLf3xtfxPdqpjDIKSBW6uB3XpKotTXZSNjRSG+33NKcrNMXZkChdbkkEEfzKTOQRuOXfT76mv52TYf7aZhznB0J9/WWeVpa9QNC5hxqOkc9g+SqXqNDS6M8G8wymSye4U0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746582106; c=relaxed/simple;
-	bh=9ityg9GGQPQ59OuDk4YgW6K9gKObBHsjxBg0Jv7ROeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R0Z0Rxsy2mxkO9Rdo5j4yJCkc7xUGbjlbMHjFciYrwXQoHjHNbwjh92fVsG08S+oso/AMsAiQtxcCwVRdmPHHN/9Dh0CroZX/I8ILkEADL5HCfDz7m/uFIEuXRob7bRIMBecKAHagkT0aoa7JJ3j3q0c7qUsorxkunAagzQvZv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pR+DDvHq; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93D58460
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 01:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746582562; cv=fail; b=ntcfXv7N/7WiHR0H7+ed6aDnFIW+NsyuQqB8UFnMOSXaBFFAqoTdwvxj76Y2R07HqK2dJCiSIXzLYH3W2TM8D9UCkvQ1+3FjTv/NtgGusZXnT/B/uVCit6uwVe5+blJaQEBhMxwV6bzbP43R52MawQxp8RaNS77N5hlUFBmJpMM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746582562; c=relaxed/simple;
+	bh=inV1+m86yvm6ooJD/o4hdZYMFHULS3ABLhGpbBQj0G4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Lp/p0osKwKpUt61xO8XMYzphxVb+X/AipZ23vI3uC1alimgYwvGgf3IENkPOC0pf/AA2/DD/qoExYGbSVwLe6PPX65FldkEcDy6l2rZ/WcRBT5Le1U5J1jgy3lfURGkby624HTpQBSaKiC0W10ks/WM0NnZUKEShB8n5xgX/PFg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=daXPjSMN; arc=fail smtp.client-ip=40.107.236.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pR+DDvHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73028C4CEE4;
-	Wed,  7 May 2025 01:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746582106;
-	bh=9ityg9GGQPQ59OuDk4YgW6K9gKObBHsjxBg0Jv7ROeI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pR+DDvHqHTAnvFj2OItmJi7AihRpCBVpQ9e+K3PXggPK+HuN1bjhSE3L7SOTpnQtG
-	 27fpa8YRcjGS5zadSurOIOShFQ41Dw+DXH5lGFGuBr93WT9cLNQkhe9LIq13wm10x0
-	 HDsY4gft1WeCLb6cOkzCV4dAaa/PkyQqyxIfrN9BAGkDySjDxs9l+PiJz7MI8TNu9Z
-	 ymAVJuQ1KHCWrerIlAwwtToxho+b0EFD76YW2rKWNwCpRongud+m/iobRLc5hgKHXC
-	 qYPtkt50lnL51QpSC3H6MEqBPZxDBNxdpbbYlyK75BIuiJxfiySCEnX0D0c9X2CoLN
-	 4+rkXnniAsCIw==
-Message-ID: <f3a52690-2a27-4c27-a5dd-460a244491ef@kernel.org>
-Date: Tue, 6 May 2025 20:41:43 -0500
-Precedence: bulk
-X-Mailing-List: platform-driver-x86@vger.kernel.org
-List-Id: <platform-driver-x86.vger.kernel.org>
-List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="daXPjSMN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i9t3z/1OUdULFiI9QSb9Jk1QuRt1lJtOKxaLEph5QcDmr/cK3BeUgcmjtMB3JP5Ni1EKa6cCs0AhDcT9odd3oneGeePOfN1fK6QPjagdaESSzYFdmVZoPEO3ik6iCilcQvCL75YVDBe3xKznwcjdL+ZOZdEO3iQcIC0yms41raUhE+8oDAude4CiFwFJMbme26nNJvJ/mLuM7sGrrG7x7UZFunDQpq9cp2o4EmuBmF7RqlTHk1C2eRBc9ajwbAzMM2aPbZdz/jnbSxcyyxR+ZJxMUkOCAvlHtzphsZbkU8lOBHLKuNc5mk+eO0krVOP/vL2VdNyNmQGDjKBP4TITVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hv1C1SyD1N96o+9+c/QI1JDdwa0gFux88nDEnnopXPw=;
+ b=d2OcUDm03yqNQi7ytUKYbdN4x1VqlEURJwYiDX21ZaJV6ZWg57hpUL2PUH3FDboqdYeIchQDjwqa/OyXJyu5FwPTx6i/NOAcO0aVWWOP0OlLaZDSqXA7pPGfLmWYlj3BmZGd005qkWqvOcrVrcOlwhI51o+gMGOfXP6qJlO999Z9agw42G+afYkF6TOAtpOixo46Dy53rB9XeLfPFpcVfMt6Q79JBcljewJFrSE9aE5ac4tJ64LDY711tXjGdsfp/V3/JvGlnyeS6IgOf2lsQlNA/KD52FH/3twq9wvJxj1JPc5bDiGvmbumuv5F6udU8px+5SjGS7Yb4zolneF4Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hv1C1SyD1N96o+9+c/QI1JDdwa0gFux88nDEnnopXPw=;
+ b=daXPjSMNFZV4X6d25LIIFL/2HU2umZ1wZr/6YYSALsO9eM0E8fLiIn0zv4hjfck24j3Z+IC++1C4G4R0ecW8nZ+9KRT8iJl6w/vIYn/4KqzdLpKd+O7JJ5dpd0t0iNZqNfAZ1q11JFR6a+rMvHThm1TQULbaZpd/csYfH6IHhE8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ2PR12MB8846.namprd12.prod.outlook.com (2603:10b6:a03:549::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Wed, 7 May
+ 2025 01:49:14 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8699.022; Wed, 7 May 2025
+ 01:49:14 +0000
+Message-ID: <528c230b-978e-4cb3-9339-0569bcbb16bc@amd.com>
+Date: Tue, 6 May 2025 20:49:12 -0500
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] drivers/platform/x86/amd: pmf: Fix a double free on
  module unload
-To: Dan Carpenter <dan.carpenter@linaro.org>
+To: Mario Limonciello <superm1@kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>
 Cc: Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
 References: <20250506131130.1446262-1-superm1@kernel.org>
  <aBowhD4lwc017-NE@stanley.mountain>
  <fce0ca00-3d0b-48a8-ad97-9125f4297f05@kernel.org>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
+From: Mario Limonciello <mario.limonciello@amd.com>
 In-Reply-To: <fce0ca00-3d0b-48a8-ad97-9125f4297f05@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR04CA0008.namprd04.prod.outlook.com
+ (2603:10b6:806:f2::13) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
+Precedence: bulk
+X-Mailing-List: platform-driver-x86@vger.kernel.org
+List-Id: <platform-driver-x86.vger.kernel.org>
+List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB8846:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ccc4a65-d9af-4c0d-ba8e-08dd8d095eb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bFMyMnZITFl3bUs3dTFRdVBjdUltVEdpNkhxclhOd1Q3WFFKWmk0OHJHRW5n?=
+ =?utf-8?B?VFNyaDNJc0ljNmdjQ2pnWmVtK25Nb3Zrc3BSanR2VE1mN0VHNFo5ZUtnNEJy?=
+ =?utf-8?B?TGg2cFNUWlNxRkNWZXBBL3pzc0o2YnNBck4vQXFRME96SERqd0tWSGtHMXlh?=
+ =?utf-8?B?NGQ2TVdQMm5MQVl2SDNUSW84VXVJZFdsalFHeHBUTlQwY0lRNXoxYVRzWWxB?=
+ =?utf-8?B?NzNsakluY1gzcGxUK3BJeW90NXZnUm4yVFNaK2xRdm45Y04raG5qRVgwRE5T?=
+ =?utf-8?B?RmhGamg2UkJ3Zm15UTVKdWlkV2tzRnc3dWZqdGY5OG9TV1d0bzdENFFYbGtB?=
+ =?utf-8?B?cmFqeE9OaHNYdlhWL2ZYR0FWY3JSdG1SZTZDVWJaNEkwRU1aN3NkNkdoV0Iv?=
+ =?utf-8?B?M0hmV3dib2dRb01FYUJOMTg2NGJCNnVsVHE5cDlWTXQ1WXVpUFRocmQ5RXo2?=
+ =?utf-8?B?dUkwNFlYUk4zYktBS2lMZWJIZy94dXU2Wnl3WjlYcExJNVNMS3N3bmt5K0xs?=
+ =?utf-8?B?U29hb1FsQ0YwUUROUytDdi8waldCeWtDbzk3KzRCakVzRGZCdVpWdHM4Vktz?=
+ =?utf-8?B?anVsY3h1UHFlNEtzV0xQbmo0cWNEZ0h2aDNpNnhybGhzUk5uYnUzdk5xdEN4?=
+ =?utf-8?B?YllORFRYQXk5bXRwY2hlT3RRa0tTbU0vYmMyaktVS1FnMVZ4aVorNGV6aUta?=
+ =?utf-8?B?NUUvRXMrZmRMNVlCNzNkT0F1amx6bkZhenprdXQ2eXFFeFo4RENpbVB6UXpq?=
+ =?utf-8?B?UXN5Q3BYQXVzYTRIb0RSZnhsS2NtajdzV2VaU2dLN1dGKzRIS1hlWlZ3Nnly?=
+ =?utf-8?B?ampna0UzY2RtWG9jaXR3a0xvcTdEbXNXeVNtbTFHdTZYVWRuRGl2QnhYc2sv?=
+ =?utf-8?B?ai9IdEdRSkRmeFFNTTFYdjFtUnBTakl4UnBlcXpDOGF5QzB5S2ZXLzV2T3Fk?=
+ =?utf-8?B?RUV5WTNkSlVIck9oR1NNUXFTMFd2OTBYNmViUzZ6dWF5cDhrbjE5TEI1U1dM?=
+ =?utf-8?B?T1AxQ1dxL3RzT2lOV1plbDBBbi9GZ2t0RFludlpKZDJpOG9rUEhscThlY1U0?=
+ =?utf-8?B?OG42NzFCSndIRUtoMXhYT1RPQXdGdWk1a1JPK1h3UExHWXgwcUtVOHZCNmVk?=
+ =?utf-8?B?dE1tQXZhQ09CR2lZT0dvRnExKytVcHBrNThoemttMGdtcnhGbDJIQzNzNVZ5?=
+ =?utf-8?B?eVlSRHM5QkZ3cGo0cStUOW9wN3NhS0ZjdE53MHhFZHRQZUJIVXFRYlpwMGl2?=
+ =?utf-8?B?OU1TcncvSFB3d3F2NWNpcWc1YkxXdlVnOWtxWmpBNWhteVRERE5xQ2Zib3FY?=
+ =?utf-8?B?bElZcURXeS9tL3hOcGU5UVdKK3lRWVREN0Z1cG9vSE1KOVp5Z0dVY1VVbXZT?=
+ =?utf-8?B?OEpESnRiVlQyZ1dzMGUzSm9BZlpqSzF0aUNjemc0RVVPS2dJLy8yY2lFT1Vh?=
+ =?utf-8?B?K3NCb2t0T1Q1RUpubUZNdUtpUlpJWlJmSUlXRlVIZWZLTndWb1Q1NlA4dWJx?=
+ =?utf-8?B?bjhpUnBUcUI2azVZUDJGWno5YkVrNktnNnlvaGhhQTE1Q1JCbXVUblRNVWFD?=
+ =?utf-8?B?blFhNXp1eFpvSGF2UjdxSFloYlluWkJHSk5idjB1aUpFZFZ1QkIyeTRlMXFr?=
+ =?utf-8?B?YWVINVNoeVBrcndjQ0FIb0RLelZweU0xdW5wNVdHWnNWTURYTmE4VDFqVTBj?=
+ =?utf-8?B?Q2psM0V5YnFZTnhjeTJhb00rUkM3RXpjNFkvSnh0WWliN3g4NlhXTGhxQzNn?=
+ =?utf-8?B?MUl2K1N4N0kva245eG9yeEluam1lOVNSRXNsNDVKRjlKeWtGaFRBSkJ6bENT?=
+ =?utf-8?B?SkRwRS9vVG5zbStwcGRCMjhNL1U4ZFFyMS92Z0FZYXhIUWdYbFJUYTY3S0R3?=
+ =?utf-8?B?SDlyQWc0dUJHZ2MrSk0xZndCNGtiRXhVVTNZNVY4VG9MN2llcHhEbkoyamY3?=
+ =?utf-8?Q?HfWtc7zJojU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZHY4cjdma2daS2xWU1BrM3FaRmZ2Nm4zd3FWL2FJT0VmallEdytkR1Y0Tkt3?=
+ =?utf-8?B?TGFjZDEwYzNYdHNDTW1DWDJTSGN2bTdiZHpncTBoSG9CL0luYlhod0lxYmVB?=
+ =?utf-8?B?VUNKblAxR2YzOFRTMFlYNUZncWxwRWhEUEt2V2IvVnRGR3J1aHBsVm1aZU1J?=
+ =?utf-8?B?UWdJNFMvdlNERVlQTG5ka2p4d2plbkVWNEdKWmZZMG10Uk8rblR2STVaMUNT?=
+ =?utf-8?B?SVVnVENPYXNKMHVQRlNwamtiNHBnWU5Ocy9LbzZOY3crN2FMV1YvcElqUE1w?=
+ =?utf-8?B?amc2aUZlUXJ4aGZBV0liM3ZGbTRuYXJZTElORFZpQjJ2OTk0OGRteXBid3pT?=
+ =?utf-8?B?S1FxK3JEWTBySzdPZit3ZnBhMExxb1BYQ3kxOTdXK3puTmhvby83QzJrV1VZ?=
+ =?utf-8?B?emY3b21GV081ZzVtRWJUNVRvNlh1TVVoaWNsN0t5cmg4dWhaMFRIMnhQZ2k5?=
+ =?utf-8?B?YXRMRnIzL1ZGMnl1dWFTMG1LaTVPMGlrQmhaM2NSVkJnK25HeWZWZXlqUGk0?=
+ =?utf-8?B?VDVDY21qT2drbm5lU1hYSjlJQlNkaUp0aUlQM3VZa1pzV2JJb0dDdlVXcFpl?=
+ =?utf-8?B?MDUvSXhzMWlJOTBtelV3WUwyK2hWQS9ZejFmVzJSWmI3clhIZ0FiSXNMY3Nn?=
+ =?utf-8?B?bFFZVWN2Y3RQMW11MFo2Q2xiOXQvV2NVaUprMURxY21UNHhPQXpnQnI4UUZS?=
+ =?utf-8?B?N2ozcjdpOEdnZCt3UVRxME5NUVVLRkZONkVJVmRwcG8rdDF5TnYrbjRUajkx?=
+ =?utf-8?B?cit2NVRBVUtkODY5RHFWRnpoOVM0R3RPd1JEeTROZVJ5YmFQMDRDZWtNQk1q?=
+ =?utf-8?B?YkNmOEYwWGpwb0ZHM1JHME1LMC80N2dYOEQwYWtOc1hwczFqZEt6c2x4bCtj?=
+ =?utf-8?B?WFBNUkt1T1Z2SGZqMlN0V1BHM0s0SEwzaG9hUFJRUzVHYkRKbkpnd1hUK2xn?=
+ =?utf-8?B?TEQ0S05wU3dqNDBrZnY3NEdwTUdhK1JNZ3ExeGEveERoVWJqOXA0dnZ1ejZD?=
+ =?utf-8?B?UHc0eVYwZFB4WU9vUHNJV0EzTXlHWEpQSWtpL0xBYWJTRmZ0Qmo3M3BIckh2?=
+ =?utf-8?B?T0xzOERJVWVFSmY3RmgzSXNmTUsyVHk4SW8xbHZ2eloxeEtwSWdSMXV5TDFp?=
+ =?utf-8?B?SjZnb3dycnV1UTRwd3VJZDBqOWgwYWhvWmcrcUoyam16SzVjdmsxY0Z4TE1Z?=
+ =?utf-8?B?akg2K2VwZTBlc0NuemFLQkVWN1B0THg1NnRNMTlXcWtMUlg2WHlGY0NBcXpU?=
+ =?utf-8?B?SFJlazRKdlNvMklSZEgyT2ZLMkEwOEMwTm9WSkM5cmgzblBCOVNJUmpjN1U2?=
+ =?utf-8?B?eTdEenJLY0JBbytiU05RczBRbzl1Yk8wR1ltQ05YT0hnM0tQcS9ib0tmYVdD?=
+ =?utf-8?B?aW9BcGVjUWI5K2h2WGFKU3dOYUcxR1BNMy9NNmFLQWRGam5VdXNIVjBZSnhE?=
+ =?utf-8?B?aG1vdmVoUWVsZUVXRzYvQ0plOHQ1N2pNcnFVbk5SejJQWi9RU2RBdGFRSTFJ?=
+ =?utf-8?B?amljNEFpVVVIaHJ4MWs3UEVaYUYvS2U1bVgyMU4zZzY4TlNNdS9lQThON0pW?=
+ =?utf-8?B?SDRCRnhRbC9XMHNXWUpNSWttVFRRL2R3K052bUJsRVliN2U2NTdoVldrWCtH?=
+ =?utf-8?B?aWFwZ2lpdTdZTDZpd0owMXdFSjVpVmhXVVNmN2RqUkg1eTlFMjlvWG9IWnRR?=
+ =?utf-8?B?Y2NZb1lSNFFteTZsdmFhNE5wRDRpQU00MUhlRkZEZkdmbXJ1aUc0VCtST1ph?=
+ =?utf-8?B?ZUZIa0NFSjluZXQyUGRaVFYxRnZvdjBWaTdJTkdnMEZIdVBNZHcxL25WaU8x?=
+ =?utf-8?B?ZDY4T1EyU2F2bnV4TGIvYU5XVXhZSFRTeURlbHc5dzY1Mlg5SDdIZEd2MXM3?=
+ =?utf-8?B?emk5Y2dVMzB2UHZEcnNxOHpkRmFndlp1bjhzbXpSUHpGbThuaWhmZk1sdjVV?=
+ =?utf-8?B?U3BIakx0WWFReG56MklydGhMZE9WNlJUbEdMcER0Ynd3Q21pb2lhSVBuMjJJ?=
+ =?utf-8?B?MWxoSUVzMFBBejUxMU5OaDlkVEtCa09DU2wwMEtlcElITlJEVGxVTG5vc3VH?=
+ =?utf-8?B?a1J5UCsxNXZUclk2UkxMamN4OVkyZFVSOVRVdUNOa2w1U2p3eW1wVEg4RTF6?=
+ =?utf-8?Q?JO3o0f4oytlzEIFxOgrischYv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ccc4a65-d9af-4c0d-ba8e-08dd8d095eb1
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 01:49:14.1100
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iqVI4thPv/vQ1+azEDIHR9yH6tOhouAJGtT9zLf1Oo23HO3+30IZrKgyI4CQqTValO8fqlK1LNVzOjwknfjBUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8846
 
 On 5/6/2025 11:11 AM, Mario Limonciello wrote:
 > On 5/6/2025 10:53 AM, Dan Carpenter wrote:
@@ -131,266 +241,7 @@ On 5/6/2025 11:11 AM, Mario Limonciello wrote:
 > happening [amd_pmf_deinit_smart_pc() would only be called from 
 > amd_pmf_deinit_features()].
 
-For completeness; here is the trace back after load/unload which was 
-fixed by this patch I shared (passed through scripts/decode_stacktrace.sh)
+Ah I think I found the actual callpath.
 
-[   33.636532] ------------[ cut here ]------------ 
-  
-  
-                                                                [ 
-33.636540] kernel BUG at mm/slub.c:546! 
-  
-  
-                                                            [ 
-33.636554] Oops: invalid opcode: 0000 [#1] SMP NOPTI 
-  
-  
-                                                            [ 
-33.636560] CPU: 4 UID: 0 PID: 3245 Comm: rmmod Not tainted 
-6.15.0-rc1-00020-g0581d384f344 #79 PREEMPT(full) 
-4b12a0d175d8a11a0952957398aaf7c2efd0bbd7 
-  
-                       [   33.636565] Hardware name: Framework Laptop 13 
-(AMD Ryzen AI 300 Series)/FRANMGCP09, BIOS 03.03 03/10/2025 
-  
-  
-              [   33.636567] RIP: 0010:__slab_free (mm/slub.c:546 
-(discriminator 1) mm/slub.c:4475 (discriminator 1)) 
-  
-  
-            [ 33.636578] Code: 0c 44 0f b6 4c 24 13 44 8b 44 24 14 48 89 
-44 24 20 49 8b 04 24 4c 8b 54 24 18 48 c1 e8 09 83 e0 01 88 44 24 11 e9 
-ce fe ff ff <0f> 0b 41 f7 46 08 87 04 00 00 75 91 eb 83 41 f7 46 08 87 
-04 00 00 
-    All code 
-  
-  
-  
-======== 
-  
-  
-                                                                   0: 
-0c 44                   or     $0x44,%al 
-  
-  
-                                                           2:   0f b6 4c 
-24 13          movzbl 0x13(%rsp),%ecx 
-  
-  
-                                                  7:   44 8b 44 24 14 
-       mov    0x14(%rsp),%r8d 
-  
-  
-                                          c:   48 89 44 24 20 
-mov    %rax,0x20(%rsp) 
-  
-  
-                                  11:   49 8b 04 24             mov 
-(%r12),%rax 
-  
-  
-                           15:   4c 8b 54 24 18          mov 
-0x18(%rsp),%r10 
-  
-  
-                           1a:   48 c1 e8 09             shr 
-$0x9,%rax 
-  
-  
-                           1e:   83 e0 01                and 
-$0x1,%eax 
-  
-  
-                           21:   88 44 24 11             mov 
-%al,0x11(%rsp) 
-  
-  
-                           25:   e9 ce fe ff ff          jmp 
-0xfffffffffffffef8 
-  
-  
-                           2a:*  0f 0b                   ud2 
-<-- trapping instruction 
-  
-  
-                  2c:   41 f7 46 08 87 04 00    testl  $0x487,0x8(%r14) 
-  
-  
-  
-          33:   00 
-  
-  
-  
-  34:   75 91                   jne    0xffffffffffffffc7 
-  
-  
-                                                                  36: 
-eb 83                   jmp    0xffffffffffffffbb 
-  
-  
-                                                          38:   41 f7 46 
-08 87 04 00    testl  $0x487,0x8(%r14) 
-  
-  
-                                                 3f:   00 
-  
-  
-  
-  
-  
-  
-  
-                               Code starting with the faulting 
-instruction 
-  
-  
-  
-=========================================== 
-  
-  
-                                                                   0: 
-0f 0b                   ud2 
-  
-  
-                                                           2:   41 f7 46 
-08 87 04 00    testl  $0x487,0x8(%r14) 
-  
-  
-                                                  9:   00 
-  
-  
-  
-                                          a:   75 91 
-jne    0xffffffffffffff9d 
-  
-  
-                                   c:   eb 83                   jmp 
-0xffffffffffffff91
-    e:   41 f7 46 08 87 04 00    testl  $0x487,0x8(%r14) 
-  
-  
-                                                                   15:   00
-[   33.636580] RSP: 0018:ffffd3ae43327a10 EFLAGS: 00010246
-[   33.636584] RAX: ffff8a6164a50f00 RBX: 000000008020001e RCX: 
-0000000000000000
-[   33.636585] RDX: ffffd3ae43327a40 RSI: fffff51cc4929400 RDI: 
-ffffd3ae43327a80
-[   33.636587] RBP: ffffd3ae43327ab0 R08: 0000000000000001 R09: 
-ffffffffaa799600
-[   33.636588] R10: ffff8a6164a50e00 R11: ffffd3ae43327ab0 R12: 
-fffff51cc4929400
-[   33.636589] R13: ffff8a6164a50e00 R14: ffff8a6140042a00 R15: 
-0000000000000000
-[   33.636590] FS:  00007f6c8ee08680(0000) GS:ffff8a68d20c3000(0000) 
-knlGS:0000000000000000 
-  
-                                                                   [ 
-33.636591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
-  
-  
-                                                            [ 
-33.636592] CR2: 00007f6c8e4578e0 CR3: 000000012fdb0000 CR4: 
-0000000000b50ef0 
-  
-  
-[   33.636594] Call Trace: 
-  
-  
-                                                                [ 
-33.636596]  <TASK> 
-  
-  
-                                                            [ 
-33.636598] ? __call_rcu_common (./arch/x86/include/asm/atomic64_64.h:15 
-./include/linux/atomic/atomic-arch-fallback.h:2583 
-./include/linux/atomic/atomic-long.h:38 
-./include/linux/atomic/atomic-instrumented.h:3189 
-kernel/rcu/rcu_segcblist.h:52 kernel/rcu/tree.c:2956 
-kernel/rcu/tree.c:2967 kernel/rcu/tree.c:3106) 
-  
-  
-  
-  [   33.636605] ? platform_remove (drivers/base/platform.c:1424) 
-  
-  
-                                                                  [ 
-33.636610] kfree (mm/slub.c:4599 mm/slub.c:4647 mm/slub.c:4845) 
-  
-  
-                                                            [ 
-33.636613] ? mntput_no_expire (fs/namespace.c:259 fs/namespace.c:1492) 
-  
-  
-                                                            [ 
-33.636626] platform_remove (drivers/base/platform.c:1424) 
-  
-  
-                                                            [ 
-33.636628] device_release_driver_internal (drivers/base/dd.c:1275 
-drivers/base/dd.c:1296) 
-  
-                                                                  [ 
-33.636634] driver_detach (drivers/base/dd.c:1360) 
-  
-  
-                                                            [ 
-33.636637] bus_remove_driver (drivers/base/bus.c:748) 
-  
-  
-                                                            [ 
-33.636640] __do_sys_delete_module (kernel/module/main.c:781) 
-  
-  
-                                                            [ 
-33.636646] do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 
-1) arch/x86/entry/syscall_64.c:94 (discriminator 1))
-[   33.636654] ? vfs_read (fs/read_write.c:489 fs/read_write.c:570)
-[   33.636658] ? ___pte_offset_map (./include/linux/pgtable.h:347 
-(discriminator 2) ./include/linux/pgtable.h:624 (discriminator 2) 
-mm/pgtable-generic.c:289 (discriminator 2)) 
-  
-    [   33.636663] ? next_uptodate_folio (./include/linux/xarray.h:1722 
-mm/filemap.c:3585) 
-  
-                                                                    [ 
-33.636668] ? __mod_memcg_lruvec_state (mm/memcontrol.c:586 
-mm/memcontrol.c:771)
-[   33.636673] ? mod_objcg_state (mm/memcontrol.c:2475 mm/memcontrol.c:2837)
-[   33.636675] ? xas_load (./include/linux/xarray.h:175 
-./include/linux/xarray.h:1264 lib/xarray.c:241)
-[   33.636680] ? xa_load (lib/xarray.c:1624)
-[   33.636683] ? __memcg_slab_free_hook (mm/memcontrol.c:3093 
-(discriminator 1))
-[   33.636686] ? __x64_sys_close (fs/open.c:1584 fs/open.c:1566 
-fs/open.c:1566)
-[   33.636689] ? kmem_cache_free (mm/slub.c:4646 (discriminator 1) 
-mm/slub.c:4748 (discriminator 1))
-[   33.636692] ? syscall_exit_to_user_mode 
-(./arch/x86/include/asm/irqflags.h:37 
-./arch/x86/include/asm/irqflags.h:114 ./include/linux/entry-common.h:232 
-kernel/entry/common.c:206 kernel/entry/common.c:218)
-[   33.636695] ? do_syscall_64 (arch/x86/entry/syscall_64.c:113)
-[   33.636698] ? __count_memcg_events (mm/memcontrol.c:586 
-mm/memcontrol.c:862)
-[   33.636699] ? handle_mm_fault (mm/memory.c:6182 mm/memory.c:6335)
-[   33.636704] ? do_user_addr_fault (arch/x86/mm/fault.c:1338)
-[   33.636710] ? exc_page_fault (./arch/x86/include/asm/irqflags.h:37 
-./arch/x86/include/asm/irqflags.h:114 arch/x86/mm/fault.c:1488 
-arch/x86/mm/fault.c:1538)
-[   33.636713] entry_SYSCALL_64_after_hwframe 
-(arch/x86/entry/entry_64.S:130)
-[   33.636716] RIP: 0033:0x7f6c8e53519b
-[ 33.636719] Code: 73 01 c3 48 8b 0d 5d bc 0d 00 f7 d8 64 89 01 48 83 c8 
-ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 
-<48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 2d bc 0d 00 f7 d8 64 89 01 48
-
-And this was built and reproduced from platform-x86/review-ilpo-fixes:
-
-0581d384f344e (HEAD, platform-x86/review-ilpo-fixes) 
-platform/x86/amd/hsmp: Make amd_hsmp and hsmp_acpi as mutually exclusive 
-drivers
-8e81b9cd6e951 drivers/platform/x86/amd: pmf: Check for invalid Smart PC 
-Policies
-690d722e02819 drivers/platform/x86/amd: pmf: Check for invalid 
-sideloaded Smart PC Policies
-02c6e43397c39 (tag: platform-drivers-x86-v6.15-4, platform-x86/fixes)
+It's amd_pmf_remove() that has kfree(dev->buf) - that's probably what's 
+actually tripping it.
