@@ -1,213 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFCA72603
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 09:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E30748D;
+	Wed,  7 May 2025 10:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611070; cv=none; b=UjJ37OMD+uMXkA2nhqEVfzpvTidnP3ZOYuwTsVCDUkx8FqP5RuGgr+inpAmXuA99ah1FtvCzZBNFIJRJM2FEMeH1IknLQ2x6qpUuy3luECfdXG1IRiv+GcYXMIcyhNWwn+TjgMnV6R1CMuon4QOWzx468ZyGIk0e9Z8R77WaNr8=
+	t=1746612288; cv=none; b=W37YJjHvPkWzAGcgGHxhdungEkDALxx2evCsfh8pqwSxCZvUScDVk4j6UtANTM/6rDCX/Q+SSRRpRHS4RDkuOICx1uSDeXMNbfNz8t/LeVoba7JxXDnXjv5wFeT4PAGU7CdBF2JCp37jR+iCXexeqw3n2gHEFpW1ri3YCTS+O5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611070; c=relaxed/simple;
-	bh=GIQW8AYp2zTLa7LP5kebVBxoyjPi3nRkx+fuBLguc1g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hgyUicN9JnktaA9khkykStzzfPCjhQMsh11yFfOZ8vn4maiTonlitTFC7rSI2CnTzkqi8QjYxNxd/r8HRqGx6/3WgViWCOe3ewtgq3eGztAkBqrdKwAm9fnUSl5A6OJDAJpKtbYpT7/aehiPy+bpOMIB7pVlifB3aeBKU0bPKKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VL0XZgPb; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746612288; c=relaxed/simple;
+	bh=mmFmsqM7Nq7w8TVg8U3Rogh4VyZckeHRwu9Hsc96wPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qp57OErttkW1i+WmjSr517pt1+cAwyTXMFmZjExayUcz6sS3yApo5YOHmWxyNRFqHpr90uAJjXiR4FrU54GsjkSimfC4eTW2w+KT6wWTk9ZPIOrh0RUVkoSnqldHFbKyo5BxHff7keSm+InqMyMUX98PK1owN/wimIUAm7EPn+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=mxAeDq6Q; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VL0XZgPb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746611069; x=1778147069;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GIQW8AYp2zTLa7LP5kebVBxoyjPi3nRkx+fuBLguc1g=;
-  b=VL0XZgPbOMtYfccccwNZVuy+P9m0wWkFq+weuqUvD7XgtaKIZneD1bSH
-   FOj/PQ+0rtWUligQfrFsjCFLCdOfmL0qadXe33ecpWhsWl9eyf2PztvIF
-   fvBPAUZd95z5DsnGZVgoJfw3mJONl2q+8aIWi6r5gSyNDh2thNl+NvNXL
-   uRluFD5stT4Xt8A2Yv7fLaggNr0CCx8AJudaYZkbZ5IpmRY82NKRK9U/k
-   08oDamGApYNDrK5CzK007L1IhXNISXKzjxoOSbE8snxG/W3nz5p1JZL+4
-   flgbKHEiSIFijQN57qDWqrI4YplvJQD3zH1S2EWxednfyvQK0V47K1YFM
-   g==;
-X-CSE-ConnectionGUID: CFx91S+1QX2yVRUuV1KugQ==
-X-CSE-MsgGUID: IU0Hd2unSuGbM1FVXBr7Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48341123"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="48341123"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:44:28 -0700
-X-CSE-ConnectionGUID: ElrxZsEDTAGyNW8NFtJEmQ==
-X-CSE-MsgGUID: V8Jpu4hhS0uxmBv/y0rFgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="136425436"
-Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:44:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 May 2025 12:44:22 +0300 (EEST)
-To: Mario Limonciello <superm1@kernel.org>
-cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
-    Hans de Goede <hdegoede@redhat.com>, dan.carpenter@linaro.org, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd: pmf: Use device managed
- allocations
-In-Reply-To: <20250507020838.2962896-1-superm1@kernel.org>
-Message-ID: <b10d7dcd-4026-b06a-f278-b7d46b6a0fee@linux.intel.com>
-References: <20250507020838.2962896-1-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="mxAeDq6Q"
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id C9E6A2634A;
+	Wed,  7 May 2025 10:04:43 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 363933EBDC;
+	Wed,  7 May 2025 10:04:36 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 40101400CD;
+	Wed,  7 May 2025 10:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1746612275; bh=mmFmsqM7Nq7w8TVg8U3Rogh4VyZckeHRwu9Hsc96wPQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mxAeDq6QxdoymKp2Jk5R5qeSYKbrNDAoqW/k9L6ABkSfPd/EQb/RjNne0hUHqDstk
+	 n1OzJmRdXny2UfrV0wjEn4XGiIyd2z6GBUWtJPpO7/LpoFQ/F5lTKfzX4raxNWBDyn
+	 ke/CtQdMOtS6bA2AEPIscYxPrEfO2o5gh7g3Ek80=
+Received: from hrh-ofice.wok.cipunited.com (unknown [60.247.127.212])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 35131409D2;
+	Wed,  7 May 2025 10:04:30 +0000 (UTC)
+From: Runhua He <hua@aosc.io>
+To: platform-driver-x86@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Rong Zhang <i@rong.moe>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Runhua He <hua@aosc.io>,
+	Xinhui Yang <cyan@cyano.uk>,
+	Yemu Lu <prcups@krgm.moe>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86/amd/pmc: Declare quirk_spurious_8042 for MECHREVO Wujie 14XA (GX4HRXL)
+Date: Wed,  7 May 2025 18:01:03 +0800
+Message-ID: <20250507100103.995395-1-hua@aosc.io>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: 40101400CD
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [1.50 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	SUBJECT_RANDOM_CHARS_1(0.10)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[prcups.krgm.moe:server fail,cyan.cyano.uk:server fail,i.rong.moe:server fail,jeffbai.aosc.io:server fail,hua.aosc.io:server fail,mario.limonciello.amd.com:server fail];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
-On Tue, 6 May 2025, Mario Limonciello wrote:
+MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
+This happens regardless of whether the laptop is plugged into AC power,
+or whether any peripheral is plugged into the laptop.
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> If setting up smart PC fails for any reason then this can lead to
-> a double free when unloading amd-pmf.  This is because dev->buf was
-> freed but never set to NULL and is again freed in amd_pmf_remove().
-> 
-> To avoid subtle allocation bugs in failures leading to a double free
-> change all allocations into device managed allocations.
-> 
-> Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v1->v2:
->  * Correct commit message with correct offending function root cause
->  * Switch to device managed allocations.
-> 
->  drivers/platform/x86/amd/pmf/core.c   |  3 +--
->  drivers/platform/x86/amd/pmf/tee-if.c | 30 ++++++++-------------------
->  2 files changed, 10 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 96821101ec773..395c011e837f1 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -280,7 +280,7 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
->  			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
->  		}
->  
-> -		dev->buf = kzalloc(dev->mtable_size, GFP_KERNEL);
-> +		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size, GFP_KERNEL);
->  		if (!dev->buf)
->  			return -ENOMEM;
->  	}
-> @@ -493,7 +493,6 @@ static void amd_pmf_remove(struct platform_device *pdev)
->  	mutex_destroy(&dev->lock);
->  	mutex_destroy(&dev->update_mutex);
->  	mutex_destroy(&dev->cb_mutex);
-> -	kfree(dev->buf);
->  }
->  
->  static const struct attribute_group *amd_pmf_driver_groups[] = {
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index d3bd12ad036ae..50c082a78cd9e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -532,13 +532,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
->  	if (IS_ERR(dev->policy_base)) {
->  		ret = PTR_ERR(dev->policy_base);
-> -		goto err_free_dram_buf;
-> +		goto err_cancel_work;
->  	}
->  
-> -	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
-> +	dev->policy_buf = devm_kzalloc(dev->dev, dev->policy_sz, GFP_KERNEL);
+Similar to commit a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard
+wakeup on AMD Framework 13"), the MECHREVO Wujie 14XA wakes up almost
+instantly after s2idle suspend entry (IRQ1 is the keyboard):
 
-Hi Mario,
+2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 9
+2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 1
 
-Isn't ->policy_buf freed and another allocated in amd_pmf_get_pb_data() 
-and this patch lacks any changes around there?? That switch of the buffer 
-has been the reason why I've not suggested using devm_*() for earlier for 
-it.
+Add this model to the spurious_8042 quirk to workaround this.
 
-Please check all related code to the pointers you're changing if there 
-are other similar traps you have not taken into account.
+This patch does not affect the wake-up function of the built-in keyboard.
+Because the firmware of this machine adds an insurance for keyboard
+wake-up events, as it always triggers an additional IRQ 9 to wake up the
+system.
 
->  	if (!dev->policy_buf) {
->  		ret = -ENOMEM;
-> -		goto err_free_dram_buf;
-> +		goto err_cancel_work;
->  	}
->  
->  	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
-> @@ -546,21 +546,21 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (!amd_pmf_pb_valid(dev)) {
->  		dev_info(dev->dev, "No Smart PC policy present\n");
->  		ret = -EINVAL;
-> -		goto err_free_policy;
-> +		goto err_cancel_work;
->  	}
->  
->  	amd_pmf_hex_dump_pb(dev);
->  
-> -	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
-> +	dev->prev_data = devm_kzalloc(dev->dev, sizeof(*dev->prev_data), GFP_KERNEL);
->  	if (!dev->prev_data) {
->  		ret = -ENOMEM;
-> -		goto err_free_policy;
-> +		goto err_cancel_work;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
->  		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
->  		if (ret)
-> -			goto err_free_prev_data;
-> +			goto err_cancel_work;
->  
->  		ret = amd_pmf_start_policy_engine(dev);
->  		switch (ret) {
-> @@ -575,7 +575,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  		default:
->  			ret = -EINVAL;
->  			amd_pmf_tee_deinit(dev);
-> -			goto err_free_prev_data;
-> +			goto err_cancel_work;
->  		}
->  
->  		if (status)
-> @@ -584,7 +584,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  
->  	if (!status && !pb_side_load) {
->  		ret = -EINVAL;
-> -		goto err_free_prev_data;
-> +		goto err_cancel_work;
->  	}
->  
->  	if (pb_side_load)
-> @@ -600,12 +600,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (pb_side_load && dev->esbin)
->  		amd_pmf_remove_pb(dev);
->  	amd_pmf_tee_deinit(dev);
-> -err_free_prev_data:
-> -	kfree(dev->prev_data);
-> -err_free_policy:
-> -	kfree(dev->policy_buf);
-> -err_free_dram_buf:
-> -	kfree(dev->buf);
->  err_cancel_work:
->  	cancel_delayed_work_sync(&dev->pb_work);
->  
-> @@ -621,11 +615,5 @@ void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
->  		amd_pmf_remove_pb(dev);
->  
->  	cancel_delayed_work_sync(&dev->pb_work);
-> -	kfree(dev->prev_data);
-> -	dev->prev_data = NULL;
-> -	kfree(dev->policy_buf);
-> -	dev->policy_buf = NULL;
-> -	kfree(dev->buf);
-> -	dev->buf = NULL;
->  	amd_pmf_tee_deinit(dev);
->  }
-> 
+Suggested-by: Mingcong Bai <jeffbai@aosc.io>
+Suggested-by: Xinhui Yang <cyan@cyano.uk>
+Suggested-by: Rong Zhang <i@rong.moe>
+Fixes: a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13")
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4166
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://zhuanldan.zhihu.com/p/730538041
+Tested-by: Yemu Lu <prcups@krgm.moe>
+Signed-off-by: Runhua He <hua@aosc.io>
 
+---
+Changes in v2:
+- Match quirk to precise motherboard models to avoid false positives.
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index b4f49720c87f..2e3f6fc67c56 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
+ 		}
+ 	},
++	{
++		.ident = "MECHREVO Wujie 14X (GX4HRXL)",
++		.driver_data = &quirk_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
++		}
++	},
+ 	{}
+ };
+ 
 -- 
- i.
+2.49.0
 
