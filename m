@@ -1,348 +1,271 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F7020C48D;
-	Wed,  7 May 2025 07:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3E61D61BC
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 07:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601982; cv=none; b=ooRvFhkeFRV+B5/aV5OLdQ53PEWeNui/+EvB+hp8L0oJu3t7I7JS7DXDCbp7R5mIDuJtDPF8qp5LbBYoIDkrCYYz4N1fIBytqc+anlmlLLg31C6wSWskM4HXpYeJJ1F6dvdjKIrxpLUhOUIUnlAN0jI0E3dJW7AyWzVJ+0wELDA=
+	t=1746602559; cv=none; b=VcsS/tqFLc5Asv3vQl9F25rQQMWabyyXmYC2dMo6fUkLNkKNcODhtaTpoIc1jw0EHp3Rnh7DjSIJU6Y3cAd3+AAKJBTrlAnpXbQ7h42cnl26tfrsfpcpEYR59saJ7fyPe+jzcahF41e9+xbhZHUA4yE88899rZRB0EcY3ZAVBHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601982; c=relaxed/simple;
-	bh=7iju5gNoWvZ7SExVLh6ZjTch9Wq7tQuPkHPrnqnjy6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qxc5ZBA7Gs+H6GALaQ+JkPwKo77sU4dpbre46V8LjR7Q9akR9MpuJJxlbV6DCQNkhtgCQ3cJhkfy8C0JtaqL4iOeOUlDYaj70FYEP7teIg5tj+I7Zqj+iyk4SaaAo9ga7QqlIxL2MDc+Wb+wSI/Hfn6Z+zBr1kwYl+1g7EQdbdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fAKAXuZn; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746602559; c=relaxed/simple;
+	bh=GLPob0R5jZ7tYNrPSzgofxau6DyB61v2JCxWTjdH3y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cENyfZVxIsVa4E/yq2328n8Y2/kWASRO8dJsO+ZyuuD6nl9fZpi+i7xr8ZDGhVgnUi9oFZnQqrx0HOgDMfVKUOtGCjUWavDClmw6gc5muA3h0uY5S1F9W9uJmzfFaaUzBojAXcto6GFi8tD1FWHiipW8XPcdPsrtKYF41lMn4rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b7J6OtgF; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fAKAXuZn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0550B438F2;
-	Wed,  7 May 2025 07:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746601970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XYAyvJHL12oT6BGBWrmzXRLHiSyv5UkdfdbxyEq+wzE=;
-	b=fAKAXuZnSS3eGpzPhDcjGsacbbVKiGgoN1+hKvLf8W9LVvJ4q/yN8mvMPuPltCTDbXMASe
-	lHtfyjGut/XmC/xrpKXVchctm+xWS0nliJAHS7g61Md9sxN7YRtopQtlivvhd8mGnFfnK1
-	zLHPF0YGiRFpUlXubh1ep5E4ewLXUZtHVVNtabxb5GJkslE1cAx6oSWctsvQExum3J+p+E
-	G4ikcxIyCXqyCiM2jQxJjrh9Kx946k992iKwtXwwTIyGamjbbizyN66uuoDV6SDsxQtsCc
-	zjoWTyHHf75l2ZvLTS0zTK/WEP7psTFLBKbj64q26m1zvV+GCXrw3FgTUMGpzQ==
-Date: Wed, 7 May 2025 09:12:44 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250507091244.32865a71@booty>
-In-Reply-To: <a1abf31a-7a4a-4f8d-bf48-6b826aa01197@nxp.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
-	<553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
-	<20250430112944.1b39caab@booty>
-	<f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
-	<20250506224720.5cbcf3e1@booty>
-	<a1abf31a-7a4a-4f8d-bf48-6b826aa01197@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7J6OtgF"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso7013430f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2025 00:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746602556; x=1747207356; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=69raFDVHNcb/taTnxHpd9YhjnhSZXRNZ9khxgQS9W9U=;
+        b=b7J6OtgFsQwK3y+hdUxEzwsJYfZN+vvgHnOJZS/ivzQYhVfoRLUzqJm2zytMMDlTYw
+         dVAYoUUtuxHpK7Nf6DDnYKVm7qNfV+KCKiMubswxH4FYbgfrAivGywQN9WipX5MD8cyo
+         03z5VAgPoY1cE93PSlGb4ero4j0YYC7wJ2wzmzMXf+GnTi2vfZ+w3kQ87ccmqrdo/+fZ
+         bettXgmJhljxOyvw+T4kqjNyT3mgr3PSkfMI9t8MHKG0m2on6WO6cffcSkhZsdUT9bp1
+         6T6ikTRZdui6ro8tJYjoitmR4jJumcjpx8Gg6zge+HaL5Wmp3GWInb+HVs9WIfh8LtII
+         3anQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746602556; x=1747207356;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=69raFDVHNcb/taTnxHpd9YhjnhSZXRNZ9khxgQS9W9U=;
+        b=Ib9/Pv+M0vlBKeslOB3ZwLMFLLwgZySBg1iiL66WmCijeSLKN0TKVIptorygAv4KtH
+         CGigfVM3POblkadj6kVT9R7/98eRLqCc01VvtlIPdKGgUb11nqRWohnxqcFJHl+3pKS7
+         wp+HrBCYIi7RVh4PmeRuc680uWgG4PGIRISJvGv5AThLLyvQ8WsGq77QrH3nfI1my4Y/
+         0JFp0Xu2DLSogZaNC31xlsxVi/OH5QL1kR98QP1Myl4KfmTenrbrVSwu93rU8embWen8
+         JGsKZVILw9eRF5Yeb1BYg/PTZlBa7J7tX1sgsMR9mKrBWZdtdsoxn8bdxHG+T3P5jOv0
+         zl/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVW4UJZdH4mVIvYMhv+j2l2z50cUw0BMr5WI92yuP8JzXRiF+04B4IQS0aAS1R2CpCWPXc8nuc/4RsOQIdNdnc84X8a@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgDSfsf30pU/qsHcaJC0IMtYwglVmJkPPaPr56lZ2lqkn3gh1T
+	kwLDMq3ExBReOlrU+lWSGymNz+iVVuEVR+3UMrWBC5vGaphwYhOlWPlC/wlkUCEpaG10StHtt9e
+	H
+X-Gm-Gg: ASbGnctQD+JVHe5HWR67JzAUuI2jctV6N1Oz6gVg5PK9KjjPaDIU3Lbai4dXq1It/O3
+	N693/B58gRRlTQ5GPHO/o/DlpcNL1vqeerw2tPnnZWh30NTAoKqB79wlaXw8P/prmv21+DOKT0z
+	uKu4vOo3OYViUcu36C5t2MPOhMEvwGohjGQCFyjHW2o2rd3gd+MnPAVYRmuV4Re/PaaOMzBK/iq
+	KCN3Oe/OgaQfNhtDqycg0dRMlI30rbsJDw4hSUqqAEVR/Aw6mlIfIwvXx4rDspEiz1EujMZA6fs
+	8NyZe7ogVLckBnFXQcRdoQhza3A9n7/UZCHYrWAO5q0Nhw==
+X-Google-Smtp-Source: AGHT+IFM5ONWsMRyKkNBIsGfMDj/ImaSCorIOdM2jXY26FxphXVxsVl79Bl1eFrUQ8xbmb8pxmckWQ==
+X-Received: by 2002:adf:f4cf:0:b0:3a0:b55f:dc25 with SMTP id ffacd0b85a97d-3a0b55fdc32mr1114039f8f.17.1746602555695;
+        Wed, 07 May 2025 00:22:35 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a0b348419dsm2556340f8f.23.2025.05.07.00.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 00:22:35 -0700 (PDT)
+Date: Wed, 7 May 2025 10:22:30 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>, Shyam-sundar.S-k@amd.com,
+	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] drivers/platform/x86/amd: pmf: Fix a double free on
+ module unload
+Message-ID: <aBsKNrn6hdbHswPj@stanley.mountain>
+References: <20250506131130.1446262-1-superm1@kernel.org>
+ <aBowhD4lwc017-NE@stanley.mountain>
+ <fce0ca00-3d0b-48a8-ad97-9125f4297f05@kernel.org>
+ <528c230b-978e-4cb3-9339-0569bcbb16bc@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeivdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehvihgtthhorhdrlhhiuhesnhigphdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
- hepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <528c230b-978e-4cb3-9339-0569bcbb16bc@amd.com>
 
-Hello Liu,
-
-On Wed, 7 May 2025 10:10:53 +0800
-Liu Ying <victor.liu@nxp.com> wrote:
-
-> On 05/07/2025, Luca Ceresoli wrote:
-> > Hello Liu,  
+On Tue, May 06, 2025 at 08:49:12PM -0500, Mario Limonciello wrote:
+> On 5/6/2025 11:11 AM, Mario Limonciello wrote:
+> > On 5/6/2025 10:53 AM, Dan Carpenter wrote:
+> > > On Tue, May 06, 2025 at 08:11:29AM -0500, Mario Limonciello wrote:
+> > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > 
+> > > > If setting up smart PC fails for any reason then this can lead to
+> > > > a double free when unloading amd-pmf.  This is because dev->buf was
+> > > > freed but never set to NULL and is again freed in
+> > > > amd_pmf_deinit_smart_pc().
+> > > > 
+> > > > Explicitly set pointers to NULL after freeing them to avoid the
+> > > > double free.
+> > > > 
+> > > > Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in
+> > > > amd_pmf_init_smart_pc()")
+> > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > ---
+> > > >   drivers/platform/x86/amd/pmf/tee-if.c | 3 +++
+> > > >   1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/
+> > > > platform/x86/amd/pmf/tee-if.c
+> > > > index a1e43873a07b0..48902f1c767c6 100644
+> > > > --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> > > > +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> > > > @@ -579,10 +579,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+> > > >       amd_pmf_tee_deinit(dev);
+> > >          ^^^^^^^^^^^^^^^^^^^^^^^
+> > > 
+> > > >   err_free_prev_data:
+> > > >       kfree(dev->prev_data);
+> > > > +    dev->prev_data = NULL;
+> > > >   err_free_policy:
+> > > >       kfree(dev->policy_buf);
+> > > > +    dev->policy_buf = NULL;
+> > > >   err_free_dram_buf:
+> > > >       kfree(dev->buf);
+> > > > +    dev->buf = NULL;
+> > > >   err_cancel_work:
+> > > >       cancel_delayed_work_sync(&dev->pb_work);
+> > > 
+> > > This is a real bug.  Did you find it from testing or reading the code?
+> > 
+> > I found it from testing.  I was testing some other unrelated changes and
+> > found that unloading/reloading the module eventually lead to problems. I
+> > tracked it down to your change.
+> > 
+> > > My reading of the code says that this bug can only occur if
+> > > amd_pmf_register_input_device() fails, right?
+> > 
+> > No; it was happening from a failure where the system didn't have a
+> > policy or had a "bad" policy.
+> > 
+> > > 
+> > > We can only call amd_pmf_deinit_smart_pc() if
+> > > amd_pmf_start_policy_engine()
+> > > succeeds because that's where we set:
+> > > 
+> > >     dev->smart_pc_enabled = true;
+> > > 
+> > > This patch doesn't totally fix the problem because we would still call
+> > > amd_pmf_tee_deinit().  That's why I suspect you found this by auditing
+> > > the code because I think that remaining bug would trigger a stack trace.
+> > > I also worry that there is a small race window where we could trigger
+> > > amd_pmf_tee_deinit() before amd_pmf_init_smart_pc() has finished
+> > > running.
+> > > 
+> > > Another bug is that we should cancel the work before freeing all the
+> > > pointers.  This looks like the more serious bug.
+> > > 
+> > > What about if we only set dev->smart_pc_enabled = true if the whole
+> > > amd_pmf_init_smart_pc() has succeeded?
+> > > 
+> > > regards,
+> > > dan carpenter
+> > > 
+> > 
+> > Right; it's only set when amd_pmf_start_policy_engine() succeeds which
+> > was not the case for me.  This makes me wonder how exactly this was
+> > happening [amd_pmf_deinit_smart_pc() would only be called from
+> > amd_pmf_deinit_features()].
 > 
-> Hi Luca,
+> Ah I think I found the actual callpath.
 > 
-> > 
-> > thanks for your further feedback.
-> > 
-> > On Tue, 6 May 2025 10:24:18 +0800
-> > Liu Ying <victor.liu@nxp.com> wrote:
-> >   
-> >> On 04/30/2025, Luca Ceresoli wrote:  
-> >>> Hello Liu,    
-> >>
-> >> Hi Luca,
-> >>  
-> >>>
-> >>> On Tue, 29 Apr 2025 10:10:55 +0800
-> >>> Liu Ying <victor.liu@nxp.com> wrote:
-> >>>     
-> >>>> Hi,
-> >>>>
-> >>>> On 04/25/2025, Luca Ceresoli wrote:    
-> >>>>> This is the new API for allocating DRM bridges.
-> >>>>>
-> >>>>> This driver embeds an array of channels in the main struct, and each
-> >>>>> channel embeds a drm_bridge. This prevents dynamic, refcount-based
-> >>>>> deallocation of the bridges.
-> >>>>>
-> >>>>> To make the new, dynamic bridge allocation possible:
-> >>>>>
-> >>>>>  * change the array of channels into an array of channel pointers
-> >>>>>  * allocate each channel using devm_drm_bridge_alloc()
-> >>>>>  * adapt the code wherever using the channels
-> >>>>>
-> >>>>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>    
-> >>>
-> >>> [...]
-> >>>     
-> >>>>> @@ -345,8 +351,8 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
-> >>>>>  free_child:
-> >>>>>  	of_node_put(child);
-> >>>>>  
-> >>>>> -	if (i == 1 && pc->ch[0].next_bridge)
-> >>>>> -		drm_bridge_remove(&pc->ch[0].bridge);
-> >>>>> +	if (i == 1 && pc->ch[0]->next_bridge)      
-> >>>>
-> >>>> Since this patch makes pc->ch[0] and pc->ch[1] be allocated separately,
-> >>>> pc->ch[0] could be NULL if channel0 is not available, hence a NULL pointer
-> >>>> dereference here...    
-> >>>
-> >>> See below for this.
-> >>>     
-> >>>>> +		drm_bridge_remove(&pc->ch[0]->bridge);
-> >>>>>  
-> >>>>>  	pm_runtime_disable(dev);
-> >>>>>  	return ret;
-> >>>>> @@ -359,7 +365,7 @@ static void imx8qxp_pc_bridge_remove(struct platform_device *pdev)
-> >>>>>  	int i;
-> >>>>>  
-> >>>>>  	for (i = 0; i < 2; i++) {
-> >>>>> -		ch = &pc->ch[i];
-> >>>>> +		ch = pc->ch[i];
-> >>>>>  
-> >>>>>  		if (!ch->is_available)      
-> >>>>
-> >>>> ...and here too.    
-> >>>
-> >>> This is indeed a bug, I should have checked the pointer for being
-> >>> non-NULL.
-> >>>
-> >>> Looking at that more closely, I think the is_available flag can be
-> >>> entirely removed now. The allocation itself (ch != NULL) now is
-> >>> equivalent. Do you think my reasoning is correct?
-> >>>
-> >>> Ouch! After writing the previous paragraph I realized you proposed this
-> >>> a few lines below! OK, removing is_available. :)
-> >>>
-> >>> [...]
-> >>>     
-> >>>> On top of this patch series, this issue doesn't happen if I apply the below
-> >>>> change:    
-> >>>
-> >>> [...]
-> >>>     
-> >>>> @@ -351,7 +349,7 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
-> >>>>  free_child:
-> >>>>         of_node_put(child);
-> >>>>  
-> >>>> -       if (i == 1 && pc->ch[0]->next_bridge)
-> >>>> +       if (i == 1 && pc->ch[0])
-> >>>>                 drm_bridge_remove(&pc->ch[0]->bridge);    
-> >>>
-> >>> Unrelated to this patch, but as I looked at it more in depth now, I'm
-> >>> not sure this whole logic is robust, even in the original code.
-> >>>
-> >>> The 'i == 1' check here seems to mean "if some error happened when
-> >>> handling channel@1, that means channel@0 was successfully initialized,
-> >>> so let's clean up channel 0".
-> >>>
-> >>> However my understanding of the bindings is that device tree is allowed
-> >>> to have the channel@1 node before the channel@0 node (or even channel@1
-> >>> without channel@0, but that's less problematic here).
-> >>>
-> >>> In such case (channel@1 before channel@0), this would happen:
-> >>>
-> >>>  1. alloc and init ch[1], all OK
-> >>>  2. alloc and init ch[0], an error happens
-> >>>     (e.g. of_graph_get_remote_node() fails)
-> >>>
-> >>> So we'd reach the free_child: label, and we should call
-> >>> drm_bridge_remove() for ch[1]->bridge, but there's no code to do that.
-> >>>
-> >>> To be robust in such a case, I think both channels need to be checked
-> >>> independently, as the status of one does not imply the status of the
-> >>> other. E.g.:
-> >>>
-> >>>   for (i = 0; i < 2; i++)
-> >>>       if (pc->ch[i] && pc->ch[i]->next_bridge)
-> >>>           drm_bridge_remove(&pc->ch[i]->bridge);
-> >>>
-> >>> (which is similar to what .remove() does after the changes discussed in
-> >>> this thread, and which I have queued for v3)
-> >>>
-> >>> What's your opinion? Do you think I missed anything?    
-> >>
-> >> The pixel combiner DT node would be added in imx8-ss-dc{0,1}.dtsi, please
-> >> see the case for imx8-ss-dc0.dtsi introduced by an in-flight patch[1].  As
-> >> channel@{0,1} child nodes always exist(DT overlay cannot effectively delete
-> >> any of them) and channel@0 always comes first, there is no problematic case.  
-> > 
-> > I'm not questioning what existing and future dts files (will) contain,
-> > and surely I don't see a good reason someone would write channel@1
-> > before channel@0.
-> > 
-> > My point is:
-> > 
-> >  - the bindings _allow_ channel1 before channel@0
-> >  - the error management code after the free_child label won't work
-> >    correctly if channel1 is before channel@0 in the device tree
-> > 
-> > IOW the driver is not robust against all legal device tree descriptions,
-> > and it could be easily made robust using the example code in my
-> > previous e-mail (quoted a few lines above).
-> > 
-> > If you agree about this I'll be happy to send a patch doing that change.
-> > If you think I'm wrong, I won't fight a battle. This topic is
-> > orthogonal to the change I'm introducing in this patch, and I can
-> > continue the conversion independently from this discussion.  
-> 
-> I don't think it is necessary to do that change for now.  When someone
-> really comes across this issue, we may make the error management code
-> robust.
-> 
-> >   
-> >>> Thanks for taking the time to dig into this!    
-> >>
-> >> After looking into this patch and patch 31(though I've already provided my A-b)
-> >> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
-> >> should have the same life time with the embedded DRM bridges, because for
-> >> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
-> >> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
-> >> the life time for the embedded channel/bridge structures only, but not for the
-> >> main structures.  What do you think ?  
-> > 
-> > I see you concern, but I'm sure the change I'm introducing is not
-> > creating the problem you are concerned about.
-> > 
-> > The key aspect is that my patch is merely changing the lifetime of the
-> > _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
-> > the bridge is removed from its encoder chain and it is completely not
-> > reachable, both before and after my patch. With my patch it is not
-> > freed immediately, but it's just a piece of "wasted" memory that is
-> > still allocated until elsewhere in the kernel there are pointers to it,
-> > to avoid use-after-free.
-> > 
-> > With this explanation, do you think my patch is correct (after fixing
-> > the bug we already discussed of course)?  
-> 
-> I tend to say your patch is not correct because we'll eventually make sure
-> that removing a bridge module is safe when doing atomic commit,
+> It's amd_pmf_remove() that has kfree(dev->buf) - that's probably what's
+> actually tripping it.
 
-I think your sentence can be rephrased as "your patch is correct with
-the current code base where bridges are not (yet) removable, but there
-will be a problem when they start to actually be removable".
+Great!  There should be no need to call kfree(dev->buf) there because
+amd_pmf_deinit_features() will do it.  Could you add something like
+the following to your diff?
 
-Is my understanding correct? If it is, I agree on that sentence.
+The changes to amd_pmf_ta_open_session() are unrelated actually?  Do
+that in another patch?
 
-The work to have removable bridges is massive and non-trivial, so it
-will need to be tackled in steps. The grand plan [0] is:
+Setting dev->tee_ctx to NULL will prevent amd_pmf_tee_deinit() from
+being run twice.
 
- 1. add refcounting to DRM bridges (struct drm_bridge)
- 2. handle gracefully atomic updates during bridge removal
- 3. avoid DSI host drivers to have dangling pointers to DSI devices 
- 4. finish the hotplug bridge work, removing the "always-disconnected"
-    connector, moving code to the core and potentially removing the
-    hotplug-bridge itself (this needs to be clarified as points 1-3 are
-    developed)
+We only need to cancel the work once it has been scheduled.  We
+scheduled it for 3 seconds into the future so it will be canceled and
+that bug won't trigger in real life.  But freeing the pointers before
+canceling is ugly.
 
-I am at step 1 right now. Removal during atomic updates is step 2,
-ideas about how to implement that are already being discussed [1],
-there's a practical plan proposed by Maxime with the goal of reaching
-removable bridges without breaking things along the path.
+regards,
+dan carpenter
 
-[0] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/
-[1] https://lore.kernel.org/all/20250106-vigorous-talented-viper-fa49d9@houat/
-
-> which means
-> the main structures should have the same life time with the DRM bridges.
-
-The word "lifetime" mean two things for bridges:
-
- * the time span during which memory is allocated for a struct
-   drm_bridge (along with the embedding struct)
- * the time span during which a DRM bridge is active/used/usable as
-   part of a card
-   - i.e. when it is part of an encoder chain
-   - i.e. when drm_bridge_funcs callbacks can be called
-   - i.e. from drm_bridge_add() to drm_bridge_remove()
-
-These two lifetimes used to be nearly the same. Now the "memory
-allocation lifetime" is extended, but the "bridge existence" is
-unchanged: drm_bridge_add() to drm_bridge_remove() are called in the
-same place and do the same things, so the bridge will stop being in any
-encoder chain at the exact same time. now we are just keeping a piece of
-memory allocated for a longer time.
-
-Seen in another way, the events used to be:
-
- * probe:
-   - allocate bridge
-   - drm_bridge_add()
-
- * remove
-   - drm_bridge_remove()
-   - now the bridge is not used, it's just some dead memory [*]
-   - kfree bridge (either in .remove() or just after by devm)
-
-Now it becomes:
-
- * probe:
-   - allocate bridge
-   - drm_bridge_add()
-
- * remove
-   - drm_bridge_remove()
-   - now the bridge is not used, it's just some dead memory [*]
-   - maybe some more time, possibly long, until the last put [*]
-   - kfree bridge (by devm)
-
-The duration of the [*] steps changes, but it's harmless because the
-bridge is not used at all. No change except for memory allocation.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 96821101ec77..0a494d6e8fcf 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -493,7 +493,6 @@ static void amd_pmf_remove(struct platform_device *pdev)
+ 	mutex_destroy(&dev->lock);
+ 	mutex_destroy(&dev->update_mutex);
+ 	mutex_destroy(&dev->cb_mutex);
+-	kfree(dev->buf);
+ }
+ 
+ static const struct attribute_group *amd_pmf_driver_groups[] = {
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index 14b99d8b63d2..b332b5470398 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -407,12 +407,12 @@ static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id, const uuid_
+ 	rc = tee_client_open_session(ctx, &sess_arg, NULL);
+ 	if (rc < 0 || sess_arg.ret != 0) {
+ 		pr_err("Failed to open TEE session err:%#x, rc:%d\n", sess_arg.ret, rc);
+-		return rc;
++		return rc ?: -EINVAL;
+ 	}
+ 
+ 	*id = sess_arg.session;
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ static int amd_pmf_register_input_device(struct amd_pmf_dev *dev)
+@@ -447,7 +447,9 @@ static int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid)
+ 	dev->tee_ctx = tee_client_open_context(NULL, amd_pmf_amdtee_ta_match, NULL, NULL);
+ 	if (IS_ERR(dev->tee_ctx)) {
+ 		dev_err(dev->dev, "Failed to open TEE context\n");
+-		return PTR_ERR(dev->tee_ctx);
++		ret = PTR_ERR(dev->tee_ctx);
++		dev->tee_ctx = NULL;
++		return ret;
+ 	}
+ 
+ 	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id, uuid);
+@@ -487,9 +489,12 @@ static int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid)
+ 
+ static void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
+ {
++	if (!dev->tee_ctx)
++		return;
+ 	tee_shm_free(dev->fw_shm_pool);
+ 	tee_client_close_session(dev->tee_ctx, dev->session_id);
+ 	tee_client_close_context(dev->tee_ctx);
++	dev->tee_ctx = NULL;
+ }
+ 
+ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+@@ -512,7 +517,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 
+ 	ret = amd_pmf_set_dram_addr(dev, true);
+ 	if (ret)
+-		goto err_cancel_work;
++		return ret;
+ 
+ 	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+ 	if (IS_ERR(dev->policy_base)) {
+@@ -576,6 +581,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	return 0;
+ 
+ err_pmf_remove_pb:
++	cancel_delayed_work_sync(&dev->pb_work);
+ 	if (pb_side_load && dev->esbin)
+ 		amd_pmf_remove_pb(dev);
+ 	amd_pmf_tee_deinit(dev);
+@@ -585,8 +591,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	kfree(dev->policy_buf);
+ err_free_dram_buf:
+ 	kfree(dev->buf);
+-err_cancel_work:
+-	cancel_delayed_work_sync(&dev->pb_work);
+ 
+ 	return ret;
+ }
