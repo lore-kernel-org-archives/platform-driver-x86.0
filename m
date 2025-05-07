@@ -1,184 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC828B3FA;
-	Wed,  7 May 2025 14:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872AD1B414A
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 18:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627493; cv=none; b=ZQkozgDADvW1kHZNPh62+2CYaiPxI9pQvYf9qs5P679riTCvKFZ9UoPp5NFvPzbhYjnDaHQOi3/UlEm8IgoqBpGr9uWH+FWKantmbxcqyiN7/kSWjKceFnsqE85owjxqehvWN85yCRp2jvCGbUUBjHt0eTv0TitckOYtRq4i8hE=
+	t=1746643676; cv=none; b=Trauqg8/c5UhO2Bf1jQMrFQj4H2fpknhZV3egcZYvWwGtNThk+Zboie+uMFI43D+rhylFk5X5GGjnQDMLukYG+6oki1PMlBfq07KxspkxNk8btXsZR5oewIuOQxQYqzanFj+gu9odWTTSemmcwV1MEAftCm24uoe0dEEqXqBDAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627493; c=relaxed/simple;
-	bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AzI8QYOpREze4zLezNIb8ZpNwJp9a97E4jSTMrfYy0QFjOqh5XJO1/LyvVcu/Q9H6zAUgQnx/32WZgVs/zYRP8dPOZnUk7riqhkNCSgTZGDG7IWZBKAlji3UPcokg1Gb76F6RpKgaiaZj4BmKT9dDTaguxSE7lYRO67Xc/Dxxpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7RyfflU; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746643676; c=relaxed/simple;
+	bh=Ix+ixCRYX7nhf54621iyda7H0xVjnd+96PAL2peFtNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AeLpWOjDSNCyFOpvgzWSzr4P0VrdqDMbZjPAcA3mqQnLA2Y3LP1g153O+hW4nqE/dp2Itl7GmRRkc7j3WwiT6zwTuMih4gMYSp+eGyLACHbUknhRMZ1FDeL9WQHR7gF2R38G3pamaYdEdQ12DCp9xhDLwPS0Adv/NBWdSPbNhNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eGui7Hxv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7RyfflU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746627492; x=1778163492;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
-  b=D7RyfflU4b4SxdXTd+d+sHQ8aIRrqz0U7hr1peLWGzydnfSrGjeWDS10
-   l+0k2iHLEbc6lIX4FU/aV2OaQyQjWVvYTTwvZl0xho9DP8NlGdW5tWGwi
-   +HmREzC3f3XezsY2oWJfa0+MoeHFyHbLRoEWCvJ44FFzZrUclorDpCyyi
-   bZA/TTO8qvc3R0md89WuxYRWMx/VkuHLbMnJO/ixNRt37pri7iWPTBFna
-   JUZBgXmdFtRNcyYqgUiNT5oRpyAeRE4XI/rVo9j1ramatOhVLw95ZQtBG
-   GOiWFoU+B7XmOZD/K1lm0ec1n1bBIjzcnXzjrlf2X7mRjW9hsH3YAw2tk
-   g==;
-X-CSE-ConnectionGUID: xz49VLD3SA++xV2nI5v2/Q==
-X-CSE-MsgGUID: veBGodXST3O50P8k1r37uw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48263815"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48263815"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
-X-CSE-ConnectionGUID: ZxOHtIKiQYS+qT5Z5hQaTg==
-X-CSE-MsgGUID: RLjhfDswR9m5aDVQ8JS4xQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="136492492"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.226])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
-Message-ID: <06d57c763f54082c01ab7f1ced896910b0e8a680.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/5] platform/x86/intel-uncore-freq: Add attributes
- to show agent types
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGui7Hxv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746643673;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DQ1MeujzY80NlUXgSlBSkAf4IDE/Iof+2Qm5wM8j44g=;
+	b=eGui7HxvicBdor2jMkGOyicKdh6puKBXg7s542aOZ3nj+KA/eD7gykv2syKXA2NOmkrGQf
+	TGuLvfOpM/yw6z+V662JRbPetTRnAE20uAI/3vrUANnjblaa/5b8ND/8xpKO7EVuhhv2+K
+	XJwz5XcXZdu1ThyOMsog2z4u3aAVPbo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-671-EFz21W8-NUie05BQa1T5vA-1; Wed,
+ 07 May 2025 14:47:51 -0400
+X-MC-Unique: EFz21W8-NUie05BQa1T5vA-1
+X-Mimecast-MFC-AGG-ID: EFz21W8-NUie05BQa1T5vA_1746643670
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E4F8D1800374;
+	Wed,  7 May 2025 18:47:49 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.44.33.122])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2B45E30001A1;
+	Wed,  7 May 2025 18:47:46 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
-Date: Wed, 07 May 2025 07:17:56 -0700
-In-Reply-To: <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
-References: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com>
-	 <20250428170316.231353-2-srinivas.pandruvada@linux.intel.com>
-	 <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	platform-driver-x86@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: [PATCH 0/6] platform/x86: int3472: Allow re-using sensor GPIO mapping in atomisp
+Date: Wed,  7 May 2025 20:47:31 +0200
+Message-ID: <20250507184737.154747-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, 2025-05-07 at 16:02 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 28 Apr 2025, Srinivas Pandruvada wrote:
->=20
-> > Currently, users need detailed hardware information to understand
-> > the
-> > scope of controls within each uncore domain. Uncore frequency
-> > controls
-> > manage subsystems such as core, cache, memory, and I/O. The UFS
-> > TPMI
-> > provides this information, which can be used to present the scope
-> > more
-> > clearly.
-> >=20
-> > Each uncore domain consists of one or more agent types, with each
-> > agent
-> > type controlling one or more uncore hardware subsystems. For
-> > example, a
-> > single agent might control both the core and cache.
-> >=20
-> > Introduce a new attribute called "agent_types." This attribute
-> > displays
-> > a list of agents, separated by space character.
-> >=20
-> > The string representations for agent types are as follows:
-> > 	For core agent: core
-> > 	For cache agent: cache
-> > 	For memory agent: memory
-> > 	For I/O agent: io
-> >=20
-> > These agent types are read during probe time for each cluster and
-> > stored
-> > as part of the struct uncore_data.
-> >=20
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > ---
-> > v2:
-> > No change
-> >=20
-> > =C2=A0.../uncore-frequency-common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 24
-> > ++++++++++++++++
-> > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++=
-+-
-> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 28
-> > +++++++++++++++++++
-> > =C2=A03 files changed, 68 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency-common.c b/drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-common.c
-> > index 4e2c6a2d7e6e..cfa3039a0e39 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > common.c
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > common.c
-> > @@ -43,6 +43,28 @@ static ssize_t show_package_id(struct kobject
-> > *kobj, struct kobj_attribute *attr
-> > =C2=A0	return sprintf(buf, "%u\n", data->package_id);
-> > =C2=A0}
-> > =C2=A0
-> > +static ssize_t show_agent_types(struct kobject *kobj, struct
-> > kobj_attribute *attr, char *buf)
-> > +{
-> > +	struct uncore_data *data =3D container_of(attr, struct
-> > uncore_data, agent_types_kobj_attr);
-> > +	int length =3D 0;
-> > +
-> > +	if (data->agent_type_mask & AGENT_TYPE_CORE)
-> > +		length +=3D sysfs_emit_at(buf, length, "core ");
-> > +
-> > +	if (data->agent_type_mask & AGENT_TYPE_CACHE)
-> > +		length +=3D sysfs_emit_at(buf, length, "cache ");
-> > +
-> > +	if (data->agent_type_mask & AGENT_TYPE_MEMORY)
-> > +		length +=3D sysfs_emit_at(buf, length, "memory ");
-> > +
-> > +	if (data->agent_type_mask & AGENT_TYPE_IO)
-> > +		length +=3D sysfs_emit_at(buf, length, "io ");
->=20
-> Is this set going to get expanded soon?
+Hi All,
 
-Unlikely, as this list is adding every frequency scaled subsystem.
+This patch series does some small refactoring of the int3472 code to allow
+re-using the sensor GPIO mapping code in the atomisp driver and then the
+final patch in the series moves the atomisp driver over.
 
-But I will try to change to loop. No issue.
+About merging this, maybe the int3472 patches can be merged in time for
+the 6.16 merge window and then the atomisp patch can be merged after
+6.16-rc1 is released, otherwise an immutable pdx86 branch with the first
+5 patches will be necessary.
 
-Thanks,
-Srinivas
+Regards,
+
+Hans
 
 
->  It would feel more future proof to
-> do this mapping using a loop and array. You also chose the quick and
-> dirty=20
-> approach wrt. trailing spaces as getting rid of the extra space is a
-> bit=20
-> tedious when open coding the mapping like that ;-).
->=20
+Hans de Goede (6):
+  platform/x86: int3472: Move common.h to public includes, symbols to
+    INTEL_INT3472
+  platform/x86: int3472: Stop using devm_gpiod_get()
+  platform/x86: int3472: Export int3472_discrete_parse_crs()
+  platform/x86: int3472: Remove unused sensor_config struct member
+  platform/x86: int3472: For mt9m114 sensors map powerdown to
+    powerenable
+  media: atomisp: Switch to int3472 driver sensor GPIO mapping code
+
+ MAINTAINERS                                   |   1 +
+ .../x86/intel/int3472/clk_and_regulator.c     |   9 +-
+ drivers/platform/x86/intel/int3472/common.c   |   9 +-
+ drivers/platform/x86/intel/int3472/discrete.c |  28 +-
+ .../x86/intel/int3472/discrete_quirks.c       |   3 +-
+ drivers/platform/x86/intel/int3472/led.c      |   3 +-
+ drivers/platform/x86/intel/int3472/tps68470.c |   3 +-
+ .../staging/media/atomisp/pci/atomisp_csi2.h  |  17 --
+ .../media/atomisp/pci/atomisp_csi2_bridge.c   | 239 ++----------------
+ .../staging/media/atomisp/pci/atomisp_v4l2.c  |   1 +
+ .../linux/platform_data/x86/int3472.h         |  16 +-
+ 11 files changed, 76 insertions(+), 253 deletions(-)
+ rename drivers/platform/x86/intel/int3472/common.h => include/linux/platform_data/x86/int3472.h (92%)
+
+-- 
+2.49.0
 
