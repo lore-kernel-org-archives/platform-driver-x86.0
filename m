@@ -1,190 +1,184 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8162628A3E4;
-	Wed,  7 May 2025 14:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC828B3FA;
+	Wed,  7 May 2025 14:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627207; cv=none; b=nROzYsvtxVTGYRvrKaPjKC3xeuHgcrNtEkrecUXV5ndw6d2bjvLJZI7/BFckBxPyoGlmSFFSKpghe1T05BNmxrhNzozQPc0nG2fTciIyA3X/5ORREMPutVCUctM87jTGqMHMSdRWBtRQLYXnOjZ0rnO9V3COrXebmi5tHBRKg1A=
+	t=1746627493; cv=none; b=ZQkozgDADvW1kHZNPh62+2CYaiPxI9pQvYf9qs5P679riTCvKFZ9UoPp5NFvPzbhYjnDaHQOi3/UlEm8IgoqBpGr9uWH+FWKantmbxcqyiN7/kSWjKceFnsqE85owjxqehvWN85yCRp2jvCGbUUBjHt0eTv0TitckOYtRq4i8hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627207; c=relaxed/simple;
-	bh=wRvDEyGE8SyLT4eXm8S/vOTb1xNAByubplY2t+C38K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kLbr/8CNpTmpgE7XJGmfeedCJyH6E/En/6Gb7bgFl6PBJMC+UAasFlJ6vBSlWa1LG9dAQ6fN0TD0gcZJbSQBGA1jvvH6PNaygFZfCspTOISmZEJVHJCVNOJc0uPyxogvvZTgOvW1T6YxoHgNmllE9SrtigE6skOVb4/dhne5rRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=adYesO7D; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746627493; c=relaxed/simple;
+	bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AzI8QYOpREze4zLezNIb8ZpNwJp9a97E4jSTMrfYy0QFjOqh5XJO1/LyvVcu/Q9H6zAUgQnx/32WZgVs/zYRP8dPOZnUk7riqhkNCSgTZGDG7IWZBKAlji3UPcokg1Gb76F6RpKgaiaZj4BmKT9dDTaguxSE7lYRO67Xc/Dxxpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7RyfflU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="adYesO7D"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A7A8943A17;
-	Wed,  7 May 2025 14:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746627197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZUkZFmqLpaya2SvixZMFXiK5vMoC/WgZVFpr9qlTBnY=;
-	b=adYesO7D1P7ynosW29lwbsjTgJFaCmVyHEon+flnFOa0BvpYbgiRnF+Xmpud0uAtagWCKR
-	3oskQarIGt0LOBcEzJnasoloDFldQLXTPGfiIhzFPFxQ44Bv9OhNB8OfgtRyxM7+9P43cR
-	EkU5M3wIV4eMfygkH8Z49lCMg02BGC3HtUgDaN8q7xI8pIpFMVELZovDj9NLGU/agK2QHw
-	g3CUt2Har990IGmx7V543phmv8Wv4XvzKKsAS8THOhfgcNBUADs19379Lxd8e7/I43vGMD
-	r3WqKePwg6IikvuHOAtVe8FiAWFIlf69nPFcMS8m4pDVEx1m0DuHF1UEztkH0g==
-Date: Wed, 7 May 2025 16:13:11 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250507161311.6e434f2f@booty>
-In-Reply-To: <430d497d-45a1-436d-91fd-635854f80c9f@nxp.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
-	<553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
-	<20250430112944.1b39caab@booty>
-	<f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
-	<20250506224720.5cbcf3e1@booty>
-	<a1abf31a-7a4a-4f8d-bf48-6b826aa01197@nxp.com>
-	<20250507091244.32865a71@booty>
-	<430d497d-45a1-436d-91fd-635854f80c9f@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7RyfflU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746627492; x=1778163492;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
+  b=D7RyfflU4b4SxdXTd+d+sHQ8aIRrqz0U7hr1peLWGzydnfSrGjeWDS10
+   l+0k2iHLEbc6lIX4FU/aV2OaQyQjWVvYTTwvZl0xho9DP8NlGdW5tWGwi
+   +HmREzC3f3XezsY2oWJfa0+MoeHFyHbLRoEWCvJ44FFzZrUclorDpCyyi
+   bZA/TTO8qvc3R0md89WuxYRWMx/VkuHLbMnJO/ixNRt37pri7iWPTBFna
+   JUZBgXmdFtRNcyYqgUiNT5oRpyAeRE4XI/rVo9j1ramatOhVLw95ZQtBG
+   GOiWFoU+B7XmOZD/K1lm0ec1n1bBIjzcnXzjrlf2X7mRjW9hsH3YAw2tk
+   g==;
+X-CSE-ConnectionGUID: xz49VLD3SA++xV2nI5v2/Q==
+X-CSE-MsgGUID: veBGodXST3O50P8k1r37uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48263815"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48263815"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
+X-CSE-ConnectionGUID: ZxOHtIKiQYS+qT5Z5hQaTg==
+X-CSE-MsgGUID: RLjhfDswR9m5aDVQ8JS4xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136492492"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.226])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
+Message-ID: <06d57c763f54082c01ab7f1ced896910b0e8a680.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/5] platform/x86/intel-uncore-freq: Add attributes
+ to show agent types
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Wed, 07 May 2025 07:17:56 -0700
+In-Reply-To: <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
+References: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com>
+	 <20250428170316.231353-2-srinivas.pandruvada@linux.intel.com>
+	 <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehvihgtthhorhdrlhhiuhesnhigphdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
- hepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hello Liu,
+On Wed, 2025-05-07 at 16:02 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 28 Apr 2025, Srinivas Pandruvada wrote:
+>=20
+> > Currently, users need detailed hardware information to understand
+> > the
+> > scope of controls within each uncore domain. Uncore frequency
+> > controls
+> > manage subsystems such as core, cache, memory, and I/O. The UFS
+> > TPMI
+> > provides this information, which can be used to present the scope
+> > more
+> > clearly.
+> >=20
+> > Each uncore domain consists of one or more agent types, with each
+> > agent
+> > type controlling one or more uncore hardware subsystems. For
+> > example, a
+> > single agent might control both the core and cache.
+> >=20
+> > Introduce a new attribute called "agent_types." This attribute
+> > displays
+> > a list of agents, separated by space character.
+> >=20
+> > The string representations for agent types are as follows:
+> > 	For core agent: core
+> > 	For cache agent: cache
+> > 	For memory agent: memory
+> > 	For I/O agent: io
+> >=20
+> > These agent types are read during probe time for each cluster and
+> > stored
+> > as part of the struct uncore_data.
+> >=20
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> > v2:
+> > No change
+> >=20
+> > =C2=A0.../uncore-frequency-common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 24
+> > ++++++++++++++++
+> > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++=
++-
+> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 28
+> > +++++++++++++++++++
+> > =C2=A03 files changed, 68 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-common.c b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-common.c
+> > index 4e2c6a2d7e6e..cfa3039a0e39 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > @@ -43,6 +43,28 @@ static ssize_t show_package_id(struct kobject
+> > *kobj, struct kobj_attribute *attr
+> > =C2=A0	return sprintf(buf, "%u\n", data->package_id);
+> > =C2=A0}
+> > =C2=A0
+> > +static ssize_t show_agent_types(struct kobject *kobj, struct
+> > kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct uncore_data *data =3D container_of(attr, struct
+> > uncore_data, agent_types_kobj_attr);
+> > +	int length =3D 0;
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_CORE)
+> > +		length +=3D sysfs_emit_at(buf, length, "core ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_CACHE)
+> > +		length +=3D sysfs_emit_at(buf, length, "cache ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_MEMORY)
+> > +		length +=3D sysfs_emit_at(buf, length, "memory ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_IO)
+> > +		length +=3D sysfs_emit_at(buf, length, "io ");
+>=20
+> Is this set going to get expanded soon?
 
-On Wed, 7 May 2025 18:16:28 +0800
-Liu Ying <victor.liu@nxp.com> wrote:
+Unlikely, as this list is adding every frequency scaled subsystem.
 
-[...]
+But I will try to change to loop. No issue.
 
-> >>>> After looking into this patch and patch 31(though I've already provided my A-b)
-> >>>> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
-> >>>> should have the same life time with the embedded DRM bridges, because for
-> >>>> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
-> >>>> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
-> >>>> the life time for the embedded channel/bridge structures only, but not for the
-> >>>> main structures.  What do you think ?    
-> >>>
-> >>> I see you concern, but I'm sure the change I'm introducing is not
-> >>> creating the problem you are concerned about.
-> >>>
-> >>> The key aspect is that my patch is merely changing the lifetime of the
-> >>> _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
-> >>> the bridge is removed from its encoder chain and it is completely not
-> >>> reachable, both before and after my patch. With my patch it is not
-> >>> freed immediately, but it's just a piece of "wasted" memory that is
-> >>> still allocated until elsewhere in the kernel there are pointers to it,
-> >>> to avoid use-after-free.
-> >>>
-> >>> With this explanation, do you think my patch is correct (after fixing
-> >>> the bug we already discussed of course)?    
-> >>
-> >> I tend to say your patch is not correct because we'll eventually make sure
-> >> that removing a bridge module is safe when doing atomic commit,  
-> > 
-> > I think your sentence can be rephrased as "your patch is correct with
-> > the current code base where bridges are not (yet) removable, but there
-> > will be a problem when they start to actually be removable".
-> > 
-> > Is my understanding correct? If it is, I agree on that sentence.  
-> 
-> Nope, I meant your patch should align the life times of the main structures
-> and the DRM bridges, for the sake of the kinda long term goal - remove bridge
-> driver module safely when doing atomic commit.
+Thanks,
+Srinivas
 
-Again, I don't think there is any bug introduced by this patch (once
-the NULL ptr deref bug we already discussed is fixed). No bridge can be
-removed as of now, with or without this patch.
 
-You concern that this patch would make things more complex in the
-future, when bridges will actually become removable and they could be
-during atomic updates. But about this...
+>  It would feel more future proof to
+> do this mapping using a loop and array. You also chose the quick and
+> dirty=20
+> approach wrt. trailing spaces as getting rid of the extra space is a
+> bit=20
+> tedious when open coding the mapping like that ;-).
+>=20
 
-> > The work to have removable bridges is massive and non-trivial, so it
-> > will need to be tackled in steps. The grand plan [0] is:
-> > 
-> >  1. add refcounting to DRM bridges (struct drm_bridge)
-> >  2. handle gracefully atomic updates during bridge removal
-> >  3. avoid DSI host drivers to have dangling pointers to DSI devices 
-> >  4. finish the hotplug bridge work, removing the "always-disconnected"
-> >     connector, moving code to the core and potentially removing the
-> >     hotplug-bridge itself (this needs to be clarified as points 1-3 are
-> >     developed)  
-> 
-> I'm busy with internal things these days and cannot look into the grand
-> plan and steps closely, sorry about that.
-
-...I'll wait until you have time to look into that more closely. There
-is just no way to understand this whole topic without some dedicated
-attention, which takes time unavoidably.
-
-In the meanwhile I am going to send v3 soon with the known bug fixed,
-so the best version is available to continue this discussion.
-
-> > I am at step 1 right now. Removal during atomic updates is step 2,
-> > ideas about how to implement that are already being discussed [1],
-> > there's a practical plan proposed by Maxime with the goal of reaching
-> > removable bridges without breaking things along the path.
-> > 
-> > [0] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/
-> > [1] https://lore.kernel.org/all/20250106-vigorous-talented-viper-fa49d9@houat/
-> >   
-> >> which means
-> >> the main structures should have the same life time with the DRM bridges.  
-> > 
-> > The word "lifetime" mean two things for bridges:
-> > 
-> >  * the time span during which memory is allocated for a struct
-> >    drm_bridge (along with the embedding struct)  
-> 
-> Note that with your patch set the imx8*-ldb drivers and this bridge driver
-> won't allocate the DRM bridge along with the embedding struct.
-
-By "embedding struct" I mean the struct imx8qxp_pc_channel that embeds
-the struct drm_bridge. Sorry, I realize my wording was ambiguous.
-
-> This makes
-> me worry, because maybe these drivers are the only "special" ones in this
-> patch set and I don't want them to be "special" after your patch set is
-> applied.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
