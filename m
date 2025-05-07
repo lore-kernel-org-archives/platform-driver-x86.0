@@ -1,115 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E1C28982A;
-	Wed,  7 May 2025 13:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8162628A3E4;
+	Wed,  7 May 2025 14:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623358; cv=none; b=lpNgvFB8UU5QlW6qc62KI8QRvNZrNCzAQY+v0vb4kg9ii6YRa6yhSlxuq5PRnVJKmX8mP1hD/19Umo0+8IqgEiSte5NrJ8MhqkAkG7Qy73Xx/yRCTykhmKAlnNObup/wT/aP2TNmDyezegZQNm5TNuIdRQRwZEMWRxgBkj+RFoM=
+	t=1746627207; cv=none; b=nROzYsvtxVTGYRvrKaPjKC3xeuHgcrNtEkrecUXV5ndw6d2bjvLJZI7/BFckBxPyoGlmSFFSKpghe1T05BNmxrhNzozQPc0nG2fTciIyA3X/5ORREMPutVCUctM87jTGqMHMSdRWBtRQLYXnOjZ0rnO9V3COrXebmi5tHBRKg1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623358; c=relaxed/simple;
-	bh=kMgdzLabAxL6YnP/fjeNcPYjDESyaG+EhzaI9fwEYGU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k7323D7sQVG8LEKd743fF2xtlp3h2L3wKSv34ntYioE79rTh3P8CvDWIAhqkN5ESRNdEuBtFDOgQ2TBqiBtlkfsyUiJ6X2BjHIHDbBqTrbctGVNYuGrqdilNX4XUnNa1RD3CCxL/Xc0t/iERinttXMYuQxodpmwd7Q5jUKLpic8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9ucu/DO; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746627207; c=relaxed/simple;
+	bh=wRvDEyGE8SyLT4eXm8S/vOTb1xNAByubplY2t+C38K8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kLbr/8CNpTmpgE7XJGmfeedCJyH6E/En/6Gb7bgFl6PBJMC+UAasFlJ6vBSlWa1LG9dAQ6fN0TD0gcZJbSQBGA1jvvH6PNaygFZfCspTOISmZEJVHJCVNOJc0uPyxogvvZTgOvW1T6YxoHgNmllE9SrtigE6skOVb4/dhne5rRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=adYesO7D; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9ucu/DO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746623356; x=1778159356;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=kMgdzLabAxL6YnP/fjeNcPYjDESyaG+EhzaI9fwEYGU=;
-  b=n9ucu/DO6/ix/9hOBLJ+e4CO/KS9Ioqi9yTxPMOrOOuL4PXc76EXOXNr
-   vsNDcAcGGgYBi5MA4EqoyzTHiREZ9+QYfAUhNf1V6I6kp8Xedxd/bv0LU
-   +DoQjBlA3SFK1SvsW8h9SR4UrvbYp6puc2MicZf3ogfYmBdYwvS8CYL4j
-   qn8L7oyO1peTdg7BWERK8T0+X8ot9ezRAsXNfNf1WTEzl1ctvKuDWhj4t
-   DuZBnKHkOBjbKs2hxLE37SPVfvwaWQq6gKTipwwkBiv53V6hJreExYSIH
-   SDwy7+M0rLzZvDfEmtTh+sl5kxAiQlWo9U9rKFoGOEHmwkYmGe1lM17Ul
-   w==;
-X-CSE-ConnectionGUID: tXsct6ByTXiKsWW4S2otRg==
-X-CSE-MsgGUID: uv6y4czrQpG26oAZ2O+Lmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="47451592"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="47451592"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:09:15 -0700
-X-CSE-ConnectionGUID: cSqpTXqLQoiRwUgKlM9RlA==
-X-CSE-MsgGUID: TllN34sVS6+442M8ka57Vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="140000252"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:09:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 May 2025 16:09:09 +0300 (EEST)
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] Documentation: admin-guide: pm: Add documentation
- for die_id
-In-Reply-To: <20250428170316.231353-6-srinivas.pandruvada@linux.intel.com>
-Message-ID: <5b93214c-458c-c062-7a7b-45750f368c35@linux.intel.com>
-References: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com> <20250428170316.231353-6-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="adYesO7D"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A7A8943A17;
+	Wed,  7 May 2025 14:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746627197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUkZFmqLpaya2SvixZMFXiK5vMoC/WgZVFpr9qlTBnY=;
+	b=adYesO7D1P7ynosW29lwbsjTgJFaCmVyHEon+flnFOa0BvpYbgiRnF+Xmpud0uAtagWCKR
+	3oskQarIGt0LOBcEzJnasoloDFldQLXTPGfiIhzFPFxQ44Bv9OhNB8OfgtRyxM7+9P43cR
+	EkU5M3wIV4eMfygkH8Z49lCMg02BGC3HtUgDaN8q7xI8pIpFMVELZovDj9NLGU/agK2QHw
+	g3CUt2Har990IGmx7V543phmv8Wv4XvzKKsAS8THOhfgcNBUADs19379Lxd8e7/I43vGMD
+	r3WqKePwg6IikvuHOAtVe8FiAWFIlf69nPFcMS8m4pDVEx1m0DuHF1UEztkH0g==
+Date: Wed, 7 May 2025 16:13:11 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250507161311.6e434f2f@booty>
+In-Reply-To: <430d497d-45a1-436d-91fd-635854f80c9f@nxp.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
+	<553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
+	<20250430112944.1b39caab@booty>
+	<f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+	<20250506224720.5cbcf3e1@booty>
+	<a1abf31a-7a4a-4f8d-bf48-6b826aa01197@nxp.com>
+	<20250507091244.32865a71@booty>
+	<430d497d-45a1-436d-91fd-635854f80c9f@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1427501539-1746623171=:949"
-Content-ID: <e2fe5a41-0d7d-9ca1-9ee8-e62ba848a524@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehvihgtthhorhdrlhhiuhesnhigphdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
+ hepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello Liu,
 
---8323328-1427501539-1746623171=:949
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <8e1b33c4-a768-500f-4c74-e5f8c1eff9a4@linux.intel.com>
+On Wed, 7 May 2025 18:16:28 +0800
+Liu Ying <victor.liu@nxp.com> wrote:
 
-On Mon, 28 Apr 2025, Srinivas Pandruvada wrote:
+[...]
 
-> Add documentation to describe die_id attribute.
->=20
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2:
-> Change "attributes" to "attribute"
->=20
->  .../admin-guide/pm/intel_uncore_frequency_scaling.rst        | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.=
-rst b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> index 84608dad84bd..d7ffda6a8095 100644
-> --- a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> +++ b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> @@ -91,6 +91,11 @@ Attributes in each directory:
->  ``domain_id``
->  =09This attribute is used to get the power domain id of this instance.
-> =20
-> +``die_id``
-> +=09This attribute is used to get the Linux die id of this instance.
-> +=09This attribute is only present for domains with core agents and
-> +        when the CPUID leaf 0x1f presents die ID.
-> +
->  ``fabric_cluster_id``
->  =09This attribute is used to get the fabric cluster id of this instance.
-> =20
->=20
+> >>>> After looking into this patch and patch 31(though I've already provided my A-b)
+> >>>> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
+> >>>> should have the same life time with the embedded DRM bridges, because for
+> >>>> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
+> >>>> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
+> >>>> the life time for the embedded channel/bridge structures only, but not for the
+> >>>> main structures.  What do you think ?    
+> >>>
+> >>> I see you concern, but I'm sure the change I'm introducing is not
+> >>> creating the problem you are concerned about.
+> >>>
+> >>> The key aspect is that my patch is merely changing the lifetime of the
+> >>> _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
+> >>> the bridge is removed from its encoder chain and it is completely not
+> >>> reachable, both before and after my patch. With my patch it is not
+> >>> freed immediately, but it's just a piece of "wasted" memory that is
+> >>> still allocated until elsewhere in the kernel there are pointers to it,
+> >>> to avoid use-after-free.
+> >>>
+> >>> With this explanation, do you think my patch is correct (after fixing
+> >>> the bug we already discussed of course)?    
+> >>
+> >> I tend to say your patch is not correct because we'll eventually make sure
+> >> that removing a bridge module is safe when doing atomic commit,  
+> > 
+> > I think your sentence can be rephrased as "your patch is correct with
+> > the current code base where bridges are not (yet) removable, but there
+> > will be a problem when they start to actually be removable".
+> > 
+> > Is my understanding correct? If it is, I agree on that sentence.  
+> 
+> Nope, I meant your patch should align the life times of the main structures
+> and the DRM bridges, for the sake of the kinda long term goal - remove bridge
+> driver module safely when doing atomic commit.
 
-For patches #2-#5,
+Again, I don't think there is any bug introduced by this patch (once
+the NULL ptr deref bug we already discussed is fixed). No bridge can be
+removed as of now, with or without this patch.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+You concern that this patch would make things more complex in the
+future, when bridges will actually become removable and they could be
+during atomic updates. But about this...
 
-It would have been nice to use cleanup.h in #3 but there's no good=20
-alternative for no_free_ptr() that doesn't have __must_check (IIRC,=20
-somebody proposed a solution to this relatively recently but I don't see=20
-that in linux/cleanup.h currently so lets forget that for now).
+> > The work to have removable bridges is massive and non-trivial, so it
+> > will need to be tackled in steps. The grand plan [0] is:
+> > 
+> >  1. add refcounting to DRM bridges (struct drm_bridge)
+> >  2. handle gracefully atomic updates during bridge removal
+> >  3. avoid DSI host drivers to have dangling pointers to DSI devices 
+> >  4. finish the hotplug bridge work, removing the "always-disconnected"
+> >     connector, moving code to the core and potentially removing the
+> >     hotplug-bridge itself (this needs to be clarified as points 1-3 are
+> >     developed)  
+> 
+> I'm busy with internal things these days and cannot look into the grand
+> plan and steps closely, sorry about that.
 
---=20
- i.
---8323328-1427501539-1746623171=:949--
+...I'll wait until you have time to look into that more closely. There
+is just no way to understand this whole topic without some dedicated
+attention, which takes time unavoidably.
+
+In the meanwhile I am going to send v3 soon with the known bug fixed,
+so the best version is available to continue this discussion.
+
+> > I am at step 1 right now. Removal during atomic updates is step 2,
+> > ideas about how to implement that are already being discussed [1],
+> > there's a practical plan proposed by Maxime with the goal of reaching
+> > removable bridges without breaking things along the path.
+> > 
+> > [0] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/
+> > [1] https://lore.kernel.org/all/20250106-vigorous-talented-viper-fa49d9@houat/
+> >   
+> >> which means
+> >> the main structures should have the same life time with the DRM bridges.  
+> > 
+> > The word "lifetime" mean two things for bridges:
+> > 
+> >  * the time span during which memory is allocated for a struct
+> >    drm_bridge (along with the embedding struct)  
+> 
+> Note that with your patch set the imx8*-ldb drivers and this bridge driver
+> won't allocate the DRM bridge along with the embedding struct.
+
+By "embedding struct" I mean the struct imx8qxp_pc_channel that embeds
+the struct drm_bridge. Sorry, I realize my wording was ambiguous.
+
+> This makes
+> me worry, because maybe these drivers are the only "special" ones in this
+> patch set and I don't want them to be "special" after your patch set is
+> applied.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
