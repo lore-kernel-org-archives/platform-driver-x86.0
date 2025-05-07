@@ -1,102 +1,117 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4508433AC
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 07:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98772221DA5
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 07:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602868; cv=none; b=JPNuXW9qzqTAELDBW9LjD/ljhNrjCgJTdWAeG25Z7crbU5K1FPkMn10unXpkyBEFr+xAm+qdAJonfP4Oy2qWdABH8SycwaUF312280c8FcsRNu2IrLp6U7HjR//IHoarjyuSPRGCvsUCs3ET7ETGY2EvnHaUNfaoJcVHrnvLhM8=
+	t=1746604344; cv=none; b=ouIFKS8+OpAh4sJTEiXvTuHFlvqWLuEYrtwiZQ3ydvmzzXTfq5DLapoC/IJQVYZeRTIEFKmOzPzPqODIdHKHVVWst+bDmGduPR2Dz9jQCdaf634iyBkMIKXG8wEhPOTY/8PQ9ciwQ38/lmh3nvq8uRIP8l1VexrWPqEdxvGjYQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602868; c=relaxed/simple;
-	bh=/aX5bq5YfO+uIdJxRQLwfj4EO8JDWB5QLAhlLEbPTYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=os2AvZBrH9HjNw21eh+2KSl52ezHJc8NaUazQG1hITDBCKwP8BsdTDH8ip124yOeYL7CyPYjekWDe1cyPiR4UrzYyQPvSqLHpTbhXIR6p+X1lDEjH8VMZKYF6Od3d1x6CXK4+UxkiguCx8blrzi7SFWylx3iGEPOyOjNdFZWhU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SIv3DKE1; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746604344; c=relaxed/simple;
+	bh=Si1QvVZW2cyZhFItNCPhnZgDqOaPxdjxwEHoeO/uyhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RH7xGymCkJoNdlR1QXoP6Od7LvE3Fie/YpZN/px+45TSp1nOkUrr3UZdiZtqBGRm+ayV50GjfUybNWS7iHegD/EKhVSN+CiZHM1jwTQFAfGzbOtd30JuJTZDJK/2ilfYmF6ukpXCxgZQ1Zo0ZWSSXacprmxAqDiGZIsK8fuvNqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SqLtbziP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SIv3DKE1"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441ab63a415so65386435e9.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2025 00:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746602864; x=1747207664; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bOMLVPLMT/Ti/Aagdn1vs0WyXQKd27bYNVBAQVXwrMY=;
-        b=SIv3DKE1b7MPrOq2z+hfp6sHYxhO6m3ta6BwX9eIvWXpb3Ht4zUh3qZF27VVC2S0up
-         XFlW/oReKsoMmHUcgCCpAKcMiDPunKQhZTjQAfG1NRJacAywE3VR+WOAG2Fn4RYRx340
-         HIhgxjSDVre4qX+7AvxsxhpSK0+EKXz3RumB2grMZ7GDjmLdb6Cn3DoG2S9P8dcQGaek
-         LLqOuLgYmRnrnd3PiRsQUaTNuOXfVv/BE26oWvyUWzqa0g7cTkpM1jEeg4CSdpwe+5AV
-         KYJmXwXJxA6D18anPZWDouzsEb/ZCAjgF6iCcackWx3gpCCnchi1bHeuPng6+Ns7cFSc
-         399g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqLtbziP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746604341;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
+	b=SqLtbziPMsHpbi+WccSRywb7PaxvQ2fwHGBYBAJAxRG7QIx6rGksgiarDREw8CSMQYfzx1
+	048LB2gASVXOTJTu6OtfBgy5YaPdYPFwQsdJGyBA0rNTz63TgFBxliU7clG9DYhS3P4chM
+	WtMJvGMcr1HD8JZkr7ObARLNZ3ea14A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-3-WSJa5m5nO82zes01H4Q6Ww-1; Wed, 07 May 2025 03:52:20 -0400
+X-MC-Unique: WSJa5m5nO82zes01H4Q6Ww-1
+X-Mimecast-MFC-AGG-ID: WSJa5m5nO82zes01H4Q6Ww_1746604339
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-440667e7f92so39111845e9.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2025 00:52:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746602864; x=1747207664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bOMLVPLMT/Ti/Aagdn1vs0WyXQKd27bYNVBAQVXwrMY=;
-        b=BCr/RMTvxFkRfNypWdtvsOo8Drwkp2CKoTkd+Sg0RTLwuWw4mmdZ3AcmrsKuLPrkJo
-         a9rZ51BvuNiuGdG1K4ED75M6Q8jaJw1RXOXVdZZ3acehsEhZy0QzRXd18uAK5JzUePtn
-         llD4LgODDjfL5Fu5ZwuaYmXv0A0E8o/3X9bjsuPDKgqlWHF97Zq8YzP+eHhGDy1H2Zsh
-         ZwGF1YNRWNUrK4EKcsisOJL1ldVj3Vg6Wp0lmAQVk5U9fWS+ZRvvB2tIOivnOj54vtQC
-         c0rhgJLE8GGY/w9CKIVfvYZ4BB1GDW2Qd44jBdA6NFW14iJawxkvembfhZwwjKKRG2yG
-         jyvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqfHaLPSlroVlL3te4YayZ8KB7TCEkMydB3G9UWUkpbvCdoltC9FLAA982iMa6e21bAhOZbRxLkGhxffuQ8ZeNfQDN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKCPIlgk2RwLyMczCpNSEQeHQNzUqhW0kksAgGnVWXUFCNw3QQ
-	crYbitQEoESZWWC0xZJ0BdQ/gY/2siQbAtqasiGr2sFmK0E15bcfxQrLNUWdApIxuUP3GdZNT20
-	x
-X-Gm-Gg: ASbGncvsa2dbPV2/HjmT1kp6nX81q0Iz8YOpAmNFEwJ4hd5TtFHs51geae7p97E5d53
-	dGv3j9jH9ztdoE8YXk4acr62uyeGD+gbSbqHXQUpSm9F1nFjq97SQkPjMyJ05dK6tZ9plpIvwZU
-	Zws9xYUOAv+ymA/lEefCE0gacEKKkoHdQEt7shn+XEoJbesWB9cGPA5i2VK1Bbsyycqk7nMiyQe
-	4kptOaJr9L7k637KoaPFSGmuP4gKr406aJ96P9YAzllTAuaNRy/e4xfu75rh7cmdHFdY0iTTZWy
-	8yrWKNb4/h3fRfpoWmN3Gi3h8RE+JLkhdqUxyyJGCwhgYfU1Ro8FXehF
-X-Google-Smtp-Source: AGHT+IFhuZiy2LXE1Ti7k4HVpHa/nRycztYO8afegHsWo37CiiWmYZ8KRyYov/WLrmkt/fx8CBDX+w==
-X-Received: by 2002:a05:6000:4312:b0:3a0:7a5d:96f6 with SMTP id ffacd0b85a97d-3a0b4a14a6dmr1880366f8f.38.1746602864043;
-        Wed, 07 May 2025 00:27:44 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099b0fe92sm16213193f8f.68.2025.05.07.00.27.43
+        d=1e100.net; s=20230601; t=1746604339; x=1747209139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
+        b=SIGGvcNmlkbFzEE1lSEjdqhZNFIxFzzk2ktM2KqnWRygR1g0QSTerSobS2tOXcS9o7
+         oNwqrhgTVjYfYwaX39P7YsWjXIXDXF0Fo8j5QBu3JzKNmkcATQPfpUlc9tfT2g2RqK5w
+         afKK8dWJA+iK0i4H59YhCZi86GDdnxvOEWqf2sZIxBHShaw0XIoqVSuBPRpM3ULJ+f/f
+         MPC1qxFDMWB6ilU/ccCpscGRy7FrwM4nVcMzP7sEe8SpvW4IpALH39JwKLAFYs2PM7Cp
+         jBb5B5oyL0bKKnXDUZqh1U2lz2hbkiAzoiTmUooXWVs+L1f/8vIi6EWgl+iACTMY5uth
+         mywQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWHmyObWFA40rwmeSVeENa8D0o34EhLpve+D/Qg5OxWDP2FiLk9IA67/mxiyb7GyJwTacARM1OLvC4LIwcc8GhZsAD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn4bxdJCo454FlT5DULjWvbkGtzXgJA07uXMwS/rcaA8/SueCh
+	rKSvQsdp5cujV3fhVqGjoSedp52cwQ5jxCM57g+xogoKsnX1sDUf5309Ucqu8wBtiDUrhwzscbA
+	M2OBQ4ePOskzhhBRBQnFWttJ3sUuII+00dU4X5kS/K+y8MQcEpvTXNubcGWTkWtPJNEQpuYM=
+X-Gm-Gg: ASbGncs1xDm8cqKAUrArdu2k+HOxNgqvZzOoLhZur2g+pq7OO6Nk6NkE40y5zi4YDxa
+	TCwVy3+FwMzQQYwEn0eFfFzBifpETfnhkQ1fQN+lxuVc2tamGqtdVrK7IFgb8YRFJCpm8+qnWhy
+	92ndSeWHQPqm9AND7Nw1WM54EN7axanGD914mlaHLnfafpjE7ztwzqBHjGs+F5SAjVGo24V8YN6
+	9cFEcAbgyrZfRNMaX7p6OW6ZGOoc6TIVH4a+FJVobBHhDW5mzeutGaUA58KUQNBhu+up/XBA7Lp
+	zLnXdFKJ2Sf9XUVPJ73gL/KMFlQMGTp32miFOw0RAbB17amlab2vV/PGwg==
+X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543285e9.30.1746604339056;
+        Wed, 07 May 2025 00:52:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6bbFfoJUlE32ZpjhY8SNYfXA9NoideZRSClq3CU4H3TaCkDCmJ5dagaVohFcNt3ifY5S59g==
+X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543005e9.30.1746604338689;
+        Wed, 07 May 2025 00:52:18 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a802csm21562885e9.39.2025.05.07.00.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:27:43 -0700 (PDT)
-Date: Wed, 7 May 2025 10:27:40 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com,
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        Wed, 07 May 2025 00:52:18 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd: pmf: Use device managed allocations
-Message-ID: <aBsLbAQxgQD0_05h@stanley.mountain>
-References: <20250507020838.2962896-1-superm1@kernel.org>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: rectify file entry in DASHARO ACPI PLATFORM DRIVER
+Date: Wed,  7 May 2025 09:52:05 +0200
+Message-ID: <20250507075214.36729-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507020838.2962896-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 06, 2025 at 09:07:23PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> If setting up smart PC fails for any reason then this can lead to
-> a double free when unloading amd-pmf.  This is because dev->buf was
-> freed but never set to NULL and is again freed in amd_pmf_remove().
-> 
-> To avoid subtle allocation bugs in failures leading to a double free
-> change all allocations into device managed allocations.
-> 
-> Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v1->v2:
->  * Correct commit message with correct offending function root cause
->  * Switch to device managed allocations.
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-Yeah, this the best solution.  But we still could end up calling
-amd_pmf_tee_deinit() twice if amd_pmf_register_input_device() fails
-so there is still a bug.
+Commit 2dd40523b7e2 ("platform/x86: Introduce dasharo-acpi platform
+driver") adds the platform driver drivers/platform/x86/dasharo-acpi.c and
+a new file entry referring to the non-existent file
+drivers/platform/x86/dasharo_acpi.c in section DASHARO ACPI PLATFORM DRIVER
+rather than referring to the file added with this commit.
 
-regards,
-dan carpenter
+Adjust the file reference to the intended file.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 34a55e3ff863..82e7b053ea76 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6576,7 +6576,7 @@ DASHARO ACPI PLATFORM DRIVER
+ M:	Michał Kopeć <michal.kopec@3mdeb.com>
+ S:	Maintained
+ W:	https://docs.dasharo.com/
+-F:	drivers/platform/x86/dasharo_acpi.c
++F:	drivers/platform/x86/dasharo-acpi.c
+ 
+ DATA ACCESS MONITOR
+ M:	SeongJae Park <sj@kernel.org>
+-- 
+2.49.0
 
