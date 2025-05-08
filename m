@@ -1,94 +1,127 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E01F27A111;
-	Thu,  8 May 2025 14:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D71813635C;
+	Thu,  8 May 2025 15:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716152; cv=none; b=nKPwbl0Vf6AUyWkKNJZtpwK3SRxCsV6Zw9Dt3xVaYI7mQWHtT3vU5pkAHZjQKpmdL4NtheJDzo5FOHWu9MiRBbDGD3kF/DahEmA+IzfUg1yX3s/mVPlXISDuC/Ko0KNs0kF9gs0MmB5llIOJDHiszkN9nvOBojvkcod5qM7J6FI=
+	t=1746716534; cv=none; b=KR2xO79Dg+rfK8/XoOHs2FO0pzJhIMnNu7ojS0qXCEuXkj1D0HVa1f6PRv3vjTjFEMsFCfKrRUl3K41t7Ger8N4GPdyCGKKTn5GRSJCRXOmw8ml1MewpRl1Ch6aDps0WfXbyPauZE7K1HhuSt4dnjfL5boFYaMGUvNDdCo5IuBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716152; c=relaxed/simple;
-	bh=Wi41NfxUGhbTbv1pQ0AGhckkbn6srjFISoz8v8J+p+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SgYiJF0S2sMqMehoflFv3ibvu9C3rEid1/WNnOlNEJQAWThmaB89P3kryTP5yYiAV9eil325lf1BvqZ/7ryTx9hhKbmGEurMFC9UDWc0T0fNrrm9JqBp7ISXNzp9VNcDY6Ee46k/av0NmiNzn1NP/THEzx9vzpMMIANclQfd2Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5w3sKN2; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746716534; c=relaxed/simple;
+	bh=SjMorZSEEhUVxlivOPjaGzogzcdVpoFwgxHS3tWkzi0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VUVHWzgkijxgNnRrGb8ZNeVjieEZ2nf8RuQO6ltxevI66QOyMzvjL625n0tsCbqQBktySZ+dmR6d/aPQht2JrQmGzM1/EW9CtIe6TsjTZTuxZh5zYasA5TWyxZztFnXnpL2zOHu01pGf8zPzRScmM+qVJ1F9m6dmrEx0fJAyIeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=NBy+0edq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OqWQ7ATu; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5w3sKN2"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso191799266b.0;
-        Thu, 08 May 2025 07:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746716149; x=1747320949; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wi41NfxUGhbTbv1pQ0AGhckkbn6srjFISoz8v8J+p+Y=;
-        b=j5w3sKN2ybmhdAX58sx9s+pNRLJsXadx/rph3M5Zuk+vFXr0oBkwhpeknW2ba07EvY
-         8t/VWGtqUvt9NwY9pR8wEZCZ7TkvyVUWzHTOFcF4t7hjYroAsH8d4TjUITC1zg8SpNjp
-         RE+4BvnR6gKOuDP5SXINA2A6kiUhQ0LbdncR/3qaU2JeCdKKrL5aN3fjqg1+SdMDVSWo
-         68OyNUK6X6QaU3TSYIuOMJsXRJIWWUjhnWigBaBwKX3SxjeOcvPIaTgKsx6MTAW2ti1s
-         wJVI7wJJ9rBTv9DyFQrmd5F/WyA1NMcx3F5xGmzbZoRSaUDiMwLESY7ybOErbRRyO8qv
-         zN2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746716149; x=1747320949;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wi41NfxUGhbTbv1pQ0AGhckkbn6srjFISoz8v8J+p+Y=;
-        b=emC8vrlrV++nNn+PlGBRZ7rHF59i38L5yUNo+Bp5lXQuy8nqqnu+xGRSIcsRudLSoj
-         ugKO6YOhmKTtYzsqmER+u+NlRDbuFzAd50v2wSysE688XF1qRJE461BwhqERuzdgaGdg
-         83inm6Io3z3Pn3vynXL18T69jb6UIuXRzoSGvcHZWnrLutmGlG08WztjJUSMJyUFBAEf
-         wGCYp3fMiR6H3QREig3itk344vbn979npchNIgxMbJjfR+0N2WFU0pQh5wX9QX0Amwfe
-         4kIBlZcmoV/pHRbp+OURcmOUDG4kO+3X2kLu4P90IDysrpNfSmTHc+Rp2J9QmG9OLU/3
-         AvvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPomqSCVTpneJKOqL0wgcl0a8L3GB+mfBAnZbPtmPjVQqObpcsSiWMBHzbgEa//l8CeKzS8lthDEDr0w==@vger.kernel.org, AJvYcCXmWaXi+kg+9DA2VlmOcV6z+gdQbwVpJJH5tR4QaZdFzQ9/vN1dXv1mDEHVTIe55lp8k2eyYYIDXUdVzZhegJLj6BhuWA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE1fT18gnsQl8N8cRFXB5Cn0gKKlpop5lCmFxcWZHX3M0GqGoZ
-	Rnbft+LmlFowz0EHykQYUfhylIEVVZlV6gQ9DKlGYSY9O3FBZGHCL/B0LfG1ylXgn9mlrkzmNPP
-	w8oa56RSClMORUR4EG5l3XwB+QsQ1ft1B
-X-Gm-Gg: ASbGncs5xQX+jzgiUsTaveMteNII8mWcpjULaT6MtGARBWDFKhSbmhKh5vUQLCM/IcF
-	qqw1MWBP7nsaIvaPqWne/Ip/lrPLHEIoLyhGCByeh3uY6WrIDURUdmIrDXPNaH0yrysezK1zO1k
-	2H9xltIbGT7rv2DFEPfkxeaquW6CnPVHIX1I8=
-X-Google-Smtp-Source: AGHT+IGiKRW4TiDoK9/lBhRrzeQKcy9vPDCmLn29aM+2GMRxVJdJ+CW9Z051dhndWfzh2L6JSFGlIL4gDWZ3hZmGZI4=
-X-Received: by 2002:a17:907:8d87:b0:ad1:e7f2:b94e with SMTP id
- a640c23a62f3a-ad1e8bcc880mr783564066b.18.1746716138298; Thu, 08 May 2025
- 07:55:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="NBy+0edq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OqWQ7ATu"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5F6B613801E9;
+	Thu,  8 May 2025 11:02:11 -0400 (EDT)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-12.internal (MEProxy); Thu, 08 May 2025 11:02:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1746716531;
+	 x=1746802931; bh=g8AJp5cmHz955S1tjFyzd5FQ3sp+0zBbwr569rPT9yw=; b=
+	NBy+0edq4czxBfkDiIggyfrdf8earIPi9fo6cODr5KAmtTEykF4VOzPhGZLQlOPS
+	c2pBkrpmTue5W08BuE6pz7znLy6OJpUTD+d1vZnKXGHswv1R/UF+TGOxVvm1LKl7
+	lEWWQAbMZHa2P4d4uFM+qO7yQCOv6f/IKWOJ7rw+GqmLJ3Z1HJbjzu0z4kH9y+Im
+	WuhovyU1m0M8+ckD7u15+jt1zYCFS8ne/imXsmBzLfMZac6FOiSmZe7KLHpdgEPu
+	6WtPEuWgDN7kWPYLwMEOtdSnUJIf2AKfLzlhRVPMuQVQj4pPjRIfQ8Tzajp0djgA
+	bg/wqdwAUk9G1HXFfbusRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746716531; x=
+	1746802931; bh=g8AJp5cmHz955S1tjFyzd5FQ3sp+0zBbwr569rPT9yw=; b=O
+	qWQ7ATuIh4/FAgKEFcyJDxviX1gZXjB3xyOX96XAt/FASMFnPOgyEGgFxgueyTZI
+	tGcP/5dEazFORH2W/vnA8FI3COjRHRtM0+VI8Ie+mNWtS7ZK7XlvCnjjQgT8NPU9
+	+yytkcEzmbpRk6EIoZ0iNTJ/gIYhwxEvY0IWzJJHdQqYiJ4IkeEfKBNKmF3laSOW
+	BEZvt+Kft+rUIi/Zq/q1+dnNgWijUv3lxMmhCOi6ZnmU0mb1f2+iURefb8zm7dPT
+	4zmXq9KrBSrb2xEImCVCyZhu6NhDQaYRmdASpmmJWx0c3OaDhx8MXsLEzMw1JKqr
+	NhC8drt+g6ksp9fUXfijw==
+X-ME-Sender: <xms:csccaG_WRHa0Yznc8RinZBkip0aoUkYDtGDGmHcDVo2I2dHJ8RxWxg>
+    <xme:csccaGsjQWynD7axHMAnQvIvpu6lw60S5h5P9JARgyGICGcCPOgG93Zj2ue-J05hi
+    EcTGJPH6_2aFu2x9-k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledttdegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlh
+    gvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeeh
+    tdehtdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhho
+    vhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehikhgvphgrnhhhtgesghhmrghilhdrtghomhdprhgtphhtthho
+    peifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopegrnhgurhhihidrshhhvghvtg
+    hhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhj
+    rghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqd
+    grtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgt
+    phhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhl
+    rghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:csccaMCOkgWp3QLLhXiskazPgE_o1E1NE9YkYTJ3FLp-Xt02QmNrUQ>
+    <xmx:csccaOezimliUHnHX-J3win0h4G3OoNarvBkp8L-lfylM-cj5u2pbw>
+    <xmx:csccaLPn5_RTUVaJ_UM_hRG1I9XhEVDRnoHsFuJuABjsJB3llFLJrg>
+    <xmx:csccaIkV0_Sh-9Rw7hd5wiLR7T5i0puERaCC2jDDH9GbFR-EXS60Qg>
+    <xmx:c8ccaChglLKv_xTSssEMyL_TTHq6N9QCXL7NY8WkVpzRdXKHqFF4fcwF>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id ADC953C006D; Thu,  8 May 2025 11:02:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507184737.154747-1-hdegoede@redhat.com>
-In-Reply-To: <20250507184737.154747-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 8 May 2025 17:55:01 +0300
-X-Gm-Features: ATxdqUFbSQF6mj9SBgrSeC8p9uP8gtobKBLj7O4lMyjvY1f-aFMKCyAoOnzP-K8
-Message-ID: <CAHp75Vf3jUuALHGk3fXEDRnWKh-z0prSgQ6sYhK_dcrxAiyEYw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] platform/x86: int3472: Allow re-using sensor GPIO
- mapping in atomisp
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: T747cf12b99a35bad
+Date: Thu, 08 May 2025 11:01:50 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ikepanhc@gmail.com, "Armin Wolf" <W_Armin@gmx.de>,
+ linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net
+Message-Id: <d423ac66-bb8f-44e4-b995-f88cf2ece70c@app.fastmail.com>
+In-Reply-To: <aBzAWrgEgmnAnum-@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
+ <20250507190456.3004367-2-mpearson-lenovo@squebb.ca>
+ <aBzAWrgEgmnAnum-@smile.fi.intel.com>
+Subject: Re: [PATCH 2/2] platform/x86: export thinkpad_acpi handles
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 7, 2025 at 9:52=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
+On Thu, May 8, 2025, at 10:31 AM, Andy Shevchenko wrote:
+> On Wed, May 07, 2025 at 03:04:35PM -0400, Mark Pearson wrote:
+>> Add API to be able to get the thinkpad_acpi various handles.
+>> 
+>> Will use this to start pulling some of the thinkpad_acpi functionality
+>> into separate modules in the future.
+>
+> ...
+>
+>> +#ifndef _TP_ACPI_H_
+>> +#define _TP_ACPI_H_
+>
+> + include for  acpi_handle typedef.
+> Or it the forward declaration works
+>
+> acpi_handle;
+>
+> but I haven't checked and my gut feelings that it's not correct syntax as
+> compiler doesn't know what the heck this word means.
+>
 
-> This patch series does some small refactoring of the int3472 code to allo=
-w
-> re-using the sensor GPIO mapping code in the atomisp driver and then the
-> final patch in the series moves the atomisp driver over.
-
-I just realised that the AtomISP variant is very likely a predecessor
-of INT3472, and hence a lot of code has to be shared between two. Or
-even having INT3472 being enumerated as a pure platform driver for the
-case of AtomISP.
-
---=20
-With Best Regards,
-Andy Shevchenko
+OK - I'll have a look and figure out what makes sense.
+Thanks for the review
+Mark
