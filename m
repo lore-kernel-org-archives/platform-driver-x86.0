@@ -1,137 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40291E5215;
-	Thu,  8 May 2025 13:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB232236E1;
+	Thu,  8 May 2025 13:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712121; cv=none; b=tYd0XbAon6YYBr3thUFY2aUOL/823sVeVaSTaaOn322Nszs1WQXK6kKgIyt2G1ZtR8LFdC/LUWohdgNXXh4EnwiQ/AMUl8/H2H5wgRNCtOpBzSnbc4Zdy3tObgvqOy8cl1PMtgLLHGuJt7NVF9QtZbNlcm6WPc3Fn891zU+8hIU=
+	t=1746712188; cv=none; b=k2be4nEYOREOcPAXlOSSaS3p7RgDRfUoiQs40i3boxru+sy70dJVPzRwUGJyCy1fYMHTsgfK/r0Kkl0hFUJtS50VFwyumzWrdgKvw9+O0p9lEN1qqe/FckA8Sl1/R7/bFGphYkCXhApLBcE/iRhVAfewzaJqz7UX7ut2Ij4sifs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712121; c=relaxed/simple;
-	bh=gw2zPlLac5sBf5f8EpTbuMbjUdDqEwgXD5tWTAbTEu8=;
+	s=arc-20240116; t=1746712188; c=relaxed/simple;
+	bh=xACFtUu3v8qXhgbi5basp7pkEXN+RSX82+EiPKqtDHI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=j7CaAd/j1l5Vgx5rVmsm4kk1X0kN+vXKhdricofwQp7Dd1wSTBxMpphCu/J8zaythXoC6EA+/cmMcVjnIiNGWaRVlmm8tHhHpi6TL3ISVyKnbXXJidDSi9Ah8oLM8lKpMd6N1bpSfaS7MTz3h9tGzphUPw8BW0YtoY9ghbV0Rv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ol+9KkbW; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=UJb3jOznvkSWnGeB52GRMYPJa2GOKRZL8xt7YuqllS+pZYp8NwWOMnCdGygYBWkGaNLX3bHUysQFoWa2HFtk6OvFOigWVls+xIOX2f7MOq5F5AkT0c1MDAkoRExuU/7fOQ/TGLfFZcymotJ1Ql3Gwbzv4J4Zt56vIxby9G0dkcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FWyZaO9I; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ol+9KkbW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FWyZaO9I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746712119; x=1778248119;
+  t=1746712187; x=1778248187;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=gw2zPlLac5sBf5f8EpTbuMbjUdDqEwgXD5tWTAbTEu8=;
-  b=Ol+9KkbWRnAxp8alqZq/me2iFyXRHyMovvlO+0vaF6ixOBz7S+oLq543
-   Mc8xm/4kL0pYFCubbjOpgRrlJDeoUC+/d2bDKiHvWHKaZ1OiKNftcOJt3
-   XuGdH4u8jimAgYM9EYLOBl9v4kVSWLB1fJE5dM316SpIlKs1oY5J5PB/+
-   u8ISa4zzjF4hVR2vUkVUBUkHsI1jitVNOXJoWM64BA5F4wJCeqFOySJwW
-   COoDpU+9xC9sld3fb3MrafBXZczG9DRIuGnsLenebpvSLtGogM22O5aYE
-   GUT2I3EEWfe0sYlAfwhw1FMBjYShfUDWIltcG5tUaRlpPNm93jk0soFNn
+   references:mime-version;
+  bh=xACFtUu3v8qXhgbi5basp7pkEXN+RSX82+EiPKqtDHI=;
+  b=FWyZaO9I+3TrDWXWeKHBI79aGy0CUx0WaKe8uHA9zqrycw08n8xbvof4
+   8zb2FS0UGIh7TRdFbDOA0tXJiSOKxV5A10Ea98mPCsv79fA+Or0//0dYN
+   LLmslxFhTyqlt0g8Rc/EoJ1XtSbq1bMXFYEyOHqzWzRcmvY7rXY3FtExP
+   gTFJSxgf7LTFO9Pz2mEhySAJ2SB7xkCozmLqhMtpUWroXiSuRVZuNbFsd
+   T+lRBEDBk5iiHdYAMtvlfaU+g74zm+khhip3nRoKs1Cy6GB4EEEdwSYMf
+   7w65Y0E8U278pg6cPuYdezpIcRr0dKsfaxWqHFBaVOYfwD2iBQGbBzttG
    g==;
-X-CSE-ConnectionGUID: dxFG3BCMTwei8Vope6bpsQ==
-X-CSE-MsgGUID: v/Li0r2jS6eNv27BSugfeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="58702505"
+X-CSE-ConnectionGUID: 4wZF+iZdQYG/vIuvIUWjMw==
+X-CSE-MsgGUID: kFMBo21XTZ67u8CgTm8AXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52304826"
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="58702505"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:48:38 -0700
-X-CSE-ConnectionGUID: rwJWjqnOSMaEENfSLQPxLQ==
-X-CSE-MsgGUID: SOMKx/hYTyyAGbgXFiQg3w==
+   d="scan'208";a="52304826"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:49:46 -0700
+X-CSE-ConnectionGUID: dpjBy9Z7R2ive2NcWv9j1A==
+X-CSE-MsgGUID: JmOmzARwQFChPnQ22p1Hww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="137229373"
+   d="scan'208";a="136310013"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:48:35 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:49:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 May 2025 16:48:31 +0300 (EEST)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-    Andy Shevchenko <andy@kernel.org>, 
-    Sakari Ailus <sakari.ailus@linux.intel.com>, 
-    platform-driver-x86@vger.kernel.org, 
-    Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-    linux-staging@lists.linux.dev
-Subject: Re: [PATCH 6/6] media: atomisp: Switch to int3472 driver sensor GPIO
- mapping code
-In-Reply-To: <6d5a5cc2-a7b1-4032-82cd-0250f345dca9@redhat.com>
-Message-ID: <a8a6257d-854f-62c2-dd63-c3d2cbab31a5@linux.intel.com>
-References: <20250507184737.154747-1-hdegoede@redhat.com> <20250507184737.154747-7-hdegoede@redhat.com> <CAHp75Vc0UZOXbfhjeq1XCAwt-2SX-SGOYomHhEfvx5HuXaxf1g@mail.gmail.com> <6d5a5cc2-a7b1-4032-82cd-0250f345dca9@redhat.com>
+Date: Thu, 8 May 2025 16:49:39 +0300 (EEST)
+To: Dan Carpenter <dan.carpenter@linaro.org>
+cc: =?ISO-8859-2?Q?Micha=B3_Kope=E6?= <michal.kopec@3mdeb.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] platform/x86: dasharo-acpi: Fix a couple off by
+ one bugs
+In-Reply-To: <aBtZBLNXxaYxMIMr@stanley.mountain>
+Message-ID: <7dac833b-5a47-d168-38b9-ece2d5de2ae5@linux.intel.com>
+References: <aBtZBLNXxaYxMIMr@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-330200422-1746712030=:922"
-Content-ID: <e673d6a0-b57e-46da-fbcb-2a5e8e07c151@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 7 May 2025, Dan Carpenter wrote:
 
---8323328-330200422-1746712030=:922
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d98cfc0b-3181-5c97-6af9-3d348da61c73@linux.intel.com>
+> These two > comparisons should be >= to prevent reading beyond
+> the end of the array.
+> 
+> Fixes: 2dd40523b7e2 ("platform/x86: Introduce dasharo-acpi platform driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/platform/x86/dasharo-acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dasharo-acpi.c b/drivers/platform/x86/dasharo-acpi.c
+> index f10f52e44641..f0c5136af29d 100644
+> --- a/drivers/platform/x86/dasharo-acpi.c
+> +++ b/drivers/platform/x86/dasharo-acpi.c
+> @@ -101,10 +101,10 @@ static int dasharo_read_channel(struct dasharo_data *data, char *method, enum da
+>  	acpi_status status;
+>  	u64 val;
+>  
+> -	if (feat > ARRAY_SIZE(data->capabilities))
+> +	if (feat >= ARRAY_SIZE(data->capabilities))
+>  		return -EINVAL;
+>  
+> -	if (channel > data->caps_found[feat])
+> +	if (channel >= data->caps_found[feat])
+>  		return -EINVAL;
+>  
+>  	obj[0].type = ACPI_TYPE_INTEGER;
+> 
 
-On Thu, 8 May 2025, Hans de Goede wrote:
-> On 8-May-25 10:34 AM, Andy Shevchenko wrote:
-> > On Wed, May 7, 2025 at 9:48=E2=80=AFPM Hans de Goede <hdegoede@redhat.c=
-om> wrote:
-> >>
-> >> Replace the duplicate code for calling the special Intel camera sensor=
- GPIO
-> >> type _DSM (79234640-9e10-4fea-a5c1-b5aa8b19756f) and mapping GPIOs to
-> >> the sensor with a call to int3472_discrete_parse_crs() from the int347=
-2
-> >> driver.
-> >>
-> >> Besides avoiding code duplication the int3472 version of the code also
-> >> supports more features, like mapping the powerdown GPIO to a regulator=
- on
-> >> the mt9m114 which is necessary to make the camera on the Asus T100TA w=
-ork.
-> >=20
-> > ...
-> >=20
-> > Don't you need the Kconfig(s) update to have proper dependencies all
-> > over these cases?
->=20
-> Yes I do, I thought about doing this already but forgot to actually
-> do it, thank you for catching this.
->=20
-> When I've some time for it I'll prepare a v2 of just this patch
-> addressing this and your s/then/than/ remark.
->=20
-> Since you and Sakari are happy with them patches 1-5 can be picked up
-> and merged by Ilpo as is, so I do not plan to send a v2 of those.
+Thanks Dan, I've folded this into the original commit as I was rewriting 
+history anyway due to some other fixes.
 
-Thanks for the quick reviews.
-
-I took patch 1-5 into the review-ilpo-next branch with one typo in=20
-change log fixed (reser -> reset).
-
-> > Otherwise I am fully in favour of this change and the series as a whole=
-, thanks!
-> >=20
-> > ...
-> >=20
-> >> +       /*
-> >> +        * On atomisp the _DSM to get the GPIO type must be made on th=
-e sensor
-> >> +        * adev, rather then on a separate INT3472 adev.
-> >=20
-> > rather than
-> >=20
-> > (FWIW, it's your typical mistake, it's something like the 10th time I
-> > noticed it :-)
->=20
-> Yeah, I'll try to remember to double check for this spelling mistake
-> myself, but I'm afraid I'll probably never learn. We have something
-> somewhat similar to than vs then in Dutch and I even do it wrong there :)
-
-I know the feeling, muscle memory is extremely hard to override. :-)
-
---=20
+-- 
  i.
---8323328-330200422-1746712030=:922--
+
