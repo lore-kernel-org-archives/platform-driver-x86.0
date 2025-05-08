@@ -1,150 +1,117 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557F10F9;
-	Thu,  8 May 2025 07:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688675; cv=pass; b=WfgG+7T/86slNQ7bbRbpmoCK6FvPq06gwN8szyqltLGKkrZfvToDxM+JFOtAqKjzCAd4bVF6AscNPq+qhI33dwstzCo5XnVWF8qClS7ZbPAsjeXfhsbFnDL4S7ID3ioe59/5ImM4bobzNZ+JwK5LAPtD50G2pAITokmKYgrTckU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688675; c=relaxed/simple;
-	bh=vYCDu5efpnGg8Jut4LYEfxMi9552KR5R18/GTqYfT+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBUy5iwNWIoE2CnoxDtUMA8NQcr0iiKUnSrVc50CnynM6zFQkvp2UdwiEbz3rWTrzdVgHGe9zawyBVKACY2VqY+RVtzv56majGfpLSuWd1hwR49msDx0tDWxuFiSfbuYE2dvGAzVEAR4Zv0VE7f2yFVtsLFGdIkfzUwbMp0G27k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=iH/ZrBjU; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8543A2620C6;
+	Thu,  8 May 2025 08:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746693324; cv=none; b=X9ep/XT0s6Ul6XW6PLsgZCihgvouJmZPZFZ5lJzUv9oy5CE/PaT1jHodtcahjGP0kLJMV/CyWqKz1HIDwFl+3B8eDe13Itlc6uhO1EPZ6PKFcXz6a922r0snFgMcy3isrmu9LAONUc706PwWN537ARF2trCRod2EWUnLuu3Ze7s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746693324; c=relaxed/simple;
+	bh=e3t7QJAuaFJtViosS65Bennck9HPjSpPtTFfrFBECa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KY/Lul1bz+Nr6AuxzJKukHVq3RpFQrUxqFOEwpcSQkjYoJXfiireDrMrcSF8ZaqVnUQJedK+x8jJaNnRZWVjvNclilLUD+d+9pUkD0p3mue3EnZk6kKkGGG3SW+1ISvX8zOGEq2GKIOAtHqHNV6RCH2HDZ7/hTvcMW1gu2iMCX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jy49b26F; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="iH/ZrBjU"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZtNkZ3QzczyRf;
-	Thu,  8 May 2025 10:17:42 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1746688663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
-	b=iH/ZrBjUdi0TnM5aoTYtlIy7Wrv1SUZDP3Af505alufDE5JHrZC7+FCymbrecP5rbi9BCT
-	RVnE0UodIZNeUa3Xv2NJSrGmPxc9eM/uZK00a0FCxSQaDI2hRZxUUmsF6jFyqxZ7w82iWi
-	RiVXrqD6Q2fy9Svu4RjjgMGGSSJfsaY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1746688663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
-	b=w7ODN86qNPUOLsk/Vcr4VHwajVd1zxTI5aMWb3CoEQTpab6udQ68lTWBZ+SGCOCo1v2oIB
-	1BlZ8npBNPpStbPCF0cpl7uYP5LYmIs4Bye+fcXYcCd6XtSNe5WAJ5CW2AmVnkcHwBnCoj
-	L7+x7II/XAc30zGfOnJLC2MRVHJKfXQ=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1746688663; a=rsa-sha256; cv=none;
-	b=uoNRvsm97R3i3S27vJUD4UOIBRD0osYd2Xs2uXUAmgf2szkUnBmT4XjhXJ06v3mlfJHUI8
-	Drg17RzoAe50gdKk/KnAgeTxwHX6CCF6fhqyhthbLcJtRvjmYkVUKVlWgCmptq7X3yYdgZ
-	cLcjoNIQ9HzVMFcdTFkkhNi+LA2IewU=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id A0F1D634C93;
-	Thu,  8 May 2025 10:17:41 +0300 (EEST)
-Date: Thu, 8 May 2025 07:17:41 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, W_Armin@gmx.de,
-	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
-	king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-Message-ID: <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jy49b26F"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acb415dd8faso112651766b.2;
+        Thu, 08 May 2025 01:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746693321; x=1747298121; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UC9aDZS0LKYqmqpbLRQ0il6x7yHH8lhw0zmN0sVe3Os=;
+        b=Jy49b26FwA0n+GVHti0sPoZg7Oa65+GPLbEnc2DUCPAym7MLehuvpGDhtO2etC59dg
+         g1PHM4LLdhiykXhfXOtBiJ4K2Fw2DRxMZGKL66JzErCsZL81q4y37D8vl4ZcMm0b+jjv
+         ieDEr56d93Rr52N075wfZwJxwkKWlcyfNYV/d4MksxeA+LK5wMaW0gpeAImoZjSuDdyY
+         t9K0k9RWmtgI3c4hH0CNmYCbuIdKLldbTy3BbzJ/dzbCfUDAzA6q2KBW1jTCyIzSWLuG
+         x7amL3Yx0JKG8viFxhAK3MDYUBrk1qyujFhiU2tC8ViyzJCtSCxgN1/+JXEKNlaX02Bb
+         blUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746693321; x=1747298121;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UC9aDZS0LKYqmqpbLRQ0il6x7yHH8lhw0zmN0sVe3Os=;
+        b=wh1hFPhgi3eSa8xYTKg1/0Y4d5WKPqSS0EuYJUY9YJO9ZEQV6tTPGk7WYixURMAhEj
+         eAP/j3lhQ/N7DFWe/VwLkXBnrEIqtJ29ZQc7AWeHm2XQlHZLSq1DKZAy8uNxxGdSsHY1
+         fYpg+nI8fCJz09WnSUe5zJhNKmpZ1WMz8OcGCQrJ+C3vbbZlm8VcAiB78WuAZWT1nkjt
+         4vduxhAFA35Fb5GgP4owrwFCz0D/+rslpTHpyXULcDesljXwuh7ucuCP7lCN85PXU00t
+         KUt8ld8fKWxQBdRMAzrGGnkOcYTR1GknGtNZJ1rvY4f3fuhzLi7AWesmeEAmESeSnUA0
+         gr4A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1W+5ERYi1m1RyZQLixHfAq+qx6/DzxIjQ+cSj15Bngwq4VSC+kIYozXEfSJFTKgnawzK04r9DenZyBw==@vger.kernel.org, AJvYcCWbvo0EZ2ktb92LAyoPK7p44ASDJhTvFqVO+vVHPOvzpQjfoNBAdF5ut5s8jtfSMuYVjBstBlhnRqnIqszCf3hMner7tA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqccXGHnZwf9Ngi5cuacP6Lu9pAuADxzZ2e0fDjiyQY4WDY6YX
+	miGrr1YoOP/J6ycq8CcQNxqoY6TgzRJqxb0JJ+NH2Yh5BmhpkGdiYjT2gOijRrT/IujwotBuBoH
+	ZkRIKbO4D0Tk7aKOXxwhcscnZ4Jk=
+X-Gm-Gg: ASbGnctmHGY6HhLGjK+ddkVbgcdQaMl09DQXDH93pM8JPL0bDoAGVtsFuXzj/aqpqHs
+	PI/MShS2B/CxIAqlFU6/P37ZDoiWEO3WFVzRGOxQYZN/EfuRFF/eZe2GshIiDEOBSMaUuo2VfzD
+	rYtzfSzz7bNf682RgFIs6jCA==
+X-Google-Smtp-Source: AGHT+IFpTRqB004nqyjzDqZJ/RdnM5xzbDAlNgJkwigYL1F9Hqa2p1wCGUuWD8zw4M5LDHI+4YuxtzAWl8MSMgluW7c=
+X-Received: by 2002:a17:907:3d8b:b0:ace:c2ab:a720 with SMTP id
+ a640c23a62f3a-ad1fe67bec2mr215231166b.6.1746693320490; Thu, 08 May 2025
+ 01:35:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
+References: <20250507184737.154747-1-hdegoede@redhat.com> <20250507184737.154747-7-hdegoede@redhat.com>
+In-Reply-To: <20250507184737.154747-7-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 8 May 2025 11:34:43 +0300
+X-Gm-Features: ATxdqUEYVL7wDPaJGrVwNdydfTxWU0TSHRUnwOLZJPK0ubdIgZb-muGbEwg1zkw
+Message-ID: <CAHp75Vc0UZOXbfhjeq1XCAwt-2SX-SGOYomHhEfvx5HuXaxf1g@mail.gmail.com>
+Subject: Re: [PATCH 6/6] media: atomisp: Switch to int3472 driver sensor GPIO
+ mapping code
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-staging@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+On Wed, May 7, 2025 at 9:48=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Replace the duplicate code for calling the special Intel camera sensor GP=
+IO
+> type _DSM (79234640-9e10-4fea-a5c1-b5aa8b19756f) and mapping GPIOs to
+> the sensor with a call to int3472_discrete_parse_crs() from the int3472
+> driver.
+>
+> Besides avoiding code duplication the int3472 version of the code also
+> supports more features, like mapping the powerdown GPIO to a regulator on
+> the mt9m114 which is necessary to make the camera on the Asus T100TA work=
+.
 
-On Wed, May 07, 2025 at 11:13:18PM +0200, Hans de Goede wrote:
-> Hi Sakari,
-> 
-> On 6-May-25 5:37 PM, Sakari Ailus wrote:
-> > Hi Pratap,
-> > 
-> > On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
-> >> ISP device specific configuration is not available in ACPI. Add
-> >> swnode graph to configure the missing device properties for the
-> >> OV05C10 camera device supported on amdisp platform.
-> >>
-> >> Add support to create i2c-client dynamically when amdisp i2c
-> >> adapter is available.
-> >>
-> >> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-> >> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-> >> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> >> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> >> ---
-> 
-> <snip>
-> 
-> >> +/*
-> >> + * Remote endpoint AMD ISP node definition. No properties defined for
-> >> + * remote endpoint node for OV05C10.
-> > 
-> > How will this scale? Can you use other sensors with this ISP? Although if
-> > you get little from firmware, there's not much you can do. That being said,
-> > switching to DisCo for Imaging could be an easier step in this case.
-> 
-> Note I've already talked to AMD about the way the camera setup
-> is currently being described in ACPI tables is suboptimal and
-> how they really should use proper ACPI description using e.g.
-> a _CRS with an I2cSerialBus resource for the sensor.
+...
 
-That's one thing, yes, but it's not enough to get rid of the board code.
+Don't you need the Kconfig(s) update to have proper dependencies all
+over these cases?
 
-> 
-> Although I must admit I did not bring up the ACPI DisCo for imaging
-> spec as something to also look at for future generations.
+Otherwise I am fully in favour of this change and the series as a whole, th=
+anks!
 
-I think we should really try to get rid of the board code the raw cameras
-on ACPI systems currently depend on, in future systems, instead of just
-reducing it a little bit. MIPI DisCo for Imaging enables that.
+...
 
-I guess you're not very familiar with Intel-based ChromeOS systems in this
-area? Maybe largely because they work out of the box. And there's no board
-code for these systems in the kernel. These are based (albeit I'm not quite
-sure about the latest ones) on older Linux-based definitions whereas newer
-MIPI DisCo for Imaging spec is OS-independent.
+> +       /*
+> +        * On atomisp the _DSM to get the GPIO type must be made on the s=
+ensor
+> +        * adev, rather then on a separate INT3472 adev.
 
-> 
-> Note that there currently is hw shipping using the somewhat
-> broken ACPI sensor description this glue driver binds to,
-> so we're stuck with dealing with these ACPI tables as they
-> are already out there in the wild.
+rather than
 
-I agree, there's little that can be done at this point.
+(FWIW, it's your typical mistake, it's something like the 10th time I
+noticed it :-)
 
-> 
-> But yes for future hw generations it would be good to have
-> a better description of the hw in ACPI.
+> +        */
 
--- 
-Regards,
-
-Sakari Ailus
+--=20
+With Best Regards,
+Andy Shevchenko
