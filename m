@@ -1,66 +1,66 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2077.outbound.protection.outlook.com [40.107.92.77])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2089.outbound.protection.outlook.com [40.107.102.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC32028373;
-	Thu,  8 May 2025 23:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972C621883C;
+	Thu,  8 May 2025 23:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746745562; cv=fail; b=O2YPlml19No3j3XIAcfDv/Z6ZFtwDG3QODnghDdVz8/TkRByKOFD0PLShE0RjblQ1T6rkQ2YjSrwj3+jkqgmiVq6BJLSLAR6ENxM7qsLBxAiBhiAqmB6r9pDKpIaaJS1JT4TzBpZUw26KrteT9TswhWQomtm5Vinvl4rLPjcogo=
+	t=1746746010; cv=fail; b=kGpMe4mC0hbyB4ID4ARi3N3Fu/u9ltFh+y2jW3qC4OyR43hKduVUAiItY50e1xkGu413zZEuuIwNjXSk6t5x/arGejmi6mQ2zRJF0bF0vpxYlSoPYYulJpQHYW9DaS21NUfKD4TClg7fypsBpeRiOFVTE5S7F/PZIFQiA9V+qtM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746745562; c=relaxed/simple;
-	bh=NICxbyxxbawW/Uo4jNuyQnw8xbs7R0CEAZcVZ5RLpNU=;
+	s=arc-20240116; t=1746746010; c=relaxed/simple;
+	bh=zQ7FOHUKm83uFm8PPo4/DLR5H/+7TIxR2BW2BT3yFA0=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UL7e4RWX+1QefwC4bmzwPzXEUeEO8revkR4ku0SQsi36wYzMQg7JcqIKRjf74yNZE7PDlMZTxdmiZqRfRGmlWch9LD8GM9t7PzIZTpCySQP9n/ZuPlMSW1PtgxDiSqqPuy2O2SWVJEH2nLOvDHyMMNKDWdPg/3SxKhGPyzPOJHY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oiAgq5c0; arc=fail smtp.client-ip=40.107.92.77
+	 Content-Type:MIME-Version; b=pU94ES/5Ct+bKWsnPuhNQlbXj3OdBHAN2wn/kXAN0reC45HVaHeLxpKea/oLBO3YqSK6mPGfv7gZp3QuChzgoDtGqz+jHXaFKV9k29AB1F6VJhJu4NTQUSVez/WWY3T//PBNi3L5rXH9sxP6jV1jnwv8QQzjOAE5maJAhuYYyWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LIapA81s; arc=fail smtp.client-ip=40.107.102.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oiAgq5c0"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LIapA81s"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tz1vibaPtMiE1V4Is6udwqsRO3qn/6kiULmAepO8rbhzlawfos61l7l9hICl6hrERRSURLk6ZK1LTZEFIuvzCkRC8mmSpMM/sTNLKUfR1ypHPJ3YkgqAN19RSVUlX9VPXGLRPjxq++61KMCORoHPbgc81rnvj/fkNwbcL8Ki4eo42EwGD5UrWiXKCYeb1hWjZOI5Z/Pfu0Y8NAPyJoqswLE3YId8M+wqOM8gg0cUajd/f+7ns1Mo/OnLPb3pXVYWju2P2zfQ4PDw/zAWiFDiNX/I54XCyva5kkpN7K5sd+h5EyShwR64Q3ebTPyZhyASN2Cq9QJiN6UaS0EWtXrAOw==
+ b=s6KOeDQdN+Qud8GMAgQs+ULJGbI/B23YD3zMmIAkVLg9rbq2kIc8/+xqmThHZHb4setb697qNS6zaCwdoRLZeswdnronVQf9MRoxDGhf4a5bhZP3deg1MNy8IMd/MF14wMnOhhKvWbA753fil6XEiD698d9UruFAni1jX8ewv3VNgJpjOhf3releqZrRCEO9NnUsyGiO7anhXB70weVWeid1w8B6RdZyPMQmpR/Y+e0vinkozBhqo9P/yFxD+TSQ9jCaB9kRlkcl5bjnfhSBVpOwkXi3HkuTIwyXhuOwqkxBbzY4W/kL3o0PEOsrjSfVXE8WHYNSJ0PqSFhov809zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a6cYkAMOgYj+7HOty4P3zrLSgHCveaa6RKBUFcPC4Lw=;
- b=st3QlF5z4miCO8UJt5fnXQusCgn/098pX0M81wXk+h53neY2Y/6+WeZ5vsx6DBDW8YWSH6nUTiADz4PMffffjj29MJuzD4yZYnNDnyshiWdqF+WUldjte5J8+fDwlYQMDvNqNGHG/+dZfMyyZR9yoRBkkxj1ZCX4F1mFTfLLFcEHvf3+Yys5kzMzODgdE4Y7mEfVcgUkWq5jLaZ0PrFglT6RQVadGE+kL8PgOdQTOQxlPAxdvQhHs8Eb6n1SDHIHRO5dvkylk/1XkJy5U4y/GngYHnsjn9mp9A6tLBL6oNDCwWVPfRJsfsCJTA+tjweug1kf3eXoUdsnjdXxClin2Q==
+ bh=K7Ujvu/NWKEEBfggPFp7LsZV8ozz43A3iLoIgREiezQ=;
+ b=MNS4D9SWNQqXcKo6EH6m460S8RtEANG6M9uuEVdzRVo6TGdIDxsUX2+uXUuZxa6NXfJfc9jYRJBfVBby4xtQpdPYalO1G1soNmn8D+W0PcWvqJ4xF39OixIKWzAgr0bWOKw9NoX3ywc9j4Da3oh/ZFudNj3OgLrMiz8//3HtEma/b/0fgmkshZsQjOoTSZFC6eulhGMimk/Rb521CJEfZ+v7zpSPblGEbQtk4/iZLhbl6oO/Smmp+EBGBSkcI/Qhj0I77pZVjmdwgqAzib0BQCmxMx8Nz699UAQqtZe8K7k70p1s6fN1QV69M2O5Pi9CNQhk0+O9hzAHCJv4zxIU4w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a6cYkAMOgYj+7HOty4P3zrLSgHCveaa6RKBUFcPC4Lw=;
- b=oiAgq5c0P6Rked+ezKQmI3LMjShpdRSshCC8yXd/dNfSq6Ni5r0fvPMuR22ND6l3oX7KncjtGV87qFTfBt47/M4iC/5IyFB2pE3mNDNdlirsvn6G2XEV7TWsjshb/jFpKh1hs2HuvZxiHYcv/L+ljdDHCxyxfmDEt1a3A5gnLms=
+ bh=K7Ujvu/NWKEEBfggPFp7LsZV8ozz43A3iLoIgREiezQ=;
+ b=LIapA81saw/nyS34GpZvOKYBbAPvpeBgNvgWCRhZ4dutA17L7NjyQmfTQzYvYtVie8xK04SduwfN2d6awXxret+FLJjKA7ehXjBbHPun1IvPsw0J59MArq84x8wCah+BJbX2fZH4FToApV8Es7UzK8jeYtkEgDtwHVqBSsDf0Hk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
- DM6PR12MB4330.namprd12.prod.outlook.com (2603:10b6:5:21d::20) with Microsoft
+ SJ0PR12MB6926.namprd12.prod.outlook.com (2603:10b6:a03:485::8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.21; Thu, 8 May 2025 23:05:54 +0000
+ 15.20.8722.23; Thu, 8 May 2025 23:13:25 +0000
 Received: from DS0PR12MB6440.namprd12.prod.outlook.com
  ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
  ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8678.028; Thu, 8 May 2025
- 23:05:54 +0000
-Message-ID: <8d892845-e134-4553-a6af-55d785c1ae98@amd.com>
-Date: Thu, 8 May 2025 19:05:52 -0400
+ 23:13:25 +0000
+Message-ID: <2a9ba94e-7985-4ba9-88c6-45b8cf4d001f@amd.com>
+Date: Thu, 8 May 2025 19:13:24 -0400
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
 Content-Language: en-GB
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
- W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+To: Sakari Ailus <sakari.ailus@iki.fi>, Hans de Goede <hdegoede@redhat.com>
+Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, W_Armin@gmx.de,
+ ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
  king.li@amd.com, dantony@amd.com
 References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
  <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
- <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
+ <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
+ <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
 From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
+In-Reply-To: <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0059.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:88::23) To DS0PR12MB6440.namprd12.prod.outlook.com
+X-ClientProxiedBy: YT3PR01CA0102.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:85::21) To DS0PR12MB6440.namprd12.prod.outlook.com
  (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,200 +69,129 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|DM6PR12MB4330:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4e5cf0a-1c34-450e-13a6-08dd8e84e256
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|SJ0PR12MB6926:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0eebfc7c-8416-452a-7381-08dd8e85ef72
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MWRJRmlFRlFTOU1idWd2cjBMKzc3WTlmZjNpYkU5UnRPYkUvaE1RVURlK3dO?=
- =?utf-8?B?OWdRWkhYQzk1L2tBQ0JSQ0pac3lhQm1LY1ZOQlhvOWVGRnJHUGFSYldYTkpq?=
- =?utf-8?B?MFNlMnY4clR4MExIUFZvSmFyMnczTXM2dmxXbWxqZmJqUnp3MUwreUJZcFMy?=
- =?utf-8?B?bDQ4QktIejZRRTJwZVF1b3ltMlNaVnM5NkpOTkNoMzJUUXk0ZUhEalNLS3Zt?=
- =?utf-8?B?UWRqOGx3ODVaUTJhK0ptSGtqMWh3aGlkYmhoQ3pySHhBem42M3N2VkpqM0Jh?=
- =?utf-8?B?MnZNcXV3YS9Fa21abkNCcjNxWHQzVmtPN2R4T2NjTDRINXFjc3dqL1VvdVJh?=
- =?utf-8?B?akJCMjF1bEc0YkhxRTJ2RURUSFBvWHhmV3E0TkFncHF1QU1rRThhOE1sNDRO?=
- =?utf-8?B?NkRnenVOZnB6anJ5RFlzaER4SXVPeVBOZzRNLytkUzNYVGhFem1MalI1ak5I?=
- =?utf-8?B?eEgyc2k3QzZuNUZjc04zdU9iOVlUWnJUa1l3dXlseTlXVjdSdjlORWx0QWFm?=
- =?utf-8?B?a2Z2YXcyMWNkSXJVNXVRdEd0aUNvRUZKT0MwK3RGOUcwVXlYeWN6S3FHR2t2?=
- =?utf-8?B?S0pjM1E3VG1nMUozR0NIamxBRXhVT0gzY3lsZVk5czdXYjJuTU9vYVFsSXFn?=
- =?utf-8?B?Z3cyZW9zdXVZQUdSR3JvZUJXRFBua2V4enFxMWFEUGVDMGpLREFidnJIWk5H?=
- =?utf-8?B?VUZIOFR6OGIvbG41QXVXSDU5cW1SbG81eWdGOG1nR2VUMTBMaUFEREVsSDVQ?=
- =?utf-8?B?L0puNzNlcEQxdEdremF3UTZzQjJSWHNyQnZXNjJyYkx4bHB1eXVBY1AyZVk2?=
- =?utf-8?B?ZWJxNGg2K3g1NHNockxjd3Bsa3F4c2pHMEVmbTZUT0pzT2FtRFVGeDZqWUF6?=
- =?utf-8?B?ZjhPQ2JFQ2hMQjJXcTNrWVFDYmFYdGxPSDAwMlQ1YnBoT1RkYzJjVmZERWg5?=
- =?utf-8?B?a0pZbkhGTjZtMm1sWDRjb1ZVQXlMdS9ha3Z4TllPNmFQU3NyTUdnWEtpSk5M?=
- =?utf-8?B?T2dVeFhvcFhqcThOZlpoblR2WDYwek82cTJ3NWErY0xLdURyODdUUDJ3aklY?=
- =?utf-8?B?bE1lY1RGUm44YjFoTTVmVTN5dURERjdtdk0vNmcyWnZTZEVkREsxcXBRZVFm?=
- =?utf-8?B?UldkaEZqeUJOd2tTby9oc2N3MElEeG9pa0wyOHdWdmVOODIrVWxjZG9kL2U2?=
- =?utf-8?B?dlMyOXRwT2xlZ1RXRlRSaHdxOG4yQks5UlY2VUtZOXRtQzlqVkIrUUw0RStB?=
- =?utf-8?B?MDNyaGFkbFRUTEdFRjhwZk1qQUpLWEFEY1BmSTRXbUJEMWNISEFNa2FCOHFq?=
- =?utf-8?B?NnZJN2tIaFpTZ25UNUMwNXJMaEo4QW9HL1RtVkpTZzZrNW5oYWw1cERtVGRI?=
- =?utf-8?B?aFZ3ZG5MUW9aT3RPdndBSFJnZFdtdU5GOFhjQ1NKSUM5N3NjOUlqSHdDL2lU?=
- =?utf-8?B?V202dFJQSEdtUTRjMlRMUUgrWmljT0RhdTFOM2JORURJRzkrSm5LS0JNaDFG?=
- =?utf-8?B?ZlluNElFRktkT2xJd2ZLR1hjSE02bXJVdmYvZDQ0dFBjOVNhcEo0SFphaE1Z?=
- =?utf-8?B?SU5OaFpIcDlYaTY1dTJaeC9tbkE4OUVVd2VseFFFa0hkS21WY0xENVJ4czlI?=
- =?utf-8?B?RDN5blVJZytCWVFOUWdya0o4NlVSNk1tM2NCa2M0UXVMa2dvUExSUU1HcmJ4?=
- =?utf-8?B?ZVEyejZMWHY3djFQckdHbGlUbExFSHFsOFdGU1NhanF6aGFtQWd2UWVYeGIz?=
- =?utf-8?B?R0I3U2xxWXdNcHFJdlI4NFZnRmFtSHZyL0U2TGxiSVhqZDZHZk5UOVRGMzRY?=
- =?utf-8?B?YnNPV1ZFVWZIWHZFbU1MbFhORVVQT0tCQXJhbGhLQWE1SUlvQnFBYmhLamNM?=
- =?utf-8?B?OEp1dUNUYzRHYWR3aUN6RzdnT1M2MEJaaU5xT0JpeFpycXdwM01pcHArTlVU?=
- =?utf-8?Q?kgNk211iHik=3D?=
+	=?utf-8?B?RjNEOU96OGNNVDdXODJ3c2Zja28veUhLSmJyVGlUL3lGYllGTFVGcjQ5dTdQ?=
+ =?utf-8?B?SmIxckR3NWFvSEVXZnZ4YlhFd00wZUkxUTd4aHZtQzFUZGNiOEZnY3V3Zzl1?=
+ =?utf-8?B?Qm13d09xeVFiRUR4UHR6TlJabjltUlpzb3dVUDNBc3lneVRxOXR1dG4wdE9u?=
+ =?utf-8?B?TUhTaDBuSW0wc1drL096NDBhZ3lucEZIQ2lZK2pGSzllR2hwM1RDR0lZdEE4?=
+ =?utf-8?B?UTJEU2drWnZrTE5CWGNKdmdQenU1WEsybVhJdWc1Nk5jenVqc2QwRDR2Qk9W?=
+ =?utf-8?B?WEZoc2RrMS8ybHdKTjh4NS9FWUlkZStnYzVQZjlCWUJVYkxGZFd2U2h2V3A4?=
+ =?utf-8?B?UG1od3prZ3NNSHQ3azlTQXpORGM5aFpEUHovQ1YzV09IMDdvMy9kWjcrbnla?=
+ =?utf-8?B?RHJOc0x2RWtybFVhUTVSVjFIR2ZKRkdHaXRtVXVaK0VxMXZ6ZlY2dDM5UHNq?=
+ =?utf-8?B?M2Ywcld0R2pLcTdPdkVJdTEvQXl0bktNWkZpTDFmZ05HSUo2M0I0M1ZESjRH?=
+ =?utf-8?B?RzlPMDhsWkdBNFpqY3FRcG9DMnZVV3RMSjNHS2VpU24rS2FpL1M4MWN6YVNk?=
+ =?utf-8?B?VnBwZ1p5bG1obWEzcGxVMFFIVFJHc1F3SGpTL3grcmxITU9nTVlGSU1nUkZz?=
+ =?utf-8?B?VEQvWVA4ZHdtVFEza2JoYkVGaXliNnZsM2tJelR0V0x2eG02SjgyeVhSaWJv?=
+ =?utf-8?B?aE0vQ1kyNzI4bFJ0b1JiTW1kcUJGc1NpZTN3ekNnaGU0YUtSYjROOE0xQlJl?=
+ =?utf-8?B?VHZ4SGVFZ0Fka2ovcGl6UUJmR0UzUnpIQWg4bzNPUFhhc0ExQXlYNURabzdG?=
+ =?utf-8?B?VXlWSUVUaGwzUzFSQXhUd0FmREJZZ2lwb3F4OWZqWjU0cDNUWTU0TUlBSWFm?=
+ =?utf-8?B?Z2RVOS9jUW9IczFDMWF6TTQyazd4bzZra3Zna1hVYnZlZWMvci9NSEdjYmcr?=
+ =?utf-8?B?RmxJZ01CckNrSzRpQUdndm9WTVRiRmhtYmVZRHNQcGdodVg1TEFJZFRKT3hP?=
+ =?utf-8?B?dU5wajN5Q2dxclBMNUdxa1JHbnlqZkcwVjZxSVFQN3laQXZUZGdjM0hUU3pu?=
+ =?utf-8?B?VndvbDFrTCsreTM4cDRkNTJWTUhHM3piRkJPdkEvTlYvclZFNHdDdGtJS01C?=
+ =?utf-8?B?Q2pOcWIyTW5Uc0QzaGpGZFhPbjhobWpJYk02YjRlRlVNZVFDTG5LNDB3ZXBI?=
+ =?utf-8?B?WVFUYWl0aWJ3SHN6eUYyVTRNQ01VaEliS3MyOGRJcWdmRjlhYXhzZy8wc3VL?=
+ =?utf-8?B?R0RSQmxlc0dTbk9tWWVlVmxZaW92SnpYajVjNDdhM0Z3dHYxOXIyd1lqN3hj?=
+ =?utf-8?B?dTkrZUNaV1FXcUkyNElWNmcwdEUvamIyaW5TbVc2bC84TUpUWDZEd1Mweno3?=
+ =?utf-8?B?Qm5pblQ4UlYzMUtyWUhIa3Vod0VLQnNHL2YrWlBySjVhZEZRZndPR0VXaXBw?=
+ =?utf-8?B?SEtsUGRRY0lUWG05MWE5RGtpRzlUN0RzRXlwRDhJemFWVURlcVhpM1UrZzI3?=
+ =?utf-8?B?RzFxcjZkMWxxQzhrbEp5QTNZZWhxNFNURkN3MXV3RTk2SU1xNGY4eGhZbGgx?=
+ =?utf-8?B?T2NYM2xKd1ZNbENnTmZmNVhELzgxOFVwVTJCbmQzdVByV0htNWFadzdYMjl2?=
+ =?utf-8?B?czFIcnRGRmI2WUN0U2Ftc25TR2pWZXh4ZGo2WUFVVUVPZTFTSktCUEI5OXh5?=
+ =?utf-8?B?ZXYydnA3TEg2SWFWTzBWem45S2xQUCsyNVFwT0FQaHBINDJQV3VvRWJnQlR6?=
+ =?utf-8?B?aElPQTVGbVJySjB6R21JUW9MazE3WHJqdmNRTjUvQnhRWTVJQzZ5eGZvS0xx?=
+ =?utf-8?B?Ynp2ZjdDazFyTEhjK0NrVDk0S1d6eDNrKzVFUFYyK283cFBNNVNzdWtSL2FT?=
+ =?utf-8?B?T01nWUhOOWtiUU1LU3pSSkhXeFJsd2FNeG5WUkhETHdwLzEvK2YxYkNiY1FH?=
+ =?utf-8?Q?4c6zI87JIn0=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0F0bmxqNUwzekZUeTdrUE8weG03R21nUEZxaVhtWWtOcHBGeTZxNVRXY0g2?=
- =?utf-8?B?Y29BMGpwR2I2R05vNEpmazR1YUdiVEZoQWovYWtOREs0MWFPeUxsQlVWZy9J?=
- =?utf-8?B?OVdpaVJSNm1iZFVMM3lUQ2ljNVJMSW1RV21GNXUyeXBjUm9hOEVYdG5FdnVT?=
- =?utf-8?B?R0tRVCtiSVZtYnJKS0VVMGd1dzR4TmRlUldneEpwYWpWQ1NOenBJKzRJcEcx?=
- =?utf-8?B?YysvYVI4b1V3RnZBQTNOaXhYaXVDMlNIOXdMRG8zeVpIU3hjb2JhMlF3TmZa?=
- =?utf-8?B?djlyN09HYXdYUFFmSGpqdlIrSTBxZHM2MFpTL2ZJbXREVFNpVkl3MDIwT0hx?=
- =?utf-8?B?VWZrNExlcjVhT09ZRDl2bGRUTjR5TVhNVnJQUDFpOFlTYUhVNS80SjFXdExB?=
- =?utf-8?B?WHIwRzJlVEtIZDhhUm05YlZxcmhWRHhqTE8xMndJV1VpWmNmelplUkgrSTNR?=
- =?utf-8?B?a09hTUNacWVySGgvUk9qU3IySXM3U3krYWNMVm94dUIwQ3Ava1AwS01GTHh0?=
- =?utf-8?B?dVFVUkcvTW9RS2lhdG5vUzRjb28wRGFDWDR2c3BHWFMzc09Lay9YNFVHeXpa?=
- =?utf-8?B?dzlOb3JqYndOMzNranM1UDNpN25xcVBYTEpWbXlIcHY1R1pGTFlwcVJHamVK?=
- =?utf-8?B?UVFhZnpFcXZSU3B2NHlYYlJ1S1dVcGt4WXErZk4rVDBZWGNnRmhZRzVXSk1Y?=
- =?utf-8?B?ZkR2YTBPSzh5QXVPZ1BZb2pORitrTnFyZFFMSFRCSjM3MlVzQlBlN3RqWm5j?=
- =?utf-8?B?RklaekdRbTZoMUtIRm1Nb0wxS2pjWDNIY21TM1M1RG85M3NMTTM5LzNpa2ZQ?=
- =?utf-8?B?UzRHbHVndU1VaW9GbVAvRmtUdnJ5V0ozdHFxNXdYQ3RwMFJQK09ZZ05EZ2Rq?=
- =?utf-8?B?RXIwaVVVZEpuUWdURCtwK0J2YUhmUlRzak5WTnpJV1BRakdSUjFHaS9DNFd6?=
- =?utf-8?B?YUlVR2J6a3hybTdBb2p4OWlBelFiN2NmMEJ0cnV0QjVQNnduUHZmZThPTktR?=
- =?utf-8?B?bWl4b3pwZ2ZZc0dIMHR3Mkt5SGNRSFJYV2dlZ1ZXbjQyRmRub0Q5ck1nWnI4?=
- =?utf-8?B?czBoZUdhVW5qVklndXFBZWM5ZzNZd3ZPbFVCemlvWlRIdkJOc2x4Vlg0ZHJj?=
- =?utf-8?B?TXlsYllHNHQ1WTBpL0JFMm0xd1kzR1Zob2IxeVFUMEpBeTBHUnhTTlNlVXhY?=
- =?utf-8?B?dzM3VkFsb01XaGNIVXBzWTBrOXRqeVpYeFNXSjJYT3BHMjdBdGZNSmtkMFlh?=
- =?utf-8?B?UnlzcXdBSGpzUStyOVBPazJlM3lTOFV3L1orcFZZS2RVZDZnWThORzdibjlz?=
- =?utf-8?B?NWFUdmI1aU5Ma1BGUC95akkycWxvdUppTlNiWjBtVXlBb3V4WTlueFRuMnRX?=
- =?utf-8?B?RXBWY21lamg5dnFZcnBjQ1dLZFhlS2NDeEVhSXUvdGh4eXBqaHI1L2JtdWpW?=
- =?utf-8?B?cWxuWmNGL2ZNcFUyZ21NZjl4SmZ3S0ZDenBKclVGYWRKVHVkYmYzR0ZJRXZF?=
- =?utf-8?B?TjZwYXZySGk0cFRkT05Sb3dBaWpjUFhya0k4aDR1MEpoWm5VaHJnWHovTWl5?=
- =?utf-8?B?S1RVa1Q1WnE2NjJUVWEwMEd4ckRmcGF5Uk5mK3ZUaUg5TjkzczBjQldCdnRl?=
- =?utf-8?B?b2g1dmRRMGdaOHJscTdZTHhjL0hvZmhXd082QVozb2I3L09raVdncnRxdjdG?=
- =?utf-8?B?WXJoaWo3OGxrMEl1a04zUHdzWmlqUXorWjZvTWZpcENBaWRoRzRXNG1IcFBG?=
- =?utf-8?B?dVNlbHA4SkJrNC95ZWxYaXRSUlpQR0hhNFljczNLNzB4SkJwNHczRlZMTEh3?=
- =?utf-8?B?NWVyVjI5UHIwMmV5ektjWGNwWHRyUDdVdlc0bzRHdVVMOFJFVG9SZkJCeUkw?=
- =?utf-8?B?ZHlYMDltbzNORTNtNklrYmJRRjRHMDBvTm5PbDkzekVDbTlFSFBtdVVFS1kx?=
- =?utf-8?B?a1hyREtPWkJmWCs5bklDdVNRSkxZekYyR0wvOUhiYzRyRldFemhWY0JYRUIz?=
- =?utf-8?B?aWVTL0F1MVpJRFVJQUdldEhtNHp0ZEc4SHVGako5dXVDVXMySFF1WFhCQUls?=
- =?utf-8?B?cGo5THRoK1hnMlViV0p3c0Q3WGR2L3VIV05oczcwaFJHWURkaGkvZ3lvL0JG?=
- =?utf-8?Q?WSEAYe+CQ/x7umQeTUulL5CVX?=
+	=?utf-8?B?MFZWZEk5eGZ0REYwUENGS1R3c1F6OUN5VU9wQkQzMGxyYW1sYThOQmNhZFZh?=
+ =?utf-8?B?ckhyUnR6TDRaSjAwRHI5STloUnQzdEk1OHZhVDB2ellOdE1jUUEza21OUm43?=
+ =?utf-8?B?Sy85WU9FdDRJTTZuZWMvQkZyL3NuOUhLc3ZRSHV4Y2JFNW5tV3dua2l3NXNl?=
+ =?utf-8?B?YzhSWkc1SmdjemgxaUROcjI4bllDN1ZHUjBnakZLMXVuYmYrQVNyNVFOQzhY?=
+ =?utf-8?B?cHhUR0ZhQlVwWHM5cFRtN1BuL2Q1NzlJTURDNTZWYVhvSzNHdzlUMndXa0ha?=
+ =?utf-8?B?Zy9HMDFDMEJFWEhGOC9mV1hOVWRxQ2UrRzBCNjdGVFZ5RmR6NTFRZGZhMXZH?=
+ =?utf-8?B?NHM5RXpuVGlGeEhBK0NUbytSNzZOSmY1T1VCeTVMamFNaEtwbXB6VExoWVVm?=
+ =?utf-8?B?a1BPeTNWZ1N1NjR5VFFyK2xidWRzMms2dVhLNjhOcnJuV3A5YmJ4N3J5VjVQ?=
+ =?utf-8?B?SGVRSlhkU2p3YnNrRTBsS0w3MjV6RUYvZTNoMFlZMDA5TTlhN1hHRTBhbEhJ?=
+ =?utf-8?B?cnUvVXpCZHJmaDIrRmgzVDBQRUJ5N2x0WFNLUFpyMDR4Nmx4eDI4UmhaNHFM?=
+ =?utf-8?B?MU9mUWh6blJEa3RIUXUyVmpqYlhRYWs0dStVQ0V4dEhiUzZSazF0Y1dyNVRz?=
+ =?utf-8?B?STJKQnNuaW40UnJGMEh2a2xZNDhtcE43THpXaXVITkVHOGpoeC9kTE9aU0di?=
+ =?utf-8?B?bzY2YmduV3g4OCtjSW5Lc1B3S2xsK3poSk9wUVE1bjQrUzlnZmV1TlZ1cXVY?=
+ =?utf-8?B?UXpNb3lFZVRSbTlrcE5sRFNueWNjcGg2UFltK2Y2WlhpWGNicEJvRXRGT1hE?=
+ =?utf-8?B?N0pCeVFWcFNtOHpGT0pwZGs5TGZIcGcvTnZZVUVBSHJPTTNGN2kwNUF2aDdN?=
+ =?utf-8?B?cVljL01sWDhxMnh5Vzc1dW9zVWtWZ0tHZW93aGhzOXo0VFdBek5HdDNXMHc4?=
+ =?utf-8?B?VUQxcmE0WVFaUVh5bnRRQkorVEI3YVh4QzBKTXFBeTFJeFZGSDhsZENLczV6?=
+ =?utf-8?B?V0sxVXM5ZFFkZ1kzeFloQjQ1QkZaeFJSWTEzKzBzSElIZFhBNHlIS1NxdWtD?=
+ =?utf-8?B?dE9tbU9rcDg3dTFaZjRMcEQxMzRRVnRjK0x2aEdzSHNmWXdCL0ljcEcvam9Z?=
+ =?utf-8?B?enI2MEladTEwakVVUnEwSktuLzh1RGJRSVFhQlpnSjZ6Y2hBSnpCN05yL1Z4?=
+ =?utf-8?B?ZkxkS0V3Y2NMYVlsOWVoaXcrSll2dGcwYTJkVGJwWTdMTlMwM2ZTOG1QZ1Na?=
+ =?utf-8?B?MUdqNDI1azNKNlJsK3RIYUgzTkRGUzk5aFQyQXNJY3JJZnA3cjNGMWdWU1Rh?=
+ =?utf-8?B?RFk3dmxuUVRVekNhUnFubSs0OFlTN0RTZjdCOWc0UmdublJvdUpLZ25rVURz?=
+ =?utf-8?B?UkF6QS9XK0FILzNTNVY0MFVXclBHSzhRZ25SWXlnN3QyYlErN25IMlFBbHJF?=
+ =?utf-8?B?SmhIcTBKWDNWWjJsVW9ROFNHNURLbVJ5MXNhY2N6ZmNCZ1U0cUkyT0pBV1VL?=
+ =?utf-8?B?WEFsQXNVODg0elVUQldVL05obHoxK015SS9pYXV1K3M1WnZ2TUF6bDZZT1dR?=
+ =?utf-8?B?cy8rdXZiWUR4dHczbERjZG4zV2dFR2VITFZvTk0raExaaXg1NEZEc2RHYnQ0?=
+ =?utf-8?B?dGNreVBScXBIVnNRQWNSVFNXVkVTVXROTDJnZHd1NzZON3hIMkRldGxHcUg5?=
+ =?utf-8?B?d3VLdVBDbDlLbkloRXJwQ2M5VmZBTkNXU29xWkptMXR6ZHJYYU82MzZkMHlM?=
+ =?utf-8?B?dGVRVVZsUXpHUnpnZElNNUJwbGRIZ1lTU3d6NUVpSmY0Ujhub2VzU3BielYx?=
+ =?utf-8?B?dDRDaUdJNS9jczAzUk8rcVpEMTM3bkRQQWs3L3N2Z0pmTDNhYzZoRldLYWtJ?=
+ =?utf-8?B?eG9hRVdQYkNNWXNjQzNsaCtuTlU4c1YwZ0FrSk83YVpHd3c4TWFORFNwSHRx?=
+ =?utf-8?B?SDZ5YXBqdFR4TFJxQVZGYWs0SW9wV3V3cEl5cjRNZEI3SkU0UytyZUNWcXBK?=
+ =?utf-8?B?TnRLQjhSRW9nUVowdlBFOERBRVdRbXd2V3c3dTNuT2FTaXdRb0VySGRlUnU1?=
+ =?utf-8?B?bWZMcEJkK3VadmlaMmtmYzRsNjE1M0FJZzdpWEZMWndySXF3Y1NJVkFNNFo4?=
+ =?utf-8?Q?KICQAHb4b0TmwbkVCBvGZ3yWX?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4e5cf0a-1c34-450e-13a6-08dd8e84e256
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0eebfc7c-8416-452a-7381-08dd8e85ef72
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 23:05:54.2833
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 23:13:25.7570
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C+SG+lFSZXryVfL7OFBmq3sorY7Htsbg7i045gjRzLhDA8p8B2hkOMahgXUQdOmbEWYy/RR2DXNfsMC3SRNNhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4330
+X-MS-Exchange-CrossTenant-UserPrincipalName: paMolVEmjhuRHHc+iAmKeJBE3budeM9iLhEZmIHQwBAPnsJbHsXpl/M9TCnem1togJEFPq3rYripyF0tlIlZIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6926
 
-Hi Sakari,
 
-On 5/8/2025 1:44 AM, Sakari Ailus wrote:
+
+On 5/8/2025 3:17 AM, Sakari Ailus wrote:
 > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 > 
 > 
-> Hi Pratap,
+> Hi Hans,
 > 
-> On Wed, May 07, 2025 at 04:16:04PM -0400, Nirujogi, Pratap wrote:
->>>> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
->>>> new file mode 100644
->>>> index 000000000000..1520ebb94507
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/amd/amd_isp4.c
->>>> @@ -0,0 +1,280 @@
->>>> +// SPDX-License-Identifier: GPL-2.0+
->>>> +/*
->>>> + * AMD ISP platform driver for sensor i2-client instantiation
->>>> + *
->>>> + * Copyright 2025 Advanced Micro Devices, Inc.
->>>> + */
->>>> +
->>>> +#include <linux/i2c.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/property.h>
->>>> +#include <linux/units.h>
->>>> +
->>>> +#define AMDISP_OV05C10_I2C_ADDR              0x10
->>>> +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
->>>> +#define AMDISP_OV05C10_HID           "OMNI5C10"
+> On Wed, May 07, 2025 at 11:13:18PM +0200, Hans de Goede wrote:
+>> Hi Sakari,
+>>
+>> On 6-May-25 5:37 PM, Sakari Ailus wrote:
+>>> Hi Pratap,
 >>>
->>> What's the purpose of this _HID and is it present on actual firmware
->>> implementation? There's no such ACPI vendor ID as "OMNI".
->>>
->> The (_HID, "OMNI5C10") is used to check if the OV05C10 ACPI device is
->> actually present before creating the AMD ISP4 platform driver. Yes, ACPI
->> entry is present for OV05C10 sensor in _SB/CAMF.
+>>> On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
+>>>> ISP device specific configuration is not available in ACPI. Add
+>>>> swnode graph to configure the missing device properties for the
+>>>> OV05C10 camera device supported on amdisp platform.
+>>>>
+>>>> Add support to create i2c-client dynamically when amdisp i2c
+>>>> adapter is available.
+>>>>
+>>>> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
+>>>> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
+>>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+>>>> ---
 >>
->>       Scope (_SB)
->>       {
->>           Device (CAMF)
->>           {
->>               Name (_HID, "OMNI5C10")  // _HID: Hardware ID
-> 
-> Please tell your BIOS folks this ACPI ID is invalid. In the future, either
-> allocate one yourself with your own vendor ID or get one from the sensor
-> vendor, which they would have allocated using their own ACPI vendor ID.
-> 
-Thanks for the feedback. I will share it with the BIOS team and make 
-sure its taken into account for future models.
-
-Thanks,
-Pratap
-
->>               Name (_DDN, "OV05C-RGB")  // _DDN: DOS Device Name
->>               Name (_SUB, "OV05C")  // _SUB: Subsystem ID
+>> <snip>
 >>
->>
->>>> +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
->>>> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
->>>> +
->>>> +/*
->>>> + * AMD ISP platform definition to configure the device properties
->>>> + * missing in the ACPI table.
->>>> + */
->>>> +struct amdisp_platform {
->>>> +     struct i2c_board_info board_info;
->>>> +     struct notifier_block i2c_nb;
->>>> +     struct i2c_client *i2c_dev;
->>>> +     struct mutex lock; /* protects i2c client creation */
->>>> +};
->>>> +
->>>> +/* Top-level OV05C10 camera node property table */
->>>> +static const struct property_entry ov05c10_camera_props[] = {
->>>> +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
->>>> +     { }
->>>> +};
->>>> +
->>>> +/* Root AMD ISP OV05C10 camera node definition */
->>>> +static const struct software_node camera_node = {
->>>> +     .name = AMDISP_OV05C10_HID,
->>>> +     .properties = ov05c10_camera_props,
->>>> +};
->>>> +
->>>> +/*
->>>> + * AMD ISP OV05C10 Ports node definition. No properties defined for
->>>> + * ports node for OV05C10.
->>>> + */
->>>> +static const struct software_node ports = {
->>>> +     .name = "ports",
->>>> +     .parent = &camera_node,
->>>> +};
->>>> +
->>>> +/*
->>>> + * AMD ISP OV05C10 Port node definition. No properties defined for
->>>> + * port node for OV05C10.
->>>> + */
->>>> +static const struct software_node port_node = {
->>>> +     .name = "port@",
->>>> +     .parent = &ports,
->>>> +};
->>>> +
 >>>> +/*
 >>>> + * Remote endpoint AMD ISP node definition. No properties defined for
 >>>> + * remote endpoint node for OV05C10.
@@ -270,14 +199,48 @@ Pratap
 >>> How will this scale? Can you use other sensors with this ISP? Although if
 >>> you get little from firmware, there's not much you can do. That being said,
 >>> switching to DisCo for Imaging could be an easier step in this case.
->>>
->> the scope of this driver is limited to ov05c10, and it can be enhanced to
->> support other sensor modules in future.
 >>
->> Sorry, I'm not familiar with the term DisCo. Could you please elaborate.
+>> Note I've already talked to AMD about the way the camera setup
+>> is currently being described in ACPI tables is suboptimal and
+>> how they really should use proper ACPI description using e.g.
+>> a _CRS with an I2cSerialBus resource for the sensor.
 > 
-> See my reply to Hans.
+> That's one thing, yes, but it's not enough to get rid of the board code.
 > 
+>>
+>> Although I must admit I did not bring up the ACPI DisCo for imaging
+>> spec as something to also look at for future generations.
+> 
+> I think we should really try to get rid of the board code the raw cameras
+> on ACPI systems currently depend on, in future systems, instead of just
+> reducing it a little bit. MIPI DisCo for Imaging enables that.
+> 
+> I guess you're not very familiar with Intel-based ChromeOS systems in this
+> area? Maybe largely because they work out of the box. And there's no board
+> code for these systems in the kernel. These are based (albeit I'm not quite
+> sure about the latest ones) on older Linux-based definitions whereas newer
+> MIPI DisCo for Imaging spec is OS-independent.
+> 
+>>
+>> Note that there currently is hw shipping using the somewhat
+>> broken ACPI sensor description this glue driver binds to,
+>> so we're stuck with dealing with these ACPI tables as they
+>> are already out there in the wild.
+> 
+> I agree, there's little that can be done at this point.
+> 
+>>
+>> But yes for future hw generations it would be good to have
+>> a better description of the hw in ACPI.
+> 
+Hi Sakari, Hans,
+
+Thanks for your support and understanding. We will work internally and 
+ensure our future models adheres to MIPI DisCo Imaging spec.
+
+Thanks,
+Pratap
+
 > --
 > Regards,
 > 
