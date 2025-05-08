@@ -1,143 +1,196 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581BA28FFD5
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2025 21:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746652421; cv=none; b=OaXW7f81Jws3rCADhn6SN3OU95iZUy5LOc5RaoR0JphmSagkyJ9tj2rrBM7fgyxVJOiX1A4CniRYb151JIih6EJzo9aaFUlqiBmbRBzLnfV21yE1yfcXK6WeiififLcvGJQLeqiWFVgCIspV2GhywB5j9+LHAJE5l1u9XIm4KGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746652421; c=relaxed/simple;
-	bh=rDi+M50iRkEBn8NyIC4MJndVXEuY8kocc7kmsv6+/pY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S59ZVsZ6z0bcHYzcFOJA4jaCvCftqnJxtEJQK3Q9vySkMr+90Yr7MZpTw6vtVTc+Ihbxvom6lgG2NFI0KOtKK+1WdcmAobU7lf6lQljkuiQP4zfeF9sUeFJsnA+Gv1VBhhZwRFBhAYEuE/qR5VSwSL5HaITkZoZDLkIpgO69CrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULp4C9gS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F2D214A82;
+	Thu,  8 May 2025 05:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746683105; cv=pass; b=VtYukSClPbAD9h8qK/ZWu/oLpX9STN469xeLLwV0NwMs8wC+8VU8xF3mbFf+okfDm9dEPQN4Jxn90AREa8wSA35WYmu7+Mzt96iq660DwzHroSz7aDMGGx4pD010Ag33m+FNkA4LTrdM9/bzB2dN6ez0VhvRAua5XDgSPzv3PyI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746683105; c=relaxed/simple;
+	bh=Uf9a1i8ReGes8erD/DMJp00dttjBJpsRgLzV+yx45iU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f7DmvNic+OYh4uOaotmzQ4szyIkuRNXWKU8esG3+4Ixy2FHsTEEgwblLsSemJ4xMugJLRPoYqY4VsFl6i+tonOP51Sh8MrSjFXaHcK67BgjcQwyilaI2UsAwq3zpvi8XkJNr2jnWea4HnUC2Z+dwW0fGX2hykkINfntSM6zYQkE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=daXwf0Ms; arc=pass smtp.client-ip=185.185.170.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULp4C9gS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746652418;
+	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="daXwf0Ms"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4ZtLgL5vMxz49PvQ;
+	Thu,  8 May 2025 08:44:46 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+	t=1746683087;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pyFruEMGsFO4LymNbk8Aadri71IZZ9QOzkfxFDvyktk=;
-	b=ULp4C9gSV8QTXGgtceR6n6EI8ulDRdGOn0Z17H7X4V0deHS7gTw2sGKZBLAhjDpFkX1Mud
-	EYPY1/MCiT53PAs7p1Z1dix3oJR+/n+KKwHz/UkXI6iXH1nE/qjeLvYjjNwP3zGOphDRus
-	sAZR4Yzp81vv7AnUC7AdCvqJVB3VC7M=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-M2m9EpLfMASE1Q83-2n8kQ-1; Wed, 07 May 2025 17:13:37 -0400
-X-MC-Unique: M2m9EpLfMASE1Q83-2n8kQ-1
-X-Mimecast-MFC-AGG-ID: M2m9EpLfMASE1Q83-2n8kQ_1746652416
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acb66d17be4so17562066b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2025 14:13:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746652415; x=1747257215;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pyFruEMGsFO4LymNbk8Aadri71IZZ9QOzkfxFDvyktk=;
-        b=Pu/28SWWzf3YXZXCy5dftvJtjVSmLdQiCYvo+6B2QLVgrV2xPcfETK1+ig3oSvIF2P
-         DF1vsp2ZdgpSGX17v+UlsdRBUBBhinl4yR+fslihhRjFwz4w/KS0v3e03mgsWOuWIlPS
-         mV0uLI1zFbcxRTgpkOHhVko4EnFeoj7xk7yyK4kJaWWuDI3JSHwTqFBiJeZG4VnFlo/U
-         HPW445F/SPvQ/6TzaClYOJ7ufC3cgHTHGIOUYmU52t9dcB3bmfeb0cOJ56trYVCrEg1H
-         ZwxMOS62mx3ppo9UKvaYjyW4hMqK+dfjH7/uJee75XOVEQoBZp2YCA97+jdagSNdLifz
-         pUgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYFsN7DUoCKJrrLpZdrRnys2HmpFAfTsHt2Av2Y1nVRTYSTsgd16iEb29sZpTPQGI1jVN782yf7L/ZtDw0NDlc/6Kv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYD21N807+UoUaZ89TfoeivX+CYLb83BRDpusWTMc3hGOzzIbz
-	ACTd3WisWMXuxzdQesefSBRpUcRlS9nhEn2IH7XGorMnZFDSAVvf+ymBN7T8FJerjUOacZrkJtm
-	BTyvDJhP/d+aMihpGWo3yn/xQ4ofTPxbJAOjL35fzGRQpgkJ40PcIXsu1rDCZ//IDUW4Oj9DvyK
-	pFMcE=
-X-Gm-Gg: ASbGncupKNXlxfqsMSSzg8pz5Lujn9EmmzQITrHhJ1Au0n64tPWVpQd7HNxxKbazi+W
-	A8wLrWzQF+975jEadaCmWgdGXfq9R/k0Zcss8OoQ8DzMLdqucJKdoinEvsepEUblSgACDbINRRQ
-	SMw6ha/6yeC78HgA0qY7AtxD/2pxDjeJtW08kV1EFWzxAJ2RQsjHOgD8aX+t4FVtbtK7GUBtGqi
-	6PsPUSX9AMvJqdM/Nno+lqSYUUi9yUlRVGi8HNSR18dw67SNXyXTQgeu8UoIql1xeggpeFS1PON
-	DAj259B6iAYngFi29hZsi9FNXTyQ3/jjls1xvIVfD5U1FInkyetYFrYGz6xGxo8/SDmhgPGvafD
-	CbiiLRbpoBPXZVobL2bju764NMZx2kYU2+Rh9084kdIQl8bWnwVY6zuZDjH0GrQ==
-X-Received: by 2002:a17:907:7d88:b0:ac3:4139:9346 with SMTP id a640c23a62f3a-ad1e8b9c92bmr474554366b.9.1746652415454;
-        Wed, 07 May 2025 14:13:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9Pd3cb9fBsixR0vs0CblTQxcvY90hk5Dm8Nag6f3wwTUMQqcKULDist3ihZOkXkbCvFhKHg==
-X-Received: by 2002:a17:907:7d88:b0:ac3:4139:9346 with SMTP id a640c23a62f3a-ad1e8b9c92bmr474552966b.9.1746652415077;
-        Wed, 07 May 2025 14:13:35 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a2df5sm961549766b.38.2025.05.07.14.13.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 14:13:34 -0700 (PDT)
-Message-ID: <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
-Date: Wed, 7 May 2025 23:13:18 +0200
+	bh=4LpmtxyzH7OZvwjxTMiEA4Nd29xTsJw2FUUa5CYnOv0=;
+	b=daXwf0MsEmXugKkqimHQ8oGxSZBJyhm4T/VnfQLkWLpBm1Y5ueOafPKJtlrfs7zLM26+H7
+	nJpQdmTBadCjPrmmyRc4R9hYBJHtAh06i/7YxIi7mf32KBc9SQhrnzeukzkQWo7LLHf2Cz
+	zJZzve81cRwjCd+4h1fn68wgYvAT9AlJOJ9afT7kXCe7cES/eUN+rqHgXJ8kix/CnNC+xY
+	ldv1fco8Qc+bIKM+ni8dYRsIKLdRT5si5Iadi7r8W7oI/niSIvNrxQp2S9V6Z1FGf59vle
+	f+WbFrzZUbAc4oZ1u/pGZ54bzUQOXxku7q994vJU80PIlnie9VLSA3N6q/HBRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=lahtoruutu; t=1746683087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4LpmtxyzH7OZvwjxTMiEA4Nd29xTsJw2FUUa5CYnOv0=;
+	b=qC1l7vU7Gqq6tqTBLh0cKF9ODW3Ct+m0XPOT8dfosQAqDW+UZcIXzA1/VNNu33GzfJXeYf
+	21MzKnyN+JTd6rTwuahCynhxuaD2x6Eh/8AtBtblnhBKcj/TpVS7ToB68dcNdjadGxwPhO
+	td0cEVaprgX9D/pGOadIYZASEmAG5cQBIRsma+dogjoFOKRF82JktOXoX21inD6RVQZejK
+	pq03F/6uZozdZfANEeEp11Ne7i2P8zdE7tH54YKJmQ8KV+NmSzHyG9blz/Ur73psRY2Nwk
+	I3L7ypR8J7t4AhCbmZzXANZbL7CFyiqLI5l1GxF9WhB2FUfBl9AO7kSNEUz4PQ==
+ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1746683087; a=rsa-sha256;
+	cv=none;
+	b=o2g+JAzJ67IuLrU6Zw/SQ4l1pF+U6+tNJgnH89dBoAMBa5+Tcni9JLQN3c45apAeINYKKh
+	yW51b8SB+TOqd9Km+8OKMnypZnCae+iHGInysKPchJ29bDQgue06svJxgNCKytlahXU7sd
+	1+lZCF7FR5W4hBo95pEdliKTnaL2rqfFWUifXC/VeRKjHzryYTTgdNQmR3b64CcJSWJN1L
+	eFQc37zJFnth1yg9a4dCr9zOFK3M2APyNK6wJ+Zzdx/DV7A6Zb4X26XWAD09OQE8aG63h0
+	/AwfoT75ccZlJDj4XJbDg8GMdrn6wFk3fcG1zrZswCoJE17KgFa+XqF2WjW1pg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 4632F634C93;
+	Thu,  8 May 2025 08:44:46 +0300 (EEST)
+Date: Thu, 8 May 2025 05:44:46 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: "Nirujogi, Pratap" <pnirujog@amd.com>
+Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
+	W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com,
+	mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
+	gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
+Message-ID: <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
+References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
+ <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
+ <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-To: Sakari Ailus <sakari.ailus@iki.fi>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>
-Cc: W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
 
-Hi Sakari,
+Hi Pratap,
 
-On 6-May-25 5:37 PM, Sakari Ailus wrote:
-> Hi Pratap,
+On Wed, May 07, 2025 at 04:16:04PM -0400, Nirujogi, Pratap wrote:
+> > > diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+> > > new file mode 100644
+> > > index 000000000000..1520ebb94507
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/amd/amd_isp4.c
+> > > @@ -0,0 +1,280 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * AMD ISP platform driver for sensor i2-client instantiation
+> > > + *
+> > > + * Copyright 2025 Advanced Micro Devices, Inc.
+> > > + */
+> > > +
+> > > +#include <linux/i2c.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/property.h>
+> > > +#include <linux/units.h>
+> > > +
+> > > +#define AMDISP_OV05C10_I2C_ADDR              0x10
+> > > +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
+> > > +#define AMDISP_OV05C10_HID           "OMNI5C10"
+> > 
+> > What's the purpose of this _HID and is it present on actual firmware
+> > implementation? There's no such ACPI vendor ID as "OMNI".
+> > 
+> The (_HID, "OMNI5C10") is used to check if the OV05C10 ACPI device is
+> actually present before creating the AMD ISP4 platform driver. Yes, ACPI
+> entry is present for OV05C10 sensor in _SB/CAMF.
 > 
-> On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
->> ISP device specific configuration is not available in ACPI. Add
->> swnode graph to configure the missing device properties for the
->> OV05C10 camera device supported on amdisp platform.
->>
->> Add support to create i2c-client dynamically when amdisp i2c
->> adapter is available.
->>
->> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
->> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
->> ---
+>      Scope (_SB)
+>      {
+>          Device (CAMF)
+>          {
+>              Name (_HID, "OMNI5C10")  // _HID: Hardware ID
 
-<snip>
+Please tell your BIOS folks this ACPI ID is invalid. In the future, either
+allocate one yourself with your own vendor ID or get one from the sensor
+vendor, which they would have allocated using their own ACPI vendor ID.
 
->> +/*
->> + * Remote endpoint AMD ISP node definition. No properties defined for
->> + * remote endpoint node for OV05C10.
+>              Name (_DDN, "OV05C-RGB")  // _DDN: DOS Device Name
+>              Name (_SUB, "OV05C")  // _SUB: Subsystem ID
 > 
-> How will this scale? Can you use other sensors with this ISP? Although if
-> you get little from firmware, there's not much you can do. That being said,
-> switching to DisCo for Imaging could be an easier step in this case.
+> 
+> > > +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
+> > > +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
+> > > +
+> > > +/*
+> > > + * AMD ISP platform definition to configure the device properties
+> > > + * missing in the ACPI table.
+> > > + */
+> > > +struct amdisp_platform {
+> > > +     struct i2c_board_info board_info;
+> > > +     struct notifier_block i2c_nb;
+> > > +     struct i2c_client *i2c_dev;
+> > > +     struct mutex lock; /* protects i2c client creation */
+> > > +};
+> > > +
+> > > +/* Top-level OV05C10 camera node property table */
+> > > +static const struct property_entry ov05c10_camera_props[] = {
+> > > +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+> > > +     { }
+> > > +};
+> > > +
+> > > +/* Root AMD ISP OV05C10 camera node definition */
+> > > +static const struct software_node camera_node = {
+> > > +     .name = AMDISP_OV05C10_HID,
+> > > +     .properties = ov05c10_camera_props,
+> > > +};
+> > > +
+> > > +/*
+> > > + * AMD ISP OV05C10 Ports node definition. No properties defined for
+> > > + * ports node for OV05C10.
+> > > + */
+> > > +static const struct software_node ports = {
+> > > +     .name = "ports",
+> > > +     .parent = &camera_node,
+> > > +};
+> > > +
+> > > +/*
+> > > + * AMD ISP OV05C10 Port node definition. No properties defined for
+> > > + * port node for OV05C10.
+> > > + */
+> > > +static const struct software_node port_node = {
+> > > +     .name = "port@",
+> > > +     .parent = &ports,
+> > > +};
+> > > +
+> > > +/*
+> > > + * Remote endpoint AMD ISP node definition. No properties defined for
+> > > + * remote endpoint node for OV05C10.
+> > 
+> > How will this scale? Can you use other sensors with this ISP? Although if
+> > you get little from firmware, there's not much you can do. That being said,
+> > switching to DisCo for Imaging could be an easier step in this case.
+> > 
+> the scope of this driver is limited to ov05c10, and it can be enhanced to
+> support other sensor modules in future.
+> 
+> Sorry, I'm not familiar with the term DisCo. Could you please elaborate.
 
-Note I've already talked to AMD about the way the camera setup
-is currently being described in ACPI tables is suboptimal and
-how they really should use proper ACPI description using e.g.
-a _CRS with an I2cSerialBus resource for the sensor.
+See my reply to Hans.
 
-Although I must admit I did not bring up the ACPI DisCo for imaging
-spec as something to also look at for future generations.
-
-Note that there currently is hw shipping using the somewhat
-broken ACPI sensor description this glue driver binds to,
-so we're stuck with dealing with these ACPI tables as they
-are already out there in the wild.
-
-But yes for future hw generations it would be good to have
-a better description of the hw in ACPI.
-
+-- 
 Regards,
 
-Hans
-
+Sakari Ailus
