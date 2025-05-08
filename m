@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C1222B8DB
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 May 2025 13:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE1F153BD9
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 May 2025 14:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712606; cv=none; b=TkAN7kWN1Y6anPns+AQc0+yn0JXk/fCVVmTlyYdsfliKOE1yGlhP6rCqPdrGCMCriQrOVHxITeDupSBD9y//A/q+3knwwi7Z8ZFKFi4CfXZTo9Wka0T1mpb/3lmZEjGfrqJCufY32dCKAe25AQMApEGJ5w9qWg3BJwIy3t2hvQI=
+	t=1746712855; cv=none; b=ilL77703ufXPBHLDxWqPwEJqkmzdlbiRQ8IXnhjy30/+3jODCejkB0kL01mArMEVozFwiqPfvOYvw2/nIEJTaRFKBZXycEWHgZUqhtMUb0SSPeiDd7gAyGWtY9j0XJ3Ue+5JIBFDnPuCRlO0WzmreLGdivPVdfn6i81PI3k8czY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712606; c=relaxed/simple;
-	bh=c6C0IDh8jGfLHYAmrhCgs46oNWjgnTtyZ8KVsxZOoT0=;
+	s=arc-20240116; t=1746712855; c=relaxed/simple;
+	bh=YRoyK3BALEABx2JcCF10SK+pnBjrZ9BRPIqjbg5H2Nw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LHai0TqboktyQG5glPpWRNfijx1DFSIPLC5QK6fTFgs1htHxtNycZ0pbiPjo8jhhzNncjBuDQrMP7FM5MRYbwK8X3ZEkvfTnKFR83VwoLfsjKvGXnRPoH5WmcDcfMlYijDFgv+u0hqJGSsZzopivRhWKaSIzG6zX/626fyErark=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cjYb4tRx; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=YEb2s4cIcyQJIICCOXdPmyL18ZcOMFiKMWKjxIUfVhvEv/g0YvEjcSs9bFZKH1pQJllaacKsJqEHk3cdSWOUaAJH9l2asUzuJx0PLkI5CBpR1GLirtOYTGjkSXWdpRfXtin7MoIYannkKEt3jpKTMHnYOKpLzZjObh8zj8eGLwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gIm+i1sA; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cjYb4tRx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIm+i1sA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746712604;
+	s=mimecast20190719; t=1746712853;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4T8aqjWnvUph2fimAuP0M4LAoZzE8Kq74Pp22qiTivI=;
-	b=cjYb4tRxQ39lG7WnJY0VcN3C3IwaAHpH4UaAGRNVLYN8mylRw5u2LEfG3Sx1XwQ9faIgRc
-	dtqM5WA0cJz7T1ARkr7Jv7eQ/TTARPDADmkSv0MH7UPFufiT4gt4nA/4yBiHct5YlXPu3j
-	iEa6UskiaQ+7vChcHIgNMuZZayx8fTs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=6TnCo9X9rFkd8dZfcQN25Ythz1cGmJDR0tW3PaauvIE=;
+	b=gIm+i1sA9ZMQ8IWffTRwkLgIxAwkIXERxrw0mFFzC79BhnhWDztavJbnr4NtADs4Gc5u8W
+	BRTxtLnHABEoa99I/i1duxDVNSe9PtOLBWaMR0CkK7lLHVtdmbIIKQlVdh8wYt50tI4Oax
+	LuZlGaFOfPRDUR9s8wJsnvhcm6yjvjk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-552-uTnFzd40MfqRKCKMp-hVxA-1; Thu, 08 May 2025 09:56:42 -0400
-X-MC-Unique: uTnFzd40MfqRKCKMp-hVxA-1
-X-Mimecast-MFC-AGG-ID: uTnFzd40MfqRKCKMp-hVxA_1746712602
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac710ace217so80421466b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 May 2025 06:56:42 -0700 (PDT)
+ us-mta-50-foT4mKACOWK_UqtirLWNhQ-1; Thu, 08 May 2025 10:00:51 -0400
+X-MC-Unique: foT4mKACOWK_UqtirLWNhQ-1
+X-Mimecast-MFC-AGG-ID: foT4mKACOWK_UqtirLWNhQ_1746712850
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acb90bccc16so99671466b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 May 2025 07:00:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746712602; x=1747317402;
+        d=1e100.net; s=20230601; t=1746712850; x=1747317650;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4T8aqjWnvUph2fimAuP0M4LAoZzE8Kq74Pp22qiTivI=;
-        b=jBVs2L8o/ShLAxpnXn/tmqiwPZ+Nk483hZzasrHeCSX1e0izekAxyUMNLdPgICiuJn
-         /FeGoMTmu9FRWGMp64psG5+t7Of7XJDy5gYOxudg4DeuRd9dDTUb1iSy4ktP109r9hpC
-         7KrWubBohJM1sP4Iw2FOTVuM2Ib7XkFQ0YZtP4DPLcU7tLdSRfXq0e1m0zqAFnBiu2xD
-         tz90pvebrCOLofXUEgj5Fis/qOInQwJ2TqIl1IK3esWFXmef851WRPw8VIC2sGHj/6gO
-         6OKRoRtfnYDDUvnQYNZRNMisk2COsqsmOl43Pme+Wjz8KUaw0k6zd4M0CqtEFnNMrAg1
-         3k8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW7jDo/Axif0hQdVaR4fi5kjwEbYPGkqRxEz3RdJIuAuY3Aq0lX4W7lj6xRhmuMHEH5aaLjba2/NiMLZeweni0dLzCF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYA0jbmFma3Ryc01aT6rHrNTcKQn5I1uMTvPzdVl6bXiJ4NoxV
-	guvgM62jPUQ4jYUbYSme/jZG/vEs+k+2v9A4nS6XQkrSAZgR0rhJvr2nMXSxKiLXB5xpJZP7Lgm
-	ds12gW5Y7dIX8qir6Kvhzmub6y7Akp/OcTE8JPrdU7bF9WK5/nOBjwFPTVtthC6EPSkH/IQ0=
-X-Gm-Gg: ASbGncvajOMyfjhHk3pkWbvNKUFhrocFupHm8V3/i4hgpOzuNdhcBJFb/Z/UIBxyVAY
-	XsKGnrD/t4I99Ru8O3NaEfZL8Y2cOUEB3Woef92P05xLc0cIgWo30r5B85Fzl0dwrku9lRWHjZV
-	zm/u5YLM/rhimx+nqE0s42lIXYDGkcHBXG6kv5iH5ioOZjiC7MaqtGuYbIusg5LeZu6LVKkL2dc
-	/ESMS0WuYH5ibog9zWQQ6RKTVIfaDpapA6VNqsgL6PGWx6RJb2EmkoxJlQJJT9lX1YpN35jE/k7
-	JNgIfQ0WfGgDxwfE3Lx65XDFNI46fxaPUPWHy3pxkK2a3d0deIeqicOTTpcDDpxSD/hxAyvCu+S
-	A+LWNekCku1fBpEmrZdMPAfOnul4fiT1RCE0TzEp1mEUxvWDQX5QzglkXXuifpQ==
-X-Received: by 2002:a17:907:181a:b0:acb:9769:364c with SMTP id a640c23a62f3a-ad1fe6c087fmr295870566b.21.1746712601581;
-        Thu, 08 May 2025 06:56:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHONZfcA79C9YJCxJXm9PYVFvyZiVs0xzW0M3ZiHJd3VPv1yoYEcXa7Qpf6U9oWkZRVxppOhg==
-X-Received: by 2002:a17:907:181a:b0:acb:9769:364c with SMTP id a640c23a62f3a-ad1fe6c087fmr295867766b.21.1746712601203;
-        Thu, 08 May 2025 06:56:41 -0700 (PDT)
+        bh=6TnCo9X9rFkd8dZfcQN25Ythz1cGmJDR0tW3PaauvIE=;
+        b=MfIcLyyZ/5sEL/X3TTKc61pc9kIfhWS2dCOCLLG1GFz7ztWWZiuD2iYTxPZ1kAxq9N
+         JiFPfoAf3d+UAqw7Zr6DQVTw4vepvcr9vVTIjMps4kr9anD/eumRDsH+bGejgcWTEz87
+         KHwshND1/n+39+s8WkJsiYXx9vgsmrQAyU0E/Hk3UH96HBg+rjoTKPH2XPyX1vliohGf
+         9OiPfWhBgrYoCkBLuyu88r85TBdzX/p3IDIHovmvQlmUIp6Q8ZB0Cs0ZxQxY40YvxFEV
+         MvifzbkyhdBWf1wPHDVlxt5+nDp2ag9aj4qsD4q85WpqA3yz5DFb9FtO2z7okR6MSBbE
+         w1sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsv2dD9dZO+2uSVNrCnePueGu0/xlxPNWJ3FdMS2NZzSbtn706wPybl6bVTNh2GeGCsAicmNm+dSserjZQ6oC8XCKo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3imqwfN2WtzGXTOI2tkidiQLbfw1BvUEKCIp6a4Nr1Lc+CxHV
+	RqKrVv8NUD6XWmzX89mp+VMzWA4fzDSMRFnMiYK1vZsFS8886GGH28ItpdSKkoxi5hYzCPTkIYc
+	KgbA6Q65wS2Sd3PISTkN12SqMPe2l6CifT5mcqon/eVkt/EwWsw1JjFkOZPDrS2JiGPvAscA=
+X-Gm-Gg: ASbGncvubG3N2A3USDn0z2CbDpfl8KzhQlZdHLAEDSw91NiZAOficP2i3qxazix4iXj
+	0j3MxdOtxiAN5D+iAUDJXkGmMV3t/kIBwYDX8EN1xzxzSBWmdWiqpm8KilM1ghMRlIqJSdZGB6O
+	B4PjCCTGdt36KCDEWbxMK9YZlt1zPSYGii85l+pNNfK3f4MEK8mmxj1XLpEgxiik537n2/MzLLm
+	HeQGZUOFfAO+DRjpqyOoeUZkZlv02h+yiI+EdZBEfAWJMvQQHGrwFGY/L1k8Ah2EH9vNc3uu0de
+	7eQdxqeWROmKmVYdqrGWmb4vpG6PTKVnC+oPs/y8yBKV1sjMZYsV8DYDSZfybrwT3XMw96cnqI3
+	TgsQpa2DCzy2sfivF3uKeKFuw66LF9zjJzBsvByaRB08mkIIvho8Wa4TFeve5Pg==
+X-Received: by 2002:a17:907:1b0d:b0:ac1:dfab:d38e with SMTP id a640c23a62f3a-ad1e8ca918fmr791990666b.15.1746712849778;
+        Thu, 08 May 2025 07:00:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGs4kUttzZ/fXfN85MKSO8+LoixBy/tJ7xib42w1vjltEhwA+sdD5VBLF+aPCStQURh6GIMiA==
+X-Received: by 2002:a17:907:1b0d:b0:ac1:dfab:d38e with SMTP id a640c23a62f3a-ad1e8ca918fmr791984266b.15.1746712849050;
+        Thu, 08 May 2025 07:00:49 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189146d4dsm1096324666b.15.2025.05.08.06.56.40
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a19e6sm1081594466b.46.2025.05.08.07.00.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 06:56:40 -0700 (PDT)
-Message-ID: <f8a321cc-2545-4048-a257-56c3c5dd03b3@redhat.com>
-Date: Thu, 8 May 2025 15:56:39 +0200
+        Thu, 08 May 2025 07:00:48 -0700 (PDT)
+Message-ID: <dc3b07a9-cb0f-4f84-9e4b-c6e62ffc73df@redhat.com>
+Date: Thu, 8 May 2025 16:00:47 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,62 +74,57 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] media: atomisp: Switch to int3472 driver sensor GPIO
- mapping code
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+Subject: Re: [PATCH 0/6] platform/x86: int3472: Allow re-using sensor GPIO
+ mapping in atomisp
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Andy Shevchenko <andy@kernel.org>,
  Sakari Ailus <sakari.ailus@linux.intel.com>,
  platform-driver-x86@vger.kernel.org,
  Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
  linux-staging@lists.linux.dev
 References: <20250507184737.154747-1-hdegoede@redhat.com>
- <20250507184737.154747-7-hdegoede@redhat.com>
- <CAHp75Vc0UZOXbfhjeq1XCAwt-2SX-SGOYomHhEfvx5HuXaxf1g@mail.gmail.com>
- <6d5a5cc2-a7b1-4032-82cd-0250f345dca9@redhat.com>
- <a8a6257d-854f-62c2-dd63-c3d2cbab31a5@linux.intel.com>
+ <CAHp75Vcb-fcQHWqVDh=KUwhwvSP6KqUN8FsAMvDuwF2iD7=J1A@mail.gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <a8a6257d-854f-62c2-dd63-c3d2cbab31a5@linux.intel.com>
+In-Reply-To: <CAHp75Vcb-fcQHWqVDh=KUwhwvSP6KqUN8FsAMvDuwF2iD7=J1A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Andy,
 
-On 8-May-25 3:48 PM, Ilpo Järvinen wrote:
-> On Thu, 8 May 2025, Hans de Goede wrote:
->> On 8-May-25 10:34 AM, Andy Shevchenko wrote:
->>> On Wed, May 7, 2025 at 9:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Replace the duplicate code for calling the special Intel camera sensor GPIO
->>>> type _DSM (79234640-9e10-4fea-a5c1-b5aa8b19756f) and mapping GPIOs to
->>>> the sensor with a call to int3472_discrete_parse_crs() from the int3472
->>>> driver.
->>>>
->>>> Besides avoiding code duplication the int3472 version of the code also
->>>> supports more features, like mapping the powerdown GPIO to a regulator on
->>>> the mt9m114 which is necessary to make the camera on the Asus T100TA work.
->>>
->>> ...
->>>
->>> Don't you need the Kconfig(s) update to have proper dependencies all
->>> over these cases?
->>
->> Yes I do, I thought about doing this already but forgot to actually
->> do it, thank you for catching this.
->>
->> When I've some time for it I'll prepare a v2 of just this patch
->> addressing this and your s/then/than/ remark.
->>
->> Since you and Sakari are happy with them patches 1-5 can be picked up
->> and merged by Ilpo as is, so I do not plan to send a v2 of those.
+On 8-May-25 10:36 AM, Andy Shevchenko wrote:
+> On Wed, May 7, 2025 at 9:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> Thanks for the quick reviews.
+>> This patch series does some small refactoring of the int3472 code to allow
+>> re-using the sensor GPIO mapping code in the atomisp driver and then the
+>> final patch in the series moves the atomisp driver over.
+>>
+>> About merging this, maybe the int3472 patches can be merged in time for
+>> the 6.16 merge window and then the atomisp patch can be merged after
+>> 6.16-rc1 is released, otherwise an immutable pdx86 branch with the first
+>> 5 patches will be necessary.
 > 
-> I took patch 1-5 into the review-ilpo-next branch with one typo in 
-> change log fixed (reser -> reset).
+> Overall I'm pretty much liking this series, but one comment against
+> the last patch (see there) and one question here. Can you isolate GPIO
+> mapping code in a separate file, please? This will help to generalise
+> this code outside of two mentioned drivers (I might need it in the
+> future for something else, not related to cameras at all).
 
-Great, thank you!
+If you want to re-use this elsewhere then splitting it out
+further sounds like a good plan.
+
+But which bits do you need? Do you actually need the full code calling
+the special DSM and then adding either GPIO-lookups, or gpio controlled
+regulators / clks / LEDs ?
+
+Because atm the int3472/discrete.c + other c files linked into the .ko
+does all of that and for the atomisp2 case we actually want all of
+that (although for now GPIO -> clk and LED is unused there).
+
+Anyway I think it would be best for you (Andy) to come up with
+a proposal / RFC patch series to split out what you need. I'm certainly
+open to that and happy to review such a series.
 
 Regards,
 
