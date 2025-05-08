@@ -1,248 +1,166 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2089.outbound.protection.outlook.com [40.107.102.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972C621883C;
-	Thu,  8 May 2025 23:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746746010; cv=fail; b=kGpMe4mC0hbyB4ID4ARi3N3Fu/u9ltFh+y2jW3qC4OyR43hKduVUAiItY50e1xkGu413zZEuuIwNjXSk6t5x/arGejmi6mQ2zRJF0bF0vpxYlSoPYYulJpQHYW9DaS21NUfKD4TClg7fypsBpeRiOFVTE5S7F/PZIFQiA9V+qtM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746746010; c=relaxed/simple;
-	bh=zQ7FOHUKm83uFm8PPo4/DLR5H/+7TIxR2BW2BT3yFA0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pU94ES/5Ct+bKWsnPuhNQlbXj3OdBHAN2wn/kXAN0reC45HVaHeLxpKea/oLBO3YqSK6mPGfv7gZp3QuChzgoDtGqz+jHXaFKV9k29AB1F6VJhJu4NTQUSVez/WWY3T//PBNi3L5rXH9sxP6jV1jnwv8QQzjOAE5maJAhuYYyWg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LIapA81s; arc=fail smtp.client-ip=40.107.102.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CC56F073;
+	Thu,  8 May 2025 23:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746748345; cv=none; b=tN34ugdNj44jrm0pFLWc3Wzqs5V3LaVIDQQSIbYgSkK8gzGQh5ennivadKaf4yM1acCAllGh+QiBtSdp8H/JugjL8Qq7NSL/5XLW0LR+KcFzXhj4WXO+eMZpzjS7zrR55JlChmklZb/lNYSldfyeUwFI7hhQ1fhIiaIlQ1M/iGM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746748345; c=relaxed/simple;
+	bh=zCcLlGfnA/SwK/QTsQ6H1iR+5VjSwFpBApt8bXe5e1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L1gkDjfUSMJQZrr68HBQYX7A/ZHf+83NatGVnbArmDw/vt2KFTB95UxmtWwNgtto2Fk+GGoOCcBxVm2ItVjsLLtgd7qytv2qmOUpf3KC5Q8Rgde5EeyCNWwZzAlCj6yq9X9c0SWPh48lLluFALDCKQN9E4JZhyOBHOrtMlpeBBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgaprQwh; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LIapA81s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s6KOeDQdN+Qud8GMAgQs+ULJGbI/B23YD3zMmIAkVLg9rbq2kIc8/+xqmThHZHb4setb697qNS6zaCwdoRLZeswdnronVQf9MRoxDGhf4a5bhZP3deg1MNy8IMd/MF14wMnOhhKvWbA753fil6XEiD698d9UruFAni1jX8ewv3VNgJpjOhf3releqZrRCEO9NnUsyGiO7anhXB70weVWeid1w8B6RdZyPMQmpR/Y+e0vinkozBhqo9P/yFxD+TSQ9jCaB9kRlkcl5bjnfhSBVpOwkXi3HkuTIwyXhuOwqkxBbzY4W/kL3o0PEOsrjSfVXE8WHYNSJ0PqSFhov809zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K7Ujvu/NWKEEBfggPFp7LsZV8ozz43A3iLoIgREiezQ=;
- b=MNS4D9SWNQqXcKo6EH6m460S8RtEANG6M9uuEVdzRVo6TGdIDxsUX2+uXUuZxa6NXfJfc9jYRJBfVBby4xtQpdPYalO1G1soNmn8D+W0PcWvqJ4xF39OixIKWzAgr0bWOKw9NoX3ywc9j4Da3oh/ZFudNj3OgLrMiz8//3HtEma/b/0fgmkshZsQjOoTSZFC6eulhGMimk/Rb521CJEfZ+v7zpSPblGEbQtk4/iZLhbl6oO/Smmp+EBGBSkcI/Qhj0I77pZVjmdwgqAzib0BQCmxMx8Nz699UAQqtZe8K7k70p1s6fN1QV69M2O5Pi9CNQhk0+O9hzAHCJv4zxIU4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K7Ujvu/NWKEEBfggPFp7LsZV8ozz43A3iLoIgREiezQ=;
- b=LIapA81saw/nyS34GpZvOKYBbAPvpeBgNvgWCRhZ4dutA17L7NjyQmfTQzYvYtVie8xK04SduwfN2d6awXxret+FLJjKA7ehXjBbHPun1IvPsw0J59MArq84x8wCah+BJbX2fZH4FToApV8Es7UzK8jeYtkEgDtwHVqBSsDf0Hk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
- SJ0PR12MB6926.namprd12.prod.outlook.com (2603:10b6:a03:485::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.23; Thu, 8 May 2025 23:13:25 +0000
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8678.028; Thu, 8 May 2025
- 23:13:25 +0000
-Message-ID: <2a9ba94e-7985-4ba9-88c6-45b8cf4d001f@amd.com>
-Date: Thu, 8 May 2025 19:13:24 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-Content-Language: en-GB
-To: Sakari Ailus <sakari.ailus@iki.fi>, Hans de Goede <hdegoede@redhat.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, W_Armin@gmx.de,
- ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
- <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT3PR01CA0102.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:85::21) To DS0PR12MB6440.namprd12.prod.outlook.com
- (2603:10b6:8:c8::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgaprQwh"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22e16234307so17884905ad.0;
+        Thu, 08 May 2025 16:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746748342; x=1747353142; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7+dTqK1fH1KDfSrx+FC1lge6PAOCtI5Bu9tu5w/CBEA=;
+        b=RgaprQwhAgT8ATCjCaWEG5F8oKCyelA4Jc6Fk/igFiIS7FIjnk5L13cHiaLrivzazM
+         Su2jjtNOXeWN5khEKexAdHO/Xj4TmqEFOfPJ6sK2RXZCzcayOXuCaalulYJ/o1BUgbgN
+         8IDCJH3aiFIPJdtkO/f5/6c1hOJuZ4R2Bn+XDwga4Ry9651wWYLSubSPLtacKcge3pjp
+         q4kHojX08dkhkkIqv3SOAQUtY97h4TNY48GuS1K6ZXqqHjvBryHPHN6JFWTye/HgOD/l
+         cBm84yQYRr2sUIXOmNa3+7DB1HhrtNQz8wyjtuQrGkcMLylFShwnXBb0C7AUjI0yJ5S0
+         g/VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746748342; x=1747353142;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7+dTqK1fH1KDfSrx+FC1lge6PAOCtI5Bu9tu5w/CBEA=;
+        b=AhtqR9gVgAnLrlspgF9ZikkAH9QFhyiK/rA9g5IRNYWEmRbQf747BJWBsgTrqqAb/j
+         EGG9BNmSIkeq8j3/Sb+8xLTA+JkNSj1PAJ3DdBzmEnTiXbwPdca8SJkgunBYlqQR3DC/
+         yzjx1a+DK9jWgXXv+9t99YzMUuxNFxR3dkSi2xRJ3Ys3tgYwsCyQ31v98DBDT1onbeXc
+         JorNKopZxXXGlkKsNXlDUYHDj/eb1/0khdWHmSrAFETGG10RzPlcQZJ4hg/39SsHURVd
+         YmtrTGZkzkh1H/sJdrvMI+t+mcMYPGPlsW6fuZo//5lj7QIhNbQpTvftmkwrdZxveFsA
+         jgNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkM4y0eSqPw/fQ1MzeTTbP7Yf3RXNE2llsL+bVY/s8d9u/Xde4SEKDuQkidJ8ox60yVfi30A+nshU=@vger.kernel.org, AJvYcCWsygji454zfHFUJeCaEuIBvicVbaRl7jThY4K4jJRO21deLmk2KDoq3W0eMZMcAVBlrF+UE9DM4xjVMQnYGCQ508Yrqg==@vger.kernel.org, AJvYcCXz1j6bVKHAKZI+c/RLQpSC5Ltczhp9iXcwDEYswNOwy4adJoCS58wbyuLpUv3CU97PWXf2EmUKlVHfEOwa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGaLmZs6IswHJW4oprQz5Mmi4Eir7BKBlOpMGtl1uAOPGQSKTC
+	EWhDfDlUEw3CmY9N/difS2IwnSPxtjo2zOT+XJw9/3wFxvfNBKPd
+X-Gm-Gg: ASbGnctlxKTkWggni6dXqngMhkRp2oV7JxHuQUALGcC71qr25b5loy9iwnmE4jf8CQk
+	7yZE5iCw3ho6Z9i0UGYU5HhDmxn3Pk/8S7NdEEBgdLFRbAZ2kGP96GHu3QZPkN3keqcOc+mMYwJ
+	fOkBVV5yATOCutRct+XSSxeDj74VY4T/fbLes2sUyQvfuKToxqL1LygYkNjqbSsoRh0S12AsA3g
+	bGZwBRUJ0frJEGAV8XlGlKNsfejQfwgP5V1W07Tww3147dXmwKdpyCNduPq4m9p97CvPgfaOsrp
+	KblESDZkq72jRyZplMoDgBbe9M/dkdLThOt4FHQ5j/xQd8AumFo3RQ6kK5DTX4pKCReB+SETYXT
+	aHXiUpiBJnWXVK6vRhP19M002VVyfH/qrOInlQT4=
+X-Google-Smtp-Source: AGHT+IESsDblSF+om3G+D3PxsuAoe6bcX9pTwOjV+DZvyRSsbWeo5knrzuuY7eJVy/VoPigXf3w0+A==
+X-Received: by 2002:a17:902:f602:b0:220:fe36:650c with SMTP id d9443c01a7336-22fc93e3d82mr18459165ad.23.1746748342170;
+        Thu, 08 May 2025 16:52:22 -0700 (PDT)
+Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc680515esm5844615ad.0.2025.05.08.16.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 16:52:21 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/6] platform/x86: Add Lenovo WMI Gaming Series Drivers
+Date: Thu,  8 May 2025 16:51:33 -0700
+Message-ID: <20250508235217.12256-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|SJ0PR12MB6926:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0eebfc7c-8416-452a-7381-08dd8e85ef72
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RjNEOU96OGNNVDdXODJ3c2Zja28veUhLSmJyVGlUL3lGYllGTFVGcjQ5dTdQ?=
- =?utf-8?B?SmIxckR3NWFvSEVXZnZ4YlhFd00wZUkxUTd4aHZtQzFUZGNiOEZnY3V3Zzl1?=
- =?utf-8?B?Qm13d09xeVFiRUR4UHR6TlJabjltUlpzb3dVUDNBc3lneVRxOXR1dG4wdE9u?=
- =?utf-8?B?TUhTaDBuSW0wc1drL096NDBhZ3lucEZIQ2lZK2pGSzllR2hwM1RDR0lZdEE4?=
- =?utf-8?B?UTJEU2drWnZrTE5CWGNKdmdQenU1WEsybVhJdWc1Nk5jenVqc2QwRDR2Qk9W?=
- =?utf-8?B?WEZoc2RrMS8ybHdKTjh4NS9FWUlkZStnYzVQZjlCWUJVYkxGZFd2U2h2V3A4?=
- =?utf-8?B?UG1od3prZ3NNSHQ3azlTQXpORGM5aFpEUHovQ1YzV09IMDdvMy9kWjcrbnla?=
- =?utf-8?B?RHJOc0x2RWtybFVhUTVSVjFIR2ZKRkdHaXRtVXVaK0VxMXZ6ZlY2dDM5UHNq?=
- =?utf-8?B?M2Ywcld0R2pLcTdPdkVJdTEvQXl0bktNWkZpTDFmZ05HSUo2M0I0M1ZESjRH?=
- =?utf-8?B?RzlPMDhsWkdBNFpqY3FRcG9DMnZVV3RMSjNHS2VpU24rS2FpL1M4MWN6YVNk?=
- =?utf-8?B?VnBwZ1p5bG1obWEzcGxVMFFIVFJHc1F3SGpTL3grcmxITU9nTVlGSU1nUkZz?=
- =?utf-8?B?VEQvWVA4ZHdtVFEza2JoYkVGaXliNnZsM2tJelR0V0x2eG02SjgyeVhSaWJv?=
- =?utf-8?B?aE0vQ1kyNzI4bFJ0b1JiTW1kcUJGc1NpZTN3ekNnaGU0YUtSYjROOE0xQlJl?=
- =?utf-8?B?VHZ4SGVFZ0Fka2ovcGl6UUJmR0UzUnpIQWg4bzNPUFhhc0ExQXlYNURabzdG?=
- =?utf-8?B?VXlWSUVUaGwzUzFSQXhUd0FmREJZZ2lwb3F4OWZqWjU0cDNUWTU0TUlBSWFm?=
- =?utf-8?B?Z2RVOS9jUW9IczFDMWF6TTQyazd4bzZra3Zna1hVYnZlZWMvci9NSEdjYmcr?=
- =?utf-8?B?RmxJZ01CckNrSzRpQUdndm9WTVRiRmhtYmVZRHNQcGdodVg1TEFJZFRKT3hP?=
- =?utf-8?B?dU5wajN5Q2dxclBMNUdxa1JHbnlqZkcwVjZxSVFQN3laQXZUZGdjM0hUU3pu?=
- =?utf-8?B?VndvbDFrTCsreTM4cDRkNTJWTUhHM3piRkJPdkEvTlYvclZFNHdDdGtJS01C?=
- =?utf-8?B?Q2pOcWIyTW5Uc0QzaGpGZFhPbjhobWpJYk02YjRlRlVNZVFDTG5LNDB3ZXBI?=
- =?utf-8?B?WVFUYWl0aWJ3SHN6eUYyVTRNQ01VaEliS3MyOGRJcWdmRjlhYXhzZy8wc3VL?=
- =?utf-8?B?R0RSQmxlc0dTbk9tWWVlVmxZaW92SnpYajVjNDdhM0Z3dHYxOXIyd1lqN3hj?=
- =?utf-8?B?dTkrZUNaV1FXcUkyNElWNmcwdEUvamIyaW5TbVc2bC84TUpUWDZEd1Mweno3?=
- =?utf-8?B?Qm5pblQ4UlYzMUtyWUhIa3Vod0VLQnNHL2YrWlBySjVhZEZRZndPR0VXaXBw?=
- =?utf-8?B?SEtsUGRRY0lUWG05MWE5RGtpRzlUN0RzRXlwRDhJemFWVURlcVhpM1UrZzI3?=
- =?utf-8?B?RzFxcjZkMWxxQzhrbEp5QTNZZWhxNFNURkN3MXV3RTk2SU1xNGY4eGhZbGgx?=
- =?utf-8?B?T2NYM2xKd1ZNbENnTmZmNVhELzgxOFVwVTJCbmQzdVByV0htNWFadzdYMjl2?=
- =?utf-8?B?czFIcnRGRmI2WUN0U2Ftc25TR2pWZXh4ZGo2WUFVVUVPZTFTSktCUEI5OXh5?=
- =?utf-8?B?ZXYydnA3TEg2SWFWTzBWem45S2xQUCsyNVFwT0FQaHBINDJQV3VvRWJnQlR6?=
- =?utf-8?B?aElPQTVGbVJySjB6R21JUW9MazE3WHJqdmNRTjUvQnhRWTVJQzZ5eGZvS0xx?=
- =?utf-8?B?Ynp2ZjdDazFyTEhjK0NrVDk0S1d6eDNrKzVFUFYyK283cFBNNVNzdWtSL2FT?=
- =?utf-8?B?T01nWUhOOWtiUU1LU3pSSkhXeFJsd2FNeG5WUkhETHdwLzEvK2YxYkNiY1FH?=
- =?utf-8?Q?4c6zI87JIn0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MFZWZEk5eGZ0REYwUENGS1R3c1F6OUN5VU9wQkQzMGxyYW1sYThOQmNhZFZh?=
- =?utf-8?B?ckhyUnR6TDRaSjAwRHI5STloUnQzdEk1OHZhVDB2ellOdE1jUUEza21OUm43?=
- =?utf-8?B?Sy85WU9FdDRJTTZuZWMvQkZyL3NuOUhLc3ZRSHV4Y2JFNW5tV3dua2l3NXNl?=
- =?utf-8?B?YzhSWkc1SmdjemgxaUROcjI4bllDN1ZHUjBnakZLMXVuYmYrQVNyNVFOQzhY?=
- =?utf-8?B?cHhUR0ZhQlVwWHM5cFRtN1BuL2Q1NzlJTURDNTZWYVhvSzNHdzlUMndXa0ha?=
- =?utf-8?B?Zy9HMDFDMEJFWEhGOC9mV1hOVWRxQ2UrRzBCNjdGVFZ5RmR6NTFRZGZhMXZH?=
- =?utf-8?B?NHM5RXpuVGlGeEhBK0NUbytSNzZOSmY1T1VCeTVMamFNaEtwbXB6VExoWVVm?=
- =?utf-8?B?a1BPeTNWZ1N1NjR5VFFyK2xidWRzMms2dVhLNjhOcnJuV3A5YmJ4N3J5VjVQ?=
- =?utf-8?B?SGVRSlhkU2p3YnNrRTBsS0w3MjV6RUYvZTNoMFlZMDA5TTlhN1hHRTBhbEhJ?=
- =?utf-8?B?cnUvVXpCZHJmaDIrRmgzVDBQRUJ5N2x0WFNLUFpyMDR4Nmx4eDI4UmhaNHFM?=
- =?utf-8?B?MU9mUWh6blJEa3RIUXUyVmpqYlhRYWs0dStVQ0V4dEhiUzZSazF0Y1dyNVRz?=
- =?utf-8?B?STJKQnNuaW40UnJGMEh2a2xZNDhtcE43THpXaXVITkVHOGpoeC9kTE9aU0di?=
- =?utf-8?B?bzY2YmduV3g4OCtjSW5Lc1B3S2xsK3poSk9wUVE1bjQrUzlnZmV1TlZ1cXVY?=
- =?utf-8?B?UXpNb3lFZVRSbTlrcE5sRFNueWNjcGg2UFltK2Y2WlhpWGNicEJvRXRGT1hE?=
- =?utf-8?B?N0pCeVFWcFNtOHpGT0pwZGs5TGZIcGcvTnZZVUVBSHJPTTNGN2kwNUF2aDdN?=
- =?utf-8?B?cVljL01sWDhxMnh5Vzc1dW9zVWtWZ0tHZW93aGhzOXo0VFdBek5HdDNXMHc4?=
- =?utf-8?B?VUQxcmE0WVFaUVh5bnRRQkorVEI3YVh4QzBKTXFBeTFJeFZGSDhsZENLczV6?=
- =?utf-8?B?V0sxVXM5ZFFkZ1kzeFloQjQ1QkZaeFJSWTEzKzBzSElIZFhBNHlIS1NxdWtD?=
- =?utf-8?B?dE9tbU9rcDg3dTFaZjRMcEQxMzRRVnRjK0x2aEdzSHNmWXdCL0ljcEcvam9Z?=
- =?utf-8?B?enI2MEladTEwakVVUnEwSktuLzh1RGJRSVFhQlpnSjZ6Y2hBSnpCN05yL1Z4?=
- =?utf-8?B?ZkxkS0V3Y2NMYVlsOWVoaXcrSll2dGcwYTJkVGJwWTdMTlMwM2ZTOG1QZ1Na?=
- =?utf-8?B?MUdqNDI1azNKNlJsK3RIYUgzTkRGUzk5aFQyQXNJY3JJZnA3cjNGMWdWU1Rh?=
- =?utf-8?B?RFk3dmxuUVRVekNhUnFubSs0OFlTN0RTZjdCOWc0UmdublJvdUpLZ25rVURz?=
- =?utf-8?B?UkF6QS9XK0FILzNTNVY0MFVXclBHSzhRZ25SWXlnN3QyYlErN25IMlFBbHJF?=
- =?utf-8?B?SmhIcTBKWDNWWjJsVW9ROFNHNURLbVJ5MXNhY2N6ZmNCZ1U0cUkyT0pBV1VL?=
- =?utf-8?B?WEFsQXNVODg0elVUQldVL05obHoxK015SS9pYXV1K3M1WnZ2TUF6bDZZT1dR?=
- =?utf-8?B?cy8rdXZiWUR4dHczbERjZG4zV2dFR2VITFZvTk0raExaaXg1NEZEc2RHYnQ0?=
- =?utf-8?B?dGNreVBScXBIVnNRQWNSVFNXVkVTVXROTDJnZHd1NzZON3hIMkRldGxHcUg5?=
- =?utf-8?B?d3VLdVBDbDlLbkloRXJwQ2M5VmZBTkNXU29xWkptMXR6ZHJYYU82MzZkMHlM?=
- =?utf-8?B?dGVRVVZsUXpHUnpnZElNNUJwbGRIZ1lTU3d6NUVpSmY0Ujhub2VzU3BielYx?=
- =?utf-8?B?dDRDaUdJNS9jczAzUk8rcVpEMTM3bkRQQWs3L3N2Z0pmTDNhYzZoRldLYWtJ?=
- =?utf-8?B?eG9hRVdQYkNNWXNjQzNsaCtuTlU4c1YwZ0FrSk83YVpHd3c4TWFORFNwSHRx?=
- =?utf-8?B?SDZ5YXBqdFR4TFJxQVZGYWs0SW9wV3V3cEl5cjRNZEI3SkU0UytyZUNWcXBK?=
- =?utf-8?B?TnRLQjhSRW9nUVowdlBFOERBRVdRbXd2V3c3dTNuT2FTaXdRb0VySGRlUnU1?=
- =?utf-8?B?bWZMcEJkK3VadmlaMmtmYzRsNjE1M0FJZzdpWEZMWndySXF3Y1NJVkFNNFo4?=
- =?utf-8?Q?KICQAHb4b0TmwbkVCBvGZ3yWX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0eebfc7c-8416-452a-7381-08dd8e85ef72
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 23:13:25.7570
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: paMolVEmjhuRHHc+iAmKeJBE3budeM9iLhEZmIHQwBAPnsJbHsXpl/M9TCnem1togJEFPq3rYripyF0tlIlZIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6926
+Content-Transfer-Encoding: 8bit
 
+Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+WMI interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "Gamezone", "Other
+Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and other data block interfaces would be trivial in later
+patches.
 
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
 
-On 5/8/2025 3:17 AM, Sakari Ailus wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Hi Hans,
-> 
-> On Wed, May 07, 2025 at 11:13:18PM +0200, Hans de Goede wrote:
->> Hi Sakari,
->>
->> On 6-May-25 5:37 PM, Sakari Ailus wrote:
->>> Hi Pratap,
->>>
->>> On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
->>>> ISP device specific configuration is not available in ACPI. Add
->>>> swnode graph to configure the missing device properties for the
->>>> OV05C10 camera device supported on amdisp platform.
->>>>
->>>> Add support to create i2c-client dynamically when amdisp i2c
->>>> adapter is available.
->>>>
->>>> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
->>>> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
->>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
->>>> ---
->>
->> <snip>
->>
->>>> +/*
->>>> + * Remote endpoint AMD ISP node definition. No properties defined for
->>>> + * remote endpoint node for OV05C10.
->>>
->>> How will this scale? Can you use other sensors with this ISP? Although if
->>> you get little from firmware, there's not much you can do. That being said,
->>> switching to DisCo for Imaging could be an easier step in this case.
->>
->> Note I've already talked to AMD about the way the camera setup
->> is currently being described in ACPI tables is suboptimal and
->> how they really should use proper ACPI description using e.g.
->> a _CRS with an I2cSerialBus resource for the sensor.
-> 
-> That's one thing, yes, but it's not enough to get rid of the board code.
-> 
->>
->> Although I must admit I did not bring up the ACPI DisCo for imaging
->> spec as something to also look at for future generations.
-> 
-> I think we should really try to get rid of the board code the raw cameras
-> on ACPI systems currently depend on, in future systems, instead of just
-> reducing it a little bit. MIPI DisCo for Imaging enables that.
-> 
-> I guess you're not very familiar with Intel-based ChromeOS systems in this
-> area? Maybe largely because they work out of the box. And there's no board
-> code for these systems in the kernel. These are based (albeit I'm not quite
-> sure about the latest ones) on older Linux-based definitions whereas newer
-> MIPI DisCo for Imaging spec is OS-independent.
-> 
->>
->> Note that there currently is hw shipping using the somewhat
->> broken ACPI sensor description this glue driver binds to,
->> so we're stuck with dealing with these ACPI tables as they
->> are already out there in the wild.
-> 
-> I agree, there's little that can be done at this point.
-> 
->>
->> But yes for future hw generations it would be good to have
->> a better description of the hw in ACPI.
-> 
-Hi Sakari, Hans,
+The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+S.
 
-Thanks for your support and understanding. We will work internally and 
-ensure our future models adheres to MIPI DisCo Imaging spec.
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+---
+v8:
+https://lore.kernel.org/platform-driver-x86/20250505010659.1450984-1-derekjohn.clark@gmail.com/
+v7:
+https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
+v6:
+https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
+v5:
+https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
+v4:
+https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
+v3:
+https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+v2:
+https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+v1:
+https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
+Derek J. Clark (6):
+  platform/x86: Add lenovo-wmi-* driver Documentation
+  platform/x86: Add lenovo-wmi-helpers
+  platform/x86: Add Lenovo WMI Events Driver
+  platform/x86: Add Lenovo Capability Data 01 WMI Driver
+  platform/x86: Add Lenovo Gamezone WMI Driver
+  platform/x86: Add Lenovo Other Mode WMI Driver
 
-Thanks,
-Pratap
+ .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+ .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
+ MAINTAINERS                                   |  12 +
+ drivers/platform/x86/Kconfig                  |  41 ++
+ drivers/platform/x86/Makefile                 |   5 +
+ drivers/platform/x86/lenovo-wmi-capdata01.c   | 303 ++++++++
+ drivers/platform/x86/lenovo-wmi-capdata01.h   |  25 +
+ drivers/platform/x86/lenovo-wmi-events.c      | 196 ++++++
+ drivers/platform/x86/lenovo-wmi-events.h      |  20 +
+ drivers/platform/x86/lenovo-wmi-gamezone.c    | 408 +++++++++++
+ drivers/platform/x86/lenovo-wmi-gamezone.h    |  20 +
+ drivers/platform/x86/lenovo-wmi-helpers.c     |  75 ++
+ drivers/platform/x86/lenovo-wmi-helpers.h     |  20 +
+ drivers/platform/x86/lenovo-wmi-other.c       | 658 ++++++++++++++++++
+ drivers/platform/x86/lenovo-wmi-other.h       |  16 +
+ 15 files changed, 2110 insertions(+)
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
 
-> --
-> Regards,
-> 
-> Sakari Ailus
+-- 
+2.49.0
 
