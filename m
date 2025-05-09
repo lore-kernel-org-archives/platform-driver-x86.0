@@ -1,166 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA97F17BCE;
-	Fri,  9 May 2025 10:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BF9269AEE;
+	Fri,  9 May 2025 10:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785391; cv=none; b=YBtfiZ18CcIZpFf4OiZitUvzuIhdzBXOX8bpY/BXj4bwSC6Fy0DZjOyr5didn2SMYrB9A6vNRtiZ80qUU7ZleONkwe2hXZYu/AuoGxUXo18AnuMgY5/KjnRoyhRMpNgeezyi9YTDYiL7SW7rfdrJqvlGyhxxgFrVvSLLLHRYjBQ=
+	t=1746788287; cv=none; b=OJN+wSE0Kmz8HG0fbGqhC7NalYaW/RfVtpCRB/JXsYLlh447Y/bQIIZtusaEFbVnSmJhFgG2xaUj+9ypqZWH5vzDk6TBfjdytHbMStTeZFIt0IveHi4Eyvm/USQoPGAcSrB2xJERynkV8050U0mmB1D9sUqAS1INExgMAMRDQkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785391; c=relaxed/simple;
-	bh=dB3ZTnyk1kZ+zuDLSOuNbQop1pPwHF748M2kpHxCdzA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WUU83CDZDpoJFZTjMPvSPrsZzHGRpNpL4gQ9Nkl5ZHZbUH7eLvkCiUexx8xCZIPWgK/Z2unoaSd0gUCZ/WYuqosJXidhPA4E4FlHwJKd/ycu5QHZeAkJgejGLxjlgsEBDH607YEsAaGpEU492HXpm9a3DnLA+CV0bQAGDOC+Rc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LLPf9nQL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746788287; c=relaxed/simple;
+	bh=Ob37pOMqnXBZIHadN4tX/Ro7PwfUMbXIaw5YzlFxD6k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uSqsmhpAJ/dm7aoLuDN67Unfdl1jMLE5qKD2Ubk2QF/qpOEwwyVVIhUkTp3B+XkzjSD1QgkD6iHs6WmVv0b0xRhaXKRrjKbkx/0Yb/oRe004ciskJLl3k0mBk0AjwGCQNUOaUyCpoA3hsGLaDIHlINPfVymQKH5+RHMA41MEjKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOH4Ha+b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LLPf9nQL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746785390; x=1778321390;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dB3ZTnyk1kZ+zuDLSOuNbQop1pPwHF748M2kpHxCdzA=;
-  b=LLPf9nQLtoYLlO0F4DLyn5+TSYmfRPumVq5fGZ3mwxu2m1Scd96xjVaV
-   aSy4Mr/xCyZ5doLc8ndmDxxA8JCATaA6Jazr9c/aDJPm3uaYbfovhzuGL
-   yUi1L7ZZ4B+sbtnzApmm+BhEPfxlBX2HykdOnxvuhpRnu/Q8rtgItgYqj
-   xhkwK1uwgVnOjD2Gi1UykQKr3SZEQamB8tWVDo+oS820gHFJ0RBI4Fh1G
-   Q6tzkunfMU7H8etS5f4xufu86xTW5wR9JkBDZ7AFWRaRPLBhpm5QYYk36
-   KguIHCzeqxLLEzL+CqWWuU0qZSZ9cUA7C3pr2aVkTet/TIuqwowDFlgiN
-   w==;
-X-CSE-ConnectionGUID: +Ig17lHFSYeslTDji3XC7Q==
-X-CSE-MsgGUID: 88ABJpkmTeWMILRrElmEiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="60009857"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="60009857"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:09:49 -0700
-X-CSE-ConnectionGUID: ueNjeU7KQ82sEWarbwiJ3A==
-X-CSE-MsgGUID: fsH6DgXCTSGrIbbsx8jIRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="141784023"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.123])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 03:09:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 9 May 2025 13:09:43 +0300 (EEST)
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] power: supply: core: Add additional health status
- values
-In-Reply-To: <8cb0e0f7-a48e-5770-0c82-f0a75ed23d66@linux.intel.com>
-Message-ID: <ff044893-04bd-84e1-cfc6-842787a8ba54@linux.intel.com>
-References: <20250429003606.303870-1-W_Armin@gmx.de> <wla5mfgblecq7tiiangrzxv32yjhiru4h6i7nnmn3qvvl6o3ht@j7rbgete42u7> <8cb0e0f7-a48e-5770-0c82-f0a75ed23d66@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOH4Ha+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8D4C4CEE4;
+	Fri,  9 May 2025 10:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746788287;
+	bh=Ob37pOMqnXBZIHadN4tX/Ro7PwfUMbXIaw5YzlFxD6k=;
+	h=From:Date:Subject:To:Cc:From;
+	b=KOH4Ha+bXDRPcAccfce8JgYpzjoB9IckPltJqufP6ipaYC7wV2znMKVDfSWxpB2X4
+	 aP+nREyXBRC8wgB4TeWgNzvF+zJQgx3BBOAvlggQPGcKcUL0obkiznaY7Tu2oUjxJl
+	 oW1+DyJo4+FeSmliyd57DtJ6pSvET01XOEKk0L9E5+0DYYxjqEQgFsfRrRVggn/Dsu
+	 tCc/IoLuAfVN1kJrkgiicKrV5DNEpAXHo5vOKEYsXPh2T9Cv3Mvl40ri6cMFALetuh
+	 vebZmGXf+UFUEStB+ev3JxhFOP/BO9T31Uxk4Z4UVg7x1bCzpzYhT3xE7Wu/pR+NVp
+	 06rSPppUH+X6g==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Fri, 09 May 2025 11:58:01 +0100
+Subject: [PATCH] platform: mellanox: nvsw-sn2200: Fix .items in
+ nvsw_sn2201_busbar_hotplug
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-118282477-1746785383=:1546"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-nvsw-sn2200-fix-items-busbar-hotplug-v1-1-8844fff38dc8@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALnfHWgC/x2NQQqDQAwAvyI5NxBDt7V+pXhYNWrArrJRK4h/d
+ /E4MMwcYBJVDMrsgCibmk4hQf7IoBl86AW1TQxM7MjRB8Nmf7TATISd7qiL/Azr1WofcZiWeVx
+ 7fPPLEZEvnm0HKTVHSe69+VbneQHKAcObdgAAAA==
+X-Change-ID: 20250509-nvsw-sn2200-fix-items-busbar-hotplug-7265000a84df
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Vadim Pasternak <vadimp@nvidia.com>
+Cc: Michael Shych <michaelsh@nvidia.com>, 
+ platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1716; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=Ob37pOMqnXBZIHadN4tX/Ro7PwfUMbXIaw5YzlFxD6k=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBmy9/eyhrKrSD968/nb4dx0b+6z6pPyfJnzxBc3z3jqP
+ 0Xl34XzHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiM+cyMry7/ObnNMmcG5/+
+ 7/qTy6K00WmeHcPafTuuMaia3e08HybF8E9ldu0Dk+s/tk5jyTRe9pzrA+8Knd/uAYt+KByX87D
+ lC2MFAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Clang warns (or errors with CONFIG_WERROR=y):
 
---8323328-118282477-1746785383=:1546
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+  drivers/platform/mellanox/nvsw-sn2201.c:531:32: error: variable 'nvsw_sn2201_busbar_items' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+    531 | static struct mlxreg_core_item nvsw_sn2201_busbar_items[] = {
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~
 
-On Mon, 5 May 2025, Ilpo J=E4rvinen wrote:
-> On Wed, 30 Apr 2025, Sebastian Reichel wrote:
-> > On Tue, Apr 29, 2025 at 02:36:03AM +0200, Armin Wolf wrote:
-> > > Some batteries can signal when an internal fuse was blown. In such a
-> > > case POWER_SUPPLY_HEALTH_DEAD is too vague for userspace applications
-> > > to perform meaningful diagnostics.
-> > >=20
-> > > Additionally some batteries can also signal when some of their
-> > > internal cells are imbalanced. In such a case returning
-> > > POWER_SUPPLY_HEALTH_UNSPEC_FAILURE is again too vague for userspace
-> > > applications to perform meaningful diagnostics.
-> > >=20
-> > > Add new health status values for both cases.
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> >=20
-> > Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->=20
-> Hi Sebastian,
->=20
-> Is it okay with you I take this through pdx86 tree?
+nvsw_sn2201_busbar_items is only used in ARRAY_SIZE(), which uses
+sizeof(), so this variable is only used at compile time. It appears that
+this may be a copy and paste issue, so use nvsw_sn2201_busbar_items as
+the .items member in nvsw_sn2201_busbar_hotplug, clearing up the
+warning.
 
-Ping?
+Fixes: 56b0bb7f9069 ("platform: mellanox: nvsw-sn2200: Add support for new system flavour")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/platform/mellanox/nvsw-sn2201.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
- i.
+diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
+index 8c31189a94dd..db31c8bf2255 100644
+--- a/drivers/platform/mellanox/nvsw-sn2201.c
++++ b/drivers/platform/mellanox/nvsw-sn2201.c
+@@ -551,7 +551,7 @@ static struct mlxreg_core_item nvsw_sn2201_busbar_items[] = {
+ 
+ static
+ struct mlxreg_core_hotplug_platform_data nvsw_sn2201_busbar_hotplug = {
+-	.items = nvsw_sn2201_items,
++	.items = nvsw_sn2201_busbar_items,
+ 	.count = ARRAY_SIZE(nvsw_sn2201_busbar_items),
+ 	.cell = NVSW_SN2201_SYS_INT_STATUS_OFFSET,
+ 	.mask = NVSW_SN2201_CPLD_AGGR_BUSBAR_MASK_DEF,
 
->=20
-> --
->  i.
->=20
-> >=20
-> > -- Sebastian
-> >=20
-> > > ---
-> > > Changes since v1:
-> > >  - rename "Fuse blown" to "Blown fuse"
-> > >  - rename "Cell imbalanced" to "Cell imbalance"
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-class-power | 2 +-
-> > >  drivers/power/supply/power_supply_sysfs.c   | 2 ++
-> > >  include/linux/power_supply.h                | 2 ++
-> > >  3 files changed, 5 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentat=
-ion/ABI/testing/sysfs-class-power
-> > > index 2a5c1a09a28f..be8be54b183d 100644
-> > > --- a/Documentation/ABI/testing/sysfs-class-power
-> > > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > > @@ -456,7 +456,7 @@ Description:
-> > >  =09=09=09      "Over voltage", "Under voltage", "Unspecified failure=
-", "Cold",
-> > >  =09=09=09      "Watchdog timer expire", "Safety timer expire",
-> > >  =09=09=09      "Over current", "Calibration required", "Warm",
-> > > -=09=09=09      "Cool", "Hot", "No battery"
-> > > +=09=09=09      "Cool", "Hot", "No battery", "Blown fuse", "Cell imba=
-lance"
-> > > =20
-> > >  What:=09=09/sys/class/power_supply/<supply_name>/precharge_current
-> > >  Date:=09=09June 2017
-> > > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/powe=
-r/supply/power_supply_sysfs.c
-> > > index edb058c19c9c..2703ed1dd943 100644
-> > > --- a/drivers/power/supply/power_supply_sysfs.c
-> > > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > > @@ -110,6 +110,8 @@ static const char * const POWER_SUPPLY_HEALTH_TEX=
-T[] =3D {
-> > >  =09[POWER_SUPPLY_HEALTH_COOL]=09=09    =3D "Cool",
-> > >  =09[POWER_SUPPLY_HEALTH_HOT]=09=09    =3D "Hot",
-> > >  =09[POWER_SUPPLY_HEALTH_NO_BATTERY]=09    =3D "No battery",
-> > > +=09[POWER_SUPPLY_HEALTH_BLOWN_FUSE]=09    =3D "Blown fuse",
-> > > +=09[POWER_SUPPLY_HEALTH_CELL_IMBALANCE]=09    =3D "Cell imbalance",
-> > >  };
-> > > =20
-> > >  static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] =3D {
-> > > diff --git a/include/linux/power_supply.h b/include/linux/power_suppl=
-y.h
-> > > index 888824592953..69df3a452918 100644
-> > > --- a/include/linux/power_supply.h
-> > > +++ b/include/linux/power_supply.h
-> > > @@ -71,6 +71,8 @@ enum {
-> > >  =09POWER_SUPPLY_HEALTH_COOL,
-> > >  =09POWER_SUPPLY_HEALTH_HOT,
-> > >  =09POWER_SUPPLY_HEALTH_NO_BATTERY,
-> > > +=09POWER_SUPPLY_HEALTH_BLOWN_FUSE,
-> > > +=09POWER_SUPPLY_HEALTH_CELL_IMBALANCE,
-> > >  };
-> > > =20
-> > >  enum {
-> > > --=20
-> > > 2.39.5
-> > >=20
-> >=20
->=20
---8323328-118282477-1746785383=:1546--
+---
+base-commit: 3c415b1df95c06ae4f9bdb166541ab366b862cc2
+change-id: 20250509-nvsw-sn2200-fix-items-busbar-hotplug-7265000a84df
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
