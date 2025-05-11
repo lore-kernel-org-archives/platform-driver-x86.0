@@ -1,298 +1,142 @@
-Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD1222CBEA
-	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 11:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490352907;
+	Sun, 11 May 2025 12:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746963088; cv=none; b=RgKqcQ7OHgfh9COBl3erRIm5Ay7ino35/87xnhNwa480h6liJrRT78RzR9uA4C4yR5Jat4T6vMSpjgnqmCrkeF5d/xjrU8Z+UijmdMC6umTtD/DQ6vyU11v01i7Yqv1zYd4mwaQtG1tlqrR7Np76X1LISG38W8jAS8kL3XDUTZQ=
+	t=1746965785; cv=none; b=surB9jm8L4Az5jsYNnj6wjxYkvmUiIH6L8AuoWclRiy7yuRlCj3xmHS8H50TKSUruSnX/KoQ+NCUyYKPEoNzUpaqGYE2jr+rleyzs6mV5CLHuWDWZpZd+8WJWvq5xFqDiDTmbWrZ1nbLaXR2vQ4VFKyg7VZbAa6itGPnTCTBjKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746963088; c=relaxed/simple;
-	bh=uQWq1koWqQWS4e8R1RTtdoZXPGcmGPgeyy028RBSekw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sOd0Yl+SdN7q4Sr7mRmJfwp2LGkRMXPMyWn3OOGVq/jzV9nX90g/NNg3cd8XTvgqsuY2Au6V4ZIpQ+c4GrWev0X6+lZIIEwdb8puawDufWc1t9/ALnWipDz/PmBOfOuLt98Cqr4XmYeADSG1JVdzzACzMLxcGwDeZznc49CLiZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=fail smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b=hgo9u1ib; arc=none smtp.client-ip=195.121.94.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b="hgo9u1ib"
-X-KPN-MessageId: 6590ddfc-2e5b-11f0-a9b7-00505699b430
-Received: from smtp.kpnmail.nl (unknown [10.31.155.7])
-	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
-	id 6590ddfc-2e5b-11f0-a9b7-00505699b430;
-	Sun, 11 May 2025 13:30:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=kpnmail.nl; s=kpnmail01;
-	h=mime-version:message-id:date:subject:to:from;
-	bh=flkF+1C8Hyw8f3QcJMUG3n89ZpRXGBeuoJ5MOO7PpDc=;
-	b=hgo9u1ibAQCFPNY/Evw6TDj5ax7TD9Ejw/YMOvlwspnEC4ioSlOnglK2Gc2rAFWw+3/RufAZEqT7B
-	 czz5dHsT32TTThumMGgK0pU1K5i4z5FQJE4pC8RLaxPKeYBTM0OhVhaDU4LvsrXz3uj7Kiivl5d//N
-	 Yk2ZCX7W8B/7juXc=
-X-KPN-MID: 33|tZDXYltEaykxJBp8DWpYj+XJ4fTd0dpcMmscNhCdMj5rL9BlSfvxN9hdJRGZL15
- 48XcdcRc1szPh6bFBn0UTajqRDEBijzEmjSjNQc5L6ss=
-X-KPN-VerifiedSender: No
-X-CMASSUN: 33|PqDB/pLcQztwtRXJ4JH3KgwHJfNL3owtJhJocNbQAFpOicO0LGCTr34WNoWVoLj
- xKJicAbQpmcWx8NtuMaR+rg==
-Received: from localhost.localdomain (77-171-66-179.fixed.kpn.net [77.171.66.179])
-	by smtp.kpnmail.nl (Halon) with ESMTPSA
-	id 4f497295-2e5b-11f0-afcf-005056998788;
-	Sun, 11 May 2025 13:30:15 +0200 (CEST)
-From: Jelle van der Waa <jvanderw@redhat.com>
-To: Ike Panhc <ikepanhc@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 1/1] platform/x86: ideapad: Expose charge_types
-Date: Sun, 11 May 2025 13:30:09 +0200
-Message-ID: <20250511113012.9251-2-jvanderw@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250511113012.9251-1-jvanderw@redhat.com>
-References: <20250511113012.9251-1-jvanderw@redhat.com>
+	s=arc-20240116; t=1746965785; c=relaxed/simple;
+	bh=ih7wmAXVhDCJyYBR3vLth3h9hrhkplcPDL2t1WrCTpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXVKj0lxrGJwo36vJfuPPH/3ZjQXz8L6sJUt9oCfnEG+pmSuBfVYCX2eXcBxssybeeFsYWVkR5fMB5//XdyZ25t64ZHJhHXk7uB0UGfywHTjU1qUyrYZ/ZFR07FAddPB8gaua1T+ONtBbDqWwNtz/AE8zrQOimZcwHeFyq5nRxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 54BC8bUa030948
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Sun, 11 May 2025 21:38:38 +0930
+Date: Sun, 11 May 2025 21:38:37 +0930
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Valtteri Koskivuori <vkoskiv@gmail.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Support Lifebook S2110
+ hotkeys
+Message-ID: <aCCTRWvlYKX/fObR@marvin.atrad.com.au>
+References: <20250509184251.713003-1-vkoskiv@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509184251.713003-1-vkoskiv@gmail.com>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-From: Jelle van der Waa <jvanderwaa@redhat.com>
+On Fri, May 09, 2025 at 09:42:49PM +0300, Valtteri Koskivuori wrote:
+> The S2110 has an additional set of media playback control keys enabled
+> by a hardware toggle button that switches the keys between "Application"
+> and "Player" modes. Toggling "Player" mode just shifts the scancode of
+> each hotkey up by 4.
+> 
+> Add defines for new scancodes, and a keymap and dmi id for the S2110.
+> 
+> Tested on a Fujitsu Lifebook S2110.
+> 
+> Signed-off-by: Valtteri Koskivuori <vkoskiv@gmail.com>
 
-Some Ideapad models support a battery conservation mode which limits the
-battery charge threshold for longer battery longevity. This is currently
-exposed via a custom conservation_mode attribute in sysfs.
+These additions look fine to me.
 
-The newly introduced charge_types sysfs attribute is a standardized
-replacement for laptops with a fixed end charge threshold. Setting it to
-`Long Life` would enable battery conservation mode. The standardized
-user space API would allow applications such as UPower to detect laptops
-which support this battery longevity mode and set it.
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-Tested on an Lenovo ideapad U330p.
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 33 +++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index a0eae24ca9e6..162809140f68 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -17,13 +17,13 @@
+>  /*
+>   * fujitsu-laptop.c - Fujitsu laptop support, providing access to additional
+>   * features made available on a range of Fujitsu laptops including the
+> - * P2xxx/P5xxx/S6xxx/S7xxx series.
+> + * P2xxx/P5xxx/S2xxx/S6xxx/S7xxx series.
+>   *
+>   * This driver implements a vendor-specific backlight control interface for
+>   * Fujitsu laptops and provides support for hotkeys present on certain Fujitsu
+>   * laptops.
+>   *
+> - * This driver has been tested on a Fujitsu Lifebook S6410, S7020 and
+> + * This driver has been tested on a Fujitsu Lifebook S2110, S6410, S7020 and
+>   * P8010.  It should work on most P-series and S-series Lifebooks, but
+>   * YMMV.
+>   *
+> @@ -107,7 +107,11 @@
+>  #define KEY2_CODE			0x411
+>  #define KEY3_CODE			0x412
+>  #define KEY4_CODE			0x413
+> -#define KEY5_CODE			0x420
+> +#define KEY5_CODE			0x414
+> +#define KEY6_CODE			0x415
+> +#define KEY7_CODE			0x416
+> +#define KEY8_CODE			0x417
+> +#define KEY9_CODE			0x420
+>  
+>  /* Hotkey ringbuffer limits */
+>  #define MAX_HOTKEY_RINGBUFFER_SIZE	100
+> @@ -560,7 +564,7 @@ static const struct key_entry keymap_default[] = {
+>  	{ KE_KEY, KEY2_CODE,            { KEY_PROG2 } },
+>  	{ KE_KEY, KEY3_CODE,            { KEY_PROG3 } },
+>  	{ KE_KEY, KEY4_CODE,            { KEY_PROG4 } },
+> -	{ KE_KEY, KEY5_CODE,            { KEY_RFKILL } },
+> +	{ KE_KEY, KEY9_CODE,            { KEY_RFKILL } },
+>  	/* Soft keys read from status flags */
+>  	{ KE_KEY, FLAG_RFKILL,          { KEY_RFKILL } },
+>  	{ KE_KEY, FLAG_TOUCHPAD_TOGGLE, { KEY_TOUCHPAD_TOGGLE } },
+> @@ -584,6 +588,18 @@ static const struct key_entry keymap_p8010[] = {
+>  	{ KE_END, 0 }
+>  };
+>  
+> +static const struct key_entry keymap_s2110[] = {
+> +	{ KE_KEY, KEY1_CODE, { KEY_PROG1 } }, /* "A" */
+> +	{ KE_KEY, KEY2_CODE, { KEY_PROG2 } }, /* "B" */
+> +	{ KE_KEY, KEY3_CODE, { KEY_WWW } },   /* "Internet" */
+> +	{ KE_KEY, KEY4_CODE, { KEY_EMAIL } }, /* "E-mail" */
+> +	{ KE_KEY, KEY5_CODE, { KEY_STOPCD } },
+> +	{ KE_KEY, KEY6_CODE, { KEY_PLAYPAUSE } },
+> +	{ KE_KEY, KEY7_CODE, { KEY_PREVIOUSSONG } },
+> +	{ KE_KEY, KEY8_CODE, { KEY_NEXTSONG } },
+> +	{ KE_END, 0 }
+> +};
+> +
+>  static const struct key_entry *keymap = keymap_default;
+>  
+>  static int fujitsu_laptop_dmi_keymap_override(const struct dmi_system_id *id)
+> @@ -621,6 +637,15 @@ static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
+>  		},
+>  		.driver_data = (void *)keymap_p8010
+>  	},
+> +	{
+> +		.callback = fujitsu_laptop_dmi_keymap_override,
+> +		.ident = "Fujitsu LifeBook S2110",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S2110"),
+> +		},
+> +		.driver_data = (void *)keymap_s2110
+> +	},
+>  	{}
+>  };
+>  
+> -- 
+> 2.49.0
 
-Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
----
- .../ABI/testing/sysfs-platform-ideapad-laptop |   2 +
- drivers/platform/x86/ideapad-laptop.c         | 126 +++++++++++++++++-
- 2 files changed, 125 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-index 4989ab266682..83eca4c14503 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -32,6 +32,8 @@ Date:		Aug 2017
- KernelVersion:	4.14
- Contact:	platform-driver-x86@vger.kernel.org
- Description:
-+		This interface is deprecated; please use /sys/class/power_supply/*/charge_types.
-+
- 		Controls whether the conservation mode is enabled or not.
- 		This feature limits the maximum battery charge percentage to
- 		around 50-60% in order to prolong the lifetime of the battery.
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index ede483573fe0..fd9127ffd456 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -34,12 +34,17 @@
- #include <linux/wmi.h>
- #include "ideapad-laptop.h"
- 
-+#include <linux/power_supply.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
- 
- #include <dt-bindings/leds/common.h>
- 
- #define IDEAPAD_RFKILL_DEV_NUM	3
- 
-+#define IDEAPAD_CHARGE_TYPES		(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD)  | \
-+					 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
-+
- enum {
- 	CFG_CAP_BT_BIT       = 16,
- 	CFG_CAP_3G_BIT       = 17,
-@@ -162,6 +167,8 @@ struct ideapad_private {
- 	struct backlight_device *blightdev;
- 	struct ideapad_dytc_priv *dytc;
- 	struct dentry *debug;
-+	struct acpi_battery_hook battery_hook;
-+	struct power_supply *hooked_battery;
- 	unsigned long cfg;
- 	unsigned long r_touchpad_val;
- 	struct {
-@@ -589,6 +596,11 @@ static ssize_t camera_power_store(struct device *dev,
- 
- static DEVICE_ATTR_RW(camera_power);
- 
-+static void show_deprecation_warning(struct device *dev)
-+{
-+	dev_warn_once(dev, "conservation_mode attribute has been deprecated, see charge_types.\n");
-+}
-+
- static ssize_t conservation_mode_show(struct device *dev,
- 				      struct device_attribute *attr,
- 				      char *buf)
-@@ -597,6 +609,8 @@ static ssize_t conservation_mode_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
-+	show_deprecation_warning(dev);
-+
- 	err = eval_gbmd(priv->adev->handle, &result);
- 	if (err)
- 		return err;
-@@ -612,6 +626,8 @@ static ssize_t conservation_mode_store(struct device *dev,
- 	bool state;
- 	int err;
- 
-+	show_deprecation_warning(dev);
-+
- 	err = kstrtobool(buf, &state);
- 	if (err)
- 		return err;
-@@ -1973,10 +1989,99 @@ static const struct dmi_system_id ctrl_ps2_aux_port_list[] = {
- 	{}
- };
- 
--static void ideapad_check_features(struct ideapad_private *priv)
-+static int ideapad_psy_ext_set_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *ext_data,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	struct ideapad_private *priv = ext_data;
-+	int err;
-+
-+	if (psp != POWER_SUPPLY_PROP_CHARGE_TYPES)
-+		return -EINVAL;
-+
-+	err = exec_sbmc(priv->adev->handle,
-+			(val->intval == POWER_SUPPLY_CHARGE_TYPE_LONGLIFE ?
-+			 SBMC_CONSERVATION_ON : SBMC_CONSERVATION_OFF));
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int ideapad_psy_ext_get_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *ext_data,
-+				       enum power_supply_property psp,
-+				       union power_supply_propval *val)
-+{
-+	struct ideapad_private *priv = ext_data;
-+	unsigned long result;
-+	int err;
-+
-+	if (psp != POWER_SUPPLY_PROP_CHARGE_TYPES)
-+		return -EINVAL;
-+
-+	err = eval_gbmd(priv->adev->handle, &result);
-+	if (err)
-+		return err;
-+
-+	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-+	else
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+
-+	return 0;
-+}
-+
-+static int ideapad_psy_prop_is_writeable(struct power_supply *psy,
-+					    const struct power_supply_ext *ext,
-+					    void *data,
-+					    enum power_supply_property psp)
-+{
-+	if (psp == POWER_SUPPLY_PROP_CHARGE_TYPES)
-+		return true;
-+
-+	return false;
-+}
-+
-+static const enum power_supply_property ideapad_power_supply_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_TYPES,
-+};
-+
-+static const struct power_supply_ext ideapad_battery_ext = {
-+	.name			= "ideapad",
-+	.properties		= ideapad_power_supply_props,
-+	.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),
-+	.charge_types		= IDEAPAD_CHARGE_TYPES,
-+	.get_property		= ideapad_psy_ext_get_prop,
-+	.set_property		= ideapad_psy_ext_set_prop,
-+	.property_is_writeable	= ideapad_psy_prop_is_writeable,
-+};
-+
-+static int ideapad_battery_add(struct power_supply *battery,
-+			       struct acpi_battery_hook *hook)
-+{
-+	struct ideapad_private *priv = container_of(hook, struct ideapad_private, battery_hook);
-+
-+	return power_supply_register_extension(battery, &ideapad_battery_ext,
-+					       &priv->platform_device->dev, priv);
-+}
-+
-+static int ideapad_battery_remove(struct power_supply *battery,
-+				  struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &ideapad_battery_ext);
-+
-+	return 0;
-+}
-+
-+static int ideapad_check_features(struct ideapad_private *priv)
- {
- 	acpi_handle handle = priv->adev->handle;
- 	unsigned long val;
-+	int err;
- 
- 	priv->features.set_fn_lock_led =
- 		set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
-@@ -1991,8 +2096,19 @@ static void ideapad_check_features(struct ideapad_private *priv)
- 	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
- 		priv->features.fan_mode = true;
- 
--	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC"))
-+	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
- 		priv->features.conservation_mode = true;
-+		priv->battery_hook.add_battery = ideapad_battery_add;
-+		priv->battery_hook.remove_battery = ideapad_battery_remove;
-+		priv->battery_hook.name = "Ideapad Battery Extension";
-+
-+		err = devm_battery_hook_register(&priv->platform_device->dev, &priv->battery_hook);
-+		if (err) {
-+			dev_dbg(&priv->platform_device->dev,
-+				"failed to register battery hook: %d\n", err);
-+			return err;
-+		}
-+	}
- 
- 	if (acpi_has_method(handle, "DYTC"))
- 		priv->features.dytc = true;
-@@ -2027,6 +2143,8 @@ static void ideapad_check_features(struct ideapad_private *priv)
- 			}
- 		}
- 	}
-+
-+	return 0;
- }
- 
- #if IS_ENABLED(CONFIG_ACPI_WMI)
-@@ -2175,7 +2293,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	ideapad_check_features(priv);
-+	err = ideapad_check_features(priv);
-+	if (err)
-+		return err;
- 
- 	ideapad_debugfs_init(priv);
- 
 -- 
-2.49.0
-
