@@ -1,148 +1,176 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EE72905;
-	Sun, 11 May 2025 23:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4F31E485;
+	Sun, 11 May 2025 23:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747004446; cv=none; b=XDjnLL3qNflsMQJsPZnGsyWpvqaLk7F9/twKuFOsXMdM8d7scvDsE8Dm2RmAD8Cd+xRE8f/N9PLXd/4mIdWVEQ+2iaxHx95m/c6WTnpltz6TxqAYNOsgb1BbIh7NJi6l95QblClqlK1oD8RI9n3PiLe8agUE5wsTp3V56wdYJw8=
+	t=1747006226; cv=none; b=fXfD6o7yovYxdJGjC0D0MVxxzwy1zjJMG3YR3xotD4Qk287Tg9yufKeij0NDXdANpdOYaIqhutsFFjy1PdblTTYVdSx46NO063aFei4cpbJguVZsVWGi+8MhVvjdBroFG+OKKZeJ7xDoY+9VL6Cv3Qa+Q2xnMYf9m+Ls+zMLMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747004446; c=relaxed/simple;
-	bh=P4iJnELmZ5F53wgKldMyawx0mOuutAnVumZrcp3mRRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOVSn2jIrgxJwdqgZkk9AiHIWgRNdMbtmiLAPux6m6/9hCJRs+wBrfwqnWdzkyqccUDm/OV7BaF4BTM5m/PcGg9Nq0jTFOyHYMfNiL3BBxF9tWH2xDpK8zqQ/Yk0mMRt0GcYLn1pnVl5NbPrAvlkUt3Lrji+Ln6eeE/Jq1nOiGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rwf1OP67; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1747006226; c=relaxed/simple;
+	bh=kxS9RGUJfGYHYRC6/YRlAu+5nrctscMWll9hzu5mfPw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=o3xxsatoNQ9KvBOfTqBBmvLAhHHTg3OVAxgH5Dp5U8dLSqEwomCizXuEYiUdj9ac4q0oaUuCJpYvqPjZOSG5qH8j3kJi7qTPnuE0NnwYYk9Dt3Z5Uu7V8/yuSj4W5Iyk2sgLOMRpHPoHkyTc9a8lt8oiCZmYBnB/552T5mGHfuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5xFv9CW; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rwf1OP67"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747004431; x=1747609231; i=w_armin@gmx.de;
-	bh=P4iJnELmZ5F53wgKldMyawx0mOuutAnVumZrcp3mRRo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rwf1OP675y8zKkCTt/k0QiMoxxVcYzN/8sc+NSsfkcPDYCqZAhnT2UdT811IFeOR
-	 AW4UZ+gaKJhKpYAXlJErmzIoAqPkuL+Vvl3VYIfjLEDc9iP99WN33/GN7yOF4o3G2
-	 tg9urzgJinQc/wPi+/z4/SlAuW91egEJzSVR8tRkHHNip9mMuAdZQXIPENT3ZJKCp
-	 rpAj7+cpx7JrjXzrS0T4qhi6CTDxLdcUBa05dneqKT4uL4IlFeqj0e/JUGcnenCJM
-	 bUBnHUVSJ347Hs093w+gdPyt80rF1ppO8O0XRcYAA5i9ZYBKNrLMveJXn9QdMxoKk
-	 moAnZACI0CVLAqplmA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3DJv-1uHGSY1MmT-001nWF; Mon, 12
- May 2025 01:00:31 +0200
-Message-ID: <52a2c1f9-0267-42d0-8e46-31eea58f88a8@gmx.de>
-Date: Mon, 12 May 2025 01:00:28 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5xFv9CW"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-879e8e2237dso2136150241.0;
+        Sun, 11 May 2025 16:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747006224; x=1747611024; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FuAxY1FnwLvvV5y/w1jLzmRCbR2PH85UKoUxJqV9epg=;
+        b=D5xFv9CWjEpo+EMQJNA0Ze7UV14onpW7Kfi8RnAz6rDAT3pxVF9Xnoxyj+Dg9PVtGl
+         i8sPbPuK/FO0yxlsvDWraf++x9W2nkZTtW9vrXKxRbnYH+aJdazveMraC3Wz3cItZC9X
+         i75/PSR8Ypuik7x0MYdMSCJ82oTo5veeXLAph7jgrxocIfSsr1itZtV22elkfbMX6H3j
+         cqtr/shdPpRHQcaZ9mvtJ2A6x7Zn7NMNuFuw+yPs3yHiwhXGu6LRi2TBCqV/GakD2bEx
+         4ATWkAIMjW6B/IzNNuCvpb1n19zBSe9/HVk2Hdr9WshEOqrR3mUMYu2DUU1K9/anwfC2
+         r8rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747006224; x=1747611024;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FuAxY1FnwLvvV5y/w1jLzmRCbR2PH85UKoUxJqV9epg=;
+        b=OLr26QSHb+7HOf4lrggFGFPGF8OFUBqXhG30foWNcDKmbxoO3crtT6OzbsEH57BGzM
+         uvufmu2EbJ2ZgTCIDTth4UvTn0XrXfZijhBdPfAV9JyrofU07bPKUO4ziYAVPQrWSZqr
+         b6Vp0fXPi0aWcTn4ahfaKKzfO4otwXS6Yrv8zcDaDcLWk2nG7JcD7ZTp4STDC7KUASyk
+         A9bBY4F57kbI3koocO1CGuSaPKk5brWgQnhTcAWijI7fseYhay8493LyRJHcE/MFImsq
+         geOzFawzkFVOGXcxtNqTpSrlfJp8kT4sck4Rk++aoYZ5LlrnymGOTu//53SBPTaTixh2
+         kD+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUmneW2mS1FliW/wxMsGiJhs6Du9y4c6nZm5PsaFZfL0mLsEmXdGsKTnX7E+FTCRVGtNy60blEaYEE6XCSh@vger.kernel.org, AJvYcCVPrij1VLlw1vWV+gkHg+ULU+EXPoU/s+5w2R25Kam1yP/bv427lxS0E8K5UyjBZSz5G6Kw1qfKGTaYPonGoRbny7tlvQ==@vger.kernel.org, AJvYcCW9usKEUqbCMKsb5nzYMm30FQRT0aRJfL1QguqW++MnIIFtiMdYTR1VhwKVy0MR8rAbBElOfTAAEqQ=@vger.kernel.org, AJvYcCWKudGQlBCOYC3Na2DC4aYhPxgcdUeAhvJ0EYo386EOYQYi5hVoz8VwMclbM+1MKNXM5Q7YRImjVOFB0z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmuQuhW0NY559Iv+RGvOFGCxUUyoXirafYJzuXImwXiUiWi02b
+	v0IKlAA3VmG4lRkVNAopSTgPDs37UnLIrIE89JGQWTSjo7zyz9u9
+X-Gm-Gg: ASbGncvL1ogPhRU/Y0VeENRbDDn3mJ2wCxHZw6GzOEQ20R66/E/c+RlrjtKUDcBwGIG
+	8Kzvxj+Dy3bCNbcfvKljZU+gpgfWV777PuNsKCRkYQsLaxjxiJbhRcNtfgBtgg87OwKv2XpySfF
+	HsLxcIn9hq/hGvsG3FlSZ4On/hY6h6P4cw30KqwwLcsr223BSVoBj+UtNnjtiOJHDrgAjtRi8Y1
+	2a7ssxd86AqLPWA4NQLwImGwfx89K4TAuA4X8gDcBmUWnfNS2XcRAen+Taka5cmuADk/uz2fnc8
+	OZ4fnJyetyDPgEoeM/zKdF2s3wWSmqZg2S8uzAbZJnG+8cZz5dZsb/c=
+X-Google-Smtp-Source: AGHT+IGLAPxCLFkep0vlw76XA5pXelgzr8XBayNAzLNhNympu2KSsPefmv4d83vBHWQJt8DoWywtcA==
+X-Received: by 2002:a05:6102:2c02:b0:4c1:9288:906c with SMTP id ada2fe7eead31-4deed33c572mr10054589137.9.1747006223621;
+        Sun, 11 May 2025 16:30:23 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb2018611sm4186579137.20.2025.05.11.16.30.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 May 2025 16:30:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for May 9
- (drivers/platform/x86/tuxedo/nb04/wmi_ab.o)
-To: Randy Dunlap <rdunlap@infradead.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Werner Sembach <wse@tuxedocomputers.com>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20250509195816.7f0a67a3@canb.auug.org.au>
- <a1d9134f-0567-4a53-a1e7-a55cd6b189a9@infradead.org>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <a1d9134f-0567-4a53-a1e7-a55cd6b189a9@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:0PGp9KkmBeWtmDkJC2HVVGIzhwbOJi2S1EkAy8z8EDRbws1HrSk
- ZOtnWksaDoas2Wl4CrN6psjaGjmk+z0YF7pd6WF7WsnJLZ/erlGazGd7jvEL8MjJgcv3NuY
- V3aW6DFSFlbkrTcsNCX0nZnd85RhDqlNikfSFDHkTR15rBV3JV+etMTlToVDKXcBDifGFzn
- gBAgj9cjgkwD6HDvAXefw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aet/ldG/ex0=;N9j4+79R+ctt8NtF4dbaC4wwzSd
- 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
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sun, 11 May 2025 20:30:11 -0300
+Message-Id: <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
+Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>, "Hans
+ de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Jean Delvare" <jdelvare@suse.com>,
+ "Guenter Roeck" <linux@roeck-us.net>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
+ curves/platform profile/tdp/battery limiting
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Antheas Kapenekakis" <lkml@antheas.dev>,
+ <platform-driver-x86@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250511204427.327558-1-lkml@antheas.dev>
+In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
 
-Am 10.05.25 um 03:35 schrieb Randy Dunlap:
+--1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+
+Hi Antheas,
+
+On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
+> This draft patch series brings into parity the msi-wmi-platform driver wi=
+th
+> the MSI Center M Windows application for the MSI Claw (all models).
+> Unfortunately, MSI Center M and this interface do not have a discovery AP=
+I,
+> necessitating the introduction of a quirk system.
+>
+> While this patch series is fully functional and tested, there are still
+> some issues that need to be addressed:
+>   - Armin notes we need to disable fan curve support by default and quirk
+>     it as well, as it is not supported on all models. However, the way
+>     PWM enable ops work, this makes it a bit difficult, so I would like
+>     some suggestions on how to rework this.
+
+If I understood the question correctly, then you should control the
+visibility of all "curve" related attributes with the quirk.
+
+The custom hwmon attribute_group has an is_visible callback, and so do
+the hwmon_ops.
+
+>   - It turns out that to fully disable the fan curve, we have to restore
+>     the default fan values. This is also what is done on the OEM software=
+.
+>     For this, the last patch in the series is used, which is a bit dirty.
+
+I have a couple questions about this.
+
+* What are the default fan curves? Can these be statically defined?
+* Are user-defined fan curves persistent between reboots?
+
+I have some doubts about the approach you took on the last patch, but I
+want to understand how the platform works first.
 
 >
-> On 5/9/25 2:58 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20250508:
->>
-> When CONFIG_HID is not set:
+> Sleep was tested with all values being preserved during S0iX (platform
+> profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
+> least for the Claw devices.
 >
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_ab.o: in function `tux_remove':
-> wmi_ab.c:(.text+0x29): undefined reference to `hid_destroy_device'
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_ab.o: in function `tux_probe':
-> wmi_ab.c:(.text+0x6a): undefined reference to `hid_allocate_device'
-> ld: wmi_ab.c:(.text+0xbc): undefined reference to `hid_add_device'
-> ld: wmi_ab.c:(.text+0xf3): undefined reference to `hid_destroy_device'
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_ab.o: in function `tux_ll_parse':
-> wmi_ab.c:(.text+0x46e): undefined reference to `hid_parse_report'
->
-> When CONFIG_ACPI or CONFIG_ACPI_WMI is not set:
->
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_ab.o: in function `tuxedo_nb04_wmi_tux_init':
-> wmi_ab.c:(.init.text+0x20): undefined reference to `__wmi_driver_register'
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_ab.o: in function `tuxedo_nb04_wmi_tux_exit':
-> wmi_ab.c:(.exit.text+0x9): undefined reference to `wmi_driver_unregister'
-> ld: drivers/platform/x86/tuxedo/nb04/wmi_util.o: in function `__wmi_method_buffer_out.constprop.0':
-> wmi_util.c:(.text+0x3a): undefined reference to `wmidev_evaluate_method'
->
-Hi,
+> For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
+> his new high level interface is merged beforehand, we can use that instea=
+d.
 
-i think this happens because CONFIG_TUXEDO_NB04_WMI_AB does not declare any dependencies at all.
-I would prefer if the original author would send the necessary fix, otherwise i can do it too.
+Hopefully!
 
-Thanks,
-Armin Wolf
+--=20
+ ~ Kurt
 
+>
+> Antheas Kapenekakis (8):
+>   platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
+>   platform/x86: msi-wmi-platform: Add quirk system
+>   platform/x86: msi-wmi-platform: Add platform profile through shift
+>     mode
+>   platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
+>     attributes
+>   platform/x86: msi-wmi-platform: Add charge_threshold support
+>   platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
+>   platform/x86: msi-wmi-platform: Update header text
+>   platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
+>     unload
+>
+> Armin Wolf (2):
+>   platform/x86: msi-wmi-platform: Use input buffer for returning result
+>   platform/x86: msi-wmi-platform: Add support for fan control
+>
+>  .../wmi/devices/msi-wmi-platform.rst          |   26 +
+>  drivers/platform/x86/Kconfig                  |    3 +
+>  drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
+>  3 files changed, 1156 insertions(+), 54 deletions(-)
+>
+>
+> base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
+
+
+--1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCEzCAAKCRAWYEM49J/U
+ZvMVAP90EoPkVW7VqHuwNlfls7tgNzziX1CAK5Eu6S5HKDVw+QD/VFui/pt6/cZX
+xPsGAD7Fgq9WqgM4WaErpofj5IHf2gw=
+=ZTi6
+-----END PGP SIGNATURE-----
+
+--1917ec96a486740fa601ecfd0c45a92a45394f0234bd152b47b6d3031405--
