@@ -1,85 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7569E19F464
-	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 20:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBE425E441;
+	Sun, 11 May 2025 20:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746996385; cv=none; b=R+sqpvV/WiV1gDdVgLVD+JMjfW8RNVRM0VKdj9MZ4grt8tlZhUeMXam7Po9Dv0zj8Rkx2okbSIVffGGuKWDY3edb4vV8VRlQu16NnfERQ4PKdn8VDIJ2q2KpPoEySQRz7q8Cz8KGhI2yU4FKmrHWyXDPkZ/0Rbd3HRWGXbFAl6Q=
+	t=1746996806; cv=none; b=JWzePHvrVc+JKTZL+1xYMlwwhxncpkfwWwJME4OOrFQ6F2VAxZbou9i4o8W9JoQzj7IhyhnJvw1/4ALPgQwmigxVnZkHUnLP4oBfyCbqIr9Lb9PFZmaj5O+xSZFc6lx4zZ8grQ68eDHGesBvucXqXIAtA4DDUwmReqmIdv4442k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746996385; c=relaxed/simple;
-	bh=nLQhBvGxKE388cZAZOMBN37aaL7FEH086ud4qjXB8bs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IQa+BNw5YrPcShvnEYxUV0vo4q42kHXig0YeSQgIpEZHkc4Kp4/KLzBGOUVNAGBQiIxeq0nE5+NNxcgXL0OF09aXeIvCS5Z8JHu7ROSQETnEQYmZ8d58eQfbAyKSbQ70C8w/RoG2TESk80H8aelh9WgjxeYVVODzEDJJp8GokSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nGu3Vn4D; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746996806; c=relaxed/simple;
+	bh=BpRiUEkykFFxmO6Nb5gIYaR0NfbGv/J3jo+sqA5HoLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nCrIbDnUaDoAwwJy+4k5K1+TMpkIhYKg+Nq86DkQMOs222omkr7aTXSd1vre70kIggUA43XAE11zP4QbULsbUiaAlEpEv5B55Hcf8Dgnz6ekjeWdI1I2u7NSQhIaiEDn4JykCPzuao+WlVQAAh+Kc7MpNPQvzNt3XWl/ptZWjAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=r67q5xHp; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nGu3Vn4D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746996384; x=1778532384;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=nLQhBvGxKE388cZAZOMBN37aaL7FEH086ud4qjXB8bs=;
-  b=nGu3Vn4DvBJAZikVRUgHannMM4MJfogSatn9KnmAzaJKIDomsqLI1pAD
-   3B1MXA8zHEVcWS8ydRcJD4G8vi7nHcva+EWFG5N1S3WbjH6ysORwa9d4F
-   A/HLuW994NnNL81O+419suADwTaa0d6fFxHadHcAb724rWWTjNu4n+cmu
-   HOKfr3zqHKKk15Y0/+jHGFe6WKHXItsIS79WXGeVYQkXcu3oLwapIQUXQ
-   q5grJpJzaALHO2xmBGrUGyCfNKFP7mfm8CYxajz9bnvJ0B2sY8Z47xzLz
-   23SWCU+BbT2zXPsvNJKLE34Aoyiz5k6uIMIH2YtYKDxx/cUmghtWVK3Zw
-   A==;
-X-CSE-ConnectionGUID: meZeJwkGTkGTwzuMpHDd2w==
-X-CSE-MsgGUID: AKJ+8Dz4TTWyEyolKbCGUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="59444740"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="59444740"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:46:24 -0700
-X-CSE-ConnectionGUID: vX1lJZzPSsmkdnAoOGLWTg==
-X-CSE-MsgGUID: 5pNKmV6tRHy+BM9Tz93MAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="137189080"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:46:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Vadim Pasternak <vadimp@nvidia.com>
-Cc: michaelsh@nvidia.com, dan.carpenter@linaro.org, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20250508203139.55171-1-vadimp@nvidia.com>
-References: <20250508203139.55171-1-vadimp@nvidia.com>
-Subject: Re: [PATCH platform-next v2 1/1] platform/mellanox: mlxreg-dpu:
- Fix smatch warnings
-Message-Id: <174699637602.1989.15085679873619656088.b4-ty@linux.intel.com>
-Date: Sun, 11 May 2025 23:46:16 +0300
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="r67q5xHp"
+Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 81F812E0A48C;
+	Sun, 11 May 2025 23:44:42 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1746996284;
+	bh=MHrWlgs+N01hBSgFhNm7P6i9ul6uIvdp2jaUCTHGVik=; h=From:To:Subject;
+	b=r67q5xHpVpa9JrQt7aSGQEnrkuTUTZnNFF/ZzxrNyXMK591efwnYo+eILIR3+PuYp
+	 euy7QaCmxizoF+sL1WNrkfS6Cjcae+mwTDuuZXj4bAv/TAfqy2FJZnGVebuNjZrPRT
+	 QoYCWtEmdYm4+R264udqO7B8exF+h9qVh1GGANFw=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kurt Borja <kuurtb@gmail.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 03/10] platform/x86: msi-wmi-platform: Add quirk system
+Date: Sun, 11 May 2025 22:44:20 +0200
+Message-ID: <20250511204427.327558-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
+References: <20250511204427.327558-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174699628445.27701.9153414834377873410@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Thu, 08 May 2025 23:31:39 +0300, Vadim Pasternak wrote:
+MSI uses the WMI interface as a passthrough for writes to the EC
+and uses a board name match and a quirk table from userspace on
+Windows. Therefore, there is no auto-detection functionality and
+we have to fallback to a quirk table.
 
-> Add missed call to release adapter.
-> Remove wrong error pointer conversion.
-> 
-> 
+Introduce it here, prior to starting to add features to it.
 
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/msi-wmi-platform.c | 45 +++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/mellanox: mlxreg-dpu: Fix smatch warnings
-      commit: f94ffc3f0b90bf4880e0abf2c056fc465e2c3be8
-
---
- i.
+diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
+index f0d1b8e1a2fec..408d42ab19e20 100644
+--- a/drivers/platform/x86/msi-wmi-platform.c
++++ b/drivers/platform/x86/msi-wmi-platform.c
+@@ -14,6 +14,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/device/driver.h>
++#include <linux/dmi.h>
+ #include <linux/errno.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+@@ -79,8 +80,12 @@ enum msi_wmi_platform_method {
+ 	MSI_PLATFORM_GET_WMI		= 0x1d,
+ };
+ 
++struct msi_wmi_platform_quirk {
++};
++
+ struct msi_wmi_platform_data {
+ 	struct wmi_device *wdev;
++	struct msi_wmi_platform_quirk *quirks;
+ 	struct mutex wmi_lock;	/* Necessary when calling WMI methods */
+ };
+ 
+@@ -124,6 +129,39 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
+ 	"get_wmi"
+ };
+ 
++static struct msi_wmi_platform_quirk quirk_default = {};
++static struct msi_wmi_platform_quirk quirk_gen1 = {
++};
++static struct msi_wmi_platform_quirk quirk_gen2 = {
++};
++
++static const struct dmi_system_id msi_quirks[] = {
++	{
++		.ident = "MSI Claw (gen 1)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T41"),
++		},
++		.driver_data = &quirk_gen1,
++	},
++	{
++		.ident = "MSI Claw AI+ 7",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T42"),
++		},
++		.driver_data = &quirk_gen2,
++	},
++	{
++		.ident = "MSI Claw AI+ 8",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T52"),
++		},
++		.driver_data = &quirk_gen2,
++	},
++};
++
+ static int msi_wmi_platform_parse_buffer(union acpi_object *obj, u8 *output, size_t length)
+ {
+ 	if (obj->type != ACPI_TYPE_BUFFER)
+@@ -413,6 +451,7 @@ static int msi_wmi_platform_init(struct msi_wmi_platform_data *data)
+ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ {
+ 	struct msi_wmi_platform_data *data;
++	const struct dmi_system_id *dmi_id;
+ 	int ret;
+ 
+ 	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+@@ -422,6 +461,12 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
+ 	data->wdev = wdev;
+ 	dev_set_drvdata(&wdev->dev, data);
+ 
++	dmi_id = dmi_first_match(msi_quirks);
++	if (dmi_id)
++		data->quirks = dmi_id->driver_data;
++	else
++		data->quirks = &quirk_default;
++
+ 	ret = devm_mutex_init(&wdev->dev, &data->wmi_lock);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.49.0
 
