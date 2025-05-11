@@ -1,464 +1,413 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2821917CD;
-	Sun, 11 May 2025 22:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409C1917CD
+	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 22:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747004051; cv=none; b=I+u8KaZAENX0jLS7gAfngFHwNp/YW0cWV9EpiTuitZJIkmlA0b7vvcrvh7cM5qrhUWj3BDgBOtncGrTJzQx2+iowv/D+B/7D1PMSzy2/QhS2yM41bBISR/+S2tYO9VXRdfLdq93OJ1/8bF4MPVJieJA8H+3BlOSrVW4J1CphhdU=
+	t=1747004083; cv=none; b=IZNKgT/D0rZpw+KREvMcNayiXb4/MgAhXDOGQEPfC5Fvs4fy8KmmPLbEpcVkfvo5t1JnDo4Q0kOqSlqQ+Tl6rUj6Vohv5i28oBO92JSl6nW9WwGhUhQ4X4np3AuLoT5IZqSPQubqGfzccvy3g9dpz/gszNnHeUR7sF7Amv5zTY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747004051; c=relaxed/simple;
-	bh=kQ8hGhzbS5NT85smkTyj8CfxpEUPiILxDtS8kM8Hq5E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jEpF7ZJzT8+09W76TdNiOuBh364VyUqDAjy0JbKfeA2eabHbEx1mQAXkgmetKPQEmNL/YWxcB1pQPmlP8sOuthB5KkDu73b7M9tFppCizRb2iMqKprYGTvQaMr8HFjy0ZcelU58ky9mH47bwMHay8q/AWJGO0MD45+yMzvlgOvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGWuEvzS; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747004083; c=relaxed/simple;
+	bh=Vdpx9H+mCFWzYbA4rdsO0Tr4arlC4QnFW8hRejw3bSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U92Sbl5MCJGc+D8FWHNiAO792kezD1tfo/dJBSGG3b4OTmhA9irk7J8bZRgO47NkWuxK5hWnKbE+LawLbLQ8aI3/2Vtyizjr8zVYC74/JoAWoQzUg4+O4wNpmmCuRlIAblpfwlsYKtrWE1e1xXW8qisCP8XgeHC1BN2M8XGMQjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=G800DORt; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGWuEvzS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747004050; x=1778540050;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kQ8hGhzbS5NT85smkTyj8CfxpEUPiILxDtS8kM8Hq5E=;
-  b=GGWuEvzSlNVFbd9UxnIdhodpucZ0W3clWKD68hMR4EjR5GyvPtFqdaGz
-   4Fw1pX/NLfyFhGDm2AWx4hJnxAoXxQ15EsEwAt8tGVOX8q4Qyk2EyqRL+
-   je6GMdAGtcBH2F8InMl9m4Zo2+9Jc/nKJxMYPviSFNuSuBsvmdPJEzo3z
-   zH0LiIiyx3bA3OF2kf0mcDJXFinJdVWwrTvbMgyrIRLBKPxQd17HTBuNd
-   j7JZycyh6xSadJ7erMztbBCOGRQtWuYkqZmNd1zMv8wJg+hw8ocaUlK7Y
-   VVRBmK89Q6MKwC8GB/aLKsi1dlnLiSPaEV6UcDP2s93XBS2ZvT0hpOe6Q
-   w==;
-X-CSE-ConnectionGUID: 7kK3Co5oSEmJ48pUnvC/bw==
-X-CSE-MsgGUID: AlM7uQ+HQuC84tzNaBV3OQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="66192177"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="66192177"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:54:10 -0700
-X-CSE-ConnectionGUID: 8wtEbG1dTT+dSlOHI/vE1w==
-X-CSE-MsgGUID: YRIoJXh9SkSDLavB56AzqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142168315"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:54:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 May 2025 01:54:01 +0300 (EEST)
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
-    mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
-    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v13] platform/x86: Add AMD ISP platform config for
- OV05C10
-In-Reply-To: <20250509181220.1744783-1-pratap.nirujogi@amd.com>
-Message-ID: <6b649ebf-6f03-4050-18bb-788bbb3a664e@linux.intel.com>
-References: <20250509181220.1744783-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="G800DORt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747004074; x=1747608874; i=w_armin@gmx.de;
+	bh=aJu4PA6WeKUavJ14YD0zwV0jz79YIsysYJ3D3DOLZ5s=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=G800DORtAyc9ipBiAwZ4S6E7N5A4CGUmBoLnelOealu4ZuhbegAihp2b7eisLCgi
+	 sRuRVW2L7SDkwQWFY6OMXOS3XuXnOLBbqIp227NL3JlKDE0vcSI9veSmLyPnw1MnE
+	 85K7O7BG+oPZF4yVI3tljPFkVRIu8XpQxT1ZjFqQwL9ItwHGDKNhwZ8OLcoMATycZ
+	 tQwIKSXwuv5lH0YADC8PNqHUkDVhCm3iThOhsGTVRYQHkYiyvA388aa3AjE+5VNZi
+	 ClLWaWrgtFAsnFF+Od4LL+hz5xbkpxpcMw8e9PRS4+ReVDJfchgyndy23qS82zXDM
+	 R/Dqfl/tyXlsAOw68A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1Obh-1uysrK3jkh-012IVo; Mon, 12
+ May 2025 00:54:34 +0200
+Message-ID: <964a9e0b-8901-4f50-a725-9f841fa6914d@gmx.de>
+Date: Mon, 12 May 2025 00:54:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] platform/x86: ideapad: Expose charge_types
+To: Jelle van der Waa <jvanderw@redhat.com>, Ike Panhc <ikepanhc@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20250511113012.9251-1-jvanderw@redhat.com>
+ <20250511113012.9251-2-jvanderw@redhat.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250511113012.9251-2-jvanderw@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:R9xWvO0LLV8e7iY6riK9Nah3HIILYfOtFPZ2M+zkF3o519oTEtS
+ U9351vRmlvS7Rl12mMh96lDmO7wRCcqe7DDzpm5GjnWWusIeH3PcyevNCOvJpzag0Armh2r
+ GKtWRacpRRi1zQw8yydU+E6gaOihQamSs9+sYwq4QJL5czUy3stxxpzi1HhELLO3jbkO5Q1
+ bQLaflIy+hH56M1xGKwLw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nYlYdnmhPHA=;ygXZPmrosxMtK4EPesCVFag8apz
+ 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
 
-On Fri, 9 May 2025, Pratap Nirujogi wrote:
+Am 11.05.25 um 13:30 schrieb Jelle van der Waa:
 
-> ISP device specific configuration is not available in ACPI. Add
-> swnode graph to configure the missing device properties for the
-> OV05C10 camera device supported on amdisp platform.
-> 
-> Add support to create i2c-client dynamically when amdisp i2c
-> adapter is available.
-> 
-> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> From: Jelle van der Waa <jvanderwaa@redhat.com>
+>
+> Some Ideapad models support a battery conservation mode which limits the
+> battery charge threshold for longer battery longevity. This is currently
+> exposed via a custom conservation_mode attribute in sysfs.
+>
+> The newly introduced charge_types sysfs attribute is a standardized
+> replacement for laptops with a fixed end charge threshold. Setting it to
+> `Long Life` would enable battery conservation mode. The standardized
+> user space API would allow applications such as UPower to detect laptops
+> which support this battery longevity mode and set it.
+>
+> Tested on an Lenovo ideapad U330p.
+
+Hi,
+
+i like the idea behind this patch series, the charge_types attribute is in=
+deed
+exactly what we need in this case.
+
+>
+> Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
 > ---
-> Changes v12 -> v13:
-> 
-> * Add "struct amdisp_platform_info" to pass sensor specific
-> configuration and make the driver generic to support OV05C10
-> and other supported sensor modules in future.
-> 
-> * Address cosmetic and other review comments.
-> 
->  drivers/platform/x86/amd/Kconfig    |  11 +
->  drivers/platform/x86/amd/Makefile   |   1 +
->  drivers/platform/x86/amd/amd_isp4.c | 309 ++++++++++++++++++++++++++++
->  3 files changed, 321 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/amd_isp4.c
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index c3e086ea64fc..152a68a470e8 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -32,3 +32,14 @@ config AMD_WBRF
->  
->  	  This mechanism will only be activated on platforms that advertise a
->  	  need for it.
+>   .../ABI/testing/sysfs-platform-ideapad-laptop |   2 +
+>   drivers/platform/x86/ideapad-laptop.c         | 126 +++++++++++++++++-
+>   2 files changed, 125 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/D=
+ocumentation/ABI/testing/sysfs-platform-ideapad-laptop
+> index 4989ab266682..83eca4c14503 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> @@ -32,6 +32,8 @@ Date:		Aug 2017
+>   KernelVersion:	4.14
+>   Contact:	platform-driver-x86@vger.kernel.org
+>   Description:
+> +		This interface is deprecated; please use /sys/class/power_supply/*/ch=
+arge_types.
 > +
-> +config AMD_ISP_PLATFORM
-> +	tristate "AMD ISP4 platform driver"
-> +	depends on I2C && X86_64 && ACPI
-> +	help
-> +	  Platform driver for AMD platforms containing image signal processor
-> +	  gen 4. Provides camera sensor module board information to allow
-> +	  sensor and V4L drivers to work properly.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called amd_isp4.
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index c6c40bdcbded..b0e284b5d497 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
->  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
->  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
-> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-> new file mode 100644
-> index 000000000000..27939020634c
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/amd_isp4.c
-> @@ -0,0 +1,309 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * AMD ISP platform driver for sensor i2-client instantiation
-> + *
-> + * Copyright 2025 Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/units.h>
-> +
-> +#define AMDISP_OV05C10_I2C_ADDR		0x10
-> +#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
 
-This is not used anywhere?
+Maybe it would make sense to move this attribute to Documentation/ABI/obso=
+lete?
 
-> +#define AMDISP_OV05C10_HID		"OMNI5C10"
-> +#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
-> +#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
-> +
-> +/*
-> + * AMD ISP platform info definition to initialize sensor
-> + * specific platform configuration to prepare the amdisp
-> + * platform.
-> + */
-> +struct amdisp_platform_info {
-> +	struct i2c_board_info board_info;
-> +	const struct software_node **swnodes;
-> +};
-> +
-> +/*
-> + * AMD ISP platform definition to configure the device properties
-> + * missing in the ACPI table.
-> + */
-> +struct amdisp_platform {
-> +	const struct amdisp_platform_info *pinfo;
-> +	struct i2c_board_info board_info;
-> +	struct notifier_block i2c_nb;
-> +	struct i2c_client *i2c_dev;
-> +	struct mutex lock;	/* protects i2c client creation */
+>   		Controls whether the conservation mode is enabled or not.
+>   		This feature limits the maximum battery charge percentage to
+>   		around 50-60% in order to prolong the lifetime of the battery.
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x8=
+6/ideapad-laptop.c
+> index ede483573fe0..fd9127ffd456 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -34,12 +34,17 @@
+>   #include <linux/wmi.h>
+>   #include "ideapad-laptop.h"
+>  =20
+> +#include <linux/power_supply.h>
+> +#include <acpi/battery.h>
 
-Missing #include.
+Please make sure that IDEAPAD_LAPTOP depends on ACPI_BATTERY inside the Kc=
+onfig.
 
-> +};
-> +
-> +/* Top-level OV05C10 camera node property table */
-> +static const struct property_entry ov05c10_camera_props[] = {
-> +	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-> +	{ }
-> +};
-> +
-> +/* Root AMD ISP OV05C10 camera node definition */
-> +static const struct software_node camera_node = {
-> +	.name = AMDISP_OV05C10_HID,
-> +	.properties = ov05c10_camera_props,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Ports node definition. No properties defined for
-> + * ports node for OV05C10.
-> + */
-> +static const struct software_node ports = {
-> +	.name = "ports",
-> +	.parent = &camera_node,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Port node definition. No properties defined for
-> + * port node for OV05C10.
-> + */
-> +static const struct software_node port_node = {
-> +	.name = "port@",
-> +	.parent = &ports,
-> +};
-> +
-> +/*
-> + * Remote endpoint AMD ISP node definition. No properties defined for
-> + * remote endpoint node for OV05C10.
-> + */
-> +static const struct software_node remote_ep_isp_node = {
-> +	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
-> +};
-> +
-> +/*
-> + * Remote endpoint reference for isp node included in the
-> + * OV05C10 endpoint.
-> + */
-> +static const struct software_node_ref_args ov05c10_refs[] = {
-> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
-> +};
-> +
-> +/* OV05C supports one single link frequency */
-> +static const u64 ov05c10_link_freqs[] = {
+>   #include <acpi/video.h>
+>  =20
+>   #include <dt-bindings/leds/common.h>
+>  =20
+>   #define IDEAPAD_RFKILL_DEV_NUM	3
+>  =20
+> +#define IDEAPAD_CHARGE_TYPES		(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD)  =
+| \
+> +					 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
 
-+ #include <linux/types.h>
+This macro is rather small and only used once. Please open-code it.
 
-> +	925 * HZ_PER_MHZ,
-> +};
 > +
-> +/* OV05C supports only 2-lane configuration */
-> +static const u32 ov05c10_data_lanes[] = {
-> +	1,
-> +	2,
-> +};
-> +
-> +/* OV05C10 endpoint node properties table */
-> +static const struct property_entry ov05c10_endpoint_props[] = {
-> +	PROPERTY_ENTRY_U32("bus-type", 4),
-> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
-> +				     ARRAY_SIZE(ov05c10_data_lanes)),
-> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
-> +				     ARRAY_SIZE(ov05c10_link_freqs)),
-> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
-> +	{ }
-> +};
-> +
-> +/* AMD ISP endpoint node definition */
-> +static const struct software_node endpoint_node = {
-> +	.name = "endpoint",
-> +	.parent = &port_node,
-> +	.properties = ov05c10_endpoint_props,
-> +};
-> +
-> +/*
-> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
-> + * fixed to align with the structure that v4l2 expects for successful
-> + * endpoint fwnode parsing.
-> + *
-> + * It is only the node property_entries that will vary for each platform
-> + * supporting different sensor modules.
-> + */
-> +static const struct software_node *ov05c10_nodes[] = {
-> +	&camera_node,
-> +	&ports,
-> +	&port_node,
-> +	&endpoint_node,
-> +	&remote_ep_isp_node,
-> +	NULL
-> +};
-> +
-> +/* OV05C10 specific AMD ISP platform configuration */
-> +static const struct amdisp_platform_info ov05c10_platform_config = {
-> +	.board_info = {
-> +		.dev_name = "ov05c10",
-> +		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
-> +	},
-> +	.swnodes = ov05c10_nodes,
-> +};
-> +
-> +static const struct acpi_device_id amdisp_sensor_ids[] = {
-> +	{ AMDISP_OV05C10_HID, (kernel_ulong_t)&ov05c10_platform_config },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-> +
-> +static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+>   enum {
+>   	CFG_CAP_BT_BIT       =3D 16,
+>   	CFG_CAP_3G_BIT       =3D 17,
+> @@ -162,6 +167,8 @@ struct ideapad_private {
+>   	struct backlight_device *blightdev;
+>   	struct ideapad_dytc_priv *dytc;
+>   	struct dentry *debug;
+> +	struct acpi_battery_hook battery_hook;
+> +	struct power_supply *hooked_battery;
+
+Unused attribute, please remove.
+
+>   	unsigned long cfg;
+>   	unsigned long r_touchpad_val;
+>   	struct {
+> @@ -589,6 +596,11 @@ static ssize_t camera_power_store(struct device *de=
+v,
+>  =20
+>   static DEVICE_ATTR_RW(camera_power);
+>  =20
+> +static void show_deprecation_warning(struct device *dev)
 > +{
-> +	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-
-Missing #include.
-
+> +	dev_warn_once(dev, "conservation_mode attribute has been deprecated, s=
+ee charge_types.\n");
 > +}
 > +
-> +static void instantiate_isp_i2c_client(struct amdisp_platform *isp4_platform,
-> +				       struct i2c_adapter *adap)
+>   static ssize_t conservation_mode_show(struct device *dev,
+>   				      struct device_attribute *attr,
+>   				      char *buf)
+> @@ -597,6 +609,8 @@ static ssize_t conservation_mode_show(struct device =
+*dev,
+>   	unsigned long result;
+>   	int err;
+>  =20
+> +	show_deprecation_warning(dev);
+> +
+>   	err =3D eval_gbmd(priv->adev->handle, &result);
+>   	if (err)
+>   		return err;
+> @@ -612,6 +626,8 @@ static ssize_t conservation_mode_store(struct device=
+ *dev,
+>   	bool state;
+>   	int err;
+>  =20
+> +	show_deprecation_warning(dev);
+> +
+>   	err =3D kstrtobool(buf, &state);
+>   	if (err)
+>   		return err;
+> @@ -1973,10 +1989,99 @@ static const struct dmi_system_id ctrl_ps2_aux_p=
+ort_list[] =3D {
+>   	{}
+>   };
+>  =20
+> -static void ideapad_check_features(struct ideapad_private *priv)
+> +static int ideapad_psy_ext_set_prop(struct power_supply *psy,
+> +				       const struct power_supply_ext *ext,
+
+Alignment should match open parenthesis.
+
+> +				       void *ext_data,
+> +				       enum power_supply_property psp,
+> +				       const union power_supply_propval *val)
 > +{
-> +	struct i2c_board_info *info = &isp4_platform->board_info;
-> +	struct i2c_client *i2c_dev;
+> +	struct ideapad_private *priv =3D ext_data;
+> +	int err;
 > +
-> +	guard(mutex)(&isp4_platform->lock);
+> +	if (psp !=3D POWER_SUPPLY_PROP_CHARGE_TYPES)
+> +		return -EINVAL;
 > +
-> +	if (isp4_platform->i2c_dev)
-> +		return;
-> +
-> +	i2c_dev = i2c_new_client_device(adap, info);
-> +	if (IS_ERR(i2c_dev)) {
+> +	err =3D exec_sbmc(priv->adev->handle,
+> +			(val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE ?
+> +			 SBMC_CONSERVATION_ON : SBMC_CONSERVATION_OFF));
 
-Missing #include.
+AFAIK the power supply core does not check if val->intval holds a supporte=
+d charge type value.
+Please use a switch case to return -EINVAL in such cases.
 
-> +		dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev);
-> +		return;
-> +	}
-> +	isp4_platform->i2c_dev = i2c_dev;
+> +	if (err)
+> +		return err;
+
+Please directly return the result of exec_sbmc() here.
+
+> +
+> +	return 0;
 > +}
 > +
-> +static int isp_i2c_bus_notify(struct notifier_block *nb,
-> +			      unsigned long action, void *data)
+> +static int ideapad_psy_ext_get_prop(struct power_supply *psy,
+> +				       const struct power_supply_ext *ext,
+
+Alignment should match open parenthesis.
+
+> +				       void *ext_data,
+> +				       enum power_supply_property psp,
+> +				       union power_supply_propval *val)
 > +{
-> +	struct amdisp_platform *isp4_platform =
-> +		container_of(nb, struct amdisp_platform, i2c_nb);
-> +	struct device *dev = data;
-> +	struct i2c_client *client;
-> +	struct i2c_adapter *adap;
+> +	struct ideapad_private *priv =3D ext_data;
+> +	unsigned long result;
+> +	int err;
 > +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		adap = i2c_verify_adapter(dev);
-> +		if (!adap)
-> +			break;
-> +		if (is_isp_i2c_adapter(adap))
-> +			instantiate_isp_i2c_client(isp4_platform, adap);
-> +		break;
-> +	case BUS_NOTIFY_REMOVED_DEVICE:
-> +		client = i2c_verify_client(dev);
-> +		if (!client)
-> +			break;
+> +	if (psp !=3D POWER_SUPPLY_PROP_CHARGE_TYPES)
+> +		return -EINVAL;
 > +
-> +		scoped_guard(mutex, &isp4_platform->lock) {
-> +			if (isp4_platform->i2c_dev == client) {
-> +				dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
-> +				isp4_platform->i2c_dev = NULL;
-> +			}
+> +	err =3D eval_gbmd(priv->adev->handle, &result);
+> +	if (err)
+> +		return err;
+> +
+> +	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
+> +	else
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ideapad_psy_prop_is_writeable(struct power_supply *psy,
+> +					    const struct power_supply_ext *ext,
+
+Alignment should match open parenthesis.
+
+> +					    void *data,
+> +					    enum power_supply_property psp)
+> +{
+> +	if (psp =3D=3D POWER_SUPPLY_PROP_CHARGE_TYPES)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static const enum power_supply_property ideapad_power_supply_props[] =
+=3D {
+> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
+> +};
+> +
+> +static const struct power_supply_ext ideapad_battery_ext =3D {
+> +	.name			=3D "ideapad",
+
+Maybe using a more specific name like "ideapad_laptop"/"ideapad_acpi" woul=
+d be better here?
+
+> +	.properties		=3D ideapad_power_supply_props,
+> +	.num_properties		=3D ARRAY_SIZE(ideapad_power_supply_props),
+> +	.charge_types		=3D IDEAPAD_CHARGE_TYPES,
+> +	.get_property		=3D ideapad_psy_ext_get_prop,
+> +	.set_property		=3D ideapad_psy_ext_set_prop,
+> +	.property_is_writeable	=3D ideapad_psy_prop_is_writeable,
+> +};
+> +
+> +static int ideapad_battery_add(struct power_supply *battery,
+> +			       struct acpi_battery_hook *hook)
+> +{
+> +	struct ideapad_private *priv =3D container_of(hook, struct ideapad_pri=
+vate, battery_hook);
+> +
+> +	return power_supply_register_extension(battery, &ideapad_battery_ext,
+> +					       &priv->platform_device->dev, priv);
+> +}
+> +
+> +static int ideapad_battery_remove(struct power_supply *battery,
+> +				  struct acpi_battery_hook *hook)
+> +{
+> +	power_supply_unregister_extension(battery, &ideapad_battery_ext);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ideapad_check_features(struct ideapad_private *priv)
+>   {
+>   	acpi_handle handle =3D priv->adev->handle;
+>   	unsigned long val;
+> +	int err;
+>  =20
+>   	priv->features.set_fn_lock_led =3D
+>   		set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
+> @@ -1991,8 +2096,19 @@ static void ideapad_check_features(struct ideapad=
+_private *priv)
+>   	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
+>   		priv->features.fan_mode =3D true;
+>  =20
+> -	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")=
+)
+> +	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")=
+) {
+>   		priv->features.conservation_mode =3D true;
+> +		priv->battery_hook.add_battery =3D ideapad_battery_add;
+> +		priv->battery_hook.remove_battery =3D ideapad_battery_remove;
+> +		priv->battery_hook.name =3D "Ideapad Battery Extension";
+> +
+> +		err =3D devm_battery_hook_register(&priv->platform_device->dev, &priv=
+->battery_hook);
+> +		if (err) {
+> +			dev_dbg(&priv->platform_device->dev,
+> +				"failed to register battery hook: %d\n", err);
+
+I think this error message is unnecessary. Please remove it.
+
+Thanks,
+Armin Wolf
+
+> +			return err;
 > +		}
-> +		break;
-> +	default:
-> +		break;
 > +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct amdisp_platform *prepare_amdisp_platform(struct device *dev,
-> +						       const struct amdisp_platform_info *src)
-> +{
-> +	struct amdisp_platform *isp4_platform;
-> +	int ret;
-> +
-> +	isp4_platform = devm_kzalloc(dev, sizeof(*isp4_platform), GFP_KERNEL);
-> +	if (!isp4_platform)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = devm_mutex_init(dev, &isp4_platform->lock);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	isp4_platform->board_info.dev_name = src->board_info.dev_name;
-> +	strscpy(isp4_platform->board_info.type, src->board_info.type);
-> +	isp4_platform->board_info.addr = src->board_info.addr;
-> +	isp4_platform->pinfo = src;
-> +
-> +	ret = software_node_register_node_group(src->swnodes);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	isp4_platform->board_info.swnode = src->swnodes[0];
-> +
-> +	return isp4_platform;
-> +}
-> +
-> +static int try_to_instantiate_i2c_client(struct device *dev, void *data)
-> +{
-> +	struct amdisp_platform *isp4_platform = (struct amdisp_platform *)data;
-
-No need to cast from void *.
-
-> +	struct i2c_adapter *adap = i2c_verify_adapter(dev);
-> +
-> +	if (!isp4_platform || !adap)
-> +		return 0;
-> +	if (!adap->owner)
-> +		return 0;
-> +
-> +	if (is_isp_i2c_adapter(adap))
-> +		instantiate_isp_i2c_client(isp4_platform, adap);
+>  =20
+>   	if (acpi_has_method(handle, "DYTC"))
+>   		priv->features.dytc =3D true;
+> @@ -2027,6 +2143,8 @@ static void ideapad_check_features(struct ideapad_=
+private *priv)
+>   			}
+>   		}
+>   	}
 > +
 > +	return 0;
-> +}
-> +
-> +static int amd_isp_probe(struct platform_device *pdev)
-> +{
-> +	const struct amdisp_platform_info *pinfo;
-> +	struct amdisp_platform *isp4_platform;
-> +	int ret;
-> +
-> +	pinfo = device_get_match_data(&pdev->dev);
-> +	if (!pinfo) {
-> +		return dev_err_probe(&pdev->dev, -EINVAL,
-> +				     "failed to get valid ACPI data\n");
-> +	}
-> +
-> +	isp4_platform = prepare_amdisp_platform(&pdev->dev, pinfo);
-> +	if (IS_ERR(isp4_platform))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(isp4_platform),
-> +				     "failed to prepare AMD ISP platform fwnode\n");
-> +
-> +	isp4_platform->i2c_nb.notifier_call = isp_i2c_bus_notify;
-> +	ret = bus_register_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
-> +	if (ret)
-> +		goto error_unregister_sw_node;
-> +
-> +	/* check if adapter is already registered and create i2c client instance */
-> +	i2c_for_each_dev((void *)isp4_platform, try_to_instantiate_i2c_client);
-
-No need to case pointer to/from void *.
-
-> +
-> +	platform_set_drvdata(pdev, isp4_platform);
-> +	return 0;
-> +
-> +error_unregister_sw_node:
-> +	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
-> +	return ret;
-> +}
-> +
-> +static void amd_isp_remove(struct platform_device *pdev)
-> +{
-> +	struct amdisp_platform *isp4_platform = platform_get_drvdata(pdev);
-> +
-> +	bus_unregister_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
-> +	i2c_unregister_device(isp4_platform->i2c_dev);
-> +	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
-> +}
-> +
-> +static struct platform_driver amd_isp_platform_driver = {
-> +	.driver	= {
-> +		.name			= AMD_ISP_PLAT_DRV_NAME,
-> +		.acpi_match_table	= amdisp_sensor_ids,
-> +	},
-> +	.probe	= amd_isp_probe,
-> +	.remove	= amd_isp_remove,
-> +};
-> +
-> +module_platform_driver(amd_isp_platform_driver);
-> +
-> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
-> +MODULE_LICENSE("GPL");
-> 
-
--- 
- i.
-
+>   }
+>  =20
+>   #if IS_ENABLED(CONFIG_ACPI_WMI)
+> @@ -2175,7 +2293,9 @@ static int ideapad_acpi_add(struct platform_device=
+ *pdev)
+>   	if (err)
+>   		return err;
+>  =20
+> -	ideapad_check_features(priv);
+> +	err =3D ideapad_check_features(priv);
+> +	if (err)
+> +		return err;
+>  =20
+>   	ideapad_debugfs_init(priv);
+>  =20
