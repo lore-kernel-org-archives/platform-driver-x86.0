@@ -1,265 +1,96 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2958264FBB;
-	Sun, 11 May 2025 20:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FB819F41C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 20:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746996305; cv=none; b=pd9Welb5iZdp0wPbJdI4zRxUK7zo4/g8mJo3tIBGZdKOhFNAS2l1KmYCF/revfkdUWrofTTT+xgk2T/e4T1I63tY0eNZLwKFmJw6lW3BgnndauqtffauXO7v43UxH2Vg8xPi95UYriYZ4BGeexzqbPte5oc7doj/MIG48o90tkA=
+	t=1746996378; cv=none; b=NjINNUwRk4QvYgCeABTfE2Jqu2+hwozsmm/IO150Tcb+Wv3J4nH8UWxq/DxD7scv4DrPbS+ZArYJ2+HFO4fIrBpb3y1co75VHFL6sCKnzbSKFjbCDE9QFlRVMUYS61911c2JPuEC5r6iE3bG1xy0FityojZes6e5VkWMeavYuk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746996305; c=relaxed/simple;
-	bh=orJ8j/3ajnfYd3uDV2+SFkRISKEac5ehE16CTuEw1eI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NORRHoczhuuyPRQCGxtdScdlq+LBb+D22sCrrbay+t84k/fuCRMwlhjbnyemGsHu61zWVAnYWnk++704pNsvDRdJyozXZlMTFdaLxpRLwFACR7fKBe1r5dzBokdDuYihUNHaImvP3meBQyP37xERy03bDVJE19L/ek1SYEaZLnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=tmQC8lgf; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1746996378; c=relaxed/simple;
+	bh=iCjSfWpDxAtoOc8GvSfo01HZ5iHt42za8DP5zxzA8qg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=o8b4KdMMwLO0cg3ersPxJwReFpNwqD5WmGCmwWg5wXHOluqDX14nwSlp7jSJUqwgjaAt6Qfg9LLoSbpYnsgveH5sBdGfhN4NYVklXbOloLrMKxmwy0FL2VXUP2J2icVKReoRzWSaepk87FRWfW3YBReSOsWKtSVNM5/9jU1gK/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFBA19ZS; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="tmQC8lgf"
-Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id AB49A2E0A4EA;
-	Sun, 11 May 2025 23:44:59 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1746996301;
-	bh=Enb2hpri1htzmtmoOfLTI9UZyxly8NwM8OPV3n/jH3Q=; h=From:To:Subject;
-	b=tmQC8lgfWNLsbtuszcxNtW+/jFiB/zKXw4HpKzaKbSQR3duV1mNKmN/0b0OEIELtI
-	 pv4vKxaN77nnP2QKM+Pf2gj54uJWnzof2S97WqDB5NjeqGF5LeGluSWgF2SFqJh+1z
-	 JencDpHdmlq+O/oEvKLwxX4ZJW6Tw27noCTT9tIo=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kurt Borja <kuurtb@gmail.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1 10/10] platform/x86: msi-wmi-platform: Restore fan curves
- on PWM disable and unload
-Date: Sun, 11 May 2025 22:44:27 +0200
-Message-ID: <20250511204427.327558-11-lkml@antheas.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
-References: <20250511204427.327558-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFBA19ZS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746996376; x=1778532376;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=iCjSfWpDxAtoOc8GvSfo01HZ5iHt42za8DP5zxzA8qg=;
+  b=kFBA19ZSG4lRsWkhjcBqB5jFvOz3rtI51eIt+tbzfMn8PGhFX4fj+TgF
+   YVUnyRW4VUCHg5C0IQbsoKeweeim22ZjIvnKDCqexXGWbsC0pPn9zIbYe
+   91i7Rav/yBCpqPSvfJN2DfS/lxDrSdXpj1jN1ClYTidk0iDV1GePBPgEY
+   MPeA3yWF4It/9u8nl8VNVIqbMuhQEdIa88u0X+k9QktFvyrvSKCFISCtU
+   ZSpC+TXldsO1Bo9VVJvpu/jOVYqTmlytYRdsySw6tLoH8u20gO616bM83
+   D9PViq3cnqJNxRYhl64jqH2We0LVNcplzGfcTSiQfRA11ohWJAf3Obvjk
+   g==;
+X-CSE-ConnectionGUID: ezX0Jx48QzSRTsYVoGIuMg==
+X-CSE-MsgGUID: //nARQNCRqqtjMoLgfDORw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="59444732"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="59444732"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:46:15 -0700
+X-CSE-ConnectionGUID: 1HQNhrMITiKnD6hSLyyWiQ==
+X-CSE-MsgGUID: 6RyRpZqGQLK+ROoUeFnN3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="137189074"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:46:13 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ Vadim Pasternak <vadimp@nvidia.com>, Nathan Chancellor <nathan@kernel.org>
+Cc: Michael Shych <michaelsh@nvidia.com>, 
+ platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev
+In-Reply-To: <20250509-nvsw-sn2200-fix-items-busbar-hotplug-v1-1-8844fff38dc8@kernel.org>
+References: <20250509-nvsw-sn2200-fix-items-busbar-hotplug-v1-1-8844fff38dc8@kernel.org>
+Subject: Re: [PATCH] platform: mellanox: nvsw-sn2200: Fix .items in
+ nvsw_sn2201_busbar_hotplug
+Message-Id: <174699636829.1989.8868622516931156810.b4-ty@linux.intel.com>
+Date: Sun, 11 May 2025 23:46:08 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174699630136.28218.12400765318638031012@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-MSI software is a bit weird in that even when the manual fan curve is
-disabled, the fan speed is still somewhat affected by the curve. So
-we have to restore the fan curves on unload and PWM disable, as it
-is done in Windows.
+On Fri, 09 May 2025 11:58:01 +0100, Nathan Chancellor wrote:
 
-Suggested-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/msi-wmi-platform.c | 123 +++++++++++++++++++++++-
- 1 file changed, 122 insertions(+), 1 deletion(-)
+> Clang warns (or errors with CONFIG_WERROR=y):
+> 
+>   drivers/platform/mellanox/nvsw-sn2201.c:531:32: error: variable 'nvsw_sn2201_busbar_items' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+>     531 | static struct mlxreg_core_item nvsw_sn2201_busbar_items[] = {
+>         |                                ^~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> nvsw_sn2201_busbar_items is only used in ARRAY_SIZE(), which uses
+> sizeof(), so this variable is only used at compile time. It appears that
+> this may be a copy and paste issue, so use nvsw_sn2201_busbar_items as
+> the .items member in nvsw_sn2201_busbar_hotplug, clearing up the
+> warning.
+> 
+> [...]
 
-diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-index 7dafe17d4d6be..a917db0300c06 100644
---- a/drivers/platform/x86/msi-wmi-platform.c
-+++ b/drivers/platform/x86/msi-wmi-platform.c
-@@ -123,16 +123,25 @@ struct msi_wmi_platform_quirk {
- 	bool shift_mode;	/* Shift mode is supported */
- 	bool charge_threshold;	/* Charge threshold is supported */
- 	bool dual_fans;		/* For devices with two hwmon fans */
-+	bool restore_curves;	/* Restore factory curves on unload */
- 	int pl_min;		/* Minimum PLx value */
- 	int pl1_max;		/* Maximum PL1 value */
- 	int pl2_max;		/* Maximum PL2 value */
- };
- 
-+struct msi_wmi_platform_factory_curves {
-+	u8 cpu_fan_table[32];
-+	u8 gpu_fan_table[32];
-+	u8 cpu_temp_table[32];
-+	u8 gpu_temp_table[32];
-+};
-+
- struct msi_wmi_platform_data {
- 	struct wmi_device *wdev;
- 	struct msi_wmi_platform_quirk *quirks;
- 	struct mutex wmi_lock;	/* Necessary when calling WMI methods */
- 	struct device *ppdev;
-+	struct msi_wmi_platform_factory_curves factory_curves;
- 	struct acpi_battery_hook battery_hook;
- 	struct device *fw_attrs_dev;
- 	struct kset *fw_attrs_kset;
-@@ -219,6 +228,7 @@ static struct msi_wmi_platform_quirk quirk_gen1 = {
- 	.shift_mode = true,
- 	.charge_threshold = true,
- 	.dual_fans = true,
-+	.restore_curves = true,
- 	.pl_min = 8,
- 	.pl1_max = 43,
- 	.pl2_max = 45
-@@ -227,6 +237,7 @@ static struct msi_wmi_platform_quirk quirk_gen2 = {
- 	.shift_mode = true,
- 	.charge_threshold = true,
- 	.dual_fans = true,
-+	.restore_curves = true,
- 	.pl_min = 8,
- 	.pl1_max = 30,
- 	.pl2_max = 37
-@@ -507,6 +518,94 @@ static struct attribute *msi_wmi_platform_hwmon_attrs[] = {
- };
- ATTRIBUTE_GROUPS(msi_wmi_platform_hwmon);
- 
-+static int msi_wmi_platform_curves_save(struct msi_wmi_platform_data *data)
-+{
-+	int ret;
-+
-+	data->factory_curves.cpu_fan_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE;
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_GET_FAN,
-+		data->factory_curves.cpu_fan_table,
-+		sizeof(data->factory_curves.cpu_fan_table));
-+	if (ret < 0)
-+		return ret;
-+	data->factory_curves.cpu_fan_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE;
-+
-+	data->factory_curves.gpu_fan_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE;
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_GET_FAN,
-+		data->factory_curves.gpu_fan_table,
-+		sizeof(data->factory_curves.gpu_fan_table));
-+	if (ret < 0)
-+		return ret;
-+	data->factory_curves.gpu_fan_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE;
-+
-+	data->factory_curves.cpu_temp_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE;
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_GET_TEMPERATURE,
-+		data->factory_curves.cpu_temp_table,
-+		sizeof(data->factory_curves.cpu_temp_table));
-+	if (ret < 0)
-+		return ret;
-+	data->factory_curves.cpu_temp_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE;
-+
-+	data->factory_curves.gpu_temp_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE;
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_GET_TEMPERATURE,
-+		data->factory_curves.gpu_temp_table,
-+		sizeof(data->factory_curves.gpu_temp_table));
-+	if (ret < 0)
-+		return ret;
-+	data->factory_curves.gpu_temp_table[0] =
-+		MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE;
-+
-+	return 0;
-+}
-+
-+static int msi_wmi_platform_curves_load(struct msi_wmi_platform_data *data)
-+{
-+	u8 buffer[32] = { };
-+	int ret;
-+
-+	memcpy(buffer, data->factory_curves.cpu_fan_table,
-+	       sizeof(data->factory_curves.cpu_fan_table));
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_FAN,
-+					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	memcpy(buffer, data->factory_curves.gpu_fan_table,
-+	       sizeof(data->factory_curves.gpu_fan_table));
-+	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_FAN,
-+					      buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	memcpy(buffer, data->factory_curves.cpu_temp_table,
-+	       sizeof(data->factory_curves.cpu_temp_table));
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_SET_TEMPERATURE, buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	memcpy(buffer, data->factory_curves.gpu_temp_table,
-+	       sizeof(data->factory_curves.gpu_temp_table));
-+	ret = msi_wmi_platform_query_unlocked(
-+		data, MSI_PLATFORM_SET_TEMPERATURE, buffer, sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+
- static umode_t msi_wmi_platform_is_visible(const void *drvdata, enum hwmon_sensor_types type,
- 					   u32 attr, int channel)
- {
-@@ -603,9 +702,19 @@ static int msi_wmi_platform_write(struct device *dev, enum hwmon_sensor_types ty
- 				return -EINVAL;
- 			}
- 
--			return msi_wmi_platform_query_unlocked(
-+			ret = msi_wmi_platform_query_unlocked(
- 				data, MSI_PLATFORM_SET_AP, buffer,
- 				sizeof(buffer));
-+			if (ret < 0)
-+				return ret;
-+
-+			if (val == 2 && data->quirks->restore_curves) {
-+				ret = msi_wmi_platform_curves_load(data);
-+				if (ret < 0)
-+					return ret;
-+			}
-+
-+			return 0;
- 		default:
- 			return -EOPNOTSUPP;
- 		}
-@@ -1373,6 +1482,13 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
- 
- 	msi_wmi_platform_profile_setup(data);
- 
-+	if (data->quirks->restore_curves) {
-+		guard(mutex)(&data->wmi_lock);
-+		ret = msi_wmi_platform_curves_save(data);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return msi_wmi_platform_hwmon_init(data);
- }
- 
-@@ -1382,6 +1498,11 @@ static void msi_wmi_platform_remove(struct wmi_device *wdev)
- 
- 	if (data->quirks->charge_threshold)
- 		battery_hook_unregister(&data->battery_hook);
-+
-+	if (data->quirks->restore_curves) {
-+		guard(mutex)(&data->wmi_lock);
-+		msi_wmi_platform_curves_load(data);
-+	}
- }
- 
- static const struct wmi_device_id msi_wmi_platform_id_table[] = {
--- 
-2.49.0
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform: mellanox: nvsw-sn2200: Fix .items in nvsw_sn2201_busbar_hotplug
+      commit: 8e725ff0419ad74dc79abfbdcd4cfba936a5d167
+
+--
+ i.
 
