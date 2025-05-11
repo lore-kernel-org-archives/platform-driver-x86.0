@@ -1,109 +1,89 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3325B25E830;
-	Sun, 11 May 2025 20:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD49C29D0E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 21:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746996807; cv=none; b=KtaYu/ObYVOGk5QSYX+dI57yl9liqJXa3s2X924jonYiuHHh0Oip+cRvm10qfPVFot+40rRYX6WySiiYHxBaxvA+pPLWba57dYUZOVQfkbkFDZXkunjFc9ypp70hgrSvzqxsDVvH6RvuOGQJ0LYSw+hBv27t3YpAIUpiavsMMvo=
+	t=1746999960; cv=none; b=nRFkemCx0gwgI382tx0ORFrB7zDCoLA6DuNfVPYGRnMhcwvQ9q9z0WaF3IKLn3bBK5S1meSDlejfma66dB9avxr0ex/DhbnsPV2FKTSGy+rNDw+I6zhJrkZzt8vygajxjRzbLhSNUJs6H9UGvsb4nykGsmMfo5fxY3z2EkTYc1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746996807; c=relaxed/simple;
-	bh=csg+A7Bhp01hECOFFManlrmGorkh6UdbFJH4llgO7MM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YRs1GC0Sp/tiAl1cwek2E7Dw04OMd8Katk0XDAL8XdvIrXM8DYz0x4XIpPu9Bhi7jGbL0lYh6SiDqgGmr2gpexL8xlibbaZjoTCX6LbQl83U0ecKN1EXiEJ33QROwim2pXUprkYj0g2/6yNcbKuHaGSlK9T9xeP7m5gj2mvMV/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=kI9MxO1m; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1746999960; c=relaxed/simple;
+	bh=ryH0gRz1Eud/OChhzlPcELSO6ZvS+6GRf/eMb+fichI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UeMjhQgFAo3KkvGPI5NZQ638ipSvT6GbgrnlK0o+yNIui87Q/xzkaNXEL1/Ce8gaZ3Xlz7WeUksZOlOR/1A5UKmT8XNw5R/zCpU4Rc1ArxZXXqIPLI+0o66kh1gFqYCwz2x8RCNMvJ4gw2b99f+J+8ONO06gPQrkZ6ve6R900jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPD5Sh4S; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="kI9MxO1m"
-Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 8CDEA2E0A418;
-	Sun, 11 May 2025 23:44:35 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1746996277;
-	bh=Rp8WBypSDO+ZIBKX6G/H59IRWLeWcZlkVKkdbkhSt18=; h=From:To:Subject;
-	b=kI9MxO1maPq9CIL/1NXeDogXNMRY0P8eIGOcfUL/yip3h9QKGg11JgMj56hqSbplD
-	 V8DnWxgjV3wMdFAiBjy001fIBHVmUQUKSa/LErMYAUcaKUbOfjV+rTTNCMNbVi9ca1
-	 SnTBIjuO9oPWUW/dW23u4b1lEuiQVnawBy/RfC7M=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kurt Borja <kuurtb@gmail.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
- curves/platform profile/tdp/battery limiting
-Date: Sun, 11 May 2025 22:44:17 +0200
-Message-ID: <20250511204427.327558-1-lkml@antheas.dev>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPD5Sh4S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746999959; x=1778535959;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=ryH0gRz1Eud/OChhzlPcELSO6ZvS+6GRf/eMb+fichI=;
+  b=ZPD5Sh4SoXOYqkLvLXnTuM6OP28pCt+tsk8tajXrjjeMRcek/EmHSlsh
+   xbfPyIKjjXUcT9pMQO51J0ywclN3Zd1L/mIpckJF4DctSmJg9bVu865Gw
+   Jixtu8D0tnMBSZOuqP5ebLmAiYz5483DpQ5rSvqxgIp4I2ixla6bUGNkP
+   xE668U6TQeT+pyszyUO7eBlFgmAQNYYOEP+fSoG50CSdVe0Xah5tcsYIq
+   LaKKpGsYYkTdgCkhqws7JQ54x9pL9HRJ8/Oi8IiUmFnuT6J2UjDhKDBYl
+   ri8XhPrKFMVTl0vZop0rg8LRRRKHDdFOAYGCY32b32ABgV5d/8Rlg8Xoh
+   Q==;
+X-CSE-ConnectionGUID: 3kLKlnmQTOiHq4Fh7l56vA==
+X-CSE-MsgGUID: xZLEceqZSSKXUCOh+ji/og==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48865921"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="48865921"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:45:50 -0700
+X-CSE-ConnectionGUID: XeDNUBNPR9u07w9c9LoaUw==
+X-CSE-MsgGUID: 43MR0j/yQ0ClTfMfthZOUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="141245032"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 14:45:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
+Cc: hdegoede@redhat.com, 
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+In-Reply-To: <20250506101542.200811-1-suma.hegde@amd.com>
+References: <20250506101542.200811-1-suma.hegde@amd.com>
+Subject: Re: [v4 1/3] platform/x86/amd/hsmp: Use a single DRIVER_VERSION
+ for all hsmp modules
+Message-Id: <174699994255.12637.15173942861915017654.b4-ty@linux.intel.com>
+Date: Mon, 12 May 2025 00:45:42 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174699627737.27496.1574115942377532855@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-This draft patch series brings into parity the msi-wmi-platform driver with
-the MSI Center M Windows application for the MSI Claw (all models).
-Unfortunately, MSI Center M and this interface do not have a discovery API,
-necessitating the introduction of a quirk system.
+On Tue, 06 May 2025 10:15:40 +0000, Suma Hegde wrote:
 
-While this patch series is fully functional and tested, there are still
-some issues that need to be addressed:
-  - Armin notes we need to disable fan curve support by default and quirk
-    it as well, as it is not supported on all models. However, the way
-    PWM enable ops work, this makes it a bit difficult, so I would like
-    some suggestions on how to rework this.
-  - It turns out that to fully disable the fan curve, we have to restore
-    the default fan values. This is also what is done on the OEM software.
-    For this, the last patch in the series is used, which is a bit dirty.
-
-Sleep was tested with all values being preserved during S0iX (platform
-profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
-least for the Claw devices.
-
-For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
-his new high level interface is merged beforehand, we can use that instead.
-
-Antheas Kapenekakis (8):
-  platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
-  platform/x86: msi-wmi-platform: Add quirk system
-  platform/x86: msi-wmi-platform: Add platform profile through shift
-    mode
-  platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
-    attributes
-  platform/x86: msi-wmi-platform: Add charge_threshold support
-  platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
-  platform/x86: msi-wmi-platform: Update header text
-  platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
-    unload
-
-Armin Wolf (2):
-  platform/x86: msi-wmi-platform: Use input buffer for returning result
-  platform/x86: msi-wmi-platform: Add support for fan control
-
- .../wmi/devices/msi-wmi-platform.rst          |   26 +
- drivers/platform/x86/Kconfig                  |    3 +
- drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
- 3 files changed, 1156 insertions(+), 54 deletions(-)
+> Use a single DRIVER_VERSION for the plat, hsmp and acpi modules,
+> as all these modules are connected to a common functionality.
+> 
+> 
 
 
-base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
--- 
-2.49.0
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/3] platform/x86/amd/hsmp: Use a single DRIVER_VERSION for all hsmp modules
+      commit: cf8dea42e42b243e41878b57c0ecd898688234e6
+[2/3] platform/x86/amd/hsmp: Report power via hwmon sensors
+      commit: 8957cb9cfa76f95aa05b1da514de9b82f04b5a07
+[3/3] platform/x86/amd/hsmp: acpi: Add sysfs files to display HSMP telemetry
+      commit: 0d74cb76f711d08a5a745da6e2bdddbeb06ee328
+
+--
+ i.
 
