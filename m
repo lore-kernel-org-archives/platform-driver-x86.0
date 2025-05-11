@@ -1,145 +1,464 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127A326156E;
-	Sun, 11 May 2025 22:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2821917CD;
+	Sun, 11 May 2025 22:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747002836; cv=none; b=PMU7UZ6j7O2uS2fMHtRk1RsnEDyJFf2E2/rDyCVKjMxRjT1kz5v52IQOul+9bMko/U6SuemXVqH8Q9mcmdd8hV8TvVWWZIqWj1H+kD8i0CyUlczLTmRBU58oTSDsGiqRfI+8Oq75mp4qxNzCs9p0Yic4rWIf/EdTAMpo4AhdN3I=
+	t=1747004051; cv=none; b=I+u8KaZAENX0jLS7gAfngFHwNp/YW0cWV9EpiTuitZJIkmlA0b7vvcrvh7cM5qrhUWj3BDgBOtncGrTJzQx2+iowv/D+B/7D1PMSzy2/QhS2yM41bBISR/+S2tYO9VXRdfLdq93OJ1/8bF4MPVJieJA8H+3BlOSrVW4J1CphhdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747002836; c=relaxed/simple;
-	bh=ER0N6bH41WRr745tGcPE6MlthWyflWusLPiW21xpnQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZsetzuSsgt4G4A9uIOwW7x93klc3vPJyy1fbmVl0PTD9+a6+JOXUyY4smmht94LU5KJ8pNij8NXbHPTdUV6YJibRRWzpYsq1yUEVIBUb7bzz2qX5PifobFhZqNH9rq6gA7hIGfKwJlzDVuHnEr5DSaUMdV5lfj/k5IZLC9BlLKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=GDpWYBME; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1747004051; c=relaxed/simple;
+	bh=kQ8hGhzbS5NT85smkTyj8CfxpEUPiILxDtS8kM8Hq5E=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jEpF7ZJzT8+09W76TdNiOuBh364VyUqDAjy0JbKfeA2eabHbEx1mQAXkgmetKPQEmNL/YWxcB1pQPmlP8sOuthB5KkDu73b7M9tFppCizRb2iMqKprYGTvQaMr8HFjy0ZcelU58ky9mH47bwMHay8q/AWJGO0MD45+yMzvlgOvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGWuEvzS; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="GDpWYBME"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747002829; x=1747607629; i=w_armin@gmx.de;
-	bh=gQ24rytmNTcd6LvYJKQeYrV2HnY/+YLZa39tllVCGkw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=GDpWYBMEjxSnEoDRN/2bmm2vXCrGdJrA8IoK4zFc9b1EnxBGBEvOFpmwv4SgYoLa
-	 uP5zfkq1JyRT4zh93dMRTkm4mnyX/tsKvNLHteC7PazUx9/4bTurwyl/C0Azjsp8Z
-	 UQqXRwOm7+X0iJwolirW7dqqINqcjcX8dOc9trer6l62PYhXOLw63IaoDCp0L0jzv
-	 kQ5PgKV+BHEKNbzyRYYvd9xC3C4Wko4Ob3t4WFuGs7pxU3DLKf/5lUHzcmRiYAm0T
-	 r1ieYr4YRLO23JUjTPVK+MqkRUwufiRhqfDK2odf2NclnRbGj5gIoNqK4bzHzYIb5
-	 ouYhl7BTmM5VTrajbg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M7K3i-1uLxwX22fs-006Ugd; Mon, 12
- May 2025 00:33:49 +0200
-Message-ID: <e11b6c57-675b-4c81-bfb6-5133c8c245e7@gmx.de>
-Date: Mon, 12 May 2025 00:33:48 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGWuEvzS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747004050; x=1778540050;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kQ8hGhzbS5NT85smkTyj8CfxpEUPiILxDtS8kM8Hq5E=;
+  b=GGWuEvzSlNVFbd9UxnIdhodpucZ0W3clWKD68hMR4EjR5GyvPtFqdaGz
+   4Fw1pX/NLfyFhGDm2AWx4hJnxAoXxQ15EsEwAt8tGVOX8q4Qyk2EyqRL+
+   je6GMdAGtcBH2F8InMl9m4Zo2+9Jc/nKJxMYPviSFNuSuBsvmdPJEzo3z
+   zH0LiIiyx3bA3OF2kf0mcDJXFinJdVWwrTvbMgyrIRLBKPxQd17HTBuNd
+   j7JZycyh6xSadJ7erMztbBCOGRQtWuYkqZmNd1zMv8wJg+hw8ocaUlK7Y
+   VVRBmK89Q6MKwC8GB/aLKsi1dlnLiSPaEV6UcDP2s93XBS2ZvT0hpOe6Q
+   w==;
+X-CSE-ConnectionGUID: 7kK3Co5oSEmJ48pUnvC/bw==
+X-CSE-MsgGUID: AlM7uQ+HQuC84tzNaBV3OQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="66192177"
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="66192177"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:54:10 -0700
+X-CSE-ConnectionGUID: 8wtEbG1dTT+dSlOHI/vE1w==
+X-CSE-MsgGUID: YRIoJXh9SkSDLavB56AzqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
+   d="scan'208";a="142168315"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 15:54:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 May 2025 01:54:01 +0300 (EEST)
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
+    mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
+    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH v13] platform/x86: Add AMD ISP platform config for
+ OV05C10
+In-Reply-To: <20250509181220.1744783-1-pratap.nirujogi@amd.com>
+Message-ID: <6b649ebf-6f03-4050-18bb-788bbb3a664e@linux.intel.com>
+References: <20250509181220.1744783-1-pratap.nirujogi@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] power: supply: core: Add additional health status
- values
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- hdegoede@redhat.com
-Cc: sre@kernel.org, platform-driver-x86@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429003606.303870-1-W_Armin@gmx.de>
- <174700275600.13063.9398321342899509983.b4-ty@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <174700275600.13063.9398321342899509983.b4-ty@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qKs3HwdgrZXaw/Np+b3stUsqSq055NmDs/ugQW5AOqNyc3u1epW
- StkfqNeWKgP0ze216GWJiTf1E0Fub87dTj7i+Dv/5lrs8/dnsac1i/sRETWX54bUAN8Q4rQ
- X3PD6KR9RqNbcLXy8BetZU2F1YH2v3hdsmu6BhtnItHxUEB2TPzbjDW5rsIYZ50Etoy/KU0
- Me3vqmGK0EBJYSfEV2MYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KWU/MuIuinw=;VT3PswBjoXI1uWAJyE5AnPODYO2
- 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
+Content-Type: text/plain; charset=US-ASCII
 
-Am 12.05.25 um 00:32 schrieb Ilpo J=C3=A4rvinen:
+On Fri, 9 May 2025, Pratap Nirujogi wrote:
 
-> On Tue, 29 Apr 2025 02:36:03 +0200, Armin Wolf wrote:
->
->> Some batteries can signal when an internal fuse was blown. In such a
->> case POWER_SUPPLY_HEALTH_DEAD is too vague for userspace applications
->> to perform meaningful diagnostics.
->>
->> Additionally some batteries can also signal when some of their
->> internal cells are imbalanced. In such a case returning
->> POWER_SUPPLY_HEALTH_UNSPEC_FAILURE is again too vague for userspace
->> applications to perform meaningful diagnostics.
->>
->> [...]
->
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
+> ISP device specific configuration is not available in ACPI. Add
+> swnode graph to configure the missing device properties for the
+> OV05C10 camera device supported on amdisp platform.
+> 
+> Add support to create i2c-client dynamically when amdisp i2c
+> adapter is available.
+> 
+> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
+> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> ---
+> Changes v12 -> v13:
+> 
+> * Add "struct amdisp_platform_info" to pass sensor specific
+> configuration and make the driver generic to support OV05C10
+> and other supported sensor modules in future.
+> 
+> * Address cosmetic and other review comments.
+> 
+>  drivers/platform/x86/amd/Kconfig    |  11 +
+>  drivers/platform/x86/amd/Makefile   |   1 +
+>  drivers/platform/x86/amd/amd_isp4.c | 309 ++++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>  create mode 100644 drivers/platform/x86/amd/amd_isp4.c
+> 
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index c3e086ea64fc..152a68a470e8 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -32,3 +32,14 @@ config AMD_WBRF
+>  
+>  	  This mechanism will only be activated on platforms that advertise a
+>  	  need for it.
+> +
+> +config AMD_ISP_PLATFORM
+> +	tristate "AMD ISP4 platform driver"
+> +	depends on I2C && X86_64 && ACPI
+> +	help
+> +	  Platform driver for AMD platforms containing image signal processor
+> +	  gen 4. Provides camera sensor module board information to allow
+> +	  sensor and V4L drivers to work properly.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called amd_isp4.
+> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+> index c6c40bdcbded..b0e284b5d497 100644
+> --- a/drivers/platform/x86/amd/Makefile
+> +++ b/drivers/platform/x86/amd/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+>  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+>  obj-$(CONFIG_AMD_PMF)		+= pmf/
+>  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
+> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+> new file mode 100644
+> index 000000000000..27939020634c
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/amd_isp4.c
+> @@ -0,0 +1,309 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * AMD ISP platform driver for sensor i2-client instantiation
+> + *
+> + * Copyright 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/units.h>
+> +
+> +#define AMDISP_OV05C10_I2C_ADDR		0x10
+> +#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
 
-Thank you :)
+This is not used anywhere?
 
-> The list of commits applied:
-> [1/4] power: supply: core: Add additional health status values
->        commit: e6b07a34038716e010d9fd1ac74c1d84a501f369
-> [2/4] platform/x86: dell-ddv: Implement the battery matching algorithm
->        commit: 52e59cf1332dc4da5aecaa64c20f4a9f902e3186
-> [3/4] platform/x86: dell-ddv: Expose the battery manufacture date to use=
-rspace
->        commit: 366a50722c7071120a494aaf91c9193922e3d8f6
-> [4/4] platform/x86: dell-ddv: Expose the battery health to userspace
->        commit: d5251eef71bab8bd0b9ea3fe0005ad3d2553c3bb
->
-> --
->   i.
->
+> +#define AMDISP_OV05C10_HID		"OMNI5C10"
+> +#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
+> +#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
+> +
+> +/*
+> + * AMD ISP platform info definition to initialize sensor
+> + * specific platform configuration to prepare the amdisp
+> + * platform.
+> + */
+> +struct amdisp_platform_info {
+> +	struct i2c_board_info board_info;
+> +	const struct software_node **swnodes;
+> +};
+> +
+> +/*
+> + * AMD ISP platform definition to configure the device properties
+> + * missing in the ACPI table.
+> + */
+> +struct amdisp_platform {
+> +	const struct amdisp_platform_info *pinfo;
+> +	struct i2c_board_info board_info;
+> +	struct notifier_block i2c_nb;
+> +	struct i2c_client *i2c_dev;
+> +	struct mutex lock;	/* protects i2c client creation */
+
+Missing #include.
+
+> +};
+> +
+> +/* Top-level OV05C10 camera node property table */
+> +static const struct property_entry ov05c10_camera_props[] = {
+> +	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+> +	{ }
+> +};
+> +
+> +/* Root AMD ISP OV05C10 camera node definition */
+> +static const struct software_node camera_node = {
+> +	.name = AMDISP_OV05C10_HID,
+> +	.properties = ov05c10_camera_props,
+> +};
+> +
+> +/*
+> + * AMD ISP OV05C10 Ports node definition. No properties defined for
+> + * ports node for OV05C10.
+> + */
+> +static const struct software_node ports = {
+> +	.name = "ports",
+> +	.parent = &camera_node,
+> +};
+> +
+> +/*
+> + * AMD ISP OV05C10 Port node definition. No properties defined for
+> + * port node for OV05C10.
+> + */
+> +static const struct software_node port_node = {
+> +	.name = "port@",
+> +	.parent = &ports,
+> +};
+> +
+> +/*
+> + * Remote endpoint AMD ISP node definition. No properties defined for
+> + * remote endpoint node for OV05C10.
+> + */
+> +static const struct software_node remote_ep_isp_node = {
+> +	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
+> +};
+> +
+> +/*
+> + * Remote endpoint reference for isp node included in the
+> + * OV05C10 endpoint.
+> + */
+> +static const struct software_node_ref_args ov05c10_refs[] = {
+> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+> +};
+> +
+> +/* OV05C supports one single link frequency */
+> +static const u64 ov05c10_link_freqs[] = {
+
++ #include <linux/types.h>
+
+> +	925 * HZ_PER_MHZ,
+> +};
+> +
+> +/* OV05C supports only 2-lane configuration */
+> +static const u32 ov05c10_data_lanes[] = {
+> +	1,
+> +	2,
+> +};
+> +
+> +/* OV05C10 endpoint node properties table */
+> +static const struct property_entry ov05c10_endpoint_props[] = {
+> +	PROPERTY_ENTRY_U32("bus-type", 4),
+> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+> +				     ARRAY_SIZE(ov05c10_data_lanes)),
+> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
+> +				     ARRAY_SIZE(ov05c10_link_freqs)),
+> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+> +	{ }
+> +};
+> +
+> +/* AMD ISP endpoint node definition */
+> +static const struct software_node endpoint_node = {
+> +	.name = "endpoint",
+> +	.parent = &port_node,
+> +	.properties = ov05c10_endpoint_props,
+> +};
+> +
+> +/*
+> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
+> + * fixed to align with the structure that v4l2 expects for successful
+> + * endpoint fwnode parsing.
+> + *
+> + * It is only the node property_entries that will vary for each platform
+> + * supporting different sensor modules.
+> + */
+> +static const struct software_node *ov05c10_nodes[] = {
+> +	&camera_node,
+> +	&ports,
+> +	&port_node,
+> +	&endpoint_node,
+> +	&remote_ep_isp_node,
+> +	NULL
+> +};
+> +
+> +/* OV05C10 specific AMD ISP platform configuration */
+> +static const struct amdisp_platform_info ov05c10_platform_config = {
+> +	.board_info = {
+> +		.dev_name = "ov05c10",
+> +		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
+> +	},
+> +	.swnodes = ov05c10_nodes,
+> +};
+> +
+> +static const struct acpi_device_id amdisp_sensor_ids[] = {
+> +	{ AMDISP_OV05C10_HID, (kernel_ulong_t)&ov05c10_platform_config },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
+> +
+> +static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+> +{
+> +	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+
+Missing #include.
+
+> +}
+> +
+> +static void instantiate_isp_i2c_client(struct amdisp_platform *isp4_platform,
+> +				       struct i2c_adapter *adap)
+> +{
+> +	struct i2c_board_info *info = &isp4_platform->board_info;
+> +	struct i2c_client *i2c_dev;
+> +
+> +	guard(mutex)(&isp4_platform->lock);
+> +
+> +	if (isp4_platform->i2c_dev)
+> +		return;
+> +
+> +	i2c_dev = i2c_new_client_device(adap, info);
+> +	if (IS_ERR(i2c_dev)) {
+
+Missing #include.
+
+> +		dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev);
+> +		return;
+> +	}
+> +	isp4_platform->i2c_dev = i2c_dev;
+> +}
+> +
+> +static int isp_i2c_bus_notify(struct notifier_block *nb,
+> +			      unsigned long action, void *data)
+> +{
+> +	struct amdisp_platform *isp4_platform =
+> +		container_of(nb, struct amdisp_platform, i2c_nb);
+> +	struct device *dev = data;
+> +	struct i2c_client *client;
+> +	struct i2c_adapter *adap;
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_ADD_DEVICE:
+> +		adap = i2c_verify_adapter(dev);
+> +		if (!adap)
+> +			break;
+> +		if (is_isp_i2c_adapter(adap))
+> +			instantiate_isp_i2c_client(isp4_platform, adap);
+> +		break;
+> +	case BUS_NOTIFY_REMOVED_DEVICE:
+> +		client = i2c_verify_client(dev);
+> +		if (!client)
+> +			break;
+> +
+> +		scoped_guard(mutex, &isp4_platform->lock) {
+> +			if (isp4_platform->i2c_dev == client) {
+> +				dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
+> +				isp4_platform->i2c_dev = NULL;
+> +			}
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct amdisp_platform *prepare_amdisp_platform(struct device *dev,
+> +						       const struct amdisp_platform_info *src)
+> +{
+> +	struct amdisp_platform *isp4_platform;
+> +	int ret;
+> +
+> +	isp4_platform = devm_kzalloc(dev, sizeof(*isp4_platform), GFP_KERNEL);
+> +	if (!isp4_platform)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret = devm_mutex_init(dev, &isp4_platform->lock);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	isp4_platform->board_info.dev_name = src->board_info.dev_name;
+> +	strscpy(isp4_platform->board_info.type, src->board_info.type);
+> +	isp4_platform->board_info.addr = src->board_info.addr;
+> +	isp4_platform->pinfo = src;
+> +
+> +	ret = software_node_register_node_group(src->swnodes);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	isp4_platform->board_info.swnode = src->swnodes[0];
+> +
+> +	return isp4_platform;
+> +}
+> +
+> +static int try_to_instantiate_i2c_client(struct device *dev, void *data)
+> +{
+> +	struct amdisp_platform *isp4_platform = (struct amdisp_platform *)data;
+
+No need to cast from void *.
+
+> +	struct i2c_adapter *adap = i2c_verify_adapter(dev);
+> +
+> +	if (!isp4_platform || !adap)
+> +		return 0;
+> +	if (!adap->owner)
+> +		return 0;
+> +
+> +	if (is_isp_i2c_adapter(adap))
+> +		instantiate_isp_i2c_client(isp4_platform, adap);
+> +
+> +	return 0;
+> +}
+> +
+> +static int amd_isp_probe(struct platform_device *pdev)
+> +{
+> +	const struct amdisp_platform_info *pinfo;
+> +	struct amdisp_platform *isp4_platform;
+> +	int ret;
+> +
+> +	pinfo = device_get_match_data(&pdev->dev);
+> +	if (!pinfo) {
+> +		return dev_err_probe(&pdev->dev, -EINVAL,
+> +				     "failed to get valid ACPI data\n");
+> +	}
+> +
+> +	isp4_platform = prepare_amdisp_platform(&pdev->dev, pinfo);
+> +	if (IS_ERR(isp4_platform))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(isp4_platform),
+> +				     "failed to prepare AMD ISP platform fwnode\n");
+> +
+> +	isp4_platform->i2c_nb.notifier_call = isp_i2c_bus_notify;
+> +	ret = bus_register_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
+> +	if (ret)
+> +		goto error_unregister_sw_node;
+> +
+> +	/* check if adapter is already registered and create i2c client instance */
+> +	i2c_for_each_dev((void *)isp4_platform, try_to_instantiate_i2c_client);
+
+No need to case pointer to/from void *.
+
+> +
+> +	platform_set_drvdata(pdev, isp4_platform);
+> +	return 0;
+> +
+> +error_unregister_sw_node:
+> +	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
+> +	return ret;
+> +}
+> +
+> +static void amd_isp_remove(struct platform_device *pdev)
+> +{
+> +	struct amdisp_platform *isp4_platform = platform_get_drvdata(pdev);
+> +
+> +	bus_unregister_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
+> +	i2c_unregister_device(isp4_platform->i2c_dev);
+> +	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
+> +}
+> +
+> +static struct platform_driver amd_isp_platform_driver = {
+> +	.driver	= {
+> +		.name			= AMD_ISP_PLAT_DRV_NAME,
+> +		.acpi_match_table	= amdisp_sensor_ids,
+> +	},
+> +	.probe	= amd_isp_probe,
+> +	.remove	= amd_isp_remove,
+> +};
+> +
+> +module_platform_driver(amd_isp_platform_driver);
+> +
+> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
+> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
+> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
+> +MODULE_LICENSE("GPL");
+> 
+
+-- 
+ i.
+
