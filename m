@@ -1,203 +1,550 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5D625F968
-	for <platform-driver-x86@vger.kernel.org>; Sun, 11 May 2025 20:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D919CD1B;
+	Sun, 11 May 2025 20:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746995406; cv=none; b=fKJqXOfI6cVS4UzczWN3CjnHL19paoFb7eBpuU5Ak+sXB4XCmzx0z3xtyXW6IlAW6L3Dqjo0ClGVZ5HY0DRwsLjHI5y29Oa8X8lEdpB7TtrJNtjcDi2kMx6abcBt3aEhyY5yFIeW8MssQyMNyn1jzrzKNzhkFZNXaqS9zGqofG4=
+	t=1746996294; cv=none; b=J01r29TeDtKWLX+OUii4HaaK27oYj13o7kxLGqLkUu9XRefQTJvRRkDYLWqOQwkxta23EMc8GWvu5M7XxmlbPsKcerKROdWSrzLLugaw6bATo5Lp01RDFTy1B5Q9h0hVgaZCvEi02/5dp2KdUZUb0n8mFnh+eC/seLloGRihGIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746995406; c=relaxed/simple;
-	bh=NPXQKuSmb+Zo8f0GeIWkOzfOMoaEsbzMGbNt4Pr45Do=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JNDDnSuPknxnPRz4qfsQMFuz/+KJ6w6F6buKKZZQHvMoiQYOSxAYLWhPTfTBkp/KyEGbkgNsZocQ+REamPLNuOItU6TtJTVy5yhY1MC1O2pHoSVSfxWsyhH/hDFuXPggR0OdTbj1ZKJ+pdSkrQh//mHkrpGOz5MdnU6DsOImhyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RawtNUbh; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746996294; c=relaxed/simple;
+	bh=yod0QYTUWXu4beihq/PFbHrXHSx9LymHN6BEblhLqMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h129NMzWmvHVYzGXrsuHGuCIVxcmamlOu4N6JM/VcXLDGgnURmNcvWc25ZHEN7yvKqpr+7UOcTCMKyhZabfY3MYOjwhcWsY1wPbSd/ylKho0cmkyS/UCYN2aq96qR7Ed43mcaerx8vgwJIn6hEHcPO1fJTrIVJEy6JWs5+pLKoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CU86VxmU; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RawtNUbh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746995404; x=1778531404;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NPXQKuSmb+Zo8f0GeIWkOzfOMoaEsbzMGbNt4Pr45Do=;
-  b=RawtNUbhncDfgexiTk8CGi+IQIttycLMGjShi5v9dSkQqQJb2aG9UuVw
-   VZDNknHYu5Q/eKcVG9TDIauZAGMKrBQlGRGw/azbnSCaBJuA5tFD3b8Xq
-   0Ntlh4OsGg0m/3hWc9oUzSeeaiTki+8EvJI/2L3Ilt5TL4I9YeBYp4iOH
-   EGsasl96lirYuAvDIUkjePbqyk6e9MRdyuiyqfR/ZiJZu6W1k6Za12QMh
-   Cx5O6mhTdVuJPOD2QsfadcCLbkAvvWsm+IkbelK4Y+TX5XjxGjau4ZHx1
-   gHnmUR+8PeF4xORyt/A7r686IjzJX8HdfmXOegzm7qzaWOIgn+U0wgVR+
-   A==;
-X-CSE-ConnectionGUID: xpUkJEd2Sfyh/4Vju0aJlg==
-X-CSE-MsgGUID: 3FYsB6mpQ5ewZ/tHIfzbFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48935761"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48935761"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:30:03 -0700
-X-CSE-ConnectionGUID: gan2u+JzSIGtgPIh45LfKA==
-X-CSE-MsgGUID: xJjZyZqcQduNhRiPdQkelg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142296282"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.117])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2025 13:30:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sun, 11 May 2025 23:29:58 +0300 (EEST)
-To: Suma Hegde <Suma.Hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v4 1/3] platform/x86/amd/hsmp: Use a single DRIVER_VERSION for
- all hsmp modules
-In-Reply-To: <3984e564-3f62-4f20-978e-4eb6b21dda1b@amd.com>
-Message-ID: <51600738-dddf-358a-6b9a-045786e7d746@linux.intel.com>
-References: <20250506101542.200811-1-suma.hegde@amd.com> <0f6fcfc6-f79f-e5fc-fa3e-6a6b6a5956c8@linux.intel.com> <3984e564-3f62-4f20-978e-4eb6b21dda1b@amd.com>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CU86VxmU"
+Received: from localhost.localdomain (x5996a826.customers.hiper-net.dk [89.150.168.38])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id F1FB12E0A497;
+	Sun, 11 May 2025 23:44:44 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1746996287;
+	bh=vn6mkpGqtjeko6MG3AwpTqUYV+4tOle1Wn/dLcrIDPo=; h=From:To:Subject;
+	b=CU86VxmU/cSKepiOJ8+DFMCHdRSiDtOwhFldAL2+j0QQ8xebRc2KIMBPWG6BOM0/4
+	 zOnj48znK2TjfBZ1U4AJ9KXHblONm8OuT5yK+fA900oqMBjPerkeSXQp4/WNZcUsqV
+	 x2XAyZ5Gy7XgCKLKyvAsPKBkoG1yObxE9Jonul/A=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 89.150.168.38) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kurt Borja <kuurtb@gmail.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 04/10] platform/x86: msi-wmi-platform: Add support for fan
+ control
+Date: Sun, 11 May 2025 22:44:21 +0200
+Message-ID: <20250511204427.327558-5-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250511204427.327558-1-lkml@antheas.dev>
+References: <20250511204427.327558-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1643332376-1746995398=:1007"
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174699628685.27760.15530964568722829701@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Armin Wolf <W_Armin@gmx.de>
 
---8323328-1643332376-1746995398=:1007
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Adds fan curve support for the MSI platform. These devices contain
+support for two fans, where they are named CPU and GPU but in the
+case of the Claw series just map to left and right fan.
 
-On Sun, 11 May 2025, Suma Hegde wrote:
-> On 5/8/2025 8:04 PM, Ilpo J=C3=A4rvinen wrote:
-> > Caution: This message originated from an External Source. Use proper ca=
-ution
-> > when opening attachments, clicking links, or responding.
-> >=20
-> >=20
-> > On Tue, 6 May 2025, Suma Hegde wrote:
-> >=20
-> > > Use a single DRIVER_VERSION for the plat, hsmp and acpi modules,
-> > > as all these modules are connected to a common functionality.
-> > >=20
-> > > Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> > > Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.co=
-m>
-> > > ---
-> > > Changes since v3:
-> > > None
-> > >=20
-> > > This patch is rebased on
-> > > https://lore.kernel.org/platform-driver-x86/20250425102357.266790-1-s=
-uma.hegde@amd.com/T/#u
-> > >=20
-> > > Changes since v2:
-> > > Update the commit message and description
-> > >=20
-> > > Changes since v1:
-> > > None
-> > >=20
-> > >   drivers/platform/x86/amd/hsmp/acpi.c | 1 -
-> > >   drivers/platform/x86/amd/hsmp/hsmp.c | 2 --
-> > >   drivers/platform/x86/amd/hsmp/hsmp.h | 2 ++
-> > >   drivers/platform/x86/amd/hsmp/plat.c | 1 -
-> > >   4 files changed, 2 insertions(+), 4 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/amd/hsmp/acpi.c
-> > > b/drivers/platform/x86/amd/hsmp/acpi.c
-> > > index eaae044e4f82..12f4950afcd9 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> > > +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> > > @@ -28,7 +28,6 @@
-> > >   #include "hsmp.h"
-> > >=20
-> > >   #define DRIVER_NAME          "hsmp_acpi"
-> > > -#define DRIVER_VERSION               "2.3"
-> > This fails to apply on top of the review-ilpo-next branch, I've no idea=
- on
-> > what commit this is based on. Could you please rebase and check if the
-> > entire series is fine wrt. the changes what this is based on vs what's =
-in
-> > the review-ilpo-next branch.
->=20
->=20
-> This patch series is re based on
-> https://lore.kernel.org/platform-driver-x86/20250425102357.266790-1-suma.=
-hegde@amd.com/T/#u
-> (I added this as part of changelog)
->=20
-> I rechecked by applying this series on review-ilpo-next + the above patch=
-=2E It
-> applies clean.
->=20
-> Could you please take the above mentioned dependent patch and apply this
-> series?
+Co-developed-by: Antheas Kapenekakis <lkml@antheas.dev>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+---
+ .../wmi/devices/msi-wmi-platform.rst          |  26 ++
+ drivers/platform/x86/msi-wmi-platform.c       | 328 +++++++++++++++++-
+ 2 files changed, 337 insertions(+), 17 deletions(-)
 
-Hi,
+diff --git a/Documentation/wmi/devices/msi-wmi-platform.rst b/Documentation/wmi/devices/msi-wmi-platform.rst
+index 73197b31926a5..704bfdac5203e 100644
+--- a/Documentation/wmi/devices/msi-wmi-platform.rst
++++ b/Documentation/wmi/devices/msi-wmi-platform.rst
+@@ -169,6 +169,32 @@ The fan RPM readings can be calculated with the following formula:
+ 
+ If the fan speed reading is zero, then the fan RPM is zero too.
+ 
++The subfeature ``0x01`` is used to retrieve the fan speed table for the CPU fan. The output
++data contains the fan speed table and two bytes with unknown data. The fan speed table
++consists of six 8-bit entries, each containing a fan speed value in percent.
++
++The subfeature ``0x02`` is used tho retrieve the same data for the GPU fan.
++
++WMI method Set_Fan()
++--------------------
++
++The fan speed tables can be accessed using subfeature ``0x01`` (CPU fan) and subfeature ``0x02``
++(GPU fan). The input data has the same format as the output data of the ``Get_Fan`` WMI method.
++
++WMI method Get_AP()
++-------------------
++
++The current fan mode can be accessed using subfeature ``0x01``. The output data contains a flag
++byte and two bytes of unknown data. If the 7th bit inside the flag byte is cleared then all fans
++are operating in automatic mode, otherwise the fans operate based on the fan speed tables
++accessible thru the ``Get_Fan``/``Set_Fan`` WMI methods.
++
++WMI method Set_AP()
++-------------------
++
++The current fan mode can be changed using subfeature ``0x01``. The input data has the same format
++as the output data of the ``Get_AP`` WMI method.
++
+ WMI method Get_WMI()
+ --------------------
+ 
+diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
+index 408d42ab19e20..9ac3c6f1b3f1d 100644
+--- a/drivers/platform/x86/msi-wmi-platform.c
++++ b/drivers/platform/x86/msi-wmi-platform.c
+@@ -16,13 +16,18 @@
+ #include <linux/device/driver.h>
+ #include <linux/dmi.h>
+ #include <linux/errno.h>
++#include <linux/fixp-arith.h>
+ #include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
+ #include <linux/kernel.h>
++#include <linux/kstrtox.h>
++#include <linux/minmax.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/printk.h>
+ #include <linux/rwsem.h>
+ #include <linux/string.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
+ #include <linux/wmi.h>
+ 
+@@ -34,9 +39,11 @@
+ 
+ #define MSI_WMI_PLATFORM_INTERFACE_VERSION	2
+ 
++/* Get_WMI() WMI method */
+ #define MSI_PLATFORM_WMI_MAJOR_OFFSET	1
+ #define MSI_PLATFORM_WMI_MINOR_OFFSET	2
+ 
++/* Get_EC() and Set_EC() WMI methods */
+ #define MSI_PLATFORM_EC_FLAGS_OFFSET	1
+ #define MSI_PLATFORM_EC_MINOR_MASK	GENMASK(3, 0)
+ #define MSI_PLATFORM_EC_MAJOR_MASK	GENMASK(5, 4)
+@@ -44,6 +51,18 @@
+ #define MSI_PLATFORM_EC_IS_TIGERLAKE	BIT(7)
+ #define MSI_PLATFORM_EC_VERSION_OFFSET	2
+ 
++/* Get_Fan() and Set_Fan() WMI methods */
++#define MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED		0x0
++#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE	0x1
++#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE	0x2
++#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE	0x1
++#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE	0x2
++
++/* Get_AP() and Set_AP() WMI methods */
++#define MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE	0x1
++#define MSI_PLATFORM_AP_FAN_FLAGS_OFFSET	1
++#define MSI_PLATFORM_AP_ENABLE_FAN_TABLES	BIT(7)
++
+ static bool force;
+ module_param_unsafe(force, bool, 0);
+ MODULE_PARM_DESC(force, "Force loading without checking for supported WMI interface versions");
+@@ -221,9 +240,201 @@ static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
+ 	}
+ }
+ 
++static ssize_t msi_wmi_platform_fan_table_show(struct device *dev, struct device_attribute *attr,
++					       char *buf)
++{
++	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
++	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 buffer[32] = { sattr->nr };
++	u8 fan_percent;
++	int ret;
++
++	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	fan_percent = buffer[sattr->index + 1];
++	if (fan_percent > 100)
++		return -EIO;
++
++	return sysfs_emit(buf, "%d\n", fixp_linear_interpolate(0, 0, 100, 255, fan_percent));
++}
++
++static ssize_t msi_wmi_platform_fan_table_store(struct device *dev, struct device_attribute *attr,
++						const char *buf, size_t count)
++{
++	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
++	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 buffer[32] = { sattr->nr };
++	long speed;
++	int ret;
++
++	ret = kstrtol(buf, 10, &speed);
++	if (ret < 0)
++		return ret;
++
++	speed = clamp_val(speed, 0, 255);
++
++	guard(mutex)(&data->wmi_lock);
++
++	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_FAN,
++					      buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	buffer[0] = sattr->nr;
++	buffer[sattr->index + 1] = fixp_linear_interpolate(0, 0, 255, 100, speed);
++
++	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_FAN,
++					      buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
++static ssize_t msi_wmi_platform_temp_table_show(struct device *dev, struct device_attribute *attr,
++						char *buf)
++{
++	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
++	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 buffer[32] = { sattr->nr };
++	u8 temp_c;
++	int ret;
++
++	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_TEMPERATURE,
++				     buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	temp_c = buffer[sattr->index + 1];
++
++	return sysfs_emit(buf, "%d\n", temp_c);
++}
++
++static ssize_t msi_wmi_platform_temp_table_store(struct device *dev, struct device_attribute *attr,
++						 const char *buf, size_t count)
++{
++	struct sensor_device_attribute_2 *sattr = to_sensor_dev_attr_2(attr);
++	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 buffer[32] = { sattr->nr };
++	long temp_c;
++	int ret;
++
++	ret = kstrtol(buf, 10, &temp_c);
++	if (ret < 0)
++		return ret;
++
++	temp_c = clamp_val(temp_c, 0, 255);
++
++	guard(mutex)(&data->wmi_lock);
++
++	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_TEMPERATURE,
++					      buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	buffer[0] = sattr->nr;
++	buffer[sattr->index + 1] = temp_c;
++
++	ret = msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_TEMPERATURE,
++					      buffer, sizeof(buffer));
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x0);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x3);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x4);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x5);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x6);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x7);
++
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x1);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x2);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x3);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x4);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x5);
++static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x6);
++
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x0);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x3);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x4);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x5);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x6);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_temp, msi_wmi_platform_temp_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x7);
++
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x1);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x2);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x3);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x4);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x5);
++static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_pwm, msi_wmi_platform_fan_table,
++			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x6);
++
++static struct attribute *msi_wmi_platform_hwmon_attrs[] = {
++	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
++
++	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
++
++	&sensor_dev_attr_pwm2_auto_point1_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point2_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point3_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point4_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point5_temp.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point6_temp.dev_attr.attr,
++
++	&sensor_dev_attr_pwm2_auto_point1_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point2_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point3_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point4_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point5_pwm.dev_attr.attr,
++	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(msi_wmi_platform_hwmon);
++
+ static umode_t msi_wmi_platform_is_visible(const void *drvdata, enum hwmon_sensor_types type,
+ 					   u32 attr, int channel)
+ {
++	if (type == hwmon_pwm && attr == hwmon_pwm_enable)
++		return 0644;
++
+ 	return 0444;
+ }
+ 
+@@ -233,24 +444,102 @@ static int msi_wmi_platform_read(struct device *dev, enum hwmon_sensor_types typ
+ 	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
+ 	u8 buffer[32] = { 0 };
+ 	u16 value;
++	u8 flags;
+ 	int ret;
+ 
+-	ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buf, sizeof(buf));
+-	if (ret < 0)
+-		return ret;
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			buffer[0] = MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED;
++			ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer,
++						     sizeof(buffer));
++			if (ret < 0)
++				return ret;
++
++			value = get_unaligned_be16(&buffer[channel * 2 + 1]);
++			if (!value)
++				*val = 0;
++			else
++				*val = 480000 / value;
++
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	case hwmon_pwm:
++		switch (attr) {
++		case hwmon_pwm_enable:
++			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
++			ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_AP, buffer,
++						     sizeof(buffer));
++			if (ret < 0)
++				return ret;
++
++			flags = buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET];
++			if (flags & MSI_PLATFORM_AP_ENABLE_FAN_TABLES)
++				*val = 1;
++			else
++				*val = 2;
++
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
+ 
+-	value = get_unaligned_be16(&buffer[channel * 2 + 1]);
+-	if (!value)
+-		*val = 0;
+-	else
+-		*val = 480000 / value;
++static int msi_wmi_platform_write(struct device *dev, enum hwmon_sensor_types type, u32 attr,
++				  int channel, long val)
++{
++	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 buffer[32] = { };
++	int ret;
+ 
+-	return 0;
++	switch (type) {
++	case hwmon_pwm:
++		switch (attr) {
++		case hwmon_pwm_enable:
++			guard(mutex)(&data->wmi_lock);
++
++			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
++			ret = msi_wmi_platform_query_unlocked(
++				data, MSI_PLATFORM_GET_AP, buffer,
++				sizeof(buffer));
++			if (ret < 0)
++				return ret;
++
++			buffer[0] = MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
++			switch (val) {
++			case 1:
++				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] |=
++					MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
++				break;
++			case 2:
++				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] &=
++					~MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
++				break;
++			default:
++				return -EINVAL;
++			}
++
++			return msi_wmi_platform_query_unlocked(
++				data, MSI_PLATFORM_SET_AP, buffer,
++				sizeof(buffer));
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
+ }
+ 
+ static const struct hwmon_ops msi_wmi_platform_ops = {
+ 	.is_visible = msi_wmi_platform_is_visible,
+ 	.read = msi_wmi_platform_read,
++	.write = msi_wmi_platform_write,
+ };
+ 
+ static const struct hwmon_channel_info * const msi_wmi_platform_info[] = {
+@@ -260,6 +549,10 @@ static const struct hwmon_channel_info * const msi_wmi_platform_info[] = {
+ 			   HWMON_F_INPUT,
+ 			   HWMON_F_INPUT
+ 			   ),
++	HWMON_CHANNEL_INFO(pwm,
++			   HWMON_PWM_ENABLE,
++			   HWMON_PWM_ENABLE
++			   ),
+ 	NULL
+ };
+ 
+@@ -268,8 +561,8 @@ static const struct hwmon_chip_info msi_wmi_platform_chip_info = {
+ 	.info = msi_wmi_platform_info,
+ };
+ 
+-static ssize_t msi_wmi_platform_write(struct file *fp, const char __user *input, size_t length,
+-				      loff_t *offset)
++static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
++					      size_t length, loff_t *offset)
+ {
+ 	struct seq_file *seq = fp->private_data;
+ 	struct msi_wmi_platform_debugfs_data *data = seq->private;
+@@ -303,7 +596,7 @@ static ssize_t msi_wmi_platform_write(struct file *fp, const char __user *input,
+ 	return length;
+ }
+ 
+-static int msi_wmi_platform_show(struct seq_file *seq, void *p)
++static int msi_wmi_platform_debugfs_show(struct seq_file *seq, void *p)
+ {
+ 	struct msi_wmi_platform_debugfs_data *data = seq->private;
+ 	int ret;
+@@ -315,19 +608,19 @@ static int msi_wmi_platform_show(struct seq_file *seq, void *p)
+ 	return ret;
+ }
+ 
+-static int msi_wmi_platform_open(struct inode *inode, struct file *fp)
++static int msi_wmi_platform_debugfs_open(struct inode *inode, struct file *fp)
+ {
+ 	struct msi_wmi_platform_debugfs_data *data = inode->i_private;
+ 
+ 	/* The seq_file uses the last byte of the buffer for detecting buffer overflows */
+-	return single_open_size(fp, msi_wmi_platform_show, data, data->length + 1);
++	return single_open_size(fp, msi_wmi_platform_debugfs_show, data, data->length + 1);
+ }
+ 
+ static const struct file_operations msi_wmi_platform_debugfs_fops = {
+ 	.owner = THIS_MODULE,
+-	.open = msi_wmi_platform_open,
++	.open = msi_wmi_platform_debugfs_open,
+ 	.read = seq_read,
+-	.write = msi_wmi_platform_write,
++	.write = msi_wmi_platform_debugfs_write,
+ 	.llseek = seq_lseek,
+ 	.release = single_release,
+ };
+@@ -389,7 +682,8 @@ static int msi_wmi_platform_hwmon_init(struct msi_wmi_platform_data *data)
+ 	struct device *hdev;
+ 
+ 	hdev = devm_hwmon_device_register_with_info(&data->wdev->dev, "msi_wmi_platform", data,
+-						    &msi_wmi_platform_chip_info, NULL);
++						    &msi_wmi_platform_chip_info,
++						    msi_wmi_platform_hwmon_groups);
+ 
+ 	return PTR_ERR_OR_ZERO(hdev);
+ }
+-- 
+2.49.0
 
-Ah, I didn't realize that so thanks. Yes, I intend to merge fixes where=20
-that change currently sits into for-next anyway to resolve a few conflicts=
-=20
-so it should take care of this too.
-
---=20
- i.
-
->=20
->=20
-> Thanks and Regards,
->=20
-> Suma
->=20
-> > --
-> >   i.
-> >=20
-> > >   /* These are the strings specified in ACPI table */
-> > >   #define MSG_IDOFF_STR                "MsgIdOffset"
-> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > b/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > index a3ac09a90de4..3df34d7436a9 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > @@ -32,8 +32,6 @@
-> > >   #define HSMP_WR                      true
-> > >   #define HSMP_RD                      false
-> > >=20
-> > > -#define DRIVER_VERSION               "2.4"
-> > > -
-> > >   /*
-> > >    * When same message numbers are used for both GET and SET operatio=
-n,
-> > >    * bit:31 indicates whether its SET or GET operation.
-> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > b/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > index d58d4f0c20d5..7877cb97993b 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > @@ -25,6 +25,8 @@
-> > >   #define HSMP_DEVNODE_NAME    "hsmp"
-> > >   #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
-> > >=20
-> > > +#define DRIVER_VERSION               "2.4"
-> > > +
-> > >   struct hsmp_mbaddr_info {
-> > >        u32 base_addr;
-> > >        u32 msg_id_off;
-> > > diff --git a/drivers/platform/x86/amd/hsmp/plat.c
-> > > b/drivers/platform/x86/amd/hsmp/plat.c
-> > > index 81931e808bbc..4f03fdf988c1 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/plat.c
-> > > +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> > > @@ -24,7 +24,6 @@
-> > >   #include "hsmp.h"
-> > >=20
-> > >   #define DRIVER_NAME          "amd_hsmp"
-> > > -#define DRIVER_VERSION               "2.3"
-> > >=20
-> > >   /*
-> > >    * To access specific HSMP mailbox register, s/w writes the SMN add=
-ress
-> > > of HSMP mailbox
-> > >=20
->=20
---8323328-1643332376-1746995398=:1007--
