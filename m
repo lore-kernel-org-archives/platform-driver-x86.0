@@ -1,288 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB32025EFA0;
-	Mon, 12 May 2025 09:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DF5257436;
+	Mon, 12 May 2025 10:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747043783; cv=none; b=ighws9hBnn4+T36krcuA8Q8RKMwC1ut9qET56ZOy8Ke361AJl3FymeK+cVQdNi37+tselLZOZBL2WOCmBH7qLYHyMVjIt1gPb5kwgZKKdw6V1M16mbcaWRIouIhMBVqZ3sBt8p+nKIs4lYXDhw7n6NLnBEvkVPzS+CJdNUQrczY=
+	t=1747044994; cv=none; b=tmJ2fNMv9vflbI17VDbU5vR5b4iSTERBZSAvsHzl2qTrO5BBDhbK/DO+i1j9N0ST6f+6BlenNa8IH+iHH08XT7oba8wantxoTMzMu5BwEJkIN8yj+g2O7YfcwEzBfSpFvDx63J7zUqTpjvPfJPGyeDmHQqKSdS6imVJW5SBejJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747043783; c=relaxed/simple;
-	bh=i+C4MquKCE5DzjebZIg1suA7nSkmpPf5qHNeApUsg1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sOAB7g/ALFTR4u7FslLdb3p7+khLm2vxKDb7Gop/W/tZvgS7E2IjB68QzGUg2y2kCUn3KN3CPQ4AnDxUAGJws1wjnwIuizjgZTYCFGVxpXvpYfC/S3EfJbgDeas1zxzNi+rTWxLLInDmOw02yEdW+0rQ8QFNbH5cjXoUpdNwN/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRopC9c+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747044994; c=relaxed/simple;
+	bh=x47o99WWq54f1B7dp6ChhOM/NYXsBJx5IlYwnzky/CI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pCPIrG0dwV8BcBFc8j7zzwADi+j7ykUpEpyzEGa1omKLLq+kDwYE3BFJIuyznoCy6WRTo35UyT0z1TczF64RrLyVHUr99gxuE7lXFK2xAjB3rJn/bqcM2/yodswzL2iIQzQzeTus0pwXFcI2Pcw9vB53D1CUQ2Yh74ItsvuoZH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=pSMqnJTD; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRopC9c+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20E1C4CEE7;
-	Mon, 12 May 2025 09:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747043779;
-	bh=i+C4MquKCE5DzjebZIg1suA7nSkmpPf5qHNeApUsg1A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qRopC9c+wx/+YYC0sJ/UvJzWi+Nuq8Af/LOL6TTdw1ObAiA1N4EP+e6QolBr4MpT6
-	 p5ltChjlCbyDDYRz89R5OVuaZ83tbLw+pYcksx/XVXGNoBUri07jOIpHu8d097AHB/
-	 gSDUJRuD+w/qmayEwLfKcRkm+4e+sfpRcvHaPFTEPbrRTxGpnFsatWWUdcTBd7OQnA
-	 w+ym87xDkxssPWo79tPQu/rSntgc4PEKUjTQ4e3C6qaM9CVgjCp/lHxzZltc1AavRM
-	 /LPUSo4AklmCrtIuWgWZpLqR0YnBmCrfB22k4a1IjHg5OgJnYBulNV1QgQrtx5KTRE
-	 uIiF1y2I3VB1w==
-Message-ID: <a40c0dfc-b531-4cc0-80b2-5b972d9fb65c@kernel.org>
-Date: Mon, 12 May 2025 11:55:32 +0200
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="pSMqnJTD"
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 7B9682E01935;
+	Mon, 12 May 2025 13:16:26 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1747044987;
+	bh=OTHX52PGxLTtNGWPpt9j694BPNPZbGM7vPRnoWGCaj8=;
+	h=Received:From:Subject:To;
+	b=pSMqnJTDIq+JK8bEPeaaJUPiIcr09cHS5fH77CUKXOff1moX+6RRSf6T4u5HOo4Ab
+	 dbZMVO/4Hyj3Knx9RTKYaNWJmdj2S0VI7fjtVvEEBDgYbuWr6X1f1MGOjydmo68FdT
+	 K+CW9LwHhGDHkgwYCIXewxCu/E0CrWdbGZHNxIYQ=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f170.google.com with SMTP id
+ 38308e7fff4ca-326c1f3655eso30300531fa.1;
+        Mon, 12 May 2025 03:16:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCUufefQFZkYdDKJrVAY4RGdnhae9BWzyVmWsL/azG7cMZsqjxlGwp8uECx+B+GsiRg3M9493qqugas=@vger.kernel.org,
+ AJvYcCWIZFIAVFAkuufdHHK0va3TG8j4X8ksaTMsFtlHKaxFOd+Znkq33CbIWYjaiSy3VwAavIRiUkY5J9pDSzA=@vger.kernel.org,
+ AJvYcCXEDKJbpOL0/0NPSX2VaNhhUsDPnsXLgqVcoLKDCKBD/s0WPuVvmhGkgTMbY2MkuauS5p1ntWzmXhbj5T28@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRlROBLQl0kaKyleByMhKXwqV6+XuRqSxLabJt5K0BCw9ROI6B
+	jFg8vY83QSqBx1Dl572Lh1zE9UVKa/GOxALq/+3HbThg4g3kiOfup1M/BQr2t9vlOhnyyxOja7X
+	uIC3LRvF/20g+dxueBYCEzPxB4Bg=
+X-Google-Smtp-Source: 
+ AGHT+IFw5A+OcMQWiTpmDThG4iT3S00ecaSR5XN3PPYP8Daj9AbNazUCokipeEHqlGTHSZxIvj3aYKVk1S9KVQy8VpE=
+X-Received: by 2002:a05:651c:30c6:b0:30b:b956:53d4 with SMTP id
+ 38308e7fff4ca-326c453d60cmr48709821fa.5.1747044985845; Mon, 12 May 2025
+ 03:16:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/57] irqdomain: Cleanups and Documentation
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Ghiti <alex@ghiti.fr>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Alex Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, =?UTF-8?Q?Alvin_=C5=A0ipraga?=
- <alsi@bang-olufsen.dk>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- amd-gfx@lists.freedesktop.org, Amit Kucheria <amitk@kernel.org>,
- Anatolij Gustschin <agust@denx.de>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Andreas Kemnade <andreas@kemnade.info>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>,
- Andy Shevchenko <andy@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Antoine Tenart <atenart@kernel.org>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Anup Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>,
- asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
- Baruch Siach <baruch@tkos.co.il>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
- Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Borislav Petkov <bp@alien8.de>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Corentin Chary <corentin.chary@gmail.com>,
- Daire McNamara <daire.mcnamara@microchip.com>,
- Daniel Golle <daniel@makrotopia.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Daniel Mack <daniel@zonque.org>,
- Daniel Palmer <daniel@thingy.jp>, Dave Hansen <dave.hansen@linux.intel.com>,
- David Airlie <airlied@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- DENG Qingfang <dqfext@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Dongliang Mu <dzm91@hust.edu.cn>, Doug Berger <opendmb@gmail.com>,
- dri-devel@lists.freedesktop.org, Eddie James <eajames@linux.ibm.com>,
- Eric Dumazet <edumazet@google.com>, Fabio Estevam <festevam@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Geoff Levand <geoff@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Gregory Clement <gregory.clement@bootlin.com>, Guo Ren <guoren@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- Haojian Zhuang <haojian.zhuang@gmail.com>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Herve Codina <herve.codina@bootlin.com>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Changhuang Liang <changhuang.liang@starfivetech.com>,
- Chen-Yu Tsai <wens@csie.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Chris Zankel <chris@zankel.net>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Imre Kaloz <kaloz@openwrt.org>, Ingo Molnar <mingo@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, James Morse <james.morse@arm.com>,
- Janne Grunau <j@jannau.net>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Jiawen Wu
- <jiawenwu@trustnetic.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Jim Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>,
- Joel Stanley <joel@jms.id.au>, Johannes Berg <johannes@sipsolutions.net>,
- John Crispin <john@phrozen.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonas Bonn <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jonathan Hunter <jonathanh@nvidia.com>,
- =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
- Joyce Ooi <joyce.ooi@intel.com>,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, Keerthy
- <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>,
- Konrad Dybcio <konradybcio@kernel.org>, Krzysztof Kozlowski
- <krzk@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij
- <linus.walleij@linaro.org>, Linus Walleij <linusw@kernel.org>,
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-remoteproc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org,
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Lukasz Luba <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Mark Brown <broonie@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Max Filippov
- <jcmvbkbc@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>, Michael Buesch <m@bues.ch>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>,
- Miodrag Dinic <miodrag.dinic@mips.com>, Naveen N Rao <naveen@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, netdev@vger.kernel.org,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Nicholas Piggin <npiggin@gmail.com>, Nikhil Agarwal
- <nikhil.agarwal@amd.com>, Nipun Gupta <nipun.gupta@amd.com>,
- Nishanth Menon <nm@ti.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>,
- Paul Cercueil <paul@crapouillou.net>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- platform-driver-x86@vger.kernel.org,
- Prasad Kumpatla <quic_pkumpatl@quicinc.com>, Qiang Zhao
- <qiang.zhao@nxp.com>, Qin Jian <qinjian@cqplus1.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>,
- Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>,
- Rob Clark <robdclark@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>,
- Robert Richter <rric@kernel.org>, Rob Herring <robh@kernel.org>,
- Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Ryan Chen <ryan_chen@aspeedtech.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Samuel Holland <samuel@sholland.org>, Santosh Shilimkar
- <ssantosh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>,
- Sean Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>,
- Sean Wang <sean.wang@mediatek.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Shawn Guo <shawnguo@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, Simona Vetter <simona@ffwll.ch>,
- Stafford Horne <shorne@gmail.com>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stephen Boyd <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>,
- Takashi Iwai <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>,
- Tero Kristo <kristo@kernel.org>,
- Thangaraj Samynathan <Thangaraj.S@microchip.com>,
- Thara Gopinath <thara.gopinath@gmail.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Toan Le <toan@os.amperecomputing.com>, Tony Lindgren <tony@atomide.com>,
- Tony Luck <tony.luck@intel.com>, UNGLinuxDriver@microchip.com,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Vignesh Raghavendra <vigneshr@ti.com>, Vineet Gupta <vgupta@kernel.org>,
- Vladimir Oltean <olteanv@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
- WANG Xuerui <kernel@xen0n.name>, Woojung Huh <woojung.huh@microchip.com>,
- x86@kernel.org, Yanteng Si <si.yanteng@linux.dev>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Zhang Rui <rui.zhang@intel.com>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
- <874ixxonyy.ffs@tglx>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <874ixxonyy.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250511204427.327558-1-lkml@antheas.dev>
+ <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
+In-Reply-To: <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 12 May 2025 12:16:14 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
+X-Gm-Features: AX0GCFuArtFUaWkkLJa1COmLkMRLR7iabLhAEIG80zqyIm0niW2BE_gm6mMX3S4
+Message-ID: 
+ <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
+ curves/platform profile/tdp/battery limiting
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174704498690.13136.1383982283804880591@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On 06. 05. 25, 15:41, Thomas Gleixner wrote:
-> On Wed, Mar 19 2025 at 10:28, Jiri Slaby wrote:
-> 
->> Hi,
->>
->> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
->> respective ones via their trees (as they are split per subsys), so that
->> the IRQ tree can take only the rest. That would minimize churn/conflicts
->> during merges.
-> 
-> So. It's rc5 by now and I picked up everything
+On Mon, 12 May 2025 at 01:30, Kurt Borja <kuurtb@gmail.com> wrote:
+>
+> Hi Antheas,
+>
+> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
+> > This draft patch series brings into parity the msi-wmi-platform driver with
+> > the MSI Center M Windows application for the MSI Claw (all models).
+> > Unfortunately, MSI Center M and this interface do not have a discovery API,
+> > necessitating the introduction of a quirk system.
+> >
+> > While this patch series is fully functional and tested, there are still
+> > some issues that need to be addressed:
+> >   - Armin notes we need to disable fan curve support by default and quirk
+> >     it as well, as it is not supported on all models. However, the way
+> >     PWM enable ops work, this makes it a bit difficult, so I would like
+> >     some suggestions on how to rework this.
+>
+> If I understood the question correctly, then you should control the
+> visibility of all "curve" related attributes with the quirk.
 
-Good, thanks.
+Yep, this is what I was wondering. I will investigate this. It would
+be good to get some comments on the quirk naming as well.
 
-> which did not show up in next yet. 
+> The custom hwmon attribute_group has an is_visible callback, and so do
+> the hwmon_ops.
+>
+> >   - It turns out that to fully disable the fan curve, we have to restore
+> >     the default fan values. This is also what is done on the OEM software.
+> >     For this, the last patch in the series is used, which is a bit dirty.
+>
+> I have a couple questions about this.
+>
+> * What are the default fan curves? Can these be statically defined?
+> * Are user-defined fan curves persistent between reboots?
+>
+> I have some doubts about the approach you took on the last patch, but I
+> want to understand how the platform works first.
 
-Which is the majority -- routing through subsystems didn't work as well 
-as I anticipated.
+So do I. Essentially here is how the Windows software works: when it
+first opens, it saves the current curve in Windows registry. Then,
+when the user sets a fan curve, it applies it in the same way we do
+here and sets a bit in AP. When the custom curve is removed, it unsets
+that bit and restores the original curve in WMI.
 
-I planned to retry with v3 after the next merge window, but you were faster.
+The logical reasoning would be that that bit controls the fan curve.
+This is how it is named in the software. However, when setting that
+bit on its own, it seems to only partially affect the fan curve. E.g.,
+when the fan curve is 100% in all points, unsetting that bit makes it
+go down to 50% when no load occurs. When using the default fan curve,
+it goes to 0%. Therefore, it seems like that bit makes the fan curve
+semi-autonomous?
 
-V3 contains a switch from nodes to dev_fwnode() in some cases. It 
-simplifies the code there. This did not get lost, I will send this 
-separately to maintainers once everything from this series settles in 
-the tree. I.e. likely after the next merge window.
+The fan curve seems to be hardware specific and resets after reboots.
+So a straightforward way to get it is to grab it on a fresh boot.
 
-> @Jiri, I fixed up all your subject prefixes as
-> 
->    'irqdomain: subsys: Switch to foo()'
-> 
-> does not make any sense at all. These subsystems have their regular
-> prefixes and these changes do not justify made up irqdomain special
-> prefixes at all.
+Antheas
 
-Yes.
-
-thanks,
--- 
-js
-suse labs
+> >
+> > Sleep was tested with all values being preserved during S0iX (platform
+> > profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
+> > least for the Claw devices.
+> >
+> > For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
+> > his new high level interface is merged beforehand, we can use that instead.
+>
+> Hopefully!
+>
+> --
+>  ~ Kurt
+>
+> >
+> > Antheas Kapenekakis (8):
+> >   platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
+> >   platform/x86: msi-wmi-platform: Add quirk system
+> >   platform/x86: msi-wmi-platform: Add platform profile through shift
+> >     mode
+> >   platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
+> >     attributes
+> >   platform/x86: msi-wmi-platform: Add charge_threshold support
+> >   platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
+> >   platform/x86: msi-wmi-platform: Update header text
+> >   platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
+> >     unload
+> >
+> > Armin Wolf (2):
+> >   platform/x86: msi-wmi-platform: Use input buffer for returning result
+> >   platform/x86: msi-wmi-platform: Add support for fan control
+> >
+> >  .../wmi/devices/msi-wmi-platform.rst          |   26 +
+> >  drivers/platform/x86/Kconfig                  |    3 +
+> >  drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
+> >  3 files changed, 1156 insertions(+), 54 deletions(-)
+> >
+> >
+> > base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
+>
