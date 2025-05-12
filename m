@@ -1,552 +1,290 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00154904.pphosted.com (mx0a-00154904.pphosted.com [148.163.133.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19929D0B;
-	Mon, 12 May 2025 10:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747045370; cv=none; b=RZ41yiTpa/uvy/2JKoJFv/cGfcYukceccglb14ScFWhbFtMxSzR0iLkwFHMEAQ8fqywbiWJwfORqIynCSGsdX1G2u7IdlE//iENeyjYyM9aaVHIIn9GOQcXDyu5eNctN2rY7EfGwekkrL1uptLxNV+9c8iy4mh1jcHd2e1ofnD4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747045370; c=relaxed/simple;
-	bh=y++feBpYS2yhJbLN7RauAAM0tm/rlodrzGivJXlk+aM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VelJd2HpJ/8tGLPI1Jq0uCVGgvGJs+JoPGVYfKnDf+WRQgt4A9J+w62iAwa+BteC9Nc3k6fRWkjCg14CUz2+M663su5auEaso3ZRmSvMB4Lo9EyObj33BRS9e9wn/y3eyCrLoV6vc642youZ5XZOaBWRPZ287XHsUjcRF9HnsH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=uOTtc1wE; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C3564D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 May 2025 10:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747045876; cv=fail; b=rBj+7KFwAvj9kCszMRU0HWaAqOB/PEvIYlXHfZFcvdmKvs8guah1cB666qDewbsv0n7eg34M2ORuRY6UxZ2sQieswcXx7ovFXf+NRQRnAg/DzPKqn//5To7f2G9Gxiv8RuvZMF5WQeR2+v1esj+eLXL6RCLWOhwZ9BdwaVEONG4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747045876; c=relaxed/simple;
+	bh=psCeEOEbSywUpzmYs3eoS6QC6Jcf9Vd7Cvi3gYoX3TM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=IfMmY9gWRG7sKHqFc20xls97JfRtVWNU7vyCGzZIC2r/45ZV9UCdBRz8Te6LMatKirON+Ut3SaWJnZ2Dkfy/L1QKxkVZJVr462+sJFadRM4y8kq8AoMHIO73Azzoz/78AaK+eddmLxV2yLpyYsEuU74mI2vKeTaeT27tBFZujN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=BA6i7Ygh; arc=fail smtp.client-ip=148.163.133.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="uOTtc1wE"
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3C9C32E09F0E;
-	Mon, 12 May 2025 13:22:42 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1747045364;
-	bh=IaG5h+uHMEU3JCbpf+1PwbXCW59K43zhFj3arQhtd/o=;
-	h=Received:From:Subject:To;
-	b=uOTtc1wE1OaRRx2NN/w01OJZnZzefqIlxImA1Oe01ly0iEZDoJ2hmIgx8Z9uC7nrx
-	 QGnnFsnBjNzA0gNkAUFsRLxZWxwOH62TwHZAYjkAFoATaJ/rbPExOhmY8tQHmdH0WH
-	 kn+BGjhlZcmbBbHxk+MLX2vu3aXDoYrNSkZI0t9M=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-326d67aacc4so18200231fa.3;
-        Mon, 12 May 2025 03:22:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU18mLf2Pdz77g7JT3q74z2Ikad0g2lHLhS9CfEpoQiuCfNmu6+mDsczaaAvkpto1mZQchgaLS+eDjqJgE=@vger.kernel.org,
- AJvYcCUwsVj4RdgKh3v7e8bkZRy0TXbNvO0ZY2Gk9NhDXXDW8swEcV66bSw6ORoSLuJlf/smCgVKVDv6oXc=@vger.kernel.org,
- AJvYcCW3bRmpjUfbZvysf+cve4JMh+4vtH7cD98q/QfsHYAl/0qY5WojThKu+IIyTlH+sbWJBxDzlOKmx9WxnT9t@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu6njCUbQThz2Os5pLMxwS4jzVxnOJOAH/vjecOOUQsvJryvRa
-	Y07G3pSQMTiyLoKxK6z+BmT/K4bCuMe+q7RozVDDfCmPiXHDbMwygX0jZPtWzvmqURaejE/gp0l
-	Y2AfXqgA+CORif6dmZnUAkF6BfRs=
-X-Google-Smtp-Source: 
- AGHT+IEfOMQPGHpM16kbGmKH72oODVzy3/QrmWs19fr7mNbji++6YukQx4EKzq3Y5LYS1ccLiLwJtnywY8F8kkQVz1M=
-X-Received: by 2002:a2e:be9c:0:b0:30b:b7c3:ea71 with SMTP id
- 38308e7fff4ca-326c45da855mr40172211fa.15.1747045361445; Mon, 12 May 2025
- 03:22:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="BA6i7Ygh"
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+	by mx0a-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54BNUvFi011467;
+	Mon, 12 May 2025 04:13:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=smtpout1; bh=+
+	3akTDEb2MkwJMBW9eQhedqUCRfUORFDEiMCrRgjxdA=; b=BA6i7YghHyRZ2g8RU
+	3ra6kROBjdawP3k81xwPARJt0jHjUiDX1bp5WLvmTSE8QYWjhXtj7fbF3wTPq0wu
+	QVQ4J8jJ1qS0dBub2mri/3K0RlzHtJGxca9vk8+s/9SNQSvYJ969lvIeSoM8BGAQ
+	Ejt7NYmGzkfYfnSra/zUH/0XLk7bRFDaUE8owzoG2XajfSul0wqORoWiNZ/14W3d
+	ioPJl8q8Apqo+e1Pk6+BHD3rEl798lK8FnlmfsSLSPgXxjYh3/PqDlDj4vntZWGH
+	LL7TEQyVkoiw4+g4dnzTSHxf3Pi/Tb1nrnm6tflG3RSHAgOPKQYyDhOi7FtTSs8J
+	Wsf6Q==
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+	by mx0a-00154904.pphosted.com (PPS) with ESMTPS id 46j24kdgt9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 04:13:43 -0400 (EDT)
+Received: from pps.filterd (m0371675.ppops.net [127.0.0.1])
+	by mx0a-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C7FRHS010192;
+	Mon, 12 May 2025 04:13:43 -0400
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2044.outbound.protection.outlook.com [104.47.51.44])
+	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 46j05q96qb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 May 2025 04:13:42 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IzxU9g+PE3JCoPXfyQ/eEQzCf6tTpEzqzCsXpJ+/MHCtXClPUMcHS/9B6tmyY8IeeNAXLy7deXh7OTWv5MCDvSOf7xbv3AB8c8q1pgKiTBciZbf9GAXQ+BiCFev/M1SXBL330+T/h87k8UT15omCrIncI1tTlPuz+hwAylEBYmz/olvcOBHpSJjSEMaJRa7odpTZm7mXgO7eJ892NgQPgwaBYrAzJ3y62JK/lbvNvY9Bm79tBsTxwZMyh5l9wVYdeliuHvmj9ti3TgIFQK5/hIifsUBS9fa/zAGJe08xhVPuQ9//hFymV/jM1RRD9q1hHTXJAfNl0iQjgmDvSTNaCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+3akTDEb2MkwJMBW9eQhedqUCRfUORFDEiMCrRgjxdA=;
+ b=qHZxwx4uhs7BCQ0uWIrifNFOcRCln2pIV6hJwLBJ0xs+AJ4JHIbukdLOACg7sDM4Z2JE/4qXiXb7RuJfAUSedcQyCbLsmVdAKRK8aaFm429HIWIEmFRSKspD78k5vldF2cIaWNjDFcCVp6m8myveVQYLMRmU+CpenazogV832EQg5CssdlLiSpttAjKK/9PPzDKfxT5u3/i/rUBnwsL+ar59w9kmrALgNqy+7AjSVi2BCeFsiK5JGK0cm+/KrUJ8x+eKa24HkwdVJ9x4ZloZy7f3RhS1NyuIauY4iuACDEMnxCgL3d0GEYjSR5TmODuE8Z/7NR+xWHNxOMtF82rUUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from BY5PR19MB3922.namprd19.prod.outlook.com (2603:10b6:a03:228::23)
+ by MN0PR19MB6264.namprd19.prod.outlook.com (2603:10b6:208:3c4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 08:13:33 +0000
+Received: from BY5PR19MB3922.namprd19.prod.outlook.com
+ ([fe80::afc3:5bb2:37fb:2f9d]) by BY5PR19MB3922.namprd19.prod.outlook.com
+ ([fe80::afc3:5bb2:37fb:2f9d%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 08:13:33 +0000
+From: "Shen, Yijun" <Yijun.Shen@dell.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "hdegoede@redhat.com"
+	<hdegoede@redhat.com>,
+        "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>,
+        "Patil.Reddy@amd.com"
+	<Patil.Reddy@amd.com>,
+        "mario.limonciello@amd.com"
+	<mario.limonciello@amd.com>
+Subject: RE: [PATCH 00/10] Enhancements to PMF Driver for Improved Custom BIOS
+ Input Handling
+Thread-Topic: [PATCH 00/10] Enhancements to PMF Driver for Improved Custom
+ BIOS Input Handling
+Thread-Index: AQHbwLPdFO9NTnO230mggJ9+UEgStbPOpBgA
+Date: Mon, 12 May 2025 08:13:32 +0000
+Message-ID:
+ <BY5PR19MB392208C717944725657254449A97A@BY5PR19MB3922.namprd19.prod.outlook.com>
+References: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ActionId=947c4025-2fe3-4058-860f-d05e233e0b25;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ContentBits=0;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Enabled=true;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Method=Standard;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Name=No
+ Protection (Label Only) - Internal
+ Use;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SetDate=2025-05-12T07:52:03Z;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Tag=10,
+ 3, 0, 1;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY5PR19MB3922:EE_|MN0PR19MB6264:EE_
+x-ms-office365-filtering-correlation-id: afcd2570-fdd3-4bb4-12e8-08dd912ce341
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-7?B?OHJJNkxMZDZwM2RYV1VCVkhsWTBteFlQN3dWTEVEVUVpUk4yL21VbERzZ0xo?=
+ =?utf-7?B?dVJod1plYTZUbXA2cjk0eCstNkVVQ2tlMTlDMGs4cE1BQ3Bod09JSnhIbmc5?=
+ =?utf-7?B?TDVxQ0xoYmhPUU5zcTdDWEMxNistNzlscnYxNDdYN3ZaanZsTzdqQlpjb3d5?=
+ =?utf-7?B?eldvKy1yOEFQQkc2SzZtb05hRklpMFRrM3VmWmp2eVR5ZnhGWDlPSDdkMXdE?=
+ =?utf-7?B?cW9aem41alJJRWt2QmNjaTMrLW5sL0pvanpnb0FsbmNRY2orLWJZQ1gwekUw?=
+ =?utf-7?B?WXpxV1QxM052bzN6Y3o1MVJ0OGVuNEtWUFpTZlQwcEl6Ky1kVzRJUmVaV3hT?=
+ =?utf-7?B?UXh4WFpiZ2pveEl4cll2eU0yS2FUYjVzUDYrLXg4eWg4YXg0T2NhZDhucUtM?=
+ =?utf-7?B?SUFxV0dWVzA1ZU94czcrLXJUSzI4MWwwS2xraFB4Ky13Ky15VEVxaXdZbmRC?=
+ =?utf-7?B?Y2Y2U3pVM1RtR090YlpGMVZGclRacDJucXVEaWE3Nko1QVdPUmtEZ3BMTlFI?=
+ =?utf-7?B?anBHbmEwblhRUmYxOEgrLU1nUWVsY3AwZUprZGFvM2JHZnNHKy10b25RcG80?=
+ =?utf-7?B?d2wvVXNRQmF3OGsvR0VDTjkxZlFRVXVDeWtWZVJxREN3YUc5bzdBTlprb2o0?=
+ =?utf-7?B?Ui8vUystVXYxUXFRaWxSZmtXRzhYbzdzVjJ3dmI1UmZYdmdQM0JiSW4va3lF?=
+ =?utf-7?B?eXZ0YmxUeko1YjJCNmMyc2tKZEhRcHhOeGZiVngxRDVJZ3VzSzBJb21iSzRL?=
+ =?utf-7?B?amdady9SU2pLRG10NC94YlBaWDJzcGkwR1oyTmxIOEg2WmhsdXp5UkR0akhr?=
+ =?utf-7?B?bUVzb1BJcVZqSUsyQ2o2dWNhdnBoMFBNRWk4Yk81M2JOZSstOTh1TUJhLzVM?=
+ =?utf-7?B?QXhYWTRuNGF2SEJYd3lRVnVXWmNnNDJhSG5KaHBFNmZBQistMmIwajE2a3Rh?=
+ =?utf-7?B?TzNtVXFjOFNrcC81N1U2dk5oM1AyWFZjQkhIZHQzRUI1OTk0YzZUSS9ObVI=?=
+ =?utf-7?B?Ky0zVmM4ZGpQOW8rLTdHT1JZQVhPUGRLL2IvWmZQb1gwaXdiNXlWN3BacTZP?=
+ =?utf-7?B?OGVSZHdKbWRsYXhOQ1laS1FlWUtFekRHTnBZMFhqQ29vTFRiMnpvUkNOWist?=
+ =?utf-7?B?cGpQUzZWamJ1SEJwN1F2T0I3WTRhRGM4Z1gwMlpaVEZTS3E5ZSstaXA2VXVC?=
+ =?utf-7?B?R1dUV09xYzVudU9SaS9mcndzRGNPYW1CZWdLTjlqNHNVQkNNTGVYd0tJMHVG?=
+ =?utf-7?B?TkxZTzdlaVRxdzBwKy04cG9PRDcvOHBzVUpMakU0bEtaYVpKTnRLNUtKM1lh?=
+ =?utf-7?B?M1h6ZzJFSjlFUHNTWDcxZWxQZ09DbWlkN0dZcW5RS2d6UHJaeEpObGp3N1ZN?=
+ =?utf-7?B?VmFFZjVMYXdUKy1RaG5BQUlheWtEaTJuM0pRa3VsZXJkbmZvdzNpeW5NV2s1?=
+ =?utf-7?B?YVpacktIKy1oVHg1N2xMUkE0VThvZ21KSTZiWTgvWEo4SXZ4RFo0OXZTOUlk?=
+ =?utf-7?B?MURUSlVKYmlWcTBzdEJiazBCMHJzWGFlN1ZmR2Q2Mi9zQWttU2NPY0ptU1Z5?=
+ =?utf-7?B?RGVYR2RlRVlRSmpZbk9WZ3dnZmNkcWNZMjRndm1jb1FCbTMyUlI4V1lyQnJw?=
+ =?utf-7?B?aG9lalA1VmZheUpVODBZTUNHYkhKekRPRU9MQU9tamR0RERTRy9XNnFzRG54?=
+ =?utf-7?B?dHE3NlQ5RkQvQ3J0RDcvd1R5anVweGk5NVN6b3FpckRleVovQlJiNlhZZXY4?=
+ =?utf-7?B?NFppQjhUUUVDWGtIWHZ0cVMzck1KUFVhSVJVTTNzeDh5SlJRKy01RHl3OE5V?=
+ =?utf-7?B?MDFkNWZEenAxbHZzbCstRGRJLzVNL05Gd0xKME42SnQ2REhVZmR2MjhYZFRY?=
+ =?utf-7?B?ajArLWZVNzR3c2RLektTVFNQbDVYd2tDTTFXV2YwRmorLTJaSFJkTzVtY2xE?=
+ =?utf-7?B?ektKSistanNKRmptL3VqcDNESmRXRTA0cjZETEEwYktTRVB5Z1lnWnVGUml1?=
+ =?utf-7?B?emhuek1hbGhMR2FrOWwzVTlQejN4YWIvMGtMTkRZdmVqNW5NZytBRDBBUFEt?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR19MB3922.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-7?B?NVJONFhWTGNwZTkxbThpQlZVQTZTWU1pc0JDSGZxeHBhUjY3MUZCWHN1RmNq?=
+ =?utf-7?B?TTduQzhQM2lib0NHY2pDMjg5S2F2ZWdyVWVMaUYrLTBDQXorLWhyZFkzRTFm?=
+ =?utf-7?B?YUpVdlp4dGVDOEN0Ujd6d1ZaS08vTCstQ3EydGI4STJuKy1VVXVacXNWQTRN?=
+ =?utf-7?B?d0c1ZlE5STJJRGhnYUtYdzh6OEpQY3VkMmlmWmc1Vmk5YXVMKy1qcUN5dmZS?=
+ =?utf-7?B?MzlydG96MjBudlZTWSstaXpxTm9zUlNaUjRRZXBGakxPYnlKZEcrLUdJNzcw?=
+ =?utf-7?B?cjFsOWo0SmVwdXZnY1I1ZzQwNi8vQ1RNbHhOODFLR2ZXMkExT2U3QmFOTEg1?=
+ =?utf-7?B?REMxYXdMTWplNDdoU0lhaUdWRkRNSmRBRElObSstVm4vN3dJcXE5Y2YwYXZ6?=
+ =?utf-7?B?U3JJOE9COXZ4V0pUc29jNzBLOE5oRUVmOHR6SzhCRystNWg3a1VWTkNTNDlU?=
+ =?utf-7?B?cTNFaVcwVUh5OFE0eXlXQy9FaWhhdzNGU0wwa2RhU3dVZzBKVkhZNWpmMVM0?=
+ =?utf-7?B?R25qM0dneXBHTTd4d3hCalNpTEdxNzhDc1JCOGdtQmtuSDFDTGtic2F0MDZs?=
+ =?utf-7?B?U3VHOVgzdnY1bmcyalNMTk9iR0wxSWVmM2g4RFgyRWlmU00wT1B6UGtPeU8z?=
+ =?utf-7?B?QzZ6YjFtQ2FXZ2d5amFLUWV6bTVBa1cxcGxPOWRzUVE2SistVGhKQlQrLTBo?=
+ =?utf-7?B?REhRMDJkd0o1MUZiMDlxYzRVbmZua1ltcWJ4cEFWR1JlcXBvdzRvWm96R3NG?=
+ =?utf-7?B?NHBJM254TFp2Vi9pQUFRQUEzR0U3cVU1NjNyb0p4NHVMQi9UNGVhcnlRQXc0?=
+ =?utf-7?B?emtnaUIyclRhYWZ1V0RSNUovNFh4NUo0RmJrRjc0aVF6Q3hlam9QN0Y4cGh0?=
+ =?utf-7?B?UDU5enVrYWdMNm55RGtiZ2x6TDdVT1JWbmc2ME5Qd3hDVzZkVWU4ZVVqVmtW?=
+ =?utf-7?B?Y3AxeGw1Rkl1aTg2NlFzcDVhYURLWmNrOFB3bmF6VmIyVmlYNGh2NU16akJq?=
+ =?utf-7?B?YUxKLzVMRERsbXFLMGlNMTJpM2hIbGFPMnFnb0lqeTBTWXZ5Rm5YRDFYREhB?=
+ =?utf-7?B?UistMTlRL0laN25xSUVQeE5NR2NPRWR5TnRsMFVaYk1wZTFodlhIYktSYXBy?=
+ =?utf-7?B?RFBoL1o0Q0JWOXArLWRmcXByOGxoQ201cG5xUVNZMCstcTFZRTRkdHR3ckRR?=
+ =?utf-7?B?WUxicWdiSHl2YjdZQistWENBWWRmbmZFZWVFelI0QzBydW1LVXIwWDhQbUI=?=
+ =?utf-7?B?Ky15cnNSVkNRNWNMNDE2SHFzOW1rUS8vT3ljMzJ0WFhJZm1QR2ZGampkbFRF?=
+ =?utf-7?B?N3pNRVJCdUJXSncwbTJ3dGoyQ2hpT25oOE1QYkY0WVdVWlFpRzU3N1g2TGdk?=
+ =?utf-7?B?d0JkSXI3TVNmemd2MkVFaFluVXBEdmoxc2NIa01wRkV0Njk5SlQyZ0ZFZzV1?=
+ =?utf-7?B?MFBFRnVhTWUwcGgrLWwza0d0NFcxTXZKRlhIWTdxTFErLWQ1eGo5UmpweVVw?=
+ =?utf-7?B?Yk95eTgrLU12bjNlZ1lMZE9Yb0hGZHR4Qm1CbUxWNWptaGhwQjViN3ZGU2w=?=
+ =?utf-7?B?ZystZFRJbE02Y2pnRk91dE92U0FYWmN3WUhVN2ZFR1hkbzRNWk96NCstQ0pq?=
+ =?utf-7?B?RmVXUzdiU01rQktuanZUdDBVci9TWHpLUC9ndEhxTkdMRVFWY3paOGorLUpT?=
+ =?utf-7?B?bkRoNG9nSTZ6NUM3UWhHcldlL0xNSFN4ZkNrSGh1eHZwdndzcmN2c2w2YWtm?=
+ =?utf-7?B?dCstZFJTdlJFSUFzaXJrcWVJZzFQM2hhaFRiYmxWbFVya2Q5dXRUL0lUODBK?=
+ =?utf-7?B?bFRUc2prWVlwNGw2R3pmTGJLazhDNXpYekhBUHJLSHJod1hER0dmZWRXbkxU?=
+ =?utf-7?B?blFmeS9hb0I3STVlMS9BSXY1aXd3VGNqdEN6Ykc4UzNMU08xYzZZak1jMmZh?=
+ =?utf-7?B?d2VjYjRyTlhXV0w5ZXRWcmhTSVVQNFVCUDZ6UXk3Q1pTZExoaHQ1eEhjMENz?=
+ =?utf-7?B?V3hyVFVDKy1HMlJuNkF6dnVnSnpCTk1ienZWWmkxa3p2YmZhT1ZtS1FkYWtU?=
+ =?utf-7?B?enJvZFlZUGEwdTJocWk2Vy9CZ3FJblRkdno1Q2x5dlA1U0VyMzBZcW45bHUw?=
+ =?utf-7?B?djYwbmpadGIxdmRSeGlzaTNtWnRSNmxlaldKbWpuQWRsd2JiVkgyV0IxRzFp?=
+ =?utf-7?B?NHZaUzZx?=
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-7-lkml@antheas.dev>
- <D9TQ3YPQDD4W.3JQOYGQB5GS7P@gmail.com>
-In-Reply-To: <D9TQ3YPQDD4W.3JQOYGQB5GS7P@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 12 May 2025 12:22:29 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwHo61uX_Xy3g-YtQg1dgs7bXu9uFqF0BrK3ThkpUUtmHA@mail.gmail.com>
-X-Gm-Features: AX0GCFs87ueiENXcgrg2D_nbN4EwykAcuqDzXVMMPWwsA-toAfHwNpOTJuy1894
-Message-ID: 
- <CAGwozwHo61uX_Xy3g-YtQg1dgs7bXu9uFqF0BrK3ThkpUUtmHA@mail.gmail.com>
-Subject: Re: [PATCH v1 06/10] platform/x86: msi-wmi-platform: Add PL1/PL2
- support via firmware attributes
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174704536359.7951.12336531955247682423@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR19MB3922.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afcd2570-fdd3-4bb4-12e8-08dd912ce341
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2025 08:13:33.3405
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QNld+3TZgrw/zQl5GdcmObCyNFVYA+YSHdR9fEy9BkuPGUnzRKhK9UMXJ6liddHk/KpSfbGf8JKsoCDurV6E1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR19MB6264
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 suspectscore=0
+ spamscore=0 bulkscore=0 phishscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120086
+X-Proofpoint-GUID: 33TaRIfJnkiHEtWp5hIznCh3mLZa3VL-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA4NiBTYWx0ZWRfXy5lLUZa7O4GW 1q+zdko8Nr3tmDsoSkj3y+n2vjkIcDFMJOGzsRgNxJjw6xNo5nUcxCLeGQKQQnAY+K/wR704k1C BjuZHZfTTtrqOA/kEivnRhV7j9FNSoW//eN9V4m+/v+0T+3qBvfjD/uskwP9kFGv4koq7u7d8dT
+ y36mdlVWX7KJZiMetO0JZay9VOtR/R0sfIH2+y8JtpHBAezGWejWmzhHpaOuMk/j1pA8GRA6wZr tvh0TRt9c/kL2tQTbZjP+u1UmAwIk2m4EaMQsgccFBy8tk5ttwhm9Jgq9y3JiYe95B+fpuKB6PF ZdhkFu+20aDDnJKwBy8BFXXoo5VtLBJhkR5HxYroLxGoLr9kvjM9AIjqtdvt5sCwVXX8LZUOJLQ
+ hNIe+bfJ9H31QsMot7DBHE9mbbCS+Vl9TDu5Fy4T9Kzr1+eaB+fo7Mt+CCbb2K/yTXG28UMp
+X-Authority-Analysis: v=2.4 cv=ErrSrTcA c=1 sm=1 tr=0 ts=6821adb7 cx=c_pps a=j0++y401J6f/BxNAf5EDow==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=wzW8d0FwaosA:10
+ a=YU3QZWNX-B8A:10 a=dt9VzEwgFbYA:10 a=zd2uoN0lAAAA:8 a=20KFwNOVAAAA:8 a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=iLNU1ar6AAAA:8 a=sS_K4Su9AAAA:8 a=XlRjxQ70AAAA:8 a=LfxEVeEBAAAA:8 a=Eck7xrpOGDWHRZXxsvUA:9 a=avxi3fN6y70A:10 a=gbU3OgOOxF9bX48Letew:22
+ a=QaANnTo53oYaUAiVOp1Z:22 a=1uMOUU2w0DxzEe95gQqD:22 a=7k9nRlTqVbDGZ3p5_T00:22
+X-Proofpoint-ORIG-GUID: 33TaRIfJnkiHEtWp5hIznCh3mLZa3VL-
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 impostorscore=0 adultscore=0 bulkscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505120086
 
-On Mon, 12 May 2025 at 01:34, Kurt Borja <kuurtb@gmail.com> wrote:
->
-> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
-> > Adds PL1, and PL2 support through the firmware attributes interface.
-> > The min and max values are quirked, and the attributes are only defined
-> > if they are set to a non-zero value. These values are meant to be set
-> > in conjunction with shift mode, where shift mode automatically sets
-> > an upper bound on PL1/PL2 (e.g., low-power would be used with 8W).
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/platform/x86/Kconfig            |   1 +
-> >  drivers/platform/x86/msi-wmi-platform.c | 361 +++++++++++++++++++++++-
-> >  2 files changed, 360 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index 57a48910c8fd4..fd3da718731e7 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -747,6 +747,7 @@ config MSI_WMI_PLATFORM
-> >       depends on ACPI_WMI
-> >       depends on HWMON
-> >       select ACPI_PLATFORM_PROFILE
-> > +     select FW_ATTR_CLASS
-> >       help
-> >         Say Y here if you want to have support for WMI-based platform features
-> >         like fan sensor access on MSI machines.
-> > diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-> > index c0b577c95c079..6498f4b44fe53 100644
-> > --- a/drivers/platform/x86/msi-wmi-platform.c
-> > +++ b/drivers/platform/x86/msi-wmi-platform.c
-> > @@ -34,6 +34,8 @@
-> >
-> >  #include <linux/unaligned.h>
-> >
-> > +#include "firmware_attributes_class.h"
-> > +
-> >  #define DRIVER_NAME  "msi-wmi-platform"
-> >
-> >  #define MSI_PLATFORM_GUID    "ABBC0F6E-8EA1-11d1-00A0-C90629100000"
-> > @@ -74,6 +76,10 @@
-> >  #define MSI_PLATFORM_SHIFT_ECO               (MSI_PLATFORM_SHIFT_ENABLE + 2)
-> >  #define MSI_PLATFORM_SHIFT_USER              (MSI_PLATFORM_SHIFT_ENABLE + 3)
-> >
-> > +/* Get_Data() and Set_Data() Params */
-> > +#define MSI_PLATFORM_PL1_ADDR        0x50
-> > +#define MSI_PLATFORM_PL2_ADDR        0x51
-> > +
-> >  static bool force;
-> >  module_param_unsafe(force, bool, 0);
-> >  MODULE_PARM_DESC(force, "Force loading without checking for supported WMI interface versions");
-> > @@ -112,6 +118,9 @@ enum msi_wmi_platform_method {
-> >
-> >  struct msi_wmi_platform_quirk {
-> >       bool shift_mode;        /* Shift mode is supported */
-> > +     int pl_min;             /* Minimum PLx value */
-> > +     int pl1_max;            /* Maximum PL1 value */
-> > +     int pl2_max;            /* Maximum PL2 value */
-> >  };
-> >
-> >  struct msi_wmi_platform_data {
-> > @@ -119,6 +128,44 @@ struct msi_wmi_platform_data {
-> >       struct msi_wmi_platform_quirk *quirks;
-> >       struct mutex wmi_lock;  /* Necessary when calling WMI methods */
-> >       struct device *ppdev;
-> > +     struct device *fw_attrs_dev;
-> > +     struct kset *fw_attrs_kset;
-> > +};
-> > +
-> > +enum msi_fw_attr_id {
-> > +     MSI_ATTR_PPT_PL1_SPL,
-> > +     MSI_ATTR_PPT_PL2_SPPT,
-> > +};
-> > +
-> > +static const char *const msi_fw_attr_name[] = {
-> > +     [MSI_ATTR_PPT_PL1_SPL] = "ppt_pl1_spl",
-> > +     [MSI_ATTR_PPT_PL2_SPPT] = "ppt_pl2_sppt",
-> > +};
-> > +
-> > +static const char *const msi_fw_attr_desc[] = {
-> > +     [MSI_ATTR_PPT_PL1_SPL] = "CPU Steady package limit (PL1/SPL)",
-> > +     [MSI_ATTR_PPT_PL2_SPPT] = "CPU Boost slow package limit (PL2/SPPT)",
-> > +};
-> > +
-> > +#define MSI_ATTR_LANGUAGE_CODE "en_US.UTF-8"
-> > +
-> > +struct msi_fw_attr {
-> > +     struct msi_wmi_platform_data *data;
-> > +     enum msi_fw_attr_id fw_attr_id;
-> > +     struct attribute_group attr_group;
-> > +     struct kobj_attribute display_name;
-> > +     struct kobj_attribute current_value;
-> > +     struct kobj_attribute min_value;
-> > +     struct kobj_attribute max_value;
-> > +
-> > +     u32 min;
-> > +     u32 max;
-> > +
-> > +     int (*get_value)(struct msi_wmi_platform_data *data,
-> > +                      struct msi_fw_attr *fw_attr, char *buf);
-> > +     ssize_t (*set_value)(struct msi_wmi_platform_data *data,
-> > +                          struct msi_fw_attr *fw_attr, const char *buf,
-> > +                          size_t count);
-> >  };
-> >
-> >  struct msi_wmi_platform_debugfs_data {
-> > @@ -163,10 +210,16 @@ static const char * const msi_wmi_platform_debugfs_names[] = {
-> >
-> >  static struct msi_wmi_platform_quirk quirk_default = {};
-> >  static struct msi_wmi_platform_quirk quirk_gen1 = {
-> > -     .shift_mode = true
-> > +     .shift_mode = true,
-> > +     .pl_min = 8,
-> > +     .pl1_max = 43,
-> > +     .pl2_max = 45
-> >  };
-> >  static struct msi_wmi_platform_quirk quirk_gen2 = {
-> > -     .shift_mode = true
-> > +     .shift_mode = true,
-> > +     .pl_min = 8,
-> > +     .pl1_max = 30,
-> > +     .pl2_max = 37
-> >  };
-> >
-> >  static const struct dmi_system_id msi_quirks[] = {
-> > @@ -660,6 +713,306 @@ static const struct platform_profile_ops msi_wmi_platform_profile_ops = {
-> >       .profile_set = msi_wmi_platform_profile_set,
-> >  };
-> >
-> > +/* Firmware Attributes setup */
-> > +static int data_get_addr(struct msi_wmi_platform_data *data,
-> > +                      const enum msi_fw_attr_id id)
-> > +{
-> > +     switch (id) {
-> > +     case MSI_ATTR_PPT_PL1_SPL:
-> > +             return MSI_PLATFORM_PL1_ADDR;
-> > +     case MSI_ATTR_PPT_PL2_SPPT:
-> > +             return MSI_PLATFORM_PL2_ADDR;
-> > +     default:
-> > +             pr_warn("Invalid attribute id %d\n", id);
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +static ssize_t data_set_value(struct msi_wmi_platform_data *data,
-> > +                           struct msi_fw_attr *fw_attr, const char *buf,
-> > +                           size_t count)
-> > +{
-> > +     u8 buffer[32] = { 0 };
-> > +     int ret, fwid;
-> > +     u32 value;
-> > +
-> > +     fwid = data_get_addr(data, fw_attr->fw_attr_id);
-> > +     if (fwid < 0)
-> > +             return fwid;
-> > +
-> > +     ret = kstrtou32(buf, 10, &value);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (fw_attr->min >= 0 && value < fw_attr->min)
-> > +             return -EINVAL;
-> > +     if (fw_attr->max >= 0 && value > fw_attr->max)
-> > +             return -EINVAL;
->
-> Maybe clamp instead of failing?
->
-> > +
-> > +     buffer[0] = fwid;
-> > +     put_unaligned_le32(value, &buffer[1]);
-> > +
-> > +     ret = msi_wmi_platform_query(data, MSI_PLATFORM_SET_DATA, buffer, sizeof(buffer));
-> > +     if (ret) {
-> > +             pr_warn("Failed to set_data with id %d: %d\n",
-> > +                     fw_attr->fw_attr_id, ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static int data_get_value(struct msi_wmi_platform_data *data,
-> > +                       struct msi_fw_attr *fw_attr, char *buf)
-> > +{
-> > +     u8 buffer[32] = { 0 };
-> > +     u32 value;
-> > +     int ret, addr;
-> > +
-> > +     addr = data_get_addr(data, fw_attr->fw_attr_id);
-> > +     if (addr < 0)
-> > +             return addr;
-> > +
-> > +     buffer[0] = addr;
-> > +
-> > +     ret = msi_wmi_platform_query(data, MSI_PLATFORM_GET_DATA, buffer, sizeof(buffer));
-> > +     if (ret) {
-> > +             pr_warn("Failed to show set_data for id %d: %d\n",
-> > +                     fw_attr->fw_attr_id, ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     value = get_unaligned_le32(&buffer[1]);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", value);
-> > +}
-> > +
-> > +static ssize_t display_name_language_code_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                                            char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", MSI_ATTR_LANGUAGE_CODE);
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_display_name_language_code =
-> > +     __ATTR_RO(display_name_language_code);
-> > +
-> > +static ssize_t scalar_increment_show(struct kobject *kobj,
-> > +                                            struct kobj_attribute *attr,
-> > +                                            char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "1\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_scalar_increment =
-> > +     __ATTR_RO(scalar_increment);
-> > +
-> > +static ssize_t pending_reboot_show(struct kobject *kobj,
-> > +                                  struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "0\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_pending_reboot = __ATTR_RO(pending_reboot);
-> > +
-> > +static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, display_name);
-> > +
-> > +     return sysfs_emit(buf, "%s\n", msi_fw_attr_desc[fw_attr->fw_attr_id]);
-> > +}
-> > +
-> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, current_value);
-> > +
-> > +     return fw_attr->get_value(fw_attr->data, fw_attr, buf);
-> > +}
-> > +
-> > +static ssize_t current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                                const char *buf, size_t count)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, current_value);
-> > +
-> > +     return fw_attr->set_value(fw_attr->data, fw_attr, buf, count);
-> > +}
-> > +
-> > +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                      char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "integer\n");
-> > +}
-> > +
-> > +static struct kobj_attribute fw_attr_type_int = {
-> > +     .attr = { .name = "type", .mode = 0444 },
-> > +     .show = type_show,
-> > +};
->
-> Use __ATTR_RO().
->
-> > +
-> > +static ssize_t min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                           char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, min_value);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", fw_attr->min);
-> > +}
-> > +
-> > +static ssize_t max_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > +                           char *buf)
-> > +{
-> > +     struct msi_fw_attr *fw_attr =
-> > +             container_of(attr, struct msi_fw_attr, max_value);
-> > +
-> > +     return sysfs_emit(buf, "%d\n", fw_attr->max);
-> > +}
-> > +
-> > +#define FW_ATTR_ENUM_MAX_ATTRS  7
-> > +
-> > +static int
-> > +msi_fw_attr_init(struct msi_wmi_platform_data *data,
-> > +              const enum msi_fw_attr_id fw_attr_id,
-> > +              struct kobj_attribute *fw_attr_type, const s32 min,
-> > +              const s32 max,
-> > +              int (*get_value)(struct msi_wmi_platform_data *data,
-> > +                               struct msi_fw_attr *fw_attr, char *buf),
-> > +              ssize_t (*set_value)(struct msi_wmi_platform_data *data,
-> > +                                   struct msi_fw_attr *fw_attr,
-> > +                                   const char *buf, size_t count))
-> > +{
-> > +     struct msi_fw_attr *fw_attr;
-> > +     struct attribute **attrs;
-> > +     int idx = 0;
-> > +
-> > +     fw_attr = devm_kzalloc(&data->wdev->dev, sizeof(*fw_attr), GFP_KERNEL);
-> > +     if (!fw_attr)
-> > +             return -ENOMEM;
-> > +
-> > +     attrs = devm_kcalloc(&data->wdev->dev, FW_ATTR_ENUM_MAX_ATTRS + 1,
-> > +                          sizeof(*attrs), GFP_KERNEL);
-> > +     if (!attrs)
-> > +             return -ENOMEM;
-> > +
-> > +     fw_attr->data = data;
-> > +     fw_attr->fw_attr_id = fw_attr_id;
-> > +     fw_attr->attr_group.name = msi_fw_attr_name[fw_attr_id];
-> > +     fw_attr->attr_group.attrs = attrs;
-> > +     fw_attr->get_value = get_value;
-> > +     fw_attr->set_value = set_value;
-> > +
-> > +     attrs[idx++] = &fw_attr_type->attr;
-> > +     if (fw_attr_type == &fw_attr_type_int)
-> > +             attrs[idx++] = &fw_attr_scalar_increment.attr;
-> > +     attrs[idx++] = &fw_attr_display_name_language_code.attr;
-> > +
-> > +     sysfs_attr_init(&fw_attr->display_name.attr);
-> > +     fw_attr->display_name.attr.name = "display_name";
-> > +     fw_attr->display_name.attr.mode = 0444;
-> > +     fw_attr->display_name.show = display_name_show;
-> > +     attrs[idx++] = &fw_attr->display_name.attr;
-> > +
-> > +     sysfs_attr_init(&fw_attr->current_value.attr);
-> > +     fw_attr->current_value.attr.name = "current_value";
-> > +     fw_attr->current_value.attr.mode = 0644;
-> > +     fw_attr->current_value.show = current_value_show;
-> > +     fw_attr->current_value.store = current_value_store;
-> > +     attrs[idx++] = &fw_attr->current_value.attr;
-> > +
-> > +     if (min >= 0) {
-> > +             fw_attr->min = min;
-> > +             sysfs_attr_init(&fw_attr->min_value.attr);
-> > +             fw_attr->min_value.attr.name = "min_value";
-> > +             fw_attr->min_value.attr.mode = 0444;
-> > +             fw_attr->min_value.show = min_value_show;
-> > +             attrs[idx++] = &fw_attr->min_value.attr;
-> > +     } else {
-> > +             fw_attr->min = -1;
-> > +     }
-> > +
-> > +     if (max >= 0) {
-> > +             fw_attr->max = max;
-> > +             sysfs_attr_init(&fw_attr->max_value.attr);
-> > +             fw_attr->max_value.attr.name = "max_value";
-> > +             fw_attr->max_value.attr.mode = 0444;
-> > +             fw_attr->max_value.show = max_value_show;
-> > +             attrs[idx++] = &fw_attr->max_value.attr;
-> > +     } else {
-> > +             fw_attr->max = -1;
-> > +     }
-> > +
-> > +     attrs[idx] = NULL;
->
-> kcalloc already sets this to 0.
->
-> > +     return sysfs_create_group(&data->fw_attrs_kset->kobj, &fw_attr->attr_group);
->
-> This group is never removed.
->
-> I think it's not that big of a deal? But you should probably do it
-> anyway.
->
-> > +}
-> > +
-> > +static void msi_kset_unregister(void *data)
-> > +{
-> > +     struct kset *kset = data;
-> > +
-> > +     sysfs_remove_file(&kset->kobj, &fw_attr_pending_reboot.attr);
-> > +     kset_unregister(kset);
-> > +}
-> > +
-> > +static void msi_fw_attrs_dev_unregister(void *data)
-> > +{
-> > +     struct device *fw_attrs_dev = data;
-> > +
-> > +     device_unregister(fw_attrs_dev);
-> > +}
-> > +
-> > +static int msi_wmi_fw_attrs_init(struct msi_wmi_platform_data *data)
-> > +{
-> > +     int err;
-> > +
-> > +     data->fw_attrs_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-> > +                                              NULL, "%s", DRIVER_NAME);
->
-> Set the wmi device as the parent.
->
-> > +     if (IS_ERR(data->fw_attrs_dev))
-> > +             return PTR_ERR(data->fw_attrs_dev);
-> > +
-> > +     err = devm_add_action_or_reset(&data->wdev->dev,
-> > +                                    msi_fw_attrs_dev_unregister,
-> > +                                    data->fw_attrs_dev);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     data->fw_attrs_kset = kset_create_and_add("attributes", NULL,
-> > +                                               &data->fw_attrs_dev->kobj);
-> > +     if (!data->fw_attrs_kset)
-> > +             return -ENOMEM;
-> > +
-> > +     err = sysfs_create_file(&data->fw_attrs_kset->kobj,
-> > +                             &fw_attr_pending_reboot.attr);
->
-> If it's always 0 why include it? It's not mandatory anyway.
 
-fwupd complained. I am fine either way but without this there is no
-userspace tooling to test the interface with. Ack for the rest.
+Internal Use - Confidential
++AD4- -----Original Message-----
++AD4- From: Shyam Sundar S K +ADw-Shyam-sundar.S-k+AEA-amd.com+AD4-
++AD4- Sent: Friday, May 9, 2025 3:27 PM
++AD4- To: hdegoede+AEA-redhat.com+ADs- ilpo.jarvinen+AEA-linux.intel.com
++AD4- Cc: platform-driver-x86+AEA-vger.kernel.org+ADs- Patil.Reddy+AEA-amd.=
+com+ADs-
++AD4- mario.limonciello+AEA-amd.com+ADs- Shen, Yijun +ADw-Yijun+AF8-Shen+AE=
+A-Dell.com+AD4AOw- Shyam
++AD4- Sundar S K +ADw-Shyam-sundar.S-k+AEA-amd.com+AD4-
++AD4- Subject: +AFs-PATCH 00/10+AF0- Enhancements to PMF Driver for Improve=
+d Custom BIOS
++AD4- Input Handling
++AD4-
++AD4-
++AD4- +AFs-EXTERNAL EMAIL+AF0-
++AD4-
++AD4- This patch series includes the following changes to the PMF driver:
++AD4-
++AD4- - Implement support for modifying PMF PPT and PPT APU thresholds
++AD4- - Enable custom BIOS input support for AMD+AF8-CPU+AF8-ID+AF8-PS
++AD4- - Add the is+AF8-apmf+AF8-bios+AF8-input+AF8-notifications+AF8-suppor=
+ted() helper function
++AD4- - Correct the handling mechanism for custom BIOS inputs
++AD4- - Maintain a record of past custom BIOS inputs
++AD4- - Process early custom BIOS inputs
++AD4- - Initiate enact() earlier to address the initial custom BIOS input
++AD4-
++AD4-
++AD4- Changes based on review-ilpo-next with tip 'commit d430124bac58
++AD4- (+ACI-platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devi=
+ces+ACI-)'
 
-Antheas
+Verified this patch series on the issued system.
 
-> --
->  ~ Kurt
->
-> > +     if (err) {
-> > +             kset_unregister(data->fw_attrs_kset);
-> > +             return err;
-> > +     }
-> > +
-> > +     err = devm_add_action_or_reset(&data->wdev->dev, msi_kset_unregister,
-> > +                                    data->fw_attrs_kset);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     if (data->quirks->pl1_max) {
-> > +             err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL1_SPL,
-> > +                                     &fw_attr_type_int, data->quirks->pl_min,
-> > +                                     data->quirks->pl1_max, &data_get_value,
-> > +                                     &data_set_value);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     if (data->quirks->pl2_max) {
-> > +             err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL2_SPPT,
-> > +                                    &fw_attr_type_int, data->quirks->pl_min,
-> > +                                    data->quirks->pl2_max, &data_get_value,
-> > +                                    &data_set_value);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user *input,
-> >                                             size_t length, loff_t *offset)
-> >  {
-> > @@ -888,6 +1241,10 @@ static int msi_wmi_platform_probe(struct wmi_device *wdev, const void *context)
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > +     ret = msi_wmi_fw_attrs_init(data);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> >       msi_wmi_platform_debugfs_init(data);
-> >
-> >       msi_wmi_platform_profile_setup(data);
->
+Tested-By: Yijun Shen +ADw-Yijun.Shen+AEA-Dell.com+AD4-
+
++AD4-
++AD4- Shyam Sundar S K (10):
++AD4-   platform/x86/amd/pmf: Add support for adjusting PMF PPT and PPT APU
++AD4-     thresholds
++AD4-   platform/x86/amd/pmf: Fix the custom bios input handling mechanism
++AD4-   platform/x86/amd/pmf: Extend custom BIOS inputs for more policies
++AD4-   platform/x86/amd/pmf: Update ta+AF8-pmf+AF8-action structure member
++AD4-   platform/x86/amd/pmf: Add helper to verify BIOS input notifications
++AD4-     are enable/disable
++AD4-   platform/x86/amd/pmf: Add custom BIOS input support for AMD+AF8-CPU=
++AF8-ID+AF8-PS
++AD4-   platform/x86/amd/pmf: Use amd+AF8-pmf+AF8-update+AF8-bios+AF8-input=
+s() helper
++AD4-   platform/x86/amd/pmf: Preserve custom BIOS inputs for evaluating th=
+e
++AD4-     policies
++AD4-   platform/x86/amd/pmf: Call enact function sooner to process early
++AD4-     pending requests
++AD4-   platform/x86/amd/pmf: Add debug logs for pending requests and custo=
+m
++AD4-     BIOS inputs
++AD4-
++AD4-  drivers/platform/x86/amd/pmf/acpi.c   +AHw- 60 +-+-+-+-+-+-+-+-+-+-+=
+-+-+-+-+-+-+-+-+--
++AD4-  drivers/platform/x86/amd/pmf/pmf.h    +AHw- 80 +-+-+-+-+-+-+-+-+-+-+=
+-+-+-+-+-+-+-+-+-+-+-+-+-+----
++AD4-  drivers/platform/x86/amd/pmf/spc.c    +AHw- 51 +-+-+-+-+-+-+-+-+-+-+=
+-+-+-----
++AD4-  drivers/platform/x86/amd/pmf/tee-if.c +AHw- 19 +-+-+-+-+-+--
++AD4-  4 files changed, 191 insertions(+-), 19 deletions(-)
++AD4-
++AD4- --
++AD4- 2.34.1
+
+
