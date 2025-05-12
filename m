@@ -1,198 +1,232 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CD129345A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 May 2025 17:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747070781; cv=fail; b=YuXNwI74OslXw5DQvVAJvGa4wU++GJFKJXj6w9GvarJ5pKFoGJr3dJQ0cqz/lgVOpg7VahPEHiwT1/hRVB8fGoN3L+SgKDvvk989pSMacMoQWLhxy0au3SBlapss5Ne/UmKHEKlQRPZBELN6v4Kg6Hq7CHCnhnrfMma58B8KAh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747070781; c=relaxed/simple;
-	bh=8J4HB+02xoVSncCgTUv3ob7x7o4vwrCvbjMAdo4uABw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FYpN7IQRAU8DzfEsiayhNZpgnaY2Wjb5ovlQX7j+Os3/nAE7gpQMxn/t/ZPQX1gRaNL2z1ZNeK2hT/vVu6LlNWcbdxHzIFNES51VYMGCmlCbDL8QhEjZngC1vK3Q8r/ZQPcv/X4rgAK6+gfAxzOg8IE2T7H5+mZ4Hei7ViLhrmM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M9VJENVN; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6A6246788;
+	Mon, 12 May 2025 19:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747076773; cv=none; b=t+qOTNTbLDbcEirQKlT5wjQkUW5NM4Yk6oszM73gQO/9q81h0ruqPyipopJckN5973DgjPup0uw9fTSndEQJwt1bc+dhHr/kxSTO3SKpNOAa4Gtu8t9q2eSaYnY9MF/91DYBvniXplS07eSIonBKe9rky0PVG9+1WXp/xu1M7jo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747076773; c=relaxed/simple;
+	bh=6kUXqRfl/QRDHqu7tMXUAiQxfdy3036V26oKCsXgiD4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=BPhR00M+h2twr9vajqTzKFJV7YqJS7M5dLgRnZESN57sFECSmBrFCd/54UydC05g6LubX3GS+eaWCioLxXw3A7kOE3ZXoMta3QJ6i0aJ2aucayFnw1lI8rGsUPE+xF860GhQQ6Q5Z+8YVwVF9KvINpMRU1yO58uKAvSnZ8a8Jk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzbvSqAT; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M9VJENVN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zCHS0bO5FFyEWYkkyf9uPLbGaLURu4u45xMOCiCa0PuLqsFtGEMCj6I7RRbBoE0uFBkKqsBTlAlVILEFWFyi8DmsRHe0Cknqj7wX336K97lhpgRLCqyeQ02MiVRvpe0JpV9p1HHOn6uTLlwRVX7R1gdcOIrQjCzjZTVSlyG8VYIFWx70V0+CsJpNi5G8t8Hw0cxntoeHM1Jcp9HU54ceNxW3Qofg6HixMaJrRTtQBqrGRCOPmDcqw5vLWQmxEH/qHacD32tkekEWdoIzM5Z++XqBodO2tylkRcdqvIEA5eiksCpaKCKs5ER3DieTeEoSruzjPhtOomeFTnKEKjKpAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N5Bn43nHgbrYisoAklSK+QpVdJKBTt7seJLfCsZS8hs=;
- b=ZanJIhWTYlioH5WS0DDTjgChq09BZnQi6AHJF4Wgu3FpwP8nqjRScGdcEnPpMMZ4YrtZbDIRl6v4rR7J0llvvPeW2nKQWNL1JNMgTI9TU3hUcR2xTChI5LfHJHJLb0F9oibX7D4zyDI5uAfkLlknBSKDcBwl3tK/2phEE0natGt629HiBFdMv9k66Xj4Fuwl+F/2CPCFMhtgwl8WiLHrurilIaTB6/Pc2+QG9YN1eQe4pnPxtcXClAKPAjQfJy2/7NwijnXUww/03+aDJVjNYrsYSaz0JBT0Y3GC0YKqvGLKr2G9BlykfxAlN2zSO8OaVLrDwFUcfJr5c2b8dO384w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N5Bn43nHgbrYisoAklSK+QpVdJKBTt7seJLfCsZS8hs=;
- b=M9VJENVNOY5tZkclm34DB7wmJLkgEDFI0YTYXpCGxhnjysN7fpUlcm8I7+J4DcRRnlexg2RkKxXETJjQB5nhlZJE2f5+PLm03ABksv6XwiybXRJgfEEzos0O9MYb6eSt3Lzys8EJ2letIvPgZXHaDHKw5X5Rf2WgVqwAy3uGfyY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB8329.namprd12.prod.outlook.com (2603:10b6:610:12e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 17:26:13 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8722.020; Mon, 12 May 2025
- 17:26:12 +0000
-Message-ID: <78abfbd5-5424-4a5e-8a4e-f93e9aef7948@amd.com>
-Date: Mon, 12 May 2025 12:26:11 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] Enhancements to PMF Driver for Improved Custom BIOS
- Input Handling
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- Yijun.Shen@dell.com
-References: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DS0PR17CA0016.namprd17.prod.outlook.com
- (2603:10b6:8:191::7) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzbvSqAT"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5290be1aedcso4517221e0c.1;
+        Mon, 12 May 2025 12:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747076770; x=1747681570; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4h/HoEMxsgGlwFELk4YaCnFR/81exfwZAWd/Rc8C414=;
+        b=bzbvSqATKylbOxiUN6nz11XVoVnYI0uNTI5krVdjvAs7no+Wwlx/7m6U84KT6DjuA1
+         rfDrTkXbcYJmG+0H8gAhAn8ryc9eqTIjlHUwRxAAPMj2I3X90UpUXEliX04q9lUt4Y0S
+         ooFnJdOhTTfI3LF9zvdG6nqSSHTVVj/PO5sOtREATmmomXqOyI7BlnhMfmXywsdqviss
+         YgSCpiBbyhcILIvuIGm6h9/+3fAPyHrMwW46rY5vbueQLqcYF/D8HygFeqJFdBGmAtXv
+         we8elpRb3oV2NeERbGUnOtFFyTU3gNY+PJuIzgWKBLtqQf/81AvRqwNAU6tT+w6noR9e
+         02fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747076770; x=1747681570;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4h/HoEMxsgGlwFELk4YaCnFR/81exfwZAWd/Rc8C414=;
+        b=A2M2ARNfV6b3q7mvEkoobVKNKkDhus1NATu1ZJuDfLiE6g45GAZ/Fkwa6VzDfjhqmS
+         +0ORB0ZJECkW+LT/gi8mvTmganj9aNvaSYdmKRYCCRjU+EKDMDhJE6emKXWvGDLva4c4
+         25aVyahziNteqfzAJ8bNpEhbkghdGcCCboDJyw/N7pngqKM2rBxPKSlsPRBoNV8/Fnol
+         d3cUx1vdRCY9vUBPN0zypASHmkevfdhyEhKHcAqCo1fguz6ZaY0UPFiDCqfc4hp+i/W1
+         UUni5IzBie9Q6dBkAjnrKbrmRHzacxqvVyI/GgHPEam7It0ZI5+RLWZS6HL8S+QWEQ4l
+         B2hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgyBTsakusVuvGAexk/cvM1Cb6OeW4xTE7D3y1faeTy7EmPNjkQGQlkVH8+fOXCXjooInuUk+jm2FuWMoR@vger.kernel.org, AJvYcCVhsO+9Fb1CPOFuzOEx6AS4FGksXpAKGP/9wRRRlWTYV0cyUXfkaE0MfNLMi2ikJMkzeYOgo9mC9X7RxW0=@vger.kernel.org, AJvYcCWGBfPZfzg8r5eVzCWc42+U2ntHu3K5EuoH8/TMLeLH+pm1mUUg3yewLvoVZ9qJlwPB2uu9Yz73gX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGzgkKOds7mK2nYjbeR9OxNtzp0oUIIHbPMPbz+Bt/nV8eUU6w
+	weczk5KZ5F7682ad4ITzqAVBGEyczv35W/NdSTDMbHC4RxVilNYQ
+X-Gm-Gg: ASbGncu3IEo2aOUFv1ywomVwR/i3LzQOISU7H2hSf4eo5InHAI6nqwe8rNC+hcFxdBE
+	EpcjaRPAWJevnva1ct6SxNPUWBCB5U6iphL8eZwBhpgjiO2vqfnx2v31MLDtQKMdTvk81T7p78J
+	Ob+1adFbWlXN0Cs60rZfRFujg3Vlnfus/kqkeYF2Wog4Z+D3ydNZFBRH+vqvCldougakQxF3m4S
+	p6Lef7ZFtDwSRko/swPoQKEqDWRytHogayNakx499cyVF2qyPVd1v/EU/MmRwJiTR4TgQDpdl8u
+	0f9GTQCxczsXYobCyMTujIS1+Qhi+wKaPr/kQSQiWllxuX+UyJjYNtA=
+X-Google-Smtp-Source: AGHT+IHhM1WuOrFfud3xHWGersrJfw6ltQOIuLsHMahLNTS+wCuSOkQbBayYZvHrZGar3gstSEYr/Q==
+X-Received: by 2002:a05:6122:318e:b0:527:67d9:100d with SMTP id 71dfb90a1353d-52c88a73545mr624984e0c.4.1747076770234;
+        Mon, 12 May 2025 12:06:10 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c537264dfsm6194990e0c.13.2025.05.12.12.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 12:06:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB8329:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3fa63325-73cb-4c35-d761-08dd917a17b3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WjQ1d1lWTit2ZllrTW53SXRjTU1yVnpVVVJ0c0lHVmUxdlNSV0xGNC92YXhY?=
- =?utf-8?B?bHNIK1d4ZHdTWjNmRmhoMFpEQ1J5RHdHeTdDQ1lzQmdGSVo2UW1BNUZ6ZmVo?=
- =?utf-8?B?ZUwxc1pRdWZ3OFlEYXA4cVVRekRSNE1yWHRQM1VRNEI3WXkxNW45RlNQMWVV?=
- =?utf-8?B?LzV1dFppc3dKM0lzaGY3ditmcmVGOFkzV3pJTDM1ZzdOY2FudW1NRE1Rd1hS?=
- =?utf-8?B?dGcydi9RckhFczNZdWg2WkZGWVRQNXhFZ3B3RkhmNFpSc3FFWEtEM2VZRE5I?=
- =?utf-8?B?RVJHUU5wQTdqOUZzeFptNTg1V2VoMjZwWVVzc0NzTEtXWk8xK3FpYWIzcUdx?=
- =?utf-8?B?djc2SzJ6anRJU09RYXZYRnNYUy9QWW55SERTTUV2bkR1RmRzZjdjaktZNjl2?=
- =?utf-8?B?bHROL2pna2hQWFBuM1M2MjhtRW9PNUtRUnh3eTBubHpMYUJCN3VYdUpqVTNC?=
- =?utf-8?B?V1p6TFlXbTgvSllEVVNyMFppWVMwS09sWW5GWXdTRHBFU0dGWWV3bEJFRXVG?=
- =?utf-8?B?WnVZa1J0dTJldDM0eGdwMWhTQ0xkTU15c0R0N29qTVBMMGJ3TU9KQmpiV1hu?=
- =?utf-8?B?UUFmZERwVlVYc2NPclNTdVNwUE94SmxIRzhxTlVDalluTlVYMjFoSnRxQnRR?=
- =?utf-8?B?QUdzcEJvYjBPaXUwOGN2bTFPOTBQZ3hsWXJqa2Q2RjlBTXE3TW9KcmtOZEgw?=
- =?utf-8?B?R1lINS9VbDhtQUdEYnB6RDdtOGE5QWZpZmlhRllsaG54TEVVZWszWjMrbHhW?=
- =?utf-8?B?MjVqL2Y4VzZ6TXhGeHFNcEJocHlDK1FQcDl0eEwxYWJQbVYyVFhwTG13aEpL?=
- =?utf-8?B?aGRzRUs5RjZjREE0ZFB3N1NlemIxcmRDSC9NbXk4eXFNUmtQd3lNWFQ3ekd6?=
- =?utf-8?B?ZklaU1M3dTY2QVRFbDVUc3RhT2NkKzAwcFhOM0JDNzV1TnMyTWpWYlFraVZz?=
- =?utf-8?B?S0FWZ0JiLzZJaHZIcEN2Q2gzRkpQK3hWcEtwbHFXS2Jsbmd5bXN6cGVUV1Bt?=
- =?utf-8?B?a2dIWFpEUG9MN0o1ZUhZbkVOZzlpTVYrK01pamV1UTA4MWg4UlRTbE9OVG5s?=
- =?utf-8?B?ek1TRkZ0L1ByMVdwMGY3S2xtVnZwWnpCMXE4R0VUcG9LallpbkMreVB4MDlO?=
- =?utf-8?B?OU01bDNRRzZ4cC8yNlFla2RoSzFlQWdMQ2J4SFY3Z3lNc0VQL2d6c2FZQlNG?=
- =?utf-8?B?VVlobGlBRFVQdHdtQzNGV2oxc2draXJoVXZmYjA4SGVmcEdIWFBBOXg0MUlq?=
- =?utf-8?B?Y1lmVkUvYmdjc2t5NDV3ZmUxZE9XdnJGRkxhVTJsblFmYWpPcndyS2c4Ri8w?=
- =?utf-8?B?Y0x0dzVYajBLbWcwOEp0NEFtRnB4amMxb0x5MDNxWWhIN1RLVk91V1NEa3ov?=
- =?utf-8?B?dFAyRklNalJDdUFrMGx1aGlaS3FoTWNSNUZ0NEtHcTI3YU1kUmFRaEczZlY1?=
- =?utf-8?B?aDBYQjZuMU0ySEx0dWtkdmszaWErWkRmYjc3NFpzaHg4eU1QTlpmS2ljUjhl?=
- =?utf-8?B?TERZdTRUMzdNZXNPNURWS0pRc0NTR1QwcS9aZzVkSkllaVM3eGR5aU0rTWQ1?=
- =?utf-8?B?bVBTdnUwb3VDYnVqbUlaMGtIcW1iMUMzUzNnUW1hbGtEZFRUTWF6VDlnSnVE?=
- =?utf-8?B?bXZEWnNvbWhReXJ2TUFrS2IxNDJ6b2g5NVBDTCtEWU9CV2ltMmZKd1phdmJ6?=
- =?utf-8?B?VGVOWmcvNFNLTDlGcFlYTUQrVkdJUzlENm9JRDBzakxhMm9GdzVwWmVXaDNu?=
- =?utf-8?B?NmltZVgrOGZwaTZSRkhvUFFkbGR6RTROTHBKVTZmTVNPc21rVHQvSlNjVXBa?=
- =?utf-8?B?RzNKd0ppUGhzQWxOZmkyU2NMMkFncWF3YU9Rc0k2TjdZOG1uNnJTSUJpREp1?=
- =?utf-8?B?c1NxbUxwUFlZQWsvcThRa1ZDeFpiSXFUYnpDdTNLR2ZBZHc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R3dlSjdZcXNtTUF4emx0eUNvaDNCdjVaVHpIdFNDMXdxajM1bm9COTMrc21W?=
- =?utf-8?B?V1ZxeTlrSDc1VTdhUWN2Ny91WU91dm4zM1RSQVhFdlp4bHVoWVBrTWVDcjhB?=
- =?utf-8?B?ekRKTGJCU21ETUNSbHcyVVNhQTExa2xHMk9MeGJUelJiVGp0S0lTRlFzc0RS?=
- =?utf-8?B?a3hNU1V5TUErSUxZZWNjaFFaai9RVFROeDQ1c0V2L3IyMDM2dUJoZkhFMlFP?=
- =?utf-8?B?UjNYeDJMdWtLbW5EVzhKWmZVc2tkc0FRNzYvUDZQQWp5SGtlZ1hZVjBSZHVx?=
- =?utf-8?B?ZU9rMmdLamczMzlzZXBMRnExc2lpcW82byszeVMwRjkxNC85dlIxWlhpSjl2?=
- =?utf-8?B?Z0wvZTQ4cWFUSU92TVBSc2w1OU1Ebk02VHBGL215aUl4UFlhenQ0bzVOVzBR?=
- =?utf-8?B?azhkZEZZbGRjYjBtdnJrd29SNEEwQ1pSdkx3RkZ6dXMzOXJram03M3RDN2F1?=
- =?utf-8?B?WWFXcjVpUGJ2OWFETTN5Sno4L1orYWFmRjJKeGhJQlhTeVVhSnIybXhSai9S?=
- =?utf-8?B?WUprSU1wQ3RKUnlzQVRuY3grbWs5djhVeG1wWDNob09SZEliTzAvWmhrL0Y4?=
- =?utf-8?B?RnZON243K2ovd0ZEa1lTQlh1QW9HSFFnM0VoZnd3clcrSE91Uk9wVWVKaDFR?=
- =?utf-8?B?REVPWlJIKzU1aVdFdTVDV2tFb1pzYW9KRko1bVhtV2FIN3liSEozY1ZrNDAz?=
- =?utf-8?B?Ukd1amI3YnlqRW9jalNiS2xsdFhMekZ4N3YvTGdFeWFqQUhCOE51YllvZ28y?=
- =?utf-8?B?eVArd0J0ZVY3b2orNmpNczdzWGxsVkpzd2xTUzR6UXF2SUg3R28xSDJ3d010?=
- =?utf-8?B?UndRd1FHU2JYYjRhM0JmK05aN3ZFczd5TE5OUnBBVFhobWZIY3JCS3JmK2pV?=
- =?utf-8?B?VTFLa1FHSm4vNk1rWW5UUFJHMVR4OGg3cnphTTE3TjlqOWM0NFF2SnJjS3Fu?=
- =?utf-8?B?UzUySWovYTRTZElqcmtLa2ZwZ3NjcEhjSUFTdzBEQmdERENhN3k5OHFmaTJT?=
- =?utf-8?B?MURwWlFad0lGK2YwUUp5Q2hSZUNBMWI2eVJWbnF3T2NCTU5DcW1jU1JUVXlC?=
- =?utf-8?B?dGZNOTRFRmN2bW9KN1NJZkdHUXpEb09PYlM3WmtTZGdRTW5MZHZlZXE4cS95?=
- =?utf-8?B?N3lVckMxMmdXa1p3UGxCdEt1ZW5jQ2s2VjVpVExoTUdXM3Ayd3J2UlJJaE1V?=
- =?utf-8?B?Mk9wZWFiVFVwQ2tNbDdhUTZ3QzJ6dHJWSXB2Vk1yc0Zha0FsVWxxZjlZTkFC?=
- =?utf-8?B?TldaS0xmVmxaUThDcGFzR0dLdmJzL2hDQTdZQ21qalNKUDVodXAvRGNlUnJW?=
- =?utf-8?B?MUZlVkRkbHZKWlBzaG9QNFE5RlhnbjNxVGFBaXIwRmpadFVMWlRzbHIwQVd2?=
- =?utf-8?B?NWx6a0x5TFRQN2JqQzJrTHJUY0dNakZYWHZNTjhlc3g4RUM0MWplNmdWdlJK?=
- =?utf-8?B?ZFR5TmdMNUR5SUVCVnZsRVFtTjc2dDl4a2tSSjFINXRsYkhBT2pXS3ZUTHBp?=
- =?utf-8?B?S0JLZHdBc0xDNmhxdHZPMityc0JySzRoU1QzWmViZmVhdkM4b0RsY0VlSnZR?=
- =?utf-8?B?cndiRHU0b2wxblJHWnFkQkVIK2JEdDZuU201a21lQittaWIzQStub1RuVXlk?=
- =?utf-8?B?WXV3TndJclc5Nk9HaCtiS2laSkZLN1NNVVB3RTFialhsaGRJNHBsVFE4M24y?=
- =?utf-8?B?R2VRUFNvNEtUd1dZa0NTMDNsNitQdTljVmF1YVZVZmRySEhCSlR0UXpHUzdS?=
- =?utf-8?B?VVlmMThBd3N2MEFWUDk2WlRReEdueDYrUDhhQjJNZnZEZnBIcmZhbWRhMTg3?=
- =?utf-8?B?MUtHcXpqTERyNGwrTTY4U3MySjUyYnpaUHdEMzc4d0RncVFuWVhZOVhVMU5Q?=
- =?utf-8?B?WTVzSWY0djBSUkNLZHdJclV6dGwvYWFJc05SZ0R4RXFqNDBjYk1xR2x5MlVw?=
- =?utf-8?B?UkZRMmVsdU1qaUxKcXZZR1dHV21KZ3hWYWsrTmRnR0tuOU1NeGJHMFNDRUtS?=
- =?utf-8?B?ZlZJNUJBb2xUM1g0VWQ4WXY0OWU1R2tJcjcrdlJiTmZRYXYrZ2h1SE91MndX?=
- =?utf-8?B?YTBXKzZFMEJiYXJwa2wwUDEzWkpLc0ZBYmlvUnRnN2REcVJkdVZFU2ZuODhz?=
- =?utf-8?Q?PsMpds3x04P6yCgOE4k7w2VE6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fa63325-73cb-4c35-d761-08dd917a17b3
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 17:26:12.8276
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BzNc1qVO7loE7ghkOOzNNJUcl7PI65fSD+l/y5IuMooAxiHs7Z1gaZD+H3mspzWG0/mdKusx42uCasKyidzn0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8329
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 12 May 2025 16:05:35 -0300
+Message-Id: <D9UF0KCST7K7.23TWU22S6L09H@gmail.com>
+To: "Antheas Kapenekakis" <lkml@antheas.dev>
+Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Jean
+ Delvare" <jdelvare@suse.com>, "Guenter Roeck" <linux@roeck-us.net>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
+ curves/platform profile/tdp/battery limiting
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250511204427.327558-1-lkml@antheas.dev>
+ <D9TQ0LYKISGB.3QAOHFXVL9PEO@gmail.com>
+ <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
+In-Reply-To: <CAGwozwFJnR2aMhj6LJKU8aF+MDzF9FR21fXPPd7_=44M+KUJGg@mail.gmail.com>
 
-On 5/9/2025 2:26 AM, Shyam Sundar S K wrote:
-> This patch series includes the following changes to the PMF driver:
-> 
-> - Implement support for modifying PMF PPT and PPT APU thresholds
-> - Enable custom BIOS input support for AMD_CPU_ID_PS
-> - Add the is_apmf_bios_input_notifications_supported() helper function
-> - Correct the handling mechanism for custom BIOS inputs
-> - Maintain a record of past custom BIOS inputs
-> - Process early custom BIOS inputs
-> - Initiate enact() earlier to address the initial custom BIOS input
-> 
-> 
-> Changes based on review-ilpo-next with tip
-> 'commit d430124bac58 ("platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices")'
-> 
-> Shyam Sundar S K (10):
->    platform/x86/amd/pmf: Add support for adjusting PMF PPT and PPT APU
->      thresholds
->    platform/x86/amd/pmf: Fix the custom bios input handling mechanism
->    platform/x86/amd/pmf: Extend custom BIOS inputs for more policies
->    platform/x86/amd/pmf: Update ta_pmf_action structure member
->    platform/x86/amd/pmf: Add helper to verify BIOS input notifications
->      are enable/disable
->    platform/x86/amd/pmf: Add custom BIOS input support for AMD_CPU_ID_PS
->    platform/x86/amd/pmf: Use amd_pmf_update_bios_inputs() helper
->    platform/x86/amd/pmf: Preserve custom BIOS inputs for evaluating the
->      policies
->    platform/x86/amd/pmf: Call enact function sooner to process early
->      pending requests
->    platform/x86/amd/pmf: Add debug logs for pending requests and custom
->      BIOS inputs
-> 
->   drivers/platform/x86/amd/pmf/acpi.c   | 60 +++++++++++++++++++-
->   drivers/platform/x86/amd/pmf/pmf.h    | 80 ++++++++++++++++++++++++---
->   drivers/platform/x86/amd/pmf/spc.c    | 51 +++++++++++++----
->   drivers/platform/x86/amd/pmf/tee-if.c | 19 ++++++-
->   4 files changed, 191 insertions(+), 19 deletions(-)
-> 
+--eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+On Mon May 12, 2025 at 7:16 AM -03, Antheas Kapenekakis wrote:
+> On Mon, 12 May 2025 at 01:30, Kurt Borja <kuurtb@gmail.com> wrote:
+>>
+>> Hi Antheas,
+>>
+>> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
+>> > This draft patch series brings into parity the msi-wmi-platform driver=
+ with
+>> > the MSI Center M Windows application for the MSI Claw (all models).
+>> > Unfortunately, MSI Center M and this interface do not have a discovery=
+ API,
+>> > necessitating the introduction of a quirk system.
+>> >
+>> > While this patch series is fully functional and tested, there are stil=
+l
+>> > some issues that need to be addressed:
+>> >   - Armin notes we need to disable fan curve support by default and qu=
+irk
+>> >     it as well, as it is not supported on all models. However, the way
+>> >     PWM enable ops work, this makes it a bit difficult, so I would lik=
+e
+>> >     some suggestions on how to rework this.
+>>
+>> If I understood the question correctly, then you should control the
+>> visibility of all "curve" related attributes with the quirk.
+>
+> Yep, this is what I was wondering. I will investigate this. It would
+> be good to get some comments on the quirk naming as well.
+
+You can check [1] for an example of the hwmon visibility. It's a similar
+problem because some models have 2 fans and others have 4. In the
+alienware-wmi driver we also have custom hwmon attributes, see [2] for
+how to handle visibility with those.
+
+I would personally just name it fan_curve or has_fan_curve.
+
+>
+>> The custom hwmon attribute_group has an is_visible callback, and so do
+>> the hwmon_ops.
+>>
+>> >   - It turns out that to fully disable the fan curve, we have to resto=
+re
+>> >     the default fan values. This is also what is done on the OEM softw=
+are.
+>> >     For this, the last patch in the series is used, which is a bit dir=
+ty.
+>>
+>> I have a couple questions about this.
+>>
+>> * What are the default fan curves? Can these be statically defined?
+>> * Are user-defined fan curves persistent between reboots?
+>>
+>> I have some doubts about the approach you took on the last patch, but I
+>> want to understand how the platform works first.
+>
+> So do I. Essentially here is how the Windows software works: when it
+> first opens, it saves the current curve in Windows registry. Then,
+> when the user sets a fan curve, it applies it in the same way we do
+> here and sets a bit in AP. When the custom curve is removed, it unsets
+> that bit and restores the original curve in WMI.
+>
+> The logical reasoning would be that that bit controls the fan curve.
+> This is how it is named in the software. However, when setting that
+> bit on its own, it seems to only partially affect the fan curve. E.g.,
+> when the fan curve is 100% in all points, unsetting that bit makes it
+> go down to 50% when no load occurs. When using the default fan curve,
+> it goes to 0%. Therefore, it seems like that bit makes the fan curve
+> semi-autonomous?
+>
+> The fan curve seems to be hardware specific and resets after reboots.
+> So a straightforward way to get it is to grab it on a fresh boot.
+
+Oh - this is interesting. Then I think it is the right approach. I'll
+add a couple more comments.
+
+>
+> Antheas
+>
+>> >
+>> > Sleep was tested with all values being preserved during S0iX (platform
+>> > profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, =
+at
+>> > least for the Claw devices.
+>> >
+>> > For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since =
+if
+>> > his new high level interface is merged beforehand, we can use that ins=
+tead.
+>>
+>> Hopefully!
+>>
+>> --
+>>  ~ Kurt
+>>
+>> >
+>> > Antheas Kapenekakis (8):
+>> >   platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
+>> >   platform/x86: msi-wmi-platform: Add quirk system
+>> >   platform/x86: msi-wmi-platform: Add platform profile through shift
+>> >     mode
+>> >   platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
+>> >     attributes
+>> >   platform/x86: msi-wmi-platform: Add charge_threshold support
+>> >   platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
+>> >   platform/x86: msi-wmi-platform: Update header text
+>> >   platform/x86: msi-wmi-platform: Restore fan curves on PWM disable an=
+d
+>> >     unload
+>> >
+>> > Armin Wolf (2):
+>> >   platform/x86: msi-wmi-platform: Use input buffer for returning resul=
+t
+>> >   platform/x86: msi-wmi-platform: Add support for fan control
+>> >
+>> >  .../wmi/devices/msi-wmi-platform.rst          |   26 +
+>> >  drivers/platform/x86/Kconfig                  |    3 +
+>> >  drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++=
+-
+>> >  3 files changed, 1156 insertions(+), 54 deletions(-)
+>> >
+>> >
+>> > base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
+>>
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
+x86.git/tree/drivers/platform/x86/dell/alienware-wmi-wmax.c?h=3Dfor-next#n7=
+42
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
+x86.git/tree/drivers/platform/x86/dell/alienware-wmi-wmax.c?h=3Dfor-next#n9=
+42
+
+--eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaCJGggAKCRAWYEM49J/U
+Zh6EAQD+BliCO7QDYlUXFOISo+JdFEngBzHqoPexiF+Q+2MbhAD+P4bi/TbuhQNG
+M9RvPyR4ew+RrrgxHSJDwMYxqwWhGg4=
+=Hb/2
+-----END PGP SIGNATURE-----
+
+--eee164ff418b0b8924af0432fe0737a6f07a095a24ff0c61f41e7842966b--
