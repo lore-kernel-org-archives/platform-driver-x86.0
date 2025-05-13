@@ -1,170 +1,319 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148820E018
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 May 2025 08:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF6020E032
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 May 2025 08:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747125492; cv=none; b=YnIZUzyIX+sJ322U2mqXwJhNc5teetf5Za20sCBPVddUOv5ShQMqMQYRQFPpH75opb0hInq7k3Ar5W42uZ3mhGwIZqs61jFpG1g5xOJyAM7FhnksKqS14tC6S/gGI4w60VMLLMgNUX81rCoHk9w1D2AENpjn6m/eE/C2dpxFLEQ=
+	t=1747125525; cv=none; b=KQ28nlaXhUZKV34QVVeDPt1wppZ0l+Xi0MkkrHLJ7dwCP+qB6w0879BpH6cQr8dcTxjMPxCy9qDKd+nbTnfAWEtZMfqmulC+OLX7edn9pOYd7kZcdNtj9JJR0XfDwvfGdz6Z8kux9ba4VJHTE7TC889+PUQLgxmtTkH9b1VAUMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747125492; c=relaxed/simple;
-	bh=fa6F82d9BBX9LAITeckMVN3U7zJJfDtzzzABuz5mf4c=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CxWwmGHx8bclDxuYpXP9vL78oUhiv2lj1j0FQSZ3At1PVg3Qeik4Lc2ksGcnOwiIOifvRQPynimWN8mL8qRhih1xJI1EMQH66/BChKBddwsrYKCVBgrwOiYKSvwfFTIVoTtUCSFVTeA/B9ZSgjaIFwwSVqbSH78h6nNH0k7FYGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fzxBmdQe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747125525; c=relaxed/simple;
+	bh=w0Y9Skz7QHL5k0YbQDAmtu0In9UK2DryeqOaYUazFPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ikP90EMecb+wdwfTvz76yMsCMgTLH5yBMHtZWlnsWvWGje5eQBPw3cXrRN0CL1VNe4/ri7XgQ7b40I9t5BS25SzmIYMw7fywktECjAIXcfwaZb9FdkPMpkS2VlBEMpbhM7ZocnKjz7GjLveVyH9R9kUG/ypOt0+ahGBL/U5hOpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=fail smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b=tBkSYe8F; arc=none smtp.client-ip=195.121.94.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fzxBmdQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747125489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wLLFCLymOaVFr953pWS5HxRXuX+XLwuzVP4k1lrSadM=;
-	b=fzxBmdQemsABVYY5O9uv12hlgtFM52KoO777dkcwxdwlE501Zur8M3sLsYXB1aMpKdbgNW
-	371CWGHBr9GsxkpwdMRZk28GLJeHkaIK+jTaYmNt9tC0kwdXKRuV3gabU45vdMdHdFhVAN
-	N7y0zTGqGfAUckmltGvDU0snr8l2vbk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-286-w-Ex0TNFPkOc9M3GqmR8Rg-1; Tue, 13 May 2025 04:38:07 -0400
-X-MC-Unique: w-Ex0TNFPkOc9M3GqmR8Rg-1
-X-Mimecast-MFC-AGG-ID: w-Ex0TNFPkOc9M3GqmR8Rg_1747125487
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-acb94dbd01fso643026866b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 May 2025 01:38:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747125486; x=1747730286;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wLLFCLymOaVFr953pWS5HxRXuX+XLwuzVP4k1lrSadM=;
-        b=CW/rPOQal8XwoC3LU2pLSev10QBG17kWaSS4rcEJFFA+LJ+rnQ5hrRdzGN8KuXUP94
-         4NoUE7RrR3uAYO3c6cQOvnUyLOqapAZUowTypYaHf6MW4LONp8/MbEeD2nFg23qdwwgF
-         4ArLU4KzdZYD+EcXJrZNUazqG6Jm66QcSOQq2qQbK1w/HFI7/m2WbFsuw0ynMej/W1YS
-         YVvX0awOBb751L0svUv4GfUsK+0ZQvb8zfI/Ll2IO2w0FUAttYTRq/IzIH9WpIigF8pn
-         HdNgi4J61MikdQARFj08fx0QMmBKBpfQdcOKNgeIyfdozrzs/TlmMcSri336ZznzspYr
-         k9mg==
-X-Gm-Message-State: AOJu0YyMOn+BEYGA019W0CdYmOiffBTKoUrrO4TMReJZjoOvwYjAmCmW
-	XoeoEmJKbW2M5P8GE6RPiho58WzCjrnVN09sp//d6zRJEaKuHPy1bBL7HJTS0dRRkUnGldxmuGU
-	pbY3TCxn3lO83qGrdxsvtE93sv9j3LN5Vlgb1u0le10D/rYwW0xamJHyWODwo9alwF5Cs2XtLim
-	XRfdSqhQ==
-X-Gm-Gg: ASbGncuJf5B0PqaXawp79mf9L4bfHLoafo7kLkVC2xbKpWESw9vwrKW0iOnW/kXIZcz
-	9evd4Aqk76zrE27I3wHaZKd2WGGfFFrqiLRoeXNC/GVxRDPPIR0hQXVy2pP+5W6SaY2yOYqeBf2
-	vU1LkjLLb8gxR2n/QHCF376rJzcFUgq4ZYBg/Cy9SLvzqxYxW69Bk+htsOE2/DZkBTkUScT3W5t
-	SFkAmFFrR2vnpCHmvHpjKshVbQas8x0WZdOhI70brN2QfurrSuXtBxAZZ5uH0Jxf9QmkWp6+Xrx
-	z9Zd17Ydx0eKTHKLAPgfA26hKoggN2tyxxVPY4TKXGHKPHci4dnaKDjkWQKHoyW1RJa20ZNQPh8
-	oWVuNGYU42V2Vkaay/I5ANbGCp4WhfGcZhQB75oGt
-X-Received: by 2002:a17:906:3b91:b0:ad2:23b6:149c with SMTP id a640c23a62f3a-ad223b61518mr1151210866b.43.1747125486158;
-        Tue, 13 May 2025 01:38:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEtI5fZb55eqGVMRNAPogeBfueI32p48GGwibAizMRDag6NuYsxFIRR+AE6V0GTOADC9KV9/Q==
-X-Received: by 2002:a17:906:3b91:b0:ad2:23b6:149c with SMTP id a640c23a62f3a-ad223b61518mr1151208166b.43.1747125485552;
-        Tue, 13 May 2025 01:38:05 -0700 (PDT)
-Received: from ?IPV6:2a02:a457:3555:0:7285:c2ff:fead:c51d? (2a02-a457-3555-0-7285-c2ff-fead-c51d.fixed6.kpn.net. [2a02:a457:3555:0:7285:c2ff:fead:c51d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192cc454sm740004966b.32.2025.05.13.01.38.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 01:38:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b="tBkSYe8F"
+X-KPN-MessageId: bd4eb0c6-2fd5-11f0-a9b7-00505699b430
+Received: from smtp.kpnmail.nl (unknown [10.31.155.5])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id bd4eb0c6-2fd5-11f0-a9b7-00505699b430;
+	Tue, 13 May 2025 10:39:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kpnmail.nl; s=kpnmail01;
+	h=mime-version:message-id:date:subject:to:from;
+	bh=xep5RU3/8Q9x+gCDpyxC34swlTmvScuZUDBKNLnwdHs=;
+	b=tBkSYe8FO2mEnB5ym4QfppW4OUxuKuDnXYOGimoSAxD8OcEeMFbKqvpN6MwMzo5N7SzW9kGHmYAfG
+	 6zVkay6XKbiGD1LXSv/Yhlj9LTWVTkNbmJAnuRNMA5gBfjO/1Bhe+bgUsUT783i0NHK+NgSZ7Xih9+
+	 MPmhFT7DAv66Ag/0=
+X-KPN-MID: 33|fJIsOu3aZlAdXvcX7EfZ/1qE+qAPUG/A7di1bOMywwIe5Qou+RRdLHlxK5dHr9n
+ 6PoyrkP6XTjW93FYcuGAnvjFPqxoO2QH2nVJvcEIKELo=
+X-KPN-VerifiedSender: No
+X-CMASSUN: 33|qGf/iAkBDNI5Aw0uifSlq+yM7Y1ESAnO4pa532cqyxkafwNlP+RN6fVF0Dp2e1b
+ g8OIkOSn6h/8B3GdllFRgUQ==
+Received: from localhost.localdomain (77-171-66-179.fixed.kpn.net [77.171.66.179])
+	by smtp.kpnmail.nl (Halon) with ESMTPSA
+	id a7ccc1f3-2fd5-11f0-9dc1-00505699b758;
+	Tue, 13 May 2025 10:38:33 +0200 (CEST)
 From: Jelle van der Waa <jvanderw@redhat.com>
-X-Google-Original-From: Jelle van der Waa <jvanderwaa@redhat.com>
-Message-ID: <e6cbd30b-5e97-49ba-9f62-2e7e1fe835fc@redhat.com>
-Date: Tue, 13 May 2025 10:38:04 +0200
+To: Ike Panhc <ikepanhc@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 1/1] platform/x86: ideapad: Expose charge_types
+Date: Tue, 13 May 2025 10:38:14 +0200
+Message-ID: <20250513083816.461771-2-jvanderw@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250513083816.461771-1-jvanderw@redhat.com>
+References: <20250513083816.461771-1-jvanderw@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86: ideapad: Expose charge_types
-To: Armin Wolf <W_Armin@gmx.de>, Jelle van der Waa <jvanderw@redhat.com>,
- Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <20250511113012.9251-1-jvanderw@redhat.com>
- <20250511113012.9251-2-jvanderw@redhat.com>
- <964a9e0b-8901-4f50-a725-9f841fa6914d@gmx.de>
-Content-Language: en-US
-In-Reply-To: <964a9e0b-8901-4f50-a725-9f841fa6914d@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/12/25 00:54, Armin Wolf wrote:
-> Am 11.05.25 um 13:30 schrieb Jelle van der Waa:
-> 
->> From: Jelle van der Waa <jvanderwaa@redhat.com>
->>
->> Some Ideapad models support a battery conservation mode which limits the
->> battery charge threshold for longer battery longevity. This is currently
->> exposed via a custom conservation_mode attribute in sysfs.
->>
->> The newly introduced charge_types sysfs attribute is a standardized
->> replacement for laptops with a fixed end charge threshold. Setting it to
->> `Long Life` would enable battery conservation mode. The standardized
->> user space API would allow applications such as UPower to detect laptops
->> which support this battery longevity mode and set it.
->>
->> Tested on an Lenovo ideapad U330p.
-> 
-> Hi,
-> 
-> i like the idea behind this patch series, the charge_types attribute is 
-> indeed
-> exactly what we need in this case.
+From: Jelle van der Waa <jvanderwaa@redhat.com>
 
-Thanks! Credit where credit is due, this idea came from Hans de Goede 
-(who also added charge_types). I only wrote the code.
+Some Ideapad models support a battery conservation mode which limits the
+battery charge threshold for longer battery longevity. This is currently
+exposed via a custom conservation_mode attribute in sysfs.
 
->> ---
->>   .../ABI/testing/sysfs-platform-ideapad-laptop |   2 +
->>   drivers/platform/x86/ideapad-laptop.c         | 126 +++++++++++++++++-
->>   2 files changed, 125 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop 
->> b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
->> index 4989ab266682..83eca4c14503 100644
->> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
->> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
->> @@ -32,6 +32,8 @@ Date:        Aug 2017
->>   KernelVersion:    4.14
->>   Contact:    platform-driver-x86@vger.kernel.org
->>   Description:
->> +        This interface is deprecated; please use /sys/class/ 
->> power_supply/*/charge_types.
->> +
-> 
-> Maybe it would make sense to move this attribute to Documentation/ABI/ 
-> obsolete?
+The newly introduced charge_types sysfs attribute is a standardized
+replacement for laptops with a fixed end charge threshold. Setting it to
+`Long Life` would enable battery conservation mode. The standardized
+user space API would allow applications such as UPower to detect laptops
+which support this battery longevity mode and set it.
 
-I am not sure what the normal workflow is so I've applied this 
-suggestion in v2.
+Tested on an Lenovo ideapad U330p.
 
->> +                       void *ext_data,
->> +                       enum power_supply_property psp,
->> +                       const union power_supply_propval *val)
->> +{
->> +    struct ideapad_private *priv = ext_data;
->> +    int err;
->> +
->> +    if (psp != POWER_SUPPLY_PROP_CHARGE_TYPES)
->> +        return -EINVAL;
->> +
->> +    err = exec_sbmc(priv->adev->handle,
->> +            (val->intval == POWER_SUPPLY_CHARGE_TYPE_LONGLIFE ?
->> +             SBMC_CONSERVATION_ON : SBMC_CONSERVATION_OFF));
-> 
-> AFAIK the power supply core does not check if val->intval holds a 
-> supported charge type value.
-> Please use a switch case to return -EINVAL in such cases.
+Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
+---
+ .../obsolete/sysfs-platform-ideapad-laptop    |   8 ++
+ .../ABI/testing/sysfs-platform-ideapad-laptop |   9 --
+ drivers/platform/x86/Kconfig                  |   1 +
+ drivers/platform/x86/ideapad-laptop.c         | 110 +++++++++++++++++-
+ 4 files changed, 116 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop
 
- From my testing checking val->intval wasn't needed, you'll get an 
-"write error: invalid argument" when trying to set "Long lifeee".
-
-I believe that is handled in power_supply_store_property, but reading 
-the code I don't really believe that's true? So I've simply switched it 
-over to a switch/case.
-
-Thanks,
-
-Jelle
+diff --git a/Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop b/Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop
+new file mode 100644
+index 000000000000..c1dbd19c679c
+--- /dev/null
++++ b/Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop
+@@ -0,0 +1,8 @@
++What:		/sys/bus/platform/devices/VPC2004:*/conservation_mode
++Date:		Aug 2017
++KernelVersion:	4.14
++Contact:	platform-driver-x86@vger.kernel.org
++Description:
++		Controls whether the conservation mode is enabled or not.
++		This feature limits the maximum battery charge percentage to
++		around 50-60% in order to prolong the lifetime of the battery.
+diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+index 4989ab266682..5ec0dee9e707 100644
+--- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
++++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+@@ -27,15 +27,6 @@ Description:
+ 			* 1 -> Switched On
+ 			* 0 -> Switched Off
+ 
+-What:		/sys/bus/platform/devices/VPC2004:*/conservation_mode
+-Date:		Aug 2017
+-KernelVersion:	4.14
+-Contact:	platform-driver-x86@vger.kernel.org
+-Description:
+-		Controls whether the conservation mode is enabled or not.
+-		This feature limits the maximum battery charge percentage to
+-		around 50-60% in order to prolong the lifetime of the battery.
+-
+ What:		/sys/bus/platform/devices/VPC2004:*/fn_lock
+ Date:		May 2018
+ KernelVersion:	4.18
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 43407e76476b..5ea12d6cbb38 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -462,6 +462,7 @@ config IBM_RTL
+ config IDEAPAD_LAPTOP
+ 	tristate "Lenovo IdeaPad Laptop Extras"
+ 	depends on ACPI
++	depends on ACPI_BATTERY
+ 	depends on RFKILL && INPUT
+ 	depends on SERIO_I8042
+ 	depends on BACKLIGHT_CLASS_DEVICE
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index ede483573fe0..21db9646443e 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -27,6 +27,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_profile.h>
++#include <linux/power_supply.h>
+ #include <linux/rfkill.h>
+ #include <linux/seq_file.h>
+ #include <linux/sysfs.h>
+@@ -34,6 +35,7 @@
+ #include <linux/wmi.h>
+ #include "ideapad-laptop.h"
+ 
++#include <acpi/battery.h>
+ #include <acpi/video.h>
+ 
+ #include <dt-bindings/leds/common.h>
+@@ -162,6 +164,7 @@ struct ideapad_private {
+ 	struct backlight_device *blightdev;
+ 	struct ideapad_dytc_priv *dytc;
+ 	struct dentry *debug;
++	struct acpi_battery_hook battery_hook;
+ 	unsigned long cfg;
+ 	unsigned long r_touchpad_val;
+ 	struct {
+@@ -589,6 +592,11 @@ static ssize_t camera_power_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RW(camera_power);
+ 
++static void show_conservation_mode_deprecation_warning(struct device *dev)
++{
++	dev_warn_once(dev, "conservation_mode attribute has been deprecated, see charge_types.\n");
++}
++
+ static ssize_t conservation_mode_show(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      char *buf)
+@@ -597,6 +605,8 @@ static ssize_t conservation_mode_show(struct device *dev,
+ 	unsigned long result;
+ 	int err;
+ 
++	show_conservation_mode_deprecation_warning(dev);
++
+ 	err = eval_gbmd(priv->adev->handle, &result);
+ 	if (err)
+ 		return err;
+@@ -612,6 +622,8 @@ static ssize_t conservation_mode_store(struct device *dev,
+ 	bool state;
+ 	int err;
+ 
++	show_conservation_mode_deprecation_warning(dev);
++
+ 	err = kstrtobool(buf, &state);
+ 	if (err)
+ 		return err;
+@@ -1973,10 +1985,90 @@ static const struct dmi_system_id ctrl_ps2_aux_port_list[] = {
+ 	{}
+ };
+ 
+-static void ideapad_check_features(struct ideapad_private *priv)
++static int ideapad_psy_ext_set_prop(struct power_supply *psy,
++				    const struct power_supply_ext *ext,
++				    void *ext_data,
++				    enum power_supply_property psp,
++				    const union power_supply_propval *val)
++{
++	struct ideapad_private *priv = ext_data;
++
++	switch (val->intval) {
++	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
++		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_ON);
++	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
++		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_OFF);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ideapad_psy_ext_get_prop(struct power_supply *psy,
++				    const struct power_supply_ext *ext,
++				    void *ext_data,
++				    enum power_supply_property psp,
++				    union power_supply_propval *val)
++{
++	struct ideapad_private *priv = ext_data;
++	unsigned long result;
++	int err;
++
++	err = eval_gbmd(priv->adev->handle, &result);
++	if (err)
++		return err;
++
++	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
++		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
++	else
++		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
++
++	return 0;
++}
++
++static int ideapad_psy_prop_is_writeable(struct power_supply *psy,
++					 const struct power_supply_ext *ext,
++					 void *data,
++					 enum power_supply_property psp)
++{
++	return true;
++}
++
++static const enum power_supply_property ideapad_power_supply_props[] = {
++	POWER_SUPPLY_PROP_CHARGE_TYPES,
++};
++
++static const struct power_supply_ext ideapad_battery_ext = {
++	.name			= "ideapad_laptop",
++	.properties		= ideapad_power_supply_props,
++	.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),
++	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
++				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
++	.get_property		= ideapad_psy_ext_get_prop,
++	.set_property		= ideapad_psy_ext_set_prop,
++	.property_is_writeable	= ideapad_psy_prop_is_writeable,
++};
++
++static int ideapad_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
++{
++	struct ideapad_private *priv = container_of(hook, struct ideapad_private, battery_hook);
++
++	return power_supply_register_extension(battery, &ideapad_battery_ext,
++					       &priv->platform_device->dev, priv);
++}
++
++static int ideapad_battery_remove(struct power_supply *battery,
++				  struct acpi_battery_hook *hook)
++{
++	power_supply_unregister_extension(battery, &ideapad_battery_ext);
++
++	return 0;
++}
++
++static int ideapad_check_features(struct ideapad_private *priv)
+ {
+ 	acpi_handle handle = priv->adev->handle;
+ 	unsigned long val;
++	int err;
+ 
+ 	priv->features.set_fn_lock_led =
+ 		set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
+@@ -1991,8 +2083,16 @@ static void ideapad_check_features(struct ideapad_private *priv)
+ 	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
+ 		priv->features.fan_mode = true;
+ 
+-	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC"))
++	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
+ 		priv->features.conservation_mode = true;
++		priv->battery_hook.add_battery = ideapad_battery_add;
++		priv->battery_hook.remove_battery = ideapad_battery_remove;
++		priv->battery_hook.name = "Ideapad Battery Extension";
++
++		err = devm_battery_hook_register(&priv->platform_device->dev, &priv->battery_hook);
++		if (err)
++			return err;
++	}
+ 
+ 	if (acpi_has_method(handle, "DYTC"))
+ 		priv->features.dytc = true;
+@@ -2027,6 +2127,8 @@ static void ideapad_check_features(struct ideapad_private *priv)
+ 			}
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ #if IS_ENABLED(CONFIG_ACPI_WMI)
+@@ -2175,7 +2277,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	if (err)
+ 		return err;
+ 
+-	ideapad_check_features(priv);
++	err = ideapad_check_features(priv);
++	if (err)
++		return err;
+ 
+ 	ideapad_debugfs_init(priv);
+ 
+-- 
+2.49.0
 
