@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F612BEC3B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 May 2025 17:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83E42BFC83;
+	Tue, 13 May 2025 19:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747156734; cv=none; b=aidC0cXbg1koOAxd94j2JO1xpTzNaLUY1FnJisWMLV7iSM3dK0QKcT08IYwujpfaRHqCg48wlx2PPxSD8yMSZDpe7X6qCtqy4f3f5SaSzSGkIuIRtgNaawOZXHhFATuHEafVrt89WAtRl/O/q7f1fF11vgIO2G8M1ruKTdtHV6w=
+	t=1747165347; cv=none; b=if2Gxc5RQ1Gj5BHN4ZpvN7QpD+d2gKm6OyvPwn6KEVB78+Qv9IDxsVUycdOHyKffMQ/1EgSkMdgKI2SQHZGvYJLmDf1N0EWDVqacfLvjVn/8ke7krU3wjraCrN+tM8eJihEpnZufAF6cMUkvTExL7l+P3xAx6O1vAo/o0M32+pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747156734; c=relaxed/simple;
-	bh=ZgPv8aJIUOlC2dqv1/gW0Wqu6XxvJkmqO8m1Gij0+rc=;
+	s=arc-20240116; t=1747165347; c=relaxed/simple;
+	bh=8BN5j7cNFXmmbrRrvFPjdbDL/2JU79dE/kdWYSSmOL0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GMxmf8l0YqJI16RDwlWEycVJ/Vq0Uq/ElJZVYWAg78ZqeIG1GIoljFX5IJh8ZJysO9N1JMwSqLgVJWAM8qW3oR2fGkrC2EiIDO29aVgDXw6WdWsceI7iDg8prSm9LZv5B6n8T3zsy/Plbv92AyQ6uy4mTiuBv6vAL8GZl0fRTk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aA3vu5g1; arc=none smtp.client-ip=212.227.17.20
+	 In-Reply-To:Content-Type; b=FcyeLBxqoVpJGegAF9I2/6xiUKFTWZnRapsuoxFDMV5YYn0tQ5C7Wp4P3gEGKv7g1OQpJpdBO8/Z6VUk2HVCIpbbrTsXXdYADrKiSPndvFtBYWEuAlBxOUwW5/B1Sx2neZIWrGIS8m4IbaxuMi0Gh7iWQmvFF65+I8uSQNRUs2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=UCQyny97; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aA3vu5g1"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="UCQyny97"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747156723; x=1747761523; i=w_armin@gmx.de;
-	bh=C7WYxwTikTa+4S9JKA3d/NQdL+ku992HZvSgWFJwVYs=;
+	s=s31663417; t=1747165343; x=1747770143; i=w_armin@gmx.de;
+	bh=fddHqwrhkHOiCUxiWGVuWeBgKP7fSVA6+8wEaA+CJ7s=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=aA3vu5g17+cKt7jUVDAzCitNR474a7xrTtjugj9pVlKw/ZomzpV1GTga4qi9t18n
-	 IzYYTNTfM1NBxhpUKYimUizQwJX6zhPmUrBbJCzF/0HDv10b0W3qXaEehADLD1s00
-	 7k99s0KFbxWszImE9oXVkeqTYqOWAEZztHS7TetBovZGkfnbIb2j9H2Yn27zehgES
-	 qBwsEXYqTlBmub2Bq3iuxrNxJpJskO0BI+Av+FPzRAYfwuaB9Q1DgXoj8gdsai64K
-	 osIHwMbJEGcAWPtDri5xBO1TMIsMd8c+xaTm3PziTAmxp5gppNpvC79AdyjY5GvT8
-	 Rnt9Qp+LYWKbX7Za8Q==
+	b=UCQyny973nbwNnAn98OV+e62BjRzuVM1L1d5tZdc5Zh6lGsOejdLEL1cij1YiykV
+	 RSSZY2mDGCEU3+Cvov26x9gC1Sgvw03nNoG8zXNZm23SS/k6dagoPalcOyOz/i7Kx
+	 YgFNtNk5u4xkkiAItAjqI2NIzgsYNwaHYOuTUbnWqJ8cBwh42tV4kandwFasYd9Eg
+	 JHfBH8Y1Mzm+kCKp2iJi459S9tXx1ogiWekQQpBlGtqglWXsWI2n5c9/BBlPKqS8s
+	 jeorR0MPusDJBOHdNR4Mf6VDn0vKG/7QponDYJR6HVtxWpdb6OdUHzbhvId53zHUL
+	 CKAWfIx6d974lS1U1w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M89L1-1uIRm52n1X-002oFR; Tue, 13
- May 2025 19:18:42 +0200
-Message-ID: <a1374573-9b27-4fb4-b857-eb4d1eef1800@gmx.de>
-Date: Tue, 13 May 2025 19:18:40 +0200
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTRR0-1uR4cc2XnQ-00SZqk; Tue, 13
+ May 2025 21:42:22 +0200
+Message-ID: <d6842862-935f-4b3e-9f67-69e09307b851@gmx.de>
+Date: Tue, 13 May 2025 21:42:16 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,351 +43,185 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] platform/x86: ideapad: Expose charge_types
-To: Jelle van der Waa <jvanderw@redhat.com>, Ike Panhc <ikepanhc@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
+Subject: Re: [PATCH v1 01/10] platform/x86: msi-wmi-platform: Use input buffer
+ for returning result
+To: Kurt Borja <kuurtb@gmail.com>, Antheas Kapenekakis <lkml@antheas.dev>,
  platform-driver-x86@vger.kernel.org
-References: <20250513083816.461771-1-jvanderw@redhat.com>
- <20250513083816.461771-2-jvanderw@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250511204427.327558-1-lkml@antheas.dev>
+ <20250511204427.327558-2-lkml@antheas.dev>
+ <D9TQ1OS3HDY7.DR4X47HLSEND@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250513083816.461771-2-jvanderw@redhat.com>
+In-Reply-To: <D9TQ1OS3HDY7.DR4X47HLSEND@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ol/S5keNj5RUyPxnlKYQWf/row9dKdApAKEzWIp8VO6DYVQE6Ap
- 2YleokQAZOFb/tbDfUKpdfmHbl7BPKzDhZ1/Po+jbrAbhfNha5FCbGC+dyItYahyb4mR2zS
- g1tuKW+sK5k5I00hEOgn6iKE1MZDBr+SNL90EiaI7A+/Pcmd91qOwV4tdBtsKnMy5JooBCn
- KWAQgLFhg0vxbIiA9LDjw==
+X-Provags-ID: V03:K1:n6niDBNBzb3ookZc3wB0Z44lPc5zCUL6P5R0iPEjP2hMvi9sZNl
+ +Bl0OFPhKgqi6gJaLM9+WCZGoXrLtnoOLmsj35jL40mvq8Uody5UM5RI6dcbJCT4VXDp9sy
+ ld/pHFM1X0Yt4cWIgFBicbLwYRHr4nV6DPnLlNgkfkj06dQ/FCirXtxLLP5BmGKDlpFeIxX
+ 6FLs1IQpy6uObDqJvTmkQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:NfPG9WnGFsA=;NWB5ySJOZVRCRJBsNf9tyQgpBIy
- 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
+UI-OutboundReport: notjunk:1;M01:P0:enSVlC81VmA=;8b4eaoABKJmEVompC8esl5kBQxL
+ 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
 
-Am 13.05.25 um 10:38 schrieb Jelle van der Waa:
+Am 12.05.25 um 01:31 schrieb Kurt Borja:
 
-> From: Jelle van der Waa <jvanderwaa@redhat.com>
+> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
+>> From: Armin Wolf <W_Armin@gmx.de>
+>>
+>> Modify msi_wmi_platform_query() to reuse the input buffer for
+>> returning the result of a WMI method call. Using a separate output
+>> buffer to return the result is unnecessary because the WMI interface
+>> requires both buffers to have the same length anyway.
+>>
+>> Co-developed-by: Antheas Kapenekakis <lkml@antheas.dev>
+>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/msi-wmi-platform.c | 53 ++++++++++++------------=
+-
+>>   1 file changed, 26 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform=
+/x86/msi-wmi-platform.c
+>> index dc5e9878cb682..41218a9d6e35d 100644
+>> --- a/drivers/platform/x86/msi-wmi-platform.c
+>> +++ b/drivers/platform/x86/msi-wmi-platform.c
+>> @@ -21,6 +21,7 @@
+>>   #include <linux/mutex.h>
+>>   #include <linux/printk.h>
+>>   #include <linux/rwsem.h>
+>> +#include <linux/string.h>
+>>   #include <linux/types.h>
+>>   #include <linux/wmi.h>
+>>  =20
+>> @@ -140,19 +141,19 @@ static int msi_wmi_platform_parse_buffer(union ac=
+pi_object *obj, u8 *output, siz
+>>   }
+>>  =20
+>>   static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
+>> -				  enum msi_wmi_platform_method method, u8 *input,
+>> -				  size_t input_length, u8 *output, size_t output_length)
+>> +				  enum msi_wmi_platform_method method, u8 *buffer,
+>> +				  size_t length)
+>>   {
+>>   	struct acpi_buffer out =3D ACPI_ALLOCATE_BUFFER, NULL };
+>>   	struct acpi_buffer in =3D
+>> -		.length =3D nput_length,
+>> -		.pointer =3Dnput
+>> +		.length =3Dength,
+>> +		.pointer =3Duffer
+>>   	};
+>>   	union acpi_object *obj;
+>>   	acpi_status status;
+>>   	int ret;
+>>  =20
+>> -	if (!input_length || !output_length)
+>> +	if (!length)
+>>   		return -EINVAL;
+>>  =20
+>>   	/*
+>> @@ -169,7 +170,7 @@ static int msi_wmi_platform_query(struct msi_wmi_pl=
+atform_data *data,
+>>   	if (!obj)
+>>   		return -ENODATA;
+>>  =20
+>> -	ret =3Dsi_wmi_platform_parse_buffer(obj, output, output_length);
+>> +	ret =3Dsi_wmi_platform_parse_buffer(obj, buffer, length);
+>>   	kfree(obj);
+>>  =20
+>>   	return ret;
+>> @@ -185,17 +186,15 @@ static int msi_wmi_platform_read(struct device *d=
+ev, enum hwmon_sensor_types typ
+>>   				 int channel, long *val)
+>>   {
+>>   	struct msi_wmi_platform_data *data =3Dev_get_drvdata(dev);
+>> -	u8 input[32] =3D 0 };
+>> -	u8 output[32];
+>> +	u8 buffer[32] =3D 0 };
+>>   	u16 value;
+>>   	int ret;
+>>  =20
+>> -	ret =3Dsi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, input, sizeo=
+f(input), output,
+>> -				     sizeof(output));
+>> +	ret =3Dsi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buf, sizeof(=
+buf));
+> s/buf/buffer/
 >
-> Some Ideapad models support a battery conservation mode which limits the
-> battery charge threshold for longer battery longevity. This is currently
-> exposed via a custom conservation_mode attribute in sysfs.
+>>   	if (ret < 0)
+>>   		return ret;
+>>  =20
+>> -	value =3Det_unaligned_be16(&output[channel * 2 + 1]);
+>> +	value =3Det_unaligned_be16(&buffer[channel * 2 + 1]);
+>>   	if (!value)
+>>   		*val =3D;
+>>   	else
+>> @@ -245,13 +244,17 @@ static ssize_t msi_wmi_platform_write(struct file=
+ *fp, const char __user *input,
+>>   		return ret;
+>>  =20
+>>   	down_write(&data->buffer_lock);
+>> -	ret =3Dsi_wmi_platform_query(data->data, data->method, payload, data-=
+>length, data->buffer,
+>> +	ret =3Dsi_wmi_platform_query(data->data, data->method, data->buffer,
+> Is this logic right? Shouldn't we pass payload instead of data->buffer?
 >
-> The newly introduced charge_types sysfs attribute is a standardized
-> replacement for laptops with a fixed end charge threshold. Setting it to
-> `Long Life` would enable battery conservation mode. The standardized
-> user space API would allow applications such as UPower to detect laptops
-> which support this battery longevity mode and set it.
+> Better yet, I think we should write the payload directly to
+> data->buffer and drop the memcpy hunk bellow
 >
-> Tested on an Lenovo ideapad U330p.
+You are right that we indeed pass the wrong buffer here, but we should onl=
+y update data->buffer
+if msi_wmi_platform_query() was successful. That why we have the call to m=
+emcpy().
 
-For the code itself:
+Thanks,
+Armin Wolf
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
->
-> Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
-> ---
->   .../obsolete/sysfs-platform-ideapad-laptop    |   8 ++
->   .../ABI/testing/sysfs-platform-ideapad-laptop |   9 --
->   drivers/platform/x86/Kconfig                  |   1 +
->   drivers/platform/x86/ideapad-laptop.c         | 110 +++++++++++++++++-
->   4 files changed, 116 insertions(+), 12 deletions(-)
->   create mode 100644 Documentation/ABI/obsolete/sysfs-platform-ideapad-l=
-aptop
->
-> diff --git a/Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop b/=
-Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop
-> new file mode 100644
-> index 000000000000..c1dbd19c679c
-> --- /dev/null
-> +++ b/Documentation/ABI/obsolete/sysfs-platform-ideapad-laptop
-> @@ -0,0 +1,8 @@
-> +What:		/sys/bus/platform/devices/VPC2004:*/conservation_mode
-> +Date:		Aug 2017
-> +KernelVersion:	4.14
-> +Contact:	platform-driver-x86@vger.kernel.org
-> +Description:
-> +		Controls whether the conservation mode is enabled or not.
-> +		This feature limits the maximum battery charge percentage to
-> +		around 50-60% in order to prolong the lifetime of the battery.
-> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/D=
-ocumentation/ABI/testing/sysfs-platform-ideapad-laptop
-> index 4989ab266682..5ec0dee9e707 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> @@ -27,15 +27,6 @@ Description:
->   			* 1 -> Switched On
->   			* 0 -> Switched Off
->  =20
-> -What:		/sys/bus/platform/devices/VPC2004:*/conservation_mode
-> -Date:		Aug 2017
-> -KernelVersion:	4.14
-> -Contact:	platform-driver-x86@vger.kernel.org
-> -Description:
-> -		Controls whether the conservation mode is enabled or not.
-> -		This feature limits the maximum battery charge percentage to
-> -		around 50-60% in order to prolong the lifetime of the battery.
-> -
->   What:		/sys/bus/platform/devices/VPC2004:*/fn_lock
->   Date:		May 2018
->   KernelVersion:	4.18
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 43407e76476b..5ea12d6cbb38 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -462,6 +462,7 @@ config IBM_RTL
->   config IDEAPAD_LAPTOP
->   	tristate "Lenovo IdeaPad Laptop Extras"
->   	depends on ACPI
-> +	depends on ACPI_BATTERY
->   	depends on RFKILL && INPUT
->   	depends on SERIO_I8042
->   	depends on BACKLIGHT_CLASS_DEVICE
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x8=
-6/ideapad-laptop.c
-> index ede483573fe0..21db9646443e 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -27,6 +27,7 @@
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
->   #include <linux/platform_profile.h>
-> +#include <linux/power_supply.h>
->   #include <linux/rfkill.h>
->   #include <linux/seq_file.h>
->   #include <linux/sysfs.h>
-> @@ -34,6 +35,7 @@
->   #include <linux/wmi.h>
->   #include "ideapad-laptop.h"
->  =20
-> +#include <acpi/battery.h>
->   #include <acpi/video.h>
->  =20
->   #include <dt-bindings/leds/common.h>
-> @@ -162,6 +164,7 @@ struct ideapad_private {
->   	struct backlight_device *blightdev;
->   	struct ideapad_dytc_priv *dytc;
->   	struct dentry *debug;
-> +	struct acpi_battery_hook battery_hook;
->   	unsigned long cfg;
->   	unsigned long r_touchpad_val;
->   	struct {
-> @@ -589,6 +592,11 @@ static ssize_t camera_power_store(struct device *de=
-v,
->  =20
->   static DEVICE_ATTR_RW(camera_power);
->  =20
-> +static void show_conservation_mode_deprecation_warning(struct device *d=
-ev)
-> +{
-> +	dev_warn_once(dev, "conservation_mode attribute has been deprecated, s=
-ee charge_types.\n");
-> +}
-> +
->   static ssize_t conservation_mode_show(struct device *dev,
->   				      struct device_attribute *attr,
->   				      char *buf)
-> @@ -597,6 +605,8 @@ static ssize_t conservation_mode_show(struct device =
-*dev,
->   	unsigned long result;
->   	int err;
->  =20
-> +	show_conservation_mode_deprecation_warning(dev);
-> +
->   	err =3D eval_gbmd(priv->adev->handle, &result);
->   	if (err)
->   		return err;
-> @@ -612,6 +622,8 @@ static ssize_t conservation_mode_store(struct device=
- *dev,
->   	bool state;
->   	int err;
->  =20
-> +	show_conservation_mode_deprecation_warning(dev);
-> +
->   	err =3D kstrtobool(buf, &state);
->   	if (err)
->   		return err;
-> @@ -1973,10 +1985,90 @@ static const struct dmi_system_id ctrl_ps2_aux_p=
-ort_list[] =3D {
->   	{}
->   };
->  =20
-> -static void ideapad_check_features(struct ideapad_private *priv)
-> +static int ideapad_psy_ext_set_prop(struct power_supply *psy,
-> +				    const struct power_supply_ext *ext,
-> +				    void *ext_data,
-> +				    enum power_supply_property psp,
-> +				    const union power_supply_propval *val)
-> +{
-> +	struct ideapad_private *priv =3D ext_data;
-> +
-> +	switch (val->intval) {
-> +	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> +		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_ON);
-> +	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-> +		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_OFF);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ideapad_psy_ext_get_prop(struct power_supply *psy,
-> +				    const struct power_supply_ext *ext,
-> +				    void *ext_data,
-> +				    enum power_supply_property psp,
-> +				    union power_supply_propval *val)
-> +{
-> +	struct ideapad_private *priv =3D ext_data;
-> +	unsigned long result;
-> +	int err;
-> +
-> +	err =3D eval_gbmd(priv->adev->handle, &result);
-> +	if (err)
-> +		return err;
-> +
-> +	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
-> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-> +	else
-> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ideapad_psy_prop_is_writeable(struct power_supply *psy,
-> +					 const struct power_supply_ext *ext,
-> +					 void *data,
-> +					 enum power_supply_property psp)
-> +{
-> +	return true;
-> +}
-> +
-> +static const enum power_supply_property ideapad_power_supply_props[] =
-=3D {
-> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
-> +};
-> +
-> +static const struct power_supply_ext ideapad_battery_ext =3D {
-> +	.name			=3D "ideapad_laptop",
-> +	.properties		=3D ideapad_power_supply_props,
-> +	.num_properties		=3D ARRAY_SIZE(ideapad_power_supply_props),
-> +	.charge_types		=3D (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> +				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
-> +	.get_property		=3D ideapad_psy_ext_get_prop,
-> +	.set_property		=3D ideapad_psy_ext_set_prop,
-> +	.property_is_writeable	=3D ideapad_psy_prop_is_writeable,
-> +};
-> +
-> +static int ideapad_battery_add(struct power_supply *battery, struct acp=
-i_battery_hook *hook)
-> +{
-> +	struct ideapad_private *priv =3D container_of(hook, struct ideapad_pri=
-vate, battery_hook);
-> +
-> +	return power_supply_register_extension(battery, &ideapad_battery_ext,
-> +					       &priv->platform_device->dev, priv);
-> +}
-> +
-> +static int ideapad_battery_remove(struct power_supply *battery,
-> +				  struct acpi_battery_hook *hook)
-> +{
-> +	power_supply_unregister_extension(battery, &ideapad_battery_ext);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ideapad_check_features(struct ideapad_private *priv)
->   {
->   	acpi_handle handle =3D priv->adev->handle;
->   	unsigned long val;
-> +	int err;
->  =20
->   	priv->features.set_fn_lock_led =3D
->   		set_fn_lock_led || dmi_check_system(set_fn_lock_led_list);
-> @@ -1991,8 +2083,16 @@ static void ideapad_check_features(struct ideapad=
-_private *priv)
->   	if (!read_ec_data(handle, VPCCMD_R_FAN, &val))
->   		priv->features.fan_mode =3D true;
->  =20
-> -	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")=
-)
-> +	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")=
-) {
->   		priv->features.conservation_mode =3D true;
-> +		priv->battery_hook.add_battery =3D ideapad_battery_add;
-> +		priv->battery_hook.remove_battery =3D ideapad_battery_remove;
-> +		priv->battery_hook.name =3D "Ideapad Battery Extension";
-> +
-> +		err =3D devm_battery_hook_register(&priv->platform_device->dev, &priv=
-->battery_hook);
-> +		if (err)
-> +			return err;
-> +	}
->  =20
->   	if (acpi_has_method(handle, "DYTC"))
->   		priv->features.dytc =3D true;
-> @@ -2027,6 +2127,8 @@ static void ideapad_check_features(struct ideapad_=
-private *priv)
->   			}
->   		}
->   	}
-> +
-> +	return 0;
->   }
->  =20
->   #if IS_ENABLED(CONFIG_ACPI_WMI)
-> @@ -2175,7 +2277,9 @@ static int ideapad_acpi_add(struct platform_device=
- *pdev)
->   	if (err)
->   		return err;
->  =20
-> -	ideapad_check_features(priv);
-> +	err =3D ideapad_check_features(priv);
-> +	if (err)
-> +		return err;
->  =20
->   	ideapad_debugfs_init(priv);
->  =20
