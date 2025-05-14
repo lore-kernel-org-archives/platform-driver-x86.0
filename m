@@ -1,177 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mailhub11-fb.kaspersky-labs.com (mailhub11-fb.kaspersky-labs.com [81.19.104.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B49C1E04BD
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 May 2025 10:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A58427510A;
+	Wed, 14 May 2025 12:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.104.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747218248; cv=none; b=g5AfLBjNAHvm+MQ0E55zk532lZvehT0KpIlmMreELO4Hj5KtX1ePtks+yDMrTzz2AIYmVXxFfotICbxJ9qQsk3Q1S5zCPqEz0QKpBQRA4K0ckKhfb6/nKvHUa4mJU6t2m8r9TUu/IhstSAOyet6fyeXLlUx8QcylohqWKx11iFw=
+	t=1747225243; cv=none; b=YmADbBDwNI9XSswzgzITLU+gWLVTZj/fljNQLEoRwFn08M+Eqtfjr/ul8Tpwij098cGOyqyOMelS6YVh3q02mqzTHU/BU1IgXPqyfZpFmFbXUwjDsKeNyRqzJp6tb+k337BbLPIudMUhyHpUafoF9+xBYW/6+PLbcJuhz6uLA0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747218248; c=relaxed/simple;
-	bh=9nh7qho2kCx+6rwiqp0Mymt1jKEyg5caCQVmne+OhnU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GqqeY5uk7ZOKrR4nT7mtXD3leZq9NYH2PXGeGy17oQyZ18g2IqqYCmqUwM6TBiNQ5XAY6cpbmmXL+nAJ2TlEkZ1in6KtD4+dRJld5Lvd2gEoOqdXrN5CRVaHJJcI2yFcPigVLjyZoEAzC96ASSO0jlW3x05e7nBlnXOp06sUfms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K09aS1E+; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747225243; c=relaxed/simple;
+	bh=bCMtLnVD2dgxi8EjKGcWIGCO8ra6AUHVklgwLHB8IbQ=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nuqwrMy+fEDw2zqS9goVPjUx71FSYivnhLoKrDO4cRD8TXKJNM0VSZTlbhEBfSBbaoBvoR9lzMqX5EOTMxuDKBTba42Ipv8Oq4dGgSgRX8U3w4r76xu4Ng9f5oq5LbcgICxFf+z6sqD9DzSi3Hh6WhKnbADkS1KGlHFT8UvFnlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=bBB1baW5; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=KtcrOFi7; arc=none smtp.client-ip=81.19.104.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K09aS1E+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747218248; x=1778754248;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9nh7qho2kCx+6rwiqp0Mymt1jKEyg5caCQVmne+OhnU=;
-  b=K09aS1E+q8fxDLu+rolS5Ea/1cYxqQ02NIH2atvUHWHfXK2znchfzE38
-   SOwVW1SmsTcL54mHpzIgGv2N8vA1W8+ZKsOG4hthIu+APSrQU/sS/9YWw
-   oIfF3eI0x3nrCxiK49abXPswMQQuebwO4jfDVsCL1kun1OEIaIwamQC4h
-   3CGaBXYTWtLTYq2qjbJ49ldUBCFxvRau1c6l9oDomt9fQWL5i0ESNVqpr
-   PIhzLIpUMO/dwG0ix4/Tb1qaDZlOfWQSc6sSvlO/CNYJMrmK6r81sjmXt
-   Ln8L0aja3k1d6glfVErTsIEd5SIWl2HU52sfs5FRiIk8UQZvwXr+4g67f
-   g==;
-X-CSE-ConnectionGUID: lEr5CfrvSDeycnZ+4JQxtA==
-X-CSE-MsgGUID: e1F0hdspR36LyImN9gTegQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48978251"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="48978251"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 03:24:07 -0700
-X-CSE-ConnectionGUID: zmS+IDhKQV2XAZ1p76piSA==
-X-CSE-MsgGUID: XA3DtTl2TIq/Fj5EzWdqfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="175131193"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.231])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 03:24:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 May 2025 13:24:01 +0300 (EEST)
-To: Jelle van der Waa <jvanderw@redhat.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Ike Panhc <ikepanhc@gmail.com>, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86: ideapad: Expose charge_types
-In-Reply-To: <e6cbd30b-5e97-49ba-9f62-2e7e1fe835fc@redhat.com>
-Message-ID: <73f7bcd0-d9e3-ff9a-133f-3b8c94b0139d@linux.intel.com>
-References: <20250511113012.9251-1-jvanderw@redhat.com> <20250511113012.9251-2-jvanderw@redhat.com> <964a9e0b-8901-4f50-a725-9f841fa6914d@gmx.de> <e6cbd30b-5e97-49ba-9f62-2e7e1fe835fc@redhat.com>
+	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="bBB1baW5";
+	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="KtcrOFi7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
+	s=mail202502; t=1747224786;
+	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
+	b=bBB1baW5Ev8WKm3e59WK+xdR5CNo2/JVqpkdYxLLm2KjiU6CRjCd3Y+rJaMxwxmw7
+	 LPvIKXJHXuJeI/p1+1nY11GiWx8pWabQGPRlb+k3vnOkYTPlG/4ooVqnno7bcrI/5J
+	 xrviDOcyvcYwUxWPcRZ07+2GlDT3qmKseMH0WWVcDDacgvUw4V0RY3P47imS5Nc1Ss
+	 wd4X7KO17llqX91Tsr/13bHnDsoy4Oo9KEjj4SMr0qNrPjUlhMk10u83xgEWKlxdnH
+	 puoZjgQfLD1akbfX0EXnG74Oe3JCg5aXBSZismY63KUK4al2zaGuqZ1SOJZ+ZQDfJ3
+	 N+gtvs5Cl/uAA==
+Received: from mailhub11-fb.kaspersky-labs.com (localhost [127.0.0.1])
+	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTP id 2D6D7E8F244;
+	Wed, 14 May 2025 15:13:06 +0300 (MSK)
+Received: from mx13.kaspersky-labs.com (mx13.kaspersky-labs.com [91.103.66.164])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "mx13.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
+	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTPS id 03BC9E8F231;
+	Wed, 14 May 2025 15:13:05 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
+	s=mail202502; t=1747224776;
+	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
+	b=KtcrOFi7sYoiVBDNR4Znc/i/kYXErdIJGU8ic98y9kHQ5/xXIbeufS6FBaa26lWmp
+	 coIrO2YxLe5drhpOXnQDEBisNnkZ/Z2l40Te3ntqSlrgMDGjjQ+jBrREFCIaBWx664
+	 pWZMt2aIJ+IGg+J9wH+KEwS2ZwY+lMFPJB1VRVKOlJYVYTFzbLcQA/Fbs29nlyq9K6
+	 hIpNs7Kjut6kNf+INdGneqyjaLcV9X8iFsbNNo6/72C/sHoESOGyNzXlce2lAA2kNd
+	 z1717Uu1JnhkZv1QCFXwOiZGDbaczwQie6vA8JxEEL6BslOSj62mwS3KFOf51fXnD0
+	 bLHMXvnP6aDTw==
+Received: from relay13.kaspersky-labs.com (localhost [127.0.0.1])
+	by relay13.kaspersky-labs.com (Postfix) with ESMTP id DC7813E501B;
+	Wed, 14 May 2025 15:12:56 +0300 (MSK)
+Received: from mail-hq2.kaspersky.com (unknown [91.103.66.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
+	by mailhub13.kaspersky-labs.com (Postfix) with ESMTPS id 1C3AB3E5671;
+	Wed, 14 May 2025 15:12:56 +0300 (MSK)
+Received: from HQMAILSRV1.avp.ru (10.64.57.51) by HQMAILSRV2.avp.ru
+ (10.64.57.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 14 May
+ 2025 15:12:55 +0300
+Received: from HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408]) by
+ HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408%2]) with mapi id
+ 15.02.1748.010; Wed, 14 May 2025 15:12:55 +0300
+From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+To: Prasanth Ksr <prasanth.ksr@dell.com>
+CC: Hans de Goede <hdegoede@redhat.com>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Mario Limonciello
+	<mario.limonciello@dell.com>, Divya Bharathi <divya.bharathi@dell.com>,
+	"Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
+ current_password_store()
+Thread-Topic: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
+ current_password_store()
+Thread-Index: AdvEyRwGGRgYB7/5RZGEC7fXF7io4Q==
+Date: Wed, 14 May 2025 12:12:55 +0000
+Message-ID: <39973642a4f24295b4a8fad9109c5b08@kaspersky.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-kse-serverinfo: HQMAILSRV2.avp.ru, 9
+x-kse-attachmentfiltering-interceptor-info: no applicable attachment filtering
+ rules found
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 5/14/2025 10:47:00 AM
+x-kse-bulkmessagesfiltering-scan-result: InTheLimit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1913238170-1747218241=:1054"
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/05/14 05:39:00 #27979694
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 52
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+If the 'buf' array received from the user contains an empty string, the
+'length' variable will be zero. Accessing the 'buf' array element with
+index 'length - 1' will result in a buffer overflow.
 
---8323328-1913238170-1747218241=:1054
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Add a check for an empty string.
 
-On Tue, 13 May 2025, Jelle van der Waa wrote:
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> On 5/12/25 00:54, Armin Wolf wrote:
-> > Am 11.05.25 um 13:30 schrieb Jelle van der Waa:
-> >=20
-> > > From: Jelle van der Waa <jvanderwaa@redhat.com>
-> > >=20
-> > > Some Ideapad models support a battery conservation mode which limits =
-the
-> > > battery charge threshold for longer battery longevity. This is curren=
-tly
-> > > exposed via a custom conservation_mode attribute in sysfs.
-> > >=20
-> > > The newly introduced charge_types sysfs attribute is a standardized
-> > > replacement for laptops with a fixed end charge threshold. Setting it=
- to
-> > > `Long Life` would enable battery conservation mode. The standardized
-> > > user space API would allow applications such as UPower to detect lapt=
-ops
-> > > which support this battery longevity mode and set it.
-> > >=20
-> > > Tested on an Lenovo ideapad U330p.
-> >=20
-> > Hi,
-> >=20
-> > i like the idea behind this patch series, the charge_types attribute is
-> > indeed
-> > exactly what we need in this case.
->=20
-> Thanks! Credit where credit is due, this idea came from Hans de Goede (wh=
-o
-> also added charge_types). I only wrote the code.
+Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Managemen=
+t Driver over WMI for Dell Systems")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+---
+ drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Add a Suggested-by tag then so the relevant people are easier to find,=20
-lets say, after 5 years from now.
-
-> > > =C2=A0 .../ABI/testing/sysfs-platform-ideapad-laptop |=C2=A0=C2=A0 2 =
-+
-> > > =C2=A0 drivers/platform/x86/ideapad-laptop.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 126 +++++++++++++++++-
-> > > =C2=A0 2 files changed, 125 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > > b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > > index 4989ab266682..83eca4c14503 100644
-> > > --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > > +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > > @@ -32,6 +32,8 @@ Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Aug=
- 2017
-> > > =C2=A0 KernelVersion:=C2=A0=C2=A0=C2=A0 4.14
-> > > =C2=A0 Contact:=C2=A0=C2=A0=C2=A0 platform-driver-x86@vger.kernel.org
-> > > =C2=A0 Description:
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This interface is depreca=
-ted; please use /sys/class/
-> > > power_supply/*/charge_types.
-> > > +
-> >=20
-> > Maybe it would make sense to move this attribute to Documentation/ABI/
-> > obsolete?
->=20
-> I am not sure what the normal workflow is so I've applied this suggestion=
- in
-> v2.
->=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *ex=
-t_data,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum pow=
-er_supply_property psp,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const un=
-ion power_supply_propval *val)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0 struct ideapad_private *priv =3D ext_data;
-> > > +=C2=A0=C2=A0=C2=A0 int err;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 if (psp !=3D POWER_SUPPLY_PROP_CHARGE_TYPES)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0 err =3D exec_sbmc(priv->adev->handle,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (=
-val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE ?
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 SBMC_CONSERVATION_ON : SBMC_CONSERVATION_OFF));
-> >=20
-> > AFAIK the power supply core does not check if val->intval holds a suppo=
-rted
-> > charge type value.
-> > Please use a switch case to return -EINVAL in such cases.
->=20
-> From my testing checking val->intval wasn't needed, you'll get an "write
-> error: invalid argument" when trying to set "Long lifeee".
->=20
-> I believe that is handled in power_supply_store_property, but reading the=
- code
-> I don't really believe that's true? So I've simply switched it over to a
-> switch/case.
->=20
-> Thanks,
->=20
-> Jelle
->=20
-
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index 230e6ee96636..d8f1bf5e58a0 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -45,7 +45,7 @@ static ssize_t current_password_store(struct kobject *kob=
+j,
+ 	int length;
+=20
+ 	length =3D strlen(buf);
+-	if (buf[length-1] =3D=3D '\n')
++	if (length && buf[length - 1] =3D=3D '\n')
+ 		length--;
+=20
+ 	/* firmware does verifiation of min/max password length,
 --=20
- i.
+2.25.1
 
---8323328-1913238170-1747218241=:1054--
