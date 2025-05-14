@@ -1,141 +1,124 @@
-Received: from mailhub11-fb.kaspersky-labs.com (mailhub11-fb.kaspersky-labs.com [81.19.104.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A58427510A;
-	Wed, 14 May 2025 12:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.104.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A187274672
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 May 2025 13:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747225243; cv=none; b=YmADbBDwNI9XSswzgzITLU+gWLVTZj/fljNQLEoRwFn08M+Eqtfjr/ul8Tpwij098cGOyqyOMelS6YVh3q02mqzTHU/BU1IgXPqyfZpFmFbXUwjDsKeNyRqzJp6tb+k337BbLPIudMUhyHpUafoF9+xBYW/6+PLbcJuhz6uLA0E=
+	t=1747227761; cv=none; b=OlSYFyFy3KFgw3ksw25noDW27yyKn1JOF0NyWkW5OORCm/cxctcIv6OSeNWFRCykkYVuDUH8EndgHc1a83hupZxCynnLTId3iqLP4lUOojx1lV99P4h12KJSwMM4KW4IXd/RZSGqAgJIS1r543ld+CDjfDQGbWEp2EhO1cIdCTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747225243; c=relaxed/simple;
-	bh=bCMtLnVD2dgxi8EjKGcWIGCO8ra6AUHVklgwLHB8IbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nuqwrMy+fEDw2zqS9goVPjUx71FSYivnhLoKrDO4cRD8TXKJNM0VSZTlbhEBfSBbaoBvoR9lzMqX5EOTMxuDKBTba42Ipv8Oq4dGgSgRX8U3w4r76xu4Ng9f5oq5LbcgICxFf+z6sqD9DzSi3Hh6WhKnbADkS1KGlHFT8UvFnlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=bBB1baW5; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=KtcrOFi7; arc=none smtp.client-ip=81.19.104.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
+	s=arc-20240116; t=1747227761; c=relaxed/simple;
+	bh=ncA3q3Xi5r3iQe5/b6bYr7W3Fgq+klqnmqS6aCXE7I4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BU1McFzHbLb/OyxPTieH9HuopmybwuGFLGW3I4mt62u/Z6HMULJsNUDAJyGh+Cw2MF37ot4d3Ik/PcABt63C3jw2Gm+VmRYajYZjn3P1NB2jvFVF2JayrHxYpKNvyQvHiVa30P0yWsYC3dzfXiqUwA6xSqBM/2V8ETXWzGoK5Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RMYGejJE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="bBB1baW5";
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="KtcrOFi7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747224786;
-	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-	b=bBB1baW5Ev8WKm3e59WK+xdR5CNo2/JVqpkdYxLLm2KjiU6CRjCd3Y+rJaMxwxmw7
-	 LPvIKXJHXuJeI/p1+1nY11GiWx8pWabQGPRlb+k3vnOkYTPlG/4ooVqnno7bcrI/5J
-	 xrviDOcyvcYwUxWPcRZ07+2GlDT3qmKseMH0WWVcDDacgvUw4V0RY3P47imS5Nc1Ss
-	 wd4X7KO17llqX91Tsr/13bHnDsoy4Oo9KEjj4SMr0qNrPjUlhMk10u83xgEWKlxdnH
-	 puoZjgQfLD1akbfX0EXnG74Oe3JCg5aXBSZismY63KUK4al2zaGuqZ1SOJZ+ZQDfJ3
-	 N+gtvs5Cl/uAA==
-Received: from mailhub11-fb.kaspersky-labs.com (localhost [127.0.0.1])
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTP id 2D6D7E8F244;
-	Wed, 14 May 2025 15:13:06 +0300 (MSK)
-Received: from mx13.kaspersky-labs.com (mx13.kaspersky-labs.com [91.103.66.164])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "mx13.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTPS id 03BC9E8F231;
-	Wed, 14 May 2025 15:13:05 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747224776;
-	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-	b=KtcrOFi7sYoiVBDNR4Znc/i/kYXErdIJGU8ic98y9kHQ5/xXIbeufS6FBaa26lWmp
-	 coIrO2YxLe5drhpOXnQDEBisNnkZ/Z2l40Te3ntqSlrgMDGjjQ+jBrREFCIaBWx664
-	 pWZMt2aIJ+IGg+J9wH+KEwS2ZwY+lMFPJB1VRVKOlJYVYTFzbLcQA/Fbs29nlyq9K6
-	 hIpNs7Kjut6kNf+INdGneqyjaLcV9X8iFsbNNo6/72C/sHoESOGyNzXlce2lAA2kNd
-	 z1717Uu1JnhkZv1QCFXwOiZGDbaczwQie6vA8JxEEL6BslOSj62mwS3KFOf51fXnD0
-	 bLHMXvnP6aDTw==
-Received: from relay13.kaspersky-labs.com (localhost [127.0.0.1])
-	by relay13.kaspersky-labs.com (Postfix) with ESMTP id DC7813E501B;
-	Wed, 14 May 2025 15:12:56 +0300 (MSK)
-Received: from mail-hq2.kaspersky.com (unknown [91.103.66.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub13.kaspersky-labs.com (Postfix) with ESMTPS id 1C3AB3E5671;
-	Wed, 14 May 2025 15:12:56 +0300 (MSK)
-Received: from HQMAILSRV1.avp.ru (10.64.57.51) by HQMAILSRV2.avp.ru
- (10.64.57.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 14 May
- 2025 15:12:55 +0300
-Received: from HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408]) by
- HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408%2]) with mapi id
- 15.02.1748.010; Wed, 14 May 2025 15:12:55 +0300
-From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>
-CC: Hans de Goede <hdegoede@redhat.com>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Mario Limonciello
-	<mario.limonciello@dell.com>, Divya Bharathi <divya.bharathi@dell.com>,
-	"Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
- current_password_store()
-Thread-Topic: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
- current_password_store()
-Thread-Index: AdvEyRwGGRgYB7/5RZGEC7fXF7io4Q==
-Date: Wed, 14 May 2025 12:12:55 +0000
-Message-ID: <39973642a4f24295b4a8fad9109c5b08@kaspersky.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-kse-serverinfo: HQMAILSRV2.avp.ru, 9
-x-kse-attachmentfiltering-interceptor-info: no applicable attachment filtering
- rules found
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 5/14/2025 10:47:00 AM
-x-kse-bulkmessagesfiltering-scan-result: InTheLimit
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RMYGejJE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747227759; x=1778763759;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ncA3q3Xi5r3iQe5/b6bYr7W3Fgq+klqnmqS6aCXE7I4=;
+  b=RMYGejJEjw0OGB4TqBDJTka+bbuAdEMfzjrlvXg8buZN7RdulLC6Qy4c
+   ff7W5GKihU7VaKK7IGw0hWAcR9DdmKOcVGGUaOp2+Al+ds97skYdcmJ42
+   LyWAwW4qLiBn+IiuFHjHP2S0DhU4KfvLGPwJArPuwy+Tt/tvtdFk2X2uV
+   3AkFvDK5mnveFafjoO8TdpdTjAZZWwC/CY8HAq//DSke1pAV2x1+PIFgm
+   IGw28Y2f7SWmna+MwNBBPMtx6Psnl/srPt0BzYMa4freLFo95J7dk4Mdx
+   ++rq7gt3cMQV0hic+ou9P9Gu5FRIepM14Fl0kai6eIyzsDlOF+SufqchY
+   w==;
+X-CSE-ConnectionGUID: UCMY/DIaRhyJpMCfN+VKdA==
+X-CSE-MsgGUID: QS8nku46TMa21UNVmTsZjg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="59780567"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="59780567"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:02:35 -0700
+X-CSE-ConnectionGUID: Bcto/hFwT8CQxYl/H0kLjw==
+X-CSE-MsgGUID: 7OpC2mAdQmeVdizlGHQIcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="168975086"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.231])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 06:02:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 May 2025 16:02:27 +0300 (EEST)
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+cc: "hdegoede@redhat.com" <hdegoede@redhat.com>, 
+    "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.16-rc1
+In-Reply-To: <f3f874fd1a505396ded7fc35856dd3386e44d0a6.camel@intel.com>
+Message-ID: <9a395011-090a-3b8b-ee78-fe33a7d06951@linux.intel.com>
+References: <f3f874fd1a505396ded7fc35856dd3386e44d0a6.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/05/14 05:39:00 #27979694
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 52
+Content-Type: text/plain; charset=US-ASCII
 
-If the 'buf' array received from the user contains an empty string, the
-'length' variable will be zero. Accessing the 'buf' array element with
-index 'length - 1' will result in a buffer overflow.
+On Fri, 9 May 2025, Pandruvada, Srinivas wrote:
 
-Add a check for an empty string.
+> Hi Hans and Ilpo,
+> 
+> This pull request is based on
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> review-ilpo-next
+>
+> This has changes for SST-PP revision 2 support and uncore frequency
+> update for new generations of CPUs.
+> 
+> The following changes since commit
+> 83579675331059689e2869bf752ca9e17fadbd82:
+> 
+>   platform/x86: portwell-ec: Add GPIO and WDT driver for Portwell EC
+> (2025-05-08 17:37:58 +0300)
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Thanks Srinivas,
 
-Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Managemen=
-t Driver over WMI for Dell Systems")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
----
- drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I've applied these now.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c=
- b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-index 230e6ee96636..d8f1bf5e58a0 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-@@ -45,7 +45,7 @@ static ssize_t current_password_store(struct kobject *kob=
-j,
- 	int length;
-=20
- 	length =3D strlen(buf);
--	if (buf[length-1] =3D=3D '\n')
-+	if (length && buf[length - 1] =3D=3D '\n')
- 		length--;
-=20
- 	/* firmware does verifiation of min/max password length,
---=20
-2.25.1
+In the future, preferrably please try to base PRs on the for-next branch 
+as review-ilpo-next is quite volatile an I do rewrite commits there on 
+relatively low bar. When you base something on review-ilpo-next, you 
+effectively end up tying my hands to keep those commits in 
+review-ilpo-next (or the PR needs to be rebased/respun).
 
+-- 
+ i.
+
+> 
+> are available in the Git repository at: 
+> 
+>   https://github.com/spandruvada/linux-kernel.git intel-sst
+> 
+> for you to fetch changes up to
+> 6dfe26cb1c290fa4b62e6fb8c05209fe5f7adb76:
+> 
+>   tools/power/x86/intel-speed-select: v1.23 release (2025-05-09
+> 11:12:31 -0700)
+> 
+> ----------------------------------------------------------------
+> Srinivas Pandruvada (3):
+>       tools/power/x86/intel-speed-select: Support SST PP revision 2
+> fields
+>       tools/power/x86/intel-speed-select: Skip uncore frequency update
+>       tools/power/x86/intel-speed-select: v1.23 release
+> 
+>  tools/power/x86/intel-speed-select/isst-config.c    | 15
+> +++++++++++++--
+>  tools/power/x86/intel-speed-select/isst-core-tpmi.c | 12 ++++++++++++
+>  tools/power/x86/intel-speed-select/isst-display.c   | 20
+> ++++++++++++++++++++
+>  tools/power/x86/intel-speed-select/isst.h           |  3 +++
+>  4 files changed, 48 insertions(+), 2 deletions(-)
+> 
+> Thanks,
+> Srinivas
+> 
+> 
