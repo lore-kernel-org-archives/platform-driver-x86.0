@@ -1,675 +1,263 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7AB1F4180;
-	Tue, 13 May 2025 20:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747169929; cv=none; b=lx6PBNWPONU1GnldQyGWcYFKl+3BHoQxB++ZpZNbd77YyIeSFGXxKN6BTXDYFY7jBDser6IF3yXC39RnzmMyU+JVFB05DK6MxvZEMQfB1fkUZ4iG6i4mUkUSzB9UuqA2ecoIYmCaxdJjPLrCUw88NTE8vdAvnNWAsm7JfS6AzRE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747169929; c=relaxed/simple;
-	bh=G+dL2lmJCmTlnb/VZYUNtrzP7hbXL5e6ydE+pwbnTig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sRf95EpW5UOHZsJPGGc0kmmtYSkWSALYP9ZA4LeeqBwPYxMdX41peZE8mQcmPTHhAtyQTHa/CeXrwz3N6X7MnxRG8cLWUTcdfA6hwXg6Mp1I6t0g9ArYom23cU9a/tZz1X4emyerXw3NO2Xda5r2E+fGBGiUsFKxrhRmJoWtkL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BVym6ytl; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9996F21B195;
+	Wed, 14 May 2025 08:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747211678; cv=fail; b=VL8jdM+4OYF+SXUCklqiBSKyHPcRdmOGDX2sUiPPpeeffBO9OKO24I9fE/FC83teMnXBdpa/3Y7P3efqcEM72FFY+z5ZnP1UI4efuUg1xiakZH75YJsgZc7WPE2FpME/ciqMNPlf8UOjgWX3qLEMkgShy7Ac2lcOMSKiS6QutCg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747211678; c=relaxed/simple;
+	bh=XqdHjJxxWs4h6a/Eos2XSjAwoCpHXahazCuntxxymZ8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OXWzfI2JbsjwQ2zuwyqCyVaLdLGZZW7sJyBr9Ml+RNt6HO8qjVMKW5TF4V2WhXTjC6hoeFOlk9xk+Ges7Ur8y7nG/CDUMmeEOlTJFnMgWHl/DUJHmst5e7bXChdclMu4D1ZLpli5vEPQMNOtU7cm26MsjM4BdYr7UpthhcODvwA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EyZp8s1g; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rAsU67R8; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BVym6ytl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747169922; x=1747774722; i=w_armin@gmx.de;
-	bh=oeMlP+t9JIZfrGi5LOdL+/KuE3L+G6ybrsw58/4uSn4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BVym6ytlMd9EOcDDIOyYHwTQWLJ6G3K5xVray8o0iNdmddaZ8dDiEcLfSK0QzQA3
-	 zBu8sngiUbH+MZ5aNVvAw8XqzY1t0plausuOWsUUKs/SNbdYKRe/lilOSRExnP85j
-	 SDVUONCQZX9nmFgy2dcodn57yDoidQAQzFHyoBW98ooeuz7IYOUZf/rOxUUR3qznj
-	 DKhSXD6zSrYb1fxxnQNrMDkzGRdRLAD8fxJAru+llB4JPIeyKZM24kV7vldeFzsFh
-	 jkGU22yFHQELbfwz4KYYTMy0t+flEnGUjZsMvCTgOXcHpOmCJGMPmMWX9Tu8XRVKu
-	 mfd+OtvTyuBUZbRKLA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVN6j-1uO3gD0Ijv-00TxDj; Tue, 13
- May 2025 22:58:42 +0200
-Message-ID: <f4ef43c4-db8d-4722-b286-b82877ca202c@gmx.de>
-Date: Tue, 13 May 2025 22:58:40 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EyZp8s1g";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rAsU67R8"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E0fuwu025340;
+	Wed, 14 May 2025 08:34:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=p7MQkzZJqerI7+cSZuJnZEJ7MPqms0SsgblCxTBU0Lc=; b=
+	EyZp8s1gtVwEZ2ou9KRxIRoYSlmIuz/X8sEaBxa/HZrU4gDASJ3I1Weny74gQHcb
+	KbbgKi7MaBElSJLgPOoxUdvFZV+eWJwyD+URTX7G3QwLfsxow2KO2CCycoLEcNKV
+	jlgc+1ePsJPDJug2/nHBGZd58Zfop4UC/ZSfHdO6btF3JIxwNPkDNs1m+4eL0FS6
+	i1BIxLIYdAG4IAXQTmPv5L8YpbIVklSfg5Cmo3UVuouT2DELmicb1OiIjb7TpjHn
+	9wG5//k9R0lOGZKPKrb1YdblZ2WrZkbnb+7BLeqTGDoTI19KqwPv+6xppyxvqMqS
+	Ir2uYUAUN8r8Z0hQqF08cg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46mbchs1a2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 08:34:29 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54E8AJEZ008922;
+	Wed, 14 May 2025 08:34:28 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazlp17012034.outbound.protection.outlook.com [40.93.6.34])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mc6wcf6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 08:34:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X2RGLOjx24jm3PEd0MXxcEQfaeGKo+l0I9yRwOVD3ffY3abInUUwqcwsgoUDATgpR5WNm4c+dPm9KoB5vjd+iscQz9jfLMMRkpfaoPHI/RKIZZiPMTVrRexb+uT/QGZSghGT3V9lAviMzoCVvtK/RSq06AXVjOhUBg5sZI/EdN55hF1WTuTdFOsRn279TC0MUCubELP1LrqgrDEowu7SBkS8PXqSZhUb+qnx+RAqMKUutk0nLGScCMoDIJ8CoAKRrEFOfiiNLs/mvYlqAPedBgV1h6cBBoKJ+wmfnpnlWiBkunosAfrRBnc/AfFWfek6AqVKvjuJpvO64sGQvApbtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p7MQkzZJqerI7+cSZuJnZEJ7MPqms0SsgblCxTBU0Lc=;
+ b=o/PS881gZYr+b7lwk+r5EluzaqDQAEXjJAf8C1F7cxOzrZh6puhYbGlJExiE6fVMiJIexNhH4rvjZKa1aQpaF94U1iYOlPnyG9J8GAujO3O06FzMV2Qgu7BRhZEfkUauwiEbUv3VFZEL3UpejByk/iwZW+v/3ptax9s3pItxTSZ3N7fo3IvVfRx4lrH6gz+OCWKNgG2jXgbvbXopR0Oa6Pc7if4j6wLmq19SQc0Hu1GyjXYDRQ7WvmpQdormR90mRx6/5lqx9/WWgNbZKsh3Ug5h88IdvAinLO9FuM983ghHqcHP7nB+G5S4GIY8oxgwSgRS2C/cSiU+dPysrnQT/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7MQkzZJqerI7+cSZuJnZEJ7MPqms0SsgblCxTBU0Lc=;
+ b=rAsU67R8VSTZO07L2E1ZrOu2sc7eaCenSWNNvfhwNmsN23nhB3nxkF3Pg39jyWNsMXqfmOmTc4M731SOc+yy+IZHCjrnygug0t8PnlP1LxkVUmR7h9RULhdwbzSE55wg7g+lK09sTCmhsinhrmVB/wV++6DyOW+tpYHitfnb6uQ=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by BY5PR10MB4145.namprd10.prod.outlook.com (2603:10b6:a03:208::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 14 May
+ 2025 08:34:26 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8699.022; Wed, 14 May 2025
+ 08:34:25 +0000
+Message-ID: <aece6449-8acd-41ae-bed6-fe5cc7d64050@oracle.com>
+Date: Wed, 14 May 2025 14:04:17 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14] platform/x86: Add AMD ISP platform config for OV05C10
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
+        hdegoede@redhat.com, W_Armin@gmx.de, mario.limonciello@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+        king.li@amd.com, dantony@amd.com
+References: <20250512213711.3226784-1-pratap.nirujogi@amd.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250512213711.3226784-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0041.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::18) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/10] platform/x86: msi-wmi-platform: Add support for
- fan control
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Kurt Borja <kuurtb@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-5-lkml@antheas.dev>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250511204427.327558-5-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nHhGyRMdLz6AKqN6nTH0eYL+r/Lod9HkIk8Wc+BP86rQrr9Znsh
- cxGPo5n58jmvRnGK80cjqAQL7ENkS1Qhc5OLNBmRGEIsHZqSv4Jd/AUpjHRtuuAsiGPL34k
- vD2PGsJKwJOw8JbT/UxD+VROll43RmNTUf3egqSSgXotBOFR6XWlQtiGzxpFuGRpVaeonTw
- LQcf/Bj2dEhHzZXpnEHrA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vjqdk0KmXMU=;V1uUkDc4dzWT2oUPop5zk8xIN9j
- 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
- UsgAQsawjgqaCq6O45Cfua/CI+hI3LsZir
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|BY5PR10MB4145:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3d636694-a433-4b50-7de3-08dd92c221f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q1lXZlgxcTNNcjlnMm5DNXZxNDU4WnlsYkdVL05WL3EzTVRZQW5DeEgvemNn?=
+ =?utf-8?B?NWpsUm9YZHBqM3Ftdk9zM0M5S2FCcXhOcFNvM3R6V0dZcFdZbjJ2M2EzeEw5?=
+ =?utf-8?B?RDhqWEVGRE1JZERhamNVOXBocUFjajFoRnNJZFZrdTJHSGVxM255T0tGVHdj?=
+ =?utf-8?B?R2RINHlTU3ZMa0dkYUVtSzFOMytlNVZMUUNQVm80MEZKQnlaWVBOTXdEWU9m?=
+ =?utf-8?B?aEVYMTk0RWk1b0dXa3cwNkxuNVE5K2lBL1BJdEtBZ25BZnliSVdONDNIeElh?=
+ =?utf-8?B?c0s0ZytOVjRYTWs5ajhMYW82QzF0YlhPbXV1Q2NqQWluYmg1R0VKVVlINlBy?=
+ =?utf-8?B?Ty9YWTJEczJjTDVVSXZKSERjUHIxSFoydHk0OTM0a1dNSURITmxsOHd0VG4z?=
+ =?utf-8?B?SE5Sd0hCa250MGllZXVyT21pS3ZHVWhjbmk5U1N5QnRFUnhFNWNBNGxEdkNO?=
+ =?utf-8?B?VDdPRDdGb255K3NUdnh2QndJdGs4UnNYdENTMlhYcFpENVpFMFpKMmFEZ3RH?=
+ =?utf-8?B?eEdjV2F4NHN5VXFnY0tDK2VNOHZ3VFByaTNCYjcyL3lXVGdDQ3I0K0xRMzZM?=
+ =?utf-8?B?NlBENmh1WW8yNFJOZzFQOXBlSEt3V0ZhcWR6RjREdmVGUEVqeUdjaFFSRy9C?=
+ =?utf-8?B?ZHV1TEpHTnNKSXlZOEd2UExWRHIzV3hQaldnZTlGOWtnejVuWHExR3EvM3gy?=
+ =?utf-8?B?S1l1eTk3RWd4Y1FKTUg4dVJQYldXWldPcFpUSTJZRjNvMXhpdUJmcUdjYmFh?=
+ =?utf-8?B?UDMvTjBYK1psb2Nac3RZQ0xhaDREVVhRVzNXYXBlUVR1ai9KelVKNnJuakNo?=
+ =?utf-8?B?TTBDYzR6d2ZKeG55Q2Ixd3I2REVTdlQyZk1lR2xqbWhzZkJBdzRaS0w4UlM4?=
+ =?utf-8?B?S1NNdWpKUDNGN3ZZbnlmU3NmOEdBaGNJMVpmeHhSQTNRaWVUc1pFL20zeWFn?=
+ =?utf-8?B?Y3lPeHl5b25nYTdxb0tYRWp4eFJlYzh4VnFuR20zZ1BmSGlPdjRpWnpKdjFt?=
+ =?utf-8?B?U3g2Q0dCY21VNFI0UWpCY0xYV0tYTEpraitnYjR4SkQ4Z1dMZk50c0VRUmFp?=
+ =?utf-8?B?eVY0NHRDbUo0a2NBOUY4bXlhdWwzdmNEVFJPeEVaZWVZenIyV3V1RVRHMWtB?=
+ =?utf-8?B?RXB5SEE3Q0NoRVM4azFLb252Sm96U3JXeGZlNjltSUVLL0lWcHhIalRyQStG?=
+ =?utf-8?B?WXliaDM5V1NzazI5ZU9sNFdYdkQrLzEyU29Sc0hwMDVqSkxTcjZtaDBleVFk?=
+ =?utf-8?B?SFNKMU8xNlRSb203K3gzSjVCSEtJbGsrVVg0d0dsREdHMitDTEFPNEdNTUQ3?=
+ =?utf-8?B?U2RrcW56U0x1aGM3S0kraGF1Rk5WVXlRWisvc0xkekloWmJIS25LbTBpS3hZ?=
+ =?utf-8?B?Yjg4SHN2NFFxY1JlUVdMOGhHRzVPd1BCeDl5WS9wV042RE5CYjNONE1yeUhs?=
+ =?utf-8?B?My9lZHMwTW8ybWpQaUVjZDNZQ3QrWDZwODZRUTNtb2NiSDcwOU9zMnVuSjdS?=
+ =?utf-8?B?VmliSmpSdnBkUEZlaTF5N0lka1NrQis0UGpPTW9PSUZWc1VHZ2E3UGRrS2Mr?=
+ =?utf-8?B?ZTdJZHR4WWJmSnZIdG5kWU9SMzN3VVlNKzFiVUxIY2RoVXFsVFpOYndSQVVy?=
+ =?utf-8?B?VzZ2WTZ1N0U0ZVhjQUtZN1JsckFBNzV6aTBtNXBybnpGZE9jQm1vbUtvdE9S?=
+ =?utf-8?B?QklvT1FHQ1JmcHc5UDhSdTU3dzI0YlRrSnVBd0NNV0dkT2h4dmFoTEovRVhR?=
+ =?utf-8?B?UDZyV0VzRCtGNGNTeFd6YjhNNU1mZFc0RldrcDgxNUhwSXo5aEI1QXpzUWcw?=
+ =?utf-8?B?amZCS0lsNExVcWV4SHl2anAyRjl2QW5JdGtacW5IZUdJL1plWVNndURrS3Fq?=
+ =?utf-8?B?TEV6b1ZvTlVxVm54UWFtbVFUZVJOek5pVGIyOTdqR1NlZWlFajcxTFN3N0xj?=
+ =?utf-8?Q?dFfVSDNxC6A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bzZjaDIvNkFZV1U3UkFXSkJEYU56eUZlWGl5clZ0Ly93OFJucHpPRXUrZGxY?=
+ =?utf-8?B?UDRmVXhiZk5uRGlRVVlRMXVPaHdsUWk5blR6eXpkK2tHaEVua3BLU3A0amky?=
+ =?utf-8?B?c1ZoYmE4eTdPZVJONW1YN281MCsxemgwZ21ZV1FidmhFTEc1Rlk4NDhHaUhT?=
+ =?utf-8?B?aG56d0xTdmhtOHNKRFdISS9LWmMyUUVBNXBTaGwraGszQ1VqQmVrbFJlSXRu?=
+ =?utf-8?B?dW54OEdwZ3pkVXZrb0RIYmx3ZzkrOXp2R1dzcndYdkFzdEkvQjRLbnEyNmdT?=
+ =?utf-8?B?VTdnbFk4S3UvN29ZZUF4ci8wUGlBMnF4ZWpaUk5Ib2RvTkM4bTNPRHIyK2VF?=
+ =?utf-8?B?d0V4YnBBMFpOdnlFUVhyV2NZZVJyc242NWZOdUU0VUpYVTVSamtQMWdoMk8w?=
+ =?utf-8?B?aTE2VUZpbWVUNXZkdUR4L2dRcVlDK2wyeU05YTM3SzBKZWdFUVRHSDR0dWM2?=
+ =?utf-8?B?alBTNFhOTWRDUTBOY3NQdnMzRjdwMmQyRVd2KzNXVUp2cjVNWVkzNG91dVN2?=
+ =?utf-8?B?bENFWjRxR2I1TXk0UDBVWlNOV0NEY0hvSnpYTlZYa3k4WUlsVXV5cEF0VzZ3?=
+ =?utf-8?B?bG9ZZFZBS2M4NDVRQ1BwWXU4aGVQZFNNakhVZzNERVJsaTZsY1YyZjAvWW1k?=
+ =?utf-8?B?SmNKVFUyN2hpMTIzTE9jVE41ZFZ3a05PV3p1Smw4ZFVndG11cWV3TlN0ZjVp?=
+ =?utf-8?B?b3o1dGc3dTlIUXN3YTAzUGJQREZ6WUtJdTZKZDhDbkVlRFcvTGpsWE1uOWhu?=
+ =?utf-8?B?TmRyYTlYa3REUWcvTElMWlNjLytTUGs2c0ZqclBWcmoxUVdqeVhuc2RkY2l3?=
+ =?utf-8?B?aGtUbWwzVzFHWlpDSGNRK3N3UFc1WHBuUDEvV3lUU1ZNbUVKWlIzaFBuNFJZ?=
+ =?utf-8?B?bGhVVkJoaHNZZkdHN0thczNONWtUV1kyWWc2UldibWgrMEMvN29RMVZ4N3FD?=
+ =?utf-8?B?eWRhbXhxWGUzM21oMFRPK0lOVmdjU0pmeDZLc24vd2ZoMjV6UVg3dkd0dnBW?=
+ =?utf-8?B?ZHNCUVlIcWNuNmxnVjZ5N05NL20veEFxWkhKcGhGMi9Qbmw0c3hEczJlTTZM?=
+ =?utf-8?B?NG1BYzA0K0pydC9nSzdVRlJDZm53dDhKNXdySXVKWllrOWRuM3RkVFFXZkN4?=
+ =?utf-8?B?V2VzcHNOazNHalNtQzhlMmRDb01TTzZsQ1VpTXZ6RlBOQjNWRlhBSGI1WHFR?=
+ =?utf-8?B?REVQUXR0U1V4QTh4WlYxT3hEWXcvUkZ5N2hxZ3JlRTZDRjZuUWwvUkRGQ2xV?=
+ =?utf-8?B?TDlGK0QrbThwU25DOUFPWWI2ZGVOQlNsSlM2Rjg1aXZ3OE5jVjN4RW4yTzhI?=
+ =?utf-8?B?czNTbTdpWmh4dkJXL1h4Q2ovVjdvZDU4Q1BuanhzYk1QQ3dKcFVtYWZiWHdi?=
+ =?utf-8?B?Ymc4bkRTRE1KVXpaNzEzTjYwaVlaOVJ0T2hqU1Z5alVhMTl4SzBUZzhxVEJE?=
+ =?utf-8?B?WTVnTGxyT0VTNWdyTG1uNUJFQlIyS1pCanJnRnpjT2NDNjM5UGl1S1pXSFNF?=
+ =?utf-8?B?cEtyc1dKUGdaVmZ4TEtRNm9xN2Nra09TVjNvcjBWdm9vYjVtZHMydFZENEta?=
+ =?utf-8?B?eGxyZUZoRXovR0hLa3FIQ2ZxVWl6WUFJbHBNRFMwNnVGcVdrVFlTNmVWclQr?=
+ =?utf-8?B?R085T3VPMXFwVVZJN2ZSYlhnbTI5TUVoR1VFa1o0QnNLRVZWWU56aFE3b0Vv?=
+ =?utf-8?B?ZVVJNGdPUVJ1WWFOZE94NytPcU5weEVsRWVZbWxDR0NJekJpdXpKZ0tKWXdS?=
+ =?utf-8?B?RmxqQnZqZGNHVjR3dUlFOFVoUlhrODc2aG5NQyt5YVFmdU5odGo2aXRhcXBT?=
+ =?utf-8?B?V2N5OWxRQTBmYkNyb1VXTUNETmgrNUgvYTR2ajRGNEhmOXRXREI1MnFnak05?=
+ =?utf-8?B?OEtBWHY1bDZUelNSY0dEYkFQcDhtcGorc2ZuODJTOXg3YlY2bjZabFI1RldL?=
+ =?utf-8?B?ZGdLRTZoZzdydXRRbVcxRDUrdk93Ly9Zc3NzQmxlY3JrUDFBdDNPRjJRb0Jn?=
+ =?utf-8?B?cFBNV0RDODl3Tzc4YW9zVE5jS09taDlITW5mOTdOblNRN3RJa21zSTlLblVw?=
+ =?utf-8?B?S2lMRks2aVhqVTYyaGQvemF1SzM3amFrVWMxYzVnTEJsU1RGMk9CRU9kOGhv?=
+ =?utf-8?B?ZjdUWjdqdjVNLzcwcDZGWk1SSENNMG9neDJHMFVjS0VrM0RGb2sxbVRuc0Z2?=
+ =?utf-8?B?b3c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	NeGonnYkrUFkgAC0/IIa2FGJaUb3cxzaEpCr3ESNZ4MSX+VGqlgO04Pz5zQTA1n6lq79kDhUtkAh1jUWJq596ijL/VUXYYJZrJHgCr0Pnq3gjBqvBrWduG+4gq8T9iF098rFKtsfDgntJDTnAMzBORojfyPLkE3th6gg7vMrqUmlO1RFFMM7um6bYhqDNNySdgcXgBtHvjhnwPhZ7bbY8+tzlqrGt5ObpAfVygG9DRZG0viaJurgo2S2hsSiV8SjxM5niqIRpiNtCizM95gvPylg1YVUzm2XB58e/DtsJLqrFSuNEoH/vAQc3WjDXrt2tjmmLmGb09NJwC54MEcH7lZnJvGuzLyjm72TTspTKCzghrP3v25ZnwDEOQnwty0/O9YgBbwijQLurUnAax/mnYAPDZD9XO+LPMAKFfOEViI5mIXabX//0hSXKjfwBwKdtdYv2sDgJAboOjTx0FrfCnhg8FQ6fCg9ZhG6i0fZOSwKmXXmTqaq7Cftrlaa99Gk7Y+AeTEN9ctqkvEDnXH7H/0vyi2A4R4K2keYPyp85qqqBjzumdm/1oxqw+0nbWkMuyP05UQluwqiwC5Xg3YhN/fxM3O492tJ6i3HaUrhrfA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d636694-a433-4b50-7de3-08dd92c221f9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 08:34:25.2236
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QozHwIR4R0cfDPoA9lmR7YbZz7eX/uoTMfhAIACuq+2AP53zaVsGJ7P1b21XwRDZ/vTJxH1ivzrDqrnNi/TX6YGw+tatLUXpzQKsOv2EBx0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4145
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505070000
+ definitions=main-2505140074
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA3NCBTYWx0ZWRfX8RnSN2sgT6JS Bf6Yh8tKu4zW7CFyUmNM/EbtvYfjzEahUBtAnibUeTT0Mdv+9T3NHss6InMgJ/DVKb2MFamIm8t wzgb+Qq20iBN5ie8p0f2xYOj1EYNunSGp50+/XG1/ZKES2BK08BlCED9a3GWzZ+hR7JxZ3hGQ6z
+ CXWE53Sph9cDvAmC78+AmV1wCVve713U+QeX1y+afiTyUefaLAmilcI/t+/fFr9uvxLosQkw2MT soN0t9le/r/BHeMNrC8R+Iafb0M+CPO2jyRzEVmITNo4nfkjliFAmZBMS9Hf9kJUU5GkcKN+u78 Bp+9RaF1Ng2Mspcokm1It04FB6maFPkricQCm5ruJo+t4AU1/enW0G0ZJhkd4qH7n0W6hTewFI/
+ uANqjsbL/e6K7tMwYX2Buzzs1ob50rSeUWF7PfkOXqLTmKXPf8iSVMaA+p8y8OqghXS5EfXE
+X-Authority-Analysis: v=2.4 cv=EtTSrTcA c=1 sm=1 tr=0 ts=68245595 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=IEYkgWkrS7oWPDPJLVMA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: TxNqMwMJh81NYScwJTjODu9FimOuz443
+X-Proofpoint-GUID: TxNqMwMJh81NYScwJTjODu9FimOuz443
 
-Am 11.05.25 um 22:44 schrieb Antheas Kapenekakis:
+> +config AMD_ISP_PLATFORM
+> +	tristate "AMD ISP4 platform driver"
+> +	depends on I2C && X86_64 && ACPI
+> +	help
+> +	  Platform driver for AMD platforms containing image signal processor
+> +	  gen 4. Provides camera sensor module board information to allow
+> +	  sensor and V4L drivers to work properly.
+> +
+> +	  This driver can also be built as a module.  If so, the module
 
-> From: Armin Wolf <W_Armin@gmx.de>
->
-> Adds fan curve support for the MSI platform. These devices contain
-> support for two fans, where they are named CPU and GPU but in the
-> case of the Claw series just map to left and right fan.
+remove extra '' before If
 
-I assume that not all devices support this feature? If so then please hide=
- it behind
-a quirk.
+[clip]
+> +/*
+> + * Remote endpoint AMD ISP node definition. No properties defined for
+> + * remote endpoint node for OV05C10.
+> + */
+> +static const struct software_node remote_ep_isp_node = {
+> +	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
+> +};
+> +
+> +/*
+> + * Remote endpoint reference for isp node included in the
+> + * OV05C10 endpoint.
+> + */
+> +static const struct software_node_ref_args ov05c10_refs[] = {
+> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+> +};
+> +
+> +/* OV05C supports one single link frequency */
+> +static const u64 ov05c10_link_freqs[] = {
+> +	925 * HZ_PER_MHZ,
+> +};
+> +
+> +/* OV05C supports only 2-lane configuration */
+> +static const u32 ov05c10_data_lanes[] = {
+> +	1,
+> +	2,
+> +};
+
+OV05C -> OV05C10
+
+> +
+> +/* OV05C10 endpoint node properties table */
+> +static const struct property_entry ov05c10_endpoint_props[] = {
+> +	PROPERTY_ENTRY_U32("bus-type", 4),
+> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+> +				     ARRAY_SIZE(ov05c10_data_lanes)),
+> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
+> +				     ARRAY_SIZE(ov05c10_link_freqs)),
+> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+> +	{ }
+> +};
+> +
+[clip]
+
 
 Thanks,
-Armin Wolf
+Alok
 
-> Co-developed-by: Antheas Kapenekakis <lkml@antheas.dev>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   .../wmi/devices/msi-wmi-platform.rst          |  26 ++
->   drivers/platform/x86/msi-wmi-platform.c       | 328 +++++++++++++++++-
->   2 files changed, 337 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/wmi/devices/msi-wmi-platform.rst b/Documentat=
-ion/wmi/devices/msi-wmi-platform.rst
-> index 73197b31926a5..704bfdac5203e 100644
-> --- a/Documentation/wmi/devices/msi-wmi-platform.rst
-> +++ b/Documentation/wmi/devices/msi-wmi-platform.rst
-> @@ -169,6 +169,32 @@ The fan RPM readings can be calculated with the fol=
-lowing formula:
->  =20
->   If the fan speed reading is zero, then the fan RPM is zero too.
->  =20
-> +The subfeature ``0x01`` is used to retrieve the fan speed table for the=
- CPU fan. The output
-> +data contains the fan speed table and two bytes with unknown data. The =
-fan speed table
-> +consists of six 8-bit entries, each containing a fan speed value in per=
-cent.
-> +
-> +The subfeature ``0x02`` is used tho retrieve the same data for the GPU =
-fan.
-> +
-> +WMI method Set_Fan()
-> +--------------------
-> +
-> +The fan speed tables can be accessed using subfeature ``0x01`` (CPU fan=
-) and subfeature ``0x02``
-> +(GPU fan). The input data has the same format as the output data of the=
- ``Get_Fan`` WMI method.
-> +
-> +WMI method Get_AP()
-> +-------------------
-> +
-> +The current fan mode can be accessed using subfeature ``0x01``. The out=
-put data contains a flag
-> +byte and two bytes of unknown data. If the 7th bit inside the flag byte=
- is cleared then all fans
-> +are operating in automatic mode, otherwise the fans operate based on th=
-e fan speed tables
-> +accessible thru the ``Get_Fan``/``Set_Fan`` WMI methods.
-> +
-> +WMI method Set_AP()
-> +-------------------
-> +
-> +The current fan mode can be changed using subfeature ``0x01``. The inpu=
-t data has the same format
-> +as the output data of the ``Get_AP`` WMI method.
-> +
->   WMI method Get_WMI()
->   --------------------
->  =20
-> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/=
-x86/msi-wmi-platform.c
-> index 408d42ab19e20..9ac3c6f1b3f1d 100644
-> --- a/drivers/platform/x86/msi-wmi-platform.c
-> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> @@ -16,13 +16,18 @@
->   #include <linux/device/driver.h>
->   #include <linux/dmi.h>
->   #include <linux/errno.h>
-> +#include <linux/fixp-arith.h>
->   #include <linux/hwmon.h>
-> +#include <linux/hwmon-sysfs.h>
->   #include <linux/kernel.h>
-> +#include <linux/kstrtox.h>
-> +#include <linux/minmax.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
->   #include <linux/printk.h>
->   #include <linux/rwsem.h>
->   #include <linux/string.h>
-> +#include <linux/sysfs.h>
->   #include <linux/types.h>
->   #include <linux/wmi.h>
->  =20
-> @@ -34,9 +39,11 @@
->  =20
->   #define MSI_WMI_PLATFORM_INTERFACE_VERSION	2
->  =20
-> +/* Get_WMI() WMI method */
->   #define MSI_PLATFORM_WMI_MAJOR_OFFSET	1
->   #define MSI_PLATFORM_WMI_MINOR_OFFSET	2
->  =20
-> +/* Get_EC() and Set_EC() WMI methods */
->   #define MSI_PLATFORM_EC_FLAGS_OFFSET	1
->   #define MSI_PLATFORM_EC_MINOR_MASK	GENMASK(3, 0)
->   #define MSI_PLATFORM_EC_MAJOR_MASK	GENMASK(5, 4)
-> @@ -44,6 +51,18 @@
->   #define MSI_PLATFORM_EC_IS_TIGERLAKE	BIT(7)
->   #define MSI_PLATFORM_EC_VERSION_OFFSET	2
->  =20
-> +/* Get_Fan() and Set_Fan() WMI methods */
-> +#define MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED		0x0
-> +#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE	0x1
-> +#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE	0x2
-> +#define MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE	0x1
-> +#define MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE	0x2
-> +
-> +/* Get_AP() and Set_AP() WMI methods */
-> +#define MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE	0x1
-> +#define MSI_PLATFORM_AP_FAN_FLAGS_OFFSET	1
-> +#define MSI_PLATFORM_AP_ENABLE_FAN_TABLES	BIT(7)
-> +
->   static bool force;
->   module_param_unsafe(force, bool, 0);
->   MODULE_PARM_DESC(force, "Force loading without checking for supported =
-WMI interface versions");
-> @@ -221,9 +240,201 @@ static int msi_wmi_platform_query(struct msi_wmi_p=
-latform_data *data,
->   	}
->   }
->  =20
-> +static ssize_t msi_wmi_platform_fan_table_show(struct device *dev, stru=
-ct device_attribute *attr,
-> +					       char *buf)
-> +{
-> +	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr)=
-;
-> +	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
-> +	u8 buffer[32] =3D { sattr->nr };
-> +	u8 fan_percent;
-> +	int ret;
-> +
-> +	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer, siz=
-eof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	fan_percent =3D buffer[sattr->index + 1];
-> +	if (fan_percent > 100)
-> +		return -EIO;
-> +
-> +	return sysfs_emit(buf, "%d\n", fixp_linear_interpolate(0, 0, 100, 255,=
- fan_percent));
-> +}
-> +
-> +static ssize_t msi_wmi_platform_fan_table_store(struct device *dev, str=
-uct device_attribute *attr,
-> +						const char *buf, size_t count)
-> +{
-> +	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr)=
-;
-> +	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
-> +	u8 buffer[32] =3D { sattr->nr };
-> +	long speed;
-> +	int ret;
-> +
-> +	ret =3D kstrtol(buf, 10, &speed);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	speed =3D clamp_val(speed, 0, 255);
-> +
-> +	guard(mutex)(&data->wmi_lock);
-> +
-> +	ret =3D msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_FAN,
-> +					      buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	buffer[0] =3D sattr->nr;
-> +	buffer[sattr->index + 1] =3D fixp_linear_interpolate(0, 0, 255, 100, s=
-peed);
-> +
-> +	ret =3D msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_FAN,
-> +					      buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t msi_wmi_platform_temp_table_show(struct device *dev, str=
-uct device_attribute *attr,
-> +						char *buf)
-> +{
-> +	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr)=
-;
-> +	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
-> +	u8 buffer[32] =3D { sattr->nr };
-> +	u8 temp_c;
-> +	int ret;
-> +
-> +	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_TEMPERATURE,
-> +				     buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	temp_c =3D buffer[sattr->index + 1];
-> +
-> +	return sysfs_emit(buf, "%d\n", temp_c);
-> +}
-> +
-> +static ssize_t msi_wmi_platform_temp_table_store(struct device *dev, st=
-ruct device_attribute *attr,
-> +						 const char *buf, size_t count)
-> +{
-> +	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr)=
-;
-> +	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
-> +	u8 buffer[32] =3D { sattr->nr };
-> +	long temp_c;
-> +	int ret;
-> +
-> +	ret =3D kstrtol(buf, 10, &temp_c);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	temp_c =3D clamp_val(temp_c, 0, 255);
-> +
-> +	guard(mutex)(&data->wmi_lock);
-> +
-> +	ret =3D msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_GET_TEMPERA=
-TURE,
-> +					      buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	buffer[0] =3D sattr->nr;
-> +	buffer[sattr->index + 1] =3D temp_c;
-> +
-> +	ret =3D msi_wmi_platform_query_unlocked(data, MSI_PLATFORM_SET_TEMPERA=
-TURE,
-> +					      buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x0);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x3);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x4);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x5);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x6);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_TEMP_TABLE, 0x7);
-> +
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x1);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x2);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x3);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point4_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x4);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point5_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x5);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point6_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_CPU_FAN_TABLE, 0x6);
-> +
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x0);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x3);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x4);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x5);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x6);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_temp, msi_wmi_platform_=
-temp_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_TEMP_TABLE, 0x7);
-> +
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point1_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x1);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point2_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x2);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point3_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x3);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point4_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x4);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point5_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x5);
-> +static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point6_pwm, msi_wmi_platform_f=
-an_table,
-> +			       MSI_PLATFORM_FAN_SUBFEATURE_GPU_FAN_TABLE, 0x6);
-> +
-> +static struct attribute *msi_wmi_platform_hwmon_attrs[] =3D {
-> +	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
-> +
-> +	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
-> +
-> +	&sensor_dev_attr_pwm2_auto_point1_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point2_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point3_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point4_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point5_temp.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point6_temp.dev_attr.attr,
-> +
-> +	&sensor_dev_attr_pwm2_auto_point1_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point2_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point3_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point4_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point5_pwm.dev_attr.attr,
-> +	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(msi_wmi_platform_hwmon);
-> +
->   static umode_t msi_wmi_platform_is_visible(const void *drvdata, enum h=
-wmon_sensor_types type,
->   					   u32 attr, int channel)
->   {
-> +	if (type =3D=3D hwmon_pwm && attr =3D=3D hwmon_pwm_enable)
-> +		return 0644;
-> +
->   	return 0444;
->   }
->  =20
-> @@ -233,24 +444,102 @@ static int msi_wmi_platform_read(struct device *d=
-ev, enum hwmon_sensor_types typ
->   	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
->   	u8 buffer[32] =3D { 0 };
->   	u16 value;
-> +	u8 flags;
->   	int ret;
->  =20
-> -	ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buf, sizeof=
-(buf));
-> -	if (ret < 0)
-> -		return ret;
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			buffer[0] =3D MSI_PLATFORM_FAN_SUBFEATURE_FAN_SPEED;
-> +			ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_FAN, buffer,
-> +						     sizeof(buffer));
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			value =3D get_unaligned_be16(&buffer[channel * 2 + 1]);
-> +			if (!value)
-> +				*val =3D 0;
-> +			else
-> +				*val =3D 480000 / value;
-> +
-> +			return 0;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_enable:
-> +			buffer[0] =3D MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-> +			ret =3D msi_wmi_platform_query(data, MSI_PLATFORM_GET_AP, buffer,
-> +						     sizeof(buffer));
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			flags =3D buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET];
-> +			if (flags & MSI_PLATFORM_AP_ENABLE_FAN_TABLES)
-> +				*val =3D 1;
-> +			else
-> +				*val =3D 2;
-> +
-> +			return 0;
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
->  =20
-> -	value =3D get_unaligned_be16(&buffer[channel * 2 + 1]);
-> -	if (!value)
-> -		*val =3D 0;
-> -	else
-> -		*val =3D 480000 / value;
-> +static int msi_wmi_platform_write(struct device *dev, enum hwmon_sensor=
-_types type, u32 attr,
-> +				  int channel, long val)
-> +{
-> +	struct msi_wmi_platform_data *data =3D dev_get_drvdata(dev);
-> +	u8 buffer[32] =3D { };
-> +	int ret;
->  =20
-> -	return 0;
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_enable:
-> +			guard(mutex)(&data->wmi_lock);
-> +
-> +			buffer[0] =3D MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-> +			ret =3D msi_wmi_platform_query_unlocked(
-> +				data, MSI_PLATFORM_GET_AP, buffer,
-> +				sizeof(buffer));
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			buffer[0] =3D MSI_PLATFORM_AP_SUBFEATURE_FAN_MODE;
-> +			switch (val) {
-> +			case 1:
-> +				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] |=3D
-> +					MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
-> +				break;
-> +			case 2:
-> +				buffer[MSI_PLATFORM_AP_FAN_FLAGS_OFFSET] &=3D
-> +					~MSI_PLATFORM_AP_ENABLE_FAN_TABLES;
-> +				break;
-> +			default:
-> +				return -EINVAL;
-> +			}
-> +
-> +			return msi_wmi_platform_query_unlocked(
-> +				data, MSI_PLATFORM_SET_AP, buffer,
-> +				sizeof(buffer));
-> +		default:
-> +			return -EOPNOTSUPP;
-> +		}
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
->   }
->  =20
->   static const struct hwmon_ops msi_wmi_platform_ops =3D {
->   	.is_visible =3D msi_wmi_platform_is_visible,
->   	.read =3D msi_wmi_platform_read,
-> +	.write =3D msi_wmi_platform_write,
->   };
->  =20
->   static const struct hwmon_channel_info * const msi_wmi_platform_info[]=
- =3D {
-> @@ -260,6 +549,10 @@ static const struct hwmon_channel_info * const msi_=
-wmi_platform_info[] =3D {
->   			   HWMON_F_INPUT,
->   			   HWMON_F_INPUT
->   			   ),
-> +	HWMON_CHANNEL_INFO(pwm,
-> +			   HWMON_PWM_ENABLE,
-> +			   HWMON_PWM_ENABLE
-> +			   ),
->   	NULL
->   };
->  =20
-> @@ -268,8 +561,8 @@ static const struct hwmon_chip_info msi_wmi_platform=
-_chip_info =3D {
->   	.info =3D msi_wmi_platform_info,
->   };
->  =20
-> -static ssize_t msi_wmi_platform_write(struct file *fp, const char __use=
-r *input, size_t length,
-> -				      loff_t *offset)
-> +static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const ch=
-ar __user *input,
-> +					      size_t length, loff_t *offset)
->   {
->   	struct seq_file *seq =3D fp->private_data;
->   	struct msi_wmi_platform_debugfs_data *data =3D seq->private;
-> @@ -303,7 +596,7 @@ static ssize_t msi_wmi_platform_write(struct file *f=
-p, const char __user *input,
->   	return length;
->   }
->  =20
-> -static int msi_wmi_platform_show(struct seq_file *seq, void *p)
-> +static int msi_wmi_platform_debugfs_show(struct seq_file *seq, void *p)
->   {
->   	struct msi_wmi_platform_debugfs_data *data =3D seq->private;
->   	int ret;
-> @@ -315,19 +608,19 @@ static int msi_wmi_platform_show(struct seq_file *=
-seq, void *p)
->   	return ret;
->   }
->  =20
-> -static int msi_wmi_platform_open(struct inode *inode, struct file *fp)
-> +static int msi_wmi_platform_debugfs_open(struct inode *inode, struct fi=
-le *fp)
->   {
->   	struct msi_wmi_platform_debugfs_data *data =3D inode->i_private;
->  =20
->   	/* The seq_file uses the last byte of the buffer for detecting buffer=
- overflows */
-> -	return single_open_size(fp, msi_wmi_platform_show, data, data->length =
-+ 1);
-> +	return single_open_size(fp, msi_wmi_platform_debugfs_show, data, data-=
->length + 1);
->   }
->  =20
->   static const struct file_operations msi_wmi_platform_debugfs_fops =3D =
-{
->   	.owner =3D THIS_MODULE,
-> -	.open =3D msi_wmi_platform_open,
-> +	.open =3D msi_wmi_platform_debugfs_open,
->   	.read =3D seq_read,
-> -	.write =3D msi_wmi_platform_write,
-> +	.write =3D msi_wmi_platform_debugfs_write,
->   	.llseek =3D seq_lseek,
->   	.release =3D single_release,
->   };
-> @@ -389,7 +682,8 @@ static int msi_wmi_platform_hwmon_init(struct msi_wm=
-i_platform_data *data)
->   	struct device *hdev;
->  =20
->   	hdev =3D devm_hwmon_device_register_with_info(&data->wdev->dev, "msi_=
-wmi_platform", data,
-> -						    &msi_wmi_platform_chip_info, NULL);
-> +						    &msi_wmi_platform_chip_info,
-> +						    msi_wmi_platform_hwmon_groups);
->  =20
->   	return PTR_ERR_OR_ZERO(hdev);
->   }
+
+
