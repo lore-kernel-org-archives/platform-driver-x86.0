@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35352222C3;
-	Thu, 15 May 2025 11:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FD818DB37;
+	Thu, 15 May 2025 11:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309601; cv=none; b=F7565AhxG+9Nbypm+yJmVvV+eXsl9B5fecMEoBVyowOFbsPDtsYoiFo2fxQwd1Xih67reNKfRs3GQnHIGDO/uQUoKkl5/WpUr1pPbPArRlnHtsBvFLdz6iotdc1tj+wzTNOl/zp07d15T9iQX4wV383i5N9p2u0PzsuK6j9zLew=
+	t=1747309742; cv=none; b=iw7uWMjSQcBzPc7fXlbZG9WV7zVTizPcF8kVZ6vw40anTry6xatF6E7OQyXx3e5tRosySQGU+FBSwuNqtsPHELUIusqdb2XmuYmNP3gBJd6CrSvodegYT1yAk1CQDT9/rVJHueRRXoM9vmFdKBYVJQSrR/WDUS/x9J4XowiBUzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309601; c=relaxed/simple;
-	bh=fUtdb1ZBLSNxOPTuGClCZkpTsX8/OnyIZ17b09HUUn8=;
+	s=arc-20240116; t=1747309742; c=relaxed/simple;
+	bh=+UrfJA0kWpQhsXymgUbijz4kmy6evjIkw5lKxUYPVSk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mL6p63LJKc370Di+SJeNFzlSzjauoPEcYxFduHcOqlLKZV2+w+lkh8sa4wbiHcbfLVeI6UCvtFIUXdGonR5AASnewDE9W77+61TclO52jQDS6H6V6igCTCKZc3SW1nykVD+aOjeJAEWlj3oP6SEV48MVz7BdVf9URbKeOqOe2d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta26EHQG; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=ERCF66gNAqwql4vViH/Cmr6ni6sPBhMDqHK11Umfu9xJ70E49oUd4MLHKoKuVzKbMBkykOEIfwgMt/kNeOx0QuvO3EKAQHoaIhtzu44fdmR8AfbosN9mt2ZgG87PNewNgozQ5wmjBP7Tmdw2yBFSREXTC1dxREK8nNfx0IVvYiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WWFhqUFf; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta26EHQG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WWFhqUFf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747309600; x=1778845600;
+  t=1747309741; x=1778845741;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=fUtdb1ZBLSNxOPTuGClCZkpTsX8/OnyIZ17b09HUUn8=;
-  b=Ta26EHQGhXBYUB+C2TPgtKl6jhmNBoZjhcju53dzf5A1HYDsEh8s/rmW
-   c/jPxYFfL7RS6+3DFp8a0mPfLJSxLzrF6qfVk+YFOkNIgSGxiF2zRDmky
-   xIeJ+Wpu73PGg/mJnH/fBvTst4OdmQmgXFkyX/hiUNA0Z2On5X51ZFQA9
-   J0SuLJWfxAEIYObokdhzKYnuMQp8lVFaWdJE3x1yVr32zVh3GPgl7PgvL
-   /tYJm/MMDd71O6TgK32uSJARp8ugMoK2I70pX4AIgFR6WNq8WmV/Kr5I2
-   wtufnKDMQFJnFHW92y5ikqBbVfqHCdknvy8Kab/FnhRhk62dYz/a0vNra
+  bh=+UrfJA0kWpQhsXymgUbijz4kmy6evjIkw5lKxUYPVSk=;
+  b=WWFhqUFfnDK+jf4mk613KkIQJBet3aI66ZDASCmDiwgAhNntJETgKcGi
+   9Eivr05oJo9sGxEMWBB8hoQwRqXLUXpxB6+N1hzk4fDoBOIz2oRQe/WYR
+   HwOi0ECBa7Pg/y5iEVLmTpG5q1ha4dwu3MfjtY9uOLoPymyohmtPLv5PG
+   secSvtf62ZC5VoOh1xkqZjoHFeguZPdkuD03JBLawIsJ5l4ucs8suQOiy
+   bS652cFH3gsL7jlZsYrlTrTXJ94EONy5Bvb1IG5ktRPDUPUO95cUG1Dko
+   pItrF5B94gR761r+IF8kSRYQkIjjmYDydEvxp4yVmAbyNRuZyhpDcc/Tl
    g==;
-X-CSE-ConnectionGUID: glBsl4/1SLGt9qu5XkavuA==
-X-CSE-MsgGUID: JdfnAczuSNeOr7ZaVqoDgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48357276"
+X-CSE-ConnectionGUID: Nt+DQEdiRcqIkV/mmv1jEw==
+X-CSE-MsgGUID: oZJHM1kYSMK+MMy0Rfyivw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71750349"
 X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="48357276"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:46:39 -0700
-X-CSE-ConnectionGUID: hJHve9/NTMOjfvIgjAAtHg==
-X-CSE-MsgGUID: 3RhB2/lUTwWpip8Ru2n/xA==
+   d="scan'208";a="71750349"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:48:59 -0700
+X-CSE-ConnectionGUID: P1TP7DtjS2ep0rddaKbbwg==
+X-CSE-MsgGUID: t4Bo2VtESbKcexAMVdiBQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138226205"
+   d="scan'208";a="143452561"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:46:36 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:48:57 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: jwoithe@just42.net, hdegoede@redhat.com, 
- Valtteri Koskivuori <vkoskiv@gmail.com>
+To: hdegoede@redhat.com, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250509184251.713003-1-vkoskiv@gmail.com>
-References: <20250509184251.713003-1-vkoskiv@gmail.com>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Support Lifebook S2110
- hotkeys
-Message-Id: <174730959183.1777.1876414558560379948.b4-ty@linux.intel.com>
-Date: Thu, 15 May 2025 14:46:31 +0300
+In-Reply-To: <20250508230250.1186619-1-srinivas.pandruvada@linux.intel.com>
+References: <20250508230250.1186619-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v3 0/5] intel-uncore-freq: Add agent_types and die_id
+ attributes
+Message-Id: <174730973209.2036.3411257270314629381.b4-ty@linux.intel.com>
+Date: Thu, 15 May 2025 14:48:52 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,26 +63,36 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 09 May 2025 21:42:49 +0300, Valtteri Koskivuori wrote:
+On Thu, 08 May 2025 16:02:37 -0700, Srinivas Pandruvada wrote:
 
-> The S2110 has an additional set of media playback control keys enabled
-> by a hardware toggle button that switches the keys between "Application"
-> and "Player" modes. Toggling "Player" mode just shifts the scancode of
-> each hotkey up by 4.
+> Add two new attributes, so that orchestration software like Kubernetes can
+> target specific dies and agents for uncore frequency control.
 > 
-> Add defines for new scancodes, and a keymap and dmi id for the S2110.
+> v3:
+> Patch 1/5 has changes to change to loops
+> 
+> v2:
+> In patch 5/5 fix grammar as reported by Alok Tiwari
 > 
 > [...]
 
 
 Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
-      commit: a7e255ff9fe4d9b8b902023aaf5b7a673786bb50
+[1/5] platform/x86/intel-uncore-freq: Add attributes to show agent types
+      commit: b98fa870fce2335433f20b2213e526b8d99e15dc
+[2/5] Documentation: admin-guide: pm: Add documentation for agent_types
+      commit: bfbe7729d6dd2e2c8ef44f9179ad11ab766150e6
+[3/5] platform/x86/intel: power-domains: Add interface to get Linux die ID
+      commit: e37be5d85c602e07c1e2930c2cc98ebd46f9ecf7
+[4/5] platform/x86/intel-uncore-freq: Add attributes to show die_id
+      commit: 247b43fcd8722914282fbd432e9cc41cd3971e31
+[5/5] Documentation: admin-guide: pm: Add documentation for die_id
+      commit: e636e3f7421b2ff8e706a835f78f071cb0d8e197
 
 --
  i.
