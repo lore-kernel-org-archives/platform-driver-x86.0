@@ -1,123 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFBC289E2B;
-	Thu, 15 May 2025 09:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35352222C3;
+	Thu, 15 May 2025 11:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300977; cv=none; b=b70T36wHO6at0159ZG820/Xz1+uPPXH1i4fL+cfYy/uDNVJn4r23d4wssYjSTsD6+LMjhdnKW6vRcWtrUq1hnGJQMoy2EntG7snX9HgI4iovaWaTtKinlS9pJ/6qWvObHG89BiAVplGQW6kpQsfPm1x//HpczzJCov00T4pSm8I=
+	t=1747309601; cv=none; b=F7565AhxG+9Nbypm+yJmVvV+eXsl9B5fecMEoBVyowOFbsPDtsYoiFo2fxQwd1Xih67reNKfRs3GQnHIGDO/uQUoKkl5/WpUr1pPbPArRlnHtsBvFLdz6iotdc1tj+wzTNOl/zp07d15T9iQX4wV383i5N9p2u0PzsuK6j9zLew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300977; c=relaxed/simple;
-	bh=/XyyqdAFLfTvtOdOvYOEoJsJo0ZYtebZv7lzp117MMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwPGCPkbvWBm/Y5I8i+XRKMX//OTsZcg6itFfopvSV5QHIqvELLTIMrSAPe6lWLEUX0vVgyOmKNZ1qdwGDHpvw8KITbUlEwVK4TogeKqrnq31W5s5Oeck5/n4S9YRpHDq+tkfdXWJM8LflwmGHqmSFqpuU/OFp8BHSbGirxh6+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCUpFO0e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747309601; c=relaxed/simple;
+	bh=fUtdb1ZBLSNxOPTuGClCZkpTsX8/OnyIZ17b09HUUn8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mL6p63LJKc370Di+SJeNFzlSzjauoPEcYxFduHcOqlLKZV2+w+lkh8sa4wbiHcbfLVeI6UCvtFIUXdGonR5AASnewDE9W77+61TclO52jQDS6H6V6igCTCKZc3SW1nykVD+aOjeJAEWlj3oP6SEV48MVz7BdVf9URbKeOqOe2d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta26EHQG; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCUpFO0e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D210FC4CEE7;
-	Thu, 15 May 2025 09:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747300975;
-	bh=/XyyqdAFLfTvtOdOvYOEoJsJo0ZYtebZv7lzp117MMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vCUpFO0eiIjGdw2hwNIPSSFvC/uEEfkQJOSf59VgMbLwO1KrXvu4mxn8XCEFAZ7Ar
-	 +czvu6eBWzzP75vIKtFwdPXoGDI6llAjQI7SQ7D/Dj33j9++KihkhMVdsdSVJMXfn4
-	 zIDyQNdB1O+P/kuJiUMndXDEidK5gNOyYRrgtqGqD5Yz/ZLeizaARnCrdq6SzLHP4J
-	 2fGdl7w70LA34d6h4Zp2NyHz9w7quPzdGHpWfjsDjtaCvdqFKVszOwPnL1YrK+uhFL
-	 P66NQilQG4sq3vBfbsciXZCTA+AmEiIn4XOyyWKkW6ISF7uiArNLMGVkAw9vXDILNv
-	 3qIGrIf3nY+IQ==
-Date: Thu, 15 May 2025 11:22:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	PDx86 ML <platform-driver-x86@vger.kernel.org>,
-	Suma Hegde <suma.hegde@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
-Message-ID: <aCWyatvDQEG5l6NV@gmail.com>
-References: <20250515164620.071d70e3@canb.auug.org.au>
- <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta26EHQG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747309600; x=1778845600;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=fUtdb1ZBLSNxOPTuGClCZkpTsX8/OnyIZ17b09HUUn8=;
+  b=Ta26EHQGhXBYUB+C2TPgtKl6jhmNBoZjhcju53dzf5A1HYDsEh8s/rmW
+   c/jPxYFfL7RS6+3DFp8a0mPfLJSxLzrF6qfVk+YFOkNIgSGxiF2zRDmky
+   xIeJ+Wpu73PGg/mJnH/fBvTst4OdmQmgXFkyX/hiUNA0Z2On5X51ZFQA9
+   J0SuLJWfxAEIYObokdhzKYnuMQp8lVFaWdJE3x1yVr32zVh3GPgl7PgvL
+   /tYJm/MMDd71O6TgK32uSJARp8ugMoK2I70pX4AIgFR6WNq8WmV/Kr5I2
+   wtufnKDMQFJnFHW92y5ikqBbVfqHCdknvy8Kab/FnhRhk62dYz/a0vNra
+   g==;
+X-CSE-ConnectionGUID: glBsl4/1SLGt9qu5XkavuA==
+X-CSE-MsgGUID: JdfnAczuSNeOr7ZaVqoDgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48357276"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="48357276"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:46:39 -0700
+X-CSE-ConnectionGUID: hJHve9/NTMOjfvIgjAAtHg==
+X-CSE-MsgGUID: 3RhB2/lUTwWpip8Ru2n/xA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138226205"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:46:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: jwoithe@just42.net, hdegoede@redhat.com, 
+ Valtteri Koskivuori <vkoskiv@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250509184251.713003-1-vkoskiv@gmail.com>
+References: <20250509184251.713003-1-vkoskiv@gmail.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Support Lifebook S2110
+ hotkeys
+Message-Id: <174730959183.1777.1876414558560379948.b4-ty@linux.intel.com>
+Date: Thu, 15 May 2025 14:46:31 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
+On Fri, 09 May 2025 21:42:49 +0300, Valtteri Koskivuori wrote:
 
-* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-
-> On Thu, 15 May 2025, Stephen Rothwell wrote:
+> The S2110 has an additional set of media playback control keys enabled
+> by a hardware toggle button that switches the keys between "Application"
+> and "Player" modes. Toggling "Player" mode just shifts the scancode of
+> each hotkey up by 4.
 > 
-> > Hi all,
-> > 
-> > After merging the drivers-x86 tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/platform/x86/amd/hsmp/hwmon.c: In function 'hsmp_hwmon_write':
-> > drivers/platform/x86/amd/hsmp/hwmon.c:38:16: error: implicit declaration of function 'hsmp_send_message' [-Wimplicit-function-declaration]
-> >    38 |         return hsmp_send_message(&msg);
-> >       |                ^~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
-> > 
-> > I have used the drivers-x86 tree from next-20250514 for today.
+> Add defines for new scancodes, and a keymap and dmi id for the S2110.
 > 
-> Hi Stephen,
-> 
-> This is a direct result of moving a pdx86 related header behind my back:
-> 
-> https://lore.kernel.org/all/20250413084144.3746608-5-mingo@kernel.org/
-> 
-> That change wasn't sent to the relevant MAINTAINERS entries (and obviously 
-> then does not contain my ack either).
+> [...]
 
-Sorry about that! I always try to over- Cc:, but missed you this time.
 
-> Ingo, any suggestion how to deal with this breakage? Do you have e.g. 
-> an IB which I could pull into pdx86 tree which has only these header 
-> moves?
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-I'm not sure that's needed, the above build failure is not really a 
-build failure caused by the platform-drivers-x86.git tree, it is a 
-semantic merge conflict that should be resolved at the linux-next level 
-I think. (And which conflict should be mentioned to Linus by whoever 
-sends their tree second.)
+The list of commits applied:
+[1/1] platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
+      commit: a7e255ff9fe4d9b8b902023aaf5b7a673786bb50
 
-Stephen, could you apply the patch below perhaps?
+--
+ i.
 
-If not then I'll add back an <asm/amd_hsmp.h> wrapper to the x86 tree.
-
-Thanks,
-
-	Ingo
-
-================>
- drivers/platform/x86/amd/hsmp/hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/hwmon.c b/drivers/platform/x86/amd/hsmp/hwmon.c
-index 7ffb61e0ef62..0cc9a742497f 100644
---- a/drivers/platform/x86/amd/hsmp/hwmon.c
-+++ b/drivers/platform/x86/amd/hsmp/hwmon.c
-@@ -7,7 +7,7 @@
-  * This file provides hwmon implementation for HSMP interface.
-  */
- 
--#include <asm/amd_hsmp.h>
-+#include <asm/amd/hsmp.h>
- 
- #include <linux/device.h>
- #include <linux/err.h>
