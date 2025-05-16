@@ -1,127 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AA623AD;
-	Fri, 16 May 2025 01:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE5E3D69
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 May 2025 06:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747360566; cv=none; b=YLzeLGKEroo6BDuszDLpLDfLbePcQ+GGl88hugqmDdUXeDKFhChPd7pKajhd3hPan8SjSHyT7vf5lOX1c+D/SuiJIqPLdi10aOoJTZx0STN7rRAT7ZRHueYjHjdyqeyCLtumTUiDcWhHr/YoGQx6ItcZHBXBmifqEuRBA66huRI=
+	t=1747375477; cv=none; b=TmZoeatpC/p3c8SrZGj+MPhfo8Z0CX0416w8Nocq3uC0VQiuVWh5SKfxwMAA64w75WZa3Gm4U0TUFuIF5N+HwXwBI+FdRRoY0OFiRsyNitTh8faKnbLW/7tTg3cABCRlb53PAdvhKqniKBcZhN2q0tEU92iP5gHz2Sl7zB4k0n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747360566; c=relaxed/simple;
-	bh=GL5gVAuFOk2LeSHFbYE6Y3fD6MyXSNNeP8jl2yiUPQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hKSvjdhQrHJCDvy4VM853lAtGBhvawNukCrAVnQziBcD0LoUqFdOtdbbPU08DQsL1MoLKlvGng2je6ZBj8WIUE3yclUC5flxoic8wcJudv58IQ8NzLznmsZVeHk+kIH6cjrSngm/UJwdnXqyGkPdfzhKb/lly9HF8XuqIJICisI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbUFM4le; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747375477; c=relaxed/simple;
+	bh=a2WgICQykR47KOS2D5Nw1on61yUFgFC7+AolV799EuM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hqCyO0n3OA07EsJSVcBAcOS7CtLDuLHm6TmCPLjkUJkQuy7sVPvAULJhslP8JetSX4T6vrJttMe43f8yLUAxjq+3pE9m1+Aw/K6cI0odn7QPHRanC5K4aYt5GYsm6TvrU2djaAwC1DJQ0CR2s8axf+l5yIJ/pNkT2tRfm+3eWBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hDB4uIwU; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbUFM4le"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hDB4uIwU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747360563; x=1778896563;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GL5gVAuFOk2LeSHFbYE6Y3fD6MyXSNNeP8jl2yiUPQw=;
-  b=dbUFM4leqw9kdMvY3M2soKQsid0bVYwBliv/6iM0Z2Es3ptPY2tSSy0s
-   SDFJ+NyH4fS7pxg6+xBFJpqXunEBbqJZS6svpIQnrA+1+p0jqatMgElLX
-   CrA702bpdWVYgnWdWyXnbq1T9xWg7CfXNiCqvnfTcQO/Qr9pMWScpxoX1
-   wFGX4S5j9BSQw9VmcYGUkgd3Ewpf8QmeQTtz39E8LEvp5aKXS3P9uT/2e
-   xNtlVfCEet2o/5LSMOtKCZHet9/swmYDjiax2jHuuj+gju06CD6WSK5HR
-   jwPLw3w579RD1n+UcbejyTJDHlDWDH5kY2Ge9KkpMrTgGMK4QIGiuwKdQ
-   g==;
-X-CSE-ConnectionGUID: QU8mtAOhTUGL3CWVgF6ihg==
-X-CSE-MsgGUID: mtyS4GBuQhWmoCz6Xa97xQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49305488"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="49305488"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 18:56:02 -0700
-X-CSE-ConnectionGUID: Gona/V5USEaobqVLBA23VA==
-X-CSE-MsgGUID: ezm2cH0fT5SpLASKbSf+CQ==
+  t=1747375475; x=1778911475;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=a2WgICQykR47KOS2D5Nw1on61yUFgFC7+AolV799EuM=;
+  b=hDB4uIwUykCt/TDs/Zws6GnZMH2iZ942b/Z+e7qQ48N1Jkn+OtQx8Xfm
+   NXgMQoLjQIKUFioS7Oy8m91Kz6B8NNhnc0j/A2HLEDGxczXwd8z3xdJwO
+   uHbjAdoQxP+gZxAA55C5gVO9t7Njqhc0M2j+qIcvaHlHmyoB8l9QCc7Ck
+   J/M9DxhcebbkJbV280R5/YfZBDmkdWB8bX06OxSR6FDjJWdow0O8dUsxo
+   zmt3RQTNnV5OaK7hl+Ck1cgaQiaSAKuPmR7CnqkVBRbit4x1VwUuLpV05
+   /5Pmh+l3TnvERnUqe2p2ahQV50fYp2eHmLykRsFRW9hPc2hrk6VfzAX9U
+   Q==;
+X-CSE-ConnectionGUID: Kv17MbiPQVqRl+29SJijhg==
+X-CSE-MsgGUID: KTUuL6lrSumC0ebwLh4jbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="48588344"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="48588344"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:04:34 -0700
+X-CSE-ConnectionGUID: rRpE71hUSaqAiV893xJopw==
+X-CSE-MsgGUID: pJQ7Rbj6ST+tAKiOI15+Ng==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="138428560"
-Received: from wopr.jf.intel.com ([10.54.75.146])
-  by orviesa006.jf.intel.com with ESMTP; 15 May 2025 18:56:02 -0700
-From: Todd Brandt <todd.e.brandt@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	xi.pardee@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	todd.e.brandt@linux.intel.com,
-	todd.e.brandt@intel.com
-Subject: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to intel_pmc_core driver
-Date: Thu, 15 May 2025 18:56:00 -0700
-Message-Id: <3492e00e6e343d03e28bc58c4365b282e71e786d.1747360275.git.todd.e.brandt@intel.com>
-X-Mailer: git-send-email 2.25.1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143363464"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.94])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:04:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 16 May 2025 09:04:28 +0300 (EEST)
+To: Mario Limonciello <superm1@kernel.org>
+cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v4 1/3] platform/x86/amd: pmf: Use device managed
+ allocations
+In-Reply-To: <20250515162351.2111468-2-superm1@kernel.org>
+Message-ID: <4570e60a-c313-56ac-d85b-072aa3395ec2@linux.intel.com>
+References: <20250515162351.2111468-1-superm1@kernel.org> <20250515162351.2111468-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The ARL requires that the GMA and NPU devices both be in D3Hot in order
-for PC10 and S0iX to be achieved in S2idle. The original ARL-H/U addition
-to the intel_pmc_core driver attempted to do this by switching them to D3
-in the init and resume calls of the intel_pmc_core driver.
+On Thu, 15 May 2025, Mario Limonciello wrote:
 
-The problem is the ARL-H/U have a different NPU device and thus are not
-being properly set and thus S0iX does not work properly in ARL-H/U. This
-patch creates a new ARL-H specific device id that is correct and also
-adds the D3 fixup to the suspend callback. This way if the PCI devies
-drop from D3 to D0 after resume they can be corrected for the next
-suspend. Thus there is no dropout in S0iX.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> If setting up smart PC fails for any reason then this can lead to
+> a double free when unloading amd-pmf.  This is because dev->buf was
+> freed but never set to NULL and is again freed in amd_pmf_remove().
+> 
+> To avoid subtle allocation bugs in failures leading to a double free
+> change all allocations into device managed allocations.
+> 
+> Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
+> Link: https://lore.kernel.org/r/20250512211154.2510397-2-superm1@kernel.org
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v4:
+>  * Handle failures from memory allocation on sideload (Ilpo)
+>  * Allocate memory before copying from user (Ilpo)
+> ---
+>  drivers/platform/x86/amd/pmf/core.c   |  3 +-
+>  drivers/platform/x86/amd/pmf/tee-if.c | 58 +++++++++------------------
+>  2 files changed, 20 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 96821101ec773..395c011e837f1 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -280,7 +280,7 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
+>  			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
+>  		}
+>  
+> -		dev->buf = kzalloc(dev->mtable_size, GFP_KERNEL);
+> +		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size, GFP_KERNEL);
+>  		if (!dev->buf)
+>  			return -ENOMEM;
+>  	}
+> @@ -493,7 +493,6 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>  	mutex_destroy(&dev->lock);
+>  	mutex_destroy(&dev->update_mutex);
+>  	mutex_destroy(&dev->cb_mutex);
+> -	kfree(dev->buf);
+>  }
+>  
+>  static const struct attribute_group *amd_pmf_driver_groups[] = {
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index d3bd12ad036ae..6d85601812225 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -350,38 +350,30 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
+>  				   size_t length, loff_t *pos)
+>  {
+>  	struct amd_pmf_dev *dev = filp->private_data;
+> -	unsigned char *new_policy_buf;
+>  	int ret;
+>  
+>  	/* Policy binary size cannot exceed POLICY_BUF_MAX_SZ */
+>  	if (length > POLICY_BUF_MAX_SZ || length == 0)
+>  		return -EINVAL;
+>  
+> -	/* re-alloc to the new buffer length of the policy binary */
+> -	new_policy_buf = memdup_user(buf, length);
+> -	if (IS_ERR(new_policy_buf))
+> -		return PTR_ERR(new_policy_buf);
+> -
+> -	kfree(dev->policy_buf);
+> -	dev->policy_buf = new_policy_buf;
+> +	devm_kfree(dev->dev, dev->policy_buf);
+> +	dev->policy_buf = devm_kzalloc(dev->dev, length, GFP_KERNEL);
+> +	if (IS_ERR(dev->policy_buf))
+> +		return -ENOMEM;
+>  	dev->policy_sz = length;
+>  
+> -	if (!amd_pmf_pb_valid(dev)) {
+> -		ret = -EINVAL;
+> -		goto cleanup;
+> -	}
+> +	if (copy_from_user(dev->policy_buf, buf, length))
+> +		return -EFAULT;
 
-Signed-off-by: Todd Brandt <todd.e.brandt@intel.com>
----
- drivers/platform/x86/intel/pmc/arl.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Previously, if anything failed here, the old buffer was left in place.
+I always assumed it was intentional. But after your change, first thing 
+that happens is freeing the old policy_buf.
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 320993bd6d31..5053e3dd8f5e 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -681,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] = {
- 
- #define ARL_NPU_PCI_DEV			0xad1d
- #define ARL_GNA_PCI_DEV			0xae4c
-+#define ARL_H_NPU_PCI_DEV		0x7d1d
- #define ARL_H_GNA_PCI_DEV		0x774c
- /*
-  * Set power state of select devices that do not have drivers to D3
-@@ -694,7 +695,7 @@ static void arl_d3_fixup(void)
- 
- static void arl_h_d3_fixup(void)
- {
--	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-+	pmc_core_set_device_d3(ARL_H_NPU_PCI_DEV);
- 	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
- }
- 
-@@ -705,6 +706,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
- 	return cnl_resume(pmcdev);
- }
- 
-+static void arl_h_suspend(struct pmc_dev *pmcdev)
-+{
-+	arl_h_d3_fixup();
-+
-+	cnl_suspend(pmcdev);
-+}
-+
- static int arl_h_resume(struct pmc_dev *pmcdev)
- {
- 	arl_h_d3_fixup();
-@@ -739,7 +747,7 @@ struct pmc_dev_info arl_h_pmc_dev = {
- 	.dmu_guid = ARL_PMT_DMU_GUID,
- 	.regmap_list = arl_pmc_info_list,
- 	.map = &mtl_socm_reg_map,
--	.suspend = cnl_suspend,
-+	.suspend = arl_h_suspend,
- 	.resume = arl_h_resume,
- 	.init = arl_h_core_init,
- };
+We're long past the point where I've started to lose confidence in this 
+patch :-(. Could we like just make the minimal changes here to convert 
+into devm_*() and nothing more? If you want to make any other changes, be 
+it reordering logic, removal of the local variable, or whatever, please 
+put those into own patch(es) and properly justify them.
+
 -- 
-2.25.1
+ i.
 
+> +
+> +	if (!amd_pmf_pb_valid(dev))
+> +		return -EINVAL;
+>  
+>  	amd_pmf_hex_dump_pb(dev);
+>  	ret = amd_pmf_start_policy_engine(dev);
+>  	if (ret < 0)
+> -		goto cleanup;
+> +		return ret;
+>  
+>  	return length;
+> -
+> -cleanup:
+> -	kfree(dev->policy_buf);
+> -	dev->policy_buf = NULL;
+> -	return ret;
+>  }
+>  
+>  static const struct file_operations pb_fops = {
+> @@ -532,13 +524,13 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	dev->policy_base = devm_ioremap_resource(dev->dev, dev->res);
+>  	if (IS_ERR(dev->policy_base)) {
+>  		ret = PTR_ERR(dev->policy_base);
+> -		goto err_free_dram_buf;
+> +		goto err_cancel_work;
+>  	}
+>  
+> -	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
+> +	dev->policy_buf = devm_kzalloc(dev->dev, dev->policy_sz, GFP_KERNEL);
+>  	if (!dev->policy_buf) {
+>  		ret = -ENOMEM;
+> -		goto err_free_dram_buf;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> @@ -546,21 +538,21 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (!amd_pmf_pb_valid(dev)) {
+>  		dev_info(dev->dev, "No Smart PC policy present\n");
+>  		ret = -EINVAL;
+> -		goto err_free_policy;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	amd_pmf_hex_dump_pb(dev);
+>  
+> -	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+> +	dev->prev_data = devm_kzalloc(dev->dev, sizeof(*dev->prev_data), GFP_KERNEL);
+>  	if (!dev->prev_data) {
+>  		ret = -ENOMEM;
+> -		goto err_free_policy;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(amd_pmf_ta_uuid); i++) {
+>  		ret = amd_pmf_tee_init(dev, &amd_pmf_ta_uuid[i]);
+>  		if (ret)
+> -			goto err_free_prev_data;
+> +			goto err_cancel_work;
+>  
+>  		ret = amd_pmf_start_policy_engine(dev);
+>  		switch (ret) {
+> @@ -575,7 +567,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  		default:
+>  			ret = -EINVAL;
+>  			amd_pmf_tee_deinit(dev);
+> -			goto err_free_prev_data;
+> +			goto err_cancel_work;
+>  		}
+>  
+>  		if (status)
+> @@ -584,7 +576,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  
+>  	if (!status && !pb_side_load) {
+>  		ret = -EINVAL;
+> -		goto err_free_prev_data;
+> +		goto err_cancel_work;
+>  	}
+>  
+>  	if (pb_side_load)
+> @@ -600,12 +592,6 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	if (pb_side_load && dev->esbin)
+>  		amd_pmf_remove_pb(dev);
+>  	amd_pmf_tee_deinit(dev);
+> -err_free_prev_data:
+> -	kfree(dev->prev_data);
+> -err_free_policy:
+> -	kfree(dev->policy_buf);
+> -err_free_dram_buf:
+> -	kfree(dev->buf);
+>  err_cancel_work:
+>  	cancel_delayed_work_sync(&dev->pb_work);
+>  
+> @@ -621,11 +607,5 @@ void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
+>  		amd_pmf_remove_pb(dev);
+>  
+>  	cancel_delayed_work_sync(&dev->pb_work);
+> -	kfree(dev->prev_data);
+> -	dev->prev_data = NULL;
+> -	kfree(dev->policy_buf);
+> -	dev->policy_buf = NULL;
+> -	kfree(dev->buf);
+> -	dev->buf = NULL;
+>  	amd_pmf_tee_deinit(dev);
+>  }
+> 
