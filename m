@@ -1,33 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2FB1CEAC2
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 May 2025 19:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816F81581F0;
+	Fri, 16 May 2025 21:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747423621; cv=none; b=INZZPNL5uITKvluQBOJVEd6CEspTm0p0bICuGUDc19oXQLjRLkmhOBAUaIFOT5bTaRALKGYYjr1JFewYjBFWwKiXbcx839lehFMHUeUoLci0hxPKmbOi1p2DNniYefEXurFcbhChDN/1cpt3vxTGiUuIX6PIkbbLgcpDj7I2mow=
+	t=1747429448; cv=none; b=KBpdU5q9HGi8GsCdM0j5yfXTyQhdO1TAlTB2ghBfJ9upRm3fvOmw+BDaw9x1tTqqn0LDq2S5zRu7BCMQQLv9tBtVFWMpy4tOrXvkodX8e2GRgZuaKqFk4+cROKz3xh9yT4gMHCZp9FYn6qfce705QVtrV1kNGgL3sPoX0dmeqpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747423621; c=relaxed/simple;
-	bh=7FkZuRSp8kzhhu88AbEuUi/QsY5wtawG1puKJ1jDDOU=;
+	s=arc-20240116; t=1747429448; c=relaxed/simple;
+	bh=pfFugCWEaP3NhgchmOd8zrRq3qvntaZY1NCJWh7lx1M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GI4dYVWWXmZyvYk5RtPSvxCLaZkdp3RL0bOdWkwMYRr7jZrwM/6yj6Ef/jFOQkMUoFUx7uH+03MF8m81PwMZaeioGYfNBeYLjxLIVzONqm35Zur8wAbpa+7bZti4/SV0yWlShzWvQlzC2PN/qOI5hdx2th57k+ArkUKjgB9wEpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hP/Y6LtB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZFi3UCF89UKithmfpe8qANOu+zMe4Dzr8SH4fkLu1ioDJtDRYy7PNBU/ADPWx51/uWHus3vfhLgMkjITDcfpBlOx43/oKCz+wzrOosVzrs+tuyHnTDIfpLpOTyjN4T+9RedYxDGQX8EWe6SVr+P9TOasSB+ghzeCWhpSIwmARyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jm+CxyrE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hP/Y6LtB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA6FC4CEE4;
-	Fri, 16 May 2025 19:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747423621;
-	bh=7FkZuRSp8kzhhu88AbEuUi/QsY5wtawG1puKJ1jDDOU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hP/Y6LtB2KxbvZ5WkvyLDBbzYASEtCXrduU3qg1VpOh1wgGXItRhlEft9bPzP1Q1/
-	 DBt4BGVbbN7C3uwQwMCbtwaCJVQwOIx5V6+VMwR14g5oa6ljQhIn2KEcCHcy9iNq97
-	 WiTwFvPuyW/F2sU0ATuGHz+dbVlmwHfychLhZV/v63e4ugSrYoXmTO0UrstyubwDlk
-	 UtViiC1Zs6ZCPciBIqCFD6Q0byAHlEwJrzgbXAAYgQ7jfHHlXCtKaOCpJHu6nZdmXv
-	 iiKX/40AvmXwv1XZl56f4ZlDerl1AlExQegsLoJu9icBDZ/R8Yd8jytwgkNdUEUhiO
-	 pOzhQbyhQIJEw==
-Message-ID: <82933030-59fe-436f-a43e-934f00c20bfa@kernel.org>
-Date: Fri, 16 May 2025 14:26:59 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jm+CxyrE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=WiO93ROMEx5JisucJLumxe2j6tGvTF9kF/SEZl7Lxmg=; b=jm+CxyrEYXpoQxpAxxryFfK/e2
+	7Jd9K/24Wrcj4QIZxpTQULmxVy5RC9oUfL4uu5bBnJz8C7S570Ag9tBK3EqNl0XCFXvCk7a/9rJH5
+	/SQGqptqbKZU6/VWhGfN3nrCr4kdTn+gFdxRAo4rVNvxAUrr4KZ7iX4oC4+ji50k7QLutgzTEJEqK
+	y8GNhf2qXVjsjJxGIvcP5nSQHifvaXZYDLrjm6aE07FgSRtPQfuKAatAc7XHYy3Dj3PSiQvk4jJ6r
+	c16Ht2ukUlWNES/GYJtu4+bk3Y+JwiOfOXYzwEg3yoQBb6POa4dcDoDia5HmrU16/zIWESNvFhuYH
+	CXfhS6IA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uG2D0-00000000762-0cSG;
+	Fri, 16 May 2025 21:03:58 +0000
+Message-ID: <872eba5d-cd00-4597-abaa-8cd632a4b630@infradead.org>
+Date: Fri, 16 May 2025 14:03:07 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,165 +39,47 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] platform/x86/amd: pmf: Use device managed
- allocations
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250515162351.2111468-1-superm1@kernel.org>
- <20250515162351.2111468-2-superm1@kernel.org>
- <4570e60a-c313-56ac-d85b-072aa3395ec2@linux.intel.com>
- <45179f82-f423-4093-a748-9411b983b57f@kernel.org>
- <83097abc-0adb-f916-4d10-672f0ec3d41e@linux.intel.com>
+Subject: Re: linux-next: Tree for May 16
+ [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko]
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Carlos Bilbao <carlos.bilbao@kernel.org>
+References: <20250516202417.31b13d13@canb.auug.org.au>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <83097abc-0adb-f916-4d10-672f0ec3d41e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250516202417.31b13d13@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/16/2025 1:36 AM, Ilpo Järvinen wrote:
-> On Fri, 16 May 2025, Mario Limonciello wrote:
->> On 5/16/25 01:04, Ilpo Järvinen wrote:
->>> On Thu, 15 May 2025, Mario Limonciello wrote:
->>>
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> If setting up smart PC fails for any reason then this can lead to
->>>> a double free when unloading amd-pmf.  This is because dev->buf was
->>>> freed but never set to NULL and is again freed in amd_pmf_remove().
->>>>
->>>> To avoid subtle allocation bugs in failures leading to a double free
->>>> change all allocations into device managed allocations.
->>>>
->>>> Fixes: 5b1122fc4995f ("platform/x86/amd/pmf: fix cleanup in
->>>> amd_pmf_init_smart_pc()")
->>>> Link:
->>>> https://lore.kernel.org/r/20250512211154.2510397-2-superm1@kernel.org
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> ---
->>>> v4:
->>>>    * Handle failures from memory allocation on sideload (Ilpo)
->>>>    * Allocate memory before copying from user (Ilpo)
->>>> ---
->>>>    drivers/platform/x86/amd/pmf/core.c   |  3 +-
->>>>    drivers/platform/x86/amd/pmf/tee-if.c | 58 +++++++++------------------
->>>>    2 files changed, 20 insertions(+), 41 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/amd/pmf/core.c
->>>> b/drivers/platform/x86/amd/pmf/core.c
->>>> index 96821101ec773..395c011e837f1 100644
->>>> --- a/drivers/platform/x86/amd/pmf/core.c
->>>> +++ b/drivers/platform/x86/amd/pmf/core.c
->>>> @@ -280,7 +280,7 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev,
->>>> bool alloc_buffer)
->>>>    			dev_err(dev->dev, "Invalid CPU id: 0x%x",
->>>> dev->cpu_id);
->>>>    		}
->>>>    -		dev->buf = kzalloc(dev->mtable_size, GFP_KERNEL);
->>>> +		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size,
->>>> GFP_KERNEL);
->>>>    		if (!dev->buf)
->>>>    			return -ENOMEM;
->>>>    	}
->>>> @@ -493,7 +493,6 @@ static void amd_pmf_remove(struct platform_device
->>>> *pdev)
->>>>    	mutex_destroy(&dev->lock);
->>>>    	mutex_destroy(&dev->update_mutex);
->>>>    	mutex_destroy(&dev->cb_mutex);
->>>> -	kfree(dev->buf);
->>>>    }
->>>>      static const struct attribute_group *amd_pmf_driver_groups[] = {
->>>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c
->>>> b/drivers/platform/x86/amd/pmf/tee-if.c
->>>> index d3bd12ad036ae..6d85601812225 100644
->>>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->>>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->>>> @@ -350,38 +350,30 @@ static ssize_t amd_pmf_get_pb_data(struct file
->>>> *filp, const char __user *buf,
->>>>    				   size_t length, loff_t *pos)
->>>>    {
->>>>    	struct amd_pmf_dev *dev = filp->private_data;
->>>> -	unsigned char *new_policy_buf;
->>>>    	int ret;
->>>>      	/* Policy binary size cannot exceed POLICY_BUF_MAX_SZ */
->>>>    	if (length > POLICY_BUF_MAX_SZ || length == 0)
->>>>    		return -EINVAL;
->>>>    -	/* re-alloc to the new buffer length of the policy binary */
->>>> -	new_policy_buf = memdup_user(buf, length);
->>>> -	if (IS_ERR(new_policy_buf))
->>>> -		return PTR_ERR(new_policy_buf);
->>>> -
->>>> -	kfree(dev->policy_buf);
->>>> -	dev->policy_buf = new_policy_buf;
->>>> +	devm_kfree(dev->dev, dev->policy_buf);
->>>> +	dev->policy_buf = devm_kzalloc(dev->dev, length, GFP_KERNEL);
->>>> +	if (IS_ERR(dev->policy_buf))
->>>> +		return -ENOMEM;
->>>>    	dev->policy_sz = length;
->>>>    -	if (!amd_pmf_pb_valid(dev)) {
->>>> -		ret = -EINVAL;
->>>> -		goto cleanup;
->>>> -	}
->>>> +	if (copy_from_user(dev->policy_buf, buf, length))
->>>> +		return -EFAULT;
->>>
->>> Previously, if anything failed here, the old buffer was left in place.
->>> I always assumed it was intentional. But after your change, first thing
->>> that happens is freeing the old policy_buf.
->>
->> Yeah; in order to do devm without a double malloc it needs to be cleared
->> immediately.
+
+
+On 5/16/25 3:24 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I'm feeling like I must be missing something here, but I just fail to see
-> why the order _has to be_ changed when changing kfree() -> devm_kfree().
-
-Because the policy is coming in from userspace and you need to have 
-somewhere that is the right size to copy it to.
-
-As you mentioned wanting to remove the double malloc in the earlier 
-version this is the way to do it.
-
-IE when using copy_from_user() instead of memdup_user() the memory must 
-"already" be allocated.  That's what is done now with devm_kzalloc().
-
-Are you suggesting some sort of way to keep it in the same order and 
-subvert device managed allocations and "steal" the pointer?  Glib has a 
-concept like this, but I wasn't aware of a way to do in the kernel.
-
+> Changes since 20250515:
 > 
->> But this is a debugfs sideloading interface.  If you send a bad
->> binary you can just try again with a good one.
->>
->>>
->>> We're long past the point where I've started to lose confidence in this
->>> patch :-(. Could we like just make the minimal changes here to convert
->>> into devm_*() and nothing more? If you want to make any other changes, be
->>> it reordering logic, removal of the local variable, or whatever, please
->>> put those into own patch(es) and properly justify them.
->>>
->>
->> If we're aiming for a total minimal patch that just fixes the most immediate
->> issue that's v1 of this series [1].
-> 
-> As spelled out very clearly in the above comment, I'm aiming to a patch
-> which converts this to devm_*() without other changes. If you want to do
-> other changes, they should be in their own patch.
 
-I guess if there's a way to do this without changing the order I will do 
-it, but I don't see one RN.
+on x86_64:
 
-> 
->> Through the course of the discussion obviously there were more things raised
->> by Dan, and I feel that v4 is more robust.
->>
->> Maybe the right answer is to just pick up v1 for 6.15-rc, and this series for
->> 6.16?  Or if you want this to have more time in -next I can just resubmit it
->> after 6.16-rc1 and we aim for 6.17 with it.
->>
->> [1]
->> https://lore.kernel.org/platform-driver-x86/20250506131130.1446262-1-superm1@kernel.org/#t
->>
-> 
+ERROR: modpost: "hsmp_create_sensor" [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko] undefined!
+
+CONFIG_HWMON=m
+
+CONFIG_AMD_HSMP=y
+
+#
+# AMD HSMP Driver
+#
+CONFIG_AMD_HSMP_ACPI=m
+CONFIG_AMD_HSMP_PLAT=y
+# end of AMD HSMP Driver
+
+
+
+-- 
+~Randy
 
