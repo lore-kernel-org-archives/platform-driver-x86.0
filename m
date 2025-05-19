@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AEE230981;
-	Mon, 19 May 2025 21:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397D721FF58;
+	Mon, 19 May 2025 21:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689764; cv=none; b=dyp1El2r51rPu0warutgm+vhZjw8mUkvLuVaFLu+50gvmLzO+SGKHADDc9mXUU0+qNl7DppakkOKG+b0NkSmauGeUiprsf3G7U6coA3gyQ12Seg/kTL9lYQcZDzat/pWdcDt2hHZYdK67sHusiQl3w35G2yOfW5cUSRT3Y2i2WI=
+	t=1747689781; cv=none; b=JnN2kg0wdUvJNQuGFUlX3vdRzwD57OKoniqipokFdKJ887QY2wf5JjjfPYt+QRKXWLZ5pfVD6MsiIkyS/2KkLef8SZVlVJd5BS8qwrx31amHWGeoXtDmWf5hkvt78lt4rWQGh+kJgu3llXp9K4NCO29wjcmkGTozfoUn4yf1UJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689764; c=relaxed/simple;
-	bh=OI5P4Jm394yZ5E6GBd4Jat7JRI0seZhD1C9gtHKvD8E=;
+	s=arc-20240116; t=1747689781; c=relaxed/simple;
+	bh=XPqOwXfAgfZKTlDdhXFR0Y3hEXwmtuaVxdKBmLe1VOo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OMAkIEYAc0a9hLIg+naOmWoGDS1qWwKd7HdBtCScKTJcoJUf1ciqGol+2X59Uu7Y48GdGuhs6lpSjJkQbn+7xHPwa1Q8ohnx/nhJAMg03oA0369fusz/04vFA2jMRpHt5F9wKPfvrL28CPgBZsYz/kdpCiyNcaoNVwDbdHZi9Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJJxgIEb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=QpajMNdvflhUbEiCSIf096Zj5uIr2zPP+3Q1KfEe8sh6Qx66WLNIfV5JninqrllbuxuJaEJwZa7Wf8DoKDsh29FQYm/3wY0hYwPVlIAMZroFa3ephW5P27pvqqU7Ij9tBpNQmTxChIOMOU6PaRmW+t2VDRzPniC2CJabjvbOF08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWtpNabp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJJxgIEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F814C4CEE4;
-	Mon, 19 May 2025 21:22:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWtpNabp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1698C4CEF1;
+	Mon, 19 May 2025 21:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689764;
-	bh=OI5P4Jm394yZ5E6GBd4Jat7JRI0seZhD1C9gtHKvD8E=;
+	s=k20201202; t=1747689781;
+	bh=XPqOwXfAgfZKTlDdhXFR0Y3hEXwmtuaVxdKBmLe1VOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sJJxgIEbVFJxvtQOPUokbOsWfCArt+fMseiigGs0mp9oJ3NnSZ3VpEbcJD3f+8Yk1
-	 8icntg+FoXJ47Dae7lYUmby5QsaJExkA64HlpOLzXhSOc5o001BJZTE7dufVkR8Q/b
-	 I2AH4ROwGZrex/3YZMQDkGrIELHCa4yDTbFza6ar3YZ8DgUmTq7GzAPHyqpfR+7J/g
-	 EzScHPHk0eF9crSyR2OcR+idHEZ0b3HwXH8RvGzDIO2oCDlRp60ksPmxrYwy2AhYhj
-	 KPBQz+byzDRXTNU13WSt8GVgCNotQC3HrHK3A3lSUf91BXHreaD0/1CLRySmPfDlP0
-	 BiMrEZGkfUGpQ==
+	b=BWtpNabpaOx0wKkjFgy/T88aRyyXw88ssFsc5Je4VmVNWHEf/dmwGpNJREE8NU1DV
+	 1h2jUVLD/zKKuYvniuif9cynEghfBecd27n9L9lRTG73Bv/A0KgK8KTNb38AKN0Dro
+	 hrs6q1TCjKcoZWM6uR1i2FC77PANhkmfEyBwt2M4LPYALZVL3JuPrdNxTuBvcMBEik
+	 gLhdYuQKq9qaVfbfvt+EJlDE9vwEmTBmiLTSlUmzWpeKRzcLP99iRV8YCc3ilopuxC
+	 3HArDX6OSFlQu4ZfidVN8MUMWZLCCY1/BNEFbduOMPuBz5h1ShYmLw897yceps1Z8z
+	 WbEFvu5Pz2rKw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: John Chau <johnchau@0atlas.com>,
 	ibm-acpi-devel@lists.sourceforge.net,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 04/11] platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
-Date: Mon, 19 May 2025 17:22:30 -0400
-Message-Id: <20250519212237.1986368-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 3/8] platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
+Date: Mon, 19 May 2025 17:22:50 -0400
+Message-Id: <20250519212255.1986527-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519212237.1986368-1-sashal@kernel.org>
-References: <20250519212237.1986368-1-sashal@kernel.org>
+In-Reply-To: <20250519212255.1986527-1-sashal@kernel.org>
+References: <20250519212255.1986527-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,7 +53,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.91
+X-stable-base: Linux 6.1.139
 Content-Transfer-Encoding: 8bit
 
 From: John Chau <johnchau@0atlas.com>
@@ -92,10 +92,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cde5f845cf255..bcb0689101e2b 100644
+index 26ca9c453a59c..295939e9ac69d 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11315,6 +11315,8 @@ static int __must_check __init get_thinkpad_model_data(
+@@ -11517,6 +11517,8 @@ static int __must_check __init get_thinkpad_model_data(
  		tp->vendor = PCI_VENDOR_ID_IBM;
  	else if (dmi_name_in_vendors("LENOVO"))
  		tp->vendor = PCI_VENDOR_ID_LENOVO;
