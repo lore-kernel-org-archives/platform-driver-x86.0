@@ -1,138 +1,109 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C47217F33;
-	Mon, 19 May 2025 20:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7DB21D3E2;
+	Mon, 19 May 2025 21:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747686952; cv=none; b=Cq3x7g1aKeJjBMWoXJM2h1eVPSO0cCJGoHsohERd4RIU441smykQi0DyIgUwRQiXI7NvGYw9y9GAtU0F8HUuIvluw8H59NeadVTy/IhsEbxghHp7eTCmYQPc3OVEfgENqApz7EIRrOjWE4Y4lvUVmkwv2u+62f2ZXx4B82sPBMs=
+	t=1747689700; cv=none; b=V3TZQJHFpwga2p0P5x83dXMKsfk+dPNWwD0cBHOZuTdnAKOhIQwQSXfr9fPkC1weNSzorZBBXKsSRokiNIc7CbnSLMYawXng2JL5X9GMAqXzMTVsqUk/S+ROHI+uZ6F8ySry3RMwEMtgFLcEdjiRJi8Tg4wwLzaTE2t3P22kxg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747686952; c=relaxed/simple;
-	bh=RRfj6sklt52XV9KPvHuEGNGS2C+bYmaNrEa80a65PI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J+XJPROUVftIBWmlq6sw/RKAqaQKRAhDY1Yg95+8P7GjmRqb1gJBkE7RX8UxqvBoY5Y0UB2FeNNHo8JAqVxTITYFEjnWsMh42LKw8AlBWAdQ2/aDj/uuZsXf8zaiDLR4KwnM+DOhm3LhHys23+gqrGHJb/UGJCWrLuWBoMWP6Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NBgUCaLu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747689700; c=relaxed/simple;
+	bh=NxzYm3xGbnfG5Wu8vNM0wvIDnieCXReM6L6CtJSvII8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=khC7wScbWpodpEdwzZIboAQL+IFwzgZaK7kLLsJrAEuf9kruGnrHYGo7PYRcA8FT4tnIMuy50AMIPuoged1MtEcTKM3ih1CUG1cVlleEZJDklb+cC1vhlEDkpi8gPoBIpeEQaD1dJuLQqkm98lt5MioKnPT1551x4GJd90Q5U/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnexzgqD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBgUCaLu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=XaOMJJ7u0iVjtCw5+/d6aptsqLr44Y26RgnYyUy9xVc=; b=NBgUCaLuUPXMiMVXiPqUaXkdef
-	mlcIza4vAcC7k6AJTdxqfWCBK1Lu/hQz+GkIqtoKoI+dZu1nzxi8Z+gsRxGk4j4QIfduTINgTNxjk
-	3GPe+cvaWIZCOU96gYWLGvSSDxq8mQGJReeBzAPbc+TMVYmWPVj5I1rJGRvK/fZUOQ/ug9r5lpqeW
-	kLulKgVgI6/RFVnyuNRxZbParm/AeeKE82BOBAD9h7SehsOr56hEGvhkN//iiafM9bd6Bcl6I7GJH
-	y+YHlENrb7Qh42nM2FlMghYJuFK/wcWd4JlwAawkiSmMFcXogA5ljX94fUaI6WTwRjSLT1xxpribk
-	sINQz2DA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uH7D8-00000002M1C-1ryQ;
-	Mon, 19 May 2025 20:35:46 +0000
-Message-ID: <e50896d2-f44a-42da-8bfc-446e80980e80@infradead.org>
-Date: Mon, 19 May 2025 13:35:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnexzgqD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9965EC4CEE9;
+	Mon, 19 May 2025 21:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747689699;
+	bh=NxzYm3xGbnfG5Wu8vNM0wvIDnieCXReM6L6CtJSvII8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WnexzgqDXH3nccAirRRX1aZTPIYHgSkKsMzw178ZEa3O40bdMdwLW5Wn+Kz+57Ez4
+	 +69RDajjXaLO7tZobCJSaL+3YuArljHekNRz870FWjOE11SbysBnXBElaABUykDa6b
+	 3ZkrwGE1hI6GEG+lZBhWE0E/te0ZUVTXDuZi6vkDuGUjZaCWVpCf0qiXS7Ilpp7V1/
+	 G0lkK/Qo45r3OPDB7nG7nnAXW5w8h2EzaAyIqY12syaOC+lxgBwLiTFFQ47c5Y2Iol
+	 loievawHCQR6DNpM9qc6ZvifIGSZnip/He/azGcVLeV6WtisUkAfxUb+BRSXc14q9s
+	 roMHXLEt/QPyg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: John Chau <johnchau@0atlas.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	ibm-acpi@hmh.eng.br,
+	dvhart@infradead.org,
+	andy@infradead.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 05/23] platform/x86: thinkpad_acpi: Support also NEC Lavie X1475JAS
+Date: Mon, 19 May 2025 17:21:12 -0400
+Message-Id: <20250519212131.1985647-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250519212131.1985647-1-sashal@kernel.org>
+References: <20250519212131.1985647-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
- Documentation and MAINTAINERS
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Dongliang Mu <dzm91@hust.edu.cn>, Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.7
 Content-Transfer-Encoding: 8bit
 
+From: John Chau <johnchau@0atlas.com>
 
+[ Upstream commit a032f29a15412fab9f4352e0032836d51420a338 ]
 
-On 5/16/25 2:52 AM, Andy Shevchenko wrote:
-> The recent changes in the gpiolib-acpi.c need also updates in the Documentation
-> and MAINTAINERS. Do the necessary changes here.
-> 
-> Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.au
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Change get_thinkpad_model_data() to check for additional vendor name
+"NEC" in order to support NEC Lavie X1475JAS notebook (and perhaps
+more).
 
+The reason of this works with minimal changes is because NEC Lavie
+X1475JAS is a Thinkpad inside. ACPI dumps reveals its OEM ID to be
+"LENOVO", BIOS version "R2PET30W" matches typical Lenovo BIOS version,
+the existence of HKEY of LEN0268, with DMI fw string is "R2PHT24W".
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+I compiled and tested with my own machine, attached the dmesg
+below as proof of work:
+[    6.288932] thinkpad_acpi: ThinkPad ACPI Extras v0.26
+[    6.288937] thinkpad_acpi: http://ibm-acpi.sf.net/
+[    6.288938] thinkpad_acpi: ThinkPad BIOS R2PET30W (1.11 ), EC R2PHT24W
+[    6.307000] thinkpad_acpi: radio switch found; radios are enabled
+[    6.307030] thinkpad_acpi: This ThinkPad has standard ACPI backlight brightness control, supported by the ACPI video driver
+[    6.307033] thinkpad_acpi: Disabling thinkpad-acpi brightness events by default...
+[    6.320322] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+[    6.371963] thinkpad_acpi: secondary fan control detected & enabled
+[    6.391922] thinkpad_acpi: battery 1 registered (start 0, stop 85, behaviours: 0x7)
+[    6.398375] input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/input13
 
-Thanks.
+Signed-off-by: John Chau <johnchau@0atlas.com>
+Link: https://lore.kernel.org/r/20250504165513.295135-1-johnchau@0atlas.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
->  Documentation/driver-api/gpio/index.rst                    | 2 +-
->  Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
->  MAINTAINERS                                                | 2 +-
->  drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
-> index 34b57cee3391..43f6a3afe10b 100644
-> --- a/Documentation/driver-api/gpio/index.rst
-> +++ b/Documentation/driver-api/gpio/index.rst
-> @@ -27,7 +27,7 @@ Core
->  ACPI support
->  ============
->  
-> -.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
-> +.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
->     :export:
->  
->  Device tree support
-> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> index e4d54724a1b5..f64a69f771ca 100644
-> --- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-> @@ -42,7 +42,7 @@ ACPI支持
->  
->  该API在以下内核代码中:
->  
-> -drivers/gpio/gpiolib-acpi.c
-> +drivers/gpio/gpiolib-acpi-core.c
->  
->  设备树支持
->  ==========
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96b827049501..d1290bbb6ac6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10105,7 +10105,7 @@ L:	linux-acpi@vger.kernel.org
->  S:	Supported
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
->  F:	Documentation/firmware-guide/acpi/gpio-properties.rst
-> -F:	drivers/gpio/gpiolib-acpi.c
-> +F:	drivers/gpio/gpiolib-acpi-*.c
->  F:	drivers/gpio/gpiolib-acpi.h
->  
->  GPIO AGGREGATOR
-> diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
-> index 3b48cd7a4075..b7b98343fdc6 100644
-> --- a/drivers/platform/x86/intel/int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel/int0002_vgpio.c
-> @@ -23,7 +23,7 @@
->   * ACPI mechanisms, this is not a real GPIO at all.
->   *
->   * This driver will bind to the INT0002 device, and register as a GPIO
-> - * controller, letting gpiolib-acpi.c call the _L02 handler as it would
-> + * controller, letting gpiolib-acpi call the _L02 handler as it would
->   * for a real GPIO controller.
->   */
->  
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2ff38ca9ddb40..ace1cd14d4ba3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -11481,6 +11481,8 @@ static int __must_check __init get_thinkpad_model_data(
+ 		tp->vendor = PCI_VENDOR_ID_IBM;
+ 	else if (dmi_name_in_vendors("LENOVO"))
+ 		tp->vendor = PCI_VENDOR_ID_LENOVO;
++	else if (dmi_name_in_vendors("NEC"))
++		tp->vendor = PCI_VENDOR_ID_LENOVO;
+ 	else
+ 		return 0;
+ 
 -- 
-~Randy
+2.39.5
+
