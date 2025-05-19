@@ -1,98 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A12927979D;
-	Mon, 19 May 2025 17:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C47217F33;
+	Mon, 19 May 2025 20:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675955; cv=none; b=spkGC3r1JMaO7Lt1Ch/mVhHxoe6t2RHfrIXfF4ANuaH7wzfilHEJ8qVwXFjwb3qpweYA1VPuuPN5VIzdrMNfaApQE2zbISEm6nTSufFCY+x2kZ614hE2HnEbqKC1pcO43wqNv+wNgIpgX6wckwfUfjjinxY0E5VA/a6/+WtxiwE=
+	t=1747686952; cv=none; b=Cq3x7g1aKeJjBMWoXJM2h1eVPSO0cCJGoHsohERd4RIU441smykQi0DyIgUwRQiXI7NvGYw9y9GAtU0F8HUuIvluw8H59NeadVTy/IhsEbxghHp7eTCmYQPc3OVEfgENqApz7EIRrOjWE4Y4lvUVmkwv2u+62f2ZXx4B82sPBMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675955; c=relaxed/simple;
-	bh=uxW/Y44LlHu7A4hcYct8su/An7A98gxV72NAtsVDtHI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=g3e3EfYoK4c76IjJZJJlRz/LxDY6wyXR873VmuK6Gj3KUWbRUDvyZN+i+uErGREayvOilICCCw+E4dQLRSGOOuoI/EMD0RcueiYYnm0Cx+YMrVa79CnfRBqxRZKFH7KTC8ebB/nn4LxBQRgijitLIULaayhjyrCg6TbGhRXSTKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZDzt0Mp0; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747686952; c=relaxed/simple;
+	bh=RRfj6sklt52XV9KPvHuEGNGS2C+bYmaNrEa80a65PI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J+XJPROUVftIBWmlq6sw/RKAqaQKRAhDY1Yg95+8P7GjmRqb1gJBkE7RX8UxqvBoY5Y0UB2FeNNHo8JAqVxTITYFEjnWsMh42LKw8AlBWAdQ2/aDj/uuZsXf8zaiDLR4KwnM+DOhm3LhHys23+gqrGHJb/UGJCWrLuWBoMWP6Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NBgUCaLu; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZDzt0Mp0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747675954; x=1779211954;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uxW/Y44LlHu7A4hcYct8su/An7A98gxV72NAtsVDtHI=;
-  b=ZDzt0Mp0cCUvG7oE6d0vLqPgb+RqTwXryg1nngDHInrtD6/pok2kgxNb
-   CN1ew9SfF3Ib6ExYu+TfcVfkh7Xz5NLY1IFRv/tdJ70oW0FCtYmY7wPsJ
-   71QOs0oEZzhSMBFiAoEwzfJnDTLqRZgDJuBO2pOSBgVe0dkTaSLP02aiP
-   i98D82+qXJ+azBdbPhkA7Q2qz2idnYIu9UxTj+X53giCzErdXMBcF+yap
-   fdA/fG8Jeo0/tpEe4j459cq/FytzqM06wAsJZZZJSZmHNol7Io1JdID1p
-   pwXHJ9APIobT4hZNW10q6fGXkkPJ7lZLz02bfJVZ4se05kF7nfpfiW9Jq
-   Q==;
-X-CSE-ConnectionGUID: 78w5aZdLTkmw8n0lDGiwiQ==
-X-CSE-MsgGUID: CaoZpYl7R3WG6GGUAhOlYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49739528"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="49739528"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:32:32 -0700
-X-CSE-ConnectionGUID: eDKgWOTfS8qudHCpi506WQ==
-X-CSE-MsgGUID: iJeyVBImTTC82hhFXVOT1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="176547197"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:32:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 May 2025 20:32:25 +0300 (EEST)
-To: "Luck, Tony" <tony.luck@intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    xi.pardee@linux.intel.com, "David E. Box" <david.e.box@linux.intel.com>
-Subject: Re: [PATCH 00/15] Intel VSEC/PMT: Introduce Discovery Driver
-In-Reply-To: <aCtouJ7Lz80srgBa@agluck-desk3>
-Message-ID: <9b0a215f-1a42-6e23-6b00-f6a8531f14cc@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com> <aCdaMel-zV8Qir69@agluck-desk3> <aCtouJ7Lz80srgBa@agluck-desk3>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBgUCaLu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=XaOMJJ7u0iVjtCw5+/d6aptsqLr44Y26RgnYyUy9xVc=; b=NBgUCaLuUPXMiMVXiPqUaXkdef
+	mlcIza4vAcC7k6AJTdxqfWCBK1Lu/hQz+GkIqtoKoI+dZu1nzxi8Z+gsRxGk4j4QIfduTINgTNxjk
+	3GPe+cvaWIZCOU96gYWLGvSSDxq8mQGJReeBzAPbc+TMVYmWPVj5I1rJGRvK/fZUOQ/ug9r5lpqeW
+	kLulKgVgI6/RFVnyuNRxZbParm/AeeKE82BOBAD9h7SehsOr56hEGvhkN//iiafM9bd6Bcl6I7GJH
+	y+YHlENrb7Qh42nM2FlMghYJuFK/wcWd4JlwAawkiSmMFcXogA5ljX94fUaI6WTwRjSLT1xxpribk
+	sINQz2DA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uH7D8-00000002M1C-1ryQ;
+	Mon, 19 May 2025 20:35:46 +0000
+Message-ID: <e50896d2-f44a-42da-8bfc-446e80980e80@infradead.org>
+Date: Mon, 19 May 2025 13:35:42 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
+ Documentation and MAINTAINERS
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+ Dongliang Mu <dzm91@hust.edu.cn>, Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 19 May 2025, Luck, Tony wrote:
-> On Fri, May 16, 2025 at 08:30:59AM -0700, Luck, Tony wrote:
-> > On Wed, Apr 30, 2025 at 02:20:49PM -0700, David E. Box wrote:
-> > > 4. Discovery Driver and API:  The core of the series is the addition of
-> > > the PMT Discovery driver. This driver not only implements discovery of
-> > > telemetry attributes and capability data (exposed via sysfs) but also
-> > > introduces an API to retrieve telemetry regions by feature, which is
-> > > essential for features like per-RMID telemetry counters.
-> > 
-> > This part of the series is the foundation for my telemetry/resctrl
-> > patches:
-> > 
-> > https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
-> > 
-> > That series includes a fake place holder for the discovery driver, but
-> > I've been using David's patches for all my testing on real hardware.
-> > 
-> > Tested-by: Tony Luck <tony.luck@intel.com>
-> 
-> Ilpo, Hans,
-> 
-> Linus released -rc7 as the likely final rc before opening merge window
-> next week.
-> 
-> Are David's patches in shape to be part of that merge? Or will I be
-> using them out of tree for another cycle?
 
-It's relatively large series so it isn't exactly a small task to go 
-through it. I've been hoping to find enough time still to review it in 
-this cycle and if nothing major comes up, it might make into this cycle.
+
+On 5/16/25 2:52 AM, Andy Shevchenko wrote:
+> The recent changes in the gpiolib-acpi.c need also updates in the Documentation
+> and MAINTAINERS. Do the necessary changes here.
+> 
+> Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.au
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  Documentation/driver-api/gpio/index.rst                    | 2 +-
+>  Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
+>  MAINTAINERS                                                | 2 +-
+>  drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
+> index 34b57cee3391..43f6a3afe10b 100644
+> --- a/Documentation/driver-api/gpio/index.rst
+> +++ b/Documentation/driver-api/gpio/index.rst
+> @@ -27,7 +27,7 @@ Core
+>  ACPI support
+>  ============
+>  
+> -.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
+> +.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
+>     :export:
+>  
+>  Device tree support
+> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> index e4d54724a1b5..f64a69f771ca 100644
+> --- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> @@ -42,7 +42,7 @@ ACPI支持
+>  
+>  该API在以下内核代码中:
+>  
+> -drivers/gpio/gpiolib-acpi.c
+> +drivers/gpio/gpiolib-acpi-core.c
+>  
+>  设备树支持
+>  ==========
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b827049501..d1290bbb6ac6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10105,7 +10105,7 @@ L:	linux-acpi@vger.kernel.org
+>  S:	Supported
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
+>  F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+> -F:	drivers/gpio/gpiolib-acpi.c
+> +F:	drivers/gpio/gpiolib-acpi-*.c
+>  F:	drivers/gpio/gpiolib-acpi.h
+>  
+>  GPIO AGGREGATOR
+> diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+> index 3b48cd7a4075..b7b98343fdc6 100644
+> --- a/drivers/platform/x86/intel/int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel/int0002_vgpio.c
+> @@ -23,7 +23,7 @@
+>   * ACPI mechanisms, this is not a real GPIO at all.
+>   *
+>   * This driver will bind to the INT0002 device, and register as a GPIO
+> - * controller, letting gpiolib-acpi.c call the _L02 handler as it would
+> + * controller, letting gpiolib-acpi call the _L02 handler as it would
+>   * for a real GPIO controller.
+>   */
+>  
 
 -- 
- i.
-
+~Randy
