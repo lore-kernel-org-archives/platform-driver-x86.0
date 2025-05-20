@@ -1,139 +1,98 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDCE264A97;
-	Tue, 20 May 2025 11:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2AF24168D;
+	Tue, 20 May 2025 13:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741330; cv=none; b=A5UjHbVs890v3KfXw26RlUxJi3uznq2t3V1onNetwgdUHd5cKLWY0zGD89Jzbe5BA+OCY/2atbcqBBDn98J0jnjhNRTkr9LbH16yoWblD+Cil30wCPWlqB2/uGHxMH/n2UIWXgkRo6HMALwHa+lf/aFzsLseY3m6lHbSIinVKXM=
+	t=1747747087; cv=none; b=pAjEKDNpli3O+ZBnC1QSLaeG8aBWbrc/XXK9Mueu1r2BxFjVqHnV8kCB6rfw6OSP5Ahibm/CX1sWxU7zZHoR/cqukhLYOR9gjUlN4O9R1yMhYQPmJk6y62sYth/updHqrb1cpW1C04Yjc7oIGCXIxXYffAZHWDnwj366Dl/o9PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741330; c=relaxed/simple;
-	bh=UExusS9wGruu2jirSHupY+orQc1NwlzDHTp5gtaUL6E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qR01rG5J0jHTvQscNNox1eUPy43r6ovEnmcdhuRnDM+cC6kXncsInSvwEZL7MR7jFBIFz85ExiH94E8yCeV1CUnjBPpmvVHW0znvqSYvEESQermE856ffqrZ4+zc70vTLElOnxH1MNc+sJNqUj+v/kURTb2F1Uu63pkvyKGtkdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=GzTXMwsi; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747747087; c=relaxed/simple;
+	bh=12sxSexrPftwam4EVzQzaBGgKY0Ix96koleT5+KTJ4g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o8LPWghZvJXBvZlLuaPd0qGAcCf5ZMYhLyWlQRrCNG+xphTwcFN5kaLfHMnwDUyJ5LxQnMJsaSEo6GeGlffuVQLpnizULZewtNz5USN03a+kfXWfRJ3H+9At9S/WZFEWWTkQQptXnhSu4SFmfpTrPDM69MhG5TIydMhoU3J8F3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mWJahKP+; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="GzTXMwsi"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K9UC8E021011;
-	Tue, 20 May 2025 13:41:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	UExusS9wGruu2jirSHupY+orQc1NwlzDHTp5gtaUL6E=; b=GzTXMwsiZejt1O8H
-	HSMOo4JJMYdWKi4XLUZACmweuNUHMXMcoKBaBK4izDYF74vuwBPhTZk6IexHobg/
-	qK9I73asI1F+eYDQZiyzxP43hKUrX/gpKv/++Q/63O4zRbJXsKcyIXJRe8YtHdoV
-	RPwyyY04Tk6DjBcJZpMMLx0wfWgVldqOE1FvIgNQm9RI5S0gb+O/faMVPHN8vYO7
-	xVKBfv+hc1nAbKmBD0/cmEDphgVskJ4VOESdBzuwEbJOODz1O+/U82sx8FwgyLMU
-	7hCq2HGWxCcmbZsgQoNFKYIKbh+ZOklyV2oLZ5i1xQm8eShnTM2y/drHpPFlUzAG
-	h0IOcQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pht1w43t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 13:41:16 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1C0F740049;
-	Tue, 20 May 2025 13:38:29 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4B551AE2BFA;
-	Tue, 20 May 2025 13:37:16 +0200 (CEST)
-Received: from [10.252.29.31] (10.252.29.31) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
- 2025 13:37:13 +0200
-Message-ID: <b1d3f93b-8206-481b-bd8a-d7c0953e0ea5@foss.st.com>
-Date: Tue, 20 May 2025 13:37:12 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mWJahKP+"
+Received: from [127.0.1.1] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id F104D74C;
+	Tue, 20 May 2025 15:17:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747747057;
+	bh=12sxSexrPftwam4EVzQzaBGgKY0Ix96koleT5+KTJ4g=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mWJahKP+H81H15HXLpZuXmzfRIWb0d+vDRGnwJAEpnaiedGEaLLaELvubI6L4aCTH
+	 Ep6Irt7j6bmoVKxIiMrSLPQLY7RAp2rdfv1ejcLwjceoYWC7A14ImxVBaK1Wp4R7xq
+	 eIoCGW7Ddpc1z7I7zJNUcmWI3TjQ2Vp+vg+MToD0=
+From: Daniel Scally <dan.scally@ideasonboard.com>
+Subject: [PATCH v2 0/3] Support OV5670 on IPU3 devices
+Date: Tue, 20 May 2025 14:17:43 +0100
+Message-Id: <20250520-djrscally-ov5670-v2-0-104ae895aecf@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/22] drm/bridge: stm_lvds: convert to
- devm_drm_bridge_alloc() API
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman
-	<jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki
-	<jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer
-	<s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>
-CC: Anusha Srivatsa <asrivats@redhat.com>,
-        Paul Kocialkowski
-	<paulk@sys-base.io>,
-        Dmitry Baryshkov <lumag@kernel.org>, Hui Pu
-	<Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        <dri-devel@lists.freedesktop.org>, <asahi@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <chrome-platform@lists.linux.dev>,
-        <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Philippe Cornu <philippe.cornu@foss.st.com>,
-        Yannick Fertre
-	<yannick.fertre@foss.st.com>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
- <20250509-drm-bridge-convert-to-alloc-api-v3-15-b8bc1f16d7aa@bootlin.com>
-Content-Language: en-US
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-15-b8bc1f16d7aa@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPeALGgC/x3MQQqAIBBA0avErBNkYoq6SrQQnWpCNBSikO6et
+ HyL/wtkTsIZpqZA4kuyxFCBbQN2N2FjJa4aUCNpQq3ckbI13j8qXtQPWhFbcuNqHHUGanYmXuX
+ +l/Pyvh9vGqTSYgAAAA==
+X-Change-ID: 20250520-djrscally-ov5670-5ec5d9fad53a
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ Daniel Scally <dan.scally@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=974;
+ i=dan.scally@ideasonboard.com; h=from:subject:message-id;
+ bh=12sxSexrPftwam4EVzQzaBGgKY0Ix96koleT5+KTJ4g=;
+ b=owEBbQKS/ZANAwAKAchJV3psRXUyAcsmYgBoLID+yFr8c0e+05Cw895+RH/NrPZq/GofEakyF
+ QSLXscI0ESJAjMEAAEKAB0WIQQqyuwyDnZdb+mxmm/ISVd6bEV1MgUCaCyA/gAKCRDISVd6bEV1
+ MvHdD/4zKyw0FyXpG6Tyxp0rIGtN5I0ip9KF/d/JZOkcgnq7U7GauXb8B3zgySf+mcQMZqnd8Et
+ zYrMXVIJ47SFg8BjrJtlHTLBVDP/71ip4EyE40NKsHqlfbrqnW6lStbD8QHbF7GNrsGDwN/+Vp6
+ cL5SE837tWJJV+j2c3IGQ+7uL3p2NMtZ6jcCfvdnDd4w31oLrcft2yx3UOdoyS4gtCoReGGQFji
+ h4ZzQiBEV3RzSlnlpjW+iEImaNelvoGlmJTeVNfjq6T1ryd1u8wW6madfhsLcK7NpC0/wkAqyOQ
+ HZObXr7CmJM21ikYYTUfH48t5FuQc0u41VoIHRtO0oyqJ60KGeObNDby+QtlGLEuL/m3NOyVUyO
+ 4Cia7eeoEbNmT8y81B/EoWYF3bvTqAIEfinM40/DqypPamWH36RShba0PnHk6pmqA39iVQXbIwu
+ p3nwb+9roxmbldb6sFMmfVx1FFC1o2yNllLPkJA/DSYpRzx8zI+TH/W4kliARTLX8r7LoPLp4lb
+ v/MiyQUD2UHQa5FcNoZuzv7CDrPgj3NryZ14PkLiYaEBoI9bFPVnWYSCsD7j/tdzhNhctAScIJr
+ xcQyCXq1lkmQGHrwTnsQYyOO0mR4pmaa8m1+Rq/SJFrjQOc+EAfEeqqxu3yvQNQw+M6VROXjNSp
+ /g0yCfBfbhKbhhw==
+X-Developer-Key: i=dan.scally@ideasonboard.com; a=openpgp;
+ fpr=EEC699ACA1B7CB5D31330C0BBD501C2A3546CCF6
 
-Hi Luca,
+Hello all
 
-On 5/9/25 15:53, Luca Ceresoli wrote:
-> This is the new API for allocating DRM bridges.
->
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->
-> ---
->
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Philippe Cornu <philippe.cornu@foss.st.com>
-> Cc: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-> Cc: Yannick Fertre <yannick.fertre@foss.st.com>
-> ---
+The OV5670 is found in the Dell 7212 tablet, along with an IPU3 ISP. This small
+series adds support for the sensor by connecting it through the ipu-bridge and
+adding board data for the PMIC so that it can be powered.
 
-I went away from keyboard for some time.  Sorry for the delay :
+Changes since v1:
 
-Acked-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+* Commas following the final member in a struct definition in patch 2
 
+Regards
+Dan
 
-Regards,
-Raphaël
+---
+Daniel Scally (3):
+      media: i2c: Defer ov5670_probe() if endpoint not found
+      platform/x86: int3472: Add board data for Dell 7212
+      media: ipu-bridge: Add _HID for OV5670
+
+ drivers/media/i2c/ov5670.c                         |   9 +-
+ drivers/media/pci/intel/ipu-bridge.c               |   2 +
+ .../x86/intel/int3472/tps68470_board_data.c        | 128 +++++++++++++++++++++
+ 3 files changed, 137 insertions(+), 2 deletions(-)
+---
+base-commit: b64b134942c8cf4801ea288b3fd38b509aedec21
+change-id: 20250520-djrscally-ov5670-5ec5d9fad53a
+
+Best regards,
+-- 
+Daniel Scally <dan.scally@ideasonboard.com>
 
