@@ -1,147 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB17C2F3E;
-	Fri, 23 May 2025 10:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFF62459F0;
+	Fri, 23 May 2025 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747995526; cv=none; b=dItq0YTv3W+xDLscEAm7ELvqaolMTvQpenhKRqsln0KgA3gVU926h4kSlWmaKSd01XN2xmHSHpIWd0sFjrHOUW5/dlNjGt/Qgg1p5GB//6I2mZtdSGe1jpaE37KIpj/2QiaDNHdDtQXV5BuGUFUVyMQ0NmNSOdDn+i5V1M1bNgQ=
+	t=1748006101; cv=none; b=dtc9X09/+9QHkh5RpoSrdQimSulWrp27s1Wve2AYXdC9Yor1S1zlrfOfoWfiKe5UGRzwchl1mFbZ3EIvJc1A63q3AL50RV9V7LZorVVae6LK0T3kPj52IWEmCqRrk52+rsOBepf6UlJlicNE7kNLgkh+htwYSEILW8Q03AW6WaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747995526; c=relaxed/simple;
-	bh=Fy38s9E9y03KrAq33nFmiJB8kK3AKrmMx6Y899eu74o=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=WAE3O37HIx/nGTdYur8GclJxHgMbzOD46EE3omJtJvKjPdHg4w+pghP5Yr54TdzM7scVuMpTNIgBVxQlRpWklWJMT1+AjwQogpzn0vWemi3sdwEqfsT6d8D7gzKPDEDsgGiLm2fr+vReeyXWpJIkorQv/a52lb8vFMCZWeSVEUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSh5IXs1; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748006101; c=relaxed/simple;
+	bh=nP4DCqI2FKwvIfEQkVkSafK1L7oY2AmjccjXGu8w8I4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nl9ULqNLRcjgtggT4lkaf6FHtEs0jhVXa6RU6qQekdbBQYC6/5yhQkana11FaUTuYDDhfI7GeA+7GwuIXySuYXBsPB4iN6D61RgSFwv9Z8QLxY48s7TIFf5PiOE5N+w/DxDUuK4XqxQvxKChmUKRxCX48nXi3MBzNWslrbXz6qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=w697mgEF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rHe6EB5Y; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSh5IXs1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747995525; x=1779531525;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Fy38s9E9y03KrAq33nFmiJB8kK3AKrmMx6Y899eu74o=;
-  b=kSh5IXs1X2vLQ55wcq1GyCBrNM7eKRNlg+EGEHxYYdY0rrPtPRbXogqL
-   l9RlGNt9cjsnjt2ZV5TeUwX8P9uNtVx+tEiyc9u8cEoIt72G8EKiP52Ft
-   jT12zReNn3O1f4AYA7SHT1YUNXsC8irWg8M4cBnHZQTxZDlyVr8iUvpAq
-   TyD3T6U6jlbQlomqx5F5uGl8JVQh78ktAr+P2ayIph8KIt6fnqqWKJtHg
-   3cLHCdVbVTo5/yG6HeGukVb64Cbl9lcczjiGkpgeP1gJ4sn0tMQu8SoyL
-   ObVqcofsysuBzVZaIOO+snowduPvfyl/7MwQrZc/b4HpA219BQ8CXISZw
-   w==;
-X-CSE-ConnectionGUID: apEK6hoERN6mJkiQGpq66A==
-X-CSE-MsgGUID: /I3vfh8oTsWhS/52eRJuGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50194928"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="50194928"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 03:18:44 -0700
-X-CSE-ConnectionGUID: OW+tsV7sQ9OvqpS13EoxUw==
-X-CSE-MsgGUID: phajeoXXRBWZCif8JdWxqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="141147204"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 03:18:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 23 May 2025 12:10:19 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.15-6
-Message-ID: <pdx86-pr-20250523121019-62803604@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="w697mgEF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rHe6EB5Y"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E2438114010D;
+	Fri, 23 May 2025 09:14:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 23 May 2025 09:14:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1748006097; x=1748092497; bh=onu9pSqOyo0uXFxfnI4FT
+	VRTqgcadMSK1+A57xxFnXo=; b=w697mgEFErnrhXal+vlUYUwA7VdoT4XqkI5cx
+	5vuk2tyhfs9A59WAQazMsRytAAgwr8XRR1rryDjeisfLdxvEXpK8Uv+2ZQn6L+9+
+	9qGEyUqdNxepBuYT/vuE4FJamHF/G/NDMrVXXpRJ52SiwniEpWYf1Gog+IChxq3Q
+	p1wfsvmTfafbTxanjQ/G5bI9sAVbvuBpQn6Gr2Igdw0xoLGifziL5Mmkv0SSLF8Z
+	ExaGmQZoi+W92N1Y3iBKBpt3EQR5fM04lfs+hvnbCBHI/4aP72mBb3M9fdQ6IyF/
+	M+uUAzshtCt4b1TMuLzMcB/kj0dT3HC7/WihLNskQRt2+306Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1748006097; x=1748092497; bh=onu9pSqOyo0uXFxfnI4FTVRTqgcadMSK1+A
+	57xxFnXo=; b=rHe6EB5YRfABUSJf/hlkF3SUW5BadxjpSJdDqDafVgJPJQ1Voe9
+	zHgJHX9nT1TcHn9rFJEsOP+VQ2LDiLqm+LJBzwZzKjLjxOs/VOT5cnAt1PNjlLc4
+	1jN/colujxbIa3fLi3hjB8z2Nx6JPV3pUXGJjy4JkuBTedBik/c6efc0TuTFL47r
+	k/JoFWy/S0nduHnbuSim8V8Vb41WE7KAjQXmXXpdis6bzPROs+b4B3ZNIv6y6nBG
+	c1e7mJ5lsyKjbM2Lwul6pwxK7nZUuCJyTlsXI7/PzP3o16S64q5i1QXP1IXViOBb
+	RJ7D/WaHAMoTNh1/jPFm10SoBM+CfbWMIBQ==
+X-ME-Sender: <xms:0HQwaCGGyaQevqsHWQ8o3Ll4Y5WhtsMSbJlrnlk44cJMFgp_4Wcu3g>
+    <xme:0HQwaDXescQZ_hCUsJt9ze2SD2v9vmF0ZJliIFXVWIBCNIfOqA-ztKZgfWnppfpNy
+    e7YgoOhcLDQcp9ZVCY>
+X-ME-Received: <xmr:0HQwaMKSm1MnZoniOauZWXTsigPqclGas4uVejbjeuCk6CKPZZWHwYGDjcnvUkHg1XEWZ0Ycm5iovY5gOx9QVHaF3toxtcFAY0YKKWDBxhM8X6AJXlTzdmTBs3as>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdekleehucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeeihfefueeuiefggfdtfeegteegudeffeekkedtvedufeehtdfgheekjeevjedtffen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpddtuddrohhrghdpghhithhhuhgsrdgtoh
+    hmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhu
+    khgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtph
+    htthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhr
+    tghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgu
+    rdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugi
+    drihhnthgvlhdrtghomhdprhgtphhtthhopehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:0HQwaME00yq8pb-Jv51axUFvaXGr71dphK1jvg0IW4iw9FtpD0gRSA>
+    <xmx:0HQwaIWggjlp9PFI7rmsZ5anS2Iw4md5bcqqhRYOE_IWbycLrKerlQ>
+    <xmx:0HQwaPNyWKp6pBq6vzM3kE4Sbf4gHkw8FD4giJTEDuhsZq8gln-Pvg>
+    <xmx:0HQwaP3UkCOdGvGfXjvF522Vycm-y6xpLhQ8rSKZvfs-NcReVdWFdQ>
+    <xmx:0XQwaP1kbYzhtZaTZLKZ4l1Ic_bBvbflZb1-1IU5X-Y2kSboKc6oTSW6>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 May 2025 09:14:55 -0400 (EDT)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	mario.limonciello@amd.com,
+	andriy.shevchenko@linux.intel.com,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH 0/1] platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
+Date: Fri, 23 May 2025 15:14:50 +0200
+Message-ID: <20250523131451.1942578-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+Fixes "platform/x86: asus-wmi: Refactor Ally suspend/resume".
 
-Here is a platform-drivers-x86 fixes PR for v6.15.
+Verified using the following details provided by test robot:
 
-The committing date is very recent due me fixing small errors in the
-changelog while preparing this PR but the same code has been sitting
-in the linux-next for a few days.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git review-ilpo-next
+head:   83579675331059689e2869bf752ca9e17fadbd82
+commit: feea7bd6b02d43a794e3f065650d89cf8d8e8e59 [74/89] platform/x86: asus-wmi: Refactor Ally suspend/resume
+config: x86_64-buildonly-randconfig-004-20250509 (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090418.DaeaXe4i-lkp@intel.com/reproduce)
 
-Fixes and new HW support
+I've not done anything fancy here and left asus_hotk_prepare() as is, as it is *incredibly* unlikely anyone would ever run a ROG Ally without suspend enabled.
 
- - dell-wmi-sysman: Avoid buffer overflow in current_password_store()
+Luke Jones (1):
+  platform/x86: asus-wmi: fix build without CONFIG_SUSPEND
 
- - fujitsu-laptop: Support Lifebook S2110 hotkeys
+ drivers/platform/x86/asus-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- - intel/pmc: Fix Arrow Lake U/H NPU PCI ID
+-- 
+2.49.0
 
- - think-lmi: Fix attribute name usage for non-compliant items
-
- - thinkpad_acpi: Ignore battery threshold change event notification
-
-Regards, i.
-
-
-The following changes since commit bfcfe6d335a967f8ea0c1980960e6f0205b5de6e:
-
-  platform/x86: asus-wmi: Fix wlan_ctrl_by_user detection (2025-05-07 15:46:34 +0300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-6
-
-for you to fetch changes up to f2eae58c4428bd792c8e91e3666ab0718d87b44a:
-
-  platform/x86/intel/pmc: Fix Arrow Lake U/H NPU PCI ID (2025-05-23 12:04:54 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.15-6
-
-Fixes and new HW support
-
- - dell-wmi-sysman: Avoid buffer overflow in current_password_store()
-
- - fujitsu-laptop: Support Lifebook S2110 hotkeys
-
- - intel/pmc: Fix Arrow Lake U/H NPU PCI ID
-
- - think-lmi: Fix attribute name usage for non-compliant items
-
- - thinkpad_acpi: Ignore battery threshold change event notification
-
-The following is an automated shortlog grouped by driver:
-
-dell-wmi-sysman:
- -  Avoid buffer overflow in current_password_store()
-
-fujitsu-laptop:
- -  Support Lifebook S2110 hotkeys
-
-intel/pmc:
- -  Fix Arrow Lake U/H NPU PCI ID
-
-think-lmi:
- -  Fix attribute name usage for non-compliant items
-
-thinkpad_acpi:
- -  Ignore battery threshold change event notification
-
-----------------------------------------------------------------
-Mark Pearson (2):
-      platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
-      platform/x86: think-lmi: Fix attribute name usage for non-compliant items
-
-Todd Brandt (1):
-      platform/x86/intel/pmc: Fix Arrow Lake U/H NPU PCI ID
-
-Valtteri Koskivuori (1):
-      platform/x86: fujitsu-laptop: Support Lifebook S2110 hotkeys
-
-Vladimir Moskovkin (1):
-      platform/x86: dell-wmi-sysman: Avoid buffer overflow in current_password_store()
-
- .../x86/dell/dell-wmi-sysman/passobj-attributes.c  |  2 +-
- drivers/platform/x86/fujitsu-laptop.c              | 33 +++++++++++++++++++---
- drivers/platform/x86/intel/pmc/arl.c               |  3 +-
- drivers/platform/x86/think-lmi.c                   | 26 +++++++++--------
- drivers/platform/x86/think-lmi.h                   |  1 +
- drivers/platform/x86/thinkpad_acpi.c               |  5 ++++
- 6 files changed, 52 insertions(+), 18 deletions(-)
