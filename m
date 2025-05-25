@@ -1,176 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82AB1A3178;
-	Sun, 25 May 2025 20:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C61ACEDC;
+	Sun, 25 May 2025 21:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748206369; cv=none; b=gx1hQ9916nvJ18jwK9vXUprMRKZdUOoyngBjMM9NFBW+CIJLddZlsFT6WS4Pjt7ct5hqfzmNbTMQFN0JcCYAE3hPxkyh7KMUSDLu/rbXPVblnPeMTnV7ivrCiZLPnuJrBodIOMYdAFUyZ4SW2tt/WmMLEOfcrnHTS0jWFTnf1bw=
+	t=1748206805; cv=none; b=fQtBh7sEfXDrxd5IDwIin3hk5j9xNTUBw+OZBQ8t0pDn5LCQzZ/0L+uJ2pYBCVE97i3hmVd+Ubo1jdLye7vFcBcvvCYFlniy7+IYlIe98KxlE9/2D8z3DUID4JI1r5fgP05KYs8/XEUSeIGx6k63LQ8R7wzxdoHa0GnRMZQgz44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748206369; c=relaxed/simple;
-	bh=fdAnDv+w64nAvZzngYOOh1GV5frHnbKNivMHASAmyrc=;
+	s=arc-20240116; t=1748206805; c=relaxed/simple;
+	bh=UVQpbghoGLikWoMYHWdmkTEFbU5Pl2j2w3h6WzBZe3k=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oOYer6HBy4BRQwgNMwwkJ/JFiishpkTNtZAS8l4v4lFIW3cXRJpwizKIkVr1cd8mJxmcbdMZFyZwed1cJEmr2HEbFirBxcZTObk/MABB5hrG8GIKtxaszDVht586EVK0w0XH+eprd3hO+jAKiXOe1WiOJ1KyQhuoNy1gSTu3bOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CVNlkfJp; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=qjLkIXhHoP2m27BdwxwKmSFjcKaUZDQ/L4CBIEMMcbKq2Cbi0yUk+8ZV/as2gBGwUhP84rXyLU3MbCJZOJkl61+DfsQzhA2vVqJYg8NhvqQc31TO2vmFfcAHbngxMfDhlZMTS+sBI75/yEpAk3EfEEl+PinOTJf8qJNjYnUYeMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPjh7MF4; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CVNlkfJp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPjh7MF4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748206368; x=1779742368;
+  t=1748206805; x=1779742805;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=fdAnDv+w64nAvZzngYOOh1GV5frHnbKNivMHASAmyrc=;
-  b=CVNlkfJp8zMoRx1FnfD8YkREeXV3sWgdb4ayHf1KAINdiCOTZ5TIgMpu
-   Qbl9g7peeAzBAEeWY2kDFAElw/rcPGeEeYhlTC/gY13SnQmSPJ2cjSzGu
-   i3BgLCSmNZCm/WgMBo4ao8ouJ49vdrYmWYQJH8E/u/Xg47z+fc+I8uyXz
-   FvVerOo3UtomM9gvK+G0wQhn2OZY4Pqs0OSj9of/bdmweJWsTy7eOUmH2
-   TX2uC476mV29CVBShC03ZqCsTBmfjljdaKOctLPdEgLo65G8yufesCWz/
-   Os28gAu4+8+E2RXB5e9+LIMdw2u76G681lMyONsJggakauNrkMZtlXlX0
+  bh=UVQpbghoGLikWoMYHWdmkTEFbU5Pl2j2w3h6WzBZe3k=;
+  b=PPjh7MF4xo0Cojl46fxxj/Az4PtjFWd3/ydLszN/PHQZQiuXHAD6LzEe
+   6hxamPzG3IhzqkT3Et93CAa4tO8TrFc6aL4KphhcbVzn4BQzIrwYzw4T9
+   K7WoB/Ao0av9Hr6pztk7vk7odh0CK/+pu90/QFLaSC8LiYIkuCO+1g/W8
+   tp9JX5hQOnSeEp9ozLyfv0ApuSGMQOjODmeXywcQVK9mwtXYkZe+p0qlL
+   GWjWPfzcSzumI/733TeI1bMkuB3lItNt5xYo0d7P+gL+FM+rDSM+G72WO
+   wn5PWEU60lDQQD3k513DSCKu6lHxWJooQHcRZ1z+bTHAkuT79EoM9F3Ui
    w==;
-X-CSE-ConnectionGUID: ebsP6OYuSFqc5BTVKJycdg==
-X-CSE-MsgGUID: Q2eNugkqS8yPnZsXPx7vFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="49295964"
+X-CSE-ConnectionGUID: CXbGm4IFQpSL4T9PlSypdQ==
+X-CSE-MsgGUID: QHq3J96VTq2BwP2kb7guwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="61537064"
 X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="49295964"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 13:52:47 -0700
-X-CSE-ConnectionGUID: 0zcN2tXYT6i+6LniVpf4kg==
-X-CSE-MsgGUID: h/k1RPxoQ3C196AgeCNsHQ==
+   d="scan'208";a="61537064"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:00:04 -0700
+X-CSE-ConnectionGUID: P48Ki6zGSvew3cGfCCPR6Q==
+X-CSE-MsgGUID: jUfjBM/3RDWta28esQwJEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="141972195"
+   d="scan'208";a="172993775"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 13:52:44 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 13:59:59 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sun, 25 May 2025 23:52:40 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] platform/x86: asus-wmi: fix build without
- CONFIG_SUSPEND
-In-Reply-To: <5128b201-ab6e-4536-8c24-8263789a3d78@app.fastmail.com>
-Message-ID: <560511d7-06da-2afb-07e2-1589a6b55a16@linux.intel.com>
-References: <20250523131451.1942578-1-luke@ljones.dev> <20250523131451.1942578-2-luke@ljones.dev> <0dc0316d-a9ae-c152-3737-be1c73a415b1@linux.intel.com> <5128b201-ab6e-4536-8c24-8263789a3d78@app.fastmail.com>
+Date: Sun, 25 May 2025 23:59:55 +0300 (EEST)
+To: Suma Hegde <Suma.Hegde@amd.com>, Arnd Bergmann <arnd@kernel.org>
+cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+    Carlos Bilbao <carlos.bilbao@kernel.org>, 
+    Yazen Ghannam <yazen.ghannam@amd.com>, 
+    "Borislav Petkov (AMD)" <bp@alien8.de>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/amd/hsmp: fix building with
+ CONFIG_HWMON=m
+In-Reply-To: <35537263-47cf-4cc3-9808-7a93361d3ba8@amd.com>
+Message-ID: <8123c1ca-f06c-8d42-7553-c0907580ef52@linux.intel.com>
+References: <20250522144422.2824083-1-arnd@kernel.org> <35537263-47cf-4cc3-9808-7a93361d3ba8@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1695216397-1748206360=:933"
+Content-Type: multipart/mixed; boundary="8323328-96070654-1748206795=:933"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1695216397-1748206360=:933
-Content-Type: text/plain; charset=utf-8
+--8323328-96070654-1748206795=:933
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Fri, 23 May 2025, Luke Jones wrote:
+On Fri, 23 May 2025, Suma Hegde wrote:
 
-> On Fri, 23 May 2025, at 3:25 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Fri, 23 May 2025, Luke Jones wrote:
-> >
-> >> The patch "Refactor Ally suspend/resume" introduced an
-> >
-> > The commit feea7bd6b02d ("...")
-> >
-> >> acpi_s2idle_dev_ops for use with ROG Ally which caused a build error
-> >> if CONFIG_SUSPEND was not defined.
-> >>=20
-> >> Signed-off-by: Luke Jones <luke@ljones.dev>
-> >> Reported-by: kernel test robot <lkp@intel.com>
-> >> Closes: https://lore.kernel.org/oe-kbuild-all/202505090418.DaeaXe4i-lk=
-p@intel.com/
-> >> Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/re=
-sume")
-> >> ---
-> >>  drivers/platform/x86/asus-wmi.c | 9 +++++++++
-> >>  1 file changed, 9 insertions(+)
-> >>=20
-> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
-us-wmi.c
-> >> index 27f11643a00d..087318e0d595 100644
-> >> --- a/drivers/platform/x86/asus-wmi.c
-> >> +++ b/drivers/platform/x86/asus-wmi.c
-> >> @@ -5005,6 +5005,7 @@ static int asus_hotk_restore(struct device *devi=
-ce)
-> >>  =09return 0;
-> >>  }
-> >> =20
-> >> +#if defined(CONFIG_SUSPEND)
-> >>  static void asus_ally_s2idle_restore(void)
-> >>  {
-> >>  =09if (use_ally_mcu_hack =3D=3D ASUS_WMI_ALLY_MCU_HACK_ENABLED) {
-> >> @@ -5013,6 +5014,7 @@ static void asus_ally_s2idle_restore(void)
-> >>  =09=09msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
-> >>  =09}
-> >>  }
-> >> +#endif /* CONFIG_SUSPEND */
-> >
-> > Move this function below asus_hotk_prepare() next to ops, so that only =
-one=20
-> > #if block is needed for them.
-> >
+> Hi Arnd,
 >=20
-> Done
 >=20
-> >> =20
-> >>  static int asus_hotk_prepare(struct device *device)
-> >>  {
-> >> @@ -5025,9 +5027,11 @@ static int asus_hotk_prepare(struct device *dev=
-ice)
-> >>  }
-> >> =20
-> >>  /* Use only for Ally devices due to the wake_on_ac */
-> >> +#if defined(CONFIG_SUSPEND)
-> >>  static struct acpi_s2idle_dev_ops asus_ally_s2idle_dev_ops =3D {
-> >>  =09.restore =3D asus_ally_s2idle_restore,
-> >>  };
-> >> +#endif /* CONFIG_SUSPEND */
-> >> =20
-> >>  static const struct dev_pm_ops asus_pm_ops =3D {
-> >>  =09.thaw =3D asus_hotk_thaw,
-> >> @@ -5060,9 +5064,11 @@ static int asus_wmi_probe(struct platform_devic=
-e *pdev)
-> >>  =09=09=09return ret;
-> >>  =09}
-> >> =20
-> >> +=09#if defined(CONFIG_SUSPEND)
-> >>  =09ret =3D acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
-> >>  =09if (ret)
-> >>  =09=09pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
-> >> +=09#endif /* CONFIG_SUSPEND */
-> >> =20
-> >>  =09return asus_wmi_add(pdev);
-> >>  }
-> >> @@ -5096,7 +5102,10 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
-> >> =20
-> >>  void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
-> >>  {
-> >> +=09#if defined(CONFIG_SUSPEND)
-> >>  =09acpi_unregister_lps0_dev(&asus_ally_s2idle_dev_ops);
-> >> +=09#endif /* CONFIG_SUSPEND */
-> >
-> > I'd have preferred these reg/unreg be solved with wrappers (see=20
-> > pmc_atom.c).
+> On 5/22/2025 8:08 PM, Arnd Bergmann wrote:
+> > Caution: This message originated from an External Source. Use proper ca=
+ution
+> > when opening attachments, clicking links, or responding.
+> >=20
+> >=20
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >=20
+> > When CONFIG_HWMON is built as a loadable module, the HSMP drivers
+> > cannot be built-in:
+> >=20
+> > ERROR: modpost: "hsmp_create_sensor"
+> > [drivers/platform/x86/amd/hsmp/amd_hsmp.ko] undefined!
+> > ERROR: modpost: "hsmp_create_sensor"
+> > [drivers/platform/x86/amd/hsmp/hsmp_acpi.ko] undefined!
+> >=20
+> > Enforce that through the usual Kconfig dependnecy trick.
+> >=20
+> > Fixes: 92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon
+> > sensors")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >   drivers/platform/x86/amd/hsmp/Kconfig | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/amd/hsmp/Kconfig
+> > b/drivers/platform/x86/amd/hsmp/Kconfig
+> > index d6f7a62d55b5..2911120792e8 100644
+> > --- a/drivers/platform/x86/amd/hsmp/Kconfig
+> > +++ b/drivers/platform/x86/amd/hsmp/Kconfig
+> > @@ -12,6 +12,7 @@ menu "AMD HSMP Driver"
+> >   config AMD_HSMP_ACPI
+> >          tristate "AMD HSMP ACPI device driver"
+> >          depends on ACPI
+> > +       depends on HWMON || !HWMON
 >=20
-> Can do, but I don't really understand the difference it makes in this con=
-text. Should I log that  CONFIG_SUSPEND was not enabled? Otherwise it's jus=
-t as good as not there, right?
+>=20
+> Thanks for sending this fix.=C2=A0 I verified it.
+>=20
+> Along with this=C2=A0 fix, I will change IS_REACHABLE() to IS_ENABLED() i=
+n hsmp.h
+> as its not necessary and send v2 of this patch.
+>=20
+> -#if IS_REACHABLE(CONFIG_HWMON)
+> +#if IS_ENABLED(CONFIG_HWMON)
+> =C2=A0int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+> =C2=A0#else
+> static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) {
+> return 0; }
+> #endif
+>=20
+> >          select AMD_HSMP
+> >          help
+> >            Host System Management Port (HSMP) interface is a mailbox
+> > interface
+> > @@ -29,6 +30,7 @@ config AMD_HSMP_ACPI
+> >=20
+> >   config AMD_HSMP_PLAT
+> >          tristate "AMD HSMP platform device driver"
+> > +       depends on HWMON || !HWMON
+> >          select AMD_HSMP
+> >          help
+> >            Host System Management Port (HSMP) interface is a mailbox
+> > interface
 
-I just want to limit the use of ifdeffery to minimum and prefer using=20
-#else + a stub over sprinkling ifdefs all over the place. And it's=20
-orthogonal whether the CONFIG_SUSPEND=3Dn should print a warning or not.
+Hi,
 
-I'll take the v3.
+I've taken Arnd's patch now as the merge window is pressing in and this=20
+issue is disturbing build testing.
 
 --=20
  i.
 
---8323328-1695216397-1748206360=:933--
+--8323328-96070654-1748206795=:933--
