@@ -1,168 +1,205 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0358E4C6E;
-	Sun, 25 May 2025 22:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B867E110;
+	Mon, 26 May 2025 03:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748212294; cv=none; b=ZfaRYOqK326cdBXlLQpss3FG044OnmumHmRy9S/gvxPmM9vLCJnbt2wVpxvueISsMT6GjbsGARCwgSeRVS/riHXCpoKQra878pZiuY95c1UIEnVm2RrwJXP7w5z57u3GP5JUhPlErGsGslEYaQ54epHbBczf+oidbGXjRLGhBNk=
+	t=1748231610; cv=none; b=P6R7cuViRdc9rwfuJkrLgxnpWzEcBgWo3uCe8hUbQlwuOeKWkx4y7TfPRGeS0Oqn8C3lkcS2rKLjYDVqRuPRKAhfLkxBbQu1MP6iDyh71cw5PzVbEvIw5A9lT0THYy/Fe0io58xEqov9Kgq/6lUhYWNQSgYhuN4XI9Ian3NU+/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748212294; c=relaxed/simple;
-	bh=IeMM05OqHnOOhC29RLdPNxztZuvbTiFhqT0KwYHxVt8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bToaSBoFpIjtv8SS7f7O59HCaVRHTe1NgNoZ3bL8tnByD5GrSZtUTOvHjAeEBJqIMv70PemOum4YWHmN3/c67qnU4Jsm/nEO6MPkCycFQInUQ8myQHeOt3ze9yX2iGY4RzWbv9OIMBNacbRkSgh0xNwzn3gM+/egoTVvZMTDKPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlcI6sSF; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748231610; c=relaxed/simple;
+	bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EorWGcxzugO4+Aym578VDy7OIOKBithrOECa+t7Ij1+H1HBktTvLIpPEl3YupHmBjSULQWv+3dlstAoPxckjHHGpFmO3RhBduT0eqGnnfRz2S6eoTaF7Bmb8W6t1LG4YpQFYas20XBl72+2bPoNA8nQ3B5uWO8xWSFhShLyfDuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Zv8br4FS; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlcI6sSF"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1117531b3a.0;
-        Sun, 25 May 2025 15:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748212292; x=1748817092; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BNk1HW/GPBBVIki2yiAq9nzP3MYBLWG6yDhALpawHdE=;
-        b=UlcI6sSFmKna4AaP3zWAQLdGE/FGyza0kfA3OF1LQ5HvJOaT00f/UYVSJOcqTclReD
-         Fg8e3h9zI7AjIQ2zfinJMkry1XE6BA80v9tyxxkXj4VejGWQjKJtq6xbst0AJgYYjn6n
-         K0qxMQMFxUfou6soxK0lmMVYOoujs/6GmxXl6g3x7yZHdFzBrbkAA3vhWYw4o2L9fCHC
-         8TIpRKM5F/SWWMvJzmaPT2Ume3xWDEkoHsx9foqcEX0CnNlqxeSOjrH6/bubG1wVvcLG
-         30OmBkSWRd8D/jshhjQNi5dJlNrrvDB4ByRIXfNfQ0mV2kfpl/vIYNs8IrMX0rUEi1UQ
-         X/PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748212292; x=1748817092;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BNk1HW/GPBBVIki2yiAq9nzP3MYBLWG6yDhALpawHdE=;
-        b=dxyqbEGLy8Bjzb9khyCNkaQkiAX9eR2CMegoACg22ukoNFNdNdqykoLy5N2l62JC5k
-         dUUfal5jd7bK+goI7mO0eMzbBluiiOTbgMPt/LEcIO7a/KgdKcIQfLQIIwNq550nzdRo
-         f+iWsi6dKfG9cTN1BTvDVs1KQ5k63z90Z6r8aOk6XPFBpp3YyXBNa9RD+veI4EvPpiBw
-         DWv5kX3c+rni3mZFh/avi/WGVjQ83hrnEPEYHoMuLakKiTd6HXJGTg1+SZPWM+GzEdz/
-         ytZTjlZXdThWtmDRDQL0B5PSsEjrNq/RhdVr+juJKIAv2JKUuVVuV7Ri05m2Wkh7l07T
-         R7xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUp9Cvf217ewfOr976v1zI8QOgwiaKYQMT+4BaANNtsDEJHGiuB5ZjXw3OPBWktwDOz9yOEb/fVKZy679lflF14x2mCcw==@vger.kernel.org, AJvYcCWywklj5zgRVDja1PEqmNO8vCva8QMaxalszOu0X3zakXFDTjN2t8MjkZKvg+vhSOSCB5nTznG/sXzW27WY@vger.kernel.org, AJvYcCXhS3/MKC+DCDdf6V+EbYSpxVaQXi0VMIBhn4H5qa1FbxQ3R3fqKTJlAW3FiBh2FwquGQo/LovKaH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/aS3hts3wJ1BWooTRadsE3MYGjpg+Af8rxgXz+hjuDXutTkO4
-	hMD9scie3KZNrCamrJDMymlpzTjOhmyQ1rcNjsa/dcdM8QwIWIfMta3h
-X-Gm-Gg: ASbGncs6lz07eUOdRnKnnHGImMoBFNNJrC0pkbKJg/j88aQAXfJi5YETiMsApG1BPjF
-	x23b474ZpdzW/gs5GWEbUrqmQvdAe/jZCpy8RsDauZekXb7Pn1Zge/60Z3ojaqy1kPrHDOKbUgy
-	H+XqyaSC95YljMiRFVWinnIyW1i5RvcrgtmA+wAvZFKUmp62WRGcOsPo72cWSznl5NtR3IxZ/UN
-	ZMStPyMYKevNwvcWvVBplMiaz9BN2Wyb1nBEqaGaqFI1p6N9RAAplqnsCM0W1w98ljQ9qG4aqD0
-	m6svro6Cs6mqC6Eot5rQONaLCLxvRb2Bn1PxnvXlmBrv9KSRbXnEfyYEhJxuZFnG5NoQ10Wym8C
-	z7rWPabJszm4Ywsdch408BXy6vMBUQtgTviI1vVKf0CEGVA==
-X-Google-Smtp-Source: AGHT+IFTk+EvF2W9G//EcorjDe7dKdWV289H14hln+o8U9THUxAgVaqSH5tdMkI3QRz7WvL39iK3ag==
-X-Received: by 2002:a05:6a00:10d2:b0:72d:3b2e:fef9 with SMTP id d2e1a72fcca58-745fe03c2damr10085373b3a.20.1748212292052;
-        Sun, 25 May 2025 15:31:32 -0700 (PDT)
-Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9877030sm16403042b3a.148.2025.05.25.15.31.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 May 2025 15:31:31 -0700 (PDT)
-Date: Sun, 25 May 2025 15:31:29 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
- Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v11_0/6=5D_platform/x86=3A_A?=
- =?US-ASCII?Q?dd_Lenovo_WMI_Gaming_Series_Drivers?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com>
-References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com>
-Message-ID: <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Zv8br4FS"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id B3CE520276;
+	Mon, 26 May 2025 03:43:46 +0000 (UTC)
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 81A47261DE;
+	Mon, 26 May 2025 03:43:37 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id 0A81F20312;
+	Mon, 26 May 2025 03:43:29 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 4499440093;
+	Mon, 26 May 2025 03:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1748231007; bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zv8br4FSCCtzCbnIYIFAKDYXUPoA4iWvA8kAK1tmMEU023p/NChCG1U4MV7OpqRUv
+	 Z0dOHgg2xTLBMutKUGuQq2Nl65DX1w7r/HnvMpCQGrTgz5jea5oC/4NV+EzFuzTZig
+	 /9noWHf/aWg7FPS2gAPvg1l5RWz+FsYZ3+vhQJj4=
+Received: from [19.191.1.9] (unknown [223.76.243.206])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 7C97140CC8;
+	Mon, 26 May 2025 03:43:24 +0000 (UTC)
+Message-ID: <5c7537a3-4a23-44e9-860a-9c12203577f0@aosc.io>
+Date: Mon, 26 May 2025 11:43:16 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
+ polling
+To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Eric Long <i@hack3r.moe>,
+ Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250525201833.37939-1-i@rong.moe>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: 4499440093
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[rong.moe,gmail.com,redhat.com,linux.intel.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail,i.hack3r.moe:server fail,i.rong.moe:server fail];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[]
 
+Hi Rong,
 
+在 2025/5/26 04:18, Rong Zhang 写道:
+> It was reported that ideapad-laptop sometimes causes some recent (since
+> 2024) Lenovo ThinkBook models shut down when:
+>   - suspending/resuming
+>   - closing/opening the lid
+>   - (dis)connecting a charger
+>   - reading/writing some sysfs properties, e.g., fan_mode, touchpad
+>   - pressing down some Fn keys, e.g., Brightness Up/Down (Fn+F5/F6)
+>   - (seldom) loading the kmod
+> 
+> The issue has existed since the launch day of such models, and there
+> have been some out-of-tree workarounds (see Link:) for the issue. One
+> disables some functionalities, while another one simply shortens
+> IDEAPAD_EC_TIMEOUT. The disabled functionalities have read_ec_data() in
+> their call chains, which calls schedule() between each poll.
+> 
+> It turns out that these models suffer from the indeterminacy of
+> schedule() because of their low tolerance for being polled too
+> frequently. Sometimes schedule() returns too soon due to the lack of
+> ready tasks, causing the margin between two polls to be too short.
+> In this case, the command is somehow aborted, and too many subsequent
+> polls (they poll for "nothing!") may eventually break the state machine
+> in the EC, resulting in a hard shutdown. This explains why shortening
+> IDEAPAD_EC_TIMEOUT works around the issue - it reduces the total number
+> of polls sent to the EC.
+> 
+> Even when it doesn't lead to a shutdown, frequent polls may also disturb
+> the ongoing operation and notably delay (+ 10-20ms) the availability of
+> EC response. This phenomenon is unlikely to be exclusive to the models
+> mentioned above, so dropping the schedule() manner should also slightly
+> improve the responsiveness of various models.
+> 
+> Fix these issues by migrating to usleep_range(150, 300). The interval is
+> chosen to add some margin to the minimal 50us and considering EC
+> responses are usually available after 150-2500us based on my test. It
+> should be enough to fix these issues on all models subject to the EC bug
+> without introducing latency on other models.
+> 
+> Tested on ThinkBook 14 G7+ ASP and solved both issues. No regression was
+> introduced in the test on a model without the EC bug (ThinkBook X IMH,
+> thanks Eric).
+> 
+> Link: https://github.com/ty2/ideapad-laptop-tb2024g6plus/commit/6c5db18c9e8109873c2c90a7d2d7f552148f7ad4
+> Link: https://github.com/ferstar/ideapad-laptop-tb/commit/42d1e68e5009529d31bd23f978f636f79c023e80
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218771
+> Fixes: 6a09f21dd1e2 ("ideapad: add ACPI helpers")
+> Cc: stable@vger.kernel.org
+> Tested-by: Eric Long <i@hack3r.moe>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>   drivers/platform/x86/ideapad-laptop.c | 19 +++++++++++++++++--
+>   1 file changed, 17 insertions(+), 2 deletions(-)
 
-On May 25, 2025 2:41:51 PM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvinen@linu=
-x=2Eintel=2Ecom> wrote:
->On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
->
->> On Wed, 21 May 2025, Derek J=2E Clark wrote:
->>=20
->> > Adds support for the Lenovo "Gaming Series" of laptop hardware that u=
-se
->> > WMI interfaces that control various power settings=2E There are multi=
-ple WMI
->> > interfaces that work in concert to provide getting and setting values=
- as
->> > well as validation of input=2E Currently only the "Gamezone", "Other
->> > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, bu=
-t
->> > I attempted to structure the driver so that adding the "Custom Mode",
->> > "Lighting", and other data block interfaces would be trivial in later
->> > patches=2E
->> >=20
->> > This driver attempts to standardize the exposed sysfs by mirroring th=
-e
->> > asus-armoury driver currently under review=2E As such, a lot of
->> > inspiration has been drawn from that driver=2E
->> > https://lore=2Ekernel=2Eorg/platform-driver-x86/20250319065827=2E5347=
-8-1-luke@ljones=2Edev/#t
->> >=20
->> > The drivers have been tested by me on the Lenovo Legion Go and Legion=
- Go
->> > S=2E
->> >=20
->> > Suggested-by: Mario Limonciello <superm1@kernel=2Eorg>
->> > Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
->> > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> > ---
->> > v11:
->> >   - Fix formmating issues=2E
->>=20
->> Thanks for the update, I've applied this now into the review-ilpo-next=
-=20
->> branch=2E BUT, this is very late in the cycle now and if there's a buil=
-d=20
->> issue (or LKP doesn't build test it in reasonable time), I'll have to d=
-rop=20
->> this series and postpone it into the next cycle as I don't want to dela=
-y=20
->> the main PR to Linus too long=2E
->>=20
->> But lets hope for the best, I think some depends on issues were fixed=
-=20
->> earlier (IIRC), so hopefully it works good enough now=2E :-)
+Tested good on my Lenovo ThinkBook 14 G6+ (AHP) with the following:
 
->Hmpf, these give me a few new warnings related to this series:
->
->make W=3D1 drivers/platform/x86/
->make C=3D2 drivers/platform/x86/
->
->=2E=2E=2EI really don't know why sparse complains about the lock context=
-=20
->imbalance though, those functions use guard()=2E
+- Frequent Fn+F5/F6 inputs
+- Lid opening/closing to suspend: 20 times each whilst (1) plugged in 
+and (2) using battery power
+- Plugging in and unplugging USB-C power: 20 times while running
 
-Hmm, I'll take a look at it=2E
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
 
-Is there a comprehensive list of all tests that need to be run? I'd like t=
-o improve my process to avoid these in the future=2E
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index ede483573fe0..b5e4da6a6779 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/bug.h>
+>   #include <linux/cleanup.h>
+>   #include <linux/debugfs.h>
+> +#include <linux/delay.h>
+>   #include <linux/device.h>
+>   #include <linux/dmi.h>
+>   #include <linux/i8042.h>
+> @@ -267,6 +268,20 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
+>    */
+>   #define IDEAPAD_EC_TIMEOUT 200 /* in ms */
+>   
+> +/*
+> + * Some models (e.g., ThinkBook since 2024) have a low tolerance for being
+> + * polled too frequently. Doing so may break the state machine in the EC,
+> + * resulting in a hard shutdown.
+> + *
+> + * It is also observed that frequent polls may disturb the ongoing operation
+> + * and notably delay the availability of EC response.
+> + *
+> + * These values are used as the delay before the first poll and the interval
+> + * between subsequent polls to solve the above issues.
+> + */
+> +#define IDEAPAD_EC_POLL_MIN_US 150
+> +#define IDEAPAD_EC_POLL_MAX_US 300
+> +
+>   static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
+>   {
+>   	unsigned long long result;
+> @@ -383,7 +398,7 @@ static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *da
+>   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
+>   
+>   	while (time_before(jiffies, end_jiffies)) {
+> -		schedule();
+> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
+>   
+>   		err = eval_vpcr(handle, 1, &val);
+>   		if (err)
+> @@ -414,7 +429,7 @@ static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long dat
+>   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
+>   
+>   	while (time_before(jiffies, end_jiffies)) {
+> -		schedule();
+> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
+>   
+>   		err = eval_vpcr(handle, 1, &val);
+>   		if (err)
+> 
+> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
 
->There's also a copy-paste error:
->
-> * lwmi_gz_profile_get_get() - Get the current platform profile=2E
->
->=2E=2E=2E_get_get -> =2E=2E=2E_set
->Get -> Set
-
-
-Do you want me to submit v12 whenever it's ready,  or wait for the merge w=
-indow to open? Trying to avoid too much noise on your end=2E
-
-Thanks,
-- Derek
