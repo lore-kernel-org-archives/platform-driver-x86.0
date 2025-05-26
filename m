@@ -1,205 +1,260 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+Received: from mail.archlinux.org (mail.archlinux.org [95.216.189.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B867E110;
-	Mon, 26 May 2025 03:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6215125569;
+	Mon, 26 May 2025 06:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.189.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748231610; cv=none; b=P6R7cuViRdc9rwfuJkrLgxnpWzEcBgWo3uCe8hUbQlwuOeKWkx4y7TfPRGeS0Oqn8C3lkcS2rKLjYDVqRuPRKAhfLkxBbQu1MP6iDyh71cw5PzVbEvIw5A9lT0THYy/Fe0io58xEqov9Kgq/6lUhYWNQSgYhuN4XI9Ian3NU+/o=
+	t=1748242302; cv=none; b=cl2dEFD9HZKT18plteTKJU42Ddp7pmLzOtZyMMQ4Oclo65gPRFykwh0LciLulnCnVFWxBtlLtmurbl/ZJ/odB2CUTgDz6gWgmixcokiicKQX+FyrbhfJ9bZ3VbLZYOmsPGPee8TcVOeZaAklFs/bX+FFD2HmS6Wmq5l2RTFO8Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748231610; c=relaxed/simple;
-	bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
+	s=arc-20240116; t=1748242302; c=relaxed/simple;
+	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EorWGcxzugO4+Aym578VDy7OIOKBithrOECa+t7Ij1+H1HBktTvLIpPEl3YupHmBjSULQWv+3dlstAoPxckjHHGpFmO3RhBduT0eqGnnfRz2S6eoTaF7Bmb8W6t1LG4YpQFYas20XBl72+2bPoNA8nQ3B5uWO8xWSFhShLyfDuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Zv8br4FS; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	 In-Reply-To:Content-Type; b=DXY4TlPiYndFg/pEEiKIGKPG+fH2xUo2W2+EYAMihRmfPp+Hy9+fwU9739a9zpATV2gdoeplorN1quUTgBVjnT8EaQGRcV0Q8nd0mkZTzL6ncsHKs3jTwBdlvk09MGv7hJcW17VANrvg8D26l+zj4fsXQZelRYPajfYsQlx3tuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org; spf=pass smtp.mailfrom=archlinux.org; dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=cYFzAF0Z; dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=CU5kWGDr; arc=none smtp.client-ip=95.216.189.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinux.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Zv8br4FS"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id B3CE520276;
-	Mon, 26 May 2025 03:43:46 +0000 (UTC)
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 81A47261DE;
-	Mon, 26 May 2025 03:43:37 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 0A81F20312;
-	Mon, 26 May 2025 03:43:29 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 4499440093;
-	Mon, 26 May 2025 03:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1748231007; bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Zv8br4FSCCtzCbnIYIFAKDYXUPoA4iWvA8kAK1tmMEU023p/NChCG1U4MV7OpqRUv
-	 Z0dOHgg2xTLBMutKUGuQq2Nl65DX1w7r/HnvMpCQGrTgz5jea5oC/4NV+EzFuzTZig
-	 /9noWHf/aWg7FPS2gAPvg1l5RWz+FsYZ3+vhQJj4=
-Received: from [19.191.1.9] (unknown [223.76.243.206])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 7C97140CC8;
-	Mon, 26 May 2025 03:43:24 +0000 (UTC)
-Message-ID: <5c7537a3-4a23-44e9-860a-9c12203577f0@aosc.io>
-Date: Mon, 26 May 2025 11:43:16 +0800
+	dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="cYFzAF0Z";
+	dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="CU5kWGDr"
+Message-ID: <be5d2f98-0424-4b29-be79-0e8c61bb7f28@archlinux.org>
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-ed25519; t=1748241906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
+	b=cYFzAF0ZV3WI25BoHgIVkaPSZJyToJCMZZWzeYD9NBu++9R1xtNfuhafq5+GBbl4FEbRUo
+	1PV4Is/q6OL4uTBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-rsa; t=1748241906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
+	b=CU5kWGDrvCjO2THiymfBpjB32gOpbn+UAyJ6NjHLfoTVBYn/8dM5vUzLiD/ByShg+i47yL
+	ZNFe6jPGYmHaqBbsGXPaKC76RhvHwp1cHSKZHn65jbAMYscwQzbtngy0bPSKekUAdGAF9E
+	DVn9RhmBQEuc9cfeVVHvuL6ut+hrE5joNqSoHkWBckD5I1zFNrsTdY1V7O/T/Pc7BWUSd8
+	MDbftBaNZL9PhHlGHJlNvOcmrTxcqu18ymDBRWyL29AkKubcCx/O1iNZWQfnkcfwou0NwJ
+	T+HZ5w+nm8QLHIPRUxJhWl2vWZN7XtReVx8LK5Bl+QJPe4y01dzJY90QB0Rgi7hCJORCis
+	uDf1OsMk7jrRXtYMstoxzTGZvk3unUrWz7EyN3U06ILf7cXUTQ50eA/UrtpypbFNoxOMQx
+	l+6Jd9f0uZuBAHQxVCPhL6VcM6jSIgW/+2drOnkAy0J8hZ6AVHH1OxLEFrC2ntBmyog6Tp
+	afnWw6kdp25acM54TaFf/Fsjijx28/QzZMbdck+RPg/NIbTwf0Av/AAVeEE+pUR4HQ8ls3
+	jatY7vAA1ThcEVw5M2+pV5xSCHnkQ9M1R8RCSESnmdQx3GVx1vAtvivrOXHBuJfuej0Ba/
+	99L51Yvv3jpre5FNXfg0pe4GWpqptrnbSeiVF0i0ZZQGq0bozsTJY=
+Authentication-Results: mail.archlinux.org;
+	auth=pass smtp.auth=felixonmars smtp.mailfrom=felixonmars@archlinux.org
+Date: Mon, 26 May 2025 14:44:59 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
  polling
 To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
  Hans de Goede <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Eric Long <i@hack3r.moe>,
- Kexy Biscuit <kexybiscuit@aosc.io>
+ stable@vger.kernel.org, Eric Long <i@hack3r.moe>, jeffbai@aosc.io
 References: <20250525201833.37939-1-i@rong.moe>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
+From: Felix Yan <felixonmars@archlinux.org>
+Content-Language: en-US-large
+Autocrypt: addr=felixonmars@archlinux.org; keydata=
+ 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
+ EAXqa6vUBxBrfkBwwf11sYqqZyFORHr8
 In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------ssfCMzWuDrsAMe0uEPqRDEHP"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------ssfCMzWuDrsAMe0uEPqRDEHP
+Content-Type: multipart/mixed; boundary="------------lsgaCJLygDxGvMm7fpKfGrdb";
+ protected-headers="v1"
+From: Felix Yan <felixonmars@archlinux.org>
+To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Eric Long <i@hack3r.moe>, jeffbai@aosc.io
+Message-ID: <be5d2f98-0424-4b29-be79-0e8c61bb7f28@archlinux.org>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
+ polling
+References: <20250525201833.37939-1-i@rong.moe>
+In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+
+--------------lsgaCJLygDxGvMm7fpKfGrdb
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: 4499440093
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[rong.moe,gmail.com,redhat.com,linux.intel.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail,i.hack3r.moe:server fail,i.rong.moe:server fail];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[]
+Content-Transfer-Encoding: base64
 
-Hi Rong,
+SGkgUm9uZywNCg0KT24gNS8yNi8yNSAwNDoxOCwgUm9uZyBaaGFuZyB3cm90ZToNCj4gSXQg
+d2FzIHJlcG9ydGVkIHRoYXQgaWRlYXBhZC1sYXB0b3Agc29tZXRpbWVzIGNhdXNlcyBzb21l
+IHJlY2VudCAoc2luY2UNCj4gMjAyNCkgTGVub3ZvIFRoaW5rQm9vayBtb2RlbHMgc2h1dCBk
+b3duIHdoZW46DQo+ICAgLSBzdXNwZW5kaW5nL3Jlc3VtaW5nDQo+ICAgLSBjbG9zaW5nL29w
+ZW5pbmcgdGhlIGxpZA0KPiAgIC0gKGRpcyljb25uZWN0aW5nIGEgY2hhcmdlcg0KPiAgIC0g
+cmVhZGluZy93cml0aW5nIHNvbWUgc3lzZnMgcHJvcGVydGllcywgZS5nLiwgZmFuX21vZGUs
+IHRvdWNocGFkDQo+ICAgLSBwcmVzc2luZyBkb3duIHNvbWUgRm4ga2V5cywgZS5nLiwgQnJp
+Z2h0bmVzcyBVcC9Eb3duIChGbitGNS9GNikNCj4gICAtIChzZWxkb20pIGxvYWRpbmcgdGhl
+IGttb2QNCj4gDQo+IFRoZSBpc3N1ZSBoYXMgZXhpc3RlZCBzaW5jZSB0aGUgbGF1bmNoIGRh
+eSBvZiBzdWNoIG1vZGVscywgYW5kIHRoZXJlDQo+IGhhdmUgYmVlbiBzb21lIG91dC1vZi10
+cmVlIHdvcmthcm91bmRzIChzZWUgTGluazopIGZvciB0aGUgaXNzdWUuIE9uZQ0KPiBkaXNh
+YmxlcyBzb21lIGZ1bmN0aW9uYWxpdGllcywgd2hpbGUgYW5vdGhlciBvbmUgc2ltcGx5IHNo
+b3J0ZW5zDQo+IElERUFQQURfRUNfVElNRU9VVC4gVGhlIGRpc2FibGVkIGZ1bmN0aW9uYWxp
+dGllcyBoYXZlIHJlYWRfZWNfZGF0YSgpIGluDQo+IHRoZWlyIGNhbGwgY2hhaW5zLCB3aGlj
+aCBjYWxscyBzY2hlZHVsZSgpIGJldHdlZW4gZWFjaCBwb2xsLg0KPiANCj4gSXQgdHVybnMg
+b3V0IHRoYXQgdGhlc2UgbW9kZWxzIHN1ZmZlciBmcm9tIHRoZSBpbmRldGVybWluYWN5IG9m
+DQo+IHNjaGVkdWxlKCkgYmVjYXVzZSBvZiB0aGVpciBsb3cgdG9sZXJhbmNlIGZvciBiZWlu
+ZyBwb2xsZWQgdG9vDQo+IGZyZXF1ZW50bHkuIFNvbWV0aW1lcyBzY2hlZHVsZSgpIHJldHVy
+bnMgdG9vIHNvb24gZHVlIHRvIHRoZSBsYWNrIG9mDQo+IHJlYWR5IHRhc2tzLCBjYXVzaW5n
+IHRoZSBtYXJnaW4gYmV0d2VlbiB0d28gcG9sbHMgdG8gYmUgdG9vIHNob3J0Lg0KPiBJbiB0
+aGlzIGNhc2UsIHRoZSBjb21tYW5kIGlzIHNvbWVob3cgYWJvcnRlZCwgYW5kIHRvbyBtYW55
+IHN1YnNlcXVlbnQNCj4gcG9sbHMgKHRoZXkgcG9sbCBmb3IgIm5vdGhpbmchIikgbWF5IGV2
+ZW50dWFsbHkgYnJlYWsgdGhlIHN0YXRlIG1hY2hpbmUNCj4gaW4gdGhlIEVDLCByZXN1bHRp
+bmcgaW4gYSBoYXJkIHNodXRkb3duLiBUaGlzIGV4cGxhaW5zIHdoeSBzaG9ydGVuaW5nDQo+
+IElERUFQQURfRUNfVElNRU9VVCB3b3JrcyBhcm91bmQgdGhlIGlzc3VlIC0gaXQgcmVkdWNl
+cyB0aGUgdG90YWwgbnVtYmVyDQo+IG9mIHBvbGxzIHNlbnQgdG8gdGhlIEVDLg0KPiANCj4g
+RXZlbiB3aGVuIGl0IGRvZXNuJ3QgbGVhZCB0byBhIHNodXRkb3duLCBmcmVxdWVudCBwb2xs
+cyBtYXkgYWxzbyBkaXN0dXJiDQo+IHRoZSBvbmdvaW5nIG9wZXJhdGlvbiBhbmQgbm90YWJs
+eSBkZWxheSAoKyAxMC0yMG1zKSB0aGUgYXZhaWxhYmlsaXR5IG9mDQo+IEVDIHJlc3BvbnNl
+LiBUaGlzIHBoZW5vbWVub24gaXMgdW5saWtlbHkgdG8gYmUgZXhjbHVzaXZlIHRvIHRoZSBt
+b2RlbHMNCj4gbWVudGlvbmVkIGFib3ZlLCBzbyBkcm9wcGluZyB0aGUgc2NoZWR1bGUoKSBt
+YW5uZXIgc2hvdWxkIGFsc28gc2xpZ2h0bHkNCj4gaW1wcm92ZSB0aGUgcmVzcG9uc2l2ZW5l
+c3Mgb2YgdmFyaW91cyBtb2RlbHMuDQo+IA0KPiBGaXggdGhlc2UgaXNzdWVzIGJ5IG1pZ3Jh
+dGluZyB0byB1c2xlZXBfcmFuZ2UoMTUwLCAzMDApLiBUaGUgaW50ZXJ2YWwgaXMNCj4gY2hv
+c2VuIHRvIGFkZCBzb21lIG1hcmdpbiB0byB0aGUgbWluaW1hbCA1MHVzIGFuZCBjb25zaWRl
+cmluZyBFQw0KPiByZXNwb25zZXMgYXJlIHVzdWFsbHkgYXZhaWxhYmxlIGFmdGVyIDE1MC0y
+NTAwdXMgYmFzZWQgb24gbXkgdGVzdC4gSXQNCj4gc2hvdWxkIGJlIGVub3VnaCB0byBmaXgg
+dGhlc2UgaXNzdWVzIG9uIGFsbCBtb2RlbHMgc3ViamVjdCB0byB0aGUgRUMgYnVnDQo+IHdp
+dGhvdXQgaW50cm9kdWNpbmcgbGF0ZW5jeSBvbiBvdGhlciBtb2RlbHMuDQo+IA0KPiBUZXN0
+ZWQgb24gVGhpbmtCb29rIDE0IEc3KyBBU1AgYW5kIHNvbHZlZCBib3RoIGlzc3Vlcy4gTm8g
+cmVncmVzc2lvbiB3YXMNCj4gaW50cm9kdWNlZCBpbiB0aGUgdGVzdCBvbiBhIG1vZGVsIHdp
+dGhvdXQgdGhlIEVDIGJ1ZyAoVGhpbmtCb29rIFggSU1ILA0KPiB0aGFua3MgRXJpYykuDQo+
+IA0KPiBMaW5rOiBodHRwczovL2dpdGh1Yi5jb20vdHkyL2lkZWFwYWQtbGFwdG9wLXRiMjAy
+NGc2cGx1cy9jb21taXQvNmM1ZGIxOGM5ZTgxMDk4NzNjMmM5MGE3ZDJkN2Y1NTIxNDhmN2Fk
+NA0KPiBMaW5rOiBodHRwczovL2dpdGh1Yi5jb20vZmVyc3Rhci9pZGVhcGFkLWxhcHRvcC10
+Yi9jb21taXQvNDJkMWU2OGU1MDA5NTI5ZDMxYmQyM2Y5NzhmNjM2Zjc5YzAyM2U4MA0KPiBD
+bG9zZXM6IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE4
+NzcxDQo+IEZpeGVzOiA2YTA5ZjIxZGQxZTIgKCJpZGVhcGFkOiBhZGQgQUNQSSBoZWxwZXJz
+IikNCj4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gVGVzdGVkLWJ5OiBFcmljIExv
+bmcgPGlAaGFjazNyLm1vZT4NCj4gU2lnbmVkLW9mZi1ieTogUm9uZyBaaGFuZyA8aUByb25n
+Lm1vZT4NCj4gLS0tDQo+ICAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3Au
+YyB8IDE5ICsrKysrKysrKysrKysrKysrLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5z
+ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCg0KVGVzdGVkIHRvIHdvcmsgYXMgZXhwZWN0
+ZWQgb24gbXkgVGhpbmtCb29rIDE0IEc2KyBJTUggKEludGVsIG1vZGVsKSB3aXRoIA0KdGhl
+IGZvbGxvd2luZzoNCg0KLSBGbitGNS9GNiBpbnB1dHMsIG1vcmUgcmVzcG9uc2l2ZSB0aGFu
+IGJlZm9yZSBhbmQgbm8gc2h1dGRvd24uDQotIFNsZWVwIHZpYSBwb3dlciBidXR0b24gYW5k
+IGNsb3NlIHRoZSBsaWQgKHdoaWNoIGlzIGJvdW5kIHRvIHNsZWVwIGFzIA0Kd2VsbCk7IFdh
+a2UgdmlhIHNoYWtpbmcgdGhlIG1vdXNlIGFuZCBvcGVuIGxpZC4gQm90aCBjYXVzZWQgdW5l
+eHBlY3RlZCANCnNodXRkb3duIGJlZm9yZSBhbmQgZml4ZWQgbm93Lg0KDQpUaGFua3MgZm9y
+IGZpZ3VyaW5nIG91dCB0aGlzIGxvbmctc3RhbmRpbmcgaXNzdWUhDQoNClRlc3RlZC1ieTog
+RmVsaXggWWFuIDxmZWxpeG9ubWFyc0BhcmNobGludXgub3JnPg0KDQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFkLWxhcHRvcC5jIGIvZHJpdmVycy9wbGF0
+Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3AuYw0KPiBpbmRleCBlZGU0ODM1NzNmZTAuLmI1ZTRk
+YTZhNjc3OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1s
+YXB0b3AuYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFkLWxhcHRvcC5j
+DQo+IEBAIC0xNSw2ICsxNSw3IEBADQo+ICAgI2luY2x1ZGUgPGxpbnV4L2J1Zy5oPg0KPiAg
+ICNpbmNsdWRlIDxsaW51eC9jbGVhbnVwLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2RlYnVn
+ZnMuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPg0KPiAgICNpbmNsdWRlIDxsaW51
+eC9kZXZpY2UuaD4NCj4gICAjaW5jbHVkZSA8bGludXgvZG1pLmg+DQo+ICAgI2luY2x1ZGUg
+PGxpbnV4L2k4MDQyLmg+DQo+IEBAIC0yNjcsNiArMjY4LDIwIEBAIHN0YXRpYyB2b2lkIGlk
+ZWFwYWRfc2hhcmVkX2V4aXQoc3RydWN0IGlkZWFwYWRfcHJpdmF0ZSAqcHJpdikNCj4gICAg
+Ki8NCj4gICAjZGVmaW5lIElERUFQQURfRUNfVElNRU9VVCAyMDAgLyogaW4gbXMgKi8NCj4g
+ICANCj4gKy8qDQo+ICsgKiBTb21lIG1vZGVscyAoZS5nLiwgVGhpbmtCb29rIHNpbmNlIDIw
+MjQpIGhhdmUgYSBsb3cgdG9sZXJhbmNlIGZvciBiZWluZw0KPiArICogcG9sbGVkIHRvbyBm
+cmVxdWVudGx5LiBEb2luZyBzbyBtYXkgYnJlYWsgdGhlIHN0YXRlIG1hY2hpbmUgaW4gdGhl
+IEVDLA0KPiArICogcmVzdWx0aW5nIGluIGEgaGFyZCBzaHV0ZG93bi4NCj4gKyAqDQo+ICsg
+KiBJdCBpcyBhbHNvIG9ic2VydmVkIHRoYXQgZnJlcXVlbnQgcG9sbHMgbWF5IGRpc3R1cmIg
+dGhlIG9uZ29pbmcgb3BlcmF0aW9uDQo+ICsgKiBhbmQgbm90YWJseSBkZWxheSB0aGUgYXZh
+aWxhYmlsaXR5IG9mIEVDIHJlc3BvbnNlLg0KPiArICoNCj4gKyAqIFRoZXNlIHZhbHVlcyBh
+cmUgdXNlZCBhcyB0aGUgZGVsYXkgYmVmb3JlIHRoZSBmaXJzdCBwb2xsIGFuZCB0aGUgaW50
+ZXJ2YWwNCj4gKyAqIGJldHdlZW4gc3Vic2VxdWVudCBwb2xscyB0byBzb2x2ZSB0aGUgYWJv
+dmUgaXNzdWVzLg0KPiArICovDQo+ICsjZGVmaW5lIElERUFQQURfRUNfUE9MTF9NSU5fVVMg
+MTUwDQo+ICsjZGVmaW5lIElERUFQQURfRUNfUE9MTF9NQVhfVVMgMzAwDQo+ICsNCj4gICBz
+dGF0aWMgaW50IGV2YWxfaW50KGFjcGlfaGFuZGxlIGhhbmRsZSwgY29uc3QgY2hhciAqbmFt
+ZSwgdW5zaWduZWQgbG9uZyAqcmVzKQ0KPiAgIHsNCj4gICAJdW5zaWduZWQgbG9uZyBsb25n
+IHJlc3VsdDsNCj4gQEAgLTM4Myw3ICszOTgsNyBAQCBzdGF0aWMgaW50IHJlYWRfZWNfZGF0
+YShhY3BpX2hhbmRsZSBoYW5kbGUsIHVuc2lnbmVkIGxvbmcgY21kLCB1bnNpZ25lZCBsb25n
+ICpkYQ0KPiAgIAllbmRfamlmZmllcyA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVzKElE
+RUFQQURfRUNfVElNRU9VVCkgKyAxOw0KPiAgIA0KPiAgIAl3aGlsZSAodGltZV9iZWZvcmUo
+amlmZmllcywgZW5kX2ppZmZpZXMpKSB7DQo+IC0JCXNjaGVkdWxlKCk7DQo+ICsJCXVzbGVl
+cF9yYW5nZShJREVBUEFEX0VDX1BPTExfTUlOX1VTLCBJREVBUEFEX0VDX1BPTExfTUFYX1VT
+KTsNCj4gICANCj4gICAJCWVyciA9IGV2YWxfdnBjcihoYW5kbGUsIDEsICZ2YWwpOw0KPiAg
+IAkJaWYgKGVycikNCj4gQEAgLTQxNCw3ICs0MjksNyBAQCBzdGF0aWMgaW50IHdyaXRlX2Vj
+X2NtZChhY3BpX2hhbmRsZSBoYW5kbGUsIHVuc2lnbmVkIGxvbmcgY21kLCB1bnNpZ25lZCBs
+b25nIGRhdA0KPiAgIAllbmRfamlmZmllcyA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVz
+KElERUFQQURfRUNfVElNRU9VVCkgKyAxOw0KPiAgIA0KPiAgIAl3aGlsZSAodGltZV9iZWZv
+cmUoamlmZmllcywgZW5kX2ppZmZpZXMpKSB7DQo+IC0JCXNjaGVkdWxlKCk7DQo+ICsJCXVz
+bGVlcF9yYW5nZShJREVBUEFEX0VDX1BPTExfTUlOX1VTLCBJREVBUEFEX0VDX1BPTExfTUFY
+X1VTKTsNCj4gICANCj4gICAJCWVyciA9IGV2YWxfdnBjcihoYW5kbGUsIDEsICZ2YWwpOw0K
+PiAgIAkJaWYgKGVycikNCj4gDQo+IGJhc2UtY29tbWl0OiBhNTgwNmNkNTA2YWY1YTdjMTli
+Y2Q1OTZlNDcwOGI1YzQ2NGJmZDIxDQo=
 
-在 2025/5/26 04:18, Rong Zhang 写道:
-> It was reported that ideapad-laptop sometimes causes some recent (since
-> 2024) Lenovo ThinkBook models shut down when:
->   - suspending/resuming
->   - closing/opening the lid
->   - (dis)connecting a charger
->   - reading/writing some sysfs properties, e.g., fan_mode, touchpad
->   - pressing down some Fn keys, e.g., Brightness Up/Down (Fn+F5/F6)
->   - (seldom) loading the kmod
-> 
-> The issue has existed since the launch day of such models, and there
-> have been some out-of-tree workarounds (see Link:) for the issue. One
-> disables some functionalities, while another one simply shortens
-> IDEAPAD_EC_TIMEOUT. The disabled functionalities have read_ec_data() in
-> their call chains, which calls schedule() between each poll.
-> 
-> It turns out that these models suffer from the indeterminacy of
-> schedule() because of their low tolerance for being polled too
-> frequently. Sometimes schedule() returns too soon due to the lack of
-> ready tasks, causing the margin between two polls to be too short.
-> In this case, the command is somehow aborted, and too many subsequent
-> polls (they poll for "nothing!") may eventually break the state machine
-> in the EC, resulting in a hard shutdown. This explains why shortening
-> IDEAPAD_EC_TIMEOUT works around the issue - it reduces the total number
-> of polls sent to the EC.
-> 
-> Even when it doesn't lead to a shutdown, frequent polls may also disturb
-> the ongoing operation and notably delay (+ 10-20ms) the availability of
-> EC response. This phenomenon is unlikely to be exclusive to the models
-> mentioned above, so dropping the schedule() manner should also slightly
-> improve the responsiveness of various models.
-> 
-> Fix these issues by migrating to usleep_range(150, 300). The interval is
-> chosen to add some margin to the minimal 50us and considering EC
-> responses are usually available after 150-2500us based on my test. It
-> should be enough to fix these issues on all models subject to the EC bug
-> without introducing latency on other models.
-> 
-> Tested on ThinkBook 14 G7+ ASP and solved both issues. No regression was
-> introduced in the test on a model without the EC bug (ThinkBook X IMH,
-> thanks Eric).
-> 
-> Link: https://github.com/ty2/ideapad-laptop-tb2024g6plus/commit/6c5db18c9e8109873c2c90a7d2d7f552148f7ad4
-> Link: https://github.com/ferstar/ideapad-laptop-tb/commit/42d1e68e5009529d31bd23f978f636f79c023e80
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218771
-> Fixes: 6a09f21dd1e2 ("ideapad: add ACPI helpers")
-> Cc: stable@vger.kernel.org
-> Tested-by: Eric Long <i@hack3r.moe>
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
->   drivers/platform/x86/ideapad-laptop.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
+--------------lsgaCJLygDxGvMm7fpKfGrdb--
 
-Tested good on my Lenovo ThinkBook 14 G6+ (AHP) with the following:
+--------------ssfCMzWuDrsAMe0uEPqRDEHP
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-- Frequent Fn+F5/F6 inputs
-- Lid opening/closing to suspend: 20 times each whilst (1) plugged in 
-and (2) using battery power
-- Plugging in and unplugging USB-C power: 20 times while running
+-----BEGIN PGP SIGNATURE-----
 
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
+wsF5BAABCAAjFiEEtZcfLFwQqaCMYAMPeGxj8zDXy5IFAmg0DesFAwAAAAAACgkQeGxj8zDXy5L6
+Lw/8CyY1Y9PBwEocLWS5Ut3B8Ka0SEqSjhTazXjj2eWj6RKSy6WbGQuUO9lQFfM7oO0D5jj625Xc
+3G3hrZNE9f/p2CVZ6TGpFhPANUQjsQOTomyO3tdzW5ENFkiUMemXgY4gidvsiSaEZjQTPsDocfYT
+L+xQs5cFOVzgQfU0fGOeQiab28fex+95jGkR+GBJz7NnTL890MWBlUo7+WnF+DxtgdVmAq/+yzoF
+GXIChBkRQBn5trxJ4QBglBpjQZSAAqfTwOEAz3IQ1uXFtDWc/QfuAoyJH0Ec8EhMJDXH7MsfNxQA
+LZ/yRLEyS6mWCa+buZ9hPcmNrkZughfxnVoIWYYILLZjgT8loMsvbakahp3zox0CBUZp7lv87ThI
+OL897D3v125TqpS7rdKdzqv20HNALJKvSQ9VN8dpetzk7Jnc4eCm6OBRXy09oNm9RnbBY57Fjvto
+Z6XimmKgoBVyFkgkl6Y5JOxuH+/+HTmPNH2079qihs8Z2rHBw278OcX3fUDkk6nU7xhV6lXPQW1k
+EABA8Xp4SdbFCArMJ5MUuBjc2FIIeTpKv+Tj38mZBpLBLoEjI7YQrpSJNsbAuxij5bLLg+EpFRwr
+PpU0HmKPvXQEO7JRhNuxJPc15eFpf5eaBi1nhzhy9FOSoYEnj3cAEJKkn3Iu+8seNEWTx1iWNd3l
+TBk=
+=ESfk
+-----END PGP SIGNATURE-----
 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index ede483573fe0..b5e4da6a6779 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -15,6 +15,7 @@
->   #include <linux/bug.h>
->   #include <linux/cleanup.h>
->   #include <linux/debugfs.h>
-> +#include <linux/delay.h>
->   #include <linux/device.h>
->   #include <linux/dmi.h>
->   #include <linux/i8042.h>
-> @@ -267,6 +268,20 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
->    */
->   #define IDEAPAD_EC_TIMEOUT 200 /* in ms */
->   
-> +/*
-> + * Some models (e.g., ThinkBook since 2024) have a low tolerance for being
-> + * polled too frequently. Doing so may break the state machine in the EC,
-> + * resulting in a hard shutdown.
-> + *
-> + * It is also observed that frequent polls may disturb the ongoing operation
-> + * and notably delay the availability of EC response.
-> + *
-> + * These values are used as the delay before the first poll and the interval
-> + * between subsequent polls to solve the above issues.
-> + */
-> +#define IDEAPAD_EC_POLL_MIN_US 150
-> +#define IDEAPAD_EC_POLL_MAX_US 300
-> +
->   static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
->   {
->   	unsigned long long result;
-> @@ -383,7 +398,7 @@ static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *da
->   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
->   
->   	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
->   
->   		err = eval_vpcr(handle, 1, &val);
->   		if (err)
-> @@ -414,7 +429,7 @@ static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long dat
->   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
->   
->   	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
->   
->   		err = eval_vpcr(handle, 1, &val);
->   		if (err)
-> 
-> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-
+--------------ssfCMzWuDrsAMe0uEPqRDEHP--
