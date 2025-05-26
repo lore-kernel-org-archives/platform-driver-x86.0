@@ -1,201 +1,175 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E435BF9D9;
-	Mon, 26 May 2025 07:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B484B1E8324;
+	Mon, 26 May 2025 09:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244041; cv=none; b=thq+XN7yLTFYgC428Kwkh6sAgQNV8izgH372vMlDoGf/8XSGbcCnhEcZ3E5XGNslPnOxIN3dJ74E1fWUBRDAritlZoZeGfmOQT1+79A+Dy4hps0omzEo3sen2yqHGeHhODTGS6xoo4W+vaaYjE8aop43m+ZrHj45kHnz6Vj2rE4=
+	t=1748250665; cv=none; b=hXJa0ixmuDsHgkSWxZ7KWmAawi9tyzjnD5Dqm0g2qLwhb3XzVHi1+jv+JB05r1vTI9DeyOIj+j/NFuLSGRY6Y99vcwOM35y3dddASldG+nGI2Ul0A5OSlxFvTXYrTrrg1KbI4BkJVQaGCkUviP9KnxB6MJf8CI1OFykkDNCXkt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244041; c=relaxed/simple;
-	bh=E7nsl7EWs55+/uUhfc7iqd4zyB1Z1lv1eOZEgqQ0ZBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eD154JLeQPwa+KzKGaJc94uFlLAYtljoMRo4Nduvf+4tGjcJKlvw90nT4VxMlMdSAXhYEcyBWBA5HZ6Eb/k5HjKwtQnyEPwg7bTN++3SkB6sLhAOwKNosaqwp8x/mDiUMbkQH0P9ofTsxYOL9QoCfiP5OytR954dMh2g3aLtV5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ERsZFnNG; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748250665; c=relaxed/simple;
+	bh=vV4FBCFkwq6PyUFkRrLKn+LL8FlEQvtmUBn1sC+uQvQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YRd7jXLKTqg5EZb8OSEdTsvf5dMksgh6lVj/Jc0tNYibblDuan/h6kLY1z7WdfWwxJyoUEZ729fezmyEu5h6lVJb0ozbSeeYhVl5ThFARGibq77HfIV3KKffupLMwwcMh1OpO+WNC520HMDmLVg30sFZ6FU66NjSLrcp+BW2MfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgfLpO9Y; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ERsZFnNG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 16875442B5;
-	Mon, 26 May 2025 07:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748244030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QLkd7DkuwItmUeCsro4GRU7KY1n+af+fkKCtRJvc72M=;
-	b=ERsZFnNGGx1taTjFML/F7g48As15TWrVqpm7AQM6ITdhjMQXPkfTl1YTY624dt2A61ojKn
-	C4GrIy3LvMnZuQ3f48MHbrAItO9yt2FMHAqBFQBNWnAd4H+GlbFkLp+0Q5jpHR5ME8BtSC
-	rLb2TykZsJeBxh/2UPnUC+byagvOBWEHs+mzz5buaw+VAmwRzWbNg55alaA49c/WX7dEK/
-	fsh2zNr1ZhqaGyMrCEJNSdr/QBQDpvqqwK5PYQ+P4KU7TlWYdbGXAPWQsVfUnDZH7GHJxL
-	bRcPS+1N1hdPuMOBL2LrEIz8HJMPOUVPD7+c3bsfVFBouRX3auSsw6Kbri6nhA==
-Date: Mon, 26 May 2025 09:20:24 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250526092024.48cae4ae@booty>
-In-Reply-To: <67252c36-8b31-4c40-9d89-4f502da4a087@nxp.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
- <553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
- <20250430112944.1b39caab@booty>
- <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
- <20250506224720.5cbcf3e1@booty>
- <67252c36-8b31-4c40-9d89-4f502da4a087@nxp.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgfLpO9Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748250663; x=1779786663;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vV4FBCFkwq6PyUFkRrLKn+LL8FlEQvtmUBn1sC+uQvQ=;
+  b=jgfLpO9Y6PRBrZbmw03vQKdU51In3pfK3+3SVNoQAfzbvVt8wormfrZX
+   X6WY9j8rtEpiJsE97HTr63JJHBukEnxYFMWZyhZDTDNoR+OqL6UsQiHyP
+   F94j0j7I79cWC1YDmMGsAgK5iRyyusQIbZqZCXP7LF8gu6RY4qmq2PK5Q
+   txt2sI+4IeJ9VcA7KJ232gQBz+H2Um4VKSU1FSWOCb9jFh4o+GVlWzEE3
+   /woPWmS/ObvQQx3DnYn8Po8reVltl4IBDu5n+3vzPUhfKaEILbfCO568V
+   /tdvXGe1LQuSNIDUFPMwY+TpUyr+ZJSc3u8uFaUpcaWBp7oTw6gB7x0rI
+   Q==;
+X-CSE-ConnectionGUID: ZjZCVgtGTXKx3aPj4E/XDA==
+X-CSE-MsgGUID: bOtBtVvMQRKhgRbcmDsnFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="67628423"
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="67628423"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:11:02 -0700
+X-CSE-ConnectionGUID: 578vrcYzTpClzj62Mmi7zw==
+X-CSE-MsgGUID: bZeN2YJ5QsW5NogFl5qb4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="142195432"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.245.206])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:10:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 May 2025 12:10:53 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, Kurt Borja <kuurtb@gmail.com>, 
+    platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 0/6] platform/x86: Add Lenovo WMI Gaming Series
+ Drivers
+In-Reply-To: <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
+Message-ID: <b178447d-362e-1ef9-03a0-796dda036626@linux.intel.com>
+References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com> <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduieeltdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgfeetieeutdeifefggfegheelgeefiefgffeifeeujeehkeffgeehhfevfefhjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhfrhgvvgguvghskhhtohhprdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepvhhitghtohhrrdhlihhusehngihprdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkh
- hhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: multipart/mixed; boundary="8323328-796157268-1748250653=:932"
 
-Hello Liu,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Thu, 22 May 2025 11:01:13 +0800
-Liu Ying <victor.liu@nxp.com> wrote:
+--8323328-796157268-1748250653=:932
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> On 05/07/2025, Luca Ceresoli wrote:
+On Sun, 25 May 2025, Derek J. Clark wrote:
+> On May 25, 2025 2:41:51 PM PDT, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux=
+=2Eintel.com> wrote:
+> >On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
+> >
+> >> On Wed, 21 May 2025, Derek J. Clark wrote:
+> >>=20
+> >> > Adds support for the Lenovo "Gaming Series" of laptop hardware that =
+use
+> >> > WMI interfaces that control various power settings. There are multip=
+le WMI
+> >> > interfaces that work in concert to provide getting and setting value=
+s as
+> >> > well as validation of input. Currently only the "Gamezone", "Other
+> >> > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, b=
+ut
+> >> > I attempted to structure the driver so that adding the "Custom Mode"=
+,
+> >> > "Lighting", and other data block interfaces would be trivial in late=
+r
+> >> > patches.
+> >> >=20
+> >> > This driver attempts to standardize the exposed sysfs by mirroring t=
+he
+> >> > asus-armoury driver currently under review. As such, a lot of
+> >> > inspiration has been drawn from that driver.
+> >> > https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-l=
+uke@ljones.dev/#t
+> >> >=20
+> >> > The drivers have been tested by me on the Lenovo Legion Go and Legio=
+n Go
+> >> > S.
+> >> >=20
+> >> > Suggested-by: Mario Limonciello <superm1@kernel.org>
+> >> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> >> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> >> > ---
+> >> > v11:
+> >> >   - Fix formmating issues.
+> >>=20
+> >> Thanks for the update, I've applied this now into the review-ilpo-next=
+=20
+> >> branch. BUT, this is very late in the cycle now and if there's a build=
+=20
+> >> issue (or LKP doesn't build test it in reasonable time), I'll have to =
+drop=20
+> >> this series and postpone it into the next cycle as I don't want to del=
+ay=20
+> >> the main PR to Linus too long.
+> >>=20
+> >> But lets hope for the best, I think some depends on issues were fixed=
+=20
+> >> earlier (IIRC), so hopefully it works good enough now. :-)
 >=20
-> [...]
+> >Hmpf, these give me a few new warnings related to this series:
+> >
+> >make W=3D1 drivers/platform/x86/
+> >make C=3D2 drivers/platform/x86/
+> >
+> >...I really don't know why sparse complains about the lock context=20
+> >imbalance though, those functions use guard().
 >=20
-> >> After looking into this patch and patch 31(though I've already provide=
-d my A-b)
-> >> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structu=
-res
-> >> should have the same life time with the embedded DRM bridges, because =
-for
-> >> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
-> >> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patch=
-es extend
-> >> the life time for the embedded channel/bridge structures only, but not=
- for the
-> >> main structures.  What do you think ? =20
-> >=20
-> > I see you concern, but I'm sure the change I'm introducing is not
-> > creating the problem you are concerned about.
-> >=20
-> > The key aspect is that my patch is merely changing the lifetime of the
-> > _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
-> > the bridge is removed from its encoder chain and it is completely not
-> > reachable, both before and after my patch. With my patch it is not =20
+> Hmm, I'll take a look at it.
+
+Thanks.
+
+> Is there a comprehensive list of all tests that need to be run? I'd like=
+=20
+> to improve my process to avoid these in the future.=20
+
+There's some list in Documentation/process/submit-checklist.rst
+but use reason with some of the items whether they're relevant, I think=20
+very few patches would meet _all_ of those in the most literal=20
+interpretation :-).
+
+> >There's also a copy-paste error:
+> >
+> > * lwmi_gz_profile_get_get() - Get the current platform profile.
+> >
+> >..._get_get -> ..._set
+> >Get -> Set
 >=20
-> drm_bridge_remove() only removes a bridge from the global bridge_list def=
-ined
-> in drm_bridge.c.  drm_bridge_detach() is the one which removes a bridge f=
-rom
-> it's encoder chain.  It looks like you wrongly thought drm_bridge_remove()
-> is drm_bridge_detach().
+>=20
+> Do you want me to submit v12 whenever it's ready,  or wait for the merge=
+=20
+> window to open? Trying to avoid too much noise on your end.
 
-Indeed my sentence was inaccurate, sorry about that.
-
-> So, even if drm_bridge_remove() is called, the removed
-> bridge could still be in it's encoder chain, hence an atomic commit could=
- still
-> access the allocated bridge(with lifetime extended) and the clock_apb clo=
-ck
-> for example in struct imx8qxp_pc could also be accessed.  That's why I th=
-ink
-> the main structures should have the same lifetime with the allocated brid=
-ge.
-
-As the long-term goal is to allow bridges to be hot-removable,
-decoupling the lifetime of the various components is a necessary step.
-Definitely it will open other issues, and especially the removal during
-atomic updates. This has been discussed already, and there is a
-proposed plan to handle it.
-
-First, here is the grand plan (mentioned in the v3 cover letter):
-
- 1. =E2=9E=9C add refcounting to DRM bridges (struct drm_bridge)
- 2. handle gracefully atomic updates during bridge removal
- 3. avoid DSI host drivers to have dangling pointers to DSI devices
- 4. finally, let bridges be removable (depends on 1+2+3)
-
-We are now at step 1. Your concern, as I understand it, will be
-addressed at step 2. Bridges won't be removable until step 4, so the
-current changes are not introducing a misbehavior but rather preparing
-the ground with all the necessary infrastructure changes.
-
-Step 2 was discussed in the past [0], and the idea proposed by Maxime
-is to introduce a "gone" or "unplugged" flag and drm_bridge_enter() /
-drm_bridge_exit() functions. The principle is the same as struct
-drm_device.unplugged and drm_dev_enter/exit().
-
-In a nutshell the idea is:
-
- - drm_bridge.unplugged is initialized to false
- - drm_bridge_enter() returns false if drm_bridge.unplugged =3D=3D true
- - any code holding a pointer to the bridge (including the bridge driver
-   itself) and operating on the bridge (including removal) needs to do:
-     if (drm_bridge_enter()) {
-         do something;
-         drm_bridge_exit();
-     }
- - when the bridge is removed, the driver removal function sets
-   dev_bridge.unplugged =3D true
-
-The "do something" above includes any access to device resources,
-including clocks (and clk_apb).
-
-In other words, two pieces of code can not access the bridge structure
-at the same time. This includes bridge removal VS any atomic operations.
-
-Do you think this addresses your concern?
-
-
-For you to have a better picture of the path, here's an additional
-clarification about drm_bridge_attach/detach() and
-drm_bridge_add/remove(). As part of step 1 of the grand plan, both of
-them will drm_bridge_get/put() the bridge, so that no bridge is freed
-if it is either in the global bridge_list or in any encoder chain.
-
-Patches for this are already approved by Maxime [1][2]. They cannot be
-applied until all bridge drivers have been converted to the new
-devm_drm_bridge_alloc() API, so they depend on this series to be
-completely applied. We are getting pretty close: as of now the entire
-series has been applied except for this and another driver.
-
-[0] https://lore.kernel.org/all/20250129125153.35d0487a@booty/t/#u
-[1] https://patchwork.freedesktop.org/patch/643095/
-[2] https://patchwork.freedesktop.org/patch/643096/
-
-Best regards,
-Luca
+Just send v12 when it's ready. For pdx86, there's no need to avoid sending=
+=20
+during merge window (just don't assume anything gets applied during merge=
+=20
+window :-)).
 
 --=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ i.
+
+--8323328-796157268-1748250653=:932--
