@@ -1,96 +1,77 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E5282F5;
-	Tue, 27 May 2025 18:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5191CAA6C;
+	Tue, 27 May 2025 18:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369799; cv=none; b=TBrnc+6L2/cIiWwBcEcurtW96YrnGSW/U/wg4OKc1YiU/tNLRsFeJAVxbTrTevnOhpXI6ssydDBakgrzk0adFhDfifYZtMIzYPUqzzTgtelZa2PR+kg00lNqLOeT6W6YWzJcxqHthi8aN3+wsvnW1x98sEuUrgtVR8TUZ4bVP4o=
+	t=1748372215; cv=none; b=DGO7mlqvGca2HGSnN+HwvtQoS4Oo7NktuSJqrqrhVJ23l7eR6/aaBOD7EbIGW8+vY4PaeWN4jqJ7FnPpSc+rl2c3zE8HAqJq4dJGbHHgopOME6GXsk2dyG7du9brmd/jd08OJNqTla1TamzbU4ivag5cc+7sD/SndacQNiiLSVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369799; c=relaxed/simple;
-	bh=z/1nierZUFrBDz8dXNTKygJZRWilTfTDCz5cVzuxn+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HO+FmQy7AJGo9sVQ2+9713i8QZ9P8fFORlciPN3BNn+A34d1McITo+ZQ/MNaBiFJYkvFfUQW4QO7/Uk2mHR/JdeAOUSsAwjG5/oPtmva32/KeD5ZJDD/4adn9I8LMUrzZsjlOJWz88pa2ZQ4xfGTwsEvnNkXOhznTsXFAXs9TKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=H/ZsJ7qW; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1748372215; c=relaxed/simple;
+	bh=Kt8hkX+NOPAFYRRZ6dPid588poe6O6S4SmENjGduciw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=okpXTOTFk09Inyfb4pohIvDsVmVYk51OcqNcN32M/ob5iv1DscttUaC+dFaNngZISjTtoUfeUj/PrASb52sOQuBsigh5gqVmcX2e1WF1i90oSFDlRUUugl2TMhtw5q+UwO1zJ8ZQ8wuksJQoQNmI+uDkzy7XACn2nGM4MXyoPbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=enHxrF7u; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="H/ZsJ7qW"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id AA0291C01D9; Tue, 27 May 2025 20:16:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1748369793;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=caktQKPVz8v/q+eBzEBEoCG4CufONU3ehSaGJ6uLTNk=;
-	b=H/ZsJ7qWYsIVUdOCNlNd2FcqrmWpv4P1vP5+4DGzksP+ZdynCq6rEU5jOuGI1SUPy5K0JI
-	IrDJXXX55W7PJRgHHVWuKKh+2mQyuI2Rhl5VV+W20/kYBwSAdQInFXR0JdrrTp/lYCCuHe
-	B+PYPLByXtQQPOeXi7/AORBBz0jua2s=
-Date: Tue, 27 May 2025 20:16:33 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	PDx86 <platform-driver-x86@vger.kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
-Message-ID: <aDYBgcSbVQriCyhO@duo.ucw.cz>
-References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
- <aDWq/U57DO7fMu4K@duo.ucw.cz>
- <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="enHxrF7u"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=Pb4HbvNRtURyWEvutH1i+CzUZEMMh0LESQbc8k3392o=; b=enHxrF7uEtbtabCB14gJloa3oC
+	YOpcz05+IPBUmTEjtm71S1S9k1l1RHbJNuFnWcf2xP4m8MOZoYggOY1ibY+gXKlRg1Vfn2H6PD6vj
+	eCHNXdkhKKrXxVny1FCdARigBW74ARx8mX4qrNCSaljaMW4PMnuPndwFwISjG2eJTR7PEuufzRB/Z
+	kvj3N9ASMzHtOQGY7XGE9EuyihM46dyuAYJyBIIyqk/o1ccu5TrLqvnxUSen/lmbV/k/z2ufC8MBg
+	dOMoMT+QPbVnU4xEhwoSM1WiYMhpslwumtAB5UE+FrzBtVnVdugnsHX8uKZtQzHCQYTwEGUDq4M+G
+	6WwQBwqQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJzTl-0000000Cl5K-2m6Z;
+	Tue, 27 May 2025 18:56:49 +0000
+Message-ID: <04577a46-9add-420c-b181-29bad582026d@infradead.org>
+Date: Tue, 27 May 2025 11:56:45 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SAhQsDNdRiRNEyv5"
-Content-Disposition: inline
-In-Reply-To: <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for May 27 (drivers/platform/x86/amd/amd_isp4.c)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ Benjamin Chan <benjamin.chan@amd.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250527203231.3c6c0b9d@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250527203231.3c6c0b9d@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---SAhQsDNdRiRNEyv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 5/27/25 3:32 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20250526:
+> 
 
-> > 4) We don't have reasonable support for the new API in the userland.
->=20
-> This is simply not true. Openrgb's next release is planning to
-> include HID lamparray support.
+on x86_64, when
+# CONFIG_MODULES is not set
 
-I said "reasonable", and openrgb is not reasonable. It is the same
-mess "gpm" was. Remember gpm for mouse handling? Except that... it is
-bigger mess. Few megabytes bigger, IIRC, links against QT.
+../drivers/platform/x86/amd/amd_isp4.c: In function 'is_isp_i2c_adapter':
+../drivers/platform/x86/amd/amd_isp4.c:154:35: error: invalid use of undefined type 'struct module'
+  154 |         return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+      |                                   ^~
 
-I have debian 11 here. That does not even have openrgb.
 
-Device drivers in userland ... never worked too well. Openrgb is a
-hardware driver that happens to link QT gui into the binary. That's
-=2E.. not reasonable.
+-- 
+~Randy
 
-Best regards,
-							Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
-
---SAhQsDNdRiRNEyv5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaDYBgQAKCRAw5/Bqldv6
-8pxlAJ0bkaJARLOFiPmEOPRe8wQQujjj1QCdEy5czXdwfz9hDDnYtSid78sAw20=
-=vODu
------END PGP SIGNATURE-----
-
---SAhQsDNdRiRNEyv5--
