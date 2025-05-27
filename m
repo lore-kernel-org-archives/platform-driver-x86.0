@@ -1,82 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B01DB34C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 May 2025 17:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E5282F5;
+	Tue, 27 May 2025 18:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748366881; cv=none; b=lOZ3vN1mHom9Am2Of6Tz/xNdWTBqvhSNR1cRqdzIbUUk7r/ohu98fvs2kkMFaXgyaT2IwC/qBYN0lW5zj/Mt4KMNibtZHiuMuAX+p7z8idy8rvmrnDssldkZWN1GkhfakXF+ykeOBgRF8cBGu/IyXUvDjQg1uZ4tXmUVho8AmK8=
+	t=1748369799; cv=none; b=TBrnc+6L2/cIiWwBcEcurtW96YrnGSW/U/wg4OKc1YiU/tNLRsFeJAVxbTrTevnOhpXI6ssydDBakgrzk0adFhDfifYZtMIzYPUqzzTgtelZa2PR+kg00lNqLOeT6W6YWzJcxqHthi8aN3+wsvnW1x98sEuUrgtVR8TUZ4bVP4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748366881; c=relaxed/simple;
-	bh=kWmFUAJ0MSmOexDKwyEyzGHbiEFt2rmB0/UtoEe6l3I=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VgeqIIXqoEstAo75tZSjIww3WrRZaibRhIOHTHRwvhj7E3mFt5etSUZu2BzCdVipbMtvPKHNTCebPPSyKN2xZvGK6xlUayDh5KwD+Ej6uALtxlXwFugPxQAwl3vt3+VJzB8Q0QHwJi8DnfosqXvy7rXLcKLYSXtQCiK03DaMIu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeEvzPui; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748369799; c=relaxed/simple;
+	bh=z/1nierZUFrBDz8dXNTKygJZRWilTfTDCz5cVzuxn+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HO+FmQy7AJGo9sVQ2+9713i8QZ9P8fFORlciPN3BNn+A34d1McITo+ZQ/MNaBiFJYkvFfUQW4QO7/Uk2mHR/JdeAOUSsAwjG5/oPtmva32/KeD5ZJDD/4adn9I8LMUrzZsjlOJWz88pa2ZQ4xfGTwsEvnNkXOhznTsXFAXs9TKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=H/ZsJ7qW; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeEvzPui"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E3B6C4CEEB
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 May 2025 17:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748366881;
-	bh=kWmFUAJ0MSmOexDKwyEyzGHbiEFt2rmB0/UtoEe6l3I=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=oeEvzPui6XH52fJ2UKMEeaflFbbn0Fv2URJXJvj2l7n49mGc/fwZrZnzkOT7n/Dnf
-	 4xx5Z85O1ze4LSM+ik9J6iBdj8sn9/mlntrl2j+20A6vXSLjnwnpRo/hQP27rpZ4iD
-	 rMv2janZ058bb7SiKjKwiwKHJPoG9j2twtItK8LKnxHhNXJ92xk3EPzPFq5bvf8Oca
-	 OxK8VVVwyuSe5tvNet5FpWqI9bs35hczkIltvnZh35oaU1WmKRs0+kJvzgowkGjZ+n
-	 swjeazwRa+VO/5DUKWwzK633+Ad/8fGu6abVliXrlBkQf0+DXIXSNhLyGJgUYwFSbG
-	 YikT57D5wOM+g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2D228C3279F; Tue, 27 May 2025 17:28:01 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218771] Lenovo Thinkbook - turning off after closing lid or
- (dis)connecting charger
-Date: Tue, 27 May 2025 17:28:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: i@rong.moe
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218771-215701-FpJL6N3Mzq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218771-215701@https.bugzilla.kernel.org/>
-References: <bug-218771-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="H/ZsJ7qW"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id AA0291C01D9; Tue, 27 May 2025 20:16:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1748369793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=caktQKPVz8v/q+eBzEBEoCG4CufONU3ehSaGJ6uLTNk=;
+	b=H/ZsJ7qWYsIVUdOCNlNd2FcqrmWpv4P1vP5+4DGzksP+ZdynCq6rEU5jOuGI1SUPy5K0JI
+	IrDJXXX55W7PJRgHHVWuKKh+2mQyuI2Rhl5VV+W20/kYBwSAdQInFXR0JdrrTp/lYCCuHe
+	B+PYPLByXtQQPOeXi7/AORBBz0jua2s=
+Date: Tue, 27 May 2025 20:16:33 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	PDx86 <platform-driver-x86@vger.kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
+Message-ID: <aDYBgcSbVQriCyhO@duo.ucw.cz>
+References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
+ <aDWq/U57DO7fMu4K@duo.ucw.cz>
+ <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SAhQsDNdRiRNEyv5"
+Content-Disposition: inline
+In-Reply-To: <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218771
 
---- Comment #12 from Rong Zhang (i@rong.moe) ---
-(In reply to PMR from comment #11)
-> THX :))
+--SAhQsDNdRiRNEyv5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > 4) We don't have reasonable support for the new API in the userland.
 >=20
-> I am not sure: I could not find it in a change log - is this patch an
-> experimental one or will it be included into the main kernel line?
+> This is simply not true. Openrgb's next release is planning to
+> include HID lamparray support.
 
-It is awaiting review from maintainers and hasn't been merged. Testing it o=
-ut
-and sending a Tested-by helps the review process.
+I said "reasonable", and openrgb is not reasonable. It is the same
+mess "gpm" was. Remember gpm for mouse handling? Except that... it is
+bigger mess. Few megabytes bigger, IIRC, links against QT.
 
+I have debian 11 here. That does not even have openrgb.
+
+Device drivers in userland ... never worked too well. Openrgb is a
+hardware driver that happens to link QT gui into the binary. That's
+=2E.. not reasonable.
+
+Best regards,
+							Pavel
 --=20
-You may reply to this email to add a comment.
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--SAhQsDNdRiRNEyv5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaDYBgQAKCRAw5/Bqldv6
+8pxlAJ0bkaJARLOFiPmEOPRe8wQQujjj1QCdEy5czXdwfz9hDDnYtSid78sAw20=
+=vODu
+-----END PGP SIGNATURE-----
+
+--SAhQsDNdRiRNEyv5--
