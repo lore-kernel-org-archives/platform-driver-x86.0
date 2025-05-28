@@ -1,246 +1,240 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33602451F0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 May 2025 10:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA4F279796;
+	Wed, 28 May 2025 13:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748429742; cv=none; b=FqfMsB71DgA+IEDqo8fNb1t/Ti9Sl8giguCz3gfkFoSRL8rqzdeJPZPyOJrEfrbAvLF/8ak4nTGSdAN2INs5KVA8EiCWEnlahrpoABum2bdRrFndEehjI7lRrJysBMxEZKKUP66GGxZM4/Fu7Z1EN0nScFOh0nzhuE4IKjtay/U=
+	t=1748437696; cv=none; b=hmlCg5wMQgzGmueB1M12UxnCxdLJt0oT4w3d6LLaPMW/QTokLHgoGgLVl0U2PRLgTmy+ouprhuL9vS/VAl+4FCLozV1BLvb+0yJ3C6NmUtvbZyRroyOOdKD8/nIDxrg9lWHnOb+DSWY8efKnwuiHr/NjK6P+dTbRL+avQq9Zco4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748429742; c=relaxed/simple;
-	bh=SCxngfYK+IOIKRdHrgEoscUNHocL+yQ57wscCRIrBuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUUDsV+Srj0rBeMQjY75NbJ7eX9S9iimq9YNg1ufzKnsLd2QymKbi9leKlLw67Q6gNCnlWg3TE0Q3pzK3oaEjdSDSU6lg55kmzBMzoMtJR5+ethbXS8C/YbUDNmSMI9n7K9rpIilFW+rA3tQUPDknWHfV7akw/pTGYKEDW9Mplk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WLqBDXLa; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748437696; c=relaxed/simple;
+	bh=SKXsssFM41JTC2gaCfx4SQKtyLz5wZGPp0cgG0XBZ7g=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BkSePK4GP2HY8XiI3bhiwPZ8msDj7M8WDUV2Jb3wo3Ao/hrI35KBY9pyCi+KaGqTy8tBiyjr7VoH43NUS13TBp5xjJshhcPwVSAb/z9RpOU3x9cWBWv9w+imkCtYOpHAx9mPtBYW2ySW8ZqHo2JryiZyrWtbyQ3ETevsL+iNHBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=yx1gaKhE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VhFEsxKb; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WLqBDXLa"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6olVW001380
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 May 2025 10:55:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2GBHIa4UJXy3kvJwaMsOIp36AT4ZgsNjCHuBmMnsGGw=; b=WLqBDXLaETrREYPP
-	k3bqTgo4rPOev8L1bg2YP3zUKL3ZKb/ZbYk2aOckQdMkBvCDvDHTPbAK0IhR7Wjv
-	12r5wFXgoAWjAYkw74SbYE+gmbpqy29x+7rpmMgEm8WCZyASVPYsO6vxBdYVsYsg
-	P4+BgsYx9M5+a/I/xK+XplgbelC1Jxf365V3AIK6OTFyZpKSRusIKbJ4S4HmWsTt
-	0gtsHWF3imOnvSr9sHhysmwT4MkLWmAvXSE2jGkGzbBBkuXpKVh9qjJXwo3/r3s7
-	5uLyOjv1bGFclk/VO6rcG/LGayxuaz3O1JC4IIzV+UlafMX9BvVP/6bYQqL4mxuj
-	X3b5uQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g91y8r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 May 2025 10:55:38 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8cc1c047dso62377206d6.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 May 2025 03:55:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748429738; x=1749034538;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2GBHIa4UJXy3kvJwaMsOIp36AT4ZgsNjCHuBmMnsGGw=;
-        b=MJ8Uu2CElriNjYOnJER/dchg4zsg9AmmQs9vgYgtjr6Rw2E9kvpS2nEQ4g3al3RYqB
-         /T2Zcu7h935nEYz5iTPd8AFKpJjhzSDSrXD2+MpBBYZO5H8vXXb5quKIE99O20H3nxAd
-         so8kYfyZL465bTEqJgNuI3+eMooovFFa1sa1aOxeo0XV/0XcWFjdjrnC84NcDBE0ygco
-         qCo//xgUYFisAH1OOKnyYWRXLE9+AHeCQUpqA9Otdgb8tp8EwYXlf6cl9FHhFAz094Qr
-         LeMV3MGuFKjtx29ykAlAzubeN4utQwnL16M1ELX8rMcQMo0kfhy6AI6BGT5h40ub/r9C
-         m2RA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZfCj+76eKrpVeXFfbN5O7fdDSOAdGDcViVZOaZGgSEh7zg0ZRjzE0p8/s2wcaKYthhOl81oFSZAkzgfP58CYSlBSV@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxp+ZzPvsBH4ufxZZgH2ekqZJYqfPC5ePzvre6zJmJvfyZir1b
-	CVYhkDnhuBGL1jiJsctPr3T0auYoRveBPUfTCctWZHk2y0RyD/pvmF/uEKOiUP4irlqSzI0NZgb
-	jMieeL9paMXrGztDinGjYoSgTU9UuE8/yLhSkbE7uGuSO7olsesCP8sLuELRMAM9y/iLDFxArqA
-	0V
-X-Gm-Gg: ASbGnctZgSgn6eLAyIzvemI02WzuRuITxGNpro+R45IP9pN3vFJxFCZQX72rI9gu472
-	0MC/Jm79DsH/IpqPmiwQ4qbj59pN6npoy+MYkM9gnncm3mi5XdBbAz85ucViKMkepUvhHFmVT0r
-	nE2+/9cM2c2STHNmMBWPy/hxFI8n7mqUcd2Y6IFSLxvTq+ArPk6v4oLgf8IxAuKbxVuuZAYzmcj
-	qSvsveMn0YwjL0MCpg9KM/wwZhvr3AY5xL3QC0X6Q1ZlqDGGXjjQV3mbSbzXQ+jmOhz9MhvYyD/
-	70BTE2emIVDg7f+waMpu3QKiVi/iBAwqvT4jUIEjKU5w45ee3kAnbEKKixARAfp5lvQuB5IjUX4
-	=
-X-Received: by 2002:a05:6214:f04:b0:6f9:51b5:45b4 with SMTP id 6a1803df08f44-6fa9d01b876mr219767896d6.12.1748429737679;
-        Wed, 28 May 2025 03:55:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHTeW9Oym5KrU5w2CrN6TuqbEYXZSVkhfiP2M2uzBIJxVS46ac7MVbRXMxqQkY4kvIlFReMQ==
-X-Received: by 2002:a05:6214:f04:b0:6f9:51b5:45b4 with SMTP id 6a1803df08f44-6fa9d01b876mr219767476d6.12.1748429737194;
-        Wed, 28 May 2025 03:55:37 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f62b2e8sm233345e87.96.2025.05.28.03.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 03:55:36 -0700 (PDT)
-Date: Wed, 28 May 2025 13:55:34 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anusha Srivatsa <asrivats@redhat.com>,
-        Paul Kocialkowski <paulk@sys-base.io>,
-        Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v4] drm/bridge: tc358767: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <y262e67gi5f53objugljkpyc3lzdaqtw3b7qr4546btqo7ehu4@qp2orsf6xd7t>
-References: <20250528-drm-bridge-convert-to-alloc-api-v4-1-f04e698c9a77@bootlin.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="yx1gaKhE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VhFEsxKb"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.stl.internal (Postfix) with ESMTP id 770AE1140154;
+	Wed, 28 May 2025 09:08:12 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-06.internal (MEProxy); Wed, 28 May 2025 09:08:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1748437692;
+	 x=1748524092; bh=P3wS2hHSppU0mSKPs0YAqDamY9Rvl8W25s48imdCn4c=; b=
+	yx1gaKhEwm0WfMgos9EXeZmG3V9w1vDxmJKUei1Duvxg647jScpXayj8mhWIh62z
+	7myEs35lKUEtA2iTGQ9NEUgBT7jcmsRaZ6XY6CsLZy8WOMdi6SkzC8Qe1XrKMrrg
+	BvX5y079GGL/qcEzbybtm4UdkGklK6rNgLJ1dGpi9v6EEWlPgmoSTCplSQgUb+py
+	MkMN4d9Rgy4KAAOm3mwsnSDgKtpn2OoeHTGuy96LKMUBw5NNeqRd0VzFYWu2FLOl
+	DlORBapABm4h90hDAiKj5aVhHniL3fI8DF0WWV5iLKgMU1HQoqrZwU1/dDQEgcR/
+	kDabyYIFO5o8QoQd4HArTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748437692; x=
+	1748524092; bh=P3wS2hHSppU0mSKPs0YAqDamY9Rvl8W25s48imdCn4c=; b=V
+	hFEsxKb9xnn+hEmyX+Eiy1IBRgkRHc/SU671MwyM0L+E6pxvDwefdstgDXe18lAW
+	e+ZvOrQLmA779DQB8o4+ZYaIWNKAsZXyUo3kd2SAtoh/RhfGZKyWfT27oG4xPOcc
+	eDTnS+oZgA5p3iPXeuiNS5NIHwcWeRNojYqXgnoLhNOb55OBrElX34I9CoHwW4lj
+	6bMKNC4ta67LoseZ3tF04fJk5UVNG9Z9hgTJNye7Gm5wSdyepNDtMXQ5aQEIk5Ju
+	+12znHw4mxKhTZYNbOSSzsL8DCAngcgGEFvB7qHAmztb3saN1qrcLHc7lS3SqRzh
+	KpBl7dFY4oxNxDEdTPgkA==
+X-ME-Sender: <xms:uwo3aL-D-_gVsOoxNZCeatb5QFZ8LnUFIlGp7mW59FHgTFNDegMHsQ>
+    <xme:uwo3aHvOflm1b0_2NAghj4JlwSgXQXmIOvTti8LWM_-fGkmqKKHW7cI3O6qWHQ-Dx
+    r1TMUgd2IxWvCF0sSI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeeffeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
+    jghfufgtgfesthhqredtredtjeenucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolh
+    hukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgedvhefhveevkeel
+    hefhleeuheefteeijedtvdekledvjeekfedtgfefvdevgfdvnecuffhomhgrihhnpehlkh
+    hmlhdrohhrghdptddurdhorhhgpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhi
+    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvg
+    hvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegt
+    hhgrihhtrghnhigrrdhkuhhmrghrrdgsohhrrghhsehinhhtvghlrdgtohhmpdhrtghpth
+    htohepjhgrnhhirdhnihhkuhhlrgesihhnthgvlhdrtghomhdprhgtphhtthhopehjrghn
+    ihdrshgrrghrihhnvghnsehinhhtvghlrdgtohhmpdhrtghpthhtoheplhhutggrshdrug
+    gvmhgrrhgthhhisehinhhtvghlrdgtohhmpdhrtghpthhtohepshhurhgvshhhrdhkuhhm
+    rghrrdhkuhhrmhhisehinhhtvghlrdgtohhmpdhrtghpthhtohepihhnthgvlhdqghhfgi
+    eslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehinhhtvghl
+    qdigvgeslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhl
+    rghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:uwo3aJDERAOtO_Tg0nInJ9CmtutuDq3VAR_aQ0TKV_CpIjK9YsoVsw>
+    <xmx:vAo3aHd9hIaLNFPfPFhVgfBCmjzxQSlNYMHVFRmJKjP1uDi3BGyc0Q>
+    <xmx:vAo3aAMaGmd_1dZRaW8dD_7jIiV5kthsgegdyJ0548BE7cDQPBbIhw>
+    <xmx:vAo3aJlhJm-BNM5u_Bii_djGlMp1rBd7sBqun9aurDJ3kanClh-a7Q>
+    <xmx:vAo3aE0zYkxkLN1OHqQUlFGKd-eV17ELQhO1wXd6-ukVCC26OpWwR62c>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D9676780070; Wed, 28 May 2025 09:08:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: T4bdae7bed362e7f1
+Date: Wed, 28 May 2025 15:07:51 +0200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>
+Cc: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "Saarinen, Jani" <jani.saarinen@intel.com>,
+ "Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
+ "De Marchi, Lucas" <lucas.demarchi@intel.com>,
+ "Nikula, Jani" <jani.nikula@intel.com>,
+ "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Message-Id: <0325a50d-8499-4602-aa8c-67445b626587@app.fastmail.com>
+In-Reply-To: 
+ <SJ1PR11MB6129F730EEDCD051DAD8A5DCB967A@SJ1PR11MB6129.namprd11.prod.outlook.com>
+References: 
+ <SJ1PR11MB6129F730EEDCD051DAD8A5DCB967A@SJ1PR11MB6129.namprd11.prod.outlook.com>
+Subject: Re: [REGRESSSION] on linux-next (next-20250509)
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528-drm-bridge-convert-to-alloc-api-v4-1-f04e698c9a77@bootlin.com>
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6836ebaa cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8
- a=EUspDBNiAAAA:8 a=Xa5mcPTA7YjQpW6brCsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=Vxmtnl_E_bksehYqCbjh:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: VU4BJ3Cn6EWormPAqjV945NmpZaOYLKX
-X-Proofpoint-GUID: VU4BJ3Cn6EWormPAqjV945NmpZaOYLKX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA5NSBTYWx0ZWRfX20Um1BzIdmAg
- 3Xqi/a0q5kJ0gKI9glrBhV4SKLOJo1RysMSGUymcfxIqmh7aYAhNuaeuEyjANsBUW0z0SlmI/Ke
- TDW7xMy+wQFnACerM2B8Aj+OecbTpKSzYld666+G/o3ReVDQgX76dBb/AXFDUtOA7az8ztM/2aE
- DXx2LQ0H9InjK0tOgj5/wh3UYGb97GjEFUOIsr7H0z98ddr5mKV9/rLo3ak22I7P1gJ7VNlBkcm
- SXUhGjeh1m/q8hmZETvjIjtLLmWcHWUoyFxSxlS2FBdpAuJ28xI6d+C/fdoDMVj3s4TaI5+KWqe
- IY1+gtQj0RbLTlE+4rmTWD8gUxu4ha8Ybqkl9Xf0KyGKQUmZkKxk5ERpwygWGEpQNDxr12HV0hC
- uRQVKx6Nf9+i3UD7nIMrTbpPDCJTFCyiZoYUEHc/AY2XtRLIR3NsGaAstzc6dYTPnAJVty+c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280095
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 11:29:36AM +0200, Luca Ceresoli wrote:
-> This is the new API for allocating DRM bridges.
-> 
-> Converting this driver is a bit complex because the drm_bridge funcs
-> pointer differs based on the bridge mode. So the current code does:
-> 
->  * tc_probe()
->    * devm_kzalloc() private struct embedding drm_bridge
->    * call tc_probe_bridge_endpoint() which
->      * parses DT description into struct fields
->      * computes the mode
->      * calls different bridge init functions based on the mode
->        * each sets a different bridge.funcs pointer
-> 
-> The new API expects the funcs pointer to be known at alloc time, which does
-> not fit in the current code structure.
-> 
-> Solve this by splitting tc_probe_bridge_endpoint() in two functions:
-> 
->  * tc_probe_get_mode(), computing the mode without needing the private
->    driver structure
->  * tc_probe_bridge_endpoint(), only initializing the endpoints
-> 
-> So now the mode is known before allocation and so
-> is the funcs pointer, while all other operations are still happening after
-> allocation, directly into the private struct data, as they used to.
-> 
-> The new code flow is:
-> 
->  * tc_probe()
->    * tc_probe_get_mode()
->      * parses DT description
->      * computes and returns the mode
->    * based onf the mode, pick the funcs pointer
->    * devm_drm_bridfge_alloc(..., funcs)
->    * call tc_probe_bridge_endpoint() which
->      * calls different bridge init functions based on the mode
->        * these don't set the funcs pointer, it was done by _alloc
-> 
-> This solution is chosen to minimize the changes in the driver logical code
-> flow. The drawback is we now iterate twice over the endpoints during probe.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> ---
-> devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
-> bridge, and the only one supported from now on. It is the first milestone
-> towards removal of bridges from a still existing DRM pipeline without
-> use-after-free.
-> 
-> The steps in the grand plan [1] are:
-> 
->  1. ➜ add refcounting to DRM bridges (struct drm_bridge)
->  2. handle gracefully atomic updates during bridge removal
->  3. avoid DSI host drivers to have dangling pointers to DSI devices
->  4. finish the hotplug bridge work, removing the "always-disconnected"
->     connector, moving code to the core and potentially removing the
->     hotplug-bridge itself (this needs to be clarified as points 1-3 are
->     developed)
-> 
-> This series is part of step 1 of the grand plan.
-> 
-> Current tasks in step 1 of the grand plan:
-> 
->  A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
->  B. ➜ convert all bridge drivers to new API (this series)
->  C. … documentation, kunit tests (v1 under discussion)
->  D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
->  E. after (B), convert accessors; this is a large work and can be done
->     in chunks
->  F. debugfs improvements
-> 
-> More info about this series in the v2 cover [2].
-> 
-> Luca
-> 
-> [0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
-> [1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
-> [2] https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
-> ---
-> Changes in v4:
-> - Removed patches already in drm-misc-next -> only 1 left
-> - Improve commit message of patch 1
-> - Link to v3: https://lore.kernel.org/all/20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com/
-> 
-> Changes in v3:
-> - Fixed issues reported for some patches
-> - Added review tags
-> - Removed patches that have been applied
-> - Added revert for the exynos patch, applied by mistake
-> - Update cover with grand plan info and trim some of it
-> - Updated bouncing e-mail address in Cc list
-> - Link to v2: https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
-> 
-> Changes in v2:
-> - Improved cover letter with link to commit adding devm_drm_bridge_alloc()
-> - add review tags
-> - fix bugs in zynqmp, vc4 patches
-> - fix patch 1 error code checking
-> - Link to v1: https://lore.kernel.org/r/20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com
-> ---
-> 
+On Wed, 28 May 2025, at 12:08 PM, Borah, Chaitanya Kumar wrote:
+> Hello Luke,
+>
+> Hope you are doing well. I am Chaitanya from the linux graphics team i=
+n Intel.
+>
+> This mail is regarding a regression we are seeing in our CI runs[1] on=20
+> linux-next repository.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Can you tell me if the fix here was included?
+https://lkml.org/lkml/2025/5/24/152
 
--- 
-With best wishes
-Dmitry
+I could change to:
+static void asus_s2idle_check_register(void)
+{
+    // Only register for Ally devices
+    if (dmi_check_system(asus_rog_ally_device)) {
+        if (acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops))
+            pr_warn("failed to register LPS0 sleep handler in asus-wmi\n=
+");
+    }
+}
+
+but I don't really understand what is happening here. The inner lps0 fun=
+ctions won't run unless use_ally_mcu_hack is set.
+
+I will do my best to fix but I need to understand what happened a bit be=
+tter.
+
+regards,
+Luke.
+
+> Since the version next-20250509 [2], we are seeing the following regre=
+ssion
+>
+> ``````````````````````````````````````````````````````````````````````=
+```````````
+> <4>[    5.400826] ------------[ cut here ]------------
+> <4>[    5.400832] list_add double add: new=3Dffffffffa07c0ca0,=20
+> prev=3Dffffffff837e9a60, next=3Dffffffffa07c0ca0.
+> <4>[    5.400845] WARNING: CPU: 0 PID: 379 at lib/list_debug.c:35=20
+> __list_add_valid_or_report+0xdc/0xf0
+> <4>[    5.400850] Modules linked in: cmdlinepart(+) eeepc_wmi(+)=20
+> asus_nb_wmi(+) asus_wmi spi_nor(+) sparse_keymap mei_pxp mtd=20
+> platform_profile kvm_intel(+) mei_hdcp wmi_bmof kvm irqbypass=20
+> polyval_clmulni usbhid ghash_clmulni_intel snd_hda_intel hid sha1_ssse=
+3=20
+> r8152(+) binfmt_misc aesni_intel snd_intel_dspcfg mii r8169=20
+> snd_hda_codec rapl video snd_hda_core intel_cstate snd_hwdep realtek=20
+> snd_pcm snd_timer mei_me snd i2c_i801 i2c_mux spi_intel_pci idma64=20
+> soundcore spi_intel i2c_smbus mei intel_pmc_core nls_iso8859_1=20
+> pmt_telemetry pmt_class intel_pmc_ssram_telemetry pinctrl_alderlake=20
+> intel_vsec acpi_tad wmi acpi_pad dm_multipath msr nvme_fabrics fuse=20
+> efi_pstore nfnetlink ip_tables x_tables autofs4
+> <4>[    5.400904] CPU: 0 UID: 0 PID: 379 Comm: (udev-worker) Tainted: =
+G=20
+> S                 =20
+> 6.15.0-rc7-next-20250526-next-20250526-g3be1a7a31fbd+ #1=20
+> PREEMPT(voluntary)=20
+> <4>[    5.400907] Tainted: [S]=3DCPU_OUT_OF_SPEC
+> <4>[    5.400908] Hardware name: ASUS System Product Name/PRIME Z790-P=20
+> WIFI, BIOS 0812 02/24/2023
+> <4>[    5.400909] RIP: 0010:__list_add_valid_or_report+0xdc/0xf0
+> <4>[    5.400912] Code: 16 48 89 f1 4c 89 e6 e8 a2 c5 5f ff 0f 0b 31 c=
+0=20
+> e9 72 ff ff ff 48 89 f2 4c 89 e1 48 89 fe 48 c7 c7 68 ba 0f 83 e8 84 c=
+5=20
+> 5f ff <0f> 0b 31 c0 e9 54 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 90=20
+> 90
+> <4>[    5.400914] RSP: 0018:ffffc90002763588 EFLAGS: 00010246
+> <4>[    5.400916] RAX: 0000000000000000 RBX: ffffffffa07c0ca0 RCX:=20
+> 0000000000000000
+> <4>[    5.400918] RDX: 0000000000000000 RSI: 0000000000000000 RDI:=20
+> 0000000000000000
+> <4>[    5.400919] RBP: ffffc90002763598 R08: 0000000000000000 R09:=20
+> 0000000000000000
+> <4>[    5.400920] R10: 0000000000000000 R11: 0000000000000000 R12:=20
+> ffffffffa07c0ca0
+> <4>[    5.400921] R13: ffffffffa07c0ca0 R14: 0000000000000000 R15:=20
+> ffff8881212d6da0
+> <4>[    5.400923] FS:  0000778637b418c0(0000) GS:ffff8888dad0c000(0000=
+)=20
+> knlGS:0000000000000000
+> <4>[    5.400926] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> <4>[    5.400928] CR2: 00007786373b80b2 CR3: 0000000116faa000 CR4:=20
+> 0000000000f50ef0
+> <4>[    5.400931] PKRU: 55555554
+> <4>[    5.400933] Call Trace:
+> <4>[    5.400935]  <TASK>
+> <4>[    5.400937]  ? lock_system_sleep+0x2b/0x40
+> <4>[    5.400942]  acpi_register_lps0_dev+0x58/0xb0
+> <4>[    5.400949]  asus_wmi_probe+0x7f/0x1930 [asus_wmi]
+> <4>[    5.400956]  ? kernfs_create_link+0x69/0xe0
+> ``````````````````````````````````````````````````````````````````````=
+```````````
+> Detailed log can be found in [3].
+>
+> After bisecting the tree, the following patch [4] seems to be the firs=
+t "bad"
+> commit
+>
+> ``````````````````````````````````````````````````````````````````````=
+```````````````````````````````````
+> commit feea7bd6b02d43a794e3f065650d89cf8d8e8e59
+> Author: Luke D. Jones mailto:luke@ljones.dev
+> Date:=C2=A0=C2=A0 Sun Mar 23 15:34:21 2025 +1300
+>
+> =C2=A0=C2=A0=C2=A0 platform/x86: asus-wmi: Refactor Ally suspend/resume
+> ``````````````````````````````````````````````````````````````````````=
+```````````````````````````````````
+>
+> We could not revert the patch because of merge conflict but resetting=20
+> to the parent of the commit seems to fix the issue
+>
+> Could you please check why the patch causes this regression and provid=
+e=20
+> a fix if necessary?
+>
+> Thank you.
+>
+> Regards
+>
+> Chaitanya
+>
+> [1] https://intel-gfx-ci.01.org/tree/linux-next/combined-alt.html?
+> [2]=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/co=
+mmit/?h=3Dnext-20250509=20
+> [3]=20
+> https://intel-gfx-ci.01.org/tree/linux-next/next-20250526/bat-rpls-4/b=
+oot0.txt=20
+> [4]=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/co=
+mmit/?h=3Dnext-20250509&id=3Dfeea7bd6b02d43a794e3f065650d89cf8d8e8e59
