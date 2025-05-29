@@ -1,103 +1,110 @@
 Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099B4293725;
-	Thu, 29 May 2025 20:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EC71AF0C8;
+	Thu, 29 May 2025 22:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748550512; cv=none; b=Ilp1LmibRQeOucOIYNYFynaPEw8mz34pc7T03SULTt338ZvtShR+53OyQ3u0Ke0jEevEWkrDhDhWmKNZApC4EU+c9t0+pDgbksvNX11XxtWYrNBM8FQ43cVlmmB4ZrDSZHwG9yYSzRqmtzCSOwtudut3yHX//Gz/moCQ6w3CJTo=
+	t=1748556754; cv=none; b=CU8g+mhruXl7t6YK2FEAhYOQIzChOeWk81Y4YXJSRF8yKhGmGR1ta0CAnZQM+ddV1xNfuExjjR4QgBJtX2PUje0n1QBettwM+Ypo6EtVAdGfXtROOgnwGA3HToLrEr5GIs4b3wSR/WWHP2dTZctNvKxC1nkMToZAVHeiNYKdSgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748550512; c=relaxed/simple;
-	bh=QBX0wKas8hMg8UqxUJo8euFBcQTuFEJmE6HLDNOpMw0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fbD5ZIsVlEkUXcRTDP2osxhPaUpO7KV0TaPn9p3G7Wwdl9hZEb50qrS5hI8GtcRFIetFzf4xK2LSnokJOcy+UbKDgsJ4qC8qJwxfpkSi0YjtMI6rYlbErPwoJfbzTnoVehQCZHR1FTR9MBQRK9N1x2opRI+Wyf8Wbs9be0frcBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgLlF2KE; arc=none smtp.client-ip=209.85.161.45
+	s=arc-20240116; t=1748556754; c=relaxed/simple;
+	bh=4Iupiln/BgqshBDEn9yBfvIRrelaFb7lXwcLDuVcWvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZMxkP5iKw0sRsljGNAxrJ107HkT46Q11allwm3fV+EeatpCzzZcJRX2Ch4UuMD9fctcMgTEBKMHWluGBkHt8HgnAV9nGO/dMmRM4jmSzk5y33pMdmlgoPIoSLtV7NyNySUR0iAt/6BIfoNK+vodGP0nNja+JljGWpTuyE3R+3HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbZO3H6e; arc=none smtp.client-ip=209.85.161.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgLlF2KE"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60be827f2b7so649920eaf.0;
-        Thu, 29 May 2025 13:28:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbZO3H6e"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60b8a9be8a3so662651eaf.3;
+        Thu, 29 May 2025 15:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748550510; x=1749155310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
-        b=mgLlF2KE4kiT7EeQNzUWohqOqKFzDWBpRcihOHrvD49Z3iwKGxbEOxhBnRijKtIpCh
-         5SjCdE0mioEnAyOtvYBFZIpIrLxde0dzFCo0zroEnSegDGT51SfxGt6sFTWTHhLF0Ks0
-         gmgCpEFgbeb4/1572Vn4fVlt2gfCxWnHMs4iWE3d6fOVcu652wDcryoNexdfS7XVkRhJ
-         j2iO/Dwdp7WVkRjiPmgFKiaQsRvwyktuI6urdecR3PJlpfNvvhi3Ky4teDSZ3gXC5q/k
-         6/CpAMXTlhaNL5KFCaElNtgkWFP3txzlTIEwy/YqQcTUo8QM95P4pvPsOYUOMTDuAXPF
-         aMTA==
+        d=gmail.com; s=20230601; t=1748556751; x=1749161551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ue6o1C6d/kSRNPWgK84kUQwoXawmCLOvT1ulIKWZSR4=;
+        b=XbZO3H6efuHpFpt9UGKzT0BWlCuXDrFpINrJQ835ZqCsU0NL0Q3HX6oTF6M+Z8Q/xd
+         PwL9RqPWVLgZVT9UuN+ZJyYbuqRd4mRnVkJSlxgJU98pMcCWxKmgmwpKgHWp44iWzKUG
+         DXJWkuWOsdODYOMv2Yi7Y9C5zzsmfbroiJBkb6cALc1WE/tHecpJ3OxLJKLFn2HTvAmm
+         yLNYiErz/7RTTiePtIqylDg804xUGlWulri+fF6utiZRMrkDgHHvLTNSLAVzcGdH3ULF
+         8gOTwds4Aocvjtm6T+pH2dSDMkNWO+9utrT/Za2Sr+/Qryn56WDzYGVUocBmDDO0Hq2l
+         5qwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748550510; x=1749155310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
-        b=bmmxB4dH2PTOO4RoCzuSgUEmII0geOQ1kD4szDGD/3GA4IRxAvsxJvwpO53n1tg/as
-         3H/tglcDWQOCBLaJnW2RkSwrKUw3p1EOj9VmtxZX2TVx5chCBSc+k/wnRTKdWOza6Oej
-         GR5GTIFsz9SmX+NBPBZWGn484JVh8SH4DH+hHkEwhISuLP1wIrV5DVsvaIHUZEftARst
-         DjR//ZJydOhu1KRBdQBI7WH6y0551kUbH+8VyCgdJu7xqQ195+K9ARqTvaWJIIeisg64
-         1WaPZ3G2kvzCRxCJJj1P13KIqxm5bJLEf4Q2yBKpt6z7oUklD10oUMRPu13MzBq1eGZO
-         iU6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUA5g4jhglAjj0FDFGhBzHbonQ7zFwClmii6V3YkS+EAWMiTDVY7BaS2uqhiwdzfrluFDL7q2S6KWs9z3C5/HWCx9Jh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBU8hEEMf1/WY7OersqRBMhXfjo76xEibDhDT+KeNiRxembOSE
-	EVLFJQDNdstdqKLQ11XfhdGGHipGq1oxlV4fpDIaO9xc/ZVVM+Ws9UWiQlXS/Q==
-X-Gm-Gg: ASbGncv5dIZV7UxHXXji3TDgenlz5Fji17vCi5fHoncsK+r7n40Ex3FDPnrLSfppcjx
-	uaDNj1Hq1BU3Qcx+By5x2EB1J3Qj/P9TNW+Xc3vajmhPYb1RO60pMAD3Ap4UyhhV5jSCFXH9CJx
-	4roI46QpbGHaxI/O/D3t0RMFgvewqdh+7c58ap86wt8+0jVv0i+hhDJkjXGzw/aYPlzXCkk4tj4
-	1ktIu7U8QfxDwC/KgKa+ILp+fVYoOoFNRTnwWdNY3sXMDDxk1GhYKHrdG3ZeMNWuxYhXy09b+K8
-	+74kr+gt97nO0OKlInOsn9AIBhZjKJp3HEPrh52Hnlyav0P8eLa8ofoa36plk1/Gx5284UEeuV4
-	VQYT5M6iz7Pv6RnXr2w==
-X-Google-Smtp-Source: AGHT+IHF4HZ++L8kM1VGf0rEhKmV59LLBJotobAimHoIQQjkhamAF/oB3sGTdm8zOhi7vwQ9xI9hSg==
-X-Received: by 2002:a05:6808:6a87:b0:3f8:18a3:b1cc with SMTP id 5614622812f47-40679fd1c7cmr484415b6e.12.1748550509905;
-        Thu, 29 May 2025 13:28:29 -0700 (PDT)
-Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678bf36e7sm129240b6e.1.2025.05.29.13.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 13:28:29 -0700 (PDT)
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v3 4/4] platform/x86: dell_rbu: Bump version
-Date: Thu, 29 May 2025 15:27:58 -0500
-Message-ID: <20250529202758.8440-5-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+        d=1e100.net; s=20230601; t=1748556751; x=1749161551;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ue6o1C6d/kSRNPWgK84kUQwoXawmCLOvT1ulIKWZSR4=;
+        b=ShqcisW6iqeWEPr0NUlWKQdifAvJMszrdnlBJ+/pDQfne77cwdjQj5yc6nAfRHe02q
+         /8NCdsliLGYdA+wfXWG0DBZSxV+UlHCszJbu0L4mrDYvm9s5dQW5Schjo+ngEuyewjEa
+         EbsMr1pdl1ypWGCKXa7QDr4L1FSd++io1NDzhg5mnA+90Sd4rigHzT8+8sys2s5voqZ4
+         wlUDUElEjBlZkAYO9fgiR+wJNdyhT0kKnml3zE2nL+1UHIll0P6oiuQRZv+SmaD2nLfm
+         iEI2eQAVgE/wqI9h184CJA7UXJ6r+pA640bBdj41i8NKoZ2yWwVf1q1rXnzfkcTGN3k1
+         Nfig==
+X-Forwarded-Encrypted: i=1; AJvYcCU0ZsiShhDsHxy8G78qtaZZukR5xJOwzUHhPbwEE/U9sWtXEnOMYjLSqz7xO7k7NMM1gTKgGHi2SP2ve8Xq5sixjW18@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFPF2moPlfU/ShGWeLlPcevA4K+f2drowCQbBMrvw1ioltDGqi
+	tFOC9Svgx0NHaC0DLZI9812Y0hgm3iM6noJDO8zjg7EqLFfmQwrbDnHJ
+X-Gm-Gg: ASbGncsKbZt8FbVZDNxh45mmh5du0NpM2PM2xmkj1r7C9Ot/xfOdmzhOW71+r3dfFQc
+	zq2RSW6Xf1ZlXEnsQvveSjHk6etS7AQyRYPCJeNt2G5CQlPbc1ycklVKeNZ1l9FGhZahDcloRYh
+	oWzVYx6a/fEIhpx9i/4B+B2cG7getwl67PlaqdcPOtfQkOqwG1gko2aVfFiIK4L2MX4XwYIDE8X
+	k6Z4wBLmyY28OHpe+tmAXLTodepARY4s/+HJ3E1vHWqcu1lfoC4xAarpg26kgxr2nClTz/mF38h
+	7SQwtPEaG9r/oZNiZbLGl1dJp2LomM3eFJ5cXTehZ6Oi3sRWjzv+bVK6A5fXJ61ytt9+x1VdhD3
+	RzI7ji0FbDQg+cAC4NXhAaI0EErrehWEyivBTHXf/J63iW9A=
+X-Google-Smtp-Source: AGHT+IGOcQUephSzzgz2CHW+pPQ2opWwxKd9OY10/tYlSUj7AUQB1i4y6lml9sZHFa8PZ3aYyVAIpQ==
+X-Received: by 2002:a05:6820:1e0a:b0:60b:9d5b:e94b with SMTP id 006d021491bc7-60c4d729658mr951701eaf.4.1748556751341;
+        Thu, 29 May 2025 15:12:31 -0700 (PDT)
+Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c6fc02sm164228eaf.11.2025.05.29.15.12.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 15:12:30 -0700 (PDT)
+Message-ID: <9a1a1d6e-4d0b-4c0a-aa5c-31ee9ad65da2@gmail.com>
+Date: Thu, 29 May 2025 17:12:29 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] platform/x86: dell_rbu: Stop overwriting data
+ buffer
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
+ <20250522200937.9578-4-stuart.w.hayes@gmail.com>
+ <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
+Content-Language: en-US
+From: stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Bump the module version.
+On 5/25/2025 5:14 PM, Ilpo Järvinen wrote:
+> On Thu, 22 May 2025, Stuart Hayes wrote:
+> 
+>> The dell_rbu driver will use memset to clear the data held by each packet
+> 
+> Please add () after function names.
+> 
+>> when it is no longer needed (when the driver is unloaded, the packet size
+>> is changed, etc).
+>>
+>> The amount of memory that is cleared is (currently) the normal packet
+>> size.  However, the last packet in the list may be smaller.  Fix this to
+> 
+> One space is enough after .
+> 
+>> only clear the memory actually used by each packet, to prevent it from
+>> writing past the end of data buffer.
+>>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> 
+> Fixes tag?
+> 
+>> ---
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/platform/x86/dell/dell_rbu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index 7d5b26735a20..45c0a72e494a 100644
---- a/drivers/platform/x86/dell/dell_rbu.c
-+++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -45,7 +45,7 @@
- MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
- MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
- MODULE_LICENSE("GPL");
--MODULE_VERSION("3.2");
-+MODULE_VERSION("3.3");
- 
- #define BIOS_SCAN_LIMIT 0xffffffff
- #define MAX_IMAGE_LENGTH 16
--- 
-2.47.1
+Thank you for reviewing this! I sent a new version (V3) with these fixes 
+(and a module version bump).
 
