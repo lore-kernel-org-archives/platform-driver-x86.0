@@ -1,63 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762661F19A;
-	Thu, 29 May 2025 17:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14251DA5F;
+	Thu, 29 May 2025 18:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748540892; cv=none; b=kuUPRo8SUQO7Kn1rdOcoVhul1jN5GZ5o0tpiCDRYvo88zOJeRP9w4zg1ltb+iDBgwe5wPakod6TB3wt1g2ESVjkI3Ir/qlaGdoOyNPaUHyuPSFogMX3mpGPhmlEjeMl9/Oob5NnsnpTXhmPrbGQvtBWqKGOnwMn+hGGzj5czGI0=
+	t=1748542723; cv=none; b=u1u6alhHtze5GOeXWQDUEXZYNdI8nvx4kv1hFzrt7eKQNIndrRpk1CS1YdD86L3S2USD36phP+IPm+0AamhoVsFNOtlpjxsZUoeCbExckO+xyetj3HjDlR7HffAW57QaKyehrGS3BVdHRbqh8ejubtQhhKt/fDYTyyUhv8Sw3Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748540892; c=relaxed/simple;
-	bh=cBzEdsWGNxKvQ8QfkXlbooqOBKVN6kDeOz3Ad9cZM94=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NyQ2J6dqEBiyWtcyaNqIc1AupccpOUrPyIJEHkXg4Q0+0RjUpd78ckXR3d37vTi4UWS5Iq6LOYPQEIbtz/ziLCsaPElj79AxfV0KjbzICUuH6TQj6hghFQHeowUqjswsr9a3+vTyXU8pq003ozG+eBk5DVnVtbHIcmIKkjdJ4Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZ8Y9CAv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748542723; c=relaxed/simple;
+	bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ai0SyCzXsYm8VpRvmdthAY7yBUG/S8+am5WuQ58boJqpHYferkaDHeiNCtzc99IOxps4090fLjU5Nv61oXQelE6kgxCCcPOOMKdaNcM0HB+13uiAFuTgh8psCJuFQ/a4cUnBXndkX424zxlFrGLj+9gB/M18tyySW2epwr78crE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8ir0CSE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZ8Y9CAv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D5BC4CEE7;
-	Thu, 29 May 2025 17:48:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8ir0CSE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDA0C4CEE7;
+	Thu, 29 May 2025 18:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748540892;
-	bh=cBzEdsWGNxKvQ8QfkXlbooqOBKVN6kDeOz3Ad9cZM94=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pZ8Y9CAvKkPdnWL1cKq9aTvhL8RXf3gbVam2rYmjH13HqmcEUO0IUPnShM1BbCjuG
-	 e9aMpPgfWR3n0Tfu85Wm7TCtfiOZMirf0G4Ai9GDjR5GIywNcy6LFPkslkskUDpVsg
-	 pRVECfyFSU/6+xR7F1pA4bye/TBM7mH62dxd1ZuIcrwNYCD1GQJ1+bRwXwAfwBmfP7
-	 dUKKr5jlo2C4M8975Tc2RM62gFTsnriXYhkVqNavvLxeDw78sh6cXPQyGGAV8Clh0X
-	 V6vS0gkzAcEfatDVTO+KSjQK6eiZu+p877ECYY2pSWLUPjeR5dRkrNovqr2FUlRnFl
-	 GBJu2U7kOsyQg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F7D380664F;
-	Thu, 29 May 2025 17:48:47 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
-References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-1
-X-PR-Tracked-Commit-Id: 9c96808f10d84156b5e98e16176b725ec5a1386f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1193e205dbb6feca917dc8e1862ffcdf2194234b
-Message-Id: <174854092578.3342178.14645201863716783567.pr-tracker-bot@kernel.org>
-Date: Thu, 29 May 2025 17:48:45 +0000
+	s=k20201202; t=1748542722;
+	bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n8ir0CSEmy6bIGSbyNxD10QqoifIt1Gqxh7Gsx2sy29RycjNVgQot7RAjiXILql+h
+	 dgvd3gNc9TJf6pTq8octJa1POiGhfYajEyzjhrsMBHLXpHXtIoJBUByaqH95IoA3sS
+	 EyZJyaTpFbZXD1ojb1hGLKR7D5M77siOx1ly8NIQ8pWwvWRt1WjFDwblhTUmE1sGtN
+	 QY6yvGjvx3zb6QE8DWyrRSxkDqrBgmdXrZpgA1hK8UyusKrIfJLqof9ti/aC/yq5sx
+	 FIqUjXo7nAGgj2QHGvX2YTaq51rZIok/ptXhcWl68upja5/c/fN/FiW5Yl7/bSdd8n
+	 Mul12ddO5PGGg==
+From: Kees Cook <kees@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>, Guenter Roeck <linux@roeck-us.net>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Sebastian Reichel <sre@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
+Date: Thu, 29 May 2025 11:18:37 -0700
+Message-Id: <20250529181831.work.439-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=kees@kernel.org; h=from:subject:message-id; bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkWS/58TEh4pBSa6nHtuPec9MuRK25fyY4P+XTViv338 0xjo+xHHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOJ/cbI0JccesCqUu3Ypa/R Br3Paj58//nziGb4e+HbWjV8AdFXNjL8s+58tDZzdrCh+byfG1ZvVTScrpfy4f2Dginpt+aJKW7 byw4A
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Tue, 27 May 2025 12:44:35 +0300:
+When KCOV is enabled all functions get instrumented, unless the
+__no_sanitize_coverage attribute is used. To prepare for
+__no_sanitize_coverage being applied to __init functions[1], we have
+to handle differences in how GCC's inline optimizations get resolved.
+For thinkpad_acpi routines, this means forcing two functions to be
+inline with __always_inline.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-1
+Link: https://lore.kernel.org/lkml/20250523043935.2009972-11-kees@kernel.org/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+This is split out of https://lore.kernel.org/lkml/20250523043935.2009972-4-kees@kernel.org/
+at Ilpo's request.
+---
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>
+Cc: <platform-driver-x86@vger.kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1193e205dbb6feca917dc8e1862ffcdf2194234b
-
-Thank you!
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 657625dd60a0..dc1fc069fed9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -558,12 +558,12 @@ static unsigned long __init tpacpi_check_quirks(
+ 	return 0;
+ }
+ 
+-static inline bool __pure __init tpacpi_is_lenovo(void)
++static __always_inline bool __pure __init tpacpi_is_lenovo(void)
+ {
+ 	return thinkpad_id.vendor == PCI_VENDOR_ID_LENOVO;
+ }
+ 
+-static inline bool __pure __init tpacpi_is_ibm(void)
++static __always_inline bool __pure __init tpacpi_is_ibm(void)
+ {
+ 	return thinkpad_id.vendor == PCI_VENDOR_ID_IBM;
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
