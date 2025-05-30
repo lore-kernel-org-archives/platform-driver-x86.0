@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3629915990C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 30 May 2025 20:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9615990C
+	for <platform-driver-x86@vger.kernel.org>; Fri, 30 May 2025 20:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748637270; cv=none; b=onmywz9rBmpySqlLhV/4vNf/Zl/mK6WtiTqyaOHGZyX96saow/5LybhvAY8r1mKhKU75jFIyMSHkfb7UcsbGyi1sEPkoF1fbV0oo6czcAOov6bZIo+Dhpfz1rxxj5sSwB7+nYkaT8F00Q0i7jtGwKio5atTgaM/NBdq7CE/iReI=
+	t=1748637273; cv=none; b=KTxK9eod6Qpn00Fg3J6Sb/8Ufalbh2w4wS1uCXnW3u5/JVcWmGDqXBDL04NIfRRP7OyvYU48j/eLNoBENcE3tuax8CzsrAOdAtSf7J5KqhxNW9yEOLSIyzGnWzgS8nAHpvJlvfScLpVvCv1BUkD8sKNMvOOhHa4ZEmFeGCK4scQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748637270; c=relaxed/simple;
-	bh=9cDQbkxmkOwg5ni8Ci2XPkw2I0HGftzC089pq0QmGlA=;
+	s=arc-20240116; t=1748637273; c=relaxed/simple;
+	bh=V0cRuTqCcDsiblitVsaOLoYDNL8Po7arWi43KEasI2M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rNrfd97W5trtbCM/eKZPm7UIsDt1+6BMCG0xTK+DAq3+8eWwqRAyYYwu79luFkMVB/aVF9p+lAVauxebgQgMi8ykdKc1Q6yQxikryTZ8hXjzvsluQJ9TlIouQpM2DNYVWt99WbpUzFqS7mBfujNejJ9dgs/wQcMEKZTC+5WCxIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6JJYZ57; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=LnkUJfrGCwMQqEMjdzWuypvUSpuhqQwIT8qtIwp6sPoP++okyDPOUUT3pnKB2ThQdy3DZE60Tv6fvcApydmo2oVdAim7Wt2Vm2b0+SZFnI6BwgEZeFc5Xh94AUYLnvIWioTqoNBs7t34CJzWsEIVlqmmkYg3xMhuI3jUydFVhPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+2XVRiv; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6JJYZ57"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+2XVRiv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748637270; x=1780173270;
+  t=1748637271; x=1780173271;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9cDQbkxmkOwg5ni8Ci2XPkw2I0HGftzC089pq0QmGlA=;
-  b=X6JJYZ5794LZ2Hucl/IqexPZT8lzHfZcOwjZBsnrp+JmXMtFtxmQEG4W
-   lpZTDSzCRPyYONoHgRoMkfQlP9/ck7glLReA6C4KcvKVKE0ys2Tg5Jw0v
-   1+R2ljevdCFlwpnlYjFdzzCkK3EaffaUUbdc1pR/OaPt5QxIh445N79PJ
-   Is9V0VITViwrv1QA6p+fYCxYC0pwPxytu/Ril5l+IQDYnEHAm6W+Erh4z
-   cYxmX/MB9QULg5LIne0y2U/J+yGnyDY9RuPB20kuqsgp4Fy+VNK1fP41Z
-   zLLCfJRz8jYiFRqXeXM3YRb/J0LjZ1v+Jw59V2or0N0Ia5d4J7zL5zTfX
-   A==;
-X-CSE-ConnectionGUID: lb5aCJcxTAi5iMQAPByuuw==
-X-CSE-MsgGUID: Sz1+3y9oQZmVKzRaftMwjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54405778"
+  bh=V0cRuTqCcDsiblitVsaOLoYDNL8Po7arWi43KEasI2M=;
+  b=F+2XVRiv3wDQBRlqsAAC3hfaMNpKcrCRs2mB1zeLZkD9dML7VNH7lxSO
+   /HswVA/no9RqDpxMJw+k7najF1Cj6VkpcDhmszcS0WV18/BgYdh9RzJGE
+   xwA/ojLXGGvQtHd6YqI0QN5hCLmtLybdlX3xeHgP5551V+tuksoliZou0
+   NDU0raER8pbj9bDbvxrWB+vUCnGXiILiYJcfWw10lqIEOHjWKVvzmo/Ct
+   Rn9KCFrVpnsLdWVVlmBABkg20DTFBIYhKZBrmBjZtobLjTCR/cG3B+agr
+   IyRfPJn3kkRUaOrs0lBs+Ky+GN2/rmDf1qulDxicg377CXj4JHxTswV5K
+   g==;
+X-CSE-ConnectionGUID: 7K455DCvQmigSVPxlHnW3Q==
+X-CSE-MsgGUID: LJqaVkmES1+a1AnxAPFUsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54405784"
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="54405778"
+   d="scan'208";a="54405784"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:34:30 -0700
-X-CSE-ConnectionGUID: a/rtaXybSZm9xHxtNeE+cg==
-X-CSE-MsgGUID: Gf35lT07QbGYe+N5AhPcPg==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:34:31 -0700
+X-CSE-ConnectionGUID: er+8+lccT+uJy9c1E0ToJg==
+X-CSE-MsgGUID: pfh3CkirRLebyKRdqChZ1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="149246677"
+   d="scan'208";a="149246680"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.223.23])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:34:28 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:34:30 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -51,9 +51,9 @@ To: platform-driver-x86@vger.kernel.org,
 	lucas.demarchi@intel.com,
 	rodrigo.vivi@intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH 05/10] platform/x86/intel/pmt: crashlog binary file endpoint
-Date: Fri, 30 May 2025 16:33:42 -0400
-Message-ID: <20250530203356.190234-5-michael.j.ruhl@intel.com>
+Subject: [PATCH 06/10] platform/x86/intel/pmt: decouple sysfs and namespace
+Date: Fri, 30 May 2025 16:33:43 -0400
+Message-ID: <20250530203356.190234-6-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250530203356.190234-1-michael.j.ruhl@intel.com>
 References: <20250530203356.190234-1-michael.j.ruhl@intel.com>
@@ -63,65 +63,103 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Usage of the intel_pmt_read() for binary sysfs, requires an
-allocated endpoint struct. The crashlog driver does not
-allocate the endpoint.
+The PMT namespace includes the crashlog sysfs attribute
+information. Other crashlog version/types may need different
+sysfs attributes. Coupling the attributes with the namespace
+blocks this usage.
 
-Without the ep, the crashlog usage causes the following NULL
-pointer exception:
+Decouple sysfs attributes from the name space and add them
+to the specific entry.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-Oops: Oops: 0000 [#1] SMP NOPTI
-RIP: 0010:intel_pmt_read+0x3b/0x70 [pmt_class]
-Code:
-Call Trace:
- <TASK>
- ? sysfs_kf_bin_read+0xc0/0xe0
- kernfs_fop_read_iter+0xac/0x1a0
- vfs_read+0x26d/0x350
- ksys_read+0x6b/0xe0
- __x64_sys_read+0x1d/0x30
- x64_sys_call+0x1bc8/0x1d70
- do_syscall_64+0x6d/0x110
-
-Add the endpoint information to the crashlog driver to avoid
-the NULL pointer exception.
-
-Fixes: 416eeb2e1fc7 ("platform/x86/intel/pmt: telemetry: Export API to read telemetry")
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmt/class.c    | 12 ++++++------
+ drivers/platform/x86/intel/pmt/class.h    |  2 +-
+ drivers/platform/x86/intel/pmt/crashlog.c |  3 ++-
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index bba552131bc2..880baf02a985 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -329,8 +329,8 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 
+ 	entry->kobj = &dev->kobj;
+ 
+-	if (ns->attr_grp) {
+-		ret = sysfs_create_group(entry->kobj, ns->attr_grp);
++	if (entry->attr_grp) {
++		ret = sysfs_create_group(entry->kobj, entry->attr_grp);
+ 		if (ret)
+ 			goto fail_sysfs_create_group;
+ 	}
+@@ -371,8 +371,8 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ fail_add_endpoint:
+ 	sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
+ fail_ioremap:
+-	if (ns->attr_grp)
+-		sysfs_remove_group(entry->kobj, ns->attr_grp);
++	if (entry->attr_grp)
++		sysfs_remove_group(entry->kobj, entry->attr_grp);
+ fail_sysfs_create_group:
+ 	device_unregister(dev);
+ fail_dev_create:
+@@ -414,8 +414,8 @@ void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
+ 	if (entry->size)
+ 		sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
+ 
+-	if (ns->attr_grp)
+-		sysfs_remove_group(entry->kobj, ns->attr_grp);
++	if (entry->attr_grp)
++		sysfs_remove_group(entry->kobj, entry->attr_grp);
+ 
+ 	device_unregister(dev);
+ 	xa_erase(ns->xa, entry->devid);
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index d2d8f9e31c9d..a44571c09253 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -47,6 +47,7 @@ struct intel_pmt_entry {
+ 	struct class_endpoint	*ep;
+ 	struct intel_pmt_header	header;
+ 	struct bin_attribute	pmt_bin_attr;
++	const struct attribute_group *attr_grp;
+ 	struct kobject		*kobj;
+ 	void __iomem		*disc_table;
+ 	void __iomem		*base;
+@@ -60,7 +61,6 @@ struct intel_pmt_entry {
+ struct intel_pmt_namespace {
+ 	const char *name;
+ 	struct xarray *xa;
+-	const struct attribute_group *attr_grp;
+ 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
+ 				 struct device *dev);
+ 	int (*pmt_add_endpoint)(struct intel_vsec_device *ivdev,
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index c6d8a7a61d39..94858bfb52f8 100644
+index 94858bfb52f8..09cd0a1346f3 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -250,6 +250,7 @@ static struct intel_pmt_namespace pmt_crashlog_ns = {
- 	.xa = &crashlog_array,
- 	.attr_grp = &pmt_crashlog_group,
- 	.pmt_header_decode = pmt_crashlog_header_decode,
-+	.pmt_add_endpoint = intel_pmt_add_endpoint,
- };
+@@ -241,6 +241,8 @@ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+ 	/* Size is measured in DWORDS, but accessor returns bytes */
+ 	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
  
- /*
-@@ -260,8 +261,12 @@ static void pmt_crashlog_remove(struct auxiliary_device *auxdev)
- 	struct pmt_crashlog_priv *priv = auxiliary_get_drvdata(auxdev);
- 	int i;
- 
--	for (i = 0; i < priv->num_entries; i++)
--		intel_pmt_dev_destroy(&priv->entry[i].entry, &pmt_crashlog_ns);
-+	for (i = 0; i < priv->num_entries; i++) {
-+		struct intel_pmt_entry *entry = &priv->entry[i].entry;
++	entry->attr_grp = &pmt_crashlog_group;
 +
-+		intel_pmt_release_endpoint(entry->ep);
-+		intel_pmt_dev_destroy(entry, &pmt_crashlog_ns);
-+	}
+ 	return 0;
  }
  
- static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
+@@ -248,7 +250,6 @@ static DEFINE_XARRAY_ALLOC(crashlog_array);
+ static struct intel_pmt_namespace pmt_crashlog_ns = {
+ 	.name = "crashlog",
+ 	.xa = &crashlog_array,
+-	.attr_grp = &pmt_crashlog_group,
+ 	.pmt_header_decode = pmt_crashlog_header_decode,
+ 	.pmt_add_endpoint = intel_pmt_add_endpoint,
+ };
 -- 
 2.49.0
 
