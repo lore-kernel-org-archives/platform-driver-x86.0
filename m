@@ -1,164 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F3DFBF0;
-	Fri, 30 May 2025 15:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F22FBF0;
+	Fri, 30 May 2025 15:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748618745; cv=none; b=PfF8Fkwgc6kjxNGzBRbHXZEQucac/Txk9bp+WebOhQ+xuUHO0llOCuXtF/9p9aidnK/GSAa6HkldRQlLMAcbJjUAcpa+NbFzRslj8xSYxMhw0FeBnC4ODO3PtX7ik6MaQS8HD54KUMQooD8WB4JvyO94+P4OCCTOPI9z6xT+q/Q=
+	t=1748618887; cv=none; b=hPN3zBRi95wbn+95OzOu6evB5ubl8XyagAlbZG3ZagxRAYvf6cJeyec4GojdT+ZuHd4JXXOwSaWew6Q7fh0gkaJVfkwrg85pF4qrPyQYN27z8NDSg4X8/zjDZ0pkTCL0G5H1cayh3IKMK/Nz6qmwW5Rsma52EfdEDteLVp0GNFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748618745; c=relaxed/simple;
-	bh=B6d2bVqDcpzIXpKKW3UkTMIoccx13r6cCnlI0AhcFCg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eFLNJ0oW9FosSW+5NCvR8Xd+qE7Wr9ib1ykLPB+JTHZ47GywXCSaofl3B5t+7eyWmGbApw6wVG5+43+Ix+r5SeMH81vcN8ic9CDWXa+ihJFYCz8uRtVX9nknAxQF4vA+YLByP6+rq8DFcwFLQfWcBEmxDRVBOUqPldCPSCTxjQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cy3lzAzg; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748618887; c=relaxed/simple;
+	bh=bqbIQZx7tbU8Dq+hbFk5qs1YF5oVdFEw6SaA3RZwkqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GT/QzXInxQR8rOXQ2jwtscUG9UINs4ARwlgeCx+5iFGDQyKqv4zyMu43PC+MKKUJ2HiAyQQjk6BzTrwBvkJQDbTIRpyKIpw9EsGPhRrDUa425aVg9gHK3lfN8356VZ/hGTHJis8FoFA4nkzNGZoWPbdOAF1fTlshKErD/U+MZcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhpL26uJ; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cy3lzAzg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748618744; x=1780154744;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=B6d2bVqDcpzIXpKKW3UkTMIoccx13r6cCnlI0AhcFCg=;
-  b=Cy3lzAzgraWTvKS+5DtqXFdrTqRA23NXL9LR6ogUOAdiUiOnO6yXSemt
-   0ADkh63yiWHkMyKxDsU5NiEXq3QsWAO1MHAcI+nftNtsKINUW7rVXUoGE
-   9DloqP37NX1lvmGa7+hzqVRZQalAYrG4cJyLOXA+0CMyH+bxuBaZuSw9G
-   zpPSwWnDoFG7BZkacwlvMhaaFHkTL1TeRTsyeWXUHOEMW+ue1Sg/L5v2p
-   hp+AWNGTmZz7aRy11rqTgouRLv3rKQUMcgJXd+BSpFVGMl3fLJiN1Lequ
-   i+ec9vdb8EdMk9MO8urJROnVc65yffFR2+GXhTDSAutxnVg1+3wpLJ+WY
-   w==;
-X-CSE-ConnectionGUID: Q1/BrTRcQ0uEx+guFkcRyQ==
-X-CSE-MsgGUID: PwshDrnXR/6W2W57vwK9CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50585410"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="50585410"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:25:41 -0700
-X-CSE-ConnectionGUID: 2fk67xolS+i32YmdRnLrig==
-X-CSE-MsgGUID: Y6PE+e6gTWSTBbDJsMSwaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="174905813"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:25:34 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 May 2025 18:25:20 +0300 (EEST)
-To: stuart hayes <stuart.w.hayes@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] platform/x86: dell_rbu: Fix list usage
-In-Reply-To: <c213733e-e907-40cd-ab60-ec8fa0b15e4d@gmail.com>
-Message-ID: <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com> <20250529202758.8440-3-stuart.w.hayes@gmail.com> <d7adf2ca-0cd7-99eb-9be1-a2b37fa8445e@linux.intel.com> <c213733e-e907-40cd-ab60-ec8fa0b15e4d@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhpL26uJ"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-40356cb3352so1393166b6e.1;
+        Fri, 30 May 2025 08:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748618885; x=1749223685; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fq2KhMBOr60BNuiq4EFnjEPZcEVfqIe+cd1pNBKZpOY=;
+        b=OhpL26uJ9mLpggHwdF/uANaIz5VVOf/DMlsXckLOAHgfmPRSSK+ayMVIJkCBuV2Oul
+         T18mkg58pSRdNT4oukSE/9ZXkwPZjslRAy5lweq6/prplfpu3rxohLGHfSQLNwwpMxbX
+         xh50EXdRC6MgBqToEtE7qMk9/sDlyJj3iDFMpCTACqARGwhoXkzSAomNLbiNJDZytrP0
+         Rj4scuW7ha9gyuuNsi7bMORsXpunrN9exYpuJYGdu1YSFI7Bs1OBpQ6Oyl19hPJSqm1R
+         m0kU6hZq9zub31kQq4BwHosPe6aX2SOSz8B5Xu7uBT4ZYR4AX56BZj+4xf1QqXTEmmbV
+         meGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748618885; x=1749223685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fq2KhMBOr60BNuiq4EFnjEPZcEVfqIe+cd1pNBKZpOY=;
+        b=tytq1Y9LlFr0G8k1nkt1nVOCrdQRYvwcR95bWdAIOf5w2muM0HVWyO9X+ByC+JpI9N
+         9q0M7ItALZ8/v5nma0QiyGStI5UhIuZPEiZVdc1e6CZApkvkN1f6RChlU8S0YFlP/RPQ
+         4tcFH9ljJYSofi9v/4d38nKmBbdLxXBjAJTCGFeb9oJ3OoaWcRTpZHTXNNfh78oJJImL
+         Q2+3I0laAaMwkaqcqjZfNkZS2CPp30SRHdXjYDWGX1LdteH8tkwFlN4shTLnSVb9SuWv
+         aHSRLAaqHiusZxQMuNP+diorgmt6KjKr6HsUurB37uoZ/rkmr9j46tj+74lmf0gCZU3O
+         aQKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVofnQ/xdgSvQnN30oyYkIimdxT8HdGUmMMI0RAWzSJzkX7Lbw4pzwpGnI3SxlLwiPcDB7PvqL8nBw6GPJmuZXhdfT5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxzTR4SFOerWZHtyl7NiK7Az188oScIYJ1k1xjH89m3ubsHdxJ
+	+zhzgkn6/i5nJBEPjGLcuFVzAdUye0p/NWvJaTr1c9RF/XIsytfAlvxFBoU5zQ==
+X-Gm-Gg: ASbGncuEsPPEvNAPT5mmnTU8H+MqzNKT8t1TtGSU2zwi+2t9Ze83BXUjc2IRNiWLhst
+	xOlbkAFkhmRPQogCFfnxTDuif5MWI5+61uqNJlciQB8eVJo6IYwxAsrXl2dOvq1WeuaB4ecjHy+
+	Y/LFytag/pEd7cHq8R7F7tM+/6HvcEk6o6+cP6Vx8/6+L21pZgJ9ROXbPTjwV2UrZkr7dqX2f91
+	PPhFnmISJT5FqEa4glQ3ezlmQ83e8RfpH2JhPFXJjTpXIZU5DXfXUT8Wgf8QcFguLCgQyzp0/3O
+	SKlnjtcCmPyV49Okywd9BzUn+tJLf+ovSNH4bYyEqNKcbXNCxn/u0YNpZKVnVgFU8/GWFz+6eQy
+	pi5328QFJPmQyb9VxFupfRwKTtBcTmuoSsojn
+X-Google-Smtp-Source: AGHT+IHKkhsy6Uz1bY8BQdc1ov61XM/m9cZ1jC2Xl3IOfyNQ2Ger8hqyJv6NvLF39lVR3lajl+s58w==
+X-Received: by 2002:a05:6870:538b:b0:2d5:f8f:56eb with SMTP id 586e51a60fabf-2e9210f13e5mr1829335fac.2.1748618874235;
+        Fri, 30 May 2025 08:27:54 -0700 (PDT)
+Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e90681bcc0sm691268fac.23.2025.05.30.08.27.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 08:27:53 -0700 (PDT)
+Message-ID: <8a8ff0b4-49a9-4b07-abbd-243b754bfc0e@gmail.com>
+Date: Fri, 30 May 2025 10:27:52 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-48537591-1748618720=:1000"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] platform/x86: dell_rbu: Stop overwriting data
+ buffer
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+ <20250529202758.8440-4-stuart.w.hayes@gmail.com>
+ <ad0301a0-f45f-900a-028d-dff5e08b9525@linux.intel.com>
+Content-Language: en-US
+From: stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <ad0301a0-f45f-900a-028d-dff5e08b9525@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 5/30/2025 3:03 AM, Ilpo Järvinen wrote:
+> On Thu, 29 May 2025, Stuart Hayes wrote:
+> 
+>> The dell_rbu driver will use memset() to clear the data held by each
+>> packet when it is no longer needed (when the driver is unloaded, the
+>> packet size is changed, etc).
+>>
+>> The amount of memory that is cleared (before this patch) is the normal
+>> packet size. However, the last packet in the list may be smaller.
+>>
+>> Fix this to only clear the memory actually used by each packet, to prevent
+>> it from writing past the end of data buffer.
+>>
+>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> 
+> This still doesn't have Fixes tag? If it writes part the buffer, there
+> certainly should be one in this one. Did you perhaps add it to a wrong
+> patch?
+> 
 
---8323328-48537591-1748618720=:1000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This fixes a bug that's existed for the life of the driver. Should I use 
+the patch that introduced the driver for "Fixes:"?
 
-On Fri, 30 May 2025, stuart hayes wrote:
+I don't think this has ever caused a problem, because, as far as I know, 
+the Dell BIOS update program is the only user of this module, and it 
+uses 4096 as the packet size. Because the packet data buffers are 
+allocated with...
 
-> On 5/30/2025 2:54 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 29 May 2025, Stuart Hayes wrote:
-> >=20
-> > > Stop using an entire struct packet_data just for the embedded list_he=
-ad,
-> > > and fix usage of that list_head.
-> > >=20
-> > > Fixes: d19f359fbdc6 ("platform/x86: dell_rbu: don't open code
-> > > list_for_each_entry*()")
-> > > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> >=20
-> > Isn't this just refactor so Fixes tag for this commit is not warranted?
-> >=20
->=20
-> No. The patch that this fixes had converted the driver to use
-> list_for_each_entry*() to loop through the packet list instead of a while
-> loop. But it passed (&packet_data_head.list)->next to list_for_each_entry=
-*()
-> instead of the list head itself.
->=20
-> That resulted in to issues. In the function that prints the packets, it w=
-ould
-> start with the wrong packet, and in the function that deletes the packets=
-, it
-> would get a null pointer dereference when it tried to zero out the data
-> associated with the packet that held the actual list head.
+	ordernum = get_order(size);
+	image_update_buffer =
+		(unsigned char *)__get_free_pages(GRP_DMA32, ordernum);
 
-Oh, I see that difference now. Good catch.
+...this will always allocate one full page for every packet data buffer.
 
-However, that also means the ->next part is wrong and there are two=20
-independent changes here, one that fixes this ->next problem and then the=
-=20
-refactoring of packet_data_head to packet_data_list?
+I just happened to notice that the driver could overwrite the end of the 
+buffer for the last packet if a packet size of more than 4096 was used, 
+so I thought I'd fix that.
 
-> > > ---
-> > >   drivers/platform/x86/dell/dell_rbu.c | 10 +++++-----
-> > >   1 file changed, 5 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/dell/dell_rbu.c
-> > > b/drivers/platform/x86/dell/dell_rbu.c
-> > > index 7b019fb72e86..c03d4d55fcc1 100644
-> > > --- a/drivers/platform/x86/dell/dell_rbu.c
-> > > +++ b/drivers/platform/x86/dell/dell_rbu.c
-> > > @@ -77,14 +77,14 @@ struct packet_data {
-> > >   =09int ordernum;
-> > >   };
-> > >   -static struct packet_data packet_data_head;
-> > > +static struct list_head packet_data_list;
-> > >     static struct platform_device *rbu_device;
-> > >   static int context;
-> > >     static void init_packet_head(void)
-> > >   {
-> > > -=09INIT_LIST_HEAD(&packet_data_head.list);
-> > > +=09INIT_LIST_HEAD(&packet_data_list);
-> > >   =09rbu_data.packet_read_count =3D 0;
-> > >   =09rbu_data.num_packets =3D 0;
-> > >   =09rbu_data.packetsize =3D 0;
-> > > @@ -183,7 +183,7 @@ static int create_packet(void *data, size_t lengt=
-h)
-> > > __must_hold(&rbu_data.lock)
-> > >     =09/* initialize the newly created packet headers */
-> > >   =09INIT_LIST_HEAD(&newpacket->list);
-> > > -=09list_add_tail(&newpacket->list, &packet_data_head.list);
-> > > +=09list_add_tail(&newpacket->list, &packet_data_list);
-> > >     =09memcpy(newpacket->data, data, length);
-> > >   @@ -292,7 +292,7 @@ static int packet_read_list(char *data, size_t =
-*
-> > > pread_length)
-> > >   =09remaining_bytes =3D *pread_length;
-> > >   =09bytes_read =3D rbu_data.packet_read_count;
-> > >   -=09list_for_each_entry(newpacket, (&packet_data_head.list)->next, =
-list) {
-> > > +=09list_for_each_entry(newpacket, &packet_data_list, list) {
-> > >   =09=09bytes_copied =3D do_packet_read(pdest, newpacket,
-> > >   =09=09=09remaining_bytes, bytes_read, &temp_count);
-> > >   =09=09remaining_bytes -=3D bytes_copied;
-> > > @@ -315,7 +315,7 @@ static void packet_empty_list(void)
-> > >   {
-> > >   =09struct packet_data *newpacket, *tmp;
-> > >   -=09list_for_each_entry_safe(newpacket, tmp,
-> > > (&packet_data_head.list)->next, list) {
-> > > +=09list_for_each_entry_safe(newpacket, tmp, &packet_data_list, list)=
- {
-> > >   =09=09list_del(&newpacket->list);
-> > >     =09=09/*
-> > >=20
-> >=20
->=20
+>> ---
+>>   drivers/platform/x86/dell/dell_rbu.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+>> index c03d4d55fcc1..7d5b26735a20 100644
+>> --- a/drivers/platform/x86/dell/dell_rbu.c
+>> +++ b/drivers/platform/x86/dell/dell_rbu.c
+>> @@ -322,7 +322,7 @@ static void packet_empty_list(void)
+>>   		 * zero out the RBU packet memory before freeing
+>>   		 * to make sure there are no stale RBU packets left in memory
+>>   		 */
+>> -		memset(newpacket->data, 0, rbu_data.packetsize);
+>> +		memset(newpacket->data, 0, newpacket->length);
+>>   		set_memory_wb((unsigned long)newpacket->data,
+>>   			1 << newpacket->ordernum);
+>>   		free_pages((unsigned long) newpacket->data,
+>>
+> 
 
---=20
- i.
-
---8323328-48537591-1748618720=:1000--
