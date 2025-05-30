@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D10227AC2F
-	for <platform-driver-x86@vger.kernel.org>; Fri, 30 May 2025 20:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2EE27AC2F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 30 May 2025 20:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748637495; cv=none; b=YaaE9acjrUYo3h/sJI69FEWduVa3Uao0UGnNObo1g7uGyStp/YKi68FB2Kc5dE4bxmaZpmCGQqnCtJZ8VTfPEWkl9nloVgzpAruxsxO23HIeIKPbzrkihkJ3Rhtd1hKQQM0fOxTUpLNv8pUAkQDrbpUSGB/mCo6xhVTP5ZLVd7I=
+	t=1748637498; cv=none; b=j89Q3HJPYS4Z/Pe1inVeU2DHu5FCHg2/9yRgTW5vG2RxnmAHAnMDYanCHVKdSTMRXuiCzDXyV5+RxHw8rkT9Ie/18nTSwlm6J/eZdIGl76NueK/l6CFm1Rja59pvMxLGhBqyUayYFrb/jfB5EOfZmyPGrUuzkRLzwYpUNAofjfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748637495; c=relaxed/simple;
-	bh=wJv3c/1LezX8Oe1JiPDGB77Ypq2pscUvluUa/9cETfA=;
+	s=arc-20240116; t=1748637498; c=relaxed/simple;
+	bh=CjOnVCQN5NKVwGN0gIEWebL23xpSyncTNjPSqfj0KUQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J1MzvlgGYb8VzYWriiYu3swVkHNUWfS4YK4JedO5h/kY+GpCM95AbvFxN3LV2SRiWh5LGXTuhpZEAGXWDwhmiHLGDfqdl7yGzR+F9+DFSsJZdGfejyfLUzrZn+L1w6/IXgPg33c61nSpruSElx3sLWT5nBufRhW8OseAYbpNr14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QBfNSOwG; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=j9C8GFN3Hiqf8iCdOECe1iYLhgmsgNpEOr+zqIXf7YgpeOYoMEWVac8984kn3V1ri3+w3k5fU5EXkSCfGt93vtPQHRqeWvxqLdheSPu57l8GC+4EChhWXxK9PEIlmjVWQFQHNtGGyXg6A2BNBPgWcGjHb0Y2BbUJZFtszLSck08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8tGx3ko; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QBfNSOwG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8tGx3ko"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748637494; x=1780173494;
+  t=1748637496; x=1780173496;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wJv3c/1LezX8Oe1JiPDGB77Ypq2pscUvluUa/9cETfA=;
-  b=QBfNSOwGMsXTwyNZNZ874umzL5HauXmDRXWL1wwhZFgwweqQuveQibib
-   4cE3rEagT4JnC6NjJXpSLEtfA4l/ya8GrZ5/a6fbmtMYD/1nabmJJtOLO
-   vLgLPkcyZEFnii2Gjwkm9dmesyfvpScocBBBfDHPh3Oa/qRqd9QXql7ll
-   NUwmahAtiY7HIk6o9btVw+a2UxuMuuhXlViYyl8J9dqLBytaOKfP9b42+
-   0N0cTcL8346nMH9QE9ovn0myA8VK9jRqwSxkIl9phYj8USKfJ4+jILCt3
-   HZlfkzcIb8QOr4eECyBgAdOzqQX+nh8sPBR0C8+Hn/luok29qZJ66/g5h
-   A==;
-X-CSE-ConnectionGUID: H6gaaGwJQIaqUz1fXAEOnQ==
-X-CSE-MsgGUID: t2vIbUkdTdSpeh5JThrx1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54405997"
+  bh=CjOnVCQN5NKVwGN0gIEWebL23xpSyncTNjPSqfj0KUQ=;
+  b=L8tGx3koACuu22GjmNWyuBVGCrPRT5833Acjwgledp0UacH35sF6jPRa
+   2n5LVElCmyLkgh6v53KDuWt7svifhGPBdoGu+tY+cN1321iQBuwS81MZy
+   X0DTxY14F3220SptRdLf4yMmNQ/sOQ3MjEkUsEB3sdwLOGqtTzrWEuWOE
+   WvPH1rOie9zmDJJJaPr9j8bMkJSrcTWxYeV2NCZK7RziFgigRNf1YRfUG
+   XczSLq9ts7nPTMUUx3QOYp/KK9YXTladzlAHKv5+9eGIsiwT0YijVxVPM
+   aODpPT5joC2k/QKNm6Qc4Pfkdw2hLDjAnf+160tjRUzvAW8CVYMkn4pGt
+   g==;
+X-CSE-ConnectionGUID: Z+nMM9fERYWEHSxrD5P68w==
+X-CSE-MsgGUID: ooQ6CWelR96cqAYDBeUsWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54406000"
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="54405997"
+   d="scan'208";a="54406000"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:38:14 -0700
-X-CSE-ConnectionGUID: slSZLBpxRFObNfbi27Hc4A==
-X-CSE-MsgGUID: mM8ACSJ6TrSmzZuTwr6pVw==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:38:16 -0700
+X-CSE-ConnectionGUID: DIOCCvLpRheJc6m3u0zSkg==
+X-CSE-MsgGUID: CqCFVJFCTxW9IganhPxPow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="143824188"
+   d="scan'208";a="143824206"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.223.23])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:38:13 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:38:15 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -51,9 +51,9 @@ To: platform-driver-x86@vger.kernel.org,
 	lucas.demarchi@intel.com,
 	rodrigo.vivi@intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v2 1/8] drm/xe: Correct BMG VSEC header sizing
-Date: Fri, 30 May 2025 16:37:50 -0400
-Message-ID: <20250530203757.190853-2-michael.j.ruhl@intel.com>
+Subject: [PATCH v2 2/8] platform/x86/intel/pmt: white space cleanup
+Date: Fri, 30 May 2025 16:37:51 -0400
+Message-ID: <20250530203757.190853-3-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250530203757.190853-1-michael.j.ruhl@intel.com>
 References: <20250530203757.190853-1-michael.j.ruhl@intel.com>
@@ -65,54 +65,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The intel_vsec_header information for the crashlog feature
-is incorrect.
-
-Update the VSEC header with correct sizing and count.
+Noticed two white space issues; cleaned them.
 
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/gpu/drm/xe/xe_vsec.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index 3e573b0b7ebd..67238fc57a4d 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -32,28 +32,18 @@ static struct intel_vsec_header bmg_telemetry = {
- 	.offset = BMG_DISCOVERY_OFFSET,
- };
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+index 6a9eb3c4b313..d40c8e212733 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -143,7 +143,7 @@ enable_show(struct device *dev, struct device_attribute *attr, char *buf)
  
--static struct intel_vsec_header bmg_punit_crashlog = {
--	.length = 0x10,
-+static struct intel_vsec_header bmg_crashlog = {
-+	.length = 0x18,
- 	.id = VSEC_ID_CRASHLOG,
--	.num_entries = 1,
--	.entry_size = 4,
-+	.num_entries = 2,
-+	.entry_size = 6,
- 	.tbir = 0,
- 	.offset = BMG_DISCOVERY_OFFSET + 0x60,
- };
+ static ssize_t
+ enable_store(struct device *dev, struct device_attribute *attr,
+-	    const char *buf, size_t count)
++	     const char *buf, size_t count)
+ {
+ 	struct crashlog_entry *entry;
+ 	bool enabled;
+@@ -177,7 +177,7 @@ trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
  
--static struct intel_vsec_header bmg_oobmsm_crashlog = {
--	.length = 0x10,
--	.id = VSEC_ID_CRASHLOG,
--	.num_entries = 1,
--	.entry_size = 4,
--	.tbir = 0,
--	.offset = BMG_DISCOVERY_OFFSET + 0x78,
--};
--
- static struct intel_vsec_header *bmg_capabilities[] = {
- 	&bmg_telemetry,
--	&bmg_punit_crashlog,
--	&bmg_oobmsm_crashlog,
-+	&bmg_crashlog,
- 	NULL
- };
- 
+ static ssize_t
+ trigger_store(struct device *dev, struct device_attribute *attr,
+-	    const char *buf, size_t count)
++	      const char *buf, size_t count)
+ {
+ 	struct crashlog_entry *entry;
+ 	bool trigger;
 -- 
 2.49.0
 
