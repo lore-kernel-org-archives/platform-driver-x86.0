@@ -1,182 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF74148850;
-	Fri, 30 May 2025 15:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AE221CFF6;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748620150; cv=none; b=kvk9A1Lr+ZTTc5xtmXLbB8RbpK1u0DP8FedJTY8xi9RPuQsynngQyICwscRFAttea4NT7yvV/COlECIEYIOx16v1dMYCXAvtkTPky3GXOnbdXlzUqWX0Vd0nMPSLExldrSybfQbM7sficRh5yDOI5lSh4iMNlHFcbjyzXuPlNB8=
+	t=1748621743; cv=none; b=Bbl7yfw4h2+FUMlEzAxDTtQelkUmYKvQ77M+mBtx71uvH0jM3QX4mN2FsTbpT2ZyqTU6I3ZNQlATqqlXbbodZYkNHxS7vBZZHs7qpQEjJxKNiPX7N/LeyU3VYJyB6nbHZUn6wBPiM2srCrrYd9qQ7Ak0v7xSolfpN97Vzt0ylGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748620150; c=relaxed/simple;
-	bh=+Bu7NzhJ/v0zklvwxEVmvw9uY9L+IuyTRDbBPHukWOc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lNS/Ifmw4Bko/17Isju16NiXdegoaApMLnM5IjzMofjMuD65yArJW9oNeIUQCkHVNsf7WApbdZ/9uQxKYyqd5WAhZJW0sqJpQzy9GA+IUEo0HKzCgwXee8NosGMjrYOC4QwSobOoF1dsN37u5rb8r/KA5MqYM3A6B5iCKFgAW1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMPfArZg; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748621743; c=relaxed/simple;
+	bh=J2tLUrNZJeP0b5EenQFGoAgg3wG4OtOoEYwTiiW8gcU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nZNf/szBzNCBmOEOpXc4yIsdpoDESjFIHQDW36UnR0H/WbE6FALxgcZci0A6OQQ3c42fKI3J7VCVMVorPy8W9r9qX4gvHFA81+id64alEgB6ly1VbcrccB3cc021+VPisq+VZUACmmBBg20A+ibXmVYkW3MKscjLrWav8kQmFbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHzSCSsr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMPfArZg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748620149; x=1780156149;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+Bu7NzhJ/v0zklvwxEVmvw9uY9L+IuyTRDbBPHukWOc=;
-  b=VMPfArZgZ7EkqT+PREAVvuF2fDf2CRMi9tvvORaK/dH/JzDDU5K51tLJ
-   13cyEGULB2iypybohCEXtt3zfh4nbPwb9beKq/1OuaqM43cJ/ve0asiFK
-   rnQzs2TkgWK9d8bCwViO7VebdiP2mUQSyOfaRCclSMPfGF/AoWXIwnJOG
-   DPd87N9BEY7o5Or09BMDMkoUP/5y6MEg2oRSf5W3uCWvDU+T4Tm235/pu
-   lIcKwyxyceHFosExVRRPHX58KakRXzUgos95IBuleLe+UUX1MiimMjuYt
-   DJ6J5tVfs6vKi9CMNRMhJ4mKHtBkcZ5tVAMM2Gh/E6Mi8uNEgfqdRLgNj
-   Q==;
-X-CSE-ConnectionGUID: o0kRbRJ1SbieULmwYA5NOg==
-X-CSE-MsgGUID: QsoEZxTiSme/o+qVKk3Niw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50867396"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="50867396"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:49:08 -0700
-X-CSE-ConnectionGUID: zYwEjvuKTmaP8/j7zNNC0g==
-X-CSE-MsgGUID: cesVpli4SemjKu/FLzGMAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="174910425"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:49:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 May 2025 18:48:55 +0300 (EEST)
-To: stuart hayes <stuart.w.hayes@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] platform/x86: dell_rbu: Fix list usage
-In-Reply-To: <04ba20e6-ce2c-4e47-8884-c563b931cd66@gmail.com>
-Message-ID: <749f1036-9ad7-ede0-5412-b9449d9e2cde@linux.intel.com>
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com> <20250529202758.8440-3-stuart.w.hayes@gmail.com> <d7adf2ca-0cd7-99eb-9be1-a2b37fa8445e@linux.intel.com> <c213733e-e907-40cd-ab60-ec8fa0b15e4d@gmail.com> <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
- <04ba20e6-ce2c-4e47-8884-c563b931cd66@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHzSCSsr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 220C1C4CEEE;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748621743;
+	bh=J2tLUrNZJeP0b5EenQFGoAgg3wG4OtOoEYwTiiW8gcU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=GHzSCSsrVX5d/+mwa2WFH6Ya5D+zt0CCMbcaohPkqfoCopBbJitO9BKdVDRR1Zrej
+	 zuRcgfSKsRLackm/ljGKT3yy/5V9LRM+w4fpcJGoMTevKW18p8O1E5mJ9O5ndFs0Ld
+	 p8MYmZ2Ir2w8qvKaCWo75/joSmznZHNpJXrYGxU4fZJudjXfbzuVrRpndSrRrtIeYw
+	 xBrmsekl226FtRgkJ5hu+dYEwFeIfab9TyBSzL61HhC9CFVWs+Rru0vTy4GygBSPIK
+	 RPNLmHN8crKXKAJ2gTv4grd+IGB4k6Lte7NlkyTxpv+C98HHVhSHjHtqeKDVWVwAJB
+	 7AIIbXvQOcIoA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE9C5B549;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+From: Jake Hillion via B4 Relay <devnull+jake.hillion.co.uk@kernel.org>
+Date: Fri, 30 May 2025 17:15:21 +0100
+Subject: [PATCH 1/2] x86/platform/amd: move final timeout check to after
+ final sleep
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-550902521-1748620135=:20209"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250530-amd-hsmp-v1-1-3222bffa4008@hillion.co.uk>
+References: <20250530-amd-hsmp-v1-0-3222bffa4008@hillion.co.uk>
+In-Reply-To: <20250530-amd-hsmp-v1-0-3222bffa4008@hillion.co.uk>
+To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Carlos Bilbao <carlos.bilbao@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ sched-ext@meta.com, Jake Hillion <jake@hillion.co.uk>, 
+ Blaise Sanouillet <linux@blaise.sanouillet.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748621741; l=1760;
+ i=jake@hillion.co.uk; s=20250530; h=from:subject:message-id;
+ bh=4EV5qkO85AXhQhZuF40dcwxkZ1W5E4mea6iYRbqFyME=;
+ b=xjApLCcXbb/4z3p6GORkeT1jDsc2Rt6qJRaECX1Dq6LZy1MStYB8zbFBtnV17nUNRboTmtBI9
+ yTFLmXUaVYsBoJ3UfAwjyHXOISz0UR3AuuPcqMFITVl9jHJbppFd7r6
+X-Developer-Key: i=jake@hillion.co.uk; a=ed25519;
+ pk=8cznmqtMcMEcU8QH55k8DrySboD889OBB/BEUMJh3dw=
+X-Endpoint-Received: by B4 Relay for jake@hillion.co.uk/20250530 with
+ auth_id=419
+X-Original-From: Jake Hillion <jake@hillion.co.uk>
+Reply-To: jake@hillion.co.uk
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Jake Hillion <jake@hillion.co.uk>
 
---8323328-550902521-1748620135=:20209
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+__hsmp_send_message sleeps between result read attempts and has a
+timeout of 100ms. Under extreme load it's possible for these sleeps to
+take a long time, exceeding the 100ms. In this case the current code
+does not check the register and fails with ETIMEDOUT.
 
-On Fri, 30 May 2025, stuart hayes wrote:
+Refactor the loop to ensure there is at least one read of the register
+after a sleep of any duration. This removes instances of ETIMEDOUT with
+a single caller, even with a misbehaving scheduler. Tested on AMD
+Bergamo machines.
 
-> On 5/30/2025 10:25 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Fri, 30 May 2025, stuart hayes wrote:
-> >=20
-> > > On 5/30/2025 2:54 AM, Ilpo J=C3=A4rvinen wrote:
-> > > > On Thu, 29 May 2025, Stuart Hayes wrote:
-> > > >=20
-> > > > > Stop using an entire struct packet_data just for the embedded
-> > > > > list_head,
-> > > > > and fix usage of that list_head.
-> > > > >=20
-> > > > > Fixes: d19f359fbdc6 ("platform/x86: dell_rbu: don't open code
-> > > > > list_for_each_entry*()")
-> > > > > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > > >=20
-> > > > Isn't this just refactor so Fixes tag for this commit is not warran=
-ted?
-> > > >=20
-> > >=20
-> > > No. The patch that this fixes had converted the driver to use
-> > > list_for_each_entry*() to loop through the packet list instead of a w=
-hile
-> > > loop. But it passed (&packet_data_head.list)->next to
-> > > list_for_each_entry*()
-> > > instead of the list head itself.
-> > >=20
-> > > That resulted in to issues. In the function that prints the packets, =
-it
-> > > would
-> > > start with the wrong packet, and in the function that deletes the pac=
-kets,
-> > > it
-> > > would get a null pointer dereference when it tried to zero out the da=
-ta
-> > > associated with the packet that held the actual list head.
-> >=20
-> > Oh, I see that difference now. Good catch.
-> >=20
-> > However, that also means the ->next part is wrong and there are two
-> > independent changes here, one that fixes this ->next problem and then t=
-he
-> > refactoring of packet_data_head to packet_data_list?
-> >=20
->=20
-> Correct. Do you want those as two separate patches?
+Suggested-by: Blaise Sanouillet <linux@blaise.sanouillet.com>
+Signed-off-by: Jake Hillion <jake@hillion.co.uk>
+---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Yes please, and please order the fix patch before the refactor patch as=20
-stable people will be interested in taking the fix into stable releases.
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index e262e8a97b4542a389e09a82dad71f7d2e8b2449..f35c639457ac425e79dead2515c0eddea0759323 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -99,7 +99,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	short_sleep = jiffies + msecs_to_jiffies(HSMP_SHORT_SLEEP);
+ 	timeout	= jiffies + msecs_to_jiffies(HSMP_MSG_TIMEOUT);
+ 
+-	while (time_before(jiffies, timeout)) {
++	while (true) {
+ 		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
+ 		if (ret) {
+ 			dev_err(sock->dev, "Error %d reading mailbox status\n", ret);
+@@ -108,6 +108,10 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 
+ 		if (mbox_status != HSMP_STATUS_NOT_READY)
+ 			break;
++
++		if (!time_before(jiffies, timeout))
++			break;
++
+ 		if (time_before(jiffies, short_sleep))
+ 			usleep_range(50, 100);
+ 		else
 
---=20
- i.
+-- 
+2.47.2
 
-> > > > > ---
-> > > > >    drivers/platform/x86/dell/dell_rbu.c | 10 +++++-----
-> > > > >    1 file changed, 5 insertions(+), 5 deletions(-)
-> > > > >=20
-> > > > > diff --git a/drivers/platform/x86/dell/dell_rbu.c
-> > > > > b/drivers/platform/x86/dell/dell_rbu.c
-> > > > > index 7b019fb72e86..c03d4d55fcc1 100644
-> > > > > --- a/drivers/platform/x86/dell/dell_rbu.c
-> > > > > +++ b/drivers/platform/x86/dell/dell_rbu.c
-> > > > > @@ -77,14 +77,14 @@ struct packet_data {
-> > > > >    =09int ordernum;
-> > > > >    };
-> > > > >    -static struct packet_data packet_data_head;
-> > > > > +static struct list_head packet_data_list;
-> > > > >      static struct platform_device *rbu_device;
-> > > > >    static int context;
-> > > > >      static void init_packet_head(void)
-> > > > >    {
-> > > > > -=09INIT_LIST_HEAD(&packet_data_head.list);
-> > > > > +=09INIT_LIST_HEAD(&packet_data_list);
-> > > > >    =09rbu_data.packet_read_count =3D 0;
-> > > > >    =09rbu_data.num_packets =3D 0;
-> > > > >    =09rbu_data.packetsize =3D 0;
-> > > > > @@ -183,7 +183,7 @@ static int create_packet(void *data, size_t
-> > > > > length)
-> > > > > __must_hold(&rbu_data.lock)
-> > > > >      =09/* initialize the newly created packet headers */
-> > > > >    =09INIT_LIST_HEAD(&newpacket->list);
-> > > > > -=09list_add_tail(&newpacket->list, &packet_data_head.list);
-> > > > > +=09list_add_tail(&newpacket->list, &packet_data_list);
-> > > > >      =09memcpy(newpacket->data, data, length);
-> > > > >    @@ -292,7 +292,7 @@ static int packet_read_list(char *data, si=
-ze_t
-> > > > > *
-> > > > > pread_length)
-> > > > >    =09remaining_bytes =3D *pread_length;
-> > > > >    =09bytes_read =3D rbu_data.packet_read_count;
-> > > > >    -=09list_for_each_entry(newpacket, (&packet_data_head.list)->n=
-ext,
-> > > > > list) {
-> > > > > +=09list_for_each_entry(newpacket, &packet_data_list, list) {
-> > > > >    =09=09bytes_copied =3D do_packet_read(pdest, newpacket,
-> > > > >    =09=09=09remaining_bytes, bytes_read, &temp_count);
-> > > > >    =09=09remaining_bytes -=3D bytes_copied;
-> > > > > @@ -315,7 +315,7 @@ static void packet_empty_list(void)
-> > > > >    {
-> > > > >    =09struct packet_data *newpacket, *tmp;
-> > > > >    -=09list_for_each_entry_safe(newpacket, tmp,
-> > > > > (&packet_data_head.list)->next, list) {
-> > > > > +=09list_for_each_entry_safe(newpacket, tmp, &packet_data_list,
-> > > > > list) {
-> > > > >    =09=09list_del(&newpacket->list);
-> > > > >      =09=09/*
-> > > > >=20
-> > > >=20
-> > >=20
-> >=20
->=20
---8323328-550902521-1748620135=:20209--
+
