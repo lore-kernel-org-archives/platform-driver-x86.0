@@ -1,640 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD333227BB9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Jun 2025 18:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788124C92;
+	Tue,  3 Jun 2025 03:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887250; cv=fail; b=uGox/ylyOTdRLS5MjLOJ0exV+/kLKy42WXlabh9UhhHcPNhSB+2NfoFmc1UOCf/845HJTJo5Jku2g/5LMNLqnNqyLKr5/FUz9/QX8vQ0LdI6UpJVjKdfYiRo9QRtWk/c0qbl3+M4RZGcTscms/i/4D5ahDu/YmIyQ1rUZcv/Lww=
+	t=1748920544; cv=fail; b=S7/ciXx2uyVZzANi57zZp+jtQtEuD4+VuL5sXjZT+pOFUmWyUGqFThf1pl8t82AE9gsA/kzxwRZfjZFpUd/ks/XJ2qViAlfO3rznAdATYcUpZ8KuCYxtYU4H3Gw+mf0fQmgoPM9BNs9KaD+bW9cuAabGGJD7QnGErXeVZlctYJE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887250; c=relaxed/simple;
-	bh=INm3Zav5cMi62KvaXrXi+JIoecmsfAq2toewCMZZNUI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Yvd9yKvsqS6oC8dJB/SGD+6k7lXggcAndX2VDyZuorZrtkd8M0Uc1hkSQwbMg8l4GFztsksaqZUcrS7tMtAFd7fxeBQpIg6I+ygxOl/HrPx/bcn8+IuRWBFzsbvHGyOY70trS7FLbrk6kfHauyuOFTbnd2jHAJxxRpB7R+H4dNU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9DPubtU; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748920544; c=relaxed/simple;
+	bh=/1c/K3vSrNJY2ltDNE1fxT0b4WZbBpdUXo9r3es8y9I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=q888qED4n6E2x5xaB+8+646RgkIf1tMnnXUOQ+9Sp2QW0Z5fJjBnfIJ1acgpdTA9GL79lpd60YKsIatn6BhsQY+HFc99+YcVYU5YuFBpIg8UJLK2C4VZQPSZhaDoZN1vQR5MxGPckuhYGtM0v0h6k+qK6njULXAxuMhwLcINJCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pIWv5xZa; arc=fail smtp.client-ip=40.107.237.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9DPubtU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748887248; x=1780423248;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=INm3Zav5cMi62KvaXrXi+JIoecmsfAq2toewCMZZNUI=;
-  b=M9DPubtUW/MsoHdCHY7TWlVNJl2Jl1bpz5XJGWGkTNo+cpCPfCLblS3W
-   ASE8f3W3urdOKYzYFN32y0337yb+4gKaYTGgLBfFg1c3+4iCfQpnkfGfI
-   PEDqZ+8flMjspXJyR1+P4U46gaT7ZRv6xzKZMJu/GIEejjCO5gSBfWQZp
-   xG3lg6E3xC8NJ+SyURocwQLNIc7Jb6E4YWHvQGuFOaBDkGxhGLBf5TfP3
-   WldANNzCPIaymb2rjXqKmKRFn1Ldah93V+ZEKCZ3EuVFt8nV1wOH7WAFy
-   wTDElPIVWV2RGT5Vtr5eft3HOO9YwplVheCAc9NtGVU3u8BzX/kH1CdG5
-   Q==;
-X-CSE-ConnectionGUID: m7GHSnwuSGKqXjpLr9QpRA==
-X-CSE-MsgGUID: 6IMLmn1wRia81tBz34YE5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="76292729"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="76292729"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:00:47 -0700
-X-CSE-ConnectionGUID: QCnpTcocTw6KPgdVN2DlLQ==
-X-CSE-MsgGUID: kNVATj6tR4CKe5fmqYRsyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="149382222"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:00:46 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 2 Jun 2025 11:00:46 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 2 Jun 2025 11:00:46 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.56)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Mon, 2 Jun 2025 11:00:45 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pIWv5xZa"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jql5HdeHVJoA7Cir2PHnlbeTNS9CaTxPbqKwmTgq2/WgZoNC0ldrnl4HI5mtd0KXLFtuF58kXKfwqoTk0HlXOuZugqtIwUh0uxsoNHU8dlVBBF72OXjCMQkUeZBxWj4fFIp88YUclscvvu4bi/TcxZ38rzZb7Iz6FZFlsiQDRn1+BOHZ3Hji21EGVo5h4zzhLJuBplsk5sihsrp7qYDJAAFZMadAwzuQOD07Y/Ig8I+loeCgKrfCnazLZdaK4UQrtdlr+sIVg6Fro/+l92ZUnfle+idMVnXdCkuH85kfJhaxSTJw6IdLU3K7Ma1pI1AS8BbAEL+wOEI5fCPi62I1dQ==
+ b=pa5Upy0CiZB9Td9KDn0UxPqBdRvs/aPFEIhft5wOquBhMWHyuBv+ybQHPLUGRdMo3f+s1LHojro02GXQYyh12/XDO/2z15ICBbVryZfOwLW/ZUjsTHmJSxwlS+Rw15+m6hbSt1bVwj+Un+/fcbeI1ePU8AOpYuLkGXMq3pKt11l82CPhcu0EX8JV6yeE6pvdpa7zm5rLqd3Fd4SG/dm5Q9TtE2PsUPb+2jeax6PZzxrWCHHYJpUvxX286zHrxIJ9LCBdGBHa8aRvcfqqSZNo9ODlJ75h6MeZyz4cubDoHW6zq4BQB5lkwcAojGy5wosAmDF/etVPV8CpMmlZPndz9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=poDPBvRLiQNRuNWnSPRzxJ8tiCVXsY119TjOF+fh57c=;
- b=LGjriPpQJ3pd8lKZ+KgbZnQx14cV83xjpO/vKixdS9xJHKIZXajy2r7Bql+C71Fp8ARPrA549/2ZS/lJdJ4ZLa8OHQ6bItM1axCQS4VoB72y+9TYHuLqN2BEgn/xW2PmCybFJphsJLFAACcvfM3XK/4E7xPevVIefIX4JEU7f3YftOXYpSfggry5xXfSHFrakav0n1KbPG1a4WneOy7lSsN36iOrIMrbUgGRNi6So4plxsU2K6QxfBjsB6Mw23V9PIpwH49whRU6N3TV8gITvappKoZdqdJn+0qf+0+VHicYGPq5neEYpF3C59NrVTBLXievgYJTekbLGVi6zbFXWg==
+ bh=pN/XgaiupB7Kw79gNPWWcELxCNnJTYYGuhUUTn4F6sM=;
+ b=k9HOgbp9l45cVEyKKWl+NxOlnkbBje/kZk+gbMQf1rHYK1WxkGgXNeyFYpHBadRt3cCeDyhaSkzwTuZDlGeeTuxzNuQ9oeREfhdu7FjoMizvWeFsFwYHJ6xAp2TrLrgf6XXqK3YFe2uxfr/RouAvm7I9HBT8ORwjavkzOLQaECRFoxn92dze6lZcYbMLDRB9WFvGp42MprPt81ctOxvt53/+kKdBEb8caVsSlp4DfZbQK5fRE9SCOVyLg5yqpUemv9gi6LTqkNBRfnhTjRP7A51xL+34JkRKdE57HXOwCyxFZZIdOSHw3DyABK3mN8IaEgcvqORJdAmgHQ+gLg9nxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA1PR11MB6418.namprd11.prod.outlook.com (2603:10b6:208:3aa::18)
- by SA3PR11MB7609.namprd11.prod.outlook.com (2603:10b6:806:319::14) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pN/XgaiupB7Kw79gNPWWcELxCNnJTYYGuhUUTn4F6sM=;
+ b=pIWv5xZa+4k+mF8bp2d6sD0vPbHLUrK012utIT88DfPL6g0dkBF4wqdolevKB6XMQupf4WfCpq1FM5SEv6HA2ITTG/MJhS8Azg7EEwsmVwn7aBPRoEIaNR+XHhs0t9bkQ6mSLYT3hqn/pxZh+tPb3JttFljxIrQI/Qhf3cdQIGw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
+ PH0PR12MB7813.namprd12.prod.outlook.com (2603:10b6:510:286::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Mon, 2 Jun
- 2025 18:00:02 +0000
-Received: from IA1PR11MB6418.namprd11.prod.outlook.com
- ([fe80::68b8:5391:865e:a83]) by IA1PR11MB6418.namprd11.prod.outlook.com
- ([fe80::68b8:5391:865e:a83%4]) with mapi id 15.20.8769.037; Mon, 2 Jun 2025
- 18:00:02 +0000
-From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "intel-xe@lists.freedesktop.org"
-	<intel-xe@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, "De
- Marchi, Lucas" <lucas.demarchi@intel.com>, "Vivi, Rodrigo"
-	<rodrigo.vivi@intel.com>
-Subject: RE: [PATCH 08/10] platform/x86/intel/pmt: support BMG crashlog
-Thread-Topic: [PATCH 08/10] platform/x86/intel/pmt: support BMG crashlog
-Thread-Index: AQHb0aJIxK2vppkXAU+lGGw4eAYXIbPsPP2AgAPv1IA=
-Date: Mon, 2 Jun 2025 18:00:02 +0000
-Message-ID: <IA1PR11MB6418DDDA11436C3F92A8C012C162A@IA1PR11MB6418.namprd11.prod.outlook.com>
-References: <20250530203356.190234-1-michael.j.ruhl@intel.com>
- <20250530203356.190234-8-michael.j.ruhl@intel.com>
- <6c38fa36-cc8e-3ed1-380e-074c27b2581d@linux.intel.com>
-In-Reply-To: <6c38fa36-cc8e-3ed1-380e-074c27b2581d@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR11MB6418:EE_|SA3PR11MB7609:EE_
-x-ms-office365-filtering-correlation-id: 4feae263-60f7-45d8-1548-08dda1ff4c6b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?tE9WOHSfQF0+eEzoegRTTjht9hz/nlPKmSZDlt2GTeYY40C0b7Jm47rnqE?=
- =?iso-8859-1?Q?A8HJV2lEdY4Fhz0q3pWuMPGLG8WQO4SPk4+TelS3S4Q/rHAf4rRk0e8qhh?=
- =?iso-8859-1?Q?yZg+7mrfrYgcA4wIdadRtGvIc24GGUYsU9o6iJpvbhnCp11wQkyEHzsBF+?=
- =?iso-8859-1?Q?46O3wRFWCKRjK7BAhdosK3zROug2xA4YsmxHs9OZIgwMO1mijdtanQMm3I?=
- =?iso-8859-1?Q?pmhJAKMIgf+pnt1P5MWSbmm/s5pr7o5hMaeL6cwYb6cWPu0G7+S8IKpue0?=
- =?iso-8859-1?Q?aLkYZ6kYVuUtnqij6LE5FJgeXg/wN2Nl86yhskNo9r5qGkwvM4nMSRR9K1?=
- =?iso-8859-1?Q?oAg0dGSx4HF6hDQmSbGky/iyqajDJXGZuSnvCAcebULu9XEYXDF+uWaPA6?=
- =?iso-8859-1?Q?gsl1YVHHC/JJxhu2j9I4SWf8Wk8dKW6ZPXZHOqDv/c8bqLbvzl9CuvPR2q?=
- =?iso-8859-1?Q?RUfYzc/LmKTE6oH2dNGxmYvnn863TakktIS+dRTcztXyR6zTLpAM/im71w?=
- =?iso-8859-1?Q?2muIuaPTyPwqWX1vYdrKdAz2WXLKudXVsqieL6WvS+1jsJ3X8eGd56U8pl?=
- =?iso-8859-1?Q?V4WW7GhU/T5bKas/CG2S7yAS6FyNpcfjLEWTA7tWfXI6jaXHXnUH2evWMo?=
- =?iso-8859-1?Q?tlJx62G0ATmbSTzA2IZRdVGGwxq6qU529iUvXtp6Pi45M1tsPpMerFm62O?=
- =?iso-8859-1?Q?fGAjSvSClkzCS0mTnTM22wsG1xzXtFhRn0kMycy+7CCrQrMv+yxwdbAtDA?=
- =?iso-8859-1?Q?VXmWpLAdbZ9nJmxeRrnkkX8i/LWuVZRe7SZAOy50xf4rcsHcUVWgzlpppe?=
- =?iso-8859-1?Q?vk1bwl8qsRTx9mVRk29SxHP4c6788e/4M0SazAgfvV4rx+6gUuYvwteC8w?=
- =?iso-8859-1?Q?U0ye1xa/ge0FOwBIUwAa82UJPUnEo1Dzv26niRT98XPhHhZQnXTiB8yfJc?=
- =?iso-8859-1?Q?O+opgaVtcbSPithgelEykXVfjeNYzgeMqdTymqIzbLo6K+OPa7qJ7wNsam?=
- =?iso-8859-1?Q?14O2tdeNdFPUQfLddoF5CD5KhJ1WWwpMj+0ukqaPuliGgkG32jpR7keFRE?=
- =?iso-8859-1?Q?deCzH1rCjfBNUHyXT6HQq+x44HCEAP3UinIJoVnvmoHMrMxC4Y5V0ck7ER?=
- =?iso-8859-1?Q?+fbLnxjHFtey2vPLEfPiCZX+cN/O+vfaFkMC+ZfiDMHg8oKrKaHqV7uqmC?=
- =?iso-8859-1?Q?Llt23coIYdDvkePERcX/5hxvnbdKIVvG2/nHu+XTQWEglagmZtyobRQjCn?=
- =?iso-8859-1?Q?CEUwFcW9vr6jumlYdf9vfUNs9tlWM6AQTEsn1rEuLXV14KLXQspHBUBQCF?=
- =?iso-8859-1?Q?QMf/48hmOZ1/jkZGsG2lZj+Q9YlyT278MWxUxlzaU6DtkYOHw8T+aH+Z0C?=
- =?iso-8859-1?Q?uk4lwZRbabvoDwnoZuRaXVYnThNLfw5bPWIdqhqbkB/IcIpCSnKEdoCniD?=
- =?iso-8859-1?Q?ML5n2LRojFcgySPL22dH5ElCRGVd2NN+putJKNyMkUmkAL2XLIFOWhyaP0?=
- =?iso-8859-1?Q?cx6OUi0MFrimLDsmqll+Zdl5GX7JSaMfPS4itsRHsnc4CsM8nrmBcLWMdu?=
- =?iso-8859-1?Q?1IIu2dU=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?82aLB4B+vuwRDMwkxAXAAwKM1qbsktQ5TAxSfonO8AqfiJVP3yLz9GPmib?=
- =?iso-8859-1?Q?JYPo2X3BM11hy37fKYi/YgFD7nCE6EHCv37vdJQsPYWLSpXUY3fgdMehUD?=
- =?iso-8859-1?Q?e6TYOP8OK7VyVQTQiTwqU/o2IG4H9zXnTBM+Wcsm7pClg1tx3705eZCN+H?=
- =?iso-8859-1?Q?S7uoL2Y/7jGGHom8A6xBh1oG3uBiFwJKZ6mte3J6sdTO3MVMOaYpDnjIb0?=
- =?iso-8859-1?Q?7kO5BRZw9FJcUDvUh4KkhSz7tIQMwNM0dy+jNWNxXK2yJvNssHXgMkuDvC?=
- =?iso-8859-1?Q?CSvlr6joi9qe2Zq0UqyCSTpaWiRKchOblUkJAvlTO7C0qzSzdfpHPSBL/X?=
- =?iso-8859-1?Q?ser1VaUTw5ZNecbYkArYjSNXOXYJNaGxYKs6jSW1ULuG604Jj1LzJhKzeR?=
- =?iso-8859-1?Q?Usgle3tcFCj5pWesLerc6JAcmxTWmcx/rnmdzN1RXHsXuA0ZGvF0wD0wu3?=
- =?iso-8859-1?Q?QotUsfpUpJQRpGnUtvK9E6ecmyiN7hwmbIVjCdp4kPk8g7OHfOvYKQJt/K?=
- =?iso-8859-1?Q?UG8iRgU7KdrMH/DXSo7eNQ/gmxM02zkEA47lBBJfdT9p+LnDsv3Mb/Bxv1?=
- =?iso-8859-1?Q?+fKxAXAh8dzciuW2oJRfZV5jywKLRYxwlVwuBk3DVfaQ2FKYY13BYOFlTW?=
- =?iso-8859-1?Q?no3TgWoT+VsX2Q0s7zAsYffKk2Wse/+Y4hkSdqwEXSLWI3bp0kZzj/zOmz?=
- =?iso-8859-1?Q?+48FfdZ6OKNPpd8I3qoAhBCK5WX6ArURu4MY90mvDKXm9tEeEBmXDNXSeo?=
- =?iso-8859-1?Q?zQJe/x3bsgCNA4mkKW73/NJ9rM/b1/9UYRAp8vZUZbDHGmGfE6dIAYmGY8?=
- =?iso-8859-1?Q?14HOkcsxfajkSlIAev09X6O7jyWK9jNc1YTFMhihW4RIOVBOUvfyEfCZio?=
- =?iso-8859-1?Q?7rTkihs1gdCv8+c/u3t/TXZDrm7eNdgZRZiyaRl9JdqwxGsdAEiT+C/ezW?=
- =?iso-8859-1?Q?idWZu1fcnxTxNreMdifX8HX2I3uqwFKlza4/pTAQQmQPjo2/V9kjvUrH6y?=
- =?iso-8859-1?Q?Uiwa8CjUOpVonePXIwAiitU5BhH2l8EWllyFpYV4bjEb7v7QmVOfULRITn?=
- =?iso-8859-1?Q?9N7uK9kRwzdei2buKMUmSdHI8zeB9ktSsGOk3Z0r/lNWcrnqMl8X0aIsja?=
- =?iso-8859-1?Q?i1FgrMQYIhsSYkr3SEp3OxG4R4IK0atGSPWP/+BSgOPRfyNKb1i72a+025?=
- =?iso-8859-1?Q?xKTfmB0qheLEt1Faiyqb6Ll0GsnMSnpRGYYcknQgIICjq/xR6VfgF33Vo4?=
- =?iso-8859-1?Q?AUIgdqn06w/Tq4HNq3voII8Q4x8gqC6MqeXhsm24kx2zn8ONGdS7Bzz8nc?=
- =?iso-8859-1?Q?4ZTjtYjv4RFpD7RxOdgqKLrnNX0ZoNPBeG7QmNyF0Avd4CC3xBQYvgQrRq?=
- =?iso-8859-1?Q?TmTQTNt5wB+5UtVudaGVGT1oIQNdBlINzOGJcwArJDqn2cmo+ylLO2EVPU?=
- =?iso-8859-1?Q?Y7v/2t2CaY0netD7WbZZRmBWRAOMzycu3VZ8+mtfgOYf0S1Wtja7TfAaW3?=
- =?iso-8859-1?Q?Sb9E1/yZCJARPesfWjUcqI70DxtX7nvRb9O+H6nNVEr+H4yfscdbyHpUxg?=
- =?iso-8859-1?Q?dqNMChRDkr5Z1zVMJ3r8TuK0OdCrnyiWPGB1nW3dAGzk1uoY+Wag6FVegh?=
- =?iso-8859-1?Q?JDKAcpLxvHSJ/Rn7YMCvKhA5fNUinvhvaS?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Tue, 3 Jun
+ 2025 03:15:39 +0000
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8722.031; Tue, 3 Jun 2025
+ 03:15:39 +0000
+Message-ID: <eb2cdc21-0744-4ac7-96a7-bc84625a5644@amd.com>
+Date: Mon, 2 Jun 2025 23:15:29 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] i2c: amd-isp: Initialize unique adpater name
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>,
+ sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+ king.li@amd.com, dantony@amd.com
+References: <20250530200234.1539571-1-pratap.nirujogi@amd.com>
+ <20250530200234.1539571-3-pratap.nirujogi@amd.com>
+ <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <8670fa5f-5bf6-7dfe-1ec7-5cd1ec4472aa@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CPXP152CA0006.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103::18)
+ To DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|PH0PR12MB7813:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bb5d80e-20a8-4245-49bc-08dda24cea4f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzRKSzhEbFIrVTJRbVY4djJTelNqUWsvYWxINitPc2N0RXlPSXB3cTlmVFBY?=
+ =?utf-8?B?elJhSjNUSEUvZkkxc3A4OGNsRmNRUDVSZDJmRkx6YmdDdHlXbjc0cEVaaXlD?=
+ =?utf-8?B?UVQyRnBoekxqRHJFdWRaN2dTekdUakczc0R3SW8wR0tLZ2l4dnlRN3JxdGVY?=
+ =?utf-8?B?MnNFWFN2cUtPeEVwNGFKcE16ckszMDVzUUFBRDE1YllTT29lWTRNb09sc1B4?=
+ =?utf-8?B?Nk1mY3IycW05N0ZReVJGeS9WS1pMM2tJVHJhbjVGVHhDc25kSnE2REF6amR1?=
+ =?utf-8?B?NmZSM0phVlpsQy9NQnVuWERCeXhwek9nU2hlOUJ6RnpIczN3VXlZdTNSbHhk?=
+ =?utf-8?B?SjIrTkR0dytjL21uOFl2TEhLQlVLUHVZdW0yNWhucGJDVk94V05uRUt0eHR3?=
+ =?utf-8?B?NE51ZzgvSmI5S3Z6dnhMdjA3Wkx4SlhDNzNwS3lzVXJZSjBkRzc3SE9Fc2Zn?=
+ =?utf-8?B?M2JubG13N0p0MlI3OEFiL0FPWmwrQy9udTNDWi9pMUFjMndzTXVLa1hjVTFU?=
+ =?utf-8?B?OWhSTFVTZHRsdFBuSitvQWxIRzBIbEdyejNHL0x5VmRwZEtHckdiMklud2ZI?=
+ =?utf-8?B?d21rdngvVXhyT1dwZTMyaGYzRGtJaEJBNGxoMGx0V0lCM1VVWGluSXFFTmZD?=
+ =?utf-8?B?ZklGWjBxbWxRUW9vREd6cmE4bkFsSHVBa2F2ZEZRSTlkYVBMS3FzN0N2QzRk?=
+ =?utf-8?B?QWpDczVuZ0JnZFBIa0Z1d0ErU04rNDJaSGgvRCsxMHNJTG1WRG93YjR2d0tX?=
+ =?utf-8?B?YnYvWkEzZmZuU1E4cWMrY0piY1I1OHdqQXAzZWhTS3hldCttWG1tU0hZZU1i?=
+ =?utf-8?B?RklLdGNzemJDSmRJbldpeG11dml2TWFxSzJ6anVGWVVvckNSdENFK3NSQUxS?=
+ =?utf-8?B?eUQ3cWVZcTZqSmxBTHprSWNPYlVoMzlVaWJGcnM1VHllUzNucEZ6bmVFbENI?=
+ =?utf-8?B?YUxBamtxYzFEQmcxVGl6MVExREJjS2c5TUFPeWlpZE9tNUphMUtENDlENE13?=
+ =?utf-8?B?UXVBQWdNNmVBRGJ2UE5LS3ZoOFczSGxVOVV5N0hPRWw0bTNJamJIeXNBSmE4?=
+ =?utf-8?B?S0gwWFNGZ21DVXMwbXU3eGN0eGhhYlZpeDV5V3orNkdEbXRya0lJbFRkMlFR?=
+ =?utf-8?B?Um1UekZUdUp3S3gwbGJkYnk1OExzWFRXK2lGOWdmcDFGbHBhS3BTS1hrNGo3?=
+ =?utf-8?B?ZFlib1FYZWNGckhXSUtMQWM4WGxjNVUwWmlMc081R3Q0ejNxSGRBWnl1Rm0x?=
+ =?utf-8?B?YkRla0VjOVdadWRJRnVRTkd4aUkxc2x5V3YwL0ZzZjYyOHp6Z1BjWFB6NEF5?=
+ =?utf-8?B?ZDRPcUVWdGkwOVdLaW1zeUhKdSt0bU9McWdlaWZVeERsS2hTUmt6ZjdHaDVL?=
+ =?utf-8?B?NjZ6UkxNekxaNG9aUnorVlg2WHVwOUQ1TTMyaHFMZHhGcEdiczRjMWUxSk10?=
+ =?utf-8?B?S3NzNFUvMVo5ZmRQOXRjeHRoNEpJUmlsWDF3L3NqZ2hKWGtRaVp1QjhTaFlN?=
+ =?utf-8?B?WG9YdTJWeUxQbFJQNmVTbzRiK0JMYngyNThoei9UMEFwTkVPRm5hWDRkMkVZ?=
+ =?utf-8?B?TGp1WlpPeW95YWxBY1gwVmZWL09yVGJMVC9qL3pZc245eDZ4NXNGQlQ2QTZP?=
+ =?utf-8?B?emEvQ3pldXVYM0pMVGtMdGhKQjJTQ0ozbEZNaVVCR3AyU1cxTWl3WXRUTmhE?=
+ =?utf-8?B?UVlaV25JemNsbGpROWVLQ2NoYWE0bldIV1Jod0dOdGxXbnZGZDZ5TDYyU25U?=
+ =?utf-8?B?L0cyM2xmek93Y2xZUWFwNG5xZzBCY29wTHpCU1dNdUQ5MmhCSnFtNXFmc0Rw?=
+ =?utf-8?B?Ly9KenRFbUMxc2F2YWhqaVFTVVpGVjg3Yktrc20rMk9meS8xRlRFbFZ3VUk4?=
+ =?utf-8?B?QjNxMjZxbzhDWlljZldneGR0T21yUnVmWEJyWDdJWUUrSDNDK2R2N054cHI0?=
+ =?utf-8?Q?Ae6gV2hfsMw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U1FGQTRaQmtpMll6di9LMVhTQ0o5enkxcTlIdjZZZHQvUEpTaHREMGhUWHAz?=
+ =?utf-8?B?bHYyU29IQUoxMFdUSkJLVUE3VWsxeXd0M1lTTlVYaFlCRXlsdks5RlNnWk44?=
+ =?utf-8?B?bzZVOVlWMEtFOFZCQWI4VndQcC9mTi85Y21YWDZaWmo1T1lVZjVtaS83ZHdx?=
+ =?utf-8?B?WHl2d2FwQXlxbUh3amExTWR6emp1TXlGRHpBMDV2WGJIbFpGWkRQS1VIK2ZC?=
+ =?utf-8?B?SEY3aHFCQXU0dTNaV09kVU9UOXplS3FCZ0FYUkhVaGtHWnZyOWplUWZQUVgz?=
+ =?utf-8?B?YmdLK0VCMjk0cWZOZXZoYTdZSmNacFFud3gxZm1hU1VaNE5vL0VKdGo0VHdu?=
+ =?utf-8?B?TDNpOG9GM2ozNjRMZmtzUTlraUhsUXBKYzRMSVR6TXRXdC9BQStkb3NnTzlx?=
+ =?utf-8?B?VVhvUnZwWkthY2pYWWVLRWZkd3F2aklvS1pSMkdrc296SG1yUkU3Q3UzQ0U0?=
+ =?utf-8?B?ajZYZSsxRk1UUHFKSWVwTGVMOWpib21Tc0Y1OTRQVUpEdHYzOXlORUppTGtD?=
+ =?utf-8?B?WFpGeEFneFJBRGxsd255ZTNrUTNwR1JSa3NYelptaE81NktFeUdXblc3cGFZ?=
+ =?utf-8?B?T1FGcVlEZmkzUE80MU1pekFzWmlnVVNXY05ZMUQvK2s0eWdHTDdmTllYMnI1?=
+ =?utf-8?B?Z0Y1eVZsTE5DRy9JSDdHbFpxZ2g0ZFBOT2lmRUtwdTFOTkFOTnFQYWw2MW9T?=
+ =?utf-8?B?M205QzNZaHpZY3pqZHFnaktacHdpTnNud2pPQ2t5M0hKVEZGQTV2RGFhL2ln?=
+ =?utf-8?B?UzNSRURHNmxUMlJwWWxKTDdyT3hpbXdOM1NPbm1XZWpaQVB1ODhEbzZUV3RS?=
+ =?utf-8?B?Z0hFV05YcFVnbEZKRkVOdWhiWmhZM01rYWh6c0duUG5hNk1CMWF4VmxxcGIy?=
+ =?utf-8?B?bHlNM0hSc3ZuOGtBa0NMakczSlFBVkRDSzJKRjUwcTM4TFQvUlJ2YTBOOUow?=
+ =?utf-8?B?RTdHN044MC9hejl6MUpJdjhGSVU3S3ZYVEZWdUpMckdEdWgyNHVHckNKT3JN?=
+ =?utf-8?B?MVFLakRzb3U3NUp1L0pPTS9IbHdvZWV2L3NoMlZ5VEdOdU5DaVUybXhhc0lu?=
+ =?utf-8?B?ckJONEVsekU3UjlIbnl0Z0hqRmphTDFBMktPOGh6alYxNUZ1RDlLc2pnZlBC?=
+ =?utf-8?B?czEydXFyWnZ0ZGdBWTFBbldqSW1hL3VWK25nbjNtUDVwOGUxVG1yQWNPaCti?=
+ =?utf-8?B?a0RSdTZ2T0FXeFdTV25FSEZqUENJME1iNHZIVlNxTVROazh5cjVObC9KQjdY?=
+ =?utf-8?B?L0JCR28vUlBNdjlGUmlvaHRJR1lKNnJSbmI5a3hnazVEVnBFY0RnUWIyeDNS?=
+ =?utf-8?B?MEhMWXNSRllKNHB1OGk4Sm00N1BpRW03MHdZYlgvYS9sSDBvc1pDcjEwRUR1?=
+ =?utf-8?B?a3RLZ2VmaUlIYmJ2clZRYnU3YzFsa1E3N2hmT21kditJZDBlaGZMYzQ0VVpT?=
+ =?utf-8?B?bTB6cDV0d0t4NEdHUUp4eGNxQ0x0a2dSK0NQbmw4V3FpYmIzbG5YR1g5UytR?=
+ =?utf-8?B?MmFTd3ZxZC9EZlM3V3gwRGNKWU5ndTlZYVJ3ZkF1RG9KS2lvMkl2TURqU3dQ?=
+ =?utf-8?B?dU1HZ1hVVTlJSXIrUXFpRlpXcGlxQUlFdXZlcGxrdGViQWQvbUNSQ3ZkRGpT?=
+ =?utf-8?B?QW1laEh4MUYwa09GenBkWWwxUEpqOFk1Rk83dFcxVjV5OUw2WWZmMnBCS09z?=
+ =?utf-8?B?VnA2bW10T1pyOTl6VFYxSTlxN3NaS3pFVWRVVnc0NTNwRGhWUFpydElDc2xB?=
+ =?utf-8?B?dTNnVjdBck9idUovZkEwendwRWIzdnNBcFAxTGd3R0s4NGcvMng2bHRhaWdV?=
+ =?utf-8?B?Q0NNQlZVV3Z3dUljRGsvSzYvRC9MR3Y0TDVuRmNyZzRHMGNrbXdLVzFiMExN?=
+ =?utf-8?B?OWU5NDcrV1d3SkJxVnlyNG8wR2hnazhlMG82UHJwU0llc3V1clArK1Q0WnhN?=
+ =?utf-8?B?Mk9FVU01R1BVWDJEakVCbFZMQVVTQytIU2FiaGx4M1NPMEUvYTN3TU8vdjBn?=
+ =?utf-8?B?S3BHUTJ2SzNvS0ZQZ1VZVUtJajFDcWdLdkFWM2l5OXNFK2licDB2V0tzQkw4?=
+ =?utf-8?B?eEtlTmNseHlUUnRXazEzSjVnWDdEVzBOOVA2ZHBpd013bTlzSGN3a1VuRFRp?=
+ =?utf-8?Q?k2zzGj49NUkjgLlEaU21L2VgW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bb5d80e-20a8-4245-49bc-08dda24cea4f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6418.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4feae263-60f7-45d8-1548-08dda1ff4c6b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2025 18:00:02.6941
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 03:15:39.3175
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FR0p2udJmkvmMDdDkmpqmC9hddMoQjuGmBItixBfa18HSubGl3L908pbrTGOnNSDPYuKt718NzogQ1B4LxqfwZ6LfTvGgoYT1Wq0YNG/F5s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7609
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8fYNS82t9xQb1o/C2Y+d0C3nIZF97Xd+Jo8AEwjkmTEWNITTFZmlFeWFBtDkiYZqAR1X4hRrnzz2YnHvy9c1Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7813
 
->-----Original Message-----
->From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->Sent: Saturday, May 31, 2025 1:52 AM
->To: Ruhl, Michael J <michael.j.ruhl@intel.com>
->Cc: platform-driver-x86@vger.kernel.org; intel-xe@lists.freedesktop.org; H=
-ans
->de Goede <hdegoede@redhat.com>; De Marchi, Lucas
-><lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>
->Subject: Re: [PATCH 08/10] platform/x86/intel/pmt: support BMG crashlog
->
->On Fri, 30 May 2025, Michael J. Ruhl wrote:
->
->> The Battlemage GPU has the type 1 version 2 crashlog feature.
+Hi Ilpo,
+
+Thanks for the review feedback and guidance. Sure, I will take care of 
+addressing the review comments and will ensure to include the key 
+stakeholders / mailing lists recommened by scripts/get_maintainer.pl 
+while submitting the next patch.
+
+Thanks,
+Pratap
+
+On 5/31/2025 1:06 AM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> Hi Pratap,
+> 
+> Please send the next version(s) to all relevant people as indicated by
+> scripts/get_maintainer.pl.
+> 
+> On Fri, 30 May 2025, Pratap Nirujogi wrote:
+> 
+>> Initialize unique name for amdisp i2c adapter, which is used
+>> in the platform driver to detect the matching adapter for
+>> i2c_client creation.
 >>
->> Update the crashlog driver to support this crashlog version.
->>
->> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@infradead.org
+>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
 >> ---
->>  drivers/platform/x86/intel/pmt/crashlog.c | 282 ++++++++++++++++++++-
->-
->>  1 file changed, 263 insertions(+), 19 deletions(-)
+>>   drivers/i2c/busses/i2c-designware-amdisp.c | 2 ++
+>>   1 file changed, 2 insertions(+)
 >>
->> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c
->b/drivers/platform/x86/intel/pmt/crashlog.c
->> index e6eea8809a56..7291c93d71df 100644
->> --- a/drivers/platform/x86/intel/pmt/crashlog.c
->> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
->> @@ -51,20 +51,53 @@
->>  #define TYPE1_VER0_COMPLETE		BIT(31)
->>  #define TYPE1_VER0_TRIGGER_MASK		GENMASK(31, 28)
+>> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/busses/i2c-designware-amdisp.c
+>> index ad6f08338124..e8cb3785c740 100644
+>> --- a/drivers/i2c/busses/i2c-designware-amdisp.c
+>> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
+>> @@ -62,6 +62,8 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
 >>
->> +/*
->> + * Type 1 Version 2
->> + * status and control are two different registers
->> + */
->> +#define TYPE1_VER2_STATUS_OFFSET	0x00
->> +#define TYPE1_VER2_CONTROL_OFFSET	0x14
->> +
->> +/* status register */
->> +#define TYPE1_VER2_CLEAR_SUPPORT	BIT(20)
->> +#define TYPE1_VER2_REARMED		BIT(25)
->> +#define TYPE1_VER2_ERROR		BIT(26)
->> +#define TYPE1_VER2_CONSUMED		BIT(27)
->> +#define TYPE1_VER2_DISABLED		BIT(28)
->> +#define TYPE1_VER2_CLEARED		BIT(29)
->> +#define TYPE1_VER2_IN_PROGRESS		BIT(30)
->> +#define TYPE1_VER2_COMPLETE		BIT(31)
->> +
->> +/* control register */
->> +#define TYPE1_VER2_CONSUME		BIT(25)
->> +#define TYPE1_VER2_REARM		BIT(28)
->> +#define TYPE1_VER2_EXECUTE		BIT(29)
->> +#define TYPE1_VER2_CLEAR		BIT(30)
->> +#define TYPE1_VER2_DISABLE		BIT(31)
->> +#define TYPE1_VER2_TRIGGER_MASK
->	(TYPE1_VER2_CONSUME | TYPE1_VER2_EXECUTE | \
->> +					 TYPE1_VER2_CLEAR |
->TYPE1_VER2_DISABLE)
->> +
->>  /* After offset, order alphabetically, not bit ordered */
->>  struct crashlog_status {
->>  	u32 offset;
->> -	u32 clear;
->> +	u32 clear_supported;
->> +	u32 cleared;
->>  	u32 complete;
->> -	u32 disable;
->> +	u32 consumed;
->> +	u32 disabled;
->> +	u32 error;
->> +	u32 in_progress;
->> +	u32 rearmed;
->>  };
->>
->>  struct crashlog_control {
->>  	u32 offset;
->>  	u32 trigger_mask;
->>  	u32 clear;
->> +	u32 consume;
->>  	u32 disable;
->>  	u32 manual;
->> +	u32 rearm;
->>  };
->>
->>  struct crashlog_info {
->> @@ -73,18 +106,38 @@ struct crashlog_info {
->>  };
->>
->>  const struct crashlog_info crashlog_type1_ver0 =3D {
->> -	.status.offset =3D CONTROL_OFFSET,
->> -	.status.clear =3D TYPE1_VER0_CLEAR,
->> +	.status.offset =3D TYPE1_VER0_STATUS_OFFSET,
->> +	.status.cleared =3D TYPE1_VER0_CLEAR,
->>  	.status.complete =3D TYPE1_VER0_COMPLETE,
->> -	.status.disable =3D TYPE1_VER0_DISABLE,
->> +	.status.disabled =3D TYPE1_VER0_DISABLE,
->> +
->>
->> -	.control.offset =3D CONTROL_OFFSET,
->> +	.control.offset =3D TYPE1_VER0_CONTROL_OFFSET,
->>  	.control.trigger_mask =3D TYPE1_VER0_TRIGGER_MASK,
->>  	.control.clear =3D TYPE1_VER0_CLEAR,
->>  	.control.disable =3D TYPE1_VER0_DISABLE,
->>  	.control.manual =3D TYPE1_VER0_EXECUTE,
->>  };
->>
->> +const struct crashlog_info crashlog_type1_ver2 =3D {
->> +	.status.offset =3D TYPE1_VER2_STATUS_OFFSET,
->> +	.status.clear_supported =3D TYPE1_VER2_CLEAR_SUPPORT,
->> +	.status.disabled =3D TYPE1_VER2_DISABLED,
->> +	.status.cleared =3D TYPE1_VER2_CLEARED,
->> +	.status.complete =3D TYPE1_VER2_COMPLETE,
->> +	.status.rearmed =3D TYPE1_VER2_REARMED,
->> +	.status.error =3D TYPE1_VER2_ERROR,
->> +	.status.in_progress =3D TYPE1_VER2_IN_PROGRESS,
->> +
->> +	.control.offset =3D TYPE1_VER2_CONTROL_OFFSET,
->> +	.control.trigger_mask =3D TYPE1_VER2_TRIGGER_MASK,
->> +	.control.clear =3D TYPE1_VER2_CLEAR,
->> +	.control.consume =3D TYPE1_VER2_CONSUME,
->> +	.control.disable =3D TYPE1_VER2_DISABLE,
->> +	.control.manual =3D TYPE1_VER2_EXECUTE,
->> +	.control.rearm =3D TYPE1_VER2_REARM,
->> +};
->> +
->>  struct crashlog_entry {
->>  	/* entry must be first member of struct */
->>  	struct intel_pmt_entry		entry;
->> @@ -99,22 +152,27 @@ struct pmt_crashlog_priv {
->>
->>  /*
->>   * This is the generic access to a PMT struct. So the use of
->> - * struct crashlog_entry
->> - * doesn't "make sense" here.
->> + *   struct crashlog_entry
->> + * doesn't "make sense" here, i.e. use:
->> + *   struct intel_pmt_entry
->>   */
->> -static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
->> +static bool pmt_crashlog_supported(struct intel_pmt_entry *entry, u32
->*crash_type, u32 *version)
->>  {
->>  	u32 discovery_header =3D readl(entry->disc_table + CONTROL_OFFSET);
->> -	u32 crash_type, version;
->>
->> -	crash_type =3D GET_TYPE(discovery_header);
->> -	version =3D GET_VERSION(discovery_header);
->> +	*crash_type =3D GET_TYPE(discovery_header);
->> +	*version =3D GET_VERSION(discovery_header);
->>
->>  	/*
->> -	 * Currently we only recognize OOBMSM version 0 devices.
->> -	 * We can ignore all other crashlog devices in the system.
->> +	 * Currently we only recognize OOBMSM (type 1) and version 0 or 2
->> +	 * devices.
->> +	 *
->> +	 * Ignore all other crashlog devices in the system.
->>  	 */
->> -	return crash_type =3D=3D CRASH_TYPE_OOBMSM && version =3D=3D 0;
->> +	if (*crash_type =3D=3D CRASH_TYPE_OOBMSM && (*version =3D=3D 0 ||
->*version =3D=3D 2))
->> +		return true;
->> +
->> +	return false;
->>  }
->>
->>  /*
->> @@ -135,7 +193,7 @@ static bool pmt_crashlog_disabled(struct
->intel_pmt_entry *entry,
->>  	u32 reg =3D readl(entry->disc_table + status->offset);
->>
->>  	/* return current value of the crashlog disabled flag */
->> -	return !!(reg & status->disable);
->> +	return !!(reg & status->disabled);
->>  }
->>
->>  static void pmt_crashlog_set_disable(struct intel_pmt_entry *entry,
->> @@ -177,9 +235,78 @@ static void pmt_crashlog_set_execute(struct
->intel_pmt_entry *entry,
->>  	writel(reg, entry->disc_table + control->offset);
->>  }
->>
->> +/* version 2 support */
->> +static bool pmt_crashlog_cleared(struct intel_pmt_entry *entry,
->> +				 const struct crashlog_status *status)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + status->offset);
->> +
->> +	/* return current value of the crashlog cleared flag */
->> +	return !!(reg & status->cleared);
->> +}
->> +
->> +static bool pmt_crashlog_consumed(struct intel_pmt_entry *entry,
->> +				  const struct crashlog_status *status)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + status->offset);
->> +
->> +	/* return current value of the crashlog consumedflag */
->> +	return !!(reg & status->cleared);
->> +}
->> +
->> +static void pmt_crashlog_set_consumed(struct intel_pmt_entry *entry,
->> +				      const struct crashlog_control *control)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + control->offset);
->> +
->> +	reg &=3D ~control->trigger_mask;
->> +	reg |=3D control->consume;
->> +
->> +	writel(reg, entry->disc_table + control->offset);
->> +}
->> +
->> +static bool pmt_crashlog_error(struct intel_pmt_entry *entry,
->> +			       const struct crashlog_status *status)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + status->offset);
->> +
->> +	/* return current value of the crashlog error flag */
->> +	return !!(reg & status->error);
->> +}
->> +
->> +static bool pmt_crashlog_rearm(struct intel_pmt_entry *entry,
->> +			       const struct crashlog_status *status)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + status->offset);
->> +
->> +	/* return current value of the crashlog reamed flag */
->> +	return !!(reg & status->rearmed);
->> +}
->> +
->> +static void pmt_crashlog_set_rearm(struct intel_pmt_entry *entry,
->> +				   const struct crashlog_control *control)
->> +{
->> +	u32 reg =3D readl(entry->disc_table + control->offset);
->> +
->> +	reg &=3D ~control->trigger_mask;
->> +	reg |=3D control->rearm;
->> +
->> +	writel(reg, entry->disc_table + control->offset);
->> +}
->> +
->>  /*
->>   * sysfs
->>   */
->> +static ssize_t
->> +clear_show(struct device *dev, struct device_attribute *attr, char *buf=
-)
->> +{
->> +	struct crashlog_entry *crashlog =3D dev_get_drvdata(dev);
->> +	int cleared =3D pmt_crashlog_cleared(&crashlog->entry, &crashlog->info=
--
->>status);
->> +
->> +	return sysfs_emit(buf, "%d\n", cleared);
->> +}
->> +static DEVICE_ATTR_RO(clear);
->> +
->>  static ssize_t
->>  enable_show(struct device *dev, struct device_attribute *attr, char *bu=
-f)
->>  {
->> @@ -189,6 +316,46 @@ enable_show(struct device *dev, struct
->device_attribute *attr, char *buf)
->>  	return sprintf(buf, "%d\n", enabled);
->>  }
->>
->> +static ssize_t
->> +consumed_show(struct device *dev, struct device_attribute *attr, char *=
-buf)
->> +{
->> +	struct crashlog_entry *crashlog =3D dev_get_drvdata(dev);
->> +	int consumed =3D pmt_crashlog_consumed(&crashlog->entry, &crashlog-
->>info->status);
->
->Why you don't match the type with the returned type?
+>>        adap = &isp_i2c_dev->adapter;
+>>        adap->owner = THIS_MODULE;
+>> +     snprintf(adap->name, sizeof(adap->name),
+>> +              "AMDISP DesignWare I2C adapter");
+> 
+> scnprintf() is preferrable over snprintf(). Even if you don't use the
+> return value here, eventually somebody will want to get rid of snprintf()
+> entirely so lets try not add new ones.
+> 
+sure, will use scnprintf() in place of snprintf() in v2.
 
-Probably a missed edit.. I will update.
-
-Thanks!
-
-M
-
->> +	return sysfs_emit(buf, "%d\n", consumed);
->> +}
->> +
->> +static ssize_t consumed_store(struct device *dev, struct device_attribu=
-te
->*attr,
->> +			      const char *buf, size_t count)
->> +{
->> +	struct crashlog_entry *crashlog;
->> +	bool consumed;
->> +	int result;
->> +
->> +	crashlog =3D dev_get_drvdata(dev);
->> +
->> +	result =3D kstrtobool(buf, &consumed);
->> +	if (result)
->> +		return result;
->> +
->> +	/* set bit only */
->> +	if (!consumed)
->> +		return -EINVAL;
->> +
->> +	guard(mutex)(&crashlog->control_mutex);
->> +
->> +	if (pmt_crashlog_disabled(&crashlog->entry, &crashlog->info->status))
->> +		return -EBUSY;
->> +
->> +	if (!pmt_crashlog_complete(&crashlog->entry, &crashlog->info-
->>status))
->> +		return -EEXIST;
->> +
->> +	pmt_crashlog_set_consumed(&crashlog->entry, &crashlog->info-
->>control);
->> +
->> +	return count;
->> +}
->> +static DEVICE_ATTR_RW(consumed);
->> +
->>  static ssize_t
->>  enable_store(struct device *dev, struct device_attribute *attr,
->>  	     const char *buf, size_t count)
->> @@ -211,6 +378,50 @@ enable_store(struct device *dev, struct
->device_attribute *attr,
->>  }
->>  static DEVICE_ATTR_RW(enable);
+>>        ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+>>        adap->dev.of_node = pdev->dev.of_node;
+>>        /* use dynamically allocated adapter id */
 >>
->> +static ssize_t
->> +error_show(struct device *dev, struct device_attribute *attr, char *buf=
-)
->> +{
->> +	struct crashlog_entry *crashlog =3D dev_get_drvdata(dev);
->> +	int error =3D pmt_crashlog_error(&crashlog->entry, &crashlog->info-
->>status);
->> +
->> +	return sysfs_emit(buf, "%d\n", error);
->> +}
->> +static DEVICE_ATTR_RO(error);
->> +
->> +static ssize_t
->> +rearm_show(struct device *dev, struct device_attribute *attr, char *buf=
-)
->> +{
->> +	struct crashlog_entry *crashlog =3D dev_get_drvdata(dev);
->> +	int rearmed =3D pmt_crashlog_rearm(&crashlog->entry, &crashlog->info-
->>status);
->> +
->> +	return sysfs_emit(buf, "%d\n", rearmed);
->> +}
->> +
->> +static ssize_t rearm_store(struct device *dev, struct device_attribute =
-*attr,
->> +			   const char *buf, size_t count)
->> +{
->> +	struct crashlog_entry *crashlog;
->> +	bool rearm;
->> +	int result;
->> +
->> +	crashlog =3D dev_get_drvdata(dev);
->> +
->> +	result =3D kstrtobool(buf, &rearm);
->> +	if (result)
->> +		return result;
->> +
->> +	/* set only */
->> +	if (!rearm)
->> +		return -EINVAL;
->> +
->> +	guard(mutex)(&crashlog->control_mutex);
->> +
->> +	pmt_crashlog_set_rearm(&crashlog->entry, &crashlog->info->control);
->> +
->> +	return count;
->> +}
->> +static DEVICE_ATTR_RW(rearm);
->> +
->>  static ssize_t
->>  trigger_show(struct device *dev, struct device_attribute *attr, char *b=
-uf)
->>  {
->> @@ -264,24 +475,57 @@ static struct attribute *pmt_crashlog_attrs[] =3D =
-{
->>  	NULL
->>  };
->>
->> +static struct attribute *pmt_crashlog_ver2_attrs[] =3D {
->> +	&dev_attr_clear.attr,
->> +	&dev_attr_consumed.attr,
->> +	&dev_attr_enable.attr,
->> +	&dev_attr_error.attr,
->> +	&dev_attr_rearm.attr,
->> +	&dev_attr_trigger.attr,
->> +	NULL
->> +};
->> +
->>  static const struct attribute_group pmt_crashlog_group =3D {
->>  	.attrs	=3D pmt_crashlog_attrs,
->>  };
->>
->> +static const struct attribute_group pmt_crashlog_ver2_group =3D {
->> +	.attrs =3D pmt_crashlog_ver2_attrs,
->> +};
->> +
->> +static const struct crashlog_info *select_crashlog_info(u32 type, u32
->version)
->> +{
->> +	if (version =3D=3D 0)
->> +		return &crashlog_type1_ver0;
->> +
->> +	return &crashlog_type1_ver2;
->> +}
->> +
->> +static const struct attribute_group *select_sysfs_grp(u32 type, u32 ver=
-sion)
->> +{
->> +	if (version =3D=3D 0)
->> +		return &pmt_crashlog_group;
->> +
->> +	return &pmt_crashlog_ver2_group;
->> +}
->> +
->>  static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
->>  				      struct device *dev)
->>  {
->>  	void __iomem *disc_table =3D entry->disc_table;
->>  	struct intel_pmt_header *header =3D &entry->header;
->>  	struct crashlog_entry *crashlog;
->> +	u32 version;
->> +	u32 type;
->>
->> -	if (!pmt_crashlog_supported(entry))
->> +	if (!pmt_crashlog_supported(entry, &type, &version))
->>  		return 1;
->>
->>  	/* initialize the crashlog struct */
->>  	crashlog =3D container_of(entry, struct crashlog_entry, entry);
->>  	mutex_init(&crashlog->control_mutex);
->> -	crashlog->info =3D &crashlog_type1_ver0;
->> +
->> +	crashlog->info =3D select_crashlog_info(type, version);
->>
->>  	header->access_type =3D GET_ACCESS(readl(disc_table));
->>  	header->guid =3D readl(disc_table + GUID_OFFSET);
->> @@ -290,7 +534,7 @@ static int pmt_crashlog_header_decode(struct
->intel_pmt_entry *entry,
->>  	/* Size is measured in DWORDS, but accessor returns bytes */
->>  	header->size =3D GET_SIZE(readl(disc_table + SIZE_OFFSET));
->>
->> -	entry->attr_grp =3D &pmt_crashlog_group;
->> +	entry->attr_grp =3D select_sysfs_grp(type, version);
->>
->>  	return 0;
->>  }
->>
->
->--
-> i.
+> 
+> --
+>   i.
+> 
 
