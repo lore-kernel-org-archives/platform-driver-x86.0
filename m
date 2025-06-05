@@ -1,96 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0791C32;
-	Thu,  5 Jun 2025 08:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE12E659
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749110636; cv=none; b=jh1ROOtnMBa4xtwtg86xuEGxAJQ1drHWz9lTXSPxUkJ/HTQFzhLy/N3OApElWbc3Xt94qFW1/nZQF358BoK+3Tm4dR0OulRoKKQUColLXZZY1TCdWWZuR/UZg38g+zWw9U6JC5lM2je7aHS0Xr7dV3oqc96uCyIRReBunDMMpus=
+	t=1749121126; cv=none; b=TozVQSmV+DWOzsYt8ACVj5omfA/VaHgicddcAYsEgaz11PBupZrOAvnInQE/FAw/+rDvtWWhOkrGXUvMOeWpN6nYZWX1jItuoP+sLnTgOX4T70dqT4S+6++9WCgrRzND5BJc9+QrfwmjzBr6JaviXeLjZrSmsCCtApitBliv3IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749110636; c=relaxed/simple;
-	bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KI47RKB6WfJmcQETtR7pxQ6y4bQdtOhZvXgD2jYb8Gc1mrbWUulkF4/lm+VUuyH7QXnMfNURijWa5uRyfu1n1eAeMc9dRRMiktK9Vgz5JELRnUGcHwUhVrGHfl0uySbyRh3d9IewNX8QJMlIocsKgZn/35IAqrCFUMsjV54xpEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BblZ+dja; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749121126; c=relaxed/simple;
+	bh=OGH0Yv9x949jBDL4jv2/c73VnwhGY61tlH71ITAG9+E=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qS7oByHRVZnb/I8r2ivxMGZFNCbnWPLF+Dmx7jdgxIT8rTyYVOHQwV/LxwF/stf9KeRWXLUkZLhImAqSY22+Cx+sY5C9FvzSPLQb1okO3LZbN8m/LxNNYUI34fHbNhfA1XRkxJjPH/AaLm3QAB8cPWlK12g8Z+GRoMmhUC52wZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fm2uWpT2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BblZ+dja"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749110635; x=1780646635;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GVU4Gvw7/QkvUOMwYa1MyK0yJkaG+dpjnoUe5fhC0Rk=;
-  b=BblZ+dja/B8dEr3owGeVj9uM2Bzt9X2twX6zLm+MUoJUyg2JaRMBG61/
-   wjOUxiHsYa8d2WOARJKlXl7vhlMR5O3SjRJO8fHxWwA6CGVL/tLcdoISt
-   Xz/kM24/aCWg4XktlyrBxRq3WCD95peFWg87HJYsOYw4qDVe9nlCGjtXT
-   cuzSwsGrxkvPNt8quFQ+jIsmivbm0vjxM8yC9znfA0U0yp4whTIeab7ad
-   YWx71OtMLxePYktT7zaWEdPtvSRtC8VQEvxIir0f897Ly9SyUWmGNCkUh
-   sfIbt2w5b6XivB3c491Z57y+eJv8vDH9R3LbbRE9vS4h0CuF++lPqQDvK
-   g==;
-X-CSE-ConnectionGUID: 7M6EV79fTye151pnJrMKIg==
-X-CSE-MsgGUID: Kpsvjn6kTFub3BvNHykpQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51310352"
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="51310352"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:54 -0700
-X-CSE-ConnectionGUID: 0ZvabdKoQbGkfvKSzEZZSg==
-X-CSE-MsgGUID: LpaLe2XjRFe4TDXFeEy9MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
-   d="scan'208";a="145389173"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 01:03:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 5 Jun 2025 11:03:46 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, ikepanhc@gmail.com, 
-    hmh@hmh.eng.br, W_Armin@gmx.de, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
-Message-ID: <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fm2uWpT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93C44C4CEE7
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749121125;
+	bh=OGH0Yv9x949jBDL4jv2/c73VnwhGY61tlH71ITAG9+E=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Fm2uWpT2tU1ReMeMnQquanLOxvpBNxhj5bEhivMEYY1mey4qdcYwoIZ9yvyhxAIRd
+	 WyaOPqWkhidohBFt6WSukXJXzuL7AFFC1XOUr5g9B/5JgAWAZCiEhPwcZu35689tMr
+	 7Cx6qDEdPoQ+dth9kL6pIGCUwySa9wd/m2v5LYh42iklvJQcOj3xmSc0SBT2OPCYeg
+	 saraIxrqCA7fRo/u7uoB5CkPVOenfKH3H1HJHLKDDDYIdy6QTnHc+fkeHHCTUQ1yrp
+	 3bQ0yAK67SbtZDKKXF3Rb4oudpHByU9W15nGf2ah3DKXxL9pDzK8sHJ5ixXZDqnk+B
+	 eI2vtpG2ulSbg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7BBFBC3279F; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
+Date: Thu, 05 Jun 2025 10:58:45 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ein4rth@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: mario.limonciello@amd.com
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-220116-215701-1BEkepVaNd@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
+References: <bug-220116-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 4 Jun 2025, Mark Pearson wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
 
-> Create lenovo subdirectory for holding Lenovo specific drivers.
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v2:
->  - Rebased to Linus's latest as requested
->  - Updated documentation reference
->  - Updated MAINTAINER file
->  - Removed X86_PLATFORM_DRIVERS_LENOVO as I was worried about
->    maintaining backwards compatibility for the distros.
->  - Removed 2nd patch in series splitting out hkeys. That will be for
->    the future
+--- Comment #20 from raoul (ein4rth@gmail.com) ---
+Created attachment 308209
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308209&action=3Dedit
+reports with and without wakeup disabled
 
-+# Lenovo x86 Platform-Specific Drivers
-+# Lenovo X86 Platform Specific Drivers
+No I didn't rmmod and I made sure to remove that i8042-keyboard-fix-linux
+script I tried before. Here's another 2 tests I've just run, one before
+disabling wakeups and one after disabling.
 
-Any possibility to be consistent in formatting that? :-)
+--=20
+You may reply to this email to add a comment.
 
-Why does the admin guide contain a history book?? It should be guide for 
-this version of kernel, not what was there in 2.6.x era ;-D. Please don't 
-add to that any more, preferrably remove the history part afterwards in a 
-separate change.
-
-Other than those mentioned above, diffing per vs post seemed clean (I 
-didn't check where the empty lines got added, Andy seemingly did already 
-:-)).
-
--- 
- i.
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.=
