@@ -1,114 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C047278773;
-	Thu,  5 Jun 2025 18:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADFE27BF80
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 18:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749146983; cv=none; b=P5+nf+Nr4qHHumYykBx3wWsX0bmOf6MuQiexazlPfpH/W+YWebfqyGYEiJWSJdQk5RNFJwDL0IJBsMYvKINQMw3T0NG6xJ9xhc5d6YJ5sWagD59LeKDT6UM58E6iilmat7cPhq4ufVOD9+AnOtir6PLxViBMdypLewY3PVchJWg=
+	t=1749149119; cv=none; b=V8tl8MW1xZkSHHXJNHkGEp6JslUxYHxhl2U55hk/iJeXdFz5yEtGjhqeeWN/EtacgpPB5/HUUXjUBeyAyr51wVPKTwLnQHyCldG31WI+VLKxjJiDyQJIBf6NgKSRrekp9ykwAFBSvP97rTJV+04y5gxgQD+orRthBClxONE5NqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749146983; c=relaxed/simple;
-	bh=dnpNnbKCVL2gci2y0adQ9yPu5V+GAIsm4hL4ztLtBlQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mom+pWrKZEC8WSarHAprcN1pTGsGi/I0ej1ITALUw63ig5C4rTegfUL8tS+Crx+2QE6MZZWUYjkJaTCelsjoa3i4eobbexM5ipdv/qD5+fzhvVZZ7ZMl+L4WzQcGJdJhFWTmuSM8/3iCnz8UhX5CyNSDv/9In8l4jRWANdaVo1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRc/y2Gn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749149119; c=relaxed/simple;
+	bh=7rwPpLw0SheicDklStm9qNsxPp3vZKCENvPajTfBhyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WRFdPENLuQiGR3ayG+SNCFsallvRB5wbYgwvCpVCUBzexBcU6LkF9JXJ36vP6pLMMPuZxCCQn51WAI6yGQ1jb+13+LB1kOuO2eoDGYt4+A1pt1zFj9J0HsFRcFN9ti0wR/pm4iHTE0VSevYip5HTacWqBxeaTiCLD8VTCYSZwjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RrS1QOMu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRc/y2Gn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0AFB8C4CEEB;
-	Thu,  5 Jun 2025 18:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749146983;
-	bh=dnpNnbKCVL2gci2y0adQ9yPu5V+GAIsm4hL4ztLtBlQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=qRc/y2GnaBrjOGWD6VQgZkB9uaepY/WPZzJ0sOJxmrv0ybhN0ROqyTn/sj0ddfuV/
-	 LycQI2O6Od0n89ZsuJWdcRXRavn4UbLc0zovSTh2QvjV5DjEBcZpiSVBOLi+WqeTc7
-	 OzSWt3MqKrNP2/MxQRqpF+gR6am+9Cb8tcRoLQ4Y8EG6nBMZhcEaVTETNTguLJ2Ilf
-	 ykPKeDV8Pkk6yehW6WY7zZg+q/i9thgbJrV5EFath8hCUrfAY65aEpuQISElCQ+XCP
-	 LATuHSUUGy2npt3RBWOpdVrP0cdIbNsdI4rTFs4gMTZcU3oEaCAQYvlO5FZaqdgTBU
-	 Jf6BsQvl9Ekng==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E1C61CE7;
-	Thu,  5 Jun 2025 18:09:42 +0000 (UTC)
-From: Jake Hillion via B4 Relay <devnull+jake.hillion.co.uk@kernel.org>
-Date: Thu, 05 Jun 2025 19:09:27 +0100
-Subject: [PATCH v2 2/2] x86/platform/amd: replace down_timeout with
- down_interruptible
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RrS1QOMu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749149117; x=1780685117;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7rwPpLw0SheicDklStm9qNsxPp3vZKCENvPajTfBhyo=;
+  b=RrS1QOMu2aEwp7A1eg9WNTmDyI7mAM6HQj1RUgP2Qm6Dnmj7ThPHxwhG
+   OgsOXc6PUop71T7+lpWiTh039TLjWSo7duw+eG2f4IXKMa5vzYoL/MFUp
+   ouu0IQCodSwhDhkCa5Kp3l6E2cXobsJ25TVEi0HQfAZEazYcaFFXV0WMC
+   sZSiuFio9FJlTocpLrXyY9uGcgQ9XzsmVcR+irV2w4qe2EtSN2jnEGenO
+   J9/ErwqAoGuYUDGYgFQpf7O/gtIT/39o65C7UF8BjxlKVwOnuYqX+Nf9i
+   4WkaS723+bKNsmgwCdIIXCu95Ncswkgwriir88kDNEsB7RMJq3sjH/93t
+   Q==;
+X-CSE-ConnectionGUID: xbXcClNrQu+VD/a8qaIdpg==
+X-CSE-MsgGUID: YTCcbYeCSh+C2zWRokYMGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="38916566"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="38916566"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 11:45:14 -0700
+X-CSE-ConnectionGUID: xC6G3ZGxScCRORcAM+xE2Q==
+X-CSE-MsgGUID: VUffQyUDQDKcqd6+yrYMeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="182782413"
+Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.222.42])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 11:45:13 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	lucas.demarchi@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com
+Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Subject: [PATCH v3 00/11] Crashlog Type1 Version2 support
+Date: Thu,  5 Jun 2025 14:44:33 -0400
+Message-ID: <20250605184444.515556-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-amd-hsmp-v2-2-a811bc3dd74a@hillion.co.uk>
-References: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
-In-Reply-To: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
-To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
- Carlos Bilbao <carlos.bilbao@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- sched-ext@meta.com, Jake Hillion <jake@hillion.co.uk>, 
- Suma Hegde <suma.hegde@amd.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749146981; l=1781;
- i=jake@hillion.co.uk; s=20250530; h=from:subject:message-id;
- bh=BYAzdfHYrA5yva9uiI+ppxClpMwD9wLzjRUsigvAH2U=;
- b=2kCxMz7JbRGpl/vAOojbeOUSTrmddSQMKB3C7jJl191JIm6tNZXphXGRbOuSo3vRYQ8ks2k2a
- /HgXDOzRthWDeVmqC9h/1xHqZ/Bd6npLihO8FO0Nh+MumO4TY9XAKpr
-X-Developer-Key: i=jake@hillion.co.uk; a=ed25519;
- pk=8cznmqtMcMEcU8QH55k8DrySboD889OBB/BEUMJh3dw=
-X-Endpoint-Received: by B4 Relay for jake@hillion.co.uk/20250530 with
- auth_id=419
-X-Original-From: Jake Hillion <jake@hillion.co.uk>
-Reply-To: jake@hillion.co.uk
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Jake Hillion <jake@hillion.co.uk>
+The Intel BMG GPU device supports the crashlog feature, which was
+exposed in an Xe driver patch (drm/xe/vsec: Support BMG devices),
+however the version of crashlog used by the BMG GPU does not have
+a supporing PMT driver.
 
-Currently hsmp_send_message uses down_timeout with a 100ms timeout to
-take the semaphore. However __hsmp_send_message, the content of the
-critical section, has a sleep in it. On systems with significantly
-delayed scheduling behaviour this may take over 100ms.
+Update the PMT crashlog driver to support the BMG crashlog feature.
 
-Convert this method to down_interruptible. Leave the error handling the
-same as the documentation currently is not specific about what error is
-returned.
+v2:
+ - fix a misconfig for the crashlog DVSEC info in the xe driver
+ - address review comments
+v3:
+ - re-order bug fix patches for stable
+ - added re-order trigger logic patch
+ - added helper patch to address repeated code patterns
+ - address review comments
 
-Previous behaviour: a caller who competes with another caller stuck in
-the critical section due to scheduler delays would receive -ETIME.
+Michael J. Ruhl (11):
+  platform/x86/intel: refactor endpoint usage
+  platform/x86/intel/pmt: crashlog binary file endpoint
+  drm/xe: Correct BMG VSEC header sizing
+  platform/x86/intel/pmt: white space cleanup
+  platform/x86/intel/pmt: use guard(mutex)
+  platform/x86/intel/pmt: re-order trigger logic
+  platform/x86/intel/pmt: correct types
+  platform/x86/intel/pmt: decouple sysfs and namespace
+  platform/x86/intel/pmt: add register access helpers
+  platform/x86/intel/pmt: use a version struct
+  platform/x86/intel/pmt: support BMG crashlog
 
-New behaviour: a caller who competes with another caller stuck in the
-critical section due to scheduler delays will complete successfully.
-
-Reviewed-by: Suma Hegde <suma.hegde@amd.com>
-Tested-by: Suma Hegde <suma.hegde@amd.com>
-Signed-off-by: Jake Hillion <jake@hillion.co.uk>
----
- drivers/platform/x86/amd/hsmp/hsmp.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index f35c639457ac425e79dead2515c0eddea0759323..6c30bb3edc1d77939b10047b771a5c574e5f2a1e 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -216,13 +216,7 @@ int hsmp_send_message(struct hsmp_message *msg)
- 		return -ENODEV;
- 	sock = &hsmp_pdev.sock[msg->sock_ind];
- 
--	/*
--	 * The time taken by smu operation to complete is between
--	 * 10us to 1ms. Sometime it may take more time.
--	 * In SMP system timeout of 100 millisecs should
--	 * be enough for the previous thread to finish the operation
--	 */
--	ret = down_timeout(&sock->hsmp_sem, msecs_to_jiffies(HSMP_MSG_TIMEOUT));
-+	ret = down_interruptible(&sock->hsmp_sem);
- 	if (ret < 0)
- 		return ret;
- 
+ drivers/gpu/drm/xe/xe_vsec.c                |  20 +-
+ drivers/platform/x86/intel/pmc/core.c       |   3 +-
+ drivers/platform/x86/intel/pmc/core.h       |   4 +-
+ drivers/platform/x86/intel/pmc/core_ssram.c |   2 +-
+ drivers/platform/x86/intel/pmt/class.c      |  57 ++-
+ drivers/platform/x86/intel/pmt/class.h      |  23 +-
+ drivers/platform/x86/intel/pmt/crashlog.c   | 477 ++++++++++++++++----
+ drivers/platform/x86/intel/pmt/telemetry.c  |  51 +--
+ drivers/platform/x86/intel/pmt/telemetry.h  |  23 +-
+ 9 files changed, 483 insertions(+), 177 deletions(-)
 
 -- 
-2.47.2
-
+2.49.0
 
