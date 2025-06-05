@@ -1,149 +1,93 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FCE1E47AD;
-	Thu,  5 Jun 2025 15:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575501DFF8
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 17:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749139035; cv=none; b=edOqtI4hX9SyRZ/lQc2O23A9ysvbgLtWo6A3tT+ASQ/UbBDUiTcbhBfFy8Z2mQEqdue56G/DzqUzARDP2MMH1eHLH5V1bpoKxcX9RgNMREXSgGnOGUoG9+E3sYAC4FYB7++1kVmDmanTB0q9+7b7827PBk4QDpXwOvJe9gcix3c=
+	t=1749144725; cv=none; b=M2T3QktwO7HO5Ufo03cr1HZrPQMQvyGSp5E35RTqUneUCNNC/t9+2ASvu1SXvg9LF9Wu2aw36vXjxbIH5DQZ8CGhraWhmFx5Db+gsr6gd/FgxCOJ9Ixy7/0dScpSusfH00uTQr74qRPYzMOJDGWCcDY+tab9i7G93w0hTQr3VWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749139035; c=relaxed/simple;
-	bh=3Jf/SJCCZMnPIW6ljfS/il7LMpnZ627rg6AgyFtW8dg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TgzHnaVZRDrVddfA4ekreznOOHYikDtnlECfmFkOtK3OAVt3oR0lVMzqieQyKO9WBQMbE6AWYqSzp3r9n0VEWQuXtBcrcxIulzWmMdKBGK+RvlP2K+eCXLMM4gYwZcZqQB2flX/biA2DqaHpHNWZmOkesX20LdUM2f16r9HUb6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=QpTguXxY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S6T+XHo7; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749144725; c=relaxed/simple;
+	bh=S0QHJsrjrC4QNnLosgee9n8HSaIdDDJNROTwGbUDiNs=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nm+bcraSxDFljOU5LXgzx/ph8/Xpcp4U4jI2UlVZ26qoMWZVUOwN+yMouDb2O5sWRRcVArY02PFg0zcmKjIQwfE3XhlD7dZnhJUtn/YM0n1UoNtKhlM5nlyw6hTBATbysDBdUSyI1ydoctABp9p82LGpYOqUYCOn348z966/vMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gk8ka7+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="QpTguXxY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S6T+XHo7"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 72978138031A;
-	Thu,  5 Jun 2025 11:57:12 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 11:57:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749139032;
-	 x=1749225432; bh=i36Nkr/BYr7tE7XmsmYgh9umetnEHRPzzI0WI95Neu8=; b=
-	QpTguXxYJt+tlZ/cGftoTjnyeu8tvD8Dc/RJW/HFcC73A1okUfCdjdhfyuVB9W+/
-	NSnxfWnwTPaQ7G+ru0qyyQF63hzqH/tmMpwZvzzPGdxIe4SJJMN7+yAbYa0K7mtT
-	A2SWXWDqkQfT+cJzuM1wqdc02PWWKbRXwopnw678uVmALGhWDrtQ8dNOqe+jwAvE
-	KMwtuGTCD18rQEBwzgAJ47AGwH43N2A0Y4ksPSQWB+kHz8GZ4tsT53QHDNg0WRSK
-	fQF279Jn18ilNO055tdodh21OTQA1Jph3LjfwQovnxb0FBzCexbXWP5O4xs4gUG7
-	eq+OCq/boUtWWFOx6hDXQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749139032; x=
-	1749225432; bh=i36Nkr/BYr7tE7XmsmYgh9umetnEHRPzzI0WI95Neu8=; b=S
-	6T+XHo7AwD6M4dmbUVcmICQCGk6iZZuDyUXaM48afdbLXgxx8XySadhmncA+oFop
-	B8eAjx7dAEOdF9rL8BvLWB8xKEUuDtpdJyJKUE57NaffCakEs6QxrPO2MFfwkGSW
-	34gDP9yeYLUYASomfCuIwucIBbfPk4oFExTUWFNWGHqFqrM7P46n5wcTXZY09muj
-	NSe6UPj/RJJiRynAIvBj5tqvy4E2lB6+5pS0WbzvXgyC4OSMKR70MRwLGKZ2lwp6
-	2fejhypXcJNGls8eLAU2Rkr/J1OphKRlcg/bJBZAwsmhr6i5yB1rk5xHCRG8RJt/
-	STR++sohnI5NTeLLhR1sw==
-X-ME-Sender: <xms:V75BaMAv4H3eukwV-sxwQaUFHdJdzQN6iXeiEtuL17FvMxWGjovVmg>
-    <xme:V75BaOjwUNBBmjee_uephyNOFxaby04reLg8SFCVpOkdhFCe5a0GRZh7QVvGZpokz
-    4-UPjsaZqTSFZsmA3o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefh
-    leeljeehuedugfetffdvteekffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
-    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:V75BaPlaJ6iOAtj5fbammoZONO5J36WkP9qPoprU6AjpxYg3LuYAkQ>
-    <xmx:V75BaCze7ATTTbjAyOdZWoqFKRDRu7YL_ULE-o6Y8vqQvQS2ILnuxA>
-    <xmx:V75BaBTlSR1fyR4_SnZMWoWp5treq-hukxLoNwsFZa6pTmr4Arom_w>
-    <xmx:V75BaNYdneM1M-ZUDFLrLtTM4NEaJvp2rhvL2zl7lrNnT-7qT051Dw>
-    <xmx:WL5BaFcU5x9TKTJtIbko64iu5BV2QuPXtQgp0ELSXOmMjuNycj1-oWrP>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B31352CE0062; Thu,  5 Jun 2025 11:57:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gk8ka7+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CED67C4CEEB
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 17:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749144724;
+	bh=S0QHJsrjrC4QNnLosgee9n8HSaIdDDJNROTwGbUDiNs=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Gk8ka7+WRcLCqa/tKAEbj0XKSGZ6+KdBef3G++b9Zm1t1201tu3WSc6RXmXJYCi/j
+	 Fg9bnagHomN7C/UkSXKUQlCCEfRik20kwv8icVQp85HoW84SyXE1myL30KDijsMcjS
+	 YB9braaCZV2J/gAsMCF+WgWSSabcKE1d3C7Uj8HEnSAAuSwXKNeoFpXkz+BKZ85eEf
+	 0v9Bax52xfzSwAZCLgTbmjocD+u9CS7FDljMeTC2achLx7LhuYw7x6vPZxt+Aedj32
+	 /uHi0DBjhg2Bg0zvI3EtaKltPEF4LeSoIp7jqydEDInId5DAHR9eJxEoU6dLGbbGO5
+	 LPsgXrRLkyV4Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id C74E3C3279F; Thu,  5 Jun 2025 17:32:04 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
+Date: Thu, 05 Jun 2025 17:32:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Input Devices
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: ASSIGNED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: mario.limonciello@amd.com
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status component product
+Message-ID: <bug-220116-215701-wrd76INoqw@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
+References: <bug-220116-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Thu, 05 Jun 2025 11:56:51 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
-Message-Id: <63e00b35-361f-41ac-8341-f30c2e9dade9@app.fastmail.com>
-In-Reply-To: <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <d6df0dcf-5786-0ad6-dd30-3a8c9f16426e@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
 
-On Thu, Jun 5, 2025, at 4:03 AM, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 4 Jun 2025, Mark Pearson wrote:
->
->> Create lenovo subdirectory for holding Lenovo specific drivers.
->>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v2:
->>  - Rebased to Linus's latest as requested
->>  - Updated documentation reference
->>  - Updated MAINTAINER file
->>  - Removed X86_PLATFORM_DRIVERS_LENOVO as I was worried about
->>    maintaining backwards compatibility for the distros.
->>  - Removed 2nd patch in series splitting out hkeys. That will be for
->>    the future
->
-> +# Lenovo x86 Platform-Specific Drivers
-> +# Lenovo X86 Platform Specific Drivers
->
-> Any possibility to be consistent in formatting that? :-)
->
-Ooops - yes. I'll fix.
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
-> Why does the admin guide contain a history book?? It should be guide f=
-or=20
-> this version of kernel, not what was there in 2.6.x era ;-D. Please do=
-n't=20
-> add to that any more, preferrably remove the history part afterwards i=
-n a=20
-> separate change.
->
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |ASSIGNED
+          Component|x86-64                      |Input Devices
+            Product|Platform Specific/Hardware  |Drivers
 
-Sure. Will remove that change from the commit.
+--- Comment #22 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+OK thanks.  It looks to me that this is most likely a problem with your
+firmware.=20=20
+You can pass this over to linux-input guys to see if they agree.
 
-I was just trying to make sure I updated in all the right places and rea=
-lised I hadn't checked the documentation files and found that reference.
+But I feel you should report this to your manufacturer.
 
-> Other than those mentioned above, diffing per vs post seemed clean (I=20
-> didn't check where the empty lines got added, Andy seemingly did alrea=
-dy=20
-> :-)).
->
-Thanks for the review.
-Mark
+If the input guys don't find anything wrong with the driver something we "c=
+an"
+do in Linux is default that i8042 wakeup to disabled, which is something we
+have done for a number of other vendors with various firmware problems.
+
+https://github.com/torvalds/linux/blob/v6.15/drivers/platform/x86/amd/pmc/p=
+mc-quirks.c#L223
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.=
