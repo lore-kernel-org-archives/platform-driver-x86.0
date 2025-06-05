@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE12E659
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C76128E17
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 11:34:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749121126; cv=none; b=TozVQSmV+DWOzsYt8ACVj5omfA/VaHgicddcAYsEgaz11PBupZrOAvnInQE/FAw/+rDvtWWhOkrGXUvMOeWpN6nYZWX1jItuoP+sLnTgOX4T70dqT4S+6++9WCgrRzND5BJc9+QrfwmjzBr6JaviXeLjZrSmsCCtApitBliv3IY=
+	t=1749123258; cv=none; b=XK9TnR2JFD8BHnVmpdP7UKW/BnwqVTXlrGZ20Pz0oKvDXN/7oaTnaqQHoHNFOqpOMlX1mk6sjOBaMCth52rHpC4WUJHfDw6aFKYo1DbJCVE7+862+GJBrJiifp8xp02FgZ1I9ai8q9fVkLbdvGrmt+fiJHoZ2weXJ4IvMIGm9uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749121126; c=relaxed/simple;
-	bh=OGH0Yv9x949jBDL4jv2/c73VnwhGY61tlH71ITAG9+E=;
+	s=arc-20240116; t=1749123258; c=relaxed/simple;
+	bh=Fdr5j/jXBZ0OxMJM++J6tKNH/wFeFZ3tXH3yhMQe7WQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qS7oByHRVZnb/I8r2ivxMGZFNCbnWPLF+Dmx7jdgxIT8rTyYVOHQwV/LxwF/stf9KeRWXLUkZLhImAqSY22+Cx+sY5C9FvzSPLQb1okO3LZbN8m/LxNNYUI34fHbNhfA1XRkxJjPH/AaLm3QAB8cPWlK12g8Z+GRoMmhUC52wZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fm2uWpT2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=gCSms9q13MSvS4FRnC6X7rj2h0eVXXsMT62PyFX98wNaYMAiacBA095eZQOn6DOMPM0EdCH8obOfIt7IFYSut2znTQ0WBauswL0MtCYPG/Q7uSWwey6uLOot8dnEhFnFs0kowYWpC6I1+67x4KaRv4BICi4V1+oAOBFzIh3JvhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5Ek1iwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fm2uWpT2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93C44C4CEE7
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5Ek1iwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9FE93C4CEEE
+	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Jun 2025 11:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749121125;
-	bh=OGH0Yv9x949jBDL4jv2/c73VnwhGY61tlH71ITAG9+E=;
+	s=k20201202; t=1749123255;
+	bh=Fdr5j/jXBZ0OxMJM++J6tKNH/wFeFZ3tXH3yhMQe7WQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Fm2uWpT2tU1ReMeMnQquanLOxvpBNxhj5bEhivMEYY1mey4qdcYwoIZ9yvyhxAIRd
-	 WyaOPqWkhidohBFt6WSukXJXzuL7AFFC1XOUr5g9B/5JgAWAZCiEhPwcZu35689tMr
-	 7Cx6qDEdPoQ+dth9kL6pIGCUwySa9wd/m2v5LYh42iklvJQcOj3xmSc0SBT2OPCYeg
-	 saraIxrqCA7fRo/u7uoB5CkPVOenfKH3H1HJHLKDDDYIdy6QTnHc+fkeHHCTUQ1yrp
-	 3bQ0yAK67SbtZDKKXF3Rb4oudpHByU9W15nGf2ah3DKXxL9pDzK8sHJ5ixXZDqnk+B
-	 eI2vtpG2ulSbg==
+	b=R5Ek1iwNJF7Nv6RIb3FtRZri+WyyUAqNa2izL5gMC1KGEll5qtaVLo7p+IhWHaHiI
+	 6WybK5E3pLV4T1BUNJZi6E+3vYy3zlZ3t5JX9OlFnasvq765pJZaF94fevfqPrRclo
+	 MLI1XO2kUkpJMRrLSN6dqDLFHYRwVpyD90EzNskfSBc215le/CDt341HdKQmEU2Mue
+	 Iykgw5625uS01upKroNoKBk5GQ5kLySE4psbLgOptF+PLpM28rPFHx83br2vR0rRgn
+	 T19h1LIrVWIKsXwv6Tpda8YjOFD8FXHdUw3ptjTFOeRkrENmY2czCClo05xHFadSo2
+	 RQAARboCxW7PQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7BBFBC3279F; Thu,  5 Jun 2025 10:58:45 +0000 (UTC)
+	id 8F560C3279F; Thu,  5 Jun 2025 11:34:15 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
-Date: Thu, 05 Jun 2025 10:58:45 +0000
+Date: Thu, 05 Jun 2025 11:34:15 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
@@ -46,8 +46,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: mario.limonciello@amd.com
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-220116-215701-1BEkepVaNd@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220116-215701-EEH8IDgwjl@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
 References: <bug-220116-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,14 +63,16 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
 
---- Comment #20 from raoul (ein4rth@gmail.com) ---
-Created attachment 308209
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308209&action=3Dedit
-reports with and without wakeup disabled
+--- Comment #21 from raoul (ein4rth@gmail.com) ---
+Manually pressing the power button to suspend now actually works. I still g=
+et
+those "spurious ack" you mentioned, and an ucsi_acpi error "failed to re-en=
+able
+notifications (-110)", but at least I can work.
 
-No I didn't rmmod and I made sure to remove that i8042-keyboard-fix-linux
-script I tried before. Here's another 2 tests I've just run, one before
-disabling wakeups and one after disabling.
+So this has nothing to do with amdgpu... Should I file a bug report somewhe=
+re
+else?
 
 --=20
 You may reply to this email to add a comment.
