@@ -1,77 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6066242A87
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Jun 2025 19:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE71F0E37;
+	Thu,  5 Jun 2025 05:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749064364; cv=none; b=kD0gjo7t38o802wQduEqNS+h5yoeVbr3o4Y3wCUb7hctYSz9TgrOt8MCK8wEiRZs2LWQ8ixgjf3+Vqtnm7LywHlNTLNtM18OXHEDdJwMcjX0WEXSNAh6gzlhOsXdg/DDZ/ERAEPckOle/i6U7EhLSUWCJFAmBAzKSDzG4cVH+08=
+	t=1749103133; cv=none; b=S3BNYItl20vAtv6xE9bY6qpwfflFNoqVoZQuJqF0bMdp8NuhbdN5yQ13QrzFlYzVm9xIHlhCsFjZZf1ENDCHmv4RiAJuedZnCI5/UWBwBVip74sL8s8wx8qeZ2iYmm2/I/T30rIXNFm1qc1WocN3w+ukYmc7OQdJWfLOzrSOaPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749064364; c=relaxed/simple;
-	bh=Z2MiE6p62VF4OKVSZpf1kDy23AwUa+PBtymHH0KOnzI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C0tkA5X2DfLO+SMV0DXJJlrkiTGLPG3YCn1qNPW8oEx3l6+jFnjz/fUmzS8x1ZSaXR0w480wQvWSVCtgGojEUdM0/j1bAU6ipxDQKd/eIVaF9BVseqA+nhzODaV6xXqmKNoDAHZ1eL1LqSEF/EOl/vjkQ8P95YkkQk75nj9RsVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKuxAuyZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749103133; c=relaxed/simple;
+	bh=/ByTCSRKhoKS/nj0DFNvNzqPbdF7gDWTNXPA+3K7AJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sW3yvWq0/oiux4ZItWdFdvBK0AFcFbycggj5XQ9NheVlT7FHLY9P4ovfG2is1AZKwRPbw7p/NFk6o10HcfSSkNEyhiRhk9cirNXErqFWsFe68XSu1iEJz+8vTXGZ9ldBHcdaNcPd2qOPA5U09sEXaqOrW9s1RVPoP8Dy/wcmWJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WRVrpB+m; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKuxAuyZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D1650C4CEF2
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Jun 2025 19:12:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749064363;
-	bh=Z2MiE6p62VF4OKVSZpf1kDy23AwUa+PBtymHH0KOnzI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=qKuxAuyZX1D7fYD1MUJMnAOIVVO+GAva65ATnX05BuZGP8pphbGyMTpr5y6z8VbCt
-	 1oiuKunM+tuS11H/Ru6Ed0GW6f4EAdroQGgWnennmTwEVtVJSTqJRB1LcIHPR9A5YZ
-	 VvL6pdPbpXmmC+KJBA5VdWxOBi0Atavub9J9JChneMnXFfhhcbTA3ooNXyE4S5FksB
-	 BsNRulT4TV/w6RppD/1TbfYYAaBc7UsGYWlozUyq+asNN6mkPmZzfiG3X2iZCnc1bV
-	 IPF7wnX7Xxh5M05IBxL320A0Th0aNSi9lMGirmKUCdJdxW0+nf4DtE2Lx+XJa7v3k0
-	 zgf5Lgr4xkQPw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BC844C4160E; Wed,  4 Jun 2025 19:12:43 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
-Date: Wed, 04 Jun 2025 19:12:43 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Platform Specific/Hardware
-X-Bugzilla-Component: x86-64
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: mario.limonciello@amd.com
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220116-215701-Dk58eiB7z0@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
-References: <bug-220116-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WRVrpB+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749103132; x=1780639132;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/ByTCSRKhoKS/nj0DFNvNzqPbdF7gDWTNXPA+3K7AJM=;
+  b=WRVrpB+mrpp0W7rb3QnmQx+s+9wMnrtfti4s4gHl6nwRNuxXYx1rpKMH
+   T6yyYETaSsgAPu5fIp/plcBXc6pDeXQzIkQ15d11Q2iQaC+b4N8wEbK4d
+   yyIZUYvSxn0ASe7HY1Zp1i260FHxCemgVE3wjB4o5x02zuFgwMlV9PM7L
+   FNdNKwxeQ0MygkxySeVukLT3BuGFfijfqWdIUBmsPu83u5vp3RT5rW2eK
+   PcN+afob2THizbSppO6Q8xCBliZliHrYAxFLVqvxamysen0U+yFbKuZD2
+   CYZf2zcPPvAG5uKJOEnPveuRkeNVOahNViGheoFHEjbGSFEMcQPIpC2KL
+   w==;
+X-CSE-ConnectionGUID: 4s9UYh9CSxufvkLOvc3duw==
+X-CSE-MsgGUID: +8cYOmsxT0m+Gl6pfeFz2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="51350675"
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="51350675"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:58:49 -0700
+X-CSE-ConnectionGUID: Qr7ZhDsVSQa50KZK2V97/A==
+X-CSE-MsgGUID: RWXMFbBFSLOCtiLFxCnQFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,211,1744095600"; 
+   d="scan'208";a="146391908"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 22:58:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uN3cf-00000003m7A-1apF;
+	Thu, 05 Jun 2025 08:58:41 +0300
+Date: Thu, 5 Jun 2025 08:58:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, corbet@lwn.net,
+	ikepanhc@gmail.com, hmh@hmh.eng.br, W_Armin@gmx.de,
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
+On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
+> Create lenovo subdirectory for holding Lenovo specific drivers.
 
---- Comment #19 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Everything looks solid for hardware sleep now.
+...
 
-Did you rmmod i8042 or did you disable wakeup?  It /looks/ like you might h=
-ave
-done rmmod.
+> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
 
---=20
-You may reply to this email to add a comment.
+You may follow the trick in the Makefile (see intel folder) to avoid repetition
+of the folder name in the file names. Note, the modules will be called the
+same (assuming no ABI breakages due to renames).
 
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+...
+
+> -# IBM Thinkpad and Lenovo
+> +# IBM Thinkpad
+
+This is a bit ambiguous now. It's IBM and Lenove for ThinkPad... Perhaps you
+should put some kind of date or so? Like
+
+# IBM Thinkpad (before 2007)
+
+(note, I speculated on the year, you may know better what to put there).
+
+...
+
+> +++ b/drivers/platform/x86/lenovo/Makefile
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/x86/lenovo
+> +# Lenovo x86 Platform-Specific Drivers
+> +#
+> +obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
+> +obj-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= lenovo-wmi-hotkey-utilities.o
+> +obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
+> +obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+> +obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+> +obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+> +obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+
+> +
+> +
+
+No need to have even a single blank line at the end of file. Usually editors
+even complain about this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
