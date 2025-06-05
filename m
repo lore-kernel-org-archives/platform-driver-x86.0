@@ -1,126 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6C313D53B;
-	Thu,  5 Jun 2025 19:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059A17548;
+	Thu,  5 Jun 2025 21:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152618; cv=none; b=PrjhlXSS04uWplaPJ5Asi3KN/W2U9Ebtkqkc7+TVZCKTcQzJpebK75FtBB33Ffks2Jql4pu/hmwl0QTUdCcdSkgww4RVpQ/woV731TQJj8hW9tOzIS5B8v9X/L/qL5tJoSeXOybOVjjC9wpYMRwQaZP7n18+stecxB4at3QTSdI=
+	t=1749157421; cv=none; b=FPTWwuoBew3iiEwaOiS7dPjI6r5BogVlfOngpdBkYUJqB+WDvpKHpEWKbbRZoEMWw+AOGnyNaY8YB7GNbqmvoznqXRLVRKv8IuwdPjfJAewacFH9xsCgqdhBqbn2VM0CbgsUB685KXNR9CEEu0IsrR4UM0Wm1ocs2hucFYCm0WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152618; c=relaxed/simple;
-	bh=VLOUVhQrMl4XAJ98RU/ZeVhQMV1SLl+3znWYmt8OdJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bFVj+sbJUd+93t5c9f7o7axUMJ4L+oRE+HrW9lZ1tQf9aKpDLqsrjKQIoqvbndkvH4WSNZbG/aVqkYHtUvV+iUzQnYCWi0p+4muFaseYX345fOV413Dq8BP588x6LTVI4dt/rIsl8ZkJOixFGppZcqvM/QhZHfJU11xlBLvBy4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PX+W28fm; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749157421; c=relaxed/simple;
+	bh=DxZuCT3zQTNmwF1w5Jm8UNNxG3gAbyWGaSO957EG0X0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NFX/E9MhZbRZK8XCZn49S3ZW/9jo83RSzlGFJe4vnhDQwFV4anST5IBrksM/HKKnlhgFeQrRsnAUQafx2fjvtHUO7WqD3uVpgKiVAQEoUwV78/PkTeauHolGBZPQtBpkfd8QsNWmn2x9LT10LjQLevXko6lZBAOHzDYcYE7Iivo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lXP4G1Xq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eeiE05iw; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PX+W28fm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749152617; x=1780688617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VLOUVhQrMl4XAJ98RU/ZeVhQMV1SLl+3znWYmt8OdJQ=;
-  b=PX+W28fme3MUZxmAxQy8V2sfB5g5uHP0uS2wueAKJaQw4UMKqrj8mfAo
-   /MLydDASzqnF6rBrwhEw8TYNzd8WNH2IvOr8j8y/827snj/6cb1cIesbQ
-   nLYGaCLKdOGzA5oY/cljYdLd8DbtORKiZquQOZ3iOPY2t3MIZ5sL1wZcz
-   0lXLpmv+uEKyyAcmdtRcHZTEz46zSIW+I8nEhPJ+Nr/dori9ThvQ4nlin
-   4WwizdP2Jidzktizeft344rA97/1C8yVMq1mBYI5NFu9AO7nKczpQ3C5r
-   F+6TUF06iey90XcvFVmUUPczVbep31mtnokW5LvsA7sw094VM/Vh15zfI
-   g==;
-X-CSE-ConnectionGUID: WUA/Ld+qRhG63gkAJ0XNgw==
-X-CSE-MsgGUID: FQUP2z1ASBGWKG0870e4Lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55097227"
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="55097227"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 12:43:36 -0700
-X-CSE-ConnectionGUID: E1ZyDno8RNGwjQxzqLw5zQ==
-X-CSE-MsgGUID: wWqhUdQ1QHmESSUM+W2UZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="145576147"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 12:43:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uNGUs-00000003yiI-0sUk;
-	Thu, 05 Jun 2025 22:43:30 +0300
-Date: Thu, 5 Jun 2025 22:43:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
- <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lXP4G1Xq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eeiE05iw"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 934E825400A6;
+	Thu,  5 Jun 2025 17:03:36 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 17:03:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749157416;
+	 x=1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=
+	lXP4G1Xq5ZjVlFKq7Gix18VYqGVRI/WRB0nc7KXjXTNDuuRMIHdVUkJd5GDrEqbn
+	F0fBSSDKhriKiwnMEKUEKPSZwyHliTMH38NCC2h4d1UPa9P8Q0Jh5eEZXo1sRyXJ
+	R1k7Y6xy0TIC3edWP5R2/Jz/IxHIFArRH9F6jB8rpgj3rmFk51OW0/RNAv24mVzW
+	Tx4hNjMkzSGZRVPDZ5M4CddPVoG7OF//c1EDNtFfWif/UglsuUfsG6mUA5dVtORf
+	vOKyBhq10IhVRJvBTcZpOq89utXSmCajHfH1d+F61dSeroEHmBMtsr3SqLsWTY+R
+	nQasJAaVFhP9l0DurRyrUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749157416; x=
+	1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=e
+	eiE05iwGYDaO3E/O8JDndkKK0VxO6F1x6Hm+rFuL2llSHoH1UAXlJuLOflOElRMD
+	9v1rv9b6bzgasRmeA7aJcU4Zs4VT0vvmr+BFoSt72hzIn1uKN/Ndex6j3ViGtWoo
+	8LHA0abS9VAUTl6Z1bZ9hLdClhmLfyZfFm/6ZdIThtPeiIHVlp7ja5A+RCaB6zU9
+	Uf6JQHymBioylFyLYZt+gaZnBAC0jEG+/hWGDmwmE8avbY7hJwwGeG6pqZOmIvac
+	IUZ29rY7b6Fs2cSdiR6WRg0LH+3jqwBeJTzHHdpDBd55rTY1gyeAHZ/l9Yyl4yw8
+	KDt0c+rhum9FGvMTmGmxA==
+X-ME-Sender: <xms:JwZCaNOYXk3GU1KfdHQwcm5gjtm0nFK96JEChOWimEFb3Xsf0z7tDw>
+    <xme:JwZCaP-_DhP4kX2MeE_ciRlbqT7TmRQtQ8NoFCUmBoRJ5UsTBbFMUu9073LjeT52O
+    ktUjF2kVaSwlzXyEuY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
+    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
+    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
+    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
+    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
+    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
+    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
+    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:JwZCaMQxO3al6dnB9sAdgd8ehpyzlkre8wKXr_4f6tlTNw8GmhNm2Q>
+    <xmx:JwZCaJu0faNmirli2wnJb6Qgxyczz_r6eaqfNJ85KVD4rGjFJ2wxTA>
+    <xmx:JwZCaFfs8LEfV22mhfqxO6oZU_Bd1x-r8bDhi14rhokQhsQUNLo5yw>
+    <xmx:JwZCaF1nBQuTKr9assGbqRn69EmcugK5WfAevgrNEySn17TCeyC7tw>
+    <xmx:KAZCaB89Oo0mEfqAobynotnzf2EN0r0SWxl4WmYtyFEH5vw3KrU3ka-W>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BFFF82CE0060; Thu,  5 Jun 2025 17:03:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ThreadId: T107eb5199b18744c
+Date: Thu, 05 Jun 2025 17:03:15 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
+In-Reply-To: <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+ <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
+ <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
+ <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
-> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
-> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
-> >> Create lenovo subdirectory for holding Lenovo specific drivers.
+Hi Andy
 
-...
+On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
+> On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
+>> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
+>> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
+>> >> Create lenovo subdirectory for holding Lenovo specific drivers.
+>
+> ...
+>
+>> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+>> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
+>> >
+>> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
+>> > of the folder name in the file names. Note, the modules will be called the
+>> > same (assuming no ABI breakages due to renames).
+>> >
+>> Interesting - I'll have to look at that a bit more.
+>> Any objections if I leave that for a future change?
+>
+> IF it's nearest future :-)
+>
+I got this implemented - I'll include it with v3. It's less complicated than I thought when I initially looked. 
+Thanks for the suggestion.
 
-> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
-> >
-> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
-> > of the folder name in the file names. Note, the modules will be called the
-> > same (assuming no ABI breakages due to renames).
-> >
-> Interesting - I'll have to look at that a bit more.
-> Any objections if I leave that for a future change?
-
-IF it's nearest future :-)
-
-...
-
-> >> -# IBM Thinkpad and Lenovo
-> >> +# IBM Thinkpad
-> >
-> > This is a bit ambiguous now. It's IBM and Lenove for ThinkPad... Perhaps you
-> > should put some kind of date or so? Like
-> >
-> > # IBM Thinkpad (before 2007)
-> >
-> > (note, I speculated on the year, you may know better what to put there).
-> >
-> 
-> Sure. Realistically the thinkpad_acpi driver still works for the (pretty old
-> now!) IBM Thinkpads so it's a bit messy.
-> 
-> Main reason I did this is those two IBM specific drivers aren't, to my
-> understanding, active for Lenovo devices now, and it seemed wrong to move
-> them. Not sure if anybody really cares though :) I just didn't want to step
-> on any toes.
-> 
-> IBM sold the PC business to Lenovo in 2005, so I can put that date there
-> unless anybody else has concerns.
-
-Sounds good to me.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Mark
