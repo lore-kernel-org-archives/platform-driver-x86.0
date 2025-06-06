@@ -1,119 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D069E1534EC;
-	Fri,  6 Jun 2025 14:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F5D288C93;
+	Fri,  6 Jun 2025 15:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749220114; cv=none; b=ZASnx9XHrUNfhUrDNSgHX0JX2OoR0vAWBUBsnOnlo7Ut8hrZFtLYYRBg+aOWjM3wHvbV7IRwRKTcO21aL1WJwTnRsuCwSs9tS8XJYR3Owqx07Tb3wlVVectX9ZLhoqXKhWU7QppEmU0mY1XSIXSQpdJuvLQArhJzGsjO3uYorFM=
+	t=1749225547; cv=none; b=oTIIv2ssW6vVIdWWkBxRU8fvYyyTh5aOiWRC1DxAWIHLlkaCpMwoWnDrcQeR5UxNGvU7UpRn7NSfhgRPkRrBBX5VLN927u5ZHsuFOSFfAzFoLgaKuyjpCGhFGrXrV4tsSnz9cyDdLCgYZ/RVeH8yfwStSqOx34Ga+byELgPFHsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749220114; c=relaxed/simple;
-	bh=53Ex4c46jHWyz2mMEelxLlc4ZhhiL9qpn6AzizAK0oM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ILcAMW59K8Oilvv0/YFYx1GLSZOIkGnV6WlkmUqW6FdoppJ6uc/tXTOb2mOcWRKCxrHTy7SOdyyZLnA4bkV1es4dpB3XuZmEKPifeU2nxWjDmnLP8z0IdsNg1/1Dw32vjRL3PX64ARpHY3L6Sm4dlj0vUYhEOxry622AGmZvrNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mgv5Fpav; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749225547; c=relaxed/simple;
+	bh=DqILrp7MAmIHBHpVhQPDe90I9D1u0u26u1bnK5dDg38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ca3e5TGHTMaKcz3Zb7lmS2bkeZWGBuTJgGtyjHXu2EAv6+9uK7HEPjtNzTSQDssApjR2G9qm9mYnYaXZmcHUQ5BgWXLn1itdC9ldQTdPVqYQNcR8gxmlYYc71rFL/JYoMoHU5YFZd0glW+n+yVZOc0+6nw72BIAzr4NiwtIeT0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TsbMtZCo; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mgv5Fpav"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsbMtZCo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749220113; x=1780756113;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=53Ex4c46jHWyz2mMEelxLlc4ZhhiL9qpn6AzizAK0oM=;
-  b=Mgv5FpavyX0R7X45pnbCUQcgDXy07cK2Fn5r0367De7G1Ib+eLiZCO9o
-   ZvVMMR/We7Fr8y9udDirtMW5zjAtEXlMBkqu0TXVDqKiuW4Ir7DaClAZO
-   Imc7j7NaoM4dcVEEV/jrd0EC5lG4T6XKiIDQt2DvxW1alau7GlHAYA6w6
-   IqXN8igzYZvQ+8I5d0f9wZ4ru4bafOv1qOcv8MYJNlC0TWXfy3vGF2vXd
-   47bUie/X6RrRB6hW9jgsmFFwVaB2vgqTWq/5ovEc4tITXcIn9hGHmjMtM
-   dzhIqIAh+ncyFloQVXb9eT/yrTEzab/SBwZY3IL+jYWRv6VvY3GGOmp0D
-   Q==;
-X-CSE-ConnectionGUID: CzJg8o+IRsC8cuwlGAvSNw==
-X-CSE-MsgGUID: 5aTyCbw8QnOqnKPbKupagw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51076071"
+  t=1749225545; x=1780761545;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DqILrp7MAmIHBHpVhQPDe90I9D1u0u26u1bnK5dDg38=;
+  b=TsbMtZCoduM1sxMFrHH7pI8RIMh/6aFAQUogt/xFqKsStFglorQhHQH7
+   MjmM9ez1vNzBxMRktIAmzZ0Eq3wzQfw7/rkhA9WLy1DI3ETnw+crSO3+J
+   f3/BRYF18Btquo8hFk6ruadTZ4o4c/ul78T10kc3X2QIJOGsOLHeB2dqq
+   XyCFJpwX33kFOBtlHKfKFqbXicP08wzejlAcQUis/7nFI/L1A+2pDjOXm
+   XyWLYalWduLhC6XecGAvUj6TgvoNHKK5VPb1A0mFeEtjRSiVYEXSVDjtM
+   J/TCwRf0gOwPAqnVXKcY+hKovQ0jC7IcUfdCyehB7OKGrZpQQpLezZXHc
+   w==;
+X-CSE-ConnectionGUID: Aq6Y4urORS2+jJtmwBmbiQ==
+X-CSE-MsgGUID: PPY+fI+3TEWLs8oZrTv3Jg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51525633"
 X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="51076071"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:28:28 -0700
-X-CSE-ConnectionGUID: /NzKoUHWRDua3ANvn/f/1w==
-X-CSE-MsgGUID: wwcVO4s3SNqWDhf7i+2Ymg==
+   d="scan'208";a="51525633"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 08:59:04 -0700
+X-CSE-ConnectionGUID: oZVF5Z4hQXmdJLGOaHW+Wg==
+X-CSE-MsgGUID: AjXvMA79Q3u8y2LSr675og==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="150851783"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.124.222.159])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:28:28 -0700
-Message-ID: <67fea61ec40d0e54d4674ab83728e84120d9fb9d.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel: power-domains: Fix error code in
- tpmi_init()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Greg KH	 <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Date: Fri, 06 Jun 2025 07:28:26 -0700
-In-Reply-To: <aEKvIGCt6d8Gcx4S@stanley.mountain>
-References: <aEKvIGCt6d8Gcx4S@stanley.mountain>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+   d="scan'208";a="151020215"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 06 Jun 2025 08:59:01 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNZT9-00055V-0u;
+	Fri, 06 Jun 2025 15:58:59 +0000
+Date: Fri, 6 Jun 2025 23:58:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: oe-kbuild-all@lists.linux.dev, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com, corbet@lwn.net, ikepanhc@gmail.com,
+	hmh@hmh.eng.br, W_Armin@gmx.de, andriy.shevchenko@linux.intel.com,
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <202506062319.F0IpDxF6-lkp@intel.com>
+References: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
 
-On Fri, 2025-06-06 at 12:04 +0300, Dan Carpenter wrote:
-> Return -ENOMEM instead of success if kcalloc() fails.
->=20
-> Fixes: e37be5d85c60 ("platform/x86/intel: power-domains: Add
-> interface to get Linux die ID")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Acked-by:Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Hi Mark,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on next-20250606]
+[cannot apply to v6.15]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Pearson/platform-x86-Move-Lenovo-files-into-lenovo-subdir/20250605-013934
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250604173702.3025074-1-mpearson-lenovo%40squebb.ca
+patch subject: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+config: x86_64-randconfig-078-20250606 (https://download.01.org/0day-ci/archive/20250606/202506062319.F0IpDxF6-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506062319.F0IpDxF6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/lenovo/think-lmi.c: In function 'certificate_store':
+>> drivers/platform/x86/lenovo/think-lmi.c:661:47: warning: '%s' directive argument is null [-Wformat-overflow=]
+     661 |                 return kasprintf(GFP_KERNEL, "%s,%s", arg1, arg2);
+         |                                               ^~
+   drivers/platform/x86/lenovo/think-lmi.c:657:50: warning: '%s' directive argument is null [-Wformat-overflow=]
+     657 |                 return kasprintf(GFP_KERNEL, "%s,%s,%s",
+         |                                                  ^~
 
 
-> ---
-> =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 4 +++-
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
-> b/drivers/platform/x86/intel/tpmi_power_domains.c
-> index 0c5c88eb7baf..9d8247bb9cfa 100644
-> --- a/drivers/platform/x86/intel/tpmi_power_domains.c
-> +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-> @@ -228,8 +228,10 @@ static int __init tpmi_init(void)
-> =C2=A0
-> =C2=A0	domain_die_map =3D kcalloc(size_mul(topology_max_packages(),
-> MAX_POWER_DOMAINS),
-> =C2=A0				 sizeof(*domain_die_map),
-> GFP_KERNEL);
-> -	if (!domain_die_map)
-> +	if (!domain_die_map) {
-> +		ret =3D -ENOMEM;
-> =C2=A0		goto free_domain_mask;
-> +	}
-> =C2=A0
-> =C2=A0	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-> =C2=A0				"platform/x86/tpmi_power_domains:onl
-> ine",
+vim +661 drivers/platform/x86/lenovo/think-lmi.c
+
+640a5fa50a42b9 drivers/platform/x86/think-lmi.c Mark Pearson 2021-11-17  652  
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  653  static char *cert_command(struct tlmi_pwd_setting *setting, const char *arg1, const char *arg2)
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  654  {
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  655  	/* Prepend with SVC or SMC if multicert supported */
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  656  	if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT)
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  657  		return kasprintf(GFP_KERNEL, "%s,%s,%s",
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  658  				 setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  659  				 arg1, arg2);
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  660  	else
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24 @661  		return kasprintf(GFP_KERNEL, "%s,%s", arg1, arg2);
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  662  }
+5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  663  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
