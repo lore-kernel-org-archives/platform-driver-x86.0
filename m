@@ -1,91 +1,119 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D113CF9EC;
-	Fri,  6 Jun 2025 13:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D069E1534EC;
+	Fri,  6 Jun 2025 14:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215364; cv=none; b=pWSaIcSarOr3zT+rTXQvp8uJno6F5RSel1zOYLubRMrKA/vlFBPewslSEuh3ZJFFBuqvX+ercRuYcwBhy9b+1MQV2tefjSTVOp3ZQIF4vyJllUssCOrAvxjdi73ke2Pe67skDAp7j7inJDGrocFOh2IQO2HgXYctm8DXw8E0APM=
+	t=1749220114; cv=none; b=ZASnx9XHrUNfhUrDNSgHX0JX2OoR0vAWBUBsnOnlo7Ut8hrZFtLYYRBg+aOWjM3wHvbV7IRwRKTcO21aL1WJwTnRsuCwSs9tS8XJYR3Owqx07Tb3wlVVectX9ZLhoqXKhWU7QppEmU0mY1XSIXSQpdJuvLQArhJzGsjO3uYorFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215364; c=relaxed/simple;
-	bh=p65BgQsXIRell7NjibwP8/nB9rR+PSzRnhPcxgf6bbU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DP6gRyRQ5CxAI1h1lLcO/H3bfByW9vXmZR4oQuRx3w0epLCgTqsDH0lBKH15E9w+KLg03HvVo4Qgg6wE4U16crSk4Ltf6Hr6PkfBYJtqdGQ+lFCKr75dG7Ok42d6Hw96Q72gvczEvcCP82r0SWbO+lU2LMgzJaoUB3dl4Gucyzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso2240955e87.2;
-        Fri, 06 Jun 2025 06:09:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749215361; x=1749820161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SDIM4cWaSDVmDW7CZCAy47kSfugePR2in3Baxdfjghc=;
-        b=I3kp007GoIKy7jJoMzWSIKMTSK2z8IIsaNypqiwRaa3DPnJNpNn/gvbOvJrsfPvK3c
-         Of42xFTT+fmKvSM65mJfWFwH0fZxUfyNzD7nFMyT+IubtjUnzU4zR766a46Kff1caIGJ
-         pg7Qjq/EhbwyAd4quSQz4OnTcNm4k0csdjNCOIT0tiHgJv3kgN8Ac2mlr7Zb7KGeELV7
-         OiCsLj1bzmln304+x/76H4pkUn8TmaoyPPWme+0zg/nTn6LTlvFcjsq5a8BvZgPFHQNS
-         puwGeFstElvX9lvbvT6TdpbtwlvCe+Cx9P2iaNcg9ufT1vt6pQZBdlYiAWNteqq+49+7
-         PrAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGPeUvV+PIqOC7pa9A3H4hMjj2PHqyqIRp9COiRYFdxXV9txre9XVXjqcEBTW7c2XOjqwJQtwpQCpjwPVU0risGNhS5A==@vger.kernel.org, AJvYcCX5OWx1HzHm/sXD2VmnmIgIOapVbTy5j6pghNfz7+A2RX1kBvtDOX6gQRM0/52sfboFZXIqaZmcPIuLCkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIc1rmhKJO0mmZTe30wo6MjBXsXJ1kc4Zu3aqqKQWweVG2nDbn
-	k2MLu1BTXn46FIJI5rNAqGl9SZ63RZGO3OC8Ny9YRzz9b/tnMUbXNBJv
-X-Gm-Gg: ASbGncvy7K7dprzk3FVJDd1RPUlwgVgZnECOWqgw0Rf8MFqGdIwxz0ONOkTnupR8ZNF
-	qvKZQjRFmUHOj/JZ2tSCD5pcUuq8p6+H3nBJvkt8cbTwXefNrM2KYvF73z+U+X6HNDHUFODiJu0
-	shaMLyPSD/VX7XraJOxNtwEgUeB0TshKsng1djut3H07Jt/y2iw8KmK5d48NrIDbJy6J5A8+mkD
-	aF8zs+WnVuQ7mikhO6rpRr2jrY2wBjBMxxP4ZjBKPqOdEoqUMBmvTxUn7jAg9hLW2i2yIYMLSX0
-	h4LJTtNsieJMiwb1oblbQn3Tkh/PP6i34MxvZ/n4vvktVD8Rg0qvDNdpVzTANqGV/6eNthJZrg0
-	3WC0F0yHn/m7pshQB4TlA4oefyLc=
-X-Google-Smtp-Source: AGHT+IGOxCjkdUdURCQroxmFj//+lEKQJxyprwe/KzhvvZnQO0JORgBaWN3NUp/eJgzM2lwmEJUGsw==
-X-Received: by 2002:a05:651c:1545:b0:32a:8bb1:d971 with SMTP id 38308e7fff4ca-32adfc290f3mr7905301fa.18.1749215360651;
-        Fri, 06 Jun 2025 06:09:20 -0700 (PDT)
-Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1cad5c8sm1696921fa.72.2025.06.06.06.09.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 06:09:19 -0700 (PDT)
-From: Joshua Grisham <josh@joshuagrisham.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org,
-	W_Armin@gmx.de,
-	thomas@t-8ch.de,
-	kuurtb@gmail.com,
-	linux-kernel@vger.kernel.org
-Cc: Joshua Grisham <josh@joshuagrisham.com>
-Subject: [PATCH] platform/x86: samsung-galaxybook: Add SAM0426
-Date: Fri,  6 Jun 2025 15:09:08 +0200
-Message-ID: <20250606130909.207047-1-josh@joshuagrisham.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1749220114; c=relaxed/simple;
+	bh=53Ex4c46jHWyz2mMEelxLlc4ZhhiL9qpn6AzizAK0oM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ILcAMW59K8Oilvv0/YFYx1GLSZOIkGnV6WlkmUqW6FdoppJ6uc/tXTOb2mOcWRKCxrHTy7SOdyyZLnA4bkV1es4dpB3XuZmEKPifeU2nxWjDmnLP8z0IdsNg1/1Dw32vjRL3PX64ARpHY3L6Sm4dlj0vUYhEOxry622AGmZvrNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mgv5Fpav; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mgv5Fpav"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749220113; x=1780756113;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=53Ex4c46jHWyz2mMEelxLlc4ZhhiL9qpn6AzizAK0oM=;
+  b=Mgv5FpavyX0R7X45pnbCUQcgDXy07cK2Fn5r0367De7G1Ib+eLiZCO9o
+   ZvVMMR/We7Fr8y9udDirtMW5zjAtEXlMBkqu0TXVDqKiuW4Ir7DaClAZO
+   Imc7j7NaoM4dcVEEV/jrd0EC5lG4T6XKiIDQt2DvxW1alau7GlHAYA6w6
+   IqXN8igzYZvQ+8I5d0f9wZ4ru4bafOv1qOcv8MYJNlC0TWXfy3vGF2vXd
+   47bUie/X6RrRB6hW9jgsmFFwVaB2vgqTWq/5ovEc4tITXcIn9hGHmjMtM
+   dzhIqIAh+ncyFloQVXb9eT/yrTEzab/SBwZY3IL+jYWRv6VvY3GGOmp0D
+   Q==;
+X-CSE-ConnectionGUID: CzJg8o+IRsC8cuwlGAvSNw==
+X-CSE-MsgGUID: 5aTyCbw8QnOqnKPbKupagw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51076071"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="51076071"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:28:28 -0700
+X-CSE-ConnectionGUID: /NzKoUHWRDua3ANvn/f/1w==
+X-CSE-MsgGUID: wwcVO4s3SNqWDhf7i+2Ymg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="150851783"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.124.222.159])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 07:28:28 -0700
+Message-ID: <67fea61ec40d0e54d4674ab83728e84120d9fb9d.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel: power-domains: Fix error code in
+ tpmi_init()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH	 <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Date: Fri, 06 Jun 2025 07:28:26 -0700
+In-Reply-To: <aEKvIGCt6d8Gcx4S@stanley.mountain>
+References: <aEKvIGCt6d8Gcx4S@stanley.mountain>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Add device ID SAM0426 (Notebook 9 Pro and similar devices) as reported
-and tested by GitHub user "diego-karsa" [1].
+On Fri, 2025-06-06 at 12:04 +0300, Dan Carpenter wrote:
+> Return -ENOMEM instead of success if kcalloc() fails.
+>=20
+> Fixes: e37be5d85c60 ("platform/x86/intel: power-domains: Add
+> interface to get Linux die ID")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Acked-by:Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[1]: https://github.com/joshuagrisham/samsung-galaxybook-extras/issues/69
 
-Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
----
- drivers/platform/x86/samsung-galaxybook.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 5878a3519..3c13e13d4 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -1403,6 +1403,7 @@ static int galaxybook_probe(struct platform_device *pdev)
- }
- 
- static const struct acpi_device_id galaxybook_device_ids[] = {
-+	{ "SAM0426" },
- 	{ "SAM0427" },
- 	{ "SAM0428" },
- 	{ "SAM0429" },
--- 
-2.45.2
-
+> ---
+> =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 4 +++-
+> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
+> b/drivers/platform/x86/intel/tpmi_power_domains.c
+> index 0c5c88eb7baf..9d8247bb9cfa 100644
+> --- a/drivers/platform/x86/intel/tpmi_power_domains.c
+> +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+> @@ -228,8 +228,10 @@ static int __init tpmi_init(void)
+> =C2=A0
+> =C2=A0	domain_die_map =3D kcalloc(size_mul(topology_max_packages(),
+> MAX_POWER_DOMAINS),
+> =C2=A0				 sizeof(*domain_die_map),
+> GFP_KERNEL);
+> -	if (!domain_die_map)
+> +	if (!domain_die_map) {
+> +		ret =3D -ENOMEM;
+> =C2=A0		goto free_domain_mask;
+> +	}
+> =C2=A0
+> =C2=A0	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> =C2=A0				"platform/x86/tpmi_power_domains:onl
+> ine",
