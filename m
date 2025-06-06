@@ -1,139 +1,144 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8799220FAA4;
-	Fri,  6 Jun 2025 19:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CF2323D;
+	Fri,  6 Jun 2025 19:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749238246; cv=none; b=UrvDorodLQQB5qAnnRrESj+IIy29oVd/uiAnKJFiEvr2TGn3IQ6r84Z6Cjs7gvJWff0bzZrOUE+QPkJQUbp/Z/1UmBODcs4v9Mow0XnHnSVGtcS4cuC9QgtYFjHFhAtffg82IJ4fiPYORV7JjfjZtkXWMjsgwJQxWrKlYPhbdvE=
+	t=1749239694; cv=none; b=ba8k3FZkVliW+er5ll50rT1A3SQkRk0dVcFQBh3KGh/WVmmBBxNqh8dOwWDXmJY1FWxMaogJOk/hPBX0tteGjbvFfyPJCzAVg2cqaS48Pla9UcAPVVa8FWoddJ6jkiwhfuYqChGXPHQZczXFTs+hP/hyDnfab3Hvv393cHh9ZNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749238246; c=relaxed/simple;
-	bh=mop+KlpuK8X386yUkF6VkytkPGwtEzTMMJxWKOhtygo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=iw2Qr7jETCB3lQ1f/Xp7/6pngmQe9RFyJHh0ZIhGZL1hkLy01C4MKdjBbH6kumMXyNmywhZPWoctD1iu+suLFrZAiN1UM7p4fj8+Y8Qf3ySvdbwUIRng/vasBriYuZpMLL170llirUtc3K+UZVXyFYrxItXEwshkKYL9++pfmiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=R/CZGEpf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ls3Sm07C; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749239694; c=relaxed/simple;
+	bh=M2U7m45XzX5ma0cIa1VZzGqbw8q13+6NTCkBPcrGIf0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dZLEjZdlXVT2Sca3nvIr/7XCfdM2pgbLuHskQMeJuB8+1Pe0wyqhnTWZ3nZHQNFtpbm6aOLAgKyC+uGHL3ZqLuVguE+BWmRETS9MM0lSB8B/qz5rcRpN0FKokKXkeP/CQPypx4srYAHQOuYK2XCW8GY/xAGAVByZ0S5ufVtmFOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1GcmQ1c; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="R/CZGEpf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ls3Sm07C"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8D1301140193;
-	Fri,  6 Jun 2025 15:30:43 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Fri, 06 Jun 2025 15:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749238243;
-	 x=1749324643; bh=lEYf3neoow/7vEvxjuEgRsFKRcKeW6cqpzgTmhNHb2g=; b=
-	R/CZGEpf2uJtX9c5zhVO/wgEY531AM5LvDJrSmDrK3jEQzjTkTMzcjRX187dWR84
-	oIbQD8KXGP6YFK9fYC23LRe49M5teDXkK0Kz7d1KVsrLoPZaXXSuRO5by7URUhJN
-	lDmsEUOkOigp1YI6oTnhyIiVzJO7mPl/eULFOqIHC8v85yCxpCbrOhurSUqR+DaQ
-	jxtJ504ytF76XFsmpCienWJKMYFCl3B3Gy8iBKA6zE9AdW+D1ZxDzxrPKqx5eNWv
-	XMeezlkno9ykDQXuhvmLat4lxi6u0mObQxYc4iVVrgInmEeM2NYXWruCDmoW0umO
-	pP2u54ml6Z1U53fqM8UCzg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749238243; x=
-	1749324643; bh=lEYf3neoow/7vEvxjuEgRsFKRcKeW6cqpzgTmhNHb2g=; b=l
-	s3Sm07C1nnR2e9ZaUstuOe39LaA4ILuj5i6IH3wzVdHTi2IaLfZElQ5ssZ8WfQqZ
-	KWosRgmzq2hWEZEj/wjD8GGoMZC/LFUF10n+yLMrRoT7YU5SPNlPDei4/GOYszWL
-	5ex4LXel+75mZdZSLX/L2VdWwvZprLGAWd4y0wNBOKXsho5qSDQVbqMvjf0rbjMt
-	4G1QNaZrTS/8hWtQGnRbOv8xbxVeNndzyU43UN1FphT9p9HhnPoHc3A5tGqEnltC
-	3DffjneC9Mql+t6N0uXSou61iqT2fo8S9fDRn1ABSiAVQB5Bd3a+9nxr64it5oJE
-	vNYJmwuMNFA5c6V43yVYg==
-X-ME-Sender: <xms:4kFDaIxR-T4VMUeCvpyO6b0aNY6mc-cKHTNvPCsAcnYXO97MTjv0tQ>
-    <xme:4kFDaMSccayqbSsT7xH9tiE_xNR1r_maZ-9AHpaTrTTfmElVg5ZrkUQtuS-UPF_pO
-    kMZkGg2lr7GnKFSHXA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
-    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhhi
-    hidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoh
-    epihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphht
-    thhopehovgdqkhgsuhhilhguqdgrlhhlsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtg
-    hpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhr
-    ghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
-X-ME-Proxy: <xmx:4kFDaKUvSPNU1VHVDoLtZsVeoDlZrIuwcqaUW64hDiY5ihLIY22pxw>
-    <xmx:4kFDaGjzibfTxl3_FCUnSXmYzJKrgoIEJNYTi1bBxdOQkl1z75bDjA>
-    <xmx:4kFDaKDXj-b13AJ8C7SQoQBZPyRQEg6wgtjZydwznk16NGjYmI29ug>
-    <xmx:4kFDaHIrX28gXw3p76CQa6l6t2qX-poMA5iFKfHiiFVqfd7undZuOw>
-    <xmx:40FDaAILvoi3Ti-qur14dEFImeIPFodxm3Q5F2ESeqfvgtfgCTm4u-vx>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2ADB22CE0063; Fri,  6 Jun 2025 15:30:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1GcmQ1c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749239692; x=1780775692;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=M2U7m45XzX5ma0cIa1VZzGqbw8q13+6NTCkBPcrGIf0=;
+  b=m1GcmQ1cdGyeZWNTWnYqqZ2/6BG8ncqglfUYYhbnAMHxMf/XmrQLEjY0
+   6/RMRcNru7AtBgt1n2VZUUwWmrLSIRaBnkzzgs2DzJr4o9+EhiTAYMT1i
+   +Br9gP1piQsRXs0XPmj/CyhEcit6fEaOu8wPaU8o0unNeg2Kjn3+qqkP7
+   EINbH/owxXAU977h1U8YIdWLMb0e3q40LTh0oDAX/8d5ew2ANJcMhznLf
+   pSlUMDGZcyF3JU7u/xOwQxNksfZbDXoP61ZBEAeP20WwCVKza9HELhrWs
+   6gweSEXqXtaTSjxiEy8dmA+xgrq7w+ba+t/nMJM9zU0Qd3xZn22gu0Br5
+   A==;
+X-CSE-ConnectionGUID: qicOaq4FRhaI6wF+ddjTlQ==
+X-CSE-MsgGUID: HP928RFPTbqaHGh+/JkISA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="50510229"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="50510229"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:54:51 -0700
+X-CSE-ConnectionGUID: ZYCPfifOQXyBmXDLu+48CQ==
+X-CSE-MsgGUID: G8XK7oUiQQqSuBsF/p3fVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="150747948"
+Received: from aschofie-mobl2.amr.corp.intel.com ([10.124.222.251])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:54:50 -0700
+Message-ID: <b98363d420ec1862ce5a30b49d4d094bebd847b1.camel@linux.intel.com>
+Subject: Re: [PATCH v3 02/11] platform/x86/intel/pmt: crashlog binary file
+ endpoint
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>, 
+ platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ lucas.demarchi@intel.com,  rodrigo.vivi@intel.com,
+ thomas.hellstrom@linux.intel.com, airlied@gmail.com,  simona@ffwll.ch
+Cc: stable@vger.kernel.org
+Date: Fri, 06 Jun 2025 12:54:49 -0700
+In-Reply-To: <20250605184444.515556-3-michael.j.ruhl@intel.com>
+References: <20250605184444.515556-1-michael.j.ruhl@intel.com>
+	 <20250605184444.515556-3-michael.j.ruhl@intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Fri, 06 Jun 2025 15:30:21 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "kernel test robot" <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <68f7cbc2-f81b-47ff-9dfb-093c54bec760@app.fastmail.com>
-In-Reply-To: <aEM6PTCql7l1n6e0@smile.fi.intel.com>
-References: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <202506062319.F0IpDxF6-lkp@intel.com>
- <6d17454f-faac-4616-ac2e-7da80feedf2c@app.fastmail.com>
- <aEM6Da6CZ0DI3x8w@smile.fi.intel.com> <aEM6PTCql7l1n6e0@smile.fi.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-Thanks Andy
+On Thu, 2025-06-05 at 14:44 -0400, Michael J. Ruhl wrote:
+> Usage of the intel_pmt_read() for binary sysfs, requires an allocated
+> endpoint struct. The crashlog driver does not allocate the endpoint.
+>=20
+> Without the ep, the crashlog usage causes the following NULL pointer
+> exception:
+>=20
+> BUG: kernel NULL pointer dereference, address: 0000000000000000
 
-On Fri, Jun 6, 2025, at 2:58 PM, Andy Shevchenko wrote:
-> On Fri, Jun 06, 2025 at 09:57:17PM +0300, Andy Shevchenko wrote:
->> On Fri, Jun 06, 2025 at 01:30:25PM -0400, Mark Pearson wrote:
->> > On Fri, Jun 6, 2025, at 11:58 AM, kernel test robot wrote:
->
-> ...
->
->> > I'm unable to reproduce this issue with a W=1 build
->> 
->> Do you have GCC-12?
->
-> To be more precise you need to have a CONFIG_DMI=n.
->
->> > and I think it's a false positive.
->> 
->> I think the problematic line is in certificate_store().
->> You need to check the value of dmi_get_system_info().
->> Or make sure the DMI is always selected (depend on DMI
->> in Kconfig, perhaps).
->> 
+Okay, there it is. I'll still review the rest to see if the endpoint is eve=
+n
+needed, but if not then you could drop this patch too.
 
-I think this is already in place, but it's a bit of a tangled nest of Kconfig options and could depend on the architecture. I can't disable it in my current build anyway.
+David
 
->> > Am I safe to ignore this report?
->> 
->> Please, try to fix it.
+> Oops: Oops: 0000 [#1] SMP NOPTI
+> RIP: 0010:intel_pmt_read+0x3b/0x70 [pmt_class]
+> Code:
+> Call Trace:
+> =C2=A0<TASK>
+> =C2=A0? sysfs_kf_bin_read+0xc0/0xe0
+> =C2=A0kernfs_fop_read_iter+0xac/0x1a0
+> =C2=A0vfs_read+0x26d/0x350
+> =C2=A0ksys_read+0x6b/0xe0
+> =C2=A0__x64_sys_read+0x1d/0x30
+> =C2=A0x64_sys_call+0x1bc8/0x1d70
+> =C2=A0do_syscall_64+0x6d/0x110
+>=20
+> Add the endpoint information to the crashlog driver to avoid the NULL
+> pointer exception.
+>=20
+> Fixes: 416eeb2e1fc7 ("platform/x86/intel/pmt: telemetry: Export API to re=
+ad
+> telemetry")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> ---
+> =C2=A0drivers/platform/x86/intel/pmt/crashlog.c | 9 +++++++--
+> =C2=A01 file changed, 7 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c
+> b/drivers/platform/x86/intel/pmt/crashlog.c
+> index 6a9eb3c4b313..74ce199e59f0 100644
+> --- a/drivers/platform/x86/intel/pmt/crashlog.c
+> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
+> @@ -252,6 +252,7 @@ static struct intel_pmt_namespace pmt_crashlog_ns =3D=
+ {
+> =C2=A0	.xa =3D &crashlog_array,
+> =C2=A0	.attr_grp =3D &pmt_crashlog_group,
+> =C2=A0	.pmt_header_decode =3D pmt_crashlog_header_decode,
+> +	.pmt_add_endpoint =3D intel_pmt_add_endpoint,
+> =C2=A0};
+> =C2=A0
+> =C2=A0/*
+> @@ -262,8 +263,12 @@ static void pmt_crashlog_remove(struct auxiliary_dev=
+ice
+> *auxdev)
+> =C2=A0	struct pmt_crashlog_priv *priv =3D auxiliary_get_drvdata(auxdev);
+> =C2=A0	int i;
+> =C2=A0
+> -	for (i =3D 0; i < priv->num_entries; i++)
+> -		intel_pmt_dev_destroy(&priv->entry[i].entry,
+> &pmt_crashlog_ns);
+> +	for (i =3D 0; i < priv->num_entries; i++) {
+> +		struct intel_pmt_entry *entry =3D &priv->entry[i].entry;
+> +
+> +		intel_pmt_release_endpoint(entry->ep);
+> +		intel_pmt_dev_destroy(entry, &pmt_crashlog_ns);
+> +	}
+> =C2=A0}
+> =C2=A0
+> =C2=A0static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
 
-Ack. 
-I'll add in a check for the dmi_get_system_info returning NULL, and add a depends on DMI.
-
-Thanks for the pointers.
-
-Mark
