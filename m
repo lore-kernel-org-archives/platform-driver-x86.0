@@ -1,107 +1,91 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F78C28640B
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Jun 2025 09:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D113CF9EC;
+	Fri,  6 Jun 2025 13:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200680; cv=none; b=Fo3FQVNZn8T43qRl0/nVkA9b6gvnp6Eoi+Q+15QonU4uOh8DJm3SRIQ99MTq7g3F+p99jsdEpD2KTXNVynOoQTB5nv424vF1KNTO4gCZalo0+/ZJQMmB59TLMvrXH05WlrvVPwpKhr0MONRXlbr0cRWhU8AQpPAHM6+6JzRz1K0=
+	t=1749215364; cv=none; b=pWSaIcSarOr3zT+rTXQvp8uJno6F5RSel1zOYLubRMrKA/vlFBPewslSEuh3ZJFFBuqvX+ercRuYcwBhy9b+1MQV2tefjSTVOp3ZQIF4vyJllUssCOrAvxjdi73ke2Pe67skDAp7j7inJDGrocFOh2IQO2HgXYctm8DXw8E0APM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200680; c=relaxed/simple;
-	bh=ITvBuxSeIAXDkBJEWGSGD5rlQvO64BrbWaK4vCuf/rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KXibBjBGpPivZdARK3RnF8UYKH5jSN26VvUjW2wKnnSyfSyIxRGOGYyqGDGYFBGUWinpM5DWZbCG/9O3uCoTvKy2DF04gVavl6KAXXf+qLWO+cBnN4+1n7raUQlKcpNOkVJ3AVTCF+IyggRbYP6kB7Dh30IZs5hvR/RSvIW4BpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yr1l27W8; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yr1l27W8"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450dd065828so13776085e9.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Jun 2025 02:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749200676; x=1749805476; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S/emY2XS5cFVoX90o0NgZjiKA3eudgdKvmBzuNCnA9A=;
-        b=yr1l27W8cUM/Ij7/AcbfDzBETTN6LucQXjVhHwYsqs+I0cjoajpSHJcGu49FF0LdNd
-         UVDmZILBPMmJ/09mBBSgqLIC5ptsMLC691HSZYcXviFtfA5ZJ3rRDjQePX+vHwGci5m8
-         qcAaH+8V82AggiqR4EaO4xiFEDfft/CrRxya9h/7I8pUA6T6bJDKZa5JDhBRuKVbxMnM
-         VLra/shle7JRd/rtH1cCFkt41lPEIkY+dxoRT14Jp1wYyU3FFhofZ+WKXsR3k2PquYo6
-         bYQZA7+2CdXYJjWqL+bx/QNnh3tb+1fGYGeY5BrqO3U9dYt5iDu8e2Tix7jkz4OFSsiF
-         n2lg==
+	s=arc-20240116; t=1749215364; c=relaxed/simple;
+	bh=p65BgQsXIRell7NjibwP8/nB9rR+PSzRnhPcxgf6bbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DP6gRyRQ5CxAI1h1lLcO/H3bfByW9vXmZR4oQuRx3w0epLCgTqsDH0lBKH15E9w+KLg03HvVo4Qgg6wE4U16crSk4Ltf6Hr6PkfBYJtqdGQ+lFCKr75dG7Ok42d6Hw96Q72gvczEvcCP82r0SWbO+lU2LMgzJaoUB3dl4Gucyzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso2240955e87.2;
+        Fri, 06 Jun 2025 06:09:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200676; x=1749805476;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S/emY2XS5cFVoX90o0NgZjiKA3eudgdKvmBzuNCnA9A=;
-        b=Xia/rG5/Qu/g2IfzcYctSl2uBol8tK5QlCTPLoYRqn9y9DQh0P4AyPYxDdaoxC5Joe
-         rzNHvXLlhlxrCmDMWpiH+fG6QRRHBWoQKUj9sl69tH+2CSKn087A0rjlEpCpX/ZPk5m4
-         JX0tdZJV/uDed9Erx6BkqHns5pg4mAKL2sq7iqzY5lyeXRZCwQKWmBgjNsoTlMxfRHV7
-         hhsjYeeuyo6WVrmSvst9VMdod+68GuB1lr6O5ScaSk1u0B4jrTbY/kx0UGmbszQ6Gv+U
-         dba1c0PyyviBpxCvyJMAvmPi5WvihpOKOKtptrXN4nHIvwWwMUV6FCnFRmKgE/Qr+Sf6
-         yqkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgj/G97/siylj1OzH8J6KyMBY5Wg1CJX7Lh7MyqMA57WXf+J4TPeMkNCJFUeukxvcCq/g2AEahltNX4yGlZ07B6+97@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhV8JOHCd3kcGsBdtYM4gmQTKmv30aydMyET9p5eR+NKaSqHgO
-	7XmA1L9S8LGyxFk7WSMlbeMKvNFD1dHvE5CP6ixGyBkOFugVFxsWGJXoz21m0sma+NY=
-X-Gm-Gg: ASbGnctbbr/qDBPBGxjbPsPAPXMSeT/4HwOWdsv5Tunx32Js4kOC2uouv9L5PMMKyO5
-	037oTnmZUTojXpzFLklyIbsMo50Fa/EnuwTi7SKRsEjuDNvP6wdfSWjxzFWXNH7f73UbxgOreck
-	u5t/XmrB2I2ywn4Bmj5SwxNfx0RldbYyh1M+DbHZuO2ktmQXrNbCTFqV1SFZwHu7qO2bGIJE6tJ
-	+Ueny/1IBKU+yBYPWdZ4XsEaxNAeTFTuRj419wot8n2Ada/kpeWhy66LP5HQjUHVOw27V9NnqYy
-	lPQKVwMDZb8Zcr8Cg6R2Mv4gpjXjvpfqcR/WCSB7rmgCaz8NHZRnQ+Oz89JX4Q0PgqRMcTMr1YO
-	lww==
-X-Google-Smtp-Source: AGHT+IFhA2vqyp8xEAIPBvNHsWP+ZzsHRKW0V5DhFiNi2JLK+60alY4CgxuHf71qdKGE0Cj1Xq0Z3g==
-X-Received: by 2002:a05:600c:6207:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-452013fd6b5mr27037065e9.4.1749200676516;
-        Fri, 06 Jun 2025 02:04:36 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4526e155ce7sm14210735e9.10.2025.06.06.02.04.35
+        d=1e100.net; s=20230601; t=1749215361; x=1749820161;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SDIM4cWaSDVmDW7CZCAy47kSfugePR2in3Baxdfjghc=;
+        b=I3kp007GoIKy7jJoMzWSIKMTSK2z8IIsaNypqiwRaa3DPnJNpNn/gvbOvJrsfPvK3c
+         Of42xFTT+fmKvSM65mJfWFwH0fZxUfyNzD7nFMyT+IubtjUnzU4zR766a46Kff1caIGJ
+         pg7Qjq/EhbwyAd4quSQz4OnTcNm4k0csdjNCOIT0tiHgJv3kgN8Ac2mlr7Zb7KGeELV7
+         OiCsLj1bzmln304+x/76H4pkUn8TmaoyPPWme+0zg/nTn6LTlvFcjsq5a8BvZgPFHQNS
+         puwGeFstElvX9lvbvT6TdpbtwlvCe+Cx9P2iaNcg9ufT1vt6pQZBdlYiAWNteqq+49+7
+         PrAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGPeUvV+PIqOC7pa9A3H4hMjj2PHqyqIRp9COiRYFdxXV9txre9XVXjqcEBTW7c2XOjqwJQtwpQCpjwPVU0risGNhS5A==@vger.kernel.org, AJvYcCX5OWx1HzHm/sXD2VmnmIgIOapVbTy5j6pghNfz7+A2RX1kBvtDOX6gQRM0/52sfboFZXIqaZmcPIuLCkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIc1rmhKJO0mmZTe30wo6MjBXsXJ1kc4Zu3aqqKQWweVG2nDbn
+	k2MLu1BTXn46FIJI5rNAqGl9SZ63RZGO3OC8Ny9YRzz9b/tnMUbXNBJv
+X-Gm-Gg: ASbGncvy7K7dprzk3FVJDd1RPUlwgVgZnECOWqgw0Rf8MFqGdIwxz0ONOkTnupR8ZNF
+	qvKZQjRFmUHOj/JZ2tSCD5pcUuq8p6+H3nBJvkt8cbTwXefNrM2KYvF73z+U+X6HNDHUFODiJu0
+	shaMLyPSD/VX7XraJOxNtwEgUeB0TshKsng1djut3H07Jt/y2iw8KmK5d48NrIDbJy6J5A8+mkD
+	aF8zs+WnVuQ7mikhO6rpRr2jrY2wBjBMxxP4ZjBKPqOdEoqUMBmvTxUn7jAg9hLW2i2yIYMLSX0
+	h4LJTtNsieJMiwb1oblbQn3Tkh/PP6i34MxvZ/n4vvktVD8Rg0qvDNdpVzTANqGV/6eNthJZrg0
+	3WC0F0yHn/m7pshQB4TlA4oefyLc=
+X-Google-Smtp-Source: AGHT+IGOxCjkdUdURCQroxmFj//+lEKQJxyprwe/KzhvvZnQO0JORgBaWN3NUp/eJgzM2lwmEJUGsw==
+X-Received: by 2002:a05:651c:1545:b0:32a:8bb1:d971 with SMTP id 38308e7fff4ca-32adfc290f3mr7905301fa.18.1749215360651;
+        Fri, 06 Jun 2025 06:09:20 -0700 (PDT)
+Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1cad5c8sm1696921fa.72.2025.06.06.06.09.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 02:04:35 -0700 (PDT)
-Date: Fri, 6 Jun 2025 12:04:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/x86/intel: power-domains: Fix error code in
- tpmi_init()
-Message-ID: <aEKvIGCt6d8Gcx4S@stanley.mountain>
+        Fri, 06 Jun 2025 06:09:19 -0700 (PDT)
+From: Joshua Grisham <josh@joshuagrisham.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org,
+	W_Armin@gmx.de,
+	thomas@t-8ch.de,
+	kuurtb@gmail.com,
+	linux-kernel@vger.kernel.org
+Cc: Joshua Grisham <josh@joshuagrisham.com>
+Subject: [PATCH] platform/x86: samsung-galaxybook: Add SAM0426
+Date: Fri,  6 Jun 2025 15:09:08 +0200
+Message-ID: <20250606130909.207047-1-josh@joshuagrisham.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 7bit
 
-Return -ENOMEM instead of success if kcalloc() fails.
+Add device ID SAM0426 (Notebook 9 Pro and similar devices) as reported
+and tested by GitHub user "diego-karsa" [1].
 
-Fixes: e37be5d85c60 ("platform/x86/intel: power-domains: Add interface to get Linux die ID")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+[1]: https://github.com/joshuagrisham/samsung-galaxybook-extras/issues/69
+
+Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
 ---
- drivers/platform/x86/intel/tpmi_power_domains.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/samsung-galaxybook.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
-index 0c5c88eb7baf..9d8247bb9cfa 100644
---- a/drivers/platform/x86/intel/tpmi_power_domains.c
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-@@ -228,8 +228,10 @@ static int __init tpmi_init(void)
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index 5878a3519..3c13e13d4 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1403,6 +1403,7 @@ static int galaxybook_probe(struct platform_device *pdev)
+ }
  
- 	domain_die_map = kcalloc(size_mul(topology_max_packages(), MAX_POWER_DOMAINS),
- 				 sizeof(*domain_die_map), GFP_KERNEL);
--	if (!domain_die_map)
-+	if (!domain_die_map) {
-+		ret = -ENOMEM;
- 		goto free_domain_mask;
-+	}
- 
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				"platform/x86/tpmi_power_domains:online",
+ static const struct acpi_device_id galaxybook_device_ids[] = {
++	{ "SAM0426" },
+ 	{ "SAM0427" },
+ 	{ "SAM0428" },
+ 	{ "SAM0429" },
 -- 
-2.47.2
+2.45.2
 
