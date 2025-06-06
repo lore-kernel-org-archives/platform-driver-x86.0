@@ -1,130 +1,89 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2059A17548;
-	Thu,  5 Jun 2025 21:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2202C324C;
+	Fri,  6 Jun 2025 03:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157421; cv=none; b=FPTWwuoBew3iiEwaOiS7dPjI6r5BogVlfOngpdBkYUJqB+WDvpKHpEWKbbRZoEMWw+AOGnyNaY8YB7GNbqmvoznqXRLVRKv8IuwdPjfJAewacFH9xsCgqdhBqbn2VM0CbgsUB685KXNR9CEEu0IsrR4UM0Wm1ocs2hucFYCm0WA=
+	t=1749181662; cv=none; b=o6Ub6RHg54KKx7306/JMmC8Yi7tfGEsGC19A0Xrdgy7IpRiT1JUi7sBUOeKkiX/EBej8pAbmHWpJ99NaipWucBcGluFdWKBJUwAdTUQAlQqP7T4YiyaDsvOAxzchvEB92Y/sAVCGt8X3mu/qp7hVXLG6+tC3UNkKTb22wlWWz5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157421; c=relaxed/simple;
-	bh=DxZuCT3zQTNmwF1w5Jm8UNNxG3gAbyWGaSO957EG0X0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NFX/E9MhZbRZK8XCZn49S3ZW/9jo83RSzlGFJe4vnhDQwFV4anST5IBrksM/HKKnlhgFeQrRsnAUQafx2fjvtHUO7WqD3uVpgKiVAQEoUwV78/PkTeauHolGBZPQtBpkfd8QsNWmn2x9LT10LjQLevXko6lZBAOHzDYcYE7Iivo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lXP4G1Xq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eeiE05iw; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749181662; c=relaxed/simple;
+	bh=2NMxuTL0gu7ifpRUazjZpgZ8fKXD2KWHPJLk3dFMSSE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=lZINauX/b6nxeBcTWqYTGyg1ua9DIMc79zNYdQj5w0GXAyC6WdGOKpGakq4J05w53DtP6Q+St9z+uTdVR7+97VnIbqkyLghAiFLPx4ilL/tR2XFZweQrRttSjWAVXXUu+lerXEF7O6RLDyYapj28Swyt8tbjOebBjLXpUyI2c2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqLE2VND; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lXP4G1Xq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eeiE05iw"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 934E825400A6;
-	Thu,  5 Jun 2025 17:03:36 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 17:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749157416;
-	 x=1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=
-	lXP4G1Xq5ZjVlFKq7Gix18VYqGVRI/WRB0nc7KXjXTNDuuRMIHdVUkJd5GDrEqbn
-	F0fBSSDKhriKiwnMEKUEKPSZwyHliTMH38NCC2h4d1UPa9P8Q0Jh5eEZXo1sRyXJ
-	R1k7Y6xy0TIC3edWP5R2/Jz/IxHIFArRH9F6jB8rpgj3rmFk51OW0/RNAv24mVzW
-	Tx4hNjMkzSGZRVPDZ5M4CddPVoG7OF//c1EDNtFfWif/UglsuUfsG6mUA5dVtORf
-	vOKyBhq10IhVRJvBTcZpOq89utXSmCajHfH1d+F61dSeroEHmBMtsr3SqLsWTY+R
-	nQasJAaVFhP9l0DurRyrUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749157416; x=
-	1749243816; bh=zVXTQZbdvC/TAzsb8x4vqo9EMW+NlidVTsUt3AlM1ic=; b=e
-	eiE05iwGYDaO3E/O8JDndkKK0VxO6F1x6Hm+rFuL2llSHoH1UAXlJuLOflOElRMD
-	9v1rv9b6bzgasRmeA7aJcU4Zs4VT0vvmr+BFoSt72hzIn1uKN/Ndex6j3ViGtWoo
-	8LHA0abS9VAUTl6Z1bZ9hLdClhmLfyZfFm/6ZdIThtPeiIHVlp7ja5A+RCaB6zU9
-	Uf6JQHymBioylFyLYZt+gaZnBAC0jEG+/hWGDmwmE8avbY7hJwwGeG6pqZOmIvac
-	IUZ29rY7b6Fs2cSdiR6WRg0LH+3jqwBeJTzHHdpDBd55rTY1gyeAHZ/l9Yyl4yw8
-	KDt0c+rhum9FGvMTmGmxA==
-X-ME-Sender: <xms:JwZCaNOYXk3GU1KfdHQwcm5gjtm0nFK96JEChOWimEFb3Xsf0z7tDw>
-    <xme:JwZCaP-_DhP4kX2MeE_ciRlbqT7TmRQtQ8NoFCUmBoRJ5UsTBbFMUu9073LjeT52O
-    ktUjF2kVaSwlzXyEuY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
-    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
-    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
-    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptghorhgsvghtsehlfi
-    hnrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:JwZCaMQxO3al6dnB9sAdgd8ehpyzlkre8wKXr_4f6tlTNw8GmhNm2Q>
-    <xmx:JwZCaJu0faNmirli2wnJb6Qgxyczz_r6eaqfNJ85KVD4rGjFJ2wxTA>
-    <xmx:JwZCaFfs8LEfV22mhfqxO6oZU_Bd1x-r8bDhi14rhokQhsQUNLo5yw>
-    <xmx:JwZCaF1nBQuTKr9assGbqRn69EmcugK5WfAevgrNEySn17TCeyC7tw>
-    <xmx:KAZCaB89Oo0mEfqAobynotnzf2EN0r0SWxl4WmYtyFEH5vw3KrU3ka-W>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BFFF82CE0060; Thu,  5 Jun 2025 17:03:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqLE2VND"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so2511798b3a.0;
+        Thu, 05 Jun 2025 20:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749181660; x=1749786460; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lr2vvCKQAF0INUKCLuc8SKZUA7cjJKU+AV4AIvcmXhc=;
+        b=YqLE2VNDBN2rB762+sedi22OENh3Arpvs8TEhznklcewuk7R5zraU4AkASJrvYXtL5
+         ck1Ub92LRIa1sghAlJ4Ci1pRPhDN81i/v9Y2K9tov4AYFbjIv3X25muOqZ/sTVJLTNO0
+         n66EQtwjE7o44dyhGw66LO++koD+oynNDibFZ8yvHdok8V8iKJe2BU4pgvJka/tBtAum
+         2e9giwOcXIT5lwWjZTH797PnQ3A47ppDvOuF/GqdYOQRQxs6hgphXvTrSVrjCO5HSxcq
+         ncvqvYaMHLpgqMSxelrvNam2ymxFVSWS90FQihovmYv5gEGgqlfmjuIrXIv3WOxdI98L
+         LjNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749181660; x=1749786460;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lr2vvCKQAF0INUKCLuc8SKZUA7cjJKU+AV4AIvcmXhc=;
+        b=EIUnW3vw60XTwEKFcGmuRxATm0HZPJ5maKoOogfJXj+Fdq893ADPOUfli4nYG6SxZq
+         OSLmcLH/Ao7fqnypVCRXc71O6ckCmRZgrQdLNijTbmM7R1UgxOSwdvMaqEWR+cLFIQdc
+         lkl3Vmv+alBLGDLmaRQ8vl5/zhtUIDuGhICA5B01KT3j9n+OaBqcQfEd2BsI4YSK0ayZ
+         H/3Ki9DO5L2UDdLV2kERuR2ogX7uoaah/436YxvUUvo42ljvWlLCV1D6jx6XIYpJEjxF
+         3XgU5j4OUtKocNk/JANemAeGYstIzpOckA67smWHn14327eVVpjrt2RNs6K8XrTgUJ/L
+         8gQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwI3JoR3SmF4eC18DbrSwnquBJNwzqB9NS2/ljMUjsTDn5TY+88s5O+4eW46y6tVwghPPPPNTi@vger.kernel.org, AJvYcCW2wU/E7TgMQVgx4ldkerl3NL+AZiTDrFlwYUyq/p8i8pybbtMrJoPfujUR1s8rM84vlMnoIjjjkaCsFqvZc9+d2GmvFA==@vger.kernel.org, AJvYcCX8aW8VCEDWNrscegI8FqG9y5Q6cECa96H0Q5fT+vvuwGV0RfnDsoXQd+sgVuVKcMUf/yiqTSxrCD9yZyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy86f5CcEjJCckJ3am2cjc/GO0Y7SNEo52GhNEn18VotbcBt7LK
+	xndn+hu3Lqq8x3rI45Ovlovc7Oq2aKW+aW0LKm07UFBk7CRh+LBxZDRH
+X-Gm-Gg: ASbGnctSAl94vmaw/7P6AtiMq0+NyjkMLIrvmk2TsXD0S4hGLRN0hgp4QSIEFCptAOX
+	3SH/h+OFw8qMuyWCOfjEw4e9zWP9VJCqGhJ4vDDEpYnpudgU734czVBHuku6ra53R67Tfu/zl0I
+	fC7p8/IZ80UIPkaJDmqipfKcijnpz8AA7yjdWFmNU4qa+a9eYJsD7naT6NITW7EjFjMsajP1aMr
+	Kmie9aeei5e4dfzAXdG2PLbGMugQAsrkeHxu4BAY3A7UyOKxchZRkUGJUs4bXdbmbEVoxb1/+cX
+	k8TZDjlj/i5U3VBEnmS148d9ppJ2wxY6Z6ihkN0YJA0EZYW6AATDe5Qj6twUyPUeXA==
+X-Google-Smtp-Source: AGHT+IF2sQQ5dDUhEWpDErUQAEcTihmeES3m1x3jmzqV/MK0NFzGtiOQtqp43btFMj4+mW4UJ5XWbQ==
+X-Received: by 2002:a05:6a20:9392:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-21f21772c3emr1513246637.21.1749181660509;
+        Thu, 05 Jun 2025 20:47:40 -0700 (PDT)
+Received: from [192.168.1.12] ([125.235.238.36])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f895274sm386464a12.68.2025.06.05.20.47.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jun 2025 20:47:40 -0700 (PDT)
+Message-ID: <bc6ea194-d86d-46d5-b62f-128af7016bae@gmail.com>
+Date: Fri, 6 Jun 2025 10:47:37 +0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Thu, 05 Jun 2025 17:03:15 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
-In-Reply-To: <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
- <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
- <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+To: i@rong.moe
+Cc: hdegoede@redhat.com, i@hack3r.moe, ikepanhc@gmail.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+References: <20250525201833.37939-1-i@rong.moe>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
+ polling
+Content-Language: en-US
+From: Minh <minhld139@gmail.com>
+In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Andy
+Tested to work as expected on my ThinkBook 16 G7+ ASP (Ryzen model) with
+the following:
 
-On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
-> On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
->> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
->> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
->> >> Create lenovo subdirectory for holding Lenovo specific drivers.
->
-> ...
->
->> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
->> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
->> >
->> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
->> > of the folder name in the file names. Note, the modules will be called the
->> > same (assuming no ABI breakages due to renames).
->> >
->> Interesting - I'll have to look at that a bit more.
->> Any objections if I leave that for a future change?
->
-> IF it's nearest future :-)
->
-I got this implemented - I'll include it with v3. It's less complicated than I thought when I initially looked. 
-Thanks for the suggestion.
+- Fn+F4/F5/F6 inputs, more responsive than before and no shutdown.
+- Previous issue with suspend including close lid, sleep button, 
+mouse/keyboard during suspend cause shutdown has been fixed now
 
-Mark
+Tested-by: Minh Le <minhld139@gmail.com>
