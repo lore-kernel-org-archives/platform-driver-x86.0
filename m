@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04ACF7E9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jun 2025 10:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483D57E9
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jun 2025 10:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749465989; cv=none; b=TQa38B/IAt9+lTSe/0KFuJp740LgdJ5rtQCWnkONwH0/UKeC+sYYEt8kUGmwiEoBwTJQpRfb/2s8s3gtFvkupbwY4ffg9XXr/5rglfErBYWZTom83L4sHXhH1lU2xxpHMl6KVZnQdnvS1pQkBSScoMhTE0fuA9ha/AI6BmWEC8E=
+	t=1749465990; cv=none; b=F9WbJmTpEshXIx6jpnrykX2soAsKxXOhEXzgdv1YwQlkgqHo9AI/fBkumlyXiqzkR70merq3yTVzKOrFE1O2ebkg//1BvSxCJo/CZbIWrIy+KgE/2ELcoGOiW9+AvxysmaAPbnRk7GUhKzj7xJ/xWLf7g98sqWzPDpIB0elJclg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749465989; c=relaxed/simple;
-	bh=5ZsHhvUeYD45TrMQ6Rt83N88oNduYBfMovIJJNQO3j4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LOuOPTAQ30rVmjW+W2rNK6gecrCwUq+GzqtGhqITKnPj/AiGQuQEA8V4q4NT1MwPcZzTEXQ6dAWFqRk+G8lXY62iMXRBaUxO1wS4PUKDtzwatb+S+JLK//0vKfkSKBnCWOUNISyeT9CsA2Ja3qKQGrn/g+N+pETsFpC8IC4Gc+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4FWuOEC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749465990; c=relaxed/simple;
+	bh=DI4t7vpioQF/iUOvsC4FLIfkadopIPWDrR7pQnrGtKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tuyYNYae2IC5t2O35CC23pTWml50ErNnd0YK9JIYsBZ4spnSygCY6OSmHtEDHuGd2Jq8XuuhOynQ2JGUSopG73EsOoJuNag+kt0hjPiE1xsvhQUWvAupQhS0cpmyEgVpmbumVFSMG6ZfVZenXqWpRMYDoInfxWX09KcrtxiHsNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUb/U1J2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4FWuOEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A77C4CEEB;
-	Mon,  9 Jun 2025 10:46:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUb/U1J2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEDFC4CEED;
+	Mon,  9 Jun 2025 10:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749465988;
-	bh=5ZsHhvUeYD45TrMQ6Rt83N88oNduYBfMovIJJNQO3j4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i4FWuOECktBARCzFqx4+h0A5DZf+V3LyoDamXMW25gz1e5o33ApiX+HgSRwsBEjcT
-	 7KMz9vLM2L4eT0n8afy5Vsi8yHnGkQXB4l4FZ56h1h9QUKdSJ/sIGiXbj1IHVj1kNT
-	 th63Di2HqquO7U+aowbBhTB2aMVVoghFWIjfiChQBZVHLDIrPrnUZkNx+Rr4XB8eeK
-	 vSzdam5aaqZqkrMczzY5XKI8H0SAmGlUphy3Q7kgvO9KoLZ5DuQedTbPjZD7OUE26C
-	 DbaDofJzySo+YikzL9O+eSCSsMT8xukyq1UY1xKAoMFf7SE2lJJWpteTAUdabHroFM
-	 oDoQR7H0WX91Q==
+	s=k20201202; t=1749465990;
+	bh=DI4t7vpioQF/iUOvsC4FLIfkadopIPWDrR7pQnrGtKI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qUb/U1J29NkDxgojfqX1+i9fej9xwww4SPkBLzfZhXV96bTV6mwoa0EI9mVEOdzrq
+	 FMlTlsum4cuqL9dXSmyO9T8oIBAPRdTPbWcT8raEQruZq+9q+jf7cdO9ktAlTb6E+s
+	 4VynOpAxmLHIY7804YvDXk6Mw8T3+o7B/ihMlPGsryOzk0ugcq0a55Rc+5pKTQxDTk
+	 VCqZ8yT8Y1vAzt3dyAXuYlvNo1l3vOYo/9cyhI4ib46m+LNNq7a5fq5mVB6ChkSzhf
+	 Wc1YDZwL7q1oWjlE1wVgbMMOHdxyjDneQky632Bcp9cbypo355u/B9B7DNsTavjKNP
+	 8E8AFoLzlRQbw==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 1/2] platform/x86: x86-android-tablets: Add generic_lipo_4v2_battery info
-Date: Mon,  9 Jun 2025 12:46:19 +0200
-Message-ID: <20250609104620.25896-1-hansg@kernel.org>
+Subject: [PATCH v2 2/2] platform/x86: x86-android-tablets: Add ovc-capacity-table info
+Date: Mon,  9 Jun 2025 12:46:20 +0200
+Message-ID: <20250609104620.25896-2-hansg@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250609104620.25896-1-hansg@kernel.org>
+References: <20250609104620.25896-1-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,106 +45,106 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the asus_tf103c_battery_node to shared-psy-info.c and rename it to
-generic_lipo_4v2_battery_node.
+Add ovc-capacity-table info to the generic battery nodes.
 
-This is a preparation patch for adding ovc-capacity-table info to
-the battery nodes.
+The values come from the ug3105 driver which currently hardcodes these
+values. The ug3105 driver will be modified to stop hardcoding this and
+instead get the values from device-properties.
 
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- .../platform/x86/x86-android-tablets/asus.c   | 21 +++----------------
- .../x86/x86-android-tablets/shared-psy-info.c | 16 ++++++++++++++
- .../x86/x86-android-tablets/shared-psy-info.h |  1 +
- 3 files changed, 20 insertions(+), 18 deletions(-)
+Changes in v2:
+- Remove final comma at the end of the table initialization
+---
+ .../x86/x86-android-tablets/shared-psy-info.c | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
-index 7dde63b9943f..97cd14c1fd23 100644
---- a/drivers/platform/x86/x86-android-tablets/asus.c
-+++ b/drivers/platform/x86/x86-android-tablets/asus.c
-@@ -206,24 +206,9 @@ static const struct software_node asus_tf103c_touchscreen_node = {
- 	.properties = asus_tf103c_touchscreen_props,
- };
- 
--static const struct property_entry asus_tf103c_battery_props[] = {
--	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
--	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion-polymer"),
--	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
--	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
--	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 2048000),
--	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4208000),
--	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
--	{ }
--};
--
--static const struct software_node asus_tf103c_battery_node = {
--	.properties = asus_tf103c_battery_props,
--};
--
- static const struct property_entry asus_tf103c_bq24190_props[] = {
- 	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", tusb1211_chg_det_psy, 1),
--	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
-+	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_4v2_battery_node),
- 	PROPERTY_ENTRY_U32("ti,system-minimum-microvolt", 3600000),
- 	PROPERTY_ENTRY_BOOL("omit-battery-class"),
- 	PROPERTY_ENTRY_BOOL("disable-reset"),
-@@ -236,7 +221,7 @@ static const struct software_node asus_tf103c_bq24190_node = {
- 
- static const struct property_entry asus_tf103c_ug3105_props[] = {
- 	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", bq24190_psy, 1),
--	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
-+	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_4v2_battery_node),
- 	PROPERTY_ENTRY_U32("upisemi,rsns-microohm", 5000),
- 	{ }
- };
-@@ -321,6 +306,6 @@ const struct x86_dev_info asus_tf103c_info __initconst = {
- 	.gpio_button = &asus_me176c_tf103c_lid,
- 	.gpio_button_count = 1,
- 	.gpiod_lookup_tables = asus_tf103c_gpios,
--	.bat_swnode = &asus_tf103c_battery_node,
-+	.bat_swnode = &generic_lipo_4v2_battery_node,
- 	.modules = bq24190_modules,
- };
 diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-index a46fa15acfb1..55da57477153 100644
+index 55da57477153..fe34cedb6257 100644
 --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
 +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-@@ -39,6 +39,22 @@ const struct software_node fg_bq25890_supply_node = {
+@@ -39,6 +39,58 @@ const struct software_node fg_bq25890_supply_node = {
  	.properties = fg_bq25890_supply_props,
  };
  
-+/* Standard LiPo (max 4.2V) settings used by most devs with a LiPo battery */
-+static const struct property_entry generic_lipo_4v2_battery_props[] = {
-+	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
-+	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion-polymer"),
-+	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
-+	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
-+	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 2048000),
-+	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4208000),
-+	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
-+	{ }
++static const u32 generic_lipo_battery_ovc_cap_celcius[] = { 25 };
++
++static const u32 generic_lipo_4v2_battery_ovc_cap_table0[] = {
++	4200000, 100,
++	4150000, 95,
++	4110000, 90,
++	4075000, 85,
++	4020000, 80,
++	3982500, 75,
++	3945000, 70,
++	3907500, 65,
++	3870000, 60,
++	3853333, 55,
++	3836667, 50,
++	3820000, 45,
++	3803333, 40,
++	3786667, 35,
++	3770000, 30,
++	3750000, 25,
++	3730000, 20,
++	3710000, 15,
++	3690000, 10,
++	3610000, 5,
++	3350000, 0
 +};
 +
-+const struct software_node generic_lipo_4v2_battery_node = {
-+	.properties = generic_lipo_4v2_battery_props,
++static const u32 generic_lipo_hv_4v35_battery_ovc_cap_table0[] = {
++	4300000, 100,
++	4250000, 96,
++	4200000, 91,
++	4150000, 86,
++	4110000, 82,
++	4075000, 77,
++	4020000, 73,
++	3982500, 68,
++	3945000, 64,
++	3907500, 59,
++	3870000, 55,
++	3853333, 50,
++	3836667, 45,
++	3820000, 41,
++	3803333, 36,
++	3786667, 32,
++	3770000, 27,
++	3750000, 23,
++	3730000, 18,
++	3710000, 14,
++	3690000, 9,
++	3610000, 5,
++	3350000, 0
 +};
 +
- /* LiPo HighVoltage (max 4.35V) settings used by most devs with a HV battery */
- static const struct property_entry generic_lipo_hv_4v35_battery_props[] = {
+ /* Standard LiPo (max 4.2V) settings used by most devs with a LiPo battery */
+ static const struct property_entry generic_lipo_4v2_battery_props[] = {
  	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
-diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-index c2d2968cddc2..bcf9845ad275 100644
---- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-+++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-@@ -21,6 +21,7 @@ extern const char * const bq25890_psy[];
+@@ -48,6 +100,10 @@ static const struct property_entry generic_lipo_4v2_battery_props[] = {
+ 	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 2048000),
+ 	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4208000),
+ 	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
++	PROPERTY_ENTRY_U32_ARRAY("ocv-capacity-celsius",
++				 generic_lipo_battery_ovc_cap_celcius),
++	PROPERTY_ENTRY_U32_ARRAY("ocv-capacity-table-0",
++				 generic_lipo_4v2_battery_ovc_cap_table0),
+ 	{ }
+ };
  
- extern const struct software_node fg_bq24190_supply_node;
- extern const struct software_node fg_bq25890_supply_node;
-+extern const struct software_node generic_lipo_4v2_battery_node;
- extern const struct software_node generic_lipo_hv_4v35_battery_node;
+@@ -64,6 +120,10 @@ static const struct property_entry generic_lipo_hv_4v35_battery_props[] = {
+ 	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 1856000),
+ 	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4352000),
+ 	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
++	PROPERTY_ENTRY_U32_ARRAY("ocv-capacity-celsius",
++				 generic_lipo_battery_ovc_cap_celcius),
++	PROPERTY_ENTRY_U32_ARRAY("ocv-capacity-table-0",
++				 generic_lipo_hv_4v35_battery_ovc_cap_table0),
+ 	{ }
+ };
  
- extern struct bq24190_platform_data bq24190_pdata;
 -- 
 2.49.0
 
