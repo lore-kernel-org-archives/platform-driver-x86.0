@@ -1,58 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEFA281368
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jun 2025 07:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5258E28137D;
+	Mon,  9 Jun 2025 07:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455595; cv=none; b=Mg/6cmCe1BMDmVwlxeDfbpDDVseHEZ1s6m0TE0QC+8LmzIoA4WD1CYa6uZixHFR+StczPkXt6aQghJ0TIwbZCsVNSmPTzymcBp1enLxgGJf68UJejtgVy6Wb9BYl6mHFFQBfCvmpLc243Df22lVb7uVGPsYJzwOFQvEDcZkSmkI=
+	t=1749455603; cv=none; b=Wu1nGjnd8luOPjgyPkiFBbz4D3ij5VC82WH+O7KTiIMBCdtMHv9PrpreE/nAqxzdqb8a9srshSmKh8DeOV6DH4G6aVUf+mPU/dyWG0Jd0bb1K2C9uXrXlDm2de5pf7s7HvmFvuQHC1bSOZp3xIOozqngAfQrfk8isMOs3V0BEEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455595; c=relaxed/simple;
-	bh=2VhBVoFW0kqafxSyM0OejnZBMtK6tshxOVT1OyyPG4k=;
+	s=arc-20240116; t=1749455603; c=relaxed/simple;
+	bh=7LijH0SPeNUjBldUSejfieceyNximr4tVLZLdK910TQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GOgXJ5JwNtoH7LdErH2k6fNsBg0ubUYRLN1Z2uZmK5U/3xvcoqmULgXznIuwK0vgIrqmMTf3mHvvZGbzO6ioZ1fQmHFoWYZGqEd625hT2qn1vwwivaYTuV37VG0/GPuVlVMaRiGCpcjGSimarj1F7BvUzluKpEGigezYnQ0kNgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kt1QEYsH; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=UgmpaqMhbWtxn6JmaohvteLXPxRx9nv0PFgy/gM2tfzHxwjTWQsr861paXvj7RNf6sWtvh/h4VCNcGycQPdl/MKUfb5zUR24Nx7+gtSzHUMr6bY9ANG8eeVcf6Si8m1nzEtF/GBqseduucIpK8QE/SV7LykxoKD4rDryZbNjmDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2BKJTZb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kt1QEYsH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2BKJTZb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749455594; x=1780991594;
+  t=1749455603; x=1780991603;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=2VhBVoFW0kqafxSyM0OejnZBMtK6tshxOVT1OyyPG4k=;
-  b=Kt1QEYsH3W9tdNVCCROJryEDX/tyTD8DCV6dGDrYsv20Mqa2qCq5g4rj
-   C1tzRa0UjwckXSjyc7als7tI98dcHaE9DHOURzMiCgSx+QWW1o4uTtX/O
-   1iad/ZWRvyOyHBSJJHTzn+uxvQj6TMOQLe7qAVTYkGkwvpfdsZj+2Fb/+
-   WQ7sNiiWRwxJ7XHttAhOLNPd0ToWb/1NJQLEYQXwuQo8YixBzsQBRv8lq
-   aXBWW6hFrw9ZLvkFFaMvaN5zw5DNWPFMqEm5QUd2GFr5SW/aGbngrj4m3
-   7qbYg/jxQz2wzbGnmbWFQFG87xo0h1ib+9sw3rKIyeg3/bxu0ZFvMQJXb
-   g==;
-X-CSE-ConnectionGUID: 9iblyDPiSlK4RRxZBzGEFA==
-X-CSE-MsgGUID: p7L8Tbd7QQKAGkqZ5Wwv4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="68973418"
+  bh=7LijH0SPeNUjBldUSejfieceyNximr4tVLZLdK910TQ=;
+  b=F2BKJTZbmpuqEgU+CuzTBdRVw3vRLu/pNreVrRTPxe6lCRzPctI9YR2v
+   EATzKa7+iorYmGasEmvwcZB6v6b0XvJ7oUdytn78DYR4G9YnU6wih7lRg
+   anpjPfHg1iFuEvDva9EiWqEQpWr9P5I2I8FmPGI60Q0xLw2C0kB+mmG0D
+   PjkmmmyNPIjGSqOsbFFZidXPJHGvgd/B0XKH+3+gDX6lNYWZVliEbifDq
+   gqRYKLZ4k7lnSTqxIELJqAYU/58c9n88ppCrCkaz+PcZkePDi4wjR207y
+   kYCYVMOPW4tIvtk5CazBZHw+9uDfV+IZYXDVr1H/hQa0i0eNWdvrsG6PG
+   Q==;
+X-CSE-ConnectionGUID: XhjlAaf0TdOI+c1USvIuiQ==
+X-CSE-MsgGUID: GYXUIw9gSCanbAjXxhCYSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="68973433"
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="68973418"
+   d="scan'208";a="68973433"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:13 -0700
-X-CSE-ConnectionGUID: SD8hktx0RdyiG4jo9Y85eA==
-X-CSE-MsgGUID: mXJd8hJ1SpuVx9j7OudEoQ==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:22 -0700
+X-CSE-ConnectionGUID: 9Gi5XOEeRO61pud+b9myAQ==
+X-CSE-MsgGUID: Jy9aPLFdSjic6eJM+WAapw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="146324959"
+   d="scan'208";a="146325004"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:10 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:17 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, 
- hdegoede@redhat.com, Mario Limonciello <superm1@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20250603132412.3555302-1-superm1@kernel.org>
-References: <20250603132412.3555302-1-superm1@kernel.org>
-Subject: Re: [PATCH] platform/x86/amd: pmc: Clear metrics table at start of
- cycle
-Message-Id: <174945558571.2685.1305515456946931009.b4-ty@linux.intel.com>
-Date: Mon, 09 Jun 2025 10:53:05 +0300
+To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Carlos Bilbao <carlos.bilbao@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, Jake Hillion <jake@hillion.co.uk>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ sched-ext@meta.com, Blaise Sanouillet <linux@blaise.sanouillet.com>, 
+ Suma Hegde <suma.hegde@amd.com>
+In-Reply-To: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
+References: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
+Subject: Re: [PATCH v2 0/2] x86/platform/amd: better handle scheduling
+ delays in hsmp_send_message
+Message-Id: <174945559319.2685.13353516764058471154.b4-ty@linux.intel.com>
+Date: Mon, 09 Jun 2025 10:53:13 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,15 +66,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 03 Jun 2025 08:24:08 -0500, Mario Limonciello wrote:
+On Thu, 05 Jun 2025 19:09:25 +0100, Jake Hillion wrote:
 
-> The area of memory that contains the metrics table may contain garbage
-> when the cycle starts.  This normally doesn't matter because the cycle
-> itself will populate it with valid data, however commit 9f5595d5f03fd
-> ("platform/x86/amd: pmc: Require at least 2.5 seconds between HW sleep
-> cycles") started to use it during the check() phase.  Depending upon
-> what garbage is in the table it's possible that the system will wait
-> 2.5 seconds for even the first cycle, which will be visible to a user.
+> hsmp_send_message currently relies in 2 places on the assumption that
+> usleep_range will complete in well under 100ms. This is not guaranteed,
+> and is prevalent when running sched_ext schedulers or possible under
+> other high load conditions.
+> 
+> These patches alter the behaviour in two ways:
+> 1. Checks the result of `mbox_status` a final time if the sleep took us
+>    past the timeout. This gives a useful result under test when there
+>    are significant scheduling delays, rather than -ETIMEDOUT.
+> 2. Removes the 100ms limit on awaiting the semaphore. This allows a
+>    second thread to compete even when the other suffers large scheduling
+>    delays.
 > 
 > [...]
 
@@ -82,8 +90,10 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/amd: pmc: Clear metrics table at start of cycle
-      commit: 4dbd11796f3a8eb95647507befc41995458a4023
+[1/2] x86/platform/amd: move final timeout check to after final sleep
+      commit: f8afb12a2d7503de6558c23cacd7acbf6e9fe678
+[2/2] x86/platform/amd: replace down_timeout with down_interruptible
+      commit: 784e48a82976ee0b645788750343cd1b28a372f3
 
 --
  i.
