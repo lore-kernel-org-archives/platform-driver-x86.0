@@ -1,95 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08292AD14;
-	Mon,  9 Jun 2025 10:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E846D2517A4
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Jun 2025 10:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749463471; cv=none; b=KSOcPvd5loJGNnM+XeU4x0tZH00OLjmZWxRqyhrq5ZuQh5ZBwXSo/UNte0IJ4E2UHrAIwqAtZK/2Wef3e1yqxP5mu2zgMU2VEfFd7bC6pC7zNbrv7G8uXhE6i+Sic/Jy0eVrB6ZkMeQ+S7xDWKLHGEO2MddPOyg+1drxdC0/U1Q=
+	t=1749464546; cv=none; b=Nt3SjYHdmSUb+C8nhSnCI9XLMTbDUb+ey2fpSdVC1GjEThnA4JjoqYypfruynYRU4QufJdlRRdyvySO1fyDYUTYLz2sSu8bn1FKYkUw1IL/vN/PsQycrmK3oNB9CbeB7LZzrsfaLxBL9/eszHPzJVHbK0tS4CaZYWVjQXigpyAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749463471; c=relaxed/simple;
-	bh=xA/k0GHRhOpNaqNOgCivX4AoaTF5llgmSIHoIT01l+k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eWTf6S+bAR5kK/rr6wyWWqljOq1joK3lcyKEI8eUjhRE2GxadyOiQibjj/lBDGmc4RlEdZhomMPWXyKxkV4UhXL9AqqD/w0HeDoaDyTmZkhbsDbLv2ivisrbWq+rGBX16t3I8yRYyw1lWGuT4eQSIpoRytQgxf/ivME6o9Z6M+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxkkWr+w; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749464546; c=relaxed/simple;
+	bh=0Fc6cDFUObMf+Q4kriqQdKo/9JgtnJCCVRFIswhGqco=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DK6EMfUio//md/ZCNrCybAUJynI+m4Gu1HHsqGNQvYIgGD+1OCekLwS+YlyMEsedy0H6RUnFcmCbkYVTDLruVK1PxKoGSSiz/A9OvaoXRV7bgzROumseETFuhgC6LsvAotz80UpAldQS9tPu8b6mPcIhlOMTI/bQvoayNzT41KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DNqAPfD+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxkkWr+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749463470; x=1780999470;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=xA/k0GHRhOpNaqNOgCivX4AoaTF5llgmSIHoIT01l+k=;
-  b=TxkkWr+wMMNn3XKi2A3dKfg3SXGI+ffkNpp4ka7+UsG4MwL/rXTDtuEP
-   w7ovVwmyIbkm6UZDiJBKusof89RDPDtRikm0SIgmqGoA+w9NR3fprjUhq
-   lQj0VDirZu1Nyxja9XqSCj9IIofmOzKapU4gLGo3gLc9cZt4hZ6ywW6o7
-   Aep6whIXXSGMHcV8v4WmBZ0y1ihN1wxb69cfC2QlnvKQ5N3H7Fl3NWt6F
-   bQnPgMdII4oUfLIO86ycq2udbXSFc0slsPEkeLZBFoXoJc2DXr4SCEwFy
-   ccSeoyeheQj5R/OvjJ7zgPdt8dWaevA0yKXtUU0rjtaFTaTNcGI406I+q
-   A==;
-X-CSE-ConnectionGUID: KB7nY+AyTzWwonHUiQ8CXg==
-X-CSE-MsgGUID: 1gdD2LCwSUmz197SgvNHcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51529387"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="51529387"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:29 -0700
-X-CSE-ConnectionGUID: oLSyDNZrTruMIeefQI/Jxw==
-X-CSE-MsgGUID: qcpKczmYTsSk3aW3cymMzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="177406123"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- hdegoede@redhat.com, linux@treblig.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
- dave.hansen@linux.intel.com, x86@kernel.org, 
- platform-driver-x86@vger.kernel.org, hpa@zytor.com, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250608012512.377134-1-linux@treblig.org>
-References: <20250608012512.377134-1-linux@treblig.org>
-Subject: Re: [PATCH 0/3] platform/x86: intel_telemetry: Remove deadcode
-Message-Id: <174946345966.3675.2007813244363355783.b4-ty@linux.intel.com>
-Date: Mon, 09 Jun 2025 13:04:19 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DNqAPfD+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749464543;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W+5YRGlYAwgP1pxdrADvOt5Mp9LsFZd7mcyef4W3XmE=;
+	b=DNqAPfD+RPow/68LINyi/ikK9F3BN62nW1slJ0WrkrDSXaVncsmx3X97qccU4jNhrs64Jc
+	Ng9mFrM0RgjucdRIkV6Zv8dOH+TYYEMx2U/sp2Iu2AHJDb2MX+xpL0CrpuoTaA3AhYQO0z
+	hldW4+2OpQGuQSIqM1ys6oJcWKBHSXM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-146-FStkp3j-P8K1sDHxDiyV9g-1; Mon,
+ 09 Jun 2025 06:22:20 -0400
+X-MC-Unique: FStkp3j-P8K1sDHxDiyV9g-1
+X-Mimecast-MFC-AGG-ID: FStkp3j-P8K1sDHxDiyV9g_1749464539
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 290E418002B3;
+	Mon,  9 Jun 2025 10:22:19 +0000 (UTC)
+Received: from carbon.redhat.com (unknown [10.44.32.119])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 66ABE30001B1;
+	Mon,  9 Jun 2025 10:22:15 +0000 (UTC)
+From: Jelle van der Waa <jvanderwaa@redhat.com>
+To: Jonathan Woithe <jwoithe@just42.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/2] platform/x86: clamp charge thresholds on fujitsu
+Date: Mon,  9 Jun 2025 12:21:12 +0200
+Message-ID: <20250609102115.36936-1-jvanderwaa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sun, 08 Jun 2025 02:25:09 +0100, linux@treblig.org wrote:
+For userspace programs it is not know what the valid charge control
+threshold values are, clamping them to the nearest supported threshold
+makes the API easier to use for power management daemons such as UPower.
 
-> Many of the entries in the Telemetry core driver are not called
-> anywhere, and haven't been since they were originally added in 2016.
-> 
-> Remove them.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> [...]
+Jelle van der Waa (2):
+  platform/x86: fujitsu: use unsigned int for kstrtounit
+  platform/x86: fujitsu: clamp charge_control_end_threshold values to 50
 
+ drivers/platform/x86/fujitsu-laptop.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/3] platform/x86: intel_telemetry: Remove unused telemetry_*_events
-      commit: 22428723a27e6ee03dffd86ba62501bffe5b4c78
-[2/3] platform/x86: intel_telemetry: Remove unused [gs]et_sampling_period
-      commit: 2ad029bde3d4dd7787483f646384a93a95922cf8
-[3/3] platform/x86: intel_telemetry: Remove unused telemetry_raw_read_events
-      commit: 458957b8e3d552701cdb55ffacc38627d2039fe8
-
---
- i.
+-- 
+2.49.0
 
