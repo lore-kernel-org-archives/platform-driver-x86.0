@@ -1,943 +1,743 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F61D220F55;
-	Mon,  9 Jun 2025 18:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3C7191F89;
+	Mon,  9 Jun 2025 19:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749495051; cv=none; b=kOPMuyETBxiBrnEvXTrZuNF+bAlI+dG+EzrfWL3KCYFTrTZg1Idf/ZmBzZlg8REsgh9aNi/UCzObvWVTD5p/xxo91Gh7evJIVWAqqgGkdRWeydx1y+rLdJTGspbmxtgbSG1jDTpkbJQAvCVeeZXj3j2dZhLdIiUkTlmFE9cS80A=
+	t=1749495694; cv=none; b=dUP0nWnFm21CGVOAmYF175qgvANpYCqgzEXprYSx2pg5IjEvZ6WVQGvJeiX3SwhABqYGU+3BuETCipcdfgrvmQJK0GAbLzgEmJbwB28AfP+K/77x8xMcq5+XXz0PkuEtQBbAZyXgw7KcyGBuhf2JJeCJBKUucaU883sNS2oLmbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749495051; c=relaxed/simple;
-	bh=Nj8y0xGvLwOji5rbBuwip4PAsYQ7CNogmQRs3AWfzmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qFBmp1saHK66EdEgc85Nb/5KPEl3BQSh7gH3mxin1z1/SfVyWW7s5lfXjuniMsV31suxmrqarXOwXxi1IWDryW51zOaNfoeQbbz857WSNPV9iCTMcwCJISdq46LyTNOi5ogDnEfxOEs+sHHzg2st+7N8ThQGs+q8I6v8NXby4OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P2gGCZUJ; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1749495694; c=relaxed/simple;
+	bh=/iv7dLGbmfckfwd3Ssdw/FjjrXoSEcJehAzLuwJaL4s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=o9IzSUikKssvMxtbDmk6eEByMOOsnEAQnE9lOEmepejInLXTSo4Pn9AsBHw8Jo4SXvwehCTgIrYktJWoIDmIrhKEL5jUExmFMTe24xOrYR8BeWejVuRKUUpL1e8MXBFbBZCxxezCA2sgFheA1FMESXda4IOrmLj+XTjP8eSdHxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcxTr4Ct; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2gGCZUJ"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747fc7506d4so4458266b3a.0;
-        Mon, 09 Jun 2025 11:50:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcxTr4Ct"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a52d82adcaso69840081cf.0;
+        Mon, 09 Jun 2025 12:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749495048; x=1750099848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jl7AqjTeqw5KwR+U52A48lfejXxRfjIaWIWbqLK8jN4=;
-        b=P2gGCZUJJnRXXzam84XCChEYX5X0bx9By6N1A1GF1OKxNrBbGKFYdTpoc2MIvw2syO
-         +hBSkcZYviOxNwGJD3MoQMaj6/m5ZbuMlOXc2k4kAw9Ln4bBbqtwPRKasoLc1JUV0WQ1
-         jkFj7KPXWwb4OVsNIXalT71Er26Ud1aNBvNThBHdCusF+ZRIuuM/m0bHGSIcM1i8Wg9U
-         CKVxzMRgSiGigrPJgXTZDPOLtTo/cF8JAuQrCixCfMJI6YdVMR5di8Omw7LsyUGXLsTE
-         xUfV+TS4dVK1yWoRVqok8ehiJvJYdqRaZK29Nf7yVgDt3Zrf1Cpme3+5E1J3Y83j05UI
-         tLDA==
+        d=gmail.com; s=20230601; t=1749495691; x=1750100491; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zz51eDo5oHQdZouxtNgX5gnRuuzY5oVeYkhbDmQHc+0=;
+        b=NcxTr4Ctr65LETqU35y1SXIl01RzQVXZwNm2jXefF50WYlzreDxD6j7nMaOyhJSFzo
+         VvMgSf+GB0htQiNmRBJQvi+izStfKAFpQPNgAK4X/LNyHHGKHNiCbZQbXyn90PyxJYq0
+         ACZTy2pjlbkT6o8LGMDmFsS1wQ/i8lMJmv44GNtklhzYj7/W7UiEmFcb3GlQZYgHlRD3
+         5KufMJFjdu8VNKPgg/6Gf9p9QNVGXjYHwdf5muEW/bWy4wiFVeUTr40BBAHg6KLhEbtJ
+         /PhpzE0HAWza0X9XJwPo11Gbf7+cQm1og9Mk1HwEjo4k30xNOTBi/8Ak7+fUb+lAVXwo
+         L5Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749495048; x=1750099848;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jl7AqjTeqw5KwR+U52A48lfejXxRfjIaWIWbqLK8jN4=;
-        b=wU3YUZwHoznasbuLiZH+3lvbftMO4yEbA6GtcszvA9plpa9ElK8+7CjbW+S2Zi/ZnF
-         QDBZTeuy/e/huKi+UO62z29gZeP9JdMjXr2bNzyvkK2v1cFXo+ek8/6IdGaA/FfjHDdX
-         KdJu1MX3LRdd0FG/c2DI2iNjRnXBMC2T9rhVIP3344tiBpyJ/uOP+FfC/r9bvaUhz6WD
-         nBQkTvEyTto6EGFfOUNLH3Wpkw2GRWbDAKAxaP1T2wOYFXOqR1jmfMVnNxqH0vEF/yrg
-         WZtMSXwX3jZpdJyYErRSRRg97o2zVF5uyrvTMnAT0w4XgITW6CLQLu8sw4j02mDJa5oO
-         oLWA==
-X-Forwarded-Encrypted: i=1; AJvYcCURpes/IeNeGPfKVoy54Ei04xVbwEN5edzpLBEO3RzuARMdfKpkcELR+x2zeKw+G4YsOKbFH4fy6Qw=@vger.kernel.org, AJvYcCVXZDxHjBIEbWN6pREFu/eNllYT2IW5IHHzKPRKDoKbLFToniLKkGNHPJjSNN6uMSS6WL8zqcHHirde11bWk9q9z4avAg==@vger.kernel.org, AJvYcCX4t+XLd068nJ7+4sIUMsaouDaDoku7gqFgaRtMcxoPHQ8lQSfGk6jg+KZ3pm17Np4nuuITrXMDjlA+QuNZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrqEiKQzawxI4lGAZPJ3s9eR12ZsNBp5Xuqwlf+texQURcYdEF
-	+ubmd2mmlOz7i+eMrHeG8s/4E1rn27TEb2E0FQ7DqVOMQkwToVpk9lyu
-X-Gm-Gg: ASbGncsOCKEqLVFFxzjCFqyFbnCifSBeihNGDKunuf+UERQ9TocS+dLI3KH5qfnbYAT
-	KR8VoX44RwOtE+8DW39RjuygS6fbXakNYswyPaUj0rPKtDlK2E1M2jzmNlZGEAqyIFvU3puzzfh
-	a5weLzD0zPIarnyonsuxXhqhrTwNA1nIwJimz2TdlGMODbIOnb5APIVMeTXuWCkUc0rcJU101qK
-	OVT9dtQenLgQKGte0qz4qurnoKdNi+znD1h7KF4BP4hYcp1SjM4PXrYZ9P0NcyCw2UkLWE7Z+9V
-	u0Zc0fQHmKZbCV50SzBnHuo9OPEs5miDb/iUN7+0oEynAiFTikM0iZUGgUkVIdgUkR0U/PHeUX6
-	e7mG5vmS7ks4mYXpieysI+XYMMbzfg4MEMqRi3NEsXEwluJ2HzNvjuioBfvi/
-X-Google-Smtp-Source: AGHT+IFUY/zY+nD0pP4YOdTee0QEhff1cHAQt+CWNoBsr3QXmOOx7y7KDXeKYThL7u8Kd/ok3ymZNw==
-X-Received: by 2002:a05:6a20:d817:b0:216:6108:788f with SMTP id adf61e73a8af0-21ee25f4afbmr22321519637.35.1749495048305;
-        Mon, 09 Jun 2025 11:50:48 -0700 (PDT)
-Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ed58e9bsm5625461a12.10.2025.06.09.11.50.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 11:50:47 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>,
-	Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>,
-	Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alok Tiwari <alok.a.tiwari@oracle.com>
-Subject: [PATCH v12 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
-Date: Mon,  9 Jun 2025 11:50:27 -0700
-Message-ID: <20250609185027.7378-7-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250609185027.7378-1-derekjohn.clark@gmail.com>
-References: <20250609185027.7378-1-derekjohn.clark@gmail.com>
+        d=1e100.net; s=20230601; t=1749495691; x=1750100491;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zz51eDo5oHQdZouxtNgX5gnRuuzY5oVeYkhbDmQHc+0=;
+        b=LwaJ3UWI1wCAQOJ9SsN3hJnEGm6NFfbgfO6+K0PHj1sbyf9ts52aPuKl8xIfch7NyK
+         F80gZ9MerYESOa+WEE0kM1/5GkDWiUhpD6x1iQWmlVJm9/6KnkW3nN2dbK7Je332b1YO
+         kW+cEP57DbphZ8Kii6htwxa4khfVPFqwO4AqBcY0iIPz4f5B1zJ6tUn0R0z3YL1ulSAk
+         ncZdoO0i1WLzz57Gclb6qPZ2ngFyDHbg77W4eG2xuKtZ6x7j5DsSxGyBfUlANt8GcOgG
+         PVG7ofLUHc3xSaT4Y1D/bQfrSt0fh0kMZ4TyF/8oa6Q2thpP1V4InLsCM8Iyn7Hcef8N
+         Ladw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaGKUgYJnrddZMd5ZuVNwCEhRkXpvVfwjOdSEm0OR+UVa5o7ECYHXSxFf2v2vE/IKdvCgXK3zsXHy0SOU=@vger.kernel.org, AJvYcCVkuqAZcfnHt6Me8WJFD7nuWzuH9puJA4LmocqbogOp6XyUFtE+aN2WfIgVnG8RU4QcNAjmMiKOdQSpJ8b2yrtZaR1I+g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDqhCZfU7f0GutQZhyVP3lAr7Of3uHjtaXXBp2S8CajSxtWo+y
+	R7zqSwH6QQBATNsNaf/wELskOps99XyH4OppRvMUBCc6ukDY+iAm7l8tAewKsQ==
+X-Gm-Gg: ASbGncuARUtvKTye3ucw86E4EvNe7vOOOkBWQY0ljSo+Ug6+axIW6hNVeRwAQBbXqi8
+	6PwXwXXpCKS2HWutQVbLdiPyyuG6U/WkO9RbOBWajmtCDPNnqgWrwFwD1znh3cVZH96S79H30Id
+	U335c2pA5mrZNYkeJPLIru9KpVyrn2gtWyxnpYfdKYFuG/fbxjje6RVweJmrx158B3sPkPlo9Nd
+	nzrwyohaaoN2+fVrwp4iXmUE6TAWAl7i3NJRrRB51BhdYqikAOllvPb51kRoZnlnse9lJ55GDP1
+	OxZ/AfygTCY5+6MnNBevoUbrz5rmtepj62Hfx0eMHBY+oeoXp0ycCtE=
+X-Google-Smtp-Source: AGHT+IG6mGotocc/AgzOwyHuisb0Kb6GsppjquSvcdEbxN93iPUnk8jknNT72+UKSLlq6AtXN77rTw==
+X-Received: by 2002:a05:6102:149f:b0:4df:8f03:12ca with SMTP id ada2fe7eead31-4e7729fdb01mr11656414137.21.1749495680116;
+        Mon, 09 Jun 2025 12:01:20 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7739986eesm5310634137.28.2025.06.09.12.00.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 12:01:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=196205227fad0cc982452ccca0517bb9e7372bd856cd4c6d1e0cde9143eb;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 09 Jun 2025 16:00:55 -0300
+Message-Id: <DAI8G8XYYSKF.2KT9ZYEQCOWAC@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, =?utf-8?q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Armin
+ Wolf" <W_Armin@gmx.de>, "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Antheas Kapenekakis" <lkml@antheas.dev>, "Derek J. Clark"
+ <derekjohn.clark@gmail.com>, "Prasanth Ksr" <prasanth.ksr@dell.com>, "Jorge
+ Lopez" <jorge.lopez2@hp.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH v2 0/5] platform/x86: firmware_attributes_class: Add a
+ high level API
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Joshua Grisham" <josh@joshuagrisham.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com>
+ <CAMF+KeYRpBFN=E=ZQm+Ho51QH4_-53VOe+Pup8SUiXOn6-sFRA@mail.gmail.com>
+ <DAHM3NWF82G8.A9XJ6TAVE4IY@gmail.com>
+ <CAMF+KebZ_BSCD8m6TWE-BfDD==j5s3WpC0NS68as-k29k9DxxA@mail.gmail.com>
+In-Reply-To: <CAMF+KebZ_BSCD8m6TWE-BfDD==j5s3WpC0NS68as-k29k9DxxA@mail.gmail.com>
 
-Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" WMI
-interface that comes on some Lenovo "Gaming Series" hardware. Provides a
-firmware-attributes class which enables the use of tunable knobs for SPL,
-SPPT, and FPPT.
+--196205227fad0cc982452ccca0517bb9e7372bd856cd4c6d1e0cde9143eb
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+On Mon Jun 9, 2025 at 10:03 AM -03, Joshua Grisham wrote:
+> Den m=C3=A5n 9 juni 2025 kl 03:30 skrev Kurt Borja <kuurtb@gmail.com>:
+>>
+>> Hi Joshua,
+>>
+>> On Sat Jun 7, 2025 at 1:38 PM -03, Joshua Grisham wrote:
+>> > Den l=C3=B6r 17 maj 2025 kl 10:52 skrev Kurt Borja <kuurtb@gmail.com>:
+>> >>
+>> >> Hi all,
+>> >>
+>> >> These series adds the _long awaited_ API for the Firmware Attributes
+>> >> class.
+>> >>
+>> >> You'll find all the details in the commit messages and kernel-doc.
+>> >>
+>> >> I think it's easier to understand by example, so I used the
+>> >> samsung-galaxybook driver for this purpose (last patch). IMO code
+>> >> readibility, simplicity, maintainability, etc. is greatly improved, b=
+ut
+>> >> there is still room for improvement of the API itself. For this reaso=
+n I
+>> >> submitted this as an RFC.
+>> >>
+>> >> As always, your feedback is very appreciated :)
+>> >>
+>> >> Overview
+>> >> =3D=3D=3D=3D=3D=3D=3D=3D
+>> >>
+>> >> Patch 1-2: New API with docs included.
+>> >>   Patch 3: New firwmare attributes type
+>> >>   Patch 4: Misc Maintainers patch
+>> >>   Patch 5: samsung-galaxybook example
+>> >>
+>> >> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> >> ---
+>> >> Changes in v2:
+>> >>
+>> >> [Patch 1]
+>> >>  - Include kdev_t.h header
+>> >>
+>> >> [Patch 2]
+>> >>  - Use one line comments in fwat_create_attrs()
+>> >>  - Check propagate errors in fwat_create_attrs()
+>> >>  - Add `mode` to fwat_attr_config and related macros to let users
+>> >>    configure the `current_value` attribute mode
+>> >>  - Use defined structs in fwat_attr_ops instead of anonymous ones
+>> >>  - Move fwat_attr_type from config to ops
+>> >>
+>> >> [Patch 5]
+>> >>  - Just transition to new API without chaing ABI
+>> >>
+>> >> - Link to v1: https://lore.kernel.org/r/20250509-fw-attrs-api-v1-0-25=
+8afed65bfa@gmail.com
+>> >>
+>> >> ---
+>> >> Kurt Borja (4):
+>> >>       platform/x86: firmware_attributes_class: Add a high level API
+>> >>       platform/x86: firmware_attributes_class: Add a boolean type
+>> >>       MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+>> >>       platform/x86: samsung-galaxybook: Transition to new firmware_at=
+tributes API
+>> >>
+>> >> Thomas Wei=C3=9Fschuh (1):
+>> >>       platform/x86: firmware_attributes_class: Add device initializat=
+ion methods
+>> >>
+>> >>  .../ABI/testing/sysfs-class-firmware-attributes    |   1 +
+>> >>  MAINTAINERS                                        |   7 +
+>> >>  drivers/platform/x86/firmware_attributes_class.c   | 454 +++++++++++=
+++++++++++
+>> >>  drivers/platform/x86/firmware_attributes_class.h   | 276 +++++++++++=
+++
+>> >>  drivers/platform/x86/samsung-galaxybook.c          | 308 ++++++-----=
 ---
-v12:
- - Fix warnings from make W=1
-v11:
- - Formatting
-v10:
- - include kdev_t to fix build error.
-v9:
- - Make tunable_attr_01 declarations static & adjust formatting.
-v8:
- - Remove dead code.
- - use struct cd01_list pointer instead of void pointer in
-   lwmi_cd01_priv.
-v7:
- - Use stach allocated capdata01 stuct instead of getting a pointer from
-   lenovo-wmi-capdata01.
- - Fix typos.
-v6:
-- Pass locally stored pointer to cd01_list back to lenovo-wmi-capdata01
-  instead of itterating over the list locally. Due to ACPI event handing
-  the list is now mutexed.
-- Fix typos and rewordings from v5 review.
-v5:
-- Switch from locally storing capability data list to storing a pointer
-  from the capability data interface.
-- Add portion of Gamezone driver that relies on the exported functions
-  of this driver.
-- Properly initialize IDA and use it for naming the firmware-attributes
-  path.
-- Rename most defines to clearly indicate they are from this driver.
-- Misc fixes from v4 review.
-v4:
-- Treat Other Mode as a notifier chain head, use the notifier chain to
-  get the current mode from Gamezone.
-- Add header file for Other Mode specific structs and finctions.
-- Use component master bind to cache the capdata01 array locally.
-- Drop all reference to external driver private data structs.
-- Various fixes from review.
-v3:
-- Add notifier block and store result for getting the Gamezone interface
-  profile changes.
-- Add driver as master component of capdata01 driver.
-- Use FIELD_PREP where appropriate.
-- Move macros and associated functions out of lemovo-wmi.h that are only
-  used by this driver.
-v2:
-- Use devm_kmalloc to ensure driver can be instanced, remove global
-  reference.
-- Ensure reverse Christmas tree for all variable declarations.
-- Remove extra whitespace.
-- Use guard(mutex) in all mutex instances, global mutex.
-- Use pr_fmt instead of adding the driver name to each pr_err.
-- Remove noisy pr_info usage.
-- Rename other_method_wmi to lenovo_wmi_om_priv and om_wmi to priv.
-- Use list to get the lenovo_wmi_om_priv instance in some macro
-  called functions as the data provided by the macros that use it
-  doesn't pass a member of the struct for use in container_of.
-- Do not rely on GameZone interface to grab the current fan mode.
----
- MAINTAINERS                                |   1 +
- drivers/platform/x86/Kconfig               |  15 +
- drivers/platform/x86/Makefile              |   1 +
- drivers/platform/x86/lenovo-wmi-gamezone.c |   8 +-
- drivers/platform/x86/lenovo-wmi-other.c    | 665 +++++++++++++++++++++
- drivers/platform/x86/lenovo-wmi-other.h    |  16 +
- 6 files changed, 705 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+>> >>  5 files changed, 861 insertions(+), 185 deletions(-)
+>> >> ---
+>> >> base-commit: 9f080c9f2099b5a81c85b3b7f95fd11fad428cc8
+>> >> change-id: 20250326-fw-attrs-api-0eea7c0225b6
+>> >> --
+>> >>  ~ Kurt
+>> >>
+>> >
+>> > Hi Kurt! First let me begin by saying GREAT job in picking this up,
+>> > carrying on the work from Thomas, and really trying to glue all of the
+>> > various pieces together into a packaged solution that can finally see
+>> > the light of day :)
+>> >
+>> > Sorry it has taken some time for me to get back to you--work and other
+>> > life stuff seemed to always get in the way and I wanted to make sure I
+>> > took enough time to really think about this before I were to give any
+>> > feedback myself.
+>> >
+>> > First off, the quick and easy one:  I applied all of your patches (on
+>> > top of 6.15.1), tested everything with samsung-galaxybook from my
+>> > device, and everything is still working without any failures and all
+>> > features work as I expect them to. I diffed everything under
+>> > /sys/class/firmware-attributes before vs after and everything is
+>> > exactly the same EXCEPT it looks like what is currently
+>> > "default_value" will now be called "default" with your patch. I assume
+>> > if the intention is to keep the ABI same as before then you would
+>> > probably want to change this? Specifically here:
+>> >
+>> >> +static const char * const fwat_prop_labels[] =3D {
+>> >> +        [FWAT_PROP_DISPLAY_NAME] =3D "display_name",
+>> >> +        [FWAT_PROP_LANGUAGE_CODE] =3D "display_name_language_code",
+>> >> +        [FWAT_PROP_DEFAULT] =3D "default",
+>> >
+>> > Assume the last line should instead be
+>> >
+>> >         [FWAT_PROP_DEFAULT] =3D "default_value",
+>> >
+>> > or maybe even for consistency to rename the fwat_property to also
+>> > match and then it could be like this?
+>> >
+>> >         [FWAT_PROP_DEFAULT_VALUE] =3D "default_value",
+>>
+>> Yes! You are correct. I completely missed this.
+>>
+>> >
+>> > FWIW I don't personally mind changing the ABI for samsung-galaxybook;
+>> > as you mentioned it is basically a brand new driver and the solutions
+>> > which exist "in the wild" for it are quite limited so better maybe
+>> > that it looks "right" going forward instead of carrying any
+>> > unnecessary baggage, but I can understand that this may not be the
+>> > case for all of the other drivers which have been using these
+>> > facilities for a longer time period.
+>>
+>> This was my first thought but I found out fwupd uses this interface.
+>> I'll leave the ABI as is to not incur in regressions.
+>>
+>> >
+>> > Past that, I certainly think this is a big step forward as compared to
+>> > messing around with the lower level kset / kobj_attribute etc
+>> > facilities and trying to set everything up from scratch without so
+>> > many helper utilities. As you may have noticed, what I ended up doing
+>> > in samsung-galaxybook was essentially to create my own local
+>> > implementation of some kind of "standard" fw attributes (but only for
+>> > booleans), but it would be even better if this were standardized
+>> > across all drivers! There are a few things left over in
+>> > samsung-galaxybook that still need to be cleaned up from your
+>> > suggested change (e.g. the struct galaxybook_fw_attr can now be
+>> > totally removed, etc) which we can also address at some point, of
+>> > course!
+>>
+>> Thanks! I'll clean them in the next revision.
+>>
+>> >
+>> > But just to take a step back for a moment, and what I have been really
+>> > trying to think through and reflect on myself for a few hours with
+>> > this change...
+>> >
+>> > (Please feel free to completely disregard the below if this has
+>> > already been brought up and ruled out, or anyone else has any opinions
+>> > against this; all of that feedback is welcome and most definitely
+>> > trumps my own meager opinions! ;) Also please remember that it is not
+>> > my intention at all to detract from any of the great work that has
+>> > already been done here -- just the stuff that my brain kind of gets
+>> > "stuck" on as I try to think through the bigger picture with this! )
+>>
+>> Don't worry, feedback is always appreciated :)
+>>
+>> >
+>> > If I think in terms of anyone who wants to come in and work on device
+>> > drivers in the kernel, then they will potentially need to learn
+>> > facilities for multiple different kind of "attributes" depending on
+>> > their use case: device attributes, driver attributes, hwmon's
+>> > sensor-related attributes, bus attributes, etc etc, and for the most
+>> > part, I think they ALL have basically the same kind of interface and
+>> > facilities. It feels very unified and relatively easy to work with all
+>> > of them once you have basically figured out the scheme and conventions
+>> > that have been implemented.
+>> >
+>> > Now, when I look at the proposal from these patches, these "Firmware
+>> > Attributes" do not seem to have the same kind of "look, feel, and
+>> > smell" as the other type of attributes I just mentioned, but instead
+>> > feels like a totally new animal that must be learned separately. My
+>> > take on it would be that a desired/"dream" scenario for a device
+>> > driver developer is that all of these interfaces sort of look and
+>> > "smell" the same, it is just a matter of the name of the macro you
+>> > use, which device you attach the attributes to (which registration
+>> > function you need to execute??), and maybe some small subtle
+>> > differences in the facilities as appropriate to their context.
+>> >
+>> > Specifically with firmware attributes vs the other kinds, I guess the
+>> > biggest differences are that:
+>> > 1) There is a display_name with a language code
+>> > 2) There are built-in restrictions on the input values depending on a
+>> > "type" (e.g. "enumeration" type has a predetermined list of values,
+>> > min/max values or str lengths for numeric or string values, etc)
+>> > 3) There is a default_value
+>> > 4) *Maybe* there should be some kind of inheritance and/or sub-groups
+>> > (e.g. the "authentication" and similar extensions that create a group
+>> > under the parent group...)
+>>
+>> I'm not sure what you mean by this. If you mean this API should also
+>> offer a way to create the Authentication group, I agree!
+>>
+>> I was just hoping to get feedback from other maintainers before doing
+>> that. I want to know if this approach passes the "smell" test for
+>> everyone.
+>>
+>> >
+>> > But at the end of the day, my hope as a developer would be to be able
+>> > to create these firmware attributes in much the same way as the other
+>> > types. E.g. maybe something like this quick and dirty pseudo example:
+>> >
+>> >
+>> > static ssize_t power_on_lid_open_show(struct device *dev,
+>> >                                       struct device_attribute *attr,
+>> >                                       char *buf)
+>> > {
+>> >         // ...
+>> > }
+>> >
+>> > static ssize_t power_on_lid_open_store(struct device *dev,
+>> >                                        struct device_attribute *attr,
+>> >                                        const char *buf, size_t count)
+>> > {
+>> >         // ...
+>> > }
+>> >
+>> > static FW_BOOL_ATTR_RW(power_on_lid_open, "Power On Lid Open");
+>> >
+>> > static struct attribute *galaxybook_fw_attrs[] =3D {
+>> >         // ... other fw attrs not shown above ...
+>> >        &fw_attr_power_on_lid_open.attr,
+>> >         NULL
+>> > };
+>> >
+>> > static const struct attribute_group galaxybook_fw_attrs_group =3D {
+>> >         .attrs =3D galaxybook_fw_attrs,
+>> >         .is_visible =3D galaxybook_fw_attr_visible,
+>> > };
+>> >
+>> > static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxyb=
+ook)
+>> > {
+>> >         // ...
+>> >
+>> >         /* something like "devm_fw_attr_device_register" could be sort
+>> > of similar to
+>> >            how devm_hwmon_device_register_with_groups works ? */
+>> >
+>> >         ret =3D devm_fw_attr_device_register(&galaxybook->platform->de=
+v,
+>> >                                           DRIVER_NAME, galaxybook,
+>> >                                           &galaxybook_fw_attrs_group);
+>> >         return PTR_ERR_OR_ZERO(ret);
+>> > }
+>> >
+>> >
+>> > Or in other words:
+>> > - I create my callback functions for "show" and "store" with a certain
+>> > named prefix and then use a macro to create the struct for this fw
+>> > attr that relies on that these functions exist (e.g. in the above
+>> > example the macro would create this "fw_attr_power_on_lid_open" fw
+>> > attr structure instance) -- note here it might need to be a macro per
+>> > type and/or to include the type-related stuff (including value
+>> > constraints/enumeration arrays/default values/etc) as parameters to
+>> > the macro, plus maybe I would want to provide some kind of context
+>> > parameter e.g. I would maybe want a pointer to my samsung_galaxybook
+>> > ideally somehow to get to come along?? (that might affect the
+>> > signature of my above examples of course! they were just a
+>> > quick-and-dirty example...),
+>>
+>> I agree and I believe this API has this capability. You can do this:
+>>
+>> static int power_on_lid_open_read(struct device *dev, long aux, const ch=
+ar **str)
+>> {
+>>         ...
+>> }
+>>
+>> static int power_on_lid_open_write(struct device *dev, long aux, const c=
+har *str, size_t count)
+>> {
+>>         ...
+>> }
+>>
+>> static ssize_t power_on_lid_open_prop_read(struct device *dev, long aux,=
+ enum fwat_property prop,
+>>                                            char *buf)
+>> {
+>>         ...
+>> }
+>>
+>> DEFINE_FWAT_OPS(power_on_lid_open, enumeration);
+>>
+>> ...
+>>
+>> static const struct fwat_attr_config * const galaxybook_fwat_config[] =
+=3D {
+>>         FWAT_CONFIG_AUX("power_on_lid_open", 0644,
+>>                         GB_ATTR_POWER_ON_LID_OPEN,
+>>                         &power_on_lid_open_ops,
+>>                         galaxybook_fwat_props,
+>>                         ARRAY_SIZE(galaxybook_fwat_props)),
+>>         ...
+>>         NULL
+>> }
+>>
+>> I.e, you can define ops for each "firmware attribute" (aka
+>> attribute_group).
+>>
+>> I feel the _props approach is currently a bit ugly though, and there is
+>> room for improvement in the boilerplate department.
+>>
+>> In the samsung-galaxybook case I decided to define a single struct
+>> fwat_attr_ops because I didn't want to make the diff too ugly. The
+>> *_acpi_{get,set}() functions that already exist are used in other parts
+>> of the driver, and I would have to change a few lines to make it work.
+>>
+>> BTW, you can pass a drvdata pointer to devm_fwat_device_register().
+>>
+>> > - put all of my desired attrs together in a group where I can specify
+>> > their is_visible callback (just like you do with DEVICE_ATTRs),
+>>
+>> I decided to make this a single callback defined in struct
+>> fwat_dev_config. I went for this because I didn't like the idea of a
+>> different function for each attribute_group because it would just be a
+>> bunch of functions.
+>>
+>> > - and then register my fw attr device with my attribute_group (the
+>> > register function would take care of all the rest..)
+>>
+>> Do you think the struct fwat_attr_config * list achieves this? Could it
+>> be improved in some way?
+>>
+>
+> Hi again Kurt!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c45013cec5ad..e04312a14dea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13457,6 +13457,7 @@ F:	drivers/platform/x86/lenovo-wmi-capdata01.*
- F:	drivers/platform/x86/lenovo-wmi-events.*
- F:	drivers/platform/x86/lenovo-wmi-gamezone.*
- F:	drivers/platform/x86/lenovo-wmi-helpers.*
-+F:	drivers/platform/x86/lenovo-wmi-other.*
- 
- LENOVO WMI HOTKEY UTILITIES DRIVER
- M:	Jackie Dong <xy-jackie@139.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c6ecfa5f024c..45ef08449b14 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -485,6 +485,21 @@ config LENOVO_WMI_DATA01
- 	tristate
- 	depends on ACPI_WMI
- 
-+config LENOVO_WMI_TUNING
-+	tristate "Lenovo Other Mode WMI Driver"
-+	depends on ACPI_WMI
-+	select FW_ATTR_CLASS
-+	select LENOVO_WMI_DATA01
-+	select LENOVO_WMI_EVENTS
-+	select LENOVO_WMI_HELPERS
-+	help
-+	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
-+	  firmware_attributes API to control various tunable settings typically exposed by
-+	  Lenovo software in Windows.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called lenovo-wmi-other.
-+
- config IDEAPAD_LAPTOP
- 	tristate "Lenovo IdeaPad Laptop Extras"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d05630a315f7..47a03056b795 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
- obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
- obj-$(CONFIG_LENOVO_WMI_GAMEZONE)	+= lenovo-wmi-gamezone.o
- obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
-+obj-$(CONFIG_LENOVO_WMI_TUNING)	+= lenovo-wmi-other.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platform/x86/lenovo-wmi-gamezone.c
-index f172d8ed711d..261284de22b6 100644
---- a/drivers/platform/x86/lenovo-wmi-gamezone.c
-+++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-@@ -373,7 +373,12 @@ static int lwmi_gz_probe(struct wmi_device *wdev, const void *context)
- 		return ret;
- 
- 	priv->event_nb.notifier_call = lwmi_gz_event_call;
--	return devm_lwmi_events_register_notifier(&wdev->dev, &priv->event_nb);
-+	ret = devm_lwmi_events_register_notifier(&wdev->dev, &priv->event_nb);
-+	if (ret)
-+		return ret;
-+
-+	priv->mode_nb.notifier_call = lwmi_gz_mode_call;
-+	return devm_lwmi_om_register_notifier(&wdev->dev, &priv->mode_nb);
- }
- 
- static const struct wmi_device_id lwmi_gz_id_table[] = {
-@@ -395,6 +400,7 @@ module_wmi_driver(lwmi_gz_driver);
- 
- MODULE_IMPORT_NS("LENOVO_WMI_EVENTS");
- MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
-+MODULE_IMPORT_NS("LENOVO_WMI_OTHER");
- MODULE_DEVICE_TABLE(wmi, lwmi_gz_id_table);
- MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
- MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-diff --git a/drivers/platform/x86/lenovo-wmi-other.c b/drivers/platform/x86/lenovo-wmi-other.c
-new file mode 100644
-index 000000000000..299fc87189ec
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-other.c
-@@ -0,0 +1,665 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo Other Mode WMI interface driver.
-+ *
-+ * This driver uses the fw_attributes class to expose the various WMI functions
-+ * provided by the "Other Mode" WMI interface. This enables CPU and GPU power
-+ * limit as well as various other attributes for devices that fall under the
-+ * "Gaming Series" of Lenovo laptop devices. Each attribute exposed by the
-+ * "Other Mode" interface has a corresponding Capability Data struct that
-+ * allows the driver to probe details about the attribute such as if it is
-+ * supported by the hardware, the default_value, max_value, min_value, and step
-+ * increment.
-+ *
-+ * These attributes typically don't fit anywhere else in the sysfs and are set
-+ * in Windows using one of Lenovo's multiple user applications.
-+ *
-+ * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/component.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/gfp_types.h>
-+#include <linux/idr.h>
-+#include <linux/kdev_t.h>
-+#include <linux/kobject.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/types.h>
-+#include <linux/wmi.h>
-+
-+#include "lenovo-wmi-capdata01.h"
-+#include "lenovo-wmi-events.h"
-+#include "lenovo-wmi-gamezone.h"
-+#include "lenovo-wmi-helpers.h"
-+#include "lenovo-wmi-other.h"
-+#include "firmware_attributes_class.h"
-+
-+#define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
-+
-+#define LWMI_DEVICE_ID_CPU 0x01
-+
-+#define LWMI_FEATURE_ID_CPU_SPPT 0x01
-+#define LWMI_FEATURE_ID_CPU_SPL 0x02
-+#define LWMI_FEATURE_ID_CPU_FPPT 0x03
-+
-+#define LWMI_TYPE_ID_NONE 0x00
-+
-+#define LWMI_FEATURE_VALUE_GET 17
-+#define LWMI_FEATURE_VALUE_SET 18
-+
-+#define LWMI_ATTR_DEV_ID_MASK GENMASK(31, 24)
-+#define LWMI_ATTR_FEAT_ID_MASK GENMASK(23, 16)
-+#define LWMI_ATTR_MODE_ID_MASK GENMASK(15, 8)
-+#define LWMI_ATTR_TYPE_ID_MASK GENMASK(7, 0)
-+
-+#define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
-+
-+static BLOCKING_NOTIFIER_HEAD(om_chain_head);
-+static DEFINE_IDA(lwmi_om_ida);
-+
-+enum attribute_property {
-+	DEFAULT_VAL,
-+	MAX_VAL,
-+	MIN_VAL,
-+	STEP_VAL,
-+	SUPPORTED,
-+};
-+
-+struct lwmi_om_priv {
-+	struct component_master_ops *ops;
-+	struct cd01_list *cd01_list; /* only valid after capdata01 bind */
-+	struct device *fw_attr_dev;
-+	struct kset *fw_attr_kset;
-+	struct notifier_block nb;
-+	struct wmi_device *wdev;
-+	int ida_id;
-+};
-+
-+struct tunable_attr_01 {
-+	struct capdata01 *capdata;
-+	struct device *dev;
-+	u32 feature_id;
-+	u32 device_id;
-+	u32 type_id;
-+};
-+
-+static struct tunable_attr_01 ppt_pl1_spl = {
-+	.device_id = LWMI_DEVICE_ID_CPU,
-+	.feature_id = LWMI_FEATURE_ID_CPU_SPL,
-+	.type_id = LWMI_TYPE_ID_NONE,
-+};
-+
-+static struct tunable_attr_01 ppt_pl2_sppt = {
-+	.device_id = LWMI_DEVICE_ID_CPU,
-+	.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
-+	.type_id = LWMI_TYPE_ID_NONE,
-+};
-+
-+static struct tunable_attr_01 ppt_pl3_fppt = {
-+	.device_id = LWMI_DEVICE_ID_CPU,
-+	.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
-+	.type_id = LWMI_TYPE_ID_NONE,
-+};
-+
-+struct capdata01_attr_group {
-+	const struct attribute_group *attr_group;
-+	struct tunable_attr_01 *tunable_attr;
-+};
-+
-+/**
-+ * lwmi_om_register_notifier() - Add a notifier to the blocking notifier chain
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call blocking_notifier_chain_register to register the notifier block to the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-EEXIST on error.
-+ */
-+int lwmi_om_register_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&om_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * lwmi_om_unregister_notifier() - Remove a notifier from the blocking notifier
-+ * chain.
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call blocking_notifier_chain_unregister to unregister the notifier block from the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+int lwmi_om_unregister_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&om_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * devm_lwmi_om_unregister_notifier() - Remove a notifier from the blocking
-+ * notifier chain.
-+ * @data: Void pointer to the notifier_block struct to register.
-+ *
-+ * Call lwmi_om_unregister_notifier to unregister the notifier block from the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+static void devm_lwmi_om_unregister_notifier(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	lwmi_om_unregister_notifier(nb);
-+}
-+
-+/**
-+ * devm_lwmi_om_register_notifier() - Add a notifier to the blocking notifier
-+ * chain.
-+ * @dev: The parent device of the notifier_block struct.
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call lwmi_om_register_notifier to register the notifier block to the
-+ * lenovo-wmi-other driver notifier chain. Then add devm_lwmi_om_unregister_notifier
-+ * as a device managed action to automatically unregister the notifier block
-+ * upon parent device removal.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+int devm_lwmi_om_register_notifier(struct device *dev,
-+				   struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret = lwmi_om_register_notifier(nb);
-+	if (ret < 0)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_lwmi_om_unregister_notifier,
-+					nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * lwmi_om_notifier_call() - Call functions for the notifier call chain.
-+ * @mode: Pointer to a thermal mode enum to retrieve the data from.
-+ *
-+ * Call blocking_notifier_call_chain to retrieve the thermal mode from the
-+ * lenovo-wmi-gamezone driver.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_notifier_call(enum thermal_mode *mode)
-+{
-+	int ret;
-+
-+	ret = blocking_notifier_call_chain(&om_chain_head,
-+					   LWMI_GZ_GET_THERMAL_MODE, &mode);
-+	if ((ret & ~NOTIFY_STOP_MASK) != NOTIFY_OK)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* Attribute Methods */
-+
-+/**
-+ * int_type_show() - Emit the data type for an integer attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kattr: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ *
-+ * Return: Number of characters written to buf.
-+ */
-+static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *kattr,
-+			     char *buf)
-+{
-+	return sysfs_emit(buf, "integer\n");
-+}
-+
-+/**
-+ * attr_capdata01_show() - Get the value of the specified attribute property
-+ *
-+ * @kobj: Pointer to the driver object.
-+ * @kattr: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ * @tunable_attr: The attribute to be read.
-+ * @prop: The property of this attribute to be read.
-+ *
-+ * Retrieves the given property from the capability data 01 struct for the
-+ * specified attribute's "custom" thermal mode. This function is intended
-+ * to be generic so it can be called from any integer attributes "_show"
-+ * function.
-+ *
-+ * If the WMI is success the sysfs attribute is notified.
-+ *
-+ * Return: Either number of characters written to buf, or an error code.
-+ */
-+static ssize_t attr_capdata01_show(struct kobject *kobj,
-+				   struct kobj_attribute *kattr, char *buf,
-+				   struct tunable_attr_01 *tunable_attr,
-+				   enum attribute_property prop)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct capdata01 capdata;
-+	u32 attribute_id;
-+	int value, ret;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK,
-+			   LWMI_GZ_THERMAL_MODE_CUSTOM) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	ret = lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
-+	if (ret)
-+		return ret;
-+
-+	switch (prop) {
-+	case DEFAULT_VAL:
-+		value = capdata.default_value;
-+		break;
-+	case MAX_VAL:
-+		value = capdata.max_value;
-+		break;
-+	case MIN_VAL:
-+		value = capdata.min_value;
-+		break;
-+	case STEP_VAL:
-+		value = capdata.step;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return sysfs_emit(buf, "%d\n", value);
-+}
-+
-+/**
-+ * attr_current_value_store() - Set the current value of the given attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kattr: Pointer to the attribute calling this function.
-+ * @buf: The buffer to read from, this is parsed to `int` type.
-+ * @count: Required by sysfs attribute macros, pass in from the callee attr.
-+ * @tunable_attr: The attribute to be stored.
-+ *
-+ * Sets the value of the given attribute when operating under the "custom"
-+ * smartfan profile. The current smartfan profile is retrieved from the
-+ * lenovo-wmi-gamezone driver and error is returned if the result is not
-+ * "custom". This function is intended to be generic so it can be called from
-+ * any integer attribute's "_store" function. The integer to be sent to the WMI
-+ * method is range checked and an error code is returned if out of range.
-+ *
-+ * If the value is valid and WMI is success, then the sysfs attribute is
-+ * notified.
-+ *
-+ * Return: Either count, or an error code.
-+ */
-+static ssize_t attr_current_value_store(struct kobject *kobj,
-+					struct kobj_attribute *kattr,
-+					const char *buf, size_t count,
-+					struct tunable_attr_01 *tunable_attr)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct wmi_method_args_32 args;
-+	struct capdata01 capdata;
-+	enum thermal_mode mode;
-+	u32 attribute_id;
-+	u32 value;
-+	int ret;
-+
-+	ret = lwmi_om_notifier_call(&mode);
-+	if (ret)
-+		return ret;
-+
-+	if (mode != LWMI_GZ_THERMAL_MODE_CUSTOM)
-+		return -EBUSY;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	ret = lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
-+	if (ret)
-+		return ret;
-+
-+	ret = kstrtouint(buf, 10, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (value < capdata.min_value || value > capdata.max_value)
-+		return -EINVAL;
-+
-+	args.arg0 = attribute_id;
-+	args.arg1 = value;
-+
-+	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
-+				    (unsigned char *)&args, sizeof(args), NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+};
-+
-+/**
-+ * attr_current_value_show() - Get the current value of the given attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kattr: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ * @tunable_attr: The attribute to be read.
-+ *
-+ * Retrieves the value of the given attribute for the current smartfan profile.
-+ * The current smartfan profile is retrieved from the lenovo-wmi-gamezone driver.
-+ * This function is intended to be generic so it can be called from any integer
-+ * attribute's "_show" function.
-+ *
-+ * If the WMI is success the sysfs attribute is notified.
-+ *
-+ * Return: Either number of characters written to buf, or an error code.
-+ */
-+static ssize_t attr_current_value_show(struct kobject *kobj,
-+				       struct kobj_attribute *kattr, char *buf,
-+				       struct tunable_attr_01 *tunable_attr)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct wmi_method_args_32 args;
-+	enum thermal_mode mode;
-+	u32 attribute_id;
-+	int retval;
-+	int ret;
-+
-+	ret = lwmi_om_notifier_call(&mode);
-+	if (ret)
-+		return ret;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	args.arg0 = attribute_id;
-+
-+	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET,
-+				    (unsigned char *)&args, sizeof(args),
-+				    &retval);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%d\n", retval);
-+}
-+
-+/* Lenovo WMI Other Mode Attribute macros */
-+#define __LWMI_ATTR_RO(_func, _name)                                  \
-+	{                                                             \
-+		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-+		.show = _func##_##_name##_show,                       \
-+	}
-+
-+#define __LWMI_ATTR_RO_AS(_name, _show)                               \
-+	{                                                             \
-+		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-+		.show = _show,                                        \
-+	}
-+
-+#define __LWMI_ATTR_RW(_func, _name) \
-+	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-+
-+/* Shows a formatted static variable */
-+#define __LWMI_ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)                     \
-+	static ssize_t _attrname##_##_prop##_show(                             \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return sysfs_emit(buf, _fmt, _val);                            \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_##_prop =              \
-+		__LWMI_ATTR_RO(_attrname, _prop)
-+
-+/* Attribute current value read/write */
-+#define __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname)                          \
-+	static ssize_t _attrname##_current_value_store(                        \
-+		struct kobject *kobj, struct kobj_attribute *kattr,            \
-+		const char *buf, size_t count)                                 \
-+	{                                                                      \
-+		return attr_current_value_store(kobj, kattr, buf, count,       \
-+						&_attrname);                   \
-+	}                                                                      \
-+	static ssize_t _attrname##_current_value_show(                         \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return attr_current_value_show(kobj, kattr, buf, &_attrname);  \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_current_value =        \
-+		__LWMI_ATTR_RW(_attrname, current_value)
-+
-+/* Attribute property read only */
-+#define __LWMI_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)                  \
-+	static ssize_t _attrname##_##_prop##_show(                             \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return attr_capdata01_show(kobj, kattr, buf, &_attrname,       \
-+					   _prop_type);                        \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_##_prop =              \
-+		__LWMI_ATTR_RO(_attrname, _prop)
-+
-+#define LWMI_ATTR_GROUP_TUNABLE_CAP01(_attrname, _fsname, _dispname)      \
-+	__LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname);                    \
-+	__LWMI_TUNABLE_RO_CAP01(default_value, _attrname, DEFAULT_VAL);   \
-+	__LWMI_ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname); \
-+	__LWMI_TUNABLE_RO_CAP01(max_value, _attrname, MAX_VAL);           \
-+	__LWMI_TUNABLE_RO_CAP01(min_value, _attrname, MIN_VAL);           \
-+	__LWMI_TUNABLE_RO_CAP01(scalar_increment, _attrname, STEP_VAL);   \
-+	static struct kobj_attribute attr_##_attrname##_type =            \
-+		__LWMI_ATTR_RO_AS(type, int_type_show);                   \
-+	static struct attribute *_attrname##_attrs[] = {                  \
-+		&attr_##_attrname##_current_value.attr,                   \
-+		&attr_##_attrname##_default_value.attr,                   \
-+		&attr_##_attrname##_display_name.attr,                    \
-+		&attr_##_attrname##_max_value.attr,                       \
-+		&attr_##_attrname##_min_value.attr,                       \
-+		&attr_##_attrname##_scalar_increment.attr,                \
-+		&attr_##_attrname##_type.attr,                            \
-+		NULL,                                                     \
-+	};                                                                \
-+	static const struct attribute_group _attrname##_attr_group = {    \
-+		.name = _fsname, .attrs = _attrname##_attrs               \
-+	}
-+
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
-+			      "Set the CPU sustained power limit");
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
-+			      "Set the CPU slow package power tracking limit");
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
-+			      "Set the CPU fast package power tracking limit");
-+
-+static struct capdata01_attr_group cd01_attr_groups[] = {
-+	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
-+	{ &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
-+	{ &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
-+	{},
-+};
-+
-+/**
-+ * lwmi_om_fw_attr_add() - Register all firmware_attributes_class members
-+ * @priv: The Other Mode driver data.
-+ *
-+ * Return: Either 0, or an error code.
-+ */
-+static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	priv->ida_id = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
-+	if (priv->ida_id < 0)
-+		return priv->ida_id;
-+
-+	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
-+					  MKDEV(0, 0), NULL, "%s-%u",
-+					  LWMI_OM_FW_ATTR_BASE_PATH,
-+					  priv->ida_id);
-+	if (IS_ERR(priv->fw_attr_dev)) {
-+		err = PTR_ERR(priv->fw_attr_dev);
-+		goto err_free_ida;
-+	}
-+
-+	priv->fw_attr_kset = kset_create_and_add("attributes", NULL,
-+						 &priv->fw_attr_dev->kobj);
-+	if (!priv->fw_attr_kset) {
-+		err = -ENOMEM;
-+		goto err_destroy_classdev;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
-+		err = sysfs_create_group(&priv->fw_attr_kset->kobj,
-+					 cd01_attr_groups[i].attr_group);
-+		if (err)
-+			goto err_remove_groups;
-+
-+		cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
-+	}
-+	return 0;
-+
-+err_remove_groups:
-+	while (i--)
-+		sysfs_remove_group(&priv->fw_attr_kset->kobj,
-+				   cd01_attr_groups[i].attr_group);
-+
-+	kset_unregister(priv->fw_attr_kset);
-+
-+err_destroy_classdev:
-+	device_unregister(priv->fw_attr_dev);
-+
-+err_free_ida:
-+	ida_free(&lwmi_om_ida, priv->ida_id);
-+	return err;
-+}
-+
-+/**
-+ * lwmi_om_fw_attr_remove() - Unregister all capability data attribute groups
-+ * @priv: the lenovo-wmi-other driver data.
-+ */
-+static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
-+{
-+	for (unsigned int i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++)
-+		sysfs_remove_group(&priv->fw_attr_kset->kobj,
-+				   cd01_attr_groups[i].attr_group);
-+
-+	kset_unregister(priv->fw_attr_kset);
-+	device_unregister(priv->fw_attr_dev);
-+}
-+
-+/**
-+ * lwmi_om_master_bind() - Bind all components of the other mode driver
-+ * @dev: The lenovo-wmi-other driver basic device.
-+ *
-+ * Call component_bind_all to bind the lenovo-wmi-capdata01 driver to the
-+ * lenovo-wmi-other master driver. On success, assign the capability data 01
-+ * list pointer to the driver data struct for later access. This pointer
-+ * is only valid while the capdata01 interface exists. Finally, register all
-+ * firmware attribute groups.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_master_bind(struct device *dev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+	struct cd01_list *tmp_list;
-+	int ret;
-+
-+	ret = component_bind_all(dev, &tmp_list);
-+	if (ret)
-+		return ret;
-+
-+	priv->cd01_list = tmp_list;
-+	if (!priv->cd01_list)
-+		return -ENODEV;
-+
-+	return lwmi_om_fw_attr_add(priv);
-+}
-+
-+/**
-+ * lwmi_om_master_unbind() - Unbind all components of the other mode driver
-+ * @dev: The lenovo-wmi-other driver basic device
-+ *
-+ * Unregister all capability data attribute groups. Then call
-+ * component_unbind_all to unbind the lenovo-wmi-capdata01 driver from the
-+ * lenovo-wmi-other master driver. Finally, free the IDA for this device.
-+ */
-+static void lwmi_om_master_unbind(struct device *dev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+
-+	lwmi_om_fw_attr_remove(priv);
-+	component_unbind_all(dev, NULL);
-+}
-+
-+static const struct component_master_ops lwmi_om_master_ops = {
-+	.bind = lwmi_om_master_bind,
-+	.unbind = lwmi_om_master_unbind,
-+};
-+
-+static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct component_match *master_match = NULL;
-+	struct lwmi_om_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	component_match_add(&wdev->dev, &master_match, lwmi_cd01_match, NULL);
-+	if (IS_ERR(master_match))
-+		return PTR_ERR(master_match);
-+
-+	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops,
-+					       master_match);
-+}
-+
-+static void lwmi_other_remove(struct wmi_device *wdev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	component_master_del(&wdev->dev, &lwmi_om_master_ops);
-+	ida_free(&lwmi_om_ida, priv->ida_id);
-+}
-+
-+static const struct wmi_device_id lwmi_other_id_table[] = {
-+	{ LENOVO_OTHER_MODE_GUID, NULL },
-+	{}
-+};
-+
-+static struct wmi_driver lwmi_other_driver = {
-+	.driver = {
-+		.name = "lenovo_wmi_other",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lwmi_other_id_table,
-+	.probe = lwmi_other_probe,
-+	.remove = lwmi_other_remove,
-+	.no_singleton = true,
-+};
-+
-+module_wmi_driver(lwmi_other_driver);
-+
-+MODULE_IMPORT_NS("LENOVO_WMI_CD01");
-+MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
-+MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
-+MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/lenovo-wmi-other.h b/drivers/platform/x86/lenovo-wmi-other.h
-new file mode 100644
-index 000000000000..8ebf5602bb99
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-other.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
-+
-+#ifndef _LENOVO_WMI_OTHER_H_
-+#define _LENOVO_WMI_OTHER_H_
-+
-+struct device;
-+struct notifier_block;
-+
-+int lwmi_om_register_notifier(struct notifier_block *nb);
-+int lwmi_om_unregister_notifier(struct notifier_block *nb);
-+int devm_lwmi_om_register_notifier(struct device *dev,
-+				   struct notifier_block *nb);
-+
-+#endif /* !_LENOVO_WMI_OTHER_H_ */
--- 
-2.49.0
+Hi Joshua,
 
+>
+> In case it helps for me to restate that, from my perspective, I can
+> say that I was maybe not thinking too terribly deeply, more at a
+> shallow level about the higher level workflow/process for a developer.
+> For example, with device attributes, it is loosely like this:
+>
+> 1. create functions to handle the actual getting and setting logic
+> which can become my show/store callback(s)
+>
+> 2. use DEVICE_ATTR_RW or similar macro to create my
+> device_attribute(s) -- the macro will expect callback functions that
+> follow specific naming convention from step 1
+>
+> 3. put one of more of my device_attribute(s) in a group (with optional
+> is_visible callback that also should be created)
+>
+> 4. my "device" is registered (through various mechanisms) while
+> passing in this attribute group as a parameter and everything is
+> created for me via the registration process
+>
+> And this process is roughly the same with device attributes, driver
+> attributes, bus attributes, hwmon sensor attributes etc etc. so it is
+> very "familiar" to me (not saying that is "good" or "bad", but it is
+> nice that once you learn this process, you can sort of more quickly
+> understand what is happening as you encounter these various types used
+> in different places).
+>
+> And from what I can tell as you mentioned in this patch, the process
+> for FW attributes would instead be something like .. ?
+>
+> 1. create functions or some way to handle the actual getting and
+> setting logic (but these are maybe not directly used as callbacks, but
+> instead used as one case within the logic of a more general
+> "show/store any property under the fw attr" callback)
+
+I don't really see how this steps differs from your dream scenario. If
+you want you could define read/write/read_prop for each "firmware
+attribute" (which is actually an attribute_group).
+
+The only difference is that you can (optionally) reuse these
+read/write/read_prop callbacks for multiple attribute groups. I think
+this is necessary if you want to define a bunch of attribute_groups with
+the same behavior without having to define a bunch of callbacks.
+
+>
+> 2. create (or use an existing "standard"?)  enum with all properties
+> that should exist under my fw attr (display_name, current_value,
+> default_value, etc)
+
+You have to provide a list of sysfs attributes (not fw attributes!) you
+want for each of your "fw attributes" (attribute_groups). The enum is
+already provided.
+
+>
+> 3. create said general show/store callback function for all properties
+> within the fw attr (display_name, current_value, default_value, etc)
+>
+> 4. use DEFINE_FWAT_OPS macro to create some fw attr ops for a specific
+> fw attr (passing the name and type)
+
+Or multiple fw attributes. Users can decide.
+
+>
+> 5. build an array of fwat_attr_config whose entry is another struct,
+> but that struct can/will be built by another macro FWAT_CONFIG_AUX (or
+> similar) with all of its own properties for things like mode, the ops
+> from step 4, the properties enum from step 2, etc
+>
+> 6. put the attrs config in a new fwat_dev_config (with optional
+> is_visible callback that also should be created)
+>
+> 7. register the fw attr device with devm_fwat_device_register, passing
+> the fwat_dev_config and optional drvdata
+>
+> (of course I could have easily missed something obvious or gotten
+> something totally wrong here, but hopefully I have captured the gist
+> of it!)
+>
+> So I guess what I was trying to say was, the first process seems
+> easier and more intuitive for my simple mind to understand, whereas
+> the second process is a fair bit different from the others. Not that
+> one is necessarily better or worse than the other, but I guess I would
+
+> say that the first does feel more "simple" to me (though admittedly
+> these other attributes are more "simple" by design, of course!).
+
+This is not a minor detail :p
+
+In the first example you are creating single attributes. In the second
+process you are creating attribute_group(s) with a few "type" specific
+attributes, which are all optional too! (per ABI specification).
+
+>
+> What I tried to convey before was more that my own personal "dream
+> scenario" with this is that I as a developer could essentially still
+> follow the first process I mentioned from above (the one for other
+> device attrs) and then in a "happy path" scenario I would only need to
+> focus on callback functions for my getting and setting logic (show
+> and/or store callbacks) and not have to write ANY other code.
+> Basically like this:
+>
+> 1. create functions to handle the actual getting and setting logic
+> which can become my show/store callback(s)
+
+I think we can agree this API already accomplishes this? I might be
+misunderstanding something though.
+
+>
+> 2. use FW_BOOL_ATTR_RW(name, display_name, default_value) or similar
+
+IMO using that name would actually break intution. As a user I would
+expect that macro to create a sysfs attribute, not an attribute group.
+
+But I agree, display_name can/should be statically defined. I don't know
+about default_value though. Some drivers may obtain this value
+dynamically.
+
+> macro to create my fw_attribute(s) --> NOTE that because I chose
+> "bool" here (in that I used the "BOOL" variant of the macro) then I
+> will automatically get all of the standard attributes like
+> display_name, current_value, language_code (maybe even that it
+
+I agree, this could be the default behavior. I think most drivers
+already do this anyway, so it would eliminate some boilerplate code.
+
+> defaults to English unless I want to change it??), fixed choice of
+> possible_values (as the possible values are always the same for
+> booleans, I don't need to do anything with this part..) etc etc i.e.
+
+IMO possible_values (or any of the other props) should not be statically
+defined. I think this is too restrictive for drivers that probe for this
+data.
+
+> there are standard callback functions for these standard things like
+> display_name etc and the developer does not have to implement them
+> (and similar variants could exist for enum, string, and numeric fw
+> attrs that take care of min/max properties etc)
+
+I like this, it could work for drivers that do want this values
+statically defined. I'll think a way of accomplishing this without
+introducing too much complexity.
+
+>
+> 3. put one of more of my fw_attribute(s) in a group (with optional
+> is_visible callback that also should be created)
+>
+> 4. my fw attr "device" is registered and the group is passed and
+> everything is created for me via the registration process
+
+I think this API already accomplishes this two? What do you think?
+
+>
+> So *essentially* the process of this kind of fw attr implementation
+> would still be roughly the same as other attribute types, the code
+> would "look/feel/smell" the same as other attribute types, but I would
+> just need to pass a few extra parameters to the attribute macro in
+> order to set the display_name, default_value, etc properties that
+> would then get picked up by the "standard" show callback functions for
+> those attributes. The only thing I as an implementer really bother
+> with is the show/store functions and their actual getting/setting
+> logic on the actual device.
+
+I agree. This should be the workflow for drivers that want everything
+statically defined (such as samsung-galaxybook).
+
+>
+> And bonus if the "standard" logic also enforces the various
+> constraints (e.g. it should always block to store something that is
+> not one of my given possible_values, or enforce the various min/max
+> rules, etc) so that I do not even have to write any of the code for
+> that part, either!
+
+IMO APIs like this should enforce the least possible constraints and let
+drivers handle that appropiately.
+
+Also as I said before, some of these values are dynamically obtained. We
+can't assume they don't change, etc.
+
+>
+> Maybe I am thinking of this too simply? I have not as mentioned
+> thought through all of the implementation details of this, but my
+> first guess is at least for these standard types (enumeration, string,
+> boolean, etc) is that it does seem like it is *probably* possible??
+> (not the extensions e.g. "authentication" etc -- needs more thinking
+> on that!)
+>
+> Does this make sense, or are we saying the same thing, or maybe
+> "talking past each other" as they say in Swedish? :)
+
+I think I understand your major concerns/suggestions. For v3 I'll do the
+following:
+
+ - Make display name and language code statically defined
+ - Create all attributes for a "fw attribute" type by default and offer
+   an option to select just the ones you want
+ - Offer a way to define these props statically (I have to think more
+   about this though)
+ - Improve documentation!
+
+Would you add something extra?
+
+--=20
+ ~ Kurt
+
+>
+> Thanks again and keep up the good fight!
+>
+> Joshua
+>
+>> >
+>> > And as sort of shown in the above example I certainly think it would
+>> > be nice if the naming convention lined up nicely with how the naming
+>> > convention works for the existing attribute stuff (e.g. DEVICE_ATTR_RW
+>> > vs DRIVER_ATTR_RW vs something like "FW_ATTR_RW" or "FIRMWARE_ATTR_RW"
+>> > seems like it falls into the same convention??)
+>>
+>> I can certainly add these macros, but they would be for "firmware
+>> attributes" defined entirely manually, using struct fwat_attribute.
+>> Actually I thought of adding these, but I didn't do it because I wanted
+>> to get something working at first and then add some of these extra
+>> helpers.
+>>
+>> >
+>> > Again I am not trying to "rock the boat" here, and I have not
+>> > necessarily *really* thought through all of the implications to the
+>> > existing fw attrs extensions and how they might be able to be
+>> > implemented with the above kind of example, ... I'm just taking a step
+>> > back and sharing my observations of the patch compared to how it
+>> > actually looks in the driver with the example vs how most of the other
+>> > existing attribute facilities have been designed.
+>>
+>> Thank you! As I said before, feedback is always welcome.
+>>
+>> I feel this API already accomplishes the requirements (which I agree
+>> with) you listed, albeit with some (maybe a bit too much) boilerplate.
+>> However your questions make me realise documentation is still lacking, I
+>> will make it better for the next revision.
+>>
+>> If you have more concrete areas of improvement, please let me know! I
+>> know there is room for improvement. Especially with naming.
+>>
+>> >
+>> > One more final thing which I always felt a little "off" about -- is it
+>> > not the case that other type of platforms might could use firmware
+>> > attributes as well? Or is this considered ONLY an x86 thing (e.g. that
+>> > "firmware" relates to "BIOS" or something) ? Because I always thought
+>> > it a bit strange that the header file was only local to
+>> > ./drivers/platform/x86/ instead of being part of the Linux headers
+>> > under ./include ..
+>>
+>> I agree! I'd like to know maintainers opinion on this.
+>>
+>> >
+>> > And in the same vein as that, is it not the case that other attributes
+>> > could benefit from this "typing" mechanism with constraints (e.g.
+>> > DEVICE_ATTR of type "enumeration" that only allows for one of a list
+>> > of values ? or a number with min/max value / a string with min/max
+>> > length etc etc??). I understand this poses an even bigger question and
+>> > much larger change (now we are really talking a HUGE impact! ;) ), but
+>> > my first guess is that it would probably be sort of nice to have these
+>> > types and this automatic constraints mechanism to be somewhat
+>> > universal across other type of attributes, otherwise every single
+>> > driver author/maintainer has to write their own manual code for the
+>> > same kinds of verifications in every function of every driver (e.g.
+>> > write an if statement to check the value in every store function of
+>> > every attribute they create, and then otherwise return -EINVAL or
+>> > similar... this kind of code exists over and over and over in the
+>> > kernel today!).
+>>
+>> Device attributes already have a lot of helpers for creating some
+>> common attributes, see [1].
+>>
+>> I feel like every driver, subsystem, interface, etc. Has VERY different
+>> requirements for how sysfs attributes/groups should work. IMO there
+>> wouldn't be a lot of benefit in providing this infrastructure for other
+>> subsystems, either because they already have something in place or
+>> because it wouldn't exactly fit their needs. Kernel ABI is very diverse.
+>>
+>> These syfs interfaces are very old and there are good reasons why they
+>> are the way they are now. I don't think is a bad think to have to
+>> develop infrastructures for each subsystem!
+>>
+>> >
+>> > Anyway I hope this all was of some use, and, as mentioned, please feel
+>> > free to take all I have said here "with a pinch of salt" -- I would
+>> > definitely hope and encourage that others with longer service records
+>> > here could chime in regarding this!
+>>
+>> I hope so!
+>>
+>> >
+>> > Thanks again for the contribution, great work, and have a nice weekend=
+!
+>>
+>> You too :)
+>>
+>> >
+>> > Best regards,
+>> > Joshua
+>>
+>>
+>> --
+>>  ~ Kurt
+>>
+
+
+--196205227fad0cc982452ccca0517bb9e7372bd856cd4c6d1e0cde9143eb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaEcvbAAKCRAWYEM49J/U
+Zs4MAQDDatUm8xerQKHZS8UeE+ZK87sWcAfckraXYOR2WghaNgD+LAKyL3ifnJwV
+FM+ewNjX2tLANomV2B410hA5RGMpuwk=
+=qNit
+-----END PGP SIGNATURE-----
+
+--196205227fad0cc982452ccca0517bb9e7372bd856cd4c6d1e0cde9143eb--
