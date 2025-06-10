@@ -1,169 +1,164 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98F425F973
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 19:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D27423AE83;
+	Tue, 10 Jun 2025 19:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582232; cv=none; b=RutJHb3huV4duZw9/f/xMrx64l4Hhh5pf1kdHcHJ79POXLkAC5nfPomRzlf4+osurLduFhcot5fW9QhjZ43/yG5Hush1VLgW2mtyWrwknX6+USJ8BtsZ1ZPhuE/GUecVwI7z5VU3rV1aXKBmalaZOYmk4vA6dg8X/zi54gCoS2U=
+	t=1749583722; cv=none; b=QfLS3igE8KmjMru1RlvA2o/ULbEeaob1VdwxOYTtqRc2dJiiZMSxYgoT3n3mdgBQsC8ec9UiJXxmG0V6doYK9ayTcuMEkHDYCu2Koh5J9SugJQvqTgsaXrDvdBXIIBzHQY/jWEQ6kOfxAOP3g8sC6jafsWiKt7tad+lVUFonxrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582232; c=relaxed/simple;
-	bh=yHYkDxxRy38M1FlNtZYPSs82PtWZaK2ZvGmVJyM824Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HxbHcCaIO3+3coln89skuxQTwrFjGKwuM5fVYCMJhcbH7/TbpQQQKonqatLI2fSJHjFruWbZWlK0GcWECR/1m+mneU7wNIyAgAC2n9ZWA5X/NVlXIoVjiuSQEJw8t3Hxty24HeHL0J6uaabWNgC79FkbqGOcNJrlsvsl5QpfvL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=URpkAOrh; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749583722; c=relaxed/simple;
+	bh=XwlS22OvjxQGChjQoHKIHNOxFW1CO7FSvjHuvA8OnVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G4gQZEkJ94R5P6BBQzYE3aMZseDp72ctB9ge3457Ih9/1z5qkUmWLa4cXh4Wr2Uh06fn79oJBID9eJJ3Z+kn/xy2o0rG473NVksdEQFfcVt/KFWYNOA+ZSwPEUX+UZ6Tpei2BqAditu3N3kb6FzrlDODnSLqC626xJISpFSkWOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=qL+D7tYc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dVGzBQqS; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="URpkAOrh"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso54567015e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 12:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749582229; x=1750187029; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=funz8EyNepVDeMk/RxHWitYUvBrNyORmOZCxo5M3b94=;
-        b=URpkAOrh4FTPog54w5xzIUSwYxK5JGHu/569LRZjVANl/CnXIuUiAwELLXSYv72ylB
-         Ig/CRvz3qkP3rs20FQbkPW4g68JRstuNmrxZJmSOi9+55djuGcVMjmbHi2Fjbp8PGjvD
-         FvbVz6bliyNHT5pn4gGIaGoPy8YAYVCCeoTGl0Lh1K0F97z1bRDLZ7Ght4ZqsFnLvALN
-         +8moCPYxs8XKmmDxe7HlZAjkvCh52b9xvwSRuZYrxyWof8FKv7H2uUMWzb3u8KlP85+N
-         c0TukoLHNGO1JKNisq5IKu+EXOPeEEcHr1z2ExK7QDUU8vibLL6+ye/8Nz3xFH1Fk+0H
-         ZBwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749582229; x=1750187029;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=funz8EyNepVDeMk/RxHWitYUvBrNyORmOZCxo5M3b94=;
-        b=Yf/OoSOch6y3gwud8UTNGrc12UxdYx2v8E0f8V0eqxfxg0GaXD0VwRfGpeo/4PrVa5
-         RbSpuLzu2ue/7U0t0VkTjZ3nyrq1hVEcyxhc0rETrOayN96earWMnafXLNoW6zlPFLO9
-         pukZJjOFooefLcfs7EYEGzDLB6ndqViZSsSxrbNS1AfWzl6kRUkH3LIbwBDDGn+GHewr
-         VtKBGImv2M4Db5A4tWVVhtlWo3GL/FL5G6gzrh+uqmAfujOX8smZmonq+y2XbBcKmvNx
-         QKG4LXMWXmcjTQGNuSztsyAhV5+lw/1+dN2pgEudd51F5lb87xoOhDAu/mN54zi6TB2Y
-         cmtg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0uJRmOKrDPxqW8X4v3CFUqfl6DRRW4/5GQsptmxZfijfH/0PJcRNZp0v3AW3XKODCTFc4wDLyQZtMnJWyhD/MTS25@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdWBKI+U31F9XP2C40uWwU7CtpNjiu2LuJWVpcKKj6bx5LnJYs
-	RL3tUFzcg9JlsUzGhg8sfoFpt/mePTONpTvSUjTlH9w364OkuTiZOKQW6MMGjcGqyMNMSS2jS/T
-	qmdw3mz0=
-X-Gm-Gg: ASbGncuXfS+GkqBPRhZLDKJJ0p4k7LHmA+hadgmV1mrkI8EbyYIH8LoI8vJieVYRdDc
-	pIuuZSoizaohQp6YiojxoyEL50nkU5VMD1LWgS3pYu3i25iDGhX2j3um9VxoqpW+eU0EJeN5y1S
-	H4qOQ2g8vos2cJQL2fr9uIyjoEXciNFvHl7SqjvBhvknm0fO62z0GR8Z+T2Hrm0NKVwRgn0NFya
-	2ZYnPvbIQY2Haxs9s4vwGutxenhgsolrzI5MijWhLhghUt0H/9FDA2jLcb8YmE+v2Z4DjTU2dLB
-	akEiE81vNTXLQ03PdXYJrfvxaJS5KTiv6chO+AZ0t4U2TUStJscIl+2RQe6FOqfLnanQaAjlAY6
-	k6M6ewGtYWG7KaKQkj9gUznr/MhuJsns84GTToQ==
-X-Google-Smtp-Source: AGHT+IFka0ouDWU/1cfYMkQ1O8mZ7JUKop6qAwXN0Nv0LhNi30kWDFWStH0iiouNqQwWBVbHfIQMdA==
-X-Received: by 2002:a05:600c:1c08:b0:442:f44f:655 with SMTP id 5b1f17b1804b1-453248f8b5emr2177315e9.32.1749582229240;
-        Tue, 10 Jun 2025 12:03:49 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213709670sm149959845e9.25.2025.06.10.12.03.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 12:03:48 -0700 (PDT)
-Message-ID: <b574bb3a-eba7-430c-bd83-544eb5188cfc@linaro.org>
-Date: Tue, 10 Jun 2025 20:03:47 +0100
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="qL+D7tYc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dVGzBQqS"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.stl.internal (Postfix) with ESMTP id 3BE8F11400EA;
+	Tue, 10 Jun 2025 15:28:38 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Tue, 10 Jun 2025 15:28:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1749583718; x=
+	1749670118; bh=sgPJbsLxBu0TMu9PG5pgy2qt41CUvg+KpMXqP7UQJcw=; b=q
+	L+D7tYcVxXDqlnYCq6hILUn8eRPFAiIPhZt5cKpy8TU85FG0bMzo13oflSrZNhg4
+	u+SEuOcq5UJz2izcQ0YQD3ksgPRMCVCr3HP3cg/ui4yLAeWi7fYXz2ypvYsEv5R+
+	RNukDngxkXf7J9F5zSyerkUAWcHI7TPqizUqxeQ59Q0XY0feEdipVodB40rr644b
+	j++AVSKmNYk8md9PmoIgp3NyfIcO3zGenAZs6RBdl/kcx9f7Sv0BgR1+DoAW79SB
+	cUUzSWR3SzPYVRq8bkSv6YC081Ldd+GsA3VVKFBG65jRfVadfMcoZ2wb8l0+D10D
+	xkUZlbMlB0UAO3bZvL5Ng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1749583718; x=1749670118; bh=s
+	gPJbsLxBu0TMu9PG5pgy2qt41CUvg+KpMXqP7UQJcw=; b=dVGzBQqSxZ8/MSESH
+	qYcWRC/vYTaNDnYakgtyuosUa57QdH66IqwKzNPLAZrpki33htBKI/qQ9D57TvQU
+	fVSP5BXoF32JI6ZUrr2ohtz8ng+giyjZ3a5V+DJKROo4J5i58dGLo3nDej2qlmVO
+	2sX6IoaqNI+TLOHViVdxKPi7MJPbO8ZKqyV+/h3SpKnBcYkYAuP54aYN65dneBwY
+	SIVpUKCbAQemzX1+6ycRADpyp5WZEEQf6nyxI+nCPJCyOP1KQh2V37nYWNGgezQH
+	DylVMjTqeP92OFZMzEr/btRd6wIkFxY+c/90wVPLkPpNZvrVJK/y+73f5OFLn4bd
+	iciRA==
+X-ME-Sender: <xms:ZIdIaLiPEo7AyHEmHg3vrTSwWYsJT-lFATZPXQMeSebGXV1PGKAO8w>
+    <xme:ZIdIaICdnIADhcKYr2bwZjvnYIOnu1KNlEBjBzeTbGVBT9pqCuXu1lVwZ4_0prqhO
+    498_GhrUWIyroVCWto>
+X-ME-Received: <xmr:ZIdIaLFnkKHzNPoNWKtWRGw-5HEtjfgvj24qh8VbhDBNYzUedGCQCacWI04oSDgjvi8-Pr19b6ild3eB4iQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
+    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
+    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpeevtdelgfeggfejtedtvdfgkefhuefguedt
+    keeffeduueduvdeiuedtleejvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggr
+    rhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepuddupd
+    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinh
+    hugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrght
+    rdgtohhmpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtohepfigprghrmhhinhesghhm
+    gidruggvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugi
+    drihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdig
+    keeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihgsmhdqrggtphhiqd
+    guvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvght
+X-ME-Proxy: <xmx:ZIdIaISYtOHQZTm3m8xdHY84DUubazkFAjG1Yy70x4y2DLqn3iwYxQ>
+    <xmx:ZYdIaIxM36gIGrqB87ht-vzc1Ap3Iw9AoafDUtvIfIaubsTGZa60Ug>
+    <xmx:ZYdIaO77z_8TRZfDP6TCi_t1X_6avYNUCBc86VHXkKZ5RtWiX--P2Q>
+    <xmx:ZYdIaNyp691fMo7sYadnkuOzCz6aSuIQ9SaO407yDeZ16S_yf1mrIA>
+    <xmx:ZodIaNtPIYq4-lL-vQO3oFj2oVpCm9EIkndLUvX-nmGWOnBi03gXZejy>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Jun 2025 15:28:36 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	ikepanhc@gmail.com,
+	hmh@hmh.eng.br,
+	W_Armin@gmx.de,
+	andriy.shevchenko@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v4 1/2] platform/x86: thinklmi: improved DMI handling
+Date: Tue, 10 Jun 2025 15:28:24 -0400
+Message-ID: <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform: arm64: lenovo-yoga-c630: use the auxiliary
- device creation helper
-To: Jerome Brunet <jbrunet@baylibre.com>, Hans de Goede
- <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250610-yoga-aux-v1-1-d6115aa1683c@baylibre.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250610-yoga-aux-v1-1-d6115aa1683c@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/06/2025 09:41, Jerome Brunet wrote:
-> The auxiliary device creation of this driver is simple enough to
-> use the available auxiliary device creation helper.
-> 
-> Use it and remove some boilerplate code.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
-> This is essentially a resend of this change [1] which was sent a few months
-> ago. The necessary auxiliary bus support has now been merged with
-> v6.16-rc1, so this change should be safe to apply.
-> 
-> [1]: https://lore.kernel.org/r/20250218-aux-device-create-helper-v4-4-c3d7dfdea2e6@baylibre.com
-> ---
->   drivers/platform/arm64/lenovo-yoga-c630.c | 40 +++----------------------------
->   1 file changed, 3 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
-> index 1f05c9a6a89d5ee146144062f5d2e36795c56639..75060c842b249c1b4cab21fef943266ae0b31d32 100644
-> --- a/drivers/platform/arm64/lenovo-yoga-c630.c
-> +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
-> @@ -191,50 +191,16 @@ void yoga_c630_ec_unregister_notify(struct yoga_c630_ec *ec, struct notifier_blo
->   }
->   EXPORT_SYMBOL_GPL(yoga_c630_ec_unregister_notify);
->   
-> -static void yoga_c630_aux_release(struct device *dev)
-> -{
-> -	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-> -
-> -	kfree(adev);
-> -}
-> -
-> -static void yoga_c630_aux_remove(void *data)
-> -{
-> -	struct auxiliary_device *adev = data;
-> -
-> -	auxiliary_device_delete(adev);
-> -	auxiliary_device_uninit(adev);
-> -}
-> -
->   static int yoga_c630_aux_init(struct device *parent, const char *name,
->   			      struct yoga_c630_ec *ec)
->   {
->   	struct auxiliary_device *adev;
-> -	int ret;
->   
-> -	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-> +	adev = devm_auxiliary_device_create(parent, name, ec);
->   	if (!adev)
-> -		return -ENOMEM;
-> -
-> -	adev->name = name;
-> -	adev->id = 0;
-> -	adev->dev.parent = parent;
-> -	adev->dev.release = yoga_c630_aux_release;
-> -	adev->dev.platform_data = ec;
-> -
-> -	ret = auxiliary_device_init(adev);
-> -	if (ret) {
-> -		kfree(adev);
-> -		return ret;
-> -	}
-> -
-> -	ret = auxiliary_device_add(adev);
-> -	if (ret) {
-> -		auxiliary_device_uninit(adev);
-> -		return ret;
-> -	}
-> +		return -ENODEV;
->   
-> -	return devm_add_action_or_reset(parent, yoga_c630_aux_remove, adev);
-> +	return 0;
->   }
->   
->   static int yoga_c630_ec_probe(struct i2c_client *client)
-> 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250610-yoga-aux-30715036a8f4
-> 
-> Best regards,
+Fix issues reported by kernel test robot.
+ - Require DMI for think-lmi.
+ - Check return from getting serial string
 
-LGTM
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v4:
+ - Return -ENODEV instead of -EINVAL
+ - Make patch first in series
+ - Clean up commit message (empty line)
+Changes in v3:
+ - New patch added to series.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+ drivers/platform/x86/Kconfig     | 1 +
+ drivers/platform/x86/think-lmi.c | 8 +++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e5cbd58a99f3..9f39547d98f6 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -659,6 +659,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
+ config THINKPAD_LMI
+ 	tristate "Lenovo WMI-based systems management driver"
+ 	depends on ACPI_WMI
++	depends on DMI
+ 	select FW_ATTR_CLASS
+ 	help
+ 	  This driver allows changing BIOS settings on Lenovo machines whose
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 00b1e7c79a3d..02ede1ec99e9 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
+ 	enum cert_install_mode install_mode = TLMI_CERT_INSTALL;
+ 	char *auth_str, *new_cert;
++	const char *serial;
+ 	char *signature;
+ 	char *guid;
+ 	int ret;
+@@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 			return -EACCES;
+ 
+ 		/* Format: 'serial#, signature' */
+-		auth_str = cert_command(setting,
+-					dmi_get_system_info(DMI_PRODUCT_SERIAL),
+-					setting->signature);
++		serial = dmi_get_system_info(DMI_PRODUCT_SERIAL);
++		if (!serial)
++			return -ENODEV;
++		auth_str = cert_command(setting, serial, setting->signature);
+ 		if (!auth_str)
+ 			return -ENOMEM;
+ 
+-- 
+2.43.0
+
