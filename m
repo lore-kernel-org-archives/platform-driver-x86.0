@@ -1,130 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1B327FD6D;
-	Tue, 10 Jun 2025 07:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6961917CD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 07:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749540960; cv=none; b=eqr1U7g6Mw+0BXVJAMMySjonJkxZUslKxxSkea5P+NHq/F/6KaVpyb+qQ4PDIGOfbmnsIGsoVtVliyn3HZQeQUSeqKyYOkJ6bIqj2LxzU71Z7kE5WshYu7+6C7AhXOloLkgG7zwrXqnopliq4e0ot1aCkMYlAzuIgFDCZPH3QpM=
+	t=1749541766; cv=none; b=VWYArQZTASvag5hvn8FqDdTOV670LjEyzOSojL6YqvNj9x4fQHoEErbVG/pscQ//hsyPI9C8ZLywFGe3ss7Kw90Za4X0bi3PJl/GdAlWk+uJV0NPYjLU+KUNa1eVz9KSVXcGsOntHI9U9GxG6vbX2P53SD2B7WIlmxKSvpibaik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749540960; c=relaxed/simple;
-	bh=ElacH2Wky9DtShQPH7U56vIWBMhMOiRCTWD4CBF36RI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FaO4fn0FU2d3EODvvVwwhoqdO4sJG5Tx4xIEHwIMS6Rrb370BIq720cS6mkB7NY6Zkdag9Qt1rmUbhB72sGDGMk/ADnJ6EAl58myWzn3ERAME2kq6wFJw+OyGZnqq85/idzVgjN/X0PsfX8vxOT4dgyLp1qejws0giDNRzAxPCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lYxdQO+A; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1749541766; c=relaxed/simple;
+	bh=yPKc6T40B3XakMaNtWAXSn/mNIQG2MGHVnPLJ4GwDnA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tWT2ddy8TUSEbhR6RWpPHFLwiQr4PYfh6RM5GVdPNDclTMI9A45s4tIeb/qj9VqcLROWzdtXEZIePwD0ss+NDRPy+mf8pEPDSTQdTfwOuoSoeWrs0ChGeoue419WPtLCcgJ5JXPxkGB4sk9rBdeq0VD0VrksBPRaOgZ+XOxz05c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HQ3JFylv; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lYxdQO+A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HQ3JFylv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749540958; x=1781076958;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ElacH2Wky9DtShQPH7U56vIWBMhMOiRCTWD4CBF36RI=;
-  b=lYxdQO+AKUqJRNViFAFTPJamZzWsq4vSCQHhUVOD5VpRyF6VgEXN2avz
-   fbvcRYKaOHygPXKY0M8QCY7oiF5esdab2ozRohuUDBrQux4A8WrRQLsOi
-   ZghKN9x7ZQHOw6zxDlFfhqreiLToYw1T+kTOFYP24dg3zA9Kkou1sunTQ
-   mZGLbGdxBqklWXlYohCIOejWJ26W0J/P8yVaWAp3EfmpC6MmJyTGIpiYX
-   H6I+o9gmFTr7zda8lyMB3vv7Yj3QBMVULyEBtFBsC4JAQgOtBrFcsdJOb
-   IL1tT2cTk6UltO/FzBpfkvzEsqZ02A+PJ5eG8zB64GiJcOZVylqUMoW1C
-   Q==;
-X-CSE-ConnectionGUID: V8uR3U3xRaWKBwdsHC/mjg==
-X-CSE-MsgGUID: 594ohpR1TqSQVNjbDwwPIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="61907010"
+  t=1749541765; x=1781077765;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=yPKc6T40B3XakMaNtWAXSn/mNIQG2MGHVnPLJ4GwDnA=;
+  b=HQ3JFylvI17qv4H52PQS42GfQ9MqW3wT9HRFdRbli3PI7CI/STLxowCN
+   a4NAN0OklVaWH5gKTfTHyogJnphoQkBWPaYTTkUtwNfiy7VGYhpP6UCmS
+   kCLfXDoWP0j1bVkKoRumWqgTIxm7UoLWKzAG8hoQSUrDSe8h/FVBUJYcm
+   9oZQy7XcvSb2P2h9V7gAfq1AFJLPjsuY2gjG5wqzAQ/fGDzDDsCHEwm3p
+   duLhaJzHESgA1/rJD//acs51AOPx7Sm+pqtD9jHA47+JORFF8wHKWS0ln
+   Mh8sKs5YCOmbMyvT2nzn0oByorzETjcKlHb8ge2p2jh9vowFHob15AqJ1
+   g==;
+X-CSE-ConnectionGUID: 0chC+yeJTIeITczQ64e4vQ==
+X-CSE-MsgGUID: pXtuEDexTZytL8lscFy1kw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="77039677"
 X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="61907010"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:35:58 -0700
-X-CSE-ConnectionGUID: 6ozIU5eiTcuu24hAps7wLQ==
-X-CSE-MsgGUID: pHH8Bb2iQtiT7ZpVY1dBsQ==
+   d="scan'208";a="77039677"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:49:24 -0700
+X-CSE-ConnectionGUID: 2VLw2jESRHe7PZ8unJJjrQ==
+X-CSE-MsgGUID: CL7Ph7xRQ1qTfowrP/tWrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="150592232"
+   d="scan'208";a="146682160"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:35:53 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:49:20 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Jun 2025 10:35:50 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, ikepanhc@gmail.com, 
-    hmh@hmh.eng.br, W_Armin@gmx.de, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, 
-    kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
-In-Reply-To: <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
-Message-ID: <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250609122736.3373471-1-mpearson-lenovo@squebb.ca> <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Mario Limonciello <superm1@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250522003457.1516679-1-superm1@kernel.org>
+References: <20250522003457.1516679-1-superm1@kernel.org>
+Subject: Re: [PATCH v5 0/3] Improved cleanup handling for amd-pmf
+Message-Id: <174954175075.5583.9150193625762056673.b4-ty@linux.intel.com>
+Date: Tue, 10 Jun 2025 10:49:10 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Mon, 9 Jun 2025, Mark Pearson wrote:
+On Wed, 21 May 2025 19:34:54 -0500, Mario Limonciello wrote:
 
-> Fix issues reported by kernel test robot.
->  - Require DMI for think-lmi.
->  - Check return from getting serial string
+> I noticed some memory problems with unloading and reloading amd-pmf.
+> These were root caused with a double free.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
+> This series cleans up that double free by switching to device managed
+> allocations and also fixes other problems observed in earlier iterations
+> of the patches.
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
->  - New patch added to series.
-> 
->  drivers/platform/x86/lenovo/Kconfig     | 1 +
->  drivers/platform/x86/lenovo/think-lmi.c | 8 +++++---
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-> index a4b565283768..207dd7f88ed0 100644
-> --- a/drivers/platform/x86/lenovo/Kconfig
-> +++ b/drivers/platform/x86/lenovo/Kconfig
-> @@ -197,6 +197,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
->  config THINKPAD_LMI
->  	tristate "Lenovo WMI-based systems management driver"
->  	depends on ACPI_WMI
-> +	depends on DMI
->  	select FW_ATTR_CLASS
->  	help
->  	  This driver allows changing BIOS settings on Lenovo machines whose
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-> index 143d9fdedb65..8f70c60f791f 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *kobj,
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->  	enum cert_install_mode install_mode = TLMI_CERT_INSTALL;
->  	char *auth_str, *new_cert;
-> +	const char *serial;
->  	char *signature;
->  	char *guid;
->  	int ret;
-> @@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject *kobj,
->  			return -EACCES;
->  
->  		/* Format: 'serial#, signature' */
-> -		auth_str = cert_command(setting,
-> -					dmi_get_system_info(DMI_PRODUCT_SERIAL),
-> -					setting->signature);
-> +		serial = dmi_get_system_info(DMI_PRODUCT_SERIAL);
-> +		if (!serial)
-> +			return -EINVAL;
+> [...]
 
-This should not return -EINVAL as it is not a problem with the input 
-parameters. Perhaps -ENODEV would make sense instead?
 
-> +		auth_str = cert_command(setting, serial, setting->signature);
->  		if (!auth_str)
->  			return -ENOMEM;
->  
-> 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
--- 
+The list of commits applied:
+[1/3] platform/x86/amd: pmf: Use device managed allocations
+      commit: d9db3a941270d92bbd1a6a6b54a10324484f2f2d
+[2/3] platform/x86/amd: pmf: Prevent amd_pmf_tee_deinit() from running twice
+      commit: 93103d56650d7a38ed37ba4041578310f82776ae
+[3/3] platform/x86/amd: pmf: Simplify error flow in amd_pmf_init_smart_pc()
+      commit: d7186dfd41924ef01ef490be5b82ab63cc417b31
+
+--
  i.
 
