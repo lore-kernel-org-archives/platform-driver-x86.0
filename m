@@ -1,107 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9DD28BAAB;
-	Tue, 10 Jun 2025 10:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931228F503;
+	Tue, 10 Jun 2025 12:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549696; cv=none; b=D7AFVGgFS+rOl4Bihf7QE4WD1jL9T0Ir36EYD2kggVXZyCyPYGAvhUrsp500/jgks0DpBhBcivp6CQivPukZ3cFSyIhDbDej34WXpm6ASpUdZB23RTlGDL07kBubsesteHXnpfdz3QbJnq9Pnx+d1+Vmdl3zB8MLQ0whP1Q4HqQ=
+	t=1749558555; cv=none; b=Wi03Qaej8r7mQloqso7MmS7KxPssyQQab5+KURsuojdRgfeWkvnRn80+j6n000MzXQd62Edz1xaO520ezuysww+woZ7kDMYKuEBal4qPl23PYKI+2R9vC+4D/tnwtV4rSLS02gVsCEpEXrvT2SEUDKR5R6puL7aLy8giHrmboJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549696; c=relaxed/simple;
-	bh=0esks7NiXmflWu86rtyiHIstnvaZKrxBSy6l+qhJjF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbJEQII4WYoObBtp3CJLJWjkvcEMsPm2GPtQFv0K2Tck9cOujhtqk4vkude60gL/wiXMyEOAYxW9Q4QBbHhqRMiJLmZewnqYcxWP1PdXFD8GlqWRD1O6glZ32OMF/aUJC5uzguJ8VHDg6g1+5fSE9U701G6ZGeMUvvUOmWptjk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cBOCU2y3; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749558555; c=relaxed/simple;
+	bh=s/Mms/MwIMqVWLnjCgYLsX7RxmSQ4yf/IkuaD8FSw5s=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pNoCA09l++Rp8Dxj8mHYiKOh8ISrJpjpGSngS8be2pHJRKD0vnCtQYr4WCRRIdUzzESSexUUrTBS+F+eAfVniyNctYXxaHVE5D23V2QaielfTB9if+5NLRg/k5OgZW5qdkPOfZCLBFI1mQ1RgWmKDeNaB1jOeicrRVxgV9+lUZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=SQHIPIgZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HzuuaZn9; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cBOCU2y3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749549695; x=1781085695;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0esks7NiXmflWu86rtyiHIstnvaZKrxBSy6l+qhJjF4=;
-  b=cBOCU2y3UIx/d7s4P9nJhJEHZNhRpgfd3Ur6fm9dPCkDeRmmg/WIFaCR
-   ToZn9rMSjtRXhq0FNhGbY+ENlgcfkSTbneDG7wLTboL4fVs7xilgkYsaF
-   QunxhmDrEMdzfCtb2vlGpW/AxazzmtAUS1CWl15Fg4xRydvlk9mNRvKkY
-   nxRyZtbRiLmJ4UTtXOE9Q9Yebaoee6GVlLQGUeq6liX4elbSiPFdHlv3W
-   Ef1UbS2Gs0FG8UZKqZrOZ3XRg7+plDKr/3EZoRIy+I6/LQ5a5M0wS0B4h
-   CqpsTr8px3zm5Ht8RsAFo1yIYWUX/TdcSu0H9aPJ6XV0IfORcOAVf0yGq
-   Q==;
-X-CSE-ConnectionGUID: QT+QTfyhRVGlfCxCfvDzfQ==
-X-CSE-MsgGUID: dIV1nNsIT1yzh3zak/LTPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51507604"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51507604"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:01:34 -0700
-X-CSE-ConnectionGUID: 7me+KZ45RwK1tv3QMP35qQ==
-X-CSE-MsgGUID: SV1iRhpfTj+uJjkfSBuvIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="177720231"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:01:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOvnM-00000005JbT-0JsS;
-	Tue, 10 Jun 2025 13:01:28 +0300
-Date: Tue, 10 Jun 2025 13:01:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aEgCd7Z1rE6-K2Ac@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
- <aEdBWymLN7aYqkeB@smile.fi.intel.com>
- <33d3ea0d-161d-4297-9a99-9e7e129b31b1@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="SQHIPIgZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HzuuaZn9"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 3F4692540105;
+	Tue, 10 Jun 2025 08:29:11 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Tue, 10 Jun 2025 08:29:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749558551;
+	 x=1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=
+	SQHIPIgZzfBrshp4cxz+AB5A778efV2gH0zQ2/lJ9RPmwKPasv3t/YtcYc8G+Mqh
+	ULw6AXTRxXrLL0R0eT0Y+PO3OX+Bu5msiAmyLY640iaXQW7gNqKjk9MdT26pkah6
+	8FaPOwmoiUHB84BqvGAFPX8ZdGT8jXh7dLA6Nzr5gVLHb1d/tmPwk1V4rSodEJoC
+	VBccAx1AYw6h8/p/LdL8DKVjjC3IhZuQlRFEohbwbk5rzhedtoXmzhZ3ViokvutE
+	HMryuSGG1x6x+Fpg9cC8aFIWTyGUHg1Ve2J3lkY32/ietD12FxfriHNRMuwSC1z9
+	E+/5IziFbmxUQR7JgHmqHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749558551; x=
+	1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=H
+	zuuaZn9g6Q7jc7zlV7wtU/xVlh4ExQcCROsAxd5szo+vDar+59MY5uBIkm3lE8aD
+	vgYnDVKN0KDlmnbIXVVmsbuRFlbxjbTxDqsqhDaXuVQnn/v58GMKDzO7Hb4RMHs8
+	PWxOLz3T46MhzHyYBW94mlF88OtaH9GU9P39GRMyZ/3jphG5mhubjngFwcwB+Pzg
+	A0zAzfh1fFx+TjhF6FJgoBzUWbncJZ9EbaUtgxj6DnKR2R7u3Md0qafqqA7eUMo6
+	DeVmxIVoJebyMYzMv8cS0a0GMKqt7is3ZSHJ64RMq7uMHgs8A41Ljk8CG/wkrpwG
+	MDDV4TsVT8K+zImFI+Hyw==
+X-ME-Sender: <xms:FiVIaD1p4SHd_Ol7AIJrdF3aCDwxTwnOzEIeR-C0lCPLLQX5qUOEqQ>
+    <xme:FiVIaCG5uCPvHYYfdSIAp5AbFmhEI9uqQqxboi9Jrak6CVy9CNNpA35eHyERPTxFK
+    ZyEv6jdOOIwx1K4ECY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepgedvgeeufffhtdel
+    iefgjefhgffgiedvjeegleeujeeutdduteehjeduhedtiedtnecuffhomhgrihhnpehkvg
+    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
+    gtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepihhkvghprghn
+    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpd
+    hrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtoheplhhkphesihhn
+    thgvlhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlih
+    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnhes
+    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvh
+    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopegtohhr
+    sggvtheslhifnhdrnhgvthdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
+    gtohhm
+X-ME-Proxy: <xmx:FiVIaD7RxmtHxMynnUN8zHb7dflxNnYKtL1YzN2d5z3nArN4N6r5RQ>
+    <xmx:FiVIaI03sHHcoqn41xDZOXyD7KpDhGFmAPuFdUMlbPACTMpmGt_XIQ>
+    <xmx:FiVIaGEZMHKlc1Ma8crv7vr0ybroCqlOU4sVUmImkV0R3xkL9huROg>
+    <xmx:FiVIaJ-QmtmUwgm5Iosg0B3oz9qxAvmOe9bd0YyudIq4vywN8Nwr0w>
+    <xmx:FyVIaNUPQ_RaKZ61HuNj6fZFZuijvSnE6BDgT_fH-FZ0-iXL4YYD63WG>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 09BB62CE0063; Tue, 10 Jun 2025 08:29:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33d3ea0d-161d-4297-9a99-9e7e129b31b1@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ThreadId: T95b0e86a2866f664
+Date: Tue, 10 Jun 2025 08:28:49 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ linux-doc@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>,
+ "kernel test robot" <lkp@intel.com>
+Message-Id: <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
+In-Reply-To: <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
+ <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025 at 09:21:45PM -0400, Mark Pearson wrote:
-> On Mon, Jun 9, 2025, at 4:17 PM, Andy Shevchenko wrote:
-> > On Mon, Jun 09, 2025 at 08:27:24AM -0400, Mark Pearson wrote:
+Hi Ilpo,
 
-...
+On Tue, Jun 10, 2025, at 3:35 AM, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 9 Jun 2025, Mark Pearson wrote:
+>
+>> Fix issues reported by kernel test robot.
+>>  - Require DMI for think-lmi.
+>>  - Check return from getting serial string
+>>=20
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-l=
+kp@intel.com/
+>>=20
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>>  - New patch added to series.
+>>=20
+>>  drivers/platform/x86/lenovo/Kconfig     | 1 +
+>>  drivers/platform/x86/lenovo/think-lmi.c | 8 +++++---
+>>  2 files changed, 6 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
+86/lenovo/Kconfig
+>> index a4b565283768..207dd7f88ed0 100644
+>> --- a/drivers/platform/x86/lenovo/Kconfig
+>> +++ b/drivers/platform/x86/lenovo/Kconfig
+>> @@ -197,6 +197,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
+>>  config THINKPAD_LMI
+>>  	tristate "Lenovo WMI-based systems management driver"
+>>  	depends on ACPI_WMI
+>> +	depends on DMI
+>>  	select FW_ATTR_CLASS
+>>  	help
+>>  	  This driver allows changing BIOS settings on Lenovo machines whose
+>> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platfo=
+rm/x86/lenovo/think-lmi.c
+>> index 143d9fdedb65..8f70c60f791f 100644
+>> --- a/drivers/platform/x86/lenovo/think-lmi.c
+>> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+>> @@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *=
+kobj,
+>>  	struct tlmi_pwd_setting *setting =3D to_tlmi_pwd_setting(kobj);
+>>  	enum cert_install_mode install_mode =3D TLMI_CERT_INSTALL;
+>>  	char *auth_str, *new_cert;
+>> +	const char *serial;
+>>  	char *signature;
+>>  	char *guid;
+>>  	int ret;
+>> @@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject =
+*kobj,
+>>  			return -EACCES;
+>> =20
+>>  		/* Format: 'serial#, signature' */
+>> -		auth_str =3D cert_command(setting,
+>> -					dmi_get_system_info(DMI_PRODUCT_SERIAL),
+>> -					setting->signature);
+>> +		serial =3D dmi_get_system_info(DMI_PRODUCT_SERIAL);
+>> +		if (!serial)
+>> +			return -EINVAL;
+>
+> This should not return -EINVAL as it is not a problem with the input=20
+> parameters. Perhaps -ENODEV would make sense instead?
+>
 
-> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
-> >
-> > Is this correct?
-> >
-> Jackie is on my team, he wrote this driver originally (with some help) for one of the thinkbook platforms.
-> If there are any changes he should review them as he has access to the HW, but I'll be helping too.
-> I think it's fine - let me know if otherwise.
-> 
-> Just as background: We can't use our Lenovo email addresses for kernel
-> contributions. They're based on an awful Outlook server that is incapable of
-> handling text only emails, and also won't play nice with any other tooling
-> (including git send-email). Not ideal but it is what it is, and I gave up
-> fighting with IT about it (there are some workarounds, but they're arguably
-> worse).
-> 
-> > Otherwise LGTM.
+Good point.
+Unless Andy strongly thinks I should drop this bit, I'll fix in the next=
+ version
 
-What I'm talking about is the filename.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
+Mark
