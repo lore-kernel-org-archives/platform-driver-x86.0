@@ -1,145 +1,213 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B01A0BFA;
-	Tue, 10 Jun 2025 01:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE025F7A2;
+	Tue, 10 Jun 2025 05:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749518842; cv=none; b=dbZcLPXMOB3OX+lSFU4kNOC2c8Gz312spAMQfKp9yiGq7boo//cqWSVGpN0OqhchyNFcZuHvkWJI945absTIDI4kiKYea1ycE7IkI25W8F5mZDYLNdPsKLNnQfsATOhSwB0WiE4SOnOKHTvs4ygR4giemHyfo4y4RmzcquKzfns=
+	t=1749534947; cv=none; b=n6DAKRCRKezMWa5P4fB6Gz739M0hop3Gx6aUWYZ4NwG1fkXcP9Ynr47h54Dlvj/OarO2JLekcqldBYnBNPYVjulttike//jo9E3GvJy1zaJGX3s7Zl2wx3Awm7fjPIJoEHgOSed+kpGr9z5uNevgsqTOxTDtvcEZcf6SpmAP0v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749518842; c=relaxed/simple;
-	bh=lababK9PXv3X/Hak6+Il/2t+egD0njFbW7VWIq9mylI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=KXWPQHVc4khxR8t1tF06kTdUd2LW/Jz2u6z5r3P0M6mPT6HB4i7Z1Rb/1X82Yphj7e/Ceu1vLTH3QPC5y98V704sJFTknc2KWb7gdo+GfgsdbxOn6zBsK/lB7u+aOo3rN803jUmn10ZOc4rCwED2tuQB9M8C3WJEughunGRZB28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=PpSBxSUi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m0m3HEhr; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749534947; c=relaxed/simple;
+	bh=ybT/6LzbsTJe9XbUclvW55O/CINdufKjms9E4PJV35k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lB24u5OPsA4T+9eZcjozGW215v38TpALUzfwaALQcehYQrAxvrvlZtH3Pb4as333prrA76w+eLcjwOktDbxyBsHOK4U6Cd1G5Staw63tSmjgSxL1pPI7LGi0cDosGhSVJMUqOzqXt9ysGMAl8WdNR5sep8spV0gWzUWEEor/Y7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=TLvbBoEw; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="PpSBxSUi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m0m3HEhr"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8D0D7114026D;
-	Mon,  9 Jun 2025 21:27:19 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Mon, 09 Jun 2025 21:27:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749518839;
-	 x=1749605239; bh=lU8nvWLBcjap5Wuv+m6wHzcFE5BeUJSBjblgsXqqq00=; b=
-	PpSBxSUisBidWcuqEbAZZpZE4tsuxGDlcoYfgFc5AsoMNDC+yKsgIUn6KVHRzh3O
-	0q5MUdtIIgJPgLYa+j+bU0t7gLLJRdFK9WksOoTqaThMKpGNLEsoMnG8xyCxmlfu
-	OFbHPkuct882I8+S3UKpY55taP2l/xDqn3+LWuHSRKYEZu92adfObM3MEe+tAQ03
-	z167lsY9fYVpAjItO2jfFhBDH7qrM77w08ca9+/TcWq32JtRqWBzUYdXvdMd//KD
-	ySxMc2xF9aEit7CvE0h8IGI8/KJdbqhNqG4OS2bja85IhcYBidUhVhTPf4Gl1Lqe
-	0AKm/pIvOBhqXQjlh0UY6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749518839; x=
-	1749605239; bh=lU8nvWLBcjap5Wuv+m6wHzcFE5BeUJSBjblgsXqqq00=; b=m
-	0m3HEhrWcOrap9Qbh9dIoSTPvmaPrdSn89gkWt18MuviMsYiQRTHUL2RTtVwdYYr
-	k5fNZwSHSey68wgPzCAa/fKwwYQCUf85TbuJ3v9zMy6GwlDlNWcMCx2dq1ZA7jTa
-	dbUXATKrVZUehKKGQCAkqP+u8RpaX3BNzs6E3972mFA5KN8XPnOaEmxpdEK7WhM+
-	/v/mrx/rvQlDlaG1fvbFPKaw2eXZx2nFNfSXbQCZhUhwoH9z1Y652xl/5JFt/9kt
-	rtQrDJ8P4APDQFIx+74wnwbMBt24Guh53rVOsijj5qSB5WQluVVYumJpA5KyNUGV
-	9KB1vIR7z7o2uz/+KbEbQ==
-X-ME-Sender: <xms:9olHaAKX1uFh-W2JLPV6iZzg27Nov5PvvCbCCI0nRNas8Z8pv5rWwQ>
-    <xme:9olHaAI02C2-Z3-z_7UOKi4-lrUZo3tHjCQn5VOJzSJHvT8F8nGUQPgl07gVjDlAl
-    -vGN3M1zxDNcQK1dg8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutddtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnheptdffvefgtefhveet
-    uddvfeelveektdduvdelgfehgfeikeffjeetjeevffektdfhnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
-    gtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepihhkvghprghn
-    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpd
-    hrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtoheplhhkphesihhn
-    thgvlhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnhes
-    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvh
-    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopegtohhr
-    sggvtheslhifnhdrnhgvthdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
-    gtohhm
-X-ME-Proxy: <xmx:9olHaAtJAGm73zapfHZ1rJNwHJTenFu-ywA75RGz1MTDcUWO1YkqzQ>
-    <xmx:9olHaNZnxht25yuYzQPX88yHYbv7CvZjsXts0c4nbvk71NZ21Oq5aA>
-    <xmx:9olHaHY-UJ7rmXhxSRKvKPUsLPXVE7pvCvVaZwsrx7EanPl7O8iHdA>
-    <xmx:9olHaJA49-mi2Ft4xU2RTqmkX1B00UH1GknOrljJqZr9xYzL5Kr2Wg>
-    <xmx:94lHaM7f0N9FRe_JvxmxNth6XUnV3FzkytPDefQrRNwxQZxarXK4Fd0D>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B54F62CE0063; Mon,  9 Jun 2025 21:27:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="TLvbBoEw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1749534934; x=1750139734; i=w_armin@gmx.de;
+	bh=i5+Pxcmp/SbEOw11Mc+rQ1F242lhNXtVYD6Xck5KQw0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=TLvbBoEwJXQVhcNQE2Dxl+oPuXzBN0dDcWT0CBoPdtEcTkim0NYfjaYc8GoaeKiW
+	 0PEUNFG0Kpt0wdMDG+nTpM0QDVsaP2YwunAW5SojDBYOJvz9PW9d30iMPX1DXCEj7
+	 fAgPyCgpWSm6Koa/9fUyvcOl9jAA+q+GAN7TaYc/jBZTLXzfkMZqX4ha7wRVnrJkU
+	 GLrDyOtTsliNQCzSl61qGmsYYCAn58Uz0EgmgPM4EICYFW7n88+IbXCOkZY1QgX75
+	 heY1R0STooUnepP/n0VoVpmojFRoXMYu5wUjmSh0OBzFaAgKkP1VLYtXWtRT1B/AD
+	 l1eP9S7WfSw9rpSjFA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M59GG-1uNm1i0xwC-00CM24; Tue, 10 Jun 2025 07:55:34 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: Dell.Client.Kernel@dell.com,
+	jithu.joseph@intel.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	corbet@lwn.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] Documentation: ABI: Update WMI device paths in ABI docs
+Date: Tue, 10 Jun 2025 07:55:25 +0200
+Message-Id: <20250610055526.23688-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T95b0e86a2866f664
-Date: Mon, 09 Jun 2025 21:26:58 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- "kernel test robot" <lkp@intel.com>
-Message-Id: <7e0d5241-e82a-42e3-b6ac-ffe9ea42a897@app.fastmail.com>
-In-Reply-To: <aEdBy6m_6aQr8l41@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
- <aEdBy6m_6aQr8l41@smile.fi.intel.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pKaX/vPIFZdWEIntIE7snXU3W4yyvzue7+cVzj+WoP0/Suu/2zB
+ SHzhKzt3TYaBSeINry9tbi4V9aOJoYWu9Bx84pYVTkHAGSs5Ar9EKRVTfeaFJMTmSGZPMhm
+ 7SpXpBhadAaUgs7MQAeHlTEFQkLdvx9y29zMrFg87p3xFN7qrE0yBTVQLpWCKCTFftc0vzF
+ zXwuLqX5RaPwOyOUc7rAg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pmQi7xs/HFU=;FrKZryHMm9etmgFazZGZHJFfnkv
+ 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
 
-Hi Andy
+The WMI driver core might append an ID to the WMI device name to avoid
+name collisions in case multiple WMI devices with the same GUID are
+present. Update all sysfs path referring to WMI devices to inform
+users about this important detail.
 
-On Mon, Jun 9, 2025, at 4:19 PM, Andy Shevchenko wrote:
-> On Mon, Jun 09, 2025 at 08:27:25AM -0400, Mark Pearson wrote:
->> Fix issues reported by kernel test robot.
->>  - Require DMI for think-lmi.
->>  - Check return from getting serial string
->> 
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
->
->> 
->
-> No blank line in tag block.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ .../ABI/testing/sysfs-platform-dell-privacy-wmi          | 8 ++++----
+ .../ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update   | 2 +-
+ .../ABI/testing/sysfs-platform-intel-wmi-thunderbolt     | 2 +-
+ Documentation/admin-guide/thunderbolt.rst                | 9 ++-------
+ 4 files changed, 8 insertions(+), 13 deletions(-)
 
-Oh - I'd not come across that requirement before. I can fix.
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi b/D=
+ocumentation/ABI/testing/sysfs-platform-dell-privacy-wmi
+index 1f1f274a6979..b4da7b2ea0ca 100644
+=2D-- a/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
+@@ -1,4 +1,4 @@
+-What:		/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_pri=
+vacy_supported_type
++What:		/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919[-X]/dell=
+_privacy_supported_type
+ Date:		Apr 2021
+ KernelVersion:	5.13
+ Contact:	"<perry.yuan@dell.com>"
+@@ -29,12 +29,12 @@ Description:
+=20
+ 		For example to check which privacy devices are supported::
+=20
+-		    # cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3A=
+B0A901919/dell_privacy_supported_type
++		    # cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3A=
+B0A901919*/dell_privacy_supported_type
+ 		    [Microphone Mute] [supported]
+ 		    [Camera Shutter] [supported]
+ 		    [ePrivacy Screen] [unsupported]
+=20
+-What:		/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_pri=
+vacy_current_state
++What:		/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919[-X]/dell=
+_privacy_current_state
+ Date:		Apr 2021
+ KernelVersion:	5.13
+ Contact:	"<perry.yuan@dell.com>"
+@@ -66,6 +66,6 @@ Description:
+=20
+ 		For example to check all supported current privacy device states::
+=20
+-		    # cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3A=
+B0A901919/dell_privacy_current_state
++		    # cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3A=
+B0A901919*/dell_privacy_current_state
+ 		    [Microphone] [unmuted]
+ 		    [Camera Shutter] [unmuted]
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-upd=
+ate b/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
+index 02ae1e9bbfc8..7ffd1579b8f7 100644
+=2D-- a/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
++++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
+@@ -1,4 +1,4 @@
+-What:		/sys/bus/wmi/devices/44FADEB1-B204-40F2-8581-394BBDC1B651/firmware=
+_update_request
++What:		/sys/bus/wmi/devices/44FADEB1-B204-40F2-8581-394BBDC1B651[-X]/firm=
+ware_update_request
+ Date:		April 2020
+ KernelVersion:	5.7
+ Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbol=
+t b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
+index fd3a7ec79760..10ef1282c9d2 100644
+=2D-- a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
++++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
+@@ -1,4 +1,4 @@
+-What:		/sys/devices/platform/<platform>/force_power
++What:		/sys/bus/wmi/devices/86CCFD48-205E-4A77-9C48-2021CBEDE341[-X]/forc=
+e_power
+ Date:		September 2017
+ KernelVersion:	4.15
+ Contact:	"Mario Limonciello" <mario.limonciello@outlook.com>
+diff --git a/Documentation/admin-guide/thunderbolt.rst b/Documentation/adm=
+in-guide/thunderbolt.rst
+index 240fee618e06..102c693c8f81 100644
+=2D-- a/Documentation/admin-guide/thunderbolt.rst
++++ b/Documentation/admin-guide/thunderbolt.rst
+@@ -358,12 +358,7 @@ Forcing power
+ Many OEMs include a method that can be used to force the power of a
+ Thunderbolt controller to an "On" state even if nothing is connected.
+ If supported by your machine this will be exposed by the WMI bus with
+-a sysfs attribute called "force_power".
+-
+-For example the intel-wmi-thunderbolt driver exposes this attribute in:
+-  /sys/bus/wmi/devices/86CCFD48-205E-4A77-9C48-2021CBEDE341/force_power
+-
+-  To force the power to on, write 1 to this attribute file.
+-  To disable force power, write 0 to this attribute file.
++a sysfs attribute called "force_power", see
++Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt for detail=
+s.
+=20
+ Note: it's currently not possible to query the force power state of a pla=
+tform.
+=2D-=20
+2.39.5
 
->
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->
->>  - New patch added to series.
->
-> Shouldn't it be the first one in the series? It seems to me that this is the
-> fix of the original code as well.
-
-I guess. I'll re-order.
-
->
-> ...
->
->> +++ b/drivers/platform/x86/lenovo/think-lmi.c
->
-> My understanding is that you need either Kconfig or changing C file.
-
-Does it matter? I figured both were valid. Adding the DMI to the Kconfig makes sure it's used and checking the return code felt sensible.
-
-If you object I'll go with just the Kconfig but I thought the extra check had value and was related to the reported issue so did it as well. Let me know if you feel strongly about it.
-
-Thanks
-Mark
