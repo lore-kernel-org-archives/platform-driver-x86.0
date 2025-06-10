@@ -1,137 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A1529B8F5;
-	Tue, 10 Jun 2025 14:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEADD201034
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 14:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564754; cv=none; b=nqEu1+15qGZ96gdK+1Bx2YQm3hGMSBHIkK5XXEbsqrFBRA8LPTUNUR3YeY9XaZMDaVNpRbZJzk9Sos39yJgnrvjb5u+F3NsmQT4YvDYwXHPnl9ACxLSRlBjhwANbRBSxhqw3HpZP7rcHMtY1+89yIusoLDjYftcL+0jzUswD/P8=
+	t=1749566981; cv=none; b=sM4CbwSQFbVumpRwyQKxc9QFegdH7Zm1NO9XyKS6NxsmIQMCGy2oDNPV5pCnn/SHc8WHR6xw8cW/Yuies5/GmBIkN7iRaOm9tKIS2ShvBfsSas///+/HuUi0TPQcBbGnFx3IdbzlP0LPAvZ+UnDV//sDegx3ZsunHw4P5AIpUtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564754; c=relaxed/simple;
-	bh=eMKse3olgDDTdTVEulDHGZT76bFnjfTCsl3tj8Z5nvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iIFUMSQ7mGeYiZkKdqhHrmuJlOtiVDOyvAnZ6HwGU1avlEkjcsGxhTp7hGdzgPUrtzjk1Ju6YxYRldLrkcFvl7+/77Wx6wSyoQavCNvYUQc5Mf2nDAI9Q+gPAe08OVIwxMyX7ZgAWPYp/UD/yKlzATdCqhuPYxUqviyLJuDeQOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDvadfL4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749566981; c=relaxed/simple;
+	bh=vgj42bQ635nNSbuuBwByTTCGh+6Hp50dmu3sPfcDtjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Js/M63llByqGE8jWXIsF9GXz1WafwscgE5pH0lfvsSYfjrUR12EYUlh8xoSIcbb3kLC2UiqHRWi2oSKeQE94GaOQ1Qohq0Oq54wcBScKiSot+PjGI0mluYXLynROiIC1yFlISrES7goWNKz1E4oOHawhx7CL+f8psgowOG3X/Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JgbjQiHc; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDvadfL4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5397BC4CEED;
-	Tue, 10 Jun 2025 14:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749564753;
-	bh=eMKse3olgDDTdTVEulDHGZT76bFnjfTCsl3tj8Z5nvY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iDvadfL44uEdOn0RtAKvFUzmjA3P8wkt05S4itlgj9uHWgynwMccowZQoFOu++QFD
-	 mcO3mvOL0NAsin3bQOp1h/ZCUlyHQ7oF95a6pd4BXFE848ngnZ/kbV4NzdmmP1wPDf
-	 +yJYT56/8HzKLHsFkoz4bVY/bh1bycU0oA9nM3IQe9O73TQETn9ejg5v9TbCXY7XlL
-	 j/uk/x99ebbbgoC8rj/LqcgfuDB2K4uUCu7+rBgVsN0GTiJWd1HAkRtT8HqrFPZXKN
-	 eyHu8r5vNhJXkO1hgX/cidteEiZ+OJRZGChy0yn/mmeNtajyWF7kIDt6PVFpJ3d8SS
-	 TgTABlY1obp+g==
-Message-ID: <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
-Date: Tue, 10 Jun 2025 07:12:31 -0700
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JgbjQiHc"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453066fad06so20817215e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 07:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749566978; x=1750171778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2/iEEeefANeHi9vXHghJ7cwdYmeCqzXT54wm2S05hec=;
+        b=JgbjQiHcKzEJUL2f2f0zpBe8Y0hiEb+xIXYk9B5V4iDZNymVv1TBd81G8Ei+91PPfq
+         92EfH3s6AH9zUErgMu51H2OvMghrH+P1HlZ/ZBu5gd9IIgV28FLvBxUEbfcknzhbj+GK
+         yqCQsxjvuqPF4Z3Ubhbj8eiE5VB8uZc3lDJOUFop+LpqdjJKcG2omQMPZhmfhqyjGqUJ
+         18Dk868m9EJX5b9aMteszVd0KC175BbccLkRsz2WtALlJhoptBOD9kKG/33QWi3yoKMY
+         wDnq+6PdvnC3w28XJig3BpDL4DYPZ4ZsLX77lHrHIBhIeBIY4JpUy0SZK3Jsm8/MSLFl
+         riOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749566978; x=1750171778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2/iEEeefANeHi9vXHghJ7cwdYmeCqzXT54wm2S05hec=;
+        b=wtqBpfxCWHfXsxzjnT9SGW8GR6B/9gOVkqGYiV9HD4amR5NWCXYh3+vt9o5Jm12R/Y
+         5VqyQIsVgZM4BhM10k1z3U9tigUjESL2EBgrbJGrlKWODoLn2+RrVRvYFO4Nb53OYZ/H
+         SZ/pjS6bePJTxJXLX60Bunm6eJc0fVke+ATvEqHGDTGO8MmqiHbnL5ilAFQI2bRhGeya
+         ZcOvrzGUPiEBRAwVuGRFTG8/knxSvk7OLoy07t8+4Cyc2nfEgDhaKMW0oVdmTH7yRDNA
+         6/TcCwuXKMyiwHDWULT6WS5TmPhMyxSS/b0eRvVMNF5erKG88L8Y5tOLrF0Vh+ymfZHK
+         sGug==
+X-Gm-Message-State: AOJu0Yz/OhcQSxlMcsCmfR3oXRoy1VXJebtTfRG3fwMnmm8Iq7Muol5W
+	P6WJx4LVgj/PAHXafg7lGIP8ha4ARWkKtvMlR4FOXku65k7bkSgZCR5RoNVIzJgCaiU=
+X-Gm-Gg: ASbGncu/Er+2vg68Mg2WpI2ENVqxqDxiVvvPhXZCpu6uBlDGeKZm783SHzcXb+OvtaT
+	/A4TAwnTsymmMCBeV1yvb8oSo2BD0KxOMaMNGLamZ70Rqe/j7iwDDJzh+vfmUXt1je68xT0N7Y9
+	CXNG8kJyOycxDl4VUITHhlOPn+QXkL8IfezrNvSwMbXGupFrBtV/NB1X6Z98n1JUtIhIiHMewn/
+	Tj9rOJf13Li8jF65wTOF1McGG8q80BbpiDf7SC9s7FsIPgNG3wGPOWXm0kFmANJhYE5HKT+XKvu
+	3k2T3hQ21oFiHQkfaX+Tz14WIWA8HDIvK5/Mo6jVbMs6/8deugi2fxfmjSia
+X-Google-Smtp-Source: AGHT+IFkuuvXSAGznKXq5aZyc3XgYqvZ1NbhCK94yQk5I2xSZTlpXtUojsO7fQIOC22DYcqFw6Q0nw==
+X-Received: by 2002:a05:6000:2504:b0:3a5:2653:7322 with SMTP id ffacd0b85a97d-3a53188a710mr14986384f8f.3.1749566978284;
+        Tue, 10 Jun 2025 07:49:38 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b27sm139850235e9.23.2025.06.10.07.49.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 07:49:37 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] platform/x86: silicom: remove unnecessary GPIO line direction check
+Date: Tue, 10 Jun 2025 16:49:35 +0200
+Message-ID: <20250610144935.84375-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
- <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/10/2025 2:24 AM, Huacai Chen wrote:
-> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>
->> Hi Mario,
->>
->> CC mips, loongarch
->>
->> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> PIIX4 and compatible controllers are only for X86. As some headers are
->>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
->>>
->>> Suggested-by: Ingo Molnar <mingo@kernel.org>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Thanks for your patch, which is now commit 7e173eb82ae97175
->> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
->> in v6.16-rc1.
->>
->>> --- a/drivers/i2c/busses/Kconfig
->>> +++ b/drivers/i2c/busses/Kconfig
->>> @@ -200,7 +200,7 @@ config I2C_ISMT
->>>
->>>   config I2C_PIIX4
->>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
->>> -       depends on PCI && HAS_IOPORT
->>> +       depends on PCI && HAS_IOPORT && X86
->>
->> Are you sure this south-bridge is not used on non-x86 platforms?
->> It is enabled in several non-x86 defconfigs:
->>
->>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
->>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
->>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>
->> The loongarch and loongson entries are probably bogus, but I wouldn't
->> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
-> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Well we could revert this patch, but it's going to be a compile failure 
-because of 624b0d5696a89b138408d385899dd35372db324b and other patches 
-that go on top of that.
+As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
+lines"), the GPIO core makes sure values cannot be set on input lines.
+Remove the unnecessary check.
 
-My current leaning is we make a dummy fch.h header for these archs with 
-#defines for 0.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/platform/x86/silicom-platform.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Any thoughts?
-
-> 
-> Huacai
-> 
->>
->>>          select I2C_SMBUS
->>>          help
->>>            If you say yes to this option, support will be included for the Intel
->>
->> Gr{oetje,eeting}s,
->>
->>                          Geert
->>
->> --
->> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->>
->> In personal conversations with technical people, I call myself a hacker. But
->> when I'm talking to journalists I just say "programmer" or something like that.
->>                                  -- Linus Torvalds
->>
+diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
+index 021f3fed197a6..4d2c2d4a66e5e 100644
+--- a/drivers/platform/x86/silicom-platform.c
++++ b/drivers/platform/x86/silicom-platform.c
+@@ -252,9 +252,6 @@ static int silicom_gpio_set(struct gpio_chip *gc, unsigned int offset,
+ 	u8 *channels = gpiochip_get_data(gc);
+ 	int channel = channels[offset];
+ 
+-	if (direction == GPIO_LINE_DIRECTION_IN)
+-		return -EPERM;
+-
+ 	silicom_mec_port_set(channel, !value);
+ 
+ 	return 0;
+-- 
+2.48.1
 
