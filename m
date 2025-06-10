@@ -1,82 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9B19A2A3;
-	Tue, 10 Jun 2025 20:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AC1264A85;
+	Tue, 10 Jun 2025 20:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749587240; cv=none; b=AHYi7GksAAZ9QEQqSI0IZvPfXc+6aFvMbkO7skvhtdR6Z/SwJmoF3+0j08xwSrewvXoubbYsPwNL/Hv+otjm3l4H6uVjBaZMkeddD/sHuyWgxQIR/7GTdkKgAwuWYjvbCiaEvoUEx7hEvwIoG1xCuPQ9zvxD1crWixcEJSjPkDk=
+	t=1749589121; cv=none; b=XwulPhYkFa+K58gB7rd6phx9xKDTGz9ewMNR2OwMRFZvUPl5SSzzAKcoC1EKUvgLnZAc/7WvBfZjsTvy53N/32Frtc/RUjnqSinUZwQlqVh0ezwwZUxifGHuhPE5RpsrqHov78lrUbGnBTQ1ocQPQVNxOx2eybsPEFxeSIvgWis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749587240; c=relaxed/simple;
-	bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWd85FwAynetcYXEFFdDz1XPVABx8Wo/15O0uOPBLhC/fFN8r21lDGsBxQCiFOxRCuOmEgw6TdVrW34+6zOZ5kVOaknnf4kIWG2Kb6Whk3TSyLyfdPXUIUu7CGAajipk4/4LazzaemEIL0lDmu5zLuIhq/tdvA5QojGQB3+VruA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPLsBrgK; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749589121; c=relaxed/simple;
+	bh=qm3uF6HSzJnRnw72+spsb/hFAmy0FfViB4PecXNYNVg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qImX44JLVhpbQpf84Q9Kw1+aEkJXRIW2fD11jxNQo5TG226ZIHeGTBGtfgooWDoTnqCnbpFrLJSlj6eNyZFf3vtfqpjVXsYzBVak05AnT+NoyJM3MzhuSBu/qgjgHGPXSTROtNs4JJRlfYXBOszeRDiFj3DqH9lgpkCtNWLK8GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1fplW04; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPLsBrgK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749587239; x=1781123239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
-  b=lPLsBrgK2giaK16KT6+XMW34OhWLMvjQFV9bnUfxGgFCVtMvoTFwiCH3
-   UyxGEIyGuneLI1KbiXnviYxVHQlgWWN5s/ZwkK6i0RXQwwJcaJ3XF3AXk
-   tfuIJ4Km38a035s9r5VKuEIlCnYjvqpauT/4B/TrYM+mpRDrjTCxIpZBD
-   4bLgmUsUnhIs0WUQwUpjwKdSAATTwtV93bV4dOHsVFW33TZ97eY61Xlfu
-   bZKLINMXwR0Tb+5c5rHRzNfDH/9UJ7unzT3ZFPiyfBcyqRBeoibMWDYAp
-   5yPMmJLwGVrisrLAPmDWrWeHLGBXEVLsDc5ETLw8AhLe9ZYK4lsJGelgU
-   A==;
-X-CSE-ConnectionGUID: Noxo5AgHSsa+6KU9Sbq3zg==
-X-CSE-MsgGUID: t0upGzxuQlO+xrBIKXuKPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51812187"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51812187"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:15 -0700
-X-CSE-ConnectionGUID: P3dVhLlURDeKL62XEUj5QA==
-X-CSE-MsgGUID: hx91AJa8SgCOP+/SdpGtHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146867111"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uP5Ys-00000005RbS-06B9;
-	Tue, 10 Jun 2025 23:27:10 +0300
-Date: Tue, 10 Jun 2025 23:27:09 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, ikepanhc@gmail.com,
-	hmh@hmh.eng.br, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1fplW04"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB9FC4CEED;
+	Tue, 10 Jun 2025 20:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749589121;
+	bh=qm3uF6HSzJnRnw72+spsb/hFAmy0FfViB4PecXNYNVg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k1fplW04yy6+qHw/isDiwWRXbz+MBex3RvCws52wxu8s7yojNk1RfUT1OeNpJSSMR
+	 IeMhDzuQC9Yxl52p0ODzdHjbepJyfRjNqnOzfK6KW+wSoyYUyMeoewTxzLAw+yV5wD
+	 DH4g+B7v+ldHkheavFnTz1Pfr+m4LkE3g/jsstlQTbb5zjSWH1GKsL9zgmE3eqiZ03
+	 i8Xk7a+WAy07BQe1kBHBPzDuOgaxlqQF1in8KMnzizkVAWU8Ch7A3PgjoKGXdLcm9x
+	 Va5Ou8s69GjMWDTrE+e4pBWrfah6Dl/TtEYYHYLKgcXEW1ZVwF1pkpzivScatniuQG
+	 hJypUqLSIN18g==
+From: Mario Limonciello <superm1@kernel.org>
+To: Ingo Molnar <mingo@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER),
+	Hans de Goede <hansg@kernel.org>
+Subject: [PATCH 1/2] Move FCH header to a location accessible by all archs
+Date: Tue, 10 Jun 2025 15:58:16 -0500
+Message-ID: <20250610205817.3912944-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
-> Create lenovo subdirectory for holding Lenovo specific drivers.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+A new header fch.h was created to store registers used by different AMD
+drivers.  This header was included by i2c-piix4 in
+commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
+definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
+archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
+("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
+This was not a good decision because loongarch and mips both actually
+support i2c-piix4 and set it enabled in the defconfig.
 
+Move the header to a location accessible by all architectures.
+
+Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ arch/x86/kernel/cpu/amd.c                                       | 2 +-
+ drivers/i2c/busses/i2c-piix4.c                                  | 2 +-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c                       | 2 +-
+ .../asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h  | 0
+ 4 files changed, 3 insertions(+), 3 deletions(-)
+ rename arch/x86/include/asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h (100%)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 93da466dfe2cb..9543d5de4e7d6 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -9,7 +9,7 @@
+ #include <linux/sched/clock.h>
+ #include <linux/random.h>
+ #include <linux/topology.h>
+-#include <asm/amd/fch.h>
++#include <linux/platform_data/x86/amd-fch.h>
+ #include <asm/processor.h>
+ #include <asm/apic.h>
+ #include <asm/cacheinfo.h>
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 9d3a4dc2bd60c..ac3bb550303fe 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -34,7 +34,7 @@
+ #include <linux/dmi.h>
+ #include <linux/acpi.h>
+ #include <linux/io.h>
+-#include <asm/amd/fch.h>
++#include <linux/platform_data/x86/amd-fch.h>
+ 
+ #include "i2c-piix4.h"
+ 
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index 5c7c01f66cde0..6648fe0dce537 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -11,7 +11,7 @@
+ #include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+-#include <asm/amd/fch.h>
++#include <linux/platform_data/x86/amd-fch.h>
+ 
+ #include "pmc.h"
+ 
+diff --git a/arch/x86/include/asm/amd/fch.h b/include/linux/platform_data/x86/amd-fch.h
+similarity index 100%
+rename from arch/x86/include/asm/amd/fch.h
+rename to include/linux/platform_data/x86/amd-fch.h
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
