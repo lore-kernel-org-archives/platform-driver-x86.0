@@ -1,130 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C47F20766E;
-	Tue, 10 Jun 2025 14:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10192327A7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 15:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567333; cv=none; b=W0BYVU+VsITKgHosIqHoO/yFa0/FiUFJEeIovKnWatFb5tJmAztrQT5GD2sNQI9qWZN5mp+QF+6H5K1t9fVYxptuME7tHEnO3hHyGZfCQMQbESyYaGSoRMRkOIYmFIJ3IFUmh/pSpbXbwFUxxnD0iAWaf2nIurhx2S4gmfS/PLs=
+	t=1749571027; cv=none; b=QoEZdo6WCAs5bnvCyDwFfgOqfPb8cEag44xTH0g4PX/biTY7KnVXoVnJ8wQ6sgP4k2HBn6ek4ty26XYvpPW38RfVq5vL4tIx1mxs7G5Mw1SXNURCQTu3JyQ7x/JYXirbpyU38UtDocwA3lZQGycXUqOwAWQot8YdYC/+KXH7Ho0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567333; c=relaxed/simple;
-	bh=o2qFIwCJqf1Owe8LoAFDkXI9Um7ln94fm/Lg5eVi6/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bx9EOMPQtbJQdtFI/G7pCkMzFjEsL34G+8Uasi+UCanKVNzerCkHVeCNPxUDyrvGEUEowCJ3wEAr55CA8opNl2CThOhzNhFc1NUR5s7OopLAvX2Ez0E/AqMcO4Dtjo/c2NAg2NX1pejnM4+r7bAdpV63VrQzY/x3gMb0HMQjdqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl51QyIk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749571027; c=relaxed/simple;
+	bh=e+O4bMT58b8+xWRfctaQ7qZ6vcj0nWCsgj8Kqvc8+W8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=c43t6rGyZzCfSpNalkcNcwOablbnandjADwHGCJlnnHkgbWCiNo4Crz7goUWvWZGA5SAZRhydy1cQJQtTLs3Jk5q1KFJBZkziIwTrb1dmZxnoaxmuv6I4KHExkfr5dzMc6HQuvvEvGyMiqueWzFu01oCh7RzNCzBYtsqRsNkVRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bObcPYr4; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl51QyIk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04298C4CEED;
-	Tue, 10 Jun 2025 14:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749567333;
-	bh=o2qFIwCJqf1Owe8LoAFDkXI9Um7ln94fm/Lg5eVi6/s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Sl51QyIkRvKqYv018SvVzJZZ1IvNREg1v8VuuTS4bBTEiwLbyujGGldADwF5xT8tN
-	 SwjGfmnT5myotfQhC5x4VXrpEz/YFGqll2BfRcnKFSia9CrNGOqdZ5x8ccvlz2uxVb
-	 UXW0bTsrTa7YiQxKBaApgGFE6hwBBrIwbbnkTigUEfAxqhrdMjJNMMpw5at6o0uOmd
-	 a7ZkgXr+IpLI3P2/qTFKDhtIHzvJ3lxNLJNv986w2tgeProeOj3fue8Hw3hXi0hjzq
-	 TLBCNnQNk8lokn5M4NexbgYJAE0pKDPb2DYn3/w5kdi8Mm2p3l5sg7FTewow6ayy4X
-	 HevTJcwJF1WjQ==
-Message-ID: <1e06c620-8f8e-4ddf-8356-0782bccd63a2@kernel.org>
-Date: Tue, 10 Jun 2025 16:55:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bObcPYr4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749571025; x=1781107025;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=e+O4bMT58b8+xWRfctaQ7qZ6vcj0nWCsgj8Kqvc8+W8=;
+  b=bObcPYr4NDCZMhAU4T4PIRclkLZfd+lzhwHHMwMov4dctf7xQS++kFiP
+   4kSn2UQwf2v5A0BFCG7bEMf/7MfVX+qZCVg/TeUKMcPsVLv+7U8e9RClw
+   HcL4DKuzRa0uGsAm/2Z32P6uDzyE5+mjlwBG5Wns6kdRJ11kR9R8XSN8H
+   fe2QvlVArhALV5eiQUYPf1wnmvJizYTz1o/26NtEuVZzmYF4KpFC0ttM3
+   /ymzAiIBSdiKr00pnIQfwcn+UbQeC4BnrpE0ZE9jABCjFW6WVDCccuHxl
+   xSjRjnMQcgeOTZ/ftTCwgvUXtmk9E5Gtppsj4Xj1N+5Z+cUEmH8XgNPhl
+   Q==;
+X-CSE-ConnectionGUID: avalRo3sT4y2Rh4RGBcJiQ==
+X-CSE-MsgGUID: sm+hDERfRTCYIJKYG8V17A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51834228"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51834228"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:57:04 -0700
+X-CSE-ConnectionGUID: gtnG2UVmT2qRddUpM111uw==
+X-CSE-MsgGUID: NSa2qQTjQVK4y8+JXfj8hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="147252502"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:57:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 10 Jun 2025 18:56:58 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, mario.limonciello@amd.com, Yijun.Shen@dell.com
+Subject: Re: [PATCH 07/10] platform/x86/amd/pmf: Use amd_pmf_update_bios_inputs()
+ helper
+In-Reply-To: <20250509072654.713629-8-Shyam-sundar.S-k@amd.com>
+Message-ID: <d4b5df6e-912d-8925-51d2-5f8da4ca5e64@linux.intel.com>
+References: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com> <20250509072654.713629-8-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Mario Limonciello <superm1@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
- <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
- <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
- <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Fri, 9 May 2025, Shyam Sundar S K wrote:
 
-On 10-Jun-25 16:53, Hans de Goede wrote:
-> Hi,
+> Use amd_pmf_update_bios_inputs() helper function to update the custom
+> BIOS inputs.
 > 
-> On 10-Jun-25 16:12, Mario Limonciello wrote:
->> On 6/10/2025 2:24 AM, Huacai Chen wrote:
->>> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>>
->>>> Hi Mario,
->>>>
->>>> CC mips, loongarch
->>>>
->>>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
->>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>
->>>>> PIIX4 and compatible controllers are only for X86. As some headers are
->>>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
->>>>>
->>>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
->>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> Thanks for your patch, which is now commit 7e173eb82ae97175
->>>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
->>>> in v6.16-rc1.
->>>>
->>>>> --- a/drivers/i2c/busses/Kconfig
->>>>> +++ b/drivers/i2c/busses/Kconfig
->>>>> @@ -200,7 +200,7 @@ config I2C_ISMT
->>>>>
->>>>>   config I2C_PIIX4
->>>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
->>>>> -       depends on PCI && HAS_IOPORT
->>>>> +       depends on PCI && HAS_IOPORT && X86
->>>>
->>>> Are you sure this south-bridge is not used on non-x86 platforms?
->>>> It is enabled in several non-x86 defconfigs:
->>>>
->>>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
->>>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
->>>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>>
->>>> The loongarch and loongson entries are probably bogus, but I wouldn't
->>>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
->>> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
->>
->> Well we could revert this patch, but it's going to be a compile failure because of 624b0d5696a89b138408d385899dd35372db324b and other patches that go on top of that.
->>
->> My current leaning is we make a dummy fch.h header for these archs with #defines for 0.
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/spc.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> Move "fch.h" to include/linux/platform/x86/ so that it is available on all arches
-> and if necessary ifdef out anything x86 specific in the C-code referencing it ?
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+> index be6ffb823efc..0cd50d342b11 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -125,15 +125,12 @@ static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+>  		&in->ev_info.bios_input3, &in->ev_info.bios_input4, &in->ev_info.bios_input5,
+>  		&in->ev_info.bios_input6, &in->ev_info.bios_input7, &in->ev_info.bios_input8,
+>  		&in->ev_info.bios_input9, &in->ev_info.bios_input10};
+> -	int i;
+>  
+>  	if (!(pdev->req.pending_req || pdev->req1.pending_req))
+>  		return;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+> -		if (pdev->req.pending_req & custom_bios_inputs[i].bit_mask)
+> -			*bios_inputs[i] = pdev->req.custom_policy[i];
+> -	}
+> +	amd_pmf_update_bios_inputs(pdev, bios_inputs, custom_bios_inputs, pdev->req.pending_req,
+> +				   pdev->req.custom_policy);
 
-Correction that should be include/linux/platform_data/x86/
+Why is this in own patch and not in the one introducing 
+amd_pmf_update_bios_inputs() ?
 
-Regards,
+>  	if (pdev->smart_pc_enabled && pdev->pmf_if_version == PMF_IF_V1 &&
+>  	    is_apmf_bios_input_notifications_supported(pdev)) {
+> 
 
-Hans
-
+-- 
+ i.
 
