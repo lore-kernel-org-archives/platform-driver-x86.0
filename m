@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F67F2741C9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D643C266F00
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749589973; cv=none; b=HqwRMS7kwx54JoqkvfGrvwDp9UVH7BB5i4+J2HXpx725aWvlUg9ZwEbZYeCgo/AA5REW9NbR7SsFfAdI66N4F4c3q+i1Y62f+xxc5r7pY4PmhjCIraoN7bFcXGvaBhGDyD0j3cd4HPIIfcyugavfIyifCsdGDAH2wJle1dKOAx8=
+	t=1749589976; cv=none; b=XdLIRfiPBba1wCZxyl2dCh3BtgGNCQBiCBoRkOhNUHomiUe4iWMa2uDi1zjj9sPaciRZig2jYPEeJrtFEvQ+H3rHlV3BtPglzUxd4iEyfdqEnnDISGhz/rIM07A3TDFZljRgi9MxIjQxt9IpgTkx6SAK8G8yFk3Nw2qo1wC5/eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749589973; c=relaxed/simple;
-	bh=pOIDz017sJBbK2oIqU+tLFCqZZU2v13L/TTfFRtl5wU=;
+	s=arc-20240116; t=1749589976; c=relaxed/simple;
+	bh=huEBjA3UxNbeNrW5uorw39DFn1/wTp9TfQsQtMmu7xg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bTDDnt1wKtUauHrFY9NxDY6R05qHJnP84zcodSVSpMivBlxEEsOPGbsR+mSZS6z5kwKkJbMUp3I9CEabFXMiroWkL/yhcu/KxtBD5rs9sz+Yj4G0OVnJBXe+R9N9TGGrGQTc9v00oJtbYvMpbl6l1Ts/fL1u84E+wjPJORFzpbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjW/CTsH; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=RnvTbO531P4e9mYSVEXEr3hJwxJNLCwnbTC0WXdB4BVNsj0SyFG0jkiiAV4uL2ncOhPhEB5Bbpb+aEm0+L11COVAze3+ozEYp98HRb4v78tlyHcCpT90yHFHc9uT+15BaGzyltIqkeW5WaiMi7o4hhOIQv03faAYGCRYvOGeJoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MQz2r7gn; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjW/CTsH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MQz2r7gn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749589972; x=1781125972;
+  t=1749589975; x=1781125975;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pOIDz017sJBbK2oIqU+tLFCqZZU2v13L/TTfFRtl5wU=;
-  b=DjW/CTsHi3o3bDkRe/neCc9PYs3diWmsEe9ImbSXq+YC9WTpGMK/WFEs
-   bkzPZPoihUIEezfSfzzw0+LaEkA8FPOWherjDTklwOI/EgWs8VV0ZZQEw
-   l3hiUS6QLMTTooOqokZ1yWifQUEVwBEi7VuA6VefzERuiFBoC8hhcUmQW
-   x34pZXoO3ZQ6BZHawWdZqaFNqS1HglfR/Bkthgnp4i8Srr28EtGmB+NNs
-   9aW6OhRgmGPWKk8dPhD5QK/dbvujVHnMTkWNnWYIZ0bmhQD2piSAXvLNc
-   gUJIhfdBlDnwjQzyQt3SStvGgunR00e4OEwEV/N7CcN2Rlp36VleC2zZk
-   A==;
-X-CSE-ConnectionGUID: EKF3GMgST0GV2YsuS0ixiw==
-X-CSE-MsgGUID: AWRe7WpQSV+UN7bI3xanUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816930"
+  bh=huEBjA3UxNbeNrW5uorw39DFn1/wTp9TfQsQtMmu7xg=;
+  b=MQz2r7gnMQZOoVrzQUp8FGfuq8EvN9KzFBKff5/3LIXWDGI1yXhFWIaU
+   wnrOHo1Z1h6Bm8duU3StCCUwh3GqirxGPdzsFv4uhTf+RJ8RoCt9GFzs0
+   KeeBou3IlDe+5IF+rjos4g3VXETzJVMx5J0cGYHZgFnup0QcrqAW+9NeS
+   4eSiH2Ao/RYDTMx6mhlGuM9N+CaGuiDFO82t54t7p55l8TmOBK/mpvBeK
+   OmyfdaFStvp0HGzqqvy4myOF0cslBvC2XE38vuhz1PBaLfnH6TqYfqhBC
+   mIW/yR/hSBq5EYkQONgUEciaGHWbXKD2LJhyOemX4+Kywdf8y9dBlSeCi
+   Q==;
+X-CSE-ConnectionGUID: dtp+Mh7KQ5uXGr1zY8kbUw==
+X-CSE-MsgGUID: +vM/msCcQMuUiN/lXxS2vQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816939"
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="51816930"
+   d="scan'208";a="51816939"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:52 -0700
-X-CSE-ConnectionGUID: m6MMw7XURsi92/gCSOTESg==
-X-CSE-MsgGUID: Y9BlLX7QSHKkBlFwRSpVaw==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:55 -0700
+X-CSE-ConnectionGUID: SAoSRXYrRJGGn6oIjK0f0g==
+X-CSE-MsgGUID: 9v/HgIYXTmOl7F5sRSjFnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="146939800"
+   d="scan'208";a="146939821"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.220.88])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:50 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:52 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -55,9 +55,9 @@ To: platform-driver-x86@vger.kernel.org,
 	simona@ffwll.ch,
 	david.e.box@linux.intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v4 05/10] platform/x86/intel/pmt: re-order trigger logic
-Date: Tue, 10 Jun 2025 17:12:20 -0400
-Message-ID: <20250610211225.1085901-6-michael.j.ruhl@intel.com>
+Subject: [PATCH v4 06/10] platform/x86/intel/pmt: correct types
+Date: Tue, 10 Jun 2025 17:12:21 -0400
+Message-ID: <20250610211225.1085901-7-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
 References: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
@@ -69,43 +69,39 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Setting the clear bit or checking the complete bit before checking to
-see if crashlog is disabled seems incorrect.
+A couple of auto variables do not match the return types of some of
+the functions.
 
-Check disable before accessing any other bits.
+Update the mismatched types to match.
 
 Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 1525e702e993..3d3b72451c01 100644
+index 3d3b72451c01..ddb05d069fc6 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -192,6 +192,10 @@ trigger_store(struct device *dev, struct device_attribute *attr,
+@@ -137,7 +137,7 @@ static ssize_t
+ enable_show(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+ 	struct intel_pmt_entry *entry = dev_get_drvdata(dev);
+-	int enabled = !pmt_crashlog_disabled(entry);
++	bool enabled = !pmt_crashlog_disabled(entry);
  
- 	guard(mutex)(&entry->control_mutex);
+ 	return sprintf(buf, "%d\n", enabled);
+ }
+@@ -168,7 +168,7 @@ static ssize_t
+ trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+ 	struct intel_pmt_entry *entry;
+-	int trigger;
++	bool trigger;
  
-+	/* if device is currently disabled, return busy */
-+	if (pmt_crashlog_disabled(&entry->entry))
-+		return -EBUSY;
-+
- 	if (!trigger) {
- 		pmt_crashlog_set_clear(&entry->entry);
- 		return count;
-@@ -201,10 +205,6 @@ trigger_store(struct device *dev, struct device_attribute *attr,
- 	if (pmt_crashlog_complete(&entry->entry))
- 		return -EEXIST;
- 
--	/* if device is currently disabled, return busy */
--	if (pmt_crashlog_disabled(&entry->entry))
--		return -EBUSY;
--
- 	pmt_crashlog_set_execute(&entry->entry);
- 
- 	return count;
+ 	entry = dev_get_drvdata(dev);
+ 	trigger = pmt_crashlog_complete(entry);
 -- 
 2.49.0
 
