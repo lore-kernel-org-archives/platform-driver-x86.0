@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BA3269CED
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C752641EA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749589986; cv=none; b=ALBIlSNeeGQngNyTSJp23F72sRtEnNXK+4SekN+9zcC8hQPY46zJEMQXXOm1VdggOPzgrJmUWpGljPwd9pjz2lJ9ojDJdlRy0JH5ZUDmBUVqKfoFfem8W8vTLG9BHYrBZcIKLpF2m41f4OPT0pb+TSFpEZDnbLXuQK4dFNCOdKc=
+	t=1749589990; cv=none; b=bxdgvIWy9q+xY4EupbedYp+vQldVY3dGJy6FLFo94S0GnpvuqL0yqmjlSHwq1q1/OP3xosC5Fl3zWIgQFYJ2WzVBKFXyC5L6Beel+hVYgJPVjxFf4V3khSMMhTBnVDyijiwojf63Gnx5nY0nabaLE2WME5lAa0vA4Mql+TGUDNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749589986; c=relaxed/simple;
-	bh=pSQcJiqh17/DZH0gllgI5mFjVxpS907sIY3Ak6I783I=;
+	s=arc-20240116; t=1749589990; c=relaxed/simple;
+	bh=BQ/npdhDaxmdvZeojpRRYD51/nf7Rp21QDIIlMXBWpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TzUuTQEcj0K3rOmJlq9o2GiG8FaoXkCwtT7WN+s2zD/cIlsPo/wI/+0SfW/UNsulaVrZPV7ldeoO3bVHWcmj/MugnUQXuvmUJWyACvRIOzplevpPhKxElXP08WYtZDNW4a/r1QeDGqE9UvtiptfXHKSPMVDGejIuJ7jwtlYyZEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l1TcuUuK; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=SReksYuT0Wdn36uqwMOwtEO+jQWaEcnnjy+5sS+DoilHkywUyehKwbDJ7uozMmTWike8U46DrfCVvsoAHydFKBDdQlqVvz4b44E95Gtq++FVjkmP7SjLh2jB5DwupriUZAPiwKOqz1IVf5sDRBElX3XAyvuDaRovt8nWLghi6cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2MM0DTH; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l1TcuUuK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2MM0DTH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749589985; x=1781125985;
+  t=1749589988; x=1781125988;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pSQcJiqh17/DZH0gllgI5mFjVxpS907sIY3Ak6I783I=;
-  b=l1TcuUuKvWShM0prk1A8zqNk6HklS1oKtqF6fqZEK+fycJx5ur3l+lzd
-   w911xB2lgzWHkd7GSqKc0sFBDrUBSCrJEKLEVEzRACuP5T3vZtfjPiWGi
-   wioi5nljcG8zkct1LYQQp0+XGgbL48fwUJvxRlxc5cm74P3uvcyNQhn5y
-   AsPzVIzn8ZMcnIHgBzhIeQEa5k9UwykS4cS/CvBv+GeQd8eCmDdIWNRwb
-   EL/8TydbAtiKOTyDvAg2h7ZiEMBDZZ7NlTMQ2AVFsy0C8mM5LBh9Lc6TK
-   KceS7yrhXYzf27Kl8cGdaWu6shx2aQbpau0FPVRYeanU0tKxUZf9u9CA2
+  bh=BQ/npdhDaxmdvZeojpRRYD51/nf7Rp21QDIIlMXBWpY=;
+  b=k2MM0DTHJFfOfIGrTWTaPOr3jV6LLVZB4FvuvTwNFLQr3dicwmInruGK
+   qcjmqu8iVkLxJx11sJt1H6bVsT2Rug1XfBPfHPPbwxTYrFjGWNFjlwDRM
+   B2xxq3hUHAHUsIwkwZtT76Lb0S9vO9F4OUQzlfIAgej7MatjN1Dy+Pdl9
+   6XfIdfxGC0hnBleFg1q8eSwIUFr8Xdk8XkqNhDVBkLMUrxOTI6MULF9nz
+   6yeyxiB8ImzQcYWQyfdma0omzikrUwaoqfKFd4zdr8kAz3iL0P4un35Pw
+   dqrSxpiXaihzFl5YWWkz3KBC98bNHOSTUEhFHHzTMSyl80YS21zdW1t+m
    A==;
-X-CSE-ConnectionGUID: eKwF5R5JTIGYkGf2Q80GlQ==
-X-CSE-MsgGUID: +4PtDq2YQnGIAjO1HWsVGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816964"
+X-CSE-ConnectionGUID: I7jl2AjFRza0hd4z7Qc6EA==
+X-CSE-MsgGUID: JhM/z9BnQtSZMcwW5kSmhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816970"
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="51816964"
+   d="scan'208";a="51816970"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:13:04 -0700
-X-CSE-ConnectionGUID: gmfIwZ8zRkmKJJSDyUxArQ==
-X-CSE-MsgGUID: IvKEGhcQT7GqIdc4umqlAQ==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:13:08 -0700
+X-CSE-ConnectionGUID: U+VTz/IfSvu7oGU8kjQDFQ==
+X-CSE-MsgGUID: MSgYjpq6RdGjiVCzh7GzFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="146939882"
+   d="scan'208";a="146939907"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.220.88])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:13:02 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:13:06 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -55,9 +55,9 @@ To: platform-driver-x86@vger.kernel.org,
 	simona@ffwll.ch,
 	david.e.box@linux.intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v4 09/10] platform/x86/intel/pmt: use a version struct
-Date: Tue, 10 Jun 2025 17:12:24 -0400
-Message-ID: <20250610211225.1085901-10-michael.j.ruhl@intel.com>
+Subject: [PATCH v4 10/10] platform/x86/intel/pmt: support BMG crashlog
+Date: Tue, 10 Jun 2025 17:12:25 -0400
+Message-ID: <20250610211225.1085901-11-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
 References: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
@@ -69,318 +69,379 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for supporting multiple crashlog versions, use a struct
-to keep bit offset info for the status and control bits.
+The Battlemage GPU has the type 1 version 2 crashlog feature.
+
+Update the crashlog driver to support this crashlog version.
 
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 174 ++++++++++++++--------
- 1 file changed, 108 insertions(+), 66 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 269 ++++++++++++++++++++--
+ 1 file changed, 256 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index e11865686f2a..7c259b1cf95b 100644
+index 7c259b1cf95b..17a49c08e911 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -23,21 +23,6 @@
- /* Crashlog discovery header types */
- #define CRASH_TYPE_OOBMSM	1
- 
--/* Control Flags */
--#define CRASHLOG_FLAG_DISABLE		BIT(28)
--
--/*
-- * Bits 29 and 30 control the state of bit 31.
-- *
-- * Bit 29 will clear bit 31, if set, allowing a new crashlog to be captured.
-- * Bit 30 will immediately trigger a crashlog to be generated, setting bit 31.
-- * Bit 31 is the read-only status with a 1 indicating log is complete.
-- */
--#define CRASHLOG_FLAG_TRIGGER_CLEAR	BIT(29)
--#define CRASHLOG_FLAG_TRIGGER_EXECUTE	BIT(30)
--#define CRASHLOG_FLAG_TRIGGER_COMPLETE	BIT(31)
--#define CRASHLOG_FLAG_TRIGGER_MASK	GENMASK(31, 28)
--
- /* Crashlog Discovery Header */
- #define CONTROL_OFFSET		0x0
- #define GUID_OFFSET		0x4
-@@ -49,10 +34,63 @@
- /* size is in bytes */
- #define GET_SIZE(v)		((v) * sizeof(u32))
+@@ -52,20 +52,53 @@
+ #define TYPE1_VER0_COMPLETE		BIT(31)
+ #define TYPE1_VER0_TRIGGER_MASK		GENMASK(31, 28)
  
 +/*
-+ * Type 1 Version 0
-+ * status and control registers are combined.
-+ *
-+ * Bits 29 and 30 control the state of bit 31.
-+ * Bit 29 will clear bit 31, if set, allowing a new crashlog to be captured.
-+ * Bit 30 will immediately trigger a crashlog to be generated, setting bit 31.
-+ * Bit 31 is the read-only status with a 1 indicating log is complete.
++ * Type 1 Version 2
++ * status and control are two different registers
 + */
-+#define TYPE1_VER0_STATUS_OFFSET	0x00
-+#define TYPE1_VER0_CONTROL_OFFSET	0x00
++#define TYPE1_VER2_STATUS_OFFSET	0x00
++#define TYPE1_VER2_CONTROL_OFFSET	0x14
 +
-+#define TYPE1_VER0_DISABLE		BIT(28)
-+#define TYPE1_VER0_CLEAR		BIT(29)
-+#define TYPE1_VER0_EXECUTE		BIT(30)
-+#define TYPE1_VER0_COMPLETE		BIT(31)
-+#define TYPE1_VER0_TRIGGER_MASK		GENMASK(31, 28)
++/* status register */
++#define TYPE1_VER2_CLEAR_SUPPORT	BIT(20)
++#define TYPE1_VER2_REARMED		BIT(25)
++#define TYPE1_VER2_ERROR		BIT(26)
++#define TYPE1_VER2_CONSUMED		BIT(27)
++#define TYPE1_VER2_DISABLED		BIT(28)
++#define TYPE1_VER2_CLEARED		BIT(29)
++#define TYPE1_VER2_IN_PROGRESS		BIT(30)
++#define TYPE1_VER2_COMPLETE		BIT(31)
 +
-+/* After offset, order alphabetically, not bit ordered */
-+struct crashlog_status {
-+	u32 offset;
-+	u32 cleared;
-+	u32 complete;
-+	u32 disabled;
-+};
++/* control register */
++#define TYPE1_VER2_CONSUME		BIT(25)
++#define TYPE1_VER2_REARM		BIT(28)
++#define TYPE1_VER2_EXECUTE		BIT(29)
++#define TYPE1_VER2_CLEAR		BIT(30)
++#define TYPE1_VER2_DISABLE		BIT(31)
++#define TYPE1_VER2_TRIGGER_MASK		(TYPE1_VER2_CONSUME | TYPE1_VER2_EXECUTE | \
++					 TYPE1_VER2_CLEAR | TYPE1_VER2_DISABLE)
 +
-+struct crashlog_control {
-+	u32 offset;
-+	u32 trigger_mask;
-+	u32 clear;
-+	u32 disable;
-+	u32 manual;
-+};
+ /* After offset, order alphabetically, not bit ordered */
+ struct crashlog_status {
+ 	u32 offset;
++	u32 clear_supported;
+ 	u32 cleared;
+ 	u32 complete;
++	u32 consumed;
+ 	u32 disabled;
++	u32 error;
++	u32 in_progress;
++	u32 rearmed;
+ };
+ 
+ struct crashlog_control {
+ 	u32 offset;
+ 	u32 trigger_mask;
+ 	u32 clear;
++	u32 consume;
+ 	u32 disable;
+ 	u32 manual;
++	u32 rearm;
+ };
+ 
+ struct crashlog_info {
+@@ -86,6 +119,26 @@ static const struct crashlog_info crashlog_type1_ver0 = {
+ 	.control.manual = TYPE1_VER0_EXECUTE,
+ };
+ 
++const struct crashlog_info crashlog_type1_ver2 = {
++	.status.offset = TYPE1_VER2_STATUS_OFFSET,
++	.status.clear_supported = TYPE1_VER2_CLEAR_SUPPORT,
++	.status.cleared = TYPE1_VER2_CLEARED,
++	.status.complete = TYPE1_VER2_COMPLETE,
++	.status.consumed = TYPE1_VER2_CONSUMED,
++	.status.disabled = TYPE1_VER2_DISABLED,
++	.status.error = TYPE1_VER2_ERROR,
++	.status.in_progress = TYPE1_VER2_IN_PROGRESS,
++	.status.rearmed = TYPE1_VER2_REARMED,
 +
-+struct crashlog_info {
-+	struct crashlog_status status;
-+	struct crashlog_control control;
-+};
-+
-+static const struct crashlog_info crashlog_type1_ver0 = {
-+	.status.offset = TYPE1_VER0_STATUS_OFFSET,
-+	.status.cleared = TYPE1_VER0_CLEAR,
-+	.status.complete = TYPE1_VER0_COMPLETE,
-+	.status.disabled = TYPE1_VER0_DISABLE,
-+
-+	.control.offset = TYPE1_VER0_CONTROL_OFFSET,
-+	.control.trigger_mask = TYPE1_VER0_TRIGGER_MASK,
-+	.control.clear = TYPE1_VER0_CLEAR,
-+	.control.disable = TYPE1_VER0_DISABLE,
-+	.control.manual = TYPE1_VER0_EXECUTE,
++	.control.offset = TYPE1_VER2_CONTROL_OFFSET,
++	.control.trigger_mask = TYPE1_VER2_TRIGGER_MASK,
++	.control.clear = TYPE1_VER2_CLEAR,
++	.control.consume = TYPE1_VER2_CONSUME,
++	.control.disable = TYPE1_VER2_DISABLE,
++	.control.manual = TYPE1_VER2_EXECUTE,
++	.control.rearm = TYPE1_VER2_REARM,
 +};
 +
  struct crashlog_entry {
  	/* entry must be first member of struct */
  	struct intel_pmt_entry		entry;
- 	struct mutex			control_mutex;
-+	const struct crashlog_info	*info;
- };
- 
- struct pmt_crashlog_priv {
-@@ -60,74 +98,76 @@ struct pmt_crashlog_priv {
+@@ -98,19 +151,23 @@ struct pmt_crashlog_priv {
  	struct crashlog_entry	entry[];
  };
  
-+static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
+-static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
++static bool pmt_crashlog_supported(struct intel_pmt_entry *entry, u32 *crash_type, u32 *version)
+ {
+ 	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
+-	u32 crash_type, version;
+ 
+-	crash_type = GET_TYPE(discovery_header);
+-	version = GET_VERSION(discovery_header);
++	*crash_type = GET_TYPE(discovery_header);
++	*version = GET_VERSION(discovery_header);
+ 
+ 	/*
+-	 * Currently we only recognize OOBMSM version 0 devices.
+-	 * We can ignore all other crashlog devices in the system.
++	 * Currently we only recognize OOBMSM (type 1) and version 0 or 2
++	 * devices.
++	 *
++	 * Ignore all other crashlog devices in the system.
+ 	 */
+-	return crash_type == CRASH_TYPE_OOBMSM && version == 0;
++	if (*crash_type == CRASH_TYPE_OOBMSM && (*version == 0 || *version == 2))
++		return true;
++
++	return false;
+ }
+ 
+ /*
+@@ -170,9 +227,118 @@ static void pmt_crashlog_set_execute(struct crashlog_entry *crashlog)
+ 	read_modify_write(crashlog, crashlog->info->control.manual, SET);
+ }
+ 
++static bool pmt_crashlog_cleared(struct crashlog_entry *crashlog)
 +{
-+	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
-+	u32 crash_type, version;
++	/* return current value of the crashlog cleared flag */
++	return read_check(crashlog, crashlog->info->status.cleared);
++}
 +
-+	crash_type = GET_TYPE(discovery_header);
-+	version = GET_VERSION(discovery_header);
++static bool pmt_crashlog_consumed(struct crashlog_entry *crashlog)
++{
++	/* return current value of the crashlog consumedflag */
++	return read_check(crashlog, crashlog->info->status.consumed);
++}
 +
-+	/*
-+	 * Currently we only recognize OOBMSM version 0 devices.
-+	 * We can ignore all other crashlog devices in the system.
-+	 */
-+	return crash_type == CRASH_TYPE_OOBMSM && version == 0;
++static void pmt_crashlog_set_consumed(struct crashlog_entry *crashlog)
++{
++	read_modify_write(crashlog, crashlog->info->control.consume, SET);
++}
++
++static bool pmt_crashlog_error(struct crashlog_entry *crashlog)
++{
++	/* return current value of the crashlog error flag */
++	return read_check(crashlog, crashlog->info->status.error);
++}
++
++static bool pmt_crashlog_rearm(struct crashlog_entry *crashlog)
++{
++	/* return current value of the crashlog reamed flag */
++	return read_check(crashlog, crashlog->info->status.rearmed);
++}
++
++static void pmt_crashlog_set_rearm(struct crashlog_entry *crashlog)
++{
++	read_modify_write(crashlog, crashlog->info->control.rearm, SET);
 +}
 +
  /*
-  * I/O
+  * sysfs
   */
--#define SET	true
--#define CLEAR	false
-+#define SET     true
-+#define CLEAR   false
- 
--static void read_modify_write(struct intel_pmt_entry *entry, u32 bit, bool set)
-+static void read_modify_write(struct crashlog_entry *crashlog, u32 bit, bool set)
- {
--	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
-+	const struct crashlog_control *control = &crashlog->info->control;
-+	struct intel_pmt_entry *entry = &crashlog->entry;
-+	u32 reg = readl(entry->disc_table + control->offset);
- 
--	reg &= ~CRASHLOG_FLAG_TRIGGER_MASK;
-+	reg &= ~control->trigger_mask;
- 
- 	if (set)
- 		reg |= bit;
- 	else
- 		reg &= bit;
- 
--	writel(reg, entry->disc_table + CONTROL_OFFSET);
-+	writel(reg, entry->disc_table + control->offset);
- }
- 
--static bool read_check(struct intel_pmt_entry *entry, u32 bit)
-+static bool read_check(struct crashlog_entry *crashlog, u32 bit)
- {
--	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
-+	const struct crashlog_status *status = &crashlog->info->status;
-+	u32 reg = readl(crashlog->entry.disc_table + status->offset);
- 
- 	return !!(reg & bit);
- }
- 
--static bool pmt_crashlog_complete(struct intel_pmt_entry *entry)
-+static bool pmt_crashlog_complete(struct crashlog_entry *crashlog)
- {
- 	/* return current value of the crashlog complete flag */
--	return read_check(entry, CRASHLOG_FLAG_TRIGGER_COMPLETE);
-+	return read_check(crashlog, crashlog->info->status.complete);
- }
- 
--static bool pmt_crashlog_disabled(struct intel_pmt_entry *entry)
-+static bool pmt_crashlog_disabled(struct crashlog_entry *crashlog)
- {
- 	/* return current value of the crashlog disabled flag */
--	return read_check(entry, CRASHLOG_FLAG_DISABLE);
-+	return read_check(crashlog, crashlog->info->status.disabled);
- }
- 
--static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
-+static void pmt_crashlog_set_disable(struct crashlog_entry *crashlog, bool disable)
- {
--	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
--	u32 crash_type, version;
--
--	crash_type = GET_TYPE(discovery_header);
--	version = GET_VERSION(discovery_header);
--
--	/*
--	 * Currently we only recognize OOBMSM version 0 devices.
--	 * We can ignore all other crashlog devices in the system.
--	 */
--	return crash_type == CRASH_TYPE_OOBMSM && version == 0;
-+	read_modify_write(crashlog, crashlog->info->control.disable, disable);
- }
- 
--static void pmt_crashlog_set_disable(struct intel_pmt_entry *entry,
--				     bool disable)
-+static void pmt_crashlog_set_clear(struct crashlog_entry *crashlog)
- {
--	read_modify_write(entry, CRASHLOG_FLAG_DISABLE, disable);
-+	read_modify_write(crashlog, crashlog->info->control.clear, SET);
- }
- 
--static void pmt_crashlog_set_clear(struct intel_pmt_entry *entry)
-+static void pmt_crashlog_set_execute(struct crashlog_entry *crashlog)
- {
--	read_modify_write(entry, CRASHLOG_FLAG_TRIGGER_CLEAR, SET);
--}
--
--static void pmt_crashlog_set_execute(struct intel_pmt_entry *entry)
--{
--	read_modify_write(entry, CRASHLOG_FLAG_TRIGGER_EXECUTE, SET);
-+	read_modify_write(crashlog, crashlog->info->control.manual, SET);
- }
- 
- /*
-@@ -136,8 +176,8 @@ static void pmt_crashlog_set_execute(struct intel_pmt_entry *entry)
++static ssize_t
++clear_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
++	bool cleared = pmt_crashlog_cleared(crashlog);
++
++	return sysfs_emit(buf, "%d\n", cleared);
++}
++
++static ssize_t
++clear_store(struct device *dev, struct device_attribute *attr,
++	    const char *buf, size_t count)
++{
++	struct crashlog_entry *crashlog;
++	bool clear;
++	int result;
++
++	crashlog = dev_get_drvdata(dev);
++
++	result = kstrtobool(buf, &clear);
++	if (result)
++		return result;
++
++	/* set bit only */
++	if (!clear)
++		return -EINVAL;
++
++	guard(mutex)(&crashlog->control_mutex);
++
++	pmt_crashlog_set_clear(crashlog);
++
++	return count;
++}
++static DEVICE_ATTR_RW(clear);
++
++static ssize_t
++consumed_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
++	bool consumed = pmt_crashlog_consumed(crashlog);
++
++	return sysfs_emit(buf, "%d\n", consumed);
++}
++
++static ssize_t consumed_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct crashlog_entry *crashlog;
++	bool consumed;
++	int result;
++
++	crashlog = dev_get_drvdata(dev);
++
++	result = kstrtobool(buf, &consumed);
++	if (result)
++		return result;
++
++	/* set bit only */
++	if (!consumed)
++		return -EINVAL;
++
++	guard(mutex)(&crashlog->control_mutex);
++
++	if (pmt_crashlog_disabled(crashlog))
++		return -EBUSY;
++
++	if (!pmt_crashlog_complete(crashlog))
++		return -EEXIST;
++
++	pmt_crashlog_set_consumed(crashlog);
++
++	return count;
++}
++static DEVICE_ATTR_RW(consumed);
++
  static ssize_t
  enable_show(struct device *dev, struct device_attribute *attr, char *buf)
  {
--	struct intel_pmt_entry *entry = dev_get_drvdata(dev);
--	bool enabled = !pmt_crashlog_disabled(entry);
+@@ -204,6 +370,50 @@ enable_store(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RW(enable);
+ 
++static ssize_t
++error_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
 +	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
-+	bool enabled = !pmt_crashlog_disabled(crashlog);
- 
- 	return sprintf(buf, "%d\n", enabled);
- }
-@@ -146,19 +186,19 @@ static ssize_t
- enable_store(struct device *dev, struct device_attribute *attr,
- 	     const char *buf, size_t count)
- {
--	struct crashlog_entry *entry;
++	bool error = pmt_crashlog_error(crashlog);
++
++	return sysfs_emit(buf, "%d\n", error);
++}
++static DEVICE_ATTR_RO(error);
++
++static ssize_t
++rearm_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
++	int rearmed = pmt_crashlog_rearm(crashlog);
++
++	return sysfs_emit(buf, "%d\n", rearmed);
++}
++
++static ssize_t rearm_store(struct device *dev, struct device_attribute *attr,
++			   const char *buf, size_t count)
++{
 +	struct crashlog_entry *crashlog;
- 	bool enabled;
- 	int result;
- 
--	entry = dev_get_drvdata(dev);
++	bool rearm;
++	int result;
++
 +	crashlog = dev_get_drvdata(dev);
- 
- 	result = kstrtobool(buf, &enabled);
- 	if (result)
- 		return result;
- 
--	guard(mutex)(&entry->control_mutex);
++
++	result = kstrtobool(buf, &rearm);
++	if (result)
++		return result;
++
++	/* set only */
++	if (!rearm)
++		return -EINVAL;
++
 +	guard(mutex)(&crashlog->control_mutex);
- 
--	pmt_crashlog_set_disable(&entry->entry, !enabled);
-+	pmt_crashlog_set_disable(crashlog, !enabled);
- 
- 	return count;
- }
-@@ -167,11 +207,11 @@ static DEVICE_ATTR_RW(enable);
++
++	pmt_crashlog_set_rearm(crashlog);
++
++	return count;
++}
++static DEVICE_ATTR_RW(rearm);
++
  static ssize_t
  trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
  {
--	struct intel_pmt_entry *entry;
-+	struct crashlog_entry *crashlog;
- 	bool trigger;
- 
--	entry = dev_get_drvdata(dev);
--	trigger = pmt_crashlog_complete(entry);
-+	crashlog = dev_get_drvdata(dev);
-+	trigger = pmt_crashlog_complete(crashlog);
- 
- 	return sprintf(buf, "%d\n", trigger);
+@@ -252,30 +462,63 @@ trigger_store(struct device *dev, struct device_attribute *attr,
  }
-@@ -180,32 +220,33 @@ static ssize_t
- trigger_store(struct device *dev, struct device_attribute *attr,
- 	      const char *buf, size_t count)
- {
--	struct crashlog_entry *entry;
-+	struct crashlog_entry *crashlog;
- 	bool trigger;
- 	int result;
+ static DEVICE_ATTR_RW(trigger);
  
--	entry = dev_get_drvdata(dev);
-+	crashlog = dev_get_drvdata(dev);
+-static struct attribute *pmt_crashlog_attrs[] = {
++static struct attribute *pmt_crashlog_type1_ver0_attrs[] = {
+ 	&dev_attr_enable.attr,
+ 	&dev_attr_trigger.attr,
+ 	NULL
+ };
  
- 	result = kstrtobool(buf, &trigger);
- 	if (result)
- 		return result;
- 
--	guard(mutex)(&entry->control_mutex);
-+	guard(mutex)(&crashlog->control_mutex);
- 
- 	/* if device is currently disabled, return busy */
--	if (pmt_crashlog_disabled(&entry->entry))
-+	if (pmt_crashlog_disabled(crashlog))
- 		return -EBUSY;
- 
- 	if (!trigger) {
--		pmt_crashlog_set_clear(&entry->entry);
-+		pmt_crashlog_set_clear(crashlog);
- 		return count;
- 	}
- 
- 	/* we cannot trigger a new crash if one is still pending */
--	if (pmt_crashlog_complete(&entry->entry))
-+	if (pmt_crashlog_complete(crashlog))
- 		return -EEXIST;
- 
--	pmt_crashlog_set_execute(&entry->entry);
-+	pmt_crashlog_set_execute(crashlog);
+-static const struct attribute_group pmt_crashlog_group = {
+-	.attrs	= pmt_crashlog_attrs,
++static struct attribute *pmt_crashlog_type1_ver2_attrs[] = {
++	&dev_attr_clear.attr,
++	&dev_attr_consumed.attr,
++	&dev_attr_enable.attr,
++	&dev_attr_error.attr,
++	&dev_attr_rearm.attr,
++	&dev_attr_trigger.attr,
++	NULL
++};
 +
++static const struct attribute_group pmt_crashlog_type1_ver0_group = {
++	.attrs	= pmt_crashlog_type1_ver0_attrs,
+ };
  
- 	return count;
- }
-@@ -231,9 +272,10 @@ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
- 	if (!pmt_crashlog_supported(entry))
++static const struct attribute_group pmt_crashlog_type1_ver2_group = {
++	.attrs = pmt_crashlog_type1_ver2_attrs,
++};
++
++static const struct crashlog_info *select_crashlog_info(u32 type, u32 version)
++{
++	if (version == 0)
++		return &crashlog_type1_ver0;
++
++	return &crashlog_type1_ver2;
++}
++
++static const struct attribute_group *select_sysfs_grp(u32 type, u32 version)
++{
++	if (version == 0)
++		return &pmt_crashlog_type1_ver2_group;
++
++	return &pmt_crashlog_type1_ver2_group;
++}
++
+ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+ 				      struct device *dev)
+ {
+ 	void __iomem *disc_table = entry->disc_table;
+ 	struct intel_pmt_header *header = &entry->header;
+ 	struct crashlog_entry *crashlog;
++	u32 version;
++	u32 type;
+ 
+-	if (!pmt_crashlog_supported(entry))
++	if (!pmt_crashlog_supported(entry, &type, &version))
  		return 1;
  
--	/* initialize control mutex */
-+	/* initialize the crashlog struct */
+ 	/* initialize the crashlog struct */
  	crashlog = container_of(entry, struct crashlog_entry, entry);
  	mutex_init(&crashlog->control_mutex);
-+	crashlog->info = &crashlog_type1_ver0;
+-	crashlog->info = &crashlog_type1_ver0;
++
++	crashlog->info = select_crashlog_info(type, version);
  
  	header->access_type = GET_ACCESS(readl(disc_table));
  	header->guid = readl(disc_table + GUID_OFFSET);
+@@ -284,7 +527,7 @@ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+ 	/* Size is measured in DWORDS, but accessor returns bytes */
+ 	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
+ 
+-	entry->attr_grp = &pmt_crashlog_group;
++	entry->attr_grp = select_sysfs_grp(type, version);
+ 
+ 	return 0;
+ }
 -- 
 2.49.0
 
