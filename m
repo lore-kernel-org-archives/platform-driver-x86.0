@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD132741C9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F67F2741C9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 21:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749589970; cv=none; b=GkpZo6MYUxCe0UyLLunCnSfNqWpdQTuHQE+8jGvNGBrK0WsKCOWXazQa/5fMOt5U6wFY+Cen6Yz0xQ44YRQpKCMINx7ihOM4fM7DljLTRpn++vNzCSv346YIxQAtx6HANWCgj6wviFR7BdbGsyo3fWq2IXbb7lVurwjF6i7p1D8=
+	t=1749589973; cv=none; b=HqwRMS7kwx54JoqkvfGrvwDp9UVH7BB5i4+J2HXpx725aWvlUg9ZwEbZYeCgo/AA5REW9NbR7SsFfAdI66N4F4c3q+i1Y62f+xxc5r7pY4PmhjCIraoN7bFcXGvaBhGDyD0j3cd4HPIIfcyugavfIyifCsdGDAH2wJle1dKOAx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749589970; c=relaxed/simple;
-	bh=rZQayzoi8ONjnqpJLzmJXR2jMABT7CLW7RJ0yrE30Vk=;
+	s=arc-20240116; t=1749589973; c=relaxed/simple;
+	bh=pOIDz017sJBbK2oIqU+tLFCqZZU2v13L/TTfFRtl5wU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OBl8nyZhYqGk1Oh8nzZbrlHSNbz78wnth9OId5zRxW4b3pqV+NxrV41E3Zxc+AFXIG79Y1UWaAQugf4XDpP6FzbgYvlJOjJ9qsEDqHFTGT1ENoSkIf6K478uaDatL5Nn5IcBx/ZWYnuAYTiiaNePK4GqFE5wfFVAFS1GKnZZwhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MypCIgac; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=bTDDnt1wKtUauHrFY9NxDY6R05qHJnP84zcodSVSpMivBlxEEsOPGbsR+mSZS6z5kwKkJbMUp3I9CEabFXMiroWkL/yhcu/KxtBD5rs9sz+Yj4G0OVnJBXe+R9N9TGGrGQTc9v00oJtbYvMpbl6l1Ts/fL1u84E+wjPJORFzpbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjW/CTsH; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MypCIgac"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjW/CTsH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749589969; x=1781125969;
+  t=1749589972; x=1781125972;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rZQayzoi8ONjnqpJLzmJXR2jMABT7CLW7RJ0yrE30Vk=;
-  b=MypCIgact1eGLHATr6lsp+6f1XLMAbGAXxjrqigXD75OCWcmZIxunAiw
-   FdDLsO/FzXpo9MKoofZNVIGa9JjqifszoQaAjI/0mi4V7ZMbxxlxmj8ns
-   Vdt6c+RE1DFXcUcTyCXzblf9LXhJb3/1mGmiX3QoegVBqwFOuNFTk7Zn0
-   GYS8DXZB//A0kMgm1rBnlpXfBLZt+WUqaJ+Kt2dSBcN/z+45+nO4mhpaD
-   kvuJvUL1o/7D4fyTKxXG1xtmysKKmLnx1CD+wE8AnRzSFJW0L+H9W2vMf
-   ox0HpiFx88YyTX+/SpM34tJYz+sZD61ZOxIgl2LYZnfls2+40AjmEjbvz
+  bh=pOIDz017sJBbK2oIqU+tLFCqZZU2v13L/TTfFRtl5wU=;
+  b=DjW/CTsHi3o3bDkRe/neCc9PYs3diWmsEe9ImbSXq+YC9WTpGMK/WFEs
+   bkzPZPoihUIEezfSfzzw0+LaEkA8FPOWherjDTklwOI/EgWs8VV0ZZQEw
+   l3hiUS6QLMTTooOqokZ1yWifQUEVwBEi7VuA6VefzERuiFBoC8hhcUmQW
+   x34pZXoO3ZQ6BZHawWdZqaFNqS1HglfR/Bkthgnp4i8Srr28EtGmB+NNs
+   9aW6OhRgmGPWKk8dPhD5QK/dbvujVHnMTkWNnWYIZ0bmhQD2piSAXvLNc
+   gUJIhfdBlDnwjQzyQt3SStvGgunR00e4OEwEV/N7CcN2Rlp36VleC2zZk
    A==;
-X-CSE-ConnectionGUID: 0BW7lhKlQ4+pSN+0ngXU7A==
-X-CSE-MsgGUID: xzIJ8LbUTfK71/NPIjtS3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816915"
+X-CSE-ConnectionGUID: EKF3GMgST0GV2YsuS0ixiw==
+X-CSE-MsgGUID: AWRe7WpQSV+UN7bI3xanUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51816930"
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="51816915"
+   d="scan'208";a="51816930"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:49 -0700
-X-CSE-ConnectionGUID: tg/7dTh7ST2YllnGKYttZA==
-X-CSE-MsgGUID: A0sYQmLzRPKWQSkTwDpe8Q==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:52 -0700
+X-CSE-ConnectionGUID: m6MMw7XURsi92/gCSOTESg==
+X-CSE-MsgGUID: Y9BlLX7QSHKkBlFwRSpVaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="146939774"
+   d="scan'208";a="146939800"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.220.88])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:47 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:12:50 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -55,9 +55,9 @@ To: platform-driver-x86@vger.kernel.org,
 	simona@ffwll.ch,
 	david.e.box@linux.intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v4 04/10] platform/x86/intel/pmt: use guard(mutex)
-Date: Tue, 10 Jun 2025 17:12:19 -0400
-Message-ID: <20250610211225.1085901-5-michael.j.ruhl@intel.com>
+Subject: [PATCH v4 05/10] platform/x86/intel/pmt: re-order trigger logic
+Date: Tue, 10 Jun 2025 17:12:20 -0400
+Message-ID: <20250610211225.1085901-6-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
 References: <20250610211225.1085901-1-michael.j.ruhl@intel.com>
@@ -67,85 +67,45 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Update the mutex paths to use the new guard() mechanism.
+Setting the clear bit or checking the complete bit before checking to
+see if crashlog is disabled seems incorrect.
 
-With the removal of goto, do some minor cleanup of the current logic
-path.
+Check disable before accessing any other bits.
 
 Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 33 +++++++++++------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index d40c8e212733..1525e702e993 100644
+index 1525e702e993..3d3b72451c01 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -9,6 +9,7 @@
-  */
+@@ -192,6 +192,10 @@ trigger_store(struct device *dev, struct device_attribute *attr,
  
- #include <linux/auxiliary_bus.h>
-+#include <linux/cleanup.h>
- #include <linux/intel_vsec.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -155,9 +156,9 @@ enable_store(struct device *dev, struct device_attribute *attr,
- 	if (result)
- 		return result;
+ 	guard(mutex)(&entry->control_mutex);
  
--	mutex_lock(&entry->control_mutex);
-+	guard(mutex)(&entry->control_mutex);
-+
- 	pmt_crashlog_set_disable(&entry->entry, !enabled);
--	mutex_unlock(&entry->control_mutex);
- 
- 	return count;
- }
-@@ -189,26 +190,24 @@ trigger_store(struct device *dev, struct device_attribute *attr,
- 	if (result)
- 		return result;
- 
--	mutex_lock(&entry->control_mutex);
-+	guard(mutex)(&entry->control_mutex);
- 
- 	if (!trigger) {
- 		pmt_crashlog_set_clear(&entry->entry);
--	} else if (pmt_crashlog_complete(&entry->entry)) {
--		/* we cannot trigger a new crash if one is still pending */
--		result = -EEXIST;
--		goto err;
--	} else if (pmt_crashlog_disabled(&entry->entry)) {
--		/* if device is currently disabled, return busy */
--		result = -EBUSY;
--		goto err;
--	} else {
--		pmt_crashlog_set_execute(&entry->entry);
-+		return count;
- 	}
- 
--	result = count;
--err:
--	mutex_unlock(&entry->control_mutex);
--	return result;
-+	/* we cannot trigger a new crash if one is still pending */
-+	if (pmt_crashlog_complete(&entry->entry))
-+		return -EEXIST;
-+
 +	/* if device is currently disabled, return busy */
 +	if (pmt_crashlog_disabled(&entry->entry))
 +		return -EBUSY;
 +
-+	pmt_crashlog_set_execute(&entry->entry);
-+
-+	return count;
- }
- static DEVICE_ATTR_RW(trigger);
+ 	if (!trigger) {
+ 		pmt_crashlog_set_clear(&entry->entry);
+ 		return count;
+@@ -201,10 +205,6 @@ trigger_store(struct device *dev, struct device_attribute *attr,
+ 	if (pmt_crashlog_complete(&entry->entry))
+ 		return -EEXIST;
  
+-	/* if device is currently disabled, return busy */
+-	if (pmt_crashlog_disabled(&entry->entry))
+-		return -EBUSY;
+-
+ 	pmt_crashlog_set_execute(&entry->entry);
+ 
+ 	return count;
 -- 
 2.49.0
 
