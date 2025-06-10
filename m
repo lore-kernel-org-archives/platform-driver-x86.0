@@ -1,156 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEA823D28E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 16:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C446246BAC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jun 2025 16:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571977; cv=none; b=BcN40oLAafRlH5SmaLRUP35GUcelYkWo7ljOb57ndE+O0obhQBzezM0es1zCmkKE4zXvXJlm4moJ/7pRQp8jRwIXS++fct2UFssvIahlKAMnwk2utowhvp09gChXSkyLoV/pODk6EbA5MYEvh0oCWUVzr/Xx3t+xLhzZCi6djVY=
+	t=1749572447; cv=none; b=Eg7KD0gZYiv36Kbcwryewhn11MBW1KX2ricHRTGEHx4CrE0dlF5sXSbsGXI2IOX3p5JD2MTkow4B+y/exgw6LeELgRueMGs8M7ehUK5948FxuN/ItK/0bR0ES/6yskYEPgj8AExExdTD0jS5OpHgj3rcjoFucU7RNjpplRtVspI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571977; c=relaxed/simple;
-	bh=Q9ztGLkQYZMDiJG0S/MqT649BTkOv2R9luXIGg5Pg00=;
+	s=arc-20240116; t=1749572447; c=relaxed/simple;
+	bh=+tDusi+vTiogrVyMkqhg2CCTWoCL2lyS5C/bpER5L/A=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mzQHuxgXyFWcrbU5oWCvrt/waEAiiFcWTx8KT+Szxbahb7H2kL+nfzY5w3oGdxhw/qekIAz1b9FsRFdT6NX1PnFnNaaz/gWX+ETSEsOj1/p4zcH+QEoMJoamcvzs2ndrPztP0KbhSOmYtIJjLx7S2zOn0L6hhMOv/qHBsfU09Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=it2kPgTc; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=E2ztJn/0SzHrM2scn3qSyeqnpfcMJCY26YWTriPrKY7Nr9ecFonbWgddRLBpGA6pEYbnGVxZbJq0Mx7ldoxwYj7Gu0TpCQrIKPLSCIiVUtkc40MbRGrxPAv0UI5xJaDUULNTQWINpSbP6iqRZFdnyr7EnYHOBfiZiUE66O4F8VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RqI0Y1ul; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="it2kPgTc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RqI0Y1ul"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749571976; x=1781107976;
+  t=1749572446; x=1781108446;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Q9ztGLkQYZMDiJG0S/MqT649BTkOv2R9luXIGg5Pg00=;
-  b=it2kPgTcwwsc4utlguna6Ne55mwT0h2Hv6S7kyknE8aBpM8/9sYykQEL
-   UXAxXVsaszHy4QvKb1EzUgsHb2NDeTcgbxCK5jnbOvJxu2LO/FnW791/h
-   C9AoSnKBr0DyUx1LYpBbr6dtv0VPDhoINnATdFA7ADrY/SwO/VZxKKjjF
-   +9EXGyVofMFMmNJOZVNJrvx6igpCqyeznfVcbqKXyOV5iVyoVwH/mDQTy
-   fSb4unzOqgP64S5EJf3mX8tBGnEhvvXJGTD/3DlDdHJpV38B9tVSkyMJx
-   Sfq8gO7zI71wy5h4hS15o/2hPZXfew+8I7XPLv1TC309YAMN4BvuDGmxP
+  bh=+tDusi+vTiogrVyMkqhg2CCTWoCL2lyS5C/bpER5L/A=;
+  b=RqI0Y1ulZpMVkZQaLgJ8M6X2Lr/im3sDtJzws2Ejx/B9yTmCSSYc1oaG
+   ZQY2DU/oCw265ZgyO3OWkFQkIt2uC+EV5oCoqhj0pN/buBD38PDmQOy2L
+   aUbQ+h5MpPnKrNS+sbduUDFxzFJTe1susWufmCIwoMCmTPJ0VogxHNH30
+   MfrGrQwuRsiez18qThAoBxhvn1NOmYeueV4DOmQmyp4g9Y6+8FmMHtHtH
+   KHZWoZqhSlfQQZp8D9yGqL5l+JSx+Cdce3r6JT8NJ0eIW9GvsWMdIk2eI
+   L5BMbcLclPkO8oTt2Vkq3KR1C46rEa79xfg//djzNRgecTzSJ/o4Hngho
    g==;
-X-CSE-ConnectionGUID: N703X95KSQyAQ8PhS5vqPA==
-X-CSE-MsgGUID: O0647GLWS2aM5OVsjZk2fg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62726376"
+X-CSE-ConnectionGUID: 1kz+cP53TTWQGV7sER4VDA==
+X-CSE-MsgGUID: nVCH0KjZR5SfIpkNwQ4f0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55498249"
 X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="62726376"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 09:12:55 -0700
-X-CSE-ConnectionGUID: 885+NdyVTy2qQx3xpLEOnw==
-X-CSE-MsgGUID: g56cm1UXTH+lFOd+Xxfkcw==
+   d="scan'208";a="55498249"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 09:19:57 -0700
+X-CSE-ConnectionGUID: wXdLFeZUTWK9016muowTNg==
+X-CSE-MsgGUID: p4ojga+KTmuGtihUVI/cUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="151687984"
+   d="scan'208";a="146787215"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 09:12:52 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 09:19:53 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Jun 2025 19:12:48 +0300 (EEST)
+Date: Tue, 10 Jun 2025 19:19:49 +0300 (EEST)
 To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
     Patil.Reddy@amd.com, mario.limonciello@amd.com, Yijun.Shen@dell.com
-Subject: Re: [PATCH 01/10] platform/x86/amd/pmf: Add support for adjusting
- PMF PPT and PPT APU thresholds
-In-Reply-To: <20250509072654.713629-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <5f5ab951-b948-e9d0-6ae2-d8269e4d82e1@linux.intel.com>
-References: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com> <20250509072654.713629-2-Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH 09/10] platform/x86/amd/pmf: Call enact function sooner
+ to process early pending requests
+In-Reply-To: <20250509072654.713629-10-Shyam-sundar.S-k@amd.com>
+Message-ID: <20e8a15a-0abe-6f14-37f9-d570dcec70b8@linux.intel.com>
+References: <20250509072654.713629-1-Shyam-sundar.S-k@amd.com> <20250509072654.713629-10-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1844231520-1749571968=:949"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1844231520-1749571968=:949
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
 
 On Fri, 9 May 2025, Shyam Sundar S K wrote:
 
-> The most recent PMF Trusted Application includes enhanced features that
-> allow for modifications to PMF thermal parameters such as PPT and PPT APU=
-=2E
->=20
-> This update introduces the necessary driver support to utilize these
-> capabilities.
->=20
+> Call the amd_pmf_invoke_cmd_enact() function to manage early pending
+> requests and their associated custom BIOS inputs. Additionally, add a
+> return statement for cases of failure.
+> 
+> The PMF driver will adjust power settings according to custom BIOS inputs
+> after assessing the policy conditions.
+> 
+> Cc: Yijun Shen <Yijun.Shen@dell.com>
 > Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 > Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/amd/pmf/pmf.h    |  4 ++++
->  drivers/platform/x86/amd/pmf/tee-if.c | 16 ++++++++++++++++
->  2 files changed, 20 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/am=
-d/pmf/pmf.h
-> index e6bdee68ccf3..4665e68e5c07 100644
+>  drivers/platform/x86/amd/pmf/acpi.c   | 18 ++++++++++++++++--
+>  drivers/platform/x86/amd/pmf/pmf.h    |  2 ++
+>  drivers/platform/x86/amd/pmf/tee-if.c |  3 ++-
+>  3 files changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index 1521988c1002..a3319ac89fd1 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -339,8 +339,15 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
+>  	guard(mutex)(&pmf_dev->cb_mutex);
+>  
+>  	ret = apmf_get_sbios_requests_v2(pmf_dev, &pmf_dev->req);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(pmf_dev->dev, "Failed to get v2 SBIOS requests: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	if (pmf_dev->cb_flag) {
+> +		amd_pmf_invoke_cmd_enact(pmf_dev);
+> +		pmf_dev->cb_flag = false;
+> +	}
+>  }
+>  
+>  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
+> @@ -351,8 +358,15 @@ static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
+>  	guard(mutex)(&pmf_dev->cb_mutex);
+>  
+>  	ret = apmf_get_sbios_requests_v1(pmf_dev, &pmf_dev->req1);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(pmf_dev->dev, "Failed to get v1 SBIOS requests: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	if (pmf_dev->cb_flag) {
+> +		amd_pmf_invoke_cmd_enact(pmf_dev);
+> +		pmf_dev->cb_flag = false;
+> +	}
+
+Why isn't there another function which can be called by both???
+
+>  }
+>  
+>  static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index d9e6467be852..71cc94bdbd32 100644
 > --- a/drivers/platform/x86/amd/pmf/pmf.h
 > +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -93,6 +93,8 @@ struct cookie_header {
->  #define PMF_POLICY_BIOS_OUTPUT_1=09=09=09=0910
->  #define PMF_POLICY_BIOS_OUTPUT_2=09=09=09=0911
->  #define PMF_POLICY_P3T=09=09=09=09=09=0938
-> +#define PMF_POLICY_PMF_PPT=09=09=09=09=0954
-> +#define PMF_POLICY_PMF_PPT_APU_ONLY=09=09=09=0955
->  #define PMF_POLICY_BIOS_OUTPUT_3=09=09=09=0957
->  #define PMF_POLICY_BIOS_OUTPUT_4=09=09=09=0958
->  #define PMF_POLICY_BIOS_OUTPUT_5=09=09=09=0959
-> @@ -677,6 +679,8 @@ struct pmf_action_table {
->  =09u32 stt_skintemp_apu;=09/* in C */
->  =09u32 stt_skintemp_hs2;=09/* in C */
->  =09u32 p3t_limit;=09=09/* in mW */
-> +=09u32 pmf_ppt;=09=09/* in mW */
-> +=09u32 pmf_ppt_apu_only;=09/* in mW */
+> @@ -404,6 +404,7 @@ struct amd_pmf_dev {
+>  	u32 notifications;
+>  	struct apmf_sbios_req_v1 req1;
+>  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
+> +	bool cb_flag; /* To handle first custom BIOS input */
+
+Please more the comment more to right, preferrably align it with the 
+previous line.
+
 >  };
-> =20
->  /* Input conditions */
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86=
-/amd/pmf/tee-if.c
-> index a1e43873a07b..679c5bf5faca 100644
+>  
+>  struct apmf_sps_prop_granular_v2 {
+> @@ -891,5 +892,6 @@ int amd_pmf_smartpc_apply_bios_output(struct amd_pmf_dev *dev, u32 val, u32 preq
+>  /* Smart PC - TA interfaces */
+>  void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
+>  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
+> +int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev);
+>  
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 679c5bf5faca..249683509635 100644
 > --- a/drivers/platform/x86/amd/pmf/tee-if.c
 > +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -145,6 +145,22 @@ static void amd_pmf_apply_policies(struct amd_pmf_de=
-v *dev, struct ta_pmf_enact_
->  =09=09=09}
->  =09=09=09break;
-> =20
-> +=09=09case PMF_POLICY_PMF_PPT:
-> +=09=09=09if (dev->prev_data->pmf_ppt !=3D val) {
-> +=09=09=09=09amd_pmf_send_cmd(dev, SET_PMF_PPT, false, val, NULL);
-> +=09=09=09=09dev_dbg(dev->dev, "update PMF PPT: %u\n", val);
-> +=09=09=09=09dev->prev_data->pmf_ppt =3D val;
-> +=09=09=09}
-> +=09=09=09break;
-> +
-> +=09=09case PMF_POLICY_PMF_PPT_APU_ONLY:
-> +=09=09=09if (dev->prev_data->pmf_ppt_apu_only !=3D val) {
-> +=09=09=09=09amd_pmf_send_cmd(dev, SET_PMF_PPT_APU_ONLY, false, val, NULL=
-);
-> +=09=09=09=09dev_dbg(dev->dev, "update PMF PPT APU ONLY: %u\n", val);
-> +=09=09=09=09dev->prev_data->pmf_ppt_apu_only =3D val;
-> +=09=09=09}
-> +=09=09=09break;
-> +
+> @@ -223,7 +223,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  	}
+>  }
+>  
+> -static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+> +int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+>  {
+>  	struct ta_pmf_shared_memory *ta_sm = NULL;
+>  	struct ta_pmf_enact_result *out = NULL;
+> @@ -559,6 +559,7 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  		switch (ret) {
+>  		case TA_PMF_TYPE_SUCCESS:
+>  			status = true;
+> +			dev->cb_flag = true;
+>  			break;
+>  		case TA_ERROR_CRYPTO_INVALID_PARAM:
+>  		case TA_ERROR_CRYPTO_BIN_TOO_LARGE:
+> 
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-=2E..But with the caveat that you should start to consider something more=
-=20
-clever here as most of these cases are essentially just copy-paste code=20
-with very minor variations in a single parameters and offset in=20
-dev->prev_data so it would be nice if the similar cases could be handled=20
-with once generic code fragment (I don't count dev_dbg variations).
-
->  =09=09case PMF_POLICY_SYSTEM_STATE:
->  =09=09=09switch (val) {
->  =09=09=09case 0:
->=20
-
---=20
+-- 
  i.
 
---8323328-1844231520-1749571968=:949--
