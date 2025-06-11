@@ -1,117 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907F123AB86
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jun 2025 10:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E7E2E6126
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jun 2025 10:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638828; cv=none; b=QyyEAVYUMJhtBMgkf8vXJ7eQF8yfXqvDl0BlRjrKeNoMDQM+feiUe95fFPkKrz46KmwyJ66B4Ebjk14h404c3waeUe0qNBdCkhDQXSKUUEdJ7vC66uSS/V3YAsEEVdKuWiVVeTS4h3kSMcrqKgvvoeADGwRT261A0Yu8bCuztt0=
+	t=1749639153; cv=none; b=d0ii1SAj7WD3vYTl1v/9maHxuLLhupsEAQL5D0Dd2NayepQC1WK7H/RXHl8t8Cr1WY//8RLl++2KZdYZk5k5S5pfXx1NC9d0cTVA/nXCXoHOPN/en7If2b4V183m0E4XXDW/8f8yyB35gZMMuHnM2Iw7HQfPYHpSzYO4ZYquIGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638828; c=relaxed/simple;
-	bh=R9TlHxURUnjN573yzRx32Bgm2lbsetGLhCeLLYiw+Jw=;
+	s=arc-20240116; t=1749639153; c=relaxed/simple;
+	bh=gGMagrCDK3sN1QP+NUuRSNak5emFF1SEvpjfqW/lTX4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=h4w8bxaN4FUFIYAukNXJP6Kdf3ptBsB62ToSX9wFXVCGS7WQLyyR7LQVoO2VINUJfnboCbXk4vRvrG9faUQAK1ZYIYxaJptz49xjKbwdVnDlb1Cem/nJT/NHV0RmSwGxgTkTnPd4cxzxHkPwVh21r0LZkzsF0taE9xlDAZTY5wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EoCAQZwQ; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=uLrHAlvWZ3fCfQG70ZQgNFY7XI6wIQGmIOVXISWYqmeYSPwcBv/JMkMh9Vbi5iqlMG13jJRhc0fU/GuQCsibclzO3tmzkx3ulwb6xCpdg9gtUIsgJpYx5U2h4aiChdchN/YXFojSlaV8YDqnUUgtYXDcBcYIddPb0csSQcctC4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fn5U67lE; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EoCAQZwQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fn5U67lE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749638826; x=1781174826;
+  t=1749639152; x=1781175152;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=R9TlHxURUnjN573yzRx32Bgm2lbsetGLhCeLLYiw+Jw=;
-  b=EoCAQZwQEqSMSFVUNcVIyB9RXP7S6PoJG9fAAUIP1/iZnbUj9A1hpLiW
-   1X/wtHwAnyTa+fa5VGNT1jhClPgsl4m0ZJGyvdhVGWdid1f0Oaosr/fxo
-   7dIkPbqAxKQwRpZf/dIzpN6NxoFcnDaRStVRU99EPZi8iFJFwDkbsu4f/
-   JRgj+/egPgpq3H/2jzNybiPfRgLVmBD2dyXLiNQsYlTQpGpHezvEONnqE
-   Lte7QK8PG6sGX5UsrEsPgb4R2cpi5pybpM9Xp53gLFZaed0aBfIUmxzR3
-   dNtGb1msh0E3IMFc2XL1IErHbtMOkFzM4hSMkyFEPu9W1BjKinknn8k0d
+  bh=gGMagrCDK3sN1QP+NUuRSNak5emFF1SEvpjfqW/lTX4=;
+  b=Fn5U67lExvJDNiFYzksolqkamSoXHMzZc7bY7akLKTPKiJSjAsuBLvkv
+   k9YHYX5NxXANPPvnDmRqlKsAnQNNjeIB5aksZ+UMQqROyj8GYwS5X+ZRq
+   FS1fd+t9K4weBqCYIa1BoICInMqaDBv2gIlny+ADGaQXbgmGJuMl+E6ih
+   rvCJbZzcTpF83+4izEmGBdiCGFHHUG6M1Lp8nWQ7Uia/kpB6FC3P3O7hq
+   DlUQfSQpoK+oKH9J8ZfyfgecnH3MCgRWpUiWT8xjw800LJhM3//L3VH5W
+   xfLoUEXmv9jgvUScoJyF8BktBZlixaurju74mYFVI4P2ldxiqidnY9PSY
    g==;
-X-CSE-ConnectionGUID: 1kL0gzxrQ+2PSAxyPGxKHQ==
-X-CSE-MsgGUID: Z6OtkaIRTgOz7NbIISpzsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55580248"
+X-CSE-ConnectionGUID: T2A/91zVS+KsH5FOFiuN/A==
+X-CSE-MsgGUID: J8cimHqEReiOaN75Rxt/ew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="63186269"
 X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="55580248"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 03:47:06 -0700
-X-CSE-ConnectionGUID: 0AZ/IltoRTSkxMqIbF/2jQ==
-X-CSE-MsgGUID: 5YGJZQ7jSO65C9hAlADBpQ==
+   d="scan'208";a="63186269"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 03:52:32 -0700
+X-CSE-ConnectionGUID: X8kzDrbZSSmWKMsjkooWew==
+X-CSE-MsgGUID: InIDx2zRQEC8iQ5CX9WUzQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="147516745"
+   d="scan'208";a="152443572"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 03:47:02 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 03:52:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 13:46:58 +0300 (EEST)
+Date: Wed, 11 Jun 2025 13:52:24 +0300 (EEST)
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     Hans de Goede <hdegoede@redhat.com>, lucas.demarchi@intel.com, 
     rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, 
     airlied@gmail.com, simona@ffwll.ch, david.e.box@linux.intel.com
-Subject: Re: [PATCH v4 06/10] platform/x86/intel/pmt: correct types
-In-Reply-To: <20250610211225.1085901-7-michael.j.ruhl@intel.com>
-Message-ID: <c412f6d2-0889-1a12-133e-10e87024351a@linux.intel.com>
-References: <20250610211225.1085901-1-michael.j.ruhl@intel.com> <20250610211225.1085901-7-michael.j.ruhl@intel.com>
+Subject: Re: [PATCH v4 08/10] platform/x86/intel/pmt: add register access
+ helpers
+In-Reply-To: <20250610211225.1085901-9-michael.j.ruhl@intel.com>
+Message-ID: <8baebd44-971f-dd79-cede-1e8fd5965956@linux.intel.com>
+References: <20250610211225.1085901-1-michael.j.ruhl@intel.com> <20250610211225.1085901-9-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-233003694-1749638818=:957"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-233003694-1749638818=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 10 Jun 2025, Michael J. Ruhl wrote:
 
-> A couple of auto variables do not match the return types of some of
-> the functions.
->=20
-> Update the mismatched types to match.
->=20
-> Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+> The control register is used in a read/modify/write pattern.
+> The status register is used in a read/check bit pattern.
+> 
+> Add helpers to eliminate common code.
+> 
 > Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 > ---
->  drivers/platform/x86/intel/pmt/crashlog.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform=
-/x86/intel/pmt/crashlog.c
-> index 3d3b72451c01..ddb05d069fc6 100644
+>  drivers/platform/x86/intel/pmt/crashlog.c | 58 +++++++++++------------
+>  1 file changed, 29 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+> index 99f0e85f2de6..e11865686f2a 100644
 > --- a/drivers/platform/x86/intel/pmt/crashlog.c
 > +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-> @@ -137,7 +137,7 @@ static ssize_t
->  enable_show(struct device *dev, struct device_attribute *attr, char *buf=
-)
+> @@ -63,20 +63,40 @@ struct pmt_crashlog_priv {
+>  /*
+>   * I/O
+>   */
+> -static bool pmt_crashlog_complete(struct intel_pmt_entry *entry)
+> +#define SET	true
+> +#define CLEAR	false
+
+There's a risk of namespace collisions if using too generic names.
+
+> +static void read_modify_write(struct intel_pmt_entry *entry, u32 bit, bool set)
 >  {
->  =09struct intel_pmt_entry *entry =3D dev_get_drvdata(dev);
-> -=09int enabled =3D !pmt_crashlog_disabled(entry);
-> +=09bool enabled =3D !pmt_crashlog_disabled(entry);
-> =20
->  =09return sprintf(buf, "%d\n", enabled);
+> -	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+> +	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
+> +
+> +	reg &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+> +
+> +	if (set)
+> +		reg |= bit;
+> +	else
+> +		reg &= bit;
+> +
+> +	writel(reg, entry->disc_table + CONTROL_OFFSET);
+> +}
+> +
+> +static bool read_check(struct intel_pmt_entry *entry, u32 bit)
+
+Despite being static, I'd prefer these to have prefixes. With the prefixes 
+reading the calling code, it's trivial to discern it's an driver internal 
+function whereas generic names likes will not convey the scope 
+information.
+
+> +{
+> +	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
+> +
+> +	return !!(reg & bit);
+> +}
+>  
+> +static bool pmt_crashlog_complete(struct intel_pmt_entry *entry)
+> +{
+>  	/* return current value of the crashlog complete flag */
+> -	return !!(control & CRASHLOG_FLAG_TRIGGER_COMPLETE);
+> +	return read_check(entry, CRASHLOG_FLAG_TRIGGER_COMPLETE);
 >  }
-> @@ -168,7 +168,7 @@ static ssize_t
->  trigger_show(struct device *dev, struct device_attribute *attr, char *bu=
-f)
+>  
+>  static bool pmt_crashlog_disabled(struct intel_pmt_entry *entry)
 >  {
->  =09struct intel_pmt_entry *entry;
-> -=09int trigger;
-> +=09bool trigger;
-> =20
->  =09entry =3D dev_get_drvdata(dev);
->  =09trigger =3D pmt_crashlog_complete(entry);
->=20
+> -	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+> -
+>  	/* return current value of the crashlog disabled flag */
+> -	return !!(control & CRASHLOG_FLAG_DISABLE);
+> +	return read_check(entry, CRASHLOG_FLAG_DISABLE);
+>  }
+>  
+>  static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
+> @@ -97,37 +117,17 @@ static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
+>  static void pmt_crashlog_set_disable(struct intel_pmt_entry *entry,
+>  				     bool disable)
+>  {
+> -	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+> -
+> -	/* clear trigger bits so we are only modifying disable flag */
+> -	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+> -
+> -	if (disable)
+> -		control |= CRASHLOG_FLAG_DISABLE;
+> -	else
+> -		control &= ~CRASHLOG_FLAG_DISABLE;
+> -
+> -	writel(control, entry->disc_table + CONTROL_OFFSET);
+> +	read_modify_write(entry, CRASHLOG_FLAG_DISABLE, disable);
+>  }
+>  
+>  static void pmt_crashlog_set_clear(struct intel_pmt_entry *entry)
+>  {
+> -	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+> -
+> -	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+> -	control |= CRASHLOG_FLAG_TRIGGER_CLEAR;
+> -
+> -	writel(control, entry->disc_table + CONTROL_OFFSET);
+> +	read_modify_write(entry, CRASHLOG_FLAG_TRIGGER_CLEAR, SET);
+>  }
+>  
+>  static void pmt_crashlog_set_execute(struct intel_pmt_entry *entry)
+>  {
+> -	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+> -
+> -	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+> -	control |= CRASHLOG_FLAG_TRIGGER_EXECUTE;
+> -
+> -	writel(control, entry->disc_table + CONTROL_OFFSET);
+> +	read_modify_write(entry, CRASHLOG_FLAG_TRIGGER_EXECUTE, SET);
+>  }
+>  
+>  /*
+> 
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
+-- 
  i.
 
---8323328-233003694-1749638818=:957--
