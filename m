@@ -1,133 +1,93 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A40186A;
-	Wed, 11 Jun 2025 21:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF671E376C;
+	Wed, 11 Jun 2025 21:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677450; cv=none; b=piDl+3pPCaundN3RAZu7dCm0IKrEDERgImtS+AYklNwqHdWwC3GEESGW359usixjQxkhwsQ0lO1EbNWdf5jAW7k5khU6ZLmakhf0tGZN7VSi/IJvk3aoGJ/X8qhSFmHoHYiuzaV9MlBiEczd0NSu8kx/+scgX2mkoLlTFadTupM=
+	t=1749678841; cv=none; b=lyGEIJMhFTjbHCylvqP2aNTA5U2QP3/cUR15i9eNKZECKaF0GynRS1/GtRsHmgAoF35OxGAhqDsjZq8Esx3oml4W3PLVCJjC6kjbhUKwtgMz3pOFeZPwE1QuiggiG0JkMNXgPU3yqeakC3O9IxdmYTwS5fI2zapqO+px3FD6vOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677450; c=relaxed/simple;
-	bh=QY/+VOMB3hjC1vh3UgKqUkYoH3CgOEIg2LM7M9goxTg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=h4cOC+1KuL5lcbkyOj3BtZdg2X8LvPqXeDtqDNCRt8odi3KcNlLpjRVo/UtVJQzjl/TfM1Rg51fHNFHvLMz+It2ibQ2fRL5XY9xWl+TGdq6pXIpdJDUvA7mhmYSFRqi263K7aRuAD5+3sxToB1c/UcufNgi4iclnzgb8TwYV7Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSnsuMcf; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749678841; c=relaxed/simple;
+	bh=tKK5yfPg7D5z3FMs/xanZOrdx6IhPpba6UXPZN6y4u4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y1MO9m/cWXJWXOFn94Yp3ezHhzujUZxEnBpNWkC/wyiBRwsYB71P8W+S51e/0srUH76fw7pfsm52Cql2t7EMEU+61Wh8r0fT8kkOBdJ6XHeS0QrnYc5b4mvG+NHXsmh9lJ+LwMDaJ+OO+z1WrlttEKLNcQK/f5qXZYqjGngz+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoEZHYgW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSnsuMcf"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747c2cc3419so323721b3a.2;
-        Wed, 11 Jun 2025 14:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749677448; x=1750282248; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HsnCCnxN20sfpCU7Ra0k0nlSofD440pIeWpk86OcN64=;
-        b=jSnsuMcfCrS1RZWIHcV4p7EmIeCMS/S+cm43D+ubcDRbKxk5attFBcbxodjpLsAEqx
-         BTAujqbri/GyonButz2oESPIAul9UOuyO6uhRFMwc342ZjkMGzN12I8KBujO/RG673GP
-         I1pms3zBPxrTYdoMgAqjmJMmTVF7Lpn6uBCNRF/fdKR5CyNGSRZD9uivJ5opTZ9aSSZF
-         c0tlRhY6bWiO+V4sxxH1K7J6k8qciHv+yZ0MNBc9/+jXSx0VrXvt6nMUnFJR2r2Chrgd
-         DklO/fDMDfEdminI3yrGi1OykrIdkGG7gQyrswxQ+hHv3phzjOVlx49s11TQ9Dp9axTW
-         nRoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677448; x=1750282248;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HsnCCnxN20sfpCU7Ra0k0nlSofD440pIeWpk86OcN64=;
-        b=NOP9nV4aaF1adTRJBN5xDDyPyKpEuDVZSscb2qLUpEEy5isxjtWucF8CRvlaW5eqpZ
-         dr2c+rWz7FLWWtxZEdYgoeyweG48Ko7tGo5CWuuEW2JwkGb9CpBLIbvDDjVTefAW5Ljd
-         v6Iqgr8fT1Df4N7iURsRfo5blhrUT657QLQw+f7km4Cvjmy2zh5rc/2w4Pd1a/Zw/Jwg
-         s8bC/AMtJT9uoABRNZRRb0zWxGFxs2+flhbP/rHdibYk3I1L/k+c9IJI+Go5haBdIv5y
-         BwbwZYOSrqLbWNLJZGYv/Jk5e2CHRE5RBsTwqLGaO+sgocO8U6AuxuG++YwouXxdKoL3
-         qAEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/JJhr6KxN5ORIghqggEDqjQ3x/VqTghBqjeipVe1YATSfJCQX7KWrUIOcDaNdJPgzmDZWaJSf@vger.kernel.org, AJvYcCWxrw9bPawVB8PepYgaOBEmge3X0/pPHPt+zrdOMX/mVhr7FhUNgQv65KCEVMKawIO+aUJUnyvEOFWn+NE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHEtVkyPU1speeEt4hX0fGAL1TeUebSWB3Jl85m/Mhqt9OzkIh
-	msnUPCRMoI1o4sysHDJ0a9hSEFmb1CnmdQmNFzYVnAWkWHGMtKpGttnw/eKrtTSh
-X-Gm-Gg: ASbGncsa0GuiK3OWOaKLLOd0fThfY2u6LIapVfvFkngj9j5dXZq6CGzQAuvaWKcyyDb
-	k9squ8xMYPwlW6BOFmwYjff1nE3KoDjq/ZilBNlgYqIJjtF9Yq6c7f9m5D7CbMDorjZu9ur6d5w
-	Z2rt3eJQMUyrEbzSs3sDId+tQ2OiyyKAG7GRGLVGoUVHVOCzVdqM9nKMMHy6IFVq1F2B8CWNIYj
-	wC4G+qT8h486p0MEx4o74OIG1hF62fhYAuZwFO1G8ocEzixDwrUhstTG8h4mvL7HWrQeSLELmy1
-	V2gsBfe0GCxHmvyVStyM6/iLQ+jFPveSWN0x1xEpwcyV7eBrqk52h8OKQQdgog==
-X-Google-Smtp-Source: AGHT+IGATYByORSgsAFit5O8cnNwbGYaHuvhIPD9to+nw2gFdfr7AgTwiNvnef3L06hk91VNfWadog==
-X-Received: by 2002:a05:6a00:b45:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-7487bfe8e07mr1557216b3a.3.1749677447847;
-        Wed, 11 Jun 2025 14:30:47 -0700 (PDT)
-Received: from [192.168.1.26] ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74880896402sm31992b3a.49.2025.06.11.14.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 14:30:47 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Wed, 11 Jun 2025 18:30:40 -0300
-Subject: [PATCH] Revert "platform/x86: alienware-wmi-wmax: Add G-Mode
- support to Alienware m16 R1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoEZHYgW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49722C4CEE3;
+	Wed, 11 Jun 2025 21:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749678840;
+	bh=tKK5yfPg7D5z3FMs/xanZOrdx6IhPpba6UXPZN6y4u4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aoEZHYgW/9gR8xZrH14yAM40F2Jf+X2PgQprkhtx1uSAKFELopVc6F04OGFEovh/n
+	 9YIvFd6zpV3eD7vNkozPq6E4wb5L3h8YmiEArpNetPyFNH8AkNm4jdfKaeEwBZsm+V
+	 WaAuMpFxacitW/xQmlq1TD5B8aUIYLE8areKB9hutGJXFr89g2QUEsIYaAw5KXXiSZ
+	 RP+PUh72z31aPFKp40zQvy/HLnHxKYso+yh8Cb8FMKtlIfQspoH71PYGgx9bSkkI9a
+	 l8NyF8Kc0TN7+Xk5R/0bS4dETes/1G25w1zPDQmhW0pd8tPUzwPAadeBxgH2CUUBCD
+	 EIM5RuL4j17Ew==
+Date: Wed, 11 Jun 2025 23:53:57 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Jean Delvare <jdelvare@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] i2c: Re-enable piix4 driver on non-x86
+Message-ID: <5zw232i4edbbmnm752cenjca4quesl253riv2wkibfqttks5zx@edpkmzqgchal>
+References: <20250610205817.3912944-1-superm1@kernel.org>
+ <20250610205817.3912944-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-m16-rev-v1-1-72d13bad03c9@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAID1SWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0ND3VxDM12gQl0LQwPLJAujlNRUYwMloOqCotS0zAqwSdGxtbUAMKP
- V4lkAAAA=
-X-Change-ID: 20250611-m16-rev-8109b82dee30
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Cihan Ozakca <cozakca@outlook.com>, 
- stable@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1581; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=QY/+VOMB3hjC1vh3UgKqUkYoH3CgOEIg2LM7M9goxTg=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmeX1tS5TbMX3dMcD7b0h3le21rSh/NPvSglsuovU+3f
- O3sn7/WdZSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBEbnox/BVPf/2oZcWrbdMu
- vuJ6NUHt6Ul/tyJuW4OzueILDs/S1ddh+B+7MMTkfmzab49lxVsNk9S4/Py+L2jcMek1Z7P0z5p
- 7GzgB
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610205817.3912944-2-superm1@kernel.org>
 
-This reverts commit 5ff79cabb23a2f14d2ed29e9596aec908905a0e6.
+Hi Mario,
 
-Although the Alienware m16 R1 AMD model supports G-Mode, it actually has
-a lower power ceiling than plain "performance" profile, which results in
-lower performance.
+On Tue, Jun 10, 2025 at 03:58:17PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> loongarch and mips both support hardware that uses the i2c-piix4 driver.
+> It should not be restricted to x86, so drop the x86 dependency.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Closes: https://lore.kernel.org/all/CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com/
+> Fixes: 7e173eb82ae97175 ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/i2c/busses/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 48c5ab8320090..3be623735ca8a 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -200,7 +200,7 @@ config I2C_ISMT
+>  
+>  config I2C_PIIX4
+>  	tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+> -	depends on PCI && HAS_IOPORT && X86
+> +	depends on PCI && HAS_IOPORT
 
-Reported-by: Cihan Ozakca <cozakca@outlook.com>
-Cc: stable@vger.kernel.org # 6.15.x
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-Hi all,
+mmmhhh... OK.
 
-Contrary to (my) intuition, imitating Windows behavior actually results
-in LOWER performance.
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
-I was having second thoughts about this revert because users will notice
-that "performance" not longer turns on the G-Mode key found in this
-laptop. Some users may think this is actually a regression, but IMO
-lower performance is worse.
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Andi
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index c42f9228b0b255fe962b735ac96486824e83945f..20ec122a9fe0571a1ecd2ccf630615564ab30481 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -119,7 +119,7 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m16 R1 AMD"),
- 		},
--		.driver_data = &g_series_quirks,
-+		.driver_data = &generic_quirks,
- 	},
- 	{
- 		.ident = "Alienware m16 R2",
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250611-m16-rev-8109b82dee30
--- 
- ~ Kurt
-
+>  	select I2C_SMBUS
+>  	help
+>  	  If you say yes to this option, support will be included for the Intel
+> -- 
+> 2.43.0
+> 
