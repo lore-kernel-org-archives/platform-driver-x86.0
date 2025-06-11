@@ -1,121 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498632045B5;
-	Wed, 11 Jun 2025 05:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68822253F3
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jun 2025 06:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749618537; cv=none; b=H+48nv2wpN7mBWJOe/ObEA7FvOI5gq29t6HGFmWO1U8YTV9/85xRSC5YlVn2YQmQ0iNjn1bEncnmyhazbeLpoGM8gE8d4eA9EkqcOIOyYcI+yOaK+GzPfM/n8PuCyguJNBzE5rG9wdUtLt+siYCKhXjWgwv3BLjoHXR3mayfoMM=
+	t=1749622246; cv=none; b=eLRzNVvwA7liwAUut0H7EdAwVz/msCnDFA7jKkVpe2IqjGZXpymTw1ErSuNfBw6SFiEfU9p8yrn/7xUaSNppiWPKpMCekn4diAt9KWAvvxOPxOC0X07HJKH7kH3TvQZvZ3fW1g1JlyTKNbKtVKy2pRzwetYc5QbAJvQbTlcFZDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749618537; c=relaxed/simple;
-	bh=6nuA4xEX7lOYOpAa4aR6XpGyHElF5bswh33ac9+B1OI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AeElfkYzXplMNheY/jQLNsAgl+1NAR20yXSzLkYTEN1xcBJ9+DJv6eIPo3p3yYLE6r0WCsXLQ4Ir0HaOAnNGZc/zwJIpqeK1a9ENEsM6U1/nDVMtKq0xlv1NnD7q8Cr4+78+Np3fbvAEZ3BY8tkde8RNs3AXkNEaMk1dO7iKB+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HzOJfsEx; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749622246; c=relaxed/simple;
+	bh=BE+mGOyahaT9r6ZdTZ3GOhAGIxoFT78r9UDxCzbA4W4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sXsPfFx8IpM6qMYdPqT0fgrFwCBweoF0Vk0gzTyfAuCaUMcv0GfLU7AkYGwGBBbsYyi3aJM2fXMJqXD7MdwcjcnNckDxBSXIEi3We/ODtmM0qJjNuYOegS1gsDJPVcWDWtnafFzu5ZEuqxi8w4ZHyaTkos2SdMYDOZc5xm+4WWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=du+0iKgD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HzOJfsEx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749618536; x=1781154536;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6nuA4xEX7lOYOpAa4aR6XpGyHElF5bswh33ac9+B1OI=;
-  b=HzOJfsExL8jv1UMRDVlYts8B1Ba4Wm7ZWZRrlwsA9GPrnHQXQaFFHUmv
-   lgmCm+Jc6Mia1srivg5hRzgOkuxd115nShyrcl2rCwKRX+6PQmzdgvtZE
-   Skya0Z39MJpbCS/8wQpwCxGpoqHpNGIMHI+OyG/cr87WW3G6j81yvV9Pd
-   fmwIEzdzCzGjAayQHemJbDy863lBtPaUzOy+ThHhG1NZAJcmUCmSPVnAq
-   DaH8P3WyZsOTtqiGOO187ehYYT1TtARkVJScoTNCnaLk7PqIHJqhrkhpr
-   nKl3tlJchRDTQMrTghEAEy8XCqOgOVgrrMVZJXTFchwvnoaRzE9D4kXc6
-   A==;
-X-CSE-ConnectionGUID: MO13LiIhQI2w5B1ytZRh2w==
-X-CSE-MsgGUID: lAFPgC0/S1qkZ3a93blp6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51459311"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="51459311"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 22:08:55 -0700
-X-CSE-ConnectionGUID: 5KUD7XQaS7+3OlBQTv1j5Q==
-X-CSE-MsgGUID: AcDGY8xxS9i5baqZmzg1dA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="151943277"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 10 Jun 2025 22:08:51 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPDhg-000A1E-1l;
-	Wed, 11 Jun 2025 05:08:48 +0000
-Date: Wed, 11 Jun 2025 13:07:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] platform/x86: silicom: remove unnecessary GPIO line
- direction check
-Message-ID: <202506111214.mbG7aOVD-lkp@intel.com>
-References: <20250610144935.84375-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="du+0iKgD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 463EEC4CEF4
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Jun 2025 06:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749622245;
+	bh=BE+mGOyahaT9r6ZdTZ3GOhAGIxoFT78r9UDxCzbA4W4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=du+0iKgDbJFGKMYCGHK3wiDB9ii+OfUmNDMk9DueoK5Nx2k1vF27LXSwwE9lF0C61
+	 VhwzUo+i1/NR3P7UjHclBPLkSKFMwD2tP0RRgKDMWO71LxqG30ZYzOi6/bA6Ee1Z/8
+	 Q3bQTbAWi2Wouf1Pfl2DYvSvGeEBjesiUA63xgtIj+UhJm46JsKm+thuNbjgJVY+mo
+	 ifb/kTVvj/4x8+TLIzfoAfO7Qw2qm+7EqiMjs/9l4Yx44S43OeKwAjA0SWvymf7g4e
+	 ccIGjfSjjltdsf8UrEp2PmiQQYcrOTNLGQ/PlrkcWfkj5P7aF7q+nOKW1nwxLcAYS4
+	 9IFIoirHKq/1A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 3E717C41612; Wed, 11 Jun 2025 06:10:45 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
+Date: Wed, 11 Jun 2025 06:10:44 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Input Devices
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ein4rth@gmail.com
+X-Bugzilla-Status: ASSIGNED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_input-devices@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220116-215701-UzlgFAeFI1@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
+References: <bug-220116-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610144935.84375-1-brgl@bgdev.pl>
 
-Hi Bartosz,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
 
-kernel test robot noticed the following build warnings:
+--- Comment #25 from raoul (ein4rth@gmail.com) ---
+I haven't heard from the linux-input devs, but PCSpecialist replied they do=
+n't
+care about Linux, so no chance for a bios fix. This keyboard also seems to
+cause issues like lag after a while while I'm typing, but I couldn't find a=
+ny
+message in dmesg except for those ACPI errors.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc1 next-20250610]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Anyway - since disabling the wakeup fixed suspend with a consistent 88%
+hardware sleep, I guess defaulting i8042 to disabled for this hardware coul=
+d be
+a good idea. I noticed other manufacturers share the same hardware (usually
+Tuxedo and others release theirs after PCSpecialist), so maybe they're goin=
+g to
+find a fix in the future.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/platform-x86-silicom-remove-unnecessary-GPIO-line-direction-check/20250610-225049
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250610144935.84375-1-brgl%40bgdev.pl
-patch subject: [PATCH] platform/x86: silicom: remove unnecessary GPIO line direction check
-config: x86_64-buildonly-randconfig-001-20250611 (https://download.01.org/0day-ci/archive/20250611/202506111214.mbG7aOVD-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250611/202506111214.mbG7aOVD-lkp@intel.com/reproduce)
+Thanks again, Mario.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506111214.mbG7aOVD-lkp@intel.com/
+--=20
+You may reply to this email to add a comment.
 
-All warnings (new ones prefixed by >>):
-
-   drivers/platform/x86/silicom-platform.c: In function 'silicom_gpio_set':
->> drivers/platform/x86/silicom-platform.c:251:13: warning: unused variable 'direction' [-Wunused-variable]
-     251 |         int direction = silicom_gpio_get_direction(gc, offset);
-         |             ^~~~~~~~~
-
-
-vim +/direction +251 drivers/platform/x86/silicom-platform.c
-
-d9cd21d441c8c7 Henry Shi           2023-11-24  247  
-88f67f2a99f061 Bartosz Golaszewski 2025-04-08  248  static int silicom_gpio_set(struct gpio_chip *gc, unsigned int offset,
-d9cd21d441c8c7 Henry Shi           2023-11-24  249  			    int value)
-d9cd21d441c8c7 Henry Shi           2023-11-24  250  {
-d9cd21d441c8c7 Henry Shi           2023-11-24 @251  	int direction = silicom_gpio_get_direction(gc, offset);
-d9cd21d441c8c7 Henry Shi           2023-11-24  252  	u8 *channels = gpiochip_get_data(gc);
-d9cd21d441c8c7 Henry Shi           2023-11-24  253  	int channel = channels[offset];
-d9cd21d441c8c7 Henry Shi           2023-11-24  254  
-890a48ca7b0540 Dan Carpenter       2024-01-12  255  	silicom_mec_port_set(channel, !value);
-88f67f2a99f061 Bartosz Golaszewski 2025-04-08  256  
-88f67f2a99f061 Bartosz Golaszewski 2025-04-08  257  	return 0;
-d9cd21d441c8c7 Henry Shi           2023-11-24  258  }
-d9cd21d441c8c7 Henry Shi           2023-11-24  259  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.=
