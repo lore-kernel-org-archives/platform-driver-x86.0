@@ -1,113 +1,140 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A386342
-	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jun 2025 07:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787292153CB;
+	Thu, 12 Jun 2025 08:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714526; cv=none; b=WSjwGQwqHGyp/p0O+3gMBIBl7XwDMCV34ykq/SsYJLyZ1tlx8Y59Bf83LD/kjvwWkA3FTUNdUWBuBrlbAZlHAlJzCaSbbw9BYNH5VII6LKoDtdzkV09y5kNIS6cqR87Wx2zlW9bw5oZ9J3o+fKxmigwvigAzcGtXF2Esu6SbO7c=
+	t=1749717396; cv=none; b=YzzAvT7ayn5TQ63YDUOLrvXNsMAd+2p2qSOLgUG4R8u/Y0bZSsSYupML5Cm6uWY16gvJn8Ju1WI90Xe8/fEUn8jMRKDyF7p+VTJKmns4tCDDGsR5IOObdcjFHUQ9PqKDdibLcXw9pi45ySuRaRplZeMKTbjTW0RqdA/MrkLcqHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714526; c=relaxed/simple;
-	bh=WkPpAAZN6wiya3x1lfspsnoQ69Jw3+KU8DkWcXoaPlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=naEQXmKs4OpvnoiVUNgPy2j4qiWXIUHoPQHYIC6UnNLgTUeUIaRf9lJM62sRwTKfM9V+iTNZLU8v3SgioVbtRnY6/pdRbUoyxnItvCSmbM+aCo2VnoeFDnb6K+g+7+3foTrbXR5Inx4Gj/EkyvemYNySEQUrTpdl9zyqC5dFFpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SBXydNzh; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749717396; c=relaxed/simple;
+	bh=sVgJ8qvJ2VSa38WpIG5GekK+tQbN3qtzWBhqiJ6QI6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nZyHPCTvScYD8hUTdpJ5rhdb6+PtSaErDDU+HCGRWxoU1WGPNt9KcLG0PJsNspENwWKkGfjZXG94cMztF4nnkdNCfOFtvWnpWt+cnqDBfXDdGil7YmRYA+TJFeoCw5zIurevERM1PP4G7X0WOOhOpp2p/ZwwBOeHDfrxAfi/iSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poeKPkkw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SBXydNzh"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4531e146a24so3716335e9.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Jun 2025 00:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749714522; x=1750319322; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M6kbazs5dYqqqHnTBGLekJlCVKFOup+/Gt2I17JMQJg=;
-        b=SBXydNzhC5rByHXbAmTjGEC5yQTWwG73guwr7CDgfwJinOEfHKc/Byj4ahndCwvnD7
-         trRvZa9kXh6o0TV9ICEmq6ZRQ6Ilf9bbt0abnz4ZGf/mbr4EtJbsOa8HtGrtFx5kAVEO
-         mRq+zJGBiec6yqlgubRB7pB65f8GbIfQ86byO8HwhCKLllZnqw5Jrjjcm3ZmSwXZ4hVF
-         NmCDJ4x5Kkx2zYuC4s76xC156I4vEuIXjszDtSpqZjgpEYfsxwc/FHAKaGPEH85xRRDM
-         tFLSLe6gH5nfJ6Ml9lnpmkUiSHT8g/O/C6gEvV8/fFRIVYyGjJBNT18oMWwY2nIy8jUz
-         pmFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714522; x=1750319322;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M6kbazs5dYqqqHnTBGLekJlCVKFOup+/Gt2I17JMQJg=;
-        b=EcCo42S8GUcYO9cPRvbNoyMRKeU2JfDVoNqg8SA3M3SYnAgPXfreig7IeJKnOVgpOI
-         6ZHFT8kgZ/XegX5DM3wK7NgnwSyp0QsXLQXz8nHGh6HmVlNQbDwbvJkvdSD3M8PtX4KY
-         2hzh5z4xBv6PLX8IAjJJ+wODX5cbk5P8m7LXpx6gDw7qLIa+fTE2hZTp3nwBA8UqrxpS
-         K1A+Z0pBrXu5oaJ7K6RqmLTo37316+UXWvOKJjt/lNjGH8aGYSO5Mg7eFCUvF6IlEdH7
-         lynmOCJoXskqULQ9/ZWqNnN5TAABO6NjcBBD+8fFB7E/RlaOZDuqGphp29SpFdlU/jdn
-         2aPQ==
-X-Gm-Message-State: AOJu0YxfD0YnhG1WutVl3K+DhnsBU6gghmkhApyRqqPlFFHyKheeCeyc
-	MlH5KMDgtOJn4ZRUIZdiLpje1Zp7AAxR4Jscj/YmJS89z2IQQqhmNZR9f7i8exm14gP6IvDqKf9
-	5U/blrXM=
-X-Gm-Gg: ASbGncu/bgLNwb2ox+7mvMerR3jeA/md5Xg/B4jubHRt+rpx7MzoxW1W7SsVglLPBkE
-	OIDMOeKrFyB+F6Oy2ItXPngvf2bprmBjz3GWiBJYf3quoS4O8dr00pZOwLLI4SQIdJZ4gAYPDuT
-	exmWavc8yyBr/VL0Kl1ROyzWLgP/b56K1J1LvoDJHlRfZvqxt1lYDLYCYFwkVhz+fHa120RhpBN
-	PMRaWIObKsCdPCj08fzbOhW4I6Bcll1WNDuzxVTTEneO6fJju48gpWtTwSxillx7+QhVkv34zoL
-	mvCUb8YZNP4kFev4X9JDlnp1PgjJ0fzcGUcqF2pwDdRFvXBenoJLoirC4Y7tdmwA12v3XERy+A=
-	=
-X-Google-Smtp-Source: AGHT+IGfspKVbS1RMGhdM0mqEwwSe16gt1zmT0hxrDLfPBZvEF5ETRkitqYhctrTwYTM+zUgT5aL1g==
-X-Received: by 2002:a05:600c:8587:b0:450:cabd:160 with SMTP id 5b1f17b1804b1-453249d2072mr43594245e9.3.1749714521536;
-        Thu, 12 Jun 2025 00:48:41 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8b99:9926:3892:5310])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e268de2sm11983455e9.40.2025.06.12.00.48.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:48:41 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2] platform/x86: silicom: remove unnecessary GPIO line direction check
-Date: Thu, 12 Jun 2025 09:48:35 +0200
-Message-ID: <20250612074835.13800-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poeKPkkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060B5C4CEEA;
+	Thu, 12 Jun 2025 08:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749717395;
+	bh=sVgJ8qvJ2VSa38WpIG5GekK+tQbN3qtzWBhqiJ6QI6c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=poeKPkkwG8en8DfJKEy0RCeiVCsiHOIMUXlvildhQZQOKL99w7Qq7AxVjaIQUU2jA
+	 yIWgbiOi9OVQTpeJLOQ0XBBkYsxsD1CK0F3QrnyKugdfMzZYICRXbBQO1s6sXoZHwg
+	 a+q8BR3JPf22zZWxPOlyTjo7mQa2VTt9+zeLozl+uDwHrytIoRyBYuMq8u6zap+smA
+	 DmkMAQIp0ifOwQgTAjgxr9oaFtRdQNuX9S/AbODm5PyACkhYYy1iCeL2882YdZdmQt
+	 fMy1dxD7rB/7GOndPB/R3EtVXid7fHdVOCdkjC+7KhtWNqM2hhjsn8umQWyRukRUhG
+	 C28nAsCJXlyAw==
+Message-ID: <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org>
+Date: Thu, 12 Jun 2025 10:36:31 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] Move FCH header to a location accessible by all archs
+To: Mario Limonciello <superm1@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Jean Delvare <jdelvare@suse.com>, Shyam Sundar S K
+ <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+References: <20250610205817.3912944-1-superm1@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250610205817.3912944-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
 
-As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
-lines"), the GPIO core makes sure values cannot be set on input lines.
-Remove the unnecessary check.
+On 10-Jun-25 10:58 PM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> A new header fch.h was created to store registers used by different AMD
+> drivers.  This header was included by i2c-piix4 in
+> commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
+> definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
+> archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
+> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
+> This was not a good decision because loongarch and mips both actually
+> support i2c-piix4 and set it enabled in the defconfig.
+> 
+> Move the header to a location accessible by all architectures.
+> 
+> Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Changes in v2:
-- remove the now unused variable
+Thanks, patch looks good to me:
 
- drivers/platform/x86/silicom-platform.c | 4 ----
- 1 file changed, 4 deletions(-)
+Reviewed-by: Hans de Goede <hansg@kernel.org>
 
-diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-index 021f3fed197a6..63b5da410ed57 100644
---- a/drivers/platform/x86/silicom-platform.c
-+++ b/drivers/platform/x86/silicom-platform.c
-@@ -248,13 +248,9 @@ static int silicom_gpio_direction_input(struct gpio_chip *gc,
- static int silicom_gpio_set(struct gpio_chip *gc, unsigned int offset,
- 			    int value)
- {
--	int direction = silicom_gpio_get_direction(gc, offset);
- 	u8 *channels = gpiochip_get_data(gc);
- 	int channel = channels[offset];
- 
--	if (direction == GPIO_LINE_DIRECTION_IN)
--		return -EPERM;
--
- 	silicom_mec_port_set(channel, !value);
- 
- 	return 0;
--- 
-2.48.1
+Regards,
+
+Hans
+
+
+
+> ---
+>  arch/x86/kernel/cpu/amd.c                                       | 2 +-
+>  drivers/i2c/busses/i2c-piix4.c                                  | 2 +-
+>  drivers/platform/x86/amd/pmc/pmc-quirks.c                       | 2 +-
+>  .../asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h  | 0
+>  4 files changed, 3 insertions(+), 3 deletions(-)
+>  rename arch/x86/include/asm/amd/fch.h => include/linux/platform_data/x86/amd-fch.h (100%)
+> 
+> diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+> index 93da466dfe2cb..9543d5de4e7d6 100644
+> --- a/arch/x86/kernel/cpu/amd.c
+> +++ b/arch/x86/kernel/cpu/amd.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/random.h>
+>  #include <linux/topology.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  #include <asm/processor.h>
+>  #include <asm/apic.h>
+>  #include <asm/cacheinfo.h>
+> diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+> index 9d3a4dc2bd60c..ac3bb550303fe 100644
+> --- a/drivers/i2c/busses/i2c-piix4.c
+> +++ b/drivers/i2c/busses/i2c-piix4.c
+> @@ -34,7 +34,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/acpi.h>
+>  #include <linux/io.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  
+>  #include "i2c-piix4.h"
+>  
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index 5c7c01f66cde0..6648fe0dce537 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -11,7 +11,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> -#include <asm/amd/fch.h>
+> +#include <linux/platform_data/x86/amd-fch.h>
+>  
+>  #include "pmc.h"
+>  
+> diff --git a/arch/x86/include/asm/amd/fch.h b/include/linux/platform_data/x86/amd-fch.h
+> similarity index 100%
+> rename from arch/x86/include/asm/amd/fch.h
+> rename to include/linux/platform_data/x86/amd-fch.h
 
