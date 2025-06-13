@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C1585C5E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 13:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2524A29
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 13:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749819801; cv=none; b=RcVNonJZMjypeNRoa7VB5aVw/pbOQ8GN38cDyOnF3GH9vW9BKhlNx03neAol94RjLHowMcf4BZjYWeEUz/lp9tmvFCkfgjyjDRGWb2+cpRvCTc/SyJU5kbj4qBq7FWNgs9efOeWlgNdZTx97HV6+9/Su4IxiuLkzWvYMc2g6+UQ=
+	t=1749819843; cv=none; b=UJN9UcwsmNfVv5L8zBO+SLxQcndaIhdeBcerQEBwdSCEiP3Ae/8ChmWhGyJZPUC3/W0Yyl32VnHpl/D+IzgJYgGLFBqJ1wbCb7Vc/A6urRZOjnrWySLPZlcmei2u2X0hknzlj4FxUwf3iAAbEe7UvIz7o0TVYxjHrDgNN9Ab054=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749819801; c=relaxed/simple;
-	bh=Mbq9U56Gyc3ZPynY8sKa40Jh+7dBx3eQ3XA/y5/a3aQ=;
+	s=arc-20240116; t=1749819843; c=relaxed/simple;
+	bh=7Fl4HtPQ/xPOck0reh3S3vd1ePwWQCI3yA1YpDTGhtM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DQwmJv2YH5EQGhxRYIb4UJvsViFLMGpSJJGsh2+OzkE6wPfxjjTOcECwoLgO4wt7UnE4iZdPH0KelzZzlzb/mKg09r+L6q6fxfZtVPL3LUKkVUJvMm9AtJUVYeqcs2+L8Z2E5jEOd2c/xD6VISRrFIUvvp1OLl9DMo0kYAAbASY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyRTTBie; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Fif2P2X6Sk0G9OYJg72HE0doA2Z8Wu63tgUxEcaiAUCJMcKas4txl7ELd82sFwed2XLwgva/ebAxZDHWwq1cg5ndSUX4hBG0qRMKUSY8X2AcDCTQoSwRllyPbCu2TMbAil4+hXCECLE0AjL0axbZ8iV7cqIBs5e+v579w3yoF2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgcxZ8//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyRTTBie"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96D69C4CEEF
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 13:03:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgcxZ8//"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D175CC4CEEF
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 13:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749819800;
-	bh=Mbq9U56Gyc3ZPynY8sKa40Jh+7dBx3eQ3XA/y5/a3aQ=;
+	s=k20201202; t=1749819842;
+	bh=7Fl4HtPQ/xPOck0reh3S3vd1ePwWQCI3yA1YpDTGhtM=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=eyRTTBieLW8C4pZv+foGnR15PhNG330glQMudmK7iQINu7qglUEmiRHqj7Z3AvpR/
-	 XsVzXFYPd3pjUHK2Y6C/ITphROd4GZsPx/hYtxqMNbR3KhYkGJ4hc5SNhGzb0XEpAe
-	 v9NYztez4oREFBd9YOhZnZbSXovNl1GyqSQbuzhRsE3VXPjU6TZLPNwImOeWN+FEp+
-	 ndlzElaw8rs13Ww+QxHDptg7augeTy3ajxgiBvGH0UBaDynesOygmkegOFY50BWCVx
-	 d9P0ic5yxWdMwvnKCZxpA34Fa24jBRB/f6osFppjZI06CijnsrCGe7CsH10sagjkWV
-	 zl1fd4ELgjn+g==
+	b=hgcxZ8//vt2SaT8JH8Mv3wxdDa+oP5Msy13baT+b34NOZzZn/DZ6KAZTmBU8322Da
+	 ykAt6L/0RvYGL8hafNbypwrcrDBnCHg3MqbOo6HGf9uB+n16S1hz8iu7bfcnfnmHr0
+	 10Pxmw5hAVHzSS8pYokJIrJ1bOWC2FG1O0Ff3e6okLCYvm/fqlk1tsy80TaAEmnFwK
+	 lHxnrPHy0tAzh6Mpihn1L9x7hwphZAqDw1DxnjBjZx77fmtuDG/RTPUEJF0J0t8Vu3
+	 bnTxYiTs1+/YbVJndoOzl7Bf/rmnkAZsk/omj6+Z1drtMoYRSW5+an0o/5FACXZHY1
+	 NfUR2+upvCWIQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 8E52BC41612; Fri, 13 Jun 2025 13:03:20 +0000 (UTC)
+	id CAB09C41612; Fri, 13 Jun 2025 13:04:02 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220224] Kernel 6.15 causes crash (general protection fault) due
  to amd_sfh module
-Date: Fri, 13 Jun 2025 13:03:20 +0000
+Date: Fri, 13 Jun 2025 13:04:02 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-220224-215701-f7IyHBZBRc@https.bugzilla.kernel.org/>
+Message-ID: <bug-220224-215701-WXzKCQSVsW@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220224-215701@https.bugzilla.kernel.org/>
 References: <bug-220224-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220224
 
---- Comment #11 from g.molinaro@linuxmail.org ---
-Created attachment 308245
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308245&action=3Dedit
-Output of dmesg for 6.15.2 arch
+--- Comment #12 from g.molinaro@linuxmail.org ---
+Created attachment 308246
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308246&action=3Dedit
+Output of dmesg -S for 6.15.2-arch
 
 --=20
 You may reply to this email to add a comment.
