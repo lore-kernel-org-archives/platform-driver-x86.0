@@ -1,89 +1,87 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BAC26B774;
-	Fri, 13 Jun 2025 08:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E474B2DA77F;
+	Fri, 13 Jun 2025 08:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749803184; cv=none; b=hV8FdKC7fpH5vB66os8OPH6Rk2kwda9v1YhG4+gt6dTP9K9GW3aVnYAnNjo5UD+3K7AQ6Z7F0ApYJeTc90006q7H2QGg9unUiLXPTj8azuK3kWwY9fDh0MZueYV4v5QyHHDnN5DQbT7M0zVEuVQlUdXUy12aPQ5KcrQAo7EZIqY=
+	t=1749804503; cv=none; b=cMbOCHCB9W3B0T3IYgQ/9S6x1uwb2bORVRPFQ/LTWshprTQl7agDG/YUOkJzhMfn8eueNWJa4o8NISc4cxamKRNKSrhQ0QGEhzC0CCakXNcR/jk9wcMxuox5FsVlZQPypOKY8yRE1w4jIOtsSmB2XHhRk9GtXkFDe+9UVLFTC+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749803184; c=relaxed/simple;
-	bh=ZHfesctzgFNOrFtmn+aXJup7a3ssdaH492fgBMdVnlE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cUm/l+kv7OHvBdP3GafzqZOMsJtXn9ks739GSP200HRops+tNRW7cuPJkZtDEW81xlpSrk0m3tdBqjSow3AGxDF87C1Qkq+oZecc3NGzRHZ2uTYu4F1aF0ZpfrbnMScRDvhabRYC7+NVYIeoQI0NkQ6dCVKD6Df4y9Qo30fLfUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LZl7Ozvt; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1749804503; c=relaxed/simple;
+	bh=PjS8zzwBErJ5XZsMyktKp4mX9z2fWJ7QaMUytAfCx68=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mHNSMgTUdPNjUkaFAC478uaFHVObgKb2vMmaPIHGJh1+/69tA33Bf7ZvK/Did2i1rLAtUr0dr+tQFdSBNMWx8IukG0ie+3D7aboFuVpDGj/WZuGy/wIte0BU7LmjnWeQUv1RcYEA+0zlaZZ2FvP/PCj7TrTcKi5yVKSGcmWDxl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EykgHarO; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LZl7Ozvt"
-Received: from canonical.com (1.general.ivanhu.uk.vpn [10.172.194.164])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 82D5B3FAEC;
-	Fri, 13 Jun 2025 08:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1749803179;
-	bh=d/pzoPC2lfC8W0PA9XL09cFHVO8DAv+BBjkHc2wSDhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=LZl7Ozvt/b76Wn+QIB3OyfFzxAMUfZMhBrXfE4ekP0mcbBe0FRXvHK2JveQx5hVnY
-	 yLKgTcYcIn1ute17pUv86lWuCO9tdfEaiMXVviuqIKDlxKTC1TiaeHzPvqp/B+ndoF
-	 laaduu36+eTERwJ/9WS8Su6+Wqxl9VFlqpSjrrxmxJnyMeYeP/HDBQOLJRe4zpZKBr
-	 dzItl6+sCYwu3Gao78Ca+q5k/P/3gfK60LPHR/XXCn6AtvHEFRS5maal/6F78/+9yj
-	 mkpxjW29HpVRltSkiPtKhkbsLtVkbJWAVONeVJF5TpLjwkQJCR/1wiImiSr90rHpM4
-	 OFBoAdbE6IiQg==
-From: Ivan Hu <ivan.hu@canonical.com>
-To: hdegoede@redhat.com,
-	jesse.huang@portwell.com.tw,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ivan.hu@canonical.com
-Subject: [PATCH] platform/x86: portwell-ec: Move watchdog device under correct platform hierarchy
-Date: Fri, 13 Jun 2025 16:26:14 +0800
-Message-Id: <20250613082614.28929-1-ivan.hu@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EykgHarO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749804502; x=1781340502;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=PjS8zzwBErJ5XZsMyktKp4mX9z2fWJ7QaMUytAfCx68=;
+  b=EykgHarO/HxQI8TYPTkFJKmTALj5pAlsRrYSyT9pxSAbu3xPVzVCumxh
+   K2OGQ1Kj3IX87rYaXthTNblQFVLDQDCXpjO9iBpH1YEPphj2qyJsgPIBY
+   EUPRHPgNkVDqNgdQHRuW6qtUHwPJJKsPWs5UYkYwDeg4Zd6fI2+zWSS1E
+   yH1Yms+V+t1EwzmVdNK2f4QNi8lYbzu1HJj65bONC1JMg2hZy0X8WiaA0
+   5qBW2RMWCsX2cfSYvuIMPd6QawhGpgWUR9ofwIFcFxMEjHbsPW5XFU4Hx
+   mmBybGFU7hMv2flNggN/pC0jfFiwn18nNbHYLU3vLCYAJlQxJy10/e4QQ
+   Q==;
+X-CSE-ConnectionGUID: FBrB2gLoQI6h3lqm6J3muQ==
+X-CSE-MsgGUID: uSZt///BT26aVABBx9abDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="51993202"
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="51993202"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:21 -0700
+X-CSE-ConnectionGUID: Gc0sCCM2RtO3reCsvYG3NA==
+X-CSE-MsgGUID: nICVCTpXRo+Y/Ah2jw0t1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
+   d="scan'208";a="148659566"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 01:48:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <20250610230416.622970-1-xi.pardee@linux.intel.com>
+References: <20250610230416.622970-1-xi.pardee@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/pmc: Add Lunar Lake support to
+ Intel PMC SSRAM Telemetry
+Message-Id: <174980449349.1640.10907164330928365040.b4-ty@linux.intel.com>
+Date: Fri, 13 Jun 2025 11:48:13 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Without explicitly setting a parent for the watchdog device, the device is
-registered with a NULL parent. This causes device_add() (called internally
-by devm_watchdog_register_device()) to register the device under
-/sys/devices/virtual, since no parent is provided. The result is:
+On Tue, 10 Jun 2025 16:04:06 -0700, Xi Pardee wrote:
 
-DEVPATH=/devices/virtual/watchdog/watchdog0
+> Add Lunar Lake support to Intel PMC SSRAM Telemetry driver.
+> 
+> 
 
-To fix this, assign &pdev->dev as the parent of the watchdog device before
-calling devm_watchdog_register_device(). This ensures the device is
-associated with the Portwell EC platform device and placed correctly in
-sysfs as:
 
-DEVPATH=/devices/platform/portwell-ec/watchdog/watchdog0
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-This aligns the device hierarchy with expectations and avoids misplacement
-under the virtual class.
+The list of commits applied:
+[1/2] platform/x86/intel/pmc: Add Lunar Lake support to Intel PMC SSRAM Telemetry
+      commit: 2d5a84c3ecc075d87bcb16c1cc80277b5837c153
+[2/2] platform/x86/intel/pmc: Add Panther Lake support to Intel PMC SSRAM Telemetry
+      commit: be574d5eee9808a422cff0293da9b08c0e434ed0
 
-Signed-off-by: Ivan Hu <ivan.hu@canonical.com>
----
- drivers/platform/x86/portwell-ec.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-index 8b788822237b..3e019c51913e 100644
---- a/drivers/platform/x86/portwell-ec.c
-+++ b/drivers/platform/x86/portwell-ec.c
-@@ -236,6 +236,7 @@ static int pwec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ec_wdt_dev.parent = &pdev->dev;
- 	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
--- 
-2.34.1
+--
+ i.
 
