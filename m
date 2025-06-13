@@ -1,91 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA862D23B2;
-	Fri, 13 Jun 2025 10:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA122D8775
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 10:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749809713; cv=none; b=TTCCN1cH0x1oi6c3Fzv4768hdXvJVe1RQoAOTK0aMEEldv4NHjUuxxGo68MZHFYws7AoBgeRDFVCAtxThrNbgWKX2+8uY+WOvRD8UxdXuHUyX94dEkB3t1LkanXNtnp6r71F3e7vXN4G/hzrLrXYzs+boxEIXkQGGP1aVq702VA=
+	t=1749811214; cv=none; b=oN6qbjVn88iJEJRYo+1T9O1IQHM5iNcphJbi7oHxDMSWvMr/DPNvPA+7hS43dyoCpOiyr99Vt95G2ZmvhfTXaeQrUjm3sjEK+CEr6oZm7DYFCmje5EmY10aaHFW/uOeVnJVtfBKKd0woYuogVJpakiJyr8Zn4Qj0NKXvYUV18eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749809713; c=relaxed/simple;
-	bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ip4d1I7p63jRK/efvmxap2BvrLg7Ibi491loqy9VnGLLrVDjAai2AfA4/qlgRoQ7LvgN3pDpjrK9JHKSe9FkAQLuJsIBSHoZffkIJzXaOgKB/ljmaWj8e5JUbqxI8FM2Iidm6QXrUTTG+4ji6nfK2syCAkqzkq/YB5yi55pZzQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pi0t6+BN; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749811214; c=relaxed/simple;
+	bh=rpqwhVydMrPStcidCMWu6FCitPz5meTjLgmFeHCYnRM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SYKcxq8TV07nAdd+7q9KjK7Kia6YaOnejYmK7B2kp4DMCW3du8cNLE3GzoWm6gG5Htx2+xjsrsb6VWZkze1+QQYh6nko11Zsst+sdTY9hjpyx3U2sSWPtu2v6sfD63fzYrWcK2xQaOaefyYMVeFONP42mVEDdH9tG+VE+8MAHik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOMyGwew; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pi0t6+BN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749809712; x=1781345712;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Mmx2wiHujPu/dQ2+A7mZP3qk4H3KDRZF79BQL/Bhfx0=;
-  b=Pi0t6+BN5QbZKy0c+V8aRc6gTaw3m6txMA1Me76F0L//94c16nW4v8Rp
-   FUBSPCfWRuKmmk9ondUcJ9l7xJVvwFqJ4K3ZUTo6r1REj/DYXa2sAK1Ic
-   isnE0ZS3mdwFKcMjnlhDUAhZyJdTxkOsATfTDlRjokUDHcZMabPB9BsXc
-   0nxFl6A761IGcratxh/qBPMUm99xN+EdwyuC+V094og5GExnf9uzHGcKs
-   5f+M3qiOd0+IodJWVE0AAy6Ar5SvwEVg1OTDB6fJ6n0SU28UMaWTeeA7T
-   Ve4vp6k9YBxN9Neu7w8Rt7t8WmGq83+cyDA3HfhPVzJBPCK0aV+j26EHM
-   A==;
-X-CSE-ConnectionGUID: dY4/PBCtThyLyggm1nHXaw==
-X-CSE-MsgGUID: 4qeVeGCtQ3eWG8CMORz7ZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="69595223"
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="69595223"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:11 -0700
-X-CSE-ConnectionGUID: fM9L2VxHQGKMqkw/wYZJbQ==
-X-CSE-MsgGUID: vM/HAJK6TtecF+C6VezkBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,233,1744095600"; 
-   d="scan'208";a="147635800"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.102])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 03:15:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dell.Client.Kernel@dell.com, jithu.joseph@intel.com, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, corbet@lwn.net, 
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250610055526.23688-1-W_Armin@gmx.de>
-References: <20250610055526.23688-1-W_Armin@gmx.de>
-Subject: Re: [PATCH 1/2] Documentation: ABI: Update WMI device paths in ABI
- docs
-Message-Id: <174980970219.26331.6171635150526759589.b4-ty@linux.intel.com>
-Date: Fri, 13 Jun 2025 13:15:02 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOMyGwew"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3BAA7C4CEF0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Jun 2025 10:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749811214;
+	bh=rpqwhVydMrPStcidCMWu6FCitPz5meTjLgmFeHCYnRM=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=gOMyGwew3aEk2eoj2YG6xXkdC3jNgc+NCCZKTlGMiLyrgFMiXxedUpDIYCTbJniJN
+	 5pn7joWpbYg96QlujSEpi88vPY59a6wnSlzHAEgEJW9E0KLQymvJ93+JQRzBigAyOs
+	 QM9woHUxHWsxv+P/6v6arBefSfwHehVWgJTJ3v95o1zlL2M2GXsY2OaEH3v5n1rpfs
+	 DjeAKnVFXg0OcLAWqevD1mrV+sVqjfWWezVUrxHuIKTJpO4e4wRBdsM0sU1+x70fl5
+	 RgQ6puutCbnCTv4w5wytpBnXTP+yxrICARxpk+Fy9v6PaQn24WIwR3wkZE0jVf9UB1
+	 xSfNBzChE+nUA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 30FCFC41612; Fri, 13 Jun 2025 10:40:14 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220224] Kernel 6.15 causes crash (general protection fault) due
+ to amd_sfh module
+Date: Fri, 13 Jun 2025 10:40:14 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: g.molinaro@linuxmail.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220224-215701-NIwUBaLYAm@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220224-215701@https.bugzilla.kernel.org/>
+References: <bug-220224-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
-On Tue, 10 Jun 2025 07:55:25 +0200, Armin Wolf wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220224
 
-> The WMI driver core might append an ID to the WMI device name to avoid
-> name collisions in case multiple WMI devices with the same GUID are
-> present. Update all sysfs path referring to WMI devices to inform
-> users about this important detail.
-> 
-> 
+--- Comment #7 from g.molinaro@linuxmail.org ---
+I haven't compiled the kernel from source since Slackware 14, so I may need=
+ to
+refresh my memory, but I'll try to get through those commits as soon as I c=
+an.
 
+I don't know what you mean for a "more complete dmesg", the file I attached=
+ was
+made using `sudo dmesg > dmesg.txt`, if you need something different, please
+ask and I'll be happy to comply asap.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+I'll fetch the output of `journactl -k -b-1` and the contents of pstore, as
+well as any other info, after work. This is my only machine and I need it f=
+or
+my hob, so testing may take some time, sorry.
 
-The list of commits applied:
-[1/2] Documentation: ABI: Update WMI device paths in ABI docs
-      commit: c9de2e5c15cba9e9be7fd124a74b9067560d4746
-[2/2] platform/x86: wmi: Fix WMI device naming issue
-      commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+Thank you for the timely response.
 
---
- i.
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
