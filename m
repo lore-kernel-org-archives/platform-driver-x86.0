@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2515C4A33;
-	Mon, 16 Jun 2025 09:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5F1270EAB;
+	Mon, 16 Jun 2025 11:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750065695; cv=none; b=IZB9dfAwLVPjcePgHHWHXByoL/SZ9rgTnaH1kTYQBA9OCAIfXDYucqtg1/n7WW7tU3M9IzBbgMjiwwfb4gjMk+vGHZDscs1fhE0jbOpf1vUlpsFn11hCgi6x7TZLyiZUW44mrUTwlt3APmA7lZboppjRjmKlHR1N8u/zNHnMNRk=
+	t=1750072457; cv=none; b=hNnBiCgvIH1odw26yXTh5Npp27I8dd7VVnPf+XxEiH481DunvKbg88e4X2qNuZczI+ZIQah9XnsVoHs9cgN8kARRaflBneLm1Zd0RjeX+EBf3Ir1X417FRU4YNzph+krcQo4ui6ERshMvpd0aSh814f1dXhItKLWY7PE3dCMgiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750065695; c=relaxed/simple;
-	bh=F5KAkKBRvMmgLQwEQfJPDviEgn8ekPbT601F5MS3B7Y=;
+	s=arc-20240116; t=1750072457; c=relaxed/simple;
+	bh=if2NmAZEOedgGz5Ewx2SLYq6OAJLlbiOyud3CuDlCow=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AH2Rys/TS/spyxT5Fzz9z/gNCYXD02A60GheSp2hz0A26uFmO//B8aqLkPYsMvsZmrIXNlNt4BgTWSX51+tzYQjsk8TBR+r3hO4bTrVoeojpIr06fP02Zo0rg0bKPvzc3mxRlJO40V0VSGuJOBPtKiJ1Fo9Npku0Ab4Hw7h88MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzJFyXSz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QoXPktw4pnumr9tLh5vzHNzU/XFmTOWpxGY0fsF4lEegV57/PeOqNtuiSqcaR/iiK7ndUwRhqDIKf8+ldXzHGjnEc/COrjnV01RVL+ziwLqLk0l96bCbi/VTuGn5AWKQtEx6xj+VAEpjVEInAtq+cAHHe1uqujCjQSbBuyJoJ0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=aLhzHVtJ; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzJFyXSz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66219C4CEEA;
-	Mon, 16 Jun 2025 09:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750065695;
-	bh=F5KAkKBRvMmgLQwEQfJPDviEgn8ekPbT601F5MS3B7Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QzJFyXSzLIRErXwhpt1hk0RoMEQp3TuvRBXJd72O8VSI4mfde3YhLVV+tI/2yLLlm
-	 kR0FoPrwehHVfU7k3r2aqtI5Fl7bIniRQgiuLkF3+jXsF8J/LC2rf4iODNqtpIDntf
-	 b4kfmHr7UO2Mr/6CJ7dzuVDkW2QzLBBv9TTfsYArvWRYB6X39J2T7eAujBUIqjdG2d
-	 Q4vdGkbooP81JxIRdGqT2SpA2KbSxV3JywPQTFCKst8YZYCYRfKP8dEfFNuqSOM9ic
-	 9k9h+EuD8giVGWkVTNmxNBq40iDht4w4OOGTPr70a9P+uADCIMgKypaPWKdKTzvJ2F
-	 Jk/OXYf/+8eCA==
-Message-ID: <77da5151-ddbd-409f-8b48-28029a96d5d8@kernel.org>
-Date: Mon, 16 Jun 2025 11:21:26 +0200
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="aLhzHVtJ"
+Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id B35772FC0089;
+	Mon, 16 Jun 2025 13:14:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1750072443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6N5Ru2ma9ZvgG7hQ03K8lSkQi5TzLJZLJVF8eDsuPFk=;
+	b=aLhzHVtJ72+ts0GNdIspDTfMGp30NeLnPnwF5rfXjKbqcVc+uQHVEhMo6XhUTzS11g+C4Q
+	LQjsuipXHmjWY5QE0vRvemDPVY1X5wEurqCt0Afry9ZUnLc0uciMAtyT1LyvzlcTIZ+J64
+	xxcSmCj8eY/NBpKNf0oPJm3Itb6vJtQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <b22834bd-2a03-41c2-9c37-d57c0c4d2143@tuxedocomputers.com>
+Date: Mon, 16 Jun 2025 13:14:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -38,47 +44,53 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
 To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
  hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
+ ggo@tuxedocomputers.com
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  platform-driver-x86@vger.kernel.org
 References: <20250615175957.9781-1-W_Armin@gmx.de>
  <20250615175957.9781-2-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
 In-Reply-To: <20250615175957.9781-2-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 15-Jun-25 19:59, Armin Wolf wrote:
+Hi Armin,
+
+thanks for pushing this forward.
+
+Small comment below.
+
+Am 15.06.25 um 19:59 schrieb Armin Wolf:
 > Add a new driver for handling WMI events on Uniwill laptops.
 > The driver sadly cannot use the WMI GUID for autoloading since Uniwill
 > just copied it from the Windows driver example.
-> 
+>
 > The driver is reverse-engineered based on the following information:
 > - https://github.com/pobrn/qc71_laptop
 > - https://github.com/tuxedocomputers/tuxedo-drivers
 > - various OEM software
-> 
+>
 > Reported-by: cyear <chumuzero@gmail.com>
 > Closes: https://github.com/lm-sensors/lm-sensors/issues/508
 > Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  Documentation/wmi/devices/uniwill-wmi.rst  |  52 ++++++
->  MAINTAINERS                                |   8 +
->  drivers/platform/x86/Kconfig               |   2 +
->  drivers/platform/x86/Makefile              |   3 +
->  drivers/platform/x86/uniwill/Kconfig       |  32 ++++
->  drivers/platform/x86/uniwill/Makefile      |   7 +
->  drivers/platform/x86/uniwill/uniwill-wmi.c | 177 +++++++++++++++++++++
->  drivers/platform/x86/uniwill/uniwill-wmi.h | 122 ++++++++++++++
->  8 files changed, 403 insertions(+)
->  create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
->  create mode 100644 drivers/platform/x86/uniwill/Kconfig
->  create mode 100644 drivers/platform/x86/uniwill/Makefile
->  create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
->  create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
-> 
+>   Documentation/wmi/devices/uniwill-wmi.rst  |  52 ++++++
+>   MAINTAINERS                                |   8 +
+>   drivers/platform/x86/Kconfig               |   2 +
+>   drivers/platform/x86/Makefile              |   3 +
+>   drivers/platform/x86/uniwill/Kconfig       |  32 ++++
+>   drivers/platform/x86/uniwill/Makefile      |   7 +
+>   drivers/platform/x86/uniwill/uniwill-wmi.c | 177 +++++++++++++++++++++
+>   drivers/platform/x86/uniwill/uniwill-wmi.h | 122 ++++++++++++++
+>   8 files changed, 403 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/uniwill-wmi.rst
+>   create mode 100644 drivers/platform/x86/uniwill/Kconfig
+>   create mode 100644 drivers/platform/x86/uniwill/Makefile
+>   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.c
+>   create mode 100644 drivers/platform/x86/uniwill/uniwill-wmi.h
+>
 > diff --git a/Documentation/wmi/devices/uniwill-wmi.rst b/Documentation/wmi/devices/uniwill-wmi.rst
 > new file mode 100644
 > index 000000000000..232fa8349611
@@ -137,14 +149,24 @@ On 15-Jun-25 19:59, Armin Wolf wrote:
 > +The same is true for Tuxedo Computers, which developed the
 > +`tuxedo-drivers <https://github.com/tuxedocomputers/tuxedo-drivers>`_ package which also served as
 > +a foundation for this driver.
+
+The main repo is actually the one on gitlab: 
+https://gitlab.com/tuxedocomputers/development/packages/tuxedo-drivers
+
+The Github one is just a mirror
+
+Best regards,
+
+Werner
+
 > diff --git a/MAINTAINERS b/MAINTAINERS
 > index c14614613377..53876ec2d111 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
 > @@ -25496,6 +25496,14 @@ L:	linux-scsi@vger.kernel.org
->  S:	Maintained
->  F:	drivers/ufs/host/ufs-renesas.c
->  
+>   S:	Maintained
+>   F:	drivers/ufs/host/ufs-renesas.c
+>   
 > +UNIWILL WMI DRIVER
 > +M:	Armin Wolf <W_Armin@gmx.de>
 > +L:	platform-driver-x86@vger.kernel.org
@@ -153,36 +175,36 @@ On 15-Jun-25 19:59, Armin Wolf wrote:
 > +F:	drivers/platform/x86/uniwill/uniwill-wmi.c
 > +F:	drivers/platform/x86/uniwill/uniwill-wmi.h
 > +
->  UNSORTED BLOCK IMAGES (UBI)
->  M:	Richard Weinberger <richard@nod.at>
->  R:	Zhihao Cheng <chengzhihao1@huawei.com>
+>   UNSORTED BLOCK IMAGES (UBI)
+>   M:	Richard Weinberger <richard@nod.at>
+>   R:	Zhihao Cheng <chengzhihao1@huawei.com>
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
 > index 43055df44827..ba9d65f01332 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
 > @@ -65,6 +65,8 @@ config HUAWEI_WMI
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called huawei-wmi.
->  
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called huawei-wmi.
+>   
 > +source "drivers/platform/x86/uniwill/Kconfig"
 > +
->  config UV_SYSFS
->  	tristate "Sysfs structure for UV systems"
->  	depends on X86_UV
+>   config UV_SYSFS
+>   	tristate "Sysfs structure for UV systems"
+>   	depends on X86_UV
 > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
 > index 0530a224bebd..1549c56ced91 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
 > @@ -107,6 +107,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
->  # before toshiba_acpi initializes
->  obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
->  
+>   # before toshiba_acpi initializes
+>   obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+>   
 > +# Uniwill
 > +obj-y				+= uniwill/
 > +
->  # Inspur
->  obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
->  
+>   # Inspur
+>   obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
+>   
 > diff --git a/drivers/platform/x86/uniwill/Kconfig b/drivers/platform/x86/uniwill/Kconfig
 > new file mode 100644
 > index 000000000000..5f1ea3e9e72f
@@ -365,23 +387,6 @@ On 15-Jun-25 19:59, Armin Wolf wrote:
 > +{
 > +	struct uniwill_wmi_data *data;
 > +	int ret;
-
-Hmm, if someone manually modprobe-s this because they think it will
-help it will still load despite the generic GUID thing.
-
-I think this should the same DMI allow-list as the -laptop driver?
-
-Or maybe just export the driver as a symbol and have -laptop do
-the actual registering of the driver ? Then if e.g. a force module
-option gets added to the -laptop driver that will not need to
-be duplicated here ...
-
-Regards,
-
-Hans
-
-
-
 > +
 > +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
 > +	if (!data)
@@ -562,4 +567,3 @@ Hans
 > +int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifier_block *nb);
 > +
 > +#endif /* UNIWILL_WMI_H */
-
