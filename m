@@ -1,89 +1,259 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C7293C64;
-	Tue, 17 Jun 2025 10:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D01F9C1;
+	Tue, 17 Jun 2025 12:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750156014; cv=none; b=Q4rV1ZCcOUsrz+cI1E5RuzT4B54E9qKq2OLN18f2CKU9FBM8lhRaJHKTC1FGE5rNYHzkl5X6/X2fCU+h3nz3wotpPe2HMTaXqvGbVu0jGCaiagnxJVJlUYQPmoPDig5R+9m9YhY2WSXkDdWQGwAWcUqP2z0OWNt1HBN2mGG4d5o=
+	t=1750163530; cv=none; b=DIkRTWvBm9g2E2gze7twH9F7DjqczgvB6FfwYqJ2l1GyqhNaoVnQczrJ1yrIJDp6iqJPbCnXwdHU0tVjB76Ai7iNlbtD1VbWwMUJD9RohrI/eTFE3uJ/BDgEQ6L7Ak8yMs2r3lEhyzF/4HwE4sFg/gUBUjH9dHGxW111pFFBSjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750156014; c=relaxed/simple;
-	bh=c7SJ8S5i0EZ71+KLteXSUyF3nQXE2e502C4Rl9OAeiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YwXVCrI9wCiUg9s3ArKXyByr8m+gIKKPnUXf4fwLmBqXdBNzU+ZXn0LTQuq1ouspEzdV4ouLGxd68zl9LJxoU18zYKtIXxDbn/Co7LAZf1MOWOPrcfE1Jd2n3EzbRV9jKrC5ip1NevEuouORz3mXuUicAxJJPIDvYtZ6r8zQ0xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4Tu15w9; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750163530; c=relaxed/simple;
+	bh=LuiDLCiBmzOtrkWiGYzaos/vIBFgUoxHOmHYolNd7Lk=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=UmWSOsh+2GayQKVKVOca5Ohq8GZjaiSxd63+j72QlotteImvJTfZiOVO2igYgIan+mpLk9h0Y/aACAI3SZGPhV0iWM4J4DtIQBB1BKgw332bfnoN8DnD4q7tMN5eG6N5Qg0WpWKWFnhrMt4/RJCIUm8HZDTl6oELujcMbEhTskg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QpEX4HTj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4Tu15w9"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3137c20213cso6608848a91.3;
-        Tue, 17 Jun 2025 03:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750156012; x=1750760812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
-        b=d4Tu15w9mPe4I9AiESzvjNTZjHcABRB9mYznpgNwxg5Q7X50dgIh1rtJbz6FlJYpjr
-         NhPKvR6/fdai0yvtB9+akEOR31ya4rwvykY9xyhaKMRnhv9RAJX9GS4tLTeThRQoVXA2
-         9+uQLUT5AGBB+jYqopFx2BcA1b6hB/njt1+5yCph9vW8p+wsJbfUq0Asb3/EUKyv66rw
-         kiWn9Dzr0SFZtrCacWckNAGGx+rXlOWQT7bGp9NvPGkZLhhU9Vxxy6xoc/QeONois+fN
-         48skoBSTBDXb3CXkCTi8h+JLPijXL2+OM0XH0df8D3LQMs0FCaP/+LqV0Sqw8qbqqtbd
-         JfXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750156012; x=1750760812;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
-        b=qUPnxNVHp7OHLBDgvTSu6bCEsaKiH9qpX8s+X29ZOVxVX7yWyot0rcM7y1UjVnkB5o
-         MqMSxXy8FO6FR2oNXZhFEDcEvJrFcEOj97ZrTsU/5wEFEGkGG3ATyLrcX6V/RdHa385J
-         PgyuXUETEbo/63PXYzO4+eQ7t+Z06rc42O/4ubjDhPPB2yoVr4IEhVb9BC0N46slsC/m
-         Yz7EAPgP+SG4BGWGfqj/pkzYydK0Sun3S0gsPHUjTq0bR125m09F6FWOknMy/UNSMXzI
-         FPDyn/psUdwyswRSgkPyxp8QjO4H9fkd5IHmhF94vuR/IciAT4k8iyYhhhWU4sXFt1MI
-         PRkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeiUGY4iIjjDG0QRm+aeUZN2yNmouG5BMlIbGMEOdjMAx1qKgt6UlmJx7XbfLaXt1phgtpn5A9ZEG9GlQIOsVCr/F69w==@vger.kernel.org, AJvYcCUosPFmW9rQTgd2vfQFZRvjzHoS+J3hKolfPzmog+ro7l3TnlY4xHEoXK/KRHYrapvTlk1zXfz6+5RMmdw=@vger.kernel.org, AJvYcCVTmodj5cCTX4HV2RSiiMW2C/WVfVK4M99XfG5pBDFlohSFqeWWzVy2qZBCKxseoaHCfraDGGff@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY2/sU+QuvvM/90LTrjiX9MjPpSRdojfeJXKy+j9EQmG7cXEHb
-	aH0mAHmi95lJK7mvxkkA6XqGFQ6xYxb7il+B3xtVtZ6GfkJtpAOZKZ0f
-X-Gm-Gg: ASbGncvC+/HZMXPOrrrps2X072qdEK2as66Y+g0WmYjMmmnMHEzhZvCuc/J42ul/ErV
-	wiq/bOnFajcnhkFkk/icQ4RRkHuxvDANReH+FskDqeUtrBDpCiYeJ0VRMMXXuNZEmzvFx0XpuO4
-	u0Y6RGOhLrcED+3XANcrurSBVRQensBWxMAjcCsGaFHvUGK8viLCh5RoBrtF2NbwM/sZ8PJZFib
-	l6/A8ARPKxKTS9iMFWJ8E74pKmjYAqEe8JkzXdE1rwI/3QRdxNUo3sgEJMfSUBgDHAVUFCKhJJP
-	nnSM1EeJCJqCd+0fnEQHVk1GnOoPcZCTSy+XputnuRW5EkOWEtS9ASy68dwyzzjlfYBCtrjCJY/
-	riIXb
-X-Google-Smtp-Source: AGHT+IEvpo0maN0m+gyRmMErklVTxeyTK+JnMtREA8aMyFe7PwoLhFvswRDMfRFhsxdH7wrvpIfxhw==
-X-Received: by 2002:a17:90b:274d:b0:312:959:dc4d with SMTP id 98e67ed59e1d1-313f1beafdcmr21027180a91.7.1750156011965;
-        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.254.76])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88bf0esm76165935ad.31.2025.06.17.03.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
-From: Hai Tran <hoanghaivn0406@gmail.com>
-To: i@rong.moe
-Cc: hdegoede@redhat.com,
-	i@hack3r.moe,
-	ikepanhc@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org,
-	Hai Tran <hoanghaivn0406@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC polling
-Date: Tue, 17 Jun 2025 17:25:22 +0700
-Message-ID: <20250617102522.2524-1-hoanghaivn0406@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250525201833.37939-1-i@rong.moe>
-References: <20250525201833.37939-1-i@rong.moe>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QpEX4HTj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750163529; x=1781699529;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LuiDLCiBmzOtrkWiGYzaos/vIBFgUoxHOmHYolNd7Lk=;
+  b=QpEX4HTjGb+kOamxXGo8exyPO0M/+hM8+233XUrO6zScTd2dkEpF5AMX
+   xHcaPTVpel4QivDfaHKSabBukmop+fjq14OfDj78iWm4b0fCuPLNoSElm
+   /VQUev73vKTiVKPxndUapQa2dEGfvFwvScNaWEdHWh70ETyfkGxytf9Gi
+   mKPHcDO+1H6YY8AovSb1GvEoWVxEv36L0gkra0HT2RZF+sTsg2RJ3a/wc
+   S9pzEvQaEpCBGceHZw4Ljfuby3jv8ThnrRt9bai/hTYZSeX2Haj0UkTjL
+   KNPSCpwf/zHUFjSFCIz9ZzTrfi+7i6NqutGjgjli0/gZhF/ugHPp5OPO1
+   w==;
+X-CSE-ConnectionGUID: JLKRNoqkQC2waMXm/O7BwA==
+X-CSE-MsgGUID: ntB2BaFeSRCQY+zUE42TXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52252406"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52252406"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:30:46 -0700
+X-CSE-ConnectionGUID: 8RLb4unqRnShhIEZfTrZnQ==
+X-CSE-MsgGUID: pNrz+SDnSDiOy62onCbY6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="153656018"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:30:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Date: Tue, 17 Jun 2025 15:28:16 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.16-2
+Message-ID: <pdx86-pr-20250617152816-1278911842@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Tested on my ThinkBook 16 G6+ AHP and everything is working fine now with:
-- Fn+F5/F6 inputs to change brightness are not shutdown unexpectedly anymore.
-- Sleep is working after closing the lid or via power button.
+Hi Linus,
 
-Tested-by: Hai Tran <hoanghaivn0406@gmail.com> 
+Here is a platform-drivers-x86 fixes PR for v6.16.
+
+Fixes and New HW Support
+
+- amd/hsmp: Timeout handling fixes
+
+- amd/pmc:
+
+  - Clear metrics table at start of cycle
+
+  - Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+- amd/pmf: Fix error handling corner cases (nth attempt)
+
+- alienware-wmi-wmax: Revert G-Mode support as it lowers performance
+
+- dell_rbu:
+
+  - Fix sparse lock context warning
+
+  - Fix list head usage
+
+  - Don't overwrite data buffer past the size of the last packet
+
+- ideapad-laptop: Ensure EC is not polled too frequently
+
+- intel-uncore-freq:
+
+  - Fail module load when plat_info is NULL
+
+  - Avoid a non-literal format string as it triggers a compiler warning
+
+- intel/pmc: Add Lunar Lake and Panther Lake support to SSRAM Telemetry
+
+- intel/power-domains: Fix error code in tpmi_init()
+
+- samsung-galaxybook: Add support for Notebook 9 Pro and others (SAM0426)
+
+Regards, i.
+
+
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-2
+
+for you to fetch changes up to e2468dc700743683e1d1793bbd855e2536fd3de2:
+
+  Revert "platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1" (2025-06-13 15:09:02 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.16-2
+
+Fixes and New HW Support
+
+- amd/hsmp: Timeout handling fixes
+
+- amd/pmc:
+
+  - Clear metrics table at start of cycle
+
+  - Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+- amd/pmf: Fix error handling corner cases (nth attempt)
+
+- alienware-wmi-wmax: Revert G-Mode support as it lowers performance
+
+- dell_rbu:
+
+  - Fix sparse lock context warning
+
+  - Fix list head usage
+
+  - Don't overwrite data buffer past the size of the last packet
+
+- ideapad-laptop: Ensure EC is not polled too frequently
+
+- intel-uncore-freq:
+
+  - Fail module load when plat_info is NULL
+
+  - Avoid a non-literal format string as it triggers a compiler warning
+
+- intel/pmc: Add Lunar Lake and Panther Lake support to SSRAM Telemetry
+
+- intel/power-domains: Fix error code in tpmi_init()
+
+- samsung-galaxybook: Add support for Notebook 9 Pro and others (SAM0426)
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmc:
+ -  Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+amd: pmc:
+ -  Clear metrics table at start of cycle
+
+amd: pmf:
+ -  Prevent amd_pmf_tee_deinit() from running twice
+ -  Simplify error flow in amd_pmf_init_smart_pc()
+ -  Use device managed allocations
+
+dell_rbu:
+ -  Bump version
+ -  Fix list usage
+ -  Fix lock context warning
+ -  Stop overwriting data buffer
+
+ideapad-laptop:
+ -  use usleep_range() for EC polling
+
+intel/pmc:
+ -  Add Lunar Lake support to Intel PMC SSRAM Telemetry
+ -  Add Panther Lake support to Intel PMC SSRAM Telemetry
+
+intel: power-domains:
+ -  Fix error code in tpmi_init()
+
+intel-uncore-freq:
+ -  avoid non-literal format string
+ -  Fail module load when plat_info is NULL
+
+MAINTAINERS: .mailmap:
+ -  Update Hans de Goede's email address
+
+platform/x86: alienware-wmi-wmax:
+ - Revert: Add G-Mode support to Alienware m16 R1
+
+samsung-galaxybook:
+ -  Add SAM0426
+
+x86/platform/amd:
+ -  move final timeout check to after final sleep
+ -  replace down_timeout() with down_interruptible()
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      platform/x86/intel-uncore-freq: avoid non-literal format string
+
+Dan Carpenter (1):
+      platform/x86/intel: power-domains: Fix error code in tpmi_init()
+
+Hans de Goede (1):
+      MAINTAINERS: .mailmap: Update Hans de Goede's email address
+
+Jake Hillion (2):
+      x86/platform/amd: move final timeout check to after final sleep
+      x86/platform/amd: replace down_timeout() with down_interruptible()
+
+Joshua Grisham (1):
+      platform/x86: samsung-galaxybook: Add SAM0426
+
+Kurt Borja (1):
+      Revert "platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1"
+
+Mario Limonciello (5):
+      platform/x86/amd: pmc: Clear metrics table at start of cycle
+      platform/x86/amd: pmf: Use device managed allocations
+      platform/x86/amd: pmf: Prevent amd_pmf_tee_deinit() from running twice
+      platform/x86/amd: pmf: Simplify error flow in amd_pmf_init_smart_pc()
+      platform/x86/amd/pmc: Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+Rong Zhang (1):
+      platform/x86: ideapad-laptop: use usleep_range() for EC polling
+
+Srinivas Pandruvada (1):
+      platform/x86/intel-uncore-freq: Fail module load when plat_info is NULL
+
+Stuart Hayes (4):
+      platform/x86: dell_rbu: Fix lock context warning
+      platform/x86: dell_rbu: Fix list usage
+      platform/x86: dell_rbu: Stop overwriting data buffer
+      platform/x86: dell_rbu: Bump version
+
+Xi Pardee (2):
+      platform/x86/intel/pmc: Add Lunar Lake support to Intel PMC SSRAM Telemetry
+      platform/x86/intel/pmc: Add Panther Lake support to Intel PMC SSRAM Telemetry
+
+ .mailmap                                           |   1 +
+ MAINTAINERS                                        |  72 +++++++-------
+ drivers/platform/x86/amd/hsmp/hsmp.c               |  14 ++-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |   9 ++
+ drivers/platform/x86/amd/pmc/pmc.c                 |   2 +
+ drivers/platform/x86/amd/pmf/core.c                |   3 +-
+ drivers/platform/x86/amd/pmf/tee-if.c              | 108 ++++++++-------------
+ drivers/platform/x86/dell/alienware-wmi-wmax.c     |   2 +-
+ drivers/platform/x86/dell/dell_rbu.c               |  10 +-
+ drivers/platform/x86/ideapad-laptop.c              |  19 +++-
+ drivers/platform/x86/intel/pmc/core.h              |   7 ++
+ drivers/platform/x86/intel/pmc/ssram_telemetry.c   |   3 +
+ drivers/platform/x86/intel/tpmi_power_domains.c    |   4 +-
+ .../uncore-frequency/uncore-frequency-common.c     |   2 +-
+ .../intel/uncore-frequency/uncore-frequency-tpmi.c |   9 +-
+ drivers/platform/x86/samsung-galaxybook.c          |   1 +
+ 16 files changed, 137 insertions(+), 129 deletions(-)
