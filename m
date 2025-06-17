@@ -1,163 +1,158 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78AEC2FB
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jun 2025 00:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC7319307F;
+	Tue, 17 Jun 2025 01:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750119245; cv=none; b=KxdiHpXqCBtLpx4yctsnBMvQgPZKY1h4YjB+SGCHKu2c35xjf42BIrojVpmmwzOxIExk5Ij4y+UugsCusyYsutNysQv2u8Xp16VWnBVu5xrFaH+Qkzsjr4FgnVNKxytbxd4pwGyE4g6hm1uYknWwjrGl+QUNNFu+UnMTvy/MSgs=
+	t=1750124452; cv=none; b=bUrfFCQzBgj9tggCaPzrqnJz6ZiFiWekwZYse/wad0jDex+mY4AyzjvbPxAmxv3h9bn4DbC6mhmeFMQ+PYhwk7E+I4m6cdyv6qfOgzh9+pDuuqK7cPcqxLz4mJZztCu5PPD2EOd83vuWauBiBB353PbeqkGwt5D/kFh0AHvf52o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750119245; c=relaxed/simple;
-	bh=BCUpnu00PdYTBYe5/iMD4TN6t9Gob1BlHNTNi7fYXxw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SaQboqGFdOVVF7kJ3o/qSxTGrxhg2hBc+wZz0jMNBGQq75tmjn2GdHNsOd8YCzoetuXi4dy2ZF+fDC4eUNz7Qi6ZoLUf5G1oD0lyfSLx3Z9/GxfUiyk7fiW6MXQRtHwLY5/SYNnW50IwoSTPsnF1it51qzlkYXENBPkKRveErGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jUKeohdZ; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750124452; c=relaxed/simple;
+	bh=wQ6MZV7f9lscQoKIvT/a+AYvr5KBF/pwE0GYxjHI5S8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uej/+cjxszWsHeNATztas26NWkK0a2gw/NKjsGjWRZTgvPst0RzTYDnxfkzLp0XXWCvlLY7LjWSCM/Xc+aVC8GFPL2LJSS3t/lpr8i0PF/x1a6ck3df7ns4tDqT7YNNDpsFEaaWLcuC9qxmIMPUq4Yi5TBeYl4NHn9b9Yj1zBbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ViGJH6j7; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jUKeohdZ"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso4494358b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Jun 2025 17:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750119243; x=1750724043; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/xPzkNisft+m84N4JYez02rZP6098OOb7aM1R5PhuhU=;
-        b=jUKeohdZnZtmsL8mj/emMhk0SSdV9kK1WxVewPB9EnBFgyV4w76cO/HXfb2zeldY4p
-         0zmSBWEzC6EzsASERu1MzG10/MQNyBr8M9OSbc4UC5xeWvK+sNGPMpYy9uoZfITZ2lmg
-         pi86zvSAu3jxzArN8DplfNlapZjh/QHk+g0FE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750119243; x=1750724043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/xPzkNisft+m84N4JYez02rZP6098OOb7aM1R5PhuhU=;
-        b=Sf5TWTfhTZn9dXQTOuWSOOBsAz/R9Uddpf7x1AQyqsa/9ndpytuTdeUbr/dnqKy1PO
-         iKOB0bxzNgZIymn8f4aeYX9ITd8rLe6tG4u/aliaQPJn9giftqomturPKhnC1nfBPDgz
-         n1FOYv4n6h8N4RFki4jonV4o6sqywUbS59x+UPPxwLdVYsRhtk2/DaoBVex4nNQAYbc/
-         GobYWetGpwburTBg5vIKqR5QKwsbrV5iDuOu6g6/GYrxmLYlnMuBHe6nUGvPqT/WRflM
-         6BDA54AT+Cjci9zdyZGUSBWYWueT30FrRq9cU0+MATLl/PaBum9xJxmCcApsUbwA9ytY
-         hNMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNGgm6D1NkAaE/TIHU3AFuUv3QlgUTJ73KXwdWj5FmRdtCeTOxY5Z60N8z6R7v5nqXEVByE/U9g2MHGcpNQCBLDYIb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5Q/p8hJGzcMEf+L59yg6DV+A2mq8flCNtYwXO38a5SEfFIU4E
-	egW2vfHFSt2lRuRpXKdTrGzkc2VIw66QxeJrpcRKyo1Q4grp1xSKk3b77yqGIT/dWVQnZ1ozJFy
-	1lzk=
-X-Gm-Gg: ASbGncuOfONiZiZd776/vcZSFNp5SbOvt5lVD45Lpr58P/UCC1a2XdS5+vlUS3Jtzbs
-	VPNsWxlxkwyCzRGXiRoZex8ORjDyQfLpdtUxeBUUNMtLyzFedSh4kcsuos9tvgkHJfMF+xnOmAA
-	T+9FSFkAws0K7t/eD16wk7xwsGe34eBmyt0RdoBrNA6uQsn5IlDafQjzJw6yzs3n/E4UBV/Wn4G
-	iaK8+mYofrnci9y/NnRkmToWwp3UTDTAg1KnPTO5dVgG5T3a6CR6o/UA73FtqlzfHsLRGZugRun
-	yXFouAsa6dm3pktbtavF4ywepzhK+qfX8qSzWSQnveYXEmU7Ke9NkHlGxA77ir+2hgsOsgYYpiC
-	T5tFGD82CdVucMufckZyrglrACA==
-X-Google-Smtp-Source: AGHT+IHe5pU4IaVZUb2p38fRPTs3qALx3WgDk4H/x68ZunAx94O0jrddKdWCg77ERbSesgNRiSR5QA==
-X-Received: by 2002:a05:6a00:b95:b0:730:75b1:7219 with SMTP id d2e1a72fcca58-7489d006780mr15963185b3a.12.1750119243142;
-        Mon, 16 Jun 2025 17:14:03 -0700 (PDT)
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com. [209.85.216.42])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900064d1sm7767766b3a.61.2025.06.16.17.14.02
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 17:14:02 -0700 (PDT)
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313f68bc519so1848557a91.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Jun 2025 17:14:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXO32fXCFNx1XxalhOHp724pxYlztKQiyRLzxHHOZgtplmofPsYMKcmDj/A7PtNTk5BcwXeFlw3YfkHOMvF8twa7LQn@vger.kernel.org
-X-Received: by 2002:a17:90a:da8f:b0:311:ae39:3dad with SMTP id
- 98e67ed59e1d1-313f1d05b32mr18262369a91.30.1750119242065; Mon, 16 Jun 2025
- 17:14:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ViGJH6j7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750124451; x=1781660451;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wQ6MZV7f9lscQoKIvT/a+AYvr5KBF/pwE0GYxjHI5S8=;
+  b=ViGJH6j7bgopSHPYG+OmcDswDQp456dwtYj6CyA+MgrnGN77lXF/03Yg
+   pihln6fEY2Jscc3UzzmiJc2sI2IvVnnAOHJF4pg2X+PZydntvbeDUY0T4
+   Bup06Yk4wwCh+0zvZHQIfAylWyjwnPc6eM7QhpCpiXuIyZQ9lODSaSnE7
+   e2JZ06dTF1tEb2PsYq0VoUTm2et0uWMlW87o6MXBQfuTTx63OSBn8lJcM
+   7KedN3oUHIrRaXTbzqYw1bQp6WXPfr+lgC0PwIYjtOoB3fvKElN6/KD5S
+   6wVgXIfAuUfKhwEjxqAevu+qZh1FQUi2iqJXU1yif0q2gbkZR1/oKX91X
+   Q==;
+X-CSE-ConnectionGUID: owyQ0EQvRtSuRs7O0csm4A==
+X-CSE-MsgGUID: YgiIDKGURg+TxLF2bP4OxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62556528"
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="62556528"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:50 -0700
+X-CSE-ConnectionGUID: aQGb1JIUSBOcSwQJI5Dmtw==
+X-CSE-MsgGUID: VovBetjjRJOfvND9v1n9Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="148989433"
+Received: from spandruv-desk2.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.124.223.117])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:49 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	xi.pardee@linux.intel.com
+Cc: hdegoede@redhat.com
+Subject: [PATCH V2 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Date: Mon, 16 Jun 2025 18:40:24 -0700
+Message-ID: <20250617014041.2861032-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com>
- <20250218-aux-device-create-helper-v4-3-c3d7dfdea2e6@baylibre.com>
- <CAD=FV=Vb+Wb6wJ42jUBxVVNp9P87BiqHZgoY+Tw6W3fO==FF6g@mail.gmail.com>
- <1jmsahcbkv.fsf@starbuckisacylon.baylibre.com> <CAD=FV=WzN9Evge-v30NA64Q=QPJR8hkZAhmLXxDekXXFMFrd9g@mail.gmail.com>
-In-Reply-To: <CAD=FV=WzN9Evge-v30NA64Q=QPJR8hkZAhmLXxDekXXFMFrd9g@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 16 Jun 2025 17:13:49 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UOucHSqgGE_OfW9MAeLbwqtk1emCiByxJw-LpQnCbDww@mail.gmail.com>
-X-Gm-Features: AX0GCFs2ZyAAIENHNjz3BASVq2N7KuTDsUG8ACNS6wvc-Dx4zSZzUpIgLa-Czmw
-Message-ID: <CAD=FV=UOucHSqgGE_OfW9MAeLbwqtk1emCiByxJw-LpQnCbDww@mail.gmail.com>
-Subject: Re: [PATCH v4 3/8] drm/bridge: ti-sn65dsi86: use the auxiliary device
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Danilo Krummrich <dakr@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Abel Vesa <abelvesa@kernel.org>, 
-	Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-clk@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+This patch series introduces a new discovery driver for Intel Platform
+Monitoring Technology (PMT) and a set of supporting changes to improve
+telemetry integration across Intel VSEC features.
 
-On Mon, Jun 9, 2025 at 8:43=E2=80=AFAM Doug Anderson <dianders@chromium.org=
-> wrote:
->
-> Hi,
->
-> On Mon, Jun 9, 2025 at 6:02=E2=80=AFAM Jerome Brunet <jbrunet@baylibre.co=
-m> wrote:
-> >
-> > On Tue 25 Feb 2025 at 08:04, Doug Anderson <dianders@chromium.org> wrot=
-e:
-> >
-> > > Hi,
-> > >
-> > > On Tue, Feb 18, 2025 at 11:30=E2=80=AFAM Jerome Brunet <jbrunet@bayli=
-bre.com> wrote:
-> > >>
-> > >> The auxiliary device creation of this driver is simple enough to
-> > >> use the available auxiliary device creation helper.
-> > >>
-> > >> Use it and remove some boilerplate code.
-> > >>
-> > >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > >> ---
-> > >>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 49 +++++-------------------=
------------
-> > >>  1 file changed, 7 insertions(+), 42 deletions(-)
-> > >
-> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > >
-> > > I'll snooze this for a bunch of weeks and check back to see if this
-> > > can be landed in drm-misc-next every once in a while. If you notice
-> > > that drm-misc-next has the necessary patches before I do then feel
-> > > free to poke me and I'll commit it.
-> >
-> > Hi Doug,
-> >
-> > FYI, this is safe to take with v6.16-rc1.
-> > Please let know in case you prefer a resend.
->
-> Thanks for the reminder. Unfortunately, I still need to wait. This
-> patch will need to land through drm-misc-next and that doesn't have
-> v6.16-rc1 yet.
->
-> https://cgit.freedesktop.org/drm/drm-misc/
->
-> ...presumably v6.16-rc1 will get merged in before too much longer.
-> I'll try to keep an eye on it.
+The primary goal of this series is to add the PMT Discovery driver, which
+enumerates and exposes telemetry attributes by parsing hardware-provided
+discovery tables from OOBMSM devices. In particular, the discovery driver
+gathers detailed capability information (such as telemetry region
+attributes) that will later enable direct access to telemetry regions via a
+new API (intel_pmt_get_regions_by_feature()). This API is crucial for
+retrieving data like per-RMID counters.
 
-Pushed to drm-misc-next:
+The remainder of the series consists of several preparatory and testing
+patches:
 
-[3/8] drm/bridge: ti-sn65dsi86: use the auxiliary device
-      commit: 6526b02e10209608464f2645af59b2cc955b5a19
+1. Private Data and CPU Mapping:  The VSEC driver now includes
+per-device private data to store the OOBMSM-to-CPU mapping. The TPMI driver
+copies its platform info into this common area (via
+intel_vsec_set_mapping()), allowing other VSEC features to access CPU
+mapping information without redundant queries.
+
+2. Device Links Enhancements:  With telemetry now depending on both the
+TPMI driver (for CPU mapping) and the new discovery driver (for telemetry
+region attributes), device links have been added and optimized. These
+changes ensure that supplier drivers are probed and registered before
+consumer drivers, enforcing the proper dependency order for reliable
+telemetry feature access.
+
+4. Discovery Driver and API:  The core of the series is the addition of
+the PMT Discovery driver. This driver not only implements discovery of
+telemetry attributes and capability data (exposed via sysfs) but also
+introduces an API to retrieve telemetry regions by feature, which is
+essential for features like per-RMID telemetry counters.
+
+5. Testing:  A simple KUNIT test is provided for the enhanced discovery
+API to ensure its reliability and correctness.
+
+Together, these patches provide a foundation for future telemetry
+enhancements in the Intel VSEC framework. They enable a unified interface
+for accessing hardware telemetry capabilities and ensure that inter-driver
+dependencies are properly managed through device links.
+
+David E. Box (15):
+  MAINTAINERS: Add link to documentation of Intel PMT ABI
+  platform/x86/intel/vsec: Add private data for per-device data
+  platform/x86/intel/vsec: Create wrapper to walk PCI config space
+  platform/x86/intel/vsec: Add device links to enforce dependencies
+  platform/x86/intel/vsec: Skip absent features during initialization
+  platform/x86/intel/vsec: Skip driverless features
+  platform/x86/intel/vsec: Add new Discovery feature
+  platform/x86/intel/pmt: Add PMT Discovery driver
+  docs: Add ABI documentation for intel_pmt feature directories
+  platform/x86/intel/tpmi: Relocate platform info to intel_vsec.h
+  platform/x86/intel/vsec: Set OOBMSM to CPU mapping
+  platform/x86/intel/tpmi: Get OOBMSM CPU mapping from TPMI
+  platform/x86/intel/pmt/discovery: Get telemetry attributes
+  platform/x86/intel/pmt/telemetry: Add API to retrieve telemetry
+    regions by feature
+  platform/x86/intel/pmt: KUNIT test for PMT Enhanced Discovery API
+
+ .../testing/sysfs-class-intel_pmt-features    | 134 ++++
+ MAINTAINERS                                   |   2 +
+ drivers/platform/x86/intel/plr_tpmi.c         |   3 +-
+ drivers/platform/x86/intel/pmt/Kconfig        |  27 +
+ drivers/platform/x86/intel/pmt/Makefile       |   4 +
+ drivers/platform/x86/intel/pmt/class.c        |  35 +-
+ drivers/platform/x86/intel/pmt/class.h        |   9 +
+ .../platform/x86/intel/pmt/discovery-kunit.c  | 116 ++++
+ drivers/platform/x86/intel/pmt/discovery.c    | 635 ++++++++++++++++++
+ drivers/platform/x86/intel/pmt/features.c     | 205 ++++++
+ drivers/platform/x86/intel/pmt/telemetry.c    |  94 ++-
+ .../intel/speed_select_if/isst_tpmi_core.c    |   9 +-
+ .../uncore-frequency/uncore-frequency-tpmi.c  |   7 +-
+ drivers/platform/x86/intel/vsec.c             | 363 +++++++++-
+ drivers/platform/x86/intel/vsec_tpmi.c        |   8 +-
+ drivers/powercap/intel_rapl_tpmi.c            |   9 +-
+ include/linux/intel_pmt_features.h            | 157 +++++
+ include/linux/intel_tpmi.h                    |  27 +-
+ include/linux/intel_vsec.h                    |  97 ++-
+ 19 files changed, 1877 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt-features
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery-kunit.c
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery.c
+ create mode 100644 drivers/platform/x86/intel/pmt/features.c
+ create mode 100644 include/linux/intel_pmt_features.h
+
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+--=20
+2.43.0
+
