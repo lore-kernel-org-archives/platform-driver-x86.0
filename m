@@ -1,88 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8922DE201;
-	Tue, 17 Jun 2025 12:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9132EF9D4;
+	Tue, 17 Jun 2025 18:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163985; cv=none; b=bBMGKOFeM/czKmTjJ8KLZiptV9mkShlHb32xUxAOFqzszJYmEtjkOU0sBqUOLcfP52ptR7ctSDWgvP7ke8cbiKMKh7Ne7CYuzy/tpHFaEM1boMKJ9geTMPnkHSleXs91rtButcIAgBwYByXbQuS5VUDoYwJ9ZncEkdAO0eDf46U=
+	t=1750186102; cv=none; b=noE+jVdQXFNFgHqqGSZ4jIY9t6VewYyao2+0Ytrfekuf1iHHmIISMEprXL9RBmmU8deppFhCYzB/QX9sePc7CyK8DFmvQ8NblWtyby4B0atcNMzTQMNpAfXLbsKJ52Oqn5nL7D5WP6Ic74cx3MIUATn8v5Ua8PWzIsGmTCygX1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163985; c=relaxed/simple;
-	bh=FxF78pfUEwcnldmVITYLPHptbKq/FCT9ZAiwHo4FQvA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hyHAfa2z/VA9oimMjA7451E2iIhu3pZWQepk3PF+jG8d/0Xyse0pMqra9GX9dv/ooGHhxuQhrsXAkj4YzUbE2F+WdtNpqhkMdB0kEldE2B8Fc/aJ8D9sSUQgIBAo/jGdu0rSuQT2kRMSv2GkQmOoheT8Y5KJwhcTTa601O9xt9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kcep2lKz; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750186102; c=relaxed/simple;
+	bh=xXrkHKB+EL6rA4PB287KHi2ShFXyyA+Au3iKbif/BEg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qq82v9eBZ6e7j5UGTl2gxD2wYg36orNpyjj9EA+yqCZ5xehyMgdmpujr7g5p2KM+ZlmD5okX62438Yn2P4Mtvvp/4N3zNSLI3LKa+/twCWVG8+ZOd1PAZ1D8hIi4kLxHHsxRsUJHaDBEdB1xJ2lfoqAa+UMNoL/IY6xUQLUAUtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haePrrBu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcep2lKz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750163984; x=1781699984;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=FxF78pfUEwcnldmVITYLPHptbKq/FCT9ZAiwHo4FQvA=;
-  b=kcep2lKzO9DlSmjqNL5P6MKMJoSFuZDF85IH83LYODN6iu06B0PfSmeb
-   lX6M5CXFENdDHIzwVCw+064rPFstKSSNHHmvBu/VqHoL5j3zLQONBpa3w
-   s61KtP3RgALd4mPhcCvFRrD8+DHIPOA+wRADrDSj4WAuT3EbMEgoMcAKa
-   0DWr0O9qeqy7bpDLzrL7wZKDg0zTeM4R+CjKI8TQsxSwDv/SkjJXxSU5I
-   yKVCnKzv6A5jLSJaovAQxp+om9YDt3UvtynXX4PjXusVJa7jhD1ynmGVP
-   ftNk+PC1ZtPc7IerV52/eqsdeyhi1c86MTJF6+qTjWADSOuJqklgA0vZu
-   Q==;
-X-CSE-ConnectionGUID: bO9J0mIWRIi7U2B45fHhlA==
-X-CSE-MsgGUID: ur0EjqlHQvKvkALU8nz0nA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="62945778"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="62945778"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:39:43 -0700
-X-CSE-ConnectionGUID: SZO0S/QESiy0O1aJJMZNAw==
-X-CSE-MsgGUID: sQeJtb+uQv2jnSbdzfq1KA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="149134140"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:39:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: vadimp@nvidia.com, Hans de Goede <hansg@kernel.org>, 
- David Thompson <davthompson@nvidia.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <lkp@intel.com>
-In-Reply-To: <20250613214608.2250130-1-davthompson@nvidia.com>
-References: <20250613214608.2250130-1-davthompson@nvidia.com>
-Subject: Re: [PATCH v1] platform/mellanox: mlxbf-tmfifo: fix vring_desc.len
- assignment
-Message-Id: <175016397593.2117.2399113137810241629.b4-ty@linux.intel.com>
-Date: Tue, 17 Jun 2025 15:39:35 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haePrrBu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F27EC4CEE3;
+	Tue, 17 Jun 2025 18:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750186102;
+	bh=xXrkHKB+EL6rA4PB287KHi2ShFXyyA+Au3iKbif/BEg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=haePrrButp7lnbes6zl0ZMjOwV9JIPvOZMjFpVEQ9enwhtUXcZ4UPqqaSnZHB4MKu
+	 PD0kVY52B5+gA1UGhflEs/4xH1OoJx9S0AzVHeiHz/lkXe2+tnGtxe9uXadugsmRcd
+	 slyALuP+T4+TQkYqGoFZyHovuol4ZVhQKsnuBz9LKFFnAy72Cc4/6mBhOJjcUQhJL3
+	 kZHli/e039+C7T2OFQ6jiNm23Fm73ZbCeripTJmA0k1YV7tuKoqc4CeC7sI2bmSkFL
+	 zHJsNzpyYorMlEJNvRseu+2wcg4/lzLJQRFmccmdijL4+Ny2bdIt2EjHjDiWpyei+z
+	 eEcV6VNSb0Iig==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7106139EFFE0;
+	Tue, 17 Jun 2025 18:48:52 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20250617152816-1278911842@linux.intel.com>
+References: <pdx86-pr-20250617152816-1278911842@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20250617152816-1278911842@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-2
+X-PR-Tracked-Commit-Id: e2468dc700743683e1d1793bbd855e2536fd3de2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4663747812d1a272312d1b95cbd128f0cdb329f2
+Message-Id: <175018613108.3294381.13079775060200758242.pr-tracker-bot@kernel.org>
+Date: Tue, 17 Jun 2025 18:48:51 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
-On Fri, 13 Jun 2025 21:46:08 +0000, David Thompson wrote:
+The pull request you sent on Tue, 17 Jun 2025 15:28:16 +0300:
 
-> Fix warnings reported by sparse, related to incorrect type:
-> drivers/platform/mellanox/mlxbf-tmfifo.c:284:38: warning: incorrect type in assignment (different base types)
-> drivers/platform/mellanox/mlxbf-tmfifo.c:284:38:    expected restricted __virtio32 [usertype] len
-> drivers/platform/mellanox/mlxbf-tmfifo.c:284:38:    got unsigned long
-> 
-> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-2
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4663747812d1a272312d1b95cbd128f0cdb329f2
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Thank you!
 
-The list of commits applied:
-[1/1] platform/mellanox: mlxbf-tmfifo: fix vring_desc.len assignment
-      commit: 109f4d29dade8ae5b4ac6325af9d1bc24b4230f8
-
---
- i.
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
