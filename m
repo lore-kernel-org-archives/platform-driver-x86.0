@@ -1,136 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A29156C6F;
-	Wed, 18 Jun 2025 07:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFBD280037;
+	Wed, 18 Jun 2025 09:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231414; cv=none; b=cH1gxU4L5wgvb0ByTLR3J3E5bt88/ZHCoD7yigShYVCK2K7iQx940YbhzeV6UwV18Cf0fwhXXK618tEsGfoDPCsQCKCbm6V2Hl1q+j3EbcTPgmEXPUOd9fecLWUufJdHnm4WDD7XQkOK603/AdXm/89W2WEGtD4VTuGsXnqOmP0=
+	t=1750238776; cv=none; b=DmBlF/U1UsvbxM1XsbsP7orfAc3aiKhDJG8lI7C9a1Q8ba1LSel9kmTNSq6Dq97/mfhf64/4V6H1//+emtvR/DfEwygy8g7f/RrSXTUSJ3+jXT8deX6UGBvSZmWnOzfwU5Sqw8UfUXtDWnGbvy2P5uEM+wKgyolWqCZoIOZKzhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231414; c=relaxed/simple;
-	bh=OwO8yp44JjVttqwjiAYSFrtMYCDSz0M9l5NAf5Flp3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GmaEARatiMp0N+ebE5dbSkIZ1XNxoQQc7+dnWUUQYdp3jO+tuPtC6+PYDRSgLPqrHf8H+J/lN8WGHPDpIkl0mQja7LOGFz8NHOlU5XLqQZ9PKORixmngjYnq0tWFabhiFC+nxWC5RQx9vA2Bs1yiJb1WFlBUNS8joe7QRhPzGVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGtpEKUO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750238776; c=relaxed/simple;
+	bh=4a36yfaVxjel1bSdzn14/ug9XsRUK4qd0+2wlh7dnFs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=f9yMX0mFvdVuMkNsnpeKXWk14sF0ACMGLXjWfPLtdkBbjTaPsjXz3DsRKTU5dTaNZvyTtjLuONJ4xwJYZG0vJVnuNLlV1oXu0r79+a98pETNcTWATLHcxA9xYkvZAsaaWnn+xVrlUV1aFV7QUAQfPMo/xAtePdywiAfaxzQRAa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVQOrJJj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGtpEKUO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B01CC4CEE7;
-	Wed, 18 Jun 2025 07:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750231414;
-	bh=OwO8yp44JjVttqwjiAYSFrtMYCDSz0M9l5NAf5Flp3M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vGtpEKUOVzLhjkDKvLm2GarppFbX/1ZYBAMLpyvxirCD1bGJBZ/uFiC6dUhat0zhc
-	 WCId9zclyRhTkD5yRV2ZC76x6srterL1yTD6/uDc48yj50Cp5r2rkrXXsSvKvXgMnS
-	 qzy9alFdrQfqXIpGqb1AYIPsv4EHn/0f2qxxbjqqfYQRguCUfHs8I2keQmBiFv6w6V
-	 FQKsVv7QDINTThPaFPR/Uzd9KRfDMm5v0AISgyBLdBJISVVvyn4Uu+FHp3t3QRZSeD
-	 jwna1m7STyUmLRdsMsXKvc0nvSbg7JMOnQgtFax7+6IGYDrH5pl+f8vtGZptnhUJ+g
-	 N+vhLjqmj2PWg==
-Message-ID: <834849c2-2793-4f3a-b686-5e5ded713379@kernel.org>
-Date: Wed, 18 Jun 2025 09:23:30 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVQOrJJj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750238775; x=1781774775;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4a36yfaVxjel1bSdzn14/ug9XsRUK4qd0+2wlh7dnFs=;
+  b=WVQOrJJjhxopaFYOD7FrKMC+MmRf4dqopK9kJvbtZZwgi2DufJmAvxdo
+   a686Dld4Ab/TESCNkn+8ZqarN2B862OoDgt2HqIeursWdH6edoGneJk4i
+   H8hSbHZiKmWIl3GV2CAM3mBXpTE3Jx+KV+Dz5hwDkIofvwTOFvSETSLOW
+   da8OFAGVSnnqOBpf2kgLBuNfYRCbmg1X5Z+LRfqqKpoHldU5Fx6aJICce
+   0jo34lyRLvfontZjGdcdf0/B+lzKB4LJWvA5CNV2JaCbTLXLHVbS+0edd
+   IQSsAdGiYRpIfnL+ZprTenMDot7RYeBwQA7sdO7BBwEvxiGf3PvVIe1Ob
+   g==;
+X-CSE-ConnectionGUID: 6nQi78CvTICtBDhm8x1BXA==
+X-CSE-MsgGUID: nX0ubiUkRWSPzF9Tj5M4Ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56122619"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="56122619"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 02:25:07 -0700
+X-CSE-ConnectionGUID: i+jrtZyrSdKfB197CboOpA==
+X-CSE-MsgGUID: A4AbLTM6SMi037T+x57/pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="150189629"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.62])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 02:25:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 18 Jun 2025 12:25:01 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Check validity of
+ event/enable input
+In-Reply-To: <20250618071713.8595-1-shravankr@nvidia.com>
+Message-ID: <7d5d6ca9-0078-dec1-d889-4407f8867abd@linux.intel.com>
+References: <20250618071713.8595-1-shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-2-W_Armin@gmx.de>
- <77da5151-ddbd-409f-8b48-28029a96d5d8@kernel.org>
- <8126f0b8-c12e-4917-8f3e-f7b4a620aea2@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <8126f0b8-c12e-4917-8f3e-f7b4a620aea2@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Wed, 18 Jun 2025, Shravan Kumar Ramani wrote:
 
-On 17-Jun-25 11:10 PM, Armin Wolf wrote:
-> Am 16.06.25 um 11:21 schrieb Hans de Goede:
+> For eventN input, check if the event is part of the event list
+> supported by the block.
+> For enable input, do not accept values other than 0 or 1.
+> Also replace sprintf instance with snprintf.
+
+The code changes in the patch barely match some of what is described 
+here, there are major gaps in the description.
+
+Please don't try to put multiple independent changes into the same patch 
+but create a patch series, each patch having focused changelog explaining 
+reasoning clearly.
+
+Unless the change is trivial (e.g., a comment typo fix) my general 
+suggestion is to first state the problem, then explain the solution (on 
+general level, no need to spell out what can be trivially read from the 
+patch). Even for that comment change below, I'd want it mentioned that the 
+comment does not match the code, it would be not enough to say e.g. "fix 
+a wrong comment" but explain why it is wrong.
+
+Some of these changes below may need Fixes tag but given the general 
+vagueness and lack of description for some of the changes, I cannot decide 
+(nor will accept the patches which do not have enough explanation). Put 
+any fix patch at the head of the series.
+
+Please don't leave lines "short" in the changelog (lines cut abruptly at 
+stop "."). Write real paragraphs with full length and if you want have 
+more than one paragraph, leave an empty line in between.
+
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
->> On 15-Jun-25 19:59, Armin Wolf wrote:
->>> Add a new driver for handling WMI events on Uniwill laptops.
->>> The driver sadly cannot use the WMI GUID for autoloading since Uniwill
->>> just copied it from the Windows driver example.
->>>
->>> The driver is reverse-engineered based on the following information:
->>> - https://github.com/pobrn/qc71_laptop
->>> - https://github.com/tuxedocomputers/tuxedo-drivers
->>> - various OEM software
->>>
->>> Reported-by: cyear <chumuzero@gmail.com>
->>> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
->>> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
->>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>> ---
-
-...
-
->>> +static void uniwill_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
->>> +{
->>> +    struct uniwill_wmi_data *data = dev_get_drvdata(&wdev->dev);
->>> +    u32 value;
->>> +    int ret;
->>> +
->>> +    if (obj->type != ACPI_TYPE_INTEGER)
->>> +        return;
->>> +
->>> +    value = obj->integer.value;
->>> +
->>> +    dev_dbg(&wdev->dev, "Received WMI event %u\n", value);
->>> +
->>> +    ret = blocking_notifier_call_chain(&uniwill_wmi_chain_head, value, NULL);
->>> +    if (ret == NOTIFY_BAD)
->>> +        return;
->>> +
->>> +    mutex_lock(&data->input_lock);
->>> +    sparse_keymap_report_event(data->input_device, value, 1, true);
->>> +    mutex_unlock(&data->input_lock);
->>> +}
->>> +
->>> +static int uniwill_wmi_probe(struct wmi_device *wdev, const void *context)
->>> +{
->>> +    struct uniwill_wmi_data *data;
->>> +    int ret;
->> Hmm, if someone manually modprobe-s this because they think it will
->> help it will still load despite the generic GUID thing.
->>
->> I think this should the same DMI allow-list as the -laptop driver?
->>
->> Or maybe just export the driver as a symbol and have -laptop do
->> the actual registering of the driver ? Then if e.g. a force module
->> option gets added to the -laptop driver that will not need to
->> be duplicated here ...
->>
->> Regards,
->>
->> Hans
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 900069eb186e..fcc3392ff150 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -1215,14 +1215,14 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+>  		return -EINVAL;
+>  
+>  	for (i = 0; i < size; ++i) {
+> -		if (!strcmp(evt, events[i].evt_name))
+> +		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
+>  			return events[i].evt_num;
+>  	}
+>  
+>  	return -ENODEV;
+>  }
+>  
+> -/* Get the event number given the name */
+> +/* Get the event name given the number */
+>  static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
+>  {
+>  	const struct mlxbf_pmc_events *events;
+> @@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+>  		err = kstrtouint(buf, 0, &evt_num);
+>  		if (err < 0)
+>  			return err;
+> +
+> +		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
+> +			return -EINVAL;
+>  	}
+>  
+>  	if (strstr(pmc->block_name[blk_num], "l3cache"))
+> @@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  	if (err < 0)
+>  		return err;
+>  
+> +	if (en != 0 && en != 1)
+> +		return -EINVAL;
+> +
+>  	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+>  		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+>  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> @@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+>  			MLXBF_PMC_WRITE_REG_32, word);
+>  	} else {
+> -		if (en && en != 1)
+> -			return -EINVAL;
+> -
+>  		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+>  		if (err)
+>  			return err;
 > 
-> I do not think that a allow-list is necessary here, because the driver
-> cannot cause any hardware damage. The driver only listens to firmware
-> events, it does not access the underlying hardware in any way.
-> 
-> If someone really does load this driver manually on an unsupported device
-> then the worst things that will happen are random hotkey presses. In most
-> cases nothing will happen.
 
-That is true. Still it feels a bit wrong to have this potentially
-bind to a completely different WMI device which happens to share
-the GUID.
-
-Anyways I'll it up to you if you want to do something about this.
-
-Regards,
-
-Hans
-
-
+-- 
+ i.
 
