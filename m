@@ -1,79 +1,99 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85152E3B03;
-	Wed, 18 Jun 2025 11:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750246813; cv=fail; b=S8UC9mnXsgOsLnxTPkhKr4J3ABsbOmepNt6Dx5KMoDlh9ZohMZWoXCHsjZAYQniFUi+AFRSc5k5aXJsVZWev1L3aJWs6X17JT13W38jcRjkuHoWbcrIPg7QeHRlpIrudh5DRkr3n4NyYFVaT6TFECcnV5x3oF2VHA3QwFOINL8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750246813; c=relaxed/simple;
-	bh=XuNxSkN71EMENpw7vtDSrZkvmSxDotpYnmGCF1EkkAs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TpxyNIhRYcAGnY6bQwFTeAQZvdk16lyl1e+JZi2ZQxzF+4s+TPwgmFV9fKKmb7Nyqgmrj65RnbjuD6o51ztNDY4Qz2zSxkr+prcB0LHUPCt4/PMUm5IbBlGl81oxjq2GbaPyJJO7IKdcc0m0+oHnNMyU0ZZZdkQOOFHMrlZVqr8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rHHOxZHL; arc=fail smtp.client-ip=40.107.237.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671F5285053
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 12:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750249658; cv=none; b=Ch9/a45+HkZUvxE3GaQzLe5Ogszvd34nbGedW6sLv6He191u+w9SJ28cHxGUPVjrhs4alKx6xBgSy3rmHlL7uYiHd1VC/ZQEmtxR4oacFgBb+dcdl4L/PelTFxxkugcP2rn6XXLc1/A64lPB0oHmGGPDNkSlee+30csQaA9OAr4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750249658; c=relaxed/simple;
+	bh=h+w/BK5bXld2lZwZrB/Usc8G0x1qx+OxapBqmFM0NWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GC7F8OtOVwZM60tvlH9zIKVsB9jk8pUitrxfdifRGxbYxlYiT/TotosZ8YbagIigFX6uEH5JSjAZHjQ5tgYmWchZzMinc9yvxw20WL/8oHmu5Y86ifbTB3/1C1PygGit9rm6NsN1A4F80Uqtgi+guSxWtUT1r9txp6hvj9GL2z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v8kW+/Wh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yyqNFC86; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v8kW+/Wh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yyqNFC86; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rHHOxZHL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GateL7wgaivw60YAaw6mFAaGTVIElbwpyvXS2IqZ73EOqgjzKIKB14B4jMfs+zliUgsN4jB+6AJ2Y7io4/8CWRuy7naKddInPkXMm14But4fcOZ5kDBSPVTMKG7b+3x5k8dHixI9+vwfWOTEs7auathqaczkDLh45jL24GAaoXmfWvPmUcsM4Vt1P54pgj04wYyA1J9xaWCfJY11QPHd6spV/FsNb4r22UJGbg0aDLD/rFFS7pGXR4+PAJBrvdr20QvbtCnfhbeM02f0nWMry68xri8Y6EGP1P6nNwTQxt8UISWZxX4vrN//bebM2ZneCW2lOh37GUJ1DSe4YkdCWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KVnsr6BWz/cr3oA8G6ddnegG7uUUn1Ac2wlVNcNrWhw=;
- b=KpTk82591aZCpXSvHaYBwqXC9ej2sVBgjOfPhVitq9C4oF7ZTSlKyHab1M2dsDCv3fhumEP4E+yNaFKzdEnu0q0wKoEzuVRzGWpA36KtLLNi7bPG2ngFotrTSyKh2OBj7wBLbnnmpIwQUNrV8GUcbAYAgjbEC5TwramV4IwgciXrJn6Ro307Z1WAZFgqWfmQUOFUM3lBWRBWncnAN9s3Mtmj0fAdXPDS1L9lzjYG7HdpTW+3EXMGG8BXQPSu6ajo6JkFd1G9gdjyAdd/Hk5pHrcvR8R6hOPMgZ7eJWXSAVLoOtdsE/W8yr8TbuxdrOes8c7gzoARW2O0Iw+h/TT75Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVnsr6BWz/cr3oA8G6ddnegG7uUUn1Ac2wlVNcNrWhw=;
- b=rHHOxZHLFuzwvz44FLODxBJQlV4EEPKp5uPzPiD8ef8W+UdAbKRyEHvVOBp+swde6pzxm4gvI3NtvykRp9/yuNlWOG2HK0AlBmJUWFHm+ZyXj74OVVv6Kf6EMZ36jFkxIC60E4eTEX65gDpjoXWKqN1NOimKYrTfllLquR7m1i7iNlLzi4nvmWOWXWopwuQtU3GUFBVZZaGH6ou3iQ3t8FN0+2WYEvgvSSerRLdhu7wIKYiDunE6PtJympw3eHZ9QqvoqVLnnDgEmwAZ/bvqvvrm5Pb+wcJz9L3+fAodNDmNDKYV0lo6ZH7cZTwNwn8FDlShvLQqk/M/XhKYCzrJkw==
-Received: from BYAPR05CA0031.namprd05.prod.outlook.com (2603:10b6:a03:c0::44)
- by MN0PR12MB6247.namprd12.prod.outlook.com (2603:10b6:208:3c1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
- 2025 11:40:07 +0000
-Received: from SJ1PEPF00001CE2.namprd05.prod.outlook.com
- (2603:10b6:a03:c0:cafe::bf) by BYAPR05CA0031.outlook.office365.com
- (2603:10b6:a03:c0::44) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Wed,
- 18 Jun 2025 11:40:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF00001CE2.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 11:40:06 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 18 Jun
- 2025 04:39:56 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 18 Jun 2025 04:39:56 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Wed, 18 Jun 2025 04:39:55 -0700
-From: Shravan Kumar Ramani <shravankr@nvidia.com>
-To: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Vadim Pasternak
-	<vadimp@nvidia.com>, David Thompson <davthompson@nvidia.com>
-CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] platform/mellanox: mlxbf-pmc: Validate event/enable input
-Date: Wed, 18 Jun 2025 07:39:48 -0400
-Message-ID: <7936743cf4d6b20c4ed25dc03722e3a7277aed70.1750245955.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <cover.1750245955.git.shravankr@nvidia.com>
-References: <cover.1750245955.git.shravankr@nvidia.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v8kW+/Wh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yyqNFC86";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v8kW+/Wh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yyqNFC86"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 88F8E1F7C0;
+	Wed, 18 Jun 2025 12:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750249654; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=kpYueEtFBgcTo2VblGMdW3oPMA2MzFgTFdzQYaZrL0Q=;
+	b=v8kW+/Whte4SxfoSH7s4wz8zF9pYu/DtVMUitJ3lHbL9tcaq9bqp97fUoBGE1dgdKwDHZJ
+	+hWVdjbY32Rvd9ZNlsrlTDqGPFjiKSh8Sfu3aN5DQu0zqNrkP+aJORwjOiLxCCO6o+hViK
+	Dq/wuTLxyCEhckcdevWZjKVsx6X+BdM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750249654;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=kpYueEtFBgcTo2VblGMdW3oPMA2MzFgTFdzQYaZrL0Q=;
+	b=yyqNFC86/O5vIsjbS00Q/L6NY74aiSeLTeYDp9dCdGMWnb5KPvUoTn3m7U/+eUby5iHXPQ
+	E/qO3GkiWfSuJqCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750249654; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=kpYueEtFBgcTo2VblGMdW3oPMA2MzFgTFdzQYaZrL0Q=;
+	b=v8kW+/Whte4SxfoSH7s4wz8zF9pYu/DtVMUitJ3lHbL9tcaq9bqp97fUoBGE1dgdKwDHZJ
+	+hWVdjbY32Rvd9ZNlsrlTDqGPFjiKSh8Sfu3aN5DQu0zqNrkP+aJORwjOiLxCCO6o+hViK
+	Dq/wuTLxyCEhckcdevWZjKVsx6X+BdM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750249654;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=kpYueEtFBgcTo2VblGMdW3oPMA2MzFgTFdzQYaZrL0Q=;
+	b=yyqNFC86/O5vIsjbS00Q/L6NY74aiSeLTeYDp9dCdGMWnb5KPvUoTn3m7U/+eUby5iHXPQ
+	E/qO3GkiWfSuJqCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC0C713721;
+	Wed, 18 Jun 2025 12:27:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PM5nMLWwUmg4UgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 18 Jun 2025 12:27:33 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: lee@kernel.org,
+	danielt@kernel.org,
+	jingoohan1@gmail.com,
+	neil.armstrong@linaro.org,
+	jessica.zhang@oss.qualcomm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	fnkl.kernel@gmail.com,
+	j@jannau.net,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	sven@kernel.org,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	deller@gmx.de,
+	support.opensource@diasemi.com,
+	duje.mihanovic@skole.hr
+Cc: dri-devel@lists.freedesktop.org,
+	asahi@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 00/12] backlight: Do not include <linux/fb.h> in header file
+Date: Wed, 18 Jun 2025 14:16:32 +0200
+Message-ID: <20250618122436.379013-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,114 +101,73 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE2:EE_|MN0PR12MB6247:EE_
-X-MS-Office365-Filtering-Correlation-Id: 678a9b97-dce2-4638-8cc1-08ddae5cdf8e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FvKm0mNSzV9TFC7GB5qJvnCMYFCkcyhzIBOZcMZjqPq2Cc7HVKSxYhK5T7hO?=
- =?us-ascii?Q?3V7Zyyj6Wl1YiHcX6IzCRuX90/vcFZnGJwCjZ63tjc9BxaNPPSxr+kd6h9m2?=
- =?us-ascii?Q?avUsqInqQsgNtR8K3ZmfpOLr8EoRhruXT6/hQH1SYmlmEbDwlMygIuNU20xo?=
- =?us-ascii?Q?Tp8bFuzqLHP1FHmqXyp8gYCMPEqxU2Otp1yEoa7GX0IqlKZl3f/MMREYYlff?=
- =?us-ascii?Q?p48O4jHUhXyw/bNTEwBmaxlBMvSBgTVtP9rZmpfPXd1EOJ3Rvvy801sDd4Gx?=
- =?us-ascii?Q?brE0QrwWvwDQmCuveKw00KJVQ2XzVdWXEXb9WHg3q8GWqX3j2Eh69Uz2+R93?=
- =?us-ascii?Q?SLbZPxhMYZVPTb6fVhyXdi894NFHcLY/mW/XIHwjdDsiKOAFhtbfVkwxCJJC?=
- =?us-ascii?Q?ktkTgshz6XtrqnSKeWsACY9i3CKTymmoHt9Z4i2UEppgoRQYV9FLaIxhNG2/?=
- =?us-ascii?Q?056SmChnCJ9Jv3Rj3yU/rUbEN+2uelT5h9SLjRUoKKsKcJaRXtC4KfevuW5N?=
- =?us-ascii?Q?s3zpZ6HjdQQFi7K8l5joyTAq8jm2e2F/KoQvtuvI/qg/pr3uU02BJ82I/h09?=
- =?us-ascii?Q?YTeZ18qXJJxC5UChEZ7iwXajAbIC/z7PEihooZvP6B72PC0cNr87+UAVwCVo?=
- =?us-ascii?Q?llvDlXPdl4Op1CRzVxVUBij+y2yU9xfK9PzCX0EXmt214U1jTJ4eEWep8wlF?=
- =?us-ascii?Q?EZ+2SfuGrvPGLbnRE5LKt9jW84slz667hdC4MHRbvD7wmT7SGXHFQrmSO3fI?=
- =?us-ascii?Q?uHH5HHqj+q+4F3uAoKkkhS7E4PFfKE99EqSU30QMCH9GZV8rnYgYJWem+vR1?=
- =?us-ascii?Q?GX7IxwdBvGKGQrqrcPGBQSLRfBCk/xjUk89EsKZI0LIbbPPrHWOaFUlNdv7O?=
- =?us-ascii?Q?ZEDBmDtM0zShmGGIB9zN0mymPsG7+syZYV4TvCQUs0Zt2dTMCyXbBSzc9NlS?=
- =?us-ascii?Q?yE9izFT1cSJfwT6WlxXoIgNoo+XJYTyjfkVMXToaO8vaLdLfUvAvjWWEpvCd?=
- =?us-ascii?Q?M0EhyK8d3JWAOZNXDK5sq2/R/Q+6HEf+z7ZQ8qycD920tGUg3i18LMqV+WO3?=
- =?us-ascii?Q?TXaT0wTwRGhoCQoUk++0GxNXrChTZCoyX5i4W55Flda+NwifY9fTxbA2XZVN?=
- =?us-ascii?Q?vWp6CSvu87EOFYygUpyp/8bVBHn2D3YBH9+/VIlTzdjuUSMPMfc0tjOe6CWx?=
- =?us-ascii?Q?N/+vn1X67Hv/ReXVocmiO6HnjqvyCLVC8G93aEtFVuTgExAIyX4qqbhLU9oY?=
- =?us-ascii?Q?2xZgzM6twoVhbNFU1IpOKyo+g9DEf38GaozDQkg7Asl+1YeYWatQBB+cMc/s?=
- =?us-ascii?Q?X525/0ZrzQifm7R1n546U2TyJiHquJK+pyIGrEHVj5aBGxztSv+Vkn0JAhc4?=
- =?us-ascii?Q?h5k+4hDpql5uDIKT3lKbvzqKO/sYZ/7kL7X5naPuDyvUcrtq+PlAy68sElHn?=
- =?us-ascii?Q?35/HX3xkTwGUHp64116iyRAhDC2fqU67hMbWX7RsPgJr/PHSdMFMqOD9tfaK?=
- =?us-ascii?Q?3put2otsGJ4x1EOW3h9LH/BX8ASZk5aJzJRP?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 11:40:06.6692
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 678a9b97-dce2-4638-8cc1-08ddae5cdf8e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6247
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,gmx.de,diasemi.com,skole.hr];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.30
 
-Before programming the event info, validate the event number received as input
-by checking if it exists in the event_list. Also fix a typo in the comment for
-the mlxbf_pmc_get_event_name routine to correctly mention that it returns the
-event name when taking the event number as input, and not the other way round.
-For the enable setting, the value should be only 0 or 1. Make this check common
-for all scenarios in enable store.
+Remove the final dependencies on fbdev from the backlight subsystem.
+This is really just the include of <linux/fb.h> in backlight, but it
+has some fallout in other code.
 
-Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueField-3")
-Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-pmc.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Patches 1 to 11 fix all the implicit includes that come from fb.h
+throughout the kernel. It's all trivial, but touches various drivers.
+Maintainers are in CC. Patch 12 fixes the backlight header.
 
-diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-index 366c0cba447f..fcc3392ff150 100644
---- a/drivers/platform/mellanox/mlxbf-pmc.c
-+++ b/drivers/platform/mellanox/mlxbf-pmc.c
-@@ -1222,7 +1222,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
- 	return -ENODEV;
- }
- 
--/* Get the event number given the name */
-+/* Get the event name given the number */
- static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
- {
- 	const struct mlxbf_pmc_events *events;
-@@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
- 		err = kstrtouint(buf, 0, &evt_num);
- 		if (err < 0)
- 			return err;
-+
-+		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
-+			return -EINVAL;
- 	}
- 
- 	if (strstr(pmc->block_name[blk_num], "l3cache"))
-@@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
- 	if (err < 0)
- 		return err;
- 
-+	if (en != 0 && en != 1)
-+		return -EINVAL;
-+
- 	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
- 		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
- 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
-@@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
- 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
- 			MLXBF_PMC_WRITE_REG_32, word);
- 	} else {
--		if (en && en != 1)
--			return -EINVAL;
--
- 		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
- 		if (err)
- 			return err;
+With the series applied the backlight subsystem should be free from
+fbdev dependencies.
+
+Thomas Zimmermann (12):
+  platform/x86: dell-uart-backlight: Use blacklight power constant
+  drm/panel: panel-samsung-s6e63m0: Include <linux/of.h>
+  drm/panel: panel-samsung-s6e88a0-ams427ap24: Include <linux/of.h>
+  drm/panel: panel-summit: Include <linux/of.h>
+  fbcon: Add necessary include statements and forward declarations
+  backlight: Include <linux/of.h>
+  backlight: apple_dwi_bl: Include <linux/mod_devicetable.h>
+  backlight: as3711_bl: Include <linux/of.h>
+  backlight: da9052_bl: Include <linux/mod_devicetable.h>
+  backlight: ktd2801: Include <linux/mod_devicetable.h>
+  backlight: led_bl: Include <linux/of.h>
+  backlight: Do not include <linux/fb.h> in header file
+
+ drivers/gpu/drm/panel/panel-samsung-s6e63m0.c            | 1 +
+ drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams427ap24.c | 1 +
+ drivers/gpu/drm/panel/panel-summit.c                     | 1 +
+ drivers/platform/x86/dell/dell-uart-backlight.c          | 2 +-
+ drivers/video/backlight/apple_dwi_bl.c                   | 1 +
+ drivers/video/backlight/as3711_bl.c                      | 1 +
+ drivers/video/backlight/backlight.c                      | 1 +
+ drivers/video/backlight/da9052_bl.c                      | 1 +
+ drivers/video/backlight/ktd2801-backlight.c              | 1 +
+ drivers/video/backlight/led_bl.c                         | 1 +
+ include/linux/backlight.h                                | 1 -
+ include/linux/fbcon.h                                    | 7 +++++++
+ 12 files changed, 17 insertions(+), 2 deletions(-)
+
 -- 
-2.30.1
+2.49.0
 
