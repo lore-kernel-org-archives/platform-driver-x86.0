@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D310139D1B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 17:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36F61FBCAD
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 17:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267916; cv=none; b=TiKpGBkmVjuBPUZqIC4UN5rdXZ2pi/b8QOaVvZst8WbhbJu729mXg9mqiemJKMuiuh0x2p2wfOnToGZrM2BtCI38P+2WiDgeFi0iXRtPv+GdnO+uwp06coY5TLWuBdNqCCtrqb6I0TGjmoF+D+5hPQQ+9kaYE/DQJESw7KQUwWE=
+	t=1750267959; cv=none; b=C/u7TsN3GL5UwgtV0fUqca8XOIw149Pvpr2fiB+p0oFE+PkU6W7DBodDWoYChsrmQcsVsMgshWWyNAb5pKMh7hueOwBGOoLpO80j3HDCioI1N6MK85ASmOqWk++UyF7a/m29P60BBVZOfe1lyULtxEODhLEMxurWXbBOLIYhwqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267916; c=relaxed/simple;
-	bh=OMD21k3e6IkEVQR76lO0ncOim2Alecz9ZTQ7wruV4+0=;
+	s=arc-20240116; t=1750267959; c=relaxed/simple;
+	bh=H4glMASaOaNh1iNpQrrTy2RAiENEpfWBJEweDu0VF3E=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VuVdMeWdTU12sR0pjdPF/KLTS/b6cLSy+MEL9X18hwMFMKFN7EjwRe5Q+LUMFBLdKd79Hp6J2WXUDlJwpgSuzm97ECHX7LS/bICHcLpqcENX1cbAiEEHNUjFZzo/EEU7i1dMaYRyOzTEQ6XEYQcTJSYBRucFgo6PBA6KxlzqTek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/msnrWW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=tBa0T2hZrVtlLQFAtbezQbfJ0z18g2CBhYx0PAbytsFeBh7gCDcjdAbtNEcicnTW6jn2ZHtCzDBhFEH1oGS47XGOJYQ1xbE6oIrdNwz7GOQELDAXQ49Il15s4H3/FTRqyj86mg/Tta9NE3oSmx+i9IXwRCreLgcdCHhjlSJuxDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjmrheRe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/msnrWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A2CAEC4CEF3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 17:31:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjmrheRe"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 722CEC4CEF0
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 17:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750267914;
-	bh=OMD21k3e6IkEVQR76lO0ncOim2Alecz9ZTQ7wruV4+0=;
+	s=k20201202; t=1750267959;
+	bh=H4glMASaOaNh1iNpQrrTy2RAiENEpfWBJEweDu0VF3E=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=n/msnrWWc41x+e1YiMDBc8sR/WnnnJbLSLoQEtfAxC+8Mdw7SM6B+SxYDIQPQcZb7
-	 3KNFV8duOJlcwJ/SRRHvgk7GRvbmKkmr/6ZO6oF1jVMHgwYSd8sGjqOuGMv5C3XBA/
-	 /GI5JyO1pLZLVs3rt6lqV8B4YFa5jBjK9mceVQDUV+Rv6C4WAzS4Cr3g5nzvD0a1WQ
-	 koXx6wJAWAg0LcH9hVzZflWNXDasLDgJc1NWsWa+bQnahhBhWLLTw+e3OSvl0R7V6A
-	 PdMG2y31fWgzB9IxR055PJTpQRbZ4ypmUT3Hnx30AoK/GuPiVxaqFqN0Xvs8uKl4Ob
-	 fmw9S7VKCMJqg==
+	b=AjmrheRegtp4msXm9lqXX3jKV0RHwbXlWNiQN2iaLGLD+rsS8DuL+iKEURbGMXCzJ
+	 UaAU+p+MhfkJhl3HxfzQD3XYDO0qbwwwwpLEPukfb0zDKCI1U/sv2AvhWKNDqnzyKH
+	 JDi5Mt8pOPyWte1/CpErnJEzBDqe0IXlHUpFOafFtryetGz8Cpc1NnsB4BI6w7qhR5
+	 YlJyxPDON0hBUb/nMUFbrKaQjkBh0PcdY1heQ1bSNDBrC9tMId/2QnUh4Mvuvo/idO
+	 BgjZWUUiRdiyujKg4d3dLBPn8tRU9LfED4CRoX/bENjiLIzlaGvkHNsDxBDloamtJ9
+	 FDK0308P+KH5w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 8F769C3279F; Wed, 18 Jun 2025 17:31:54 +0000 (UTC)
+	id 6AE8FC41616; Wed, 18 Jun 2025 17:32:39 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220246] Dell Latitude 5400: Mic Mute key stopped to work in
- v6.15
-Date: Wed, 18 Jun 2025 17:31:54 +0000
+Subject: [Bug 220224] Kernel 6.15 causes crash (general protection fault) due
+ to amd_sfh module
+Date: Wed, 18 Jun 2025 17:32:39 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,17 +40,17 @@ X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kuurtb@gmail.com
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: g.molinaro@linuxmail.org
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-220246-215701-VuXSXbPwlc@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220246-215701@https.bugzilla.kernel.org/>
-References: <bug-220246-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220224-215701-9lz712JXSO@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220224-215701@https.bugzilla.kernel.org/>
+References: <bug-220224-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -62,34 +62,16 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220224
 
-Kurt Borja (kuurtb@gmail.com) changed:
+--- Comment #23 from g.molinaro@linuxmail.org ---
+So, I've been trying a kernel with this
+https://lore.kernel.org/linux-input/57eb65bc-f710-4c86-ad0e-7473cc6db135@am=
+d.com/
+(provided by downstream) for a few hours and it works.
+I suspect this can be closed.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |kuurtb@gmail.com
-
---- Comment #1 from Kurt Borja (kuurtb@gmail.com) ---
-Hi Dmytro,
-
-(In reply to Dmytro Bagrii from comment #0)
-> Mic Mute key (Fn+F4) stopped to emit input events.=20
-> Before v6.15 pressing Fn+F4 caused `libinput debug-events` to print:
->=20
-> -event8   KEYBOARD_KEY                 +21.508s KEY_MICMUTE (248) pressed
->  event8   KEYBOARD_KEY                 +21.508s KEY_MICMUTE (248) released
-
-Can you please check which device owns this input event?
-
-It may change from boot to boot so call debug-events again, press the mic m=
-ute
-key, check the event number and get it's parent's name with
-
-$ libinput list-devices
-
-Additionally, please attach the output of this command before and after the
-regression.
+Thank you and keep up the good work.
 
 --=20
 You may reply to this email to add a comment.
