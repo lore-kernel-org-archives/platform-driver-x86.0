@@ -1,159 +1,196 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2061.outbound.protection.outlook.com [40.107.96.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B2B1C8604;
-	Wed, 18 Jun 2025 06:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750227853; cv=none; b=tDf4BpGwtTONSY5lSTkEA2Jp9bPCqfNhBcxF73oO8NphRDuVlH2AmwMtpD7TssnYkocD0ldTZIgxg5qq0fcfpZJWAtsUIfhmF7IA2bFSfUKhb1BZEooHaeaYNMzOQnGylbzL/wR707OrmMODb1MDvPjtfd9P/wyEBdYpJsp1kiU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750227853; c=relaxed/simple;
-	bh=onSnLvsz6DVt8iekrXxb1L4Z0MhwSokv1Ooo9nCMouo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d/xtQ6EyULVpudOYliPvzAV8xtfKP4KIlB5+yUAebb8Odnho1iyzNnsD5Qpi5eqVF8WV5Hi7s94Vfdl4OwEq0qoo/2LCTHDyW59cKjGBWnRLP362zOq6UT1H7QS8cI7eJNMvfzmiJG+UGMAA+TwvYNxl/oIQPb+6Dj53hWwEOuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P3Q0wBnV; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE82819DFA2;
+	Wed, 18 Jun 2025 07:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750231080; cv=fail; b=jw/nQjwBpWGsfbw3fjvcGF1ElRYSiBYAWxpXmLRMAq/5ORIShp4mUU3zT2BAYLBQwfSd0t5uOPNpILSMi1Xx7POCopcpNgFN9gITx9iGxfUAVPMlvDFMm76QAkpQpajpzyVV+6drqhoEvE8YV2oHdxn8vCTzBWSEUaJOcuQ+pOA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750231080; c=relaxed/simple;
+	bh=LvC05DVt0puEdrIhG7INIVvrbnRxz6MsNk6reYqt7VA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jUDIVFKlAqt5UtYpwO1ftOQBiTMWsEjS51BwT7kCIIXWbAhPw80jlul91Lg7yocBXlId0xkfZcRXn/iWUMKnJbWwuygXSRtPljCCIWHLO7u6kAFIckeV57kll7OSQpIo0XA/IWS1So4USN8eMo+37k4zPaxv8J03Yt/kiC2EzkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Eoavw9RC; arc=fail smtp.client-ip=40.107.96.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P3Q0wBnV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=Dhr4RW/Vvp94J0vVGybJ5KdBi6R1f3XY9y/GSp6VCSg=; b=P3Q0wBnV5IUeaW4j8mMKz5PV29
-	vNNMYwAuNVjnongBRZtAZZqT3ftcvogT0IF7gmFmi+TwKr5JqYzufy8/BkgT7tbBlyYzcl/pwvS9t
-	GbxdvlwftpW41stqvBzm4V8TnKI8WSoSaK3tnh0jQOU4n/wYXg3XhoVGDMqv9nGVC8DfGTW46cpzR
-	o1UA11LqxIhHniB4Jlrin1Zlqv/DsignZCVa3ZEzZKChUjJEJSH/vN1mZUq3R+3y1jFNc5RtubqTf
-	AE3v8wos+LVid05180XoGSAQ2Txr3qzvtgXBkeW5bdl59Rr7gfoXswBZkbqsKF/jl/tEkZNTxdVlc
-	M66o0RWQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRmD9-00000001WuR-0Qb3;
-	Wed, 18 Jun 2025 06:23:51 +0000
-Message-ID: <45184ccd-04c7-4883-9500-8a628272c2cd@infradead.org>
-Date: Tue, 17 Jun 2025 23:23:46 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Eoavw9RC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V7a89/9dAYAwAed/WXlyeuFy7I3Zc92YDsPElhxCAbVk986UQLqlFrj6IrLQyPuy4lRFcj0KpCwceb+omMbqXyV30GXO2TX9RaaPAQgandhhZVe1Vx49em77HMOuYhC254MWpdIKKni82geo8BV+QeZg/vRvdtHac49dlz+L8//CalMFlN45JZ0/YRPMkg+dB3eb7jW4Dt+P72Mmu6lgfmwhdskrYM6lyWEZ2//VSi9leBWhj36LWp4nZJA86u3R3EgWTbNxlg9NzBNHJ6MBhuO2mE51K02KTtq65DckJwNR6WY1kc/7EBFT5dq/7PY2nmQeDvorKAU1z//7too0WQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F9F//+d3SI0sPoAgCiZkEuy0CObKMVucyoSrrKfwAFo=;
+ b=eggK+Fn4P+ZcCXLKKCekuuEkgSf4uXJV12/N09iqpfNcs9uO01IiOBA7Ywbn+hsM05HKzTLfywWZwSt32X/l/aMG6F2X/T/DW2Y8aBggmA6qEvBkOptVzFZWO9gWWuCmg3CjPqDb0q81pehudRA0JMxBPmxtWgNe5I/0PjLFOenoiL5PD7jV1K7dY69guSJQl/vvo8HbknEOBdC9pjIg+CjmhRWT5J0Z6SsVWyOYNzgFm60DT9zpQp6I7jokdPm8iPg0tqm1YMC/RP1+oQUJ08CC1CVn6pCsQtLIMKnsmJOBt4yQLCL0sc2LDY6tD/YLkePa2xtdSLPRhH5Cv2D/Xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F9F//+d3SI0sPoAgCiZkEuy0CObKMVucyoSrrKfwAFo=;
+ b=Eoavw9RCH+9XIzBpZKJyykXjOLWdJBxov4v0LDtjEtMIUoDEbsJa3GhDyvoxVdp+l8D7Kb83Zr4i18dCd/99xGU0CrHgLyLLAeyyMxG5/azSeL99loP2ZKrMq7hkkIFO9Pt3/b3LAqd08VCJlN8Wa8Bb4DlVphzeNR36yIjiRL2G4XWkGedbNIUtKqyfEh5GN3082M0GMqPAU5cHul2PWbW/1QAn4qzv8noYU7SDpE2hXk8cEU3ZlPD3G8SicUq8EQ1CcNHYldpzMMajyarQeq5ErPsxQWABuLmPivH8AJ2YSAtRPwcBq1MqKLfaxE5e3XbtVAYNcSm3fY5sq1mNYg==
+Received: from CH3P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1e7::31)
+ by CH0PR12MB8577.namprd12.prod.outlook.com (2603:10b6:610:18b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 07:17:55 +0000
+Received: from CH1PEPF0000AD7B.namprd04.prod.outlook.com
+ (2603:10b6:610:1e7:cafe::70) by CH3P221CA0030.outlook.office365.com
+ (2603:10b6:610:1e7::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Wed,
+ 18 Jun 2025 07:17:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CH1PEPF0000AD7B.mail.protection.outlook.com (10.167.244.58) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 07:17:55 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 18 Jun
+ 2025 00:17:39 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 18 Jun 2025 00:17:39 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Wed, 18 Jun 2025 00:17:38 -0700
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Vadim Pasternak
+	<vadimp@nvidia.com>, David Thompson <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Check validity of event/enable input
+Date: Wed, 18 Jun 2025 03:17:13 -0400
+Message-ID: <20250618071713.8595-1-shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] Documentation: laptops: Add documentation for
- uniwill laptops
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-4-W_Armin@gmx.de>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250615175957.9781-4-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7B:EE_|CH0PR12MB8577:EE_
+X-MS-Office365-Filtering-Correlation-Id: b18b3d23-daae-4c0f-0a43-08ddae383ef2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lBVndR8VqdPuKxzzza4sVtwk0t1nanASgmNyo7VWC6ko+FQxRdjZFk5tfw8J?=
+ =?us-ascii?Q?XPAPYmfAbmfiSTMAcUdW9ixPzQFEvz3oLgYyHmk+g5iKPzp4TBWAVsfYUkPW?=
+ =?us-ascii?Q?vB51DOcsiLF7sxqy8Rff3Rte80oKF3RiYvCISg10rjiUP3p02OIskosjNdWb?=
+ =?us-ascii?Q?pgiByzc00RJNgbahLRW4fc/sNGFNqvn9DbHQMextYF/szHylX3Ayo+x2AGuJ?=
+ =?us-ascii?Q?tUDZVgkzmjPRo6+0ULfL0F7HfUWPlVh6zRuRVd8FpDgH8zAO4jdor/cAEhJZ?=
+ =?us-ascii?Q?iaTcIFuLJbPUVq/6QOOCMzJQtoAqsRbGXJ0rlexe7omvvTQ/afkpIJip3o80?=
+ =?us-ascii?Q?OOOaZOfoMErUUmG+TbNP5RAZf5rHg3wklKiREVzgW+tctYwauUintd/3luI5?=
+ =?us-ascii?Q?4rCzwqq93k86Hi90UFFqZpz3LlbQhbu9j81aZX1pZuPCepj0gJeXFQdxAbE/?=
+ =?us-ascii?Q?K46i6Ic3F44f6gNzV9SmPLM8iXtBpTY/TejgQFb9VtxI+C5oLbj/Ub9/wfJB?=
+ =?us-ascii?Q?V72akWn5bqu1vDrSzc7Ued+AnNDLxEEys/L94JtiJScKW3Qzk6vIY+XdotVQ?=
+ =?us-ascii?Q?Rn7NyUQ+lR0QDZ2GA3vK1c9WYz1R5WLqWdTJ2VxB8fh8UfF0hUqCqdYZtWHP?=
+ =?us-ascii?Q?mvEGIRNsiOTM/ilZta5SciQRI83nBU47be3nfuTBLI8814xQzp7Qv8Yy8GQm?=
+ =?us-ascii?Q?ELcmXj3WVWEIwnkrkZ6eyNv8spp0aGbe74xbIf2xwTIdHT1CvNDGZjBrnXK/?=
+ =?us-ascii?Q?sH2kI59lX7zqBxodulftYKjpZ8vNv0Czo6fQWqn8b5R0+CnEVxuGzZd3QyKR?=
+ =?us-ascii?Q?eK23B97hHlV7mBXjTczRlbDzdHC0lSL7MQBE3TQr1+uJV1t4g9bcpieeJiHX?=
+ =?us-ascii?Q?VxwjvdmulBV+KQjY3D75NpmuK23wFjk1T2UE1VrCm48/B8YjQ48mFNqI8RmN?=
+ =?us-ascii?Q?6n3bVS5ZeOoUXzfjXXXSCiM+dat/83HWwYFy5+qKXgvW1DaRz1F0/aBQ7bPe?=
+ =?us-ascii?Q?WMNXrixdrRr081JOTAM/PHx5b0KW3ZwCpE+zrsLF/Mlow1Q/NmBdsZrT11va?=
+ =?us-ascii?Q?2LdtVFip+/plubU7nCcJmCs+UEbmtnPczYegMJeS6y1Yi2zZ3NDK36AgRGnh?=
+ =?us-ascii?Q?G6Qg/FX2Im3j7f/4adEmf1y1k6UjzGViSLBJX0SfW0c27/ObLiszvoOXsrYT?=
+ =?us-ascii?Q?hQ9+6Ycuel9WSm9eZXA+/bO02vBmE1P/jh8yiFQK/2j0BDM1qBmKsST1bgnN?=
+ =?us-ascii?Q?1ep9lqfpduSlw1PnCaJrd3a2oCG875Td6OcsKEOF3+8ou1sQm4NUMuJP5lfH?=
+ =?us-ascii?Q?OA/NSwANsDrXJ9HFKD+YTgOueyYki15Nwmnv8O97IRRMYlxKkWQ+tJHeMf0h?=
+ =?us-ascii?Q?qjoF7S1er+IrBjlByBSe+0bAyY+lM9Og6q7KQleBpkxB3wSgONnprHusFUHY?=
+ =?us-ascii?Q?te5j+j5dxZW/fhbRVo+BsVUP8smZd2SAz/WYPx7jm5XttN5aMNNrcrWHXVv3?=
+ =?us-ascii?Q?2enD1eURATThbD469jDjjsVrA2AfeJXILeGM?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 07:17:55.2438
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b18b3d23-daae-4c0f-0a43-08ddae383ef2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8577
 
-Hi,
+For eventN input, check if the event is part of the event list
+supported by the block.
+For enable input, do not accept values other than 0 or 1.
+Also replace sprintf instance with snprintf.
 
-On 6/15/25 10:59 AM, Armin Wolf wrote:
-> Add documentation for admins regarding Uniwill laptops. This should
-> help users to setup the uniwill-laptop and uniwill-wmi drivers, which
-> sadly cannot be loaded automatically.
-> 
-> Reported-by: cyear <chumuzero@gmail.com>
-> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
-> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  Documentation/admin-guide/laptops/index.rst   |  1 +
->  .../admin-guide/laptops/uniwill-laptop.rst    | 68 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  3 files changed, 70 insertions(+)
->  create mode 100644 Documentation/admin-guide/laptops/uniwill-laptop.rst
+Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+Reviewed-by: David Thompson <davthompson@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-pmc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-
-> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> new file mode 100644
-> index 000000000000..8b977c09e747
-> --- /dev/null
-> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> @@ -0,0 +1,68 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
-> +
-> +Uniwill laptop extra features
-> +=============================
-> +
-> +On laptops manufactured by Uniwill (either directly or as ODM), the ``uniwill-laptop`` and
-> +``uniwill-wmi`` driver both handle various platform-specific features.
-> +However due to a design flaw in the underlying firmware interface, both drivers might need
-> +to be loaded manually on some devices.
-> +
-> +.. warning:: Not all devices supporting the firmware interface will necessarily support those
-> +             drivers, please be careful.
-> +
-> +Module Loading
-> +--------------
-> +
-> +The ``uniwill-laptop`` driver relies on a DMI table to automatically load on supported devices.
-> +When using the ``force`` module parameter, this DMI check will be omitted, allowing the driver
-> +to be loaded on unsupported devices for testing purposes.
-> +
-> +The ``uniwill-wmi`` driver always needs to be loaded manually. However the ``uniwill-laptop``
-> +driver will automatically load it as a dependency.
-> +
-> +Hotkeys
-> +-------
-> +
-> +Usually the FN keys work without a special driver. However as soon as the ``uniwill-laptop`` driver
-> +is loaded, the FN keys need to be handled manually. This is done by the ``uniwill-wmi`` driver.
-> +
-> +Keyboard settings
-> +-----------------
-> +
-> +The ``uniwill-laptop`` driver allows the user to enable/disable:
-> +
-> + - the FN and super key lock functionality of the integrated keyboard
-> + - the touchpad toggle functionality of the integrated touchpad
-
-What is this touchpad toggle functionality, please?
-
-> +
-> +See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
-> +
-> +Hwmon interface
-> +---------------
-> +
-> +The ``uniwill-laptop`` driver supports reading of the CPU and GPU temperature and supports up to
-> +two fans. Userspace applications can access sensor readings over the hwmon sysfs interface.
-> +
-> +Platform profile
-> +----------------
-> +
-> +Support for changing the platform performance mode is currently not implemented.
-> +
-> +Battery Charging Control
-> +------------------------
-> +
-> +The ``uniwill-laptop`` driver supports controlling the battery charge limit. This happens over
-> +the standard ``charge_control_end_threshold`` power supply sysfs attribute. All values
-> +between 1 and 100 percent are supported.
-> +
-> +Additionally the driver signals the presence of battery charging issues thru the standard ``health``
-> +power supply sysfs attribute.
-> +
-> +Lightbar
-> +--------
-> +
-> +The ``uniwill-laptop`` driver exposes the lightbar found on some models as a standard multicolor
-> +led class device. The default name of this led class device is ``uniwill:multicolor:status``.
-
-s/led/LED/ 2 places, preferably.
-
-> +
-> +See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on how to control the various
-> +animation modes of the lightbar.
-
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 900069eb186e..fcc3392ff150 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1215,14 +1215,14 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+ 		return -EINVAL;
+ 
+ 	for (i = 0; i < size; ++i) {
+-		if (!strcmp(evt, events[i].evt_name))
++		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
+ 			return events[i].evt_num;
+ 	}
+ 
+ 	return -ENODEV;
+ }
+ 
+-/* Get the event number given the name */
++/* Get the event name given the number */
+ static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
+ {
+ 	const struct mlxbf_pmc_events *events;
+@@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+ 		err = kstrtouint(buf, 0, &evt_num);
+ 		if (err < 0)
+ 			return err;
++
++		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
++			return -EINVAL;
+ 	}
+ 
+ 	if (strstr(pmc->block_name[blk_num], "l3cache"))
+@@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 	if (err < 0)
+ 		return err;
+ 
++	if (en != 0 && en != 1)
++		return -EINVAL;
++
+ 	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+ 		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+ 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+@@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+ 			MLXBF_PMC_WRITE_REG_32, word);
+ 	} else {
+-		if (en && en != 1)
+-			return -EINVAL;
+-
+ 		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+ 		if (err)
+ 			return err;
 -- 
-~Randy
+2.30.1
 
