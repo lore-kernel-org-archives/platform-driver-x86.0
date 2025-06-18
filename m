@@ -1,84 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D906D1DF75B;
-	Tue, 17 Jun 2025 23:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D639B1FBE9E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 05:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750202963; cv=none; b=V456RbmtYK7M7UGhH/ibBSzQWbUdSzahXH1yKuNHqQSmk3QGdS3blXnAnTYBiJdbI8jEulZd5Mrua45/ClUhWvKhnKyok3CWYDQWYPECyh1HnZ9VaN6bIDUPcro7foIR7iirNpuS16U11l6bq66XDhKzX8N2qer1aZAtZtVv060=
+	t=1750223708; cv=none; b=j72xVFJvyrJsnrhZnOWDl5qo1nukOAWNYezCtfLXeKL42gUlU9CqSTN9Zt6iUGxex6J0T8umhnoCe8gDpFn7y2LBF5OksFqMvBibeGAHrjQgkvBE6pdFVpFPqip6VmxdMaNX/t3qKEJEBMAirnspdXP7hZ3FKeAOkVQrxf8sGJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750202963; c=relaxed/simple;
-	bh=vHIOJ3pYnf0kGz/veR/TaTT7eamc5Fqd1ge3/r9H95E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GAvq0CvEnqkFb+rVspFRTguI5M4hu1ay6FIckkT2QCwFItJVqNK8g9KEuxMwChEgxOuNJnAVf/Lqi0cNNcMIsa3WeReFLt88UY3AXKpM4YdSVbL3mr+jEmaGW485xEv1eFPX+dkkVqQ2e/3TClyaT+YN2pRjmVM4QCwSc363c0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OlSqDrsB; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750223708; c=relaxed/simple;
+	bh=+dJ7p6ifyeXmPVmfoitWxjOqyrJUWc2Gl0LI168NWZw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RiNU1Y/g/YpcXQbQLtx7Sukz8eRsb2/k6Mgn2bvon9LXe+5srwqpcXA/7WeL1joPfFr8mktoU1xj7VDViAVo+giIDdzt9YEpwA2bCFSO51Oe7HX6mAaw73uL+uP6lxWT+HxYQZN+6GhaRWDs8ciwakX1/DXISlUWImzzx/sW9Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJfwNRM5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OlSqDrsB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750202962; x=1781738962;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vHIOJ3pYnf0kGz/veR/TaTT7eamc5Fqd1ge3/r9H95E=;
-  b=OlSqDrsBTtjy7coWE+YdqnMkft7dm1h9MWyYwzkXeh+9dVvP9IIsF/oy
-   u/nMx9Cppzq2chHk8IVByc4WTd3PGNHvGKQeiqBArzUaUGu7Xx0W5s+Ba
-   M/PzE+5YJN5p9t6dB5WwdzY+VOx1LXrTfiyspQ3XmUaeEfIUKGSjtJw1t
-   /gXlrxqHvPEkmBT6HrRwRDEJYMGj4Qi2lPkdmwJ05wV+W+YVpK+wRbSsb
-   kQwyrOB7E3sqObBICGf+zStlkF6ixjy9OETQh2s4j5JBKiqK8uX6+jW2z
-   7YbEgK0r85uGze6n5RMlPlN+sIFfhzeFwW6Wj2TDwa2Ilb9NaLmCDx2D0
-   A==;
-X-CSE-ConnectionGUID: CP9qzXqkTguUxul96g0zdA==
-X-CSE-MsgGUID: PBmzVFqZQ4+XIXazZ206Uw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52542602"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="52542602"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 16:29:20 -0700
-X-CSE-ConnectionGUID: QdM+Fmg+RIeGfLvAs7h8AQ==
-X-CSE-MsgGUID: Oahb12JiSNeQ7YoZp6/TdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="149535458"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by orviesa007.jf.intel.com with ESMTP; 17 Jun 2025 16:29:20 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] Platform/x86/intel/hid: Add Wildcat Lake support
-Date: Tue, 17 Jun 2025 16:29:13 -0700
-Message-ID: <20250617232913.3314765-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJfwNRM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6603CC4CEF2
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 05:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750223708;
+	bh=+dJ7p6ifyeXmPVmfoitWxjOqyrJUWc2Gl0LI168NWZw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=GJfwNRM5a1kTLQNxvWn3GFR3gEIwwNKk+9X7GvzDBGbNMFYDt/huNkoNIAP9LqPaW
+	 RuuXJXEpa7OxNZ+PrJJIJbhY/eJ7lNBGwybkyb7wCDwZ4PAUQ6OT+ajJnQi2a4RvlD
+	 X3zMdlVEkHgP/BOByJStFPr5LMw+kYXU3J2PFsf0lnVpJIuBaas0xOYHp7X3l522sV
+	 4HQ8Wd7ZgChKZOsBxdxXfoPXafnl16LU2fDf2mbACyuMBHnmmhGGO5EOZVqW7tZCIy
+	 rGGtXzJTN/DLJvWZ9L8dY1DEz07plCwlPu593zE/nQr1rTGjAbGX1nTM9Qz+4MimKR
+	 cYh1lcvdCnv4g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 5A798C41613; Wed, 18 Jun 2025 05:15:08 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220116] amd_pmc - Last suspend didn't reach deepest state
+Date: Wed, 18 Jun 2025 05:15:08 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: CC drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Input Devices
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ein4rth@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_input-devices@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220116-215701-mnMDuiVhfv@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220116-215701@https.bugzilla.kernel.org/>
+References: <bug-220116-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add ACPI ID for Wildcat Lake.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220116
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel/hid.c | 1 +
- 1 file changed, 1 insertion(+)
+--- Comment #31 from raoul (ein4rth@gmail.com) ---
+Thank you.
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 0b5e43444ed6..f25a427cccda 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -54,6 +54,7 @@ static const struct acpi_device_id intel_hid_ids[] = {
- 	{ "INTC107B" },
- 	{ "INTC10CB" },
- 	{ "INTC10CC" },
-+	{ "INTC10F1" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
--- 
-2.49.0
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching someone on the CC list of the bug.=
