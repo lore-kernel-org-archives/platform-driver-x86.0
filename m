@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F6328682
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 21:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B4321ADCB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 22:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750283212; cv=none; b=BXYc+778LRkStyr86sAZBBEo6c/SVJojmSlpl3/ehB5Rn1iMeV/Ix4m6DOVUfpW7YR2lgiit9DkjUsxQQrRYMUMJo50aRk5ToJKHWr5eqylxnloUjvNA9/jw9gv0OyGL9EZIvz7CL2Yowej3QNSRc+acT0ZN/sLytpSW7Hk67W0=
+	t=1750284248; cv=none; b=n6WgRCqScKm283tReN6DoAfq08e0cdi5xo6wtKlkgjgDkxoZkb4DZHW8JksG8ZpOYUWy1/leUPuWV3+v07qWPrxEmga0CeM7q8Pa40TZc3bvWdPgyyJvKxkjHzfYAcT5Er8GCfYDk3ttrEPE2Luwgjm49a1866lIC3LI3ezV620=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750283212; c=relaxed/simple;
-	bh=R8AawmWBDEPYjBC12Y5lirl6l2zZouLgn0wNB6+nFEk=;
+	s=arc-20240116; t=1750284248; c=relaxed/simple;
+	bh=HWSCASKxz2OxP8theWmvOc2lvbCV2VKpf72GJs6ENxU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=L2DM6RMMtqV8pnY5zocjhyLVr7SQO/PH5PonIbtwbFIOUOBBemO8+Gns/5un3W/cALv5UWaDZEc3kiFBfQC8J2yt7/+m1rCw4EqU4ZKjkaa8krZiyoER89sakXutU0los/wbYno1++1ODw48K1k+RP7rh3dU3ds66lKy3eAwYIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrvKovlc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ONRD+8oAEbslt9owUBqjQD3HqLXsz1qLXzNs3nU5UrvlI+fbhLt9p0e8eFo3NwCe6K6fOIpSdQQXVixlxtJV9iQA92RTMk1VeY1t/50ZD650Jk6sWLUCK/GiwKHKM53ecJX29z2yBhTiNYFYGloohBpbA8cSKUIAu3ztSuvee0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7cVdWMc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrvKovlc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9D8BEC4CEED
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 21:46:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7cVdWMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC922C4CEEE
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jun 2025 22:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750283211;
-	bh=R8AawmWBDEPYjBC12Y5lirl6l2zZouLgn0wNB6+nFEk=;
+	s=k20201202; t=1750284247;
+	bh=HWSCASKxz2OxP8theWmvOc2lvbCV2VKpf72GJs6ENxU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=RrvKovlcTrZMfN4zqjlEOx07WSXLD6NRPX6adk19oaqV+HBDB6qK9IfhSTMGw1pGI
-	 gQSGIbjPpLeuJCjpEZJ44IYU763EwQqPdAEiNiSGroCswF8OrPmwj6PyUOxD5poC5Z
-	 i8hbvJc73xI9vVoOSQ9bYR8/LBDpS06Le1ZLA5ycp0cRZIwo+9629QaepWh1AO0sTV
-	 ILixaFgzvXfVVQgh+HwAHVLe9TdPvHACUG4kgoPFtaVliJCm9SdudVOd9asD0m9kRE
-	 xAvAjJbR77Ao86CXKQPFMaLU9wWAt5wwiPrwrNCsdvej5D33lAS6/qYcuJGq+qHvi0
-	 eyvF+EuCOyL2g==
+	b=Q7cVdWMcHfLHrEgxfKsvPQWR5sLw1l7nQ4SefTAmSFzB05TBGs6UlGsI4CfDHXE/I
+	 Fuma25orZm5YJNiTHuEA3OQUUWEglJ41XIybviLj1VkwLW5VBG9jzkdZYxq8zOgnwe
+	 OC7iPIUshO3bwmc6OUicTnJCvVlGKtjR50LlqeDRk3FprfUfW53KiuyTGPfaQNrneE
+	 u8K8/7HBRYFC8d1O0g5dXPxtxlsmKv4Pe2cpR54iYoJFAKCn6HMhocF5HAr/axdarZ
+	 v35dYPwn8TV8YE77CARbU/2FAzqKDTJeox+JRs1du4xHNv9TXEOCISBppcpFgP9R2I
+	 PmfkGJrRrbfNA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 8B8CCC3279F; Wed, 18 Jun 2025 21:46:51 +0000 (UTC)
+	id 97371C3279F; Wed, 18 Jun 2025 22:04:07 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220246] Dell Latitude 5400: Mic Mute key stopped to work in
  v6.15
-Date: Wed, 18 Jun 2025 21:46:51 +0000
+Date: Wed, 18 Jun 2025 22:04:07 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Who: dimich.dmb@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220246-215701-Qe4j6MrDMp@https.bugzilla.kernel.org/>
+Message-ID: <bug-220246-215701-ExVIszphNd@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220246-215701@https.bugzilla.kernel.org/>
 References: <bug-220246-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,15 +64,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
 
---- Comment #14 from Armin Wolf (W_Armin@gmx.de) ---
-It seems that the WMI event used by the dell-wmi driver is not marked as
-expensive, but still requires us to call the enable/disable methods. Since =
-we
-only call those methods on devices marked as expensive the WMI event never =
-gets
-enabled.
+--- Comment #15 from Dmytro Bagrii (dimich.dmb@gmail.com) ---
+(In reply to Armin Wolf from comment #14)
+> Does the WMI event work under Windows?
 
-Does the WMI event work under Windows?
+Sorry, can't test this. I have no Windows installed.
 
 --=20
 You may reply to this email to add a comment.
