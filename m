@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AF030E852
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 21:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90900DF42
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 22:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750369144; cv=none; b=hbq2cXRrDOfCqJEanTi3oPB+EjqBiG0G9OtbloRw/2jK8+/MBF+kgT4S0ZDc9/usydXqh0g+uMIbXAAVxSIrXmrXiGdTYz8WjtCR/Ks2N15e0Dx5pqMTK/2KmB0SjS99TQ2+JcBpeVdBUFe2n/8NWNmUPpZU7UgCdcTmdDbIiSQ=
+	t=1750371022; cv=none; b=HDAyqFljvew55qN9r0k9eYGJ4/TVNANBeX7oxsahtdor4bUS3Lz+2W37Pn+SklSS+jQb7j6JD6U2omwJLOKXJ1Vvaf7nNlBg43B4Q4ih8A3FIB3Q6x1QmrsbaTJaRX2StpBswXC2aELP9ZsZziBT4aVSrCQRSWGstgqdilKGFjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750369144; c=relaxed/simple;
-	bh=4465e03fj3SlKJuY+L5ATurM2nUPKBOgBKVWPsg1DtM=;
+	s=arc-20240116; t=1750371022; c=relaxed/simple;
+	bh=f8/NrsQiSvPqlY4bkyLIIqKcd8xdemyNci12x3mqZI4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lsbNGU/BOhUJwbJJBTANMw++33lRU+OIJxCclXXEHT2XUsBp1kAuTyu0Qx0jdsWN7rpDgGeyzIRVBQAMNPtJD3iVbAIQ/12ZZPKtJxQSIip0vvh4eaNmhi4NXVagkPS2Q5Lahz49RBwF2klQ2T5h4U/dJxtZ4TYn2vT6+VNcAGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJiHlb3g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=AqcTwkS2R09hAaftow6GpVDCDWajBrxVBcFGOIFuJHjzkD3WEM2+QGBnuYG3Tcfjho2WKaVW+3A85WvYBGjFMgt+2AOQYg/xI9L2jyNqhqxLKJY+5zxVssQ4KNxsxlKlDXu9gPyr95s6DopDEb7O2FuKIyYfcKNny7fuk80OyjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pvt5u2W1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJiHlb3g"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 71270C4CEF0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 21:39:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pvt5u2W1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27CF8C4CEEE
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 22:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750369143;
-	bh=4465e03fj3SlKJuY+L5ATurM2nUPKBOgBKVWPsg1DtM=;
+	s=k20201202; t=1750371022;
+	bh=f8/NrsQiSvPqlY4bkyLIIqKcd8xdemyNci12x3mqZI4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=rJiHlb3g/2uIXEwV8WZniZddWlll969MMuM+NEKYRk1t9QohBnnyzUOv/PSDbJ3rS
-	 E5boFhRzTs/3rNAmhgj1BqMPBCDVLXYrPwieXnqUkOn/PCyzfV8QUhcrfiuatzCE66
-	 5RI8BW1MrZjEkp36MG5MjQuxeh0HC424Ud/3jy5tukhXa2xq6XzBkAaIk7je8G6n51
-	 3iPbz0xkTJuBuXyFE86w3/fIJ8998RPEuZH7F9mPSufmR7yOoRpBKFmyT2GoAYIPrL
-	 Xw/yGxdO7z5FP6YbxlSm1VgetnCrI8tO0SefQgLJMQN2CR2kuf8gfo4xmoVvecOA3b
-	 Ex9uZSu4mbDLg==
+	b=Pvt5u2W1XD4aDVFBbgMAOShGn7Uo4pQyHBjzF/JojEsyefrsIpZPU1+Q3Yx4SxwAe
+	 ea3Z3O0MptBoP/SsaSCm/TTaDxus0+OYzBq2yNL/9p6qdLAjMvrsueXGdyaT0fjuRO
+	 pQd2f1LGu57PDIyVs2o2j2bOQJlVnwVAGF6NKUoIeamtelP/I3SbQN0AIUiGBDwP51
+	 h+dOqc2dOkpKgq8lpsymuSJs3tNYdDk9WLFlmryoDV/8i5JJJbG8H/AgYCOK/Y0V3i
+	 9faMlsJGqNAnCc3yFtniDdDSYzZNVRxnT4I85eH6VnzmMcL0ydHkuQo/ZHHTt4bIyf
+	 87Cwbg69mrHcw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 5E898C4160E; Thu, 19 Jun 2025 21:39:03 +0000 (UTC)
+	id 15864C4160E; Thu, 19 Jun 2025 22:10:22 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220246] Dell Latitude 5400: Mic Mute key stopped to work in
  v6.15
-Date: Thu, 19 Jun 2025 21:39:03 +0000
+Date: Thu, 19 Jun 2025 22:10:21 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: dimich.dmb@gmail.com
+X-Bugzilla-Who: W_Armin@gmx.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220246-215701-50HzIaDyHZ@https.bugzilla.kernel.org/>
+Message-ID: <bug-220246-215701-L9SCq3LMlh@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220246-215701@https.bugzilla.kernel.org/>
 References: <bug-220246-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,15 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
 
---- Comment #19 from Dmytro Bagrii (dimich.dmb@gmail.com) ---
-(In reply to Armin Wolf from comment #18)
-
-> This patch should fix the problem. Could you please test it and report ba=
-ck
-> if the hotkey event works again?
-
-Yes, the key works again in 6.15.1 with patch applied.
-Thank you!
+--- Comment #20 from Armin Wolf (W_Armin@gmx.de) ---
+Nice, i will send the patch upstream then. With a bit of luck it will soon =
+be
+picked up by the stable kernels.
 
 --=20
 You may reply to this email to add a comment.
