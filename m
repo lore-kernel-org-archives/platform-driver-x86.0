@@ -1,201 +1,192 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2045.outbound.protection.outlook.com [40.107.100.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0790523CB
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 17:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCFD220686
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Jun 2025 17:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750352722; cv=fail; b=aXsPLr1HF39ctOoaJZGDOz5PUVuRkO6GEqVi4ZOolQYkZ7FVV3n8MHbhZ2nkp2EPK1qduZVskFkdG9a+IaO6CCpXT0GwYvvTRz2KcRLh/DiK1OOl+pWYdZLapGoSPQludS0/qvaNsMv5+amB7ssdvBatbWzCldr+2geQXj3XwC4=
+	t=1750354067; cv=fail; b=rcWcXblu89Lw3OnjeaSrPq0FXEkB/OVonOMt2PwmuDMSwf0VlptKvvdrKvpuKfWgZ5J7ypWjIvnxvsiAwu0IGp2GSL/sPutPQfDipVzJk6mm1xINobLPF2neUc4KKJWMMwK7fBhspZU6WjZHCLcwdzMWLcjjmLB3n4QKeJ3C72I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750352722; c=relaxed/simple;
-	bh=38Lu7G7Q/8oT4AJOElJx0qaBACx1sOITkzx8JcuoRWA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sCwbWTi66Gflo8vyjIWmzmjWTolbMF6FXontwvbch8UkTswbe1MafBhwCR5cbxm4bR917Zd9w7UFg45NpSapMXrzw8RJ1gLoQS4fuyXaZHBa+lo80La5TG09EZODhOpyu4KvYac17cPNewNT+GJcYGnaklbMqUQyRamV4xrq464=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jiCvDnu0; arc=fail smtp.client-ip=40.107.94.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1750354067; c=relaxed/simple;
+	bh=c70F7ZUW9oyQSwO87xzuwn+dEjLvtb3AvgDKam3gEMQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cyxTkVNiXHluV0pkGQuOFnXuaKUqRLI0iMLHufiGc1f1Ga5Y0++obdr00pkqQxb/J3JK6RutetPDcym4qUFaIo3sHDBrPMGpLswVbOviO9kkDf9SDwAkd8VP5l2ABS6eyIXGOWcIikbrym7UtdEQqFzzCAjN5Yv1CBXEiF981wo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ToOwGIrL; arc=fail smtp.client-ip=40.107.100.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jiCvDnu0"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ToOwGIrL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lfsukqC7dOkUANB5oGYCnLIj1N3Ta4v4zDKU+WfQNDebh5H3oPiQa5Xph1Y1TqFbv1SKXxLk5LNMfQVbOEOjwPsi7gSsiY058UR6xAQICXASB/9EliKRdddmThogVFLVMJn4/2hux/eQ0PHHAR/tYgvA7NKK2/33VGYHc1002qVzU8Ylv5uu8Y1q2JRWZH6FRF9CHbl+0/8zLDgZIDDWLCccRwp//Zi1qmZtwQHP7IaZJEyygpDfLIbft7NxkO+7SpGXlFP5W253ocf10XYNsgXfwUBNyXXk7NFa3+irub74mXQt3LjKh7H6P7QL1LDDEuUEXM3C+csDL4lQYnCryA==
+ b=Hs6WPZSDx8Bd5ydHJrCplOZXXi5m72+ZNeecDY492vpfax9LWMuvGSQ7+boP83JqoVO1vKjzBRG6W1PxLKUQ25VC2OlxoEElWLRDFMGctPUlrT5PCzEM42baabCnZFQxveSwC8pzhbZ9bF7kIJSQK9PoJIOpgNPYWFzvlnIrKZEJ+/of2cQO1LghwZxDQilFGXHJi5sa03Dx6EybGkOFSEI1sj9VCczPBGFXDRdCUBh0r0Vw39UF5ji7V/0YLQIaVlIZ1/WRcEW9fPaAq62Bvdl8Dr2GoKmLEohYJnZvQALwMfrhdw0vhx99kS2J9s2DoeQbTp0ELDtI2DmdW/2iXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DPuMG+0h+YcJ6MtxjkD0OsHQn4lz4fv8cLGWXjnnHkc=;
- b=qKJWC1jAC+N8shnV0pJYT78Fz1wTrUKs5sL82zyiGSlaSfBUJPK+NrNKI+4XyZaYTYq6ft/ROp6D0kbIQAMgKYT8VvNeyMk1+TxXHo4vyBaZAaZv0znFVNtqR8yHZEP9lqsyhNWrLiuWRgI+hP2Igam7jSHS1esV4tdetFwAsAGOSFJUW2ZwMVepjONPFN1s0F/XW/YxkU5U1y1B+DHijnp165Uf9IpdpcImfkEt73oUX4fNXoyn4KJx4EfD8vl3eK5HxLyrNeDGXuk8uKiPZjWmis7PCN2Vn0Jvo+fosF0crcJ9rFpoEqGGPcWgv8jKPUjvjrmPC2N2FiC+IQrZiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=OnrZRd/WOOX0HdSF4qWnoY0ys2qn+uDl3nHeslknNS0=;
+ b=OgktH2Hk6WG0Ij0lTROmLt+i7CkDqspi2YQJyv4nzFhOMPgkm89NDZrVeulpkhBni0uXf0tNXPc8fSkj5qqM6qRbKGKizFUxtV6Si4v+5vZqPN8YHUy9TRE53FJLo8CdAxNDaXTtGDnRWQn/VclUM91pc6B4/AyuqWnzZrYoAHal0TOP3HzWKP9Bi+gKmjjybFdCdxkwLoJBBfy5LQhMSMD8N6KuomTcfps/eRN98fchhpR/Era46erzu9TXdxdp9PGIXZ2VzQpgvUsssfoxr8YfFrlwb3M3H79X3MuFWvXVZomzsTBYEl0VL1hVswjxjIz/AJgDMj17hW/vHk93vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DPuMG+0h+YcJ6MtxjkD0OsHQn4lz4fv8cLGWXjnnHkc=;
- b=jiCvDnu0i/qKfs9bjxulvQ7V3z98aEB+aqC9r2NfsWT7Y1T2JTOgxUPO6dMc0tC+YoF7Pg/lKHA2S8QRKTME9tV+4ahLPQr6vXrfBOQCweA2zE6Bj9xPhW2Rat6VMJlQnLOz8rHXnCLnFkhvHsQ/+WE2LOOWmyJXCxKZWDfyLUM=
-Received: from CH0PR04CA0110.namprd04.prod.outlook.com (2603:10b6:610:75::25)
- by CH2PR12MB4102.namprd12.prod.outlook.com (2603:10b6:610:a9::7) with
+ bh=OnrZRd/WOOX0HdSF4qWnoY0ys2qn+uDl3nHeslknNS0=;
+ b=ToOwGIrLzMDabzoo8aPB2Yj/JGSCBewPZEuiEwyjJ/q5GStiK4NqAf30hNSQ4p7gqWEPN7WuGtjXUQ6v/1TPy9/IYi6qqGdoljSBsGMiANP2l0xZ2dJdtrfo6tw1UrGBSMwZJTazgFtWNT1coy02NJzbM9fYXz01ToUJ1PpVl/VO9lNHiSY2ysjdQsaupLH9JdM81GDxhFurnYCd/b99r4IF3IiIy5ca5LsegFrjg/JuIiuGVbUuTKir2wAvomcbAy2JI/9kdhLxqxhz17sx3GOtFgTxQ5rNTthofMzQeLfdwitDvWEo6CW2ynVlShbXkGLoFFvdVVE6Jvbabpi/sQ==
+Received: from PH7PR12MB5902.namprd12.prod.outlook.com (2603:10b6:510:1d6::8)
+ by DS4PR12MB9585.namprd12.prod.outlook.com (2603:10b6:8:27e::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Thu, 19 Jun
- 2025 17:05:17 +0000
-Received: from CH2PEPF00000149.namprd02.prod.outlook.com
- (2603:10b6:610:75:cafe::55) by CH0PR04CA0110.outlook.office365.com
- (2603:10b6:610:75::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.34 via Frontend Transport; Thu,
- 19 Jun 2025 17:05:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000149.mail.protection.outlook.com (10.167.244.106) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8857.21 via Frontend Transport; Thu, 19 Jun 2025 17:05:17 +0000
-Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 19 Jun
- 2025 12:05:15 -0500
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
-	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
-	<naveenkrishna.chatradhi@amd.com>
-Subject: [v2] platform/x86/amd/hsmp: Improve the print messages to avoid confusion
-Date: Thu, 19 Jun 2025 17:04:39 +0000
-Message-ID: <20250619170439.5548-1-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Thu, 19 Jun
+ 2025 17:27:41 +0000
+Received: from PH7PR12MB5902.namprd12.prod.outlook.com
+ ([fe80::f62:33c5:301d:edf0]) by PH7PR12MB5902.namprd12.prod.outlook.com
+ ([fe80::f62:33c5:301d:edf0%7]) with mapi id 15.20.8857.019; Thu, 19 Jun 2025
+ 17:27:41 +0000
+From: David Thompson <davthompson@nvidia.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>, "hdegoede@redhat.com"
+	<hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, Shravan
+ Ramani <shravankr@nvidia.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH] platform/mellanox: mlxbf-pmc: Fix duplicate event ID for
+ CACHE_DATA1
+Thread-Topic: [PATCH] platform/mellanox: mlxbf-pmc: Fix duplicate event ID for
+ CACHE_DATA1
+Thread-Index: AQHb4OAuNBxFGhouMkCrfgo6N+T9yLQKu9+A
+Date: Thu, 19 Jun 2025 17:27:41 +0000
+Message-ID:
+ <PH7PR12MB590262FD5D49E483BD664C63C77DA@PH7PR12MB5902.namprd12.prod.outlook.com>
+References: <20250619060502.3594350-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250619060502.3594350-1-alok.a.tiwari@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR12MB5902:EE_|DS4PR12MB9585:EE_
+x-ms-office365-filtering-correlation-id: f90ed901-c69b-4b1f-3125-08ddaf569858
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|366016|1800799024|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?XL8NCevay0Q0uGyusejXXpixjQrUec6pFoa4xohw8AyXVfMhjv0auqxUszLU?=
+ =?us-ascii?Q?2myi0/kx4Ino0oVnuZ25UWrmkBcRrul2VDoOBnEc+aSrvRg4pQojLurSJHRI?=
+ =?us-ascii?Q?Ik180inHppJLlNsOCXA6gFrrM8mllecKFQhcZvTbNXXQXxJEmWYg/vov/bti?=
+ =?us-ascii?Q?6LjPn+M8R9pmHpCTSJjlVqwgpQAAjz5J+Wcii3CeWbRHrDsJ23g9JyOtsa4D?=
+ =?us-ascii?Q?elQhxcaHrJFoS3OWPOhmwhr60yX3XCRYidcAF17sz8pE3q9qCUImqnSng4Jw?=
+ =?us-ascii?Q?7m22VfYgIi5sOX6hJ+Pa6IKKgyQGVzsKUPV1XQQrh8vQdbxzVslNWL48I6SV?=
+ =?us-ascii?Q?2L4XNYMMXMToOXXv42erkWe5ck3MXPuF3RN8rFc/478WVpItGxr/yiIBfn9C?=
+ =?us-ascii?Q?2Honq1TeK3KH+LLsCewfzXX1DPFP+z40yzvYIq82R4GzYQIeL9Cv6Gkgk0+5?=
+ =?us-ascii?Q?NaOcr85AXeCXnur9wrVFcmg9dPpZs16+463IouQrfIzwM2KIgbz63qmyUsJX?=
+ =?us-ascii?Q?QIh0A+7WDdx1nTTSsuems6ZkBhRNHHLKQ6FW/4srIY/4+svCU3gX9Y6OPhw0?=
+ =?us-ascii?Q?d34tDK8Wh/OS63VOTTBTg7j/hFa4x8C/q1tQJnNQqMqiWUyB/wSmYO9ynjXR?=
+ =?us-ascii?Q?ywo4crKa8ehOyDaPvDFlc/1b+WYa7FDnMJFBE9N7ap1AtrnsrU3nAfmWsKNw?=
+ =?us-ascii?Q?YbZQUIyV5++VhUwqI7vYXczt3qoVsuObca+wM95ng7Q7w2XnIAavEE+wMctl?=
+ =?us-ascii?Q?f+oUWocq/wn305WdjSb9XHjj1t8d4v7N9QEBy+icbHfTkTYIOmi3MIJPqZjA?=
+ =?us-ascii?Q?eAPy4+nfC0u1Prn6hIdjGFWww1Y8tvJk1yheh4aWfZVPBYWwy864brz54l5Q?=
+ =?us-ascii?Q?w6Ult9CWyIg48xcXK1RNrIWHCT6Znf4Rj6WUGW9k4YBRC5NmCMeDC8iYgKFs?=
+ =?us-ascii?Q?TB13mdiz3b1WXEW42JXYqnxmOilK6ogxe1X2SWHWRiDOCrDancIjTAwfBXtk?=
+ =?us-ascii?Q?V3qWChEBPU2ARorgZ0Ir84w8KlKYNeZeT+tqygvCjOybr6QNd6teZwodpPTC?=
+ =?us-ascii?Q?POSDNAD/W+wlHqvJqEv7VY0muu0JtcHKeZFupWp8mD6udyi/pLIuoWA7cTWH?=
+ =?us-ascii?Q?wsP7o5liqqSlYSJKTEpXDB8ltqcjTeeWcqZRy6Ey0N39E5dJJWM3vUM32QqZ?=
+ =?us-ascii?Q?Ttz6uUTvhrb/bKfRWs6ZWTT5GrjQ2Pi7e1dflFV/ipYn8EJKpInuBJc0EOfL?=
+ =?us-ascii?Q?G7q1wr6enx4cBQR26b7NXkl4JLPlh/KFlR+Zj6ZWxAElzyzEDTgMo5Zinbfo?=
+ =?us-ascii?Q?KaGy6qjGWWycuYYN8SsYnwT2pjjn8yge+vnVh7xQEmZnNBdvKVN07V8+Duf2?=
+ =?us-ascii?Q?9e0WKz5UI0S+CpHr0zQLZYHYlLGUtaTiDkpS8oULdr87zZiZJQDeVEHEMVns?=
+ =?us-ascii?Q?sFyqgdFR6Twn/4HysGef6OQiYQISCPp7WB3kHMDnHcc6asKsLBEEqWDCYm9S?=
+ =?us-ascii?Q?VaDma1yAgBGTntg=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5902.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?PrYFwZ41Z+bDycQLL3VIsxIAMBd3ZCoPrwzrKFLBXnOEjbB0NN/y7pCMh7ej?=
+ =?us-ascii?Q?A/XFmmv2eBf7hxZXypFsAC+/Y/sfwAENsRbrqecCW2kvxGnUDsHXCmbAzt/O?=
+ =?us-ascii?Q?3KSo8UDgq3DGRxl7K6BG+8VAX6qBwHuLYkThoRz9IJo62N18kaq9heM+Z+t5?=
+ =?us-ascii?Q?s8cAqIjzp3C0D5O36jo3fhyugUb645IMumTvvFjwHkGUU04jlY1udaxCW9ub?=
+ =?us-ascii?Q?PzG1+KIlDwopLMZX+dWzW/LlX5iPnW69pkSOJl0nJ2kB2BGzXmMpJ/Tuy8A3?=
+ =?us-ascii?Q?+W2OediW2yN9mIyZad+LmBKj+BdmC8HtNjpo42jnLJPbuvEh69TLoyoWFr4B?=
+ =?us-ascii?Q?U9/MsZ8xa2JygRw1OxxeiLgrg27Ux0grZTfOTNgo4yXxFz9ee6oq3S4H/d57?=
+ =?us-ascii?Q?cJYBWf5heDSQHkHbu4cg/bqr3f0Iinq8l0a25Bb9dn/dKPeG5OgcQXCJhKLH?=
+ =?us-ascii?Q?H8yAb6sQh4Q0YNSUfWJLpR7MZCXzBJG6xpH3igH9gliuhYL+CIJIsZbtWIUt?=
+ =?us-ascii?Q?LCkVpzamPDuHZ7zG1peMDnNHmxGjbe1RT0r1j0222KCLX+mZ/9AkJpPkQa18?=
+ =?us-ascii?Q?rJJFbMH3nR168HvIXvcosBxU7wJaXCz4zCJ5i2git6MQbNDcWE30xKQuNQAw?=
+ =?us-ascii?Q?SVPHqGvKfpcy6pqyyiwm4T6Lvs28YyO/Kwb9vLXMI8Lza55RDng9MFkPSMdO?=
+ =?us-ascii?Q?cour3iDfC3mLM7VUxWWeXCHoV/XttcOwDsf87OXztBKtBsSFy/x7x3j3+0Gk?=
+ =?us-ascii?Q?e3W+RuPfmaIiIxRoZAlI1sQ+dYy7wKONEt7Tc/SzwKje3MFYICt6xo7D5cyL?=
+ =?us-ascii?Q?zdkzqc9aiKHVm1EBG5qzlnQbfXPB1fL4xZZLU70JLOw3TD8eCV+mtwATvq98?=
+ =?us-ascii?Q?jhN6p9WsB6G//GJNSJTpjws5D1QzgnQu4h1buJVftsGRFPEIO6yo7ctcF0Cd?=
+ =?us-ascii?Q?/BZz/HMlV65QsEK0+SQeNj7RO2l0mARFgLrf4yKvCFITzN/lOSxWkPLJG/NE?=
+ =?us-ascii?Q?qjgZizBqVXp42Xa/xds+ztuh03h9/aCJvDYIQovl3zhrNCx8lsq4jTro6ILs?=
+ =?us-ascii?Q?zlEi5wPVEixCBWo4B3sSeBucaYK1M02PwdKWtjg0weciWH5OcPlQLgl7QvYt?=
+ =?us-ascii?Q?3YlXhB0hk1iuoLSa+E+9pJo5Oa+NNSsgfS69me61W+ByrOnupR/t3C90hWK3?=
+ =?us-ascii?Q?nQiThZ66YmoOlJVj/i/6UnCrUs6wkz2wZTmQqEyXxBFkZL5jPYcBHERWL49U?=
+ =?us-ascii?Q?eEy7RQywL/ntNQMNGBozCEqDYGgjN57vaS63M1uFPsXyxys3yq4Da0jtuL8B?=
+ =?us-ascii?Q?mGkYCwMFlqP3Td/6cIA17FwdK0Exl2Y7uNPfeoM+hTPQ8lwqJVwkGyR5Bl9V?=
+ =?us-ascii?Q?1mvspSwilCMIJxGjyghgzriSIT7NsYg5Hh5r6vCa93mrlBTppXJZPc6rf7jC?=
+ =?us-ascii?Q?hpVLftRF4aetzLfv8jGpy/o6aIY9bEnGNL9gZFQkXRsK4Ra8FaRDnxGzDE3b?=
+ =?us-ascii?Q?OhGfLVG1C5Di3Upr4v2Id5lglFAcmyzqDbopzd40aPuz6gwtfewvixRres2t?=
+ =?us-ascii?Q?1nawPvREJiMEvR3BtJwLY+/s1nSkteBab0DTrYSU?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000149:EE_|CH2PR12MB4102:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf794660-2f8a-4be8-6c83-08ddaf53770a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sxaRRAUE/dE8u7nLE+GT62QK9Z6Jfwk3g7Q0xy5BUAu4A6/ZsUngi9BQbwPa?=
- =?us-ascii?Q?qkgHifDQY4uFJK0U+elFTvVQTVGo3qGom/1l7O5C3d34Aq9vw/JDoLDurTeg?=
- =?us-ascii?Q?vuG3/86jJ//Zvno0hObgCaEJmvbeksbTaVThinWKWTedXaNvydWdQryHIM+f?=
- =?us-ascii?Q?m0BkeFPzJKQip/8KIiGJi7l7nrUBQ4uPlWu7DptOz3CLOFVdUYhKCrN2ECpH?=
- =?us-ascii?Q?nB7mR4jVgwvr4QPZBRiDtcReL+c3SsxViUX3mK8HX6E/dNltuMir7pPBSO8r?=
- =?us-ascii?Q?J0iIy6Yb3qeApv0WBqSQRRZ3VgnNXh2cMAu/0dUJEbf/My71ChcnaaCAKu5h?=
- =?us-ascii?Q?mXzzQbpClXQRpTPJbfsK3ie3D62H+SoaGKVUMgFrNOXEeUcrmbn2zaundCLa?=
- =?us-ascii?Q?0qTr/1M04a2eTtAZtzoUSo1xU8wJXMsR4Rk9Abhpbam5RiwxKS+yh79r2r5V?=
- =?us-ascii?Q?XBDFZOWpO7wCfH6t/II0YPqyhy+IYsb3SB2DiL8b5uMSEXrQm8kJ3CF4/KoA?=
- =?us-ascii?Q?BxCt0izLoNu7pauCxzyzzw5T7AAdw3zbLJDsCPbLFVgbySI3PXrdn5SfTB8q?=
- =?us-ascii?Q?Ft90ewNHaOB44VVx3wB+M/MAo5Q4M62481B+b5EO6M1ovbiHwA4JogNAeyzA?=
- =?us-ascii?Q?SfTfnSAQSarWhwVYs12uqw5xXt1EZfE8UXkmOOv61tRl3ObL4M2X+F98N01/?=
- =?us-ascii?Q?DDtEX3yNyqnZJL7kHXSTbqbe0qtrI1/DIGtJ4H5LLXeISknkJf8BbCYjI8Wf?=
- =?us-ascii?Q?l8tETGUkMbPn+q7uzzzmzsXdfvh1hYLgCLjnFponFaAKGx+WZuDDthyLW3NU?=
- =?us-ascii?Q?SnDSrfZYSQcofoq4k09tGKRlFJhb6wrT9zJsZtX81d0qiEAHJbWhiCkX3FXa?=
- =?us-ascii?Q?8c2gvoWC9kNjm3wiZvTYTFDUR/c823dP8gLtoEPmndZuLy5L1axUW32++a3d?=
- =?us-ascii?Q?F98LCciiwbztBcY1T7JqaKSJRDBZlceFrBzY8vujNLxRdmlFXLGIWbHzQiAq?=
- =?us-ascii?Q?bG+JsoZpjUl9K1mOj+O/49cp2NklnVZp6luy27xDKlvn61WcVBINLr7BHV85?=
- =?us-ascii?Q?5fFJrvoS6Lfr0IZMPCBRBvehPqnLGdZrLn9MRvRKbhtq5ez+v1iE7FImewAX?=
- =?us-ascii?Q?+MqV1JbpD4nLJOFjRhOFO71X7O/FO1QPbmSMXYPwh1YSM8NsKEXMG97fN6S1?=
- =?us-ascii?Q?tsHLA8wI4sb0yO2H0QfirALBSSXy1vsz5oQBZSoyDbVBz8qPf9pEQxqwrZcd?=
- =?us-ascii?Q?eCGf4GtVEUBTepJtjtUSpom8HXEgePI7UErgeJtfQ76wKUu5Vy8RZ0Xp7dMq?=
- =?us-ascii?Q?NKj6UYJKBGgyPLtZAUamsb/8QxBhzR9BykIkVRVws1xG5+w+frBtkP4s7M+q?=
- =?us-ascii?Q?hjZK/O+ACLyvORN0rTBuL1+bWcmw0oMmC/zIUcqHb2LTCSVJvTRHODUpRqK7?=
- =?us-ascii?Q?Oq43dlETdSlYFkxJA3NnKQyGjO8bMTvziNgvZjdFKZZ57pD4cUqzGC9/AXOB?=
- =?us-ascii?Q?LV1zD74ArThLFOKahxbiwTXccTDcH6jf9/ZP?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 17:05:17.0191
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5902.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f90ed901-c69b-4b1f-3125-08ddaf569858
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2025 17:27:41.4230
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf794660-2f8a-4be8-6c83-08ddaf53770a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000149.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4102
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tXQptR+gRQLbSh4z6izL9CP/nvj1bHvt7dq75kdg7L3CCSmZ8dybvti385EEhD1JdmiwbNwqZqdQ7gtwXJry/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9585
 
-When the HSMP ACPI device is available, then loading the amd_hsmp.ko
-module incorrectly prints the message "HSMP is not supported on
-Family:%x model:%x\n" despite being supported by the hsmp_acpi.ko
-module, leading to confusion.
+> -----Original Message-----
+> From: Alok Tiwari <alok.a.tiwari@oracle.com>
+> Sent: Thursday, June 19, 2025 2:05 AM
+> To: hdegoede@redhat.com; ilpo.jarvinen@linux.intel.com; Vadim Pasternak
+> <vadimp@nvidia.com>; Shravan Ramani <shravankr@nvidia.com>; David
+> Thompson <davthompson@nvidia.com>
+> Cc: alok.a.tiwari@oracle.com; platform-driver-x86@vger.kernel.org
+> Subject: [PATCH] platform/mellanox: mlxbf-pmc: Fix duplicate event ID for
+> CACHE_DATA1
+>=20
+> same ID (103) was assigned to both GDC_BANK0_G_RSE_PIPE_CACHE_DATA0
+> and GDC_BANK0_G_RSE_PIPE_CACHE_DATA1. This could lead to incorrect event
+> mapping.
+> Updated the ID to 104 to ensure uniqueness.
+>=20
+> Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueF=
+ield-
+> 3")
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c
+> b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 900069eb186eb..a1c529f1ff1a4 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -715,7 +715,7 @@ static const struct mlxbf_pmc_events
+> mlxbf_pmc_llt_events[] =3D {
+>  	{101, "GDC_BANK0_HIT_DCL_PARTIAL"},
+>  	{102, "GDC_BANK0_EVICT_DCL"},
+>  	{103, "GDC_BANK0_G_RSE_PIPE_CACHE_DATA0"},
+> -	{103, "GDC_BANK0_G_RSE_PIPE_CACHE_DATA1"},
+> +	{104, "GDC_BANK0_G_RSE_PIPE_CACHE_DATA1"},
+>  	{105, "GDC_BANK0_ARB_STRB"},
+>  	{106, "GDC_BANK0_ARB_WAIT"},
+>  	{107, "GDC_BANK0_GGA_STRB"},
+> --
+> 2.46.0
 
-To resolve this, relocate the acpi_dev_present() check to the
-beginning of the hsmp_plt_init() and revise the print message
-to better reflect the current support status.
-
-Also add messages indicating successful probing for both
-hsmp_acpi.ko and amd_hsmp.ko modules.
-
-Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Signed-off-by: Suma Hegde <suma.hegde@amd.com>
----
-Changes since v1
-Move successful probe print message inside the if condition in acpi.c.
-
- drivers/platform/x86/amd/hsmp/acpi.c |  1 +
- drivers/platform/x86/amd/hsmp/plat.c | 17 ++++++++++++-----
- 2 files changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 2f1faa82d13e..bdfb86eeecf2 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -608,6 +608,7 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 		if (ret)
- 			return ret;
- 		hsmp_pdev->is_probed = true;
-+		dev_info(&pdev->dev, "AMD HSMP ACPI is probed successfully\n");
- 	}
- 
- 	return 0;
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index e3874c47ed9e..724e5c7fc819 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -215,7 +215,12 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	return hsmp_misc_register(&pdev->dev);
-+	ret = hsmp_misc_register(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(&pdev->dev, "AMD HSMP is probed successfully\n");
-+	return 0;
- }
- 
- static void hsmp_pltdrv_remove(struct platform_device *pdev)
-@@ -287,15 +292,17 @@ static int __init hsmp_plt_init(void)
- {
- 	int ret = -ENODEV;
- 
-+	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1)) {
-+		pr_info("HSMP is supported through ACPI on this platform, please use hsmp_acpi.ko\n");
-+		return -ENODEV;
-+	}
-+
- 	if (!legacy_hsmp_support()) {
--		pr_info("HSMP is not supported on Family:%x model:%x\n",
-+		pr_info("HSMP interface is either disabled or not supported on family:%x model:%x\n",
- 			boot_cpu_data.x86, boot_cpu_data.x86_model);
- 		return ret;
- 	}
- 
--	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
--		return -ENODEV;
--
- 	hsmp_pdev = get_hsmp_pdev();
- 	if (!hsmp_pdev)
- 		return -ENOMEM;
--- 
-2.25.1
-
+Reviewed-by: David Thompson <davthompson@nvidia.com>
