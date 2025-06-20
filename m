@@ -1,141 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0998C28368C;
-	Fri, 20 Jun 2025 10:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4981624DE;
+	Fri, 20 Jun 2025 11:54:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750413607; cv=none; b=oTP8/O0HOiauvudjpFM2jsW0vmYm4tqjBFSs/+DPDrWzP3i492XJCs6yFWBChhzDnBbr95vibOEs0z2m7eOQE4jIOFc6DZ7a5jB5bn1p4ThKHSylyAqmPm5IDVPCGF11oZ7DrHwQuaXolagjV0YeACMAPrf0++AtUDqvTqo2ZbQ=
+	t=1750420494; cv=none; b=Hc1cF4EEhaYx3No0lvYndQC6j/zOvVQsGF4grmudxEx+zMnpwuGJk7a17srI/He1XpLBKf7wXzsr8kMuTNYaFRqbneeJrLFb0U1M39agctF8F+U2gP3hyNGCWeADBVJV2x8wFFC7PEmdZUEAbZnQik4jp4bPy1McTt9VWVZTRhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750413607; c=relaxed/simple;
-	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YSkO8U45oCrFqayz1TmWhszDCVWYC+ojnd2/YGa3kTzDeVIGdUSsjOZmBaNnqydx1Eruch6v132VQfRSyeABUmu4mNM+7j/yB1mDw1sZhH+k1wfKS6blvfVxjuUyvOOkNLu4noqiLYQf4ZPUXaicFzRdyD3mla5kOpqCy+C2qyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+TqVJ89; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750420494; c=relaxed/simple;
+	bh=MytoXtQaPni0it6yYWfCVADYD7ugpdiw/k3h63C1vWY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=heKeJV/WKca7df+28+/WXx804QmqMlNGTJQT9pUGBzuIt+GlF5+ph8knyRp5HN61GQ/ba8YiHIKbPEwqntNRD/6t8bc5Dp9VioWRThdVrvRPAlOaicJjIeDy1OAT/qzKGqvTYBSF7EjE1tkcdVE53YPM1PQRsH/H/cUhEuwGXa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1EISdf3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+TqVJ89"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A4EC4CEE3;
-	Fri, 20 Jun 2025 10:00:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1EISdf3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392EFC4CEE3;
+	Fri, 20 Jun 2025 11:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750413606;
-	bh=IRZCB8GMoP84MKUn9SMaAGQ9qpgXhcZRKOZp86qZfno=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W+TqVJ896c/dwB23Q2KDA8VvHqx5c64JMtk/c7PBTuo+CgFnCRzmEd9WvcX4A8ZXm
-	 5IOUf6CBnN1tkRp+QnUPBo9NJrbX0WghyUZLZzdiPnQ4U9eZ0KqLVY7Gwd30CF5Bf6
-	 46jqE7295eoeG+BecPycXAsXFcr+QNPTj97VEqMsrPqsfpm3Pvng2s5h2YSeac3DUB
-	 ioF0oFStcf+vyMkIAoY44tO5C/FjObUuuqCyJ96+SqE31DrF/tSKD18xOMkJRulGYj
-	 DzuS/Q2pZCIs5ne1SIod+H/w0R/lCPGvJy/rwDA8tEad6ugP9RuGzrLYeogsGo0bRI
-	 DcgFkDXOHLAPA==
-Message-ID: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
-Date: Fri, 20 Jun 2025 12:00:03 +0200
+	s=k20201202; t=1750420493;
+	bh=MytoXtQaPni0it6yYWfCVADYD7ugpdiw/k3h63C1vWY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e1EISdf30ogXbndk62n4Izr2YWrZM3Rm3uocJV3gtsMDXBTpGAw88BF6Sw/6AF5/o
+	 Ncpb6lK4hn1het2/akrqXlchdX06wuHnfM4q4qv46l5TCZpUhrtwozy5O/OPCsJpe3
+	 eNmEJ9bx1ThXmRTUdHqtO4WOV37m/W0ZqN/Qo0fSnd6z+795rhjmdieGPF/ls79+l9
+	 fkzaUIA3/045nSrf9GWwBXo72GZ3SjXP+AtAI+PfpEyMDT5fY/lTD6Lw+O6F112eee
+	 c3fkHcB14bDmXJwpPioEeBI8Vio0+k8WZkn383fySyf4ZdYh4KHIWlHoVBYSrV0VyB
+	 spRWi52RDY6Sw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>,
+	Benjamin Chan <benjamin.chan@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	kernel test robot <lkp@intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Suma Hegde <suma.hegde@amd.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
+Date: Fri, 20 Jun 2025 13:54:45 +0200
+Message-Id: <20250620115448.202425-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-To: Xiang Shen <turyshen@gmail.com>, acelan.kao@canonical.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250620003849.54442-1-turyshen@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250620003849.54442-1-turyshen@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On 20-Jun-25 2:38 AM, Xiang Shen wrote:
-> Fix checkpatch code style errors:
-> 
-> ERROR: do not use assignment in if condition
-> +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> 
-> ERROR: do not use assignment in if condition
-> +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> 
-> Signed-off-by: Xiang Shen <turyshen@gmail.com>
+Checking the module owner of the device only works when modules are
+enabled, and the device is created from a module:
 
-Thank you for your patch, but this change really does not make
-the code more readable.
+drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
 
-The contrary the suggested changes are making the code harder
-to read, so NACK.
+Building the driver as a loadable module avoids the build failure,
+though this should probably be fixed in a different way that still
+works if the device was created from built-in code.
 
-Note checkpatch is just a tool, sometimes there are good reasons
-to deviate from the style checks done by checkpatch.
+Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/amd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Next time when submitting a patch to fix checkpatch issues please
-take a look at the resulting code after the patch and only submit
-the patch upstream if it actually is an improvement.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
->  1 file changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> index 232cd12e3c9f..bcc97b06844e 100644
-> --- a/drivers/platform/x86/intel/vbtn.c
-> +++ b/drivers/platform/x86/intel/vbtn.c
-> @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  
->  	guard(mutex)(&priv->mutex);
->  
-> -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-> +	if (ke) {
->  		if (!priv->has_buttons) {
->  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
->  				 event);
->  			return;
->  		}
->  		input_dev = priv->buttons_dev;
-> -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> -		if (!priv->has_switches) {
-> -			/* See dual_accel_detect.h for more info */
-> -			if (priv->dual_accel)
-> -				return;
-> -
-> -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> -			ret = input_register_device(priv->switches_dev);
-> -			if (ret)
-> -				return;
-> -
-> -			priv->has_switches = true;
-> -		}
-> -		input_dev = priv->switches_dev;
->  	} else {
-> -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> -		return;
-> +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-> +		if (ke) {
-> +			if (!priv->has_switches) {
-> +				/* See dual_accel_detect.h for more info */
-> +				if (priv->dual_accel)
-> +					return;
-> +
-> +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> +				ret = input_register_device(priv->switches_dev);
-> +				if (ret)
-> +					return;
-> +
-> +				priv->has_switches = true;
-> +			}
-> +			input_dev = priv->switches_dev;
-> +		} else {
-> +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> +			return;
-> +		}
->  	}
->  
->  	if (priv->wakeup_mode) {
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index 63e4bd985699..9e150500e37e 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -36,6 +36,7 @@ config AMD_WBRF
+ config AMD_ISP_PLATFORM
+ 	tristate "AMD ISP4 platform driver"
+ 	depends on I2C && X86_64 && ACPI
++	depends on m
+ 	help
+ 	  Platform driver for AMD platforms containing image signal processor
+ 	  gen 4. Provides camera sensor module board information to allow
+-- 
+2.39.5
 
