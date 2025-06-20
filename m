@@ -1,583 +1,451 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8BA23CE;
-	Fri, 20 Jun 2025 00:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750380365; cv=none; b=H9O8XO8ZkvWQyC8bHiuDzOulwjbaiBBhrxLIfc3w/jFqNHjJ0RpJIXKZEmS1db6vXLaxA+Pu9tPjES/0k/1DQixz5UMHyV8TqRUktJvKBrZFabc9KOXzvHCydzabwvP+sz1Y4J8SaaIciM2z30MGMg93C2zKoEYOfQsp8oLTPxs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750380365; c=relaxed/simple;
-	bh=MzUuSg4NpLWyNz6pkfUoQSMn0crSeKOVA1iOczCgsMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CzrvSNlYvCLBaUg1HC51JhGHT7wp11TbZF++Su9inkIqPhsFPVkbvYpEBv95eqZJPQoMbUlShQP8TRWn73DWAJRFtfO+Y3AmE6c6pjof8dXAb56CSCoY4B+BJ8gi3zqNXJbxLEsKpwD5VJMPW5JuYvE0nIWXFyQk3052eXY42u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgPpk4+0; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D78101EE;
+	Fri, 20 Jun 2025 03:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750388780; cv=fail; b=P8ryeVz5734gCGf9Fa8kwI/gteWBDuuF8WVXApRV5p/ma036QuegSjX2WRDwFWP8JxnaVKWC+Sh0zdA9A1Jh5iGbq1AHbEQkwtZGUfpDtWoISIsEZly6HMuVXJOFaA+8mY8bsXrakF5Z9sb6+rMOkJQ6OO4cCjbLhHKtEFvKmSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750388780; c=relaxed/simple;
+	bh=Cue0nV2Wt8dI4TI/TfufbPAAM6k5TRTLDlQP0LLfY5I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tm14YkaEpX04FhejhNVIR/7AtPGdeZdrQGh3CFTu6ekrDACwjlb+JBOaz9LN0SesB3YmugZjwCCbT/+62B2x/x2m0ZAbS3eq3BhAwmCYg0SJcY/NmgmWSbYKuaYfQvkCF09rhd257JYnDwJfSeryIfBKwPQcN/Oxpgmm8qUXvKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LnipFjls; arc=fail smtp.client-ip=40.107.244.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgPpk4+0"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235e1d4cba0so10880725ad.2;
-        Thu, 19 Jun 2025 17:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750380363; x=1750985163; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nQg973+ufjVuMHyrzITaW0ybSIdkXPsZ44e1NZj+ppk=;
-        b=UgPpk4+0Hgfb0w8RR9mzlL0OXyvzDe5skjnUizuEZUTHajJ3ZXRd2qkoXSSxi9xmHH
-         c5O9r7LuTYapauooPcZFe7x29h3QZHpxQQ7Ok6+cmTM8q/xZxB1411YfjEJ7Cm2Fzyrc
-         N4Ot5q8WclYiX8Uz7Z1WMTVFcpK67Lgtv0u6qFgWA4rRiI9sRh03XghIplvJoL6Pw5vj
-         ST7nsrZ+O+Z4wSCLAwJnKPW5R0mn1Szd3yEE9xYmy2pSMZlzPGUVTsEPyxEBJDgOySEp
-         WFp81P7c/sqsmQQxeyDtVQGXFs6/KArTx4LsO7As70j7LLsaqvS/+wYX9d6UlNve41Kb
-         7qRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750380363; x=1750985163;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nQg973+ufjVuMHyrzITaW0ybSIdkXPsZ44e1NZj+ppk=;
-        b=BHSnPESg10qLJ+/yRTRFqCBLbW83CIEcC8O0Np5bthmlqYSVAqiLcPgGv1qokZYAN6
-         VhVgOap1CZeEZjdpAERfmPoxi05r/PrjEC5/8RDojNZSxdnAeS+O3nuA7HLeIgGuqAYx
-         6lNRpddLwF8zWrDdBoyHXWxL6/XgBMlcxYOQ30l63WPTRguzqbTlRzzaJMIZI4ha4s2+
-         DqrbKXkWq/RwLmGN+3geUnLEIQJONanzBSsQbITYzmaiYvX0zA8BGy5BM8wGv/zN4YxW
-         M5F07Lx1rKONdSO9XQsc+FqMhlP93qxHNPaUpEp+dAS1itLLCG+OTIXsf9GiOR3ZveJz
-         BZVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCBFHRELxV7fb+6ngOi5SR5ybMgANFch+MuMmkuLXpe7Krpdzx5k6MRSAzQrXC2bQPtMEvplB2k37ggg==@vger.kernel.org, AJvYcCWtuikNPaJWKlBHLBsU+H+ZSs6iO3ZmLpYH8H1vHPGTBBj04RkELfe6/YwOivApBVVpTub+8xjswHAMj1S0@vger.kernel.org, AJvYcCXhyKJHVJe/SJfbLFDreARn7XIeQwtlNdZIIdcW72tTwc+TIPRXXHAgUQwHuJpg4XpvnDKX0RNzCFuoqCDd9J62cN7WHA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8x7/bKiMwoM04tLjof89fSU3upoIZtr0xEE9YANY0uF2CceJS
-	/LzGhz5ee4r+hRpk8yJ+mMgB4M/UQID0EeK0oWd+ODNhCscqxRGd+oB2
-X-Gm-Gg: ASbGnctaCnxuXtiG4XEsv+iDTctCC81/lH1aq1yxNxToKWNvTnHVrC5aVz2NiPsUqH/
-	mJPQGR+ZoQ/BRidxt7pbl62eyO/BtthXBrkoqB58op98z2kRsyM1fl+OLsWe+mleaP1QEJZVUXM
-	Fxg7406JkUEnff6i/CJloK3TZpmLAR42MPGRq8i9UY1jYE1+05JM8ILx54X6+eaJoYlFYkXMQrX
-	PN4pg78DkY9sWNy+fBUOUrUEVU8srliSky2SFSi9EHXISqaq9PY24OjXLr7d/27a3IQkvY55hzC
-	i+H2FrBPAFP/wsT0KE6cMD/5zIKQKAuaLBq/GfEeuqP0MmjHOLLokTkgTXJx+cIeXRWq4xehEhv
-	yM0XWHOUa2YnDyBQH
-X-Google-Smtp-Source: AGHT+IEq73gsgVn5CXUc0KsCulS9g3qRN78Z7hVFVN9QJ1qlEJIN/nffAorE8TXlOd4e585MftfTQA==
-X-Received: by 2002:a17:903:2f4b:b0:235:f70:fd44 with SMTP id d9443c01a7336-237d9870d24mr10497975ad.21.1750380363019;
-        Thu, 19 Jun 2025 17:46:03 -0700 (PDT)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12.. ([2404:7a80:b9a1:7100:a8d:7fca:8b97:7765])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159df846fdsm468946a91.20.2025.06.19.17.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jun 2025 17:46:02 -0700 (PDT)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: pali@kernel.org,
-	dmitry.torokhov@gmail.com,
-	hmh@hmh.eng.br,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: tglx@linutronix.de,
-	mingo@kernel.org,
-	jon_xie@pixart.com,
-	jay_lee@pixart.com,
-	zhoubinbin@loongson.cn,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
-Date: Fri, 20 Jun 2025 09:42:08 +0900
-Message-ID: <20250620004209.28250-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LnipFjls"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sZuA1tPmIKb2QiqDvNQLWIMn2Zsg31fl9gDoF84GrKIPWWyUTpjGeMa3l/6gZxcQze6kZYpi5KzMcb6pdIvJhsR9DeSr/8ZUx+0ZFTeQT0jP70qGsthXCt64SR1V5Onb7NcX+1w8m441ashAPkigOAnt4/vdwcCoNqGNXPjaw3kPA7mzSEv6pHZ/XELW19woG/xaJq9yKgO0m5qqM2wvsx6MWA9tAb0piwWoj2l6xv/04sms9PV8yxCEQRbOXzu8ba3fRTayqahYKr7VVdWb3aFHS8aDARiGOJ8Y3UzguFbHWg+CXTmLfKObZEWBAE9KWxyBl3vIC9BaA61a+hjzQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f6flxEDSoL2QgYGVW6xRK4F+yTSO6S86Nom+qxbnrGE=;
+ b=wvUHtMdC3EKAtdKseSTRr0eOn5dGi1gpmdL9wuavH0mKf5WQ3bONtUYdXEX9+pFHvf5NcwHaH3rTiEHU+35MMpsiFeWFtQadE+2YnB/SF4II+1vXaVCxK8yvhqPVHRxSEbviPQLKo79OdwP2BDjKB+oVJ9Y+/IL4CMaH0bKjsn04qNA/YrI00Ou0mh3Cl/N6I1sVAfOQNTUQ2vgVUFoJDmM29yvW9HrAoxizbBnDT2yFo2ma5vx+i/A0q2c9hRZ9vvq0sqJIV5sdK88PprgEyubbrZ1W9ofuBUeCoY6S1Qe7c6WD3h6gSt65mrt/8AWhOsKfeqjezMXkaIz7Q5+Cng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f6flxEDSoL2QgYGVW6xRK4F+yTSO6S86Nom+qxbnrGE=;
+ b=LnipFjlsgDkHaSn4Xa2W5p1jIwzDqsf7cMfGMMnzmXBduEI6rX+yy+KT3xezOW20C4beKOpgklWvX2aI69AzPyTlLxCWUVe0ASNf9r2aT/lxscTU2IeWDPRza02ht0WkQp2WEmuE5MGCiEjd5aw80uTap719O6gXC9fxiy9FvZ0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DS0PR12MB9400.namprd12.prod.outlook.com (2603:10b6:8:1b6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Fri, 20 Jun
+ 2025 03:06:14 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8857.019; Fri, 20 Jun 2025
+ 03:06:14 +0000
+Message-ID: <4efba85a-332f-4134-9a1e-50101c80aa73@amd.com>
+Date: Thu, 19 Jun 2025 22:06:09 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: Update swnode graph for amd isp4
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, W_Armin@gmx.de
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+ king.li@amd.com, Dominic.Antony@amd.com, Phil.Jawich@amd.com
+References: <20250618202958.3934822-1-pratap.nirujogi@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250618202958.3934822-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0147.namprd11.prod.outlook.com
+ (2603:10b6:806:131::32) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB9400:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b61b113-49f3-4b97-4a0b-08ddafa769dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QVZWelNJelI5Q2lVWGpkV0N1c1lrUUgwQjJyMUdsSUpTSUxBbXpFTldDWkIv?=
+ =?utf-8?B?UFlxc0RqQ3pESTVDeGtKRStweEdVbXNWZFo5OVZURElqSUFKajlJcHZ4bVRO?=
+ =?utf-8?B?SjUxdnYyQkppTVBsaWYrZmh0Uzcwcmwxa0VLRmZrSTZXTDBrZmZIMFVlaWtH?=
+ =?utf-8?B?aWt3UG8rZW5WUmIycDZIUW8wNjZKOFFkUi9ldFpkbWI1ZGxjakpuN2o1YURC?=
+ =?utf-8?B?eVpORlVEUDBuZy9TMFpMcEVPNHdrSnZ6cHIzOWhIQTMyb2NhME45RW5JQWtE?=
+ =?utf-8?B?N1hZTzlva2lqTnlZUVBpWk50cytybnlCWnppNmdvTDZqVmZ0ZVRhTjkxaU5j?=
+ =?utf-8?B?bDdBdzBYQXF4WmpMUjZhQUx0VGxLVW41aTBNM1EvZldxOWRaYnBwSVpwM05n?=
+ =?utf-8?B?WVl0SmV0RFBaZU5ScmFjSE9RcGFoSDFxdE8rb0FPajZWS1Z0ckJScGhhY1M3?=
+ =?utf-8?B?TiszbVoxUFloZGsrNnFPajVoY3JsMFBJbHkrcUV0aFNSV2NWZEFOWWZWZkwz?=
+ =?utf-8?B?VW1BSnppajlqbStjVzNqcnJ4TUFnUWJ4Zm9FeUZJbkJWNHRPb3BzSnNWWG1E?=
+ =?utf-8?B?MVBtQTdYNHRKallMRlBDWkIvQVNzZ2ZPRTJrTFowRG9WOWMxcjlsOFo2TXFQ?=
+ =?utf-8?B?REQ3b2o5aUJGanJOeS8zbXg4RWRqSmlCNEhTdGRHZWhJUWozbWZ6YXRUQWtK?=
+ =?utf-8?B?dHlEdFNGQysyeUhYNzdWYzNpYkszYVY4S1kzQkp4NXpBRDIvUHQ3ekc1TWd1?=
+ =?utf-8?B?SnhkdWhvVjVLMkdpZlV6dSt3TGtJUUhtZXJQRnkrNHV1VUxESTNHVlc1ZWx4?=
+ =?utf-8?B?WldxSndEdEppZktzRXNZQ3hxZFhvYml2MjBUbHNJQzZlalpybGZoU09PUFYw?=
+ =?utf-8?B?b0grMEMwU0UrRzB6YlJ3eWIwTXhpYUp2RWM5SFN2NisvM0ZHR2ZNMnU5WlRB?=
+ =?utf-8?B?UGVLKzRYUVh1WWNCdFlEVWxpaEFEZDNqc1d2OUxQdUNPT3dONkZ3cFBGOUg5?=
+ =?utf-8?B?YWZRMmcycXJYaGFxbmtxV2IrY2g4UGpId1pZWUM1TzRmOWNUYk1EWVBrbUZi?=
+ =?utf-8?B?MGVIb1FQb2dLTEQ5UU9FWldjV2liVkx0bGVXNWdvMHFZNmFIWFNLSkRSY0Yw?=
+ =?utf-8?B?WjVJZVdNMW13RkV2Ui9NWGVZSlNhQnFyd0FIYlVPRWVJVHlVR2lpT1JQNHV0?=
+ =?utf-8?B?Q1VsUU9xYkF1MGY3Zmc5c0s2RWRFTkNVSWxEVDRBeS9VSS9iczBiaEdqZkNN?=
+ =?utf-8?B?N3FnMnFuV3A0UjE2dGkxT3kzeHZ5dEZYcWZETEhxbUNRVmpsc25YL3JCR3hq?=
+ =?utf-8?B?WklucitnQmRBeW9HWFI4MksreFk5MnUwMUxpSmt1K2V5RjRncDZTWTBwQTM3?=
+ =?utf-8?B?dnlCNXh4Ky9hSVNNdWxRM1NTS1FwWkQrTWJxclZCemtlQ29Vb3JjOUxUazVl?=
+ =?utf-8?B?ZzhpcXBmcEptbHEzd0lBOEpjOVlYbDZzYlNtMVl5WXpNN09MMzJ5WFAxcUpK?=
+ =?utf-8?B?VXpvQmtJaitNUmVmNlQzaDVPOTJ2OUlWNFhhaWdyUEx5eE5vOUlvRkFoUkNS?=
+ =?utf-8?B?ajRJSERrbUxyYldTUzlTRnVNSFp3SDQxY1hKZGZqd21BelJPZ2o5UUFrOWJO?=
+ =?utf-8?B?RkxLTEpVdXppWE0zL0NoSjZnLzhucFd1Y2FvVFRENEtNZ2wvM3hBYmtpQ2RH?=
+ =?utf-8?B?ZFcrQVNpNFJTQmY5Vk45UU9EeG9jRGdoQkZaR0dKS2U4NzEzUFJ0M0FldHhO?=
+ =?utf-8?B?TlRHL0hlVEhTZDNjcTZCSWgySWhXV3BDZ29DZHg1WVN2TFFuaWY4enVQSTFn?=
+ =?utf-8?B?VmREZm1YZHZrajdUekR0R0krTktWc3JlcU5LQkVadDZJNm9VbnIzL3lIZVlz?=
+ =?utf-8?B?d0hsNUtLd1hlc1lNUytkSW1vVHEreDhnOENabmU4YnBmeVVPZ0o3aUwwMFZV?=
+ =?utf-8?Q?umD0lCF+VQ0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?azRncHJQcWthMUN0WVN4UHNDKzRXOStmMzNub2tteGIrV1lwTGN3c0ljMEdI?=
+ =?utf-8?B?Q2tTeU5OaTFTL2RLdUFvNkJERjVxRjduYjdNLzl1b1dnNGUzSWI4dzNjSm4r?=
+ =?utf-8?B?eDEvYlhJZmNKK1N6MHVwSFJQTTRYMy9lR0tZVTJ2OHBDU0pJUm5CYUJQakVI?=
+ =?utf-8?B?WHR6M3lwVzYxMldGMFlWQ2VZR0hxbWlQRStjenJVcVA5Y3B4NHAxV1QvVE54?=
+ =?utf-8?B?SmdJdUtYb2JPbGlDNlFFazUwRFVzb1hGWDJTL3VEWnpEZU1IRHVtb3VUTUk0?=
+ =?utf-8?B?SmdINzJEcWFOSHFmTU9QTmRNMzNQdWQxMGliZ2FMUFN4QnFJdk4xbUl0Z2Ju?=
+ =?utf-8?B?R1I4Tm5EN0c2bXgvQ2RVUEx3NnJxUXZwZUtOSjRuM2QxdmFyaXlZeVI2Um5U?=
+ =?utf-8?B?by9iWHQxZXdINjYvL0lQeDk3NXBWbFlLdmt2OGpWdWlPZ0xxWVY0MU4weHE2?=
+ =?utf-8?B?T2I1Uzg2L21CeTNuMzZFMGdqcUt1RElXb0Exd2NUWEhDY2VVVU83SGYyOGlL?=
+ =?utf-8?B?UDdOazVnc0Z6dmZwdkI5Vnd6TzJ5aTkzYWRVbzFYK2pkU2s1WUNJMW1LamRs?=
+ =?utf-8?B?bW85ZEZSRnNKbXFaUzlNQ3dwSjJOQlIveTYvR1NlZHdjZlgvQ2VSZW5tMG1h?=
+ =?utf-8?B?ajVoekdKQ2FvWmgzbjhIYWF0N1RWSVpQeDgwNllYcWZ0ZW5HMUUzSDQ0ZkdD?=
+ =?utf-8?B?ZnJ5R2xodmRKMmZITUh3NlVzbTE1QWw4KzRIWEtzQW5GU1BKWjJnbUdaMklG?=
+ =?utf-8?B?Tm1ZcG5HazdMV2U2N2VJMHR5Vkl1RG1tdjFUKzNoTXAxT0lvc2VxakdGL1py?=
+ =?utf-8?B?aWtQT010K0NkRndyN2t2TWtNajZyOWFhNEVhZ01NcUsrZm5McUVLRWRUa1Mr?=
+ =?utf-8?B?RDlHdllhU1NNa0FzSTU2T1QvTEo2SWJDNjYzam5uZGwrUitNTlN3c0FreEhX?=
+ =?utf-8?B?OHNWMlNwVk45aVFKNjdRMGV6VlE4NnFUTG5QU1lOV1REbEJCSy9IQ2dYN3hn?=
+ =?utf-8?B?cmVJamdRNlhUUExVRnMzRFo1Kzhmb2RRK3BVWXZrNTNWd0lqcEM1bGxCbkhu?=
+ =?utf-8?B?b3E2ZEt3L2EvWm55L0hjRlh2STRhRWNYN2gyWHIyTTV2RFZjUG0rdHIzQ0FB?=
+ =?utf-8?B?U3kvcGVNd3BSVVYvbkI0dTBjTWV5K2RwQUNuQlc0SWxwTDZvd2tBb2JOYmVW?=
+ =?utf-8?B?TndId25qS2NTNzdKMnpuUTJKMUo3a2Fkd3JOY1BVbVAvbERlOUlkNEluM05E?=
+ =?utf-8?B?SGgyTDI0T3oyNlBaekhVeXRLNENzcmVJWVBWRVZuTzQ0UGxEd25rSS9CRmJH?=
+ =?utf-8?B?ck80bkZRbTBCbjJ0aE9xdGdKYnBMMFZ5SFVPZUNBcGJyUGN1d21hYjVobi92?=
+ =?utf-8?B?MGpSaXhkTmlrQVlWK2lBcU1wdmJiamRHRkVxazZ4U01nL0x1S05qRW16d1M0?=
+ =?utf-8?B?bUI4OHpzYUd0ZEV3WHFMU3RaUlRQSndzc1FWVTJ2aURiak1rcUtYYmRlUGIx?=
+ =?utf-8?B?Z0pabVdleDhtOE0rMHFlbWh4N0tEcGpQSnl5Z2Jlc1FmaWNrWFViVFczMVBq?=
+ =?utf-8?B?aDIyTTg5RlpsQURaNkwzZFBkZkNMR2l4bkNhRjJ2N0F5STJCSjVscnhBZVFI?=
+ =?utf-8?B?RzVNa1NXaDlmSzhEOHd6ZHo0MWNNU2RkTmFML21QYitoMXVzUm1PUEpmYkF6?=
+ =?utf-8?B?VGZudmpMRTJnVXFFdWpBbkdpRStLK3QveHhvejNxUkwyNmR4OEN4VEFvVDVu?=
+ =?utf-8?B?UXlROE8zUmhTckh2dy8yZnY0N2krSDNOTDh4eDJsS2V4aGV6VFpwUkZES2hs?=
+ =?utf-8?B?SlNOczgyemw1Z3VGWVdJRU45NGlFWmFHeFE0aWJmQk1aVGc3T0YvV0xxbnlN?=
+ =?utf-8?B?Z29qL3VreEloYklQN05BVGVkMThFODkvaktWNmtaVDVHNjdGN2t6SHo3ZmxW?=
+ =?utf-8?B?cUZDQURQUEl4UXpGYTFTZGtmbWVtT29QOGwyNjZQeE1KS0pZU1FyWXFJUm50?=
+ =?utf-8?B?R2xMWHVnVmtTRU1CTmlpTHNVSnNJdER2RTJxK2lUWk9EU3pndHNZcGp0V2U5?=
+ =?utf-8?B?a3lkQWpVNExtdmsvNVYvcmpBcEw1QjRkc1UrNE5wKytUR3Y4ckhZZWZVbW1Q?=
+ =?utf-8?Q?nZ2tssC3J7AKX5HL176413Ai1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b61b113-49f3-4b97-4a0b-08ddafa769dd
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2025 03:06:13.9245
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9mwrPTxsY03zEvhQfp7dFr8d+qhnAksiKEkkoXxyulF91TwzvvZ4wFepJl3z7dEw49ustxeOcG6lAdRUMOv9bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9400
 
-Newer ThinkPads have a doubletap feature that needs to be turned
-ON/OFF via the trackpoint registers.
-Systems released from 2023 have doubletap disabled by default and
-need the feature enabling to be useful.
-
-This patch introduces support for exposing and controlling the
-trackpoint doubletap feature via a sysfs attribute.
-/sys/devices/platform/thinkpad_acpi/tp_doubletap
-This can be toggled by an "enable" or a "disable".
-
-With this implemented we can remove the masking of events, and rely on
-HW control instead, when the feature is disabled.
-
-Note - Early Thinkpads (pre 2015) used the same register for hysteris
-control, Check the FW IDs to make sure these are not affected.
-
-trackpoint.h is moved to linux/input/.
-
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- drivers/input/mouse/alps.c                    |   2 +-
- drivers/input/mouse/psmouse-base.c            |   2 +-
- drivers/input/mouse/trackpoint.c              | 115 ++++++++++++-
- drivers/platform/x86/thinkpad_acpi.c          | 153 ++++++++++++++++--
- .../linux/input}/trackpoint.h                 |  16 ++
- 5 files changed, 276 insertions(+), 12 deletions(-)
- rename {drivers/input/mouse => include/linux/input}/trackpoint.h (90%)
-
-diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-index be734d65ea72..2abf338e8f1b 100644
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -18,10 +18,10 @@
- #include <linux/serio.h>
- #include <linux/libps2.h>
- #include <linux/dmi.h>
-+#include <linux/input/trackpoint.h>
- 
- #include "psmouse.h"
- #include "alps.h"
--#include "trackpoint.h"
- 
- /*
-  * Definitions for ALPS version 3 and 4 command mode protocol
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index a2c9f7144864..6bc515254403 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -21,6 +21,7 @@
- #include <linux/libps2.h>
- #include <linux/mutex.h>
- #include <linux/types.h>
-+#include <linux/input/trackpoint.h>
- 
- #include "psmouse.h"
- #include "synaptics.h"
-@@ -28,7 +29,6 @@
- #include "alps.h"
- #include "hgpk.h"
- #include "lifebook.h"
--#include "trackpoint.h"
- #include "touchkit_ps2.h"
- #include "elantech.h"
- #include "sentelic.h"
-diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/trackpoint.c
-index 5f6643b69a2c..53d06d72968a 100644
---- a/drivers/input/mouse/trackpoint.c
-+++ b/drivers/input/mouse/trackpoint.c
-@@ -13,8 +13,10 @@
- #include <linux/libps2.h>
- #include <linux/proc_fs.h>
- #include <linux/uaccess.h>
-+#include <linux/input/trackpoint.h>
- #include "psmouse.h"
--#include "trackpoint.h"
-+
-+static struct trackpoint_data *trackpoint_dev;
- 
- static const char * const trackpoint_variants[] = {
- 	[TP_VARIANT_IBM]		= "IBM",
-@@ -63,6 +65,21 @@ static int trackpoint_write(struct ps2dev *ps2dev, u8 loc, u8 val)
- 	return ps2_command(ps2dev, param, MAKE_PS2_CMD(3, 0, TP_COMMAND));
- }
- 
-+/* Read function for TrackPoint extended registers */
-+static int trackpoint_extended_read(struct ps2dev *ps2dev, u8 loc, u8 *val)
-+{
-+	u8 ext_param[2] = {TP_READ_MEM, loc};
-+	int error;
-+
-+	error = ps2_command(ps2dev,
-+			    ext_param, MAKE_PS2_CMD(2, 1, TP_COMMAND));
-+
-+	if (!error)
-+		*val = ext_param[0];
-+
-+	return error;
-+}
-+
- static int trackpoint_toggle_bit(struct ps2dev *ps2dev, u8 loc, u8 mask)
- {
- 	u8 param[3] = { TP_TOGGLE, loc, mask };
-@@ -393,6 +410,96 @@ static int trackpoint_reconnect(struct psmouse *psmouse)
- 	return 0;
- }
- 
-+/* List of known incapable device PNP IDs */
-+static const char * const dt_incompatible_devices[] = {
-+	"LEN0304",
-+	"LEN0306",
-+	"LEN0317",
-+	"LEN031A",
-+	"LEN031B",
-+	"LEN031C",
-+	"LEN031D",
-+};
-+
-+/*
-+ * checks if it’s a doubletap capable device
-+ * The PNP ID format eg: is "PNP: LEN030d PNP0f13".
-+ */
-+bool is_trackpoint_dt_capable(const char *pnp_id)
-+{
-+	char id[16];
-+
-+	/* Make sure string starts with "PNP: " */
-+	if (strncmp(pnp_id, "PNP: LEN03", 10) != 0)
-+		return false;
-+
-+	/* Extract the first word after "PNP: " */
-+	if (sscanf(pnp_id + 5, "%15s", id) != 1)
-+		return false;
-+
-+	/* Check if it's blacklisted */
-+	for (size_t i = 0; i < ARRAY_SIZE(dt_incompatible_devices); ++i) {
-+		if (strcmp(pnp_id, dt_incompatible_devices[i]) == 0)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Trackpoint doubletap status function */
-+int trackpoint_doubletap_status(bool *status)
-+{
-+	struct trackpoint_data *tp = trackpoint_dev;
-+	struct ps2dev *ps2dev = &tp->psmouse->ps2dev;
-+	u8 reg_val;
-+	int rc;
-+
-+	/* Reading the Doubletap register using extended read */
-+	rc = trackpoint_extended_read(ps2dev, TP_DOUBLETAP, &reg_val);
-+	if (!rc)
-+		*status = reg_val & BIT(TP_DOUBLETAP_STATUS_BIT) ?
-+				true : false;
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL(trackpoint_doubletap_status);
-+
-+/* Trackpoint doubletap enable/disable function */
-+int trackpoint_set_doubletap(bool enable)
-+{
-+	struct trackpoint_data *tp = trackpoint_dev;
-+	struct ps2dev *ps2dev = &tp->psmouse->ps2dev;
-+	static u8 doubletap_status;
-+	u8 new_val;
-+
-+	if (!tp)
-+		return -ENODEV;
-+
-+	new_val = enable ? TP_DOUBLETAP_ENABLE : TP_DOUBLETAP_DISABLE;
-+
-+	/* Comparing the new value paased with the existing value */
-+	if (doubletap_status == new_val) {
-+		pr_info("TrackPoint: Doubletap is already %s\n",
-+			enable ? "enabled" : "disabled");
-+		return 0;
-+	}
-+
-+	doubletap_status = new_val;
-+
-+	return trackpoint_write(ps2dev, TP_DOUBLETAP, new_val);
-+}
-+EXPORT_SYMBOL(trackpoint_set_doubletap);
-+
-+/*
-+ * Doubletap capability check
-+ * We use PNP ID to check the capability of the device.
-+ */
-+bool trackpoint_doubletap_support(void)
-+{
-+	return trackpoint_dev->doubletap_capable;
-+}
-+EXPORT_SYMBOL(trackpoint_doubletap_support);
-+
- int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
- {
- 	struct ps2dev *ps2dev = &psmouse->ps2dev;
-@@ -425,6 +532,9 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
- 	psmouse->reconnect = trackpoint_reconnect;
- 	psmouse->disconnect = trackpoint_disconnect;
- 
-+	trackpoint_dev = psmouse->private;
-+	trackpoint_dev->psmouse = psmouse;  /* Set parent reference */
-+
- 	if (variant_id != TP_VARIANT_IBM) {
- 		/* Newer variants do not support extended button query. */
- 		button_info = 0x33;
-@@ -470,6 +580,9 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
- 		     psmouse->vendor, firmware_id,
- 		     (button_info & 0xf0) >> 4, button_info & 0x0f);
- 
-+	/* Checking the doubletap Capability */
-+	tp->doubletap_capable = is_trackpoint_dt_capable(ps2dev->serio->firmware_id);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index e7350c9fa3aa..241c1dd5e1f4 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -71,6 +71,7 @@
- #include <linux/uaccess.h>
- #include <linux/units.h>
- #include <linux/workqueue.h>
-+#include <linux/input/trackpoint.h>
- 
- #include <acpi/battery.h>
- #include <acpi/video.h>
-@@ -373,7 +374,8 @@ static struct {
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
--	u32 trackpoint_doubletap:1;
-+	u32 trackpoint_doubletap_state:1;
-+	u32 trackpoint_doubletap_capable:1;
- 	struct quirk_entry *quirks;
- } tp_features;
- 
-@@ -3325,6 +3327,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	bool radiosw_state  = false;
- 	bool tabletsw_state = false;
- 	int hkeyv, res, status, camera_shutter_state;
-+	bool dt_state;
-+	int rc;
- 
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
- 			"initializing hotkey subdriver\n");
-@@ -3556,8 +3560,19 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 
- 	hotkey_poll_setup_safe(true);
- 
--	/* Enable doubletap by default */
--	tp_features.trackpoint_doubletap = 1;
-+	/* Checking doubletap status by default */
-+	tp_features.trackpoint_doubletap_capable = trackpoint_doubletap_support();
-+
-+	if (tp_features.trackpoint_doubletap_capable) {
-+		rc = trackpoint_doubletap_status(&dt_state);
-+		if (rc) {
-+			/* Disable if access to register fails */
-+			tp_features.trackpoint_doubletap_state = false;
-+			pr_info("ThinkPad ACPI: Doubletap failed to check status\n");
-+		} else {
-+			tp_features.trackpoint_doubletap_state = dt_state;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -3862,9 +3877,7 @@ static bool hotkey_notify_8xxx(const u32 hkey, bool *send_acpi_ev)
- {
- 	switch (hkey) {
- 	case TP_HKEY_EV_TRACK_DOUBLETAP:
--		if (tp_features.trackpoint_doubletap)
--			tpacpi_input_send_key(hkey, send_acpi_ev);
--
-+		*send_acpi_ev = true;
- 		return true;
- 	default:
- 		return false;
-@@ -10738,6 +10751,101 @@ static struct ibm_struct  dytc_profile_driver_data = {
- 	.exit = dytc_profile_exit,
- };
- 
-+/************************************************************************
-+ * Trackpoint Doubletap Interface
-+ *
-+ * Control/Monitoring of Trackpoint Doubletap from
-+ * /sys/devices/platform/thinkpad_acpi/tp_doubletap
-+ */
-+
-+static ssize_t tp_doubletap_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	bool status;
-+
-+	if (!trackpoint_doubletap_status(&status))
-+		return sysfs_emit(buf, "access error\n");
-+
-+	return sysfs_emit(buf, "%s\n", status ? "enabled" : "disabled");
-+}
-+
-+static ssize_t tp_doubletap_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	if (sysfs_streq(buf, "enable")) {
-+		/* enabling the doubletap here */
-+		if (!trackpoint_set_doubletap(true))
-+			tp_features.trackpoint_doubletap_state = true;
-+	} else if (sysfs_streq(buf, "disable")) {
-+		/* disabling the doubletap here */
-+		if (!trackpoint_set_doubletap(false))
-+			tp_features.trackpoint_doubletap_state = false;
-+	} else {
-+		pr_err("ThinkPad ACPI: thinkpad_acpi: Invalid value '%s' for tp_doubletap\n", buf);
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static umode_t tp_doubletap_is_visible(struct kobject *kobj, struct attribute *attr, int index);
-+
-+static DEVICE_ATTR_RW(tp_doubletap);
-+
-+static struct attribute *tp_doubletap_attrs[] = {
-+	&dev_attr_tp_doubletap.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group tp_doubletap_attr_group = {
-+	.attrs = tp_doubletap_attrs,
-+	.is_visible = tp_doubletap_is_visible,
-+};
-+
-+static umode_t tp_doubletap_is_visible(struct kobject *kobj, struct attribute *attr, int index)
-+{
-+	/* Only show the attribute if the TrackPoint doubletap is supported */
-+	tp_features.trackpoint_doubletap_capable = trackpoint_doubletap_support();
-+	if (!tp_features.trackpoint_doubletap_capable)
-+		return 0;
-+
-+	pr_info("ThinkPad ACPI: TrackPoint doubletap sysfs is visible\n");
-+
-+	return attr->mode;
-+}
-+
-+static struct delayed_work tp_doubletap_work;
-+
-+static void tp_doubletap_work_func(struct work_struct *work)
-+{
-+	if (!trackpoint_doubletap_support()) {
-+		pr_info("TrackPoint doubletap not supported yet, rechecking later\n");
-+		schedule_delayed_work(&tp_doubletap_work, msecs_to_jiffies(2000));
-+		return;
-+	}
-+
-+	if (sysfs_create_group(&tpacpi_pdev->dev.kobj, &tp_doubletap_attr_group) == 0)
-+		pr_info("TrackPoint doubletap sysfs group created\n");
-+	else
-+		pr_err("Failed to create TrackPoint doubletap sysfs group\n");
-+}
-+
-+static int __init tp_doubletap_init(struct ibm_init_struct *iibm)
-+{
-+	INIT_DELAYED_WORK(&tp_doubletap_work, tp_doubletap_work_func);
-+	schedule_delayed_work(&tp_doubletap_work, msecs_to_jiffies(1000));
-+
-+	return 0;
-+}
-+
-+static void tp_doubletap_exit(void)
-+{
-+	device_remove_file(&tpacpi_pdev->dev, &dev_attr_tp_doubletap);
-+}
-+
-+static struct ibm_struct tp_doubletap_driver_data = {
-+	.name = "tp_doubletap",
-+	.exit =  tp_doubletap_exit,
-+};
-+
- /*************************************************************************
-  * Keyboard language interface
-  */
-@@ -11192,7 +11300,7 @@ static struct platform_driver tpacpi_hwmon_pdriver = {
-  */
- static bool tpacpi_driver_event(const unsigned int hkey_event)
- {
--	int camera_shutter_state;
-+	int camera_shutter_state, rc;
- 
- 	switch (hkey_event) {
- 	case TP_HKEY_EV_BRGHT_UP:
-@@ -11284,8 +11392,30 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
- 		mutex_unlock(&tpacpi_inputdev_send_mutex);
- 		return true;
- 	case TP_HKEY_EV_DOUBLETAP_TOGGLE:
--		tp_features.trackpoint_doubletap = !tp_features.trackpoint_doubletap;
--		return true;
-+		if (tp_features.trackpoint_doubletap_capable) {
-+			/* Togging the register value */
-+			rc = trackpoint_set_doubletap(!tp_features.trackpoint_doubletap_state);
-+
-+			if (rc) {
-+				pr_err("ThinkPad ACPI: Trackpoint doubletap toggle failed\n");
-+			} else {
-+				/* Toggling the Doubletap Enable/Disable */
-+				tp_features.trackpoint_doubletap_state =
-+					!tp_features.trackpoint_doubletap_state;
-+				pr_info("ThinkPad ACPI: Trackpoint doubletap is %s\n",
-+					tp_features.trackpoint_doubletap_state ?
-+					"enabled" : "disabled");
-+
-+				return true;
-+			}
-+		}
-+
-+		/*
-+		 * Suppress the event if Doubletap is not supported
-+		 * or if the trackpoint_set_doubletap() is failing
-+		 */
-+		return false;
-+
- 	case TP_HKEY_EV_PROFILE_TOGGLE:
- 	case TP_HKEY_EV_PROFILE_TOGGLE2:
- 		platform_profile_cycle();
-@@ -11751,6 +11881,11 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = auxmac_init,
- 		.data = &auxmac_data,
- 	},
-+	{
-+		.init = tp_doubletap_init,
-+		.data = &tp_doubletap_driver_data
-+	},
-+
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
-diff --git a/drivers/input/mouse/trackpoint.h b/include/linux/input/trackpoint.h
-similarity index 90%
-rename from drivers/input/mouse/trackpoint.h
-rename to include/linux/input/trackpoint.h
-index eb5412904fe0..a8165becabe6 100644
---- a/drivers/input/mouse/trackpoint.h
-+++ b/include/linux/input/trackpoint.h
-@@ -69,6 +69,8 @@
- 					/* (how hard it is to drag */
- 					/* with Z-axis pressed) */
- 
-+#define TP_DOUBLETAP		0x58	/* TrackPoint doubletap register */
-+
- #define TP_MINDRAG		0x59	/* Minimum amount of force needed */
- 					/* to trigger dragging */
- 
-@@ -139,6 +141,12 @@
- #define TP_DEF_TWOHAND		0x00
- #define TP_DEF_SOURCE_TAG	0x00
- 
-+/* Doubletap register values */
-+#define TP_DOUBLETAP_ENABLE	0xFF	/* Enable value */
-+#define TP_DOUBLETAP_DISABLE	0xFE	/* Disable value */
-+
-+#define TP_DOUBLETAP_STATUS_BIT 0	/* 0th bit defines enable/disable */
-+
- #define MAKE_PS2_CMD(params, results, cmd) ((params<<12) | (results<<8) | (cmd))
- 
- struct trackpoint_data {
-@@ -150,13 +158,21 @@ struct trackpoint_data {
- 	u8 thresh, upthresh;
- 	u8 ztime, jenks;
- 	u8 drift_time;
-+	bool doubletap_capable;
- 
- 	/* toggles */
- 	bool press_to_select;
- 	bool skipback;
- 	bool ext_dev;
-+
-+	struct psmouse *psmouse;  /* Parent device */
- };
- 
- int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
- 
-+int trackpoint_doubletap_status(bool *status);
-+int trackpoint_set_doubletap(bool enable);
-+bool trackpoint_doubletap_support(void);
-+bool is_trackpoint_dt_capable(const char *device_id);
-+
- #endif /* _TRACKPOINT_H */
--- 
-2.48.1
+On 6/18/2025 3:29 PM, Pratap Nirujogi wrote:
+> Existing swnode graph format is specific to sensor device
+> and is causing conflicts when accessing standard property
+> variables outside the sensor driver.
+> 
+> To address this issue, enhanced swnode graph format with
+> dedicated nodes for i2c and isp devices, with sensor node
+> added as child to i2c node. This approach allows to have
+> standard property variables (ex: 'clock-frequency') with
+> values applicable for each of the devices (sensor, i2c and
+> isp).
+> 
+> ACPI device driver_data handle is also initialized with root
+> camera swnode to access the property variables in the graph
+> in isp and i2c drivers.
+> 
+> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/platform/x86/amd/amd_isp4.c | 181 ++++++++++++++++++++++------
+>   1 file changed, 144 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+> index 0cc01441bcbb..c440a7dfed27 100644
+> --- a/drivers/platform/x86/amd/amd_isp4.c
+> +++ b/drivers/platform/x86/amd/amd_isp4.c
+> @@ -20,6 +20,9 @@
+>   #define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
+>   #define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
+>   
+> +static const struct software_node isp4_mipi1_endpoint_node;
+> +static const struct software_node ov05c10_endpoint_node;
+> +
+>   /*
+>    * AMD ISP platform info definition to initialize sensor
+>    * specific platform configuration to prepare the amdisp
+> @@ -42,55 +45,116 @@ struct amdisp_platform {
+>   	struct mutex lock;	/* protects i2c client creation */
+>   };
+>   
+> -/* Top-level OV05C10 camera node property table */
+> +/* Root AMD CAMERA SWNODE */
+> +
+> +/* Root amd camera node definition */
+> +static const struct software_node amd_camera_node = {
+> +	.name = "amd_camera",
+> +};
+> +
+> +/* ISP4 SWNODE */
+> +
+> +/* ISP4 OV05C10 camera node definition */
+> +static const struct software_node isp4_node = {
+> +	.name = "isp4",
+> +	.parent = &amd_camera_node,
+> +};
+> +
+> +/*
+> + * ISP4 Ports node definition. No properties defined for
+> + * ports node.
+> + */
+> +static const struct software_node isp4_ports = {
+> +	.name = "ports",
+> +	.parent = &isp4_node,
+> +};
+> +
+> +/*
+> + * ISP4 Port node definition. No properties defined for
+> + * port node.
+> + */
+> +static const struct software_node isp4_port_node = {
+> +	.name = "port@0",
+> +	.parent = &isp4_ports,
+> +};
+> +
+> +/*
+> + * ISP4 MIPI1 remote endpoint points to OV05C10 endpoint
+> + * node.
+> + */
+> +static const struct software_node_ref_args isp4_refs[] = {
+> +	SOFTWARE_NODE_REFERENCE(&ov05c10_endpoint_node),
+> +};
+> +
+> +/* ISP4 MIPI1 endpoint node properties table */
+> +static const struct property_entry isp4_mipi1_endpoint_props[] = {
+> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", isp4_refs),
+> +	{ }
+> +};
+> +
+> +/* ISP4 MIPI1 endpoint node definition */
+> +static const struct software_node isp4_mipi1_endpoint_node = {
+> +	.name = "endpoint",
+> +	.parent = &isp4_port_node,
+> +	.properties = isp4_mipi1_endpoint_props,
+> +};
+> +
+> +/* I2C1 SWNODE */
+> +
+> +/* I2C1 camera node property table */
+> +static const struct property_entry i2c1_camera_props[] = {
+> +	PROPERTY_ENTRY_U32("clock-frequency", 1 * HZ_PER_MHZ),
+> +	{ }
+> +};
+> +
+> +/* I2C1 camera node definition */
+> +static const struct software_node i2c1_node = {
+> +	.name = "i2c1",
+> +	.parent = &amd_camera_node,
+> +	.properties = i2c1_camera_props,
+> +};
+> +
+> +/* I2C1 camera node property table */
+>   static const struct property_entry ov05c10_camera_props[] = {
+>   	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+>   	{ }
+>   };
+>   
+> -/* Root AMD ISP OV05C10 camera node definition */
+> -static const struct software_node camera_node = {
+> +/* OV05C10 camera node definition */
+> +static const struct software_node ov05c10_camera_node = {
+>   	.name = AMDISP_OV05C10_HID,
+> +	.parent = &i2c1_node,
+>   	.properties = ov05c10_camera_props,
+>   };
+>   
+>   /*
+> - * AMD ISP OV05C10 Ports node definition. No properties defined for
+> + * OV05C10 Ports node definition. No properties defined for
+>    * ports node for OV05C10.
+>    */
+> -static const struct software_node ports = {
+> +static const struct software_node ov05c10_ports = {
+>   	.name = "ports",
+> -	.parent = &camera_node,
+> -};
+> -
+> -/*
+> - * AMD ISP OV05C10 Port node definition. No properties defined for
+> - * port node for OV05C10.
+> - */
+> -static const struct software_node port_node = {
+> -	.name = "port@",
+> -	.parent = &ports,
+> +	.parent = &ov05c10_camera_node,
+>   };
+>   
+>   /*
+> - * Remote endpoint AMD ISP node definition. No properties defined for
+> - * remote endpoint node for OV05C10.
+> + * OV05C10 Port node definition.
+>    */
+> -static const struct software_node remote_ep_isp_node = {
+> -	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
+> +static const struct software_node ov05c10_port_node = {
+> +	.name = "port@0",
+> +	.parent = &ov05c10_ports,
+>   };
+>   
+>   /*
+> - * Remote endpoint reference for isp node included in the
+> - * OV05C10 endpoint.
+> + * OV05C10 remote endpoint points to ISP4 MIPI1 endpoint
+> + * node.
+>    */
+>   static const struct software_node_ref_args ov05c10_refs[] = {
+> -	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+> +	SOFTWARE_NODE_REFERENCE(&isp4_mipi1_endpoint_node),
+>   };
+>   
+>   /* OV05C10 supports one single link frequency */
+>   static const u64 ov05c10_link_freqs[] = {
+> -	925 * HZ_PER_MHZ,
+> +	900 * HZ_PER_MHZ,
+>   };
+>   
+>   /* OV05C10 supports only 2-lane configuration */
+> @@ -110,27 +174,64 @@ static const struct property_entry ov05c10_endpoint_props[] = {
+>   	{ }
+>   };
+>   
+> -/* AMD ISP endpoint node definition */
+> -static const struct software_node endpoint_node = {
+> +/* OV05C10 endpoint node definition */
+> +static const struct software_node ov05c10_endpoint_node = {
+>   	.name = "endpoint",
+> -	.parent = &port_node,
+> +	.parent = &ov05c10_port_node,
+>   	.properties = ov05c10_endpoint_props,
+>   };
+>   
+>   /*
+> - * AMD ISP swnode graph uses 5 nodes and also its relationship is
+> - * fixed to align with the structure that v4l2 expects for successful
+> - * endpoint fwnode parsing.
+> + * AMD Camera swnode graph uses 10 nodes and also its relationship is
+> + * fixed to align with the structure that v4l2 and i2c frameworks expects
+> + * for successful parsing of fwnodes and its properties with standard names.
+>    *
+>    * It is only the node property_entries that will vary for each platform
+>    * supporting different sensor modules.
+> + *
+> + * AMD ISP4 SWNODE GRAPH Structure
+> + *
+> + * amd_camera {
+> + *  isp4 {
+> + *	  ports {
+> + *		  port@0 {
+> + *			  isp4_mipi1_ep: endpoint {
+> + *					  remote-endpoint = &OMNI5C10_ep;
+> + *			  };
+> + *		  };
+> + *	  };
+> + *  };
+> + *
+> + *  i2c1 {
+> + *	  clock-frequency = 1 MHz;
+> + *	  OMNI5C10 {
+> + *		  clock-frequency = 24MHz;
+> + *		  ports {
+> + *			  port@0 {
+> + *				  OMNI5C10_ep: endpoint {
+> + *					  bus-type = 4;
+> + *					  data-lanes = <1 2>;
+> + *					  link-frequencies = 900MHz;
+> + *					  remote-endpoint = &isp4_mipi1;
+> + *				  };
+> + *			  };
+> + *		  };
+> + *	  };
+> + *	};
+> + * };
+> + *
+>    */
+> -static const struct software_node *ov05c10_nodes[] = {
+> -	&camera_node,
+> -	&ports,
+> -	&port_node,
+> -	&endpoint_node,
+> -	&remote_ep_isp_node,
+> +static const struct software_node *amd_isp4_nodes[] = {
+> +	&amd_camera_node,
+> +	&isp4_node,
+> +	&isp4_ports,
+> +	&isp4_port_node,
+> +	&isp4_mipi1_endpoint_node,
+> +	&i2c1_node,
+> +	&ov05c10_camera_node,
+> +	&ov05c10_ports,
+> +	&ov05c10_port_node,
+> +	&ov05c10_endpoint_node,
+>   	NULL
+>   };
+>   
+> @@ -140,7 +241,7 @@ static const struct amdisp_platform_info ov05c10_platform_config = {
+>   		.dev_name = "ov05c10",
+>   		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
+>   	},
+> -	.swnodes = ov05c10_nodes,
+> +	.swnodes = amd_isp4_nodes,
+>   };
+>   
+>   static const struct acpi_device_id amdisp_sensor_ids[] = {
+> @@ -232,7 +333,8 @@ static struct amdisp_platform *prepare_amdisp_platform(struct device *dev,
+>   	if (ret)
+>   		return ERR_PTR(ret);
+>   
+> -	isp4_platform->board_info.swnode = src->swnodes[0];
+> +	/* initialize ov05c10_camera_node */
+> +	isp4_platform->board_info.swnode = src->swnodes[6];
+>   
+>   	return isp4_platform;
+>   }
+> @@ -257,6 +359,7 @@ static int amd_isp_probe(struct platform_device *pdev)
+>   {
+>   	const struct amdisp_platform_info *pinfo;
+>   	struct amdisp_platform *isp4_platform;
+> +	struct acpi_device *adev;
+>   	int ret;
+>   
+>   	pinfo = device_get_match_data(&pdev->dev);
+> @@ -274,6 +377,10 @@ static int amd_isp_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		goto error_unregister_sw_node;
+>   
+> +	adev = ACPI_COMPANION(&pdev->dev);
+> +	/* initialize root amd_camera_node */
+> +	adev->driver_data = (void *)pinfo->swnodes[0];
+> +
+>   	/* check if adapter is already registered and create i2c client instance */
+>   	i2c_for_each_dev(isp4_platform, try_to_instantiate_i2c_client);
+>   
 
