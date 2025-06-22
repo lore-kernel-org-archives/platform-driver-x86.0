@@ -1,184 +1,162 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D22581;
-	Sun, 22 Jun 2025 06:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8341A13B58C;
+	Sun, 22 Jun 2025 07:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750574923; cv=none; b=VbE2oCCXop2aZ5C0775kEWXAYGcHDjU5Q4bJFs8tJ0fTiIxG7zjEITtSRuW4V8bqSmt2dx7T+eDMmu8nrQQMxKH1YOv476JcWfV6OpzfuDQXZ5QUX0wp7oZMbZy4qlfbhPD2OktK3I382mez4g/mPsxqFNA0t5wv3NSk626shpc=
+	t=1750577401; cv=none; b=et1PDQhgkHiGxwf2tIuP3kkqs+fTtI1TzYpbduSl2svgJcaK3IBDrwLTc2+4kfAy92vvtUKZ2DKWnuI0y9dZlr3JHP05BU/7oxHI3UqRCclxgPypLIKT9FONopcnq32NMcB6zRCZqJm3UIUBUSz8Y9jsWNUFwhCUJSM2nsJJiI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750574923; c=relaxed/simple;
-	bh=ken8puwclcNgHFq68mfenvEGASAjx50Nx4u0UKKqKc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QllBXfj+LU1KFrlLNVIie0LRTgUBwekxbkOSpJDU+h6AO+S/sms+rM6EwwegWTdmY5q2amMrFmq/wxq2l9kUyMEmcyCvc+UWAqOBa+1Yuq73TdkRmq4LkBqruiQTHXXrZsNXAQOJn99zA2Vpm0nokv2ILmHcCF+dA63Wo+8eljM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9sbttc0; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750577401; c=relaxed/simple;
+	bh=WHG3l2194eAYfNypkbJz/TxSuFIa2gD7sthVM1KzmN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jApN37pU6Qcz4o5INHEHa92A20TCMoCsId/HjvK0tLg6blvfFHsYSQaeZ03mHcSddeU2BVfNyaJ5eGjnr65N2KnG+/2OUryJY07SfzwoozQy0ilW7gJZdrGITrYidgfUQ5fiYgCctwXZTRpaph7HljKxGiEMsLZjUkp2dSp2h8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aBICUCzT; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9sbttc0"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso2280279a91.1;
-        Sat, 21 Jun 2025 23:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750574921; x=1751179721; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
-        b=h9sbttc0hlCVc9+wdhVD2ablsESwriA3udEjqm5Hv6dOtfnHW+Bor/KQMK0TdbTriw
-         eXek6hReJglKLldvfeiF3zyVrO3nhS/uEGSTR5D4WqmWF8eBt9CLMBD7c1D2rYbvmikr
-         c/1xsku+vvSCKzugA6YLDZlmqEsDiXfVgylkhb7b6AJrhlmpf5YvKpzvi98TaeDmITed
-         ifaJ3IHZzwU3zU/HGTWGt82yoQlG3bDZJhY/HJK2dRGrbPTsZg90jRIiFMMYxvyfaumM
-         rXJeueJCXR97YiwyfgGNYT8s9HV2zLnzstQlWCOpBd1u9K9EzRZ91vaTz1ek7SGPxebF
-         9PCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750574921; x=1751179721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
-        b=TpAr+YivjwBsXqGPtiX3z5VRm9zX1cLkVjADs8zVR9LrxhXZZdSXQVbLuj3faf/+pm
-         o5lIlQoCsrgpOICN9YzA7knyEHWbDeXmoGqAFefnkPeJvzhkLwk9ZWtZ+N5UZmh3WDwj
-         cmO3soKuiDp45/GJ4GZqGFDqo1/bceHRjo8ehDrzWIP7zdq38JHLL9jzEXEEEI5rLtl4
-         d8mo9HXI0pe/nPu7J1jD7SiA37cRyVaWOOsJoJO+J0TzltUT2Pd3nAGs0vZFib/1KmO5
-         fsaZPrRDuZ6Iq2ATZB8OCmWpQK+IbTgBwoxSPI3VSFQWqraPiib/XsieSJtb74R9on3M
-         ERpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXU4lVHJAF78O1ULUBRPv1HVpxE7LzeoR1EIwZi1WqzMi8raZsE6pWyXqQC0bKb+9lLq/Vg44LOfYJHGgAv2evrjjl2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7smw238Epo6rtGZanOE7Zn/CbL0XC7Ij7TPRuhhTxpqUst9qH
-	T8olWLDLzobLh6LTARRK46oHcxbOuSvmp9dIpcMqyDKOwHbueCnGXR4lVtQjC7Y3TNQ=
-X-Gm-Gg: ASbGncsKG4JhCrKbpsWSj1p4RD8oYqaujfjgs5s6TdHrwe68UfxfckL+0VqpdPCyhxf
-	Cxe/xwmyf+X/xPas4gbSetQlXvrbFurrL/30559dWYYlc+cUweDbEkB1YR4eBJb62x5I8eoS7Jk
-	R20TkrE7g0v7DXfCqszaiIYvTbblKcR6qjDB0HKiFqPNDH6Cv++hEWEDtj43LXlIOHW81pwGcs/
-	lKbbwO5Os7tUvXhII1ZWNRa47VAO76TG4lCI+LnaRDHbYmHqcyjQdM+dFFWkJkNvo5m/sg8It1z
-	g1/f6duzM4vx24whSAedI9cfNOzfx+5oNpXc6LzHBZwPJIeoW4bOb4LnSZb1JYFhwKqA
-X-Google-Smtp-Source: AGHT+IHfshealo1W0FfHBth8WYDVeEbFWywIsu2h8iW6w8zyRGEpc8wmAd32L6qLE/gwyiJxUvzjig==
-X-Received: by 2002:a17:90b:57e7:b0:311:ffe8:20e9 with SMTP id 98e67ed59e1d1-3159d8c5337mr15089422a91.17.1750574920802;
-        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
-Received: from localhost ([203.123.65.120])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3159df71c4bsm5142980a91.2.2025.06.21.23.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
-Date: Sun, 22 Jun 2025 16:48:35 +1000
-From: Xiang Shen <turyshen@gmail.com>
-To: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-Message-ID: <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
-References: <20250620003849.54442-1-turyshen@gmail.com>
- <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aBICUCzT"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55M4K2gY030003;
+	Sun, 22 Jun 2025 07:29:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=mcitZQcakbXoqMQg7LWame7U/gV0A
+	djN+l9YkVHU9tY=; b=aBICUCzTfhkd4uHrcDLPVEjHxPcssJFLjimeZjVUIlp13
+	rt0pHQ+o7X3Pv2UGa7uU8GNYw6uTEplHbXWLgWaQrwffao7hfCAhkrOwy/YiICOi
+	NLRfCsWF1ayZa8iOlWnTHjVuYgOsMgLaneHvgS+uI8USjulLThkHdNvM6mMc3TNc
+	D0/LL/Miu1Sz7U3M/f3vlHisGok/NLEQAH+JWm50U6+HEqxYWx30/ZVrPNWiWjlv
+	E1GprJvJFSpsQTxwVpGI9CyCyvGVQ2RmNE2Z6QnSYeZhpmM1Y9ib52sNEu6mr7TZ
+	iTNsszcKbgf7TozMvh7GzWT+ZhF/bvrDQh3sepITg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8mruab-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 07:29:52 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55M2HZAs008544;
+	Sun, 22 Jun 2025 07:29:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47dk6e6pk5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 07:29:51 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55M7THri031282;
+	Sun, 22 Jun 2025 07:29:51 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47dk6e6pjk-1;
+	Sun, 22 Jun 2025 07:29:51 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, davthompson@nvidia.com,
+        michaelsh@nvidia.com, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity in Mellanox drivers
+Date: Sun, 22 Jun 2025 00:29:11 -0700
+Message-ID: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_02,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506220043
+X-Authority-Analysis: v=2.4 cv=IcWHWXqa c=1 sm=1 tr=0 ts=6857b0f1 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=Dpny8YC7gtef0Hx4SHEA:9 cc=ntf awl=host:13207
+X-Proofpoint-ORIG-GUID: _NgjJGt7GntB2N7GuV2_CW4Nt0DbpiWf
+X-Proofpoint-GUID: _NgjJGt7GntB2N7GuV2_CW4Nt0DbpiWf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDA0MyBTYWx0ZWRfXyf9Hy07fOMYd d3n8rPOatxcc7Wm1SMN37lfwqwl6DJXm/0UsIIvf1bzZrWiEI01eh3wCMc2WbejiKBWN1o0LBiX 86XyDdzuZCRedGuUbw30wEVJzlzCizLpg9Tj/36xHcVPgqKM98GD9tE7lYyzTnRRgy5n4I0MaKu
+ RXfgJxCupBESGTw01m+oOYV84fko3HQ7wvetWptnN3Siuvt6cld06TRsoydSUIbNjrBiPCGC12G 2fyNg+Nc/zmz1xX4yjtzc2LV6fmPVRJ6wosqSFVUoDoIP8QjOUUnNBSoBaQBic22DTM5lRqnIB3 0wzJ75w/yhf3ezXB3POtVO5T5+Kmb5ri1p4Uk9kMesbDGSnrZbU9vzqqEKFr4S3afY/ygIvqFKU
+ vXL/vmUTlHtsnLTNztqJVK7kJotN8TJS3VTsjNwyEpQbqN6NyT+dpzD6vvhhd877NAfyc1lD
 
-On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
-> Hi,
-> 
-> On 20-Jun-25 2:38 AM, Xiang Shen wrote:
-> > Fix checkpatch code style errors:
-> > 
-> > ERROR: do not use assignment in if condition
-> > +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > 
-> > ERROR: do not use assignment in if condition
-> > +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > 
-> > Signed-off-by: Xiang Shen <turyshen@gmail.com>
-> 
-> Thank you for your patch, but this change really does not make
-> the code more readable.
-> 
-> The contrary the suggested changes are making the code harder
-> to read, so NACK.
-> 
-> Note checkpatch is just a tool, sometimes there are good reasons
-> to deviate from the style checks done by checkpatch.
-> 
-> Next time when submitting a patch to fix checkpatch issues please
-> take a look at the resulting code after the patch and only submit
-> the patch upstream if it actually is an improvement.
-> 
-> Regards,
-> 
-> Hans
-> 
-Hi Hans,
+This commit corrects several minor typographical errors in comments
+and error messages across multiple Mellanox platform driver.
+Fixed spelling of "thresholds", "region", "platform", "default",
+and removed redundant spaces in comment strings and error logs.
 
-Thanks for the feedback. 
+These changes are cosmetic and do not affect runtime behavior.
 
-That's fine if breaking the "rule" is the only way to keep the file readable.
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  2 +-
+ drivers/platform/mellanox/mlxreg-dpu.c   |  2 +-
+ drivers/platform/mellanox/mlxreg-lc.c    | 10 +++++-----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-However, there are only three files (x86/sony-laptop.c and x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform folder that have such an error.
-Perhaps there are other approaches to make them more readable without breaking the rule.
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index aae99adb29eb0..6264379d96907 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -1287,7 +1287,7 @@ static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
+ 		ether_addr_copy(mac, mlxbf_tmfifo_net_default_mac);
+ }
+ 
+-/* Set TmFifo thresolds which is used to trigger interrupts. */
++/* Set TmFifo thresholds which is used to trigger interrupts. */
+ static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
+ {
+ 	u64 ctl;
+diff --git a/drivers/platform/mellanox/mlxreg-dpu.c b/drivers/platform/mellanox/mlxreg-dpu.c
+index 52260106a9f16..39f89c47144a2 100644
+--- a/drivers/platform/mellanox/mlxreg-dpu.c
++++ b/drivers/platform/mellanox/mlxreg-dpu.c
+@@ -483,7 +483,7 @@ static int mlxreg_dpu_config_init(struct mlxreg_dpu *mlxreg_dpu, void *regmap,
+ 							  mlxreg_dpu->io_data,
+ 							  sizeof(*mlxreg_dpu->io_data));
+ 		if (IS_ERR(mlxreg_dpu->io_regs)) {
+-			dev_err(dev, "Failed to create regio for client %s at bus %d at addr 0x%02x\n",
++			dev_err(dev, "Failed to create region for client %s at bus %d at addr 0x%02x\n",
+ 				data->hpdev.brdinfo->type, data->hpdev.nr,
+ 				data->hpdev.brdinfo->addr);
+ 			return PTR_ERR(mlxreg_dpu->io_regs);
+diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+index aee395bb48ae4..8eef3d990d1ae 100644
+--- a/drivers/platform/mellanox/mlxreg-lc.c
++++ b/drivers/platform/mellanox/mlxreg-lc.c
+@@ -57,9 +57,9 @@ enum mlxreg_lc_state {
+  * @dev: platform device;
+  * @lock: line card lock;
+  * @par_regmap: parent device regmap handle;
+- * @data: pltaform core data;
++ * @data: platform core data;
+  * @io_data: register access platform data;
+- * @led_data: LED platform data ;
++ * @led_data: LED platform data;
+  * @mux_data: MUX platform data;
+  * @led: LED device;
+  * @io_regs: register access device;
+@@ -171,7 +171,7 @@ static int mlxreg_lc_chan[] = {
+ 	0x4e, 0x4f
+ };
+ 
+-/* Defaul mux configuration. */
++/* Default mux configuration. */
+ static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
+ 	{
+ 		.chan_ids = mlxreg_lc_chan,
+@@ -181,7 +181,7 @@ static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
+ 	},
+ };
+ 
+-/* Defaul mux board info. */
++/* Default mux board info. */
+ static struct i2c_board_info mlxreg_lc_mux_brdinfo = {
+ 	I2C_BOARD_INFO("i2c-mux-mlxcpld", 0x32),
+ };
+@@ -758,7 +758,7 @@ mlxreg_lc_config_init(struct mlxreg_lc *mlxreg_lc, void *regmap,
+ 		platform_device_register_resndata(dev, "mlxreg-io", data->hpdev.nr, NULL, 0,
+ 						  mlxreg_lc->io_data, sizeof(*mlxreg_lc->io_data));
+ 		if (IS_ERR(mlxreg_lc->io_regs)) {
+-			dev_err(dev, "Failed to create regio for client %s at bus %d at addr 0x%02x\n",
++			dev_err(dev, "Failed to create region for client %s at bus %d at addr 0x%02x\n",
+ 				data->hpdev.brdinfo->type, data->hpdev.nr,
+ 				data->hpdev.brdinfo->addr);
+ 			err = PTR_ERR(mlxreg_lc->io_regs);
+-- 
+2.46.0
 
-
-BRs,
-Xiang
-
-> 
-> 
-> > ---
-> >  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
-> >  1 file changed, 21 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> > index 232cd12e3c9f..bcc97b06844e 100644
-> > --- a/drivers/platform/x86/intel/vbtn.c
-> > +++ b/drivers/platform/x86/intel/vbtn.c
-> > @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
-> >  
-> >  	guard(mutex)(&priv->mutex);
-> >  
-> > -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-> > +	if (ke) {
-> >  		if (!priv->has_buttons) {
-> >  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
-> >  				 event);
-> >  			return;
-> >  		}
-> >  		input_dev = priv->buttons_dev;
-> > -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > -		if (!priv->has_switches) {
-> > -			/* See dual_accel_detect.h for more info */
-> > -			if (priv->dual_accel)
-> > -				return;
-> > -
-> > -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > -			ret = input_register_device(priv->switches_dev);
-> > -			if (ret)
-> > -				return;
-> > -
-> > -			priv->has_switches = true;
-> > -		}
-> > -		input_dev = priv->switches_dev;
-> >  	} else {
-> > -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > -		return;
-> > +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-> > +		if (ke) {
-> > +			if (!priv->has_switches) {
-> > +				/* See dual_accel_detect.h for more info */
-> > +				if (priv->dual_accel)
-> > +					return;
-> > +
-> > +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > +				ret = input_register_device(priv->switches_dev);
-> > +				if (ret)
-> > +					return;
-> > +
-> > +				priv->has_switches = true;
-> > +			}
-> > +			input_dev = priv->switches_dev;
-> > +		} else {
-> > +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > +			return;
-> > +		}
-> >  	}
-> >  
-> >  	if (priv->wakeup_mode) {
-> 
