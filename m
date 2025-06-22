@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A299E555;
-	Sun, 22 Jun 2025 18:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED31A8F60;
+	Sun, 22 Jun 2025 19:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750618711; cv=none; b=bTt3rZTBk8T7QOE1+WGOXYrSYZCuEWSCxTw7DxU3naWkWnfS0ryU41JUlrdzG8XBNvWgX7O0Uezy8zMv6yXkesMzaTwoGZ6qo7Scj6PIaEhLkra2qNWKy2fu5ufPZqsKOc25ID29C7RgSsqyEtKKnSlQUCHp3L9MG+dWdnv/l1Y=
+	t=1750620012; cv=none; b=EP0VJ3w7qGO4WdVuzwkKEbWuOYNUgAFF6P4AdDvEJJMG6XJYmACC3lw15SijZaOkv7Q9B/lOAYB9EEehE5PuH9QyfJvI30kOUd3CtK1PKM9rw9lur4v00Z5Qx2OE9Kf5Qe3nu+47gFbYuHcRaSSUe2/dQ7Ia14Hv5yhNG0jKpLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750618711; c=relaxed/simple;
-	bh=ZzQJ3M8EqiWxxmmNLvTPgJfzj3h9+EYdmRkBn+wuBIc=;
+	s=arc-20240116; t=1750620012; c=relaxed/simple;
+	bh=WeOG+MjzdIsxy/CWwpwMD2pDWBrpkmsWHu8soZ4CLMM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kA40G5Ztovoje0+0yrOjvePcELuj8Vuwx+WFmLQxIoOmPk3/u6zgxJ8whljPErHm1vv00DWAvA2JTmgyBS2BNCS3M6qjVr0a/7VmNUOOWVPIU+fA4YR77T1ckS/a4uigmIRV4NWj0akVha2CjApPU7dmNyRW3wIAQCedx7mEcr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XInck6gh; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=bVIULebwVZycyIrQZqw4bthn7ZF2WzHK/SSVMUKRQtzRmLqp3KimJdvGBmbGHFHzrnR79tMmRAkPBr8gq8mUlwRM11Tn+rBaTckqg0OhccoFBn7fp8fMbiTvLkGGCn/d0TSmSDPm7tFWy/ip+rFwLRgN1X5+kIyvEK0iybaOGsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=g/xW99Ie; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XInck6gh"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="g/xW99Ie"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750618699; x=1751223499; i=w_armin@gmx.de;
-	bh=ZzQJ3M8EqiWxxmmNLvTPgJfzj3h9+EYdmRkBn+wuBIc=;
+	s=s31663417; t=1750620001; x=1751224801; i=w_armin@gmx.de;
+	bh=lll09mEnZfyJBByfpKGMz7/npbWC/hm4DjReGgJOgCM=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=XInck6ghvQ34DDzaYVO8aXFQ3lrLGEZBpCaqA9Npfv9Se8k/1WH46pxllRKzy5SA
-	 GN0jh/LyHTsIg8Z8/UxFHo7LhFVuE4DGtveTwIZgli/TQwFp/pKfNHcLLkRWFajJU
-	 Pwe1lq+YeTT7/oWytBk4t3YGVsl3/HkyUE2xIZFrvmAObCimnKGYHgy0Ipo5lQ3C8
-	 CkNXXaVwjY98ODgc/q08S/J/qnMJhfdudZY1KLwWox4UTlQqGixWLP7rcX9TyDvCf
-	 e+ElB5tPtMgOjDkxvrs4yLqjhoZ2cVbxE09bXF6VWZGOcTHxrfp956O3+3FHjjqWj
-	 91aWVM6vjvgGIQhM4g==
+	b=g/xW99Iebj9T1WJ+j30aXjSPqqto4kyMSNVr6ipKJsKISZVbikgKvZktlfwk/B2h
+	 IY6G/L7Im22bomjX/8R7fRlWOQcCr6pO4G2HPj4OaUwyji+LCuFzRe8bzcVc84L9R
+	 ZnSZgcgkCIK6XCRDT61raFpmGtLQBiU/Yf7rR47xoCmDDe0jtDoA6THDD3IJBtZ0n
+	 zBIhX16Rs8Q/INYdNY9OYHyAHDDWV3XwVvs8U4/U37SQqQND2VatteE2pMHA/KuIu
+	 VJ5dqbLg77GqS8CKx7QRtPUtzTyqK/cHDAOt3CDnYFQn6U396F8vQ+mMbBP6On4jt
+	 sTQPLGtBscw5qGmBgQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N95iH-1urQho1ggh-017RDC; Sun, 22
- Jun 2025 20:58:19 +0200
-Message-ID: <c50c011f-6ad5-4122-a0e7-39880a4740ca@gmx.de>
-Date: Sun, 22 Jun 2025 20:58:16 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N2DxE-1utNMt05K2-0118K9; Sun, 22
+ Jun 2025 21:20:01 +0200
+Message-ID: <71b50cf8-5798-4a00-a908-e6c9e741dc30@gmx.de>
+Date: Sun, 22 Jun 2025 21:19:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -44,110 +44,176 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
-To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hansg@kernel.org>, Lee Jones <lee@kernel.org>
+Cc: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com,
+ chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de, ggo@tuxedocomputers.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 References: <20250615175957.9781-1-W_Armin@gmx.de>
  <20250615175957.9781-3-W_Armin@gmx.de>
- <1020d244-4d52-4afd-ae98-bfcb2b8e7145@tuxedocomputers.com>
- <de9d469b-9ea2-4fe3-8a7e-92fdc6d1c980@gmx.de>
- <45a985fd-5428-4cbb-843a-523ea435a228@tuxedocomputers.com>
+ <41de4cd4-2a27-4b14-a1c0-e336a3cec317@tuxedocomputers.com>
+ <d645ba09-1820-4473-96bb-8550ed0b0a26@gmx.de>
+ <20250619094757.GB587864@google.com>
+ <ebd9489d-2783-468a-ad07-e7d1c04fb165@kernel.org>
+ <20250619151714.GJ795775@google.com>
+ <7c5b6512-1374-41c9-be9a-ac05b573e2cd@kernel.org>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <45a985fd-5428-4cbb-843a-523ea435a228@tuxedocomputers.com>
+In-Reply-To: <7c5b6512-1374-41c9-be9a-ac05b573e2cd@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:KraxmP3ugauMr2F7LZA3Uu1+rEskZF4aZC/KWb3ccj3BLI/jZST
- 6uDuWjKdvhAC02tu9+qnHUPMPYgQSgxmq7Q391laFfDt2EzP/nNH+9DLXzbA3LtwAYdYU9O
- nD2J9SH/Ef/TpoZoz9je4AuJ5kb3sNCVt93y/9h27nW0q1EHnlJR4LzXdXGgU7Cf84X5Je2
- 2VV8aNIfYQBjf8/RuKtpA==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:npnkzj5qX/JQbDhHXyCZGfYPZW2AiQ2/k0u1cinjwo888pGD4LV
+ WK0agvLtH0uKsdy9/RT+OSwFuEeHn85ZxpvdIiWycIhZDzPZTdCNOJ/zT7Yb0Uva3WZLoDb
+ FTBgzrcqNaJ3uiOGQbnf7D3MVBCDXoBIoftisCyxDD6N3VKCFPRG9f7FnKVIHFkwM7gUPIv
+ d1ugSWoPVzrgdoqB5Aqgg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mt0q4MjzrLg=;QG94SVr0FBqrpnMtCaF6ch+hvjf
- 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
- 2+FRmUo2SEVH1BL2lJUtrWs9xI/9uEq+AlHZjQ==
+UI-OutboundReport: notjunk:1;M01:P0:cTKaCFfLzjo=;9IOcCc3f4rJJOL4MvrYvsQTx9J9
+ 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
+ hZCtpZqL5LhUEDu1oWquXg2cWk+1PhgnG4yAaw==
 
-QW0gMTguMDYuMjUgdW0gMTM6MTUgc2NocmllYiBXZXJuZXIgU2VtYmFjaDoNCg0KPiBIaSwNCj4N
-Cj4gQW0gMTcuMDYuMjUgdW0gMjM6NTAgc2NocmllYiBBcm1pbiBXb2xmOg0KPj4gQW0gMTYuMDYu
-MjUgdW0gMTQ6MzIgc2NocmllYiBXZXJuZXIgU2VtYmFjaDoNCj4+DQo+Pj4gSGksDQo+Pj4NCj4+
-PiBBbSAxNS4wNi4yNSB1bSAxOTo1OSBzY2hyaWViIEFybWluIFdvbGY6DQo+IFsuLi5dDQo+Pj4+
-ICtUaGUgRUMgYmVoaW5kIHRoZSBgYEdldFNldFVMb25nYGAgbWV0aG9kIGlzIHVzZWQgYnkgdGhl
-IE9FTSANCj4+Pj4gc29mdHdhcmUgc3VwcGxpZWQgYnkgdGhlIG1hbnVmYWN0dXJlci4NCj4+Pj4g
-K1JldmVyc2UtZW5naW5lZXJpbmcgb2YgdGhpcyBzb2Z0d2FyZSBpcyBkaWZmaWN1bHQgc2luY2Ug
-aXQgdXNlcyBhbiANCj4+Pj4gb2JmdXNjYXRvciwgaG93ZXZlciBzb21lIHBhcnRzDQo+Pj4+ICth
-cmUgbm90IG9iZnVzY2F0ZWQuDQo+Pj4gSWlyYyBDaHJpc3RvZmZlciBzYWlkIHRoZXJlIGlzIGFs
-c28gYW5vdGhlciBub24gd21pLCBidXQgYWNwaSwgDQo+Pj4gZ2V0L3NldCBjbWQgdGhhdCBjYW4g
-d3JpdGUgb25seSBzcGVjaWZpYyByZWdpb25zIGJ1dCBpcyBmYXN0ZXIuIEp1c3QgDQo+Pj4gd2Fu
-dGVkIHRvIGxlYXZlIHRoaXMgaGVyZSBmb3IgcG90ZW50aWFsIGZ1dHVyZSBvcHRpbWl6YXRpb25z
-IGlmIHlvdSANCj4+PiBhcmUgaW50ZXJlc3RlZC4NCj4+DQo+PiBXaGF0IGludGVyZmFjZSBhcmUg
-eW91IHJlZmVycmluZyB0byBleGFjdGx5Pw0KPg0KPiBJIHRoaW5rIGhlIHdhcyByZWZlcnJpbmcg
-dG8gdGhlc2UgMiBtZXRob2RzIGluIHRoZSBkc2R0Og0KPg0KPiDCoMKgwqAgU2NvcGUgKF9TQikN
-Cj4gwqDCoMKgIHsNCj4gwqDCoMKgwqDCoMKgwqAgRGV2aWNlIChJTk9VKQ0KPiDCoMKgwqDCoMKg
-wqDCoCB7DQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIFsuLi5dDQo+DQo+IMKgwqDCoCDCoMKgwqAg
-wqDCoMKgIE1ldGhvZCAoRUNSUiwgMSwgTm90U2VyaWFsaXplZCkNCj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMb2NhbDAgPSAoMHhG
-RTQxMDAwMCArIEFyZzApDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMb2NhbDEg
-PSBNTVJXIChMb2NhbDAsIFplcm8sIFplcm8sIFplcm8pDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBSZXR1cm4gKExvY2FsMSkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9DQo+
-DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgTWV0aG9kIChFQ1JXLCAyLCBOb3RTZXJpYWxpemVk
-KQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIExvY2FsMCA9ICgweEZFNDEwMDAwICsgQXJnMCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIE1NUlcgKExvY2FsMCwgT25lLCBaZXJvLCBBcmcxKQ0KPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIH0NCj4NCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgWy4uLl0NCj4gwqDCoMKg
-IMKgwqDCoCB9DQo+IMKgwqDCoCB9DQo+DQo+IFRoZXkgY2FuIHJlYWQvd3JpdGUgdGhlIDB4MDR4
-eCBhbmQgMHgwN3h4IGFkZHJlc3NlcyBidXQgbm90IHRoZSAweDE4eHggDQo+IG9uZXMgaWlyYywg
-ZG9uJ3Qga25vdyBhYm91dCB0aGUgMHgwZnh4IG9uZXMuDQo+DQo+IEkgdGhpbmsgMHgxOHh4IHdh
-cyBuZXZlciBpbnRlbmRlZCB0byBiZSB3cml0dGVuIHByb2JhYmx5LCBidXQgd2UgdXNlIA0KPiBp
-dCB0byBpbXBsZW1lbnQgYSBjdXN0b20gZmFuIGN1cnZlIG9wdGlvbiBpbiB0dXhlZG8tZHJpdmVy
-cyBvbiBvbGRlciANCj4gZGV2aWNlcyB0aGF0IG9mZmljaWFsbHkgZG9uJ3Qgc3VwcG9ydCBpdC4N
-Cj4NCj4gQmVzdCByZWdhcmRzLA0KPg0KPiBXZXJuZXINCj4NCkkgc2VlLCBpIHRvbyBub3RpY2Vk
-IHRoZSBJTk9VMDAwMCBkZXZpY2UgZHVyaW5nIHJldmVyc2UgZW5naW5lZXJpbmcuIEkgd2lsbCB1
-cGRhdGUgdGhlIGRvY3VtZW50YXRpb24gdG8gaW5mb3JtIGZ1dHVyZSBkZXZlbG9wZXJzIGFib3V0
-IHRoaXMgcG90ZW50aWFsbHkNCmZlYXN0ZXIgaW50ZXJmYWNlLiBIb3dldmVyIGZvciBub3cgaSBz
-dWdnZXN0IHRoYXQgd2Ugc3RpY2sgdG8gdGhlIFdNSSBpbnRlcmZhY2UuDQoNClRoYW5rcywNCkFy
-bWluIFdvbGYNCg0K
+Am 19.06.25 um 22:03 schrieb Hans de Goede:
+
+> Hi Lee,
+>
+> On 19-Jun-25 5:17 PM, Lee Jones wrote:
+>> On Thu, 19 Jun 2025, Hans de Goede wrote:
+>>
+>>> Hi Lee,
+>>>
+>>> On 19-Jun-25 11:47 AM, Lee Jones wrote:
+>>>> On Tue, 17 Jun 2025, Armin Wolf wrote:
+>>>>
+>>>>> Am 16.06.25 um 14:46 schrieb Werner Sembach:
+>>>>>
+>>>>>> Hi, small additon
+>>>>>>
+>>>>>> Am 15.06.25 um 19:59 schrieb Armin Wolf:
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 functionality.
+>>>>>>> +
+>>>>>>> +What: /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-=
+X]/rainbow_animation
+>>>>>>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Juni 2025
+>>>>>>> +KernelVersion:=C2=A0=C2=A0=C2=A0 6.17
+>>>>>>> +Contact:=C2=A0=C2=A0=C2=A0 Armin Wolf <W_Armin@gmx.de>
+>>>>>>> +Description:
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Forces the integrated =
+lightbar to display a rainbow
+>>>>>>> animation when the machine
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is not suspended. Writ=
+ing "enable"/"disable" into this file
+>>>>>>> enables/disables
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this functionality.
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Reading this file retu=
+rns the current status of the rainbow
+>>>>>>> animation functionality.
+>>>>>>> +
+>>>>>>> +What: /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-=
+X]/breathing_in_suspend
+>>>>>>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Juni 2025
+>>>>>>> +KernelVersion:=C2=A0=C2=A0=C2=A0 6.17
+>>>>>>> +Contact:=C2=A0=C2=A0=C2=A0 Armin Wolf <W_Armin@gmx.de>
+>>>>>>> +Description:
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Causes the integrated =
+lightbar to display a breathing
+>>>>>>> animation when the machine
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 has been suspended and=
+ is running on AC power. Writing
+>>>>>>> "enable"/"disable" into
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this file enables/disa=
+bles this functionality.
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Reading this file retu=
+rns the current status of the
+>>>>>>> breathing animation
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 functionality.
+>>>>>> maybe this would be better under the /sys/class/leds/*/ tree if pos=
+sible
+>>>>> I CCed the LED mailing list so that they can give us advice on which=
+ location is the preferred one for new drivers.
+>>>> No need to involve the LED subsystem for a hardware function controll=
+ed
+>>>> by a single register value just because the interface involves an LED=
+.
+>>> Lee, the question here is where put the sysfs attribute to put the lig=
+htbar
+>>> in breathing mode e.g. which of these 2 should be used?  :
+>>>
+>>> 1. /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/breat=
+hing_in_suspend
+>>> 2. /sys/class/leds/uniwill-lightbar/breathing_in_suspend
+>>>
+>>> I think this is a fair question and since 2. involves the LED class us=
+erspace
+>>> API I also think that asking for the LED maintainers input is reasonab=
+le.
+>>>
+>>> FWIW I'm not sure myself. 2. is the more logical place / path. But 2. =
+adds
+>>> a custom sysfs attr the LED class device. Whereas 1. adds a custom sys=
+fs attr
+>>> in a place where these are more or less expected.
+>> Right.  It was a reasonable question.  Did I imply otherwise?
+> Sorry, my bad, I interpreted your "No need to involve the LED
+> subsystem for a hardware function ..." remark as meaning that
+> you did not understand why you were Cc-ed.
+>
+> I now realize that you meant that you believe the control for
+> this does not need to be under /sys/class/leds/
+>
+>> If it wasn't clear, my vote (this is not a dictatorship) is for 1.
+> Ok, 1. works for me and that is what the patch is already doing,
+> so lets keep it as as.
+>
+> Regards,
+>
+> Hans
+
+Fine with me.
+
+Armin Wolf
+
