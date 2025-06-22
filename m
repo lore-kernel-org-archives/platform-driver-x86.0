@@ -1,41 +1,33 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125812BAF4
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jun 2025 19:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4CE4409;
+	Sun, 22 Jun 2025 20:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750620435; cv=none; b=NPo+rZASDSS4SqrnQJZNdGYqBlxR1Cl2DTAEuv+H8XcrgaeXI+vVAGIrt0uHLHxHJxF7iqVgC80M5+vRs+RC8/6foVAKjZ1F7UGT8cbY6mC3OMn2d4Xlh4CPOmI9T5Yib+eX2q75zUpy24WwfOF3ytJxqMoe7b1eGvG8lwAGEt0=
+	t=1750625974; cv=none; b=HMu0q19OKnY2yuZl1812ch/gVKb45gIwE3GmWLkND3MldWXuIis9Bzf3EvhdK7KSG4IbUe3yCE7fmf93AJJiyp/a2TU1KYgWA6/5ANNbjCZQkPR5bbFUhMMKnRTMpGflZYGVcNXga8cLaVmxDjrrvWl4183GI7aXoacyPjfluOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750620435; c=relaxed/simple;
-	bh=zSVIVogv8ArIjShYK7gxiLpWNYR9mU8lKbPw7mfJMU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Kk+bI3Y1TUsp2D99MD4UnqKK2zuN7T9V3JEC7Xls4gcb8Di2IjseBCvJTPaxPiAh5su/+xSVzedl2tQBUCVoLlFp96RsSFXhc4j1yYLtbDyYGoniqvuo2+dn7MpN8oRP5S2u84hjhrA9181Ry4NMiLZX7DcUR4Hi/t6Ny+zZ0Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WSAtMh8a; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1750625974; c=relaxed/simple;
+	bh=8YMK4lPlyBFWPRybG/UDVbwX/HzVAlNCWxUJvE/HP6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H5AvKalJcbuu485w1N2OzD2vaNM9aIb9K2E5aIRxpMMjsFtBxdWXpppFLTTRkHSjTWxZlK7hoXOKwVom174gh2t7sKbbE70CvFElMCdH/u3uxdmlbqBh1Ily+U6K5jzuNts9rJ1ela5YVEarGvjNCvvHiu2J/p9nJMIXpSZuwb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfkmzOou; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WSAtMh8a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750620431; x=1751225231; i=w_armin@gmx.de;
-	bh=zSVIVogv8ArIjShYK7gxiLpWNYR9mU8lKbPw7mfJMU8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=WSAtMh8aP7Hf1pd1gfxipgdxK+6dd/PwDMWJnwtIfVNS6qGBBT+iu2hSYZ+BcLgt
-	 tlMKJlGkeyTrHHQndByxM2l5vYnTzM8KpftOt6WDDxxfULAdB1DtXOtSNBt8aXxQY
-	 h82a4LJ8qMEKG3IOIN6yhLk6LGKiJTN+AlQbVVLqRQffTedxweFShu847waKq0Mf8
-	 zWM7UScyxU0leLdJz8AKuejEtRGz+sBldoS66x8yFzBALA9norNcmcR/IzA3hlKN/
-	 b2dVtHFm5pp7gPvA3no8OFnLjpjW6TbjG6BfeBS5ZB0F5WaJB7ZJfq7ChaYQVTaxR
-	 5/54TXtiSduEO/UuRg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M89Gj-1uPpiH3O3H-006zWl; Sun, 22
- Jun 2025 21:27:11 +0200
-Message-ID: <48e0d534-6ebf-4cd4-95c5-d74d1af10ac1@gmx.de>
-Date: Sun, 22 Jun 2025 21:27:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfkmzOou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78D0C4CEE3;
+	Sun, 22 Jun 2025 20:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750625974;
+	bh=8YMK4lPlyBFWPRybG/UDVbwX/HzVAlNCWxUJvE/HP6w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MfkmzOouKrwq5EkGi039PmDyCPGcgMosT6K7xlPlapB9X+jAJ9f07GxBbOEkUUC/3
+	 wydx/m+BjwGKfbJtcb7FACvS2McFN42YCH5/IGcktgIiQv5ABSH/MkOBIB6gTarU7s
+	 kmg5iqoJftPPJaO0kH1VpvmVsg4sM9vOhBtyKMneUkP/2lLKHR+kZVcN2MWyWOkqmk
+	 k18gfUsIpeiAYUCpFgEGb5AMRCQ7BMwgKIxQ7QEuzI/zXyzkfQ4dx0qZXMyvK46cXr
+	 QQNtKXq8EJ7G8CQbSUniOIhhz6/dMblFzVgVlQDJcw4Fm/PpSUwlk229FPWxiVEYVr
+	 /Nlnfyhj5bLYQ==
+Message-ID: <b46dcef3-2893-4b94-81ef-a495e6a0e7ca@kernel.org>
+Date: Sun, 22 Jun 2025 22:59:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,96 +35,187 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: lenovo_wmi_hotkey_utilities probe failure regression on IdeaPad 5
- Pro 14ACN6 (6.15.x)
-To: Andrei Tescula <atescula@gmail.com>, platform-driver-x86@vger.kernel.org
-References: <2eda8f9b-9421-4068-87ae-ccfd834649bc@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <2eda8f9b-9421-4068-87ae-ccfd834649bc@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:e3Inezg3TsBHaYTD0bhVDoporVrgANnAb166MDptkdrhjhVmLHE
- p5ACULB8h90GTAi8VSt5LFJw1JOQDmvElBHa9N4fX22xl1uj5RoktBzA6E44Kzy2y9Pbh0V
- xZkNGlb8HbiczwhsTTufIYTJiN5AEE57ZZagmvPRHxGAYr4mfvp44pmZbWbbk1B3WqbF9yz
- +LCjGFFbkXAj/2CzLZUbw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Enz7lKXtSY0=;ZN1zRUO09ss8CXfqXmNB/ZXxdh3
- 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
+Subject: Re: [PATCH] platform/x86: dell-ddv: Fix taking the
+ psy->extensions_sem lock twice
+To: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>
+References: <20250620175807.418300-1-hansg@kernel.org>
+ <3bfea893-fd3e-48b6-8a34-9ab36108efe2@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <3bfea893-fd3e-48b6-8a34-9ab36108efe2@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am 18.06.25 um 07:58 schrieb Andrei Tescula:
++ Cc sre, whom I should have Cc-ed from the beginning.
 
-> Hardware: Lenovo IdeaPad 5 Pro 14ACN6 (82L7)
-> BIOS: GECN39WW(V1.23) 10/30/2024
->
-> Regression:
-> - Working: 6.14.10-arch1-1 and earlier
-> - Broken: 6.15.x
-> - Also working: linux-lts
->
-> Error message:
-> lenovo_wmi_hotkey_utilities CE6C0974-0407-4F50-88BA-4FC3B6559AD8:=20
-> probe with driver lenovo_wmi_hotkey_utilities failed with error -5
->
-> Impact:
-> - Error message appears in dmesg/journalctl
-> - Functionality not affected (hotkeys work via ideapad_laptop driver)
-> - Purely cosmetic but indicates improper driver probing
->
-> Additional info:
-> - ideapad_laptop module loaded and working correctly
-> - All hotkeys (Fn+F1-F12) function properly
-> - WMI GUID CE6C0974-0407-4F50-88BA-4FC3B6559AD8 probe fails with -EIO
+Hi Armin,
 
-Hi,
+On 22-Jun-25 8:41 PM, Armin Wolf wrote:
+> Am 20.06.25 um 19:58 schrieb Hans de Goede:
+> 
+>> dell_wmi_ddv_get_property() gets called with psy->extensions_sem
+>> read-locked, it calls dell_wmi_ddv_battery_translate() which calls
+>> power_supply_get_property() on the same psy which again read-locks
+>> psy->extensions_sem.
+>>
+>> Lockdep rightfully complains about this:
+>>
+>>   ============================================
+>>   WARNING: possible recursive locking detected
+>> ...
+>>   kworker/16:3/1230 is trying to acquire lock:
+>>   ffff8c3143417658 (&psy->extensions_sem){++++}-{4:4},
+>>    at: power_supply_get_property.part.0+0x23/0x160
+>>   but task is already holding lock:
+>>   ffff8c3143417658 (&psy->extensions_sem){++++}-{4:4},
+>>    at: power_supply_get_property.part.0+0x23/0x160
+>> ...
+>>    Possible unsafe locking scenario:
+>>
+>>          CPU0
+>>          ----
+>>     lock(&psy->extensions_sem);
+>>     lock(&psy->extensions_sem);
+>>
+>>    *** DEADLOCK ***
+>> ...
+>>   Call Trace:
+>>    <TASK>
+>>    ...
+>>    down_read+0x3e/0x180
+>>    ? power_supply_get_property.part.0+0x23/0x160
+>>    power_supply_get_property.part.0+0x23/0x160
+>>    dell_wmi_ddv_battery_translate+0x68/0x1d0 [dell_wmi_ddv]
+>>    ? lock_acquire+0xd9/0x2c0
+>>    dell_wmi_ddv_get_property+0x25/0x240 [dell_wmi_ddv]
+>>    power_supply_get_property.part.0+0x87/0x160
+>>    power_supply_format_property+0xc4/0x3d0
+>>    add_prop_uevent+0x26/0x90
+>>    power_supply_uevent+0xb9/0xf0
+>>
+>> This usually works fine, because read-locking can be done multiple times
+>> but if someone tries to write-lock between the 2 read-lock calls then
+>> the second read-lock will block on the write-lock and the write-lock will
+>> be blocked on the first read-lock leading to a deadlock.
+>>
+>> The serial is part of the main psy device, not of an extension. Directly
+>> call psy->desc->get_property() in dell_wmi_ddv_battery_translate() to fix
+>> the double-lock issue.
+>>
+>> Note this also influences eppid_show() which is called directly rather
+>> then through power_supply_get_property(). This is ok since the ACPI
+>> battery is fully ready to be used when the battery hook's add_battery
+>> callback is called.
+> 
+> Thank you very much for finding this issue, but i think that simply calling battery->desc->get_property()
+> is not the right solution for this:
+> 
+> 1. We should still call psy_desc_has_property() to determine if the power supply actually support
+>    POWER_SUPPLY_PROP_SERIAL_NUMBER.
 
-can you share the output of "acpidump"?
+Although it is currently not enforced in power_supply_core.c it seems
+reasonable to assume that any powersupply must have a get_property
+callback in their desc (the core also unconditionally calls this).
 
-Thanks,
-Armin Wolf
+And most (all?) psy drivers I've seen have a default which returns -EINVAL
+in their get_property() implementation which works just as well as
+calling has_prop ...
+
+My bigger worry is the lack of the:
+
+>     if (atomic_read(&psy->use_cnt) <= 0) {
+>         if (!psy->initialized)
+>             return -EAGAIN;
+>         return -ENODEV;
+>     }
+
+Check TBH.
+
+> 2. At least another power supply extension user (the uniwill-laptop driver currently being under review)
+>    suffers from a similar problem, so a more generic solution is needed.
+> 
+> Maybe we could introduce a new function for reading power supply properties that ignores any
+> power supply extensions? This way future extension could use this function too.
+> 
+> I envision something like this:
+>     
+> int power_supply_get_property_direct(struct power_supply *psy,
+>                 enum power_supply_property psp,
+>                 union power_supply_propval *val)
+> {
+>     if (atomic_read(&psy->use_cnt) <= 0) {
+>         if (!psy->initialized)
+>             return -EAGAIN;
+>         return -ENODEV;
+>     }
+> 
+>     if (psy_desc_has_property(psy->desc, psp))
+>         return psy->desc->get_property(psy, psp, val);
+>     else if (power_supply_battery_info_has_prop(psy->battery_info, psp))
+>         return power_supply_battery_info_get_prop(psy->battery_info, psp, val);
+>     else
+>         return -EINVAL;
+> }
+> EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
+> 
+> It basically is power_supply_get_property() without the extension logic.
+
+While working on this fix I was thinking that something like this would be useful,
+so +1 for this.
+
+Maybe first do a prep patch where the extension handling in
+power_supply_get_property() is moved last, then power_supply_get_property()
+can just wrap this new helprr and on -EINVAL check the extensions.
+
+Actually if you move the extensions check to last then the whole doublelock
+issue goes away because the serial-number will be found before checking
+extensions.
+
+Or if you want to keep checking the extensions first change
+the current power_supply_get_property() into a new
+__power_supply_get_property() with a "bool check_extensions"
+argument and make power_supply_get_property() wrap it pasing true
+for check_extensions. Or some such, whatever you do try to avoid code
+duplication but you already know this ...
+
+> I can also write some
+> documentation on how to implement power supply extensions in general.
+
+That would also be good to have.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+>> Fixes: 058de163a376 ("platform/x86: dell-ddv: Implement the battery matching algorithm")
+>> Signed-off-by: Hans de Goede <hansg@kernel.org>
+>> ---
+>>   drivers/platform/x86/dell/dell-wmi-ddv.c | 8 +++++---
+>>   1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+>> index 67f3d7158403..95cc3139f271 100644
+>> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+>> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+>> @@ -689,9 +689,11 @@ static int dell_wmi_ddv_battery_translate(struct dell_wmi_ddv_data *data,
+>>         dev_dbg(&data->wdev->dev, "Translation cache miss\n");
+>>   -    /* Perform a translation between a ACPI battery and a battery index */
+>> -
+>> -    ret = power_supply_get_property(battery, POWER_SUPPLY_PROP_SERIAL_NUMBER, &val);
+>> +    /*
+>> +     * Perform a translation between a ACPI battery and a battery index. Directly call
+>> +     * desc->get_property() to avoid locking battery->extensions_sem a second time.
+>> +     */
+>> +    ret = battery->desc->get_property(battery, POWER_SUPPLY_PROP_SERIAL_NUMBER, &val);
+>>       if (ret < 0)
+>>           return ret;
+>>   
 
