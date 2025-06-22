@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E80A14A62B
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jun 2025 18:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A299E555;
+	Sun, 22 Jun 2025 18:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750617727; cv=none; b=KnliRN5eZFLEic75wZtyve0aqYnYcQ3f6lVcB7tjsgL+QMyuzYSe1IHdmM5IXqBDMWYAhEFukfcLeCaxdknF1/TUV2yr6ZFG7q7KuTltER0P1uArp53mYboQYvzXK+dLHxxre5RY5jnW+1eXqnNZy/t4oa5AlQaviuGjFsDsrY0=
+	t=1750618711; cv=none; b=bTt3rZTBk8T7QOE1+WGOXYrSYZCuEWSCxTw7DxU3naWkWnfS0ryU41JUlrdzG8XBNvWgX7O0Uezy8zMv6yXkesMzaTwoGZ6qo7Scj6PIaEhLkra2qNWKy2fu5ufPZqsKOc25ID29C7RgSsqyEtKKnSlQUCHp3L9MG+dWdnv/l1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750617727; c=relaxed/simple;
-	bh=+nT0tRUZ10344pMr3MgsoWUUezLDpjYtgT7fxxUgYag=;
+	s=arc-20240116; t=1750618711; c=relaxed/simple;
+	bh=ZzQJ3M8EqiWxxmmNLvTPgJfzj3h9+EYdmRkBn+wuBIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rs68gODfT+DntQUZxPC3NQyT4zqp7eAGUiv+24xHCbgcpeIuY+9JVJtD2gWXqVbwCV7tlRWZmz46fnWQtQUI9vKae3FcNUCmEpqZCF1kPyvVuphVNz2ZEgxba9IczzqufUamuRFi3uavqj1twlkbL1iuqTZlo/SylIsdjFB/Y0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nEH2c2yf; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=kA40G5Ztovoje0+0yrOjvePcELuj8Vuwx+WFmLQxIoOmPk3/u6zgxJ8whljPErHm1vv00DWAvA2JTmgyBS2BNCS3M6qjVr0a/7VmNUOOWVPIU+fA4YR77T1ckS/a4uigmIRV4NWj0akVha2CjApPU7dmNyRW3wIAQCedx7mEcr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XInck6gh; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nEH2c2yf"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XInck6gh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750617714; x=1751222514; i=w_armin@gmx.de;
-	bh=cVamjRUFhh8vCtzSooqYx3W/LOXF5dcYUy5jomwb3+A=;
+	s=s31663417; t=1750618699; x=1751223499; i=w_armin@gmx.de;
+	bh=ZzQJ3M8EqiWxxmmNLvTPgJfzj3h9+EYdmRkBn+wuBIc=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=nEH2c2yfzB8MrCYWhJNz2ypJw5QRxzbvK8xE//HBqrd5tSXX2b5da9asHEV4CcvP
-	 dytPMpL2VIIGnx2zHdJodhtOXoOHNnuPtk07hXARtpT2TRk18IpCdMo846J4eF4Jb
-	 hJSRPkvdD6Jd+gE/0QWEagxwOkR0AhHJ/TPu17IXe4vw5sS4mmJUX6UVNZQIOB+Rm
-	 2bWRrNMHdlRA7lhHeM9Nh94fjcC27bjbmyt608/JZEHDzZQpLhdSinICd3EFUJ1un
-	 vJTEKIksXN83W0UealPyS8qboMhyAX04z1aGrEvRUP3FfGTL/iP8NPY/rgZBzsQ5s
-	 Gfnzj5wYRWJ8WDymkg==
+	b=XInck6ghvQ34DDzaYVO8aXFQ3lrLGEZBpCaqA9Npfv9Se8k/1WH46pxllRKzy5SA
+	 GN0jh/LyHTsIg8Z8/UxFHo7LhFVuE4DGtveTwIZgli/TQwFp/pKfNHcLLkRWFajJU
+	 Pwe1lq+YeTT7/oWytBk4t3YGVsl3/HkyUE2xIZFrvmAObCimnKGYHgy0Ipo5lQ3C8
+	 CkNXXaVwjY98ODgc/q08S/J/qnMJhfdudZY1KLwWox4UTlQqGixWLP7rcX9TyDvCf
+	 e+ElB5tPtMgOjDkxvrs4yLqjhoZ2cVbxE09bXF6VWZGOcTHxrfp956O3+3FHjjqWj
+	 91aWVM6vjvgGIQhM4g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8XTv-1upo832BBh-016tIS; Sun, 22
- Jun 2025 20:41:54 +0200
-Message-ID: <3bfea893-fd3e-48b6-8a34-9ab36108efe2@gmx.de>
-Date: Sun, 22 Jun 2025 20:41:52 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N95iH-1urQho1ggh-017RDC; Sun, 22
+ Jun 2025 20:58:19 +0200
+Message-ID: <c50c011f-6ad5-4122-a0e7-39880a4740ca@gmx.de>
+Date: Sun, 22 Jun 2025 20:58:16 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,206 +43,111 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-ddv: Fix taking the
- psy->extensions_sem lock twice
-To: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-References: <20250620175807.418300-1-hansg@kernel.org>
+Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
+To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-3-W_Armin@gmx.de>
+ <1020d244-4d52-4afd-ae98-bfcb2b8e7145@tuxedocomputers.com>
+ <de9d469b-9ea2-4fe3-8a7e-92fdc6d1c980@gmx.de>
+ <45a985fd-5428-4cbb-843a-523ea435a228@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250620175807.418300-1-hansg@kernel.org>
+In-Reply-To: <45a985fd-5428-4cbb-843a-523ea435a228@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kWTAVzie3LQWzRnRJM0uB/4mWIXLHhKsDSd8C3+uY2NBzbgaIr/
- gem2qpqWNdk2d+zTaXD3qSM86zc50l3/dOgkFT62L3Fmq3Osq45h7tiq5aIo3K3LxsoNo3g
- tgVsyt0ZKOwjhhyF0TrcKOqyepv3vsN3UNLlgI4ZGXWZ1Z5aI1ADkKC6TfNRV0mfC7H1wCt
- oz/y8oc9ZiPEUTj5NPX7w==
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:KraxmP3ugauMr2F7LZA3Uu1+rEskZF4aZC/KWb3ccj3BLI/jZST
+ 6uDuWjKdvhAC02tu9+qnHUPMPYgQSgxmq7Q391laFfDt2EzP/nNH+9DLXzbA3LtwAYdYU9O
+ nD2J9SH/Ef/TpoZoz9je4AuJ5kb3sNCVt93y/9h27nW0q1EHnlJR4LzXdXGgU7Cf84X5Je2
+ 2VV8aNIfYQBjf8/RuKtpA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CKSC1W2Cy+Y=;F1hP8PGtFM3cZ8r/UAJwqI1m6db
- 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
+UI-OutboundReport: notjunk:1;M01:P0:mt0q4MjzrLg=;QG94SVr0FBqrpnMtCaF6ch+hvjf
+ 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
+ 2+FRmUo2SEVH1BL2lJUtrWs9xI/9uEq+AlHZjQ==
 
-Am 20.06.25 um 19:58 schrieb Hans de Goede:
-
-> dell_wmi_ddv_get_property() gets called with psy->extensions_sem
-> read-locked, it calls dell_wmi_ddv_battery_translate() which calls
-> power_supply_get_property() on the same psy which again read-locks
-> psy->extensions_sem.
->
-> Lockdep rightfully complains about this:
->
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->   WARNING: possible recursive locking detected
-> ...
->   kworker/16:3/1230 is trying to acquire lock:
->   ffff8c3143417658 (&psy->extensions_sem){++++}-{4:4},
->    at: power_supply_get_property.part.0+0x23/0x160
->   but task is already holding lock:
->   ffff8c3143417658 (&psy->extensions_sem){++++}-{4:4},
->    at: power_supply_get_property.part.0+0x23/0x160
-> ...
->    Possible unsafe locking scenario:
->
->          CPU0
->          ----
->     lock(&psy->extensions_sem);
->     lock(&psy->extensions_sem);
->
->    *** DEADLOCK ***
-> ...
->   Call Trace:
->    <TASK>
->    ...
->    down_read+0x3e/0x180
->    ? power_supply_get_property.part.0+0x23/0x160
->    power_supply_get_property.part.0+0x23/0x160
->  =C2=A0 dell_wmi_ddv_battery_translate+0x68/0x1d0 [dell_wmi_ddv]
->    ? lock_acquire+0xd9/0x2c0
->    dell_wmi_ddv_get_property+0x25/0x240 [dell_wmi_ddv]
->    power_supply_get_property.part.0+0x87/0x160
->    power_supply_format_property+0xc4/0x3d0
->    add_prop_uevent+0x26/0x90
->    power_supply_uevent+0xb9/0xf0
->
-> This usually works fine, because read-locking can be done multiple times
-> but if someone tries to write-lock between the 2 read-lock calls then
-> the second read-lock will block on the write-lock and the write-lock wil=
-l
-> be blocked on the first read-lock leading to a deadlock.
->
-> The serial is part of the main psy device, not of an extension. Directly
-> call psy->desc->get_property() in dell_wmi_ddv_battery_translate() to fi=
-x
-> the double-lock issue.
->
-> Note this also influences eppid_show() which is called directly rather
-> then through power_supply_get_property(). This is ok since the ACPI
-> battery is fully ready to be used when the battery hook's add_battery
-> callback is called.
-
-Thank you very much for finding this issue, but i think that simply callin=
-g battery->desc->get_property()
-is not the right solution for this:
-
-1. We should still call psy_desc_has_property() to determine if the power =
-supply actually support
-    POWER_SUPPLY_PROP_SERIAL_NUMBER.
-
-2. At least another power supply extension user (the uniwill-laptop driver=
- currently being under review)
-    suffers from a similar problem, so a more generic solution is needed.
-
-Maybe we could introduce a new function for reading power supply propertie=
-s that ignores any
-power supply extensions? This way future extension could use this function=
- too.
-
-I envision something like this:
-=09
-int power_supply_get_property_direct(struct power_supply *psy,
-			    enum power_supply_property psp,
-			    union power_supply_propval *val)
-{
-	if (atomic_read(&psy->use_cnt) <=3D 0) {
-		if (!psy->initialized)
-			return -EAGAIN;
-		return -ENODEV;
-	}
-
-	if (psy_desc_has_property(psy->desc, psp))
-		return psy->desc->get_property(psy, psp, val);
-	else if (power_supply_battery_info_has_prop(psy->battery_info, psp))
-		return power_supply_battery_info_get_prop(psy->battery_info, psp, val);
-	else
-		return -EINVAL;
-}
-EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
-
-It basically is power_supply_get_property() without the extension logic. I=
- can also write some
-documentation on how to implement power supply extensions in general.
-
-What do you thing?
-
-Thanks,
-Armin Wolf
-
-> Fixes: 058de163a376 ("platform/x86: dell-ddv: Implement the battery matc=
-hing algorithm")
-> Signed-off-by: Hans de Goede <hansg@kernel.org>
-> ---
->   drivers/platform/x86/dell/dell-wmi-ddv.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform=
-/x86/dell/dell-wmi-ddv.c
-> index 67f3d7158403..95cc3139f271 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-> @@ -689,9 +689,11 @@ static int dell_wmi_ddv_battery_translate(struct de=
-ll_wmi_ddv_data *data,
->  =20
->   	dev_dbg(&data->wdev->dev, "Translation cache miss\n");
->  =20
-> -	/* Perform a translation between a ACPI battery and a battery index */
-> -
-> -	ret =3D power_supply_get_property(battery, POWER_SUPPLY_PROP_SERIAL_NU=
-MBER, &val);
-> +	/*
-> +	 * Perform a translation between a ACPI battery and a battery index. D=
-irectly call
-> +	 * desc->get_property() to avoid locking battery->extensions_sem a sec=
-ond time.
-> +	 */
-> +	ret =3D battery->desc->get_property(battery, POWER_SUPPLY_PROP_SERIAL_=
-NUMBER, &val);
->   	if (ret < 0)
->   		return ret;
->  =20
+QW0gMTguMDYuMjUgdW0gMTM6MTUgc2NocmllYiBXZXJuZXIgU2VtYmFjaDoNCg0KPiBIaSwNCj4N
+Cj4gQW0gMTcuMDYuMjUgdW0gMjM6NTAgc2NocmllYiBBcm1pbiBXb2xmOg0KPj4gQW0gMTYuMDYu
+MjUgdW0gMTQ6MzIgc2NocmllYiBXZXJuZXIgU2VtYmFjaDoNCj4+DQo+Pj4gSGksDQo+Pj4NCj4+
+PiBBbSAxNS4wNi4yNSB1bSAxOTo1OSBzY2hyaWViIEFybWluIFdvbGY6DQo+IFsuLi5dDQo+Pj4+
+ICtUaGUgRUMgYmVoaW5kIHRoZSBgYEdldFNldFVMb25nYGAgbWV0aG9kIGlzIHVzZWQgYnkgdGhl
+IE9FTSANCj4+Pj4gc29mdHdhcmUgc3VwcGxpZWQgYnkgdGhlIG1hbnVmYWN0dXJlci4NCj4+Pj4g
+K1JldmVyc2UtZW5naW5lZXJpbmcgb2YgdGhpcyBzb2Z0d2FyZSBpcyBkaWZmaWN1bHQgc2luY2Ug
+aXQgdXNlcyBhbiANCj4+Pj4gb2JmdXNjYXRvciwgaG93ZXZlciBzb21lIHBhcnRzDQo+Pj4+ICth
+cmUgbm90IG9iZnVzY2F0ZWQuDQo+Pj4gSWlyYyBDaHJpc3RvZmZlciBzYWlkIHRoZXJlIGlzIGFs
+c28gYW5vdGhlciBub24gd21pLCBidXQgYWNwaSwgDQo+Pj4gZ2V0L3NldCBjbWQgdGhhdCBjYW4g
+d3JpdGUgb25seSBzcGVjaWZpYyByZWdpb25zIGJ1dCBpcyBmYXN0ZXIuIEp1c3QgDQo+Pj4gd2Fu
+dGVkIHRvIGxlYXZlIHRoaXMgaGVyZSBmb3IgcG90ZW50aWFsIGZ1dHVyZSBvcHRpbWl6YXRpb25z
+IGlmIHlvdSANCj4+PiBhcmUgaW50ZXJlc3RlZC4NCj4+DQo+PiBXaGF0IGludGVyZmFjZSBhcmUg
+eW91IHJlZmVycmluZyB0byBleGFjdGx5Pw0KPg0KPiBJIHRoaW5rIGhlIHdhcyByZWZlcnJpbmcg
+dG8gdGhlc2UgMiBtZXRob2RzIGluIHRoZSBkc2R0Og0KPg0KPiDCoMKgwqAgU2NvcGUgKF9TQikN
+Cj4gwqDCoMKgIHsNCj4gwqDCoMKgwqDCoMKgwqAgRGV2aWNlIChJTk9VKQ0KPiDCoMKgwqDCoMKg
+wqDCoCB7DQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIFsuLi5dDQo+DQo+IMKgwqDCoCDCoMKgwqAg
+wqDCoMKgIE1ldGhvZCAoRUNSUiwgMSwgTm90U2VyaWFsaXplZCkNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMb2NhbDAgPSAoMHhG
+RTQxMDAwMCArIEFyZzApDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMb2NhbDEg
+PSBNTVJXIChMb2NhbDAsIFplcm8sIFplcm8sIFplcm8pDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBSZXR1cm4gKExvY2FsMSkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9DQo+
+DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgTWV0aG9kIChFQ1JXLCAyLCBOb3RTZXJpYWxpemVk
+KQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIExvY2FsMCA9ICgweEZFNDEwMDAwICsgQXJnMCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIE1NUlcgKExvY2FsMCwgT25lLCBaZXJvLCBBcmcxKQ0KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIH0NCj4NCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgWy4uLl0NCj4gwqDCoMKg
+IMKgwqDCoCB9DQo+IMKgwqDCoCB9DQo+DQo+IFRoZXkgY2FuIHJlYWQvd3JpdGUgdGhlIDB4MDR4
+eCBhbmQgMHgwN3h4IGFkZHJlc3NlcyBidXQgbm90IHRoZSAweDE4eHggDQo+IG9uZXMgaWlyYywg
+ZG9uJ3Qga25vdyBhYm91dCB0aGUgMHgwZnh4IG9uZXMuDQo+DQo+IEkgdGhpbmsgMHgxOHh4IHdh
+cyBuZXZlciBpbnRlbmRlZCB0byBiZSB3cml0dGVuIHByb2JhYmx5LCBidXQgd2UgdXNlIA0KPiBp
+dCB0byBpbXBsZW1lbnQgYSBjdXN0b20gZmFuIGN1cnZlIG9wdGlvbiBpbiB0dXhlZG8tZHJpdmVy
+cyBvbiBvbGRlciANCj4gZGV2aWNlcyB0aGF0IG9mZmljaWFsbHkgZG9uJ3Qgc3VwcG9ydCBpdC4N
+Cj4NCj4gQmVzdCByZWdhcmRzLA0KPg0KPiBXZXJuZXINCj4NCkkgc2VlLCBpIHRvbyBub3RpY2Vk
+IHRoZSBJTk9VMDAwMCBkZXZpY2UgZHVyaW5nIHJldmVyc2UgZW5naW5lZXJpbmcuIEkgd2lsbCB1
+cGRhdGUgdGhlIGRvY3VtZW50YXRpb24gdG8gaW5mb3JtIGZ1dHVyZSBkZXZlbG9wZXJzIGFib3V0
+IHRoaXMgcG90ZW50aWFsbHkNCmZlYXN0ZXIgaW50ZXJmYWNlLiBIb3dldmVyIGZvciBub3cgaSBz
+dWdnZXN0IHRoYXQgd2Ugc3RpY2sgdG8gdGhlIFdNSSBpbnRlcmZhY2UuDQoNClRoYW5rcywNCkFy
+bWluIFdvbGYNCg0K
