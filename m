@@ -1,149 +1,160 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A21EED7;
-	Sun, 22 Jun 2025 03:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC17B2F2E;
+	Sun, 22 Jun 2025 04:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750563733; cv=none; b=UZksYJqvW9jvuqwq5kOkRTuXa7DDqBRF/f5CvkruL9T1zPceModUkMuKaX0olznv/efRpNfC+NyPt+AC8ciUQ/Zt+/rkZsF756kuNXedbTtPjH3Z8ZyuaK/OcCEyndY6T46h0or4KP5mBkR9zx1p/cVyQRu2zS5qzU3++MORfTY=
+	t=1750566461; cv=none; b=ie/wYgrmT/0z1O4jK2JT7fsZay5oE0Dug95czzCcLHdtLD1Xa2h9I7UQfiG/5KsZPMFDFXjnStwHgNcYN666SGkcQLWEIPsJaLB87ILRzZP78hZNPLXeC+92znLtSesJfFZr9KN+q1QDEEvIfSFFx+K39P7YvLg+A0njged2sgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750563733; c=relaxed/simple;
-	bh=df/RU6vS7r46gg5CHN26K4KwETwBocAQpsujB+Fqij8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=GlxBXuQt1yhilWa9r5ZTkpsa/1xYWikzZNISKI2J5abudlmM/5C27KlV5O537WxJoszaNDkgYizbiZFgsgBvnnV07lBzswruDssyOhp9vkk8tI6sJJ3UTM0HcY4NHLjpNCKt2tawtekGwpfk+IM06wFx6v0Y1b9eUN6kmDiSj2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6fJs+ha; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1750566461; c=relaxed/simple;
+	bh=iCOF/K5X4bAOaoV+D/K1MxYNzdPkFPkOlnRW7O/LPPE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Y+fx+eMhTUZ/oEbmhD8rw/+dcg5HV1Im0OdLjNXpdeGK51YGH1X74loYjr2nF44FaNgIONlOZr/E7+le30bGKl4vSGZE9yrO4PjFreLO5PsFPLb//Eu8hk6y3NM2jTXoZtOMB62OcgRYJUbrU0hAsMpRoS71+2um8oXHXpdRYp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SxgGJZKb; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6fJs+ha"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-748d982e97cso2738043b3a.1;
-        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxgGJZKb"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2363616a1a6so24154165ad.3;
+        Sat, 21 Jun 2025 21:27:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750563731; x=1751168531; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4H7Ru0v2s37Emrsos5i13ygignUvfaRQ2BrMRVg3z4Y=;
-        b=F6fJs+haFjFRwdrtCzb1MlWOP64AndryR3sMpJKRnNGirvdwO4LARupuh2VvuJ+202
-         mPyutfTQ2aIIhhHg+/DhoWYR3Z/i65niO9266sQnBej3hX1TdJcDGZIGVbC8MGvcXSP1
-         /rUmBZbja+yK7IKLufJul+1/XGk/j63Uw9MWsqgRP3QMxphD++7I0hd6XEXDiOTGYTit
-         w+Ls4TGNW1HkiKvdSt9BOpTZG9P3tNHy3o0MvXFdq6xKbKUMyo7II7LgCFVlmJpIGPk1
-         arUQ7Lz4RBTmgKaoq+mN+4Co8sxpWXyrNxHGJ8sP/D0fkbxAL3XbeLD6wM9jDmzXQkH6
-         Bfvg==
+        d=gmail.com; s=20230601; t=1750566459; x=1751171259; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q2Aw5qYPQcheKlwYiFKa9iPN3MI1HFL9oXfK7SQu+ps=;
+        b=SxgGJZKb2h83e8bJQnYMz05qmQeZVk3ucK4MJgg9mmVPPrbIT2eHGJKhrp0dZyqgAs
+         e8TqextAnjPG7/gT5YPkGWWWoxodBtB1t6MCl+TtIEyDVTfT+KJ31sCSA1AD8vbqhe04
+         6z9lUNPrOHNDrsaT1pLJd6Q8ApTZlTK4vzkO5qLp0Eqd+9PmnwSX31dBOwIWhgLmvbZD
+         8zcCs1jsjucc/vOth/SVo0xhXI2yG2GNFmj3wZYjb5Lsy/0ezZDm1lQSIqxhglqVLP8w
+         GUH5fXDo+t7+R+ul+RJ4uPHO3FaFiwjnf0NNK3rErrB1L+0mMx2Ci5TgRrjBmXETcvbB
+         qG0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750563731; x=1751168531;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4H7Ru0v2s37Emrsos5i13ygignUvfaRQ2BrMRVg3z4Y=;
-        b=k2HaSy2as1rOymRLECjoavP2r84QeCPpz/8RxZ/C7sgIQRmj9kUlCBYxpLMs0cCpUW
-         z6Vof0l/sdnhgLeBvl0pUVqHaLlHf7AkOK3IBhNqsjHqO9hJGJMS8MBy1nisp4aMXgbW
-         bXmV/xJMy2Rp5JN8W+KlvR49wT8muaCWYkSAB5B3lUOySbp1YBXUi9XUT7kfISbB6270
-         eDu+SM4mFxP4Ze4OCnwY19MjUfHiugdM2yqaaYXeDlV4rXgPpuMOTknypQYofCSpEOhm
-         4QoTSmVhxE9fIBpmIwLaOka4RJ01uE2Ug9PXT38IyeGdt8b0X1fEo/+HRxao4Hja3uXW
-         js2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVW+6bKUBzklzMNCckOncxU9Ry+yT6t3fC1fyuY9Gw/zWWQiK9lWar5qy0+O2lUim3604sim51yqvLCT/qoDeCETTXjDg==@vger.kernel.org, AJvYcCVbf/ajvZpTnAk+QrPXpqiKHPhjIzyZggqo8Nk9WvbP2aRvgZzQ0iUy3x2mRsMu+U/+p5cCMTHrxcxGd8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG/D1onjZ3k9s/3nEHWZc7IC/+1swR6FQ/NvkhlIy500RRDWk6
-	gdoOEx5aVzjrHE2Ya5MKIAG5CD9nCBezfzYhRAYdjFYABSXfhzqZ9wZLYaYj7Rvv
-X-Gm-Gg: ASbGnctFgW69/ceGGQAZDZ6nuzbgMkUlNCFxeiRwDy0Cws5qsyTwMKKNAMpzQNchmOE
-	6L+u9YsF/zduzDsqJlOe4mv2Y5nZ8azu4mwsT4XfpxPGp0h9UUk6d/z/TbYSuH+Gv+3O4eDR2AC
-	y8jMZKcFJX5iT1GjXOgMNj7QfMUfxw/ngbnLrTmovNoi2h2e5CIhsdKD+3zxCD+Q4IkAIePVJj9
-	0Fp85m8q1SUnPM5/+6v4z8E7+MsbX6PeqULaR1zvvhilocHGumMa5vKo5bTYt68VM8tsHZJUf3j
-	CcFSsWyzOBj1ZHi0zNWmjUeady+QjqjIC/0ckd9Vw/AvY98tCVdDoaedbJNZ7kmjmpATd2wfxUn
-	eSmtLfOco0f+ZtAK/+38xu6uRF6md35krsHgzBxNFsPuT4g==
-X-Google-Smtp-Source: AGHT+IGdcLTzkQtcTmvpAChLvudbT7/DyVZc2q+ShaOKWzMv+CGFskqvnJ+nsaUjtRYZ3TwD3zClBw==
-X-Received: by 2002:a05:6a20:9146:b0:21a:b78b:e916 with SMTP id adf61e73a8af0-22026f15bf1mr13176386637.27.1750563731358;
-        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
-Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f124249bsm4124215a12.38.2025.06.21.20.42.10
+        d=1e100.net; s=20230601; t=1750566459; x=1751171259;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q2Aw5qYPQcheKlwYiFKa9iPN3MI1HFL9oXfK7SQu+ps=;
+        b=LkhlZl7eFGNFwlVLz8qzHj2dPhgDN5o4MY4RyWq3Vm+kmhJOwszUEGrD6m6xu1tIjN
+         IkHuGC8bIe0HYFnJII/oNLxx5CCj0Wrua7/fxUBieqaelHTSfLfdATA2nSY/y+48j3VY
+         ErgRUZil8Uy58ZKakTL9wRHEbnJMWYOon98XZ/6nCPxrPRgulFB9lvCliI5ryMuxTh7n
+         lAotCviAFman3bFiXmNpI5E1lA4tP0TZk2yhj9H+d8wZT+pZ2KsTHNlIOh4Rcv2AbTnN
+         aA+uXXds0CJ4cE88NrxkrZPUkQ4e/HvlJibwpyrcM6SYngY2ljX9rUbNx09TgDrL2qKS
+         pSjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCcf7sd598/bigKkxF8wkHOBomjpAj7pSJ7L6wjV1e718XDXJlsEoW9b0E2a8CXZM0UKimnrkoTfY/Y2o=@vger.kernel.org, AJvYcCXLQL+w7JuCQiYzZ+sbqv7cIOC7+ytGGY3bgwxsB4HjlUAeJKaKuAs+DNadeh+tckhD9jH7ff7FHgMEg4fTSIkEvh8uiQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YycRDHry5pRdHWEB3UxY1akjVMN4QSomI2EnwWUaGWVdJL3+dCJ
+	UBgV85q1QdcBa1tVCc8KewpGOSNx+tBVpVEyWCT+cNf8P+Epo89PmFw3
+X-Gm-Gg: ASbGncsX97+7lFuG3eajHSxNB4W2BOaSHyybtQu8SYTDXaYI9FD6JVeBQlaxgBf4oZf
+	VGrNUulOALLKiMHPgo87xss7dxID6QuK4jUE9FcJRWTzbfaTvcVdkHkDVU8Q2Y/lu1cUqsDVigk
+	gy9gAZam7LCofo8Xi/Z9Zb2Yon5711HaLvi3qQ6jy0vPdOQXy4vqU7pCFesNQKuqinWU5rUnz/t
+	qSrOGVf9eV4aAgezWxRdBUXKBNqE4RJ2aTvOrgLS6TOiM3cNOce0mr5RBwyEvfp6V7nAdNUYZvE
+	Dyfu/M5wxbQIbQrwaHE137x1nWVB54Sw8Xkp7Cm7XbYCt55rKiVj5F2S8KUSP7phxg==
+X-Google-Smtp-Source: AGHT+IHeBuy+w7TEPP33XduJcFzzz8JbIH7zTmMMlcTdYcc5YrNiQhg5ujBu9FDlmNHgrJMcOmPFBw==
+X-Received: by 2002:a17:903:2285:b0:235:eb71:a386 with SMTP id d9443c01a7336-237d9b8e9d5mr117029895ad.50.1750566459079;
+        Sat, 21 Jun 2025 21:27:39 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83d5c97sm53186375ad.70.2025.06.21.21.27.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Jun 2025 20:42:11 -0700 (PDT)
-Date: Sat, 21 Jun 2025 20:42:11 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
- Joshua Grisham <josh@joshuagrisham.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Mario Limonciello <mario.limonciello@amd.com>
-CC: Antheas Kapenekakis <lkml@antheas.dev>, Prasanth Ksr <prasanth.ksr@dell.com>,
- Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_0/6=5D_platform/x86=3A_firmwar?=
- =?US-ASCII?Q?e=5Fattributes=5Fclass=3A_Add_a_high_level_API?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <DASQQCLO08Q6.WGADUXY300N0@gmail.com>
-References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com> <DA17A4BC-938D-45BC-848E-BD8FB43597BB@gmail.com> <DASQQCLO08Q6.WGADUXY300N0@gmail.com>
-Message-ID: <DF4ABD29-158B-4D7E-8096-5C4ADC851A2B@gmail.com>
+        Sat, 21 Jun 2025 21:27:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 22 Jun 2025 01:27:33 -0300
+Message-Id: <DASS0MF0SCE9.1AU3QG8U6A6WV@gmail.com>
+Cc: "Antheas Kapenekakis" <lkml@antheas.dev>, "Prasanth Ksr"
+ <prasanth.ksr@dell.com>, "Jorge Lopez" <jorge.lopez2@hp.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH v3 0/6] platform/x86: firmware_attributes_class: Add a
+ high level API
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, =?utf-8?q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, "Joshua Grisham" <josh@joshuagrisham.com>, "Mark
+ Pearson" <mpearson-lenovo@squebb.ca>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
+ <DA17A4BC-938D-45BC-848E-BD8FB43597BB@gmail.com>
+ <DASQQCLO08Q6.WGADUXY300N0@gmail.com>
+ <DF4ABD29-158B-4D7E-8096-5C4ADC851A2B@gmail.com>
+In-Reply-To: <DF4ABD29-158B-4D7E-8096-5C4ADC851A2B@gmail.com>
 
-
-
-On June 21, 2025 8:27:06 PM PDT, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
->On Sun Jun 22, 2025 at 12:01 AM -03, Derek J=2E Clark wrote:
->>
->>
->> On June 21, 2025 5:04:03 PM PDT, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
->>>Hi all,
+On Sun Jun 22, 2025 at 12:42 AM -03, Derek J. Clark wrote:
+>
+>
+> On June 21, 2025 8:27:06 PM PDT, Kurt Borja <kuurtb@gmail.com> wrote:
+>>On Sun Jun 22, 2025 at 12:01 AM -03, Derek J. Clark wrote:
 >>>
->>>I apologize for taking so long=2E I've been a bit busy these last few
->>>weeks=2E
 >>>
->>>After my discussion with Joshua on v2, I realized the API I made was no=
+>>> On June 21, 2025 5:04:03 PM PDT, Kurt Borja <kuurtb@gmail.com> wrote:
+>>>>Hi all,
+>>>>
+>>>>I apologize for taking so long. I've been a bit busy these last few
+>>>>weeks.
+>>>>
+>>>>After my discussion with Joshua on v2, I realized the API I made was no=
 t
->>>ergonomic at all and it didn't exactly respond to driver needs=2E In th=
-is
->>>version I tried a completely different approach and IMO it's much much
->>>better now=2E
+>>>>ergonomic at all and it didn't exactly respond to driver needs. In this
+>>>>version I tried a completely different approach and IMO it's much much
+>>>>better now.
+>>>>
+>>>>First of all I adopted standard sysfs terminology for everything. A
+>>>>"firmware attribute" is just an attribute_group under the attributes/
+>>>>directory so everything related to this concept is just called "group"
+>>>>now. Everything refered as properties in the previous patch are now jus=
+t
+>>>>plain "attributes".
+>>>>
+>>>>This new API revolves around the `fwat_{bool,enum,int,str}_data`
+>>>>structs. These hold all the metadata a "firmware_attribute" of that
+>>>>given type needs.
+>>>>
+>>>>These structs also hold `read` and `write` callbacks for the
+>>>>current_value attribute, because obviously that value is always dynamic=
+.
+>>>>However the rest of attributes (default_value, display_name, min, max,
+>>>>etc) are constant.
 >>>
->>>First of all I adopted standard sysfs terminology for everything=2E A
->>>"firmware attribute" is just an attribute_group under the attributes/
->>>directory so everything related to this concept is just called "group"
->>>now=2E Everything refered as properties in the previous patch are now j=
-ust
->>>plain "attributes"=2E
+>>> Hi Kurt,
 >>>
->>>This new API revolves around the `fwat_{bool,enum,int,str}_data`
->>>structs=2E These hold all the metadata a "firmware_attribute" of that
->>>given type needs=2E
->>>
->>>These structs also hold `read` and `write` callbacks for the
->>>current_value attribute, because obviously that value is always dynamic=
-=2E
->>>However the rest of attributes (default_value, display_name, min, max,
->>>etc) are constant=2E
+>>> In the lenovo-wmi drivers the min/max for multiple attributes are actua=
+lly dynamic based on if power is AC connected or on battery. Looking at pat=
+ch 2 I might be able to do some pointer manipulation with the attribute's "=
+data" member for those events to make this work, but it would be a lot easi=
+er if there was a simple way for me to call my own functions here instead. =
+Perhaps a function pointer could be used to override the default method her=
+e?=20
 >>
->> Hi Kurt,
+>>Hi Derek,
 >>
->> In the lenovo-wmi drivers the min/max for multiple attributes are actua=
-lly dynamic based on if power is AC connected or on battery=2E Looking at p=
-atch 2 I might be able to do some pointer manipulation with the attribute's=
- "data" member for those events to make this work, but it would be a lot ea=
-sier if there was a simple way for me to call my own functions here instead=
-=2E Perhaps a function pointer could be used to override the default method=
- here?=20
->
->Hi Derek,
->
->All attributes in a given group have the same show method=2E Maybe we can
->let users override this with their own show method, i=2Ee=2E Add a
->
->	ssize_t (*attr_show)(struct device *dev, const struct fwat_attribute *at=
+>>All attributes in a given group have the same show method. Maybe we can
+>>let users override this with their own show method, i.e. Add a
+>>
+>>	ssize_t (*attr_show)(struct device *dev, const struct fwat_attribute *at=
 tr, const char *buf)
+>>
+>>to struct fwat_group_data. That should be fairly simple to implement.
+>>
+>>Did you have another solution in mind?
+>>
+>>
 >
->to struct fwat_group_data=2E That should be fairly simple to implement=2E
->
->Did you have another solution in mind?
->
->
+> That should work, yeah.=20
+> - Derek
 
-That should work, yeah=2E=20
-- Derek
+Just realized that's exactly what you said :)
+
+It was indeed easy to implement. It will be there for next version.
+
+
+--=20
+ ~ Kurt
+
