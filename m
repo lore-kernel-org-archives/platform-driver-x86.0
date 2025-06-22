@@ -1,198 +1,184 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAFA2F2E;
-	Sun, 22 Jun 2025 04:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07D22581;
+	Sun, 22 Jun 2025 06:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750566547; cv=none; b=mSpJ1AUbyoX9SuhaP+WSwaiXxHpXxsQBQuddFt4KECiRj7z7sXz5zt90PZhxMbeQ9VS6mEe5zBjnzRjNw37IC82BrtG3NhG3R40wGdG/Hs+yS9O2xca82C+vlkp4SQQKeHZbmAr32r2cf4W+puSMESKiYUNyNH1e/w0G0cz1F1A=
+	t=1750574923; cv=none; b=VbE2oCCXop2aZ5C0775kEWXAYGcHDjU5Q4bJFs8tJ0fTiIxG7zjEITtSRuW4V8bqSmt2dx7T+eDMmu8nrQQMxKH1YOv476JcWfV6OpzfuDQXZ5QUX0wp7oZMbZy4qlfbhPD2OktK3I382mez4g/mPsxqFNA0t5wv3NSk626shpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750566547; c=relaxed/simple;
-	bh=IagScaMDEdYQG7R9P2kSib2dyoqUDnnPhlqsjDyOxsY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=mhiDBVp04B/lA85IrpOHlBAyGPdbk8yEfX1P5HVggJ6IZkTyYWHvBirm2vmGpdtDGK4oS2F+GsnIhCdLqDPCyeZGFEHumB3p5BVsQq38UylLjFjAIMqzp2Dr1CGuF2qdjH/cd+gpTirazWtLp3bKkSkTnzPm3QWCM5ZC2NYCopQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BexUzxyl; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1750574923; c=relaxed/simple;
+	bh=ken8puwclcNgHFq68mfenvEGASAjx50Nx4u0UKKqKc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QllBXfj+LU1KFrlLNVIie0LRTgUBwekxbkOSpJDU+h6AO+S/sms+rM6EwwegWTdmY5q2amMrFmq/wxq2l9kUyMEmcyCvc+UWAqOBa+1Yuq73TdkRmq4LkBqruiQTHXXrZsNXAQOJn99zA2Vpm0nokv2ILmHcCF+dA63Wo+8eljM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9sbttc0; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BexUzxyl"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235e1d710d8so43025315ad.1;
-        Sat, 21 Jun 2025 21:29:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9sbttc0"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-31223a4cddeso2280279a91.1;
+        Sat, 21 Jun 2025 23:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750566545; x=1751171345; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HdpyOZkXk+9YOdwFj2cMizll4bcR4525E3JmeNI/prg=;
-        b=BexUzxyljWiOT6NTBW0LLz1MAjCc3heyda49QhPLYOK5dWsGxb6tWStCfB2itiqMcp
-         Zoh268bTryji0JbesKe8Qa9PcJ5jmsFM+B0buM6v4Nr3bRJJ8bJuZQToJGkf7ddR1Fn2
-         y7Vm13bmwyBk06EhHfS156zRkR0xX5S2fNC5qPGqSmNLSo/bQurZ0OfuyUf2ZRGgUTWl
-         A1N/XTH77/jzQgOQ08rY3/RL/0hg2qnP6tTS8t5rEfVgu4CdH1bMCOYUt9HK4K/yvnPM
-         8f2DvhS0Cc8ns7Eq+tsJzIRkjodsWV4WrDkg9/0HlMUwrdmdmO46P5q/iW3V4TAyVDm/
-         GjPg==
+        d=gmail.com; s=20230601; t=1750574921; x=1751179721; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
+        b=h9sbttc0hlCVc9+wdhVD2ablsESwriA3udEjqm5Hv6dOtfnHW+Bor/KQMK0TdbTriw
+         eXek6hReJglKLldvfeiF3zyVrO3nhS/uEGSTR5D4WqmWF8eBt9CLMBD7c1D2rYbvmikr
+         c/1xsku+vvSCKzugA6YLDZlmqEsDiXfVgylkhb7b6AJrhlmpf5YvKpzvi98TaeDmITed
+         ifaJ3IHZzwU3zU/HGTWGt82yoQlG3bDZJhY/HJK2dRGrbPTsZg90jRIiFMMYxvyfaumM
+         rXJeueJCXR97YiwyfgGNYT8s9HV2zLnzstQlWCOpBd1u9K9EzRZ91vaTz1ek7SGPxebF
+         9PCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750566545; x=1751171345;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HdpyOZkXk+9YOdwFj2cMizll4bcR4525E3JmeNI/prg=;
-        b=cOWrSj/P9jOZ+YupKs3lQd6PdVHq4hteveNkO53N15KVusr1jtx71iI5/LV64h7PFR
-         O8+VgKlW0gbKOYm4VO8OLwnfybokdO7TQGESbP0uF3PWxTrRY9y2SNUTeoUy5QI4VHXp
-         p6+RwF8OcHEWFv0vZUijmIk9FDf6KG5wOAYkpOdZlb6zgXZCOZIi0RJz+du3H7nvxdA2
-         vTkfIengnkZ+AC1Z+TqN4JIT6KgMHbp7G6hEJPwGGv8Fr4J/Y3Q2iQjgn/QyyAEL7WrK
-         WnmtA7MI32JkZwWvcuFn1sGN7h2bOkGmhoVe+4jGu6CMhRD5pQxJ+LKB9daiEfUPJlWP
-         pfrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGc5Yc4TETrzyX1MCsy3F0HNuBk/pnqCfjss7Cu3x98oQYkR1g9CYtVJZFq7WWWXsLYOt3zM2WRl0Th4k=@vger.kernel.org, AJvYcCWQTe/lFv1cv/UaiaCoSBgjjKZECpYpYAERUj0ayj7E8z+qeuzjpjwYsbXXAEtHW1M2OxviyRcdkAFDfwFr3QMk22Ak+Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4PZShM7qTLYAuP4w6mLy6tI5XOJpQ9XjoPwsuWdtiP3P086Du
-	Dpjj2vKRW3vwIBHwbvTSaBQrjiNi7EIShHRhrC26Ohf/tx7GLl1Ll66qqKltLEUx
-X-Gm-Gg: ASbGncuXbeAzRL9kY1H03cU11ikJMqSnwIPbMxHRNvrzs4rf93VluHGo1wt937b3t/9
-	gVxFqzG00jdfR6F3gqt4S7L7StJI/7PruPOevegche7MpozocWyVPGegrUjXcSGfNYaZ+WkfewB
-	n1iOyekgNhjFEyo1yHzdtE04C2bXmuCJUWu9acYGCU+pPCph52hRMde6pReojfaA/DbEBcBI8zi
-	lrPqoUBr40DxBh77BeBAcaD6Ja8Ug8IpFkonyKb1H8g5lruofrqPyJumNHRtOyejLEqLdCehGdR
-	0AJ7p2diMJ6P53bvAOQ+CrZbalo7I5jzX7nbKavra7rwmQda+7KwQO4=
-X-Google-Smtp-Source: AGHT+IGUlypzRoG3xn36Mo4Gj00Qa+tkaFrLmP2eEsLGcTIfLac4x+JIzAMedbRc5xTB7i0FOz0zPQ==
-X-Received: by 2002:a17:902:cec5:b0:235:88b:2d06 with SMTP id d9443c01a7336-237d96bc38fmr102831495ad.6.1750566545316;
-        Sat, 21 Jun 2025 21:29:05 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8393470sm53418855ad.37.2025.06.21.21.29.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Jun 2025 21:29:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750574921; x=1751179721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ikRz4wnk0lbFqmVhhlnU6ujDGF3hUYEk5WhcaI60D4=;
+        b=TpAr+YivjwBsXqGPtiX3z5VRm9zX1cLkVjADs8zVR9LrxhXZZdSXQVbLuj3faf/+pm
+         o5lIlQoCsrgpOICN9YzA7knyEHWbDeXmoGqAFefnkPeJvzhkLwk9ZWtZ+N5UZmh3WDwj
+         cmO3soKuiDp45/GJ4GZqGFDqo1/bceHRjo8ehDrzWIP7zdq38JHLL9jzEXEEEI5rLtl4
+         d8mo9HXI0pe/nPu7J1jD7SiA37cRyVaWOOsJoJO+J0TzltUT2Pd3nAGs0vZFib/1KmO5
+         fsaZPrRDuZ6Iq2ATZB8OCmWpQK+IbTgBwoxSPI3VSFQWqraPiib/XsieSJtb74R9on3M
+         ERpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXU4lVHJAF78O1ULUBRPv1HVpxE7LzeoR1EIwZi1WqzMi8raZsE6pWyXqQC0bKb+9lLq/Vg44LOfYJHGgAv2evrjjl2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7smw238Epo6rtGZanOE7Zn/CbL0XC7Ij7TPRuhhTxpqUst9qH
+	T8olWLDLzobLh6LTARRK46oHcxbOuSvmp9dIpcMqyDKOwHbueCnGXR4lVtQjC7Y3TNQ=
+X-Gm-Gg: ASbGncsKG4JhCrKbpsWSj1p4RD8oYqaujfjgs5s6TdHrwe68UfxfckL+0VqpdPCyhxf
+	Cxe/xwmyf+X/xPas4gbSetQlXvrbFurrL/30559dWYYlc+cUweDbEkB1YR4eBJb62x5I8eoS7Jk
+	R20TkrE7g0v7DXfCqszaiIYvTbblKcR6qjDB0HKiFqPNDH6Cv++hEWEDtj43LXlIOHW81pwGcs/
+	lKbbwO5Os7tUvXhII1ZWNRa47VAO76TG4lCI+LnaRDHbYmHqcyjQdM+dFFWkJkNvo5m/sg8It1z
+	g1/f6duzM4vx24whSAedI9cfNOzfx+5oNpXc6LzHBZwPJIeoW4bOb4LnSZb1JYFhwKqA
+X-Google-Smtp-Source: AGHT+IHfshealo1W0FfHBth8WYDVeEbFWywIsu2h8iW6w8zyRGEpc8wmAd32L6qLE/gwyiJxUvzjig==
+X-Received: by 2002:a17:90b:57e7:b0:311:ffe8:20e9 with SMTP id 98e67ed59e1d1-3159d8c5337mr15089422a91.17.1750574920802;
+        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
+Received: from localhost ([203.123.65.120])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3159df71c4bsm5142980a91.2.2025.06.21.23.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jun 2025 23:48:40 -0700 (PDT)
+Date: Sun, 22 Jun 2025 16:48:35 +1000
+From: Xiang Shen <turyshen@gmail.com>
+To: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
+Message-ID: <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
+References: <20250620003849.54442-1-turyshen@gmail.com>
+ <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 22 Jun 2025 01:28:59 -0300
-Message-Id: <DASS1Q8GNS4V.1Z08IM0OKRY3Z@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Kurt Borja" <kuurtb@gmail.com>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, "Joshua Grisham"
- <josh@joshuagrisham.com>, "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- "Armin Wolf" <W_Armin@gmx.de>, "Mario Limonciello"
- <mario.limonciello@amd.com>
-Cc: "Antheas Kapenekakis" <lkml@antheas.dev>, "Derek J. Clark"
- <derekjohn.clark@gmail.com>, "Prasanth Ksr" <prasanth.ksr@dell.com>, "Jorge
- Lopez" <jorge.lopez2@hp.com>, <platform-driver-x86@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <Dell.Client.Kernel@dell.com>
-Subject: Re: [PATCH v3 3/6] platform/x86: firmware_attributes_class: Move
- header to include directory
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com>
- <20250621-fw-attrs-api-v3-3-3dd55e463396@gmail.com>
-In-Reply-To: <20250621-fw-attrs-api-v3-3-3dd55e463396@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org>
 
-On Sat Jun 21, 2025 at 9:04 PM -03, Kurt Borja wrote:
-> Move firmware_attributes_class.h to include/linux/ to avoid hardcoding
-> paths inside drivers/platform/x86/.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
+> Hi,
+> 
+> On 20-Jun-25 2:38 AM, Xiang Shen wrote:
+> > Fix checkpatch code style errors:
+> > 
+> > ERROR: do not use assignment in if condition
+> > +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> > 
+> > ERROR: do not use assignment in if condition
+> > +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> > 
+> > Signed-off-by: Xiang Shen <turyshen@gmail.com>
+> 
+> Thank you for your patch, but this change really does not make
+> the code more readable.
+> 
+> The contrary the suggested changes are making the code harder
+> to read, so NACK.
+> 
+> Note checkpatch is just a tool, sometimes there are good reasons
+> to deviate from the style checks done by checkpatch.
+> 
+> Next time when submitting a patch to fix checkpatch issues please
+> take a look at the resulting code after the patch and only submit
+> the patch upstream if it actually is an improvement.
+> 
+> Regards,
+> 
+> Hans
+> 
+Hi Hans,
 
-I forgot to add:
+Thanks for the feedback. 
 
-Suggested-by: Joshua Grisham <josh@joshuagrisham.com>
+That's fine if breaking the "rule" is the only way to keep the file readable.
 
-> ---
->  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c                  | 2 =
-+-
->  drivers/platform/x86/firmware_attributes_class.c                    | 2 =
-+-
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c                        | 2 =
-+-
->  drivers/platform/x86/lenovo/think-lmi.c                             | 2 =
-+-
->  drivers/platform/x86/samsung-galaxybook.c                           | 2 =
-+-
->  {drivers/platform/x86 =3D> include/linux}/firmware_attributes_class.h | =
-0
->  6 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers=
-/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index d00389b860e4ea0655c740c78bc3751f323b6370..3aec09987ab145508ed05b02e=
-61a6d94edf79484 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -12,8 +12,8 @@
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/wmi.h>
-> +#include <linux/firmware_attributes_class.h>
->  #include "dell-wmi-sysman.h"
-> -#include "../../firmware_attributes_class.h"
-> =20
->  #define MAX_TYPES  4
->  #include <linux/nls.h>
-> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/p=
-latform/x86/firmware_attributes_class.c
-> index 034f9254240b048f58c97c18062db03f771f8139..af39ed9ad2836147c98b4bb0b=
-89e70e96ee34b71 100644
-> --- a/drivers/platform/x86/firmware_attributes_class.c
-> +++ b/drivers/platform/x86/firmware_attributes_class.c
-> @@ -10,7 +10,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/string_choices.h>
-> -#include "firmware_attributes_class.h"
-> +#include <linux/firmware_attributes_class.h>
-> =20
->  #define to_fwat_bool_data(_c) \
->  	container_of_const(_c, struct fwat_bool_data, group)
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platf=
-orm/x86/hp/hp-bioscfg/bioscfg.c
-> index 13237890fc92002e7e730b1c235ddf068a6737cd..2df31af8a3b4ac88710af1fae=
-2d5dabbb3185f1d 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> @@ -12,7 +12,7 @@
->  #include <linux/kernel.h>
->  #include <linux/wmi.h>
->  #include "bioscfg.h"
-> -#include "../../firmware_attributes_class.h"
-> +#include <linux/firmware_attributes_class.h>
->  #include <linux/nls.h>
->  #include <linux/errno.h>
-> =20
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x=
-86/lenovo/think-lmi.c
-> index 34a47269e3d34d2eda6b71af73892656cd2bf67d..f61a6287eb0ebe9ac4c0c9445=
-c3b54c12b276691 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -20,7 +20,7 @@
->  #include <linux/types.h>
->  #include <linux/dmi.h>
->  #include <linux/wmi.h>
-> -#include "../firmware_attributes_class.h"
-> +#include <linux/firmware_attributes_class.h>
->  #include "think-lmi.h"
-> =20
->  static bool debug_support;
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform=
-/x86/samsung-galaxybook.c
-> index 5878a351993eb05a4c5c2c75b4915d972ce9becc..9a5a7b956a9f6a2738470e83c=
-e93f4cccf4bf3b4 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -28,7 +28,7 @@
->  #include <linux/uuid.h>
->  #include <linux/workqueue.h>
->  #include <acpi/battery.h>
-> -#include "firmware_attributes_class.h"
-> +#include <linux/firmware_attributes_class.h>
-> =20
->  #define DRIVER_NAME "samsung-galaxybook"
-> =20
-> diff --git a/drivers/platform/x86/firmware_attributes_class.h b/include/l=
-inux/firmware_attributes_class.h
-> similarity index 100%
-> rename from drivers/platform/x86/firmware_attributes_class.h
-> rename to include/linux/firmware_attributes_class.h
+However, there are only three files (x86/sony-laptop.c and x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform folder that have such an error.
+Perhaps there are other approaches to make them more readable without breaking the rule.
 
 
---=20
- ~ Kurt
+BRs,
+Xiang
 
+> 
+> 
+> > ---
+> >  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
+> >  1 file changed, 21 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+> > index 232cd12e3c9f..bcc97b06844e 100644
+> > --- a/drivers/platform/x86/intel/vbtn.c
+> > +++ b/drivers/platform/x86/intel/vbtn.c
+> > @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+> >  
+> >  	guard(mutex)(&priv->mutex);
+> >  
+> > -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> > +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
+> > +	if (ke) {
+> >  		if (!priv->has_buttons) {
+> >  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
+> >  				 event);
+> >  			return;
+> >  		}
+> >  		input_dev = priv->buttons_dev;
+> > -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> > -		if (!priv->has_switches) {
+> > -			/* See dual_accel_detect.h for more info */
+> > -			if (priv->dual_accel)
+> > -				return;
+> > -
+> > -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> > -			ret = input_register_device(priv->switches_dev);
+> > -			if (ret)
+> > -				return;
+> > -
+> > -			priv->has_switches = true;
+> > -		}
+> > -		input_dev = priv->switches_dev;
+> >  	} else {
+> > -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> > -		return;
+> > +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
+> > +		if (ke) {
+> > +			if (!priv->has_switches) {
+> > +				/* See dual_accel_detect.h for more info */
+> > +				if (priv->dual_accel)
+> > +					return;
+> > +
+> > +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> > +				ret = input_register_device(priv->switches_dev);
+> > +				if (ret)
+> > +					return;
+> > +
+> > +				priv->has_switches = true;
+> > +			}
+> > +			input_dev = priv->switches_dev;
+> > +		} else {
+> > +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> > +			return;
+> > +		}
+> >  	}
+> >  
+> >  	if (priv->wakeup_mode) {
+> 
