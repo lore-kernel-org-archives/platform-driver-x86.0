@@ -1,184 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9861C28466F;
-	Tue, 24 Jun 2025 10:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C151B87D9;
+	Tue, 24 Jun 2025 11:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761713; cv=none; b=hwIPKSsReP576RVVOP2zrs2nfwecI+M2+jPCtT+UctBJDoXrHV1fpsGgfiGmOyoMoLZIKUe7Ma6CMDofKHCm+H5lNnJU12vWefqnfKU0gvRb+ae2MBm5P6ecSqSOzgwbeSyF3yS2n63jUTgcHihKgRLli/p6BO5CAxxjyLjMlD0=
+	t=1750765006; cv=none; b=iCGRCp0yOEp8qnpAXWa3xNCSPaf4RvF9jMi6pzOb5ddZatKrqIElMvqbuCNUNplz7euj4iuFYZhsxPA2BXyzrGVl0xtvs3Qr7EI133mprtgBsocuROFRa/8/nbJZT459/zAZB4OV3oRjYpAUHnnzJE7INyMORFhHan/fydKa3u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761713; c=relaxed/simple;
-	bh=K/6nYeBo/6GMRm/IJUluTXarB6TXhlyTShmGZg83qWE=;
+	s=arc-20240116; t=1750765006; c=relaxed/simple;
+	bh=0QPLj8k1RfrRJykPno6tnMdX52dcMJxf3LHllaynLDw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cf/WonWyU9bJ8hhq+8IpJOp+WXOr6eQHnWfVqbBlMkmF2z4+nC5IclA6aY5xNfvNO0GVGZSWo4i7nf2qIuNVUY4k4+OrjEbVgMQo/IF5DXZ6BZnqJ3ufixR6NHnH84BrEVbHXvSrH9GvdJe2JWC4epRIOOUHELMEGk15yZBjnXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lo61+Wpa; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=iEdpCWnqJFDlFNJROpOR4TiIM5IxUlF2r2F/iVq7xdTo8UrMdPIeucMDD9aNHLCq8zx3F+64k1rf0YRY7vr5UvO2hFl38owik6yxXDTXU8fw8R064ckHb54+93W1AxO9aVCnZ+92hqoW4PxK2IrCD1b0IWvXIMyP/SKU4MRnrU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=by7cf22X; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lo61+Wpa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="by7cf22X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750761711; x=1782297711;
+  t=1750765005; x=1782301005;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=K/6nYeBo/6GMRm/IJUluTXarB6TXhlyTShmGZg83qWE=;
-  b=Lo61+WpaeIm/kV3D1KRFGlJPvGy7APcRPa0Wps9go/hmsMtp6fIhqjeS
-   5XbWeLfisqUrTr+IaqWnbeHiBDrWho9BJ1e2Yix73ZZ8wXDC8GzVR2ZO2
-   VJlhQQsW8jVdTlqUYAtSDyzwJrEdUqRzfCErslZ8WJWaHzeAsqGDf0QTX
-   SKpCM3z1i4793AWPiPkH30psLHZ3A6xFc4jA5gdn/W2RrI0S5qE6qCVNo
-   6ljBhbsFlpUEBjImdaWxfdPblaeBh/tKyqvn6+ca6P+DHrbA2gcRtvRG7
-   iIzqIkGPkJycf88T8WcpqHAgkqq3OGsPLiXO/y6RU7QToiBqP8jCEFKAX
-   A==;
-X-CSE-ConnectionGUID: mXSlqwPYSKWtSl1RuZW4tg==
-X-CSE-MsgGUID: cY7QUJpVSQGuYE6jt9Sl8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53090922"
+  bh=0QPLj8k1RfrRJykPno6tnMdX52dcMJxf3LHllaynLDw=;
+  b=by7cf22XaEy+fw2+Lrqw6U3dTmwCd2mAXOkp9GpcSiaUa92m1nlI8+co
+   kDFOygCGglG/c33BWFZpytdbwo5EzMLNqlcpG5epqpZ9UzEtf7FjuT0Vt
+   faPSXLb/97Nn0SPHMKyxjhnvgLmAZ2ssrseJYVw1vNrsi10BGCjgKZpxX
+   xjw3U3o512ns3DWiKSDrdh2t+WbgbhlcPOV1XV0oR6dw7+OoMsgWRxfp7
+   K+nY+LAKaIuve4w9t3Q1YrOnzeWEMGz8sn3KBonvaIFTQRl6KxnIoOoNm
+   S3ci+NU4eP6i3G/pNNtjWY2ZKKMCa0rKPVn2+SiXp9doGi7+4WwpCCJFu
+   g==;
+X-CSE-ConnectionGUID: q5UCm5PySaSvLiPLej/Jdg==
+X-CSE-MsgGUID: j7TPNPFNR2+oOKVNnSVWPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="75537674"
 X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="53090922"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:36:03 -0700
-X-CSE-ConnectionGUID: eTgT9tTeQLSNO23lmfZECQ==
-X-CSE-MsgGUID: rXky3VK0QF+HIv5mLeALbA==
+   d="scan'208";a="75537674"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:36:44 -0700
+X-CSE-ConnectionGUID: ZHCD7C6DTR2lmQR8qI5exA==
+X-CSE-MsgGUID: 7CPkk997S2yicYNRtR1V4g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152007753"
+   d="scan'208";a="156185875"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:36:00 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:36:37 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Jun 2025 13:35:57 +0300 (EEST)
-To: Xiang Shen <turyshen@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
-In-Reply-To: <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
-Message-ID: <83b27cc9-3544-4fd5-4ece-a46f422ec6fe@linux.intel.com>
-References: <20250620003849.54442-1-turyshen@gmail.com> <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org> <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
+Date: Tue, 24 Jun 2025 14:36:34 +0300 (EEST)
+To: Thomas Zimmermann <tzimmermann@suse.de>
+cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com, 
+    neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, 
+    maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com, 
+    simona@ffwll.ch, fnkl.kernel@gmail.com, j@jannau.net, 
+    Hans de Goede <hdegoede@redhat.com>, sven@kernel.org, alyssa@rosenzweig.io, 
+    neal@gompa.dev, deller@gmx.de, support.opensource@diasemi.com, 
+    duje.mihanovic@skole.hr, dri-devel@lists.freedesktop.org, 
+    asahi@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 01/12] platform/x86: dell-uart-backlight: Use blacklight
+ power constant
+In-Reply-To: <20250618122436.379013-2-tzimmermann@suse.de>
+Message-ID: <63e0be02-f7b5-2b14-d858-6b66d0a51bd2@linux.intel.com>
+References: <20250618122436.379013-1-tzimmermann@suse.de> <20250618122436.379013-2-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-584399545-1750764994=:943"
 
-On Sun, 22 Jun 2025, Xiang Shen wrote:
-> On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
-> > On 20-Jun-25 2:38 AM, Xiang Shen wrote:
-> > > Fix checkpatch code style errors:
-> > > 
-> > > ERROR: do not use assignment in if condition
-> > > +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > > 
-> > > ERROR: do not use assignment in if condition
-> > > +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > > 
-> > > Signed-off-by: Xiang Shen <turyshen@gmail.com>
-> > 
-> > Thank you for your patch, but this change really does not make
-> > the code more readable.
-> > 
-> > The contrary the suggested changes are making the code harder
-> > to read, so NACK.
-> > 
-> > Note checkpatch is just a tool, sometimes there are good reasons
-> > to deviate from the style checks done by checkpatch.
-> > 
-> > Next time when submitting a patch to fix checkpatch issues please
-> > take a look at the resulting code after the patch and only submit
-> > the patch upstream if it actually is an improvement.
-> > 
-> > Regards,
-> > 
-> > Hans
-> > 
-> Hi Hans,
-> 
-> Thanks for the feedback. 
-> 
-> That's fine if breaking the "rule" is the only way to keep the file readable.
-> 
-> However, there are only three files (x86/sony-laptop.c and 
-> x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform 
-> folder that have such an error. 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi,
+--8323328-584399545-1750764994=:943
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Please don't call correct code "error" even if checkpatch may label it as 
-such. The goal is NOT and will never be to have zero checkpatch warnings.
+On Wed, 18 Jun 2025, Thomas Zimmermann wrote:
 
-The fact that the checkpatch "rule" is broken only a few times does not 
-mean those 3 places have a problem, it just tells it's good rule for the
-general case. So I won't accept using such numbers as a leverage against 
-the few places just for the sake of silencing checkpatch.
+> The backlight subsystem has gotten its own power constants. Replace
+> FB_BLANK_UNBLANK with BACKLIGHT_POWER_ON.
+>=20
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/pl=
+atform/x86/dell/dell-uart-backlight.c
+> index 8f868f845350..f323a667dc2d 100644
+> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
+> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
+> @@ -305,7 +305,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_de=
+vice *serdev)
+>  =09dev_dbg(dev, "Firmware version: %.*s\n", resp[RESP_LEN] - 3, resp + R=
+ESP_DATA);
+> =20
+>  =09/* Initialize bl_power to a known value */
+> -=09ret =3D dell_uart_set_bl_power(dell_bl, FB_BLANK_UNBLANK);
+> +=09ret =3D dell_uart_set_bl_power(dell_bl, BACKLIGHT_POWER_ON);
+>  =09if (ret)
+>  =09=09return ret;
 
-> Perhaps there are other approaches to make them more readable without 
-> breaking the rule.
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Perhaps, but I'm not sure the effort spent to find one is worthwhile 
-investment.
-
-> > > ---
-> > >  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
-> > >  1 file changed, 21 insertions(+), 17 deletions(-)
-> > > 
-> > > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> > > index 232cd12e3c9f..bcc97b06844e 100644
-> > > --- a/drivers/platform/x86/intel/vbtn.c
-> > > +++ b/drivers/platform/x86/intel/vbtn.c
-> > > @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
-> > >  
-> > >  	guard(mutex)(&priv->mutex);
-> > >  
-> > > -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
-> > > +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
-> > > +	if (ke) {
-> > >  		if (!priv->has_buttons) {
-> > >  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
-> > >  				 event);
-> > >  			return;
-> > >  		}
-> > >  		input_dev = priv->buttons_dev;
-> > > -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
-> > > -		if (!priv->has_switches) {
-> > > -			/* See dual_accel_detect.h for more info */
-> > > -			if (priv->dual_accel)
-> > > -				return;
-> > > -
-> > > -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > > -			ret = input_register_device(priv->switches_dev);
-> > > -			if (ret)
-> > > -				return;
-> > > -
-> > > -			priv->has_switches = true;
-> > > -		}
-> > > -		input_dev = priv->switches_dev;
-> > >  	} else {
-> > > -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > > -		return;
-> > > +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
-> > > +		if (ke) {
-> > > +			if (!priv->has_switches) {
-> > > +				/* See dual_accel_detect.h for more info */
-> > > +				if (priv->dual_accel)
-> > > +					return;
-> > > +
-> > > +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
-> > > +				ret = input_register_device(priv->switches_dev);
-> > > +				if (ret)
-> > > +					return;
-> > > +
-> > > +				priv->has_switches = true;
-> > > +			}
-> > > +			input_dev = priv->switches_dev;
-> > > +		} else {
-> > > +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > > +			return;
-> > > +		}
-> > >  	}
-> > >  
-> > >  	if (priv->wakeup_mode) {
-> > 
-> 
-
--- 
+--=20
  i.
 
+--8323328-584399545-1750764994=:943--
