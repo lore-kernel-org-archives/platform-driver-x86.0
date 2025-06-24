@@ -1,137 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DEC25BEE4;
-	Tue, 24 Jun 2025 12:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20BF299A83
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jun 2025 13:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766846; cv=none; b=sdFDamhivUXE1ujgcdftzi/zHKqFSqbLP/acVh4zzwBsDnkkqyfxZ51MynIw5drAz95jbwqbLebc3rzemPBzW9GYjETQkOm6YGCpv4Ky3wPRKWKXkSuo/Y4u5dyPIw0tdvYnSDytb0vBeHZIGBEUYfY/zgJtbHw1W74pKoDZ1Po=
+	t=1750773113; cv=none; b=tyJ9JpwhfAEgU0YVCWJDImxNMLOlS5ETucYPB7GFcO+KVGUPoMqJPIN4UxH2pWNmQOZvxGhaomfC6mcQb+lzqZH3lsFbd6gZWEkkpZfBisWS/6Vy5t7lJU7iLXaccNokiM9DlvyaSLIPtKE+5Yeiiw5Yj/REr5VYdLpAGe3V76Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766846; c=relaxed/simple;
-	bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iftDhOe7H73rBtSt67wzWgoN9mwMnw9HdiRz86z0O3Fz08qzNoya7PKR0j9xZuNS6xtjnChgSALaPzAXl+pHincSPl1uuRBCVh3aSNl/q5ggKvzlh7zlLHfhmEtGNgPiqcZNMDvjK57uoK4D3Q5Dy1MEIz6EAkR3WPUn3nCAMag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+7wp1OM; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750773113; c=relaxed/simple;
+	bh=41+Yjoi9OYz2fBRFnx0iFknWoNHKcEzR4kHyXMggmuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mhuVhunnt4oRJYUVrbuo7DWMLMEStKDDk0NH6wIjXn+msYl1XEPQbVCLpQVu+rpcs6omLah8t/TD5TB0y482xy43/z/Br3EXqYfCxf+blYZVCD5cPQMDSDWIVkNkgeisMDy15lo4ZTJtW8rw2JSn8QlGQ1l6gc0CP/IHCfl3PV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1WovXrx6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hcveDnqE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1WovXrx6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hcveDnqE; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+7wp1OM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750766845; x=1782302845;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
-  b=j+7wp1OM7oTSBZvbW/he+lDq0GahwNS7TQnfP78BtHLmvnj1WVhxZTuQ
-   dNoqd+ZmESub8b/PvQD3CDBA0zqMnsYhsljm8vMdkuqOFp8aOnH91osHa
-   1jZXh+GuJj+kxtzheRD90gR5mCaMT3yf2Uo4IKZf4a5tRVN7E7Z8FosbE
-   SgDGpqfIKAv88vlJQgoSO3/qe+rQq7CY+g/o5Wx2CX0L4i0GsRITEEdK8
-   6WMocYI2GS6VIRYZs5zBTwikC++3XaDwqfiHSrHS2vlqEjcbt+63Wf4UI
-   y39DC18LHKTKSLioeLMuPKmc3ZktuR0yfl5RX7VWw2mvzRjLKydJeizvh
-   w==;
-X-CSE-ConnectionGUID: AkgeqjvXTpSJPqCXlxmthA==
-X-CSE-MsgGUID: 4Prz/HDgRUKBDL4nV9Fx1w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="63604102"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="63604102"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:24 -0700
-X-CSE-ConnectionGUID: WIGBv54MQ/CqmccVAA5cdw==
-X-CSE-MsgGUID: YezupBD2Sf+Z/OYkyyxvtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="151641624"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Jun 2025 15:07:16 +0300 (EEST)
-To: andi.shyti@kernel.org
-cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org, 
-    rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
-    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
-    linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
-    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v4 3/3] platform/x86: Use i2c adapter name to fix build
- errors
-In-Reply-To: <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
-Message-ID: <2a74c711-0d9c-8013-dc92-82ffd0d7d416@linux.intel.com>
-References: <20250609155601.1477055-1-pratap.nirujogi@amd.com> <20250609155601.1477055-4-pratap.nirujogi@amd.com> <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1WovXrx6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hcveDnqE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1WovXrx6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hcveDnqE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1B10C1F46E;
+	Tue, 24 Jun 2025 13:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750773110; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oQQv5SKftafQDp93BKFKqx3Knbyd8+l+43ItvVQJEH8=;
+	b=1WovXrx6UqQo6zQcTf8U7Bu/rWjeSinKFSUf1NPEDGTUQceqnLv16kiIJhBW1SPMlhmTV8
+	CttmqkoQkbBlCEDYgeb59GaTmVlMZoRjdW+B80riomQeLVa6UowWTiBMXFLTpS7Q2hW7sm
+	zy0dFhDkBuS4/FSdzRFDdWHc4QG5kRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750773110;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oQQv5SKftafQDp93BKFKqx3Knbyd8+l+43ItvVQJEH8=;
+	b=hcveDnqE/tmOpeJFISbFw72dzXR8c8HmEOap5owJHNIaa3Z9BWhHMFc5NfSG7Hr3uKgjGs
+	xA7KCky0GNofSHDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750773110; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oQQv5SKftafQDp93BKFKqx3Knbyd8+l+43ItvVQJEH8=;
+	b=1WovXrx6UqQo6zQcTf8U7Bu/rWjeSinKFSUf1NPEDGTUQceqnLv16kiIJhBW1SPMlhmTV8
+	CttmqkoQkbBlCEDYgeb59GaTmVlMZoRjdW+B80riomQeLVa6UowWTiBMXFLTpS7Q2hW7sm
+	zy0dFhDkBuS4/FSdzRFDdWHc4QG5kRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750773110;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oQQv5SKftafQDp93BKFKqx3Knbyd8+l+43ItvVQJEH8=;
+	b=hcveDnqE/tmOpeJFISbFw72dzXR8c8HmEOap5owJHNIaa3Z9BWhHMFc5NfSG7Hr3uKgjGs
+	xA7KCky0GNofSHDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7038113751;
+	Tue, 24 Jun 2025 13:51:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id e9f6GXWtWmjFcQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 24 Jun 2025 13:51:49 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: lee@kernel.org,
+	danielt@kernel.org,
+	jingoohan1@gmail.com,
+	neil.armstrong@linaro.org,
+	jessica.zhang@oss.qualcomm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	fnkl.kernel@gmail.com,
+	j@jannau.net,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	sven@kernel.org,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	deller@gmx.de,
+	support.opensource@diasemi.com,
+	duje.mihanovic@skole.hr
+Cc: dri-devel@lists.freedesktop.org,
+	asahi@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 00/15] backlight: Do not include <linux/fb.h> in header file
+Date: Tue, 24 Jun 2025 15:45:40 +0200
+Message-ID: <20250624134858.1736090-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-586974884-1750766836=:943"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -1.80
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.982];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,gmx.de,diasemi.com,skole.hr];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Remove the final dependencies on fbdev from the backlight subsystem.
+This is really just the include of <linux/fb.h> in <linux/backlight.h>,
+but it has some fallout in other code.
 
---8323328-586974884-1750766836=:943
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Patches 1 to 14 fix all the implicit includes that come from fb.h
+throughout the kernel. It's all trivial, but touches various drivers.
+Maintainers are in CC. Patch 15 fixes the backlight header.
 
-Hi Andi,
+With the series applied the backlight subsystem should be free from
+fbdev dependencies.
 
-(ping)
+v2:
+- fix jornada720, rave-sp and rt4831 (kernel test robot)
 
-It seems by now people are starting to send workaround fixes (build only=20
-with =3Dm) as this series is still pending and compile is breaking because=
-=20
-of it.
+Thomas Zimmermann (15):
+  platform/x86: dell-uart-backlight: Use blacklight power constant
+  drm/panel: panel-samsung-s6e63m0: Include <linux/of.h>
+  drm/panel: panel-samsung-s6e88a0-ams427ap24: Include <linux/of.h>
+  drm/panel: panel-summit: Include <linux/of.h>
+  fbcon: Add necessary include statements and forward declarations
+  backlight: Include <linux/of.h>
+  backlight: apple_dwi_bl: Include <linux/mod_devicetable.h>
+  backlight: as3711_bl: Include <linux/of.h>
+  backlight: da9052_bl: Include <linux/mod_devicetable.h>
+  backlight: jornada720: Include <linux/io.h>
+  backlight: ktd2801: Include <linux/mod_devicetable.h>
+  backlight: led_bl: Include <linux/of.h>
+  backlight: rave-sp: Include <linux/of.h> and <linux/mod_devicetable.h>
+  backlight: rt4831: Include <linux/mod_devicetable.h>
+  backlight: Do not include <linux/fb.h> in header file
 
-I'm fine with you taking the entire series through i2c, or just let me=20
-know if you want me to take it through pdx86 tree instead.
+ drivers/gpu/drm/panel/panel-samsung-s6e63m0.c            | 1 +
+ drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams427ap24.c | 1 +
+ drivers/gpu/drm/panel/panel-summit.c                     | 1 +
+ drivers/platform/x86/dell/dell-uart-backlight.c          | 2 +-
+ drivers/video/backlight/apple_dwi_bl.c                   | 1 +
+ drivers/video/backlight/as3711_bl.c                      | 1 +
+ drivers/video/backlight/backlight.c                      | 1 +
+ drivers/video/backlight/da9052_bl.c                      | 1 +
+ drivers/video/backlight/jornada720_bl.c                  | 1 +
+ drivers/video/backlight/ktd2801-backlight.c              | 1 +
+ drivers/video/backlight/led_bl.c                         | 1 +
+ drivers/video/backlight/rave-sp-backlight.c              | 2 ++
+ drivers/video/backlight/rt4831-backlight.c               | 1 +
+ include/linux/backlight.h                                | 1 -
+ include/linux/fbcon.h                                    | 7 +++++++
+ 15 files changed, 21 insertions(+), 2 deletions(-)
 
-On Tue, 10 Jun 2025, Ilpo J=E4rvinen wrote:
-> On Mon, 9 Jun 2025, Pratap Nirujogi wrote:
->=20
-> > Use adapater->name inplace of adapter->owner->name to fix
-> > build issues when CONFIG_MODULES is not defined.
-> >=20
-> > Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV0=
-5C10")
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@=
-infradead.org
-> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> > ---
-> >  drivers/platform/x86/amd/amd_isp4.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86=
-/amd/amd_isp4.c
-> > index 0cc01441bcbb..9f291aeb35f1 100644
-> > --- a/drivers/platform/x86/amd/amd_isp4.c
-> > +++ b/drivers/platform/x86/amd/amd_isp4.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/property.h>
-> > +#include <linux/soc/amd/isp4_misc.h>
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> >  #include <linux/units.h>
-> > @@ -151,7 +152,7 @@ MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-> > =20
-> >  static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
-> >  {
-> > -=09return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-> > +=09return !strcmp(adap->name, AMDISP_I2C_ADAP_NAME);
-> >  }
-> > =20
-> >  static void instantiate_isp_i2c_client(struct amdisp_platform *isp4_pl=
-atform,
->=20
-> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> Andi, do you want to take this fix series through i2c tree or do you=20
-> prefer me to take them through pdx86 tree?
+-- 
+2.50.0
 
-
---=20
- i.
-
---8323328-586974884-1750766836=:943--
