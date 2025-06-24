@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4222222FDEA;
-	Tue, 24 Jun 2025 04:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7642B22AE76;
+	Tue, 24 Jun 2025 04:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750738319; cv=none; b=XDRh4F9VhnudHdHRVgJlj+YjjqpbRR+gh7PskF8zznCtMRfERolCiIWIzXOr7gPO/nw7tcYbuygeVx8saW/3gw4ZdHX0jgi1cpbAYeEKPHIDXPMM+sQ8NJWT/eOG9Ta3FGI5tjPR+Pw1WxHDfYtmMQXfC755kZWip0PUWryPOyc=
+	t=1750738344; cv=none; b=LZH723D0McmILGrBJkA3HPC9cuJgjh6KehSv1o5c/mFqJtDsE0Aud8B487U51uQE+HRSIokmz5WhlsENveOCGW7yRdrzRvdX+4qrXhoprSnFekBYpBRMb7+SzthRNdCVYQpGTHPP8yutrdYdT/GR7fgtM1uoGzDCNBC1jR42ajY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750738319; c=relaxed/simple;
+	s=arc-20240116; t=1750738344; c=relaxed/simple;
 	bh=/iRNU+EkQaTv8q7sY8RusloUPQRZmgHJuNsbZTVYgmE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iCxPVYBEMJeCk0GpvXklv02G1JJZQBOev7/CAt/pZ1ygCAuK4PM4VNH8eYe7yr18XaKsJPGkeBhx54q4lDYjbWRVnC7wwid2ZfY76xUtVPTvom6YoAfhqt+l0NXIS/UBvlS1CVxBn+dhxmQaCBf/Jm9lKgr1J6nG3KKoN5v48Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVfZXiQr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Be67bpzva19odYfCLmLBnn4ugFtcewBpPpUjnl22EFCTryOUkRf+x5vGNe7ASS5HqcAHwVpf0GNNFsNKhwz4mSYw8ItK9shYyUtAs7+zSaQy4dPA8k3s0gimopxXE3hsP0x0GS694ATSs1simyPKzoDXzC3eGC055p8TEZwdZUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr2299es; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVfZXiQr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7638C4CEEF;
-	Tue, 24 Jun 2025 04:11:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr2299es"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E69AC4CEE3;
+	Tue, 24 Jun 2025 04:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750738319;
+	s=k20201202; t=1750738344;
 	bh=/iRNU+EkQaTv8q7sY8RusloUPQRZmgHJuNsbZTVYgmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DVfZXiQr/yqhYcrcKNRh6dNWeDY/9HjYAEp0iZFVODcP9Xnwe8ynwsZ1HK6nQ3aJo
-	 dz4w/C2RIc6uy+XDgD6FljN0B1esUAysuV3k0J4kmUwcCDKRI0NWGGzpxRTGKsW4f/
-	 Sak210olXH84BUQ8E2DCa1BdkaY6rNE5BCut6iVyUyy+2Y97efNpnHOHbn9TPxvYBD
-	 2CyA5QUjKV4f1+EDU4U1p9+4HTsejLBX9wOuoJnDq6OaUPVo0m8HSI2vkH7RkJzt7Y
-	 3xK8onpXgZw2+OjKteun9AjXalsOI4ZmTra8D1d421/UBFnEo1H71jhnc6sdqFEWRN
-	 uEGG3UKOw1J/w==
+	b=gr2299esk9wiXMj0hnl+LQQ4lT+B3jMnB4qaARs1qvndLzKTJ7qbP62Oy3E9irXfi
+	 PgHYS3omAAKlZ3ASVzlT0K9TGLQDyI7+IRj9qky2goY8bAhPVpx/7wzzyZhzGnAD+G
+	 BMpDhBTHMXZwtNB7RqJH2eCLIPYoLzUVcz1etwRBYwk5PbQgsVPOENBTkoXpzCwzr2
+	 a7RNp1dePTAydFsj9i3eEo2BP3Boe6EIgYUjMC3nU2BG6W8ZcPLO4nuTnZQJ7y6f8m
+	 OCj3IyR92IHPayds6yGojqPCSzV/s6iGjXX9BRuZSmxnrTp+/la5GiKu7Csf90IXx8
+	 Sa47bUfdL3yvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -35,12 +35,12 @@ Cc: Mario Limonciello <mario.limonciello@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
 	Shyam-sundar.S-k@amd.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 08/19] platform/x86/amd/pmc: Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
-Date: Tue, 24 Jun 2025 00:11:37 -0400
-Message-Id: <20250624041149.83674-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 08/18] platform/x86/amd/pmc: Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+Date: Tue, 24 Jun 2025 00:12:04 -0400
+Message-Id: <20250624041214.84135-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250624041149.83674-1-sashal@kernel.org>
-References: <20250624041149.83674-1-sashal@kernel.org>
+In-Reply-To: <20250624041214.84135-1-sashal@kernel.org>
+References: <20250624041214.84135-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,7 +50,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.34
+X-stable-base: Linux 6.6.94
 Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
