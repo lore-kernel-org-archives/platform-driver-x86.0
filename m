@@ -1,180 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o54.zoho.com (sender4-of-o54.zoho.com [136.143.188.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7642B22AE76;
-	Tue, 24 Jun 2025 04:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750738344; cv=none; b=LZH723D0McmILGrBJkA3HPC9cuJgjh6KehSv1o5c/mFqJtDsE0Aud8B487U51uQE+HRSIokmz5WhlsENveOCGW7yRdrzRvdX+4qrXhoprSnFekBYpBRMb7+SzthRNdCVYQpGTHPP8yutrdYdT/GR7fgtM1uoGzDCNBC1jR42ajY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750738344; c=relaxed/simple;
-	bh=/iRNU+EkQaTv8q7sY8RusloUPQRZmgHJuNsbZTVYgmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Be67bpzva19odYfCLmLBnn4ugFtcewBpPpUjnl22EFCTryOUkRf+x5vGNe7ASS5HqcAHwVpf0GNNFsNKhwz4mSYw8ItK9shYyUtAs7+zSaQy4dPA8k3s0gimopxXE3hsP0x0GS694ATSs1simyPKzoDXzC3eGC055p8TEZwdZUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr2299es; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC49239E6E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jun 2025 07:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750750396; cv=pass; b=o7uVRIEch9Hxtv5NdDrFBRtniWWrXWSY+PaAt5FqDbxSX84MQoXpoc94yxhKz66p5gqzjVRaceJLpFREYSoovPr21FzCEAh1vtt8NF3vX5cw6Iuajk2dtvLvtUKGetO4Cb2PDtwWTH3281WCRDBUMrxdbUN7nEbQA5mYQetpsDQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750750396; c=relaxed/simple;
+	bh=KHUeOoI954bnelxUzah8MoZ4V43yTPyQyzpSAGFHEDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lhb0ZphWl+/1B7vstbs/jNpMHIYpoLcX4FnOE/HL1GKPdh03CR8CbmSe55KNL+hcT6LVkUH35IiO4pFTegF6WmANLYVjNyMVcHDyLVi18ou+CzmwIZ/uid6rxDhRFyS+BcOg5hTz6cSmaGO9vW4lMlw6hWNG2wPvxTBKrVZZgEo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net; spf=pass smtp.mailfrom=chandra.net; dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b=bREmFSGI; dkim=fail (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b=kiDpSVZu reason="signature verification failed"; arc=pass smtp.client-ip=136.143.188.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chandra.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr2299es"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E69AC4CEE3;
-	Tue, 24 Jun 2025 04:12:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750738344;
-	bh=/iRNU+EkQaTv8q7sY8RusloUPQRZmgHJuNsbZTVYgmE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gr2299esk9wiXMj0hnl+LQQ4lT+B3jMnB4qaARs1qvndLzKTJ7qbP62Oy3E9irXfi
-	 PgHYS3omAAKlZ3ASVzlT0K9TGLQDyI7+IRj9qky2goY8bAhPVpx/7wzzyZhzGnAD+G
-	 BMpDhBTHMXZwtNB7RqJH2eCLIPYoLzUVcz1etwRBYwk5PbQgsVPOENBTkoXpzCwzr2
-	 a7RNp1dePTAydFsj9i3eEo2BP3Boe6EIgYUjMC3nU2BG6W8ZcPLO4nuTnZQJ7y6f8m
-	 OCj3IyR92IHPayds6yGojqPCSzV/s6iGjXX9BRuZSmxnrTp+/la5GiKu7Csf90IXx8
-	 Sa47bUfdL3yvQ==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Raoul <ein4rth@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Shyam-sundar.S-k@amd.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 08/18] platform/x86/amd/pmc: Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
-Date: Tue, 24 Jun 2025 00:12:04 -0400
-Message-Id: <20250624041214.84135-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250624041214.84135-1-sashal@kernel.org>
-References: <20250624041214.84135-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b="bREmFSGI";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b="kiDpSVZu"
+ARC-Seal: i=1; a=rsa-sha256; t=1750750387; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SJjxtNsLdB8kWR2nXz+o/VCPG6R2zBGj1lezPEWYTCEVSdMyaEEQY42f2nOm6Bzs3zso1ehzF201YRckaSEMT5EvQXDOjOlfGg2Qd5p8Me0Y6cyL3GH7TB5sP6pb5v2YCK3PKfb6PG01Ggm3eiXtiW+oYIJgNLSE/d2tZ7AvWLQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750750387; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=KrffFLDF2toS33FmQJwTaAiXSKxYzz6NHPrVWnJSAhw=; 
+	b=e/sBsnqG4Lkbzqu5KmXuKj+5ozUJlrZiJlq5fWH+L+8Kpoprls9KvsSz/VNUjzglM7qb8Tz7KTn1Ct3eonmJZ2r8rAS7WjWDJFe8IHM+tZ3DXXJnAjseif/WG22I9x4F7+xxcdvrZPaN4+i7YYI/2GUBTI4Zmc15HZ3SjdpSzoQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=chandra.net;
+	spf=pass  smtp.mailfrom=rahul@chandra.net;
+	dmarc=pass header.from=<rahul@chandra.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750750387;
+	s=zmail; d=chandra.net; i=rahul@chandra.net;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=KrffFLDF2toS33FmQJwTaAiXSKxYzz6NHPrVWnJSAhw=;
+	b=bREmFSGIvTyqyZHgpt3h2dmXTB9XOyRJfT/6faz8IccxCffpqfWpoGQLR+AvxF/P
+	hxDqJt9EHdHA//ARrqx0uN2iJ56NLgxV0028UoDbSaGVGPYq386RP4YGhUGJv7M9T0f
+	whLd6RCri0uVcfeE7Mv0pyUvXip/KFdHZ+suGg3k=
+Received: by mx.zohomail.com with SMTPS id 1750750385700149.9075869911477;
+	Tue, 24 Jun 2025 00:33:05 -0700 (PDT)
+Received: from the-valkyrien-leopard.mynetworksettings.com (pool-108-5-102-140.nwrknj.fios.verizon.net [108.5.102.140])
+	by mailserver.projecteclipse.org (Postfix) with ESMTPSA id 8CEF8EB546;
+	Tue, 24 Jun 2025 07:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=chandra.net;
+	s=default; t=1750750384;
+	bh=wZUZeaMvxNDAIH6f/ei5hWX2qtqhJuwkO4p78DaKTZI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kiDpSVZun0DPPS1/oG2dcZXSol0dimsd6xNgivZMGJ3JePlYesysXGqqIvKBZDweT
+	 9L47RKLysPQ0XVXoi5EDV9v/JNVtMDo1Va7HrGdJLCotPikn8d6G/w/Z0UvmWyergb
+	 BWFWxW/2E4VOFqeOHnAZua6LKWhMwTDtj6KsuXwS0GzAdMYrR2u7/ajEkcVbZaZ42P
+	 b0IKttky9UwPn89vrGH1jVrqP6MmT/hZZAFNdFUtS1zggYald9CRP1yzBP3zFlCNLf
+	 wsIo8naEu+HYWyKMZAii8qfKwTsvzbqBK9XB4AXJwIQlUdbjjYiso0XkNDP2epf9NW
+	 +xoBIuYqnVCFw==
+From: Rahul Chandra <rahul@chandra.net>
+To: corentin.chary@gmail.com,
+	luke@ljones.dev
+Cc: platform-driver-x86@vger.kernel.org,
+	rahul@chandra.net
+Subject: [PATCH] platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8406CA
+Date: Tue, 24 Jun 2025 03:33:01 -0400
+Message-ID: <20250624073301.602070-1-rahul@chandra.net>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.94
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Add a DMI quirk entry for the ASUS Zenbook Duo UX8406CA 2025 model to use=
+=20
+the existing zenbook duo keyboard quirk.
 
-[ Upstream commit 9ba75ccad85708c5a484637dccc1fc59295b0a83 ]
-
-Every other s2idle cycle fails to reach hardware sleep when keyboard
-wakeup is enabled.  This appears to be an EC bug, but the vendor
-refuses to fix it.
-
-It was confirmed that turning off i8042 wakeup avoids ths issue
-(albeit keyboard wakeup is disabled).  Take the lesser of two evils
-and add it to the i8042 quirk list.
-
-Reported-by: Raoul <ein4rth@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220116
-Tested-by: Raoul <ein4rth@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Link: https://lore.kernel.org/r/20250611203341.3733478-1-superm1@kernel.org
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rahul Chandra <rahul@chandra.net>
 ---
-
-**YES**
-
-This commit should be backported to stable kernel trees. Here's the
-extensive explanation based on the code analysis:
-
-## Key Reasons for Backporting:
-
-### 1. **Bug Fix for Real Hardware Issue**
-The commit fixes a legitimate suspend/resume bug on the PCSpecialist
-Lafite Pro V 14M laptop where:
-- Every other s2idle cycle fails to reach hardware sleep when keyboard
-  wakeup is enabled
-- This is confirmed to be an EC (Embedded Controller) firmware bug
-- The issue causes spurious wakeups, severely affecting power management
-
-### 2. **Simple, Contained Fix**
-The change is minimal and low-risk:
-```diff
-+       {
-+               .ident = "PCSpecialist Lafite Pro V 14M",
-+               .driver_data = &quirk_spurious_8042,
-+               .matches = {
-+                       DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
-+                       DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
-+               }
-+       },
-```
-It only adds a DMI match entry to an existing quirk list, using an
-already-established mechanism (`quirk_spurious_8042`).
-
-### 3. **Follows Established Pattern**
-This commit follows the exact same pattern as previous backported
-commits:
-- Commit `a55bdad5dfd1` (Framework 13) - BACKPORTED
-- Commit `0887817e4953` (MECHREVO Wujie 14XA) - BACKPORTED
-Both use the same `quirk_spurious_8042` mechanism and were deemed
-suitable for stable.
-
-### 4. **Hardware-Specific Fix**
-The fix is:
-- Only activated for specific hardware (DMI matching)
-- Cannot affect other systems
-- Has zero risk of regression on non-affected hardware
-
-### 5. **User Impact**
-From the commit message and bug report:
-- The vendor refuses to fix the EC firmware bug
-- Without this fix, users experience broken suspend/resume behavior
-- This is the "lesser of two evils" - disabling keyboard wakeup vs.
-  having unreliable suspend
-
-### 6. **Implementation Details**
-The quirk works by setting `dev->disable_8042_wakeup = true` in
-`amd_pmc_quirks_init()`, which triggers `amd_pmc_wa_irq1()` during
-suspend to:
-```c
-disable_irq_wake(1);
-device_set_wakeup_enable(d, false);
-```
-This disables IRQ1 (keyboard) as a wakeup source, preventing the
-spurious wakeups.
-
-### 7. **Tested Solution**
-The commit includes:
-- Reported-by tag
-- Tested-by tag
-- Reference to bug report
-  (https://bugzilla.kernel.org/show_bug.cgi?id=220116)
-
-This indicates the fix has been verified to resolve the issue on
-affected hardware.
-
-The commit meets all criteria for stable backporting: it fixes a real
-bug affecting users, is minimal in scope, has no risk of regression, and
-follows the established pattern of similar fixes that have already been
-backported.
-
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
  1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index 2e3f6fc67c568..7ed12c1d3b34c 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -224,6 +224,15 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
- 		}
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
+us-nb-wmi.c
+index 3f8b2a324efd..f84c3d03c1de 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -530,6 +530,15 @@ static const struct dmi_system_id asus_quirks[] =3D =
+{
+ 		},
+ 		.driver_data =3D &quirk_asus_zenbook_duo_kbd,
  	},
-+	/* https://bugzilla.kernel.org/show_bug.cgi?id=220116 */
 +	{
-+		.ident = "PCSpecialist Lafite Pro V 14M",
-+		.driver_data = &quirk_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
-+		}
++		.callback =3D dmi_matched,
++		.ident =3D "ASUS Zenbook Duo UX8406CA",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX8406CA"),
++		},
++		.driver_data =3D &quirk_asus_zenbook_duo_kbd,
 +	},
- 	{}
+ 	{},
  };
- 
--- 
-2.39.5
+=20
+--=20
+2.50.0
 
