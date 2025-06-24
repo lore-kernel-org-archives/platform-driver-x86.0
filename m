@@ -1,85 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53E221A42F;
-	Tue, 24 Jun 2025 11:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DEC25BEE4;
+	Tue, 24 Jun 2025 12:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750765885; cv=none; b=gzFz81TkrqiV9d05u6OPQ2s8FSC4fdu3Vc9nXy3BU/Yhze6PdgdSMSjfwsCFo02h10J/tQCcYERzm0686wYTLJVyvasOgtDyfOyt9pmQPGln25INCE3SQ2lUiybGLlejgcmZ8ErC3ioKJvbcD5q61ltxV4hoT+95zXiNknQHT7s=
+	t=1750766846; cv=none; b=sdFDamhivUXE1ujgcdftzi/zHKqFSqbLP/acVh4zzwBsDnkkqyfxZ51MynIw5drAz95jbwqbLebc3rzemPBzW9GYjETQkOm6YGCpv4Ky3wPRKWKXkSuo/Y4u5dyPIw0tdvYnSDytb0vBeHZIGBEUYfY/zgJtbHw1W74pKoDZ1Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750765885; c=relaxed/simple;
-	bh=de+zyq3lrV3HiIb5ljhQjZo7EhZ0lt/ItXJ0k6bqSGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpHFlpnvuGvKUqtz0qtsVd7Lkne2wXDBooPa7bTN5R42LRr9crIyDhcOn7LonmFcjKvHzakgCCMpN3SWGRgIb3VOcMe8DUIVNX2nL23FGmxH1bilPVV9Ji3wmQlrHFbPve/MwJeB56TABJk+q1aAo3FTO88SVrDWPhHHRI81YZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dv95ynRM; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1750766846; c=relaxed/simple;
+	bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iftDhOe7H73rBtSt67wzWgoN9mwMnw9HdiRz86z0O3Fz08qzNoya7PKR0j9xZuNS6xtjnChgSALaPzAXl+pHincSPl1uuRBCVh3aSNl/q5ggKvzlh7zlLHfhmEtGNgPiqcZNMDvjK57uoK4D3Q5Dy1MEIz6EAkR3WPUn3nCAMag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+7wp1OM; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dv95ynRM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+7wp1OM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750765884; x=1782301884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=de+zyq3lrV3HiIb5ljhQjZo7EhZ0lt/ItXJ0k6bqSGE=;
-  b=Dv95ynRMunb+lt4w4730FjMc9bqA0LuUwxDm1tXS0TEd4owGkO2byeUz
-   ZANsTPg7lqqy0KD/M+igv/BRNbJBa9bYG+X2k1DmgfGhaOS8HHio2LIV7
-   +S0e1mvwNvWh837+f3zNkymOBSVpDlr/BWJ9rWb+gyL/5bU01NA7eGIBV
-   JGPpHOjoMn2zHqJfMFpvvZXk+d7pnQGW71ikN8Yuyc6YfvL0zqKGuDVW6
-   q6gCBFkULe+5bvaxky4gbv5v0tT6k8Z9+owTZ8KIWBGEEhB6eWRKT4IKa
-   dOw/kfz7FpgvOVjdII2c7zu09T8pTJoANxhD2LSg39wEy2LT0zgv2fyq6
-   g==;
-X-CSE-ConnectionGUID: EsAzseI5TJGuVp8HB0oEMw==
-X-CSE-MsgGUID: j3TXK+9iTiiBdIOFII5vNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63264984"
+  t=1750766845; x=1782302845;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
+  b=j+7wp1OM7oTSBZvbW/he+lDq0GahwNS7TQnfP78BtHLmvnj1WVhxZTuQ
+   dNoqd+ZmESub8b/PvQD3CDBA0zqMnsYhsljm8vMdkuqOFp8aOnH91osHa
+   1jZXh+GuJj+kxtzheRD90gR5mCaMT3yf2Uo4IKZf4a5tRVN7E7Z8FosbE
+   SgDGpqfIKAv88vlJQgoSO3/qe+rQq7CY+g/o5Wx2CX0L4i0GsRITEEdK8
+   6WMocYI2GS6VIRYZs5zBTwikC++3XaDwqfiHSrHS2vlqEjcbt+63Wf4UI
+   y39DC18LHKTKSLioeLMuPKmc3ZktuR0yfl5RX7VWw2mvzRjLKydJeizvh
+   w==;
+X-CSE-ConnectionGUID: AkgeqjvXTpSJPqCXlxmthA==
+X-CSE-MsgGUID: 4Prz/HDgRUKBDL4nV9Fx1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="63604102"
 X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="63264984"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:51:23 -0700
-X-CSE-ConnectionGUID: yQEfPmseTV29fMMZblvo4g==
-X-CSE-MsgGUID: 7X13RnkiQti+h/L08v8a8w==
+   d="scan'208";a="63604102"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:24 -0700
+X-CSE-ConnectionGUID: WIGBv54MQ/CqmccVAA5cdw==
+X-CSE-MsgGUID: YezupBD2Sf+Z/OYkyyxvtQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="156472590"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.201])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:51:22 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 7DB8411F742;
-	Tue, 24 Jun 2025 14:51:17 +0300 (EEST)
-Date: Tue, 24 Jun 2025 11:51:17 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Daniel Scally <djrscally@gmail.com>, linux-media@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] platform/x86: int3472: Add board data for Dell
- 7212
-Message-ID: <aFqRNXasQE2wvL0G@kekkonen.localdomain>
-References: <20250520-djrscally-ov5670-v2-0-104ae895aecf@ideasonboard.com>
- <20250520-djrscally-ov5670-v2-2-104ae895aecf@ideasonboard.com>
- <aFlXSrZH1f4BbB3M@kekkonen.localdomain>
- <c5ec1707-5007-4417-bc54-303924598a1e@kernel.org>
- <a26ae32c-e5b2-08b7-bc47-6a84881502f4@linux.intel.com>
+   d="scan'208";a="151641624"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Jun 2025 15:07:16 +0300 (EEST)
+To: andi.shyti@kernel.org
+cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org, 
+    rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
+    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
+    linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
+    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH v4 3/3] platform/x86: Use i2c adapter name to fix build
+ errors
+In-Reply-To: <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
+Message-ID: <2a74c711-0d9c-8013-dc92-82ffd0d7d416@linux.intel.com>
+References: <20250609155601.1477055-1-pratap.nirujogi@amd.com> <20250609155601.1477055-4-pratap.nirujogi@amd.com> <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a26ae32c-e5b2-08b7-bc47-6a84881502f4@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-586974884-1750766836=:943"
 
-On Tue, Jun 24, 2025 at 02:41:33PM +0300, Ilpo Järvinen wrote:
-> I'm fine with taking it in through the media tree.
-> 
-> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks, Ilpo!
+--8323328-586974884-1750766836=:943
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
--- 
-Sakari Ailus
+Hi Andi,
+
+(ping)
+
+It seems by now people are starting to send workaround fixes (build only=20
+with =3Dm) as this series is still pending and compile is breaking because=
+=20
+of it.
+
+I'm fine with you taking the entire series through i2c, or just let me=20
+know if you want me to take it through pdx86 tree instead.
+
+On Tue, 10 Jun 2025, Ilpo J=E4rvinen wrote:
+> On Mon, 9 Jun 2025, Pratap Nirujogi wrote:
+>=20
+> > Use adapater->name inplace of adapter->owner->name to fix
+> > build issues when CONFIG_MODULES is not defined.
+> >=20
+> > Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV0=
+5C10")
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@=
+infradead.org
+> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> > ---
+> >  drivers/platform/x86/amd/amd_isp4.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86=
+/amd/amd_isp4.c
+> > index 0cc01441bcbb..9f291aeb35f1 100644
+> > --- a/drivers/platform/x86/amd/amd_isp4.c
+> > +++ b/drivers/platform/x86/amd/amd_isp4.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/mutex.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/property.h>
+> > +#include <linux/soc/amd/isp4_misc.h>
+> >  #include <linux/string.h>
+> >  #include <linux/types.h>
+> >  #include <linux/units.h>
+> > @@ -151,7 +152,7 @@ MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
+> > =20
+> >  static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+> >  {
+> > -=09return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+> > +=09return !strcmp(adap->name, AMDISP_I2C_ADAP_NAME);
+> >  }
+> > =20
+> >  static void instantiate_isp_i2c_client(struct amdisp_platform *isp4_pl=
+atform,
+>=20
+> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> Andi, do you want to take this fix series through i2c tree or do you=20
+> prefer me to take them through pdx86 tree?
+
+
+--=20
+ i.
+
+--8323328-586974884-1750766836=:943--
