@@ -1,179 +1,185 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCA6C8EB
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jun 2025 21:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750887821; cv=none; b=tKNA944Q17zK6xlsVX1nUtEbFTOhCztlBDX5FWbYSdNXsUO1eEqda4QXEir6ClDHVZBzyzADSz4ooOKL613wXgyMIRheEQAb/DLokbPe+5p4mCseic2iVPvmKBnhaBYOXr2HmNZJJHbVqUnTJhyWCrFbZM4siQpTgogmUUiuuKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750887821; c=relaxed/simple;
-	bh=eVmy/cR/N8d6RuQLJFRtUojmR1nzx+7KALt1lDBzPdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CMY4k8wYPVuaprrjHNK+++cc+mlA3nx82XT2ikSN/9ca926EYzxKfnnQ4v0fuRUy8zI0mjs49L50sd16GBQHeDp33vUgMyHFNv4CWujyCqEPa9D2oJjPuw2JIDEako50Iyimey3ScpKb6KaHcMOXz9qMRnI1AUVRzpszOUyFudM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aiF9DYI2; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852D71E9B04;
+	Wed, 25 Jun 2025 21:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750888269; cv=fail; b=K943iNbJ9UT97xk0fCzVzkr1Ix06Q+CGgq+Kh6nQks6PPHxrmKOBwhq/VMFIgknOC2T/kd5BXrnWxFvWPkDyUgatqvBy6fTrYVGkRyA/VLnfHYo0UHRzjUwWMGfkqs+gFr7mnaDrC7DE3K9vyr7TTWUOkxqCUuhmh/kKPlx/uuI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750888269; c=relaxed/simple;
+	bh=RkGHwzcmW0i1YeKonYhprYz3e74E8KEwDOb8rdBCl00=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ihcz6DWQaOJ/6cjoyolygVFROfZ3vyMGDfO+ZPy15TgqwYxcCDOgmmBoN7FMUeH4ZraIRMG7RIAlbWJFIRU2DiYfRd2vbRdCJUFAl24nBiBJZgsuE/bysU9ok00mPKW+hBRV+/8XrXHpTGvZPyiEiaSIDCEHogF9O2/BsFY8Hp0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tu7mgx+c; arc=fail smtp.client-ip=40.107.92.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aiF9DYI2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750887816; x=1751492616; i=w_armin@gmx.de;
-	bh=eVmy/cR/N8d6RuQLJFRtUojmR1nzx+7KALt1lDBzPdE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=aiF9DYI2AvBD3QJSl6258eIQ0/ZstDA7HvPJkYmaXNvbNEGI00+d/JNzI1GETUIT
-	 N/U+oXC3K2aPxSPNYUu1fa3QVtmAPxUutXq1c0ZEXd77v8bjogyL6vo0rsQWctbR4
-	 F8GbGT1m7Jm6AFqSImzXD9nHH1zHG7+LxABbpTVcnJaQUIf4oD8EuQydaaFMd+613
-	 ob/cqQ/TdyLDcswGaSXnpg/vo3Mt8hbQ3QRSHBhAQ2GcFEZia5DYyfcG/1tAwxB50
-	 vhZM+PlhPXRsbXxYZ0LEgJYZbM5vTj9gRd2x3wVTPIh2Nx5uL2unGm2kfYtmeqRQ8
-	 wnPKgwiP4RwJ4Fu0+g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgeoI-1uwBYS0Rg4-00fm0M; Wed, 25
- Jun 2025 23:43:36 +0200
-Message-ID: <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de>
-Date: Wed, 25 Jun 2025 23:43:35 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tu7mgx+c"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A6qX/dJSOduFEr5LZ1lxfIHrDWVQCHIjtm4DFlGgZ07K2zjvJQ3X8ErLJUmQH9XUM93T2V8Me/Ns/9nXItSYn2sjnNOCs1+KwL8nkprRcZGQ3Gvx86jfh9lSmAZhgo06mdRpAt/hGuD4eTcZgBlPmhQFprm5u2tDgaE9uZ/4QwpGILR1PGXgKbvCyYI/kTBsFqqYQxA3XYzcYq6IGxGGm0sN1lsxCpJKwEXOGlsRZEBhbXkcM4If8xM3cqFWmhHB4ZMotglfRqHO7gyzx/KtlRY8jQjsKmjrUaPgr9XlLkr3DtLGPJJAUS1brWJuWpwhD7eadDFZt+zMJJVl6B30GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7NZL3me6ISZVR1P1PmH3rPR+xwd+bGgmi1OYTA3u9ME=;
+ b=fahtuV0vLfeRSZM7b2ZFB652z2T5LfarxlYw9uaTlEwfulqrDbZ1UPV6aY6o/nMWJs32ReKq5m7bHMhMFfT+wp2vaIo3ZPMBam15J2Pq9m0cuTI/5l9WWHLQ7tIjC1t/ohJxqYLNobk/7J2RgfybIW/5usnaDD8aHch/2ywldlmSJYhzGHQyhC4fyUbDty/A7fmcGPGTpQatKNgzYdk1s2hSlG/6A+8iwdNxxclY6pQjsMz/3uU7BWOX8rlbi+Yq/uegDiAPmJ3ChHVQ3tZkcuskJK4FLeutxNlsM++fT+utXJKYC0ZV1tB8IUHflWgDigGI6iI5qvVIJHR3rNNhAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7NZL3me6ISZVR1P1PmH3rPR+xwd+bGgmi1OYTA3u9ME=;
+ b=tu7mgx+c5jjniePiqRZgyRdfAWAczqVItRVP92xv7uch/zc5m2Bnqg5NEUem2fo04sVvSUTKwAieLPKHYgxqpZQtGqaLFjxOcrdZ/+33qAEamfuN8accGfHzgtslgLP12EHbF2523LKp+HaW5PHWFL6VY91Lqb43uHmCbMluzgM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by SJ5PPF6375781D1.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::995) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 25 Jun
+ 2025 21:51:04 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 21:51:03 +0000
+Message-ID: <bbd2d9c4-da3b-40d1-ae90-5a75fc11e4a5@amd.com>
+Date: Wed, 25 Jun 2025 17:51:01 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Fix build issue when CONFIG_MODULES is not set
+Content-Language: en-GB
+To: Andi Shyti <andi.shyti@kernel.org>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: ilpo.jarvinen@linux.intel.com, rdunlap@infradead.org,
+ hdegoede@redhat.com, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+ linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
+ gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+References: <20250609155601.1477055-1-pratap.nirujogi@amd.com>
+ <a4aja2xsya3titlnalacf2pfioj5zrddan5a2wazgfl7l4eu46@oe4f27vdmrnf>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <a4aja2xsya3titlnalacf2pfioj5zrddan5a2wazgfl7l4eu46@oe4f27vdmrnf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT4PR01CA0054.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:111::11) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
-To: =?UTF-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se>
- <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de>
- <5I8UDmgF_DcJBmBE0zgCXjuvmmhLamDCHkpnkAwRjSAkCa5xcFUvU-SmAeymxTajjDPR8avuW55RxOjhd8idK6jLy-hz8i-Ma3RHSaFy2Gs=@benis.se>
- <9642ad7e-3e57-45f9-bfd9-beac3e55418e@gmx.de>
- <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lHxs4JYvp8MNmC9t+cezbyR7qPV9KSdpSwaO0gmLBjGiONUxOh5
- 65oNoL68wcI+lke9IDeCHi7l2+ZToenjQsZQmQ9kQXYo01HiigfIuPA04wDOKmM/iZxzYb+
- rjFWoUPGwbJsegfxEKNNz+xhc3K6Yf6k6ZRBp9lS0gISnsbiG53QFxoNXQGtBz9eFG49tN4
- UWPLdSOK1Bjkuq0r3nUUA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j8RZ+bY5i50=;WLijtnR3M+A3BxhtifhZFP21kBs
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|SJ5PPF6375781D1:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab5bc139-9d02-40f4-062f-08ddb432616d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZE8ydlRvRHh6eHZUMHFEM01zZmZGZFQ0TS82VGdudHRqRkMydzU5d0FOcXNF?=
+ =?utf-8?B?RVFlb09taDAxRFJiZmx2L3lxK09haHdMQjd3TU1QeXpFVGoyNU5Ya25hMU9Q?=
+ =?utf-8?B?Y2xyVEpvLy8vcWtxS0MxcXVOOFFRZXlza0VFYkU4SG83WHhPclNGa0VIa2I4?=
+ =?utf-8?B?YTlMVkpGYXJKUUp0eGlOdWFRZ2NkODhZVzVsTFIwU0xmeGZsaXhreHhvelFy?=
+ =?utf-8?B?UCtZWUxjQ0xSZVUrbW9yYVI5MHhncVhHRGtiZVJoU2lWMWl4bWF3TlBZbzl2?=
+ =?utf-8?B?VEtZWUpPc3FpbDgrdjJFMFlWVVkzOGtPbVduRzlWbXByWGxqUy9iTXdPYTVY?=
+ =?utf-8?B?UHpJLzJtK0ZGMTl5SzErV1Q3ZTFaSm94UEZlZGN6WTdlR1BjQXN3cEdSaFl1?=
+ =?utf-8?B?NXlWOFFSN0dselBRVWdwOENscE84MitYZUJXS2ZDTllJemJjMk9zZUpqeXdV?=
+ =?utf-8?B?ZzNBaW9qTCtWVUdKRU4wSi80QnZVVW9PUHNzSStDd0wvUFROOXZ5V0FTaFBR?=
+ =?utf-8?B?eHFJNzI3cWt0Vi9jT3p5T0pGWFBlMVJleVA0OEFqeFZpUSt5OTdkY2pRaldV?=
+ =?utf-8?B?UnYzRUdSeU5HQ0cwOXlCYnM4dzhNR2FSWlFlMkhjZFNUNHNJOHNMU2l0aWFy?=
+ =?utf-8?B?cEdTVEpad0ROSFN1TGprcWhyME9ZV05RMnFVUGJ1SWNCaWo2aUtqS0FaNUNs?=
+ =?utf-8?B?VUNUbStKSjY4N2htUks3K1J3b2ZGQnZOSmI1U3RJYXBqaGVoYk45ZUxaemlM?=
+ =?utf-8?B?d3hGMGI0WEpySW41bEFSVVJ3NkRvNm5qTEl2R05IajZFU3RNWU9tbDNTd3F6?=
+ =?utf-8?B?Vy82NlZWRTRzY3ZIQjdrWnA3cjU3dGNiMDdkbzJEWVRnaDNWRUphMDlSOVNq?=
+ =?utf-8?B?emJDWS9sVVgrMWhvSmNqQ2piV1JGVkVRS2FyQ2lYUDk1UjQ3SEpEOUhURVJs?=
+ =?utf-8?B?aVltOVZaRlJLVC8vZ1F5QTFGbDdRcHczMEsybk1XeVo2eUZSaDV2WGwzYWpN?=
+ =?utf-8?B?WVYwOG5YZXErak9ncmxiY0c0UC9Na1lsMUp5RiswV1FMd2dhRThKS3htMXp4?=
+ =?utf-8?B?VTV6MTg2Mm9GeDR3MlpZcVVMaUoxcXFuMFNiK2N1c0tvMms2ekJsTkkwTUM1?=
+ =?utf-8?B?cHdERG9pMnVzSFhOZVd4ekFPL1MvbHFVKzNoUGhuR3RSTk1Rbm4wZVVscWFB?=
+ =?utf-8?B?aXJvV3JITGU1cm1SdkRJRVdvZnA2a3BDcUx1WDlmWFVmeDd6clpyTVdSKzhu?=
+ =?utf-8?B?eGpYSlVsZjQ0dlIwY0l4ckMzemorTW5LWFBwcW0rMmZ3c3gzYVdHZzdVWGh3?=
+ =?utf-8?B?TnU4VVgrb05USm1DQ01iNG5qQUhKV1N5OWxVMEV1SlhkZXozQ243bDRvS0NG?=
+ =?utf-8?B?eUlZRDVPZlhZaGJaK2w1MmNmc2R1VktORGd5eUZhQ3lZV0d6TTlVUWxSYmZC?=
+ =?utf-8?B?NzVFS3hsbVhmdXhTdkV1dGczYlllbWtwRUdObjVTWk9vVzBwbEdrL2dNUmlF?=
+ =?utf-8?B?Qnd0MDNiQlliS0xpM0pGaE11WFM2dmV4ZDFiejN5ZWRJc0Zzc2ZCNTFRYnRR?=
+ =?utf-8?B?YW1zTVY0dXhCQ2tmTUVjRDlsUnpBL1NxQWw4MHh3MjBDUkZJMS80L3Z0bkdB?=
+ =?utf-8?B?TFE0SzlKSEIyMU8xeTZFUHlWNUMwVzdpMUR2TXgrWU44RVYyUzU4dkFwaStF?=
+ =?utf-8?B?Y1FFYkt5S0YwTjJHSTdsRWdpOThTaVZGN09vYXh0Z2J2SFpQTXNPcHQvMkFC?=
+ =?utf-8?B?Z1BLY0FnRmlKOTR4ckxOK21TTDNsZ2JWTzMzNEhDSHlaRTAweEY2SWdJbmxH?=
+ =?utf-8?B?WFFXejhmRDd6QmxvWDRLcFF1SWo4b0dvL0NTYmpSTmZMdUo0S1Bvd3dwRUxm?=
+ =?utf-8?B?NWRqU21iaXhEWFpNSlIxeUQwdzZtbDZhN250Q05OVFhRaVM4cXZ3OUNZRVR0?=
+ =?utf-8?Q?Bxnp7ZaD2Nw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b3IvL1ZsZTV3L0N1MjY1VWM1RUEvNkRXSnRWNm9PeURyM3JGYU02Ky81bGFN?=
+ =?utf-8?B?YmhIV3RIdXhaZmQwd3ZISDNXKzhMMW9FVldPT1NSczJpalJKYmgxelp4dWFZ?=
+ =?utf-8?B?dkFIR3RzVDZ3dWk2OWVnNTFZQnI5RkVQMnd4d0hUODhuOWhWdFpETEx0YStT?=
+ =?utf-8?B?dE5GbE1NajBHU2FQdVlJNmYrTEtVYjhyK1ZvTmVXVmdkWFUwSW9lelNKU29k?=
+ =?utf-8?B?UG9oR2d0VUdZK0ZXb2RsVWszREtuMWJyblFvaENYQUNWejNVWHo2eFNlbDBF?=
+ =?utf-8?B?MTJtMzlxZzBBWk5nM1lJUlhwSXZYaWZ4YVdISGJlaEdZNEFoUThGVVg1NHRC?=
+ =?utf-8?B?OURSUG16dnpkUmY0MkU3aDZlbnB1ZE1DT0JzVy9ydzZJMEZJdEpPRElmTDd1?=
+ =?utf-8?B?L2N3OFhGUitqb3lGbTJoRm80RXdwcDgwWFR1TFoyb3hVV2lSWUlHdTAyTS9q?=
+ =?utf-8?B?b05FM2s1ZGlielhwdHlIVnZGZ0dSaVI2U1BpYnBaYnYyd0hFa2pVQk9YZFV0?=
+ =?utf-8?B?NjVUREF0YTVubDNuUWlvMzBINHE3RkJlUlprekwyNUduVFBWNE5NWTBsdHpI?=
+ =?utf-8?B?TTR5RXdjNTh0UEVXbkZaUjdhMWpqRzU1QlpGSkJmWHczbEJManpaYkZPMFFG?=
+ =?utf-8?B?OGFyZEMwUTlseFhvak9jS3ZxNktJd3hRdGd2RTVLZ0dYL3FWbllXUTZWdkV0?=
+ =?utf-8?B?RmxzVi9KSkxLOE1LYUxERTR0TGRYVGMxbGd3NElUWkpxb3pyb0FndUVRSy9W?=
+ =?utf-8?B?a1FOVnpoY3dtZEJ6Ulp1ZjhqR3lrMThabFplOXlWQUxDTWxUZ0ExRmhpd2xU?=
+ =?utf-8?B?UUMzeTZ0K2J5WjRsK0lrODdzQm5uWnFkUyt2QmRLRFNJOHFqaGxnTlBiSlhM?=
+ =?utf-8?B?c0tqYy9jRW0xZHNnamRrcm5MRlRmTXE0c1lYMHRRVkRQRTYyUXlrMVlwa3h4?=
+ =?utf-8?B?TVQ1em1LV0N2OXc1aS9Bakg5amF2b2p6UzFSUzBBbmxKbW0ybTI4VWVWQWZQ?=
+ =?utf-8?B?NkUxZ3krM01NaUlIV3I2aUhlTm1MY3RHci8yQnZYRHZoM3B4Qk5BYjNkTDdX?=
+ =?utf-8?B?aElCZ2sycEpVL0hSVzJsVWRLNGRRN21VLzBRVkdENitFUnZMd2J3TXVUZmw4?=
+ =?utf-8?B?Nmx2MjJ0ejlkWEF1bEtINXVFWHBmTkZZSm1vbUdiMDVCNW9NdUJWNEpOY2Rk?=
+ =?utf-8?B?dDNkQXpiMWVhNWFCWVVCSFdvaWorbk1HOFoxcXVBSTdWei9QM1k1Y0VBb2pV?=
+ =?utf-8?B?azEzV2x6TUhBakdlQzhrdzc5ZS9mNjNjekZlQURDTzFzVUJ1RVAwOTRUUTVB?=
+ =?utf-8?B?eWtSM0JuNnBUem9uTmZTbEY1TllicmtWOE1wSVBZYXRPeXZUcno2eThPYmZp?=
+ =?utf-8?B?cll6OFN1dnlhdFdnTXlSbFc2Rnp5WC9WTVVnOTdxNzNGbXJ5Z0NQVnpnL2dk?=
+ =?utf-8?B?bVFSZmpUQjBKbng0MmhTRXNuYU0zM2lmS0dmMFFtTTJtTGVaM2k5R1ZaOUoy?=
+ =?utf-8?B?UnVvWVpvSlo1SmVGQXV0dXlzbHRnSkp2YStNbUF0UGhuREhrU0V0bjZvNVNC?=
+ =?utf-8?B?MmxwdWdBVXRrWWtJbjJSRHlYN0NZQllFTXliajJFb3VFVlhoQVE0aG1QUTFZ?=
+ =?utf-8?B?TnhsUGhKNXk5WlJOQjcra28vSzVQMk9XeFJIejZxcjY3QTUyUG90R0NPZDlt?=
+ =?utf-8?B?YzFwMWlvRSs0MjBMSDlUa3laZEFQZVRici9OblRnWUpZWHpPNG1wcWVreFNI?=
+ =?utf-8?B?TENKSDNFOUpKVFVvWGcvVmZreXFCaXZZVmhvaU1oTnRPeTM1SWVvQ3hwWVBN?=
+ =?utf-8?B?ZGgzTTF3YW1WRjNYTXRBVW4yaldYdlZXNkc4YnFRM0oweERSd3d2SGNQZFhV?=
+ =?utf-8?B?RVdPQmFYcFdTOG5uZjBzbTQyNjZWdi9jZVRsQ3E0bnAzcG5LL0REMlFJL1la?=
+ =?utf-8?B?NGg0UEEweXVsWUIxbGxjM1BsODg2b1N0NmgzenVPMnRCcFFXSGsxK1dTQWVp?=
+ =?utf-8?B?c3UzRWplZStZNlVQMWlCeEtnTkRIRXJTZ2ZYaEVicXJXUW92d1h3MEVhM0l1?=
+ =?utf-8?B?M2lsVFJzL0dUQ0NZMzlZYTVScFkzTzlxeG56SWNWSXJZVXQ4a1EvQ0VhU2E5?=
+ =?utf-8?Q?nntkWvddUOoZqlR+1CAqOb9sN?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab5bc139-9d02-40f4-062f-08ddb432616d
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 21:51:03.4259
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p5xjyvd01Td86IzPkzo+/HrzlJguMT5AieYNblwJU2eUusoblQJnBeDOwUsJfKiyOk63ZLyhZVubLw2MqwCRAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF6375781D1
 
-Am 25.06.25 um 23:22 schrieb Benjamin Hasselgren-Hall=C3=A9n:
-
-> The laptop do complain about not being able to load hp-wmi during boot. =
-Same on Fedora 42 as on Debian 13 (with kernel 6.15).
-
-Can you share the output of dmesg?
-
->
-> I did install thermald and that might have increased the power budget (w=
-hich is good) - but introduced some bug that keeps the fans on even while =
-suspended.
-
-Please elaborate.
+Thanks Andi. That's very helpful.
 
 Thanks,
-Armin Wolf
+Pratap
 
-> Best regards,
-> Benjamin Hasselgren-Hall=C3=A9n
->
->
-> On Wednesday, 25 June 2025 at 15:44, Armin Wolf <W_Armin@gmx.de> wrote:
->
->> Am 25.06.25 um 10:06 schrieb Benjamin Hasselgren-Hall=C3=A9n:
->>
->>> Hi,
->>>
->>> The acpidump is here: https://drive.benis.se/s/pcKLAL7i8zncX8q
->>>
->>> Best regards,
->>> Benjamin Hasselgren-Hall=C3=A9n
->>
->> The hp-wmi driver should be able to control the platform profile on you=
-r device. Does this
->> driver load and register a platform profile handler?
->>
->> Additionally you might need to install and setup the intel thermal daem=
-on for the platform
->> profile settings to work.
->>
->> Thanks,
->> Armin Wolf
->>
->>> On Monday, 23 June 2025 at 20:52, Armin Wolf W_Armin@gmx.de wrote:
->>>
->>>> Am 23.06.25 um 15:52 schrieb Benjamin Hasselgren-Hall=C3=A9n:
->>>>
->>>>> Hi dear Linux friends,
->>>>>
->>>>> This is very much a long shot and I understand if no one got any tim=
-e or motivation for this.However, I am trying to understand how HP Omniboo=
-k Ultra Flip (a laptop with Lunar Lake platform) working with power profil=
-es. The reason is that it seems to be very limited while running Linux (to=
- 30 watts to be exact, no matter the power profile, this is for the whole =
-laptop, to compare with something the Omnibook Ultra 14 with AMD Strix dra=
-ws up to over 70 watts, sure more power hungry platform but still). Also t=
-he gpu performance is not as it should be.
->>>>> So if anyone got the time or so - let me know where to start digging=
-!
->>>>>
->>>>> Best regards,
->>>>> Benjamin Hasselgren-Hall=C3=A9n
->>>>> Can you share the output of "acpidump"?
->>>> Thanks,
->>>> Armin Wolf
+On 6/25/2025 5:43 PM, Andi Shyti wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> Hi Pratap,
+> 
+>> Pratap Nirujogi (3):
+>>    i2c: designware: Initialize adapter name only when not set
+>>    i2c: amd-isp: Initialize unique adapter name
+>>    platform/x86: Use i2c adapter name to fix build errors
+> 
+> I merged this entire series in i2c/i2c-host-fixes. For the last
+> patch I added the "Requires:" tag in order to include non-Fixes
+> patches in the fixes pull request.
+> 
+> Thanks,
+> Andi
+
