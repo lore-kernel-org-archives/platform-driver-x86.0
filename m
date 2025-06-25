@@ -1,58 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598DF25EFB9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jun 2025 13:03:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CE9223704;
+	Wed, 25 Jun 2025 13:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856620; cv=none; b=GVX139vJqXc2j86Q5aKWQnbVkC0ZDLRF1ngsXmm5puRl9JKg0m81SGLb10iuu+Qm5pMl4UZtsLe6T1UFRArInUVgJSR3vib+4yGbgQz2veHB4Pt0O0uP+R3j8Dtbgm7ooRuo8I8z36TQa+83oRJXfaCdlTfmaE16FlcK9W3pzBo=
+	t=1750856628; cv=none; b=PCPXeFpagNvhKF8HC33APi2i+uSsUEDK0DRgbmqAXYR2LzEPBxuEsYVvNI4o8QLF5eBT+AejT0oZ7mpnIx4WShxQAjjPpgFFQ+yrsrdNKN93hNIQvhWBcrYPD6q2m1PKBDZStyxY/Ho4OMpvMIBFONTJPm6VadnrlFmzVDIBxCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856620; c=relaxed/simple;
-	bh=10Nht8ZAAvadiA8bcFeX6ZYmcdAKqP3eA2f8Jloc0uQ=;
+	s=arc-20240116; t=1750856628; c=relaxed/simple;
+	bh=6U88q7TOKdSVgEqMDSSDTApj1e+MmNyr/LKmIeBvLt0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GA/JXdFoTnoDI7g4uiBteZltLp2vdMhdYcvtUTW4sp8DH5INCc4rAxtrLB1xiK2DUeteV5L67JFnW1LM9qJV8MQWeOwBxztltS/mqAbJg4llpAC2+QGc7k9uEudPkLyj52xLxbPGsyP6GALoYGiecqXkZuctWpUaigpiaAdcbrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IH4Xoxns; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=Qata8tXH1rkk0iNAqct593HnErCjE46W38xg2g/OKEQTUZ57Zp9x5SqhdagXywInKCdhhyG5Iqfg/3SV6Ycog1+dxjUjyL0JSUbKHDuNxmUAoFmdF+k3g4e1Vuo6Iuwpvfs3D/4E1by//a+lAjHMyDsPAcEkMRdp5W9rkkXH338=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXqM0Hh2; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IH4Xoxns"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXqM0Hh2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750856619; x=1782392619;
+  t=1750856627; x=1782392627;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=10Nht8ZAAvadiA8bcFeX6ZYmcdAKqP3eA2f8Jloc0uQ=;
-  b=IH4Xoxns8v3h4nTXt3XZP/FUDTZnn9fXvH7CvbGTYLXd8rIFfbjw6Y90
-   zmOmCYPyX/jtnZKv98WgP7higPaelJIK1FnRQTAZ3HGwTJuEO3saUb+TO
-   kuIlS8WMtyMkNSVPPnf0IG0aI0EOCp04yNaLnx7yAl/gebO+AETqUol1g
-   2tirXGXjK5B1ibryA6ddPCDJ7Uq57TF5Abyz/3kzJcOsnaiwLnWkDJdv+
-   LvH0WaF6pXuBxEBmffC8SmvCi34rZIBEF9J7XV+1i3WLdFAYCMFb41XNB
-   Dbdx/5FbDEulcRNmAvvjGTkLk+fr3yHTRETsEl4PtLfsrJwdGTnHnyeCu
+  bh=6U88q7TOKdSVgEqMDSSDTApj1e+MmNyr/LKmIeBvLt0=;
+  b=aXqM0Hh2hCd5g8Src0H4+m3WWZSKNUfteJFHDyxXs9eTRUPr03cI681s
+   eJKYSEpMT+L5D80I4kQZP1dW8iISx0pMY4rrVa1mS+ZJRmKSeg+YgWH8s
+   5aSCkf2mAxWXnJ5lU7i0IrfC3DyAmJyHXIn4h0pnhNb96I6PaAnbG3PX7
+   1sozgn4BRZfhykCoH/gnp7Ff/BIDiw1P3IHF0h0gN1acCxJdXtFC89dSv
+   iL8KEuro6xyvUVGS7Gy1Be72qSmJbbAZ+Y0BpHvz1VHbXZyuGCCMDiAYU
+   GVAqDW5Q9QP9MbOv3w7xb0VhcokyfMGYLBhDJNshGVD6sy5yWRfuZcikD
    g==;
-X-CSE-ConnectionGUID: F0w+WQ2OSdOKOwmLpsGGHg==
-X-CSE-MsgGUID: nJNvotc3Q7uT+A6us2vgdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64185280"
+X-CSE-ConnectionGUID: o+tHfElVRay5KPJewcUAwA==
+X-CSE-MsgGUID: UncaI0ONT+mzVQdfAQiTAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64185296"
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="64185280"
+   d="scan'208";a="64185296"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:39 -0700
-X-CSE-ConnectionGUID: pnPIk1IaSfG68eBhhemfxA==
-X-CSE-MsgGUID: nArvMAYwTgWf6JAqIn7pVg==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:46 -0700
+X-CSE-ConnectionGUID: UHYkEejIRNqw1qeBhngccg==
+X-CSE-MsgGUID: TsnVDkPrTDm9joJJ+31IVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="151633819"
+   d="scan'208";a="151633868"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:36 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: corentin.chary@gmail.com, luke@ljones.dev, 
- Rahul Chandra <rahul@chandra.net>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20250624073301.602070-1-rahul@chandra.net>
-References: <20250624073301.602070-1-rahul@chandra.net>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add DMI quirk for ASUS
- Zenbook Duo UX8406CA
-Message-Id: <175085661190.8098.7867768138992871777.b4-ty@linux.intel.com>
-Date: Wed, 25 Jun 2025 16:03:31 +0300
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Damjan Georgievski <gdamjan@gmail.com>, Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+ <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+Message-Id: <175085661917.8098.8803611578218025120.b4-ty@linux.intel.com>
+Date: Wed, 25 Jun 2025 16:03:39 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,12 +64,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 24 Jun 2025 03:33:01 -0400, Rahul Chandra wrote:
+On Fri, 20 Jun 2025 14:11:10 -0400, Mark Pearson wrote:
 
-> Add a DMI quirk entry for the ASUS Zenbook Duo UX8406CA 2025 model to use
-> the existing zenbook duo keyboard quirk.
+> 2025 Thinkpads F11 key launch the Intel Unison app on Windows,
+> which does some sort of smart sharing between laptop and phone.
+> 
+> Map this key event to KEY_LINK_PHONE as the closest thing we have.
+> This prevents an error message being displayed on key press.
 > 
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -77,8 +82,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8406CA
-      commit: 7dc6b2d3b5503bcafebbeaf9818112bf367107b4
+[1/1] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+      commit: b511bbfe4242e14c27a4f80da95dabc4a99d73b2
 
 --
  i.
