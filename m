@@ -1,149 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D254D1F7060;
-	Wed, 25 Jun 2025 06:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C36817A2F8
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jun 2025 08:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833114; cv=none; b=DxX05dLMCwWqRkCbS9tDmmqNvlq9Tuv+BvSdhkELmQfkOpSbxFu6uT9kZb/qPrVbIDtmk3fQbddGfXrtCLxPJC2M93BJvxB7t9xrvruLJZRTIaDIObJs3z3Gzn8HfZm7J1CV21ywgEqsq6g8+nj/fjM4vKXoqgWDbvPf4488ZLg=
+	t=1750838792; cv=none; b=gK3IDeK55pNYr4wNz4rXoZFLEKItiFTo3+koC1zf50+7wVz1KjfnG5jwqEkqmXIqiXZiHdiRwGmK2tkUX/lu0JHXzd+jqKMDrYEXvJ8aln/cWoTSYwlVNesblB1NF2CamBbB7nzr27VUyZq7FSphOZkgSKZHYCHqrATUuRq+t0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833114; c=relaxed/simple;
-	bh=SMiK8R4rvJPitqeDKcJiQw7hgXniGdGbaSll/QfassA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IBkwQ1y2X969sG/Pt9c4rvRdqqJm9zbJ0xB0exCg7qm6chIQPmsA+/keLIJ5NsRa/LrayW5ZRt4LF4yHql1PE/p9ONGkAoEb0XVkZbMAI15nIbZf86DNCLcAsHm0xz5AJPrH7cMRQIJrlzSzpOLZrj0SRJ88lECqpUu/Fjus7RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ce93dUPU; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ce93dUPU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750833113; x=1782369113;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=SMiK8R4rvJPitqeDKcJiQw7hgXniGdGbaSll/QfassA=;
-  b=Ce93dUPUmeK2ADq/PXQHI0pQfFNFWHlz45pXFGZ+bFMRDszpioCIty8I
-   ZVJnSs+1ecEyyAvdVBL9zTyHYw92J/Ba18vY+bf91Dhw0RQ31iqtpVIc9
-   RwVkjPL4A7pQA1kh9FLh+LPAzJ6MvSKyL771cfL4nDSXJ3Z2/k+ufCMgg
-   eMGaQEGa7dvJpf94tWsFPGJ9MoRBRJudSH6DOMJnMbdkZZksTOf4ITx1s
-   l9K8xWkKXnpwLsS7InpJMskNmr6Bb6b8FvZbVoCNFTvMEs627yMh2lliH
-   3/Ub7pWPImRNZWaFo7ADhWCOtJwjzE0zJ3FVsvNJD7SKdJVGa7m3Xle8i
-   w==;
-X-CSE-ConnectionGUID: 6qQFeM5eSJy3kCilHHMXZA==
-X-CSE-MsgGUID: unC6ecZ+ToWtvwQgwf0PGQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53187472"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="53187472"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:31:51 -0700
-X-CSE-ConnectionGUID: aKc48rkyTwOrIAwOnLYbRQ==
-X-CSE-MsgGUID: L991gemuTMCOYIYmXeBdSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152257582"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.223.140])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:31:50 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 5/5] platform/x86:intel/pmc: Enable SSRAM support for Panther Lake
-Date: Tue, 24 Jun 2025 23:31:42 -0700
-Message-ID: <20250625063145.624585-6-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625063145.624585-1-xi.pardee@linux.intel.com>
-References: <20250625063145.624585-1-xi.pardee@linux.intel.com>
+	s=arc-20240116; t=1750838792; c=relaxed/simple;
+	bh=9XVyFRCTu7CjCcRd/bdqL7lBYTA2otciW3YlZSFnCxs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PvGQ836ccIXq1dOaJvkElyOlz5IXuMYaGWIWxdaEqa7XjDR9XGw/kHPjK8ptBsXa0W6laTvkkbtwvIiKCqg2iNvVPjuQF3mBC+ZD1AhPbHvhL7RZn8YbL+etJlYJnPSND8Z3q6HHzO18PgZwmLJgpLC7C2gsLmyQoEAhd5nsIzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=109.224.244.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
+Date: Wed, 25 Jun 2025 08:06:11 +0000
+To: Armin Wolf <W_Armin@gmx.de>
+From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+Message-ID: <5I8UDmgF_DcJBmBE0zgCXjuvmmhLamDCHkpnkAwRjSAkCa5xcFUvU-SmAeymxTajjDPR8avuW55RxOjhd8idK6jLy-hz8i-Ma3RHSaFy2Gs=@benis.se>
+In-Reply-To: <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de>
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de>
+Feedback-ID: 18592338:user:proton
+X-Pm-Message-ID: c2b2272a8c8ac1e9b300475de65dc136a03df38c
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Enable Panther Lake platforms to achieve PMC information from
-Intel PMC SSRAM Telemetry driver and substate requirements data
-from telemetry region.
+Hi,
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.h |  2 ++
- drivers/platform/x86/intel/pmc/ptl.c  | 30 +++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+The acpidump is here: https://drive.benis.se/s/pcKLAL7i8zncX8q
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index d8c7b28493055..cdb32f2203cff 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -301,6 +301,8 @@ enum ppfear_regs {
- #define PTL_PMC_LTR_CUR_ASLT			0x1C28
- #define PTL_PMC_LTR_CUR_PLT			0x1C2C
- #define PTL_PCD_PMC_MMIO_REG_LEN		0x31A8
-+#define PTL_NUM_S0IX_BLOCKER			106
-+#define PTL_BLK_REQ_OFFSET			55
- 
- /* SSRAM PMC Device ID */
- /* LNL */
-diff --git a/drivers/platform/x86/intel/pmc/ptl.c b/drivers/platform/x86/intel/pmc/ptl.c
-index 394515af60d60..48be79b4e769f 100644
---- a/drivers/platform/x86/intel/pmc/ptl.c
-+++ b/drivers/platform/x86/intel/pmc/ptl.c
-@@ -10,6 +10,17 @@
- 
- #include "core.h"
- 
-+/* PMC SSRAM PMT Telemetry GUIDS */
-+#define PCDP_LPM_REQ_GUID 0x47179370
-+
-+/*
-+ * Die Mapping to Product.
-+ * Product PCDDie
-+ * PTL-H   PCD-H
-+ * PTL-P   PCD-P
-+ * PTL-U   PCD-P
-+ */
-+
- static const struct pmc_bit_map ptl_pcdp_pfear_map[] = {
- 	{"PMC_0",               BIT(0)},
- 	{"FUSE_OSSE",           BIT(1)},
-@@ -515,6 +526,22 @@ static const struct pmc_reg_map ptl_pcdp_reg_map = {
- 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
- 	.s0ix_blocker_maps = ptl_pcdp_blk_maps,
- 	.s0ix_blocker_offset = LNL_S0IX_BLOCKER_OFFSET,
-+	.num_s0ix_blocker = PTL_NUM_S0IX_BLOCKER,
-+	.blocker_req_offset = PTL_BLK_REQ_OFFSET,
-+};
-+
-+static struct pmc_info ptl_pmc_info_list[] = {
-+	{
-+		.guid	= PCDP_LPM_REQ_GUID,
-+		.devid	= PMC_DEVID_PTL_PCDH,
-+		.map	= &ptl_pcdp_reg_map,
-+	},
-+	{
-+		.guid   = PCDP_LPM_REQ_GUID,
-+		.devid  = PMC_DEVID_PTL_PCDP,
-+		.map    = &ptl_pcdp_reg_map,
-+	},
-+	{}
- };
- 
- #define PTL_NPU_PCI_DEV                0xb03e
-@@ -543,6 +570,9 @@ static int ptl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
- }
- 
- struct pmc_dev_info ptl_pmc_dev = {
-+	.pci_func = 2,
-+	.telem_info = SUB_REQ_BLK,
-+	.regmap_list = ptl_pmc_info_list,
- 	.map = &ptl_pcdp_reg_map,
- 	.suspend = cnl_suspend,
- 	.resume = ptl_resume,
--- 
-2.43.0
 
+
+Best regards,
+Benjamin Hasselgren-Hall=C3=A9n
+
+
+On Monday, 23 June 2025 at 20:52, Armin Wolf <W_Armin@gmx.de> wrote:
+
+> Am 23.06.25 um 15:52 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+>=20
+> > Hi dear Linux friends,
+> >=20
+> > This is very much a long shot and I understand if no one got any time o=
+r motivation for this.However, I am trying to understand how HP Omnibook Ul=
+tra Flip (a laptop with Lunar Lake platform) working with power profiles. T=
+he reason is that it seems to be very limited while running Linux (to 30 wa=
+tts to be exact, no matter the power profile, this is for the whole laptop,=
+ to compare with something the Omnibook Ultra 14 with AMD Strix draws up to=
+ over 70 watts, sure more power hungry platform but still). Also the gpu pe=
+rformance is not as it should be.
+> > So if anyone got the time or so - let me know where to start digging!
+> >=20
+> > Best regards,
+> > Benjamin Hasselgren-Hall=C3=A9n
+>=20
+> Can you share the output of "acpidump"?
+>=20
+> Thanks,
+> Armin Wolf
