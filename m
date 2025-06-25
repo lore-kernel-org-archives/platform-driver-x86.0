@@ -1,58 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0130A800;
-	Wed, 25 Jun 2025 12:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F4A25D1F1;
+	Wed, 25 Jun 2025 12:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854532; cv=none; b=tIFPOkbxCh7g2/5iGoia16Q1A6zB1NwA77xrF2OOIBJFUHByVxK5pQcZbL0aiFsORAz04jyZzTRPGJtD41pI1CvCHUL2FQujwEIFYMEpuTNK5YcyEMCA9W6QIZ4MvVzdNnyYq/e42b2EKBuan8Lg+a+dPmMBH4MjM/kHB5nQQTM=
+	t=1750854994; cv=none; b=pUlDc+A3cGYVy9Gzn3c6RFsJmaJGTeMZyTLFmHlPCikn17n3ddM10S+lw9eL3UlfhDpkBxvj67naojFj6RvwgtUfjEe7rHPd+pMvO8SCn0q3F4oKrsUhqhN5Zc9HeXbrdxg1lgfpB62STaNJ22fmn/XEg6C4Z+/SkXkn9OCHAik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854532; c=relaxed/simple;
-	bh=x+77b4i0Z6wKis3aStFQZ7veNrPOT+2KFQd69RsxdjI=;
+	s=arc-20240116; t=1750854994; c=relaxed/simple;
+	bh=e9CudshOQPC4nd+M+TnQLZ1u162DySaMmKeXbl8oGVs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EGToClWHKq4qDRmJ3Ibc95V6oZrpMS5VPtFYbhbLsp4K2mf7klqlKyUgRobgrexF+KmYX+uwDFi7aGb+5OQWMnWVo6lRtqAztCGA3LczD87yyT3Y46tX/wJNe7YBScuew+Bh9vzMeyoitI+mxCNN0y3n6bukdOm1+x1VvZQHyVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W37ODDGs; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=hJzmvuqB/O6fijVq5DPihbGHe85lylXYU0+SnBd3ij9K7y7rffx2OLCNpPPlJLO4HWvtAOrwP6AhPisyZgRtN9jCg/LuajUDGYQjxO8WqaSL3YlbLlnZzk9BoGpmIPVuN2dvn7o1oLFkTPyNdciGx82Kl/5Thl9s2pOHPHhsmmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZgLWh/Kt; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W37ODDGs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZgLWh/Kt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750854530; x=1782390530;
+  t=1750854994; x=1782390994;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=x+77b4i0Z6wKis3aStFQZ7veNrPOT+2KFQd69RsxdjI=;
-  b=W37ODDGsXjcudJGDkl4cz2OzR3o3bVvonAhkzNkYW/SVUL3iah11/P+Z
-   I1JWopHr+iExqxgYcojRO6kqRNd+9jSskoWnpuVLQ8BoB12Rk+41GWsei
-   c0CGLdpcYWiKa4fkQeaJa1uT70xnejB/1m5jUviXYJNFR8t1BqhSTsTHe
-   5HEhgvoH0wkBpBWY1/ER28csBUg92GKms74FTlbb7l+GdfxbEfZXFNURQ
-   /3l1/jGPCe4OjUeK7WSGExpy1rdfvE6QVWFiRY8HkXEj6uKygyJgz/F5R
-   cdqMlVMBbqfwwIrjpvttrvlAmzhoLd23OeAt+ipOdMKh9XuEanSzwl56K
-   w==;
-X-CSE-ConnectionGUID: fwvn+bumTIOGz7MtQDn4qw==
-X-CSE-MsgGUID: mC0XEDCoQRS4yxZsEOKYSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52986391"
+  bh=e9CudshOQPC4nd+M+TnQLZ1u162DySaMmKeXbl8oGVs=;
+  b=ZgLWh/KtUCBIXr9SwT0tROTs5Z+W8cZ0PPMyWoDvFBimiGzDkReaNkoA
+   Q0iDoCFlKn+pDkcvWtZLvLTVi0PHyO8lFP7Kua3XbYVbdWWMGyudnS+2T
+   2Jidjj14TXC33sjJkjq3I9jP95KNz4bYZvDEQ5CqU+K7qCsXQup96mfuN
+   1Ni9woN+OLA8H49Yew9lQcNDmKszodZfZGl2FSPQxMKkSOFNjixhBwIPv
+   BtXjDFrN1OSOnjfah264MnAtqfldZaRKF8HdqthypM79U4RebZlISz1SJ
+   ly83yqIWtjaJeg+Ftnt1YfR19aXrqzBVitNU5S/j0gTobQbwFcSH8ZrRD
+   Q==;
+X-CSE-ConnectionGUID: Wl4otzUmSNGuWFJekEhQJA==
+X-CSE-MsgGUID: xDDLJsEcTgiyVNDx26dZRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="75660933"
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52986391"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:28:50 -0700
-X-CSE-ConnectionGUID: 9xNSDUdMS+q77U3s5X5XnQ==
-X-CSE-MsgGUID: sTrhSogiRLmBSxcVtSP++w==
+   d="scan'208";a="75660933"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:36:33 -0700
+X-CSE-ConnectionGUID: 3qYUeyW3Quu7rBwIOvV3Nw==
+X-CSE-MsgGUID: ffGbyOsfQda3WI+0NqNGww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152502198"
+   d="scan'208";a="152698653"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:28:46 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:36:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 25 Jun 2025 15:28:43 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: dimich.dmb@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
-    kuurtb@gmail.com, corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform/x86: wmi: Fix WMI event enablement
-In-Reply-To: <20250619221440.6737-1-W_Armin@gmx.de>
-Message-ID: <e23ffd29-13db-bb11-ee06-0f1203269902@linux.intel.com>
-References: <20250619221440.6737-1-W_Armin@gmx.de>
+Date: Wed, 25 Jun 2025 15:36:25 +0300 (EEST)
+To: Vadim Pasternak <vadimp@nvidia.com>
+cc: Alok Tiwari <alok.a.tiwari@oracle.com>, 
+    "hansg@kernel.org" <hansg@kernel.org>, 
+    David Thompson <davthompson@nvidia.com>, 
+    Michael Shych <michaelsh@nvidia.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity
+ in Mellanox drivers
+In-Reply-To: <PH7PR12MB66686B87D8572B5812A1402EAF78A@PH7PR12MB6668.namprd12.prod.outlook.com>
+Message-ID: <96280bbc-c20d-430c-493b-35d883e4622d@linux.intel.com>
+References: <20250622072921.4111552-1-alok.a.tiwari@oracle.com> <PH7PR12MB66686B87D8572B5812A1402EAF78A@PH7PR12MB6668.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,71 +65,123 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 20 Jun 2025, Armin Wolf wrote:
+On Tue, 24 Jun 2025, Vadim Pasternak wrote:
+> > -----Original Message-----
+> > From: Alok Tiwari <alok.a.tiwari@oracle.com>
+> > Sent: Sunday, 22 June 2025 10:29
+> > To: hansg@kernel.org; ilpo.jarvinen@linux.intel.com; David Thompson
+> > <davthompson@nvidia.com>; Michael Shych <michaelsh@nvidia.com>;
+> > Vadim Pasternak <vadimp@nvidia.com>; platform-driver-x86@vger.kernel.org
+> > Cc: alok.a.tiwari@oracle.com; linux-kernel@vger.kernel.org
+> > Subject: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity in
+> > Mellanox drivers
+> > 
+> > This commit corrects several minor typographical errors in comments and
+> > error messages across multiple Mellanox platform driver.
+> > Fixed spelling of "thresholds", "region", "platform", "default", and removed
+> > redundant spaces in comment strings and error logs.
+> > 
+> > These changes are cosmetic and do not affect runtime behavior.
+> > 
+> > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> 
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
 
-> It turns out that the Windows WMI-ACPI driver always enables/disables
-> WMI events regardless of whether they are marked as expensive or not.
-> This finding is further reinforced when reading the documentation of
-> the WMI_FUNCTION_CONTROL_CALLBACK callback used by Windows drivers
-> for enabling/disabling WMI devices:
-> 
-> 	The DpWmiFunctionControl routine enables or disables
-> 	notification of events, and enables or disables data
-> 	collection for data blocks that the driver registered
-> 	as expensive to collect.
-> 
-> Follow this behavior to fix the WMI event used for reporting hotkey
-> events on the Dell Latitude 5400 and likely many more devices.
-> 
-> Reported-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220246
-> Tested-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> Fixes: 656f0961d126 ("platform/x86: wmi: Rework WCxx/WExx ACPI method handling")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/wmi.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 21b7e54bd7ab..4e86a422f05f 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -180,16 +180,22 @@ static int wmi_device_enable(struct wmi_device *wdev, bool enable)
->  	acpi_handle handle;
->  	acpi_status status;
->  
-> -	if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> -		return 0;
-> -
->  	if (wblock->dev.dev.type == &wmi_type_method)
->  		return 0;
->  
-> -	if (wblock->dev.dev.type == &wmi_type_event)
-> +	if (wblock->dev.dev.type == &wmi_type_event) {
-> +		/*
-> +		 * Windows always enables/disables WMI events, even when they are
-> +		 * not marked as being expensive. We follow this behavior for
-
-Hi Armin,
-
-Is the wording in the comment reversed? (I suspect you didn't mean to 
-include "not" into that statement?)
-
-> +		 * compatibility reasons.
-> +		 */
->  		snprintf(method, sizeof(method), "WE%02X", wblock->gblock.notify_id);
-> -	else
-> +	} else {
-> +		if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> +			return 0;
-> +
->  		get_acpi_method_name(wblock, 'C', method);
-> +	}
->  
->  	/*
->  	 * Not all WMI devices marked as expensive actually implement the
-> 
+Okay folks, this was easy to review but what about the second patch which 
+does a real change to code (albeit only printing related)? Could somebody 
+review that as well? :-)
 
 -- 
  i.
 
+> > ---
+> >  drivers/platform/mellanox/mlxbf-tmfifo.c |  2 +-
+> >  drivers/platform/mellanox/mlxreg-dpu.c   |  2 +-
+> >  drivers/platform/mellanox/mlxreg-lc.c    | 10 +++++-----
+> >  3 files changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > index aae99adb29eb0..6264379d96907 100644
+> > --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > @@ -1287,7 +1287,7 @@ static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
+> >  		ether_addr_copy(mac, mlxbf_tmfifo_net_default_mac);  }
+> > 
+> > -/* Set TmFifo thresolds which is used to trigger interrupts. */
+> > +/* Set TmFifo thresholds which is used to trigger interrupts. */
+> >  static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)  {
+> >  	u64 ctl;
+> > diff --git a/drivers/platform/mellanox/mlxreg-dpu.c
+> > b/drivers/platform/mellanox/mlxreg-dpu.c
+> > index 52260106a9f16..39f89c47144a2 100644
+> > --- a/drivers/platform/mellanox/mlxreg-dpu.c
+> > +++ b/drivers/platform/mellanox/mlxreg-dpu.c
+> > @@ -483,7 +483,7 @@ static int mlxreg_dpu_config_init(struct mlxreg_dpu
+> > *mlxreg_dpu, void *regmap,
+> >  							  mlxreg_dpu-
+> > >io_data,
+> >  							  sizeof(*mlxreg_dpu-
+> > >io_data));
+> >  		if (IS_ERR(mlxreg_dpu->io_regs)) {
+> > -			dev_err(dev, "Failed to create regio for client %s at bus
+> > %d at addr 0x%02x\n",
+> > +			dev_err(dev, "Failed to create region for client %s at
+> > bus %d at
+> > +addr 0x%02x\n",
+> >  				data->hpdev.brdinfo->type, data->hpdev.nr,
+> >  				data->hpdev.brdinfo->addr);
+> >  			return PTR_ERR(mlxreg_dpu->io_regs); diff --git
+> > a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-
+> > lc.c
+> > index aee395bb48ae4..8eef3d990d1ae 100644
+> > --- a/drivers/platform/mellanox/mlxreg-lc.c
+> > +++ b/drivers/platform/mellanox/mlxreg-lc.c
+> > @@ -57,9 +57,9 @@ enum mlxreg_lc_state {
+> >   * @dev: platform device;
+> >   * @lock: line card lock;
+> >   * @par_regmap: parent device regmap handle;
+> > - * @data: pltaform core data;
+> > + * @data: platform core data;
+> >   * @io_data: register access platform data;
+> > - * @led_data: LED platform data ;
+> > + * @led_data: LED platform data;
+> >   * @mux_data: MUX platform data;
+> >   * @led: LED device;
+> >   * @io_regs: register access device;
+> > @@ -171,7 +171,7 @@ static int mlxreg_lc_chan[] = {
+> >  	0x4e, 0x4f
+> >  };
+> > 
+> > -/* Defaul mux configuration. */
+> > +/* Default mux configuration. */
+> >  static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
+> >  	{
+> >  		.chan_ids = mlxreg_lc_chan,
+> > @@ -181,7 +181,7 @@ static struct mlxcpld_mux_plat_data
+> > mlxreg_lc_mux_data[] = {
+> >  	},
+> >  };
+> > 
+> > -/* Defaul mux board info. */
+> > +/* Default mux board info. */
+> >  static struct i2c_board_info mlxreg_lc_mux_brdinfo = {
+> >  	I2C_BOARD_INFO("i2c-mux-mlxcpld", 0x32),  }; @@ -758,7 +758,7
+> > @@ mlxreg_lc_config_init(struct mlxreg_lc *mlxreg_lc, void *regmap,
+> >  		platform_device_register_resndata(dev, "mlxreg-io", data-
+> > >hpdev.nr, NULL, 0,
+> >  						  mlxreg_lc->io_data,
+> > sizeof(*mlxreg_lc->io_data));
+> >  		if (IS_ERR(mlxreg_lc->io_regs)) {
+> > -			dev_err(dev, "Failed to create regio for client %s at bus
+> > %d at addr 0x%02x\n",
+> > +			dev_err(dev, "Failed to create region for client %s at
+> > bus %d at
+> > +addr 0x%02x\n",
+> >  				data->hpdev.brdinfo->type, data->hpdev.nr,
+> >  				data->hpdev.brdinfo->addr);
+> >  			err = PTR_ERR(mlxreg_lc->io_regs);
+> > --
+> > 2.46.0
+> 
+> 
