@@ -1,187 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F4A25D1F1;
-	Wed, 25 Jun 2025 12:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1512725A337;
+	Wed, 25 Jun 2025 13:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854994; cv=none; b=pUlDc+A3cGYVy9Gzn3c6RFsJmaJGTeMZyTLFmHlPCikn17n3ddM10S+lw9eL3UlfhDpkBxvj67naojFj6RvwgtUfjEe7rHPd+pMvO8SCn0q3F4oKrsUhqhN5Zc9HeXbrdxg1lgfpB62STaNJ22fmn/XEg6C4Z+/SkXkn9OCHAik=
+	t=1750856613; cv=none; b=JQ23E/FILDA9300KJosvdxdPh7eAxkM63GZ0uqir5idb2cud571kyGGsoHyO+A59KTAhWk1NlKKLML60TwrcB85c5KT44TuPHFgT+/5HV79odkAYFutPeuTn/OvSNdNr7268lVOnIO+BXb4MCh4D7OcsKr1J6qKn+wtRJhDpWt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854994; c=relaxed/simple;
-	bh=e9CudshOQPC4nd+M+TnQLZ1u162DySaMmKeXbl8oGVs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hJzmvuqB/O6fijVq5DPihbGHe85lylXYU0+SnBd3ij9K7y7rffx2OLCNpPPlJLO4HWvtAOrwP6AhPisyZgRtN9jCg/LuajUDGYQjxO8WqaSL3YlbLlnZzk9BoGpmIPVuN2dvn7o1oLFkTPyNdciGx82Kl/5Thl9s2pOHPHhsmmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZgLWh/Kt; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1750856613; c=relaxed/simple;
+	bh=zJUtDDXZZsNgnHWXi945NdyeR509h7c3lPJubouFxcc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mN99lk/es61OBd95JIVNW5f8VzkHTjN16Qm1OnDqT2Bzq8Zw7ry97C+fLM7luXbZiP3B5t6XF+PqbRGltuiksjT87PvcGKnoMwmarz497hDWHH43WSuHeE60E2KIohYCwexIRMonfOQqjC8PJFoAM35RXuSFB5Sf/2W/mtP3/j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jk5bwxxn; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZgLWh/Kt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jk5bwxxn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750854994; x=1782390994;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=e9CudshOQPC4nd+M+TnQLZ1u162DySaMmKeXbl8oGVs=;
-  b=ZgLWh/KtUCBIXr9SwT0tROTs5Z+W8cZ0PPMyWoDvFBimiGzDkReaNkoA
-   Q0iDoCFlKn+pDkcvWtZLvLTVi0PHyO8lFP7Kua3XbYVbdWWMGyudnS+2T
-   2Jidjj14TXC33sjJkjq3I9jP95KNz4bYZvDEQ5CqU+K7qCsXQup96mfuN
-   1Ni9woN+OLA8H49Yew9lQcNDmKszodZfZGl2FSPQxMKkSOFNjixhBwIPv
-   BtXjDFrN1OSOnjfah264MnAtqfldZaRKF8HdqthypM79U4RebZlISz1SJ
-   ly83yqIWtjaJeg+Ftnt1YfR19aXrqzBVitNU5S/j0gTobQbwFcSH8ZrRD
-   Q==;
-X-CSE-ConnectionGUID: Wl4otzUmSNGuWFJekEhQJA==
-X-CSE-MsgGUID: xDDLJsEcTgiyVNDx26dZRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="75660933"
+  t=1750856612; x=1782392612;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=zJUtDDXZZsNgnHWXi945NdyeR509h7c3lPJubouFxcc=;
+  b=Jk5bwxxn94mudCy+ERzINrsupHW6af23tl9NMrfZSRvvRYGsL3KlL6jy
+   qGAuySWtf1i7Jd/HQFCsnfBKQmOmvWw6FPP8w22s4HrE9aKah2Ra0AMI4
+   sN2GBBx4mmj8KjdmbjzfmKhaq/nkMayOlrSjahdKJTPHYBGerFMHomrV5
+   LkjooLZWO/l3rawHs8KLtOUev1KJiHHNAdmiKegjmqc2T5gxDU47DWUf7
+   +t23usl0W5rSITed6rkgnyum4XoAJJb2PgCUIK0x7QDYhDHD4vIVCa/lL
+   +Oly3DzV/ewRsMh5/JTGKm8e0NRZO/WR3fk0E/yBdlQJF9xZIL56ypm9Y
+   w==;
+X-CSE-ConnectionGUID: MJSgloBcQ+qONk3+R6OcTw==
+X-CSE-MsgGUID: V51Q8rk7QeeLc9vtQkP4Rw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56909532"
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="75660933"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:36:33 -0700
-X-CSE-ConnectionGUID: 3qYUeyW3Quu7rBwIOvV3Nw==
-X-CSE-MsgGUID: ffGbyOsfQda3WI+0NqNGww==
+   d="scan'208";a="56909532"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:32 -0700
+X-CSE-ConnectionGUID: ZPQSt1bsQhC9r0sar1c0WQ==
+X-CSE-MsgGUID: YS/irz4ISkCMrptFHrQ8Hg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152698653"
+   d="scan'208";a="152922531"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:36:29 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:30 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 25 Jun 2025 15:36:25 +0300 (EEST)
-To: Vadim Pasternak <vadimp@nvidia.com>
-cc: Alok Tiwari <alok.a.tiwari@oracle.com>, 
-    "hansg@kernel.org" <hansg@kernel.org>, 
-    David Thompson <davthompson@nvidia.com>, 
-    Michael Shych <michaelsh@nvidia.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity
- in Mellanox drivers
-In-Reply-To: <PH7PR12MB66686B87D8572B5812A1402EAF78A@PH7PR12MB6668.namprd12.prod.outlook.com>
-Message-ID: <96280bbc-c20d-430c-493b-35d883e4622d@linux.intel.com>
-References: <20250622072921.4111552-1-alok.a.tiwari@oracle.com> <PH7PR12MB66686B87D8572B5812A1402EAF78A@PH7PR12MB6668.namprd12.prod.outlook.com>
+To: Hans de Goede <hansg@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250622080721.4661-1-pmenzel@molgen.mpg.de>
+References: <20250622080721.4661-1-pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude 5500
+Message-Id: <175085660320.8098.14462069839144981994.b4-ty@linux.intel.com>
+Date: Wed, 25 Jun 2025 16:03:23 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Tue, 24 Jun 2025, Vadim Pasternak wrote:
-> > -----Original Message-----
-> > From: Alok Tiwari <alok.a.tiwari@oracle.com>
-> > Sent: Sunday, 22 June 2025 10:29
-> > To: hansg@kernel.org; ilpo.jarvinen@linux.intel.com; David Thompson
-> > <davthompson@nvidia.com>; Michael Shych <michaelsh@nvidia.com>;
-> > Vadim Pasternak <vadimp@nvidia.com>; platform-driver-x86@vger.kernel.org
-> > Cc: alok.a.tiwari@oracle.com; linux-kernel@vger.kernel.org
-> > Subject: [PATCH 1/2] platform/mellanox: Fix spelling and comment clarity in
-> > Mellanox drivers
-> > 
-> > This commit corrects several minor typographical errors in comments and
-> > error messages across multiple Mellanox platform driver.
-> > Fixed spelling of "thresholds", "region", "platform", "default", and removed
-> > redundant spaces in comment strings and error logs.
-> > 
-> > These changes are cosmetic and do not affect runtime behavior.
-> > 
-> > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+On Sun, 22 Jun 2025 10:07:20 +0200, Paul Menzel wrote:
+
+> Add 0x29 as the accelerometer address for the Dell Latitude 5500 to
+> lis3lv02d_devices[].
 > 
-> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> The address was verified as below:
+> 
+>     $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.4
+>     $ ls -d i2c-?
+>     i2c-2
+>     $ sudo modprobe i2c-dev
+>     $ sudo i2cdetect 2
+>     WARNING! This program can confuse your I2C bus, cause data loss and worse!
+>     I will probe file /dev/i2c-2.
+>     I will probe address range 0x08-0x77.
+>     Continue? [Y/n] Y
+>          0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>     00:                         08 -- -- -- -- -- -- --
+>     10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     20: -- -- -- -- -- -- -- -- -- 29 -- -- -- -- -- --
+>     30: 30 -- -- -- -- 35 UU UU -- -- -- -- -- -- -- --
+>     40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
+>     50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+>     60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     70: -- -- -- -- -- -- -- --
+>     $ echo lis3lv02d 0x29 | sudo tee /sys/bus/i2c/devices/i2c-2/new_device
+>     lis3lv02d 0x29
+>     $ sudo dmesg
+>     [    0.000000] Linux version 6.12.32-amd64 (debian-kernel@lists.debian.org) (x86_64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT_DYNAMIC Debian 6.12.32-1 (2025-06-07)
+>     […]
+>     [    0.000000] DMI: Dell Inc. Latitude 5500/0M14W7, BIOS 1.38.0 03/06/2025
+>     […]
+>     [  609.063488] i2c_dev: i2c /dev entries driver
+>     [  639.135020] i2c i2c-2: new_device: Instantiated device lis3lv02d at 0x29
+> 
+> [...]
 
-Okay folks, this was easy to review but what about the second patch which 
-does a real change to code (albeit only printing related)? Could somebody 
-review that as well? :-)
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: dell-lis3lv02d: Add Latitude 5500
+      commit: d0f8ee81a8fe63cd29d01b905eead72b88326ef2
+
+--
  i.
 
-> > ---
-> >  drivers/platform/mellanox/mlxbf-tmfifo.c |  2 +-
-> >  drivers/platform/mellanox/mlxreg-dpu.c   |  2 +-
-> >  drivers/platform/mellanox/mlxreg-lc.c    | 10 +++++-----
-> >  3 files changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> > b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> > index aae99adb29eb0..6264379d96907 100644
-> > --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> > +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> > @@ -1287,7 +1287,7 @@ static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
-> >  		ether_addr_copy(mac, mlxbf_tmfifo_net_default_mac);  }
-> > 
-> > -/* Set TmFifo thresolds which is used to trigger interrupts. */
-> > +/* Set TmFifo thresholds which is used to trigger interrupts. */
-> >  static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)  {
-> >  	u64 ctl;
-> > diff --git a/drivers/platform/mellanox/mlxreg-dpu.c
-> > b/drivers/platform/mellanox/mlxreg-dpu.c
-> > index 52260106a9f16..39f89c47144a2 100644
-> > --- a/drivers/platform/mellanox/mlxreg-dpu.c
-> > +++ b/drivers/platform/mellanox/mlxreg-dpu.c
-> > @@ -483,7 +483,7 @@ static int mlxreg_dpu_config_init(struct mlxreg_dpu
-> > *mlxreg_dpu, void *regmap,
-> >  							  mlxreg_dpu-
-> > >io_data,
-> >  							  sizeof(*mlxreg_dpu-
-> > >io_data));
-> >  		if (IS_ERR(mlxreg_dpu->io_regs)) {
-> > -			dev_err(dev, "Failed to create regio for client %s at bus
-> > %d at addr 0x%02x\n",
-> > +			dev_err(dev, "Failed to create region for client %s at
-> > bus %d at
-> > +addr 0x%02x\n",
-> >  				data->hpdev.brdinfo->type, data->hpdev.nr,
-> >  				data->hpdev.brdinfo->addr);
-> >  			return PTR_ERR(mlxreg_dpu->io_regs); diff --git
-> > a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-
-> > lc.c
-> > index aee395bb48ae4..8eef3d990d1ae 100644
-> > --- a/drivers/platform/mellanox/mlxreg-lc.c
-> > +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> > @@ -57,9 +57,9 @@ enum mlxreg_lc_state {
-> >   * @dev: platform device;
-> >   * @lock: line card lock;
-> >   * @par_regmap: parent device regmap handle;
-> > - * @data: pltaform core data;
-> > + * @data: platform core data;
-> >   * @io_data: register access platform data;
-> > - * @led_data: LED platform data ;
-> > + * @led_data: LED platform data;
-> >   * @mux_data: MUX platform data;
-> >   * @led: LED device;
-> >   * @io_regs: register access device;
-> > @@ -171,7 +171,7 @@ static int mlxreg_lc_chan[] = {
-> >  	0x4e, 0x4f
-> >  };
-> > 
-> > -/* Defaul mux configuration. */
-> > +/* Default mux configuration. */
-> >  static struct mlxcpld_mux_plat_data mlxreg_lc_mux_data[] = {
-> >  	{
-> >  		.chan_ids = mlxreg_lc_chan,
-> > @@ -181,7 +181,7 @@ static struct mlxcpld_mux_plat_data
-> > mlxreg_lc_mux_data[] = {
-> >  	},
-> >  };
-> > 
-> > -/* Defaul mux board info. */
-> > +/* Default mux board info. */
-> >  static struct i2c_board_info mlxreg_lc_mux_brdinfo = {
-> >  	I2C_BOARD_INFO("i2c-mux-mlxcpld", 0x32),  }; @@ -758,7 +758,7
-> > @@ mlxreg_lc_config_init(struct mlxreg_lc *mlxreg_lc, void *regmap,
-> >  		platform_device_register_resndata(dev, "mlxreg-io", data-
-> > >hpdev.nr, NULL, 0,
-> >  						  mlxreg_lc->io_data,
-> > sizeof(*mlxreg_lc->io_data));
-> >  		if (IS_ERR(mlxreg_lc->io_regs)) {
-> > -			dev_err(dev, "Failed to create regio for client %s at bus
-> > %d at addr 0x%02x\n",
-> > +			dev_err(dev, "Failed to create region for client %s at
-> > bus %d at
-> > +addr 0x%02x\n",
-> >  				data->hpdev.brdinfo->type, data->hpdev.nr,
-> >  				data->hpdev.brdinfo->addr);
-> >  			err = PTR_ERR(mlxreg_lc->io_regs);
-> > --
-> > 2.46.0
-> 
-> 
