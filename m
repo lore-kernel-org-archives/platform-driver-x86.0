@@ -1,109 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01F52EB5CA;
-	Thu, 26 Jun 2025 15:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5BB2E718D;
+	Thu, 26 Jun 2025 15:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750951098; cv=none; b=D7HL23AWNh4cnYPPQDCgqeGmDgvpyV/slrWehFVVMAPgBU8PGjStuXlEqUyZYIY2/0MViwtxwRIY2kQmiNcU0Wuvxr0X8T5RB/ivEr/OMfo5PH+AtgUsJ6bg/gaNswIow9aHA6ZqJKj1B24JmCG2fl+YBgkZ4H9Z20MOY7zYIeg=
+	t=1750951203; cv=none; b=jOLEwHEpiX1SqfrTk+IE+tl7/W1bw6Hl9PPrRdXVZbO0xmLxW9+4oYvXCCm/Tl+lV2tm0B9mOBgoyIytAKcrcLbtLV4UfKuCLlqDFpDDsFMwggWGV1VReS11Mi+Z9yDpM7fquPJI/nz4gtJSHaaCRBPM2TttykplWtN/SEmzfIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750951098; c=relaxed/simple;
-	bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=N8oOMOafFQwFFzINxV+LyiheQURE15Xhg6JvgX8iXg5udgJ0G+SfZdhnj96XnJUlXTr7u5O5zTqzEPb/Sw09jp9Kew1NdozV3YmM/O8Q4IrRJQdvwGjBBIXFpTeUOZsSyT0gi39z8y7D3IyOg3f5nUsgnTROyBh1s89zKIVU4TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ui2NLhQ5; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1750951203; c=relaxed/simple;
+	bh=CEnmvCK+tZOnG4ocoionyzTDYqD43xaZs+fiIJ4JpLI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XPDkhP9mce3Q3bSX/5DfBsYicFZS54bVFz2wMCFIRfiA9Zf9FG/UmyG8AQN11Y6mVs+j3X7ReaeS7mSEbCZ/NkthkvZvQQQWVrVQb1FhTlhEqg3E75RxdEQ1beVpalw6xKXKZ3xX7dx0T/EcDB2K89udJdHCKaphaq/cU8lzsnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IupvtFvc; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ui2NLhQ5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IupvtFvc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750951097; x=1782487097;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=O/PahS6LrdahoJgUmBA8HOvNulGcN+KpvOPWLplfST4=;
-  b=Ui2NLhQ5cctMxhuO+NkSMPx/tQz13lDHbI6yu/vn5czITopoRulRmUTr
-   NJ+sjCohPVyd40x8ZTA5i8eObsumAjOsZq7aOcbm8kiqXzDw44mfiIbto
-   0kuR9C7kvEFebef96ZrgrSCcH4DR8Vt+UqikAazJovaewAUOi7T+mUi+l
-   SQYTDmvPmPGgB2dy/jVeayJgaNk9ruSuYkLEFskuuJePopMccbWes290u
-   PLm86uYt8NI0EKCTBnvWgA7UWlpXMsDFIZSCYrdfxvXbn8WrxkxjExsUN
-   /1g1Ga7dXaX5Ml+JlVHM3x9go9fPKIU3TW8oa25jp+g1ID533a/ntpdIZ
-   A==;
-X-CSE-ConnectionGUID: hKmQa6LkS1CXAYavPeKaiQ==
-X-CSE-MsgGUID: qmNxp4ouTliF7f7eiz9yig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78688262"
+  t=1750951202; x=1782487202;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=CEnmvCK+tZOnG4ocoionyzTDYqD43xaZs+fiIJ4JpLI=;
+  b=IupvtFvchmxAUAPm8azIi77fmPhQTFkRhzd0pwAEqpnMRLee+NA4PXFi
+   2cfB7nWAnMdnJ8GjluXemG/yi/F14NdLCvtsubep02r+Esuc723b/WEub
+   DCwWXAQipDHVt/1Jg389vYzI0g9Rkqw41u+00+p0mogaqkNbRrHZQ0bQa
+   lrtdfz8JZ/cH+NclWf/T/0yBacw/Hs5fBLsOPIhRsOB4V+OJqNBISJczg
+   SnIN1vpXNWbaxgGPSXP2RX5HCyy2UNjMW4uYgZ/MFb0/QTIWtJjABFRtk
+   msCmz/gYrPItAkn6OJzQOS/7dLggKnLaYAuRtUXpkcWXZU0aCwHsoWyYT
+   Q==;
+X-CSE-ConnectionGUID: 7s7bcPNvQsuKw2HbAiLV7Q==
+X-CSE-MsgGUID: LgUbvVe2QLyt2uGaik0zog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="70823142"
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="78688262"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:16 -0700
-X-CSE-ConnectionGUID: +TsuNq6pRkeISQ6zV4HevQ==
-X-CSE-MsgGUID: QhoFw5F/Q66u4O/fZY9sbQ==
+   d="scan'208";a="70823142"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:19:58 -0700
+X-CSE-ConnectionGUID: OVy7sUwhQa290ZmdyD/9hg==
+X-CSE-MsgGUID: Sh4lnV8JT3CYf3a137UwhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="183576678"
+   d="scan'208";a="153044424"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:18:12 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:19:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Jun 2025 18:18:07 +0300 (EEST)
-To: Arnd Bergmann <arnd@kernel.org>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Pratap Nirujogi <pratap.nirujogi@amd.com>, 
-    Benjamin Chan <benjamin.chan@amd.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>, 
-    Armin Wolf <W_Armin@gmx.de>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-    Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86/amd_isp4: prevent built-in configuration
-In-Reply-To: <20250620115448.202425-1-arnd@kernel.org>
-Message-ID: <49a6a302-8660-5072-27b9-abc61253f608@linux.intel.com>
-References: <20250620115448.202425-1-arnd@kernel.org>
+To: hansg@kernel.org, davthompson@nvidia.com, michaelsh@nvidia.com, 
+ vadimp@nvidia.com, platform-driver-x86@vger.kernel.org, 
+ Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
+References: <20250622072921.4111552-1-alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH 1/2] platform/mellanox: Fix spelling and comment
+ clarity in Mellanox drivers
+Message-Id: <175095118765.2233.246981792463543905.b4-ty@linux.intel.com>
+Date: Thu, 26 Jun 2025 18:19:47 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Fri, 20 Jun 2025, Arnd Bergmann wrote:
+On Sun, 22 Jun 2025 00:29:11 -0700, Alok Tiwari wrote:
 
-> From: Arnd Bergmann <arnd@arndb.de>
+> This commit corrects several minor typographical errors in comments
+> and error messages across multiple Mellanox platform driver.
+> Fixed spelling of "thresholds", "region", "platform", "default",
+> and removed redundant spaces in comment strings and error logs.
 > 
-> Checking the module owner of the device only works when modules are
-> enabled, and the device is created from a module:
+> These changes are cosmetic and do not affect runtime behavior.
 > 
-> drivers/platform/x86/amd/amd_isp4.c:154:28: error: incomplete definition of type 'struct module'
-> 
-> Building the driver as a loadable module avoids the build failure,
-> though this should probably be fixed in a different way that still
-> works if the device was created from built-in code.
-> 
-> Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV05C10")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506150313.UHoIoVhR-lkp@intel.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/amd/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index 63e4bd985699..9e150500e37e 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -36,6 +36,7 @@ config AMD_WBRF
->  config AMD_ISP_PLATFORM
->  	tristate "AMD ISP4 platform driver"
->  	depends on I2C && X86_64 && ACPI
-> +	depends on m
->  	help
->  	  Platform driver for AMD platforms containing image signal processor
->  	  gen 4. Provides camera sensor module board information to allow
-> 
+> [...]
 
-The fix series should finally be on its way to Linus through i2c tree. 
-I'm sorry for the unexpected delay in getting the real fix applied.
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/2] platform/mellanox: Fix spelling and comment clarity in Mellanox drivers
+      commit: c3ac7e30309b8221a8321c3882d289ba519b4104
+[2/2] platform/mellanox: nvsw-sn2201: Fix bus number in adapter error message
+      commit: d07143b507c51c04c091081627c5a130e9d3c517
+
+--
  i.
 
