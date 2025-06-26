@@ -1,60 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE932EBB94;
-	Thu, 26 Jun 2025 15:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3E535975
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jun 2025 16:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953016; cv=none; b=Cn3IW3mGpf+J5+/xyEaGN2hsu7EIej/wP7ITQiIGKmtXjyUSCOsFhLO17146lA2YuLBCzlmQ2zayVk9CqFLbKM5S4WZVSNO5Ea7ZmGvsfqegrB91lo4L+FVBh30WYAuy1Ruc3nzKRWjXrLtvPOpHqelbiI4TGriZ4shHdvgpTKE=
+	t=1750955522; cv=none; b=SCv5hwzGpFanixTh6kOfZ8hpCarpp0Ob5Z/fH1W2syVdb+EdU2bKWnx7aZAxMJ4auQldqFJ4jh8NAW0lRyLqUQLnHtejCLOiAxh5SzAuanUFhsq+U39el8wkkanP8UqnPnLuUz9LHpvHj55ndy4+e0Ywzn5Fv3gLxGZuiudVXM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953016; c=relaxed/simple;
-	bh=IKyNrNO05dxmhNUJyWkxJMbolc2ZnJKiV6fh31BcteQ=;
+	s=arc-20240116; t=1750955522; c=relaxed/simple;
+	bh=UGFHL46cfd/oqqfbyV4YuMFu1KYIONs7DTp/R8aYo3w=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ib6DdkFgNo5bhEsFxaxrZG4uY2Lt0oDi9RN+TW477kq2JiS6NhtKRRQG+WU/JUaEYkm0Fk9YoqS3Xz/G6M0RyqjuvQ4JTbk2H2jowY4Si1vk29L1lgVCeWIRF+cLMGmf5/+yw8wKLt5cF7jKwFcUyKsSkJWWUsUyeO+xqiVbIYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEFugxIX; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=HpqxylD2iyEe37Z9lb0W2xQcUigAzR55EqOuiC0/XW3RUGB4G5wjvPsihaFc+IJIDHXpjkR70XS7GEQ6+IKnQgYgIJG0NAKSXw3Bu+vIBLeHwZm8mN26aQpaf0DD+xIKgy8Lqeodbjhg0Svg9smcmkyjOvke/Bd81qiLq0Nsxo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaBozyhW; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEFugxIX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaBozyhW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750953015; x=1782489015;
+  t=1750955520; x=1782491520;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=IKyNrNO05dxmhNUJyWkxJMbolc2ZnJKiV6fh31BcteQ=;
-  b=IEFugxIXqCvyB4YvPRKMqsf2q0TCa1K32BHR89DK6qwnjHC4NZ1A+WCn
-   UTZVrSJrV16MRoIWZlY8tzZbZo2KXmAui+BGTSeKMOR969an99+C52nUB
-   h5I06mtkMuXXPr0dToe4yVwX6BUCZhNntgH4AxGerKthS2P5NLZwJBGhg
-   frf1eLpQTl26qiH6hCl565MyXHwe38KFi5a0dxlV9ytXPCnTSOHHZig4n
-   wo44ito81UXlBZzxxaUn3lIwitmoNaOj7tWZRN/M13fgh3E23TodyVTbR
-   hgs15wq5meBbsESGFSILyuy9j06HPUzZYm72F1r+2TuYp5kwfbYvRYpiz
-   A==;
-X-CSE-ConnectionGUID: 25eOgMDDTO2/3gcndKCqRg==
-X-CSE-MsgGUID: PtYWQzD6TMCfCUcLPxRpMQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="63513101"
+  bh=UGFHL46cfd/oqqfbyV4YuMFu1KYIONs7DTp/R8aYo3w=;
+  b=SaBozyhWCon+Zm6tEN/txtZaiQ3shCOdDq0CNsAhSAkMhZkOrAmihL/Z
+   tVqOueG/eVSiOGw8cUQmIcGfaTiRrEtiGCeu8FMh1R7v0fADHJLnZHDjr
+   m78uHo1Qs1x+nA8za4B9JRB+KjUKUhEMPQoCJGK81P4dENbHeIXZU8fft
+   FCglB9xN1A7vaKaMV5k2CIylWYFf8lS8Gb1ezOzYn0EZW0rtgg80FR6OJ
+   gQixCc2B2FfuNVmRfMdYeq+2E9dtpveB40YnvgWez+itRVqnoIKI8rd4q
+   CnqgXhrG3zdrVVnc74/bSrJZr+B+yrMYed/3nncPwoKR7/Dsp1f6Syez0
+   Q==;
+X-CSE-ConnectionGUID: mnYZGe+5TJKFfUDjSqQyOQ==
+X-CSE-MsgGUID: FmhilJ13Q8SbkhOkZSPDLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="78695462"
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="63513101"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:50:14 -0700
-X-CSE-ConnectionGUID: n8tPLJOzSA+l7H/xENT91Q==
-X-CSE-MsgGUID: r2uyqN55TPqeCRZzCnVDRQ==
+   d="scan'208";a="78695462"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:31:59 -0700
+X-CSE-ConnectionGUID: 5NL1MGwmTfO5BwInB2HJqQ==
+X-CSE-MsgGUID: Gg/JPO6bR/Ow2xSTCcV4Rw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="152068186"
+   d="scan'208";a="151978494"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:50:12 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:31:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 26 Jun 2025 18:50:07 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    David Thompson <davthomspson@nvidia.com>
-Subject: Re: [PATCH v2 1/2] platform/mellanox: mlxbf-pmc: Replace strcmp with
- strncmp
-In-Reply-To: <fbb8ab5fd566369cc47e9f23b9f4ac25dde009b8.1750245955.git.shravankr@nvidia.com>
-Message-ID: <f8437991-2688-33f8-3843-4e5ffe72a308@linux.intel.com>
-References: <cover.1750245955.git.shravankr@nvidia.com> <fbb8ab5fd566369cc47e9f23b9f4ac25dde009b8.1750245955.git.shravankr@nvidia.com>
+Date: Thu, 26 Jun 2025 19:31:54 +0300 (EEST)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [PATCH] platform/x86/amd/hsmp: Use guard mutex to synchronize
+ probe
+In-Reply-To: <20250625100216.1462594-1-suma.hegde@amd.com>
+Message-ID: <ada3eca0-4c86-c3ee-816c-a3635b4ad110@linux.intel.com>
+References: <20250625100216.1462594-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,41 +61,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 18 Jun 2025, Shravan Kumar Ramani wrote:
+On Wed, 25 Jun 2025, Suma Hegde wrote:
 
-> Since the input string passed via the command line appends a newline char,
-> comparison using strcmp is not correct. Use the string length of the
-> event_list entries to match the string using strncmp instead.
+In the shortlog, drop word "guard". This should also mention ACPI as the 
+legacy probe is not affected.
 
-Please include () after any function name (don't forget those in the 
-shortlog).
+> When async probing is used, 2 hsmp_acpi_probe() calls can race and
+> make a mess of things.
 
-> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthomspson@nvidia.com>
+Too vague wording.
+
+> So, add guard mutex to synchronize them.
+>
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 > ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/amd/hsmp/acpi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 900069eb186e..366c0cba447f 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -1215,7 +1215,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
->  		return -EINVAL;
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index 2f1faa82d13e..ab2b65f16d1d 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -15,11 +15,13 @@
+>  #include <linux/array_size.h>
+>  #include <linux/bits.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/device.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/ioport.h>
+>  #include <linux/kstrtox.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/uuid.h>
+> @@ -44,6 +46,8 @@ struct hsmp_sys_attr {
+>  	u32 msg_id;
+>  };
 >  
->  	for (i = 0; i < size; ++i) {
-> -		if (!strcmp(evt, events[i].evt_name))
-> +		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
-
-So if there's extra garbage behind the input, it will also match 
-spuriously? So store the len and reduce it if there's a trailing newline 
-to make it more robust?
-
->  			return events[i].evt_num;
->  	}
+> +static DEFINE_MUTEX(hsmp_lock);
+> +
+>  static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+>  			      u32 *value, bool write)
+>  {
+> @@ -585,6 +589,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+>  	if (!hsmp_pdev)
+>  		return -ENOMEM;
 >  
-> 
+> +	guard(mutex)(&hsmp_lock);
+> +
+>  	if (!hsmp_pdev->is_probed) {
+>  		hsmp_pdev->num_sockets = amd_num_nodes();
+>  		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
+
+So is it just the ->sock alloc and misc dev registration that require
+protection? (The latter doesn't even seem to require that if a local 
+variable carries that information over.)
 
 -- 
  i.
