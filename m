@@ -1,84 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4A426E16F;
-	Wed, 25 Jun 2025 21:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF08335C7;
+	Thu, 26 Jun 2025 01:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888786; cv=none; b=TtYtK0uAnH34+Yo14t0ymuFp3TDqpLmtCsA0SFDGbPtTnYeWpBBLqMnrZ5XYzjEqbzGIlvzOmW1PJqBCqqWASisESa7/TL+Nb4k7unvJ6d6X9roMFNuibibuTM1N1+GC64m1sHYgzrasvvE/oixmAuQXCftAlRuyLuWX/GXgE1k=
+	t=1750900699; cv=none; b=fw64aV5yFIZCyl+YQELGuEg1vvj2Q2Rv8E1IGSNKaUunEQbtCvVv+Egc7IpfzRYCq14IaJII9h2oymraQDEYOtkd/+EneZEpsZZPJvEStj3vAeo4BDi9QW4JwZC2sEcnrJZpUmGEaZzPLNVFEfApERNly0Op7B6T6pJ5dNUr4lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888786; c=relaxed/simple;
-	bh=Dkppk9JvwG05l4vSydLpv8YsMxwQ7r1LZhfBvWErRdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVTjfIiUFUlK0+nWa5LcqTIoE/x7yA6jFvI7Pozo4RMNDstgYgdhuG6ZlI4E6xH5+mQ167gaTyr3w4HZ/pNdCiK3ASzQoRV0o5pWsusHrRTiUXOb7X93xYuVsWb8SNAXPN5PfOFA97vgLvWVS6q9uwVPDaFow2WEbqNYCjI7g5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVEL78pw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750900699; c=relaxed/simple;
+	bh=txBj50oC3ARrwVlgFC3zuz3alQWcd/MUPASflpIkFCY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RHpGj1yhdig3nGP6gA+TKjeYxnTepfcVhhOZ5nx58lQdwUhXBgWsqpxKYNRe9FTXS3/yoeqBrC+aiyzT8oueZzSiaXUzEOvUOuxisf02ENzNxfUJIZ/LMcT5z6zFdH5324SsR3QeoKiv2fGYzKlnCzpIVIpSolyWq2GYBQesXsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTFvMnn6; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVEL78pw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A65C4CEEA;
-	Wed, 25 Jun 2025 21:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750888785;
-	bh=Dkppk9JvwG05l4vSydLpv8YsMxwQ7r1LZhfBvWErRdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nVEL78pwDAsnnPUEgVv3DyIkKJZyqe/I4BJbaG0TaP7+8Rq55PhuGE69CjfCLHj33
-	 XjSwp6sUs8Kmqr6RxUrEopTn5ahzz0jtiUKDvnHE6QNEocjjUK/uOC1tQTEWoF89R+
-	 uX0TOflnBjmI205Ua7rXCHsL07D8KusqFe61HYXYQ8Hl/szepi80i+BamMom2+ViGO
-	 ISL8oaKlJ+6gb/MKXjzl4UKaLR2JX4QQdOxY0pcyNFiWxoXTaDJBtzWm5djw09E4uf
-	 AqKNnYz1McHyg8GknlCRH35pXsEC/qAt3qxwlqDiMPHvXMf78kHaPFcGJO69LKh8gH
-	 aEVecld0235KA==
-Date: Wed, 25 Jun 2025 23:59:41 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Mario Limonciello <superm1@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Jean Delvare <jdelvare@suse.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
-	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Move FCH header to a location accessible by all archs
-Message-ID: <zkbd5qdfj3xrjh7l6sviqzsu6foyxpwsko47czrpet55kgqzfv@aw3igwk34irc>
-References: <20250610205817.3912944-1-superm1@kernel.org>
- <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTFvMnn6"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2363616a1a6so4880855ad.3;
+        Wed, 25 Jun 2025 18:18:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750900698; x=1751505498; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BQxmQ3ZNFaMMJU+w7tK5QVT1MOPim9tRaV1Wj7cYjcw=;
+        b=JTFvMnn6R3MiPG4WqXAizUkjU6w5PM7n9QyFv1r7I+E8JpTc5uvbXROUDxFCbwAFvg
+         +VTZarFnBO9mE7OWcgKUvYWcUibvXfw+IlLabOPVs4KxQ3wBFCg0mgOjUyQ9yrl1FP6x
+         ToNgemaPy1GXkjJritatfmWj9J4/pDq8nDadhNRJX1SSPGue7HRON1TZX6akae7Aegqf
+         lUJaZCme5hs+SCFveSTztUc9uOeTd8sbX80TBaz6vBvWSG3s4E/BefhHdauvWh/gp5Xb
+         3cAzjkgpvTHU204Bhoku4yFzMUMuFKEQbQ63Z3vM6+HnZMMcPoWcHjizoLxa1HLseeH+
+         678g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750900698; x=1751505498;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BQxmQ3ZNFaMMJU+w7tK5QVT1MOPim9tRaV1Wj7cYjcw=;
+        b=viuvpisvi5XAg4JVkUCpOKcejmVKWgCtHnxK/OIwN+md9F/XiPMCVoDX9dI/PCWXEh
+         JiEfQ63JjrX/Om16UGR0ko6BYBRduT4X8NnSocSQJ9431gdkAPH3V0DH8C/gXqFKlVp7
+         di+5ecowjud/Ao9cGfETV9MhOa4yE5oleaiCk/aRiJqIq97GP8aAzA7FMjD6cPrHrEin
+         v1couRKqfW/4iVbOvX1Y6keM004hxg1rZClTowT3HcS3qb16v1+GpgEkaPoLvpeo7Rx+
+         nmT/xiCrGD3/wxDHboH730EfCiBs6ThHAArH5ahQY/y/hbJ2nppyOs9S2HvT2ATrXUba
+         50EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEYCaHUxovW7vPaMVkDlCgsFY67Dsi9AQtyQpfUU0S8pf7NwBeAAod5X22byISYTc5Gg2Cpn1QhFlJvlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy504lnjw+pfTJMwk4J9GdywxSlWR2tn7ceQvjV4mVY5RB3W8Vc
+	YANnX0pTTjYO3PvuBd8B8PXPtSG5FFd3DP0p9/fgqy86sPbQfWXezeih
+X-Gm-Gg: ASbGncvqoEvoBN1ft5ohpeTdPvIgGkaPaOdoCphHOoepKMq7lU7C/V3wiLmxnNGK8wz
+	nsu+4rotOvkAXlSW3ufzBhIz8kwGRqJnmPwwPY3a2KAhGONma+yN5FQ4qU/VS17OSMf8DzjqOcR
+	o6GLGpplBce9p4avfkhnlCfdHwriUQW9wi86d21M+dopkTzrI2enGESzPIILp4xRIRZa3rR5VHd
+	rUECcZJUvStIuzxjTRbbruJU0S0CqA8t0hm07rLM5zg2JKOBeBPu4NQjRySKHG86K5nfhZyr1Bo
+	xB/g2f0aCROn+EUZPbmA7PMQqrCnCaUp9GV6OQkkM8zD6Rho16K+xAfTsWOc2Q==
+X-Google-Smtp-Source: AGHT+IGAvc9GeOOyZ4HqGfagih45BN8YxRtFSW/5A8FhV+TzIq5Nbed3TQmM204w0VYn8CTDvt5PvQ==
+X-Received: by 2002:a17:903:3acb:b0:235:e942:cb9e with SMTP id d9443c01a7336-23823f95760mr74499485ad.9.1750900697694;
+        Wed, 25 Jun 2025 18:18:17 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d871f10fsm142710025ad.233.2025.06.25.18.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 18:18:17 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/3] platform/x86: Fix fiwmare_attributes_class device
+ unregistration
+Date: Wed, 25 Jun 2025 22:17:34 -0300
+Message-Id: <20250625-dest-fix-v1-0-3a0f342312bb@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK6fXGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyNT3ZTU4hLdtMwK3STLlFRTIxNjE4MkIyWg8oKiVKAw2Kjo2NpaANU
+ 6VbBaAAAA
+X-Change-ID: 20250625-dest-fix-b9de524340b2
+To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Divya Bharathi <divya.bharathi@dell.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=868; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=txBj50oC3ARrwVlgFC3zuz3alQWcd/MUPASflpIkFCY=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBkx84/sXnO4sCzBQrE14/3kbbfCFmaoH/r1okSGdeLK3
+ Xn2ao+WdJSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBEeo8z/JULWnzgFA/r7WUV
+ POun8UkbzsnW+1Nq5TzRes9iE7PUwgCG//X//CUeXjv640WP8Yr3k474T+F/Y/pgjuTmtMQaww3
+ BjYwA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Hi,
+Hi all,
 
-On Thu, Jun 12, 2025 at 10:36:31AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 10-Jun-25 10:58 PM, Mario Limonciello wrote:
-> > From: Mario Limonciello <mario.limonciello@amd.com>
-> > 
-> > A new header fch.h was created to store registers used by different AMD
-> > drivers.  This header was included by i2c-piix4 in
-> > commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
-> > definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
-> > archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
-> > ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
-> > This was not a good decision because loongarch and mips both actually
-> > support i2c-piix4 and set it enabled in the defconfig.
-> > 
-> > Move the header to a location accessible by all architectures.
-> > 
-> > Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
-> > Suggested-by: Hans de Goede <hansg@kernel.org>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Thanks, patch looks good to me:
-> 
-> Reviewed-by: Hans de Goede <hansg@kernel.org>
+Using device_destroy() for unregistering firmware_attributes_class
+devices may cause issues if there is more than one device under this
+class. See details in the commit message.
 
-I don't see this series in yet. I thought you were taking it,
-shall I take it through i2c?
+This patchset fixes this problem for all users.
 
-Andi
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Kurt Borja (3):
+      platform/x86: hp-bioscfg: Fix class device unregistration
+      platform/x86: think-lmi: Fix class device unregistration
+      platform/x86: dell-wmi-sysman: Fix class device unregistration
+
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 4 ++--
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       | 4 ++--
+ drivers/platform/x86/lenovo/think-lmi.c            | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+---
+base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+change-id: 20250625-dest-fix-b9de524340b2
+-- 
+ ~ Kurt
+
