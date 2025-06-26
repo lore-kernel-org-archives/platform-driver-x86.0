@@ -1,78 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10061C1741
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jun 2025 17:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C3528D8FE
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jun 2025 18:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750957493; cv=none; b=Zu3Q68rPOaACls/9uOwted3W1aCsOPUuhHh/A96hurcTE2Nb3fr/TFmqyXs6BUs23fiArhZrNM4ZfeWlWSIslJduUr5cOLjjxMi2k75rnXXtTe2cGDjWHqNZl12DvoTeNhmYJ594RZpDikBtebbbUUlxi6/m75UGtVvx5b7B0Sk=
+	t=1750964004; cv=none; b=fOb0i72zq7IcWF+el2LHgdO+vIi4JDHjbyDDjp/CcubIhMbbN9Y2fBRkmhavOBz3ZQYJ/gHzUQA36kZ0fMCeVbgtE0+iwkKqzlO2x01UQagH07aOWPayEkzip1RNNK85oP1zXx/nu11etcSm8nRpZRJ5ILAyINpIdcCk5dc4m/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750957493; c=relaxed/simple;
-	bh=p/Cpl1tqqYQHjO9CbFtzqezL4JI722OEEd4kHHR14vA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=myKNBi6Nn/4dDbtQuHFlLFnvxLnaqD4stwAsFBJxUgqeIaHhsEWrypAm3mC73S7tmQfhmsMPB+WJdv/f+hRiS+9XwAljvtQl85/hZVpuzHsHoX7KB0WTCsrs9WAAnMUlrL4yX/9mp1gNwnvLvNlDyIGYH9utPGeqepG50FqSUQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPbQuVf6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750964004; c=relaxed/simple;
+	bh=Fq1uU6DDl50BFP0hn2MPafwdD3nkK14eQfM8u70/uvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YRgE9wXRhH/btbUTpeYkuJjVP89yNteK2E9R8TmqKRCAR2zQUDa9/ACOZXTq2rTG2w70Ys1brJutNoHT++JjbtD2CoYlaX0eSPn91Bzt9JNLRaZLCmTtYLWR2VVSu7Y8CSEem8JxhRs/OZEuQRNQpwZWafueKfcMXslUBCkGKCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkCC4rwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPbQuVf6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EEFEC4CEED
-	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jun 2025 17:04:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkCC4rwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65364C4CEEB;
+	Thu, 26 Jun 2025 18:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750957493;
-	bh=p/Cpl1tqqYQHjO9CbFtzqezL4JI722OEEd4kHHR14vA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=nPbQuVf6ORATzc3h1U5B7QoMQWERHdew45j/MxBxZgJxkbAtqzRh6UGEQEhxLwXAY
-	 6eIrlsSAKhkrl8WWivE0ZPXTzeE9me+/2WD5thikqNfY8PDjW5zlnKQ1vF80UE/+d6
-	 fkIM6bDPyDH4QEalV2V8EXwC9VrTnCepo9K0BYPFdjpfkB2jpJKrDWJZNGqkfDaRcB
-	 AGJgkG2Gj/l+APyaWi+kt7/A+yYtCxmAjaeFzt2RCfG0zcJ3GYXH2SQf5/qJ4zAeyM
-	 iv0Zh/j/NiIA+hLM4KZNJAVqrpq+U4eTL1T7xpsJgQFz1KxBDgsLeLn5nRPTAFgLJa
-	 dyi2ELtMlmOiQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4BAE4C433E1; Thu, 26 Jun 2025 17:04:53 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220246] Dell Latitude 5400: Mic Mute key stopped to work in
- v6.15
-Date: Thu, 26 Jun 2025 17:04:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220246-215701-c9gaqBtQMW@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220246-215701@https.bugzilla.kernel.org/>
-References: <bug-220246-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1750964003;
+	bh=Fq1uU6DDl50BFP0hn2MPafwdD3nkK14eQfM8u70/uvQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lkCC4rwow6mUDhVrTTH35jnN5wIsagtHR2pZqbNlr6xmuWtlf6NhrS9V9fs5jjbtn
+	 iU+3YvgOupqF0LCOHrueUcPdJOg7ZZicdJhN43VVP+DzoEqlGIQ6MIos5NhUtiUALd
+	 6K4wgOCykktYMUDTldMhFKfJ/SibVGZILgVMn/i1P9BhrRfrKqQcb85tq9tW/fAXB9
+	 ieJFNYOYFW8HfUmnGRlHBYoEt9v6aS7EEx3PXZUGD/k/EYR6wNAuTsndkPRWRnR8a2
+	 21U39VHwvS3OrVZ1VanWcgBhwy4jkZMqyAxp4YXTQ+AUbx/P97/wBTV5/bD/XtS41M
+	 4+Oi/RLiHnlWw==
+Message-ID: <4fc05197-688a-454f-aadb-7a297db7a594@kernel.org>
+Date: Thu, 26 Jun 2025 20:53:20 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/hsmp: Use guard mutex to synchronize
+ probe
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Suma Hegde <suma.hegde@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+References: <20250625100216.1462594-1-suma.hegde@amd.com>
+ <ada3eca0-4c86-c3ee-816c-a3635b4ad110@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <ada3eca0-4c86-c3ee-816c-a3635b4ad110@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
+Hi,
 
---- Comment #22 from Armin Wolf (W_Armin@gmx.de) ---
-The patch has been accepted upstream and should appear in the stable kernel=
-s in
-a short time.
+On 26-Jun-25 18:31, Ilpo Järvinen wrote:
+> On Wed, 25 Jun 2025, Suma Hegde wrote:
+> 
+> In the shortlog, drop word "guard". This should also mention ACPI as the 
+> legacy probe is not affected.
+> 
+>> When async probing is used, 2 hsmp_acpi_probe() calls can race and
+>> make a mess of things.
+> 
+> Too vague wording.
+> 
+>> So, add guard mutex to synchronize them.
+>>
+>> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/hsmp/acpi.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+>> index 2f1faa82d13e..ab2b65f16d1d 100644
+>> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+>> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+>> @@ -15,11 +15,13 @@
+>>  #include <linux/array_size.h>
+>>  #include <linux/bits.h>
+>>  #include <linux/bitfield.h>
+>> +#include <linux/cleanup.h>
+>>  #include <linux/device.h>
+>>  #include <linux/dev_printk.h>
+>>  #include <linux/ioport.h>
+>>  #include <linux/kstrtox.h>
+>>  #include <linux/module.h>
+>> +#include <linux/mutex.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/sysfs.h>
+>>  #include <linux/uuid.h>
+>> @@ -44,6 +46,8 @@ struct hsmp_sys_attr {
+>>  	u32 msg_id;
+>>  };
+>>  
+>> +static DEFINE_MUTEX(hsmp_lock);
+>> +
+>>  static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+>>  			      u32 *value, bool write)
+>>  {
+>> @@ -585,6 +589,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+>>  	if (!hsmp_pdev)
+>>  		return -ENOMEM;
+>>  
+>> +	guard(mutex)(&hsmp_lock);
+>> +
+>>  	if (!hsmp_pdev->is_probed) {
+>>  		hsmp_pdev->num_sockets = amd_num_nodes();
+>>  		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
+> 
+> So is it just the ->sock alloc and misc dev registration that require
+> protection? (The latter doesn't even seem to require that if a local 
+> variable carries that information over.)
 
-You might now eant to close this bug report.
+Another review note:
 
---=20
-You may reply to this email to add a comment.
+hsmp_pdev->is_probed is also used in remove() so that needs a guard(mutex)(&hsmp_lock); too.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Regards,
+
+Hans
+
