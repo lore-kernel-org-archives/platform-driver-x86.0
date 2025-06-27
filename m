@@ -1,206 +1,101 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ED325DAFF;
-	Fri, 27 Jun 2025 21:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425C2BCFB
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jun 2025 21:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751059766; cv=none; b=dP8VmYUoGIII/WRsbeTHPkMeOrYRttO7dm2qoxURQkcOr9FXX6Hq0bvZEOUtoMbMsJhhCh05nRkVkUW+U8E95TVVCfZO7aWnpbmv6GfZJxfNCSIHDeAfccINixewChC+370TcpxsHamhfNvubyPhdXskAHuL1A6fGIOePaPRGH4=
+	t=1751061376; cv=none; b=jYWgXf1OEQhk5TtFiML11o3OtYgLQnwepuV/yoD3iamGFoYXsGfutrhByLzpyr8Zeq8SKLkMdfWFlaYEsDpIjyPjQj9a7AM4Q3aZswqh1sq4yMQugza7WTO1lCCGEU68NsxhQ1YHBmybtu2ZKh1ujUiHA7okwPdSA+2n6FE13nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751059766; c=relaxed/simple;
-	bh=N97nvFwtdl90865mk771PfQ/KF4VVJLYZIN6Cs6jKAE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=P2VnPGg7Abpc5UIuoYZgzoiVEilsbIIqtIJDQkzCfriCgUJSF3ErdJJMh/V7VDj8vfbI1tQ7NCYoQ8dri5qHGBJih1GOc3hvcjzjQcmL9904XfIu+PnquY/AXm3zrD7gklgxYlioGuvd2v8NeaxaS1kR59H0oBJYsoElVJ+e0hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsriAmDK; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsriAmDK"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313154270bbso31136a91.2;
-        Fri, 27 Jun 2025 14:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751059764; x=1751664564; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
-        b=PsriAmDKicaNAwsitlrW5PSoDbGr8BXzK2oIn/ihKklGoX457xEB0pxINIuip8oqGv
-         4U8jjolSY1AQswqu7upbJ9l8El4qFCgPbpdGFCzu+0Mat5kaZ2iY6P+dMe5xqD7gE7Xs
-         uUOW1b95wL5rG2BLO6CDJCBf4ztihic+6fAM++/AW3u0aiuwZFU6otqnUm3R8CQVHzvS
-         wznrIMTlk/ThsaUixIEE5LhpxPO1oCmWpqvNwB8XIgDnnbBTX7hwsolzP2u7pujoe55p
-         pTHSimNj9yDYcC7/hu4FJF38RNUn+ITUq8RkKYYx0Ym1pOom2CFz1Oj8G6NpQTk8WmGr
-         xYGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751059764; x=1751664564;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzJSDyiIELqDj/d+NVM8mR/dEA9dW0Mg1tiXeZEkSJs=;
-        b=FlBNo8A0j3TbOLS9eE2HJuyiwM3XuBRu6ALNlRW5i9o0s9XPVgIw1aRGa4A0IKmhhO
-         JpJ9iNEvs09Iv81C+FgILwMFP1KS0RgkSnWB4SVDh795ymjxGLZzZxq2BZ9ibuxi0f4C
-         dCjzF8sCBPmVw88kVwI3avwRbqu2kyt4mD3YnuoFYsjyHYgGfvty5mk54LLMvZg++jkR
-         TydWDCu3AMFoaKfsqr3qW/a8n4Uyy0OsfZI74kjoucUx1c5m2acDmgQyIW6ucf+Lr+iX
-         ZZl+IxLdX9FuuBBykgCBEPsgBSRbyu5Opz4ZjRuD0/jp3yd8O97fFRHNOBu03pp4ARaB
-         ZBSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyNczGdUQwrFVik6EINd/GM9YUxlagPNefsHIjByf3VFg9G0XArrXYeOxGD/jC3Cig7/sOLWh/h8PXni7CiQuIj4kIQg==@vger.kernel.org, AJvYcCXz3WEU4vQdMOICo+DG1Ixcx7kHTYvvYlQAgNvbW2w0dnVcr73ZomaRsUmDBVVYNqq2bcibe2vOUB+ddso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWlilEKihnOW8eDtIN4jeeQD07CaaiSxI59rDahRwGTgM553f
-	wjPDbkEBFgIo2Iph0dDFnyg5bQh+OD8ACfkve2YBgtsRwHX+vv1UX6/P
-X-Gm-Gg: ASbGncueWcmuIABi/ubnehr7LYQFHAj74d0M6gucJxAJvtWC3M8nO/YA4xvDHnA4Y2Z
-	BQwI/Jdgc/YEUskwmTE5B1iuSHosHwRynDb9PCFX4iSPrNDfnsD0heuRbwHIuUw8D6bTc9AdX2V
-	JLh7JkEl5LC97BRaHcj7eiD4/I/QrQMFHej3IXFBYVl1Ps0oh7wKNRJ691ssT/trLjb30p6j+rD
-	7cbCDPocS7h662SBdqYskA2CKbY11387G3+Snet9/OartX2mdhRkdJn4gl9syIstpwlqMmZpmyU
-	4wzJRI2RY615a6qI0LP1gBSjFJDwncCsdzOtLHgzlRzDNMfG8hgSi60=
-X-Google-Smtp-Source: AGHT+IFf3HpHm+vMMOuNPlSgz7AefKhyzkVVTh0a7NTYXytjvSZGJ7HwbUbw1GuEXetgUUo5Qgz6Sg==
-X-Received: by 2002:a17:90a:d603:b0:313:db0b:75e4 with SMTP id 98e67ed59e1d1-318c9288263mr7791368a91.33.1751059764387;
-        Fri, 27 Jun 2025 14:29:24 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c150d959sm3108624a91.38.2025.06.27.14.29.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 14:29:23 -0700 (PDT)
+	s=arc-20240116; t=1751061376; c=relaxed/simple;
+	bh=51oqGs1SiNokUEcwH6oPT8/D4gUY5tYN0DUVhVQQI8o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Errbvh6giFUcvHXlh2IMGT+OfJYu/smek4QvHxR55NQXLMUZode4OU+gYgpFsS1TUYa1B8eKQsc9DwJs6p7NV3eW268KS/lCRC88k1pl7tGL9+Kq0zyW+4I2vkoFnvU3BuqN+B5EpukFUcMiXyWMIgRxq68aofr0Vj9K0OHe2oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=109.224.244.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
+Date: Fri, 27 Jun 2025 21:56:04 +0000
+To: Kurt Borja <kuurtb@gmail.com>
+From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Cc: Armin Wolf <W_Armin@gmx.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+Message-ID: <ilIo-AIjpnkWmahXpgmQeK_6mFWl5s7x7jf0qSdGlpHSGMK1KJDdFjKLQ3t--U-cEUKtpx7s49njQx1I_nU100aE_ca4frY50L4miN8LCks=@benis.se>
+In-Reply-To: <jCZyBwYNgVSM_Qk2XkfweZRlZNiSh06WVUBqya9leWoWXAmNFL9fdbgBX038OzfQUEaGE5PU8yhtJL2zq_PRW67FmLYTnoK_SPUPmzoTdco=@benis.se>
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de> <5I8UDmgF_DcJBmBE0zgCXjuvmmhLamDCHkpnkAwRjSAkCa5xcFUvU-SmAeymxTajjDPR8avuW55RxOjhd8idK6jLy-hz8i-Ma3RHSaFy2Gs=@benis.se> <9642ad7e-3e57-45f9-bfd9-beac3e55418e@gmx.de> <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se> <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de> <X-40AqXfdmQw5shUOk3VSaHSXmwJYWHPmDDMLyGUH6GpMt56ty5SbNg8EVfyI_uC9J07uqZ2TtGJmmpB_x8-xpcVOw29fnKzJZ4n9L0x78A=@benis.se> <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de> <DAXK1634VYQI.1PEUCTQIYAF3Y@gmail.com> <jCZyBwYNgVSM_Qk2XkfweZRlZNiSh06WVUBqya9leWoWXAmNFL9fdbgBX038OzfQUEaGE5PU8yhtJL2zq_PRW67FmLYTnoK_SPUPmzoTdco=@benis.se>
+Feedback-ID: 18592338:user:proton
+X-Pm-Message-ID: 127d65eaf45a725634246f1e1c58f196faf03748
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 27 Jun 2025 18:29:19 -0300
-Message-Id: <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
-Cc: <mpearson-lenovo@squebb.ca>, <hdegoede@redhat.com>,
- <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
- features gracefully
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, <xy-jackie@139.com>,
- <alireza.bestboyy@gmail.com>, <atescula@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250627195436.3877-1-W_Armin@gmx.de>
- <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
- <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
-In-Reply-To: <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
-
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
-> Am 27.06.25 um 22:38 schrieb Kurt Borja:
->
->> Hi Armin,
->>
->> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
->>> Not all devices support audio mute and microphone mute LEDs, so the
->>> explicitly checks for hardware support while probing. However missing
->>> hardware features are treated as errors, causing the driver so fail
->>> probing on devices that do not support both LEDs.
->>>
->>> Fix this by simply ignoring hardware features that are not present.
->>> This way the driver will properly load on devices not supporting both
->>> LEDs and will stop throwing error messages on devices with no LEDS
->>> at all.
->> This patch makes me wonder what is the policy around issues like this.
->> In fact I've submitted and changes that do the exact opposite :p
->> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
->> detecting feature support")
->>
->> IMO missing features should be treated as errors. i.e. The probe should
->> fail.
->
-> IMHO the probe should only fail if some features are deemed essential, li=
-ke
-> required ACPI methods. Optional features like in this case LEDs should be
-> handled by the driver in a graceful manner if possible.
->
->>
->> Quoting documentation [1]:
->>
->> 	If a match is found, the device=E2=80=99s driver field is set to the
->> 	driver and the driver=E2=80=99s probe callback is called. This gives th=
-e
->> 	driver a chance to verify that it really does support the
->> 	hardware, and that it=E2=80=99s in a working state.
->>
->> And again [2]:
->>
->> 	This callback holds the driver-specific logic to bind the driver
->> 	to a given device. That includes verifying that the device is
->> 	present, that it=E2=80=99s a version the driver can handle, that driver
->> 	data structures can be allocated and initialized, and that any
->> 	hardware can be initialized.
->>
->> Both of these makes me wonder if such a "fail" or error message should
->> be fixed in the first place. In this case the probe correctly checks for
->> device support and fails if it's not found, which is suggested to be the
->> correct behavior.
->
-> The driver should only fail probing if it cannot handle some missing feat=
-ures.
-> In this case however both features (audio mute LED and mic mute LED) are =
-completely
-> optional and the driver should not fail to load just because one of them =
-is absent.
+One more thing: I noticed this during boot (before entering password for di=
+sk encryption)
+https://drive.benis.se/s/5wMkEMKs6SELQzt
 
-I agree, both are individually optional, but at least one should be
-required.
-
->
-> Just think about machines supporting only a single LED (audio or mic mute=
-). Currently
-> the driver would fail to load on such devices leaving the users with noth=
-ing.
-
-That's very true.
-
-But I do still think if both fail the probe should still fail. Maybe
-there is a way to accomplish this?
-
-I'm thinking of something like
-
-if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
-    lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
-    return -ENODEV;
-
-What do you think?
-
->
->>
->> BTW this also leaks `wpriv`, which would remain allocated for no reason.
->
-> wpriv will be freed using devres, so no memory leak here. However i admit=
- that there is
-> some room for optimizations, however i leave this to the maintainer of th=
-e driver in
-> question.
-
-Leak was a bit of an overstatement :) But if both features are missing
-it would be kinda leaked, in practice.
-
->
-> Thanks,
-> Armin Wolf
->
->>
->>
->> [1] https://docs.kernel.org/driver-api/driver-model/binding.html
->> [2] https://docs.kernel.org/driver-api/driver-model/driver.html
->>
+Thermal trip point bug and other stuff, might be something?
 
 
---=20
- ~ Kurt
+
+Best regards,
+Benjamin Hasselgren-Hall=C3=A9n
 
 
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f
-Content-Type: application/pgp-signature; name="signature.asc"
+On Friday, 27 June 2025 at 22:49, Benjamin Hasselgren-Hall=C3=A9n <benjamin=
+@benis.se> wrote:
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaF8NMwAKCRAWYEM49J/U
-Zq/MAP43RcMOug9PHqtyPp8hxLwpmiw1OL2C+HeGNdgROp7aLwD+IMFNPVSATQBt
-ypCbYADZoqn9p6xC69w7/74Y88YqJgw=
-=4GiE
------END PGP SIGNATURE-----
-
---f9fa37f2e671fa9a6c56202a7260752149da78fe6b978ac304144ee9d19f--
+> Hi Kurt,
+>=20
+> I do not experience the same error messages as in the bug report - no err=
+or message at all. It respons to changing power profile without any errors.
+> I also tried 6.12 but same behaviour as 6.15.3 (just getting some gpu gli=
+tches - problably because of Lunar Lake).
+>=20
+> I am trying to understand how power profiles work - I guess on a high lev=
+el it's controlled by uefi and the profile is set by the OS? Or is it more =
+complicated than that?
+>=20
+>=20
+>=20
+> Best regards,
+> Benjamin Hasselgren-Hall=C3=A9n
+>=20
+>=20
+>=20
+>=20
+> On Friday, 27 June 2025 at 21:15, Kurt Borja kuurtb@gmail.com wrote:
+>=20
+> > Hi all,
+> >=20
+> > On Fri Jun 27, 2025 at 2:10 PM -03, Armin Wolf wrote:
+> >=20
+> > > Am 26.06.25 um 15:20 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+> > >=20
+> > > > Hi again,
+> > > >=20
+> > > > dmesg: https://drive.benis.se/s/2crz7zPzkrzaqXN
+> > >=20
+> > > The following message intrigues me:
+> > >=20
+> > > platform_profile: Failed to get profile for handler hp-wmi
+> >=20
+> > This might be a regression.
+> >=20
+> > This was reported a couple months ago and I completely forgot until I
+> > saw this thread. See [1].
+> >=20
+> > @Benjamin: Can you please check if your power profiles work on Linux
+> > v6.12 (LTS)?
+> >=20
+> > Also try:
+> >=20
+> > $ cat /sys/firmware/acpi/platform_profile
+> >=20
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D220008
+> >=20
+> > --
+> > ~ Kurt
