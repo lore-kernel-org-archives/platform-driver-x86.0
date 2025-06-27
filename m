@@ -1,158 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57459EAD0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jun 2025 05:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0322F1FE2;
+	Fri, 27 Jun 2025 05:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751001063; cv=none; b=dH8IgC82lFe5rNt8sdir0fDrnskrrb1CNmhYqf2AU/A//ObZjPEv6g8ZwhEsyiBpixBZLlv3dMBFpMMMmU1zc32OBnXm4ftrq5J5uW7l9mfVcCHDEJloosLKAfUN+G+zwRUhzFIDVDNr/XFH51pnb1MYvpMh7LrJgwh8/o4lcnM=
+	t=1751001270; cv=none; b=tImik74VErPlXFiCMFa6zMlR6ymfd2/xxmql13xhRHqwYsxzlYMQEarnCr7oY523X/ptTMcRJoX3BtercxIAv3ayP7aHGuyF2/l+29pPNJa5k6HaIAG/QHchQbEKvdcSaTZ57SIIfKytXzWVKlAQ+cgCkcMPj5Xnpka+FiTyh9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751001063; c=relaxed/simple;
-	bh=Fn/ML8rIcjrgZntI8WTdff47Qv2VSSttgr7j9+mv09o=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ojx8tclRAoB26EogNZYweO8GOCF5oBFso7qxnx2E/Giim75AU/IVqTsDI+VKa/M6wTmdn6DQ123FNtmf0pHiuHFF5CCEYW6yAfmbSjqCz0tg9FJ334i4889nOBN6lAbsxezr85NlDJA6PdF1PJUOv6OA6ZFVb8WKUJS+lXJ5xkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUE1ldG5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751001270; c=relaxed/simple;
+	bh=o8ZQHp4/hDL23QfIAn8Wt8PvTC8gS76JqKcuZRP/FWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gX9lwNIfxMz06mF2C4p4/BvKC4cMAZrgAvuKsfQ55d7Is03KaPvfHUMrn3ly78das/Tt3cR26S+CFbxyzbo+G3yc0odD2WJ6yfI5kKofOrI4tN2/joqIm5UHNDOCvEAlYzQ0tNPkQk3Y3Xk/83oKFgrEFS4DLfVlf2qLIYeVuH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDezvZ+M; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUE1ldG5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA557C4AF09
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jun 2025 05:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751001062;
-	bh=Fn/ML8rIcjrgZntI8WTdff47Qv2VSSttgr7j9+mv09o=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=tUE1ldG5WhFTxNCDmOzhV84/9cG6Sc4XTdThX33tC7s81REC57KLqYaGZ8FTbYMDz
-	 Sgym16A5n4xC7pNx8+2De1PpE4ouYrNYKFYd6dfUYAAWOP2/s+NdKbsfDOs+mYLOjW
-	 qAgz7jVMXimHM6ZYMF7kcXmSJ6V6Ar3KE+U/BOPKU8WE5uT0v7PO7CaR9OUq2bWhUc
-	 niWWKya0uQq9b73Z+6ULapmzHOWlMjY9+FKoXjS8SnYZFY8TGPrQhrpXVeka4W7LTl
-	 uQRbuhFQMtJMlywJRE9cg/eIAgfvanoUUfvbhJeSWE1hACb9tOOd6ozp0CS7nXiU1O
-	 RoCbc0i4H9ICA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D2F06C41612; Fri, 27 Jun 2025 05:11:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date: Fri, 27 Jun 2025 05:10:59 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: ariel122333444455555666666@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-204807-215701-X5BfZU4njn@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDezvZ+M"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73c17c770a7so2078592b3a.2;
+        Thu, 26 Jun 2025 22:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751001269; x=1751606069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bhc4F3bUMNlVYBI4FrEiquw9o4SRTI6Gsg6n63VV2NE=;
+        b=nDezvZ+MU53VusahGb1HXaZQTmswJItaNOSdH4ZpPgbdzFKE/oAYR7TzH7q9WpovYy
+         vzjNZ1j6prJ0Pi9julfCo+vLwJjBaoDxnUxWQwEm8zSaF5sDSx2/oyujtBXZgjQF2wrH
+         AO2bR0M3fZLq2pINmhgLM2+SJHrTMu1qOsTi7nWc+gwKSwNsd/UFpzwkuTcU0h8byhyy
+         7tQOFGivXQogOzuns3Ig55MuPBxYVK4dJlbkyXpkFOqLjp9Ked1iN+Z7kSqhFSzV5Jt+
+         kqKcpL2inzF2IET51B4CPyEfH0NBeB81mvvMwBq2FGvcpoGg0vaIMdN6M+zFMviwxu/b
+         f5UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751001269; x=1751606069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bhc4F3bUMNlVYBI4FrEiquw9o4SRTI6Gsg6n63VV2NE=;
+        b=nCmF91UvrUTMhMWaLeijSzmwvhX1Njd2l91jCkO4Jk34itjeh1ZhXIWNuEj/a2Sn9f
+         qzbizkW/1LP6ENXAIUCPVNvkKbOa39fc3a7jinHlS3Pvtxpl7UE3a4uI9JFSSrPPN+sV
+         88cNBvnoJwMbNeo+ZhyKw0yvOgHLO7FLS1/1IeBTuGyw4/3LuWsQeYDWPbJIHy/lhL4t
+         le06YwfCjFqW5FMddHA8bfF5pNtrP/Tc5/Ze6leXYl67q2mUjGUFFMqM39/tpQd2efUs
+         thcoHs7XgaBc7HH/jMmleEG/gyX7kaObkyYe7E4PVDMEvfJxWau37bfONnOAkdvGXb2n
+         83gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWsPTmPMvsRQG5lKNIhCaSJR25jjjWU3H5lePgqr7RUGyuVOAGrh6RJaD4oV0GcOemDtqhlFbbrTqoA882@vger.kernel.org, AJvYcCVs9TS2r5pCiPc1HM4rH3eB+RBYlovnYCVlWPcGkVOl31wybRQzi5wOjoEyCQ2NUBa2FPQZHMzbd5T25Q==@vger.kernel.org, AJvYcCXoUT8/z1aYLXpSsTe3mqbscb1WsqWiRZrfbrGGCoMZXHV2Ocif+GbwmJLKYSivo2VAkYnNWKqnZ8t4arZxD21YDCEQVw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YypXmkqyzDrXM0iquCyThmJSv95sWfXQcxwE2+tb+7O4bKp6HH8
+	E/05X74inSXb6YpQO/fAvB0h9QfTjhzNBbTvvMvMfTjum7wx+K7f+81Q
+X-Gm-Gg: ASbGncu62on+inPuhsm2YlOqEJ+zTRMJ0Kqcvo/BUUi+jy3wbULrp32fuBWm1+tn/wv
+	7u3AUTzCNJM1H+kwUkECwbZ7KWylJVgdyhoedAV6MqJRqWvauCQZTME8erT88mUNxa3y8848xgi
+	R5BNdE+zUidlEuy/Tiy8o5qb2aXv15e4iKeIJYgditZZMZ62zSDjVoyDlESN6aGmaVAcMhDNBRd
+	8241ub7VjthGWuAErV3+qQBsaAieksJrRKRkcFF7TpGoGJhSLTOEo4/hkZMtwGT8R3LPeT8Pxpo
+	chLZFR0KkFQa0v7LwEkQA/MViJlee7SeKBaIBFYp1LjGGZQLLfs6nNjXuUoX1Q==
+X-Google-Smtp-Source: AGHT+IFXEsyBMb/CAdGfjgJitTkGAT8Tvs9bfEcnJN13gSVQY2QQe/8p4thG2wM4PAe2ueMPgyt9Pw==
+X-Received: by 2002:a05:6a21:328c:b0:1f5:931d:ca6d with SMTP id adf61e73a8af0-220a113ca68mr2413528637.1.1751001268908;
+        Thu, 26 Jun 2025 22:14:28 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:d0c7:d92:6a17:eb62])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557b3adsm1228434b3a.106.2025.06.26.22.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 22:14:28 -0700 (PDT)
+Date: Thu, 26 Jun 2025 22:14:25 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Vishnu Sankar <vishnuocv@gmail.com>
+Cc: pali@kernel.org, hmh@hmh.eng.br, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
+	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint
+ Doubletap handling
+Message-ID: <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
+References: <20250620004209.28250-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620004209.28250-1-vishnuocv@gmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi Vishnu,
 
-Ariel (ariel122333444455555666666@gmail.com) changed:
+On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
+> Newer ThinkPads have a doubletap feature that needs to be turned
+> ON/OFF via the trackpoint registers.
+> Systems released from 2023 have doubletap disabled by default and
+> need the feature enabling to be useful.
+> 
+> This patch introduces support for exposing and controlling the
+> trackpoint doubletap feature via a sysfs attribute.
+> /sys/devices/platform/thinkpad_acpi/tp_doubletap
+> This can be toggled by an "enable" or a "disable".
+> 
+> With this implemented we can remove the masking of events, and rely on
+> HW control instead, when the feature is disabled.
+> 
+> Note - Early Thinkpads (pre 2015) used the same register for hysteris
+> control, Check the FW IDs to make sure these are not affected.
+> 
+> trackpoint.h is moved to linux/input/.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |ariel122333444455555666666@
-                   |                            |gmail.com
+No, please keep everything private to trackpoint.c and do not involve
+thinkpad_acpi driver. By doing so you are introducing unwanted
+dependencies (for both module loading, driver initialization, and
+operation) and unsafe use of non-owned pointers/dangling pointers, etc.
 
---- Comment #347 from Ariel (ariel122333444455555666666@gmail.com) ---
-Created attachment 308318
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308318&action=3Dedit
-acpidump -b -n DSDT for STRIX X99 GAMING motherboard from ASUS
+Thanks.
 
-The ASUS ROG STRIX X99 GAMING motherboard has an NCT6791D chip, as shown in
-https://rog.asus.com/motherboards/rog-strix/rog-strix-x99-gaming-model/ (see
-this photo
-https://dlcdnimgs.asus.com/websites/global/products/5QleWlDkArjGYpzg/img/fl=
-awless/pic.jpg).
-This chip is correctly detected by the nct6775 module, but the motherboard
-needs to be added to the module in order for it to work without the
-acpi_enforce_resources=3Dlax kernel parameter.
-
-# cat /sys/class/dmi/id/board_name
-STRIX X99 GAMING
-
-# dmesg
-...
-[jue jun 26 21:33:52 2025] nct6775: Found NCT6791D or compatible chip at
-0x2e:0x290
-[jue jun 26 21:33:52 2025] ACPI Warning: SystemIO range
-0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-0x0000000000000290-0x0000000000000299 (\_GPE.HWM) (20240322/utaddress-204)
-[jue jun 26 21:33:52 2025] ACPI: OSL: Resource conflict; ACPI support missi=
-ng
-from driver?
-[jue jun 26 21:33:52 2025] ACPI: OSL: Resource conflict: System may be unst=
-able
-or behave erratically
-
-
-
-# sensors
-nct6791-isa-0290
-Adapter: ISA adapter
-Vcore:                 888.00 mV (min =3D  +0.00 V, max =3D  +1.74 V)
-in1:                     1.01 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-AVCC:                    3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-+3.3V:                   3.36 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in4:                   1000.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALA=
-RM
-in5:                     2.04 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in6:                   376.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-3VSB:                    3.42 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-Vbat:                    3.31 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in9:                     1.05 V  (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in10:                  624.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in11:                  928.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in12:                  368.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in13:                  368.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-in14:                  688.00 mV (min =3D  +0.00 V, max =3D  +0.00 V)  ALARM
-fan1:                     0 RPM  (min =3D    0 RPM)
-fan2:                   479 RPM  (min =3D    0 RPM)
-fan3:                     0 RPM  (min =3D    0 RPM)
-fan4:                     0 RPM  (min =3D    0 RPM)
-fan5:                     0 RPM  (min =3D    0 RPM)
-fan6:                  1942 RPM  (min =3D    0 RPM)
-SYSTIN:                 +33.0=C2=B0C  (high =3D +77.0=C2=B0C, hyst =3D +74.=
-0=C2=B0C)  sensor =3D
-thermistor
-CPUTIN:                 +43.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +75.=
-0=C2=B0C)  sensor =3D
-thermistor
-AUXTIN0:                +73.5=C2=B0C    sensor =3D thermistor
-AUXTIN1:                +48.0=C2=B0C    sensor =3D thermistor
-AUXTIN2:                +30.0=C2=B0C    sensor =3D thermistor
-AUXTIN3:                +43.0=C2=B0C    sensor =3D thermistor
-PECI Agent 0:           +39.0=C2=B0C  (high =3D +77.0=C2=B0C, hyst =3D +74.=
-0=C2=B0C)
-                                 (crit =3D +79.0=C2=B0C)
-PCH_CHIP_CPU_MAX_TEMP:   +0.0=C2=B0C=20=20
-PCH_CHIP_TEMP:           +0.0=C2=B0C=20=20
-PCH_CPU_TEMP:            +0.0=C2=B0C=20=20
-PCH_MCH_TEMP:            +0.0=C2=B0C=20=20
-PCH_DIM0_TEMP:           +0.0=C2=B0C=20=20
-intrusion0:            ALARM
-intrusion1:            OK
-beep_enable:           disabled
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Dmitry
