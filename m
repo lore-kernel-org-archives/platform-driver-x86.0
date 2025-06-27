@@ -1,90 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47532BAF9;
-	Fri, 27 Jun 2025 19:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3031F8724;
+	Fri, 27 Jun 2025 19:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751051290; cv=none; b=HUzAarMm3q5LA204PVD+L8i8w1vEcjtq/MJpzImLbrMarKfdbtn62Q4XEIqP+nK4bckDwIYF/hV2wr3hEu4cFqJbovWImFnv1NhPMT7zolqezyNpgSgfvKr678Nmt84YCsMMQh7fxM2mdrODm6lilTlwhDNBXMUy4dNV6B1dg3A=
+	t=1751051733; cv=none; b=rKuoJxePZ7beQ5eRupHkuag2wCp/S4KlhuzEkvEtTmRn+hNSjMFxHHY/AXOqnfUkY+acqtklF9Om4PA+LDc4a7CJHUU3SGcOIc9Lx/2byWgWJT4sxb2rJRvtCSNlQ6fJ9h/Zup2p+tYBpgXEd7UerJgYawo4PUYzAZy4k7lrTIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751051290; c=relaxed/simple;
-	bh=h2V7n5lcId3Q5D9J9FBwMhLB7N9wwQBDYBQCNpHNKUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGLLBWmfmBz7hV5/h7Frf+ZK9HNGLuUuBn8fma73oa6Wt+B4/7AKV6Md0zIDlVzCrCDvPrR4o9F2VhcUaBdmlzN0F3UeE6JUaAQp0jdwPaXIkjV22jdtQYkkUpBDuQTQWlSQJ+Oppe6iD0R5x88OWNy+ZagFrkChIPF69mZkNFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pe/0J1kh; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751051733; c=relaxed/simple;
+	bh=4jrabYQ0JtI6OuhTCr7VLTvejtfzNWRPfphd7z7CjYs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=VDCWTSURH6OAMFRPRDuNNgGmfVgTZOBj6KCFti1skkhsI0vxsXlcQoVHYIkvVZmdvLsigKtHsUYzB621IwCXxthaF/5Hk04Bua/zubiW53JcqqzPimIV6YatToW2qJNtbLFbGkVxyluS35IQnydbJIkHZKunQsgVRw/ArfmF/6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ed3n96Gv; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pe/0J1kh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751051288; x=1782587288;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h2V7n5lcId3Q5D9J9FBwMhLB7N9wwQBDYBQCNpHNKUY=;
-  b=Pe/0J1khOdln0qBRTGB87NHMnyMHpJbz3MhK2CHrWhaHomfepB95QRqh
-   MmzWeawdJVXGCR4S+mKbJym9uVeGj50DsuLAKlBUTIneoXA3Vsbvaibvp
-   e+5esCENLlD+fYhfEQfNMuIwGNd8J0N3//dQ/tm3mI0YzeXrDu6rw/f+U
-   czS57C+2GSjRFMjiFcQ8l2zjMf38PpMSqN/ANZR6OkOwMSNGaGKg5AxdM
-   7nOLXkW/oUlS24ln8w8zzK9oyeHgwX+XMF7tH0gxW1JBodwP/onFlzrNx
-   IUiuDrGLmirk4avjNqQB1DAIQbQW5XTm2hPKbezncHbGU6DOLK/1hXWzI
-   g==;
-X-CSE-ConnectionGUID: /9jdx+iFRGSxA9iKhMnWHQ==
-X-CSE-MsgGUID: nAP/FOt7TxiRQJTaHA/j7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="70806780"
-X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="70806780"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 12:08:08 -0700
-X-CSE-ConnectionGUID: xiHlSFjZSpCMu6OQRMYUZg==
-X-CSE-MsgGUID: xnkBiDgXTrKpHNSSnyugrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
-   d="scan'208";a="183794875"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO localhost) ([10.124.221.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 12:08:07 -0700
-Date: Fri, 27 Jun 2025 12:08:06 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	srinivas.pandruvada@linux.intel.com, andriy.shevchenko@linux.intel.com, ilpo.jarvinen@linux.intel.com, 
-	xi.pardee@linux.intel.com, hdegoede@redhat.com
-Subject: Re: [PATCH V2 00/15] Intel VSEC/PMT: Introduce Discovery Driver
-Message-ID: <blofpgaq2o3jcy2h4mbpbm2zpnpniroz5agvvqvfs4qf5o2pwm@7spetkpvs7u7>
-References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
- <aFxahfwnntrMFumI@agluck-desk3>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ed3n96Gv"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b321bd36a41so350149a12.2;
+        Fri, 27 Jun 2025 12:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751051731; x=1751656531; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MC33Lr444cQjbDQpogG91dDKBJUHhtcvW36ZB7YX1Y8=;
+        b=ed3n96GvXcwUQ2W9eZuvVbhwpTgg8M5ol8CtCHyOFSaVKo7yga9uAqO50reIF+NLYs
+         pKTQqggdzBYAhuapGSPn596Q56mzuOlJawi48UTAi9Y9q7EBIrwakvAQ5Gv4Vga/uySE
+         MFPvG0SC4oVsTqXB2/oyWc6nE/t+mmUGyBGh70tiuBjcChk7neHTw0xB7qSDpQ08wUy6
+         PKIUzNNC6zUbrYfinjLQE4B+dQvffV7ObFztj7jwFz4W6GE4rRSZVL1ziAgMOthJ8uGo
+         chjKNLvINE9egH0/tHhJwl8GZlhoVDH/8Tv1mUWBxOsbqX0z1Zp7vrCeOzb36ZU1nkeu
+         p36g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751051731; x=1751656531;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MC33Lr444cQjbDQpogG91dDKBJUHhtcvW36ZB7YX1Y8=;
+        b=aE9lYnPRRuF0RlytBAeXf+NU1CinkPhnJVK7rnRKTE9tPg/74eDpQtY1I50bXC5V1E
+         fTYQxLfdydDtU4vpPGgd7YU3klmlyzSRqAcrsFBfC/jtmoDcelA8rGYd5snyXPxzRb2c
+         mKma5B/Ac89QzZfOuft7wdz0xz/c+MOADQk2qk9TbIcHc3Sj0dUIX4GpWK4wZkLp63Xe
+         hmmvwX+nz4hSmOUq8A08EQHbqL7mBMr6/0iuNhQySfWej4Ht/1Exm0GcprbI3v4wIkof
+         09QfBE49Bz/ZOulQ49AKEjOX+dfMc02khWZd/PRMqcXJsST9WmXe1mtqhgRHjYwQIRty
+         6V8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVmQUizcrQGbI0uWoqKUfZImqiRu1YkEW79NUDsNKRED/z5aSPs6XO8cjdYpYWyUkpXI5p0UfWhOg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUPrtVYAcUysfXwtKD/+6k5UATl41BQgMwpa93fdM3FqpvEsVO
+	LEdaViqVY9JEXo+DkggZPWTktl2rBmiZ2pT8xs9zMctX/vomfGuiUnbS
+X-Gm-Gg: ASbGncvImzK3qIuq4bUB7WPwyiBHscr3B0Y35SqjM7/sMu524DTAnFCwWCK8pg4lS7c
+	QsOyszEXiSh/4VthoLJo/hxlPhSns0IZPbtCzKvRZvScwUzV9epYkwlsDg0jXkWYxVi8QnZD81o
+	K5iMx57+fRMLGcdbjSeqxGTdeHkoLxO7a403+SPWBGbaAqVqwuCQZi4ig4ewba/XJ012Nr0HvW/
+	QL06mvpYYAyDKkV60qFjC4a+n4THdneWofp3ectvdLQRxvoi4IKrgwrRpghB8Z/Q/sBdNwWIci5
+	7lQYfw1piMGsxJZoodltrKQ3KpfDSiDgI9vTRWC8nudFlO1cvvF5ygM=
+X-Google-Smtp-Source: AGHT+IHcuG/PKrysKfVFrUFi9VUefuigkudHVP3viNjydqJL6P0UaWxAMZQHOs8+lKRCAE9NOXqMXA==
+X-Received: by 2002:a17:903:2ece:b0:235:f70:fd44 with SMTP id d9443c01a7336-23ac45ce9d3mr68539455ad.21.1751051730662;
+        Fri, 27 Jun 2025 12:15:30 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39b97dsm23407155ad.121.2025.06.27.12.15.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 12:15:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aFxahfwnntrMFumI@agluck-desk3>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 16:15:26 -0300
+Message-Id: <DAXK1634VYQI.1PEUCTQIYAF3Y@gmail.com>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>,
+ =?utf-8?q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Daniel Lezcano" <daniel.lezcano@linaro.org>, "Zhang
+ Rui" <rui.zhang@intel.com>, "Linux PM" <linux-pm@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de> <5I8UDmgF_DcJBmBE0zgCXjuvmmhLamDCHkpnkAwRjSAkCa5xcFUvU-SmAeymxTajjDPR8avuW55RxOjhd8idK6jLy-hz8i-Ma3RHSaFy2Gs=@benis.se> <9642ad7e-3e57-45f9-bfd9-beac3e55418e@gmx.de> <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se> <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de> <X-40AqXfdmQw5shUOk3VSaHSXmwJYWHPmDDMLyGUH6GpMt56ty5SbNg8EVfyI_uC9J07uqZ2TtGJmmpB_x8-xpcVOw29fnKzJZ4n9L0x78A=@benis.se> <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de>
+In-Reply-To: <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de>
 
-On Wed, Jun 25, 2025 at 01:22:29PM -0700, Luck, Tony wrote:
-> On Mon, Jun 16, 2025 at 06:40:24PM -0700, David E. Box wrote:
-> > This patch series introduces a new discovery driver for Intel Platform
-> > Monitoring Technology (PMT) and a set of supporting changes to improve
-> > telemetry integration across Intel VSEC features.
-> 
-> Caution. Part 14 has this "Subject:"
-> 
->    [PATCH V2] platform/x86/intel/pmt/telemetry: Add API to retrieve telemetry regions by feature
-> 
-> which is missing the "14/15" "b4 am" does warn:
-> 
-> 	ERROR: missing [14/15]!
-> 
-> But my eyes skipped over that, and then I got surprised that the
-> DISCOVERY driver was missing from my kernel.
-> 
-> With part 14 manually applied things seem good.
-> 
-> -Tony
+Hi all,
 
-Ah, I forgot to reset the numbering to 14/15 when I respun this patch. I didn't
-even notice. Thanks for spotting it and testing Tony.
+On Fri Jun 27, 2025 at 2:10 PM -03, Armin Wolf wrote:
+> Am 26.06.25 um 15:20 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+>
+>> Hi again,
+>>
+>> dmesg: https://drive.benis.se/s/2crz7zPzkrzaqXN
+>
+> The following message intrigues me:
+>
+> 	platform_profile: Failed to get profile for handler hp-wmi
 
-David
+This might be a regression.
+
+This was reported a couple months ago and I completely forgot until I
+saw this thread. See [1].
+
+@Benjamin: Can you please check if your power profiles work on Linux
+v6.12 (LTS)?
+
+Also try:
+
+$ cat /sys/firmware/acpi/platform_profile
+
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D220008
+
+--=20
+ ~ Kurt
