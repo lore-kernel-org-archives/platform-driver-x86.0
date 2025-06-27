@@ -1,170 +1,192 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023102.outbound.protection.outlook.com [40.107.44.102])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FAC296163;
-	Fri, 27 Jun 2025 09:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015489; cv=fail; b=b/dSJwu+pFIjtmtNel7aPzS830yZ54jqT67W82tJXJ0ltxHYelZ8HTFF6hVgIbSs6aeme8HxJBDOCXV+jdh5EeKHJcSlrunM05dDfQzNZh69eJ0wjZ4G3Ovsfpp8u3pm+nrN0bcOKhA/ninDE5o/9YmFyQ9IA1gJ6VSaVaKSUOY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015489; c=relaxed/simple;
-	bh=wdlW0bwbSjbF6m8wDvrcMr8Cz/dZf8AwlfQURTBwv8o=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=hbSn/RQra4KN2rffqNOQj44ozQYWaoKcrUyJCZG1Rlya8eZjdVQqJTxzjt16YxR6GvP7vlp3MIReasNIpBnPKiDkpJi2npQW6I4WhgNVPRiDTcdXclzsVxfHRRlmm6FE0FQMLtNQblrAY8Scll9WwByJqn9l4F7MDRqzkiR+Vb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=JN5YE6oH; arc=fail smtp.client-ip=40.107.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FC8294A11
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Jun 2025 09:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751015684; cv=none; b=ax2G2TEEVyGv9vdjHKxJ8YzofNhgAlQ0Dyr7HDfZeXYfzMm4jNZPcz6aBCIU5vVnI/GbEro8XQlhq7RMaV9W3M9SLd2O4OLt/ll33/3UatFi5VqE8YFgwFov2sRniTykTUpu7raAkiXOE1lZPvjrQA+sq8tIMABsJjcDrHsSHhw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751015684; c=relaxed/simple;
+	bh=3nEIgJCmjlqaSQIOu2o6gKbPqljz6zUwsumBh5ajMUM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=t9QIR4KnetQhYcrrbtJpaOB+SHUpVQnMWoUf1eWxNS7v0qImH/6IPYmdTJSKxbJssBrf+qm8nhVPzaZPFABonEfHqQAYQBisXatoQOu+K6wrSH0n7QJ3BetrUwMGviO9l6g2rNrwdmNeLvskqWJj/ovxjeve8njVwl4ObgbvX+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXGRrDEa; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="JN5YE6oH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JMejpSfr2135/ji48SjFgFAQcwK8TI8Foza9Z+9IAk2BtCCsNtYqxIWreuz25gnFOznVhUKDqPPRDRST3AQs7ry7O/SYKKcO3uue6J8XQLn+4blXhZA9JtDvgUYX5d7SEm/gxwZk7ky30yNRuogs0q5muNBaREDl5uDLiide4ZpxDq8YIxdnJxfJx/SAm3FV5ZKMBCjjLAhl2lvTVPSPFwthScohD3Sj5a3KB1gD76KB8MWiHIpvFOHeIZpru/YxYui/ifr+eO0ELbXlsQXetVw3gDY1KLuXuG1B/anLU+knnymO61wVauNyrh9p606Vr7IPhlmj5JzGDnK9weGQ/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DNw/tlNwB9cvrfwejePN76STFX0ILAi/lbbe9kjSnIk=;
- b=wQ/rc2LhAuq+Dj8IBUD+UiE3s7SnR4ppMLmkJ0X7/jZ1LTybNCPsPh0iGBDlrUPjQ9gGMWIFtW79JxIPjynkf1mDgfxCKWDBxJEtqR2at973xhTWl9BbCKYd2sDZiFymefjS+hgJWUiZvEuCglCh1UbeWw3hlrMjh73Id+XpJUwtdKC/Q7tj/HD4kE1JXphlrZQULt0cSzm3TsKJn3UcOUSCjpXABFyZlzWBymRZGQ6SKEQukbuCg+uknRybg4UYDEWjwW9brRtivTgwomKMtmG1V27vGsu3LxjymW6G96mHBLlqalswqF7T5+XwFYKh0aqv7RrZazS3/Z0+vGs2YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
- header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DNw/tlNwB9cvrfwejePN76STFX0ILAi/lbbe9kjSnIk=;
- b=JN5YE6oHhL9PExTrBdAft9zD6zKW32O877uhGeLKgW1P2prxZtR0ZZXaYuxM0dRfNHSKXTay9xxVn7Ssb0cKh7nrfuvSbucylUB6+pZqAF/Pu7V/LIiWYzs5VaEurIClY+QoLWKIkOAUsr1UdPBxJQg9TFRt4PfCVy+QE78AvAio90LZujMtvLAhImoRL9MfzfCE0ZoGpO+ovDN8KWDZ0t1E1le/v9XakjTOabEnXZDYhgYlm8x6mRIg52WDD9zFvepqjr4XLsO+Qbh4dnfv3+EtgfHk1aC5JopRFP/crqUyS7TDR/X4pKrcEisufI+iTydSW1oc4qVWbMUIj0swbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=portwell.com.tw;
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
- by TYZPR06MB5999.apcprd06.prod.outlook.com (2603:1096:400:33d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Fri, 27 Jun
- 2025 09:11:21 +0000
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224%6]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
- 09:11:21 +0000
-Message-ID: <8bf959d1-bfa0-4546-bbdf-396ec8ffddd9@portwell.com.tw>
-Date: Fri, 27 Jun 2025 17:11:18 +0800
-User-Agent: Mozilla Thunderbird
-From: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Subject: [PATCH 0/2] platform/x86: portwell-ec: Add watchdog suspend/resume
- and hwmon
-To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TPYP295CA0017.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:a::9)
- To KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXGRrDEa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751015683; x=1782551683;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3nEIgJCmjlqaSQIOu2o6gKbPqljz6zUwsumBh5ajMUM=;
+  b=DXGRrDEaztuIYpgwvCRaftBH4xg/HvSw+BLBUUm8kH4kmqQZeVTzXp17
+   uCDIu3O2skC93RSoqWYdfWy9/pAKLSaAu80te7mRh1Uz+dFLY1Td0umrM
+   EpZW6hm6MdEYkw1ic7YaXl6maRVKQsyw9dneSP40+Lb1UHIQ69uURZEEF
+   yoEYfUmoXUMC1g6jL1UhEuMqR5XrBH+apZKdu4LQkMyK/kl66W4iiIEnX
+   dfQ8ZrdfdR2O/48ZTlBzpLlyedakmEcBr8i35TTAKVe6D4yNo73NBqBsc
+   SYsuU7q9MXjp+LIZCBNNaSl40S2arExYGYXM8n3HGhxizN8SBYYqzp+Cf
+   A==;
+X-CSE-ConnectionGUID: L9+9SnaMRey0XegHCS6ORg==
+X-CSE-MsgGUID: xZCuOSqGSsWR2Jd9ECzhCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="75871732"
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="75871732"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:14:42 -0700
+X-CSE-ConnectionGUID: y/qN6GcXQM6iJxDvamcKnA==
+X-CSE-MsgGUID: cDUhJcz8SFumr4JwL4KsWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
+   d="scan'208";a="152499931"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.71])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 02:14:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 27 Jun 2025 12:14:36 +0300 (EEST)
+To: Hans de Goede <hansg@kernel.org>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] platform/x86: x86-android-tablets: Add
+ generic_lipo_4v2_battery info
+In-Reply-To: <96d47457-cc87-46ed-ae9f-75f2fbcff76c@kernel.org>
+Message-ID: <ba75eff2-1d69-6a23-2248-25fd8a26163d@linux.intel.com>
+References: <20250609104620.25896-1-hansg@kernel.org> <96d47457-cc87-46ed-ae9f-75f2fbcff76c@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|TYZPR06MB5999:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8255bc20-63ad-4b69-e400-08ddb55a9518
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cStzRklMdU5LNTRPZ09VZWVyTDZEZ1lPNTZnbGFaVURpS2Jhd1dSVmNYMFc4?=
- =?utf-8?B?VXgybFVYK2JYRFk4U1RmVFlMQzNzb1hXL1hyQzE3OUhGeGdMS1htcTlTc0dx?=
- =?utf-8?B?eVllVzczd1VoRitLbG9TK1plRVE3aXZsWHpqU1YrZXJZVnY5Y2VqdFRWNXMv?=
- =?utf-8?B?dUJYZFFmMVpudnRkdnNMQ1Rwd0J3YXJBcnZiTE9rUWNSWVVDOFpxK2piQUlM?=
- =?utf-8?B?QlJXck9PRHFpd0VTaUVINFdmQndPMWs2bWNJd2RKMXRQbFdmWDJvL2o3RDVu?=
- =?utf-8?B?Q0Q1c0c4NVVxbDFud1J3V1N4VjVDUmh0M25samJoTnlSc0kvelFRcFlhZFNw?=
- =?utf-8?B?OURwd2FCajlLQ3RHRitiekl6ZGhJaXpJY045VjFVNE9NYTBvQVl1dWRZZUhL?=
- =?utf-8?B?KysvSEVnN2VIT1RIYmNIdFRhbWhweHhYWktNdExXOG1uQ21XdXNuM2h0ekxm?=
- =?utf-8?B?QldtWCtmNlZINncrTUtmWVQxd1FucEs3Q1hjTjcyQStFOTkyT0pEMCt3RFdm?=
- =?utf-8?B?VlZvZDFTOTkyaG5oTnBMVGtLL0NzREFGeWg4cStURW9ldzk0dDJXMVdweGov?=
- =?utf-8?B?czVicDJCZi9zd0ZQQmpDNEVtYXJCQ1RLbnVLa2wwNEQ2eFJndU1jNFg3VHdi?=
- =?utf-8?B?dDNiT0EvN0NuSUtBRVdiRHhYVUUwbEFiR0ZCbURjNTUyWEt2cEhwYjJJTlRw?=
- =?utf-8?B?N0tIaWpIQzZReFlHSitNdjNSU2syUWNqSXZ6OGhnUEVHRjhsUzI5bDE4dEVS?=
- =?utf-8?B?SGgyeFN1UWdwQjgwM1BORGk5Rkg4aFRpMDBkTVBtbFovMVFYeXh6QjdPMTB0?=
- =?utf-8?B?RS9QU2hwOGdFQ09qS1orM0ZrTC82ek5EOUJxYmhINVl5bVIvL2tvanYrajIr?=
- =?utf-8?B?dEw4QjIvT0VkMkZvZkJJK0pIODFLZFl1UXgyZ2d0dkpPU1JNaTBJOXdpUDBE?=
- =?utf-8?B?M0pacDkwNFFRYzB1bGc1aXlvV1ZyVFFkQ2xHUGpuSGhxdG5uT2JxNVFKVjR3?=
- =?utf-8?B?VkVMaFBqQlRwbDFRaDFRQ01PVkhhbzlOUzFURTk1SDNrTk5abFdBN0QvWWtO?=
- =?utf-8?B?K2Y5T3orV2pWWk1MVWkyQXVrVDhmMWlNdGc2QlpIdVZVcS9RQ0o0OEt5emtO?=
- =?utf-8?B?V1dSYk80V1R5cHdicEI5M0NQR0FxcmovVFdBVnFERURQYWpVeXZtS1JRN1Jx?=
- =?utf-8?B?ak10YlI3NWJkRTRwRndZd1FDTXhyNXNsb2dLWnUrSnAzSFpVU0hVSTVSYjRo?=
- =?utf-8?B?UXVWSEozUHlLVHBlemhjZEJ3bFZwaGxKSkYvZFd3M2lpMFdwTGVZaUZPVk8w?=
- =?utf-8?B?cEVNdXNVQUo3dFo4KzZEbndOUi9WWkNOT213OTI2UDgyRm9UNE1tK3BTSkho?=
- =?utf-8?B?VGVyazNxRHh2MDdKdWM1amhnL1cvVmVKWmpjQ1F2VUZ4c0NWR2NDczBIMkQ3?=
- =?utf-8?B?K2M2Ky9CM2RiR1QwanVhTTB0MU9uTXU4eHBqWEVRRDNBMmNsVTE0N3grbUJD?=
- =?utf-8?B?dTJWNXc4eG1FcVpEU0lFcU0xOTZDSnB1Q1Y2d3hsY1BEeWl5Q2graGtGcEV5?=
- =?utf-8?B?eW1BVDgyUmE4VjIvT3NyL0tJazlBbTZzcHAzM3FXWDcybFJjeVI1UlBsc0kv?=
- =?utf-8?B?Vm96cU1WUEtUQndpZHNLSVQ0UVAzWFlvWThhSDh3RFB4azlJaE1pYVJuSG1P?=
- =?utf-8?B?K0tKMGo1NUJZbGxlWWI3d2J5dzNDa3hJWVBvMzh3TjB2b0Z2ZVc4aDM1WmE2?=
- =?utf-8?B?bG8yMXJtempLSXhwTWxFaFBDd2J2WTUyRFIxOVF0bElCWU1MR3hzTEN6SDZB?=
- =?utf-8?B?QTVUc1hKMlR0aVBFQWtiRGRNbmY3UXBTdmpJQk5Ld1VZSnBrTFdaVzAwTFdW?=
- =?utf-8?B?VzAvVEpTSDhqQ0wzYVpxNEpTMmNWNFJpb0NwMlVYL3NPaUlKN296SXpTSE1P?=
- =?utf-8?Q?0ulNfo6bKJc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFplSDRWUG9mU0xPazB1MDVnZ3BZSGNtcjU5ZDdFYjNtVFMxdGhIcmY0Q2RP?=
- =?utf-8?B?NThWMTJXVUcvUEh2Y1Y1enlIdGFnalBLNnpIdmFaYzlYYlJtN2NzV1lZSVFH?=
- =?utf-8?B?cTMwUEVNcFpKUi9mRmlOc003MEErTkRXQ1ducHJ5TlZScjFWY0tsR1d5NTMw?=
- =?utf-8?B?eTBkRXA1TTFodlRBQmFPeUxISEoxeGlpaE44U1FwQnl1cGZoSWg3cnJvWXlj?=
- =?utf-8?B?c0RwK0RmaWl6QWVwK2NTcGJlUnh0cGFVY2ZlbFpoRUp1WGZucTRBaE5QQmxS?=
- =?utf-8?B?WTRlQ3I3MVhNYmxiU1Q4SUtrRTFJQnZmKy9vYnlBV0JiNU5YdWV5TWRWMFBN?=
- =?utf-8?B?QTJEc1c3bHlGVkhIMkJLcXU2cXhNQjE4TmJ1R1ZxamppSk1uWFRYTWtFVW90?=
- =?utf-8?B?aDd4QzNRVDdGZzlpckZzNXlNZGdOSDNPUjI4OUhXUTdKN011WnRDQ3RydXE1?=
- =?utf-8?B?akNqZEZLdkZVcVhTZzVpdktNWFRkMzFvNTZVQ0h5MytZWDM0TVA1by9wVU4w?=
- =?utf-8?B?VVBnY0VjVVlRam54TlVFZWhCTGtnc0ltdklVNjFSOEEwU1BBb05jZjhmdVpW?=
- =?utf-8?B?TmdsWTRRNUYra0dSYm1VMTZodDVqUTVtNEkzRzREbXl5cXJxVFloL1YzNk94?=
- =?utf-8?B?MFpkWG9zSGovSzIrcWlLRmlUVDM3WWx5YnFrMnBCUE5LOXZhL2s2V05xa1Ir?=
- =?utf-8?B?Zm05Q2l5bGRWSXpabitVeElMbDFoUjI4c3RwWEVNQjZhb1lEbkYrNThLRHc3?=
- =?utf-8?B?VW5LdmtmUEkvUGhTOVNSTHdkeDd4Mk9LNlhMeEc2TGsvRzMzZmd5RTR5UVI2?=
- =?utf-8?B?QmJ5ZG5qd3hYamo2bVFqSUJobEdNRW5wN20vRzcwR2ljc3R5TVEraktUOFJD?=
- =?utf-8?B?eEFqMHN2aHIzQ0tjVHJYRzRpTzllQ0MxdVllMHFrN3JuVmhWc0pWTXAreG1G?=
- =?utf-8?B?b1YwZ28vbVVreEE0V3ZvQ1FkYWVZRGJ4Y3poZklWWnUvTndta1dlTVJWSEFs?=
- =?utf-8?B?bHRWV2hGa0RtT1RJODN0R0J4RjZGU090d1A0bENZd2M1dFptakVxeHVWc3p3?=
- =?utf-8?B?L2hGakE5V1RQOGNxVURqTnNkS28zU09oR3MvUjNUWnBQTjh2ZXlXTWUzemtl?=
- =?utf-8?B?em9YckJubVIydFU5NE43aldTQVFwNXdjeGZkNVZNcFJhMTFvckVRT0NVZW9t?=
- =?utf-8?B?RzRGUXRqTDhnOStDZEVQV1BJc1ozS2E0WmF3R05MUURTM0NPVlBudDUzajFm?=
- =?utf-8?B?djNjLzhTYVMvWWpmSFJEQTJlamxIalZQcEVyaWZYcnRyQ2QwNDlXQnBGQnNX?=
- =?utf-8?B?Qm13S0owS2ozNng0TEU4M3VLVlF6THNSZmRPcCtCQVBPdmxvNERwMmtJeUM0?=
- =?utf-8?B?WHQ1dlFwaDhZejFDcGlRQ3FJdHVPVFVNeEttSWMwRExnMGFhQU1HYlFVOTBn?=
- =?utf-8?B?N2dnN1FwSGM0YTV4SDRJbHM2Q1FWSGFOZEpHWjBLQVZ3V3IwSEYxWVppSWNX?=
- =?utf-8?B?SU5LNzNMREFxUTNWWnpWMDd5OEdtdGp3TmljWUZibTE5MGc0ZTFaT2htaUh3?=
- =?utf-8?B?SVMyYmI0aXBYUE4wV3R3cmtKbkxRQ3hJTisxeEVKYWEwQlVqbHpJanJ1RWh2?=
- =?utf-8?B?UFVXMmRJcllCaXRUZklRKy90REtBVHJCdW1OckIwZWxBK0dJMnRZUHIxYUVT?=
- =?utf-8?B?OHg1d1dkUW8yWVBVZG12Rk5iZk5nYkYwdjRYVGV5SWpRSEhyNnd5TUFST1Bu?=
- =?utf-8?B?OXdXSndhaFgrUktoS0s0eXBzMmFLS0tBWmhUSnk3WHZ6Vm9VSUNOTTI1WmZQ?=
- =?utf-8?B?Ny9IYTVWS0w0WHlmWW5uK3RYeDVpVVR4ekRsclU2R0FJZS9KWWhxR0hTV3dn?=
- =?utf-8?B?ejVQYUg1dVRSbWlRaUpyY3owYWVRZmxpYnIwZ1BuWFBNbEFZaVpNVzg2OXp1?=
- =?utf-8?B?U213bW9QeXlaQ1ZRWjdFVWpiUzZPVUc4QXk1VEpUcDY5dlZBckNKZ0l1OEVV?=
- =?utf-8?B?dk51Ujg3THNId0xOOGptM1ptMGExWnhidXBSSTNNSi91Nlg2MVlKdmRzS095?=
- =?utf-8?B?WDFNNzBVSDM4Si9PT1RNL3dWWWhXL0pyT3MwcWd3Ymw1TE5PN0tVcW9rbm9Y?=
- =?utf-8?B?RVN5a1ZZaEFoTTErN2FUOHllSFY1WWlmZG5GRUU2eklJNFROVURYZ09jMnJW?=
- =?utf-8?B?bHc9PQ==?=
-X-OriginatorOrg: portwell.com.tw
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8255bc20-63ad-4b69-e400-08ddb55a9518
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 09:11:21.2616
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9BOo3In1yMK1Z05xe3ytsR/Qnbc4oNlYPVI++H/JKOunKtDytckoco6DoMIttCE51orsa9Y76DIpZR6iXFy5VbQi6Bw8/o2PNnrYMDPQF/U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5999
+Content-Type: text/plain; charset=US-ASCII
 
-Add suspend/resume support for watchdog and hwmon monitoring functionality
-to the Portwell EC driver, enabling better power management and sensor
-reporting.
+On Fri, 27 Jun 2025, Hans de Goede wrote:
 
-Yen-Chi Huang (2):
-  platform/x86: portwell-ec: Add suspend/resume support for watchdog
-  platform/x86: portwell-ec: Add hwmon support for voltage and temperature
+> Hi Ilpo,
+> 
+> This series seems to have fallen through the cracks ?
 
- drivers/platform/x86/portwell-ec.c | 206 ++++++++++++++++++++++++++++-
- 1 file changed, 204 insertions(+), 2 deletions(-)
+Thanks for the heads up, it had indeed been marked as superceded in the 
+patchwork for a reason I don't know, perhaps I had confused it with some 
+other series or mismarked checkboxes in the interface.
+
+I've restored its state now to New so I won't forget it again.
 
 -- 
-2.34.1
+ i.
+
+> If you're waiting for a review, both patches already have
+> a Reviewed-by from Andy given to the v1 series, this v2 just
+> fixes a small nitpick from Andy's v1 review in patch 2/2.
+> 
+> And the matching ug3105 driver changes have already landed in:
+> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/log/?h=for-next
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> On 9-Jun-25 12:46 PM, Hans de Goede wrote:
+> > Move the asus_tf103c_battery_node to shared-psy-info.c and rename it to
+> > generic_lipo_4v2_battery_node.
+> > 
+> > This is a preparation patch for adding ovc-capacity-table info to
+> > the battery nodes.
+> > 
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > Signed-off-by: Hans de Goede <hansg@kernel.org>
+> > ---
+> >  .../platform/x86/x86-android-tablets/asus.c   | 21 +++----------------
+> >  .../x86/x86-android-tablets/shared-psy-info.c | 16 ++++++++++++++
+> >  .../x86/x86-android-tablets/shared-psy-info.h |  1 +
+> >  3 files changed, 20 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+> > index 7dde63b9943f..97cd14c1fd23 100644
+> > --- a/drivers/platform/x86/x86-android-tablets/asus.c
+> > +++ b/drivers/platform/x86/x86-android-tablets/asus.c
+> > @@ -206,24 +206,9 @@ static const struct software_node asus_tf103c_touchscreen_node = {
+> >  	.properties = asus_tf103c_touchscreen_props,
+> >  };
+> >  
+> > -static const struct property_entry asus_tf103c_battery_props[] = {
+> > -	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
+> > -	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion-polymer"),
+> > -	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
+> > -	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
+> > -	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 2048000),
+> > -	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4208000),
+> > -	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
+> > -	{ }
+> > -};
+> > -
+> > -static const struct software_node asus_tf103c_battery_node = {
+> > -	.properties = asus_tf103c_battery_props,
+> > -};
+> > -
+> >  static const struct property_entry asus_tf103c_bq24190_props[] = {
+> >  	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", tusb1211_chg_det_psy, 1),
+> > -	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
+> > +	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_4v2_battery_node),
+> >  	PROPERTY_ENTRY_U32("ti,system-minimum-microvolt", 3600000),
+> >  	PROPERTY_ENTRY_BOOL("omit-battery-class"),
+> >  	PROPERTY_ENTRY_BOOL("disable-reset"),
+> > @@ -236,7 +221,7 @@ static const struct software_node asus_tf103c_bq24190_node = {
+> >  
+> >  static const struct property_entry asus_tf103c_ug3105_props[] = {
+> >  	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", bq24190_psy, 1),
+> > -	PROPERTY_ENTRY_REF("monitored-battery", &asus_tf103c_battery_node),
+> > +	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_4v2_battery_node),
+> >  	PROPERTY_ENTRY_U32("upisemi,rsns-microohm", 5000),
+> >  	{ }
+> >  };
+> > @@ -321,6 +306,6 @@ const struct x86_dev_info asus_tf103c_info __initconst = {
+> >  	.gpio_button = &asus_me176c_tf103c_lid,
+> >  	.gpio_button_count = 1,
+> >  	.gpiod_lookup_tables = asus_tf103c_gpios,
+> > -	.bat_swnode = &asus_tf103c_battery_node,
+> > +	.bat_swnode = &generic_lipo_4v2_battery_node,
+> >  	.modules = bq24190_modules,
+> >  };
+> > diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+> > index a46fa15acfb1..55da57477153 100644
+> > --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+> > +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+> > @@ -39,6 +39,22 @@ const struct software_node fg_bq25890_supply_node = {
+> >  	.properties = fg_bq25890_supply_props,
+> >  };
+> >  
+> > +/* Standard LiPo (max 4.2V) settings used by most devs with a LiPo battery */
+> > +static const struct property_entry generic_lipo_4v2_battery_props[] = {
+> > +	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
+> > +	PROPERTY_ENTRY_STRING("device-chemistry", "lithium-ion-polymer"),
+> > +	PROPERTY_ENTRY_U32("precharge-current-microamp", 256000),
+> > +	PROPERTY_ENTRY_U32("charge-term-current-microamp", 128000),
+> > +	PROPERTY_ENTRY_U32("constant-charge-current-max-microamp", 2048000),
+> > +	PROPERTY_ENTRY_U32("constant-charge-voltage-max-microvolt", 4208000),
+> > +	PROPERTY_ENTRY_U32("factory-internal-resistance-micro-ohms", 150000),
+> > +	{ }
+> > +};
+> > +
+> > +const struct software_node generic_lipo_4v2_battery_node = {
+> > +	.properties = generic_lipo_4v2_battery_props,
+> > +};
+> > +
+> >  /* LiPo HighVoltage (max 4.35V) settings used by most devs with a HV battery */
+> >  static const struct property_entry generic_lipo_hv_4v35_battery_props[] = {
+> >  	PROPERTY_ENTRY_STRING("compatible", "simple-battery"),
+> > diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> > index c2d2968cddc2..bcf9845ad275 100644
+> > --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> > +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> > @@ -21,6 +21,7 @@ extern const char * const bq25890_psy[];
+> >  
+> >  extern const struct software_node fg_bq24190_supply_node;
+> >  extern const struct software_node fg_bq25890_supply_node;
+> > +extern const struct software_node generic_lipo_4v2_battery_node;
+> >  extern const struct software_node generic_lipo_hv_4v35_battery_node;
+> >  
+> >  extern struct bq24190_platform_data bq24190_pdata;
+> 
