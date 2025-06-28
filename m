@@ -1,231 +1,126 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E10220694;
-	Sat, 28 Jun 2025 05:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853F4184F;
+	Sat, 28 Jun 2025 05:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751086886; cv=none; b=YLAdE47qe0zkyEbpDRWNa8pnFloRzdfWiZdpGJuh1hpOgMLU+FuhlcxLddQMkd2aNGqqVd1vNBgTPWnVLWw6e4WZKkNxAyIcebhNwFuc2RSOI0NYLsjSe4J3xVLIyqxIchIW8I0pWvckfhi7Q95EeHr12dHrpXspvdOB1IcgFDM=
+	t=1751088742; cv=none; b=tM/TUa21fmZaTsWrz4S82zwIUatXpM+r0Z5D7yxYvqMz3BHg7whVwvOmz9VDTUSIBk07oNm3vPX3TScnsHSTRGJPXS7Pp5iQ/cEXkubCP5sEGWB3UvFzdNfSyOcsY47wWx/+noiRVILrtD4Xn//CeKluQ03ItBrx/qIxLWONadw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751086886; c=relaxed/simple;
-	bh=xwIOPQzp0CO3CmXlsDJnb/CIg4qQWC9AW3Q9DCnl/l0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q93bKSYGHJWu0tlAZ98NAWJbRk4rOe90La0u0s20uZhAAfyCjIaw0gksE+GJskQxy75D/ANsC9CcWpoH2VuJ6OxqxaNYCkk+ksMtFH6mboeH5nfNwR4KzWwJ6n4hwrL50WCDXluD+zB8J0/WnH61qVlmyWeyekktCZa1XbKSYjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NglNz79k; arc=none smtp.client-ip=209.85.219.50
+	s=arc-20240116; t=1751088742; c=relaxed/simple;
+	bh=jN20wTNP7dhLxm0tND0hLA5ocjKeGPVNjk7M/PBPOGQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=UJgyirT66K/pKlNtr1VIzz5rTTmXGzhOAp1fqcS2gAiWSz2wDB2w7405xzy4cuLYRpdcj1SigPhOHRCR7+L72m8JIAXXQk5PzyHcxPW75U2hBYR49gBOpW7ooYK3v5VlMua6CQV+nB5hwwyfRv9oWCFzuCn0U+N/d0AG2T8wl1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJ8O+06J; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NglNz79k"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fabe9446a0so29436886d6.2;
-        Fri, 27 Jun 2025 22:01:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJ8O+06J"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a585dc5f4aso33285321cf.2;
+        Fri, 27 Jun 2025 22:32:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751086883; x=1751691683; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WUvrkQsWXj+PLipOZYg/AMH/QOdAbiTxRFe5XCl9bn8=;
-        b=NglNz79k1IyvggEzWt7Eyelx2S/p2BbAX6oTXk/v96kIyK3OGoL2Cpjs0No1PupTAR
-         W7piVZQ0pOml+VhSNGJl544PuRs95DFsrZRBR4FIz5mzk48AnTSP4t/n6hgIraet3xoL
-         kSPD0IizNkf7Ioz9eSUDzTM3bMjgHnbWHiosaBqI5ipogOQW3Lgm/Q2rlQ6FNBstmrtq
-         M58SohYq/vEGyPT+ZMkuhnGKtrDR7TNnUBrDOXrqTzsWi5wULLXRHizxM+dUC3R1NIWL
-         pZ3L47SegulhRsB5uCu7RS+w1G9CJYU4A5Gv7jOmrZQzNerozSmB0I/TtgLrw75aANR4
-         6rTA==
+        d=gmail.com; s=20230601; t=1751088739; x=1751693539; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jN20wTNP7dhLxm0tND0hLA5ocjKeGPVNjk7M/PBPOGQ=;
+        b=QJ8O+06JzTAa2dq4wbw7buyR6hE2oinXnOnWtdAvu4lAKalAO4Xs6ZrYqN4Dhj5MRT
+         bKMjrwQJNpXpRU5sJkyy2aTisUHP0FG2PLLCWrMrp2l1v9xregPyG9rTAFKY2hlIyL6c
+         hgAyNG/7Hn3D8SZcO+EG3eP8hKgg0idxIPEn4SB8WjZVIWl9Pz7KsZV9Sh42q4EvinnV
+         HM2Y4PwYBwnN20cceF3R4dLJ/R8xC910SUaB8saOHAky61qB+MYzfFB5fBfhERfXKxeR
+         jdOnewWt+a0okgnVrZrY3mpjyTzGeplYmNkXPYkVveE5CLYeOZPP91bQtilMenWiKwvO
+         9ZVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751086883; x=1751691683;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WUvrkQsWXj+PLipOZYg/AMH/QOdAbiTxRFe5XCl9bn8=;
-        b=YJWmq4HtRF+1wqVyFMUcwRUn6Effi1FiV6NAbFx1hW0SFJo7AwokNPUWd8mdmxrcaC
-         qrd/B01+6WdC9PdELqv15unri+aC3oze96pmcv79QkT/m8FuDGaozUOW0TZH1vFCLMGB
-         lIcUFC1jDA8w0loNULNaaqCe6ftXH5WNsUMfqI/3u5qybNDSlnKEEYMMBOLOlZy6X90R
-         XYg1TEYp8jA1YM9udb5HP2mQ1yqkjsu82MrliVkeUfkCE/Q51X5BLprCrfgJBcB+hg5r
-         ZQQy7kVJg6m6obOaAlMhANqy37+U5zxNfo6ZpfDYrHHjFLKoKjzBmEnFRrFWYouw1uYO
-         UfWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbm2Gb1Fsz9gZGa1/YbdZBFWWYER7PxNrAb9HHqdSw0fevwDotis46FfqL9vLIwexv/5dsOd43GGk44k4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzauGUy5CYN0bngHcnUNBWQcDMjdvUBeWDoH50oKyywWMfPCAUv
-	+I+HQ7iBW6obqoySfReiW+pJJe/0FdN5MWSFg9Rr/f/rF8Wbz/TmurB5es/cUbEy
-X-Gm-Gg: ASbGnctEUxr6T18qsJrIsN0YUiakS/V56Qtc0rVZ0mdii8x+MDAuP5ll+rfTxtJVNLU
-	hE0jyjtmi/gzDQgdcKWlSEgQy5Dt52f2btjeLywxERVbrVnMRUnOGQabdxxx/U3kFwdt38wDDPl
-	daFZcNPVAJ4iP654/xIJsQzLiwPAxJZjClM1ehBLj776jmxqsCFOvHVDVj4n3CVm/5wEmJvozjm
-	mjh70cB7NMgKjfxzXPSnyzMrusB9uZ0tTqVYbWyunk59CUWT007TDQX7bF5AKsFTR3l4jyKr5bJ
-	yU4fFJMyzz0xTLImUdrzsEXSZbZFHPewcQO6iao8z8wm0ZLKqS03CjAhwr2NTQ==
-X-Google-Smtp-Source: AGHT+IHlfgEq66Ajo2smNviFqc07tlhE097H/PMai94CvRwZW0HOuBMjBw4QWm/IonglatgCc1GibA==
-X-Received: by 2002:a05:6214:260b:b0:6f5:4214:774a with SMTP id 6a1803df08f44-70003c91593mr79847216d6.41.1751086883359;
-        Fri, 27 Jun 2025 22:01:23 -0700 (PDT)
-Received: from [192.168.1.26] ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e34besm31504966d6.75.2025.06.27.22.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 22:01:23 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 28 Jun 2025 02:00:48 -0300
-Subject: [PATCH 3/3] platform/x86: think-lmi: Fix sysfs group cleanup
+        d=1e100.net; s=20230601; t=1751088739; x=1751693539;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jN20wTNP7dhLxm0tND0hLA5ocjKeGPVNjk7M/PBPOGQ=;
+        b=A9XUGdnnbdnA2BEwHa3Q2NixEiBYwKP5BPjouES5s2xqBYxDPROGrqxsEsohLtkkJq
+         yQ4pjsRGSzEZF6SrI4HMT78We+l8yGHGzkew3GEtskcN82pA8K4tnf2HZFjWrC0zBgOl
+         ngwnSN1PFEtwlL84/9joA3ZPwmBjQ1HCOAiXKG96A0HeALdkKtoxwTOBBjGQyIJBAUl+
+         esF2XOjeT9RM4N2JVIernxed2HdugVTHBO8NHAsWV98h5mxQUXBzyh3dRSzXoBM2etBy
+         nyVuXayyu5vtF6bqVzyEmJCtVRR2d2uid7yHNvJnRf5oEYm5z1EYNZtsCwp3JEf1fAdA
+         LAPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWE9R80dcvYrSogl/jT9r9vhpcxWcJ9aTW490MwW9p/z7uahlU+ZOjrlIUB2BXqyes0ft0ayxF5Xu5VEIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg+TKbNYflKrXOlUCOaM25N8hpAZRkIxyRQiXe/Yau/uQWXXIe
+	D3022b3lg/zmwOkItIzR8dFm1aFUmIJZvPo8ryU85B1xRCVAio25bufG
+X-Gm-Gg: ASbGncsbe4Pz6a9NddxEp5GvLOsSj6KixaqDL6AyBooNi46macTIA041/EqV7ld3Y4J
+	nG0kb7fxRV2RIpp0t3nUhmhzYaHcUwgGnQwvBBzLiYxeD9zZ0c23La4jRLMJtCxU1ZP4MiKYwlo
+	fYGPw9Y9bomu6OJxIecr+F31lEskdVleKynJ6dguadelEok5cVGMCbqw6PBFlkw1XxEe0hEIxM7
+	lD1X6PatCTrO9bAVsDPpLgbM4Uhsc9ze4yg735KLf/H3n9s59dWrUKUMqnxk9dGdTrAXCWmyaL/
+	ZwGTVi883wARv1irOLStxWbiHE4xDXoxHm5lf72/KJt3ojzemcfT5FI=
+X-Google-Smtp-Source: AGHT+IExamxO4nFX5HRk/OiYHpEJXf1fxtN7zSDbTxbrzFT3zhHgmhCwAkSN6LC75csS2oJlXwa9dw==
+X-Received: by 2002:ac8:7c4c:0:b0:4a4:31c5:fc8a with SMTP id d75a77b69052e-4a7fcb0588fmr104788571cf.47.1751088739260;
+        Fri, 27 Jun 2025 22:32:19 -0700 (PDT)
+Received: from localhost ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44324e1e5sm244200985a.117.2025.06.27.22.32.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 22:32:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250628-lmi-fix-v1-3-c6eec9aa3ca7@gmail.com>
-References: <20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com>
-In-Reply-To: <20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- Hans de Goede <hdegoede@redhat.com>, 
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=b76512108e791b9479c6a97fc44e2032d249ff5544f13e8fbc895f420fb3;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sat, 28 Jun 2025 02:32:15 -0300
+Message-Id: <DAXX5FP3VB6T.198C8JS1MVWAL@gmail.com>
+To: "Kurt Borja" <kuurtb@gmail.com>, "Mark Pearson"
+ <mpearson-lenovo@squebb.ca>, "Hans de Goede" <hdegoede@redhat.com>,
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5169; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=xwIOPQzp0CO3CmXlsDJnb/CIg4qQWC9AW3Q9DCnl/l0=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnx5VI/LugtfSC8aWt1+OElT57FtMnGXvuSG/Ex6eP2p
- 1bzd7KldpSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBE1sxkZGiwcluSOW2iu+uT
- 7Y6ZWk98+g3PHbz5NMTm0BOjDxNyBVkYGTbzWsTsOCg7Pd3MaXbC3f8tbeHS5TPWGEX6lOvwbLo
- Tww8A
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Cc: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] platform/x86: think-lmi: Fix kobject cleanup
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com>
+ <20250628-lmi-fix-v1-2-c6eec9aa3ca7@gmail.com>
+In-Reply-To: <20250628-lmi-fix-v1-2-c6eec9aa3ca7@gmail.com>
 
-Many error paths in tlmi_sysfs_init() lead to sysfs groups being removed
-when they were not even created.
+--b76512108e791b9479c6a97fc44e2032d249ff5544f13e8fbc895f420fb3
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Fix this by letting the kobject core manage these groups through their
-kobj_type's defult_groups.
+On Sat Jun 28, 2025 at 2:00 AM -03, Kurt Borja wrote:
+> Cleanup of allocated kobjects has many flaws.
+>
+> In tlmi_analyze(), allocated structs with an embedded kobject are freed
+> in error paths after the they were already initialized.
+>
+> In tlmi_release_attr(), which is called in tlmi_sysfs_init() error paths
+> and in module exit, kobject_del() is never called. This, between other
+> things, leaks the reference of the parent kobject, which is a kset in
+> this case.
+>
+> Fix this flaws simultaneously, first by avoiding the initialization of
+> kobjects in tlmi_analyze() and then by correctly cleaning them up in
+> tlmi_release_attr() using their kset's kobject list.
+>
+> Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support =
+on Lenovo platforms")
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 
-Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/lenovo/think-lmi.c | 43 +++------------------------------
- 1 file changed, 4 insertions(+), 39 deletions(-)
+I missed some commits:
 
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index da3568727d79832f4669d7217e2fdf691acf1cf5..a38262295abad9f97f67208dc9e3f4f4c6b27b32 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -975,6 +975,7 @@ static const struct attribute_group auth_attr_group = {
- 	.is_visible = auth_attr_is_visible,
- 	.attrs = auth_attrs,
- };
-+__ATTRIBUTE_GROUPS(auth_attr);
- 
- /* ---- Attributes sysfs --------------------------------------------------------- */
- static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *attr,
-@@ -1190,6 +1191,7 @@ static const struct attribute_group tlmi_attr_group = {
- 	.is_visible = attr_is_visible,
- 	.attrs = tlmi_attrs,
- };
-+__ATTRIBUTE_GROUPS(tlmi_attr);
- 
- static void tlmi_attr_setting_release(struct kobject *kobj)
- {
-@@ -1209,11 +1211,13 @@ static void tlmi_pwd_setting_release(struct kobject *kobj)
- static const struct kobj_type tlmi_attr_setting_ktype = {
- 	.release        = &tlmi_attr_setting_release,
- 	.sysfs_ops	= &kobj_sysfs_ops,
-+	.default_groups = tlmi_attr_groups,
- };
- 
- static const struct kobj_type tlmi_pwd_setting_ktype = {
- 	.release        = &tlmi_pwd_setting_release,
- 	.sysfs_ops	= &kobj_sysfs_ops,
-+	.default_groups = auth_attr_groups,
- };
- 
- static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
-@@ -1383,14 +1387,8 @@ static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
- static void tlmi_release_attr(void)
- {
- 	struct kobject *pos, *n;
--	int i;
- 
- 	/* Attribute structures */
--	for (i = 0; i < TLMI_SETTINGS_COUNT; i++) {
--		if (tlmi_priv.setting[i]) {
--			sysfs_remove_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
--		}
--	}
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
- 
-@@ -1409,15 +1407,6 @@ static void tlmi_release_attr(void)
- 	kfree(tlmi_priv.pwd_admin->save_signature);
- 
- 	/* Authentication structures */
--	sysfs_remove_group(&tlmi_priv.pwd_admin->kobj, &auth_attr_group);
--	sysfs_remove_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
--
--	if (tlmi_priv.opcode_support) {
--		sysfs_remove_group(&tlmi_priv.pwd_system->kobj, &auth_attr_group);
--		sysfs_remove_group(&tlmi_priv.pwd_hdd->kobj, &auth_attr_group);
--		sysfs_remove_group(&tlmi_priv.pwd_nvme->kobj, &auth_attr_group);
--	}
--
- 	list_for_each_entry_safe(pos, n, &tlmi_priv.authentication_kset->list, entry) {
- 		kobject_del(pos);
- 		kobject_put(pos);
-@@ -1490,10 +1479,6 @@ static int tlmi_sysfs_init(void)
- 					   NULL, "%s", tlmi_priv.setting[i]->display_name);
- 		if (ret)
- 			goto fail_create_attr;
--
--		ret = sysfs_create_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
--		if (ret)
--			goto fail_create_attr;
- 	}
- 
- 	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-@@ -1517,20 +1502,12 @@ static int tlmi_sysfs_init(void)
- 	if (ret)
- 		goto fail_create_attr;
- 
--	ret = sysfs_create_group(&tlmi_priv.pwd_admin->kobj, &auth_attr_group);
--	if (ret)
--		goto fail_create_attr;
--
- 	tlmi_priv.pwd_power->kobj.kset = tlmi_priv.authentication_kset;
- 	ret = kobject_init_and_add(&tlmi_priv.pwd_power->kobj, &tlmi_pwd_setting_ktype,
- 				   NULL, "%s", "Power-on");
- 	if (ret)
- 		goto fail_create_attr;
- 
--	ret = sysfs_create_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
--	if (ret)
--		goto fail_create_attr;
--
- 	if (tlmi_priv.opcode_support) {
- 		tlmi_priv.pwd_system->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_system->kobj, &tlmi_pwd_setting_ktype,
-@@ -1538,29 +1515,17 @@ static int tlmi_sysfs_init(void)
- 		if (ret)
- 			goto fail_create_attr;
- 
--		ret = sysfs_create_group(&tlmi_priv.pwd_system->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
--
- 		tlmi_priv.pwd_hdd->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_hdd->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "HDD");
- 		if (ret)
- 			goto fail_create_attr;
- 
--		ret = sysfs_create_group(&tlmi_priv.pwd_hdd->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
--
- 		tlmi_priv.pwd_nvme->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_nvme->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "NVMe");
- 		if (ret)
- 			goto fail_create_attr;
--
--		ret = sysfs_create_group(&tlmi_priv.pwd_nvme->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
- 	}
- 
- 	return ret;
+Fixes: 30e78435d3bf ("platform/x86: think-lmi: Split kobject_init() and kob=
+ject_add() calls")
+Fixes: f7e506ec4a99 ("platform/x86: think-lmi: Fix possible mem-leaks on tl=
+mi_analyze() error-exit")
 
--- 
-2.50.0
 
+--=20
+ ~Kurt
+
+--b76512108e791b9479c6a97fc44e2032d249ff5544f13e8fbc895f420fb3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaF9+YgAKCRAWYEM49J/U
+Zi7cAP9rjuapZf6BmJaCWsq94fiEtT/LYiRFwPSeY+CaX8IfagEAjnqAsFqe1mpX
+Z6xQ28fmahHG/CwjlE9qfxdadrhhgAs=
+=2B7i
+-----END PGP SIGNATURE-----
+
+--b76512108e791b9479c6a97fc44e2032d249ff5544f13e8fbc895f420fb3--
