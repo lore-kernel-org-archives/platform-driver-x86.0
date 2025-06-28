@@ -1,128 +1,345 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D7621ABDD;
-	Sat, 28 Jun 2025 20:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BF71F872D;
+	Sat, 28 Jun 2025 21:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751142399; cv=none; b=O4MJ9/Kmb+LaRnMeh/iw6mXxDz28+2wNMhxHC06i0k3Q7C3LGfpBNDjMjd8PcXhAoOJxNGA0orAnOocQexTs12xZ+FSwDtXk/fGCFDaV+D8APDDfSKMZ5xqJtGKNu/gRQHA/s6CEOAoXqRd4wTbqwgDkcV+RkGcy5ZjjdUzwwrw=
+	t=1751146481; cv=none; b=t9Q+O/myRUsxbZ7w04mcOQjMrfrQrKw1xt1IgDUkiQ6iEpYP6+L878Z5EgriF61R4Id/eHreYW8tVc+9Z1QQwxeK0mYKz/0l7uIW/Jg94E4zpgvGoOFCzTLXeeGY0Irer9p1r7hgWXP+4mJgTK5cjeW+xDSInRDgSbcmlHgZSes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751142399; c=relaxed/simple;
-	bh=25AkAP+Oxy/7aAa504unS8DpFJq1VXkIFfWL7SNORD0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sCQ+QRb3dtnpEzAwp0Qm0xJdvlb+GdNhZdy/saokScuUdYItChb9C0WQBU2U2ieJssbRP43w1EMsGJK6Afyo0QmOlM/JUODwAesChXTlEicLKsdWVOMwAGnn7qM/HVINzkj7rmxVNRm3/sO8EatWKpum7Jj44tCUVpMnV/rpg0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geOLi+yC; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751146481; c=relaxed/simple;
+	bh=jVvtXlbC2ZlGcZNiEc2KeLWoVdo6RCJFgOivujX3peE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLPqVyxPnsI2yGwuBAj+7PlxmQ1qa/y+UKDjwbjx/XoxIlVCe4ooS0QEUl5DcNne58JieOgsmec13d6JE8pywEkB1wM6TkbpC13gteEOM3ntDGEQehr07HEGj8gQkc3BwZXCwblnD6xbcNsYqkTvmUQpxEb5r82LHt/rByT4GWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BlmPC5lM; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geOLi+yC"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a442a3a2bfso18243041cf.1;
-        Sat, 28 Jun 2025 13:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751142394; x=1751747194; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Wvd8sE0kaDsaHnRfYE1X9dhAsMqTM2j1ls+skCriCc=;
-        b=geOLi+yCQ1/FZcZIBMdUBLA+hg3m0fzTZA203mmxmqwsx0Cn6lwK8ZcYlWMChAxlCt
-         SgsiYPEv6FnQ1AVLXaQfCAVcksTLCmo12bl60SasJ07xekvjWet8w4zrxJ3LNkI3L1wX
-         jFUcHD5UI8hvNEGc8WcCGnVtxMtBmTG61NXVIMkWJ6kDjQF9NlVFRYayH2tzpuIj+2XT
-         WWtz8r/UJMkskcn2K4rP2cr8MbJ6T0MXEXNdmp6bl/+wB9SdLTNRZvMKsMuq9R9lHDPe
-         Ls4xLhGX6LPHoEdVCY8AHZnX57DtSIdTydePe9yVB8FsWO/kDjInBs4fpgSdF0yn8kg/
-         sDvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751142394; x=1751747194;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3Wvd8sE0kaDsaHnRfYE1X9dhAsMqTM2j1ls+skCriCc=;
-        b=iahyQVWy9/K2aNx0Bv6MeMaDyoocH8Ey+vCVTkpHG3cFn7cHFy8NZ3kVCwTSpOGrZ0
-         ujMbsjQYtVzfTWOvF5dmIz6zte/EZdcJGMGiF3ZOanNR+EjzxvRJSGojPzPZNZlPHjEG
-         55p8TbmUy13pINNYvzYwEpfe72K71e8KfiGuzMMaz0ps4vuSrIcIA3PN7r2ZE9J5s32Y
-         ocFGibXdRr6cSOGOCeR4QRdPqpQYVnWhGLj3VC2GQ6PbZorU262cT/MB1qqIz4BPct8W
-         nlYIhliBMN/qUdIoywgAgNYD97345HC4gfFCUEEZkjUb/Ys1980Uuc+crvhaHlamUYA2
-         Qx2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWqtMWHBbSpLOnvjUXQU5Poa0SVXC87HB+jmnnNwdVtZajeZemNFxvICax9VYT44UgjQmELEBV1M4agshE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAodMfAFRiA3F/jJ8mjRdjclrg1ym78oAdqsaQtp9sgWqS3J8J
-	rSupVYKu/j6Fxf5i/Tedq1e37GtsRGvHMQnNcHDGbSBiuAiAMcLSGlDPYGo9Wu5+
-X-Gm-Gg: ASbGncsVYMe8HT9EcMc1D7COe4g6u+vDJoXpzcHPR3jCF5HE+SpPzbivw8KimYbjFam
-	aHrBL5/SDLwoj8yxzbkVpyGK4HTs8rDs+GUlXZ5VfHGe1GWlTUAF9PIB2E7zQmcC3b2DtUbu/K6
-	IJWoKJDph/xCiI7BNrEGZPGA3xnLwKLNfNM0ImVFvuCblMbvoSSp+sif63wPGc07eoOB2OwCr7X
-	gpoJW6PgNxF/P7uIslYV5nwkyZZ7pO3H86/KhMqB+K7JFdsxlTEZLnUKgPpRPqb/cddo7ig5D3x
-	DacLc/j09r4dPEoScmfkTAfkJrHdLnQqr+pQoAzcPuQmZzhdfSio9us=
-X-Google-Smtp-Source: AGHT+IEU+sM8dfXKOCDIBrhFENIwAbmzAI0LgQ7Kb8UndNFJC+H3tdGB8EQSW9LLjfXfWQ3AuGFR0w==
-X-Received: by 2002:a05:6214:2468:b0:6fa:c5be:dad6 with SMTP id 6a1803df08f44-6ffed7a55fdmr108456996d6.6.1751142394444;
-        Sat, 28 Jun 2025 13:26:34 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd773244e8sm41439206d6.121.2025.06.28.13.26.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Jun 2025 13:26:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BlmPC5lM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1751146474; x=1751751274; i=w_armin@gmx.de;
+	bh=LnRkb5hf4pqtcOpKjv5AcWU7Px18+ExBGnIOoFeiyMM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=BlmPC5lM30H0I2g1lXEgsblePIItWl2kmna9ubYRqkBOZqNQ2oqNiXMN3WFkggTs
+	 CY8FqMT+lAP107vCUjIfZ8b28/cF8ES8u54rfRyFACTj4A0l2VA4LJKJVah7mwJeV
+	 LnsroYPge4hQhSA7Y4hvzlYPoIWvOXqRYwaJvc3IFxAo6YyoHh6b2NOooluU9S+ec
+	 E3NvgV/si9ImYAovRW1cU183fcG+ArzhX7CXL0cWMUtGXSagc8BDyQZtnrT8PdbFV
+	 IJJPpf8Bd6J05DixoxI7dBwtvfLzqcI2U/AdBIkxjvTc31R2HxJA8gjcH9yX+sEnw
+	 sy0YpJAQqRGf4lXHFQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYeMt-1uAP0b0p2h-00OTVW; Sat, 28
+ Jun 2025 23:34:34 +0200
+Message-ID: <4e28458b-baba-456a-bae6-08c2818aedf8@gmx.de>
+Date: Sat, 28 Jun 2025 23:34:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] power: supply: core: Add
+ power_supply_get/set_property_direct()
+To: Hans de Goede <hansg@kernel.org>, sre@kernel.org, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250627205124.250433-1-W_Armin@gmx.de>
+ <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 28 Jun 2025 17:26:30 -0300
-Message-Id: <DAYG64BWS8XH.1CGZIOE4GYZD6@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] platform/x86: think-lmi: Fix resource cleanup flaws
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Hans de Goede"
- <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com>
- <ffee2d20-f2c3-4976-bb64-8d442c7c5d05@app.fastmail.com>
-In-Reply-To: <ffee2d20-f2c3-4976-bb64-8d442c7c5d05@app.fastmail.com>
+X-Provags-ID: V03:K1:8SqBnx49cMGI5fE3T4pmIEWEMVgfctI2gNe7E5VVnyJPnq9qZ0o
+ LZpUKRwADkQqeSoLJyeaFQK87PaHqGvY3DSN0ICeKh6FxuE542k+fYOohheGQSY7icnGqh4
+ j7X1AlfjHA+i0AifixsoWL+DOfaglnQ3NzC+Fafkf/hKc4NHshv32vEPfgYnawONBq4NUwl
+ cYPPLFfwgbc3GqCl4ffTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FwZcTQpmIoA=;lR8eBML7evwJBW5M05f95136RwR
+ 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
+ ClDW/N6Vr2oDw+/wAlo72rw=
 
-On Sat Jun 28, 2025 at 4:30 PM -03, Mark Pearson wrote:
-> Thanks Kurt,
+Am 28.06.25 um 11:25 schrieb Hans de Goede:
+
+> Hi Armin,
 >
-> On Sat, Jun 28, 2025, at 2:00 PM, Kurt Borja wrote:
->> Hi all,
+> On 27-Jun-25 10:51 PM, Armin Wolf wrote:
+>> Power supply extensions might want to interact with the underlying
+>> power supply to retrieve data like serial numbers, charging status
+>> and more. However doing so causes psy->extensions_sem to be locked
+>> twice, possibly causing a deadlock.
 >>
->> First patch is a prerequisite in order to avoid NULL pointer
->> dereferences in error paths. Then two fixes follow.
+>> Provide special variants of power_supply_get/set_property() that
+>> ignore any power supply extensions and thus do not touch the
+>> associated psy->extensions_sem lock.
 >>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> Suggested-by: Hans de Goede <hansg@kernel.org>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Thank you for your work on this.
+>
+> The entire series looks good to me:
+>
+> Reviewed-by: Hans de Goede <hansg@kernel.org>
+>
+> for the series.
+>
+> There is the question of how to merge this. I think it might
+> be best for the entire series to go through the power-supply
+> tree.
+>
+> Ilpo would that work for you and if yes can we have your ack ?
+>
+> Sebastian, IMHO this should be merged as fixed not as for-next
+> material.
+>
+> Regards,
+>
+> Hans
+
+Personally i would prefer to merge this through the pdx86 tree as the
+uniwill-laptop driver currently under review will also require this functi=
+onality.
+
+Thanks,
+Armin Wolf
+
 >> ---
->> Kurt Borja (3):
->>       platform/x86: think-lmi: Create ksets consecutively
->>       platform/x86: think-lmi: Fix kobject cleanup
->>       platform/x86: think-lmi: Fix sysfs group cleanup
+>>   drivers/power/supply/power_supply_core.c | 82 ++++++++++++++++++++---=
+-
+>>   include/linux/power_supply.h             |  8 +++
+>>   2 files changed, 78 insertions(+), 12 deletions(-)
 >>
->>  drivers/platform/x86/lenovo/think-lmi.c | 92 ++++++++++++--------------=
--------
->>  1 file changed, 33 insertions(+), 59 deletions(-)
->> ---
->> base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
->> change-id: 20250628-lmi-fix-98143b10d9fd
->> --=20
->>  ~ Kurt
+>> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/s=
+upply/power_supply_core.c
+>> index aedb20c1d276..e70ffedf1a80 100644
+>> --- a/drivers/power/supply/power_supply_core.c
+>> +++ b/drivers/power/supply/power_supply_core.c
+>> @@ -1241,9 +1241,8 @@ bool power_supply_has_property(struct power_suppl=
+y *psy,
+>>   	return false;
+>>   }
+>>  =20
+>> -int power_supply_get_property(struct power_supply *psy,
+>> -			    enum power_supply_property psp,
+>> -			    union power_supply_propval *val)
+>> +static int __power_supply_get_property(struct power_supply *psy, enum =
+power_supply_property psp,
+>> +				       union power_supply_propval *val, bool use_extensions)
+>>   {
+>>   	struct power_supply_ext_registration *reg;
+>>  =20
+>> @@ -1253,10 +1252,14 @@ int power_supply_get_property(struct power_supp=
+ly *psy,
+>>   		return -ENODEV;
+>>   	}
+>>  =20
+>> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
+>> -		power_supply_for_each_extension(reg, psy) {
+>> -			if (power_supply_ext_has_property(reg->ext, psp))
+>> +	if (use_extensions) {
+>> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
+>> +			power_supply_for_each_extension(reg, psy) {
+>> +				if (!power_supply_ext_has_property(reg->ext, psp))
+>> +					continue;
+>> +
+>>   				return reg->ext->get_property(psy, reg->ext, reg->data, psp, val)=
+;
+>> +			}
+>>   		}
+>>   	}
+>>  =20
+>> @@ -1267,20 +1270,49 @@ int power_supply_get_property(struct power_supp=
+ly *psy,
+>>   	else
+>>   		return -EINVAL;
+>>   }
+>> +
+>> +int power_supply_get_property(struct power_supply *psy, enum power_sup=
+ply_property psp,
+>> +			      union power_supply_propval *val)
+>> +{
+>> +	return __power_supply_get_property(psy, psp, val, true);
+>> +}
+>>   EXPORT_SYMBOL_GPL(power_supply_get_property);
+>>  =20
+>> -int power_supply_set_property(struct power_supply *psy,
+>> -			    enum power_supply_property psp,
+>> -			    const union power_supply_propval *val)
+>> +/**
+>> + * power_supply_get_property_direct - Read a power supply property wit=
+hout checking for extensions
+>> + * @psy: The power supply
+>> + * @psp: The power supply property to read
+>> + * @val: The resulting value of the power supply property
+>> + *
+>> + * Read a power supply property without taking into account any power =
+supply extensions registered
+>> + * on the given power supply. This is mostly useful for power supply e=
+xtensions that want to access
+>> + * their own power supply as using power_supply_get_property() directl=
+y will result in a potential
+>> + * deadlock.
+>> + *
+>> + * Return: 0 on success or negative error code on failure.
+>> + */
+>> +int power_supply_get_property_direct(struct power_supply *psy, enum po=
+wer_supply_property psp,
+>> +				     union power_supply_propval *val)
+>> +{
+>> +        return __power_supply_get_property(psy, psp, val, false);
+>> +}
+>> +EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
+>> +
+>> +
+>> +static int __power_supply_set_property(struct power_supply *psy, enum =
+power_supply_property psp,
+>> +				       const union power_supply_propval *val, bool use_extensions)
+>>   {
+>>   	struct power_supply_ext_registration *reg;
+>>  =20
+>>   	if (atomic_read(&psy->use_cnt) <=3D 0)
+>>   		return -ENODEV;
+>>  =20
+>> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
+>> -		power_supply_for_each_extension(reg, psy) {
+>> -			if (power_supply_ext_has_property(reg->ext, psp)) {
+>> +	if (use_extensions) {
+>> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
+>> +			power_supply_for_each_extension(reg, psy) {
+>> +				if (!power_supply_ext_has_property(reg->ext, psp))
+>> +					continue;
+>> +
+>>   				if (reg->ext->set_property)
+>>   					return reg->ext->set_property(psy, reg->ext, reg->data,
+>>   								      psp, val);
+>> @@ -1295,8 +1327,34 @@ int power_supply_set_property(struct power_suppl=
+y *psy,
+>>  =20
+>>   	return psy->desc->set_property(psy, psp, val);
+>>   }
+>> +
+>> +int power_supply_set_property(struct power_supply *psy, enum power_sup=
+ply_property psp,
+>> +			      const union power_supply_propval *val)
+>> +{
+>> +	return __power_supply_set_property(psy, psp, val, true);
+>> +}
+>>   EXPORT_SYMBOL_GPL(power_supply_set_property);
+>>  =20
+>> +/**
+>> + * power_supply_set_property_direct - Write a power supply property wi=
+thout checking for extensions
+>> + * @psy: The power supply
+>> + * @psp: The power supply property to write
+>> + * @val: The value to write to the power supply property
+>> + *
+>> + * Write a power supply property without taking into account any power=
+ supply extensions registered
+>> + * on the given power supply. This is mostly useful for power supply e=
+xtensions that want to access
+>> + * their own power supply as using power_supply_set_property() directl=
+y will result in a potential
+>> + * deadlock.
+>> + *
+>> + * Return: 0 on success or negative error code on failure.
+>> + */
+>> +int power_supply_set_property_direct(struct power_supply *psy, enum po=
+wer_supply_property psp,
+>> +				     const union power_supply_propval *val)
+>> +{
+>> +	return __power_supply_set_property(psy, psp, val, false);
+>> +}
+>> +EXPORT_SYMBOL_GPL(power_supply_set_property_direct);
+>> +
+>>   int power_supply_property_is_writeable(struct power_supply *psy,
+>>   					enum power_supply_property psp)
+>>   {
+>> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.=
+h
+>> index 45468959dd98..f21f806bfb38 100644
+>> --- a/include/linux/power_supply.h
+>> +++ b/include/linux/power_supply.h
+>> @@ -878,15 +878,23 @@ static inline int power_supply_is_system_supplied=
+(void) { return -ENOSYS; }
+>>   extern int power_supply_get_property(struct power_supply *psy,
+>>   			    enum power_supply_property psp,
+>>   			    union power_supply_propval *val);
+>> +int power_supply_get_property_direct(struct power_supply *psy, enum po=
+wer_supply_property psp,
+>> +				     union power_supply_propval *val);
+>>   #if IS_ENABLED(CONFIG_POWER_SUPPLY)
+>>   extern int power_supply_set_property(struct power_supply *psy,
+>>   			    enum power_supply_property psp,
+>>   			    const union power_supply_propval *val);
+>> +int power_supply_set_property_direct(struct power_supply *psy, enum po=
+wer_supply_property psp,
+>> +				     const union power_supply_propval *val);
+>>   #else
+>>   static inline int power_supply_set_property(struct power_supply *psy,
+>>   			    enum power_supply_property psp,
+>>   			    const union power_supply_propval *val)
+>>   { return 0; }
+>> +static inline int power_supply_set_property_direct(struct power_supply=
+ *psy,
+>> +						   enum power_supply_property psp,
+>> +						   const union power_supply_propval *val)
+>> +{ return 0; }
+>>   #endif
+>>   extern void power_supply_external_power_changed(struct power_supply *=
+psy);
+>>  =20
 >
-> The patches all look good to me:
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-Thanks!
-
->
-> The only caveat is I tried a build and system won't boot. I don't think i=
-t's related to your changes, but it means I've not been able to actually te=
-st them to confirm all working normally. I'll dig a bit more and figure out=
- what is going on.
-
-Let me know if the problem persists only when the patches are applied.
-
->
-> Mark
-
-PD: After reading the kobject code I realized kobject_del() call is
-completely optional. I'll send a v2 without it.
-
-
---=20
- ~ Kurt
