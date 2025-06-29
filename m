@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94071EE035
-	for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jun 2025 23:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B4D1CA84;
+	Sun, 29 Jun 2025 23:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751239912; cv=none; b=YhtTmWLp/rhoIXfPaDrq0vENrOoWEq80X+wU4DA0nbr6dxoGSifXpkKZMNR1QPo1840DRyDW8CPeNwNCih30BANyV1ZiTOTY+ThXj9Y2j/HJfp8uoL+JO8b4IOz074VvAD/r1cXkND3kofztOGCtMSXDVwZEDpEzxyXSrE0O7W0=
+	t=1751240283; cv=none; b=UZzlMjv9e7i15CfCUpsMg2v3SfjdGqoE2lDiW3e44PXG+ochYXq0qHCDuo5C1Qv1cGqy4e+pEJwVnQGFld2pQJEahXaACimAAI9a0KOeKpTrklY99finmbhHoLTU9UbHctWY2XzWOJ+Bd65L7PwbQArngUUJd6nD02e3WXdzgNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751239912; c=relaxed/simple;
-	bh=SguBH5622aqi/5s2a5390Toif9M5eca6y0BTqKAawvU=;
+	s=arc-20240116; t=1751240283; c=relaxed/simple;
+	bh=8RS+dxkZbuGdmC+7DeTpw3+PJ0tyipXZW3amGzEHgHs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C1PY4AzhJ/MMo6EOGjx0OQhynEWgmLywUmaxBBxUstVO3bw2oS3jSGU9CMmeiyx1KD0keR/ZxCVy0eZGMREVMnSctF5AkH83u+UYHCDbTEVRNy7lJHMde5J9w4Vq74giA0/uUmgAJD19RGNHI0W+W6UMdXxBKS5wmV0azePbnek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Nppr4lO0; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=jW2vHilOS4XqNDD3u774Oh4JYTHiIoqc8/Cr1L6Hji/q1WhyBQSgEPKbOXdHjK1o7LFfGioguPWEzc0oa0HekwqGH5w8pCF7mKS5aVCycknpYMd2mBa6wWvSCQSAmBo2wd+b6GDUad44NZqMinENBDXyHlur9cE5ykCw5Kq8qgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=np3sJKKi; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Nppr4lO0"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="np3sJKKi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751239903; x=1751844703; i=w_armin@gmx.de;
-	bh=SguBH5622aqi/5s2a5390Toif9M5eca6y0BTqKAawvU=;
+	s=s31663417; t=1751240266; x=1751845066; i=w_armin@gmx.de;
+	bh=UfseTpRy2Xh/PCATDYWRgj3JQpfki2UklzAhSsCWRoY=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=Nppr4lO0Yu2Ig0diOre9Yz5O2HmyRHeFd/rK6rvPvyMgpw6d/2pdpVnW4Qc5OBAj
-	 5ayiM9S9d/h4sN2Gxlx/FvSxnmVs2ux3UQgvOyeIRYAf9awrQqagUKxWxyJGAQYMz
-	 aNrLNMPsBThybBZ3b4lY4NsO0HNxHF9p6X7/wE6bVmiT8IfoftNbffVK+rMq4A8Td
-	 QyjU/xoHMg28PqUOZgk7eJn2sssG9REZXJ8QQlxEaeOsg+OtxIFzngYfo9TomrpDZ
-	 jl/9HVveD4wMEghR9iUYKFwUf9GpS6e3ND/Oelwy5wJKMy4gmomJDIUGTFhPHOOWc
-	 maW6avfALDEGvOf3+A==
+	b=np3sJKKiiXWbnDbVijZxPTqMiMK+A37LI7gnDSOIw10dy2C4A8dtbdGSejdgH+Cx
+	 BGBgbjtU5pNcKklUFwS4F7n02u09tatzWzgNWxnGwn6bKyyjvzsFlCQhGG9l3YaCW
+	 EScuBNgeZyjOPYp+cE9Qs1+MeKdJJQX0Z79mKbi8EW2Rq7j9Cro4HK7L9ORBkcfuI
+	 PZJodaAwUHDWkce3WjK6jU3Oby+RWVipUBUNBOlY+vN0YQO/ny5e6QOhCFe+Ol8Fw
+	 QqoR2wcRYIh9kVA3kBRvDwogr4a+PlmMOIyq93Qh4nWu2ftmNBqr6iR1uxGdg0pmj
+	 GfY5cCKxt+dgSP99wA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQg6-1urpdP1Dm4-00yQI7; Mon, 30
- Jun 2025 01:31:43 +0200
-Message-ID: <0f15012b-f65c-4fda-81a1-9fff091f166c@gmx.de>
-Date: Mon, 30 Jun 2025 01:31:40 +0200
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3W0-1uIBvw1C8s-00IkoK; Mon, 30
+ Jun 2025 01:37:46 +0200
+Message-ID: <6a9b6660-acd2-44b4-a57e-2245043471ab@gmx.de>
+Date: Mon, 30 Jun 2025 01:37:43 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,197 +43,252 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Linux kernel 6.8.0-62 generic null pointer
-To: Jan Graczyk <jangraczyk@yahoo.ca>, Kurt Borja <kuurtb@gmail.com>
-Cc: Prasanth Ksr <prasanth.ksr@dell.com>,
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Fix WMI data block
+ retrieval in sysfs callbacks
+To: Kurt Borja <kuurtb@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>,
+ Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "dell.client.kernel@dell.com" <dell.client.kernel@dell.com>,
- PDx86 <platform-driver-x86@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Hans de Goede <hansg@kernel.org>
-References: <740368848.567654.1751195731131.ref@mail.yahoo.com>
- <740368848.567654.1751195731131@mail.yahoo.com>
- <CAHk-=wgMiSKXf7SvQrfEnxVtmT=QVQPjJdNjfm3aXS7wc=rzTw@mail.gmail.com>
- <CAHk-=wjOg3ODTiNF9T5Kifwiz2FnU5DCrUB1MLxG1mnWAo_k9w@mail.gmail.com>
- <DAZ7CSDVAD9H.31NIC2DQ4U1SJ@gmail.com>
- <164439597.623624.1751220132689@mail.yahoo.com>
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Divya Bharathi <divya.bharathi@dell.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>
+References: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <164439597.623624.1751220132689@mail.yahoo.com>
+In-Reply-To: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Mduoxs4vlr41lORysO/VgzO5bI4utrRzLHk+FDEVzzlXnEL78d/
- 0jDsIFqD+CJwAEfji3s1dJbLhZzEAPrrQpvxQC1wtyHB5cxaH5rZkB+qGzpGJ8my7tQOE29
- bYd1l+kUIr8vivOGKN2jZJjayMtBH/WHz37zC2rIM2Giw3limIaXcM4WxD6R8X3d7WsW6bq
- bZERKMWoqlgoXZhISNVLw==
+X-Provags-ID: V03:K1:pTzSc8d0QINnOn/L5iAuo4OEE6uYbo7TGPt8mceQDhlqhWgbT94
+ uHnESaxHPN3Q9uQiAb8HfCUttcj7YKZsszYxtLj5V6rsnjUtizzT3YUqu5MQo0a0PHrnXOk
+ FL4kuOgFaGQhTXANgkqlsylsFfIFnrt86MLL94bC85Ma4x2k5xk7J6vlOi6a5fQjAvpY3GA
+ 5MebFsXYSeI8ByW+mT1PA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DV6NSFX63Z8=;6uOjmbXu8eBPyv5V6/ibxpCZl6Y
- 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
+UI-OutboundReport: notjunk:1;M01:P0:mcU180uSLjA=;jJ5sc7CUy05btWsuKEJX/BVDa9T
+ 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
 
-Am 29.06.25 um 20:02 schrieb Jan Graczyk:
+Am 29.06.25 um 20:33 schrieb Kurt Borja:
 
-> Hello Kurt,
+> After retrieving WMI data blocks in sysfs callbacks, check for the
+> validity of them before dereferencing their content.
 >
-> I have attached both full dmesg dump and acpi dump.
+> Reported-by: Jan Graczyk <jangraczyk@yahoo.ca>
+> Closes: https://lore.kernel.org/r/CAHk-=3DwgMiSKXf7SvQrfEnxVtmT=3DQVQPjJ=
+dNjfm3aXS7wc=3DrzTw@mail.gmail.com/
+> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Manage=
+ment Driver over WMI for Dell Systems")
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 7 +++=
+++++
+>   drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c    | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c     | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c  | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/sysman.c             | 8 +++=
++----
+>   6 files changed, 23 insertions(+), 12 deletions(-)
 >
-> Best Regards,
->
-> Jan
->
-No top posting please.
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> index 3ad33a094588c6a258786a02f952eaa6bf953234..792e7d865bfb1cfc13b59c90=
+ddf7de47feff408f 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> @@ -89,6 +89,13 @@ extern struct wmi_sysman_priv wmi_priv;
+>  =20
+>   enum { ENUM, INT, STR, PO };
+>  =20
+> +enum {
+> +	ENUM_MIN_ELEMENTS	=3D 8,
+> +	INT_MIN_ELEMENTS	=3D 9,
+> +	STR_MIN_ELEMENTS	=3D 8,
+> +	PO_MIN_ELEMENTS		=3D 4,
+> +};
 
-> On Sunday, June 29, 2025 at 07:45:13 p.m. GMT+2, Kurt Borja=20
-> <kuurtb@gmail.com> wrote:
->
->
-> Hi Linus,
->
-> On Sun Jun 29, 2025 at 1:55 PM -03, Linus Torvalds wrote:
-> > On Sun, 29 Jun 2025 at 09:19, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> >>
-> >> The band-aid fix looks fairly obvious:
-> >>
-> >>=C2=A0 -=C2=A0 =C2=A0 =C2=A0 if (!obj)
-> >>=C2=A0 +=C2=A0 =C2=A0 =C2=A0 if (!obj || !obj->package.elements)
-> >>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return =
--EIO;
-> >>
-> >> in both places, but I wonder if there's something more fundamentally
-> >> wrong there that the elements array doesn't exist.
-> >
-> > Bah. That band-aid may fix the oops. but I think the problem is deeper=
-.
-> >
-> > It should probably also check that
-> >
-> >=C2=A0 (a) obj->type =3D=3D ACPI_TYPE_PACKAGE
-> >
-> >=C2=A0 (b) obj->package.count is actually large enough for the derefere=
-nce
->
-> As you mentioned, the driver does check this when creating the sysfs
-> attributes here [1]. But I believe it should definitely check every time
-> to catch spurious errors.
->
-> I'll submit this fix.
->
-> >
-> > because maybe some broken ACPI bios ends up having a non-package
-> > object there and then checking "is obj->package.elements NULL"
-> > pointless, because that "package.elements" may be something entirely
-> > different than a pointer in the first place, because
-> > "package.elements" is only valid for a ACPI_TYPE_PACKAGE.
-> >
-> > Maybe that wmi_query_block() is always *supposed* to return a
-> > ACPI_TYPE_PACKAGE, but I don't see any such guarantees, and it
-> > obviously happily is returning an ACPI object with a NULL
-> > package.elements.
->
-> Not necessarily, AFAIK data blocks could be of any type.
->
-> >
-> > Some other drivers do seem to check this all, eg
-> > drivers/hwmon/hp-wmi-sensors.c has check_wobj() to verify the thing it
-> > uses, and it does do things like this:
-> >
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (type !=3D ACPI_TYPE_PACKAGE)
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;
-> >
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 elem_count =3D wobj->package.count;
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (elem_count !=3D last_prop + 1)
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;
-> >
-> > at the very top of the function. So clearly people have either hit
-> > this kind of issue before, or some people have just been more careful.
->
-> I think in this case this bug is not common at all, because the driver
-> already retrieved this data block successfully once (at init).
->
-> I also believe this has something to do with WMI method enablement.
-> There might be a race condition at play here. I'll Cc this to Armin Wolf
-> so he can take a look.
+Hi,
 
-I do not think so, from my point of view querying the DELL_WMI_BIOS_ENUMER=
-ATION_ATTRIBUTE_GUID using ACPI control method WQBL
-causes the error. The reason for this seems that this control method can r=
-eturn an integer when encountering an error.
+are you sure that this works? I suggest we use defines instead as ENUM_MIN=
+_ELEMENTS has the same value as STR_MIN_ELEMENTS.
 
-Under windows the WMI request would thus fail as the integer would be mars=
-haled as a 32-bit buffer, being too small to fulfill
-the request. So i think improving the ACPI object validation inside the dr=
-iver is indeed the best way to go.
+For the rest:
 
-Thanks,
-Armin Wolf
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+> +
+>   enum {
+>   	ATTR_NAME,
+>   	DISPL_NAME_LANG_CODE,
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> index 8cc212c852668312096f756bc1fb1e3054a1f5c0..fc2f58b4cbc6eff863f2c329=
+3cb4322d28048bb8 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> @@ -23,9 +23,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATT=
+RIBUTE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < ENUM_MIN_=
+ELEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURREN=
+T_VAL].string.pointer);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c =
+b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> index 951e75b538fad42509614c2ebf2ef77aa05b614f..73524806423914bf210b9b5f=
+78c0b5b4f6a7984c 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> @@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBU=
+TE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_INTEGER) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < INT_MIN_E=
+LEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_INTEGER) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[CURR=
+ENT_VAL].integer.value);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attribute=
+s.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> index d8f1bf5e58a0f441cfd6c21f299c5426b2e28ce9..3167e06d416ede61cda5ad4c=
+860dcb41b05cd5fa 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> @@ -26,9 +26,10 @@ static ssize_t is_enabled_show(struct kobject *kobj, =
+struct kobj_attribute *attr
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_PASSOBJ_ATTRIBU=
+TE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[IS_PASS_SET].type !=3D ACPI_TYPE_INTEGER) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < PO_MIN_EL=
+EMENTS ||
+> +	    obj->package.elements[IS_PASS_SET].type !=3D ACPI_TYPE_INTEGER) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[IS_P=
+ASS_SET].integer.value);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes=
+.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> index c392f0ecf8b55ba722246d67ba0073772a4f0094..0d2c74f8d1aad7843effcd7b=
+600dd42e6947dc15 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> @@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_STRING_ATTRIBUT=
+E_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < STR_MIN_E=
+LEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURREN=
+T_VAL].string.pointer);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/driver=
+s/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index d00389b860e4ea0655c740c78bc3751f323b6370..3c74d5e8350a413a55739ca5=
+e9647be30bac50d4 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -407,10 +407,10 @@ static int init_bios_attributes(int attr_type, con=
+st char *guid)
+>   		return retval;
+>  =20
+>   	switch (attr_type) {
+> -	case ENUM:	min_elements =3D 8;	break;
+> -	case INT:	min_elements =3D 9;	break;
+> -	case STR:	min_elements =3D 8;	break;
+> -	case PO:	min_elements =3D 4;	break;
+> +	case ENUM:	min_elements =3D ENUM_MIN_ELEMENTS;	break;
+> +	case INT:	min_elements =3D INT_MIN_ELEMENTS;	break;
+> +	case STR:	min_elements =3D STR_MIN_ELEMENTS;	break;
+> +	case PO:	min_elements =3D PO_MIN_ELEMENTS;		break;
+>   	default:
+>   		pr_err("Error: Unknown attr_type: %d\n", attr_type);
+>   		return -EINVAL;
 >
-> >
-> >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Linus
->
-> @Jan:
->
-> What is the reproduction rate of the OOPS?
->
-> Your crash log suggest this was triggered by fwupd, maybe a call to
-> `fwupdmgr get-bios-settings`?
->
-> Also, please attach your full `dmesg` output and `acpidump`.
->
->
->
-> [1]
-> https://elixir.bootlin.com/linux/v6.16-rc3/source/drivers/platform/x86/d=
-ell/dell-wmi-sysman/sysman.c#L426
->
-> --=20
-> ~ Kurt
->
->
+> ---
+> base-commit: 173bbec6693f3f3f00dac144f3aa0cd62fb60d33
+> change-id: 20250629-sysman-fix-9c527a28f1dd
