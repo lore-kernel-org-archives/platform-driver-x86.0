@@ -1,345 +1,118 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BF71F872D;
-	Sat, 28 Jun 2025 21:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7883C4685;
+	Sun, 29 Jun 2025 02:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751146481; cv=none; b=t9Q+O/myRUsxbZ7w04mcOQjMrfrQrKw1xt1IgDUkiQ6iEpYP6+L878Z5EgriF61R4Id/eHreYW8tVc+9Z1QQwxeK0mYKz/0l7uIW/Jg94E4zpgvGoOFCzTLXeeGY0Irer9p1r7hgWXP+4mJgTK5cjeW+xDSInRDgSbcmlHgZSes=
+	t=1751164399; cv=none; b=DLAzKkZFYdCvVOO38TEwxQjiygUBNxxKqnp021eC2u/f9LISUxjLXuTN3c7IXW3z0DwBg71Cqhmvcdn9KIYxuCWL25SU7/PBg9e+/5z6+8aN2ASbKzfcfPvUdRfmXx54cyKDqgxROGAgorP0i3ovUfAxJSQqkDht2xME0MLtfY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751146481; c=relaxed/simple;
-	bh=jVvtXlbC2ZlGcZNiEc2KeLWoVdo6RCJFgOivujX3peE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fLPqVyxPnsI2yGwuBAj+7PlxmQ1qa/y+UKDjwbjx/XoxIlVCe4ooS0QEUl5DcNne58JieOgsmec13d6JE8pywEkB1wM6TkbpC13gteEOM3ntDGEQehr07HEGj8gQkc3BwZXCwblnD6xbcNsYqkTvmUQpxEb5r82LHt/rByT4GWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BlmPC5lM; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1751164399; c=relaxed/simple;
+	bh=7TNjsOsxaG078tW24eRpGIBuRggGpKpO1anWw/g3xvo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J7wm7Yq+e7p5MScHJS2/DVow1kUstB30eK9ZPyeSDorznaWATT76U65twLU1VAHgVfo9BN8M/y+y92/Rv5U68vmpUd4G34tN/+ufwmRQXz/0oLLwQTK+DGPrfY23zDXxpO8Y7uvRtJlr0Cq7jMhLwK9veZ+ssstRRV7dZncwRzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0gFTF+j; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BlmPC5lM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751146474; x=1751751274; i=w_armin@gmx.de;
-	bh=LnRkb5hf4pqtcOpKjv5AcWU7Px18+ExBGnIOoFeiyMM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BlmPC5lM30H0I2g1lXEgsblePIItWl2kmna9ubYRqkBOZqNQ2oqNiXMN3WFkggTs
-	 CY8FqMT+lAP107vCUjIfZ8b28/cF8ES8u54rfRyFACTj4A0l2VA4LJKJVah7mwJeV
-	 LnsroYPge4hQhSA7Y4hvzlYPoIWvOXqRYwaJvc3IFxAo6YyoHh6b2NOooluU9S+ec
-	 E3NvgV/si9ImYAovRW1cU183fcG+ArzhX7CXL0cWMUtGXSagc8BDyQZtnrT8PdbFV
-	 IJJPpf8Bd6J05DixoxI7dBwtvfLzqcI2U/AdBIkxjvTc31R2HxJA8gjcH9yX+sEnw
-	 sy0YpJAQqRGf4lXHFQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYeMt-1uAP0b0p2h-00OTVW; Sat, 28
- Jun 2025 23:34:34 +0200
-Message-ID: <4e28458b-baba-456a-bae6-08c2818aedf8@gmx.de>
-Date: Sat, 28 Jun 2025 23:34:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0gFTF+j"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ecf99dd567so16771516d6.0;
+        Sat, 28 Jun 2025 19:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751164397; x=1751769197; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jaLii3lNy2CzM3IdE26aImFnghtJ1UVJQQeyhI36CDg=;
+        b=M0gFTF+jheqi3+Hw4dLgfRu8ZsKTxDk2DWMl5VpjDsTB0eb3e032/d7eE1KF18B5TU
+         yRf8n1IXr4EIfdIUmPHj91djN1Y7dXFts85auOm9bXl7dIv168h8ciruJji/zhdOi8YW
+         aPcrAt1jlUyVck9ilZRskkfMbMfg2E0yGlS1ltvnuNsuQH5F1uAHAi8e8f3OkGPFpQTq
+         2hnzOkhSos80sgjcHaLyKMsOVUJ1kqPWlkSGy/TbNBtIOlLX7UrMZYmUjfHLb/KRQ0AF
+         QsU+6kKnhTHSbfk+yTfoWkSz4pUytZ+rW6syDZZLJOL7btvcCZx03ZsFr2+XHPNa3sgv
+         HDgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751164397; x=1751769197;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jaLii3lNy2CzM3IdE26aImFnghtJ1UVJQQeyhI36CDg=;
+        b=AIZqbFSGbyuyCH5JBaBDA4PWvuS9E7ww/9Vs5RjtrrTD0SmC0nEL/WrTI3mxBxlC/I
+         Bb6Imq+O2RWrvM+A02jbKiSCWtQyrfPqvmQ9jWcnnaEBxpjL1FXeUpCliBEc6CCW+nNI
+         rQPL2oA466Gahv80N6lph1fTtRZiCEgYBHjybS30dC6Ov7XlFSaNdp+U5msrXC15nGfp
+         pRbuRAU6bJRM8Bn2M8KQLpjcEdW8Ov+U9+LhQn+ey4Ta2ZYCdpYEPxyRkZI3K8F4PULe
+         KeOSawvtzo3YiTHePD1aB7Qn1vZORdIxmHV2dDrFzjC0w/R7GErC4GsPmwjxXi2GSHGN
+         12Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwTFPlZl3uL6oQ5WZpcbU8mMKATSfvZbfrQiL7V9p9FE/LDsAMys7e4+nbwHJy1ZOxhPmbdFr6v2CA3KI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUUe2qkFMf++W117b1Fzg3MdQCqqPStPSDWt+zQbxhILA1olqg
+	PR93J0iWhA3vj2DEFddDaULr/Qirg+WrRU1Ua+6wGi8ldy+uSQJwyk5b
+X-Gm-Gg: ASbGncu9UOI76GELfnDYeU91C4CWWzSK7xX0i91iSruHCQea8VSGG/aChV1hJZ46U22
+	rNVMXhALQG/ouosvMPnFcI/kGxAhjgMAHXHlMCE5SXBcFzcvAubwky56YP82iqBEcjZFAlTVhlF
+	ljD401rPR7ba33+EjpSQeAlgwzRo96K4a1OFItx4rgjNxHe1zZEc4+TG5QRrOvf1Ph+XKSlucna
+	rODIOQEjiL+srutJmiNfn42bo7CAda++zShSc6G0el9Y2vt8xj+wpINFfhjvcExE/Tg+LPmjYox
+	m65H+u6A3Ud5xyr0e+nGvpO3gH+S9SN3no0NiTPcsZXn5Aqrm/i6Eu+pfLQj7tR1Xm/8ZjVA
+X-Google-Smtp-Source: AGHT+IGJN374oPdb4HsZrF0iGc4qhQ+7BO8sPU2qnJfm0xv5BYCJ5fLgnAd/CbULgmqSTbxA3rF/KA==
+X-Received: by 2002:a05:6214:2aae:b0:6fa:c41e:cc6c with SMTP id 6a1803df08f44-70002dec8ccmr152061816d6.15.1751164397300;
+        Sat, 28 Jun 2025 19:33:17 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44317e285sm374242985a.45.2025.06.28.19.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 19:33:16 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v2 0/3] platform/x86: think-lmi: Fix resource cleanup flaws
+Date: Sat, 28 Jun 2025 23:32:52 -0300
+Message-Id: <20250628-lmi-fix-v2-0-c530e1c959d7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] power: supply: core: Add
- power_supply_get/set_property_direct()
-To: Hans de Goede <hansg@kernel.org>, sre@kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250627205124.250433-1-W_Armin@gmx.de>
- <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8SqBnx49cMGI5fE3T4pmIEWEMVgfctI2gNe7E5VVnyJPnq9qZ0o
- LZpUKRwADkQqeSoLJyeaFQK87PaHqGvY3DSN0ICeKh6FxuE542k+fYOohheGQSY7icnGqh4
- j7X1AlfjHA+i0AifixsoWL+DOfaglnQ3NzC+Fafkf/hKc4NHshv32vEPfgYnawONBq4NUwl
- cYPPLFfwgbc3GqCl4ffTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FwZcTQpmIoA=;lR8eBML7evwJBW5M05f95136RwR
- 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
- ClDW/N6Vr2oDw+/wAlo72rw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANSlYGgC/2WMQQ7CIBAAv9Ls2TVAtRZP/sP0gLBtNynFgCGah
+ r+LvXqcyWQ2SBSZElybDSJlThzWCurQgJ3NOhGyqwxKqLPoVI+LZxz5jbqXp/YhhdOjg1o/I1W
+ 9n+5D5ZnTK8TPPs7yZ/8fWaJA2xFZbUxrzeU2ecPL0QYPQynlCxp39hSeAAAA
+X-Change-ID: 20250628-lmi-fix-98143b10d9fd
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=910; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=7TNjsOsxaG078tW24eRpGIBuRggGpKpO1anWw/g3xvo=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBkJSx+vTP7lZ8HOY3vpZ7JEZQDXC58IZrPXjXIvy4RbO
+ Dxs9LQ7SlkYxLgYZMUUWdoTFn17FJX31u9A6H2YOaxMIEMYuDgFYCInbzD8T556rFI72HeVgZaD
+ ldqrPT8L7hVvnz1x4tEdPafvBP2bu4Phv9fRWpWJUk5KW6p8b1y2ZDrwxoJXWCx8Z19wcljKgcr
+ NjAA=
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Am 28.06.25 um 11:25 schrieb Hans de Goede:
+Hi all,
 
-> Hi Armin,
->
-> On 27-Jun-25 10:51 PM, Armin Wolf wrote:
->> Power supply extensions might want to interact with the underlying
->> power supply to retrieve data like serial numbers, charging status
->> and more. However doing so causes psy->extensions_sem to be locked
->> twice, possibly causing a deadlock.
->>
->> Provide special variants of power_supply_get/set_property() that
->> ignore any power supply extensions and thus do not touch the
->> associated psy->extensions_sem lock.
->>
->> Suggested-by: Hans de Goede <hansg@kernel.org>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Thank you for your work on this.
->
-> The entire series looks good to me:
->
-> Reviewed-by: Hans de Goede <hansg@kernel.org>
->
-> for the series.
->
-> There is the question of how to merge this. I think it might
-> be best for the entire series to go through the power-supply
-> tree.
->
-> Ilpo would that work for you and if yes can we have your ack ?
->
-> Sebastian, IMHO this should be merged as fixed not as for-next
-> material.
->
-> Regards,
->
-> Hans
+First patch is a prerequisite in order to avoid NULL pointer
+dereferences in error paths. Then two fixes follow.
 
-Personally i would prefer to merge this through the pdx86 tree as the
-uniwill-laptop driver currently under review will also require this functi=
-onality.
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Changes in v2:
 
-Thanks,
-Armin Wolf
+[PATCH 02]
+  - Remove kobject_del() and commit message remark. It turns out it's
+    optional to call this (my bad)
+  - Leave only one fixes tag. The other two are not necessary.
 
->> ---
->>   drivers/power/supply/power_supply_core.c | 82 ++++++++++++++++++++---=
--
->>   include/linux/power_supply.h             |  8 +++
->>   2 files changed, 78 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/s=
-upply/power_supply_core.c
->> index aedb20c1d276..e70ffedf1a80 100644
->> --- a/drivers/power/supply/power_supply_core.c
->> +++ b/drivers/power/supply/power_supply_core.c
->> @@ -1241,9 +1241,8 @@ bool power_supply_has_property(struct power_suppl=
-y *psy,
->>   	return false;
->>   }
->>  =20
->> -int power_supply_get_property(struct power_supply *psy,
->> -			    enum power_supply_property psp,
->> -			    union power_supply_propval *val)
->> +static int __power_supply_get_property(struct power_supply *psy, enum =
-power_supply_property psp,
->> +				       union power_supply_propval *val, bool use_extensions)
->>   {
->>   	struct power_supply_ext_registration *reg;
->>  =20
->> @@ -1253,10 +1252,14 @@ int power_supply_get_property(struct power_supp=
-ly *psy,
->>   		return -ENODEV;
->>   	}
->>  =20
->> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
->> -		power_supply_for_each_extension(reg, psy) {
->> -			if (power_supply_ext_has_property(reg->ext, psp))
->> +	if (use_extensions) {
->> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
->> +			power_supply_for_each_extension(reg, psy) {
->> +				if (!power_supply_ext_has_property(reg->ext, psp))
->> +					continue;
->> +
->>   				return reg->ext->get_property(psy, reg->ext, reg->data, psp, val)=
-;
->> +			}
->>   		}
->>   	}
->>  =20
->> @@ -1267,20 +1270,49 @@ int power_supply_get_property(struct power_supp=
-ly *psy,
->>   	else
->>   		return -EINVAL;
->>   }
->> +
->> +int power_supply_get_property(struct power_supply *psy, enum power_sup=
-ply_property psp,
->> +			      union power_supply_propval *val)
->> +{
->> +	return __power_supply_get_property(psy, psp, val, true);
->> +}
->>   EXPORT_SYMBOL_GPL(power_supply_get_property);
->>  =20
->> -int power_supply_set_property(struct power_supply *psy,
->> -			    enum power_supply_property psp,
->> -			    const union power_supply_propval *val)
->> +/**
->> + * power_supply_get_property_direct - Read a power supply property wit=
-hout checking for extensions
->> + * @psy: The power supply
->> + * @psp: The power supply property to read
->> + * @val: The resulting value of the power supply property
->> + *
->> + * Read a power supply property without taking into account any power =
-supply extensions registered
->> + * on the given power supply. This is mostly useful for power supply e=
-xtensions that want to access
->> + * their own power supply as using power_supply_get_property() directl=
-y will result in a potential
->> + * deadlock.
->> + *
->> + * Return: 0 on success or negative error code on failure.
->> + */
->> +int power_supply_get_property_direct(struct power_supply *psy, enum po=
-wer_supply_property psp,
->> +				     union power_supply_propval *val)
->> +{
->> +        return __power_supply_get_property(psy, psp, val, false);
->> +}
->> +EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
->> +
->> +
->> +static int __power_supply_set_property(struct power_supply *psy, enum =
-power_supply_property psp,
->> +				       const union power_supply_propval *val, bool use_extensions)
->>   {
->>   	struct power_supply_ext_registration *reg;
->>  =20
->>   	if (atomic_read(&psy->use_cnt) <=3D 0)
->>   		return -ENODEV;
->>  =20
->> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
->> -		power_supply_for_each_extension(reg, psy) {
->> -			if (power_supply_ext_has_property(reg->ext, psp)) {
->> +	if (use_extensions) {
->> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
->> +			power_supply_for_each_extension(reg, psy) {
->> +				if (!power_supply_ext_has_property(reg->ext, psp))
->> +					continue;
->> +
->>   				if (reg->ext->set_property)
->>   					return reg->ext->set_property(psy, reg->ext, reg->data,
->>   								      psp, val);
->> @@ -1295,8 +1327,34 @@ int power_supply_set_property(struct power_suppl=
-y *psy,
->>  =20
->>   	return psy->desc->set_property(psy, psp, val);
->>   }
->> +
->> +int power_supply_set_property(struct power_supply *psy, enum power_sup=
-ply_property psp,
->> +			      const union power_supply_propval *val)
->> +{
->> +	return __power_supply_set_property(psy, psp, val, true);
->> +}
->>   EXPORT_SYMBOL_GPL(power_supply_set_property);
->>  =20
->> +/**
->> + * power_supply_set_property_direct - Write a power supply property wi=
-thout checking for extensions
->> + * @psy: The power supply
->> + * @psp: The power supply property to write
->> + * @val: The value to write to the power supply property
->> + *
->> + * Write a power supply property without taking into account any power=
- supply extensions registered
->> + * on the given power supply. This is mostly useful for power supply e=
-xtensions that want to access
->> + * their own power supply as using power_supply_set_property() directl=
-y will result in a potential
->> + * deadlock.
->> + *
->> + * Return: 0 on success or negative error code on failure.
->> + */
->> +int power_supply_set_property_direct(struct power_supply *psy, enum po=
-wer_supply_property psp,
->> +				     const union power_supply_propval *val)
->> +{
->> +	return __power_supply_set_property(psy, psp, val, false);
->> +}
->> +EXPORT_SYMBOL_GPL(power_supply_set_property_direct);
->> +
->>   int power_supply_property_is_writeable(struct power_supply *psy,
->>   					enum power_supply_property psp)
->>   {
->> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.=
-h
->> index 45468959dd98..f21f806bfb38 100644
->> --- a/include/linux/power_supply.h
->> +++ b/include/linux/power_supply.h
->> @@ -878,15 +878,23 @@ static inline int power_supply_is_system_supplied=
-(void) { return -ENOSYS; }
->>   extern int power_supply_get_property(struct power_supply *psy,
->>   			    enum power_supply_property psp,
->>   			    union power_supply_propval *val);
->> +int power_supply_get_property_direct(struct power_supply *psy, enum po=
-wer_supply_property psp,
->> +				     union power_supply_propval *val);
->>   #if IS_ENABLED(CONFIG_POWER_SUPPLY)
->>   extern int power_supply_set_property(struct power_supply *psy,
->>   			    enum power_supply_property psp,
->>   			    const union power_supply_propval *val);
->> +int power_supply_set_property_direct(struct power_supply *psy, enum po=
-wer_supply_property psp,
->> +				     const union power_supply_propval *val);
->>   #else
->>   static inline int power_supply_set_property(struct power_supply *psy,
->>   			    enum power_supply_property psp,
->>   			    const union power_supply_propval *val)
->>   { return 0; }
->> +static inline int power_supply_set_property_direct(struct power_supply=
- *psy,
->> +						   enum power_supply_property psp,
->> +						   const union power_supply_propval *val)
->> +{ return 0; }
->>   #endif
->>   extern void power_supply_external_power_changed(struct power_supply *=
-psy);
->>  =20
->
+- Link to v1: https://lore.kernel.org/r/20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com
+
+---
+Kurt Borja (3):
+      platform/x86: think-lmi: Create ksets consecutively
+      platform/x86: think-lmi: Fix kobject cleanup
+      platform/x86: think-lmi: Fix sysfs group cleanup
+
+ drivers/platform/x86/lenovo/think-lmi.c | 90 +++++++++++----------------------
+ 1 file changed, 30 insertions(+), 60 deletions(-)
+---
+base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+change-id: 20250628-lmi-fix-98143b10d9fd
+-- 
+ ~ Kurt
+
