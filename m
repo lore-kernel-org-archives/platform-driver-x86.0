@@ -1,105 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC021D59F;
-	Mon, 30 Jun 2025 22:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C310028D844
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jun 2025 22:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751321360; cv=none; b=X3l5UmfmlJAsY9Dl/gvpQL7D6dqSEoonTo7kkscIpSczLmhiLlwLi18H9thdTA/ycgt3gxsW0LuLYCQaQ/ews/MTGocsaoZdrMjoAc0cjabo4isY01nVTANn0B8qsMGq5QPM9XIEELiDp/xdjcP37vAyJur3bo9jHtzPxgjb2n0=
+	t=1751322599; cv=none; b=j6VlujUV8u6dB2LLuWop8oe8ISDAZ1yj9YANBZN/FtaESDqyorHX5csmRf1K6EyaTypuvd70+TEs93V4Mic0sMhcIr4YW7F4TFTfYPEHz51ug0WeXZjc5sQQgPMiS63M77562OwtGPGPgaLmADrbXR87WMEmWOLFKUaVs75Moqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751321360; c=relaxed/simple;
-	bh=CWF8K0+JEFix5jRu+JNhGBEpCZPOlQ8Ny5a89ql8Tlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=STjXOw+a5pmDYNLviIU0KN25VWEkQPPmPeQ60Feu2phgrXBHnJ8fAnmSt8r9HAFEIVr3R6FAoNQ9r1u58a/hfAcVFOGGQ0LNOlH7rAUOUZpoUVYMa6oVZI9tDh/4dg1dkbtxl8wf+f8HgV70dhVV3kA7fHlbHTmLGdUWiTTcNic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bcvh4UYE; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bcvh4UYE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751321359; x=1782857359;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CWF8K0+JEFix5jRu+JNhGBEpCZPOlQ8Ny5a89ql8Tlw=;
-  b=Bcvh4UYEJEi5IuzPlumsFFGnZuAE7x0+ctg94P0oXg7Hexu3V/suE0SE
-   /Dq+ONUZ/pdX/YdaNlgdR6mJUTFhB3U8oRtQbyhxV3iqlRu1vbokRQlwC
-   5eM4IpfOFAhm6UAP8rmJrEDd2kLVd4ubWcTGmFa9zqw019QxyuWEn0sMa
-   nOzF/6ocZt6hvH9cKttJuvDPE+s1aGVVYIYGoJfuzsUsqqt0KAq84qN1+
-   qy+3YCo7yF2I57dsLxwKOy6OBmUR+75Rn+Dxa+ZaS+N/km07b27tcL9AD
-   T5MhwB4IcyUAeaM6QoNGm2alHWNSdeHbt7CqJHodv9+QGic0oXsvoVBnp
-   A==;
-X-CSE-ConnectionGUID: sWHWhzk0SYCILXw0FGx+JA==
-X-CSE-MsgGUID: axsakdRHRbSBzV2VoBa/GQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="52676696"
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="52676696"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:09:18 -0700
-X-CSE-ConnectionGUID: 9nz+v2rvRQmegypfaMeFXg==
-X-CSE-MsgGUID: m5ujfXIKTwek1eo9LxXxbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="152965787"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 30 Jun 2025 15:09:14 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWMgZ-000ZQ2-39;
-	Mon, 30 Jun 2025 22:09:11 +0000
-Date: Tue, 1 Jul 2025 06:08:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Joshua Grisham <josh@joshuagrisham.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Antheas Kapenekakis <lkml@antheas.dev>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Prasanth Ksr <prasanth.ksr@dell.com>,
-	Jorge Lopez <jorge.lopez2@hp.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
-Subject: Re: [PATCH v4 1/6] platform/x86: firmware_attributes_class: Add
- device initialization methods
-Message-ID: <202507010553.vgtA0xlb-lkp@intel.com>
-References: <20250630-fw-attrs-api-v4-1-1a04952b255f@gmail.com>
+	s=arc-20240116; t=1751322599; c=relaxed/simple;
+	bh=egHzrVlKIuNkOSz6kKYtVbRsEhLtLrrIezCiIWc0ll0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t7IFhbwEDgHCJ8TpjTL3yNgTo5xpF1m92ydpFOOsAWUJMT03ls3cvL5zP3j6tl53Z7u+ac588GK1784+xfOPWaIrI4iQlLa+aoWI021LXiWuFvUaQkCOmSi591b8FvlaKLISzeDqOKcQvzqHRZT3IHxHV5kNjhYLQMDgzQlERSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=109.224.244.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
+Date: Mon, 30 Jun 2025 22:29:46 +0000
+To: Armin Wolf <W_Armin@gmx.de>
+From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Cc: Kurt Borja <kuurtb@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+Message-ID: <JQkv2Fxny1LxdvvwhjRdF7tnxhTsZy7cZypJB8vpJeaaCU2-0ZrGW3k7F-HlSEhe-pzVtbCO9TzPE06mvXhs1q6_esONc8jAzgc3Pglq8ak=@benis.se>
+In-Reply-To: <77c78beb-84c6-4113-8a32-ba09ab22f098@gmx.de>
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de> <DAXK1634VYQI.1PEUCTQIYAF3Y@gmail.com> <jCZyBwYNgVSM_Qk2XkfweZRlZNiSh06WVUBqya9leWoWXAmNFL9fdbgBX038OzfQUEaGE5PU8yhtJL2zq_PRW67FmLYTnoK_SPUPmzoTdco=@benis.se> <DAXR1M1W2XFZ.3H2AWUO3N1X5E@gmail.com> <oZxsMVf4IphclLjVLbrpp1rHYXlgWYV7BXDzgP40QKiHSOUtVDtDwP_s2uKFel3aLTZyIh-KepV7MjdSN_MkRWpn1_v55BEs0MEVyhKK0fU=@benis.se> <bf9475d3-9131-4d4f-af05-411fdd4f032f@gmx.de> <j_p1hHcOXyva0UEpg4sTPqgLids8s32HxY2oYcpt1rX32spMMOhufyHwscBnt0HqL4ERznsS92ob9KViB1WWEk8wg7VHwNyRV5PO-3ssHOk=@benis.se> <77c78beb-84c6-4113-8a32-ba09ab22f098@gmx.de>
+Feedback-ID: 18592338:user:proton
+X-Pm-Message-ID: 8189cb91c4169d1bcaa5e21c14e7bbc9aa7a6d6b
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630-fw-attrs-api-v4-1-1a04952b255f@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kurt,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 73f0f2b52c5ea67b3140b23f58d8079d158839c8]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-firmware_attributes_class-Add-device-initialization-methods/20250630-160549
-base:   73f0f2b52c5ea67b3140b23f58d8079d158839c8
-patch link:    https://lore.kernel.org/r/20250630-fw-attrs-api-v4-1-1a04952b255f%40gmail.com
-patch subject: [PATCH v4 1/6] platform/x86: firmware_attributes_class: Add device initialization methods
-config: x86_64-randconfig-073-20250701 (https://download.01.org/0day-ci/archive/20250701/202507010553.vgtA0xlb-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010553.vgtA0xlb-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507010553.vgtA0xlb-lkp@intel.com/
+Best regards,
+Benjamin Hasselgren-Hall=C3=A9n
 
-All warnings (new ones prefixed by >>):
 
->> Warning: drivers/platform/x86/firmware_attributes_class.c:39 function parameter 'drvdata' not described in 'fwat_device_register'
->> Warning: drivers/platform/x86/firmware_attributes_class.c:39 Excess function parameter 'data' description in 'fwat_device_register'
+On Monday, 30 June 2025 at 16:50, Armin Wolf <W_Armin@gmx.de> wrote:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Am 30.06.25 um 14:46 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+>=20
+> > On Monday, 30 June 2025 at 14:39, Armin Wolf W_Armin@gmx.de wrote:
+> >=20
+> > > Am 30.06.25 um 14:32 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+> > >=20
+> > > > Best regards,
+> > > > Benjamin Hasselgren-Hall=C3=A9n
+> > > >=20
+> > > > On Saturday, 28 June 2025 at 02:45, Kurt Borja kuurtb@gmail.com wro=
+te:
+> > > >=20
+> > > > > On Fri Jun 27, 2025 at 5:49 PM -03, Benjamin Hasselgren-Hall=
+=C3=A9n wrote:
+> > > > >=20
+> > > > > > Hi Kurt,
+> > > > > >=20
+> > > > > > I do not experience the same error messages as in the bug repor=
+t - no error message at all. It respons to changing power profile without a=
+ny errors.
+> > > > > > I also tried 6.12 but same behaviour as 6.15.3 (just getting so=
+me gpu glitches - problably because of Lunar Lake).
+> > > > > > Can you paste the output of `cat /sys/firmware/acpi/platform_pr=
+ofile` on
+> > > > > > Linux v6.12?
+> > > > > > cat /sys/firmware/acpi/platform_profile_choices
+> > > > > > cool quiet balanced performance
+> > > > > > cat /sys/firmware/acpi/platform_profile
+> > > > > > cat: /sys/firmware/acpi/platform_profile: Invalid argument
+> > >=20
+> > > Good, it seems that the firmware returns additional data when queryin=
+g the current platform profile.
+> > > As the driver does not mask-out this data, he cannot determine what k=
+ind of platform profile is currently
+> > > selected and thus returns -EINVAL.+
+> > >=20
+> > > I can provide you with an experimental patch, could you test that?
+> > > Yes! I am trying to compile 6.16-rc3 atm and the first time I am doin=
+g this, but I will happily test a patch.
+>=20
+>=20
+> Alright, i attach the experimental patch. Please note that this might not=
+ fully solve the problem, because the
+> driver also needs support for the additional platform profiles available =
+on your machine.
+
+I think I managed to patch a kernel that I installed. No performance change=
+.=20
+
+Then I also tried=20
+cat /sys/firmware/acpi/platform_profile
+on a non-patched kernel and I get the result (balanced) on kernel 6.15 (but=
+ not on 6.12).=20
+
+Dunno what to do with this tho? What have we learned?
+
+
+>=20
+> However after setting the platform profile the driver should be able to r=
+ead the current platform profile setting
+> without any errors.
+>=20
+> Thanks,
+> Armin Wolf
+>=20
+> > > Thanks,
+> > > Armin Wolf
+> > >=20
+> > > > > > I am trying to understand how power profiles work - I guess on =
+a high level it's controlled by uefi and the profile is set by the OS? Or i=
+s it more complicated than that?
+> > > > > > Yes, as quick overview. Power profiles are usually a capability=
+ of
+> > > > > > individual devices. Drivers of these devices expose this profil=
+es to
+> > > > > > userspace through some predefined interfaces. Then your DE envi=
+roment
+> > > > > > exposes this to you.
+> > > > >=20
+> > > > > KDE and Gnome use power-profiles-daemon. This program controlls m=
+ainly
+> > > > > two kernel interfaces: CPUFreq and platform-profile (there may be=
+ more).
+> > > > >=20
+> > > > > You can read about CPUFreq here [1], although I don't know much a=
+bout
+> > > > > it. The platform-profile interface may be used by any platform dr=
+iver -
+> > > > > in your case this is the hp-wmi driver.
+> > > > >=20
+> > > > > This driver exposes some firmware defined profiles to sysfs troug=
+h the
+> > > > > following paths.
+> > > > >=20
+> > > > > /sys/firmware/acpi/
+> > > > > /sys/class/platform-profile/
+> > > > >=20
+> > > > > You won't find the latter in the Linux LTS version though. You wi=
+ll find
+> > > > > documentation on these paths here [2] and [3] respectively.
+> > > > >=20
+> > > > > PD: Please, avoid top-posting in kernel mailing lists, interleave=
+d style
+> > > > > is very much preferred [4].
+> > > > >=20
+> > > > > [1] https://docs.kernel.org/admin-guide/pm/cpufreq.html
+> > > > > [2] https://docs.kernel.org/admin-guide/abi-testing-files.html#ab=
+i-file-testing-sysfs-platform-profile
+> > > > > [3] https://docs.kernel.org/admin-guide/abi-testing-files.html#ab=
+i-file-testing-sysfs-class-platform-profile
+> > > > > [4] https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
+> > > > >=20
+> > > > > --
+> > > > > ~ Kurt
