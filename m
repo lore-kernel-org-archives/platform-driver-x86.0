@@ -1,179 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD64A1C862D;
-	Mon, 30 Jun 2025 10:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DF4222597;
+	Mon, 30 Jun 2025 10:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279423; cv=none; b=io0ZrNe3UVxMXOADbSccyXSL71KOn0wToly8V2rBdPHMulhZ72+4p8EWJh2m8aUfbvMKjQGKYC02bmI2tw6NgAg9jYl0SiVrvsjuxxnMmd8pGRLitFkE2CDfRXZjH0chM+iMHsFWoVkNBozTb5QA4umkdtRR/GP0TeKapX80cIc=
+	t=1751280407; cv=none; b=h8fIzE6BI6g4HyvNkW3wa0sDHaqrjNxXz7+WV2jhe4gLC5ajWT3vO4HQVgWcmrToSl6MJsixDb0NvoGIyfCxnTtMHVFzFkS6VWty8QE5tlQhoDa71o8tFWhLnjVMAlJBXXU8BD3LKhwZBFvw12g5IVVsjE9IsurUZbceQs58K9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279423; c=relaxed/simple;
-	bh=D8Rid0bcVc5Pr2IELERjxtYwzLWTo01IYXtAN+LRJfk=;
+	s=arc-20240116; t=1751280407; c=relaxed/simple;
+	bh=6hn4Jcbt8dG1IC3Ga4bKV/Nz0qNkj1yaEdy0zsmucXA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cnhBKie74PaZn+bbmpQiZLiFN306odAjV1FJAFHKel2/9cppI700zrWE864nfJGda3azp3BsgmhlrTODNaHCvw7qFBOIIQzVJDUEFlw/3H25x9s6Llu0Ly/GSgvfOzvXAV3rCjl3dDOmzyFkteNFztKCagKXWeMNkH005l9M/Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KGt7OTNr; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=QGMgBiw2uJ1qMRpVddLNq+ndqg8BZ9kSkadoF7SQj+yyDMUzxvjDJhmUVCgCtQtoTJoTyBVNOduvoQ6B3uoEwtEX9Eq5j7oMh7Ym+RgxzAOUyBGE4/Rq5frNpIIV7JU1RhiWPyWNFMtrBHPSCQuBZTxlqrfJJbB044J3Q0PEGYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHvPJy1A; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KGt7OTNr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHvPJy1A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751279422; x=1782815422;
+  t=1751280406; x=1782816406;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=D8Rid0bcVc5Pr2IELERjxtYwzLWTo01IYXtAN+LRJfk=;
-  b=KGt7OTNrtG30Fej/UFoP4sKRBX/z24BCki2qyy0JjUqaKt2z07Uw6mxj
-   +fpfoqSm5tEojlxtqhLx5ygoGO7ijUNFhL87t46aNB9IcoNgI4uVSa/o5
-   dKZZ0YJ6L6Tbibh5HlIDSpz+5Ddv9MGSHKnt7BzHx5sGk7U3kFSaGzBMY
-   vQdldMqTZ6GwIZzAxBTL+OdxiZmQfAeGF7eT0HJqCHplDu77sSbMM3/me
-   +OcTkthhlt07Oe4de77ZTZHGavwhQtAG45ktLWCbdOpwqIl0qzDnyokJc
-   w+Y6TWQLD62AM/NtDw0PrSiURbsl574FxjI1YtDec/q3NH0QgQ0ANO7A4
-   A==;
-X-CSE-ConnectionGUID: gJstAsThTiqtlOd5D22reQ==
-X-CSE-MsgGUID: 43qohBGYSK6FLYYIWg5GDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="78940308"
+   references:mime-version;
+  bh=6hn4Jcbt8dG1IC3Ga4bKV/Nz0qNkj1yaEdy0zsmucXA=;
+  b=HHvPJy1AA/3QdmIJaPRG86gjPg8HCmT5hEakBz4LZdsdwMVD4BydsnP7
+   +GPdIHwcTvyB0u+QzrIvUYAjqqk7tLty/XyzvVWKegI4bCxjvc0HS+va5
+   pIkmeaR5NtXd0zEywj20p1Vy3Cw+10Va14F0iiczXLHfqdJzvmCGHRYfe
+   CVcl7Zk7hjv8qFmVDnsaLSC047/6CpR4TRuqI3kFi+Af1Iq7B81eE8+4k
+   0KDZiSD7vR8loAVuv0W+292MGZKlh60rj8LZqawf6PgKpckoWhAhGvYUV
+   b1R1P7uhL106LQ5ojGBwe+D3X4IXxRxZQC93OyPXkWgqWwhMPK2zZZQdw
+   g==;
+X-CSE-ConnectionGUID: 0iqG9NrnTgyTcZDv07LyVw==
+X-CSE-MsgGUID: KkyV/3MdS2WUoyOs83Bk5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64555063"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="78940308"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:30:21 -0700
-X-CSE-ConnectionGUID: xV/uDRqjS7atOjXTMdnVmA==
-X-CSE-MsgGUID: k9O9eEo4TdmfRaK2YxefHw==
+   d="scan'208";a="64555063"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:46:45 -0700
+X-CSE-ConnectionGUID: BbPfNzhxRAC3i0+5+4jLQA==
+X-CSE-MsgGUID: miiu3+DXQFmp+ecZ65NmBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153050589"
+   d="scan'208";a="184348456"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:30:15 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:46:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 13:30:12 +0300 (EEST)
-To: Mario Limonciello <superm1@kernel.org>
-cc: Mario Limonciello <mario.limonciello@amd.com>, 
-    Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
+Date: Mon, 30 Jun 2025 13:46:35 +0300 (EEST)
+To: Andi Shyti <andi.shyti@kernel.org>
+cc: Hans de Goede <hansg@kernel.org>, Mario Limonciello <superm1@kernel.org>, 
+    Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, 
-    "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, 
-    Huang Rui <ray.huang@amd.com>, 
-    "Gautham R . Shenoy" <gautham.shenoy@amd.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    Viresh Kumar <viresh.kumar@linaro.org>, 
-    "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    "H . Peter Anvin" <hpa@zytor.com>, Jean Delvare <jdelvare@suse.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
     "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
-    "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-    "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v11 00/13] Add support for AMD hardware feedback
- interface
-In-Reply-To: <20250609200518.3616080-1-superm1@kernel.org>
-Message-ID: <5b312c44-346b-0499-962e-5a80a787e031@linux.intel.com>
-References: <20250609200518.3616080-1-superm1@kernel.org>
+    "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, 
+    "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 1/2] Move FCH header to a location accessible by all
+ archs
+In-Reply-To: <zkbd5qdfj3xrjh7l6sviqzsu6foyxpwsko47czrpet55kgqzfv@aw3igwk34irc>
+Message-ID: <a6ccabd7-1436-ff73-398f-b92e546d3701@linux.intel.com>
+References: <20250610205817.3912944-1-superm1@kernel.org> <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org> <zkbd5qdfj3xrjh7l6sviqzsu6foyxpwsko47czrpet55kgqzfv@aw3igwk34irc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1730005503-1751279366=:7079"
-Content-ID: <16e53ef6-1677-69e6-f234-6f14e754d788@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 25 Jun 2025, Andi Shyti wrote:
 
---8323328-1730005503-1751279366=:7079
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <8943e6f1-0a75-8515-3884-25951a634d31@linux.intel.com>
+> Hi,
+> 
+> On Thu, Jun 12, 2025 at 10:36:31AM +0200, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 10-Jun-25 10:58 PM, Mario Limonciello wrote:
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > A new header fch.h was created to store registers used by different AMD
+> > > drivers.  This header was included by i2c-piix4 in
+> > > commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
+> > > definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
+> > > archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
+> > > ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
+> > > This was not a good decision because loongarch and mips both actually
+> > > support i2c-piix4 and set it enabled in the defconfig.
+> > > 
+> > > Move the header to a location accessible by all architectures.
+> > > 
+> > > Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
+> > > Suggested-by: Hans de Goede <hansg@kernel.org>
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > 
+> > Thanks, patch looks good to me:
+> > 
+> > Reviewed-by: Hans de Goede <hansg@kernel.org>
+> 
+> I don't see this series in yet. I thought you were taking it,
+> shall I take it through i2c?
 
-On Mon, 9 Jun 2025, Mario Limonciello wrote:
+I'm sorry I seem to have missed this inquiry until now. I thought x86 
+would handle it this but apparently they haven't.
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
->=20
-> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
-> provide behavioral classification of tasks.
->=20
-> Threads are classified during runtime into enumerated classes.
-> Currently, the driver supports 3 classes (0 through 2). These classes
-> represent thread performance/power characteristics that may benefit from
-> special scheduling behaviors. The real-time thread classification is
-> consumed by the operating system and is intended to be used to inform the=
- scheduler
-> of where the thread should be placed for optimal performance or energy ef=
-ficiency.
->=20
-> The thread classification can be used to helps to select CPU from a ranki=
-ng table
-> that describes an efficiency and performance ranking for each classificat=
-ion from
-> two dimensions. This is not currently done in this series, but is intende=
-d for future
-> follow ups after the plumbing is laid down.
->=20
-> The ranking data provided by the ranking table are numbers ranging from 0=
- to 255,
-> where a higher performance value indicates higher performance capability =
-and a higher
-> efficiency value indicates greater efficiency. All the CPU cores are rank=
-ed into
-> different class IDs. Within each class ranking, the cores may have differ=
-ent ranking
-> values. Therefore, picking from each classification ID will later allow t=
-he scheduler
-> to select the best core while threads are classified into the specified w=
-orkload class.
->=20
-> This series was originally submitted by Perry Yuan [1] but he is now doin=
-g a different
-> role and he asked me to take over.
->=20
-> Link: https://lore.kernel.org/all/cover.1724748733.git.perry.yuan@amd.com=
-/
->=20
-> v10->v11:
->  * rebase on v6.16-rc1
->  * Adjust for Randy's and Ingo's feedback
->=20
-> Mario Limonciello (5):
->   MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
->   cpufreq/amd-pstate: Disable preferred cores on designs with workload
->     classification
->   platform/x86/amd: hfi: Set ITMT priority from ranking data
->   platform/x86/amd: hfi: Add debugfs support
->   x86/itmt: Add debugfs file to show core priorities
->=20
-> Perry Yuan (8):
->   Documentation: x86: Add AMD Hardware Feedback Interface documentation
->   x86/msr-index: define AMD heterogeneous CPU related MSR
->   platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
->   platform/x86: hfi: parse CPU core ranking data from shared memory
->   platform/x86: hfi: init per-cpu scores for each class
->   platform/x86: hfi: add online and offline callback support
->   platform/x86: hfi: add power management callback
->   x86/process: Clear hardware feedback history for AMD processors
->=20
->  Documentation/arch/x86/amd-hfi.rst    | 133 +++++++
->  Documentation/arch/x86/index.rst      |   1 +
->  MAINTAINERS                           |   9 +
->  arch/x86/include/asm/msr-index.h      |   5 +
->  arch/x86/kernel/itmt.c                |  23 ++
->  arch/x86/kernel/process_64.c          |   4 +
->  drivers/cpufreq/amd-pstate.c          |   6 +
->  drivers/platform/x86/amd/Kconfig      |   1 +
->  drivers/platform/x86/amd/Makefile     |   1 +
->  drivers/platform/x86/amd/hfi/Kconfig  |  18 +
->  drivers/platform/x86/amd/hfi/Makefile |   7 +
->  drivers/platform/x86/amd/hfi/hfi.c    | 551 ++++++++++++++++++++++++++
+(I'm the primary person handling pdx86 patches, not Hans any more).
 
-I don't have objections to this series. But as discussed before, not all=20
-features are provided by this series and follow-up series will be=20
-required to provide what are documented as features (perhaps more than=20
-one).
+I can take this now.
 
-The pdx86 side seems pretty conflict free as this is new code. If e.g. x86=
-=20
-wants to merge this due to this series touching existing code there=20
-(besides the minor cpufreq bits), it would be fine with me,
-
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
---=20
+-- 
  i.
---8323328-1730005503-1751279366=:7079--
+
