@@ -1,311 +1,148 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B78E25EF89;
-	Mon, 30 Jun 2025 11:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F338283680;
+	Mon, 30 Jun 2025 11:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283402; cv=none; b=jSLXpZqKtmi+CAdVtztAGMpOS2IWiNaiLI1L1jciYMjWXhqfNH0lFSQRXX4Opmr1+/tCiKhCDUWvAvNpu2uJq4NfyEviPresDTpB3FaY9hiUA55bTeWx/FBkN2MPX/kxf9z2pX7SFp+QgD0g9zNy/kbKtPPpoc81S6AN1q+tFQk=
+	t=1751284191; cv=none; b=L9q32xcKlc0SuAgHQWkD0hhPJuldZSigA9ZtlIJ6ea7xt8V3VpvM8U+SdGPUlUKvGf5vuFi2GAincg46RxcKMePPKJ+BVCf2udie5QDp3Jetz79Ysgh+3HozzdlKbPIZKNpMElmWs9vBtGXojtlPYsGBL8GhD26dWJ/vOcG0mRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283402; c=relaxed/simple;
-	bh=KGsAVlR6AlgnaseWmvAzZf7z3728oii+uockZUpwZiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2zT9eKv2IP2lyjhR1XjQUBYKH2TBzBoh9bBKwYxiSIjhQcIUqqvWMVr6amsHahzR49J7GNgLmhESidrQLYPCPITRsUxSuP6VVBZkG6vtbSqzYxK2pAzFsk1BlzgDJEW9DrCzb60iyz5MqoUQQTNXo/hT7xss56WRgeMbQDhY9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzkwFL8w; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751284191; c=relaxed/simple;
+	bh=FubJ0f4TUj+LS4X9PahmEZxliWzY+t0GjeUIOd2VVXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N7WzPM4/S+YLgBAExMlUUMUbPZOHjIJl8BZgH4pt+sP/X7ht0XmquiwRvM0miUDGzLHYnqTKAozKfPWIeuNw51Vnv6apQ3IbMVnPll1RBgMmlQ3bZde02JnF/ZWjRA1gbXxbSWCa1vossgIuc8IhQseHo8sKwtW38HFIgbvbkuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B445rSor; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzkwFL8w"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b31befde0a0so1478093a12.0;
-        Mon, 30 Jun 2025 04:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751283399; x=1751888199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
-        b=OzkwFL8wNFXYXl7FxT9s4Ace6370i4N8iDBf0nHcnACaxf1mI0dx12XhVoguuttA82
-         W0+tBNE16vhSjAD2EF9LZMxVO/eUG47vTJyPlbnIb4RRfH+9rAIU2N0e7pWyGxEql5q9
-         uTKIZEVh+vBIl4WSuZHmP7cYiA9tSmwVRMKmyjEan19WavNHgzQnyFBZazjacaOYFiPW
-         dRWqfmgFHSA276Z+GDueeVo5FRuzAgZlo8X+TgP4Ta1gJIJHzPfW0yBAx02iQdWdoa/u
-         yd4VpxDormiwpPiVBy9JCUeTTH+YnVFVIbQsFXoysRHFDs63VuibwDJqhDDj/rQW9wOz
-         ghBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751283399; x=1751888199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
-        b=fbvaohZFrsVaer4Prr1+e8Qb8z8nQ04uPmxEiLobVCFDsiKZOoo7k2/+LbNqgCKprr
-         DDrwweJyRz6g+Vj4fEhmnplQaYY5bBBEGuXfih0P1hf+Vlm0lp07nkNEi9bQGrqAatfs
-         ToPhdcoQVdEX0xBq/b+MQlIBCKrwiYbtNw+yVKGECRpnksvKDPqF8U2KBfGz00dfVOan
-         mPM4NiTVrtQECW8IABpuO0pysmOtkEMQJPT/bSbcZ2HJBsUXcj9+dQPki3cJN9LYyxds
-         6vrbT9o9nNWl3CSy8N55E65zWH7GalWePqZ2gCcKhcxXPVta7EX5DC0vCm3geguZ9H/9
-         9ckg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk/K12HT71L56yjILQquwxS28+p8cfaE8fJ/3plu5gCPCJDzE+tG0No8Wldjpqy7bzt7rnHuJZB8oNgI5xH0/+5OrWSw==@vger.kernel.org, AJvYcCWyFlQG7HjZSp1t/15EfAmsf07XIYsa5dEwfpPDtIDLofphZ+/1xR91u3OGFC7eH+kvS/oNBF6EfLTZT00w@vger.kernel.org, AJvYcCXQ/q/B6QyHqL4n8v65KwBHOFpIwwgZc+BHCkXL9Sv4jJUq0XGYwIW/z/hUlPqHzCzcgIeXIEnvSIjUvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyueYV6kQGmndln47tUztX+D6041UsTQsL5n2hwkDSPEkucFTKA
-	a9eUgXgECS5h4lnCh4YQ84VkOHWnPgunw5zAR8hHn5+GbgztohXx1NhZfeqFwoTUvscxaZ1NX/n
-	8cK6DOKu9xHQ37XYyVX/0xbPQsZRC/PU=
-X-Gm-Gg: ASbGnctC5mjIK73n+L4xRWYdFjTOtUkIV6ZV5hkO056EcRws0ke9N4jcksyLgoCbI/p
-	OF40slIOScFZx2x/AYalL/3RbtgTYNANfH+L4RnFN9sFxSmp8+oOcCLBjRXGVWFRS+3x3wlLm9i
-	t02OLOjY68TXxWBdx/VDyHzZcIxoNqg3aWURnqcQh1jVKnD8ADHU4XbaS5Yx4pDkKbX5oSFGxtW
-	/BHVw==
-X-Google-Smtp-Source: AGHT+IHT1QanRw0SG2T4GyW6c2j8HJpX9VMAOEb92ivAi9s1+4lDE8SiqMYwhejw16+krR4CNzHVDv9J7eln53v0wLo=
-X-Received: by 2002:a17:90b:2c83:b0:315:cc22:68d9 with SMTP id
- 98e67ed59e1d1-318c927f2e4mr17945627a91.31.1751283399365; Mon, 30 Jun 2025
- 04:36:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B445rSor"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751284190; x=1782820190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FubJ0f4TUj+LS4X9PahmEZxliWzY+t0GjeUIOd2VVXE=;
+  b=B445rSorN4lS/+WSA+cVveQPH8121IemDTGLCYmMVz23x0ePSGsN6v8z
+   nE/HdQj8CcEQQs9iVUrEdfhAh8cUaSTikv8FBKeQ4tdhjEV3YNlkz7DEL
+   E3tR7Beuxv85pXwwoFO3vCw6+Sl2bEiobB58dWt3mwVDUcC+lSZ893MJ2
+   rguusNK0wDK4zvmL9RRX1KJQEfg55zHpBMvzfWZTlvbl158dtUSKCJbVc
+   ENUB4aZCWgJLIZfeOK2R871B0EQtAq3gupFK3hn5Z6kUqc5HwtPCsqRt4
+   +K1HiozAEJOH6QmpZ7Ov7JejP17PUeAr2mUrtIAa1oA7Vg+WR7erLKL0I
+   g==;
+X-CSE-ConnectionGUID: 3fpPNc5aQ/Wa5Zo2tTqCuQ==
+X-CSE-MsgGUID: up07I+RnTQa7qfhbfo49Og==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64956120"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="64956120"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:49:49 -0700
+X-CSE-ConnectionGUID: d7dkjV0FSwOqxf3IMTuDzw==
+X-CSE-MsgGUID: BDwFvLBwQMCw21Ce23nyvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157829155"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 30 Jun 2025 04:49:47 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWD16-000Yvu-2c;
+	Mon, 30 Jun 2025 11:49:44 +0000
+Date: Mon, 30 Jun 2025 19:49:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Denis Benato <benato.denis96@gmail.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+	mario.limonciello@amd.com, "Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v9 2/8] platform/x86: asus-armoury: move existing tunings
+ to asus-armoury module
+Message-ID: <202506301937.xAR28T0l-lkp@intel.com>
+References: <20250629131423.9013-3-benato.denis96@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <c7eb2d82-a487-1baa-dd89-4276551974ec@linux.intel.com>
- <CABxCQKvt+vreQN1+BWr-XBu+pF81n5fh9Fa59UBsV_hLgpvh3A@mail.gmail.com>
- <4e846cf1-e7c7-3bb9-d8b3-d266b9dfbc4e@linux.intel.com> <CABxCQKt7SjMhX33WGOTk8hdZf1Hvkp8YYFWJK5v1xcbQQm14nQ@mail.gmail.com>
- <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
-In-Reply-To: <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Mon, 30 Jun 2025 20:36:01 +0900
-X-Gm-Features: Ac12FXwTJ95mw7IU-AIogK8VMM4mq0SPmRExNfsuMUoY2Xn_PjPeYHZ7J1JgkH8
-Message-ID: <CABxCQKvsv3K_gviYMNS2gUQMdd+Q1w_hzJ5irTk5m9pphdSm9g@mail.gmail.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: pali@kernel.org, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
-	hansg@kernel.org, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
-	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629131423.9013-3-benato.denis96@gmail.com>
 
-Hi Ilpo,
+Hi Denis,
 
-Sorry for the late reply.
+kernel test robot noticed the following build warnings:
 
-On Fri, Jun 27, 2025 at 4:28=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Fri, 27 Jun 2025, Vishnu Sankar wrote:
->
-> > Hi Ilpo,
-> >
-> > Thanks a lot for the review.
-> >
-> > On Fri, Jun 27, 2025 at 12:09=E2=80=AFAM Ilpo J=C3=A4rvinen <ilpo.jarvi=
-nen@linux.intel.com> wrote:
-> >       On Thu, 26 Jun 2025, Vishnu Sankar wrote:
-> >
-> >       > Hi Ilpo,
-> >       >
-> >       > Thanks a lot for the comments and guidance.
-> >       > Please find my comments inline below.
-> >       >
-> >       > On Wed, Jun 25, 2025 at 9:07 PM Ilpo J=C3=A4rvinen <
-> >       ilpo.jarvinen@linux.intel.com >
-> >       > wrote:
-> >       >       On Fri, 20 Jun 2025, Vishnu Sankar wrote:
-> >       >
-> >       >       I don't like the shortlog prefixes (in the subject), plea=
-se don't
-> >       make
-> >       >       confusing prefixes up like that.
-> >       >
-> >       > Got it.
-> >       > I will correct this in V2 (as a patch series).
-> >       >
-> >       >       > Newer ThinkPads have a doubletap feature that needs to =
-be
-> >       turned
-> >       >       > ON/OFF via the trackpoint registers.
-> >       >
-> >       >       Don't leave lines short mid-paragraph. Either reflow the
-> >       paragraph or add
-> >       >       an empty line in between paragraphs.
-> >       >
-> >       > Acked.
-> >       > Will correct this in V2.
-> >       >
-> >       >       > Systems released from 2023 have doubletap disabled by d=
-efault
-> >       and
-> >       >       > need the feature enabling to be useful.
-> >       >       >
-> >       >       > This patch introduces support for exposing and controll=
-ing the
-> >       >       > trackpoint doubletap feature via a sysfs attribute.
-> >       >       > /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> >       >       > This can be toggled by an "enable" or a "disable".
-> >       >
-> >       >       This too has too short lines.
-> >       >
-> >       > Sorry!
-> >       > Will do the needful in v2.
-> >       >
-> >       >       >
-> >       >       > With this implemented we can remove the masking of even=
-ts, and
-> >       rely on
-> >       >
-> >       >       "With this implemented" is way too vague wording.
-> >       >
-> >       > Sorry for this!
-> >       > I will make this better.
-> >       >
-> >       >       > HW control instead, when the feature is disabled.
-> >       >       >
-> >       >       > Note - Early Thinkpads (pre 2015) used the same registe=
-r for
-> >       hysteris
-> >       >
-> >       >       hysteresis ?
-> >       >
-> >       > Sorry for not being clear.
-> >       > It's the trackpoint drag hysteris functionality. Pre-2015 Think=
-Pads
-> >       used to have a
-> >       > user-configurable drag hysterisis register (0x58).
-> >       > Drag hysterisis is not user configurable now.
-> >       >
-> >       >       > control, Check the FW IDs to make sure these are not af=
-fected.
-> >       >
-> >       >       This Note feels very much disconnected from the rest. Sho=
-uld be
-> >       properly
-> >       >       described and perhaps in own patch (I don't know)?
-> >       >
-> >       > my bad, it's not FW ID, but PnP ID.
-> >       > The older ThinkPad's trackpoint controllers use the same regist=
-er
-> >       (0x58) to control
-> >       > the drag hysteresis, which is obsolete now.
-> >       > Now (on newer systems from 2023) the same register (0x58) is re=
-mapped
-> >       as
-> >       > doubletap register.
-> >       > Just to exclude those older systems (with drag hysterisis contr=
-ol), we
-> >       check the PnP
-> >       > ID's.
-> >       >
-> >       > I will give a better commit message in V2.
-> >       >
-> >       >       > trackpoint.h is moved to linux/input/.
-> >       >
-> >       >       This patch doesn't look minimal and seems to be combining=
- many
-> >       changes
-> >       >       into one. Please make a patch series out of changes that =
-can be
-> >       separated
-> >       >       instead of putting all together.
-> >       >
-> >       > Understood.
-> >       > Will make a patch series on V2
-> >       > 0001: Move trackpoint.h to include/linux/input
-> >       > 0002: Add new doubletap set/status/capable logics to trackpoint=
-.c
-> >       > 0003: Add new trackpoint api's and trackpoint sysfs in thinkpad=
-_acpi.c
-> >
-> >       Okay, sounds better.
-> >
-> >       >       > +/* List of known incapable device PNP IDs */
-> >       >       > +static const char * const dt_incompatible_devices[] =
-=3D {
-> >       >       > +     "LEN0304",
-> >       >       > +     "LEN0306",
-> >       >       > +     "LEN0317",
-> >       >       > +     "LEN031A",
-> >       >       > +     "LEN031B",
-> >       >       > +     "LEN031C",
-> >       >       > +     "LEN031D",
-> >       >       > +};
-> >       >       > +
-> >       >       > +/*
-> >       >       > + * checks if it=E2=80=99s a doubletap capable device
-> >       >       > + * The PNP ID format eg: is "PNP: LEN030d PNP0f13".
->
-> There's case difference between this comment and the list.
-Thank you for pointing this out.
-Will correct this.
->
-> >       >       > + */
-> >       >       > +bool is_trackpoint_dt_capable(const char *pnp_id)
-> >       >       > +{
-> >       >       > +     char id[16];
-> >       >       > +
-> >       >       > +     /* Make sure string starts with "PNP: " */
-> >       >       > +     if (strncmp(pnp_id, "PNP: LEN03", 10) !=3D 0)
-> >       >
-> >       >       We seem to have strstarts().
-> >       >
-> >       > Thanks a lot for the suggestion.
-> >       > Will make use of this.
-> >       >
-> >       >       > +             return false;
-> >       >       > +
-> >       >       > +     /* Extract the first word after "PNP: " */
-> >       >       > +     if (sscanf(pnp_id + 5, "%15s", id) !=3D 1)
-> >       >       > +             return false;
-> >       >       > +
-> >       >       > +     /* Check if it's blacklisted */
-> >       >       > +     for (size_t i =3D 0; i <
-> >       ARRAY_SIZE(dt_incompatible_devices); ++i)
-> >       >       {
-> >       >       > +             if (strcmp(pnp_id, dt_incompatible_device=
-s[i]) =3D=3D
-> >       0)
-> >       >
-> >       >       Isn't this buggy wrt. the PNP: prefix??
-> >       >
-> >       >       Perhaps it would have been better to just do pnp_id +=3D =
-5 before
-> >       sscanf()
-> >       >       as you don't care about the prefix after that.
-> >       >
-> >       >
-> >       > Understood.
-> >       > Shall we have something like the following:
-> >       >         if (!strstarts(pnp_id, "PNP: LEN03"))
-> >       >               return false;
-> >       >
-> >       >         id =3D pnp_id + 5;
-> >       >
-> >       >         for (size_t i =3D 0; i < ARRAY_SIZE(dt_incompatible_dev=
-ices);
-> >       ++i) {
-> >       >                        if (strncmp(id, dt_incompatible_devices[=
-i],
-> >       > strlen(dt_incompatible_devices[i])) =3D=3D 0)
-> >
-> >       Why did you change to strncmp()?
-> >
-> > I switched to strncmp() to allow matching just the known prefix part in
-> > dt_incompatible_devices, rather than requiring an exact full string mat=
-ch.
-> > Will keep the original "if (strcmp(id, dt_incompatible_devices[i]) =3D=
-=3D 0) " logic as
-> > it serves the purpose.
->
-> I didn't mean to say the change is necessarily incorrect, I was just
-> asking for reasonale as it was different from the original.
-Understood.
->
-> If you think you it needs to be broader to the match to a prefix only,
-> I've no problem with that.
-Understood. Will keep the original as it is, without changes.
->
-> --
->  i.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc4 next-20250630]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Denis-Benato/platform-x86-asus-wmi-export-symbols-used-for-read-write-WMI/20250629-211651
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250629131423.9013-3-benato.denis96%40gmail.com
+patch subject: [PATCH v9 2/8] platform/x86: asus-armoury: move existing tunings to asus-armoury module
+config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20250630/202506301937.xAR28T0l-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250630/202506301937.xAR28T0l-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506301937.xAR28T0l-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/platform/x86/asus-armoury.c:28:
+>> include/linux/platform_data/x86/asus-wmi.h:202:35: warning: 'asus_use_hid_led_dmi_ids' defined but not used [-Wunused-const-variable=]
+     202 | static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
 
 
+vim +/asus_use_hid_led_dmi_ids +202 include/linux/platform_data/x86/asus-wmi.h
 
---=20
+ffb6ce7086ee2d Daniel Drake  2018-10-09  200  
+a720dee5e03923 Luke D. Jones 2024-07-13  201  /* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
+a720dee5e03923 Luke D. Jones 2024-07-13 @202  static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
+a720dee5e03923 Luke D. Jones 2024-07-13  203  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  204  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  205  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Zephyrus"),
+a720dee5e03923 Luke D. Jones 2024-07-13  206  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  207  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  208  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  209  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  210  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Strix"),
+a720dee5e03923 Luke D. Jones 2024-07-13  211  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  212  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  213  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  214  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  215  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Flow"),
+a720dee5e03923 Luke D. Jones 2024-07-13  216  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  217  	},
+53078a736fbc60 Luke D. Jones 2025-01-11  218  	{
+53078a736fbc60 Luke D. Jones 2025-01-11  219  		.matches = {
+53078a736fbc60 Luke D. Jones 2025-01-11  220  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
+53078a736fbc60 Luke D. Jones 2025-01-11  221  		},
+53078a736fbc60 Luke D. Jones 2025-01-11  222  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  223  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  224  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  225  			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
+a720dee5e03923 Luke D. Jones 2024-07-13  226  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  227  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  228  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  229  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  230  			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
+a720dee5e03923 Luke D. Jones 2024-07-13  231  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  232  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  233  	{
+a720dee5e03923 Luke D. Jones 2024-07-13  234  		.matches = {
+a720dee5e03923 Luke D. Jones 2024-07-13  235  			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+a720dee5e03923 Luke D. Jones 2024-07-13  236  		},
+a720dee5e03923 Luke D. Jones 2024-07-13  237  	},
+a720dee5e03923 Luke D. Jones 2024-07-13  238  	{ },
+a720dee5e03923 Luke D. Jones 2024-07-13  239  };
+a720dee5e03923 Luke D. Jones 2024-07-13  240  
 
-Regards,
-
-      Vishnu Sankar
-     +817015150407 (Japan)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
