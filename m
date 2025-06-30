@@ -1,234 +1,148 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1CB19CC29;
-	Mon, 30 Jun 2025 17:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5C623FC5F;
+	Mon, 30 Jun 2025 17:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304720; cv=none; b=od4XuG6/bmFdLReBZEKfnU81VmIB0Ku2kd2MFvhvRVOk68hj1av7Yl3hwPngTeccJg/tuaZ2oI8f17hlykTSIReMSOKYsSvv4r8AADn77jKmXHJe74KRg+pfdf36fa7WOE6h27BvUbLvqdWWsOrV1ySDMxNvAH48mNLd5cpihLs=
+	t=1751304913; cv=none; b=ZmxAJgQeYb1z8+LPtN8Ky2IVTFj81vFhIG+OsjO5BneCecsk2r3gIsk9FCleT3tBD4Nu/RxFD5/lwFFKzBdwuru94gwABqN+Gdvpz8JMn07oN9d48t5kO5JOg3ooFkj9jyhMbxLcn/NTzUvbTB+C8xqJ5q7TUCL2SkGFoIelZKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304720; c=relaxed/simple;
-	bh=ZURlPW2Su3bhWmXhsJ5JPtUvI0sHbLz04Z8qD3gPWwA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u6J8LFd2TrXSIyiBBO5iAIORJdzRfe38PuFtzg6GBRJNNMGBdxh6IP2oBWglg9wSco2plW5QUQdzWsyO4u1RIT4m4f5PnZUVdH8Qi/nDlxE3gXGPwohbgqdZ5IzkALJu877YJZ52wT8WVEICEpNhedxcZvvPY2YEr5bLexVfbZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ys7g7dDU; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751304913; c=relaxed/simple;
+	bh=xQeYx7QXVrleUZqeEO9jUP9OtSFphSkSEPBbT9PSwg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iUHJdu5/zYkYklxdHFemqazBzVtuK3wdcCZXbp9OgLjT/5/5PHKNG8WlKIKuEQGeJ1tNB0BEcUAMTGaOcVJeDswyUwKSQgWI1u+JZx08XnoIzr57cXiAV0dQeP0OXog8k8X0QoH0InP0zP/T1Bzg71mxW7G5KzOy9rddDqk0KpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DFQmWjGz; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ys7g7dDU"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a752944794so55029071cf.3;
-        Mon, 30 Jun 2025 10:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751304717; x=1751909517; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1XyHKWfXiT73L/YJwJtLTidOp8ZtTUUZ7vQ8/O4IC6M=;
-        b=Ys7g7dDU8y88S88k0nmzf0CkhRzvf6wGUpwUtNcc7/XZarG57tsu317I72bUwcVo0o
-         I8T9YT8AURo+7dX8uZ1brGsxlFZ1g5/NLbWNNSMRDU8EhKSRv839UvaAeCGw8yIgPesQ
-         XkUnuBdYZ9bbfgIfyFhRUWE0E7Y85yrRuryyuWNz3vdUJyGawGKDuzSPsH1e1g4xRKAN
-         PwK1gTpp055EharZ3iWT/C4yTw9ZA86SS9a0VZThY2jXnqkRaeqXT5PjtFv29rxPXifR
-         5OoP0xa90TdUUUR4qsa9UAGSlKwnEv7tWsOIhfPSj7ECxD6runMzJFXDisKUMseIRG1Z
-         3/fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751304717; x=1751909517;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1XyHKWfXiT73L/YJwJtLTidOp8ZtTUUZ7vQ8/O4IC6M=;
-        b=HVE7JfGel61WzizK43puQ4wjcFq+K3JEW2btNYRj7Gwtnlr40DE9fnUx8lT60YSgL+
-         eU44o4mNWaBNUg5R0Mpk3whIKTV6hSt6loAbTwbCjHrq3+OONNEmCJuUSqHTt+apadj7
-         C0BKN7RI7CoBrDyFRN/RGs/+OgwlWGxQeUA9JGgqdF+B50IBVKftJK7krk8edYNCQ48K
-         EEsR0P2bVuftQXUVwAIH0P7uPYwww8RQrAgZJBkeLejJFH49ePp1AhxucmLkvi8iklu4
-         TmACMYtq7LuZOLL+gO3KubQXKUh2qaPvYrPuQUOExgFfIMgZdcyjjwoV0TtBJU4CRKBA
-         JGiA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0WTz16BgxHg64swvdf9YIBSJrAoTuWbBDtRmixX2pHYBYUZngL7RZwc5kftCm1ctxGzttVZppgkAK5AE=@vger.kernel.org, AJvYcCWMBBYyPKSObQiAbxm2E0TbEWdZU4D3A4KurieNmg+buPGwZ8RUnS1OqdmlMO28H1+xBilJC3qv@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo0otyarWttgsSb9xo48KsFkr0qQdWzt/+40/L4ae6CupCGzUi
-	ru2wbk4ccL4u77kNiuFpSCmXgz1f4bm4DiTNSmOhGOu7ZQ9kHvFWfa3kFemPL2nx
-X-Gm-Gg: ASbGncv5+9HAZHf6oWFsHeookAVZtPOXTWfLDhPUURT4H9rnwkFxDww4Ozzjlzjj9s6
-	+AwecUKpJ6PzJTPgzW0li1o5IIKiSIceFz40G3cuoCLxf+/wAHr6E9HXO05ul+6MqlPuZm1PHVc
-	WX1U6BVm7lVY0ON25Cuq5nn/QFe+lZW20JhfVRU1PHZzocVdC1UgrOCjl2VhfzydOxeeDW7c/xS
-	1auozeVIAJ9vIeKCBaIu6iZ2sZDVq6sYg4kRnZZh95r41ORY1bRuBaEn1poDZijHNmivEasX8s9
-	e/9QWKWrwIt1vRbH/CvXGU3sl7J/Mqx0EVys1m7T9UYsyugA7XXhjZJwaAZtUg==
-X-Google-Smtp-Source: AGHT+IGkuOjju5AuPtd/cJ1gTcI5SpsR41Hyu6T1TxW+PRwPKPth4lKNdSMaaT9esOCSEaX3+1gKLw==
-X-Received: by 2002:a05:622a:30d:b0:494:a2b8:88f0 with SMTP id d75a77b69052e-4a7fcab19cbmr220357751cf.33.1751304717324;
-        Mon, 30 Jun 2025 10:31:57 -0700 (PDT)
-Received: from [192.168.1.26] ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fdadb11bsm59784521cf.17.2025.06.30.10.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:31:57 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Mon, 30 Jun 2025 14:31:21 -0300
-Subject: [PATCH v3 3/3] platform/x86: think-lmi: Fix sysfs group cleanup
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFQmWjGz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751304912; x=1782840912;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xQeYx7QXVrleUZqeEO9jUP9OtSFphSkSEPBbT9PSwg4=;
+  b=DFQmWjGzNnJ90Cu2dVZll3z4C0T0UUdHIdTP3vCvZQ+2iGXhV3j+88zC
+   uEbtm4AbvsrzGElqja6MxYP5LRkNQADQvfqV32J1jGal2LEfXQzXmH64X
+   h4RZ61xgnh+s7yUa7pkb4H6/pp0RrnO+RMAk0GTIdmyaqyUuh1+Fqtu8e
+   Az1ff8dIT0YVQGA/i9EVKN8lOtmVOPWdIOGLwlmYqLcK1+FdAHS7RYUTx
+   KzTc2XOqxCB7sOsEp9kY2f/XtrLH2UaPh0Di8HzihC3xUXEQkp+0t2UvN
+   DMqZcHAaNrFWaFSOsuHC+1+6Lpe3pzNQZ7U7pk/zgdCo4D4b2VZLAJizN
+   w==;
+X-CSE-ConnectionGUID: 7wxKU6h+TuaJMNwo2qoDyg==
+X-CSE-MsgGUID: bo1U9xmQSIyoVYBvaQ/Uxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="57318378"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="57318378"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 10:35:11 -0700
+X-CSE-ConnectionGUID: 8oPblvrlQzqh6ZOYoezrgQ==
+X-CSE-MsgGUID: yizalB3GRkGYsX2Sx9ix3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="159242713"
+Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.246.154.149]) ([10.246.154.149])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 10:35:11 -0700
+Message-ID: <67da5800-e8b3-4f80-a0e6-c9becae60c07@linux.intel.com>
+Date: Mon, 30 Jun 2025 10:35:10 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] platform/x86:intel/pmc: Improve function to show
+ substate header
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+References: <20250625063145.624585-1-xi.pardee@linux.intel.com>
+ <20250625063145.624585-4-xi.pardee@linux.intel.com>
+ <951682a6-66e7-cd1a-4798-c5b4f88c79ec@linux.intel.com>
+Content-Language: en-US
+From: Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <951682a6-66e7-cd1a-4798-c5b4f88c79ec@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250630-lmi-fix-v3-3-ce4f81c9c481@gmail.com>
-References: <20250630-lmi-fix-v3-0-ce4f81c9c481@gmail.com>
-In-Reply-To: <20250630-lmi-fix-v3-0-ce4f81c9c481@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Kurt Borja <kuurtb@gmail.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5264; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=ZURlPW2Su3bhWmXhsJ5JPtUvI0sHbLz04Z8qD3gPWwA=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBlJp5jlxSzfsrh8unrZ1V5/499Sru+Cgvdjzh5K7E76O
- 2nD3RTGjlIWBjEuBlkxRZb2hEXfHkXlvfU7EHofZg4rE8gQBi5OAZjIpOmMDDearsq9KU5WeS3w
- xe+Xm/27jo3nLfZemDwv+T9DgT9nbycjw35f74R5XyYGpl7tv2gS3BZnppqg/yRA3ynHgPfjO5l
- 4HgA=
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Many error paths in tlmi_sysfs_init() lead to sysfs groups being removed
-when they were not even created.
+Hi Ilpo,
 
-Fix this by letting the kobject core manage these groups through their
-kobj_type's defult_groups.
+Thanks for reviewing the patch. My response is inline.
 
-Cc: stable@vger.kernel.org
-Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/think-lmi.c | 43 ++++------------------------------------
- 1 file changed, 4 insertions(+), 39 deletions(-)
+On 6/30/2025 4:34 AM, Ilpo Järvinen wrote:
+> On Tue, 24 Jun 2025, Xi Pardee wrote:
+>
+>> Refactor pmc_core_substate_req_header_show() to accept a new argument.
+>> This is a preparation patch to introduce a new way to show Low Power
+>> Mode substate requirement data for platforms starting from Panther
+>> Lake. Increased the size for the name column as the Low Power Mode
+>> requirement register name is longer in newer platforms.
+>>
+>> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel/pmc/core.c | 15 +++++++++------
+>>   1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+>> index a1dd80bdbd413..47cc5120e7dd6 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.c
+>> +++ b/drivers/platform/x86/intel/pmc/core.c
+>> @@ -828,17 +828,20 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
+>>   
+>> -static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
+>> +static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index, char *name)
+>>   {
+>>   	struct pmc_dev *pmcdev = s->private;
+>>   	int mode;
+>>   
+>> -	seq_printf(s, "%30s |", "Element");
+>> +	seq_printf(s, "%40s |", "Element");
+>>   	pmc_for_each_mode(mode, pmcdev)
+>>   		seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
+>>   
+>> -	seq_printf(s, " %9s |", "Status");
+>> -	seq_printf(s, " %11s |\n", "Live Status");
+>> +	if (!strcmp(name, "Status")) {
+> I'm not very happy passing this as string. Could we use an
+> internal defines/enum instead for this differentiation?
+Will use enum in next version.
+>
+>> +		seq_printf(s, " %9s |", name);
+>> +		seq_printf(s, " %11s |\n", "Live Status");
+>> +	} else
+>> +		seq_printf(s, " %9s |\n", name);
+> Please always use braces symmetrically in both blocks.
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 3e5e6e6031efcefe6b3d31bc144e738599566d98..ca8498f8b831ae5d5c1dcb3f0585e748975dd2c7 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -973,6 +973,7 @@ static const struct attribute_group auth_attr_group = {
- 	.is_visible = auth_attr_is_visible,
- 	.attrs = auth_attrs,
- };
-+__ATTRIBUTE_GROUPS(auth_attr);
- 
- /* ---- Attributes sysfs --------------------------------------------------------- */
- static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *attr,
-@@ -1188,6 +1189,7 @@ static const struct attribute_group tlmi_attr_group = {
- 	.is_visible = attr_is_visible,
- 	.attrs = tlmi_attrs,
- };
-+__ATTRIBUTE_GROUPS(tlmi_attr);
- 
- static void tlmi_attr_setting_release(struct kobject *kobj)
- {
-@@ -1207,11 +1209,13 @@ static void tlmi_pwd_setting_release(struct kobject *kobj)
- static const struct kobj_type tlmi_attr_setting_ktype = {
- 	.release        = &tlmi_attr_setting_release,
- 	.sysfs_ops	= &kobj_sysfs_ops,
-+	.default_groups = tlmi_attr_groups,
- };
- 
- static const struct kobj_type tlmi_pwd_setting_ktype = {
- 	.release        = &tlmi_pwd_setting_release,
- 	.sysfs_ops	= &kobj_sysfs_ops,
-+	.default_groups = auth_attr_groups,
- };
- 
- static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
-@@ -1381,14 +1385,8 @@ static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
- static void tlmi_release_attr(void)
- {
- 	struct kobject *pos, *n;
--	int i;
- 
- 	/* Attribute structures */
--	for (i = 0; i < TLMI_SETTINGS_COUNT; i++) {
--		if (tlmi_priv.setting[i]) {
--			sysfs_remove_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
--		}
--	}
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
- 
-@@ -1405,15 +1403,6 @@ static void tlmi_release_attr(void)
- 	kfree(tlmi_priv.pwd_admin->save_signature);
- 
- 	/* Authentication structures */
--	sysfs_remove_group(&tlmi_priv.pwd_admin->kobj, &auth_attr_group);
--	sysfs_remove_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
--
--	if (tlmi_priv.opcode_support) {
--		sysfs_remove_group(&tlmi_priv.pwd_system->kobj, &auth_attr_group);
--		sysfs_remove_group(&tlmi_priv.pwd_hdd->kobj, &auth_attr_group);
--		sysfs_remove_group(&tlmi_priv.pwd_nvme->kobj, &auth_attr_group);
--	}
--
- 	list_for_each_entry_safe(pos, n, &tlmi_priv.authentication_kset->list, entry)
- 		kobject_put(pos);
- 
-@@ -1484,10 +1473,6 @@ static int tlmi_sysfs_init(void)
- 					   NULL, "%s", tlmi_priv.setting[i]->display_name);
- 		if (ret)
- 			goto fail_create_attr;
--
--		ret = sysfs_create_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
--		if (ret)
--			goto fail_create_attr;
- 	}
- 
- 	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-@@ -1511,20 +1496,12 @@ static int tlmi_sysfs_init(void)
- 	if (ret)
- 		goto fail_create_attr;
- 
--	ret = sysfs_create_group(&tlmi_priv.pwd_admin->kobj, &auth_attr_group);
--	if (ret)
--		goto fail_create_attr;
--
- 	tlmi_priv.pwd_power->kobj.kset = tlmi_priv.authentication_kset;
- 	ret = kobject_init_and_add(&tlmi_priv.pwd_power->kobj, &tlmi_pwd_setting_ktype,
- 				   NULL, "%s", "Power-on");
- 	if (ret)
- 		goto fail_create_attr;
- 
--	ret = sysfs_create_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
--	if (ret)
--		goto fail_create_attr;
--
- 	if (tlmi_priv.opcode_support) {
- 		tlmi_priv.pwd_system->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_system->kobj, &tlmi_pwd_setting_ktype,
-@@ -1532,29 +1509,17 @@ static int tlmi_sysfs_init(void)
- 		if (ret)
- 			goto fail_create_attr;
- 
--		ret = sysfs_create_group(&tlmi_priv.pwd_system->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
--
- 		tlmi_priv.pwd_hdd->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_hdd->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "HDD");
- 		if (ret)
- 			goto fail_create_attr;
- 
--		ret = sysfs_create_group(&tlmi_priv.pwd_hdd->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
--
- 		tlmi_priv.pwd_nvme->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_nvme->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "NVMe");
- 		if (ret)
- 			goto fail_create_attr;
--
--		ret = sysfs_create_group(&tlmi_priv.pwd_nvme->kobj, &auth_attr_group);
--		if (ret)
--			goto fail_create_attr;
- 	}
- 
- 	return ret;
+Will use braces in next version.
 
--- 
-2.50.0
+Thanks!
 
+Xi
+
+>
+>>   }
+>>   
+>>   static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>> @@ -872,7 +875,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>>   			continue;
+>>   
+>>   		/* Display the header */
+>> -		pmc_core_substate_req_header_show(s, pmc_index);
+>> +		pmc_core_substate_req_header_show(s, pmc_index, "Status");
+>>   
+>>   		/* Loop over maps */
+>>   		for (mp = 0; mp < num_maps; mp++) {
+>> @@ -910,7 +913,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>>   				}
+>>   
+>>   				/* Display the element name in the first column */
+>> -				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
+>> +				seq_printf(s, "pmc%d: %34s |", pmc_index, map[i].name);
+>>   
+>>   				/* Loop over the enabled states and display if required */
+>>   				pmc_for_each_mode(mode, pmcdev) {
+>>
