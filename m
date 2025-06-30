@@ -1,141 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115123BD02;
-	Mon, 30 Jun 2025 09:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21DB247280;
+	Mon, 30 Jun 2025 09:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275749; cv=none; b=W4Jsn3Rs3EPe+mRByRoMgmefz1Q7ysrXNt9MpIiljDWr31BZVR48W7tQQnNPKs1K4aA3PZ3DmOTxDc56a/dJgk8U1g4ObnIRb7GIQ3SsakItTJT+GcR3WTS0XKoSkPKyrgd7Etk60HSsRpp5IRFiNqvXerhdJiL7CzenYoWDHbA=
+	t=1751277062; cv=none; b=p5nyvYUEM3CwE20Bt9EZOls6y6rQaV79fVxLSCLu0Ar13wSP70hf1tj621nPxHCUOUBYsopJVqW9paDpKhqiWbI7YUXpxMmoMargRAU9wlGtookHQ2RBMKpxVtxmOvnN78q0ozqfQpC8jdxsPkiDA8im7ESVGPipKCDrtK5VZhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275749; c=relaxed/simple;
-	bh=hjHmh1x3LHSxiHJHwSYt2mDw6VTgEyuQJvBe3qr0u0E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=avE33aBX5OyQ4f77uK5SbHEZEJDzirx+hxMj+cTDl3c3SRFKZ6JehgRlvin7IuoBuwJ+fpebETC1xsuG/YHWLgmiQc+Kvcjmsu7ZqEkJJV+VS7cUIvBf8N1lAwEsclQMsWTr8Gm71r0dFsUDAYVxmwmJunCS+BMr29LR8X4RS+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GLX7oQvY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751277062; c=relaxed/simple;
+	bh=O5oLr3bwWsZD8uL73nva/6Unk6JmucG8/TRTyuz5QlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c5sjwtRx4S9INjOCNAw2bQPYnae5112whPPgPI9NGYi46vt8PIZBCieBueaEeHy3ae1Pl2oi+kZfrzXUfFplSdlekBXtqey47ucwXRiOUld+DWIhGeFYh7HLqmb9ebqBvuq3dFzwaBd3SkU/z/3nmQ6jh/amW34MTCrs5YXSoZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cykCsxnM; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GLX7oQvY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751275748; x=1782811748;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hjHmh1x3LHSxiHJHwSYt2mDw6VTgEyuQJvBe3qr0u0E=;
-  b=GLX7oQvYlHm1TsDNm1MLAo0CttOnX7LxGaZmoDxCYGgTHuwkpq485lyZ
-   JamfFB4hjkMiby7JNhgoc5ATaevVSqzUVu27007Ii64aoFn9C1X4MbhCW
-   nFEGfj45qbmkur597bH3ylJsExCWJoN+2WqDlfKnWu8I/9QbdKLyFipJM
-   I3DPtX1G+JZXYywmN3YezmR65LIOs7HFBjtiZH4EQjfOgDN1btpnWsJ/N
-   eR9Opt2/hfPUHJ1LiWi20drxXs/7mVKKahIeaA+ZnRIKy4pMqY9Wl6cAz
-   irx6LNEK9buOi5QB09FUYOnVZtkOadfWM1D7B4YUuuEYtW0TFkxE1CjX7
-   g==;
-X-CSE-ConnectionGUID: DoBryTBoTuK1FeeKmx70XQ==
-X-CSE-MsgGUID: DlxLiTS7T/SoRDlnpdPeFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="41122822"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="41122822"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:29:08 -0700
-X-CSE-ConnectionGUID: /v5dCSGZSGCqsXnD5ZH/Vg==
-X-CSE-MsgGUID: GJwE85ORQsqPDhCYTvmC+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="157951058"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:29:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 12:29:00 +0300 (EEST)
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    Hans de Goede <hdegoede@redhat.com>, lucas.demarchi@intel.com, 
-    rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, 
-    airlied@gmail.com, simona@ffwll.ch, david.e.box@linux.intel.com, 
-    Tejas Upadhyay <tejas.upadhyay@intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v5 01/12] platform/x86/intel/pmt: fix a crashlog NULL
- pointer access
-In-Reply-To: <20250627204321.521628-2-michael.j.ruhl@intel.com>
-Message-ID: <e860ab9b-4f75-b6ef-3b82-f4e45f478d03@linux.intel.com>
-References: <20250627204321.521628-1-michael.j.ruhl@intel.com> <20250627204321.521628-2-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cykCsxnM"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U84fBH004461;
+	Mon, 30 Jun 2025 09:50:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=DKjS5goKMi5rK2GbghAH6/rgG28ei
+	A8yPjSPHnwGwiU=; b=cykCsxnMIgofblcqsKXBVZ2xLbV5R2pH2FBysEBHvaMEl
+	GBsbPm4tbiJ6lNF37SwuY8M9mhSzQaD8FM/T7arH4x0uqMNAcY5srRTy2GxNqpmj
+	RExaCDGYjvV3MMQaoC2LrFH7Q7zGkuFjALXI7I7bSUs8e4NSR8yYujSLz5Xx0Qup
+	aQGbWjX5iP9YZ6JnkmnMuZV7SnysVTty9zhRU/yMlImgqXrEXX8MeXryX0MYlK8L
+	MdV76/tNdMae7kzYL7cFHpAikZY6xmA7eHr5jSbYhMJJWpB5DB3Cqmzav10+T9R5
+	UNwY8Ev/z3oZD3pTemZkPLHC0HeUVICFOfltSS4fw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j766a600-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:50:55 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8dmeK028997;
+	Mon, 30 Jun 2025 09:50:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u84adh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:50:54 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55U9orcK038230;
+	Mon, 30 Jun 2025 09:50:53 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u84abs-1;
+	Mon, 30 Jun 2025 09:50:53 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/mellanox: Fix logic error in power state check in mlxreg-lc
+Date: Mon, 30 Jun 2025 02:49:51 -0700
+Message-ID: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506300081
+X-Proofpoint-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
+X-Proofpoint-ORIG-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
+X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=68625dff cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=Ikd4Dj_1AAAA:8 a=yPCof4ZbAAAA:8 a=gBumKNB3FYnGDgap0wUA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA4MSBTYWx0ZWRfX6NWuw3aMVu1p uI9N3K4onrFfMNpk6+QyhY72nRShtBgwTqMUvukboNbBYRZdZ8ID7m9XAfrr9euRiTHCThauqpP IpFn2nKS7zazKA6FlKpimxFFP4uh3NpwHn75pBHS6RKISkFltYSImqfaFcLnmvbgZ++s8fUPTl4
+ 5ft4Ag22Fnd/CZE8e5HWjy0ox4+HSqjZIPGXTgFifZtFc1Vq8gwcugHAgkR2/OU5y3LH1tFtnUq vDVfwfSZplwo/sXulJ1EWiE/ST//eKcPr899EMG5x5qkRCabW7oam+g5uZKkhcy3eQBhvM2bGt/ df/vD9x4TD76LvtpMmCCoUWl4DHHynW07Ld4VIiiOX1/c9rrrtA85HoP5jyLbA4GDjl6hvHp2/l
+ WQnaMm6U5SYl48BUllvqT7bTOcxj0mcljod4ye1L4CjpvIs2LvwqdRH2+ZT985zYLlDNWp+y
 
-On Fri, 27 Jun 2025, Michael J. Ruhl wrote:
+Fixes a logic issue in mlxreg_lc_completion_notify() where the
+intention was to check if MLXREG_LC_POWERED flag is not set before
+powering on the device.
 
-> Usage of the intel_pmt_read() for binary sysfs, requires a pcidev. The
-> current use of the endpoint value is only valid for telemetry endpoint
-> usage.
-> 
-> Without the ep, the crashlog usage causes the following NULL pointer
-> exception:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> RIP: 0010:intel_pmt_read+0x3b/0x70 [pmt_class]
-> Code:
-> Call Trace:
->  <TASK>
->  ? sysfs_kf_bin_read+0xc0/0xe0
->  kernfs_fop_read_iter+0xac/0x1a0
->  vfs_read+0x26d/0x350
->  ksys_read+0x6b/0xe0
->  __x64_sys_read+0x1d/0x30
->  x64_sys_call+0x1bc8/0x1d70
->  do_syscall_64+0x6d/0x110
+The original code used "state & ~MLXREG_LC_POWERED" to check for the
+absence of the POWERED bit. However this condition evaluates to true
+even when other bits are set, leading to potentially incorrect
+behavior.
 
-Can you confirm, if this was possible to trigger only after this series 
-has been applied, not with the current mainline code?
+Corrected the logic to explicitly check for the absence of
+MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
 
+Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/platform/mellanox/mlxreg-lc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+index aee395bb48ae4..8681ceb7144ba 100644
+--- a/drivers/platform/mellanox/mlxreg-lc.c
++++ b/drivers/platform/mellanox/mlxreg-lc.c
+@@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
+ 	if (regval & mlxreg_lc->data->mask) {
+ 		mlxreg_lc->state |= MLXREG_LC_SYNCED;
+ 		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
+-		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
++		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
+ 			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
+ 			if (err)
+ 				goto mlxreg_lc_regmap_power_on_off_fail;
 -- 
- i.
+2.46.0
 
-> Augment struct intel_pmt_entry with a pointer to the pcidev to avoid
-> the NULL pointer exception.
-> 
-> Reviewed-by: Tejas Upadhyay <tejas.upadhyay@intel.com>
-> Fixes: 416eeb2e1fc7 ("platform/x86/intel/pmt: telemetry: Export API to read telemetry")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> ---
->  drivers/platform/x86/intel/pmt/class.c | 3 ++-
->  drivers/platform/x86/intel/pmt/class.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index 7233b654bbad..d046e8752173 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -97,7 +97,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
->  	if (count > entry->size - off)
->  		count = entry->size - off;
->  
-> -	count = pmt_telem_read_mmio(entry->ep->pcidev, entry->cb, entry->header.guid, buf,
-> +	count = pmt_telem_read_mmio(entry->pcidev, entry->cb, entry->header.guid, buf,
->  				    entry->base, off, count);
->  
->  	return count;
-> @@ -252,6 +252,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
->  		return -EINVAL;
->  	}
->  
-> +	entry->pcidev = pci_dev;
->  	entry->guid = header->guid;
->  	entry->size = header->size;
->  	entry->cb = ivdev->priv_data;
-> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-> index b2006d57779d..f6ce80c4e051 100644
-> --- a/drivers/platform/x86/intel/pmt/class.h
-> +++ b/drivers/platform/x86/intel/pmt/class.h
-> @@ -39,6 +39,7 @@ struct intel_pmt_header {
->  
->  struct intel_pmt_entry {
->  	struct telem_endpoint	*ep;
-> +	struct pci_dev		*pcidev;
->  	struct intel_pmt_header	header;
->  	struct bin_attribute	pmt_bin_attr;
->  	struct kobject		*kobj;
-> 
