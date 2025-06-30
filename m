@@ -1,90 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35184A2B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jun 2025 10:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108BE84A2B;
+	Mon, 30 Jun 2025 10:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280665; cv=none; b=NDSylnHRI6Nzm/2H1CkGluu45IajhRJQdQfmNAeS0uEaZAOevskb53rESx0vqR/Jg/xOFR6Ydkk7i6hwqkUMNy6BxxZQU+kr+PuOt1G8IT2S7bp41bgVoKNUxkmkvrmjWvyq2S/WMRVKstPy9ja9OhO97J7BawsTq3BjeMdPDLk=
+	t=1751281129; cv=none; b=SbH/fLUONEMbwBWuQNLW6JwsfUXCgxBFCEr9yTKlvDjsFXmkiE3BlGUv0QIWRi3YotG4/V84ExCSoontK04qwYToFK9y8VQ4fnr7/u/ReHjvN//Lc74IJ7dPfXOrTKzoPoXKtt6avILH+XGQ4mlVh7445ZHE239tNfRbscq2jqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280665; c=relaxed/simple;
-	bh=Co89zZttVNtIlxqu980VzFpBHa5rGu91LRK3eN5cJPs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PkdqpM22JbMUz8rmPo/Y0B4R/mLtHb0Cg+r6lSoYpvmXenrGqdQy5Nd3AdHn+5i1wQYZvIcUDO3vYiUFW+TTgqnOk7V4y9bM+2tUNHa4ZHPkcCCoGbBCI7lnvidToQE5Eu1ZbtAltKX2tzcBD5oLaut4SVv/dCoPj9XUNbt9p28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O4fGJsxu; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751281129; c=relaxed/simple;
+	bh=c01+prwLt3Z4uzPP3P6c3b8DwK0aebzLgzpARx2p0mM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B9fKMTYwa5DI0R3PdsOazECS64Xart6hAn2qN/huMCogYiPildQftcupetIHNlYufM2ds3NzQ1XfMiZ0sp63Pcbdm1RkFWaD7EuPUrafVGnRi9es2VECDXpGOrs3K1AK2gQ7rXeu013S67/87/I5kLrgc460ZXmR6VkqW//9z1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PPCLG5v0; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O4fGJsxu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751280665; x=1782816665;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Co89zZttVNtIlxqu980VzFpBHa5rGu91LRK3eN5cJPs=;
-  b=O4fGJsxuNdqGsEP6z82ncgzgAgj5Rv05G2L/P+7xRoIK0pIzn7GvY8C8
-   y1h0Mz8bxCbch7xAkOiCV//etvRS1TzONEN3WhonU6LO2YlgF+yEyfTl5
-   aZWCm/qaShwdRcLgUSNlcZMtPxD6nwAN+wVyE0Td9mxtZKJy6he5fikWM
-   r7uEh2idOYHO8KgIuzyaeXbcTs5jfQXXLEIz5s5h9g7JZkRri3kc2AQE9
-   mRloeLJRWM9v00sWEeJynb47GNmIrt52mTVJULnCFz9WKhU3+BCkKtJ4x
-   MvNTuWlCHnignLNzK72Eq0PP+YYj0pQgMZjXQtierEkGjI7fxrGLoyxIm
-   w==;
-X-CSE-ConnectionGUID: A1himlLERhSgnp1OL28U0Q==
-X-CSE-MsgGUID: USM8q5IsQimAcl0DDzVLcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53363773"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53363773"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:51:05 -0700
-X-CSE-ConnectionGUID: 6WrlGGTNSWObeX9xPvHbiQ==
-X-CSE-MsgGUID: h40pjbZPSz+YbYOUWuzzTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153730718"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:51:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20250609104620.25896-1-hansg@kernel.org>
-References: <20250609104620.25896-1-hansg@kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: x86-android-tablets: Add
- generic_lipo_4v2_battery info
-Message-Id: <175128065653.8269.3372149116791542277.b4-ty@linux.intel.com>
-Date: Mon, 30 Jun 2025 13:50:56 +0300
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PPCLG5v0"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U84cdV008767;
+	Mon, 30 Jun 2025 10:58:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=tVek2cu/fX9vb11AdxYkBeTfTfEnW
+	2qEG+yUYqSTTM8=; b=PPCLG5v0Spf4Pb04+hU3AQcDDAZWQnMr/SK3+f+gsRudf
+	rkKZq0Syk5v32ts8ZWGs849mL5sMCO2Vi78YMPRts4rBLWkhFKJ+llz/lV8boHZi
+	x2netIvbUTS2mWgzBoKVCsFIRDgnIqKaTVnl+ucEfcGCU+tTSSYf0oGsoWh+tMdP
+	8RqpI8ruwWdKNOnHZwQxxXFgF0UduGTznM1UOS+BLtVLDAQeb8m6AZl0OkJ5BDRr
+	06gMQ8MdSgWP+7V3zoKHaOwO+z8KA6MkssaqLXZC5Jc+XtCOZfwwyol8/++oyynU
+	JzOE5C3hKmGQtfWeWUWILzCmm6KEW/whUr9Xl1yyw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j8xx273g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 10:58:43 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55UAtcUa017089;
+	Mon, 30 Jun 2025 10:58:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u7xgpw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 10:58:42 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55UAwgBm015032;
+	Mon, 30 Jun 2025 10:58:42 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u7xgpf-1;
+	Mon, 30 Jun 2025 10:58:42 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/mellanox: mlxreg-lc: Fix logic error in power state check
+Date: Mon, 30 Jun 2025 03:58:08 -0700
+Message-ID: <20250630105812.601014-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506300090
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA5MCBTYWx0ZWRfX0AXknf2lDP9Z wlSCzK9jRT7upHog1MI/2atNq0WULZy4vxTWjKdKwHHlwkclyRVtMS/r36vA+6CLO0IoMJmEePQ EcrgbNfbVuNt8CAnq7WhNMSYkrPzv1IgaL8aZqGC05Swf4xpQoE8MUqxyo6Rgb9kT0tWZr1FkGr
+ jnpc/xwYT4skNFfEjWlGsDxbwGNjtOBHud2Q7kTk++f+ssS01tCFH/+wGzQoh3y0zg1yQT0nI+p 4yub62zVm8PUpG8UpyZPIEKW2r/wcGUphlJaF/OHBcxMbHCoccK/PuH5Cp63YliyPY99r6103NC MnODjU3BaAh5SlD3inh0BlOT8ZziiI1367ZD20DSStmni2dFaH/zAFtFkRC/onxmYf3S+1lJIqa
+ XaENMD74rgNBwKw5BvJrqvepeJtktex3Ht3VMovHexWJ8MoWYRLzwOitJCMCRa+mVtgHUo/j
+X-Proofpoint-ORIG-GUID: YmC8SlpdMejEOUyZamoEO-OY-7S3jLRN
+X-Proofpoint-GUID: YmC8SlpdMejEOUyZamoEO-OY-7S3jLRN
+X-Authority-Analysis: v=2.4 cv=QfRmvtbv c=1 sm=1 tr=0 ts=68626de3 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=Ikd4Dj_1AAAA:8 a=yPCof4ZbAAAA:8 a=gBumKNB3FYnGDgap0wUA:9
 
-On Mon, 09 Jun 2025 12:46:19 +0200, Hans de Goede wrote:
+Fixes a logic issue in mlxreg_lc_completion_notify() where the
+intention was to check if MLXREG_LC_POWERED flag is not set before
+powering on the device.
 
-> Move the asus_tf103c_battery_node to shared-psy-info.c and rename it to
-> generic_lipo_4v2_battery_node.
-> 
-> This is a preparation patch for adding ovc-capacity-table info to
-> the battery nodes.
-> 
-> 
-> [...]
+The original code used "state & ~MLXREG_LC_POWERED" to check for the
+absence of the POWERED bit. However this condition evaluates to true
+even when other bits are set, leading to potentially incorrect
+behavior.
 
+Corrected the logic to explicitly check for the absence of
+MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Fixes: 62f9529b8d5c ("platform/mellanox: mlxreg-lc: Add initial support for Nvidia line card devices")
+Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/platform/mellanox/mlxreg-lc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The list of commits applied:
-[1/2] platform/x86: x86-android-tablets: Add generic_lipo_4v2_battery info
-      commit: a8fc1224f2318d3e5948671d1cad458e6372d921
-[2/2] platform/x86: x86-android-tablets: Add ovc-capacity-table info
-      commit: be91bf40a96d567973d5c5e870d1464eb51b6c42
-
---
- i.
+diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+index aee395bb48ae4..8681ceb7144ba 100644
+--- a/drivers/platform/mellanox/mlxreg-lc.c
++++ b/drivers/platform/mellanox/mlxreg-lc.c
+@@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
+ 	if (regval & mlxreg_lc->data->mask) {
+ 		mlxreg_lc->state |= MLXREG_LC_SYNCED;
+ 		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
+-		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
++		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
+ 			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
+ 			if (err)
+ 				goto mlxreg_lc_regmap_power_on_off_fail;
+-- 
+2.46.0
 
