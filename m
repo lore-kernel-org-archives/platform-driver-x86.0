@@ -1,237 +1,518 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E231B87F0
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jun 2025 19:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751313491; cv=fail; b=gj1qC6sm1gVLYwdYSfBrcsQgo/7snKBFbJW5VLpDJuZlOqQrJlFcZm55SpyNTrFSYG/PZJGfW5ajITlCUu7EA41lYM2Qs9o4b3EhJEELFnmWqdWpXhT/HWQaUjy+qF5ZfHurPxr8LrwmjUSkKVnnb+1oThDboU9adpGlyYHcMSs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751313491; c=relaxed/simple;
-	bh=9M/we95B+8lTsF0DTpWxdmCl/TZTzlyCGYCT0OUAUQQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WkUkvR1YqQFp27E8vMKdici6CeyyMrDFOWEshdvSmf5qBeSFvZHi/8g8uaDgsGj8c54EKyBe/S9+MGbUpYiU5/myTqPnsGX/uefYM1n0B9I2Gwazm5PV9e3ixjdXWXA1nTIUByjy9nsSAQmzfZPQjboJeJmz0oPmkv4j1F+7OY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XU/Th2/L; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5676149620;
+	Mon, 30 Jun 2025 20:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751316460; cv=none; b=EizoBS16SijGzbIfp875rLO/xjDv/xgnrChtZK0Bw2fArAra9qc5Ydv9U0I/HHlobsKOPrxiAy8IQdiSf7ynCize/ZYL4+lL1DoIFvASXJAoFXK+7Dp33n1YbOOtQdEmG5v5ZpsICI34z8ZyJQVoRZxRfdeXOtM7FPzXVPZiCkc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751316460; c=relaxed/simple;
+	bh=oNquZK1HnRmZjb7ZRYom7qqktMBdhoa1erfLwxtyV5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TT52IvApNxFmbAfOQ5t22/WBcWfMpT5aLZbe4lZj3rZfloz+J35HgsaqW5y9y0zfg7215r4kScBCYFwU/Sy0Qe7V0W027OgZfbYkNU5Y3pHlykg4Tz0hutnon4/j/ezQT02inwwuObLr6VaNQ7pfpSHfazc/AfN6BkoioWsbCWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l0Yr/pB6; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XU/Th2/L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0Yr/pB6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751313489; x=1782849489;
+  t=1751316458; x=1782852458;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=9M/we95B+8lTsF0DTpWxdmCl/TZTzlyCGYCT0OUAUQQ=;
-  b=XU/Th2/LiKYdY4fpRS8jfjNIora1wZwrkxL3A/Q8nuu3Xw0Ep/vxou27
-   OVZcLl+AFoEwI7kxMeI5SbPVfh1XwT4ifBORqyKD6k659MMEMl05ljT5m
-   xmf8jsCvwXj/aeLJXi8S+mZAIhHOQsNl6Ekxx1j0l0WVhdQm7f4COLi4H
-   U78XTEzbqH7YDDPdpF++Bp5Pm73rQ21SQkOpybEUvqLj+TcbHW2H5rN+p
-   BJ+bWWYkJAAmz2c78We+c5lqWnr4WT0rl4inYGhZPbMptXACUDBOad5wj
-   lM9cDLBVKCVgXOA/RXXz+C7wuf6zdCfzsrkQ22PeZRg39v2vgseW8eGKW
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oNquZK1HnRmZjb7ZRYom7qqktMBdhoa1erfLwxtyV5E=;
+  b=l0Yr/pB6Nri6dR11vd7AKuyCZ3fqYzVWi9uHpDZNHkAQ+jBlAwLVa315
+   i/dYwz0CBnjV6wF3omWRdZcPfZv7yKPy3NaD7Q2rN7uYQXbcw8Ya5t5w4
+   fntO0x9hnkukTBeb0z01hr94qbDYEha+qc2aXIbs0uWik8RIzdshLS3/D
+   FO6KFMnY0x2sedjzMQnhUGYWStfwvS1vVPgHCmtEfsHPzWr06lE2kn+/x
+   wCgOMn8XywdPojw1MHU7dhUsJzGlap1enAkbh+7yaYNV7SEcN0iRoBi1Z
+   ysi+ykC1XUqzdh86X8dqa5KV0QcW0mKZuph+wd30B2lyog/vjihlzWW0w
    g==;
-X-CSE-ConnectionGUID: +6vO+9CeQcadpJ0pt66E7Q==
-X-CSE-MsgGUID: BpYzOqXOTcaUX4Dc7xEGVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64999831"
+X-CSE-ConnectionGUID: Cx2NvY4hSj6WchcAbVpynw==
+X-CSE-MsgGUID: evWWp3FzSfGSBWdiGVQVrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64608840"
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="64999831"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 12:58:08 -0700
-X-CSE-ConnectionGUID: 7iEAiiwcSs2hONTN4r7PfQ==
-X-CSE-MsgGUID: nclGEf35TR6q1lHygwXXlA==
+   d="scan'208";a="64608840"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:47:36 -0700
+X-CSE-ConnectionGUID: V9HLrmyIQV+u4+oKa/dyYw==
+X-CSE-MsgGUID: 0i7QkBjtQvKJAz28MhXEMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="153848780"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 12:58:07 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 12:58:06 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 12:58:06 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.84)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 12:58:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g7zXVmiZvIILnCN6P2eqZ8hq9kRB9efeELoJBr3B3P/6gxRrp1p5fA19e67OkqBCU4RoDAieqBYu5xwLBHqtmd6bAMVs9T8nwLpQv4pu53D4ChtkpRA26+1urQ2RbPJ2P+hflHCvhl5vVDlu/Th4juhEHGI95654HLyri7zwMVvAWjhl6jNPxT4jEOXcB6qi64O7VRMM9lCBi0wTsvJbt4lVAXMDxzlaP9qEzPNYnQ9CC7USFYi75EGZac2l0sXOROhjbzWgKFaO4mV2sEtdgukxDX1zBJB5pY39D43+Fc1E/RDBzmfjAF9P2z8aiLHnfGmQ7O/kMtgsaomQIJOcBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xsAwqEMYvQnL4+YZZusYbIkrAICv/vCk0dpEqKNZBV8=;
- b=jVhW8jtIjvBVpNMxylc2LFlibBzM+JS5MofZ2wP3cmg8VAbG2zjaUI88Qb1nhgvZes1IkSM1szNNlbIP1nSKi1e41u8B78+RSjLNV8XOErAV33zCJU/lhQ4cszu2S2wpELwMjmlDy1wjg23Mq7m/tM69QhQor/yH9FBhs28VZoo0CzjzrUwGbYyX3RNuDEZHjjYl28bt12MWDuX6tQzZBt7W6HiNZ3VI4P+PFDYkMI6+zmfjDGKSmoRG2NES9eTL8MHE/JbmVWsFDbOMa2MW1uOeVFexr6gz3t8GC1JiX0hP+GXjKYz+o30uYFFaFG2YOTZ+BePVmF6o8CgPxHO2MQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by CO1PR11MB4914.namprd11.prod.outlook.com (2603:10b6:303:90::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Mon, 30 Jun
- 2025 19:58:02 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Mon, 30 Jun 2025
- 19:58:02 +0000
-Date: Mon, 30 Jun 2025 15:57:59 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-	<lucas.demarchi@intel.com>, <thomas.hellstrom@linux.intel.com>,
-	<airlied@gmail.com>, <simona@ffwll.ch>, <david.e.box@linux.intel.com>
-Subject: Re: [PATCH v5 02/12] drm/xe: Correct BMG VSEC header sizing
-Message-ID: <aGLsR6rrszH0c7RS@intel.com>
-References: <20250627204321.521628-1-michael.j.ruhl@intel.com>
- <20250627204321.521628-3-michael.j.ruhl@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250627204321.521628-3-michael.j.ruhl@intel.com>
-X-ClientProxiedBy: SJ0P220CA0030.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::6) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+   d="scan'208";a="152948433"
+Received: from ldmartin-desk2.corp.intel.com (HELO localhost) ([10.124.221.227])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:47:37 -0700
+Date: Mon, 30 Jun 2025 13:47:35 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, srinivas.pandruvada@linux.intel.com, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, xi.pardee@linux.intel.com, 
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH V2 04/15] platform/x86/intel/vsec: Add device links to
+ enforce dependencies
+Message-ID: <cz76fcobnr6yxxw7pvhm25x7t54p66etiulhosjdfdx5td6g66@746chufy67uj>
+References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
+ <20250617014041.2861032-5-david.e.box@linux.intel.com>
+ <8ccfd660-791a-6cf1-2982-b4f09ae6d3e1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|CO1PR11MB4914:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f70f194-8d60-43f8-e989-08ddb8106bc5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?NBbgnpacr8lI1bNOo46BGYDrAbCe5m0Nz/pR/TEmGTHWNpgFxRg0EjzSeVQh?=
- =?us-ascii?Q?HRxRefZEd/RtEcJ75u+8ROIOAsQjDLrNRcf6PWukT99t46ifzi0QHdFeNG/Z?=
- =?us-ascii?Q?jxnIjJB+6P2OFXfA6DlyiIbqwtW6IAc4r9XDr9NTz5w3IRkS1i0OCbdmznVs?=
- =?us-ascii?Q?+FE8rOov8RM0ub+Q3J84C3NxCqvwUHQbNdkqj7R+1J9IX34Z20NQa/TxPqbg?=
- =?us-ascii?Q?RBkzXSxz2gWy8jsmHGiS57P37D46zzViWMjo9SgyhnibcRH4lqEwl6VW68V+?=
- =?us-ascii?Q?zqrPDQK37l3I0tOHbA+x/pIydjyUJ7SrxVIzTgpBl85QR3bLMHFbJINPJzZL?=
- =?us-ascii?Q?O/tcrSjQsNR4HSOfhtx+3fuPT7eJNq1+Kga167U3K6kx9J5eg4tGOcepIemQ?=
- =?us-ascii?Q?ywujEbZunbwXfxHQ6uCJFr0m+OfFVj0ZNOrz6sF+xApYN8qS8piGyCou6rV/?=
- =?us-ascii?Q?EGlp2bvcKxV+aEOn5SnovAYAo5XFYfbj/jckcy5h+B0WErv+71am+YT3N0f/?=
- =?us-ascii?Q?bi+Ff3jmx7dxcpknI918m5AuDZHs0LpzoU93mHFehAoiFTokH60oVUmUPiKa?=
- =?us-ascii?Q?oIGVBFiXtvJCjMwTxqUNSv+O++9flCl+DHQfB90crPhE/c6hhoCXv02Z4J3D?=
- =?us-ascii?Q?pb9iPzkatblVuhYwZ2tNJzsFir7wJtqJs6bnxP7W7NSpKaQXL6SxjAzcV3YR?=
- =?us-ascii?Q?FdXqmfoXUaoON+2IJUHMdNjPe4OXJ7AcV8W1Am4VWh2yWv+00vGbqOj8k5Co?=
- =?us-ascii?Q?WeSAVZcjaKlsF+8lcpOdS8iaTXzJ834LV12dPhl0G0iLR+kJ6Gv0LeiH6KjU?=
- =?us-ascii?Q?8alOkBLQhLgSJN+NENbvkBLWfyNJAC5cCE8XlL+mK/voBILyWMJmR9/Tf3up?=
- =?us-ascii?Q?AQw4rZDhWFcifl558oHDaWj7UMSwz0zJY5alioS4/gFk1aIlm4Peovo7aTLz?=
- =?us-ascii?Q?CFRY6s5ojBVQHEyjPm2Urgvrg5rGdIzwK/GplmgcS8Rw6zZP7vLlk2iyvPtN?=
- =?us-ascii?Q?bWRtJWN2TweGbi1Po4rIaesCANyJV5RwFolRZ315ZnVBf3gJr/IWMmvbRdOp?=
- =?us-ascii?Q?nmSYI5QO19ZBGvzLePMjkQ/opYUODmfM6iypBC+R897F2/EU4GdwZql2VBEA?=
- =?us-ascii?Q?jTpIwssekA2MXffCDyu5fyrypPcKBojQ6eAWeZjY5+k+YLyacUPdsnoREnNU?=
- =?us-ascii?Q?h54lGX+AOok+WF4DtyL+6SCxMABFaOnu8pkfWAp+ZjRibQC4bmQjE4XOD5cu?=
- =?us-ascii?Q?h4bsqmXcaywtZfcpmIs+ueeDsmzcQRYGPMLVGC3C66CghyyvN1Llh9e8R1uH?=
- =?us-ascii?Q?zmayAbexgzhzoXfbeMc2IYLbcUsou0laJbLVRho3mVQPsxwOsLKjpFGmJSEB?=
- =?us-ascii?Q?GDEnXp1LgJPA1g5zyIYFyyxGY+a5sOC8OvWV2WuZb8Qi9JSB9Q=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pRRsHjfkyjD3TT0xhzaXhccBWvKVl/mFFmIM4+m3hfQ35zafpG8bwSesj89y?=
- =?us-ascii?Q?FQyX+90AVnS5df8ZfSwNWjSjPXXiJyYl89984v1/9XuQKbiZIuuVFDbQee3o?=
- =?us-ascii?Q?ZkXs7oymR0YxdLVMpB7Hnd+UPXdVGMx7MzF6MnLHn5DhtBwnm1E76k3jSmDp?=
- =?us-ascii?Q?fyMhgZwiy/HSB3MbQoHcyLk2Sl41EfgN0ri+niLo/SKAkZ6OOe5TG+bmjfng?=
- =?us-ascii?Q?4OKpgMYUkjnP/WaqAARGAWkLVCVBxgGd3hf3RntfeDNNYNy85rKQi3EavXJC?=
- =?us-ascii?Q?OE141PL+YQwCcLprsh0GzwxOgHJFcS8gkqvSK+kO7o9MLsNi294/ZVV4azJ1?=
- =?us-ascii?Q?6VqShEM/WEU2gpCSfs6l5PwobnbahU7m9Lk7ldJxDqSEERSKzsTV2wVQ4Buh?=
- =?us-ascii?Q?9zOp0lnUd01xdIujeP5lGOuuDVH5mUhPc1ryMT5ko/LOvUpEQnXq4DqTfKIS?=
- =?us-ascii?Q?SlN94qGCu0u9tYWJes1PPHYXEa/BCLyXp3LSbtCvqHMhq6V+yMTOmP8DjIvq?=
- =?us-ascii?Q?SHLZDE1x2V8wSYqJu6Q2ALvj7uWYdXj2RNXpi3efkAmvvi8VcQVG8jARNTmG?=
- =?us-ascii?Q?LuHYkqU4RzirCjzqUjog8OHkHjPwN5r+Vk7yxZZ7ezYvusrp3U2bbWqMeaDx?=
- =?us-ascii?Q?gu46VdMogz7ixubOpaG855LpDwTHOoFdnHawpbCzsi4yQ5PyZtYS8hd/t5ya?=
- =?us-ascii?Q?MXoZEKvdRa64uLj7rkYFuN0/DFVvt7xH20avwD0EojqvahQia7m2DGy9UQf2?=
- =?us-ascii?Q?vBI1Wp3EvObYvLib/Gfp2SltHUVosCv+Ia+6JItAvPOPl9OyFVqd3E8NwKN0?=
- =?us-ascii?Q?V7kCsMrtZIkmCx5v07tbMDQdyuAPggo3sAYN1cZoeJv8zFHCIMYczerZAbUN?=
- =?us-ascii?Q?LW1dns88QZ3wmIpyz4qg9EO9Iz2kp0FBYcDQRQuQanzcNRyHo8Fq1IqssHmJ?=
- =?us-ascii?Q?peSI5Iq1KyYS9+4TTVAxn3ujDNoKupX9Iw371WmpTVUj2GLy62ox2GyiV86S?=
- =?us-ascii?Q?Nvd9PdK8JwfdAa0xfSwVzJW3uGLAM16pttMNEEs1HvTWKCss9MD8zpda1UZK?=
- =?us-ascii?Q?jEENXzTMcbii13BZR5hPoKmJxDTEY1fZgD23ybfwOGBTX6Ay3Gq8diT7n4df?=
- =?us-ascii?Q?3sWIcnULrJaVsYhHRexq8VSgOvgs3mAM40kgV9djupxQeEyBF9XHahFr9BgF?=
- =?us-ascii?Q?e9mguJRpcpCMjtJ55IWDde9LPaOmgfEITrhp3zBUkigphbpQxNrGfxeE5DW6?=
- =?us-ascii?Q?XvvT3UBM+eVH6N6//b8QAE7k6WLC6yinqJq9+s0em+Tkz9csIVBbyN7vuxUs?=
- =?us-ascii?Q?spffUlwEEuX58QBII3pXpQV1gNK+nipFIwFwBr3Y3BqghujFEndAFK9xf0gK?=
- =?us-ascii?Q?XOmDRryfKLZUtsvgsJVaKXOy3ZPOmH2PDN+pqA1pl0H6+o+RtAjg/CtEhjSv?=
- =?us-ascii?Q?2pTrsGUfmLPwpSBWvnFeu59x8uCiBtDTirLCAkIeT9JUQkmF3cjZ/kV2wMLl?=
- =?us-ascii?Q?84T1XJoUzHzndkiq0Yb7/C/6D98Zzo2Y8Gb/EiLj1pgFx2W1qHalsoeKWBS7?=
- =?us-ascii?Q?eoF7wD6dIsoChEd7GEi6707bHvLQSv84OmunVraM?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f70f194-8d60-43f8-e989-08ddb8106bc5
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 19:58:02.6696
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xqZRKMKipeCcs8v6jJQTUKRoOnY7GF3p0HazAS1riyl3xxox3aBWnQDNsP/ecceFXn1xT14uh23dfT9L+LQabw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4914
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ccfd660-791a-6cf1-2982-b4f09ae6d3e1@linux.intel.com>
 
-On Fri, Jun 27, 2025 at 04:43:11PM -0400, Michael J. Ruhl wrote:
-> The intel_vsec_header information for the crashlog feature is
-> incorrect.
+On Mon, Jun 30, 2025 at 03:06:38PM +0300, Ilpo Järvinen wrote:
+> On Mon, 16 Jun 2025, David E. Box wrote:
 > 
-> Update the VSEC header with correct sizing and count.
+> > New Intel VSEC features will have dependencies on other features, requiring
+> > certain supplier drivers to be probed before their consumers. To enforce
+> > this dependency ordering, introduce device links using device_link_add(),
+> > ensuring that suppliers are fully registered before consumers are probed.
+> > 
+> > - Add device link tracking by storing supplier devices and tracking their
+> >   state.
+> > - Implement intel_vsec_link_devices() to establish links between suppliers
+> >   and consumers based on feature dependencies.
+> > - Add get_consumer_dependencies() to retrieve supplier-consumer
+> >   relationships.
+> > - Modify feature registration logic:
+> >   * Consumers now check that all required suppliers are registered before
+> >     being initialized.
+> >   * suppliers_ready() verifies that all required supplier devices are
+> >     available.
+> > - Prevent potential null consumer name issue in sysfs:
+> >   - Use dev_set_name() when creating auxiliary devices to ensure a
+> >     unique, non-null consumer name.
+> > - Update intel_vsec_pci_probe() to loop up to the number of possible
+> >   features or when all devices are registered, whichever comes first.
+> > - Introduce VSEC_CAP_UNUSED to prevent sub-features (registered via
+> >   exported APIs) from being mistakenly linked.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > 
+> > Changes in v2:
+> >   - Simply dependency search in get_consumer_dependencies() per comments
+> >     from Ilpo.
+> >   - Add rollback for auxiliary_device_uninit() in intel_vsec_add_aux().
+> >   - In suppliers_ready() clarify that for_each_set_bit() is searching for
+> >     all *ready* suppliers, not all suppliers. If any is not ready and not
+> >     ignored, it immediately returns.
+> >   - In suppliers_ready() check device_link_add() return status.
+> >   - In intel_vsec_probe() uses info->caps consistently.
+> >   - Fix spelling errors and remove unrelated changes.
+> > 
+> >  drivers/platform/x86/intel/vsec.c | 219 ++++++++++++++++++++++++++++--
+> >  include/linux/intel_vsec.h        |  28 +++-
+> >  2 files changed, 232 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> > index f01651f498ca..e497b570f814 100644
+> > --- a/drivers/platform/x86/intel/vsec.c
+> > +++ b/drivers/platform/x86/intel/vsec.c
+> > @@ -15,9 +15,11 @@
+> >  
+> >  #include <linux/auxiliary_bus.h>
+> >  #include <linux/bits.h>
+> > +#include <linux/bitops.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/idr.h>
+> > +#include <linux/log2.h>
+> >  #include <linux/intel_vsec.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > @@ -32,8 +34,17 @@ static DEFINE_IDA(intel_vsec_ida);
+> >  static DEFINE_IDA(intel_vsec_sdsi_ida);
+> >  static DEFINE_XARRAY_ALLOC(auxdev_array);
+> >  
+> > +enum vsec_device_state {
+> > +	STATE_NOT_FOUND,
+> > +	STATE_REGISTERED,
+> > +	STATE_SKIP,
+> > +};
+> > +
+> >  struct vsec_priv {
+> >  	struct intel_vsec_platform_info *info;
+> > +	struct device *suppliers[VSEC_FEATURE_COUNT];
+> > +	enum vsec_device_state state[VSEC_FEATURE_COUNT];
+> > +	unsigned long found_caps;
+> >  };
+> >  
+> >  static const char *intel_vsec_name(enum intel_vsec_id id)
+> > @@ -95,6 +106,74 @@ static void intel_vsec_dev_release(struct device *dev)
+> >  	kfree(intel_vsec_dev);
+> >  }
+> >  
+> > +static const struct vsec_feature_dependency *
+> > +get_consumer_dependencies(struct vsec_priv *priv, int cap_id)
+> > +{
+> > +	const struct vsec_feature_dependency *deps = priv->info->deps;
+> > +	int consumer_id = priv->info->num_deps;
+> > +
+> > +	if (!deps)
+> > +		return NULL;
+> > +
+> > +	while (consumer_id--)
+> > +		if (deps[consumer_id].feature == BIT(cap_id))
+> > +			return &deps[consumer_id];
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +/*
+> > + * Although pci_device_id table is available in the pdev, this prototype is
+> > + * necessary because the code using it can be called by an exported API that
+> > + * might pass a different pdev.
+> > + */
+> > +static const struct pci_device_id intel_vsec_pci_ids[];
+> > +
+> > +static int intel_vsec_link_devices(struct pci_dev *pdev, struct device *dev,
+> > +				   int consumer_id)
+> > +{
+> > +	const struct vsec_feature_dependency *deps;
+> > +	enum vsec_device_state *state;
+> > +	struct device **suppliers;
+> > +	struct vsec_priv *priv;
+> > +	int supplier_id;
+> > +
+> > +	if (!consumer_id)
+> > +		return 0;
+> > +
+> > +	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+> > +		return 0;
+> > +
+> > +	priv = pci_get_drvdata(pdev);
+> > +	state = priv->state;
+> > +	suppliers = priv->suppliers;
+> > +
+> > +	priv->suppliers[consumer_id] = dev;
+> > +
+> > +	deps = get_consumer_dependencies(priv, consumer_id);
+> > +	if (!deps)
+> > +		return 0;
+> > +
+> > +	for_each_set_bit(supplier_id, &deps->supplier_bitmap, VSEC_FEATURE_COUNT) {
+> > +		struct device_link *link;
+> > +
+> > +		if (state[supplier_id] != STATE_REGISTERED)
+> > +			continue;
+> > +
+> > +		if (!suppliers[supplier_id]) {
+> > +			dev_err(dev, "Bad supplier list\n");
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		link = device_link_add(dev, suppliers[supplier_id],
+> > +				       DL_FLAG_AUTOPROBE_CONSUMER);
+> > +		if (!link)
+> > +			return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+> >  		       struct intel_vsec_device *intel_vsec_dev,
+> >  		       const char *name)
+> > @@ -132,19 +211,37 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+> >  		return ret;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Assign a name now to ensure that the device link doesn't contain
+> > +	 * a null string for the consumer name. This is a problem when a supplier
+> > +	 * supplies more than one consumer and can lead to a duplicate name error
+> > +	 * when the link is created in sysfs.
+> > +	 */
+> > +	ret = dev_set_name(&auxdev->dev, "%s.%s.%d", KBUILD_MODNAME, auxdev->name,
+> > +			   auxdev->id);
+> > +	if (ret)
+> > +		goto cleanup_aux;
+> > +
+> > +	ret = intel_vsec_link_devices(pdev, &auxdev->dev, intel_vsec_dev->cap_id);
+> > +	if (ret)
+> > +		goto cleanup_aux;
+> > +
+> >  	ret = auxiliary_device_add(auxdev);
+> > -	if (ret < 0) {
+> > -		auxiliary_device_uninit(auxdev);
+> > -		return ret;
+> > -	}
+> > +	if (ret)
+> > +		goto cleanup_aux;
+> >  
+> >  	return devm_add_action_or_reset(parent, intel_vsec_remove_aux,
+> >  				       auxdev);
+> > +
+> > +cleanup_aux:
+> > +	auxiliary_device_uninit(auxdev);
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, "INTEL_VSEC");
+> >  
+> >  static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
+> > -			      struct intel_vsec_platform_info *info)
+> > +			      struct intel_vsec_platform_info *info,
+> > +			      unsigned long cap_id)
+> >  {
+> >  	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+> >  	struct resource __free(kfree) *res = NULL;
+> > @@ -211,6 +308,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+> >  	intel_vsec_dev->quirks = info->quirks;
+> >  	intel_vsec_dev->base_addr = info->base_addr;
+> >  	intel_vsec_dev->priv_data = info->priv_data;
+> > +	intel_vsec_dev->cap_id = cap_id;
+> >  
+> >  	if (header->id == VSEC_ID_SDSI)
+> >  		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
+> > @@ -225,6 +323,101 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+> >  				  intel_vsec_name(header->id));
+> >  }
+> >  
+> > +static bool suppliers_ready(struct vsec_priv *priv,
+> > +			    const struct vsec_feature_dependency *consumer_deps,
+> > +			    int cap_id)
+> > +{
+> > +	enum vsec_device_state *state = priv->state;
+> > +	int supplier_id;
+> > +
+> > +	if (consumer_deps->feature != BIT(cap_id))
+> > +		return false; /* Should not happen */
 > 
-> Since the crashlog entries are "merged" (num_entries = 2), the
-> separate capabilities entries must be merged as well.
+> I don't recall if I asked this already, but does the comment imply this is 
+> an error on the caller side warranting using WARN_ON_ONCE()?
+>
 
-if you share some doc I might be able to help with reviews on this.
-But for now,
+Yeah, it would. This would indicate a bug in the driver itself.
+get_consumer_dependencies() already filters by cap_id, so if suppliers_ready()
+sees a mismatch here, something went wrong earlier in the chain.
 
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+David
 
-to get this Xe patch merged with the rest of the series in the
-PMT subsystem trees.
-
-> 
-> Fixes: 0c45e76fcc62 ("drm/xe/vsec: Support BMG devices")
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> ---
->  drivers/gpu/drm/xe/xe_vsec.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-> index 3e573b0b7ebd..67238fc57a4d 100644
-> --- a/drivers/gpu/drm/xe/xe_vsec.c
-> +++ b/drivers/gpu/drm/xe/xe_vsec.c
-> @@ -32,28 +32,18 @@ static struct intel_vsec_header bmg_telemetry = {
->  	.offset = BMG_DISCOVERY_OFFSET,
->  };
->  
-> -static struct intel_vsec_header bmg_punit_crashlog = {
-> -	.length = 0x10,
-> +static struct intel_vsec_header bmg_crashlog = {
-> +	.length = 0x18,
->  	.id = VSEC_ID_CRASHLOG,
-> -	.num_entries = 1,
-> -	.entry_size = 4,
-> +	.num_entries = 2,
-> +	.entry_size = 6,
->  	.tbir = 0,
->  	.offset = BMG_DISCOVERY_OFFSET + 0x60,
->  };
->  
-> -static struct intel_vsec_header bmg_oobmsm_crashlog = {
-> -	.length = 0x10,
-> -	.id = VSEC_ID_CRASHLOG,
-> -	.num_entries = 1,
-> -	.entry_size = 4,
-> -	.tbir = 0,
-> -	.offset = BMG_DISCOVERY_OFFSET + 0x78,
-> -};
-> -
->  static struct intel_vsec_header *bmg_capabilities[] = {
->  	&bmg_telemetry,
-> -	&bmg_punit_crashlog,
-> -	&bmg_oobmsm_crashlog,
-> +	&bmg_crashlog,
->  	NULL
->  };
->  
 > -- 
-> 2.49.0
+>  i.
 > 
+> > +
+> > +	/*
+> > +	 * Verify that all required suppliers have been found. Return false
+> > +	 * immediately if any are still missing.
+> > +	 */
+> > +	for_each_set_bit(supplier_id, &consumer_deps->supplier_bitmap, VSEC_FEATURE_COUNT) {
+> > +		if (state[supplier_id] == STATE_SKIP)
+> > +			continue;
+> > +
+> > +		if (state[supplier_id] == STATE_NOT_FOUND)
+> > +			return false;
+> > +	}
+> > +
+> > +	/*
+> > +	 * All suppliers have been found and the consumer is ready to be
+> > +	 * registered.
+> > +	 */
+> > +	return true;
+> > +}
+> > +
+> > +static int get_cap_id(u32 header_id, unsigned long *cap_id)
+> > +{
+> > +	switch (header_id) {
+> > +	case VSEC_ID_TELEMETRY:
+> > +		*cap_id = ilog2(VSEC_CAP_TELEMETRY);
+> > +		break;
+> > +	case VSEC_ID_WATCHER:
+> > +		*cap_id = ilog2(VSEC_CAP_WATCHER);
+> > +		break;
+> > +	case VSEC_ID_CRASHLOG:
+> > +		*cap_id = ilog2(VSEC_CAP_CRASHLOG);
+> > +		break;
+> > +	case VSEC_ID_SDSI:
+> > +		*cap_id = ilog2(VSEC_CAP_SDSI);
+> > +		break;
+> > +	case VSEC_ID_TPMI:
+> > +		*cap_id = ilog2(VSEC_CAP_TPMI);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int intel_vsec_register_device(struct pci_dev *pdev,
+> > +				      struct intel_vsec_header *header,
+> > +				      struct intel_vsec_platform_info *info)
+> > +{
+> > +	const struct vsec_feature_dependency *consumer_deps;
+> > +	struct vsec_priv *priv;
+> > +	unsigned long cap_id;
+> > +	int ret;
+> > +
+> > +	ret = get_cap_id(header->id, &cap_id);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * Only track dependencies for devices probed by the VSEC driver.
+> > +	 * For others using the exported APIs, add the device directly.
+> > +	 */
+> > +	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+> > +		return intel_vsec_add_dev(pdev, header, info, cap_id);
+> > +
+> > +	priv = pci_get_drvdata(pdev);
+> > +	if (priv->state[cap_id] == STATE_REGISTERED ||
+> > +	    priv->state[cap_id] == STATE_SKIP)
+> > +		return -EEXIST;
+> > +
+> > +	priv->found_caps |= BIT(cap_id);
+> > +
+> > +	consumer_deps = get_consumer_dependencies(priv, cap_id);
+> > +	if (!consumer_deps || suppliers_ready(priv, consumer_deps, cap_id)) {
+> > +		ret = intel_vsec_add_dev(pdev, header, info, cap_id);
+> > +		if (ret)
+> > +			priv->state[cap_id] = STATE_SKIP;
+> > +		else
+> > +			priv->state[cap_id] = STATE_REGISTERED;
+> > +
+> > +		return ret;
+> > +	}
+> > +
+> > +	return -EAGAIN;
+> > +}
+> > +
+> >  static bool intel_vsec_walk_header(struct pci_dev *pdev,
+> >  				   struct intel_vsec_platform_info *info)
+> >  {
+> > @@ -233,7 +426,7 @@ static bool intel_vsec_walk_header(struct pci_dev *pdev,
+> >  	int ret;
+> >  
+> >  	for ( ; *header; header++) {
+> > -		ret = intel_vsec_add_dev(pdev, *header, info);
+> > +		ret = intel_vsec_register_device(pdev, *header, info);
+> >  		if (!ret)
+> >  			have_devices = true;
+> >  	}
+> > @@ -281,7 +474,7 @@ static bool intel_vsec_walk_dvsec(struct pci_dev *pdev,
+> >  		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2, &hdr);
+> >  		header.id = PCI_DVSEC_HEADER2_ID(hdr);
+> >  
+> > -		ret = intel_vsec_add_dev(pdev, &header, info);
+> > +		ret = intel_vsec_register_device(pdev, &header, info);
+> >  		if (ret)
+> >  			continue;
+> >  
+> > @@ -326,7 +519,7 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev,
+> >  		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
+> >  		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
+> >  
+> > -		ret = intel_vsec_add_dev(pdev, &header, info);
+> > +		ret = intel_vsec_register_device(pdev, &header, info);
+> >  		if (ret)
+> >  			continue;
+> >  
+> > @@ -375,7 +568,7 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+> >  	struct intel_vsec_platform_info *info;
+> >  	struct vsec_priv *priv;
+> >  	bool have_devices = false;
+> > -	int ret;
+> > +	int num_caps, ret;
+> >  
+> >  	ret = pcim_enable_device(pdev);
+> >  	if (ret)
+> > @@ -393,7 +586,13 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+> >  	priv->info = info;
+> >  	pci_set_drvdata(pdev, priv);
+> >  
+> > -	intel_vsec_feature_walk(pdev, &have_devices, info);
+> > +	num_caps = hweight_long(info->caps);
+> > +	while (num_caps--) {
+> > +		intel_vsec_feature_walk(pdev, &have_devices, info);
+> > +
+> > +		if (priv->found_caps == info->caps)
+> > +			break;
+> > +	}
+> >  
+> >  	if (!have_devices)
+> >  		return -ENODEV;
+> > diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> > index bc95821f1bfb..71067afaca99 100644
+> > --- a/include/linux/intel_vsec.h
+> > +++ b/include/linux/intel_vsec.h
+> > @@ -5,11 +5,18 @@
+> >  #include <linux/auxiliary_bus.h>
+> >  #include <linux/bits.h>
+> >  
+> > -#define VSEC_CAP_TELEMETRY	BIT(0)
+> > -#define VSEC_CAP_WATCHER	BIT(1)
+> > -#define VSEC_CAP_CRASHLOG	BIT(2)
+> > -#define VSEC_CAP_SDSI		BIT(3)
+> > -#define VSEC_CAP_TPMI		BIT(4)
+> > +/*
+> > + * VSEC_CAP_UNUSED is reserved. It exists to prevent zero initialized
+> > + * intel_vsec devices from being automatically set to a known
+> > + * capability with ID 0
+> > + */
+> > +#define VSEC_CAP_UNUSED		BIT(0)
+> > +#define VSEC_CAP_TELEMETRY	BIT(1)
+> > +#define VSEC_CAP_WATCHER	BIT(2)
+> > +#define VSEC_CAP_CRASHLOG	BIT(3)
+> > +#define VSEC_CAP_SDSI		BIT(4)
+> > +#define VSEC_CAP_TPMI		BIT(5)
+> > +#define VSEC_FEATURE_COUNT	6
+> >  
+> >  /* Intel DVSEC offsets */
+> >  #define INTEL_DVSEC_ENTRIES		0xA
+> > @@ -81,22 +88,31 @@ struct pmt_callbacks {
+> >  	int (*read_telem)(struct pci_dev *pdev, u32 guid, u64 *data, loff_t off, u32 count);
+> >  };
+> >  
+> > +struct vsec_feature_dependency {
+> > +	unsigned long feature;
+> > +	unsigned long supplier_bitmap;
+> > +};
+> > +
+> >  /**
+> >   * struct intel_vsec_platform_info - Platform specific data
+> >   * @parent:    parent device in the auxbus chain
+> >   * @headers:   list of headers to define the PMT client devices to create
+> > + * @deps:      array of feature dependencies
+> >   * @priv_data: private data, usable by parent devices, currently a callback
+> >   * @caps:      bitmask of PMT capabilities for the given headers
+> >   * @quirks:    bitmask of VSEC device quirks
+> >   * @base_addr: allow a base address to be specified (rather than derived)
+> > + * @num_deps:  Count feature dependencies
+> >   */
+> >  struct intel_vsec_platform_info {
+> >  	struct device *parent;
+> >  	struct intel_vsec_header **headers;
+> > +	const struct vsec_feature_dependency *deps;
+> >  	void *priv_data;
+> >  	unsigned long caps;
+> >  	unsigned long quirks;
+> >  	u64 base_addr;
+> > +	int num_deps;
+> >  };
+> >  
+> >  /**
+> > @@ -110,6 +126,7 @@ struct intel_vsec_platform_info {
+> >   * @priv_data:     any private data needed
+> >   * @quirks:        specified quirks
+> >   * @base_addr:     base address of entries (if specified)
+> > + * @cap_id:        the enumerated id of the vsec feature
+> >   */
+> >  struct intel_vsec_device {
+> >  	struct auxiliary_device auxdev;
+> > @@ -122,6 +139,7 @@ struct intel_vsec_device {
+> >  	size_t priv_data_size;
+> >  	unsigned long quirks;
+> >  	u64 base_addr;
+> > +	unsigned long cap_id;
+> >  };
+> >  
+> >  int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+> > 
