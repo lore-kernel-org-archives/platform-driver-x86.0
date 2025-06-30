@@ -1,110 +1,167 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21DB247280;
-	Mon, 30 Jun 2025 09:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2190823F27B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jun 2025 09:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277062; cv=none; b=p5nyvYUEM3CwE20Bt9EZOls6y6rQaV79fVxLSCLu0Ar13wSP70hf1tj621nPxHCUOUBYsopJVqW9paDpKhqiWbI7YUXpxMmoMargRAU9wlGtookHQ2RBMKpxVtxmOvnN78q0ozqfQpC8jdxsPkiDA8im7ESVGPipKCDrtK5VZhI=
+	t=1751277341; cv=none; b=NTBvYI0bX4wzEubpjRWFLAEuVd0779AIOQLWPLjqzUfuyNmcplQYRQ/x/IHpiilFAHeqMuGxRrgrkHOUGD5OdStK5qpvCP4Gu+K4o/okY7JEwGB9i4j5lXjj2yiw1Th2lPtwkeyAiHG9BR+95H6KuPDPaD6oUACrOtKKwV7GvGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277062; c=relaxed/simple;
-	bh=O5oLr3bwWsZD8uL73nva/6Unk6JmucG8/TRTyuz5QlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c5sjwtRx4S9INjOCNAw2bQPYnae5112whPPgPI9NGYi46vt8PIZBCieBueaEeHy3ae1Pl2oi+kZfrzXUfFplSdlekBXtqey47ucwXRiOUld+DWIhGeFYh7HLqmb9ebqBvuq3dFzwaBd3SkU/z/3nmQ6jh/amW34MTCrs5YXSoZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cykCsxnM; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1751277341; c=relaxed/simple;
+	bh=UZRviixlWmkG0xEQbQJxPrK04I3TTPa/udzmaj9/RB8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MqONNmbeYLwOy5+FUHb62bUMoP0c2fociHBTNTNZC9sZsmgx77KK730vc+buwZattEOLuuKzVE1fW4lUB+D5CvdJ63FPZV4O9xNE2s1bG9N8Ahoj8xi8RoNjkduwrZHTGKMopVj9z/ZFN6r3lkkIcJPG3KJVx+EKcScT9yv0jxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yj1xvkSM; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cykCsxnM"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U84fBH004461;
-	Mon, 30 Jun 2025 09:50:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=DKjS5goKMi5rK2GbghAH6/rgG28ei
-	A8yPjSPHnwGwiU=; b=cykCsxnMIgofblcqsKXBVZ2xLbV5R2pH2FBysEBHvaMEl
-	GBsbPm4tbiJ6lNF37SwuY8M9mhSzQaD8FM/T7arH4x0uqMNAcY5srRTy2GxNqpmj
-	RExaCDGYjvV3MMQaoC2LrFH7Q7zGkuFjALXI7I7bSUs8e4NSR8yYujSLz5Xx0Qup
-	aQGbWjX5iP9YZ6JnkmnMuZV7SnysVTty9zhRU/yMlImgqXrEXX8MeXryX0MYlK8L
-	MdV76/tNdMae7kzYL7cFHpAikZY6xmA7eHr5jSbYhMJJWpB5DB3Cqmzav10+T9R5
-	UNwY8Ev/z3oZD3pTemZkPLHC0HeUVICFOfltSS4fw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j766a600-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 09:50:55 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8dmeK028997;
-	Mon, 30 Jun 2025 09:50:54 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u84adh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 09:50:54 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55U9orcK038230;
-	Mon, 30 Jun 2025 09:50:53 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u84abs-1;
-	Mon, 30 Jun 2025 09:50:53 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, vadimp@nvidia.com,
-        platform-driver-x86@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/mellanox: Fix logic error in power state check in mlxreg-lc
-Date: Mon, 30 Jun 2025 02:49:51 -0700
-Message-ID: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yj1xvkSM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751277341; x=1782813341;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UZRviixlWmkG0xEQbQJxPrK04I3TTPa/udzmaj9/RB8=;
+  b=Yj1xvkSMAd7Y/FI1rbqqfyK/LxzSiX1+IX4ICdjIYZ6ij47Ku2rQTiTS
+   E+Bsg0vDY9AvlpPpfjk8JqII+3H4Pt1m1BoXnguDDTFcosuil/+Agacx1
+   NA5nBl0NNSN4VXItPe0a8TF2vImexo6ROg8fZi0DI7TTqbXReos19NlRk
+   3o8pFy9kiMH92oWf9j6ZnfoBqTL50y16hQ5nvae83td9i2KpVIW13FrFm
+   ZW/dC1EEC7t8jMYjJfnGpx21TrzRQWyg4SVZDLk3/nNt/TtXRSGpW6isT
+   DwirTYRmVl6qLqXVresBJyKKasR2dW4mXz1/jNX44QZEHLAtp6DVOwONe
+   Q==;
+X-CSE-ConnectionGUID: 2dDCM+uMQaWjYAwiz9qRfA==
+X-CSE-MsgGUID: g1qPW7/LSnatLdZbFRJ9Sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="70932019"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="70932019"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:55:40 -0700
+X-CSE-ConnectionGUID: C0z/nUJWTbGxqc7ngeNHuQ==
+X-CSE-MsgGUID: owO76/NHQGuqfWiva6xrUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153044065"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:55:37 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 12:55:34 +0300 (EEST)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [v2] platform/x86/amd/hsmp: Improve the print messages to avoid
+ confusion
+In-Reply-To: <20250619170439.5548-1-suma.hegde@amd.com>
+Message-ID: <8fbd301d-c1a7-2499-89ee-acb27a8335e3@linux.intel.com>
+References: <20250619170439.5548-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506300081
-X-Proofpoint-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
-X-Proofpoint-ORIG-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
-X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=68625dff cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=Ikd4Dj_1AAAA:8 a=yPCof4ZbAAAA:8 a=gBumKNB3FYnGDgap0wUA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA4MSBTYWx0ZWRfX6NWuw3aMVu1p uI9N3K4onrFfMNpk6+QyhY72nRShtBgwTqMUvukboNbBYRZdZ8ID7m9XAfrr9euRiTHCThauqpP IpFn2nKS7zazKA6FlKpimxFFP4uh3NpwHn75pBHS6RKISkFltYSImqfaFcLnmvbgZ++s8fUPTl4
- 5ft4Ag22Fnd/CZE8e5HWjy0ox4+HSqjZIPGXTgFifZtFc1Vq8gwcugHAgkR2/OU5y3LH1tFtnUq vDVfwfSZplwo/sXulJ1EWiE/ST//eKcPr899EMG5x5qkRCabW7oam+g5uZKkhcy3eQBhvM2bGt/ df/vD9x4TD76LvtpMmCCoUWl4DHHynW07Ld4VIiiOX1/c9rrrtA85HoP5jyLbA4GDjl6hvHp2/l
- WQnaMm6U5SYl48BUllvqT7bTOcxj0mcljod4ye1L4CjpvIs2LvwqdRH2+ZT985zYLlDNWp+y
+Content-Type: text/plain; charset=US-ASCII
 
-Fixes a logic issue in mlxreg_lc_completion_notify() where the
-intention was to check if MLXREG_LC_POWERED flag is not set before
-powering on the device.
+On Thu, 19 Jun 2025, Suma Hegde wrote:
 
-The original code used "state & ~MLXREG_LC_POWERED" to check for the
-absence of the POWERED bit. However this condition evaluates to true
-even when other bits are set, leading to potentially incorrect
-behavior.
+> When the HSMP ACPI device is available, then loading the amd_hsmp.ko
+> module incorrectly prints the message "HSMP is not supported on
+> Family:%x model:%x\n" despite being supported by the hsmp_acpi.ko
+> module, leading to confusion.
+> 
+> To resolve this, relocate the acpi_dev_present() check to the
+> beginning of the hsmp_plt_init() and revise the print message
+> to better reflect the current support status.
+> 
+> Also add messages indicating successful probing for both
+> hsmp_acpi.ko and amd_hsmp.ko modules.
+> 
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> ---
+> Changes since v1
+> Move successful probe print message inside the if condition in acpi.c.
+> 
+>  drivers/platform/x86/amd/hsmp/acpi.c |  1 +
+>  drivers/platform/x86/amd/hsmp/plat.c | 17 ++++++++++++-----
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index 2f1faa82d13e..bdfb86eeecf2 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -608,6 +608,7 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+>  		if (ret)
+>  			return ret;
+>  		hsmp_pdev->is_probed = true;
+> +		dev_info(&pdev->dev, "AMD HSMP ACPI is probed successfully\n");
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index e3874c47ed9e..724e5c7fc819 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -215,7 +215,12 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	return hsmp_misc_register(&pdev->dev);
+> +	ret = hsmp_misc_register(&pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(&pdev->dev, "AMD HSMP is probed successfully\n");
 
-Corrected the logic to explicitly check for the absence of
-MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
+Printing anything should be avoided when something has probed 
+succesfully. Thus, either remove these or make them dev_dbg() level.
 
-Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/platform/mellanox/mlxreg-lc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess you added them to have a positive confirmation after the legacy 
+side print below, but I think it should be solved differently.
 
-diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-index aee395bb48ae4..8681ceb7144ba 100644
---- a/drivers/platform/mellanox/mlxreg-lc.c
-+++ b/drivers/platform/mellanox/mlxreg-lc.c
-@@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
- 	if (regval & mlxreg_lc->data->mask) {
- 		mlxreg_lc->state |= MLXREG_LC_SYNCED;
- 		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
--		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
-+		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
- 			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
- 			if (err)
- 				goto mlxreg_lc_regmap_power_on_off_fail;
+> +	return 0;
+>  }
+>  
+>  static void hsmp_pltdrv_remove(struct platform_device *pdev)
+> @@ -287,15 +292,17 @@ static int __init hsmp_plt_init(void)
+>  {
+>  	int ret = -ENODEV;
+>  
+> +	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1)) {
+> +		pr_info("HSMP is supported through ACPI on this platform, please use hsmp_acpi.ko\n");
+
+I suggest you make this printing depend on whether AMD_HSMP_ACPI is 
+enabled.
+
+I think this should be totally silent if the probe is expected to happen 
+through the ACPI driver and AMD_HSMP_ACPI is enabled (or do a pr_debug() 
+level print at most).
+
+In the case AMD_HSMP_ACPI is not enabled, you might consider adding 
+pr_info() that AMD_HSMP_ACPI should be enabled.
+
+That way, there's zero noise on success. Only downside is, that if legacy 
+driver is loaded manually, it doesn't tell about the failure other than 
+through the error code, but that seems a very minor problem, and as 
+mentioned, pr_debug() could be used to cover that case too if wanted.
+
+> +		return -ENODEV;
+> +	}
+> +
+>  	if (!legacy_hsmp_support()) {
+> -		pr_info("HSMP is not supported on Family:%x model:%x\n",
+> +		pr_info("HSMP interface is either disabled or not supported on family:%x model:%x\n",
+>  			boot_cpu_data.x86, boot_cpu_data.x86_model);
+>  		return ret;
+>  	}
+>  
+> -	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
+> -		return -ENODEV;
+> -
+>  	hsmp_pdev = get_hsmp_pdev();
+>  	if (!hsmp_pdev)
+>  		return -ENOMEM;
+> 
+
 -- 
-2.46.0
+ i.
 
