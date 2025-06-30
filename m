@@ -1,179 +1,178 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C074280CD3;
-	Mon, 30 Jun 2025 11:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816A254918;
+	Mon, 30 Jun 2025 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284267; cv=none; b=I+1OrzohwprI3V8kPh0CzyJC7i9ohCwFxTpUFQo3g7g90tuuzd4nxm6cMWX/4mPww0KTBUhkmfC3HNgjBH9h9tHUNPuI+4YqE4jC9go2Q+84hBn2/K0TB+dpesuD0unNDxgUGl5IBUrqFufsgxQZeJ9/RUh6zADQwtCt8uORocw=
+	t=1751284554; cv=none; b=G5YkB8VgKDE6Wj94mcIpsNkJfVKWFKF3F8WzeXugN32pVpFom1tspoEKbdSGe+g7OZ/Yf6DOLIb20uqyI2/ovwINN43mER0ggGs0GFQCUfxUTFAcWgM1TcnzB2HX0vysxArpRxXeFCb0myXBGyE9ZKJ3I7CwRK3eZQxIwFaTAak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284267; c=relaxed/simple;
-	bh=eq68b++dNbZV7pveROonXKwtHxiuaKovNI1OK8hCDXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eHXYyhhtnT+4RffOxVQSzPdvxSPZcA4kdkQCGUOhVRRDvZEnDO/tHvoX/s4GRlsWsoLijE+TXaVr+c95l/U9Jy0NVonRWJ46Ok5uzTH5pW0r/PqBRGIEnFnKoL3KNGov0gBIANei1HxX6HQ8be5PsVrwqyZGAyflJnzEYMC56Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHoJ9IjL; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751284554; c=relaxed/simple;
+	bh=OAdObtNjz1gSQejy5rqJ+xlQ4X9D1M8OhMHiG1zlYco=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OoeHttSLv3O/ocN1jXsaSymmpP2xLVqln3mDKTj1zaZ8FQVoS32uY9fudFKTpMwb7pSSLX5OiKjobMhlRlzPsuZ33UXf6rwRYxLWWW4DCerEfeikjECdrF1hasfhqx8xtNmut7TAGo3J464sYsIyJlcKHrS/d5Bf0woVes0T3XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXu/hO9+; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHoJ9IjL"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-235d6de331fso22770985ad.3;
-        Mon, 30 Jun 2025 04:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751284264; x=1751889064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7xoeh3vSdh/zXf4cNHVjE6wocHe0HAHfeeqTMNqAKiQ=;
-        b=iHoJ9IjLRUP9rhRYSwQdQmwpXOQjT7zbtJqCDJMvA9HtNzu6AN4Uden94/7exSBrGx
-         dMIzjWRo3U1voM9bvulArG0uR+ciS2rNXt9MwJIf7XAM6jYtTTWhxAMq/0xFm+EuSNTt
-         Bkwc9fc4X55DeDC9i3tJlLtoHy33nLTOemRADrIRBy8T+FaVcCT0AnfbjZh80cpmuHbx
-         hGh83hZH2znzkQVceo4qWsBtVsxBSlB7Ee3SFsF+eQ1RloscsgWguTrxYZBEjjsa9Bl6
-         TcSu2GdsBqbTwlE+q585WTRp6/XkNogoaLDEmmCn1ye7rSMhbTAcmhFOYnWb4UNWaeze
-         hyIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751284264; x=1751889064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7xoeh3vSdh/zXf4cNHVjE6wocHe0HAHfeeqTMNqAKiQ=;
-        b=N9nwM8eo26ZjfKmDSfGkjOqn87Pki/MZKZ6hhXq61Q1yhNh70SQYg7EHsMLncEVJ4V
-         0M76Y9uXfdIscevI0N7vuDh5SUPVjq2H1oq0FEJgmHf/vuWZ/M2tW0PLj+ea7JKUcZYv
-         fE+6SJ11wzkwyHD/lYlQQ5O5mt3HXLlXfhqrk/XBR/zu6TBNd6tHmeuvw7dr9eEmWRFW
-         +ZRO498nIcvjTAGTjZ27eyV07JQmD3y4gWMk1If3ORF09Y78y62tCxZgQZ51xqZk0w81
-         5SXptkgUX5xYLFeme+E4XpXPCPR4sEfPSnRL9gVWdoVPUqBbba9qnmA07D6tJghEBol2
-         ibbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9hXSJnxgzfCfpMhiDHOsj/DcOBLnuSlHFhaLJCB8hf2ZJLpu9OXZwrVR78GYu6Ik9C9MmdHde6Bygw3Jt2gRKkkSVBQ==@vger.kernel.org, AJvYcCWSG8eU6cCkbzBehLZH5lVODsNA3nboxBscFkqBTr/3FKnplbXMiGIlh/rXfUzveuFEasHD4PYceOHOYsgd@vger.kernel.org, AJvYcCXU/eaMPd7hfDesnX1JQT8Jqg3Jzqs8q2jxfY61w3e/KoEhsdsyxuMWe9PhH7KbR+sg2QEUZeSewVF41A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGoI+rS2utZNEBxhr6yWB4YhLNrBZXa+Wg6uFecMZDOztzU00i
-	WvNDDYXU/RJEmbI9Lu2kyuRr1bNLMjrO7fOobRkPU2fF7ctvy5Ljb6MgoyiA1bqshvxzFTdCSR9
-	KViPyw/AL3gLLAIrEcXivKvjZ4ihlYsnCSl+QID20UA==
-X-Gm-Gg: ASbGncs28DvvCRku89IWIZ8fBd526xxP6/9ywqZKUST4Te8r+gMRrE2Jnk8CTJuPqis
-	YHEv8vDUc2Zk9ZbAuiN+8DVuukAznwzhQ09zZPlmUyGE8HbL529MTfcxIWyJwnZVg4MdIoNmEdP
-	wwQexFjVf4zbpPZ9qmWOM4qOTpOjJmIGTSn52DmhICPtyaiVIpaeE8p9vTZwRfzj1IlckocwJbn
-	DuUVQ==
-X-Google-Smtp-Source: AGHT+IGN+rhauFUfuWf74k2PbBjLpYa/S/qJx6luzuDHeQnUcjKa/KznP5zozRqdEgr7gW8GbGP/N5oyJ5DRoq4EOuE=
-X-Received: by 2002:a17:903:138a:b0:234:d7b2:2ac3 with SMTP id
- d9443c01a7336-23ac3dec23emr125906385ad.20.1751284264329; Mon, 30 Jun 2025
- 04:51:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXu/hO9+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751284552; x=1782820552;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OAdObtNjz1gSQejy5rqJ+xlQ4X9D1M8OhMHiG1zlYco=;
+  b=hXu/hO9+/W91gUyRupNn6kGF8OR7sRrNlrLcXIjtjqD4dXdeM2nLFT++
+   KsiZVjZw0kREIYs1xxw6FrNiYhbHK6Fk0Xi3INC81foQoF5AbBTmi0Hh+
+   9GnT1qK7ii1OnSn3S5yQKmnh+J2YVXFZRNdGcg/hw13+JtVkgKUxtxPBc
+   iHBR/VR23zNocYVwQEK0QwWwTE0DQvKPTnyi+JRVPM753KSzCgDkhBAJa
+   /HjzhQZ9ulebuXvuXN8vndK5w9cOjWOSO3xDSgbhS/SKg4zpXMUEqAfMT
+   KAV/+AJ6zUkUCxhZc0nJaQHUBUYOZv7OgRVws+YZMfjl/ymliswh3Q+/C
+   g==;
+X-CSE-ConnectionGUID: mPdkRibnROSE8Hj0uySaMg==
+X-CSE-MsgGUID: y9yyP5CSRKWB+SgeYyYTzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="41134448"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="41134448"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:55:46 -0700
+X-CSE-ConnectionGUID: WeaMPAFQTnGxgJ4R0+/2/Q==
+X-CSE-MsgGUID: rxnmX8CLSB+XC/MFMaznJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157715145"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:55:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 14:55:41 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    srinivas.pandruvada@linux.intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
+    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH V2 11/15] platform/x86/intel/vsec: Set OOBMSM to CPU
+ mapping
+In-Reply-To: <20250617014041.2861032-12-david.e.box@linux.intel.com>
+Message-ID: <9911d37b-eff6-2562-2e52-7bcd656186c0@linux.intel.com>
+References: <20250617014041.2861032-1-david.e.box@linux.intel.com> <20250617014041.2861032-12-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
- <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com> <bviu4igchqy6bvu54fw6afts7ooctlmmcutdq6tc4rutzhjvfs@o56kezrit6un>
-In-Reply-To: <bviu4igchqy6bvu54fw6afts7ooctlmmcutdq6tc4rutzhjvfs@o56kezrit6un>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Mon, 30 Jun 2025 20:50:27 +0900
-X-Gm-Features: Ac12FXyuz-BAS2ti-x32124j_cwmFRrdPpLXJrtemsXMcxWSUyeyDdI2ZZrmOhU
-Message-ID: <CABxCQKvJzf1G3XLWmqngpy-Ou9U+a7Lzt6gjwZoEcU-+WL6Apw@mail.gmail.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, pali@kernel.org, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, jay_lee@pixart.com, 
-	zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Vishnu Sankar <vsankar@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Dimitry,
+On Mon, 16 Jun 2025, David E. Box wrote:
 
+> Add functions, intel_vsec_set/get_mapping(), to set and retrieve the
+> OOBMSM-to-CPU mapping data in the private data of the parent Intel VSEC
+> driver. With this mapping information available, other Intel VSEC features
+> on the same OOBMSM device can easily access and use the mapping data,
+> allowing each of the OOBMSM features to map to the CPUs they provides data
+> for.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> 
+> Changes in v2:
+>   - No changes
+> 
+>  drivers/platform/x86/intel/vsec.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/intel_vsec.h        | 14 ++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index 98f570a389c6..8c330b57e4d4 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -43,6 +43,7 @@ enum vsec_device_state {
+>  struct vsec_priv {
+>  	struct intel_vsec_platform_info *info;
+>  	struct device *suppliers[VSEC_FEATURE_COUNT];
+> +	struct oobmsm_plat_info plat_info;
+>  	enum vsec_device_state state[VSEC_FEATURE_COUNT];
+>  	unsigned long found_caps;
+>  };
+> @@ -660,6 +661,36 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+>  	return 0;
+>  }
+>  
+> +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +			   struct intel_vsec_device *vsec_dev)
+> +{
+> +	struct vsec_priv *priv;
+> +
+> +	priv = pci_get_drvdata(vsec_dev->pcidev);
+> +	if (!priv)
+> +		return -EINVAL;
+> +
+> +	priv->plat_info = *plat_info;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(intel_vsec_set_mapping, "INTEL_VSEC");
+> +
+> +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> +{
+> +	struct vsec_priv *priv;
+> +
+> +	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	priv = pci_get_drvdata(pdev);
+> +	if (!priv)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return &priv->plat_info;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(intel_vsec_get_mapping, "INTEL_VSEC");
+> +
+>  /* DG1 info */
+>  static struct intel_vsec_header dg1_header = {
+>  	.length = 0x10,
+> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> index cd78d0b2e623..b15155ff1154 100644
+> --- a/include/linux/intel_vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -170,6 +170,8 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+>  		       struct intel_vsec_device *intel_vsec_dev,
+>  		       const char *name);
+>  
+> +int intel_vsec_suppliers_ready(struct intel_vsec_device *vsec_dev,
+> +			       unsigned long needs);
 
-On Mon, Jun 30, 2025 at 2:20=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Mark,
->
-> On Mon, Jun 30, 2025 at 05:42:45AM +0900, Mark Pearson wrote:
-> > Hi Dmitry,
-> >
-> > On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
-> > > Hi Vishnu,
-> > >
-> > > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
-> > >> Newer ThinkPads have a doubletap feature that needs to be turned
-> > >> ON/OFF via the trackpoint registers.
-> > >> Systems released from 2023 have doubletap disabled by default and
-> > >> need the feature enabling to be useful.
-> > >>
-> > >> This patch introduces support for exposing and controlling the
-> > >> trackpoint doubletap feature via a sysfs attribute.
-> > >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> > >> This can be toggled by an "enable" or a "disable".
-> > >>
-> > >> With this implemented we can remove the masking of events, and rely =
-on
-> > >> HW control instead, when the feature is disabled.
-> > >>
-> > >> Note - Early Thinkpads (pre 2015) used the same register for hysteri=
-s
-> > >> control, Check the FW IDs to make sure these are not affected.
-> > >>
-> > >> trackpoint.h is moved to linux/input/.
-> > >
-> > > No, please keep everything private to trackpoint.c and do not involve
-> > > thinkpad_acpi driver. By doing so you are introducing unwanted
-> > > dependencies (for both module loading, driver initialization, and
-> > > operation) and unsafe use of non-owned pointers/dangling pointers, et=
-c.
-> > >
-> >
-> > Do you have recommendations on how to handle this case then?
-> >
-> > This is a Thinkpad specific feature and hence the logic for involving
-> > thinkpad_acpi. There are Thinkpad hotkeys that will enable/disable the
-> > trackpoint doubletap feature - so there is some linkage. I'm not sure
-> > how to avoid that.
-> >
-> > Is there a cleaner way to do this that you'd recommend we look at
-> > using? It's a feature (albeit a minor one) on the laptops that we'd
-> > like to make available to Linux users.
->
-> I believe if you define the doubletap as an attribute (see
-> TRACKPOINT_INT_ATTR or TRACKPOINT_BIT_ATTR in
-> drivers/input/mouse/trackpoint.c) then whatever process is handling the
-> hot keys switching this function on or off should be able to toggle the
-> behavior. The difference is that it will have to locate trackpoint node
-> in /sys/bus/serio/devices/* (or maybe scan
-> /sys/devices/platform/i8042/serio*) instead of expecting the attributes
-> be atached to thinkpad_acpi instance.
->
-> You just don't want to have one driver directly peeking into another,
-> because then it starts breaking if you unbind or force use of a
-> different protocol, etc.
->
-> Thanks.
->
-> --
-> Dmitry
+There's no code for this anywhere in the series??
 
-Thanks for the suggestion. I understand the concern about avoiding
-direct driver-to-driver calls and unwanted dependencies.
+>  static inline struct intel_vsec_device *dev_to_ivdev(struct device *dev)
+>  {
+>  	return container_of(dev, struct intel_vsec_device, auxdev.dev);
+> @@ -183,11 +185,23 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
+>  #if IS_ENABLED(CONFIG_INTEL_VSEC)
+>  int intel_vsec_register(struct pci_dev *pdev,
+>  			 struct intel_vsec_platform_info *info);
+> +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +			   struct intel_vsec_device *vsec_dev);
+> +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev);
+>  #else
+>  static inline int intel_vsec_register(struct pci_dev *pdev,
+>  				       struct intel_vsec_platform_info *info)
+>  {
+>  	return -ENODEV;
+>  }
+> +static inline int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +					 struct intel_vsec_device *vsec_dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+>  #endif
+>  #endif
+> 
 
-Just to clarify: if we move the sysfs attribute to the trackpoint
-driver itself (under /sys/bus/serio/devices/...), then thinkpad_acpi
-would no longer be able to directly enable/disable the doubletap
-feature in response to the Fn+G hotkey press. Don't we need userspace
-to listen for the hotkey event, find the trackpoint sysfs node, and
-toggle the attribute there?
-That's possible, of course, but it means the feature won't work
-out-of-the-box without extra userspace integration. For example, there
-would be no automatic linkage between pressing Fn+G and toggling the
-feature unless a udev rule or userspace daemon is configured to do it.
-Or is there an approach you'd recommend to preserve the automatic
-hotkey integration while avoiding the direct dependency between
-thinkpad_acpi and trackpoint?
-Sorry, I missed something.
+-- 
+ i.
 
-Windows is utilizing this double-tap event as a Quick Launch button.
-
-
---=20
-
-Regards,
-
-      Vishnu Sankar
-     +817015150407 (Japan)
