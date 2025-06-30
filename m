@@ -1,114 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DF4222597;
-	Mon, 30 Jun 2025 10:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35184A2B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jun 2025 10:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280407; cv=none; b=h8fIzE6BI6g4HyvNkW3wa0sDHaqrjNxXz7+WV2jhe4gLC5ajWT3vO4HQVgWcmrToSl6MJsixDb0NvoGIyfCxnTtMHVFzFkS6VWty8QE5tlQhoDa71o8tFWhLnjVMAlJBXXU8BD3LKhwZBFvw12g5IVVsjE9IsurUZbceQs58K9A=
+	t=1751280665; cv=none; b=NDSylnHRI6Nzm/2H1CkGluu45IajhRJQdQfmNAeS0uEaZAOevskb53rESx0vqR/Jg/xOFR6Ydkk7i6hwqkUMNy6BxxZQU+kr+PuOt1G8IT2S7bp41bgVoKNUxkmkvrmjWvyq2S/WMRVKstPy9ja9OhO97J7BawsTq3BjeMdPDLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280407; c=relaxed/simple;
-	bh=6hn4Jcbt8dG1IC3Ga4bKV/Nz0qNkj1yaEdy0zsmucXA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QGMgBiw2uJ1qMRpVddLNq+ndqg8BZ9kSkadoF7SQj+yyDMUzxvjDJhmUVCgCtQtoTJoTyBVNOduvoQ6B3uoEwtEX9Eq5j7oMh7Ym+RgxzAOUyBGE4/Rq5frNpIIV7JU1RhiWPyWNFMtrBHPSCQuBZTxlqrfJJbB044J3Q0PEGYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHvPJy1A; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1751280665; c=relaxed/simple;
+	bh=Co89zZttVNtIlxqu980VzFpBHa5rGu91LRK3eN5cJPs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PkdqpM22JbMUz8rmPo/Y0B4R/mLtHb0Cg+r6lSoYpvmXenrGqdQy5Nd3AdHn+5i1wQYZvIcUDO3vYiUFW+TTgqnOk7V4y9bM+2tUNHa4ZHPkcCCoGbBCI7lnvidToQE5Eu1ZbtAltKX2tzcBD5oLaut4SVv/dCoPj9XUNbt9p28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O4fGJsxu; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHvPJy1A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O4fGJsxu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751280406; x=1782816406;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6hn4Jcbt8dG1IC3Ga4bKV/Nz0qNkj1yaEdy0zsmucXA=;
-  b=HHvPJy1AA/3QdmIJaPRG86gjPg8HCmT5hEakBz4LZdsdwMVD4BydsnP7
-   +GPdIHwcTvyB0u+QzrIvUYAjqqk7tLty/XyzvVWKegI4bCxjvc0HS+va5
-   pIkmeaR5NtXd0zEywj20p1Vy3Cw+10Va14F0iiczXLHfqdJzvmCGHRYfe
-   CVcl7Zk7hjv8qFmVDnsaLSC047/6CpR4TRuqI3kFi+Af1Iq7B81eE8+4k
-   0KDZiSD7vR8loAVuv0W+292MGZKlh60rj8LZqawf6PgKpckoWhAhGvYUV
-   b1R1P7uhL106LQ5ojGBwe+D3X4IXxRxZQC93OyPXkWgqWwhMPK2zZZQdw
-   g==;
-X-CSE-ConnectionGUID: 0iqG9NrnTgyTcZDv07LyVw==
-X-CSE-MsgGUID: KkyV/3MdS2WUoyOs83Bk5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64555063"
+  t=1751280665; x=1782816665;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=Co89zZttVNtIlxqu980VzFpBHa5rGu91LRK3eN5cJPs=;
+  b=O4fGJsxuNdqGsEP6z82ncgzgAgj5Rv05G2L/P+7xRoIK0pIzn7GvY8C8
+   y1h0Mz8bxCbch7xAkOiCV//etvRS1TzONEN3WhonU6LO2YlgF+yEyfTl5
+   aZWCm/qaShwdRcLgUSNlcZMtPxD6nwAN+wVyE0Td9mxtZKJy6he5fikWM
+   r7uEh2idOYHO8KgIuzyaeXbcTs5jfQXXLEIz5s5h9g7JZkRri3kc2AQE9
+   mRloeLJRWM9v00sWEeJynb47GNmIrt52mTVJULnCFz9WKhU3+BCkKtJ4x
+   MvNTuWlCHnignLNzK72Eq0PP+YYj0pQgMZjXQtierEkGjI7fxrGLoyxIm
+   w==;
+X-CSE-ConnectionGUID: A1himlLERhSgnp1OL28U0Q==
+X-CSE-MsgGUID: USM8q5IsQimAcl0DDzVLcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53363773"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="64555063"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:46:45 -0700
-X-CSE-ConnectionGUID: BbPfNzhxRAC3i0+5+4jLQA==
-X-CSE-MsgGUID: miiu3+DXQFmp+ecZ65NmBg==
+   d="scan'208";a="53363773"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:51:05 -0700
+X-CSE-ConnectionGUID: 6WrlGGTNSWObeX9xPvHbiQ==
+X-CSE-MsgGUID: h40pjbZPSz+YbYOUWuzzTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="184348456"
+   d="scan'208";a="153730718"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:46:38 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:51:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 13:46:35 +0300 (EEST)
-To: Andi Shyti <andi.shyti@kernel.org>
-cc: Hans de Goede <hansg@kernel.org>, Mario Limonciello <superm1@kernel.org>, 
-    Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, 
-    "H . Peter Anvin" <hpa@zytor.com>, Jean Delvare <jdelvare@suse.com>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
-    "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, 
-    "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Move FCH header to a location accessible by all
- archs
-In-Reply-To: <zkbd5qdfj3xrjh7l6sviqzsu6foyxpwsko47czrpet55kgqzfv@aw3igwk34irc>
-Message-ID: <a6ccabd7-1436-ff73-398f-b92e546d3701@linux.intel.com>
-References: <20250610205817.3912944-1-superm1@kernel.org> <c3d78272-c80d-47fa-a32d-151c137251e3@kernel.org> <zkbd5qdfj3xrjh7l6sviqzsu6foyxpwsko47czrpet55kgqzfv@aw3igwk34irc>
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20250609104620.25896-1-hansg@kernel.org>
+References: <20250609104620.25896-1-hansg@kernel.org>
+Subject: Re: [PATCH v2 1/2] platform/x86: x86-android-tablets: Add
+ generic_lipo_4v2_battery info
+Message-Id: <175128065653.8269.3372149116791542277.b4-ty@linux.intel.com>
+Date: Mon, 30 Jun 2025 13:50:56 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, 25 Jun 2025, Andi Shyti wrote:
+On Mon, 09 Jun 2025 12:46:19 +0200, Hans de Goede wrote:
 
-> Hi,
+> Move the asus_tf103c_battery_node to shared-psy-info.c and rename it to
+> generic_lipo_4v2_battery_node.
 > 
-> On Thu, Jun 12, 2025 at 10:36:31AM +0200, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 10-Jun-25 10:58 PM, Mario Limonciello wrote:
-> > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > 
-> > > A new header fch.h was created to store registers used by different AMD
-> > > drivers.  This header was included by i2c-piix4 in
-> > > commit 624b0d5696a8 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH
-> > > definitions to <asm/amd/fch.h>"). To prevent compile failures on non-x86
-> > > archs i2c-piix4 was set to only compile on x86 by commit 7e173eb82ae9717
-> > > ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86").
-> > > This was not a good decision because loongarch and mips both actually
-> > > support i2c-piix4 and set it enabled in the defconfig.
-> > > 
-> > > Move the header to a location accessible by all architectures.
-> > > 
-> > > Fixes: 624b0d5696a89 ("i2c: piix4, x86/platform: Move the SB800 PIIX4 FCH definitions to <asm/amd/fch.h>")
-> > > Suggested-by: Hans de Goede <hansg@kernel.org>
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > 
-> > Thanks, patch looks good to me:
-> > 
-> > Reviewed-by: Hans de Goede <hansg@kernel.org>
+> This is a preparation patch for adding ovc-capacity-table info to
+> the battery nodes.
 > 
-> I don't see this series in yet. I thought you were taking it,
-> shall I take it through i2c?
+> 
+> [...]
 
-I'm sorry I seem to have missed this inquiry until now. I thought x86 
-would handle it this but apparently they haven't.
 
-(I'm the primary person handling pdx86 patches, not Hans any more).
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-I can take this now.
+The list of commits applied:
+[1/2] platform/x86: x86-android-tablets: Add generic_lipo_4v2_battery info
+      commit: a8fc1224f2318d3e5948671d1cad458e6372d921
+[2/2] platform/x86: x86-android-tablets: Add ovc-capacity-table info
+      commit: be91bf40a96d567973d5c5e870d1464eb51b6c42
 
--- 
+--
  i.
 
