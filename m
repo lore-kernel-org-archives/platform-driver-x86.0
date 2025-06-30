@@ -1,175 +1,210 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A5525A351;
-	Mon, 30 Jun 2025 11:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C4624467A;
+	Mon, 30 Jun 2025 11:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282502; cv=none; b=nm+Y7Kwx0NiOzZTsrp5b+Czs4XLyDBnQ0rUmT3eK2RIcam/o3ke6NRTVTijr34jXKhG+xqR6Kbg624Bwqp8T8SGPuQDlt82mI2FSvLbMmwV1NEHk6nW8oXcz4Ez8KdyI9PdcWQkasDcgHKIlG9v/ekonK2TqvsPrKCmy590f3dY=
+	t=1751282727; cv=none; b=KV6AC8YgsitlEQgKz/PSzgRMsSmYiXC6+1ZIDLD7+ZJK+8So5uVgf3kaoWZT4E6s+nxWXpzEMHj3tGVUlup9V9WR+kaTuGT163VyTqx4TsZenGJMSci6jpGpq8ajxuzNgg3XySbUHoEINyOCvSz/Q392uB7U0EeAYcfaETl8xQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282502; c=relaxed/simple;
-	bh=NCU514sWwUJE9Z2TWXQPbFT8ayuK6ddhyUCCZiIEVIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RwHK/xzg2xE2mxHxMSan6psToYhfPt5HQC1azexvyUgqvm4SECLHKbS4/Pb0gnMk0MhF/Zkq7WiG4DkREe4aX/k1viOj1nIT3SJ8lU9oecaqC/2IzqPDq0R8WuBKrs+CLdlfhV259VPiSfjju0OeJEPi8Er6yXticS76BvvbSo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UGZkwMcN; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751282727; c=relaxed/simple;
+	bh=Kh5HTNvJ65doI+29MrGYbqQvRnFZKdq2N32MrSNK4zc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rYerWHK4CU56u+LKPdY5VU3+pyFq2h2Cq1owbqT8/DRLDoMb3gOlfIqptvTKTCZFsB+JzWwe6JN9OGkxag3a6oBM32ALi6IIlj3DynCxYDnFgP6BD0p+UR005jWxtQ4Lbpr5XLMr9Woia649jKXs2efpXmHmnzF467Af03Jjg7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zo9lXDzh; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGZkwMcN"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747ef5996edso1706462b3a.0;
-        Mon, 30 Jun 2025 04:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751282500; x=1751887300; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8J3oU3FmkEwSjLfjiK/dSK0NR+xWVZZ4VhglxPAf/2M=;
-        b=UGZkwMcN/QjmDb8ICxkGRFgdxlN7pP0OkzpP1rj4pZEpPF8EUNyR5ECxjVC3ZjQjxv
-         bjvoIw81flqOCVH4frXqCg5fY3sK5WU93q2GH6iOsIb87uX3dOTEItDVF7C5/A0LA/qp
-         Als6hR2WpcopZj50Tdw0ZBxG34DiRFVrNkkk66ch4Pu+W1rLccl/PZ4cw5wwUmBbcjBq
-         QTAiQVXp0gOqo4Z26FGtwRmxWl6VpJyXeJu1pKZA0ngrACM4RAzIDdZbsFOpyHVRHzPE
-         gY3WvZfN6LfOKy8bz/Lg7kPGf/snVDeWgVyuTS+s6pdoCGNhjFhYLv/AExLDFYriWGlm
-         shgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751282500; x=1751887300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8J3oU3FmkEwSjLfjiK/dSK0NR+xWVZZ4VhglxPAf/2M=;
-        b=HTGibGZNypLaIEgadfzw2TNU+AEulZzdxjhogbun3/jpNqKuf6DYvl62WwtFRknfI3
-         8DQJf0aXi9gAHk2uJEZiZChOoEjALWyEfSsqzpJCbyX8OLDNbGZH4lwm4UOcByUmcAFT
-         1/T0nDJft3gGk5VuLmCpMbQ7KBcy7nUvikyg89PhBAbLftzcC/R0YsYaZBZn5L3fwm6j
-         8MdWKzeO+hOVr4H3Hcz8eu/Ouxh+KUMrmOijdb5ZOKEbJ1TuUeh5zppMCI2e5OxVWK/y
-         8Nr5hhV+JkuSIlntl/j6Wxe2gRZGvIqVblV3/sFzbF6nwlEy3jqarl2bnn3l+n4kHYiZ
-         YJLA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7LS8ZPu1FC5lCSQ3d3sj0b4Vr7ml1gH1t+B2mNqS7pKYaW1mZqtiVh4WYTgfFpTGO1upzvsMgOXGesA4ZCffAUOMQJg==@vger.kernel.org, AJvYcCUH5b+F+O4JaTID8BRQmB4vXmN4kJsodQkExXEYXUmW0hUVcqi+382Og06RP5tBommzK0+vubRPqY75/Q==@vger.kernel.org, AJvYcCXgkjbO7z3l8GaQlgGe6rNfh9IbUa8ZR5isHxEdtcwMPjiHq9oTE/ylVSRKZVYakcodTxPqkDmxp/qFWdLW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhQl1pQSBS8kuy2fWozWJgZqYm8spGrcDnI7Jmug1vi9V5iCwi
-	9eu2lraw+lL/hayAt2unotLGSIDF9O6YZjxEnT3dK5qXbTeRI7d4N/V6g1YOwmsFWU2Hg9SXW+x
-	5b8SRau4VerTH/REdU3cj1CKH98DzbW0=
-X-Gm-Gg: ASbGnctve7hvSyaiq97K2/YmjZmOgpR4v/goxcVMq/TSprOLbZlVDOfqiTj3GkDD71E
-	Nq9/tMn5bn4aGd+nTYsYe7/K9gXOkQ/Ek6Ve3tmnffyd0zXT+zYLsrjCfvyZn//6LjOh3wUDfkD
-	e6ysJHBCUU7bgAZfbuQ/OKHAOK0G1ZdsDyMy+4df+EEf16ulT29tsO7RrDD5F6MdUgZzKEJaMLB
-	m+uCg==
-X-Google-Smtp-Source: AGHT+IGel8gwZk7cmvt1YCIp9yfYoFSQ3i1n6CaDsHWkLJCLxhmB2RQZN2NpmquyT2mQLHl4GyGcNrHfMFbUs2i4gpA=
-X-Received: by 2002:a05:6a00:2d18:b0:748:68dd:ecc8 with SMTP id
- d2e1a72fcca58-74af6f7a3ebmr17244165b3a.22.1751282499827; Mon, 30 Jun 2025
- 04:21:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zo9lXDzh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751282725; x=1782818725;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Kh5HTNvJ65doI+29MrGYbqQvRnFZKdq2N32MrSNK4zc=;
+  b=Zo9lXDzhWRFnR9drI6Bbmf8y1UZDX1Aq5ZcQHH9Sdr4zIUyoGM/2FxPJ
+   px2GHoGCSec/UTUPz2z/0r0iX7jbTubDzo9EbVIbQkQ9h8/bWOOrKHM8b
+   1quFwkCFIf+1Tf/yu9ahFfdr+w1Y9ws6QLQXFs1OWBHOa04BxeEFegE+6
+   /p+bGhWHRw3XvYJUrwlHQzP9XWm8RpUyw7Dk5JEZN2F4Dtrzh8DlpyOyC
+   YjNhAL+89abKIvpkBYu0TBUJWzo3plKFpMRM/8PWIi0XSe4WUYVpcXgxs
+   3ztPsB7G9gdYGXoknrtNVr4Bp31uWNPbTi/N6R2NOqMQtwzxQG8U490qp
+   A==;
+X-CSE-ConnectionGUID: L+q5uhglSRiqn5RxEBsUKg==
+X-CSE-MsgGUID: vNNwnK4hTDens1ipH0BWhQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53366695"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53366695"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:25:25 -0700
+X-CSE-ConnectionGUID: FbdjG4QNTuuypO0WXcN8jg==
+X-CSE-MsgGUID: vNE4kJXnR8yEi/1m3UC8+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="177098724"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:25:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 14:25:19 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] platform/x86:intel/pmc: Move telemetry endpoint
+ register handling
+In-Reply-To: <20250625063145.624585-3-xi.pardee@linux.intel.com>
+Message-ID: <a40aa7c1-084c-e49c-33ee-57088a58debe@linux.intel.com>
+References: <20250625063145.624585-1-xi.pardee@linux.intel.com> <20250625063145.624585-3-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
- <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com> <20250629205148.l2etpceayuzmhzph@pali>
-In-Reply-To: <20250629205148.l2etpceayuzmhzph@pali>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Mon, 30 Jun 2025 20:21:02 +0900
-X-Gm-Features: Ac12FXyJREBHZUE3BDLX_Wweq50jfNnmNP1LCY3mZVSbuEU7aKBjMJPbMugfydg
-Message-ID: <CABxCQKucaDFHb+faMz6w6GOWNrbA_nDb4zhA8xrWmq=Qj8ZpgA@mail.gmail.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, jay_lee@pixart.com, 
-	zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Vishnu Sankar <vsankar@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-978402621-1751282719=:7079"
 
-Hi Pali,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon, Jun 30, 2025 at 5:51=E2=80=AFAM Pali Roh=C3=A1r <pali@kernel.org> w=
-rote:
->
-> On Monday 30 June 2025 05:42:45 Mark Pearson wrote:
-> > Hi Dmitry,
-> >
-> > On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
-> > > Hi Vishnu,
-> > >
-> > > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
-> > >> Newer ThinkPads have a doubletap feature that needs to be turned
-> > >> ON/OFF via the trackpoint registers.
-> > >> Systems released from 2023 have doubletap disabled by default and
-> > >> need the feature enabling to be useful.
-> > >>
-> > >> This patch introduces support for exposing and controlling the
-> > >> trackpoint doubletap feature via a sysfs attribute.
-> > >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> > >> This can be toggled by an "enable" or a "disable".
-> > >>
-> > >> With this implemented we can remove the masking of events, and rely =
-on
-> > >> HW control instead, when the feature is disabled.
-> > >>
-> > >> Note - Early Thinkpads (pre 2015) used the same register for hysteri=
-s
-> > >> control, Check the FW IDs to make sure these are not affected.
-> > >>
-> > >> trackpoint.h is moved to linux/input/.
-> > >
-> > > No, please keep everything private to trackpoint.c and do not involve
-> > > thinkpad_acpi driver. By doing so you are introducing unwanted
-> > > dependencies (for both module loading, driver initialization, and
-> > > operation) and unsafe use of non-owned pointers/dangling pointers, et=
-c.
-> > >
-> >
-> > Do you have recommendations on how to handle this case then?
-> >
-> > This is a Thinkpad specific feature and hence the logic for involving t=
-hinkpad_acpi. There are Thinkpad hotkeys that will enable/disable the track=
-point doubletap feature - so there is some linkage. I'm not sure how to avo=
-id that.
-> >
-> > Is there a cleaner way to do this that you'd recommend we look at using=
-? It's a feature (albeit a minor one) on the laptops that we'd like to make=
- available to Linux users.
-> >
-> > Mark
->
-> Hello, I do not know what is doubletap and patch description does not
-> explain it. But for laptop / mouse interface, I'm just giving example
-> that dell-laptop.c for some particular laptop can enable/disable
-> touchpad led and uses PS/2 interface for it. See touchpad_led_init().
-> I do not know if it is ideal or preferred solution, just writing to let
-> you know, maybe it can be useful.
+--8323328-978402621-1751282719=:7079
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-FYR, please find the previous commits regarding Doubletap support for
-Trackpoint below:
+On Tue, 24 Jun 2025, Xi Pardee wrote:
 
-https://github.com/torvalds/linux/commit/a9b0b1ee59a79d0d3853cba9a4b7376ea1=
-5be21f
-https://github.com/torvalds/linux/commit/fd1e3344d13f1eedb862804dd1d2d5e184=
-cf8eae
+> Move telemetry endpoint handling to pmc_core_get_telem_info(). This
+> is a preparation patch to introduce a new table to obtain Low Power
+> Mode substate requirement data for platforms starting from Panther
+> Lake.
+>=20
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 51 +++++++++++++--------------
+>  1 file changed, 25 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
+/intel/pmc/core.c
+> index 540cd2fb0673b..a1dd80bdbd413 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1399,36 +1399,23 @@ static u32 pmc_core_find_guid(struct pmc_info *li=
+st, const struct pmc_reg_map *m
+>   * +----+---------------------------------------------------------+
+>   *
+>   */
+> -static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,=
+ struct pci_dev *pcidev)
+> +static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *=
+pmc,
+> +=09=09=09=09    struct telem_endpoint *ep)
+>  {
+> -=09struct telem_endpoint *ep;
+>  =09const u8 *lpm_indices;
+>  =09int num_maps, mode_offset =3D 0;
+>  =09int ret, mode;
+>  =09int lpm_size;
+> -=09u32 guid;
+> =20
+>  =09lpm_indices =3D pmc->map->lpm_reg_index;
+>  =09num_maps =3D pmc->map->lpm_num_maps;
+>  =09lpm_size =3D LPM_MAX_NUM_MODES * num_maps;
+> =20
+> -=09guid =3D pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
+> -=09if (!guid)
+> -=09=09return -ENXIO;
+> -
+> -=09ep =3D pmt_telem_find_and_register_endpoint(pcidev, guid, 0);
+> -=09if (IS_ERR(ep)) {
+> -=09=09dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %pe", ep)=
+;
+> -=09=09return -EPROBE_DEFER;
+> -=09}
+> -
+>  =09pmc->lpm_req_regs =3D devm_kzalloc(&pmcdev->pdev->dev,
+>  =09=09=09=09=09 lpm_size * sizeof(u32),
+>  =09=09=09=09=09 GFP_KERNEL);
+> -=09if (!pmc->lpm_req_regs) {
+> -=09=09ret =3D -ENOMEM;
+> -=09=09goto unregister_ep;
+> -=09}
+> +=09if (!pmc->lpm_req_regs)
+> +=09=09return -ENOMEM;
+> =20
+>  =09mode_offset =3D LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
+>  =09pmc_for_each_mode(mode, pmcdev) {
+> @@ -1442,23 +1429,21 @@ static int pmc_core_get_lpm_req(struct pmc_dev *p=
+mcdev, struct pmc *pmc, struct
+>  =09=09=09if (ret) {
+>  =09=09=09=09dev_err(&pmcdev->pdev->dev,
+>  =09=09=09=09=09"couldn't read Low Power Mode requirements: %d\n", ret);
+> -=09=09=09=09goto unregister_ep;
+> +=09=09=09=09return ret;
+>  =09=09=09}
+>  =09=09=09++req_offset;
+>  =09=09}
+>  =09=09mode_offset +=3D LPM_REG_COUNT + LPM_MODE_OFFSET;
+>  =09}
+> -
+> -unregister_ep:
+> -=09pmt_telem_unregister_endpoint(ep);
+> -
+>  =09return ret;
+>  }
+> =20
+> -static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev, int func)
+> +static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+>  {
+>  =09struct pci_dev *pcidev __free(pci_dev_put) =3D NULL;
+> +=09struct telem_endpoint *ep;
+>  =09unsigned int i;
+> +=09u32 guid;
+>  =09int ret;
+> =20
+>  =09pcidev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
+> @@ -1466,10 +1451,24 @@ static int pmc_core_ssram_get_lpm_reqs(struct pmc=
+_dev *pmcdev, int func)
+>  =09=09return -ENODEV;
+> =20
+>  =09for (i =3D 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
+> -=09=09if (!pmcdev->pmcs[i])
+> +=09=09struct pmc *pmc;
+> +
+> +=09=09pmc =3D pmcdev->pmcs[i];
+> +=09=09if (!pmc)
+>  =09=09=09continue;
+> =20
+> -=09=09ret =3D pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i], pcidev);
+> +=09=09guid =3D pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
+> +=09=09if (!guid)
+> +=09=09=09return -ENXIO;
+> +
+> +=09=09ep =3D pmt_telem_find_and_register_endpoint(pcidev, guid, 0);
+> +=09=09if (IS_ERR(ep)) {
+> +=09=09=09dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %pe", =
+ep);
+> +=09=09=09return -EPROBE_DEFER;
+> +=09=09}
+> +
+> +=09=09ret =3D pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
+> +=09=09pmt_telem_unregister_endpoint(ep);
+>  =09=09if (ret)
+>  =09=09=09return ret;
+>  =09}
+> @@ -1583,7 +1582,7 @@ int generic_core_init(struct pmc_dev *pmcdev, struc=
+t pmc_dev_info *pmc_dev_info)
+>  =09=09pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
+> =20
+>  =09if (ssram) {
+> -=09=09ret =3D pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func=
+);
+> +=09=09ret =3D pmc_core_get_telem_info(pmcdev, pmc_dev_info->pci_func);
+>  =09=09if (ret)
+>  =09=09=09goto unmap_regbase;
+>  =09}
+>=20
 
-Sorry if details are missing in the commit. I can add those.
-
-To be more precise, Thinkpad_acpi handles hotkeys, including Fn+G for doubl=
-etap.
-To make that work, we need an integration point.
-
-Thinkpad_acpi.c
-Fn + G Hotkey - Enable/Disable the Trackpoint Double Tap.
-DoubleTap on Trackpoint - Generates a DoubleTap ACPI Event
-
-trackpoint.c
-Enable/Disable the Doubletap functionality
-
-To enable (this is decided based on Fn + G toggle key) the Trackpoint
-Doubletap, we need to write to the Trackpoint extended register.
-Therefore, the event to enable or disable the double tap will be
-handled inside Thinkpad_acpi, but the actual write to the register is
-in trackpoint.c.
-
-I will check dell-laptop.c to understand the LED handling.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
+ i.
 
-Regards,
-
-      Vishnu Sankar
-     +817015150407 (Japan)
+--8323328-978402621-1751282719=:7079--
