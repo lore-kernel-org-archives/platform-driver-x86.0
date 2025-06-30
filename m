@@ -1,141 +1,124 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1858291C30;
-	Mon, 30 Jun 2025 17:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451901BC099;
+	Mon, 30 Jun 2025 17:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303970; cv=none; b=YaQ54MnxSgB9kRtZp/5jpvV0BkGd0/ZPN7X7LpKfvVj6yss9d/YlwV5ALDPFvMnz86CphUPt0a8zuaSc1E0fpJQtXfrHPir7ZrHkfufq83LknAAI6jYJE/SqDxffN9/ldyG2mmeP/XGF/LjTjD3jsZFPDFEd4CyJZxwclo878vA=
+	t=1751304712; cv=none; b=OZdk8G6R2iDdvw0JV7CMOHw1VU0088nvolIGXiTU433j2KIcU/JQoS1CG1HjwI7fhra4fOQwUKfrlWEQHGZ4mQ1x/yrzSAkE3vYkRro+fSXtPjIUXB5oM4s1Cah7Cou1dVIbrYPqmzKxMse/7DEkHH70yApuRWLDQgGPEcttRw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303970; c=relaxed/simple;
-	bh=aBHh8k34IFJzeCdbR7OpwK5tXeAmEli59bp6Th6Hq70=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BpYk/4bIj3xTX6FfmvLTclYPQ3CVlvCgOFLtZYDj8Jpsrg0eQd9AKkSnVpo9D5rHI7uh/rjMpFZkTc1JDOhIO07V2RnQz4xw7ts08Uzipm05L2BQjv635stBAjYH+5o5GMXnIsp4Q848pJxvg826KW9OhHpRKsjWFC3A5krNOyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lf5FT/6w; arc=none smtp.client-ip=209.85.222.175
+	s=arc-20240116; t=1751304712; c=relaxed/simple;
+	bh=h5c6IBJbv78fE5ZeORO47Y2ZLDLghsSas52hLDJz8Vo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c++N55G9ixVtlamnrR3etvrQLK/IFA0kJPAOOMMZ1AKkAi3WqrdUFeO0tdRBO8zXf46XLWOTtetfbX2Td26LmB2hRFJoJvSVXJBSQdQ7vBv1HMFgVdYRsh6AeDr8F/ILkAS2y8x34B2+aRRM396W9yMlFHxMD0qZK739i1STR1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TdyCeEJq; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lf5FT/6w"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d3f1bd7121so229388285a.3;
-        Mon, 30 Jun 2025 10:19:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TdyCeEJq"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a4bb155edeso56494311cf.2;
+        Mon, 30 Jun 2025 10:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751303967; x=1751908767; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=My+Sd9qKBXoQQgJZzomU2pSofVLYPOkVonsDsMPeVOk=;
-        b=lf5FT/6wsG4pJWBnvstWuaCldcvPB7XvJNvfXP4tHWXmnRIchuOpvF1Hop1H42KCa7
-         bera6xnzePl5TxU+fRfHkeevdtuBBkifU3yuE2VaXsJyjWaaUWtLejKTQQfw+1GUCMu2
-         W6YQnRsTe5iA+guvITL8Yd0xlRv0XYF6perl624uxvXM2tEXm3M2Hj8NeogDP3Nk6/mb
-         kxC33G3E8e7MA9KUwN1tTO/ViiAVZJDya3xGFoCWKbgXEUzCKhrk+mSSySfDO1i9c81n
-         /drhirdujDn32oytfNkzMN8F9fZQpdRoydEp0Du1fBFYZsE1T5Ro/IcpZeXZhL9QYGBz
-         nx3Q==
+        d=gmail.com; s=20230601; t=1751304710; x=1751909510; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=awH8Fz1hjM1DBo3h7PP84BBK0d0aPmxgVTCni1QNExg=;
+        b=TdyCeEJqeJ7Gc4+3HtxBm2DA2OZ72mb2byc9EWm3Od36TH03DU4GgO6PYQNXe81JTU
+         kAKkvUSTuPd04aLpEKfqoW2eCJzI5+uqz7su0aioCUzKDy1H44ISChxKxUIf8J3f9nLu
+         iCrgGZm/xU0WcQMDhp9WuJf0PN+M1UN2KkXP9dGTXLS69r8eiHxIg/LhqBBBRBs7qJvT
+         MMGHZBJXZ1EKsOPzdtLSv+M3vepN6nHRHChYl3VupENfYCdh+Xs4p19TvkdXDcUwluAe
+         Q5B9D4IJv5GGnKa+A+6hDOaPzo9uqr6bdui7eroMs7fNlzVYDQl0NqaAQxzjDqAizPWt
+         slYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751303967; x=1751908767;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=My+Sd9qKBXoQQgJZzomU2pSofVLYPOkVonsDsMPeVOk=;
-        b=FRdurBfunipgDjHhCqWpeAU/+ZYR2kR0q3CNgRdlFKhYs2bTWOltoXTlfFvI0jt7eB
-         ULYg1HDkzJa4o6uEhDvsRUZB0oxxfbBMimbuXQZla6MBxRLl5YnSOZdLQgmRC9w6a4+k
-         9lFrNtD1ezcB9uTIXIjQV3kVr7t/4AJn7CoJ44dBg7hXFguG1E/P/ofD7yHiDq7WsSJu
-         0NTfR3r+zEbvzN/Ml6WbHwU1XbXMBgUOpld1MOCIavrBLHSMDKuZjkai0FXe/czOmhwT
-         2PRiTIThLvmktmTwSkJFqX1maxBS9NdE5EvXB/GAIpUWPgkrGfS5UtMP3Jc/Veg32Twd
-         Zy4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUGexuLCKBbOVEjL4aM22MAZ1fRFHjmIrLPraXY4J3H82mrT/6GQEKqKeEqxkIzi4eXtFpdA+TBSC0bgNg=@vger.kernel.org, AJvYcCWIAXmB2bwm37Aq/taPZF9bponXR+xNVvMYT2vnwUF/+uNP3SUYJiSp32f7S5mqfB/2OFiF/nyrzqEuYknrkzaV4O1Bsg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3gyKb1gMtYhnox7QTcu18wyoVLhUwQMfxTJc8jLMpLcGO31p0
-	zPTlrzkYYyfT/P/j6RxPq9bAH9WK0k1WwtT2q6pOsf68NT++EVZwR847JRsviL1P
-X-Gm-Gg: ASbGncvpEFOodpNO6iOIaRAm+6nonWeW1tuqfVVQS1aVWt3yIP2zMf9fV1OCy2MaANd
-	qxif8YW0vFl79l29Ctdv+yNpbjum13b0PDh4nb0yiFShVW2c/Q07U130rs75QNhnQsHeuble93a
-	PVT3cVjTI8Cl/2wpJShn1T953WCZWOKN8T24b0mDEzCpNu8peEdFC+pNcmobO3E+DYWzEoMuMOr
-	ykADSmnOqAkfBtyyfOHF6YeHaeN4qUeL0s1jtbxLvHRJ6QY9Vy3x0H8XfjkgTEcPckSmFfxby9Y
-	bhxooc1lSlkveq6jM1QjQyn/ARP4pxBJCiJ/egzTjM1sjcsGpbE1lS8=
-X-Google-Smtp-Source: AGHT+IGxBURdNCIiYI0Fgw7UXD7Psq9lNzuv/sGDalOMDIh5FbdKbuOopkgoPjE5XHAiPaHwkNz9jg==
-X-Received: by 2002:a05:620a:2b97:b0:7ca:cd71:2bf8 with SMTP id af79cd13be357-7d4439ca6admr2323639885a.54.1751303966627;
-        Mon, 30 Jun 2025 10:19:26 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc57d530sm62157231cf.61.2025.06.30.10.19.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 10:19:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751304710; x=1751909510;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=awH8Fz1hjM1DBo3h7PP84BBK0d0aPmxgVTCni1QNExg=;
+        b=PZuuM4KG5oIiByIKwLmBWt4hFGBGP3PaMnj7vh0h6f0BCcHnSVZ9L08li8IutnI2H4
+         WGP8jCzS45BimjZj5wzbGOzmqy6dmVA1AmeNQRp3oQq14T2ycL7ZgFuUDt9SEt+k/jUn
+         WDppEsZFD8gEwDSk9ko65ZcIethrPJh7keiRzjLxRyzid0HJ3aBGWudH6vi2EkxROhEM
+         n8nR5Wn9SSrCm2m91vWfWSSUM5j6FRUQTZN1rPSzMlva6N8JomPHaGju0hibBKCplCXT
+         zu4xGAp1LiOdaCCwhUF7QTcKmbC622o/KRQtzumR8++k7Y4er+4L2g6eksqTKw1XU8y/
+         U/Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7E3G1Y0pOD8o8AidxLyjMPyVpVkCoU70w54DmG5HSKZIoymJs9oSXktDaC/nGW6AM429sWArH@vger.kernel.org, AJvYcCXZ+nZzQ/8NsnBG4V/1OOW69UYlnVkydfKqC33iY9pTOpcQ00/QfxolLrn5kXih+LB7Y5UhYprs/cRVyvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb9k+7u0KI/IdwR9XYXCBF3fswfivru+d62DAxpD5uOGYAuxen
+	ZD9cZMYTNKvg9ZW8ny/VpKGdP7WkC5uqK4CXl+6oNDPL47U/IAM9xbQQZR6pWcMn
+X-Gm-Gg: ASbGncvKXWYe52VaB7DUnq0nb3Al3ww54UnI+8mbQL0MMsvbmF5E2859GuAU1NoDEkW
+	h0ab99DO4XG7kui7e0kHfh9jP0HoZ0jbZ5e4mgNPLJ4Iw7ZW3iHhTX1MqyFU9Bizz3+Ev4OJZ7C
+	aHMLkO+tLZwqX++Al530a3shPWCFflSpvyEodCY/GFbptzW7EU3NN4gJerXO7SOzam2aUvn2t+Y
+	YqeEVAPsDD7JEaGdKG48Lh0vynQ7wozDVQDVbYO6jqskHycosPeGbQXO1yTSqWRyYhY6UZw7pU1
+	FabRPVtGtNUqOo4OWEWHcuMj3o296YjBvUVghg7eCOhnrHDDEJ+wRfl3VaS+6g==
+X-Google-Smtp-Source: AGHT+IHZ4buoJHnWhZ6S3ZkMqcQoDpG2ZYTNt8Xb/GVgOKbOC/G5iCpPL2tq18S0hY6EsH9TWBa18g==
+X-Received: by 2002:a05:622a:1886:b0:476:7e6b:d297 with SMTP id d75a77b69052e-4a7fcde992fmr256784921cf.41.1751304709760;
+        Mon, 30 Jun 2025 10:31:49 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fdadb11bsm59784521cf.17.2025.06.30.10.31.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 10:31:49 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v3 0/3] platform/x86: think-lmi: Fix resource cleanup flaws
+Date: Mon, 30 Jun 2025 14:31:18 -0300
+Message-Id: <20250630-lmi-fix-v3-0-ce4f81c9c481@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Jun 2025 14:19:23 -0300
-Message-Id: <DB01FY24LYWZ.1JZJNZR47ORO4@gmail.com>
-Cc: "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Hans de Goede"
- <hdegoede@redhat.com>, <platform-driver-x86@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] platform/x86: think-lmi: Fix resource cleanup
- flaws
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250628-lmi-fix-v2-0-c530e1c959d7@gmail.com>
- <5ee91db8-8ed1-6860-7736-9fb723371bc1@linux.intel.com>
-In-Reply-To: <5ee91db8-8ed1-6860-7736-9fb723371bc1@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAObJYmgC/3WMywrCMBBFf6XM2kgepjau/A9xEZNpO9AXiQSl9
+ N9NuhNxeS73nBUiBsIIl2qFgIkizVMGdajA9XbqkJHPDJJLzWvZsGEk1tKLmUac1ENwb1oP+b0
+ EzPNeut0z9xSfc3jv4STK+ttIgnHmakRnrFXOnq/daGk4unmE0kjyjyeLpxVH4Yw2/svbtu0DM
+ NAqndYAAAA=
+X-Change-ID: 20250628-lmi-fix-98143b10d9fd
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kurt Borja <kuurtb@gmail.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1090; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=h5c6IBJbv78fE5ZeORO47Y2ZLDLghsSas52hLDJz8Vo=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBlJJz8qPaua118peG2Z8d7KXedmXvvN8F7nQ5DvxLALr
+ i1aBiY8HaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCRJE1Ghn9p25RO+y+aYHmF
+ PyOd4WOLcKud+dnzmg/k/+4xW7kptIDhf3XL0pwI3gVJF7qn3vom2i6pFMXlKm29+tr86oOzF81
+ I4AQA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Hi Ilpo,
+Hi all,
 
-On Mon Jun 30, 2025 at 5:54 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Sat, 28 Jun 2025, Kurt Borja wrote:
->
->> Hi all,
->>=20
->> First patch is a prerequisite in order to avoid NULL pointer
->> dereferences in error paths. Then two fixes follow.
->
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+First patch is a prerequisite in order to avoid NULL pointer
+dereferences in error paths. Then two fixes follow.
 
-Thanks!
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Changes in v3:
+- Add Cc stable tags to all patches
+- Rebase on top of the 'fixes' branch
+- Link to v2: https://lore.kernel.org/r/20250628-lmi-fix-v2-0-c530e1c959d7@gmail.com
 
->
-> Please send v3 with stable Cc tags in all these so that this dependency=
-=20
-> gets automatically handled (as per documentation).
+Changes in v2:
 
-I forgot the stable tag in the dell-sysman fix too. Hopefully it gets
-picked up by AUTOSEL. Else I'll submit it manually.
+[PATCH 02]
+  - Remove kobject_del() and commit message remark. It turns out it's
+    optional to call this (my bad)
+  - Leave only one fixes tag. The other two are not necessary.
 
->
-> I'll apply this through the fixes branch but I can deal with the removal=
-=20
-> of the lenovo/ folder from the file names myself while applying.
+- Link to v1: https://lore.kernel.org/r/20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com
 
-It's easy to rebase too so I'll do it :)
+---
+Kurt Borja (3):
+      platform/x86: think-lmi: Create ksets consecutively
+      platform/x86: think-lmi: Fix kobject cleanup
+      platform/x86: think-lmi: Fix sysfs group cleanup
 
->
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->> Changes in v2:
->>=20
->> [PATCH 02]
->>   - Remove kobject_del() and commit message remark. It turns out it's
->>     optional to call this (my bad)
->>   - Leave only one fixes tag. The other two are not necessary.
->>=20
->> - Link to v1: https://lore.kernel.org/r/20250628-lmi-fix-v1-0-c6eec9aa3c=
-a7@gmail.com
->>=20
->> ---
->> Kurt Borja (3):
->>       platform/x86: think-lmi: Create ksets consecutively
->>       platform/x86: think-lmi: Fix kobject cleanup
->>       platform/x86: think-lmi: Fix sysfs group cleanup
->>=20
->>  drivers/platform/x86/lenovo/think-lmi.c | 90 +++++++++++---------------=
--------
->>  1 file changed, 30 insertions(+), 60 deletions(-)
->> ---
->> base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
->> change-id: 20250628-lmi-fix-98143b10d9fd
->>=20
-
-
---=20
+ drivers/platform/x86/think-lmi.c | 90 ++++++++++++++--------------------------
+ 1 file changed, 30 insertions(+), 60 deletions(-)
+---
+base-commit: 173bbec6693f3f3f00dac144f3aa0cd62fb60d33
+change-id: 20250628-lmi-fix-98143b10d9fd
+-- 
  ~ Kurt
 
