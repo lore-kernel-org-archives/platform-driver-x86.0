@@ -1,104 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D3024501D;
-	Mon, 30 Jun 2025 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642852475F7;
+	Mon, 30 Jun 2025 10:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277725; cv=none; b=WFQePYlQ8I860ODqDmpvAvlM1J03CjoJZ5c+2WmNdspfBClfFj+Z5Gf+dwCbUEX4KfP1GUlAHnLCZ4w3QfRb9gz6YJoX4FV1IfTRyMSKWYIf3llCPIMCuCKPHcvijo1uqEioXzpLxFMR8gk3MY0qR+aOzvBjc7PqOoGa5NPwfYc=
+	t=1751277811; cv=none; b=uzXb0nBT6ON0WM7ASC/Y2ydlzt8y4CMXozcwzpfW/7rqdmsNnnYFTq0nxOY1b1ZZRavwg2+ZeCuk3ARJVgXLLyb2O7DG11knePG/sNiYBq2QO98s2pr8yOAotALaikzcwxd2dXKRD13DbG1O2IJdIgbLdv350p+OEG1UAM8GQ1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277725; c=relaxed/simple;
-	bh=bfjuw9gXAYyPF7VQZoSgZnNTMnWd678yVZRGAvIW96A=;
+	s=arc-20240116; t=1751277811; c=relaxed/simple;
+	bh=gFCA79flgaQXnugGgdIo3m8Y3CQG8kjvj8+trQjJNeA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YDFG2o3ATczwyS0MVFLOQC0fC2/8G1tgkCUsspMZX3W8wiuh8GL1flH+tGcb4ItodGT7R1KefHf/3iYfxO4b+RHxDBDUGXhfHdl1CIJ4+1ShdJa6wnOG2rfg8GHdr3/+g2wexnd5CzLw4qlPh3X/PI1OFkk79KL7NbXmbXWfLg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkLJPpGn; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=MZlTwCtfDP7N/mVkAfBY1b8mM3g+jPlbpm5YJ7y4uT2wY3bJ/ALCUF3gCdzouAx6qsKoiSRlrMJla9yWpwuT8wlKirssF5k/5XiEg7mlqdagdM02XbZC2L0JNvS4gZfFXb60sMo2hUdA3g6e9HEvKVbkA3kOL1az98o4kO1eDXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjyAgmLR; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkLJPpGn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjyAgmLR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751277724; x=1782813724;
+  t=1751277810; x=1782813810;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=bfjuw9gXAYyPF7VQZoSgZnNTMnWd678yVZRGAvIW96A=;
-  b=nkLJPpGnTGVAVbj3m4r2ydKLmg2RsJNNZhHHDawFU3vq3k7oh5b/cKyy
-   12DKTkLp4ifcizpARpXuqLZ0VBRZY7fNH8SLs6gQtG4IUwI0rXjpdRrtY
-   I5goyw3AO9t37D0+Eb4V/5knmd+IREE51ADgyt21Acg6e50uW7fO92QUw
-   aORXwiWtVd9wA+8hbbG1JkT7JldJQxuqCTX13YjO+NQcLo++ZBO1wtn8P
-   EyhOaLVFBT6ZBzeMRnF8W40gjHStVtO9kuKtNKZLS2IwWbPmMYuCYZERX
-   nQ0K33KSQpowM/CoX3EOOyjyOPZ1V4rNzzsbS4UC6E1WC5mZO1TYUBmj+
-   A==;
-X-CSE-ConnectionGUID: oz5nxvp2R3KZC9IzvZ15TQ==
-X-CSE-MsgGUID: MHPj5nVVRaug42t7VSxFEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57277422"
+  bh=gFCA79flgaQXnugGgdIo3m8Y3CQG8kjvj8+trQjJNeA=;
+  b=hjyAgmLRePO5j9EUDQR4lO0MpC4KrBUR3pAKVRkN6v+NYr52WlI9f6A6
+   Rb8aGVwtL5P4S1cfVpWIqwi57JXIDW5UcYal3YFshSM3jE6tUVhfBhG3b
+   a8WTeKqo38PF9iBhNcFAtaDC+yGT8EQqkBX5XJH1g2iv7S7dRKMT548GF
+   l7oOOaX6t6uqbd0qnM0jWXn5d5/T4Mx63TrdBmotosLpc5eX23fD77z2j
+   hvYgoa8JLkLfDGdKbdhQ/2kGX2CBXZgpEW9CvnwVa7I9wVyAbSwWvbXt0
+   1PnYLbyRbMgb/kBAd8gecdiglzZRCttgPm+LIY+edHubHOyxhjry47D/4
+   Q==;
+X-CSE-ConnectionGUID: AQgpCvdFTcq6pEc1pZyNyA==
+X-CSE-MsgGUID: TrHRK+NvRzyuYBUqIUIF2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64094586"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="57277422"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:02:01 -0700
-X-CSE-ConnectionGUID: gx+DFMCRQLifpuG30/l9/g==
-X-CSE-MsgGUID: DVrlXRpKSkKD3jGYQ9DL7g==
+   d="scan'208";a="64094586"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:03:30 -0700
+X-CSE-ConnectionGUID: p6Tg9e3YQrWI2l6W9ZCvRQ==
+X-CSE-MsgGUID: 17Wdq6ufS9+Kq572OrFMRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="190587470"
+   d="scan'208";a="177079776"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:01:58 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:03:27 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 13:01:54 +0300 (EEST)
+Date: Mon, 30 Jun 2025 13:03:24 +0300 (EEST)
 To: Alok Tiwari <alok.a.tiwari@oracle.com>
 cc: hansg@kernel.org, vadimp@nvidia.com, platform-driver-x86@vger.kernel.org, 
     darren.kenny@oracle.com, LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] platform/mellanox: Fix logic error in power state check
  in mlxreg-lc
-In-Reply-To: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
-Message-ID: <8e86e409-0a19-ec74-f126-2e5315e3dc0a@linux.intel.com>
-References: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <8e86e409-0a19-ec74-f126-2e5315e3dc0a@linux.intel.com>
+Message-ID: <fad3e60f-b6c2-19bd-020c-9306d1c88a99@linux.intel.com>
+References: <20250630095001.598061-1-alok.a.tiwari@oracle.com> <8e86e409-0a19-ec74-f126-2e5315e3dc0a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1482056202-1751277804=:7079"
 
-On Mon, 30 Jun 2025, Alok Tiwari wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Fixes a logic issue in mlxreg_lc_completion_notify() where the
-> intention was to check if MLXREG_LC_POWERED flag is not set before
-> powering on the device.
-> 
-> The original code used "state & ~MLXREG_LC_POWERED" to check for the
-> absence of the POWERED bit. However this condition evaluates to true
-> even when other bits are set, leading to potentially incorrect
-> behavior.
-> 
-> Corrected the logic to explicitly check for the absence of
-> MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
-> 
-> Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+--8323328-1482056202-1751277804=:7079
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Makes sense but please add Fixes tag and resubmit as v2.
+On Mon, 30 Jun 2025, Ilpo J=E4rvinen wrote:
+> On Mon, 30 Jun 2025, Alok Tiwari wrote:
 
-> ---
->  drivers/platform/mellanox/mlxreg-lc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
-> index aee395bb48ae4..8681ceb7144ba 100644
-> --- a/drivers/platform/mellanox/mlxreg-lc.c
-> +++ b/drivers/platform/mellanox/mlxreg-lc.c
-> @@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
->  	if (regval & mlxreg_lc->data->mask) {
->  		mlxreg_lc->state |= MLXREG_LC_SYNCED;
->  		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
-> -		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
-> +		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
->  			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
->  			if (err)
->  				goto mlxreg_lc_regmap_power_on_off_fail;
-> 
+Also please move mlxreg-lc into prefixes (see some earlier commits made=20
+into that file).
 
--- 
+> > Fixes a logic issue in mlxreg_lc_completion_notify() where the
+> > intention was to check if MLXREG_LC_POWERED flag is not set before
+> > powering on the device.
+> >=20
+> > The original code used "state & ~MLXREG_LC_POWERED" to check for the
+> > absence of the POWERED bit. However this condition evaluates to true
+> > even when other bits are set, leading to potentially incorrect
+> > behavior.
+> >=20
+> > Corrected the logic to explicitly check for the absence of
+> > MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
+> >=20
+> > Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
+> > Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+>=20
+> Makes sense but please add Fixes tag and resubmit as v2.
+>=20
+> > ---
+> >  drivers/platform/mellanox/mlxreg-lc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/m=
+ellanox/mlxreg-lc.c
+> > index aee395bb48ae4..8681ceb7144ba 100644
+> > --- a/drivers/platform/mellanox/mlxreg-lc.c
+> > +++ b/drivers/platform/mellanox/mlxreg-lc.c
+> > @@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle=
+, struct i2c_adapter *parent,
+> >  =09if (regval & mlxreg_lc->data->mask) {
+> >  =09=09mlxreg_lc->state |=3D MLXREG_LC_SYNCED;
+> >  =09=09mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
+> > -=09=09if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
+> > +=09=09if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
+> >  =09=09=09err =3D mlxreg_lc_power_on_off(mlxreg_lc, 1);
+> >  =09=09=09if (err)
+> >  =09=09=09=09goto mlxreg_lc_regmap_power_on_off_fail;
+> >=20
+>=20
+>=20
+
+--=20
  i.
 
+--8323328-1482056202-1751277804=:7079--
