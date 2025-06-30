@@ -1,262 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9678289E17;
-	Mon, 30 Jun 2025 12:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C532F1FE6;
+	Mon, 30 Jun 2025 12:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285311; cv=none; b=PIcG6zY8hJrj6lJfqNr+Sp/xxynE+16199xmdQhgxLQM6hddMGn4YYeTd3Z9a2+Occvy+kHpKP/B9Ge1L7ZzgFCzQn7zkAbiIzF4MRuQp3i3CwB31selnYFfXjcHrNAWvXfus+26iHKXS+Vjc8Kl5jzm3WJ4vTl7qu9UiBdEoBg=
+	t=1751286689; cv=none; b=ogQiboVR4Pil28c8sI5GtWbc22FUHRbRG8mB07PkwyB3vv7waDz+ejglYENiWq6uDqtYw33DOimB1o7JEh1KLTnefOtio+SoeYDIPD5SM/m/dJI3YiHmet0bJ7MULTYmGGM866xMBHO+g4/Pr/xChtSgGJogN8qF1NZljXZXet4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285311; c=relaxed/simple;
-	bh=tvZg4BwFQFp9qXk8LOfSnmYas1LLCBXoBwsdinGav/4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Nm8Jon3GuVOq1gAZxAx01nY0KMKYXearyYJ5/ZrG8Dkok9TI4n7bPEWe3JjIRMZHlpIyJX3d9e2AWpFval0bhGqMy13s8NYp7ai2Aq4KUOW6eU2oywTU7wDbZzvPkjjJGESl6t3bAIw6w20RopoQenvvIDRbNs9FSkrmHG5ZucQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaNXEMZg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaNXEMZg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751285310; x=1782821310;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tvZg4BwFQFp9qXk8LOfSnmYas1LLCBXoBwsdinGav/4=;
-  b=AaNXEMZgvUkiTAXKdoL+G0E1uyMrNsh8+4bVpfvQWsd7YU+0ssyYL9DE
-   PO56H2lek8Fp7gzXa5qOSeUPQf8XZ+JNSupBVgXoxQxEbVHkCS5ku8R2p
-   xuJNzIH/MOKtHLR0JFN5Z76VeyZTh10O58jpqUx4bfr0AGzzyYHLPUM6S
-   eeHQP5lT7Dd+srL4f5qx5Nx7ms6y9OV9hGZk/3SGh3eoJOgqLBDOHf/Ng
-   vQcxwfCbmSReNNc7lKWb8NXdHfN08E5z3Cl0guVRl/1l9alz33VSdV7g6
-   AIpdG9001yJQwiN7L2LKx+E23i+EwbE8i2nvqta81TInLObVaQAJe+Ej6
-   w==;
-X-CSE-ConnectionGUID: 3iz39t/nTC2DqX1Zq3Fwbg==
-X-CSE-MsgGUID: aCqbF8cxRtOy0vAlxc3L8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="76057586"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="76057586"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 05:08:29 -0700
-X-CSE-ConnectionGUID: CYx8uifpR/mRmsaaFAKvDg==
-X-CSE-MsgGUID: 3akPhiGtQN+cqO7jT2YXiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="158950341"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 05:08:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 15:08:24 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH V2] platform/x86/intel/pmt/telemetry: Add API to retrieve
- telemetry regions by feature
-In-Reply-To: <20250617014041.2861032-15-david.e.box@linux.intel.com>
-Message-ID: <077c52bb-6dec-a140-cd7b-8bf26f46dc65@linux.intel.com>
-References: <20250617014041.2861032-1-david.e.box@linux.intel.com> <20250617014041.2861032-15-david.e.box@linux.intel.com>
+	s=arc-20240116; t=1751286689; c=relaxed/simple;
+	bh=dU7GGXFIfaPTQQofUlvHwdBqJ9f+t3bWDI3an8Jy6TM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GggsJmmwq9DMrv0/2cdWWHSl7k0SElHamx2frx9IgpZX5uAVsgrNpUyemwbH25aH0xGTGlc8N06bg8YoPk/CeVqjaCeg8Bjh10gvBEz8iDq9cG5ouANudD2A8Jrk4Vl5PdyFucW7WevhWiG4iQB6G5H8AtrHBUoyMT40IAw8tCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=109.224.244.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
+Date: Mon, 30 Jun 2025 12:31:13 +0000
+To: Armin Wolf <W_Armin@gmx.de>
+From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Cc: Kurt Borja <kuurtb@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+Message-ID: <ODTjSMb7txgGF_gfWq-zWlEhygUDgdi8hu5piyxj8IT0eCmCVZKA7cvlE1jW4bWY970L1dXXvkkbBg1-cWBg2NEwmm3vCn8zs_O25417ZbA=@benis.se>
+In-Reply-To: <032bba69-7f74-4181-9398-d9d370195bd0@gmx.de>
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se> <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de> <X-40AqXfdmQw5shUOk3VSaHSXmwJYWHPmDDMLyGUH6GpMt56ty5SbNg8EVfyI_uC9J07uqZ2TtGJmmpB_x8-xpcVOw29fnKzJZ4n9L0x78A=@benis.se> <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de> <DAXK1634VYQI.1PEUCTQIYAF3Y@gmail.com> <jCZyBwYNgVSM_Qk2XkfweZRlZNiSh06WVUBqya9leWoWXAmNFL9fdbgBX038OzfQUEaGE5PU8yhtJL2zq_PRW67FmLYTnoK_SPUPmzoTdco=@benis.se> <ilIo-AIjpnkWmahXpgmQeK_6mFWl5s7x7jf0qSdGlpHSGMK1KJDdFjKLQ3t--U-cEUKtpx7s49njQx1I_nU100aE_ca4frY50L4miN8LCks=@benis.se> <032bba69-7f74-4181-9398-d9d370195bd0@gmx.de>
+Feedback-ID: 18592338:user:proton
+X-Pm-Message-ID: 40a349eed958f48226b5ef011aa58d0691d89276
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025, David E. Box wrote:
 
-b4 didn't like how this patch was created and failed to link it with the 
-rest of the series.
 
--- 
- i.
 
-> Introduce a new API, intel_pmt_get_regions_by_feature(), that gathers
-> telemetry regions based on a provided capability flag. This API enables
-> retrieval of regions with various capabilities (for example, RMID-based
-> telemetry) and provides a unified interface for accessing them. Resource
-> management is handled via reference counting using
-> intel_pmt_put_feature_group().
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> Changes in v2:
->   - In pmt_telem_get_endpoint_info() use __free() for feature_group
->   - Add missing header for ERR_PTR()
->   - Split static inline function into multiple lines
-> 
->  drivers/platform/x86/intel/pmt/telemetry.c | 89 +++++++++++++++++++++-
->  include/linux/intel_vsec.h                 | 18 +++++
->  2 files changed, 106 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-> index 58d06749e417..a4dfca6cac19 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -9,16 +9,21 @@
->   */
->  
->  #include <linux/auxiliary_bus.h>
-> +#include <linux/bitops.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/err.h>
->  #include <linux/intel_pmt_features.h>
->  #include <linux/intel_vsec.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> -#include <linux/overflow.h>
-> +#include <linux/xarray.h>
->  
->  #include "class.h"
->  
-> @@ -209,6 +214,87 @@ int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
->  }
->  EXPORT_SYMBOL_NS_GPL(pmt_telem_get_endpoint_info, "INTEL_PMT_TELEMETRY");
->  
-> +static int pmt_copy_region(struct telemetry_region *region,
-> +			   struct intel_pmt_entry *entry)
-> +{
-> +
-> +	struct oobmsm_plat_info *plat_info;
-> +
-> +	plat_info = intel_vsec_get_mapping(entry->ep->pcidev);
-> +	if (IS_ERR(plat_info))
-> +		return PTR_ERR(plat_info);
-> +
-> +	region->plat_info = *plat_info;
-> +	region->guid = entry->guid;
-> +	region->addr = entry->ep->base;
-> +	region->size = entry->size;
-> +	region->num_rmids = entry->num_rmids;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pmt_feature_group_release(struct kref *kref)
-> +{
-> +	struct pmt_feature_group *feature_group;
-> +
-> +	feature_group = container_of(kref, struct pmt_feature_group, kref);
-> +	kfree(feature_group);
-> +}
-> +
-> +struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{
-> +	struct pmt_feature_group *feature_group __free(kfree) = NULL;
-> +	struct telemetry_region *region;
-> +	struct intel_pmt_entry *entry;
-> +	unsigned long idx;
-> +	int count = 0;
-> +	size_t size;
-> +
-> +	if (!pmt_feature_id_is_valid(id))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	guard(mutex)(&ep_lock);
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		if (entry->feature_flags & BIT(id))
-> +			count++;
-> +	}
-> +
-> +	if (!count)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	size = struct_size(feature_group, regions, count);
-> +	feature_group = kzalloc(size, GFP_KERNEL);
-> +	if (!feature_group)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	feature_group->count = count;
-> +
-> +	region = feature_group->regions;
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		int ret;
-> +
-> +		if (!(entry->feature_flags & BIT(id)))
-> +			continue;
-> +
-> +		ret = pmt_copy_region(region, entry);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-> +
-> +		region++;
-> +	}
-> +
-> +	kref_init(&feature_group->kref);
-> +
-> +	return no_free_ptr(feature_group);
-> +}
-> +EXPORT_SYMBOL(intel_pmt_get_regions_by_feature);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
-> +{
-> +	kref_put(&feature_group->kref, pmt_feature_group_release);
-> +}
-> +EXPORT_SYMBOL(intel_pmt_put_feature_group);
-> +
->  int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
->  {
->  	u32 offset, size;
-> @@ -353,3 +439,4 @@ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
->  MODULE_LICENSE("GPL v2");
->  MODULE_IMPORT_NS("INTEL_PMT");
-> +MODULE_IMPORT_NS("INTEL_VSEC");
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index f63e67398a8e..0d127d3a18b3 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/auxiliary_bus.h>
->  #include <linux/bits.h>
-> +#include <linux/err.h>
->  #include <linux/intel_pmt_features.h>
->  
->  /*
-> @@ -220,4 +221,21 @@ static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pd
->  	return ERR_PTR(-ENODEV);
->  }
->  #endif
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMT_TELEMETRY)
-> +struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
-> +#else
-> +static inline struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void
-> +intel_pmt_put_feature_group(struct pmt_feature_group *feature_group) {}
-> +#endif
-> +
->  #endif
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> prerequisite-patch-id: b38c42e1e0ad4a9d7c2bad26bafc44e4710b221e
-> prerequisite-patch-id: 8c78f389183292e444aea2450bbd9c49cbd2b276
-> prerequisite-patch-id: cde36b6a28c7c6b8fce58aecfef7f442ff6d1e50
-> prerequisite-patch-id: 0657fb342c016c1aa47501c17a69e78178371c02
-> prerequisite-patch-id: a9d8e0500e5eda1146a3203d70375ae2b2b25a9d
-> prerequisite-patch-id: c8b1a9d4e48c13353cc41b815b69141118b3d457
-> prerequisite-patch-id: 6f676b5e6d90b87fb8e39154998cc06f0cd99914
-> prerequisite-patch-id: 4aa05c3ad0e61fe133ee82d84831a451ec551f5d
-> prerequisite-patch-id: d92f2986c580d720420a371923f788265d22dc02
-> prerequisite-patch-id: f281f452c8cdc2545abc881f4761a79b633b2847
-> prerequisite-patch-id: 01215266d8d3e0450ed991feb1d17a9b54ed771b
-> prerequisite-patch-id: ee9f8ca9f1357aebd5f240a1b089be1f0e3258e9
-> prerequisite-patch-id: 82ee7c3801bca82569d1cf8febcab7ded56e5bd1
-> 
+On Saturday, 28 June 2025 at 02:40, Armin Wolf <W_Armin@gmx.de> wrote:
+
+> Am 27.06.25 um 23:56 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+>=20
+> > One more thing: I noticed this during boot (before entering password fo=
+r disk encryption)
+> > https://drive.benis.se/s/5wMkEMKs6SELQzt
+> >=20
+> > Thermal trip point bug and other stuff, might be something?
+>=20
+>=20
+> Yes, it seems the trip code AML code try to access an array called CUZO t=
+hat is only initialize
+> inside a ACPI control method called _WAK. Since _WAK is only called when =
+the system wakes from
+> a sleep state CUZO remains initialized and thus causes this error.
+>=20
+> Can you check if a BIOS update is available for your device?
+
+I have the latest bios for my device.
+
+
+>=20
+> Thanks,
+> Armin Wolf
+>=20
+> > Best regards,
+> > Benjamin Hasselgren-Hall=C3=A9n
+> >=20
+> > On Friday, 27 June 2025 at 22:49, Benjamin Hasselgren-Hall=C3=A9n benja=
+min@benis.se wrote:
+> >=20
+> > > Hi Kurt,
+> > >=20
+> > > I do not experience the same error messages as in the bug report - no=
+ error message at all. It respons to changing power profile without any err=
+ors.
+> > > I also tried 6.12 but same behaviour as 6.15.3 (just getting some gpu=
+ glitches - problably because of Lunar Lake).
+> > >=20
+> > > I am trying to understand how power profiles work - I guess on a high=
+ level it's controlled by uefi and the profile is set by the OS? Or is it m=
+ore complicated than that?
+> > >=20
+> > > Best regards,
+> > > Benjamin Hasselgren-Hall=C3=A9n
+> > >=20
+> > > On Friday, 27 June 2025 at 21:15, Kurt Borja kuurtb@gmail.com wrote:
+> > >=20
+> > > > Hi all,
+> > > >=20
+> > > > On Fri Jun 27, 2025 at 2:10 PM -03, Armin Wolf wrote:
+> > > >=20
+> > > > > Am 26.06.25 um 15:20 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+> > > > >=20
+> > > > > > Hi again,
+> > > > > >=20
+> > > > > > dmesg: https://drive.benis.se/s/2crz7zPzkrzaqXN
+> > > > > > The following message intrigues me:
+> > > > >=20
+> > > > > platform_profile: Failed to get profile for handler hp-wmi
+> > > > > This might be a regression.
+> > > >=20
+> > > > This was reported a couple months ago and I completely forgot until=
+ I
+> > > > saw this thread. See [1].
+> > > >=20
+> > > > @Benjamin: Can you please check if your power profiles work on Linu=
+x
+> > > > v6.12 (LTS)?
+> > > >=20
+> > > > Also try:
+> > > >=20
+> > > > $ cat /sys/firmware/acpi/platform_profile
+> > > >=20
+> > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D220008
+> > > >=20
+> > > > --
+> > > > ~ Kurt
