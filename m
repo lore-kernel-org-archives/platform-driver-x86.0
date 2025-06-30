@@ -1,284 +1,296 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5350B10A3E;
-	Mon, 30 Jun 2025 14:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295002; cv=none; b=rr3CnFzx3MITJS47N9SH1sHaQIadHJZtbw1pkMPtSKUpbxd1naoPqIRDfY+cGXKMbtV//UGVKL4qshuU/4qa/LCup0RWpw9U7yO7Cc3f/lJ0e4IaEHeZH7skYSe+BecCRMvwytI2yv0Zd3GiYF3s/aTXbzkpuwhPgMuGb4KWUGU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295002; c=relaxed/simple;
-	bh=FxJzuT/Ie0KmGDtCLqi5d8gF5PO4hL85KUuc3GSfOsk=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=Tmb7VGTVDBo/Efi5D+ZsmUKrNxiUcWovRIwIEmPETzbhXPm7r1xsF/2mvD+AVgYWOh+MYhOCIzqZnU1kPqIK3iJlaLsF/Hb8BoET1L090r0eRa3DRy8OQ1FkZkhaosJv0n1isNEi02r/Ea8jXzleS1XJQfsgris8R9v4qpb/vmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=GW3Evcul; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE56239E6A;
+	Mon, 30 Jun 2025 15:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751295661; cv=fail; b=FTtTSYXYpoZ3++fTuKBWm8HOIpRjE4YgOU3XOZKxZ0Ih0qUG680CU+2eEFO49TXIo4dJBYw6xLaBTOsscQLRfN7nxVCQpHUXCRIGamfkqCspR2L1bsdsyqAKuQiJ1yQT7VN0jKdgKJIT95SfXe7Mi5SIMVcpQKT0MJNRWvRVhAs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751295661; c=relaxed/simple;
+	bh=bSnpiUVA7fS4AUVV7DnsVc8CWi+XZRO19FLxmGs2s+U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sSkJCfDWJHumRk/cN5y/SHfivplyHiNbVjHAXA8VDlUJ46JQgtj+6MN1n0upmGfiooeZJCnqG4eQMG6CeCt6HBqGh2mED4M46HMSS1qgvaboG0SwBs1g7A0PeM73iD7OBpRKfzl8hqoSfubblKK+JOdF21WUbqaSUJjk0UgDl+Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FR5+5ncO; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="GW3Evcul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1751294990; x=1751899790; i=w_armin@gmx.de;
-	bh=FxJzuT/Ie0KmGDtCLqi5d8gF5PO4hL85KUuc3GSfOsk=;
-	h=X-UI-Sender-Class:Content-Type:Message-ID:Date:MIME-Version:
-	 Subject:To:Cc:References:From:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=GW3EvculBOz3S3MUspThxVSdFu5B6ExtIf+lMdH09OSjKC8hDPNls1GNUAQ1LQBo
-	 h+cE7Kb23AaS6OHl+IpIyQpoRh0c0mf+embXWyAPvGDZEqHRPOUjRs4Dli+FRefWz
-	 6DHIAPVN1RM1uzksu+34xi4g6HJcVU/CZpufm6uvRbx0rFig3Ge4Aymel36Q89hKN
-	 NUFZmV3L79KgeP5iLuOQu07RIGHjjBVkxj3MEXGrhVh1w7+0FK3BaKmL9j8K52f3n
-	 xkaoafGIJNmTtCTrQn/ByOcpHPKZYMU2QZfqJrnLvMFzqg/CnLn7v/RrghFndhBz/
-	 oLIXleq954QChAnjhQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mof9F-1v3Nnb1Epl-00hBlX; Mon, 30
- Jun 2025 16:49:50 +0200
-Content-Type: multipart/mixed; boundary="------------H9CjNd1mJj2wCGY6Id3i0aU7"
-Message-ID: <77c78beb-84c6-4113-8a32-ba09ab22f098@gmx.de>
-Date: Mon, 30 Jun 2025 16:49:48 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FR5+5ncO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751295660; x=1782831660;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=bSnpiUVA7fS4AUVV7DnsVc8CWi+XZRO19FLxmGs2s+U=;
+  b=FR5+5ncOknhlrkg9ok+X1A7qfrS/K1yFYIEVHXhbZVK4d84EHMinZpmo
+   sIvxQ8iAGa0QTV2zEhy6m6iXUiUoFiVfW3mnoI3ug1Md9ZoczsW791yZg
+   abAdEeYu4xjg3zQFPNVA4qTInGGDkRzCpB1qxI1eiGIYHVzO+rEnm0Wvm
+   lJZqzDkvjCWCwSfzDsRmW4X8NUKGcVI3jbCMeOJ05D01kala8U5vvI4Nk
+   1BPg1qPrd83CcEjdUVSxMcAP/tSE1KQCNgy5sLdmVxcd39by52Y9XWjaK
+   4MfmF64tjKiiYD1QRjKctrXprSXRJLUv59GuPxJcZm8V2T2kylGul69ta
+   g==;
+X-CSE-ConnectionGUID: REv6TM4CRHOL4SdgJpI36w==
+X-CSE-MsgGUID: kkw5XxyiRXil4QHfYU5Rlg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64219910"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="64219910"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 08:00:59 -0700
+X-CSE-ConnectionGUID: d65aChS2Qpi5rL/JOwxfcw==
+X-CSE-MsgGUID: jXwhrd10TeuSo/L+X/CWKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="157761102"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 08:00:59 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 08:00:58 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 08:00:58 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.78)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 08:00:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zw5HRSFYsiMxkYkDsKBGqUMu7fDGIE4hbSSHz/vcZ0o5SSUu2jb/FArf7G5+hCFPTzBoEjtzwnip6RlcD/HHHxdUXOBPm4eZX9+Pe/LQfo2lK+Vzd2KFnUOkRDmdYKbx/uV9NsaesNobysAhYDHTHiHdqcmsbZnJnqE6SaObt5Z9R9Ct2gFnK12mtug5j1NbR11Rk6C13MuXV3Jz+iUAIz+w6hVmyCZa43ZYGrTtnn29n0QWYqjhndF+84oVDu1QxbxWKfISWFdtT6GM4UGhVmpEraoPkpL8eOf0eGK4S5XI0J/afoGyM0iLA/muCxGFfEOgQUBtx2/qFstEy/wCnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9N2Or24G1+SgSznY8LXDHXhKg+sDyKtvhNPwZol4Ovk=;
+ b=HGnyq4RgsfRgTh+hDFHT0sqdhyr8gdHa6fIersFJVGxXl5/qDeEIhUuP50mk1Yxe2XvAVkCwSgQ/wr9Rv5qkUjcuP3KbCD9jMO90XXaurTTgoYm/3N0emwcB18TQIZYyVO8WY9T46kiZamMtXWbphdMo+8fBuXYzmPDt8KIMt8p8PHeH3Hy5LoZV++TLgWA3B4TQpgnqVaKlfZbWSBm7Nv4uyXrl2y8N3E1UuMLYlwYdKk9wSZ7zWc7ckjWjyD4ckAxg2PiiN8DTgbEWIVdFeLOFvXpyR9rygzfvLQL+oufqFhYWzhuQbQ9ySXZp32I8mc0yJut4vnf6AWdtMuCy4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com (2603:10b6:208:3aa::18)
+ by SA1PR11MB6758.namprd11.prod.outlook.com (2603:10b6:806:25d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.27; Mon, 30 Jun
+ 2025 15:00:13 +0000
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::68b8:5391:865e:a83]) by IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::68b8:5391:865e:a83%4]) with mapi id 15.20.8880.026; Mon, 30 Jun 2025
+ 15:00:13 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "intel-xe@lists.freedesktop.org"
+	<intel-xe@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, "De
+ Marchi, Lucas" <lucas.demarchi@intel.com>, "Vivi, Rodrigo"
+	<rodrigo.vivi@intel.com>, "thomas.hellstrom@linux.intel.com"
+	<thomas.hellstrom@linux.intel.com>, "airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>, "david.e.box@linux.intel.com"
+	<david.e.box@linux.intel.com>, "Upadhyay, Tejas" <tejas.upadhyay@intel.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v5 01/12] platform/x86/intel/pmt: fix a crashlog NULL
+ pointer access
+Thread-Topic: [PATCH v5 01/12] platform/x86/intel/pmt: fix a crashlog NULL
+ pointer access
+Thread-Index: AQHb56QsZbgAspdI/0qZKBKDkkrWd7Qbc4kAgABWn2A=
+Date: Mon, 30 Jun 2025 15:00:13 +0000
+Message-ID: <IA1PR11MB64183C7CD3EE5D532B7165FCC146A@IA1PR11MB6418.namprd11.prod.outlook.com>
+References: <20250627204321.521628-1-michael.j.ruhl@intel.com>
+ <20250627204321.521628-2-michael.j.ruhl@intel.com>
+ <e860ab9b-4f75-b6ef-3b82-f4e45f478d03@linux.intel.com>
+In-Reply-To: <e860ab9b-4f75-b6ef-3b82-f4e45f478d03@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6418:EE_|SA1PR11MB6758:EE_
+x-ms-office365-filtering-correlation-id: ea0ab54c-0def-4244-2599-08ddb7e6d136
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?iso-8859-1?Q?41CySq50KEZ+eVf/z5IjbNB2FwnHhUFU+qrXZD/rPp+FA2VT9hc6GCVTGX?=
+ =?iso-8859-1?Q?tuXPv38Oke9GJ8nkJrI6aC74U54+c6GivgYtiBjyr/OZrKy03SrVSujN1O?=
+ =?iso-8859-1?Q?GrEUfDJtlfHpVm/M5+d2Av1N34nHcUyE2TgqY+0Zv6hlGdiIt069VLhkLB?=
+ =?iso-8859-1?Q?lyn8OGyWeed5pguKMW+NS6NzgwyKK14w+vM9hJfmH9aJJid1zXfqqGR9Yv?=
+ =?iso-8859-1?Q?iJcEkraXucBmAfbFKeJZcPikQRJISVrxIubNBkGGmaVNS9X5Et4aur1eVL?=
+ =?iso-8859-1?Q?suidOzq38x4FTj/JqFVmnZ4JckMJOkM6FVIWyc6tU6XTysjN0+GVlOXAAt?=
+ =?iso-8859-1?Q?nZqK2sCbMMcQrIj0QK/XY/Id/P1yH1C5yN+MS0UAtiq0YPrVHzybdlW6BX?=
+ =?iso-8859-1?Q?/Ck+3j5COtxGJAgzqqymbbyqaqzlL31erLn8ZSRCHtx+/OAyjFQB4M9rTj?=
+ =?iso-8859-1?Q?on2P1O6tKy3An1HtQVqiLiO+ONfWDv/ucRAFJnXGAikhxE5RnPHYJUZumT?=
+ =?iso-8859-1?Q?YymxqiM8e6E+yPdbOJyfUpusbblPZrJe4Jfc/bGz/midg4reVA96DXy1C6?=
+ =?iso-8859-1?Q?urz/onhODq95AAkHCsx/to6PMKo7zokYVHpkjF8pOOnA/SS1xU7lzRrZYu?=
+ =?iso-8859-1?Q?05QNyP8yxAp+gckrNVZmRPtAAiG+Jd0Az62X8iO21sfDC5FTZ7/E5KMFwT?=
+ =?iso-8859-1?Q?CI1+6D0aazWaI1rHRm6Bv1FpMUK7/3t9dqkLIy39Fru5mvgTLOI1tXj+io?=
+ =?iso-8859-1?Q?7oL3ZTEwroaOzX/6ZyLDxeNtRBjcMNjMS0ePy/5Vpe2NfhWpe47sveiwWt?=
+ =?iso-8859-1?Q?9WaD15fvUgw2kOiMdy+nHMZtFTW290KSEZUHnPiskhgg136nv60uctybdh?=
+ =?iso-8859-1?Q?ey8fCjiRop3+LZ+Bus8mzzItKnOyED3gScQPt+UiFpNhRs6cismi2ZEz6j?=
+ =?iso-8859-1?Q?bcInOTJlzX+TwIo8TvKpJwUFscry+yY8ruhgYTIziypaDFOkTCvdqZqgTJ?=
+ =?iso-8859-1?Q?z9rtp8jWbq4GGIT/dyjgH7qWDLo+j2fewq65gbevxh7NBFi2CpmRfD5AbW?=
+ =?iso-8859-1?Q?mzWsGHDH/zXERiMbIS8tzQJ4MVzZe90kWlrwKpHq4OnBfga4LdNoZgXwkn?=
+ =?iso-8859-1?Q?jAVQx9+Pa/5nYHpqya0f8umMbfPNTlrFYSniRXHMJiw+M8oG/Umk5cDP+k?=
+ =?iso-8859-1?Q?2QJ3wE0XbjM6sS5yd7WJ2haFNeYWMl5X8tEYQKQVL+TXNFnZA4qrht3scZ?=
+ =?iso-8859-1?Q?RV2rHfZUnCKA1ZoBzlWBJGWxIiyLmzktcFF7grdWhy7aMFWz3Hr37QPDwp?=
+ =?iso-8859-1?Q?cDm3d/zWuw+pFkTKQ92pJ6iPOYAB7K/dSwxGcIYSjKMDPJH2YbolNXjsRN?=
+ =?iso-8859-1?Q?6thdMfIdactze4MaRybPF8zqxhwQxnBW6VmZSdZC+0UEXLcWJ/SYGwl5Yl?=
+ =?iso-8859-1?Q?FroiTpLua6cEpV9gAmjSgq71kLlPu8egU4D3UEWXTi9DNlYIASc8MmKJH+?=
+ =?iso-8859-1?Q?Z+ZZBxJEeMmQxb7hqVITACuir/sq7ZKuboJjC4YFxe/FdoZIZ0lUnG7QB4?=
+ =?iso-8859-1?Q?gkFe02I=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?pvPPN61oNGfvFrkvphoH/UrNc+fBE2IFe3UXn2tX5YRAZuUFUrhKCDCzBL?=
+ =?iso-8859-1?Q?9JuLbZ0suXS2noZrUhpAOxYxtLjg1vtK+1RXmTUJVboxh0nvO+vrD+ScOH?=
+ =?iso-8859-1?Q?KMtIlR0KSho7IjFzYH2EABk+EYSq3hMeS8ETcS8lr0nC57pD0W/oTYYKie?=
+ =?iso-8859-1?Q?N2kW31UW3cNRSa8b0cJVvWrUho0GLQhBeNqo6ds/u9vZwD+rsUeLm4gBiu?=
+ =?iso-8859-1?Q?QxRu44X9B35q+4wvqaoZEKcKwQwRyMbXqIsp2GIfVXr+HjTPf1MumJeHrx?=
+ =?iso-8859-1?Q?CRRFnpgVBh9vvk+xzjEFJyza/ZmuZpIJ717Z8l+fni8fG4nbgtI/uKtFsV?=
+ =?iso-8859-1?Q?rpi5OIv0mQHAQE+2teA3rvA2aG5B3PWPDCLpQhIDACdhNYEvQC7Dehy5gs?=
+ =?iso-8859-1?Q?64BW2tIE/vytXG3hNWTyAG3IprxN6jXikSc8epPBUYvjm7x+5/mt7qglC7?=
+ =?iso-8859-1?Q?CopneUraBSS2CJlEdQ0IT45lAu8OPMmsLH9AunmYmZpyL6fTNnjwRKvA3R?=
+ =?iso-8859-1?Q?c8vACK/JLSo8/AygAjr6MvClvguPici0aPTx8YUjqaVBI4LYJqHkT0eicO?=
+ =?iso-8859-1?Q?VP5umGQnDl4Gs2XZYfXn5Lp5O2bxE04FjxS7L0fJL/rRhdJSLBQUNbqdtQ?=
+ =?iso-8859-1?Q?36IMYJs5sxKYg2rncK8YErmCG6uuxqU0nW/kO5PcaMoy4jBCd63Sdjhetk?=
+ =?iso-8859-1?Q?MHMUWYYaWeQjUUhC5szqp9wOcSoQGc2TTOq/6RXacOgtKFF62GJ8Ipum2K?=
+ =?iso-8859-1?Q?DThbUa2hDNyU4OzY36OCpk9St+F6HNv+BgnTkLdUYYO8lmsH58OZNLOC5B?=
+ =?iso-8859-1?Q?4Op7JhR1Os3GW2kGA+xnc/7AWRux0sXQvUzPt5FX7va02tr3uy+0eIq1yv?=
+ =?iso-8859-1?Q?tQ19kxL5Ouo9koeKTlpMFatdCfr7DxnCatl9VHXRndTdG+lxvLTJxUS4Fp?=
+ =?iso-8859-1?Q?RIqOXxPljIsC6vXhbMPWs4zmQb8ZtWp0I7hOfC7WHVeSE3zV/AbEqckkBt?=
+ =?iso-8859-1?Q?0HwS7SVCexclJ/FRovCmyTLdSpjFnHJrkLNUF89Qths32h1Sa2UILXIO43?=
+ =?iso-8859-1?Q?ZA0nGkCv7yh2Gi6KLTYCVLOx97iwZ7JA2uCcqfYQA0D4pZvZww7IouCN9D?=
+ =?iso-8859-1?Q?f4riWMsusiRQLyYE0W8okUDxVuuxfOA8RcxkrhbWNQMhcJPEeREwevTyI9?=
+ =?iso-8859-1?Q?9HI0jCm9Aa9A+FqrFoI4slDBwrl6Exiq6Jfb4bZ3xiacbmCSL7iEjQXzZT?=
+ =?iso-8859-1?Q?QJb21Xiyx/tMLgET0aU9uTYzMBMcAwoQyBlnh24RdnmhKzcOjFeo0zjGXH?=
+ =?iso-8859-1?Q?1DZrLZZcwEEREiKPGW1D0Lg9VfUUJxrZoafx1/EeTXAZLCJr1xwIGTs39O?=
+ =?iso-8859-1?Q?PJQtFR2x7x8hg7mhvTS+JMQxAJdiOihe2UCqqG7lsbQiAVHhX2UXM04hGz?=
+ =?iso-8859-1?Q?8G1iDh2PIONJ0Y8MbBp9UATSlAhU80Czk2D8jsnIWZCvrcVuMnm7E9a1PG?=
+ =?iso-8859-1?Q?aZe+AQ5prWRZSEKPjEtF0xaXHY579I3wmP9NwEUm5cq7VcPYC760nQpgB9?=
+ =?iso-8859-1?Q?0ClTTHvn56ZGIOsdR2Ar0ElhiPlhfyol0U8qPXOfnIsKhOUCoa2cAZNTiD?=
+ =?iso-8859-1?Q?zLuvsHAQPvx26omUbedTW+DExw+CYxJTM2?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
-To: =?UTF-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
-Cc: Kurt Borja <kuurtb@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Linux PM <linux-pm@vger.kernel.org>
-References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se>
- <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de>
- <X-40AqXfdmQw5shUOk3VSaHSXmwJYWHPmDDMLyGUH6GpMt56ty5SbNg8EVfyI_uC9J07uqZ2TtGJmmpB_x8-xpcVOw29fnKzJZ4n9L0x78A=@benis.se>
- <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de>
- <DAXK1634VYQI.1PEUCTQIYAF3Y@gmail.com>
- <jCZyBwYNgVSM_Qk2XkfweZRlZNiSh06WVUBqya9leWoWXAmNFL9fdbgBX038OzfQUEaGE5PU8yhtJL2zq_PRW67FmLYTnoK_SPUPmzoTdco=@benis.se>
- <DAXR1M1W2XFZ.3H2AWUO3N1X5E@gmail.com>
- <oZxsMVf4IphclLjVLbrpp1rHYXlgWYV7BXDzgP40QKiHSOUtVDtDwP_s2uKFel3aLTZyIh-KepV7MjdSN_MkRWpn1_v55BEs0MEVyhKK0fU=@benis.se>
- <bf9475d3-9131-4d4f-af05-411fdd4f032f@gmx.de>
- <j_p1hHcOXyva0UEpg4sTPqgLids8s32HxY2oYcpt1rX32spMMOhufyHwscBnt0HqL4ERznsS92ob9KViB1WWEk8wg7VHwNyRV5PO-3ssHOk=@benis.se>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <j_p1hHcOXyva0UEpg4sTPqgLids8s32HxY2oYcpt1rX32spMMOhufyHwscBnt0HqL4ERznsS92ob9KViB1WWEk8wg7VHwNyRV5PO-3ssHOk=@benis.se>
-X-Provags-ID: V03:K1:EhmC9P2+GWuuMEQuZPhKWpuOb/uWD0BP9zfunR4jsTGGO6WiA5D
- kzmJbPplhSY9BYTNtCsiIHoMkDFgSyUYBtTub65DuwX8HlTazW5yd+zoq5weiB60M3u+efb
- fpDUgGzFvQd+cMGtgWkY8wGkOwUwflXsfelopy6wLI3d5R1wFIjwRSwau18y1CDcv2/AxRl
- GHoVi4iScGNdIP6t6m/BA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:xBgX/mpC0Ug=;cskioTjUYhaCKWgdgyNeQJVP3Ob
- 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
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6418.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea0ab54c-0def-4244-2599-08ddb7e6d136
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 15:00:13.6326
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w5GRWFJkeeIDapQE+Dc6icJPc2GHSUPbTL7uxTFjuSQR2lbPRDu1teEBPMzFB6cyKAn8kkFB9bcNGqs5Kjlh6+GM7jNxpJOCjTEUbaKlUdY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6758
+X-OriginatorOrg: intel.com
 
-This is a multi-part message in MIME format.
---------------H9CjNd1mJj2wCGY6Id3i0aU7
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-Am 30.06.25 um 14:46 schrieb Benjamin Hasselgren-Hall=C3=A9n:
-
+>-----Original Message-----
+>From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>Sent: Monday, June 30, 2025 5:29 AM
+>To: Ruhl, Michael J <michael.j.ruhl@intel.com>
+>Cc: platform-driver-x86@vger.kernel.org; intel-xe@lists.freedesktop.org; H=
+ans
+>de Goede <hdegoede@redhat.com>; De Marchi, Lucas
+><lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
+>thomas.hellstrom@linux.intel.com; airlied@gmail.com; simona@ffwll.ch;
+>david.e.box@linux.intel.com; Upadhyay, Tejas <tejas.upadhyay@intel.com>;
+>stable@vger.kernel.org
+>Subject: Re: [PATCH v5 01/12] platform/x86/intel/pmt: fix a crashlog NULL
+>pointer access
 >
-> On Monday, 30 June 2025 at 14:39, Armin Wolf <W_Armin@gmx.de> wrote:
+>On Fri, 27 Jun 2025, Michael J. Ruhl wrote:
 >
->> Am 30.06.25 um 14:32 schrieb Benjamin Hasselgren-Hall=C3=A9n:
+>> Usage of the intel_pmt_read() for binary sysfs, requires a pcidev. The
+>> current use of the endpoint value is only valid for telemetry endpoint
+>> usage.
 >>
->>> Best regards,
->>> Benjamin Hasselgren-Hall=C3=A9n
->>>
->>> On Saturday, 28 June 2025 at 02:45, Kurt Borja kuurtb@gmail.com wrote:
->>>
->>>> On Fri Jun 27, 2025 at 5:49 PM -03, Benjamin Hasselgren-Hall=C3=A9n w=
-rote:
->>>>
->>>>> Hi Kurt,
->>>>>
->>>>> I do not experience the same error messages as in the bug report - n=
-o error message at all. It respons to changing power profile without any e=
-rrors.
->>>>> I also tried 6.12 but same behaviour as 6.15.3 (just getting some gp=
-u glitches - problably because of Lunar Lake).
->>>> Can you paste the output of `cat /sys/firmware/acpi/platform_profile`=
- on
->>>> Linux v6.12?
->>>> cat /sys/firmware/acpi/platform_profile_choices
->>>> cool quiet balanced performance
->>> cat /sys/firmware/acpi/platform_profile
->>> cat: /sys/firmware/acpi/platform_profile: Invalid argument
+>> Without the ep, the crashlog usage causes the following NULL pointer
+>> exception:
 >>
->> Good, it seems that the firmware returns additional data when querying =
-the current platform profile.
->> As the driver does not mask-out this data, he cannot determine what kin=
-d of platform profile is currently
->> selected and thus returns -EINVAL.+
+>> BUG: kernel NULL pointer dereference, address: 0000000000000000
+>> Oops: Oops: 0000 [#1] SMP NOPTI
+>> RIP: 0010:intel_pmt_read+0x3b/0x70 [pmt_class]
+>> Code:
+>> Call Trace:
+>>  <TASK>
+>>  ? sysfs_kf_bin_read+0xc0/0xe0
+>>  kernfs_fop_read_iter+0xac/0x1a0
+>>  vfs_read+0x26d/0x350
+>>  ksys_read+0x6b/0xe0
+>>  __x64_sys_read+0x1d/0x30
+>>  x64_sys_call+0x1bc8/0x1d70
+>>  do_syscall_64+0x6d/0x110
+>
+>Can you confirm, if this was possible to trigger only after this series
+>has been applied, not with the current mainline code?
+
+Hi Ilpo,
+
+I somehow got the wrong fixes patch.  It should be:
+
+Fixes: 045a513040cc ("platform/x86/intel/pmt: Use PMT callbacks")
+
+The issue occurs before my patches are applied.
+
+Does this answer your question?
+
+M
+
+>--
+> i.
+>
+>> Augment struct intel_pmt_entry with a pointer to the pcidev to avoid
+>> the NULL pointer exception.
 >>
->> I can provide you with an experimental patch, could you test that?
-> Yes! I am trying to compile 6.16-rc3 atm and the first time I am doing t=
-his, but I will happily test a patch.
-
-Alright, i attach the experimental patch. Please note that this might not =
-fully solve the problem, because the
-driver also needs support for the additional platform profiles available o=
-n your machine.
-
-However after setting the platform profile the driver should be able to re=
-ad the current platform profile setting
-without any errors.
-
-Thanks,
-Armin Wolf
-
->> Thanks,
->> Armin Wolf
+>> Reviewed-by: Tejas Upadhyay <tejas.upadhyay@intel.com>
+>> Fixes: 416eeb2e1fc7 ("platform/x86/intel/pmt: telemetry: Export API to r=
+ead
+>telemetry")
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>> ---
+>>  drivers/platform/x86/intel/pmt/class.c | 3 ++-
+>>  drivers/platform/x86/intel/pmt/class.h | 1 +
+>>  2 files changed, 3 insertions(+), 1 deletion(-)
 >>
->>>>> I am trying to understand how power profiles work - I guess on a hig=
-h level it's controlled by uefi and the profile is set by the OS? Or is it=
- more complicated than that?
->>>> Yes, as quick overview. Power profiles are usually a capability of
->>>> individual devices. Drivers of these devices expose this profiles to
->>>> userspace through some predefined interfaces. Then your DE enviroment
->>>> exposes this to you.
->>>>
->>>> KDE and Gnome use power-profiles-daemon. This program controlls mainl=
-y
->>>> two kernel interfaces: CPUFreq and platform-profile (there may be mor=
-e).
->>>>
->>>> You can read about CPUFreq here [1], although I don't know much about
->>>> it. The platform-profile interface may be used by any platform driver=
- -
->>>> in your case this is the hp-wmi driver.
->>>>
->>>> This driver exposes some firmware defined profiles to sysfs trough th=
-e
->>>> following paths.
->>>>
->>>> /sys/firmware/acpi/
->>>> /sys/class/platform-profile/
->>>>
->>>> You won't find the latter in the Linux LTS version though. You will f=
-ind
->>>> documentation on these paths here [2] and [3] respectively.
->>>>
->>>> PD: Please, avoid top-posting in kernel mailing lists, interleaved st=
-yle
->>>> is very much preferred [4].
->>>>
->>>> [1] https://docs.kernel.org/admin-guide/pm/cpufreq.html
->>>> [2] https://docs.kernel.org/admin-guide/abi-testing-files.html#abi-fi=
-le-testing-sysfs-platform-profile
->>>> [3] https://docs.kernel.org/admin-guide/abi-testing-files.html#abi-fi=
-le-testing-sysfs-class-platform-profile
->>>> [4] https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
->>>>
->>>> --
->>>> ~ Kurt
-
---------------H9CjNd1mJj2wCGY6Id3i0aU7
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-platform-x86-hp-wmi-Use-bitmask-when-accessing-the-t.patch"
-Content-Disposition: attachment;
- filename*0="0001-platform-x86-hp-wmi-Use-bitmask-when-accessing-the-t.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSBhZWQ1MDNlNGRlYjRiMTJlMDVhN2Y5NDNkZWVhNjgxNjk1YzkzY2EzIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBBcm1pbiBXb2xmIDxXX0FybWluQGdteC5kZT4KRGF0
-ZTogTW9uLCAzMCBKdW4gMjAyNSAxNjozNToxNiArMDIwMApTdWJqZWN0OiBbUEFUQ0hdIHBs
-YXRmb3JtL3g4NjogaHAtd21pOiBVc2UgYml0bWFzayB3aGVuIGFjY2Vzc2luZyB0aGUgdGhl
-cm1hbAogcHJvZmlsZQpNSU1FLVZlcnNpb246IDEuMApDb250ZW50LVR5cGU6IHRleHQvcGxh
-aW47IGNoYXJzZXQ9VVRGLTgKQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogOGJpdAoKT24g
-dGhlIEhQIE9tbmlib29rIFVsdHJhIEZsaXAgMTQgdGhlIHNlY29uZCBhbmQgdGhpcmQgYnl0
-ZSBpbnNpZGUKdGhlIHJlc3VsdCBvZiBIUFdNSV9USEVSTUFMX1BST0ZJTEVfUVVFUlkgY29u
-dGFpbnMgYWRkaXRpb25hbCBkYXRhLgpDdXJyZW50bHkgdGhpcyBhZGRpdGlvbmFsIGRhdGEg
-aXMgbm90IHByb3Blcmx5IG1hc2tlZCBvdXQsIG1ha2luZyBpdAppbXBvc3NpYmxlIHRvIHJl
-YWQgdGhlIHRoZXJtYWwgcHJvZmlsZSBvbiBzdWNoIG1hY2hpbmVzLgoKRml4IHRoaXMgYnkg
-dXNpbmcgYSBiaXRtYXNrIHRvIG1hc2stb3V0IGV2ZXJ5dGhpbmcgYnV0IHRoZSBmaXJzdCBi
-eXRlCndoZW4gcmVhZGluZyB0aGUgdGhlcm1hbCBwcm9maWxlLiBUaGUgc2FtZSBpcyBkb25l
-IHdoZW4gd3JpdGluZyB0aGUKdGhlcm1hbCBwcm9maWxlIGZvciB0aGUgc2FrZSBvZiBzeW1t
-ZXRyeS4KClJlcG9ydGVkLWJ5OiBCZW5qYW1pbiBIYXNzZWxncmVuLUhhbGzDqW4gPGJlbmph
-bWluQGJlbmlzLnNlPgpDbG9zZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BsYXRmb3Jt
-LWRyaXZlci14ODYvWC00MEFxWGZkbVF3NXNoVU9rM1ZTYUhTWG13SllXSFBtRERNTHlHVUg2
-R3BNdDU2dHk1U2JOZzhFVmZ5SV91QzlKMDd1cVoyVHRHSm1tcEJfeDgteHBjVk93Mjlmbkt6
-Slo0bjlMMHg3OEE9QGJlbmlzLnNlLwpTaWduZWQtb2ZmLWJ5OiBBcm1pbiBXb2xmIDxXX0Fy
-bWluQGdteC5kZT4KLS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC13bWkuYyB8IDE5
-ICsrKysrKysrKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hw
-L2hwLXdtaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtd21pLmMKaW5kZXggZGI1
-ZmRlZTIxMDljLi4yOTBkOGQ0YzZmMWQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0v
-eDg2L2hwL2hwLXdtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLXdtaS5j
-CkBAIC0xMyw2ICsxMyw4IEBACiAKICNkZWZpbmUgcHJfZm10KGZtdCkgS0JVSUxEX01PRE5B
-TUUgIjogIiBmbXQKIAorI2luY2x1ZGUgPGxpbnV4L2JpdHMuaD4KKyNpbmNsdWRlIDxsaW51
-eC9iaXRmaWVsZC5oPgogI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgogI2luY2x1ZGUgPGxp
-bnV4L21vZHVsZS5oPgogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4KQEAgLTI1Miw2ICsyNTQs
-OSBAQCBlbnVtIGhwX3RoZXJtYWxfcHJvZmlsZSB7CiAJSFBfVEhFUk1BTF9QUk9GSUxFX1FV
-SUVUCQk9IDB4MDMsCiB9OwogCisvKiBUaGUgc2Vjb25kIGFuZCB0aGlyZCBieXRlIGNvbnRh
-aW5zIHVua25vd24gZGF0YSwgc28gYm90aCBuZWVkIHRvIGJlIG1hc2tlZCBvdXQuICovCisj
-ZGVmaW5lIEhQX1RIRVJNQUxfUFJPRklMRV9NQVNLIEdFTk1BU0soNywgMCkKKwogI2RlZmlu
-ZSBJU19IV0JMT0NLRUQoeCkgKCh4ICYgSFBXTUlfUE9XRVJfRldfT1JfSFcpICE9IEhQV01J
-X1BPV0VSX0ZXX09SX0hXKQogI2RlZmluZSBJU19TV0JMT0NLRUQoeCkgISh4ICYgSFBXTUlf
-UE9XRVJfU09GVCkKIApAQCAtMTQzMSwxMyArMTQzNiwyMSBAQCBzdGF0aWMgaW50IHBsYXRm
-b3JtX3Byb2ZpbGVfb21lbl9zZXQoc3RydWN0IGRldmljZSAqZGV2LAogCiBzdGF0aWMgaW50
-IHRoZXJtYWxfcHJvZmlsZV9nZXQodm9pZCkKIHsKLQlyZXR1cm4gaHBfd21pX3JlYWRfaW50
-KEhQV01JX1RIRVJNQUxfUFJPRklMRV9RVUVSWSk7CisJaW50IHJldDsKKworCXJldCA9IGhw
-X3dtaV9yZWFkX2ludChIUFdNSV9USEVSTUFMX1BST0ZJTEVfUVVFUlkpOworCWlmIChyZXQg
-PCAwKQorCQlyZXR1cm4gcmV0OworCisJcmV0dXJuIEZJRUxEX0dFVChIUF9USEVSTUFMX1BS
-T0ZJTEVfTUFTSywgcmV0KTsKIH0KIAogc3RhdGljIGludCB0aGVybWFsX3Byb2ZpbGVfc2V0
-KGludCB0aGVybWFsX3Byb2ZpbGUpCiB7Ci0JcmV0dXJuIGhwX3dtaV9wZXJmb3JtX3F1ZXJ5
-KEhQV01JX1RIRVJNQUxfUFJPRklMRV9RVUVSWSwgSFBXTUlfV1JJVEUsICZ0aGVybWFsX3By
-b2ZpbGUsCi0JCQkJCQkJICAgc2l6ZW9mKHRoZXJtYWxfcHJvZmlsZSksIDApOworCWludCB2
-YWx1ZSA9IEZJRUxEX1BSRVAoSFBfVEhFUk1BTF9QUk9GSUxFX01BU0ssIHRoZXJtYWxfcHJv
-ZmlsZSk7CisKKwlyZXR1cm4gaHBfd21pX3BlcmZvcm1fcXVlcnkoSFBXTUlfVEhFUk1BTF9Q
-Uk9GSUxFX1FVRVJZLCBIUFdNSV9XUklURSwgJnZhbHVlLAorCQkJCSAgICBzaXplb2YodGhl
-cm1hbF9wcm9maWxlKSwgMCk7CiB9CiAKIHN0YXRpYyBpbnQgaHBfd21pX3BsYXRmb3JtX3By
-b2ZpbGVfZ2V0KHN0cnVjdCBkZXZpY2UgKmRldiwKLS0gCjIuMzkuNQoK
-
---------------H9CjNd1mJj2wCGY6Id3i0aU7--
+>> diff --git a/drivers/platform/x86/intel/pmt/class.c
+>b/drivers/platform/x86/intel/pmt/class.c
+>> index 7233b654bbad..d046e8752173 100644
+>> --- a/drivers/platform/x86/intel/pmt/class.c
+>> +++ b/drivers/platform/x86/intel/pmt/class.c
+>> @@ -97,7 +97,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj=
+,
+>>  	if (count > entry->size - off)
+>>  		count =3D entry->size - off;
+>>
+>> -	count =3D pmt_telem_read_mmio(entry->ep->pcidev, entry->cb, entry-
+>>header.guid, buf,
+>> +	count =3D pmt_telem_read_mmio(entry->pcidev, entry->cb, entry-
+>>header.guid, buf,
+>>  				    entry->base, off, count);
+>>
+>>  	return count;
+>> @@ -252,6 +252,7 @@ static int intel_pmt_populate_entry(struct
+>intel_pmt_entry *entry,
+>>  		return -EINVAL;
+>>  	}
+>>
+>> +	entry->pcidev =3D pci_dev;
+>>  	entry->guid =3D header->guid;
+>>  	entry->size =3D header->size;
+>>  	entry->cb =3D ivdev->priv_data;
+>> diff --git a/drivers/platform/x86/intel/pmt/class.h
+>b/drivers/platform/x86/intel/pmt/class.h
+>> index b2006d57779d..f6ce80c4e051 100644
+>> --- a/drivers/platform/x86/intel/pmt/class.h
+>> +++ b/drivers/platform/x86/intel/pmt/class.h
+>> @@ -39,6 +39,7 @@ struct intel_pmt_header {
+>>
+>>  struct intel_pmt_entry {
+>>  	struct telem_endpoint	*ep;
+>> +	struct pci_dev		*pcidev;
+>>  	struct intel_pmt_header	header;
+>>  	struct bin_attribute	pmt_bin_attr;
+>>  	struct kobject		*kobj;
+>>
