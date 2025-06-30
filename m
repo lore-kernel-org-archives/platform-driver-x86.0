@@ -1,226 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0916715A8;
-	Mon, 30 Jun 2025 01:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751246319; cv=fail; b=XerdJDtKvR2bwtT11+OCcNAvTIMd2EB7EV6IZH0UceoD+IUuZEjDFIrmBPaCdsPd3SqYPOXxwWaQXEM+4BmPdEjIX8pP+gf6jqzvdvWgAGVesdJNlOieCKSQrQmUZoup/lLq1EG8oXMFt0kJ8ZICBI3cBvAk27t85zPluHaz+mw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751246319; c=relaxed/simple;
-	bh=Lvt23wu4WN5UnQ3NjmKlaBqo0+9t4ISOl5DaSWnodZQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=udJUtnDaI3+M4pANyxXCBp9t2BBDlLU6l3cT7pchgHVmzWbzxUl3mIz4TdeKv2vf0AW4oraBi49tkbes1V8H6U5D1gMHClCYezVrUnXg7nvFd+G2aGw6KDuIiEQ2AQkAkmsuu/DzLjZMz76uqOQAVUKTjR6dJrcTT44u5nt3WnI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ByYvqqow; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F89A79D2;
+	Mon, 30 Jun 2025 03:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751255016; cv=none; b=eOcZKVDf7emrqNaf5UQaVGmP/puN15X0anbusjsxNQUPMmvAhfrGwN6jrP5FmxkvDyD+9APOUBH+6COZfCwfBRaJztK0R2xeHBmDXQLWCqsyqJyVIvxcT9abeYUCFgT1Ry/mqV/lCkW4iT/IwlR1rHHSq7SwPVzLLjKfuAta5p0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751255016; c=relaxed/simple;
+	bh=aU3OF31XlKW7ZgsMb4VMmMEeuzG+p6hYnD7yS+wO6lk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VUIS8J510b6XK8eT6QMGNrTXfP2TgpiBmV5V6jlVmT0PwxIZrOShg9rdwrbabwdJy7i85HzI4n01fcSDFU6TIRAXWEZM6WItqgDsk916FINcTNkXJuhCLkOn4I6lWh9wP5e4y/wn80aYqbaIaf7mN5yaVB4FLG8bEomJmmeAIYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hoNL6D9K; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ByYvqqow"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751246318; x=1782782318;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Lvt23wu4WN5UnQ3NjmKlaBqo0+9t4ISOl5DaSWnodZQ=;
-  b=ByYvqqowpBBHPD/sm3Zfe20vegyGwR2AwV+qkmLh0jrNzHy4vXkgHVHh
-   ZJyc2QxyN+f1PRfikyEWgxJqLPU73yxdc7BSKjYgaBZnahiFDK4lY1ulX
-   s0FIwur1gZAtCh4c9ehY94Th9qkHp5NUrPvVZND217DvJVK2+sEH8hpWB
-   QJ9Zx2E0zGkNZqPZFekQdgEQdIb3AIWLaPzuodz11ypoj3J9b67LisfdD
-   5/HGHJfftjmeareAPRPBmSRDBwTfgFsqxa3ZEeQZrIOQWYxJo+ynsUaDD
-   Jq+QOMdOIpRoxWz7zGC0asdt53izhbShmivzX4WWnwDgPYj6+T5eOcYGa
-   A==;
-X-CSE-ConnectionGUID: jn61AgXLRSSqYkv3K9XfXQ==
-X-CSE-MsgGUID: U2rfBvxgRWKG+CjBUmGw9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53338502"
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="53338502"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 18:18:37 -0700
-X-CSE-ConnectionGUID: ShheEmP+Q1i5pBBsP4Smfg==
-X-CSE-MsgGUID: xd56YbTrQCGC/6rsb/vbQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="157341960"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 18:18:36 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Sun, 29 Jun 2025 18:18:36 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Sun, 29 Jun 2025 18:18:36 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.72)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Sun, 29 Jun 2025 18:18:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KQiWyi3bdxarZ0r61hnZNeSx8KqIOFmwtdf7F7NsVvWFMh1nqWULepCfD5c3NEd61p+/f1x6U+Ddlrc36KLozsekx8pzNr33JYj/hqeags8lJXe64TpF+YphbsIz2DIFfHc6bIZPpLdaGapnprpX5994q/a2dHaPc019oNLlCOfOjdddq6tQnkIxF8mIV5TuHcGuipa1bpi5wyCuK2YwxcewAtU5wX/yN6FqrFXcyWtIDHZ/I3klD+96Jr5t9rnNQtJ7UFwpeyBZSFCIrlMAktuwVFpca8HGHYa3XfBuZxGsCZyd18r/8GE9EcxdoYVKk/puMugxRg6Cz0pR0LpqpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lvt23wu4WN5UnQ3NjmKlaBqo0+9t4ISOl5DaSWnodZQ=;
- b=EI/l+rcQCvjOcmpUuraxLR5pWFG2ahz0mQjRnbXG2DvM9WMCJlqv/+8/McmxYmLwdmHjYQFFOZmXCH9eQDuoVDDDy9aEmgTopc6kdK+/yK6qJnphhHNzJxIJtPca+Q2Ltjfh7qg5plKjbu3oAYmlWZdJhvHANuIDrc9LvZE3X1+rAb05gzu0M9iKGlqXxM6rRjPjxfDr8HcVe8BlRmkHYPxMssbWfHRbtKHN4Ix/QCjW4WphCBBFBdKlzliOfXAPGiAB7ts7sbwLYWoUG8E6ZXZ836Xthlwc2RcPaFJpFa6UD9YjDU9w8eZ6dhN6ppu1m5CJXwF49wa9YNaEjOMOJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH0PR11MB7493.namprd11.prod.outlook.com (2603:10b6:510:284::15)
- by IA3PR11MB8986.namprd11.prod.outlook.com (2603:10b6:208:577::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Mon, 30 Jun
- 2025 01:18:28 +0000
-Received: from PH0PR11MB7493.namprd11.prod.outlook.com
- ([fe80::b83b:c176:bef3:a4e3]) by PH0PR11MB7493.namprd11.prod.outlook.com
- ([fe80::b83b:c176:bef3:a4e3%5]) with mapi id 15.20.8880.021; Mon, 30 Jun 2025
- 01:18:28 +0000
-From: "Zhang, Rui" <rui.zhang@intel.com>
-To: "W_Armin@gmx.de" <W_Armin@gmx.de>, "benjamin@benis.se" <benjamin@benis.se>
-CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rafael@kernel.org"
-	<rafael@kernel.org>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "daniel.lezcano@linaro.org"
-	<daniel.lezcano@linaro.org>
-Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
-Thread-Topic: HP Omnibook Ultra Flip 14 - power profiles
-Thread-Index: AQHb54aI/x4TucNMjkG3sTXjdCBKkbQa6rUA
-Date: Mon, 30 Jun 2025 01:18:28 +0000
-Message-ID: <3b25e59bc1b162ee8f43ffbd3c50589a52d540af.camel@intel.com>
-References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se>
-	 <1037e223-a6ad-4d12-9619-f69a29cecba1@gmx.de>
-	 <5I8UDmgF_DcJBmBE0zgCXjuvmmhLamDCHkpnkAwRjSAkCa5xcFUvU-SmAeymxTajjDPR8avuW55RxOjhd8idK6jLy-hz8i-Ma3RHSaFy2Gs=@benis.se>
-	 <9642ad7e-3e57-45f9-bfd9-beac3e55418e@gmx.de>
-	 <GXC8NQl6AY_N7nQAOCRLt7SDGjFNll_TnqQyzYnP_b1weGkRqITOR-kHKcM66lPonOCo9xO2nSWXr7yycwfFuKmjRMtXVlJKya8-qvvkGik=@benis.se>
-	 <de8321ce-e595-460a-81d7-f7dae8a7b790@gmx.de>
-	 <X-40AqXfdmQw5shUOk3VSaHSXmwJYWHPmDDMLyGUH6GpMt56ty5SbNg8EVfyI_uC9J07uqZ2TtGJmmpB_x8-xpcVOw29fnKzJZ4n9L0x78A=@benis.se>
-	 <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de>
-In-Reply-To: <9439ec38-aadd-4aac-ba51-a8786ba50239@gmx.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.52.3-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR11MB7493:EE_|IA3PR11MB8986:EE_
-x-ms-office365-filtering-correlation-id: fe1467f1-5636-420a-43a3-08ddb77404e1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?dndmdWZaOXhIQUx2eVVQaEhRYUtJcHZzME9MQzl3MUNkakdXZEZWWU5aZk1U?=
- =?utf-8?B?TC9JMTcreldRTjIwSHVvRWZCNWFLU1J5UmpESzVTZlFsSlh1NVdIdUhwOXVF?=
- =?utf-8?B?YnRsRHUvVXhlQzRYdkducmVSTHVLNzM4Zy9SQkU5cy8rZDZBc0JaMCtCb3FK?=
- =?utf-8?B?MUNWMmhKUFhJVGFNc3djVEh4N2JJaWwrQXVlU01HS0pSSVlDaUxXejBlSHRB?=
- =?utf-8?B?YzF6UEJFbkRBcmtaV1l0bSsvMUlwM2EvM3F0cjVpWHpqeCtmdkNtTDY4WVNT?=
- =?utf-8?B?M2NTRWZuSFRlLzBTTHV4YVVacWsyRGk1blV4M24wOHRjRG1Sbll1aHRzYXpv?=
- =?utf-8?B?R3gvcTNjWFpIYWowOHF4c21CREtMUThVUDllbzVrUUozdUlQZ1hPek91MVdy?=
- =?utf-8?B?N21DanpPU0dZUjBIOWgvbkJNaFRsODlCbVBISnlCSmpEQ08vOVNBTWNWdk9O?=
- =?utf-8?B?Sll4L3N5OU5FNll4TSt6blgzY085MVJ4ZnFrUEpuT3FodFZGUUU3bjRIZXR3?=
- =?utf-8?B?WjRETTJuczhVeWNPL0hIYlEzVXVYRlFNZTdRZm1HbElCc1BYYk9CaWRTRUpO?=
- =?utf-8?B?SHNqSk5sOUV5NWpMNy9MYmJPZVJoT2RMakpVa0dZcXBqR0h5V1E2YTV2REZ3?=
- =?utf-8?B?UU1SWWllY0xPdk43WVBLREhJVGxrRnNnWWdXZ1hIQnRjUVV5NlJsZGZvclV4?=
- =?utf-8?B?YmE0U0hLRzk5aEVZSUVNZHhrZDAycTRQczFqajFOVFV2UFZ6eS90Q1llKzhz?=
- =?utf-8?B?Q244VUVla2NrUXhiVHExdGVZNXp3bk83cTdVWCtjQWMvcjRaWG15UjFtdHlz?=
- =?utf-8?B?UUFoOGp3MEZHVGZKeDJHbWFUU1VjYXAyQmNmUWc0TDB4ajEyOWhJMmVESXFD?=
- =?utf-8?B?UU5vZ1VwaVo4ZzZSbEp4NjN2YzJMR2xQMUt3YUl1NDVOYVhJU1Qydlp1Zk5v?=
- =?utf-8?B?OFBKUkMvU1VPY3NvbmlxTEZaVXVTSWdkc0wwM0RURUJ0eFNINXM2V283dGp2?=
- =?utf-8?B?cDZ2Sk5RRU5xVmNuT0I0cVFUZHRNMHNHdnBDRkhBUEg0eE9Rb0RYS1QrdjZh?=
- =?utf-8?B?VkhiODlUaG9BMXVzUGF1OTlTd2lBb0N3Q0wvWmhJbVBiWVVKSEhINlN1VDBD?=
- =?utf-8?B?ZC85anZINEZZNVlUVWRidnkrMTVkek1XOVdyb2NiaE1Ydjl0VXQ2RVRJNEth?=
- =?utf-8?B?QnF1VXlJRVJ1d3h3UHNGclBsUGp5a3RCZzZ6bmFXZGxWNyt5ZzFRTUlXczFJ?=
- =?utf-8?B?Z3VBVXhodjRYS0JWR2xFdVcyRWZWbk1iczAydHRmTkhYNkFsWHA2VUdJMStO?=
- =?utf-8?B?WFB6SUorOUIzdlNZbUFEM2dTdWd1VzJ4Ukorb2pIN05zWmdjQjEvUlV4RlpE?=
- =?utf-8?B?QmEvaXcxYTEvcHJyYXVlUGlaY1lYRXpFZVNLV1J2NWJvL1RxZGhTZ25ONDJh?=
- =?utf-8?B?amFDbEhGTUlsNTF6bDJNZW10OUpGUk5BZGN1NnhTM1Q2Q1JoMFNvOTJyWVVL?=
- =?utf-8?B?QW95a1d4ejl1MnA0ZVh2MERQOHRkcWFsNnZEM2dORUwwazFMZzY1d1hlcXk3?=
- =?utf-8?B?VHp4UnpxZ1diNTN1cm01UHJwS2ZIM0dtbzlPekIzTk1haDM3Sk1OVTFOUlVM?=
- =?utf-8?B?cnduTzlWTERnZ2IrS2dGMXViME9SNE83dk4vS011a04xWVp2U3o4Yis4V0Ft?=
- =?utf-8?B?MkdaUXZpRUFYKzJTblhtUUI1MU5KNzVjR2ROSldNK2xtcDJNK215ZWt1SC8v?=
- =?utf-8?B?NzdKUUkrZ3U2YUJGazJNRUJzY0U3c3E5UnlpVE1XMU16bEhHUkJyR2wzNnFu?=
- =?utf-8?B?eVRuMTRyTnJPVWI4K1NBYnZld3RVMVFLZ3B2MExUdjdobHEzSFI3Z3JjV0hZ?=
- =?utf-8?B?ZkI0WlM3Ty9yUmJHSjVUOFJ6TkFHeDdxSXF6YXRVRDlLSjVqeTJWUlNEekN3?=
- =?utf-8?B?d0Y1SHRCeGduMUVPWHN5R1I3NkxMNFlReVhmZUxkMlFLSDZ4Ui9SMENDNjNx?=
- =?utf-8?B?WnN3MVJRK2pBPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB7493.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a1ZRWmtGbUtlVGFxN3JIUW9Xb0ZQLzlObTM0TFZoYWRMdC9jQit0T0tTWVk0?=
- =?utf-8?B?RzI3allIdmVkMnJYc2E1NERzS2JTM1pGZDJ3NWdpZ0FDT01VOXE4U3dYUGxL?=
- =?utf-8?B?SG84Tk5ycmpDRk9VVXhwMXhYZWVBOTFxamtlajk3QnZIMkIzdHVUY0tWeHNW?=
- =?utf-8?B?cW5QMXk4OFpwL1A3TTlER0FieHp3Ny9SMDg0UFJ2RExmVlE2MVYvcUd2K1Jq?=
- =?utf-8?B?U3NzMWJQVXZnTlZnNklkcnZjbFVXaHJ1MC93WkI3NkZEOWoxRE52bDYvaEFa?=
- =?utf-8?B?RnpEYmlsbWVxQjltSXMzeDVORU4zRmN3SGY3UUVvMDV0TGpQSERLUnpCL0dI?=
- =?utf-8?B?OXB4V3hIQkVkOXpDcXhvc1Y0SHJTRm4rZzN2UUgrSlQ2bm9FN0xpc0hSWWFp?=
- =?utf-8?B?ZUxnT0VDaTV3T29uemkyMklHZFBLeVdpNTBER3JhM2ZVbjFiMkdadk1NSUE0?=
- =?utf-8?B?WkdUR3BheTBqM2g0cXdEUU43aVcyLzlPbkpkUXVvNUVUdk1IZmp4S2tSYVBS?=
- =?utf-8?B?d0ZpRll3b3ZCcWp5OWZpMWQ4SlhCR2tRdERuNHhrbThQM0ZReWdyamx0VFl4?=
- =?utf-8?B?K2IxR2VsaG1TNWIwNEtVMWdqTVJ3dDdodkZwMzR3eEhFUGVXcDFDWWxneCtJ?=
- =?utf-8?B?ZFRxZHFxNEZvbytuaVo2S3BoNUN6MlFzaGFuM3BvMG9naElaaG5KYUlZRk1n?=
- =?utf-8?B?Vm85WU4yMTN5MDVzbnozdXNGaVFhbjNTRjhMVWt1b1RGN0tLbitPdW5FRzZv?=
- =?utf-8?B?dml3K3BhVm80UnF5YWFoTjhKSFhiUzJ0VnEwZUZjMHFFNWJYbzFyUlQvaWJJ?=
- =?utf-8?B?eDBrV3kzZDV0NUtEV0tHOExtc2tlL0E1bWdNbk9Eek5lclRPelk5ekxIV0NY?=
- =?utf-8?B?T2V0a1dONGx4Ukt3ZzkxTTNIb3d6SCtLZTdIa0h0LzF4TjZ4S3pJL3dUanhq?=
- =?utf-8?B?WjZuT0VkSExyVUdQWDVkbkZlR0tLVGZHNXI5aC8rVkpXSWN3WHBGQ2ROVEJ5?=
- =?utf-8?B?NlNLR05qNU43Z0lGTGFJa0pmd1Z3SVE2Q3lsdStjajBVbDN3OUlYUG9yK0Ix?=
- =?utf-8?B?VU0zY0VHOWlmZHlKRlY0a0hQNjdqWUh0TU5MZVlNM0VYeFJYMTVzMGFhcVRv?=
- =?utf-8?B?d2Y2ZG9aalFhdmc1bDI5NkIyVmJEdkxpOTNGaHZJQnhFSmc3ajYwSXdtNWN6?=
- =?utf-8?B?dXZhZXorR0pHQmIwVzkxMlR2b3M5WHo1YXlZYlZOZktnUTl4VWZwdGN1ZlRN?=
- =?utf-8?B?VVhSME1GSjRpR20ybnVvOG5vZVdQcDhYT3p4MXIrRzZlbUJuOUMweFhSR0Q5?=
- =?utf-8?B?MDUvRHBwNzRUeXVOTTREcTI1ZmtZT3RwSXUzWXNDSFpmSW9WRmVCek53dUp0?=
- =?utf-8?B?eTBZZnN0RVhZeXJjaStGOW4xVGRBR1VOWC9rckVWQXAvclhPZldCTXRaanMx?=
- =?utf-8?B?dURkMnhndnBoeEdXZE5vY2ZTS3NDdHQ3dS9yTURpU2JkNVhtU1VUOXVJZmJ6?=
- =?utf-8?B?M2FzVVVyejc1bjh1ZWFaTk5JR3RIMUs0WnFDSEREZnhkMDhYMDRldDVIMkhq?=
- =?utf-8?B?ckx2SXoxNVZPZGhHYjdmQ09LNEVqazdDZ2YyQld1ZlhvUlBWOGVEei9Ccm5s?=
- =?utf-8?B?N1VJZC9hOE9IWTRPT0kxS0FvakkzMVE3ekd2N2FwY0lWUVJnUUErbWZLNmRs?=
- =?utf-8?B?QkRZY0VDY3hqdjMxRVNFcEZzbWVYTXdPWlhvZ3I4U1N6RUhtSVE3a1hTUmdj?=
- =?utf-8?B?T1BEaTB2L0M2M1FnSzRKTmV5bkp5TWpoejVuMFFFM3A5UlV4dHFNdHU5K3ph?=
- =?utf-8?B?bXlHaktxZEZMcnNMcndRNEE0NnFVcTAyRTErY3pnT29XTGhPSjc1SGtDVkdS?=
- =?utf-8?B?a3d1UzZib2lDcm5tWUVCWkdvMFpsTVBXTTZpZ1J2VkJRMktFbmFxYmpyUVUv?=
- =?utf-8?B?Vll5SUVtakdrVzBEcUg0Zk1ESzcyZ0JKbTVsbDc0N0p4TDE2U21MUXE0OElN?=
- =?utf-8?B?bFhSbFRtSW1XSGNtK0h4Vm1qc1liM1JOa3hJamtzdEtiK0hleGFwMnFlc005?=
- =?utf-8?B?VCtxSU9SMHJKcjdXZHNpUldJVkZ0N1FuQnE4WDBaVTlEdk5QZ3hxMzBuQmhw?=
- =?utf-8?B?SUJ1YjVzT3REa1JnbmttZGpJZ01LUWpPYURMMVNuZVBlZ3hmZnhvQ0dUQ0t5?=
- =?utf-8?B?T0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C939E617A39E3C4AA7F52A239A96B0B1@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoNL6D9K"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso1396620b3a.2;
+        Sun, 29 Jun 2025 20:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751255014; x=1751859814; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4bIwAhKqz4a8STFhK376kouBXKdmYNJTk3lqAL+u3CE=;
+        b=hoNL6D9KxUm43LXck/9gI+7UqlrDjw0BasiMQWzC2Rg0sT1TZ36FVUogaVMWG/BCrV
+         K/nLajxjkHixkB4mSqKLrCEJcfSCzykVw9LAVrLz6O9uV7UMe4ncQ8FgTYbCxlxT94qS
+         9XSEY0u4+MvKeYViVrNwWP3H3pk5XoW7PB+csUtn4Eqdra8O0os1kksECkJNnV46lTYg
+         ZsBUk2vX07HYHAGImriof5WCODD4eijRgAg705gD7GoRMyIYhPsQJyGtnYK3sAGquRqj
+         Rp7PGhbkxgQSRgvdQcEI/WgV51Jod02u/edRy2xKsQ5VBSen2PAvcPozb6F0wb8O5Tgh
+         XMTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751255014; x=1751859814;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4bIwAhKqz4a8STFhK376kouBXKdmYNJTk3lqAL+u3CE=;
+        b=iRC625ynSoYQlPXXEKRvScDzrFdsygljxWY/ROUFTvml7W/0h30pioBuTnF5amf16m
+         YaNzen8NsAVz/YvVrwMjRbsLJpAj4w8umxMe6rrkIy52zh/Qm/6Bnmn4X8CgqSqpOiVM
+         2txxv1QxXTWV0UAxcXTklC4whottA6IO9f+VhirkW4k4muIw37vXTvNxgOndi7c8yugS
+         0i/AdNOXmqjVp9UHlVVGFppf29SnRA43WKGmF5bMv8ApYtOH7E6/Aw65gp+X9iBf70nH
+         0CXwir1CPJUDcMRs6O0XTA8TY97x8b8JN1r+p1PH7CJrgt8EKixTSFvCYwdVM7l5lO92
+         UnHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV73EpanumDqiIW0J7xqowfLA7wiW9N9lJB1G8jhCApPHFvDmh1O5+wVjRNQUf1vIz2QPsm0VL+iUDx3rkY/SBHr+oKIA==@vger.kernel.org, AJvYcCWkK6NTOjH8tZ3Loc2xZYgBZbPlpRFtsjBOQRCXWqSDaC1rKxaDU2Gt8BzxQWUhHyUY7PWKKRvWrzSGiyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxSYJyjsuTjqoqDlzFVgvCEZu5nrqyJID4jJJJcS1vqF8cWpRv
+	krmCX5qfmgfaO+nVsGfI4TZL49HpxQnXWZrKlus7Ig4uKrvmGHjrOvnH0xWTWtaj
+X-Gm-Gg: ASbGncuXbYHlMM87nJa4DrapS7LWG8BzizXHKclenKgkwUA69rOp/3xEGNLEtKGlO4G
+	9RKX1hsS1HTFaTIKmEqO23ncKRZLI3ibF+npIyg3v9LNGoO3CSA4UjG02Ew0Mn4O8vpOIo32tKc
+	IddO6J8qQKSKlY5D6X6CaXiPBidSVKKtLvsTV5f7CgQVsGlmn3JPebWz9T1U0UORVyzBuLoYdFY
+	GluylYPHoJuo8nMDBBnViduFs6qT+vVMhJfJqNoBfWeaWGE1QCu7CTWHRidb4jO6CVa8101OGr2
+	VubzHydtRtKGfWLJGDTR9FXWdj509bZyfLv2XHFgD4I8h/bYVUZSfCe1I9EnLg==
+X-Google-Smtp-Source: AGHT+IFcg8jm6RxZyyIgmlhNKPBdDB85x+e1UBI38fidb/l3jtKUX/r5MGvW+cZ5adQpsDO/pb+L0g==
+X-Received: by 2002:a05:6a00:b87:b0:74a:e29c:2879 with SMTP id d2e1a72fcca58-74af6f79036mr15052578b3a.15.1751255013553;
+        Sun, 29 Jun 2025 20:43:33 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5579d37sm7464187b3a.81.2025.06.29.20.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 20:43:33 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Date: Mon, 30 Jun 2025 00:43:12 -0300
+Subject: [PATCH v2] platform/x86: dell-wmi-sysman: Fix WMI data block
+ retrieval in sysfs callbacks
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB7493.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe1467f1-5636-420a-43a3-08ddb77404e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 01:18:28.2066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FTY8hMPfzo5D5LKYFeNxv5t83wSUY7OGfvH9OsIIcgY/BasbcVqbcS5Qwqmj+EKwVXftK5j2HVBrDHlUH+TYBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB8986
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-sysman-fix-v2-1-d185674d0a30@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAM8HYmgC/22MywqDMBBFf0Vm3ZRkwKpd9T+Ki5CHDjRJSSRUJ
+ P/eqeve3TlwzwHFZXIF7t0B2VUqlCIDXjowq46LE2SZASX28oaTKHsJOgpPHzGZHgeNo1fWAh/
+ e2bE+Y8+ZeaWypbyf7ap+9m+mKqGEN07y9DAq+1iCptfVpABza+0LSUetXqQAAAA=
+X-Change-ID: 20250629-sysman-fix-9c527a28f1dd
+To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Divya Bharathi <divya.bharathi@dell.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>, 
+ Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6784; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=aU3OF31XlKW7ZgsMb4VMmMEeuzG+p6hYnD7yS+wO6lk=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBlJ7HfurliSrBb97IHFxMYT2QpMPeuXvNI6vGD5ErunE
+ qt3/Vnu3lHKwiDGxSArpsjSnrDo26OovLd+B0Lvw8xhZQIZwsDFKQATmW7C8D8spPRdUuemhwvv
+ nhBki36UdmbXje9fnpcrZ2n8bvpufuoawz+1YKeo0sV+6fHvL+QW1E86soJF80gSG8cEp3OmnAV
+ ik1gB
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-PiA+IFNvIEkgdGVzdGVkIHRoZXJtYWxkIGFnYWluLiBTbyBoZXJlIGFyZSBzb21lIHJlc3VsdHMu
-DQo+ID4gDQo+ID4gQmVmb3JlOg0KPiA+IFJ1bm5pbmcgVmFsaGVpbSB0aGUgcG93ZXIgZHJhdyBp
-cyAzNXcgYW5kIHRoZSBmcHMgaXMgNDEuDQo+ID4gDQo+ID4gQWZ0ZXIgSSBoYXZlIGluc3RhbGxl
-ZCB0aGVybWFsZDoNCj4gPiBSdW5uaW5nIFZhbGhlaW0gdGhlIHBvd2VyIGRyYXcgaXMgNDR3IGFu
-ZCB0aGUgZnBzIGlzIDQ2DQo+ID4gDQo+ID4gU28gaXQncyB3b3JraW5nLA0KDQpHb29kIHRvIGtu
-b3cgdGhhdCB0aGVybWFsZCBoZWxwcy4NCg0KY2FuIHlvdSBwbGVhc2UgYWxzbyBhdHRhY2ggdGhl
-IHR1cmJvc3RhdCBvdXRwdXQ/IHNheSAidHVyYm9zdGF0IC1vIHRzLmxvZw0Kc2xlZXAgMSINCg0K
-PiA+ICBidXQgSSBhbHNvIG5vdGljZWQgdGhhdCBpdCBkb2Vzbid0IG1hdHRlciBpZiBJIGNoYW5n
-ZSB0aGUgcG93ZXINCj4gPiBwcm9maWxlLiBTYW1lIHBlcmZvcm1hbmNlIGFuZCBwb3dlciBkcmF3
-LiBTbyBzb21ldGhpbmcgaXMgc3RpbGwNCj4gPiB3ZWlyZC4NCj4gDQo+IFRoZSBBQ1BJIGNvZGUg
-c2VlbXMgdG8gc3VnZ2VzdCB0aGF0IHlvdXIgZGV2aWNlIHN1cHBvcnQgNyBwcm9maWxlcywNCj4g
-d2hpbGUgdGhlIGhwLXdtaSBkcml2ZXIgb25seSBzdXBwb3J0cyA0LiBBZGRpdGlvbmFsbHkgdGhl
-IGRyaXZlcnMgZmFpbHMNCj4gdG8gcHJvcGVybHkgbWFzayBvdXQgdGhlIHBsYXRmb3JtIHByb2Zp
-bGUgdmFsdWUgcmV0dXJuZWQgYnkgdGhlDQo+IGZpcm13YXJlLCBzbyB0aGF0IGNvdWxkIGJlIHRo
-ZSByZWFzb24gd2h5IGl0IGlzIG5vdCB3b3JraW5nIG9uIHlvdXINCj4gZGV2aWNlLg0KPiANCj4g
-Q2FuIHlvdSB0ZXN0IGtlcm5lbCBwYXRjaGVzPw0KPiANCj4gPiBBbHNvIHRoZSBidWcgd2l0aCB0
-aGUgZnVuIHN0aWxsIHJ1bm5pbmcgd2hpbGUgdGhlIGxhcHRvcCBpcyBzdXNwZW5kZWQNCj4gPiBp
-cyBhbiBpc3N1ZS4NCj4gDQo+IEkgQ0NlZCB0aGUgcGVvcGxlIGZyb20gdGhlIHRoZXJtYWwgc3Vi
-c3lzdGVtLCBtYXliZSB0aGV5IGtub3cgaWYgdGhpcw0KPiBpcyBleHBlY3RlZCBiZWhhdmlvciBv
-ciBhIGJ1ZyBpbnNpZGUgdGhlIGludDM0MHhfdGhlcm1hbCBkcml2ZXIuDQo+IA0KaG93IGRvIHlv
-dSBzdXNwZW5kIHRoZSBzeXN0ZW0/IGFuZCBjYW4geW91IGF0dGFjaCB0aGUgZG1lc2cgb3V0cHV0
-IGFmdGVyDQpzeXN0ZW0gInN1c3BlbmRlZCIgYW5kIHJlc3VtZWQ/DQoNCnRoYW5rcywNCnJ1aQ0K
+After retrieving WMI data blocks in sysfs callbacks, check for the
+validity of them before dereferencing their content.
+
+Reported-by: Jan Graczyk <jangraczyk@yahoo.ca>
+Closes: https://lore.kernel.org/r/CAHk-=wgMiSKXf7SvQrfEnxVtmT=QVQPjJdNjfm3aXS7wc=rzTw@mail.gmail.com/
+Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Changes in v2:
+- Use #define instead of enum to name minimum values
+- Link to v1: https://lore.kernel.org/r/20250629-sysman-fix-v1-1-fce0000a781d@gmail.com
+---
+ drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 5 +++++
+ drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c    | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c     | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c  | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c             | 8 ++++----
+ 6 files changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index 3ad33a094588c6a258786a02f952eaa6bf953234..817ee7ba07ca08cfe286d8ff5a6f864991c6522d 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -89,6 +89,11 @@ extern struct wmi_sysman_priv wmi_priv;
+ 
+ enum { ENUM, INT, STR, PO };
+ 
++#define ENUM_MIN_ELEMENTS		8
++#define INT_MIN_ELEMENTS		9
++#define STR_MIN_ELEMENTS		8
++#define PO_MIN_ELEMENTS			4
++
+ enum {
+ 	ATTR_NAME,
+ 	DISPL_NAME_LANG_CODE,
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+index 8cc212c852668312096f756bc1fb1e3054a1f5c0..fc2f58b4cbc6eff863f2c3293cb4322d28048bb8 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+@@ -23,9 +23,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < ENUM_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+index 951e75b538fad42509614c2ebf2ef77aa05b614f..73524806423914bf210b9b5f78c0b5b4f6a7984c 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+@@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_INTEGER) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < INT_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_INTEGER) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[CURRENT_VAL].integer.value);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index d8f1bf5e58a0f441cfd6c21f299c5426b2e28ce9..3167e06d416ede61cda5ad4c860dcb41b05cd5fa 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -26,9 +26,10 @@ static ssize_t is_enabled_show(struct kobject *kobj, struct kobj_attribute *attr
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_PASSOBJ_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[IS_PASS_SET].type != ACPI_TYPE_INTEGER) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < PO_MIN_ELEMENTS ||
++	    obj->package.elements[IS_PASS_SET].type != ACPI_TYPE_INTEGER) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[IS_PASS_SET].integer.value);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+index c392f0ecf8b55ba722246d67ba0073772a4f0094..0d2c74f8d1aad7843effcd7b600dd42e6947dc15 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+@@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < STR_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index d00389b860e4ea0655c740c78bc3751f323b6370..3c74d5e8350a413a55739ca5e9647be30bac50d4 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -407,10 +407,10 @@ static int init_bios_attributes(int attr_type, const char *guid)
+ 		return retval;
+ 
+ 	switch (attr_type) {
+-	case ENUM:	min_elements = 8;	break;
+-	case INT:	min_elements = 9;	break;
+-	case STR:	min_elements = 8;	break;
+-	case PO:	min_elements = 4;	break;
++	case ENUM:	min_elements = ENUM_MIN_ELEMENTS;	break;
++	case INT:	min_elements = INT_MIN_ELEMENTS;	break;
++	case STR:	min_elements = STR_MIN_ELEMENTS;	break;
++	case PO:	min_elements = PO_MIN_ELEMENTS;		break;
+ 	default:
+ 		pr_err("Error: Unknown attr_type: %d\n", attr_type);
+ 		return -EINVAL;
+
+---
+base-commit: 173bbec6693f3f3f00dac144f3aa0cd62fb60d33
+change-id: 20250629-sysman-fix-9c527a28f1dd
+-- 
+ ~ Kurt
+
