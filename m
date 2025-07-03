@@ -1,306 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BEB2E49BA
-	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Jul 2025 18:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79B41E9B3D;
+	Thu,  3 Jul 2025 02:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481016; cv=none; b=XySEwNOQXNdUa3J3PiZix9mW/8mp9T/bqUqnaKdVZY26HvifPymhTKUb34eMP6A/TjDxE6BAqZZ8VxaaBrWhVqnNiD2oho8oCP7JIZH0xhE9GCaWsJ1555S2uW9Yr9CMaMBartS2d2f3J4wrFPtr8PejRXSv8uHOCM3YJpwSuJk=
+	t=1751509721; cv=none; b=lrS29XKg4r8Yqae5WaubWp/4LAv6NsWnnMG8GbgsSPvEYiPxXVKy6TS2jApmp3DJeFmC8QCzgnqv6gvpeLpdAW3KA+LhMo/Q9GelEGDRspuKgHc07QG70e8aZM9W5SV5HzNjkv8LcNWdsdbVE+LwVW66BcUf4OauLlHkTmwHyrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481016; c=relaxed/simple;
-	bh=iNgjRnlWJUyTgumuiwM9IFYMRVi9fCVMBhQZrXEwJyc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qbg2KrJYg3og9HT0BGf5QlYnJ1V9KMwCnvMmI92wjeOzvg6kGuoNkVs68C/+b5Y538p7qJ8+Gs+Tw71LcrNNFWh0ej1qMMWkTehs/0dZD44R2opPkOzADA2rKslXgz5yvUTO9NhEoLIOsrN4WYv1aczMMZ/EuP3CXJAjjXTMAuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jA/3PGDT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751509721; c=relaxed/simple;
+	bh=aU8FEVOH9p4QlopgS3RyFqvauECgUG+suhNF7f5naI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uEnBcK+U7AFRLPanuXLZ/ig5JP5MCg4KAqWeUT19eL8NgWEROE+Cc5x6NhCPS7vIKZI6yMeT18Be/qR+BPS+5PMf2+/8j+h/UARU77rpdskj0mUukOixo8TTuxe3mcVVJYcbvD0icgdT8rfOQmHygndF5SXpGZClU4q0twx/fA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gixsSHoc; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jA/3PGDT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751481013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gnUoEwGRyRRCWbX+f+ZtGX4vj/F5dO/iBxWdtFcYrhQ=;
-	b=jA/3PGDThg/08w/NBour8DfTCbeGy5WcrB3jo+gZbQ6Z9avyBDwZv0k8qDk2PzgeGgJM1L
-	9J7rcLgaGLOXe6k68Hm3zSIlr2OZRJfyHdo/OGSn+YyqVjc6cdEaCVV0BU4n3IBiQmGYvP
-	TFTVmt11IsDX77qN2ZGWp2kMLxKgiK4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-h12dAk_4MBSGfMRzuJvy5g-1; Wed,
- 02 Jul 2025 14:30:11 -0400
-X-MC-Unique: h12dAk_4MBSGfMRzuJvy5g-1
-X-Mimecast-MFC-AGG-ID: h12dAk_4MBSGfMRzuJvy5g_1751481010
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3780618DBA29;
-	Wed,  2 Jul 2025 18:30:10 +0000 (UTC)
-Received: from carbon.redhat.com (unknown [10.44.32.40])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 69B9F19560AB;
-	Wed,  2 Jul 2025 18:30:06 +0000 (UTC)
-From: Jelle van der Waa <jvanderwaa@redhat.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jelle van der Waa <jvanderwaa@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: samsung-laptop: Expose charge_types
-Date: Wed,  2 Jul 2025 20:28:43 +0200
-Message-ID: <20250702182844.107706-1-jvanderwaa@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gixsSHoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751509720; x=1783045720;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aU8FEVOH9p4QlopgS3RyFqvauECgUG+suhNF7f5naI8=;
+  b=gixsSHoc1xk78TKtWNafZb7MEVWOsBqd+vBHqrXeuDO+3VczaCD9dNxH
+   K9Smy0VIrY1ReZpUepMXTN0zn6EJ8oeD/LOZp2xQLhD6gsyfemjI3IyBq
+   iQATQ4EZ6TfNyUgiN+TdU1nfYEDPRln05xp0U0zTM6E8gwjPY7No7j5IN
+   F/6v1rceLpIvxvnW4MaUB6fj0+I5ain3HgyzU0qlPUD3zZv5ZTpDyuM4+
+   gM+i/6jB/oSC/Yr8DbZmaClzkZjyA9MmG7vRqYFwUG2EddOGBCp6nb2Sl
+   aH4XXtK/JaGuT98NKddGHm/GOzCaXuVCSUDtrHCaBALmOVGTO132lYnCa
+   w==;
+X-CSE-ConnectionGUID: m+WwS58mSfuvW2xmu5bFXw==
+X-CSE-MsgGUID: Ue9WPEmESdmYH2cvWdZwGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="41450225"
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="41450225"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:39 -0700
+X-CSE-ConnectionGUID: v5xkgAXdQJ2ivHdMXrT4kA==
+X-CSE-MsgGUID: rxPOhIkwRwWgNJLy4zSvCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
+   d="scan'208";a="154594008"
+Received: from mgerlach-mobl1.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.124.223.28])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 19:28:38 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	xi.pardee@linux.intel.com
+Cc: hdegoede@redhat.com
+Subject: [PATCH V3 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Date: Wed,  2 Jul 2025 19:28:15 -0700
+Message-ID: <20250703022832.1302928-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Support the newly introduced charge_types sysfs attribute as a
-replacement for the custom `battery_life_extender` attribute. Setting
-charge_types to `Long Life` enables battery life extending mode.
+This patch series introduces a new discovery driver for Intel Platform
+Monitoring Technology (PMT) and a set of supporting changes to improve
+telemetry integration across Intel VSEC features.
 
-This change is similar to the recent Ideapad patch adding support for
-charge_types.
+The primary goal of this series is to add the PMT Discovery driver, which
+enumerates and exposes telemetry attributes by parsing hardware-provided
+discovery tables from OOBMSM devices. In particular, the discovery driver
+gathers detailed capability information (such as telemetry region
+attributes) that will later enable direct access to telemetry regions via a
+new API (intel_pmt_get_regions_by_feature()). This API is crucial for
+retrieving data like per-RMID counters.
 
-Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
----
- .../ABI/obsolete/sysfs-driver-samsung-laptop  |  10 ++
- .../ABI/testing/sysfs-driver-samsung-laptop   |  11 --
- drivers/platform/x86/Kconfig                  |   1 +
- drivers/platform/x86/samsung-laptop.c         | 110 ++++++++++++++++++
- 4 files changed, 121 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/ABI/obsolete/sysfs-driver-samsung-laptop
+The remainder of the series consists of several preparatory and testing
+patches:
 
-diff --git a/Documentation/ABI/obsolete/sysfs-driver-samsung-laptop b/Documentation/ABI/obsolete/sysfs-driver-samsung-laptop
-new file mode 100644
-index 000000000000..204c3f3a1d78
---- /dev/null
-+++ b/Documentation/ABI/obsolete/sysfs-driver-samsung-laptop
-@@ -0,0 +1,10 @@
-+What:		/sys/devices/platform/samsung/battery_life_extender
-+Date:		December 1, 2011
-+KernelVersion:	3.3
-+Contact:	Corentin Chary <corentin.chary@gmail.com>
-+Description:	Max battery charge level can be modified, battery cycle
-+		life can be extended by reducing the max battery charge
-+		level.
-+
-+		- 0 means normal battery mode (100% charge)
-+		- 1 means battery life extender mode (80% charge)
-diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-index 28c9c040de5d..408cb0ddf4aa 100644
---- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-@@ -20,17 +20,6 @@ Description:	Some Samsung laptops have different "performance levels"
- 		and it's still unknown if this value even changes
- 		anything, other than making the user feel a bit better.
- 
--What:		/sys/devices/platform/samsung/battery_life_extender
--Date:		December 1, 2011
--KernelVersion:	3.3
--Contact:	Corentin Chary <corentin.chary@gmail.com>
--Description:	Max battery charge level can be modified, battery cycle
--		life can be extended by reducing the max battery charge
--		level.
--
--		- 0 means normal battery mode (100% charge)
--		- 1 means battery life extender mode (80% charge)
--
- What:		/sys/devices/platform/samsung/usb_charge
- Date:		December 1, 2011
- KernelVersion:	3.3
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e5cbd58a99f3..f9fc09a034a0 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -825,6 +825,7 @@ config SAMSUNG_LAPTOP
- 	tristate "Samsung Laptop driver"
- 	depends on RFKILL || RFKILL = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on ACPI_BATTERY
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	select LEDS_CLASS
- 	select NEW_LEDS
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index decde4c9a3d9..9d43a12db73c 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -16,6 +16,7 @@
- #include <linux/leds.h>
- #include <linux/dmi.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
- #include <linux/rfkill.h>
- #include <linux/acpi.h>
- #include <linux/seq_file.h>
-@@ -23,6 +24,7 @@
- #include <linux/ctype.h>
- #include <linux/efi.h>
- #include <linux/suspend.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
- 
- /*
-@@ -348,6 +350,8 @@ struct samsung_laptop {
- 
- 	struct notifier_block pm_nb;
- 
-+	struct acpi_battery_hook battery_hook;
-+
- 	bool handle_backlight;
- 	bool has_stepping_quirk;
- 
-@@ -697,6 +701,11 @@ static ssize_t set_performance_level(struct device *dev,
- static DEVICE_ATTR(performance_level, 0644,
- 		   get_performance_level, set_performance_level);
- 
-+static void show_battery_life_extender_deprecation_warning(struct device *dev)
-+{
-+	dev_warn_once(dev, "battery_life_extender attribute has been deprecated, see charge_types.\n");
-+}
-+
- static int read_battery_life_extender(struct samsung_laptop *samsung)
- {
- 	const struct sabi_commands *commands = &samsung->config->commands;
-@@ -739,6 +748,8 @@ static ssize_t get_battery_life_extender(struct device *dev,
- 	struct samsung_laptop *samsung = dev_get_drvdata(dev);
- 	int ret;
- 
-+	show_battery_life_extender_deprecation_warning(dev);
-+
- 	ret = read_battery_life_extender(samsung);
- 	if (ret < 0)
- 		return ret;
-@@ -753,6 +764,8 @@ static ssize_t set_battery_life_extender(struct device *dev,
- 	struct samsung_laptop *samsung = dev_get_drvdata(dev);
- 	int ret, value;
- 
-+	show_battery_life_extender_deprecation_warning(dev);
-+
- 	if (!count || kstrtoint(buf, 0, &value) != 0)
- 		return -EINVAL;
- 
-@@ -766,6 +779,84 @@ static ssize_t set_battery_life_extender(struct device *dev,
- static DEVICE_ATTR(battery_life_extender, 0644,
- 		   get_battery_life_extender, set_battery_life_extender);
- 
-+static int samsung_psy_ext_set_prop(struct power_supply *psy,
-+				    const struct power_supply_ext *ext,
-+				    void *ext_data,
-+				    enum power_supply_property psp,
-+				    const union power_supply_propval *val)
-+{
-+	struct samsung_laptop *samsung = ext_data;
-+
-+	switch (val->intval) {
-+	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-+		return write_battery_life_extender(samsung, 1);
-+	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-+		return write_battery_life_extender(samsung, 0);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int samsung_psy_ext_get_prop(struct power_supply *psy,
-+				    const struct power_supply_ext *ext,
-+				    void *ext_data,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct samsung_laptop *samsung = ext_data;
-+	int ret;
-+
-+	ret = read_battery_life_extender(samsung);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret == 1)
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-+	else
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+
-+	return 0;
-+}
-+
-+static int samsung_psy_prop_is_writeable(struct power_supply *psy,
-+					 const struct power_supply_ext *ext,
-+					 void *data,
-+					 enum power_supply_property psp)
-+{
-+	return true;
-+}
-+
-+static const enum power_supply_property samsung_power_supply_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_TYPES,
-+};
-+
-+static const struct power_supply_ext samsung_battery_ext = {
-+	.name			= "samsung_laptop",
-+	.properties		= samsung_power_supply_props,
-+	.num_properties		= ARRAY_SIZE(samsung_power_supply_props),
-+	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-+				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
-+	.get_property		= samsung_psy_ext_get_prop,
-+	.set_property		= samsung_psy_ext_set_prop,
-+	.property_is_writeable	= samsung_psy_prop_is_writeable,
-+};
-+
-+static int samsung_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	struct samsung_laptop *samsung = container_of(hook, struct samsung_laptop, battery_hook);
-+
-+	return power_supply_register_extension(battery, &samsung_battery_ext,
-+					       &samsung->platform_device->dev, samsung);
-+}
-+
-+static int samsung_battery_remove(struct power_supply *battery,
-+				  struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &samsung_battery_ext);
-+
-+	return 0;
-+}
-+
- static int read_usb_charge(struct samsung_laptop *samsung)
- {
- 	const struct sabi_commands *commands = &samsung->config->commands;
-@@ -1043,6 +1134,21 @@ static int __init samsung_lid_handling_init(struct samsung_laptop *samsung)
- 	return retval;
- }
- 
-+static int __init samsung_battery_hook_init(struct samsung_laptop *samsung)
-+{
-+	int retval = 0;
-+
-+	if (samsung->config->commands.get_battery_life_extender != 0xFFFF) {
-+		samsung->battery_hook.add_battery = samsung_battery_add;
-+		samsung->battery_hook.remove_battery = samsung_battery_remove;
-+		samsung->battery_hook.name = "Samsung Battery Extension";
-+		retval = devm_battery_hook_register(&samsung->platform_device->dev,
-+						    &samsung->battery_hook);
-+	}
-+
-+	return retval;
-+}
-+
- static int kbd_backlight_enable(struct samsung_laptop *samsung)
- {
- 	const struct sabi_commands *commands = &samsung->config->commands;
-@@ -1604,6 +1710,10 @@ static int __init samsung_init(void)
- 	if (ret)
- 		goto error_lid_handling;
- 
-+	ret = samsung_battery_hook_init(samsung);
-+	if (ret)
-+		goto error_lid_handling;
-+
- 	samsung_debugfs_init(samsung);
- 
- 	samsung->pm_nb.notifier_call = samsung_pm_notification;
--- 
-2.49.0
+1. Private Data and CPU Mapping:  The VSEC driver now includes
+per-device private data to store the OOBMSM-to-CPU mapping. The TPMI driver
+copies its platform info into this common area (via
+intel_vsec_set_mapping()), allowing other VSEC features to access CPU
+mapping information without redundant queries.
+
+2. Device Links Enhancements:  With telemetry now depending on both the
+TPMI driver (for CPU mapping) and the new discovery driver (for telemetry
+region attributes), device links have been added and optimized. These
+changes ensure that supplier drivers are probed and registered before
+consumer drivers, enforcing the proper dependency order for reliable
+telemetry feature access.
+
+4. Discovery Driver and API:  The core of the series is the addition of
+the PMT Discovery driver. This driver not only implements discovery of
+telemetry attributes and capability data (exposed via sysfs) but also
+introduces an API to retrieve telemetry regions by feature, which is
+essential for features like per-RMID telemetry counters.
+
+5. Testing:  A simple KUNIT test is provided for the enhanced discovery
+API to ensure its reliability and correctness.
+
+Together, these patches provide a foundation for future telemetry
+enhancements in the Intel VSEC framework. They enable a unified interface
+for accessing hardware telemetry capabilities and ensure that inter-driver
+dependencies are properly managed through device links.
+
+David E. Box (15):
+  MAINTAINERS: Add link to documentation of Intel PMT ABI
+  platform/x86/intel/vsec: Add private data for per-device data
+  platform/x86/intel/vsec: Create wrapper to walk PCI config space
+  platform/x86/intel/vsec: Add device links to enforce dependencies
+  platform/x86/intel/vsec: Skip absent features during initialization
+  platform/x86/intel/vsec: Skip driverless features
+  platform/x86/intel/vsec: Add new Discovery feature
+  platform/x86/intel/pmt: Add PMT Discovery driver
+  docs: Add ABI documentation for intel_pmt feature directories
+  platform/x86/intel/tpmi: Relocate platform info to intel_vsec.h
+  platform/x86/intel/vsec: Set OOBMSM to CPU mapping
+  platform/x86/intel/tpmi: Get OOBMSM CPU mapping from TPMI
+  platform/x86/intel/pmt/discovery: Get telemetry attributes
+  platform/x86/intel/pmt/telemetry: Add API to retrieve telemetry
+    regions by feature
+  platform/x86/intel/pmt: KUNIT test for PMT Enhanced Discovery API
+
+ .../testing/sysfs-class-intel_pmt-features    | 134 ++++
+ MAINTAINERS                                   |   2 +
+ drivers/platform/x86/intel/plr_tpmi.c         |   3 +-
+ drivers/platform/x86/intel/pmt/Kconfig        |  27 +
+ drivers/platform/x86/intel/pmt/Makefile       |   4 +
+ drivers/platform/x86/intel/pmt/class.c        |  35 +-
+ drivers/platform/x86/intel/pmt/class.h        |   9 +
+ .../platform/x86/intel/pmt/discovery-kunit.c  | 116 ++++
+ drivers/platform/x86/intel/pmt/discovery.c    | 635 ++++++++++++++++++
+ drivers/platform/x86/intel/pmt/features.c     | 205 ++++++
+ drivers/platform/x86/intel/pmt/telemetry.c    |  94 ++-
+ .../intel/speed_select_if/isst_tpmi_core.c    |   9 +-
+ .../uncore-frequency/uncore-frequency-tpmi.c  |   7 +-
+ drivers/platform/x86/intel/vsec.c             | 372 +++++++++-
+ drivers/platform/x86/intel/vsec_tpmi.c        |   8 +-
+ drivers/powercap/intel_rapl_tpmi.c            |   9 +-
+ include/linux/intel_pmt_features.h            | 157 +++++
+ include/linux/intel_tpmi.h                    |  27 +-
+ include/linux/intel_vsec.h                    |  98 ++-
+ 19 files changed, 1885 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt-features
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery-kunit.c
+ create mode 100644 drivers/platform/x86/intel/pmt/discovery.c
+ create mode 100644 drivers/platform/x86/intel/pmt/features.c
+ create mode 100644 include/linux/intel_pmt_features.h
+
+
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+--=20
+2.43.0
 
