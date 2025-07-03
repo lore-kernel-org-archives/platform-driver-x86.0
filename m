@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B3776C61
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Jul 2025 21:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2072BE656
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Jul 2025 21:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751577141; cv=none; b=QAyQjY0vHbjrJVNAtxkTsT97hxCwQuxWJYOEZYIu1wj3Pyx7pzGILtfxZX+SB4vKwwwGtrw/96vQ6irnqdKhUBCGveCT3TnoLhtzUhevKnW6XjKqmrq1dms8iJfQdxvsnzb8M5ogtlmCWAMUuOlQWp4y/IJoYPrJgAmWUPnDfws=
+	t=1751577144; cv=none; b=Q0Gd4+cdqehFbc3GAf3Up0AQpHIO89YsuKmhMQur3pjMwbo85eOiGR+K7yJaTV7xRECW1dDM9eQ11VxXzlh8yZu8VNl7yzuCQaTDqa95m6QbntIFAKKPHkZCvBo73MBoDvtGf9ejy3uZvN/esa21TL1diulG8Xn/6ARvjea8xwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751577141; c=relaxed/simple;
-	bh=Qi8VA7IyqSTyswM7OG5Q49zNovGlyjja/KwiWAM4/W0=;
+	s=arc-20240116; t=1751577144; c=relaxed/simple;
+	bh=k7OnI7U7Wz1ru9DPsR2JE/ukHM10lhYx6INguoad3i0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CJmLdYN0x8DJ3OVEAfx/o98/c/hvnM2Wbo5zE8db4IKKbu9OyrpG82YkDPZSy6ONbMmiaYDgiVeEcirgl5N8ZaCxLb2snePy5Al177k4BY1Wp3mu2MK5iMmoMVpW01ELT7fAEy03P/88WQ/btz7M+SLXdsPasAmdkLSt/0OhwIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HtJmzjY/; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=jqbyYE6T73Zog0Ms+a9RpCs3qLVs+kiW+3XNH5mkjaPxpbvmq+EUDEyfEhp4YjBlAaXoNF+kyhDtyxhhL2+zQ1zdFn0dP0vr/FEy8C9PugEimWyHvh/59HputLKyyYOkFP3mGJ9p368a+g2dd0Ksm5/jWZWvSshWbw3FNRmd7z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TGTFkYcf; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HtJmzjY/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TGTFkYcf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751577140; x=1783113140;
+  t=1751577143; x=1783113143;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Qi8VA7IyqSTyswM7OG5Q49zNovGlyjja/KwiWAM4/W0=;
-  b=HtJmzjY/R25bjLkfL1jYraVfGZziTyEej+MlrUCbRqakJuobS++oTZVt
-   OxAy9WEp2UF7Io2i9lOcY/hmWhC6AsD5l5e11/RF0TGcMQ2SgWwIAOIIz
-   n0RTPEg2skTGcciWgOvFtegZH2JA4JV/Dp1tH3Yl5J2nrbi3vtY2E0S7U
-   gKtW6/auAzKVV74pGIK8DF4PxHjeLo+wdvC39c2UfrYQfPDVFcttSTdaU
-   D0k/o0/hV9A14YlQug3oIFErPRx3lnj2OSLz8v8Oe+KAmT8Ez9ewPAnAz
-   hfMOZFbajrcUflrGiBlkuJAzg0/eSL2VpKRn+LnycdA+AORCJrP+CzAW+
-   g==;
-X-CSE-ConnectionGUID: EgouJMRmRaeXPG5yaRRkGA==
-X-CSE-MsgGUID: BqNTahkPQsigT/05ezfEfw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="79353006"
+  bh=k7OnI7U7Wz1ru9DPsR2JE/ukHM10lhYx6INguoad3i0=;
+  b=TGTFkYcfC33GWurBnqkEi3JpfL7+FiTt1yERRklBAlCkMxb8CuOVJJE2
+   9ZhyHTJJbf32NmR69DDMDlmMPvzZIhGLismhmHEwpC1OCzAFNVusTQqKN
+   wFPDcQw0IjI6oZFyGlmi8ecqGeUxPv7795SaIqgvIiA+3AFNXa+NRFbdy
+   DQqAln/y6MYlDYpCG0ZfAmA28ceqZYSryw2FZlCvzA0Ukm4+leS1y+YpG
+   mKjj9ddDx9SRCwdMoLSxKxtgBGSWgnFw26JXD6swUrgKizuE3b1bbblEh
+   gzLxB/XM6rFMfROsLpbKszOTWmSaMeFc0MySBuC9/KfenhW/4+p7l4fnd
+   Q==;
+X-CSE-ConnectionGUID: AXeoMiuRTtebwTK4rV53jg==
+X-CSE-MsgGUID: vVF84byWQoeJOnqUbNGIJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="79353011"
 X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="79353006"
+   d="scan'208";a="79353011"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:12:20 -0700
-X-CSE-ConnectionGUID: CoI5qBEYT0eTvtpG4Y/SKw==
-X-CSE-MsgGUID: j77FCaf/RJ+9CUQ/XJn8Lg==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:12:22 -0700
+X-CSE-ConnectionGUID: 1DsHGKBiRLSDeMpVP4/8ng==
+X-CSE-MsgGUID: Z2LyvHDWRfCKaFMuQvTzOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="154240033"
+   d="scan'208";a="154240039"
 Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.223.97])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:12:18 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 14:12:20 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -55,9 +55,9 @@ To: platform-driver-x86@vger.kernel.org,
 	simona@ffwll.ch,
 	david.e.box@linux.intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v6 03/12] platform/x86/intel/pmt: white space cleanup
-Date: Thu,  3 Jul 2025 17:11:41 -0400
-Message-ID: <20250703211150.135320-4-michael.j.ruhl@intel.com>
+Subject: [PATCH v6 04/12] platform/x86/intel/pmt: mutex clean up
+Date: Thu,  3 Jul 2025 17:11:42 -0400
+Message-ID: <20250703211150.135320-5-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250703211150.135320-1-michael.j.ruhl@intel.com>
 References: <20250703211150.135320-1-michael.j.ruhl@intel.com>
@@ -67,40 +67,45 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Noticed two white space issues; cleaned them.
+The header file for mutex usage and mutex_destroy() cleanup code is
+absent from this module.
 
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Add the header file and mutex_destroy().
+
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 6a9eb3c4b313..d40c8e212733 100644
+index d40c8e212733..6e32fc1f8f1d 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -143,7 +143,7 @@ enable_show(struct device *dev, struct device_attribute *attr, char *buf)
+@@ -12,6 +12,7 @@
+ #include <linux/intel_vsec.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+@@ -262,8 +263,12 @@ static void pmt_crashlog_remove(struct auxiliary_device *auxdev)
+ 	struct pmt_crashlog_priv *priv = auxiliary_get_drvdata(auxdev);
+ 	int i;
  
- static ssize_t
- enable_store(struct device *dev, struct device_attribute *attr,
--	    const char *buf, size_t count)
-+	     const char *buf, size_t count)
- {
- 	struct crashlog_entry *entry;
- 	bool enabled;
-@@ -177,7 +177,7 @@ trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
+-	for (i = 0; i < priv->num_entries; i++)
+-		intel_pmt_dev_destroy(&priv->entry[i].entry, &pmt_crashlog_ns);
++	for (i = 0; i < priv->num_entries; i++) {
++		struct crashlog_entry *crashlog = &priv->entry[i];
++
++		intel_pmt_dev_destroy(&crashlog->entry, &pmt_crashlog_ns);
++		mutex_destroy(&crashlog->control_mutex);
++	}
+ }
  
- static ssize_t
- trigger_store(struct device *dev, struct device_attribute *attr,
--	    const char *buf, size_t count)
-+	      const char *buf, size_t count)
- {
- 	struct crashlog_entry *entry;
- 	bool trigger;
+ static int pmt_crashlog_probe(struct auxiliary_device *auxdev,
 -- 
 2.49.0
 
