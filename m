@@ -1,155 +1,197 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C4D1E86E;
-	Sun,  6 Jul 2025 23:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751843665; cv=pass; b=TbKeeMv+xwM32cePwgR+Rj0yX4VWUoi2kkOJxc+yeD61OwR1BpuiUIzVsmbuCK9sbSO4oSX0qe2j0b2PJQB0Ht4d9QNPkNskgSO13GEN2aiFkx3ubNQU+ZWzWKsP/tPmRfFcMvblBnMWkvMEGpw1DQdWTMi3TI36GwVQ/yoZGDA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751843665; c=relaxed/simple;
-	bh=b1oTof9XHsD6TWvzUALGVJhu6zyuarKFaH9BBs5xfQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lSEFC8HPoVOW4gFJ/KhD5vNeDvBeDwdyT6dxRrM/rG5cqmFSWM+XvkeVc0Suq6NumDwBd9k78yxbZr83VHvqqDXNwS3PTvs56bmqgjU51JUlEJeMxPvUOfIS0yNbmUnFEqsHboGp8h8lGbX3rnuVwmy/LKbcUQLV7yVz0kXZbk4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=HIT91SYD; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="HIT91SYD"
-ARC-Seal: i=1; a=rsa-sha256; t=1751843656; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UwWhPUPVN4uPSTRFlR5Rkj6uzrlQnZYuSUF4EcNJrRdH3hUa796BV/Y0+++UTS3tKg2yNSXpzpHtBFhxX3sBOuQDYyK3ALmZ0QlaDK9ogFec3qculnftkeJmJ2Bqj+D0EDsAbAN0d8U3ZIqBuA2+UblW7Dm1I3BZlBCQhUJZvu0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751843656; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=b1oTof9XHsD6TWvzUALGVJhu6zyuarKFaH9BBs5xfQ4=; 
-	b=I0jOzjlRiuVnaFgv7nMcNZt8BLKi84EENPdnKMsTL/epCJVUYTw+E5qVRWnIlDym7MT0AmAqb3xQScRF/G0bVwBjH8Jjvd+CfYjVa2vaPP0Eg8ianbmp9vedhRsiVwkZEm2DaGEOyK/RVkux5gCx9hp5rvwJ6FMJyyX+Ivg1Ljk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751843656;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=b1oTof9XHsD6TWvzUALGVJhu6zyuarKFaH9BBs5xfQ4=;
-	b=HIT91SYDiPr6LT3EaDa78c69b8m8ZopgYOf0YqjvamGqBSyD4Kl90Hfh3dXSxTAR
-	TSOFTswIGVeHGLhLY3DqJoIOktgLNlVWhtE21zVCd8PuIyTk7PZxMEyJddWFUeq9VnX
-	MbMj8vk94viPmXwq0xu6ZF4tehKxja3PgF69WAQ4=
-Received: by mx.zohomail.com with SMTPS id 1751843653394405.22398881437505;
-	Sun, 6 Jul 2025 16:14:13 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 4CE1E180F17; Mon, 07 Jul 2025 01:14:10 +0200 (CEST)
-Date: Mon, 7 Jul 2025 01:14:10 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] power: supply: core: Add
- power_supply_get/set_property_direct()
-Message-ID: <6lgsjfgug5mvsj55n3hc2egvi5hjfemsxuhsfkookgpqrzgqfr@woud4h7bdhvj>
-References: <20250627205124.250433-1-W_Armin@gmx.de>
- <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
- <4e28458b-baba-456a-bae6-08c2818aedf8@gmx.de>
- <66dbff89-131b-4bc5-1059-c97342b2efca@linux.intel.com>
+Received: from n169-113.mail.139.com (n169-113.mail.139.com [120.232.169.113])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A063E1A316E;
+	Mon,  7 Jul 2025 03:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.113
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751857618; cv=none; b=madSAC33arsTr1MfdIdfJS0OfMPTj2KXX5MYxPdUSYDnqz0zRj9JeUrJqawokSDKno0YUOAbDHoIrUcIPnfHuQlj3pQkY/5mR+ks+nrEwXZj7RyjLR68o7OAvzmzpAgZXth5g/l53WEmVstvjbciv3hERJZalkTvrx9ecwvqj5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751857618; c=relaxed/simple;
+	bh=QntrMZUtRIqFWeurX+7yTUDzCG+e3Q76fifHnkT60Uw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fRPLbdlbuW7V7E1wM/TEaMl7fjZN0UhHpZuwj6AAk97du8A8ULFbM0jrkJXm4tcvUDN60jWOwTTinsbFBOwI78BLRNQW2Hj3xLKgwaYDBwz+rzXAXE39CbSJ+OmqMnT+GPZjdkAStFFxjAnlO1LalTGBuhDMhKV7MeQ2/3GQvZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM:                                                                                        
+X-RM-SPAM-FLAG:00000000
+Received:from [10.103.165.236] (unknown[106.38.209.7])
+	by rmsmtp-lg-appmail-34-12048 (RichMail) with SMTP id 2f10686b38fd736-a7378;
+	Mon, 07 Jul 2025 11:03:30 +0800 (CST)
+X-RM-TRANSID:2f10686b38fd736-a7378
+Message-ID: <92feb1cf-798c-4026-9084-cf90988e1604@139.com>
+Date: Mon, 7 Jul 2025 11:03:28 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bo3tsc62dh4x3mul"
-Content-Disposition: inline
-In-Reply-To: <66dbff89-131b-4bc5-1059-c97342b2efca@linux.intel.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/251.827.75
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
+ featuresgracefully
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
+ Kurt Borja <kuurtb@gmail.com>, alireza.bestboyy@gmail.com, atescula@gmail.com
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250627195436.3877-1-W_Armin@gmx.de>
+ <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
+ <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
+ <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
+ <50361e3c-c947-4df8-97fd-4963d18ee4f2@gmx.de>
+ <7f2496e7-7092-46a2-885f-8e8f44fc0af1@app.fastmail.com>
+Content-Language: en-US
+From: Jackie Dong <xy-jackie@139.com>
+In-Reply-To: <7f2496e7-7092-46a2-885f-8e8f44fc0af1@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 6/30/25 04:36, Mark Pearson wrote:
+> Hi Armin & Kurt,
+> 
+> On Sat, Jun 28, 2025, at 8:01 AM, Armin Wolf wrote:
+>> Am 27.06.25 um 23:29 schrieb Kurt Borja:
+>>
+>>> On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
+>>>> Am 27.06.25 um 22:38 schrieb Kurt Borja:
+>>>>
+>>>>> Hi Armin,
+>>>>>
+>>>>> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
+>>>>>> Not all devices support audio mute and microphone mute LEDs, so the
+>>>>>> explicitly checks for hardware support while probing. However missing
+>>>>>> hardware features are treated as errors, causing the driver so fail
+>>>>>> probing on devices that do not support both LEDs.
+>>>>>>
+>>>>>> Fix this by simply ignoring hardware features that are not present.
+>>>>>> This way the driver will properly load on devices not supporting both
+>>>>>> LEDs and will stop throwing error messages on devices with no LEDS
+>>>>>> at all.
+>>>>> This patch makes me wonder what is the policy around issues like this.
+>>>>> In fact I've submitted and changes that do the exact opposite :p
+>>>>> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
+>>>>> detecting feature support")
+>>>>>
+>>>>> IMO missing features should be treated as errors. i.e. The probe should
+>>>>> fail.
+>>>> IMHO the probe should only fail if some features are deemed essential, like
+>>>> required ACPI methods. Optional features like in this case LEDs should be
+>>>> handled by the driver in a graceful manner if possible.
+>>>>
+>>>>> Quoting documentation [1]:
+>>>>>
+>>>>> 	If a match is found, the device’s driver field is set to the
+>>>>> 	driver and the driver’s probe callback is called. This gives the
+>>>>> 	driver a chance to verify that it really does support the
+>>>>> 	hardware, and that it’s in a working state.
+>>>>>
+>>>>> And again [2]:
+>>>>>
+>>>>> 	This callback holds the driver-specific logic to bind the driver
+>>>>> 	to a given device. That includes verifying that the device is
+>>>>> 	present, that it’s a version the driver can handle, that driver
+>>>>> 	data structures can be allocated and initialized, and that any
+>>>>> 	hardware can be initialized.
+>>>>>
+>>>>> Both of these makes me wonder if such a "fail" or error message should
+>>>>> be fixed in the first place. In this case the probe correctly checks for
+>>>>> device support and fails if it's not found, which is suggested to be the
+>>>>> correct behavior.
+>>>> The driver should only fail probing if it cannot handle some missing features.
+>>>> In this case however both features (audio mute LED and mic mute LED) are completely
+>>>> optional and the driver should not fail to load just because one of them is absent.
+>>> I agree, both are individually optional, but at least one should be
+>>> required.
+>>>
+>>>> Just think about machines supporting only a single LED (audio or mic mute). Currently
+>>>> the driver would fail to load on such devices leaving the users with nothing.
+>>> That's very true.
+>>>
+>>> But I do still think if both fail the probe should still fail. Maybe
+>>> there is a way to accomplish this?
+>>>
+>>> I'm thinking of something like
+>>>
+>>> if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
+>>>       lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
+>>>       return -ENODEV;
+>>>
+>>> What do you think?
+>>
+>> Normally i would agree to such a thing, but in this case the underlying
+>> WMI device
+>> supports many more functions that are currently not supported by this
+>> driver. Additionally
+>> the driver cannot control when the WMI device is registered, so it has
+>> to be prepared to
+>> encounter a device without the features it supports.
+>>
+>> Also keep in mind that a failing probe attempt produces a irritating
+>> error message.
+>>
+>>>>> BTW this also leaks `wpriv`, which would remain allocated for no reason.
+>>>> wpriv will be freed using devres, so no memory leak here. However i admit that there is
+>>>> some room for optimizations, however i leave this to the maintainer of the driver in
+>>>> question.
+>>> Leak was a bit of an overstatement :) But if both features are missing
+>>> it would be kinda leaked, in practice.
+>>
+>> I see, however i would leave this to the maintainer of the driver
+>> because i have no hardware
+>> to test the resulting patches :/.
+>>
+> 
+> As a note, I'm on vacation for three weeks and avoiding accessing work emails, so won't be able to discuss this with Jackie properly until I'm back.
+> 
+> For history/context - this particular driver was a bit of a oddity as the Ideapads aren't in the Lenovo Linux program (hope they will be one day). We had a Thinkbook that is using the same LUDS interface, that we were Linux certifying, and LED support is a requirement to work.
+> 
+> I do think this needs revisiting a bit. I am leaning to agreeing that it shouldn't error out - but we were also being careful to not have this cause problems on HW we ourselves don't have access to. It would be nice if it could be extended to more platforms though.
+> 
+> I don't have the specs handy right now (would need to go on the Lenovo VPN for that). Is it OK if we re-visit this when I'm back at home and working?
+> Jackie - please do have a look and think about this in the meantime.
+> 
+> Mark
+> 
+> 
+Hi Kurt, Armin, Mark,
+    I have reviewed the Lenovo Keyboard WMI Specification and find 
+GetIfSupportOrVersion method has defined that Output parameters define: 
+0 is not support, Non-zero is support.
+    As you have noted in previous mail, not all of Lenovo ideapad brand 
+laptop support both mic mute LED(on F4) and audio mute LED(on F1). Some 
+of them only support one mute LED, some of them don't have any mute LED. 
+So, I think that the below codes should be work to handle it. I have 
+verified the below codes on Lenovo Yoga Pro7 14APH8(MachineType 82Y8) 
+which is only support mic mute LED. In fact, I have gotten user mail 
+which describe the same issue on Lenovo Yoga Pro7 14APH8 with 
+https://bugzilla.kernel.org/show_bug.cgi?id=220271 which reported this 
+issue on MachineType: 81Y3.
+    If you have any comment, let me know, I'll update the below patch 
+and submit it later.
 
---bo3tsc62dh4x3mul
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/3] power: supply: core: Add
- power_supply_get/set_property_direct()
-MIME-Version: 1.0
+diff --git a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+index 89153afd7015..47f5ee34ea71 100644
+--- a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
++++ b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+@@ -122,8 +122,13 @@ static int lenovo_super_hotkey_wmi_led_init(enum
+mute_led_type led_type, struct
+           return -EIO;
 
-Hi,
+       union acpi_object *obj __free(kfree) = output.pointer;
+-    if (obj && obj->type == ACPI_TYPE_INTEGER)
++    if (obj && obj->type == ACPI_TYPE_INTEGER) {
+           led_version = obj->integer.value;
++
++        /*Output parameters define: 0 is not support, Non-zero is support*/
++        if (led_version == 0 )
++            return 0;
++    }
+       else
+           return -EIO;
 
-On Mon, Jun 30, 2025 at 11:58:39AM +0300, Ilpo J=E4rvinen wrote:
-> On Sat, 28 Jun 2025, Armin Wolf wrote:
->=20
-> > Am 28.06.25 um 11:25 schrieb Hans de Goede:
-> >=20
-> > > Hi Armin,
-> > >=20
-> > > On 27-Jun-25 10:51 PM, Armin Wolf wrote:
-> > > > Power supply extensions might want to interact with the underlying
-> > > > power supply to retrieve data like serial numbers, charging status
-> > > > and more. However doing so causes psy->extensions_sem to be locked
-> > > > twice, possibly causing a deadlock.
-> > > >=20
-> > > > Provide special variants of power_supply_get/set_property() that
-> > > > ignore any power supply extensions and thus do not touch the
-> > > > associated psy->extensions_sem lock.
-> > > >=20
-> > > > Suggested-by: Hans de Goede <hansg@kernel.org>
-> > > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > Thank you for your work on this.
-> > >=20
-> > > The entire series looks good to me:
-> > >=20
-> > > Reviewed-by: Hans de Goede <hansg@kernel.org>
-> > >=20
-> > > for the series.
-> > >=20
-> > > There is the question of how to merge this. I think it might
-> > > be best for the entire series to go through the power-supply
-> > > tree.
-> > >=20
-> > > Ilpo would that work for you and if yes can we have your ack ?
-> > >=20
-> > > Sebastian, IMHO this should be merged as fixed not as for-next
-> > > material.
-> > >=20
-> > > Regards,
-> > >=20
-> > > Hans
-> >=20
-> > Personally i would prefer to merge this through the pdx86 tree as the
-> > uniwill-laptop driver currently under review will also require this
-> > functionality.
->=20
-> Sebastian, are you okay if I take this through pdx86 fixes branch as=20
-> requested by Armin? If yes, can I have your ack please.
+--
+2.43.0
 
-Sorry, took me a bit to figure out if that works, since the core is
-also patched in my next branch. But I think git should figure
-everything out on its own. Feel free to merge the whole series.
-
-Greetings,
-
--- Sebastian
-
---bo3tsc62dh4x3mul
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhrA0EACgkQ2O7X88g7
-+prjTQ/6A/ebnZx4CpcXEfs6tLc584R2AXn8T9uoqSiFJZH007lkyjrG6+as4mZq
-4GhVEfbl/tfpTAy6nfe1NqvI7rUlzlhU44BnRcC6YfIkWU7dRx1Th7YvYQsQZEK6
-XCOeUERVBwn/FpZfj+nr0VM6PN1s05Q+QL6JdUriq03BzOsKgNnK0M86p7vTpNKG
-qkjp7AbrcuezPlydY0C31rF+zESz82jxc7DO+/ItKTH6LbdU7oBjF8FJk58mMO5p
-ZyvGqy7DXTCStpOcckRmPRWV+KYMkr9uIGTB/+xuy0Wr/NuAJA1alsZKSDUXWY1N
-NqBPus5qVHaW/h8t9XU8W89q69ooncDwhPbatBR1czq/n+YfClVfTpoAZw6FVx7n
-WhqnB2L2/a8O5+HY25muBB3FmIvAe9RFRxkFgNLNdvXa5MdARaddWAc7eNygHTdJ
-VE/AEjzivpjv9ZTuPxJKhidG+WVv7DSy/wJSIfyvbmTZLJE5TeOsqJ6PTQ707wwA
-zDN7vIdBCF681GvLfuRWham/WsmHlJzbypRF17NKjk/HLOdbVgUyC76X0hE4zEdb
-x9CsctuL3SIQUBtGWACgawNH7NADpLKlleXVQDWChj8siv6tQrJxTYrA82/5pdyM
-xN+8pEPH9h5wur+nCK8AfXdK4B36wuqyaxjkg/3zXPUZe+z6omc=
-=FCxe
------END PGP SIGNATURE-----
-
---bo3tsc62dh4x3mul--
