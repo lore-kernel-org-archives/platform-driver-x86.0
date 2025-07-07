@@ -1,156 +1,86 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E612798E3;
-	Mon,  7 Jul 2025 12:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556DA29ACD4;
+	Mon,  7 Jul 2025 13:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893180; cv=none; b=qJE5wGqHthbm3MDqGCZyaqhgrp/9eausVzMk05Gww1x4lSasE6Ia08egLT+FJ88kVhOw6YZmTNgFKxSF45xBru4U7tIMcbdoRgR990r6mVEwQashk/qIypAxT5+rAzJ/8Xz9Te9OALMf58NdDWP7MemEBw1dNLCSXEH668DteDk=
+	t=1751893207; cv=none; b=TQsh6NU5DyrFMVQxgFFF1PIeGqvjaqklUv2lHvB618O5QF8nBzHoC5iwLbzA24DRoh5n93HGjaaW4tGDnpVuB4vsiK4v0TbZdpxW/+BBBQLPcIIeEz38rZ4jSesq3v0AdF1Lqdzwxd6Jp59SPyfO5VbeT1OZzpq44RymWOEs/Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893180; c=relaxed/simple;
-	bh=AIpdjaop4M9+6eXivbyQLogbWlCGzKNHvDpcMI0Z31c=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DpPiIsbA3FXO3ixIWhG9/qNe5OepWn7ixnmkiIkd0Ma+tgffTpuLICLIBhIbVzB/nhw7VwZRI+TXCkpCIuiwLEaIOT04O8FHN6rmAC/otVFg4VIDRIR8kOPRZgJaamQTickDVa4tkq2RjWZ1uv0/FXzCPSkc12D9SXd9F8Jg+nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EwSE49WH; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1751893207; c=relaxed/simple;
+	bh=OYuuq41zyZEuye2UbQAlUX3ToiLuKhLbzSgHgVRSXmY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=BAm/7gfETMtWAcWEC/qDWKpEl7TWehwsG8lklnnx1s03DoAmrEkeiM1tKDS4s4S/gA9is1oNxUkuMzM8phNJ2bZQ1Q/D9Lar2eknBFUVu4wTF13X5VhlCxDWUiqmrxs7+SENgCxQjYUH+SPkj9VRNS7N6NqW3wxl0f1aRY3bJ4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FanFTgxl; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EwSE49WH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FanFTgxl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751893178; x=1783429178;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AIpdjaop4M9+6eXivbyQLogbWlCGzKNHvDpcMI0Z31c=;
-  b=EwSE49WHo/5jZhSHP0EkNPa+jsSVZ5txkCgtXBOCJMnSZEieZQBh6IB9
-   5VhcvwM2PCIVUN8Edhd4/jUoNPXkruWO4GGMKfin9sj9lEwKBgtqsextC
-   q13pO1t4cL7Bhi3OGPDL78TyMv36Bz+wD/ward6rXbf2s4xiEImwE3yhL
-   WhKplt/rttSO8T9Mm5F7Qlu+TgWyQAjEJYCJbAMwXnnLYEsCUWbNXXEzQ
-   HFS1xLKk6o4/khMFv6dcGJjEtqxUYGkJWi/spSuB1Svi1A2WsirMXFRpp
-   WoOIkcLAfs9fzatFRyoODWVcu2SxqceEEIbDJ3dCw5BxF9/PScZycmIiA
-   A==;
-X-CSE-ConnectionGUID: jc6yz7ypTBqIKJ1kG5yHHg==
-X-CSE-MsgGUID: Hx89f7GFTz6UuMx6g6V+2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="53970616"
+  t=1751893206; x=1783429206;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=OYuuq41zyZEuye2UbQAlUX3ToiLuKhLbzSgHgVRSXmY=;
+  b=FanFTgxlVXtOO/UtmnA6J+GL4UUs1C5Kv+g32VAvE8rKREosCeQbIidz
+   2GTErg5ogiAkNbl0Jorw3CO+zUCFJS/j70absxCmRo4qsEDQobP9W78Iu
+   EiJlVlRq2Dfqq5qCAiiagBkOJfWhV3Tr+G6luGr26Ls9wEYKragdC1Rgu
+   GrdxC6Fy18e+WMz3EiEPuijhK31OW5M4hmF7gl8Jc7G8ZgGrrppb/IJ5O
+   vBp8GmaIN3PffFNhuuCS12KHOmi7PAx6WGyXs/oLwtm2qLt8cLqaFX0vp
+   xzTpDD3SOe0Oq8+j5Suxl0MJt1Jl53767kPvguknsAPyrX0+nU7GLcxw1
+   Q==;
+X-CSE-ConnectionGUID: Sw1rhplPTBCA83iYatpcyw==
+X-CSE-MsgGUID: GZruzkpwQuCZMY2hiLvH5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="53970649"
 X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
-   d="scan'208";a="53970616"
+   d="scan'208";a="53970649"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 05:59:37 -0700
-X-CSE-ConnectionGUID: nwgno0biRkOTSA+PUotBNw==
-X-CSE-MsgGUID: 3nActMbpTL6pXWMIprqrSw==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:03 -0700
+X-CSE-ConnectionGUID: 9D9/kXgeSCaii8wYgwAduw==
+X-CSE-MsgGUID: 95eWDQAqRy2B9tzh3WdcYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
-   d="scan'208";a="154634790"
+   d="scan'208";a="154634834"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.104])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 05:59:35 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:01 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 7 Jul 2025 15:59:31 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] platform/mellanox: mlxbf-pmc: Validate event/enable
- input
-In-Reply-To: <2ee618c59976bcf1379d5ddce2fc60ab5014b3a9.1751380187.git.shravankr@nvidia.com>
-Message-ID: <fe24c309-737e-72c5-90ae-cfb873dd195d@linux.intel.com>
-References: <cover.1751380187.git.shravankr@nvidia.com> <2ee618c59976bcf1379d5ddce2fc60ab5014b3a9.1751380187.git.shravankr@nvidia.com>
+To: Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20250707-dmi-fix-v1-1-6730835d824d@gmail.com>
+References: <20250707-dmi-fix-v1-1-6730835d824d@gmail.com>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix `dmi_system_id`
+ array
+Message-Id: <175189319656.2280.5627704855016194059.b4-ty@linux.intel.com>
+Date: Mon, 07 Jul 2025 15:59:56 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, 2 Jul 2025, Shravan Kumar Ramani wrote:
+On Mon, 07 Jul 2025 03:24:05 -0300, Kurt Borja wrote:
 
-> Before programming the event info, validate the event number received as input
-> by checking if it exists in the event_list. Also fix a typo in the comment for
-> mlxbf_pmc_get_event_name() to correctly mention that it returns the event name
-> when taking the event number as input, and not the other way round. For setting
-> the enable value, the input should be 0 or 1 only. Use kstrtobool() in place of
-> kstrtoint() in  mlxbf_pmc_enable_store() to accept only valid input.
+> Add missing empty member to `awcc_dmi_table`.
 > 
-> Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueField-3")
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 9cc3d4ca53cf..9aa8de1122e5 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -1223,7 +1223,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
->  	return -ENODEV;
->  }
->  
-> -/* Get the event number given the name */
-> +/* Get the event name given the number */
->  static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
->  {
->  	const struct mlxbf_pmc_events *events;
-> @@ -1807,6 +1807,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
->  		err = kstrtouint(buf, 0, &evt_num);
->  		if (err < 0)
->  			return err;
-> +
-> +		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
-> +			return -EINVAL;
->  	}
->  
->  	if (strstr(pmc->block_name[blk_num], "l3cache"))
-> @@ -1887,13 +1890,14 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
->  {
->  	struct mlxbf_pmc_attribute *attr_enable = container_of(
->  		attr, struct mlxbf_pmc_attribute, dev_attr);
-> -	unsigned int en, blk_num;
-> +	unsigned int blk_num;
->  	u32 word;
->  	int err;
-> +	bool en;
->  
->  	blk_num = attr_enable->nr;
->  
-> -	err = kstrtouint(buf, 0, &en);
-> +	err = kstrtobool(buf, &en);
->  	if (err < 0)
->  		return err;
->  
-> @@ -1913,14 +1917,11 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
->  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
->  			MLXBF_PMC_WRITE_REG_32, word);
->  	} else {
-> -		if (en && en != 1)
-> -			return -EINVAL;
-> -
->  		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
->  		if (err)
->  			return err;
->  
-> -		if (en == 1) {
-> +		if (en) {
->  			err = mlxbf_pmc_config_l3_counters(blk_num, true, false);
->  			if (err)
->  				return err;
 > 
 
-Hi,
 
-I've applied this series to the review-ilpo-fixes branch but I had to 
-split the kstrbool() change to own commit, it's very apparent these two 
-changes should have been separate right from the start (and I even asked 
-you to split this earlier).
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-Whenever making changes, especially fixes, please try hard put separate 
-changes into own patches. That should be done even if the changes touch 
-same file, and they may even look similar such as here, both are doing 
-"input validation", but the cases were still clearly different.
+The list of commits applied:
+[1/1] platform/x86: alienware-wmi-wmax: Fix `dmi_system_id` array
+      commit: 8346c6af27f1c1410eb314f4be5875fdf1579a10
 
-It's easier to review, justify in the changelog, etc. when the change is 
-very focused on a single problem only.
-
--- 
+--
  i.
 
