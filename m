@@ -1,215 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AEA28D859;
-	Mon,  7 Jul 2025 09:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880181; cv=none; b=is81kffGWXUwPMG2Sicd0FjxQ4I18LEkI0zf/LRXjvzekG4C15s8xKFJuDdGvleL/7406qOyvMFRWz+ntR4a7O4U/mnBY6GUHT1eCOKaQRQTUe1xgrbgme0tqiOmw2C/G7o/KhHPgKAGjCydQumkMA8F5AlJ1pMrcGISVWFcQ9U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880181; c=relaxed/simple;
-	bh=sns9z6OCwkZpcpSCNwsDZdvlILaetOPPPX1p1HzOqt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RDAFb2/zL24cMklzF4ZUhxfTOrjOeWOoSBWMRmztfQg6VWkLpxMwwJq/wL3l8nskS4zQjgbKX1VlNI+jRnyTaQT//A54ACURGU8lU1czM3aPzFJASoyUaXaauzxoByQY0wNdag2duX+JK0E0EHd7DFn5V5xiRfznLEQHk8wN228=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qua2lj5z; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C8F293C45
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Jul 2025 10:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751885433; cv=fail; b=eJ00mS5sOssNTZGdNxqDG/ZpX+fR0GNxrXigr8DTdURo8VRz0GrUo5TsuWI8r1+Y9SDapwZ6GVYsQf7rIHYZ/+la/QQEPGoz3yW/OfMO7mx5Kp6ch46OdFXig5eiTJuzZOZejlthYoOVnRJ2JCHsO/n7r1J847LZ0Hz1kXbYRyU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751885433; c=relaxed/simple;
+	bh=foqDBixIvPTPQ1/eIWD89OlWFgS7dcjdjuRIgqIWgrA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bG0U9YjyVFsPbj4Q0uEQa8TJ2/Lbr2XGavIgzFj4lPfeDm+3VM6svmdNVBhj8betNwNP/BzTaRsZq0GFguBroUzGFI/GrMpTz4bR9Mss9MyMh3TpTV0j/s2pIwuz03wGPLPQ6Ijsjb+8NUu1hroKiGgeao4WLyKEhg8rl81ikdM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QDcUM42I; arc=fail smtp.client-ip=40.107.220.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qua2lj5z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39979C4CEE3;
-	Mon,  7 Jul 2025 09:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751880180;
-	bh=sns9z6OCwkZpcpSCNwsDZdvlILaetOPPPX1p1HzOqt0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Qua2lj5zCCNINLg5Cj9DVcEYbvQ2buT2f6+jsRKi2p77BxJFmFO+hg3y8eYTh3niv
-	 2mDWYID+wtUbQtNo7rhUrxicex93QJ37+ZdWA9EDP0uHTUB+jaaMf8lnOyU4J34sG/
-	 cJrDpKa6bHXqK521a8abNmAO93e9bFyr5wUKAlKRpefWGehkLjx5GhGpKF3PlpZ3sg
-	 N4T6Vtx4/sD9usli5N+4O+0Yxiz3PPC121i8TvCh2zQeT7beQO1qYayvexvJxoCXZk
-	 LG8z+XIU8Ny/W+Wu4nx7xA04ZmY0oTvRyNs7Fwp9tfbqNYi2GxZmRHAPgD4ATNa2M8
-	 saMqo9gjvmO5Q==
-Message-ID: <ab1b00a0-3449-499c-ab6f-2f0f98895eee@kernel.org>
-Date: Mon, 7 Jul 2025 11:22:56 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QDcUM42I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DT6rbDakwMD02TsftMdCQGMJaPTbvuOLnzuSECWkWUGv4OXVpfAY/ClcJmPSF9n3JqkewwJ49rBGM1hJx5va/lJr5jgcXrw+NUFFCnWanEp4FccqxULl6kSTB/d2D8fACR1sD7V/WaoqNK0qJe5tNVcY1xGMyY4V4wSvhf3KnTlMJ0/aebvLRTOiBOS6NmfAp0e9m+yWI7pjp2ACGxPtfQ+Z9MmWqHL4XUfbwn4LiOX2OiGRFd32DI8LCc292rhfnxTFNgr0i/EmVCpaeeERMXXdpQEzNEpU3f7AQbzSnLXJwu+WKH4fN5cyI2elGTcXwwyxiGyBFKufxLWHWPWoKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5jkATv95C29ZNHxsH1kw6KNw6Qg0ihBg1d2BHDwJjTI=;
+ b=qVihNBors0Bt6xGxG/H5oWgmY+5eGlhLXIlCBAX1rjGMsTUPu4VRHiK4Vtr87UzPHY7NeZvGLahXQB2mJBfFqigUMY2ZdxPoUzGtmusyXWweEhgMYjiqkUyzl7/Onji/zmo9GDsHMQ2UFpv3r6mXWzJpJBAFSgWiKkSSimJgisqdtWHHjPGamGMSHe4g0HiUeKp//FqbO8axk5CoTiq/PiqGKfeEnq/FrTqY5Lad6t/j9kmlYDukWPT8gWPP5rl53MFXhNCH0EXqPIavuwWLIUM7uarCEDWxXEMpQpUmtrLvwSlsrCVIM2KAjhhJFDOhThXvnjrr8kntbNhxRw/8bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5jkATv95C29ZNHxsH1kw6KNw6Qg0ihBg1d2BHDwJjTI=;
+ b=QDcUM42IrrS3d5QHbEikI/2JhePIL/6HEnTLzm9JtG5bJO8De0DWUk/yPGiDt/HBGibPtpDnGkq09U1jvhTIRdCeaU07Xp8x5aG5/pbW1oa1O4gP9lEhYWBauYaLOKPUh/lZviObIdX179+GDz7RRFKqZMYB+byCCnd6QmMGaHI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by MN2PR12MB4488.namprd12.prod.outlook.com (2603:10b6:208:24e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.23; Mon, 7 Jul
+ 2025 10:50:29 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81%4]) with mapi id 15.20.8901.023; Mon, 7 Jul 2025
+ 10:50:29 +0000
+Message-ID: <52bbb308-f4d3-4b31-a683-49fcc0594f5c@amd.com>
+Date: Mon, 7 Jul 2025 16:20:24 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/hsmp: Use guard mutex to synchronize
+ probe
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+References: <20250625100216.1462594-1-suma.hegde@amd.com>
+ <ada3eca0-4c86-c3ee-816c-a3635b4ad110@linux.intel.com>
+ <4fc05197-688a-454f-aadb-7a297db7a594@kernel.org>
+ <afa69b1c-b992-4897-8bac-5b6f4b77a27e@amd.com>
+ <50c8002b-cfee-8d2d-a7d4-cfde81ccafe7@linux.intel.com>
+Content-Language: en-US
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <50c8002b-cfee-8d2d-a7d4-cfde81ccafe7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2P287CA0013.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:21b::15) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lenovo-hotkey: Handle missing hardware
- featuresgracefully
-To: Jackie Dong <xy-jackie@139.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Kurt Borja <kuurtb@gmail.com>, alireza.bestboyy@gmail.com, atescula@gmail.com
-Cc: Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250627195436.3877-1-W_Armin@gmx.de>
- <DAXLSMRH9E6Y.3Q8Z59YG2B50C@gmail.com>
- <fb08672d-881b-458c-b8ed-1a27ca93fe7d@gmx.de>
- <DAXMVOI4AXHY.18HUV9THTG0DJ@gmail.com>
- <50361e3c-c947-4df8-97fd-4963d18ee4f2@gmx.de>
- <7f2496e7-7092-46a2-885f-8e8f44fc0af1@app.fastmail.com>
- <92feb1cf-798c-4026-9084-cf90988e1604@139.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <92feb1cf-798c-4026-9084-cf90988e1604@139.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|MN2PR12MB4488:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a00e991-5b29-4990-ae5e-08ddbd4416e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TjZ0dTZkTVBESjlBN0NNVTBXWjhvMHFwWDAyUU9CcnRYZGFSNmhqMDgyTVpN?=
+ =?utf-8?B?ZnV2NERsdkJjYTR6QnQzMnUvRVZBNTY3YVJLb0tuTjM3NWR0UHk1STB1a29U?=
+ =?utf-8?B?Ty9DQ25hcXVTREZ5ZVpZOGw2KzhyY1J3UnlvZ1d5WElLUkNBaDdyczhmT2pM?=
+ =?utf-8?B?YkJYTUxIV0dSY3hidVVhYVZBL3hIUUNNNGU0VXJzTzVSeVBIQjZBMHAyb09H?=
+ =?utf-8?B?RU00UTlNUk1UOGZZRzBaN2tWRzJheGZXemZ6bU9PeG81WEU3by9UU1h2a0hj?=
+ =?utf-8?B?R3J2d3U4TTdLUUxDWXkwWmoxQ2hRZktDL3NyZlZ1bFY2SVl4M095azluL0xo?=
+ =?utf-8?B?L3NGNSt5NmRzZ3lTWTY5S29hNTMxWUJkT1ZkMHVpbGEwL0IwbHBZN0RBMTZP?=
+ =?utf-8?B?K3A1V3YvUmpsNjJxdzVXY2c3MWExOSttZlZZOXoybHFCeWk2VHhTd0I5c0o0?=
+ =?utf-8?B?MkM3c2Q3UVFYMnJzY1FIMlU2NjhDSmdKVmU2RlZSQkNZTlFjc0x5V1pGN0M1?=
+ =?utf-8?B?SmNCTDBKRzlaMlVKbFlTU0xSVGI5bkpMVnpuOTBFWDhxLzh0WDZhU3htYW5R?=
+ =?utf-8?B?L1RTaG5vcEU0dG82RCtlMXNuUjlsYVhWcU8xS3NVY2dKSVNlWTU1Y2lETUlB?=
+ =?utf-8?B?UmhKandDYmtFdXg1b2JjNFB5dGtCRzBtVi9RMms3YzExOXJZYm5xS2lFSEw5?=
+ =?utf-8?B?a2loS2lWTURYWFhyODIzNjZHZExZUUdIQWpiY0p3K0RCMlA2Wi9SNlVUNnJ4?=
+ =?utf-8?B?SUs2Y1RXNzd0V1dMeEhBK0xQbVFyaGh1THplMTF6N2tDNEZJMG1QODdranhr?=
+ =?utf-8?B?M3ZJS2N4SFdBaWZJR3ducVpJQ2oycWcvQ1c4ZDhtUWJkTDdvRmMrRWlFVkNm?=
+ =?utf-8?B?cVczS3JYaU1VSWNxWXNEdnJ2N1N2NVkrckFwVkZhSXU3Y2xYTVpWcytwVm5V?=
+ =?utf-8?B?SXF6eUtPZGNnbXhNY1RWNFpNQzdGYy9vcjJYYTM0cUFZSzNMR0FWR29jRzI5?=
+ =?utf-8?B?UXhHSGE1OVhDL3VnbVFiY0JOemE4UE1lSTFUam0xUFpONGhqOWkzWVVvOTBl?=
+ =?utf-8?B?dUtKeTN4WXB2Q2o1TE9MY2VYT0lBVUFIeThvRzdTNEFsNVlBdVlVeVF6Qng0?=
+ =?utf-8?B?dFl2dk12Yzd2cG5UU09sNk9GTnArTUdpeWhMdktCOTl4ZlNnWFhDTkluV2Nz?=
+ =?utf-8?B?UlJvZ2phVjVXZUp0c01ORHNPOXQ1Vys5NXRUdzBwT3lUZVEzMHV1K0lpek9l?=
+ =?utf-8?B?Q2NOVDAzQk9VNWJ3dDQ5UXlQSTdITlh6YTNVTENKUFRqcCtNY2EyR1RZd0hz?=
+ =?utf-8?B?MC93R011dDV2T0NGZjlBUnhBNUg0dHQyNHRQczZJeUZKMFozRnRkU1F5NDEx?=
+ =?utf-8?B?TzNiKzhNeXFrMTlzdGdVVXpDTXRZZm9oMUQzaEJmaFhSL1lGTElrTXlPbDk3?=
+ =?utf-8?B?ZUlmU2FBQVArZDg5UFFxbWI3eGVISVJIdEtGeVQ3ejFjNDBiTHNBRkVMUHFp?=
+ =?utf-8?B?MTNTeDcyR3Zxem5BNDlUdE9rSGhqWUpmV0Q3YlYwYkRJTnBLYytzZnprMXFQ?=
+ =?utf-8?B?VVFXUHB5Z25RTEFNR0lscTlNV0RNUEdWY29sMWxJNjIxdktJdlh6eHVrNEVV?=
+ =?utf-8?B?ajhwMzFpWHN3Yk9nNmtYdy9abUl5SU5VUlMvVXhoTVBQVG5HeFQ0Z1pMV3FN?=
+ =?utf-8?B?ci8xbzc1bWs5RU1jMm5tazBFTnJ3aWxoWXB4dWhpUjdnaW85Y3FucTJ2WFVF?=
+ =?utf-8?B?RWlUSnpyRzRyVlluTXZ1ckFEVXJ2aW1GUXovdjVrSWdCTTdHeWJVQ2h2ZnBv?=
+ =?utf-8?B?aWE5Yk5iWDFoNUx1WE1nbXlob2hBYnhWTkpCVHdQc1JnYW1KQ3NiTDRJeit3?=
+ =?utf-8?B?S0NsT1p2Z3VRNTJYLy95UmFRNXFwZW1HZEJJb1pLTGdYajZoK2pCazM5dk1n?=
+ =?utf-8?Q?nvrsdjNiquM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZTQ0U2pMZGFnbEZrazF6VE5MdTd6MThySFFqUzd2K1dLcWV1Z0hpUVBQcDNU?=
+ =?utf-8?B?ZlNGVFR1RWszeitSbHZMZklucUxVdndTU2lZSG5kT3JVaWRYQS9jNFpkMHZx?=
+ =?utf-8?B?dHNhY3c1cDMyRlljVFg1YXZUbFBRY05uWWJlRllMUUtGM09JQWxwTUE4OU8v?=
+ =?utf-8?B?b2MxaU9ENmYrYTRSeExyVXJtZTFROGxyc3ZobUNKMWpMbE1RVnpEUk5vaEYr?=
+ =?utf-8?B?RHcyVDl5TG1pVHE0VUpRL2hmQjl1bjUwTUNSYVhlMDVndk5OcTBoNGluY3lo?=
+ =?utf-8?B?aGlOMjBjeDJOK2ZMUWFHRzVrY0ZFbDU2RlBoYkRDaE1mc3dIRVdWTE9udkkw?=
+ =?utf-8?B?Y1N4OWpOTjBjYjRXZnJHOFI5MktjTGE2a0tqWkdGSzBoQm9lUXBIYlArbTdy?=
+ =?utf-8?B?dVVPdENNT1JQTUN2TjkwVTJZOStaelI0WmIyeTUrL3VnblU1cUdUYmUxMzFw?=
+ =?utf-8?B?V3pFWk1MTU5EUldpR21rbE5KSERNT2hndTFDS3ptVy91VmN2SUFnVHA4WVNU?=
+ =?utf-8?B?U2sxQVRiUkhobnpRWU5UL0xvQjhaSkJQa0toQUROYlJGR1pVakpic0dGdnBu?=
+ =?utf-8?B?WTlMaW5VRFZlNndWWDNYMHVPZmxKZ01VR1Vwa2hUYlNobXNDVFBKVWRnT2RH?=
+ =?utf-8?B?czhtZGxOY1krLzQ2MDdCUzlRdER4UnlhYUhFRTBvbDd0UmNyUmdNVmY0LzJl?=
+ =?utf-8?B?ckU2M3lzaURwRURkLzNaUmN0WFMxTE4vODdTcmFRbFpHYmJXNExadG9XN3Nx?=
+ =?utf-8?B?NmM5YWhFSFN4bEh4UWRNUEl5YmN6N3VkeHRwMkdKSEU2K21UcmdLTlBsanhY?=
+ =?utf-8?B?M0ptdlpaWGt5VVpNV1Zjc1F2TnBaK21HYlhkcnJlQUxsRjF2OHdqZlVjSVlq?=
+ =?utf-8?B?M1hBVytZYVBtdFdPRDJyc1VuSXdmOXQ2S1d0R3Nyd2swbW1Qc0MrdzV4Zjd5?=
+ =?utf-8?B?bWxxWnJCRkF0WjkxaktOK2dySzdzOWJYSkNFTzJMVHQyRU4wTGphMmpTZVNs?=
+ =?utf-8?B?OHFqbDhaTmVib040WW96dUF1QzVLTXZGekEvMm92bHA2OFBOcDZZcStxNkRs?=
+ =?utf-8?B?aEdySkhGaU5rU000N3lZelphTmtsczUvQzlzT0ZRY1hlUk54b0tGdE5PRkJV?=
+ =?utf-8?B?aE9ESEp0RFZDTkloU2FVNkQ3dHRrakFIYmFOdUZOS2JRUjlhRHlidHk3VFZz?=
+ =?utf-8?B?L09vZUVPOGtYZGM1UzFoKzgvbW5XblVHSTMxT3NuMEpCOWw4QUs5Y3Z1QjRa?=
+ =?utf-8?B?UnpCbmlNYTJHa1V0T1FmUUp1bjRzVVl4cGRXNWp5bStBeEtGRURWOUZLSDgv?=
+ =?utf-8?B?RUc0ZlkxYXRlLzZ1VnhVWWhWV3prQlpkQ0Vob3RKR3A1WkhJS3FJeE8vSlRZ?=
+ =?utf-8?B?SGJvWTgvc1p3S3VJWktVVGszeWJ2andFUitYZnF2cjRNcjRra2NXVnBYY0hl?=
+ =?utf-8?B?UU5pRXpVWFZBN3JzaXhMSlVCekovNFJvSkdwZFp4M3I4LzFXcSswUEp2U2RR?=
+ =?utf-8?B?WDdLTUxVT3dLVFErNkdGYXY0MGRoVDF1U1g4UHJnSlNIZ3BrcElDUDZWY0xG?=
+ =?utf-8?B?SE9PcVBuMzZYbUJFOVpWSkh4OHFvOGtvRzFHVGowTW1SL1NFaytBb291VGE1?=
+ =?utf-8?B?Y2hndlo5dTRkU3poMzRDd0lGQUpYNm0xRXJmbVFDT2RyVi82Ym9GdXVTRW1O?=
+ =?utf-8?B?TlNyY2tId0xlVDdCbm93ai9QOHh0ajJqNVNkdE1yakp3WXRWTDdNNXdxSkMx?=
+ =?utf-8?B?eVhLRDNhdERuNTE1NW04VjZtVlMrV0N6clptS2JNVXQxeE9OUnZqL25hdVU1?=
+ =?utf-8?B?VXBRdzRwZ2NQV3Z4Q2REeHhCaUhyRHlUMmIwTmljaE1YQjBUb3dXTTUyeE9i?=
+ =?utf-8?B?UW5IMHNVQWlzWFZtK2dtd3VpYm82Slp4WmxsMk5hdGZ1YmtoeGw4OTlmSitL?=
+ =?utf-8?B?T0VhZ3g0bDBiWElKYlhlOFlKeEhqbDZzUXBBcmxSSVF3aFEreWJJcFdvSUw4?=
+ =?utf-8?B?ZC9haVBHdzVsZDJYa2hscUdYZEZJZytTeE9XT0swL3NxU0ZOd1BTRCtEcTNI?=
+ =?utf-8?B?T3dtUVZ2dHdidE5DRWlWTUExbjNzd3pvK3lCYUl3Ky9RQ0xqZ3NaTmdEa3Rw?=
+ =?utf-8?Q?7128KxNHLdoGe4uAyWtjC65jv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a00e991-5b29-4990-ae5e-08ddbd4416e1
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 10:50:29.8827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pZnsJIly+Jwb1dmN0ZEuNBJu2dg/ghufSF9u0Ic+zuHFCaKr3T37Zo4jUzp2gGtbj90fM6s/w9b3qy3f8ZscsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4488
 
-Hi Jackie,
+Hi Ilpo,
 
-On 7-Jul-25 05:03, Jackie Dong wrote:
-> On 6/30/25 04:36, Mark Pearson wrote:
->> Hi Armin & Kurt,
+
+On 6/27/2025 1:25 PM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Fri, 27 Jun 2025, Suma Hegde wrote:
+>
+>> Hi Ilpo and Hans,
 >>
->> On Sat, Jun 28, 2025, at 8:01 AM, Armin Wolf wrote:
->>> Am 27.06.25 um 23:29 schrieb Kurt Borja:
+>>
+>> Thank you for the review.
+>>
+>>
+>> On 6/27/2025 12:23 AM, Hans de Goede wrote:
+>>> Caution: This message originated from an External Source. Use proper caution
+>>> when opening attachments, clicking links, or responding.
 >>>
->>>> On Fri Jun 27, 2025 at 6:17 PM -03, Armin Wolf wrote:
->>>>> Am 27.06.25 um 22:38 schrieb Kurt Borja:
+>>>
+>>> Hi,
+>>>
+>>> On 26-Jun-25 18:31, Ilpo Järvinen wrote:
+>>>> On Wed, 25 Jun 2025, Suma Hegde wrote:
+>>>>
+>>>> In the shortlog, drop word "guard". This should also mention ACPI as the
+>>>> legacy probe is not affected.
+>>
+>> Sure, will drop the guard and will mention ACPI.
+>>
+>>>>> When async probing is used, 2 hsmp_acpi_probe() calls can race and
+>>>>> make a mess of things.
+>>>> Too vague wording.
+>> I will revise the commit message to enhance clarity.
+>>
+>>>>> So, add guard mutex to synchronize them.
 >>>>>
->>>>>> Hi Armin,
->>>>>>
->>>>>> On Fri Jun 27, 2025 at 4:54 PM -03, Armin Wolf wrote:
->>>>>>> Not all devices support audio mute and microphone mute LEDs, so the
->>>>>>> explicitly checks for hardware support while probing. However missing
->>>>>>> hardware features are treated as errors, causing the driver so fail
->>>>>>> probing on devices that do not support both LEDs.
->>>>>>>
->>>>>>> Fix this by simply ignoring hardware features that are not present.
->>>>>>> This way the driver will properly load on devices not supporting both
->>>>>>> LEDs and will stop throwing error messages on devices with no LEDS
->>>>>>> at all.
->>>>>> This patch makes me wonder what is the policy around issues like this.
->>>>>> In fact I've submitted and changes that do the exact opposite :p
->>>>>> Like commit: 4630b99d2e93 ("platform/x86: dell-pc: Propagate errors when
->>>>>> detecting feature support")
->>>>>>
->>>>>> IMO missing features should be treated as errors. i.e. The probe should
->>>>>> fail.
->>>>> IMHO the probe should only fail if some features are deemed essential, like
->>>>> required ACPI methods. Optional features like in this case LEDs should be
->>>>> handled by the driver in a graceful manner if possible.
+>>>>> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+>>>>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>>>>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+>>>>> ---
+>>>>>    drivers/platform/x86/amd/hsmp/acpi.c | 6 ++++++
+>>>>>    1 file changed, 6 insertions(+)
 >>>>>
->>>>>> Quoting documentation [1]:
->>>>>>
->>>>>>     If a match is found, the device’s driver field is set to the
->>>>>>     driver and the driver’s probe callback is called. This gives the
->>>>>>     driver a chance to verify that it really does support the
->>>>>>     hardware, and that it’s in a working state.
->>>>>>
->>>>>> And again [2]:
->>>>>>
->>>>>>     This callback holds the driver-specific logic to bind the driver
->>>>>>     to a given device. That includes verifying that the device is
->>>>>>     present, that it’s a version the driver can handle, that driver
->>>>>>     data structures can be allocated and initialized, and that any
->>>>>>     hardware can be initialized.
->>>>>>
->>>>>> Both of these makes me wonder if such a "fail" or error message should
->>>>>> be fixed in the first place. In this case the probe correctly checks for
->>>>>> device support and fails if it's not found, which is suggested to be the
->>>>>> correct behavior.
->>>>> The driver should only fail probing if it cannot handle some missing features.
->>>>> In this case however both features (audio mute LED and mic mute LED) are completely
->>>>> optional and the driver should not fail to load just because one of them is absent.
->>>> I agree, both are individually optional, but at least one should be
->>>> required.
->>>>
->>>>> Just think about machines supporting only a single LED (audio or mic mute). Currently
->>>>> the driver would fail to load on such devices leaving the users with nothing.
->>>> That's very true.
->>>>
->>>> But I do still think if both fail the probe should still fail. Maybe
->>>> there is a way to accomplish this?
->>>>
->>>> I'm thinking of something like
->>>>
->>>> if (lenovo_super_hotkey_wmi_led_init(MIC_MUTE, dev) ||
->>>>       lenovo_super_hotkey_wmi_led_init(AUDIO_MUTE, dev))
->>>>       return -ENODEV;
->>>>
->>>> What do you think?
+>>>>> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c
+>>>>> b/drivers/platform/x86/amd/hsmp/acpi.c
+>>>>> index 2f1faa82d13e..ab2b65f16d1d 100644
+>>>>> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+>>>>> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+>>>>> @@ -15,11 +15,13 @@
+>>>>>    #include <linux/array_size.h>
+>>>>>    #include <linux/bits.h>
+>>>>>    #include <linux/bitfield.h>
+>>>>> +#include <linux/cleanup.h>
+>>>>>    #include <linux/device.h>
+>>>>>    #include <linux/dev_printk.h>
+>>>>>    #include <linux/ioport.h>
+>>>>>    #include <linux/kstrtox.h>
+>>>>>    #include <linux/module.h>
+>>>>> +#include <linux/mutex.h>
+>>>>>    #include <linux/platform_device.h>
+>>>>>    #include <linux/sysfs.h>
+>>>>>    #include <linux/uuid.h>
+>>>>> @@ -44,6 +46,8 @@ struct hsmp_sys_attr {
+>>>>>        u32 msg_id;
+>>>>>    };
+>>>>>
+>>>>> +static DEFINE_MUTEX(hsmp_lock);
+>>>>> +
+>>>>>    static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+>>>>>                              u32 *value, bool write)
+>>>>>    {
+>>>>> @@ -585,6 +589,8 @@ static int hsmp_acpi_probe(struct platform_device
+>>>>> *pdev)
+>>>>>        if (!hsmp_pdev)
+>>>>>                return -ENOMEM;
+>>>>>
+>>>>> +    guard(mutex)(&hsmp_lock);
+>>>>> +
+>>>>>        if (!hsmp_pdev->is_probed) {
+>>>>>                hsmp_pdev->num_sockets = amd_num_nodes();
+>>>>>                if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets
+>>>>>> MAX_AMD_NUM_NODES)
+>>>> So is it just the ->sock alloc and misc dev registration that require
+>>>> protection? (The latter doesn't even seem to require that if a local
+>>>> variable carries that information over.)
+>> Yes, the rest of the code, aside from the remove function mentioned below by
+>> Hans, doesn't require protection as it uses local variables.
+>>
+>> Additionally, we have a semaphore in place to protect the other critical
+>> section.
+>>
+>>> Another review note:
 >>>
->>> Normally i would agree to such a thing, but in this case the underlying
->>> WMI device
->>> supports many more functions that are currently not supported by this
->>> driver. Additionally
->>> the driver cannot control when the WMI device is registered, so it has
->>> to be prepared to
->>> encounter a device without the features it supports.
->>>
->>> Also keep in mind that a failing probe attempt produces a irritating
->>> error message.
->>>
->>>>>> BTW this also leaks `wpriv`, which would remain allocated for no reason.
->>>>> wpriv will be freed using devres, so no memory leak here. However i admit that there is
->>>>> some room for optimizations, however i leave this to the maintainer of the driver in
->>>>> question.
->>>> Leak was a bit of an overstatement :) But if both features are missing
->>>> it would be kinda leaked, in practice.
->>>
->>> I see, however i would leave this to the maintainer of the driver
->>> because i have no hardware
->>> to test the resulting patches :/.
->>>
->>
->> As a note, I'm on vacation for three weeks and avoiding accessing work emails, so won't be able to discuss this with Jackie properly until I'm back.
->>
->> For history/context - this particular driver was a bit of a oddity as the Ideapads aren't in the Lenovo Linux program (hope they will be one day). We had a Thinkbook that is using the same LUDS interface, that we were Linux certifying, and LED support is a requirement to work.
->>
->> I do think this needs revisiting a bit. I am leaning to agreeing that it shouldn't error out - but we were also being careful to not have this cause problems on HW we ourselves don't have access to. It would be nice if it could be extended to more platforms though.
->>
->> I don't have the specs handy right now (would need to go on the Lenovo VPN for that). Is it OK if we re-visit this when I'm back at home and working?
->> Jackie - please do have a look and think about this in the meantime.
->>
->> Mark
->>
->>
-> Hi Kurt, Armin, Mark,
->    I have reviewed the Lenovo Keyboard WMI Specification and find GetIfSupportOrVersion method has defined that Output parameters define: 0 is not support, Non-zero is support.
->    As you have noted in previous mail, not all of Lenovo ideapad brand laptop support both mic mute LED(on F4) and audio mute LED(on F1). Some of them only support one mute LED, some of them don't have any mute LED. So, I think that the below codes should be work to handle it. I have verified the below codes on Lenovo Yoga Pro7 14APH8(MachineType 82Y8) which is only support mic mute LED. In fact, I have gotten user mail which describe the same issue on Lenovo Yoga Pro7 14APH8 with https://bugzilla.kernel.org/show_bug.cgi?id=220271 which reported this issue on MachineType: 81Y3.
->    If you have any comment, let me know, I'll update the below patch and submit it later.
-> 
-> diff --git a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> index 89153afd7015..47f5ee34ea71 100644
-> --- a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> +++ b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> @@ -122,8 +122,13 @@ static int lenovo_super_hotkey_wmi_led_init(enum
-> mute_led_type led_type, struct
->           return -EIO;
-> 
->       union acpi_object *obj __free(kfree) = output.pointer;
-> -    if (obj && obj->type == ACPI_TYPE_INTEGER)
-> +    if (obj && obj->type == ACPI_TYPE_INTEGER) {
->           led_version = obj->integer.value;
-> +
-> +        /*Output parameters define: 0 is not support, Non-zero is support*/
-> +        if (led_version == 0 )
-> +            return 0;
-> +    }
->       else
->           return -EIO;
-> 
+>>> hsmp_pdev->is_probed is also used in remove() so that needs a
+>>> guard(mutex)(&hsmp_lock); too.
+>> This was overlooked. I'll make sure to add it.
+> Hmm... I was going to suggest replacing ->is_probed with
+> devm_add_action_or_reset() but then started to think probe/remove
+> ordering between different pdevs.
+>
+> Is there anything that guarantees ->sock isn't teared down too early, that
+> is, pdev that did the allocation should be removed last to not prematurely
+> free ->sock?
+Currently, there is no assurance that the pdev responsible for the 
+allocation will be the last one removed.
 
-Thank you that seems like a good change / fix.
+Should I implement reference counting to address this? The reference 
+count could be initialized to num_sockets and incremented in probe and
 
-We should probably also change this:
+decremented with each removal, freeing the "sock" when the count reaches 
+zero. Socket allocation will be performed using kmalloc instead of 
+devm_alloc.
 
-        case MIC_MUTE:
-                if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER)
-                        return -EIO;
+> --
+>   i.
 
-into logging a warning and then returning 0 and the same here:
+Thanks and Regards,
 
-        case AUDIO_MUTE:
-                if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER)
-                        return -EIO;
-
-Regards,
-
-Hans
-
+Suma
 
