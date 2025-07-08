@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E485079DA;
-	Tue,  8 Jul 2025 00:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEDC128819;
+	Tue,  8 Jul 2025 00:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751932949; cv=none; b=iFbi1pz1NnDzwQrJD1zE/4+uuCHeWTl9a9co/fCNunmaNr8ivmin0SDTaPCX8fuKE/CKe8P8HQUrh5wjHGJ+qrnWKV0kLPhJSRE3j/cqmDN4WMV1VPI2G1xb4eUgKPYS3lL76jmTUnzT22Fg5sChNs2XgGFbeRXCdEA7kzfILfw=
+	t=1751932959; cv=none; b=dK0V3y4oHC5fPE1w+BIp/amz4ADRDur2QwkUDCulH3BicRYNUhCQ5K88u8POIj5XNKe4n80E0bW01siYsVoEtMZcbG4ipWBtw5rd5CYTXGNKUBmS6yCmEyHCIixRk8nnBIi4rQZNvd3E01GTqWUGDvblLBijnlmGtSpKmfiXfQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751932949; c=relaxed/simple;
-	bh=vNaM/k+SL2ziJjMEPGwBUcTS6jl/bzY8vpECqk0Mtoo=;
+	s=arc-20240116; t=1751932959; c=relaxed/simple;
+	bh=aMR2jpdIJSO4u4M6pTvRRlOr7CGzPhsxrkuJNcWvNCI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/aiaT9zkexEmZsrM8Qshgq15BKSjNx3PtsFyT4QsSNWVyVN4ozgdJbGQs2DuETJ6AVl9Ip+6i5SlsGxn6O0LhFSdW3Clq4dXGCn7imZ8STSq3GifxnXUzk0OPmqbuaQb/xqx6nvx+zQeR83gqvBo6ZJIRzDncY5QCcpHkCBvFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTB7JcEg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=q57o5RIH5CZJ4hbq65exVcV1gFWxNauPgeiU+VzW0coA20M5fyOcE2OkbwePMPEy8f2ae5GCxxXZ/tDg0SL1JYQLoIBrDYlZJdPWJL9/DSkzwT/wSiVJp+EMfsesuo80WTeXgizPcpyZEV9GgPVmbfGJpDqvmgOFMoxoejUQVo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuynXBSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTB7JcEg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D891C4AF09;
-	Tue,  8 Jul 2025 00:02:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuynXBSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 487E2C4CEE3;
+	Tue,  8 Jul 2025 00:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751932948;
-	bh=vNaM/k+SL2ziJjMEPGwBUcTS6jl/bzY8vpECqk0Mtoo=;
+	s=k20201202; t=1751932959;
+	bh=aMR2jpdIJSO4u4M6pTvRRlOr7CGzPhsxrkuJNcWvNCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CTB7JcEgHFe87RTWmqtQFcTEdUN3046YKbYmmPhdPeXbz/AMIvg/QDrpemnqXWTWI
-	 J9zYwxklnEz+ZRE9RZBH586X2dAC9DrXY1Yz8faIFfMwgCAx5qb8VDThiuS4GdtVFz
-	 J1H904miO+37HwWiO1gHw/HNos5e/ZHD1opt7PNWvSaPtVQ/wosXjW+2vazE7ktJCK
-	 SSaEk4i3k5GB4DtQ5KdWYpu+9qb90Dier7/sVOHDL+/LD+PysbQSPMOXU0lGMLmjlK
-	 dGxMSRbl+3WTvxMYf0v7bBUcYwqB7IwvFUmuY5nW/PnvRFOJyPZViNljC46n+Z2Hw/
-	 tPNICT0OP2JvQ==
+	b=TuynXBSI1dLyXu0S2aqWMiAsnu5NVJeQIoEa2NUKqpAm3box4Sqk7905v5hph0YBG
+	 zXv5iOGFpTN/LR7LSiJdNMu3B9A7DeL1zAjDGfCgjCgXKirORMS2zH1W8rgoATAOWa
+	 Sw423Of3nL520y81i/qjewUmEYPZZcXpQQHiT4LaCy0VvQ1EOJxprkUzuB/mtAJNB5
+	 /l6M9STyi3Wja8PGSEuYTBdjVV6pLaKljnWksCzvD8i6DURiuA52H1PdZY3LfK3GwN
+	 AlCJ/YzaAxpN7xSq4+t8TTiLpMgbsVlhZpYY7Pz8x1Gkg0PqF7Tn5YWW6bnzc3+6pV
+	 A0URxRGtspFmA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -37,12 +37,12 @@ Cc: Rahul Chandra <rahul@chandra.net>,
 	markgross@kernel.org,
 	acpi4asus-user@lists.sourceforge.net,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 7/8] platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8406CA
-Date: Mon,  7 Jul 2025 20:02:14 -0400
-Message-Id: <20250708000215.793090-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 5/6] platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8406CA
+Date: Mon,  7 Jul 2025 20:02:29 -0400
+Message-Id: <20250708000230.793347-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250708000215.793090-1-sashal@kernel.org>
-References: <20250708000215.793090-1-sashal@kernel.org>
+In-Reply-To: <20250708000230.793347-1-sashal@kernel.org>
+References: <20250708000230.793347-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,7 +52,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.15.5
+X-stable-base: Linux 6.12.36
 Content-Transfer-Encoding: 8bit
 
 From: Rahul Chandra <rahul@chandra.net>
@@ -162,10 +162,10 @@ The commit should be backported to stable kernels that contain the
  1 file changed, 9 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3f8b2a324efdf..f84c3d03c1de7 100644
+index a5933980ade3d..90ad0045fec5f 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -530,6 +530,15 @@ static const struct dmi_system_id asus_quirks[] = {
+@@ -529,6 +529,15 @@ static const struct dmi_system_id asus_quirks[] = {
  		},
  		.driver_data = &quirk_asus_zenbook_duo_kbd,
  	},
