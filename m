@@ -1,84 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from n169-114.mail.139.com (n169-114.mail.139.com [120.232.169.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3992BEFE8;
-	Tue,  8 Jul 2025 08:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC2179CF;
+	Tue,  8 Jul 2025 09:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=120.232.169.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751964870; cv=none; b=byexNOozPRwydFD1yowCQF+TLxaFiwFKEt5eUib3nIn+zrZeWnCzpezag51HDClWjQK8L9A28GwSFen+cVHotRa8whqaW/Jcq4MpLbz2wnErpQEelcGiETlANN+fBjYhblDveTaQic0wFN6u9n7NI9BnmA5gPMmHCtbttRT7xFI=
+	t=1751967897; cv=none; b=jYY0aOhasaI02w4tngkekY3tG5TA2TofcRdMCVwD8PkAKgYEl09U9g5G2NvgPH4OMk1hYkzyDwhF/1eFmJTxHbL1tFwxnwJRuimyE9fB4PJPnv8HYlbsa9myDmC2tjxkIjfSBKGlZjYKoU/UrQ4guMsAxbPN3RcTx3Utpn8AmKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751964870; c=relaxed/simple;
-	bh=XbuRMxQszhiv3xuk8dB4cUp9wbNNFGyDjDesNag3FoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zcx+j6/RpUboNabaDPMhMuKrOwA4mKXd3Te+NZq90GMRNsqcAjsb4xmPnsGVFcvj7OXwUyPuvjb0PnEtTmG+O1vU4CiNlsVZReRQjyOi4YugSEI09COAwkehLr6gqgP2113rYC2dSTbVwsdIIgBqqeCVb8yNvDXoAFzmHZVpFrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNmt8Y22; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNmt8Y22"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED399C4CEF7;
-	Tue,  8 Jul 2025 08:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751964870;
-	bh=XbuRMxQszhiv3xuk8dB4cUp9wbNNFGyDjDesNag3FoY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sNmt8Y22MalcTjvlEaToG2T/BpQHFr6NsiTdBSEZilde6BMezpEMF4M1iEEo3A7fS
-	 GDeQRi/btho+rh2I7wxKc6UJyNJ76tVfrZIAWdHIFmXg0Rc0uWFyLpE+QN8HYenzvf
-	 mBhsZ2knKgH/YFqc9X2Qxq2InoqvmqxarAcrvlasweTaPHxaOyrv26TD129KSkrSgE
-	 wXQ/QgqSEliAIYY1gNqx5kd+V2XWnMR4iUl2TM2uND1PqI2t1Ptdp94Stify3fEyHL
-	 YtDv65wNGrQLwXJnXYbt82rawXGi8UiS6Gv6atnafbPxnI1MDK5hGU1Qbp+2uosqRc
-	 YtAL+s45z7x8A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uZ45m-00000000450-0a1f;
-	Tue, 08 Jul 2025 10:54:22 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Bryan ODonoghue" <bryan.odonoghue@linaro.org>,
-	platform-driver-x86@vger.kernel.org,
+	s=arc-20240116; t=1751967897; c=relaxed/simple;
+	bh=rjoGb4QYUa8g4YTR1lLJbpA0zCVoViTj52sglYfLdYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IJEkue5xySAkSCYY8t7f5h08hw/NcGraLxG05dy28ewGDQItL9jFWFzseMk5LTHYBa2ukylinchqyv7abEFJxIJXDnp+8b4wIUfY8meLJL803xji+iQQjyfvUTCItL70fjgp1xVDTEWHmHJdCjsPswgXY/YU+BgujxhJy5VX/00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com; spf=pass smtp.mailfrom=139.com; arc=none smtp.client-ip=120.232.169.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=139.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=139.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM:                                                                                        
+X-RM-SPAM-FLAG:00000000
+Received:from yoga-Lenovo-Slim-Pro-7-14APH8.lenovo.com (unknown[106.38.209.7])
+	by rmsmtp-lg-appmail-42-12056 (RichMail) with SMTP id 2f18686ce88523b-b9f71;
+	Tue, 08 Jul 2025 17:44:48 +0800 (CST)
+X-RM-TRANSID:2f18686ce88523b-b9f71
+From: Jackie Dong <xy-jackie@139.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan@kernel.org>
-Subject: [PATCH] platform: arm64: huawei-gaokun-ec: fix OF node leak
-Date: Tue,  8 Jul 2025 10:53:58 +0200
-Message-ID: <20250708085358.15657-1-johan@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dongeg1@lenovo.com,
+	Jackie Dong <xy-jackie@139.com>
+Subject: [PATCH v3] lenovo-wmi-hotkey: Fixed a kernel error report for some Lenovo non-ThinkPad devices
+Date: Tue,  8 Jul 2025 17:43:05 +0800
+Message-ID: <20250708094352.26850-1-xy-jackie@139.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Make sure to drop the OF node reference taken when creating the Gaokun
-auxiliary devices when the devices are later released.
+Not all of Lenovo non-ThinkPad devices support both mic mute LED (on F4)
+and audio mute LED (on F1). Some of them only support one mute LED, some
+of them don't have any mute LED. Add a decision to judge this device
+support mute LED or not. Without this decision, not support both of mic
+mute LED and audio mute LED Lenovo non-ThinkPad brand devices (including
+Ideapad/Yoga/Xiaoxin/Gaming/ThinkBook, etc.) will report a failed message
+with error -5.
 
-Fixes: 7636f090d02e ("platform: arm64: add Huawei Matebook E Go EC driver")
-Cc: Pengyu Luo <mitltlatltl@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Jackie Dong <xy-jackie@139.com>
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
 ---
- drivers/platform/arm64/huawei-gaokun-ec.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v3:
+ - Reverse orignal logic  (obj && obj->type == ACPI_TYPE_INTEGER) 
+   and add new decision for led_version == 0.
+ - Optimize the descriptions based on reviewer comments.
 
-diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform/arm64/huawei-gaokun-ec.c
-index 7e5aa7ca2403..7170f8eb76f7 100644
---- a/drivers/platform/arm64/huawei-gaokun-ec.c
-+++ b/drivers/platform/arm64/huawei-gaokun-ec.c
-@@ -662,6 +662,7 @@ static void gaokun_aux_release(struct device *dev)
- {
- 	struct auxiliary_device *adev = to_auxiliary_dev(dev);
+Changes in v2:
+ - Add warning message and then return 0 if the device support mute LED
+   abnormaly, based on Hans suggestion and Armin previous patch.
+
+
+ .../x86/lenovo-wmi-hotkey-utilities.c         | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+index 89153afd7015..1850992f2ea8 100644
+--- a/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
++++ b/drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+@@ -127,21 +127,30 @@ static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type, struct
+ 	else
+ 		return -EIO;
  
-+	of_node_put(dev->of_node);
- 	kfree(adev);
- }
+-	wpriv->cdev[led_type].max_brightness = LED_ON;
+-	wpriv->cdev[led_type].flags = LED_CORE_SUSPENDRESUME;
++	/*
++	 * Output parameters define: 0 means mute LED is not supported, Non-zero means
++	 * mute LED can be supported.
++	 */
++	if (led_version == 0)
++		return 0;
++
  
-@@ -693,6 +694,7 @@ static int gaokun_aux_init(struct device *parent, const char *name,
+ 	switch (led_type) {
+ 	case MIC_MUTE:
+-		if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER)
+-			return -EIO;
++		if (led_version != WMI_LUD_SUPPORT_MICMUTE_LED_VER) {
++			pr_warn("The MIC_MUTE LED of this device isn't supported now.\n");
++			return 0;
++		}
  
- 	ret = auxiliary_device_init(adev);
- 	if (ret) {
-+		of_node_put(adev->dev.of_node);
- 		kfree(adev);
- 		return ret;
+ 		wpriv->cdev[led_type].name = "platform::micmute";
+ 		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_micmute_led_set;
+ 		wpriv->cdev[led_type].default_trigger = "audio-micmute";
+ 		break;
+ 	case AUDIO_MUTE:
+-		if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER)
+-			return -EIO;
++		if (led_version != WMI_LUD_SUPPORT_AUDIOMUTE_LED_VER) {
++			pr_warn("The AUDIO_MUTE LED of this device isn't supported now.\n");
++			return 0;
++		}
+ 
+ 		wpriv->cdev[led_type].name = "platform::mute";
+ 		wpriv->cdev[led_type].brightness_set_blocking = &lsh_wmi_audiomute_led_set;
+@@ -152,6 +161,9 @@ static int lenovo_super_hotkey_wmi_led_init(enum mute_led_type led_type, struct
+ 		return -EINVAL;
  	}
+ 
++	wpriv->cdev[led_type].max_brightness = LED_ON;
++	wpriv->cdev[led_type].flags = LED_CORE_SUSPENDRESUME;
++
+ 	err = devm_led_classdev_register(dev, &wpriv->cdev[led_type]);
+ 	if (err < 0) {
+ 		dev_err(dev, "Could not register mute LED %d : %d\n", led_type, err);
 -- 
-2.49.0
+2.43.0
+
 
