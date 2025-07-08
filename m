@@ -1,202 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F027D2DBF73
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Jul 2025 12:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6AC14883F;
+	Tue,  8 Jul 2025 22:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751978485; cv=none; b=Gq/SD3cuOoZShWpf44tEgRyqHhtgvwNwLnTjc3SVTkS5fbyBVKg3wMovw29rPgwVMS5OlsSdtvpohht/8nwjItEvgtW671TwMs/OJMMLVIdtoQWjOxb4e4bFBbgaEOKia3hcLsTGj2AHWxUWFnOYPG6BwARnp2maCBAoBz9xg2g=
+	t=1752012232; cv=none; b=FhFWQRT18DvSkW1cUBA5Cgzl4ckqF0qznNMm54JpkJyx2kgzNeDbNgerQ1S5BDGXTwWirVL9mnWBn+cCaixSZ0JWiQqYpqyPOdu8ZhrBztqFP7VcaYQRFAMqNNYVitZhnrJjnr1F3tqNA6lpJv2WnXI91qsMrpVcyz8Y1JVw1Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751978485; c=relaxed/simple;
-	bh=xqixcIP0gWxGyhxWzYYMaWu2Za4gV7cIt3Y36VSA1M4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tQIk9Ntb1Zi0v7AmqaedGROH4nxicP0HRDp4byZsnG+g7PTazvZmKV5hpXggqHaVj7V9ziYRt3GuBoR5ZWmwXXCPBCKnTLZGULpp6s1UKHqZ7wUPPej6KiMtYQN8enqwpncjWuwinL+zbMwTA96vLk7nNZB7Q73V7SBX2M2S01s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kVluEe/G; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752012232; c=relaxed/simple;
+	bh=tXVDsd7NOD6A2M7p7qUaNCd/pRPGJ1t7jA8NgRtoCgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwECrHDr1POllsxG1jtsH70+N9MwK8hSJQDrOtJUyTEDWZF0jXPVCQ9Jjf6mUvQ0bWQ5vU8VbauT5gopu9bBGAQ+ujn5sADlyvPcfbl5Puu9sUWUAq9c9xLr0k1LxNsm5IpO0fVKdN9rZ6f4yRvBe7/svjTa39aHOri3kIeZO5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RexGCZPp; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kVluEe/G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751978484; x=1783514484;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xqixcIP0gWxGyhxWzYYMaWu2Za4gV7cIt3Y36VSA1M4=;
-  b=kVluEe/GpuQUjFSo1BrU7SiRQit2vvZt61CufByFsfCaVZNSHHXvyAwb
-   yELw9Fw/80Ac5TRhGft4o8WwFmG9mAZKGv2U43bsdsw6frOZ2X+hKEslS
-   RUmxGlrfnKKzfilQf9jDMs014wbZkXBNP2WUU/4HBD3eop86h1ydsmosc
-   BbUSV3teoOzUVPefWV2jdVOvexwnYNS+ZibLYaGF4o6San7ExwSyNv+/6
-   XFOC0CrZzRht3LB1yPkb8S8eFLpIfeeiLwQgmbe0GVc0TXSkFacwacP90
-   3dMDTxVZC4ALCRXvKjrj1DaCKCJh6DKFZU1qC4duiz8FWZweEvklYw6i0
-   g==;
-X-CSE-ConnectionGUID: suIvP3bcRgSNmqLMsWzWKQ==
-X-CSE-MsgGUID: P2qXgcSkSk6fkUZzeuBa3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="54103130"
-X-IronPort-AV: E=Sophos;i="6.16,297,1744095600"; 
-   d="scan'208";a="54103130"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2025 05:41:24 -0700
-X-CSE-ConnectionGUID: ekaKT/eBQWOTrXv07ZLcPA==
-X-CSE-MsgGUID: vFAZPPA3Q5KNqWBnrK3t9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,297,1744095600"; 
-   d="scan'208";a="159811961"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.247])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2025 05:41:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 8 Jul 2025 15:41:19 +0300 (EEST)
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v3] platform/x86/amd/hsmp: Enhance the print messages to prevent
- confusion
-In-Reply-To: <20250708122605.1436917-1-suma.hegde@amd.com>
-Message-ID: <38581026-8655-6bd3-dc50-97f10dc2c360@linux.intel.com>
-References: <20250708122605.1436917-1-suma.hegde@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RexGCZPp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=E2QTMLNz+wpmxWaHkhuqHev5xzFIG4QbvWSVsi2ak1c=; b=RexGCZPp/ke/j+v4PkBiS63YoY
+	wyrgKh7N5DPhqdkWpzOnWYaoasivhm5J6cvzz/Q2eeK+15y1WJDufUyjHAKVEvD41jT1emXukejQf
+	uXAPB9EP01x5fEAJsEntL0Xj2YwL2vM+ie+EIFvqsIthNNhqSlF+QmJjeRM2c1xMM3lKAwTnNqwYc
+	xRytEdYF6JrPzALeeUKpl/O2yyKKLRGQ0SWZnuiTFkM03b+LFmIY4DkkVURubaLyFlfqW4n4A24kJ
+	xAI8XnX4IfVJlUaWTItvQPhBGT9S0EHe56RoI8Ia0GEXtYWGnyXuksyUEH0ROHFWo1IsITGgb9x6s
+	DKnIR5CQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uZGPh-00000001Jge-2j3k;
+	Tue, 08 Jul 2025 22:03:45 +0000
+Message-ID: <6c1056da-8cbe-477f-be95-10a395c60443@infradead.org>
+Date: Tue, 8 Jul 2025 15:03:41 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_next/master=3A_=28build=29_format_?=
+ =?UTF-8?B?4oCYJWxk4oCZIGV4cGVjdHMgYXJndW1lbnQgb2YgdHlwZSDigJhsb25nIGludA==?=
+ =?UTF-8?B?4oCZLCBidXQgYXJndW1lbnQgMiBoLi4u?=
+To: kernelci@lists.linux.dev, kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com,
+ linux-next@vger.kernel.org, david.e.box@linux.intel.com,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 8 Jul 2025, Suma Hegde wrote:
 
-> When the HSMP ACPI device is present, loading the amd_hsmp.ko
-> module incorrectly displays the message "HSMP is not supported on
-> Family:%x model:%x\n" despite being supported by the hsmp_acpi.ko
-> module, leading to confusion.
+
+On 7/8/25 4:59 AM, KernelCI bot wrote:
+> Hello,
 > 
-> To address this issue, relocate the acpi_dev_present() check to the
-> beginning of the hsmp_plt_init() and revise the print message to
-> better reflect the current support status.
+> New build issue found on next/master:
 > 
-> Additionally, add more error messages in the error paths and debug
-> messages to indicate successful probing for both hsmp_acpi.ko
-> and amd_hsmp.ko modules.
-> 
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 > ---
-> Changes since v2
-> 1. Update the commit message and description
-> 2. Add dev_printk.h and kconfig.h
-> 3. Replace dev_info() with dev_dbg()
-> 4. Add few more err prints in hsmp_acpi_probe() and hsmp_pltdrv_probe(()
->    hsmp_plt_init() in the error paths
+>  format ‘%ld’ expects argument of type ‘long int’, but argument 2 has
+> type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=] in
+> drivers/platform/x86/intel/pmt/discovery.o
+> (drivers/platform/x86/intel/pmt/discovery.c)
+> [logspec:kbuild,kbuild.compiler.error]
+> ---
 > 
-> Changes since v1
-> Move successful probe print message inside the if condition in acpi.c.
+> - dashboard: https://d.kernelci.org/i/maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> - commit HEAD:  58ba80c4740212c29a1cf9b48f588e60a7612209
 > 
->  drivers/platform/x86/amd/hsmp/acpi.c |  9 +++++++--
->  drivers/platform/x86/amd/hsmp/plat.c | 29 ++++++++++++++++++++++------
->  2 files changed, 30 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 2f1faa82d13e..d974c2289f5a 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -587,8 +587,10 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
->  
->  	if (!hsmp_pdev->is_probed) {
->  		hsmp_pdev->num_sockets = amd_num_nodes();
-> -		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
-> +		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES) {
-> +			dev_err(&pdev->dev, "Wrong number of sockets\n");
->  			return -ENODEV;
-> +		}
->  
->  		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
->  					       sizeof(*hsmp_pdev->sock),
-> @@ -605,9 +607,12 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
->  
->  	if (!hsmp_pdev->is_probed) {
->  		ret = hsmp_misc_register(&pdev->dev);
-> -		if (ret)
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to register misc device\n");
->  			return ret;
-> +		}
->  		hsmp_pdev->is_probed = true;
-> +		dev_dbg(&pdev->dev, "AMD HSMP ACPI is probed successfully\n");
->  	}
->  
->  	return 0;
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index e3874c47ed9e..d4eeac0094ed 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -14,6 +14,8 @@
->  #include <linux/acpi.h>
->  #include <linux/build_bug.h>
->  #include <linux/device.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/kconfig.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
-> @@ -215,7 +217,14 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	return hsmp_misc_register(&pdev->dev);
-> +	ret = hsmp_misc_register(&pdev->dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register misc device\n");
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(&pdev->dev, "AMD HSMP is probed successfully\n");
-> +	return 0;
->  }
->  
->  static void hsmp_pltdrv_remove(struct platform_device *pdev)
-> @@ -287,15 +296,21 @@ static int __init hsmp_plt_init(void)
->  {
->  	int ret = -ENODEV;
->  
-> +	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1)) {
-> +#if IS_ENABLED(CONFIG_AMD_HSMP_ACPI)
+> Log excerpt:
+> =====================================================
+> drivers/platform/x86/intel/pmt/discovery.c:427:35: error: format ‘%ld’
+> expects argument of type ‘long int’, but argument 2 has type ‘size_t’
+> {aka ‘unsigned int’} [-Werror=format=]
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~
+>       |                                                               |
+>       |
+> size_t {aka unsigned int}
+> ./include/asm-generic/bug.h:112:31: note: in definition of macro ‘__WARN_printf’
+>   112 |                 __warn_printk(arg);
+>          \
+>       |                               ^~~
+> drivers/platform/x86/intel/pmt/discovery.c:427:13: note: in expansion
+> of macro ‘WARN’
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |             ^~~~
+> drivers/platform/x86/intel/pmt/discovery.c:427:53: note: format string
+> is defined here
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |                                                   ~~^
+>       |                                                     |
+>       |                                                     long int
+>       |                                                   %d
+>   CC [M]  drivers/platform/chrome/wilco_ec/telemetry.o
+> cc1: all warnings being treated as errors
+> 
+> =====================================================
+> 
+> 
+> # Builds where the incident occurred:
+> 
+> ## defconfig+kcidebug+x86-board on (i386):
+> - compiler: gcc-12
+> - dashboard: https://d.kernelci.org/build/maestro:686cf98934612746bbb465bb
+> 
+> 
+> #kernelci issue maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> 
+> --
+> This is an experimental report format. Please send feedback in!
+> Talk to us at kernelci@lists.linux.dev
+> 
+> Made with love by the KernelCI team - https://kernelci.org
+> 
 
-This doesn't require use of #if, but if (IS_ENABLED(CONFIG_AMD_HSMP_ACPI)) should do.
 
-Other than that, this change looked fine now.
+This is from commit d9a0788093565:
+platform/x86/intel/pmt: Add PMT Discovery driver
 
-> +		pr_debug("HSMP is supported through ACPI on this platform, please use hsmp_acpi.ko\n");
-> +#else
-> +		pr_info("HSMP is supported through ACPI on this platform, please enable AMD_HSMP_ACPI config\n");
-> +#endif
-> +		return -ENODEV;
-> +	}
-> +
->  	if (!legacy_hsmp_support()) {
-> -		pr_info("HSMP is not supported on Family:%x model:%x\n",
-> +		pr_info("HSMP interface is either disabled or not supported on family:%x model:%x\n",
->  			boot_cpu_data.x86, boot_cpu_data.x86_model);
->  		return ret;
->  	}
->  
-> -	if (acpi_dev_present(ACPI_HSMP_DEVICE_HID, NULL, -1))
-> -		return -ENODEV;
-> -
->  	hsmp_pdev = get_hsmp_pdev();
->  	if (!hsmp_pdev)
->  		return -ENOMEM;
-> @@ -305,8 +320,10 @@ static int __init hsmp_plt_init(void)
->  	 * if we have N SMN/DF interfaces that ideally means N sockets
->  	 */
->  	hsmp_pdev->num_sockets = amd_num_nodes();
-> -	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES)
-> +	if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES) {
-> +		pr_err("Wrong number of sockets\n");
->  		return ret;
-> +	}
->  
->  	ret = platform_driver_register(&amd_hsmp_driver);
->  	if (ret)
-> 
+Cc:ing David Box.
 
 -- 
- i.
+~Randy
 
