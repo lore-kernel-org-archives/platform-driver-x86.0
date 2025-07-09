@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB15F1DFE1;
-	Wed,  9 Jul 2025 15:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF652C3242;
+	Wed,  9 Jul 2025 15:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752074189; cv=none; b=lcmVbGcD5lYArbktVSfG2DnlAYFknSUv+Ctq8QeDtydrd3YHghZK51j1Pp1I//UmKmwkNpw6QoN1p6mHzOJWiohN86YQIlInFt9/a8ois72wlXOQ7nhmG+aBGqegY6J+84WxGr74l+ozUT1gv9AzZhmJrZtMGLih/zSsxq/NFew=
+	t=1752074259; cv=none; b=p4Rfct5YbYrSX4bDLJ79XaKHC6XI41gBsOT0ATNK9EzQAMO+R+VVax7D3WWWgKg54GKrW2Cy+ECHmxwUW29QYu8xlSS+3BSUbJtQG0SqvrKwH8UrAdV8Hp9BiRYWpxnPaFUii3ETmAGOvPVQZ+jVn/oxhYkMqOzh40hN0PwkeiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752074189; c=relaxed/simple;
-	bh=J5hfZmumX9KtMbE7muXtxOV4HLWEtKxJo5EnOpBp8uA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KW614qe2gz/8ofvVU2lUdCDvmiIG/Z/kYw3l7h48EXdsKpuOFRvTpKY2wTkZJj+Hq5udEmuXxuJDlvDMFBk2RTCI7oNDi65nW3p2A0JGYPdwfjOcstdVriHyxzUj/fxwoNSZSQwatFybaA2Re53oETEY+POKBX1LqIrw0CanntA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWtUhVeu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752074259; c=relaxed/simple;
+	bh=biijjrqVXTPUyczrqI3oFT5OL7RF+tbYJJRJdTQ19bE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZMzZBopWKxKuta2Yaha4CC92w9kkRuE7NtQ7bUz8a56AzgY0nobnZZUNagaCAtLT9m/dECHakWFA+0AZosUeCYygWTVaVvGvUGoMuNmHF3W1+EIVlEV+yDVmW2fVNqikUqp7Z5fA2KcdT0VS0dt86xX+g4nw6LFBn7NEaqZxDlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxwkSP2Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWtUhVeu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327FDC4CEEF;
-	Wed,  9 Jul 2025 15:16:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxwkSP2Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0976FC4CEF1;
+	Wed,  9 Jul 2025 15:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752074188;
-	bh=J5hfZmumX9KtMbE7muXtxOV4HLWEtKxJo5EnOpBp8uA=;
+	s=k20201202; t=1752074259;
+	bh=biijjrqVXTPUyczrqI3oFT5OL7RF+tbYJJRJdTQ19bE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=RWtUhVeu2X5PkidsChJmze4/U/Uk4MqV7X8p3GSnkyNVVaFApWfvI6eT50fZetVSJ
-	 12myGis11lBzWbxA2gWjBZPM8arIGYUm6/nWmEkADbNI0wngcXHr8/UZ9/C+9lNUO/
-	 +JSCUBlPNlSSW8OMUV8UXlH7VaV1dsxYrg5YOgxKlhr9swUJGY679LuQiKvRNF7tp0
-	 BVmjqqFbGOuvlX4xqxTFyBFaI5oFw/KmWJ6DMphPYMKhDAxu39CKjZPk8vCZellHD4
-	 HV15MrjOfaSmIKr4DHy1wd69YSZEXtoLza8ku0B4dRji4XLZPUzrrTK6iZ1WvjqFhr
-	 RNWgt+FWjsOXQ==
+	b=mxwkSP2YAFQOxne/DBLeA/7XeKIzPWD8Qizc3aiqQwyWTjYwYi5R+zpa8/N3yamTF
+	 dzzj1dq2AnmKcMFLW7MogzB6AAE4m9m8bKWT2KiKcFdv2isXF8IjEns+BoyKY3CInm
+	 RzjSWgvkU/fYZL4Rg6OyreRuZEV8WsnYnVggjDmX3l0IHLwu5hHbwVMRi/WDzp4xtF
+	 SP+AJ7IusoLWFhPG52iKMiykpMOBEkIfQRI31cDYHSL21cbb7jA4a0EFzBvCRaQEQ3
+	 xsAMRB12Cpk55+t3bN1mxBkKncZw1Rlh/A4Wf+k4sCfCCz5jlQSSzl3GS5QWpTdUis
+	 ykod++ZMXGnyw==
 From: Arnd Bergmann <arnd@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>,
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>
 Cc: Arnd Bergmann <arnd@arndb.de>,
+	Alok Tiwari <alok.a.tiwari@oracle.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Jelle van der Waa <jvanderwaa@redhat.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/pmt: fix format string in unit test
-Date: Wed,  9 Jul 2025 17:16:19 +0200
-Message-Id: <20250709151624.1229088-1-arnd@kernel.org>
+Subject: [PATCH] platform/x86: lenovo: gamezone needs "other mode"
+Date: Wed,  9 Jul 2025 17:17:28 +0200
+Message-Id: <20250709151734.1268435-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -46,33 +51,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Another warning about incorrect format strings shows up in the unit test
+Registering the "other mode" notifier fails if that is disabled:
 
-In file included from include/kunit/assert.h:13,
-                 from include/kunit/test.h:12,
-                 from drivers/platform/x86/intel/pmt/discovery-kunit.c:9:
-drivers/platform/x86/intel/pmt/discovery-kunit.c: In function 'validate_pmt_regions':
-include/linux/kern_levels.h:5:25: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
+x86_64-linux-ld: drivers/platform/x86/lenovo/wmi-gamezone.o: in function `lwmi_gz_probe':
+wmi-gamezone.c:(.text+0x336): undefined reference to `devm_lwmi_om_register_notifier'
 
-Fixes: b9707d46a959 ("platform/x86/intel/pmt: KUNIT test for PMT Enhanced Discovery API")
+This could be fixed by adding a stub helper, but a Kconfig 'select'
+seems simpler here.
+
+Fixes: 22024ac5366f ("platform/x86: Add Lenovo Gamezone WMI Driver")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/platform/x86/intel/pmt/discovery-kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/lenovo/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/discovery-kunit.c b/drivers/platform/x86/intel/pmt/discovery-kunit.c
-index b4493fb96738..f44eb41d58f6 100644
---- a/drivers/platform/x86/intel/pmt/discovery-kunit.c
-+++ b/drivers/platform/x86/intel/pmt/discovery-kunit.c
-@@ -32,7 +32,7 @@ validate_pmt_regions(struct kunit *test, struct pmt_feature_group *feature_group
- 		kunit_info(test, "\t\tbus=%u, device=%u, function=%u, guid=0x%x,",
- 			   region->plat_info.bus_number, region->plat_info.device_number,
- 			   region->plat_info.function_number, region->guid);
--		kunit_info(test, "\t\taddr=%p, size=%lu, num_rmids=%u", region->addr, region->size,
-+		kunit_info(test, "\t\taddr=%p, size=%zu, num_rmids=%u", region->addr, region->size,
- 			   region->num_rmids);
- 
- 
+diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
+index b76157b35296..e9e1c3268373 100644
+--- a/drivers/platform/x86/lenovo/Kconfig
++++ b/drivers/platform/x86/lenovo/Kconfig
+@@ -250,8 +250,7 @@ config LENOVO_WMI_GAMEZONE
+ 	depends on ACPI_WMI
+ 	depends on DMI
+ 	select ACPI_PLATFORM_PROFILE
+-	select LENOVO_WMI_EVENTS
+-	select LENOVO_WMI_HELPERS
++	select LENOVO_WMI_TUNING
+ 	help
+ 	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
+ 	  platform-profile firmware interface to manage power usage.
 -- 
 2.39.5
 
