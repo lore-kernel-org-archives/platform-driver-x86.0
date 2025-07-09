@@ -1,91 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E302D9EE6
-	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Jul 2025 12:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB15F1DFE1;
+	Wed,  9 Jul 2025 15:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752063731; cv=none; b=Y37VuH288iY6gcgD9O6db/IVXqA1KXa8AbK71NTQl/6O6BCKqlhRnk98aPwjFOB3ovi+1SRa+qmGDrZFx6Q+1uFrng60W6XX7Cm01lqmFCzt72V1RBEYKhdUZYFj7TX8/AtTREMbwwl3toooYxRnazqtt/HlQkU+GOYDrZpbCc4=
+	t=1752074189; cv=none; b=lcmVbGcD5lYArbktVSfG2DnlAYFknSUv+Ctq8QeDtydrd3YHghZK51j1Pp1I//UmKmwkNpw6QoN1p6mHzOJWiohN86YQIlInFt9/a8ois72wlXOQ7nhmG+aBGqegY6J+84WxGr74l+ozUT1gv9AzZhmJrZtMGLih/zSsxq/NFew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752063731; c=relaxed/simple;
-	bh=Q+oivYOrnwDyY3/4GGIIIlTWY65O7c6Ba3tP+oKIV4k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FdJ3bjBT2z7giXhF024XOLnsC6CNKe9cW+hPnVxdDhWSMBAW0yicW9ee4nAvBBnWA1njRWwYCrbFwuayrmLtr+Y7bc/hNjyZM138cXofUi+J/Xg03u/W2uqxedIA3Cudfkz+A40JW2o43O288DzL8YiiiReDEPZeefIT1j0bqkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D0CRtu5B; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752074189; c=relaxed/simple;
+	bh=J5hfZmumX9KtMbE7muXtxOV4HLWEtKxJo5EnOpBp8uA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KW614qe2gz/8ofvVU2lUdCDvmiIG/Z/kYw3l7h48EXdsKpuOFRvTpKY2wTkZJj+Hq5udEmuXxuJDlvDMFBk2RTCI7oNDi65nW3p2A0JGYPdwfjOcstdVriHyxzUj/fxwoNSZSQwatFybaA2Re53oETEY+POKBX1LqIrw0CanntA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWtUhVeu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D0CRtu5B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752063730; x=1783599730;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Q+oivYOrnwDyY3/4GGIIIlTWY65O7c6Ba3tP+oKIV4k=;
-  b=D0CRtu5BKHzUFgY9E50a4pawABhwifZ4VQFM4kZ1ee/4rPxk0HfZiIRy
-   y5M2jnKi63mKLkYmcY0GSxDQ6osHBUKOO1fGYnITGZvRWmOXQ8r1WkaHb
-   le6M+YUAFa1YTPFCewEMxSPmKOj6rReuIsPzNR317w6RqCf5AZzJt9Ewx
-   PauqRPbW+mzgg1G5bcKONyis4uSmOjCbNUhBhCnstKpE2WxPLLYdynKM9
-   r8+9eykfDKqtzIVm9owYah67TrMOaiZVkSrOwn7cComY8TeUCPeRQPTpc
-   KtpjMnMgkSuF2yqyuFLEkNhTGzzyY2pVgakKmm6KZoUWT758EBSIq7Tp1
-   Q==;
-X-CSE-ConnectionGUID: mVUNdMJ4Tv6Ll6PvAheY+g==
-X-CSE-MsgGUID: TZxI91M6RciEwIYDAIT+lw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11489"; a="54467114"
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="54467114"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 05:22:09 -0700
-X-CSE-ConnectionGUID: 8CWz5ekuRbqMn15FcnQIUg==
-X-CSE-MsgGUID: zTimPDpITK+HK7t/k/ozLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="155849086"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.168])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 05:22:07 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
- Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250709105413.2487851-1-suma.hegde@amd.com>
-References: <20250709105413.2487851-1-suma.hegde@amd.com>
-Subject: Re: [v4] platform/x86/amd/hsmp: Enhance the print messages to
- prevent confusion
-Message-Id: <175206372278.12514.7660174160182561105.b4-ty@linux.intel.com>
-Date: Wed, 09 Jul 2025 15:22:02 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWtUhVeu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327FDC4CEEF;
+	Wed,  9 Jul 2025 15:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752074188;
+	bh=J5hfZmumX9KtMbE7muXtxOV4HLWEtKxJo5EnOpBp8uA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RWtUhVeu2X5PkidsChJmze4/U/Uk4MqV7X8p3GSnkyNVVaFApWfvI6eT50fZetVSJ
+	 12myGis11lBzWbxA2gWjBZPM8arIGYUm6/nWmEkADbNI0wngcXHr8/UZ9/C+9lNUO/
+	 +JSCUBlPNlSSW8OMUV8UXlH7VaV1dsxYrg5YOgxKlhr9swUJGY679LuQiKvRNF7tp0
+	 BVmjqqFbGOuvlX4xqxTFyBFaI5oFw/KmWJ6DMphPYMKhDAxu39CKjZPk8vCZellHD4
+	 HV15MrjOfaSmIKr4DHy1wd69YSZEXtoLza8ku0B4dRji4XLZPUzrrTK6iZ1WvjqFhr
+	 RNWgt+FWjsOXQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: "David E. Box" <david.e.box@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/pmt: fix format string in unit test
+Date: Wed,  9 Jul 2025 17:16:19 +0200
+Message-Id: <20250709151624.1229088-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 09 Jul 2025 10:54:13 +0000, Suma Hegde wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> When the HSMP ACPI device is present, loading the amd_hsmp.ko
-> module incorrectly displays the message "HSMP is not supported on
-> Family:%x model:%x\n" despite being supported by the hsmp_acpi.ko
-> module, leading to confusion.
-> 
-> To address this issue, relocate the acpi_dev_present() check to the
-> beginning of the hsmp_plt_init() and revise the print message to
-> better reflect the current support status.
-> 
-> [...]
+Another warning about incorrect format strings shows up in the unit test
 
+In file included from include/kunit/assert.h:13,
+                 from include/kunit/test.h:12,
+                 from drivers/platform/x86/intel/pmt/discovery-kunit.c:9:
+drivers/platform/x86/intel/pmt/discovery-kunit.c: In function 'validate_pmt_regions':
+include/linux/kern_levels.h:5:25: error: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Fixes: b9707d46a959 ("platform/x86/intel/pmt: KUNIT test for PMT Enhanced Discovery API")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel/pmt/discovery-kunit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The list of commits applied:
-[1/1] platform/x86/amd/hsmp: Enhance the print messages to prevent confusion
-      commit: bde430fb669d03a0025fd90485dc26acfafd9b4f
-
---
- i.
+diff --git a/drivers/platform/x86/intel/pmt/discovery-kunit.c b/drivers/platform/x86/intel/pmt/discovery-kunit.c
+index b4493fb96738..f44eb41d58f6 100644
+--- a/drivers/platform/x86/intel/pmt/discovery-kunit.c
++++ b/drivers/platform/x86/intel/pmt/discovery-kunit.c
+@@ -32,7 +32,7 @@ validate_pmt_regions(struct kunit *test, struct pmt_feature_group *feature_group
+ 		kunit_info(test, "\t\tbus=%u, device=%u, function=%u, guid=0x%x,",
+ 			   region->plat_info.bus_number, region->plat_info.device_number,
+ 			   region->plat_info.function_number, region->guid);
+-		kunit_info(test, "\t\taddr=%p, size=%lu, num_rmids=%u", region->addr, region->size,
++		kunit_info(test, "\t\taddr=%p, size=%zu, num_rmids=%u", region->addr, region->size,
+ 			   region->num_rmids);
+ 
+ 
+-- 
+2.39.5
 
