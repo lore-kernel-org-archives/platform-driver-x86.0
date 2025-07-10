@@ -1,125 +1,142 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3791023C4F4;
-	Thu, 10 Jul 2025 12:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752149550; cv=none; b=h5lDUbwWbtiFW93epkcZ0ggWefAmQBsRn/MSrHxZl3I4G57x4L973VosJ/pvo1NKalPC+T1lPLhjrqJfvUmyJBzDpujC0na7oazyolqohN7t9Isbe1Fp1MjKFiVaSNAYRLBEa0QfwXJqhmxb0mKXneBFwaGXYHH8zHQ2aYvY8+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752149550; c=relaxed/simple;
-	bh=zRXsoN4t0HGYJYiKE4EXkDRzP+v+QPqSLpsz8ubYC10=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LcppU8zUjZL/CckXKm5LsmurnhwNL8slISloLyFEpu7I6ppkEniqDexlAyGNYKBHhqp5Uq4N5CtAWvzoUhCQUpXxL589bD064AJeqX7wcTHIjFxKCdP4YxTr/xgEeL5Bi3yd+f+beUHwzBUh1/aXj6lRYvL+Q83IE7HSFi8xZBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akksg0ED; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371162FCFFC;
+	Thu, 10 Jul 2025 19:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.220
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752174591; cv=pass; b=XOohHZ5rhGASFB5Js3jynfIQScA/ibVCm6c+cExArbLmiNVIXj1IjwfUEbw5G/pJm6Ie9gWrxMMbjSb6z7I6XgKb0YL+X6TvwVf2R1nOzMM7Z5zj7fK0DpR/P7gKchheJ0IKQigEKfNYx0UMOt8jY6ySntSTZ+FC/ujgdFcpXao=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752174591; c=relaxed/simple;
+	bh=t+LTk94kgoTR6lJqzrcbGjfmfT6df0JsCZ8AIRAZjbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LJWphHmfn3SbB4yAD1Qd0nw46w+QnaA9u/YD0WFpEWBVGqF4hrvvKvbL6u/5evtObzxU3H3gYwW+2atrY9rk2VKcIDjs7fgF3Ln1mdvMJaS63MwhwebNKBFeGIyl2j3FYukhsyxyWf+zH8DenUl52DNsSL0qX2O/z3TtHYLTqGY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aiyionpri.me; spf=none smtp.mailfrom=aiyionpri.me; dkim=pass (2048-bit key) header.d=aiyionpri.me header.i=@aiyionpri.me header.b=CuFP+KHr; dkim=permerror (0-bit key) header.d=aiyionpri.me header.i=@aiyionpri.me header.b=zQ4hvJY1; arc=pass smtp.client-ip=81.169.146.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aiyionpri.me
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=aiyionpri.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akksg0ED"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so879303b3a.0;
-        Thu, 10 Jul 2025 05:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752149548; x=1752754348; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8TQA4+iWdhebTihpcDNsTXRIFnfR3IxS8wu+OKw1UOU=;
-        b=akksg0EDwWQnbujm39mUlWgcXIO5B94AZwCa6AVxGI4/UXwRpjNlEWX4WZSJFqHnTZ
-         AkKYjxrRLwMWw1O8ua0fl2SBDvmAkFhMMCOuze/D2ld1PmXl/2SSoJBhQJlatF3X3uKW
-         VEFzm4xiwWMJw8Y7rQbY34o4TTXu3UBDs+dAZJTOaNojscfAeMLnlwjzHJ/ZZbGcV+4w
-         JNA+F5JtD+GK3G7jTQJiSrmJCykjNfSnH/pPA1sQWHd0J6IAPs4wzVTM4N0fBUKbzMMx
-         FEW5xt1quYyLjI7v7i52gk9unI0afiXh/NO0K7YMSS84NM1yzd+MXucsCrLzGd9HGlj/
-         IrtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752149548; x=1752754348;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8TQA4+iWdhebTihpcDNsTXRIFnfR3IxS8wu+OKw1UOU=;
-        b=CEwEaN6m7NDlBFx7u5rxP9BByy57C7oklUyuNxwfmYmcQxt1n0rTrMbZQ26Hs61LFt
-         H8mamsbmZ45P7YwXD5qbRIJt9j3hT+IX1cfUZHZPsEnyLWBiGOFiIni7vTvho32n9GIL
-         MssvLo3mRA4QBC5PivO4Rs2VRsSl8KVBeeD1ImOLi1PQ69yYhHgOa7tp8eDdJtA3DNpB
-         5CfUmOvINVGQEkX+htsYvdeDjiLvY0SkRPtLmqpX0h4JqHK58dHGMuYfkakAyBg2yPyw
-         1jzgn0JByzRAaPZq1CkEIMPZP+ltEK4MvEzIZr7cga5HCDDWj0c59ELhXdjbXVocvMX0
-         B0pw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2bHlIsMYWH9qJG4FF+SNK//e9qa84PuicV4/iv/B0Jwq1FWEGgojuPEd9289albFQzt28L7pNrrxET4daj8XC1uToLA==@vger.kernel.org, AJvYcCXJsD/gkuyN0EAsiM7p2Fw/PSNEDpS3ciBh6FBxEjvaCsRKbsWlju6PtdHmG9TmNzp22ZWEdEZqt/BL/Fg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4w8Fpc//zdA4hSpb4O6vexc4OqVNkkLSMSB19dEEHe/7XLhwi
-	WXwmw1v55BwMkdMDdlwEwSuhs44CIavnmVeLnYUwtVmdHslGuNVgL95x
-X-Gm-Gg: ASbGncs9jnPgI+GImn6soB2IhS/qvte87lB5sxB8CoezkwFYnJNn8iWBWf+buv2Ck07
-	DVuzVVezFbDtoQSBFLQC0ZoIp8Tk9ynIQwki0bndmq/7il1002so3u1Z9wm+WmcOHa2JdbIhWDF
-	SI3wru9I9g7PB54LM0jSNwI6gts8IAS7lBSDaHVuTBC7L1Opj53ME3TrB3Pm+BMIgiFDgMM/P8P
-	FE1vtrm7boM2IXqILR20OAiGImNr4OsDKFrQl2wXZg3qqKY3WvfAZpbIyV+nVQtZyCLpMeUdcHm
-	gMd7qIxeZ73PU7amUxLYfIlSk1McR0Nel8CIB8g8ey/Jx5cHjNGNQiJ+//m0P/yPM0TVG9s0aQ=
-	=
-X-Google-Smtp-Source: AGHT+IEei79wCN12n4ivLRhMw6PB03mr73hXLL6yImc2GsFUsxXRJqLx8nVL6cz0fWEevcMBBvzVTA==
-X-Received: by 2002:a05:6a20:2445:b0:220:21bf:b112 with SMTP id adf61e73a8af0-22cd5eee5dcmr11536615637.13.1752149548366;
-        Thu, 10 Jul 2025 05:12:28 -0700 (PDT)
-Received: from nuvole.lan ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74eb9e07facsm2194968b3a.68.2025.07.10.05.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jul 2025 05:12:27 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: johan@kernel.org
-Cc: bryan.odonoghue@linaro.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform: arm64: huawei-gaokun-ec: fix OF node leak
-Date: Thu, 10 Jul 2025 20:11:37 +0800
-Message-ID: <20250710121138.228975-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250708085358.15657-1-johan@kernel.org>
-References: <20250708085358.15657-1-johan@kernel.org>
+	dkim=pass (2048-bit key) header.d=aiyionpri.me header.i=@aiyionpri.me header.b="CuFP+KHr";
+	dkim=permerror (0-bit key) header.d=aiyionpri.me header.i=@aiyionpri.me header.b="zQ4hvJY1"
+ARC-Seal: i=1; a=rsa-sha256; t=1752174566; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=GlcinUFybpp74LXlOPbfJq/vIj2yYcvg7v+3jVMMbIf0cy8pc9Hqjm0Wwhb71EZpWe
+    kuSkxj0Ttju65YF6oS7/UWPE9puB4VPk1c1tVm2Fa94OaB//FYJqR89zkSGZ8keGnHQE
+    I/v5LGISfnVd3ui0UiDPyypvmqszoc9NGYehMsvkeknKVB70+kQWChEuwgbfOVCPuZl6
+    QC0KCUCSqVYN1UenRcl8tdP6aBPzwK1WD+v27E++WyVycm+9R7AlJoGCtIce4YaFhJOH
+    9APDpngWhGofn+TNBltVz5CqoivhzA1t9rSMK0aJDj+Wf4IoUGlxvT/Dj1FO7sJdPhwt
+    ko+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1752174566;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=FnjGVJXcq5/ir418FcqAdHT1NoKLuU/1sfPHApNdJ38=;
+    b=OdjcIQ31Q0xmGcSb2GVBg4esTFjFWz0mJ0ZB72gdudckrhBmy2ipelTQDFrrHer0fK
+    ouj5+jYYhIu50mjC1b5t1+BqX+9Vm4VNACy/YeThRIGfAJAHzs8Wnyei71DpJTkjpOjS
+    WfATTXO62jEfReEOX9GnTrSe+AyfTIHY+Wwnm4tLEkQDkCSWMzvww7/TXRvOOAhd7WEq
+    g8aIepbxpiPlp4TlYGUGF8CEvCAVE6hM1m1R5dmnk2QahD1WgJ1ISl5to1OuV63yRfJU
+    Qm1YNFHBqINKURmKQFkNH6Nhd0uDGLWR5NrBd0HvHH9NFIMAajNrc/++OQPHt6amUszx
+    6CSw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1752174566;
+    s=strato-dkim-0002; d=aiyionpri.me;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=FnjGVJXcq5/ir418FcqAdHT1NoKLuU/1sfPHApNdJ38=;
+    b=CuFP+KHrMnLLrwHbAJPhsTeGFjyWeBQWvuM/dARYAsj09gfQAfOxsBJUntFK6u/8aC
+    hTTljWAkWR9lRSNP2kZd1rfv39P7V7Hlin6hSF5I4VwECVapX8He3k0zYir+9+tuc7qt
+    oYpGKdfRxlNo2s80c8A33ydxJpsag6aXB/tY4NMOKhnsYGGhz74+/hYYBPWkCmMgJ3/h
+    gkv3766BD2KVJzKnBcZ2xQjmrot0F+UeralOcWH8+X0k8F5voXnS94W94tzzE7CwdAhP
+    ndYWvJ3iEeIXVUMTUFKMSYu0DEs58dFoMLmfHmdKNPm7u0EfpIhzfUgIQXB9/wQPX2tO
+    g/JQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1752174566;
+    s=strato-dkim-0003; d=aiyionpri.me;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=FnjGVJXcq5/ir418FcqAdHT1NoKLuU/1sfPHApNdJ38=;
+    b=zQ4hvJY15QtbxtaF4fUOY4PgZ029VZtZ0NPxpMyCDwiJ3jV1xmCBb4TLLx2h5+fZbA
+    KZZdhOrF3cc0gSxB8aAQ==
+X-RZG-AUTH: ":IWkkdEmxcvCtRDtHUQOu48a0Nfy9hOkbtqpt5cBSoxNQElJG620TYCK8nAkXs7YKQSRsyIcBIbULXaQjCPjUFD1kdMW0"
+Received: from aura.ffh.zone
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id 533eb916AJ9Q8xJ
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 10 Jul 2025 21:09:26 +0200 (CEST)
+From: Jan-Niklas Burfeind <kernel@aiyionpri.me>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Jan-Niklas Burfeind <kernel@aiyionpri.me>
+Subject: [PATCH] platform/x86: dell-lis3lv02d: Add Precision 3551
+Date: Thu, 10 Jul 2025 21:09:19 +0200
+Message-ID: <20250710190919.37842-1-kernel@aiyionpri.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jul 8, 2025 at 4:54 PM Johan Hovold <johan@kernel.org> wrote:
-> Make sure to drop the OF node reference taken when creating the Gaokun
-> auxiliary devices when the devices are later released.
->
-> Fixes: 7636f090d02e ("platform: arm64: add Huawei Matebook E Go EC driver")
-> Cc: Pengyu Luo <mitltlatltl@gmail.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/platform/arm64/huawei-gaokun-ec.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform/arm64/huawei-gaokun-ec.c
-> index 7e5aa7ca2403..7170f8eb76f7 100644
-> --- a/drivers/platform/arm64/huawei-gaokun-ec.c
-> +++ b/drivers/platform/arm64/huawei-gaokun-ec.c
-> @@ -662,6 +662,7 @@ static void gaokun_aux_release(struct device *dev)
->  {
->         struct auxiliary_device *adev = to_auxiliary_dev(dev);
->
-> +       of_node_put(dev->of_node);
->         kfree(adev);
->  }
->
-> @@ -693,6 +694,7 @@ static int gaokun_aux_init(struct device *parent, const char *name,
->
->         ret = auxiliary_device_init(adev);
->         if (ret) {
-> +               of_node_put(adev->dev.of_node);
->                 kfree(adev);
->                 return ret;
->         }
-> --
-> 2.49.0
->
+This marks 0x29 as accelerometer address on Dell Precision 3551.
 
-Oh, I should have checked `device_set_of_node_from_dev`, but I forgot,
-thanks for fixing this.
+I followed previous works of Paul Menzel and Hans de Goede to verify it:
 
-Reviewed-by: Pengyu Luo <mitltlatltl@gmail.com>
+$ cd /sys/bus/pci/drivers/i801_smbus/0000\:00\:1f.4
 
-Best wishes,
-Pengyu
+$ ls -d i2c-?
+i2c-0
+
+$ sudo modprobe i2c-dev
+
+$ sudo i2cdetect 0
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-0.
+I will probe address range 0x08-0x77.
+Continue? [Y/n] Y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         08 -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- 29 -- -- -- -- -- --
+30: 30 -- -- -- -- 35 UU UU -- -- -- -- -- -- -- --
+40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
+50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+
+$ echo lis3lv02d 0x29 > sudo tee /sys/bus/i2c/devices/i2c-0/new_device
+lis3lv02d 0x29
+
+$ sudo dmesg
+[    0.000000] Linux version 6.12.28 (nixbld@localhost) (gcc (GCC) 14.2.1 20250322, GNU ld (GNU Binutils) 2.44) #1-NixOS SMP PREEMPT_DYNAMIC Fri May  9 07:50:53 UTC 2025
+[...]
+[    0.000000] DMI: Dell Inc. Precision 3551/07YHW8, BIOS 1.18.0 10/03/2022
+[...]
+[ 3749.077624] lis3lv02d_i2c 0-0029: supply Vdd not found, using dummy regulator
+[ 3749.077732] lis3lv02d_i2c 0-0029: supply Vdd_IO not found, using dummy regulator
+[ 3749.098674] lis3lv02d: 8 bits 3DC sensor found
+[ 3749.182480] input: ST LIS3LV02DL Accelerometer as /devices/platform/lis3lv02d/input/input28
+[ 3749.182899] i2c i2c-0: new_device: Instantiated device lis3lv02d at 0x29
+
+Signed-off-by: Jan-Niklas Burfeind <kernel@aiyionpri.me>
+---
+ drivers/platform/x86/dell/dell-lis3lv02d.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
+index 0791118dd6b7..732de5f556f8 100644
+--- a/drivers/platform/x86/dell/dell-lis3lv02d.c
++++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
+@@ -49,6 +49,7 @@ static const struct dmi_system_id lis3lv02d_devices[] __initconst = {
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6330",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6430",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
++	DELL_LIS3LV02D_DMI_ENTRY("Precision 3551",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision M6800",    0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Vostro V131",        0x1d),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Vostro 5568",        0x29),
+-- 
+2.49.0
+
