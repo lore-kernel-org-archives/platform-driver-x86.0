@@ -1,466 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBAD23BCF2
-	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Jul 2025 18:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640272236F4;
+	Thu, 10 Jul 2025 03:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752086748; cv=none; b=Zp6dTaU1EbA3GfIGdmx6Fu6nknPp3tHQ5QmAm2iM9bSmaOYwC/aj3wxdCrJCewUslNOBsUy+a7xC6jEYc+98g6m9TrI1UgDCFgPJsQ/p4QybvzXAKkQ9cO7yOmIIRgUDP0BOa8SV5Ul1pPxpwQSNX6KHHlq4J7/AHb/zolYjcsc=
+	t=1752116615; cv=none; b=SejyvmnJM4vcOpk2fMVaF20HOxb9l1X97NFfRns1REqpfXWzAYNgci5BK3sQDJG58YO3QS/SCJflvuxWjA+Lo0SIKYHDKZ31TL2FI5O/cEbzfqwkJOPYgIV3E0SY4tgjdAi4Swo6BaAQq0HTVRXi2okJuhxGmhHfTct0X3QRxVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752086748; c=relaxed/simple;
-	bh=XYQD54mAUZyaa1e3o248AW8PcKJ0A/dTtE4HKXayWzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ed/zay8/ihfHsF0ePIRdPriVtbteP7GhNGSdrO0sJo0pE/HGRrS/LThFIEPWhZTF1SREiFNdDdgy4V3vaiAeNzqR/nUPsfYzZ2qjZ7KfhYQmA/VUk9j/KWbAHpm5vPqugAph167FEIHUMavTo7kotkhX+R/S3OGS8Xo/cblBLm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBt0o2UV; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1752116615; c=relaxed/simple;
+	bh=w1xylG14aNbYICY3r6z4Bte0v6mbpwubDb46q5+D4Ls=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jkqKN+x2Gp7CAf4qLscwIp/GLVe4bvs5iwrbbV555L+ZGl5vfznDr1xp2D6iB1V/9hboyUdByvTguAfUjDmOeCork4hq65rpzFCUryJh7n3f/G98r+tZt+MqgML6G6SOtmQSiYpzaiPv3pnmLT94v13sCVwcHZ6NlLO+96EtqEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGdkGOuN; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBt0o2UV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752086746; x=1783622746;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XYQD54mAUZyaa1e3o248AW8PcKJ0A/dTtE4HKXayWzw=;
-  b=HBt0o2UVkZ5VUxR/MU0Mqlvz653Q7uGljZQ9ud71QJuVt0NiTRb7pv7e
-   tZGMg2miKndTXvw09Z2Yo6iWFC3RH5Q8h7gDE1pcWT5f+M4Mt5gLpyiaU
-   VbzMLTrjMmKtH6hQhQnV8VMMiMLrX7noRCUR4TmdrlgN7pkccAdHSn31G
-   3jDup0o95lq2yElbcdtFiAUMTCcfMIiYDbi6CkYkZTQNThxVwS2PJua+2
-   brck/0wxfSPkEqKv/X/j8VWz/B8c3QhRsiMXaZWtTxX+Rjl1/8EHhcPQC
-   WFn/4kT5WUjneBaa2T3C9O3XACPYiHHVUjgKLscOcgBMV/b8zw368YqoI
-   A==;
-X-CSE-ConnectionGUID: iEkTWKR5Qem4AGuLJEXK0A==
-X-CSE-MsgGUID: R6iuxT9STOWV62K18Rg2Ew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11489"; a="54451113"
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="54451113"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 11:45:46 -0700
-X-CSE-ConnectionGUID: A6RGvs8xT12bwLuTavio9w==
-X-CSE-MsgGUID: /QME7dCySSObeP9hzr+OOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,298,1744095600"; 
-   d="scan'208";a="161404899"
-Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.221.121])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2025 11:45:45 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	lucas.demarchi@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com
-Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v7 12/12] platform/x86/intel/pmt: support BMG crashlog
-Date: Wed,  9 Jul 2025 14:44:58 -0400
-Message-ID: <20250709184458.298283-13-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250709184458.298283-1-michael.j.ruhl@intel.com>
-References: <20250709184458.298283-1-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGdkGOuN"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2349f096605so6419125ad.3;
+        Wed, 09 Jul 2025 20:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752116613; x=1752721413; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DAM9TT5oQtsAPqAhej0yrhq8Gvb63FG9Ik+G5Ou/5SM=;
+        b=mGdkGOuNJLbUoOR6g/NAIc712uSSv7ru5YHWyPOAXTtkqAIoM8+w3YRaORksVvmS0k
+         J/eFMLqWWvd+ykLFkp9kzziNaES+2PlfXoC1lorF1kDdbZZQOAFeVzA70VA6PP8nfxcw
+         u1njfijH5zQXuZ0YRDYrlAfemlb0F8B8j9VTunUMmztaYR/zk4Vg7a4cC8+t6xCLioH1
+         iMxxUTL4hy3lmOQcBia7qdN4DGapDmBJfIdasaHreuqVNo8r64ABEEK1j/H+QVXJBsp+
+         m9YYN48+R6W2yw28Z/XjyeZAQhGvUt92lLO1VI5UbL2vPFv6ntv3dGVsf6ZxU9lHhZXd
+         es5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752116613; x=1752721413;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DAM9TT5oQtsAPqAhej0yrhq8Gvb63FG9Ik+G5Ou/5SM=;
+        b=iAu2luQyomlXDWSyiAr+qRBcsUsTLrAJHr+lN9thG9nGzzFPvaNzOAY4yILwQen+Sy
+         XwyXYZ4zz2CU9Bk7gf9Bm4J15ZwNGIzHkV5J8IZbY89ROJf/+mAoZqiuSJ5hrlCc9+9v
+         f79i5fur++yfWdebcBKOskHcERYR5RKacKS1/Om6SAW9EsmtVlnVwRHgM4N4fGwfqSok
+         MM3R0R8r9oLoOOKLqYlAF8djatsdNtBDCB2ZpokADhuL46fn8G0BD0fA9s/5UXWBAXNW
+         WnoBn/Nfjklowlj/EtJSSh85WoRrE6zkpRzJPxtbO+e4vbc0Zop3SMwCoyE7VGnY09xj
+         Dvlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGaF3M/MOkVOjepDA7sbX70O/QYBba4v391b211WThmgSzbcE9QmyN2MCLkA+dOfXBytJyYtOsW6fJNRk=@vger.kernel.org, AJvYcCXJx7Kye861GKRypUlDhRyWmiL9mxf7U3wHMT+dKowaxC9n6iA+AGJ/BAQbmYx37vinqkgKffXuoR2bB88uO6OamhpnvQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU/5hca1rHQ2WC/jQKN4+fCCMWPuhYZ/32a9zVjhDKQhw0MSAe
+	NGKOiBrlaqQIr//xCuwWQpE1/hhwTbVhirRwgmbtuOCJX9TT5oKEj7Bz
+X-Gm-Gg: ASbGncsGZ/NMtiTriCyIsyAhFS9q5evpYRh+G1sURrEqw9aG4RN7OLLZ5Wbs7gnVLwf
+	H/FMpLtkaYxSBDzZha+rrYNrKDGhLdwLa1YkOet6c1Ii7RfV9vrWPU4COAjvYEX9sZnPvGlnRPU
+	WOiebny7Rl2doiVe9gzH/tiHnUeLGuaF3i8u1TkiRq5mullY+Xu+PgJKoa3cqNz+uiRVMZbGmIN
+	ksy6OtfLYXtQOiqE/gqu5yMsbZOgv/OBmTCfIvkILhzhSVFKWmNRaXQPuRWZcbv6lbh/Teg2TnN
+	K6iNKKo4c4Xg61T+C5i4aaa6DJnRRro5Sl7SBzAsu2AhEfmOfJ/RAxFvduxt5A==
+X-Google-Smtp-Source: AGHT+IHyCn+gm6m8u/SOGtyxPDuAP+8cTWSVOk6V0792+LHW5EyLcD7qCi/yQGYKaFF4xhYa1OTDiA==
+X-Received: by 2002:a17:902:ce8e:b0:236:6f7b:bf61 with SMTP id d9443c01a7336-23de4865474mr12392735ad.26.1752116613441;
+        Wed, 09 Jul 2025 20:03:33 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23de435b7e3sm6210445ad.224.2025.07.09.20.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 20:03:32 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v6 0/6] platform/x86: firmware_attributes_class: Add a high
+ level API
+Date: Thu, 10 Jul 2025 00:03:15 -0300
+Message-Id: <20250710-fw-attrs-api-v6-0-9959ef759771@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHMtb2gC/13MQW7DIBCF4atErEs1DB5cd9V7VFkMZkiQmjgCy
+ 00V+e4l6SIuy/ek77+pIjlJUe+7m8qypJKmcx3uZafGI58PolOoWyEggUWn47fmec5F8yVpEOF
+ +BETyTlVyyRLT9ZH73Nd9TGWe8s+jvpj7+xciGP6HFqNBI71xlODIR/44nDh9vY7TSd1DC26w6
+ RuMFUc27KEjBjO22D6xQ9NgW7ENgUg6Z+3gWtxtsIUGdxUbhm4g9EgUW0xP3AM1mCp24F0gEwY
+ rfovXdf0Fi6r7OpwBAAA=
+X-Change-ID: 20250326-fw-attrs-api-0eea7c0225b6
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joshua Grisham <josh@joshuagrisham.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Hans de Goede <hansg@kernel.org>
+Cc: Alok Tiwari <alok.a.tiwari@oracle.com>, 
+ Antheas Kapenekakis <lkml@antheas.dev>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5988; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=w1xylG14aNbYICY3r6z4Bte0v6mbpwubDb46q5+D4Ls=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBn5utUu8bZlM09cunz8+j3tI7ZPu15GNJ24Pb9lb1/zm
+ VWVovd2dpSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBE5PIZ/rvMjHaYszdl99rd
+ 7798jJY69Xz2FJXkFQoSq/rN42RWOE9hZJiYcZil8sYTj4DEpPcVixJq1P7eSDzCnK8e6PXI8Wq
+ DAAMA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-The Battlemage GPU has the type 1 version 2 crashlog feature.
+Hi all,
 
-Update the crashlog driver to support this crashlog version.
+After my discussion with Joshua on v2, I realized the API I made was not
+ergonomic at all and it didn't exactly respond to driver needs. In this
+version I tried a completely different approach and IMO it's much much
+better now.
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+First of all I adopted standard sysfs terminology for everything. A
+"firmware attribute" is just an attribute_group under the attributes/
+directory so everything related to this concept is just called "group"
+now. Everything refered as properties in the previous patch are now just
+plain "attributes".
+
+This new API revolves around the `fwat_{bool,enum,int,str}_data`
+structs. These hold all the metadata a "firmware_attribute" of that
+given type needs.
+
+These structs also hold `read` and `write` callbacks for the
+current_value attribute, because obviously that value is always dynamic.
+However the rest of attributes (default_value, display_name, min, max,
+etc) are constant.
+
+In the simple case this metadata structs can be defined statically with
+DEFINE_FWAT_{BOOL,ENUM,INT,STR}_GROUP() macros. However most users of
+this class obtain this values dynamically so you can also define this
+structs dynamically.
+
+In the end all groups (static and dynamic) will be created using
+fwat_create_group() after registering the class device.
+
+Let me know what you think, your feedback is very appreciated :)
+
+I do have one question for anyone interested. Should constraints over
+the current_value (such as min, max, increment, etc.) be enforced at the
+show/store level? i.e. before values reach read/write callbacks.
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/intel/pmt/crashlog.c | 292 +++++++++++++++++++---
- 1 file changed, 264 insertions(+), 28 deletions(-)
+Changes in v6:
+  [Patch 1]
+    - Add put_device() if device_register() fails
+    - Drop sysfs_remove_groups() in fwat_device_unregister()
+    - Didn't drop kset_unregister() because I think it's required
+  [Patch 2]
+    - Introduce FWAT_GROUP_ATTR() macro to avoid errors when creating
+      default ktype attributes.
+    - Fix typos in firmware_attributes_class.h
+    - Constify struct fwat_attribute in callbacks
+    - Drop DEFINE_SYSFS_GROUP_VISIBLE() and pass the visibility callback
+      directly
+    - Drop <linux/list.h> in firmware_attributes_class.h
+    - Rename enum fwat_group_type members
+    - Move fwat_*_current_value assertions to firmware_attributes_class.c
+    - Add a '__' prefix to fwat_create_*_group() functions
+    - Some style improvements
+    - Didn't drop fwat_remove_auto_groups() because I think it's
+      required
+  [Patch 4]
+    - Don't drop mutex initialization
+    - Lock fw_attrs_lock on *_write() callbacks
 
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 91c7ff123e01..17121baf9e81 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -53,38 +53,59 @@
- #define TYPE1_VER0_COMPLETE		BIT(31)
- #define TYPE1_VER0_TRIGGER_MASK		GENMASK(31, 28)
- 
-+/*
-+ * Type 1 Version 2
-+ * status and control are different registers
-+ */
-+#define TYPE1_VER2_STATUS_OFFSET	0x00
-+#define TYPE1_VER2_CONTROL_OFFSET	0x14
-+
-+/* status register */
-+#define TYPE1_VER2_CLEAR_SUPPORT	BIT(20)
-+#define TYPE1_VER2_REARMED		BIT(25)
-+#define TYPE1_VER2_ERROR		BIT(26)
-+#define TYPE1_VER2_CONSUMED		BIT(27)
-+#define TYPE1_VER2_DISABLED		BIT(28)
-+#define TYPE1_VER2_CLEARED		BIT(29)
-+#define TYPE1_VER2_IN_PROGRESS		BIT(30)
-+#define TYPE1_VER2_COMPLETE		BIT(31)
-+
-+/* control register */
-+#define TYPE1_VER2_CONSUME		BIT(25)
-+#define TYPE1_VER2_REARM		BIT(28)
-+#define TYPE1_VER2_EXECUTE		BIT(29)
-+#define TYPE1_VER2_CLEAR		BIT(30)
-+#define TYPE1_VER2_DISABLE		BIT(31)
-+#define TYPE1_VER2_TRIGGER_MASK	\
-+	(TYPE1_VER2_EXECUTE | TYPE1_VER2_CLEAR | TYPE1_VER2_DISABLE)
-+
- /* After offset, order alphabetically, not bit ordered */
- struct crashlog_status {
- 	u32 offset;
-+	u32 clear_supported;
- 	u32 cleared;
- 	u32 complete;
-+	u32 consumed;
- 	u32 disabled;
-+	u32 error;
-+	u32 in_progress;
-+	u32 rearmed;
- };
- 
- struct crashlog_control {
- 	u32 offset;
- 	u32 trigger_mask;
- 	u32 clear;
-+	u32 consume;
- 	u32 disable;
- 	u32 manual;
-+	u32 rearm;
- };
- 
- struct crashlog_info {
--	struct crashlog_status status;
--	struct crashlog_control control;
--};
--
--static const struct crashlog_info crashlog_type1_ver0 = {
--	.status.offset = TYPE1_VER0_STATUS_OFFSET,
--	.status.cleared = TYPE1_VER0_CLEAR,
--	.status.complete = TYPE1_VER0_COMPLETE,
--	.status.disabled = TYPE1_VER0_DISABLE,
--
--	.control.offset = TYPE1_VER0_CONTROL_OFFSET,
--	.control.trigger_mask = TYPE1_VER0_TRIGGER_MASK,
--	.control.clear = TYPE1_VER0_CLEAR,
--	.control.disable = TYPE1_VER0_DISABLE,
--	.control.manual = TYPE1_VER0_EXECUTE,
-+	const struct crashlog_status status;
-+	const struct crashlog_control control;
-+	const struct attribute_group *attr_grp;
- };
- 
- struct crashlog_entry {
-@@ -141,19 +162,23 @@ static bool pmt_crashlog_disabled(struct crashlog_entry *crashlog)
- 	return pmt_crashlog_rc(crashlog, crashlog->info->status.disabled);
- }
- 
--static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
-+static bool pmt_crashlog_supported(struct intel_pmt_entry *entry, u32 *crash_type, u32 *version)
- {
- 	u32 discovery_header = readl(entry->disc_table + CONTROL_OFFSET);
--	u32 crash_type, version;
- 
--	crash_type = GET_TYPE(discovery_header);
--	version = GET_VERSION(discovery_header);
-+	*crash_type = GET_TYPE(discovery_header);
-+	*version = GET_VERSION(discovery_header);
- 
- 	/*
--	 * Currently we only recognize OOBMSM version 0 devices.
--	 * We can ignore all other crashlog devices in the system.
-+	 * Currently we only recognize OOBMSM (type 1) and version 0 or 2
-+	 * devices.
-+	 *
-+	 * Ignore all other crashlog devices in the system.
- 	 */
--	return crash_type == CRASH_TYPE_OOBMSM && version == 0;
-+	if (*crash_type == CRASH_TYPE_OOBMSM && (*version == 0 || *version == 2))
-+		return true;
-+
-+	return false;
- }
- 
- static void pmt_crashlog_set_disable(struct crashlog_entry *crashlog,
-@@ -172,9 +197,115 @@ static void pmt_crashlog_set_execute(struct crashlog_entry *crashlog)
- 	pmt_crashlog_rmw(crashlog, crashlog->info->control.manual, true);
- }
- 
-+static bool pmt_crashlog_cleared(struct crashlog_entry *crashlog)
-+{
-+	return pmt_crashlog_rc(crashlog, crashlog->info->status.cleared);
-+}
-+
-+static bool pmt_crashlog_consumed(struct crashlog_entry *crashlog)
-+{
-+	return pmt_crashlog_rc(crashlog, crashlog->info->status.consumed);
-+}
-+
-+static void pmt_crashlog_set_consumed(struct crashlog_entry *crashlog)
-+{
-+	pmt_crashlog_rmw(crashlog, crashlog->info->control.consume, true);
-+}
-+
-+static bool pmt_crashlog_error(struct crashlog_entry *crashlog)
-+{
-+	return pmt_crashlog_rc(crashlog, crashlog->info->status.error);
-+}
-+
-+static bool pmt_crashlog_rearm(struct crashlog_entry *crashlog)
-+{
-+	return pmt_crashlog_rc(crashlog, crashlog->info->status.rearmed);
-+}
-+
-+static void pmt_crashlog_set_rearm(struct crashlog_entry *crashlog)
-+{
-+	pmt_crashlog_rmw(crashlog, crashlog->info->control.rearm, true);
-+}
-+
- /*
-  * sysfs
-  */
-+static ssize_t
-+clear_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
-+	bool cleared = pmt_crashlog_cleared(crashlog);
-+
-+	return sysfs_emit(buf, "%d\n", cleared);
-+}
-+
-+static ssize_t
-+clear_store(struct device *dev, struct device_attribute *attr,
-+	    const char *buf, size_t count)
-+{
-+	struct crashlog_entry *crashlog;
-+	bool clear;
-+	int result;
-+
-+	crashlog = dev_get_drvdata(dev);
-+
-+	result = kstrtobool(buf, &clear);
-+	if (result)
-+		return result;
-+
-+	/* set bit only */
-+	if (!clear)
-+		return -EINVAL;
-+
-+	guard(mutex)(&crashlog->control_mutex);
-+
-+	pmt_crashlog_set_clear(crashlog);
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(clear);
-+
-+static ssize_t
-+consumed_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
-+	bool consumed = pmt_crashlog_consumed(crashlog);
-+
-+	return sysfs_emit(buf, "%d\n", consumed);
-+}
-+
-+static ssize_t
-+consumed_store(struct device *dev, struct device_attribute *attr, const char *buf,
-+	       size_t count)
-+{
-+	struct crashlog_entry *crashlog;
-+	bool consumed;
-+	int result;
-+
-+	crashlog = dev_get_drvdata(dev);
-+
-+	result = kstrtobool(buf, &consumed);
-+	if (result)
-+		return result;
-+
-+	/* set bit only */
-+	if (!consumed)
-+		return -EINVAL;
-+
-+	guard(mutex)(&crashlog->control_mutex);
-+
-+	if (pmt_crashlog_disabled(crashlog))
-+		return -EBUSY;
-+
-+	if (!pmt_crashlog_complete(crashlog))
-+		return -EEXIST;
-+
-+	pmt_crashlog_set_consumed(crashlog);
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(consumed);
-+
- static ssize_t
- enable_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
-@@ -206,6 +337,51 @@ enable_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(enable);
- 
-+static ssize_t
-+error_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
-+	bool error = pmt_crashlog_error(crashlog);
-+
-+	return sysfs_emit(buf, "%d\n", error);
-+}
-+static DEVICE_ATTR_RO(error);
-+
-+static ssize_t
-+rearm_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct crashlog_entry *crashlog = dev_get_drvdata(dev);
-+	int rearmed = pmt_crashlog_rearm(crashlog);
-+
-+	return sysfs_emit(buf, "%d\n", rearmed);
-+}
-+
-+static ssize_t
-+rearm_store(struct device *dev, struct device_attribute *attr, const char *buf,
-+	    size_t count)
-+{
-+	struct crashlog_entry *crashlog;
-+	bool rearm;
-+	int result;
-+
-+	crashlog = dev_get_drvdata(dev);
-+
-+	result = kstrtobool(buf, &rearm);
-+	if (result)
-+		return result;
-+
-+	/* set only */
-+	if (!rearm)
-+		return -EINVAL;
-+
-+	guard(mutex)(&crashlog->control_mutex);
-+
-+	pmt_crashlog_set_rearm(crashlog);
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(rearm);
-+
- static ssize_t
- trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
-@@ -253,30 +429,90 @@ trigger_store(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(trigger);
- 
--static struct attribute *pmt_crashlog_attrs[] = {
-+static struct attribute *pmt_crashlog_type1_ver0_attrs[] = {
-+	&dev_attr_enable.attr,
-+	&dev_attr_trigger.attr,
-+	NULL
-+};
-+
-+static struct attribute *pmt_crashlog_type1_ver2_attrs[] = {
-+	&dev_attr_clear.attr,
-+	&dev_attr_consumed.attr,
- 	&dev_attr_enable.attr,
-+	&dev_attr_error.attr,
-+	&dev_attr_rearm.attr,
- 	&dev_attr_trigger.attr,
- 	NULL
- };
- 
--static const struct attribute_group pmt_crashlog_group = {
--	.attrs	= pmt_crashlog_attrs,
-+static const struct attribute_group pmt_crashlog_type1_ver0_group = {
-+	.attrs	= pmt_crashlog_type1_ver0_attrs,
- };
- 
-+static const struct attribute_group pmt_crashlog_type1_ver2_group = {
-+	.attrs = pmt_crashlog_type1_ver2_attrs,
-+};
-+
-+static const struct crashlog_info crashlog_type1_ver0 = {
-+	.status.offset = TYPE1_VER0_STATUS_OFFSET,
-+	.status.cleared = TYPE1_VER0_CLEAR,
-+	.status.complete = TYPE1_VER0_COMPLETE,
-+	.status.disabled = TYPE1_VER0_DISABLE,
-+
-+	.control.offset = TYPE1_VER0_CONTROL_OFFSET,
-+	.control.trigger_mask = TYPE1_VER0_TRIGGER_MASK,
-+	.control.clear = TYPE1_VER0_CLEAR,
-+	.control.disable = TYPE1_VER0_DISABLE,
-+	.control.manual = TYPE1_VER0_EXECUTE,
-+	.attr_grp = &pmt_crashlog_type1_ver0_group,
-+};
-+
-+const struct crashlog_info crashlog_type1_ver2 = {
-+	.status.offset = TYPE1_VER2_STATUS_OFFSET,
-+	.status.clear_supported = TYPE1_VER2_CLEAR_SUPPORT,
-+	.status.cleared = TYPE1_VER2_CLEARED,
-+	.status.complete = TYPE1_VER2_COMPLETE,
-+	.status.consumed = TYPE1_VER2_CONSUMED,
-+	.status.disabled = TYPE1_VER2_DISABLED,
-+	.status.error = TYPE1_VER2_ERROR,
-+	.status.in_progress = TYPE1_VER2_IN_PROGRESS,
-+	.status.rearmed = TYPE1_VER2_REARMED,
-+
-+	.control.offset = TYPE1_VER2_CONTROL_OFFSET,
-+	.control.trigger_mask = TYPE1_VER2_TRIGGER_MASK,
-+	.control.clear = TYPE1_VER2_CLEAR,
-+	.control.consume = TYPE1_VER2_CONSUME,
-+	.control.disable = TYPE1_VER2_DISABLE,
-+	.control.manual = TYPE1_VER2_EXECUTE,
-+	.control.rearm = TYPE1_VER2_REARM,
-+	.attr_grp = &pmt_crashlog_type1_ver2_group,
-+};
-+
-+static const struct crashlog_info *select_crashlog_info(u32 type, u32 version)
-+{
-+	if (version == 0)
-+		return &crashlog_type1_ver0;
-+
-+	return &crashlog_type1_ver2;
-+}
-+
- static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
- 				      struct device *dev)
- {
- 	void __iomem *disc_table = entry->disc_table;
- 	struct intel_pmt_header *header = &entry->header;
- 	struct crashlog_entry *crashlog;
-+	u32 version;
-+	u32 type;
- 
--	if (!pmt_crashlog_supported(entry))
-+	if (!pmt_crashlog_supported(entry, &type, &version))
- 		return 1;
- 
- 	/* initialize the crashlog struct */
- 	crashlog = container_of(entry, struct crashlog_entry, entry);
- 	mutex_init(&crashlog->control_mutex);
--	crashlog->info = &crashlog_type1_ver0;
-+
-+	crashlog->info = select_crashlog_info(type, version);
- 
- 	header->access_type = GET_ACCESS(readl(disc_table));
- 	header->guid = readl(disc_table + GUID_OFFSET);
-@@ -285,7 +521,7 @@ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
- 	/* Size is measured in DWORDS, but accessor returns bytes */
- 	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
- 
--	entry->attr_grp = &pmt_crashlog_group;
-+	entry->attr_grp = crashlog->info->attr_grp;
- 
- 	return 0;
- }
+  - Link to v5: https://lore.kernel.org/r/20250705-fw-attrs-api-v5-0-60b6d51d93eb@gmail.com
+
+Changes in v5:
+  - Fix kernel test robot warning
+  - Link to v4: https://lore.kernel.org/r/20250630-fw-attrs-api-v4-0-1a04952b255f@gmail.com
+
+Changes in v4:
+  [Patch 1]
+    - Embbed a device in fwat_device instead of a kobject.
+    - Instead of an attrs_kobj root kobj, create a kset with the same
+      name.
+  [Patch 2]
+    - Add a (*show_override) callback in fwat_group_data.
+    - Instead of allocating and filling sysfs groups and attributes
+      manually, I defined custom ktypes for each fwat type. All groups are
+      now statically defined and added through default_groups.
+  
+      I think this is a BIG optimization in terms of memory at least. Also
+      fwat_group memory is now managed by a kobject which is allocated one
+      time. This is also a less impactful performance optimization (less
+      individual allocations).
+    - No changes to API :) (I take suggestions though)
+
+  I might have lost some of the changelog. Sorry for that!
+  
+  - Link to v3: https://lore.kernel.org/r/20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com
+
+Changes in v3:
+  [Patch 1]
+  - Fixed UAF in fwat_device_unregister(). Device was unregistered after
+    freeing fadev.
+  [Patch 2]
+  - Patch 2 was completely replaced. A new approach for the API is taken,
+    based on Joshua's suggestions.
+  
+  - Link to v2: https://lore.kernel.org/r/20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com
+
+Changes in v2:
+  [Patch 1]
+   - Include kdev_t.h header
+  [Patch 2]
+   - Use one line comments in fwat_create_attrs()
+   - Check propagate errors in fwat_create_attrs()
+   - Add `mode` to fwat_attr_config and related macros to let users
+     configure the `current_value` attribute mode
+   - Use defined structs in fwat_attr_ops instead of anonymous ones
+   - Move fwat_attr_type from config to ops
+  [Patch 5]
+   - Just transition to new API without chaing ABI
+  
+  - Link to v1: https://lore.kernel.org/r/20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com
+
+---
+Kurt Borja (5):
+      platform/x86: firmware_attributes_class: Add high level API for the attributes interface
+      platform/x86: firmware_attributes_class: Move header to include directory
+      platform/x86: samsung-galaxybook: Transition new firmware_attributes API
+      Documentation: ABI: Update sysfs-class-firmware-attributes documentation
+      MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+
+Thomas Weißschuh (1):
+      platform/x86: firmware_attributes_class: Add device initialization methods
+
+ .../ABI/testing/sysfs-class-firmware-attributes    |   1 +
+ MAINTAINERS                                        |   8 +
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c |   2 +-
+ drivers/platform/x86/firmware_attributes_class.c   | 667 ++++++++++++++++++++-
+ drivers/platform/x86/firmware_attributes_class.h   |  12 -
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       |   2 +-
+ drivers/platform/x86/lenovo/think-lmi.c            |   2 +-
+ drivers/platform/x86/samsung-galaxybook.c          | 240 ++------
+ include/linux/firmware_attributes_class.h          | 369 ++++++++++++
+ 9 files changed, 1111 insertions(+), 192 deletions(-)
+---
+base-commit: 428f6f3a56ac85f37a07a3fe5149b593185d5c4c
+change-id: 20250326-fw-attrs-api-0eea7c0225b6
 -- 
-2.50.0
+ ~ Kurt
 
