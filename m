@@ -1,140 +1,125 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FCD21C173;
-	Thu, 10 Jul 2025 05:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3791023C4F4;
+	Thu, 10 Jul 2025 12:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752124085; cv=none; b=sdFvlwB3dwK/PK+i1LxLwBVp9jxODirMHIgs0uOLdnG0Psi6/kqT+hJCzC2xyPANaprF2s62Iwe5GGUgavQJGM3SV9GR14/vBhPUH1nFm0VM+LTM7gQrJLxhUECy+552p0tjOX+fvGX1lVTQH2aH0HB/V6U866Y15RerKj9cnSk=
+	t=1752149550; cv=none; b=h5lDUbwWbtiFW93epkcZ0ggWefAmQBsRn/MSrHxZl3I4G57x4L973VosJ/pvo1NKalPC+T1lPLhjrqJfvUmyJBzDpujC0na7oazyolqohN7t9Isbe1Fp1MjKFiVaSNAYRLBEa0QfwXJqhmxb0mKXneBFwaGXYHH8zHQ2aYvY8+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752124085; c=relaxed/simple;
-	bh=62i7GbnPDACSx+81EQf0xh7RDunrM0Fpi9UKFjVH2oE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=hLvEA7x/7EfSB4ZJAcu++pGqGlLwtkBCC8PRLTQWQLjTKTgPGvR9IWyHZP13ysEBjotVxyI0bYzLAnsVxKWJ7PjQfgayqaw66hQvL4RYyBs326d2dW58vtq/1zcvpbuQ2Zg6CZ9guh4AiPpp1Ot4feo1iW3coD4XZpDBVKVTA/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0Pjku5i; arc=none smtp.client-ip=209.85.216.49
+	s=arc-20240116; t=1752149550; c=relaxed/simple;
+	bh=zRXsoN4t0HGYJYiKE4EXkDRzP+v+QPqSLpsz8ubYC10=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LcppU8zUjZL/CckXKm5LsmurnhwNL8slISloLyFEpu7I6ppkEniqDexlAyGNYKBHhqp5Uq4N5CtAWvzoUhCQUpXxL589bD064AJeqX7wcTHIjFxKCdP4YxTr/xgEeL5Bi3yd+f+beUHwzBUh1/aXj6lRYvL+Q83IE7HSFi8xZBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akksg0ED; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0Pjku5i"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31329098ae8so597603a91.1;
-        Wed, 09 Jul 2025 22:08:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akksg0ED"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so879303b3a.0;
+        Thu, 10 Jul 2025 05:12:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752124083; x=1752728883; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1752149548; x=1752754348; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gbGrNvu8hiaUF4KJPNmJO47DxCjsgZKfJWKkYHjN+1c=;
-        b=b0Pjku5iEW+7bnwp/1oA0NTaEUfijwvxWg+PaH92dDOy89z9234xhMb4u2+76I8h9K
-         eVsn/Qr0w0TZ1//NlD/FahiaFT8ErLZLOuKSDVajRjlUcGDhKpD1VBZe12eHGTD+BJim
-         NQs/TGP6R/QTik/CpAJapyUOZk0D7sTeGqgbTRah4pZOjQk7Auccyn2TUl9cUNs3IgXx
-         eQfi3eaZtXRIlNSUjM1As1xVTwywezkwzOeoDw1Tlj+mAzyHCqxUwQr3qYU6AO7UAkvH
-         1qvUjn5tF2j9BmHwAHZYxg9OlD6oEozddTp1H2NBdmE7+Km2m4Prebh0FKfjFfKC7mAx
-         qXZw==
+        bh=8TQA4+iWdhebTihpcDNsTXRIFnfR3IxS8wu+OKw1UOU=;
+        b=akksg0EDwWQnbujm39mUlWgcXIO5B94AZwCa6AVxGI4/UXwRpjNlEWX4WZSJFqHnTZ
+         AkKYjxrRLwMWw1O8ua0fl2SBDvmAkFhMMCOuze/D2ld1PmXl/2SSoJBhQJlatF3X3uKW
+         VEFzm4xiwWMJw8Y7rQbY34o4TTXu3UBDs+dAZJTOaNojscfAeMLnlwjzHJ/ZZbGcV+4w
+         JNA+F5JtD+GK3G7jTQJiSrmJCykjNfSnH/pPA1sQWHd0J6IAPs4wzVTM4N0fBUKbzMMx
+         FEW5xt1quYyLjI7v7i52gk9unI0afiXh/NO0K7YMSS84NM1yzd+MXucsCrLzGd9HGlj/
+         IrtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752124083; x=1752728883;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gbGrNvu8hiaUF4KJPNmJO47DxCjsgZKfJWKkYHjN+1c=;
-        b=dCIERntecPCAGoc8qRqn1NQI9cV5a8N9S1UBDN3EZcMdRlDe7fL9YlqCPd6rD3RfZ4
-         4u3AsoX3eWWFeGKZvRO3Wbc4vx6ylqWhe9zofsAQ+eNvdRwqytHUqamq66mrf9vdv5Qy
-         KauFdDmJwr3lx2i2tsJwKcsfz9VWv62aXOm7R3aopWyHK8/lYESmqCx75MhLrPg0MWgm
-         5VZJ4Z1R5e6zJgHqDGOaqMA84r5Ps7RbsUzWqZnJk6wLBLtbtxKaYKQVRqw0hi8VNDEV
-         3hNS8WQnG8bq1U6rHt/drY3o48C0xwxXZjAO2ZjKSMIuHGp5dy78zy36gN2bg9TQZ9jT
-         22+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUXyErcezOCRMl42u0HpXnIWDAlmiMbUT/D007rO/KU8vN3YdOB0Y9hWYzbBa7USfSa17QfW7diwvc147Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8NduXeCfDbOykMbmA11VNViX7t+oIOIlAMw1POR/UeK7gEniZ
-	jkvva6EzS0Vj2tZxSzwDsUaryzIOyM28LNP82mGCR1InFWMDnPCApd26
-X-Gm-Gg: ASbGncu/XZ2QnzfM3STvymK1Ow69OCTJ2ZdWd8dyvCRozpzxyJA4zQsC5myFdzDLP8g
-	znYknra5rlghY1tvY14o5lTU+aAv3mtBBMH5J42CmmGnwLzy5GzyPsZq0qemEZbpUi68aI+iGER
-	Cdo5eA6GyIWV509nkWZxOQU4JtkrMzjmqeZLHpCHE1WCl5+oE4geEGL9fg1i0FjwcttEJ5ygS/q
-	cIP+izPL0a5a0lHG5sqDivsmzO5LJCdVjOR6bud05/V0iiMI05KHvWlTI7s/fPmpWeoCsAIItSM
-	iuZA55fpH1MZcgweidWSEstBzlWT6UpQrgmJwOTnHU0bfUgPQ+/pYrzRs7Cp1ANVEQ==
-X-Google-Smtp-Source: AGHT+IF52pFfrbGeBbMqAaG3sScelcU+r0jOAasje2Vl9yyb/k39t6KZXw8BFgKYIQxzmDxPkQbdEA==
-X-Received: by 2002:a17:90b:4d11:b0:2ff:4a8d:74f9 with SMTP id 98e67ed59e1d1-31c3cf7778bmr3275886a91.10.1752124083319;
-        Wed, 09 Jul 2025 22:08:03 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c3eb7f633sm945378a91.48.2025.07.09.22.08.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jul 2025 22:08:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752149548; x=1752754348;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8TQA4+iWdhebTihpcDNsTXRIFnfR3IxS8wu+OKw1UOU=;
+        b=CEwEaN6m7NDlBFx7u5rxP9BByy57C7oklUyuNxwfmYmcQxt1n0rTrMbZQ26Hs61LFt
+         H8mamsbmZ45P7YwXD5qbRIJt9j3hT+IX1cfUZHZPsEnyLWBiGOFiIni7vTvho32n9GIL
+         MssvLo3mRA4QBC5PivO4Rs2VRsSl8KVBeeD1ImOLi1PQ69yYhHgOa7tp8eDdJtA3DNpB
+         5CfUmOvINVGQEkX+htsYvdeDjiLvY0SkRPtLmqpX0h4JqHK58dHGMuYfkakAyBg2yPyw
+         1jzgn0JByzRAaPZq1CkEIMPZP+ltEK4MvEzIZr7cga5HCDDWj0c59ELhXdjbXVocvMX0
+         B0pw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2bHlIsMYWH9qJG4FF+SNK//e9qa84PuicV4/iv/B0Jwq1FWEGgojuPEd9289albFQzt28L7pNrrxET4daj8XC1uToLA==@vger.kernel.org, AJvYcCXJsD/gkuyN0EAsiM7p2Fw/PSNEDpS3ciBh6FBxEjvaCsRKbsWlju6PtdHmG9TmNzp22ZWEdEZqt/BL/Fg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4w8Fpc//zdA4hSpb4O6vexc4OqVNkkLSMSB19dEEHe/7XLhwi
+	WXwmw1v55BwMkdMDdlwEwSuhs44CIavnmVeLnYUwtVmdHslGuNVgL95x
+X-Gm-Gg: ASbGncs9jnPgI+GImn6soB2IhS/qvte87lB5sxB8CoezkwFYnJNn8iWBWf+buv2Ck07
+	DVuzVVezFbDtoQSBFLQC0ZoIp8Tk9ynIQwki0bndmq/7il1002so3u1Z9wm+WmcOHa2JdbIhWDF
+	SI3wru9I9g7PB54LM0jSNwI6gts8IAS7lBSDaHVuTBC7L1Opj53ME3TrB3Pm+BMIgiFDgMM/P8P
+	FE1vtrm7boM2IXqILR20OAiGImNr4OsDKFrQl2wXZg3qqKY3WvfAZpbIyV+nVQtZyCLpMeUdcHm
+	gMd7qIxeZ73PU7amUxLYfIlSk1McR0Nel8CIB8g8ey/Jx5cHjNGNQiJ+//m0P/yPM0TVG9s0aQ=
+	=
+X-Google-Smtp-Source: AGHT+IEei79wCN12n4ivLRhMw6PB03mr73hXLL6yImc2GsFUsxXRJqLx8nVL6cz0fWEevcMBBvzVTA==
+X-Received: by 2002:a05:6a20:2445:b0:220:21bf:b112 with SMTP id adf61e73a8af0-22cd5eee5dcmr11536615637.13.1752149548366;
+        Thu, 10 Jul 2025 05:12:28 -0700 (PDT)
+Received: from nuvole.lan ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74eb9e07facsm2194968b3a.68.2025.07.10.05.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jul 2025 05:12:27 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: johan@kernel.org
+Cc: bryan.odonoghue@linaro.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	mitltlatltl@gmail.com,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform: arm64: huawei-gaokun-ec: fix OF node leak
+Date: Thu, 10 Jul 2025 20:11:37 +0800
+Message-ID: <20250710121138.228975-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250708085358.15657-1-johan@kernel.org>
+References: <20250708085358.15657-1-johan@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Jul 2025 02:08:00 -0300
-Message-Id: <DB845EJ4BX1M.TK8J5TWBAQ40@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>, "Andreas Westman Dorcsak"
- <hedmoo@yahoo.com>
-Subject: Re: [PATCH] platform/x86: alieneware-wmi-wmax: Add AWCC support to
- more laptops
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Kurt Borja" <kuurtb@gmail.com>, "Hans de Goede" <hansg@kernel.org>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250710-m15_r5-v1-1-2c6ad44e5987@gmail.com>
-In-Reply-To: <20250710-m15_r5-v1-1-2c6ad44e5987@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu Jul 10, 2025 at 12:11 AM -03, Kurt Borja wrote:
-> Add support to Alienware Area-51m and Alienware m15 R5.
+On Tue, Jul 8, 2025 at 4:54 PM Johan Hovold <johan@kernel.org> wrote:
+> Make sure to drop the OF node reference taken when creating the Gaokun
+> auxiliary devices when the devices are later released.
 >
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-
-For the Alienware Area-51m model:
-
-Tested-by: Andreas Westman Dorcsak <hedmoo@yahoo.com>
-
+> Fixes: 7636f090d02e ("platform: arm64: add Huawei Matebook E Go EC driver")
+> Cc: Pengyu Luo <mitltlatltl@gmail.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 > ---
->  drivers/platform/x86/dell/alienware-wmi-wmax.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/platform/arm64/huawei-gaokun-ec.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pla=
-tform/x86/dell/alienware-wmi-wmax.c
-> index 20ec122a9fe0571a1ecd2ccf630615564ab30481..67e5dd0f140aa73ac73ea99fb=
-e081a6b08e520ec 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-> @@ -89,6 +89,14 @@ static struct awcc_quirks generic_quirks =3D {
->  static struct awcc_quirks empty_quirks;
-> =20
->  static const struct dmi_system_id awcc_dmi_table[] __initconst =3D {
-> +	{
-> +		.ident =3D "Alienware Area-51m",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware Area-51m"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
->  	{
->  		.ident =3D "Alienware Area-51m R2",
->  		.matches =3D {
-> @@ -97,6 +105,14 @@ static const struct dmi_system_id awcc_dmi_table[] __=
-initconst =3D {
->  		},
->  		.driver_data =3D &generic_quirks,
->  	},
-> +	{
-> +		.ident =3D "Alienware m15 R5",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m15 R5"),
-> +		},
-> +		.driver_data =3D &generic_quirks,
-> +	},
->  	{
->  		.ident =3D "Alienware m15 R7",
->  		.matches =3D {
+> diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform/arm64/huawei-gaokun-ec.c
+> index 7e5aa7ca2403..7170f8eb76f7 100644
+> --- a/drivers/platform/arm64/huawei-gaokun-ec.c
+> +++ b/drivers/platform/arm64/huawei-gaokun-ec.c
+> @@ -662,6 +662,7 @@ static void gaokun_aux_release(struct device *dev)
+>  {
+>         struct auxiliary_device *adev = to_auxiliary_dev(dev);
 >
-> ---
-> base-commit: 4f30f946f27b7f044cf8f3f1f353dee1dcd3517a
-> change-id: 20250509-m15_r5-7ade3650ca48
+> +       of_node_put(dev->of_node);
+>         kfree(adev);
+>  }
+>
+> @@ -693,6 +694,7 @@ static int gaokun_aux_init(struct device *parent, const char *name,
+>
+>         ret = auxiliary_device_init(adev);
+>         if (ret) {
+> +               of_node_put(adev->dev.of_node);
+>                 kfree(adev);
+>                 return ret;
+>         }
+> --
+> 2.49.0
+>
 
+Oh, I should have checked `device_set_of_node_from_dev`, but I forgot,
+thanks for fixing this.
 
---=20
- ~ Kurt
+Reviewed-by: Pengyu Luo <mitltlatltl@gmail.com>
 
+Best wishes,
+Pengyu
