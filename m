@@ -1,61 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81EB195811;
-	Fri, 11 Jul 2025 17:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754A419E82A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Jul 2025 17:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752254678; cv=none; b=PDLKmA/ruH915NwJ0o9H61LSTn+vG/cNXtrdDGQX4z74iWaL19PVGq7uMRq0MjjZSYizz4KXmRhQOkpVA+oA7oijwbGmPGNTMoUe0fs1dNwXAQ8QSs+b5pKI4UFYf3LM65Y7vggEq0KdR4XvpkdO/7KsqIRNVuDVbDX/cIS/tZs=
+	t=1752256769; cv=none; b=teIW8GO962vaZ5alO1kXrR7mVbjo/0lbDj07DSUwu1cx3/sedTAvNq8GoVBZX/x7d3noLcAX+nGboM/acsk7ip5/z4Lu6zAJ6Q7Tx+bX+oTyEWfHCloynocifmKzhNfmnd8fIVPUe8peUDz84Ml98cRMsU3P1Uad9iU64SY76jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752254678; c=relaxed/simple;
-	bh=LLBeSog7DztvXtU6B0MtqYLn+ZHH8OCXrBByrrm3NXQ=;
+	s=arc-20240116; t=1752256769; c=relaxed/simple;
+	bh=1bTQwRRh18JSkJub71DKitek5MhQp3+2ZFn1Tin5Q9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VrbAQfHp1LEeJwZNe/H9A07+XQCMdPJw62C6zecYVCSg00qdtqpSsbeVyuVmPCuIhbLevqiD/mWiJOo3dmqDcU6yn4FrnfoZf6QcN1cbZNaoSy+zjbXGota1oz72rOMNA1jW+d/Sbqp4GoraWAaKQ2+zU7p0glPGXZtpB1q1LAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmkRnQUH; arc=none smtp.client-ip=198.175.65.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTmbK7SSPvnkprIc6GgoNaDF913NocZMFN/SZjSt6SW0Gr8wMjYBOzYrCbU0SYpLUnONfz/W4Hl1A7zygKSls7PAadwqpBn8O2sYxFB5uVUrQaKrWrrsvJ7Qa+CSajzvfKk816KjIDMo5EN6izl31HJnQuwtYh/VPjwYFfzgf/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtdCMPt+; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmkRnQUH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtdCMPt+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752254677; x=1783790677;
+  t=1752256768; x=1783792768;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LLBeSog7DztvXtU6B0MtqYLn+ZHH8OCXrBByrrm3NXQ=;
-  b=RmkRnQUHjlP53/Ps7dLZToAHJnHLkTZU8oKB46PN2bQKNjZbQ+ho7EIP
-   0ew2oe+MbloCQQj+tbYsI7WtBcNS3DdQmhGp2oUsyBMX9DxH9+Z1aoUXy
-   ZortiZLuQjFAF5g8GSQIpR2yi3kGGZ9AewEKHQaTtiBQreZjRtynxE92G
-   8PzTLDlMbHQVRxY4Zvs7Bl646DyGLD7Uzt1+YoXxwi7jwsr4jAnKg1MTy
-   qI6DSoZ1gjxXqpNy1wqyc2VRNf+/h9+L9t5h44cUI64G4E8jOcsWiHOTB
-   uWmVU/FK63GYC1L8EIFMvomLcVa+vZjV9eP5ltBJ9Rb+IG0h+9pftO6Z0
-   A==;
-X-CSE-ConnectionGUID: OAx7jzpIQlWygJKOQJitwg==
-X-CSE-MsgGUID: zzAcM/qAT9igzzFhZZ168A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54687815"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=1bTQwRRh18JSkJub71DKitek5MhQp3+2ZFn1Tin5Q9Y=;
+  b=jtdCMPt+XYBmql27U+Ccs7jNdcFFXk78GA6HGvNCE6dSjweVjnEDmly6
+   ASNNZqnrxrZ7B4dQsa+RSlt4B1REyIF0mayEdpjMkoKbtQ+nL8xXG6y/r
+   1KRQMuCFYJ7Cy9K/j2sB/PnYOF+bauBgJ/6lUFTR208lvCteuuiaSNVVl
+   BomGmdmTeVAI7meOYvnbrdRh9lKo7/bxjGMFr8aC+f5MxgDZgyEBp+3Yr
+   GoDBdn/DNxcw9H0Xs4Y8aXwTkIFmnLXxyXFLNnSIp9TcUyt5N3/zDu0rU
+   /pK8XW+BQyoK9+m/F5e9Sde1STOIwKnhSjLNkQ7Dva1mxAznS/CyP1hc3
+   g==;
+X-CSE-ConnectionGUID: KJXT4etoSAKwSqtWA7vO1A==
+X-CSE-MsgGUID: T/bLl4Z3T8eksVTRGoz13Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65258907"
 X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="54687815"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:24:35 -0700
-X-CSE-ConnectionGUID: 5eGk1HCfT7iTNafse8lEeg==
-X-CSE-MsgGUID: JG62ueZoTICMXFshnx3iRA==
+   d="scan'208";a="65258907"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:59:27 -0700
+X-CSE-ConnectionGUID: P93YnsvzT5G/Mn6Zu4QBhQ==
+X-CSE-MsgGUID: lQ+y4e9oT9ePECtoxO3Alg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="156047284"
+   d="scan'208";a="180115514"
 Received: from mgerlach-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.222.101])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:24:34 -0700
-Date: Fri, 11 Jul 2025 10:24:32 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:59:26 -0700
+Date: Fri, 11 Jul 2025 10:59:25 -0700
 From: David Box <david.e.box@linux.intel.com>
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 Cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
 	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
 	rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, airlied@gmail.com, 
-	simona@ffwll.ch, Tejas Upadhyay <tejas.upadhyay@intel.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH v7 01/12] platform/x86/intel/pmt: fix a crashlog NULL
- pointer access
-Message-ID: <wu3ijqgfztvbc7x3vdh5kl6xavvdngyt647cyvhoipv3fmkr3w@7iizjdkm5a2m>
+	simona@ffwll.ch
+Subject: Re: [PATCH v7 02/12] drm/xe: Correct BMG VSEC header sizing
+Message-ID: <lfvgatgvexvot7a2x336rdv2vps3o3so5pty7n4mw4u5ze6boz@giw6rw5auo7d>
 References: <20250709184458.298283-1-michael.j.ruhl@intel.com>
- <20250709184458.298283-2-michael.j.ruhl@intel.com>
+ <20250709184458.298283-3-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,78 +62,82 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250709184458.298283-2-michael.j.ruhl@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250709184458.298283-3-michael.j.ruhl@intel.com>
 
-On Wed, Jul 09, 2025 at 02:44:47PM -0400, Michael J. Ruhl wrote:
-> Usage of the intel_pmt_read() for binary sysfs, requires a pcidev. The
-> current use of the endpoint value is only valid for telemetry endpoint
-> usage.
+On Wed, Jul 09, 2025 at 02:44:48PM -0400, Michael J. Ruhl wrote:
+> The intel_vsec_header information for the crashlog feature is
+> incorrect.
 > 
-> Without the ep, the crashlog usage causes the following NULL pointer
-> exception:
+> Update the VSEC header with correct sizing and count.
 > 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> RIP: 0010:intel_pmt_read+0x3b/0x70 [pmt_class]
-> Code:
-> Call Trace:
->  <TASK>
->  ? sysfs_kf_bin_read+0xc0/0xe0
->  kernfs_fop_read_iter+0xac/0x1a0
->  vfs_read+0x26d/0x350
->  ksys_read+0x6b/0xe0
->  __x64_sys_read+0x1d/0x30
->  x64_sys_call+0x1bc8/0x1d70
->  do_syscall_64+0x6d/0x110
+> Since the crashlog entries are "merged" (num_entries = 2), the
+> separate capabilities entries must be merged as well.
 > 
-> Augment struct intel_pmt_entry with a pointer to the pcidev to avoid
-> the NULL pointer exception.
-
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-
-> 
-> Reviewed-by: Tejas Upadhyay <tejas.upadhyay@intel.com>
-> Fixes: 045a513040cc ("platform/x86/intel/pmt: Use PMT callbacks")
-> Cc: <stable@vger.kernel.org>
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Fixes: 0c45e76fcc62 ("drm/xe/vsec: Support BMG devices")
 > Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 > ---
->  drivers/platform/x86/intel/pmt/class.c | 3 ++-
->  drivers/platform/x86/intel/pmt/class.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/xe/xe_vsec.c | 20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index 7233b654bbad..d046e8752173 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -97,7 +97,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
->  	if (count > entry->size - off)
->  		count = entry->size - off;
+> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+> index 3e573b0b7ebd..67238fc57a4d 100644
+> --- a/drivers/gpu/drm/xe/xe_vsec.c
+> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+> @@ -32,28 +32,18 @@ static struct intel_vsec_header bmg_telemetry = {
+>  	.offset = BMG_DISCOVERY_OFFSET,
+>  };
 >  
-> -	count = pmt_telem_read_mmio(entry->ep->pcidev, entry->cb, entry->header.guid, buf,
-> +	count = pmt_telem_read_mmio(entry->pcidev, entry->cb, entry->header.guid, buf,
->  				    entry->base, off, count);
+> -static struct intel_vsec_header bmg_punit_crashlog = {
+> -	.length = 0x10,
+> +static struct intel_vsec_header bmg_crashlog = {
+> +	.length = 0x18,
+
+This doesn't look right. The length field is meant to represent the size
+of the entire DVSEC, and it should remain 0x10 even for Crashlog.
+
+This field really ought to be validated in vsec.c, but I see that it
+isn’t currently. The rev field, which also isn’t set here, determines the
+length. When rev is 1, the length is 0x10. vsec does a basic revision
+check when reading the capability from config space but doesn’t validate
+this driver-provided structure. That’s a gap I’ll take care of
+separately.
+
+For now, even though this length value isn’t actually read by vsec.c,
+it should still be set correctly to 0x10. Also, add the rev field here
+and set it to 1. I see multiple headers missing the rev. That should be
+fixed in a separate patch ahead of this one. All Intel DVEC capabilities
+use revision 1.
+
+David
+
+>  	.id = VSEC_ID_CRASHLOG,
+> -	.num_entries = 1,
+> -	.entry_size = 4,
+> +	.num_entries = 2,
+> +	.entry_size = 6,
+>  	.tbir = 0,
+>  	.offset = BMG_DISCOVERY_OFFSET + 0x60,
+>  };
 >  
->  	return count;
-> @@ -252,6 +252,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
->  		return -EINVAL;
->  	}
+> -static struct intel_vsec_header bmg_oobmsm_crashlog = {
+> -	.length = 0x10,
+> -	.id = VSEC_ID_CRASHLOG,
+> -	.num_entries = 1,
+> -	.entry_size = 4,
+> -	.tbir = 0,
+> -	.offset = BMG_DISCOVERY_OFFSET + 0x78,
+> -};
+> -
+>  static struct intel_vsec_header *bmg_capabilities[] = {
+>  	&bmg_telemetry,
+> -	&bmg_punit_crashlog,
+> -	&bmg_oobmsm_crashlog,
+> +	&bmg_crashlog,
+>  	NULL
+>  };
 >  
-> +	entry->pcidev = pci_dev;
->  	entry->guid = header->guid;
->  	entry->size = header->size;
->  	entry->cb = ivdev->priv_data;
-> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-> index b2006d57779d..f6ce80c4e051 100644
-> --- a/drivers/platform/x86/intel/pmt/class.h
-> +++ b/drivers/platform/x86/intel/pmt/class.h
-> @@ -39,6 +39,7 @@ struct intel_pmt_header {
->  
->  struct intel_pmt_entry {
->  	struct telem_endpoint	*ep;
-> +	struct pci_dev		*pcidev;
->  	struct intel_pmt_header	header;
->  	struct bin_attribute	pmt_bin_attr;
->  	struct kobject		*kobj;
 > -- 
 > 2.50.0
 > 
