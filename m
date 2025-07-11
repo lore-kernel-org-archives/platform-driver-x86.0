@@ -1,114 +1,106 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABC32BAF4;
-	Fri, 11 Jul 2025 15:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678712EF9A3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Jul 2025 16:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752248225; cv=none; b=up5m1mQndbbwAMsunhsi57qMkixUm0CpNnS1+k4He4rzkv/47gnDisMJhdhbiydpWV4JoJkGreWxtygFttzjSylcrhBEVUjG3OMV0G2MSrXthsc9MvKQ6pKSVKVRBU0GDTXe7djzcAwMX8FiwWaWpSpNiul2o+j9poqK2sm7OAg=
+	t=1752251193; cv=none; b=SvV9dJ64P4YC59eI9jOi5A5FRSQyzoVU5H+iBSp/wFJIzZxOETp7g5HMyegz2/0v+gsKMTQxEtP9ILsDmL5RYBOxdL0HAQ12c+ZushHoORi0Ef82BuM2XXqPyju1sBzk4BFO1k+iEW3pcp8QD6zFmjpxlPzIFnzMXaYoamhJYQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752248225; c=relaxed/simple;
-	bh=fpWVXr/dZgI5zKMUuLYxtAo5ZnRqSqNa6Kjnysl9aTY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=kvw0WTAQIhLOJKVWdeWFnFiBuLdi4BwPsWGhVOOTXRU4Rhsrxjj3JOgs6aLME1JyTqH7xqhvj2pSyysRZ1S29hRVLeT4yYNluy3vyApR9QPRnmOoaxun8ZZ6yY2FP3MonJxhS6paVitcmbH8+h3s7C/yhJdReT7pltt/N7QM4UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=KHkJZu4z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V0lHAQ2s; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1752251193; c=relaxed/simple;
+	bh=6TM18RgHFfaNkI5GGNvloZ/6Icd4Am20kcYFkcOe/Ow=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Wyokq99rTQM81ZfG9Xy1TXVCMF6gV/Xpv4nZ5mTpXCilZNOetXyyJjY3vfQulla5US53Epu3rSwvLWwVb6sY9R/jjsRXIQDaUJCXT+hJTKyXAaI6+Gg15cfpjsGOA0feu5H/9v7AxjDwarK2kFgLx90aBY7F48Ct25ieHuYY8Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCPGQNtk; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="KHkJZu4z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V0lHAQ2s"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id EE8CF7A01DF;
-	Fri, 11 Jul 2025 11:37:02 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 11 Jul 2025 11:37:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1752248222;
-	 x=1752334622; bh=RjeYRg1RON0Z6P8SpPi8zDMOS6hH6xY8E4OI83ncSM4=; b=
-	KHkJZu4zHyCUCUG9i69KN215Z1CapklgQ1neIS3OfT4u55udrsCBTUNJoS4I5glk
-	KNrdwJrY+XBmr9a7RzgeNTlLiCh/MG3P07B2j1j7XBwtMGL9iZBekFBzp0SEzPfH
-	zOKNCABpfYxHO9XBg9jQfA4+Qn2PLoWYHaY7FAn3E562HL137PiVyHBdV9okRLud
-	rgASgoz9E4zLGqBJdMUUXaufW0/kcoPGE1w+B1TEdDnPIVNWHZolPiri/f34lRVs
-	U+Ah6UP6QT82fYVNLPqxl1Ag6/Gyw4v7Aa6zvY2kmHf70Mh/F+HgWqEjORAJuBpL
-	mNGN2tUZ49DNiDMbWNTnHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752248222; x=
-	1752334622; bh=RjeYRg1RON0Z6P8SpPi8zDMOS6hH6xY8E4OI83ncSM4=; b=V
-	0lHAQ2sxBG6SnHFfd55fvwq1xG/RcLEASLGtUziLDS1stGiST/5tDepnF2Xc7fvo
-	kJG7AjN4HUKGdHbQJZ5Q44HEWD3hVgP1cZC8nC4zy2HCweqiZAd+c/7zlw8WY8i+
-	Yd/zbn7THaqtCdV65e2teKImf1VuWG+XucZwETotC6Qu+joQfZaf7aB7Sl9dXpFx
-	D8DDBS0leL6jsBrRIk05d5ywvYBaULb0ZAzK/r5T1qk8G/VW4swpj1QD2GZ9c0Sg
-	sRJZKCm9L0UgheOacokEfj9U1fFZ8CJx0aD838fCFa1ZgzPc6g/sfJ2uImwQEq1a
-	VvbKGk9n6N8sNuTh4EqqA==
-X-ME-Sender: <xms:ni9xaFAv0pZ9g3UNosTqEBKwfE1B2tboFBpdDtNcbiiCfY18fM1Qnw>
-    <xme:ni9xaDghtlOzcQCucGEYCoAHn_DcoCzdZNsilKQCQRIlkvgdxbN6e5lbnWbI-jIF4
-    dXGDBsgaUVDCrIbdI0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegfeejtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprh
-    gtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtoheprghrnhgusehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtg
-    hpthhtoheprghlohhkrdgrrdhtihifrghrihesohhrrggtlhgvrdgtohhmpdhrtghpthht
-    ohepjhhvrghnuggvrhifrggrsehrvgguhhgrthdrtghomhdprhgtphhtthhopehmphgvrg
-    hrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:ni9xaOCdpxe3bgfz_yQl8-pCkDq5Bl018U_ib8W9vsMI6-Xckeme6w>
-    <xmx:ni9xaKG1Y6ehGtN7ov5UD0mL_BDsxz_4MCWdzztpM3HVYhULEoQWiA>
-    <xmx:ni9xaA2SmS9IiDjuZqx-LJcnQh56u29SHbO7YydfEMQWvfgxOR52gA>
-    <xmx:ni9xaDOvlVIk4HlSjN6tV5U6GaOzt26eD_MkKm4LKIttUM2afe_wZA>
-    <xmx:ni9xaGfdkmum6sVoN0BWutqAImtIlVMplTPjy4puBre9lFqVdHBBq-FG>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6C1CD700068; Fri, 11 Jul 2025 11:37:02 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCPGQNtk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752251191; x=1783787191;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6TM18RgHFfaNkI5GGNvloZ/6Icd4Am20kcYFkcOe/Ow=;
+  b=TCPGQNtkk4pdy3+sT2b/MRd5BvikU1ZqHg2t0WwFfwlcPIm6YRV4wzF6
+   Cv5GppxCzxSCahvFRGZV/QAs+ZIFxV9c32CF4MzNSmQK+5zgH32AcVCZ3
+   h3cMZ9FrMqFhMRaBoxG0KRQ0nYHxm9VyF/EbYikJc+Vpxsp/Q3XdrYLd2
+   Wa4Mhdp5dtcgP+2EmYx1+zgqLd+zZmoJIm7OJSnlwaAZu4NIFhZGgunbx
+   OPdQunFEkK2RbzOo8GKQsf/XzE3Por3KdjRQgwH37nzoZPS5pC81riVxm
+   jfD4+IROneeQSYLrC3D1+UYahZ7GQ7S3jO31MQU/MxlQqJlCUfjbMmHvY
+   g==;
+X-CSE-ConnectionGUID: CALqMThdR3G62pCkF8DRfQ==
+X-CSE-MsgGUID: Oxu7KzbfQJq0HMW5s+nqdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="53773860"
+X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
+   d="scan'208";a="53773860"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 09:26:31 -0700
+X-CSE-ConnectionGUID: Frdc6OUjTzCNoOgDVDVrrA==
+X-CSE-MsgGUID: SkzaicNkT/CstEtuC3BIoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
+   d="scan'208";a="155819660"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.249])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 09:26:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Jul 2025 19:26:24 +0300 (EEST)
+To: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+cc: platform-driver-x86@vger.kernel.org, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, Hans de Goede <hansg@kernel.org>, 
+    Wassenberg Dennis <dennis.wassenberg@secunet.com>
+Subject: Re: [PATCH] platform/x86: Fix initialization order for
+ firmware_attributes_class
+In-Reply-To: <7dce5f7f-c348-4350-ac53-d14a8e1e8034@secunet.com>
+Message-ID: <8288d533-f655-e8a9-758f-47e5e587e50b@linux.intel.com>
+References: <7dce5f7f-c348-4350-ac53-d14a8e1e8034@secunet.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T3ae3921a54d7a46d
-Date: Fri, 11 Jul 2025 17:36:42 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Arnd Bergmann" <arnd@kernel.org>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- "Hans de Goede" <hansg@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "ALOK TIWARI" <alok.a.tiwari@oracle.com>,
- "Mario Limonciello" <mario.limonciello@amd.com>,
- "Jelle van der Waa" <jvanderwaa@redhat.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Message-Id: <50756008-cd04-4e73-9552-52b80677b8b4@app.fastmail.com>
-In-Reply-To: <ffd00f91-6569-714d-29dc-65c14b64d914@linux.intel.com>
-References: <20250709151734.1268435-1-arnd@kernel.org>
- <dd727ab6-a754-77fd-5876-fec076c8905a@linux.intel.com>
- <fd1f6732-e091-48e8-90c9-4bc18aface58@app.fastmail.com>
- <ffd00f91-6569-714d-29dc-65c14b64d914@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: lenovo: gamezone needs "other mode"
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jul 11, 2025, at 17:34, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 11 Jul 2025, Arnd Bergmann wrote:
+On Fri, 11 Jul 2025, Torsten Hilbrich wrote:
 
-> I think I'll take this patch but change it to still keep the other sel=
-ects=20
-> as wmi-gamezone.c is directly using those too anyway.
+> The think-lmi driver uses the firwmare_attributes_class. But this class
+> is registered after think-lmi, causing the "think-lmi" directory in
+> "/sys/class/firmware-attributes" to be missing when the driver is
+> compiled as builtin.
+> 
+> Fixes: 55922403807a ("platform/x86: think-lmi: Directly use
+> firmware_attributes_class")
+> Signed-off-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+> ---
+>  drivers/platform/x86/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index abbc2644ff6d..bea87a85ae75 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -58,6 +58,8 @@ obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+= hp/
+>  # Hewlett Packard Enterprise
+>  obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
+>  +obj-$(CONFIG_FW_ATTR_CLASS)	+= firmware_attributes_class.o
+> +
+>  # IBM Thinkpad and Lenovo
+>  obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+>  obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
+> @@ -128,7 +130,6 @@ obj-$(CONFIG_SYSTEM76_ACPI)	+= system76_acpi.o
+>  obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+>   # Platform drivers
+> -obj-$(CONFIG_FW_ATTR_CLASS)		+= firmware_attributes_class.o
+>  obj-$(CONFIG_SERIAL_MULTI_INSTANTIATE)	+= serial-multi-instantiate.o
+>  obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
+>  obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
+> 
 
-Sounds good to me, thanks!
+I've applied this to review-ilpo-fixes but the patch was corrupted by 
+extra spaces which I had to remove manually before applying.
 
-   Arnd
+-- 
+ i.
+
