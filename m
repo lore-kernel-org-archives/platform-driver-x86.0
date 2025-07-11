@@ -1,144 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754A419E82A
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Jul 2025 17:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F181621E0BA;
+	Fri, 11 Jul 2025 22:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752256769; cv=none; b=teIW8GO962vaZ5alO1kXrR7mVbjo/0lbDj07DSUwu1cx3/sedTAvNq8GoVBZX/x7d3noLcAX+nGboM/acsk7ip5/z4Lu6zAJ6Q7Tx+bX+oTyEWfHCloynocifmKzhNfmnd8fIVPUe8peUDz84Ml98cRMsU3P1Uad9iU64SY76jE=
+	t=1752271979; cv=none; b=eD/XhogcIsgAAZhl+hHa/2SWsQSklWlXbD6THMEUiqdd/j2HoPKoC0+fdqR+i8jzAfepYO18DbJrRNwppkUGxRFae8RccqchJqRzaHOfzSoCIbzyXn8XLnH8NfpRgGk5UTrq4bViNaORkz23MP6hayhnH7JWW0Ny1jqdX3etx08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752256769; c=relaxed/simple;
-	bh=1bTQwRRh18JSkJub71DKitek5MhQp3+2ZFn1Tin5Q9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kTmbK7SSPvnkprIc6GgoNaDF913NocZMFN/SZjSt6SW0Gr8wMjYBOzYrCbU0SYpLUnONfz/W4Hl1A7zygKSls7PAadwqpBn8O2sYxFB5uVUrQaKrWrrsvJ7Qa+CSajzvfKk816KjIDMo5EN6izl31HJnQuwtYh/VPjwYFfzgf/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtdCMPt+; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752271979; c=relaxed/simple;
+	bh=SH1hT2BdZTLCljhfAoe4DjRGA0IxsqRiFeQ0moHmdR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QQ1pdSKZl0AOgaHKxLBSKJI0MGVt9FMjx2OeKux5L8MHbX1teKHhhuffwsbVovr4CxBmi9a7jC6CqzyRWtJ7d1Y5iFSipN9lVKyhPjV0SglG3hdAvAm5/nouqECo81Y7CWhiGt+bGOB4KTs69tqzHSNgTfmGwqDeCyQOnBXGRyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eY7Nc23L; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtdCMPt+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752256768; x=1783792768;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1bTQwRRh18JSkJub71DKitek5MhQp3+2ZFn1Tin5Q9Y=;
-  b=jtdCMPt+XYBmql27U+Ccs7jNdcFFXk78GA6HGvNCE6dSjweVjnEDmly6
-   ASNNZqnrxrZ7B4dQsa+RSlt4B1REyIF0mayEdpjMkoKbtQ+nL8xXG6y/r
-   1KRQMuCFYJ7Cy9K/j2sB/PnYOF+bauBgJ/6lUFTR208lvCteuuiaSNVVl
-   BomGmdmTeVAI7meOYvnbrdRh9lKo7/bxjGMFr8aC+f5MxgDZgyEBp+3Yr
-   GoDBdn/DNxcw9H0Xs4Y8aXwTkIFmnLXxyXFLNnSIp9TcUyt5N3/zDu0rU
-   /pK8XW+BQyoK9+m/F5e9Sde1STOIwKnhSjLNkQ7Dva1mxAznS/CyP1hc3
-   g==;
-X-CSE-ConnectionGUID: KJXT4etoSAKwSqtWA7vO1A==
-X-CSE-MsgGUID: T/bLl4Z3T8eksVTRGoz13Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65258907"
-X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="65258907"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:59:27 -0700
-X-CSE-ConnectionGUID: P93YnsvzT5G/Mn6Zu4QBhQ==
-X-CSE-MsgGUID: lQ+y4e9oT9ePECtoxO3Alg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,304,1744095600"; 
-   d="scan'208";a="180115514"
-Received: from mgerlach-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.222.101])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 10:59:26 -0700
-Date: Fri, 11 Jul 2025 10:59:25 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
-	rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, airlied@gmail.com, 
-	simona@ffwll.ch
-Subject: Re: [PATCH v7 02/12] drm/xe: Correct BMG VSEC header sizing
-Message-ID: <lfvgatgvexvot7a2x336rdv2vps3o3so5pty7n4mw4u5ze6boz@giw6rw5auo7d>
-References: <20250709184458.298283-1-michael.j.ruhl@intel.com>
- <20250709184458.298283-3-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eY7Nc23L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=cA89VBNrB6GjbQ3qCWib8lcT9Z2OuEVMWLg33JleEDs=; b=eY7Nc23Lx+NRDgMT3dbj3D32VN
+	5iVDtQUrp/O6ivrRYhcsY3Za9kU7CssN3SD1N7s9BXCWKRRMp6bvyHZJOIy/OSDbpVeyLgbKwVZf0
+	s1T7Y6W67WFZyXkF8OeAd3981/tjKUjiUhB4KzoESNitcJgEKkXn6yPQjpL8uGg+uZHuPp4+G4Jh5
+	acWNsfuwSQQtuUgf1djdnhEbIwSsKxqGZp/OWkcrNb24YyVuTGqLt7nRpOI3n3dYzqQpggCyimJTz
+	zgJHMZ1WwkTQchytYlPNzMr5+PKYdnjH2BkSt8Z8eJIYVXAtoLZhZO+Mpl2Ad08p5O4nQcYSbQZFL
+	i0NXfVnQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uaLzB-0000000EbTa-3QPV;
+	Fri, 11 Jul 2025 22:12:54 +0000
+Message-ID: <a1745a9b-d0a6-4c72-9096-6f9d15274b9a@infradead.org>
+Date: Fri, 11 Jul 2025 15:12:46 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250709184458.298283-3-michael.j.ruhl@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Jul 11
+ (drivers/platform/x86/lenovo/wmi-gamezone.o)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250711191014.12a64210@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250711191014.12a64210@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 09, 2025 at 02:44:48PM -0400, Michael J. Ruhl wrote:
-> The intel_vsec_header information for the crashlog feature is
-> incorrect.
-> 
-> Update the VSEC header with correct sizing and count.
-> 
-> Since the crashlog entries are "merged" (num_entries = 2), the
-> separate capabilities entries must be merged as well.
-> 
-> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Fixes: 0c45e76fcc62 ("drm/xe/vsec: Support BMG devices")
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> ---
->  drivers/gpu/drm/xe/xe_vsec.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-> index 3e573b0b7ebd..67238fc57a4d 100644
-> --- a/drivers/gpu/drm/xe/xe_vsec.c
-> +++ b/drivers/gpu/drm/xe/xe_vsec.c
-> @@ -32,28 +32,18 @@ static struct intel_vsec_header bmg_telemetry = {
->  	.offset = BMG_DISCOVERY_OFFSET,
->  };
->  
-> -static struct intel_vsec_header bmg_punit_crashlog = {
-> -	.length = 0x10,
-> +static struct intel_vsec_header bmg_crashlog = {
-> +	.length = 0x18,
 
-This doesn't look right. The length field is meant to represent the size
-of the entire DVSEC, and it should remain 0x10 even for Crashlog.
 
-This field really ought to be validated in vsec.c, but I see that it
-isn’t currently. The rev field, which also isn’t set here, determines the
-length. When rev is 1, the length is 0x10. vsec does a basic revision
-check when reading the capability from config space but doesn’t validate
-this driver-provided structure. That’s a gap I’ll take care of
-separately.
-
-For now, even though this length value isn’t actually read by vsec.c,
-it should still be set correctly to 0x10. Also, add the rev field here
-and set it to 1. I see multiple headers missing the rev. That should be
-fixed in a separate patch ahead of this one. All Intel DVEC capabilities
-use revision 1.
-
-David
-
->  	.id = VSEC_ID_CRASHLOG,
-> -	.num_entries = 1,
-> -	.entry_size = 4,
-> +	.num_entries = 2,
-> +	.entry_size = 6,
->  	.tbir = 0,
->  	.offset = BMG_DISCOVERY_OFFSET + 0x60,
->  };
->  
-> -static struct intel_vsec_header bmg_oobmsm_crashlog = {
-> -	.length = 0x10,
-> -	.id = VSEC_ID_CRASHLOG,
-> -	.num_entries = 1,
-> -	.entry_size = 4,
-> -	.tbir = 0,
-> -	.offset = BMG_DISCOVERY_OFFSET + 0x78,
-> -};
-> -
->  static struct intel_vsec_header *bmg_capabilities[] = {
->  	&bmg_telemetry,
-> -	&bmg_punit_crashlog,
-> -	&bmg_oobmsm_crashlog,
-> +	&bmg_crashlog,
->  	NULL
->  };
->  
-> -- 
-> 2.50.0
+On 7/11/25 2:10 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
+> Changes since 20250710:
 > 
+
+on i386, when
+CONFIG_LENOVO_WMI_EVENTS=y
+CONFIG_LENOVO_WMI_HELPERS=y
+CONFIG_LENOVO_WMI_GAMEZONE=y
+# CONFIG_LENOVO_WMI_TUNING is not set
+
+ld: drivers/platform/x86/lenovo/wmi-gamezone.o: in function `lwmi_gz_probe':
+wmi-gamezone.c:(.text+0x63c): undefined reference to `devm_lwmi_om_register_notifier'
+
+Adding
++	select LENOVO_WMI_TUNING
+for config LENOVO_WMI_GAMEZONE fixes the build error.
+Is that the right fix?
+If so, please go ahead with it.
+
+
+-- 
+~Randy
+
