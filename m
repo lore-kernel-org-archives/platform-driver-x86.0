@@ -1,106 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3253C2EA15A;
-	Fri, 11 Jul 2025 14:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7322EA14A;
+	Fri, 11 Jul 2025 15:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752245760; cv=none; b=AfuNlHeDu9el2Ipvnas5N5UW1VXVLdLBwNkBuRXhrKOCmgiphkYPb9IOmiYNqzJT/nRL01fMG5E+L3/J015wmRIuGsfa11OwLm0RkyxYKc6pCMyv/eAtzl/MmYxAE3K9CXB7TTa+5SzPF4sNC0Dpl8B/gDg+sUHLDjP9ezw1IDs=
+	t=1752246596; cv=none; b=L3eI7WlhcyRY43r819bVjj01zdynqJuAsocMOFZ7Jdt9NTaZt1B14JUthOuOCS/DwsnpzfNprl65F7Hfbz8TiCmFihV26OxfLpyhtaaOUextssAgr1KwKrws1EIwEeLzl0pVdaPGd8f64VaCquBiNH3gC82B4y8qtXKLWGuLMKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752245760; c=relaxed/simple;
-	bh=DokzpyZwq6qWpehUvGkYf4G9lXgOCZS54AU/nsJtJzw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Xk1Of2UFMa68LGP0WwTUn2vIWnSp8xcL8/Ab/53sJtb20UZj9np7QwAQcafoWYDw3ghgArUGtupZfooRkYXNKn7CiRnf0Vr2yZzAqLrsr/JO5fkujdn+UaB23CaLgyKVy7cCEQuL7SQenfnM4s4APMFwHqV78BPTKHiAXEkBP0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rc1AfxZ4; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752246596; c=relaxed/simple;
+	bh=MxY5wb1Wm7B8Y9ml5x3ht5huqYB4JZeNQxI4DeCUQ4o=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=jeVVxO+0UJlnNG7RYIwCiUzVTNrdZUfQNlsMeT1XILj6uiNih5GGljWZXivLYV9t19Np3JKIB3sS1TX8Ti4nTo70/JVzNEyDaxxsSvTdtfIfhjTpC/RErhGs9RpJd3ywo6dQAj3YJiTTAS2JGQua+kTfqtaXCbWq5yHTkZ/rj0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=czGel3h9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iY5YfeOS; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rc1AfxZ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752245758; x=1783781758;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=DokzpyZwq6qWpehUvGkYf4G9lXgOCZS54AU/nsJtJzw=;
-  b=Rc1AfxZ4pNMdTU6+sJd2Jmbo4ni+xU1z3lXKBK9Z4CUOeX6ZePsm5hGB
-   9pU1Pwd6xboykWGbK333mqV1qoIb4r4qekKiz2BVzCdzRbeCfoCE3Xzbu
-   CSBPhVNhrQ+AIQ2AusYXbxHMgEJ0Uskgul4eJGEvpU0v1xf1Czg3jeL2D
-   y5Wec6HgN5W6BYuVfvHrR4o/ah5S8IVfz7tC49knJQ10Wf+STHKC2G17q
-   5MTTMlJ9DfYhdCha30uZMf2tM8ezpKoXKLClM+8pk6+h6kSNNkB9iRh0p
-   ME3+MN5u4JyElpXEU1W0PgA2uOi35JutlRUi5sySARLuxAv013WJu0yLd
-   w==;
-X-CSE-ConnectionGUID: i/9MiDz7QQSUtENA2/RKZA==
-X-CSE-MsgGUID: FO1nM1tgRG+idqU9UuBGkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="64805167"
-X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
-   d="scan'208";a="64805167"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 07:55:58 -0700
-X-CSE-ConnectionGUID: bDSd06xoSn2M7zM9QGzM4g==
-X-CSE-MsgGUID: nfZpRzn7Q861dAPm9A59ZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
-   d="scan'208";a="160936701"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.249])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 07:55:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 11 Jul 2025 17:55:50 +0300 (EEST)
-To: Arnd Bergmann <arnd@kernel.org>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Hans de Goede <hansg@kernel.org>, 
-    Armin Wolf <W_Armin@gmx.de>, Arnd Bergmann <arnd@arndb.de>, 
-    Alok Tiwari <alok.a.tiwari@oracle.com>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Jelle van der Waa <jvanderwaa@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lenovo: gamezone needs "other mode"
-In-Reply-To: <20250709151734.1268435-1-arnd@kernel.org>
-Message-ID: <dd727ab6-a754-77fd-5876-fec076c8905a@linux.intel.com>
-References: <20250709151734.1268435-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="czGel3h9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iY5YfeOS"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id B4B261D0024F;
+	Fri, 11 Jul 2025 11:09:53 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Fri, 11 Jul 2025 11:09:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1752246593;
+	 x=1752332993; bh=rPs3KS1c1SkLmgd4C4FTnITK9LKw7AKveLxOo7cHuug=; b=
+	czGel3h9TjO63wlYOPNfEJddTvcv78oj9ivJVf9umjHeg7Zm8r511SxvpsKfXyyP
+	Af3ZnEJyTO5UiATGMdGi7VuzfKbBWQHTPwL6TUSCxi0SG8GMcx5lopevGqda+XoG
+	sVJE7JZd5pZQ8hhd5yKjgX3KtvidPNprWur45WdcoYaHmKP98VZKdEBHMsSgwXdS
+	ezipV692gVH/ybQQR7eVVXT6zlRJDLcRi63t1rJ6Tb6vCT9MXWngZs4a/vj4fvj+
+	+kCNj3QukTJs2WqthSUxawbB1aMnfZYyb23omV6Fwe2FK4TPr4BuBcnWngrhuWvj
+	2gbtU2P1/G6Ar8EdCPaTjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752246593; x=
+	1752332993; bh=rPs3KS1c1SkLmgd4C4FTnITK9LKw7AKveLxOo7cHuug=; b=i
+	Y5YfeOS2YT/DhNlcPgKz1/LRB2F2Uc/Ld+MKrtgt92LO77XHiHTZlI6Zk+cF7ZKM
+	kDGh9MKAEpE7AmJ31xUnSnJ+yOx2xhOpQQ9gbp36HHZjVmOdorQ2fj/N7M7cei0R
+	hPe7nxBXYYZARp4qf/43FP+4cF2iQh84CLwYYp2rtOchX6lnvFQvk3jTTtC34Vcq
+	jC7OfeGWeaRaqXQbtD5cEbxy4DJzBjr38L7qFAzo83MF7bI2BUwD4HynDKLgBzpk
+	vTAZ9MfZJulWh9WW0Lel2AUZUAae7TFeN4nKxxBeaIpd3pN5jXI9Wisq9TBkDjhR
+	oKwUWvQ8na4mAQYhkyglQ==
+X-ME-Sender: <xms:QSlxaKGOfc_An9ooQ0PfKMWP7ENJi78fqCMbPrUlCLJ_LtJQeFmdYA>
+    <xme:QSlxaLV8_IhnNFK0-IO8zJ2P2i1pOcsPNqBxag0E-iKr8vjlY_FRu96LjamVtC9dw
+    dA3ye1GtEC3gT3jYL8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegfeeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprh
+    gtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghp
+    thhtohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtoheprghrnhgusehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtg
+    hpthhtoheprghlohhkrdgrrdhtihifrghrihesohhrrggtlhgvrdgtohhmpdhrtghpthht
+    ohepjhhvrghnuggvrhifrggrsehrvgguhhgrthdrtghomhdprhgtphhtthhopehmphgvrg
+    hrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:QSlxaFOIfJxzrBIakvzZ74n7THn7ZfBfzpSlGPzhieSVz8Xbi22FJA>
+    <xmx:QSlxaMXWVfILa5PdP5K6P1rX5KNzR5t_cNicHkQiK9BGVWJm7fFaSQ>
+    <xmx:QSlxaCKty1OP5NB6gd2TUjB0S684IMFc1-1D9axS2A6h2i2srddASQ>
+    <xmx:QSlxaPrZJwn5_3zlKLQ0Ky_hcTkL67ce7mdHGx5ekhU19Us-NXtytw>
+    <xmx:QSlxaNPlcwjmDLC7HgtaFf5Aw9luUvB35KOAHsyCznkmsE6TG1ABBS6t>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 270D0700068; Fri, 11 Jul 2025 11:09:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ThreadId: T3ae3921a54d7a46d
+Date: Fri, 11 Jul 2025 17:09:31 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Arnd Bergmann" <arnd@kernel.org>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>
+Cc: "Mark Pearson" <mpearson-lenovo@squebb.ca>,
+ "Hans de Goede" <hansg@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "ALOK TIWARI" <alok.a.tiwari@oracle.com>,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Jelle van der Waa" <jvanderwaa@redhat.com>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Message-Id: <fd1f6732-e091-48e8-90c9-4bc18aface58@app.fastmail.com>
+In-Reply-To: <dd727ab6-a754-77fd-5876-fec076c8905a@linux.intel.com>
+References: <20250709151734.1268435-1-arnd@kernel.org>
+ <dd727ab6-a754-77fd-5876-fec076c8905a@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: lenovo: gamezone needs "other mode"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 9 Jul 2025, Arnd Bergmann wrote:
+On Fri, Jul 11, 2025, at 16:55, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 9 Jul 2025, Arnd Bergmann wrote:
+>> index b76157b35296..e9e1c3268373 100644
+>> --- a/drivers/platform/x86/lenovo/Kconfig
+>> +++ b/drivers/platform/x86/lenovo/Kconfig
+>> @@ -250,8 +250,7 @@ config LENOVO_WMI_GAMEZONE
+>>  	depends on ACPI_WMI
+>>  	depends on DMI
+>>  	select ACPI_PLATFORM_PROFILE
+>> -	select LENOVO_WMI_EVENTS
+>> -	select LENOVO_WMI_HELPERS
+>> +	select LENOVO_WMI_TUNING
+>
+> Why did you remove the other two?
+>
+> Do select propagate properly these days across another select?
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Registering the "other mode" notifier fails if that is disabled:
-> 
-> x86_64-linux-ld: drivers/platform/x86/lenovo/wmi-gamezone.o: in function `lwmi_gz_probe':
-> wmi-gamezone.c:(.text+0x336): undefined reference to `devm_lwmi_om_register_notifier'
-> 
-> This could be fixed by adding a stub helper, but a Kconfig 'select'
-> seems simpler here.
-> 
-> Fixes: 22024ac5366f ("platform/x86: Add Lenovo Gamezone WMI Driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/lenovo/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-> index b76157b35296..e9e1c3268373 100644
-> --- a/drivers/platform/x86/lenovo/Kconfig
-> +++ b/drivers/platform/x86/lenovo/Kconfig
-> @@ -250,8 +250,7 @@ config LENOVO_WMI_GAMEZONE
->  	depends on ACPI_WMI
->  	depends on DMI
->  	select ACPI_PLATFORM_PROFILE
-> -	select LENOVO_WMI_EVENTS
-> -	select LENOVO_WMI_HELPERS
-> +	select LENOVO_WMI_TUNING
+Yes, as far as I know it has always done this, with the one
+exception that it does not propagate when trying to select
+another symbol that has missing dependencies
 
-Why did you remove the other two?
+> I was under impression they don't which is one of the reasons
+> use of select is discouraged.
 
-Do select propagate properly these days across another select? I was under 
-impression they don't which is one of the reasons use of select is 
-discouraged.
+I have seen that mentioned before in commit logs, but I
+think this was a misunderstanding. Using 'select' is still
+discouraged, but for other reasons:
 
--- 
- i.
+- complexity quickly gets out of hand when selecting something
+  that has other dependencies, as the driver selecting them
+  must duplicate all those dependencies and keep them in sync
 
+- mixing 'depends on' and 'select' for the same dependency
+  in different drivers tends to cause dependency loops
+
+- selecting user-visible symbols has side-effects if another
+  symbol depends on that, e.g. the "select I2C" in some subsystems
+  causes the I2C submenu to appear.
+
+    Arnd
