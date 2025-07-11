@@ -1,133 +1,77 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007A51E833C;
-	Fri, 11 Jul 2025 07:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D981EDA0F;
+	Fri, 11 Jul 2025 07:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752218320; cv=none; b=Lp+P3C4oqMhjqO9HYFD2IenXF+qqg42U65/vU8RyGwkebDARANf5AkxBRBEFdNnwZH5uqZM45QV0xEOl/cLKumsfXGh8ZabZYGPXfcWsKJ7H5holEzAuB5zQbJiQErikNycXrd4OP2O4fPiSsI5LVObLa/2T00msWpAoUFsGswg=
+	t=1752218843; cv=none; b=ZKMDVQZaXi19uBIpP4Vvaf01fCEmfvpKRHl0ZmjAGH7epCXZYzJQ5FbWzv17W5QELjRtPBl7ZOUkWzd08kC8GaROXPVl7AnjAaHxoTANj4hyPW3IxVSMUN6u9yo7W5PB6uYIizyt0yOpc15vE77jzMuiGvOIldAFnD6AC7JJsOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752218320; c=relaxed/simple;
-	bh=BLnNaiDazGnT0Faq76fYjHlwJwtfYmvHHgph24oHKuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i0v+io8knuEutXFaquuJ8F2iQIL65ARPzUqQKLAZyi+xFVXp3XokvM8JEsZ/3alvbvQ/0VnL+y4TQQGwuA34hxDD+e/oBLQ4kKayQJ1DHE5rQP/3bL9cKGvNa4g1sVCQuI8XCbDMxkkF+LNdxSIYfP/Iy5RLrnJV2RNklH5C+8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.2.196] (p5b13ad99.dip0.t-ipconnect.de [91.19.173.153])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 487346028825F;
-	Fri, 11 Jul 2025 09:18:22 +0200 (CEST)
-Message-ID: <f2e0909b-0dc2-448c-bbc9-d7dfa351412c@molgen.mpg.de>
-Date: Fri, 11 Jul 2025 09:18:21 +0200
+	s=arc-20240116; t=1752218843; c=relaxed/simple;
+	bh=vQRwotoAgVJ0lAndow9DIf367RcCHh0hiNp7rDPCxCA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YbZsLq5K4Lo6rlUeeyuccrvh8iU1qEvQUfwnZvSup0g3Y/G0KT6NzssfW9Ns4iZIPz+Cn1P5DKrQBCSRGafMTQwQtg3LnekB7DONSOrhtFk/FoTPP3CRxkkiifFRSRYT8KhueW2d7gAKgNQZ6yXsAjts2fdGt5aXQcaK/S9cwGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACU1Fqjr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACU1Fqjr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4760C4CEED;
+	Fri, 11 Jul 2025 07:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752218842;
+	bh=vQRwotoAgVJ0lAndow9DIf367RcCHh0hiNp7rDPCxCA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ACU1FqjryQZdlspB0+czXPZGMsrXQHhz2YH+gZf248YvYoJsMCyxW35hDx9toZbPI
+	 jnSib3r7aQYwvRdQDCXvfvc4lSDhGamSygw4hZhsPIujW/7Fs3w70QTgm4pavArMqv
+	 hlwPFithhgG9VuPHGanR0f01DN76EYSyysRazGf+Hjo0nnUsB7Ycku8FL/W/xhfkCO
+	 YkYLYyuW72mAAoHqaDlD8NyXZ0AJMWlr4gT9Yqzc7dvPO2M52HGPybWwXx7/JkJxZp
+	 ludpVi96N2HqyQCOBcGrHo0G+o5A3qW3bswdII0Qx52c2Jlv73IRiYCMfKJVU64mzT
+	 JvzekYqdhDmhA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: "David E. Box" <david.e.box@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/pmt/discovery: fix format string warning
+Date: Fri, 11 Jul 2025 09:27:09 +0200
+Message-Id: <20250711072718.2748415-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Precision 3551
-To: Jan-Niklas Burfeind <kernel@aiyionpri.me>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>
-References: <20250710190919.37842-1-kernel@aiyionpri.me>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250710190919.37842-1-kernel@aiyionpri.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Dear Jan-Niklas,
+From: Arnd Bergmann <arnd@arndb.de>
 
+When -Wformat-security is enabled, this new code triggers it:
 
-Thank you for your patch.
+drivers/platform/x86/intel/pmt/discovery.c: In function 'pmt_features_discovery':
+drivers/platform/x86/intel/pmt/discovery.c:505:36: error: format not a string literal and no format arguments [-Werror=format-security]
+  505 |                                    pmt_feature_names[feature->id]);
 
-Am 10.07.25 um 21:09 schrieb Jan-Niklas Burfeind:
-> This marks 0x29 as accelerometer address on Dell Precision 3551.
-> 
-> I followed previous works of Paul Menzel and Hans de Goede to verify it:
-> 
-> $ cd /sys/bus/pci/drivers/i801_smbus/0000\:00\:1f.4
-> 
-> $ ls -d i2c-?
-> i2c-0
-> 
-> $ sudo modprobe i2c-dev
-> 
-> $ sudo i2cdetect 0
-> WARNING! This program can confuse your I2C bus, cause data loss and worse!
-> I will probe file /dev/i2c-0.
-> I will probe address range 0x08-0x77.
-> Continue? [Y/n] Y
->       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-> 00:                         08 -- -- -- -- -- -- --
-> 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 20: -- -- -- -- -- -- -- -- -- 29 -- -- -- -- -- --
-> 30: 30 -- -- -- -- 35 UU UU -- -- -- -- -- -- -- --
-> 40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
-> 50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
-> 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-> 70: -- -- -- -- -- -- -- --
-> 
-> $ echo lis3lv02d 0x29 > sudo tee /sys/bus/i2c/devices/i2c-0/new_device
-> lis3lv02d 0x29
-> 
-> $ sudo dmesg
-> [    0.000000] Linux version 6.12.28 (nixbld@localhost) (gcc (GCC) 14.2.1 20250322, GNU ld (GNU Binutils) 2.44) #1-NixOS SMP PREEMPT_DYNAMIC Fri May  9 07:50:53 UTC 2025
-> [...]
-> [    0.000000] DMI: Dell Inc. Precision 3551/07YHW8, BIOS 1.18.0 10/03/2022
-> [...]
-> [ 3749.077624] lis3lv02d_i2c 0-0029: supply Vdd not found, using dummy regulator
-> [ 3749.077732] lis3lv02d_i2c 0-0029: supply Vdd_IO not found, using dummy regulator
-> [ 3749.098674] lis3lv02d: 8 bits 3DC sensor found
-> [ 3749.182480] input: ST LIS3LV02DL Accelerometer as /devices/platform/lis3lv02d/input/input28
-> [ 3749.182899] i2c i2c-0: new_device: Instantiated device lis3lv02d at 0x29
-> 
-> Signed-off-by: Jan-Niklas Burfeind <kernel@aiyionpri.me>
-> ---
->   drivers/platform/x86/dell/dell-lis3lv02d.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
-> index 0791118dd6b7..732de5f556f8 100644
-> --- a/drivers/platform/x86/dell/dell-lis3lv02d.c
-> +++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
-> @@ -49,6 +49,7 @@ static const struct dmi_system_id lis3lv02d_devices[] __initconst = {
->   	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6330",     0x29),
->   	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6430",     0x29),
->   	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
-> +	DELL_LIS3LV02D_DMI_ENTRY("Precision 3551",     0x29),
->   	DELL_LIS3LV02D_DMI_ENTRY("Precision M6800",    0x29),
->   	DELL_LIS3LV02D_DMI_ENTRY("Vostro V131",        0x1d),
->   	DELL_LIS3LV02D_DMI_ENTRY("Vostro 5568",        0x29),
+Fixes: d9a078809356 ("platform/x86/intel/pmt: Add PMT Discovery driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel/pmt/discovery.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
+index 1a680a042a98..32713a194a55 100644
+--- a/drivers/platform/x86/intel/pmt/discovery.c
++++ b/drivers/platform/x86/intel/pmt/discovery.c
+@@ -502,7 +502,7 @@ static int pmt_features_discovery(struct pmt_features_priv *priv,
+ 	}
+ 
+ 	ret = kobject_init_and_add(&feature->kobj, ktype, &priv->dev->kobj,
+-				   pmt_feature_names[feature->id]);
++				   "%s", pmt_feature_names[feature->id]);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.39.5
 
-
-Kind regards,
-
-Paul
-
-
-PS: Just a heads-up, that you have a DMARC policy set:
-
-     $ dig txt _dmarc.aiyionpri.me +short
-     "v=DMARC1;p=reject;"
-
-I believe STRATO enabled this for all their customers, breaking 
-deliveries for addressees enforcing the DMARC policy, as you do not have 
-any SPF entries for example [1]. I recommend to deactivate the setting 
-by selecting *Keine STRATO-DMARC-Regel* [2], and to look for another 
-provider, as their support was not helpful at all and did not even 
-understand the problem, and hasn’t replied to my latest response in 
-several weeks. (And I didn’t get the initial emails informing about the 
-change.)
-
-
-[1]: 
-https://www.borncity.com/blog/2025/06/06/strato-aktiviert-automatisch-eine-dmarc-pruefung-fuer-mails/
-[2]: https://www.strato.de/faq/hosting/dmarc-bei-strato-aktivieren/
