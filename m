@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CD0189B8C
-	for <platform-driver-x86@vger.kernel.org>; Sun, 13 Jul 2025 17:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA781279DD6
+	for <platform-driver-x86@vger.kernel.org>; Sun, 13 Jul 2025 17:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752427815; cv=none; b=VJnP/nljKKXXavc2NxctlE2WiUQg/oknaBjnEh8hNb8syg1zHHj3b/YkTTSBSd7Oq14ySpFx2kDzaQ8gnUaZeCbgQIs2M+5ONP/yhHzMvOzfDqVvMisNw1C+Ju3mjWMfVYcOB0j2ww5ei9ocVJtw21w5L+KgEmPYQsRHOfVFmJY=
+	t=1752427818; cv=none; b=rwQhr38JaEKd/Rx9ldSmz4Jybc8GfUkBU9DGur3CI7qF/r6iBR0DN5axz4xr78Mr1HEI5rpz+6io1F/Kk53ICeqgDJtzEiYdcrMZDSEoaWpHvWzFrVDHY66APoZ+ps7L/IyTLkfsjO7Yro4bGiQUbx5EPSmVr2SRAAzZGjteobk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752427815; c=relaxed/simple;
-	bh=c4bzE6SLVin2A91eA3ifvGtrmu7myvbZoSsDr0AZJ/8=;
+	s=arc-20240116; t=1752427818; c=relaxed/simple;
+	bh=ZIclvugM+nOSJV85NwMrbVqzXojzgzSttVAU6WYraSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uMs/f0l/50SAbJn7vKq0unbIYQgXN9VqABThgvqb11lHMvA/E0sLPD2/myDCpuhNYsj1q+dD/AHdoRf6DQmt+j4qeyyMpyzZX6pXCjmfK2KV0DEDTO8JHg2Dbh7iAB37iZqAF4anvZmcHYSLbgNKOW3S0jB4F+tgST+noIsMLTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEcpcUpD; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=XNrZGixr4oGOW/r+qBdEReOZQaeiyWbf9LOCKzwmtl5vEshHMh48Hze7NtOJM4yralYB4xX0lYEM5qBdP1d9bcvT4cVlWfiVnU+1iyF/MkMTJWCxVtja3pwa0JyQ7zFeQ1gVPtLQBJJ3teGQ0IUiRnUgzH9JgJGC47RpqBHA8GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzf9SHqt; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEcpcUpD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzf9SHqt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752427814; x=1783963814;
+  t=1752427817; x=1783963817;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=c4bzE6SLVin2A91eA3ifvGtrmu7myvbZoSsDr0AZJ/8=;
-  b=kEcpcUpDajk8Bh3HrpRP8goysswK0tGm4yR1T0k9zTcVohKAEAO/H2ku
-   X/4iQe7/bf048o44rLLqduHk/16Nsnsc9TML/YVT8mlfyDBh3coJxoAQT
-   TUNpt1tJUzJA6MX6LPInnFjLXlo5W5pJVV5n64WlAV7sSYhZk8xFodGTe
-   ptEznmuedi7ibqqVgMjynrohOIUw7t3YtBeR0AD5NOF7uKTrEm4BNC05D
-   cpyUKVgwQzj3D2K7hli8xsY05X727jo333bnQPUOBz9LbwPQgcWVApJRk
-   Uh1N3PgJLa4UClvZ2P0UT0QKOIazm84OwwaDet4Pv4JQIEUBy4aYQ12f3
-   w==;
-X-CSE-ConnectionGUID: EByhzS24Q8m6rx5kyimcjw==
-X-CSE-MsgGUID: WU509MXsQSu4KiEgkAUUww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65334153"
+  bh=ZIclvugM+nOSJV85NwMrbVqzXojzgzSttVAU6WYraSQ=;
+  b=nzf9SHqtKxGUVKi84iiGlpq0crlHKUMK7FHW10X0PQOspTxMOasAkO22
+   47pPMMof0WdtKSUbh0Txtbu8jSU/0/6vwWaBeuEKMZVUUt58pY7brfJLP
+   EtkwsrUQ+w/yzIC6xnBy7Hpf00Es5wZfdKdKh6X8c59KgyLSSrC0jbYFC
+   vvd1K3J+mRDCxipPf9tvRkJYnbkKg1tlaH+46AgB3UUxsVkDPF7vLaYZt
+   BPYouKyriduzYUSLYg2Yszgot+FfpStaAzfCVHh9Pb8VXgkkfCqRf2oAO
+   urjlzbaVO4L4QnikZc+fYtj2jDwgQyQrBo6jXHGIlFnDrDF2HxhUT7kAv
+   g==;
+X-CSE-ConnectionGUID: Da4pgVRnSgyJCJN/mGEX4A==
+X-CSE-MsgGUID: a3rlkeQNSlukIFPljHZ13w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65334159"
 X-IronPort-AV: E=Sophos;i="6.16,309,1744095600"; 
-   d="scan'208";a="65334153"
+   d="scan'208";a="65334159"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2025 10:30:14 -0700
-X-CSE-ConnectionGUID: vd7CkE7BT0OqctLmgtxBzg==
-X-CSE-MsgGUID: Hc1JMPlOSaC5QSx1xZfS/Q==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2025 10:30:16 -0700
+X-CSE-ConnectionGUID: zUG4xqHqTW2jW7WYSA9zKw==
+X-CSE-MsgGUID: mFnqJ4geSGeSnqXfNq2QOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,309,1744095600"; 
-   d="scan'208";a="161069343"
+   d="scan'208";a="161069354"
 Received: from mgoodin-mobl3.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.223.19])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2025 10:30:13 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2025 10:30:15 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -55,9 +55,9 @@ To: platform-driver-x86@vger.kernel.org,
 	simona@ffwll.ch,
 	david.e.box@linux.intel.com
 Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Subject: [PATCH v8 09/13] platform/x86/intel/pmt: decouple sysfs and namespace
-Date: Sun, 13 Jul 2025 13:29:39 -0400
-Message-ID: <20250713172943.7335-10-michael.j.ruhl@intel.com>
+Subject: [PATCH v8 10/13] platform/x86/intel/pmt: add register access helpers
+Date: Sun, 13 Jul 2025 13:29:40 -0400
+Message-ID: <20250713172943.7335-11-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250713172943.7335-1-michael.j.ruhl@intel.com>
 References: <20250713172943.7335-1-michael.j.ruhl@intel.com>
@@ -67,102 +67,110 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The PMT namespace includes the crashlog sysfs attribute information.
-Other crashlog version/types may need different sysfs attributes.
-Coupling the attributes with the namespace blocks this usage.
+The control register is used in a read/modify/write pattern.
+The status register is used in a read/check bit pattern.
 
-Decouple sysfs attributes from the name space and add them to the
-specific entry.
+Add helpers to eliminate common code.
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/class.c    | 12 ++++++------
- drivers/platform/x86/intel/pmt/class.h    |  2 +-
- drivers/platform/x86/intel/pmt/crashlog.c |  3 ++-
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/platform/x86/intel/pmt/crashlog.c | 58 +++++++++++------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index d046e8752173..3b6bf2f14dcb 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -285,8 +285,8 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
- 
- 	entry->kobj = &dev->kobj;
- 
--	if (ns->attr_grp) {
--		ret = sysfs_create_group(entry->kobj, ns->attr_grp);
-+	if (entry->attr_grp) {
-+		ret = sysfs_create_group(entry->kobj, entry->attr_grp);
- 		if (ret)
- 			goto fail_sysfs_create_group;
- 	}
-@@ -327,8 +327,8 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
- fail_add_endpoint:
- 	sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
- fail_ioremap:
--	if (ns->attr_grp)
--		sysfs_remove_group(entry->kobj, ns->attr_grp);
-+	if (entry->attr_grp)
-+		sysfs_remove_group(entry->kobj, entry->attr_grp);
- fail_sysfs_create_group:
- 	device_unregister(dev);
- fail_dev_create:
-@@ -370,8 +370,8 @@ void intel_pmt_dev_destroy(struct intel_pmt_entry *entry,
- 	if (entry->size)
- 		sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
- 
--	if (ns->attr_grp)
--		sysfs_remove_group(entry->kobj, ns->attr_grp);
-+	if (entry->attr_grp)
-+		sysfs_remove_group(entry->kobj, entry->attr_grp);
- 
- 	device_unregister(dev);
- 	xa_erase(ns->xa, entry->devid);
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-index f6ce80c4e051..d5d86b8a2d15 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -42,6 +42,7 @@ struct intel_pmt_entry {
- 	struct pci_dev		*pcidev;
- 	struct intel_pmt_header	header;
- 	struct bin_attribute	pmt_bin_attr;
-+	const struct attribute_group *attr_grp;
- 	struct kobject		*kobj;
- 	void __iomem		*disc_table;
- 	void __iomem		*base;
-@@ -55,7 +56,6 @@ struct intel_pmt_entry {
- struct intel_pmt_namespace {
- 	const char *name;
- 	struct xarray *xa;
--	const struct attribute_group *attr_grp;
- 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
- 				 struct device *dev);
- 	int (*pmt_add_endpoint)(struct intel_vsec_device *ivdev,
 diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 881f4abdae14..23b3971da40a 100644
+index 23b3971da40a..ed781548e59d 100644
 --- a/drivers/platform/x86/intel/pmt/crashlog.c
 +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -243,6 +243,8 @@ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
- 	/* Size is measured in DWORDS, but accessor returns bytes */
- 	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
- 
-+	entry->attr_grp = &pmt_crashlog_group;
+@@ -64,20 +64,40 @@ struct pmt_crashlog_priv {
+ /*
+  * I/O
+  */
+-static bool pmt_crashlog_complete(struct intel_pmt_entry *entry)
 +
- 	return 0;
++/* Read, modify, write the control register, setting or clearing @bit based on @set */
++static void pmt_crashlog_rmw(struct intel_pmt_entry *entry, u32 bit, bool set)
+ {
+-	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
++	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
++
++	reg &= ~CRASHLOG_FLAG_TRIGGER_MASK;
++
++	if (set)
++		reg |= bit;
++	else
++		reg &= ~bit;
++
++	writel(reg, entry->disc_table + CONTROL_OFFSET);
++}
++
++/* Read the status register and see if the specified @bit is set */
++static bool pmt_crashlog_rc(struct intel_pmt_entry *entry, u32 bit)
++{
++	u32 reg = readl(entry->disc_table + CONTROL_OFFSET);
++
++	return !!(reg & bit);
++}
+ 
++static bool pmt_crashlog_complete(struct intel_pmt_entry *entry)
++{
+ 	/* return current value of the crashlog complete flag */
+-	return !!(control & CRASHLOG_FLAG_TRIGGER_COMPLETE);
++	return pmt_crashlog_rc(entry, CRASHLOG_FLAG_TRIGGER_COMPLETE);
  }
  
-@@ -250,7 +252,6 @@ static DEFINE_XARRAY_ALLOC(crashlog_array);
- static struct intel_pmt_namespace pmt_crashlog_ns = {
- 	.name = "crashlog",
- 	.xa = &crashlog_array,
--	.attr_grp = &pmt_crashlog_group,
- 	.pmt_header_decode = pmt_crashlog_header_decode,
- };
+ static bool pmt_crashlog_disabled(struct intel_pmt_entry *entry)
+ {
+-	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+-
+ 	/* return current value of the crashlog disabled flag */
+-	return !!(control & CRASHLOG_FLAG_DISABLE);
++	return pmt_crashlog_rc(entry, CRASHLOG_FLAG_DISABLE);
+ }
  
+ static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
+@@ -98,37 +118,17 @@ static bool pmt_crashlog_supported(struct intel_pmt_entry *entry)
+ static void pmt_crashlog_set_disable(struct intel_pmt_entry *entry,
+ 				     bool disable)
+ {
+-	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+-
+-	/* clear trigger bits so we are only modifying disable flag */
+-	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+-
+-	if (disable)
+-		control |= CRASHLOG_FLAG_DISABLE;
+-	else
+-		control &= ~CRASHLOG_FLAG_DISABLE;
+-
+-	writel(control, entry->disc_table + CONTROL_OFFSET);
++	pmt_crashlog_rmw(entry, CRASHLOG_FLAG_DISABLE, disable);
+ }
+ 
+ static void pmt_crashlog_set_clear(struct intel_pmt_entry *entry)
+ {
+-	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+-
+-	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+-	control |= CRASHLOG_FLAG_TRIGGER_CLEAR;
+-
+-	writel(control, entry->disc_table + CONTROL_OFFSET);
++	pmt_crashlog_rmw(entry, CRASHLOG_FLAG_TRIGGER_CLEAR, true);
+ }
+ 
+ static void pmt_crashlog_set_execute(struct intel_pmt_entry *entry)
+ {
+-	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
+-
+-	control &= ~CRASHLOG_FLAG_TRIGGER_MASK;
+-	control |= CRASHLOG_FLAG_TRIGGER_EXECUTE;
+-
+-	writel(control, entry->disc_table + CONTROL_OFFSET);
++	pmt_crashlog_rmw(entry, CRASHLOG_FLAG_TRIGGER_EXECUTE, true);
+ }
+ 
+ /*
 -- 
 2.50.0
 
