@@ -1,100 +1,77 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C496258CEC;
-	Mon, 14 Jul 2025 17:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FBE26981C;
+	Mon, 14 Jul 2025 17:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752514588; cv=none; b=ORT7p6rBJwMWGQjlhwtMjROJjvh0Wj/1K1yoB2YXtQN/rSG3wq1TTtD9tX8RRi7x5OdKX0Xjt0er82ydBGO/5cAI/lr7Vyp3EMT5yjtKlK0uFZnKuJAdIsRRZZXZGKTsKtNqC8Elp5UUA5GYnigUm6OVl7yiYYIPD357w93RaBQ=
+	t=1752514594; cv=none; b=oI7MrNB1/fqpvMtGsaoPeA6OWUjjtU1KoizY34X7fIIlZ8tcqxeS7orvqQtpmJZvy5kYU/8rMasnnEyZZc4o7sGTqnAu8/aq1fxJxtQlIQuPicMk+PJqKARbF84C9OZJCfohv0M4uqoIO2Gxv7/zSYHYdqQeeQdJcFw0fVq5xDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752514588; c=relaxed/simple;
-	bh=R6k+PA8mFAfajrct1qTMJVxBz3bbNDHAZienwy/KAqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k1703c4na7DbgyE4cecQTPsoCBblMTyiL6Cykv1TkslQInDLXxix0WjxGRKA9bXaaxf2C/JYqI4beG2+K1JkhKJgWFbiF7c56eHFjqaJErEeIjVJElyy/Ui56dA/9h450Wr1Ve8XvAVTT/tY+a4DlppuaJJP8yqlpsuc1r5WfCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZMlohXLO; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1752514594; c=relaxed/simple;
+	bh=702I2Xwr0JQ1IzYyTXKZ+lciKW71YsfSJrx3+/tsmDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T9j9yY2or3uB1H9En8T9JfrXvph4G+MqXWge7fvTYuITzRtCHF+PNh7QvPYKAK++U9M5XKcYeKU0giJbVquymrz0epga5189pvv2MuOGJtgWOHl5hhoAHE++FPwM5ixQnO8xexyKu+SNgkqlWDS4giL2nyD/ebKEpTyFS5sUyUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDl2Tu3G; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMlohXLO"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d3f72391so45310285e9.3;
-        Mon, 14 Jul 2025 10:36:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDl2Tu3G"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45611a6a706so8673045e9.1;
+        Mon, 14 Jul 2025 10:36:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752514585; x=1753119385; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=87+Ndx4tU3Bc/RBm9y43dq54vArNIkAlt17RzyhLMK4=;
-        b=ZMlohXLOOFYpEcjF6jeX09WaUr8aUpkOhFhP355lvcqDXB3h8rJEpp1Emixqb7Qnu/
-         wRVcPzrGnsNHYb5seAcysVZxUsoXOebCgxEZT5qfp4BnYenUpqqGSqLLCV0SIfhZs+BU
-         vpDzO/OmUJYbzC0KIQV95QRoVZfY/+DHgGxEaEsLLC7qH5Sy9Zyu9XsPCDxcoYGF4FE0
-         Fke9EnK09Hqg9LZOEvmmsDuP1CqAbyfYEqIXZV1T23dFWTpjBjXer7FX6fVvUFAgJBD3
-         mU8MDZpT56bSz9wrDDO8f77LGx1+h6W8JLwvi1J01/EyTES/9JMtwMmbORZHOqIJG7BU
-         SbVg==
+        d=gmail.com; s=20230601; t=1752514591; x=1753119391; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=whUhsMYYpwThm2v5rZLxNpKJQfD1DjrRBCSUO99Y8vc=;
+        b=lDl2Tu3GIE+kPw2V2gP+055KawNd7A34iX3++h5gwvMJv5xfQC1Xz4clYubx2/v4FX
+         SzhHWMIn5EFv98Xt//FhLC1nYMXm2bBs0aTxbM4rhi8BffUx2Uv8hNXWYQaP2/y8Ub8j
+         99Rpz2dlTSWiw9SN0mtMZ0ZLf8rolBlfJTSwZAiPs+j37ZZsbSVn0blbvfB62SJMhY1P
+         F6Wu4w8KSaag91+OA+5dXfiP+bgryMkAOEb25G2JiLgaYKiDzMD+XAnIyhbfotg+dOdg
+         qdb0cKEWJkkRU0xfE5sHv/wQM6mCW4UkETk2mlussSb/JVu6PALAWp0f2oiNH0SkmNZi
+         lrJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752514585; x=1753119385;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=87+Ndx4tU3Bc/RBm9y43dq54vArNIkAlt17RzyhLMK4=;
-        b=nuCARqDskFjJBmRatKeVLaniMtOXKxYU5h2MsntNSpNGcAjslUcNX150X3FRVXfqeK
-         Yb/Qq8F8pLfjIypVWBbN410f+N/xYJBy+9xKv4q/7JZjOGld/7fSOuyrbjzFKz5QVY0H
-         AxGvqgHNHNYIy9FaFqNXyA99WFXMLdMYt9c6cgwDL2DkkCotjA784bWov687nVeXoOzW
-         OL1520YEwckAvMkw14F7mQbjZbzKVAm6iZURfdHuLKxIAfRdV2yCgqKvAd2frbuAQv2E
-         vLGzT4DggIQlljgXRqvlekIlgk4vb7y12yqEW6hWAjc9MDzPl7u9ppO4rN4IfvHFa6s5
-         lYWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUB/bHNPJZAZeQ789avnZ4E4XRPVcYg3ooT95WdJbXDIWwXP1Vx/sO0G+eAtrP+9/inADv6+2txHQdAeEVRYc+66tZqUw==@vger.kernel.org, AJvYcCV7K5YufMol2meRHGc3f9NY9uzHJACEl2L963qSv6/u1Cvf///wt7U5SevJGeK9ObNbZ47icCRNJFQc@vger.kernel.org, AJvYcCVWiwmqH0ExRWsqOqJuYcwxMd3PHJfFn0bf8N33T34p9YKC/rF1hNlD5tU39d/+gRxbfY3GCLTVgK+OaRpW4Mw=@vger.kernel.org, AJvYcCVfq6pgT4HBoSkZcZj1tQs2Kz11SVcoxA1IZhDilMRv6DeRTikhpaG2x1JFWv4032w3raPsLtEfsjM55J7lzQ==@vger.kernel.org, AJvYcCWzoDwZWz75g+EDhCJM00Mteg+Q3fYgLTPV+GUL9PzY5rEaWLsNQpo5pAjghDzwN82P79tFK4H1Wvha0tYV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZVw8PXwMDmA3RtBHDE361C0loWDXiIwdFTxTLlVKetBRVgZCu
-	Fb3xJejmIEzdqLxEZQAd3uQSQOYbxgU9B6Qt1XPbBZp3RwN+7GqoGf1y
-X-Gm-Gg: ASbGncv0HrGJashs0nGr9JF7OAnOaNVNMHDgDdpBpIZL0On1ZnOm0843gGTj6t0K6N7
-	afL1l7FIfJJziTtQNqvHJ9+vqa3jgcJ7WE311kWOPgn7bqe+k0NNCPSoLuA13GVJrXemp9gSfBY
-	5YHuUWaYJDeHPwMNu2SzpzTDCHUdJYlLaiEdcTqNLePFWVzGM2wqYi9Y5XUdkv3vugj/vmHyZJH
-	25ZUsSoFUV/iuv5szl965ZHoObtf9Fr3c+Z0NWXG3HZou2xhzFcHifDii0ATeyCE1433vnt/25m
-	LlDQYNnY/xfIxZMwGVJTbDn7nCqBf13hSS3Ntg8ccat3p7l+mTKXbp3NsM4qcbhYiWaDHYWKYNr
-	wG/dQRX55BTRytoEuiGsUbi5VbF4ZCpNDhAkvtA83TG6RAA==
-X-Google-Smtp-Source: AGHT+IHwE5k8y6WgeeHHGTBoqTHW3b9d3pXfevxQkkUzEV8uufq6SNg+JFLfpZe/W1mCrWg4+Y19GA==
-X-Received: by 2002:a5d:5f49:0:b0:3a3:6e85:a529 with SMTP id ffacd0b85a97d-3b5f18f80c5mr11655696f8f.51.1752514584561;
-        Mon, 14 Jul 2025 10:36:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752514591; x=1753119391;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=whUhsMYYpwThm2v5rZLxNpKJQfD1DjrRBCSUO99Y8vc=;
+        b=WgXZe8jWbg+EjE2jc4IOHugDQOzHnfbOkP89nnO/TOl1SGZblGtAG9tLijsPVosfJ7
+         48vM1Swt+Zi6XPeG5xGfJJHfqg4YDzATipxD/yW0LvV3ozl2CAnFcRSZp6y6H0dQxsBU
+         t1TEfeqZR3jDYxzazE56UNNR4mFb4z/mMyd6YZX1qFP2drw3P1AlPieQsZS8xgyzi19M
+         kBLoAAI1H+Wppjb50zfzfRfuK080EgTxHmMDSaqkjuuXN6zuQb6t7mDE7HPRD85g/uHz
+         6pBguWSREc8alfm0xvcHnyUY0EhCDz46K8Ixgbt/huig2viE0C0csBf3309Ia3am+6X5
+         pbGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUErz9Evg3IRsmLACBPRbrvSQ+GWysBJsC6lWT2SayjR2PvAS/NTWmJ58AkAE3fZ9fVYmNEMgwfOBitxJOrzjg597JnWg==@vger.kernel.org, AJvYcCVqAySnLd3N5doIB/PQJBrDJPLblLi51k8OnhpqClc/T4PQ/SN+aFKJmgdCmn31rzNVRsIdhWNCxsGNMm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkf9Q6vFN1lncXw5j9SlMyG+6AEUrvldoK/2YrmOuRbn7Y8btp
+	88RacIDN+cCBcHC8UgulZxk5Zj3Z6RLyYFAzb9OEgtec4F3ZfQYB7tBC
+X-Gm-Gg: ASbGnctWU/eS62jYP0h6trh2F6vSThrymbG3qTzlrHEPXIL1GTiO1E1xu+qEzqfY4yo
+	Y0QwTTKRyxn7+WhwMOlrWfKHoxUI2Q5d+eXTrNy+W/2HOu7UdFMAwJywV8ciWlCJHgTJW+TUxwR
+	bt/488GzCYVECyIQVfb4hewocSlpQ02ajAbnjd+hjC3qXpwhe6ZV5kZortSIInKojuZ6o+KcEGP
+	3OIsTldKBJ40HMRmWkHuSEh3OpBKZVec+Izc6DCofacS4YQ17PFBxknARtHo6eSsej3ub8FAkIm
+	hTkpMsBoEXuUmeLaNeHvYBgaLJjo073uDGwhVnPxhBB6p1PGDJMudVx+iUEmuPa5qBPk/3Dx0YX
+	PWNbQ5Q34sYXcpPa4Ge+WIyq6HkHXIXBnd6A=
+X-Google-Smtp-Source: AGHT+IHeyRgu3Ju/cPBEeClqWZwWBy/pwydoSQ0VoKQwAWsBZ/0ZDZbXqnqiqgjJrU/tfvWCrkKIPQ==
+X-Received: by 2002:a05:600c:608c:b0:455:f6cd:8719 with SMTP id 5b1f17b1804b1-455f6cd8ac1mr98728775e9.20.1752514590145;
+        Mon, 14 Jul 2025 10:36:30 -0700 (PDT)
 Received: from alarm (92.40.201.95.threembb.co.uk. [92.40.201.95])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d872sm13152531f8f.60.2025.07.14.10.36.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d872sm13152531f8f.60.2025.07.14.10.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jul 2025 10:36:24 -0700 (PDT)
+        Mon, 14 Jul 2025 10:36:29 -0700 (PDT)
 From: Dale Whinham <daleyo@gmail.com>
-To: Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org,
-	freedreno@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= <jerome.debretagne@gmail.com>,
-	Dale Whinham <daleyo@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
+To: Maximilian Luz <luzmaximilian@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/9] Microsoft Surface Pro 11 support
-Date: Mon, 14 Jul 2025 18:35:36 +0100
-Message-ID: <20250714173554.14223-1-daleyo@gmail.com>
+Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= <jerome.debretagne@gmail.com>,
+	Dale Whinham <daleyo@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/9] platform/surface: aggregator_registry: Add Surface Pro 11
+Date: Mon, 14 Jul 2025 18:35:40 +0100
+Message-ID: <20250714173554.14223-5-daleyo@gmail.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250714173554.14223-1-daleyo@gmail.com>
+References: <20250714173554.14223-1-daleyo@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -104,38 +81,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series brings support for the X1E80100/X1P64100-based Microsoft
-Surface Pro 11.
+This enables support for the X1E-based Surface Pro 11.
 
-Patches 7 to 9 are included as RFC as we are unsure of how best to
-achieve the required functionality, however the implementation is
-functional.
+Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Signed-off-by: Dale Whinham <daleyo@gmail.com>
+---
+ .../surface/surface_aggregator_registry.c      | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Dale Whinham (6):
-  dt-bindings: display: panel: samsung,atna30dw01: document ATNA30DW01
-  firmware: qcom: scm: allow QSEECOM on Surface Pro 11
-  platform/surface: aggregator_registry: Add Surface Pro 11
-  arm64: dts: qcom: Add support for Surface Pro 11
-  wifi: ath12k: Add support for disabling rfkill via devicetree
-  arm64: dts: qcom: x1e80100-denali: Disable rfkill for wifi0
-
-Jérôme de Bretagne (3):
-  dt-bindings: arm: qcom: Document Microsoft Surface Pro 11
-  drm/msm/dp: Work around bogus maximum link rate
-  dt-bindings: wireless: ath12k: Add disable-rfkill property
-
- .../devicetree/bindings/arm/qcom.yaml         |    1 +
- .../display/panel/samsung,atna33xc20.yaml     |    2 +
- .../bindings/net/wireless/qcom,ath12k.yaml    |    3 +
- arch/arm64/boot/dts/qcom/Makefile             |    1 +
- .../dts/qcom/x1e80100-microsoft-denali.dts    | 1341 +++++++++++++++++
- drivers/firmware/qcom/qcom_scm.c              |    1 +
- drivers/gpu/drm/msm/dp/dp_panel.c             |   13 +
- drivers/net/wireless/ath/ath12k/core.c        |    3 +
- .../surface/surface_aggregator_registry.c     |   18 +
- 9 files changed, 1383 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-microsoft-denali.dts
-
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index a594d5fcfcfd..e08d029e0856 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -406,6 +406,22 @@ static const struct software_node *ssam_node_group_sp9_5g[] = {
+ 	NULL,
+ };
+ 
++/* Devices for Surface Pro 11 (ARM/QCOM) */
++static const struct software_node *ssam_node_group_sp11[] = {
++	&ssam_node_root,
++	&ssam_node_hub_kip,
++	&ssam_node_bat_ac,
++	&ssam_node_bat_main,
++	&ssam_node_tmp_sensors,
++	&ssam_node_hid_kip_keyboard,
++	&ssam_node_hid_kip_penstash,
++	&ssam_node_hid_kip_touchpad,
++	&ssam_node_hid_kip_fwupd,
++	&ssam_node_hid_sam_sensors,
++	&ssam_node_kip_tablet_switch,
++	NULL,
++};
++
+ /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+ 
+ static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
+@@ -485,6 +501,8 @@ static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
+ 	/* Surface Laptop 7 */
+ 	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
+ 	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
++	/* Surface Pro 11 */
++	{ .compatible = "microsoft,denali", (void *)ssam_node_group_sp11 },
+ 	{ },
+ };
+ 
 -- 
 2.50.1
 
