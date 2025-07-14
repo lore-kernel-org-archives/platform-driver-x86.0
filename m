@@ -1,159 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.khirnov.net (quelana.khirnov.net [94.230.150.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8683024678C;
-	Mon, 14 Jul 2025 14:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518FC2727F1;
+	Mon, 14 Jul 2025 15:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.230.150.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752502216; cv=none; b=kbK77ogpZBee/GW6zWWuLjTrURDMJ5cpGjIZp0X9m4zCPLKbln+1I1jko6zrAyaxas17pddpWXCtMXFEWUqHOC5h8XCpzj/8kETb1SL36aaqSGh9c0NKd42yfISXfKFpOFMeln06mpX4EYkHvrZo4uv0lExekZtbQ6eDQVo6QYs=
+	t=1752506906; cv=none; b=rqUrd/ye0cAiJZ0W0nHNsGe1TmoOTwj4B3hy/xK4CYWkDbEyDilupFFO/GoA4VS5ZTxov1wkZUsXeWLwxDE5OnjWb6X9e5COy1MM3+H5nUzv8IqNAfxlpQFH3RAHCCICGZCtI6QKuplZ9oG/Ovtt3e0EMUF/8XJU5tsgsytVmrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752502216; c=relaxed/simple;
-	bh=naC2vB5VdPl02OdoXhmjHRnsIRMtNYgzq1zhGsnWmJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rvpYDzFJo4j8E2L97nmuxI3OXuCQMlRfwgcJwMZHEu4xuP1NGgLSlv2Hy7QSawbqRqKOpqgwd2cvKdz6Yt0MObo/NA75K8im5Xh2pqBsXsQTascg+pTVPxopeD8Vy8S84NzD0j2iKet2EgnXbnq146P09htgYEI0kci8yvzwRTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KN939bm/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752506906; c=relaxed/simple;
+	bh=oOZ+zXXrtgE2QAMRfW6IPyZXEHJY2yckp2/zynTwPNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lGtcBWM3f/kMeMlN1t07ETtoa+QLxbQwtHlkrmdIct+LOXhCFlwDuK62jcAJOvUe0x562dSRGwuHmh5My8GP1UujSLk6SQnJ69hHulMz1qAdA2gsPr8PeOBR8heFgoFrsYtgscy/rGdFXI7XqrnPA2TxR6jcNqAi9Km2oj8O/Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net; spf=pass smtp.mailfrom=khirnov.net; dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b=CVJFg0LD; arc=none smtp.client-ip=94.230.150.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khirnov.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KN939bm/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDD5C4CEED;
-	Mon, 14 Jul 2025 14:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752502215;
-	bh=naC2vB5VdPl02OdoXhmjHRnsIRMtNYgzq1zhGsnWmJg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KN939bm/glOX+rZomGFqIPS3j+XtkBtc95plwPLjufw11KnoKSxb5oSs0LidzGVoZ
-	 XJgKlS3eEtw/x8fneo50Ufg5O+RnOLa6OEDdLIScmEBjc3XNem6/TZ/vl/FfAY7UnZ
-	 VLLyeq7atX8L7dTTe35/VfkPJ2vlwCe6ulqbu6W0WBZINi7HalLSH3QQC36DLMzES+
-	 AWh369+5V7jV8bHGmevEOSFEOIY3iqGA50FyHY2TBoE6MtiAj/wZyxtOljIuTrh0Fc
-	 SbKKYn1YfbAwOGVdqZukv8vPw5o5VSfVr5y0zykfvO1WoomrkD5m+eVtt8BsJvz2Md
-	 tUdFdRVH1qWhQ==
-Message-ID: <5b333571-7fa8-4581-9f9c-e5546590cbd9@kernel.org>
-Date: Mon, 14 Jul 2025 16:10:12 +0200
+	dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b="CVJFg0LD"
+Authentication-Results: mail1.khirnov.net;
+	dkim=pass (2048-bit key; unprotected) header.d=khirnov.net header.i=@khirnov.net header.a=rsa-sha256 header.s=mail header.b=CVJFg0LD;
+	dkim-atps=neutral
+Received: from localhost (mail1.khirnov.net [IPv6:::1])
+	by mail1.khirnov.net (Postfix) with ESMTP id E0D153E56;
+	Mon, 14 Jul 2025 17:20:09 +0200 (CEST)
+Received: from mail1.khirnov.net ([IPv6:::1])
+ by localhost (mail1.khirnov.net [IPv6:::1]) (amavis, port 10024) with ESMTP
+ id RE9fEx6enYrq; Mon, 14 Jul 2025 17:20:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=khirnov.net; s=mail;
+	t=1752506404; bh=oOZ+zXXrtgE2QAMRfW6IPyZXEHJY2yckp2/zynTwPNM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CVJFg0LD1nOrMYi1LtD1ABH/Ersc9XU7P1uVQrkFxNHY5lclByOre3psK8wAASVDU
+	 o2k8IH7lN03aD2JkZOE3Eyj60Iyvk9Rhlzly7qmil5RZri1UbUlKUDLQW2/vdvRVxg
+	 HiYcW4hJetDfSmU92YjraKY2bhp+kNyU5hlFW12HWRkk71E001CxQhFe4+4SqpMvEF
+	 o09cP/WDadIxUFytfS9n+v7LPYb24KHRPMHvvKtGjJ2EjpG143xl1xz/Waeeaz0Cro
+	 Xcf7PBJorJMiHXztEBsAXYlV0chmFVFMpPoa8UCmLrWLNYkWO1Ai5lFat8ednAzDVU
+	 uuv60XjMHrQcA==
+Received: from dev0.khirnov.net (dev0.khirnov.net [IPv6:2a00:c500:561:201::6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "dev0.khirnov.net", Issuer "smtp.khirnov.net SMTP CA" (verified OK))
+	by mail1.khirnov.net (Postfix) with ESMTPS id A407E3301;
+	Mon, 14 Jul 2025 17:20:04 +0200 (CEST)
+Received: by dev0.khirnov.net (Postfix, from userid 1000)
+	id E0F39404E95; Mon, 14 Jul 2025 17:16:58 +0200 (CEST)
+From: Anton Khirnov <anton@khirnov.net>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH v2 0/2] platform/x86: asus-wmi: map more keys on ExpertBook B9
+Date: Mon, 14 Jul 2025 17:07:55 +0200
+Message-Id: <20250714150756.21197-1-anton@khirnov.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: map more keys on ExpertBook B9
-To: Anton Khirnov <anton@khirnov.net>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
- <luke@ljones.dev>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250702070231.2872-1-anton@khirnov.net>
- <4a828765-abf0-4b19-95c8-bfde01d7026d@kernel.org>
- <175249787152.21445.16925102541286211351@lain.khirnov.net>
- <62871f1b-85aa-4d8c-82a1-2fb65be83094@kernel.org>
- <175250123216.21445.8438057789120013393@lain.khirnov.net>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <175250123216.21445.8438057789120013393@lain.khirnov.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
+second version of the set [1], changed according to review by Hans de
+Goede.
 
-On 14-Jul-25 15:53, Anton Khirnov wrote:
-> Quoting Hans de Goede (2025-07-14 15:27:58)
->>>> Based on other laptops I would expect this to maybe need to be
->>>> KEY_KBDILLUMTOGGLE, which toggles the kbd backlight on/off ?
->>>
->>> Keyboard backlight is Fn+F7 on this laptop. That said, I'm fine with any
->>> key that is acceptable to you and/or other maintainers.
->>
->> Ok, so no KEY_KBDILLUMTOGGLE then if that already is at Fn+F7
->>
->> So lets stick with a KEY_PROG# option here,
->> note asus-nb-wmi already used PROG# for:
->>
->>         { KE_KEY, 0x38, { KEY_PROG3 } }, /* Armoury Crate */
->>         { KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
->>         { KE_KEY, 0xB3, { KEY_PROG4 } }, /* AURA */
->>         { KE_KEY, 0xFA, { KEY_PROG2 } }, /* Lid flip action */
->>         { KE_KEY, 0xBD, { KEY_PROG2 } }, /* Lid flip action on ROG xflow */
->>  
->> I guess you checked that this laptop does not send the 0x83 / "Armoury Crate"
->> events? What about 0x86 / "MyAsus"? If there is no MyAsus key I would prefer
->> to use KEY_PROG1 here.
-> 
-> That is sent by this laptop as Fn+F12, which is why I started at PROG2.
-> 
->> Or you can add a KEY_FN_SPACE to input-event-codes.h grouping it together
->> with the existing Fn + X combos there.
-> 
-> I wasn't sure how big of a deal adding new KEY_ values is. If that isn't
-> too much of a hassle, I can do that and that takes care of Fn+space/f
-> consistently.
+Now allocates a new keycode KEY_FN_SPACE for Fn+space.
 
-It shouldn't be too much of a hassle and it indeed would be consistent,
-so that sounds good.
+The key mappings now are:
+* Fn+space              -> FN_SPACE
+* Fn+f                  -> FN_F
+* <noise cancel>        -> F13
+* Fn+<noise cancel>     -> F14
 
-> 
->>>>> +	{ KE_KEY, 0xCA, { KEY_F14 } }, /* Noise cancelling on Expertbook B9 */
->>>>
->>>> KEY_SOUND ?
->>>
->>> Can do, but then what about the fn+ version? Ideally they should be
->>> related.
->>
->> Hmm, can use KEY_PROG3 + KEY_PROG4, assuming that the Fn+ spacebar becomes
->> KEY_PROG1 and that KEY_PROG3 / PROG4 are otherwise free ?
->>
->> If not then why start at KEY_F14 and not at KEY_F13, does this laptop's
->> keyboard has a key which sends:
->>
->>
->>         { KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
->>
->> Also are there no conflicts with some of the other entries which send
->> F14 / F15 ?
->>
->> As in no other keys which generate the existing codes mapped
->> to F13 / F14 / F15 ?
-> 
-> The reason I picked F14 is that the key is physically located two keys
-> to the right of F12.
-
-> do either F13/F14, or PROG2/3.
-
-Lets do F13/F14 then.
-
-
-
-> 
-> For posterity, here's a list of all codes sent by this laptop:
-> * {up,down,left,right}: ACPI button/{up,down,left,right} (in addition to normal ATK event)
-> * fn-{up,down,left,right}: ATK {PgUp,PgDown,Home,End}
-> * copilot key (right of AltGr): ATK shift+win+F17
->   press+release (immediately, releasing the physical key does nothing)
-> * fn-lctrl: ATK compose (menu)
-> * fn-space: WMI unknown key 0x5b
-> * fn-b: ATK pause (scancode 0xc5)
-> * fn-p: ATK pause (scancode 0xc6)
-> * fn-k: ATK scrolllock
-> * fn-f: WMI unknown key 0x9d (supposed to be "asus intelligent performance")
-> * fn-a: no event visible anywhere
-> * fn-esc: toggles between fn/f keys being primary, sends no visible keys except ACPI event
-> * fn-(1-4): WMI scancode 0x61-0x64 (switch video mode);
->   also ACPI video/switchmode event identical for all 4 keys
-> * fn-(f1/f2/f3): ATK mute/voldown/volup + ACPI button/{mute,volumedown,volumeup}
-> * fn-f4/f5: ACPI brightness down/up
-> * fn-f6: WMI scancode 0x6b - F21
-> * fn-f7: keyboard backlight, sends no visible keys anywhere except ACPI event
-> * fn-f8: ATK win+p
-> * fn-f9: ATK win+l
-> * fn-f10: no event visible anywhere
-> * fn-f11: ATK win+shift+s
-> * fn-f12: WMI prog1 (scancode 0x86) + ACPI button/prog1
-> * mic-mute: WMI F20 (scancode 0xbe) + ACPI button/f20
-> * mic noise key (right of mic-mute): WMI scancode 0xca; fn- sends 0xcb
-> * fn-del: insert
-
-Thank you.
-
-Regards,
-
-Hans
+[1] https://lore.kernel.org/platform-driver-x86/20250702070231.2872-1-anton@khirnov.net/
 
 
