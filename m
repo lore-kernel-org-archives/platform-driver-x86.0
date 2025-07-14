@@ -1,93 +1,121 @@
-Received: from mail1.khirnov.net (quelana.khirnov.net [94.230.150.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71513266EF9;
-	Mon, 14 Jul 2025 15:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.230.150.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46774234984;
+	Mon, 14 Jul 2025 16:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752506906; cv=none; b=o0EG1tTBhQOn5+i90fM9kqfY7vRA04+FU9E+0gieU2NjmxF422yuj5m+m4wk88BAIDDYT4exerO0CbQb5TD7aB5o0xJFpViNHwDMDaIf+1Z2dSiSX0ZOXbZjQjLPghmWAEm6XUqZYXKw/rNzw/MmY61b7yvvgrhPHbL3E+0eGp0=
+	t=1752509074; cv=none; b=GDCjyetFBdSLhm7oclIiij5xO16MfFKBStyWbfUCQyTdMpspYyMJ3QrpdYnOdQ6M9t99v+A//ZC+54P84fQJLVjZZgnVN0gJbudD5NHB3wN8aMgdXY2xz1DzmGMkQUsAV6AzA6zIYRtAVhTBEgwXCpdfQzKhMwSysy+urPG0NTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752506906; c=relaxed/simple;
-	bh=NUnBBDHaIeOZRpZ99g3X6g+5/j84aEiBr/RfaJULEew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X7N6IIV+mxTrAqC03A5IZSDTtf/2vtw8F0QMwcL/Ud/6EGCoKlkeMSnlY3Biz6ELfDnt67CbNb58MVPk4wcTzMSW7bbSurQ90H5gGAPf0wwpDTgaGcIGEdjJ5OUdgi4J4NZqLjkcRH7KBvmKpErkqd/i71ssJ9ac+AnrrClYYBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net; spf=pass smtp.mailfrom=khirnov.net; dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b=piqLE9cJ; arc=none smtp.client-ip=94.230.150.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khirnov.net
+	s=arc-20240116; t=1752509074; c=relaxed/simple;
+	bh=+z7pdLCd9aOU0paR7ZfIkOBpV4ViwruGm1soXm9IVC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TVC7SuVHSzIYfWeUMy7Uf5irMiejcFPVvzWQVKZI2dLtaSU+hc5XMf0ti74fPIGBHONtFBE1flWZrnV1+3rgRta48Q+VzUgH5ZdYbpRbVLuRCePHqGw5XYTT4/AdvYo0S/j0q0/BwaOmlgy+D6Mp/XcdAFIeEVkpnFEWsTm2e3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B891QQtA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b="piqLE9cJ"
-Authentication-Results: mail1.khirnov.net;
-	dkim=pass (2048-bit key; unprotected) header.d=khirnov.net header.i=@khirnov.net header.a=rsa-sha256 header.s=mail header.b=piqLE9cJ;
-	dkim-atps=neutral
-Received: from localhost (mail1.khirnov.net [IPv6:::1])
-	by mail1.khirnov.net (Postfix) with ESMTP id DDD2F3E49;
-	Mon, 14 Jul 2025 17:20:09 +0200 (CEST)
-Received: from mail1.khirnov.net ([IPv6:::1])
- by localhost (mail1.khirnov.net [IPv6:::1]) (amavis, port 10024) with ESMTP
- id aHN6JMB8peBg; Mon, 14 Jul 2025 17:20:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=khirnov.net; s=mail;
-	t=1752506404; bh=NUnBBDHaIeOZRpZ99g3X6g+5/j84aEiBr/RfaJULEew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=piqLE9cJvJLGG/tFyrMSU+pGmeWBCLBBTeQlC0MeIcRmbDfBOQGOiFhQLLdqcF1SC
-	 WLG/oxsoINkTCYjfgRdkmGNygoA/5JVcr2IsHqIEw469ESrUcCa7Sg01Iw7GND4v8z
-	 xo2JPGHftjFknU/wH8DaiwgfQFp70x8pD9p2XozpsB49YGTJbWJaH9WQ7JCfmIyHaZ
-	 nicWIm+rHQR6V4W60niXpSY7ZW+/qHEL42+XAHrkQdrKIr5cRbZVwVINqLBPZrupaU
-	 7OavU9yxQfNj6PrYlYtW3r8ExVt0aqKl/AlWK7y310gBsE7BWDMDa3oPO3SWQQIS4S
-	 UqwOY4QcZkxdw==
-Received: from dev0.khirnov.net (dev0.khirnov.net [IPv6:2a00:c500:561:201::6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "dev0.khirnov.net", Issuer "smtp.khirnov.net SMTP CA" (verified OK))
-	by mail1.khirnov.net (Postfix) with ESMTPS id 7A5A43290;
-	Mon, 14 Jul 2025 17:20:04 +0200 (CEST)
-Received: by dev0.khirnov.net (Postfix, from userid 1000)
-	id 01610404ED3; Mon, 14 Jul 2025 17:18:07 +0200 (CEST)
-From: Anton Khirnov <anton@khirnov.net>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH v2 1/2] Input: allocate a keycode for Fn+space
-Date: Mon, 14 Jul 2025 17:07:57 +0200
-Message-Id: <20250714150756.21197-2-anton@khirnov.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250714150756.21197-1-anton@khirnov.net>
-References: <20250714150756.21197-1-anton@khirnov.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B891QQtA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752509073; x=1784045073;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+z7pdLCd9aOU0paR7ZfIkOBpV4ViwruGm1soXm9IVC0=;
+  b=B891QQtAlhzkBOqq+r1JCYUxSft5BV8pV4+PUl3dHTyohtCKz5BfcWkB
+   yaSdZq6swHzLq8jxWeDhOP0bPNqVRgiSBJeSL1h4y6e4ErhkgCgtYaVy3
+   UeJagVVz+smNl2xGVzd8Bjqar31ojMDcvWaPoy1nYb13JAW3Nao7RmgWO
+   DiLru4cRLBTuaAD6hbJp1uf+bp46t4uVLAEjlVBBBtvWgIgb+wAp8RvPL
+   0hetjhrdwcbxPkocTvjbIA0Z7dMTHjoQGs215uLhKIwbKh0PJ8T+O7kxu
+   choaSyBJxZW750cHx26t/KevGVEIn1mcOyA9CSbkN9Vrq+eAE+h+RzZra
+   w==;
+X-CSE-ConnectionGUID: titNqBdXSkGIGw8tDczRmA==
+X-CSE-MsgGUID: eLdehdthS2eGAk33vcP6/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="72284027"
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="72284027"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 09:04:32 -0700
+X-CSE-ConnectionGUID: Dnk+NbKMSeqZM9tyOQwH9w==
+X-CSE-MsgGUID: 6aZPoxEmS+meo/K8kO/ycw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
+   d="scan'208";a="156768758"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 14 Jul 2025 09:04:28 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubLfF-000959-37;
+	Mon, 14 Jul 2025 16:04:25 +0000
+Date: Tue, 15 Jul 2025 00:04:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Joshua Grisham <josh@joshuagrisham.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Alok Tiwari <alok.a.tiwari@oracle.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Prasanth Ksr <prasanth.ksr@dell.com>,
+	Jorge Lopez <jorge.lopez2@hp.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+Subject: Re: [PATCH v6 3/6] platform/x86: firmware_attributes_class: Move
+ header to include directory
+Message-ID: <202507142344.HcDxuqCC-lkp@intel.com>
+References: <20250710-fw-attrs-api-v6-3-9959ef759771@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250710-fw-attrs-api-v6-3-9959ef759771@gmail.com>
 
-The Asus ExpertBook B9 laptop sends a WMI event when Fn+space is
-pressed. Since I could not find any information on what this combination
-is intended to do on this or any other Asus laptop, allocate a
-KEY_FN_SPACE keycode for it.
+Hi Kurt,
 
-Signed-off-by: Anton Khirnov <anton@khirnov.net>
----
- include/uapi/linux/input-event-codes.h | 1 +
- 1 file changed, 1 insertion(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 3b2524e4b667..a49b0782fd8a 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -548,6 +548,7 @@
- #define KEY_FN_S		0x1e3
- #define KEY_FN_B		0x1e4
- #define KEY_FN_RIGHT_SHIFT	0x1e5
-+#define KEY_FN_SPACE		0x1e6
- 
- #define KEY_BRL_DOT1		0x1f1
- #define KEY_BRL_DOT2		0x1f2
+[auto build test ERROR on 428f6f3a56ac85f37a07a3fe5149b593185d5c4c]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-firmware_attributes_class-Add-device-initialization-methods/20250710-110641
+base:   428f6f3a56ac85f37a07a3fe5149b593185d5c4c
+patch link:    https://lore.kernel.org/r/20250710-fw-attrs-api-v6-3-9959ef759771%40gmail.com
+patch subject: [PATCH v6 3/6] platform/x86: firmware_attributes_class: Move header to include directory
+config: i386-randconfig-002-20250714 (https://download.01.org/0day-ci/archive/20250714/202507142344.HcDxuqCC-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507142344.HcDxuqCC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507142344.HcDxuqCC-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/platform/x86/lenovo/wmi-other.c:42:10: fatal error: ../firmware_attributes_class.h: No such file or directory
+      42 | #include "../firmware_attributes_class.h"
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+
+vim +42 drivers/platform/x86/lenovo/wmi-other.c
+
+edc4b183b794ba Derek J. Clark 2025-07-01  36  
+edc4b183b794ba Derek J. Clark 2025-07-01  37  #include "wmi-capdata01.h"
+edc4b183b794ba Derek J. Clark 2025-07-01  38  #include "wmi-events.h"
+edc4b183b794ba Derek J. Clark 2025-07-01  39  #include "wmi-gamezone.h"
+edc4b183b794ba Derek J. Clark 2025-07-01  40  #include "wmi-helpers.h"
+edc4b183b794ba Derek J. Clark 2025-07-01  41  #include "wmi-other.h"
+edc4b183b794ba Derek J. Clark 2025-07-01 @42  #include "../firmware_attributes_class.h"
+edc4b183b794ba Derek J. Clark 2025-07-01  43  
+
 -- 
-2.39.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
