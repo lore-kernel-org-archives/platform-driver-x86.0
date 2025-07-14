@@ -1,121 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46774234984;
-	Mon, 14 Jul 2025 16:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395DE262FD4;
+	Mon, 14 Jul 2025 16:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752509074; cv=none; b=GDCjyetFBdSLhm7oclIiij5xO16MfFKBStyWbfUCQyTdMpspYyMJ3QrpdYnOdQ6M9t99v+A//ZC+54P84fQJLVjZZgnVN0gJbudD5NHB3wN8aMgdXY2xz1DzmGMkQUsAV6AzA6zIYRtAVhTBEgwXCpdfQzKhMwSysy+urPG0NTM=
+	t=1752511611; cv=none; b=bjEQUs3kGFw927M1RLsQ3tNnSNyGkYKU85BF0V3lW862cCmQz9RRIMf46gaNHwTZXNAjnCrRVVIeYaHQoWhSjLbj2MAgR+TE4Pe9dUwR5S2yXE5rVWlhehPE6Wa4kLc5BLrDih+plf1bnARcoYh6+R6gXgdEZWGL9mya7Ai30KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752509074; c=relaxed/simple;
-	bh=+z7pdLCd9aOU0paR7ZfIkOBpV4ViwruGm1soXm9IVC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVC7SuVHSzIYfWeUMy7Uf5irMiejcFPVvzWQVKZI2dLtaSU+hc5XMf0ti74fPIGBHONtFBE1flWZrnV1+3rgRta48Q+VzUgH5ZdYbpRbVLuRCePHqGw5XYTT4/AdvYo0S/j0q0/BwaOmlgy+D6Mp/XcdAFIeEVkpnFEWsTm2e3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B891QQtA; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1752511611; c=relaxed/simple;
+	bh=CZ4g0Gar9M48yZ3aK1dx0+90CzTsdoCR/PgLbozfuBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Xnkd4A0ckAIM4BUC3i1poNjGrYq1b6elbRnFF3vaqf6W+e/X/aG0OnVXTPV+TKwmjp0rKVyMYw0WoAyr3Mu+5Awjqfi6TEX9zLzbFAnByY4uBEnv1ppTvZoU/AsAM3gS3nfxp1JSBxJuywmzprP3fS8775tyIbc+BUsjsNE0qaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MjyzgVVA; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B891QQtA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MjyzgVVA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752509073; x=1784045073;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+z7pdLCd9aOU0paR7ZfIkOBpV4ViwruGm1soXm9IVC0=;
-  b=B891QQtAlhzkBOqq+r1JCYUxSft5BV8pV4+PUl3dHTyohtCKz5BfcWkB
-   yaSdZq6swHzLq8jxWeDhOP0bPNqVRgiSBJeSL1h4y6e4ErhkgCgtYaVy3
-   UeJagVVz+smNl2xGVzd8Bjqar31ojMDcvWaPoy1nYb13JAW3Nao7RmgWO
-   DiLru4cRLBTuaAD6hbJp1uf+bp46t4uVLAEjlVBBBtvWgIgb+wAp8RvPL
-   0hetjhrdwcbxPkocTvjbIA0Z7dMTHjoQGs215uLhKIwbKh0PJ8T+O7kxu
-   choaSyBJxZW750cHx26t/KevGVEIn1mcOyA9CSbkN9Vrq+eAE+h+RzZra
-   w==;
-X-CSE-ConnectionGUID: titNqBdXSkGIGw8tDczRmA==
-X-CSE-MsgGUID: eLdehdthS2eGAk33vcP6/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="72284027"
+  t=1752511610; x=1784047610;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CZ4g0Gar9M48yZ3aK1dx0+90CzTsdoCR/PgLbozfuBU=;
+  b=MjyzgVVAdtr7x/F38wpNqAu+8F4zXQeS5RZYGd1BB66j2YmMi1RppI2A
+   2foql3p07fkCnoH4Fsbgkz68XHXbjJ99xDwtoT+cUE/W83GgvUp1e0KPW
+   /xg9YQjQHHPYQ+Un1oXirDWybWppo6h1hFEYBsn3QYkRCNZvCFGRwlb2q
+   vaifsyOdQH0IRx/F2/j2BKvSQVpBg0QwQwNyU+NgddrY3e0gbaEL/A+6u
+   wSTbP70oilZe0nJeHBrgCR7mUVr6xUCQV/rngE4XyejcINUcTbJPZ8EZC
+   87Nm+ie/PuMpJzn/xOo6f94+6nqb/arvLsPnhFcHc07nM/r8olMyAqX8Z
+   Q==;
+X-CSE-ConnectionGUID: ihoPRr1BQtCLoriR6DVfJQ==
+X-CSE-MsgGUID: rdohjBxkQeiGSQALwVlhmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="77246297"
 X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="72284027"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 09:04:32 -0700
-X-CSE-ConnectionGUID: Dnk+NbKMSeqZM9tyOQwH9w==
-X-CSE-MsgGUID: 6aZPoxEmS+meo/K8kO/ycw==
+   d="scan'208";a="77246297"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 09:46:49 -0700
+X-CSE-ConnectionGUID: QA0SCNZUTDqsyaMzUzfR7A==
+X-CSE-MsgGUID: WpfMqmwiQHGZaqab8lNOQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,311,1744095600"; 
-   d="scan'208";a="156768758"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 14 Jul 2025 09:04:28 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ubLfF-000959-37;
-	Mon, 14 Jul 2025 16:04:25 +0000
-Date: Tue, 15 Jul 2025 00:04:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Joshua Grisham <josh@joshuagrisham.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Alok Tiwari <alok.a.tiwari@oracle.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Prasanth Ksr <prasanth.ksr@dell.com>,
-	Jorge Lopez <jorge.lopez2@hp.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
-Subject: Re: [PATCH v6 3/6] platform/x86: firmware_attributes_class: Move
- header to include directory
-Message-ID: <202507142344.HcDxuqCC-lkp@intel.com>
-References: <20250710-fw-attrs-api-v6-3-9959ef759771@gmail.com>
+   d="scan'208";a="161529272"
+Received: from jithudellxeon.sc.intel.com ([172.25.103.66])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 09:46:49 -0700
+From: Jithu Joseph <jithu.joseph@intel.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	jithu.joseph@intel.com,
+	tony.luck@intel.com,
+	ashok.raj.linux@gmail.com
+Subject: [PATCH] MAINTAINERS: Update entries for IFS and SBL drivers
+Date: Mon, 14 Jul 2025 09:46:43 -0700
+Message-Id: <20250714164643.3879784-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250710-fw-attrs-api-v6-3-9959ef759771@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Kurt,
+Update the MAINTAINERS file to reflect the following changes for two Intel
+platform drivers:
 
-kernel test robot noticed the following build errors:
+- Tony has agreed to take over maintainership of the Intel In-Field Scan
+  (IFS) driver, and is now listed as the new maintainer.
+- Remove myself as the maintainer for the Slim BootLoader (SBL) firmware
+  update driver and mark it as Orphan. To the best of my knowledge, there
+  is no one familiar with SBL who can take over this role.
 
-[auto build test ERROR on 428f6f3a56ac85f37a07a3fe5149b593185d5c4c]
+These changes are being made as I will soon be leaving Intel.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-firmware_attributes_class-Add-device-initialization-methods/20250710-110641
-base:   428f6f3a56ac85f37a07a3fe5149b593185d5c4c
-patch link:    https://lore.kernel.org/r/20250710-fw-attrs-api-v6-3-9959ef759771%40gmail.com
-patch subject: [PATCH v6 3/6] platform/x86: firmware_attributes_class: Move header to include directory
-config: i386-randconfig-002-20250714 (https://download.01.org/0day-ci/archive/20250714/202507142344.HcDxuqCC-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250714/202507142344.HcDxuqCC-lkp@intel.com/reproduce)
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+---
+ MAINTAINERS | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507142344.HcDxuqCC-lkp@intel.com/
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fad6cb025a19..9b90f434101b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12185,9 +12185,8 @@ F:	drivers/dma/idxd/*
+ F:	include/uapi/linux/idxd.h
+ 
+ INTEL IN FIELD SCAN (IFS) DEVICE
+-M:	Jithu Joseph <jithu.joseph@intel.com>
++M:	Tony Luck <tony.luck@intel.com>
+ R:	Ashok Raj <ashok.raj.linux@gmail.com>
+-R:	Tony Luck <tony.luck@intel.com>
+ S:	Maintained
+ F:	drivers/platform/x86/intel/ifs
+ F:	include/trace/events/intel_ifs.h
+@@ -12527,8 +12526,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/iwlwifi.git
+ F:	drivers/net/wireless/intel/iwlwifi/
+ 
+ INTEL WMI SLIM BOOTLOADER (SBL) FIRMWARE UPDATE DRIVER
+-M:	Jithu Joseph <jithu.joseph@intel.com>
+-S:	Maintained
++S:	Orphan
+ W:	https://slimbootloader.github.io/security/firmware-update.html
+ F:	drivers/platform/x86/intel/wmi/sbl-fw-update.c
+ 
 
-All errors (new ones prefixed by >>):
-
->> drivers/platform/x86/lenovo/wmi-other.c:42:10: fatal error: ../firmware_attributes_class.h: No such file or directory
-      42 | #include "../firmware_attributes_class.h"
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   compilation terminated.
-
-
-vim +42 drivers/platform/x86/lenovo/wmi-other.c
-
-edc4b183b794ba Derek J. Clark 2025-07-01  36  
-edc4b183b794ba Derek J. Clark 2025-07-01  37  #include "wmi-capdata01.h"
-edc4b183b794ba Derek J. Clark 2025-07-01  38  #include "wmi-events.h"
-edc4b183b794ba Derek J. Clark 2025-07-01  39  #include "wmi-gamezone.h"
-edc4b183b794ba Derek J. Clark 2025-07-01  40  #include "wmi-helpers.h"
-edc4b183b794ba Derek J. Clark 2025-07-01  41  #include "wmi-other.h"
-edc4b183b794ba Derek J. Clark 2025-07-01 @42  #include "../firmware_attributes_class.h"
-edc4b183b794ba Derek J. Clark 2025-07-01  43  
-
+base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
