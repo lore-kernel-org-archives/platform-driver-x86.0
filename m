@@ -1,135 +1,90 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADAC25E834;
-	Tue, 15 Jul 2025 22:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA2C1F1537;
+	Tue, 15 Jul 2025 23:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752618302; cv=none; b=UZNHFBCGS6uKhwYTe3WP/l1ky8P3uMgmMLJjGHCKuTGaqNH0FmGkYW7z2Rn+n6PHbntROm/cu9jvTGdCkpkGXIxJc4Xm/v8ERdLR6moj885zjIgqq90o9a1l8ybW1hXnWmQDdySLKyshjEndwbACPl13sl6F7Z5iPJFoSSthGBs=
+	t=1752622984; cv=none; b=uLzJSyB/MF4bsXSc9t+yVzYuXRGhNXElM4V9TXrFvVHdMa0e65YwxsJvh6YhBSYVOeppKiviukG4/w45PoDtw4/27v+2V1lO4k2XzK0qwNPvzjO+UMPYljvEvDlxlj2WR7zn3Tu3AaKP2jOHB6Jra+9PHtim7fE/Bt5tidYR4to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752618302; c=relaxed/simple;
-	bh=7Mss6DWaeHS4SJgNovhTEdBOiILUCumsbOG0XkgXs0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NvDEBm3/F5Fz9y2XL1UAEOW6hUcK1BkAo8Nm1eg3xyT+lz0sUVyuYfq3jhz+dKlfROZgn5cZJ6lfLjKkkGFwXM/OXnmm+wmSWsyzXR+wX0XFuZvK2zhhDZ6cvPdBmMxNvim+7iT+E1JGr7L55/D2XZk54maMAOlJNODGqj3nTz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ktuGjee7; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752622984; c=relaxed/simple;
+	bh=oIkUYfDgAMBmComyQL46QfRRvvbeCNaERG0b0OclZGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdxQSV5v3EimKMw2RvW4s2OmCbKN1CG+XmS/QKs+3rjh8t67XUNIEnyioc8BCqv8eQkNUO18HCUk/g9vMnf0QdDSpchbxpH60Rf78tyYImfKYJzadpLG5g2/DlBqK7g9+JOr9l7fLZ4aJXGCbeP3Te028XtN8P3591myOwMR1sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzkvdF8/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktuGjee7"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so10849326a12.2;
-        Tue, 15 Jul 2025 15:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752618299; x=1753223099; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e5qGMtVB8P85XlMYqskFWHihLLlCdJwWv8lZ05HvJRA=;
-        b=ktuGjee7qB/toy9/51XW4oBiW5YXPNUS9BIWu7oIv5lAwHmOiWNeYg9HspoI/XS41G
-         nh5wNafiaJVJPcacgcyjtVMyLkfUs3/jN7Xmz/AhwBQD705N9NXD1LJPoB39AUmK/E/g
-         IRRCF1JvzeAD7Obe5Cmu78lnDcbxGWe2//LgxmnrwAb/9wWxHROoLJ1m0UsiJXsF+MEi
-         KiqQBGOW39KutGY4D0scetY79OmeSqSHGUkab9ibhVI5SnW+2S+rgN4CmEXG0Z/sk6P/
-         0BMH7dzzDwjYjT+qViyl1GlDRu+LaWX9uoqU93hZV0vG6exJG2iCQhus4Raphz07HJgU
-         J18A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752618299; x=1753223099;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e5qGMtVB8P85XlMYqskFWHihLLlCdJwWv8lZ05HvJRA=;
-        b=j0X7PinvcetRPZpnk+n41TRix4AHS9KaAFI+NES0WI7RNaq2qBEHkv1DXR5SX0eW/3
-         EZmUXZBwLjdfiHcyI1VYKwrL9LC27n33NSa86w0qChahJpyfBbyz8pWVVdiB3jvvlWgO
-         hmpttOS0F8dTWY6y0n9KL7fJvN2JcVhhMkUefOC4+TYvfOupiIrDGgwKjp77W7h3PFne
-         dRsCDmGWzOUQnuDZeh1jpZfpqDxN9A80ABI8KoagtuCfRkM1ZJNLbjjUKVOjy2A0wu5h
-         75w9Dnkf3Bzwb7yPmXia8epgKd7DwQQSzizrbYhRS6lLTsptP+T7M7chBDUWjTlKM9F5
-         RsQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDwhG1UWfha6jOyN5R5toMJzhuWmneDxseGz1bnYTRbVt7eElexCYOAXoKmbLwYbMNXWTRehfVVsWitHo=@vger.kernel.org, AJvYcCWIs3bsgYXb+wEtbG/y9aWs8VKHvZ1u731SehxDyqKqwC+rCfRwre+GD1rHrCvk5gOAHGYobpW4naga2YGyLe6n4kfCwQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8K5XMRsJZ9gHRipU8v/k82V4kYsb3ob5bldCg+p7OKURb11st
-	BlDvZQPEAIAt8tH8y428yTOfA8jkIwV5qPexDbYxxPwIyyoYFEhTop1IN3kjyg==
-X-Gm-Gg: ASbGnctGtdwcOKyQJnlNgOxXm1O/GUM+zpNVcwYno5KYQPROl8Yr3MJIH8F/dVkG1ur
-	KCnhFMLON1MgrwSmA82jeJN2ucDA5nMRxFPhHeA1RFviFrtpNYBRsycTL6LM3t40AAVB9eU42sB
-	1hPdfkBvOtmdqU81ID0PYZSEMf0l8fJI+/fRZlH3QVGAjtY2R00Y8JTWfkoY9Tu6+msFLdfKlHg
-	gCU7tDc1YJ3bb1rvlz8Mg0js/evV2+zzlcDXQFOkdZBnuWulgwrFewxfFIVX7RaGKF3Q/JpySsr
-	vcJeaIyP07RCUyUvombSNlN9emzTkTrwN+6auRIKexzBoyXW/UZkVfjrLaGuG7oTFok7tKigsUf
-	vkSdKkgrFU0e+rx5Zz3VrDnRuPfIiHlgswj9qzwxXE55ZBmsISzlk+vgs9J1AU9qvAAcqegz4wa
-	WkH7pIDhVTaw==
-X-Google-Smtp-Source: AGHT+IH0H9zSvxzKLxEHeBYmLm42abpcGN8vi6zvjLG6iKBrFBcjssAApv20szdw2BNtaSv89iRfaQ==
-X-Received: by 2002:a05:6402:34cd:b0:60c:421f:1357 with SMTP id 4fb4d7f45d1cf-6128592f82amr313469a12.13.1752618298952;
-        Tue, 15 Jul 2025 15:24:58 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611c95256d0sm7975770a12.24.2025.07.15.15.24.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jul 2025 15:24:58 -0700 (PDT)
-Message-ID: <a1a9543f-0707-4f4e-80a7-86164f96fc5a@gmail.com>
-Date: Wed, 16 Jul 2025 00:24:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzkvdF8/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D22C4CEE3;
+	Tue, 15 Jul 2025 23:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752622984;
+	bh=oIkUYfDgAMBmComyQL46QfRRvvbeCNaERG0b0OclZGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kzkvdF8/yTgHzxS4GWWzOX3MNf4yT/HYcZnvr8glkE4W0Pxmu1lz7A2uYcEN+XzuW
+	 nOVolShmJUUj28oA7KzqfIQmVGgOHB1uSA956PstXl9/dP6eBxTYNrd5zbcDNUCaky
+	 mcMRxKlylObJc+6tQ8djX6o71Mw8eSltMXt00dopXLGeGeRZwZwA+15HQq6/KQ31iE
+	 HelbunvlA9M9ptdjzLuuVQ+MxVeZbnaucqNQa/LJLrG87dvcuKUp6VCBAhGgcgLnCx
+	 pzn3lOi3QgJC46OAhOkiOWujzQ0zWjhRR9bZaJNiECosEvyiX5jUrsjf9lSgiPRbIx
+	 jhLz6kvar9zZQ==
+Received: by venus (Postfix, from userid 1000)
+	id 6D31F180F0F; Wed, 16 Jul 2025 01:43:02 +0200 (CEST)
+Date: Wed, 16 Jul 2025 01:43:02 +0200
+From: Sebastian Reichel <sre@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com, 
+	neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, deller@gmx.de, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com, simona@ffwll.ch, 
+	fnkl.kernel@gmail.com, j@jannau.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	sven@kernel.org, alyssa@rosenzweig.io, neal@gompa.dev, 
+	support.opensource@diasemi.com, duje.mihanovic@skole.hr, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v2 02/15] drm/panel: panel-samsung-s6e63m0: Include
+ <linux/of.h>
+Message-ID: <67hurwpxz4c2ropgbq3q6umybr2fgucgtbdu4qc6y3qk3uypc4@3xkijgin5ydl>
+References: <20250715122643.137027-1-tzimmermann@suse.de>
+ <20250715122643.137027-3-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/9] platform/surface: aggregator_registry: Add Surface
- Pro 11
-To: Dale Whinham <daleyo@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: =?UTF-8?Q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250714173554.14223-1-daleyo@gmail.com>
- <20250714173554.14223-5-daleyo@gmail.com>
-Content-Language: en-US
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20250714173554.14223-5-daleyo@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715122643.137027-3-tzimmermann@suse.de>
 
-On 7/14/25 7:35 PM, Dale Whinham wrote:
-> This enables support for the X1E-based Surface Pro 11.
+Hi,
+
+On Tue, Jul 15, 2025 at 02:24:39PM +0200, Thomas Zimmermann wrote:
+> Include <linux/of.h> to declare device_property_read_u32(). Avoids
+> dependency on backlight header to include it.
+
+device_property_*() is from <linux/property.h>, which is already
+included in the following line...
+
+Greetings,
+
+-- Sebastian
+
 > 
-> Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-> Signed-off-by: Dale Whinham <daleyo@gmail.com>
-
-Looks good to me. Thanks!
-
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
->   .../surface/surface_aggregator_registry.c      | 18 ++++++++++++++++++
->   1 file changed, 18 insertions(+)
+>  drivers/gpu/drm/panel/panel-samsung-s6e63m0.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index a594d5fcfcfd..e08d029e0856 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -406,6 +406,22 @@ static const struct software_node *ssam_node_group_sp9_5g[] = {
->   	NULL,
->   };
->   
-> +/* Devices for Surface Pro 11 (ARM/QCOM) */
-> +static const struct software_node *ssam_node_group_sp11[] = {
-> +	&ssam_node_root,
-> +	&ssam_node_hub_kip,
-> +	&ssam_node_bat_ac,
-> +	&ssam_node_bat_main,
-> +	&ssam_node_tmp_sensors,
-> +	&ssam_node_hid_kip_keyboard,
-> +	&ssam_node_hid_kip_penstash,
-> +	&ssam_node_hid_kip_touchpad,
-> +	&ssam_node_hid_kip_fwupd,
-> +	&ssam_node_hid_sam_sensors,
-> +	&ssam_node_kip_tablet_switch,
-> +	NULL,
-> +};
-> +
->   /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
->   
->   static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
-> @@ -485,6 +501,8 @@ static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
->   	/* Surface Laptop 7 */
->   	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
->   	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
-> +	/* Surface Pro 11 */
-> +	{ .compatible = "microsoft,denali", (void *)ssam_node_group_sp11 },
->   	{ },
->   };
->   
-
+> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e63m0.c b/drivers/gpu/drm/panel/panel-samsung-s6e63m0.c
+> index ea241c89593b..930948cb615f 100644
+> --- a/drivers/gpu/drm/panel/panel-samsung-s6e63m0.c
+> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e63m0.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/export.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/property.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/media-bus-format.h>
+> -- 
+> 2.50.0
+> 
