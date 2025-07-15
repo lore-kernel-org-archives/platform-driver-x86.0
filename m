@@ -1,111 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB1219E8;
-	Tue, 15 Jul 2025 12:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500182DE704
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 12:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752582429; cv=none; b=suwcvznywXgX9fxVI7ZzCveFkXmsywtjDvPKhOJPNR5hykGS7ddYQn6Q3FSEOYCRLarJj5l09KlGKOJngUkaIH7BdL9GI0r8+oo6FktuJaDCNxbeQG5RNmB/prGa9Nfl/+W3ovYWDTSL3liP7iBCFOlqa6Tr/k9cV92rAZaByGQ=
+	t=1752582598; cv=none; b=Ae1KnlaNS00wbdFjgI3SPBkKsTPuEFkn7F5FCC9NtOu5+ae7zwXAQgdBv9wNxzhysjP3g5MvulynXAU3PEMr3NQzsuGKQw6QKD4HJ+UtTN2remFZHWr7yUJVxMyc6ClnM7zfvXf/puhTAb/YRD/Oa5ZwlejZpQOSRCZq/L+24/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752582429; c=relaxed/simple;
-	bh=E9Digcbp9QkNx59WZDLuezaTlEp5gtp+wN8borN97ek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=skj/FwAYKRZUjACkXE7j2ojg5UwomwhE18LnSCuDoielSy6DHlZapTmO+fqxloc89BbqZu3AXIud6TVVZeX9m3ECJaXXzh69eXcGy9XwhDnuK2gRdW+NyCHRj8dYKOsVqSf/7wtc8RGfxrxfwxmC1I0t8hvjPf6HeT+hIZP8TDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cd30PVfI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752582598; c=relaxed/simple;
+	bh=mYbeIX46vdmeWrZPpXLw+bmodcnhebm5aCNlZ3DiVCY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r041tMBpBzem4vW/6XG3Ktx6lULAa71rZWAbhIcRK1QPMdcCIzdVC/dp5urg/At8o5pRqiDQMWGr+YL26i+dz1IhI4Miy7BkyRaRvusMLArbPN/dICjCl/VoTAy/LwNMSPNFacumu3AbyE8E4aqvDHZQUP1hwQ7fl+OCM/eD81c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QoKW7Yh6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AkfZqHcj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QoKW7Yh6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AkfZqHcj; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cd30PVfI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF02C4CEE3;
-	Tue, 15 Jul 2025 12:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752582429;
-	bh=E9Digcbp9QkNx59WZDLuezaTlEp5gtp+wN8borN97ek=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cd30PVfILcYix/MpbWwidYWt6kcd+a15MwK2Q6PiHqta4kBtuHGiKMU1AcgyLbdUn
-	 fronVZgvar4sh0b/l38IPhK88+JGhDbQHla6fMd88KR8SsyVtLMRdlFrrLDQ9tGjMo
-	 ExjR/uydjzILiDOJ5I4wwKfwraj/6VgAwJA+oi8WIynPQ4SPop4CPZwhJ84NhwUUdR
-	 IIirFaVcWxPkOC2GnAFkvJwafFbfnuxiVJOdlSB5bTVgMZRC04jVIhF6cD5wpH5gB1
-	 vBKTgpjSmyKpRZhi3tw3oocHqzt15NPZUWc+18p2HBgcdpJGmgCDV2BRJV1EosLMyd
-	 r5piNDLz0v1bA==
-Message-ID: <e39cf267-0784-4b56-a989-349e84487bbf@kernel.org>
-Date: Tue, 15 Jul 2025 14:27:05 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QoKW7Yh6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AkfZqHcj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QoKW7Yh6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AkfZqHcj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 37FCA1F38F;
+	Tue, 15 Jul 2025 12:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1752582594; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mjCwmxRw2oiS5uDhgBamrzilzsoTGXeob+BS+5zzIRE=;
+	b=QoKW7Yh6porPglfWJz2OZChxEiamLvLxKaIvycNJxh3bg7LYQSgk60CjlzhWEIENjMyj1Y
+	q42aI+n4ZNGdVGyAL8V1PftB8WPf2Xi1kTG2OG9CYS8agqfLmfAGndWG93mrdnPIbFKu69
+	JzeBhVTqGI2vhk9xwmhVfZQzUouV/PM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1752582594;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mjCwmxRw2oiS5uDhgBamrzilzsoTGXeob+BS+5zzIRE=;
+	b=AkfZqHcjcB3keVB6qvSM3e0/bATe1ldj69gbeuALdJU7JgXK3Jo+3SZONymHV1JreOp94h
+	CwLntdyDfgzpm6BQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QoKW7Yh6;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AkfZqHcj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1752582594; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mjCwmxRw2oiS5uDhgBamrzilzsoTGXeob+BS+5zzIRE=;
+	b=QoKW7Yh6porPglfWJz2OZChxEiamLvLxKaIvycNJxh3bg7LYQSgk60CjlzhWEIENjMyj1Y
+	q42aI+n4ZNGdVGyAL8V1PftB8WPf2Xi1kTG2OG9CYS8agqfLmfAGndWG93mrdnPIbFKu69
+	JzeBhVTqGI2vhk9xwmhVfZQzUouV/PM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1752582594;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mjCwmxRw2oiS5uDhgBamrzilzsoTGXeob+BS+5zzIRE=;
+	b=AkfZqHcjcB3keVB6qvSM3e0/bATe1ldj69gbeuALdJU7JgXK3Jo+3SZONymHV1JreOp94h
+	CwLntdyDfgzpm6BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CEB913306;
+	Tue, 15 Jul 2025 12:29:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HyAMIcFJdmgaIwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 15 Jul 2025 12:29:53 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: lee@kernel.org,
+	danielt@kernel.org,
+	jingoohan1@gmail.com,
+	neil.armstrong@linaro.org,
+	jessica.zhang@oss.qualcomm.com,
+	deller@gmx.de,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	fnkl.kernel@gmail.com,
+	j@jannau.net,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	sven@kernel.org,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	support.opensource@diasemi.com,
+	duje.mihanovic@skole.hr
+Cc: dri-devel@lists.freedesktop.org,
+	asahi@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 00/15] backlight: Do not include <linux/fb.h> in header file
+Date: Tue, 15 Jul 2025 14:24:37 +0200
+Message-ID: <20250715122643.137027-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] platform/x86: asus-wmi: map more keys on
- ExpertBook B9
-To: Anton Khirnov <anton@khirnov.net>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
- <luke@ljones.dev>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250714150756.21197-1-anton@khirnov.net>
- <20250714150756.21197-3-anton@khirnov.net>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250714150756.21197-3-anton@khirnov.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 37FCA1F38F
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.01
 
-Hi,
+Remove the final dependencies on fbdev from the backlight subsystem.
+This is really just the include of <linux/fb.h> in backlight, but it
+has some fallout in other code.
 
-On 14-Jul-25 5:07 PM, Anton Khirnov wrote:
-> * there is a dedicated "noise cancel" key in top row, between mic mute
->   and PrintScreen; it sends 0xCA when pressed by itself (mapped to F13),
->   0xCB with Fn (mapped to F14)
-> * Fn+f sends 0x9D; it is not documented in the manual, but some web
->   search results mention "asus intelligent performance"; mapped to FN_F
-> * Fn+space sends 0x5B; it is not documented or mentioned anywhere I
->   could find; mapped to FN_SPACE
-> 
-> Signed-off-by: Anton Khirnov <anton@khirnov.net>
+Patches 1 to 14 fix all the implicit includes that come from fb.h
+throughout the kernel. It's all trivial, but touches various drivers.
+Maintainers are in CC. Patch 15 fixes the backlight header.
 
-Thanks, patch looks good to me:
+With the series applied the backlight subsystem should be free from
+fbdev dependencies.
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+v2:
+- add missing clean ups in jornada720, rave-sp, rt4831
 
-Regards,
+Thomas Zimmermann (15):
+  platform/x86: dell-uart-backlight: Use blacklight power constant
+  drm/panel: panel-samsung-s6e63m0: Include <linux/of.h>
+  drm/panel: panel-samsung-s6e88a0-ams427ap24: Include <linux/of.h>
+  drm/panel: panel-summit: Include <linux/of.h>
+  fbcon: Add necessary include statements and forward declarations
+  backlight: Include <linux/of.h>
+  backlight: apple_dwi_bl: Include <linux/mod_devicetable.h>
+  backlight: as3711_bl: Include <linux/of.h>
+  backlight: da9052_bl: Include <linux/mod_devicetable.h>
+  backlight: jornada720: Include <linux/io.h>
+  backlight: ktd2801: Include <linux/mod_devicetable.h>
+  backlight: led_bl: Include <linux/of.h>
+  backlight: rave-sp: Include <linux/of.h> and <linux/mod_devicetable.h>
+  backlight: rt4831: Include <linux/mod_devicetable.h>
+  backlight: Do not include <linux/fb.h> in header file
 
-Hans
+ drivers/gpu/drm/panel/panel-samsung-s6e63m0.c            | 1 +
+ drivers/gpu/drm/panel/panel-samsung-s6e88a0-ams427ap24.c | 1 +
+ drivers/gpu/drm/panel/panel-summit.c                     | 1 +
+ drivers/platform/x86/dell/dell-uart-backlight.c          | 2 +-
+ drivers/video/backlight/apple_dwi_bl.c                   | 1 +
+ drivers/video/backlight/as3711_bl.c                      | 1 +
+ drivers/video/backlight/backlight.c                      | 1 +
+ drivers/video/backlight/da9052_bl.c                      | 1 +
+ drivers/video/backlight/jornada720_bl.c                  | 1 +
+ drivers/video/backlight/ktd2801-backlight.c              | 1 +
+ drivers/video/backlight/led_bl.c                         | 1 +
+ drivers/video/backlight/rave-sp-backlight.c              | 2 ++
+ drivers/video/backlight/rt4831-backlight.c               | 1 +
+ include/linux/backlight.h                                | 1 -
+ include/linux/fbcon.h                                    | 7 +++++++
+ 15 files changed, 21 insertions(+), 2 deletions(-)
 
-
-
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index f84c3d03c1de..9d2fd7bc3ce1 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -582,6 +582,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0x55, { KEY_CALC } },
->  	{ KE_IGNORE, 0x57, },  /* Battery mode */
->  	{ KE_IGNORE, 0x58, },  /* AC mode */
-> +	{ KE_KEY, 0x5B, { KEY_FN_SPACE } },
->  	{ KE_KEY, 0x5C, { KEY_F15 } },  /* Power Gear key */
->  	{ KE_KEY, 0x5D, { KEY_WLAN } }, /* Wireless console Toggle */
->  	{ KE_KEY, 0x5E, { KEY_WLAN } }, /* Wireless console Enable */
-> @@ -618,6 +619,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0x93, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + DVI */
->  	{ KE_KEY, 0x95, { KEY_MEDIA } },
->  	{ KE_KEY, 0x99, { KEY_PHONE } }, /* Conflicts with fan mode switch */
-> +	{ KE_KEY, 0X9D, { KEY_FN_F } },
->  	{ KE_KEY, 0xA0, { KEY_SWITCHVIDEOMODE } }, /* SDSP HDMI only */
->  	{ KE_KEY, 0xA1, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + HDMI */
->  	{ KE_KEY, 0xA2, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + HDMI */
-> @@ -632,6 +634,8 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_IGNORE, 0xC0, }, /* External display connect/disconnect notification */
->  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
-> +	{ KE_KEY, 0xCA, { KEY_F13 } }, /* Noise cancelling on Expertbook B9 */
-> +	{ KE_KEY, 0xCB, { KEY_F14 } }, /* Fn+noise-cancel */
->  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
->  	{ KE_IGNORE, 0xCF, },	/* AC mode */
->  	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+-- 
+2.50.0
 
