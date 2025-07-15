@@ -1,60 +1,60 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868062E2EE7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 13:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117DE2E2EEF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 13:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752585661; cv=none; b=oZa7Z6Yfx0rk6lT0HR7ExLLhjS5MrQWVkK6rdi3bc0wOtU/OdtvyqgafTIbfDNrVW6UpkVwRRQf3Iz5q0WjKf5ZmjTj/G6sRs1Bir3ug2oMP5/wR4X04l/OQC7wvt0s2Bz1OOFPWNaqqsDErAMKqSUQ/f0I6emcSW2HI6w5XMoc=
+	t=1752585760; cv=none; b=KLa3p0VvTccf2f1lla8Wjjl1I24bC1e8Y2k1amv2+J380/Yx+STGlfy1GhO/QS8zwH5DVepLwSz5Hpe35B3z85/s3IcU5H7K+Q7cM1A8geYpX8ZQVVQBbmb4YGGx+WXmdvxzsVVVZB/OSNcCSg+IUNc3r36h3Gm6a9SLRdHEIE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752585661; c=relaxed/simple;
-	bh=iTD6QvZiqKeEPSTRArjSPKCxmJgkIkYH4P8NnK2Uek4=;
+	s=arc-20240116; t=1752585760; c=relaxed/simple;
+	bh=sgr6rQd/h9Lyy5OV9jWvIBZZU1Mi6s8Qpv85V1jfhy0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aRie+U698j7KnQsQ/b3rDGWThw8vPisZYnX+7w4x/BceZMEzhrg0Rc52f6ct0Ah0oQhNIpWipRXsm9Nn10bmeuTC13Tpoyqj/9VgM0y+g96Anjnf1O2PEbCrjVED0SsHFufNjTZIE6dl0iqU5YfcgjYgFKtoG/z4RHkaFd/abpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Sj4CpYCY; arc=none smtp.client-ip=209.85.128.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1M75GdKQl9/LfMBFL1PdmGzng17ByiGOKJiHU6q/Z5mgbOvvFt2683U4uqj2J+ylwyIsfENSXvClTSAM227Zlq637W1cfvxTdbQ8BDl0CoQ1ItS+O9yFaKTC9m6V+14iqoYVZjqa9BEyTswz+tx7l8N3kc8BeGn2bngRXdgVww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=IpXs4VZU; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Sj4CpYCY"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4561ca74829so19054155e9.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 06:20:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IpXs4VZU"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4538bc52a8dso40019535e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 06:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1752585658; x=1753190458; darn=vger.kernel.org;
+        d=ffwll.ch; s=google; t=1752585757; x=1753190557; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2aER99iRVzHm/yjHj1djxkk2abTrxMFAl8DKmvxNC7E=;
-        b=Sj4CpYCYKMArSE2WNKe9VIHCoVVMPqgl+zSny72jjlwcJ7WPNEdhyECom2scQi6bTR
-         qWlhHb65A5VB1IvIDyb+GpZm/LprNY1x9DyiZ5RUXF7o1NY7Ca+q8jzKK03vug6NbEnX
-         RNUZbTiKsLlVvdOkedS8gdjR3Bs99uSANjo2c=
+        bh=61QFwRWr9Ndvk2ttgipTe3LJv9XUBOlZkiPA5AUFmfs=;
+        b=IpXs4VZU+zbHikWwd6mYGhpnsyqWB3vBsVxWPsbl7TRcsibZ1XgDhOR4Skp+wIk3Jn
+         jzU+CXj9y6QmMVKlSHlR3uYxEq9AY2n49cAZ7m3reLS00uuw/dbe4oj67mNwEPZYfh8j
+         5IhFPTupd/eRD8ChWgBnIu+3T8mGfr0WXBOFc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752585658; x=1753190458;
+        d=1e100.net; s=20230601; t=1752585757; x=1753190557;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2aER99iRVzHm/yjHj1djxkk2abTrxMFAl8DKmvxNC7E=;
-        b=PJ7303q28Bb4Q54IGjp4cJOOOSmlLiSkZO/LiO+ZsW73OLyHdpXeKlWIumEKWP7E1o
-         GPuuXp5wIInBZD/lqYM9/kstdnLm/GVi7jGok0r1VI5/yRW9J1otF+MxhZbnZjwTfNrE
-         vpE76V5bdvcrY9L0ODVLywHnqOI9qnjtFZlg0JhFZ+Ig+2vumbnw8hMrHVtF2ZI6ToWs
-         YXVicOGOyuLZ57f2dgZe8OHEdxUQVx5cG6I1CPf8okEbjMKWR/MDUuP+LhvQi783x1Si
-         L37h5RCoRYSzlaxbNsRb4CmSC+T692XQUPijjvzaKzY491yjD4opFYVf0rveicOvRVgJ
-         Ay9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUAxrABvEuSMcXUcHsjIAVlTxaRFRWnJmXBhUOkoPsOi9/T/aN1Cumo7MZnNzQZw8pIr+PTH1dsrAr5W7nqAZfXOR2T@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMzjX7ggNkZEdFj2xdPuFoL7S+8xT4HLuUWTaUX7yIPWXIcj+5
-	X8igg6r9ak1yy5G3M/aepfyoh6DauZGd8P3Znm9jCz79VsRmjuQWnscypVwLA//Zhas=
-X-Gm-Gg: ASbGncv85tnamGBvArgOXnbWn+t7s9KEGwvgujMOrJc/KN8gq9d3VrfSoLeobr/pohx
-	C+HzevjUVA9e6KgKpuEt4g02+lBPuq3kF6TZycYrtUiDPObibA5YjkgBgp9aIEyE7YIysTYredD
-	HnGm9ce2Sl6GqDEVE5m47eyke4YX/2KhutyNzWndp2Yc0RBYIiJI9EYyYnIMwGbo8SNhTCfxRv3
-	GuEa+YasOnG7SUiEVfqdK9jNc8zUd2qdIgaQskflfyjQmmFWq2/qnxg5y8b7QjvQAL9tRg+b6U5
-	Dm9UCfKAsPsaljADBaFrH+J5B+vnM0P+siialQF0ctD5zkwT4lGNN/eBHQOYNtuHzFcH+orn1el
-	mCciDVgFnQ+X7gJaE8PLSOOsd0pmyL//Rzg==
-X-Google-Smtp-Source: AGHT+IGinrr6VlQ7VPBCrVc59xWEOcpuzjncDgPBrTWdeNMpcUJW8rPWbAvhsIGRi9zIwLALwbGYCg==
-X-Received: by 2002:a5d:64e4:0:b0:3ab:27f9:e4f with SMTP id ffacd0b85a97d-3b5f2e1b872mr13361758f8f.35.1752585657761;
-        Tue, 15 Jul 2025 06:20:57 -0700 (PDT)
+        bh=61QFwRWr9Ndvk2ttgipTe3LJv9XUBOlZkiPA5AUFmfs=;
+        b=BDeaIi1fXRbxLo21JvXKO5hhhHWGJlBR1SEyceq7Yy4SIJO0C9l/9SWbvVGJBRdtEl
+         QNkZuiZiCk4Yklb8LKKuhBtEbG0N0LPNMdiCVecUqnH1R7Ck0cnsfvLziGC75SNFNQBT
+         zqrjghEurmQon2fMm2yMtaVd22ElocZblTaISBPqy5sOktmkS2+vdYjxIM6ARpil7YsU
+         sECvGDrYlPfbgVpYyAVEYqGA6TxsstAQp7/Dr7d/fzgRgMO6/Ss5Pq44QYymV5KdpTVn
+         H2anWa9CSTZiFcbsXznYm38gCroSgzBnqGiM0cCEpYbHzx+KAQQlm+127jkVg6NDZcxY
+         NzVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmR7ol0pJBn1mze7s+Fo3HmBlkboUbPi9yofL/2XmAkBrPqAD6uI/bVqbfSwVtQWfY58up5hoKfWQcOCZDiK3ymPI0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPJdBZjDX7Snn3H1TBWD6vhlRhPdVHhvW564uBQGEdQoyzCE4i
+	bJJUoMJsn8SbFkHtjmvAv1X821p1QSgBQZsScTeLWif9MV2AZIEVVZlK1fDEhdJpH7s=
+X-Gm-Gg: ASbGnctbRbmEZ+P4vYgmxtLCxf0xM6+SYHU0kCrKzm+oq5QjaGAuBVhoVJ0p9wzeGq1
+	osLOM+0P6EvjNX5kuu1miqINjnTLnKihNFt1mL8dQENmidX82RWJr3nb4Qx34F+EqI8MCU6R7jV
+	F+3CjlB0MG2z50VY1MzQT9saDsOuWw2irbV3iBvLXgvRHbIyyhkkK3gR4kfcwpaFQIIernR0Yiu
+	xr/PpRUFlh+VExN5zNBpUnQMNeaqCqeue3p9VCupdeElnlQdbav9/92xShYgS9l//0sEjgA/Mij
+	ODuG48TU5H/DduzRHANk9Els1g+SqNU/Ip1V0hFnFjxHVgaCattUNJU9E0E7wC8FSyB4zDGim1D
+	LncXHdw71yoJciErfyC52Vp3JFcJSsjjO2A==
+X-Google-Smtp-Source: AGHT+IGd8c2xyf0Uxkux0OC1AuHlKA+muy38gHZuCpdnRoCjje75nBhjsGOEghV+rD/6jvj+dlKRcA==
+X-Received: by 2002:a05:600c:1911:b0:456:1121:3ad8 with SMTP id 5b1f17b1804b1-45611213e56mr119039315e9.10.1752585757203;
+        Tue, 15 Jul 2025 06:22:37 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562b54b439sm3676615e9.16.2025.07.15.06.20.56
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45624651a09sm31053395e9.12.2025.07.15.06.22.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Jul 2025 06:20:57 -0700 (PDT)
-Date: Tue, 15 Jul 2025 15:20:55 +0200
+        Tue, 15 Jul 2025 06:22:36 -0700 (PDT)
+Date: Tue, 15 Jul 2025 15:22:34 +0200
 From: Simona Vetter <simona.vetter@ffwll.ch>
 To: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com,
@@ -68,11 +68,11 @@ Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com,
 	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
 	platform-driver-x86@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v2 05/15] fbcon: Add necessary include statements and
- forward declarations
-Message-ID: <aHZVt86l-sXKQpMI@phenom.ffwll.local>
+Subject: Re: [PATCH v2 15/15] backlight: Do not include <linux/fb.h> in
+ header file
+Message-ID: <aHZWGnJ9D72YFgNh@phenom.ffwll.local>
 References: <20250715122643.137027-1-tzimmermann@suse.de>
- <20250715122643.137027-6-tzimmermann@suse.de>
+ <20250715122643.137027-16-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,38 +81,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715122643.137027-6-tzimmermann@suse.de>
+In-Reply-To: <20250715122643.137027-16-tzimmermann@suse.de>
 X-Operating-System: Linux phenom 6.12.30-amd64 
 
-On Tue, Jul 15, 2025 at 02:24:42PM +0200, Thomas Zimmermann wrote:
-> Make the header self contained for including.
+On Tue, Jul 15, 2025 at 02:24:52PM +0200, Thomas Zimmermann wrote:
+> The backlight interfaces don't require anything from <linux/fb.h>, so
+> don't include it.
 > 
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
+I like this very much.
+
 Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
 
+I guess also my Acked-by for merging the entire pile through the backlight
+subsystem, that's probably the easiest path to land this all.
+
+Cheers, Sima
+
 > ---
->  include/linux/fbcon.h | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  include/linux/backlight.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-> index 2382dec6d6ab..81f0e698acbf 100644
-> --- a/include/linux/fbcon.h
-> +++ b/include/linux/fbcon.h
-> @@ -1,6 +1,13 @@
->  #ifndef _LINUX_FBCON_H
->  #define _LINUX_FBCON_H
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 10e626db7eee..f29a9ef1052e 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -10,7 +10,6 @@
+>  #define _LINUX_BACKLIGHT_H
 >  
-> +#include <linux/compiler_types.h>
-> +
-> +struct fb_blit_caps;
-> +struct fb_info;
-> +struct fb_var_screeninfo;
-> +struct fb_videomode;
-> +
->  #ifdef CONFIG_FRAMEBUFFER_CONSOLE
->  void __init fb_console_init(void);
->  void __exit fb_console_exit(void);
+>  #include <linux/device.h>
+> -#include <linux/fb.h>
+>  #include <linux/mutex.h>
+>  #include <linux/types.h>
+>  
 > -- 
 > 2.50.0
 > 
