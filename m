@@ -1,78 +1,79 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B819A2DE71A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 12:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DAE2DE71C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Jul 2025 12:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752582635; cv=none; b=XaKwnX1QqgokLBSxnWVguCNbenqphdSvGwdu2dCpzZkZ3o7rpCc+3JAqLs2WpWc/qL7i8pltX/poTIICWbejyva8yHDYnkJUQMHWV20AMrJwg9ydQATZG1mmb7l4kD2lUUxDaGoIOfjI4Ar/lzBUSfrp4lcWyuhIl+MH9GI+muU=
+	t=1752582636; cv=none; b=CD6Fxg8i1xd4LACy8mdG3z+lL0MjvRXvyIFIKXwupwY5432BhVaxXhzqiQGRPaokgDI97huGvYas/Qt+5NAkNudFZn9VYnNRjGNraALN0rnhpSec8ZjsnE55vtPY+mXl6teunS21J5Ipie/p9AFqkVKengIsagybuHBQOwiUd1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752582635; c=relaxed/simple;
-	bh=KE57ntHpJ8Nm7l2X449NyaoV0HLs1wbHopZCTFy89KE=;
+	s=arc-20240116; t=1752582636; c=relaxed/simple;
+	bh=y6uj9ijB8lvnpqO0nkSz6d5EhhxemppPcJ/JshiT0uw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MMjup/HV0FHl/MVSNBJwewC5f6Xxrg35hSab6WiTXSZowcPe1UXy7T9+8THxS+/ry1IpGYfm7sMAUOjVfvxIZvYa2XRBZ8a9OYtLSP6v4QZSNHawq3WRhP0M4oBIqVkBn2Fzy9ltO9FAEPT76BngWLzhIx6i7fnnRVU9ZiImyT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fZP0dWCz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=76J/k3jK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fZP0dWCz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=76J/k3jK; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=RiYOYNQJes22WTEYsXAwUzjYQzrODUPhdBkJ6pvAC7ynui8uO1ui5NvNVmhBDOsqGTAH56yf22DquCpp4LgHnQWLEyILh+l+vzq2jWRFd1eXKQRF4eZ0+i8E23Cv3ItTtIQOQn8n3v6Y7R18ImMhnQ/U8uBaFbBRXpZwtXA+5gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Nha4ze27; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2989Y8pp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Nha4ze27; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2989Y8pp; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fZP0dWCz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="76J/k3jK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fZP0dWCz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="76J/k3jK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Nha4ze27";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2989Y8pp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Nha4ze27";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2989Y8pp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5599621250;
-	Tue, 15 Jul 2025 12:30:04 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 594EF1F7A2;
+	Tue, 15 Jul 2025 12:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1752582604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1752582600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WfIwDLueUpdSLLQiafQ4ArRKWl+h2XDcNKHLfewAO8E=;
-	b=fZP0dWCzbVasw5rkikeRR9v/UB3Qy1brvJl6bTF14MWV5UNnjSDc3J6x3S+gLxax+eHYrI
-	QoQUNwb6H4/NsGRh8/4HyMsDK0rxFIs3CCB4r6yJ5QUbZYtQ1MXddZjEF3CfNWfTmUkRAa
-	6UzQ8HGtttb5jlg1ntl4kHxRFML937Y=
+	bh=lCm2YElLOxyPZdvbgI5q6uWBdMdbl3YtVkvPWEDIyC0=;
+	b=Nha4ze27LI+bdIYg40brUMc30qF9FU46B5Cl6ojGsJNmLhQI8QPUpUSPEQr5u2t08KnIK1
+	CwxtlOi1GEFVZ115iUyaac7qUylzI2FfVnEH3F0HlA2kqPUQjqhNxjbKczNMYQlGWQRiVg
+	MYsw59BEcQlDK/6ODGMKdkjsMZNXryk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1752582604;
+	s=susede2_ed25519; t=1752582600;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WfIwDLueUpdSLLQiafQ4ArRKWl+h2XDcNKHLfewAO8E=;
-	b=76J/k3jKQo40f/90yjZH7qtWlJCciblfX+qiHezSGaPo4Kpxza6jrnllOlTct6GxjNVfrr
-	MQiEdq+IIpApwfDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
+	bh=lCm2YElLOxyPZdvbgI5q6uWBdMdbl3YtVkvPWEDIyC0=;
+	b=2989Y8ppuJeEHTx98x6Hb7CbJRqHzU23+3OHZ9EpauliN7HqE2Xn+gs9KkIkvmrB8bDFTQ
+	SBKS7wlo6UC+wRBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Nha4ze27;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=2989Y8pp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1752582604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1752582600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WfIwDLueUpdSLLQiafQ4ArRKWl+h2XDcNKHLfewAO8E=;
-	b=fZP0dWCzbVasw5rkikeRR9v/UB3Qy1brvJl6bTF14MWV5UNnjSDc3J6x3S+gLxax+eHYrI
-	QoQUNwb6H4/NsGRh8/4HyMsDK0rxFIs3CCB4r6yJ5QUbZYtQ1MXddZjEF3CfNWfTmUkRAa
-	6UzQ8HGtttb5jlg1ntl4kHxRFML937Y=
+	bh=lCm2YElLOxyPZdvbgI5q6uWBdMdbl3YtVkvPWEDIyC0=;
+	b=Nha4ze27LI+bdIYg40brUMc30qF9FU46B5Cl6ojGsJNmLhQI8QPUpUSPEQr5u2t08KnIK1
+	CwxtlOi1GEFVZ115iUyaac7qUylzI2FfVnEH3F0HlA2kqPUQjqhNxjbKczNMYQlGWQRiVg
+	MYsw59BEcQlDK/6ODGMKdkjsMZNXryk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1752582604;
+	s=susede2_ed25519; t=1752582600;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WfIwDLueUpdSLLQiafQ4ArRKWl+h2XDcNKHLfewAO8E=;
-	b=76J/k3jKQo40f/90yjZH7qtWlJCciblfX+qiHezSGaPo4Kpxza6jrnllOlTct6GxjNVfrr
-	MQiEdq+IIpApwfDA==
+	bh=lCm2YElLOxyPZdvbgI5q6uWBdMdbl3YtVkvPWEDIyC0=;
+	b=2989Y8ppuJeEHTx98x6Hb7CbJRqHzU23+3OHZ9EpauliN7HqE2Xn+gs9KkIkvmrB8bDFTQ
+	SBKS7wlo6UC+wRBQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B244613306;
-	Tue, 15 Jul 2025 12:30:03 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AA0ED13A6C;
+	Tue, 15 Jul 2025 12:29:59 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mFAkKstJdmgaIwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 15 Jul 2025 12:30:03 +0000
+	id WAgiKMdJdmgaIwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 15 Jul 2025 12:29:59 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: lee@kernel.org,
 	danielt@kernel.org,
@@ -99,9 +100,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-fbdev@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 15/15] backlight: Do not include <linux/fb.h> in header file
-Date: Tue, 15 Jul 2025 14:24:52 +0200
-Message-ID: <20250715122643.137027-16-tzimmermann@suse.de>
+Subject: [PATCH v2 09/15] backlight: da9052_bl: Include <linux/mod_devicetable.h>
+Date: Tue, 15 Jul 2025 14:24:46 +0200
+Message-ID: <20250715122643.137027-10-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250715122643.137027-1-tzimmermann@suse.de>
 References: <20250715122643.137027-1-tzimmermann@suse.de>
@@ -113,53 +114,60 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 594EF1F7A2
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[25];
 	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr];
 	ARC_NA(0.00)[];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLc48bcaq7qz9wekwjsx9fywoc),to(RLpx6hatunazuh7ud675imbh78)];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
 	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	R_RATELIMIT(0.00)[to_ip_from(RL95szse9eqfwu74ziohs8j73e)];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de]
-X-Spam-Flag: NO
-X-Spam-Score: -1.30
+X-Spam-Score: -1.51
 
-The backlight interfaces don't require anything from <linux/fb.h>, so
-don't include it.
+Include <linux/mod_devicetable.h> to declare struct platform_device_id.
+Avoids dependency on backlight header to include it.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- include/linux/backlight.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/video/backlight/da9052_bl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 10e626db7eee..f29a9ef1052e 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -10,7 +10,6 @@
- #define _LINUX_BACKLIGHT_H
+diff --git a/drivers/video/backlight/da9052_bl.c b/drivers/video/backlight/da9052_bl.c
+index f41523d78121..2493138febfa 100644
+--- a/drivers/video/backlight/da9052_bl.c
++++ b/drivers/video/backlight/da9052_bl.c
+@@ -9,6 +9,7 @@
  
- #include <linux/device.h>
--#include <linux/fb.h>
- #include <linux/mutex.h>
- #include <linux/types.h>
+ #include <linux/backlight.h>
+ #include <linux/delay.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
  
 -- 
 2.50.0
