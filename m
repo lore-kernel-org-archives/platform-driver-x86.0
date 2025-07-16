@@ -1,222 +1,94 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2A21C68F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2025 06:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC16F2E36F4
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2025 10:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752648248; cv=none; b=ppnwBVRbXuxY56wAFzn4N2qE/WwQH9u0Kf+W1Z73xZNuniS8y7b98ObHaEXzgQ/rT/EklgaCmwGPgZQM6eUTYJl0Yc9V5n6j7Gi4bbusNpVDwCt/+aE78j9KCuze4BRgLMdye5zCHS84FSpWg8rak5noi0fanc1Nys+i1tpayws=
+	t=1752662781; cv=none; b=PDl5Oj5nLOll3Y30PNrrcDk30KAmSwvDHZ+fCgZEzBTLQ77sk6A06SPwDIcYc12WK1jIP8Wjl7PJDLHqCwe/z6kLONo9BcevjrS50E7zSvmKgBHjMJfat3M7MySNYUWJ1tM6/iX6HNAcEjvdMpkJz8GNSRr88W03yJXn5ymkHZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752648248; c=relaxed/simple;
-	bh=HjTHZZUC++ay/L1HT9nZBv3mNJEGuF6Agyu0Ii+xI7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nt99dMftvIKMLBxBUKYLaBjZnKG3h0uHXYXLVCwnHJ2DL3RgHefLlx7VYlYj5Omv+2jLHdYYsc29KdD/7ktjiHlUs/8NLM8EVIoyImKeC0YM9GZ1toimqq2GXAFKqfgTMC7nYJwMy9gdbhVjOGeeqQzf44VuW/5oDw7DynvhCDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lF9DIVbO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QOpY3Ktx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lF9DIVbO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QOpY3Ktx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1752662781; c=relaxed/simple;
+	bh=m7w5FXXePLMXj1fS3pRb4LPRMGYQ2QkTgXge66+VeKw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EIwPUTTU6pY2+1pNz6EBsf1VqiNxZjGY2jw3TyxqvUqbND42ySu8vcSAo0FhYxfUhlBiLz+7fn2+bJVA+1kMC2VP9syoGJ1ISPNzvxKhZA3Wp3KCGeRkY+FBR9ldCuCiaumIV04z+PVU1cmEUXsBaDvziqpmInroIUj/ELeuPvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/Cd1m5m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lF9DIVbO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QOpY3Ktx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lF9DIVbO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QOpY3Ktx"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1DC392122B;
-	Wed, 16 Jul 2025 06:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1752648243; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VEUoLTT5I8yzxJpfDzrdKZYJvEEQsf+bCiIncTF9xFA=;
-	b=lF9DIVbOAhMVTxiD08F1NaRufP6txNZuZn4Szmzu50e5fpgBSKnc6lx/LkO/n6Gti1iEvR
-	uvzOKwkIqYOcPo25PK1jWSkVZF0dw/zr9EmUR9aRRcI7VxfwPWajTVD2ZQlWJdyCkiuEuO
-	t4bfILADOnpKPSgOuhfC22tFZ1/ozVU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1752648243;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VEUoLTT5I8yzxJpfDzrdKZYJvEEQsf+bCiIncTF9xFA=;
-	b=QOpY3Ktx5QNQsjpv1l4ST1Enz02WmMWpXX3x+vKXuHRRXUT0wg19Y1ef3roxYrUT4d8HY6
-	H3DRYY6pepx65mBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lF9DIVbO;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QOpY3Ktx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1752648243; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VEUoLTT5I8yzxJpfDzrdKZYJvEEQsf+bCiIncTF9xFA=;
-	b=lF9DIVbOAhMVTxiD08F1NaRufP6txNZuZn4Szmzu50e5fpgBSKnc6lx/LkO/n6Gti1iEvR
-	uvzOKwkIqYOcPo25PK1jWSkVZF0dw/zr9EmUR9aRRcI7VxfwPWajTVD2ZQlWJdyCkiuEuO
-	t4bfILADOnpKPSgOuhfC22tFZ1/ozVU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1752648243;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VEUoLTT5I8yzxJpfDzrdKZYJvEEQsf+bCiIncTF9xFA=;
-	b=QOpY3Ktx5QNQsjpv1l4ST1Enz02WmMWpXX3x+vKXuHRRXUT0wg19Y1ef3roxYrUT4d8HY6
-	H3DRYY6pepx65mBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7CFB513A52;
-	Wed, 16 Jul 2025 06:44:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AOgYHTJKd2iPcAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 16 Jul 2025 06:44:02 +0000
-Message-ID: <f5a5f4a2-3ea5-4a38-9e2a-19421c532bf3@suse.de>
-Date: Wed, 16 Jul 2025 08:44:02 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/Cd1m5m"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 61AB6C4CEF8
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2025 10:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752662781;
+	bh=m7w5FXXePLMXj1fS3pRb4LPRMGYQ2QkTgXge66+VeKw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Z/Cd1m5mFLFGbcQNfA01fNOXOZZkTkdAmAdJt0CMW7S5nkHwLiHmQZ+fLJ3Ou8t+Z
+	 HOVV8M8z5ahULURiKUM+F2sINPeUAi1BVgnevIrMsTOuYDTggC4YEeXHF6l7EfGCjy
+	 HB1ZQk/bRHj1ASu5EGN0D1xqU2YT5BCsC3rVtUqDbSzs6PMZiUP0KJiCcLCfVhNSz3
+	 BogBuXdQluptv0ZJinz9acQiUSKsfg4rZoO6wwjpIqTzdvwUFpQvgaO6W/rANg1Sby
+	 qoPNNpi4ed7VusbQbU0TPpLPrJQXQYfaUfTuLAbFLrws3l/e5p6RUhwxwMH6d1Dl9C
+	 m7LxhTUKBVJkw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 584ACC53BC5; Wed, 16 Jul 2025 10:46:21 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Wed, 16 Jul 2025 10:46:21 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: kernel.org@axomail.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-218305-215701-CLQCRIQBi5@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 15/15] backlight: Do not include <linux/fb.h> in header
- file
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com,
- neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, deller@gmx.de,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
- simona@ffwll.ch, fnkl.kernel@gmail.com, j@jannau.net, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, sven@kernel.org, alyssa@rosenzweig.io,
- neal@gompa.dev, support.opensource@diasemi.com, duje.mihanovic@skole.hr,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-fbdev@vger.kernel.org
-References: <20250715122643.137027-1-tzimmermann@suse.de>
- <20250715122643.137027-16-tzimmermann@suse.de>
- <aHZWGnJ9D72YFgNh@phenom.ffwll.local>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <aHZWGnJ9D72YFgNh@phenom.ffwll.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr,lists.freedesktop.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 1DC392122B
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
 
-Hi
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Am 15.07.25 um 15:22 schrieb Simona Vetter:
-> On Tue, Jul 15, 2025 at 02:24:52PM +0200, Thomas Zimmermann wrote:
->> The backlight interfaces don't require anything from <linux/fb.h>, so
->> don't include it.
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> I like this very much.
->
-> Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+Henri (kernel.org@axomail.de) changed:
 
-Thanks for reviewing. backlight.h is also the last major header file the 
-includes <linux/fb.h>. Not including it here will free many other files 
-from the dependency.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |kernel.org@axomail.de
 
->
-> I guess also my Acked-by for merging the entire pile through the backlight
-> subsystem, that's probably the easiest path to land this all.
+--- Comment #95 from Henri (kernel.org@axomail.de) ---
+For me, the patch did not completely fix the issue. From time to time, I st=
+ill
+experience my Ryzen to be stuck at 544 Mhz after unplugging it from the pow=
+er,
+while sleeping.
 
-Yeah, that was the plan.
+Laptop: HP Elitebook 845 G10
+Processor: Ryzen 7 7840U
 
-Best regards
-Thomas
+OS: NixOS 25.05
+Kernel: 6.15.5 (linuxPackages_latest)
 
->
-> Cheers, Sima
->
->> ---
->>   include/linux/backlight.h | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
->> index 10e626db7eee..f29a9ef1052e 100644
->> --- a/include/linux/backlight.h
->> +++ b/include/linux/backlight.h
->> @@ -10,7 +10,6 @@
->>   #define _LINUX_BACKLIGHT_H
->>   
->>   #include <linux/device.h>
->> -#include <linux/fb.h>
->>   #include <linux/mutex.h>
->>   #include <linux/types.h>
->>   
->> -- 
->> 2.50.0
->>
+I have also run (an 4 month old version of) the s2_idle script, with the ou=
+tput
+being here: https://paste.debian.net/hidden/a701167b/
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
