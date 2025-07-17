@@ -1,286 +1,309 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3E62F5466;
-	Wed, 16 Jul 2025 16:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E7D2550D2;
+	Thu, 17 Jul 2025 23:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752684726; cv=none; b=Jlhvjyg4PBl1P4xohsoDYtzJqqf+mvfufZ/qNrL0soPrCLBRITVImQPs23evgRwkOgEgqp94StyBIKXXiSsX0QvuqigSNlh4MwewpxPPUCTyB1xvGr7Xs9dtjejpu0vu12d1s+7W0oNr6bS04mlArnnbqU1MLzWNbjLG/wivSxI=
+	t=1752794721; cv=none; b=Vegn0qUVsv6r/am/XJzSKogi3X2pTFsfBT/ahM4YsJF0oEGmlMQ6ruqQaWc4HsdvdprdpHpsu7WYPOM17xzqL8hyIIemddx2eoTalRc6FMSGCB6Fpgshg9UPDEuVo+hmYHZUeySztTgfL38n+gNI370sHCL7clKIe1JWu0W5VrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752684726; c=relaxed/simple;
-	bh=c0KFAemiEAizQp2k38W1DuW2PQBYBlNlBSNl4rQu5Qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEhOcDNQ/EkWsFlXEfum9FoeHFGf61vkt5gvDJ9Bc8alMQNlXUdMViy+yBqkaoZ/lkIbDVu5Zf7ln6hNqCeWyLQCJRfv9QqRVBpomC8GTE/f8jKmx1zR5fnxMOn/9IPOvT5CzDfh+UEedJ3g3jsQWto7tpnLbRM5umT7+Dx3Do4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aT7Z2p38; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1752794721; c=relaxed/simple;
+	bh=h6Zg7bnGhZLJl7gzBxEvRrK024ha+iznbtZZpACm6QM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pgPnnKkvS0ON3RBMEX7B3dmwRbvf1y2NF7x2lsoKw3BxDkx+4aJzGiADZxbWXUvZHFq/D6OM9Jl8NhRpBCPKKDst5+xdgxZC6HsY0oBTWUFJGFINxIQLXJ2I8hT4iCP6l3Bd0J2Vun4vq9tSBGrrzROG2IprCXEhmpMavsdYYBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRbkjAx4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aT7Z2p38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1752684717; x=1753289517; i=w_armin@gmx.de;
-	bh=c0KFAemiEAizQp2k38W1DuW2PQBYBlNlBSNl4rQu5Qk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=aT7Z2p38CfjeXl6Mmw7esrto1w5FZbGkF68bV+FRaWPQQ4zYZ/ZJvkUbERqzLRyu
-	 qZ/FOe1w9fRHxmJN8ZkI7EnjcWn8vcUqzswG7BwyerfjMoA+slg9ufkY3slOFgaHI
-	 4JeQDr9Z2eihDDB/Nn3omqip2BUeS5x64tu8tRoJW+CTxwz27fCrCNxrfm8/yQVMw
-	 38jF97088LfHUz2m22zelQBOY/jwFicq6gscsI61r7qUCShm15NxIjSYxy+cQbu3R
-	 Iz3e/49RWIclnXW+E56qdWNpQqxEmTkMYj6Vi6eSD0F8pMPtWBCZmtGa6PogpLlKj
-	 m0Ml4UTUUKzpiR+WQQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mel7v-1v9m9I1omb-00o4dP; Wed, 16
- Jul 2025 18:51:57 +0200
-Message-ID: <20213956-f1f9-4eba-84d0-a4ea5fc745bd@gmx.de>
-Date: Wed, 16 Jul 2025 18:51:54 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRbkjAx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B01FC116D0;
+	Thu, 17 Jul 2025 23:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752794720;
+	bh=h6Zg7bnGhZLJl7gzBxEvRrK024ha+iznbtZZpACm6QM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TRbkjAx4agQoaNgy3gLSJriPgyOo5ZCrhh3RqY0GC546jkLVEZccPCSzF8ie7fy6u
+	 kWfBerRtRzKtuY8tBoSJzz6wpe622Laedp++mPG1+CmC7M1OekiauZqbXDoIfrxwaa
+	 qPbCsHOLWtVOn1W7v9sgTGhxFMBGtrfzn5esRTca8flZAjwNRqLlO5gTyJQnSWnfg+
+	 WJcneUc8gjGzKRoq1g/v/b3UtHPiOO7ErykuiiNNVtdCQC5nlDPHQyvn5pzubaO4HM
+	 NPazOkyKiCZdmzeC3mefEGu+PJePhSvFG4uHATZJqL96ZZJo3iwGb5u8caANyBnlSk
+	 FEC4bFEVGFelQ==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org,
+	Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Date: Thu, 17 Jul 2025 16:25:09 -0700
+Message-Id: <20250717232519.2984886-4-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250717231756.make.423-kees@kernel.org>
+References: <20250717231756.make.423-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH 3/3] Documentation: laptops: Add
- documentation for uniwill laptops
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, rdunlap@infradead.org,
- linux-leds@vger.kernel.org, lee@kernel.org, pobrn@protonmail.com
-References: <20250712112310.19964-1-W_Armin@gmx.de>
- <20250712112310.19964-4-W_Armin@gmx.de>
- <533f0f95-69d1-4151-9987-84b7702179d2@oracle.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <533f0f95-69d1-4151-9987-84b7702179d2@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kKNpbXcZsNKqp3RQzdjpeMMr5vFRtbkY4YCdoB87SYhLP9UTKXf
- 48VUcQn2QN8eLMps59JNhbwm6/U82ghSkYf6j8XfByK6wmYQtvzZFOb130E8cD/+QB/7DaE
- n/qQZy9bipkcxR2bvgGBw2AVAql8BWcxW0MOi+NkfCoQl7Bhud9uHtV5YkvxhPFE0EU8Fvd
- kfpVjY2jfJjxAF9xtVz0A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0Pi65zeo9Ik=;bUDGapkUCcufhIjeIvb04i/II65
- d5pry77HQQVwOmbfosYC309LoaUrEJ5fLgjaNjFU2Ps6oxoF/LA7dPAI4Pru3xZhz9HnUCx73
- +l8neb8V5QtxOhqiOpfVDTnR9WnhAbAS1LVumlLrUt9OPYLM8350yohAG65b8VqTsbwsg/rDO
- p/JaGm9jHXJt/8eyZz3NpMcINt42xI01Fk7ECok1n4TbqxHvAhfOtZD403zZJcWOipdrCEeri
- 7Z+rcA85Umz4X2XGG1ix/V+So0flacMFlwNMzf/0Z7nQ9jhMarpyMgyEhfqEoeuSjz1+S2V3s
- 9nIw4vlAO0THnixltspy2mLjl3MFTbmFMKH7rfclYEWpUvNZQw7kN6dfP5dIw5+rEA/x5Lw0g
- hNytPolseel7vxLp3gfxL+2n+Gi7PdkaaEHWKxERVQuY93629WedPHMaTEtWCQfanWvKqfwNl
- 9TxWOORtGfSsyIcA2rAsamjCN1qRwFsTxAsQ8Efw9SM0kt8ljb0scS4V3AoiPDLsj9TGMYBrl
- wUaF2c+BSdSesiIA00zMH2CcPZCDET/aJNSgwsqSNwk/G2A0hyIG4jKYt2TjVsA68yrtlilAv
- fbU8UXdRIFgqXfcIPWIXL4YP8ZzQiY3nmZAOpNtR7HXlteOsWAntW5qstQUzrK1ROEWO2juXk
- 5QO6bHo8NSf/DafVtXlcazh4pxy1v7m+124qMA9s8rIlKoTCk0QAtFoBevjubb7UqXwyv+8kR
- hedInLCYlKrSJmRawgsZpF3x47MXMB/vTiCP6dbKi/+nrKfvYg9yBxgo+qH69sXV5ahROU41S
- hkUivRSRZVpB1NYJBG4MQQUySWsPw7998Su/bcP/7v9tsZNejUnbtrJWePpPt78BEE3exlxyV
- v0Vn3iuOZgcewneGDKz4mEkEnj0vwYFpPvxAUOuQG8DKsxjTvpC2pYGYUCweMuaPP7kQCx6ne
- cCkfEmWdTBuVP7vJxDpOoka3o1czSm5UATUyMufpTun39P8PB4+xber1IfNNrREpwDyFQR8yr
- 6gfm9Mr2MIENs2kC9MATFeqG6tM+1Bnm0BFgoF310yMHlW5RqS7Qkn8/qLHN41AMdbNkl+rWa
- AbuVp9lmtAIPWm7o6I666HWVbRltEFaI2ynv6XkGbl84l/vbrO6CZ9QLfOYf3KlLbDdue9lUv
- 9EQt3ynQT/ImsMH8Haq9C+H69EWZdY8vzvBy2IIbxO6pTtk0PoGK5SCcenQSaW8B5cGW/BA4F
- lW0HH/iVVvtc4KqJzMQa7/X2sV3vhJAp671yOch9Fo66d8ESeJbAnWLmFdg1JalFSXRvCSnOc
- dcpNGko8IU8M2/Ty48Ut60BaVrAqFKQcme8R2q7gXAvACQObe+FQgQPEwOQIadD9BXln9KhDA
- FW26ZBVIAKi2HW6oN8woqgygFXaqMciVAAMi/H9UwW6WmLsmgeIy/mEAzgJ5eel2vrhlnhmOi
- Ynj6GwojWzY2Q4B9CXWQ25dOIFaDp2haAoCIG6leqfAwvavux8oUL8Dgn9UtVgS3M2Pip7GFS
- Ko0xOoOb1y7LwyRNKQpFTvrB2qkpaejsX/rSmnj4a5pSVmjvR9id8D4g+hVrbuCQ/gDVzIHYA
- lrPCcC0hK/v9fBDhS8sJ6PniJ2wAO5+qhMm0JjdkWCQyMWtP2tMX/d1uUPYi30Ju54pbWdZb7
- +Ud+UjBjpJJ3XR13C4+fwnbydsSfGg4xCF3eeOToYGYijDaRTv08QRR69uQkcuSqITKtKneAh
- wNChCNa7sUYy/id3pTA3cbtminDVh5/az6YVc7hpu43nWhRgxGCTAZFgZZCxalaWkaMXYcpIT
- ErL2NcNuIRgrtq/3fF9V/GJ+haCM+Pudd+ZbIcjvwTx6RxBQXHCnFhmUtJPeSHgnCYwB7KObk
- UB7No2QlcQfRSdkh+on9m1OFxPO+bFFtGxrMS00ai7BWjPoHykKRtZJViSiX7eOQeFixYI1pc
- u2WRJ67SCgerXRZZQxWbBoSk/5imzTRhpqpxYdbsp4bCOxyatBoYFZvFT5/zxbD/yyRr893+h
- tdNOK8XDSgYaHZK64xd82dRGra8La+hTBeWsTMLSrKK2qIM5xnJH2nxN7HcexdBrmrcLdjB+p
- DvX+WyvyHjWxi9UFVc8voV2f03VuCBZ09BBtlhwDce03n7rOrRVwvc6LwI9i2EzH5FUCCEZUJ
- Px3KoxuNBjXolBkIwyIHEz2PUjXMqSmwKKt9DsoTDpsIdtPZVtBllOS5zOus7Ag2dPJmTIhWV
- qx9Yx0PNMmotJ5a60+jGj/P2bsCp80FSCBwcbXPWW5UBqxD0tAhZ/s3xvdelChaIUKaNW5qGS
- jlSUoO5L57CZWJXBF50os7KraL9W4Yn13JeHwSY+DgRU3xxEvwUEjDYYOTdxf7Xkq2a5SXiHy
- PCqxukgh2ZvQGV4vX1bn9rpO8CRWqMUHgTeVyZDA63h390XBcp2drEf9a7/Gd+yBXMOGcAtT7
- Mhg0en3dMAzNiEkQUiwzmauEStMCiST9N2W5LSLlV2FX4MMB1Y+q/z07vPWWLIjFSxk2F0ziu
- Usjptruoa4IcKhx+Y6gJRjGQv3kscg7hcPDrMfGHzslgAJOU8C3LUVdx7Rv/8PhRC0cRr12Uw
- DuxKnBd9iUuUiatTYtAchkmOzNhd3satyPPtg8p7g+RKmJ2UQTpiDTmsinsVrqz63mWWieF5t
- LQC/vS+SOY+UrzkcSovg004CCwzTAj46hBbJSwA32BlYzlMVxPqxgqW1Xhg54G0XBcf2IHqu/
- zZn1+zK7ZrRSBrsgJo57oigccoB6MHw/FNgksA2U+cL6ldhHBFN3Iu+m9LWLAXvZERH8Vh1uE
- zjm//OjvK3jx7yleOJzFJQ+kGMIZQa3YJPODKkEGEjV0qL8KITPBBeSE4se9E9tZsj06fU9YN
- 6eza24aiyWFLFavYC2wWkXPLlmcpbHylqs47h1Bz52KCFqXeeOGfR+IHh/zoQc+M9KRjzz98X
- me8wjJMFadT04cmDBzw49KIu7+FH7gKbKv3pa19NnVAkLUuN7HetVPglu06d+hRoWCKGjm84H
- Wv4xw+0el7hTVItfG3+clFBZbX/+bTCHNZsLEVGH9/+2JP9Lz7AiaoVieOioMz+cCueFGhX5G
- grYBrhX4JL92xL+l8Drag2I24BzB4K4Whm87+joEaTJO46je8XEAwLysVjU0YHso2qZp8EFYg
- m34p0hiR9W4KwMCAbUJikDdkEdJiutAfLUdEIPGUXRbmKKcyOcnwsuvvgpok9jrB86jZl8QeN
- 9A1miS75atnJC5ol0wZLqUO+9QzZHeyPXmtFqFxdCZQq1/mRGeSdqrqCzveReNRiAy/QnAkV5
- U6lW6VTccHtqWRe1wR+kduMwOyJZP4lTZWZWJpMamAerOp5lTVH5nOMyvs4qorwY7VKirtO21
- UplndcQVesUxucbcTM4/Fr7O4IbNU5/7+2/eFlKa9rYl0ih+JUlHpMsKS1DgjT56zqubtrvFv
- fUeXrpUrKsyPHt1LcBYIPN39i4DIsZpub+w6hgiLJPdLvobzEy/AySXi7++xPs4O6kQDolWS4
- ArAXW/2CubCxValQDnrN48lr0vvh88p9IDlYGB+bB33pAn7To2XEIwdHBC39RHSGkhEet0VJ7
- 5yKLEOA2Xvk4YWgE9DpLlCMILEsI7jfGiD3Ye7KaCkVFYkhZCyy0ycGmg==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7379; i=kees@kernel.org; h=from:subject; bh=h6Zg7bnGhZLJl7gzBxEvRrK024ha+iznbtZZpACm6QM=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmVbVEsBUWRs14v3rd2ZcSn8mMh7T+55X5XTfK6NfVtU nnon9hnHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPx6WT4n2zhIJZwQbqtV2mf gj9/g5L3r9WHjHc+Olf9QXTtxJXKZYwMuypdt881O3ZGS1GRa0Flo/olSxb117FqYnc5ylXOiL1 mAwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Am 12.07.25 um 14:54 schrieb ALOK TIWARI:
+When KCOV is enabled all functions get instrumented, unless the
+__no_sanitize_coverage attribute is used. To prepare for
+__no_sanitize_coverage being applied to __init functions, we have to
+handle differences in how GCC's inline optimizations get resolved. For
+x86 this means forcing several functions to be inline with
+__always_inline.
 
-> On 7/12/2025 4:53 PM, Armin Wolf wrote:
->> Add documentation for admins regarding Uniwill laptops. This should
->> help users to setup the uniwill-laptop and uniwill-wmi drivers, which
->> sadly cannot be loaded automatically.
->>
->> Reported-by: cyear <chumuzero@gmail.com>
->> Closes:=20
->> https://urldefense.com/v3/__https://github.com/lm-sensors/lm-sensors/is=
-sues/508__;!!ACWV5N9M2RV99hQ!MfQKq-XQLt4Lj_zRVzpbw1q-Y2RgiAMwHHbA8oE3H1FH_=
-iL99Vb9H29zjLtdHf1xmTUNkT6ZM-xUiZmfJew$
->> Closes:=20
->> https://urldefense.com/v3/__https://github.com/Wer-Wolf/uniwill-laptop/=
-issues/3__;!!ACWV5N9M2RV99hQ!MfQKq-XQLt4Lj_zRVzpbw1q-Y2RgiAMwHHbA8oE3H1FH_=
-iL99Vb9H29zjLtdHf1xmTUNkT6ZM-xU2Vmgr2k$
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->> =C2=A0 Documentation/admin-guide/laptops/index.rst=C2=A0=C2=A0 |=C2=A0 =
-1 +
->> =C2=A0 .../admin-guide/laptops/uniwill-laptop.rst=C2=A0=C2=A0=C2=A0 | 6=
-8 +++++++++++++++++++
->> =C2=A0 MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 1 +
->> =C2=A0 3 files changed, 70 insertions(+)
->> =C2=A0 create mode 100644=20
->> Documentation/admin-guide/laptops/uniwill-laptop.rst
->>
->> diff --git a/Documentation/admin-guide/laptops/index.rst=20
->> b/Documentation/admin-guide/laptops/index.rst
->> index db842b629303..6432c251dc95 100644
->> --- a/Documentation/admin-guide/laptops/index.rst
->> +++ b/Documentation/admin-guide/laptops/index.rst
->> @@ -17,3 +17,4 @@ Laptop Drivers
->> =C2=A0=C2=A0=C2=A0=C2=A0 sonypi
->> =C2=A0=C2=A0=C2=A0=C2=A0 thinkpad-acpi
->> =C2=A0=C2=A0=C2=A0=C2=A0 toshiba_haps
->> +=C2=A0=C2=A0 uniwill-laptop
->> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst=20
->> b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->> new file mode 100644
->> index 000000000000..29f6ee88063b
->> --- /dev/null
->> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->> @@ -0,0 +1,68 @@
->> +.. SPDX-License-Identifier: GPL-2.0+
->> +
->> +Uniwill laptop extra features
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
->> +
->> +On laptops manufactured by Uniwill (either directly or as ODM), the=20
->> ``uniwill-laptop`` and
->> +``uniwill-wmi`` driver both handle various platform-specific features.
->> +However due to a design flaw in the underlying firmware interface,=20
->> both drivers might need
->
-> might need or may need (optional)
->
->> +to be loaded manually on some devices.
->> +
->> +.. warning:: Not all devices supporting the firmware interface will=20
->> necessarily support those
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 drivers, please be careful.
->> +
->> +Module Loading
->> +--------------
->> +
->> +The ``uniwill-laptop`` driver relies on a DMI table to automatically=
-=20
->> load on supported devices.
->> +When using the ``force`` module parameter, this DMI check will be=20
->> omitted, allowing the driver
->> +to be loaded on unsupported devices for testing purposes.
->> +
->> +The ``uniwill-wmi`` driver always needs to be loaded manually.=20
->> However the ``uniwill-laptop``
->> +driver will automatically load it as a dependency.
->> +
->> +Hotkeys
->> +-------
->> +
->> +Usually the FN keys work without a special driver. However as soon=20
->> as the ``uniwill-laptop`` driver
->> +is loaded, the FN keys need to be handled manually. This is done by=20
->> the ``uniwill-wmi`` driver.
->> +
->> +Keyboard settings
->> +-----------------
->> +
->> +The ``uniwill-laptop`` driver allows the user to enable/disable:
->> +
->> + - the FN and super key lock functionality of the integrated keyboard
->> + - the touchpad toggle functionality of the integrated touchpad
->> +
->> +See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
->> +
->> +Hwmon interface
->> +---------------
->> +
->> +The ``uniwill-laptop`` driver supports reading of the CPU and GPU=20
->> temperature and supports up to
->> +two fans. Userspace applications can access sensor readings over the=
-=20
->> hwmon sysfs interface.
->> +
->> +Platform profile
->> +----------------
->> +
->> +Support for changing the platform performance mode is currently not=20
->> implemented.
->> +
->> +Battery Charging Control
->> +------------------------
->> +
->> +The ``uniwill-laptop`` driver supports controlling the battery=20
->> charge limit. This happens over
->> +the standard ``charge_control_end_threshold`` power supply sysfs=20
->> attribute. All values
->> +between 1 and 100 percent are supported.
->> +
->> +Additionally the driver signals the presence of battery charging=20
->> issues thru the standard ``health``
->
-> thru -> through
->
-Will fix.
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: <x86@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Michal Wilczynski <michal.wilczynski@intel.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Roger Pau Monne <roger.pau@citrix.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Usama Arif <usama.arif@bytedance.com>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Thomas Huth <thuth@redhat.com>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: <kvm@vger.kernel.org>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>
+Cc: <platform-driver-x86@vger.kernel.org>
+Cc: <linux-acpi@vger.kernel.org>
+Cc: <linux-trace-kernel@vger.kernel.org>
+Cc: <linux-efi@vger.kernel.org>
+Cc: <linux-mm@kvack.org>
+---
+ arch/x86/include/asm/acpi.h     | 4 ++--
+ arch/x86/include/asm/realmode.h | 2 +-
+ include/linux/acpi.h            | 4 ++--
+ include/linux/bootconfig.h      | 2 +-
+ include/linux/efi.h             | 2 +-
+ include/linux/memblock.h        | 2 +-
+ include/linux/smp.h             | 2 +-
+ arch/x86/kernel/kvm.c           | 2 +-
+ arch/x86/mm/init_64.c           | 2 +-
+ kernel/kexec_handover.c         | 4 ++--
+ 10 files changed, 13 insertions(+), 13 deletions(-)
 
-Thanks,
-Armin Wolf
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index 5ab1a4598d00..a03aa6f999d1 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -158,13 +158,13 @@ static inline bool acpi_has_cpu_in_madt(void)
+ }
+ 
+ #define ACPI_HAVE_ARCH_SET_ROOT_POINTER
+-static inline void acpi_arch_set_root_pointer(u64 addr)
++static __always_inline void acpi_arch_set_root_pointer(u64 addr)
+ {
+ 	x86_init.acpi.set_root_pointer(addr);
+ }
+ 
+ #define ACPI_HAVE_ARCH_GET_ROOT_POINTER
+-static inline u64 acpi_arch_get_root_pointer(void)
++static __always_inline u64 acpi_arch_get_root_pointer(void)
+ {
+ 	return x86_init.acpi.get_root_pointer();
+ }
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index f607081a022a..e406a1e92c63 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -78,7 +78,7 @@ extern unsigned char secondary_startup_64[];
+ extern unsigned char secondary_startup_64_no_verify[];
+ #endif
+ 
+-static inline size_t real_mode_size_needed(void)
++static __always_inline size_t real_mode_size_needed(void)
+ {
+ 	if (real_mode_header)
+ 		return 0;	/* already allocated. */
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 71e692f95290..1c5bb1e887cd 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -759,13 +759,13 @@ int acpi_arch_timer_mem_init(struct arch_timer_mem *timer_mem, int *timer_count)
+ #endif
+ 
+ #ifndef ACPI_HAVE_ARCH_SET_ROOT_POINTER
+-static inline void acpi_arch_set_root_pointer(u64 addr)
++static __always_inline void acpi_arch_set_root_pointer(u64 addr)
+ {
+ }
+ #endif
+ 
+ #ifndef ACPI_HAVE_ARCH_GET_ROOT_POINTER
+-static inline u64 acpi_arch_get_root_pointer(void)
++static __always_inline u64 acpi_arch_get_root_pointer(void)
+ {
+ 	return 0;
+ }
+diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+index 3f4b4ac527ca..25df9260d206 100644
+--- a/include/linux/bootconfig.h
++++ b/include/linux/bootconfig.h
+@@ -290,7 +290,7 @@ int __init xbc_get_info(int *node_size, size_t *data_size);
+ /* XBC cleanup data structures */
+ void __init _xbc_exit(bool early);
+ 
+-static inline void xbc_exit(void)
++static __always_inline void xbc_exit(void)
+ {
+ 	_xbc_exit(false);
+ }
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 7d63d1d75f22..e3776d9cad07 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1334,7 +1334,7 @@ struct linux_efi_initrd {
+ 
+ bool xen_efi_config_table_is_usable(const efi_guid_t *guid, unsigned long table);
+ 
+-static inline
++static __always_inline
+ bool efi_config_table_is_usable(const efi_guid_t *guid, unsigned long table)
+ {
+ 	if (!IS_ENABLED(CONFIG_XEN_EFI))
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index bb19a2534224..b96746376e17 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+ 					  NUMA_NO_NODE);
+ }
+ 
+-static inline void *memblock_alloc_from(phys_addr_t size,
++static __always_inline void *memblock_alloc_from(phys_addr_t size,
+ 						phys_addr_t align,
+ 						phys_addr_t min_addr)
+ {
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index bea8d2826e09..18e9c918325e 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -221,7 +221,7 @@ static inline void wake_up_all_idle_cpus(void) {  }
+ 
+ #ifdef CONFIG_UP_LATE_INIT
+ extern void __init up_late_init(void);
+-static inline void smp_init(void) { up_late_init(); }
++static __always_inline void smp_init(void) { up_late_init(); }
+ #else
+ static inline void smp_init(void) { }
+ #endif
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 921c1c783bc1..8ae750cde0c6 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -420,7 +420,7 @@ static u64 kvm_steal_clock(int cpu)
+ 	return steal;
+ }
+ 
+-static inline void __set_percpu_decrypted(void *ptr, unsigned long size)
++static inline __init void __set_percpu_decrypted(void *ptr, unsigned long size)
+ {
+ 	early_set_memory_decrypted((unsigned long) ptr, size);
+ }
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index fdb6cab524f0..76e33bd7c556 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -805,7 +805,7 @@ kernel_physical_mapping_change(unsigned long paddr_start,
+ }
+ 
+ #ifndef CONFIG_NUMA
+-static inline void x86_numa_init(void)
++static __always_inline void x86_numa_init(void)
+ {
+ 	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+ }
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 49634cc3fb43..e49743ae52c5 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -310,8 +310,8 @@ static int kho_mem_serialize(struct kho_serialization *ser)
+ 	return -ENOMEM;
+ }
+ 
+-static void deserialize_bitmap(unsigned int order,
+-			       struct khoser_mem_bitmap_ptr *elm)
++static void __init deserialize_bitmap(unsigned int order,
++				      struct khoser_mem_bitmap_ptr *elm)
+ {
+ 	struct kho_mem_phys_bits *bitmap = KHOSER_LOAD_PTR(elm->bitmap);
+ 	unsigned long bit;
+-- 
+2.34.1
 
->> +power supply sysfs attribute.
->> +
->> +Lightbar
->> +--------
->> +
->> +The ``uniwill-laptop`` driver exposes the lightbar found on some=20
->> models as a standard multicolor
->> +LED class device. The default name of this LED class device is=20
->> ``uniwill:multicolor:status``.
->> +
->> +See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for=20
->> details on how to control the various
->> +animation modes of the lightbar.
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 3efec7a99262..fe302a610fe6 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -25495,6 +25495,7 @@ M:=C2=A0=C2=A0=C2=A0 Armin Wolf <W_Armin@gmx.de=
->
->> =C2=A0 L:=C2=A0=C2=A0=C2=A0 platform-driver-x86@vger.kernel.org
->> =C2=A0 S:=C2=A0=C2=A0=C2=A0 Maintained
->> =C2=A0 F:=C2=A0=C2=A0=C2=A0 Documentation/ABI/testing/sysfs-driver-uniw=
-ill-laptop
->> +F:=C2=A0=C2=A0=C2=A0 Documentation/admin-guide/laptops/uniwill-laptop.=
-rst
->> =C2=A0 F:=C2=A0=C2=A0=C2=A0 Documentation/wmi/devices/uniwill-laptop.rs=
-t
->> =C2=A0 F:=C2=A0=C2=A0=C2=A0 drivers/platform/x86/uniwill/uniwill-laptop=
-.c
->
-> Thanks,
-> Alok
->
