@@ -1,120 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D450EEDE;
-	Fri, 18 Jul 2025 08:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3020E2E6D0A;
+	Fri, 18 Jul 2025 16:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752827814; cv=none; b=eyntYJaOy4gIbuISg5O630Y3+5gvaeJoIPU5cSsM1zFktkufsRKTpjqpx2pgpt+IPwN7XBU8WWtLt0tmjLElX0aObU4eKT+vhvg5ZmeV+wp+xWFYOduL2bGAPGrdT5VPR/k8Tp5GEKT31wuC57UESjfPK1YoN/M9qoGuEDP9WlU=
+	t=1752856765; cv=none; b=eskaiofJi0+lxvY6K31ZHokzanHunZnGhfcgp4enbiN+gf0Lo0EyEbQthWj4ZdmV2yn9S6dpaM80dxexJwV9sSHyUCtmvuXEJw7G4NZnlq+iaZzqxqvGzD+qSirPAYIc0MBORvRiCXj1lxIfs1a1GP2mVkFPHuRpVBTWTCMWyDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752827814; c=relaxed/simple;
-	bh=HL/2nr+vhFKcEcF58riyFRNQttwiCB/9fGbm+q71Dgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+ghDL96vtdztCGorIA7DWIOOdf3DXo+Wqg5kLolqXr6ayiQzjOmRia/r8q4X1I14CjPThK4ekcYbFzW8537oqCW9rsqJ8wtvZcqT91ucl1IZaajfkMJtQqhTCr7hJw42ia2cDlSM1WIbLcEyX3ka6/I+xVulGxVk8ujaDDQRhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmH8kuFD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752856765; c=relaxed/simple;
+	bh=+UBQRYw3W/UWgB2uiLYbjsD6CgO4qG9xOCRwwLiNDD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uiAb99B1obT0d1TLG/ls211iAgIGBB1sGndWzcqUby/u62BjxMMnuvj82dn4Hq4jdYutrCvJlxk20ZZM0omqq9jbRU1qWpJODFA8kUKMStvE3bs62D1dbWvK1CmTdkM6HPOABzjh+W6y0dWFtqx2Zzq/pFC5HfJU/urccpGGZ4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=k2xjDQaR; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmH8kuFD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E585C4CEEB;
-	Fri, 18 Jul 2025 08:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752827813;
-	bh=HL/2nr+vhFKcEcF58riyFRNQttwiCB/9fGbm+q71Dgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GmH8kuFDP69wLkOjDvdpYL8g4oErm+tCxzSYFjNficaE3yVU2VDi2CVybyh3k2vzL
-	 ktrs4o3SmHh9+Ti01m0+zENfWaUVs3rPEOFccIDJ8JzUuMBm7vzDhfYqgJjGzyUfX2
-	 tzprzSBZDHn6R6ZCy1S+ooHnVTZn0aRQWwJVACdL/lb02WuONW5CmJoAQ+l6IEgvXV
-	 YUoaFOXIVofvTGsxJhTxgxblsj38dHI42GL2cErPbWSgZ0WyDVaDQIEbTqk0zRmB/4
-	 6UGfFtVoeLA7gIVsJdymOjI/f87nJMUh+D/2j397DUryS3KRRsJ57CDJHeSOO9dNdu
-	 VnRo0rjVmoxGg==
-Date: Fri, 18 Jul 2025 11:36:32 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="k2xjDQaR"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 98ACC46F5D;
+	Fri, 18 Jul 2025 19:33:13 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id DBE0D461DF;
+	Fri, 18 Jul 2025 19:33:12 +0300 (EEST)
+Received: from antheas-z13 (x5996a89a.customers.hiper-net.dk [89.150.168.154])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 05C081FDA75;
+	Fri, 18 Jul 2025 19:33:11 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1752856392;
+	bh=rnsrsU9mk7kUkH23FzGwLOYEs3ZCpDGe5WOtpS909xY=; h=From:To:Subject;
+	b=k2xjDQaRbXPIX1OI9QGOtQ7HpR/Qqv4eXCBPwmktWu1AnUnzA7H1E9+ais3wDNijs
+	 Pb4/nhTHhavix2P/lTTV4GEalJ4d8hGJTnL0Q0ycN9e6KVGv9fY2FKV09jrv95+Mvx
+	 LXRU/gTuyommKzcD20HXnSRmK/KjpN8wD6sA6UZhIZbdzFQ6jWzZJ4DN/Q2ojT1sN2
+	 geD1TCcMdu0qRVlC9TNUNmRMZRc3tkoES4dSaFQGfsFew2lHIEV3c1h3fZdNytHDnW
+	 zmqUH9Vp4aaHfYNZC7qWzr+tVZCV8xep6m3ProfpRA1MEW1frT1S78z37dA/SbIK7z
+	 8FE/zmzaj0SyQ==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 89.150.168.154) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aHoHkDvvp4AHIzU1@kernel.org>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Eileen <eileen@one-netbook.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 2/2] platform/x86: oxpec: Add support for OneXPlayer X1
+ Mini Pro (Strix Point)
+Date: Fri, 18 Jul 2025 18:33:05 +0200
+Message-ID: <20250718163305.159232-2-lkml@antheas.dev>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250718163305.159232-1-lkml@antheas.dev>
+References: <20250718163305.159232-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250717232519.2984886-4-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <175285639246.3276370.3961436218321101426@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.0.9 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Hi Kees,
+The OneXPlayer X1 Mini Pro (which is the Strix Point variant of the Mini)
+uses the same registers as the X1 Mini, so re-use the quirk.
 
-On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> When KCOV is enabled all functions get instrumented, unless the
-> __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved. For
-> x86 this means forcing several functions to be inline with
-> __always_inline.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/oxpec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-...
-
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index bb19a2534224..b96746376e17 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
->  					  NUMA_NO_NODE);
->  }
->  
-> -static inline void *memblock_alloc_from(phys_addr_t size,
-> +static __always_inline void *memblock_alloc_from(phys_addr_t size,
->  						phys_addr_t align,
->  						phys_addr_t min_addr)
-
-I'm curious why from all memblock_alloc* wrappers this is the only one that
-needs to be __always_inline?
-
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 9839e8cb82ce..eb076bb4099b 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -292,6 +292,13 @@ static const struct dmi_system_id dmi_table[] = {
+ 		},
+ 		.driver_data = (void *)oxp_x1,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Mini Pro"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
 -- 
-Sincerely yours,
-Mike.
+2.50.1
+
+
