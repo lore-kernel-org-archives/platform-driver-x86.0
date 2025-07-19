@@ -1,150 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-05.mail-europe.com (mail-05.mail-europe.com [85.9.206.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D2D224AFB;
-	Fri, 18 Jul 2025 22:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D7A14F98
+	for <platform-driver-x86@vger.kernel.org>; Sat, 19 Jul 2025 20:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.206.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752879089; cv=none; b=S3MILflS8Cf19q+M1ugUM9nr3hCErwhnmRs4Qeh2HM2Uy7IPGii8uqPCudEWjUEtX34LZYs8qH0Je5AYBSPGWhdV7Dv74trvZCru2ggaDKIwSKz1pXODf+sM16Hfs8Im8guWp4c7ereH5PUKWbcy3d1LTGyZZCKapX9NeBORdq0=
+	t=1752956393; cv=none; b=OQ/nSN6JbXa+pT4pt+FrICi1nwvFpbXHj+8D61wlweT5xHEuT2C1DqbvtCn8nEN/pvPrQAp7IBU3cjkLJZEiUd19l6P4AznoZEKYfJmDWsd3RIDzgJEJhxeP85KGAirAI13EjqV3vW4aW5aSeDExYYOwSoc2HVlhf62paMZGgSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752879089; c=relaxed/simple;
-	bh=9wq1gPYvCplHPaY4Wm5XgoLMe+aODde2O7VcmHcmk98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPLgdyUatVim0CECah6F4FPsKF/Ls5gb4V26IYBlQ1t173MdwVyCoWuoCPsOvoYdTionaiaKpw/1zEypEwH8hQ3ac8ZeL+s+ZrJ3IowNbuL9fEz1xfQN0oSbLJgtdU8JIsb0nKL4BcNLpdplupJAQ+SQ37o8H60Ag8plhzcuNkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmiVcikE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmiVcikE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0591C4CEF1;
-	Fri, 18 Jul 2025 22:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752879088;
-	bh=9wq1gPYvCplHPaY4Wm5XgoLMe+aODde2O7VcmHcmk98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VmiVcikElcqZk72BFs7/zWioNVg/RlBsEZTqUIs6HsScTtVwOS6j7B3ua7R/5a+8f
-	 B/Xx/QRZM/EQh/lO2RicrfWNUj4TspYI7v5C1esxaGnMy5qNgSFrlaLuHCW1KuRQE/
-	 vwjy0/1yadEDESYc6Jup2r2d1g6hRKk98N3uI9FiR3pIjtw/6N8d9/1A9DF/kI7Ptp
-	 /KtF2y8xo3+DKYzmZGh9ileKlyQIK4tsMmB+vc1VQguKTRnI0Md6sJRL9kCLGWssqH
-	 x60/sDs7wvwXbxMyYV4GlknlF8akcqkSZPz9pRU1nNtV+O7XtlJK1/hNvPy3K6SwqK
-	 vqLjSPHvQBQpQ==
-Date: Fri, 18 Jul 2025 15:51:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>, Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <202507181541.B8CFAC7E@keescook>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org>
+	s=arc-20240116; t=1752956393; c=relaxed/simple;
+	bh=WXGaLWW64jzTdsfrBeffgb/mP86/ZZBG06qzXoVpX3k=;
+	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZmTRuVLGTemH4z1mKPQC/CFtYmYqUybWVCP2lN7fSQN4JLMlWsuVUs0OgGwwrn904mLHkJ+PhIPZpukxhIyun7hQ5zEW6+3rteHhbqPCOwaRAu1Ff08n7isxAxxqI7MwCW0UU7axsNIo+vBF9UX4Jd4flMuINX5QskyRl7Ec0fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=85.9.206.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
+Date: Sat, 19 Jul 2025 20:19:25 +0000
+To: Zhang Rui <rui.zhang@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "rb_eddie@gmx.de" <rb_eddie@gmx.de>
+From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
+Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
+Message-ID: <tZDJlprhLriFb89pD_hEuI9r5MWf8J43NSBBtSwijh3tXJUCrr0TJxKw3nR3_YvAbvnyxdNP6hktgiEQdQmNH2vv_fFyqbwzWf8gd6w91EM=@benis.se>
+In-Reply-To: <4d0e07edfa83653fa8330e08fb4520f07bb38448.camel@intel.com>
+References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <3b25e59bc1b162ee8f43ffbd3c50589a52d540af.camel@intel.com> <rFJU7KbF6iq0CxJtSjPu4vLVjWata5hY1Kl-wOv253p0C2W7egJQQrkUnkSqmr1vXDXeTwwtwp0u5ZnQU6pZmPuJ7TnNBVgudMG-q5MRHyM=@benis.se> <c6Eep72y6E7gc-wUMdcIS9JfNN1_OBjlwGUrd4yGvp2R-PW2-OOoQngQt5H5kiZIccxFAPswaN9G6wVpHuewtoEvUkT52UCzHPibVJh7iYY=@benis.se> <65f3a229f70279ab0da7efa878b863c7798d4427.camel@intel.com> <uWQ7r_hhvTbLE0QDEfkt_V2Mf39SRnexnRQCZ8lrUv3hDKfAK1jpr5AeVug8wBfz3cDhu-bYnx9zvCoU5Ch-AMaVlQHwqPmZgn3a4OMRek8=@benis.se> <1e02c8f28200d8e3f27589e0ba75a67f2e99d1a4.camel@intel.com> <Hsi54U41U6V6LB65SJ9b8D_q4OsW-xsvWJSQmvmxo7EfsebwJKc6NnNHLO20CerbcNGL-Q8huoeWtzNuGsCVNrQvJW8ndwTdnIKZJIDbTjg=@benis.se> <4d0e07edfa83653fa8330e08fb4520f07bb38448.camel@intel.com>
+Feedback-ID: 18592338:user:proton
+X-Pm-Message-ID: 69d4b90795fe5b0dd2d47bf3bcd656ef37927bec
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aHoHkDvvp4AHIzU1@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> Hi Kees,
-> 
-> On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > When KCOV is enabled all functions get instrumented, unless the
-> > __no_sanitize_coverage attribute is used. To prepare for
-> > __no_sanitize_coverage being applied to __init functions, we have to
-> > handle differences in how GCC's inline optimizations get resolved. For
-> > x86 this means forcing several functions to be inline with
-> > __always_inline.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> ...
-> 
-> > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > index bb19a2534224..b96746376e17 100644
-> > --- a/include/linux/memblock.h
-> > +++ b/include/linux/memblock.h
-> > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> >  					  NUMA_NO_NODE);
-> >  }
-> >  
-> > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> >  						phys_addr_t align,
-> >  						phys_addr_t min_addr)
-> 
-> I'm curious why from all memblock_alloc* wrappers this is the only one that
-> needs to be __always_inline?
 
-Thread-merge[1], adding Will Deacon, who was kind of asking the same
-question.
 
-Based on what I can tell, GCC has kind of fragile inlining logic, in the
-sense that it can change whether or not it inlines something based on
-optimizations. It looks like the kcov instrumentation being added (or in
-this case, removed) from a function changes the optimization results,
-and some functions marked "inline" are _not_ inlined. In that case, we end up
-with __init code calling a function not marked __init, and we get the
-build warnings I'm trying to eliminate.
 
-So, to Will's comment, yes, the problem is somewhat fragile (though
-using either __always_inline or __init will deterministically solve it).
-We've tripped over this before with GCC and the solution has usually
-been to just use __always_inline and move on.
 
-For memblock_alloc*, it appears to be that the heuristic GCC uses
-resulted in only memblock_alloc_from() being a problem in this case. I
-can certainly mark them all as __always_inline if that is preferred.
+Best regards,
+Benjamin Hasselgren-Hall=C3=A9n
 
-Some maintainers have wanted things marked __init, some have wanted
-__always_inline. I opted for __always_inline since that was basically
-the intent of marking a function "inline" in the first place. I am happy
-to do whatever. :)
 
--Kees
+On Thursday, 17 July 2025 at 03:15, Zhang, Rui <rui.zhang@intel.com> wrote:
 
-[1] https://lore.kernel.org/lkml/aHouXI5-tyQw78Ht@willie-the-truck/
+> On Mon, 2025-07-07 at 19:55 +0000, Benjamin Hasselgren-Hall=C3=A9n wrote:
+>=20
+> > Best regards,
+> > Benjamin Hasselgren-Hall=C3=A9n
+> >=20
+> > On Wednesday, 2 July 2025 at 10:00, Zhang, Rui rui.zhang@intel.com
+> > wrote:
+> >=20
+> > > Remove the list as I want to grab more details.
+> > >=20
+> > > On Tue, 2025-07-01 at 07:44 +0000, Benjamin Hasselgren-Hall=C3=A9n wr=
+ote:
+> > >=20
+> > > > with thermald
+> > > > https://drive.benis.se/s/bF5AfDGBw6DFNZt
+> > > >=20
+> > > > without thermald
+> > > > https://drive.benis.se/s/47xJdg33ayHerDF
+> > >=20
+> > > There is no much difference, which is expected.
+> > >=20
+> > > > journald
+> > > > https://drive.benis.se/s/8JdDJG2bFbHeDmz
+> > >=20
+> > > The log doesn't have anything useful.
+> > > It shows your last launch of thermald failed
+> > >=20
+> > > Jul 01 09:38:36 computer thermald[10950]: Couldn't get lock file
+> > > 10950
+> > > Jul 01 09:38:36 computer thermald[10950]: An instance of thermald is
+> > > already running, exiting ...
+> > >=20
+> > > BTW, when do you start to hear the fan spinning? upon changing
+> > > platform
+> > > profile? upon launching thermald?
+> > > is there anyway to figure out what fan device brings this noise?
+> >=20
+> > I can get the fans starting by activating performance and do any work
+> > more or less.
+> >=20
+> > I have thermald enabled all the time now. I think that as long as I
+> > don't have the fans active while suspending - it's fine.
+>=20
+>=20
+> Now I'm confused.
+> The fan issue is related via platform profile or thermald?
+>=20
+> say, after a refresh boot, does the fan spin during suspend when
+> 1. thermald is NOT activated and platform profile is NOT changed?
+> 2. thermald is NOT activated and platform profile is changed?
+> 3. thermald is activated and platform profile is NOT changed?
+> 4. thermald is activated and platform profile is changed?
+>=20
+> Or, what change does it make by switching platform profile only?
+> what change does it make by activating thermald only?
 
--- 
-Kees Cook
+The combination of thermald + running the fan while suspending keeps the fa=
+n running. Dunno for how long (if it's for ever or just for a while).
+
+However, thermald helps a bit but the system still under performance quite =
+a lot.=20
+
+I am regulary trying latest kernel + latest linux-firmware but no changes.=
+=20
+
+Anything else we can do?=20
+
+>=20
+>=20
+> thanks,
+> rui
