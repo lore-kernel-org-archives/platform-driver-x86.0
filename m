@@ -1,66 +1,41 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD14238C3D;
-	Sun, 20 Jul 2025 10:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032F212CDA5;
+	Sun, 20 Jul 2025 23:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753009128; cv=none; b=o1BYmLR7u4odTqGaKSy4PEOR79pTrjap/aPN2PkT/0XThQy5twvS7iPUi9Jlj0PP4xXZTe5WTpRM7xHzN+5HdXF0Np0V6+jGCTiGikgDqEr50FLS5kbS5A8/gKl3wYN1Rq96zKMGRohMJwRgl/ZzTVd6zAgkS0Zfmolt76yFtec=
+	t=1753053442; cv=none; b=AOrYZsrz2LSOBySyQsyBkXEt5eSHkvwspiPKgZyvlYr7YXoPTLurKD8yRh7OD4+StlyQ+pp32EVdjxzq2ElrSVr93M57tnQKbgkTlpfF1MTtTt8o5fQ+FujMQ66DUH+erfinsjbmOng1ilqVXF+c06MN1DToTcP1VykJ8KCCtfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753009128; c=relaxed/simple;
-	bh=9ptC9Oay+7k5YUyyg7+s52P+/MPYZ/5s9RwW2MPvLR0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=F5KaADGSnWFGqGyTBe57eUB2gxUnDqW026DEVNNdYwFs529VWXDu3Z2CdCKUDX4jNBitQuRYhRuljGuMYPii5/wUDD6PiBmnSz4kN1oHW8PUuy9XrY5eQVdj+w17GbD/DC9luBVvqk1VdfXFBozv2ub+HkVEkSzAe1rgHQQVyRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdFSrr1Z; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753053442; c=relaxed/simple;
+	bh=jX6VfLTUwab4NIGju/tbC3wwTlUY5p4UZMirdG+//qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=P45tUQMiWsrCAcdikeRZzhJET8kijdiPPFQuaSwEdCFs1varLxCKckQwa7AOltGzyNLbJzsHzcBJfVK15v+S7ZZ7w5mvOojr5+V3JNoGbTsRxGnILyi2Y1u7ulC/Ih9NQgilS3l0PYXdq1XYO8cEx+D+myaKgZ1DMlIcv2m42vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=iN6YQqyB; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdFSrr1Z"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-556373661aaso2950321e87.2;
-        Sun, 20 Jul 2025 03:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753009122; x=1753613922; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:content-language:references:to:from:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ptC9Oay+7k5YUyyg7+s52P+/MPYZ/5s9RwW2MPvLR0=;
-        b=SdFSrr1ZjiBMIP/0V2zwbGXIn+NIoBOb2MjLNgcm9xgCuPbH9HF2ZjSI8SvY53VgOC
-         XT4pc/vIB4fEC5DfjWeeH/tKSpQC1pADnXj0majp+yJLaCm4U2ujBGkAbrmNayPIMv5R
-         wt7xm5s+4FqlZ1+WG8iYjq2/F1xuUqKxyeZQstsLyjDD+I2TaPPupJJgEyl6Jmsg+lUp
-         stp9H31/rKW9jqBwK2QKuLBGN1HbhnieBSkiDt+QqmS4l+2l0u2AazPv5ckB852ookPU
-         9CcqeQ7pMPtu12KfQX76ffNY408ffV7IbGNQzvnVJrlyZohrK51UkVl/YYgg2AXOQ1z+
-         j+JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753009122; x=1753613922;
-        h=in-reply-to:autocrypt:content-language:references:to:from:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9ptC9Oay+7k5YUyyg7+s52P+/MPYZ/5s9RwW2MPvLR0=;
-        b=H5YkMq1uP2EvIvc1CYMCu6/XeZPNDTn1laTGAOc+7VeDdTGb1RXBEhdP/g3J+X6127
-         74XqJDYt1XkugHWjjDxopViGwHMDM/974frIonYRfLnEWFQKP6BWcgdnR7wIl1dhnJW2
-         WC3Qu39cCD6VrynaixijYAaUGielL5M2EaPnZvnZFDttAMmhTuOo8DNM53bmXogtTk5K
-         4S0272BCrGQXmWhW8CHURBGYPSA7CsGWxNbADFfEVd1c7M00rPbqrZuAzhKHHPXZJzsa
-         ulkNxEH2vtYdC8W0rAcfxzmX+9bAUAvl4K1jqbU/3ZUOK79Xq8WUkZARoKkMu9zrIo4W
-         idBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBnrYTFbsxbdTyAdzSN7VBAIrQ0UeQPmx3zIZq1QsjFUfoBZ2MlLB6bMnpf7ZY5jCy9lhCfbqfRHRm4Q==@vger.kernel.org, AJvYcCVGh1vjW+lKMnBknE/EK1bEQ6sbX7c/yZNzdQLSYJqosS5L6DXUMjB55jbEowUYpa0Q0YRueW+eichE1fw7a7vwbogykw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxWCug2ZeKCcUb3nBvu2crAGwYTWAw2iKlhjA436Jz/AR2zxR7
-	fp0ZF9ht+PRNjATaePs2N7Yc+jTIBAtCFPMPFEvOpzQMVG1oAuqksmIJLX8YW8Eufh4aLAyA
-X-Gm-Gg: ASbGncuq3iA4bey0YkH33BvgoYOL9g25YESef/nqA4P29HrxBXeYeeL9wX2wQHWPr12
-	LHnnDVtIsMCy/nFGfIAqbeq1mEpFAYTODVt8CBv4iVR62+VnJc/UlqrvVYibGokmdP+NsVF0rBf
-	IaAOBAp0MxeVbOz+rlbO8CS2M3metcJuby8oUHWtszkCNoiVtmc5NQtRzNEdefFf7TThjjUsugd
-	2+L8ZV+NiRX1yIdgdtifP//4eourBo5UCFU+K34Vv23CmhvbJtaSfIVUhMp3ZsmaIyqJo4k9IHX
-	gBl9wL99tTRahwTDWgMxp3hVCCh5ArGc5m+hQl1JwDo0oE1niHfh/bmwXi49lAoMeQIe6BKST7d
-	mRQ/N6X/LFKlnm8f3ejSDXntod3ujzRS60OgmEOJTDZps/7e5km+hex6VRtknJAzFPbS0EQZ4I+
-	bzkGA=
-X-Google-Smtp-Source: AGHT+IGmz5QJsafo95dE2Ss2O5KXN7/avbZdVPvzNvXR3sCtmfj82RhavZp6xnsnd+ciUpFKi1cbBQ==
-X-Received: by 2002:a05:6512:31d6:b0:553:af02:78db with SMTP id 2adb3069b0e04-55a23301158mr5372411e87.5.1753009121599;
-        Sun, 20 Jul 2025 03:58:41 -0700 (PDT)
-Received: from [192.168.0.122] (broadband-5-228-80-49.ip.moscow.rt.ru. [5.228.80.49])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55a31da2eedsm1081962e87.187.2025.07.20.03.58.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Jul 2025 03:58:41 -0700 (PDT)
-Message-ID: <08a8e2ad-591c-4f2b-86f5-16ac2df1b17c@gmail.com>
-Date: Sun, 20 Jul 2025 13:58:40 +0300
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="iN6YQqyB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1753053438; x=1753658238; i=w_armin@gmx.de;
+	bh=jX6VfLTUwab4NIGju/tbC3wwTlUY5p4UZMirdG+//qw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=iN6YQqyBeq9L8cQ8OtofINr+h097dkVSHhip0VE2EfrLHiPAM0x1u5ICJL7MYZkR
+	 neraWmVRs1zlec9D0oRtzauOzXO1O8Ft2uCYat7GpqX/VFWku2Lgnr9r7SFdDy0BY
+	 GGKYYubaaYJZnpg4IJXVi5aM39beyUOcWSmnQaQGab/Ivxu+O1CNaonkHqCTJu4D0
+	 0C42vYEqcQNm4DOm7rKYSAs3T8UE3aDavdT6D/4E+sbM/ZIClrbcqfdGFnsUerbHt
+	 q+y6F7IMWn4SIA/p+jgBaKEGdQ5QbbUmEAR1vZCBi+MyOClZrUyaBw01yxWHOlGXu
+	 r/SYxjiXjYv1cvWgYg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N17Ye-1ukoDv35OU-00vnyo; Mon, 21
+ Jul 2025 01:17:17 +0200
+Message-ID: <f485dfb4-0e56-4f12-8c80-68b39ae9a78f@gmx.de>
+Date: Mon, 21 Jul 2025 01:17:16 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,100 +45,87 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Missing ACPI driver for a keyboard button in Xiaomi RedmiBook Pro
  16
-From: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>
-To: linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, linux@weissschuh.net,
- fengwk94@gmail.com
+To: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>,
+ linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux@weissschuh.net, fengwk94@gmail.com
 References: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
-Content-Language: en-US, ru
-Autocrypt: addr=nikita.nikita.krasnov@gmail.com; keydata=
- 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
- sXwISql2dLWvF4EeopUcuqEmcKFKXR+Ifbxj7A==
-In-Reply-To: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------dulKLqqXvU9cpxV9vADseYtR"
+ <08a8e2ad-591c-4f2b-86f5-16ac2df1b17c@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <08a8e2ad-591c-4f2b-86f5-16ac2df1b17c@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:qq1H9WiVraaOXs9X1kGyYhln76fECLmadRwP0kZvtU1BAfosLKf
+ 8om+L2V+r4K/i827A594MmqdEozDurJwMvF5mtHiHsKsKYpSue9ELb8QMT1cC8FpM3/DKV5
+ v3bb2gH2RJikLi52nVY9ipzBoAIJf/8vhJCw2mXPWcPh02MbuLuvdJFa6UoB50Txee4xxnU
+ yP/pRbgaR0gPo8hta5X1A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ngKmhI55xNY=;OwMF1vG87dwdwfTjtOPIYcz/aGi
+ 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
+ YV11M7hnobXo24=
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------dulKLqqXvU9cpxV9vADseYtR
-Content-Type: multipart/mixed; boundary="------------FraTRrDnNE6YhD4WbN9bO8HD";
- protected-headers="v1"
-From: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>
-To: linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, linux@weissschuh.net,
- fengwk94@gmail.com
-Message-ID: <08a8e2ad-591c-4f2b-86f5-16ac2df1b17c@gmail.com>
-Subject: Re: Missing ACPI driver for a keyboard button in Xiaomi RedmiBook Pro
- 16
-References: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
-In-Reply-To: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
+Am 20.07.25 um 12:58 schrieb Nikita Krasnov:
+> I wonder if this should have also been CC'ed to linux-kernel in case
+> there is someone with the same hardware, who might be interested in this
+> (I bet this also affects RedmiBooks 14 an 15).
+>
+> I'm not subscribed to that list, so I'm not really sure what belongs
+> there.
 
---------------FraTRrDnNE6YhD4WbN9bO8HD
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-I wonder if this should have also been CC'ed to linux-kernel in case
-there is someone with the same hardware, who might be interested in this
-(I bet this also affects RedmiBooks 14 an 15).
+its fine to not send a request concerning only the x86 platform driver developers
+the the general linux kernel mailing list.
 
-I'm not subscribed to that list, so I'm not really sure what belongs
-there.
+Thanks,
+Armin Wolf
 
---=20
-Nikita Krasnov
-
---------------FraTRrDnNE6YhD4WbN9bO8HD--
-
---------------dulKLqqXvU9cpxV9vADseYtR
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEEpkOhtFujpzRWyb0a4A5zBMF+d4YFAmh8y+AFAwAAAAAACgkQ4A5zBMF+d4bL
-xBAAqhrthPi9YBc0z4htc+CPmup0E8STwv3eVmqG701iV0x7SyOi36HzlGzXrjy5VKgFvwim3ScL
-LWcHbib8s8UbymB2RZD6rHExDIqeGoROh7n7FU9hGfKY78Qrv1nepOVsSuJul6OUx6DmGZ2dH4LA
-8jUATMu0apTXVZDyieQJJJ5n3HD6DGbdUs6GQ1gyGqNj3inr6UUs8jv8lAIqjW+NxsTmLtNBXk1x
-/MwGZV6uSPmco5zDenFdalCs1luE0AgZ9i2PgkNCh3lCSs5U8Pw1oNgqkLVWVezOeZGZSqNMR5H+
-ovYVf5IJE0SZrp/RkjCIyAaloLVXTJRM5pslxPhOVdQAggZgzDJepnfMLtlGxw1a0gGgrR2dujpC
-lV7UFv3MYpNQOUfsy07wlcU44f/ZxDs3MvveZKYgw8+a8EqPrzJbS3R+ZXtAy5YwqgQMtF521G98
-jhhgpkJ0HwiGsiYWf/SYh3a5t4Z2fZ+DbjQ9bXINMYGXe82RFY76p8k8z2/wNPU3em9TlTOMUuNS
-NgXNzmdSO4mvXAX795lK+wzsLEtwBJ4u+FmE2AooxDN+DfcWlcU5ERsHvpVc+QRMit43D9IeeZJI
-rV/Xylw1MZAPtvI+LiacTnoTZuGf8ELBhaeFzEzIvg/CaUVNiVLTuZ2I+KDT4C5F1JY/m1+SgK+I
-dQc=
-=jAfZ
------END PGP SIGNATURE-----
-
---------------dulKLqqXvU9cpxV9vADseYtR--
