@@ -1,213 +1,163 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFE42222BB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Jul 2025 19:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8B02236FD;
+	Mon, 21 Jul 2025 20:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753126971; cv=none; b=T3VwmroDMnHiE+oQUsDqj517v8K7VP8NU5iXvQ3Q/dxdJ3/L/4WMpcmrNzK/AQdonPl5VtuQX63tPiRJEcXdEWdX2FAzpebC/2/HqPeFdGhguyIDtvruPevAkk+zu2DDhg8t8OLpoOYp8bjeGxrGGVT20CMSjdzSW16d2lyP9JQ=
+	t=1753128877; cv=none; b=Mh7JYSGj5moFlYfhbbQ7sOuRnHCjI7KPknehWuxAHgs7B/2S8z9AxtUB9onhaIXMNedlNEELb5+Vs3XRhRbwDUKKgEKOsMioBR8w+KZwfQbNIOJdfuwzct8SV5+ovIYtMD+MIEi5Wn86JDkdjwZmr1yGTwd5Q4GDLY5NYlRbeyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753126971; c=relaxed/simple;
-	bh=RwNrHHYuhkBvnHiTy5gQqwZsQ3XwWnyrmrB7ECTBTAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YE/xBnXlmaAfXIIxZZn6hg7MiggECu1/X5Dfasi+bvxJRFrP19YPMpL8J7u1PHuDkFdcir4bBIl8n30kvF8dtnsOhHC8cKql4aRBES6ZhIBsrl6pGzpFksHLMZKPqJTSnUe7Bf3SO7A8H3cg3qbeb1fwzoOrs14a81iv1g574CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fCnv+kVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=00x96o/B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fCnv+kVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=00x96o/B; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1753128877; c=relaxed/simple;
+	bh=4r/4nG1qgmsh/c5VG19N2iiUSmLvYYkyHl3DeygcpXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MhzxgDWdlJ0HMexi0D6afif5SDahzMtkLQHqf/P+Xiru62VdSsf0D9ns7YVvreL/O41l1YtyfSyN2IVxh64o4bfHo2dSkc/z3NuaXfNxsf0raOCus6V0AzdSJ08dTpiuo3xwPDwvgoGlnLe2UcEEpOKrkzHOOWS6pm2vbHig4nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFAdcpLW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fCnv+kVB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="00x96o/B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fCnv+kVB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="00x96o/B"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 87D022118F;
-	Mon, 21 Jul 2025 19:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1753126967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
-	b=fCnv+kVBU7Lfomb+uOH+aKD8kZfgjgfbdrpYgXuown1mcht6eBibr58EaihXBowcBRiGmo
-	r5ecx9XJIWww+ujXi3GxkIBOSMC++gbo2axhWph3j65Clj19nPmsekYNRdzQVXTBwiv9PM
-	KgAJ6QzTmg7DMq/1G9BITGbrkTGYGaU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1753126967;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
-	b=00x96o/BJT8X0gXMZQsYqn68EISCJbDlwVKkHQHtc04sixLrTRleFFqZeT1gCavj1wCwOW
-	lZixJ5a5/qwDOMBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fCnv+kVB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="00x96o/B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1753126967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
-	b=fCnv+kVBU7Lfomb+uOH+aKD8kZfgjgfbdrpYgXuown1mcht6eBibr58EaihXBowcBRiGmo
-	r5ecx9XJIWww+ujXi3GxkIBOSMC++gbo2axhWph3j65Clj19nPmsekYNRdzQVXTBwiv9PM
-	KgAJ6QzTmg7DMq/1G9BITGbrkTGYGaU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1753126967;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
-	b=00x96o/BJT8X0gXMZQsYqn68EISCJbDlwVKkHQHtc04sixLrTRleFFqZeT1gCavj1wCwOW
-	lZixJ5a5/qwDOMBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 269C3136A8;
-	Mon, 21 Jul 2025 19:42:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YAFYBjaYfmgSQgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 21 Jul 2025 19:42:46 +0000
-Message-ID: <90d816ba-aaf3-4b7b-9c52-72613be5b85a@suse.de>
-Date: Mon, 21 Jul 2025 21:42:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFAdcpLW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78896C4CEF4;
+	Mon, 21 Jul 2025 20:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753128876;
+	bh=4r/4nG1qgmsh/c5VG19N2iiUSmLvYYkyHl3DeygcpXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lFAdcpLWaHxUml6OxVBwU6HF1hrXLHYFkb/H/aJEA6dwrS3fNYgpHHD9vBXhtoV4B
+	 DnlKcNVrSuy3OpcCNz5sLZixJ87BNNsHf8Wz/iXbKKuKn/4kGIyWtHqBOtZbDd1IXJ
+	 HugdwrRmbPiDKguHMjzYQAyiU+QjuAhDHP4sI+9soOwfvMemYiSYDeWbZvGVJV9Fex
+	 I+fr6vfi5W5pHpIw/Uwwc0t82cvI6vzhJdTGqyaczDCk68iZYr7Dm3hhNM2Cwu5lkJ
+	 0NpKGkTxKOKNy3D+Lz3rZTszczYJyLaRnmSD0gVfod3q27zUYqquJUIShZDNnZldk2
+	 WRNb0JXBCq60A==
+Date: Mon, 21 Jul 2025 13:14:36 -0700
+From: Kees Cook <kees@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Message-ID: <202507211311.8DAC4C7@keescook>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-4-kees@kernel.org>
+ <aHoHkDvvp4AHIzU1@kernel.org>
+ <202507181541.B8CFAC7E@keescook>
+ <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+ <aH42--h-ARsvX5Wk@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/15] platform/x86: dell-uart-backlight: Use
- blacklight power constant
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com,
- neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, deller@gmx.de,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
- simona@ffwll.ch, fnkl.kernel@gmail.com, j@jannau.net,
- Hans de Goede <hdegoede@redhat.com>, sven@kernel.org, alyssa@rosenzweig.io,
- neal@gompa.dev, support.opensource@diasemi.com, duje.mihanovic@skole.hr,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-fbdev@vger.kernel.org, Hans de Goede <hansg@kernel.org>
-References: <20250715122643.137027-1-tzimmermann@suse.de>
- <20250715122643.137027-2-tzimmermann@suse.de>
- <c380d3a4-2a99-cf52-0952-ee916b6c9676@linux.intel.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <c380d3a4-2a99-cf52-0952-ee916b6c9676@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 87D022118F
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr,lists.freedesktop.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
-X-Spam-Score: -3.01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aH42--h-ARsvX5Wk@willie-the-truck>
 
-Hi
+On Mon, Jul 21, 2025 at 01:47:55PM +0100, Will Deacon wrote:
+> On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
+> > On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
+> > > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
+> > > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
+> > > > > When KCOV is enabled all functions get instrumented, unless the
+> > > > > __no_sanitize_coverage attribute is used. To prepare for
+> > > > > __no_sanitize_coverage being applied to __init functions, we have to
+> > > > > handle differences in how GCC's inline optimizations get resolved. For
+> > > > > x86 this means forcing several functions to be inline with
+> > > > > __always_inline.
+> > > > >
+> > > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > >
+> > > > ...
+> > > >
+> > > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > > > > index bb19a2534224..b96746376e17 100644
+> > > > > --- a/include/linux/memblock.h
+> > > > > +++ b/include/linux/memblock.h
+> > > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+> > > > >                                       NUMA_NO_NODE);
+> > > > >  }
+> > > > >
+> > > > > -static inline void *memblock_alloc_from(phys_addr_t size,
+> > > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
+> > > > >                                             phys_addr_t align,
+> > > > >                                             phys_addr_t min_addr)
+> > > >
+> > > > I'm curious why from all memblock_alloc* wrappers this is the only one that
+> > > > needs to be __always_inline?
+> > >
+> > > Thread-merge[1], adding Will Deacon, who was kind of asking the same
+> > > question.
+> > >
+> > > Based on what I can tell, GCC has kind of fragile inlining logic, in the
+> > > sense that it can change whether or not it inlines something based on
+> > > optimizations. It looks like the kcov instrumentation being added (or in
+> > > this case, removed) from a function changes the optimization results,
+> > > and some functions marked "inline" are _not_ inlined. In that case, we end up
+> > > with __init code calling a function not marked __init, and we get the
+> > > build warnings I'm trying to eliminate.
+> 
+> Got it, thanks for the explanation!
+> 
+> > > So, to Will's comment, yes, the problem is somewhat fragile (though
+> > > using either __always_inline or __init will deterministically solve it).
+> > > We've tripped over this before with GCC and the solution has usually
+> > > been to just use __always_inline and move on.
+> > >
+> > 
+> > Given that 'inline' is already a macro in the kernel, could we just
+> > add __attribute__((__always_inline__)) to it when KCOV is enabled?
+> 
+> That sounds like a more robust approach and, by the sounds of it, we
+> could predicate it on GCC too. That would also provide a neat place for
+> a comment describing the problem.
+> 
+> Kees, would that work for you?
 
-Am 21.07.25 um 13:43 schrieb Ilpo Järvinen:
-> On Tue, 15 Jul 2025, Thomas Zimmermann wrote:
->
->> The backlight subsystem has gotten its own power constants. Replace
->> FB_BLANK_UNBLANK with BACKLIGHT_POWER_ON.
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Reviewed-by: Hans de Goede <hansg@kernel.org>
->> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> ---
->>   drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
->> index 8f868f845350..f323a667dc2d 100644
->> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
->> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
->> @@ -305,7 +305,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
->>   	dev_dbg(dev, "Firmware version: %.*s\n", resp[RESP_LEN] - 3, resp + RESP_DATA);
->>   
->>   	/* Initialize bl_power to a known value */
->> -	ret = dell_uart_set_bl_power(dell_bl, FB_BLANK_UNBLANK);
->> +	ret = dell_uart_set_bl_power(dell_bl, BACKLIGHT_POWER_ON);
->>   	if (ret)
->>   		return ret;
-> Hi Thomas,
->
-> Do you expect this entire series to go in this cycle through some other
-> tree than pdx86? If not, I'll take this through pdx86 tree in this cycle.
+That seems like an extremely large hammer for this problem, IMO. It
+feels like it could cause new strange corner cases. I'd much prefer the
+small fixes I've currently got since it keeps it focused. KCOV is
+already enabled for "allmodconfig", so any new instances would be found
+very quickly, etc. (And GCC's fragility in this regard has already been
+exposed to these cases -- it's just that I changed one of the
+combinations of __init vs inline vs instrumentation.
 
-I don't know when the series will get merged, but it might still take a 
-bit. Please take this patch through your tree. Good to have it off the list.
-
-Best regards
-Thomas
-
->
+I could give it a try, if you really prefer the big hammer approach...
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Kees Cook
