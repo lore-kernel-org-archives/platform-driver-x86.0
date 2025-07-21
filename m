@@ -1,150 +1,357 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E424502F;
-	Mon, 21 Jul 2025 12:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155B185C5E;
+	Mon, 21 Jul 2025 13:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753102089; cv=none; b=E8jZoPuVMg3Fp8eB1JExRdlxpUXTxuyaHxIVIDqfiW1CnTqRG7QkKUnTN7AwmtWQTfvIh3DHlGy0G/ojCya/Yc2/lTCjfQgahjwWT41RMTZNNiR5xC9xuOpyFcKRS4dnHEf72GjmTsfDQcK6QtLQCxnW1/FEfqH3Ns72O2GwfWc=
+	t=1753106190; cv=none; b=YcuFkshYtqBNl5IsO7vAlyKHA10ZEGHSdAO+a0pvS90f3CQ8h0bt4nEL2qfbRXnEJ3gtwufTVCHa0yONvHQKGnQhCq8CHJ/mXULIYCdoZINRy1wBFv9cmL8DqESmlPvdbPrJZ5SYPuf6o0HN66vpvTD0AaXJqrjjExn8ZyAONRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753102089; c=relaxed/simple;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdSKdNjtBboMgd832HDbP+uXPaRLqk5gH43+jq8vlM1Hc4dWSbJ50xkdj0WNZbdnrejhlZFh0alyVYXwTE1HxqaXdlipy/qcX255Zo/Sd8XhRxZIm5OMID6J0an5xZ63VZTx10Wb++nILTSxyC0qtE01UAmwtUiiRLoJ/+c1UNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8evXuR+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753106190; c=relaxed/simple;
+	bh=Tg6yEZ174xmr7bLLFzRolZ7GOCNMUsamwdIO6Ei6PRI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sgmLNSIzfYKtBuEorlnjCEOMnwoQikzOsMSzG19aOnJd4e3OYsvDVCP4yX7c/rO6w7wp2iWshRsNAt5pNViCkkc1y/O4/hCcyWNwhAVo/tAQjoZH95sWFubABP2SAcWwkBFMr4iVgIF3Xj/hb9NeHpdsr3BQh8M2gfoySK4Y8yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jId8xbM1; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8evXuR+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2550C4CEED;
-	Mon, 21 Jul 2025 12:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753102088;
-	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8evXuR+wAan3GKqOPc31OKb0HXwT1fcr9RAvjn3iXq9AafrC9dr+uhqKKHXhydc/
-	 ommMgMhlPSa10h8tXea70KugAvoZCogNM+Xt21kS9UmsttjWDnOELNHjux+Ju59MNY
-	 /URVoorMncYyCzvX9VeofQFk7WldoN/Ri5qk6rB1XFXfi+hA14lKHW1R2sRPlxfo/E
-	 LGLDW2D8KsMU/Gla3tq/bXrtgsgK9NPEPhMAYMtEgjB4rEKVqgNW9ZLANwHmFPzbv2
-	 KyzNMpjT5XzFw+NFZx3vex8f/0R9leYdi3PuQeMO27/gBBOFaJYqsNHIsKj7h+b3pJ
-	 6c41KggZR4CKg==
-Date: Mon, 21 Jul 2025 13:47:55 +0100
-From: Will Deacon <will@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aH42--h-ARsvX5Wk@willie-the-truck>
-References: <20250717231756.make.423-kees@kernel.org>
- <20250717232519.2984886-4-kees@kernel.org>
- <aHoHkDvvp4AHIzU1@kernel.org>
- <202507181541.B8CFAC7E@keescook>
- <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jId8xbM1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753106188; x=1784642188;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Tg6yEZ174xmr7bLLFzRolZ7GOCNMUsamwdIO6Ei6PRI=;
+  b=jId8xbM1kW/+JT10+6sC+++nj9XyHL8gbpl+g2FE866TttyRdCTgTLpF
+   kdDd73NbwvWKEgmuCQZe25TSLi0n3uTh5oG7vgH7aRlYX/HiL8PxLlQQ/
+   E7bBr8QkFkqrfJWBFKSf3dHUxiVqVOo8AZJLX6j3/31bg0qeXZUC4zHre
+   Qj48BePPQwnX2b2O4mpludMkmkEejzlY+hHeS2ZcCkX1Eil/xJ4lV8ob1
+   WnBeqWvSuF9JOsw26+7g7f/yDdNrB7GphtW8JcQvbBY3YXkT5LoVsfUVx
+   E6bXsHr7OHbBXoUsfVXuO8tYjW6vsiqYCM/IQQdfaPUOJk8dYvqR9fMgs
+   A==;
+X-CSE-ConnectionGUID: RE1+bzK/ToK2Hnl/YklFWQ==
+X-CSE-MsgGUID: y8ZM6hnGSiabmqlVBvq1zA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="72888943"
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="72888943"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 06:56:26 -0700
+X-CSE-ConnectionGUID: qL3X642FTd6YJAR/9f3PpA==
+X-CSE-MsgGUID: B2svoTiXTwa3jxnoakFRMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
+   d="scan'208";a="159570099"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 06:56:23 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 21 Jul 2025 16:56:19 +0300 (EEST)
+To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+cc: Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, linux@roeck-us.net, 
+    wim@linux-watchdog.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-watchdog@vger.kernel.org, jay.chen@canonical.com
+Subject: Re: [PATCH v2 2/2] platform/x86: portwell-ec: Add hwmon support for
+ voltage and temperature
+In-Reply-To: <a961ba6f-4c4b-4f60-9804-2736a3d239d8@portwell.com.tw>
+Message-ID: <41ed7342-a465-16ff-8283-29f0faa64d02@linux.intel.com>
+References: <a07d8764-ee23-4d21-a7b5-121cb8a576b9@portwell.com.tw> <a961ba6f-4c4b-4f60-9804-2736a3d239d8@portwell.com.tw>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
-> On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
-> > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
-> > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
-> > > > When KCOV is enabled all functions get instrumented, unless the
-> > > > __no_sanitize_coverage attribute is used. To prepare for
-> > > > __no_sanitize_coverage being applied to __init functions, we have to
-> > > > handle differences in how GCC's inline optimizations get resolved. For
-> > > > x86 this means forcing several functions to be inline with
-> > > > __always_inline.
-> > > >
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > >
-> > > ...
-> > >
-> > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> > > > index bb19a2534224..b96746376e17 100644
-> > > > --- a/include/linux/memblock.h
-> > > > +++ b/include/linux/memblock.h
-> > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
-> > > >                                       NUMA_NO_NODE);
-> > > >  }
-> > > >
-> > > > -static inline void *memblock_alloc_from(phys_addr_t size,
-> > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
-> > > >                                             phys_addr_t align,
-> > > >                                             phys_addr_t min_addr)
-> > >
-> > > I'm curious why from all memblock_alloc* wrappers this is the only one that
-> > > needs to be __always_inline?
-> >
-> > Thread-merge[1], adding Will Deacon, who was kind of asking the same
-> > question.
-> >
-> > Based on what I can tell, GCC has kind of fragile inlining logic, in the
-> > sense that it can change whether or not it inlines something based on
-> > optimizations. It looks like the kcov instrumentation being added (or in
-> > this case, removed) from a function changes the optimization results,
-> > and some functions marked "inline" are _not_ inlined. In that case, we end up
-> > with __init code calling a function not marked __init, and we get the
-> > build warnings I'm trying to eliminate.
+On Tue, 15 Jul 2025, Yen-Chi Huang wrote:
 
-Got it, thanks for the explanation!
-
-> > So, to Will's comment, yes, the problem is somewhat fragile (though
-> > using either __always_inline or __init will deterministically solve it).
-> > We've tripped over this before with GCC and the solution has usually
-> > been to just use __always_inline and move on.
-> >
+> Integrates Vcore, VDIMM, 3.3V, 5V, 12V voltage and system temperature
+> monitoring into the driver via the hwmon subsystem, enabling
+> standardized reporting via tools like lm-sensors.
 > 
-> Given that 'inline' is already a macro in the kernel, could we just
-> add __attribute__((__always_inline__)) to it when KCOV is enabled?
+> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+> ---
+> 
+> [Re-sending to fix message threading, no content changes since v2.]
+> ---
+>  drivers/platform/x86/portwell-ec.c | 178 ++++++++++++++++++++++++++++-
+>  1 file changed, 176 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
+> index a68522aaa3fa..ac113aaf8bb0 100644
+> --- a/drivers/platform/x86/portwell-ec.c
+> +++ b/drivers/platform/x86/portwell-ec.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/dmi.h>
+>  #include <linux/gpio/driver.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> @@ -52,16 +53,64 @@
+>  #define PORTWELL_EC_FW_VENDOR_LENGTH     3
+>  #define PORTWELL_EC_FW_VENDOR_NAME       "PWG"
+>  
+> +#define PORTWELL_EC_ADC_MAX              1023
+> +
+>  static bool force;
+>  module_param(force, bool, 0444);
+>  MODULE_PARM_DESC(force, "Force loading EC driver without checking DMI boardname");
+>  
+> +struct pwec_hwmon_data {
+> +	const char *label;
+> +	u8 lsb_reg;
+> +	u32 scale;
+> +};
+> +
+> +struct pwec_data {
+> +	const struct pwec_hwmon_data *hwmon_in_data;
+> +	int hwmon_in_num;
+> +	const struct pwec_hwmon_data *hwmon_temp_data;
+> +	int hwmon_temp_num;
+> +	const struct hwmon_channel_info * const *hwmon_info;
+> +};
+> +
+> +static const struct pwec_hwmon_data pwec_nano_hwmon_in[] = {
+> +	{ "Vcore", 0x20, 3000 },
+> +	{ "VDIMM", 0x32, 3000 },
+> +	{ "3.3V",  0x22, 6000 },
+> +	{ "5V",    0x24, 9600 },
+> +	{ "12V",   0x30, 19800 },
+> +};
+> +
+> +static const struct pwec_hwmon_data pwec_nano_hwmon_temp[] = {
+> +	{ "System Temperature", 0x02, 0 },
+> +};
+> +
+> +static const struct hwmon_channel_info *pwec_nano_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_LABEL),
+> +	HWMON_CHANNEL_INFO(in,
+> +			   HWMON_I_INPUT | HWMON_I_LABEL,
+> +			   HWMON_I_INPUT | HWMON_I_LABEL,
+> +			   HWMON_I_INPUT | HWMON_I_LABEL,
+> +			   HWMON_I_INPUT | HWMON_I_LABEL,
+> +			   HWMON_I_INPUT | HWMON_I_LABEL),
+> +	NULL
+> +};
+> +
+> +static const struct pwec_data pwec_board_data_nano = {
+> +	.hwmon_in_data = pwec_nano_hwmon_in,
+> +	.hwmon_in_num = ARRAY_SIZE(pwec_nano_hwmon_in),
+> +	.hwmon_temp_data = pwec_nano_hwmon_temp,
+> +	.hwmon_temp_num = ARRAY_SIZE(pwec_nano_hwmon_temp),
+> +	.hwmon_info = pwec_nano_hwmon_info
 
-That sounds like a more robust approach and, by the sounds of it, we
-could predicate it on GCC too. That would also provide a neat place for
-a comment describing the problem.
+Please add comma to any that is not a real terminator so that a future 
+changes won't need to add the comma if more fields get added.
 
-Kees, would that work for you?
+> +};
+> +
+>  static const struct dmi_system_id pwec_dmi_table[] = {
+>  	{
+>  		.ident = "NANO-6064 series",
+>  		.matches = {
+>  			DMI_MATCH(DMI_BOARD_NAME, "NANO-6064"),
+>  		},
+> +		.driver_data = (void *)&pwec_board_data_nano,
 
-Will
+Casting a pointer to void * is not required.
+
+>  	},
+>  	{ }
+>  };
+> @@ -79,6 +128,19 @@ static u8 pwec_read(u8 address)
+>  	return inb(PORTWELL_EC_IOSPACE + address);
+>  }
+>  
+> +static u16 pwec_read16_stable(u8 lsb_reg)
+> +{
+> +	u8 lsb, msb, old_msb;
+> +
+> +	do {
+> +		old_msb = pwec_read(lsb_reg+1);
+
+Please add spaces around + as per the coding style guidance.
+
+> +		lsb = pwec_read(lsb_reg);
+> +		msb = pwec_read(lsb_reg+1);
+
+Ditto.
+
+> +	} while (msb != old_msb);
+> +
+> +	return (msb << 8) | lsb;
+> +}
+> +
+>  /* GPIO functions */
+>  
+>  static int pwec_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> @@ -204,6 +266,110 @@ static struct watchdog_device ec_wdt_dev = {
+>  	.max_timeout = PORTWELL_WDT_EC_MAX_COUNT_SECOND,
+>  };
+>  
+> +/* HWMON functions */
+> +
+> +static umode_t pwec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
+> +		u32 attr, int channel)
+> +{
+> +	const struct pwec_data *d = data;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel < d->hwmon_temp_num)
+> +			return 0444;
+> +		break;
+
+I'd suggest you change these to:
+
+		return channel < d->hwmon_temp_num ? 0444 : 0;
+
+> +	case hwmon_in:
+> +		if (channel < d->hwmon_in_num)
+> +			return 0444;
+> +		break;
+> +	default:
+> +		break;
+
+...and this to direct return 0; to simplify the code flow.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pwec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +			   u32 attr, int channel, long *val)
+> +{
+> +	struct pwec_data *data = dev_get_drvdata(dev);
+> +	u16 tmp;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel < data->hwmon_temp_num) {
+> +			*val = pwec_read(data->hwmon_temp_data[channel].lsb_reg) * 1000;
+
+There might have been some problem in preparing this series as literal 
+1000 is still there despite your cover letter suggesting it was changed?
+
+Please check the other expected changes as well, on a glance they seemed 
+to be in place but it has been a while since I've looked on this patch.
+
+> +			return 0;
+> +		}
+> +		break;
+> +	case hwmon_in:
+> +		if (channel < data->hwmon_in_num) {
+> +			tmp = pwec_read16_stable(data->hwmon_in_data[channel].lsb_reg);
+> +			*val = (data->hwmon_in_data[channel].scale * tmp) / PORTWELL_EC_ADC_MAX;
+> +			return 0;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int pwec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+> +				  u32 attr, int channel, const char **str)
+> +{
+> +	struct pwec_data *data = dev_get_drvdata(dev);
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel < data->hwmon_temp_num) {
+> +			*str = data->hwmon_temp_data[channel].label;
+> +			return 0;
+> +		}
+> +		break;
+> +	case hwmon_in:
+> +		if (channel < data->hwmon_in_num) {
+> +			*str = data->hwmon_in_data[channel].label;
+> +			return 0;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static const struct hwmon_ops pwec_hwmon_ops = {
+> +	.is_visible = pwec_hwmon_is_visible,
+> +	.read = pwec_hwmon_read,
+> +	.read_string = pwec_hwmon_read_string,
+> +};
+> +
+> +static struct hwmon_chip_info pwec_chip_info = {
+> +	.ops = &pwec_hwmon_ops,
+> +};
+> +
+> +static int pwec_hwmon_init(struct device *dev)
+> +{
+> +	struct pwec_data *data = dev_get_platdata(dev);
+> +	void *hwmon;
+> +	int ret;
+> +
+> +	if (!IS_REACHABLE(CONFIG_HWMON))
+> +		return 0;
+> +
+> +	pwec_chip_info.info = data->hwmon_info;
+> +	hwmon = devm_hwmon_device_register_with_info(dev, "portwell_ec", data, &pwec_chip_info,
+> +						     NULL);
+> +	ret = PTR_ERR_OR_ZERO(hwmon);
+> +	if (ret)
+> +		dev_err(dev, "Failed to register hwmon_dev: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+>  static int pwec_firmware_vendor_check(void)
+>  {
+>  	u8 buf[PORTWELL_EC_FW_VENDOR_LENGTH + 1];
+> @@ -242,6 +408,10 @@ static int pwec_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ret = pwec_hwmon_init(&pdev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -274,11 +444,14 @@ static struct platform_device *pwec_dev;
+>  
+>  static int __init pwec_init(void)
+>  {
+> +	const struct dmi_system_id *match;
+>  	int ret;
+>  
+> -	if (!dmi_check_system(pwec_dmi_table)) {
+> +	match = dmi_first_match(pwec_dmi_table);
+> +	if (!match) {
+>  		if (!force)
+>  			return -ENODEV;
+> +		match = &pwec_dmi_table[0];
+>  		pr_warn("force load portwell-ec without DMI check\n");
+>  	}
+>  
+> @@ -286,7 +459,8 @@ static int __init pwec_init(void)
+>  	if (ret)
+>  		return ret;
+>  
+> -	pwec_dev = platform_device_register_simple("portwell-ec", -1, NULL, 0);
+> +	pwec_dev = platform_device_register_data(NULL, "portwell-ec", -1, match->driver_data,
+> +						 sizeof(struct pwec_data));
+>  	if (IS_ERR(pwec_dev)) {
+>  		platform_driver_unregister(&pwec_driver);
+>  		return PTR_ERR(pwec_dev);
+> 
+
+-- 
+ i.
+
