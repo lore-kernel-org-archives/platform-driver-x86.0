@@ -1,90 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF82628DB47;
-	Mon, 21 Jul 2025 13:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFE42222BB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 21 Jul 2025 19:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753106381; cv=none; b=YnVvwfklZ0zl2PGWdzcy5XJGjEakeoeI0rFhZrfh2qpJqEjz5zcKp/zYX25o86qlvCb6v7KHTmE7yyve8JUVWHokyqC0edAhwbm26Zmn03ci4tWdjFSNN4kxMYBKYyv0DoAozSXU5SZae5jQ/dBaHs9LfDrXT+edDsbm9MwuV/8=
+	t=1753126971; cv=none; b=T3VwmroDMnHiE+oQUsDqj517v8K7VP8NU5iXvQ3Q/dxdJ3/L/4WMpcmrNzK/AQdonPl5VtuQX63tPiRJEcXdEWdX2FAzpebC/2/HqPeFdGhguyIDtvruPevAkk+zu2DDhg8t8OLpoOYp8bjeGxrGGVT20CMSjdzSW16d2lyP9JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753106381; c=relaxed/simple;
-	bh=36h0jA/CYrtBxUS3OpqkqwSYw4aB0BRPChxuIoSl44Q=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YyfjtqTMt509XVn5+ZmpeKONm9BgLPDj4A3Z9X/BmpcHMAyVenUtt8fgLIHeVx0qODZcZpgIv70Corx74Xq+PDUTwl8MlcCK0uAJ5xxY8ZXWylnlrnysXGjd9LWHC5vJ+Lb2V1FmF/XSGMeFiUOmLmEYh7GbYVyc2jBrYWngWng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bELwrzyM; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753126971; c=relaxed/simple;
+	bh=RwNrHHYuhkBvnHiTy5gQqwZsQ3XwWnyrmrB7ECTBTAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YE/xBnXlmaAfXIIxZZn6hg7MiggECu1/X5Dfasi+bvxJRFrP19YPMpL8J7u1PHuDkFdcir4bBIl8n30kvF8dtnsOhHC8cKql4aRBES6ZhIBsrl6pGzpFksHLMZKPqJTSnUe7Bf3SO7A8H3cg3qbeb1fwzoOrs14a81iv1g574CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fCnv+kVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=00x96o/B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fCnv+kVB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=00x96o/B; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bELwrzyM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753106380; x=1784642380;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=36h0jA/CYrtBxUS3OpqkqwSYw4aB0BRPChxuIoSl44Q=;
-  b=bELwrzyM5LaEjW/sbF98qc1hR/4wq6Nkrsk2XyZbBdvBnBTWNGDGGXpf
-   SeW4UH9v0qTJrCOYT3esudQ8LeGw8DtjGHHK0o1lZl0R7oDYArg4i9QBG
-   5ckz71U+EcVXQgJprqN8Wuzmo120xJ6mL05gQpa9SV8szS9fC3Ym9nUZl
-   LnJEC6LCkQNgJzvsraaxOY/pcMfSUFfiSntwLUTxlqG9rKmvNJ+XFw0R1
-   kC6yFFESuQplKQ1vhGx5J9dWXvz+WWWh+WbBqxLzAjG0WOM2y5Ur34bwM
-   5D1b5Wb0PrOguvhwAV2bYhgwPyxl2XbOYuQY93A+CQSr5AdHjWLvcDvkZ
-   Q==;
-X-CSE-ConnectionGUID: MEEBzZrwQYGPJB/Up3ck7g==
-X-CSE-MsgGUID: ywmbCwr5TrudX0vwMuF3aQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="80765912"
-X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
-   d="scan'208";a="80765912"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 06:59:39 -0700
-X-CSE-ConnectionGUID: 6w9KHYZXQHKpfbbWpA9bjQ==
-X-CSE-MsgGUID: LPwmPjd9R9W7OCDgAhihtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
-   d="scan'208";a="159185378"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 06:59:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250714081559.4056777-1-arnd@kernel.org>
-References: <20250714081559.4056777-1-arnd@kernel.org>
-Subject: Re: [PATCH] platform/x86/intel/pmt: fix build dependency for kunit
- test
-Message-Id: <175310637164.2828.10816028199223746983.b4-ty@linux.intel.com>
-Date: Mon, 21 Jul 2025 16:59:31 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fCnv+kVB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="00x96o/B";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fCnv+kVB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="00x96o/B"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 87D022118F;
+	Mon, 21 Jul 2025 19:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1753126967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
+	b=fCnv+kVBU7Lfomb+uOH+aKD8kZfgjgfbdrpYgXuown1mcht6eBibr58EaihXBowcBRiGmo
+	r5ecx9XJIWww+ujXi3GxkIBOSMC++gbo2axhWph3j65Clj19nPmsekYNRdzQVXTBwiv9PM
+	KgAJ6QzTmg7DMq/1G9BITGbrkTGYGaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1753126967;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
+	b=00x96o/BJT8X0gXMZQsYqn68EISCJbDlwVKkHQHtc04sixLrTRleFFqZeT1gCavj1wCwOW
+	lZixJ5a5/qwDOMBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fCnv+kVB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="00x96o/B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1753126967; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
+	b=fCnv+kVBU7Lfomb+uOH+aKD8kZfgjgfbdrpYgXuown1mcht6eBibr58EaihXBowcBRiGmo
+	r5ecx9XJIWww+ujXi3GxkIBOSMC++gbo2axhWph3j65Clj19nPmsekYNRdzQVXTBwiv9PM
+	KgAJ6QzTmg7DMq/1G9BITGbrkTGYGaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1753126967;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2IWprOXfvc6EbCygrPqSL0CUWIJ2ps0kwcPH/0eYJTc=;
+	b=00x96o/BJT8X0gXMZQsYqn68EISCJbDlwVKkHQHtc04sixLrTRleFFqZeT1gCavj1wCwOW
+	lZixJ5a5/qwDOMBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 269C3136A8;
+	Mon, 21 Jul 2025 19:42:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YAFYBjaYfmgSQgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 21 Jul 2025 19:42:46 +0000
+Message-ID: <90d816ba-aaf3-4b7b-9c52-72613be5b85a@suse.de>
+Date: Mon, 21 Jul 2025 21:42:41 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/15] platform/x86: dell-uart-backlight: Use
+ blacklight power constant
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com,
+ neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, deller@gmx.de,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
+ simona@ffwll.ch, fnkl.kernel@gmail.com, j@jannau.net,
+ Hans de Goede <hdegoede@redhat.com>, sven@kernel.org, alyssa@rosenzweig.io,
+ neal@gompa.dev, support.opensource@diasemi.com, duje.mihanovic@skole.hr,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-fbdev@vger.kernel.org, Hans de Goede <hansg@kernel.org>
+References: <20250715122643.137027-1-tzimmermann@suse.de>
+ <20250715122643.137027-2-tzimmermann@suse.de>
+ <c380d3a4-2a99-cf52-0952-ee916b6c9676@linux.intel.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <c380d3a4-2a99-cf52-0952-ee916b6c9676@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 87D022118F
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,oss.qualcomm.com,gmx.de,linux.intel.com,ffwll.ch,jannau.net,redhat.com,rosenzweig.io,gompa.dev,diasemi.com,skole.hr,lists.freedesktop.org,lists.linux.dev,vger.kernel.org,lists.infradead.org];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
+X-Spam-Score: -3.01
 
-On Mon, 14 Jul 2025 10:15:43 +0200, Arnd Bergmann wrote:
+Hi
 
-> When INTEL_PMT_TELEMETRY is in a loadable module, the discovery
-> test cannot be built-in:
-> 
-> x86_64-linux-ld: drivers/platform/x86/intel/pmt/discovery-kunit.o: in function `test_intel_pmt_get_regions_by_feature':
-> discovery-kunit.c:(.text+0x29d): undefined reference to `intel_pmt_get_regions_by_feature'
-> x86_64-linux-ld: discovery-kunit.c:(.text+0x2c3): undefined reference to `intel_pmt_put_feature_group'
-> 
-> [...]
+Am 21.07.25 um 13:43 schrieb Ilpo Järvinen:
+> On Tue, 15 Jul 2025, Thomas Zimmermann wrote:
+>
+>> The backlight subsystem has gotten its own power constants. Replace
+>> FB_BLANK_UNBLANK with BACKLIGHT_POWER_ON.
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+>> Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
+>> index 8f868f845350..f323a667dc2d 100644
+>> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
+>> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
+>> @@ -305,7 +305,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
+>>   	dev_dbg(dev, "Firmware version: %.*s\n", resp[RESP_LEN] - 3, resp + RESP_DATA);
+>>   
+>>   	/* Initialize bl_power to a known value */
+>> -	ret = dell_uart_set_bl_power(dell_bl, FB_BLANK_UNBLANK);
+>> +	ret = dell_uart_set_bl_power(dell_bl, BACKLIGHT_POWER_ON);
+>>   	if (ret)
+>>   		return ret;
+> Hi Thomas,
+>
+> Do you expect this entire series to go in this cycle through some other
+> tree than pdx86? If not, I'll take this through pdx86 tree in this cycle.
 
+I don't know when the series will get merged, but it might still take a 
+bit. Please take this patch through your tree. Good to have it off the list.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Best regards
+Thomas
 
-The list of commits applied:
-[1/1] platform/x86/intel/pmt: fix build dependency for kunit test
-      commit: 5a9fffd8a533bfb2688ec69dd6d1b6e53ef1177a
+>
 
+-- 
 --
- i.
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
