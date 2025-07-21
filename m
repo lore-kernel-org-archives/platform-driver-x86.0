@@ -1,223 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7772942A9B;
-	Mon, 21 Jul 2025 12:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E424502F;
+	Mon, 21 Jul 2025 12:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753101849; cv=none; b=r7IDvEwXWOICr23qa4UgGOrZZAC+wUlSz8PZBITwlHeAMmMz6Wm3o+Ra93TsYJ9uLwb7DwwBxisdOMdeautdls8yB3zkmaP4GUw/WJY646lGAj7I0YjSEDONp3kmVhhGTeoyJisYzzGony/H0s28TKyUY82J1Y+yNCttTIx//Qo=
+	t=1753102089; cv=none; b=E8jZoPuVMg3Fp8eB1JExRdlxpUXTxuyaHxIVIDqfiW1CnTqRG7QkKUnTN7AwmtWQTfvIh3DHlGy0G/ojCya/Yc2/lTCjfQgahjwWT41RMTZNNiR5xC9xuOpyFcKRS4dnHEf72GjmTsfDQcK6QtLQCxnW1/FEfqH3Ns72O2GwfWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753101849; c=relaxed/simple;
-	bh=2rqEcY3+vS6y9IkHDgy65e3CbWCUIfoGhGJDb3Byk9I=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=K0bCwVzcETl8Y+/nCvma+0/XlEFJFg9tWunEK2DlsV1XAcPoj4ozRFHvr1Sdp4duuSmd/mNuld4499CoClqXNKO6RbGkrBTxnjMm5X6CLL5P/3JPIO9QOQ3+APmmiougx1uz0+mYhHuvybZNa1Zbzx6va2mCfOk8B46zVr+BHlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TLxnjdxm; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753102089; c=relaxed/simple;
+	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PdSKdNjtBboMgd832HDbP+uXPaRLqk5gH43+jq8vlM1Hc4dWSbJ50xkdj0WNZbdnrejhlZFh0alyVYXwTE1HxqaXdlipy/qcX255Zo/Sd8XhRxZIm5OMID6J0an5xZ63VZTx10Wb++nILTSxyC0qtE01UAmwtUiiRLoJ/+c1UNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8evXuR+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TLxnjdxm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753101848; x=1784637848;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2rqEcY3+vS6y9IkHDgy65e3CbWCUIfoGhGJDb3Byk9I=;
-  b=TLxnjdxm4TIpIQuuds4RoIibW3/k/XzDQkEUMSYgcEs6Ap/zq6Vd6leE
-   vP3jukdx1SMR4y2AtbBytZX8VRAvnOz8zwmmFZKWtMMQVb6Y2frdkneRS
-   kCE0CEOoSy/gHxHfeRn9MhB+UmoKdq3uVAfntHMlaFPi30c2apRA8eheN
-   wnABfZ5a3ap6HvNtFr7FujOqaEE7RBXkukSfLWrOqa+ULG3VStyihOl80
-   jrPou8/pDChMhT5B3NpcqUqDtWw0HhB9KnWIJ7OC+7ADPL0aosIcRkpoJ
-   7p9fi1Ll/6382Hc88a6TDmYYjAtnbEHc7JZTiztzcYonJShtqVJn/e7Io
-   w==;
-X-CSE-ConnectionGUID: TdGSKpMCTLu1xi19boMspA==
-X-CSE-MsgGUID: L+BJVMjwQQ6MScKGD3i0Nw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="54414859"
-X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
-   d="scan'208";a="54414859"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 05:44:07 -0700
-X-CSE-ConnectionGUID: +zHVWkR/Q6uJx4aFuUAQCA==
-X-CSE-MsgGUID: iH8XBT6mT+akVTuW5wqG7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,329,1744095600"; 
-   d="scan'208";a="158612766"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2025 05:44:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Mon, 21 Jul 2025 15:38:07 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.16-4
-Message-ID: <pdx86-pr-20250721153807-334719879@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8evXuR+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2550C4CEED;
+	Mon, 21 Jul 2025 12:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753102088;
+	bh=fhUrUAac/iSii6E8bCY5/2OzAP/25KtTiniEKeJQXGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R8evXuR+wAan3GKqOPc31OKb0HXwT1fcr9RAvjn3iXq9AafrC9dr+uhqKKHXhydc/
+	 ommMgMhlPSa10h8tXea70KugAvoZCogNM+Xt21kS9UmsttjWDnOELNHjux+Ju59MNY
+	 /URVoorMncYyCzvX9VeofQFk7WldoN/Ri5qk6rB1XFXfi+hA14lKHW1R2sRPlxfo/E
+	 LGLDW2D8KsMU/Gla3tq/bXrtgsgK9NPEPhMAYMtEgjB4rEKVqgNW9ZLANwHmFPzbv2
+	 KyzNMpjT5XzFw+NFZx3vex8f/0R9leYdi3PuQeMO27/gBBOFaJYqsNHIsKj7h+b3pJ
+	 6c41KggZR4CKg==
+Date: Mon, 21 Jul 2025 13:47:55 +0100
+From: Will Deacon <will@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Message-ID: <aH42--h-ARsvX5Wk@willie-the-truck>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-4-kees@kernel.org>
+ <aHoHkDvvp4AHIzU1@kernel.org>
+ <202507181541.B8CFAC7E@keescook>
+ <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
 
-Hi Linus,
+On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
+> On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
+> > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
+> > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
+> > > > When KCOV is enabled all functions get instrumented, unless the
+> > > > __no_sanitize_coverage attribute is used. To prepare for
+> > > > __no_sanitize_coverage being applied to __init functions, we have to
+> > > > handle differences in how GCC's inline optimizations get resolved. For
+> > > > x86 this means forcing several functions to be inline with
+> > > > __always_inline.
+> > > >
+> > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > >
+> > > ...
+> > >
+> > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > > > index bb19a2534224..b96746376e17 100644
+> > > > --- a/include/linux/memblock.h
+> > > > +++ b/include/linux/memblock.h
+> > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+> > > >                                       NUMA_NO_NODE);
+> > > >  }
+> > > >
+> > > > -static inline void *memblock_alloc_from(phys_addr_t size,
+> > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
+> > > >                                             phys_addr_t align,
+> > > >                                             phys_addr_t min_addr)
+> > >
+> > > I'm curious why from all memblock_alloc* wrappers this is the only one that
+> > > needs to be __always_inline?
+> >
+> > Thread-merge[1], adding Will Deacon, who was kind of asking the same
+> > question.
+> >
+> > Based on what I can tell, GCC has kind of fragile inlining logic, in the
+> > sense that it can change whether or not it inlines something based on
+> > optimizations. It looks like the kcov instrumentation being added (or in
+> > this case, removed) from a function changes the optimization results,
+> > and some functions marked "inline" are _not_ inlined. In that case, we end up
+> > with __init code calling a function not marked __init, and we get the
+> > build warnings I'm trying to eliminate.
 
-Here is a platform-drivers-x86 fixes PR for v6.16.
+Got it, thanks for the explanation!
 
-There's one power supply accessor change to support solving pdx86 lock
-double take issue (upcoming pdx86 for-next work depends on the same API
-so we chose to route it through pdx86 tree).
+> > So, to Will's comment, yes, the problem is somewhat fragile (though
+> > using either __always_inline or __init will deterministically solve it).
+> > We've tripped over this before with GCC and the solution has usually
+> > been to just use __always_inline and move on.
+> >
+> 
+> Given that 'inline' is already a macro in the kernel, could we just
+> add __attribute__((__always_inline__)) to it when KCOV is enabled?
 
-Fixes and New HW Support
+That sounds like a more robust approach and, by the sounds of it, we
+could predicate it on GCC too. That would also provide a neat place for
+a comment describing the problem.
 
-- alienware-wmi-wmax:
+Kees, would that work for you?
 
-  - Add AWCC support for Alienware Area-51m and m15 R5.
-
-  - Fix `dmi_system_id` array termination
-
-- arm64: huawei-gaokun-ec: fix OF node leak
-
-- dell-ddv: Fix taking psy->extensions_sem twice
-
-- dell-lis3lv02d: Add Precision 3551 accelerometer support
-
-- firmware_attributes_class: Fix initialization order
-
-- ideapad-laptop: Retain FnLock and kbd backlight across boots
-
-- lenovo-wmi-hotkey: Avoid triggering error -5 due to missing mute LED
-
-- mellanox: mlxbf-pmc: Validate event names and bool input
-
-- power: supply: Add get/set property direct to allow avoiding taking
-                 psy->extensions_sem twice from power supply extensions
-
-Regards, i.
-
-
-The following changes since commit 4f30f946f27b7f044cf8f3f1f353dee1dcd3517a:
-
-  platform/x86: think-lmi: Fix sysfs group cleanup (2025-07-02 12:01:25 +0300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-4
-
-for you to fetch changes up to e2967b50b709970547b5cdfa1b42526835327f36:
-
-  MAINTAINERS: Update entries for IFS and SBL drivers (2025-07-21 14:38:19 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.16-4
-
-Fixes and New HW Support
-
-- alienware-wmi-wmax:
-
-  - Add AWCC support for Alienware Area-51m and m15 R5.
-
-  - Fix `dmi_system_id` array termination
-
-- arm64: huawei-gaokun-ec: fix OF node leak
-
-- dell-ddv: Fix taking psy->extensions_sem twice
-
-- dell-lis3lv02d: Add Precision 3551 accelerometer support
-
-- firmware_attributes_class: Fix initialization order
-
-- ideapad-laptop: Retain FnLock and kbd backlight across boots
-
-- lenovo-wmi-hotkey: Avoid triggering error -5 due to missing mute LED
-
-- mellanox: mlxbf-pmc: Validate event names and bool input
-
-- power: supply: Add get/set property direct to allow avoiding taking
-                 psy->extensions_sem twice from power supply extensions
-
-The following is an automated shortlog grouped by driver:
-
-alieneware-wmi-wmax:
- -  Add AWCC support to more laptops
-
-alienware-wmi-wmax:
- -  Fix `dmi_system_id` array
-
-arm64: huawei-gaokun-ec:
- -  fix OF node leak
-
-dell-ddv:
- -  Fix taking the psy->extensions_sem lock twice
-
-dell-lis3lv02d:
- -  Add Precision 3551
-
-Fix initialization order for firmware_attributes_class:
- - Fix initialization order for firmware_attributes_class
-
-ideapad-laptop:
- -  Fix FnLock not remembered among boots
- -  Fix kbd backlight not remembered among boots
-
-lenovo-wmi-hotkey:
- -  Avoid triggering error -5 due to missing mute LED
-
-MAINTAINERS:
- -  Update entries for IFS and SBL drivers
-
-mlxbf-pmc:
- -  Remove newline char from event name input
- -  Use kstrtobool() to check 0/1 input
- -  Validate event/enable input
-
-power: supply: core:
- -  Add power_supply_get/set_property_direct()
-
-power: supply: test-power:
- -  Test access to extended power supply
-
-----------------------------------------------------------------
-Armin Wolf (3):
-      power: supply: core: Add power_supply_get/set_property_direct()
-      power: supply: test-power: Test access to extended power supply
-      platform/x86: dell-ddv: Fix taking the psy->extensions_sem lock twice
-
-Jackie Dong (1):
-      lenovo-wmi-hotkey: Avoid triggering error -5 due to missing mute LED
-
-Jan-Niklas Burfeind (1):
-      platform/x86: dell-lis3lv02d: Add Precision 3551
-
-Jithu Joseph (1):
-      MAINTAINERS: Update entries for IFS and SBL drivers
-
-Johan Hovold (1):
-      platform: arm64: huawei-gaokun-ec: fix OF node leak
-
-Kurt Borja (2):
-      platform/x86: alienware-wmi-wmax: Fix `dmi_system_id` array
-      platform/x86: alieneware-wmi-wmax: Add AWCC support to more laptops
-
-Rong Zhang (2):
-      platform/x86: ideapad-laptop: Fix FnLock not remembered among boots
-      platform/x86: ideapad-laptop: Fix kbd backlight not remembered among boots
-
-Shravan Kumar Ramani (3):
-      platform/mellanox: mlxbf-pmc: Remove newline char from event name input
-      platform/mellanox: mlxbf-pmc: Validate event/enable input
-      platform/mellanox: mlxbf-pmc: Use kstrtobool() to check 0/1 input
-
-Torsten Hilbrich (1):
-      platform/x86: Fix initialization order for firmware_attributes_class
-
- MAINTAINERS                                        |  6 +-
- drivers/platform/arm64/huawei-gaokun-ec.c          |  2 +
- drivers/platform/mellanox/mlxbf-pmc.c              | 25 ++++---
- drivers/platform/x86/Makefile                      |  3 +-
- drivers/platform/x86/dell/alienware-wmi-wmax.c     | 17 +++++
- drivers/platform/x86/dell/dell-lis3lv02d.c         |  1 +
- drivers/platform/x86/dell/dell-wmi-ddv.c           | 10 ++-
- drivers/platform/x86/ideapad-laptop.c              |  4 +-
- drivers/platform/x86/lenovo-wmi-hotkey-utilities.c | 30 +++++---
- drivers/power/supply/power_supply_core.c           | 82 ++++++++++++++++++----
- drivers/power/supply/test_power.c                  |  4 ++
- include/linux/power_supply.h                       |  8 +++
- 12 files changed, 153 insertions(+), 39 deletions(-)
+Will
