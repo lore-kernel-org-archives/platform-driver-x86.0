@@ -1,91 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D79925C833;
-	Tue, 22 Jul 2025 15:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23C1E5B69;
+	Tue, 22 Jul 2025 16:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753198748; cv=none; b=eXccJplFDjhtPMuSKnQ7Spwo8pJBROJ36ccR/iYqcgFccS9XntbLm6kJtYkYJZHD8caZGzcoxoPY3FjO4hflZs3G1SZpOA8biS3rAUlmed2fcY4vgrzKi44MitIiNckE8WXpmlOFPtq182pNC2v5Z+iwNzTXeoYQm9yNpQmHgJ4=
+	t=1753200585; cv=none; b=IF3OSXnq+3Zk+8bdOEocXigVm4r4XTapug9vqq1GZS76cIhZYndCLjwqlHBhtjkbSxb3N4N0WOixRa5aYtiJrMysker+vr2BmLpKXWjO2u1C/2A+z7XXaU1UKKm1HxatNq9yBBEfZ5Ke4PiHtwqIk5Hp5eGmaAP7QOjAApQUG+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753198748; c=relaxed/simple;
-	bh=L1qIlieTBeJjLKSC5FnO3Bi7aA/JmO6/0ewBKzSFvjg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QrOSxsnTdcgagxxrukmJIqHw797xGlzXGKRXDMZJIdFHykR5Mb93WdbUjgQHKBBt0IqtCHroYx+6ulwC00A+lEuNS9DqwvBd6KpO7UMxMIMOIVlGO5LfmKc32hYuUYm7ZBxgwIc1K4E+xeYGV0wJ10V8exKbxQ7gfoN7xGUkJNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AQmgkO6g; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753200585; c=relaxed/simple;
+	bh=DNMSnCUpupSxBs2I5aWAsVBdwIy2uXQbv4wv/xdkf98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Gk2mIiR7ooGdFvgiCktfg56VfDTFQUeTgucFBoHCL1MCnuTbhc8h2DiOvKzKwNGK1DJz0DWKKwQPm1U3zl1evy77nByalMs2y46gSFNfucbwAUEYTFSRj2QkOrM3Okfcs7HdS0tgP9mMjMHusIW5peeE2UfXzIhHI8wLcmOWnl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=NxYOh0wn; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AQmgkO6g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753198747; x=1784734747;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=L1qIlieTBeJjLKSC5FnO3Bi7aA/JmO6/0ewBKzSFvjg=;
-  b=AQmgkO6ggsvnZrfQNrjs03oIuwSP/RPu73yKSDr0jQoU7Ytw21sTy0k2
-   IO/19gybix2fFOjNHBqCUi0C/79ScT/133l1zdmRvfXNNNbGODlXWdomo
-   +2Az/+sEGbypPWpBT6gssafZtQlwqrlpH3I9sNu3Si2LDEwbF+c8njheK
-   oARyJvnMKcCEUxJtO7b5BEiDOGGe5dtAM4t+zyD6exSQhUNSXNgXvO9kG
-   J+9+45/eYGtJJpx0JTX6M1Olv2QfsJ3NlHdXNRv3dttFqc5jnMyHGongf
-   ndDNln2BRii5xa1RLSc473tpGmjAmQflIDLJMmQyPk8czkpSeKv6RmNNG
-   g==;
-X-CSE-ConnectionGUID: Qw1hEQUbTAOGS5vknMuZsg==
-X-CSE-MsgGUID: Y9dYjJB6RUGbRcH4/narIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55336927"
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="55336927"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 08:39:07 -0700
-X-CSE-ConnectionGUID: KcsF1a1LRQaJf2IO32Mehg==
-X-CSE-MsgGUID: a8HZiMMGQ4Gua8iYk0ip3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="159229404"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 08:39:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, 
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: linux-kernel@vger.kernel.org, 
- Derek John Clark <derekjohn.clark@gmail.com>, 
- =?utf-8?q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
- Eileen <eileen@one-netbook.com>, Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250718163305.159232-1-lkml@antheas.dev>
-References: <20250718163305.159232-1-lkml@antheas.dev>
-Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Fix turbo register for G1
- AMD
-Message-Id: <175319873747.17914.9743576512932520356.b4-ty@linux.intel.com>
-Date: Tue, 22 Jul 2025 18:38:57 +0300
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="NxYOh0wn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1753200579; x=1753805379; i=w_armin@gmx.de;
+	bh=WQ2S25k3eRQ+d9qHupzJvo+pxYLzJFrIHbpZgH924og=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=NxYOh0wngz9/esO+3CGUjE6NAOUHmOPwMX6d51uNnIr5BrpSOcj+R1fAplqlJJ8w
+	 CMDk04GwIrDZJuoAnvhJrFtkC1abfBd6GmGlHJCoMZ+nF7j7NaaCcmE7O2HsQAetS
+	 1PXfcymb4e3/JRTE9PYl1hkPMfFQRSQt0TVD68HNJ3xOrRGpwI3yFXmiTfcGJZTr7
+	 Nqecmdmqs+TPGgMi7h7JXJsoMRZmSYqOmrHOvlmZRY55XsQNEhlRovhSypTrHMJlw
+	 huU6LhH9725UebdUMCfKsFgzN8Ak6T4HmctTzJflkX6hPsIhyGUqyNJ8WCx4ElaRF
+	 iFUILPondjniqPwrVw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPogF-1uHTU00oZH-00LbpD; Tue, 22
+ Jul 2025 18:09:39 +0200
+Message-ID: <616bdb32-0d57-476b-8ad0-f2be3c5c9fbe@gmx.de>
+Date: Tue, 22 Jul 2025 18:09:37 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Missing ACPI driver for a keyboard button in Xiaomi RedmiBook Pro
+ 16
+To: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>,
+ linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux@weissschuh.net, fengwk94@gmail.com
+References: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
+ <68cc7f60-39b1-47f3-9120-82f8b0f26d9c@gmx.de>
+ <b1f1fa0f-fd32-4e5d-a9df-9ac2af428a86@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <b1f1fa0f-fd32-4e5d-a9df-9ac2af428a86@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Scq8WI1nb8wnBmhwIyLj4+kc/Sl6hL1757rHz6Wf3XPvaR+s6ai
+ 3ZdleLYoeC7wt5utu8Y0jpC5Sdlci31s2WGSzjWEnazC6Y7gyNEMqLow2786aP5wUHLkKQ5
+ ymYblf3v8a8RaMtahsGZdYwRthb96TNH0lKlwNMWmBUtV71Z2RB96TOytwY6tla7pJUM3WQ
+ pDL9/4GU6vOgSAZ5lL/Fw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zYRX0oVDKKY=;0y4dghwAOa/CZ8rzZeh9MzwXLfe
+ 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
 
-On Fri, 18 Jul 2025 18:33:04 +0200, Antheas Kapenekakis wrote:
+Am 22.07.25 um 14:48 schrieb Nikita Krasnov:
 
-> Turns out that the AMD variant of the G1 uses different turbo registers
-> than the Intel variant. Differentiate them and apply the correct ones
-> to the AMD variant.
-> 
-> 
+> On Mon, Jul 21, 2025 at 02:23:32AM +0300 Armin Wolf wrote:
+>> please share the whole output of acpidump as the DSDT contains only two=
+ unrelated
+>> WMI devices.
+> Sure! I've attached a ZIP archive with the output of the `acpidump -b`.
+>
+>> I think that we do not need another driver in this case, as the xiaomi-=
+wmi driver
+>> is responsible for handling WMI events on Xiaomi devices. I can check w=
+hat needs
+>> to be done in order to add support for those additional keyboard events=
+, but for
+>> that i need the full output of acpidump.
+> Btw, I'd appreciate if you didn't patch the driver yourself and instead
+> let me do it. This is a golden opportunity for me to gain some
+> experience! :D
 
+Sure, but you have to develop a new WMI driver for your device because aft=
+er looking at the
+ACPI tables (SSDT20 in particular) i came to the conclusion that the xiaom=
+i-wmi driver cannot
+be used in this case.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+> If you may, there are some questions I have about this issue:
+>
+>   1. From what I saw on the internet, ACPI is a protocol
+>      (specification?) for how the power management is done on the modern
+>      hardware. What do keyboard events have to do with ACPI? Is it
+>      because the keypress here is handled by the firmware?
 
-The list of commits applied:
-[1/2] platform/x86: oxpec: Fix turbo register for G1 AMD
-      commit: 232b41d3c2ce8cf4641a174416676458bf0de5b2
-[2/2] platform/x86: oxpec: Add support for OneXPlayer X1 Mini Pro (Strix Point)
-      commit: 1798561befd8be1e52feb54f850efcab5a595f43
+The hotkey events cannot be delivered over the standard keyboard interface=
+ as there are no scan codes
+defined for all of those events. Because of this the platform firmware (in=
+ this case ACPI) provides a
+virtual device (the WMI device) for receiving those events from the (embed=
+ded) keyboard controller.
 
---
- i.
+>
+>   2. Where in the kernel source tree can I seem some similar drivers?
+>      Something to understand there general structure and internals.
+
+Take a look at https://docs.kernel.org/wmi/driver-development-guide.html.
+
+In your case you need to write a WMI event driver for the following WMI de=
+vice:
+
+class WMIEvent : __ExtrinsicEvent {
+};
+
+[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root=
+ WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
+class HID_EVENT20 : WmiEvent {
+   [key, read] string InstanceName;
+   [read] boolean Active;
+   [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDet=
+ail[32];
+};
+
+The event data of this WMI event device is a buffer with a size of 32 byte=
+s. The "EV20" ACPI control method
+is responsible for filling this buffer with information regarding hotkey e=
+vents. I suggest that you write a
+skeleton driver first that basically prints the content of this buffer to =
+the kernel log using print_hex_dump_bytes().
+
+This way you can determine the mapping between WMI event numbers and the h=
+otkeys. In your case the event data seems
+to be structured like this:
+
+	1. byte: event class
+	2. byte: event number
+	3. byte: event payload
+
+If you need further help just ask me :).
+
+>   3. What is WMI? Primarily in the context of the Linux kernel, of
+>      course There is Documentation/driver-api/wmi.rst, but it hard to
+>      understand what exactly is it talking about if you had no prior
+>      experience with writing drivers.
+
+ACPI-WMI is a Windows-specific extension of the ACPI interface. It=20
+allows the firmware to expose custom management interfaces (WMI objects)=
+=20
+of the Windows Management Interface (WMI). We implement a subset of the=20
+WMI interface inside the Linux kernel to be able to control the various=20
+platform-specific settings being exposed this way. Thanks, Armin Wolf
 
