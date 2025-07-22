@@ -1,58 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CEE23ED5E;
-	Tue, 22 Jul 2025 13:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2654E1E87B;
+	Tue, 22 Jul 2025 13:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753190071; cv=none; b=PviEWI//dG3ZqAIXqCp1Y9V8+kpaKHWWKCU9HmBT5WUN4wfdEL8BkI46hHjtbQaUdb6UTj/+rM2/4kYp/ijyRVQGP2BwuwU/xZgokE9ckAuSPZ5dG2VHmy3AvcQRJif2vgxGKJOraQ3jHLBBI3u3SA9mR7eHPATGSKGohoiBnIg=
+	t=1753190532; cv=none; b=cl+zfawib8F2Zp8xBSFOKoy1KVbcCmljf9kqqixNIxqZ5M+pKb65RQv+AmodAbNGKyJo2Bfgj4yVmQlZ6TI71LLELicuu1Dd08RQ1mQuIwZiy0OwB8QLejvVSPIPgBERZpc4FuuW8RLFTY4lg9CWBhx+vYLyxaig6Cmv+58EHTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753190071; c=relaxed/simple;
-	bh=4+hMLNITvQjzznkS5VvX+swrR5myW5iOTWCPjGwMvLY=;
+	s=arc-20240116; t=1753190532; c=relaxed/simple;
+	bh=hiiVm3MoevvxwaLZGF2qvRK1a9a+D7ISr391Qo+7l1U=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QG70LnqqAFPtHPISB3KkE8rjpAL6Ri3YHNhSaAFhC8kZd5YxjfeLgIgEly4xkAr5+sIkpG0Q5Bob0yohb80cUEf3JpByw8MU2AwhCsVzKh2iXKznstADT8bFsMWg7Nc6kCN4ZYg9803sOgt8A0klcLDblwGOfUQQXVqDavSIqcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEePorsw; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=e0Q+3tbgCKkDUh2nX7bU+Y0tTx3vgLmUw7W4oz/w7HDxwJUlgNEOFUVBO35nGLJ/sBoJqR85GOfr2XpfgZRXPFLmayQQvWiqA5A2Pn9fxGfUQ27LlugBPtg8lA2YEthZ4scmCdw+ZNHlYD9VqMZj5NlmUtr/OvbNp1v1LlFfkGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9OmMQM2; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEePorsw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9OmMQM2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753190069; x=1784726069;
+  t=1753190531; x=1784726531;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4+hMLNITvQjzznkS5VvX+swrR5myW5iOTWCPjGwMvLY=;
-  b=LEePorswWw/YLUG7Xs/qzCgZTVYoTcPi9iI3bpMHgzn/e5m22kdkiRvN
-   oyEo7bUs1d2EcENT1zxtoTq5/xSQnai++6+pTtLq5C/62nTvB+4XEpCV1
-   jcFgRKS1/+E6QYDMQnkRGGDawwbHjy4olNTFogrLe5QqeWi+xt7ObASm+
-   ihzt2JJpXXK8m2lfWyt9bcnibMNfBMsk3m/Sxql91oXH2czRtX3vpYyE5
-   hhDQoX5UP8XU8Nahdz5rNgFmGcXqhZ+790dFcqVqSPIElgycN+RktpU2P
-   M0rdevdruuMNZ6V+eATLO5Z2B2wnyqVxQmrwiMjuiWmLw65OC2+lZp1sB
+  bh=hiiVm3MoevvxwaLZGF2qvRK1a9a+D7ISr391Qo+7l1U=;
+  b=m9OmMQM2XMpAdVAgkmTFW1H2frn4vR5hqy9NzhuVQUJfgJF79dYR/5F2
+   IUXREM8Jrwv2/sLiOF2YJUzz8558H2OhWrbkp5gsJ8m5TAMFBMT0Bf0AJ
+   Vz0FithQOXpH61e2o+NaWZYiUDwapNh0DXOTNv8w+ilm+YxiNoW+Y8FmP
+   KOrqkPMfP6/aHLpGD1hvZCoDMja0nY9sA5eNb7rN71oSUEqoNt5Krsk2k
+   1pes6uSfs5zAFmPj2MdZJqnkE8duGhQNkjUN0MWbA+74AG2QMkasZtbS3
+   rfaZ1D+JOCAR7pJUM1sGXPc/3ANZOajPCfnYXrmedJxsrv5UqiaVtCo5o
    Q==;
-X-CSE-ConnectionGUID: L45AMUxQRe+V2LVDVAZ9zg==
-X-CSE-MsgGUID: rgyqAkBjSKqb6P4OGxRJkg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="54539222"
+X-CSE-ConnectionGUID: wZTu94KDSdOlzcvKMBrb3w==
+X-CSE-MsgGUID: mSU+8pKBTha46E+7DEL1rw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="54540862"
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="54539222"
+   d="scan'208";a="54540862"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:14:28 -0700
-X-CSE-ConnectionGUID: Ad9XyAr5TD+u+vv4WC9qlQ==
-X-CSE-MsgGUID: rBFSLfkvTqu6ZOD+IbEJrA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:22:10 -0700
+X-CSE-ConnectionGUID: b8V5oskZR2axqEKr0Ngb9A==
+X-CSE-MsgGUID: wdUO5vqBRVWmiEp7q2eYHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="182839005"
+   d="scan'208";a="182842135"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:14:26 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:22:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Jul 2025 16:14:22 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: hansg@kernel.org, Dell.Client.Kernel@dell.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-smbios-wmi: Stop touching WMI device
- ID
-In-Reply-To: <20250712140222.347638-1-W_Armin@gmx.de>
-Message-ID: <2897df20-cb7f-41c6-e72f-91f1696556a0@linux.intel.com>
-References: <20250712140222.347638-1-W_Armin@gmx.de>
+Date: Tue, 22 Jul 2025 16:22:04 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    =?ISO-8859-15?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Eileen <eileen@one-netbook.com>
+Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Fix turbo register for G1
+ AMD
+In-Reply-To: <20250718163305.159232-1-lkml@antheas.dev>
+Message-ID: <710baf02-fc18-6752-b8bd-bbf1354227e8@linux.intel.com>
+References: <20250718163305.159232-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,134 +63,79 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 12 Jul 2025, Armin Wolf wrote:
+On Fri, 18 Jul 2025, Antheas Kapenekakis wrote:
 
-> The WMI core itself uses wdev->dev.id internally to track device IDs,
-> so modifying this value will result in a resource leak.
+> Turns out that the AMD variant of the G1 uses different turbo registers
+> than the Intel variant. Differentiate them and apply the correct ones
+> to the AMD variant.
 > 
-> Fix this by not using the device ID for SMBIOS prioritization.
-
-Please describe the solution properly. The patch deals with what is called 
-"priority" which is not covered by the changelog text at all.
-
-> Tested on a Dell Inspiron 3505.
-> 
-> Fixes: 73f0f2b52c5e ("platform/x86: wmi: Fix WMI device naming issue")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Fixes: b369395c895b ("platform/x86: oxpec: Add support for the OneXPlayer G1")
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > ---
->  drivers/platform/x86/dell/dell-smbios-base.c | 19 +++++++++----------
->  drivers/platform/x86/dell/dell-smbios-smm.c  |  3 +--
->  drivers/platform/x86/dell/dell-smbios-wmi.c  |  4 +---
->  drivers/platform/x86/dell/dell-smbios.h      |  2 +-
->  4 files changed, 12 insertions(+), 16 deletions(-)
+>  drivers/platform/x86/oxpec.c | 37 +++++++++++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-> index 01c72b91a50d..444786102f02 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -39,6 +39,7 @@ struct token_sysfs_data {
->  struct smbios_device {
->  	struct list_head list;
->  	struct device *device;
-> +	int priority;
->  	int (*call_fn)(struct calling_interface_buffer *arg);
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index 06759036945d..9839e8cb82ce 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -58,7 +58,8 @@ enum oxp_board {
+>  	oxp_mini_amd_a07,
+>  	oxp_mini_amd_pro,
+>  	oxp_x1,
+> -	oxp_g1,
+> +	oxp_g1_i,
+> +	oxp_g1_a,
 >  };
 >  
-> @@ -145,7 +146,7 @@ int dell_smbios_error(int value)
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_error);
->  
-> -int dell_smbios_register_device(struct device *d, void *call_fn)
-> +int dell_smbios_register_device(struct device *d, int priority, void *call_fn)
->  {
->  	struct smbios_device *priv;
->  
-> @@ -154,6 +155,7 @@ int dell_smbios_register_device(struct device *d, void *call_fn)
->  		return -ENOMEM;
->  	get_device(d);
->  	priv->device = d;
-> +	priv->priority = priority;
->  	priv->call_fn = call_fn;
->  	mutex_lock(&smbios_mutex);
->  	list_add_tail(&priv->list, &smbios_device_list);
-> @@ -292,28 +294,25 @@ EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
->  
->  int dell_smbios_call(struct calling_interface_buffer *buffer)
->  {
-> -	int (*call_fn)(struct calling_interface_buffer *) = NULL;
-> -	struct device *selected_dev = NULL;
-> +	struct smbios_device *selected = NULL;
->  	struct smbios_device *priv;
->  	int ret;
->  
->  	mutex_lock(&smbios_mutex);
->  	list_for_each_entry(priv, &smbios_device_list, list) {
-> -		if (!selected_dev || priv->device->id >= selected_dev->id) {
-> -			dev_dbg(priv->device, "Trying device ID: %d\n",
-> -				priv->device->id);
-> -			call_fn = priv->call_fn;
-> -			selected_dev = priv->device;
-> +		if (!selected || priv->priority >= selected->priority) {
-> +			dev_dbg(priv->device, "Trying device ID: %d\n", priv->priority);
-> +			selected = priv;
->  		}
->  	}
->  
-> -	if (!selected_dev) {
-> +	if (!selected) {
->  		ret = -ENODEV;
->  		pr_err("No dell-smbios drivers are loaded\n");
->  		goto out_smbios_call;
->  	}
->  
-> -	ret = call_fn(buffer);
-> +	ret = selected->call_fn(buffer);
->  
->  out_smbios_call:
->  	mutex_unlock(&smbios_mutex);
-> diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platform/x86/dell/dell-smbios-smm.c
-> index 4d375985c85f..7055e2c40f34 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-smm.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-smm.c
-> @@ -125,8 +125,7 @@ int init_dell_smbios_smm(void)
->  	if (ret)
->  		goto fail_platform_device_add;
->  
-> -	ret = dell_smbios_register_device(&platform_device->dev,
-> -					  &dell_smbios_smm_call);
-> +	ret = dell_smbios_register_device(&platform_device->dev, 0, &dell_smbios_smm_call);
->  	if (ret)
->  		goto fail_register;
->  
-> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> index ae9012549560..a7dca8c59d60 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> @@ -264,9 +264,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
->  	if (ret)
->  		return ret;
->  
-> -	/* ID is used by dell-smbios to set priority of drivers */
-> -	wdev->dev.id = 1;
-> -	ret = dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
-> +	ret = dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
-> index 77baa15eb523..f421b8533a9e 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -64,7 +64,7 @@ struct calling_interface_structure {
->  	struct calling_interface_token tokens[];
->  } __packed;
->  
-> -int dell_smbios_register_device(struct device *d, void *call_fn);
-> +int dell_smbios_register_device(struct device *d, int priority, void *call_fn);
->  void dell_smbios_unregister_device(struct device *d);
->  
->  int dell_smbios_error(int value);
-> 
+>  static enum oxp_board board;
+> @@ -247,14 +248,14 @@ static const struct dmi_system_id dmi_table[] = {
+>  			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+>  			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
+>  		},
+> -		.driver_data = (void *)oxp_g1,
+> +		.driver_data = (void *)oxp_g1_a,
+>  	},
+>  	{
+>  		.matches = {
+>  			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+>  			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 i"),
+>  		},
+> -		.driver_data = (void *)oxp_g1,
+> +		.driver_data = (void *)oxp_g1_i,
+>  	},
+>  	{
+>  		.matches = {
+
+
+> -	case oxp_g1:
+> +	case oxp_g1_i:
+>  		return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
+> @@ -757,6 +765,7 @@ static int oxp_pwm_fan_speed(long *val)
+> +	case oxp_g1_a:
+>  		return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
+
+> -	case oxp_g1:
+> +	case oxp_g1_i:
+>  		/* scale to range [0-184] */
+>  		val = (val * 184) / 255;
+>  		return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> @@ -796,6 +805,7 @@ static int oxp_pwm_input_write(long val)
+> +	case oxp_g1_a:
+>  		return write_to_ec(OXP_SENSOR_PWM_REG, val);
+> @@ -816,7 +826,7 @@ static int oxp_pwm_input_read(long *val)
+> -	case oxp_g1:
+> +	case oxp_g1_i:
+>  		ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> @@ -842,6 +852,7 @@ static int oxp_pwm_input_read(long *val)
+> +	case oxp_g1_a:
+>  	default:
+>  		ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+
+Do these FAN and PWM registers fall under what is described in the 
+changelog as "turbo registers"? Or did you extend the scope of this patch 
+and forgot to update the changelog?
+
 
 -- 
  i.
