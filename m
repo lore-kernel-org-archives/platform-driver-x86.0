@@ -1,201 +1,249 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23C1E5B69;
-	Tue, 22 Jul 2025 16:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21D523B60F;
+	Tue, 22 Jul 2025 18:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753200585; cv=none; b=IF3OSXnq+3Zk+8bdOEocXigVm4r4XTapug9vqq1GZS76cIhZYndCLjwqlHBhtjkbSxb3N4N0WOixRa5aYtiJrMysker+vr2BmLpKXWjO2u1C/2A+z7XXaU1UKKm1HxatNq9yBBEfZ5Ke4PiHtwqIk5Hp5eGmaAP7QOjAApQUG+o=
+	t=1753209537; cv=none; b=jkrQYULShKo9u6m3qHat1y1yZqtSwssNw6aCQcHK+YOk3tC/MM8KHT2y6hc6/746NSu90PMq/m88/bsWwEu7daGnjyKoYRY6v/2nEkI17yx2Mi/FbLcRoJIab8cMQP2rBLaDSyu0wg8rtjmnZxzkEpqEdkkKcbeJ/oc5KW04cPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753200585; c=relaxed/simple;
-	bh=DNMSnCUpupSxBs2I5aWAsVBdwIy2uXQbv4wv/xdkf98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Gk2mIiR7ooGdFvgiCktfg56VfDTFQUeTgucFBoHCL1MCnuTbhc8h2DiOvKzKwNGK1DJz0DWKKwQPm1U3zl1evy77nByalMs2y46gSFNfucbwAUEYTFSRj2QkOrM3Okfcs7HdS0tgP9mMjMHusIW5peeE2UfXzIhHI8wLcmOWnl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=NxYOh0wn; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1753209537; c=relaxed/simple;
+	bh=VWLgtMwB/N5XqdJJb0pKehXNZoWX381xk8O3plV62WY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gp6Lw5rq5lZrLy6aLrXc94HigrT6vozAFFE2WUlE40u1Gub+HVTA7wjJMMpuviUXc3XTAR6xPgRBmAbowsvjzq+a36EMkqf9rwnEyBFGcBM32xOXy7DrCdyR7cpsRmTJST94t2ENELRwP9+HEyEskXoZI7yaU0oZYtukFXr09iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tsBqQO+e; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="NxYOh0wn"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tsBqQO+e"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1753200579; x=1753805379; i=w_armin@gmx.de;
-	bh=WQ2S25k3eRQ+d9qHupzJvo+pxYLzJFrIHbpZgH924og=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=NxYOh0wngz9/esO+3CGUjE6NAOUHmOPwMX6d51uNnIr5BrpSOcj+R1fAplqlJJ8w
-	 CMDk04GwIrDZJuoAnvhJrFtkC1abfBd6GmGlHJCoMZ+nF7j7NaaCcmE7O2HsQAetS
-	 1PXfcymb4e3/JRTE9PYl1hkPMfFQRSQt0TVD68HNJ3xOrRGpwI3yFXmiTfcGJZTr7
-	 Nqecmdmqs+TPGgMi7h7JXJsoMRZmSYqOmrHOvlmZRY55XsQNEhlRovhSypTrHMJlw
-	 huU6LhH9725UebdUMCfKsFgzN8Ak6T4HmctTzJflkX6hPsIhyGUqyNJ8WCx4ElaRF
-	 iFUILPondjniqPwrVw==
+	s=s31663417; t=1753209525; x=1753814325; i=w_armin@gmx.de;
+	bh=hQ7Ejgi69E9CHPlq3k43hNlSAhN/MDyFhPdHBU8j/sg=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tsBqQO+eryE9/nq/xEHP0fMsE8hFpkXkHv4AvPwLwcBmQYvnRIhU8sCvAkPXThpa
+	 KnasG2Pkd68rqZZqtjyumgDs8F/mBzBSahfFpfA7vk1Au/LlI2vEKIyFktZvYJQFd
+	 Qkj2jvO+Yd3lyEApfzAgIDLETYwhM6I+2HUrU/aGGGYGeMPc5x2osjPFZNzxaFMyO
+	 4RY3kHubX5nWnQvAyiRcl7KI0qgvF/96SOeX2YiBxhQFmN6MjHeYZpt91zoxb+2iq
+	 4PGaV6Q1BguQnTWVpkCi+K4fEHJ/El8a0thkX8dNHxGF5fT+Jq/FhRGAa2TeMT2vO
+	 VWdlYTB1ugcSC96EPQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPogF-1uHTU00oZH-00LbpD; Tue, 22
- Jul 2025 18:09:39 +0200
-Message-ID: <616bdb32-0d57-476b-8ad0-f2be3c5c9fbe@gmx.de>
-Date: Tue, 22 Jul 2025 18:09:37 +0200
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MRCKC-1uH6jA2LP2-00JDZM; Tue, 22 Jul 2025 20:38:44 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: dell-smbios-wmi: Stop touching WMI device ID
+Date: Tue, 22 Jul 2025 20:38:41 +0200
+Message-Id: <20250722183841.9552-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Missing ACPI driver for a keyboard button in Xiaomi RedmiBook Pro
- 16
-To: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>,
- linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux@weissschuh.net, fengwk94@gmail.com
-References: <6c7e2d8a-8c79-4311-8126-c888a6519c71@gmail.com>
- <68cc7f60-39b1-47f3-9120-82f8b0f26d9c@gmx.de>
- <b1f1fa0f-fd32-4e5d-a9df-9ac2af428a86@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <b1f1fa0f-fd32-4e5d-a9df-9ac2af428a86@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Scq8WI1nb8wnBmhwIyLj4+kc/Sl6hL1757rHz6Wf3XPvaR+s6ai
- 3ZdleLYoeC7wt5utu8Y0jpC5Sdlci31s2WGSzjWEnazC6Y7gyNEMqLow2786aP5wUHLkKQ5
- ymYblf3v8a8RaMtahsGZdYwRthb96TNH0lKlwNMWmBUtV71Z2RB96TOytwY6tla7pJUM3WQ
- pDL9/4GU6vOgSAZ5lL/Fw==
+X-Provags-ID: V03:K1:FlYIsSP65aPa9K4D4gCi9AZNT+i+1QykOFlZ8WGP6F8JVHtwvIC
+ ANQs9NlaJpKAHPvVb3sqdzUIFjqGW2BDjZII03F3qs8bNd3EGapotK9IBETsZ2JQor5yPGP
+ xYE5N2vgEDMuCHUcgDYMWm4Lbms6JukPH5vsCSQgsDT+KngyKbSPd3aooJD3fJkJYmhczWX
+ d+fe/8jA4iJxuFOMbmcyQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zYRX0oVDKKY=;0y4dghwAOa/CZ8rzZeh9MzwXLfe
- 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
+UI-OutboundReport: notjunk:1;M01:P0:XxdEUfZOZvw=;ZKedF9w/kqElTAL8mzjIN4XoDBQ
+ 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
 
-Am 22.07.25 um 14:48 schrieb Nikita Krasnov:
+The Dell SMBIOS driver uses the "id" field inside struct device for
+prioritizing the WMI backend over the SMM backend. Because of this
+the WMI backend modifies the "id" field of the underlying WMI device.
+However the WMI core itself uses wdev->dev.id internally to track
+device IDs, so modifying this value will result in a resource leak.
 
-> On Mon, Jul 21, 2025 at 02:23:32AM +0300 Armin Wolf wrote:
->> please share the whole output of acpidump as the DSDT contains only two=
- unrelated
->> WMI devices.
-> Sure! I've attached a ZIP archive with the output of the `acpidump -b`.
->
->> I think that we do not need another driver in this case, as the xiaomi-=
-wmi driver
->> is responsible for handling WMI events on Xiaomi devices. I can check w=
-hat needs
->> to be done in order to add support for those additional keyboard events=
-, but for
->> that i need the full output of acpidump.
-> Btw, I'd appreciate if you didn't patch the driver yourself and instead
-> let me do it. This is a golden opportunity for me to gain some
-> experience! :D
+Fix this by not using the "id" field inside struct device for SMBIOS
+prioritization. Instead extend struct smbios_device with a separate
+"priority" field.
 
-Sure, but you have to develop a new WMI driver for your device because aft=
-er looking at the
-ACPI tables (SSDT20 in particular) i came to the conclusion that the xiaom=
-i-wmi driver cannot
-be used in this case.
+Tested on a Dell Inspiron 3505.
 
-> If you may, there are some questions I have about this issue:
->
->   1. From what I saw on the internet, ACPI is a protocol
->      (specification?) for how the power management is done on the modern
->      hardware. What do keyboard events have to do with ACPI? Is it
->      because the keypress here is handled by the firmware?
+Fixes: 73f0f2b52c5e ("platform/x86: wmi: Fix WMI device naming issue")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v2:
+- improve commit message
+=2D--
+ drivers/platform/x86/dell/dell-smbios-base.c | 19 +++++++++----------
+ drivers/platform/x86/dell/dell-smbios-smm.c  |  3 +--
+ drivers/platform/x86/dell/dell-smbios-wmi.c  |  4 +---
+ drivers/platform/x86/dell/dell-smbios.h      |  2 +-
+ 4 files changed, 12 insertions(+), 16 deletions(-)
 
-The hotkey events cannot be delivered over the standard keyboard interface=
- as there are no scan codes
-defined for all of those events. Because of this the platform firmware (in=
- this case ACPI) provides a
-virtual device (the WMI device) for receiving those events from the (embed=
-ded) keyboard controller.
-
->
->   2. Where in the kernel source tree can I seem some similar drivers?
->      Something to understand there general structure and internals.
-
-Take a look at https://docs.kernel.org/wmi/driver-development-guide.html.
-
-In your case you need to write a WMI event driver for the following WMI de=
-vice:
-
-class WMIEvent : __ExtrinsicEvent {
-};
-
-[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root=
- WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
-class HID_EVENT20 : WmiEvent {
-   [key, read] string InstanceName;
-   [read] boolean Active;
-   [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDet=
-ail[32];
-};
-
-The event data of this WMI event device is a buffer with a size of 32 byte=
-s. The "EV20" ACPI control method
-is responsible for filling this buffer with information regarding hotkey e=
-vents. I suggest that you write a
-skeleton driver first that basically prints the content of this buffer to =
-the kernel log using print_hex_dump_bytes().
-
-This way you can determine the mapping between WMI event numbers and the h=
-otkeys. In your case the event data seems
-to be structured like this:
-
-	1. byte: event class
-	2. byte: event number
-	3. byte: event payload
-
-If you need further help just ask me :).
-
->   3. What is WMI? Primarily in the context of the Linux kernel, of
->      course There is Documentation/driver-api/wmi.rst, but it hard to
->      understand what exactly is it talking about if you had no prior
->      experience with writing drivers.
-
-ACPI-WMI is a Windows-specific extension of the ACPI interface. It=20
-allows the firmware to expose custom management interfaces (WMI objects)=
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platfo=
+rm/x86/dell/dell-smbios-base.c
+index 01c72b91a50d..444786102f02 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -39,6 +39,7 @@ struct token_sysfs_data {
+ struct smbios_device {
+ 	struct list_head list;
+ 	struct device *device;
++	int priority;
+ 	int (*call_fn)(struct calling_interface_buffer *arg);
+ };
 =20
-of the Windows Management Interface (WMI). We implement a subset of the=20
-WMI interface inside the Linux kernel to be able to control the various=20
-platform-specific settings being exposed this way. Thanks, Armin Wolf
+@@ -145,7 +146,7 @@ int dell_smbios_error(int value)
+ }
+ EXPORT_SYMBOL_GPL(dell_smbios_error);
+=20
+-int dell_smbios_register_device(struct device *d, void *call_fn)
++int dell_smbios_register_device(struct device *d, int priority, void *cal=
+l_fn)
+ {
+ 	struct smbios_device *priv;
+=20
+@@ -154,6 +155,7 @@ int dell_smbios_register_device(struct device *d, void=
+ *call_fn)
+ 		return -ENOMEM;
+ 	get_device(d);
+ 	priv->device =3D d;
++	priv->priority =3D priority;
+ 	priv->call_fn =3D call_fn;
+ 	mutex_lock(&smbios_mutex);
+ 	list_add_tail(&priv->list, &smbios_device_list);
+@@ -292,28 +294,25 @@ EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
+=20
+ int dell_smbios_call(struct calling_interface_buffer *buffer)
+ {
+-	int (*call_fn)(struct calling_interface_buffer *) =3D NULL;
+-	struct device *selected_dev =3D NULL;
++	struct smbios_device *selected =3D NULL;
+ 	struct smbios_device *priv;
+ 	int ret;
+=20
+ 	mutex_lock(&smbios_mutex);
+ 	list_for_each_entry(priv, &smbios_device_list, list) {
+-		if (!selected_dev || priv->device->id >=3D selected_dev->id) {
+-			dev_dbg(priv->device, "Trying device ID: %d\n",
+-				priv->device->id);
+-			call_fn =3D priv->call_fn;
+-			selected_dev =3D priv->device;
++		if (!selected || priv->priority >=3D selected->priority) {
++			dev_dbg(priv->device, "Trying device ID: %d\n", priv->priority);
++			selected =3D priv;
+ 		}
+ 	}
+=20
+-	if (!selected_dev) {
++	if (!selected) {
+ 		ret =3D -ENODEV;
+ 		pr_err("No dell-smbios drivers are loaded\n");
+ 		goto out_smbios_call;
+ 	}
+=20
+-	ret =3D call_fn(buffer);
++	ret =3D selected->call_fn(buffer);
+=20
+ out_smbios_call:
+ 	mutex_unlock(&smbios_mutex);
+diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platfor=
+m/x86/dell/dell-smbios-smm.c
+index 4d375985c85f..7055e2c40f34 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-smm.c
++++ b/drivers/platform/x86/dell/dell-smbios-smm.c
+@@ -125,8 +125,7 @@ int init_dell_smbios_smm(void)
+ 	if (ret)
+ 		goto fail_platform_device_add;
+=20
+-	ret =3D dell_smbios_register_device(&platform_device->dev,
+-					  &dell_smbios_smm_call);
++	ret =3D dell_smbios_register_device(&platform_device->dev, 0, &dell_smbi=
+os_smm_call);
+ 	if (ret)
+ 		goto fail_register;
+=20
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platfor=
+m/x86/dell/dell-smbios-wmi.c
+index ae9012549560..a7dca8c59d60 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -264,9 +264,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wd=
+ev, const void *context)
+ 	if (ret)
+ 		return ret;
+=20
+-	/* ID is used by dell-smbios to set priority of drivers */
+-	wdev->dev.id =3D 1;
+-	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
++	ret =3D dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call=
+);
+ 	if (ret)
+ 		return ret;
+=20
+diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x8=
+6/dell/dell-smbios.h
+index 77baa15eb523..f421b8533a9e 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios.h
++++ b/drivers/platform/x86/dell/dell-smbios.h
+@@ -64,7 +64,7 @@ struct calling_interface_structure {
+ 	struct calling_interface_token tokens[];
+ } __packed;
+=20
+-int dell_smbios_register_device(struct device *d, void *call_fn);
++int dell_smbios_register_device(struct device *d, int priority, void *cal=
+l_fn);
+ void dell_smbios_unregister_device(struct device *d);
+=20
+ int dell_smbios_error(int value);
+=2D-=20
+2.39.5
 
