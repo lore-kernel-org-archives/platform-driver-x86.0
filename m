@@ -1,177 +1,177 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1B42E11BA;
-	Tue, 22 Jul 2025 13:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC5C2D3EFB;
+	Tue, 22 Jul 2025 13:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753190901; cv=none; b=l+ZYL/oaABFflwmBHr8mOyZb5e7Bx4HCpO3hF9Lp+Pa/GoKFnXQG0gBiKQeeM19hAVdkMI6VN27OLhZFgiZWoU+Fewe13QBqGn8rW8FgdnczyJ4gP6CV70jWX3sWblYFNYp+bdRtwOyVgASLHUs30mshyMvS64m3TEw2kABcmZE=
+	t=1753190973; cv=none; b=jUbfq6LzYuDe8e2xZhmDFylAk82T8N+MMEYIKpBxojGEidYm6Vylg0yaPAmkkshn63vdVSCUD90HSWt9MO0R3nd1J32RRgIX4mb0D6rlNoWgRNSg1PxGtO5l89YlRRw1xld2RfKsd6w/+ImvwDJYoACPN0XaAhdiTKSZlVwGOhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753190901; c=relaxed/simple;
-	bh=ih6W084s0+qNpeeKlj+/IX2juni66kZK1UPaHdiDB8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h4bIynUgcROpjeDEdEbMlVBVD0gLH+kONkBo8ltaLNx86DYY0PIIDgJezbdXws5zTyNsQh5PIx73S+GuAFzl+59uJT07N/HPUHUafP8FLszhNo372f4ulI0X0bt5jfO8j2vklnfhFmgeMtQYxtAiw2UrrcCHAMtBEdIExid2GK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=lFSTZNe7; arc=none smtp.client-ip=88.99.38.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1753190973; c=relaxed/simple;
+	bh=v5BLSIwd7srHi/OWA5ndIBkdalmEzmLEQmrp+RewTTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGItBp7f0LJtFN0uHXVdSHBZ7Iu7ohLohoEN0sVtiLa0UUj8G20bvsqoZjSP4BErfMdtD4RlWkyaRGSWt6bsjq7zMwMV4jXbODJdDpGEMpH1y8lqKrHlolk0AgMXEnqGIcwunW3BYJWaZpefdQsci7y5deQ/aHn4RQNvfZPCnrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icCzbYE3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="lFSTZNe7"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id A3396BE3FB;
-	Tue, 22 Jul 2025 16:28:07 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id 358E5BE3BE;
-	Tue, 22 Jul 2025 16:28:06 +0300 (EEST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id C1EE11FD50D;
-	Tue, 22 Jul 2025 16:28:05 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1753190885;
-	bh=/wLMAPlnrdxZdacm1RYW8res/EQP52wJ1y7o/GCWAlg=;
-	h=Received:From:Subject:To;
-	b=lFSTZNe7AQPWxp78HygWg2Zg+p/4WMj2iNtSX4pfpYabSWs3smn/dOzuMjTmU0Or+
-	 kjuddqMRsIY/I1cWPmi6RlGZT/wAf6zDI+5NA/3c8zV+CPpQ0C4jCRVMolnpM7OzjB
-	 3IaVBN38/0i0P6UQ0CeK9IuJqLcbWA1Yaz7u3iSKWYE7m2P4iixagJhBMuW/6ADqxu
-	 l8Lgn+lR0dePMF0FHPR/xMAllKuvWuEO3ejam+gdeovHyXo0tZ3+9nqkmJRDoXAofF
-	 bmXA4jICDIObh8BwH4VzmXwUJVuci4Dyu95oQR9Z7drlt1DO+8YMNqhbPl9NS/Ibib
-	 HdhyGyn+USxdw==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f177.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f177.google.com with SMTP id
- 38308e7fff4ca-32b7cf56cacso51405181fa.1;
-        Tue, 22 Jul 2025 06:28:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXyZowKgH3p4GQc+wbQ8tcjQI5MHNSnMSX1Ij4NeAMaR8UhvDYUEy8SFcVurRbJwNDF9cFPv/COU7IGf10=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRcP8Cy7qLPDs+AgkZgZjBopAMpcWD6G5uDoquVZtM25suSpR6
-	8Vh7kPPQRlipApixmFMAm6lj0M4F1dAIEbwmCTeFmnwnUAo/t9mGXGlWmwqkpqBq9JultgMxhZc
-	NkIlpJ9bfSDReyT/CSH1/BdR2AG751Yw=
-X-Google-Smtp-Source: 
- AGHT+IFiW6yJ1+5zJBmeLLHTkCBQQxIBXxImMX8vGF0PUHqVxXdsAFdOYfl24Mvk2wS+mQRpPCpMEgyimDei4lkeZrg=
-X-Received: by 2002:a05:651c:1505:b0:32a:6312:bfc6 with SMTP id
- 38308e7fff4ca-3308e58cb51mr82492481fa.35.1753190885323; Tue, 22 Jul 2025
- 06:28:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icCzbYE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B00BC4CEEB;
+	Tue, 22 Jul 2025 13:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753190972;
+	bh=v5BLSIwd7srHi/OWA5ndIBkdalmEzmLEQmrp+RewTTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=icCzbYE3Gw4FMkjzZQGdd5PRl3DLgwJi4XEJMOcR2bhXW2g1yFhd+T0X/aqMi3/BP
+	 CibFuID4nbj6OAYkc1NMOYpqf8N3QkVei13FupO8PIGWwd7LMLFew2Gjxu4KdVUg1O
+	 DkTKaYgXxxbbsiX0+w7BLz0w/qJZtmL94y+JVE7CzC9ZZx6kQNyfp3ET4nPZ9scvga
+	 Dn2CpPG5UqY1IGli6LRySAYz4YmMRdxPp1TJllyeOcCWdL2WRYt94l/h9D04DE4+Uc
+	 MGgZG1jWvtMVVXZVVriPuhmhhcn2IesGNkPl/Ho6XBcy/wvha6uvWcQ0AKEDdQ4Ukm
+	 HjjZtlQLlu8FQ==
+Date: Tue, 22 Jul 2025 14:29:19 +0100
+From: Will Deacon <will@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, Ingo Molnar <mingo@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 04/13] x86: Handle KCOV __init vs inline mismatches
+Message-ID: <aH-SL2V2bSPkJ18o@willie-the-truck>
+References: <20250717231756.make.423-kees@kernel.org>
+ <20250717232519.2984886-4-kees@kernel.org>
+ <aHoHkDvvp4AHIzU1@kernel.org>
+ <202507181541.B8CFAC7E@keescook>
+ <CAMj1kXGAwjChyFvjQcTbL8dFXkFWnn9n47bkN7FP=+EsLNsJdg@mail.gmail.com>
+ <aH42--h-ARsvX5Wk@willie-the-truck>
+ <202507211311.8DAC4C7@keescook>
+ <202507211349.D93679FB25@keescook>
+ <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250718163305.159232-1-lkml@antheas.dev>
- <710baf02-fc18-6752-b8bd-bbf1354227e8@linux.intel.com>
-In-Reply-To: <710baf02-fc18-6752-b8bd-bbf1354227e8@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Tue, 22 Jul 2025 15:27:53 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFvWuXM_oSzY9S+2CdW+dHiusuYra6kJeA+Vo00NZFb4g@mail.gmail.com>
-X-Gm-Features: Ac12FXzPLXSU0G-YWITT4Wv5JVvws76F8drbvzJkJj_rVguY7w3qSuti0otwOys
-Message-ID: 
- <CAGwozwFvWuXM_oSzY9S+2CdW+dHiusuYra6kJeA+Vo00NZFb4g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Fix turbo register for G1 AMD
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>, Eileen <eileen@one-netbook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <175319088594.299230.17518193628529675272@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.0.9 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGoy7D+_hKyQrT_uXdjuFMYGUEMDYdRf6mx69PLeuBQQg@mail.gmail.com>
 
-On Tue, 22 Jul 2025 at 15:22, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Fri, 18 Jul 2025, Antheas Kapenekakis wrote:
->
-> > Turns out that the AMD variant of the G1 uses different turbo registers
-> > than the Intel variant. Differentiate them and apply the correct ones
-> > to the AMD variant.
+On Tue, Jul 22, 2025 at 04:55:47PM +1000, Ard Biesheuvel wrote:
+> On Tue, 22 Jul 2025 at 06:49, Kees Cook <kees@kernel.org> wrote:
 > >
-> > Fixes: b369395c895b ("platform/x86: oxpec: Add support for the OneXPlay=
-er G1")
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/platform/x86/oxpec.c | 37 +++++++++++++++++++++++-------------
-> >  1 file changed, 24 insertions(+), 13 deletions(-)
+> > On Mon, Jul 21, 2025 at 01:14:36PM -0700, Kees Cook wrote:
+> > > On Mon, Jul 21, 2025 at 01:47:55PM +0100, Will Deacon wrote:
+> > > > On Sun, Jul 20, 2025 at 04:10:01PM +1000, Ard Biesheuvel wrote:
+> > > > > On Sat, 19 Jul 2025 at 08:51, Kees Cook <kees@kernel.org> wrote:
+> > > > > > On Fri, Jul 18, 2025 at 11:36:32AM +0300, Mike Rapoport wrote:
+> > > > > > > On Thu, Jul 17, 2025 at 04:25:09PM -0700, Kees Cook wrote:
+> > > > > > > > When KCOV is enabled all functions get instrumented, unless the
+> > > > > > > > __no_sanitize_coverage attribute is used. To prepare for
+> > > > > > > > __no_sanitize_coverage being applied to __init functions, we have to
+> > > > > > > > handle differences in how GCC's inline optimizations get resolved. For
+> > > > > > > > x86 this means forcing several functions to be inline with
+> > > > > > > > __always_inline.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> > > > > > > > index bb19a2534224..b96746376e17 100644
+> > > > > > > > --- a/include/linux/memblock.h
+> > > > > > > > +++ b/include/linux/memblock.h
+> > > > > > > > @@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
+> > > > > > > >                                       NUMA_NO_NODE);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > -static inline void *memblock_alloc_from(phys_addr_t size,
+> > > > > > > > +static __always_inline void *memblock_alloc_from(phys_addr_t size,
+> > > > > > > >                                             phys_addr_t align,
+> > > > > > > >                                             phys_addr_t min_addr)
+> > > > > > >
+> > > > > > > I'm curious why from all memblock_alloc* wrappers this is the only one that
+> > > > > > > needs to be __always_inline?
+> > > > > >
+> > > > > > Thread-merge[1], adding Will Deacon, who was kind of asking the same
+> > > > > > question.
+> > > > > >
+> > > > > > Based on what I can tell, GCC has kind of fragile inlining logic, in the
+> > > > > > sense that it can change whether or not it inlines something based on
+> > > > > > optimizations. It looks like the kcov instrumentation being added (or in
+> > > > > > this case, removed) from a function changes the optimization results,
+> > > > > > and some functions marked "inline" are _not_ inlined. In that case, we end up
+> > > > > > with __init code calling a function not marked __init, and we get the
+> > > > > > build warnings I'm trying to eliminate.
+> > > >
+> > > > Got it, thanks for the explanation!
+> > > >
+> > > > > > So, to Will's comment, yes, the problem is somewhat fragile (though
+> > > > > > using either __always_inline or __init will deterministically solve it).
+> > > > > > We've tripped over this before with GCC and the solution has usually
+> > > > > > been to just use __always_inline and move on.
+> > > > > >
+> > > > >
+> > > > > Given that 'inline' is already a macro in the kernel, could we just
+> > > > > add __attribute__((__always_inline__)) to it when KCOV is enabled?
+> > > >
+> > > > That sounds like a more robust approach and, by the sounds of it, we
+> > > > could predicate it on GCC too. That would also provide a neat place for
+> > > > a comment describing the problem.
+> > > >
+> > > > Kees, would that work for you?
+> > >
+> > > That seems like an extremely large hammer for this problem, IMO. It
+> > > feels like it could cause new strange corner cases. I'd much prefer the
+> > > small fixes I've currently got since it keeps it focused. KCOV is
+> > > already enabled for "allmodconfig", so any new instances would be found
+> > > very quickly, etc. (And GCC's fragility in this regard has already been
+> > > exposed to these cases -- it's just that I changed one of the
+> > > combinations of __init vs inline vs instrumentation.
+> > >
+> > > I could give it a try, if you really prefer the big hammer approach...
 > >
-> > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.=
-c
-> > index 06759036945d..9839e8cb82ce 100644
-> > --- a/drivers/platform/x86/oxpec.c
-> > +++ b/drivers/platform/x86/oxpec.c
-> > @@ -58,7 +58,8 @@ enum oxp_board {
-> >       oxp_mini_amd_a07,
-> >       oxp_mini_amd_pro,
-> >       oxp_x1,
-> > -     oxp_g1,
-> > +     oxp_g1_i,
-> > +     oxp_g1_a,
-> >  };
+> > I gave it a try -- it fails spectacularly. ;) Let's stick to my small
+> > fixes instead?
 > >
-> >  static enum oxp_board board;
-> > @@ -247,14 +248,14 @@ static const struct dmi_system_id dmi_table[] =3D=
- {
-> >                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"=
-),
-> >               },
-> > -             .driver_data =3D (void *)oxp_g1,
-> > +             .driver_data =3D (void *)oxp_g1_a,
-> >       },
-> >       {
-> >               .matches =3D {
-> >                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 i"=
-),
-> >               },
-> > -             .driver_data =3D (void *)oxp_g1,
-> > +             .driver_data =3D (void *)oxp_g1_i,
-> >       },
-> >       {
-> >               .matches =3D {
->
->
-> > -     case oxp_g1:
-> > +     case oxp_g1_i:
-> >               return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
-> > @@ -757,6 +765,7 @@ static int oxp_pwm_fan_speed(long *val)
-> > +     case oxp_g1_a:
-> >               return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
->
-> > -     case oxp_g1:
-> > +     case oxp_g1_i:
-> >               /* scale to range [0-184] */
-> >               val =3D (val * 184) / 255;
-> >               return write_to_ec(OXP_SENSOR_PWM_REG, val);
-> > @@ -796,6 +805,7 @@ static int oxp_pwm_input_write(long val)
-> > +     case oxp_g1_a:
-> >               return write_to_ec(OXP_SENSOR_PWM_REG, val);
-> > @@ -816,7 +826,7 @@ static int oxp_pwm_input_read(long *val)
-> > -     case oxp_g1:
-> > +     case oxp_g1_i:
-> >               ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
-> > @@ -842,6 +852,7 @@ static int oxp_pwm_input_read(long *val)
-> > +     case oxp_g1_a:
-> >       default:
-> >               ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
->
-> Do these FAN and PWM registers fall under what is described in the
-> changelog as "turbo registers"? Or did you extend the scope of this patch
-> and forgot to update the changelog?
+> 
+> Fair enough :-)
 
-Yes. Perhaps its not the best wording and it should have said EC registers.
+(but please add the helpful explanation you provided to the commit message!)
 
-Antheas
-
->
-> --
->  i.
->
->
-
+Will
