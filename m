@@ -1,170 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55DA22094;
-	Tue, 22 Jul 2025 13:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8C51C84DD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 22 Jul 2025 14:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753191108; cv=none; b=UnNpP9M6kYQuo5F08yBQmQV2cwsBuKIU8rfSzq3QntncrJtUP7mFuLvMobf2SJOtZeEcsugFHb3b79NSVR3OVep5zKEz/14B5DUU3Q1q68BgKasRSUdOQ/t0Ync5l9ev2bn8ltySaQGCzqCXhQldw5q7Ta048wW9GCPhXs2EEC8=
+	t=1753195269; cv=none; b=WeY/V8SzE6O4A0IyrjpM52aInwPUUL1/1clTYEWbGl9A9Q42n9n2GALo5/uv5HjfhiukBFVCl49R9XQ7/3nUR2y+Ahc1iCcalA4i3eZGVJ9xmGmTlKZ6hwH5qkODd+3fzNIAWzG2k9hFixBzDK9v/Co0YSSvSjuTlxgu4Cyj/qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753191108; c=relaxed/simple;
-	bh=e0uI9tHQgMQf77YjaxHzIMxjYcTSwyPrvwYo4128UVY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=K2X7+Tn5U+bkFFBDYvyV79HO3phd1QapRnWAwO+WATOFWgjNjpL/f0W27/9eNKb8VkPSUIMHJ+nCJlpyiyM2IXIyD5j9F9JA5OiFZ8gI2a/m2Xf8qcq7Km9mVQQ7z7GL5SN9CfdLDlZ0TLFBX2TG5VxPkuMxRb3lloMrm5dI2bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ugq2dKgO; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1753195269; c=relaxed/simple;
+	bh=rLQr8SbHolZXQFRRF70KxevTnirnGAslnfUqJE8OC5k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=g5J+QNrymdFdKI0jbRqUD8+kAn5rdT354FDUDbtLu2Wfe9kE1LLsR+YIn/y7sQXtMkdzT4KeW6VaNfMKQ95v2zw6FXC5SidKMPXt1kSkmwkwzwv5xl5l+hw1x4oI2bI6gL/7o+Do0qc42dkuwX9H/GYZM9fPyNmG+ozErn5YiQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XV764znH; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ugq2dKgO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XV764znH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753191107; x=1784727107;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=e0uI9tHQgMQf77YjaxHzIMxjYcTSwyPrvwYo4128UVY=;
-  b=Ugq2dKgOtM/VrQCfKiR1llZYTEC95vQ/fOOs2C6NljlwM4xuGTZ/J0jW
-   8vmMMG7bAz0DmbzEu4SnqnKAWWMYUvd6omH9kn+yS305lju6qcrFevOby
-   2XF4zXgbub9n4+xRHMpEEtiE55FcHWj7rkh4nEtGcZlO0iajmOyJUbPcK
-   8l3dRMjgpes5LDaubj5kvoBGj0FbMyoa6AKSq2/W7DgdEwZcfJm7m61t7
-   QdN3ZfP27bv4mxL71AscSTO0dDgdw6gQ7NbVW+JMr+6maufEAWa2Pmasg
-   QJz5pqVwf7UmJbipMzHvTqdiYVmft2+e2M8HhEgeAyfzGBnWrqNxHhHI4
+  t=1753195268; x=1784731268;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=rLQr8SbHolZXQFRRF70KxevTnirnGAslnfUqJE8OC5k=;
+  b=XV764znH+5yMPdxLMJmlEaY4G1UVtQzbyekSFBszS5HSDRKvQqKGyRz5
+   Ak+Cng7aNYhdDlVhd2Y6PNnGrfzCswOQ8XDdEFk3tnCXQoNsj1LmTm3IO
+   e21RI+UxSIS8IjhJF8I96nDIKoGuRkY3KxiHCNogOKH36KJNCAO292D1Z
+   MD1oV/YQr7OzWxsexBHdwMuaD+DCGG8rP3MFv6qJCYUnyTCePAblTc7im
+   u1xjpJNNti8XpZTL9aaWo6yIupgD7uJwds5C1dPuXoqeDVBDy6zBdzM1+
+   O0D53mLHQ0+YBumrTOXAx2pBxOOfdHqw6KMjAYlne46cSTYwHTF6DMy5f
    g==;
-X-CSE-ConnectionGUID: zZO1wlB9Sf2dLcPmsN8PWQ==
-X-CSE-MsgGUID: vFl8XHoiRB6HxBZMsEgUtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55324317"
+X-CSE-ConnectionGUID: X0IwhEzfRDGphFXEREUJHw==
+X-CSE-MsgGUID: Lmum7/FDRR2RMVNJR5DZZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="55403414"
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="55324317"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:31:47 -0700
-X-CSE-ConnectionGUID: 27QDQDHMR4a17TKj53r9tA==
-X-CSE-MsgGUID: LOUQWW8uRPSai2T0nz+Pug==
+   d="scan'208";a="55403414"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 07:41:08 -0700
+X-CSE-ConnectionGUID: VCodK/9aQXykciqbx+oOJA==
+X-CSE-MsgGUID: rfP3lmhLQOmHjZJQr9Rlrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="159697221"
+   d="scan'208";a="158472428"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:31:43 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 07:41:06 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Jul 2025 16:31:39 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Derek John Clark <derekjohn.clark@gmail.com>, 
-    =?ISO-8859-15?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Eileen <eileen@one-netbook.com>
-Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Fix turbo register for G1
- AMD
-In-Reply-To: <CAGwozwFvWuXM_oSzY9S+2CdW+dHiusuYra6kJeA+Vo00NZFb4g@mail.gmail.com>
-Message-ID: <73ae539a-96e3-bec3-f02c-e74660297b38@linux.intel.com>
-References: <20250718163305.159232-1-lkml@antheas.dev> <710baf02-fc18-6752-b8bd-bbf1354227e8@linux.intel.com> <CAGwozwFvWuXM_oSzY9S+2CdW+dHiusuYra6kJeA+Vo00NZFb4g@mail.gmail.com>
+To: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, hansg@kernel.org, 
+ Mario Limonciello <superm1@kernel.org>
+Cc: Adam Berglund <adam.f.berglund@hotmail.com>, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <20250718172307.1928744-1-superm1@kernel.org>
+References: <20250718172307.1928744-1-superm1@kernel.org>
+Subject: Re: [PATCH] platform/x86/amd: pmc: Add Lenovo Yoga 6 13ALC6 to pmc
+ quirk list
+Message-Id: <175319525981.17685.6588774793514630477.b4-ty@linux.intel.com>
+Date: Tue, 22 Jul 2025 17:40:59 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-812461108-1753191061=:920"
-Content-ID: <27bc94a9-34a6-1ce2-f9b6-79dd743ccda1@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 18 Jul 2025 12:23:05 -0500, Mario Limonciello wrote:
 
---8323328-812461108-1753191061=:920
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <2313014d-8f39-f8eb-6da4-98a80299e629@linux.intel.com>
+> The Lenovo Yoga 6 13ACL6 82ND has a similar BIOS problem as other Lenovo
+> laptops from that vintage that causes a rather long resume from suspend.
+> 
+> Add it to the quirk list that manipulates the scratch register to avoid
+> the issue.
+> 
+> 
+> [...]
 
-On Tue, 22 Jul 2025, Antheas Kapenekakis wrote:
 
-> On Tue, 22 Jul 2025 at 15:22, Ilpo J=E4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Fri, 18 Jul 2025, Antheas Kapenekakis wrote:
-> >
-> > > Turns out that the AMD variant of the G1 uses different turbo registe=
-rs
-> > > than the Intel variant. Differentiate them and apply the correct ones
-> > > to the AMD variant.
-> > >
-> > > Fixes: b369395c895b ("platform/x86: oxpec: Add support for the OneXPl=
-ayer G1")
-> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > ---
-> > >  drivers/platform/x86/oxpec.c | 37 +++++++++++++++++++++++-----------=
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86/amd: pmc: Add Lenovo Yoga 6 13ALC6 to pmc quirk list
+      commit: 4ff3aeb664f7dfe824ba91ffb0b203397a8d431e
+
 --
-> > >  1 file changed, 24 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpe=
-c.c
-> > > index 06759036945d..9839e8cb82ce 100644
-> > > --- a/drivers/platform/x86/oxpec.c
-> > > +++ b/drivers/platform/x86/oxpec.c
-> > > @@ -58,7 +58,8 @@ enum oxp_board {
-> > >       oxp_mini_amd_a07,
-> > >       oxp_mini_amd_pro,
-> > >       oxp_x1,
-> > > -     oxp_g1,
-> > > +     oxp_g1_i,
-> > > +     oxp_g1_a,
-> > >  };
-> > >
-> > >  static enum oxp_board board;
-> > > @@ -247,14 +248,14 @@ static const struct dmi_system_id dmi_table[] =
-=3D {
-> > >                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > >                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 =
-A"),
-> > >               },
-> > > -             .driver_data =3D (void *)oxp_g1,
-> > > +             .driver_data =3D (void *)oxp_g1_a,
-> > >       },
-> > >       {
-> > >               .matches =3D {
-> > >                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > >                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 =
-i"),
-> > >               },
-> > > -             .driver_data =3D (void *)oxp_g1,
-> > > +             .driver_data =3D (void *)oxp_g1_i,
-> > >       },
-> > >       {
-> > >               .matches =3D {
-> >
-> >
-> > > -     case oxp_g1:
-> > > +     case oxp_g1_i:
-> > >               return read_from_ec(OXP_2_SENSOR_FAN_REG, 2, val);
-> > > @@ -757,6 +765,7 @@ static int oxp_pwm_fan_speed(long *val)
-> > > +     case oxp_g1_a:
-> > >               return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
-> >
-> > > -     case oxp_g1:
-> > > +     case oxp_g1_i:
-> > >               /* scale to range [0-184] */
-> > >               val =3D (val * 184) / 255;
-> > >               return write_to_ec(OXP_SENSOR_PWM_REG, val);
-> > > @@ -796,6 +805,7 @@ static int oxp_pwm_input_write(long val)
-> > > +     case oxp_g1_a:
-> > >               return write_to_ec(OXP_SENSOR_PWM_REG, val);
-> > > @@ -816,7 +826,7 @@ static int oxp_pwm_input_read(long *val)
-> > > -     case oxp_g1:
-> > > +     case oxp_g1_i:
-> > >               ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
-> > > @@ -842,6 +852,7 @@ static int oxp_pwm_input_read(long *val)
-> > > +     case oxp_g1_a:
-> > >       default:
-> > >               ret =3D read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
-> >
-> > Do these FAN and PWM registers fall under what is described in the
-> > changelog as "turbo registers"? Or did you extend the scope of this pat=
-ch
-> > and forgot to update the changelog?
->=20
-> Yes. Perhaps its not the best wording and it should have said EC register=
-s.
-
-Indeed, it is not the best wording as there is a register which has=20
-"TURBO" in its name so it's a bit confusing. I'll reword the changelog=20
-while applying.
-
---=20
  i.
---8323328-812461108-1753191061=:920--
+
