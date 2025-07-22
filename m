@@ -1,127 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F828F40;
-	Tue, 22 Jul 2025 13:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CEE23ED5E;
+	Tue, 22 Jul 2025 13:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753189443; cv=none; b=PYRaok+LWszsvKekZSDYRfwr84pCgRKQiVuFE4TLuPHlgKMjdkBcR8MUc2KXHr/E6yWT8jsqJJFIOw+GWyva7YiMA35FvgMT9v3YDhLMz4h1Mykpff22oJ9luvKhmj4REw7EimBG/xAH8f6b5SJ7n0C5UF8K/njDuHtr0RFuLgs=
+	t=1753190071; cv=none; b=PviEWI//dG3ZqAIXqCp1Y9V8+kpaKHWWKCU9HmBT5WUN4wfdEL8BkI46hHjtbQaUdb6UTj/+rM2/4kYp/ijyRVQGP2BwuwU/xZgokE9ckAuSPZ5dG2VHmy3AvcQRJif2vgxGKJOraQ3jHLBBI3u3SA9mR7eHPATGSKGohoiBnIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753189443; c=relaxed/simple;
-	bh=M9Vw3KUZFsgEmCfhOhsRP4t6JpAYCh+PJDWJBaOwz3A=;
+	s=arc-20240116; t=1753190071; c=relaxed/simple;
+	bh=4+hMLNITvQjzznkS5VvX+swrR5myW5iOTWCPjGwMvLY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=n95jm1vVj4ePSWq9HHyKQQgyMfkSGhBw43ytF6+o4xR/GyhabGaMiopdENKkzuR0I4vig3wVBzp4jb4GZ8m0yp+FELUC9XKuaTdNRLmzs7R9tnbf2UNWJNckN884x5k+Q40fY2uziTK2gR9TMYGf9L+PXrpfGK0RCT+QPtKF0yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DtJw39HN; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version:Content-Type; b=QG70LnqqAFPtHPISB3KkE8rjpAL6Ri3YHNhSaAFhC8kZd5YxjfeLgIgEly4xkAr5+sIkpG0Q5Bob0yohb80cUEf3JpByw8MU2AwhCsVzKh2iXKznstADT8bFsMWg7Nc6kCN4ZYg9803sOgt8A0klcLDblwGOfUQQXVqDavSIqcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEePorsw; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DtJw39HN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEePorsw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753189442; x=1784725442;
+  t=1753190069; x=1784726069;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=M9Vw3KUZFsgEmCfhOhsRP4t6JpAYCh+PJDWJBaOwz3A=;
-  b=DtJw39HNieyEtkXKlIPyFEneErTH9dMLtRujXhCZOUxrR5/Kv5b1g6D4
-   A6kPnjWiiuCKECBKLjraN6fkFLj6waDeTsy97hspOU5IpWIB+75xqdHxa
-   dVrGhUQfXCLx26J/v5u8aDiH0tK+uyjTQGLuJVbTDUFZ5YQMBUNefx9ng
-   aPpwfzWNVtbKQvqdcjDAHVxHr0xZmHjWtR/yM7RI6PLBGkoL7agti2Txb
-   cgy26OtD53+EFkJQD/2TvpjnmnDtOHflcC/2SlmIdgOykH7YdZD7niSBn
-   q3VWYXK+RDEy7uK5qv3AR2YwaVM10JnlHURM7inoLf6r1AaTPnLwzFYAG
-   w==;
-X-CSE-ConnectionGUID: 9Y8ZhzOzTgGx6K6CEsaVdA==
-X-CSE-MsgGUID: ImGvSV9nTJuiOgpzkmrHEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="66868866"
+  bh=4+hMLNITvQjzznkS5VvX+swrR5myW5iOTWCPjGwMvLY=;
+  b=LEePorswWw/YLUG7Xs/qzCgZTVYoTcPi9iI3bpMHgzn/e5m22kdkiRvN
+   oyEo7bUs1d2EcENT1zxtoTq5/xSQnai++6+pTtLq5C/62nTvB+4XEpCV1
+   jcFgRKS1/+E6QYDMQnkRGGDawwbHjy4olNTFogrLe5QqeWi+xt7ObASm+
+   ihzt2JJpXXK8m2lfWyt9bcnibMNfBMsk3m/Sxql91oXH2czRtX3vpYyE5
+   hhDQoX5UP8XU8Nahdz5rNgFmGcXqhZ+790dFcqVqSPIElgycN+RktpU2P
+   M0rdevdruuMNZ6V+eATLO5Z2B2wnyqVxQmrwiMjuiWmLw65OC2+lZp1sB
+   Q==;
+X-CSE-ConnectionGUID: L45AMUxQRe+V2LVDVAZ9zg==
+X-CSE-MsgGUID: rgyqAkBjSKqb6P4OGxRJkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="54539222"
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="66868866"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:04:01 -0700
-X-CSE-ConnectionGUID: s9F4wQS3SoOdr768O6l/2w==
-X-CSE-MsgGUID: a83p41ZBQmuPngQa5/7AJw==
+   d="scan'208";a="54539222"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:14:28 -0700
+X-CSE-ConnectionGUID: Ad9XyAr5TD+u+vv4WC9qlQ==
+X-CSE-MsgGUID: rBFSLfkvTqu6ZOD+IbEJrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="159209027"
+   d="scan'208";a="182839005"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.254])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:03:53 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 06:14:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 22 Jul 2025 16:03:48 +0300 (EEST)
-To: Thomas Zimmermann <tzimmermann@suse.de>
-cc: lee@kernel.org, danielt@kernel.org, jingoohan1@gmail.com, 
-    neil.armstrong@linaro.org, jessica.zhang@oss.qualcomm.com, deller@gmx.de, 
-    maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com, 
-    simona@ffwll.ch, fnkl.kernel@gmail.com, j@jannau.net, 
-    Hans de Goede <hdegoede@redhat.com>, sven@kernel.org, alyssa@rosenzweig.io, 
-    neal@gompa.dev, support.opensource@diasemi.com, duje.mihanovic@skole.hr, 
-    dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
-    platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    linux-fbdev@vger.kernel.org, Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v2 01/15] platform/x86: dell-uart-backlight: Use blacklight
- power constant
-In-Reply-To: <90d816ba-aaf3-4b7b-9c52-72613be5b85a@suse.de>
-Message-ID: <19aaca56-6784-209c-3076-cc63f733a021@linux.intel.com>
-References: <20250715122643.137027-1-tzimmermann@suse.de> <20250715122643.137027-2-tzimmermann@suse.de> <c380d3a4-2a99-cf52-0952-ee916b6c9676@linux.intel.com> <90d816ba-aaf3-4b7b-9c52-72613be5b85a@suse.de>
+Date: Tue, 22 Jul 2025 16:14:22 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: hansg@kernel.org, Dell.Client.Kernel@dell.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: dell-smbios-wmi: Stop touching WMI device
+ ID
+In-Reply-To: <20250712140222.347638-1-W_Armin@gmx.de>
+Message-ID: <2897df20-cb7f-41c6-e72f-91f1696556a0@linux.intel.com>
+References: <20250712140222.347638-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-860532718-1753189428=:920"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sat, 12 Jul 2025, Armin Wolf wrote:
 
---8323328-860532718-1753189428=:920
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The WMI core itself uses wdev->dev.id internally to track device IDs,
+> so modifying this value will result in a resource leak.
+> 
+> Fix this by not using the device ID for SMBIOS prioritization.
 
-On Mon, 21 Jul 2025, Thomas Zimmermann wrote:
+Please describe the solution properly. The patch deals with what is called 
+"priority" which is not covered by the changelog text at all.
 
-> Hi
->=20
-> Am 21.07.25 um 13:43 schrieb Ilpo J=C3=A4rvinen:
-> > On Tue, 15 Jul 2025, Thomas Zimmermann wrote:
-> >=20
-> > > The backlight subsystem has gotten its own power constants. Replace
-> > > FB_BLANK_UNBLANK with BACKLIGHT_POWER_ON.
-> > >=20
-> > > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> > > Reviewed-by: Hans de Goede <hansg@kernel.org>
-> > > Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > ---
-> > >   drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c
-> > > b/drivers/platform/x86/dell/dell-uart-backlight.c
-> > > index 8f868f845350..f323a667dc2d 100644
-> > > --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> > > +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> > > @@ -305,7 +305,7 @@ static int dell_uart_bl_serdev_probe(struct
-> > > serdev_device *serdev)
-> > >   =09dev_dbg(dev, "Firmware version: %.*s\n", resp[RESP_LEN] - 3, res=
-p +
-> > > RESP_DATA);
-> > >     =09/* Initialize bl_power to a known value */
-> > > -=09ret =3D dell_uart_set_bl_power(dell_bl, FB_BLANK_UNBLANK);
-> > > +=09ret =3D dell_uart_set_bl_power(dell_bl, BACKLIGHT_POWER_ON);
-> > >   =09if (ret)
-> > >   =09=09return ret;
-> > Hi Thomas,
-> >=20
-> > Do you expect this entire series to go in this cycle through some other
-> > tree than pdx86? If not, I'll take this through pdx86 tree in this cycl=
-e.
->=20
-> I don't know when the series will get merged, but it might still take a b=
-it.
-> Please take this patch through your tree. Good to have it off the list.
+> Tested on a Dell Inspiron 3505.
+> 
+> Fixes: 73f0f2b52c5e ("platform/x86: wmi: Fix WMI device naming issue")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/dell/dell-smbios-base.c | 19 +++++++++----------
+>  drivers/platform/x86/dell/dell-smbios-smm.c  |  3 +--
+>  drivers/platform/x86/dell/dell-smbios-wmi.c  |  4 +---
+>  drivers/platform/x86/dell/dell-smbios.h      |  2 +-
+>  4 files changed, 12 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+> index 01c72b91a50d..444786102f02 100644
+> --- a/drivers/platform/x86/dell/dell-smbios-base.c
+> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
+> @@ -39,6 +39,7 @@ struct token_sysfs_data {
+>  struct smbios_device {
+>  	struct list_head list;
+>  	struct device *device;
+> +	int priority;
+>  	int (*call_fn)(struct calling_interface_buffer *arg);
+>  };
+>  
+> @@ -145,7 +146,7 @@ int dell_smbios_error(int value)
+>  }
+>  EXPORT_SYMBOL_GPL(dell_smbios_error);
+>  
+> -int dell_smbios_register_device(struct device *d, void *call_fn)
+> +int dell_smbios_register_device(struct device *d, int priority, void *call_fn)
+>  {
+>  	struct smbios_device *priv;
+>  
+> @@ -154,6 +155,7 @@ int dell_smbios_register_device(struct device *d, void *call_fn)
+>  		return -ENOMEM;
+>  	get_device(d);
+>  	priv->device = d;
+> +	priv->priority = priority;
+>  	priv->call_fn = call_fn;
+>  	mutex_lock(&smbios_mutex);
+>  	list_add_tail(&priv->list, &smbios_device_list);
+> @@ -292,28 +294,25 @@ EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
+>  
+>  int dell_smbios_call(struct calling_interface_buffer *buffer)
+>  {
+> -	int (*call_fn)(struct calling_interface_buffer *) = NULL;
+> -	struct device *selected_dev = NULL;
+> +	struct smbios_device *selected = NULL;
+>  	struct smbios_device *priv;
+>  	int ret;
+>  
+>  	mutex_lock(&smbios_mutex);
+>  	list_for_each_entry(priv, &smbios_device_list, list) {
+> -		if (!selected_dev || priv->device->id >= selected_dev->id) {
+> -			dev_dbg(priv->device, "Trying device ID: %d\n",
+> -				priv->device->id);
+> -			call_fn = priv->call_fn;
+> -			selected_dev = priv->device;
+> +		if (!selected || priv->priority >= selected->priority) {
+> +			dev_dbg(priv->device, "Trying device ID: %d\n", priv->priority);
+> +			selected = priv;
+>  		}
+>  	}
+>  
+> -	if (!selected_dev) {
+> +	if (!selected) {
+>  		ret = -ENODEV;
+>  		pr_err("No dell-smbios drivers are loaded\n");
+>  		goto out_smbios_call;
+>  	}
+>  
+> -	ret = call_fn(buffer);
+> +	ret = selected->call_fn(buffer);
+>  
+>  out_smbios_call:
+>  	mutex_unlock(&smbios_mutex);
+> diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platform/x86/dell/dell-smbios-smm.c
+> index 4d375985c85f..7055e2c40f34 100644
+> --- a/drivers/platform/x86/dell/dell-smbios-smm.c
+> +++ b/drivers/platform/x86/dell/dell-smbios-smm.c
+> @@ -125,8 +125,7 @@ int init_dell_smbios_smm(void)
+>  	if (ret)
+>  		goto fail_platform_device_add;
+>  
+> -	ret = dell_smbios_register_device(&platform_device->dev,
+> -					  &dell_smbios_smm_call);
+> +	ret = dell_smbios_register_device(&platform_device->dev, 0, &dell_smbios_smm_call);
+>  	if (ret)
+>  		goto fail_register;
+>  
+> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+> index ae9012549560..a7dca8c59d60 100644
+> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
+> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+> @@ -264,9 +264,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* ID is used by dell-smbios to set priority of drivers */
+> -	wdev->dev.id = 1;
+> -	ret = dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
+> +	ret = dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
+> index 77baa15eb523..f421b8533a9e 100644
+> --- a/drivers/platform/x86/dell/dell-smbios.h
+> +++ b/drivers/platform/x86/dell/dell-smbios.h
+> @@ -64,7 +64,7 @@ struct calling_interface_structure {
+>  	struct calling_interface_token tokens[];
+>  } __packed;
+>  
+> -int dell_smbios_register_device(struct device *d, void *call_fn);
+> +int dell_smbios_register_device(struct device *d, int priority, void *call_fn);
+>  void dell_smbios_unregister_device(struct device *d);
+>  
+>  int dell_smbios_error(int value);
+> 
 
-Thanks.
-
-Applied it to the review-ilpo-next branch.
-
---=20
+-- 
  i.
 
---8323328-860532718-1753189428=:920--
