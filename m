@@ -1,249 +1,159 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21D523B60F;
-	Tue, 22 Jul 2025 18:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753209537; cv=none; b=jkrQYULShKo9u6m3qHat1y1yZqtSwssNw6aCQcHK+YOk3tC/MM8KHT2y6hc6/746NSu90PMq/m88/bsWwEu7daGnjyKoYRY6v/2nEkI17yx2Mi/FbLcRoJIab8cMQP2rBLaDSyu0wg8rtjmnZxzkEpqEdkkKcbeJ/oc5KW04cPc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753209537; c=relaxed/simple;
-	bh=VWLgtMwB/N5XqdJJb0pKehXNZoWX381xk8O3plV62WY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gp6Lw5rq5lZrLy6aLrXc94HigrT6vozAFFE2WUlE40u1Gub+HVTA7wjJMMpuviUXc3XTAR6xPgRBmAbowsvjzq+a36EMkqf9rwnEyBFGcBM32xOXy7DrCdyR7cpsRmTJST94t2ENELRwP9+HEyEskXoZI7yaU0oZYtukFXr09iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tsBqQO+e; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F337813A265
+	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Jul 2025 05:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753247598; cv=fail; b=gZvVXQ8bGuegWkmDTAV2Vb1Y4ey1r7M9lcsQe0f7Sddb8wAU55Rn2aZ19z7dhuJgxxzSYcDlFRfi6o2t6cexj7ApL2FgOoSSWpclueTRlmI6m7e7DaUdciVJlpnoNn3Iop9Pd1I1+PDSs5rOHFNM2lu4lyKbWEuYztW5so9fuD0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753247598; c=relaxed/simple;
+	bh=xVoXS9l0Av+QUKPm+hVKGoXKt4qYzYN9ltJiyNp8Cws=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jW+7qeyRmr1nYI/exnB7n698WToVhvAcD5YXQdezX0dZxJNLxuRGnNH/iVVOARp3CyQNZL3xhOV3QtDNtDoAmjnIIPRS1UTi37FF8nbhvFvhP3W5FLefvmGMKXZotrmlYWDYW+CSlkOsXxg2CQLb3e4gURvSKQ2NAuItJ+xNhZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r23pY1wD; arc=fail smtp.client-ip=40.107.92.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tsBqQO+e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1753209525; x=1753814325; i=w_armin@gmx.de;
-	bh=hQ7Ejgi69E9CHPlq3k43hNlSAhN/MDyFhPdHBU8j/sg=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tsBqQO+eryE9/nq/xEHP0fMsE8hFpkXkHv4AvPwLwcBmQYvnRIhU8sCvAkPXThpa
-	 KnasG2Pkd68rqZZqtjyumgDs8F/mBzBSahfFpfA7vk1Au/LlI2vEKIyFktZvYJQFd
-	 Qkj2jvO+Yd3lyEApfzAgIDLETYwhM6I+2HUrU/aGGGYGeMPc5x2osjPFZNzxaFMyO
-	 4RY3kHubX5nWnQvAyiRcl7KI0qgvF/96SOeX2YiBxhQFmN6MjHeYZpt91zoxb+2iq
-	 4PGaV6Q1BguQnTWVpkCi+K4fEHJ/El8a0thkX8dNHxGF5fT+Jq/FhRGAa2TeMT2vO
-	 VWdlYTB1ugcSC96EPQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MRCKC-1uH6jA2LP2-00JDZM; Tue, 22 Jul 2025 20:38:44 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: dell-smbios-wmi: Stop touching WMI device ID
-Date: Tue, 22 Jul 2025 20:38:41 +0200
-Message-Id: <20250722183841.9552-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r23pY1wD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tQGBoyCHp+e2gEzKAkMzzpYETArAUQnk3J7FmjTlQZD2+nYsqRSQyZsuCosnxZhXL5HbsooP3HYZG3WJHWXEhnA+xHnB8HxXn5s4CC35riiBsgH/2ZFfLESZ1OAmgvkoDDXfmhC3dvztDnEmUCO7rKPfjnFwe9eiMKybl9VohnZImYRQCaU2RDiFw6DylJJDFcFput/SbgJOW24DOD/PULWXnaDOpxYrOE/97kRnc9WGOxqEfvTcEIQS6aByhSyRHPHAZUBrsqBGwAidfjPZ3gJcsomQVKMRVaTunNLAZ7nPI+939X0iYJfIf9Bnjc8trXXChlPKFAhjGkkxLgb83Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+LQvwSPpOSDJUKxjAjSwmylS0NuXuOA3F2gHIY++W0c=;
+ b=aMHWRxOreMIF77VJ1IvqQ2VuWInwPlMJHfBhsweAJ/+Sw+oIPEDryKc7LQMA/BIsA6PTVtaj5QehSXU++QIbBcQ2aFv+HOjikoErpjQnxT7wABeP/9UXNxtZDB6XBsSm87f+jsSo+dO0O61V2uYsv/vwI/xAM4oXceYRJz0aej/vGYc2aSR+lruyTqLtz9vIUjX09LepCHst0cz4TpP1w398+8N7ssqxSluxLfKeOEtBoCd+Cl6+EctiFI5H2dXAGGOldFCf6+3QA8XtXE72nq1DfQ/wCbyfDtGlf0GPWUJtvbJd98Xk4UqvESPNH0cGLeHJzDBz0wn7Vd07H0ixaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+LQvwSPpOSDJUKxjAjSwmylS0NuXuOA3F2gHIY++W0c=;
+ b=r23pY1wDEYPwKeX64xEwkK8yWp3KD+cGVr/pFtEc9xegu9yuJKKMWr6xVh7c4h8yRESNsRwr6NcTmdClK7jmMVQS1crJ9vHV3bFG3AjfpvRe320QcEUIOUwyhQ+CTTV6Xbs2VNypu9OblOGhYkJXG8LoU+6ENvFzxDq7T862cn8=
+Received: from SJ0PR03CA0168.namprd03.prod.outlook.com (2603:10b6:a03:338::23)
+ by LV3PR12MB9258.namprd12.prod.outlook.com (2603:10b6:408:1bb::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.29; Wed, 23 Jul
+ 2025 05:13:12 +0000
+Received: from CO1PEPF000044FC.namprd21.prod.outlook.com
+ (2603:10b6:a03:338:cafe::59) by SJ0PR03CA0168.outlook.office365.com
+ (2603:10b6:a03:338::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.29 via Frontend Transport; Wed,
+ 23 Jul 2025 05:13:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FC.mail.protection.outlook.com (10.167.241.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8989.1 via Frontend Transport; Wed, 23 Jul 2025 05:13:11 +0000
+Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Jul
+ 2025 00:13:09 -0500
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>
+Subject: [PATCH v2 0/4] platform/x86/amd/hsmp: Fix potential issues during async probing of ACPI driver
+Date: Wed, 23 Jul 2025 05:12:47 +0000
+Message-ID: <20250723051251.3009625-1-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FlYIsSP65aPa9K4D4gCi9AZNT+i+1QykOFlZ8WGP6F8JVHtwvIC
- ANQs9NlaJpKAHPvVb3sqdzUIFjqGW2BDjZII03F3qs8bNd3EGapotK9IBETsZ2JQor5yPGP
- xYE5N2vgEDMuCHUcgDYMWm4Lbms6JukPH5vsCSQgsDT+KngyKbSPd3aooJD3fJkJYmhczWX
- d+fe/8jA4iJxuFOMbmcyQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XxdEUfZOZvw=;ZKedF9w/kqElTAL8mzjIN4XoDBQ
- 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
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FC:EE_|LV3PR12MB9258:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27e4109b-cb7d-479a-7d47-08ddc9a79ed3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?b+Vt4kMTOYQ0rmESlL6PFdEQ72IT7PZ24fjCbsWYWB+9oz46ISR896AhR7zz?=
+ =?us-ascii?Q?iYa1+uKiVgoWN5sSEZ9XCXw8XBJnMgevHtT/6JlTioqKSS3YFNo4nes9T5tF?=
+ =?us-ascii?Q?tWWpEqpYpmIKwETXN0EfQgQv0qDMlTwnP2ch0n2/TTr/ANt/HuEOBXpJGqrE?=
+ =?us-ascii?Q?To1d1x8y0HW/b/mhHqu/yl30GE2SMBHzS9uObqrKbEpnfLZwOqkoE0oiZyRc?=
+ =?us-ascii?Q?qlRHa4QR2BpcgfSqrC2DBvz0RV7Wpd1Lhy0FY5T8e3LPurRMbiHgDJqNuGXr?=
+ =?us-ascii?Q?xRFbCqZvkIBDkgEwcZtHlP8M3Q/aJTTozsmS8h+7wbP1Rc3d6G5C1pl6linT?=
+ =?us-ascii?Q?p6b1Thkg19BnwANhMz6kLHP6tLHhKnIdyQxwmQB6gBltizRHGpx2gJuvlYs+?=
+ =?us-ascii?Q?O3WUjeWJ94cfiItVzBYVBHXejO8roylClhF6VqsTOjDX8cE1BtgS84SdbXgW?=
+ =?us-ascii?Q?jE5LspcJ9hYIrSoAx7riAp4r0pTXZ32y09s+jNrs/8/vDzX6i/9ctfk9Mcba?=
+ =?us-ascii?Q?Ptqi+pXcdMsGdb2QAjZPLfttwuGnpTJmxwAKOYNkjr3WUhBRg4CTjXeQThs7?=
+ =?us-ascii?Q?S2idxsz/BFmgx1/9UIIKe0Hz6alvrxiVD+RPEBuNEbSLzfNP2TehOQSGkkJF?=
+ =?us-ascii?Q?st6lYyDkPQPHi0gsP0G8ith2jGGQrckYgN0eckGjf+7V7hXkir9yNiIMpHVu?=
+ =?us-ascii?Q?sHhxmQ2AFyoxRRdjR2UttKCZ3AzUjnPJrFWNNJoYWj5sTUZd5Z/xrw1ne4+1?=
+ =?us-ascii?Q?y67wYTqCJur4/UhetYvqa6SxUqBEYKO4iWxbwI6DlFa1onpLyQr2+zqjdqsY?=
+ =?us-ascii?Q?cUC1XDwL0kuGvxk6RrfpGrTXhbPqg1KCvOW7PcoaBPco8sZN7w1TiAL7CG3Z?=
+ =?us-ascii?Q?fybhYCb3/oMZwNt6EsuS4v7GqFUxirK1zRmGHw4M7kOifM26CizsXOrzT/FQ?=
+ =?us-ascii?Q?eEp4wqM2mEl3uz+/zR45P/VuagcwdVyFpx+ZVRntoc1k5bIK4EnDsKfklISz?=
+ =?us-ascii?Q?jGvziC7hAXzuR+ic3fWjDaHlIIpHuhMzxt5NEhhIXGULp8iw8RJM8AaDEIIq?=
+ =?us-ascii?Q?OiglWIpEsYGAfAIFGHLpkQFOyJ2K7yf67h+urLV4Fwuf2cFvqAC0ut9LfXt3?=
+ =?us-ascii?Q?kI2VSE7ctTExHbfoS+XeVe7d/1BpkOCYhWmmG+NlsDPdLWkrskNBBDpNdEZu?=
+ =?us-ascii?Q?nR6vAas+3ph1FgTWV4nK9d9AAViOUtg6Ix5L3LXmcFdSPE5/YMyYRJlRAqqg?=
+ =?us-ascii?Q?pN8Mwx1nMOrWAqGZs86GE6JqK8F5SJ1dxLLg/eaGke4/qS4MsVVv+cfbVr1s?=
+ =?us-ascii?Q?42cGDnOjPHnbZXvTzS9p7rOHCa3uxH0OJ34+tPZssXYmFAwZVmfZpUv3mfvb?=
+ =?us-ascii?Q?ln6+pYbi3eFPqCXguOxxChJmTuLrR4brhEYOIjXFFVDf9zZNRpRzvKMZFsT1?=
+ =?us-ascii?Q?lqCMwSBFmICgxwBLxyBKuy8vq/tAvIuReFcqX5YKEH5YAYCG3FmxzWB+0vV1?=
+ =?us-ascii?Q?Jxm0H4ppFT0S7zx1Zw5/nPjk+zZyF4Wr+v2p?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2025 05:13:11.6532
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27e4109b-cb7d-479a-7d47-08ddc9a79ed3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FC.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9258
 
-The Dell SMBIOS driver uses the "id" field inside struct device for
-prioritizing the WMI backend over the SMM backend. Because of this
-the WMI backend modifies the "id" field of the underlying WMI device.
-However the WMI core itself uses wdev->dev.id internally to track
-device IDs, so modifying this value will result in a resource leak.
+This patch series aims to resolve potential issues that may occur
+when asynchronous probing is enabled in HSMP ACPI driver.
 
-Fix this by not using the "id" field inside struct device for SMBIOS
-prioritization. Instead extend struct smbios_device with a separate
-"priority" field.
+* The first patch introduces a mutex to safeguard shared data across
+  multiple ACPI probes and removals.
 
-Tested on a Dell Inspiron 3505.
+* The second patch implements reference counting to ensure that
+  hsmp_pdev->sock allocation is freed, and the miscellaneous device
+  is deregistered only after all socket removal calls are completed.
 
-Fixes: 73f0f2b52c5e ("platform/x86: wmi: Fix WMI device naming issue")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v2:
-- improve commit message
-=2D--
- drivers/platform/x86/dell/dell-smbios-base.c | 19 +++++++++----------
- drivers/platform/x86/dell/dell-smbios-smm.c  |  3 +--
- drivers/platform/x86/dell/dell-smbios-wmi.c  |  4 +---
- drivers/platform/x86/dell/dell-smbios.h      |  2 +-
- 4 files changed, 12 insertions(+), 16 deletions(-)
+* The third patch relocates the initialization of hsmp_pdev.num_sockets to
+  hsmp.c.
 
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platfo=
-rm/x86/dell/dell-smbios-base.c
-index 01c72b91a50d..444786102f02 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -39,6 +39,7 @@ struct token_sysfs_data {
- struct smbios_device {
- 	struct list_head list;
- 	struct device *device;
-+	int priority;
- 	int (*call_fn)(struct calling_interface_buffer *arg);
- };
-=20
-@@ -145,7 +146,7 @@ int dell_smbios_error(int value)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_error);
-=20
--int dell_smbios_register_device(struct device *d, void *call_fn)
-+int dell_smbios_register_device(struct device *d, int priority, void *cal=
-l_fn)
- {
- 	struct smbios_device *priv;
-=20
-@@ -154,6 +155,7 @@ int dell_smbios_register_device(struct device *d, void=
- *call_fn)
- 		return -ENOMEM;
- 	get_device(d);
- 	priv->device =3D d;
-+	priv->priority =3D priority;
- 	priv->call_fn =3D call_fn;
- 	mutex_lock(&smbios_mutex);
- 	list_add_tail(&priv->list, &smbios_device_list);
-@@ -292,28 +294,25 @@ EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
-=20
- int dell_smbios_call(struct calling_interface_buffer *buffer)
- {
--	int (*call_fn)(struct calling_interface_buffer *) =3D NULL;
--	struct device *selected_dev =3D NULL;
-+	struct smbios_device *selected =3D NULL;
- 	struct smbios_device *priv;
- 	int ret;
-=20
- 	mutex_lock(&smbios_mutex);
- 	list_for_each_entry(priv, &smbios_device_list, list) {
--		if (!selected_dev || priv->device->id >=3D selected_dev->id) {
--			dev_dbg(priv->device, "Trying device ID: %d\n",
--				priv->device->id);
--			call_fn =3D priv->call_fn;
--			selected_dev =3D priv->device;
-+		if (!selected || priv->priority >=3D selected->priority) {
-+			dev_dbg(priv->device, "Trying device ID: %d\n", priv->priority);
-+			selected =3D priv;
- 		}
- 	}
-=20
--	if (!selected_dev) {
-+	if (!selected) {
- 		ret =3D -ENODEV;
- 		pr_err("No dell-smbios drivers are loaded\n");
- 		goto out_smbios_call;
- 	}
-=20
--	ret =3D call_fn(buffer);
-+	ret =3D selected->call_fn(buffer);
-=20
- out_smbios_call:
- 	mutex_unlock(&smbios_mutex);
-diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platfor=
-m/x86/dell/dell-smbios-smm.c
-index 4d375985c85f..7055e2c40f34 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-smm.c
-+++ b/drivers/platform/x86/dell/dell-smbios-smm.c
-@@ -125,8 +125,7 @@ int init_dell_smbios_smm(void)
- 	if (ret)
- 		goto fail_platform_device_add;
-=20
--	ret =3D dell_smbios_register_device(&platform_device->dev,
--					  &dell_smbios_smm_call);
-+	ret =3D dell_smbios_register_device(&platform_device->dev, 0, &dell_smbi=
-os_smm_call);
- 	if (ret)
- 		goto fail_register;
-=20
-diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platfor=
-m/x86/dell/dell-smbios-wmi.c
-index ae9012549560..a7dca8c59d60 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
-@@ -264,9 +264,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wd=
-ev, const void *context)
- 	if (ret)
- 		return ret;
-=20
--	/* ID is used by dell-smbios to set priority of drivers */
--	wdev->dev.id =3D 1;
--	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
-+	ret =3D dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call=
-);
- 	if (ret)
- 		return ret;
-=20
-diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x8=
-6/dell/dell-smbios.h
-index 77baa15eb523..f421b8533a9e 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios.h
-+++ b/drivers/platform/x86/dell/dell-smbios.h
-@@ -64,7 +64,7 @@ struct calling_interface_structure {
- 	struct calling_interface_token tokens[];
- } __packed;
-=20
--int dell_smbios_register_device(struct device *d, void *call_fn);
-+int dell_smbios_register_device(struct device *d, int priority, void *cal=
-l_fn);
- void dell_smbios_unregister_device(struct device *d);
-=20
- int dell_smbios_error(int value);
-=2D-=20
-2.39.5
+* The fourth patch adds a check for sock->dev in hsmp_send_message() to
+  prevent access to the hsmp_pdev->sock structure when it is not yet
+  initialized or has been removed, which could occur during partial
+  probing or removal.
+
+Suma Hegde (4):
+  platform/x86/amd/hsmp: Use mutex to synchronize ACPI based probe
+  platform/x86/amd/hsmp: Add reference counter to track ACPI probe and
+    removal
+  platform/x86/amd/hsmp: Move initialization of num_sockets to
+    hsmp_common_init()
+  platform/x86/amd/hsmp: Ensure initialization of the sock struct in
+    hsmp_send_message()
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 34 +++++++++++++++-------------
+ drivers/platform/x86/amd/hsmp/hsmp.c | 33 +++++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.h |  2 +-
+ drivers/platform/x86/amd/hsmp/plat.c | 18 ++++-----------
+ 4 files changed, 56 insertions(+), 31 deletions(-)
+
+-- 
+2.25.1
 
