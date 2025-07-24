@@ -1,302 +1,360 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D43205E02
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Jul 2025 18:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9E1239567;
+	Thu, 24 Jul 2025 20:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753383123; cv=none; b=gZ9//v8G8QeNIQ8W620iHTcH/+ohye5SecpLp6GC4s/NAXXA8Sv8wG0T6VtfCb1DEhYEugsAtesohgaXqYuvVWfWDTZ13SPf31i+/NvTSam3KcL5X2DQeG+JjSQtgc2NGIeOMvJzRRYKilekWiGb8acf23bw/Gqd1brIyBEkO8I=
+	t=1753388690; cv=none; b=Qg1pHRxNR3ZUcYJw+snhQblGgumnBUtEbv7gEObs9b7eAmGnS+7ZnNOTxwMMjxbzshdEZ6lXcOaUkQDkZVrOS8k1d26RGXBXaBMHQETaRnrFOjH9Rl0vAr2DBHaPyy8xnkhh9o81ed5t6719T6Y1dGUK/QM+BviC1DfHdoKRJYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753383123; c=relaxed/simple;
-	bh=wc8aXf9PhNdwY64MVcsVu0y41ggeSGE3pH9HwNreO7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oafRjaYnHcM+19VBX8vqC4afbF2PfkJvX57jEfp7/cD2i+aAWl3vMy7K+0DZCEkfZSXfRksMHGma+IEanZH7yPv0orOGBHwQla+oGoxaPxnBj3bzTC0y0H7+iD2EXYANGDu4ukitH/QGBfIQMkVLhKwErkUBY+lJqXukWo2wkqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2kDnV1o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753388690; c=relaxed/simple;
+	bh=koWz4qifCGj7OTtNgHlA3dYWZovw7LDne4OFxXeW4Rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LKEXp12tO7aA51xqZZzPL3uCFkmzr7VBzN1pwqoWB6nm6BbIDkTQfrNb985LXxGTU5MEGqG7TJcwBs0s8a48XHK14Usj83C7tliFUwjrr4n69kkDQXKm1I8Dislyis2hYrm1ftilCeAEKnhUzQDaCr3VRNgAcP/ecG7n0bTNhgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fWFjqkcM; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2kDnV1o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC952C4CEED;
-	Thu, 24 Jul 2025 18:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753383122;
-	bh=wc8aXf9PhNdwY64MVcsVu0y41ggeSGE3pH9HwNreO7c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=a2kDnV1o+sfwCQfcjBUL41tXjqdXvTIFRZ+C055Wai3hUBefvOf3x+lZHYvwu6lHf
-	 dURsFVsRXnRf+JrVbUQXhAlthmqe5E4HLotH/oPYitnWtfCtK9EcNnD7ltGuCcOMUC
-	 X1feXOWluoU+FxeVxuzoqTszIX3bF4kEgtuMIDfz0dNp8y6+hgIDXg1r6og+2RN30t
-	 KN5fQ4l+PCkE5tZjNCLz/2YHaAu7GMqYCgPdJWkH2Pdy8Uy4Kisz1L3TXhr7+xQ4Ax
-	 1W0fLh6EZuLSaybBU2KVkt1x6s4sBnUkp+jmmW7r9gdudy3jGJE5RO/9tjeOUJz0Wd
-	 tUtKI4O7gZDvg==
-From: Mario Limonciello <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	Shyam-sundar.S-k@amd.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWFjqkcM"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso1323732a12.3;
+        Thu, 24 Jul 2025 13:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753388688; x=1753993488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IN5McEE14w8eBuFMHIBGq02p/0OhTNf8/j4tPHNoND0=;
+        b=fWFjqkcMOf0rwQFgwsK9b2j/MNaoM0Cbl2zZ5ZzzbQJ2fxEGWpwxtsG6+4ItSJnHTU
+         M0pQm4PCJbn27Ky0EitC9acfNU8a05vnI8/nRZUY3nJXhiJMrUbcP9J6Vv2S1CHYU1QG
+         5Di2Dj3WCZpJpmpB6sRUBFLBz/R3IEwg50umEBsRQg4pjrZBLoHVJlgHf7imdBW7/LXZ
+         H/J2V78Xi/CPckmag9WOr9OePZxJ2pxcUpDYiPPwOp31ounbmEkqJYwgcQHo8Spj7n+w
+         eshllqYsvFF9LYLM7G40kalZy5slngL26rK671jHastocYD0C1PvPJy1Oh/m0vuNgOyE
+         KvQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753388688; x=1753993488;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IN5McEE14w8eBuFMHIBGq02p/0OhTNf8/j4tPHNoND0=;
+        b=Z/iiqb+cVCqjJntMc4lZMNyJuR336RNNbE06Pvpo1CviiomX/+qXvNptqdCMyIrpX7
+         Kl3sZw0T2fPLyzF6eA8XCo4uJcLTLgBO7sY8Sz6narSps1w4f2TpMBssP/OkRig2QG8G
+         +WC1Bxqj933Vtr39vjGahWd4fw9HhLww2T3ZKFWIj/UWr2tbJlpXrqH6I59dMa23/MqR
+         lhA3lyNLBo1i95wswhnznACXJ97x787deJPInR64XbJ9hyieKMjUtv9+wy2eyfSwdVDr
+         in/tuhjBSJ4+bVfrG+WJtsuFGUWz0ZGy4w5uQuAJ/HpjwwmkyN9rI+oxLRcBoN/OyFbU
+         7BCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5HG9DNHGmFf8cXxfXz9IJ1XXcP5xElotwhULoM6rZJVd+yAHO4ZF2+b4JK/CUqOOK/03L/d/3S1xG0EGnHG3ad23nuA==@vger.kernel.org, AJvYcCWfD3XwohpQ/6BUT/cHuDo/EGxxbG2Mjm+Dlk5IUb9FaJuKYK8G6xjad4tkFF0H7GfyRjkOgXlAdisMUg==@vger.kernel.org, AJvYcCXvOgXvoSHHDzEL0q6YWMTAUeVUNnfmT/LEjo8RqKGRpliYLrDo4AfLRfV/aAmTVomGj+kP9RWQSRXjVniD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxxmb0XPSa30VaLI0Ho8iqY6OavpOfoSe5jPuuwJhLYzvS7/W80
+	iiMVlEFOXNjo//nMTJ46v4/9v8om59Z1ElID84P7mw3WCFiJcxh4eGmx
+X-Gm-Gg: ASbGncvi41bciTMH/9M1ncVSbu/20CcXe6cIPagb374wlTkrUgy0d8JOyHMDoul28Ro
+	rnuC7PF/ira6kUHZHMevzfe98hIjUayLQoZu0x6gVkCMi3waL/wjyrzriztid0zlZ2stvHGDzJr
+	6TqcBaMfl5tLWVdBoZhcJY5rCifKqvZEGG2Xsx6WtU88bCVGss1LEpZKMBsEH1OxurU9bXhbulO
+	qdhm5SQzm8qNSVUEejKvqrnwr1SYBMgFWqDF8p+OMBNFp3aq21MXVpe5uNXrTmm5s6kEkli8Ptf
+	hKP1582tPbikRO0ET8vWCZRN8VVvxBE1gTIRNoCY83FJHdoMDmd6HNsBkY6tEr4GBSGHHGSpA1s
+	vLlFx6au4gPV7Swkgblg+So7JitTM1td5obMDSKd9Lnzv1sj7JQEXdw==
+X-Google-Smtp-Source: AGHT+IHYn5ikLjNuAydEDMMGIex7ApqgM3/KQF99ewlubvbJVmlu95fmMQm6oRn7qWe2odGl/vvM2Q==
+X-Received: by 2002:a17:90b:3c4a:b0:313:20d2:c99b with SMTP id 98e67ed59e1d1-31e5071ce28mr11403083a91.9.1753388687938;
+        Thu, 24 Jul 2025 13:24:47 -0700 (PDT)
+Received: from c12-ThinkPad-X1-Carbon-Gen-12.. ([2404:7a80:b9a1:7100:9762:3c57:4828:75d1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31e6625068bsm2023458a91.5.2025.07.24.13.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Jul 2025 13:24:47 -0700 (PDT)
+From: Vishnu Sankar <vishnuocv@gmail.com>
+To: dmitry.torokhov@gmail.com,
+	hmh@hmh.eng.br,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
-Cc: Chris Bainbridge <chris.bainbridge@gmail.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/amd: pmc: Drop SMU F/W match for Cezanne
-Date: Thu, 24 Jul 2025 13:51:08 -0500
-Message-ID: <20250724185156.1827592-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+Cc: mpearson-lenovo@squebb.ca,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	vsankar@lenovo.com,
+	Vishnu Sankar <vishnuocv@gmail.com>
+Subject: [PATCH v2 1/2] input: mouse: trackpoint: Add doubletap enable/disable support
+Date: Fri, 25 Jul 2025 05:23:47 +0900
+Message-ID: <20250724202349.11200-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+Add support for enabling and disabling doubletap on TrackPoint devices
+that support this functionality. The feature is detected using firmware
+ID and exposed via sysfs as `doubletap_enabled`.
 
-Chris reported that even on a BIOS that has a new enough SMU F/W
-version there is still a spurious IRQ1.  Although the solution was
-added to SMU F/W 64.66.0 it turns out there needs to be a matching
-SBIOS change to activate it.  Thus Linux shouldn't be avoiding the
-IRQ1 workaround on newer SMU F/W because there is no indication the
-BIOS change is in place.
+The feature is only available on newer ThinkPads (2023 and later).The driver
+exposes this capability via a new sysfs attribute:
+"/sys/bus/serio/devices/seriox/doubletap_enabled".
 
-Drop the match for 64.66.0+ and instead match all RN/CZN/BRC (they
-all share same SMU F/W). Adjust the quirk infrastructure to allow
-quirking the workaround on or off and also adjust existing quirks
-to match properly.
+The attribute is only created if the device is detected to be capable of
+doubletap via firmware and variant ID checks. This functionality will be
+used by platform drivers such as thinkpad_acpi to expose and control doubletap
+via user interfaces.
 
-Unfortunately this may cause some systems that did have the SBIOS
-change in place to regress in keyboard wakeup but we don't have a
-way to know.  If a user reports a keyboard wakeup regression they can
-run with amd_pmc.disable_workarounds=1 to deactivate the workaround
-and share DMI data so that their system can be quirked not to use
-the workaround in the upstream kernel.
-
-Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4449
-Tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 54 ++++++++++++++---------
- drivers/platform/x86/amd/pmc/pmc.c        | 13 ------
- 2 files changed, 34 insertions(+), 33 deletions(-)
+Changes in v2:
+- Improve commit messages
+- Sysfs attributes moved to trackpoint.c
+- Removed unnecessary comments
+- Removed unnecessary debug messages
+- Using strstarts() instead of strcmp()
+- is_trackpoint_dt_capable() modified
+- Removed _BIT suffix and used BIT() define.
+- Reverse the trackpoint_doubletap_status() logic to return error first.
+- Removed export functions as a result of the design change
+- Changed trackpoint_dev->psmouse to parent_psmouse
+- The path of trackpoint.h is not changed.
+---
+ drivers/input/mouse/trackpoint.c | 149 +++++++++++++++++++++++++++++++
+ drivers/input/mouse/trackpoint.h |  15 ++++
+ 2 files changed, 164 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index ded4c84f5ed14..7ffc659b27944 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -28,10 +28,15 @@ static struct quirk_entry quirk_spurious_8042 = {
- 	.spurious_8042 = true,
- };
+diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/trackpoint.c
+index 5f6643b69a2c..c6f17b0dec3a 100644
+--- a/drivers/input/mouse/trackpoint.c
++++ b/drivers/input/mouse/trackpoint.c
+@@ -16,6 +16,8 @@
+ #include "psmouse.h"
+ #include "trackpoint.h"
  
-+static struct quirk_entry quirk_s2idle_spurious_8042 = {
-+	.s2idle_bug_mmio = FCH_PM_BASE + FCH_PM_SCRATCH,
-+	.spurious_8042 = true,
++static struct trackpoint_data *trackpoint_dev;
++
+ static const char * const trackpoint_variants[] = {
+ 	[TP_VARIANT_IBM]		= "IBM",
+ 	[TP_VARIANT_ALPS]		= "ALPS",
+@@ -63,6 +65,21 @@ static int trackpoint_write(struct ps2dev *ps2dev, u8 loc, u8 val)
+ 	return ps2_command(ps2dev, param, MAKE_PS2_CMD(3, 0, TP_COMMAND));
+ }
+ 
++/* Read function for TrackPoint extended registers */
++static int trackpoint_extended_read(struct ps2dev *ps2dev, u8 loc, u8 *val)
++{
++	u8 ext_param[2] = {TP_READ_MEM, loc};
++	int error;
++
++	error = ps2_command(ps2dev,
++			    ext_param, MAKE_PS2_CMD(2, 1, TP_COMMAND));
++
++	if (!error)
++		*val = ext_param[0];
++
++	return error;
++}
++
+ static int trackpoint_toggle_bit(struct ps2dev *ps2dev, u8 loc, u8 mask)
+ {
+ 	u8 param[3] = { TP_TOGGLE, loc, mask };
+@@ -393,6 +410,131 @@ static int trackpoint_reconnect(struct psmouse *psmouse)
+ 	return 0;
+ }
+ 
++/* List of known incapable device PNP IDs */
++static const char * const dt_incompatible_devices[] = {
++	"LEN0304",
++	"LEN0306",
++	"LEN0317",
++	"LEN031A",
++	"LEN031B",
++	"LEN031C",
++	"LEN031D",
 +};
 +
- static const struct dmi_system_id fwbug_list[] = {
- 	{
- 		.ident = "L14 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20X5"),
-@@ -39,7 +44,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XF"),
-@@ -47,7 +52,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "X13 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XH"),
-@@ -55,7 +60,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
-@@ -63,7 +68,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UD"),
-@@ -71,7 +76,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UE"),
-@@ -79,7 +84,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
-@@ -87,7 +92,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UJ"),
-@@ -95,7 +100,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20Y1"),
-@@ -103,7 +108,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21A0"),
-@@ -111,7 +116,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21A1"),
-@@ -152,7 +157,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 14AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82VF"),
-@@ -160,7 +165,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 15AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82VG"),
-@@ -168,7 +173,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 15AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82X5"),
-@@ -176,7 +181,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad Slim 3 14AMN8",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XN"),
-@@ -184,7 +189,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad Slim 3 15AMN8",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
-@@ -193,7 +198,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/4434 */
- 	{
- 		.ident = "Lenovo Yoga 6 13ALC6",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82ND"),
-@@ -202,7 +207,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/2684 */
- 	{
- 		.ident = "HP Laptop 15s-eq2xxx",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Laptop 15s-eq2xxx"),
-@@ -285,6 +290,16 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
++/*
++ * checks if it’s a doubletap capable device
++ * The PNP ID format eg: is "PNP: LEN030d PNP0f13".
++ */
++static bool is_trackpoint_dt_capable(const char *pnp_id)
++{
++	const char *id_start;
++	char id[8];
++
++	if (!strstarts(pnp_id, "PNP: LEN03"))
++		return false;
++
++	/* Points to "LEN03xxxx" */
++	id_start = pnp_id + 5;
++	if (sscanf(id_start, "%7s", id) != 1)
++		return false;
++
++	/* Check if it's blacklisted */
++	for (size_t i = 0; i < ARRAY_SIZE(dt_incompatible_devices); ++i) {
++		if (strcmp(id, dt_incompatible_devices[i]) == 0)
++			return false;
++	}
++	return true;
++}
++
++/* Trackpoint doubletap status function */
++static int trackpoint_doubletap_status(bool *status)
++{
++	struct trackpoint_data *tp = trackpoint_dev;
++	struct ps2dev *ps2dev = &tp->parent_psmouse->ps2dev;
++	u8 reg_val;
++	int rc;
++
++	/* Reading the Doubletap register using extended read */
++	rc = trackpoint_extended_read(ps2dev, TP_DOUBLETAP, &reg_val);
++	if (rc)
++		return rc;
++
++	*status = reg_val & TP_DOUBLETAP_STATUS ? true : false;
++
++	return 0;
++}
++
++/* Trackpoint doubletap enable/disable function */
++static int trackpoint_set_doubletap(bool enable)
++{
++	struct trackpoint_data *tp = trackpoint_dev;
++	struct ps2dev *ps2dev = &tp->parent_psmouse->ps2dev;
++	static u8 doubletap_state;
++	u8 new_val;
++
++	if (!tp)
++		return -ENODEV;
++
++	new_val = enable ? TP_DOUBLETAP_ENABLE : TP_DOUBLETAP_DISABLE;
++
++	if (doubletap_state == new_val)
++		return 0;
++
++	doubletap_state = new_val;
++
++	return trackpoint_write(ps2dev, TP_DOUBLETAP, new_val);
++}
++
++/*
++ * Trackpoint Doubletap Interface
++ * Control/Monitoring of Trackpoint Doubletap from:
++ * /sys/bus/serio/devices/seriox/doubletap_enabled
++ */
++static ssize_t doubletap_enabled_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct serio *serio = to_serio_port(dev);
++	struct psmouse *psmouse = psmouse_from_serio(serio);
++	struct trackpoint_data *tp = psmouse->private;
++	bool status;
++	int rc;
++
++	if (!tp || !tp->doubletap_capable)
++		return -ENODEV;
++
++	rc = trackpoint_doubletap_status(&status);
++	if (rc)
++		return rc;
++
++	return sysfs_emit(buf, "%d\n", status ? 1 : 0);
++}
++
++static ssize_t doubletap_enabled_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct serio *serio = to_serio_port(dev);
++	struct psmouse *psmouse = psmouse_from_serio(serio);
++	struct trackpoint_data *tp = psmouse->private;
++	bool enable;
++	int err;
++
++	if (!tp || !tp->doubletap_capable)
++		return -ENODEV;
++
++	err = kstrtobool(buf, &enable);
++	if (err)
++		return err;
++
++	err = trackpoint_set_doubletap(enable);
++	if (err)
++		return err;
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(doubletap_enabled);
++
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
  {
- 	const struct dmi_system_id *dmi_id;
+ 	struct ps2dev *ps2dev = &psmouse->ps2dev;
+@@ -425,6 +567,9 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
+ 	psmouse->reconnect = trackpoint_reconnect;
+ 	psmouse->disconnect = trackpoint_disconnect;
  
-+	/*
-+	 * IRQ1 may cause an interrupt during resume even without a keyboard
-+	 * press.
-+	 *
-+	 * Affects Renoir, Cezanne and Barcelo SoCs
-+	 *
-+	 * A solution is available in PMFW 64.66.0, but it must be activated by
-+	 * SBIOS. If SBIOS is known to have the fix a quirk can be added for
-+	 * a given system to avoid workaround.
-+	 */
- 	if (dev->cpu_id == AMD_CPU_ID_CZN)
- 		dev->disable_8042_wakeup = true;
++	trackpoint_dev = psmouse->private;
++	trackpoint_dev->parent_psmouse = psmouse;
++
+ 	if (variant_id != TP_VARIANT_IBM) {
+ 		/* Newer variants do not support extended button query. */
+ 		button_info = 0x33;
+@@ -470,6 +615,10 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
+ 		     psmouse->vendor, firmware_id,
+ 		     (button_info & 0xf0) >> 4, button_info & 0x0f);
  
-@@ -295,6 +310,5 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
- 	if (dev->quirks->s2idle_bug_mmio)
- 		pr_info("Using s2idle quirk to avoid %s platform firmware bug\n",
- 			dmi_id->ident);
--	if (dev->quirks->spurious_8042)
--		dev->disable_8042_wakeup = true;
-+	dev->disable_8042_wakeup = dev->quirks->spurious_8042;
++	tp->doubletap_capable = is_trackpoint_dt_capable(ps2dev->serio->firmware_id);
++	if (tp->doubletap_capable)
++		device_create_file(&psmouse->ps2dev.serio->dev, &dev_attr_doubletap_enabled);
++
+ 	return 0;
  }
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 0b9b23eb7c2c3..bd318fd02ccf4 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -530,19 +530,6 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
- {
- 	struct device *d;
--	int rc;
--
--	/* cezanne platform firmware has a fix in 64.66.0 */
--	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
--		if (!pdev->major) {
--			rc = amd_pmc_get_smu_version(pdev);
--			if (rc)
--				return rc;
--		}
--
--		if (pdev->major > 64 || (pdev->major == 64 && pdev->minor > 65))
--			return 0;
--	}
  
- 	d = bus_find_device_by_name(&serio_bus, NULL, "serio0");
- 	if (!d)
+diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/trackpoint.h
+index eb5412904fe0..256e8cb35581 100644
+--- a/drivers/input/mouse/trackpoint.h
++++ b/drivers/input/mouse/trackpoint.h
+@@ -8,6 +8,8 @@
+ #ifndef _TRACKPOINT_H
+ #define _TRACKPOINT_H
+ 
++#include <linux/bitops.h>
++
+ /*
+  * These constants are from the TrackPoint System
+  * Engineering documentation Version 4 from IBM Watson
+@@ -69,6 +71,8 @@
+ 					/* (how hard it is to drag */
+ 					/* with Z-axis pressed) */
+ 
++#define TP_DOUBLETAP		0x58	/* TrackPoint doubletap register */
++
+ #define TP_MINDRAG		0x59	/* Minimum amount of force needed */
+ 					/* to trigger dragging */
+ 
+@@ -139,6 +143,14 @@
+ #define TP_DEF_TWOHAND		0x00
+ #define TP_DEF_SOURCE_TAG	0x00
+ 
++/* Doubletap register values */
++#define TP_DOUBLETAP_ENABLE	0xFF	/* Enable value */
++#define TP_DOUBLETAP_DISABLE	0xFE	/* Disable value */
++
++#define TP_DOUBLETAP_STATUS_BIT 0	/* 0th bit defines enable/disable */
++
++#define TP_DOUBLETAP_STATUS   BIT(TP_DOUBLETAP_STATUS_BIT)
++
+ #define MAKE_PS2_CMD(params, results, cmd) ((params<<12) | (results<<8) | (cmd))
+ 
+ struct trackpoint_data {
+@@ -150,11 +162,14 @@ struct trackpoint_data {
+ 	u8 thresh, upthresh;
+ 	u8 ztime, jenks;
+ 	u8 drift_time;
++	bool doubletap_capable;
+ 
+ 	/* toggles */
+ 	bool press_to_select;
+ 	bool skipback;
+ 	bool ext_dev;
++
++	struct psmouse *parent_psmouse;
+ };
+ 
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
 -- 
-2.43.0
+2.48.1
 
