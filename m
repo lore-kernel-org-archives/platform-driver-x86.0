@@ -1,229 +1,139 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5346C259C85
-	for <platform-driver-x86@vger.kernel.org>; Thu, 24 Jul 2025 09:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753348824; cv=fail; b=GIeYEt+xl9TtDaUq3tNb5dLtjSP1JLQNHQi7ni4zQsJSkhWWCTt9/m9aOLULdeNZYBM7uXv6d34aj9gqFT91WtJG1QrH8YAPnpJ5yuUcSU8mtVDVT/93dJnHMHX5zsrzjD+qFZqhYUlLArHBxJGKM89KPsNrvQj5CAMioCD4DPA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753348824; c=relaxed/simple;
-	bh=ggioN9vD1P4y0Mt92EiifJo769NWv5o0s23FvYuKS50=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=R97FT7OQHUtGI5cqcjGS2Y9XiDs63d2/QBUvGSSA0fMnJ7VK93f0pIiGm9nuPoBC6rBB1RXDvYmUJ7YSUtT54nMHHFDKO1DiXctVg+41Fy46QfqPdYbTCB10IM+rHUZSpm91a2oYrNS8pUdzJ4q/jquhKvDWFDMU4j5cxP4n4FI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3SUmssYw; arc=fail smtp.client-ip=40.107.94.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3SUmssYw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T3IM9BNtP/OsHHjTBccAjiZkHb57nv8grz1eLxPyGie5e+fYDny9CMAFd/hSsSr7KP6/3bKS0EIhHN2d1QpRN2sppeFt/KYe6HBUSc3fHKIBV/j4PqSgiq2De3bzec7EjOsGi49eyVx6cCGEIborSWAbKf4yJSWtKu/UlV9UdqudFEv0WKE8aV+ewQ3OS8JAEAEb7XkH6Zw8IVRX/mOdONalkF5uS9PQA4zHMU+G/SUUGtEBHALv+39nXEiOX969ltJj8NVc1S0F6MxPd7jO/s0Q5wq5EKoODKOuQNAiYF7xfR6zdutMji1Hpu0dTyeZHAH/UzhnXVhrAM6zZd5aEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZAD2h9Gt10dEfBPti2UkIFlywqkjNVgueKJyK6ued0U=;
- b=hM1Ke/2ETw///smo34wfvh76FwwyjbX0ACl8IXc/OWuvA7KId73AFlthGO5HAQihqfXA5W11KAoWK3W+daESp61bdfd78HlqDwSR/WVnmbJfdHRR9AvcBnYMAt8NXG/7EmUQLgML5iLKt6DGL/+RPFd9PAxTOFOp6ewDs9LdXmIjro0eZ6/hUOl6svnuucgBEZA64k5VyM4NRyZ17RsdYWXbKLEWzRnZS7oVhuTSmOFvscmHxzuZf+ZvsCg+v/eHkaVWsOrXTvUxuGEy3NEUJJK1/S5kr1zzwnt396N+Ae0KM6rBcgWSrR4KMYCnPT4IXqMt7xdpnk+XgIdtrsKbtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZAD2h9Gt10dEfBPti2UkIFlywqkjNVgueKJyK6ued0U=;
- b=3SUmssYw7zMSJcLRvw1vMdyP/TaIkgrX5NV8i3/JwJJJeQOroIZTwd5ihMFuzy96TDrc6EWeF/s4zAT+ppdlsavl4Ff9CGFs/DzvGIBnOW3vfjWWLuyWIheorVhIVGJyM0LoIxaQHFJ5gvdx1JCOtnfgPEftRsOFXrLrsiZmLBw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by DM4PR12MB5818.namprd12.prod.outlook.com (2603:10b6:8:62::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.21; Thu, 24 Jul
- 2025 09:20:20 +0000
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81%4]) with mapi id 15.20.8964.021; Thu, 24 Jul 2025
- 09:20:20 +0000
-Message-ID: <dd58fb6a-021c-4467-9873-7832e2185ca2@amd.com>
-Date: Thu, 24 Jul 2025 14:50:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] platform/x86/amd/hsmp: Ensure initialization of
- the sock struct in hsmp_send_message()
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20250723051251.3009625-1-suma.hegde@amd.com>
- <20250723051251.3009625-5-suma.hegde@amd.com>
- <11a77699-49f4-ac5f-4bce-6dedae7f0170@linux.intel.com>
-Content-Language: en-US
-From: Suma Hegde <Suma.Hegde@amd.com>
-In-Reply-To: <11a77699-49f4-ac5f-4bce-6dedae7f0170@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN4PR01CA0048.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:279::8) To LV2PR12MB5966.namprd12.prod.outlook.com
- (2603:10b6:408:171::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B023F2D6405;
+	Thu, 24 Jul 2025 13:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753362905; cv=none; b=m+YonTJQF6SKGC2g2mPgI99apzgt7GFTiJvPhKwCmReqcTtl0z3384umuhtup3aa8w/2qgT9ZYEjd9D/+3MIyDaGQpEGe9O+2Nb0bUUIxSwy40z7EjkcGtc44yA0m8/5s1gjKOoOoAxSTDVIiAgS04vcJk1nrZ7ReJMf2uZ8tOo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753362905; c=relaxed/simple;
+	bh=ne/XcgrgO/KJ5Vpn5Kmd1KTfFMh8OZxebN5iFuDYEM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RP9xDJCNfzdKSa+xNXYbL10zkz9slWLyA2dey0l9rXBb/aqlE6ZEYH5om7t7Nv/7iGGu8qEt/ByUAPKDTsNABCACWOgtuiSuiDHAl/8k6r4BrYS34zejdW1xkUpWBdsHM+dmDP2NtGku1lMTe7XMUL/ldH56HDj2YpS9c3wquCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.53.4)
+	(envelope-from <n.schier@avm.de>)
+	id 6882306d-0380-7f0000032729-7f000001eb7c-1
+	for <multiple-recipients>; Thu, 24 Jul 2025 15:09:01 +0200
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu, 24 Jul 2025 15:09:01 +0200 (CEST)
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 09A4980AA3;
+	Thu, 24 Jul 2025 15:09:02 +0200 (CEST)
+Received: from l-nschier-aarch64.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:6472::1])
+	by buildd.core.avm.de (Postfix) with ESMTPS id 6DAEF184464;
+	Thu, 24 Jul 2025 15:09:00 +0200 (CEST)
+Date: Thu, 24 Jul 2025 15:08:58 +0200
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 4/4] kstack_erase: Support Clang stack depth tracking
+Message-ID: <20250724-optimistic-armadillo-of-joviality-e59222@l-nschier-aarch64>
+References: <20250724054419.it.405-kees@kernel.org>
+ <20250724055029.3623499-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|DM4PR12MB5818:EE_
-X-MS-Office365-Filtering-Correlation-Id: e86cac07-8865-4757-367e-08ddca934f69
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QlVLYTJxWVJMWkx0QnRMRndWWHhrR28yOUNsTWk1YzVhR3lRRGpZbTkvMkFG?=
- =?utf-8?B?cllFUWdnb0tsWGYxcVBnclp4RnNKTzBXWFlUeHhzTG82Mk9oSDZxMkV6SHor?=
- =?utf-8?B?eFJsY1hyT1hxczREZWwzMXh3V3JIYXEzS2J1NHZJQkpPcEk3cTlLMWxqMGEz?=
- =?utf-8?B?WGo0Qm9zV05Pd2F0MXI5Tm1kSUZGVFVXVE5aeVFHQ3VKbk1GMkM4WnhJV0Ev?=
- =?utf-8?B?cHpqQk0xbWdXR1ZUKzNhdmVWT0JrT0FqZWM4VFZ5aDhlQmdvQnp0Z05ERUhy?=
- =?utf-8?B?RXVoRTY0ei8rWXZhNEs2YW9sVTZaL0tJTC9uT3oyaEpJdjZBVVZwQUc2Tk9T?=
- =?utf-8?B?R0ZwaHVFWmVjK3RpSk9IUDlOU09kWFcwaHlNdXd3NUFkU2hJTHpKOHo2Z0Rp?=
- =?utf-8?B?VmpBd0o1TThEY3UyRHliZmYxRTBVaG4zTEh6ejdkc2UzcTJCTW1PTU9rL3Qy?=
- =?utf-8?B?QmFHTWg4dVNDU3RxSGpUSzJqNjRHeEEvNW9NeUFvNTVTdHRKeUQ0SnNKbWRK?=
- =?utf-8?B?cFVZdmtoRk5tWmF5YjdIQ1gzZWsrNmVPdEd2K0E3c3BydzBCN0FjMTltLzY2?=
- =?utf-8?B?em1KRTh5eU9tQnhWVU5RQXJqQkFlQXEwMG5laWdvcGtRZzlqSktSUWZsaWVW?=
- =?utf-8?B?eS9Nek5CemZUWXhWTDZTTkFyVFduNmdwbjBOcy81Qno1SE9IZzZVc0NVbGp3?=
- =?utf-8?B?S0ZvT3Bhbk12aU16ZVZSRElLTC8xeWxScERVWmxXTWdLTXk5Y1hkMU9zZy9i?=
- =?utf-8?B?LzZ5MXBhNE1FMVc2NnlQQ0JvV2ZLRGhwdk9FeWMwc3ArTVo5eGoxMHVQRzA4?=
- =?utf-8?B?QW5JV3IzNE1wUm9LYisrWG44QVVxajBpS2NTamNrU1NFRCtKbzhmVWxZeFln?=
- =?utf-8?B?djAxdU5QWjA5dk1CUHUwMU5keEl3eE15aEg0ZW9vZVN1NGtPTGc3Y2VWeHpS?=
- =?utf-8?B?aktDOWdVMUh2SUI4djRXcmp2cEZua2hxUzJCYWlidlFQWTYrSGZBTlVmcHE0?=
- =?utf-8?B?V0ZKYkNtRUp2RE5xdjJhNnpRazQxWEx3bHFBVEFrQmU3VXU0YzdaWWdYbysx?=
- =?utf-8?B?bkQzcVVDTGxKclZxcllqamZHUmE5Mm9VWnEyazBUNUYweFRNTm85TWYvQXJn?=
- =?utf-8?B?RGVUeHFzb0lzQkQwdU9keHFROHc2V2FUVVU4ek5qd1ZiTk85eTl1QkR5NGhB?=
- =?utf-8?B?K0VkbWY4c3Rub0pPZ0tUd0x6Z2t6UzlwcmMrQVNKS2J3R3lTVFlNT25GQ2ZD?=
- =?utf-8?B?T2tkNVMwMkhqTzNaZEFoOWNSRG5wa1FwSGF4UHpoSjJzZitaYW1NNmJBb1dE?=
- =?utf-8?B?Z3BWS0M5Z25mSW1TN3c5YVlrMEJWSW1CQ2xvdjZpMUdvRU5oU0wxcW9xV0lE?=
- =?utf-8?B?Q2RpZHRrNTBCOVcwMkVHNStzd0NKZEQrVktXRDY1RWh0SVhXaGFBOEVMOHBD?=
- =?utf-8?B?eWhWeDAraXk0Ty8ra1Fscjk5amM0RkRiUWM1a29MWjlaU3dXRTB4WkhiQ0VP?=
- =?utf-8?B?dmU4Q1lYaEFCL096RllSVncyaXVsR2tJNWl3TG5jcUoxTC9mVHUvaUkrcHE5?=
- =?utf-8?B?K20wVVFiMllVUG42S20xbG1xd2x4ZVZqdmhIbFBDeHVXdldnaUc2OVR4Q2hn?=
- =?utf-8?B?TnpmckE0dUowdnhwRWd4TlVzcFhEY1pqWVJ3RWFRMCtpdUUzVkIvR1A1SWNp?=
- =?utf-8?B?S3dtMGRaR3dzSllkdlQ0NWREeUh6NHJnS014eW5ObHVSZzBRSnNpbVRCR3hH?=
- =?utf-8?B?UWhQM3dXb2M2QUcyTFpFd2tuZEJvc2JaUmp5T21ndDJ5K1JUNEFodnd3NUh4?=
- =?utf-8?B?UUdzOEFZL1JRckFWRUdkTksvUXlxRDJyNXFEOXpkZVFmdHZHb3hOR2JkUlpT?=
- =?utf-8?B?Vzdjc2ZZV0REc3Awa1gxVUQ2bW1odjl6c2tHRmg3eTN1dWdhKzJ2QWRjVGwx?=
- =?utf-8?Q?5DKn8Rxi/aA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Nm9aN3FXYUlrYWRMS3VYQ3VzbDBJKy93TUcvWjFzM0FCMXRGUWRHeCtTWUhN?=
- =?utf-8?B?QXdGbFhtSkdUVVhvOE9aNkdEQnpVcEUzYkdwR0gyQ21TN1I2T09Ca2Frenpp?=
- =?utf-8?B?MHhsUysyekRQWmFaU05sU0d0Nm1DMXcxMkM0Yi9sL1pxQlEvMlVnc3R1a3Rq?=
- =?utf-8?B?Ny9nQ1JVNHJieUpxVzNPclk4dmZJU3lMSTdwQ0JYa3Y2elR6TnBIVTJ4Rm9P?=
- =?utf-8?B?WWRzNDRCRkpjcWJRaEwrQlUvaTFRQ3Rna0xRSWhCSWZ5c3dVdi9JUVVNeGhu?=
- =?utf-8?B?ZnEwcjFWNVBTOEY2WENlRktlbjlXeGhVcVU3bFdIbHRZZjNwNFE4Vi93TkdW?=
- =?utf-8?B?ZVBjUERuRHhBSlBRNTBFSTJkOFdrK3cwNDU4Z24vYW02Vkoxdnk4Q1o0NHpU?=
- =?utf-8?B?NWkzQkFJVVEvazNwcThRQTgvUU9uR0lLVGFYSjVjVTQvNVovb3BwTTVJVTYz?=
- =?utf-8?B?eWhWL0I1SzFNbUJqc1FZamtudkxwTEZFa0ZJcTJLMEFzSEZPVjFkVG1ZbGh3?=
- =?utf-8?B?WDhxUUNkWDY2STJqYkI3QnZrWlh3UTFSOGFHbldtRzJkUUlXbkV4MWZ5Q1d4?=
- =?utf-8?B?ZnJTY1NHaVR0c1FGZkxkN3VxQzN2enB1REZnVzQ2NDlUT283NkwySGFjOUl2?=
- =?utf-8?B?QUJ4TWtEdVlaaERDWVlEc0V5eVZNckRQNHVrVFQvRm1hb1NnUERSVjNKOFZn?=
- =?utf-8?B?VklEc2E5YVk3SldwcHFPOUx3c0RSUGwrRm9uSjY5VTAxZTF3TFA1aTRzcmg0?=
- =?utf-8?B?SHlUNEkvRUR0QTYxTmxNTElHQmdNOTNPZW1KcGlleE1NK2s0Vi9HUFhwcHNy?=
- =?utf-8?B?TWhhRmM2WTFoWHlnUHJrcDl0Rm85eTNURnNXTjVXNVBnRXd2UmVLd0FURlhw?=
- =?utf-8?B?MXJ3K05qdm11d2NRc1g5NDJOMGxuQmxSMkRCekVyU1duU2liT2JVRlZNTzMw?=
- =?utf-8?B?TENPYVRicU1sQXZBUXNBTTVteEtNQlBuUFJhbzhyWnpUcFpML2FDNEpPbytk?=
- =?utf-8?B?c2xQamh5VXMwVDZLaitxNFpadmFoMEtTZGlWZm5MajFmZVJxMDR4dlZ3ZjB2?=
- =?utf-8?B?TkhleU5IeCtQdVZVZGdCZ0lYdjA5dlFjTWlPL0ZnazJZSDZOazA3eTJOQXlD?=
- =?utf-8?B?bXJ2S3QrRytBTVo4VUIyNXVJeFphbVJrYStidjd6R2JXMkp4b2pycEFhMks1?=
- =?utf-8?B?N2lWaUZWVnVEek1mRHgrY1RSY05wL0VuV3JmOVdtTEZvZnRwOEcwUHB6ZHl1?=
- =?utf-8?B?OExDMDI2VVpIRDlKNnM3WHVmd0ZxSU51MEhBOFFNMTNIbGtLcERBOUtFNURJ?=
- =?utf-8?B?Q2swb0J1a2VqcDNBaUZLOXRJeWZ5QXk5Wk81MFd5L3BRVlZwSnR4a2I0clJH?=
- =?utf-8?B?cWo4clArOGxYMVFMY1g4Zjh3TkZMdzVmWjUzWllMUDNXY1pydTBSTzBrb3lO?=
- =?utf-8?B?R3IxT04wOVlPcEhROWpJdTBSVlRjTm14QlR2ajlnNU81eG81UFp3aDNMTlBw?=
- =?utf-8?B?elE1SmRKSHQ2bW5rRDE0ZjFzYkppZi9uc2tLQnQyQWUvMkgxK1RGK3ZrNCsy?=
- =?utf-8?B?aWRlcnVZQmZvNkxwVDVudWhRMjJuUmU3U1JrdkhzOXcvd1ZmdGRDSldRT2ZL?=
- =?utf-8?B?Y0N4TVNoZ01ZKzdBaVdiK3U4dExjMk94SzdqaDYycEloamFKdTZXU2NpTENy?=
- =?utf-8?B?RlkrYmYvNVRxeG1pTFNVU2hMalNvbWo2RjlQMTN1U0N5NXpHQ2tibFRCNHRS?=
- =?utf-8?B?RDBUZXRBMkNMZVRJZFRVUTUrRGgrMHNDV1RxZjFxY3I2U012dTUvU0VNbjR1?=
- =?utf-8?B?Y2k3L290TGx2cXh0RVJtRE5sS0JPR2pEanVvdnhGVXRBL2UvbnRjQzd4YnJN?=
- =?utf-8?B?MFdhTlFwL1F3b0VkMnZETEplTW5ueWdWUmdYRDF6SEtpT0kvcEdGd0NZR05x?=
- =?utf-8?B?bnNzekh0NTA4NVU1MFh0ekVacDFUNDRjM3g5SnQzL2xYK3R0akUyRFFVVHZW?=
- =?utf-8?B?MzRlZ1ozYkhzS3NMNWp3dG9EcDRRUEdCSjRKTnlHb28vcUJzSVZZcjJEN2g4?=
- =?utf-8?B?eGlHU1hiZnBVWm5FVVg5NWFTcXQ5TkhqaXpkaFltVW9hS2xQSXU3b0oyRERP?=
- =?utf-8?Q?JzxAO23/bNv+S+gnWnoJFEOuH?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e86cac07-8865-4757-367e-08ddca934f69
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2025 09:20:19.9974
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1W4IpdqiuxRy6p5AjNPnjr4df1q7Y4bzRZspHQu+t9o/WpNH/CIk6/CZf7pij9i6aa+Embe6SNRgKVPREf+2uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5818
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250724055029.3623499-4-kees@kernel.org>
+Organization: AVM GmbH
+X-purgate-ID: 149429::1753362541-3C575E1C-2FB622E2/0/0
+X-purgate-type: clean
+X-purgate-size: 870
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-Hi Ilpo,
+On Wed, Jul 23, 2025 at 10:50:28PM -0700, Kees Cook wrote:
+> Wire up CONFIG_KSTACK_ERASE to Clang 21's new stack depth tracking
+> callback[1] option.
+>=20
+> Link: https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-stack-de=
+pth [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: <linux-kbuild@vger.kernel.org>
+> Cc: <kasan-dev@googlegroups.com>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
 
-
-On 7/23/2025 12:40 PM, Ilpo Järvinen wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
->
->
-> On Wed, 23 Jul 2025, Suma Hegde wrote:
->
->> If all sockets are not probed, invoking hsmp_send_message() might result in
->> unexpected behavior due to accessing an uninitialized socket structure.
->>
->> The initialization of the sock structure can be confirmed if sock->dev
->> is initialized.
->>
->> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
->> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
->> ---
->> Changes since v1:
->> New patch to address the partial probe/removal issue.
->>
->>   drivers/platform/x86/amd/hsmp/acpi.c | 4 ++++
->>   drivers/platform/x86/amd/hsmp/hsmp.c | 3 +++
->>   2 files changed, 7 insertions(+)
->>
->> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
->> index 15c4cedc2759..a2d91d4a3e02 100644
->> --- a/drivers/platform/x86/amd/hsmp/acpi.c
->> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
->> @@ -617,6 +617,10 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
->>
->>   static void hsmp_acpi_remove(struct platform_device *pdev)
->>   {
->> +     struct hsmp_socket *sock = dev_get_drvdata(&pdev->dev);
->> +
->> +     sock->dev = NULL;
->> +
->>        guard(mutex)(&hsmp_lock);
->>        /*
->>         * We register only one misc_device even on multi-socket system.
->> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
->> index e05d824045d6..a4420db42781 100644
->> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
->> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
->> @@ -219,6 +219,9 @@ int hsmp_send_message(struct hsmp_message *msg)
->>                return -ENODEV;
->>        sock = &hsmp_pdev.sock[msg->sock_ind];
->>
->> +     if (!sock->dev)
->> +             return -ENODEV;
->> +
->>        ret = down_interruptible(&sock->hsmp_sem);
->>        if (ret < 0)
->>                return ret;
-> This is still racy. AFAICT, nothing prevents assigning NULL into sock->dev
-> because of remove while hsmp_send_message() is running and that can result
-> in dereferencing NULL.
-
-Could you please suggest on how to resolve this issue?
-
-
-> --
->   i.
-
-
-Thanks and Regards,
-
-Suma
-
+Acked-by: Nicolas Schier <n.schier@avm.de>
