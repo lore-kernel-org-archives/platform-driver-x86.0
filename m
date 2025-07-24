@@ -1,140 +1,164 @@
-Received: from mail-10624.protonmail.ch (mail-10624.protonmail.ch [79.135.106.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC6926C386
-	for <platform-driver-x86@vger.kernel.org>; Wed, 23 Jul 2025 21:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC5119A;
+	Thu, 24 Jul 2025 05:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753305525; cv=none; b=O6jnMGxt6L3+VEsmPewu34bmD0qS1eeoQMD7adrqIK66fmsNONYJvz9yh8eRxXYQ0A1wldwP0XjlCbkkTkLaQV8J7O3BiV8rHv5HP9hp6zAkR33nQoCfx4YNR6uZ0NmLhRJ20IsS6j06oeaXvIo2iCXwOLxyOmgKixpIL+8eSiY=
+	t=1753336230; cv=none; b=IpAVAd2sdeb+i90SpfFcJ13FSAaJ2K8PdcNMwrGWjxgoBqH/vBssrXKevYhkk7dH2CoxnBblcUC2ffuY3FReU0FWneoeV0drh0JLtnoSSTCVjknQvqlq/5LqFKtIgW9f55eFqVqJZILq7RzSdyBrFq2xdmrXkDaIpY9C1o0XR54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753305525; c=relaxed/simple;
-	bh=J2tpsNAN4YouiCdT8HlOy9Ov2FMrrrnomDYc7jQI7XI=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H1ksjbgoj3JMg2VYGVxZdUEI5xOMHIwdSLvhOddOWYe43JCDiKQlJAutpqhiQd1dlu7HpU9HHtWck6/S7Cx4q8aWlMyEBoLikmGNIhhiy6dl9xJpbJACK64HAq2sn6FoIPJTaDNUt1vYnLhDAB4H98nBErt5RkhulmrtUVpmQBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se; spf=pass smtp.mailfrom=benis.se; arc=none smtp.client-ip=79.135.106.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=benis.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=benis.se
-Date: Wed, 23 Jul 2025 21:18:28 +0000
-To: Zhang Rui <rui.zhang@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "rb_eddie@gmx.de" <rb_eddie@gmx.de>
-From: =?utf-8?Q?Benjamin_Hasselgren-Hall=C3=A9n?= <benjamin@benis.se>
-Subject: Re: HP Omnibook Ultra Flip 14 - power profiles
-Message-ID: <gdnDL7F3vIUJb30OIR1QyUq62Ay5VuPVacHQqeUkcppX4BW24bZLyoo-MLHZxeqGC5ruRusZXHdSOkqXNCDXN_Hd9IesxQCEeyHDGWg3Ggs=@benis.se>
-In-Reply-To: <DqXuw9FIzvFuEW5CDi99thtdm42SH5iuKR5I50--iorP_jQCHWp0oesB906P5h98VBmYupvqGfDiEZ0er2wCYoFib77wDazJOOK0eOk2CZo=@benis.se>
-References: <GXa7F-PA_8BE7nlK9r8dkdSv7c-DW52GvOUiyYHQ6RyoZDxIpNAocWDPYQDeS7WEZeUisqQH_bqmgSV-eaRmuw5r68MGKxyU9X_4Erd0RYQ=@benis.se> <c6Eep72y6E7gc-wUMdcIS9JfNN1_OBjlwGUrd4yGvp2R-PW2-OOoQngQt5H5kiZIccxFAPswaN9G6wVpHuewtoEvUkT52UCzHPibVJh7iYY=@benis.se> <65f3a229f70279ab0da7efa878b863c7798d4427.camel@intel.com> <uWQ7r_hhvTbLE0QDEfkt_V2Mf39SRnexnRQCZ8lrUv3hDKfAK1jpr5AeVug8wBfz3cDhu-bYnx9zvCoU5Ch-AMaVlQHwqPmZgn3a4OMRek8=@benis.se> <1e02c8f28200d8e3f27589e0ba75a67f2e99d1a4.camel@intel.com> <Hsi54U41U6V6LB65SJ9b8D_q4OsW-xsvWJSQmvmxo7EfsebwJKc6NnNHLO20CerbcNGL-Q8huoeWtzNuGsCVNrQvJW8ndwTdnIKZJIDbTjg=@benis.se> <4d0e07edfa83653fa8330e08fb4520f07bb38448.camel@intel.com> <tZDJlprhLriFb89pD_hEuI9r5MWf8J43NSBBtSwijh3tXJUCrr0TJxKw3nR3_YvAbvnyxdNP6hktgiEQdQmNH2vv_fFyqbwzWf8gd6w91EM=@benis.se> <DqXuw9FIzvFuEW5CDi99thtdm42SH5iuKR5I50--iorP_jQCHWp0oesB906P5h98VBmYupvqGfDiEZ0er2wCYoFib77wDazJOOK0eOk2CZo=@benis.se>
-Feedback-ID: 18592338:user:proton
-X-Pm-Message-ID: 3377f325f1517f347267b26f5491c9140ddd9e3a
+	s=arc-20240116; t=1753336230; c=relaxed/simple;
+	bh=XE3wpC5OKAVRvxdPiqi/2WsaLPvDes1ay28krOB8Nyg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GbvBthKYc2PBKFKeWlHtxGVmfWQkQAumr14Qv7e8tvzlf+Z0CGh7o9BwA1Cg+UFsWT5Z35YS4WNxzuTi6V3A0oallX0Mb4lC4chVV643wW+iIjjFT2JR51lkt2Y0GLrKAC918ZXZDOtYEjpNRT6+Pfmtxngk892fQxEtTyNuouY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d0/TMlHJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0/TMlHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA19C4CEF4;
+	Thu, 24 Jul 2025 05:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753336230;
+	bh=XE3wpC5OKAVRvxdPiqi/2WsaLPvDes1ay28krOB8Nyg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=d0/TMlHJD3g/KJWGAgQ/f/vsSu6dz+U/wQhw7RJ+hpjI1X/Sb0vKcWNoCHtrHbwiT
+	 fH44GGf8Ya+PkaTReniUuYLdOVN2Z7VZtAILtvfvcjiAgUuEzQ5NtxiABxovHh0dhh
+	 CjjXTbcKODbX01+IxIuANaBudNKSlp4sTNUtj/Dm700M2Xeul+T3LNAq2Cwpvn93hM
+	 3mtHpKM4dxgJplW4BiyL41PLzD8gk1AUnlrUjfa7EyvQF15EPpx30bWI4LoLGEpTl8
+	 AnYSr9DuaqtX57N9wGYm/6ZnjhE8O4TTw5SsPmlN/kayzZrdvOKdlCPjUMa8a9ErZI
+	 bpYkRhkl38Olg==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	kvm@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kasan-dev@googlegroups.com,
+	linux-kbuild@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v4 0/4] stackleak: Support Clang stack depth tracking
+Date: Wed, 23 Jul 2025 22:50:24 -0700
+Message-Id: <20250724054419.it.405-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1439; i=kees@kernel.org; h=from:subject:message-id; bh=XE3wpC5OKAVRvxdPiqi/2WsaLPvDes1ay28krOB8Nyg=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmNJxc5mZrpNj5K4tORy/7TeZXhw9upF18pr/M4P+mO0 qJ1Zxv/dZSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExkx3ZGhj3Lo9RPfd61sO3K 6ZOX39cZ7GLmn/6vehbf2xvW83qXM01nZOhJWph/qli05kP325oNd1z3S2krH/3OsOnxZQ05w52 HynkB
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-I got tips from Eddie (on CC) about https://github.com/horshack-dpreview/se=
-tPL and it seems to get the cpu to boost higher, I think. However, the gpu =
-still downclocks way more on Linux than Windows.
+ v4:
+  - rebase on for-next/hardening tree (took subset of v3 patches)
+  - improve commit logs for x86 and arm64 changes (Mike, Will, Ard)
+ v3: https://lore.kernel.org/lkml/20250717231756.make.423-kees@kernel.org/
+ v2: https://lore.kernel.org/lkml/20250523043251.it.550-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
 
+Hi,
 
+These are the remaining changes needed to support Clang stack depth
+tracking for kstack_erase (nee stackleak).
 
-Best regards,
-Benjamin Hasselgren-Hall=C3=A9n
+Thanks!
 
+-Kees
 
-On Saturday, 19 July 2025 at 22:38, Benjamin Hasselgren-Hall=C3=A9n <benjam=
-in@benis.se> wrote:
+Kees Cook (4):
+  arm64: Handle KCOV __init vs inline mismatches
+  x86: Handle KCOV __init vs inline mismatches
+  init.h: Disable sanitizer coverage for __init and __head
+  kstack_erase: Support Clang stack depth tracking
 
->=20
->=20
->=20
->=20
-> Best regards,
-> Benjamin Hasselgren-Hall=C3=A9n
->=20
->=20
->=20
->=20
-> On Saturday, 19 July 2025 at 22:19, Benjamin Hasselgren-Hall=C3=A9n benja=
-min@benis.se wrote:
->=20
-> > Best regards,
-> > Benjamin Hasselgren-Hall=C3=A9n
-> >=20
-> > On Thursday, 17 July 2025 at 03:15, Zhang, Rui rui.zhang@intel.com wrot=
-e:
-> >=20
-> > > On Mon, 2025-07-07 at 19:55 +0000, Benjamin Hasselgren-Hall=C3=A9n wr=
-ote:
-> > >=20
-> > > > Best regards,
-> > > > Benjamin Hasselgren-Hall=C3=A9n
-> > > >=20
-> > > > On Wednesday, 2 July 2025 at 10:00, Zhang, Rui rui.zhang@intel.com
-> > > > wrote:
-> > > >=20
-> > > > > Remove the list as I want to grab more details.
-> > > > >=20
-> > > > > On Tue, 2025-07-01 at 07:44 +0000, Benjamin Hasselgren-Hall=C3=
-=A9n wrote:
-> > > > >=20
-> > > > > > with thermald
-> > > > > > https://drive.benis.se/s/bF5AfDGBw6DFNZt
-> > > > > >=20
-> > > > > > without thermald
-> > > > > > https://drive.benis.se/s/47xJdg33ayHerDF
-> > > > >=20
-> > > > > There is no much difference, which is expected.
-> > > > >=20
-> > > > > > journald
-> > > > > > https://drive.benis.se/s/8JdDJG2bFbHeDmz
-> > > > >=20
-> > > > > The log doesn't have anything useful.
-> > > > > It shows your last launch of thermald failed
-> > > > >=20
-> > > > > Jul 01 09:38:36 computer thermald[10950]: Couldn't get lock file
-> > > > > 10950
-> > > > > Jul 01 09:38:36 computer thermald[10950]: An instance of thermald=
- is
-> > > > > already running, exiting ...
-> > > > >=20
-> > > > > BTW, when do you start to hear the fan spinning? upon changing
-> > > > > platform
-> > > > > profile? upon launching thermald?
-> > > > > is there anyway to figure out what fan device brings this noise?
-> > > >=20
-> > > > I can get the fans starting by activating performance and do any wo=
-rk
-> > > > more or less.
-> > > >=20
-> > > > I have thermald enabled all the time now. I think that as long as I
-> > > > don't have the fans active while suspending - it's fine.
-> > >=20
-> > > Now I'm confused.
-> > > The fan issue is related via platform profile or thermald?
-> > >=20
-> > > say, after a refresh boot, does the fan spin during suspend when
-> > > 1. thermald is NOT activated and platform profile is NOT changed?
-> > > 2. thermald is NOT activated and platform profile is changed?
-> > > 3. thermald is activated and platform profile is NOT changed?
-> > > 4. thermald is activated and platform profile is changed?
-> > >=20
-> > > Or, what change does it make by switching platform profile only?
-> > > what change does it make by activating thermald only?
-> >=20
-> > The combination of thermald + running the fan while suspending keeps th=
-e fan running. Dunno for how long (if it's for ever or just for a while).
-> >=20
-> > However, thermald helps a bit but the system still under performance qu=
-ite a lot.
-> >=20
-> > I am regulary trying latest kernel + latest linux-firmware but no chang=
-es.
-> >=20
-> > Anything else we can do?
->=20
-> I can also add that when thermald is running - the fan i still running wh=
-en the cpu is 40c and the power profile is balance. It should not run now.
->=20
-> > > thanks,
-> > > rui
+ security/Kconfig.hardening      | 5 ++++-
+ scripts/Makefile.kstack_erase   | 6 ++++++
+ arch/arm64/include/asm/acpi.h   | 2 +-
+ arch/x86/include/asm/acpi.h     | 4 ++--
+ arch/x86/include/asm/init.h     | 2 +-
+ arch/x86/include/asm/realmode.h | 2 +-
+ include/linux/acpi.h            | 4 ++--
+ include/linux/bootconfig.h      | 2 +-
+ include/linux/efi.h             | 2 +-
+ include/linux/init.h            | 4 +++-
+ include/linux/memblock.h        | 2 +-
+ include/linux/smp.h             | 2 +-
+ arch/x86/kernel/kvm.c           | 2 +-
+ arch/x86/mm/init_64.c           | 2 +-
+ kernel/kexec_handover.c         | 4 ++--
+ 15 files changed, 28 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
