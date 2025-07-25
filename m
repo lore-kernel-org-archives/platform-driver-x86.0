@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7676E25B2F4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 20:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2B74501A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 20:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753475905; cv=none; b=cBF7dP3Wxc72+z0LkfaQbcXJnHAfMQflnwnjVuCglIrfmstTnILh94RQWRaNt9CoaRkT+UA1NFgGWLRxim64fmf3wnWfQjYD+pOoywy3a2BXY1Lkb/vGM52xUu3KoGifrll2dfA8Z34zUbuLMNACUSDTfvBTvHsd513uVpzmF4k=
+	t=1753476199; cv=none; b=a5Y7wXz8InLzX8Cii4F6SStgLeTaBORXBHu291gUqj4J8Mz0C5yn8tWe6FB2LIdJNVGtGsJBO/CvxmSWXmudI+s2KBdZD9zAcOmB5V9pvOaiR4nZZPg7yZBDSO8iwbeFv8WrRukBvvlBswI/OyTFH7SjhuOMvt5TKROGwvk+qzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753475905; c=relaxed/simple;
-	bh=7YfCJ8B9uTfFFfDZwKiUS3AHSDl1OR9sETL2cEV6mp8=;
+	s=arc-20240116; t=1753476199; c=relaxed/simple;
+	bh=rrYFi09JWeqEsnD3+oC20zVzR5Tg/9MCfvG2fmwE49Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N8v+qTAmU/OCZ0fCIctzJrWOyJt0gTYm882I2X2CH1h1hxSmxhtIg075ECrO7Z5f69/qwhLPHWEYdXVlXo6ueTTxZqN8VAbrUBSK9DYROvzomPAIQP13nEC8kukULQBmsvmBDLSBMxCGbY0YZVnnR0rOt0GrM/HWUfYHJax/dEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KN6cCfUE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lnfAXIn5lHLJc2h0r9EKpj/TG2Db9s7bhu8ygIUw9fhHwZv1FOkKL8GSWnROK+oMKDxigXTbq4qJKYsqjEtpUxSghzkTkiexA8nP1z3mO1tJ/ssKlkyi/zzz5T2oxSVLosvCMwNt0uNiszqqiIyoc7y+TFrrVCsiKtF5ujmT3Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sI1OYFRu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KN6cCfUE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6CAC4CEEF;
-	Fri, 25 Jul 2025 20:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sI1OYFRu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D66C4CEE7;
+	Fri, 25 Jul 2025 20:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753475905;
-	bh=7YfCJ8B9uTfFFfDZwKiUS3AHSDl1OR9sETL2cEV6mp8=;
+	s=k20201202; t=1753476199;
+	bh=rrYFi09JWeqEsnD3+oC20zVzR5Tg/9MCfvG2fmwE49Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KN6cCfUEr/3H3TnUSwqNShgcIjl12mOg4mjjuJXAfpSOlWv3RYRC/qsgvSILTuQ/z
-	 NEe4DL6wLYVZNfALnnpfkzipaaExSyi91X+TtULLGBGnb6zk9Jai0eN7T24m/g92aU
-	 w1NiGVFsK44bqgZfMt3nL0yYfZ2s8MwkLX4wpCm9ZVxoItbl9N85hNQCzV8oQM6nUP
-	 +awJIhrEp0+/nIf+JV+H9WHEFOXaXKXkg7YEJ8QJMekmJU0v2SeP30qXwSVeHQZt5e
-	 Dmcp6Lb68yBI1xTLHaC3UbwG+IytldWR5QlCiNsVRDTkvAseEP+KS/1Jg5IexHT7V5
-	 OEf714yK+6c9g==
-Message-ID: <1555f313-6dea-4e42-aca8-936379fc31eb@kernel.org>
-Date: Fri, 25 Jul 2025 22:38:22 +0200
+	b=sI1OYFRuhOLKKGLDHWDMAso2EJ9Jw/yH6i7bFHxXbCl4pHqDn27ExAtbqUaQkn8rX
+	 hhQyuqvX31QDgLwVoo9EIPOZ/wZY7YJOJhuVwjMrCzTLKMMuvpDZP6zYV46uOhGwfa
+	 SoLi9zZZwoa9pfs0LbOvVK9Yh/U3xiRFznYfKOQhKH8xkyWK+awHaw+PFYSt2fCVjs
+	 6kFG2FLGKOyuFreWGQdn0Zia9jbxDW8odlnAbGCr7GPDOLq8s8pgG/GG7ClrLelYn0
+	 hxJfvyvwX0fhJLMO06LykeoZDZ9PMVqia5MWU6kQHYZEHILaRD9ax4D0M9ZykE8rqc
+	 Ex4QdqDCt14LQ==
+Message-ID: <c4b280a3-e621-483e-932c-1f0547be5e79@kernel.org>
+Date: Fri, 25 Jul 2025 22:43:17 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,90 +35,84 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/x86: int3472: Rework regulator enable-time
- handling
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: int3472: Increase ov08x40 handshake
+ GPIO delay to 45 ms
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
- Sakari Ailus <sakari.ailus@linux.intel.com>
+ Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
 References: <20250725144444.210043-1-hansg@kernel.org>
- <20250725144444.210043-2-hansg@kernel.org>
- <CAHp75VcftCLTqRV-s3LNEHLFmy359CHx0XDDcWpdV=eoe_C20A@mail.gmail.com>
+ <20250725144444.210043-3-hansg@kernel.org>
+ <CAHp75Vf7yoLYNTQxgJFbA2FT2dqVJ5BBF0w-uTJsYooON7LqXQ@mail.gmail.com>
+ <aIPDGsNVrd7tBvY8@kekkonen.localdomain>
 Content-Language: en-US, nl
 From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <CAHp75VcftCLTqRV-s3LNEHLFmy359CHx0XDDcWpdV=eoe_C20A@mail.gmail.com>
+In-Reply-To: <aIPDGsNVrd7tBvY8@kekkonen.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+Hi,
 
-Thank you for your review.
-
-On 25-Jul-25 4:49 PM, Andy Shevchenko wrote:
-> On Fri, Jul 25, 2025 at 4:44 PM Hans de Goede <hansg@kernel.org> wrote:
+On 25-Jul-25 7:47 PM, Sakari Ailus wrote:
+> Hi Hans, Andy,
+> 
+> On Fri, Jul 25, 2025 at 04:52:26PM +0200, Andy Shevchenko wrote:
+>> On Fri, Jul 25, 2025 at 4:44 PM Hans de Goede <hansg@kernel.org> wrote:
+>>>
+>>> On HP laptops with an ov08x40 sensor the 25 ms delay coming from Intel's
+>>> out of tree drivers is not enough. Testing has confirmed that 45 ms does
+>>> work.
+>>>
+>>> Add a quirk to the int3472_gpio_map[] to increase the delay to 45 ms to fix
+>>> probing of the ov08x40 sensor failing on these laptops.
+>>>
+>>> Note this only impacts laptops which actually use an ov08x40 sensor with
+>>> a handshake GPIO.
 >>
->> Instead of hardcoding the regulator enable-time for INT3472_GPIO_TYPE-
->> POWER_ENABLE and -HANDSHAKE, make int3472_get_con_id_and_polarity()
->> set the enable-time.
+>> ...
 >>
->> This will allow overriding the enable time through quirks in
->> the int3472_gpio_map[].
-> 
-> ...
-> 
->> + * @enable_time: Enable time in usec for GPIOs mapped to regulators
->>   * GPIO_ACTIVE_HIGH otherwise
-> 
-> Make it enable_time_us, it will immediately give a hint in the code
-> without going to here to get units.
-> 
-> ...
-> 
->>  struct int3472_gpio_map {
-> 
->>         u8 type_to;
->>         bool polarity_low;
->>         const char *con_id;
->> +       unsigned int enable_time;
-> 
-> Wondering if this can be moved before con_id to save a few bytes on 64-bit.
-> 
->>  };
-> 
-> ...
-> 
->>  static const struct int3472_gpio_map int3472_gpio_map[] = {
->>         /* mt9m114 designs declare a powerdown pin which controls the regulators */
->> -       { "INT33F0", INT3472_GPIO_TYPE_POWERDOWN, INT3472_GPIO_TYPE_POWER_ENABLE, false, "vdd" },
->> +       { "INT33F0", INT3472_GPIO_TYPE_POWERDOWN, INT3472_GPIO_TYPE_POWER_ENABLE,
->> +         false, "vdd", GPIO_REGULATOR_ENABLE_TIME },
->>         /* ov7251 driver / DT-bindings expect "enable" as con_id for reset */
->>         { "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
-> 
-> Can we actually either use a macro or at least C99 initializers?
-> 
->>  };
-> 
-> ...
-> 
->> +                                           unsigned int *enable_time)
-> 
-> _us
-> 
-> ...
-> 
->> +       *enable_time = GPIO_REGULATOR_ENABLE_TIME;
-> 
-> _us
-> _US
+>>> +       /*
+>>> +        * ov08x40 sensor with a handshake pin needs a 45 ms delay on some HP laptops
+>>> +        * https://bugzilla.redhat.com/show_bug.cgi?id=2333331
+>>> +        */
+>>> +       { "OVTI08F4", INT3472_GPIO_TYPE_HANDSHAKE, INT3472_GPIO_TYPE_HANDSHAKE,
+>>> +         false, "dvdd", 45 * USEC_PER_MSEC },
+>>>  };
+>>
+>> My gut feeling is that this might be needed for most of the cameras
+>> with the handshake signal. Do you have ones that work without this
+>> delay?
 
-Ack,
+For those laptops with the CV chip that Sakari talks about below,
+25 ms, which is what is currently the default delay seems to be
+enough.
 
-I agree with all your remarks. I'll fix these for v2.
+> I'd expect this to depend on the CV chip, if not solely then primarily at
+> least (firmware could play a part maybe??). Isn't there a way to figure
+> that out?
+
+These HP laptops do not appear to use a CV chip at all, yet they do
+have a handshake signal... Specifically there is no CV / USBIO chip
+on the USB bus and the I2c and GPIOs for the camera sensor come
+directly from the main SoC.
+
+With that said, even if there were a CV chip, then given all
+the problems we're having with those I do not expect us to be
+able to get this info from the CV chip.
+
+Just getting the basic IO-expander functionality upstream has
+been and still is a very troublesome process.
+
+Which includes very different behavior between USBIO chips which report
+the exact same firmware version, it looks like the fw-version reported
+over USB does not always get updated in fw updates...
 
 Regards,
 
 Hans
+
+
+
 
 
 
