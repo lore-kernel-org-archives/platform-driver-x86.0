@@ -1,84 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F7F21C9E3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 14:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3ED8F4A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 14:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753454697; cv=none; b=rTEXi1pckxpsl8IISM7JlPehNTq5J8MO0CAXos3r2JsOU8inSb5H/0KWxojhlZR/6JtruRSRU7CnJcsq0RdB7Y4TKFBvTvEpypNgr0a00MU2pGz+0SPQ2b/pCnoZXNuc140eWrSOEVC15VCIznm73jqVuc7eg7J0Ejm09JzhjiQ=
+	t=1753455040; cv=none; b=LQI+26lHH6eTnM7cYlLu6gB/ZRh+KguwYVPNbBAl8GLh9CDVBkiVu81d9wzJmm1iBfLVfW3fBg64vkot+RNZyBHJBMMGwi+WahgAbTmJkeaIxjFMoeLFpI3AW1Cd5+H7+7SRPWMKSb15N8aTXtWsqiVV8HqgJXf8ymIziYv1fTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753454697; c=relaxed/simple;
-	bh=wXwrTH4sA52dYUVgK7xb8g130FAgJkcQSmDAfr/hcPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RRDImSbE93LKXalyS8BiN8BLyl083/ClbCSrVKofXcDEgxdY0cvIrmEAkuQrMH7LbZTgJz5eRewrk5L395sli/L6CjLbnmuEUjFWjJMACQ4OSAI8tDCj+8FYE2VnNHHzbLpC0g1tvewYDUjG+RSHPfFKwKLUbC8gdzzkYjKwNIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsClP1E1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753455040; c=relaxed/simple;
+	bh=FqL3KDTRg3nC/lVsoHhzVGrwym3P+en1ZQEkBhs++ow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RuwKNZ0grI/RVOdzYrwf47tD2UUeMAa3xYkeB+XKyc1pj/ZNIaOe+JRY0ijeuLRkw8OFZs0dEmchaQDZd6gpySpRkyEZnaIBPmjbExSLkTMfj8fTOjY7iQ2y1q3lw6lzBWqv63XSCPDVqybY/uF/n1yaWUj8OFQum2U6gmoUAcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHA0IlmK; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsClP1E1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08563C4CEE7;
-	Fri, 25 Jul 2025 14:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753454696;
-	bh=wXwrTH4sA52dYUVgK7xb8g130FAgJkcQSmDAfr/hcPE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nsClP1E1KJqjFLnc0d7i6ireJahGz7rcHIgGFZxJIi7b0hF4gPTG2LmGQ6n+lcrpz
-	 j4UOxUxdEKM78CqVI3NId6j+81t45YUjAX6kQL5/DCa5crdRbEgaDDifiOBemaycF3
-	 v0nKWG3HipOhYXeJSkFYFNzoN8yIpYRFbSVmNiElvBYw9Cn3ua5sgoOX2TePUjCsPr
-	 ZThTm268ymzZIr1TMG3zao2pN8J1HnOZTyUxnmol7zATQaSX4lqy9PDjqnGsSFuWJj
-	 Ofsk9KmPCJNuvhdicaNeZiyUim4hCeZhlH0woRqTGxObraAR5c7NNCsy1GVAy23yjf
-	 VmxaZu93N3ThQ==
-From: Hans de Goede <hansg@kernel.org>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 2/2] platform/x86: int3472: Increase ov08x40 handshake GPIO delay to 45 ms
-Date: Fri, 25 Jul 2025 16:44:44 +0200
-Message-ID: <20250725144444.210043-3-hansg@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250725144444.210043-1-hansg@kernel.org>
-References: <20250725144444.210043-1-hansg@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHA0IlmK"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae401ebcbc4so362573966b.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 07:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753455037; x=1754059837; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CPP6yD5lb30mWdtTqBNKCqK0E+fOYmH4OdMdNWZZTLo=;
+        b=BHA0IlmK7OjtMDPF8GieIWxqvE3Opg3inzhKLO6wSFbNb939KWemQN1cFn/bO/h8tt
+         xw6GBO+LyBor/Jiy/hrewUjyWqxreQOghOHFo6tEPqQetJFmhbE52lPYAOCn/ECXMTFD
+         Ube3r4cRJXdWQA6FdLLWnDyCTWGG3T9vFBaSCHmawdLrqFuF494sNMl/k4pue7DPnQPS
+         0RZo7KDjEEMm5ZPeHCdpoAIW42keIY4/0DKQEkk/ZOYln+YveqccQWHvAcq1jF8PtF2x
+         h7IHYtQfMl6hU0TY/MtH6SGz4Z+ED3aiQ6N8tJAdpCNWRrhJV1EtNcLFE4WzhZOnKNVN
+         nO5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753455037; x=1754059837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CPP6yD5lb30mWdtTqBNKCqK0E+fOYmH4OdMdNWZZTLo=;
+        b=BWyONWJOImmSGCHmalrJt9FvRT8diUk4IC17J38j/hdtrYI8RPUeRPtx3cQqjZCOx3
+         mVeLQmDhW8mvbTgy1o8oAymtPbyCCrTs3JpYa7qX92zWNEnggDZd9mZoJd485DdM6BCw
+         T3h2WIwQ5nLNrErLGMvbuQXkZkbGoZziiwrERLdsiT+F7tLrTdmJvB478EtmLZkAjWoN
+         lzLsLEK+UevAFLC+Xc8lsV46nokfrbmXf/+EgN3gogDDQaer5Y5hm5tNb027X8VszarJ
+         CD95PlrjDNTafHCzylRM9G8lKTpfC/nrCaCq0VEyUENbMCI0RJebPviphSohA0x+71u/
+         EDkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/dL1ljEykln9j9ZoAZ60DFHOg+fTX4Im+3UvJfo6NMxC40bu55QF7bzqKIYBKM0wPCjTXuFh4DnqGtuJhLyiUUF9a@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRsfFqkAwgl+2Zs3SWzDCjr9jzPR3gVa6LGAyV3lDHaslVP1Ez
+	1j5CRsynLqxhIckbsa4/pC1gkCP2j1J9wHxwiqZ+BRutyTWqsV98/vv/SI/pBr+3o9Aysi/MvbG
+	45+0Xmwy4ghoHXcMN6c6+sVcvVbs6FsT2RZT7yWA=
+X-Gm-Gg: ASbGncswv9jb6am2hqHjheAFcc6drHXcHFsjVgeFklQ+v5vlWa9ZF5uK50YJblwd9sk
+	WwjdkqONHfpJIKzFu3i1tw0FsIXGiCYX2n7FXDkL5HFBF2noqAQEreLZRsLbKXhd7JXOpzTgtR9
+	IIohq4MclWkqL2sk4PNMfYaMoTE/Bzbg8Dl+oVY7k5LcmOdXmuPWXCaHvYu6MLY3Q5tcBEe/Ibh
+	9Pzq54k7g==
+X-Google-Smtp-Source: AGHT+IE5VaPYVktNxl+8Tttc4whkPQc0OW/lLs3wngN7zWheS5CTiP4CFs7zNv0c5xjPegvjDYBuNLCtxYLX7CLM1G0=
+X-Received: by 2002:a17:907:e84b:b0:ae3:b2b7:7f2f with SMTP id
+ a640c23a62f3a-af619414091mr310396266b.40.1753455036760; Fri, 25 Jul 2025
+ 07:50:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250725144444.210043-1-hansg@kernel.org> <20250725144444.210043-2-hansg@kernel.org>
+In-Reply-To: <20250725144444.210043-2-hansg@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 25 Jul 2025 16:49:59 +0200
+X-Gm-Features: Ac12FXxnNySxb0HZPn4jbKKCJgD9Z9LSlPWjaW3WGJQP_PI30QJNqkWWC1dO2Ms
+Message-ID: <CAHp75VcftCLTqRV-s3LNEHLFmy359CHx0XDDcWpdV=eoe_C20A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: int3472: Rework regulator enable-time handling
+To: Hans de Goede <hansg@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On HP laptops with an ov08x40 sensor the 25 ms delay coming from Intel's
-out of tree drivers is not enough. Testing has confirmed that 45 ms does
-work.
+On Fri, Jul 25, 2025 at 4:44=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
+ote:
+>
+> Instead of hardcoding the regulator enable-time for INT3472_GPIO_TYPE-
+> POWER_ENABLE and -HANDSHAKE, make int3472_get_con_id_and_polarity()
+> set the enable-time.
+>
+> This will allow overriding the enable time through quirks in
+> the int3472_gpio_map[].
 
-Add a quirk to the int3472_gpio_map[] to increase the delay to 45 ms to fix
-probing of the ov08x40 sensor failing on these laptops.
+...
 
-Note this only impacts laptops which actually use an ov08x40 sensor with
-a handshake GPIO.
+> + * @enable_time: Enable time in usec for GPIOs mapped to regulators
+>   * GPIO_ACTIVE_HIGH otherwise
 
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2333331
-Signed-off-by: Hans de Goede <hansg@kernel.org>
----
- drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Make it enable_time_us, it will immediately give a hint in the code
+without going to here to get units.
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index bc442944be7f..e7ca1d83f45a 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -149,6 +149,12 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
- 	  false, "vdd", GPIO_REGULATOR_ENABLE_TIME },
- 	/* ov7251 driver / DT-bindings expect "enable" as con_id for reset */
- 	{ "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, false, "enable" },
-+	/*
-+	 * ov08x40 sensor with a handshake pin needs a 45 ms delay on some HP laptops
-+	 * https://bugzilla.redhat.com/show_bug.cgi?id=2333331
-+	 */
-+	{ "OVTI08F4", INT3472_GPIO_TYPE_HANDSHAKE, INT3472_GPIO_TYPE_HANDSHAKE,
-+	  false, "dvdd", 45 * USEC_PER_MSEC },
- };
- 
- static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
--- 
-2.49.0
+...
 
+>  struct int3472_gpio_map {
+
+>         u8 type_to;
+>         bool polarity_low;
+>         const char *con_id;
+> +       unsigned int enable_time;
+
+Wondering if this can be moved before con_id to save a few bytes on 64-bit.
+
+>  };
+
+...
+
+>  static const struct int3472_gpio_map int3472_gpio_map[] =3D {
+>         /* mt9m114 designs declare a powerdown pin which controls the reg=
+ulators */
+> -       { "INT33F0", INT3472_GPIO_TYPE_POWERDOWN, INT3472_GPIO_TYPE_POWER=
+_ENABLE, false, "vdd" },
+> +       { "INT33F0", INT3472_GPIO_TYPE_POWERDOWN, INT3472_GPIO_TYPE_POWER=
+_ENABLE,
+> +         false, "vdd", GPIO_REGULATOR_ENABLE_TIME },
+>         /* ov7251 driver / DT-bindings expect "enable" as con_id for rese=
+t */
+>         { "INT347E", INT3472_GPIO_TYPE_RESET, INT3472_GPIO_TYPE_RESET, fa=
+lse, "enable" },
+
+Can we actually either use a macro or at least C99 initializers?
+
+>  };
+
+...
+
+> +                                           unsigned int *enable_time)
+
+_us
+
+...
+
+> +       *enable_time =3D GPIO_REGULATOR_ENABLE_TIME;
+
+_us
+_US
+
+--=20
+With Best Regards,
+Andy Shevchenko
