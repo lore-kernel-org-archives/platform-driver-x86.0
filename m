@@ -1,234 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467762B9BA;
-	Sat, 26 Jul 2025 00:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAC210A1F;
+	Sat, 26 Jul 2025 02:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753490611; cv=none; b=qPi4tXDvCFfEt/BfNZrNP1ELuTpeoZu4ZYEN5iRrVUjIb2Xb6BdXQ3B7v9MNsesJZMQGDyAMGzVaN7PirM3x1B/QC2727rSdZAF+EJaMiQyTuoCpfZBvU5fqavjRJMu0OpCXM1gfmn/PtJRkmexRiNkOMa80ebUCTQTg8wnU4W8=
+	t=1753498113; cv=none; b=bPHdAh3GgyLntJSMByuN50H/NLcEHc06YJK3Izs979eY9/177RGYqiZYMn6b1mXhETjKeYhs4L71qlBE6bvR9U44QvYB5a5HTnY83dkhcPbAcaWyoAUv5+MHGOW2t7LNGHKFG4eARTRD8vN1QYGi6Wa0al6/R4yJBHnRrMpO7Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753490611; c=relaxed/simple;
-	bh=FRa9xY4x5DiJRX0obptGEWaAk44wN8I8KzUTZYrUCjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=teWuTX5tshkXvp0VMN50DKvVldt+QmyROOaSpwIZ/6Q2oqEBk6eqO8I+MW5pGZkwUznaux4V1EYcrWINNjOOIcknbPR6RlBw80t7g70RROl/eGXTJ3ATDmW8A0+YrOaa/tvRA/Kf07IsVCUs8G6m8Ke5btiUbvvTrMdP3pVwbZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBaBfcy8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753498113; c=relaxed/simple;
+	bh=FRCx8usyXnfpsH3r27JOibXD9xX0wpc6zQsXM4S3LXo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Xn1jlSUnXaIecQpvMb/a7bQaVixhN9r0cdx/ILVKIXhMesYyPSVVC2qN1VK0quEj/zrGMVFR1qw3FTzXs3iFmXCK16bdA7obFCSsLP/ypMwL7HJUN/wr/FCpdaXSAgleDtlqaMV3L4jtq2XdP/grxTILqq25imwwMuwDZVXd82Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GapqB/2z; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBaBfcy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1170C4CEE7;
-	Sat, 26 Jul 2025 00:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753490610;
-	bh=FRa9xY4x5DiJRX0obptGEWaAk44wN8I8KzUTZYrUCjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kBaBfcy8cvOEOsPzmxHVilPiLtCGr+TDf8X/qOm2ye9g94waAiMThV6LQwkD5mGES
-	 PDjLL+F1jsLeU64wJNGH2USu78DXOVIauVdSn5Za3ug6EyGqMkDWY68qx6CO1Gpj84
-	 N2fKc/oxH+okv+yKP2JrlydnIbTVzpb6w9fxjXPvPbNQT1zbh2x+enrj7WanGNqURj
-	 oluIdS5LRKkHy5qC/5rWJa6TJsIQMsqWbSs6k1imrXOBgatcUYq26mfwhTEKJwXKN7
-	 wK8GX+boueI26+UPx4/MDOH6NBVBpUuOSwVrQlpds5FDuUw13v4g1+lMsu+qwH3eh6
-	 5w2Rudv02W7cA==
-Date: Fri, 25 Jul 2025 17:43:13 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	James Morse <james.morse@arm.com>,
-	Oza Pawandeep <quic_poza@quicinc.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kas@kernel.org>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, kasan-dev@googlegroups.com,
-	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/4] stackleak: Support Clang stack depth tracking
-Message-ID: <20250726004313.GA3650901@ax162>
-References: <20250724054419.it.405-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GapqB/2z"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23f8d27eeeaso26392465ad.2;
+        Fri, 25 Jul 2025 19:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753498111; x=1754102911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vJjDihjh3OpN8+N/ddOfQmIpm6+LH61cedBfeF7gcIk=;
+        b=GapqB/2ziZpAK7BDFeg25PHZBAM0WUP/oWnoSXcbD2BA+vwEj+2rDmMkAheGXV/G0A
+         spz9z+rNsmmpeV3yBYSJXbJlb2XPJzmzW9KvJLludqzqBgmc+jZvkkYTy8y5+Jk4Na/d
+         NGFoR57HkT5J2JMwZnrzXN5Ys4CMvD94U8SjtVBZ8QuTSea8bLhgAOKa9D3zMiqWJbHr
+         9yv/hW9+CELHS4M8/GndVr98Fcrp6FYy6n0Hg0IwlMqm0vwG3UdxetIBaPz/lajkKK94
+         A79g2QzeVtc+yuU8S2vWQqFtaqX229iVe7dZ2TO3JYC1HXU0gxEwAM5KhHz4m4s67xer
+         5OJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753498111; x=1754102911;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vJjDihjh3OpN8+N/ddOfQmIpm6+LH61cedBfeF7gcIk=;
+        b=WV55wBWUcDZv0RlyIxMj+gBTIvcSz0I43wvrAwVHWxbOaAUB7IRm1YKBA15xrIRuDd
+         mgWncmHNZlXDZhrXEy8t9eG28Q592DH5p//uvFAa16JEKserpqDQXwfqzzTNVRH/b6zk
+         3yw5cSVSnPS26VOEnU0vemw1lX1w2/4mgdyJ/PoQolTsLwKXVDImyYnSfrSwNvfRJe5y
+         3wX1UlPdAdpRKWy6TkfWxdYBgaWhl8qNOucgYlfg1sjqtcdnRaZKKcBWEKqOecj2pkVU
+         MTxJsIMt7o4usytrqOZpgGTeu3cBLoYCn9SEIrbx4rD3YGlDzrt9YyMMnUaVdBnhvHpT
+         WMLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUKBcseJ9dl+RVLSozMNVAD8oEl+BqVXo7OpCyBmAPty4bj9QQEZ/E1aIG8XRy4SI8sgyCF63YUISkYg==@vger.kernel.org, AJvYcCWUx6z9xrLFciYXUkYYBPmMl1mKylXjLf3ev5Sfoe4GWjCnRsxGxTZv0ognSP8skIVZIV37hS+6g6nTNrsx1+OVJ7168Q==@vger.kernel.org, AJvYcCXdL8aQ1ouatfMg1tPZpMLTCesfOmrXmAWgCV95Y/COC4ZvR8I9BX1g3AgRzHirAgG8hXcoPTAQQudfn5BV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOXsltv97OD68dABfBBJQevsn7igpq+3ZOJOcjgwUWD/8/PX+P
+	9NsMLFXHSAZmLHPpo2EMOY0gFZ+Ys7z4290Fy5LRPns1oIAmMriU3NVV
+X-Gm-Gg: ASbGncsplSr9SThP6V97L7AErs12qWguGCSGK+9SyQVcLkfotPwMZJw3RiSkmMYso/Y
+	jwgy8oOv9dMRBoSuPpzsav+0WnWjecyDdCYpmWm16cJVdkEUhvJHkkF6KvO2Y0CYlaLRbRKORqS
+	/+s98EGG8lGjaoZDVgFwILI7o3PnAeZSyaRJxe8qwPkrEvfJZtZpa4Sz+dEh1n8FBsS7bsrOoXH
+	oNpw7lFTU7mH7ypAVkrKtymPwqrKUVunCe9qKckq02znRns+HTRIzi2Wsd3NqoJJKx+MsAaoDN/
+	C4HDeRTfQKY38+lhXFoaoFFtSfykYVAGqOhzcn5yL4IfukDAooiO/sIjQeBQm/f1PPHGSoua77a
+	CYMCnpyuJFMDDgpNajwQYWCQf/Qprp46bMO1WgNZ1HgA5VjTrsF0hqlHfYbovJ9DNVD2C7yW563
+	5T1NxGxCADfRspb//7hA==
+X-Google-Smtp-Source: AGHT+IGsAJRpsEyHwhImi+0OQ/cAj+eWZWKtB4WmpEc1hj5qrFpeRdBvufiQqIk7T0rhjiFuaEUunQ==
+X-Received: by 2002:a17:902:fc46:b0:23d:f499:79fd with SMTP id d9443c01a7336-23fb31c1b0bmr53945175ad.40.1753498110607;
+        Fri, 25 Jul 2025 19:48:30 -0700 (PDT)
+Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23fbe585538sm7101965ad.211.2025.07.25.19.48.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Jul 2025 19:48:29 -0700 (PDT)
+Date: Fri, 25 Jul 2025 19:48:28 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+CC: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 1/4] platform/x86: (ayn-ec) Add PWM Fan HWMON Interface
+User-Agent: Thunderbird for Android
+In-Reply-To: <e3ab1337-2409-4828-aea7-4c71f8e9197d@oracle.com>
+References: <20250725004533.63537-1-derekjohn.clark@gmail.com> <e3ab1337-2409-4828-aea7-4c71f8e9197d@oracle.com>
+Message-ID: <C7073C0E-3D58-41C3-99B7-A0A5EE448700@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250724054419.it.405-kees@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kees,
 
-On Wed, Jul 23, 2025 at 10:50:24PM -0700, Kees Cook wrote:
->  v4:
->   - rebase on for-next/hardening tree (took subset of v3 patches)
->   - improve commit logs for x86 and arm64 changes (Mike, Will, Ard)
->  v3: https://lore.kernel.org/lkml/20250717231756.make.423-kees@kernel.org/
->  v2: https://lore.kernel.org/lkml/20250523043251.it.550-kees@kernel.org/
->  v1: https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
-> 
-> Hi,
-> 
-> These are the remaining changes needed to support Clang stack depth
-> tracking for kstack_erase (nee stackleak).
 
-A few build issues that I see when building next-20250725, which seem
-related to this series.
+On July 25, 2025 8:08:42 AM PDT, ALOK TIWARI <alok=2Ea=2Etiwari@oracle=2Ec=
+om> wrote:
+>
+>> +/*
+>> + * Platform driver for Ayn x86 Handhelds=2E
+>> + *
+>> + * Implements multiple attributes provided by the EC=2E Fan reading an=
+d control,
+>> + * as well as temperature sensor readings are exposed via hwmon sysfs=
+=2E EC RGB
+>> + * control is exposed via an led-class-multicolor interface=2E
+>> + *
+>> + * Fan control is provided via a pwm interface in the range [0-255]=2E=
+ Ayn use
+>> + * [0-128] as the range in the EC, the written value is scaled to acco=
+mmodate=2E
+>> + * The EC also provides a configurable fan curve with five set points =
+that
+>> + * associate a temperature in Celcius [0-100] with a fan speed [0-128]=
+=2E The
+>> + * auto_point fan speeds are also scaled from the range [0-255]=2E Tem=
+perature
+>> + * readings are scaled from degrees to millidegrees when read=2E
+>> + *
+>> + * RGB control is provided using 4 registers=2E One each for the color=
+s red,
+>> + * green, and blue are [0-255]=2E There is also a effect register that=
+ takes
+>> + * switches between an EC controlled breathing that cycles through all=
+ colors
+>> + * and fades in/out, and manual, which enables setting a user defined =
+color=2E
+>> + *
+>> + * Copyright (C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>> + */
+>> +
+>[clip]
+>> +		if (val < 0 || val > 255)
+>> +			return -EINVAL;
+>> +		val =3D val >> 1; /* Max EC value is 128, scale from 255 */
+>> +		break;
+>> +	case 5:
+>> +	case 6:
+>> +	case 7:
+>> +	case 8:
+>> +	case 9:
+>> +		if (val < 0 || val > 100)
+>> +			return -EINVAL;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret =3D write_to_ec(reg, val);
+>> +	if (ret)
+>> +		return ret;
+>> +	return count;
+>> +}
+>> +
+>> +/**
+>> + * pwm_curve_show() - Read a fan curve speed or temperature value=2E
+>> + *
+>> + * @dev: The attribute's parent device=2E
+>> + * @attr: The attribute to read=2E
+>> + * @buf: Buffer to read to=2E
+>
+>"to read to" is awkward
+>Output buffer=2E
+>
+>> + *
+>> + * Return: Number of bytes read, or an error=2E
+>> + */
+>> +static ssize_t pwm_curve_show(struct device *dev, struct device_attrib=
+ute *attr,
+>> +			      char *buf)
+>> +{
+>> +	int i, ret;
+>> +	long val;
+>> +	u8 reg;
+>> +
+>> +	i =3D to_sensor_dev_attr(attr)->index;
+>> +	switch (i) {
+>> +	case 0:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_SPEED_1_REG;
+>> +		break;
+>> +	case 1:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_SPEED_2_REG;
+>> +		break;
+>> +	case 2:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_SPEED_3_REG;
+>> +		break;
+>> +	case 3:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_SPEED_4_REG;
+>> +		break;
+>> +	case 4:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_SPEED_5_REG;
+>> +		break;
+>> +	case 5:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_TEMP_1_REG;
+>> +		break;
+>> +	case 6:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_TEMP_2_REG;
+>> +		break;
+>> +	case 7:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_TEMP_3_REG;
+>> +		break;
+>> +	case 8:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_TEMP_4_REG;
+>> +		break;
+>> +	case 9:
+>> +		reg =3D AYN_SENSOR_PWM_FAN_TEMP_5_REG;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret =3D read_from_ec(reg, 1, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	switch (i) {
+>> +	case 0:
+>> +	case 1:
+>> +	case 2:
+>> +	case 3:
+>> +	case 4:
+>> +		val =3D val << 1; /* Max EC value is 128, scale to 255 */
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return sysfs_emit(buf, "%ld\n", val);
+>> +}
+>> +
+>> +/* Fan curve attributes */
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point1_pwm, pwm_curve, 0);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point2_pwm, pwm_curve, 1);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point3_pwm, pwm_curve, 2);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point4_pwm, pwm_curve, 3);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point5_pwm, pwm_curve, 4);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point1_temp, pwm_curve, 5);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point2_temp, pwm_curve, 6);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point3_temp, pwm_curve, 7);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point4_temp, pwm_curve, 8);
+>> +static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point5_temp, pwm_curve, 9);
+>> +
+>> +static struct attribute *ayn_sensors_attrs[] =3D {
+>> +	&sensor_dev_attr_pwm1_auto_point1_pwm=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point1_temp=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point2_pwm=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point2_temp=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point3_pwm=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point3_temp=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point4_pwm=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point4_temp=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point5_pwm=2Edev_attr=2Eattr,
+>> +	&sensor_dev_attr_pwm1_auto_point5_temp=2Edev_attr=2Eattr,
+>> +	NULL,
+>> +};
+>> +
+>> +ATTRIBUTE_GROUPS(ayn_sensors);
+>> +
+>> +static int ayn_ec_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct device *hwdev;
+>> +	int ret;
+>
+>ret is unused=2E
+>
+Woops, that should have been part of patch 3=2E
 
-1. I see
+Ack all for 1/4 and 2/4 reviews=2E Thanks=2E
 
-  ld.lld: error: undefined symbol: __sanitizer_cov_stack_depth
-  >>> referenced by atags_to_fdt.c
-  >>>               arch/arm/boot/compressed/atags_to_fdt.o:(atags_to_fdt)
-  make[5]: *** [arch/arm/boot/compressed/Makefile:152: arch/arm/boot/compressed/vmlinux] Error 1
+Derek
+>> +
+>> +	hwdev =3D devm_hwmon_device_register_with_info(dev, "aynec", NULL,
+>> +						     &ayn_ec_chip_info,
+>> +						     ayn_sensors_groups);
+>> +	return PTR_ERR_OR_ZERO(hwdev);
+>> +}
+>> +
+>> +static struct platform_driver ayn_ec_driver =3D {
+>> +	=2Edriver =3D {
+>> +		=2Ename =3D "ayn-ec",
+>> +	},
+>> +	=2Eprobe =3D ayn_ec_probe,
+>> +};
+>
+>Thanks,
+>Alok
 
-when building ARCH=arm allmodconfig on next-20250725. The following diff appears to cure that one.
-
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index f9075edfd773..f6142946b162 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -9,7 +9,6 @@ OBJS		=
- 
- HEAD	= head.o
- OBJS	+= misc.o decompress.o
--CFLAGS_decompress.o += $(DISABLE_KSTACK_ERASE)
- ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
- OBJS	+= debug.o
- AFLAGS_head.o += -DDEBUG
-@@ -96,7 +95,7 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- 
- ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
- 	     -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
--	     -I$(obj)
-+	     -I$(obj) $(DISABLE_KSTACK_ERASE)
- ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
- asflags-y := -DZIMAGE
- 
---
-
-2. I see
-
-  kernel/kstack_erase.c:168:2: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    168 |         BUILD_BUG_ON(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE > KSTACK_ERASE_SEARCH_DEPTH);
-        |         ^
-  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-        |         ^
-  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-        |                                     ^
-  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
-    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-        |         ^
-  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
-    556 |         __compiletime_assert(condition, msg, prefix, suffix)
-        |         ^
-  include/linux/compiler_types.h:549:4: note: expanded from macro '__compiletime_assert'
-    549 |                         prefix ## suffix();                             \
-        |                         ^
-  <scratch space>:97:1: note: expanded from here
-     97 | __compiletime_assert_521
-        | ^
-  kernel/kstack_erase.c:168:2: note: '__compiletime_assert_521' declared here
-  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-        |         ^
-  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-        |                                     ^
-  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
-    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-        |         ^
-  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
-    556 |         __compiletime_assert(condition, msg, prefix, suffix)
-        |         ^
-  include/linux/compiler_types.h:546:26: note: expanded from macro '__compiletime_assert'
-    546 |                 __noreturn extern void prefix ## suffix(void)           \
-        |                                        ^
-  <scratch space>:96:1: note: expanded from here
-     96 | __compiletime_assert_521
-        | ^
-  kernel/kstack_erase.c:172:11: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    172 |         if (sp < current->lowest_stack &&
-        |                  ^
-  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
-     28 | #define current get_current()
-        |                 ^
-  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
-     20 | static __always_inline struct task_struct *get_current(void)
-        |                                            ^
-  kernel/kstack_erase.c:173:37: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
-    173 |             sp >= stackleak_task_low_bound(current)) {
-        |                                            ^
-  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
-     28 | #define current get_current()
-        |                 ^
-  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
-     20 | static __always_inline struct task_struct *get_current(void)
-        |                                            ^
-
-when building ARCH=i386 allmodconfig.
-
-3. I see
-
-  In file included from kernel/fork.c:96:
-  include/linux/kstack_erase.h:29:37: error: passing 'const struct task_struct *' to parameter of type 'struct task_struct *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-     29 |         return (unsigned long)end_of_stack(tsk) + sizeof(unsigned long);
-        |                                            ^~~
-  include/linux/sched/task_stack.h:56:63: note: passing argument to parameter 'p' here
-     56 | static inline unsigned long *end_of_stack(struct task_struct *p)
-        |                                                               ^
-
-when building ARCH=loongarch allmodconfig, which does not support
-CONFIG_THREAD_INFO_IN_TASK it seems.
-
-Cheers,
-Nathan
+- Derek
