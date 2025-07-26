@@ -1,98 +1,234 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711C9261574
-	for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 23:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467762B9BA;
+	Sat, 26 Jul 2025 00:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753486786; cv=none; b=UuAPVL1u6z49+2NWfo37DduYmM/deUrHGewZAOm0DLu6qb7Cx4dllX/l9yyPRYJ71tQQRLi+gDWvHVUJ4xNXwMhBLDOg/bn1kfrrYqc5frnA9Nfv+AmhteZBCVeD3Ub//GHyegB7YqFQzSlRi/cRQYXk5D/t1XSMjUMtW7qAR6w=
+	t=1753490611; cv=none; b=qPi4tXDvCFfEt/BfNZrNP1ELuTpeoZu4ZYEN5iRrVUjIb2Xb6BdXQ3B7v9MNsesJZMQGDyAMGzVaN7PirM3x1B/QC2727rSdZAF+EJaMiQyTuoCpfZBvU5fqavjRJMu0OpCXM1gfmn/PtJRkmexRiNkOMa80ebUCTQTg8wnU4W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753486786; c=relaxed/simple;
-	bh=ENp0MAbfhyFMdiKxX5yT2CuR8vq6w7I7WzGENlZZbLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VFoNL7om16u21+fNZHWXsbobB/BshhfK61YMMcGeqlad3bK8WfMcy1YJ4crqAfpLnxUR5jYyVqkPZfi5KKIqEL18HzmuJj79yZijzWtEAiWQ1EXqxFNcqtEYaugOv9blkY0Fk14APP8K/ZsSnmuxS1hXrH4hAYb/DDv7jjQxfM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O25chSj2; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753490611; c=relaxed/simple;
+	bh=FRa9xY4x5DiJRX0obptGEWaAk44wN8I8KzUTZYrUCjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teWuTX5tshkXvp0VMN50DKvVldt+QmyROOaSpwIZ/6Q2oqEBk6eqO8I+MW5pGZkwUznaux4V1EYcrWINNjOOIcknbPR6RlBw80t7g70RROl/eGXTJ3ATDmW8A0+YrOaa/tvRA/Kf07IsVCUs8G6m8Ke5btiUbvvTrMdP3pVwbZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBaBfcy8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O25chSj2"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae708b0e83eso499743566b.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jul 2025 16:39:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753486781; x=1754091581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ENp0MAbfhyFMdiKxX5yT2CuR8vq6w7I7WzGENlZZbLE=;
-        b=O25chSj25SzkSSeuVKFUoEa8Pwseyso9TA8nMAc8uG3bGC42w/nH7NfEvFhwIXGtRK
-         bLqeunNhIl+ewfatGf4MkQRiADH1Db7meefEq8EJ+tw+M7P2vMM7T3J9rXubnxEklCQs
-         OpmxYl2FjBqH3bxLNbzaAvIwZ85jrrR/aFx2Zgm7yqKMs/Q3ACkzIZEv9xkRVP/OQ0aX
-         GNddvmJYItVKEVVDpYCncMcvrC/kJ8Ezp34MLCfF8MQgspS+IqudPxu3VwrR9y8Q/p8l
-         DQT/pvmrIils0zlyfLhaPERVyJlZsLKtlGnvZsX/cXC8oUBX9iGCGCGfvKMlp7/ffFEp
-         cjYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753486781; x=1754091581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ENp0MAbfhyFMdiKxX5yT2CuR8vq6w7I7WzGENlZZbLE=;
-        b=bk8junBQpFzkxRWT1Czi6b6nlgOlGoy8AN+zbIJ+PiNIxDJldcvuJGNtG3DcaFmaAN
-         g1Ujf4L2X/BgsuOZo8N+0igkq1CF7AU1pGvvU5kzOEkLxLFBdMgvqmeEnz/yP8z0iBIe
-         ZHN8Ss38ABrvjBeQa3gJnNNVVZQYcJVIQvE32l/4IjKqQiXOQRrPxq10J8lsY80dZK2o
-         XIkUIzgVsv/2lK4ZBbaGvuCrwcCLzucq/SPoNpM9x74JIOu2ixCu4MLvI4MnpK30NRT7
-         or6QA/AUIpoe3O97Xm0FXamneLnNoumU3ze15mSyBcsNEzA+GL3uvH1Fq4jbo3jC+7xD
-         LQvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfee8J+w2BZfvK4+4E7efGahrlMGcF0pgQzYvrkuOJt04uh+KJCx7hGHxS3um+dNm6in/dYd65MYJp0zGmWrnLDRku@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKCjEYyo99Ejd4UuT33wFxEQOywROx+uFemquwSRpP7uZSbn6k
-	N5h5wqwLPp/7cWJhVNcc79h9s6KB07X1xMwCXnSzUs5RopKw8Rv1AdpZzRq832ywsIdiWmp78ad
-	AvZge6Jo6Rt0P/ACxWEOL8eJNihsRWd8=
-X-Gm-Gg: ASbGncv+ANHDaN2LJSlT+5dJr483XIssl+o2kLz3YplK4sCRuMy2r2TY2gdHS4Bv/8U
-	TUBflcsJ95UpNFGQQCGO29S0VKIfG8e/t/KDhZ7ZkPoejfRUgUDrV4mkz+JHB+bLSPrh7SBuzL9
-	821+hQBXK7P2zVrV3T4lg3kXYs+Us4kBG+lgrbByMgxytkAuOwpd+iul8b8cGdiudw+K9Afs4y+
-	nldPbVJHZ2cBREjtKJW
-X-Google-Smtp-Source: AGHT+IEtumwNLY1cvOgxuusoeDiHj21WqU+AXPPhywUh67wTdqLTT8yYeeuLq0ALtTd58G2hiRyZfBqe1AD6h3HU0d4=
-X-Received: by 2002:a17:907:3d8f:b0:af1:2d10:9b19 with SMTP id
- a640c23a62f3a-af616d05747mr408490066b.8.1753486780621; Fri, 25 Jul 2025
- 16:39:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBaBfcy8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1170C4CEE7;
+	Sat, 26 Jul 2025 00:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753490610;
+	bh=FRa9xY4x5DiJRX0obptGEWaAk44wN8I8KzUTZYrUCjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kBaBfcy8cvOEOsPzmxHVilPiLtCGr+TDf8X/qOm2ye9g94waAiMThV6LQwkD5mGES
+	 PDjLL+F1jsLeU64wJNGH2USu78DXOVIauVdSn5Za3ug6EyGqMkDWY68qx6CO1Gpj84
+	 N2fKc/oxH+okv+yKP2JrlydnIbTVzpb6w9fxjXPvPbNQT1zbh2x+enrj7WanGNqURj
+	 oluIdS5LRKkHy5qC/5rWJa6TJsIQMsqWbSs6k1imrXOBgatcUYq26mfwhTEKJwXKN7
+	 wK8GX+boueI26+UPx4/MDOH6NBVBpUuOSwVrQlpds5FDuUw13v4g1+lMsu+qwH3eh6
+	 5w2Rudv02W7cA==
+Date: Fri, 25 Jul 2025 17:43:13 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, kasan-dev@googlegroups.com,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/4] stackleak: Support Clang stack depth tracking
+Message-ID: <20250726004313.GA3650901@ax162>
+References: <20250724054419.it.405-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250725215259.402796-1-hansg@kernel.org>
-In-Reply-To: <20250725215259.402796-1-hansg@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 26 Jul 2025 01:39:04 +0200
-X-Gm-Features: Ac12FXyV4ldplLQjpQNgtWMCY8giay-KI1C5r6NRSor92KGol3uJvALlww7kE_M
-Message-ID: <CAHp75Vebw6kjSm6T9OntY1YV0sod+zhA56wmoto=WV1ZynxxHA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] platform/x86: int3472: Increase ov08x40 handshake
- GPIO delay to 45 ms
-To: Hans de Goede <hansg@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250724054419.it.405-kees@kernel.org>
 
-On Fri, Jul 25, 2025 at 11:53=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
-rote:
->
-> Hi All,
->
-> Here is v2 of the patch-series to fix ov08x40 based cameras not working
-> on several HP laptop models.
->
-> Changes in v2:
-> - Convert int3472_gpio_map to use C99 initializers
-> - s/enable_time/enable_time_us/
-> - Move enable_time above con_id for better struct packing
+Hi Kees,
 
-This version LGTM, FWIW,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+On Wed, Jul 23, 2025 at 10:50:24PM -0700, Kees Cook wrote:
+>  v4:
+>   - rebase on for-next/hardening tree (took subset of v3 patches)
+>   - improve commit logs for x86 and arm64 changes (Mike, Will, Ard)
+>  v3: https://lore.kernel.org/lkml/20250717231756.make.423-kees@kernel.org/
+>  v2: https://lore.kernel.org/lkml/20250523043251.it.550-kees@kernel.org/
+>  v1: https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
+> 
+> Hi,
+> 
+> These are the remaining changes needed to support Clang stack depth
+> tracking for kstack_erase (nee stackleak).
 
-(one nit-pick in one patch, but it is minor thing)
+A few build issues that I see when building next-20250725, which seem
+related to this series.
 
---=20
-With Best Regards,
-Andy Shevchenko
+1. I see
+
+  ld.lld: error: undefined symbol: __sanitizer_cov_stack_depth
+  >>> referenced by atags_to_fdt.c
+  >>>               arch/arm/boot/compressed/atags_to_fdt.o:(atags_to_fdt)
+  make[5]: *** [arch/arm/boot/compressed/Makefile:152: arch/arm/boot/compressed/vmlinux] Error 1
+
+when building ARCH=arm allmodconfig on next-20250725. The following diff appears to cure that one.
+
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index f9075edfd773..f6142946b162 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -9,7 +9,6 @@ OBJS		=
+ 
+ HEAD	= head.o
+ OBJS	+= misc.o decompress.o
+-CFLAGS_decompress.o += $(DISABLE_KSTACK_ERASE)
+ ifeq ($(CONFIG_DEBUG_UNCOMPRESS),y)
+ OBJS	+= debug.o
+ AFLAGS_head.o += -DDEBUG
+@@ -96,7 +95,7 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
+ 	     -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
+-	     -I$(obj)
++	     -I$(obj) $(DISABLE_KSTACK_ERASE)
+ ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
+ asflags-y := -DZIMAGE
+ 
+--
+
+2. I see
+
+  kernel/kstack_erase.c:168:2: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
+    168 |         BUILD_BUG_ON(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE > KSTACK_ERASE_SEARCH_DEPTH);
+        |         ^
+  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
+     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+        |         ^
+  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
+     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+        |                                     ^
+  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
+    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |         ^
+  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
+    556 |         __compiletime_assert(condition, msg, prefix, suffix)
+        |         ^
+  include/linux/compiler_types.h:549:4: note: expanded from macro '__compiletime_assert'
+    549 |                         prefix ## suffix();                             \
+        |                         ^
+  <scratch space>:97:1: note: expanded from here
+     97 | __compiletime_assert_521
+        | ^
+  kernel/kstack_erase.c:168:2: note: '__compiletime_assert_521' declared here
+  include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
+     50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+        |         ^
+  include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
+     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+        |                                     ^
+  include/linux/compiler_types.h:568:2: note: expanded from macro 'compiletime_assert'
+    568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+        |         ^
+  include/linux/compiler_types.h:556:2: note: expanded from macro '_compiletime_assert'
+    556 |         __compiletime_assert(condition, msg, prefix, suffix)
+        |         ^
+  include/linux/compiler_types.h:546:26: note: expanded from macro '__compiletime_assert'
+    546 |                 __noreturn extern void prefix ## suffix(void)           \
+        |                                        ^
+  <scratch space>:96:1: note: expanded from here
+     96 | __compiletime_assert_521
+        | ^
+  kernel/kstack_erase.c:172:11: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
+    172 |         if (sp < current->lowest_stack &&
+        |                  ^
+  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
+     28 | #define current get_current()
+        |                 ^
+  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
+     20 | static __always_inline struct task_struct *get_current(void)
+        |                                            ^
+  kernel/kstack_erase.c:173:37: warning: function with attribute 'no_caller_saved_registers' should only call a function with attribute 'no_caller_saved_registers' or be compiled with '-mgeneral-regs-only' [-Wexcessive-regsave]
+    173 |             sp >= stackleak_task_low_bound(current)) {
+        |                                            ^
+  arch/x86/include/asm/current.h:28:17: note: expanded from macro 'current'
+     28 | #define current get_current()
+        |                 ^
+  arch/x86/include/asm/current.h:20:44: note: 'get_current' declared here
+     20 | static __always_inline struct task_struct *get_current(void)
+        |                                            ^
+
+when building ARCH=i386 allmodconfig.
+
+3. I see
+
+  In file included from kernel/fork.c:96:
+  include/linux/kstack_erase.h:29:37: error: passing 'const struct task_struct *' to parameter of type 'struct task_struct *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+     29 |         return (unsigned long)end_of_stack(tsk) + sizeof(unsigned long);
+        |                                            ^~~
+  include/linux/sched/task_stack.h:56:63: note: passing argument to parameter 'p' here
+     56 | static inline unsigned long *end_of_stack(struct task_struct *p)
+        |                                                               ^
+
+when building ARCH=loongarch allmodconfig, which does not support
+CONFIG_THREAD_INFO_IN_TASK it seems.
+
+Cheers,
+Nathan
