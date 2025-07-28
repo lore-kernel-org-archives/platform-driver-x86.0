@@ -1,154 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4C6137923
-	for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jul 2025 22:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C18225784;
+	Mon, 28 Jul 2025 23:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753743412; cv=none; b=oRfdU6uBN9l33mM/y4Sdjqu88d1WdZ+llrAyjDkJxnC9XBDpZuL4/jae1KZX6ALAQRdfQ2Cw5DH27Oe8B78LxyT3guriKJJRsM6L9gBo79bnnG3F1JTRU1g47XoyAlxr6bJQV0HR8t4+6XTbWPUgEfK0/AK9AJPZdPrDEdCI8+k=
+	t=1753745878; cv=none; b=rWeC58dhlOhkbHltz16usQP0IlYLKuvWLR4+X+ydQ3LTdr+3mktnypx3rQQEQcAcR2spp9lQoydXSrY1nwlms3je/UrbErl3WAyHYcX3yeoJ2oTOtgxxISAsQItDOQrXq+2K4khwp/60ABCkqRGUIY9RT3tL1sEaoGtDZJHEppU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753743412; c=relaxed/simple;
-	bh=uqw3hk/p3/LEme4pEJ6buJatDbzbFTQuy6PXc62i4Xs=;
+	s=arc-20240116; t=1753745878; c=relaxed/simple;
+	bh=M9KO/2aYIoLlJKYj0B6g/Dtc60iGI3XL4WVkIVReWRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpgjYPjUB3j6I781gGH6esaGzgDvcsq3AqO4hVrxYIyodDYiwA8w49Wc813UIIZxBpRldjwaizJrdieBEnFquldwt8HrueB9gGKAWb+m4sKiNTkYQG2yp8l8YwPbieJJhw7M4EYYeVsUS28CUkhqUxINPQnygVZOM+nsTmNx53c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K37FMS+j; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bKZOqa47KoyYShK0FswXp02f+s6fF828V7P++WuLI5NaaCnW5m0ClQUKK03A/9DC8aLRbhGZSw22b1pohyizqajI3GWdRIYIgq2Z9UQgRuq694lwCIPBciF2t1VUAu+RSau5MBzvVU234y1/DE1zQ8Z1+AJFgZUhuPJMGn5oKDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKdmePZb; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K37FMS+j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKdmePZb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753743411; x=1785279411;
+  t=1753745876; x=1785281876;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=uqw3hk/p3/LEme4pEJ6buJatDbzbFTQuy6PXc62i4Xs=;
-  b=K37FMS+jLw+N8DUbjq2mrPfNzErhNn7u5BdBWLNH/jg0+grwr4AOrHGO
-   Fg9Gpazx6DJign00nV9KVyZy9dlKBUGby9JwreF8+QyrtpCMgZLJNHRcX
-   EujQwY81ne28nhmFcoe/1EWwQPUNN90Js5fIJ7C7D5/4rS1Kj+PzYQXAu
-   5bOsraI9nYLQBALIfK7r4Vo/Rh1dNfJwI985z+USEPdRydqhr+QBzhssE
-   qFzejiW+oRYAtqJxvfqvT4HHUUKCHC6aTQ1kZtFHUsrknfLm7zMZJDTOs
-   yKEGvPc3TGIJpC4OSxuo54fzlYhOCj7xqh2YIEZUpu4k/4opIMYm3VmNp
-   Q==;
-X-CSE-ConnectionGUID: +8ZZXiiKSD6FAOuomeUFFg==
-X-CSE-MsgGUID: PNGmc+8IR2W+d7Ihnacj+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="43609926"
+   mime-version:in-reply-to;
+  bh=M9KO/2aYIoLlJKYj0B6g/Dtc60iGI3XL4WVkIVReWRc=;
+  b=aKdmePZb0W5MwKHrylLZtxm/Q8mJ94vRDX33eOrDCUxemybeDM1h8UT4
+   W/EG84AURDyelAASaygFBMnEGtwIsPEk/J3dVwdfMAJdlrKUrpHqAQ+wN
+   KDNtIClKaqdB81l1ZsvaN14TLvFO1xD3a81gc91GSkBzLkkDuF3zKy2P0
+   WUj43nN2kRcGeycLHUAKJPtPjTFgzvvPw638WGHS9d/xoiK9Qwlc0nDhA
+   ZILfPBJgV8iO0CnIYgaH07ApZPlWv9t6FX1ctMs+snVzDtQwMoQp6XBZ2
+   APLo5NpR//m7ZkOVHJgkjV34f3Y5SLVTIFq1yiQQYOqsaBWuG/62ZcS8x
+   A==;
+X-CSE-ConnectionGUID: 4M+yrrc2RFyunh6SmNEXJw==
+X-CSE-MsgGUID: omhOuLmLSYq37lgeHMGOJA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="78557780"
 X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="43609926"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 15:56:50 -0700
-X-CSE-ConnectionGUID: UqS97DosT7yCVHcgyqB0DQ==
-X-CSE-MsgGUID: X71hIIZLTVK6hKrMQRxHQg==
+   d="scan'208";a="78557780"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 16:37:56 -0700
+X-CSE-ConnectionGUID: PC1Oj44zRXy0Y4pJHQBufw==
+X-CSE-MsgGUID: +hKsHsYQR5qcGaeo+xhvlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="161800786"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.78])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 15:56:49 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id D4E0011FC49;
-	Tue, 29 Jul 2025 01:56:45 +0300 (EEST)
-Date: Mon, 28 Jul 2025 22:56:45 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+   d="scan'208";a="162113821"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 28 Jul 2025 16:37:52 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ugXPi-0000pJ-0o;
+	Mon, 28 Jul 2025 23:37:50 +0000
+Date: Tue, 29 Jul 2025 07:36:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/2] platform/x86: int3472: Increase ov08x40 handshake
- GPIO delay to 45 ms
-Message-ID: <aIgALTHk3sWzy0_t@kekkonen.localdomain>
-References: <20250725144444.210043-1-hansg@kernel.org>
- <20250725144444.210043-3-hansg@kernel.org>
- <CAHp75Vf7yoLYNTQxgJFbA2FT2dqVJ5BBF0w-uTJsYooON7LqXQ@mail.gmail.com>
- <aIPDGsNVrd7tBvY8@kekkonen.localdomain>
- <c4b280a3-e621-483e-932c-1f0547be5e79@kernel.org>
+	Hans de Goede <hansg@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Alok Tiwari <alok.a.tiwari@oracle.com>,
+	David Box <david.e.box@linux.intel.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] platform/x86: (ayn-ec) Add RGB Interface
+Message-ID: <202507290730.7XZMyOM7-lkp@intel.com>
+References: <20250726204041.516440-4-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c4b280a3-e621-483e-932c-1f0547be5e79@kernel.org>
+In-Reply-To: <20250726204041.516440-4-derekjohn.clark@gmail.com>
 
-Hi Hans,
+Hi Derek,
 
-On Fri, Jul 25, 2025 at 10:43:17PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 25-Jul-25 7:47 PM, Sakari Ailus wrote:
-> > Hi Hans, Andy,
-> > 
-> > On Fri, Jul 25, 2025 at 04:52:26PM +0200, Andy Shevchenko wrote:
-> >> On Fri, Jul 25, 2025 at 4:44 PM Hans de Goede <hansg@kernel.org> wrote:
-> >>>
-> >>> On HP laptops with an ov08x40 sensor the 25 ms delay coming from Intel's
-> >>> out of tree drivers is not enough. Testing has confirmed that 45 ms does
-> >>> work.
-> >>>
-> >>> Add a quirk to the int3472_gpio_map[] to increase the delay to 45 ms to fix
-> >>> probing of the ov08x40 sensor failing on these laptops.
-> >>>
-> >>> Note this only impacts laptops which actually use an ov08x40 sensor with
-> >>> a handshake GPIO.
-> >>
-> >> ...
-> >>
-> >>> +       /*
-> >>> +        * ov08x40 sensor with a handshake pin needs a 45 ms delay on some HP laptops
-> >>> +        * https://bugzilla.redhat.com/show_bug.cgi?id=2333331
-> >>> +        */
-> >>> +       { "OVTI08F4", INT3472_GPIO_TYPE_HANDSHAKE, INT3472_GPIO_TYPE_HANDSHAKE,
-> >>> +         false, "dvdd", 45 * USEC_PER_MSEC },
-> >>>  };
-> >>
-> >> My gut feeling is that this might be needed for most of the cameras
-> >> with the handshake signal. Do you have ones that work without this
-> >> delay?
-> 
-> For those laptops with the CV chip that Sakari talks about below,
-> 25 ms, which is what is currently the default delay seems to be
-> enough.
-> 
-> > I'd expect this to depend on the CV chip, if not solely then primarily at
-> > least (firmware could play a part maybe??). Isn't there a way to figure
-> > that out?
-> 
-> These HP laptops do not appear to use a CV chip at all, yet they do
-> have a handshake signal... Specifically there is no CV / USBIO chip
-> on the USB bus and the I2c and GPIOs for the camera sensor come
-> directly from the main SoC.
-> 
-> With that said, even if there were a CV chip, then given all
-> the problems we're having with those I do not expect us to be
-> able to get this info from the CV chip.
+kernel test robot noticed the following build warnings:
 
-I wouldn't expect it from the chip, but knowing which chip is there could
-be useful in determining this.
+[auto build test WARNING on groeck-staging/hwmon-next]
+[also build test WARNING on linus/master v6.16 next-20250728]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-It'd be good to understand what's going on, even if that change fixes the
-problem. Given there may be more pressing problems it may well remain a
-mystery. :-(
+url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-ayn-ec-Add-PWM-Fan-HWMON-Interface/20250727-044332
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20250726204041.516440-4-derekjohn.clark%40gmail.com
+patch subject: [PATCH v3 3/4] platform/x86: (ayn-ec) Add RGB Interface
+config: i386-randconfig-061-20250728 (https://download.01.org/0day-ci/archive/20250729/202507290730.7XZMyOM7-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250729/202507290730.7XZMyOM7-lkp@intel.com/reproduce)
 
-But it's not the sensor I presume, 5 ms should be enough since lifting
-XSHUTDOWN. It'd be good to add a comment on which models this applies to,
-besides the bug URL.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507290730.7XZMyOM7-lkp@intel.com/
 
-I'll review v2 later this week.
+sparse warnings: (new ones prefixed by >>)
+   drivers/platform/x86/ayn-ec.c:87:5: sparse: sparse: symbol 'ayn_pwm_curve_registers' was not declared. Should it be static?
+>> drivers/platform/x86/ayn-ec.c:753:18: sparse: sparse: symbol 'ayn_led_mc_subled_info' was not declared. Should it be static?
+>> drivers/platform/x86/ayn-ec.c:774:24: sparse: sparse: symbol 'ayn_led_mc' was not declared. Should it be static?
 
-> 
-> Just getting the basic IO-expander functionality upstream has
-> been and still is a very troublesome process.
-> 
-> Which includes very different behavior between USBIO chips which report
-> the exact same firmware version, it looks like the fw-version reported
-> over USB does not always get updated in fw updates...
+vim +/ayn_led_mc_subled_info +753 drivers/platform/x86/ayn-ec.c
 
-Ouch!
+   752	
+ > 753	struct mc_subled ayn_led_mc_subled_info[] = {
+   754		{
+   755			.color_index = LED_COLOR_ID_RED,
+   756			.brightness = 0,
+   757			.intensity = 0,
+   758			.channel = AYN_LED_MC_RED_REG,
+   759		},
+   760		{
+   761			.color_index = LED_COLOR_ID_GREEN,
+   762			.brightness = 0,
+   763			.intensity = 0,
+   764			.channel = AYN_LED_MC_GREEN_REG,
+   765		},
+   766		{
+   767			.color_index = LED_COLOR_ID_BLUE,
+   768			.brightness = 0,
+   769			.intensity = 0,
+   770			.channel = AYN_LED_MC_BLUE_REG,
+   771		},
+   772	};
+   773	
+ > 774	struct led_classdev_mc ayn_led_mc = {
+   775		.led_cdev = {
+   776			.name = "ayn:rgb:joystick_rings",
+   777			.brightness = 0,
+   778			.max_brightness = 255,
+   779			.brightness_set = ayn_led_mc_brightness_set,
+   780			.brightness_get = ayn_led_mc_brightness_get,
+   781			.color = LED_COLOR_ID_RGB,
+   782		},
+   783		.num_colors = ARRAY_SIZE(ayn_led_mc_subled_info),
+   784		.subled_info = ayn_led_mc_subled_info,
+   785	};
+   786	
 
 -- 
-Regards,
-
-Sakari Ailus
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
