@@ -1,75 +1,75 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EC71FC0E2;
-	Mon, 28 Jul 2025 19:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E481EDA2C;
+	Mon, 28 Jul 2025 20:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753732235; cv=none; b=UHb8/6WzvUeDo/MXi8eZQcN3He7xLpnfHtNrRnvQhzodVCztl6iOVl4U/IapG6nyZC218PaF1Sxu12mzNG1OHBPn5u3gs/feA/RFyx2w5wOJxN8n/djhIanbf6Mw7H4oslbixdjnRM+yvC12F4A84bHHznvXZcjzooXep2PzLwI=
+	t=1753733502; cv=none; b=kcm8dqgg7bzWJyOzwsVKehTklXdjeaBFM1/4T1SU0MjJnoEpM+jaQc1rpgoPGVGZbtRRIbcp/optOizoA9ccEPMKGBi1+cTm9jHBVofsaItibpw2hwCMfjQyFq25aJ9Gx+TDBvJ8FOJEijCT0DTSgWfyaWphd/dpjXPDX7FogvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753732235; c=relaxed/simple;
-	bh=rKLuiQlOyO2eI5akCz2SxHc2bsZA3ehB8Nm3+relrE0=;
+	s=arc-20240116; t=1753733502; c=relaxed/simple;
+	bh=vzq27EKg2VCy29xHgaQqsGMLZwzkt8Wg1+tXSx57q6E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hOhnJZ7HdilxlrZ0ofDI+KOYJzM5aUwyYWxo+LoAj7Z4VhyfvvfHmyKeHP68rVssba9P8vrA5ndprtZtVJ3u8FRbj9yLVCO7FKzruTMb1RUfFQ3Fl3wOukuV5uPJJz0wlj7hx6LjAOkNRF1OrRx9CGp6/vGn1vkR16PuCjCOUXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YfbVxT92; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version:Content-Type; b=jMDXVzbjhXudldAdTkM6eVurukt0j9JCHYEYDet4mQhkxaXrnwjoyvzhmYlUyNETDmqusGye/qk4YChDwvvPDtP4CSnVeLpCtB7k5QrWLlxdu+zITmO7jzjkSdB0UX5UGJU8BtKThBe/bb0hwo4ybOxbCKTp44DHJjtHK6D+3mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lhc03HnT; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfbVxT92"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b78ad900caso112214f8f.0;
-        Mon, 28 Jul 2025 12:50:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhc03HnT"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3b7889ea74cso120054f8f.1;
+        Mon, 28 Jul 2025 13:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753732232; x=1754337032; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1753733498; x=1754338298; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LqzJyz+pvH5TqNJSVLtGvQbdY/33ZPWTHO1nDG9PVLo=;
-        b=YfbVxT92X2aZ7YAOsbHcpBcnZ+WRnCvwR9PeA5kDt2z2RwwG26Vo9xjnHwvFoZ1suQ
-         /hIejx6ypM68QMxKHsnReF0fPDs0Lp0P7RVnYQaSY6GDLOxzejvYx9/IFgO9OWlvPE67
-         JogK8PoGvGXDGAUPDfX7hoHOxiQHqz11ZY4+pCyyD/4RJfPdBG/NCBlh498Xxe26zlQp
-         XtjSs2yDwJFrB7T26Vpv6RF8MqkoThpOEtuGJh9K6jjpMGwFqUe875LeHXCmnYUf04kI
-         OaX6VhPd5VKnRF5ba9g+Wu5pge+7OXJeGnhvvFozEvTAwLD/dx6iOrYZu4rWiAtsYsKI
-         hyaQ==
+        bh=8w8E1AFa1gNNtbJ7eBZ6F/bA2uq/FM/15UHeQIe5sxQ=;
+        b=lhc03HnT7NS6V9p+MrGw6uLHcTne5w3hY8PMcHl4vE6M45YrlA6dfLCjAMOxbdYGU8
+         32YZeS9nwXCLPl+JeS+qRMlPjW/nrG4pDg0lVMLPihRtz/4pkOv6Bokh4wQWaySitPJH
+         cjMmWtDj/j2q8vB0ZjGDJZZxm/JVuZKcETUmxTBmFFXvGKWaqXzawrNS/VXmqKQNlhDX
+         fyPKz2JV/Br1BJ0ZaF9DWk2Vi2NoH67qTBgIc+8cCPQT9/Ym8TCOLEapw/+4gV4lt3pk
+         c0RvnioeDL/1kvYDURuC/pxBxUxP3JwuuMZ1r1oV/j9e/jHmzfxqhPsZ3L36uOpFFJvy
+         oNJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753732232; x=1754337032;
+        d=1e100.net; s=20230601; t=1753733499; x=1754338299;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LqzJyz+pvH5TqNJSVLtGvQbdY/33ZPWTHO1nDG9PVLo=;
-        b=YsWumQhz7MzwJq8UeRoB1QE+xVF/g8d8gywyWuUgsZU8/6Y//IVQ0MLrzejahnrNcF
-         jHAztZkcG/klNUAg+MY6CJm+RjpgGE5WF8glPjpYIWaWPM66+hhGp2tKMWzFsUwcCFEX
-         gzrkFECFdTHhKbRPwGmRowc/cpxXUrEB/Hdg3I7XR+HJhbSulPyeQ9XwLFqw/5YPWnnO
-         jbPjSiQfg1cwT1rDsDJ8ehq8esl3+Dz1wBGem5HvS+6lQ90NSv+vEO95LopH2aQmjNU2
-         gvjDvJMFpB8o/CtQsEhLCwvsJ3z+i4vTbnXBz5aaCgLjgH55Ip3jhBZ/vmvThUROVYnZ
-         UD7Q==
-X-Gm-Message-State: AOJu0YzuLnXvF1ptYZhyAllpB2uduIdzDjh9mBJM8UBe+qzVYgEJnVUX
-	NxNNxqbsbfbo8bpVWkVL0pUpe0lo+yHRkmKE80J3rtrE7/XViXz+kiSuRYNQeaMXEKk=
-X-Gm-Gg: ASbGncv01FnBhqjFWdKy3KPqvzqQ0sbJuhRAUpR0CSovBjBK6O9+58UmSTi7GBVacyA
-	C91qHRt95fkbAKFZjJBO7Do1vtoPFg0ynPD1kHQdCzasiscaUCg7G/0AVdkEYTaTQfOzYC1Ur9y
-	bSagxNt7G0/DJbO311/poC4NeJmYquSeiq/TLrEPttZWaQ4Dhhs9XmQjmug401VT4MmIUmZX0bX
-	YwfpvPFM2+PXe7Wn4973ks1wpnc+ZigLBmdzptI6Eq39PB7I90ijOYU6D/MML8OvNGwcGgq8pXS
-	l7p8Q8NriGnJJxKm6C5YTNM8DZbh6M/KWWCVFELmDytI4rat+fDdRb7KD82ZFPCUZltfovG+IeK
-	qM7N/rPwqBm2pHJ1+oq2jRdn/XkiqQquMoQ6tMi2tNAunUlB7bc2BOqdWxERULrqeKE31QvT4jg
-	==
-X-Google-Smtp-Source: AGHT+IGouChMDfD+B2iX5sMvvtc+j6j8ymYQa65QiEinlp+r6aFoFRb6SAWMfXohlecp2THQJAe07A==
-X-Received: by 2002:a05:600c:3507:b0:456:4bb5:c956 with SMTP id 5b1f17b1804b1-458766c1d21mr43523015e9.7.1753732231691;
-        Mon, 28 Jul 2025 12:50:31 -0700 (PDT)
+        bh=8w8E1AFa1gNNtbJ7eBZ6F/bA2uq/FM/15UHeQIe5sxQ=;
+        b=c/lLV7wlaV/9h/VeaDt+km7C58CMv16gd6Oiyfns8vg592+az2s2w2oRqrw7vZ+7M+
+         h+5xuL6CvxkLZPxlPyVHDY/plgbxxY5vCxWO9Cu+/AOJoPWOOy4AZZ7kqNNTAMfGWSh8
+         XJR8UHpu91rdQEYE0t3pbrmopI9L2s7woCP1DMKtWk/F/kknaq/Mb1d0zhiUgBcGpSar
+         XJfNsfF8frMGRYZIwwySkEbtzqIdcGqlHKpJomY1jqzPD3cHBb3+p6pnb3dyIHkLO7nA
+         7dBdNoGx6IvNvqfEeHIRqXQn/XozcdF41JMy5bgKiSmowuN3CmdaBd0vHW/nxS4d+8H3
+         iH/Q==
+X-Gm-Message-State: AOJu0Yzm2MV9nXH/CFSHI0U+ZMP9RmaA+iS27ZBcj+KYIZvFGKB/ogyP
+	K83o0SXXjFq/RvQnH3NOCDxV+kL2LKaOrG8978h2HDz90ktGxtKKyOhcy4bc2sjqCJI=
+X-Gm-Gg: ASbGncvMOy+rFrJghJESx54RZGKukQ280u1WXd7lN005vS1NHbCuhvQ8PMXk/IR9NST
+	YWBLv9rW5jKETs8my588vsnB1N+XBcY76wiAaz2hFM1d8qTSkIaYyVBaRVdIsSTmRE+WvAJcuVE
+	aooeSYVvFJ74j+IV6kikj+BT5aDh0KxUF3JcEBCqydVmOU12Pz8WgRrD2bege7nGdVVYpc6vFb4
+	C73XIFHKWX8v8ai9oa7UYw4pqc4EmzjG3XpX9mgwItcdL3MXKotO0rnyn9kX/8NpZClu6hktVhK
+	FXcefHKJAFFAKG8Sk2yND/f4K/ZuE0HPnks45TrWuCAzYA8nDUnWJB6Gqa3pWhASi7mWFxscEdU
+	CPzZvPoY/rAKfVoukc5btF0aOUa/zBcxRsowFdkMVtgr/0+iiPYTOAoTqef4CFX9zYMa3/srYGW
+	N945pLsG0S
+X-Google-Smtp-Source: AGHT+IFpgGQrIY3SlL5TvH0uVBovSFoJbINfl5NNalgH7sGCD2hRYHlq6e/YI7Y42k7+vLWQIfRWXQ==
+X-Received: by 2002:a05:6000:4284:b0:3a5:2dae:970f with SMTP id ffacd0b85a97d-3b776758780mr4077171f8f.13.1753733498374;
+        Mon, 28 Jul 2025 13:11:38 -0700 (PDT)
 Received: from pop-os.localdomain (208.77.11.37.dynamic.jazztel.es. [37.11.77.208])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-458705ce685sm165444895e9.30.2025.07.28.12.50.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b778eb9bbcsm9760389f8f.18.2025.07.28.13.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 12:50:31 -0700 (PDT)
+        Mon, 28 Jul 2025 13:11:37 -0700 (PDT)
 From: =?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	krzk@kernel.org,
 	=?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
-Subject: [PATCH v2] platform/x86: surfacepro3_button: replace deprecated strcpy() with strscpy()
-Date: Mon, 28 Jul 2025 21:49:42 +0200
-Message-Id: <20250728194942.558194-1-miguelgarciaroman8@gmail.com>
+Subject: [PATCH v3] platform/x86: surfacepro3_button: replace deprecated strcpy() with strscpy()
+Date: Mon, 28 Jul 2025 22:11:35 +0200
+Message-Id: <20250728201135.584023-1-miguelgarciaroman8@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <b925480c-231b-44e5-bf1c-1f18f8abe42d@kernel.org>
-References: <b925480c-231b-44e5-bf1c-1f18f8abe42d@kernel.org>
+In-Reply-To: <20250728194942.558194-1-miguelgarciaroman8@gmail.com>
+References: <20250728194942.558194-1-miguelgarciaroman8@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,8 +79,25 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Replace strcpy() with strscpy() when copying SURFACE_BUTTON_DEVICE_NAME
+into the device’s embedded name buffer returned by acpi_device_name().
+Bound the copy with MAX_ACPI_DEVICE_NAME_LEN to guarantee NUL-termination
+and avoid pointer-sized sizeof() mistakes.
+
+This is a mechanical safety improvement; functional behavior is unchanged.
+
 Signed-off-by: Miguel García <miguelgarciaroman8@gmail.com>
 ---
+v2:
+ - Use MAX_ACPI_DEVICE_NAME_LEN instead of sizeof(name).
+
+v3:
+ - Add full commit message (v2 was sent without message).
+
+Testing:
+ - Build-tested on x86_64 (defconfig, allmodconfig, W=1).
+ - No runtime testing on Surface hardware
+
  drivers/platform/surface/surfacepro3_button.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
