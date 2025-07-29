@@ -1,258 +1,180 @@
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EA288516;
-	Tue, 29 Jul 2025 09:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3032140855;
+	Tue, 29 Jul 2025 13:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753781754; cv=none; b=bT/pRl3zLqnTi0zhMb1oS/CsTQXmM4p/CbppHNqbcKGa0PQB5Dze+rDiEEEO6gA1e0OW3CDVa/BBiWdm/ZwyvSZ6jMhtlC+EgtqUNk+ntqEr8QlYFSxrHrssQRwUREy6C54UjebMRQFIVdmF5BQA+KD4P3iNQAJd+aHoDK8kcBs=
+	t=1753794621; cv=none; b=k2k870WjSnCaGiIqZmj4LogXWEiLvpCHCgvhLyjJbvGP/4NWKwIkm+aUkQ+DRfIOYGXRSwjtEYrd+Z9H0KOk8v+PdH0y0k+9OcCsQoiWDKEczmKeqqaWXZ6JBL+nmvCLow5SKR39uOMX76L9Lt1g7+5SndW4xckilcG1kZx0MbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753781754; c=relaxed/simple;
-	bh=g+vpis/SpU05sbo8Vmp+65jPjCMeiygq63OVHIYclpc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RqYzr4tC0eFZirougPWnfdyB0SyEhUwGX09OXiGsvSw/BDduxmjx9ocmezn65ZIi754jBuNqWZQf9KjsNCGVZzcVDBRAV781qEdBMlt4Y7uLBhi7is+8fzhpF24ZEg+V1CWA94KodiZXUhM0ir0jB5UhPlArX9LfCVWm8xCvQMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=T0M0CDw9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=buJJFSqR; arc=none smtp.client-ip=202.12.124.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1753794621; c=relaxed/simple;
+	bh=zqwXG53TqX88OOIij8KVQ/Qra+rNQ2e4vYxubSYODL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ieBfc0YdU2NbxiQi0Z7sI4H/lO/EWDTXAkeXOt4/ZPWH3cpIc0aA0p3Cpc53hI37lprnSs+5KDioRSHGdRZyFHJqv9QaxK+z6bHDmApwRWQYSU8mEuPtRoKlmYc82REBngGwBQu3fTnmPoTohzbs/1eSPlMScjAfJyZqRSlujt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mh0C4eIr; arc=none smtp.client-ip=209.85.208.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="T0M0CDw9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="buJJFSqR"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 83C331302001;
-	Tue, 29 Jul 2025 05:35:49 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 29 Jul 2025 05:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1753781749;
-	 x=1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=
-	T0M0CDw90VbSLjna7vCcfe6mTMKCQ5endMYTmbm5F+kZuNuH4nc4BQuqm9/kFxYO
-	cQELYjIMlvNKw4lJ6TCvYDOi6/GwbiFcq8V1FL9vON4SMrAYZBHEMyr3TapvJ32Q
-	EuCcZwakLVvoMKIuhtNhw9MpoU1pIRLsrJBuKfw0mFvSH27q/GYmQZrzLEpJzswO
-	GdKXjvNgbHsWZp/zE+Lg+mEXxE3fEhCRBZiE76eszktahyeCSVZQu6/kPCC3i4ZU
-	uXu4AJQyuOJ4LmQeRHhGFlF5/SpiTMdgAiOzotcaAGdLwfh/H5w+q56btZTRpbJ7
-	8OFkhBqJ4bK5fdS1U8Lbrg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1753781749; x=
-	1753788949; bh=//ORI/NIeaAxh1YrBcckAswwPCVYsSmGgDQbyUkZAq8=; b=b
-	uJJFSqRDP45vHQljpA7Vz5hxUd4Ye4pvXCFm5P+xUL3+GeSv2Jf9TQHBok2h5/y2
-	8/PZ9GxYgAgtcQpNwox5EnnRktB7wG3sB0/j0KvR/u0lZ+CnNXcE0cmlrZO+y5ZV
-	9yem6aXNjbvR7nkneYRaElOeon59Ocxqje2qLUNlkME5Sa7zPk4kjPv9pZqHNKNh
-	lJV3swLKBE9qqltK0HfW4aTL83MPWE1v/JKK8VeT/xPzY6Nnm7iNFa/W7BubAO9J
-	3ffb5NBK06Z9dokUuQl2fLD6FS2cFL30C4YYZiw2Iduv5cvgWcUOa8OL1iybrgXJ
-	mUVNSzzn8C2I/WoIb3d+g==
-X-ME-Sender: <xms:85WIaMyhieSSZlSTT0yHTn72mdFb2rWSE8kDBFOTHT75_XQsqr_aHQ>
-    <xme:85WIaARI_U36niK6nz84PWzTnfAtsvJXL8KAZzHI9PFLHL4DmUN20-ne2_bXTcjrC
-    kpOt2tuPjxukqMBaus>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdelgeejudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeftddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidrihhnthgvlhdrtghomh
-    dprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgt
-    ohhmpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnth
-    gvlhdrtghomhdprhgtphhtthhopehkvgigvggtsehlihhsthhsrdhinhhfrhgruggvrggu
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhn
-    uhigrdguvghvpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrd
-    hsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepmhgrohgsihgsoheslhhoohhn
-    ghhsohhnrdgtnhdprhgtphhtthhopehjmhhorhhrihhssehnrghmvghirdhorhhg
-X-ME-Proxy: <xmx:85WIaPnIcgaIATKBhxVWwK2-m2EfS8PuHbx7ehTzbZYYwEyhpGDr_A>
-    <xmx:85WIaBEA4xy-CXl_decDoAPBk3bbcRqPT4EvT8P_Ytm06SHygu9mPg>
-    <xmx:85WIaCzO8e92MmMJKlNqjd5utHh39rP5DKbEOnMvLMHZjHXDsuvHGQ>
-    <xmx:85WIaKabnqwzN2tmkaM4lt9r0XopNiElVkycoMHYr9aBhvYdocxU-w>
-    <xmx:9ZWIaNYEQ0icn8P3P-aCu5BQdrX6XDYXkrqNxknDiXSDJWuFBQyFgcIe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9F298700065; Tue, 29 Jul 2025 05:35:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mh0C4eIr"
+Received: by mail-lj1-f193.google.com with SMTP id 38308e7fff4ca-32b43846e8cso42701221fa.0;
+        Tue, 29 Jul 2025 06:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753794617; x=1754399417; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zqwXG53TqX88OOIij8KVQ/Qra+rNQ2e4vYxubSYODL4=;
+        b=Mh0C4eIrYWDXO8JIwEvqXgp9WZRSgqWkrtL9e5VnBw+kJL2UNombWh4Suzn7uYBqJc
+         Qe+SppsvfZ9TgbRienn+P1hGlMU6okGeYri3mrhS8aFk43MIAT3Hpuz3jJuyO8J0sCcA
+         5kqSRI+dui484zZ35iypIH85Md9cQGz7MDjEBK0eQoWo+f0Dx/rO7FjeaaRwGcqPrZ5M
+         aNzdU9N47puXTJiOOkpkkITE75l44sB9Ru9s57opw0tN00NPaLsIjpZKd+JjtEypCVas
+         Ic3pEvIqebR9X+9Xfak52eQ3SWW6REdz9q3M3aSq4fOTh9lQHCsdLq1VzuoEDlYFmIb1
+         g5JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753794617; x=1754399417;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zqwXG53TqX88OOIij8KVQ/Qra+rNQ2e4vYxubSYODL4=;
+        b=Asj9sDIjbGqxPEOO3nodkADTbFITS3zl3Ej+vbI2KBsEprtkmITnWN5GmH1emXLbYf
+         so8I/S9G06pFizG9GCvSTWA5hGl1P3nbQCMTFwitvzWReDBAtC1Zjf6BgtnmxKN08n6T
+         FRo5NvTSOHbVVJIrNAdj6VWeEfHCtNx9VqyCC9fVci3Ufo58InMOzuDAH3v39d4cK5Hf
+         Vs3UrBAf+hOw+wpCVxOqGaT6uFLYm0gVMq4OjsRZr/tf7PF6tnLcCCwmEWZJFWZD+CLi
+         iMBC77ZgMGCZxj5145FuSteRC0UgnMyRSyv/9JVGEYSUTPfsg7g7R2fLw0J5+Z6XPdPF
+         Wd8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsUjLGT29zwRSjstQx5uxnM7W6JkVBS8vJ63Px5x7DCFaCJ8FN/HzqQdVyJ7bhUK9z9S7BCn99VOGm2g==@vger.kernel.org, AJvYcCWxOc253aIG5I2KPanAbR8UYN4BMZ2/o9t096ch5O3svF7A/3Q1g/+58Hi6q605Hkmyp7pbDJS/tWEL46lT@vger.kernel.org, AJvYcCX7STSTCDzlYx4Qvp86adyC1FxdTxiUsBGV9VBbUIM2WGNyx6paPWNGtewLcke9hZEEwVUZ9Cl3U7e+MicJ18Dnr1tCyg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoUGmEcEAVJddC3+gGXyd2TjTuCEMQYtPTjIQVqM2d102b5qpk
+	gB8WL9uziF8i/f4B3PaW5VNHVCjQu2CyxqEgvnmQXlsy5K1tao6+MYSl
+X-Gm-Gg: ASbGnctCxfC6dstAvPn3ttoizqOM4c7vceJVhx8+rtnJUl0r/shSeTYj9bZWolgv3pH
+	k2gGjfgBsj3qqBws7ZHz8IvffZ0XwuaCUKj/DVbSknYhTVNg1QTwmj5Mqd/ZHBcG5tMDnxQB+fe
+	nxjAdZidzgZ699E8LTj213jzOnuExGJokng28MAXPh96fj5C3WqdnYavXP5PePu3Gtb3WrwE+ZA
+	fIZL6vF9JhsXGyoEyNLNJMJbLV0VwcA4aaayZuBeSx3ZlvmJvvfX2U5WTUjud2lYbtKNq8vGj91
+	xAXhvElBV0PAtfBlFViOmMirsXGbEdczFpQJc1Arv9MlJlhigia4K8h12e/frIIZIcr2Tv167NG
+	GI/Qqnv/tji/HblRdFMpaofVagvxP/jHyIYsV9Q==
+X-Google-Smtp-Source: AGHT+IFZ/N3Wty39h0MbOGDUqu/LRsLW7/CkdOqmKEcvSIKIR9otNIxYvAmAhnZeMJgLicfFxAXP1Q==
+X-Received: by 2002:a05:651c:4ca:b0:32c:a502:8334 with SMTP id 38308e7fff4ca-331ee8889afmr47837211fa.36.1753794616229;
+        Tue, 29 Jul 2025 06:10:16 -0700 (PDT)
+Received: from [10.17.33.153] ([94.25.60.95])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-331f40a2970sm15766311fa.28.2025.07.29.06.10.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Jul 2025 06:10:15 -0700 (PDT)
+Message-ID: <38859d78-ee7e-4c9b-8e35-f87853d6d2e1@gmail.com>
+Date: Tue, 29 Jul 2025 16:10:14 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tf1c1d2456aa020de
-Date: Tue, 29 Jul 2025 11:34:57 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>,
- "Vitaly Kuznetsov" <vkuznets@redhat.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hdegoede@redhat.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] Add WMI driver for Redmibook keyboard.
+To: Armin Wolf <W_Armin@gmx.de>, Gladyshev Ilya <foxido@foxido.dev>
+Cc: Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Michal Wilczynski" <michal.wilczynski@intel.com>,
- "Juergen Gross" <jgross@suse.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- "Roger Pau Monne" <roger.pau@citrix.com>,
- "David Woodhouse" <dwmw@amazon.co.uk>,
- "Usama Arif" <usama.arif@bytedance.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- "Thomas Huth" <thuth@redhat.com>, "Brian Gerst" <brgerst@gmail.com>,
- kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-mm@kvack.org, "Will Deacon" <will@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Gavin Shan" <gshan@redhat.com>,
- "Russell King" <rmk+kernel@armlinux.org.uk>,
- "James Morse" <james.morse@arm.com>,
- "Oza Pawandeep" <quic_poza@quicinc.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Hans de Goede" <hansg@kernel.org>,
- "Kirill A. Shutemov" <kas@kernel.org>, "Marco Elver" <elver@google.com>,
- "Andrey Konovalov" <andreyknvl@gmail.com>,
- "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
- "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas.schier@linux.dev>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Andy Lutomirski" <luto@kernel.org>, "Baoquan He" <bhe@redhat.com>,
- "Alexander Graf" <graf@amazon.com>,
- "Changyuan Lyu" <changyuanl@google.com>,
- "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Jan Beulich" <jbeulich@suse.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Bibo Mao" <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
- linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <f8bcf5ce-8b8b-4555-a210-14e1974eac92@app.fastmail.com>
-In-Reply-To: <20250724055029.3623499-2-kees@kernel.org>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250724055029.3623499-2-kees@kernel.org>
-Subject: Re: [PATCH v4 2/4] x86: Handle KCOV __init vs inline mismatches
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>
+References: <20250727223516.29244-1-foxido@foxido.dev>
+ <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
+Content-Language: en-US, ru
+From: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>
+Autocrypt: addr=nikita.nikita.krasnov@gmail.com; keydata=
+ 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
+ sXwISql2dLWvF4EeopUcuqEmcKFKXR+Ifbxj7A==
+In-Reply-To: <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------aeGu5rzxPwO7yiq0M45COE0p"
 
-On Thu, Jul 24, 2025, at 07:50, Kees Cook wrote:
-> GCC appears to have kind of fragile inlining heuristics, in the
-> sense that it can change whether or not it inlines something based on
-> optimizations. It looks like the kcov instrumentation being added (or in
-> this case, removed) from a function changes the optimization results,
-> and some functions marked "inline" are _not_ inlined. In that case,
-> we end up with __init code calling a function not marked __init, and we
-> get the build warnings I'm trying to eliminate in the coming patch that
-> adds __no_sanitize_coverage to __init functions:
->
-> WARNING: modpost: vmlinux: section mismatch in reference: xbc_exit+0x8 
-> (section: .text.unlikely) -> _xbc_exit (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> real_mode_size_needed+0x15 (section: .text.unlikely) -> 
-> real_mode_blob_end (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> __set_percpu_decrypted+0x16 (section: .text.unlikely) -> 
-> early_set_memory_decrypted (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> memblock_alloc_from+0x26 (section: .text.unlikely) -> 
-> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_set_root_pointer+0xc (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> acpi_arch_get_root_pointer+0x8 (section: .text.unlikely) -> x86_init 
-> (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: 
-> efi_config_table_is_usable+0x16 (section: .text.unlikely) -> 
-> xen_efi_config_table_is_usable (section: .init.text)
->
-> This problem is somewhat fragile (though using either __always_inline
-> or __init will deterministically solve it), but we've tripped over
-> this before with GCC and the solution has usually been to just use
-> __always_inline and move on.
->
-> For x86 this means forcing several functions to be inline with
-> __always_inline.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------aeGu5rzxPwO7yiq0M45COE0p
+Content-Type: multipart/mixed; boundary="------------gmvRK0JGRBY12065Ty6N8ltg";
+ protected-headers="v1"
+From: Nikita Krasnov <nikita.nikita.krasnov@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>, Gladyshev Ilya <foxido@foxido.dev>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>
+Message-ID: <38859d78-ee7e-4c9b-8e35-f87853d6d2e1@gmail.com>
+Subject: Re: [PATCH 1/1] Add WMI driver for Redmibook keyboard.
+References: <20250727223516.29244-1-foxido@foxido.dev>
+ <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
+In-Reply-To: <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+--------------gmvRK0JGRBY12065Ty6N8ltg
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-In my randconfig tests, I got these ones as well:
+On Tue, Jul 29, 2025 at 12:47:57AM +0300 Armin Wolf wrote:
+> "Say Y here if you want support for WMI-based hotkey events on Xiaomi R=
+edmi devices."
 
-WARNING: modpost: vmlinux: section mismatch in reference: early_page_ext_enabled+0x14 (section: .text.unlikely) -> early_
-page_ext (section: .init.data)
-x86_64-linux-ld: lm75.c:(.text+0xd25): undefined reference to `i3c_device_do_priv_xfers'
+I think it should be "Xiaomi Redmibook" instead. "Xiaomi Redmi" is
+associated with mobiles devices. See Google Images for example of this:
+[1] and [2].
 
-And one more with a private patch of mine.
+[1]: https://www.google.com/search?q=3Dxiaomi+redmi&udm=3D2
+[2]: https://www.google.com/search?q=3Dxiaomi+redmibook&udm=3D2
 
-These are the fixups that make it build for arm/arm64/x86
-randconfigs for me, so you could fold them as well in
-as well. I have already sent the i3c patch for upstream
-but not the page_ext.h patch.
+--=20
+Nikita Krasnov
 
---- a/include/linux/page_ext.h
-+++ b/include/linux/page_ext.h
-@@ -57,7 +57,7 @@ extern bool early_page_ext;
- extern unsigned long page_ext_size;
- extern void pgdat_page_ext_init(struct pglist_data *pgdat);
- 
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return early_page_ext;
- }
-@@ -189,7 +189,7 @@ static inline struct page_ext *page_ext_iter_get(const struct page_ext_iter *ite
- #else /* !CONFIG_PAGE_EXTENSION */
- struct page_ext;
- 
--static inline bool early_page_ext_enabled(void)
-+static __always_inline bool early_page_ext_enabled(void)
- {
-        return false;
- }
---- a/include/linux/i3c/device.h
-+++ b/include/linux/i3c/device.h
-@@ -245,7 +245,7 @@ void i3c_driver_unregister(struct i3c_driver *drv);
-  *
-  * Return: 0 if both registrations succeeds, a negative error code otherwise.
-  */
--static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-+static __always_inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-                                          struct i2c_driver *i2cdrv)
- {
-        int ret;
-@@ -270,7 +270,7 @@ static inline int i3c_i2c_driver_register(struct i3c_driver *i3cdrv,
-  * Note that when CONFIG_I3C is not enabled, this function only unregisters the
-  * @i2cdrv.
-  */
--static inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-+static __always_inline void i3c_i2c_driver_unregister(struct i3c_driver *i3cdrv,
-                                             struct i2c_driver *i2cdrv)
- {
-        if (IS_ENABLED(CONFIG_I3C))
+--------------gmvRK0JGRBY12065Ty6N8ltg--
 
-As I understand, the underlying problem is less gcc inlining
-being fragile, but more that gcc does not inline functions
-when they have different __no_sanitize_coverage attributes.
+--------------aeGu5rzxPwO7yiq0M45COE0p
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-      Arnd
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEpkOhtFujpzRWyb0a4A5zBMF+d4YFAmiIyDYFAwAAAAAACgkQ4A5zBMF+d4bo
+3g/+OAx7qEd4bpF7KVYVRLWeYT6WO5v0eqa4Nu/7JrtEJMSp1uVTLRrhcEOTY72uYCXglYstZj3B
+j9uESHfsl8/h1PWh7jx0QaKwI4djBsPJIkPSlionqOwnX+n8/jPCjFxIx6OcnjdaYdIoJYGyKzLs
+pytfdXdFHu9cWfEJvmpzhpSntUSIPsLxFZ6KCTUV1zx8IKgkipvfCC/fxDuymA/jt64fU7llyl/1
+rzAboRqXQbKv+SNjNWfOS5coYc3Pl0IKv30QOUw608w39jI3t5ogaF83ufTJWdkapGJLDqwBlnbK
+Ox8nSdxFciIcK0p1XhEmgX24yF4D3Tk7A0pWmYgBrzeP7oJpTwt70csaDketg3e6gb1404+JyU0r
+7u9WlgIHqy38Gzr3gZmYDyuCrQUMHzcq8MtYGML7UdV+yycR+j5YxPqyjVlE5wePs85D0303rCqX
++1n6EXYNq+Q3mt+9TQjy+vesGVZUPPTjW/NuwDqtQC+qAGLezo59omvFUzT4Df8TNsRItCvfrG/K
+qW1V1OxLKLg/8W/NU5P4+zR14aL3wDN4t7XvUBBvc6Rrbt48N15vxJ5LCd8AExjnXyso4qqtVPaT
+nBmWuLnMAnewPwrupXaFpQAPAIr7/DsG2nhoYs836Cx6azwavFB+Y3Y601rH8KjYrYe8fJtb6c4M
+sBs=
+=HHx3
+-----END PGP SIGNATURE-----
+
+--------------aeGu5rzxPwO7yiq0M45COE0p--
