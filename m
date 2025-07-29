@@ -1,123 +1,163 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7FC170A37;
-	Tue, 29 Jul 2025 07:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6ED263F40;
+	Tue, 29 Jul 2025 08:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753774700; cv=none; b=bpMvVY4QqadOd8HJyKfYfTfXzkZTijUL0OxNrtfEeRjp2iUBYOcMlexTh0IOPUputvAvvW/2KdmouSjMYEsNZe5HLwuol84mgKhpyuWLfPQmClVCRCNXpX3VSPEQvI1+I8sPw1MwJ+ZiDp3GuLVjZOJzB69WJM3bN+1iqazpSn0=
+	t=1753776672; cv=none; b=UhPDVSQ7LnohOrK7B1YzRbX5pZM4I29itNGr+Dfh801NimR6u5eSJ3kUexrERuU4yLy3z44aqp/Z3yeBBXgmCbKBEUks52mIg/eDxjCEEN1bdk25PYaiBgaJTtMGg5rOe9MtvRYpNo0DrQ9u9qNvaZAcLAuJStScAXuO+ZEosBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753774700; c=relaxed/simple;
-	bh=+pdNgJ3ps086+n2qxORlxIfCR1VW9sQRrMkCjOdFchs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IbIKFrAe2gwP9/nmVFy9r6v6ojpjIp4JFvaagCYGhG2y0Z0tMGlBp7zXmIgsHcib1ZH2feL6KiZaCjyNitmQpJwiJGlYqaWTNWDAdufe99vrsyz3TCWt6nDHA9ynHAtsQ5n48gOHB6+udMUBB4WmdfIy7qY0uiaVoNE3O+VFo0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eQtPx7wV; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753776672; c=relaxed/simple;
+	bh=cWVIex8ZD7iLHUiFYdl7hALOOKwBmGPA9Eu9Lq5/ve4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pmiqh4vKeniJcfgXOXAwYoVO6GQcySw2yVNYTwjbe7Yaku8/g6TpDOXBbJRXdZ4g8H05+UbTsNoHXdgT8TQwCaC4nrviajMHyrdPLGrkfLV2HCXAWtbr3E155nvKeYRtqXyC3ytO4pOUYvX7Wd/0Q/2rgE/BuuOHGuotRDLZHCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+W04S5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQtPx7wV"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-71a2d9d452eso756607b3.3;
-        Tue, 29 Jul 2025 00:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753774696; x=1754379496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=acUYVfZsBQi4TKg13g+WQRNIk159Vfwdi/eEl0lSNOI=;
-        b=eQtPx7wVM8zH/yaHaTYkWkKqNu12WoMGySLsfUIeiEeeeIgVqMCjyrEi/BKW3PUHA8
-         WgXMqzRF2NoBUGSB8W9mCD0zr6rq3zVVT+p0c425LnG0tJeYAt9ubNxASRT6rQqdFXqI
-         bJH4zc/vp9HKvfb79Bqf9inw8UWFJ2mrk6hedFQm4Dbtp8d5wdpvfB13/jco/cmgfSci
-         ZX9CLEklJw2ONsJrsHNVIunM/S0Wnl1Mryj2iESt850XlSYwlmodlsRSFfdCd6RwDHxq
-         Se8sbJNGbjlnHiINW3vXLcoSUrf2HIrA6+dnhXen0tHez+GOpowgVmM8jkUa3e4zTDhr
-         Qrgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753774696; x=1754379496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=acUYVfZsBQi4TKg13g+WQRNIk159Vfwdi/eEl0lSNOI=;
-        b=cEIGq4fFTNi42n7TVCcnMp4VxkNTNiP8A1JXHoljU0PnokOr5rUCdgqpfSFbnm7XWK
-         gOwGL5QI98Ws+QIIxXkKPotJK35gy9vsoBKF9NOADHP6bWCGDRIL98VmPJeGmoiqfXgT
-         x8ECM9wCNg3UCz6Ku2hFgvDoa/G99alnpEcAiH5omLyuZfasg86XKgJ5+2YW8BQZOFlN
-         4jq0o62+XVjyKHssFaWhf/ZpJfCKx3I+AigWAWKSEnzwTfBEgrG9SxamOwToghPIunL9
-         JYIcEbPTEjRfyvjG78Qrq/PdJp9rIPR1M2M02jqgvZg7KOxaZSq4Kiw5KDe+o7KHOIQX
-         hN3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+zkR1456sLjbj05CGTcqKoaibWP5FcdddPEHxCFvPAOr5VAJlf+Lo6TWhQZdUkQGZtohk5UZ+KXuRcco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKcACo6QxmNbLQAtFrzf6+3MUl/A2EYNXPsTfvVE5xhY9KwLde
-	bt9eX1J6WXBLjnovvq/HKpR3lPe8Bvfna9JiFGFTj7XMJoqpbqAsGt1jvn8IArt05OOqDPyjZfS
-	lBcd0+LMxy6/xkwIWFE+EVt61x3+a4jo=
-X-Gm-Gg: ASbGncuEbYVbMhLICi48yck6StMW3Sc7jI6w6lDpmJxUDctavWPMhCGuTf0zoBhchgC
-	ylIaot60iJQPhcQm21ELDEjApB9Kk6/NF8eIh9Gr3GZRMdz6lWg/A/dhnywgyB1F3eSf7BacOoJ
-	2yCgmeXkIA8SqeDdTwx9h5f1pHwY3AV3r6oub6Cv0ki/uBO+HEka2Ew77+qOxBGI+9Qtwd8isJi
-	LIoiA==
-X-Google-Smtp-Source: AGHT+IHNx158p5O3L8xyKfGxS3YBga//P9XngZrZyAqoB9erR4Y7MkgJWYCG2EedBNOsM+B2pnlcNDaALI/Pa4st60s=
-X-Received: by 2002:a05:690c:6713:b0:71a:2961:e2ce with SMTP id
- 00721157ae682-71a2961e4d7mr33604967b3.0.1753774695874; Tue, 29 Jul 2025
- 00:38:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+W04S5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46400C4CEEF;
+	Tue, 29 Jul 2025 08:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753776671;
+	bh=cWVIex8ZD7iLHUiFYdl7hALOOKwBmGPA9Eu9Lq5/ve4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F+W04S5xBBcVSjTJ0lwCukWF0CUJoPlRJ5apOHIjcIp4Ir2h0WEtBfOZPNq9j6UIw
+	 6fZP5IdfM5f5vLEjByzE5d1D4q0ntoXIKt1ZlaptYaMMJ/RbpgOJ4vi8j7m1REK/WE
+	 cJzV6oM57CeEOUeuFXbdpRKe9ommavUNv3horhLZRAO6muGJhtumt9y36tBBk8z1p0
+	 RcW8XEWXTvj+vpzKEBs29ORzEbWanrDmwe68O6LcUhBYBhNbsg7nJAYdHkL7mym1rZ
+	 WuxIc0wxhAbBVU5BUD51GFHFqvaCN7R5JBhhYX7ZtWmQVYAe4Cx4MWw9LPH9S4UYr+
+	 4hpI//0VngcyA==
+Date: Tue, 29 Jul 2025 09:10:55 +0100
+From: Will Deacon <will@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	James Morse <james.morse@arm.com>,
+	Oza Pawandeep <quic_poza@quicinc.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Michal Wilczynski <michal.wilczynski@intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Kirill A. Shutemov" <kas@kernel.org>,
+	Roger Pau Monne <roger.pau@citrix.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Usama Arif <usama.arif@bytedance.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Changyuan Lyu <changyuanl@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kvm@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-mm@kvack.org, kasan-dev@googlegroups.com,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v4 1/4] arm64: Handle KCOV __init vs inline mismatches
+Message-ID: <aIiCD5V1MaI3ORqA@willie-the-truck>
+References: <20250724054419.it.405-kees@kernel.org>
+ <20250724055029.3623499-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724074539.37650-1-miguelgarciaroman8@gmail.com> <b925480c-231b-44e5-bf1c-1f18f8abe42d@kernel.org>
-In-Reply-To: <b925480c-231b-44e5-bf1c-1f18f8abe42d@kernel.org>
-From: =?UTF-8?B?TWlndWVsIEdhcmPDrWEgUm9tw6Fu?= <miguelgarciaroman8@gmail.com>
-Date: Tue, 29 Jul 2025 09:38:04 +0200
-X-Gm-Features: Ac12FXzPovSTUnOLpcjhMNjYqHwEC9VrSdVnikkVxD8cazyoJuPibEf-UzgY-KI
-Message-ID: <CABKbRoL4_rDZeTToaZn+Pug47pGB31ErvPR3C3uaspgnd=3Zww@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: surfacepro3_button: replace deprecated
- strcpy() with strscpy()
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yu.c.chen@intel.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	luzmaximilian@gmail.com, skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250724055029.3623499-1-kees@kernel.org>
 
-Hi all,
+On Wed, Jul 23, 2025 at 10:50:25PM -0700, Kees Cook wrote:
+> GCC appears to have kind of fragile inlining heuristics, in the
+> sense that it can change whether or not it inlines something based on
+> optimizations. It looks like the kcov instrumentation being added (or in
+> this case, removed) from a function changes the optimization results,
+> and some functions marked "inline" are _not_ inlined. In that case,
+> we end up with __init code calling a function not marked __init, and we
+> get the build warnings I'm trying to eliminate in the coming patch that
+> adds __no_sanitize_coverage to __init functions:
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference: acpi_get_enable_method+0x1c (section: .text.unlikely) -> acpi_psci_present (section: .init.text)
+> 
+> This problem is somewhat fragile (though using either __always_inline
+> or __init will deterministically solve it), but we've tripped over
+> this before with GCC and the solution has usually been to just use
+> __always_inline and move on.
+> 
+> For arm64 this requires forcing one ACPI function to be inlined with
+> __always_inline.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Gavin Shan <gshan@redhat.com>
+> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Oza Pawandeep <quic_poza@quicinc.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> ---
+>  arch/arm64/include/asm/acpi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+> index a407f9cd549e..c07a58b96329 100644
+> --- a/arch/arm64/include/asm/acpi.h
+> +++ b/arch/arm64/include/asm/acpi.h
+> @@ -150,7 +150,7 @@ acpi_set_mailbox_entry(int cpu, struct acpi_madt_generic_interrupt *processor)
+>  {}
+>  #endif
+>  
+> -static inline const char *acpi_get_enable_method(int cpu)
+> +static __always_inline const char *acpi_get_enable_method(int cpu)
+>  {
+>  	if (acpi_psci_present())
+>  		return "psci";
 
-thanks for the review. You were right about sizeof(name) being the pointer =
-size.
-I=E2=80=99ve sent v3 bounding with MAX_ACPI_DEVICE_NAME_LEN. Compile-tested=
- only (x86_64
-defconfig/allmodconfig, W=3D1); no Surface hardware. Apologies for the nois=
-e.
+Thanks for improving the commit message:
 
-Best regards,
+Acked-by: Will Deacon <will@kernel.org>
 
-El lun, 28 jul 2025 a las 7:30, Krzysztof Kozlowski
-(<krzk@kernel.org>) escribi=C3=B3:
->
-> On 24/07/2025 09:45, Miguel Garc=C3=ADa wrote:
-> > strcpy() is deprecated for NUL-terminated strings. Replace it with
-> > strscpy() to guarantee NUL-termination. 'name' is a fixed-size local
-> > buffer.
-> >
-> > Signed-off-by: Miguel Garc=C3=ADa <miguelgarciaroman8@gmail.com>
-> > ---
-> >  drivers/platform/surface/surfacepro3_button.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/pl=
-atform/surface/surfacepro3_button.c
-> > index 2755601f979c..9616548283a1 100644
-> > --- a/drivers/platform/surface/surfacepro3_button.c
-> > +++ b/drivers/platform/surface/surfacepro3_button.c
-> > @@ -211,7 +211,7 @@ static int surface_button_add(struct acpi_device *d=
-evice)
-> >       }
-> >
-> >       name =3D acpi_device_name(device);
-> > -     strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
-> > +     strscpy(name, SURFACE_BUTTON_DEVICE_NAME, sizeof(name));
->
->
-> Why are you copying four/eight characters if the string is around 16?
->
-> How did you test it (and I doubt you did since you change multiple
-> different files from different architectures)?
->
->
-> Best regards,
-> Krzysztof
+Will
