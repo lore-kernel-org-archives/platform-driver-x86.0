@@ -1,143 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender7.mail.selcloud.ru (sender7.mail.selcloud.ru [5.8.75.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EE9230BCE;
-	Tue, 29 Jul 2025 08:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A142B263F40;
+	Tue, 29 Jul 2025 08:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.8.75.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753777721; cv=none; b=V/oXYeX+UODDBjg0hWGXk4WbyBx0QO8I560iQZbTV+YJNSidaMEhnnGbQZ3nR6ks6ebRaqq1oHwRV1h8FxwiXdKi7qWgJhxOGiw513BIQ+uifXK63WY/rsj4VRDw42boqdLvpRXy461GssVtrFnqiCZ2o/RkFm6xS1FTre5YBg8=
+	t=1753779248; cv=none; b=enwJawLf11OJcfsYnL92KZP0NGDTBJ6lUWY3rAAjvUIHRwXBLwZb5VZqf7BsnGzCXBsWZZAUlesa5cAbykTnjeCM/e7eDFfc7HXsum4gv9QgBJFJi/kdMcBAl0YIylQg2RpPxUNHSJyjBRKxfNWaZEuhvV2NZagfsmH9HBLRtlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753777721; c=relaxed/simple;
-	bh=P+RKJolWrlScvE03/wuLDUcQEOrpyiH5p1dHdVtXVqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnH78eB4TNnOJDUOwHBJvj/AS9LeB0mL9WzSW+3Mjcr4TiSFPmrLiifipz7mpgsGkkwmCOM5Hdl9ZYS7h7dxluPVqcZubrZ8OyjC4F8AAvBnL6VIlPdD/3Cwyow5wZK3H1aucGqonsUSjv4JOTKBF9O9ETpoGjgkkzMGpCnnObQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKsDX+KR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753779248; c=relaxed/simple;
+	bh=xHRF5ck/dSCKkvBdHGfIYaKerUtm2ifkBDGuilUXhnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eESEGwke8Jf9sk9ZgpZ+zxw2UweG2gpjqH5AhXsEetRatAy0W3PnnuiBtJjZrJGMzOXYCG1xyVunWrBf57UL3xTJ68uOA+KgJIYHN4PqERyMVeFG1pbMw23JKWwJf6Dz0veA8D8K7+B6wMhU12zFlfD7QsUBpL8FswGVPgHPYzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=mail.selcloud.ru; dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b=C78ofi88; dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=GCO8EvsC; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=qkH4Tsbq; arc=none smtp.client-ip=5.8.75.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.selcloud.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKsDX+KR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D23CC4CEEF;
-	Tue, 29 Jul 2025 08:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753777721;
-	bh=P+RKJolWrlScvE03/wuLDUcQEOrpyiH5p1dHdVtXVqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XKsDX+KRLzAFuf1kLKdAmDj9dggFsRzjLIQ05RDsi+xPOxdHLALkhNkurvUosgFfb
-	 ftJlhmN/pjoAT4/au8qTUftIBkqDaJhrJ9SmRZi3Ve7JVy7Eg31DCCYSekcyfaaJNQ
-	 JbMb4DIBM9PPiwPI8OZcRcytRu3/nqoGHVDzvP77YimImLNlQUbkZujH5O0JN2T+nM
-	 BtsmRo4XDjlCw0KnWSDM6rk+MZk6QP0uSqf7QW3w7lmJVVGYAkgz4EWZXggXy7tATT
-	 HSfQX1ig9jgw3cwDIYjp+vOlzwygxMw47ojEswZF9ZVaUkapQqAqU4ht2sNRBTvD+l
-	 uIGHhOPpyE+nA==
-Date: Tue, 29 Jul 2025 11:28:14 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-mm@kvack.org, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Gavin Shan <gshan@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	James Morse <james.morse@arm.com>,
-	Oza Pawandeep <quic_poza@quicinc.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Hans de Goede <hansg@kernel.org>,
-	"Kirill A. Shutemov" <kas@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jan Beulich <jbeulich@suse.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v4 2/4] x86: Handle KCOV __init vs inline mismatches
-Message-ID: <aIiGHmw8IJb9vsM5@kernel.org>
-References: <20250724054419.it.405-kees@kernel.org>
- <20250724055029.3623499-2-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b="C78ofi88";
+	dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="GCO8EvsC";
+	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="qkH4Tsbq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=mail.selcloud.ru; s=selcloud; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	List-id:List-Unsubscribe:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Help:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PfA/Mzgm/emmBtrQ2XU6azYHY0aYh/fqXsSaSjV/xRk=; t=1753779245; x=1753952045;
+	 b=C78ofi88/AXW8nbhCUCysdHp7XJMKFK2PY2KVLIVddjT+KRPcwPO1R6FT+Koi2Zk566OACXjDq
+	Sbc4qXdCr9lLTKvn21kUVl1fqo/TuUvml79mgL0qPmyq1yi2ous6bP7aKh1zahqZr/vRfC0eZspvX
+	SbnBFUnLf21FidLQreGw=;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=foxido.dev;
+	 s=selcloud; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:List-id:
+	List-Unsubscribe:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Help:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PfA/Mzgm/emmBtrQ2XU6azYHY0aYh/fqXsSaSjV/xRk=; t=1753779245; x=1753952045;
+	 b=GCO8EvsCEE/ZDPfZrkXQ3Y1QmxqE/8VNnYRHTufdlq4tnFmH15BAp7OnvvbLJcpmWSiCHr6pUZ
+	crhAZUU4DKqm6OsMiy7oVvAcZZo6mJEjQslKNV1B50RDFZ5xo3pUVcJ+jYBMzvrh+KXLxbp4o3dvI
+	paXXcNWTXe+YPOQYOYy0=;
+Precedence: bulk
+X-Issuen: 1118611
+X-User: 99111435
+X-Postmaster-Msgtype: 3849
+Feedback-ID: 1118611:15965:3849:samotpravil
+X-From: foxido.dev
+X-from-id: 15965
+X-MSG-TYPE: bulk
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-blist-id: 3849
+X-Gungo: 20250728.224157
+X-SMTPUID: mlgnr61
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxido.dev; s=dkim;
+	t=1753778277; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=PfA/Mzgm/emmBtrQ2XU6azYHY0aYh/fqXsSaSjV/xRk=;
+	b=qkH4Tsbq/b3H1Wjt9J5GBw5CBlOwxbxkdL/+ZyzCzfoNxmqcFGYQCFLZ7pBKmILEp8Dzd1
+	8DT4BW26R1ZhZAvbK3+YFfQNo4OKoLmAgaFsKlBz/m14xzC8qb+4RlwU+P6NsJXELj5AbI
+	HeEvgAEehPSDMENZoOkVxa4bH7GG/wwG9qm5g0rXYYjCk9l59rCVyvcc8IvaOmXVrkdU51
+	25R4u/H8PkLh5JAj+hBuD/fStS4hJINx314V5qYUeu/CCWADgXQvTMTyxv1n/3WmXiQOEw
+	gz0Ogrrb9bBotio8NcKtbIkYzFwtc1/p78gZtVjAaPpraOs9IanhU2XZYoLHEw==
+Message-ID: <b9a06c17-c18d-4ff1-b020-9eea505a6f41@foxido.dev>
+Date: Tue, 29 Jul 2025 11:37:47 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250724055029.3623499-2-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] Add WMI driver for Redmibook keyboard.
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Nikita Krasnov <nikita.nikita.krasnov@gmail.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>
+References: <20250727223516.29244-1-foxido@foxido.dev>
+ <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
+Content-Language: en-US
+From: Gladyshev Ilya <foxido@foxido.dev>
+In-Reply-To: <2aa477f3-526e-4b06-826a-83f95633c040@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Jul 23, 2025 at 10:50:26PM -0700, Kees Cook wrote:
-> GCC appears to have kind of fragile inlining heuristics, in the
-> sense that it can change whether or not it inlines something based on
-> optimizations. It looks like the kcov instrumentation being added (or in
-> this case, removed) from a function changes the optimization results,
-> and some functions marked "inline" are _not_ inlined. In that case,
-> we end up with __init code calling a function not marked __init, and we
-> get the build warnings I'm trying to eliminate in the coming patch that
-> adds __no_sanitize_coverage to __init functions:
+On 7/29/25 00:47, Armin Wolf wrote:
+> Am 28.07.25 um 00:34 schrieb Gladyshev Ilya:
 > 
-> WARNING: modpost: vmlinux: section mismatch in reference: xbc_exit+0x8 (section: .text.unlikely) -> _xbc_exit (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: real_mode_size_needed+0x15 (section: .text.unlikely) -> real_mode_blob_end (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: __set_percpu_decrypted+0x16 (section: .text.unlikely) -> early_set_memory_decrypted (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: memblock_alloc_from+0x26 (section: .text.unlikely) -> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: acpi_arch_set_root_pointer+0xc (section: .text.unlikely) -> x86_init (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: acpi_arch_get_root_pointer+0x8 (section: .text.unlikely) -> x86_init (section: .init.data)
-> WARNING: modpost: vmlinux: section mismatch in reference: efi_config_table_is_usable+0x16 (section: .text.unlikely) -> xen_efi_config_table_is_usable (section: .init.text)
+>> This driver implements support for various Fn keys (like Cut) and Xiaomi
+>> specific AI button.
 > 
-> This problem is somewhat fragile (though using either __always_inline
-> or __init will deterministically solve it), but we've tripped over
-> this before with GCC and the solution has usually been to just use
-> __always_inline and move on.
-> 
-> For x86 this means forcing several functions to be inline with
-> __always_inline.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Interesting, i was just talking with another person about implementing a 
+> WMI event
+> driver for the exact same WMI event device. I CCed the person involved 
+> in the discussion
+> so that he can test this driver on his device as well.
+> All in all the driver looks promising, but there are still things that 
+> need to be improved
+> before we can include this driver in the mainline kernel. For details 
+> see below.
+Thanks for your feedback, will fix in v2. However, I have small 
+question: do I still need a mutex for linearizability if I implement 
+driver via sparse-keymap? I've copied mutex from xiaomi-wmi, but as I 
+looked up not all WMI keyboard drivers use it (fujitsu-laptop, acer-wmi).
 
-For memblock bit:
-
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
--- 
-Sincerely yours,
-Mike.
+--
+Gladyshev Ilya
