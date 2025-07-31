@@ -1,294 +1,197 @@
-Received: from sender6.mail.selcloud.ru (sender6.mail.selcloud.ru [5.8.75.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E7B2E040D;
-	Wed, 30 Jul 2025 18:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.8.75.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AC8BA27
+	for <platform-driver-x86@vger.kernel.org>; Thu, 31 Jul 2025 21:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753901849; cv=none; b=Z7lxab2O+d2x53Xo+hn3ajRVtjoXiTHmCAvOlDDmgfIzE5ebI84peoBNJcY1wFNm2mO8HGWukpPXKzFi3bOiermg+89m5KeeCG9y1t+vMm28aHdQ9QeMS3Vy6Rz/+z/DBOUb/98vqKDCBJX9aOpT/MDzMawwTB2qVFgSJjPqvhM=
+	t=1753997745; cv=none; b=OW2a7M3aVgOcmAXvntCvM2gJXpwtPeehAhDz9a+HwEQS/qbY/7SUufO9QtWffR+qafxLp0HgMgg665ztDzIh6jd9oIki+p2VpLSh0Dd8km2NPRQMpTnNVO5/EphPhhWb1Tn62lSgia/7nfoQpgsyUsQroVU/wcNY+ujhMks3v+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753901849; c=relaxed/simple;
-	bh=046a63qWt97W4qUsw19vK9WvukUJj/1gstAKzeftaWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SxyC+mLDaO6lOsGd1gNlszUY+VhyIqKWROSKcaFd6rdQHfMpI83R+Bc3eWRfO55jKz8Eg9BxvWMcvAQVKuF5B42t5F7jVCZ8FFry2W22431T4np1XdW+bQ/lwkuDbTVTva9Fk1heGrHJ1y0i28kRJdjSpHxNkFQInKqgwHZgZXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=mail.selcloud.ru; dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b=LFOuNDOm; dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=Uyx5C+55; dkim=fail (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=IzefgpgP reason="signature verification failed"; arc=none smtp.client-ip=5.8.75.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.selcloud.ru
+	s=arc-20240116; t=1753997745; c=relaxed/simple;
+	bh=yQF2uCTgMrgt5JUg3beEfaFjj7UOPV88JW/ta/EREno=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kPTwf+1N+Rq0UIjxSacnnEfgQogj4jF43uBh/Ryam6s7sCtydNusGLNlpRirtoz2KpXeDK141CG2aAJ4g2RQqI1CXy4evjpGkx8lTJ/J8JpjcPHmtZmH68nREf6SUY8tsK6hNHSokO21R0vC18BVPfuh8CBXrlPEEJyVNK9KTfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhTmIagu; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b="LFOuNDOm";
-	dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="Uyx5C+55";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="IzefgpgP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.selcloud.ru; s=selcloud; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Help:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EAWk/VZVT6FtLIzp7yLEpQc/s81hLBk2+uT6GH2SPck=; t=1753901845; x=1754074645;
-	 b=LFOuNDOmflcGvp28RdMcMUJ04OdqPVYSxYYYb5a60/C0O2FfXA+Qyrd/l0yFzd+NU9v30+efyp
-	LblaEn/RghqCpui5Itc3BWk/UayLoSFAcrmiKx+qsDBCaX9b0mdGU7e0L7BvVPmlM7dUgR9HxkXIx
-	dkT41Ii8AcYjw06+mKBc=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=foxido.dev;
-	 s=selcloud; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Help:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=EAWk/VZVT6FtLIzp7yLEpQc/s81hLBk2+uT6GH2SPck=;
-	t=1753901845; x=1754074645; b=Uyx5C+55o7sgROraXTbYZhrUZX+C0Tfr9eMlAawQ34JvUYb
-	3VkL+ykQMOUy3SOgl85maJKIAFDMSaB4h0DZOs0795T5jbGQpzvdXwNRIr+f3/BJ0Kl1e3tkfPPoL
-	MYfFys7XR7E3wQi21wa6BVLeK8/WA4XeoFdA/G9Y7iJOgGA=;
-Precedence: bulk
-X-Issuen: 1120529
-X-User: 280060488
-X-Postmaster-Msgtype: 3849
-Feedback-ID: 1120529:15965:3849:samotpravil
-X-From: foxido.dev
-X-from-id: 15965
-X-MSG-TYPE: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-X-blist-id: 3849
-X-Gungo: 20250728.224157
-X-SMTPUID: mlgnr60
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxido.dev; s=dkim;
-	t=1753901836; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=IxgYNAMOATuJkMUPc2HzQecFSd+a8bOZ5WucgUpaVSw=;
-	b=IzefgpgPfIcUei49/BJt235d8H57LQe3qGdqp2Ws6KIAM144mvRRVQhego5UOBtWmHoE8E
-	m5X6nR//Dk/fX3pYaW572M3dX0RWjRrpjePns+1CW0zVnO1l3efb6CiQ0pPZazdDfoqZBd
-	nVeqSsQurSfy9I0s+HjQBDFvD6jkwj88yMcOm7KciVyoYtZAH4OXjvj/wMDXvLPMfs2ul8
-	I6jETXIlWedJN5dlKYgX9iLjzlgYaGsQnxMLrpIrZHIrlO47n3uAFql0ew6axalpqyf4no
-	V1SxujtQfjskyROb8cDSPu0RAzY2o2uNdhPMgzvyA+46aR6kBW4dBYfSRaNTHw==
-From: Gladyshev Ilya <foxido@foxido.dev>
-To: foxido@foxido.dev
-Cc: w_armin@gmx.de,
-	linux-input@vger.kernel.org,
-	nikita.nikita.krasnov@gmail.com,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3] platform/x86: Add WMI driver for Redmibook keyboard.
-Date: Wed, 30 Jul 2025 21:56:09 +0300
-Message-ID: <20250730185619.8725-1-foxido@foxido.dev>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhTmIagu"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7e2c920058fso263718285a.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 31 Jul 2025 14:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753997742; x=1754602542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zTEsx0L9BmhmApbN6CJEdBx1NK/yZcrd2CMiI1VonMY=;
+        b=QhTmIaguHq0W9Y6ktLRSQD1wGsQkQ0QvydtXnSsOzMzdyHB50N44VmJiTsfqWiMRE4
+         BBwCPlF+j+trEe7JcZMNo/TIYmbBpuikd4li9TK7KLkrRQH/S539OhHyNd/RynVS2mWV
+         oUlNQKOQt7db+JLG0w1kpM7Oep76KdtJPWBWJnguc+LEwMgkU7RDOdzk7TTaRc1+Wvjy
+         7hKJn0LSTv27jgnd/SnHmvqyS6IqBcJg3Bp4kx1bZOr9s0M/kgQ7qPasALGYb1ezWAyc
+         Qt9Hu7q+42T9CrmuEpXeP3mMlMdTNvlSDCQDDThl9bpXHbuGnoeEHeoKyDElej8YfEfy
+         JYrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753997742; x=1754602542;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zTEsx0L9BmhmApbN6CJEdBx1NK/yZcrd2CMiI1VonMY=;
+        b=GPVxTkE3+KL0McOnt9vThoKKftAWHtWgK8RAfbXaesi4Op5QbsX/7P8+iZux1p5anR
+         a63XdGRyMV/Gw6zuniXs7FYenzRcc4zEiBzCnVTo/hwfSXwkwIjH+QQCFlLyi8iSI3gQ
+         ipzU0PBJ/qGcNiWZyWD/j9HmgZL+fCJ1lSF6yNQzo/i2o4hQSEUT9CS1zfwxXrjV9xW2
+         2AQOE+bjoxguBgufH+Bb7hmk9L3dKGJoH/SCKa14oHvk5s2XVvuiXLfWz1/2tYbK42LF
+         8l1xQMlySap3O7PQbVpXp81V+4R6f4sagVhfhS/fLAznWyR8Geg/aq0XxEVBTB4rX7TL
+         QraA==
+X-Gm-Message-State: AOJu0YxWg7lofRvWYkoUy9BUBxs1Xx8xLHU+EB9rh5qBlHq/ZDs9oM1G
+	WME2O+J3GPF1WYYVJPfjyb1iNeBge0AooBabfjKXCADkxrm9TIigQ8x4
+X-Gm-Gg: ASbGncvmQQWavZSM1oE9MBDfUAHHAzJOx+HqA3h9B9sPELWoTxsYFjFyww99F+JkfDk
+	mxxg6EA6XiQlyz+K1pVwMnXpKOdG2MF+DkOXrD1kdwXaQp9UMHacgIx+/N804zIJOLikmUCBULR
+	ICmUzYmP9hKYYwRZG+G9E4OB1gFYSmUOSWL8HQQBoY62KO0Ce2Z7uSoaKhWGmyT3rlgoLiDjOBg
+	yfYNRiOCWp+FQIfjtKB1OfsEnOJQwj31Sv6uI8twcsS0f4eS4NjSdpZcq5Ym2tTt2CJk4GfsfJe
+	5bcgG0xFx1vqI/oE/JH9fT/uxtZ4vaVEzoOC3yny/blnOi9/zx4DlPCRZNNZIQZvHoxJoBASWTR
+	9wKXug7Pdcj+Oxen4MscE
+X-Google-Smtp-Source: AGHT+IEPKUESYvBi1vhGOg4f4XmMeDg12jeKSXCTlTlWFWydg6O7sAtDxDH9qAcN6wMNeJKlBaw0jw==
+X-Received: by 2002:a05:620a:40ca:b0:7e3:2bb9:be81 with SMTP id af79cd13be357-7e681309080mr559328685a.15.1753997742157;
+        Thu, 31 Jul 2025 14:35:42 -0700 (PDT)
+Received: from nixos.lan ([2601:5c0:c300:6846:2e0c:4b69:31e2:e994])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e68b22033asm182485a.19.2025.07.31.14.35.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Jul 2025 14:35:41 -0700 (PDT)
+From: noahpro <noahpro@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	noahpro <noahpro@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: add Omen 16-wf0xxx (board 8BAB) fan & perf-profile support
+Date: Thu, 31 Jul 2025 17:35:29 -0400
+Message-ID: <20250731213529.27378-1-noahpro@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This driver implements support for various Fn keys (like Cut) and Xiaomi
-specific AI button.
+Recent 2024-era Omen laptops (DMI board 8BAB) use different
+thermal-profile commands (0x48 default, 0x31 performance) but are very
+similar to those used by the existing Victus-S code paths although
+it wasn't in the config.  As a result:
 
-Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
+- `/sys/devices/platform/hp-wmi/fan*` reported 0
+- `echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable`
+  max-fan writes failed
+- platform_profile was not registered, so performance/balanced switching
+  was not available
+
+I added the new board to victus_s_thermal_profile_boards[] and created
+omen_2024_thermal_profile_boards[] with HP_OMEN_2024_THERMAL_PROFILE_*
+enums, and switched the Victus-S performance setter to choose the
+right wmi commands.
+
+I was was unsure of whether to rename the victus_s_ names to
+newer or 2024 boards everywhere becuase this would clutter the commit.
+
+Tested on HP Omen 16-wf0xxx (BIOS F.21):
+ * fan RPMs readable
+ * performance/balanced switching works (needed nvidiaDynamicBoost to
+   see max wattage changes but it does work)
+ * "max fans" honoured (firmware reverts after 120 sec, but the existing
+   timed board variables don't work when testing. On Windows the
+   Omen Command Center simply sends lots of commands to keep this alive
+   so this seems fine to me as user applications can write to the
+   fan speed every ~100 sec).
+
+Signed-off-by: noahpro <noahpro@gmail.com>
 ---
-Changes since v2:
-- Fix Kconfig dependencies
-- Accept WMI buffers that are bigger than expected
+ drivers/platform/x86/hp/hp-wmi.c | 41 ++++++++++++++++++++++++++++----
+ 1 file changed, 36 insertions(+), 5 deletions(-)
 
-Link to v2: https://lore.kernel.org/platform-driver-x86/20250729190528.84=
-46-1-foxido@foxido.dev/
----
- MAINTAINERS                      |   6 ++
- drivers/platform/x86/Kconfig     |  12 +++
- drivers/platform/x86/Makefile    |   1 +
- drivers/platform/x86/redmi-wmi.c | 129 +++++++++++++++++++++++++++++++
- 4 files changed, 148 insertions(+)
- create mode 100644 drivers/platform/x86/redmi-wmi.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c0b444e5fd5a..eb25fb10e751 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20965,6 +20965,12 @@ S:	Maintained
- T:	git https://github.com/pkshih/rtw.git
- F:	drivers/net/wireless/realtek/rtw89/
-=20
-+REDMIBOOK WMI DRIVERS
-+M:	Gladyshev Ilya <foxido@foxido.dev>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/redmi-wmi.c
-+
- REDPINE WIRELESS DRIVER
- L:	linux-wireless@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e5cbd58a99f3..9f98a7042e43 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -109,6 +109,18 @@ config XIAOMI_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called xiaomi-wmi.
-=20
-+config REDMI_WMI
-+	tristate "Redmibook WMI key driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	help
-+	  Say Y here if you want support for WMI-based hotkey events on
-+	  Xiaomi Redmibook devices.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called redmi-wmi.
-+
- config GIGABYTE_WMI
- 	tristate "Gigabyte WMI temperature driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-index bea87a85ae75..406dd0807ba7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+=3D huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+=3D mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+=3D nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+=3D xiaomi-wmi.o
-+obj-$(CONFIG_REDMI_WMI)			+=3D redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+=3D gigabyte-wmi.o
-=20
- # Acer
-diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redm=
-i-wmi.c
-new file mode 100644
-index 000000000000..3dbf4a40a4ff
---- /dev/null
-+++ b/drivers/platform/x86/redmi-wmi.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* WMI driver for Xiaomi Redmibooks */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/unaligned.h>
-+#include <linux/wmi.h>
-+
-+#include <uapi/linux/input-event-codes.h>
-+
-+#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BC=
-A757FEF"
-+
-+#define AI_KEY_VALUE_MASK 0x00000100
-+
-+static const struct key_entry redmi_wmi_keymap[] =3D {
-+	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
-+	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
-+	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
-+
-+	/* AI button has code for each position */
-+	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
-+	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
-+
-+	/* Keyboard backlight */
-+	{KE_IGNORE, 0x00000501, {}},
-+	{KE_IGNORE, 0x00800501, {}},
-+	{KE_IGNORE, 0x00050501, {}},
-+	{KE_IGNORE, 0x000a0501, {}},
-+
-+	{KE_END}
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index db5fdee2109c..55c3680724b5 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -92,9 +92,13 @@ static const char * const victus_thermal_profile_boards[] = {
+ 	"8A25"
+ };
+ 
+-/* DMI Board names of Victus 16-s1000 laptops */
++/* DMI Board names of newer 2024+ laptops that have use different wmi commands */
+ static const char * const victus_s_thermal_profile_boards[] = {
+-	"8C9C"
++	"8C9C", "8BAB"
 +};
 +
-+struct redmi_wmi {
-+	struct input_dev *input_dev;
-+	/* Protects the key event sequence */
-+	struct mutex key_lock;
++static const char * const omen_2024_thermal_profile_boards[] = {
++	"8BAB"
+ };
+ 
+ enum hp_wmi_radio {
+@@ -245,6 +249,11 @@ enum hp_thermal_profile_victus_s {
+ 	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
+ };
+ 
++enum hp_thermal_profile_omen_2024 {
++	HP_OMEN_2024_THERMAL_PROFILE_DEFAULT	  = 0x48,
++	HP_OMEN_2024_THERMAL_PROFILE_PERFORMANCE  = 0x31,
 +};
 +
-+static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+@@ -1580,6 +1589,19 @@ static bool is_victus_s_thermal_profile(void)
+ 			    board_name) >= 0;
+ }
+ 
++static bool is_omen_2024_thermal_profile(void)
 +{
-+	struct redmi_wmi *data;
-+	int err;
++	const char *board_name;
 +
-+	/* Init dev */
-+	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
++	board_name = dmi_get_system_info(DMI_BOARD_NAME);
++	if (!board_name)
++		return false;
 +
-+	dev_set_drvdata(&wdev->dev, data);
-+
-+	err =3D devm_mutex_init(&wdev->dev, &data->key_lock);
-+	if (err)
-+		return err;
-+
-+	/* Setup input device */
-+	data->input_dev =3D devm_input_allocate_device(&wdev->dev);
-+	if (!data->input_dev)
-+		return -ENOMEM;
-+	data->input_dev->name =3D "Redmibook WMI keys";
-+	data->input_dev->phys =3D "wmi/input0";
-+
-+	err =3D sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
-+	if (err)
-+		return err;
-+
-+	return input_register_device(data->input_dev);
++	return match_string(omen_2024_thermal_profile_boards,
++			    ARRAY_SIZE(omen_2024_thermal_profile_boards),
++			    board_name) >= 0;
 +}
 +
-+static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object =
-*obj)
-+{
-+	struct redmi_wmi *data =3D dev_get_drvdata(&wdev->dev);
-+	bool autorelease =3D true;
-+	int value =3D 1;
-+
-+	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-+		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-+		return;
-+	}
-+
-+	if (obj->buffer.length < 32) {
-+		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-+		return;
-+	}
-+
-+	/* For linearizability */
-+	guard(mutex)(&data->key_lock);
-+
-+	u32 payload =3D get_unaligned_le32(obj->buffer.pointer);
-+	struct key_entry *entry =3D sparse_keymap_entry_from_scancode(data->inp=
-ut_dev, payload);
-+
-+	if (!entry) {
-+		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
-+		return;
-+	}
-+
-+	/* AI key quirk */
-+	if (entry->keycode =3D=3D KEY_ASSISTANT) {
-+		value =3D !(payload & AI_KEY_VALUE_MASK);
-+		autorelease =3D false;
-+	}
-+
-+	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
-+}
-+
-+static const struct wmi_device_id redmi_wmi_id_table[] =3D {
-+	{ .guid_string =3D WMI_REDMIBOOK_KEYBOARD_EVENT_GUID },
-+	{ }
-+};
-+
-+static struct wmi_driver redmi_wmi_driver =3D {
-+	.driver =3D {
-+		.name =3D "redmi-wmi",
-+		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS
-+	},
-+	.id_table =3D redmi_wmi_id_table,
-+	.probe =3D redmi_wmi_probe,
-+	.notify =3D redmi_wmi_notify,
-+	.no_singleton =3D true,
-+};
-+module_wmi_driver(redmi_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
-+MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
-+MODULE_DESCRIPTION("Redmibook WMI driver");
-+MODULE_LICENSE("GPL");
---=20
-2.50.0
+ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+ 					    bool *ppab_enable,
+ 					    u8 *dstate,
+@@ -1666,19 +1688,28 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+ 
+ 	switch (profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
++		if (is_omen_2024_thermal_profile())
++			tp = HP_OMEN_2024_THERMAL_PROFILE_PERFORMANCE;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+ 		gpu_ctgp_enable = true;
+ 		gpu_ppab_enable = true;
+ 		gpu_dstate = 1;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		if (is_omen_2024_thermal_profile())
++			tp = HP_OMEN_2024_THERMAL_PROFILE_DEFAULT;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+ 		gpu_ctgp_enable = false;
+ 		gpu_ppab_enable = true;
+ 		gpu_dstate = 1;
+ 		break;
+ 	case PLATFORM_PROFILE_LOW_POWER:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		if (is_omen_2024_thermal_profile())
++			tp = HP_OMEN_2024_THERMAL_PROFILE_DEFAULT;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+ 		gpu_ctgp_enable = false;
+ 		gpu_ppab_enable = false;
+ 		gpu_dstate = 1;
+
+base-commit: 1798561befd8be1e52feb54f850efcab5a595f43
+-- 
+2.50.1
 
