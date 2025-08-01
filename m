@@ -1,298 +1,342 @@
-Received: from sender8.mail.selcloud.ru (sender8.mail.selcloud.ru [5.8.75.171])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FEE246BB0;
-	Fri,  1 Aug 2025 12:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.8.75.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E2A24A06D;
+	Fri,  1 Aug 2025 14:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754050836; cv=none; b=defvKf4NOJmY3xVYal/gia/8DS7vNcLS1QJiZRj327S4TeFfcGjMmg5smK0Tu0E/7JMe0otvN6fapPyALU9SqM5B28rgbLFJ5fv69KTJ1X9xMv3NsRRgBLq4nu/SkVsEYveelpPL/ar2sKx/cN4fKDZVCK3PcCDlOuzPldS/WO4=
+	t=1754058418; cv=none; b=PdlWgxJMaE56D6V0Ceprri1j+xJNA/VOJkzFIMDo3oEyhv+Cmj+UgwNjv8iLy6JuEgmMHQ78NaYkkH+LyercHYZcZpBdvt3/2bupHATFJA4enBSxOiwLoLMc+DiLSLQkzyPgZznD0ppGW/wkn2A2gGBbwTCzB/OxJe61yCaMj4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754050836; c=relaxed/simple;
-	bh=HKl5cOQxTneNMHfsJgLASkkCf4AZvUuw1cqZRoN7XH8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mIzFGi+MVHXeZ8ydg09B0Bdvdmz9QLNgWY2zhYAld8CZiXcKUVdvZCByitXhkbmsZJ/UKbBiWVdW4p8rX9laqiGGru+DOPhyb+UIwmp5l7a8y3nqHJZTSZf84kRofVxNCdww0DmAQtiRAgzhjSD7jruZTK0OMjqx38Xh0SU27qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=mail.selcloud.ru; dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b=jpYMM14m; dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=R1uV2J65; dkim=fail (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=PY7pz7Mq reason="signature verification failed"; arc=none smtp.client-ip=5.8.75.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.selcloud.ru
+	s=arc-20240116; t=1754058418; c=relaxed/simple;
+	bh=DIocBW8J/uihn7w+BY5Wubi8M4mVZ2pdF7qls88kIgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S3I1b5d9TnCNOiC3aUtB6j3tycatf3TNd6n5cG9AwELbnS9O3kPzilc7E7ZO2tx1tKUnE4nTJ2Pr8czCAZU2IClJjS+zD5th9BV0nteYY+pJVzlZfhxVL/Hj8pKwFBdojuOVqBBUU4pZgs6EaAZeKAXgd3e3XcdF4xmwW+1iDuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ZOiTnNNQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FAlGCjY2; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b="jpYMM14m";
-	dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="R1uV2J65";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="PY7pz7Mq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.selcloud.ru; s=selcloud; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Help:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vhgdrzrS51GUEazezk2kAwd9BPkJfnpoB3zPUZ1XBlY=; t=1754050833; x=1754223633;
-	 b=jpYMM14mww1S6bSjwooD6FQrNROcWu1u6nWmkygJ4dlKo5n7hur1L4Xjpe4WRRGju+WGF5DGdS
-	ohN6yLDje09fsV+1NkEg+MCy3BO0qDXbDMzMfGPjzLpyazF/9Y4lNegM/s7weKxR91WoWwBf7yIS6
-	ZYSwwDl8v7+7o/GO2xfA=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=foxido.dev;
-	 s=selcloud; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Help:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=vhgdrzrS51GUEazezk2kAwd9BPkJfnpoB3zPUZ1XBlY=;
-	t=1754050833; x=1754223633; b=R1uV2J65GlTjefoojWLC+Ll3GLXnEJg7A+F4ONsgTiqzr6U
-	cklHvP8hhGdOyC/p6lbxofImZTms8QOJBcay81hujP9mZ/l+SKTnk0Y8/a/09755DDQ/grVI2aOix
-	BKUu2+eEaoXHn8JzhEyiGWUBfphPwlVQJpt/u5ntH8Bs6vE=;
-Precedence: bulk
-X-Issuen: 1123207
-X-User: 280060488
-X-Postmaster-Msgtype: 3849
-Feedback-ID: 1123207:15965:3849:samotpravil
-X-From: foxido.dev
-X-from-id: 15965
-X-MSG-TYPE: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-X-blist-id: 3849
-X-Gungo: 20250728.224157
-X-SMTPUID: mlgnr62
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxido.dev; s=dkim;
-	t=1754049848; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=erZmOTtVHeVswZvcm5o5pYqL6T+U+P8rOEJ4fElpoZE=;
-	b=PY7pz7MqAIxWo8AKUSlHLWlm57sVt46VK6Kl/k/Ypso369jewNFtchcFxKNBnHgJyOweOA
-	Kt/nbnnybHsQBaL9TUfO8/kwnvleP6stL5QlW2VUvimWcU0tkc9okRdvJLdb570cIluFxt
-	1nknH0QO3DxdJKDUyTpVczeZB5X0z7OkhJAC+TT+6oCa1kzgLIV5RFxBjUfa/QY3SjpJ1V
-	r469S+bSiJaLPe79Jo+y5SGdqmFh6af3cnm2iPDcSodoHGBvGKVgBZlFP15CA7sJqSOLeB
-	LjPc3/UseEWs9NCPgPrayCQH4m05NWvTPQHmU66a40DXrV00xkJWyuOITORu0Q==
-From: Gladyshev Ilya <foxido@foxido.dev>
-To: foxido@foxido.dev
-Cc: w_armin@gmx.de,
-	linux-input@vger.kernel.org,
-	nikita.nikita.krasnov@gmail.com,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4] platform/x86: Add WMI driver for Redmibook keyboard.
-Date: Fri,  1 Aug 2025 15:03:10 +0300
-Message-ID: <20250801120321.9742-1-foxido@foxido.dev>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ZOiTnNNQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FAlGCjY2"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D689514004A7;
+	Fri,  1 Aug 2025 10:26:53 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Fri, 01 Aug 2025 10:26:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1754058413; x=
+	1754144813; bh=R6ICrf9reG6bP3hDhWBQpp+gqiYLloADWJKlviszYyM=; b=Z
+	OiTnNNQCXcuBdzdg0udnHV5noX/BB2FjFyOQZEywVsqTeYywIsI5o8OnQFuJSvlp
+	lKCrqqRtuyS51QvGB+T1yUfao+afEDvmCYSTst+K4GH+ISFRfrbn08H/4Q3g40A+
+	TPBvUCGEMNAJXN8viBCkDuGUg0a/GD5fpjqrxzm7/NbxlzfoBT/jsHmGd9L9JsgP
+	z6ocvQwh0qz/jw3pQl3o0d++D6xl+3tZxmBhCVRBHfvLyYx9SAYvWtWtBD565Fmr
+	CFGcGlLFTgg+EmcTpW3V1oxfqm8mkr8xz0oT7E+8B9igN06AMF2DrBjSA8mPgmGT
+	qgIurYtKCk7C6g1cGuRiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1754058413; x=1754144813; bh=R
+	6ICrf9reG6bP3hDhWBQpp+gqiYLloADWJKlviszYyM=; b=FAlGCjY2j7JJL8qb+
+	aPUyj++bdnU/KzYb0JwOgqAxt08BgIQzWWB5ZChPAZpKOLOiFEiwyofuuIdACxQd
+	mLaH339Ei4E/LsFrxRutnsu7WNK/J17bG7ilO/2GFIBWbbh3eUUDzOP8Q+Sn1Ptw
+	SndgnDgj8UGPwgBHn7NvLfz2EuYQ6z+tWlKg/N1mwSt2ZZ0764eXEGklbPdHdJ/P
+	YZqHnBtzTA0V2thCKx4AShEryFRgUqdLJjHocOAT/7DQo0YzVP5v9DbHgS3OTcGU
+	kU/zOXlKB+2Dycvv5xbemtzUDljvZNW6bBAWxGn9rFGo+31vw/GhzZU/h8SR6n15
+	i2yBA==
+X-ME-Sender: <xms:rc6MaIgGmqE7dHejrQNnjqFJuWAjd__FFZ6u544k7AAjEqQQ3aEeTA>
+    <xme:rc6MaIZu2zM0V1b0tyWvyJCsutaANv_uNZc5ZniI1f3asaX7EeS8NanEmFdrZpA_i
+    S96eM1VLOP_S7BhGZA>
+X-ME-Received: <xmr:rc6MaFp3EFAGvgE9knZSRk_OBg_3iA692KZTB_D1h9f0WqwRyLMldrKsoRjQbGwIAnkaS3QjAkG9NzbYiJb56MJXQw5URp-UkpItkYKG6n5PZEyQVYNf>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutdefleefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephffvve
+    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhsohhn
+    uceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrth
+    htvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueethefg
+    vdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmh
+    hpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnoh
+    hvohesshhquhgvsggsrdgtrgdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrd
+    gtohhmpdhrtghpthhtohepkhgvrghntddtgeeksehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrgh
+X-ME-Proxy: <xmx:rc6MaFOJeeBYvuNjxP09dSTSrSZVd3mi043vWE-M4U8J7I4fvA-cEA>
+    <xmx:rc6MaIp4U-bLx4hE1UOed_bnB6Vzsthn33P1yXZJp91EN4jiDbiv7Q>
+    <xmx:rc6MaCcjwyIt-QA7cFRJMtNXifM_gS7oDjf2tO_CoYKv86qzl8EOpw>
+    <xmx:rc6MaGRh7Koz7Py2lXSZSgyAs_8f1otC0vN4EOy6KT4iD4XpZL1wJg>
+    <xmx:rc6MaBPVOiFqDEFZKA4jd-FJBYTROM38Al2qlAL2gbUK6-7jooYjn8uR>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 Aug 2025 10:26:52 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	kean0048@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: think-lmi: Certificate support for ThinkCenter
+Date: Fri,  1 Aug 2025 10:26:38 -0400
+Message-ID: <20250801142648.3752293-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This driver implements support for various Fn keys (like Cut) and Xiaomi
-specific AI button.
+ThinkCenter platforms use a different set of GUIDs along with some
+differences in implementation details for their support of
+certificate based authentication.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
+Update the think-lmi driver to work correctly on these platforms.
+
+Tested on M75q Gen 5
+
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Co-developed by: Kean Ren <kean0048@gmail.com>
 ---
-Changes from v3:
-- Optimize mutex scope
-- Stylistic changes
-- Pull Reviewed-by
+ drivers/platform/x86/lenovo/think-lmi.c | 85 +++++++++++++++++++++----
+ drivers/platform/x86/lenovo/think-lmi.h |  1 +
+ 2 files changed, 72 insertions(+), 14 deletions(-)
 
-Link to v3: https://lore.kernel.org/platform-driver-x86/20250730185619.87=
-25-1-foxido@foxido.dev/
----
-
- MAINTAINERS                      |   6 ++
- drivers/platform/x86/Kconfig     |  12 +++
- drivers/platform/x86/Makefile    |   1 +
- drivers/platform/x86/redmi-wmi.c | 129 +++++++++++++++++++++++++++++++
- 4 files changed, 148 insertions(+)
- create mode 100644 drivers/platform/x86/redmi-wmi.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c0b444e5fd5a..eb25fb10e751 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20965,6 +20965,12 @@ S:	Maintained
- T:	git https://github.com/pkshih/rtw.git
- F:	drivers/net/wireless/realtek/rtw89/
-=20
-+REDMIBOOK WMI DRIVERS
-+M:	Gladyshev Ilya <foxido@foxido.dev>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/redmi-wmi.c
+diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
+index 0992b41b6221..08eac6c18688 100644
+--- a/drivers/platform/x86/lenovo/think-lmi.c
++++ b/drivers/platform/x86/lenovo/think-lmi.c
+@@ -119,6 +119,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * You must reboot the computer before the changes will take effect.
+  */
+ #define LENOVO_SET_BIOS_CERT_GUID    "26861C9F-47E9-44C4-BD8B-DFE7FA2610FE"
++#define LENOVO_TC_SET_BIOS_CERT_GUID "955aaf7d-8bc4-4f04-90aa-97469512f167"
+ 
+ /*
+  * Name: UpdateBiosCert
+@@ -128,6 +129,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * You must reboot the computer before the changes will take effect.
+  */
+ #define LENOVO_UPDATE_BIOS_CERT_GUID "9AA3180A-9750-41F7-B9F7-D5D3B1BAC3CE"
++#define LENOVO_TC_UPDATE_BIOS_CERT_GUID "5f5bbbb2-c72f-4fb8-8129-228eef4fdbed"
+ 
+ /*
+  * Name: ClearBiosCert
+@@ -137,6 +139,8 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * You must reboot the computer before the changes will take effect.
+  */
+ #define LENOVO_CLEAR_BIOS_CERT_GUID  "B2BC39A7-78DD-4D71-B059-A510DEC44890"
++#define LENOVO_TC_CLEAR_BIOS_CERT_GUID  "97849cb6-cb44-42d1-a750-26a596a9eec4"
 +
- REDPINE WIRELESS DRIVER
- L:	linux-wireless@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e5cbd58a99f3..9f98a7042e43 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -109,6 +109,18 @@ config XIAOMI_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called xiaomi-wmi.
-=20
-+config REDMI_WMI
-+	tristate "Redmibook WMI key driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	help
-+	  Say Y here if you want support for WMI-based hotkey events on
-+	  Xiaomi Redmibook devices.
+ /*
+  * Name: CertToPassword
+  * Description: Switch from certificate to password authentication.
+@@ -145,6 +149,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * You must reboot the computer before the changes will take effect.
+  */
+ #define LENOVO_CERT_TO_PASSWORD_GUID "0DE8590D-5510-4044-9621-77C227F5A70D"
++#define LENOVO_TC_CERT_TO_PASSWORD_GUID "ef65480d-38c9-420d-b700-ab3d6c8ebaca"
+ 
+ /*
+  * Name: SetBiosSettingCert
+@@ -153,6 +158,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * Format: "Item,Value,Signature"
+  */
+ #define LENOVO_SET_BIOS_SETTING_CERT_GUID  "34A008CC-D205-4B62-9E67-31DFA8B90003"
++#define LENOVO_TC_SET_BIOS_SETTING_CERT_GUID  "19ecba3b-b318-4192-a89b-43d94bc60cea"
+ 
+ /*
+  * Name: SaveBiosSettingCert
+@@ -161,6 +167,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  * Format: "Signature"
+  */
+ #define LENOVO_SAVE_BIOS_SETTING_CERT_GUID "C050FB9D-DF5F-4606-B066-9EFC401B2551"
++#define LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID "0afaf46f-7cca-450a-b455-a826a0bf1af5"
+ 
+ /*
+  * Name: CertThumbprint
+@@ -170,6 +177,14 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+  */
+ #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318176C4"
+ 
++char *cert_thumbprint_guid = LENOVO_CERT_THUMBPRINT_GUID;
++char *set_bios_setting_cert_guid = LENOVO_SET_BIOS_SETTING_CERT_GUID;
++char *save_bios_setting_cert_guid = LENOVO_SAVE_BIOS_SETTING_CERT_GUID;
++char *cert_to_password_guid = LENOVO_CERT_TO_PASSWORD_GUID;
++char *clear_bios_cert_guid = LENOVO_CLEAR_BIOS_CERT_GUID;
++char *update_bios_cert_guid = LENOVO_UPDATE_BIOS_CERT_GUID;
++char *set_bios_cert_guid = LENOVO_SET_BIOS_CERT_GUID;
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called redmi-wmi.
+ #define TLMI_POP_PWD  BIT(0) /* Supervisor */
+ #define TLMI_PAP_PWD  BIT(1) /* Power-on */
+ #define TLMI_HDD_PWD  BIT(2) /* HDD/NVME */
+@@ -179,9 +194,20 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+ 
+ static const struct tlmi_err_codes tlmi_errs[] = {
+ 	{"Success", 0},
++	{"Set Certificate operation was successful.", 0},
+ 	{"Not Supported", -EOPNOTSUPP},
+ 	{"Invalid Parameter", -EINVAL},
+ 	{"Access Denied", -EACCES},
++	{"Set Certificate operation failed with status:Invalid Parameter.", -EINVAL},
++	{"Set Certificate operation failed with status:Invalid certificate type.", -EINVAL},
++	{"Set Certificate operation failed with status:Invalid password format.", -EINVAL},
++	{"Set Certificate operation failed with status:Password retry count exceeded.", -EACCES},
++	{"Set Certificate operation failed with status:Password Invalid.", -EACCES},
++	{"Set Certificate operation failed with status:Operation aborted.", -EBUSY},
++	{"Set Certificate operation failed with status:No free slots to write.", -ENOSPC},
++	{"Set Certificate operation failed with status:Certificate not found.", -EEXIST},
++	{"Set Certificate operation failed with status:Internal error.", -EFAULT},
++	{"Set Certificate operation failed with status:Certificate too large.", -EFBIG},
+ 	{"System Busy", -EBUSY},
+ };
+ 
+@@ -668,7 +694,10 @@ static ssize_t cert_thumbprint(char *buf, const char *arg, int count)
+ 	const union acpi_object *obj;
+ 	acpi_status status;
+ 
+-	status = wmi_evaluate_method(LENOVO_CERT_THUMBPRINT_GUID, 0, 0, &input, &output);
++	if (!cert_thumbprint_guid)
++		return -EOPNOTSUPP;
 +
- config GIGABYTE_WMI
- 	tristate "Gigabyte WMI temperature driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-index bea87a85ae75..406dd0807ba7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+=3D huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+=3D mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+=3D nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+=3D xiaomi-wmi.o
-+obj-$(CONFIG_REDMI_WMI)			+=3D redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+=3D gigabyte-wmi.o
-=20
- # Acer
-diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redm=
-i-wmi.c
-new file mode 100644
-index 000000000000..27f5674a2513
---- /dev/null
-+++ b/drivers/platform/x86/redmi-wmi.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* WMI driver for Xiaomi Redmibooks */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/unaligned.h>
-+#include <linux/wmi.h>
-+
-+#include <uapi/linux/input-event-codes.h>
-+
-+#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BC=
-A757FEF"
-+
-+#define AI_KEY_VALUE_MASK 0x00000100
-+
-+static const struct key_entry redmi_wmi_keymap[] =3D {
-+	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
-+	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
-+	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
-+
-+	/* AI button has code for each position */
-+	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
-+	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
-+
-+	/* Keyboard backlight */
-+	{KE_IGNORE, 0x00000501, {}},
-+	{KE_IGNORE, 0x00800501, {}},
-+	{KE_IGNORE, 0x00050501, {}},
-+	{KE_IGNORE, 0x000a0501, {}},
-+
-+	{KE_END}
-+};
-+
-+struct redmi_wmi {
-+	struct input_dev *input_dev;
-+	/* Protects the key event sequence */
-+	struct mutex key_lock;
-+};
-+
-+static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct redmi_wmi *data;
-+	int err;
-+
-+	/* Init dev */
-+	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, data);
-+
-+	err =3D devm_mutex_init(&wdev->dev, &data->key_lock);
-+	if (err)
-+		return err;
-+
-+	/* Setup input device */
-+	data->input_dev =3D devm_input_allocate_device(&wdev->dev);
-+	if (!data->input_dev)
-+		return -ENOMEM;
-+
-+	data->input_dev->name =3D "Redmibook WMI keys";
-+	data->input_dev->phys =3D "wmi/input0";
-+
-+	err =3D sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
-+	if (err)
-+		return err;
-+
-+	return input_register_device(data->input_dev);
-+}
-+
-+static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object =
-*obj)
-+{
-+	struct redmi_wmi *data =3D dev_get_drvdata(&wdev->dev);
-+	bool autorelease =3D true;
-+	int value =3D 1;
-+
-+	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-+		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-+		return;
++	status = wmi_evaluate_method(cert_thumbprint_guid, 0, 0, &input, &output);
+ 	if (ACPI_FAILURE(status)) {
+ 		kfree(output.pointer);
+ 		return -EIO;
+@@ -751,7 +780,7 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
+ 		kfree_sensitive(passwd);
+ 		return -ENOMEM;
+ 	}
+-	ret = tlmi_simple_call(LENOVO_CERT_TO_PASSWORD_GUID, auth_str);
++	ret = tlmi_simple_call(cert_to_password_guid, auth_str);
+ 	kfree(auth_str);
+ 	kfree_sensitive(passwd);
+ 
+@@ -797,7 +826,7 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 		if (!auth_str)
+ 			return -ENOMEM;
+ 
+-		ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
++		ret = tlmi_simple_call(clear_bios_cert_guid, auth_str);
+ 		kfree(auth_str);
+ 
+ 		return ret ?: count;
+@@ -834,7 +863,7 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 			kfree(new_cert);
+ 			return -EACCES;
+ 		}
+-		guid = LENOVO_UPDATE_BIOS_CERT_GUID;
++		guid = update_bios_cert_guid;
+ 		/* Format: 'Certificate,Signature' */
+ 		auth_str = cert_command(setting, new_cert, signature);
+ 	} else {
+@@ -845,9 +874,17 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 			kfree(new_cert);
+ 			return -EACCES;
+ 		}
+-		guid = LENOVO_SET_BIOS_CERT_GUID;
+-		/* Format: 'Certificate, password' */
+-		auth_str = cert_command(setting, new_cert, setting->password);
++		guid = set_bios_cert_guid;
++		if (tlmi_priv.thinkcenter_mode) {
++			/* Format: 'Certificate, password, encoding, kbdlang' */
++			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s", new_cert,
++					     setting->password,
++					     encoding_options[setting->encoding],
++					     setting->kbdlang);
++		} else {
++			/* Format: 'Certificate, password' */
++			auth_str = cert_command(setting, new_cert, setting->password);
++		}
+ 	}
+ 	kfree(new_cert);
+ 	if (!auth_str)
+@@ -1071,13 +1108,13 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 			goto out;
+ 		}
+ 
+-		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
++		ret = tlmi_simple_call(set_bios_setting_cert_guid, set_str);
+ 		if (ret)
+ 			goto out;
+ 		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
+ 			tlmi_priv.save_required = true;
+ 		else
+-			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++			ret = tlmi_simple_call(save_bios_setting_cert_guid,
+ 					       tlmi_priv.pwd_admin->save_signature);
+ 	} else if (tlmi_priv.opcode_support) {
+ 		/*
+@@ -1282,7 +1319,7 @@ static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *
+ 				ret = -EINVAL;
+ 				goto out;
+ 			}
+-			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++			ret = tlmi_simple_call(save_bios_setting_cert_guid,
+ 					       tlmi_priv.pwd_admin->save_signature);
+ 			if (ret)
+ 				goto out;
+@@ -1583,6 +1620,22 @@ static int tlmi_analyze(struct wmi_device *wdev)
+ 		wmi_has_guid(LENOVO_SAVE_BIOS_SETTING_CERT_GUID))
+ 		tlmi_priv.certificate_support = true;
+ 
++	/* ThinkCenter uses different GUIDs for certificate support */
++	if (wmi_has_guid(LENOVO_TC_SET_BIOS_CERT_GUID) &&
++	    wmi_has_guid(LENOVO_TC_SET_BIOS_SETTING_CERT_GUID) &&
++	    wmi_has_guid(LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID)) {
++		tlmi_priv.certificate_support = true;
++		tlmi_priv.thinkcenter_mode = true;
++		cert_thumbprint_guid = 0; /* Not supported */
++		set_bios_setting_cert_guid = LENOVO_TC_SET_BIOS_SETTING_CERT_GUID;
++		save_bios_setting_cert_guid = LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID;
++		cert_to_password_guid = LENOVO_TC_CERT_TO_PASSWORD_GUID;
++		clear_bios_cert_guid = LENOVO_TC_CLEAR_BIOS_CERT_GUID;
++		update_bios_cert_guid = LENOVO_TC_UPDATE_BIOS_CERT_GUID;
++		set_bios_cert_guid = LENOVO_TC_SET_BIOS_CERT_GUID;
++		pr_info("ThinkCenter modified support being used\n");
 +	}
 +
-+	if (obj->buffer.length < 32) {
-+		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-+		return;
-+	}
-+
-+	u32 payload =3D get_unaligned_le32(obj->buffer.pointer);
-+	struct key_entry *entry =3D sparse_keymap_entry_from_scancode(data->inp=
-ut_dev, payload);
-+
-+	if (!entry) {
-+		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
-+		return;
-+	}
-+
-+	/* AI key quirk */
-+	if (entry->keycode =3D=3D KEY_ASSISTANT) {
-+		value =3D !(payload & AI_KEY_VALUE_MASK);
-+		autorelease =3D false;
-+	}
-+
-+	/* For linearizability */
-+	guard(mutex)(&data->key_lock);
-+	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
-+}
-+
-+static const struct wmi_device_id redmi_wmi_id_table[] =3D {
-+	{ WMI_REDMIBOOK_KEYBOARD_EVENT_GUID, NULL },
-+	{ }
-+};
-+
-+static struct wmi_driver redmi_wmi_driver =3D {
-+	.driver =3D {
-+		.name =3D "redmi-wmi",
-+		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS
-+	},
-+	.id_table =3D redmi_wmi_id_table,
-+	.probe =3D redmi_wmi_probe,
-+	.notify =3D redmi_wmi_notify,
-+	.no_singleton =3D true,
-+};
-+module_wmi_driver(redmi_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
-+MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
-+MODULE_DESCRIPTION("Redmibook WMI driver");
-+MODULE_LICENSE("GPL");
---=20
-2.50.0
+ 	/*
+ 	 * Try to find the number of valid settings of this machine
+ 	 * and use it to create sysfs attributes.
+@@ -1728,10 +1781,14 @@ static int tlmi_analyze(struct wmi_device *wdev)
+ 	}
+ 
+ 	if (tlmi_priv.certificate_support) {
+-		tlmi_priv.pwd_admin->cert_installed =
+-			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
+-		tlmi_priv.pwd_system->cert_installed =
+-			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
++		if (tlmi_priv.thinkcenter_mode) {
++			tlmi_priv.pwd_admin->cert_installed = tlmi_priv.pwdcfg.core.password_mode;
++		} else {
++			tlmi_priv.pwd_admin->cert_installed =
++				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
++			tlmi_priv.pwd_system->cert_installed =
++				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
++		}
+ 	}
+ 	return 0;
+ 
+diff --git a/drivers/platform/x86/lenovo/think-lmi.h b/drivers/platform/x86/lenovo/think-lmi.h
+index 9b014644d316..c805ee312539 100644
+--- a/drivers/platform/x86/lenovo/think-lmi.h
++++ b/drivers/platform/x86/lenovo/think-lmi.h
+@@ -109,6 +109,7 @@ struct think_lmi {
+ 	enum save_mode save_mode;
+ 	bool save_required;
+ 	bool reboot_required;
++	bool thinkcenter_mode;
+ 
+ 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+ 	struct device *class_dev;
+-- 
+2.43.0
 
