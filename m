@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEB62AE8E;
-	Mon,  4 Aug 2025 00:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA3C2C190;
+	Mon,  4 Aug 2025 00:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754268023; cv=none; b=RALxIkw55VTZMBC739JCMSrwHz2T98Yp0Epp3+Pyo8l1hPlVnfJhvkUBY6y7xB1hwn5FMLZYG0XmGXCnrErG87EuuQrYMByUpY0sO+xFSaXjjDHC1549aoIx6LPUDJXmwTOWaOLV6YN0A63C9T7xrJ4Pz61SlZWQGiSc/OgJGu4=
+	t=1754268130; cv=none; b=EyxT+Ubf9lBMQeGeaImAkMU7cQbHQFgvT9Z3XLrnTdRGlroUsFw2VpPe5tt71l0UiN759rqZflflpAKPDqzIcNrosd1VA4ewUGZqf8kYSUo05JpRpJqNBnXN7dDHDYgUM4rgH1X4TUPD+OY41AexTH05UBxHV6lGSU8/iKMmpNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754268023; c=relaxed/simple;
-	bh=tGv7lZ6ovb/m9IXwsatOQMJbfZPCbnWkovD9COEoVa4=;
+	s=arc-20240116; t=1754268130; c=relaxed/simple;
+	bh=gvwslcTiVKML7eJqbL8/N1zabS1PwC6D3bknxS7v6k4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qJCCFqWWIKH1/mbNWNAYjtwo0Cdwcr5DFdXZTTe8VZS/5frcJp/acJkbUQ0EYfgIgCqw6Tq2yKLLKBnC7Xw3WGwKOaEf7KXe3pJTJSKoQnMsAjMSAN83N7htqpX/gFfICJhHvIRuW84Rt1AFj4wD5b3K4bTBiHJJI7EMn396dCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsgsdJVX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=QwLGd0DcorOYVBwvDcW96wDzp52kpn/Ec11bj3KczdZZZqkXClMPmlLcRJ08A+z27j4g2Lyc5UqiB7FOg0zd1dPIyFYdwYLiQOA5lu9AyBPkXtoeojvEaW4oIOJUHL9SwWUBZaG8i6vMkXFLQRz1Ikz/kag/HDiYWg+b9EIdN9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amzBiLRh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsgsdJVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8391C4CEF0;
-	Mon,  4 Aug 2025 00:40:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amzBiLRh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF917C4CEF0;
+	Mon,  4 Aug 2025 00:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754268022;
-	bh=tGv7lZ6ovb/m9IXwsatOQMJbfZPCbnWkovD9COEoVa4=;
+	s=k20201202; t=1754268129;
+	bh=gvwslcTiVKML7eJqbL8/N1zabS1PwC6D3bknxS7v6k4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tsgsdJVXKzVeWnNUQQDr64SpE/dwMvoNmmicfEFo1Qy1jcqiPuRVzshfitVv+1f7O
-	 qxhIf9U1NILBRh4pjCHAA8EluaU3507dPB75g7mQWDFToMpPL4RA1vImeL+6gl9bpT
-	 ZrcDYKR75fI0jmU26NUQOfYnI0JKd4VlaxMwXCHUwk5Ileu4CYrjBQPJnAu5OeReOl
-	 9zJshBQY2f4LwNZQauNsg03y9/uIGKNFXx7fvjwxe/bcJHT+QghsE0b11bPTJPqMp5
-	 xqJJ+MQMDHkkAITOfxLHWquHhGpFeMFR/m1Qkc2MDfZgR6JaikVky1sfjno8Gb7peZ
-	 4tb+/Ro3uqEZQ==
+	b=amzBiLRhFVufr5dg+MSNbaOcdukIDap8ctmF5UocBJ9Qv9tu+ytsPJ+gnGQd7vb0x
+	 VP6ZZ1ukqPmBUbvx2hOi33mYCYY1fCM/Hg5rUDmiuoluxzGr5oahK8udq1VFK9jxXW
+	 iQUC4JZQ45+wfrGR9meI0l2J1LteH5y6xhjcCb/06Dzjg9wSqdRM3sb2i0LOBQyGef
+	 qCi5AytWlzoFdsJNRxwFBuD54m0SSWDTFtcvACBuZlA0Al4qhTOeTJ3VO4D40d8BvV
+	 1KiGGXokPrm3ZFp4CExbDm32PTRl/HOwM5rg8BzFaOt57Sq5HS/5bnzes2nnQ5BCzB
+	 ZISNvJ1iTxUOg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Kees Cook <kees@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 38/44] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
-Date: Sun,  3 Aug 2025 20:38:43 -0400
-Message-Id: <20250804003849.3627024-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 33/39] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
+Date: Sun,  3 Aug 2025 20:40:35 -0400
+Message-Id: <20250804004041.3628812-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804003849.3627024-1-sashal@kernel.org>
-References: <20250804003849.3627024-1-sashal@kernel.org>
+In-Reply-To: <20250804004041.3628812-1-sashal@kernel.org>
+References: <20250804004041.3628812-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,7 +49,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.189
+X-stable-base: Linux 5.10.240
 Content-Transfer-Encoding: 8bit
 
 From: Kees Cook <kees@kernel.org>
@@ -165,10 +165,10 @@ with coverage testing configurations.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 9b700a3ad7b2..89a8e074c16d 100644
+index 5a8434da60e7..d18b6ddba982 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -523,12 +523,12 @@ static unsigned long __init tpacpi_check_quirks(
+@@ -515,12 +515,12 @@ static unsigned long __init tpacpi_check_quirks(
  	return 0;
  }
  
