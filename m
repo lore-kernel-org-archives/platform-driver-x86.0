@@ -1,59 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA1929A2;
-	Mon,  4 Aug 2025 07:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD65E2F2D
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Aug 2025 07:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754292710; cv=none; b=uVwPVfqpS2zewqk+gFPZqhy14zcXHyaiOnVd+ywrknwThgrva6dKrbLaX8+28t7ydiG+a2EcDP71IwvN1Kj5Dyi3btoBAblsUHtTcIiVOEoAwI4Gq1sB8TZGIFu9/koHulttjyVbusLP5xOGtx+ujwNSii+M2DSrhHHhE7kDDQM=
+	t=1754294302; cv=none; b=pekkblYvLE5wjkAXmHXtRGebehEF3aDNd8Eo0sr/iWBDtXYjx0FaMF5s5gl5UZvxcqrfMhgKOf2c4VF/a8ZL/v1Hr/Bx1Vt7/ZTnCdsITGK/he2XoS/tCbPQxWcdhMZAdabncTLyV84pqJwe4ABW+3Di9RbLCWstamK75MVz5gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754292710; c=relaxed/simple;
-	bh=bXLZe9XlORDB8Up75VZHWWmgBWBoYkuub6VQZHD29b0=;
+	s=arc-20240116; t=1754294302; c=relaxed/simple;
+	bh=XoOzbA9SCrJQUV6Gp/z8lLT57E8nMSSY0MQE5tG6na4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FFrWANQtrtjbTdoOekZYpKW6N/vprtOsy1NSEpykhyJwtrzMz8JxiFrUtimBu9BhtcWOuDHj1CQj8EC2ZcgnhYL6vHvqwGJ1Xd0uxOZfun9mQM+Yxb3WKPY3Md8zbD3I65u7/BShUwB5ndWWmVgbhOZq9fsuGaxTXP8LWr7joHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3mnAMPU; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=egStJtJPcRtXnHQj0VSBWjfX1pOvWP9lYUUwrgF3zW/lh2YqCLB0ACgsyy3de2sdV6pw/Wf6m1lOeHieU0P2NTGiA0R8D18PuVqvyhyFzQtX5Cfo9C+OL3VqOh0S93zKV9+fgmnHE8QTctDPFn4fzxU2rzi6t/aNFaH2WCLvCLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8jXZXE3; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3mnAMPU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8jXZXE3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754292708; x=1785828708;
+  t=1754294301; x=1785830301;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=bXLZe9XlORDB8Up75VZHWWmgBWBoYkuub6VQZHD29b0=;
-  b=a3mnAMPUQ5AS33vz4Zd+8CvCrqLpYtC3Y+NJ6rs/y8GAIYWakvjzt4/G
-   imrps+Adp4NsIFN3snczvc3Wmjzy9F8j46FunVXhQYwKo3xTCBDVZ1C/i
-   0uPLjYc4NYbE6maE7HMgjWWcBQhW5j9v1EJdzddRF2Wra05/tjeYEx/eZ
-   m43biMxIr1hTbrfCylFsSr1eRn9Mdmx8HffU8eBSLRkdyXyaziR6M40Tt
-   lWgfuHSABhyxLLeQQ0ZJ1D0Sb024g6pW4q75RLhTHnIx0W25mu2PJru3z
-   ylu5QhEyXF9cpCkoFRamIkq914cXrrg96wqeyJ9s4oD6PhUnrtcX3u4W1
-   g==;
-X-CSE-ConnectionGUID: +HXLMkOsRh6l2UQe8uBlgg==
-X-CSE-MsgGUID: 13sFtQ2UQKSq4WpFRfQscQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="44134516"
+  bh=XoOzbA9SCrJQUV6Gp/z8lLT57E8nMSSY0MQE5tG6na4=;
+  b=a8jXZXE3zPDdPlBSFuTctQc8bsz7g9dhmMSbMBdjX0pMHaZIRjyspcC7
+   ivlK4VPGHs9lcjKlZhWdxex7tgHTOkVqjZM6Qlcy4vXan99Ahn+3ERLgE
+   JYegRKzRnjL/PkxYuDCQiIH/OXjLtoWUhWug5MdpkdpSCIXG30QfI63jq
+   mzAncCwe18349MJ9vDcgj9vCLmMaYqJ/uF6vSS3R73UBKE9fj1uVqTWr2
+   Chs61VK0+e93vBMWe5OxGuC8KrewrHzp+LY/VWUQi7RmN4wX7o5uzPSTF
+   Z8I2X1eel0w04JtfOzFhM2uoAjFFuO51M9Hu1JhW2oKIbxK2EtSmEVA9z
+   w==;
+X-CSE-ConnectionGUID: 0caste4VQlu31hn8+zXimw==
+X-CSE-MsgGUID: XZ/EXGqjSJe0kPqsX8v39A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="79102028"
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="44134516"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 00:31:47 -0700
-X-CSE-ConnectionGUID: 39oXN+ZqQzGHmLlsmF72kQ==
-X-CSE-MsgGUID: aiANH4pqS4ij8iQ9H1SV0Q==
+   d="scan'208";a="79102028"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 00:58:18 -0700
+X-CSE-ConnectionGUID: XsoAd94uQ0Gn89ItzV+NtA==
+X-CSE-MsgGUID: hFBfYTXzToiG/dXNV1YAYQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="164540951"
+   d="scan'208";a="169472074"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.57])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 00:31:44 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 00:58:17 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Aug 2025 10:31:41 +0300 (EEST)
-To: Gladyshev Ilya <foxido@foxido.dev>
-cc: w_armin@gmx.de, linux-input@vger.kernel.org, 
-    nikita.nikita.krasnov@gmail.com, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: Add WMI driver for Redmibook
- keyboard.
-In-Reply-To: <20250730185619.8725-1-foxido@foxido.dev>
-Message-ID: <c98adc65-f756-1f4b-aaab-85f7633dd0cc@linux.intel.com>
-References: <20250730185619.8725-1-foxido@foxido.dev>
+Date: Mon, 4 Aug 2025 10:58:13 +0300 (EEST)
+To: noahpro <noahpro@gmail.com>
+cc: hansg@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: hp-wmi: add Omen 16-wf0xxx (board 8BAB)
+ fan & perf-profile support
+In-Reply-To: <20250731213529.27378-1-noahpro@gmail.com>
+Message-ID: <80eb0a87-6f21-8276-5349-50745c7c0840@linux.intel.com>
+References: <20250731213529.27378-1-noahpro@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,237 +60,132 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 30 Jul 2025, Gladyshev Ilya wrote:
+On Thu, 31 Jul 2025, noahpro wrote:
 
-> This driver implements support for various Fn keys (like Cut) and Xiaomi
-> specific AI button.
+> Recent 2024-era Omen laptops (DMI board 8BAB) use different
+> thermal-profile commands (0x48 default, 0x31 performance) but are very
+> similar to those used by the existing Victus-S code paths although
+> it wasn't in the config.  As a result:
 > 
-> Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
-
-Thank you for the patch. Small correction requests below.
-
+> - `/sys/devices/platform/hp-wmi/fan*` reported 0
+> - `echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable`
+>   max-fan writes failed
+> - platform_profile was not registered, so performance/balanced switching
+>   was not available
+> 
+> I added the new board to victus_s_thermal_profile_boards[] and created
+> omen_2024_thermal_profile_boards[] with HP_OMEN_2024_THERMAL_PROFILE_*
+> enums, and switched the Victus-S performance setter to choose the
+> right wmi commands.
+> 
+> I was was unsure of whether to rename the victus_s_ names to
+> newer or 2024 boards everywhere becuase this would clutter the commit.
+> 
+> Tested on HP Omen 16-wf0xxx (BIOS F.21):
+>  * fan RPMs readable
+>  * performance/balanced switching works (needed nvidiaDynamicBoost to
+>    see max wattage changes but it does work)
+>  * "max fans" honoured (firmware reverts after 120 sec, but the existing
+>    timed board variables don't work when testing. On Windows the
+>    Omen Command Center simply sends lots of commands to keep this alive
+>    so this seems fine to me as user applications can write to the
+>    fan speed every ~100 sec).
+> 
+> Signed-off-by: noahpro <noahpro@gmail.com>
 > ---
-> Changes since v2:
-> - Fix Kconfig dependencies
-> - Accept WMI buffers that are bigger than expected
+>  drivers/platform/x86/hp/hp-wmi.c | 41 ++++++++++++++++++++++++++++----
+>  1 file changed, 36 insertions(+), 5 deletions(-)
 > 
-> Link to v2: https://lore.kernel.org/platform-driver-x86/20250729190528.8446-1-foxido@foxido.dev/
-> ---
->  MAINTAINERS                      |   6 ++
->  drivers/platform/x86/Kconfig     |  12 +++
->  drivers/platform/x86/Makefile    |   1 +
->  drivers/platform/x86/redmi-wmi.c | 129 +++++++++++++++++++++++++++++++
->  4 files changed, 148 insertions(+)
->  create mode 100644 drivers/platform/x86/redmi-wmi.c
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index db5fdee2109c..55c3680724b5 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -92,9 +92,13 @@ static const char * const victus_thermal_profile_boards[] = {
+>  	"8A25"
+>  };
+>  
+> -/* DMI Board names of Victus 16-s1000 laptops */
+> +/* DMI Board names of newer 2024+ laptops that have use different wmi commands */
+>  static const char * const victus_s_thermal_profile_boards[] = {
+> -	"8C9C"
+> +	"8C9C", "8BAB"
+> +};
+> +
+> +static const char * const omen_2024_thermal_profile_boards[] = {
+> +	"8BAB"
+>  };
+>  
+>  enum hp_wmi_radio {
+> @@ -245,6 +249,11 @@ enum hp_thermal_profile_victus_s {
+>  	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
+>  };
+>  
+> +enum hp_thermal_profile_omen_2024 {
+> +	HP_OMEN_2024_THERMAL_PROFILE_DEFAULT	  = 0x48,
+> +	HP_OMEN_2024_THERMAL_PROFILE_PERFORMANCE  = 0x31,
+> +};
+> +
+>  enum hp_thermal_profile {
+>  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+>  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> @@ -1580,6 +1589,19 @@ static bool is_victus_s_thermal_profile(void)
+>  			    board_name) >= 0;
+>  }
+>  
+> +static bool is_omen_2024_thermal_profile(void)
+> +{
+> +	const char *board_name;
+> +
+> +	board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +	if (!board_name)
+> +		return false;
+> +
+> +	return match_string(omen_2024_thermal_profile_boards,
+> +			    ARRAY_SIZE(omen_2024_thermal_profile_boards),
+> +			    board_name) >= 0;
+> +}
+
+This feels something that should be done once and then stored into a 
+variable. Sadly this driver doesn't seem to rely on using drvdata but 
+lots of static vars.
+
+>  static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+>  					    bool *ppab_enable,
+>  					    u8 *dstate,
+> @@ -1666,19 +1688,28 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+>  
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+> +		if (is_omen_2024_thermal_profile())
+> +			tp = HP_OMEN_2024_THERMAL_PROFILE_PERFORMANCE;
+> +		else
+> +			tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+>  		gpu_ctgp_enable = true;
+>  		gpu_ppab_enable = true;
+>  		gpu_dstate = 1;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		if (is_omen_2024_thermal_profile())
+> +			tp = HP_OMEN_2024_THERMAL_PROFILE_DEFAULT;
+> +		else
+> +			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+>  		gpu_ctgp_enable = false;
+>  		gpu_ppab_enable = true;
+>  		gpu_dstate = 1;
+>  		break;
+>  	case PLATFORM_PROFILE_LOW_POWER:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		if (is_omen_2024_thermal_profile())
+> +			tp = HP_OMEN_2024_THERMAL_PROFILE_DEFAULT;
+> +		else
+> +			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+>  		gpu_ctgp_enable = false;
+>  		gpu_ppab_enable = false;
+>  		gpu_dstate = 1;
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c0b444e5fd5a..eb25fb10e751 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20965,6 +20965,12 @@ S:	Maintained
->  T:	git https://github.com/pkshih/rtw.git
->  F:	drivers/net/wireless/realtek/rtw89/
->  
-> +REDMIBOOK WMI DRIVERS
-> +M:	Gladyshev Ilya <foxido@foxido.dev>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/redmi-wmi.c
-> +
->  REDPINE WIRELESS DRIVER
->  L:	linux-wireless@vger.kernel.org
->  S:	Orphan
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index e5cbd58a99f3..9f98a7042e43 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -109,6 +109,18 @@ config XIAOMI_WMI
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called xiaomi-wmi.
->  
-> +config REDMI_WMI
-> +	tristate "Redmibook WMI key driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	select INPUT_SPARSEKMAP
-> +	help
-> +	  Say Y here if you want support for WMI-based hotkey events on
-> +	  Xiaomi Redmibook devices.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called redmi-wmi.
-> +
->  config GIGABYTE_WMI
->  	tristate "Gigabyte WMI temperature driver"
->  	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index bea87a85ae75..406dd0807ba7 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
->  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
->  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-> +obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
->  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
->  
->  # Acer
-> diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
-> new file mode 100644
-> index 000000000000..3dbf4a40a4ff
-> --- /dev/null
-> +++ b/drivers/platform/x86/redmi-wmi.c
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* WMI driver for Xiaomi Redmibooks */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/unaligned.h>
-> +#include <linux/wmi.h>
-> +
-> +#include <uapi/linux/input-event-codes.h>
-> +
-> +#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
-> +
-> +#define AI_KEY_VALUE_MASK 0x00000100
-> +
-> +static const struct key_entry redmi_wmi_keymap[] = {
-> +	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
-> +	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
-> +	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
-> +
-> +	/* AI button has code for each position */
-> +	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
-> +	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
-> +
-> +	/* Keyboard backlight */
-> +	{KE_IGNORE, 0x00000501, {}},
-> +	{KE_IGNORE, 0x00800501, {}},
-> +	{KE_IGNORE, 0x00050501, {}},
-> +	{KE_IGNORE, 0x000a0501, {}},
-> +
-> +	{KE_END}
-> +};
-> +
-> +struct redmi_wmi {
-> +	struct input_dev *input_dev;
-> +	/* Protects the key event sequence */
-> +	struct mutex key_lock;
-> +};
-> +
-> +static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct redmi_wmi *data;
-> +	int err;
-> +
-> +	/* Init dev */
-> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, data);
-> +
-> +	err = devm_mutex_init(&wdev->dev, &data->key_lock);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Setup input device */
-
-I'd drop this comment as it doesn't really add much value.
-
-> +	data->input_dev = devm_input_allocate_device(&wdev->dev);
-> +	if (!data->input_dev)
-> +		return -ENOMEM;
-> +	data->input_dev->name = "Redmibook WMI keys";
-> +	data->input_dev->phys = "wmi/input0";
-> +
-> +	err = sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
-> +	if (err)
-> +		return err;
-> +
-> +	return input_register_device(data->input_dev);
-> +}
-> +
-> +static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-> +{
-> +	struct redmi_wmi *data = dev_get_drvdata(&wdev->dev);
-> +	bool autorelease = true;
-> +	int value = 1;
-> +
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-
-To me it feels like these prints from the notify handlers should be 
-ratelimited just in case, but then I notice the other drivers don't 
-ratelimit them either so perhaps it has never caused an issue.
-
-> +		return;
-> +	}
-> +
-> +	if (obj->buffer.length < 32) {
-> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-> +		return;
-> +	}
-> +
-> +	/* For linearizability */
-
-This comment doesn't really tell anything we don't know already from 
-seeing the mutex being taken.
-
-> +	guard(mutex)(&data->key_lock);
-> +
-> +	u32 payload = get_unaligned_le32(obj->buffer.pointer);
-
-Please always declare variables at the beginning of a function or a block, 
-not in the middle of it. The only allowed exception to this rule is 
-cleanup.h related variables as there the cleanup order really matters.
-
-> +	struct key_entry *entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
-> +
-> +	if (!entry) {
-> +		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
-> +		return;
-> +	}
-> +
-> +	/* AI key quirk */
-> +	if (entry->keycode == KEY_ASSISTANT) {
-> +		value = !(payload & AI_KEY_VALUE_MASK);
-> +		autorelease = false;
-> +	}
-> +
-> +	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
-> +}
-> +
-> +static const struct wmi_device_id redmi_wmi_id_table[] = {
-> +	{ .guid_string = WMI_REDMIBOOK_KEYBOARD_EVENT_GUID },
-> +	{ }
-> +};
-> +
-> +static struct wmi_driver redmi_wmi_driver = {
-> +	.driver = {
-> +		.name = "redmi-wmi",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS
-
-Please put a comma on any non-terminating entries so that a future 
-diff won't have to add it on that (unrelated) line.
-
-> +	},
-> +	.id_table = redmi_wmi_id_table,
-> +	.probe = redmi_wmi_probe,
-> +	.notify = redmi_wmi_notify,
-> +	.no_singleton = true,
-> +};
-> +module_wmi_driver(redmi_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
-> +MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
-> +MODULE_DESCRIPTION("Redmibook WMI driver");
-> +MODULE_LICENSE("GPL");
+> base-commit: 1798561befd8be1e52feb54f850efcab5a595f43
 > 
 
 -- 
