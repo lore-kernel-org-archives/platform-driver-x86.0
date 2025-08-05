@@ -1,191 +1,124 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5195E2798EF;
-	Tue,  5 Aug 2025 14:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754402516; cv=pass; b=i/yWMfAuvmY3/pkQL5PCxNzxgSPp8cXuFwE4TjI2VLibIPxBo5fqy2fHrfrritg8hobPfYkRT3LOf0kI6o7P9igbxivTlXTLrbpB9TlltMgaElw6QQaGJQKqv11wVyBevOtRKtPdYEC1Sf0qEWxYUmklLBx0ARy6eWS1DGStQpU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754402516; c=relaxed/simple;
-	bh=XIxQxnU0xVK+cxhZrdEdccN8S9oUSm9/ytnvIqa1W5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uyjYM6PC1CHtKun2ZFThna8tP1NeOEc/sTmp2Qye966mxymAS5dOq+IaOs982b5y1sRVw1+B+87Hh24IAuUwk6nxqYmCBUnO1BBTuZV17mcmf9cwwbmbioVz55X6D30JzPi8dfeNmbBr2pdBeKBlqtGTeMF/ehYCJBR3LPicb6c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=iudBfvHW; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD2D19258E;
+	Tue,  5 Aug 2025 19:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754422977; cv=none; b=WjT6KzIE4vWBbar7+IjJldDgkbpJoRNXo8TT7HAaiAWsrmPzUlqAyayuO0Uek7GP85U3HtXrKZVNiyCzvZLUk4n3KWYIgU1o/yWnhKwXK0vbduqFgfX7TEGrqBnHvPRenQKeECL+ZJKi1JI1vC3ABMK8px3oVolAHY2XbgcBq/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754422977; c=relaxed/simple;
+	bh=kLs87WW2SMVWwYZE+OZT7eawLAhQQ1BZVADC8cwhPWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uHc/7hVO4A6u+ajmeM4vJ2PjHRCemMiCGs6S3DGKxNztUj+mh43Ji757r3/UgES5oWoIkjL/WZ3jXyIy6rGoMU9G/weRFQlm/mi9DApqTsLbpx0VfNqszqnS1dB7ZDNDcOVQRFPYaV8FpqXVF7WNfHEVfdslPbUKpXObbw63L1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqJf7+az; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="iudBfvHW"
-ARC-Seal: i=1; a=rsa-sha256; t=1754402504; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=CPAhJ38echNu7NwuPSApJAYpsp9NQZFeP6B8agGEyv3JJrK0NPCEV/mDledoyhdyTN4R1px0fheXhKL8Gt0C3DBUf4f3XToc24utZTrrfgj80SRTmQglyG4DzFSz3zcnmfPKxg8G2Fvnyb0l/zmKalbB0JN21bXsUUiaX7XfJTo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1754402504; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KLD0agmNAMnmyf27fVCPlQIUAQ3zVBfhyAEJ7jRU07s=; 
-	b=gxcmsucE2vkOHciHnD5SE8TBOTmjdjLKlWyEF3vol7yi0MBavywe9HLBqr11lMw0DwRlFULJMq+jV17MOIgA7cXVEt9E/bWL38G8dMngspiYqiNJNG7cgnggoqDuHkSc0i8TGNiqONFyXlGLVJ5aPOWwJO0B+CFJfFNjIwU2zfg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754402504;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=KLD0agmNAMnmyf27fVCPlQIUAQ3zVBfhyAEJ7jRU07s=;
-	b=iudBfvHWAuxuejX+Fs8hxlwJBf4vuchRVGJ1X4BCpRSBsCxCJGw/2eid2T9KjPgN
-	lCo+j5jYO4vehWyhPSp9yqVXhKzEDvPuJby6cB0tLdb7q17SoW0eUq8Y0cELrrNmvEc
-	4zSDfFrm5WKHBXZ5G7MZhvcKr7w+eIX+CBE8cXe0=
-Received: by mx.zohomail.com with SMTPS id 1754402502071948.9728883893175;
-	Tue, 5 Aug 2025 07:01:42 -0700 (PDT)
-From: Rong Zhang <i@rong.moe>
-To: Ike Panhc <ikepanhc@gmail.com>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Rong Zhang <i@rong.moe>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: ideapad-laptop: Fully support auto kbd backlight
-Date: Tue,  5 Aug 2025 22:01:29 +0800
-Message-ID: <20250805140131.284122-3-i@rong.moe>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250805140131.284122-1-i@rong.moe>
-References: <20250805140131.284122-1-i@rong.moe>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqJf7+az"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b390136ed88so4323818a12.2;
+        Tue, 05 Aug 2025 12:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754422975; x=1755027775; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H/84FN0lCtL+yVEoD5dY9mi3r9WEEAKxtGWaGfvdRV8=;
+        b=AqJf7+azrc+Xa6CoJdQhNDIgI9YfkugmXI7Jvi8ebPM7y/jckYLwwM+0Sy8SzGYtB5
+         jzBAGTkQINDE668/dBXY65xbd2JLu0oJ6beziPuSyyGlF6u0hktWbszJifBkjCHfqk7h
+         iTNh0brgRV2otASxbRUT8iCNw0dWUevlaZ80S3QOGQIFYkF6iXCs8kBR4jBQZksVXex0
+         OxZZ1h3aSgfQ5PIHOA808yOjMmlpfsMgVJDtXRCDAbztdRsz8iN7/gW8L1FIcQUtCvr/
+         rh2DDRNKizKOXvtmMoDLX2Y694uEDpwjkt4BflRjYkG9AW0GffEQ0sDnzXdBIeTLobtU
+         fCIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754422975; x=1755027775;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H/84FN0lCtL+yVEoD5dY9mi3r9WEEAKxtGWaGfvdRV8=;
+        b=C33NI4EzE8+FM83AH8yj0u5Q0X/yLSaA8fNGOrGh9Dw57rJlzzx2NVioFaWD8NYUEr
+         lbgHmxvukjTeTCNPUNQR47c7B2943obTQKYSzFMaXseD7xpbRcZtVabnt1h2Nn/3KoHc
+         hw4eum+qcNtCIt0waA4Yfdol0xi45/04TJvzR3dcBclqb9bdkN60TyF0/RKpaZaYIFJS
+         izGOCyzfCsxg9ACx42+ERhQoba/LRLnEAHmF9NJXsUumsm3OVa9coG9xQMfUWLtcNo6x
+         MyUWJLchbSwIBbh17DN/1B9mYiQ3g+A9HOMVnwM+v1NoXw8pghjjIBNSIqGQfEbTuLOy
+         Gg0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUICT5/EE/QgzGRtwFb74ObAB/NhgeZBltlSv4vI9UfMrHtcdcSu10N66VHwhy17d/0ZTve1ZXNjjr2dQ==@vger.kernel.org, AJvYcCUpTjooO79MH1LvNBUXQ5tXI1b8xnli5fv6ABxe6q6cpVj9z/H/iXKc7AFcnD1GqITlwdBelBbfcWhuYAsduNXe0UdYZA==@vger.kernel.org, AJvYcCWsNsWTi8M7IwSKL3n3ZkCdfSRCAkLIQrM9gQezZErjf1iTQPz22hkG1Vd5x/7ymlA2mNb/JVIv3uDHKTuO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjD7+g9cyOnR1GObh1cAKLd1csmeSRBCP/T0YN8S6guN4Y1NOW
+	asRpzePADlpE3VkDO7ZpwjQ+MUK+0CQFV2D/ViCXe31+oy/v0DxYiDXQ
+X-Gm-Gg: ASbGncv6kWIruBb3Pbx1PSTDPvp/z3hNeUqGF0PIOs+i+f+EhuweiAEgvu77IYnRVyw
+	5nfCALbouyMvTlJTLP7QPdiZjBilHA1GSmCPwXc7kstiIiSSGxvq+mkvErkjACQbal1hm8zfXo0
+	AXgZkkOPyZpyf1s4mT33q+GEPVVYbBEd+k7ySX/xFWNe877O+3iqPyJThl+vzfFZmi+sb87WOWz
+	y2HjZnmddRhDF/v1WHZx/IC5aLkqjcbv1uYnC9ZaIRWae3AAtrAR1bJik4uKE8LXsZUP0Xjctod
+	KlszYVP0SGTk9qVgozGO0eXManLb0gPwj6mdEzzCUHXeTFKv/EQF/imFKBbNcW38LUQWMCHVyz4
+	V4zc0trzsGjvD5flaRjgia8U=
+X-Google-Smtp-Source: AGHT+IHwDgUbEeMEFWdNmOEMhZvWF2cWYbUvCz4fgrfhF/bG/IDYM6bA+UzkX2dEh5rPTgjY9k0jrQ==
+X-Received: by 2002:a17:90b:3c8b:b0:31f:7160:df4b with SMTP id 98e67ed59e1d1-32166c339d7mr101323a91.15.1754422974941;
+        Tue, 05 Aug 2025 12:42:54 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:7365:6457:e1c0:7ff1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31f63ee0d77sm17475525a91.20.2025.08.05.12.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Aug 2025 12:42:54 -0700 (PDT)
+Date: Tue, 5 Aug 2025 12:42:51 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Gladyshev Ilya <foxido@foxido.dev>
+Cc: w_armin@gmx.de, linux-input@vger.kernel.org, 
+	nikita.nikita.krasnov@gmail.com, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Add WMI driver for Redmibook keyboard.
+Message-ID: <5e32uo4suh3mtib4tohtekwvycxgfzqcem3wwc6k6wwdxyjhpc@bt57y7vyvpmz>
+References: <20250729190528.8446-1-foxido@foxido.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250729190528.8446-1-foxido@foxido.dev>
 
-Currently, the auto brightness mode of keyboard backlight maps to
-brightness=0 in LED classdev. The only method to switch to such a mode
-is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-is a multiplexed brightness value; writing 0 simply results in the
-backlight being turned off.
+On Tue, Jul 29, 2025 at 10:05:21PM +0300, Gladyshev Ilya wrote:
+> +static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +{
+> +	struct redmi_wmi *data = dev_get_drvdata(&wdev->dev);
+> +	int value = 1;
+> +	bool autorelease = true;
+> +
+> +	if (obj->type != ACPI_TYPE_BUFFER) {
+> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> +		return;
+> +	}
+> +
+> +	if (obj->buffer.length != 32) {
+> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
+> +		return;
+> +	}
+> +
+> +	/* For linearizability */
+> +	guard(mutex)(&data->key_lock);
 
-With brightness processing code decoupled from LED classdev, we can now
-fully support the auto brightness mode. In this mode, the keyboard
-backlight is controlled by the EC according to the ambient light sensor
-(ALS).
+What is the exact purpose of this mutex? What does it protect? 
 
-To utilize this, a sysfs node is exposed to the userspace:
-/sys/class/leds/platform::kbd_backlight/als_enabled. The name is chosen
-to align with dell-laptop, which provides a similar feature.
+> +
+> +	u32 payload = get_unaligned_le32(obj->buffer.pointer);
+> +	struct key_entry *entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
+> +
+> +	if (!entry) {
+> +		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
+> +		return;
+> +	}
+> +
+> +	/* AI key quirk */
+> +	if (entry->keycode == KEY_ASSISTANT) {
+> +		value = !(payload & AI_KEY_VALUE_MASK);
+> +		autorelease = false;
+> +	}
+> +
+> +	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
+> +}
 
-Signed-off-by: Rong Zhang <i@rong.moe>
----
- .../ABI/testing/sysfs-platform-ideapad-laptop | 12 ++++
- drivers/platform/x86/lenovo/ideapad-laptop.c  | 65 ++++++++++++++++++-
- 2 files changed, 75 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-index 5ec0dee9e707..a2b78aa60aaa 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -50,3 +50,15 @@ Description:
- 		Controls whether the "always on USB charging" feature is
- 		enabled or not. This feature enables charging USB devices
- 		even if the computer is not turned on.
-+
-+What:		/sys/class/leds/platform::kbd_backlight/als_enabled
-+Date:		July 2025
-+KernelVersion:	6.17
-+Contact:	platform-driver-x86@vger.kernel.org
-+Description:
-+		This file allows to control the automatic keyboard
-+		illumination mode on some systems that have an ambient
-+		light sensor. Write 1 to this file to enable the auto
-+		mode, 0 to disable it. In this mode, the actual
-+		brightness level is not available and reading the
-+		"brightness" file always returns 0.
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 5014c1d0b633..49f2fc68add4 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1712,6 +1712,57 @@ static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
- 	ideapad_kbd_bl_notify_known(priv, brightness);
- }
- 
-+static ssize_t als_enabled_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-+	int hw_brightness;
-+
-+	hw_brightness = ideapad_kbd_bl_hw_brightness_get(priv);
-+	if (hw_brightness < 0)
-+		return hw_brightness;
-+
-+	return sysfs_emit(buf, "%d\n", hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
-+}
-+
-+static ssize_t als_enabled_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-+	bool state;
-+	int err;
-+
-+	err = kstrtobool(buf, &state);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Auto (ALS) mode uses a predefined HW brightness value. It is
-+	 * impossible to disable it without setting another brightness value.
-+	 * Set the brightness to 0 when disabling is requested.
-+	 */
-+	err = ideapad_kbd_bl_hw_brightness_set(priv, state ? KBD_BL_AUTO_MODE_HW_BRIGHTNESS : 0);
-+	if (err)
-+		return err;
-+
-+	/* Both HW brightness values map to 0 in the LED classdev. */
-+	ideapad_kbd_bl_notify_known(priv, 0);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(als_enabled);
-+
-+static struct attribute *ideapad_kbd_bl_als_attrs[] = {
-+	&dev_attr_als_enabled.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(ideapad_kbd_bl_als);
-+
- static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- {
- 	int brightness, err;
-@@ -1722,10 +1773,20 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (WARN_ON(priv->kbd_bl.initialized))
- 		return -EEXIST;
- 
--	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
-+	switch (priv->kbd_bl.type) {
-+	case KBD_BL_TRISTATE_AUTO:
-+		/* The sysfs node will be /sys/class/leds/platform::kbd_backlight/als_enabled */
-+		priv->kbd_bl.led.groups = ideapad_kbd_bl_als_groups;
-+		fallthrough;
-+	case KBD_BL_TRISTATE:
- 		priv->kbd_bl.led.max_brightness = 2;
--	} else {
-+		break;
-+	case KBD_BL_STANDARD:
- 		priv->kbd_bl.led.max_brightness = 1;
-+		break;
-+	default:
-+		/* This has already been validated by ideapad_check_features(). */
-+		unreachable();
- 	}
- 
- 	brightness = ideapad_kbd_bl_brightness_get(priv);
+Thanks.
+
 -- 
-2.50.1
-
+Dmitry
