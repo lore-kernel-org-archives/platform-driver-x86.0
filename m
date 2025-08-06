@@ -1,60 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75576433C8;
-	Wed,  6 Aug 2025 11:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5757B2A1BF;
+	Wed,  6 Aug 2025 11:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754479639; cv=none; b=LGuAxS+3ORbJB/EMXHmBV3NQR/SCeRndVYYWVe/RE7/a7aOd2XBAtxC2WuD0BIx6G5lrZCWdVMcCejRQ9I9d3ZM7YrCYs2FQqETqHVCw/nKKgDs+i/FlP0P7hi4/tSaELwA+CGSLltdRUADEhQEsE2SxS3vTEaustGmUTrCpxkY=
+	t=1754480172; cv=none; b=tWXAL9P5T/67rF0x4fwcZDcF1XIG5RMo5fOvMJ2b/VxH3IHYyGufKDXra9zcfhaGh1P7b7veFneqnLRwP2bD27CrgynnXA6Zi2BqW3ToIDgNamtqiaHGU/D8Pq+sUhARl/GAZ8sxJX6PutrLUtLiPGV+lemnhV+c2TftaqZUN0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754479639; c=relaxed/simple;
-	bh=SUL12yiALrrYQVurDqvFUFZvMfjm0vQJNdkY7p2+v7o=;
+	s=arc-20240116; t=1754480172; c=relaxed/simple;
+	bh=/c1JkBuOtHBojzROFpxkTsgPYzfasN63MXct1wNxB+o=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KXfwa++IGA/EOsc/fIBEmConsfbAQfsZVpLi4xJfOvkJSYsv5hzePmVhuPCo3r3ShjmsSGIRhxLvxQ512Bm5hQ4XwZlLtYPhuTMVA62AYQ0di7A+MCAFzYw1LLmHnbQfuIOC4JZtJLrzZqj3PqYZKwvGr3guj96McVNTPgti2gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7DgaPdr; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version:Content-Type; b=VyrW7RzR2fGhpV3BQWFDCAotQELLUOrEmYRwzOj34ede4trGmEaFslBlx7iyhBarxT6XEHSDA3/JIi1QJVT6k1WNfX5q995pBTJ06Ev4AzkRKIzmU+UOPS9PM8qKGQ7DE7w8n9BL1fv3jCOK9xDETY5CKnEV8MrJIZmbtG6TxSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=meP8tYEj; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7DgaPdr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meP8tYEj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754479638; x=1786015638;
+  t=1754480172; x=1786016172;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=SUL12yiALrrYQVurDqvFUFZvMfjm0vQJNdkY7p2+v7o=;
-  b=i7DgaPdr+DK4FnX5VtFG++MUbEF/wDe8va3T7bbMm5FsUjRQyxbaJT8z
-   zexSa9wCwFxI6JrQU07SP5X4W0TxSg/pFhN6+KBiTyZa05Eo/DvXqCPFD
-   dEpXU4RHL6h7fDgqhIao8+bMVsjRl7WOmoIZQblrP0aFFmHfWJro5AYm1
-   uVBTGcv2ySI2c5dL+xEUqZ3uybc4//qL0vOiUpKBCxnn/gU2jAkQRcsen
-   VMiJV7ncoVagjr1ZuHbNBhwG03Ti4Lh2SQu8NWphCQY7PwkkSvrspcDqp
-   qZ5sMzFTMYoQuFC2/k2d9qzqKEAvRYIwe1XRBFy5ihFT0NmVOXSQUdiBg
-   Q==;
-X-CSE-ConnectionGUID: HRMKU2S+RxyESxB1W7y1gg==
-X-CSE-MsgGUID: sKN+sS4IQ4uvwOMUMgwDLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11513"; a="56506899"
+  bh=/c1JkBuOtHBojzROFpxkTsgPYzfasN63MXct1wNxB+o=;
+  b=meP8tYEjLwJRWiHmj6ZfukL/rtNTOhp+FJeQOgV07Ap7rHz9Q04x4cPU
+   pSd0eb+Yiqtpqau4AqLT7rYMnptFAg7b6QdvhHHsiXPhfho6zCDgDDDz1
+   6/V8fWx6xSWwy2LM3tQThuUgPOnc6lEpqHiZgiCOpWwqQSX7U8i1L8JP9
+   agdirvbuWI2EdsMyxFfgk9vH+DLcRNJt5R3BQPsr/641/Cg85SSZFgE07
+   ObLKxILilPKmWL4DLBbchxxiE3iRUElad88XT6QKoJCcvz/nze65HPlK3
+   P46MgVTQzIr1x4i439b52VyxKeOGCjpJMsJbUTLNL+8SBmVEl7GXLHawE
+   A==;
+X-CSE-ConnectionGUID: RrA854ZWQ7eQ6qE4Uiph4A==
+X-CSE-MsgGUID: DG/8RZPCSOSgCU/0l1qGzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11513"; a="74252799"
 X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="56506899"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 04:27:17 -0700
-X-CSE-ConnectionGUID: xvThYN9ASSS/aYE6CCy/8w==
-X-CSE-MsgGUID: ZX25GWJHTCa3/JTKFsaICQ==
+   d="scan'208";a="74252799"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 04:36:11 -0700
+X-CSE-ConnectionGUID: Za+yqn57RX2aa3DtHcSe+Q==
+X-CSE-MsgGUID: /4MHrO2WSrO74i95X9L+1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="165121799"
+   d="scan'208";a="195719009"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.170])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 04:27:13 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 04:36:07 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 6 Aug 2025 14:26:59 +0300 (EEST)
-To: Rong Zhang <i@rong.moe>
-cc: Ike Panhc <ikepanhc@gmail.com>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Fully support auto
- kbd backlight
-In-Reply-To: <20250805140131.284122-3-i@rong.moe>
-Message-ID: <9a2fad3c-66d5-c877-698b-a9b5a589f081@linux.intel.com>
-References: <20250805140131.284122-1-i@rong.moe> <20250805140131.284122-3-i@rong.moe>
+Date: Wed, 6 Aug 2025 14:35:56 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v1] platform/x86: asus-wmi: Fix ROG button mapping, tablet
+ mode on ASUS ROG Z13
+In-Reply-To: <20250803155713.9301-1-lkml@antheas.dev>
+Message-ID: <2c7476d5-2a1b-5f1a-9c75-76f74752d0da@linux.intel.com>
+References: <20250803155713.9301-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,146 +62,119 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 5 Aug 2025, Rong Zhang wrote:
+On Sun, 3 Aug 2025, Antheas Kapenekakis wrote:
 
-> Currently, the auto brightness mode of keyboard backlight maps to
-> brightness=0 in LED classdev. The only method to switch to such a mode
-> is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-> is a multiplexed brightness value; writing 0 simply results in the
-> backlight being turned off.
+> On commit 9286dfd5735b ("platform/x86: asus-wmi: Fix spurious rfkill on
+> UX8406MA"), Mathieu adds a quirk for the Zenbook Duo to ignore the code
+> 0x5f (WLAN button disable). On that laptop, this code is triggered when
+> the device keyboard is attached.
 > 
-> With brightness processing code decoupled from LED classdev, we can now
-> fully support the auto brightness mode. In this mode, the keyboard
-> backlight is controlled by the EC according to the ambient light sensor
-> (ALS).
+> On the ASUS ROG Z13 2025, this code is triggered when pressing the side
+> button of the device, which is used to open Armoury Crate in Windows.
 > 
-> To utilize this, a sysfs node is exposed to the userspace:
-> /sys/class/leds/platform::kbd_backlight/als_enabled. The name is chosen
-> to align with dell-laptop, which provides a similar feature.
+> As this is becoming a pattern, where newer Asus laptops use this keycode
+> for emitting events, let's convert the wlan ignore quirk to instead
+> allow emitting codes, so that userspace programs can listen to it and
+> so that it does not interfere with the rfkill state.
 > 
-> Signed-off-by: Rong Zhang <i@rong.moe>
+> With this patch, the Z13 wil emit KEY_PROG3 and the Duo will remain
+> unchanged and emit no event.
+
+> This patch also removes the override for
+> codes 0x5d and 0x5e, as those were added for completeness in the
+> previous patch.
+
+This sounds like it warrants own patch.
+
+> While at it, add a quirk for the Z13 to switch into tablet mode when
+> removing the keyboard.
+>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > ---
->  .../ABI/testing/sysfs-platform-ideapad-laptop | 12 ++++
->  drivers/platform/x86/lenovo/ideapad-laptop.c  | 65 ++++++++++++++++++-
->  2 files changed, 75 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/asus-nb-wmi.c | 25 +++++++++++++++++++------
+>  drivers/platform/x86/asus-wmi.h    |  3 ++-
+>  2 files changed, 21 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> index 5ec0dee9e707..a2b78aa60aaa 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> @@ -50,3 +50,15 @@ Description:
->  		Controls whether the "always on USB charging" feature is
->  		enabled or not. This feature enables charging USB devices
->  		even if the computer is not turned on.
-> +
-> +What:		/sys/class/leds/platform::kbd_backlight/als_enabled
-> +Date:		July 2025
-> +KernelVersion:	6.17
-
-This ship has sailed.
-
-> +Contact:	platform-driver-x86@vger.kernel.org
-> +Description:
-> +		This file allows to control the automatic keyboard
-
-Please avoid using "This file" entirely in the description.
-
-Start with "Controls ..."
-
-> +		illumination mode on some systems that have an ambient
-> +		light sensor. Write 1 to this file to enable the auto
-> +		mode, 0 to disable it. In this mode, the actual
-
-What is "this mode" ? Did you mean, e.g., "When the auto mode is enabled,"
-?
-
-> +		brightness level is not available and reading the
-> +		"brightness" file always returns 0.
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> index 5014c1d0b633..49f2fc68add4 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -1712,6 +1712,57 @@ static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
->  	ideapad_kbd_bl_notify_known(priv, brightness);
->  }
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index f84c3d03c1de..6928bb6ae0f3 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -147,7 +147,12 @@ static struct quirk_entry quirk_asus_ignore_fan = {
+>  };
 >  
-> +static ssize_t als_enabled_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> +	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-> +	int hw_brightness;
-> +
-> +	hw_brightness = ideapad_kbd_bl_hw_brightness_get(priv);
-> +	if (hw_brightness < 0)
-> +		return hw_brightness;
-> +
-> +	return sysfs_emit(buf, "%d\n", hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
-> +}
-> +
-> +static ssize_t als_enabled_store(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 const char *buf, size_t count)
-> +{
-> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> +	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-> +	bool state;
-> +	int err;
-> +
-> +	err = kstrtobool(buf, &state);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Auto (ALS) mode uses a predefined HW brightness value. It is
-> +	 * impossible to disable it without setting another brightness value.
-> +	 * Set the brightness to 0 when disabling is requested.
-> +	 */
-> +	err = ideapad_kbd_bl_hw_brightness_set(priv, state ? KBD_BL_AUTO_MODE_HW_BRIGHTNESS : 0);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Both HW brightness values map to 0 in the LED classdev. */
-> +	ideapad_kbd_bl_notify_known(priv, 0);
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(als_enabled);
-> +
-> +static struct attribute *ideapad_kbd_bl_als_attrs[] = {
-> +	&dev_attr_als_enabled.attr,
-> +	NULL,
+>  static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
+> -	.ignore_key_wlan = true,
+> +	.key_wlan_event = ASUS_WMI_KEY_IGNORE,
 > +};
-> +ATTRIBUTE_GROUPS(ideapad_kbd_bl_als);
 > +
->  static int ideapad_kbd_bl_init(struct ideapad_private *priv)
->  {
->  	int brightness, err;
-> @@ -1722,10 +1773,20 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
->  	if (WARN_ON(priv->kbd_bl.initialized))
->  		return -EEXIST;
+> +static struct quirk_entry quirk_asus_z13 = {
+> +	.key_wlan_event = ASUS_WMI_KEY_ARMOURY,
+> +	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
+>  };
 >  
-> -	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
-> +	switch (priv->kbd_bl.type) {
-> +	case KBD_BL_TRISTATE_AUTO:
-> +		/* The sysfs node will be /sys/class/leds/platform::kbd_backlight/als_enabled */
-> +		priv->kbd_bl.led.groups = ideapad_kbd_bl_als_groups;
-> +		fallthrough;
-> +	case KBD_BL_TRISTATE:
->  		priv->kbd_bl.led.max_brightness = 2;
-> -	} else {
-> +		break;
-> +	case KBD_BL_STANDARD:
->  		priv->kbd_bl.led.max_brightness = 1;
-> +		break;
-> +	default:
-> +		/* This has already been validated by ideapad_check_features(). */
-> +		unreachable();
+>  static int dmi_matched(const struct dmi_system_id *dmi)
+> @@ -539,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_zenbook_duo_kbd,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS ROG Z13",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Flow Z13"),
+> +		},
+> +		.driver_data = &quirk_asus_z13,
+> +	},
+>  	{},
+>  };
+>  
+> @@ -636,6 +650,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>  	{ KE_IGNORE, 0xCF, },	/* AC mode */
+>  	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
+>  	{ KE_KEY, 0xBD, { KEY_PROG2 } },           /* Lid flip action on ROG xflow laptops */
+> +	{ KE_KEY, ASUS_WMI_KEY_ARMOURY, { KEY_PROG3 } },
+>  	{ KE_END, 0},
+>  };
+>  
+> @@ -655,11 +670,9 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
+>  		if (atkbd_reports_vol_keys)
+>  			*code = ASUS_WMI_KEY_IGNORE;
+>  		break;
+> -	case 0x5D: /* Wireless console Toggle */
+> -	case 0x5E: /* Wireless console Enable */
+> -	case 0x5F: /* Wireless console Disable */
+> -		if (quirks->ignore_key_wlan)
+> -			*code = ASUS_WMI_KEY_IGNORE;
+> +	case 0x5F: /* Wireless console Disable / Special Key */
+> +		if (quirks->key_wlan_event)
+> +			*code = quirks->key_wlan_event;
+>  		break;
 >  	}
+>  }
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index 018dfde4025e..5cd4392b964e 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/i8042.h>
 >  
->  	brightness = ideapad_kbd_bl_brightness_get(priv);
+>  #define ASUS_WMI_KEY_IGNORE (-1)
+> +#define ASUS_WMI_KEY_ARMOURY	0xffff01
+>  #define ASUS_WMI_BRN_DOWN	0x2e
+>  #define ASUS_WMI_BRN_UP		0x2f
+>  
+> @@ -40,7 +41,7 @@ struct quirk_entry {
+>  	bool wmi_force_als_set;
+>  	bool wmi_ignore_fan;
+>  	bool filter_i8042_e1_extended_codes;
+> -	bool ignore_key_wlan;
+> +	int key_wlan_event;
+>  	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+>  	int wapf;
+>  	/*
+> 
+> base-commit: 186f3edfdd41f2ae87fc40a9ccba52a3bf930994
 > 
 
 -- 
