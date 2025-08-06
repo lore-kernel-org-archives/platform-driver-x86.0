@@ -1,78 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89211F9EC0
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Aug 2025 09:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4857B1D63F7;
+	Wed,  6 Aug 2025 09:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754471238; cv=none; b=r/ELuyFbfepzysL1CCb+crcex3S0goF0SAMzXWoczFNnYmv04URc+XdSJMFiLis8jqARZsL9yWHn+KfEZYBA6ID/k1OOnvDHwk38gkZBmTeMuBRnY2Zl45+v5qRD1iAZbbowfGg4ZtWlFAPExVsDsvL7uSWqJdJlb2r+esIWu9A=
+	t=1754471835; cv=none; b=u7CTNIioLp0zGGk/iGG8h/CvojRMqMuowwbxXHgU7oloDoyxH6XxmCWqgHcdJweMdh9A7K/ks9AQH/McueMRfpNFLr61281yuPy3lQ0AZn0k7Ux9khCmU279ZQH/TpR7wO+b/Wk1opJ0vreNssLFrYkcNcvugEbbLz2CcuH37lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754471238; c=relaxed/simple;
-	bh=SVq08Z0bRFlPE9yFfsgS/Pa3LvW0XdEF0VqZhnUtn0s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YBlqdMAYaYGQRRtCR+svWNWAB+m3ZnBmUW3UYRB5pYTxy8/hvRyJCf8Klc3eWEJ26CbuiFiz7YrNf7eKI0XKkVUyJQp9CI0uBHZhafLLlc+4BsYYtfx0c+sldUAcG7FZt4+tOOHOqvbS7hq1jV13TQelmlBTesiRB9VUjNVjrCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4VMNOW/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754471835; c=relaxed/simple;
+	bh=2pYDtRe3Zvc28necsuByBOgarBqT07RbfR1O34mvi38=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PVy4M52vye+Ln9Fhvfgkdr5Z0h3YWvwufeP/RdOu4kqi2OjZ/m27YzLMZmUs5mmDQl3rbhaPfErYFYUAQIgje3UP7RbW/gzzJ6SqFuHDXKivswH09ee6bCiwFaKHVS8gbHcNZjf/IkDVM9ZYNd1hDAy9WRMUxihr0agodgD4peU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TuSXq1PQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4VMNOW/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 287E3C4CEF9
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Aug 2025 09:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754471238;
-	bh=SVq08Z0bRFlPE9yFfsgS/Pa3LvW0XdEF0VqZhnUtn0s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=m4VMNOW/v6/wjfc5G+Lq1GtW9l45D5Tj/qXYlv571+oInG23EelCXbQHlIF59oc0b
-	 2S1ZN5tXez8H01D/nUutngM/ho/aIZ0hW7RbQY2YG4OekzCjv4ZE2AQ4rMEqK364s7
-	 Y+YaQIrocMfnvTcPe4wiHrBVHKUxiUmwW1Arh3OjH37DvRfqUqiw/JGM+hOYdtRwJS
-	 WZmc1VVv7AOMtBzIM3s8pTFgUxtwf/iMuSmEIDjfrBkfYf7EekMQVjoRqEXlLnLGmD
-	 wJ2xsj9ixZp1lLjq7O1GXUP76Uh2z57/NM4HvYR4wjA1V3gyrb0GLn4zxDGEQjTRmF
-	 DzagBxEie8ysg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 1AC0AC41616; Wed,  6 Aug 2025 09:07:18 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220421] intel_pmc_core INT33A1:00: pmc_core: couldn't get DMU
- telem endpoint -6
-Date: Wed, 06 Aug 2025 09:07:17 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mapengyu@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220421-215701-pkd7K7FrZw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220421-215701@https.bugzilla.kernel.org/>
-References: <bug-220421-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TuSXq1PQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754471833; x=1786007833;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2pYDtRe3Zvc28necsuByBOgarBqT07RbfR1O34mvi38=;
+  b=TuSXq1PQkIe9wJUY8EeRnq/d9hRooK4T41CWiypoaZawxflYEGjzcLDa
+   jEUC/Romu3HZO+FRk6lCJEKlN2gULvZuHWByzVaKG9dM0vEdV3N0gOujP
+   PNBAU6i4Z2JCwAeZil2tHmnEgdHpCNW9YU4nwwGtMs7CVZ2l5MUvKSQGj
+   jKLMKYZZxyI73YQHx+kTrKAt96O65tnc7kUmDpJqe4ZSCakrQWrHzDSND
+   swwreHPKxwYdlNq6dQRDotNA1YdlgCS3+2RXLVsA7+Keph55oAzEwS6bn
+   8txC6AAP8C3S3N1aFbciAIMmzIgq+V9uIAgu7nUhtu7Er4q67C1XFyznB
+   g==;
+X-CSE-ConnectionGUID: 3asywbc8QMqJxWNReSInGg==
+X-CSE-MsgGUID: XuMEFtxqQ6yDrw/qjrwUmQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11513"; a="79331673"
+X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
+   d="scan'208";a="79331673"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 02:17:13 -0700
+X-CSE-ConnectionGUID: U9WNVMdqTnOqADmYYkRcqw==
+X-CSE-MsgGUID: am2KrjJpT9CiBKOAM+AieQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
+   d="scan'208";a="163947661"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.170])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 02:17:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Aug 2025 12:17:07 +0300 (EEST)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/intel-uncore-freq: Present unique domain
+ ID per package
+In-Reply-To: <20250727211051.2898789-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <f762f6a9-74cc-0299-0bea-6d1ab6c88e41@linux.intel.com>
+References: <20250727211051.2898789-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220421
+On Sun, 27 Jul 2025, Srinivas Pandruvada wrote:
 
---- Comment #2 from Pengyu Ma (mapengyu@gmail.com) ---
-# ls /sys/kernel/debug/pmc_core/
-lpm_latch_mode  package_cstate_show             substate_requirements
-ltr_ignore      pch_ip_power_gating_status      substate_residencies
-ltr_restore     slp_s0_residency_usec           substate_status_registers
-ltr_show        substate_live_status_registers
+> In partitioned systems, the domain ID is unique in the partition and a
+> package can have multiple partitions.
+> 
+> Some user-space tools, such as turbostat, assume the domain ID is unique
+> per package. These tools map CPU power domains, which are unique to a
+> package. However, this approach does not work in partitioned systems.
+> 
+> There is no architectural definition of "partition" to present to user
+> space.
+> 
+> To support these tools, set the domain_id to be unique per package. For
+> compute die IDs, uniqueness can be achieved using the platform info
+> cdie_mask, mirroring the behavior observed in non-partitioned systems.
+> 
+> For IO dies, which lack a direct CPU relationship, any unique logical
+> ID can be assigned. Here domain IDs for IO dies are configured after all
+> compute domain IDs. During the probe, keep the index of the next IO
+> domain ID after the last IO domain ID of the current partition. Since
+> CPU packages are symmetric, partition information is same for all
+> packages.
+> 
+> The Intel Speed Select driver has already implemented a similar change
+> to make the domain ID unique, with compute dies listed first, followed
+> by I/O dies.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> Rebased on
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> for-next
+> 
+>  .../uncore-frequency/uncore-frequency-tpmi.c  | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+> index bfcf92aa4d69..563e215b4076 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+> @@ -411,6 +411,47 @@ static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncor
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +#define MAX_PARTITIONS	2
+> +
+> +/* IO domain ID start index for a partition */
+> +static u8 io_die_start[MAX_PARTITIONS];
+> +
+> +/* Next IO domain ID index after the current partition IO die IDs */
+> +static u8 io_die_index_next;
+> +
+> +/* Lock to protect io_die_start, io_die_index_next */
+> +static DEFINE_MUTEX(domain_lock);
+> +
+> +static void update_domain_id(struct tpmi_uncore_cluster_info *cluster_info,
+> +			     struct oobmsm_plat_info *plat_info, int num_resource)
+> +{
+> +	u8 max_dies = topology_max_dies_per_package();
+> +	u8 cdie_cnt;
+> +
+> +	/* For non partitioned system or invalid partition number, return */
 
---=20
-You may reply to this email to add a comment.
+non-partitioned
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> +	if (!plat_info->cdie_mask || max_dies <= 1 || plat_info->partition >= MAX_PARTITIONS)
+> +		return;
+> +
+> +	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
+> +		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
+> +		return;
+> +	}
+> +
+> +	cdie_cnt = fls(plat_info->cdie_mask) - ffs(plat_info->cdie_mask) + 1;
+
+Is it intentional that you didn't use hweight here? (unfortunately,
+I don't recall details of the cdie_mask).
+
+> +	guard(mutex)(&domain_lock);
+> +
+> +	if (!io_die_index_next)
+> +		io_die_index_next = max_dies;
+> +
+> +	if (!io_die_start[plat_info->partition]) {
+> +		io_die_start[plat_info->partition] = io_die_index_next;
+> +		io_die_index_next += (num_resource - cdie_cnt);
+> +	}
+> +
+> +	cluster_info->uncore_data.domain_id += (io_die_start[plat_info->partition] - cdie_cnt);
+
+I failed to wrap my head around what this math aims to do (mainly what 
+cdie_cnt has to do with this). Can you explain (might be useful to have a 
+comment if it's something particularly tricky / non-obvious)?
+
+It could be that to make this simpler, one shouldn't assign value in 
+uncore_probe() to .domain_id at all but pass the index here (and rename 
+this function to set_domain_id()).
+
+> +}
+> +
+>  /* Callback for sysfs write for TPMI uncore data. Called under mutex locks. */
+>  static int uncore_write(struct uncore_data *data, unsigned int value, enum uncore_index index)
+>  {
+> @@ -614,6 +655,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+>  			cluster_info->uncore_data.cluster_id = j;
+>  
+>  			set_cdie_id(i, cluster_info, plat_info);
+> +			update_domain_id(cluster_info, plat_info, num_resources);
+>  
+>  			cluster_info->uncore_root = tpmi_uncore;
+>  
+> 
+
+-- 
+ i.
+
