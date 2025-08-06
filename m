@@ -1,231 +1,218 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B3419A;
-	Wed,  6 Aug 2025 13:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754487237; cv=pass; b=YrO8n+x7eCUptRExzYY5C8Rc0V4nBCJXX3+F46085AgQnFs+Qc1n6/VSASQ139X2Pbi5DJiIecrA0MATjT/65UZCLy/XzVBcoKU9A/ZatRWFXat/kB3sC6/gzN9AQy8LkU0Ka3C3w3WDoHFFeSIAywyJ6PIwfk7YEhGMEcrN0gk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754487237; c=relaxed/simple;
-	bh=2dOpAIADWbF4C8PVCONYvk4DELIrO2AJVZvujBeeo7M=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=NuchVGziPdDv1XZiqciojwUui3QwdvEmxG9sj5hV9UxziCkJaoR74iAWspBEbzaT4b+dl/MEaL/i4HYwnVguaxIdAuDoRRZdbNR5v1vT2I8TQod7VxsMKiQShZgfNiv12V5tdK42Fk6H0oGWz1waTDQbL2FMpjNJq5SyXM1Ezqo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=ycv1EeXp; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9AAC8EB;
+	Wed,  6 Aug 2025 13:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754488435; cv=none; b=Dr2pFgVqou1IqCd11UTfm3CTnmu0NjPrN0UYkzLgSQuXPnc+DNNgclaQcy+Kh5096CPIM5NrFCMMPHuGHs9LFbXHTKBcWcZdaQ3bINMzOEKE0KNhmA90INJN+rix9OeOxb1y0rI0pC8jLuf6odcX+tOaRMsu1X9uz3RaBQURZHk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754488435; c=relaxed/simple;
+	bh=NsP2wgKUUppCHuVO2UzUVaRoLitlNxQQrLsoaWU16kc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eloKhVe8b1KkOCdxa+zwDhUoc5BPiMEl8SD0Ti5o9RDys7m/qQCkMzuYBn9Rr42Dc1/wGSEq5MEKn2WEbCeb7QKV7w+MSzocLdQeCskYgKWBtRsJ9TgqvN+pchibzqaUZda+BAA71mOVv1R4FjdGsKase2Ef5dBztYl9N4ok8ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=By7INqk+; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="ycv1EeXp"
-ARC-Seal: i=1; a=rsa-sha256; t=1754487223; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QqrnqNINOdK12q5QUx5zBkEhg6O06NIYbwLwR17IXka+miZamWzxsSvT8Ym8S5TROOsuhMiuHZgnPjELlYcVOy8qvODgolnnWyhHB+vvKItUZSByUxd+Swtq66FF066aOEGibNQFZplZW1wu1Q4ATED7QUs18D683vShDglFaF8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1754487223; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pYCTlk/GK40nYVeUtUwS5qlXulOvqUMfkNed0naDUDQ=; 
-	b=Fu+f6p//RMxGO8LhCP6kzcoP1RvvsPM1pNn4Es25dPOoUycjj6KqaTkehMd7bh9Eb7TTIiSo5sBDxb7fg+MlzXqbMYmS3Z1XmixBp4JX4jUnshQU/q1jfFdhUd+yM/qN8OW9Uxse5QfcQM4kZtONwf8MB38qff34ZbzWeV4HGWA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754487223;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=pYCTlk/GK40nYVeUtUwS5qlXulOvqUMfkNed0naDUDQ=;
-	b=ycv1EeXpYpdUiOwi7KAYBWKa/KEUInXVL0JKZQfFZvej36pQQF4OVT5zAfE+xxnz
-	PlRDC2CsPbViUBfGgrLQAF98A1L1/BhW9m4n/V+Y0fRetXZarwxI3dx15lF3HcSfFWR
-	id9ybrcPE1vylacRimfJAZj2aa6tUElYS7ooEJLM=
-Received: by mx.zohomail.com with SMTPS id 1754487219747607.5034324774383;
-	Wed, 6 Aug 2025 06:33:39 -0700 (PDT)
-Message-ID: <b7ad97009fa0a49b9229ade0af5f526057869a36.camel@rong.moe>
-Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Fully support auto
- kbd backlight
-From: Rong Zhang <i@rong.moe>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ike Panhc <ikepanhc@gmail.com>, "Derek J. Clark"
- <derekjohn.clark@gmail.com>,  Mark Pearson <mpearson-lenovo@squebb.ca>,
- Hans de Goede <hansg@kernel.org>, 	platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <9a2fad3c-66d5-c877-698b-a9b5a589f081@linux.intel.com>
-References: <20250805140131.284122-1-i@rong.moe>
-	 <20250805140131.284122-3-i@rong.moe>
-	 <9a2fad3c-66d5-c877-698b-a9b5a589f081@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Aug 2025 21:28:39 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="By7INqk+"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3b8d0f1fb49so3494107f8f.2;
+        Wed, 06 Aug 2025 06:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754488431; x=1755093231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1KltnTwv+EOzLrGI8RR6Mamg5zEDocu8mKtAQ3w2FnY=;
+        b=By7INqk+XtJPw0TpnkCqWv1/xEMNlkUze0/gNJSHZ4pg1ZvDhX7pCQSPIoOmOditaW
+         uJpoOamtSGSBh36g3/fOTvGXOAH3qINpiBQaxQg7ecfkjc2KRzwPr4KAshSSMRvIL6QJ
+         jicxBqtNlmVQzgtRA5wPLgua1/H7pDuGxJcRkiXcpJ2bKjTA7XSSychYARDvsxqLTofw
+         J41/6gtiuhn9QKGTZfxCq6aTCghkl6s9vPF5Pri4A2mPBAtEImrMWc+YhDxEeiA/jAfo
+         K1CtLVyo/DUZoI7yiqdT7QP/0AKD1atCzrioSYUbgZoDSglBqXba0bUwZ209cl5tNX/O
+         8c5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754488431; x=1755093231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1KltnTwv+EOzLrGI8RR6Mamg5zEDocu8mKtAQ3w2FnY=;
+        b=hKVNQ+oR9J0E9GhRNaba6U77cJCWGRC5I7Myr5D1+SPF0jqLGfQMlLXLhRqZE2BwBD
+         Kyg6DG/7x7Xqxcl+nzexDBieU2/QtkhvF/x1ZEZGrg2koOZcAACWhIH3oEyAKCc/LUWt
+         Hzm1DdM1MpWMJpiMTC10rKE+8NCngFUtQ2rC1kO6A5X08mQGzB/LP/cKcx4psDFz5JXi
+         xo/w8tKBsbday2wazI+LHxcgfz3/IjLO1AXnZR9GBdaT+ItKWDPCKyoXX0Rn89KxHIjk
+         Q4cRQQfV3QK4AFGiqgWbK6BFzkyBwjLMxNU5a7jUwVFS9/KB+KWaFVgDbM+1GT9Styso
+         hfiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtcZ1SnuB23BYFqsBBWLqlSHTdTHlhLlHTrPVZUsAMRKDYyXdRvwuLmigzM7ta2If7bT0AE7FvZE6TznFyB+ia3Cub@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3F+YLQYzBctbD0j8QWaJP6tUwidTpBVXu0qKhuKHqDGXuNluC
+	LHu5UnAPPPPB5iegALIjKpuMZtfQoDTWeEc2FTEurquficjumLwFJsn9DKSQRw==
+X-Gm-Gg: ASbGncs5ffzDvWj1HYVr7AgMkf61+1WW919/XE/bxUxlhjc1UJmCk3SP89o2xmrtyqT
+	gVqxf1RUoBdgsOKBycQfrytKfFmWCYNeqM7jAyPc0kF4frcG6qWh7XteXaBcdyHjcqW+Xppyt/t
+	bcfZdOW3W2enEF3+AqETcvsgkCCzp/OdMnTeJdjN4fN44cft1luSGo6G9yRhkSO0mmXPqBsD+B+
+	OfjScNvCn4DHKxLuKGc6MHRzLKLuIIGXbqp7n9APBRWYOLwu0DISUz4ZwCSdPOsmgAPNvbOfPR8
+	2xInkEEP95AnvCqctXpaD8u9ZdOG+VpNSBJS7ANPaWh2WwF5W3H9qv7dpN/dRqB4DiUl5pVrhGj
+	JXzwtbVoWKLqNEAicx9gV8OMx
+X-Google-Smtp-Source: AGHT+IHoCxuge3RmQO1ZuyMwDPe6JYr/2vxpmRtScjKSZof8ArfNFpHhVY8Mu3yrZ93SBXm5ub7zew==
+X-Received: by 2002:a05:6000:240c:b0:3b7:8dd1:d7a1 with SMTP id ffacd0b85a97d-3b8f41b2b13mr2577034f8f.19.1754488431320;
+        Wed, 06 Aug 2025 06:53:51 -0700 (PDT)
+Received: from denis-pc ([151.49.205.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3bc12csm23646087f8f.28.2025.08.06.06.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 06:53:50 -0700 (PDT)
+From: Denis Benato <benato.denis96@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	mario.limonciello@amd.com,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: [PATCH v10 0/8] platform/x86: Add asus-armoury driver
+Date: Wed,  6 Aug 2025 15:53:11 +0200
+Message-ID: <20250806135319.1205762-1-benato.denis96@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.1-1 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+Hi all,
 
-On Wed, 2025-08-06 at 14:26 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 5 Aug 2025, Rong Zhang wrote:
->=20
-> > Currently, the auto brightness mode of keyboard backlight maps to
-> > brightness=3D0 in LED classdev. The only method to switch to such a mod=
-e
-> > is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-> > is a multiplexed brightness value; writing 0 simply results in the
-> > backlight being turned off.
-> >=20
-> > With brightness processing code decoupled from LED classdev, we can now
-> > fully support the auto brightness mode. In this mode, the keyboard
-> > backlight is controlled by the EC according to the ambient light sensor
-> > (ALS).
-> >=20
-> > To utilize this, a sysfs node is exposed to the userspace:
-> > /sys/class/leds/platform::kbd_backlight/als_enabled. The name is chosen
-> > to align with dell-laptop, which provides a similar feature.
-> >=20
-> > Signed-off-by: Rong Zhang <i@rong.moe>
-> > ---
-> >  .../ABI/testing/sysfs-platform-ideapad-laptop | 12 ++++
-> >  drivers/platform/x86/lenovo/ideapad-laptop.c  | 65 ++++++++++++++++++-
-> >  2 files changed, 75 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/=
-Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > index 5ec0dee9e707..a2b78aa60aaa 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> > @@ -50,3 +50,15 @@ Description:
-> >  		Controls whether the "always on USB charging" feature is
-> >  		enabled or not. This feature enables charging USB devices
-> >  		even if the computer is not turned on.
-> > +
-> > +What:		/sys/class/leds/platform::kbd_backlight/als_enabled
-> > +Date:		July 2025
-> > +KernelVersion:	6.17
->=20
-> This ship has sailed.
+the TL;DR:
+1. Introduce new module to contain bios attributes, using fw_attributes_class
+2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+3. Remove those in the next LTS cycle
 
-How time flies! It is embarrassing that I wrote this several weeks ago
-but forgot to update it before finishing the patch. Thanks for your
-reminder and I will update this in v2.
+The idea for this originates from a conversation with Mario Limonciello
+https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
 
->=20
-> > +Contact:	platform-driver-x86@vger.kernel.org
-> > +Description:
-> > +		This file allows to control the automatic keyboard
->=20
-> Please avoid using "This file" entirely in the description.
->=20
-> Start with "Controls ..."
+It is without a doubt much cleaner to use, easier to discover, and the
+API is well defined as opposed to the random clutter of attributes I had
+been placing in the platform sysfs. Given that Derek is also working on a
+similar approach to Lenovo in part based on my initial work I'd like to think
+that the overall approach is good and may become standardised for these types
+of things.
 
-Sure.
+Regarding PPT: it is intended to add support for "custom" platform profile
+soon. If it's a blocker for this patch series being accepted I will drop the 
+platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+separately to avoid holding the bulk of the series up. Ideally I would like
+to get the safe limits in so users don't fully lose functionality or continue
+to be exposed to potential instability from setting too low, or be mislead
+in to thinking they can set limits higher than actual limit.
 
-> > +		illumination mode on some systems that have an ambient
-> > +		light sensor. Write 1 to this file to enable the auto
-> > +		mode, 0 to disable it. In this mode, the actual
->=20
-> What is "this mode" ? Did you mean, e.g., "When the auto mode is enabled,=
-"
-> ?
+The bulk of the PPT patch is data, the actual functional part is relatively
+small and similar to the last version.
 
-It does sound more understandable to describe it that way. Thanks for
-your suggestion and I will improve the wording in v2.
+Unfortunately I've been rather busy over the months and may not cover
+everything in the v7 changelog but I've tried to be as comprehensive as I can.
 
-> > +		brightness level is not available and reading the
-> > +		"brightness" file always returns 0.
-> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/pla=
-tform/x86/lenovo/ideapad-laptop.c
-> > index 5014c1d0b633..49f2fc68add4 100644
-> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> > @@ -1712,6 +1712,57 @@ static void ideapad_kbd_bl_notify(struct ideapad=
-_private *priv)
-> >  	ideapad_kbd_bl_notify_known(priv, brightness);
-> >  }
-> > =20
-> > +static ssize_t als_enabled_show(struct device *dev,
-> > +				struct device_attribute *attr,
-> > +				char *buf)
-> > +{
-> > +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
-> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct ideapa=
-d_private, kbd_bl.led);
-> > +	int hw_brightness;
-> > +
-> > +	hw_brightness =3D ideapad_kbd_bl_hw_brightness_get(priv);
-> > +	if (hw_brightness < 0)
-> > +		return hw_brightness;
-> > +
-> > +	return sysfs_emit(buf, "%d\n", hw_brightness =3D=3D KBD_BL_AUTO_MODE_=
-HW_BRIGHTNESS);
-> > +}
-> > +
-> > +static ssize_t als_enabled_store(struct device *dev,
-> > +				 struct device_attribute *attr,
-> > +				 const char *buf, size_t count)
-> > +{
-> > +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
-> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct ideapa=
-d_private, kbd_bl.led);
-> > +	bool state;
-> > +	int err;
-> > +
-> > +	err =3D kstrtobool(buf, &state);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/*
-> > +	 * Auto (ALS) mode uses a predefined HW brightness value. It is
-> > +	 * impossible to disable it without setting another brightness value.
-> > +	 * Set the brightness to 0 when disabling is requested.
-> > +	 */
-> > +	err =3D ideapad_kbd_bl_hw_brightness_set(priv, state ? KBD_BL_AUTO_MO=
-DE_HW_BRIGHTNESS : 0);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	/* Both HW brightness values map to 0 in the LED classdev. */
-> > +	ideapad_kbd_bl_notify_known(priv, 0);
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(als_enabled);
-> > +
-> > +static struct attribute *ideapad_kbd_bl_als_attrs[] =3D {
-> > +	&dev_attr_als_enabled.attr,
-> > +	NULL,
-> > +};
-> > +ATTRIBUTE_GROUPS(ideapad_kbd_bl_als);
-> > +
-> >  static int ideapad_kbd_bl_init(struct ideapad_private *priv)
-> >  {
-> >  	int brightness, err;
-> > @@ -1722,10 +1773,20 @@ static int ideapad_kbd_bl_init(struct ideapad_p=
-rivate *priv)
-> >  	if (WARN_ON(priv->kbd_bl.initialized))
-> >  		return -EEXIST;
-> > =20
-> > -	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
-> > +	switch (priv->kbd_bl.type) {
-> > +	case KBD_BL_TRISTATE_AUTO:
-> > +		/* The sysfs node will be /sys/class/leds/platform::kbd_backlight/al=
-s_enabled */
-> > +		priv->kbd_bl.led.groups =3D ideapad_kbd_bl_als_groups;
-> > +		fallthrough;
-> > +	case KBD_BL_TRISTATE:
-> >  		priv->kbd_bl.led.max_brightness =3D 2;
-> > -	} else {
-> > +		break;
-> > +	case KBD_BL_STANDARD:
-> >  		priv->kbd_bl.led.max_brightness =3D 1;
-> > +		break;
-> > +	default:
-> > +		/* This has already been validated by ideapad_check_features(). */
-> > +		unreachable();
-> >  	}
-> > =20
-> >  	brightness =3D ideapad_kbd_bl_brightness_get(priv);
-> >=20
+Regards,
+Luke
 
-Thanks for your review,
-Rong
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - Too many changes to list, but all concerns raised in previous submission addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+- v3
+  - All concerns addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+- v4
+  - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch series
+  - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+  - Split the PPT knobs out to a separate patch
+  - Split the hd_panel setting out to a new patch
+  - Clarify some of APU MEM configuration and convert int to hex
+  - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+  - Fixup cyclic dependency in Kconfig
+- v5
+  - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig detail, edit commit msg
+  - cleanup ppt* tuning patch
+  - proper error handling in module init, plus pr_err()
+  - ppt tunables have a notice if there is no match to get defaults
+  - better error handling in cpu core handling
+    - don't continue if failure
+  - use the mutex to gate WMI writes
+- V6
+  - correctly cleanup/unwind if module init fails
+- V7
+  - Remove review tags where the code changed significantly
+  - Add auto_screen_brightness WMI attribute support
+  - Move PPT patch to end
+  - Add support min/max PPT values for 36 laptops (and two handhelds)
+  - reword commit for "asus-wmi: export symbols used for read/write WMI"
+  - asus-armoury: move existing tunings to asus-armoury
+    - Correction to license header
+    - Remove the (initial) mutex use (added for core count only in that patch)
+    - Clarify some doc comments (attr_int_store)
+    - Cleanup pr_warn in dgpu/egpu/mux functions
+    - Restructure logic in asus_fw_attr_add()
+    - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
+  - asus-armoury: add core count control:
+    - add mutex to prevent possible concurrent write to the core
+      count WMI due to separated bit/little attributes
+  - asus-armoury: add ppt_* and nv_* tuning knobs:
+    - Move to end of series
+    - Refactor to use a table of allowed min/max values to
+      ensure safe settings
+    - General code cleanup
+  - Ensure checkpatch.pl returns clean for all
+- V8
+  - asus-armoury: move existing tunings to asus-armoury module
+    - Further cleanup: https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a8a8e38
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - Address concerns in https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc06522c5e41
+    - Refactor struct asus_armoury_priv to record both AC and DC settings
+    - Tidy macros and functions affected by the above to be clearer as a result
+    - Move repeated strings such as "ppt_pl1_spl" to #defines
+    - Split should_create_tunable_attr() in to two functions to better clarify:
+      - is_power_tunable_attr()
+      - has_valid_limit()
+    - Restructure init_rog_tunables() to initialise AC and DC in a
+      way that makes more sense.
+    - Ensure that if DC setting table is not available then attributes
+      return -ENODEV only if on DC mode.
+- V9
+  - asus-armoury: move existing tunings to asus-armoury module
+    - return -EBUSY when eGPU/dGPU cannot be deactivated
+  - asus-armoury: add apu-mem control support
+    - discard the WMI presence bit fixing the functionality
+  - asus-armoury: add core count control
+    - replace mutex lock/unlock with guard
+    - move core count alloc for initialization in init_max_cpu_cores()
+- v10
+  - asus-armoury: use kstrtouint where appropriate
+  - asus-armoury: fix unreachable code warning
+  - asus-armoury: fix wrong function name in documentation
+  - asus-armoury: improve return values in case of error
+  - asus-armoury: fix error with redefinition of asus_wmi_set_devstate
+  - asus-armoury: register screen_auto_brightness attribute
+
+Luke D. Jones (8):
+  platform/x86: asus-wmi: export symbols used for read/write WMI
+  platform/x86: asus-armoury: move existing tunings to asus-armoury
+    module
+  platform/x86: asus-armoury: add panel_hd_mode attribute
+  platform/x86: asus-armoury: add apu-mem control support
+  platform/x86: asus-armoury: add core count control
+  platform/x86: asus-armoury: add screen auto-brightness toggle
+  platform/x86: asus-wmi: deprecate bios features
+  platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
+ drivers/platform/x86/Kconfig                  |   23 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/asus-armoury.c           | 1174 +++++++++++++++
+ drivers/platform/x86/asus-armoury.h           | 1278 +++++++++++++++++
+ drivers/platform/x86/asus-wmi.c               |  165 ++-
+ include/linux/platform_data/x86/asus-wmi.h    |   22 +
+ 7 files changed, 2648 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/platform/x86/asus-armoury.c
+ create mode 100644 drivers/platform/x86/asus-armoury.h
+
+-- 
+2.50.1
+
