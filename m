@@ -1,215 +1,248 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D71273D94;
-	Wed,  6 Aug 2025 16:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B803FE7;
+	Wed,  6 Aug 2025 19:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754499077; cv=none; b=T7xwmdphNInHuGVf7IdWDD4XsBffyweBZRnRtGrQm2NpAKC6aQU1PtiQ93MWWcn2Oa8bM7ODQ4m/ndpJG6RG9Rbu8dZv0FlL0dbLpelgv7/EKFj0ZiZMCmOLKpI/cUWDlRqn+UBOnBuF+qoAzd3rTTPqUG6vbp2OVfLnnUtpHA0=
+	t=1754506970; cv=none; b=S9RdzgFsghRYBTLUfNpWZ22omCbza+7YMBMuaXijQUqQd8CHqSxrVpw9CuK0/IJ46ZD6I1HwJc9uHaYEeM8k3M+wurseFl6o4iIt65fgmlwIK+SpdIIWF8SenhqxMWh03+lKdtG3ZwnpQQShfKaXel0U8/5G/0qni9mT0Urvm6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754499077; c=relaxed/simple;
-	bh=A0xa5i96PIllfGCTzfkXV4LSPt+MHLSdXHqImCTZmp4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gQVlwmv0GTiK1Rjwt2hniTRhYKxyzIIAa/FQQdX7t4HpTvPA6OUth20UOEKXH228KCrMa/+OzO0vxo6ncZguDcB7cnR0+8DCZR68oLGZfErA0lXfdM9n9RX6LqdeHfsvDSNzcX6tpymDago2Lm4ieLnVbtw/NgE9ru23ARPF48A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLZeppBQ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1754506970; c=relaxed/simple;
+	bh=tXFLtgw/WIrtmxowOosI5IDtAvPuOqYtwJlPOZvgwSk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=K9A2QaxtuPGrYShDH5nGCWjXUY7A6RZ1tjXHHp2n+qFMBTj2sp97BwJwW0GHOBfaby03MX1LSG9vNXFS+O1cc1c8Ls4z5Azdzk4G7MxJ3Y5jafcCCPpZj0vJjU6cxvE+e15DgMih7vYNm1pgW3f8gK3GWao2SnPXh2aXEl6cFBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=hqhFUANA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UCpGNyfs; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLZeppBQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754499072; x=1786035072;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=A0xa5i96PIllfGCTzfkXV4LSPt+MHLSdXHqImCTZmp4=;
-  b=bLZeppBQshTLishvkd+mqccyb+QrF6wOHSqGKQqM1f955QNt1k/r3BCR
-   vMPBqGOJi4LOv9C7m4Ch8Y+Dz44DwIkrms4qv9qCpl3RTOWzJDPV3wJlh
-   s9sqDvGSRA70kQPo33JiK1EC6YjY+soXIek0Kg25gY58QWavHzMwFNvoG
-   uDiw4LC9oRILxMrLgBneu03Lniem0z/QR5ocBHkwbI+NEV7QP0mtPtonA
-   I3GCPoEEyqC+PD6aZET8jWU682WeMV4CU7tTh9YLKdWIN3wbhnNJwZbIv
-   /v/ZoEcPwTEfDz4mdNVdI6/K6aZB5atzOK6ATWuuYlDCKASdanMBlyu16
-   w==;
-X-CSE-ConnectionGUID: YCYT/nibTWmyvoFg2/x0pA==
-X-CSE-MsgGUID: BIa+NmHYSjm98dzZU++/Nw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="67412100"
-X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="67412100"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 09:51:09 -0700
-X-CSE-ConnectionGUID: aEryVM7uRKGnlQ/A0jvnjw==
-X-CSE-MsgGUID: BJcGohUGQeil1h6yXy9rZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,268,1747724400"; 
-   d="scan'208";a="195801861"
-Received: from gabaabhi-mobl2.amr.corp.intel.com ([10.125.110.157])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 09:51:08 -0700
-Message-ID: <32f7aef379b3dcc51c0bc91854b718abc9fbbe13.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: Present unique domain
- ID per package
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
-Date: Wed, 06 Aug 2025 09:51:06 -0700
-In-Reply-To: <f762f6a9-74cc-0299-0bea-6d1ab6c88e41@linux.intel.com>
-References: <20250727211051.2898789-1-srinivas.pandruvada@linux.intel.com>
-	 <f762f6a9-74cc-0299-0bea-6d1ab6c88e41@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="hqhFUANA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UCpGNyfs"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 96B821400073;
+	Wed,  6 Aug 2025 15:02:46 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Wed, 06 Aug 2025 15:02:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1754506966;
+	 x=1754593366; bh=He2AOiU5K/SLmDfh9naFQfRlDHY1TiV6PJ1MxNToYGs=; b=
+	hqhFUANAQ+TGiXHvhQ6yfmyZE7SV+ASnQF2d70pwfDe+pVg1akmOpgbZFzL8HOcI
+	3ztO2xZ+onHQM+olhZQCBnH75tjmpM4AZ8muAqyt2vssCuuNOF8gnwU+Qzxp+MqE
+	QDbehM41qOvsf3xLCFdal5u+pKG/IDQSY911Q1CN/xdR7gQWromOrs0f1mJUxwUc
+	ioxVTOyaP2paFTFSRNcp/dqlKh9oXIR0HC9JLGl03YNs2SWVKpxq9MIy9bQ+b1/8
+	6nF6waYPNlNAwaCPachv5zW2IxCx9Te6HuRixukMY3gbCc/CduLcN9LFJTox80Nf
+	HKls1+Fd9wzqaFI+MjCrbA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754506966; x=
+	1754593366; bh=He2AOiU5K/SLmDfh9naFQfRlDHY1TiV6PJ1MxNToYGs=; b=U
+	CpGNyfsw/Eu/78tBnVRQTw6VHPqaFAmq8LeNyD3Ijm6Mk3rtlKh3hFNyxTv5594o
+	S1pWd7xHWQnndYpyQXWKy/YgYNDGlR3sPLO9beHJfK9+Yhz3SIu2uZvBALu3ugT5
+	Kmo9+9MHP8vP4KaCNRp+nxWYlM6PGpjJEu/mOZjxLzIxKBtIO/6KLP83/D6obuSW
+	nUWyvR/z+nTfU9ZbdkHAFae+qAF7dPJmhAmUqIMG3591IFkeYUmpm4sBSKkF3NRX
+	NnYqCcC/Gg+e3qJT0BbvJGrGkRfIKu8FL17eBEAmK3gcdmYr2XhvLHhDrIsKuna9
+	0162Uf8dcm4YIh2sBiidw==
+X-ME-Sender: <xms:1aaTaPAslru4XgnpXXer9DXkuXL5sBUSnVE0gsoBIwk_6xGvNRxNgg>
+    <xme:1aaTaFjehqCInlNJr-JDNL9-UQjSKfTjM70xtb-TdcWSejnx45e_3OaV8vJZK3OAz
+    sjTgbenRPmBR139Vrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudekkeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
+    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
+    sggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
+    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhkvghprghn
+    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdr
+    tghomhdprhgtphhtthhopehisehrohhnghdrmhhovgdprhgtphhtthhopehlihhnuhigqd
+    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhf
+    ohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:1aaTaHkq0PZ-cyNhtbKMZhD20BrRHr6ih-oT1FwDQSQmv3TzJ1Jy0g>
+    <xmx:1aaTaHyJ48VwEcoq1l5co53BslfUZYpXyAKqkkFvIv-Tz5BusUOZzw>
+    <xmx:1aaTaJQPoGqtymVjcB0bQ9rx_bm6pNPoU57MGhVbaSW3eL6D3X5drQ>
+    <xmx:1aaTaH8o1BCPmkEu9IccKtHqVq8niduvczAg_FKYQFrqLZS7L7Xpow>
+    <xmx:1qaTaBj0ZKE4tvfgVTl1-mWV2Yi0PxezA-XdBVxgexlVQxhqVez0DWUm>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CA35E2CE0071; Wed,  6 Aug 2025 15:02:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: T64782356407e243d
+Date: Wed, 06 Aug 2025 15:02:25 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Ike Panhc" <ikepanhc@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hansg@kernel.org>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com>
+In-Reply-To: <20250805140131.284122-3-i@rong.moe>
+References: <20250805140131.284122-1-i@rong.moe>
+ <20250805140131.284122-3-i@rong.moe>
+Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Fully support auto kbd backlight
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-08-06 at 12:17 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 27 Jul 2025, Srinivas Pandruvada wrote:
->=20
-> > In partitioned systems, the domain ID is unique in the partition
-> > and a
-> > package can have multiple partitions.
-> >=20
-> > Some user-space tools, such as turbostat, assume the domain ID is
-> > unique
-> > per package. These tools map CPU power domains, which are unique to
-> > a
-> > package. However, this approach does not work in partitioned
-> > systems.
-> >=20
-> > There is no architectural definition of "partition" to present to
-> > user
-> > space.
-> >=20
-> > To support these tools, set the domain_id to be unique per package.
-> > For
-> > compute die IDs, uniqueness can be achieved using the platform info
-> > cdie_mask, mirroring the behavior observed in non-partitioned
-> > systems.
-> >=20
-> > For IO dies, which lack a direct CPU relationship, any unique
-> > logical
-> > ID can be assigned. Here domain IDs for IO dies are configured
-> > after all
-> > compute domain IDs. During the probe, keep the index of the next IO
-> > domain ID after the last IO domain ID of the current partition.
-> > Since
-> > CPU packages are symmetric, partition information is same for all
-> > packages.
-> >=20
-> > The Intel Speed Select driver has already implemented a similar
-> > change
-> > to make the domain ID unique, with compute dies listed first,
-> > followed
-> > by I/O dies.
-> >=20
+Hi Rong,
 
-[...]
+On Tue, Aug 5, 2025, at 10:01 AM, Rong Zhang wrote:
+> Currently, the auto brightness mode of keyboard backlight maps to
+> brightness=0 in LED classdev. The only method to switch to such a mode
+> is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
+> is a multiplexed brightness value; writing 0 simply results in the
+> backlight being turned off.
+>
+> With brightness processing code decoupled from LED classdev, we can now
+> fully support the auto brightness mode. In this mode, the keyboard
+> backlight is controlled by the EC according to the ambient light sensor
+> (ALS).
+>
+> To utilize this, a sysfs node is exposed to the userspace:
+> /sys/class/leds/platform::kbd_backlight/als_enabled. The name is chosen
+> to align with dell-laptop, which provides a similar feature.
+>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>  .../ABI/testing/sysfs-platform-ideapad-laptop | 12 ++++
+>  drivers/platform/x86/lenovo/ideapad-laptop.c  | 65 ++++++++++++++++++-
+>  2 files changed, 75 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop 
+> b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> index 5ec0dee9e707..a2b78aa60aaa 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> @@ -50,3 +50,15 @@ Description:
+>  		Controls whether the "always on USB charging" feature is
+>  		enabled or not. This feature enables charging USB devices
+>  		even if the computer is not turned on.
+> +
+> +What:		/sys/class/leds/platform::kbd_backlight/als_enabled
+> +Date:		July 2025
+> +KernelVersion:	6.17
+> +Contact:	platform-driver-x86@vger.kernel.org
+> +Description:
+> +		This file allows to control the automatic keyboard
+> +		illumination mode on some systems that have an ambient
+> +		light sensor. Write 1 to this file to enable the auto
+> +		mode, 0 to disable it. In this mode, the actual
+> +		brightness level is not available and reading the
+> +		"brightness" file always returns 0.
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c 
+> b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 5014c1d0b633..49f2fc68add4 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -1712,6 +1712,57 @@ static void ideapad_kbd_bl_notify(struct 
+> ideapad_private *priv)
+>  	ideapad_kbd_bl_notify_known(priv, brightness);
+>  }
+> 
+> +static ssize_t als_enabled_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +	struct ideapad_private *priv = container_of(led_cdev, struct 
+> ideapad_private, kbd_bl.led);
+> +	int hw_brightness;
+> +
+> +	hw_brightness = ideapad_kbd_bl_hw_brightness_get(priv);
+> +	if (hw_brightness < 0)
+> +		return hw_brightness;
+> +
+> +	return sysfs_emit(buf, "%d\n", hw_brightness == 
+> KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
+> +}
+> +
+> +static ssize_t als_enabled_store(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf, size_t count)
+> +{
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +	struct ideapad_private *priv = container_of(led_cdev, struct 
+> ideapad_private, kbd_bl.led);
+> +	bool state;
+> +	int err;
+> +
+> +	err = kstrtobool(buf, &state);
+> +	if (err)
+> +		return err;
+> +
+> +	/*
+> +	 * Auto (ALS) mode uses a predefined HW brightness value. It is
+> +	 * impossible to disable it without setting another brightness value.
+> +	 * Set the brightness to 0 when disabling is requested.
+> +	 */
+> +	err = ideapad_kbd_bl_hw_brightness_set(priv, state ? 
+> KBD_BL_AUTO_MODE_HW_BRIGHTNESS : 0);
+> +	if (err)
+> +		return err;
+> +
+> +	/* Both HW brightness values map to 0 in the LED classdev. */
+> +	ideapad_kbd_bl_notify_known(priv, 0);
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(als_enabled);
+> +
+> +static struct attribute *ideapad_kbd_bl_als_attrs[] = {
+> +	&dev_attr_als_enabled.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(ideapad_kbd_bl_als);
+> +
+>  static int ideapad_kbd_bl_init(struct ideapad_private *priv)
+>  {
+>  	int brightness, err;
+> @@ -1722,10 +1773,20 @@ static int ideapad_kbd_bl_init(struct 
+> ideapad_private *priv)
+>  	if (WARN_ON(priv->kbd_bl.initialized))
+>  		return -EEXIST;
+> 
+> -	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
+> +	switch (priv->kbd_bl.type) {
+> +	case KBD_BL_TRISTATE_AUTO:
+> +		/* The sysfs node will be 
+> /sys/class/leds/platform::kbd_backlight/als_enabled */
+> +		priv->kbd_bl.led.groups = ideapad_kbd_bl_als_groups;
+> +		fallthrough;
+> +	case KBD_BL_TRISTATE:
+>  		priv->kbd_bl.led.max_brightness = 2;
+> -	} else {
+> +		break;
+> +	case KBD_BL_STANDARD:
+>  		priv->kbd_bl.led.max_brightness = 1;
+> +		break;
+> +	default:
+> +		/* This has already been validated by ideapad_check_features(). */
+> +		unreachable();
+>  	}
+> 
+>  	brightness = ideapad_kbd_bl_brightness_get(priv);
+> -- 
+> 2.50.1
 
-> > +	/* For non partitioned system or invalid partition number,
-> > return */
->=20
-> non-partitioned
->=20
-Will correct that.
+We're looking to implement this feature on the Thinkpads, so this change is timely :)
 
-> > +	if (!plat_info->cdie_mask || max_dies <=3D 1 || plat_info-
-> > >partition >=3D MAX_PARTITIONS)
-> > +		return;
-> > +
-> > +	if (cluster_info->uncore_data.agent_type_mask &
-> > AGENT_TYPE_CORE) {
-> > +		cluster_info->uncore_data.domain_id =3D
-> > cluster_info->cdie_id;
-> > +		return;
-> > +	}
-> > +
-> > +	cdie_cnt =3D fls(plat_info->cdie_mask) - ffs(plat_info-
-> > >cdie_mask) + 1;
->=20
-> Is it intentional that you didn't use hweight here? (unfortunately,
-> I don't recall details of the cdie_mask).
->=20
-Although unlikely but nothing stops of being holes in the die mask. But
-for usage here it will not make difference.
+I did wonder if we should be making changes at the LED class level? Something similar to LED_BRIGHT_HW_CHANGED maybe as a way to advertise that auto mode is supported and some hooks to support that in sysfs?
+I know it would be more work, but I'm guessing this is going to be a common feature across multiple vendors it might need doing at a common layer.
 
-> > +	guard(mutex)(&domain_lock)
-> > +
-> > +	if (!io_die_index_next)
-> > +		io_die_index_next =3D max_dies;
-> > +
-> > +	if (!io_die_start[plat_info->partition]) {
-> > +		io_die_start[plat_info->partition] =3D
-> > io_die_index_next;
-> > +		io_die_index_next +=3D (num_resource - cdie_cnt);
-> > +	}
-> > +
-> > +	cluster_info->uncore_data.domain_id +=3D
-> > (io_die_start[plat_info->partition] - cdie_cnt);
->=20
-> I failed to wrap my head around what this math aims to do (mainly
-> what=20
-> cdie_cnt has to do with this). Can you explain (might be useful to
-> have a=20
-> comment if it's something particularly tricky / non-obvious)?
->=20
-Seems not obvious but something like below in #if 0
+As a note - on the Thinkpads we've had to look at getting the correct Intel ISH firmware loaded (and we're working on getting that upstream to linux-firmware). Is that needed on the Ideapads for the feature to work well or not?
 
-#if 0
-/*
-Index from IO die start with in the partition
-
-For example the current resource index 5 (cluster_info-
->uncore_data.domain_id) and compute dies end at index 3 (cdie_cnt =3D 4).
-then the io only index 5 - 4 =3D 1
-*/
-u8 part_io_index =3D cluster_info->uncore_data.domain_id - cdie_cnt;
-
-/* Add to the IO die start index for this partition in this package to
-make unique in the package */
-u8 pkg_io_index =3D io_die_start[plat_info->partition] + part_io_index;
-
-/* Assign this to domain ID */
-cluster_info->uncore_data.domain_id =3D pkg_io_index;
-#endif
-
-In one line the above whole #if block
-"cluster_info->uncore_data.domain_id =3D io_die_start[plat_info-
->partition] + cluster_info->uncore_data.domain_id - cdie_cnt;"
-which is
-cluster_info->uncore_data.domain_id +=3D (io_die_start[plat_info-
->partition] - cdie_cnt)
-}
-
-
-> It could be that to make this simpler, one shouldn't assign value in=20
-> uncore_probe() to .domain_id at all but pass the index here (and
-> rename=20
-> this function to set_domain_id()).
->=20
-Can do if that is any simpler here.
-
-Thanks,
-Srinivas
-
-> > +}
-> > +
-> > =C2=A0/* Callback for sysfs write for TPMI uncore data. Called under
-> > mutex locks. */
-> > =C2=A0static int uncore_write(struct uncore_data *data, unsigned int
-> > value, enum uncore_index index)
-> > =C2=A0{
-> > @@ -614,6 +655,7 @@ static int uncore_probe(struct auxiliary_device
-> > *auxdev, const struct auxiliary_
-> > =C2=A0			cluster_info->uncore_data.cluster_id =3D j;
-> > =C2=A0
-> > =C2=A0			set_cdie_id(i, cluster_info, plat_info);
-> > +			update_domain_id(cluster_info, plat_info,
-> > num_resources);
-> > =C2=A0
-> > =C2=A0			cluster_info->uncore_root =3D tpmi_uncore;
-> > =C2=A0
-> >=20
->=20
-
+Mark
