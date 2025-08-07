@@ -1,178 +1,362 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8119710957
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Aug 2025 11:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D556265CAD;
+	Thu,  7 Aug 2025 14:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754566952; cv=fail; b=CE++Wazgw9jtHJnwUXYMkNGdycE6cOx15s1JSner5qiaF/N1Bd8HLHeYPu7bpYWN7Mz7lR71f3Ij8+PYODPPsAB6QRqB8SEP4zPhfcExCK8p3gRGbWYCUBgATQ5YlWKg9mx4NcAF6LLiSepgBbdUvfNZVlyD20D9HJWR036GFzA=
+	t=1754578560; cv=pass; b=n/RfB52UNQ6srkDFZ2l1aMHKWTBQ3T6NlKqy4g39veces9eKbEo1Cari3Ue72wNh7xubyil70MBY3JP/lLYl8hpzaci1BpukhCYOBD46EFBDmlDxdt0DbBAUlhsiNfzbgP80sKPrzGPvSj2Lxu9TLJS0Rm/aLD+mCG5tGIRhg9c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754566952; c=relaxed/simple;
-	bh=9Nu6PQLf8WQqWVRlpWz2OgGeFD9T77SO2XVspoWObYI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dKOzhjlueZozYDG8fEhc1BVMuj6YjesZ8KhdMbmwQg5TSYEolZ6yxLWB2hT+T8c1KfL5AtvBDpFFwo5I7HQ3mJXyzSOVWYypVxevrC/zp1f/gGA1IXgAT0jS2gU0MSSN+0gYiN6k/wPuYaqFMXHVIy2Jkg+qU/VUpBm6m5HuwNE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=umJxAkjd; arc=fail smtp.client-ip=40.107.243.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1754578560; c=relaxed/simple;
+	bh=4ww/HZCjHc1Mnpp1N1zs/cXAyAtGTswLveFDQ2m3Fjk=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=qwEdykbuknj0oQQKbpoPftZh1X6fsnb+izOYcpklJu0YQ4jVNUzTTgE7xnBSEHQNlK0UmacBXi9unTrnUDvZyzN0hiG90oxvCoWXHhdorw5Yvbm0+geE5KhSOTCyIVYfHPJ+hFaj2ejhAGvPAN9tbfOnWP/58gmVVZuCu5DILFk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=pN0VINF+; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="umJxAkjd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IAfPRFH+5u49gcVheWMTp1J36TUbxGiIqEpm5r+t9YkcmZ+oC0KVlclTRU1kx2IF3DUoRLHRuBIwNkFJ2wLvVu8PgULaL2d9J1VSBMdjDemZ/VhYrkGU7gQZVCXf944cIzekN2o+rFTX/ERSEb56iYxPRoCZmVj10VWjSRdMBwXzsb2+AJFIRJpZMpODuLFDWG1IklyfyCDHD9uQ9YZCL6mhonH4QhUspOO5gn2No4vBk/s/4yHjYxDkUwXIOC4BFZTOeJzgvFxK+IABlWkcvnmtRiUejG1Y54H17jUSqMKRpW9wZnTVfMmcVyUQn4f6k1mbn6b9EowiMCwN3W/FrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cz+McfAi9VzT91V+D+EJJBMw6FRZZJYwxZsgOgfEKOs=;
- b=wcAz2vwhZiq8opiaz2Jq5bR1cIkv3KK7ppatIS8owHSYo4rZpdMNWMy8+3P6LmRv7jYEYw39160Zpkmx90EtmOYg1/nqO94rBHotYL7ti/qBLcX74kZJB7QmG3hVZrPmAFvILFVflb/kajvTIKz42GlLmDv/PrO9eDCB/dgakT6SIr+kyI8z+XgaAdgt6NailI2DAGyfydMieyMaY995+4TLoex++SxXorhwSyvE7/Hy6wF7/S3zLYhRMBj1lhAwQyxVRsJn2ck/7dQBLgm32WDc28u2JdVOaVbfju6yKGKluxQ3/gYwbDz3X1xcBiw8eYV2vk4ti9HWqQc+5gF9nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cz+McfAi9VzT91V+D+EJJBMw6FRZZJYwxZsgOgfEKOs=;
- b=umJxAkjdq4n3Ki90b6ZNlAMEzOGb+M2FsCsDVlQ2PWcZzvzZgPQoTkm6ZTxlI92U8ZWvF9BuPvhVgEWu7CifnMtL9tpgPEyZwrorPCqsrx3opoYdnA/e80XlbMTc4Q3HvtL8Yn1zBxsJeb7DNOBJDE9Obgs7uvTOcoc3apKFGTA=
-Received: from BLAP220CA0029.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:32c::34)
- by CH1PR12MB9575.namprd12.prod.outlook.com (2603:10b6:610:2ad::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.16; Thu, 7 Aug
- 2025 11:42:27 +0000
-Received: from BL02EPF00021F6C.namprd02.prod.outlook.com
- (2603:10b6:208:32c:cafe::c6) by BLAP220CA0029.outlook.office365.com
- (2603:10b6:208:32c::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.17 via Frontend Transport; Thu,
- 7 Aug 2025 11:42:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF00021F6C.mail.protection.outlook.com (10.167.249.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9009.8 via Frontend Transport; Thu, 7 Aug 2025 11:42:20 +0000
-Received: from trento15c5.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 7 Aug
- 2025 06:42:18 -0500
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
-	<suma.hegde@amd.com>
-Subject: [PATCH] platform/x86/amd/hsmp: Replace dev_err() with dev_info() for non-fatal errors
-Date: Thu, 7 Aug 2025 11:42:03 +0000
-Message-ID: <20250807114203.982860-1-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="pN0VINF+"
+ARC-Seal: i=1; a=rsa-sha256; t=1754578547; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FD3HRlsVQEuJvghDXw6mBHzb6czFvH7n0Gw5PI/A6Mep9NJTsjg38+M5qz3RxUF7ITHwZbnFRt9bdCnjCwEyjlW7YV9lGwGWrp2PBzyn+saqe9uCWPM+/DKgXa4QsxvM0Sn1LMXWhiNPM+t2Bxv16aqYAYKp1UEc+WVcbrFKPng=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1754578547; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=JKRdJLGUj9Od4PZ1bJSUD3AJ1d9/oez5hpVVsvtc70M=; 
+	b=dF6nGJqZGYlRvyvEuxqSV1huiZCvRkK3DQdHL16MSLF5IQRHXGKJWZJYIuAHq5za49TmSNVHsvONsaw+jTKC6QuFtWiC9IpudDBiRDSq1YJ4pX42HVPZxqTOlOjR9/tvxinMmU+19YAxFpdlSVMQDdkKllUvs3TJ5gX5ggeNjP8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1754578547;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=JKRdJLGUj9Od4PZ1bJSUD3AJ1d9/oez5hpVVsvtc70M=;
+	b=pN0VINF+OQy6IjFyFEryWKQxXmJDpRrH8MhB+XB/pO63WeYsfioK7rOhRsmHOpYB
+	rh60KTI7duy247CE6l/FsqTAH/wFJ5G+YnHs8ni3TlXNOXa1uztLmn3gD+uWt+2YVEE
+	tG9IT/218OS/a8tUreX5p6YJpwImvg5Cp0fCdsn0=
+Received: by mx.zohomail.com with SMTPS id 1754578544733826.0027839889475;
+	Thu, 7 Aug 2025 07:55:44 -0700 (PDT)
+Message-ID: <a90584179f4c90cd58c03051280a6dda63f6cc1d.camel@rong.moe>
+Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Fully support auto
+ kbd backlight
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Ike Panhc <ikepanhc@gmail.com>, "Derek J . Clark"	
+ <derekjohn.clark@gmail.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, 
+ "platform-driver-x86@vger.kernel.org"	
+ <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Lee
+ Jones	 <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ linux-leds@vger.kernel.org
+In-Reply-To: <08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com>
+References: <20250805140131.284122-1-i@rong.moe>
+	 <20250805140131.284122-3-i@rong.moe>
+	 <08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 07 Aug 2025 22:50:37 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF00021F6C:EE_|CH1PR12MB9575:EE_
-X-MS-Office365-Filtering-Correlation-Id: b11eda9e-6793-4a9d-25cf-08ddd5a7780b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EnaFYL36k08cqGR8eaD/wPoej6VQgSjD6OwX8DpVc/qVqp2y99VCKVeiyJnR?=
- =?us-ascii?Q?THyFylo0e3GfPcM3oaLAoU9Y9unfuCHJLdrnMIF80fbyo2k6UEjYIGJ1GELD?=
- =?us-ascii?Q?gfNXCiijCXqsn1ftDtZ1bMnu5W1nR04zEpTCG1kV+b9JTH+NX5ZzQZUkR1uR?=
- =?us-ascii?Q?bfPZv2W1/ujnPD2QDO9dWii0aoGjnjyVPAR62TtaJH6IB3GZVspOVjRu2ivT?=
- =?us-ascii?Q?Als9JiMpNmImCKHFwlkzl8WOUpdlZLG9I/u21mDHx5YmVp/AhPwO46220z6r?=
- =?us-ascii?Q?4Kvc7dXLqlRBE5t+Xa/tz1XqAe0Bda1N+S3e4dFMbMwdaPleUJkrmi09NtmG?=
- =?us-ascii?Q?6QTq+yvv7WDYgLIa31mszpr3BC5uEiUdRDO6RtKkLto0vxx9g5D0ql6E+4h8?=
- =?us-ascii?Q?5oFCs0X1P4GfvW1AMS1Q/gdLJle6kKZydxQzEC3l0+gLKGjtUVOr5+PojRw1?=
- =?us-ascii?Q?1o3++rOaRtPqv1hdXWZYH+9ANWwBQy3ZDCoWXjSGTHClW3G6O0nHBmdQ90gK?=
- =?us-ascii?Q?0VWFmaUb0KBoTykuJO5S321+yc2Hg9WQ+TyTOAbB2tWL/xubB9oe59pJfnHP?=
- =?us-ascii?Q?ENm+gzxH8T5Bk7jpFuUFO2Duc/SLmFavy9sohPtKxhp7czjbhc9qL17DrlMg?=
- =?us-ascii?Q?IhWy7Q2pzz0vEZx+1wV8QAfA+xVD3qgWIDXNhXG0rSWy5iZRHNUh30KPAVcj?=
- =?us-ascii?Q?fiYMHBtejCSs41gP5Kud6gIwcVr+qa/Ge7f4gOPs21aDal6cRqyHqJFREsy5?=
- =?us-ascii?Q?E56D/6QVL4PO2/6qQHjdaAPj6N70qA/HeDx2AmIUrhl8KBHCJdtV8A65mtN8?=
- =?us-ascii?Q?WOlaHzrn5qTFoIYRtgPH3obd033ZHul7Iy8txSx1jAPimCZRabzD3g+Zr06h?=
- =?us-ascii?Q?l6wF991jEpagEGYG4SbsHzI3xA2T5PALaT+VBFBUJAzkGkPAJYr2lOzrEG5O?=
- =?us-ascii?Q?BxfU66jw+SYnZ9NvXIKMw1YcGUS2neFx9TypncpuM1ys1TW+2N08uhKgbBTr?=
- =?us-ascii?Q?WCQ+JpB8nUlSfMaih+OKZf9E4QhspQKN2+r0Liw4D1avH2JaCxilf4RYC/a7?=
- =?us-ascii?Q?A+c4ETPDMxXtisw1phqdMu5upqorfaoITG8rT3beHRo4bY7l6GXPW4w0pHO9?=
- =?us-ascii?Q?+5MQgAeyMAor1wBfle+yfs3/w4UWUd/F6RWaTLcgbiBhL0b5rQrHy6q00B/P?=
- =?us-ascii?Q?eonwYL2N4wmYpiYIyQRZ4aIBfSZij7a9dhaDGAMnkKrk/Ffd9V1OJ9ar1j7z?=
- =?us-ascii?Q?Acp59lwIocP55ztYSjO5v9MDJJEfyImb28ttqdw9VocEHGHEPnmO1EY/Wkfo?=
- =?us-ascii?Q?BDihhqmr6uxH3hVcdHOzsCpY0X0A7+sL6Pl5BJgQ9X+olbtoZ1eXfpK3UVMf?=
- =?us-ascii?Q?d4+sFVH5zAhJOjJYCSX53PTj+ztU0FUNma4uHnXpMBfIAJjWuEujwG928N/0?=
- =?us-ascii?Q?DXCoeF+G8Zf1CpHLB6BcbKBKmHVABtYHNb8SV5V4afq+32z7HLQFxIZlbPMv?=
- =?us-ascii?Q?iE8jtkZTskf0/d4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2025 11:42:20.6285
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b11eda9e-6793-4a9d-25cf-08ddd5a7780b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF00021F6C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9575
+User-Agent: Evolution 3.56.1-1 
+X-ZohoMailClient: External
 
-Failure in metric table initialization and hwmon registration are
-non-fatal errors. Hence replace them with dev_info().
+Hi Mark,
 
-Signed-off-by: Suma Hegde <suma.hegde@amd.com>
----
-This patch is rebased on below patches
-https://lore.kernel.org/platform-driver-x86/20250807100637.952729-1-suma.hegde@amd.com/T/#u
-https://lore.kernel.org/platform-driver-x86/56b5e58b-7e02-b091-9d23-2cea4c484c20@linux.intel.com/T/#t
+On Wed, 2025-08-06 at 15:02 -0400, Mark Pearson wrote:
+> Hi Rong,
+>=20
+> On Tue, Aug 5, 2025, at 10:01 AM, Rong Zhang wrote:
+> > Currently, the auto brightness mode of keyboard backlight maps to
+> > brightness=3D0 in LED classdev. The only method to switch to such a mod=
+e
+> > is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
+> > is a multiplexed brightness value; writing 0 simply results in the
+> > backlight being turned off.
+> >=20
+> > With brightness processing code decoupled from LED classdev, we can now
+> > fully support the auto brightness mode. In this mode, the keyboard
+> > backlight is controlled by the EC according to the ambient light sensor
+> > (ALS).
+> >=20
+> > To utilize this, a sysfs node is exposed to the userspace:
+> > /sys/class/leds/platform::kbd_backlight/als_enabled. The name is chosen
+> > to align with dell-laptop, which provides a similar feature.
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> >  .../ABI/testing/sysfs-platform-ideapad-laptop | 12 ++++
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c  | 65 ++++++++++++++++++-
+> >  2 files changed, 75 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop=
+=20
+> > b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> > index 5ec0dee9e707..a2b78aa60aaa 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> > +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+> > @@ -50,3 +50,15 @@ Description:
+> >  		Controls whether the "always on USB charging" feature is
+> >  		enabled or not. This feature enables charging USB devices
+> >  		even if the computer is not turned on.
+> > +
+> > +What:		/sys/class/leds/platform::kbd_backlight/als_enabled
+> > +Date:		July 2025
+> > +KernelVersion:	6.17
+> > +Contact:	platform-driver-x86@vger.kernel.org
+> > +Description:
+> > +		This file allows to control the automatic keyboard
+> > +		illumination mode on some systems that have an ambient
+> > +		light sensor. Write 1 to this file to enable the auto
+> > +		mode, 0 to disable it. In this mode, the actual
+> > +		brightness level is not available and reading the
+> > +		"brightness" file always returns 0.
+> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c=20
+> > b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > index 5014c1d0b633..49f2fc68add4 100644
+> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > @@ -1712,6 +1712,57 @@ static void ideapad_kbd_bl_notify(struct=20
+> > ideapad_private *priv)
+> >  	ideapad_kbd_bl_notify_known(priv, brightness);
+> >  }
+> >=20
+> > +static ssize_t als_enabled_show(struct device *dev,
+> > +				struct device_attribute *attr,
+> > +				char *buf)
+> > +{
+> > +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct=20
+> > ideapad_private, kbd_bl.led);
+> > +	int hw_brightness;
+> > +
+> > +	hw_brightness =3D ideapad_kbd_bl_hw_brightness_get(priv);
+> > +	if (hw_brightness < 0)
+> > +		return hw_brightness;
+> > +
+> > +	return sysfs_emit(buf, "%d\n", hw_brightness =3D=3D=20
+> > KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
+> > +}
+> > +
+> > +static ssize_t als_enabled_store(struct device *dev,
+> > +				 struct device_attribute *attr,
+> > +				 const char *buf, size_t count)
+> > +{
+> > +	struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
+> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct=20
+> > ideapad_private, kbd_bl.led);
+> > +	bool state;
+> > +	int err;
+> > +
+> > +	err =3D kstrtobool(buf, &state);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	/*
+> > +	 * Auto (ALS) mode uses a predefined HW brightness value. It is
+> > +	 * impossible to disable it without setting another brightness value.
+> > +	 * Set the brightness to 0 when disabling is requested.
+> > +	 */
+> > +	err =3D ideapad_kbd_bl_hw_brightness_set(priv, state ?=20
+> > KBD_BL_AUTO_MODE_HW_BRIGHTNESS : 0);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	/* Both HW brightness values map to 0 in the LED classdev. */
+> > +	ideapad_kbd_bl_notify_known(priv, 0);
+> > +
+> > +	return count;
+> > +}
+> > +
+> > +static DEVICE_ATTR_RW(als_enabled);
+> > +
+> > +static struct attribute *ideapad_kbd_bl_als_attrs[] =3D {
+> > +	&dev_attr_als_enabled.attr,
+> > +	NULL,
+> > +};
+> > +ATTRIBUTE_GROUPS(ideapad_kbd_bl_als);
+> > +
+> >  static int ideapad_kbd_bl_init(struct ideapad_private *priv)
+> >  {
+> >  	int brightness, err;
+> > @@ -1722,10 +1773,20 @@ static int ideapad_kbd_bl_init(struct=20
+> > ideapad_private *priv)
+> >  	if (WARN_ON(priv->kbd_bl.initialized))
+> >  		return -EEXIST;
+> >=20
+> > -	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
+> > +	switch (priv->kbd_bl.type) {
+> > +	case KBD_BL_TRISTATE_AUTO:
+> > +		/* The sysfs node will be=20
+> > /sys/class/leds/platform::kbd_backlight/als_enabled */
+> > +		priv->kbd_bl.led.groups =3D ideapad_kbd_bl_als_groups;
+> > +		fallthrough;
+> > +	case KBD_BL_TRISTATE:
+> >  		priv->kbd_bl.led.max_brightness =3D 2;
+> > -	} else {
+> > +		break;
+> > +	case KBD_BL_STANDARD:
+> >  		priv->kbd_bl.led.max_brightness =3D 1;
+> > +		break;
+> > +	default:
+> > +		/* This has already been validated by ideapad_check_features(). */
+> > +		unreachable();
+> >  	}
+> >=20
+> >  	brightness =3D ideapad_kbd_bl_brightness_get(priv);
+> > --=20
+> > 2.50.1
+>=20
+> We're looking to implement this feature on the Thinkpads, so this change =
+is timely :)
 
- drivers/platform/x86/amd/hsmp/acpi.c | 4 ++--
- drivers/platform/x86/amd/hsmp/plat.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Whoo, it's good to hear that.
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 19f0ca7958b6..52bf3ad31b8d 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -495,12 +495,12 @@ static int init_acpi(struct device *dev)
- 	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
- 		ret = hsmp_get_tbl_dram_base(sock_ind);
- 		if (ret)
--			dev_err(dev, "Failed to init metric table\n");
-+			dev_info(dev, "Failed to init metric table\n");
- 	}
- 
- 	ret = hsmp_create_sensor(dev, sock_ind);
- 	if (ret)
--		dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
-+		dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
- 
- 	dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
- 
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index f8aa844d33e4..9304d4a71e3c 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -189,13 +189,13 @@ static int init_platform_device(struct device *dev)
- 		if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
- 			ret = hsmp_get_tbl_dram_base(i);
- 			if (ret)
--				dev_err(dev, "Failed to init metric table\n");
-+				dev_info(dev, "Failed to init metric table\n");
- 		}
- 
- 		/* Register with hwmon interface for reporting power */
- 		ret = hsmp_create_sensor(dev, i);
- 		if (ret)
--			dev_err(dev, "Failed to register HSMP sensors with hwmon\n");
-+			dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
- 	}
- 
- 	return 0;
--- 
-2.25.1
+> I did wonder if we should be making changes at the LED class level? Somet=
+hing similar to LED_BRIGHT_HW_CHANGED maybe as a way to advertise that auto=
+ mode is supported and some hooks to support that in sysfs?
 
+To the best of my knowledge, there is already an ideal model to fit the
+auto brightness mode, which is private LED trigger.
+
+To utilize it, these are four pieces of the puzzle:
+
+(1) implement a private LED trigger (see leds-cros_ec and
+    leds-turris-omnia, for example)
+(2) turn on/off the auto brightness mode when the activate/deactivate
+    hooks are called
+(3) switch to the private LED trigger/the "none" trigger when such mode
+    is turned on/off by the HW (i.e., when Fn+Space is pressed)
+(4) notifying the userspace of the HW-triggered LED trigger change
+
+I'd finished (1) and (2) in my early experiments and verified their
+functionality. However, I eventually realized the dilemma that pressing
+Fn+Space would bring everything into an inconsistent state because of
+the lack of (3).
+
+For (3), when the HW turns on the auto brightness mode, we need:
+
+   mutex_lock(&led_cdev->led_access);
+  =20
+   down_write(&led_cdev->trigger_lock);
+   led_trigger_set(led_cdev, <THE PRIVATE LED TRIGGER>);
+   up_write(&led_cdev->trigger_lock);
+  =20
+   mutex_unlock(&led_cdev->led_access);
+
+When off, we need:
+
+   mutex_lock(&led_cdev->led_access);
+  =20
+   led_trigger_remove(led_cdev);
+  =20
+   mutex_unlock(&led_cdev->led_access);
+
+I never thought of (4) at that moment. Therefore, I eventually doubted
+whether it was worth so much overhead and turned to the method in the
+current patch.
+
+Think twice now, I think it is worth implementing (1)-(3) as long as
+(4) can be addressed. I just found that both led_trigger_set() and
+led_trigger_remove() send a uevent once the trigger is changed [1], and
+verified this using `udevadm monitor'. We have collected all four
+pieces of the puzzle, hooray!
+
+If you are OK with the private LED trigger approach, I will adopt it in
+[PATCH v2].
+
+[1]: commit 52c47742f79d ("leds: triggers: send uevent when changing
+triggers")
+
+> I know it would be more work, but I'm guessing this is going to be a comm=
+on feature across multiple vendors it might need doing at a common layer.
+
+CC'ing LED class maintainers.
+
+Private LED triggers currently have two users: leds-cros_ec and leds-
+turris-omnia. Their private triggers are respectively named "chromeos-
+auto" and "omnia-mcu".
+
+I agree that this is going to be a common feature. A generic name for
+such a feature helps userspace [2] identify it. What about introducing
+a namespace for private LED triggers, so that we can name these
+triggers like "hw-driven:driver-specific-name"?
+
+[2]: AFAIK, KDE Plasma already includes kbd_backlight in its battery
+panel (Plasma 5) or brightness panel (Plasma 6).
+
+> As a note - on the Thinkpads we've had to look at getting the correct Int=
+el ISH firmware loaded (and we're working on getting that upstream to linux=
+-firmware). Is that needed on the Ideapads for the feature to work well or =
+not?
+
+My device (ThinkBook 14 G7+ ASP) has an AMD Ryzen CPU, so the answer
+about Intel ISH firmware is apparent :P
+
+It has two sensor hubs [3]. The ALS sensor is under the AMD Sensor
+Fusion Hub (SFH). The auto brightness mode=C2=A0requires the amd_sfh driver
+to be loaded to work properly, but does *not* need the kernel to load
+the firmware. More details below.
+
+* AMD Sensor Fusion Hub 1.1 (1022:164a, driver: amd_sfh -> hid-sensor-
+hub):
+`` amd_sfh registers=C2=A0a standard HID sensor hub virtual device, which i=
+s
+then used by hid-sensor-hub.
+`` Checking the source code of amd_sfh,=C2=A0it doesn't use the firmware
+subsystem, so SFH1.1 seems to have the firmware built into the
+platform.
+`` Firmware version: 0xb000026.
+
+-- Ambient Light Sensor (ALS, driver: hid-sensor-als):
+``` hid-sensor-als registers an IIO device. It can be monitored via
+iio-sensor-proxy [4].
+``` The EC can't collect data from it until amd_sfh is loaded. Manually
+unloading (rmmod) amd_sfh also breaks the data availability.
+
+* Ideapad HID sensor hub (IDEA5003/048D:5003, driver: i2c-hid-acpi
+-> hid-sensor-hub):
+`` No IIO sensor is registered because all HID Usages used to pass
+sensor values are vendor-specific.
+`` The only way to monitor it is HIDRAW.
+
+-- Human Presence Detection sensor (HPD, driver: hid-sensor-custom):
+``` sensor-model=3DBIOMETRIC_HUMAN_DETECTION
+``` friendly-name=3DAMS_TMF882X HOD V2010 Sensor
+``` sensor-description=3D2.4 HOR0.0.19
+``` The EC uses it to wake the device from S0ix (s2idle) on human
+approach.
+``` I've managed to figure out how to parse its reports to get the
+distance between the human body=C2=A0and the device, as well as its
+confidence.
+
+-- Unknown sensor (driver: hid-sensor-custom):
+``` sensor-model=3DLENOVO
+``` friendly-name=3DLenovo AMS_HPD V0302 Sensor
+``` sensor-manufacturer=3DLENOVO
+``` It reports an increasing number periodically.
+
+-- Unknown sensor (driver: hid-sensor-custom):
+``` sensor-model=3DLenovo Customized Gest
+``` friendly-name=3DLenovo AMS_GESTRUE V0209 Sensor
+``` sensor-manufacturer=3DLENOVO
+``` It never sends any HID report.
+
+[3]: Maybe this is a workaround so that the EC can collect data from
+the HPD sensor in S0ix, otherwise this is so weird to have two separate
+sensor hubs since AMD SFH also supports HPD sensors. But the wake-on-
+human-presence feature is already weird anyway - my device wakes itself
+when I am napping at the desk :-/ Zzz...
+[4]: https://gitlab.freedesktop.org/hadess/iio-sensor-proxy
+
+I will just stop here as this somehow becomes off-topic. If you need
+more information about my device (or if you can provide some
+information for me, big thanks \o/), feel free to email me in private.
+
+> Mark
+
+Thanks,
+Rong
