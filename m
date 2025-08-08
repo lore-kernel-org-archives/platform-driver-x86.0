@@ -1,55 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB74D236A73;
-	Fri,  8 Aug 2025 15:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1415E19EED3;
+	Fri,  8 Aug 2025 15:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754666435; cv=none; b=Ti54lXAjFP+6Q7BeAQNjzNEiBrozk67w2aslfqz6M924quNXhpcrFIM8T5PGj7+YkDQDjJiONBnM42x33Gt+Go5atDwRbBAkpUcsV2JHA11dp5NblRrwp4rCpPmsr8+3Y20hEJcg0DmFBvDSDjePk6/TUzgyrumow5AsTix6/sQ=
+	t=1754668103; cv=none; b=Cmt8u+4xLO65wtjrSJANhaB5GDuIwsEmlEfymp/QLOf3fo6waJDj6xWVo6CDHslWxndHiT9VfIWdk1nrwy+qzO8X/H/KLoJ7/7mjeCvK65TBYrvaNS4U75I6Y3B3ZLYfIDkPwE6XYkwiDKU8qailUN8njCnAOfIe9i/rSkED+6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754666435; c=relaxed/simple;
-	bh=vwCFqwUL01DNTrnN+v0UHsEkzjzYJynmCUZDf9U+qXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nXf8ns4vFwjvdXGklMg91CiGfJLPARKlW12OxE7K6ajVirrj59I/+d32ePprC0/hrmIuwVyASg3gJjxBOIVgH9Gpz5BlriY9Jfd3hr/VwflqHI6OAoc+YP6pn4YvdW64RAQMKX1VIcwibi5mDhj872EQJIzuNYXkfxgBkEs/rgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWsIAYmP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754668103; c=relaxed/simple;
+	bh=pLtvvApMWHVOZTFQ1cFKSziWrBGeo7Y4bH/R739LrkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rOGR6XpIF1fG5SE1HmIBHPq/Ys7GbOxNlMU8Liqz8oHgjes0Alk8WjkHjrLwprs6nhHV0LptRqJ+nDKTf+2/9JbM4ki6Kn6XX6AAFonSqkUFCBHBOVn5INjod/YbaOJQDbJqN97s60iIfK64fhIBGPogUnKZfyJwqOkRUy1BU8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=HFWj363V; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWsIAYmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19096C4CEF4;
-	Fri,  8 Aug 2025 15:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754666434;
-	bh=vwCFqwUL01DNTrnN+v0UHsEkzjzYJynmCUZDf9U+qXA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iWsIAYmPgoX9KoJprcyqYPkZJzJ4NLmZYeLDW9qUqdoXnr7+hMt79yMQWmshi9dBU
-	 A6sxrbsXKH2jBtzwlcMN8UfNHTartAjNde06WnCAfIyaWLH6IujzoPV9trVL3wNr62
-	 5RtFAVnf75Tpy3knWYF0anaro4MF1YiANqmma/7LgJQm3xVXFSNzGA/AUvAPgeQU6z
-	 P1D808bIJG+WyE4Flyn7Mo3fxyLvN5UapStY/U3l8ctPU/mzRJDlKcXSnHQ7DkTPxp
-	 wDDftM/eBeIETvt9ARsjJLkuN1XqTSC0Q1eay4exXTgUTTn1BlG1GGEkTIObHzD0pk
-	 rUg6kVFDdzOXQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="HFWj363V"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 81EB0485BA;
+	Fri,  8 Aug 2025 18:48:12 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id 94339485AD;
+	Fri,  8 Aug 2025 18:48:11 +0300 (EEST)
+Received: from antheas-z13 (unknown [IPv6:2a02:2149:8b54:2b00:4bbe:4554:f657:4bd5])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 1ABC21FE633;
+	Fri,  8 Aug 2025 18:48:10 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1754668091;
+	bh=99eUG3CNzM0arOp7xBNc07BSZWLEZtBJze71+aCBs6w=; h=From:To:Subject;
+	b=HFWj363V9LOXKvR4Us2RWZn2EPjhev8Nv8nv2b6T8Ep0hIl5KcStp+OFYTf2jYKpX
+	 wtf/Kl+V2ECAE1/jRuyoiUMAJsO7qplvASgmBbvi1lw4XkYis7HHn6GMeaB792xu4h
+	 Os0MzQp55Bl1TmwGXJk+lJ8ClCi0aSFZ4joG0D3AoufEOJZBcKpX318exBNDQbhdM2
+	 mkhu9K7W2jf3VTqupQbd5/EUya1UKQUB/PIbcqvwckQqEOtyVsGd6gDOHWeHqMZdXD
+	 0M+cQrXVQAkaXrFfpmAUKcCQbh42b1jfjGQwvNxn1pQ5t76NQy1G7Zc0ub6SpS9h6T
+	 zMOaqP2FKwtVA==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 2a02:2149:8b54:2b00:4bbe:4554:f657:4bd5) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Mathieu Fenniak <mathieu@fenniak.net>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Lee Jones <lee@kernel.org>,
-	Dzmitry Sankouski <dsankouski@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 05/21] x86/platform: select legacy gpiolib interfaces where used
-Date: Fri,  8 Aug 2025 17:17:49 +0200
-Message-Id: <20250808151822.536879-6-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250808151822.536879-1-arnd@kernel.org>
-References: <20250808151822.536879-1-arnd@kernel.org>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v2 1/2] platform/x86: asus-wmi: Remove extra keys from
+ ignore_key_wlan quirk
+Date: Fri,  8 Aug 2025 17:47:09 +0200
+Message-ID: <20250808154710.8981-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,75 +60,42 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <175466809098.1696090.7962098088888285849@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.0.9 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-From: Arnd Bergmann <arnd@arndb.de>
+Currently, the ignore_key_wlan quirk applies to keycodes 0x5D, 0x5E, and
+0x5F. However, the relevant code for the Asus Zenbook Duo is only 0x5F.
+Since this code is emitted by other Asus devices, such as from the Z13
+for its ROG button, remove the extra codes before expanding the quirk.
 
-A few old machines have not been converted away from the old-style
-gpiolib interfaces. Make these select the new CONFIG_GPIOLIB_LEGACY
-symbol so the code still works where it is needed but can be left
-out otherwise.
+For the Duo devices, which are the only ones that use this quirk, there
+should be no effect.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 9286dfd5735b ("platform/x86: asus-wmi: Fix spurious rfkill on UX8406MA")
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- drivers/input/misc/Kconfig                       | 3 +++
- drivers/platform/x86/Kconfig                     | 3 +++
- drivers/platform/x86/x86-android-tablets/Kconfig | 1 +
- 3 files changed, 7 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 0fb21c99a5e3..681d4123ef2b 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -860,6 +860,9 @@ config INPUT_IDEAPAD_SLIDEBAR
- config INPUT_SOC_BUTTON_ARRAY
- 	tristate "Windows-compatible SoC Button Array"
- 	depends on KEYBOARD_GPIO && ACPI
-+	depends on X86
-+	depends on GPIOLIB
-+	select GPIOLIB_LEGACY
- 	help
- 	  Say Y here if you have a SoC-based tablet that originally runs
- 	  Windows 8 or a Microsoft Surface Book 2, Pro 5, Laptop 1 or later.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 6d238e120dce..979a2fce8fc1 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -309,6 +309,7 @@ config MERAKI_MX100
- 	depends on GPIOLIB
- 	depends on GPIO_ICH
- 	depends on LEDS_CLASS
-+	select GPIOLIB_LEGACY
- 	select LEDS_GPIO
- 	help
- 	  This driver provides support for the front button and LEDs on
-@@ -564,6 +565,7 @@ config PCENGINES_APU2
- 	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
- 	depends on LEDS_CLASS
- 	select GPIO_AMD_FCH
-+	select GPIOLIB_LEGACY
- 	select KEYBOARD_GPIO_POLLED
- 	select LEDS_GPIO
- 	help
-@@ -591,6 +593,7 @@ config PORTWELL_EC
- config BARCO_P50_GPIO
- 	tristate "Barco P50 GPIO driver for identify LED/button"
- 	depends on GPIOLIB
-+	select GPIOLIB_LEGACY
- 	help
- 	  This driver provides access to the GPIOs for the identify button
- 	  and led present on Barco P50 board.
-diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
-index 193da15ee01c..54fa6112c9ea 100644
---- a/drivers/platform/x86/x86-android-tablets/Kconfig
-+++ b/drivers/platform/x86/x86-android-tablets/Kconfig
-@@ -8,6 +8,7 @@ config X86_ANDROID_TABLETS
- 	depends on I2C && SPI && SERIAL_DEV_BUS
- 	depends on GPIOLIB && PMIC_OPREGION
- 	depends on ACPI && EFI && PCI
-+	select GPIOLIB_LEGACY
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	select POWER_SUPPLY
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index f84c3d03c1de..e6726be5890e 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -655,8 +655,6 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
+ 		if (atkbd_reports_vol_keys)
+ 			*code = ASUS_WMI_KEY_IGNORE;
+ 		break;
+-	case 0x5D: /* Wireless console Toggle */
+-	case 0x5E: /* Wireless console Enable */
+ 	case 0x5F: /* Wireless console Disable */
+ 		if (quirks->ignore_key_wlan)
+ 			*code = ASUS_WMI_KEY_IGNORE;
+
+base-commit: 186f3edfdd41f2ae87fc40a9ccba52a3bf930994
 -- 
-2.39.5
+2.50.1
+
 
