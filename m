@@ -1,274 +1,188 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A91A2E36EC;
-	Mon, 11 Aug 2025 04:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF71F76A5;
+	Mon, 11 Aug 2025 08:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754886704; cv=none; b=KEJJdvDb0MOmb5HXoXK3owbqT644j/dMdcaVwvy2a4CaC6x7GZxr+0C+O0wWZopBuUQtAv8N5t5Hqwbn6q12tffvrhptLJK7EeN/pFO4yS02sXQgIthYNn+wnST96IQbR+eyN+3Ksj0QEcGTWiN9CY4J3cgb29BdOtKdi3KDo0E=
+	t=1754901536; cv=none; b=aN2M4Mh9zBHZVIcqpGTdTMHPCUrH9AxMC8oFcxKHmwiwwCJeTvZZRB4I/k5eTsNVWrX0g2dmJTnDYJDGe0dGh1go2ERVp1EUKT3m/JtGkAY+cw3H40ewV779XCvPg7ueACMjwsrSCEX+JdkYnVQ1InU34WKfBkXoxlULE98QnWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754886704; c=relaxed/simple;
-	bh=9jhQOGVHQSqrFgET5ndbks6uqT7zenqk32zCi2L313I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rVFs6JabH49E2ujy7ZNe+vWDJNMy13pKOytNdQ5meSzk9L7DgfQl2rOk5O7hOI+har89uzHeS60N+w0L7FNnnACyqhb7oeHYkY8pKShU1QFvCxfGMjVebzKMWJm4oionGjKknw4ql1wizF+3kfQNhsDdUJqpCRGOaHywoqWiRvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0JuVKhA; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754901536; c=relaxed/simple;
+	bh=I5kNPzmFS0TrQM08QzuZwvVJEvGEI9YCa4Is7YA/p+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQaiGNU8bLU4czKcoCxodTjSO69JG2aZLmVE5fa2+u/E07gmc7QI6Xr7q7vwCGhwQDwN8Jg3xyKRglwX4W+Lf4+r1skepBJjROVBTO66EDuwADPUy5gr6Y9f5JkqMVgOuXA31butWxVuzWUyY3MBVjCcFg8F032i29kT3jnVbPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mHe8i0Qb; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0JuVKhA"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-24003ed822cso22389605ad.1;
-        Sun, 10 Aug 2025 21:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754886701; x=1755491501; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2KSIxzg7N5siQOaz/snNAUdpqjxAxtIvx/sSJBvLYGc=;
-        b=S0JuVKhAjZwDc+/V8bMxDZuvdlRgdIadAKh83bXuL7ETuvf5xS15l9XEyq1Yne3s4N
-         gcGR1z7y0ifbWOaOoNOl0olFWGBUZZJdT4OHGyD1JafgmhFEclJo1cWI+T6LRPcYInoY
-         QO4G4BSLBJIe0/Foywm4oUEElrWLgu92GVPCdy1r72ZKYGQwhCir4nhlfVVpH/CzI3HJ
-         RzOfMywwmH0YjrhsvAV9KZjVkPjH2M6Em89txPym07YibJQdo1w35LW+j6DT4nhvrcxx
-         XgzJTmVSxwQb2zx0A9+bGk/9ur7vp4GEzX1byCvKvrNysfltw8r+C/P1kyGBPePjC8qJ
-         Yj1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754886701; x=1755491501;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KSIxzg7N5siQOaz/snNAUdpqjxAxtIvx/sSJBvLYGc=;
-        b=JbTpaK3poDMdlBRaR12RLI/FNbuf1ZQ27eG82VLsw7mvyXsNChOKIAgnTfpl8nqUoS
-         I+D2UX6h/4OjNfKpr1NPvGrpnXyiGBhK0XMJj1mn7mqTKOg0IhswnsEqHXUs2+AOFn7B
-         i3AoocWJdbM1VbSylii1yfkRh3yu4pQ4i45cMhrh1ogT+tpjFT1sftQXfDs3nhKPquvM
-         NgBFl1r59IKl2wm2OLE5df+xYwmPCmnQmUfnUn3f3Xn33yzsMmvQ30zHVvsvnzNCMvYm
-         iTzTNB7+NTb4uu9ffUw4yvu7ZDJ4zvHgEYaxdv01CEESpq+pP1i6Z9FW1S3MSLs6tBGG
-         MB4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUzWDpkt9dpfleUbj6Ey5OLwYory5fL31RUdi7rO3lFq8CANDQCj58JaEAr7Scu2gs8EBYaabWwdRc94YHU7vIscfEK5g==@vger.kernel.org, AJvYcCXEjKg/DEiAK+/4Zw7JHVv2PCk/cLbMKnzeQlDcd0ff7OTYc5rq3PSYWqhovg4eOtpzQJEQgF8pKGeNjkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIe1/3VXZEdX3pgp0eE7kSmk0cBAiu1zny7A5XQNmMGvjnwkP/
-	a2FZFby8DnfANiLdQ3BSOUn7cAWqfLv6C0y/4VBwPDxWegFxZsY8ui6p
-X-Gm-Gg: ASbGncu1GeVSeZ7NqxOjQC9OOKuHIVVAKI0uemPVQsmg4ebFIvD9oLF7/MEPWI+WPh4
-	hig67TcvF/J1jHyBiMkwnjfNlSdG1eGDfQdQeRNFghG2doOpMmhqdd5sy5gyoC/WSq2JgbBD4uG
-	mjS+V2Nh2qkFJdi+SGhquGlNg27g7JJBmN5EfEWb7aRJEf6E6ijRieytahQJTUNDsfr6zDXDtxO
-	Mwz9Oj520YyB2uR8zJRo0NC8sfxVf8CSbww+eGIokKk4PGAKte0e7Rbyv0q2maDfistH0z21rxo
-	33x2hxgQRAqixBJCTgK//jtNNeIP9RvuUnesapX7ANen2fsO1i4y7DvI8svrMgxCYspe062W4NF
-	G7h6OHfPndosHG6ctE2eKmNg=
-X-Google-Smtp-Source: AGHT+IGMSbJjyvC5x/Q9BBK55d1A3AH4P45mzdebf0h428MMT29Dqng2oH+AUinVYjhogPFHeFsmcQ==
-X-Received: by 2002:a17:903:3b87:b0:240:86b2:aecf with SMTP id d9443c01a7336-242c1fdb118mr148969965ad.12.1754886700507;
-        Sun, 10 Aug 2025 21:31:40 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:69d7:30de:b05e:915b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e899a51esm263338555ad.115.2025.08.10.21.31.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Aug 2025 21:31:40 -0700 (PDT)
-Date: Sun, 10 Aug 2025 21:31:37 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
-	Hans de Goede <hansg@kernel.org>
-Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
- gpio-leds/keys
-Message-ID: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mHe8i0Qb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1754901522; x=1755506322; i=w_armin@gmx.de;
+	bh=I5kNPzmFS0TrQM08QzuZwvVJEvGEI9YCa4Is7YA/p+U=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=mHe8i0QbAguLllPuZ8wLo3CSP1YeAeqe7pymZmhHsxrC0c0Q/bjx+dJ1Isrsepzv
+	 TyDrpe3TEMrotLXlgF7ryCXqi2K+GcJXcOLrVqIFrWUUE+Ls9px26xBhlpaLjiB9b
+	 6bIhqOXzohy5IE+WNdsHYAiA1ymL+nmcieKFzv0CYQdf5jR3mPWb3vCPd22+yuBWy
+	 CsBpR6n5t5tNd6/hH1EuvvOmkWLJE6nWEryghlgc1cZME2mWuRPjENt3phDY4TcIX
+	 i4WQO64ZSB9LfWYJoN9AYFI6HQ4YRBtqh0OjzyAJRzz8wCqsle0NTYfEA02xDEawj
+	 kPfUzORmpZyIIUapJA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([91.14.231.131]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPokN-1uywzK3dBb-00YQ8U; Mon, 11
+ Aug 2025 10:38:42 +0200
+Message-ID: <5531e051-ad62-4cfd-a733-21f04385e1bb@gmx.de>
+Date: Mon, 11 Aug 2025 10:38:37 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] platform/x86: (ayn-ec) Add PWM Fan HWMON Interface
+To: Derek John Clark <derekjohn.clark@gmail.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Alok Tiwari <alok.a.tiwari@oracle.com>,
+ David Box <david.e.box@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250726204041.516440-1-derekjohn.clark@gmail.com>
+ <20250726204041.516440-2-derekjohn.clark@gmail.com>
+ <5b061220-e04a-48b5-ba2c-92ccf240798e@gmx.de>
+ <CAFqHKTnkPLEbMk+NeLaSridSJBGU+P4P5PFF7VmiQbcfv7CAkg@mail.gmail.com>
+ <404b9bfd-66c7-4524-a7ec-34fa9eb046eb@gmx.de>
+ <CAFqHKTnO2NQ+_q_FOwT74Ukg7tx2k3B_sksEhNBzuCeZEWe3FQ@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAFqHKTnO2NQ+_q_FOwT74Ukg7tx2k3B_sksEhNBzuCeZEWe3FQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:n5xXGsRRFknq9bL6r+gn9PebfWjFHtEUJJQ58Yi5HRszTj3vCbj
+ /xFhmU2S2Mo5YJzAjHsjh6Qs2KtYwJlBrUH734Q+tYwe1EsW6l8Xj7HgYyOwbA0p+CwsXfI
+ d8f1UMWhRCj2Q+x8FWBYZXatUzd/lsbdnrC9r4luYTfWyOeNoTAkkhyHUyYsPR8FfWyv+q6
+ myKMeOrA8Ig+kxNgCMKxA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nIsSwjlLkqM=;1ncjVrOFr/WZgWnoGRQXYIoNUhG
+ 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
 
-In preparation of dropping support for legacy GPIO API from gpio-keys
-switch the driver to use software nodes/properties to describe
-GPIO-connected LED and button.
+Am 11.08.25 um 00:27 schrieb Derek John Clark:
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+> On Mon, Jul 28, 2025 at 9:10=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Am 29.07.25 um 04:58 schrieb Derek John Clark:
+>>
+>>> On Sat, Jul 26, 2025 at 4:32=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
+ote:
+>>>> Am 26.07.25 um 22:40 schrieb Derek J. Clark:
+>>>>
+>>>>> Adds platform driver for AYN Loki and Tectoy Zeenix lines of handhel=
+d
+>>>>> devices. This patch implements a hwmon interface for EC provided man=
+ual
+>>>>> PWM fan control and user defined fan curves. A global ACPI lock is u=
+sed
+>>>>> when reading or writing from the EC.
+>>>>>
+>>>>> There are 4 fan modes implemented in this patch. Modes 0-3 act in
+>>>>> accordance with the standard hwmon logic where 0 is 100% fan speed, =
+1 is
+>>>>> manual control, and 2 is automatic control. As the EC only provides =
+3
+>>>>> modes by default, mode 0 is implemented by setting the device to man=
+ual
+>>>>> and then setting fan speed to 100% directly. In mode 1 the PWM duty =
+cycle
+>>>>> is set in sysfs with values [0-255], which are then scaled to the EC=
+ max
+>>>>> of 128. Mode 4 is an automatic mode where the fan curve is user defi=
+ned.
+>>>>> There are 5 total set points and each set point takes a temperature =
+in
+>>>>> Celsius [0-100] and a PWM duty cycle [0-255]. When the CPU temperatu=
+re
+>>>>> reaches a given set point, the corresponding duty cycle is automatic=
+ally
+>>>>> set by the EC.
+>>>>>
+>>>>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>>>>>
+>>>>> space
+>>>> Interesting, do you have access to such a device? If yes then i would=
+ be very interested
+>>>> in looking at the ACPI tables shipped with said device.
+>>> Hi Armin,
+>>>
+>>> I have a Loki Max, and know someone with a Loki Zero. Do you want
+>>> plain text acpidump or a decoded DSDT.dat attached?
+>> I would prefer the plain text acpidump, as the SSDT tables often contai=
+n important data.
+>>
+> Attached is the plain text acpidump, sorry for the delay. I'll also
+> note that Ayn provided me with documentation of the EC commands for
+> this driver.
+>
+> Cheers,
+> - Derek
 
-This is untested - no hardware.
+Nice :)
 
- drivers/platform/x86/barco-p50-gpio.c | 104 +++++++++++++++-----------
- 1 file changed, 62 insertions(+), 42 deletions(-)
+I also noticed that the ACPI code itself uses EC register 0xB0 to control =
+the battery thermal limit. This would
+conflict with your usage of register 0xB0 as the RED RGB value. Does the d=
+ocumentation mention this register?
 
-diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-index 28012eebdb10..6f13e81f98fb 100644
---- a/drivers/platform/x86/barco-p50-gpio.c
-+++ b/drivers/platform/x86/barco-p50-gpio.c
-@@ -11,6 +11,7 @@
- #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
- 
- #include <linux/delay.h>
-+#include <linux/dev_printk.h>
- #include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/io.h>
-@@ -18,10 +19,11 @@
- #include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
--#include <linux/gpio_keys.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
--#include <linux/input.h>
-+#include <linux/gpio/property.h>
-+#include <linux/input-event-codes.h>
-+#include <linux/property.h>
- 
- 
- #define DRIVER_NAME		"barco-p50-gpio"
-@@ -78,44 +80,57 @@ static const char * const gpio_names[] = {
- 	[P50_GPIO_LINE_BTN] = "identify-button",
- };
- 
--
--static struct gpiod_lookup_table p50_gpio_led_table = {
--	.dev_id = "leds-gpio",
--	.table = {
--		GPIO_LOOKUP_IDX(DRIVER_NAME, P50_GPIO_LINE_LED, NULL, 0, GPIO_ACTIVE_HIGH),
--		{}
--	}
-+static const struct software_node gpiochip_node = {
-+	.name = DRIVER_NAME,
- };
- 
- /* GPIO LEDs */
--static struct gpio_led leds[] = {
--	{ .name = "identify" }
-+static const struct software_node gpio_leds_node = {
-+	.name = "gpio-leds-identify",
- };
- 
--static struct gpio_led_platform_data leds_pdata = {
--	.num_leds = ARRAY_SIZE(leds),
--	.leds = leds,
-+static const struct property_entry identify_led_props[] = {
-+	PROPERTY_ENTRY_GPIO("gpios", &gpiochip_node, P50_GPIO_LINE_LED, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node identify_led_node = {
-+	.parent = &gpio_leds_node,
-+	.name = "identify",
-+	.properties = identify_led_props,
- };
- 
- /* GPIO keyboard */
--static struct gpio_keys_button buttons[] = {
--	{
--		.code = KEY_VENDOR,
--		.gpio = P50_GPIO_LINE_BTN,
--		.active_low = 1,
--		.type = EV_KEY,
--		.value = 1,
--	},
-+static const struct property_entry gpio_keys_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "identify"),
-+	PROPERTY_ENTRY_U32("poll-interval", 100),
-+	{ }
- };
- 
--static struct gpio_keys_platform_data keys_pdata = {
--	.buttons = buttons,
--	.nbuttons = ARRAY_SIZE(buttons),
--	.poll_interval = 100,
--	.rep = 0,
--	.name = "identify",
-+static const struct software_node gpio_keys_node = {
-+	.name = "gpio-keys-identify",
-+	.properties = gpio_keys_props,
- };
- 
-+static struct property_entry vendor_key_props[] = {
-+	PROPERTY_ENTRY_U32("linux,code", KEY_VENDOR),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpiochip_node, P50_GPIO_LINE_BTN, GPIO_ACTIVE_LOW),
-+	{ }
-+};
-+
-+static const struct software_node vendor_key_node = {
-+	.parent = &gpio_keys_node,
-+	.properties = vendor_key_props,
-+};
-+
-+static const struct software_node *p50_swnodes[] = {
-+	&gpiochip_node,
-+	&gpio_leds_node,
-+	&identify_led_node,
-+	&gpio_keys_node,
-+	&vendor_key_node,
-+	NULL
-+};
- 
- /* low level access routines */
- 
-@@ -285,6 +300,16 @@ static int p50_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
- 
- static int p50_gpio_probe(struct platform_device *pdev)
- {
-+	struct platform_device_info key_info = {
-+		.name	= "gpio-keys-polled",
-+		.id	= PLATFORM_DEVID_NONE,
-+		.parent	= &pdev->dev,
-+	};
-+	struct platform_device_info led_info = {
-+		.name	= "leds-gpio",
-+		.id	= PLATFORM_DEVID_NONE,
-+		.parent	= &pdev->dev,
-+	};
- 	struct p50_gpio *p50;
- 	struct resource *res;
- 	int ret;
-@@ -339,25 +364,20 @@ static int p50_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	gpiod_add_lookup_table(&p50_gpio_led_table);
--
--	p50->leds_pdev = platform_device_register_data(&pdev->dev,
--		"leds-gpio", PLATFORM_DEVID_NONE, &leds_pdata, sizeof(leds_pdata));
-+	ret = software_node_register_node_group(p50_swnodes);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "failed to register software nodes");
- 
-+	led_info.fwnode = software_node_fwnode(&gpio_leds_node);
-+	p50->leds_pdev = platform_device_register_full(&led_info);
- 	if (IS_ERR(p50->leds_pdev)) {
- 		ret = PTR_ERR(p50->leds_pdev);
- 		dev_err(&pdev->dev, "Could not register leds-gpio: %d\n", ret);
- 		goto err_leds;
- 	}
- 
--	/* gpio-keys-polled uses old-style gpio interface, pass the right identifier */
--	buttons[0].gpio += p50->gc.base;
--
--	p50->keys_pdev =
--		platform_device_register_data(&pdev->dev, "gpio-keys-polled",
--					      PLATFORM_DEVID_NONE,
--					      &keys_pdata, sizeof(keys_pdata));
--
-+	key_info.fwnode = software_node_fwnode(&gpio_keys_node);
-+	p50->keys_pdev = platform_device_register_full(&key_info);
- 	if (IS_ERR(p50->keys_pdev)) {
- 		ret = PTR_ERR(p50->keys_pdev);
- 		dev_err(&pdev->dev, "Could not register gpio-keys-polled: %d\n", ret);
-@@ -369,7 +389,7 @@ static int p50_gpio_probe(struct platform_device *pdev)
- err_keys:
- 	platform_device_unregister(p50->leds_pdev);
- err_leds:
--	gpiod_remove_lookup_table(&p50_gpio_led_table);
-+	software_node_unregister_node_group(p50_swnodes);
- 
- 	return ret;
- }
-@@ -381,7 +401,7 @@ static void p50_gpio_remove(struct platform_device *pdev)
- 	platform_device_unregister(p50->keys_pdev);
- 	platform_device_unregister(p50->leds_pdev);
- 
--	gpiod_remove_lookup_table(&p50_gpio_led_table);
-+	software_node_unregister_node_group(p50_swnodes);
- }
- 
- static struct platform_driver p50_gpio_driver = {
--- 
-2.51.0.rc0.155.g4a0f42376b-goog
+Thanks,
+Armin Wolf
 
-
--- 
-Dmitry
