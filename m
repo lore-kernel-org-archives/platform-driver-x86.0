@@ -1,200 +1,140 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E922D4801;
-	Mon, 11 Aug 2025 16:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A8B21771B;
+	Mon, 11 Aug 2025 17:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754928710; cv=none; b=X2PFTazbtvV8wWKam6m1wTJUHg397mLe9Ec1xYfvzt1lXmI0NCKltn4L2cf8sAbbKkHqIrJVogmEiAKfgSvliYap+0XeigkLVYN1lQmL6KcveFhZZ882F9IY+GOuhDvmFGoS6myUH/ZDQsHLOiilgopGeiqpUiCYBJlTFgX/5Gk=
+	t=1754934031; cv=none; b=oGpfrzxYs85d2GJkdOAr0XEedk1awuYNDvrO5W7MTF8NckWllGJesJHlv24o86v0IqMbjYGSXHb3NMjieCaIZN2vRBmjz2Vtr5mDFIofJW1t5YxuvaDQUkjMR2VnVbL9EiZP52OqQohypuq0lIbStTnQIUWbeHuQZT+HtCyqO4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754928710; c=relaxed/simple;
-	bh=inFvKHCFQ98IeGbm7fVz6dBLX4ErbBbvKCda2avqLWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mq3WomiD4tixHCAiW6PSa+SeDP2ukbpByz165lX7EV5+PkTQE+/moKqXV8EpAGPgx4u0mJzuy7+YGA3kSBkGeKABMLAoGx8Bz/7va4rKjFf+wgqal/oiPHl+Qnu0EAy8DlsUFKnAD1hnvvpVdbHHVZnkGVzWOjtzyMD0DhboYCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nBH7IX+/; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754934031; c=relaxed/simple;
+	bh=DR4nzsj2RSJeo1Dqf7XMP3J098TXOv60AI7D/vJomI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XMfOVe/7Os7UgBpP5BrF3h5h3mNkwdfMBQYv9kpJZwMAVBH6yZ48l1t6rhyYH+SYRXGIT2BaI05DABxqRChTMwYElqr1sPpnONHjOigyU9+L30Jyj2/A5hlJn/t1eMOn7cXzBee/VoGD20mQ8JQJ62D4Tua7tt6UeWTSv6DHC/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICIcPitU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBH7IX+/"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-76bc68cc9e4so4673022b3a.2;
-        Mon, 11 Aug 2025 09:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754928708; x=1755533508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3UtT+6OjrcTpmymA1eEoBAo08cqrgunpUK4YecHL14=;
-        b=nBH7IX+/UilXBzMN8yNieUfZpOuLqUtPHTa8h/uPsD+WkusgHjEVNz2Arke02F+yLI
-         9/XiqDUb+8m5bqTCAe7yC7QIEoLCjkGrV9VNtC/NHVVD4E0ZmLtK2yZVxT9ew4nWwNOk
-         N5OIxVsAPfbJkOYMYntaZ1Xrju1KqsK6V+wwzz7FrczRS50ONG520qAANDj24jNJj+ig
-         BRLPHXN/aw9ea7tNMq1E8DcNLvLfkDqoXYDj3VT7WabT8Lwxv/fw8QE9rhjYWCdfcUqx
-         LttxASzNaggd90pyDZubZaRypaAvqZFG9Lp7QUEoJ79YdiCX2V+n05deg2b8StROh/XE
-         +ktw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754928708; x=1755533508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l3UtT+6OjrcTpmymA1eEoBAo08cqrgunpUK4YecHL14=;
-        b=F51VO7LGi+qWyyI6JDKm+swMKXfSLZA0HNuM+KH/JOrjgroazQMKaqukHY/9R6UaBi
-         iXNII6ygo0aL0zTtDQ4qghnDfWf/ilnsCZAi4pbRE8DVVb4oPSgMinhuJYid4ucUCU4b
-         wfz/qWpLlHfOAPxBy/R0HsqyKzbVswBJ60jcP+eOhzI+QqBua+ueARTHyYDNz8TYn8KD
-         9kd6wG/vT57wT51iC1tmeJVhhrFpUTwMoNKFcYQtkGBGR7ou2YX3r2oXPzx1AEulmkHu
-         ak/nBygcMGqNtsNaod2eIPg/HPsd27MVVJQ9Bsi6448K7SVw7U91SEq+bVPCa5/WcQM7
-         TikQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBYm/6+mdshJR1zC51cSDor5VLN4+jR3KxARNhvF7ndfr445WoZ5Wy0c4T2aqJNlTKTiPx2hIxWUBR93Y=@vger.kernel.org, AJvYcCXOAdhsOiGEaSqU/Z5lCqfPgvb2rHO7e4NM2lw7R4905VOYlhO8feCpqfTfpF4z8aoSiWNy1y3PZfjeHJQX/Qz9rzopkA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSY3xgx3yUW7CaG+A5GPm8jDHxZKTPJRGkdJuqaiBNq0YFVKun
-	8yGY/yDk6hTLO4gAdPGDaeMH3E2LS4oi6YsQrJz3VLTluMlQsyBXvjLp
-X-Gm-Gg: ASbGncvQGfx8dgvlDarFmsw0zfZhcenP3BYvQWYrE9T2YGI0hO3pmFFcZNDqPnAmBm3
-	NVl6LaO1lFA+JbBFCSp/HEwu81fCdEX1ajHFZ7XVfjW42Av8HNF9vlkV111px6lWNEk7ih0FItx
-	LDKts7wcDpYTgj9UVbTzNmooTDRu5pkpan1T+Bh0McnoOXN8bdAxxtV1M/eUJ9HPuLAxKukbJ/u
-	bKs+haNtiJ3uPJtnd/kKCqbNeMHGw18yUd1k066tw9xzf6DGGm37Rcmo+ccPdv2P4ufiT1HuAN0
-	rHy6TTFjAKV864DAwZ82saV3wx+R2CjtFC9cjEalVFnA8zaoYz8ehm+a6wqcoCU/mtB40XQ8Rsc
-	krhzOk5xlfFbofG+MOgAa6wo=
-X-Google-Smtp-Source: AGHT+IGamdAs2+CF+UQokpsVw/83w46mf552RQ8xVzabZR/lXPJ3zIUxXISBNUgp9YcHPi7Z3Y3Eug==
-X-Received: by 2002:a17:903:2cc:b0:242:9bc4:f1c7 with SMTP id d9443c01a7336-242fc3acdddmr1819455ad.54.1754928707722;
-        Mon, 11 Aug 2025 09:11:47 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:69d7:30de:b05e:915b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8976a06sm277680485ad.81.2025.08.11.09.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 09:11:47 -0700 (PDT)
-Date: Mon, 11 Aug 2025 09:11:44 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, Peter Korsgaard <peter.korsgaard@barco.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
- gpio-leds/keys
-Message-ID: <tigj3afybwwqj5n4etir6xil7njo6q6q36abfqk46oku6fgfyg@36cg54q5sbtn>
-References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
- <aJnlnx2qF6P61jJN@smile.fi.intel.com>
- <7c2d08e3-d1e2-433e-b726-307246ab17e9@kernel.org>
- <aJoQE2CQv3nzaSqc@smile.fi.intel.com>
- <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
- <aJoTvDA6_pxVoV7G@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICIcPitU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4B9C4CEED;
+	Mon, 11 Aug 2025 17:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754934031;
+	bh=DR4nzsj2RSJeo1Dqf7XMP3J098TXOv60AI7D/vJomI4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ICIcPitUvvE+Smdr08VW/T0wbBwaCCrgWxjRnugeYNKEXuLNeR+JSbYkG4VsQ5DRe
+	 7yIzBomnbXC3CvW+XcvnjkzDoJTYh0JkarCgDW5P9hTcl2WMyDkKWhz4l9bKVPUJ0a
+	 cuDQl/tmHI1YqCGjcNI6funcs1bfaaU0McQ44XoA5y/OmuBFAYz/IIsZQ/KTBWuwYd
+	 6nS1ft+xWXfENLaDtvzQ9o8B661nt71bebSGTqybfAb7HTcDYC/5Tbq1lmvvq8vHEy
+	 ecLfCuiRrG2hsS2iuTkCTvWSKGLA58N9EWVw5jiKXStJLG3ZJuuj42zE0Jo/Ix9fxk
+	 qiliFgEoTsuEg==
+Message-ID: <c60ccef1-7213-4dd7-8c10-e8ef03675bd8@kernel.org>
+Date: Mon, 11 Aug 2025 19:40:27 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJoTvDA6_pxVoV7G@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
+ gpio-leds/keys
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
+ Peter Korsgaard <peter.korsgaard@barco.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
+ <aJnlnx2qF6P61jJN@smile.fi.intel.com>
+ <7c2d08e3-d1e2-433e-b726-307246ab17e9@kernel.org>
+ <aJoQE2CQv3nzaSqc@smile.fi.intel.com>
+ <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 11, 2025 at 07:01:00PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 11, 2025 at 08:49:21AM -0700, Dmitry Torokhov wrote:
-> > On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
-> > > > On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
-> > > > > On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
+Hi,
+
+On 11-Aug-25 5:49 PM, Dmitry Torokhov wrote:
+> On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
+>> On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
+>>> On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
+>>>> On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
+>>
+>> ...
+>>
+>>>> Otherwise LGTM as here it looks like we establish platform device ourselves and
+>>>> hence no need some additional magic Hans mentioned in the other series.
+>>>
+>>> Not entirely like with the x86-android-tablets patches this
+>>> declares a software-node for the gpiochip:
+>>>
+>>> static const struct software_node gpiochip_node = {
+>>> 	.name = DRIVER_NAME,
+>>> };
+>>>
+>>> and registers that node, but nowhere does it actually
+>>> get assigned to the gpiochip.
+>>>
+>>> This is going to need a line like this added to probe():
+>>>
+>>> 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
+>>>
+>>> note the software_node_fwnode() call MUST be made after
+>>> registering the software-nodes (group).
+>>>
+>>> Other then needing this single line things are indeed
+>>> much easier when the code containing the software
+>>> properties / nodes is the same code as which is
+>>> registering the gpiochip.
+>>
+>> Ah, good point!
 > 
-> ...
-> 
-> > > > > Otherwise LGTM as here it looks like we establish platform device ourselves and
-> > > > > hence no need some additional magic Hans mentioned in the other series.
-> > > > 
-> > > > Not entirely like with the x86-android-tablets patches this
-> > > > declares a software-node for the gpiochip:
-> > > > 
-> > > > static const struct software_node gpiochip_node = {
-> > > > 	.name = DRIVER_NAME,
-> > > > };
-> > > > 
-> > > > and registers that node, but nowhere does it actually
-> > > > get assigned to the gpiochip.
-> > > > 
-> > > > This is going to need a line like this added to probe():
-> > > > 
-> > > > 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
-> > > > 
-> > > > note the software_node_fwnode() call MUST be made after
-> > > > registering the software-nodes (group).
-> > > > 
-> > > > Other then needing this single line things are indeed
-> > > > much easier when the code containing the software
-> > > > properties / nodes is the same code as which is
-> > > > registering the gpiochip.
-> > > 
-> > > Ah, good point!
-> > 
-> > This is wrong though, the software node need not be attached to the
-> > gpiochip (and I wonder if it is even safe to do so). It simply provides
-> > a name by which gpiochip is looked up in swnode_get_gpio_device().
-> 
-> Do we have all this being documented somewhere? Perhaps start with that?1
+> This is wrong though, the software node need not be attached to the
+> gpiochip (and I wonder if it is even safe to do so). It simply provides
+> a name by which gpiochip is looked up in swnode_get_gpio_device().
 
-This is original commit introducing the functionality:
+Ah interesting. This is very different from how fwnodes generally
+work though. Generally speaking when a PROPERTY_ENTRY_REF() is used
+like PROPERTY_ENTRY_GPIO() does then the lookup is done by matching
+the reference to the fwnode of the type of device to which the
+reference points.
 
-commit e7f9ff5dc90c3826231343439c35c6b7e9e57378
-Author: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Fri Nov 11 14:19:08 2022 -0800
+IOW the standard way how this works for most other subsystems
+is that gpiolib-swnode.c: swnode_get_gpio_device() would call
+gpio_device_find() with a compare function which uses
+device_match_fwnode().
 
-    gpiolib: add support for software nodes
+I see that instead it uses the swnode name and passes that to
+gpio_device_find_by_label().
 
-    Now that static device properties understand notion of child nodes and
-    references, let's teach gpiolib to handle them:
+I must say that AFAIK this is not how swnodes are supposed to
+be used the swnode name field is supposed to only be there
+for debugging use and may normally be left empty all together.
 
-    - GPIOs are represented as a references to software nodes representing
-      gpiochip
-    - references must have 2 arguments - GPIO number within the chip and
-      GPIO flags (GPIO_ACTIVE_LOW/GPIO_ACTIVE_HIGH, etc)
-    - a new PROPERTY_ENTRY_GPIO() macro is supplied to ensure the above
-    - name of the software node representing gpiochip must match label of
-      the gpiochip, as we use it to locate gpiochip structure at runtime
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I guess using the swnode-name + gpio_device_find_by_label()
+works but it goes against the design of how fw-nodes
+and especially fwnode-references are supposed to be used...
 
-    The following illustrates use of software nodes to describe a "System"
-    button that is currently specified via use of gpio_keys_platform_data
-    in arch/mips/alchemy/board-mtx1.c. It follows bindings specified in
-    Documentation/devicetree/bindings/input/gpio-keys.yaml.
+Having a fwnode reference pointing to what is in essence
+a dangling (not attached to any device) fwnode is weird.
 
-    static const struct software_node mxt1_gpiochip2_node = {
-            .name = "alchemy-gpio2",
-    };
+Are there already any users of PROPERTY_ENTRY_GPIO() in
+the kernel? If not then I think that we should fix things
+up to actually do a reference match and not a name based
+lookup.
 
-    static const struct property_entry mtx1_gpio_button_props[] = {
-            PROPERTY_ENTRY_U32("linux,code", BTN_0),
-            PROPERTY_ENTRY_STRING("label", "System button"),
-            PROPERTY_ENTRY_GPIO("gpios", &mxt1_gpiochip2_node, 7, GPIO_ACTIVE_LOW),
-            { }
-    };
+Andy IIRC you've done quite a bit of work on software-nodes,
+what is your take on this ?
 
-    Similarly, arch/arm/mach-tegra/board-paz00.c can be converted to:
+Note this is likely my last email in this thread for
+a while since I will be traveling without email access.
 
-    static const struct software_node tegra_gpiochip_node = {
-            .name = "tegra-gpio",
-    };
+Regards,
 
-    static struct property_entry wifi_rfkill_prop[] __initdata = {
-            PROPERTY_ENTRY_STRING("name", "wifi_rfkill"),
-            PROPERTY_ENTRY_STRING("type", "wlan"),
-            PROPERTY_ENTRY_GPIO("reset-gpios",
-                                &tegra_gpiochip_node, 25, GPIO_ACTIVE_HIGH);
-            PROPERTY_ENTRY_GPIO("shutdown-gpios",
-                                &tegra_gpiochip_node, 85, GPIO_ACTIVE_HIGH);
-            { },
-    };
+Hans
 
-    static struct platform_device wifi_rfkill_device = {
-            .name   = "rfkill_gpio",
-            .id     = -1,
-    };
 
-    ...
-
-            software_node_register(&tegra_gpiochip_node);
-            device_create_managed_software_node(&wifi_rfkill_device.dev,
-                                                wifi_rfkill_prop, NULL);
-
-I guess we could extract this into somewhere like
-Documentation/driver-api/gpio/legacy-boards.rst, but given that after
-initial set of conversions we should not be seeing any more users I
-wonder if it is worth it.
-
-Thanks.
-
--- 
-Dmitry
