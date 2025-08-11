@@ -1,57 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7398171D2;
-	Mon, 11 Aug 2025 12:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F88171D2;
+	Mon, 11 Aug 2025 12:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754916942; cv=none; b=uty/yxhB7Sqt+nkeAihQpGFt2Z/k/5ZI7YI6lgkmQ3jXV65iak9j6IMr7RbhANrre/h0+Qgj4CQN7Td2GVwUD40zaPm6UGErnMbQHWtxQeMQzvvB5xUebEMe2sWM46j5pH/Hr+1oNXgwK8HniGCS5irHvjXSx0EEL+Qygc902v8=
+	t=1754916949; cv=none; b=b46n5LWHvEcrQTelvD7Gx0yzy8boE2mws7njE2uLv1nCC6SFcoN7Fu744+jGiPU+sUP99rCVkDlGNX0U1OL9GfvTMgJuaHyeuFm9UHSq3qpMNEYh1da4p+ZIY9gCXZj00AHvhz/jZGKF6dJc3oLXo3F2GBDAHr2D+9Ubl/Zdtvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754916942; c=relaxed/simple;
-	bh=+wnZvoZoaUBkH6FcJqQgSiWBOqcgT8Jjrp3b/pojvSc=;
+	s=arc-20240116; t=1754916949; c=relaxed/simple;
+	bh=vpcEseEXE2yqxqZWt5zpew9cdQiW2aUBzk2IZ1IhAr0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Kth300dm16715Z2tEB+05aNzpbY7O/nmk6Ca50ShbXaPf664zuYPYgEDF24HGWd5DPc4gzGZB2OIIOh/78dTYDxd/EvTzVWv3qt/tB0d2fU5rPb7LM32Jlp/L78ohvRVox4rVfcfkO+rJvg6N5i3UbTK9WT2IQMlBm4e8b5vixk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAvbz8hb; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=DEFkDMNFPVfFCFual22AGYsZHWy2PGsuHW81fhV4pB0EvTrGz55Bl81WVMIyzsAtIdmuOT/9IANs0nDXo4jnbofLbJ6S8raXOFbaTw/a75bXiN2icmjAmDhMmMRmo5I83grF+DmC7kn0gOWbUezpIgzjDXgGjcpN8WI33MvZCyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqAID5uv; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAvbz8hb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqAID5uv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754916941; x=1786452941;
+  t=1754916948; x=1786452948;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=+wnZvoZoaUBkH6FcJqQgSiWBOqcgT8Jjrp3b/pojvSc=;
-  b=CAvbz8hbXDV62mBs7sHXFbGQDQ0A62pmrhzVDtTKW8Tn+cAyUiEy7+Qa
-   k+0lRxK6qpJv0EKxp0JntCrMzqhJQ4ZI1GL7ebGNTqFz8k7jn5nKvQ3Ux
-   ABYzXT8jb6ij0QzUu3KYqrFokNah7512UludGJM1HJClQ/k8+xJkTk4nD
-   OdeVR7Zpdx0/csxRzLA/0AKdjTcUuPNZjbd2utYVKHplTTQwljBCjjzyE
-   pRkcPSVJTGyG4TIIJ3utVo6PZ3m0lN4Opkv8BfZDLxNIAKdaZ65IENQL/
-   Ur3E3BoBZu/cPtMkPGcLm9PQw7/QHI+vuO9s62dVx84kg9nv80kEufRP1
-   Q==;
-X-CSE-ConnectionGUID: Hp8VV3K0QaOI+R7xIpEvtg==
-X-CSE-MsgGUID: M5bWQRmAT+CXBYeEgMMevg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="44751527"
+  bh=vpcEseEXE2yqxqZWt5zpew9cdQiW2aUBzk2IZ1IhAr0=;
+  b=eqAID5uvvdoL/U9dS6TGWAZn0Z5K65iHg2PPnPM5Ak5hskcKE85/PR/S
+   34ejgOMKXBdQOJZy04qf0Fmu+BHvY/hN/tbhHdzqFUsHAJjsAVPgqOK4T
+   vuANvGEkXMdP/g7Tj8GAf+gk6gKX4swS3hGnpAhpqqd9R0RXshl2CgG/U
+   mBXVUip7n+kPbarEJ3z/GfJarzxCGsQmY+z1M1E4PPb00RTsN2d8eWw4J
+   qaCB6BHjemW6lRleu4kemo9mJ2flKhYZBiXsRGDA/EA9iF2MxTRCt+K6z
+   6ZotGEWTPGAQe/1VYHw2LBpFOvKUqWXL8RymoMyexu7SzzlDQ0/JI/CWx
+   w==;
+X-CSE-ConnectionGUID: bpB66zOlTXiBBq7hLiOSCA==
+X-CSE-MsgGUID: nobaLv0EQ5qwXna3DcwVxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="44751542"
 X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="44751527"
+   d="scan'208";a="44751542"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:40 -0700
-X-CSE-ConnectionGUID: S/OhIQdoQTiI+DswKoMlYA==
-X-CSE-MsgGUID: Fi6eOFcWTTS2nnjY1ve1DQ==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:47 -0700
+X-CSE-ConnectionGUID: 201yuLgPS6SLwXHp+3DIiA==
+X-CSE-MsgGUID: 3yvM22qVQF2ivYkOluMJwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="196750323"
+   d="scan'208";a="196750352"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:38 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:45 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, darshanrathod475@gmail.com
-Cc: stuart.w.hayes@gmail.com, hansg@kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250801104705.1824495-1-darshanrathod475@gmail.com>
-References: <20250801104705.1824495-1-darshanrathod475@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell_rbu: fix assignment in if condition
-Message-Id: <175491692881.9765.9215327884949918904.b4-ty@linux.intel.com>
-Date: Mon, 11 Aug 2025 15:55:28 +0300
+To: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, hansg@kernel.org, 
+ Chen Ni <nichen@iscas.ac.cn>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250729031631.1644740-1-nichen@iscas.ac.cn>
+References: <20250729031631.1644740-1-nichen@iscas.ac.cn>
+Subject: Re: [PATCH] platform/x86: wmi-capdata01: Remove unneeded semicolon
+Message-Id: <175491694061.9765.14025813555640370825.b4-ty@linux.intel.com>
+Date: Mon, 11 Aug 2025 15:55:40 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,16 +62,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 01 Aug 2025 16:17:05 +0530, darshanrathod475@gmail.com wrote:
+On Tue, 29 Jul 2025 11:16:31 +0800, Chen Ni wrote:
 
-> Refactor to remove assignments from inside if conditions, as required
-> by kernel coding style. This improves code readability and resolves
-> checkpatch.pl warnings:
-> 
->     ERROR: do not use assignment in if condition
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 > 
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -80,8 +76,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell_rbu: fix assignment in if condition
-      commit: 1ccc2e20fe1d3b91395de8ca9ce0efe070287534
+[1/1] platform/x86: wmi-capdata01: Remove unneeded semicolon
+      commit: 3bffbe0497f9e3c7d80f22d9d0f60c984d42ab6d
 
 --
  i.
