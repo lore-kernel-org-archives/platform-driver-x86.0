@@ -1,77 +1,70 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96382E1C79;
-	Mon, 11 Aug 2025 15:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D10A2E5B11;
+	Mon, 11 Aug 2025 16:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754927367; cv=none; b=CeeUuQywlHO0yRpQ1t1QzIHxqA6AcqCRQzj7+BYtOdA36CHDSyJnB3c9s4zyYFVZqHgNaE4rWOcxTlGC7fZyrkYo+KHWCYhACvgKt+HXxQ2x1xJt4HB70imEWKZjK1K6IZIe+S8cI7Pu9K6yvhZrzj2E2oBfBdJy/4DYXhkpf1c=
+	t=1754928069; cv=none; b=eaj+5CzTf23qB675S6b+cJ0yHTCQpBQomUJj+9lV2nIoQIR1A+l9aC4kgtLmGhrZ+L8f8t/W2Q+Gtu4x6xAw7Qktx8GCKyae220g3wp37OSCVY9yCzyVHPoOB36aqWeHZhkTbfceHGsAViqayRrNUNFSCV32u1jw6pr2byp8tdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754927367; c=relaxed/simple;
-	bh=fFCqXuZALC29F1VK+Z1uQMuKiNuiwlcnkDjAG/yluWs=;
+	s=arc-20240116; t=1754928069; c=relaxed/simple;
+	bh=RwaWkdKmiTK+8Xy6GbC5Pycw7j37yi1eej0HhVKKtkM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c4Cc9A95//2CrLwX4G5z4QHNosPh4lEHFFqBOQMRcMYK67lnYlCGLBddvH7AbJRVnQkM1V4kJ3Hm5loCOPLvDlwIHIzBhilwtmTunCBRfzNBIWUrBgKFEhJ2SuhrX5jO7NbGBM0wEk/BdHSj3n4WKv2ahrB8CdJ6v+IBzhrgVZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhXavH8u; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKXrjvHiOX88yZsvuKi1W+xoQYCVU7JlEw42QDJEyzdjo7rN0AQQ+Jk7hc12909wIYnFs0yt6m6Vnn6Nf3yc3p0C89P3LeThaa+xghZx8l102ykQONVQiZl+3mti3ZsO2k3PnLyr5drWFugnVI6Vt0bi0Gx3Yf5fA2Hy3X5PF+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNdNvv1t; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhXavH8u"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-76bc5e68e26so4196365b3a.0;
-        Mon, 11 Aug 2025 08:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754927365; x=1755532165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KvKRsb+2NxzrgJY6bF+aJhokFLuTBvZRFJZd69q97xY=;
-        b=EhXavH8u/tcCCtYTB+/PmLoD/YAFreLDk0u/7jDfCULGyd/wpsnyLggC1EkwdbEAgr
-         h2Hpce5oLT7ta3J91V9MlJWNfAwiAP2s+TPNXxPwURdNUwS0ze2L6ZOdlO64jKUmzmpJ
-         4RE06f2H5QRsNDwlhMyTkrUy8c5G6ixuS2zRY2OGATQpSVzpLG+yRpx3C4kwlZJAMrAj
-         qzxMwz8dXnwiBCFIF3iTXoqof7C7mVB1Pz5KBiRPImjKpXgmZyMBEmrl05YaZXhtR7Ex
-         4hqql4JupSku/d7rGzF8MgZSG4x85fM5a4bGs7kOwdhjluqbuqMD8sRu5CRvgd8hJWQI
-         iLcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754927365; x=1755532165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KvKRsb+2NxzrgJY6bF+aJhokFLuTBvZRFJZd69q97xY=;
-        b=KrgKlooFzd+e4M12eImKlXKOklzGy4UmbrVTfeeKUpIN8OUaqlCGI6rRoQ46k3txfh
-         Q/JGh8EYeBjA9/OZjEeE3mEcI4TkSQL/kptHTpdrULaIbXNa3gIcCOGdo5TmeFy8jwrL
-         Uav6G0T/rIUZkHyp1fnrPK/NU8LWYl0vsTzfWPSp6en3uEDZlmsgdlvBzOeX/XZ50sgW
-         4PRouFoh63qOmOpJtdYDeulOHI3YzioLqW/LHEtzhGGBaMEd7fHSXkXvGWb7NozFmzJh
-         5VgXqfSahZWJpLao0Wdr/Ea7+slJH/HBbssg8Fat/w8bPB1UVwlP3pLv+uu7tSFg6YRM
-         BDbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpm7H7O6a3XSOZw+JDNjxUJoj60P1aVs50i1bSM5bJOgtUEzfGo/tDj2YAKvVuiKumQ7MKavXwylMVQn0vrE0ClAMMFw==@vger.kernel.org, AJvYcCXWE/nMEzWoAj8L/OT5FTgY37FKURCUt1y+Gs8Wyyw4w9IfiG8psmLE/SQmHTctsilOi6b8vMRFh8RqVNQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl22/WlIhJVzEMWgYJBoqOPUJwQuKDgjCZ6eAUghftzRovx+BN
-	27SyCyUERzAyvdubxxCg4KFjmBypJ21K27kuwwW6JUWh/An/BHime81S
-X-Gm-Gg: ASbGncscKx2b67YeTX9O5gmtjRE7WhIg9JFFmZQoClM/FeBDAo7JJE1sJiDmOp90mau
-	5xgSghShdU4t6M4Kl50BM4uqW9v910gC3DgrufCpN6A/q632ztKk/lygckZjvxmkRnCM2JVkhxH
-	SVgkAgXFOIWN4bW+l4GDo1HEVSQjSNB8Rs3YpbGD4jfJnAeHT+JLppUJi5sbE7mS5Hi9PrXn0qT
-	J97R/0kPQ5a0WIBe48J798f3Z9NGJWahw/VJBdvfmkWsXt4pdtx+hh2otnqj7WBAJxxXyl/zuNe
-	pyyIufchRC31y2IOE+yDsu6jZYmS5JDsa+bSyhxwutll+0QwsGN/KXiJ5pFKW0HHxSsH0NuEp/k
-	kJYJwxBKq2taVujhd4kK4KrU=
-X-Google-Smtp-Source: AGHT+IESHtzGMKtQgCr/tPJaExBT6n+PCzO6JVvlYm7iIsrvswZGZ4XLpeOkp/+bA/wEWgv0r2C2ew==
-X-Received: by 2002:a05:6300:218d:b0:240:16ef:ec16 with SMTP id adf61e73a8af0-2405526f4cfmr24386696637.46.1754927364996;
-        Mon, 11 Aug 2025 08:49:24 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:69d7:30de:b05e:915b])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b46c08d048esm3517619a12.4.2025.08.11.08.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 08:49:24 -0700 (PDT)
-Date: Mon, 11 Aug 2025 08:49:21 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, Peter Korsgaard <peter.korsgaard@barco.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNdNvv1t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754928067; x=1786464067;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RwaWkdKmiTK+8Xy6GbC5Pycw7j37yi1eej0HhVKKtkM=;
+  b=iNdNvv1txhEEdWrQGFkfyfe/wxc47F/QO4krbD3S8zTM1lYLHyLfzxUa
+   gSOBfxU24GOWjR2YTm2zdhG74a1ibhLAB9OAAFmnAh6rKv5CU6qDcswhr
+   F6mUt/5ML9T4Apwb1nWCTGPsAc9HPCI4xmoefgc+T2mnWujSGfrTqMVQW
+   ZkQOXhrfFIIwIeNlUvGUuONpnx44jlGGPkUD1n7b55VUc0J+6/h1PtRZP
+   L9FskyCReItu/RUb6UopPptho/wQbiHjbToO9K0QJOJYa5C4V5UYm5vaL
+   MRzv36e627l8H67P2MFlnY57GpB9ZLl7aPTbEfLc9kh03s9bWdGberYhd
+   w==;
+X-CSE-ConnectionGUID: LA5+TpchQXyJjkD8XaZW1g==
+X-CSE-MsgGUID: jgvQY8GJR/+t+12hFwWIEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="68554746"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="68554746"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 09:01:06 -0700
+X-CSE-ConnectionGUID: 1of0qtGzRIu3Qw0llXGC0g==
+X-CSE-MsgGUID: xkUFkcYUSkOCx/axOymrQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="170396435"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 09:01:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ulUxI-000000054Lr-1vkg;
+	Mon, 11 Aug 2025 19:01:00 +0300
+Date: Mon, 11 Aug 2025 19:01:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
+	Peter Korsgaard <peter.korsgaard@barco.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
  gpio-leds/keys
-Message-ID: <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+Message-ID: <aJoTvDA6_pxVoV7G@smile.fi.intel.com>
 References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
  <aJnlnx2qF6P61jJN@smile.fi.intel.com>
  <7c2d08e3-d1e2-433e-b726-307246ab17e9@kernel.org>
  <aJoQE2CQv3nzaSqc@smile.fi.intel.com>
+ <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,47 +73,53 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aJoQE2CQv3nzaSqc@smile.fi.intel.com>
+In-Reply-To: <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
-> > On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
-> > > On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
-> 
-> ...
-> 
-> > > Otherwise LGTM as here it looks like we establish platform device ourselves and
-> > > hence no need some additional magic Hans mentioned in the other series.
-> > 
-> > Not entirely like with the x86-android-tablets patches this
-> > declares a software-node for the gpiochip:
-> > 
-> > static const struct software_node gpiochip_node = {
-> > 	.name = DRIVER_NAME,
-> > };
-> > 
-> > and registers that node, but nowhere does it actually
-> > get assigned to the gpiochip.
-> > 
-> > This is going to need a line like this added to probe():
-> > 
-> > 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
-> > 
-> > note the software_node_fwnode() call MUST be made after
-> > registering the software-nodes (group).
-> > 
-> > Other then needing this single line things are indeed
-> > much easier when the code containing the software
-> > properties / nodes is the same code as which is
-> > registering the gpiochip.
-> 
-> Ah, good point!
+On Mon, Aug 11, 2025 at 08:49:21AM -0700, Dmitry Torokhov wrote:
+> On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
+> > On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
+> > > On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
+> > > > On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
 
-This is wrong though, the software node need not be attached to the
-gpiochip (and I wonder if it is even safe to do so). It simply provides
-a name by which gpiochip is looked up in swnode_get_gpio_device().
+...
 
-Thanks.
+> > > > Otherwise LGTM as here it looks like we establish platform device ourselves and
+> > > > hence no need some additional magic Hans mentioned in the other series.
+> > > 
+> > > Not entirely like with the x86-android-tablets patches this
+> > > declares a software-node for the gpiochip:
+> > > 
+> > > static const struct software_node gpiochip_node = {
+> > > 	.name = DRIVER_NAME,
+> > > };
+> > > 
+> > > and registers that node, but nowhere does it actually
+> > > get assigned to the gpiochip.
+> > > 
+> > > This is going to need a line like this added to probe():
+> > > 
+> > > 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
+> > > 
+> > > note the software_node_fwnode() call MUST be made after
+> > > registering the software-nodes (group).
+> > > 
+> > > Other then needing this single line things are indeed
+> > > much easier when the code containing the software
+> > > properties / nodes is the same code as which is
+> > > registering the gpiochip.
+> > 
+> > Ah, good point!
+> 
+> This is wrong though, the software node need not be attached to the
+> gpiochip (and I wonder if it is even safe to do so). It simply provides
+> a name by which gpiochip is looked up in swnode_get_gpio_device().
+
+Do we have all this being documented somewhere? Perhaps start with that?1
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
