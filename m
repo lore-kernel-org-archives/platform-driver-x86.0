@@ -1,70 +1,71 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F4019D065;
-	Mon, 11 Aug 2025 22:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E721F0995;
+	Mon, 11 Aug 2025 22:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754952434; cv=none; b=p8mlMMPfVC1VCY2kOeMjkVVzwHaUKtbkgnHMJkXhDtqulKtfvrJu2mQY5gdHIejHkw0KKppgbrxH7+rQAQHMfOrlq5RHW8NXMwiSXT6vkUUYBc1Rox0u0ycsNwh0HccyR2AB9tCZdxjojhmoZmdRL4Vb74ID1paMVUlKncZwAPw=
+	t=1754952611; cv=none; b=Ks7n3eiiO0T6MmcWSA5RBBSK9uwzV6F/JKKum/mG3GZQgk2VxdqKsgIxe/Fb9pDrBEWR8gZjAFwdDJnBE1eVJxz4PUvFKuB4krRb+GOiQEYyqoZol1gScWb1yz8PATB+d5Yve+mv1qPNbASBgEaEO7cKPkHPBYdi2D0zfRKc32c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754952434; c=relaxed/simple;
-	bh=G1PXVZ0UA9QR41dSWs8gtM+5c+QX+/q3d7AQMM//YIc=;
+	s=arc-20240116; t=1754952611; c=relaxed/simple;
+	bh=+IS7E2IoNvWKk53YhYWvkR8ZbYq/McVW6o/anVSOGcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TnKeZCiVeXNMhWGwZV3gTx1zJVcvvYurKkmrrCKqarHWZ0QWEOvPA7ZlGWf4sDBPeC1T1PSFQTTxWMDP2HH8LhggqbL6wxHej2Oo9KtbhPEUGXRf22oUay598ZyQleQQMGVhRv4fxrZwkBaBQqakc2vMyndhLMWbv28XtEAi8bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gnKL2Lgh; arc=none smtp.client-ip=209.85.210.171
+	 Content-Disposition; b=l2hiM+u90+QZ3MIxT1qTfG6gHCwk8NXgf+ggGEAKo1wj3eqm1XZIkpdcHEJd/dW/IznBR+iS+nXaCSx+bGz5tEoW91SzeBP689DqosJHY/KywDfEYz0oP/7LoweJMnDkLSWkC8deojd7URMcOjz5vYmEXdGp0Ueu87LVojwwykU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0YyXMcf; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnKL2Lgh"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-76a3818eb9bso4464149b3a.3;
-        Mon, 11 Aug 2025 15:47:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0YyXMcf"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-76bfd457607so4762018b3a.0;
+        Mon, 11 Aug 2025 15:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754952432; x=1755557232; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754952609; x=1755557409; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=de0me9/YGHnRXlTnZjgcGffuWlmy2iUubpAeKN1WIyY=;
-        b=gnKL2LghFDcUn+D6vgQkXlBUZ6ZbR9H8ZYwnd4i2WxDBJZcP1RKA1qyIKmix2DSPDa
-         r4sHxHrwO0IH71WwYfys6GlWvQQcqN5AD9qhq1C/7AIZ7gUPhDYsWhqn1ug7cFDeZ7ia
-         mG/24HQxG1FlHdk+A+FXrBnWbGXLclUFCm9iVhCUON985u+9g8djsv4Cn282UjhDXjRV
-         IkAhDfhWwaVOIw+V8WJIG1zt+6L60PFg7RGB3M41jP2R75TLAbbkWV+GhOgUENjxU1RV
-         ++wLDjWZZ3XPKd9sHJTkvOldXvFFhoKOLGX9b03ltI6iVBKc7EbpHVE4X/9RHJgh3nDZ
-         zFOQ==
+        bh=lrqT6LJVUtfVfEIRhxlbdM/roBG32C3EVok0bPsKrAA=;
+        b=i0YyXMcfGknW8OpV1bYONwQUn+0qtUGBriryj4ivEvB5XU760xoG4EQ/N38p56R2KU
+         5BBmehxtj5ihXLQ6IqimdxH03biS9Owy2zG7N/DQYegawjrHZ8HFl7Qhch1OQykdDdlU
+         e4YnuWX/WhbLh9SkIA7bYYQ+5cLsgwuZfxHvzQOdGg7oWoM/vK8RnAE8U+Q6truWtfqJ
+         BMitfsEA5XARLsicRlN1TBN7d8w4VY3IyudXwA9F+FeAenn4q7VztvgKeJRfzFIXEXDS
+         QdfSDtiXf05T+8fx7M8z3WCSu0a3dYGfnvocscQbs9mD3VcVEqUmWry0uxMtB4UjGowm
+         dLLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754952432; x=1755557232;
+        d=1e100.net; s=20230601; t=1754952609; x=1755557409;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=de0me9/YGHnRXlTnZjgcGffuWlmy2iUubpAeKN1WIyY=;
-        b=qQqGXs9K6VEGgZyE9ucvTwzuiMSwt0lJG12NiiSe/xUYsddeUUI2Coi90a9OQjKNOt
-         1Xd8wZQ2LWczBbT3EATaMvS0XayY8cZg4HdEsAH7W+D8da6s0Zqq4GlLqHXxPX5aODLG
-         WxucV4/BpXbHsTI1lRWrPe/hNR62WR8IEfrmDV5nleGMwTp5VbUHlQLqpUsvG9WmxTMn
-         6hzhsIEmdBf5BNc1QwoP3donKmnuK81yQ04gZzg8hQNVri6RRyd+FiJcCv5FcIs6BQEc
-         +JLQzPKBIl8xjx4uEhgu69IUfHiKJ6FrtLZYwaeCZKoYGqoxY/3yprDz5duzQ63agfWe
-         xPlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVcNNDNQnapblauREQCFF7s4ZaBvfNlJeFcxJ9Z2bx5ck+FqrgC1pvcNFSu2y4XRSFlr+vWdkt0D17nOLGbeydCg9teA==@vger.kernel.org, AJvYcCWy+5pi0d4kgQ6Zx6bx6Ldm0nU3wnQ5XW7EnN31s3onoeonutWcISCl0LousG2CxFSGiXK95eVjegr6p+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxETtHkGhYTr9s8KAh9oev1rnwO2N5myDov/ddYXz7TGvn7ll9k
-	6ZFIZwGwu3ZrWtbYWdaHmUQQH+IK08HY8HCZDLpF85aqJ7PsI52HEf7q
-X-Gm-Gg: ASbGnct9XQXVC1qVA6LWncA0/XD5+mUIdqCfPCcsGJuSAgr9k6hLHU4WBNyGZtMeB0k
-	zemqkjI459lY/E8na00gJAtgNhP3a550802EBUooHkfV7CSJuvMdKQbbjqatbivcwfCzXDmvvNF
-	l88Pw2Oto2mD3cWEFbA5zINwxaodHxPefUUQcgH/8fxhkFMUn1Hglp7NknjmHa/6NfoCM3uT8uz
-	fmMS60mI7eQXJVMd6DTt8RBwY1wUsZn0VAlnMBGL8mu0+ea7H8p6vole4Q5s8N7UUAeEyy2sY0q
-	49uNUQ7jvoQLK/FDNft31/5tDox4oKgQUYvflbTiktdeDUTzB0mRDCfpYBK8xWYozz+4lEV+N3G
-	RRITmg+yPcxx6Zk7gc5meVqw=
-X-Google-Smtp-Source: AGHT+IEd0dxFQlD6GPQepFz/Y8Bd8LiRQimbwJf/I+mMRakh/i7T76SZamQZkrKQ//YkLZvuK3ZwTA==
-X-Received: by 2002:a05:6a00:14c2:b0:736:3979:369e with SMTP id d2e1a72fcca58-76c46070b0fmr20213971b3a.9.1754952431778;
-        Mon, 11 Aug 2025 15:47:11 -0700 (PDT)
+        bh=lrqT6LJVUtfVfEIRhxlbdM/roBG32C3EVok0bPsKrAA=;
+        b=DnR+tSTSfAe8F6XQqh9j3ZzgQeDi5WZKSiiwx3BMVccLz/5vV+PfXdJmZOMvzVRC73
+         EnaHQ5RGqeocuPv2Gda5fEuqFipjh0agKwF5ycBkj02fcf5v+N1dCSwtGNz/fmtqPXrm
+         dCrwv6G/li/7UNL+v29060t5UvYgWfMCS1UUmUvk6cOuC6McDmZgGpsHEDEqrKQHq1t3
+         yNUjXDN6Ha2f6EjJdZTDPnwLnmZQnwVgcu3xgrJ5DqlTFpZ2QKnldINQtv93QyMJA2wk
+         piF5HQ0KFw/E5P3XPGLLGrZDYX2EIowIja4nxSJSowHTA/TkJp0cW3GYExXm+uTOv5O6
+         0wfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3xc7DggqY3/LqBBb1D1h05oWT4FNALOwMarH8fDSxLtRsE9NfYZGLlwsFk2hllB26G39LTukxuNIYFcU=@vger.kernel.org, AJvYcCXNR2kTHAWYan2GuT1TE70e2qWmbZs36rRoM7V1i14BKz3lx4/ZSAgAll7Ep8BCG1TKxscBrZhJzj549EowaQQGpcOi/Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya9Ow9qy+3qthI9J/9L4g9GBYWBW6NcXIMtkxsqAJNHY4ZDrIg
+	JFokpUGXgS3w/gXSJbwSAhjH64iyb9RI8JCN/3T90WY6VmqBUqYEJqZrZVJ2jA==
+X-Gm-Gg: ASbGncsjZ9EIWywUQfjWWhS3dChy1Z9tjUBqmjDnFile2zB7yTb9Wn9SqNgVYfENKl1
+	Hr6wg7yUZ35sci90jQftXeeXGqxabDwYQGfPMgGMCkbXCZeoPQ+PSdMtXd+oV3VvX53sCDizzuc
+	aLJ27y4qwqIiHkw6vHl7cs2cgdrrsCWtu3Splx0LzVfLekMRa8VhwzFaKynlBRyPIwJ83AslBxy
+	uIy8fM5qgr/HMGHwYXg7YpGttUZu0/JDO0xVMmsr/mVSgFPIEmuww3Dcpz71HQ4UV9qRYOeI38P
+	G2qAZFVbCxTmMVExRBVFSoOJ+CWWK1Z1FotBJ5C5SCau7uNm3xpL0X37dfU0Mgt6V9n4+Nfa4u2
+	UxESxdsvxc/YO4ILrgoRwwho=
+X-Google-Smtp-Source: AGHT+IEX0ouW3wW4MIaKJU/yVxRpdxp7UsSV2qT/D29s1MQFh4ZsUoYpWtLbVt0viRjQUq6VWJfD9Q==
+X-Received: by 2002:a05:6a00:2ea2:b0:76b:fe65:71d2 with SMTP id d2e1a72fcca58-76e0de41b55mr1495561b3a.10.1754952608538;
+        Mon, 11 Aug 2025 15:50:08 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:7933:7499:67d8:279a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bf1c6d5dcsm22360907b3a.74.2025.08.11.15.47.11
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bd1d4e312sm26928013b3a.17.2025.08.11.15.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 15:47:11 -0700 (PDT)
-Date: Mon, 11 Aug 2025 15:47:09 -0700
+        Mon, 11 Aug 2025 15:50:08 -0700 (PDT)
+Date: Mon, 11 Aug 2025 15:50:05 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Hans de Goede <hansg@kernel.org>, 
 	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Enrico Weigelt, metux IT consult" <info@metux.net>, Arnd Bergmann <arnd@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: meraki-mx100: Use static device properties
-Message-ID: <dzecghqrsrbe74akboqih7xculdm53rbhxa7dimt2ysdevyskd@hxhd2j3vnlt5>
+Subject: [PATCH] platform/x86: pcengines-apuv2: Use static device properties
+Message-ID: <yaaegm5z2vtkl6ci5jpfnv42aywfjtoqw3bjgtli43ypask2r6@a7gg37rwkpx2>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,487 +75,285 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Convert the Meraki MX100 board driver to use software nodes and static
-device properties to describe the on-board LEDs and reset button.
+Convert the PC Engines APUv2/v3 board driver to use software nodes
+and static device properties for its on-board LEDs and front button.
 
-This moves away from the legacy gpiod_lookup_table and platform_data
-mechanisms, allowing consumer drivers like leds-gpio and gpio-keys
-to rely on the unified device properties interface instead of
-board-specific data.
+This change replaces the legacy gpiod_lookup_table and platform_data
+with a modern software node implementation, which allows the leds-gpio
+and gpio-keys drivers to use the standard device properties API.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
 
 This compiles but I have not tried this on real hardware.
 
- drivers/platform/x86/meraki-mx100.c | 404 ++++++++++++++++++----------
- 1 file changed, 262 insertions(+), 142 deletions(-)
+ drivers/platform/x86/pcengines-apuv2.c | 192 +++++++++++++++----------
+ 1 file changed, 118 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
-index 3751ed36a980..8c5276d98512 100644
---- a/drivers/platform/x86/meraki-mx100.c
-+++ b/drivers/platform/x86/meraki-mx100.c
-@@ -15,135 +15,256 @@
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index 3aa63b18a2e1..3b086863c6ac 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -12,13 +12,13 @@
  
  #include <linux/dmi.h>
  #include <linux/err.h>
--#include <linux/gpio_keys.h>
- #include <linux/gpio/machine.h>
--#include <linux/input.h>
++#include <linux/gpio/machine.h>
 +#include <linux/gpio/property.h>
 +#include <linux/input-event-codes.h>
- #include <linux/io.h>
  #include <linux/kernel.h>
 -#include <linux/leds.h>
  #include <linux/module.h>
  #include <linux/platform_device.h>
+-#include <linux/gpio_keys.h>
+-#include <linux/gpio/machine.h>
+-#include <linux/input.h>
 +#include <linux/property.h>
+ #include <linux/platform_data/gpio/gpio-amd-fch.h>
  
- #define TINK_GPIO_DRIVER_NAME "gpio_ich"
- 
-+static const struct software_node gpio_ich_node = {
-+	.name = TINK_GPIO_DRIVER_NAME,
-+};
-+
- /* LEDs */
--static const struct gpio_led tink_leds[] = {
--	{
--		.name = "mx100:green:internet",
--		.default_trigger = "default-on",
--	},
--	{
--		.name = "mx100:green:lan2",
--	},
--	{
--		.name = "mx100:green:lan3",
--	},
--	{
--		.name = "mx100:green:lan4",
--	},
--	{
--		.name = "mx100:green:lan5",
--	},
--	{
--		.name = "mx100:green:lan6",
--	},
--	{
--		.name = "mx100:green:lan7",
--	},
--	{
--		.name = "mx100:green:lan8",
--	},
--	{
--		.name = "mx100:green:lan9",
--	},
--	{
--		.name = "mx100:green:lan10",
--	},
--	{
--		.name = "mx100:green:lan11",
--	},
--	{
--		.name = "mx100:green:ha",
--	},
--	{
--		.name = "mx100:orange:ha",
--	},
--	{
--		.name = "mx100:green:usb",
--	},
--	{
--		.name = "mx100:orange:usb",
--	},
-+static const struct software_node tink_gpio_leds_node = {
-+	.name = "meraki-mx100-leds",
+ /*
+@@ -72,60 +72,91 @@ static const struct amd_fch_gpio_pdata board_apu2 = {
+ 	.gpio_names	= apu2_gpio_names,
  };
  
--static const struct gpio_led_platform_data tink_leds_pdata = {
--	.num_leds	= ARRAY_SIZE(tink_leds),
--	.leds		= tink_leds,
--};
--
--static struct gpiod_lookup_table tink_leds_table = {
++static const struct software_node apu2_gpiochip_node = {
++	.name = AMD_FCH_GPIO_DRIVER_NAME,
++};
++
+ /* GPIO LEDs device */
++static const struct software_node apu2_leds_node = {
++	.name = "apu2-leds",
++};
+ 
+-static const struct gpio_led apu2_leds[] = {
+-	{ .name = "apu:green:1" },
+-	{ .name = "apu:green:2" },
+-	{ .name = "apu:green:3" },
++static const struct property_entry apu2_led1_props[] = {
++	PROPERTY_ENTRY_STRING("label", "apu:green:1"),
++	PROPERTY_ENTRY_GPIO("gpios", &apu2_gpiochip_node,
++			    APU2_GPIO_LINE_LED1, GPIO_ACTIVE_LOW),
++	{ }
+ };
+ 
+-static const struct gpio_led_platform_data apu2_leds_pdata = {
+-	.num_leds	= ARRAY_SIZE(apu2_leds),
+-	.leds		= apu2_leds,
++static const struct software_node apu2_led1_swnode = {
++	.name = "led-1",
++	.parent = &apu2_leds_node,
++	.properties = apu2_led1_props,
+ };
+ 
+-static struct gpiod_lookup_table gpios_led_table = {
 -	.dev_id = "leds-gpio",
 -	.table = {
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 11,
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED1,
 -				NULL, 0, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 18,
--				NULL, 1, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 20,
--				NULL, 2, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 22,
--				NULL, 3, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 23,
--				NULL, 4, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 32,
--				NULL, 5, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 34,
--				NULL, 6, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 35,
--				NULL, 7, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 36,
--				NULL, 8, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 37,
--				NULL, 9, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 48,
--				NULL, 10, GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 16,
--				NULL, 11, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 7,
--				NULL, 12, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 21,
--				NULL, 13, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 19,
--				NULL, 14, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED2,
+-				NULL, 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED3,
+-				NULL, 2, GPIO_ACTIVE_LOW),
 -		{} /* Terminating entry */
 -	}
-+static const struct property_entry tink_internet_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:internet"),
-+	PROPERTY_ENTRY_STRING("linux,default-trigger", "default-on"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 11, GPIO_ACTIVE_LOW),
++static const struct property_entry apu2_led2_props[] = {
++	PROPERTY_ENTRY_STRING("label", "apu:green:2"),
++	PROPERTY_ENTRY_GPIO("gpios", &apu2_gpiochip_node,
++			    APU2_GPIO_LINE_LED2, GPIO_ACTIVE_LOW),
 +	{ }
 +};
 +
-+static const struct software_node tink_internet_led_node = {
-+	.name = "internet-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_internet_led_props,
++static const struct software_node apu2_led2_swnode = {
++	.name = "led-2",
++	.parent = &apu2_leds_node,
++	.properties = apu2_led2_props,
 +};
 +
-+static const struct property_entry tink_lan2_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan2"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 18, GPIO_ACTIVE_HIGH),
++static const struct property_entry apu2_led3_props[] = {
++	PROPERTY_ENTRY_STRING("label", "apu:green:3"),
++	PROPERTY_ENTRY_GPIO("gpios", &apu2_gpiochip_node,
++			    APU2_GPIO_LINE_LED3, GPIO_ACTIVE_LOW),
 +	{ }
 +};
 +
-+static const struct software_node tink_lan2_led_node = {
-+	.name = "lan2-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan2_led_props,
-+};
-+
-+static const struct property_entry tink_lan3_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan3"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 20, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan3_led_node = {
-+	.name = "lan3-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan3_led_props,
-+};
-+
-+static const struct property_entry tink_lan4_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan4"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 22, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan4_led_node = {
-+	.name = "lan4-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan4_led_props,
-+};
-+
-+static const struct property_entry tink_lan5_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan5"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 23, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan5_led_node = {
-+	.name = "lan5-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan5_led_props,
-+};
-+
-+static const struct property_entry tink_lan6_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan6"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 32, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan6_led_node = {
-+	.name = "lan6-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan6_led_props,
-+};
-+
-+static const struct property_entry tink_lan7_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan7"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 34, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan7_led_node = {
-+	.name = "lan7-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan7_led_props,
-+};
-+
-+static const struct property_entry tink_lan8_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan8"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 35, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan8_led_node = {
-+	.name = "lan8-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan8_led_props,
-+};
-+
-+static const struct property_entry tink_lan9_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan9"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 36, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan9_led_node = {
-+	.name = "lan9-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan9_led_props,
-+};
-+
-+static const struct property_entry tink_lan10_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan10"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 37, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan10_led_node = {
-+	.name = "lan10-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan10_led_props,
-+};
-+
-+static const struct property_entry tink_lan11_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:lan11"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 48, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node tink_lan11_led_node = {
-+	.name = "lan11-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_lan11_led_props,
-+};
-+
-+static const struct property_entry tink_ha_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:ha"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 16, GPIO_ACTIVE_LOW),
-+	{ }
-+};
-+
-+static const struct software_node tink_ha_green_led_node = {
-+	.name = "ha-green-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_ha_green_led_props,
-+};
-+
-+static const struct property_entry tink_ha_orange_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:orange:ha"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 7, GPIO_ACTIVE_LOW),
-+	{ }
-+};
-+
-+static const struct software_node tink_ha_orange_led_node = {
-+	.name = "ha-orange-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_ha_orange_led_props,
-+};
-+
-+static const struct property_entry tink_usb_green_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:green:usb"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 21, GPIO_ACTIVE_LOW),
-+	{ }
-+};
-+
-+static const struct software_node tink_usb_green_led_node = {
-+	.name = "usb-green-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_usb_green_led_props,
-+};
-+
-+static const struct property_entry tink_usb_orange_led_props[] = {
-+	PROPERTY_ENTRY_STRING("label", "mx100:orange:usb"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 19, GPIO_ACTIVE_LOW),
-+	{ }
-+};
-+
-+static const struct software_node tink_usb_orange_led_node = {
-+	.name = "usb-orange-led",
-+	.parent = &tink_gpio_leds_node,
-+	.properties = tink_usb_orange_led_props,
++static const struct software_node apu2_led3_swnode = {
++	.name = "led-3",
++	.parent = &apu2_leds_node,
++	.properties = apu2_led3_props,
  };
  
- /* Reset Button */
--static struct gpio_keys_button tink_buttons[] = {
+ /* GPIO keyboard device */
++static const struct property_entry apu2_keys_props[] = {
++	PROPERTY_ENTRY_U32("poll-interval", 100),
++	{ }
++};
+ 
+-static struct gpio_keys_button apu2_keys_buttons[] = {
 -	{
--		.desc			= "Reset",
--		.type			= EV_KEY,
 -		.code			= KEY_RESTART,
--		.active_low             = 1,
--		.debounce_interval      = 100,
+-		.active_low		= 1,
+-		.desc			= "front button",
+-		.type			= EV_KEY,
+-		.debounce_interval	= 10,
+-		.value			= 1,
 -	},
-+static const struct property_entry tink_gpio_keys_props[] = {
-+	PROPERTY_ENTRY_U32("poll-interval", 20),
++static const struct software_node apu2_keys_node = {
++	.name = "apu2-keys",
++	.properties = apu2_keys_props,
+ };
+ 
+-static const struct gpio_keys_platform_data apu2_keys_pdata = {
+-	.buttons	= apu2_keys_buttons,
+-	.nbuttons	= ARRAY_SIZE(apu2_keys_buttons),
+-	.poll_interval	= 100,
+-	.rep		= 0,
+-	.name		= "apu2-keys",
++static const struct property_entry apu2_front_button_props[] = {
++	PROPERTY_ENTRY_STRING("label", "front button"),
++	PROPERTY_ENTRY_U32("linux,code", KEY_RESTART),
++	PROPERTY_ENTRY_GPIO("gpios", &apu2_gpiochip_node,
++			    APU2_GPIO_LINE_MODESW, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_U32("debounce-interval", 10),
 +	{ }
  };
  
--static const struct gpio_keys_platform_data tink_buttons_pdata = {
--	.buttons	= tink_buttons,
--	.nbuttons	= ARRAY_SIZE(tink_buttons),
--	.poll_interval  = 20,
--	.rep		= 0,
--	.name		= "mx100-keys",
-+static const struct software_node tink_gpio_keys_node = {
-+	.name = "mx100-keys",
-+	.properties = tink_gpio_keys_props,
- };
- 
--static struct gpiod_lookup_table tink_keys_table = {
+-static struct gpiod_lookup_table gpios_key_table = {
 -	.dev_id = "gpio-keys-polled",
 -	.table = {
--		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 60,
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_MODESW,
 -				NULL, 0, GPIO_ACTIVE_LOW),
 -		{} /* Terminating entry */
 -	}
-+static const struct property_entry tink_reset_key_props[] = {
-+	PROPERTY_ENTRY_U32("linux,code", KEY_RESTART),
-+	PROPERTY_ENTRY_STRING("label", "Reset"),
-+	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 60, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_U32("linux,input-type", EV_KEY),
-+	PROPERTY_ENTRY_U32("debounce-interval", 100),
-+	{ }
++static const struct software_node apu2_front_button_swnode = {
++	.name = "front-button",
++	.parent = &apu2_keys_node,
++	.properties = apu2_front_button_props,
 +};
 +
-+static const struct software_node tink_reset_key_node = {
-+	.name = "reset",
-+	.parent = &tink_gpio_keys_node,
-+	.properties = tink_reset_key_props,
-+};
-+
-+static const struct software_node *tink_swnodes[] = {
-+	&gpio_ich_node,
++static const struct software_node *apu2_swnodes[] = {
++	&apu2_gpiochip_node,
 +	/* LEDs nodes */
-+	&tink_gpio_leds_node,
-+	&tink_internet_led_node,
-+	&tink_lan2_led_node,
-+	&tink_lan3_led_node,
-+	&tink_lan4_led_node,
-+	&tink_lan5_led_node,
-+	&tink_lan6_led_node,
-+	&tink_lan7_led_node,
-+	&tink_lan8_led_node,
-+	&tink_lan9_led_node,
-+	&tink_lan10_led_node,
-+	&tink_lan11_led_node,
-+	&tink_ha_green_led_node,
-+	&tink_ha_orange_led_node,
-+	&tink_usb_green_led_node,
-+	&tink_usb_orange_led_node,
++	&apu2_leds_node,
++	&apu2_led1_swnode,
++	&apu2_led2_swnode,
++	&apu2_led3_swnode,
 +	/* Keys nodes */
-+	&tink_gpio_keys_node,
-+	&tink_reset_key_node,
++	&apu2_keys_node,
++	&apu2_front_button_swnode,
 +	NULL
  };
  
  /* Board setup */
-@@ -161,22 +282,17 @@ MODULE_DEVICE_TABLE(dmi, tink_systems);
- static struct platform_device *tink_leds_pdev;
- static struct platform_device *tink_keys_pdev;
+@@ -222,23 +253,25 @@ static struct platform_device *apu_gpio_pdev;
+ static struct platform_device *apu_leds_pdev;
+ static struct platform_device *apu_keys_pdev;
  
--static struct platform_device * __init tink_create_dev(
--	const char *name, const void *pdata, size_t sz)
--{
--	struct platform_device *pdev;
--
--	pdev = platform_device_register_data(NULL,
--		name, PLATFORM_DEVID_NONE, pdata, sz);
--	if (IS_ERR(pdev))
--		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
--
--	return pdev;
--}
--
- static int __init tink_board_init(void)
+-static struct platform_device * __init apu_create_pdev(
+-	const char *name,
+-	const void *pdata,
+-	size_t sz)
++static struct platform_device * __init apu_create_pdev(const char *name,
++						       const void *data, size_t size,
++						       const struct software_node *swnode)
  {
--	int ret;
-+	struct platform_device_info keys_info = {
-+		.name = "gpio-keys-polled",
++	struct platform_device_info pdev_info = {
++		.name = name,
 +		.id = PLATFORM_DEVID_NONE,
++		.data = data,
++		.size_data = size,
++		.fwnode = software_node_fwnode(swnode),
 +	};
-+	struct platform_device_info leds_info = {
-+		.name = "leds-gpio",
-+		.id = PLATFORM_DEVID_NONE,
-+	};
+ 	struct platform_device *pdev;
 +	int err;
  
- 	if (!dmi_first_match(tink_systems))
- 		return -ENODEV;
-@@ -188,30 +304,35 @@ static int __init tink_board_init(void)
- 	 */
- 	outl(inl(0x530) | BIT(28), 0x530);
+-	pdev = platform_device_register_resndata(NULL,
+-		name,
+-		PLATFORM_DEVID_NONE,
+-		NULL,
+-		0,
+-		pdata,
+-		sz);
++	pdev = platform_device_register_full(&pdev_info);
  
--	gpiod_add_lookup_table(&tink_leds_table);
--	gpiod_add_lookup_table(&tink_keys_table);
-+	err = software_node_register_node_group(tink_swnodes);
+-	if (IS_ERR(pdev))
+-		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
++	err = PTR_ERR_OR_ZERO(pdev);
++	if (err)
++		pr_err("failed registering %s: %d\n", name, err);
+ 
+ 	return pdev;
+ }
+@@ -246,6 +279,7 @@ static struct platform_device * __init apu_create_pdev(
+ static int __init apu_board_init(void)
+ {
+ 	const struct dmi_system_id *id;
++	int err;
+ 
+ 	id = dmi_first_match(apu_gpio_dmi_table);
+ 	if (!id) {
+@@ -253,35 +287,45 @@ static int __init apu_board_init(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	gpiod_add_lookup_table(&gpios_led_table);
+-	gpiod_add_lookup_table(&gpios_key_table);
++	err = software_node_register_node_group(apu2_swnodes);
 +	if (err) {
 +		pr_err("failed to register software nodes: %d\n", err);
 +		return err;
 +	}
  
--	tink_leds_pdev = tink_create_dev("leds-gpio",
--		&tink_leds_pdata, sizeof(tink_leds_pdata));
-+	leds_info.fwnode = software_node_fwnode(&tink_gpio_leds_node);
-+	tink_leds_pdev = platform_device_register_full(&leds_info);
- 	if (IS_ERR(tink_leds_pdev)) {
--		ret = PTR_ERR(tink_leds_pdev);
--		goto err;
-+		err = PTR_ERR(tink_leds_pdev);
-+		pr_err("failed to create LED device: %d\n", err);
+-	apu_gpio_pdev = apu_create_pdev(
+-		AMD_FCH_GPIO_DRIVER_NAME,
+-		id->driver_data,
+-		sizeof(struct amd_fch_gpio_pdata));
++	apu_gpio_pdev = apu_create_pdev(AMD_FCH_GPIO_DRIVER_NAME,
++					id->driver_data, sizeof(struct amd_fch_gpio_pdata), NULL);
++	err = PTR_ERR_OR_ZERO(apu_gpio_pdev);
++	if (err)
 +		goto err_unregister_swnodes;
- 	}
  
--	tink_keys_pdev = tink_create_dev("gpio-keys-polled",
--		&tink_buttons_pdata, sizeof(tink_buttons_pdata));
-+	keys_info.fwnode = software_node_fwnode(&tink_gpio_keys_node);
-+	tink_keys_pdev = platform_device_register_full(&keys_info);
- 	if (IS_ERR(tink_keys_pdev)) {
--		ret = PTR_ERR(tink_keys_pdev);
--		platform_device_unregister(tink_leds_pdev);
--		goto err;
-+		err = PTR_ERR(tink_keys_pdev);
-+		pr_err("failed to create key device: %d\n", err);
+-	apu_leds_pdev = apu_create_pdev(
+-		"leds-gpio",
+-		&apu2_leds_pdata,
+-		sizeof(apu2_leds_pdata));
++	apu_leds_pdev = apu_create_pdev("leds-gpio", NULL, 0, &apu2_leds_node);
++	err = PTR_ERR_OR_ZERO(apu_leds_pdev);
++	if (err)
++		goto err_unregister_gpio;
+ 
+-	apu_keys_pdev = apu_create_pdev(
+-		"gpio-keys-polled",
+-		&apu2_keys_pdata,
+-		sizeof(apu2_keys_pdata));
++	apu_keys_pdev = apu_create_pdev("gpio-keys-polled", NULL, 0, &apu2_keys_node);
++	err = PTR_ERR_OR_ZERO(apu_keys_pdev);
++	if (err)
 +		goto err_unregister_leds;
- 	}
  
  	return 0;
- 
--err:
--	gpiod_remove_lookup_table(&tink_keys_table);
--	gpiod_remove_lookup_table(&tink_leds_table);
--	return ret;
++
 +err_unregister_leds:
-+	platform_device_unregister(tink_leds_pdev);
++	platform_device_unregister(apu_leds_pdev);
++err_unregister_gpio:
++	platform_device_unregister(apu_gpio_pdev);
 +err_unregister_swnodes:
-+	software_node_unregister_node_group(tink_swnodes);
++	software_node_unregister_node_group(apu2_swnodes);
 +	return err;
  }
- module_init(tink_board_init);
  
-@@ -219,8 +340,7 @@ static void __exit tink_board_exit(void)
+ static void __exit apu_board_exit(void)
  {
- 	platform_device_unregister(tink_keys_pdev);
- 	platform_device_unregister(tink_leds_pdev);
--	gpiod_remove_lookup_table(&tink_keys_table);
--	gpiod_remove_lookup_table(&tink_leds_table);
-+	software_node_unregister_node_group(tink_swnodes);
+-	gpiod_remove_lookup_table(&gpios_led_table);
+-	gpiod_remove_lookup_table(&gpios_key_table);
+-
+ 	platform_device_unregister(apu_keys_pdev);
+ 	platform_device_unregister(apu_leds_pdev);
+ 	platform_device_unregister(apu_gpio_pdev);
++	software_node_unregister_node_group(apu2_swnodes);
  }
- module_exit(tink_board_exit);
  
+ module_init(apu_board_init);
 -- 
 2.51.0.rc0.155.g4a0f42376b-goog
 
