@@ -1,133 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6282722422E;
-	Mon, 11 Aug 2025 12:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7398171D2;
+	Mon, 11 Aug 2025 12:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754916264; cv=none; b=lAxiBFLR9cbIsDVgzRqlndfu8SKcsCTr6t+ZsQ+VHQDbqHg+3/dWTf52kjyt+DZt2WY+WY3y/3y6jqlIEaa84UITtK/ashEV4UAENgujCBscWs5E92H1WucYgRmSxBmE3c1sSFIligmMLZhgjVO0PjSUpgAfi2flOuAtqlvQP5E=
+	t=1754916942; cv=none; b=uty/yxhB7Sqt+nkeAihQpGFt2Z/k/5ZI7YI6lgkmQ3jXV65iak9j6IMr7RbhANrre/h0+Qgj4CQN7Td2GVwUD40zaPm6UGErnMbQHWtxQeMQzvvB5xUebEMe2sWM46j5pH/Hr+1oNXgwK8HniGCS5irHvjXSx0EEL+Qygc902v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754916264; c=relaxed/simple;
-	bh=vQ+vW3bb4SLO8jvImSIJRfB/JR6jIDTFO9Yuv06+5oQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvVig6SDuCVmZMmB+INIzQT/o2qLMHviJimrhctoaYLMsikS7gHAX1p78McZUrKCiMJ7w+nLDSLEsiz+tOtktaremtyZkoOo9MP0S9pvShSLC7d8Ar2YSSyiciJuxMvIncTNxfTs6CB3cbrdA7Z2OwbC/ccJrjA/hRE5nWI4LJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=McXHSEOX; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1754916942; c=relaxed/simple;
+	bh=+wnZvoZoaUBkH6FcJqQgSiWBOqcgT8Jjrp3b/pojvSc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Kth300dm16715Z2tEB+05aNzpbY7O/nmk6Ca50ShbXaPf664zuYPYgEDF24HGWd5DPc4gzGZB2OIIOh/78dTYDxd/EvTzVWv3qt/tB0d2fU5rPb7LM32Jlp/L78ohvRVox4rVfcfkO+rJvg6N5i3UbTK9WT2IQMlBm4e8b5vixk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAvbz8hb; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="McXHSEOX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAvbz8hb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754916262; x=1786452262;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vQ+vW3bb4SLO8jvImSIJRfB/JR6jIDTFO9Yuv06+5oQ=;
-  b=McXHSEOXg7VD8JkGaIKWzF4PYwHXFblPm+iFez6ziiVVNZP1oqEL8ZiD
-   d8g7wt5Xb8jx27ZRbvVY8a3twVj1hFEcK88uwqMaQ/mBmphscIRkJUWXJ
-   P6FIETVTwQjbC1So4/IKow+Nau9QPfZJaYUHHqXK6eL/zQcHQ45G5E5x6
-   aHAST1ThsKRtazhdyr8zd6nU5tUKIDUj+NtEaMeTRKOOqDOBAMtvgz2Mt
-   qB0Vt+75vcnlIKgsrRjnrB6CyR+XkWEw/hzXgT8gejyj9D5GRFVgSEG4Z
-   SC42j60QuoOCYmszpbebjpqivMlIuxsrW6XtFM84dLqBQ+BlmHYJuivRB
-   g==;
-X-CSE-ConnectionGUID: 8nLWcKWGRlaUdJZKViPtVQ==
-X-CSE-MsgGUID: 4Jh9jiMZQYaLmHbzap5yzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="59779612"
+  t=1754916941; x=1786452941;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=+wnZvoZoaUBkH6FcJqQgSiWBOqcgT8Jjrp3b/pojvSc=;
+  b=CAvbz8hbXDV62mBs7sHXFbGQDQ0A62pmrhzVDtTKW8Tn+cAyUiEy7+Qa
+   k+0lRxK6qpJv0EKxp0JntCrMzqhJQ4ZI1GL7ebGNTqFz8k7jn5nKvQ3Ux
+   ABYzXT8jb6ij0QzUu3KYqrFokNah7512UludGJM1HJClQ/k8+xJkTk4nD
+   OdeVR7Zpdx0/csxRzLA/0AKdjTcUuPNZjbd2utYVKHplTTQwljBCjjzyE
+   pRkcPSVJTGyG4TIIJ3utVo6PZ3m0lN4Opkv8BfZDLxNIAKdaZ65IENQL/
+   Ur3E3BoBZu/cPtMkPGcLm9PQw7/QHI+vuO9s62dVx84kg9nv80kEufRP1
+   Q==;
+X-CSE-ConnectionGUID: Hp8VV3K0QaOI+R7xIpEvtg==
+X-CSE-MsgGUID: M5bWQRmAT+CXBYeEgMMevg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="44751527"
 X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="59779612"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:44:21 -0700
-X-CSE-ConnectionGUID: pP11mqFeTMO9P+0bNzVPnA==
-X-CSE-MsgGUID: /PMSQW+ORlWWFlHWtCezgQ==
+   d="scan'208";a="44751527"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:40 -0700
+X-CSE-ConnectionGUID: S/OhIQdoQTiI+DswKoMlYA==
+X-CSE-MsgGUID: Fi6eOFcWTTS2nnjY1ve1DQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="196903247"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:44:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ulRsu-000000052Y1-0cvd;
-	Mon, 11 Aug 2025 15:44:16 +0300
-Date: Mon, 11 Aug 2025 15:44:15 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Peter Korsgaard <peter.korsgaard@barco.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
- gpio-leds/keys
-Message-ID: <aJnlnx2qF6P61jJN@smile.fi.intel.com>
-References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
+   d="scan'208";a="196750323"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 05:55:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, darshanrathod475@gmail.com
+Cc: stuart.w.hayes@gmail.com, hansg@kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250801104705.1824495-1-darshanrathod475@gmail.com>
+References: <20250801104705.1824495-1-darshanrathod475@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell_rbu: fix assignment in if condition
+Message-Id: <175491692881.9765.9215327884949918904.b4-ty@linux.intel.com>
+Date: Mon, 11 Aug 2025 15:55:28 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
-> In preparation of dropping support for legacy GPIO API from gpio-keys
-> switch the driver to use software nodes/properties to describe
-> GPIO-connected LED and button.
+On Fri, 01 Aug 2025 16:17:05 +0530, darshanrathod475@gmail.com wrote:
 
-...
+> Refactor to remove assignments from inside if conditions, as required
+> by kernel coding style. This improves code readability and resolves
+> checkpatch.pl warnings:
+> 
+>     ERROR: do not use assignment in if condition
+> 
+> 
+> [...]
 
->  #include <linux/delay.h>
-> +#include <linux/dev_printk.h>
->  #include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
 
->  #include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> -#include <linux/gpio_keys.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/machine.h>
-> -#include <linux/input.h>
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> +#include <linux/gpio/property.h>
-> +#include <linux/input-event-codes.h>
-> +#include <linux/property.h>
+The list of commits applied:
+[1/1] platform/x86: dell_rbu: fix assignment in if condition
+      commit: 1ccc2e20fe1d3b91395de8ca9ce0efe070287534
 
-The idea of sorting here is to have more generic first and then more specific
-(per subsystem in use) groups of headers. So with your change it should look
-like
-
-#include <linux/delay.h>
-#include <linux/dev_printk.h>
-#include <linux/dmi.h>
-#include <linux/err.h>
-#include <linux/io.h>
-...
-#include <linux/leds.h>
-#include <linux/module.h>
-#include <linux/platform_device.h>
-#include <linux/property.h>
-
-#include <linux/gpio/driver.h>
-#include <linux/gpio/machine.h>
-#include <linux/gpio/property.h>
-
-#include <linux/input-event-codes.h>
-
-(I also added blank lines to make it more explicit)
-
-...
-
-Otherwise LGTM as here it looks like we establish platform device ourselves and
-hence no need some additional magic Hans mentioned in the other series.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+--
+ i.
 
