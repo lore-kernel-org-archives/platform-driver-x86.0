@@ -1,41 +1,33 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF71F76A5;
-	Mon, 11 Aug 2025 08:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1B02248BE;
+	Mon, 11 Aug 2025 09:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754901536; cv=none; b=aN2M4Mh9zBHZVIcqpGTdTMHPCUrH9AxMC8oFcxKHmwiwwCJeTvZZRB4I/k5eTsNVWrX0g2dmJTnDYJDGe0dGh1go2ERVp1EUKT3m/JtGkAY+cw3H40ewV779XCvPg7ueACMjwsrSCEX+JdkYnVQ1InU34WKfBkXoxlULE98QnWg=
+	t=1754905309; cv=none; b=VrPlNl7m41fqw9K3SZy3/FCI1xNZ2i9kN1EnkWnQFwplsLrLcbIL1OcY3pPQfltSB04/0QEzcQvneQGNX0TAO8xMuzaie/xXNoW83ZuCV+K89k4DZIJxue+ZVesNcR0XpGpKj1hA0TomDBW/ed7TIpO3Zn72KjsdvjSBt7uhlEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754901536; c=relaxed/simple;
-	bh=I5kNPzmFS0TrQM08QzuZwvVJEvGEI9YCa4Is7YA/p+U=;
+	s=arc-20240116; t=1754905309; c=relaxed/simple;
+	bh=y1AgwAWGVPsJLeXk56B7iUGUW7PB51HCZHLDJZWCzjo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AQaiGNU8bLU4czKcoCxodTjSO69JG2aZLmVE5fa2+u/E07gmc7QI6Xr7q7vwCGhwQDwN8Jg3xyKRglwX4W+Lf4+r1skepBJjROVBTO66EDuwADPUy5gr6Y9f5JkqMVgOuXA31butWxVuzWUyY3MBVjCcFg8F032i29kT3jnVbPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mHe8i0Qb; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=UkKpX18p1ASmTEuhNut7nz13WN9wzMiJUqX4N5/rcnOFdF7f9zI9bwLhZtZ+lxCV8PxuX4HD/Zu0EanprfGeSRn+xIK3zd91NyE2TfdzlEJZ58i9RwIxYMLfJHL7PJmMFnnteyjrwnGzUM2wjI7/YROxj4JWucHj2tI6CU9DmOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dEvpHrtt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mHe8i0Qb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1754901522; x=1755506322; i=w_armin@gmx.de;
-	bh=I5kNPzmFS0TrQM08QzuZwvVJEvGEI9YCa4Is7YA/p+U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=mHe8i0QbAguLllPuZ8wLo3CSP1YeAeqe7pymZmhHsxrC0c0Q/bjx+dJ1Isrsepzv
-	 TyDrpe3TEMrotLXlgF7ryCXqi2K+GcJXcOLrVqIFrWUUE+Ls9px26xBhlpaLjiB9b
-	 6bIhqOXzohy5IE+WNdsHYAiA1ymL+nmcieKFzv0CYQdf5jR3mPWb3vCPd22+yuBWy
-	 CsBpR6n5t5tNd6/hH1EuvvOmkWLJE6nWEryghlgc1cZME2mWuRPjENt3phDY4TcIX
-	 i4WQO64ZSB9LfWYJoN9AYFI6HQ4YRBtqh0OjzyAJRzz8wCqsle0NTYfEA02xDEawj
-	 kPfUzORmpZyIIUapJA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([91.14.231.131]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPokN-1uywzK3dBb-00YQ8U; Mon, 11
- Aug 2025 10:38:42 +0200
-Message-ID: <5531e051-ad62-4cfd-a733-21f04385e1bb@gmx.de>
-Date: Mon, 11 Aug 2025 10:38:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dEvpHrtt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C7CC4CEED;
+	Mon, 11 Aug 2025 09:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754905309;
+	bh=y1AgwAWGVPsJLeXk56B7iUGUW7PB51HCZHLDJZWCzjo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dEvpHrttiS6IC7kvPMj4ctyETPuISfr9bRXzkrynEohG/0tzDEpoWmLz5Qm9TwcRj
+	 NC7pQhkh/CGYECr96QA8R8/KF8lyXz7l0d8C7y6npAZ71uLktSLQriWjqc/58KOMeQ
+	 HtwPiZNAqDNV/HAErs1xBCw6nyMprbB20WyUjIGodt6UYByftB6ajm5/Fo8yK5se5B
+	 MOImLbLWmV6v1fZs5SqkIACTpzbj94cJ7EISJzrlFW49FmOyiqwbj3WXfGcdWXwlBT
+	 lt0XEDiyGqR7b+pnzA+nGc8VPuAQGbJcSsmNvxh8t1j+JNlAdfiX8pWlS/ut8LcM+u
+	 bVzr1mWRzPLag==
+Message-ID: <bd6a10ba-d83b-4bb2-8e69-7d985eeb5162@kernel.org>
+Date: Mon, 11 Aug 2025 11:41:46 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,146 +35,86 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] platform/x86: (ayn-ec) Add PWM Fan HWMON Interface
-To: Derek John Clark <derekjohn.clark@gmail.com>
+Subject: Re: [PATCH v2 00/11] x86-android-tablets: convert to use GPIO
+ references
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Alok Tiwari <alok.a.tiwari@oracle.com>,
- David Box <david.e.box@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250726204041.516440-1-derekjohn.clark@gmail.com>
- <20250726204041.516440-2-derekjohn.clark@gmail.com>
- <5b061220-e04a-48b5-ba2c-92ccf240798e@gmx.de>
- <CAFqHKTnkPLEbMk+NeLaSridSJBGU+P4P5PFF7VmiQbcfv7CAkg@mail.gmail.com>
- <404b9bfd-66c7-4524-a7ec-34fa9eb046eb@gmx.de>
- <CAFqHKTnO2NQ+_q_FOwT74Ukg7tx2k3B_sksEhNBzuCeZEWe3FQ@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAFqHKTnO2NQ+_q_FOwT74Ukg7tx2k3B_sksEhNBzuCeZEWe3FQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:n5xXGsRRFknq9bL6r+gn9PebfWjFHtEUJJQ58Yi5HRszTj3vCbj
- /xFhmU2S2Mo5YJzAjHsjh6Qs2KtYwJlBrUH734Q+tYwe1EsW6l8Xj7HgYyOwbA0p+CwsXfI
- d8f1UMWhRCj2Q+x8FWBYZXatUzd/lsbdnrC9r4luYTfWyOeNoTAkkhyHUyYsPR8FfWyv+q6
- myKMeOrA8Ig+kxNgCMKxA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nIsSwjlLkqM=;1ncjVrOFr/WZgWnoGRQXYIoNUhG
- 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
+ Arnd Bergmann <arnd@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250810-x86-andoroid-tablet-v2-0-9c7a1b3c32b2@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20250810-x86-andoroid-tablet-v2-0-9c7a1b3c32b2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 11.08.25 um 00:27 schrieb Derek John Clark:
+Hi Dmitry,
 
-> On Mon, Jul 28, 2025 at 9:10=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 29.07.25 um 04:58 schrieb Derek John Clark:
->>
->>> On Sat, Jul 26, 2025 at 4:32=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
-ote:
->>>> Am 26.07.25 um 22:40 schrieb Derek J. Clark:
->>>>
->>>>> Adds platform driver for AYN Loki and Tectoy Zeenix lines of handhel=
-d
->>>>> devices. This patch implements a hwmon interface for EC provided man=
-ual
->>>>> PWM fan control and user defined fan curves. A global ACPI lock is u=
-sed
->>>>> when reading or writing from the EC.
->>>>>
->>>>> There are 4 fan modes implemented in this patch. Modes 0-3 act in
->>>>> accordance with the standard hwmon logic where 0 is 100% fan speed, =
-1 is
->>>>> manual control, and 2 is automatic control. As the EC only provides =
-3
->>>>> modes by default, mode 0 is implemented by setting the device to man=
-ual
->>>>> and then setting fan speed to 100% directly. In mode 1 the PWM duty =
-cycle
->>>>> is set in sysfs with values [0-255], which are then scaled to the EC=
- max
->>>>> of 128. Mode 4 is an automatic mode where the fan curve is user defi=
-ned.
->>>>> There are 5 total set points and each set point takes a temperature =
-in
->>>>> Celsius [0-100] and a PWM duty cycle [0-255]. When the CPU temperatu=
-re
->>>>> reaches a given set point, the corresponding duty cycle is automatic=
-ally
->>>>> set by the EC.
->>>>>
->>>>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->>>>>
->>>>> space
->>>> Interesting, do you have access to such a device? If yes then i would=
- be very interested
->>>> in looking at the ACPI tables shipped with said device.
->>> Hi Armin,
->>>
->>> I have a Loki Max, and know someone with a Loki Zero. Do you want
->>> plain text acpidump or a decoded DSDT.dat attached?
->> I would prefer the plain text acpidump, as the SSDT tables often contai=
-n important data.
->>
-> Attached is the plain text acpidump, sorry for the delay. I'll also
-> note that Ayn provided me with documentation of the EC commands for
-> this driver.
->
-> Cheers,
-> - Derek
+On 11-Aug-25 4:22 AM, Dmitry Torokhov wrote:
+> This series came about because now software nodes can be used to
+> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+> eventually get rid of gpio_keys_platform_data structure.
+> 
+> So while I was doing the conversions from GPIO_LOOKUP() tables for
+> gpio_keys devices I decided to convert the rest of them as well. Maybe
+> some time in the future we can drop support for GPIO_LOOKUP() and rely
+> on device properties exclusively.
+> 
+> This is completely untested.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> Changes in v2:
+> - Reworked on top of the current linux-next
+> - Link to v1: https://lore.kernel.org/r/20230512001815.591817-1-dmitry.torokhov@gmail.com
 
-Nice :)
+Thanks this is an interesting series. I don't know why I missed / dropped
+the ball on v1.
 
-I also noticed that the ACPI code itself uses EC register 0xB0 to control =
-the battery thermal limit. This would
-conflict with your usage of register 0xB0 as the RED RGB value. Does the d=
-ocumentation mention this register?
+It will be a while before I can get around to this due to travel, but
+I'll take a look and either provide a Tested-by or fixup any issues
+I encounter and then post a fixed v3 myself.
 
-Thanks,
-Armin Wolf
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> 
+> ---
+> Dmitry Torokhov (11):
+>       platform/x86: x86-android-tablets: convert Goodix devices to GPIO references
+>       platform/x86: x86-android-tablets: convert Wacom devices to GPIO references
+>       platform/x86: x86-android-tablets: convert HiDeep devices to GPIO references
+>       platform/x86: x86-android-tablets: convert Novatek devices to GPIO references
+>       platform/x86: x86-android-tablets: convert EDT devices to GPIO references
+>       platform/x86: x86-android-tablets: convert int3496 devices to GPIO references
+>       platform/x86: x86-android-tablets: convert wm1502 devices to GPIO references
+>       platform/x86: x86-android-tablets: convert HID-I2C devices to GPIO references
+>       platform/x86: x86-android-tablets: convert Yoga Tab2 fast charger to GPIO references
+>       platform/x86: x86-android-tablets: remove support for GPIO lookup tables
+>       platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO references
+> 
+>  drivers/platform/x86/x86-android-tablets/asus.c    | 102 ++++----
+>  drivers/platform/x86/x86-android-tablets/core.c    | 109 +++++---
+>  drivers/platform/x86/x86-android-tablets/lenovo.c  | 279 +++++++++++---------
+>  drivers/platform/x86/x86-android-tablets/other.c   | 289 ++++++++++-----------
+>  .../x86/x86-android-tablets/shared-psy-info.c      |  20 --
+>  .../x86/x86-android-tablets/shared-psy-info.h      |   5 -
+>  .../x86/x86-android-tablets/x86-android-tablets.h  |  23 +-
+>  7 files changed, 436 insertions(+), 391 deletions(-)
+> ---
+> base-commit: b1549501188cc9eba732c25b033df7a53ccc341f
+> change-id: 20250810-x86-andoroid-tablet-df93908b426b
+> 
+> Best regards,
+> --  
+> Dmitry
+> 
 
