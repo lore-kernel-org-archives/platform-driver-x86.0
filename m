@@ -1,57 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453431E5B7B;
-	Tue, 12 Aug 2025 12:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5790D2F6579;
+	Tue, 12 Aug 2025 16:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755001756; cv=none; b=RP9cRnHFQQM3Mgn6SUB4UTze355Y0aNJICX6GC5CjtSkamHIjr65LdsGErPOAjjLyVaOZTxYU02AR3vhhcQQGrNeizLmABGaRwAD8cl0cXRGQcFwmVAZxg31zSA3QRP6LNmRZXtmLBG04EKUyLe2nY0sv8+vuHipVCF0Ag13jMg=
+	t=1755015838; cv=none; b=PFSAsZCzunVv8gxa4XEnMbp4b1XzoLBqLL/LabS+zdECBLqbQdr7NkCGymxOLXqexXnXZviu5gMJI2up8TfHG/RF9BA0ekc4T5CR8UHR0JEuZPMC7Tv/dzgH27UL1wmDoU3vtr2/oqMLcJ09ome62caGZQ4XNkEx6Ruu8p+CvgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755001756; c=relaxed/simple;
-	bh=LK5txVFI7G9Dh/VuhxO0Z3jVBKbeqjt+ITjSo3Vro3Y=;
+	s=arc-20240116; t=1755015838; c=relaxed/simple;
+	bh=DX/a/5+B4C5HgtQc829srmgZngPbuyntkKppc+GEAp4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tBZcOjHEgb2zlO5zXxgc2BYmUdG8YHy5LfN9UYY6wr4AuCcuISx174WHFDRMswqD2GO1vxit+wD9C+jvuZiZKNxd7p7KU3VrJMFSvAdSPtLXc9jHyXso6uFrlNXf/J+Cd2/GZrHXy45wudCoca7DLf6xZtrwhHXwn0dBKlp8c28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D27Q7G71; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=qoUE0X8/Zh2dyxXBZ/8TlB1SpBlKjievCEAZlK0Eqy29AoTcginN8L8QvP3Cm1uwnCNeDfPcK97+RT6phk8Sgjc+AzobKGGA/D12b+ehzOyALA0xmOVk8qjJ20XvWdSN0iI1xRPQ446wfAsFVai8AmgxLJt8aAUwtSRP50YGods=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUc1N2T8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D27Q7G71"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755001755; x=1786537755;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=LK5txVFI7G9Dh/VuhxO0Z3jVBKbeqjt+ITjSo3Vro3Y=;
-  b=D27Q7G71kjxvdA2ub4UAQwpLK8wancuuElaoE7tdyHHnERtKW3zYFDUM
-   A0yKDUYCD9kItH0IwqY4b4r5MlbvV/ZwWycnqNdOf/rZ/sTkoBwFXzk/L
-   jHt0H609KsfpZWamltLbHcuZbRKxPcUjpyD8XtYpI7ewuHEJqxF+lYDDR
-   /3jMv1mwEmaSDiyEdskYm4Xr6eT18Tn3wLWomFEoEopryYi3Hf1P3/xVm
-   y3rsvQQ7jAtjz3JQdz41kIeQ6SN7b+fPf2auQeeg5/J1N95OC5jae/IPn
-   m+tirP3dxK5xxAa/hUKd5vk6XshPgYuQQdiRAAZdsZ4/TL3pFBFYaFi+h
-   A==;
-X-CSE-ConnectionGUID: p6JmtkZSQS2fan4ZVgUgSQ==
-X-CSE-MsgGUID: KIRe7EWPSlC7obXrMOEokw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="68648832"
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="68648832"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:14 -0700
-X-CSE-ConnectionGUID: kiop/s72ScqjAPuuGNfo9g==
-X-CSE-MsgGUID: XES1ihE4TP6Y/NyjgVzEFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="166548287"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.96])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, edip@medip.dev
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250728115805.20954-2-edip@medip.dev>
-References: <20250728115805.20954-2-edip@medip.dev>
-Subject: Re: [PATCH] platform/x86: hp-wmi: mark Victus 16-r1xxx for
- victus_s fan and thermal profile support
-Message-Id: <175500174766.2252.16933943803051805256.b4-ty@linux.intel.com>
-Date: Tue, 12 Aug 2025 15:29:07 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUc1N2T8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58270C4CEF6;
+	Tue, 12 Aug 2025 16:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755015838;
+	bh=DX/a/5+B4C5HgtQc829srmgZngPbuyntkKppc+GEAp4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=TUc1N2T8TbtzPU7YHakEEQGtQWIy/0cxkndUmUoUoYyBPJnec8Qeecaa3FYjGPqXU
+	 0hRy0dOCtkiN6geGXdcQu084ZA3CqeMRvV/ZNJA9/XBh5noIoAUAQ0DQWHzW5Wqp2a
+	 sL/nXMBTC6PtZ3Yp4MzWPzScAq5+GwmFF4F/KIAzFsPijQ9BmpGGaqglT12Om22K5l
+	 IukZHX0AMZOFvl/jAuwISbexWGd0F8HooIRbCFqdb4FDMlRmnBka+3HmX8MYbr2ScI
+	 5T00COSasqF4+8FBfCUz+YIveYu4rSNYVl+hzJO+2PkDwAkvJCdaZP6Pyrh0ljhIcl
+	 KR+rDDyLCWlMg==
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Russell King <linux@armlinux.org.uk>, Daniel Mack <daniel@zonque.org>, 
+ Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Robert Jarzmik <robert.jarzmik@free.fr>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Jeff Johnson <jjohnson@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ "Dr. David Alan Gilbert" <linux@treblig.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
+ linux-media@vger.kernel.org, patches@opensource.cirrus.com, 
+ netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ ath10k@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-sound@vger.kernel.org
+In-Reply-To: <20250808151822.536879-1-arnd@kernel.org>
+References: <20250808151822.536879-1-arnd@kernel.org>
+Subject: Re: (subset) [PATCH 00/21] gpiolib: fence off legacy interfaces
+Message-Id: <175501582810.192378.6304989017593161369.b4-ty@kernel.org>
+Date: Tue, 12 Aug 2025 17:23:48 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,26 +77,49 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+X-Mailer: b4 0.15-dev-cff91
 
-On Mon, 28 Jul 2025 14:58:06 +0300, edip@medip.dev wrote:
-
-> This patch adds Victus 16-r1xxx laptop DMI board name into existing
-> list.
-> Tested on 16-r1077nt and works without any problem.
+On Fri, 08 Aug 2025 17:17:44 +0200, Arnd Bergmann wrote:
+> Commit 678bae2eaa81 ("gpiolib: make legacy interfaces optional") was
+> merged for linux-6.17, so now it is possible to use the legacy interfaces
+> conditionally and eventually have the support left out of the kernel
+> whenever it is not needed.
 > 
+> I created six patches to force-enable CONFIG_GPIOLIB_LEGACY on the
+> few (mostly ancient) platforms that still require this, plus a set of
+> patches to either add the corresponding Kconfig dependencies that make
+> the device drivers conditional on that symbol, or change them to no
+> longer require it.
 > 
+> [...]
 
+Applied to
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-The list of commits applied:
-[1/1] platform/x86: hp-wmi: mark Victus 16-r1xxx for victus_s fan and thermal profile support
-      commit: 748f897511446c7578ca5f6d2ff099916bad6e28
+Thanks!
 
---
- i.
+[08/21] ASoC: add GPIOLIB_LEGACY dependency where needed
+        commit: 5383d67e2430822fa7bd20dcbbebbd8ae808e386
+[20/21] ASoC: pxa: add GPIOLIB_LEGACY dependency
+        commit: 2d86d2585ab929a143d1e6f8963da1499e33bf13
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
