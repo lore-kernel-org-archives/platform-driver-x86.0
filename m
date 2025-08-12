@@ -1,331 +1,555 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4102EAD0E;
-	Tue, 12 Aug 2025 10:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F69D2EBDD2;
+	Tue, 12 Aug 2025 10:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754994119; cv=none; b=n9uzNk/gKnwCnol9McLE6AFPijfS+8twCccU8wN7zXmhLi13hR2RNBnavyuE6idSiqhHgrYfmaWk4Too+Z7wmWybAuGQboZTsVmilp9YXU86yhMCZBDhnBCeiM91FojVoVwIY6yobp0G78PNJ0NJCBydz8lbvlt7Hn1w312WoEY=
+	t=1754995933; cv=none; b=j4Axmg4lKTBf9LCLNVPb4o66EEPM16CZx1HUgm+jYwrDUResQfm8RP6IBglC7/LveJ4L6/bTOgtKu/Ulz8CP/Gk7RyOZSV5Cd6D3Six0mT/SLKKm7XqOyh30R8AQzFVxhkdJ1dlRvY7U9KlsCpRR1XwLWM+Xc2U/8vEBbrgRqv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754994119; c=relaxed/simple;
-	bh=Dj/MOQ1+urIXNRd/7BWQT3KAk/oGZYIeXl2/1/7+vM8=;
+	s=arc-20240116; t=1754995933; c=relaxed/simple;
+	bh=QQ71qvUH202fZgcD5+FySx4QDHPhgSAIQELZ1zjHjO8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cJF2ST7JBmuT4Vegj3L7oy6B0u0Yz2nKyd/NGjkUMPpb89hOVZJeXzvcM1EFU83WbaVXnxnprlpehofflnGFiBlpahJDZMTmf16arJ1ANuMq29iGEYjSgGHXnB8sMCSXn2+8G+RP6BKhpho31YfPWXw4RM7V29Ik/NkJxSzXiho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b78rUotk; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=eO+//uWL3285jrWXgeX4GmVV9Bf7D/8ZxMpiv56vWxCadqZwYI75G6DUiOgQSGRVME5uFXEOQA6o7AvKDFD5x3fpGT3vjCoR3oRRiFGwE7wWA311oEHzTC+WRRhwk3VmXSELYUGrP42i/WMLJeQN/0WTWHt5y+C1po6lX6zEfak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9Tyk87A; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b78rUotk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9Tyk87A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754994117; x=1786530117;
+  t=1754995931; x=1786531931;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Dj/MOQ1+urIXNRd/7BWQT3KAk/oGZYIeXl2/1/7+vM8=;
-  b=b78rUotkNeAwqB6aXkJ2GiQwVcfBfT/WtqkBKmYRSqBGPI34Nddgs17u
-   1yQWR0/ScqOUz8WXwCL8GTmCrsFH7njyJLcdzP2gi4F9hiVqZkuILbiPg
-   SHyvNTWIpKUOt3Hz4pRQz8Zx0zkBu+cD2HT5wLk+zIs3j23NZr0ci+uWU
-   6iOtITrxLkxrp2b4qVdxSWSLVLxvJRSvqnkQAz2ftW1HATerbUZPuX5TC
-   5MFmz4+qxIli7+Ui+4cMPPABuDbzu9OImwwAm2RO3F2Ha+AL3G/8KBvRL
-   sEPNKOMERN9AajYElVGkT9PDVJRy7zQe+OQYNthFeI6FxftwPbdOYr86U
-   A==;
-X-CSE-ConnectionGUID: 3vR4uffwRn2cTE5IPLZEFA==
-X-CSE-MsgGUID: 0YcYYsZ/RUKLhHQrBL+Urg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="67865982"
+   references:mime-version;
+  bh=QQ71qvUH202fZgcD5+FySx4QDHPhgSAIQELZ1zjHjO8=;
+  b=F9Tyk87AhidnEuiYTGdqkfJYpX/bo48DbvpjW/meejsWDUHrejbXdLK7
+   ne4gZHZ10o22ZBy0WivGUeIvGy1zPiF8fDQuAB2T3mBETsvmDkIdr+rKd
+   +u2N2QH6QnvTzGPz7XVTqvdyTWd2sYtCgar91rD0GoFqQesL6CoD2o7U6
+   nda7Q7I3OS4cOiRhPnEOXcLVSdBNBxZD7mKqsYvuZPwOEg+YA9nbpDfrL
+   E91vVy3GoeQary1yUtqLo7jCa21es9u6rznWwn+sFgAo+UUDtwFZzdSsU
+   RJ4Klh8eUgBIt5an/F3tSUK3iCqj6kx0ghZ4HYpSo+6NbWs3YiJ7T+VxE
+   Q==;
+X-CSE-ConnectionGUID: pmc+aVQjRGe7qDukkVrP4A==
+X-CSE-MsgGUID: 874BvTskT0eBY+B1Vt2iDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="56294594"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="67865982"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 03:21:56 -0700
-X-CSE-ConnectionGUID: qzXG4LUpSGyCeRGlnMsMcA==
-X-CSE-MsgGUID: oqv7yFxKQxSvucXaJGiFiQ==
+   d="scan'208";a="56294594"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 03:52:10 -0700
+X-CSE-ConnectionGUID: qr+DjTJ1Qh2ENceCOIc4vg==
+X-CSE-MsgGUID: fUOLs5y/REeN7gihc2359w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="170364989"
+   d="scan'208";a="197021750"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.96])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 03:21:53 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 03:52:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 12 Aug 2025 13:21:49 +0300 (EEST)
+Date: Tue, 12 Aug 2025 13:52:04 +0300 (EEST)
 To: Ron Li <xiangrongl@nvidia.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    Khalil Blaiech <kblaiech@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1] platform/mellanox: Add mlxbf_pka driver for BlueField
- Soc
-In-Reply-To: <BYAPR12MB30155B51CFA7F8665CAAA504A928A@BYAPR12MB3015.namprd12.prod.outlook.com>
-Message-ID: <22f3b2c5-517f-5bcf-157d-3ade74cba548@linux.intel.com>
-References: <20250515193234.2436452-1-xiangrongl@nvidia.com> <c85784ee-5f06-6d7a-377e-07db7af8bd35@linux.intel.com> <BYAPR12MB30155B51CFA7F8665CAAA504A928A@BYAPR12MB3015.namprd12.prod.outlook.com>
+cc: Hans de Goede <hdegoede@redhat.com>, vadimp@nvidia.com, 
+    alok.a.tiwari@oracle.com, kblaiech@nvidia.com, davthompson@nvidia.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] platform/mellanox/mlxbf_pka: Add mlxbf_pka driver
+ for BlueField DPU
+In-Reply-To: <20250811153934.671070-2-xiangrongl@nvidia.com>
+Message-ID: <c0445eff-4ee4-5cdf-6e5b-bcdf2504c4c5@linux.intel.com>
+References: <20250811153934.671070-1-xiangrongl@nvidia.com> <20250811153934.671070-2-xiangrongl@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1565688773-1754992195=:995"
-Content-ID: <15eb6b0a-ad53-2ca1-05f2-f2844dc299ca@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1565688773-1754992195=:995
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <fc783fc7-1d87-04a2-4ce6-cb6a75d5e58a@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 11 Aug 2025, Ron Li wrote:
 
-> Hi Ilpo,
-> I have answers for three of the review questions. You can search for "Ron=
- Answer" to locate them.
+> Add the mlxbf_pka driver to support the BlueField DPU Public Key
+> Acceleration (PKA) hardware. The PKA provides a simple, complete
+> framework for crypto public key hardware offload. It supports direct
+> access to the public key hardware resources from the user space, and
+> makes available several arithmetic operations: some basic operations
+> (e.g., addition and multiplication), some complex operations (e.g.,
+> modular exponentiation and modular inversion), and high-level
+> operations such as RSA, Diffie-Hellman, Elliptic Curve Cryptography,
+> and the Federal Digital Signature Algorithm (DSA as documented in
+> FIPS-186) public-private key systems.
+> 
+> The PKA driver initializes the PKA hardware interface and implements
+> file operations so that user space libraries can bypass the kernel and
+> have direct access to a specific set of device registers. The Arm cores
+> interface to the PKA hardware through rings and a 64KB memory known as
+> Window RAM. There are multiple PKA devices on the BlueField SoC. In
+> general, each PKA device has 4 rings, 1 window RAM and 1 True Random
+> Number Generator (TRNG). Thus, the driver has been designed to probe
+> each PKA and each individual ring inside a given PKA. It also registers
+> the TRNG to feed the kernel entropy (i.e., /dev/hwrng). To implement
+> such design, the driver creates individual device files for each ring
+> and TRNG module. The ring device files are identified using their ids,
+> i.e., /dev/mlxbf_pka/<ring_id>.
+> 
+> The main driver logic such as probe() and remove() are implemented in
+> mlxbf_pka_drv.c. The PKA ring device operations are also implemented in
+> this source file, such as open(), release() and mmap().
+> 
+> The mlxbf_pka_dev.c source file implements functions to operate the
+> underlying PKA hardware, such as TRNG operation, PKA hardware I/O
+> access, PKA memory resource operation, etc.
+> 
+> The PKA driver is a lightweight driver that implements file operations
+> and map memory regions of the PKA hardware to user space drivers and
+> libraries. There is no in-kernel crypto support. Therefore, the PKA
+> driver is included under drivers/platform/mellanox.
+> 
+> Testing
+> 
+> - Successful build of kernel for ARM64.
+> 
+> - Tested ARM64 build on several Mellanox BlueField 2 and 3 SoC boards
+> that include the PKA hardware. The testing includes the validation of
+> the PKA hardware execution, random number generation and public key
+> acceleration performance.
+> 
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Khalil Blaiech <kblaiech@nvidia.com>
+> Signed-off-by: Ron Li <xiangrongl@nvidia.com>
 
-Next time if the mail is long, please trim the response to only contain=20
-the relevant parts of the exchange so you won't even need to mark them=20
-like that. :-)
+> diff --git a/drivers/platform/mellanox/mlxbf_pka/mlxbf_pka_dev.c b/drivers/platform/mellanox/mlxbf_pka/mlxbf_pka_dev.c
+> new file mode 100644
+> index 000000000000..3048e7436509
+> --- /dev/null
+> +++ b/drivers/platform/mellanox/mlxbf_pka/mlxbf_pka_dev.c
+> @@ -0,0 +1,1941 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
+> +// SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION. All rights reserved.
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/compiler.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/ioport.h>
+> +#include <linux/kernel.h>
+> +#include <linux/math.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/time.h>
+> +#include <linux/timex.h>
+> +#include <linux/types.h>
+> +
+> +#include "mlxbf_pka_dev.h"
+> +
+> +#define MASTER_CONTROLLER_OUT_OF_RESET 0
+> +
+> +/* Personalization string "NVIDIA-MELLANOX-BLUEFIELD-TRUE_RANDOM_NUMBER_GEN". */
+> +static u32 mlxbf_pka_trng_drbg_ps_str[] = {
+> +	0x4e564944, 0x49412d4d, 0x454c4c41, 0x4e4f582d,
+> +	0x424c5545, 0x4649454c, 0x442d5452, 0x55455f52,
+> +	0x414e444f, 0x4d5f4e55, 0x4d424552, 0x5f47454e
+> +};
+> +
+> +/* Personalization string for DRBG test. */
+> +static u32 mlxbf_pka_trng_drbg_test_ps_str[] = {
+> +	0x64299d83, 0xc34d7098, 0x5bd1f51d, 0xddccfdc1,
+> +	0xdd0455b7, 0x166279e5, 0x0974cb1b, 0x2f2cd100,
+> +	0x59a5060a, 0xca79940d, 0xd4e29a40, 0x56b7b779
+> +};
+> +
+> +/* First Entropy string for DRBG test. */
+> +static u32 mlxbf_pka_trng_drbg_test_etpy_str1[] = {
+> +	0xaa6bbcab, 0xef45e339, 0x136ca1e7, 0xbce1c881,
+> +	0x9fa37b09, 0x63b53667, 0xb36e0053, 0xa202ed81,
+> +	0x4650d90d, 0x8eed6127, 0x666f2402, 0x0dfd3af9
+> +};
+> +
+> +/* Second Entropy string for DRBG test. */
+> +static u32 mlxbf_pka_trng_drbg_test_etpy_str2[] = {
+> +	0x35c1b7a1, 0x0154c52b, 0xd5777390, 0x226a4fdb,
+> +	0x5f16080d, 0x06b68369, 0xd0c93d00, 0x3336e27f,
+> +	0x1abf2c37, 0xe6ab006c, 0xa4adc6e1, 0x8e1907a2
+> +};
+> +
+> +/* Known answer for DRBG test. */
+> +static u32 mlxbf_pka_trng_drbg_test_output[] = {
+> +	0xb663b9f1, 0x24943e13, 0x80f7dce5, 0xaba1a16f
+> +};
+> +
+> +/* Known answer for poker test. */
+> +static u64 poker_test_exp_cnt[] = {
+> +	0x20f42bf4, 0xaf415f4, 0xf4f4fff4, 0xfff4f4f4
+> +};
+> +
+> +struct mlxbf_pka_dev_gbl_config_t mlxbf_pka_gbl_config;
+> +
+> +/* Global PKA shim resource info table. */
+> +static struct mlxbf_pka_dev_gbl_shim_res_info_t mlxbf_pka_gbl_res_tbl[MLXBF_PKA_MAX_NUM_IO_BLOCKS];
+> +
+> +/* Start a PKA device timer. */
+> +static inline u64 mlxbf_pka_dev_timer_start_msec(u32 msec)
+> +{
+> +	u64 cur_time = get_cycles();
+> +
+> +	return (cur_time + (mlxbf_pka_early_cpu_speed() * msec) / MSEC_PER_SEC);
 
-> All the other review questions have been fixed in the patch v2.
->
-> > -----Original Message-----
-> > From: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Sent: Friday, May 16, 2025 5:20 AM
-> > To: Ron Li <xiangrongl@nvidia.com>; Herbert Xu
-> > <herbert@gondor.apana.org.au>; David S. Miller <davem@davemloft.net>;
-> > linux-crypto@vger.kernel.org
-> > Cc: Hans de Goede <hdegoede@redhat.com>; Vadim Pasternak
-> > <vadimp@nvidia.com>; Khalil Blaiech <kblaiech@nvidia.com>; David
-> > Thompson <davthompson@nvidia.com>; platform-driver-
-> > x86@vger.kernel.org; LKML <linux-kernel@vger.kernel.org>
-> > Subject: Re: [PATCH v1] platform/mellanox: Add mlxbf_pka driver for Blu=
-eField
-> > Soc
-> >=20
-> > External email: Use caution opening links or attachments
-> >=20
-> >=20
-> > On Thu, 15 May 2025, Ron Li wrote:
-> >=20
-> > > Add the mlxbf_pka driver to support the BlueField SoC Public Key
-> > > Acceleration (PKA) hardware. The PKA provides a simple, complete
-> > > framework for crypto public key hardware offload. It supports direct
-> > > access to the public key hardware resources from the user space, and
-> > > makes available several arithmetic operations: some basic operations
-> > > (e.g., addition and multiplication), some complex operations (e.g.,
-> > > modular exponentiation and modular inversion), and high-level
-> > > operations such as RSA, Diffie-Hallman, Elliptic Curve Cryptography,
-> > > and the Federal Digital Signature Algorithm (DSA as documented in
-> > > FIPS-186) public-private key systems.
-> > >
-> > > The PKA driver initializes the PKA hardware interface and implements
-> > > file operations so that user space libraries can bypass the kernel an=
-d
-> > > have direct access to a specific set of device registers. The Arm cor=
-es
-> > > interface to the PKA hardware through rings and a 64KB memory known a=
-s
-> > > Window RAM. There are multiple PKA devices on the BlueField SoC. In
-> > > general, each PKA device has 4 rings, 1 window RAM and 1 True Random
-> > > Number Generator (TRNG). Thus, the driver has been designed to probe
-> > > each PKA and each individual ring inside a given PKA. It also registe=
-rs
-> > > the TRNG to feed the kernel entropy (i.e., /dev/hwrng). To implement
-> > > such design, the driver creates individual device files for each ring
-> > > and TRNG module. The ring device files are identified using their ids=
-,
-> > > i.e., /dev/mlxbf_pka/<ring_id>.
-> > >
-> > > The main driver logic such as probe() and remove() are implemented in
-> > > mlxbf_pka_drv.c. The PKA ring device operations are also implemented =
-in
-> > > this source file, such as open(), release() and mmap().
-> > >
-> > > The mlxbf_pka_dev.c source file implements functions to operate the
-> > > underlying PKA hardware, such as TRNG operation, PKA hardware I/O
-> > > access, PKA memory resource operation, etc.
-> > >
-> > > The PKA driver is a lighweight driver that implements file operations
-> > > and map memory regions of the PKA hardware to user space drivers and
-> > > libraries. There is no in-kernel crypto support. Therefore, the PKA
-> > > driver is included under drivers/platform/mellanox.
-> > >
-> > > Testing
-> > >
-> > > - Successful build of kernel for ARM64.
-> > >
-> > > - Tested ARM64 build on several Mellanox BlueField 2 and 3 SoC boards
-> > > that include the PKA hardware. The testing includes the validation of
-> > > the PKA hardware execution, random number generation and public key
-> > > acceleration performance.
-> >=20
-> > Hi,
-> >=20
-> > We've the in-kernel crypto framework but I don't see any attempt to bui=
-ld
-> > into that framework AFAICT. Why is that? You brush it off as "The PKA
-> > driver is a lightweight driver ..." but lets see if the crypto people
-> > agree with that approach (I added them).
-> >=20
-> > (Please also Cc crypto people in any further submission.)
+Again, please remove the unnecessary parenthesis.
 
-I don't see crypto people Cc'ed in v2 :-(.
+> +}
+> +
+> +/* Test a PKA device timer for completion. */
+> +static inline bool mlxbf_pka_dev_timer_done(u64 timer)
+> +{
+> +	return (get_cycles() >= timer);
+> +}
+> +
+> +/* Return register base address. */
+> +static inline u64 mlxbf_pka_dev_get_register_base(u64 base, u64 reg_addr)
+> +{
+> +	return (base + reg_addr) & PAGE_MASK;
+> +}
+> +
+> +/* Return register offset. */
+> +static inline u64 mlxbf_pka_dev_get_register_offset(u64 base, u64 reg_addr)
+> +{
+> +	return (base + reg_addr) & ~PAGE_MASK;
+> +}
+> +
+> +/* Return word offset within io memory. */
+> +static inline u64 mlxbf_pka_dev_get_word_offset(u64 mem_base, u64 word_addr, u64 mem_size)
+> +{
+> +	return (mem_base + word_addr) & (mem_size - 1);
+> +}
+> +
+> +static inline u64 mlxbf_pka_dev_io_read(void __iomem *mem_ptr, u64 mem_off)
+> +{
+> +	return readq_relaxed(mem_ptr + mem_off);
+> +}
+> +
+> +static inline void mlxbf_pka_dev_io_write(void __iomem *mem_ptr, u64 mem_off, u64 value)
+> +{
+> +	writeq_relaxed(value, mem_ptr + mem_off);
+> +}
+> +
+> +/*
+> + * Mapping PKA Ring address into Window RAM address.
+> + * It converts the ring address, either physical address or virtual address, to
+> + * valid address into the Window RAM. This is done assuming the Window RAM base,
 
-> > > +     ring->ring_info->cmmd_base =3D cmd_desc_ring_base;
-> >=20
-> > Is cmmd a typo?
-> >=20
-> Ron Answer: This is from the PKA IP document description:
-> Command ring base address control words (RING_CMMD_BASE_0 =E2=80=A6 _n).
+Where does this "assume" them? Perhaps it should be rephrased?
 
-Hmm, is that document consistent in shortening "command" to "cmmd"? It=20
-feel quite untypical and might be a typo in that document too.
+> + * size and mask. Here, base is the actual physical address of the Window RAM,
+> + * with the help of mask it is reduced to Window RAM offset within that PKA
+> + * block. Further, with the help of addr and size, we arrive at the Window RAM
+> + * offset address for a PKA Ring within the given Window RAM.
+> + */
+> +static inline u64 mlxbf_pka_ring_mem_addr(u64 base, u64 mask, u64 addr, u64 size)
 
-If it looks inconsistent in that document, my suggestion is to use=20
-cmd_base and add a comment where you define ring_info's struct to map it=20
-into the RING_CMMD_BASE_0 spelling in the document.
+Could these input variables match better to the comment above the 
+function. As per the comment above, my guess is: win_base, win_mask, 
+ring_addr, ring_size?
 
-> > > +             /* Check test status bits. */
-> > > +             csr_reg_off =3D mlxbf_pka_dev_get_register_offset(csr_r=
-eg_base,
-> > > +                                                             MLXBF_P=
-KA_TRNG_INTACK_ADDR);
-> > > +             if (status & MLXBF_PKA_TRNG_STATUS_MONOBIT_FAIL) {
-> > > +                     mlxbf_pka_dev_io_write(csr_reg_ptr, csr_reg_off=
-,
-> > > +                                            MLXBF_PKA_TRNG_STATUS_MO=
-NOBIT_FAIL);
-> > > +                     *monobit_fail_cnt +=3D 1;
-> > > +             } else if (status & MLXBF_PKA_TRNG_STATUS_RUN_FAIL) {
-> > > +                     mlxbf_pka_dev_io_write(csr_reg_ptr, csr_reg_off=
-,
-> > > +                                            MLXBF_PKA_TRNG_STATUS_RU=
-N_FAIL);
-> > > +                     *run_fail_cnt +=3D 1;
-> > > +             } else if (status & MLXBF_PKA_TRNG_STATUS_POKER_FAIL) {
-> > > +                     mlxbf_pka_dev_io_write(csr_reg_ptr, csr_reg_off=
-,
-> > > +                                            MLXBF_PKA_TRNG_STATUS_PO=
-KER_FAIL);
-> > > +                     *poker_fail_cnt +=3D 1;
-> > > +             }
-> >=20
-> > Are these fails prioritized like this so it's should count just into on=
-e
-> > counter if more than one FAIL is asserted?
-> >=20
-> Ron Answer: the monobit_fail_cnt, run_fail_cnt and poker_fail_cnt are use=
-d to represent different type
-> of failure counts. Will be printed separately in debug message.
+> +{
+> +	return ((base) & (mask)) |
+> +	       (FIELD_GET(MLXBF_PKA_WINDOW_RAM_RING_ADDR_MASK, addr) |
 
-Unfortunately, this didn't answer my question. Can those bits be asserted=
-=20
-at the same time? If they can, is it okay to count the failure into just a=
-=20
-one of the failure counters?
+> +	       (FIELD_GET(MLXBF_PKA_WINDOW_RAM_RING_SIZE_MASK, (addr) & ~((size) - 1)) >>
+> +		MLXBF_PKA_WINDOW_RAM_RING_SIZE_SHIFT));
 
-> > > +static void mlxbf_pka_drv_get_mem_res(struct mlxbf_pka_device
-> > *mlxbf_pka_dev,
-> > > +                                   struct mlxbf_pka_dev_mem_res *mem=
-_res,
-> > > +                                   u64 wndw_ram_off_mask)
-> > > +{
-> > > +     enum mlxbf_pka_mem_res_idx acpi_mem_idx;
-> > > +
-> > > +     acpi_mem_idx =3D MLXBF_PKA_ACPI_EIP154_IDX;
-> > > +     mem_res->wndw_ram_off_mask =3D wndw_ram_off_mask;
-> > > +
-> > > +     /* PKA EIP154 MMIO base address. */
-> > > +     mem_res->eip154_base =3D mlxbf_pka_dev->resource[acpi_mem_idx]-
-> > >start;
-> > > +     mem_res->eip154_size =3D mlxbf_pka_dev->resource[acpi_mem_idx]-
-> > >end -
-> > > +                            mem_res->eip154_base + 1;
-> >=20
-> > resource_size(), please change all of them.
-> >=20
-> > > +     acpi_mem_idx++;
-> > > +
-> > > +     /* PKA window RAM base address. */
-> > > +     mem_res->wndw_ram_base =3D mlxbf_pka_dev-
-> > >resource[acpi_mem_idx]->start;
-> > > +     mem_res->wndw_ram_size =3D mlxbf_pka_dev->resource[acpi_mem_idx=
-]-
-> > >end -
-> > > +                              mem_res->wndw_ram_base + 1;
-> > > +     acpi_mem_idx++;
-> > > +
-> > > +     /*
-> > > +      * PKA alternate window RAM base address.
-> > > +      * Note: the size of all the alt window RAM is the same, depict=
-ed by
-> > 'alt_wndw_ram_size'
-> > > +      * variable. All alt window RAM resources are read here even th=
-ough not
-> > all of them are used
-> > > +      * currently.
-> > > +      */
-> > > +     mem_res->alt_wndw_ram_0_base =3D mlxbf_pka_dev-
-> > >resource[acpi_mem_idx]->start;
-> > > +     mem_res->alt_wndw_ram_size   =3D mlxbf_pka_dev-
-> > >resource[acpi_mem_idx]->end -
-> > > +                                    mem_res->alt_wndw_ram_0_base + 1=
-;
-> > > +
-> > > +     if (mem_res->alt_wndw_ram_size !=3D
-> > MLXBF_PKA_WINDOW_RAM_REGION_SIZE)
-> > > +             dev_err(mlxbf_pka_dev->device, "alternate Window RAM si=
-ze from
-> > ACPI is wrong.\n");
-> >=20
-> > Should this return error and result in failing to register the device?
-> >=20
-> Ron Answer: if the alternative Window RAM is not properly initialized, th=
-e PKA will fall back to contiguous
-> Window RAM.
-> Also, the alternative Window RAM is not available in BlueField DPU. This =
-check will give warning,
-> in case the DPU customer manually updated the ACIP table to use alternati=
-ve Window RAM.
+This doesn't look correct conversion, FIELD_GET() will downshift the 
+value. I now realize MLXBF_PKA_WINDOW_RAM_RING_SIZE_SHIFT isn't what I 
+expected it to be based on its name. I expected it to be the shift value 
+for the lowest bit in MLXBF_PKA_WINDOW_RAM_RING_SIZE_MASK (0xF0000), ie., 
+16).
 
-Please downgrade it into dev_warn() then.
+This function might actually need BOTH FIELD_GET() and FIELD_PREP().
 
-Things like this might be nice to mention also into changelog so that it=20
-is permanently recorded somewhere. At least to me, the fallback doesn't=20
-look obvious from the code alone and one day it might be that neither of=20
-us is around to tell it when a 3rd person comes and has to figure this=20
-code out. :-)
+FIELD_GET() extracts a field from input downshifting it, FIELD_PREP(), on 
+the other hand prepares fields in output by upshifting them.
 
-> > This is extremely long and it would make reviewing it significantly eas=
-ier
-> > if it would be split into multiple, logical patches. Mixing two types o=
-f
-> > devices in a single probe adds to the confusion, can like one of those =
-be
-> > introduced first and then the other?
+So to me it looks here you have fields in "addr" you want to extract 
+(RING ADDR & SIZE). Then, you construct some output by chaining |, each is 
+probably a field in some well-defined format not explicitly defined here.
+Or can those fields actually overlap (the output field sizes are not 
+constant/fixed)? If the field size in the output are not fixed, then 
+FIELD_PREP() shouldn't be used for such fields.
 
-I think you might have misunderstood this comment. I didn't mean to=20
-address my code style and kernel API comments in separate patches, those=20
-should be used right when new code is introduced.
+TBH, even if you have the long comment above the function, I couldn't 
+figure out what this function does and have to guesswork many details.
 
-It would be large benefit if this single big change could be split into=20
-multiple patches so that you introduce this support in multiple steps.
-As noted above, one potential thing would be to add the types in different=
-=20
-changes (if possible). If there are features which can be separated into=20
-own patches, that would also help to bring the lines added per patch down=
-=20
-helping to review each patch, and allow writing more focused changelog=20
-entry for each change, etc.
+> +}
+> +
+> +/* Add the resource to the global resource table. */
+> +static int mlxbf_pka_dev_add_resource(struct mlxbf_pka_dev_res_t *res_ptr, u32 shim_idx)
+> +{
+> +	u8 res_cnt;
+> +
+> +	res_cnt = mlxbf_pka_gbl_res_tbl[shim_idx].res_cnt;
+> +	if (res_cnt >= MLXBF_PKA_DEV_SHIM_RES_CNT)
+> +		return -ENOMEM;
+> +
+> +	mlxbf_pka_gbl_res_tbl[shim_idx].res_tbl[res_cnt] = res_ptr;
+> +	mlxbf_pka_gbl_res_tbl[shim_idx].res_cnt++;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Remove the resource from the global resource table. */
+> +static int mlxbf_pka_dev_put_resource(struct mlxbf_pka_dev_res_t *res, u32 shim_idx)
+> +{
+> +	struct mlxbf_pka_dev_res_t *res_ptr;
+> +	u8 res_idx;
+> +
+> +	for (res_idx = 0; res_idx < MLXBF_PKA_DEV_SHIM_RES_CNT; res_idx++) {
+> +		res_ptr = mlxbf_pka_gbl_res_tbl[shim_idx].res_tbl[res_idx];
+> +		if (res_ptr && !strcmp(res_ptr->name, res->name)) {
 
-Please do realize that by posting a large patch like this, you'll place=20
-this patch into a very disadvantaged position. Small patches are easy to=20
-review quickly, whereas large one like this take considerable time, so the=
-=20
-chance for me or other reviewers finding time to go through it are much=20
-lower than if the series consists smaller patches.
+This logic isn't reversed?
 
+> +			mlxbf_pka_gbl_res_tbl[shim_idx].res_tbl[res_idx] = NULL;
+> +			mlxbf_pka_gbl_res_tbl[shim_idx].res_cnt--;
+> +			break;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Check whether the resource shares the same memory map; If so, the memory
+> +	 * map shouldn't be released.
+> +	 */
+> +	for (res_idx = 0; res_idx < MLXBF_PKA_DEV_SHIM_RES_CNT; res_idx++) {
+> +		res_ptr = mlxbf_pka_gbl_res_tbl[shim_idx].res_tbl[res_idx];
+> +		if (res_ptr && res_ptr->base == res->base)
+> +			return -EBUSY;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __iomem *mlxbf_pka_dev_get_resource_ioaddr(u64 res_base, u32 shim_idx)
+> +{
+> +	struct mlxbf_pka_dev_res_t *res_ptr;
+> +	u8 res_cnt, res_idx;
+> +
+> +	res_cnt = mlxbf_pka_gbl_res_tbl[shim_idx].res_cnt;
+> +	if (!res_cnt)
+> +		return NULL;
+> +
+> +	for (res_idx = 0; res_idx < res_cnt; res_idx++) {
+> +		res_ptr = mlxbf_pka_gbl_res_tbl[shim_idx].res_tbl[res_idx];
+> +		if (res_ptr->base == res_base)
+> +			return res_ptr->ioaddr;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +/* Set PKA device resource config and map io memory if needed. */
+> +static int mlxbf_pka_dev_set_resource_config(struct device *dev,
+> +					     struct mlxbf_pka_dev_shim_s *shim,
+> +					     struct mlxbf_pka_dev_res_t *res_ptr,
+> +					     u64 res_base,
+> +					     u64 res_size,
+> +					     u64 res_type,
+> +					     char *res_name)
+> +{
+> +	if (res_ptr->status == MLXBF_PKA_DEV_RES_STATUS_MAPPED)
+> +		return -EPERM;
+> +
+> +	switch (res_type) {
+> +	case MLXBF_PKA_DEV_RES_TYPE_REG:
+> +		res_ptr->base = res_base;
+> +		break;
+> +	case MLXBF_PKA_DEV_RES_TYPE_MEM:
+> +		res_ptr->base = shim->mem_res.eip154_base + res_base;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	res_ptr->size = res_size;
+> +	res_ptr->type = res_type;
+> +	res_ptr->name = res_name;
+> +	res_ptr->status = MLXBF_PKA_DEV_RES_STATUS_UNMAPPED;
+> +	res_ptr->ioaddr = mlxbf_pka_dev_get_resource_ioaddr(res_ptr->base, shim->shim_id);
+> +	if (!res_ptr->ioaddr) {
+> +		if (!devm_request_mem_region(dev, res_ptr->base, res_ptr->size, res_ptr->name)) {
+> +			dev_err(dev, "failed to get io memory region\n");
+> +			return -EPERM;
+> +		}
+> +
+> +		res_ptr->ioaddr = devm_ioremap(dev, res_ptr->base, res_ptr->size);
+> +		if (!res_ptr->ioaddr) {
+> +			dev_err(dev, "unable to map io memory into CPU space\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	res_ptr->status = MLXBF_PKA_DEV_RES_STATUS_MAPPED;
+> +
+> +	if (!res_ptr->ioaddr || mlxbf_pka_dev_add_resource(res_ptr, shim->shim_id)) {
+> +		dev_err(dev, "unable to map io memory\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* Unset PKA device resource config - unmap io memory if needed. */
+> +static void mlxbf_pka_dev_unset_resource_config(struct mlxbf_pka_dev_shim_s *shim,
+> +						struct mlxbf_pka_dev_res_t *res_ptr)
+> +{
+> +	if (res_ptr->status != MLXBF_PKA_DEV_RES_STATUS_MAPPED)
+> +		return;
+> +
+> +	if (!res_ptr->ioaddr)
+> +		return;
+> +
+> +	if (-EBUSY == mlxbf_pka_dev_put_resource(res_ptr, shim->shim_id))
+> +		return;
+> +
+> +	pr_debug("mlxbf_pka: PKA device resource released\n");
 
---=20
+dev_dbg(), remove the manual prefix.
+
+> +	res_ptr->status = MLXBF_PKA_DEV_RES_STATUS_UNMAPPED;
+> +}
+> +
+> +int mlxbf_pka_dev_clear_ring_counters(struct mlxbf_pka_dev_ring_t *ring)
+> +{
+> +	struct mlxbf_pka_dev_res_t *master_seq_ctrl_ptr;
+> +	u64 master_reg_base, master_reg_off;
+> +	struct mlxbf_pka_dev_shim_s *shim;
+> +	void __iomem *master_reg_ptr;
+> +
+> +	shim = ring->shim;
+> +	master_seq_ctrl_ptr = &shim->resources.master_seq_ctrl;
+> +	master_reg_base = master_seq_ctrl_ptr->base;
+> +	master_reg_ptr = master_seq_ctrl_ptr->ioaddr;
+> +	master_reg_off = mlxbf_pka_dev_get_register_offset(master_reg_base,
+> +							   MLXBF_PKA_MASTER_SEQ_CTRL_ADDR);
+> +
+> +	/* Push the EIP-154 master controller into reset. */
+> +	mlxbf_pka_dev_io_write(master_reg_ptr, master_reg_off, MLXBF_PKA_MASTER_SEQ_CTRL_RESET);
+> +
+> +	/* Clear counters. */
+> +	mlxbf_pka_dev_io_write(master_reg_ptr, master_reg_off,
+> +			       MLXBF_PKA_MASTER_SEQ_CTRL_CLEAR_COUNTERS);
+> +
+> +	/* Take the EIP-154 master controller out of reset. */
+> +	mlxbf_pka_dev_io_write(master_reg_ptr, master_reg_off, MASTER_CONTROLLER_OUT_OF_RESET);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Initialize ring. Set ring parameters and configure ring resources. It returns
+> + * 0 on success, a negative error code on failure.
+> + */
+> +static int mlxbf_pka_dev_init_ring(struct device *dev,
+> +				   struct mlxbf_pka_dev_ring_t *ring,
+> +				   u32 ring_id,
+> +				   struct mlxbf_pka_dev_shim_s *shim)
+> +{
+> +	struct mlxbf_pka_dev_res_t *ring_window_ram_ptr;
+> +	struct mlxbf_pka_dev_res_t *ring_info_words_ptr;
+> +	struct mlxbf_pka_dev_res_t *ring_counters_ptr;
+> +	u8 window_ram_split;
+> +	u32 ring_words_off;
+> +	u32 ring_cntrs_off;
+> +	u32 ring_mem_base;
+> +	u32 ring_mem_off;
+> +	u32 shim_ring_id;
+> +
+> +	if (ring->status != MLXBF_PKA_DEV_RING_STATUS_UNDEFINED) {
+> +		dev_err(dev, "PKA ring must be undefined\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	if (ring_id > MLXBF_PKA_MAX_NUM_RINGS - 1) {
+> +		dev_err(dev, "invalid ring identifier\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ring->ring_id = ring_id;
+> +	ring->shim = shim;
+> +	ring->resources_num = MLXBF_PKA_MAX_NUM_RING_RESOURCES;
+> +	shim_ring_id = ring_id % MLXBF_PKA_MAX_NUM_IO_BLOCK_RINGS;
+> +	shim->rings[shim_ring_id] = ring;
+> +
+> +	/* Configure ring information control/status words resource. */
+> +	ring_info_words_ptr = &ring->resources.info_words;
+> +	ring_words_off = shim_ring_id * MLXBF_PKA_RING_WORDS_SPACING;
+> +	ring_info_words_ptr->base = ring_words_off + shim->mem_res.eip154_base +
+> +				    MLXBF_PKA_RING_WORDS_ADDR;
+> +	ring_info_words_ptr->size = MLXBF_PKA_RING_WORDS_SIZE;
+> +	ring_info_words_ptr->type = MLXBF_PKA_DEV_RES_TYPE_MEM;
+> +	ring_info_words_ptr->status = MLXBF_PKA_DEV_RES_STATUS_UNMAPPED;
+> +	ring_info_words_ptr->name = "MLXBF_PKA_RING_INFO";
+> +
+> +	/* Configure ring counters registers resource. */
+> +	ring_counters_ptr = &ring->resources.counters;
+> +	ring_cntrs_off = shim_ring_id * MLXBF_PKA_RING_CNTRS_SPACING;
+> +	ring_counters_ptr->base = ring_cntrs_off + shim->mem_res.eip154_base +
+> +				  MLXBF_PKA_RING_CNTRS_ADDR;
+> +	ring_counters_ptr->size = MLXBF_PKA_RING_CNTRS_SIZE;
+> +	ring_counters_ptr->type = MLXBF_PKA_DEV_RES_TYPE_REG;
+> +	ring_counters_ptr->status = MLXBF_PKA_DEV_RES_STATUS_UNMAPPED;
+> +	ring_counters_ptr->name = "MLXBF_PKA_RING_CNTRS";
+> +
+> +	/* Configure ring window RAM resource. */
+> +	window_ram_split = shim->window_ram_split;
+> +	if (window_ram_split == MLXBF_PKA_SHIM_WINDOW_RAM_SPLIT_ENABLED) {
+> +		ring_mem_off = shim_ring_id * MLXBF_PKA_RING_MEM_1_SPACING;
+> +		ring_mem_base = ring_mem_off + shim->mem_res.alt_wndw_ram_0_base;
+> +	} else {
+> +		ring_mem_off = shim_ring_id * MLXBF_PKA_RING_MEM_0_SPACING;
+> +		ring_mem_base = ring_mem_off + shim->mem_res.wndw_ram_base;
+> +	}
+> +
+> +	ring_window_ram_ptr = &ring->resources.window_ram;
+> +	ring_window_ram_ptr->base = ring_mem_base;
+> +	ring_window_ram_ptr->size = MLXBF_PKA_RING_MEM_SIZE;
+> +	ring_window_ram_ptr->type = MLXBF_PKA_DEV_RES_TYPE_MEM;
+> +	ring_window_ram_ptr->status = MLXBF_PKA_DEV_RES_STATUS_UNMAPPED;
+> +	ring_window_ram_ptr->name = "MLXBF_PKA_RING_WINDOW";
+> +
+> +	ring->ring_info = devm_kzalloc(dev, sizeof(*ring->ring_info), GFP_KERNEL);
+> +	if (!ring->ring_info)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&ring->mutex);
+
+I don't see my comment being addressed here...
+
+> +	ring->status = MLXBF_PKA_DEV_RING_STATUS_INITIALIZED;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Release a given Ring. */
+> +static int mlxbf_pka_dev_release_ring(struct mlxbf_pka_dev_ring_t *ring)
+> +{
+> +	struct mlxbf_pka_dev_shim_s *shim;
+> +	u32 shim_ring_id;
+> +
+> +	if (ring->status == MLXBF_PKA_DEV_RING_STATUS_UNDEFINED)
+> +		return 0;
+> +
+> +	if (ring->status == MLXBF_PKA_DEV_RING_STATUS_BUSY) {
+> +		pr_err("mlxbf_pka error: PKA ring is busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	shim = ring->shim;
+> +
+> +	if (shim->status == MLXBF_PKA_SHIM_STATUS_RUNNING) {
+> +		pr_err("mlxbf_pka error: PKA shim is running\n");
+
+...nor here.
+
+I'll stop here. It's inaccetable to claim you did address all my other 
+comments while you clearly haven't. :-(
+
+Please go through all my comments against v1 and act on them. Thanks.
+
+--
  i.
---8323328-1565688773-1754992195=:995--
