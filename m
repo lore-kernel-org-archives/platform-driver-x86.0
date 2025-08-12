@@ -1,125 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from e3i331.smtp2go.com (e3i331.smtp2go.com [158.120.85.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5790D2F6579;
-	Tue, 12 Aug 2025 16:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA86D2DA779
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Aug 2025 19:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755015838; cv=none; b=PFSAsZCzunVv8gxa4XEnMbp4b1XzoLBqLL/LabS+zdECBLqbQdr7NkCGymxOLXqexXnXZviu5gMJI2up8TfHG/RF9BA0ekc4T5CR8UHR0JEuZPMC7Tv/dzgH27UL1wmDoU3vtr2/oqMLcJ09ome62caGZQ4XNkEx6Ruu8p+CvgM=
+	t=1755026014; cv=none; b=fL07rIUnzMCljA9Md+fRNc7oZ0sJz0aNhCkcxvN5SuJhz2/xNIGojgzZoz/GmMLR37Fz0BU/fYlByaRi1ob/XeVctDxW7nWS+yM6BQduw0OgAumBGJDlux0/kYR7FKwpkDiONxU8cMq7M2hiaQ1TnC8+mXK5juVlCZWjrVWwKTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755015838; c=relaxed/simple;
-	bh=DX/a/5+B4C5HgtQc829srmgZngPbuyntkKppc+GEAp4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qoUE0X8/Zh2dyxXBZ/8TlB1SpBlKjievCEAZlK0Eqy29AoTcginN8L8QvP3Cm1uwnCNeDfPcK97+RT6phk8Sgjc+AzobKGGA/D12b+ehzOyALA0xmOVk8qjJ20XvWdSN0iI1xRPQ446wfAsFVai8AmgxLJt8aAUwtSRP50YGods=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUc1N2T8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755026014; c=relaxed/simple;
+	bh=e3y0KxtUkcKGZh9/oTJPeL6Fc3bv5rgi6fWid/eKLFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SftNhEBixyXbAmTDsbNi0Oz7k9OdYEEB2hYJcohFciyfr57xsOhSyN0dZOrIOCE62Elv3VNW+D7HXnCVmIaDqNUVLJvB0fOlaIbme+dD4FHjrXBLwfKYzNyjBSUg1AvWVodJTQH7AH1H0U7tXArV/Gpr4mLy6Wn2F8VcImPw6Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=jbzlE977; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=lmh2+pw3; arc=none smtp.client-ip=158.120.85.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUc1N2T8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58270C4CEF6;
-	Tue, 12 Aug 2025 16:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755015838;
-	bh=DX/a/5+B4C5HgtQc829srmgZngPbuyntkKppc+GEAp4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TUc1N2T8TbtzPU7YHakEEQGtQWIy/0cxkndUmUoUoYyBPJnec8Qeecaa3FYjGPqXU
-	 0hRy0dOCtkiN6geGXdcQu084ZA3CqeMRvV/ZNJA9/XBh5noIoAUAQ0DQWHzW5Wqp2a
-	 sL/nXMBTC6PtZ3Yp4MzWPzScAq5+GwmFF4F/KIAzFsPijQ9BmpGGaqglT12Om22K5l
-	 IukZHX0AMZOFvl/jAuwISbexWGd0F8HooIRbCFqdb4FDMlRmnBka+3HmX8MYbr2ScI
-	 5T00COSasqF4+8FBfCUz+YIveYu4rSNYVl+hzJO+2PkDwAkvJCdaZP6Pyrh0ljhIcl
-	 KR+rDDyLCWlMg==
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
- Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Russell King <linux@armlinux.org.uk>, Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Geert Uytterhoeven <geert@linux-m68k.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Matti Vaittinen <mazziesaccount@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Jeff Johnson <jjohnson@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- "Dr. David Alan Gilbert" <linux@treblig.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
- linux-media@vger.kernel.org, patches@opensource.cirrus.com, 
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
- ath10k@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
- linux-usb@vger.kernel.org, linux-sound@vger.kernel.org
-In-Reply-To: <20250808151822.536879-1-arnd@kernel.org>
-References: <20250808151822.536879-1-arnd@kernel.org>
-Subject: Re: (subset) [PATCH 00/21] gpiolib: fence off legacy interfaces
-Message-Id: <175501582810.192378.6304989017593161369.b4-ty@kernel.org>
-Date: Tue, 12 Aug 2025 17:23:48 +0100
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="jbzlE977";
+	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="lmh2+pw3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1755025104; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=WoK0K97EorhCFt609I7t9b8P6u4nWdC/a1/DvNx7ZVY=;
+ b=jbzlE977l6R8e6P0iV4E8JwH3QLjUFv4Sc4q/5UxhVPwFFSauQU9Mazzt5SK0U74x7xTZ
+ UBf93GzlpoX9/3o1TSyinP9dxMhRmHM4Lp2VnJxLdQUeDO5Aa8gnGr1fzdD3jJNbJYOoWYo
+ DRfwT6PyCYLgNu6/EF9O/oYCwDY1g1+5BMNQGkYHpINiU7LEs3C7Gzwfv3i1OJUUYuPz7fL
+ nKpw97z1THMPkYN+ZxTq6xuQaK7ut1dkGTmbku5+JwFbA5fNoNDM3oQDaJ6h9/Pks0fhg+Z
+ u9QuWYQ/55AJXpGloCtvZL5msIkpZF0cynSOF5+b1Q9H4ttrUZCwrEKv8rNQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
+ i=@medip.dev; q=dns/txt; s=s1255854; t=1755025104; h=from : subject :
+ to : message-id : date;
+ bh=WoK0K97EorhCFt609I7t9b8P6u4nWdC/a1/DvNx7ZVY=;
+ b=lmh2+pw33b72bYMwxO09MXlptAMaiaVHk8f7S9HtCkXQ8xe2o5LkIIM1oLjGF3La8Ku/e
+ HYwYU7KI/vN9eQXM26fLdtZ4FFQtivL/iwrOEXLKwAQ1AJcbEykt36kDxiprsmKavTE+f2D
+ W7BJNej9K2cNLZndVgDVqIrKJYL1M0Qc4iJ5UV+qLX3F1moHI9/adbWcx1dpXgYZK+kBIIJ
+ fUyVOAEFnCUahNUTBFP5kZJMOI123UK5Qm+Xk7MDj27eDMi8R0oPkuHVOxYiZ43fXPMW8XU
+ gHkiKWGCN1ytC+0gVZX/DOe/FiCYtmvC/Rzu7ViWPl7I/bGsRCEGR8RtM4pw==
+Received: from [10.152.250.198] (helo=vilez.localnet)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1-S2G)
+	(envelope-from <edip@medip.dev>)
+	id 1uluCQ-FnQW0hPxeLA-g28o;
+	Tue, 12 Aug 2025 18:58:18 +0000
+From: Edip Hazuri <edip@medip.dev>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: hansg@kernel.org, kuba@kernel.org, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Edip Hazuri <edip@medip.dev>
+Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add support for Fn+P hotkey
+Date: Tue, 12 Aug 2025 21:58:12 +0300
+Message-ID: <5043622.GXAFRqVoOG@vilez>
+In-Reply-To: <d567817f-f871-c84a-a56f-9b27fb4888f6@linux.intel.com>
+References: 
+ <20250802212149.16707-2-edip@medip.dev>
+ <20250802213541.18791-2-edip@medip.dev>
+ <d567817f-f871-c84a-a56f-9b27fb4888f6@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-cff91
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 1255854m:1255854ay30w_v:1255854s19uKCa87U
+X-smtpcorp-track: IvYrHyhdjpXG.P2eb62eqMAca.bRYIzQhFQIm
 
-On Fri, 08 Aug 2025 17:17:44 +0200, Arnd Bergmann wrote:
-> Commit 678bae2eaa81 ("gpiolib: make legacy interfaces optional") was
-> merged for linux-6.17, so now it is possible to use the legacy interfaces
-> conditionally and eventually have the support left out of the kernel
-> whenever it is not needed.
-> 
-> I created six patches to force-enable CONFIG_GPIOLIB_LEGACY on the
-> few (mostly ancient) platforms that still require this, plus a set of
-> patches to either add the corresponding Kconfig dependencies that make
-> the device drivers conditional on that symbol, or change them to no
-> longer require it.
-> 
-> [...]
+On Tuesday, August 12, 2025 3:20:48=E2=80=AFPM GMT+03:00 Ilpo J=C3=A4rvinen=
+ wrote:
+> On Sun, 3 Aug 2025, edip@medip.dev wrote:
+> > From: Edip Hazuri <edip@medip.dev>
+> >=20
+> > Newer Hp Victus (And probably newer omen) e.g. Victus 16-s1011nt that i
+> > own have a Fn+P shortcut intended to use with omen gaming hub for
+>=20
+> Thanks for the patch.
+>=20
+> It's irrelevant to record in the changelog that you own one. Just
+> state what it has. :-)
+>=20
+> > changing the performance profile. see [1]
+>=20
+> Why isn't the key made to cycle platform profiles then?
+>=20
+> > > hp_wmi: Unknown event_id - 27 - 0x7
+>=20
+> Add empty line here.
+>=20
+> > Based on the dmesg warning. I found that the key have 27 as event_id and
+> > 0x7 as event_data (keycode). I implemented it in the driver and now
+> > libinput can capture the event.
+>=20
+> Please write changelogs in imperative tone. Don't write 'I did x' style
+> sentences.
+>=20
+> > Tested On Victus 16-s1011nt (9Z791EA) with MB 8C9C
+>=20
+> Tested on
+>=20
+> Missing .
+>=20
+> > [1]: https://jpcdn.it/img/adadf6c927ffeb75afd8038f95db400a.png
+> >=20
+> > Signed-off-by: Edip Hazuri <edip@medip.dev>
+> > ---
+> >=20
+> >  drivers/platform/x86/hp/hp-wmi.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/hp/hp-wmi.c
+> > b/drivers/platform/x86/hp/hp-wmi.c index db5fdee2109..6467ca27db7 100644
+> > --- a/drivers/platform/x86/hp/hp-wmi.c
+> > +++ b/drivers/platform/x86/hp/hp-wmi.c
+> > @@ -122,6 +122,7 @@ enum hp_wmi_event_ids {
+> >=20
+> >  	HPWMI_BATTERY_CHARGE_PERIOD	=3D 0x10,
+> >  	HPWMI_SANITIZATION_MODE		=3D 0x17,
+> >  	HPWMI_CAMERA_TOGGLE		=3D 0x1A,
+> >=20
+> > +	HPWMI_FN_P_HOTKEY		=3D 0x1B,
+> >=20
+> >  	HPWMI_OMEN_KEY			=3D 0x1D,
+> >  	HPWMI_SMART_EXPERIENCE_APP	=3D 0x21,
+> > =20
+> >  };
+> >=20
+> > @@ -280,6 +281,7 @@ struct bios_rfkill2_state {
+> >=20
+> >  static const struct key_entry hp_wmi_keymap[] =3D {
+> > =20
+> >  	{ KE_KEY, 0x02,    { KEY_BRIGHTNESSUP } },
+> >  	{ KE_KEY, 0x03,    { KEY_BRIGHTNESSDOWN } },
+> >=20
+> > +	{ KE_KEY, 0x07,    { KEY_FN_P } },
+> >=20
+> >  	{ KE_KEY, 0x270,   { KEY_MICMUTE } },
+> >  	{ KE_KEY, 0x20e6,  { KEY_PROG1 } },
+> >  	{ KE_KEY, 0x20e8,  { KEY_MEDIA } },
+> >=20
+> > @@ -981,6 +983,15 @@ static void hp_wmi_notify(union acpi_object *obj,
+> > void *context)>=20
+> >  						key_code,=20
+1, true))
+> >  		=09
+> >  			pr_info("Unknown key code - 0x%x\n",=20
+key_code);
+> >  	=09
+> >  		break;
+> >=20
+> > +	case HPWMI_FN_P_HOTKEY:
+> > +		key_code =3D hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
+> > +		if (key_code < 0)
+> > +			break;
+> > +
+> > +		if (!sparse_keymap_report_event(hp_wmi_input_dev,
+> > +			key_code, 1, true))
+>=20
+> This is misaligned.
+>=20
+> > +			pr_info("Unknown key code - 0x%x\n",=20
+key_code);
+> > +		break;
+>=20
+> The code looks 100% identical to that of in HPWMI_BEZEL_BUTTON. But please
+> consider what I noted above about cycling platform profiles.
+>=20
+> >  	case HPWMI_OMEN_KEY:
+> >  		if (event_data) /* Only should be true for HP Omen */
+> >  	=09
+> >  			key_code =3D event_data;
 
-Applied to
+Hi,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Sorry for my mistakes, and thank you for your feedback. I'll consider your=
+=20
+feedback and submit another patch.
 
-Thanks!
+Edip
 
-[08/21] ASoC: add GPIOLIB_LEGACY dependency where needed
-        commit: 5383d67e2430822fa7bd20dcbbebbd8ae808e386
-[20/21] ASoC: pxa: add GPIOLIB_LEGACY dependency
-        commit: 2d86d2585ab929a143d1e6f8963da1499e33bf13
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
 
