@@ -1,58 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E641E102D;
-	Tue, 12 Aug 2025 12:28:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFFC1DD9AD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Aug 2025 12:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755001722; cv=none; b=K7gKuRWNlcNcyR1p+eoQIv0SFXnZU0SGmYn/co0guuz30TMPovwJBvS72vy8qY5OBTh6YWJCjZhzDD5mSyvpQj8m/6/WQnDWRjcbzJ/Q370NpjtgAEDldYFE9aMMP+UKhLRV1VX+P0Yge+/aeWJjsrYsjNwY35FpVu4vKAZZSsM=
+	t=1755001728; cv=none; b=YYDMVGukjJONnQ1hdGb78c0XrCn93trDQ3Klz6ABW3zsXT6sx3t9CujaTw8MSQxU/2E3ytPaz82diIXLWMkHcaoCoeiFUMsRdr/ZqvJW7n7AMBPJtPdpZEp5wMwEke5+dpVREJ1vOFDVfSqp4Qm2AID54kOiBPbOZwudLy7bd+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755001722; c=relaxed/simple;
-	bh=VZlQS9qrYvaSCn5r+QNgbe0nSLiDoeCYKsW9NV3WT/M=;
+	s=arc-20240116; t=1755001728; c=relaxed/simple;
+	bh=gZ6nfGiRT0oHktq1ZFz/+OvM2kIyqlu+iflpAVWmkIw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lu7P96ArVunMf9hICyzXKSb/CvK2WStF16WA1Oes3Ns0TVO/BeJId7lIgZC/pQ5IHG+X3TSyd7YGCCJKn+9uv9tVa83k9/KdBEkvwAwTCNAULDSSRv6d5YJOY3tehEn+S88aoUHFPb19G6OgmvFkt8iFlTv8tfMLaiEEio+HD1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZ3ByvrQ; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=FxIZYuQCs61y9erd2pNKb5m7QiurX2bgSiLNTekSQ1IW7i1pwiO/GXUW4UT/sfNQSngjDNm6xZyBR4kJboc+87faqE/vVD3bsFNOIUQob8UNL5JnMNB1VXZ4tVJ4bngDAY/kaRYtzRxYFB3TbeCe5OdsXa8nJW2h8UgiwaPjQ3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=et3KeKZm; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZ3ByvrQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="et3KeKZm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755001721; x=1786537721;
+  t=1755001727; x=1786537727;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=VZlQS9qrYvaSCn5r+QNgbe0nSLiDoeCYKsW9NV3WT/M=;
-  b=lZ3ByvrQYx6mwHfBXS3r6T9rMvxynoCCEkBJDmuLkHq9kr9gkVV2Cxeb
-   wBiKAAQ/xuswT2pERuMbU1aJyTf3GQu0dkdtjumLENLwyDm9qIpuiJrk8
-   oMiSxpT+p56JxHKUww83zUE37W/BW3aMlC/3Gg/WR6B+StxSRqBuEC4DR
-   gDVGJVIxM97QXM9+YXUarYppjsva3kgNK+DVwEYpO9iuHZKECTAL3Ec1X
-   iPEzE1eCigcDMEIcRVmUYtUoGVnUTD5K3K/VmTtg9AAImGIoxKAFtBHO4
-   tUSR0p44ZsKa8aVGiPSV7TAPwBZWUJIaALt/UnsxbJ5cailbfpE2jZP0k
-   g==;
-X-CSE-ConnectionGUID: X9g2L6pMRnamzAcXQyDcwg==
-X-CSE-MsgGUID: 4CApq/JKQCKWsPEGoKlSbA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="68648798"
+  bh=gZ6nfGiRT0oHktq1ZFz/+OvM2kIyqlu+iflpAVWmkIw=;
+  b=et3KeKZmDZrrhmY3/yAwVI9FPWvkJ8Ku9zwIC/nQ/4jTw+JndIjoAY4d
+   riOCpD8FqHZqvwrVurxKYSh59c9NxBvchFNMqPjTtjVgu8SKFEOa7cG71
+   k4lEqmWmLIuggq2F9+la1Ceyr8aIRYVLO2ER1cbUJBDHTrdpRkQpCwOsA
+   DMmwMN+rySdjphkIIOBrzVS9vkTpFL793KUYzoDbRGCoGuxfQRZmKmZKp
+   gaLZ3PvZXkNgnieY1Gs5g0fuq5qCZyIH2+1mLMwwdkjWj2ecs4jYrqb8e
+   esdyC/7yHW+AfqcnjI0AOzdAArPQp8HP6R4nY+F9sj5RFFrNIQQzWT/iu
+   Q==;
+X-CSE-ConnectionGUID: 53n0BPQ7RQCHcnp9g+yTag==
+X-CSE-MsgGUID: GMMH2A/6Q+O5z8zQWGszVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="68648805"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="68648798"
+   d="scan'208";a="68648805"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:28:40 -0700
-X-CSE-ConnectionGUID: GYFtk6y2SOSACCfsmjGF/A==
-X-CSE-MsgGUID: /MZDaA0aRESoHz8ihG9zXg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:28:47 -0700
+X-CSE-ConnectionGUID: mvES1GPGRxuPYfi60SsCRw==
+X-CSE-MsgGUID: /HE6E/33QwSlwRd0cz206Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="166471960"
+   d="scan'208";a="166472006"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.96])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:28:37 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:28:44 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250722183841.9552-1-W_Armin@gmx.de>
-References: <20250722183841.9552-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2] platform/x86: dell-smbios-wmi: Stop touching WMI
- device ID
-Message-Id: <175500171231.2252.13719056870824439306.b4-ty@linux.intel.com>
-Date: Tue, 12 Aug 2025 15:28:32 +0300
+To: mario.limonciello@amd.com, Shyam-sundar.S-k@amd.com, hansg@kernel.org, 
+ Mario Limonciello <superm1@kernel.org>
+Cc: Chris Bainbridge <chris.bainbridge@gmail.com>, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <20250724185156.1827592-1-superm1@kernel.org>
+References: <20250724185156.1827592-1-superm1@kernel.org>
+Subject: Re: [PATCH] platform/x86/amd: pmc: Drop SMU F/W match for Cezanne
+Message-Id: <175500172041.2252.4566199095807504643.b4-ty@linux.intel.com>
+Date: Tue, 12 Aug 2025 15:28:40 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,17 +63,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 22 Jul 2025 20:38:41 +0200, Armin Wolf wrote:
+On Thu, 24 Jul 2025 13:51:08 -0500, Mario Limonciello wrote:
 
-> The Dell SMBIOS driver uses the "id" field inside struct device for
-> prioritizing the WMI backend over the SMM backend. Because of this
-> the WMI backend modifies the "id" field of the underlying WMI device.
-> However the WMI core itself uses wdev->dev.id internally to track
-> device IDs, so modifying this value will result in a resource leak.
-> 
-> Fix this by not using the "id" field inside struct device for SMBIOS
-> prioritization. Instead extend struct smbios_device with a separate
-> "priority" field.
+> Chris reported that even on a BIOS that has a new enough SMU F/W
+> version there is still a spurious IRQ1.  Although the solution was
+> added to SMU F/W 64.66.0 it turns out there needs to be a matching
+> SBIOS change to activate it.  Thus Linux shouldn't be avoiding the
+> IRQ1 workaround on newer SMU F/W because there is no indication the
+> BIOS change is in place.
 > 
 > [...]
 
@@ -84,8 +81,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell-smbios-wmi: Stop touching WMI device ID
-      commit: d26a9f4f0a7745f0d5127344379a62007df68dcd
+[1/1] platform/x86/amd: pmc: Drop SMU F/W match for Cezanne
+      commit: 5b9e07551faa7bb2f26cb039cc6e8d00bc4d0831
 
 --
  i.
