@@ -1,57 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38751E0DE2
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Aug 2025 12:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453431E5B7B;
+	Tue, 12 Aug 2025 12:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755001749; cv=none; b=IU43IsgAXstsuzmNoXEmXTA2fOJPaNUWPXCPsp0P5n6gSruyyQnUFxk+vtG+U/c6M2EhpCUlRpAE0Z0NZRhE99JYjw/UE75lqMVNrIP5sHnYmRLMu0o5UpIvu8avs5tTdmqQue4eVwHgSanB3dGVe5bZGzKRD9t1uM7E8smqR+4=
+	t=1755001756; cv=none; b=RP9cRnHFQQM3Mgn6SUB4UTze355Y0aNJICX6GC5CjtSkamHIjr65LdsGErPOAjjLyVaOZTxYU02AR3vhhcQQGrNeizLmABGaRwAD8cl0cXRGQcFwmVAZxg31zSA3QRP6LNmRZXtmLBG04EKUyLe2nY0sv8+vuHipVCF0Ag13jMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755001749; c=relaxed/simple;
-	bh=ghOFNqsumOqCIoL7SyjKrQhUtogDKg/AsedIGVNGB4M=;
+	s=arc-20240116; t=1755001756; c=relaxed/simple;
+	bh=LK5txVFI7G9Dh/VuhxO0Z3jVBKbeqjt+ITjSo3Vro3Y=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IdgmiqwkLqgCo1Eh90OEahqlvYra8Ov+6Ex7ONcu138KXyrwzOB3PLDJ16VX3wvHpjpISbhC9lXalHsgnMff8heBD9y+ylU9IUjOFMXaau+YnZuYSV7FLE6WeVjWpMlpYmhpvPWrSS+sQ+bw+W91Mh7iWZssktMSnrBXQiiGqJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEemakqz; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=tBZcOjHEgb2zlO5zXxgc2BYmUdG8YHy5LfN9UYY6wr4AuCcuISx174WHFDRMswqD2GO1vxit+wD9C+jvuZiZKNxd7p7KU3VrJMFSvAdSPtLXc9jHyXso6uFrlNXf/J+Cd2/GZrHXy45wudCoca7DLf6xZtrwhHXwn0dBKlp8c28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D27Q7G71; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEemakqz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D27Q7G71"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755001748; x=1786537748;
+  t=1755001755; x=1786537755;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ghOFNqsumOqCIoL7SyjKrQhUtogDKg/AsedIGVNGB4M=;
-  b=XEemakqzAL+taIYGZzW/2idrjpaQRm2cQ5NAOtd4n/eF/GXa4yio4eRF
-   5U7gVtG13O22SGAZ0J2E3QSmomg+7cY/lg5uXFXCczXFl+/kXQTAM9zqP
-   gUO05wL6/KbRIkmzXLDdAgsfdsa7j79pq6GfWfV9Nv7kDeglmXhVT2pb4
-   e+R3l1BEYhxInCYjKFRwFikL7TjmI1/aPw46fPn7AS9co5jjInUOuA/HR
-   AZZyAE+WqmeYIhcaDVDU+AEZW3UdHyykXN/dJdby5hj9HTpcF4+R8EUT9
-   lfhVW4PadltMCfYZrC/sI+/1qxOmpFil+oolpl+r7/zg2qvGiPCjm+SEK
+  bh=LK5txVFI7G9Dh/VuhxO0Z3jVBKbeqjt+ITjSo3Vro3Y=;
+  b=D27Q7G71kjxvdA2ub4UAQwpLK8wancuuElaoE7tdyHHnERtKW3zYFDUM
+   A0yKDUYCD9kItH0IwqY4b4r5MlbvV/ZwWycnqNdOf/rZ/sTkoBwFXzk/L
+   jHt0H609KsfpZWamltLbHcuZbRKxPcUjpyD8XtYpI7ewuHEJqxF+lYDDR
+   /3jMv1mwEmaSDiyEdskYm4Xr6eT18Tn3wLWomFEoEopryYi3Hf1P3/xVm
+   y3rsvQQ7jAtjz3JQdz41kIeQ6SN7b+fPf2auQeeg5/J1N95OC5jae/IPn
+   m+tirP3dxK5xxAa/hUKd5vk6XshPgYuQQdiRAAZdsZ4/TL3pFBFYaFi+h
    A==;
-X-CSE-ConnectionGUID: iard4fjsT0uB6bxQN4Jk/g==
-X-CSE-MsgGUID: +N2nV4SjRKWiHfsRYqrBFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="68648830"
+X-CSE-ConnectionGUID: p6JmtkZSQS2fan4ZVgUgSQ==
+X-CSE-MsgGUID: KIRe7EWPSlC7obXrMOEokw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="68648832"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="68648830"
+   d="scan'208";a="68648832"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:07 -0700
-X-CSE-ConnectionGUID: rB0kKhT/Tra2re6X9FDLYA==
-X-CSE-MsgGUID: HzMmkTfUREiQuH2rdCZw/A==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:14 -0700
+X-CSE-ConnectionGUID: kiop/s72ScqjAPuuGNfo9g==
+X-CSE-MsgGUID: XES1ihE4TP6Y/NyjgVzEFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="166548267"
+   d="scan'208";a="166548287"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.96])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:05 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 05:29:12 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, Suma Hegde <suma.hegde@amd.com>
-Cc: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250804101551.89866-1-suma.hegde@amd.com>
-References: <20250804101551.89866-1-suma.hegde@amd.com>
-Subject: Re: [PATCH] platform/x86/amd/hsmp: Ensure success even if hwmon
- registration fails
-Message-Id: <175500174099.2252.3823709996152765569.b4-ty@linux.intel.com>
-Date: Tue, 12 Aug 2025 15:29:00 +0300
+To: Hans de Goede <hansg@kernel.org>, edip@medip.dev
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250728115805.20954-2-edip@medip.dev>
+References: <20250728115805.20954-2-edip@medip.dev>
+Subject: Re: [PATCH] platform/x86: hp-wmi: mark Victus 16-r1xxx for
+ victus_s fan and thermal profile support
+Message-Id: <175500174766.2252.16933943803051805256.b4-ty@linux.intel.com>
+Date: Tue, 12 Aug 2025 15:29:07 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,10 +62,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 04 Aug 2025 10:15:51 +0000, Suma Hegde wrote:
+On Mon, 28 Jul 2025 14:58:06 +0300, edip@medip.dev wrote:
 
-> Even if hwmon registration fails, HSMP remains accessible through the
-> device file, so the operation should return success.
+> This patch adds Victus 16-r1xxx laptop DMI board name into existing
+> list.
+> Tested on 16-r1077nt and works without any problem.
 > 
 > 
 
@@ -76,8 +77,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/amd/hsmp: Ensure success even if hwmon registration fails
-      commit: de5cec220e4d45d7129e76f7d985c7b01f10f8d9
+[1/1] platform/x86: hp-wmi: mark Victus 16-r1xxx for victus_s fan and thermal profile support
+      commit: 748f897511446c7578ca5f6d2ff099916bad6e28
 
 --
  i.
