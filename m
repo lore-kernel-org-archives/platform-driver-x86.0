@@ -1,63 +1,63 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E7E28CF4A;
-	Wed, 13 Aug 2025 16:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F87E28D8F1;
+	Wed, 13 Aug 2025 16:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104194; cv=none; b=YiWPWMjFwD2xer55hRTjs0t2AOCF1Bt6raX0hDUskYDmeRh59UC1MzvIMP+wbNzT5dS8TpAKmvhFqtFJzJiHJiolWLvj2QIncZ8uR/ku67Ijugx7CeJn0OU7/XNRoblxTBzcL6BNgl5d3A7FYe4E2zoc897cegsll0jbhtWCyyE=
+	t=1755104196; cv=none; b=Z9VoZ1byFWsSAeyDjaBtM74xQlQem1ObAzDXbigStwdZeu6pBUUE0bF/5nBpyfjOnmewuqOtRvEANGLi7owm4JjdCAkOzHk08F6j2K/YncKau9ztVNCdHyMDiS2zNx4VeVXgbifAU0a2MWUNoF7tOIfPUPcfmV/MdNQCdxN+Cks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104194; c=relaxed/simple;
-	bh=eVoj1Ifne5xxDbkxW+z2z9z8at+1kGeP4FU5LASUo4I=;
+	s=arc-20240116; t=1755104196; c=relaxed/simple;
+	bh=+df6Qo6MKFkCpKLpsjCROnRdQpAoxY5XIcRa/rdDAEQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FFw37Radbwc7XOn5KBIQTydICwDCdgNdXVBYdaVWC9CHgNbf+FhrOK0+6KNKBXx5TvGxBkGRMtVTCHYG6wSpNnUnhtNbPIyA7/iAZq2TDb34YA8EnDCI6/RPHPqrZeSWuH+f7XGBQhabK3jYbmX2cvnUWRMvTRPOzC11GGR5cYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbCsy7XQ; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=UxvpoGrPGuM0LEKJET1olwuwdvKCxnweuxaVqDEMiQorc2b5GmMqDOaiZssN+YcO5AFLErEYccczyGY2hCJ/SJDqdyew01ZjfPpfZAIFK8HvodFSR/CGJhvqt7ySh2y8YTE/z561N5bz3QylBq5HmV+6PT+K4HrIoJ1+SYBs0xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYoRpaJa; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbCsy7XQ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-459ddada9b1so63294805e9.0;
-        Wed, 13 Aug 2025 09:56:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYoRpaJa"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-458bc3ce3beso41318145e9.1;
+        Wed, 13 Aug 2025 09:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755104190; x=1755708990; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755104192; x=1755708992; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fR5egA155L3/ZFPJyZwwU5fT3Tzttv/11idaiXKGAjY=;
-        b=MbCsy7XQQfRmaouhfVUEnEEZeILUrMXDwQBcog5criCXd71YsZ12UWhF+5CY2dwt8O
-         gvy5kXPcYd+ZJ7OCmpldthTKZZuKE8Z8AeCO2vBktnGpoj+6jStVZ28AUvzzR3bnQ6oD
-         ZmaXzFhldiM9h7QrbpPQtwnsdttl4oAGe1nuribD3AQxZhuz45f7+YWnRipBpt5dvwR5
-         8fpzKVMCN/WdYVwVpZk6qBEo6lCtHh4irx6wkiCTyINHZbaycHYBRl7av6gVzqrFYYIX
-         5ogcTTYUxafcM1sziCC/x/5DskbPQbON4ykm6eGIcw+6x2+LniG0qjY2Y7Pv3pOL7IjJ
-         KGQQ==
+        bh=KWnF/L9Gj+6Dcq7JeBV/TaoqH5US+8L+pfio/OvKFpY=;
+        b=IYoRpaJagMsd4B0+kMn6uzk2gpC4zooAnZseEOtKaLgAwCjXvh674c/MWBTdXV35N9
+         IY9g0mu8MR2KfUOLGDmfwxxqVwvoA5YBCL9aHiplaa+nrP/ZAbZ+pZV47b/Ib1h34vb3
+         zk1fLa5NrZ+t4Azh3GcsPXGr5D40560yDpCCVDok2JzKI7fjTbdJZucAawVEMXyUvrtB
+         QFJEmGWWrPJTStKzsK6US2qpFJ6OZFCCq+ZsoQHWS2w0fpWEHBoGTICpuretLdI967Tm
+         2ZxTcZrbaBFx1HvUVjTAbXINzKho1k+RMFENepkFFO5xHxvIpIk2645eoDiPIRFWnlPw
+         w3uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755104190; x=1755708990;
+        d=1e100.net; s=20230601; t=1755104192; x=1755708992;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fR5egA155L3/ZFPJyZwwU5fT3Tzttv/11idaiXKGAjY=;
-        b=TvtpT7nvCQyFDdL2X51v2llwJpEsdXsOAxbupGUBeLuxXWTEoHyt9aYK4+7sp399c5
-         L1zdsxa+GVhKjIvqutjTzo399QqiKC9xEPsNdECUX40GYmhTVCm1YQ/X51T+HNCwLk4a
-         crGc4ULuW8r5Zc2w4frgEQg9FiqpGs682SrQmvXm7P5z5o1DAzCf5DZfvOwlt5jCtQcJ
-         QogcPwrhkgmROwEOz2zW+WwwOvKR87M9bhX5/pEshACb3FnQD5FWOgL08DFZGsgN0nB7
-         /GaKZNIQQGflp/gw81La2/X6iWvVDyDdlJdJ6KDa/xF0lN5UOIB6Fy1cgc4S/wHF6yya
-         QpDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2ep92nrJmHvT3OM3yhTqs6En6n2q9DmJ2et3NChC8y3WP1RTIUfyYdh7Mlxv4LZFEGqWfv6J/jYBvjr/97i5ao1qF@vger.kernel.org
-X-Gm-Message-State: AOJu0YynHop3dalMmGwvvkEfyHS/uC4zM+A1nW+r1fCvKKAWPJwadk1k
-	9XDtYAUduR1JUmMovmmZaBDjNVjAR4YaxBl4jR+21DI2bkm/IW4Ka1QPMyo1yg==
-X-Gm-Gg: ASbGncsfnrAZyKeHjlBFiTnIU4CpJSGUGBGHAwsDtmsjxL4ufYND4HrWm2fI7cKtE31
-	SkvPxZOc4/e7Vutwch2jZGUDRAlaCYMzf+uQ+OKq3kXteyvMzwDvKee7Xmy/QyEGVQLnx79EUSs
-	54s1wpW1Jqd0kkyuaHU3If4xwAQeizBj4Bsb5KfU63moJ5V9rydT5E9ihmA+S/n8Uf/FDQSOlhy
-	B5JMpbvMB+hBSEqxJ7wFMO755ijbTEPFLOkdblWoZ8mKkfZaOkOxXwM/6FrB9e5s7XvHEBNgytS
-	CW77F3//zQnG7CEh4i/Aerj5ydmwXOdBO2ac1BUPaKx+D+Y/NIcAQq+WgtoUHb5PS4jWetEwuTb
-	hHrQUafg5FInQCYj6A7J18Sk=
-X-Google-Smtp-Source: AGHT+IGGEyrr+do7Qcx170kS4yoslivzjZQxmUKftcwex9bFug5tWs+NOQ6PBgRlRO9oscnY3woI6g==
-X-Received: by 2002:a05:600c:444d:b0:456:1c4a:82b2 with SMTP id 5b1f17b1804b1-45a165a996cmr40109375e9.10.1755104190108;
-        Wed, 13 Aug 2025 09:56:30 -0700 (PDT)
+        bh=KWnF/L9Gj+6Dcq7JeBV/TaoqH5US+8L+pfio/OvKFpY=;
+        b=ShA0KfTB7wRc4giQozvfuDYs/JHfwVa2rot1oCNAK+O1r0D/Vkk8hG43mAo7WbBr9W
+         jy/TZG+g5knzx0FCOdCBnDtB5d7Iebso63YxlhHOoXvFovOZ9UV4bS2tOoTzZ8zfTTbL
+         7n9jvHiGVF48v5Pdsa6Z7kc1PvmMpf4SgJ7WUoyzKn006Ng87sbifalDT8O1fsWrYaWj
+         R+8oL+X67jRPpE9b6XEwkJBWDKWl5nZaEsVox0QNJCqXjczZPR+4EF84OZKHrI3GZK+g
+         y0/wKKl3TgQrq4lvlSkSLFo6/q8pKQLEw8Ono+yugIEWHs5g0tPoyIdLm0PQy677QE/Q
+         iGEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVnbilZG8nijHxVZj/QWqAyZHYw8OKsuHprYkm7f/66n5oNJQkHVeRKRAH/SMt033Sqpi7gi9ENiU39I8eW9rZbFbV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmP6yQx0pMSzTBHamsiAdOZoc2h+HNFznaTGtOhM0xtLiY6Qtw
+	HwfK+fhzyvbXK3jFfyCGYxd5FZGWi7dmBco6gym/pzHFD1Ql2wBMIKbjEn8qxQ==
+X-Gm-Gg: ASbGncuP2JHaLlmXzwfsJLxi2JZAh1M0V6EJmPzo7153JMCeKz4lik17RGXlioZa5ri
+	htyEgUCaTfz5xtTejw8GLoZ9eGvb25CpTM6gd6t9e5iPxN0L41CmFynrvraQp3Y/sKEix4yjkaM
+	b/UW8uLKilN8sjqViEOQ74ovzkPMJzLmXnwYAoqT7sF8SQxm8RUSpqjLlqyL3Z6J4ESMniwytsf
+	eXabaPERUF9FBU28t+H1n+g/hE16Wi1yUVJtCUIyXID1mRHZ1Kaj/0sgdALcD1DFk7pjX9AfPZs
+	6/XZEIW0av7Qm3eWGC9xvMjr7azl44zwRazcVYNTb5wUNLLR7cW/xoVzlbg0HshSac9RNy08Ha6
+	9SBlluBKzZGyavVvjI0FpvW2CgwqhZf//Dg==
+X-Google-Smtp-Source: AGHT+IExyjiMeDuoJX7O7Y+KLW9No/N+3m+g8US48ILOaF7oBUbcr/pnPfZJSy7qMxNl0cRD0vrA+g==
+X-Received: by 2002:a05:600c:528e:b0:456:25aa:e9c0 with SMTP id 5b1f17b1804b1-45a168a3829mr35518265e9.14.1755104191673;
+        Wed, 13 Aug 2025 09:56:31 -0700 (PDT)
 Received: from denis-pc ([176.206.95.68])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c48de68sm48600399f8f.67.2025.08.13.09.56.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c48de68sm48600399f8f.67.2025.08.13.09.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 09:56:29 -0700 (PDT)
+        Wed, 13 Aug 2025 09:56:31 -0700 (PDT)
 From: Denis Benato <benato.denis96@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Hans de Goede <hdegoede@redhat.com>,
@@ -68,9 +68,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Alok Tiwari <alok.a.tiwari@oracle.com>,
 	Derek John Clark <derekjohn.clark@gmail.com>,
 	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v11 5/8] platform/x86: asus-armoury: add core count control
-Date: Wed, 13 Aug 2025 18:56:17 +0200
-Message-ID: <20250813165620.1131127-6-benato.denis96@gmail.com>
+Subject: [PATCH v11 7/8] platform/x86: asus-wmi: deprecate bios features
+Date: Wed, 13 Aug 2025 18:56:19 +0200
+Message-ID: <20250813165620.1131127-8-benato.denis96@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250813165620.1131127-1-benato.denis96@gmail.com>
 References: <20250813165620.1131127-1-benato.denis96@gmail.com>
@@ -84,390 +84,589 @@ Content-Transfer-Encoding: 8bit
 
 From: "Luke D. Jones" <luke@ljones.dev>
 
-Implement Intel core enablement under the asus-armoury module using the
-fw_attributes class.
+With the existence of the asus-armoury module the attributes no longer
+need to live under the /sys/devices/platform/asus-nb-wmi/ path.
 
-This allows users to enable or disable preformance or efficiency cores
-depending on their requirements. After change a reboot is required.
+Deprecate all those that were implemented in asus-bioscfg with the goal
+of removing them fully in the next LTS cycle.
 
-Signed-off-by: Denis Benato <benato.denis96@gmail.com>
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Tested-by: Denis Benato <benato.denis96@gmail.com>
 ---
- drivers/platform/x86/asus-armoury.c        | 258 ++++++++++++++++++++-
- drivers/platform/x86/asus-armoury.h        |  28 +++
- include/linux/platform_data/x86/asus-wmi.h |   5 +
- 3 files changed, 290 insertions(+), 1 deletion(-)
+ .../ABI/testing/sysfs-platform-asus-wmi       |  17 +++
+ drivers/platform/x86/Kconfig                  |  11 ++
+ drivers/platform/x86/asus-wmi.c               | 121 ++++++++++++++----
+ 3 files changed, 124 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index e458d23d020d..4629389c4c25 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -45,13 +45,49 @@
- #define ASUS_MINI_LED_2024_STRONG 0x01
- #define ASUS_MINI_LED_2024_OFF    0x02
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 28144371a0f1..765d50b0d9df 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -63,6 +63,7 @@ Date:		Aug 2022
+ KernelVersion:	6.1
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Switch the GPU hardware MUX mode. Laptops with this feature can
+ 		can be toggled to boot with only the dGPU (discrete mode) or in
+ 		standard Optimus/Hybrid mode. On switch a reboot is required:
+@@ -75,6 +76,7 @@ Date:		Aug 2022
+ KernelVersion:	5.17
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Disable discrete GPU:
+ 			* 0 - Enable dGPU,
+ 			* 1 - Disable dGPU
+@@ -84,6 +86,7 @@ Date:		Aug 2022
+ KernelVersion:	5.17
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Enable the external GPU paired with ROG X-Flow laptops.
+ 		Toggling this setting will also trigger ACPI to disable the dGPU:
  
-+#define ASUS_POWER_CORE_MASK	GENMASK(15, 8)
-+#define ASUS_PERF_CORE_MASK		GENMASK(7, 0)
-+
-+enum cpu_core_type {
-+	CPU_CORE_PERF = 0,
-+	CPU_CORE_POWER,
-+};
-+
-+enum cpu_core_value {
-+	CPU_CORE_DEFAULT = 0,
-+	CPU_CORE_MIN,
-+	CPU_CORE_MAX,
-+	CPU_CORE_CURRENT,
-+};
-+
-+#define CPU_PERF_CORE_COUNT_MIN 4
-+#define CPU_POWR_CORE_COUNT_MIN 0
-+
-+/* Tunables provided by ASUS for gaming laptops */
-+struct cpu_cores {
-+	u32 cur_perf_cores;
-+	u32 min_perf_cores;
-+	u32 max_perf_cores;
-+	u32 cur_power_cores;
-+	u32 min_power_cores;
-+	u32 max_power_cores;
-+};
-+
- static struct asus_armoury_priv {
- 	struct device *fw_attr_dev;
- 	struct kset *fw_attr_kset;
+@@ -95,6 +98,7 @@ Date:		Aug 2022
+ KernelVersion:	5.17
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Enable an LCD response-time boost to reduce or remove ghosting:
+ 			* 0 - Disable,
+ 			* 1 - Enable
+@@ -104,6 +108,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Get the current charging mode being used:
+ 			* 1 - Barrel connected charger,
+ 			* 2 - USB-C charging
+@@ -114,6 +119,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Show if the egpu (XG Mobile) is correctly connected:
+ 			* 0 - False,
+ 			* 1 - True
+@@ -123,6 +129,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Change the mini-LED mode:
+ 			* 0 - Single-zone,
+ 			* 1 - Multi-zone
+@@ -133,6 +140,7 @@ Date:		Apr 2024
+ KernelVersion:	6.10
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		List the available mini-led modes.
  
-+	struct cpu_cores *cpu_cores;
- 	u32 mini_led_dev_id;
- 	u32 gpu_mux_dev_id;
--} asus_armoury;
-+	/*
-+	 * Mutex to prevent big/little core count changes writing to same
-+	 * endpoint at the same time. Must lock during attr store.
-+	 */
-+	struct mutex cpu_core_mutex;
-+} asus_armoury = {
-+	.cpu_core_mutex = __MUTEX_INITIALIZER(asus_armoury.cpu_core_mutex)
-+};
+ What:		/sys/devices/platform/<platform>/ppt_pl1_spl
+@@ -140,6 +148,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
+ 		Shown on Intel+Nvidia or AMD+Nvidia based systems:
  
- struct fw_attrs_group {
- 	bool pending_reboot;
-@@ -93,6 +129,8 @@ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
- static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
- {
- 	return !strcmp(attr->attr.name, "gpu_mux_mode") ||
-+	       !strcmp(attr->attr.name, "cores_performance") ||
-+	       !strcmp(attr->attr.name, "cores_efficiency") ||
- 	       !strcmp(attr->attr.name, "panel_hd_mode");
- }
+@@ -150,6 +159,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the Slow Package Power Tracking Limit of CPU: PL2 on Intel, SPPT,
+ 		on AMD. Shown on Intel+Nvidia or AMD+Nvidia based systems:
  
-@@ -171,6 +209,12 @@ static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
- 	return sysfs_emit(buf, "enumeration\n");
- }
+@@ -160,6 +170,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the Fast Package Power Tracking Limit of CPU. AMD+Nvidia only:
+ 			* min=5, max=250
  
-+static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			     char *buf)
+@@ -168,6 +179,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the APU SPPT limit. Shown on full AMD systems only:
+ 			* min=5, max=130
+ 
+@@ -176,6 +188,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the platform SPPT limit. Shown on full AMD systems only:
+ 			* min=5, max=130
+ 
+@@ -184,6 +197,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the dynamic boost limit of the Nvidia dGPU:
+ 			* min=5, max=25
+ 
+@@ -192,6 +206,7 @@ Date:		Jun 2023
+ KernelVersion:	6.5
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set the target temperature limit of the Nvidia dGPU:
+ 			* min=75, max=87
+ 
+@@ -200,6 +215,7 @@ Date:		Apr 2024
+ KernelVersion:	6.10
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set if the BIOS POST sound is played on boot.
+ 			* 0 - False,
+ 			* 1 - True
+@@ -209,6 +225,7 @@ Date:		Apr 2024
+ KernelVersion:	6.10
+ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
++        DEPRECATED, WILL BE REMOVED SOON
+ 		Set if the MCU can go in to low-power mode on system sleep
+ 			* 0 - False,
+ 			* 1 - True
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 5c1c07d1d232..fc45a7c8c201 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -284,6 +284,17 @@ config ASUS_WMI
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called asus-wmi.
+ 
++config ASUS_WMI_DEPRECATED_ATTRS
++	bool "BIOS option support in WMI platform (DEPRECATED)"
++	depends on ASUS_WMI
++	default y
++	help
++	  Say Y to expose the configurable BIOS options through the asus-wmi
++	  driver.
++
++	  This can be used with or without the asus-armoury driver which
++	  has the same attributes, but more, and better features.
++
+ config ASUS_NB_WMI
+ 	tristate "Asus Notebook WMI Driver"
+ 	depends on ASUS_WMI
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index d595225425fb..c2f7d981b093 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -337,6 +337,13 @@ struct asus_wmi {
+ /* Global to allow setting externally without requiring driver data */
+ static enum asus_ally_mcu_hack use_ally_mcu_hack = ASUS_WMI_ALLY_MCU_HACK_INIT;
+ 
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
++static void asus_wmi_show_deprecated(void)
 +{
-+	return sysfs_emit(buf, "integer\n");
++	pr_notice_once("Accessing attributes through /sys/bus/platform/asus_wmi is deprecated and will be removed in a future release. Please switch over to /sys/class/firmware_attributes.\n");
 +}
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
 +
+ /* WMI ************************************************************************/
+ 
+ static int asus_wmi_evaluate_method3(u32 method_id,
+@@ -723,6 +730,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
+ }
+ 
+ /* Charging mode, 1=Barrel, 2=USB ******************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t charge_mode_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -733,12 +741,16 @@ static ssize_t charge_mode_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", value & 0xff);
+ }
+ 
+ static DEVICE_ATTR_RO(charge_mode);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* dGPU ********************************************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t dgpu_disable_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -749,6 +761,8 @@ static ssize_t dgpu_disable_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -802,8 +816,10 @@ static ssize_t dgpu_disable_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(dgpu_disable);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* eGPU ********************************************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t egpu_enable_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -814,6 +830,8 @@ static ssize_t egpu_enable_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -870,8 +888,10 @@ static ssize_t egpu_enable_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(egpu_enable);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Is eGPU connected? *********************************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t egpu_connected_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -882,12 +902,16 @@ static ssize_t egpu_connected_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+ static DEVICE_ATTR_RO(egpu_connected);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* gpu mux switch *************************************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t gpu_mux_mode_show(struct device *dev,
+ 				 struct device_attribute *attr, char *buf)
+ {
+@@ -898,6 +922,8 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -956,6 +982,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(gpu_mux_mode);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* TUF Laptop Keyboard RGB Modes **********************************************/
+ static ssize_t kbd_rgb_mode_store(struct device *dev,
+@@ -1079,6 +1106,7 @@ static const struct attribute_group *kbd_rgb_mode_groups[] = {
+ };
+ 
+ /* Tunable: PPT: Intel=PL1, AMD=SPPT *****************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+@@ -1117,6 +1145,8 @@ static ssize_t ppt_pl2_sppt_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->ppt_pl2_sppt);
+ }
+ static DEVICE_ATTR_RW(ppt_pl2_sppt);
+@@ -1159,6 +1189,8 @@ static ssize_t ppt_pl1_spl_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->ppt_pl1_spl);
+ }
+ static DEVICE_ATTR_RW(ppt_pl1_spl);
+@@ -1202,6 +1234,8 @@ static ssize_t ppt_fppt_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->ppt_fppt);
+ }
+ static DEVICE_ATTR_RW(ppt_fppt);
+@@ -1245,6 +1279,8 @@ static ssize_t ppt_apu_sppt_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->ppt_apu_sppt);
+ }
+ static DEVICE_ATTR_RW(ppt_apu_sppt);
+@@ -1288,6 +1324,8 @@ static ssize_t ppt_platform_sppt_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->ppt_platform_sppt);
+ }
+ static DEVICE_ATTR_RW(ppt_platform_sppt);
+@@ -1331,6 +1369,8 @@ static ssize_t nv_dynamic_boost_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->nv_dynamic_boost);
+ }
+ static DEVICE_ATTR_RW(nv_dynamic_boost);
+@@ -1374,9 +1414,12 @@ static ssize_t nv_temp_target_show(struct device *dev,
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%u\n", asus->nv_temp_target);
+ }
+ static DEVICE_ATTR_RW(nv_temp_target);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Ally MCU Powersave ********************************************************/
+ 
+@@ -1417,6 +1460,7 @@ void set_ally_mcu_powersave(bool enabled)
+ }
+ EXPORT_SYMBOL_NS_GPL(set_ally_mcu_powersave, "ASUS_WMI");
+ 
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t mcu_powersave_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -1427,6 +1471,8 @@ static ssize_t mcu_powersave_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -1462,6 +1508,7 @@ static ssize_t mcu_powersave_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(mcu_powersave);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Battery ********************************************************************/
+ 
+@@ -2335,6 +2382,7 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ }
+ 
+ /* Panel Overdrive ************************************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t panel_od_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -2345,6 +2393,8 @@ static ssize_t panel_od_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -2381,9 +2431,10 @@ static ssize_t panel_od_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(panel_od);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Bootup sound ***************************************************************/
+-
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t boot_sound_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buf)
+ {
+@@ -2394,6 +2445,8 @@ static ssize_t boot_sound_show(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
++	asus_wmi_show_deprecated();
++
+ 	return sysfs_emit(buf, "%d\n", result);
+ }
+ 
+@@ -2429,8 +2482,10 @@ static ssize_t boot_sound_store(struct device *dev,
+ 	return count;
+ }
+ static DEVICE_ATTR_RW(boot_sound);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
  /* Mini-LED mode **************************************************************/
- static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
- 						struct kobj_attribute *attr, char *buf)
-@@ -474,6 +518,207 @@ static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_at
- }
- ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
- 
-+static int init_max_cpu_cores(void)
-+{
-+	u32 cores;
-+	int err;
-+
-+	asus_armoury.cpu_cores = kzalloc(sizeof(struct cpu_cores), GFP_KERNEL);
-+	if (!asus_armoury.cpu_cores)
-+		return -ENOMEM;
-+
-+	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES_MAX, &cores);
-+	if (err)
-+		return err;
-+
-+	if ((cores & ASUS_WMI_DSTS_PRESENCE_BIT) == 0) {
-+		pr_err("ACPI does not support CPU core count control\n");
-+		err = -ENODEV;
-+		goto init_max_cpu_cores_err;
-+	}
-+
-+	asus_armoury.cpu_cores->max_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
-+	asus_armoury.cpu_cores->max_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
-+
-+	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES, &cores);
-+	if (err) {
-+		pr_err("Could not get CPU core count: error %d\n", err);
-+		goto init_max_cpu_cores_err;
-+	}
-+
-+	asus_armoury.cpu_cores->cur_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
-+	asus_armoury.cpu_cores->cur_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
-+
-+	asus_armoury.cpu_cores->min_perf_cores = CPU_PERF_CORE_COUNT_MIN;
-+	asus_armoury.cpu_cores->min_power_cores = CPU_POWR_CORE_COUNT_MIN;
-+
-+	return 0;
-+
-+init_max_cpu_cores_err:
-+	kfree(asus_armoury.cpu_cores);
-+	return err;
-+}
-+
-+static ssize_t cores_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf,
-+				enum cpu_core_type core_type, enum cpu_core_value core_value)
-+{
-+	u32 cores;
-+
-+	switch (core_value) {
-+	case CPU_CORE_DEFAULT:
-+	case CPU_CORE_MAX:
-+		if (core_type == CPU_CORE_PERF)
-+			return sysfs_emit(buf, "%u\n",
-+					  asus_armoury.cpu_cores->max_perf_cores);
-+		else
-+			return sysfs_emit(buf, "%u\n",
-+					  asus_armoury.cpu_cores->max_power_cores);
-+	case CPU_CORE_MIN:
-+		if (core_type == CPU_CORE_PERF)
-+			return sysfs_emit(buf, "%u\n",
-+					  asus_armoury.cpu_cores->min_perf_cores);
-+		else
-+			return sysfs_emit(buf, "%u\n",
-+					  asus_armoury.cpu_cores->min_power_cores);
-+	default:
-+		break;
-+	}
-+
-+	if (core_type == CPU_CORE_PERF)
-+		cores = asus_armoury.cpu_cores->cur_perf_cores;
-+	else
-+		cores = asus_armoury.cpu_cores->cur_power_cores;
-+
-+	return sysfs_emit(buf, "%u\n", cores);
-+}
-+
-+static ssize_t cores_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-+					 const char *buf, enum cpu_core_type core_type)
-+{
-+	u32 new_cores, perf_cores, power_cores, out_val, min, max;
-+	int result, err;
-+
-+	result = kstrtou32(buf, 10, &new_cores);
-+	if (result)
-+		return result;
-+
-+	scoped_guard(mutex, &asus_armoury.cpu_core_mutex) {
-+		if (core_type == CPU_CORE_PERF) {
-+			perf_cores = new_cores;
-+			power_cores = asus_armoury.cpu_cores->cur_power_cores;
-+			min = asus_armoury.cpu_cores->min_perf_cores;
-+			max = asus_armoury.cpu_cores->max_perf_cores;
-+		} else {
-+			perf_cores = asus_armoury.cpu_cores->cur_perf_cores;
-+			power_cores = new_cores;
-+			min = asus_armoury.cpu_cores->min_power_cores;
-+			max = asus_armoury.cpu_cores->max_power_cores;
-+		}
-+
-+		if (new_cores < min || new_cores > max)
-+			return -EINVAL;
-+
-+		out_val = FIELD_PREP(ASUS_PERF_CORE_MASK, perf_cores) |
-+			FIELD_PREP(ASUS_POWER_CORE_MASK, power_cores);
-+
-+		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES, out_val, &result);
-+		if (err) {
-+			pr_warn("Failed to set CPU core count: %d\n", err);
-+			return err;
-+		}
-+
-+		if (result > 1) {
-+			pr_warn("Failed to set CPU core count (result): 0x%x\n", result);
-+			return -EIO;
-+		}
-+	}
-+
-+	pr_info("CPU core count changed, reboot required\n");
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+	asus_set_reboot_and_signal_event();
-+
-+	return 0;
-+}
-+
-+static ssize_t cores_performance_min_value_show(struct kobject *kobj,
-+						struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MIN);
-+}
-+
-+static ssize_t cores_performance_max_value_show(struct kobject *kobj,
-+						struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MAX);
-+}
-+
-+static ssize_t cores_performance_default_value_show(struct kobject *kobj,
-+						    struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_DEFAULT);
-+}
-+
-+static ssize_t cores_performance_current_value_show(struct kobject *kobj,
-+						    struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_CURRENT);
-+}
-+
-+static ssize_t cores_performance_current_value_store(struct kobject *kobj,
-+						     struct kobj_attribute *attr,
-+						     const char *buf, size_t count)
-+{
-+	int err;
-+
-+	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_PERF);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+ATTR_GROUP_CORES_RW(cores_performance, "cores_performance",
-+		    "Set the max available performance cores");
-+
-+static ssize_t cores_efficiency_min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-+					       char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MIN);
-+}
-+
-+static ssize_t cores_efficiency_max_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-+					       char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MAX);
-+}
-+
-+static ssize_t cores_efficiency_default_value_show(struct kobject *kobj,
-+						   struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_DEFAULT);
-+}
-+
-+static ssize_t cores_efficiency_current_value_show(struct kobject *kobj,
-+						   struct kobj_attribute *attr, char *buf)
-+{
-+	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_CURRENT);
-+}
-+
-+static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
-+						    struct kobj_attribute *attr, const char *buf,
-+						    size_t count)
-+{
-+	int err;
-+
-+	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_POWER);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
-+		    "Set the max available efficiency cores");
-+
- /* Simple attribute creation */
- ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
- 		       "Show the current mode of charging");
-@@ -495,6 +740,8 @@ static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
- 	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
- 	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
-+	{ &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
-+	{ &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
- 
- 	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
- 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-@@ -598,6 +845,7 @@ static int asus_fw_attr_add(void)
- static int __init asus_fw_init(void)
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t mini_led_mode_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
  {
- 	char *wmi_uid;
-+	int err;
- 
- 	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
- 	if (!wmi_uid)
-@@ -610,6 +858,14 @@ static int __init asus_fw_init(void)
- 	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
- 		return -ENODEV;
- 
-+	if (asus_wmi_is_present(ASUS_WMI_DEVID_CORES_MAX)) {
-+		err = init_max_cpu_cores();
-+		if (err) {
-+			pr_err("Could not initialise CPU core control %d\n", err);
-+			return err;
-+		}
-+	}
-+
- 	return asus_fw_attr_add();
- }
- 
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-index 61675e7b5a60..a6c4caefdef9 100644
---- a/drivers/platform/x86/asus-armoury.h
-+++ b/drivers/platform/x86/asus-armoury.h
-@@ -161,4 +161,32 @@
- 		.name = _fsname, .attrs = _attrname##_attrs			\
+@@ -2461,6 +2516,8 @@ static ssize_t mini_led_mode_show(struct device *dev,
+ 		}
  	}
  
-+/* CPU core attributes need a little different in setup */
-+#define ATTR_GROUP_CORES_RW(_attrname, _fsname, _dispname)		\
-+	__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1);	\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	static struct kobj_attribute attr_##_attrname##_current_value =	\
-+		__ASUS_ATTR_RW(_attrname, current_value);		\
-+	static struct kobj_attribute attr_##_attrname##_default_value = \
-+		__ASUS_ATTR_RO(_attrname, default_value);		\
-+	static struct kobj_attribute attr_##_attrname##_min_value =	\
-+		__ASUS_ATTR_RO(_attrname, min_value);			\
-+	static struct kobj_attribute attr_##_attrname##_max_value =	\
-+		__ASUS_ATTR_RO(_attrname, max_value);			\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, int_type_show);			\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_default_value.attr,			\
-+		&attr_##_attrname##_min_value.attr,			\
-+		&attr_##_attrname##_max_value.attr,			\
-+		&attr_##_attrname##_scalar_increment.attr,		\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname, .attrs = _attrname##_attrs		\
-+	}
++	asus_wmi_show_deprecated();
 +
- #endif /* _ASUS_ARMOURY_H_ */
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index a4f6bab93a6f..9a79dae97adf 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -137,6 +137,11 @@
- /* dgpu on/off */
- #define ASUS_WMI_DEVID_DGPU		0x00090020
+ 	return sysfs_emit(buf, "%d\n", value);
+ }
  
-+/* Intel E-core and P-core configuration in a format 0x0[E]0[P] */
-+#define ASUS_WMI_DEVID_CORES		0x001200D2
-+ /* Maximum Intel E-core and P-core availability */
-+#define ASUS_WMI_DEVID_CORES_MAX	0x001200D3
+@@ -2531,10 +2588,13 @@ static ssize_t available_mini_led_mode_show(struct device *dev,
+ 		return sysfs_emit(buf, "0 1 2\n");
+ 	}
+ 
++	asus_wmi_show_deprecated();
 +
- #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+ 	return sysfs_emit(buf, "0\n");
+ }
  
- /* gpu mux switch, 0 = dGPU, 1 = Optimus */
+ static DEVICE_ATTR_RO(available_mini_led_mode);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Quirks *********************************************************************/
+ 
+@@ -3822,6 +3882,7 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
+ 	return throttle_thermal_policy_write(asus);
+ }
+ 
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t throttle_thermal_policy_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -3865,6 +3926,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+  * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+  */
+ static DEVICE_ATTR_RW(throttle_thermal_policy);
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* Platform profile ***********************************************************/
+ static int asus_wmi_platform_profile_get(struct device *dev,
+@@ -4466,27 +4528,29 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_camera.attr,
+ 	&dev_attr_cardr.attr,
+ 	&dev_attr_touchpad.attr,
+-	&dev_attr_charge_mode.attr,
+-	&dev_attr_egpu_enable.attr,
+-	&dev_attr_egpu_connected.attr,
+-	&dev_attr_dgpu_disable.attr,
+-	&dev_attr_gpu_mux_mode.attr,
+ 	&dev_attr_lid_resume.attr,
+ 	&dev_attr_als_enable.attr,
+ 	&dev_attr_fan_boost_mode.attr,
+-	&dev_attr_throttle_thermal_policy.attr,
+-	&dev_attr_ppt_pl2_sppt.attr,
+-	&dev_attr_ppt_pl1_spl.attr,
+-	&dev_attr_ppt_fppt.attr,
+-	&dev_attr_ppt_apu_sppt.attr,
+-	&dev_attr_ppt_platform_sppt.attr,
+-	&dev_attr_nv_dynamic_boost.attr,
+-	&dev_attr_nv_temp_target.attr,
+-	&dev_attr_mcu_powersave.attr,
+-	&dev_attr_boot_sound.attr,
+-	&dev_attr_panel_od.attr,
+-	&dev_attr_mini_led_mode.attr,
+-	&dev_attr_available_mini_led_mode.attr,
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
++		&dev_attr_charge_mode.attr,
++		&dev_attr_egpu_enable.attr,
++		&dev_attr_egpu_connected.attr,
++		&dev_attr_dgpu_disable.attr,
++		&dev_attr_gpu_mux_mode.attr,
++		&dev_attr_ppt_pl2_sppt.attr,
++		&dev_attr_ppt_pl1_spl.attr,
++		&dev_attr_ppt_fppt.attr,
++		&dev_attr_ppt_apu_sppt.attr,
++		&dev_attr_ppt_platform_sppt.attr,
++		&dev_attr_nv_dynamic_boost.attr,
++		&dev_attr_nv_temp_target.attr,
++		&dev_attr_mcu_powersave.attr,
++		&dev_attr_boot_sound.attr,
++		&dev_attr_panel_od.attr,
++		&dev_attr_mini_led_mode.attr,
++		&dev_attr_available_mini_led_mode.attr,
++		&dev_attr_throttle_thermal_policy.attr,
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 	NULL
+ };
+ 
+@@ -4508,7 +4572,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_LID_RESUME;
+ 	else if (attr == &dev_attr_als_enable.attr)
+ 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+-	else if (attr == &dev_attr_charge_mode.attr)
++	else if (attr == &dev_attr_fan_boost_mode.attr)
++		ok = asus->fan_boost_mode_available;
++
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
++	if (attr == &dev_attr_charge_mode.attr)
+ 		devid = ASUS_WMI_DEVID_CHARGE_MODE;
+ 	else if (attr == &dev_attr_egpu_enable.attr)
+ 		ok = asus->egpu_enable_available;
+@@ -4546,6 +4614,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		ok = asus->mini_led_dev_id != 0;
+ 	else if (attr == &dev_attr_available_mini_led_mode.attr)
+ 		ok = asus->mini_led_dev_id != 0;
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ 	if (devid != -1) {
+ 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
+@@ -4801,6 +4870,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	}
+ 
+ 	/* ensure defaults for tunables */
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 	asus->ppt_pl2_sppt = 5;
+ 	asus->ppt_pl1_spl = 5;
+ 	asus->ppt_apu_sppt = 5;
+@@ -4823,17 +4893,18 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX;
+ 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO))
+ 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
+-
+-	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
+-		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
+-	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
+-		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
+ 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
+ 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
+ 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
+ 
++	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
++		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
++	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
++		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
++
+ 	err = fan_boost_mode_check_present(asus);
+ 	if (err)
+ 		goto fail_fan_boost_mode;
 -- 
 2.39.5
 
