@@ -1,93 +1,79 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F92BF3C5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 Aug 2025 19:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8901D19F424
+	for <platform-driver-x86@vger.kernel.org>; Wed, 13 Aug 2025 19:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755112220; cv=none; b=d14YBMX3fpGNx0B7gf05fnmlJ37c5IAMdrL02HOEPaLwqjnDsRtNj9V6ZBbrdkWt5IAdJPYfFrszRjuFlWJZCqdAILn075wzqQxa8yaMh70CnpaDydtnYbC5eCBXBU91Pa+7lyLOJ6XicGSMJFWBRK+631cO2OeR5LHGtSK0e2k=
+	t=1755112464; cv=none; b=N1t6R4k4ZF7SPRnbIIFauGNoU3jPPB4mxisG/VRyxR//e3NELGS13JflMDaL5eKILQGo+D8Gmy+MeWI7TnyKr3AEEKaW3s0INB09ZNGXOucV2474mxtoQkWsF/n3EPTx1V3hmBnFwTNDsZVgrInIGaWSHxwYeBfhSzchOBIRYiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755112220; c=relaxed/simple;
-	bh=m7hBXsIBxitVlmsl3609mk3+4iieYV9lm/di6S973zU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ociWP7Ts/E2+72nq0kecG9iXX3SGAI586sJe4S5gkN6HMxuRwxeAb0cix/mUpDPzMMrbkTGTJT4bKjacikHkvfNWEZMx8eR7krmE8EsJf9JQAaD0NcoTzSfZFdbYlep/F6XoxMTQdrEgD8VGK9bGc18q6om4zLaqbllme/o71Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=dBrB/EPM; arc=none smtp.client-ip=194.117.254.33
+	s=arc-20240116; t=1755112464; c=relaxed/simple;
+	bh=YFfHXA3iVI/imVrmQZmYskpYDNVGH3qqb4HTconMmKo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IlAU3Q/QLzHQ/AsRHGScEbvFMw4GxrQ+KiZ/EAhgyBTkvgkgXzaIdz/e95xUypYCgnjspx6g8ZZi/9GZiPt3mY8+PTW+XpyQWRmy2WV6E07GtmP/SjyCmuvFgnwVaSFJ5x+Ornmd3VihpFwrQdTBQOuwPnltX3gg7+fwBzjWsBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eWt8bnKD; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="dBrB/EPM"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eWt8bnKD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=MW59
-	OM8iyHM8tNxaL/4snZLv48pcT0pbQZwdeZXlE2Q=; b=dBrB/EPM6J4aD0RXEZ+C
-	wtWg/Bfts7eCs/1jfaFGs/UV1lv2XViHvTiPx46B/8Qs105RPVeqmHFiZGfZI1z0
-	QYvQHDqgcRo0oZO+E+HSQJews6M5MXhLmxAofObJk1HJIHcU8tkYMF4W+64AZqmg
-	r6mXgj4yP5eXa0k45nOeILA3eL1C0MNfr5lvvzGCX625bfh3XTnXKwkvZjpHyIPH
-	2snzGNVemqftbFSL9nlfrsE3RnPeYKrCGAnhEk2XLwvYlI1PUDJ8AJQ4x7iVa9nq
-	NyUrDQJVzQFJw6JXwNG7nSK9T6qi0hHOGCKoHHEqgcraKX3ReozQ2eqeaK+fKr2z
-	xw==
-Received: (qmail 733730 invoked from network); 13 Aug 2025 21:10:15 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Aug 2025 21:10:15 +0200
-X-UD-Smtp-Session: l3s3148p1@JYIU6EM8lIptKDDX
-Date: Wed, 13 Aug 2025 21:10:14 +0200
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=mGgKEn7KVUz3ra
+	zfljm56Oiq7eaZi+TS97jN4whCk4U=; b=eWt8bnKDYCKA35Ih4bCjEpefvmQd6G
+	/HEVZfPo7+wLmiMn9XprGzo4WJygj+Jg5RyBerq9+LdAYTxKpuYw6Hf8M1pCSGvb
+	+msrKUEoGl/Kks29i2c/5ENwsDD120ZXV1Ms3quOrh/TQbFiEuhjKgMqykIsMyqR
+	8cU4ACzF7VNmjy91fimto+SpAJ05pbrjyMDKURFFKzKvjWyQki7nz0Pj3PJncQtH
+	GBSWg3JSoIU9B9w0+bSdrlqzCjHrJl5fJ4m0F7WF7IjfRswgg4o7gpG4eY/nZku3
+	Ju0yptI2qGvfGUBGPFI3l8+g55NJ1t/AYoFjY67gWSLG5i8+y/bD1bwA==
+Received: (qmail 734736 invoked from network); 13 Aug 2025 21:14:20 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Aug 2025 21:14:20 +0200
+X-UD-Smtp-Session: l3s3148p1@/HSz9kM8OqttKDDX
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: platform-driver-x86@vger.kernel.org
-Cc: Yen-Chi Huang <jesse.huang@portwell.com.tw>,
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Yen-Chi Huang <jesse.huang@portwell.com.tw>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: portwell-ec: don't print superfluous errors
-Message-ID: <aJzjFjAouLMDIvOw@shikoro>
-References: <20250813190816.3742-2-wsa+renesas@sang-engineering.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2] platform/x86: portwell-ec: don't print superfluous errors
+Date: Wed, 13 Aug 2025 21:13:44 +0200
+Message-ID: <20250813191416.6860-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tBOfM8QV9V4AMtqX"
-Content-Disposition: inline
-In-Reply-To: <20250813190816.3742-2-wsa+renesas@sang-engineering.com>
+Content-Transfer-Encoding: 8bit
 
+The watchdog core will handle error messages already.
 
---tBOfM8QV9V4AMtqX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
+Change since v1: simplified more into a single return statement
 
->  	ec_wdt_dev.parent =3D &pdev->dev;
->  	ret =3D devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
-> -	if (ret < 0) {
-> -		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
-> +	if (ret < 0)
->  		return ret;
-> -	}
-> =20
->  	return 0;
+ drivers/platform/x86/portwell-ec.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-Argh, I just saw, this can be simplified more. Sorry for the premature
-patch!
+diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
+index 322f296e9315..b603e68c82e9 100644
+--- a/drivers/platform/x86/portwell-ec.c
++++ b/drivers/platform/x86/portwell-ec.c
+@@ -237,13 +237,7 @@ static int pwec_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ec_wdt_dev.parent = &pdev->dev;
+-	ret = devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to register Portwell EC Watchdog\n");
+-		return ret;
+-	}
+-
+-	return 0;
++	return devm_watchdog_register_device(&pdev->dev, &ec_wdt_dev);
+ }
+ 
+ static struct platform_driver pwec_driver = {
+-- 
+2.47.2
 
-
---tBOfM8QV9V4AMtqX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmic4xIACgkQFA3kzBSg
-KbaYww//ZdKqcxTTur60HznfhpQqcpq505JT1mfmTmQd4pfVRtAeT1peGiXi7+dM
-Qkn7Tj/X80nhIs1TNQ69xqDXuuQQfJG/9Q01gx/3cmT/AXmFFPNyZ9HhwQJMgYHA
-ur7v2q4qB8wvaLVlRZBM0UeMToWkymhgDHXyycH2C5Bmx7QSRrqxQWcXSFe9RcUN
-G58Fnt/ANHe3TBoFL3+VAHSnOtsk7Nm3dnN55mNnUFmuIsJ7Tpezco+JdIZfH4RL
-A/rQcVSmLjG5ROfhTpCPm1LnTeiPqaeuk+TOay48SodL41eR9grThJjMn+KFVYMY
-NnJLGvJ45Nwod+FNFjhf2YCSr+h3FDOK60R52t/rRyQALc44FMzYdxg83vngQyf4
-gU6Kcfh1kJj8Wi0o3HVX0u/xolF/jnASniNrfmhMRc1Uo7Daav/el5plafNmtSHd
-Nn0WzC4WXkfUotV0k4FxinLmrZzmRdXKFF1EA1PXifEZYZXsTEtJrN0PlolfMoIA
-BvQV+nzxxubqnbTO/gK/sA3xleeR9WzM3Nky7QS8hj08aPXdzWSAL+CfBdb8g6/P
-esRjO3DOfnvCNy1jmgtjTwMYnb4+AJchV2HbjC0O9Pf4Havaivy75HGszOdYlT8n
-dtiXpCqBnHzCFZBDplab1k0LRGtUP2SJh/PHFv74q0dCa7vnchU=
-=U3Zi
------END PGP SIGNATURE-----
-
---tBOfM8QV9V4AMtqX--
