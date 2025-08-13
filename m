@@ -1,63 +1,63 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4F9280CD3;
-	Wed, 13 Aug 2025 16:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFFD28C5DE;
+	Wed, 13 Aug 2025 16:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104192; cv=none; b=utumBRLackAEt2zf18ZxYcj02R1PkhT3io0AhAjVV9oIdfQQcyocmWIRsuBvme6eYMl/v0k+YeRKLoXBuMF2KMraJ0hbBoC4OlY91DtIj6EwxOUT2W9hG6ys7BUPp09FLt3AGojWAtUzZrie0onSSIizASpgU9pYj5fZytasB4U=
+	t=1755104193; cv=none; b=YaMng1Az/x1bwVcvcqtBvNoZN81kc2ERsh4L9G6PlmRN6vrx5v0hzIeNuZg7rd1pkbaBuUh81FXpwbFhEFHqtM540TAbC6VQW7d+SVPvJBsWcUvlEjyWS1N/70Jf3/gnxco+jblAEjWzC+ZvKaL+6EGkAPkSSvS93/lIqI1V7Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104192; c=relaxed/simple;
-	bh=wnCwoGIEkyW8Xe9Y0SjdMKwN4vuvSnC7YmCRTBPeZlE=;
+	s=arc-20240116; t=1755104193; c=relaxed/simple;
+	bh=+4+QMDOlhumvvCxowgkRTb5iOq4/wAII3sNnLCAV0So=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CxvWSbBmdtgbwocZmA67KcdVfVORQn4y6ZBijH9hNhTlshQvH0O4d6nJ/SnqEz3gwcYMg22OzgSV5dEf7Wu33SVytgMPYEZvLMdvbHj78I1zT07N4wFSLYAhvxeFJu+djGRVqx6YyIUkhspNOJeURUYmxsjE4tiAFPBcY7IXY7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtkkhCcj; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=ArRzkpj8RvN2uATWnsfdUvdEcYktqGaCqsajCSRTrZ1wqYvlixRjKw67xQLhqbBgZhd5yIkFgz63/UYtyJRR8UMQeP/fOdujLTSkeS76vBPJGUIrW8HcuC2SkLeyX5p1oUF/eJ2l0Bxcjdnt3W3aGz40Sy8G9oyxzZwtyUodkyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSbyKo3x; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtkkhCcj"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3b9dc56ff66so20295f8f.1;
-        Wed, 13 Aug 2025 09:56:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSbyKo3x"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3b9e4193083so17934f8f.3;
+        Wed, 13 Aug 2025 09:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755104188; x=1755708988; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755104189; x=1755708989; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DShwMN7O21wjz8R7dTVIoqUsC/65qYkgXWgvDF2oTqw=;
-        b=dtkkhCcjE3icw9/KocOXtJ92WoQFMiSQdB0UVafuKFpebR6jy+PAQ1AXjVryWBI5cV
-         9E6hEf0zCGR3Yff0Hj53HbjXzcOQcJ6rtBv0YGxQ8oTjEdbGFWu5hh543Ut1l3/T4VNq
-         8ErnFQPrpMFyktF4mIrXy5JAonchtpU6/IGjYClhMjRGLkH4YeYqw2mnYJRhCYyyCsEi
-         H/2StAJiuvD1wpmhJFTPcm+STqOqqiAR+T5ZA13sh7zhQ8nX5YeeEJXD6Gt4NRtysdIk
-         IFK1nwJOEUet9CKBlANVrT6DtJBcJvBS3pyIwvGEv12K76WuTiB144l+h0ICKfQpL1lj
-         aWzA==
+        bh=MdeBbE3h5vAHXdthJ7mefbWWXRzt5X9iZ5taB+dn0rw=;
+        b=iSbyKo3xOMUtJGSUbzJ7W4QG3IV+jRc5ugQIcK9g3dctdlLfzUD0bDFwyr0eZvszYh
+         TruI5AmJRl4TrxwE3AU5p+TZBLTtBgVx5//rFiZtxcqPZHjwE18QTLswR14joQ7B+LKe
+         aIlBbL8/i+EmrGrcDU6CG3+fhzJhBKxoToNPRe4LnAmfcj1t+V/1o4dhNc+FRJenSSQr
+         M6+g4syjJX1eh4+7biQEIkITQvryqDlF0AD3MdG6Vk7DJwgg06zizlDAzMtJZ5AJz4v2
+         oK/lagQ3v+aSFW1z8x2BHw1j2F8YFgcIGDolWdCrzAx0+DCJmCjkWaA2j30sxyXtfSFq
+         5whw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755104188; x=1755708988;
+        d=1e100.net; s=20230601; t=1755104189; x=1755708989;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DShwMN7O21wjz8R7dTVIoqUsC/65qYkgXWgvDF2oTqw=;
-        b=bUuA3tnrYqChIPbKt+SFtpadzIyPkbKwRiSoN5ie/mABdJ78UBAB+H0jea+FmW4ZHt
-         cl6ygDf7F308R7fJKQpgaUNDZZ956xkB/MpEFTug/7NKWS558f7zXIPUYeHWJNV2cu5l
-         KqKqKlQd51jeD1dJrmH6c5hpdllgmg0WNZeJSaSsO1QdvvqK0En0dElxJo0OROjLwUkY
-         07x1342/X1sgt1VKw3CEFO746R/73mPDy6vmZehPlW5SSPtR+kz+0O02FA0mzFtk494G
-         SC3rUIFb1FVPmnPM1++1e0ZDrKxFIUaUQ+X8dzgGTqa/upCkRevo7ItDtZf5L3/u9kTV
-         iteg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHrfPzJX4uumjKjF5/SBOXgAOIQtqkrsmqiD+WMW+KSypYCubeDalompsAlTw2cXJkdwWEyBccSa2cBADM2u54a7eU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/Dbeg4GSQBEJiXHUMe/u+lSujGNvoszWzPQkwnP/17YY2AFuF
-	l+kVcBA/nvdjZDhElKnCGh/II28dSWS6Z43D2I10UdMbkQ36nEyHbzFdyP/arA==
-X-Gm-Gg: ASbGncuEr7GdPikSncORzH1WCg1IxzXF6TxxPsuteCGJATy3VcXYMnfq8IEesuTJvus
-	hld2eaDNaqzxSC3eQEE853L/m0tTukC3u7ecxkSCor+Z0pQIKj8e7MYsdVOVe0wZsrjw1ANEVCI
-	HBiZdv6jStHp5HjSVpFtPs/YqyT9MKrG00iizMDyLu6cl75Z7ILA3aj38tKft8zRn5rWtE32oXz
-	2oJJpd+K1oajPYRbtcgxO8xr4wVpHjcVUkYoYMAA6f7J+2xh6IGxDIsGEclACPKjHF1grrYbRMc
-	MFsSs8telmN7DV0I/89hhqqAfq9SBplXvyU0JRRSVbgaoZpCopqEq16vmJX1EavCKtYyt47wQLR
-	4XGLhJJcXWxw5NHdYFumvO6E=
-X-Google-Smtp-Source: AGHT+IGTdXSnz0QJLBxGIXs4VZYmH8aoRFECPq2YMXpopzddNBiSIncmNqHv9Uvn7zorFoIwjtikSQ==
-X-Received: by 2002:a05:6000:2887:b0:3b7:9c79:32bb with SMTP id ffacd0b85a97d-3b9fc36f44bmr5494f8f.44.1755104187691;
-        Wed, 13 Aug 2025 09:56:27 -0700 (PDT)
+        bh=MdeBbE3h5vAHXdthJ7mefbWWXRzt5X9iZ5taB+dn0rw=;
+        b=kZxCJ44+zTj04/DhhiaVvwYR4uvmiwpHe7bXS4hl32/tVSU9am+FWKouv5eHKZfY5y
+         +5PjssYtGnPcCgzZ81CrAE9G3cB/keIBfwekgxitRI9UacjCta0wLu1eBZ57KJ0m2oED
+         6djhBWZN1iR1HOGJNFaMJ2eBWbxdBC37pfHE62dENoNa6YpyOUULtMu/HWbDz7wJUtaV
+         aIebb+3SBp7SxRDLSTv2n/NsyRJg9Bb9Mtjk8FpV7Dj3uyD+bsMYxd+uUrdjYslpLnDh
+         /Pjj5lYzL9T3F1JDcVN+he7dbj2gC0U7Z4Rpqp0bn+oDMB2DS55mSE1ZKHGcUugv1Tkc
+         N7mw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3CFhr17Qv3AKyOFRg93PB6SunPPQrw/Km3brjxNFWE0ynnLZVQpYgT/PdagUPYbU6E3aSv3bW6cK72MnyQxiIarqa@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj3cakFV35K5RGDR0VWUgS3DpsCdsrBIl1ngOJxDIhLqG2kRKX
+	hCRuZqNAqrgFfxBQiG/vDM0RUpvTO2XKTcbtF3bZ2DxWL5B8Eo+55NH93XgNSg==
+X-Gm-Gg: ASbGnctxymIQcSHWua/0GaYq6SKQ6iFrzMYWiN3GcOCjxjYoz64qsytWfesWvOnU/kv
+	8oY/BwylMjX1EHoDScBOYO4UKP6JRy6r2P4EV+N/ZL8jkJ5N4E24YwLw3bIyKfRwpb/1iAuffRx
+	cJdVi6VdZ2AF7fnUXnmk7S+xaCauAP5wNN2WY1dyeybiUO6xRsjvk+dEcyeu2LU1PsLT3NB+RJh
+	/hUJ/AzNBClG4PzuTweX+CgmQ/2LqH4pk9iyuQJcBpCymI276sdYipc6KuQI0Va2jwPKngV1Ako
+	6CHuvl9kaULpTod/WLM2+h8+8WpJGfgvTYcKLhZlxH73gWMLOzkq7A8Vcp0OzJwOFi+cvp6CTMC
+	4pNTE8Zhzy6LluuQA/7pImXs=
+X-Google-Smtp-Source: AGHT+IFgYkPKYpexEhz29XR61NNy1QPwA4+m7nXwUVq9YgHWASRbW2D8x8rMRKjdjZyUiT7Kr05jCg==
+X-Received: by 2002:a05:6000:430b:b0:3b5:f0aa:b1e5 with SMTP id ffacd0b85a97d-3b9e416d83amr52195f8f.19.1755104189342;
+        Wed, 13 Aug 2025 09:56:29 -0700 (PDT)
 Received: from denis-pc ([176.206.95.68])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c48de68sm48600399f8f.67.2025.08.13.09.56.26
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c48de68sm48600399f8f.67.2025.08.13.09.56.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 09:56:27 -0700 (PDT)
+        Wed, 13 Aug 2025 09:56:29 -0700 (PDT)
 From: Denis Benato <benato.denis96@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Hans de Goede <hdegoede@redhat.com>,
@@ -68,9 +68,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Alok Tiwari <alok.a.tiwari@oracle.com>,
 	Derek John Clark <derekjohn.clark@gmail.com>,
 	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v11 2/8] platform/x86: asus-armoury: move existing tunings to asus-armoury module
-Date: Wed, 13 Aug 2025 18:56:14 +0200
-Message-ID: <20250813165620.1131127-3-benato.denis96@gmail.com>
+Subject: [PATCH v11 4/8] platform/x86: asus-armoury: add apu-mem control support
+Date: Wed, 13 Aug 2025 18:56:16 +0200
+Message-ID: <20250813165620.1131127-5-benato.denis96@gmail.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250813165620.1131127-1-benato.denis96@gmail.com>
 References: <20250813165620.1131127-1-benato.denis96@gmail.com>
@@ -80,962 +80,135 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: "Luke D. Jones" <luke@ljones.dev>
 
-The fw_attributes_class provides a much cleaner interface to all of the
-attributes introduced to asus-wmi. This patch moves all of these extra
-attributes over to fw_attributes_class, and shifts the bulk of these
-definitions to a new kernel module to reduce the clutter of asus-wmi
-with the intention of deprecating the asus-wmi attributes in future.
+Implement the APU memory size control under the asus-armoury module using
+the fw_attributes class.
 
-The work applies only to WMI methods which don't have a clearly defined
-place within the sysfs and as a result ended up lumped together in
-/sys/devices/platform/asus-nb-wmi/ with no standard API.
+This allows the APU allocated memory size to be adjusted depending on
+the users priority. A reboot is required after change.
 
-Where possible the fw attrs now implement defaults, min, max, scalar,
-choices, etc. As en example dgpu_disable becomes:
-
-/sys/class/firmware-attributes/asus-armoury/attributes/dgpu_disable/
-├── current_value
-├── display_name
-├── possible_values
-└── type
-
-as do other attributes.
-
-Signed-off-by: Denis Benato <benato.denis96@gmail.com>
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Denis Benato <benato.denis96@gmail.com>
 ---
- drivers/hid/hid-asus.c                        |   1 +
- drivers/platform/x86/Kconfig                  |  12 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/asus-armoury.c           | 545 ++++++++++++++++++
- drivers/platform/x86/asus-armoury.h           | 164 ++++++
- drivers/platform/x86/asus-wmi.c               |   5 +-
- .../platform_data/x86/asus-wmi-leds-ids.h     |  50 ++
- include/linux/platform_data/x86/asus-wmi.h    |  43 +-
- 8 files changed, 777 insertions(+), 44 deletions(-)
- create mode 100644 drivers/platform/x86/asus-armoury.c
- create mode 100644 drivers/platform/x86/asus-armoury.h
- create mode 100644 include/linux/platform_data/x86/asus-wmi-leds-ids.h
+ drivers/platform/x86/asus-armoury.c        | 81 ++++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  2 +
+ 2 files changed, 83 insertions(+)
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 4b45e31f0bab..fd002b7176c9 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -27,6 +27,7 @@
- #include <linux/hid.h>
- #include <linux/module.h>
- #include <linux/platform_data/x86/asus-wmi.h>
-+#include <linux/platform_data/x86/asus-wmi-leds-ids.h>
- #include <linux/input/mt.h>
- #include <linux/usb.h> /* For to_usb_interface for T100 touchpad intf check */
- #include <linux/power_supply.h>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 6d238e120dce..5c1c07d1d232 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -250,6 +250,18 @@ config ASUS_WIRELESS
- 	  If you choose to compile this driver as a module the module will be
- 	  called asus-wireless.
- 
-+config ASUS_ARMOURY
-+	tristate "ASUS Armoury driver"
-+	depends on ASUS_WMI
-+	select FW_ATTR_CLASS
-+	help
-+	  Say Y here if you have a WMI aware Asus machine and would like to use the
-+	  firmware_attributes API to control various settings typically exposed in
-+	  the ASUS Armoury Crate application available on Windows.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called asus-armoury.
-+
- config ASUS_WMI
- 	tristate "ASUS WMI Driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index a0c5848513e3..4279f5443f30 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
- # ASUS
- obj-$(CONFIG_ASUS_LAPTOP)	+= asus-laptop.o
- obj-$(CONFIG_ASUS_WIRELESS)	+= asus-wireless.o
-+obj-$(CONFIG_ASUS_ARMOURY)	+= asus-armoury.o
- obj-$(CONFIG_ASUS_WMI)		+= asus-wmi.o
- obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
- obj-$(CONFIG_ASUS_TF103C_DOCK)	+= asus-tf103c-dock.o
 diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-new file mode 100644
-index 000000000000..57ed9449ec5f
---- /dev/null
+index 68ce2c159ae1..e458d23d020d 100644
+--- a/drivers/platform/x86/asus-armoury.c
 +++ b/drivers/platform/x86/asus-armoury.c
-@@ -0,0 +1,545 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Asus Armoury (WMI) attributes driver.
-+ *
-+ * This driver uses the fw_attributes class to expose various WMI functions
-+ * that are present in many gaming and some non-gaming ASUS laptops.
-+ *
-+ * These typically don't fit anywhere else in the sysfs such as under LED class,
-+ * hwmon or others, and are set in Windows using the ASUS Armoury Crate tool.
-+ *
-+ * Copyright(C) 2024 Luke Jones <luke@ljones.dev>
-+ */
+@@ -394,6 +394,86 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
+ WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
+ ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
+ 
++/* Device memory available to APU */
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/dmi.h>
-+#include <linux/errno.h>
-+#include <linux/fs.h>
-+#include <linux/kernel.h>
-+#include <linux/kmod.h>
-+#include <linux/kobject.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_data/x86/asus-wmi.h>
-+#include <linux/printk.h>
-+#include <linux/types.h>
-+
-+#include "asus-armoury.h"
-+#include "firmware_attributes_class.h"
-+
-+#define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-+
-+#define ASUS_MINI_LED_MODE_MASK   0x03
-+/* Standard modes for devices with only on/off */
-+#define ASUS_MINI_LED_OFF         0x00
-+#define ASUS_MINI_LED_ON          0x01
-+/* Like "on" but the effect is more vibrant or brighter */
-+#define ASUS_MINI_LED_STRONG_MODE 0x02
-+/* New modes for devices with 3 mini-led mode types */
-+#define ASUS_MINI_LED_2024_WEAK   0x00
-+#define ASUS_MINI_LED_2024_STRONG 0x01
-+#define ASUS_MINI_LED_2024_OFF    0x02
-+
-+static struct asus_armoury_priv {
-+	struct device *fw_attr_dev;
-+	struct kset *fw_attr_kset;
-+
-+	u32 mini_led_dev_id;
-+	u32 gpu_mux_dev_id;
-+} asus_armoury;
-+
-+struct fw_attrs_group {
-+	bool pending_reboot;
++/* Values map for APU memory: some looks out of order but are actually correct */
++static u32 apu_mem_map[] = {
++	[0] = 0x000, /* called "AUTO" on the BIOS, is the minimum available */
++	[1] = 0x102,
++	[2] = 0x103,
++	[3] = 0x104,
++	[4] = 0x105,
++	[5] = 0x107,
++	[6] = 0x108,
++	[7] = 0x109,
++	[8] = 0x106,
 +};
 +
-+static struct fw_attrs_group fw_attrs = {
-+	.pending_reboot = false,
-+};
-+
-+struct asus_attr_group {
-+	const struct attribute_group *attr_group;
-+	u32 wmi_devid;
-+};
-+
-+static bool asus_wmi_is_present(u32 dev_id)
++static ssize_t apu_mem_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
++					  char *buf)
 +{
-+	u32 retval;
-+	int status;
-+
-+	status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, &retval);
-+	pr_debug("%s called (0x%08x), retval: 0x%08x\n", __func__, dev_id, retval);
-+
-+	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
-+}
-+
-+static void asus_set_reboot_and_signal_event(void)
-+{
-+	fw_attrs.pending_reboot = true;
-+	kobject_uevent(&asus_armoury.fw_attr_dev->kobj, KOBJ_CHANGE);
-+}
-+
-+static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", fw_attrs.pending_reboot);
-+}
-+
-+static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
-+
-+static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
-+{
-+	return !strcmp(attr->attr.name, "gpu_mux_mode");
-+}
-+
-+static int armoury_wmi_set_devstate(struct kobj_attribute *attr, u32 value, u32 wmi_dev)
-+{
-+	u32 result;
 +	int err;
++	u32 mem;
 +
-+	err = asus_wmi_set_devstate(wmi_dev, value, &result);
-+	if (err) {
-+		pr_err("Failed to set %s: %d\n", attr->attr.name, err);
-+		return err;
-+	}
-+	/*
-+	 * !1 is usually considered a fail by ASUS, but some WMI methods do use > 1
-+	 * to return a status code or similar.
-+	 */
-+	if (result < 1) {
-+		pr_err("Failed to set %s: (result): 0x%x\n", attr->attr.name, result);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * attr_uint_store() - Send an uint to wmi method, checks if within min/max exclusive.
-+ * @kobj: Pointer to the driver object.
-+ * @attr: Pointer to the attribute calling this function.
-+ * @buf: The buffer to read from, this is parsed to `uint` type.
-+ * @count: Required by sysfs attribute macros, pass in from the callee attr.
-+ * @min: Minimum accepted value. Below this returns -EINVAL.
-+ * @max: Maximum accepted value. Above this returns -EINVAL.
-+ * @store_value: Pointer to where the parsed value should be stored.
-+ * @wmi_dev: The WMI function ID to use.
-+ *
-+ * This function is intended to be generic so it can be called from any "_store"
-+ * attribute which works only with integers. The integer to be sent to the WMI method
-+ * is range checked and an error returned if out of range.
-+ *
-+ * If the value is valid and WMI is success, then the sysfs attribute is notified
-+ * and if asus_bios_requires_reboot() is true then reboot attribute is also notified.
-+ *
-+ * Returns: Either count, or an error.
-+ */
-+static ssize_t attr_uint_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf,
-+			      size_t count, u32 min, u32 max, u32 *store_value, u32 wmi_dev)
-+{
-+	u32 value;
-+	int err;
-+
-+	err = kstrtouint(buf, 10, &value);
++	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_APU_MEM, &mem);
 +	if (err)
 +		return err;
 +
-+	if (value < min || value > max)
-+		return -EINVAL;
-+
-+	err = armoury_wmi_set_devstate(attr, value, wmi_dev);
-+	if (err)
-+		return err;
-+
-+	if (store_value != NULL)
-+		*store_value = value;
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	if (asus_bios_requires_reboot(attr))
-+		asus_set_reboot_and_signal_event();
-+
-+	return count;
-+}
-+
-+static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			      char *buf)
-+{
-+	return sysfs_emit(buf, "enumeration\n");
-+}
-+
-+/* Mini-LED mode **************************************************************/
-+static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
-+						struct kobj_attribute *attr, char *buf)
-+{
-+	u32 value;
-+	int err;
-+
-+	err = asus_wmi_get_devstate_dsts(asus_armoury.mini_led_dev_id, &value);
-+	if (err)
-+		return err;
-+
-+	value &= ASUS_MINI_LED_MODE_MASK;
-+
-+	/*
-+	 * Remap the mode values to match previous generation mini-LED. The last gen
-+	 * WMI 0 == off, while on this version WMI 2 == off (flipped).
-+	 */
-+	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-+		switch (value) {
-+		case ASUS_MINI_LED_2024_WEAK:
-+			value = ASUS_MINI_LED_ON;
-+			break;
-+		case ASUS_MINI_LED_2024_STRONG:
-+			value = ASUS_MINI_LED_STRONG_MODE;
-+			break;
-+		case ASUS_MINI_LED_2024_OFF:
-+			value = ASUS_MINI_LED_OFF;
-+			break;
-+		}
-+	}
-+
-+	return sysfs_emit(buf, "%u\n", value);
-+}
-+
-+static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
-+						 struct kobj_attribute *attr,
-+						const char *buf, size_t count)
-+{
-+	u32 mode;
-+	int err;
-+
-+	err = kstrtou32(buf, 10, &mode);
-+	if (err)
-+		return err;
-+
-+	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE &&
-+	    mode > ASUS_MINI_LED_ON)
-+		return -EINVAL;
-+	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2 &&
-+	    mode > ASUS_MINI_LED_STRONG_MODE)
-+		return -EINVAL;
-+
-+	/*
-+	 * Remap the mode values so expected behaviour is the same as the last
-+	 * generation of mini-LED with 0 == off, 1 == on.
-+	 */
-+	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-+		switch (mode) {
-+		case ASUS_MINI_LED_OFF:
-+			mode = ASUS_MINI_LED_2024_OFF;
-+			break;
-+		case ASUS_MINI_LED_ON:
-+			mode = ASUS_MINI_LED_2024_WEAK;
-+			break;
-+		case ASUS_MINI_LED_STRONG_MODE:
-+			mode = ASUS_MINI_LED_2024_STRONG;
-+			break;
-+		}
-+	}
-+
-+	err = armoury_wmi_set_devstate(attr, mode, asus_armoury.mini_led_dev_id);
-+	if (err)
-+		return err;
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	return count;
-+}
-+
-+static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
-+						  struct kobj_attribute *attr, char *buf)
-+{
-+	switch (asus_armoury.mini_led_dev_id) {
-+	case ASUS_WMI_DEVID_MINI_LED_MODE:
-+		return sysfs_emit(buf, "0;1\n");
-+	case ASUS_WMI_DEVID_MINI_LED_MODE2:
-+		return sysfs_emit(buf, "0;1;2\n");
-+	default:
++	if ((mem & ASUS_WMI_DSTS_PRESENCE_BIT) == 0)
 +		return -ENODEV;
++
++	mem &= ~ASUS_WMI_DSTS_PRESENCE_BIT;
++
++	/* After 0x000 is set, a read will return 0x100 */
++	if (mem == 0x100)
++		return sysfs_emit(buf, "0\n");
++
++	for (unsigned int i = 0; i < ARRAY_SIZE(apu_mem_map); i++) {
++		if (apu_mem_map[i] == mem)
++			return sysfs_emit(buf, "%u\n", i);
 +	}
++
++	pr_warn("Unrecognised value for APU mem 0x%08x\n", mem);
++	return sysfs_emit(buf, "%u\n", mem);
 +}
 +
-+ATTR_GROUP_ENUM_CUSTOM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
-+
-+static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
-+						struct kobj_attribute *attr, const char *buf,
-+						size_t count)
++static ssize_t apu_mem_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
++					   const char *buf, size_t count)
 +{
 +	int result, err;
-+	u32 optimus;
++	u32 requested, mem;
 +
-+	err = kstrtou32(buf, 10, &optimus);
-+	if (err)
-+		return err;
++	result = kstrtou32(buf, 10, &requested);
++	if (result)
++		return result;
 +
-+	if (optimus > 1)
++	if (requested > ARRAY_SIZE(apu_mem_map))
 +		return -EINVAL;
 +
-+	if (asus_wmi_is_present(ASUS_WMI_DEVID_DGPU)) {
-+		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_DGPU, &result);
-+		if (err)
-+			return err;
-+		if (result && !optimus) {
-+			pr_warn("Can not switch MUX to dGPU mode when dGPU is disabled: %02X %02X\n",
-+				result, optimus);
-+			return -ENODEV;
-+		}
-+	}
++	mem = apu_mem_map[requested];
 +
-+	if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU)) {
-+		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU, &result);
-+		if (err)
-+			return err;
-+		if (result && !optimus) {
-+			pr_warn("Can not switch MUX to dGPU mode when eGPU is enabled\n");
-+			return -EBUSY;
-+		}
-+	}
-+
-+	err = armoury_wmi_set_devstate(attr, optimus, asus_armoury.gpu_mux_dev_id);
-+	if (err)
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_APU_MEM, mem, &result);
++	if (err) {
++		pr_warn("Failed to set apu_mem: %d\n", err);
 +		return err;
++	}
 +
++	pr_info("APU memory changed to %uGB, reboot required\n", requested+1);
 +	sysfs_notify(kobj, NULL, attr->attr.name);
++
 +	asus_set_reboot_and_signal_event();
 +
 +	return count;
 +}
-+WMI_SHOW_INT(gpu_mux_mode_current_value, "%u\n", asus_armoury.gpu_mux_dev_id);
-+ATTR_GROUP_BOOL_CUSTOM(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
 +
-+/*
-+ * A user may be required to store the value twice, typical store first, then
-+ * rescan PCI bus to activate power, then store a second time to save correctly.
-+ */
-+static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
-+						struct kobj_attribute *attr, const char *buf,
-+						size_t count)
++static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
++					    char *buf)
 +{
-+	int result, err;
-+	u32 disable;
-+
-+	err = kstrtou32(buf, 10, &disable);
-+	if (err)
-+		return err;
-+
-+	if (disable > 1)
-+		return -EINVAL;
-+
-+	if (asus_armoury.gpu_mux_dev_id) {
-+		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-+		if (err)
-+			return err;
-+		if (!result && disable) {
-+			pr_warn("Can not disable dGPU when the MUX is in dGPU mode\n");
-+			return -EBUSY;
-+		}
-+	}
-+
-+	err = armoury_wmi_set_devstate(attr, disable, ASUS_WMI_DEVID_DGPU);
-+	if (err)
-+		return err;
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	return count;
++	BUILD_BUG_ON(ARRAY_SIZE(apu_mem_map) != 9);
++	return sysfs_emit(buf, "0;1;2;3;4;5;6;7;8\n");
 +}
-+WMI_SHOW_INT(dgpu_disable_current_value, "%d\n", ASUS_WMI_DEVID_DGPU);
-+ATTR_GROUP_BOOL_CUSTOM(dgpu_disable, "dgpu_disable", "Disable the dGPU");
++ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
 +
-+/* The ACPI call to enable the eGPU also disables the internal dGPU */
-+static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-+					       const char *buf, size_t count)
-+{
-+	int result, err;
-+	u32 enable;
-+
-+	err = kstrtou32(buf, 10, &enable);
-+	if (err)
-+		return err;
-+
-+	if (enable > 1)
-+		return -EINVAL;
-+
-+	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU_CONNECTED, &result);
-+	if (err) {
-+		pr_warn("Failed to get eGPU connection status: %d\n", err);
-+		return err;
-+	}
-+
-+	if (asus_armoury.gpu_mux_dev_id) {
-+		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-+		if (err) {
-+			pr_warn("Failed to get GPU MUX status: %d\n", result);
-+			return err;
-+		}
-+		if (!result && enable) {
-+			pr_warn("Can not enable eGPU when the MUX is in dGPU mode\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	err = armoury_wmi_set_devstate(attr, enable, ASUS_WMI_DEVID_EGPU);
-+	if (err)
-+		return err;
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	return count;
-+}
-+WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
-+ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
-+
-+/* Simple attribute creation */
-+ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
-+		       "Show the current mode of charging");
-+
-+ATTR_GROUP_BOOL_RW(boot_sound, "boot_sound", ASUS_WMI_DEVID_BOOT_SOUND,
-+		   "Set the boot POST sound");
-+ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", ASUS_WMI_DEVID_MCU_POWERSAVE,
-+		   "Set MCU powersaving mode");
-+ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
-+		   "Set the panel refresh overdrive");
-+ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
-+		   "Show the eGPU connection status");
-+
-+/* If an attribute does not require any special case handling add it here */
-+static const struct asus_attr_group armoury_attr_groups[] = {
-+	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
-+	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
-+	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
-+
-+	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
-+	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-+	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
-+	{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
-+};
-+
-+static int asus_fw_attr_add(void)
-+{
-+	int err, i;
-+
-+	asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-+						NULL, "%s", DRIVER_NAME);
-+	if (IS_ERR(asus_armoury.fw_attr_dev)) {
-+		err = PTR_ERR(asus_armoury.fw_attr_dev);
-+		goto fail_class_get;
-+	}
-+
-+	asus_armoury.fw_attr_kset = kset_create_and_add("attributes", NULL,
-+						&asus_armoury.fw_attr_dev->kobj);
-+	if (!asus_armoury.fw_attr_kset) {
-+		err = -ENOMEM;
-+		goto err_destroy_classdev;
-+	}
-+
-+	err = sysfs_create_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-+	if (err) {
-+		pr_err("Failed to create sysfs level attributes\n");
-+		goto err_destroy_kset;
-+	}
-+
-+	asus_armoury.mini_led_dev_id = 0;
-+	if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE))
-+		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-+	else if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE2))
-+		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
-+
-+	if (asus_armoury.mini_led_dev_id) {
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+					 &mini_led_mode_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for mini_led\n");
-+			goto err_remove_file;
-+		}
-+	}
-+
-+	asus_armoury.gpu_mux_dev_id = 0;
-+	if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX))
-+		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX;
-+	else if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX_VIVO))
-+		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX_VIVO;
-+
-+	if (asus_armoury.gpu_mux_dev_id) {
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+					 &gpu_mux_mode_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for gpu_mux\n");
-+			goto err_remove_mini_led_group;
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
-+		if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
-+			continue;
-+
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+					 armoury_attr_groups[i].attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for %s\n",
-+			       armoury_attr_groups[i].attr_group->name);
-+			goto err_remove_groups;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_remove_groups:
-+	while (i--) {
-+		if (asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
-+			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
-+					   armoury_attr_groups[i].attr_group);
-+	}
-+	if (asus_armoury.gpu_mux_dev_id)
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-+err_remove_mini_led_group:
-+	if (asus_armoury.mini_led_dev_id)
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
-+err_remove_file:
-+	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-+err_destroy_kset:
-+	kset_unregister(asus_armoury.fw_attr_kset);
-+err_destroy_classdev:
-+fail_class_get:
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-+	return err;
-+}
-+
-+/* Init / exit ****************************************************************/
-+
-+static int __init asus_fw_init(void)
-+{
-+	char *wmi_uid;
-+
-+	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
-+	if (!wmi_uid)
-+		return -ENODEV;
-+
-+	/*
-+	 * if equal to "ASUSWMI" then it's DCTS that can't be used for this
-+	 * driver, DSTS is required.
-+	 */
-+	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
-+		return -ENODEV;
-+
-+	return asus_fw_attr_add();
-+}
-+
-+static void __exit asus_fw_exit(void)
-+{
-+	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-+	kset_unregister(asus_armoury.fw_attr_kset);
-+	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-+}
-+
-+module_init(asus_fw_init);
-+module_exit(asus_fw_exit);
-+
-+MODULE_IMPORT_NS("ASUS_WMI");
-+MODULE_AUTHOR("Luke Jones <luke@ljones.dev>");
-+MODULE_DESCRIPTION("ASUS BIOS Configuration Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("wmi:" ASUS_NB_WMI_EVENT_GUID);
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-new file mode 100644
-index 000000000000..61675e7b5a60
---- /dev/null
-+++ b/drivers/platform/x86/asus-armoury.h
-@@ -0,0 +1,164 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Definitions for kernel modules using asus-armoury driver
-+ *
-+ *  Copyright (c) 2024 Luke Jones <luke@ljones.dev>
-+ */
-+
-+#ifndef _ASUS_ARMOURY_H_
-+#define _ASUS_ARMOURY_H_
-+
-+#include <linux/types.h>
-+#include <linux/platform_device.h>
-+
-+#define DRIVER_NAME "asus-armoury"
-+
-+#define __ASUS_ATTR_RO(_func, _name)					\
-+	{								\
-+		.attr = { .name = __stringify(_name), .mode = 0444 },	\
-+		.show = _func##_##_name##_show,				\
-+	}
-+
-+#define __ASUS_ATTR_RO_AS(_name, _show)					\
-+	{								\
-+		.attr = { .name = __stringify(_name), .mode = 0444 },	\
-+		.show = _show,						\
-+	}
-+
-+#define __ASUS_ATTR_RW(_func, _name) \
-+	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-+
-+#define __WMI_STORE_INT(_attr, _min, _max, _wmi)			\
-+	static ssize_t _attr##_store(struct kobject *kobj,		\
-+				     struct kobj_attribute *attr,	\
-+				     const char *buf, size_t count)	\
-+	{								\
-+		return attr_uint_store(kobj, attr, buf, count, _min,	\
-+					_max, NULL, _wmi);		\
-+	}
-+
-+#define WMI_SHOW_INT(_attr, _fmt, _wmi)						\
-+	static ssize_t _attr##_show(struct kobject *kobj,			\
-+				    struct kobj_attribute *attr, char *buf)	\
-+	{									\
-+		u32 result;							\
-+		int err;							\
-+										\
-+		err = asus_wmi_get_devstate_dsts(_wmi, &result);		\
-+		if (err)							\
-+			return err;						\
-+		return sysfs_emit(buf, _fmt,					\
-+				  result & ~ASUS_WMI_DSTS_PRESENCE_BIT);	\
-+	}
-+
-+/* Create functions and attributes for use in other macros or on their own */
-+
-+/* Shows a formatted static variable */
-+#define __ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)				\
-+	static ssize_t _attrname##_##_prop##_show(				\
-+		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-+	{									\
-+		return sysfs_emit(buf, _fmt, _val);				\
-+	}									\
-+	static struct kobj_attribute attr_##_attrname##_##_prop =		\
-+		__ASUS_ATTR_RO(_attrname, _prop)
-+
-+#define __ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)\
-+	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);			\
-+	static struct kobj_attribute attr_##_attrname##_current_value =		\
-+		__ASUS_ATTR_RO(_attrname, current_value);			\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
-+	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);		\
-+	static struct kobj_attribute attr_##_attrname##_type =			\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);			\
-+	static struct attribute *_attrname##_attrs[] = {			\
-+		&attr_##_attrname##_current_value.attr,				\
-+		&attr_##_attrname##_display_name.attr,				\
-+		&attr_##_attrname##_possible_values.attr,			\
-+		&attr_##_attrname##_type.attr,					\
-+		NULL								\
-+	};									\
-+	static const struct attribute_group _attrname##_attr_group = {		\
-+		.name = _fsname, .attrs = _attrname##_attrs			\
-+	}
-+
-+#define __ATTR_RW_INT_GROUP_ENUM(_attrname, _minv, _maxv, _wmi, _fsname,\
-+				 _possible, _dispname)			\
-+	__WMI_STORE_INT(_attrname##_current_value, _minv, _maxv, _wmi);	\
-+	WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
-+	static struct kobj_attribute attr_##_attrname##_current_value =	\
-+		__ASUS_ATTR_RW(_attrname, current_value);		\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);	\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_possible_values.attr,		\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname, .attrs = _attrname##_attrs		\
-+	}
-+
-+/* Boolean style enumeration, base macro. Requires adding show/store */
-+#define __ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)	\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible);	\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_possible_values.attr,		\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname, .attrs = _attrname##_attrs		\
-+	}
-+
-+#define ATTR_GROUP_BOOL_RO(_attrname, _fsname, _wmi, _dispname)	\
-+	__ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, "0;1", _dispname)
-+
-+
-+#define ATTR_GROUP_BOOL_RW(_attrname, _fsname, _wmi, _dispname)	\
-+	__ATTR_RW_INT_GROUP_ENUM(_attrname, 0, 1, _wmi, _fsname, "0;1", _dispname)
-+
-+#define ATTR_GROUP_ENUM_INT_RO(_attrname, _fsname, _wmi, _possible, _dispname)	\
-+	__ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)
-+
-+/*
-+ * Requires <name>_current_value_show(), <name>_current_value_show()
-+ */
-+#define ATTR_GROUP_BOOL_CUSTOM(_attrname, _fsname, _dispname)		\
-+	static struct kobj_attribute attr_##_attrname##_current_value =	\
-+		__ASUS_ATTR_RW(_attrname, current_value);		\
-+	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-+
-+/*
-+ * Requires <name>_current_value_show(), <name>_current_value_show()
-+ * and <name>_possible_values_show()
-+ */
-+#define ATTR_GROUP_ENUM_CUSTOM(_attrname, _fsname, _dispname)			\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
-+	static struct kobj_attribute attr_##_attrname##_current_value =		\
-+		__ASUS_ATTR_RW(_attrname, current_value);			\
-+	static struct kobj_attribute attr_##_attrname##_possible_values =	\
-+		__ASUS_ATTR_RO(_attrname, possible_values);			\
-+	static struct kobj_attribute attr_##_attrname##_type =			\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);			\
-+	static struct attribute *_attrname##_attrs[] = {			\
-+		&attr_##_attrname##_current_value.attr,				\
-+		&attr_##_attrname##_display_name.attr,				\
-+		&attr_##_attrname##_possible_values.attr,			\
-+		&attr_##_attrname##_type.attr,					\
-+		NULL								\
-+	};									\
-+	static const struct attribute_group _attrname##_attr_group = {		\
-+		.name = _fsname, .attrs = _attrname##_attrs			\
-+	}
-+
-+#endif /* _ASUS_ARMOURY_H_ */
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e31e0264a160..d595225425fb 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -30,6 +30,7 @@
- #include <linux/pci.h>
- #include <linux/pci_hotplug.h>
- #include <linux/platform_data/x86/asus-wmi.h>
-+#include <linux/platform_data/x86/asus-wmi-leds-ids.h>
- #include <linux/platform_device.h>
- #include <linux/platform_profile.h>
- #include <linux/power_supply.h>
-@@ -55,8 +56,6 @@ module_param(fnlock_default, bool, 0444);
- #define to_asus_wmi_driver(pdrv)					\
- 	(container_of((pdrv), struct asus_wmi_driver, platform_driver))
+ /* Simple attribute creation */
+ ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
+ 		       "Show the current mode of charging");
+@@ -414,6 +494,7 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+ 	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
+ 	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
+ 	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
++	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
  
--#define ASUS_WMI_MGMT_GUID	"97845ED0-4E6D-11DE-8A39-0800200C9A66"
--
- #define NOTIFY_BRNUP_MIN		0x11
- #define NOTIFY_BRNUP_MAX		0x1f
- #define NOTIFY_BRNDOWN_MIN		0x20
-@@ -105,8 +104,6 @@ module_param(fnlock_default, bool, 0444);
- #define USB_INTEL_XUSB2PR		0xD0
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
- 
--#define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
--
- #define WMI_EVENT_MASK			0xFFFF
- 
- #define FAN_CURVE_POINTS		8
-diff --git a/include/linux/platform_data/x86/asus-wmi-leds-ids.h b/include/linux/platform_data/x86/asus-wmi-leds-ids.h
-new file mode 100644
-index 000000000000..281b98ba0ca7
---- /dev/null
-+++ b/include/linux/platform_data/x86/asus-wmi-leds-ids.h
-@@ -0,0 +1,50 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PLATFORM_DATA_X86_ASUS_WMI_LEDS_IDS_H
-+#define __PLATFORM_DATA_X86_ASUS_WMI_LEDS_IDS_H
-+
-+#include <linux/types.h>
-+#include <linux/dmi.h>
-+
-+/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-+#if IS_REACHABLE(CONFIG_ASUS_WMI) || IS_REACHABLE(CONFIG_HID_ASUS)
-+static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Zephyrus"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Strix"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Flow"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-+		},
-+	},
-+	{ },
-+};
-+#endif
-+
-+#endif	/* __PLATFORM_DATA_X86_ASUS_WMI_LEDS_IDS_H */
+ 	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
+ 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
 diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index dbd44d9fbb6f..71c68425b3b9 100644
+index 10acd5d52e38..a4f6bab93a6f 100644
 --- a/include/linux/platform_data/x86/asus-wmi.h
 +++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -6,6 +6,9 @@
- #include <linux/types.h>
- #include <linux/dmi.h>
+@@ -137,6 +137,8 @@
+ /* dgpu on/off */
+ #define ASUS_WMI_DEVID_DGPU		0x00090020
  
-+#define ASUS_WMI_MGMT_GUID	"97845ED0-4E6D-11DE-8A39-0800200C9A66"
-+#define ASUS_ACPI_UID_ASUSWMI	"ASUSWMI"
++#define ASUS_WMI_DEVID_APU_MEM		0x000600C1
 +
- /* WMI Methods */
- #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
- #define ASUS_WMI_METHODID_SFBD		0x44424653 /* Set First Boot Device */
-@@ -191,44 +194,4 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
- }
- #endif
- 
--/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
--static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
--	{
--		.matches = {
--			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Zephyrus"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Strix"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Flow"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
--		},
--	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
--		},
--	},
--	{ },
--};
--
- #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
+ /* gpu mux switch, 0 = dGPU, 1 = Optimus */
+ #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
+ #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
 -- 
 2.39.5
 
