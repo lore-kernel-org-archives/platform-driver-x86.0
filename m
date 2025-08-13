@@ -1,294 +1,231 @@
-Received: from sender5.mail.selcloud.ru (sender5.mail.selcloud.ru [5.8.75.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B25F286D42;
-	Wed, 13 Aug 2025 15:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.8.75.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD80287510;
+	Wed, 13 Aug 2025 16:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755100157; cv=none; b=RXXrPybK9q+u3tg2y38ABw51bkLbw62Jqyz4hCWueJTD6ni/n36+NVQ4yrhpmiyT9zSiSut66lAF0LMjXQbIo7BhLbs7ttn4QZH2SkL56qR1y5aIWPPZvPOlz9cjBrG2xKYUYa4LKO3mBUzA+CsRxvmaHeCzR97M93ODnOAIIco=
+	t=1755104190; cv=none; b=imTrvcFojlh/1RjC2U3gFI3O2CiLDNHeXA71UfHaqiWhqJ0Ykw4UAeeXz5Jfw5/IVnKiMxiGDiL7ZyBWMnZ5jn7OgWazCiN+sRgKbZ/gG9oIfdihbo8k3EbG/Wg1uMczNoj+XD1l9E1BkxYBRmOwqGs0nhaq+F1pETc9MkPQXh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755100157; c=relaxed/simple;
-	bh=KaVYbjPdXJcoF0koEVQDqyxopMibYjGRBwHW8E6wUJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hhT+3B2RvcGTA/faWHQ4dbNfhAUqUicHe4H+medKAaZa4rfXK4hhvjE9tbBiqhsuEaj3H4ya7lcIJyZyxis24BZ5/PkigZFhsxRaR+g3I/+swVz/RJOJTAPxuHxsNiZnN1/MuHDV3WB/OUrSEyeMA7ug98krZPdGEwGkzaTRefo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=mail.selcloud.ru; dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b=AGrBXgds; dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=juK8mAdA; dkim=fail (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=QnCXE/nc reason="signature verification failed"; arc=none smtp.client-ip=5.8.75.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.selcloud.ru
+	s=arc-20240116; t=1755104190; c=relaxed/simple;
+	bh=cDZQ03cVnTPpzRfyqUzlSr90Hr4NFUtBugpQqyj73nI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n1Okr77792qiK3jUKaPiSjvAqUdjRDU9x20tYW/qm9E8jwhCAzDikpCJzC43SoWcEmNYsoIyT5IIogVtPa3bzW2JiOjccn82/9OPEw/OAcKVW1gSWvjDDDoDtfi4SZOGcv6XVgizjdS8cjhtjy01J+jq1q3RTkOIyyn+0Ip5iBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXniqFu7; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b="AGrBXgds";
-	dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="juK8mAdA";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="QnCXE/nc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.selcloud.ru; s=selcloud; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Help:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZFAIijc4fye6M+GUPZT2rKrbn5WLnJzmrCv8+KZckuA=; t=1755100153; x=1755272953;
-	 b=AGrBXgdsekA9+2qdMQJ3dwYI6kHxuyIkk8G2tfEJyARB6X/6hzKJ40kQBDqFxH7pMm741EQ7h5
-	QhfvGwDVnSnbVz1VlCfNGvMVMI5BlR1KeezVkd7nqkbBDGMnNWzx09kUXC0weiCiPJqHWaFsCtF8C
-	9P1HI2r/j/6I21caYbO8=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=foxido.dev;
-	 s=selcloud; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Help:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=ZFAIijc4fye6M+GUPZT2rKrbn5WLnJzmrCv8+KZckuA=;
-	t=1755100153; x=1755272953; b=juK8mAdAd8FdRHuR1ot7rOBzM4bNEnxIvs5b9UsTfUIDmgI
-	tWGMOBESxk7u3MObB5vMlDV0JVpkdPSYEYAVJqRFfrycWygQRwz3fUUoXU24PhWJges3kgmJ4rJvc
-	kV9vxhdb1GWs18TfHx/WQDxrItK/Cs64hy0HLEC9SsvgNZs=;
-Precedence: bulk
-X-Issuen: 1137846
-X-User: 280060488
-X-Postmaster-Msgtype: 3849
-Feedback-ID: 1137846:15965:3849:samotpravil
-X-From: foxido.dev
-X-from-id: 15965
-X-MSG-TYPE: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-X-blist-id: 3849
-X-Gungo: 20250728.224157
-X-SMTPUID: mlgnr59
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxido.dev; s=dkim;
-	t=1755099129; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=HLeWuj70V6Rqd1lzNjH51t84oQQZtNSLoLFczbHw8Qk=;
-	b=QnCXE/ncw9G/iPQrz68hw2m14oVprOIq6gguZdCQPxmiRzYBbXWsRtixi4GznLg60c9sVD
-	AX7xS3NrEAptOPKoKBbIUxgE6n1fx4gIiK4TmvvKsNUvoWG+RHU9PvFBe+bHgFGt86PoAi
-	DizwCFOUAIYHi1ZsCuDadT9UABJ9hACs6UeSqlINx9lLGRbGy03kFb5J81qrkc98yF89Vy
-	sGipNawlkFlMvRWwOQueS3b1OfsM/TFONcfxIzV2AbxE972QfMQBrhAx4wER0KE23MlpC5
-	F26YneBVi/MWnVvFrYvbNXiBwqW9vACKOAIxMMLuMNsXYKwhxZLaZkhyCQOptg==
-From: Gladyshev Ilya <foxido@foxido.dev>
-To: foxido@foxido.dev
-Cc: w_armin@gmx.de,
-	linux-input@vger.kernel.org,
-	nikita.nikita.krasnov@gmail.com,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXniqFu7"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3b9e4148134so11796f8f.2;
+        Wed, 13 Aug 2025 09:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755104186; x=1755708986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6vspPggjf6bubnMbRlZ+WsSEeGAjNQXmQ3Io8O2p1g0=;
+        b=WXniqFu7bA41485RzIoIzn1laTKuwJ+8mZ0Btku1fvQHhuoR6gl/VNSHByisV+Nsyi
+         F5L5Tg4iSlUM1xyytNIONLzwQAnaml3xekY4K4/y/VQRGSLkaYj+uVse8qCRp5k8M3fS
+         ISbbSYLEvU4CgyXmAjH8M+1FXpMhdQAMyitpACGjjopRGbHXpSlv7fTH/mVQ1h2Y4HBv
+         YygXr7jkzVt5PvL4r/GydJP/MiLijqxVUbURdiQgrdc/Jtr5NN7fDC6lu7VcdlFfSDtM
+         iY0wFdDgqxVcGC2n2bDLjJYyP6lcbw/Csfqyiek42Q+wa8uEtoh0dBSpF/2QwBzIPLDQ
+         j6cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755104186; x=1755708986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6vspPggjf6bubnMbRlZ+WsSEeGAjNQXmQ3Io8O2p1g0=;
+        b=uWtUq3Grn6hGEZl4nWJYaEf6iBRN/rNZljJ2oeYP7itrMu7I2ob1kl6ZsvFFBQOfCU
+         IQyPpVX2ZAOdgd7ZlDP3Hnw+fD8fvVGJH69jOoMUtlAfU9mUSLf8d3LY8Z790dStZPqh
+         E0J0B5OFUAJ53kXJHCZHB+/XItDyozZ1JjjSeNIT1dmj0IT8fSc5bNCYzl0wg/9woRf6
+         4AWYNqyHZvLvW0laWo9OJ9GghN9b7p8mnHE+nJiUfg2OuekvsJTh3jLamNu+z1kOWUQN
+         rcJUu751dG1ggWFluIgqWnvnMfqFZOuxg/8AHqqZoCdaUZPht3eCZW98GfCv6IzWSCsz
+         lBvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTV9VbYJgakooYsgqpp26F11flHDssCrL0q+2qE74WTiD7I5tGCesn8qQJVIHe+iXqhnIcTjXKbSUZEYTLXc8khIhr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnG1KM20f2fSohjxWWjmhp/xhwggVa4CgXROM5OOPXIDEqe7tb
+	sbv0pHdtqkVm7pH2EQzJY/VKKa+m6rZ0fmw+QOpM4t2guABWA2CwfKfckYo2cw==
+X-Gm-Gg: ASbGncsoGe+FGhYBSKTe4udM6EpVRcDdnW+Dk1MDdjgwEAG9OdCtAJXa2FYHVT0rmC0
+	XfZBSIs+sOcfQ30DI53DdZ68O6GnL5swTJzQYKjW5VgRtCcSsBdYKfCBDg4XmyGLG+TAFfMJ7bP
+	vAf9qHqI/Qzw6f2JV6vFUgTw2ACXGDvXFg7hcL85/FnHTuEph0ba/faZqapEmhJSV6APi2cMQk1
+	S4LwNKYs9NqZq3B+gY+cvM/1av3Dvp+AlE59IZ21mnGhXipkhHFyS0priH4lFBb3Unjy79PX6qx
+	NIJsx1U9XSbQL0KXCLjujZajRGEyk1gSXKU2GWAnjbyf0djVAJBcMzIm7ZkG4hzyDVnnSHqfszG
+	iwFcgTxSTiIQag2SQFUMRbq4=
+X-Google-Smtp-Source: AGHT+IExaDRQamESqI7WrrCVloOBLd7avpvA6Fee7Zn3GKcybQvl3WvVhSW1yWyYijTdLt7QCP2ugg==
+X-Received: by 2002:a05:6000:24c7:b0:3a3:7ba5:93a5 with SMTP id ffacd0b85a97d-3b9edfcef3emr28090f8f.26.1755104186041;
+        Wed, 13 Aug 2025 09:56:26 -0700 (PDT)
+Received: from denis-pc ([176.206.95.68])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c48de68sm48600399f8f.67.2025.08.13.09.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Aug 2025 09:56:25 -0700 (PDT)
+From: Denis Benato <benato.denis96@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5] platform/x86: Add WMI driver for Redmibook keyboard.
-Date: Wed, 13 Aug 2025 18:31:28 +0300
-Message-ID: <20250813153137.18355-1-foxido@foxido.dev>
-X-Mailer: git-send-email 2.50.0
+	platform-driver-x86@vger.kernel.org,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Alok Tiwari <alok.a.tiwari@oracle.com>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: [PATCH v11 0/8] platform/x86: Add asus-armoury driver
+Date: Wed, 13 Aug 2025 18:56:12 +0200
+Message-ID: <20250813165620.1131127-1-benato.denis96@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This driver implements support for various Fn keys (like Cut) and Xiaomi
-specific AI button.
+Hi all,
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
----
-Changes since v4:
-- Cosmetic fixes from Ilpo's review (posted on v3)
+the TL;DR:
+1. Introduce new module to contain bios attributes, using fw_attributes_class
+2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+3. Remove those in the next LTS cycle
 
-Link to v4: https://lore.kernel.org/platform-driver-x86/20250801120321.97=
-42-1-foxido@foxido.dev
----
- MAINTAINERS                      |   6 ++
- drivers/platform/x86/Kconfig     |  12 +++
- drivers/platform/x86/Makefile    |   1 +
- drivers/platform/x86/redmi-wmi.c | 128 +++++++++++++++++++++++++++++++
- 4 files changed, 147 insertions(+)
- create mode 100644 drivers/platform/x86/redmi-wmi.c
+The idea for this originates from a conversation with Mario Limonciello
+https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c0b444e5fd5a..eb25fb10e751 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20965,6 +20965,12 @@ S:	Maintained
- T:	git https://github.com/pkshih/rtw.git
- F:	drivers/net/wireless/realtek/rtw89/
-=20
-+REDMIBOOK WMI DRIVERS
-+M:	Gladyshev Ilya <foxido@foxido.dev>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/redmi-wmi.c
-+
- REDPINE WIRELESS DRIVER
- L:	linux-wireless@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e5cbd58a99f3..9f98a7042e43 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -109,6 +109,18 @@ config XIAOMI_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called xiaomi-wmi.
-=20
-+config REDMI_WMI
-+	tristate "Redmibook WMI key driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	help
-+	  Say Y here if you want support for WMI-based hotkey events on
-+	  Xiaomi Redmibook devices.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called redmi-wmi.
-+
- config GIGABYTE_WMI
- 	tristate "Gigabyte WMI temperature driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-index bea87a85ae75..406dd0807ba7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+=3D huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+=3D mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+=3D nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+=3D xiaomi-wmi.o
-+obj-$(CONFIG_REDMI_WMI)			+=3D redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+=3D gigabyte-wmi.o
-=20
- # Acer
-diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redm=
-i-wmi.c
-new file mode 100644
-index 000000000000..104c4953d67d
---- /dev/null
-+++ b/drivers/platform/x86/redmi-wmi.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* WMI driver for Xiaomi Redmibooks */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/unaligned.h>
-+#include <linux/wmi.h>
-+
-+#include <uapi/linux/input-event-codes.h>
-+
-+#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BC=
-A757FEF"
-+
-+#define AI_KEY_VALUE_MASK 0x00000100
-+
-+static const struct key_entry redmi_wmi_keymap[] =3D {
-+	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
-+	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
-+	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
-+
-+	/* AI button has code for each position */
-+	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
-+	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
-+
-+	/* Keyboard backlight */
-+	{KE_IGNORE, 0x00000501, {}},
-+	{KE_IGNORE, 0x00800501, {}},
-+	{KE_IGNORE, 0x00050501, {}},
-+	{KE_IGNORE, 0x000a0501, {}},
-+
-+	{KE_END}
-+};
-+
-+struct redmi_wmi {
-+	struct input_dev *input_dev;
-+	/* Protects the key event sequence */
-+	struct mutex key_lock;
-+};
-+
-+static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct redmi_wmi *data;
-+	int err;
-+
-+	/* Init dev */
-+	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, data);
-+
-+	err =3D devm_mutex_init(&wdev->dev, &data->key_lock);
-+	if (err)
-+		return err;
-+
-+	data->input_dev =3D devm_input_allocate_device(&wdev->dev);
-+	if (!data->input_dev)
-+		return -ENOMEM;
-+
-+	data->input_dev->name =3D "Redmibook WMI keys";
-+	data->input_dev->phys =3D "wmi/input0";
-+
-+	err =3D sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
-+	if (err)
-+		return err;
-+
-+	return input_register_device(data->input_dev);
-+}
-+
-+static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object =
-*obj)
-+{
-+	struct redmi_wmi *data =3D dev_get_drvdata(&wdev->dev);
-+	bool autorelease =3D true;
-+	u32 payload;
-+	int value =3D 1;
-+
-+	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-+		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-+		return;
-+	}
-+
-+	if (obj->buffer.length < 32) {
-+		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-+		return;
-+	}
-+
-+	payload =3D get_unaligned_le32(obj->buffer.pointer);
-+	struct key_entry *entry =3D sparse_keymap_entry_from_scancode(data->inp=
-ut_dev, payload);
-+
-+	if (!entry) {
-+		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
-+		return;
-+	}
-+
-+	/* AI key quirk */
-+	if (entry->keycode =3D=3D KEY_ASSISTANT) {
-+		value =3D !(payload & AI_KEY_VALUE_MASK);
-+		autorelease =3D false;
-+	}
-+
-+	guard(mutex)(&data->key_lock);
-+	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
-+}
-+
-+static const struct wmi_device_id redmi_wmi_id_table[] =3D {
-+	{ WMI_REDMIBOOK_KEYBOARD_EVENT_GUID, NULL },
-+	{ }
-+};
-+
-+static struct wmi_driver redmi_wmi_driver =3D {
-+	.driver =3D {
-+		.name =3D "redmi-wmi",
-+		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table =3D redmi_wmi_id_table,
-+	.probe =3D redmi_wmi_probe,
-+	.notify =3D redmi_wmi_notify,
-+	.no_singleton =3D true,
-+};
-+module_wmi_driver(redmi_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
-+MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
-+MODULE_DESCRIPTION("Redmibook WMI driver");
-+MODULE_LICENSE("GPL");
---=20
-2.50.0
+It is without a doubt much cleaner to use, easier to discover, and the
+API is well defined as opposed to the random clutter of attributes I had
+been placing in the platform sysfs. Given that Derek is also working on a
+similar approach to Lenovo in part based on my initial work I'd like to think
+that the overall approach is good and may become standardised for these types
+of things.
+
+Regarding PPT: it is intended to add support for "custom" platform profile
+soon. If it's a blocker for this patch series being accepted I will drop the 
+platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+separately to avoid holding the bulk of the series up. Ideally I would like
+to get the safe limits in so users don't fully lose functionality or continue
+to be exposed to potential instability from setting too low, or be mislead
+in to thinking they can set limits higher than actual limit.
+
+The bulk of the PPT patch is data, the actual functional part is relatively
+small and similar to the last version.
+
+Unfortunately I've been rather busy over the months and may not cover
+everything in the v7 changelog but I've tried to be as comprehensive as I can.
+
+Regards,
+Luke
+
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - Too many changes to list, but all concerns raised in previous submission addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+- v3
+  - All concerns addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+- v4
+  - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch series
+  - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+  - Split the PPT knobs out to a separate patch
+  - Split the hd_panel setting out to a new patch
+  - Clarify some of APU MEM configuration and convert int to hex
+  - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+  - Fixup cyclic dependency in Kconfig
+- v5
+  - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig detail, edit commit msg
+  - cleanup ppt* tuning patch
+  - proper error handling in module init, plus pr_err()
+  - ppt tunables have a notice if there is no match to get defaults
+  - better error handling in cpu core handling
+    - don't continue if failure
+  - use the mutex to gate WMI writes
+- V6
+  - correctly cleanup/unwind if module init fails
+- V7
+  - Remove review tags where the code changed significantly
+  - Add auto_screen_brightness WMI attribute support
+  - Move PPT patch to end
+  - Add support min/max PPT values for 36 laptops (and two handhelds)
+  - reword commit for "asus-wmi: export symbols used for read/write WMI"
+  - asus-armoury: move existing tunings to asus-armoury
+    - Correction to license header
+    - Remove the (initial) mutex use (added for core count only in that patch)
+    - Clarify some doc comments (attr_int_store)
+    - Cleanup pr_warn in dgpu/egpu/mux functions
+    - Restructure logic in asus_fw_attr_add()
+    - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
+  - asus-armoury: add core count control:
+    - add mutex to prevent possible concurrent write to the core
+      count WMI due to separated bit/little attributes
+  - asus-armoury: add ppt_* and nv_* tuning knobs:
+    - Move to end of series
+    - Refactor to use a table of allowed min/max values to
+      ensure safe settings
+    - General code cleanup
+  - Ensure checkpatch.pl returns clean for all
+- V8
+  - asus-armoury: move existing tunings to asus-armoury module
+    - Further cleanup: https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a8a8e38
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - Address concerns in https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc06522c5e41
+    - Refactor struct asus_armoury_priv to record both AC and DC settings
+    - Tidy macros and functions affected by the above to be clearer as a result
+    - Move repeated strings such as "ppt_pl1_spl" to #defines
+    - Split should_create_tunable_attr() in to two functions to better clarify:
+      - is_power_tunable_attr()
+      - has_valid_limit()
+    - Restructure init_rog_tunables() to initialise AC and DC in a
+      way that makes more sense.
+    - Ensure that if DC setting table is not available then attributes
+      return -ENODEV only if on DC mode.
+- V9
+  - asus-armoury: move existing tunings to asus-armoury module
+    - return -EBUSY when eGPU/dGPU cannot be deactivated
+  - asus-armoury: add apu-mem control support
+    - discard the WMI presence bit fixing the functionality
+  - asus-armoury: add core count control
+    - replace mutex lock/unlock with guard
+    - move core count alloc for initialization in init_max_cpu_cores()
+- v10
+  - platform/x86: asus-wmi: export symbols used for read/write WMI
+    - fix error with redefinition of asus_wmi_set_devstate
+  - asus-armoury: move existing tunings to asus-armoury module
+    - hwmon or other -> hwmon or others
+    - fix wrong function name in documentation (attr_uint_store)
+    - use kstrtouint where appropriate
+    - (*) fix unreachable code warning: the fix turned out to be partial
+    - improve return values in case of error in egpu_enable_current_value_store
+  - asus-armoury: asus-armoury: add screen auto-brightness toggle
+    - actually register screen_auto_brightness attribute
+- v11
+  - cover-letter:
+    - reorganize the changelog of v10
+  - asus-armoury: move existing tunings to asus-armoury module
+    - move the DMIs list in its own include, fixing (*) for good
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - fix warning about redefinition of ppt_pl2_sppt_def for GV601R
+
+Luke D. Jones (8):
+  platform/x86: asus-wmi: export symbols used for read/write WMI
+  platform/x86: asus-armoury: move existing tunings to asus-armoury
+    module
+  platform/x86: asus-armoury: add panel_hd_mode attribute
+  platform/x86: asus-armoury: add apu-mem control support
+  platform/x86: asus-armoury: add core count control
+  platform/x86: asus-armoury: add screen auto-brightness toggle
+  platform/x86: asus-wmi: deprecate bios features
+  platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
+ drivers/platform/x86/Kconfig                  |   23 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/asus-armoury.c           | 1174 +++++++++++++++
+ drivers/platform/x86/asus-armoury.h           | 1277 +++++++++++++++++
+ drivers/platform/x86/asus-wmi.c               |  165 ++-
+ include/linux/platform_data/x86/asus-wmi.h    |   24 +-
+ 7 files changed, 2648 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/platform/x86/asus-armoury.c
+ create mode 100644 drivers/platform/x86/asus-armoury.h
+
+-- 
+2.39.5
 
