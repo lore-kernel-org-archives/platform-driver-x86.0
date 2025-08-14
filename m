@@ -1,61 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from e3i331.smtp2go.com (e3i331.smtp2go.com [158.120.85.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19061246333;
-	Thu, 14 Aug 2025 19:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94266272E67
+	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Aug 2025 20:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755201132; cv=none; b=lQzqrYSlmwDOwTaD9hxofIWoPfmizbNC9n9JjxcYAHECnG/HNy+2ooLLPHW6wUX+u+pjsbe2N4+TzqSYPrQ7TsUNC36KioTytQzfdZ/dnXeXY1N2rLn4q6FZtdYpF4CUSB5m3frYDBJpPc+HOGKdgMRVmaJGlQe8swe5ze63MFg=
+	t=1755205121; cv=none; b=GRJIobeX231YRmsF86x9kvHu3qo7Zg9adqu4yPEOh+jaJZZgJCgf9ijWAVtMFdfP2FoEb70FxAw6Ea/8IdyGOkoDvgsG1YbenBu2oRI3JDAD4iHg3SY9FxslJYy9WrNHhqVgNDrFXjTazHmNMKM8XPtY+sLFVmARhAZtFU3vmoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755201132; c=relaxed/simple;
-	bh=e1kx8I4goW+FE7U2pIi+3XcbDQGU5mWZJu8IWiQByck=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=WU+5QczGsQyCMZEvT7rCISJU2CZLSwFvdw9fnlN8U1Mql6UFcm1GIZWmkU698Uamn1IQ1Vu4CffQTpwOm4ZVqNNyjzjnb7X82bEO8kscpoS2y3QTC++X1lCLM8hwCZYMMO9qIx57ekua/sAGeU8jCdUbTOhLz9cctiyzTX7VU8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d89+KTlM; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755205121; c=relaxed/simple;
+	bh=j4AA4nQmJFlRP0/NnrzhPFhnYH+laj8mwQr9FuaC+Hs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ep8fKKLSzhrwsOZ5bTpDqbKt6oaMg+IaQdXNp/gwWj58AkW3ep6t7T7GvCuP8T1TjmJoqrvZesoRH2tSCnkSdUyi/Inzh/j75QCFwV5wcgbbRxX8IM1v2f8MEsL191ddThJAbaq4/VihaF3xZ08DXSzhwaYfop+QtLhwukNVzPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=eYvRbNLY; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=h3of59Uy; arc=none smtp.client-ip=158.120.85.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d89+KTlM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755201131; x=1786737131;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=e1kx8I4goW+FE7U2pIi+3XcbDQGU5mWZJu8IWiQByck=;
-  b=d89+KTlMZakYD9yeD0WRYtgJeWFKf97UxP4WT99IWESqeT1ZYrJ028+/
-   xpi17z/IXJ/tvVf6I15xGNN2WAkAbQP0LqwPeCgzRHPL99ump1WEGzRf7
-   uzwl8sWldbhxXDGKzsb+EEiEvx/+hMrQpVSQ2O29XDz0iq07f1hYg2V2D
-   jFfRhRe+KLBzzh8v20sYuHs23+TDeA5fo9CHJrnLVU0TueR/O0IkYnnz1
-   /BvhiNVZigT7byBzr7J+wwT60EwLKFekNMOi2JGxo9U2uLmJVsB4Q7lvb
-   mglfEQCZK/jUtLOJlfxIVdkB09cBlaXacz+/TzvmZ4nc/A/qjkv3QeGtT
-   Q==;
-X-CSE-ConnectionGUID: +hjcA+W+ShqR5xP6k5kfmA==
-X-CSE-MsgGUID: fdh+KWaXTH6I/boKzXQPOw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="56734453"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="56734453"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 12:52:09 -0700
-X-CSE-ConnectionGUID: JzYJ0BXVTniCPgje69JnmA==
-X-CSE-MsgGUID: Sk2Lw+A+TNKbDQjFbJbs1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="171082797"
-Received: from jjgreens-desk20.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.223.90])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 12:52:07 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="eYvRbNLY";
+	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="h3of59Uy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1755205110; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=OKTSY4z8mDWV1jZSFIOngnqYhOU+OVtxrQywDa1UHlk=;
+ b=eYvRbNLYQX202eC/yhYyG1Aus+4M66FOx2vD02dqnBWXBOJtFPzjg1fQZiIm234TFgJHz
+ YDAso/+opRlil8qkGdFXIfscjMdPPUbSxfyPziGA7qtW+utR8NewyQz3PQ5DpIr75nFNR0s
+ ry2mck7TlK1QZfl3uRx6va7FhPuzK/CEP0FMGzC5wNHY4AIvlmEk/KoAd1AJPUZ4RuUKc+c
+ EUvdy97KI+uEd/2XiH+ltEWqGOiVV7IYPvz7EVo+3AJNKPONszFFp7hukv+lFu340dL/DKB
+ nn8UE3vmYn6FPoEnYn7SklWTyMMkkNRAgsTBhwnZgLZBxdYrcDG32LSgLd6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
+ i=@medip.dev; q=dns/txt; s=s1255854; t=1755205110; h=from : subject :
+ to : message-id : date;
+ bh=OKTSY4z8mDWV1jZSFIOngnqYhOU+OVtxrQywDa1UHlk=;
+ b=h3of59Uy5cv0E2scB1grEmpXX1u0ZEz3rGbmdNl87XwE7wJP5fAVMAYvJkpQQYGxWr6Of
+ pQNui/dRbaZz8uSx0k/B58N5acrt6zf41nPGAyP0mNl2/TCtwyMWRC7gS/55bCh2k+mPUze
+ vHdiHOTq2X9+YdulMGeXt+6EgCwbctYBKNzwlNInRvlf7u6yTK6P1yCFoswkivOlW4cGmfg
+ 7yoemLToupPwfra6Wsqgx0E4Z9dQdp1IfeS3fSB1dYFN5FvPLOAq5dvi+f461Px7apvoaWT
+ RWxI1AqK5llkOyfQs0J8uo9b6t1St567pGG6uHLAHG8L/eXrYuHbWC/iE2pg==
+Received: from [10.152.250.198] (helo=vilez)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1-S2G)
+	(envelope-from <edip@medip.dev>)
+	id 1umf1i-FnQW0hPzmup-Oj4z;
+	Thu, 14 Aug 2025 20:58:23 +0000
+From: edip@medip.dev
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	kuba@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	mpearson@lenovo.com
-Subject: [PATCH] platform/x86:intel/pmc: Update Arrow Lake telemetry GUID
-Date: Thu, 14 Aug 2025 12:51:35 -0700
-Message-ID: <20250814195156.628714-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	Edip Hazuri <edip@medip.dev>
+Subject: [PATCH v2] platform/x86: hp-wmi: Add support for Fn+P hotkey
+Date: Thu, 14 Aug 2025 23:45:32 +0300
+Message-ID: <20250814204529.18467-4-edip@medip.dev>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,30 +59,59 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 1255854m:1255854ay30w_v:1255854sCbqN4Q8xq
+X-smtpcorp-track: 7RYdGkhaxolr.lmDe8zAZ24ow.0I4U-QpuIsz
 
-Updated ARL_PMT_DMU_GUID value. Arrow Lake PMT DMU GUID has
-been updated after it was released. This updates ensures that
-the die c6 value is available in the debug filesystem.
+From: Edip Hazuri <edip@medip.dev>
 
-Fixes: 83f168a1a437 ("platform/x86/intel/pmc: Add Arrow Lake S support to intel_pmc_core driver")
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+Add support for the Fn+P hotkey found on newer HP Victus (and probably
+newer Omen) laptops. This hotkey is intended for use with Omen Gaming Hub
+to change the performance profile (see [1]).
+
+Pressing Fn+P under linux produced the following warning in dmesg:
+
+> hp_wmi: Unknown event_id - 27 - 0x7
+
+Implemented a handling for this event so that the hotkey cycles between the
+platform profiles when triggered.
+
+Tested on Victus 16-s1011nt (9Z791EA, MB 8C9C).
+
+Changes in v2:
+- Make the key just switches between platform profiles instead of
+  assigning a key event code. 
+- v1: https://lore.kernel.org/all/20250802213541.18791-2-edip@medip.dev/
+
+[1]: https://jpcdn.it/img/adadf6c927ffeb75afd8038f95db400a.png
+
+Signed-off-by: Edip Hazuri <edip@medip.dev>
 ---
- drivers/platform/x86/intel/pmc/core.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 4a94a4ee031e6..24139617eef61 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -282,7 +282,7 @@ enum ppfear_regs {
- /* Die C6 from PUNIT telemetry */
- #define MTL_PMT_DMU_DIE_C6_OFFSET		15
- #define MTL_PMT_DMU_GUID			0x1A067102
--#define ARL_PMT_DMU_GUID			0x1A06A000
-+#define ARL_PMT_DMU_GUID			0x1A06A102
- 
- #define LNL_PMC_MMIO_REG_LEN			0x2708
- #define LNL_PMC_LTR_OSSE			0x1B88
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index db5fdee2109..c712d5bdaa1 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -122,6 +122,7 @@ enum hp_wmi_event_ids {
+ 	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
+ 	HPWMI_SANITIZATION_MODE		= 0x17,
+ 	HPWMI_CAMERA_TOGGLE		= 0x1A,
++	HPWMI_FN_P_HOTKEY		= 0x1B,
+ 	HPWMI_OMEN_KEY			= 0x1D,
+ 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
+ };
+@@ -981,6 +982,9 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ 						key_code, 1, true))
+ 			pr_info("Unknown key code - 0x%x\n", key_code);
+ 		break;
++	case HPWMI_FN_P_HOTKEY:
++		platform_profile_cycle();
++		break;
+ 	case HPWMI_OMEN_KEY:
+ 		if (event_data) /* Only should be true for HP Omen */
+ 			key_code = event_data;
 -- 
-2.43.0
+2.50.1
 
