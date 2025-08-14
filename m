@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ECE1A288
-	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Aug 2025 04:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B8B1DFE0B
+	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Aug 2025 05:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755147463; cv=none; b=JYFKpKEBmSs4yySmZ9pbImY17LZOAkPraLZibQUevVmxTLAnYSg+GcEG3vvboMIXbDoW/e4JmEbv2i7f/MpKR18Q6JcJvFcZKJ9JQr0hhWp0oGsfW/Q18oIm2+mVGmkRLkj28RdaP8UgAoQSMdwnQy/l7W2tQDi6jrpVh036zdM=
+	t=1755147885; cv=none; b=aKB/UG3y+uqM5VzCPonUm0l88senL/mp2l/BgN702Wr8+T+vdEOBs9PAlVrkJloRuZkIlgJ1o7imu8luh4F7xzoIFYvXv0S3JUeeYqSPYrrN8uURt7uvhxftHUfLi0N4g7B77xjvWqxOEvUOz4lBU/h7e7aexamzVp2w3Sk1An8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755147463; c=relaxed/simple;
-	bh=nBXMWmF95X+52cgRYRUn0ZhTT0RcQKGplpGBFRxwhPA=;
+	s=arc-20240116; t=1755147885; c=relaxed/simple;
+	bh=tV6HYC8DOhwl7nPzMCnalp9c5MK7q9VJQzSQsSxaYv4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XcD0NIGokZ00BhlupYYG27fMGg/322RFH1YsLBHwj1BLQCHbbgIcwBHDuERlKtcZBt7PmxSpWs0cSk1bkUBhj6lbZ8yPkTOFGZsuYmKuIu5RW1HLy4tzQ0P0Q9PGLaEpd4icezbKo2k12NiJWYBwtGSG02UofyfiHXmcQ8SAs7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umhDTLW6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=mmynUKMA6bFl0+0z4v6xp4vqHl7R2BSH/Y7hdGryILox28+yvAlyxGj+KQUsCGMsiISZxw8ImYeaDA5LKoI1sZe4I3HT4aqUqkqSF7GHcqTwhiWLCmTdhAqFsO8k7VX1fS70z/yc1nwOOQIFCK2sBnGxrRRFJmN1OsVrvTSssqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIBxyari; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umhDTLW6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D8F69C4CEEF
-	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Aug 2025 04:57:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIBxyari"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 755A7C4CEF5
+	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Aug 2025 05:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755147462;
-	bh=nBXMWmF95X+52cgRYRUn0ZhTT0RcQKGplpGBFRxwhPA=;
+	s=k20201202; t=1755147884;
+	bh=tV6HYC8DOhwl7nPzMCnalp9c5MK7q9VJQzSQsSxaYv4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=umhDTLW6Z7sv6eHHuimJElEAtVAND0RnJLyeTkaaO3H0oQkwYO7ApNvG8Oo7hFKSr
-	 zwXgETVyhDzAo7w4ckkpYDIMHau0sSzlf44e5njdTtO/69+P78c6ZEUoVgP5uj0t5t
-	 d0nr5rrgU0bXKekcOnhXFljACNH0RWeBl+SFoJtK6ymP4zwfQeNN/O8MnIT6SKRLqQ
-	 pw+6Xqpo0CQGE4Ql2xnf3Pqmtj14VttrD7b6Dsyu6nVAQVBDyOINkqqf93X09TZUEP
-	 NRvl7OxVZsjy5XJ3TOnKUL8dVPx96vC1eyP1vQK55V1fVDx72IeGg/E1uzucjXQHiu
-	 LikY1cwQUHlYQ==
+	b=pIBxyarinx6fyo7I9Fuo2RG1L8LR6w8vWoAs1vLFnCVKtVqco7ybZHhNNdCFbxqYf
+	 PurWBIAchC6S0p5mPhsfgouZMKn+mQLtHVu5Qee183g78ZPv6rbGniLR7XoLUgCsN3
+	 5ICgYVZAATrDChiVqKCT9HBv6ykno+cItvrUSIgudEKxuUdgMIURw7/VqHTXBI1fjo
+	 alyvR8MhIUUqC11JPWBWSvIZdmexpkapa+BOChk7RETHW7ueHaAQKJsWRjhBBUGXvL
+	 PF0fn8KInZIpdsMJY4OVOEC+HVTBJJWKCYNzwbkBd9S2K5wGpyStGSqu5HGGYU7CJJ
+	 cPNoe0S1Wu0Kg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D2A74C41612; Thu, 14 Aug 2025 04:57:42 +0000 (UTC)
+	id 6DEB9C4160E; Thu, 14 Aug 2025 05:04:44 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date: Thu, 14 Aug 2025 04:57:40 +0000
+Date: Thu, 14 Aug 2025 05:04:41 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-4rDsRleV3W@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-1kx6HlrUiq@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,13 +64,7 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Marcus (shoes2ga@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |shoes2ga@gmail.com
-
---- Comment #348 from Marcus (shoes2ga@gmail.com) ---
+--- Comment #349 from Marcus (shoes2ga@gmail.com) ---
 (In reply to Denis Pauk from comment #346)
 > Updated patch rebased over v6.14 kernel release, only build is tested.
 >=20
@@ -83,6 +77,8 @@ Marcus (shoes2ga@gmail.com) changed:
 
 Works as expected:
 
+$ cat /sys/class/dmi/id/board_name
+Pro WS WRX90E-SAGE SE
 
 $ sudo dmesg | grep nct6775
 [  176.914364] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
