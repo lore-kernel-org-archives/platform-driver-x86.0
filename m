@@ -1,134 +1,169 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail03.loswebos.de (mail03.loswebos.de [213.187.93.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E35271449;
-	Mon, 18 Aug 2025 15:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF46321CC4F
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Aug 2025 20:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.187.93.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755531672; cv=none; b=TxYG8lEdcvuiUngcmdbVt/CGbz7VNXPcMDJ8+et+EHEZztoUNRTWEvpOZf+3RIMkQJ03YHRTcjkJVtsXx0FeRfS0sVaSpU/96pEmhE45wac4gUmj22fvL8tbSCLDPUeqUi2Vi+I7nBJKu0M0NwWK3CAkLWXUkssdz53BL9NmwY0=
+	t=1755550228; cv=none; b=NDNV9N9UzckI7CPEnW7wddeD2Wu7JYZYB0JL6SD42G7Bc0st24BW0YYkPZbHcqmUkhmAdBVkE7ryKyzHVL0bmXfiEuFfzWOliPhMWJdmp8dTxX5qHVjZQSbKv11jGkFk9ZWfayimeL/7GiDnvStJMnenqSVQw8+YoJeLO0IxJOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755531672; c=relaxed/simple;
-	bh=ZsEcHhPxn/Ea9qTne3Rrj4zmGzqobeF0bv/BWvcqzD8=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=dNcJePt/PvVst1biYjWpqRVqFuK+Bz+xU4Kqcr5m04/pH5oachOizri4vz3OZu9Ly8iMgLf6X/ioTrgEI7SY+6MYarFyCUy2GIUHI6fRDufO5IJG36a99zycSkBoZWfMWH0NCGuHoMcZXdyLnealuYtSE1iWlKEAMExT0isw6Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=iP4Z2NV5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SKC+/2vK; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1755550228; c=relaxed/simple;
+	bh=cNBISzRQEYbcWEl8xuvM9PQ4ny4tbZBnB6MD89yO6nc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L3LudwlM2uzbbFMDbi7ciOZtQKV6UjsAYDbmOzSS6OM4WjZX9gIX3JT5hTJPeLXryFKjSSHUWj0XjWGWNwCp7RgJgwXhX/v6CreDWXwc4cMz7I92hn/z9hjR/l9pFTLN5paKXUNH1e51hZTThFBj+wYV0c+QxkqlWTIPbNOJDwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting; spf=pass smtp.mailfrom=protoco.consulting; dkim=fail (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b=AYZ0mGff reason="key not found in DNS"; arc=none smtp.client-ip=213.187.93.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protoco.consulting
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="iP4Z2NV5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SKC+/2vK"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 478BC14004D6;
-	Mon, 18 Aug 2025 11:41:08 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Mon, 18 Aug 2025 11:41:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1755531668;
-	 x=1755618068; bh=vFW6QBRYfsq8CJmexn1lKzszzkLnWWDYygvjmw+xj+o=; b=
-	iP4Z2NV5qm/hnVOJxy9SyYLvY/dsXSjjLa6z/jvNu3CAWSnEzYdfi5MCwbCBN/v8
-	c2Jr/pr25VFyjUjAvZzv4Sk7rU3kjebgeaJ5wjYQQwaFqWpMt2Dic8tqYxJgOhKB
-	GvPZT5SH3URDQkltuODuOwIaPf9IGU0svAfZC8BmCmzUSCKum91coh/adiZQBfD2
-	Xkt7xgYLjW32yQEe6zozUwpqU3sJf4RmQnG9twkrw6CdGVL9YhKk3mhImgGsZHeu
-	iZk9/fzbL7nLQTyJ0wGV4CPPyowkli7YhOptmxL5aNtqogS+gm0Gk8RnTzSkSoym
-	EnpRT+LiiUg7URSHwxv1Jw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1755531668; x=1755618068; bh=v
-	FW6QBRYfsq8CJmexn1lKzszzkLnWWDYygvjmw+xj+o=; b=SKC+/2vKJ4XGhnf1j
-	BdyBnQzLrEGR4Q+j4uhGDqkFECu6nylsjFwI4p0f7hCVBZpfJuuCcHAeuzaJoZ/f
-	ZoQC6lrSjybbA5fwOJ/TV9sByTF4NI77pZyVaTfvNcN9ZpEPvyH7qZs9OHj54qV3
-	IFF5nFZyUYIBOpBJznbjGuER2nLdsxjrnIW9C0szIcpmbiygidol3tgem+50qskS
-	YDUDF9mQcOYSWhBFs79QMIzphEelnHHRLJFKYUXV4uqapb2JP3BtuewW2ltzTzD+
-	aQ99MmydkCQSD+zHU64Oe2c4Qa6yL+hpkIquO/4Y5Tc6fIc68d3yq4JJfvvR9+7e
-	Bg41A==
-X-ME-Sender: <xms:k0mjaOhpLXz-tteDQFX8_BKxIizxChUXrQBYMnAoa0HOXOUurBDvDQ>
-    <xme:k0mjaPCjUsbav8FxVbcUOnS5tKdCk2bgBHynOjhDHqP4ucANyPWECF45EZBZpj-5-
-    BHxZnNwZHg14owFsK0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduhedvleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvffkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
-    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-    eqnecuggftrfgrthhtvghrnhepkeffuedtveekjeeukefgleejgeetleduueetudefudeh
-    fefhheefleehheffffeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
-    pghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepihhrvghnih
-    gtrdhrrghjnhgvvghshhesghhmrghilhdrtghomhdprhgtphhtthhopegurghvihgurdgv
-    rdgsohigsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrg
-    hrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeigihdrphgr
-    rhguvggvsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghgohgvug
-    gvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdig
-    keeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:lEmjaCR9TsVzoKeSgABiR6Gxu5h1BflUCI6cBmEebWezIFONMb1HNA>
-    <xmx:lEmjaDfZr48tcMm2ZyyaeX-yfYUmHpLA09fZPTYxxMwR1UUFSDH39A>
-    <xmx:lEmjaMTnL0zvNyLuHI1_LdV5VzG83wG08eXLCaU3A96hXER_mGqzEQ>
-    <xmx:lEmjaHKebXfir9zdhnrRulo918yeLFaQgMDy2Nrzb9zorPG2eBGkuA>
-    <xmx:lEmjaEXrVgPwPLARbhTrL8tqfiHM9RoJPGolHKULyiXnZni9rCrRuRIg>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DAC502CE0071; Mon, 18 Aug 2025 11:41:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b="AYZ0mGff"
+Received: from mail-proxy-01.loswebos.de (mail-proxy01.loswebos.de [213.187.93.160])
+	by mail03.loswebos.de (Postfix) with ESMTPSA id A643B47F011;
+	Mon, 18 Aug 2025 22:43:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=protoco.consulting;
+	s=protoco-consulting; t=1755549841;
+	bh=cNBISzRQEYbcWEl8xuvM9PQ4ny4tbZBnB6MD89yO6nc=;
+	h=From:To:Cc:Subject:Date;
+	b=AYZ0mGffd66BTKXepmSBeRVB/R/Fwl4yy0wNVdV/gXFKMtecnn8uxy+JEA9MeqDFh
+	 YSkWwuyVg2DpcGwyq9xtD88rHb6Xfzx/bThK5MWSbCZBJlGtRJE8ADDv1SUfM8SvzY
+	 BZqwb49FkfUCt5TtnmvA+MaiwKY/EdY8qdbi43ju7Ehv/bh7X9CwVJVtuADmuadyL3
+	 f2QjAtc4XcdHgxV8AHjekkq9qYV7PVUA1aehPj1QTH7kkb+3eGEg2GzbVPvOk1ciGs
+	 GMZL9JBDzuY7VeeI8RsggiudmRfa0u4TjW3ZYaoAIK01cych34grPSAdvK0WUl60n4
+	 AL91da0OKe9Hg==
+Received: by local.marc.ngoe.de (sSMTP sendmail emulation); Mon, 18 Aug 2025 22:43:57 +0200
+From: Marc Burkhardt <marc.burkhardt@protoco.consulting>
+To: platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Marc Burkhardt <marc.burkhardt@protoco.consulting>
+Subject: [RFC PATCH v1] platform/x86: thinkpad_acpi: Add parameter to suppress invalid thermal sensors
+Date: Mon, 18 Aug 2025 22:39:51 +0200
+Message-ID: <20250818204353.857304-1-marc.burkhardt@protoco.consulting>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AIq4ZBvdF6b7
-Date: Mon, 18 Aug 2025 11:40:47 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Xi Pardee" <xi.pardee@linux.intel.com>, irenic.rajneesh@gmail.com,
- david.e.box@linux.intel.com, "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Message-Id: <88da5769-1eae-4520-99b0-78a59bdbd867@app.fastmail.com>
-In-Reply-To: <20250814195156.628714-1-xi.pardee@linux.intel.com>
-References: <20250814195156.628714-1-xi.pardee@linux.intel.com>
-Subject: Re: [PATCH] platform/x86:intel/pmc: Update Arrow Lake telemetry GUID
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thanks Xi
+While moving an existing Icinga installation to a Lenovo P15 20SU I came
+across broken JSON output from a "sensors -Aj" command consumed by the
+Icinga check_lm_sensors plugin. After fiddling around trying to build a
+fix in either lm_sensors or Icinga I found out the error was rooted in
+some sysfs file that was created but threw errors while being read. On my
+Lenovo ThinkPad the default fallback to 8 temperature sensors creates
+sysfs entries like in my case "temp8_input" that fail when read, causing
+the issue in user-space.
 
-On Thu, Aug 14, 2025, at 3:51 PM, Xi Pardee wrote:
-> Updated ARL_PMT_DMU_GUID value. Arrow Lake PMT DMU GUID has
-> been updated after it was released. This updates ensures that
-> the die c6 value is available in the debug filesystem.
->
-> Fixes: 83f168a1a437 ("platform/x86/intel/pmc: Add Arrow Lake S support 
-> to intel_pmc_core driver")
-> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel/pmc/core.h 
-> b/drivers/platform/x86/intel/pmc/core.h
-> index 4a94a4ee031e6..24139617eef61 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -282,7 +282,7 @@ enum ppfear_regs {
->  /* Die C6 from PUNIT telemetry */
->  #define MTL_PMT_DMU_DIE_C6_OFFSET		15
->  #define MTL_PMT_DMU_GUID			0x1A067102
-> -#define ARL_PMT_DMU_GUID			0x1A06A000
-> +#define ARL_PMT_DMU_GUID			0x1A06A102
-> 
->  #define LNL_PMC_MMIO_REG_LEN			0x2708
->  #define LNL_PMC_LTR_OSSE			0x1B88
-> -- 
-> 2.43.0
+This patch adds a module parameter (suppress_sensor) using
+module_param_array() to allow users to specify a comma-separated list of
+zero-based sensor indices to suppress sysfs file creation (e.g.
+suppress_sensor=3,7). Instead of a model-specific quirk, this provides
+flexible configuration for any ThinkPad with similar issues and is working
+out-of-the-box without additional models being marked for the quirk. The
+parameter uses a fixed-size array based on TPACPI_MAX_THERMAL_SENSORS (16)
+consistent with the driver’s thermal sensor handling (ie.
+ibm_thermal_sensors_struct or sensor_dev_attr_thermal_temp_input).
 
-Tested this on my Lenovo P1 G8 and confirmed that it fixed the error message that was seen previously.
+Logging via pr_info() reports the number of suppressed sensors at module
+initialization, and pr_info() logs each suppressed sensor during sysfs
+attribute creation. Invalid sensor indices are logged once via pr_warn()
+to avoid repetitive warnings. Tested on a ThinkPad P15 with
+suppress_sensor=3,7, confirming suppression of temp4_input and temp8_input
+with no sysfs errors. Bounds checking for uncommon values is in place or
+will be logged.
 
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+The patch applies to the current
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git although
+it was initially written for a 6.16.0 kernel.
 
-Mark
+I look forward to any feedback on the patch and/or handling of submission.
+Please CC: for now as I am not (yet) subscribed. Thank you.
+
+Signed-off-by: Marc Burkhardt <marc.burkhardt@protoco.consulting>
+---
+Notes:
+I haven't posted on LKML or send a patch for over a decade now so
+please forgive any possible mistakes I made regarding current coding
+conventions or more generally in submitting this patch. The patch was
+running for some time here with faulty sensors removed from sysfs and no
+problems otherwise detected and was surely run through checkpatch.pl before
+submission. get_maintainer.pl was helpful to find the hopefully right
+people for CC:ing but I am otherweise totally unaware of any current
+procedures or best-practices when it comes to submitting a patch.
+
+drivers/platform/x86/lenovo/thinkpad_acpi.c | 35 +++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index cc19fe520ea9..30ff01f87403 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -6019,6 +6019,30 @@ struct ibm_thermal_sensors_struct {
+ 	s32 temp[TPACPI_MAX_THERMAL_SENSORS];
+ };
+ 
++static int suppress_sensor[TPACPI_MAX_THERMAL_SENSORS];
++static unsigned int suppress_sensor_count;
++
++static bool is_sensor_suppressed(int index)
++{
++	unsigned int i;
++	bool logged = false;
++
++	for (i = 0; i < suppress_sensor_count; i++) {
++		if (suppress_sensor[i] == index)
++			return true;
++
++		if (!logged &&
++			(suppress_sensor[i] < 0
++				|| suppress_sensor[i] >= TPACPI_MAX_THERMAL_SENSORS)) {
++			pr_warn("Invalid sensor index %d in suppress_sensor\n",
++				suppress_sensor[i]);
++			logged = true;
++		}
++	}
++
++	return false;
++}
++
+ static const struct tpacpi_quirk thermal_quirk_table[] __initconst = {
+ 	/* Non-standard address for thermal registers on some ThinkPads */
+ 	TPACPI_Q_LNV3('R', '1', 'F', true),	/* L13 Yoga Gen 2 */
+@@ -6313,6 +6337,11 @@ static umode_t thermal_attr_is_visible(struct kobject *kobj,
+ 
+ 	int idx = sensor_attr->index;
+ 
++	if (is_sensor_suppressed(idx)) {
++		pr_info("Sensor %d suppressed\n", idx);
++		return 0;
++	}
++
+ 	switch (thermal_read_mode) {
+ 	case TPACPI_THERMAL_NONE:
+ 		return 0;
+@@ -11653,6 +11682,9 @@ static void __init thinkpad_acpi_init_banner(void)
+ 			thinkpad_id.model_str,
+ 			(thinkpad_id.nummodel_str) ?
+ 				thinkpad_id.nummodel_str : "unknown");
++
++	pr_info("Suppressing %d user-supplied sensor(s) via parameter suppress_sensor\n",
++		suppress_sensor_count);
+ }
+ 
+ /* Module init, exit, parameters */
+@@ -11785,6 +11817,9 @@ MODULE_PARM_DESC(experimental,
+ module_param_named(debug, dbg_level, uint, 0);
+ MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
+ 
++module_param_array(suppress_sensor, int, &suppress_sensor_count, 0444);
++MODULE_PARM_DESC(suppress_sensor, "Comma-separated sensor indices to suppress (e.g., 3,7)");
++
+ module_param(force_load, bool, 0444);
+ MODULE_PARM_DESC(force_load,
+ 		 "Attempts to load the driver even on a mis-identified ThinkPad when true");
