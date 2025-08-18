@@ -1,106 +1,88 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8421533D6;
-	Sun, 17 Aug 2025 17:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3005261B70
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Aug 2025 11:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755450420; cv=none; b=c11/fML8pFUy2xzJARfwvGXWOOp276ujzmjDGmlVhvHljYctqXughASgRfKpYu7sASnVoZg0sLPsLq/8Yr3r75Rc+8XhFu7AE67x5l3Q3E/gkJTf/mSlqAPlo5JubVZNZdLlPfAohjODmA9HYq5JX7/LkLqTimKGjV8/aA/Z2NI=
+	t=1755517867; cv=none; b=MFdtHRDlqt9WXPzrg8DaceKDDA2Zi6u/M8IA+O2gwFkSZhsiiokwrnmJL/j9of3HtJWT1ZoMjsdHg6Cn8HJ4JNDuhsp3eZH5ebs5PHtzIf6plJi/0Pkw97upyZxAR/eoSNrG7KAWaJL5XZXRkXkrs/qFiVyRvqdp/jH1CcrBqHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755450420; c=relaxed/simple;
-	bh=Br2XmsbFFY0zRV3hTNp7XyuQxAzrFE+0awVd1x/aXmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NeoNbVJGFBoKGKyGnkmGJjgtR3grGdSYwSVCBrmOJfAH9jX7T2EqwApVRRK82Fh6edrh0J9g0JNR0qQ+iYNqMqtTum8YDWjP4kXoWk7XdE3Js09kseyjxi0BgC7jfjfi05Hww246j6b0aBxXzfHIkly1p2jlqU0A4TbP7hGRPgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hmUALcBf; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755517867; c=relaxed/simple;
+	bh=O/7JmsmF6TDMBLu3k7CYOhiafDuDc4I37X5HEsR+VGU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uEgG0biu9mpF73FZE3gxi/UtGxRKnQVdMqcfZ+bzgqLZtzQ294iiSglsedBKSJU5Ob+RuCNc+k8/4VEaJg+zBKW4aK3lCmIzl3SeqfpHFqrY9XYTGVQTFhQ86vIuJU37NqPHyR7iUXoJVHXIR+8j2y0I5YacVVQXmdt/hv+7T5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJeofDaD; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmUALcBf"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-76e39ec6f52so3065498b3a.1;
-        Sun, 17 Aug 2025 10:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755450418; x=1756055218; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pOMnQXG5ToDuQ3ZSfzmc5ovOIBEU0+927ucpZsBYdcQ=;
-        b=hmUALcBf1UklXiaHJUyAF2TDZnIuDaj0bdvnkFjR+AL/T+OLZu2UsQpx0mHY97c3SF
-         RBlxWPUOv7PsYStyZw9XgBD2P/2hA9/JdIjriQC4GhshDTTELqOD0sR1ZAD32sQNE46a
-         9UfvTDyJjzJxH1jg5V9RKnc1NQijE+chbh1Tu7tuKRhS7MjnRgITqbu/Xy8VfMOVqoFu
-         aEDTKKG0EwAa1qXjCjXaL6XWsP8xSWnFF/dPYlOjkGOk1MSh1CinVAbaZSuxQTxL6y+L
-         ptN3IrPxDRskGAP4nEK0DzuQcVaRcVecM8LxWoOUQf+4RlKBOIcPM+ptKJWsx8rfyTei
-         N/uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755450418; x=1756055218;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pOMnQXG5ToDuQ3ZSfzmc5ovOIBEU0+927ucpZsBYdcQ=;
-        b=iY80Lsx/o5AVeU3b22ajsI2vAQY+9CpJ1gtPJFE+WtaG/Km0DcRTCWVaSVQYBPRdmJ
-         M2jsTjJlRPWAB7XP2P9AS014BKWxi25I2E+ZW0V21O74gtKndwlXNxOKhj8i7EB5pfgm
-         rXU3Ecxd+Md4xHMtfGMCiOle1bQHEXh2qo4UBz0Oq2LW4CYVqBsuqDakSEbiKa98J74z
-         t3aOfAox+rM2e1BZs0auzKUGG26ZDen8fRL24ffhJyYwzcmUwwIfLl8hFCXAL1hXM2lx
-         KWDI5lXzVfFjvQty7UjfjltwiLTJYdaSxryrjUro2SdILAP6mmwjivqhZ+iVejp9GbPw
-         8G8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1ndLF5ZwX/S9JC1TWZ41Y7DdPX9VUDvJk6c0pAd0Cl6ZMsxW/u2Zpdvr7ss65YLMi7QHqy7mEWfNVWE689/O0z9s@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNk83OGy85iV96TKQ7s/OV4iYxdKvLiP4azdx4ijo3ByCTQLne
-	hsZAhvvy223J1xIfW7MGZmfgPYkgAjYTAuevRgS5iJ4UTMg7spYu5iTFKtM8TPqE8ng=
-X-Gm-Gg: ASbGncs5zpa0dnxwC4QheB5uQwgoNc56hwBySTw8spqY15SM9zfMCbSUhZmrQsYjhW7
-	aJs43pnRj/L/eBjyZ5imemxthjaCrbHXqy0PPSfRgLPlfX+AgkPooG4mvJo2jpv7lbN2lZr83Tp
-	lJ4NsrGPSX+agtNIGbYqhnJjek1OZEf3GXO0U+IVkFpzw53YAtojsdL+LKLJqRTumEeNHl7nTiy
-	kSV8JaNp8+61CzzjddbQycfwLrjiAn0tOyTTFgIwxPG3Xuf5LJxrBiws0S3f8+yKpJKhSYpaxzk
-	kL7Pal4SXQTLJiagU9bzgcLERABl0BafEhMvyydY/UiEvZ5TLRtwUZKSiYFHEib5WopZcAhLa4w
-	4X+FXjS8pSBTfpiwyrj4MT9AeyuxvSmo=
-X-Google-Smtp-Source: AGHT+IFrsgMBF20YmP7f5fA/MTut1KvrUzN3v+vLQcjv2m2+ehZODrCaZOHa6JaN1YrvWQDzjy0Jjw==
-X-Received: by 2002:aa7:8886:0:b0:748:f750:14c6 with SMTP id d2e1a72fcca58-76e447cd64cmr11457485b3a.14.1755450417575;
-        Sun, 17 Aug 2025 10:06:57 -0700 (PDT)
-Received: from lkmp.. ([157.51.84.236])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e4526e368sm5408210b3a.8.2025.08.17.10.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 10:06:57 -0700 (PDT)
-From: rakuram <rakuram.e96@gmail.com>
-To: linux-doc@vger.kernel.org
-Cc: mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	W_Armin@gmx.de,
-	corbet@lwn.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	skhan@linuxfoundation.org,
-	rakuram.e96@gmail.com
-Subject: [PATCH] Documentation/wmi: Fix Typo in lenovo-wmi-gamezone
-Date: Sun, 17 Aug 2025 22:36:43 +0530
-Message-ID: <20250817170644.5855-1-rakuram.e96@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJeofDaD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755517865; x=1787053865;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=O/7JmsmF6TDMBLu3k7CYOhiafDuDc4I37X5HEsR+VGU=;
+  b=NJeofDaDywEIvvW5Gy3EmuvQTNLoV9qn39Y48KOEw2Q2j+LRJiv29DFi
+   XrbKn2FrEhcordmlyVnVo7PxJmQEq60Ae+nBplkWw3ilYRT7vtUMoKn9e
+   YLumFa6J7J2I3c3LzWzTg4CODzRt3SNZXhP/89kWDqI9pOnJzRhRIXnD7
+   /DCUH5DTv3IyCtiB83IyTX730ZCE78LmUlDKTyPMO6fIQG7IvQtKg/deq
+   Pu6JSHi+DVLwY0h8k2utTttUR553FsXH2RleMbPPMTKZ+OLSydlRNrjUb
+   RuKBdEqocm4nveOXoGWSaQFG5rnI2IGAgCDqxrSsKAn0nQxEeHUPHTBfE
+   A==;
+X-CSE-ConnectionGUID: SVrKY+Y/S2qHCL5+QhnaSw==
+X-CSE-MsgGUID: Yln9LJerSgmWane3nPc4SA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11524"; a="80318892"
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="80318892"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 04:51:05 -0700
+X-CSE-ConnectionGUID: 9UYBTajuTqiFfwkkVi18Mw==
+X-CSE-MsgGUID: Kn7cXZciSEqcw+3vu8P37Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,293,1747724400"; 
+   d="scan'208";a="166732988"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 04:51:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 18 Aug 2025 14:50:59 +0300 (EEST)
+To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+    platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v2] platform/x86: portwell-ec: don't print superfluous
+ errors
+In-Reply-To: <ac110365-e631-4182-9936-c346d5c05f1c@portwell.com.tw>
+Message-ID: <85b8b88c-de22-737e-0fa1-827376116d06@linux.intel.com>
+References: <20250813191416.6860-2-wsa+renesas@sang-engineering.com> <ac110365-e631-4182-9936-c346d5c05f1c@portwell.com.tw>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Fixed the below typo error
+On Fri, 15 Aug 2025, Yen-Chi Huang wrote:
 
-freqency ==> frequency
-in Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> Hi Wolfram,
+> 
+> Thanks for your cleanup.
+> 
+> Yen-Chi
 
-Signed-off-by: rakuram <rakuram.e96@gmail.com>
----
- Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Yen-Chi,
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-index 997263e51a7d..22040250a97d 100644
---- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-@@ -153,7 +153,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-     [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
-     [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
-     [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalue;
--    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffsetFreq;
-+    [WmiDataId(4), read, Description("OC Offset frequency.")] uint32 OCOffsetFreq;
-     [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMinOffset;
-     [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMaxOffset;
-     [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetScale;
+Since you're relatively new you might not know this:
+
+The usual custom is to include your Reviewed-by tag into the reply if you 
+think the patch is fine and useful. That being said, it is not mandatory 
+to provide tag for anything nor should it be used as a rubber stamp for 
+everything, there could well be patches which need more work or should be 
+rejected, obviously don't give your tag for those (but reply with your 
+concerns instead if that's the case).
+
+The Reviewed-by tags will be recorded into the commits and it's also a 
+way to credit the reviewers for their work.
+
 -- 
-2.43.0
+ i.
 
