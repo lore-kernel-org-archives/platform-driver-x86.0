@@ -1,58 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C3627145F;
-	Tue, 19 Aug 2025 10:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304D627A13A;
+	Tue, 19 Aug 2025 10:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755598520; cv=none; b=TYtHWIwAeVNaEBrNAWoVgUqRLj9VBGcYFHiChaJdLRtFBvv8kFGxfUzqqkKKKAsSoyVu3/hmeDjj5TEZ5S2hEpDHzzq2WInbO3JW0eytntxmxD+mC/9p+yenJBxfJLLtp0qdisovtAJRAsBvYdOf6OvVTDe/qHq05PEyPYATB44=
+	t=1755598978; cv=none; b=JC/ZBAZWgAdU76XaJwp3qQg+hx2GUrEsLYapjxMdrJwGnak2jyO8VVwm+tKoX88eRHMfvb3XFyfvgS0JAPdlTf96ujuHtT6PhL5pCRD6qf4+uGu2mnXwp6y9Jyx1VWIXdg5B0hWv1Q1H0VlgavjJBrVjsX29EubH9BaNEQB5qTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755598520; c=relaxed/simple;
-	bh=cedxV3HOBeHsxmgpHzEoXkEyW6zbmGu21WzlcSfqhiI=;
+	s=arc-20240116; t=1755598978; c=relaxed/simple;
+	bh=j95Um73gyG4EtltIsfdN0ieCULPUTUdPkrOxfnhQWiw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mqqczbSPut8fwzbMDVUYoCsEEhmTpRgfCSaGq5g/YRWiu1adRP7lhYCpdHlrgzSL/NGXt/RA5BbvnBtNsp9olqbQTuuJlVzBsYHE1ucrdLe8PGwjmEEIqAxwf2rm5jEnrcFDX3mBHSN8HTYPUyqojNgdjmdFEqUlVJXn+4rYQiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVP6+E4D; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=njzNnTCCCQw019fD6fQAWmxa/+VUro48PEVsEPdAnicSahZCJ7AG63CTWlsqVsUQuBCLOv8CCIURVmR6BK2R66Q7pjf+m4mOnff33PTqZwMGFGrXrBXKHRaV7q8nCS3A/62TtFGVkgct/ZS0Xv+CQ5jk/SrgnGVTphE3H8JnUa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lFIQneHU; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVP6+E4D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lFIQneHU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755598518; x=1787134518;
+  t=1755598978; x=1787134978;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=cedxV3HOBeHsxmgpHzEoXkEyW6zbmGu21WzlcSfqhiI=;
-  b=mVP6+E4DbSngW5FtAS58Mt2j5ODYvDopX46bkDzwXUfuGTaAZIS2VAAm
-   5QCAbFPh/7wH1soM+aLlnIpA3utEwiB9KmYVZEbQ4jgAVWw8sb4B2aEVT
-   lXldUkm5KFDRmwSh8/kkGoRHBuJUI+x28EMz4e7MgALIEOWYzx2PsdirQ
-   3U2r/UW01dwyeo77PFvkK77n/wQuogwRwCemzcAb6O3RiWc+gJd68QF0E
-   7zQ/IVduxhrV3pANGkq9r+Tu4tQnCIQ+bFd4kSVbv4/VxVdHaf3KNXmC3
-   17yPE16OcMEq5MeNxdRmC4ugslW/Z1UQ4Mwl04CDdnl3+7ZVGWvEWL89+
-   Q==;
-X-CSE-ConnectionGUID: R0xqj79MTZyfuhh5vDPx6w==
-X-CSE-MsgGUID: Q0OlFq75QJqVwMYLAEnLcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="56866064"
+  bh=j95Um73gyG4EtltIsfdN0ieCULPUTUdPkrOxfnhQWiw=;
+  b=lFIQneHULSInvHOW18Q3RV7rGIZUP+jRkotkJV3YfjIV6AAFR3GdRc/B
+   rNgOkFkNXIXWK25uoRk1L0yjHS6bN6ODfskUaDT62r6tuKsxzW06HDdgb
+   0uPRiCFKS2DE3eL6XfhqfL+zpAK3Sf/ixCQk3MbmlqqBz7v50CrkpX7pg
+   wJUCYjIW8QK01B3YjcjA9Cpd+pZfKNfGke+isi2AGWiJVwo1mHgA0+kF0
+   kyEV5yn5MokTg6TIa00sGHF+QXd1KNHKHmvOYvgUAhtprM6nsYqbJVZ3K
+   v0KZDsp6mUMrqwLYshVkMwmj75LixDNx/5A6Dnk9L07tuHQwsHToQh4mg
+   A==;
+X-CSE-ConnectionGUID: XThKuLDxQwqs+YiA7Rt5rQ==
+X-CSE-MsgGUID: bXXjyfyqScK/i0FS6cGFwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="57984851"
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="56866064"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:15:17 -0700
-X-CSE-ConnectionGUID: UoFm2TOcQay2kbUpT+giqQ==
-X-CSE-MsgGUID: QOC77mZSSFaGoPAklROiYg==
+   d="scan'208";a="57984851"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:22:56 -0700
+X-CSE-ConnectionGUID: QvlZq7gwQ9+E/5LhCsTkdQ==
+X-CSE-MsgGUID: wxs8UbLiQcSp83OgTe8Nxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="173172924"
+   d="scan'208";a="168616509"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.120])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:15:14 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:22:52 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Aug 2025 13:15:11 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: hansg@kernel.org, kean0048@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Certificate support for
- ThinkCenter
-In-Reply-To: <20250801142648.3752293-1-mpearson-lenovo@squebb.ca>
-Message-ID: <8841e7c7-b181-67a0-c2a6-0b31fd38c4f0@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250801142648.3752293-1-mpearson-lenovo@squebb.ca>
+Date: Tue, 19 Aug 2025 13:22:49 +0300 (EEST)
+To: Gladyshev Ilya <foxido@foxido.dev>
+cc: Armin Wolf <w_armin@gmx.de>, linux-input@vger.kernel.org, 
+    nikita.nikita.krasnov@gmail.com, Armin Wolf <W_Armin@gmx.de>, 
+    Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5] platform/x86: Add WMI driver for Redmibook
+ keyboard.
+In-Reply-To: <20250813153137.18355-1-foxido@foxido.dev>
+Message-ID: <0ed8cf19-09cc-52cd-bc55-bf3f5d9e0c33@linux.intel.com>
+References: <20250813153137.18355-1-foxido@foxido.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,276 +63,220 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 1 Aug 2025, Mark Pearson wrote:
+On Wed, 13 Aug 2025, Gladyshev Ilya wrote:
 
-> ThinkCenter platforms use a different set of GUIDs along with some
-> differences in implementation details for their support of
-> certificate based authentication.
+> This driver implements support for various Fn keys (like Cut) and Xiaomi
+> specific AI button.
 > 
-> Update the think-lmi driver to work correctly on these platforms.
-> 
-> Tested on M75q Gen 5
-
-Missing .
-
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Co-developed by: Kean Ren <kean0048@gmail.com>
-
-Missing -.
-
-Also, any change which is developed by multiple people should have the
-signed-off-by for all its developers. Effectively, Co-d-b is always to be 
-paired S-o-b (obviously the other person should be okay with it, don't 
-invent S-o-b just to please the procedure :-) as it has certain legal 
-significance).
-
-You should also put your SoB as last.
-
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
 > ---
->  drivers/platform/x86/lenovo/think-lmi.c | 85 +++++++++++++++++++++----
->  drivers/platform/x86/lenovo/think-lmi.h |  1 +
->  2 files changed, 72 insertions(+), 14 deletions(-)
+> Changes since v4:
+> - Cosmetic fixes from Ilpo's review (posted on v3)
 > 
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-> index 0992b41b6221..08eac6c18688 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -119,6 +119,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * You must reboot the computer before the changes will take effect.
->   */
->  #define LENOVO_SET_BIOS_CERT_GUID    "26861C9F-47E9-44C4-BD8B-DFE7FA2610FE"
-> +#define LENOVO_TC_SET_BIOS_CERT_GUID "955aaf7d-8bc4-4f04-90aa-97469512f167"
+> Link to v4: https://lore.kernel.org/platform-driver-x86/20250801120321.9742-1-foxido@foxido.dev
+> ---
+>  MAINTAINERS                      |   6 ++
+>  drivers/platform/x86/Kconfig     |  12 +++
+>  drivers/platform/x86/Makefile    |   1 +
+>  drivers/platform/x86/redmi-wmi.c | 128 +++++++++++++++++++++++++++++++
+>  4 files changed, 147 insertions(+)
+>  create mode 100644 drivers/platform/x86/redmi-wmi.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c0b444e5fd5a..eb25fb10e751 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20965,6 +20965,12 @@ S:	Maintained
+>  T:	git https://github.com/pkshih/rtw.git
+>  F:	drivers/net/wireless/realtek/rtw89/
 >  
->  /*
->   * Name: UpdateBiosCert
-> @@ -128,6 +129,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * You must reboot the computer before the changes will take effect.
->   */
->  #define LENOVO_UPDATE_BIOS_CERT_GUID "9AA3180A-9750-41F7-B9F7-D5D3B1BAC3CE"
-> +#define LENOVO_TC_UPDATE_BIOS_CERT_GUID "5f5bbbb2-c72f-4fb8-8129-228eef4fdbed"
->  
->  /*
->   * Name: ClearBiosCert
-> @@ -137,6 +139,8 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * You must reboot the computer before the changes will take effect.
->   */
->  #define LENOVO_CLEAR_BIOS_CERT_GUID  "B2BC39A7-78DD-4D71-B059-A510DEC44890"
-> +#define LENOVO_TC_CLEAR_BIOS_CERT_GUID  "97849cb6-cb44-42d1-a750-26a596a9eec4"
+> +REDMIBOOK WMI DRIVERS
+> +M:	Gladyshev Ilya <foxido@foxido.dev>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/redmi-wmi.c
 > +
->  /*
->   * Name: CertToPassword
->   * Description: Switch from certificate to password authentication.
-> @@ -145,6 +149,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * You must reboot the computer before the changes will take effect.
->   */
->  #define LENOVO_CERT_TO_PASSWORD_GUID "0DE8590D-5510-4044-9621-77C227F5A70D"
-> +#define LENOVO_TC_CERT_TO_PASSWORD_GUID "ef65480d-38c9-420d-b700-ab3d6c8ebaca"
+>  REDPINE WIRELESS DRIVER
+>  L:	linux-wireless@vger.kernel.org
+>  S:	Orphan
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index e5cbd58a99f3..9f98a7042e43 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -109,6 +109,18 @@ config XIAOMI_WMI
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called xiaomi-wmi.
 >  
->  /*
->   * Name: SetBiosSettingCert
-> @@ -153,6 +158,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * Format: "Item,Value,Signature"
->   */
->  #define LENOVO_SET_BIOS_SETTING_CERT_GUID  "34A008CC-D205-4B62-9E67-31DFA8B90003"
-> +#define LENOVO_TC_SET_BIOS_SETTING_CERT_GUID  "19ecba3b-b318-4192-a89b-43d94bc60cea"
->  
->  /*
->   * Name: SaveBiosSettingCert
-> @@ -161,6 +167,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   * Format: "Signature"
->   */
->  #define LENOVO_SAVE_BIOS_SETTING_CERT_GUID "C050FB9D-DF5F-4606-B066-9EFC401B2551"
-> +#define LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID "0afaf46f-7cca-450a-b455-a826a0bf1af5"
->  
->  /*
->   * Name: CertThumbprint
-> @@ -170,6 +177,14 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   */
->  #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318176C4"
->  
-> +char *cert_thumbprint_guid = LENOVO_CERT_THUMBPRINT_GUID;
-> +char *set_bios_setting_cert_guid = LENOVO_SET_BIOS_SETTING_CERT_GUID;
-> +char *save_bios_setting_cert_guid = LENOVO_SAVE_BIOS_SETTING_CERT_GUID;
-> +char *cert_to_password_guid = LENOVO_CERT_TO_PASSWORD_GUID;
-> +char *clear_bios_cert_guid = LENOVO_CLEAR_BIOS_CERT_GUID;
-> +char *update_bios_cert_guid = LENOVO_UPDATE_BIOS_CERT_GUID;
-> +char *set_bios_cert_guid = LENOVO_SET_BIOS_CERT_GUID;
+> +config REDMI_WMI
+> +	tristate "Redmibook WMI key driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	select INPUT_SPARSEKMAP
+> +	help
+> +	  Say Y here if you want support for WMI-based hotkey events on
+> +	  Xiaomi Redmibook devices.
 > +
-
-These should be static, no?
-
->  #define TLMI_POP_PWD  BIT(0) /* Supervisor */
->  #define TLMI_PAP_PWD  BIT(1) /* Power-on */
->  #define TLMI_HDD_PWD  BIT(2) /* HDD/NVME */
-> @@ -179,9 +194,20 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->  
->  static const struct tlmi_err_codes tlmi_errs[] = {
->  	{"Success", 0},
-> +	{"Set Certificate operation was successful.", 0},
->  	{"Not Supported", -EOPNOTSUPP},
->  	{"Invalid Parameter", -EINVAL},
->  	{"Access Denied", -EACCES},
-> +	{"Set Certificate operation failed with status:Invalid Parameter.", -EINVAL},
-> +	{"Set Certificate operation failed with status:Invalid certificate type.", -EINVAL},
-> +	{"Set Certificate operation failed with status:Invalid password format.", -EINVAL},
-> +	{"Set Certificate operation failed with status:Password retry count exceeded.", -EACCES},
-> +	{"Set Certificate operation failed with status:Password Invalid.", -EACCES},
-> +	{"Set Certificate operation failed with status:Operation aborted.", -EBUSY},
-> +	{"Set Certificate operation failed with status:No free slots to write.", -ENOSPC},
-> +	{"Set Certificate operation failed with status:Certificate not found.", -EEXIST},
-> +	{"Set Certificate operation failed with status:Internal error.", -EFAULT},
-> +	{"Set Certificate operation failed with status:Certificate too large.", -EFBIG},
->  	{"System Busy", -EBUSY},
->  };
->  
-> @@ -668,7 +694,10 @@ static ssize_t cert_thumbprint(char *buf, const char *arg, int count)
->  	const union acpi_object *obj;
->  	acpi_status status;
->  
-> -	status = wmi_evaluate_method(LENOVO_CERT_THUMBPRINT_GUID, 0, 0, &input, &output);
-> +	if (!cert_thumbprint_guid)
-> +		return -EOPNOTSUPP;
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called redmi-wmi.
 > +
-> +	status = wmi_evaluate_method(cert_thumbprint_guid, 0, 0, &input, &output);
->  	if (ACPI_FAILURE(status)) {
->  		kfree(output.pointer);
->  		return -EIO;
-> @@ -751,7 +780,7 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
->  		kfree_sensitive(passwd);
->  		return -ENOMEM;
->  	}
-> -	ret = tlmi_simple_call(LENOVO_CERT_TO_PASSWORD_GUID, auth_str);
-> +	ret = tlmi_simple_call(cert_to_password_guid, auth_str);
->  	kfree(auth_str);
->  	kfree_sensitive(passwd);
+>  config GIGABYTE_WMI
+>  	tristate "Gigabyte WMI temperature driver"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index bea87a85ae75..406dd0807ba7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+>  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+> +obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
+>  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
 >  
-> @@ -797,7 +826,7 @@ static ssize_t certificate_store(struct kobject *kobj,
->  		if (!auth_str)
->  			return -ENOMEM;
->  
-> -		ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
-> +		ret = tlmi_simple_call(clear_bios_cert_guid, auth_str);
->  		kfree(auth_str);
->  
->  		return ret ?: count;
-> @@ -834,7 +863,7 @@ static ssize_t certificate_store(struct kobject *kobj,
->  			kfree(new_cert);
->  			return -EACCES;
->  		}
-> -		guid = LENOVO_UPDATE_BIOS_CERT_GUID;
-> +		guid = update_bios_cert_guid;
->  		/* Format: 'Certificate,Signature' */
->  		auth_str = cert_command(setting, new_cert, signature);
->  	} else {
-> @@ -845,9 +874,17 @@ static ssize_t certificate_store(struct kobject *kobj,
->  			kfree(new_cert);
->  			return -EACCES;
->  		}
-> -		guid = LENOVO_SET_BIOS_CERT_GUID;
-> -		/* Format: 'Certificate, password' */
-> -		auth_str = cert_command(setting, new_cert, setting->password);
-> +		guid = set_bios_cert_guid;
-> +		if (tlmi_priv.thinkcenter_mode) {
-> +			/* Format: 'Certificate, password, encoding, kbdlang' */
-> +			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s", new_cert,
-> +					     setting->password,
-> +					     encoding_options[setting->encoding],
-> +					     setting->kbdlang);
-> +		} else {
-> +			/* Format: 'Certificate, password' */
-> +			auth_str = cert_command(setting, new_cert, setting->password);
-> +		}
->  	}
->  	kfree(new_cert);
->  	if (!auth_str)
-> @@ -1071,13 +1108,13 @@ static ssize_t current_value_store(struct kobject *kobj,
->  			goto out;
->  		}
->  
-> -		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
-> +		ret = tlmi_simple_call(set_bios_setting_cert_guid, set_str);
->  		if (ret)
->  			goto out;
->  		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
->  			tlmi_priv.save_required = true;
->  		else
-> -			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> +			ret = tlmi_simple_call(save_bios_setting_cert_guid,
-
-Could you please these conversions in a preparatory patch. Then add the 
-new stuff in the second patch.
-
->  					       tlmi_priv.pwd_admin->save_signature);
->  	} else if (tlmi_priv.opcode_support) {
->  		/*
-> @@ -1282,7 +1319,7 @@ static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *
->  				ret = -EINVAL;
->  				goto out;
->  			}
-> -			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> +			ret = tlmi_simple_call(save_bios_setting_cert_guid,
->  					       tlmi_priv.pwd_admin->save_signature);
->  			if (ret)
->  				goto out;
-> @@ -1583,6 +1620,22 @@ static int tlmi_analyze(struct wmi_device *wdev)
->  		wmi_has_guid(LENOVO_SAVE_BIOS_SETTING_CERT_GUID))
->  		tlmi_priv.certificate_support = true;
->  
-> +	/* ThinkCenter uses different GUIDs for certificate support */
-> +	if (wmi_has_guid(LENOVO_TC_SET_BIOS_CERT_GUID) &&
-> +	    wmi_has_guid(LENOVO_TC_SET_BIOS_SETTING_CERT_GUID) &&
-> +	    wmi_has_guid(LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID)) {
-> +		tlmi_priv.certificate_support = true;
-> +		tlmi_priv.thinkcenter_mode = true;
-> +		cert_thumbprint_guid = 0; /* Not supported */
-> +		set_bios_setting_cert_guid = LENOVO_TC_SET_BIOS_SETTING_CERT_GUID;
-> +		save_bios_setting_cert_guid = LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID;
-> +		cert_to_password_guid = LENOVO_TC_CERT_TO_PASSWORD_GUID;
-> +		clear_bios_cert_guid = LENOVO_TC_CLEAR_BIOS_CERT_GUID;
-> +		update_bios_cert_guid = LENOVO_TC_UPDATE_BIOS_CERT_GUID;
-> +		set_bios_cert_guid = LENOVO_TC_SET_BIOS_CERT_GUID;
-> +		pr_info("ThinkCenter modified support being used\n");
-
-This looks like you'd want to have a single (const?) struct which holds 
-all this information so you'd not need to assign a gazillion of pointers.
-
+>  # Acer
+> diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
+> new file mode 100644
+> index 000000000000..104c4953d67d
+> --- /dev/null
+> +++ b/drivers/platform/x86/redmi-wmi.c
+> @@ -0,0 +1,128 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* WMI driver for Xiaomi Redmibooks */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/unaligned.h>
+> +#include <linux/wmi.h>
+> +
+> +#include <uapi/linux/input-event-codes.h>
+> +
+> +#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
+> +
+> +#define AI_KEY_VALUE_MASK 0x00000100
+> +
+> +static const struct key_entry redmi_wmi_keymap[] = {
+> +	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
+> +	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
+> +	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
+> +
+> +	/* AI button has code for each position */
+> +	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
+> +	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
+> +
+> +	/* Keyboard backlight */
+> +	{KE_IGNORE, 0x00000501, {}},
+> +	{KE_IGNORE, 0x00800501, {}},
+> +	{KE_IGNORE, 0x00050501, {}},
+> +	{KE_IGNORE, 0x000a0501, {}},
+> +
+> +	{KE_END}
+> +};
+> +
+> +struct redmi_wmi {
+> +	struct input_dev *input_dev;
+> +	/* Protects the key event sequence */
+> +	struct mutex key_lock;
+> +};
+> +
+> +static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct redmi_wmi *data;
+> +	int err;
+> +
+> +	/* Init dev */
+> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, data);
+> +
+> +	err = devm_mutex_init(&wdev->dev, &data->key_lock);
+> +	if (err)
+> +		return err;
+> +
+> +	data->input_dev = devm_input_allocate_device(&wdev->dev);
+> +	if (!data->input_dev)
+> +		return -ENOMEM;
+> +
+> +	data->input_dev->name = "Redmibook WMI keys";
+> +	data->input_dev->phys = "wmi/input0";
+> +
+> +	err = sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
+> +	if (err)
+> +		return err;
+> +
+> +	return input_register_device(data->input_dev);
+> +}
+> +
+> +static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +{
+> +	struct redmi_wmi *data = dev_get_drvdata(&wdev->dev);
+> +	bool autorelease = true;
+> +	u32 payload;
+> +	int value = 1;
+> +
+> +	if (obj->type != ACPI_TYPE_BUFFER) {
+> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> +		return;
 > +	}
 > +
->  	/*
->  	 * Try to find the number of valid settings of this machine
->  	 * and use it to create sysfs attributes.
-> @@ -1728,10 +1781,14 @@ static int tlmi_analyze(struct wmi_device *wdev)
->  	}
->  
->  	if (tlmi_priv.certificate_support) {
-> -		tlmi_priv.pwd_admin->cert_installed =
-> -			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
-> -		tlmi_priv.pwd_system->cert_installed =
-> -			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
-> +		if (tlmi_priv.thinkcenter_mode) {
-> +			tlmi_priv.pwd_admin->cert_installed = tlmi_priv.pwdcfg.core.password_mode;
-> +		} else {
-> +			tlmi_priv.pwd_admin->cert_installed =
-> +				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
-> +			tlmi_priv.pwd_system->cert_installed =
-> +				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
-> +		}
->  	}
->  	return 0;
->  
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.h b/drivers/platform/x86/lenovo/think-lmi.h
-> index 9b014644d316..c805ee312539 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.h
-> +++ b/drivers/platform/x86/lenovo/think-lmi.h
-> @@ -109,6 +109,7 @@ struct think_lmi {
->  	enum save_mode save_mode;
->  	bool save_required;
->  	bool reboot_required;
-> +	bool thinkcenter_mode;
->  
->  	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
->  	struct device *class_dev;
+> +	if (obj->buffer.length < 32) {
+> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
+> +		return;
+> +	}
+> +
+> +	payload = get_unaligned_le32(obj->buffer.pointer);
+> +	struct key_entry *entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
+
+Please only define variables at the beginning of some block (in this case, 
+at the beginning of the function).
+
+The only exception to this rule are cleanup.h related variables which may 
+have to be defined mid-function to ensure the correct teardown order of 
+the auto variables.
+
+> +
+> +	if (!entry) {
+> +		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
+> +		return;
+> +	}
+> +
+> +	/* AI key quirk */
+> +	if (entry->keycode == KEY_ASSISTANT) {
+> +		value = !(payload & AI_KEY_VALUE_MASK);
+> +		autorelease = false;
+> +	}
+> +
+> +	guard(mutex)(&data->key_lock);
+> +	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
+> +}
+> +
+> +static const struct wmi_device_id redmi_wmi_id_table[] = {
+> +	{ WMI_REDMIBOOK_KEYBOARD_EVENT_GUID, NULL },
+> +	{ }
+> +};
+> +
+> +static struct wmi_driver redmi_wmi_driver = {
+> +	.driver = {
+> +		.name = "redmi-wmi",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table = redmi_wmi_id_table,
+> +	.probe = redmi_wmi_probe,
+> +	.notify = redmi_wmi_notify,
+> +	.no_singleton = true,
+> +};
+> +module_wmi_driver(redmi_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
+> +MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
+> +MODULE_DESCRIPTION("Redmibook WMI driver");
+> +MODULE_LICENSE("GPL");
 > 
 
 -- 
