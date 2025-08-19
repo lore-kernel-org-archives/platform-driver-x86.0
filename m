@@ -1,117 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F6131AF01;
-	Tue, 19 Aug 2025 09:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C29311C16;
+	Tue, 19 Aug 2025 10:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755597107; cv=none; b=ZiJBem+Z9BUg+06OnOmXPVpTA1qL04S1hsB+NmG9fIyd5KbYlNf23fH03MDdwwfbOgva/ozLcKp52p+UytnDh32a+ZbvgHocuq+DNmrpTEcD8MJzgvhILmrCJTu/QmLdJ/ehL7qLarOyA/du7BvfGJi2ODxEk0R/u0rdarnfeGo=
+	t=1755597635; cv=none; b=dPpUAwqVoPYmr7x1FmSM9xenOVUvcapPYW0o93QqsrJdhXW+i0Z2vRaPjYKKc/YISwjA7j/aUxfvQqKK6bCA+qW9TgIqKejD8yvChDhmpf5ElwonUAD8Urflzu5JJwxMw45/ZfvhxQSMOXbM0tVeVYAX9Eqo4g8nW4e9wlQfScI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755597107; c=relaxed/simple;
-	bh=zAEE6PZmXVlAjr1qANkvoRFgZ0C3gmkOIMFOBCdWG5o=;
+	s=arc-20240116; t=1755597635; c=relaxed/simple;
+	bh=BY8bJb20U9mG5LpbeW/O5Prv0q93kHOPqPkHxNam+Jc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=d1oJMRgl0+x7IBq9pj6+Q+f1L6mwQH9QFwC8Lx7v9JVdgJczf+/N2S0cNN1ZsmQG84RW5DpAko6DVCaKH6nFKWlu+UI1ZHQgkuTDilvPiXk0fZhtOHiQFwLpZl34MhA3bIgxZa+RH3sulUIlB+Tycx0X+dp7n9PFrEBGi9Omfqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZruq3oV; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=R1UwPBJPu/4MUSedKYJY2C5pT7iYYK9YUX/kMywTHCBDCDIFn4OBUCVbsu0d9M4p0SmIF+woCmY5/Pcs7jmHRjYB7iIb6UYaRiCGVX3Q1dCeybxZRkTslyl0L+j/hbyhc1+NnFQhvIdNQr9AsiJ5PX7ZnOIyDiQRPRMUtRY3zRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSDQO6+w; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZruq3oV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSDQO6+w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755597105; x=1787133105;
+  t=1755597634; x=1787133634;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=zAEE6PZmXVlAjr1qANkvoRFgZ0C3gmkOIMFOBCdWG5o=;
-  b=NZruq3oVgCCQ9d3QA7X7JoSLgeLSGIHAk3UEQk3OLJRLT/NQJyJZlwrM
-   huj/3d7HfBqAvlvT/hqmD/lmpVTIvxjZ0Y0tX+PA9mSFny5ZSFan+3tJf
-   AqhIbxnrc30UA3SflVSov++UHkM0JuCIU+fMGLjWVrA7+qvZ3QFBnHyi9
-   Pvc835oxvp0azwuvXEHLw4iKbSmSKUJo9/iiQPJj2o3QGqV+mcr2i3B0L
-   OplX8UiU4B2fy45a/VoPio5od7BxKg977Thstzf6Kt0TeA4tn5j/J8RLT
-   ZNoIWlVhIXlI2BOVL1/3NPV4Kf/J9hAYjcnFjr1w+Zy9XsQy48JFCq5nk
+  bh=BY8bJb20U9mG5LpbeW/O5Prv0q93kHOPqPkHxNam+Jc=;
+  b=cSDQO6+w/MMLixqoaq50n/7PYk4uPD/KHOaFwWot/xoNZzKXqZEO6yR7
+   fdn7MMyzRRf9En2E0oHYyFf0HZ83kJvs1moaNk4kqjYwh/bv0bYoZyq0l
+   HUeomknO5XdlCJ/Jy4nqBQ/4A3ZqN48aQStbMYAvL25Bloc4t4AEx6ed2
+   ZD9DFUF/h/6ylAE/cN+kKBpZ556iI+A9BSLPHrdFyYbzO/v/8Rw9etByR
+   UWJCjTOMXN/NVSDWKIM3OKsV2nUIdOk1b0kyEG1mrtgTAiWzKfS03S6fQ
+   TJXn5uuSap2JylEpkrjeLl6eH5ogFRU2hTstgQ4TNL9ceF00Y0D0HbRfD
    A==;
-X-CSE-ConnectionGUID: 9otPXgPaS/GdSw/bMZ+IcA==
-X-CSE-MsgGUID: RAy4n2qlTrm1Cm9OjDQO4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="45409206"
+X-CSE-ConnectionGUID: SrR5WzDIQBa9ZMlg85sIsA==
+X-CSE-MsgGUID: jcMGdhJCQ6OWeWHyVBrwHw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="75288477"
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="45409206"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:51:44 -0700
-X-CSE-ConnectionGUID: /jbhT4oYQ6GmqD+2nuhHrQ==
-X-CSE-MsgGUID: CvRcmYYNQsejpPuBuM2ziQ==
+   d="scan'208";a="75288477"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:00:34 -0700
+X-CSE-ConnectionGUID: BLQl8fdfRe+VxWdFoD/sFw==
+X-CSE-MsgGUID: N0UNk5I+TfeVEYZJp5QNkg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="173036722"
+   d="scan'208";a="167045565"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.120])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:51:42 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 03:00:31 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Aug 2025 12:51:39 +0300 (EEST)
-To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
-cc: Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, linux@roeck-us.net, 
-    wim@linux-watchdog.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-watchdog@vger.kernel.org, jay.chen@canonical.com
-Subject: Re: [PATCH v3 1/2] platform/x86: portwell-ec: Add suspend/resume
- support for watchdog
-In-Reply-To: <e11e542b-b630-4f18-8a60-a36fe31c0133@portwell.com.tw>
-Message-ID: <6584da3e-fc86-7a47-f783-da77049b2215@linux.intel.com>
-References: <22148817-aade-4e40-92b7-dcac0916e1ed@portwell.com.tw> <e11e542b-b630-4f18-8a60-a36fe31c0133@portwell.com.tw>
+Date: Tue, 19 Aug 2025 13:00:27 +0300 (EEST)
+To: =?ISO-8859-15?Q?Miguel_Garc=EDa?= <miguelgarciaroman8@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    krzk@kernel.org
+Subject: Re: [PATCH v3] platform/x86: surfacepro3_button: replace deprecated
+ strcpy() with strscpy()
+In-Reply-To: <20250728201135.584023-1-miguelgarciaroman8@gmail.com>
+Message-ID: <b6cb7905-8906-27eb-60a4-4475cd3f709a@linux.intel.com>
+References: <20250728194942.558194-1-miguelgarciaroman8@gmail.com> <20250728201135.584023-1-miguelgarciaroman8@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1654603073-1755597627=:949"
 
-On Mon, 28 Jul 2025, Yen-Chi Huang wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Portwell EC does not disable the watchdog during suspend. To avoid unwanted
-> resets, this patch adds suspend and resume callbacks (pwec_suspend() and
-> pwec_resume()) to the driver.
-> 
-> The watchdog is stopped in pwec_suspend() and restarted in pwec_resume() if
-> it was active before suspend.
-> 
-> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+--8323328-1654603073-1755597627=:949
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 28 Jul 2025, Miguel Garc=C3=ADa wrote:
+
+> Replace strcpy() with strscpy() when copying SURFACE_BUTTON_DEVICE_NAME
+> into the device=E2=80=99s embedded name buffer returned by acpi_device_na=
+me().
+> Bound the copy with MAX_ACPI_DEVICE_NAME_LEN to guarantee NUL-termination
+> and avoid pointer-sized sizeof() mistakes.
+>=20
+> This is a mechanical safety improvement; functional behavior is unchanged=
+=2E
+>=20
+> Signed-off-by: Miguel Garc=C3=ADa <miguelgarciaroman8@gmail.com>
 > ---
->  drivers/platform/x86/portwell-ec.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
-> index 3e019c51913e..7f473e3032e2 100644
-> --- a/drivers/platform/x86/portwell-ec.c
-> +++ b/drivers/platform/x86/portwell-ec.c
-> @@ -246,11 +246,29 @@ static int pwec_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int pwec_suspend(struct platform_device *pdev, pm_message_t message)
-> +{
-> +	if (watchdog_active(&ec_wdt_dev))
-> +		return pwec_wdt_stop(&ec_wdt_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwec_resume(struct platform_device *pdev)
-> +{
-> +	if (watchdog_active(&ec_wdt_dev))
-> +		return pwec_wdt_start(&ec_wdt_dev);
-> +
-> +	return 0;
-> +}
-> +
->  static struct platform_driver pwec_driver = {
->  	.driver = {
->  		.name = "portwell-ec",
->  	},
->  	.probe = pwec_probe,
-> +	.suspend = pm_ptr(pwec_suspend),
-> +	.resume = pm_ptr(pwec_resume),
+> v2:
+>  - Use MAX_ACPI_DEVICE_NAME_LEN instead of sizeof(name).
+>=20
+> v3:
+>  - Add full commit message (v2 was sent without message).
+>=20
+> Testing:
+>  - Build-tested on x86_64 (defconfig, allmodconfig, W=3D1).
+>  - No runtime testing on Surface hardware
+>=20
+>  drivers/platform/surface/surfacepro3_button.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/plat=
+form/surface/surfacepro3_button.c
+> index 2755601f979c..772e107151f6 100644
+> --- a/drivers/platform/surface/surfacepro3_button.c
+> +++ b/drivers/platform/surface/surfacepro3_button.c
+> @@ -211,7 +211,7 @@ static int surface_button_add(struct acpi_device *dev=
+ice)
+>  =09}
+> =20
+>  =09name =3D acpi_device_name(device);
+> -=09strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
+> +=09strscpy(name, SURFACE_BUTTON_DEVICE_NAME, MAX_ACPI_DEVICE_NAME_LEN);
 
-These are legacy handlers, please use .pm under .driver and the macros to 
-create the struct dev_pm_ops.
+As mentioned earlier, I'd prefer this to use the two argument version of=20
+strscpy():
 
--- 
+=09strscpy(acpi_device_name(device), SURFACE_BUTTON_DEVICE_NAME);
+
+=2E..Changing to that may mean changes to name variable as well (remove=20
+it?).
+
+--=20
  i.
 
+--8323328-1654603073-1755597627=:949--
