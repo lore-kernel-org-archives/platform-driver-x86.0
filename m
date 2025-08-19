@@ -1,59 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB5E26C393;
-	Tue, 19 Aug 2025 08:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F6131AF01;
+	Tue, 19 Aug 2025 09:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755592318; cv=none; b=CaDMP649jIL5rbVUploU01eWSrsfWFjA73JqW+dZjN3Gq5aIO150O8MdOLD6CYNZfl8xisWMySRsU6Zs6RuMf2n6Rd0uU5/VECWqcATO1kjTj9pdaT2UjSOYVTWbpeVV1c14xBWBpCb3AbdxVD0EhAab4/4eKVnWi6NqX2rMSyY=
+	t=1755597107; cv=none; b=ZiJBem+Z9BUg+06OnOmXPVpTA1qL04S1hsB+NmG9fIyd5KbYlNf23fH03MDdwwfbOgva/ozLcKp52p+UytnDh32a+ZbvgHocuq+DNmrpTEcD8MJzgvhILmrCJTu/QmLdJ/ehL7qLarOyA/du7BvfGJi2ODxEk0R/u0rdarnfeGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755592318; c=relaxed/simple;
-	bh=/TBDlG5bpgeOXcz9erypKFJjVXh1iHpqW//P2dM/OFY=;
+	s=arc-20240116; t=1755597107; c=relaxed/simple;
+	bh=zAEE6PZmXVlAjr1qANkvoRFgZ0C3gmkOIMFOBCdWG5o=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ymjl4vwzmbXtct34x20hWj7gi082vSX7MjAHUthYkonV5ZmI3Cv1x1j2zm9cnaQFC/FgBPe4uBvoE1L7lDz5GHqHjVxlKC+HrQBFZZM1bKSM2ePi6ljSFCAM20cPLTM07pVVuym8+POPPqbNgtFG0mU4mG6/O2VKLExjz/Ymikc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WWY/tLmV; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=d1oJMRgl0+x7IBq9pj6+Q+f1L6mwQH9QFwC8Lx7v9JVdgJczf+/N2S0cNN1ZsmQG84RW5DpAko6DVCaKH6nFKWlu+UI1ZHQgkuTDilvPiXk0fZhtOHiQFwLpZl34MhA3bIgxZa+RH3sulUIlB+Tycx0X+dp7n9PFrEBGi9Omfqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZruq3oV; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WWY/tLmV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZruq3oV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755592317; x=1787128317;
+  t=1755597105; x=1787133105;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/TBDlG5bpgeOXcz9erypKFJjVXh1iHpqW//P2dM/OFY=;
-  b=WWY/tLmVhkenFPYSTI0FBMBPTsH02SX/w/ZTnNUygSrDcUHqFBfX83hw
-   c0+FEPmw5VMNTxgnIO5e1D3vJecZDLVvSj28oSYUdKX1dvgdv6uMbFCDB
-   eg/uWeTuSqRO0N9a0N4FOxugQgDUUdxNBEveqcIyJUFAMOpH8pNM+DTBd
-   42xmrF+s07/mNfHrUEowJnfpynx3WXRp+4jIyApa+3HdTeeKk0SboYKQz
-   NTBcGj9KKri2hZ+RMVBK37odOPRi+43JSPlXQvh+TE2fbSgPaUscWoEuF
-   wQVGDmMi/ufCun6HTlueqG5BIWzDpfTciVKdjirlyEK672DyNQR6AUAJR
-   w==;
-X-CSE-ConnectionGUID: 380xHIfXTkmcI+1S8b8hsA==
-X-CSE-MsgGUID: DKFBIsctTxquh1VSb+YIyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="68925866"
+  bh=zAEE6PZmXVlAjr1qANkvoRFgZ0C3gmkOIMFOBCdWG5o=;
+  b=NZruq3oVgCCQ9d3QA7X7JoSLgeLSGIHAk3UEQk3OLJRLT/NQJyJZlwrM
+   huj/3d7HfBqAvlvT/hqmD/lmpVTIvxjZ0Y0tX+PA9mSFny5ZSFan+3tJf
+   AqhIbxnrc30UA3SflVSov++UHkM0JuCIU+fMGLjWVrA7+qvZ3QFBnHyi9
+   Pvc835oxvp0azwuvXEHLw4iKbSmSKUJo9/iiQPJj2o3QGqV+mcr2i3B0L
+   OplX8UiU4B2fy45a/VoPio5od7BxKg977Thstzf6Kt0TeA4tn5j/J8RLT
+   ZNoIWlVhIXlI2BOVL1/3NPV4Kf/J9hAYjcnFjr1w+Zy9XsQy48JFCq5nk
+   A==;
+X-CSE-ConnectionGUID: 9otPXgPaS/GdSw/bMZ+IcA==
+X-CSE-MsgGUID: RAy4n2qlTrm1Cm9OjDQO4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="45409206"
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="68925866"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 01:31:57 -0700
-X-CSE-ConnectionGUID: oqNomq+pT2WwVfgNF2icog==
-X-CSE-MsgGUID: wGtij9/OQbamS//FQxFMQQ==
+   d="scan'208";a="45409206"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:51:44 -0700
+X-CSE-ConnectionGUID: /jbhT4oYQ6GmqD+2nuhHrQ==
+X-CSE-MsgGUID: CvRcmYYNQsejpPuBuM2ziQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="167026957"
+   d="scan'208";a="173036722"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.120])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 01:31:53 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:51:42 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Aug 2025 11:31:48 +0300 (EEST)
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-cc: mario.limonciello@amd.com, perry.yuan@amd.com, hansg@kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH -next] platform/x86: hfi: Remove unnecessary .owner for
- amd_hfi_driver
-In-Reply-To: <20250725082735.2005040-1-jiapeng.chong@linux.alibaba.com>
-Message-ID: <8a52ee4f-ab2a-f9c3-9f35-d878ac3c4b70@linux.intel.com>
-References: <20250725082735.2005040-1-jiapeng.chong@linux.alibaba.com>
+Date: Tue, 19 Aug 2025 12:51:39 +0300 (EEST)
+To: Yen-Chi Huang <jesse.huang@portwell.com.tw>
+cc: Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, linux@roeck-us.net, 
+    wim@linux-watchdog.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-watchdog@vger.kernel.org, jay.chen@canonical.com
+Subject: Re: [PATCH v3 1/2] platform/x86: portwell-ec: Add suspend/resume
+ support for watchdog
+In-Reply-To: <e11e542b-b630-4f18-8a60-a36fe31c0133@portwell.com.tw>
+Message-ID: <6584da3e-fc86-7a47-f783-da77049b2215@linux.intel.com>
+References: <22148817-aade-4e40-92b7-dcac0916e1ed@portwell.com.tw> <e11e542b-b630-4f18-8a60-a36fe31c0133@portwell.com.tw>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,39 +63,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 25 Jul 2025, Jiapeng Chong wrote:
+On Mon, 28 Jul 2025, Yen-Chi Huang wrote:
 
-> Remove .owner field if calls are used which set it automatically.
-
-This changelog is too confusing, please improve. You state "if calls are 
-used which set it automatically", are they used or not? Preferrably name 
-the call. Please don't leave things like that hanging into air.
-
-> ./drivers/platform/x86/amd/hfi/hfi.c:512:3-8: No need to set .owner here. The core will do it.
-
-This looks like an error/warning message from something? Please explain 
-before the quote what outputted it.
-
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=22940
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> Portwell EC does not disable the watchdog during suspend. To avoid unwanted
+> resets, this patch adds suspend and resume callbacks (pwec_suspend() and
+> pwec_resume()) to the driver.
+> 
+> The watchdog is stopped in pwec_suspend() and restarted in pwec_resume() if
+> it was active before suspend.
+> 
+> Signed-off-by: Yen-Chi Huang <jesse.huang@portwell.com.tw>
 > ---
->  drivers/platform/x86/amd/hfi/hfi.c | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/platform/x86/portwell-ec.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index 4f56149b3774..b633363ebf70 100644
-> --- a/drivers/platform/x86/amd/hfi/hfi.c
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -509,7 +509,6 @@ static int amd_hfi_probe(struct platform_device *pdev)
->  static struct platform_driver amd_hfi_driver = {
+> diff --git a/drivers/platform/x86/portwell-ec.c b/drivers/platform/x86/portwell-ec.c
+> index 3e019c51913e..7f473e3032e2 100644
+> --- a/drivers/platform/x86/portwell-ec.c
+> +++ b/drivers/platform/x86/portwell-ec.c
+> @@ -246,11 +246,29 @@ static int pwec_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int pwec_suspend(struct platform_device *pdev, pm_message_t message)
+> +{
+> +	if (watchdog_active(&ec_wdt_dev))
+> +		return pwec_wdt_stop(&ec_wdt_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pwec_resume(struct platform_device *pdev)
+> +{
+> +	if (watchdog_active(&ec_wdt_dev))
+> +		return pwec_wdt_start(&ec_wdt_dev);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct platform_driver pwec_driver = {
 >  	.driver = {
->  		.name = AMD_HFI_DRIVER,
-> -		.owner = THIS_MODULE,
->  		.pm = &amd_hfi_pm_ops,
->  		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
+>  		.name = "portwell-ec",
 >  	},
-> 
+>  	.probe = pwec_probe,
+> +	.suspend = pm_ptr(pwec_suspend),
+> +	.resume = pm_ptr(pwec_resume),
+
+These are legacy handlers, please use .pm under .driver and the macros to 
+create the struct dev_pm_ops.
 
 -- 
  i.
