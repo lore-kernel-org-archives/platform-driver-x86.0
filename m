@@ -1,71 +1,62 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D78C33439F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Aug 2025 15:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F3023909F;
+	Wed, 20 Aug 2025 16:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755705599; cv=none; b=nIfncOl3agsl3ZtFNzFys6rq9w+uGJd76TrOgrv1QRd+ujcGKvg5m0bYAy9OQVONa0DLzhWusCFT5pKmpQJx0GhtEmbRiqFzwZ6HzIwJzQKZKgLotcUMM4kvB2+Xaw5SRw1EUPmmekQqfxzOdGkjSXQunsWpAHpI9/kImnLp1lY=
+	t=1755706004; cv=none; b=T6q12Sa117jIQ9NVknXQv/X42w3MQx3OSjA6sk+/9JuR/ZdBj6eXtYtv5/fyqlbFiNcQJPMCvJPCHO2yDnPbC9ruA69LxZdNhNo2ECFqTGiBZ0tBKNhcvhB1xsgBXDPCfm3v45YGx4MT+7JH+423TThIIZg6SHNNmuCtJqL+iaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755705599; c=relaxed/simple;
-	bh=nIypl1ykODERwxC+sJ9vhNg0TKnMww6pPFYnDB3p4Lk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ITOm68GXVGFuqMwIICc+7JsrWsgyAlz3JA/nhcb16+InZVobzkI+BNtvPPlQHjxKAOLfjwsyCF55GiG++ssRWPAFCEwVdKQUyuceGltqUfkldJyWfxFwTJTn2+YIehPjTUG+Rp11im11f4eVn5jb0qzPrS1U3RBG4Jl4+yiIOtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGAhjt2Q; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755706004; c=relaxed/simple;
+	bh=zb2g+r3cJ7UMel+RtIvaiOlpRn9I9h6P+DbCMImmBLk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=It+DKqj91KiGyZiuJnWZc0CUGYZf+dudwP5wT6a/KMcsPzrJeJ665DbRdvSjcmlbMc48Awm8L6s/WFXRQXVTc/M+ZjNUd8bnA8pMNd9epvolJ6QC7k0yTrDy/ZvmbPRqnQq7bzLEj/iy+I/WCBksz1Kr4EpDiePSnOGrk9fJFyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=K2SnrFQK; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGAhjt2Q"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afcb732eee6so6239866b.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Aug 2025 08:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755705596; x=1756310396; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/kD6SDXu00rWD2E4zF7s0LVKDHyHggVTHrfvP7QIfM=;
-        b=bGAhjt2Qjpb7FHXo4Vt0NgYHD4kKDzU6oY09fEMGrhwx9/52e/LoGChYM+Hr2RsBMH
-         gXRlvnjqcg2HC/r4T6Ws/edPvfwRkZPu72zWZ+Y4WfkTlHcv7b/HWF4aNFlK7LzBUO/D
-         zYEQ9lWk13RHHKwM3YFoeuGAnunIJl+LX/rkA6EefYKdqR4pLnTBArfsRBgQncbPrP9A
-         ebDicRnxJ8JaeDxoNrpK8qEn2xOlGnALKa0e18eGwUkx/BA91ofelLmszuLImVyj2Qze
-         /794LWhBJzmQ9m9xtKB67wOTTfVOemDfDVn+3yJWjIFoOUz8K/pzKGojmHd7v7vQUis/
-         mVEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755705596; x=1756310396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O/kD6SDXu00rWD2E4zF7s0LVKDHyHggVTHrfvP7QIfM=;
-        b=P/lrmwcdtLOCcnQkX+h5EmxkX1TBvSa6L/JB3pdzMxXKNddMLPe3dCTnp1syDZ5xnI
-         I4NczUrHe5oO9cdWWEnXF0lEsgWClPPxTFjwOeuEdoSa5nxSUVMTIMv7uwuZ7fKQ5QZq
-         dQNYi48B/VDPBQ7tJw25zNQl2ninb+vNTpvNcfdftOTywqPzAOW+qfKf7B9F34wgtd8t
-         jeNttwNTjjgc0btbKeAHjn/RO5yWfwaFhn+I5gxI2zX9fVZdQ535vDbERBQq6zdw6Hg2
-         Fq8lQGW5FeIePT74v2I1BakvYZLgYw9nZqi1q36FVewY6aU4xaG6trWoAe+usT1Ytwr1
-         7IbQ==
-X-Gm-Message-State: AOJu0YyGfs8/PXWNwNeJfn9qjyDxpNiWinv6ZPnZLulO+NNF9CBrIDPB
-	OIge/BuJWzN1NoWAoFqsR4OB7z6l7F3Um0bZIO5nQBysDDR6Lk2hoxLu
-X-Gm-Gg: ASbGncsYGDxUG23fIEamH01jLgtueWF78kO8hC0TjExAW7I973tjA7b002qaOXhcM/E
-	z53pmXNpnzdCbhw2WcTYxQnrF0DD6oiwukxaxVa8tsCVssrWqIhtj7Q+JvNKgeh6a6/lSv8YWy4
-	3f5QbuS8gstD7DsFvKWFd95s/hTrRhPhiPnppeQsdpWCageriN20Jds47wNHLQ4KtP/iEiroNHu
-	FGRHbu6UpbPwd4scANmRMeR/PUSDh5SoQ5dVQbC3gAhtFwCBB28NzFGpk1eW6hyfgt/GUDTdZ3M
-	IbQRLwzUGO/uHnNlY8Uu42trGjoGH04eKZa6fbhEtX9hOSyXEOKKvL8SwoPESVW8+fQgpDe4Eiz
-	s8lLtW2k3lxLNRnWQs2DdCjGZ0yIp
-X-Google-Smtp-Source: AGHT+IH9aBKzJZPrEV7YyFfECG8WNpeoRRWd+CwdR5R3M8ebRmWchAAgVtuOQEsWT5L/zd16l3z4uA==
-X-Received: by 2002:a17:907:6d04:b0:afc:d209:37f2 with SMTP id a640c23a62f3a-afdf0284ebdmr270162966b.61.1755705596334;
-        Wed, 20 Aug 2025 08:59:56 -0700 (PDT)
-Received: from vagrant.. ([31.223.98.68])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded2ba596sm200912566b.8.2025.08.20.08.59.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Aug 2025 08:59:56 -0700 (PDT)
-From: Alperen Aksu <aksulperen@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Alperen Aksu <aksulperen@gmail.com>
-Subject: [PATCH] Documentation/wmi: Fix Typo Error in doc
-Date: Wed, 20 Aug 2025 15:58:35 +0000
-Message-ID: <20250820155904.32685-2-aksulperen@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="K2SnrFQK"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id 04241C5C82;
+	Wed, 20 Aug 2025 19:06:34 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id 7D7E9C5C7D;
+	Wed, 20 Aug 2025 19:06:33 +0300 (EEST)
+Received: from antheas-z13 (unknown [IPv6:2a05:f6c2:511b:0:7200:c86a:8976:4786])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id A1FD41FD4AC;
+	Wed, 20 Aug 2025 19:06:32 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1755705993;
+	bh=5lPVm50we/HBZRgiKKoeroZQYLufvKOV3QNKU3+SIrs=; h=From:To:Subject;
+	b=K2SnrFQKeQg/ITN0jYvs9AgSJ7Aog2B3TvIujGtIu7kMFf4a+vuReUAfMm0TDqJmd
+	 tbkzIH3sEUEF7n4YmMxiZLSjghc1MReEphsMrpNHQHys/3GDYHZJX8E5b45ALHIYUZ
+	 zzM6sFzdBKFzZnXFepM+8woH0yZviuqYPaLCLbSTqE/JXUXJxI4xds8mUnFDZUlq0t
+	 /U5RPrSZDEdxDWVY1DHiQD047Vt9w/tN+ky6u9Uc4KLb8X9VwhhStV5ywXntyEqleh
+	 D78uWdtQ+QmQP1eZLxDIEeB92DMzY/pbZJDec6wObZXeB2wlS1tIxklixuyvfhl+oi
+	 DIrlYbtE2a5rQ==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:7200:c86a:8976:4786) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 3/5] platform/x86: ayaneo-ec: Add charge control support
+Date: Wed, 20 Aug 2025 18:06:26 +0200
+Message-ID: <20250820160628.99678-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250820160628.99678-1-lkml@antheas.dev>
+References: <20250820160628.99678-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,27 +64,198 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <175570599317.2162733.2479809423753195306@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Fix to correct spelling of "Hardware"
+Ayaneo devices support charge inhibition via the EC. This inhibition
+only works while the device is powered on, and resets between restarts.
+However, it is maintained across suspend/resume cycles.
 
-Signed-off-by: Alperen Aksu <aksulperen@gmail.com>
+The EC does not support charge threshold control. Instead, userspace
+software on Windows manually toggles charge inhibition depending on
+battery level.
+
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/Kconfig     |   1 +
+ drivers/platform/x86/ayaneo-ec.c | 111 +++++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-index 997263e51a7d..24b027362e93 100644
---- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-@@ -126,7 +126,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-     [WmiMethodId(65), Implemented, Description("Set IGPU Mode")] void SetIGPUModeStatus([in, Description("IGPU Mode")] UINT32 mode, [out, Description("return code")] UINT32 Data);
-     [WmiMethodId(66), Implemented, Description("Notify DGPU Status")] void NotifyDGPUStatus([in, Description("DGPU status")] UINT32 status, [out, Description("return code")] UINT32 Data);
-     [WmiMethodId(67), Implemented, Description("Is changed Y log")] void IsChangedYLog([out, Description("Is changed Y Log")] UINT32 Data);
--    [WmiMethodId(68), Implemented, Description("Get DGPU Hardwawre ID")] void GetDGPUHWId([out, Description("Get DGPU Hardware ID")] string Data);
-+    [WmiMethodId(68), Implemented, Description("Get DGPU Hardware ID")] void GetDGPUHWId([out, Description("Get DGPU Hardware ID")] string Data);
-   };
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0a7ca2c78456..c871a722e5ef 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -308,6 +308,7 @@ config AYANEO_EC
+ 	tristate "Ayaneo EC platform control"
+ 	depends on X86
+ 	depends on ACPI_EC
++	depends on ACPI_BATTERY
+ 	depends on HWMON
+ 	help
+ 	  Enables support for the platform EC of Ayaneo devices. This
+diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
+index 8b1902706b81..a4bdc6ae7af7 100644
+--- a/drivers/platform/x86/ayaneo-ec.c
++++ b/drivers/platform/x86/ayaneo-ec.c
+@@ -14,6 +14,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <acpi/battery.h>
  
-   [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Definition of CPU OC parameter list"), guid("{B7F3CA0A-ACDC-42D2-9217-77C6C628FBD2}")]
+ #define AYANEO_PWM_ENABLE_REG	 0x4A
+ #define AYANEO_PWM_REG		 0x4B
+@@ -22,17 +23,27 @@
+ 
+ #define AYANEO_FAN_REG		 0x76
+ 
++#define EC_CHARGE_CONTROL_BEHAVIOURS                         \
++	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) |           \
++	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE))
++#define AYANEO_CHARGE_REG		0x1e
++#define AYANEO_CHARGE_VAL_AUTO		0xaa
++#define AYANEO_CHARGE_VAL_INHIBIT	0x55
++
+ struct ayaneo_ec_quirk {
+ 	bool has_fan_control;
++	bool has_charge_control;
+ };
+ 
+ struct ayaneo_ec_platform_data {
+ 	struct platform_device *pdev;
+ 	struct ayaneo_ec_quirk *quirks;
++	struct acpi_battery_hook battery_hook;
+ };
+ 
+ static const struct ayaneo_ec_quirk ayaneo3 = {
+ 	.has_fan_control = true,
++	.has_charge_control = true,
+ };
+ 
+ static const struct dmi_system_id dmi_table[] = {
+@@ -159,11 +170,102 @@ static const struct hwmon_chip_info ayaneo_ec_chip_info = {
+ 	.info = ayaneo_ec_sensors,
+ };
+ 
++static int ayaneo_psy_ext_get_prop(struct power_supply *psy,
++				const struct power_supply_ext *ext,
++				void *data,
++				enum power_supply_property psp,
++				union power_supply_propval *val)
++{
++	int ret;
++	u8 tmp;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
++		ret = ec_read(AYANEO_CHARGE_REG, &tmp);
++		if (ret)
++			return ret;
++
++		if (tmp == AYANEO_CHARGE_VAL_INHIBIT)
++			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
++		else
++			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ayaneo_psy_ext_set_prop(struct power_supply *psy,
++				const struct power_supply_ext *ext,
++				void *data,
++				enum power_supply_property psp,
++				const union power_supply_propval *val)
++{
++	u8 raw_val;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
++		switch (val->intval) {
++		case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
++			raw_val = AYANEO_CHARGE_VAL_AUTO;
++			break;
++		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
++			raw_val = AYANEO_CHARGE_VAL_INHIBIT;
++			break;
++		default:
++			return -EINVAL;
++		}
++		return ec_write(AYANEO_CHARGE_REG, raw_val);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ayaneo_psy_prop_is_writeable(struct power_supply *psy,
++				     const struct power_supply_ext *ext,
++				     void *data,
++				     enum power_supply_property psp)
++{
++	return true;
++}
++
++static const enum power_supply_property ayaneo_psy_ext_props[] = {
++	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
++};
++
++static const struct power_supply_ext ayaneo_psy_ext = {
++	.name			= "ayaneo-charge-control",
++	.properties		= ayaneo_psy_ext_props,
++	.num_properties		= ARRAY_SIZE(ayaneo_psy_ext_props),
++	.charge_behaviours	= EC_CHARGE_CONTROL_BEHAVIOURS,
++	.get_property		= ayaneo_psy_ext_get_prop,
++	.set_property		= ayaneo_psy_ext_set_prop,
++	.property_is_writeable	= ayaneo_psy_prop_is_writeable,
++};
++
++static int ayaneo_add_battery(struct power_supply *battery,
++			   struct acpi_battery_hook *hook)
++{
++	struct ayaneo_ec_platform_data *data =
++		container_of(hook, struct ayaneo_ec_platform_data, battery_hook);
++
++	return power_supply_register_extension(battery, &ayaneo_psy_ext,
++					       &data->pdev->dev, NULL);
++}
++
++static int ayaneo_remove_battery(struct power_supply *battery,
++			      struct acpi_battery_hook *hook)
++{
++	power_supply_unregister_extension(battery, &ayaneo_psy_ext);
++	return 0;
++}
++
+ static int ayaneo_ec_probe(struct platform_device *pdev)
+ {
+ 	const struct dmi_system_id *dmi_entry;
+ 	struct ayaneo_ec_platform_data *data;
+ 	struct device *hwdev;
++	int ret;
+ 
+ 	dmi_entry = dmi_first_match(dmi_table);
+ 	if (!dmi_entry)
+@@ -184,6 +286,15 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
+ 			return PTR_ERR(hwdev);
+ 	}
+ 
++	if (data->quirks->has_charge_control) {
++		data->battery_hook.add_battery = ayaneo_add_battery;
++		data->battery_hook.remove_battery = ayaneo_remove_battery;
++		data->battery_hook.name = "Ayaneo Battery";
++		ret = devm_battery_hook_register(&pdev->dev, &data->battery_hook);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-2.43.0
+2.50.1
+
 
