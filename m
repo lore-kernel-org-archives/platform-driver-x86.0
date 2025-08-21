@@ -1,323 +1,227 @@
-Received: from mail03.loswebos.de (mail03.loswebos.de [213.187.93.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52311482FF
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Aug 2025 17:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.187.93.129
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755798468; cv=none; b=c4CLlJCR924BK/pv4LZo1cprzZDJCtjhdZkUAFJIafQ8i7F0aD0ZxstlOood4Kp3kUUAo9pwO0Qr5ghkUBvB47FAfwITi1mRMOuDeWfTjFLFpyFp3RoLzmhnCOJX7Wpxr82nvWYXaU016ZcFO+zKKVwwOWDLyNBKM4aemYYiNJ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755798468; c=relaxed/simple;
-	bh=fv1nVIM81c2ZshjU91BY/Ccjt1kDDeumlbbgrJHzMck=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=G03jWe7eE2fBN1VisUkfNBwtbz3jKgLyt8NkaYS8fHcw8c+3GrfaV2DBdCvX/TtXKjAhF5eAbxQng1SFo0NbBDQtoaSM9k5276OOq/aLtbz8ZKK8GExCZuxbMz6CS6pyutWGWEPxsghBQ4CeySRwoRxOfnkQHmUPyYOY9Ve8iSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting; spf=pass smtp.mailfrom=protoco.consulting; dkim=fail (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b=V03YHlew reason="key not found in DNS"; arc=none smtp.client-ip=213.187.93.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protoco.consulting
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140F21F948;
+	Thu, 21 Aug 2025 19:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755804414; cv=fail; b=e3kS8yG+Y+z0ab1O5AlYaZVQapHjGsLsi54n1oLwP5HzxXdxvm5yKcr/PcB3XfnPIwCffn5KsREQi/7DR75xT58t/AheVFCkkYrND9uBb3aGMFeOks4FBiaC7QGMcTBi7RjeiObbmfCzC4iqV2AZY/scCs/FGLcnA0RB7q655fk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755804414; c=relaxed/simple;
+	bh=CSGmTj9vQ+sSCbw6Jz0R9Jj28djznFwvBs7ruFYzq/M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JuGygKcFFPiSHwf+7tTmXTelRgOjhBZSB/jPi9LqCQb09JCqUs6Lzf3jU7umCQlKI/ktH8okKEMWSwkLcUmWfxplqv4nNoyXVml/wa0mAjkotpcH8PTGGKV7+swnZVJxBUejSRGZ4YdFg7QzA00b3NN1YEycP8M2jOPdZuwGRO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NhCg/HFS; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b="V03YHlew"
-Received: from mail-proxy-01.loswebos.de (mail-proxy01.loswebos.de [213.187.93.160])
-	by mail03.loswebos.de (Postfix) with ESMTPSA id 384D91B2E8;
-	Thu, 21 Aug 2025 19:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=protoco.consulting;
-	s=protoco-consulting; t=1755798463;
-	bh=fv1nVIM81c2ZshjU91BY/Ccjt1kDDeumlbbgrJHzMck=;
-	h=Date:From:To:Cc:Subject:Reply-To:In-Reply-To:References;
-	b=V03YHlewiHN+ccq0B42b71Do+StwCHInClULGNsbE5hsYyC8/bsaN57mWJoZcXPI7
-	 AtaJCZzAwUYEpfrFqYC2a+9VZpe02R+I5bO91T0h/kKBerJKly00K69tFqGbEdfoj7
-	 shYu0itbi1I7xzqWfbS/CkUmD1rB1mejdrpCvGhhKez1kpAPTqy/50PN71mMgPE0/1
-	 T4Hn5q+g+0/XVuAl8lGKQdV83n9q6TUQZtOz3yzXlXptZfJdaDUaSJ0VP0QOn+Zrs6
-	 Cy7jCDuTDygZXwTS8j36Op7udyy49vd5HeeU3iWBUu5DDAz6HiIh/x6vRILIDgqHET
-	 LIP7zVaWe/pvw==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NhCg/HFS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755804413; x=1787340413;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=CSGmTj9vQ+sSCbw6Jz0R9Jj28djznFwvBs7ruFYzq/M=;
+  b=NhCg/HFSJ8inbIq+tZ9CPZBiA4OP3JJxQBESqjjYCq+ukTf6umXnubXc
+   vTegSEMaSg6AQ8RPAevxgSzJlnDNfsZVqKYu4353WqXorTgr5Aa54mlEQ
+   yxRMadQz8s67wDxmTqHIKoE9zXsPlBQl67kU6XU5yPgjVlbqru256SShL
+   7T9f+HjtfNWHrpccvxp4jTIzc1TR2Oabw9OCRppXfyvq4BoQuSdyuGAIz
+   FocFKUcC5GmJLqFXQDSQ5skhtg2z8k7J7K1JGYkSNc2ZyTx+GVk7jbfbC
+   SbUiHwzJudozLWKwy0X2XLN5U6zXqd77iDC4kjz0WQqyj2zx9VejTm7T2
+   Q==;
+X-CSE-ConnectionGUID: BdgbH7v0TIyx9yJ7KsZtmA==
+X-CSE-MsgGUID: e8n0ppF8SNq0xVRrYRqHJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="58031688"
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="58031688"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 12:26:52 -0700
+X-CSE-ConnectionGUID: kRG37C5mRXS5vL8qqQHZQQ==
+X-CSE-MsgGUID: wtbhElCjRny6UI4hwBGdag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="172707063"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 12:26:52 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Thu, 21 Aug 2025 12:26:51 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Thu, 21 Aug 2025 12:26:51 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.56) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Thu, 21 Aug 2025 12:26:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uQIPQZam1V7n/uNSib1avqqsQqGEY4lksuFmnTcdqnwVuPPOlVZIjVCkSIqaH12v8Pi205iHaUaqnF6zCmQbOB5dK7Bzc7qq+j3ibPejRY1cuIfQ0c/JeeyeMquiqlEVVaOP89Xf7bYpZY4SDQeVMdE2avFnDIaz6DY0SROs1PlVG1n0T3eQIiiu4SujZzLY39fcre6OKbMN8z0NlsJbfVvK0JEP5r7ieZf0TLPqAcf9kwIXBnydL0fcbGL3YOsfKQy0QdY7HGlw/IOerIW9KueZ3HpSsfVbw22y3tTnPCoSxLP3ZrmRiCJWf+RzRbRyih8wwaYEQwH23z1eToDvmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ueG/UN3hHkmyE/0lGiWk8nhMimyS45g1sUFwQgMehxI=;
+ b=ZsajEWn3VJXe1fUGvcIVxEZwWSMqOK9sFCsBuRQ+tz4y2vk3o4QpSuXQAmXeJmlxnvqlQmbAL1qUQdCcvyqBprzrdoOOPVbtXds6/Z2INPy4zTIBYfM8kqWegecavumcJMD3NdAtQOjDEY+7RBINJBi0oCROKRrSvAUY1cDsGKJg0tYyqspFOvR6RG+kR7LUGVtSB24F+iYRgB+DBkJF8wUC5yHFg39K6HtT998K8EnnP1KJ2TX4tbipzH5plXfjmisMIZ6+W5iwvgHykx4FG5NeIyXX2Wu8jZXxYXmVhPn7VFye/X6wmB+1p/xO+yvPd7WB5Q+lc4GUhMOxL/HFEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
+ by PH0PR11MB5030.namprd11.prod.outlook.com (2603:10b6:510:41::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.16; Thu, 21 Aug
+ 2025 19:26:48 +0000
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563%6]) with mapi id 15.20.9052.013; Thu, 21 Aug 2025
+ 19:26:48 +0000
+Date: Thu, 21 Aug 2025 15:26:43 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+CC: Luke Jones <luke@ljones.dev>, "Borah, Chaitanya Kumar"
+	<chaitanya.kumar.borah@intel.com>, "intel-xe@lists.freedesktop.org"
+	<intel-xe@lists.freedesktop.org>, "intel-gfx@lists.freedesktop.org"
+	<intel-gfx@lists.freedesktop.org>, "Saarinen, Jani"
+	<jani.saarinen@intel.com>, "Kurmi, Suresh Kumar"
+	<suresh.kumar.kurmi@intel.com>, "Nikula, Jani" <jani.nikula@intel.com>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [REGRESSSION] on linux-next (next-20250509)
+Message-ID: <aKdy8_zVcdg-t1ga@intel.com>
+References: <SJ1PR11MB6129F730EEDCD051DAD8A5DCB967A@SJ1PR11MB6129.namprd11.prod.outlook.com>
+ <0325a50d-8499-4602-aa8c-67445b626587@app.fastmail.com>
+ <iwo3m4fclstsm4lqmomdmlvk7gwtxjupbczbcw6i2ib5cqv2na@nsu3y5kzqzsp>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <iwo3m4fclstsm4lqmomdmlvk7gwtxjupbczbcw6i2ib5cqv2na@nsu3y5kzqzsp>
+X-ClientProxiedBy: SJ0PR03CA0190.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::15) To CYYPR11MB8430.namprd11.prod.outlook.com
+ (2603:10b6:930:c6::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 21 Aug 2025 17:47:43 +0000
-From: Marc Burkhardt <marc.burkhardt@protoco.consulting>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
- platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J. Clark"
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>
-Subject: Re: [RFC PATCH v1] platform/x86: thinkpad_acpi: Add parameter to
- suppress invalid thermal sensors
-Reply-To: marc.burkhardt@protoco.consulting
-Mail-Reply-To: marc.burkhardt@protoco.consulting
-In-Reply-To: <5a10e50a-ba06-e326-0643-73135709c8a3@linux.intel.com>
-References: <20250818204353.857304-1-marc.burkhardt@protoco.consulting>
- <5a10e50a-ba06-e326-0643-73135709c8a3@linux.intel.com>
-Message-ID: <864df0dfcb93d3b8985d9a4b18cf8d71@protoco.consulting>
-X-Sender: marc.burkhardt@protoco.consulting
-Organization: protoco consulting
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|PH0PR11MB5030:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bb08d0b-66b7-4c48-5281-08dde0e8ac4d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?gKAmz1jXVmSYchZUnw4oAFU85aQSaG9Ur7V9cLlKJB25wJX5t4uN60u7xF7n?=
+ =?us-ascii?Q?f6aXhss2eQ+7chLBBJuUTWWw1eiP3Ln/H2XLEhkG763DlZDrUvk5iWVtS9Xz?=
+ =?us-ascii?Q?g7pIomwbXSbZnBL4a59SfaXPqZn88CG/PiO1EKGhBhF/CEpeflS0UB97LpfA?=
+ =?us-ascii?Q?xiOmKDAqxliYnhZz16garfWfuDJziH//I0SYkKW7G5U1RW2r62YiuyUcMi5u?=
+ =?us-ascii?Q?GoJPcX41xI8mBkLx0LT0RoZ1vCMINhf7EBX4vkp4uaFDUSRZK4PP91NlxlqQ?=
+ =?us-ascii?Q?Y44OOPw6xaVzjjqJoKOKMdOUkrAakKMih+D9qMN/EG81xF/F8WZcmNSyS5w6?=
+ =?us-ascii?Q?xllVGrZQuRl5YsC0g+LzeZA4w87oCQ+1lIzpKHe9T0hfY958s8rObDnyIIc+?=
+ =?us-ascii?Q?vyXcpCosXCKvy2H7JJyOnTLXbZiDChheX5/BhSbyF+a3mvY/Fq5VG/4DPjFD?=
+ =?us-ascii?Q?j9NWnPRfmAuhpXijE46aN1LSCeZf+CxgqJe9XhqKto6mb5Wjd6ElTrtls8xP?=
+ =?us-ascii?Q?jINPj/joUC7rpay/crMKsKFY5MoLlxR5NJ4gkBGASc0erjcTqYxhevV8bknx?=
+ =?us-ascii?Q?OdzR4SkEnTeqcv6O674fa1ItWtr8IFGnTW37Ut3XvwkW2sds/1u590a/9wcN?=
+ =?us-ascii?Q?eqvlUKLsizDdt2zqnWyMglpQ/Nh4vw2oAmlKpp+h5Kbfb/eG56ksExBjQJ0h?=
+ =?us-ascii?Q?i6nDLfhwQVTE45AqSpeNatN9HtOpC2QtHjmkxDL++et+ABXj1UhogxpgjCWq?=
+ =?us-ascii?Q?l8uxvTvXmBt6VF7q7xz2zAEPBTXgtnp0LwVxWmhuMimroZlxds/st5h1WXxY?=
+ =?us-ascii?Q?8LlTvnhtofki34rCCPcp03IZTE+Q6dXdP9UndS+LK3TRFDH31P+Jo/Hl47kV?=
+ =?us-ascii?Q?igFihTuhGwV2GeNPnwFGayxEZdfOmETsy8IaQ7kmxUW1QuWxu5eJz7kUh7FU?=
+ =?us-ascii?Q?yXnPln4mWZ7WDTnD5iyvpn0YZCVyPd8REBR2pzawZ2pkkc+zxmCP0igbBNzi?=
+ =?us-ascii?Q?HOOB68kRrNa59ZgV2zlf2PdM5/L/iKWxFYeKpFKrj/VZxDCwlwzKBR+hWuvb?=
+ =?us-ascii?Q?067d+s0SMHGJzFlfgpsNqydKW57J/a5RHdUB0W/41lvrV+9+a6XYnlrdzk81?=
+ =?us-ascii?Q?Soc8nowB/7alQhe7Ke6932Wa0ANvJr1t9HWQl0XdMWUl3hXnj6kKwXMcp2Ma?=
+ =?us-ascii?Q?45mzVUVc8cEIG+7G4bd6DSY+3LP9XwsbudlJjxKg2XV/Lq4+h03ooCb9/kNw?=
+ =?us-ascii?Q?7RUK22zWRMyOS4grYXwY3+inJX3X3M+G4Q2GeHXg/Kyggg6d0408/NLY53B2?=
+ =?us-ascii?Q?bDk6tUA9ggV65Azi6IuzSLpyvCzUEV8gI8mSoj5GfLdd+0+4E5xBPHQir0Fc?=
+ =?us-ascii?Q?wgF+E4s=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MR9i2CJRX1JFaVNC065zeZ0DA/uZANf/BRceMrb1bvadQhJqGEm98+uabKZw?=
+ =?us-ascii?Q?FLuPchmF9oc1hkTiAS8b4uYF8dsTQBN8inTB4lxyHW4Ua+rFgP1NyuUDtwJn?=
+ =?us-ascii?Q?xXL3yYatZkWkLZGYyr9slyFVeSWwAqz0+YsUyrA02DaVtkUN2bXmXzlkPKL6?=
+ =?us-ascii?Q?7rDfGLUtriD8t/Jf6gTCm6DPAMM9wW7koqYTv/u60UUI+ZvXpIknR27l6rlD?=
+ =?us-ascii?Q?QGHcAkUy/HUHzul+xNAwE3lvA1AwqxwihDCgYm4dbMqqdkZhb/MiJAhGS8ZV?=
+ =?us-ascii?Q?nFDq+qJOBpwh7No+o0/piJD7Ec/fLgkyMSihhfwCzYxu3Ogbl5e6FR21H7EO?=
+ =?us-ascii?Q?DT0nWI98TWZ2vJh698A/OqYX31tGUQYeMPCnPhohSyjO+64SY3+wE6jpCm9v?=
+ =?us-ascii?Q?MAHfmDmPTGy38eMC+d2Ex9mP7Pydx9t6wsOiznjb4yeM06gf40YnsVzsqoRS?=
+ =?us-ascii?Q?TvsQugBpSCl5DGC59YHFgUcir3j3xhMu3R26Lf0wnEt9ZIruCq8v+A5ECSKr?=
+ =?us-ascii?Q?af3cvGCrXiY2i7lEIrZFCWmFWUtWuS9rnM7ZZX+Fb5Dz94IZHByifklgsp5U?=
+ =?us-ascii?Q?72NV5DK10vRkxyOpOtCIp9TgbXHKsq+2BWBqtBLcxQC8+B8jedBGh5kp8slk?=
+ =?us-ascii?Q?6bPL3uIZPyIhybR+MVNCxNZpT5mjUUk/lX/USvbj99lh1JTSzR+zsMtmsTXB?=
+ =?us-ascii?Q?LqpEW1qt1Q0fGy2N8xNxGIk3wOPHD5C/MOucpKlIq4opGgOG4b+16H0b/9jO?=
+ =?us-ascii?Q?dSThQC9J33E7RTWipfFn/rF++uimd6pwsISiNbtnfSRs1r/TxI+WovWfOEVS?=
+ =?us-ascii?Q?AuQyJl+m2qTUBDMFe7BM+3ALrpZi6t1VoAdsy+lPXHnV7Zjku40WrAWYUKcZ?=
+ =?us-ascii?Q?yFwhVc3fsTmrKVehc4vku8YG0psP20g/GejkdHN0ReBJ0OHPTTipcKuQBoJf?=
+ =?us-ascii?Q?LnqNUUrnZSjXa95tDB3ZlhbIwvHBF+4suwuAInFkZWg90qHbzGnjNBPONrzD?=
+ =?us-ascii?Q?H39CaeD7jYgXr0mEoIAfgXXXoXOsgn/Uu/93gIf9fHkhm01Bt4maMTW5nuvS?=
+ =?us-ascii?Q?vuYnxDSshRSdhS2ahrBekq4bl+kdEvMGSkF9rlAqHhI4vH3pCgd5z77YRO/S?=
+ =?us-ascii?Q?nT3KrSclfeVY1BkYIDBZbF7PEA4crPfhv6wQbjNenusMTWTXtKO5wVXEgtjq?=
+ =?us-ascii?Q?pMIm4X0zreU0R06A9Ohp566/ciQ35Sc5P542eUtn4nDxAwGRCHkZYQ/1DqNv?=
+ =?us-ascii?Q?z3EM8ntLNqFZTGI1L+QJ8an1P1zGZVdQl83FvC02r7+iFHj75y/82qQVSw7T?=
+ =?us-ascii?Q?yCTZkCz2+McN10JffeXcVPJlKEeGfEzueXZ6GkKcxXt8mEVPrUCvbPbTTNr1?=
+ =?us-ascii?Q?kXmQYJ42Bw/3KwQruuS320b5S4mPejugMy+Zt0gNPvi3QKihLb4QERLS1XEQ?=
+ =?us-ascii?Q?DajnniuqNrHj7JOy6Cz7Cg/e7NUSlgNNjzCejp7Qji/2OjrwOdijcl3S609j?=
+ =?us-ascii?Q?QrTxtTXY9UypDgBIVBns1Y5MWnalPy/4jTBohS3uwcH17J5cG5d8MDry3RnV?=
+ =?us-ascii?Q?Qyrsg+T9Al8uxxQF5WJ7voh26asUEGuUCfeejSZJ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bb08d0b-66b7-4c48-5281-08dde0e8ac4d
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2025 19:26:48.7223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Cknxx61hJl0bYEyYFcPbxyi99BJdN6UjLmtfFGH+UNz1A1Ypon8HZqWSHKNWVGZH2c+fsm9ZGZIoLFA+Qrwpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5030
+X-OriginatorOrg: intel.com
 
-Hi Ilpo,
+On Thu, Jul 03, 2025 at 09:43:41AM -0500, Lucas De Marchi wrote:
+> Hi,
+> 
+> On Wed, May 28, 2025 at 03:07:51PM +0200, Luke Jones wrote:
+> > On Wed, 28 May 2025, at 12:08 PM, Borah, Chaitanya Kumar wrote:
+> > > Hello Luke,
+> > > 
+> > > Hope you are doing well. I am Chaitanya from the linux graphics team in Intel.
+> > > 
+> > > This mail is regarding a regression we are seeing in our CI runs[1] on
+> > > linux-next repository.
+> > 
+> > Can you tell me if the fix here was included?
+> > https://lkml.org/lkml/2025/5/24/152
+> > 
+> > I could change to:
+> > static void asus_s2idle_check_register(void)
+> > {
+> >    // Only register for Ally devices
+> >    if (dmi_check_system(asus_rog_ally_device)) {
+> >        if (acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops))
+> >            pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
+> >    }
+> > }
+> > 
+> > but I don't really understand what is happening here. The inner lps0 functions won't run unless use_ally_mcu_hack is set.
+> > 
+> > I will do my best to fix but I need to understand what happened a bit better.
 
-below find my probably (a bit) lengthy feedback to your mail and excuse 
-the delay in replying.
+Hi Luke, is there anything we could do to help here? Any log or info that
+could help from this machine?
 
-Am 2025-08-19 08:05, schrieb Ilpo Järvinen:
-> On Mon, 18 Aug 2025, Marc Burkhardt wrote:
-> 
->> While moving an existing Icinga installation to a Lenovo P15 20SU I 
->> came
->> across broken JSON output from a "sensors -Aj" command consumed by the
-> 
-> The commit message is not meant to be a history lesson about how the 
-> patch
-> came to be but to describe the problem seen and how patch is fixing it.
-> Please try to state imperatively what is the problem, not "I did x" 
-> kind
-> of sentences. E.g.,
-> 
-> "sensors -Aj" JSON output on Lenovo P15 20SU is broken because ...
-> 
-> Also try to avoid using "This patch" to start a sentence.
-> 
->> Icinga check_lm_sensors plugin. After fiddling around trying to build 
->> a
->> fix in either lm_sensors or Icinga I found out the error was rooted in
->> some sysfs file that was created but threw errors while being read. On 
->> my
->> Lenovo ThinkPad the default fallback to 8 temperature sensors creates
->> sysfs entries like in my case "temp8_input" that fail when read, 
->> causing
->> the issue in user-space.
->> 
->> This patch adds a module parameter (suppress_sensor) using
->> module_param_array() to allow users to specify a comma-separated list 
->> of
->> zero-based sensor indices to suppress sysfs file creation (e.g.
->> suppress_sensor=3,7). Instead of a model-specific quirk, this provides
->> flexible configuration for any ThinkPad with similar issues and is 
->> working
->> out-of-the-box without additional models being marked for the quirk.
-> 
-> Can't we determine this at probe time automatically?
-> 
-> We generally try to avoid module parameters whenever possible. 
-> Sometimes,
-> if not automated way exists, quirk + a parameter intended for temporary
-> use might be acceptable compromise. I don't understand why you say
-> "additional models being marked for the quirk" as that seems never
-> necessary even if a quirk exists.
-> 
->> The
->> parameter uses a fixed-size array based on TPACPI_MAX_THERMAL_SENSORS 
->> (16)
->> consistent with the driver’s thermal sensor handling (ie.
->> ibm_thermal_sensors_struct or sensor_dev_attr_thermal_temp_input).
->> 
->> Logging via pr_info() reports the number of suppressed sensors at 
->> module
->> initialization, and pr_info() logs each suppressed sensor during sysfs
->> attribute creation. Invalid sensor indices are logged once via 
->> pr_warn()
->> to avoid repetitive warnings.
-> 
-> This logging likely needs work too (to print much less), but lets first
-> agree with the way forward.
+This bug is blocking some of our CI runs here.
 
-I can reduce the logging going from pr_info to pr_debug or just remove 
-it
-as a whole for sure. But as I thought that this is an end-user thing 
-(given it
-is a ThinkPad) I put it there on purpose to let the user know what was 
-going
-on. The message about the de-facto suppressed sensors just logs once per
-provided sensor index on sysfs creation, not the sensor's usage. The
-thinkpad_acpi module, moreover, logs excessively in general already. 
-Just saw
-this from a user's perspective seeing myself google forum posts for 
-missing
-sensors without a trace. I can surely make the logging conditional in
-thinkpad_acpi_init_banner().
-
-That user-thinking was also part my second thought: as I didn't find any 
-such
-problem for a P15 on Google or the like I suspected this to be a 
-not-so-usual case. Thus,
-I have already re-worked the patch to its current form using a parameter
-instead of using a quirk-table (analog to the ones already in place) 
-that I had
-written initially (using BIOS revision N30) as this would mean
-suppressing the sensor on any such device without knowing if the problem
-_really_ exists on the device in general in the real world - I haven't 
-found any such
-report on the Net while searching for it so I _assume_ that this is a 
-weird
-edge-case we're talking about here that the sensor is non-functional or 
-my
-hardware is borked in some way for whatever reason. The rather static 
-creation
-of let's say 8 or 16 sensors in general _could_ probably be the problem. 
-The code
-seems to make 16 iterations on my device as I saw when I had debug log 
-in place,
-probably due to the static size of TPACPI_MAX_THERMAL_SENSORS;
-
-Also I imagine there will be other ThinkPad-devices/models having such
-problem with a different sensor index (which I surely don't
-know of yet) so these would not be listed in the new quirk-table and 
-needed a new
-patch to include them valid for this quirk. It might be another model 
-needs a
-quirk for sensor 14, 15 and 16 which the current code would just create 
-if the
-device falls through a specific match (not validating the actual 
-sensors) as the
-sensors creation currently is rather "static". Using the parameter a 
-user would be
-able to just add the index of the broken sensor and would be good to go 
-no
-matter what model being used and what sensors indices it would affect - 
-it's just
-my approach to be generic and future proof. The quirk-table approach 
-also used
-more code than the parameter approach with even reduced flexibility.
-
-As I understand your mail you would also eventually like testing the 
-sensor
-being created for let's say "technical validity". On my machine 
-temp4_input is
-technically valid (sysfs created and working) but spills a static 0. So 
-this
-sensor is actually unusable from a user-point of view making me exclude 
-it via
-the new parameter as well. What would (in your opinion) the handling be 
-for
-this specific sensor temp4_input be when using the quirk-table approach?
-
-Please advice on how to re-write the functionality so I can give it 
-another spin.
-Sorry for the lengthy explanation and thanks for your time reading this.
+Thanks,
+Rodrigo.
 
 > 
->> Tested on a ThinkPad P15 with
->> suppress_sensor=3,7, confirming suppression of temp4_input and 
->> temp8_input
->> with no sysfs errors. Bounds checking for uncommon values is in place 
->> or
->> will be logged.
->> 
->> The patch applies to the current
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
->> although
->> it was initially written for a 6.16.0 kernel.
->> 
->> I look forward to any feedback on the patch and/or handling of 
->> submission.
->> Please CC: for now as I am not (yet) subscribed. Thank you.
+> Any updates here? This is basically killing our tests for drm-xe-fixes
+> we are submitting to 6.16 since it taints the kernel. If we can't fix,
+> maybe it's already late enough in RCs that we should need a revert?
 > 
-> Please don't include details like these 2 last paragraphs into the 
-> commit
-> message itself, it's fine to state things like this below --- line as
-> they're automatically removed when the patch is applied.
+> FWIW, for 6.17 we have a branch on the side we also merge before testing
+> and we've been including the change above to stop it from killing the
+> rest of our CI:
+> https://gitlab.freedesktop.org/drm/i915/kernel/-/commit/e9d0926aa1c6afcc920013c39d5bd6dd85f581fb
 > 
-> Usually Linus' tree is fine as base, but sometimes pdx86 for-next has
-> diverged.
-> 
->> 
->> Signed-off-by: Marc Burkhardt <marc.burkhardt@protoco.consulting>
->> ---
->> Notes:
->> I haven't posted on LKML or send a patch for over a decade now so
->> please forgive any possible mistakes I made regarding current coding
->> conventions or more generally in submitting this patch. The patch was
->> running for some time here with faulty sensors removed from sysfs and 
->> no
->> problems otherwise detected and was surely run through checkpatch.pl 
->> before
->> submission. get_maintainer.pl was helpful to find the hopefully right
->> people for CC:ing but I am otherweise totally unaware of any current
->> procedures or best-practices when it comes to submitting a patch.
-> 
-> Welcome back. You did quite well regardless. :-)
-> 
->> drivers/platform/x86/lenovo/thinkpad_acpi.c | 35 
->> +++++++++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->> 
->> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
->> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> index cc19fe520ea9..30ff01f87403 100644
->> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> @@ -6019,6 +6019,30 @@ struct ibm_thermal_sensors_struct {
->>  	s32 temp[TPACPI_MAX_THERMAL_SENSORS];
->>  };
->> 
->> +static int suppress_sensor[TPACPI_MAX_THERMAL_SENSORS];
->> +static unsigned int suppress_sensor_count;
->> +
->> +static bool is_sensor_suppressed(int index)
->> +{
->> +	unsigned int i;
->> +	bool logged = false;
->> +
->> +	for (i = 0; i < suppress_sensor_count; i++) {
->> +		if (suppress_sensor[i] == index)
->> +			return true;
->> +
->> +		if (!logged &&
->> +			(suppress_sensor[i] < 0
->> +				|| suppress_sensor[i] >= TPACPI_MAX_THERMAL_SENSORS)) {
->> +			pr_warn("Invalid sensor index %d in suppress_sensor\n",
->> +				suppress_sensor[i]);
->> +			logged = true;
->> +		}
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>  static const struct tpacpi_quirk thermal_quirk_table[] __initconst = 
->> {
->>  	/* Non-standard address for thermal registers on some ThinkPads */
->>  	TPACPI_Q_LNV3('R', '1', 'F', true),	/* L13 Yoga Gen 2 */
->> @@ -6313,6 +6337,11 @@ static umode_t thermal_attr_is_visible(struct 
->> kobject *kobj,
->> 
->>  	int idx = sensor_attr->index;
->> 
->> +	if (is_sensor_suppressed(idx)) {
->> +		pr_info("Sensor %d suppressed\n", idx);
->> +		return 0;
->> +	}
->> +
->>  	switch (thermal_read_mode) {
->>  	case TPACPI_THERMAL_NONE:
->>  		return 0;
->> @@ -11653,6 +11682,9 @@ static void __init 
->> thinkpad_acpi_init_banner(void)
->>  			thinkpad_id.model_str,
->>  			(thinkpad_id.nummodel_str) ?
->>  				thinkpad_id.nummodel_str : "unknown");
->> +
->> +	pr_info("Suppressing %d user-supplied sensor(s) via parameter 
->> suppress_sensor\n",
->> +		suppress_sensor_count);
->>  }
->> 
->>  /* Module init, exit, parameters */
->> @@ -11785,6 +11817,9 @@ MODULE_PARM_DESC(experimental,
->>  module_param_named(debug, dbg_level, uint, 0);
->>  MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
->> 
->> +module_param_array(suppress_sensor, int, &suppress_sensor_count, 
->> 0444);
->> +MODULE_PARM_DESC(suppress_sensor, "Comma-separated sensor indices to 
->> suppress (e.g., 3,7)");
->> +
->>  module_param(force_load, bool, 0444);
->>  MODULE_PARM_DESC(force_load,
->>  		 "Attempts to load the driver even on a mis-identified ThinkPad 
->> when true");
->> 
-
-Marc
+> Lucas De Marchi
