@@ -1,125 +1,184 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D245F2BE64E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Aug 2025 23:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CAB2EA73B;
+	Thu, 21 Aug 2025 08:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755732078; cv=none; b=TCC0MOKD1QFQ8zpNt8Fy6Tb9/MypK+FL/i7ynWf8ncn7/qgqkM4jHd9ozy/5Q30+mXMe4r+KG/sA0QI8vSDSqy5eVArDire7zx4rLoLK9DywSkaHP1acbHG1LxNHnnTBidx6eyGz11/+gBPcCHPxJGRbTgR0JWYTG+GnU3uo7vE=
+	t=1755765684; cv=none; b=hvhsKPLYFpxtp3Ps3D34/kWrUPHBtTIetlQzfaDa7LkGtHhMGeYAp4HK/rD+a7ofMjFhR42vdJvBOmyi90Swthdv4XeD7R7nza1G4/+UQVtU4Rf5+awa1b6H5cXmD7EXl4ZuntxkT3kKiW9VVo28TP8C7/Bn0/j0WZdA629tBdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755732078; c=relaxed/simple;
-	bh=1O26ZmlZTBFnDBaRzFsCpBXq44KkJ3NiHd/7+DVWzDs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=cXNB85pe6g4eSpMvYwQNAgz5W3XQHGS9d8SMR8Ctix8qRHDd52WD7XK7LGhvmGIj6jy8+fQsaLIeLW7gsYm88ZYcl4Qz+jYRdWWIZ5G4F5qCIvceqa57BAcDDqBgj8L3c71rJc2Gr8C6Gk1Owt128/DE63cdp6FHw6r0OHZeCQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c4lZX0RF; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755765684; c=relaxed/simple;
+	bh=KtT8TscMuMza33UUIFFQPhrRCIrbqTRqWw56j6zQ3yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyhwAA60f8mw6jTBxKBQysv2Ba2gVDmx21YCe+hwa3igElkCFj02ToyXHpIt7s3H+U6cxNk76XMkKl6PDjFZHr5aEz47XFcZHqXjYzx+RJUzEDjxJJDfXIqZV0jI/qmnirad/RfgVN7/Dox0QKgbahRu91PaTXQFxj519HJVfxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqyJqDqX; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4lZX0RF"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-76e7af160f1so368482b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Aug 2025 16:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755732076; x=1756336876; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Cp0W+YHyL3b7/DABNObVBBIC3Jh59WNhUlEgXALj3L8=;
-        b=c4lZX0RFnG+BMBWTXLklsJsN64rVQY2nqRsujEhK9SAzudd8X8ARzDdivFrP2+L1NX
-         iNTBlW3FdAuwXWzCkOz5oVPgUsSUUGLfj6qqzlS9qbkZckTaeZwoZvH0Z+45CnNNQvlL
-         UOW6jCvTkhmfLJSyAZ7z+rizTnO9ZSNlK/CfEWLS4A7CvR7qdE92orWgGfyM4FTkpRYR
-         tJwXEawC5Nnuvh31nQ4FKlTgSZgtP1hYYHZdpTad7pHJ/8AYb8M9tXZ7DLiDloanadVE
-         +xKRlidJlnLV9RGrmbl9JWWajAuX8qWGjE188LJCiwBXR4KTyGC6eGo1l1mtAwys/F4C
-         CWRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755732076; x=1756336876;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cp0W+YHyL3b7/DABNObVBBIC3Jh59WNhUlEgXALj3L8=;
-        b=sN9LPGai7WktSVVYFoTccfyARx27o1WFD2hunO0xcUbL1pXDk6BOVFvDizn2VeDGf3
-         1q2Dz/LllHZFN5FH6nOhxduUIfYMrNO1y9stvfn/U/BF051z1iTGslCwGG1/ENYP727B
-         zi6OUUnh1gxRI5Hixs6GK9k6pzjDBXdrGhEIM/12myJEdtw5Ey0vb7gVL1dmYbr2boAR
-         uGZiwXjIXQrWiNgYZBEg+fWl+HAG4mg7/ktKmgc9oFFVHpBIdRKeN9KwgIVug5WwDPP3
-         cKKwqiJDJbdZDELYE19KCo7glpcA4eFwWSlfl+7XImucBbgINk9tq7DzvPdqlLG00KQO
-         Uexw==
-X-Gm-Message-State: AOJu0YzFgkYUKvdYQR77W+SxhrfQ1eHJZXU7qB5kKFLRILRNo/hxY0jh
-	zrPRvE3+jUehf4UltYkXrIR8LRkaTfCgVffXpRrlrMLT/cpV1RQTTpi34GWpdg==
-X-Gm-Gg: ASbGncu27HpUO+g5MU8JKa2KN/VXiWNkOqk6XcUoW6wEJTORujqb2E6VEK6C2CRMzK4
-	tLevF+yalWSQiRR6pO2kk5zAWJGnjebggE4wke4MmPBDNzX6saf16HBjzQtZPo9XUv8GCLy0bst
-	VeVfbAbQOIa47z5CPoQfJ6royd2nmjlBly+/H4K43hRnnDr5fNvrgiGfneLtia18bYswHw83QV9
-	DvAW1uXtkiSRYUXMwDyT6gMlk8tNBwj8watjuCyJUxnHiZmp3TYdUTBs6cfAh/Lsoka5JsNKuCa
-	bymeDcVCpi+NPI+T3Mo1s/Ktkvslx9JdUwoXhUo1yPi1mN89hVdQ6daHM2fWSdM+0P2Mer6LrT9
-	JlidQvx9KaTNn95YI9hIBc9oI7mqksu0goZtzSxZWNv3iMzq8XSFu2lzWegHi+Mac8pD1bHGDEl
-	HnQnBQ4VRkDKkZxhJn1g==
-X-Google-Smtp-Source: AGHT+IFu41U7HMCbVl0868B0wK6iFMzUxciCdGUYL2r8RBObvrHpPnQpeBEYNndHyp8/Vzl3RwHCtA==
-X-Received: by 2002:a05:6a00:1408:b0:76b:dbe2:40f6 with SMTP id d2e1a72fcca58-76ea325f93dmr285843b3a.23.1755732075920;
-        Wed, 20 Aug 2025 16:21:15 -0700 (PDT)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e923f8364sm2730963b3a.107.2025.08.20.16.21.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Aug 2025 16:21:15 -0700 (PDT)
-Date: Wed, 20 Aug 2025 16:21:13 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Alperen Aksu <aksulperen@gmail.com>, mpearson-lenovo@squebb.ca
-CC: platform-driver-x86@vger.kernel.org, skhan@linuxfoundation.org,
- linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] Documentation/wmi: Fix Typo Error in doc
-User-Agent: Thunderbird for Android
-In-Reply-To: <20250820155904.32685-2-aksulperen@gmail.com>
-References: <20250820155904.32685-2-aksulperen@gmail.com>
-Message-ID: <24912814-6891-4223-BCE3-87D1CD6D9A4D@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqyJqDqX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755765683; x=1787301683;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KtT8TscMuMza33UUIFFQPhrRCIrbqTRqWw56j6zQ3yc=;
+  b=lqyJqDqXWyE2wI0K6oTAsPdsbSRqNiud2MXsSUSjekPy9St2BQcOo8Xi
+   yIdE3NN50/MPA8mb8MNemRF71htZuZ7YHkASWZneqKFu18CLErfLtaJiv
+   xZFIxVnR3I8hTEKiMuptC7ckh398VyeVkSP4I/1MM3OpQAwFrJ/jknck5
+   b6+lFATXmID8P+N4KLIrCnl7AESZgypz9KJGt8vBUb5hlSzqPTR7Hcp+K
+   Ioj/HG/hbDja7tAwyhDkZQBfRq8Fa6FfLuW4QrV767vk95iKKBk1/O7Kr
+   lgKSbBx6x0qqh6U2xC9WHCKUrbUdYmo4exi1IYzA1BHD6o2MEQPu92yyT
+   g==;
+X-CSE-ConnectionGUID: EVqCl9XFRvaoLEhRwJyjow==
+X-CSE-MsgGUID: ZWXM14OYQYaY6fzovaRBSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="69488920"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="69488920"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 01:41:22 -0700
+X-CSE-ConnectionGUID: VcnuS50NTQCGJ5qwqqfKZA==
+X-CSE-MsgGUID: s8qtbVRzSrOlunfa07343w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="167583174"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 21 Aug 2025 01:41:20 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1up0rF-000K6h-0m;
+	Thu, 21 Aug 2025 08:41:17 +0000
+Date: Thu, 21 Aug 2025 16:41:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+	platform-driver-x86@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: Re: [PATCH v1 4/5] platform/x86: ayaneo-ec: Add controller power and
+ modules attributes
+Message-ID: <202508211626.9Cxkta6K-lkp@intel.com>
+References: <20250820160628.99678-5-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250820160628.99678-5-lkml@antheas.dev>
+
+Hi Antheas,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/platform-x86-ayaneo-ec-Add-Ayaneo-Embedded-Controller-platform-driver/20250821-002525
+base:   c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
+patch link:    https://lore.kernel.org/r/20250820160628.99678-5-lkml%40antheas.dev
+patch subject: [PATCH v1 4/5] platform/x86: ayaneo-ec: Add controller power and modules attributes
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250821/202508211626.9Cxkta6K-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250821/202508211626.9Cxkta6K-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508211626.9Cxkta6K-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/platform/x86/ayaneo-ec.c: In function 'ayaneo_ec_probe':
+>> drivers/platform/x86/ayaneo-ec.c:497:49: error: implicit declaration of function 'MKDEV' [-Werror=implicit-function-declaration]
+     497 |                                                 MKDEV(0, 0), NULL, "%s",
+         |                                                 ^~~~~
+   cc1: some warnings being treated as errors
 
 
+vim +/MKDEV +497 drivers/platform/x86/ayaneo-ec.c
 
-On August 20, 2025 8:58:35 AM PDT, Alperen Aksu <aksulperen@gmail=2Ecom> w=
-rote:
->Fix to correct spelling of "Hardware"
->
-Hi Alperen,=20
+   459	
+   460	static int ayaneo_ec_probe(struct platform_device *pdev)
+   461	{
+   462		const struct dmi_system_id *dmi_entry;
+   463		struct ayaneo_ec_platform_data *data;
+   464		struct device *hwdev;
+   465		int ret;
+   466	
+   467		dmi_entry = dmi_first_match(dmi_table);
+   468		if (!dmi_entry)
+   469			return -ENODEV;
+   470	
+   471		data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+   472		if (!data)
+   473			return -ENOMEM;
+   474	
+   475		data->pdev = pdev;
+   476		data->quirks = dmi_entry->driver_data;
+   477		platform_set_drvdata(pdev, data);
+   478	
+   479		if (data->quirks->has_fan_control) {
+   480			hwdev = devm_hwmon_device_register_with_info(
+   481				&pdev->dev, "ayaneo_ec", NULL, &ayaneo_ec_chip_info, NULL);
+   482			if (IS_ERR(hwdev))
+   483				return PTR_ERR(hwdev);
+   484		}
+   485	
+   486		if (data->quirks->has_charge_control) {
+   487			data->battery_hook.add_battery = ayaneo_add_battery;
+   488			data->battery_hook.remove_battery = ayaneo_remove_battery;
+   489			data->battery_hook.name = "Ayaneo Battery";
+   490			ret = devm_battery_hook_register(&pdev->dev, &data->battery_hook);
+   491			if (ret)
+   492				return ret;
+   493		}
+   494	
+   495		if (data->quirks->has_magic_modules || data->quirks->has_controller_power) {
+   496			data->fw_attrs_dev = device_create(&firmware_attributes_class, NULL,
+ > 497							MKDEV(0, 0), NULL, "%s",
+   498							DRIVER_NAME);
+   499			if (IS_ERR(data->fw_attrs_dev))
+   500				return PTR_ERR(data->fw_attrs_dev);
+   501	
+   502			ret = devm_add_action_or_reset(&data->pdev->dev,
+   503						ayaneo_fw_attrs_dev_unregister,
+   504						data->fw_attrs_dev);
+   505			if (ret)
+   506				return ret;
+   507	
+   508			data->fw_attrs_kset = kset_create_and_add("attributes", NULL,
+   509								&data->fw_attrs_dev->kobj);
+   510			if (!data->fw_attrs_kset)
+   511				return -ENOMEM;
+   512	
+   513			ret = devm_add_action_or_reset(&data->pdev->dev, ayaneo_kset_unregister,
+   514						data->fw_attrs_kset);
+   515	
+   516			if (data->quirks->has_magic_modules) {
+   517				ret = ayaneo_fw_attr_init(
+   518					data, AYANEO_ATTR_CONTROLLER_MODULES, true);
+   519				if (ret)
+   520					return ret;
+   521			}
+   522	
+   523			if (data->quirks->has_controller_power) {
+   524				ret = ayaneo_fw_attr_init(
+   525					data, AYANEO_ATTR_CONTROLLER_POWER, false);
+   526				if (ret)
+   527					return ret;
+   528			}
+   529		}
+   530	
+   531		return 0;
+   532	}
+   533	
 
-While we can fix the spelling of these, they are currently as provided by =
-Lenovo=2E The spelling error exists in the WMI interfaces and during develo=
-pment we decided to leave them wrong to match=2E
-
-- Derek
-
->Signed-off-by: Alperen Aksu <aksulperen@gmail=2Ecom>
->---
-> Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst b/Docume=
-ntation/wmi/devices/lenovo-wmi-gamezone=2Erst
->index 997263e51a7d=2E=2E24b027362e93 100644
->--- a/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->+++ b/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->@@ -126,7 +126,7 @@ data using the `bmfdec <https://github=2Ecom/pali/bmf=
-dec>`_ utility:
->     [WmiMethodId(65), Implemented, Description("Set IGPU Mode")] void Se=
-tIGPUModeStatus([in, Description("IGPU Mode")] UINT32 mode, [out, Descripti=
-on("return code")] UINT32 Data);
->     [WmiMethodId(66), Implemented, Description("Notify DGPU Status")] vo=
-id NotifyDGPUStatus([in, Description("DGPU status")] UINT32 status, [out, D=
-escription("return code")] UINT32 Data);
->     [WmiMethodId(67), Implemented, Description("Is changed Y log")] void=
- IsChangedYLog([out, Description("Is changed Y Log")] UINT32 Data);
->-    [WmiMethodId(68), Implemented, Description("Get DGPU Hardwawre ID")]=
- void GetDGPUHWId([out, Description("Get DGPU Hardware ID")] string Data);
->+    [WmiMethodId(68), Implemented, Description("Get DGPU Hardware ID")] =
-void GetDGPUHWId([out, Description("Get DGPU Hardware ID")] string Data);
->   };
->=20
->   [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("=
-Definition of CPU OC parameter list"), guid("{B7F3CA0A-ACDC-42D2-9217-77C6C=
-628FBD2}")]
-
-- Derek
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
