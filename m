@@ -1,144 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail03.loswebos.de (mail03.loswebos.de [213.187.93.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FA22EAB7C;
-	Thu, 21 Aug 2025 08:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A59C3054E4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Aug 2025 17:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.187.93.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755765686; cv=none; b=DrxDVPw6y5KXj4quXFhvs0wSSZkcrELO7OZxOHg2IZQzniMcSoh75X5lc8o6XTHy6u9w9fORiErPFUztqUJtE3ijk7Ie8H15FzwuGEPK48C16J9ReomD5xUhCGqhDQ4XDojpIVwjoM37QFNkzUfk1UmUA41x7o3vUX/mF3TXuGk=
+	t=1755797548; cv=none; b=fMU4yWC2F2ED+3VLOhRTM+Lju3sJIZfxMO3M4SO/Ac/D+XhaTkBEV83Q3eIMU7u+a14Dr62bAhWVHMr5rlX7XNNouVbef754sjOnJQc78byQ/l/t9QVnMoT30TUz3Cq5BVa69sDBJDtZgEfXay2ZOfc48B9vpfdJc7O8g3HRO1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755765686; c=relaxed/simple;
-	bh=n1jvE7GQvNq+ke5s5OIhDsUmMtDBv0GtY6vWyj5QfNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJfzg2Icr8DXhvOaqIxqwJm1FZS6ltAF0InjvmkH4TuwWIfTOy8zMIM0dk4f9Q75/+W95oXvSmh+m4oKVQft0TetTvHpAKOt1lJfy+mBkG5vpOYXj1ensy2RyJECaxZAQlR+dMtyFC4ZwjD0t8BTTc/kB3mem9BOi9CFODzmoPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OR9sMzoa; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1755797548; c=relaxed/simple;
+	bh=dET0RahKY9/XUjw7JdQ3yhiGDltX89FRlxqo8MWiLXQ=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=HZztBodMr2qgAlacrnxzqLtloNXoGMmxAFPTnF+wNVrVojJrA6w9AmFbjCLeW0JW1WIkNMbzbOhv5mcf6pEsrsKFvPHUY1UH4e72Q6Hup+hcddDrqzwzorcXYakCatDs6JKNyvbWNZ0JKJepEg6npGaqT4fUqg4GI8G+QM7jaI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting; spf=pass smtp.mailfrom=protoco.consulting; dkim=fail (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b=CvOWZ1kz reason="key not found in DNS"; arc=none smtp.client-ip=213.187.93.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protoco.consulting
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protoco.consulting
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OR9sMzoa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755765685; x=1787301685;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n1jvE7GQvNq+ke5s5OIhDsUmMtDBv0GtY6vWyj5QfNo=;
-  b=OR9sMzoa8QkoX9d94YD6nsUoI1vbUp3Yt+7Fw/dugh+FoqMNA31b+hWI
-   8ky9V0ocKtz4lTZQAq2SK9CFLrmQVoRZS01qah+PInhMsx158frtrCT/I
-   x/24cs7NVnTArAQ+7StQSifKR2TxMCKp8uKJ9ppASZ3gmuiYqCCAuLVe2
-   yJ9mXFNNoY5sxWBNstEjHoW695+BWkO/JMhDXIffQMDG94eiHAN778iPO
-   8ulBEaUcHEvkYW203RWgJC060GYBSLPTKnF/QHz8P0a9ukdgSDiXXloq7
-   8Yp3IeO3ihnoGND/JxcNeGvC/Q7vTbe56PYLmNM5xTlU34wmxxvTBD3ge
-   Q==;
-X-CSE-ConnectionGUID: a2aQO2zoSJS1YhlHDDwLLQ==
-X-CSE-MsgGUID: 6adtBzygSC6wUJrxRinRoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="69488927"
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="69488927"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2025 01:41:22 -0700
-X-CSE-ConnectionGUID: 6fnUNu6/SsWDcIXzDofbaw==
-X-CSE-MsgGUID: 7GhbDLjtT5ahcqKwb2KLOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
-   d="scan'208";a="167583175"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 21 Aug 2025 01:41:20 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1up0rF-000K6j-0p;
-	Thu, 21 Aug 2025 08:41:17 +0000
-Date: Thu, 21 Aug 2025 16:41:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>,
-	platform-driver-x86@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: Re: [PATCH v1 4/5] platform/x86: ayaneo-ec: Add controller power and
- modules attributes
-Message-ID: <202508211640.8MtPueLL-lkp@intel.com>
-References: <20250820160628.99678-5-lkml@antheas.dev>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=protoco.consulting header.i=@protoco.consulting header.b="CvOWZ1kz"
+Received: from mail-proxy-01.loswebos.de (mail-proxy01.loswebos.de [213.187.93.160])
+	by mail03.loswebos.de (Postfix) with ESMTPSA id 8C5381B2CF;
+	Thu, 21 Aug 2025 19:32:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=protoco.consulting;
+	s=protoco-consulting; t=1755797535;
+	bh=dET0RahKY9/XUjw7JdQ3yhiGDltX89FRlxqo8MWiLXQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:In-Reply-To:References;
+	b=CvOWZ1kznn5O5KKrHyQlZymViW03a0a8M0pV1Iv073y2SQSrMo2L1c4WwvmiVKvRj
+	 t2Xhdy0nZ26PG4GmRyFQGNo3896vM9gY2QZxemR8RJSF+WLsoActe8HLDlVszbowaT
+	 QidBn/yIG86iC4d01w29qpODqlFOTByWISVYEiW4zcBs7t9sxFLZEQvTR58eHJkths
+	 SSaMG/OPYHRQsmC5LaSJryzcYL6K27D01mjFPGAByeEMJvy1k2WgKWgOy2Pnuz15cN
+	 GKRnRBviML8mWjxw1DgUgLL0UkszHeaFiYxE8zfH/M7jENGH4rY+nREE69LU5EIdlG
+	 qsUaYnhzbEqTQ==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250820160628.99678-5-lkml@antheas.dev>
+Date: Thu, 21 Aug 2025 17:32:14 +0000
+From: Marc Burkhardt <marc.burkhardt@protoco.consulting>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh
+ <hmh@hmh.eng.br>, "Derek J . Clark" <derekjohn.clark@gmail.com>, Hans de
+ Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH v1] platform/x86: thinkpad_acpi: Add parameter to
+ suppress invalid thermal sensors
+Reply-To: marc.burkhardt@protoco.consulting
+Mail-Reply-To: marc.burkhardt@protoco.consulting
+In-Reply-To: <196b8004-3b09-48d4-891a-80eee2efbf3c@app.fastmail.com>
+References: <20250818204353.857304-1-marc.burkhardt@protoco.consulting>
+ <196b8004-3b09-48d4-891a-80eee2efbf3c@app.fastmail.com>
+Message-ID: <ebaa2ff317a21291a086a55b204d2d68@protoco.consulting>
+X-Sender: marc.burkhardt@protoco.consulting
+Organization: protoco consulting
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Antheas,
+Am 2025-08-20 00:03, schrieb Mark Pearson:
 
-kernel test robot noticed the following build warnings:
+Hi Mark,
 
-[auto build test WARNING on c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9]
+thanks for replying.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/platform-x86-ayaneo-ec-Add-Ayaneo-Embedded-Controller-platform-driver/20250821-002525
-base:   c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-patch link:    https://lore.kernel.org/r/20250820160628.99678-5-lkml%40antheas.dev
-patch subject: [PATCH v1 4/5] platform/x86: ayaneo-ec: Add controller power and modules attributes
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250821/202508211640.8MtPueLL-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250821/202508211640.8MtPueLL-lkp@intel.com/reproduce)
+> Hi Marc,
+> 
+> On Mon, Aug 18, 2025, at 4:39 PM, Marc Burkhardt wrote:
+>> While moving an existing Icinga installation to a Lenovo P15 20SU I 
+>> came
+>> across broken JSON output from a "sensors -Aj" command consumed by the
+>> Icinga check_lm_sensors plugin. After fiddling around trying to build 
+>> a
+>> fix in either lm_sensors or Icinga I found out the error was rooted in
+>> some sysfs file that was created but threw errors while being read. On 
+>> my
+>> Lenovo ThinkPad the default fallback to 8 temperature sensors creates
+>> sysfs entries like in my case "temp8_input" that fail when read, 
+>> causing
+>> the issue in user-space.
+>> 
+>> This patch adds a module parameter (suppress_sensor) using
+>> module_param_array() to allow users to specify a comma-separated list 
+>> of
+>> zero-based sensor indices to suppress sysfs file creation (e.g.
+>> suppress_sensor=3,7). Instead of a model-specific quirk, this provides
+>> flexible configuration for any ThinkPad with similar issues and is 
+>> working
+>> out-of-the-box without additional models being marked for the quirk. 
+>> The
+>> parameter uses a fixed-size array based on TPACPI_MAX_THERMAL_SENSORS 
+>> (16)
+>> consistent with the driver’s thermal sensor handling (ie.
+>> ibm_thermal_sensors_struct or sensor_dev_attr_thermal_temp_input).
+>> 
+>> Logging via pr_info() reports the number of suppressed sensors at 
+>> module
+>> initialization, and pr_info() logs each suppressed sensor during sysfs
+>> attribute creation. Invalid sensor indices are logged once via 
+>> pr_warn()
+>> to avoid repetitive warnings. Tested on a ThinkPad P15 with
+>> suppress_sensor=3,7, confirming suppression of temp4_input and 
+>> temp8_input
+>> with no sysfs errors. Bounds checking for uncommon values is in place 
+>> or
+>> will be logged.
+>> 
+>> The patch applies to the current
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
+>> although
+>> it was initially written for a 6.16.0 kernel.
+>> 
+>> I look forward to any feedback on the patch and/or handling of 
+>> submission.
+>> Please CC: for now as I am not (yet) subscribed. Thank you.
+>> 
+>> Signed-off-by: Marc Burkhardt <marc.burkhardt@protoco.consulting>
+>> ---
+>> Notes:
+>> I haven't posted on LKML or send a patch for over a decade now so
+>> please forgive any possible mistakes I made regarding current coding
+>> conventions or more generally in submitting this patch. The patch was
+>> running for some time here with faulty sensors removed from sysfs and 
+>> no
+>> problems otherwise detected and was surely run through checkpatch.pl 
+>> before
+>> submission. get_maintainer.pl was helpful to find the hopefully right
+>> people for CC:ing but I am otherweise totally unaware of any current
+>> procedures or best-practices when it comes to submitting a patch.
+>> 
+>> drivers/platform/x86/lenovo/thinkpad_acpi.c | 35 
+>> +++++++++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>> 
+>> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> index cc19fe520ea9..30ff01f87403 100644
+>> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> @@ -6019,6 +6019,30 @@ struct ibm_thermal_sensors_struct {
+>>  	s32 temp[TPACPI_MAX_THERMAL_SENSORS];
+>>  };
+>> 
+>> +static int suppress_sensor[TPACPI_MAX_THERMAL_SENSORS];
+>> +static unsigned int suppress_sensor_count;
+>> +
+>> +static bool is_sensor_suppressed(int index)
+>> +{
+>> +	unsigned int i;
+>> +	bool logged = false;
+>> +
+>> +	for (i = 0; i < suppress_sensor_count; i++) {
+>> +		if (suppress_sensor[i] == index)
+>> +			return true;
+>> +
+>> +		if (!logged &&
+>> +			(suppress_sensor[i] < 0
+>> +				|| suppress_sensor[i] >= TPACPI_MAX_THERMAL_SENSORS)) {
+>> +			pr_warn("Invalid sensor index %d in suppress_sensor\n",
+>> +				suppress_sensor[i]);
+>> +			logged = true;
+>> +		}
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>>  static const struct tpacpi_quirk thermal_quirk_table[] __initconst = 
+>> {
+>>  	/* Non-standard address for thermal registers on some ThinkPads */
+>>  	TPACPI_Q_LNV3('R', '1', 'F', true),	/* L13 Yoga Gen 2 */
+>> @@ -6313,6 +6337,11 @@ static umode_t thermal_attr_is_visible(struct
+>> kobject *kobj,
+>> 
+>>  	int idx = sensor_attr->index;
+>> 
+>> +	if (is_sensor_suppressed(idx)) {
+>> +		pr_info("Sensor %d suppressed\n", idx);
+>> +		return 0;
+>> +	}
+>> +
+>>  	switch (thermal_read_mode) {
+>>  	case TPACPI_THERMAL_NONE:
+>>  		return 0;
+>> @@ -11653,6 +11682,9 @@ static void __init
+>> thinkpad_acpi_init_banner(void)
+>>  			thinkpad_id.model_str,
+>>  			(thinkpad_id.nummodel_str) ?
+>>  				thinkpad_id.nummodel_str : "unknown");
+>> +
+>> +	pr_info("Suppressing %d user-supplied sensor(s) via parameter
+>> suppress_sensor\n",
+>> +		suppress_sensor_count);
+>>  }
+>> 
+>>  /* Module init, exit, parameters */
+>> @@ -11785,6 +11817,9 @@ MODULE_PARM_DESC(experimental,
+>>  module_param_named(debug, dbg_level, uint, 0);
+>>  MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
+>> 
+>> +module_param_array(suppress_sensor, int, &suppress_sensor_count, 
+>> 0444);
+>> +MODULE_PARM_DESC(suppress_sensor, "Comma-separated sensor indices to
+>> suppress (e.g., 3,7)");
+>> +
+>>  module_param(force_load, bool, 0444);
+>>  MODULE_PARM_DESC(force_load,
+>>  		 "Attempts to load the driver even on a mis-identified ThinkPad 
+>> when
+>> true");
+> 
+> The P15 is one of the Linux certified platforms...though it's a bit 
+> older now.
+> 
+> I'd be more interested in figuring out which sensors are returning an 
+> error and figuring out how we address that. I have access to the FW and 
+> platform team for questions (though this platform is a bit older now, 
+> so if we need FW fixes that will be trickier). My gut feeling is we 
+> shouldn't be creating sysfs entries if the sensors don't exist or 
+> aren't accessible.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508211640.8MtPueLL-lkp@intel.com/
+That is what my patch does - it prevents creating the sysfs entries but 
+not based on a check for validity of the sensor in code (as probably 
+desired by Ilpo when I understand a previous mail correctly) but rather 
+on a user-provided configuration via the new parameter. I reply to the 
+other mail as well soon.
 
-All warnings (new ones prefixed by >>):
+> 
+> I do have a P15 so can check it out (I'm going to have to blow some 
+> dust off it). If you've got the details on which sensors need 
+> suppressing that would be useful. I have seen previously where it's 
+> trying to access a GPU sensor on a UMA model.
 
->> drivers/platform/x86/ayaneo-ec.c:395:12: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-     395 |                 else if (sysfs_streq(buf, "off"))
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/ayaneo-ec.c:397:7: note: uninitialized use occurs here
-     397 |                 if (ret)
-         |                     ^~~
-   drivers/platform/x86/ayaneo-ec.c:395:8: note: remove the 'if' if its condition is always true
-     395 |                 else if (sysfs_streq(buf, "off"))
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     396 |                         ret = ec_write(AYANEO_POWER_REG, AYANEO_POWER_OFF);
-   drivers/platform/x86/ayaneo-ec.c:389:9: note: initialize the variable 'ret' to silence this warning
-     389 |         int ret;
-         |                ^
-         |                 = 0
-   1 warning generated.
+On my hardware it's sensor temp8_input which is unreadable at all und 
+sensor temp4_input that has a constant value of 0, no matter how hot, 
+cold or loud the machine is running. I am, however, able to monitor GPU 
+temps via nvidia _and_ thinkpad ACPI. The values are mostly equal, 
+differ a bit due to internal timing sometimes.
 
+> 
+> Mark
 
-vim +395 drivers/platform/x86/ayaneo-ec.c
-
-   382	
-   383	static ssize_t current_value_store(struct kobject *kobj,
-   384					   struct kobj_attribute *attr, const char *buf,
-   385					   size_t count)
-   386	{
-   387		struct ayaneo_fw_attr *fw_attr =
-   388			container_of(attr, struct ayaneo_fw_attr, current_value);
-   389		int ret;
-   390	
-   391		switch (fw_attr->fw_attr_id) {
-   392		case AYANEO_ATTR_CONTROLLER_POWER:
-   393			if (sysfs_streq(buf, "on"))
-   394				ret = ec_write(AYANEO_POWER_REG, AYANEO_POWER_ON);
- > 395			else if (sysfs_streq(buf, "off"))
-   396				ret = ec_write(AYANEO_POWER_REG, AYANEO_POWER_OFF);
-   397			if (ret)
-   398				return ret;
-   399			return count;
-   400		case AYANEO_ATTR_CONTROLLER_MODULES:
-   401			return -EINVAL;
-   402		}
-   403		return -EINVAL;
-   404	}
-   405	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Marc
