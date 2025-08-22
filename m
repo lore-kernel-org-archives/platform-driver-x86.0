@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F1417B402;
-	Fri, 22 Aug 2025 11:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B31E17B402;
+	Fri, 22 Aug 2025 12:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755863724; cv=none; b=N81ddsTI5EUC6UD8UIbXuB0dgrzTcK0ntR85mN0ptmEyuCv7LofHx5GUBIOdSGz9csMZDdxEle1Gu3ide3ggGVS1afulYlMp10xLbqCIw50HB6S+D/4TDusS8pvcF/X/S4/7fKgHZBXWeM6hx55siGbGCX7sylqxT+0YTDZvrp4=
+	t=1755864131; cv=none; b=bIp4w8Z9ot0Bumkgj6i90BDW5+yPderlxJfH24wVLY+6ZWD1hBRf2Nl4VH6YP1myyG1m/kRcIGSYDx3HVZHSd5WwbrCOlJSC6wTQpY055qtizI7vo9XVpmngkz+OhpdUw4Fz6Ax/TXdqO6WG6QZaZTmQrIexcQDkAaiLTQVvugE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755863724; c=relaxed/simple;
-	bh=Lu9IRRvPM24U7OFYy8PR7CG7XhX/qIcxBeZg8JkqQH0=;
+	s=arc-20240116; t=1755864131; c=relaxed/simple;
+	bh=oiw6zqSGckEv8r9kq0C9HN50WKjtTtL9z1NPZus69jg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jVLxNv7mO14hNbWMgqIqsND7nNxkdooGJ+hRjAFPlvcAGt49WbstNKeJeLOk0BF29CHhwPZwCBfjZbfvFNGVf1XEu/9edVjZ2aeIlfu5TiZIp8p2Sex8ouXr4TiN1ZmGEHZgQx/gkq5IYbjD+mljCVI+AusaLvmBdKqBEgb2OJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=UA/qEPHK; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=uVSCLoHcDMBcqY9jLfiF/ucyrYLyCHNSSjSYqHPKWN15kMevQaH0wRXM4Ri7jfVhYwjU+tzA6x4/j40HfAZqRPX5EX6XSVowfC2PrEInG+fx3lbgtTaxaNgJRWgDAFpvlx+5lXeHKyDHtik1ONNnIKWGy+pLV6gCBh5iCBP1jqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=D05sy7mU; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="UA/qEPHK"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="D05sy7mU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1755863696; x=1756468496; i=w_armin@gmx.de;
-	bh=Lu9IRRvPM24U7OFYy8PR7CG7XhX/qIcxBeZg8JkqQH0=;
+	s=s31663417; t=1755864127; x=1756468927; i=w_armin@gmx.de;
+	bh=oiw6zqSGckEv8r9kq0C9HN50WKjtTtL9z1NPZus69jg=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=UA/qEPHKG4Vzbc1MymL1koPj+bQe96shtxd6i3V8zkbTp/CzaqF/MjkpI/f5LDFw
-	 71yhL4SaqU0bZvHeI5xf9wN9e629QHjrCP+CwaOmWSY2eYef5izmymDZB0/Q1F5WC
-	 IAXQSPt17NV3ISLNt+wey4GB9pC6i9mR4Tost9tQMjbc3BXtSlZcQpoYdy4fXeXU/
-	 XvDq9ILtzSk5q5rtJyxLFxTFzLcgik7lDb+jFDls8wqQ20EVvPpfKZzq+mUPzOzP1
-	 +h6ktwsytk46TAtFTq2wKGWsoowWM2kqcms/pXm1rdhpQ2SM/7g+PRcWJMGDmlAiw
-	 1Y5XjHE3qtgLx54rgA==
+	b=D05sy7mUI7fSb4wD3Qya0nOJqpZK31kBzZtlfVWW7lKxt302e9AdFtbtGwI8u3iI
+	 HmtT+KSlz1GsXojPr2CUdzn8OlvL0W5gQXKGUzanew9eGgBfm9DK98jNFQU0rde5k
+	 cvZdCOFlMomjoDBiz0As1F8ld3QSPlHweUfUcAJ927GS+S1C4RdOZRJBCHCp1FbqT
+	 xxZFCaX7OYGZ4+hCn9BG5Uux36FX7nWssFHSl3el+BpZYuGh0Li1NpoKp5YJLJBJN
+	 /iY0wXGIAfauWCbOanvrgaz1mwAmILblc1AX4ZzBFYngjFrHRUokeh22pgpR7MCz+
+	 SMiSgOg0cUTSkNk01w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [10.189.91.1] ([176.5.63.45]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVeI2-1uzIHD2ne0-00RPlj; Fri, 22
- Aug 2025 13:54:56 +0200
-Message-ID: <b4640a0d-c5db-4d40-a336-97fb16e8d405@gmx.de>
-Date: Fri, 22 Aug 2025 13:54:50 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1McH5a-1uFFli3HDw-00cJgF; Fri, 22
+ Aug 2025 14:02:07 +0200
+Message-ID: <400ad8a1-eb7f-4737-9434-62aad120ef4a@gmx.de>
+Date: Fri, 22 Aug 2025 14:02:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,318 +43,138 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1] platform/x86: thinkpad_acpi: Add parameter to
- suppress invalid thermal sensors
-To: marc.burkhardt@protoco.consulting,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: platform-driver-x86@vger.kernel.org,
- ibm-acpi-devel@lists.sourceforge.net,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
-References: <20250818204353.857304-1-marc.burkhardt@protoco.consulting>
- <196b8004-3b09-48d4-891a-80eee2efbf3c@app.fastmail.com>
- <ebaa2ff317a21291a086a55b204d2d68@protoco.consulting>
+Subject: Re: [RFC PATCH v2 0/3] platform/x86: acer-wmi: Add fan control
+ support
+To: Fa-Iz Faadhillah Ibrahim <faiz.faadhillah@gmail.com>
+Cc: basak.sb2006@gmail.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, jlee@suse.com, kuurtb@gmail.com,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ rayanmargham4@gmail.com
+References: <f5d8b82d-c711-4611-b257-b4297f172bb1@gmx.de>
+ <81e92b2d-825d-4455-9042-474c66c91120@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <ebaa2ff317a21291a086a55b204d2d68@protoco.consulting>
+In-Reply-To: <81e92b2d-825d-4455-9042-474c66c91120@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Pwwky3v9kRlTPArBzPmURB7S+ktX2rkdJ21nf5Gbm/pHP0WXnRf
- nng40nK2vXbCEzfw1oD27sJ53ot3Y2JOYTO/Erwu8mU0MaAOul4pJeTm5SpsiQdaShS6u4Z
- 9+BFay6+Lw8IPShrv8KV2skzRPhoVj3wTnL/tul4nekGFJDKV4PcV6bBrdo2gQBJOjsCRvy
- 7cQPd8W/OIkmpB4bz43bA==
+X-Provags-ID: V03:K1:KPqD7HeKhqi+dKBzLfcTvRJZQjT+kNBJreepmXI5/Zlp/7qCb8z
+ sx62zcXwhMyLnMtdv0w0YO+1Y9qX554gIx4KdFEhTUHKnFXgk2fXwcSRdY8gJY/BZaOTGqJ
+ +8HQ1OWIz4eLk0ruyvVQVDBUV4PZ1T0MVRsVftS4FDEfJ8uYIneK21/W+ilo+dsoPSZkybG
+ jZwO+n/+vw+ULkb+PLwvw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:w5P4ET1Ty8E=;Kf6rs4pFpKKPsdRFfryeUxtYtJB
- 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
+UI-OutboundReport: notjunk:1;M01:P0:vGbGaNJEPhM=;UzgWxI4ZvaIW+MbNzVahe/FZRcD
+ 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
+ O2xzsCQ=
 
-Am 21.08.25 um 19:32 schrieb Marc Burkhardt:
+Am 15.08.25 um 08:17 schrieb Fa-Iz Faadhillah Ibrahim:
 
-> Am 2025-08-20 00:03, schrieb Mark Pearson:
->
-> Hi Mark,
->
-> thanks for replying.
->
->> Hi Marc,
+>> > This experimental patch series aims to add fan control support to=20
+>> the > acer-wmi driver. The patches are compile-tested only and need=20
+>> to be > tested on real hardware to verify that they actually work. >=20
+>> > I CCed two users who requested support for this feature. I would be=
+=20
+>> > very happy if both of you could test those patches and report back.=
+=20
+>> > > I am ready to help you both with compiling a custom linux kernel=20
+>> for > testing this series.
+>> Any updates from the two people with Acer hardware?
 >>
->> On Mon, Aug 18, 2025, at 4:39 PM, Marc Burkhardt wrote:
->>> While moving an existing Icinga installation to a Lenovo P15 20SU I=20
->>> came
->>> across broken JSON output from a "sensors -Aj" command consumed by the
->>> Icinga check_lm_sensors plugin. After fiddling around trying to build =
-a
->>> fix in either lm_sensors or Icinga I found out the error was rooted in
->>> some sysfs file that was created but threw errors while being read.=20
->>> On my
->>> Lenovo ThinkPad the default fallback to 8 temperature sensors creates
->>> sysfs entries like in my case "temp8_input" that fail when read,=20
->>> causing
->>> the issue in user-space.
->>>
->>> This patch adds a module parameter (suppress_sensor) using
->>> module_param_array() to allow users to specify a comma-separated=20
->>> list of
->>> zero-based sensor indices to suppress sysfs file creation (e.g.
->>> suppress_sensor=3D3,7). Instead of a model-specific quirk, this provid=
-es
->>> flexible configuration for any ThinkPad with similar issues and is=20
->>> working
->>> out-of-the-box without additional models being marked for the quirk.=
-=20
->>> The
->>> parameter uses a fixed-size array based on=20
->>> TPACPI_MAX_THERMAL_SENSORS (16)
->>> consistent with the driver=E2=80=99s thermal sensor handling (ie.
->>> ibm_thermal_sensors_struct or sensor_dev_attr_thermal_temp_input).
->>>
->>> Logging via pr_info() reports the number of suppressed sensors at=20
->>> module
->>> initialization, and pr_info() logs each suppressed sensor during sysfs
->>> attribute creation. Invalid sensor indices are logged once via=20
->>> pr_warn()
->>> to avoid repetitive warnings. Tested on a ThinkPad P15 with
->>> suppress_sensor=3D3,7, confirming suppression of temp4_input and=20
->>> temp8_input
->>> with no sysfs errors. Bounds checking for uncommon values is in=20
->>> place or
->>> will be logged.
->>>
->>> The patch applies to the current
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=20
->>> although
->>> it was initially written for a 6.16.0 kernel.
->>>
->>> I look forward to any feedback on the patch and/or handling of=20
->>> submission.
->>> Please CC: for now as I am not (yet) subscribed. Thank you.
->>>
->>> Signed-off-by: Marc Burkhardt <marc.burkhardt@protoco.consulting>
->>> ---
->>> Notes:
->>> I haven't posted on LKML or send a patch for over a decade now so
->>> please forgive any possible mistakes I made regarding current coding
->>> conventions or more generally in submitting this patch. The patch was
->>> running for some time here with faulty sensors removed from sysfs=20
->>> and no
->>> problems otherwise detected and was surely run through checkpatch.pl=
-=20
->>> before
->>> submission. get_maintainer.pl was helpful to find the hopefully right
->>> people for CC:ing but I am otherweise totally unaware of any current
->>> procedures or best-practices when it comes to submitting a patch.
->>>
->>> drivers/platform/x86/lenovo/thinkpad_acpi.c | 35=20
->>> +++++++++++++++++++++++++++++
->>> =C2=A01 file changed, 35 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->>> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->>> index cc19fe520ea9..30ff01f87403 100644
->>> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->>> @@ -6019,6 +6019,30 @@ struct ibm_thermal_sensors_struct {
->>> =C2=A0=C2=A0=C2=A0=C2=A0 s32 temp[TPACPI_MAX_THERMAL_SENSORS];
->>> =C2=A0};
->>>
->>> +static int suppress_sensor[TPACPI_MAX_THERMAL_SENSORS];
->>> +static unsigned int suppress_sensor_count;
->>> +
->>> +static bool is_sensor_suppressed(int index)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
->>> +=C2=A0=C2=A0=C2=A0 bool logged =3D false;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < suppress_sensor_count; i++) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (suppress_sensor[i] =3D=
-=3D index)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn true;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!logged &&
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (s=
-uppress_sensor[i] < 0
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 || suppress_sensor[i] >=3D=20
->>> TPACPI_MAX_THERMAL_SENSORS)) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
-_warn("Invalid sensor index %d in suppress_sensor\n",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 suppress_sensor[i]);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lo=
-gged =3D true;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return false;
->>> +}
->>> +
->>> =C2=A0static const struct tpacpi_quirk thermal_quirk_table[] __initcon=
-st =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0 /* Non-standard address for thermal registers=
- on some ThinkPads */
->>> =C2=A0=C2=A0=C2=A0=C2=A0 TPACPI_Q_LNV3('R', '1', 'F', true),=C2=A0=C2=
-=A0=C2=A0 /* L13 Yoga Gen 2 */
->>> @@ -6313,6 +6337,11 @@ static umode_t thermal_attr_is_visible(struct
->>> kobject *kobj,
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0 int idx =3D sensor_attr->index;
->>>
->>> +=C2=A0=C2=A0=C2=A0 if (is_sensor_suppressed(idx)) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_info("Sensor %d suppres=
-sed\n", idx);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>> +=C2=A0=C2=A0=C2=A0 }
->>> +
->>> =C2=A0=C2=A0=C2=A0=C2=A0 switch (thermal_read_mode) {
->>> =C2=A0=C2=A0=C2=A0=C2=A0 case TPACPI_THERMAL_NONE:
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>> @@ -11653,6 +11682,9 @@ static void __init
->>> thinkpad_acpi_init_banner(void)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 thinkpad_id.model_str,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 (thinkpad_id.nummodel_str) ?
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 thinkpad_id.nummodel_str : "unknown");
->>> +
->>> +=C2=A0=C2=A0=C2=A0 pr_info("Suppressing %d user-supplied sensor(s) vi=
-a parameter
->>> suppress_sensor\n",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 suppress_sensor_count);
->>> =C2=A0}
->>>
->>> =C2=A0/* Module init, exit, parameters */
->>> @@ -11785,6 +11817,9 @@ MODULE_PARM_DESC(experimental,
->>> =C2=A0module_param_named(debug, dbg_level, uint, 0);
->>> =C2=A0MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
->>>
->>> +module_param_array(suppress_sensor, int, &suppress_sensor_count,=20
->>> 0444);
->>> +MODULE_PARM_DESC(suppress_sensor, "Comma-separated sensor indices to
->>> suppress (e.g., 3,7)");
->>> +
->>> =C2=A0module_param(force_load, bool, 0444);
->>> =C2=A0MODULE_PARM_DESC(force_load,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Attempts to lo=
-ad the driver even on a mis-identified=20
->>> ThinkPad when
->>> true");
->>
->> The P15 is one of the Linux certified platforms...though it's a bit=20
->> older now.
->>
->> I'd be more interested in figuring out which sensors are returning an=
-=20
->> error and figuring out how we address that. I have access to the FW=20
->> and platform team for questions (though this platform is a bit older=20
->> now, so if we need FW fixes that will be trickier). My gut feeling is=
-=20
->> we shouldn't be creating sysfs entries if the sensors don't exist or=20
->> aren't accessible.
+>> Thanks,
+>> Armin Wolf
 >
-> That is what my patch does - it prevents creating the sysfs entries=20
-> but not based on a check for validity of the sensor in code (as=20
-> probably desired by Ilpo when I understand a previous mail correctly)=20
-> but rather on a user-provided configuration via the new parameter. I=20
-> reply to the other mail as well soon.
+> Hello, I've tried your patch on my Predator Helios Neo 16 (PHN16-72)
+> using quirks from PH16-72 and it looks like fan control works just fine.
+> On other note, can you please add PHN16-72 to the quirk table?
+> if you need anything to test please do notify.
 >
-Such sensors are meant to be ignored using /etc/sensors3.conf (provided by=
- libsensors) unless the driver itself can
-automatically determine this by asking the platform firmware. I suggest th=
-at you use this mechanism instead of adding
-additional module parameters.
+> Thanks,
+> Fa-Iz Faadhillah Ibrahim
+>
+Hi,
+
+sorry for taking a bit long to respond, i am currently on vacation. Nice t=
+o know that the experimental patches work :).
+Can you send me the output of "acpidump" on your machine?
 
 Thanks,
 Armin Wolf
 
-(I also CCed the hwmon mailing list as libsensors originally came from the=
-re)
-
 >>
->> I do have a P15 so can check it out (I'm going to have to blow some=20
->> dust off it). If you've got the details on which sensors need=20
->> suppressing that would be useful. I have seen previously where it's=20
->> trying to access a GPU sensor on a UMA model.
->
-> On my hardware it's sensor temp8_input which is unreadable at all und=20
-> sensor temp4_input that has a constant value of 0, no matter how hot,=20
-> cold or loud the machine is running. I am, however, able to monitor=20
-> GPU temps via nvidia _and_ thinkpad ACPI. The values are mostly equal,=
+>> > Changes since v2: > - remove duplicate include and replace=20
+>> hwmon_pwm_mode with > hwmon_pwm_enable in second patch > > Armin Wolf=
 =20
-> differ a bit due to internal timing sometimes.
+>> (3): > platform/x86: acer-wmi: Fix setting of fan behavior >=20
+>> platform/x86: acer-wmi: Add fan control support > platform/x86:=20
+>> acer-wmi: Enable fan control for PH16-72 and PT14-51 > >=20
+>> drivers/platform/x86/acer-wmi.c | 298=20
+>> +++++++++++++++++++++++++++++--- > 1 file changed, 273 insertions(+),=
+=20
+>> 25 deletions(-) > > -- > 2.39.5 > >
+>> -----------------------------------------------------------------------=
+-
 >
->>
->> Mark
->
-> Marc
 >
