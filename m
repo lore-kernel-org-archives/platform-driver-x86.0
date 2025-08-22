@@ -1,91 +1,79 @@
-Received: from mail-m21467.qiye.163.com (mail-m21467.qiye.163.com [117.135.214.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A72219A81;
-	Fri, 22 Aug 2025 09:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F139A2C234F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Aug 2025 11:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755856166; cv=none; b=GBCuyWak4AMaJdb3hAQq77E9/EtZqvt/auHOXhJDMdjulF8vr8rv4xCotJjeXLuJv1bOUkmUlZ3shQe8k9eOCO/aI7Ga5zOpbHNXOHKuzMf7dTsBPfvf43azSYnKLGnIriolSvsGsVfIkJJeFNCDL+lVdGpPjTEro1K8JLIGltk=
+	t=1755860997; cv=none; b=mol6wUkIn6nO0LhZxKZoST9ufV8duMAaeVy/beENK1AoxOibJQKhgBOVk796lrKOLLjadlD/uxKYIuYTHbST83dtZ5tkml+fIlSJi3mb654k5JVY288C2h762y8AbJN2ZWuYOMye46WBKELzqTxfUWoMsG5XYMYjzFpPbvFs5aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755856166; c=relaxed/simple;
-	bh=UsaScT3prD5L7v11HZ+e3Ah6A4bsb/cIXgEzSWdRiBE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ozY/6TM2y9baPli4YB+JJU/HtlW41AAJ6k0Aty+7P0J8BLr3ezHWZFlnN9aAi+ecl3VsmvGgPqFhf6wZMRHvonqyd9uoWc/u+HVj1zcYLtQmQRkCvya4O9Cank4zOTtWRpCyTyb+3T7VGbUi50tUU4Yutx9/vezy9xTQqwFuFBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=117.135.214.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from localhost.localdomain (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTP id f067151b;
-	Fri, 22 Aug 2025 16:33:39 +0800 (GMT+08:00)
-From: Zhen Ni <zhen.ni@easystack.cn>
-To: mario.limonciello@amd.com,
-	perry.yuan@amd.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	Zhen Ni <zhen.ni@easystack.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86/amd: hfi: Fix pcct_tbl leak in amd_hfi_metadata_parser()
-Date: Fri, 22 Aug 2025 16:33:29 +0800
-Message-Id: <20250822083329.710857-1-zhen.ni@easystack.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1755860997; c=relaxed/simple;
+	bh=1/I4qcxDwNqHcjTkhLOv/ofMyGGFwfis9U5t24kO43c=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c3Tald70xzA8BzE/34uv+AdVz42xmgCDHfImbKG+f7mpYxRkM19d35j9NBOrQ9EB8QvRuERBytsDCc0ronNHkX0vzGd+r0+uc7j7Pe4FWLvzoVAi2rwRZAVPJixJ91TjXqTLqZ54J9Qutr7M2EHtdOvtbRAbUYDZZXzDHKjL9Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndvbqPCX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndvbqPCX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A01BC113D0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Aug 2025 11:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755860996;
+	bh=1/I4qcxDwNqHcjTkhLOv/ofMyGGFwfis9U5t24kO43c=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=ndvbqPCXrESDUEPQ92VD+d/eBi8bjy9S8GHyuVAjMdlMXdxYXg7uBIzU0k1smFmpb
+	 gha0wh8+A7hhWTf8/AyrfdLdIGNUR62z39/pUf4+nji4nRtrM+V9xhufSQwvGQqzIg
+	 uNIIBsPGQB7pkGHnXrShOoQReduA64jf7ZJHG3Sm8vJxkpi7jfXoa6sSsLwRYqe5Eh
+	 xqahg3qGxHbPHmS80FoIMHSXYW7pAuReuow/lNdP/xXIR0GJzvgKcGO8IreICwWHHL
+	 TqI5d7UF0nq7Xkk+b/+tKcIFeoo/YrBhmG+qfHMvQMgSJbi2vRaxnZt6r8ewCmZBmn
+	 z+Wzu2+MjxNRQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 731C3C41612; Fri, 22 Aug 2025 11:09:56 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220473] Linux 6.16 doesn't let me to shutdown the system and
+ sometimes to boot it (lib/list_debug.c:35)
+Date: Fri, 22 Aug 2025 11:09:56 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: bp@alien8.de
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc assigned_to
+Message-ID: <bug-220473-215701-IfCooCkgf2@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220473-215701@https.bugzilla.kernel.org/>
+References: <bug-220473-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a98d0e97ab50229kunm047ea2e9e3589f
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSBpJVkJIThkdTkJLHkpDS1YVFAkWGhdVGRETFh
-	oSFyQUDg9ZV1kYEgtZQVlJSkNVQk9VSkpDVUJLWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
 
-Fix a permanent ACPI table memory leak when amd_hfi_metadata_parser()
-fails due to invalid PCCT table length or memory allocation errors.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220473
 
-Fixes: d4e95ea7a78e ("platform/x86: hfi: Parse CPU core ranking data from shared memory")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zhen Ni <zhen.ni@easystack.cn>
----
- drivers/platform/x86/amd/hfi/hfi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Borislav Petkov (bp@alien8.de) changed:
 
-diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index 4f56149b3774..a465ac6f607e 100644
---- a/drivers/platform/x86/amd/hfi/hfi.c
-+++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -385,12 +385,16 @@ static int amd_hfi_metadata_parser(struct platform_device *pdev,
- 	amd_hfi_data->pcct_entry = pcct_entry;
- 	pcct_ext = (struct acpi_pcct_ext_pcc_slave *)pcct_entry;
- 
--	if (pcct_ext->length <= 0)
--		return -EINVAL;
-+	if (pcct_ext->length <= 0) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	amd_hfi_data->shmem = devm_kzalloc(amd_hfi_data->dev, pcct_ext->length, GFP_KERNEL);
--	if (!amd_hfi_data->shmem)
--		return -ENOMEM;
-+	if (!amd_hfi_data->shmem) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
- 	pcc_chan->shmem_base_addr = pcct_ext->base_address;
- 	pcc_chan->shmem_size = pcct_ext->length;
-@@ -398,6 +402,8 @@ static int amd_hfi_metadata_parser(struct platform_device *pdev,
- 	/* parse the shared memory info from the PCCT table */
- 	ret = amd_hfi_fill_metadata(amd_hfi_data);
- 
-+out:
-+	/* Don't leak any ACPI memory */
- 	acpi_put_table(pcct_tbl);
- 
- 	return ret;
--- 
-2.20.1
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |bp@alien8.de
+           Assignee|platform_x86_64@kernel-bugs |drivers_platform_x86@kernel
+                   |.osdl.org                   |-bugs.osdl.org
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
