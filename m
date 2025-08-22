@@ -1,63 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1AB30DED8;
-	Fri, 22 Aug 2025 14:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB62308F16
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Aug 2025 14:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755872309; cv=none; b=hLMWs+ilnlIms8u7L41eJgoncIL7Aw2L2OEEHDDyb8mH9vGakdJtsDSwq6rNHRd0TS/2xMoRmGERWn9XFqAplpNsWL2s3XL3YIU6VLTWsI62gOeJgeHxloECtF4BwuiDgIzIFInqiCy0KsxMnbm0P0V52vuYs4r4alR9I1GVJBU=
+	t=1755873268; cv=none; b=CTE2cmBlXYlq29nbkC4nPfnRPUaY2JZTcGY5VrGInMOg1qJC3rNi/2Gv+B3DOpn4Wylr1wi7vhxe6SwDWjCg3x3tag7o+LBs1FVSVlLtBaN8LuQpDyWppZWI5ndxn/eqeXsbk+nWtBJl+2dUCF+QC2JsUzmSPLMB4IWaXLwvMVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755872309; c=relaxed/simple;
-	bh=5nLHn80LsLHhr2NVaamNt2oAbAL7yhI1s2q3XPEdaoo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=P2vN6kb9MBApJDbVJjxT5UM+bOsswx9Bcu/kg/6uviPJdpeCFwSfKFZQGZEChVcIOXctE1X5Qtg+sgQM2Ko57GjzTlTA+ceCW+ploKC9HnUMhvLzAFqi+wJiHrwrOFgPGDl6RdDpNrnINl3mSzwdb9hdcmckXDgQhCjmNxPMiOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7qvcotL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755873268; c=relaxed/simple;
+	bh=k5yrYJssbIk3ZHTonj/gN3d0mWaUN7rJPzQpl23H6j8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bmaJkd+UZXxzA+dpS0WtVNQuqw/3WlHGVtZZq59SSqwll7e/imbR5v2SDfz2XSedeuiF+8FhbDnp1RcC02Hy6eQu2fpKp6Bhrt8dOjpKjCyldA7L73M7/EYWoxVu3K423TJ8yB3XjSDO2pgAR3vO+MKcSVImQWIvZAUwsK3L014=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVcRBleu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7qvcotL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B692BC4CEED;
-	Fri, 22 Aug 2025 14:18:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVcRBleu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B96B2C113CF
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Aug 2025 14:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755872308;
-	bh=5nLHn80LsLHhr2NVaamNt2oAbAL7yhI1s2q3XPEdaoo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=K7qvcotLxvDzYs7lrpdYSLSljecsgri7euW3mPrEuvOsw8JtTG4m99V1pb0EFX1xY
-	 5a0zf7phXzF/1yA2xtVKLjy6iH4vSD64kejdD2j6xEifZvzFi4QqIi5tdIf9puPJBK
-	 zi3q4fCHgvis4P7y0lYRyN9R6Fr7l30FXMuhq9J4w8olLBau0txmqD22Pq/DMdFFIu
-	 Jb3vaaz/kjExIHOtiQPraIxbCZWg5mX/LfEX9JTG6qdGcKDFn1BflMkY2c+X1Jf09T
-	 q2ysmq6as8IcW6V5WUrKyasQmFdA8hK8aYEeSn5JDqZNyqtnKB0qeLnT2dYHamlyDF
-	 gicLGYPSnNfnw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0B4383BF6A;
-	Fri, 22 Aug 2025 14:18:38 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.17-2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20250822161152-256141077@linux.intel.com>
-References: <pdx86-pr-20250822161152-256141077@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20250822161152-256141077@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.17-2
-X-PR-Tracked-Commit-Id: 748f897511446c7578ca5f6d2ff099916bad6e28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 272aa18fea29f3299960b62e2c24efb049b540ea
-Message-Id: <175587231758.1847242.17150080771995738883.pr-tracker-bot@kernel.org>
-Date: Fri, 22 Aug 2025 14:18:37 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	s=k20201202; t=1755873267;
+	bh=k5yrYJssbIk3ZHTonj/gN3d0mWaUN7rJPzQpl23H6j8=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=rVcRBleu28QhqmEYXcwHm5ZLbLRctSg9A5k5E5BRVWAe3J/OAk1OiD8WeLleVNmhT
+	 yaKwOeiMC9YVYiqXIqe7c7N+YeVwSmYpAfwLZ1X2356UH9tP+HojDpxXDhyGO7bgmc
+	 7gIB3HzkBxnUd4fJtAkaP2hpD9Lf19Wb2Rkw6ryrEmZrVkEuVapW0fs5Y3C9nmuhJ3
+	 /l1xVhXyJVJVcoEuRWSprTmnCjp2KJjblnEVr382bk++buCNJUoy9365rKT57pMrAD
+	 Mqxw8+r1JR+ONrCWxV/enyi1yuUqrPdtqL65xymE8FDODI12QG6e6Jn+wwo8JaSmNs
+	 wgYVrUs3He1zQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id AC296C41613; Fri, 22 Aug 2025 14:34:27 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220473] Linux 6.16 doesn't let me to shutdown the system and
+ sometimes to boot it (lib/list_debug.c:35)
+Date: Fri, 22 Aug 2025 14:34:27 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ilpo.jarvinen@linux.intel.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-220473-215701-xd6k8FGAnj@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220473-215701@https.bugzilla.kernel.org/>
+References: <bug-220473-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-The pull request you sent on Fri, 22 Aug 2025 16:11:52 +0300:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220473
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.17-2
+Ilpo J=C3=A4rvinen (ilpo.jarvinen@linux.intel.com) changed:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/272aa18fea29f3299960b62e2c24efb049b540ea
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |ilpo.jarvinen@linux.intel.c
+                   |                            |om
 
-Thank you!
+--- Comment #7 from Ilpo J=C3=A4rvinen (ilpo.jarvinen@linux.intel.com) ---
+(In reply to Eduardo Medina from comment #5)
+> Sorry, but I can't reproduce the kernel panic intentionally. I didn't see
+> any clear patron to do it.
+>=20
+> But I blacklisted the 'asus_wmi' and the 'asus_nb_wmi' modules through the
+> '/etc/modprobe.d/blacklist.conf' file and now I can shutdown and reboot t=
+he
+> ASUS computer normally through GNOME.
+>=20
+> Through the openSUSE Bugzilla I was linked to this. I don't know if this
+> related to this topic:
+>=20
+> https://lore.kernel.org/all/07815053-0e31-4e8e-8049-b652c929323b@kernel.o=
+rg/
+>=20
+> https://bugzilla.opensuse.org/show_bug.cgi?id=3D1246924
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+You've acpi_register_lps0_dev.cold+0x13/0x1c in your trace above so it looks
+very likely the same issue. I'm hoping Luke responds in a reasonable time a=
+s he
+has been too busy for kernel work recently.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
