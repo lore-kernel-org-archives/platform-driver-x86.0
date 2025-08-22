@@ -1,134 +1,221 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83FC22688C;
-	Fri, 22 Aug 2025 15:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67E721254F;
+	Fri, 22 Aug 2025 15:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755876361; cv=none; b=haKXkgh/snBvTtvobyQWpqrQZSdmEyzXJm1c7Oz9rmV0FwxT9+LWrqHF2U8De/6lzCHWJu0Xx7J50kUhwSgnezc1rOJnb5bFmXziOuP3gorFKg364lLy1sYWHr6F9+JvVWd5h4xeBKe/g7etHjR3vo/z4zJXT+UBau0vQ5XeOjs=
+	t=1755877312; cv=none; b=eqgF2kmhwNZEWDONURSQY/mDDE7MCiN3QRHLrH9r4DXsLBmRCdHz473P2Lc9VUwAbhPLd4kTkAV7IGFsMMV/2gKTEzL0Jbj7MC7EiJidlfsZpen9axGfLJTAcUZYg7gAIyIjM8/kLl3l2ne7rOZplTMAGVwaq+8w7KhNhK9OVPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755876361; c=relaxed/simple;
-	bh=2kjB9karetnc9oVHnHaEJpAOUPGW95dn+4XCESIApwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kXFG01hkhm6+LAtWXtkrOEMWnsGn38QzcMPwTNodRdC7OLQ5Y9SgeM/eq5e8eFwIrurecwaQhayOlxO3VM3nmFjBGPmrYYoc5bZCsfUK/fotMeA2YaGWlQug0dNZEZ931gPF7Z2qhJV5K2jG+hsq3iX7JPGCka3mL1bWJvchV5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=iSkjLGhH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M+qjKGPw; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1755877312; c=relaxed/simple;
+	bh=N/oyzhidX2HrDrlgYBW47gzWyPuSs9DczFIHP0fsa5c=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YIdHk1kQupqlnIeSYVB19+hkPXCpdmm2zyUOJlxf2EYtbUK1c/nDKHcKabkxdISIEm9KMyZLuFMV1eM0+uULyKKmaraMXDMjHxnG6tbx037RTIIExNvsDrBYgf+RgotGe5dWMPgW6giQgIRWxksz4HA55KyDy/mEU3crDx0NmTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8XNCmWI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="iSkjLGhH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M+qjKGPw"
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id B57741D000A8;
-	Fri, 22 Aug 2025 11:25:58 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Fri, 22 Aug 2025 11:25:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1755876358; x=
-	1755962758; bh=gqIE8uOlilaW5wWCZ7qTDFR0FqZ79zeGzHb0doGbTFw=; b=i
-	SkjLGhHifOsWyzqbseHZOI8IHl1IDMhXxTuitjCDURrWc2kAPQ5fpBE07dOZv8wo
-	0tWX7CNkWSxbLOwQLTkbB4Ga45f9vW+St1dAefxZPkJF0SxxqSjsFQY3gmt9AUZz
-	0MV+sS16yCH/VtbMcifBqkC0i+OsSHFzy7yyBPokfGOUcfZhsHdR6T0NYCHDuesl
-	L4rFy86GgjLvD2NsF7NMtxy0x+/p8hW+UgRABuqyAS6GnQnIeqD7Ped7NxITefwC
-	Y4OH8m85kCbc4uRSuiJ2cYZI//A2TByDHxzDngEsiazAiQzh3PUMBIw8IGt7pDvw
-	vVQlpkC5rSnkzzzCIp1EQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1755876358; x=1755962758; bh=g
-	qIE8uOlilaW5wWCZ7qTDFR0FqZ79zeGzHb0doGbTFw=; b=M+qjKGPw3j2Iplw/R
-	ASeBUa4m+LCyWZQIn0gPEcp4QlZ8oA/DKFA3T/wasrlcwES9MmGA5jLpFbrWVlgX
-	B7T5IOeeugzY8GVpTYpIigIdHwAUT0XhFtk569wqPP6fSJx11Fl2aEK/0/6g0dvS
-	GxjoqQBR1yBqLYNy1xx3X17CEy/Z42uVsMxHXdRPf1USfAwJZ21fcp8SaBiW03Nw
-	aBiiUkvGklcZw0cqUxWjXcsAzJSV/23PmOXMrLy0OCw0Z9w2MRjW0hd0V7Be5L1Q
-	oqBbj3DOzPT2L90TOWvZ4gszCoF7LSkrtXZGJC3cGgVWX+Mz2Dm0+2dV3ayeCpWC
-	kZM/Q==
-X-ME-Sender: <xms:BoyoaFyZDrXRYLz-UWnnX6nbJrG-O2yJH_tysYtXCxeNZCH_QRXWEA>
-    <xme:BoyoaMpq2GuhZZvoZmoxaEe1dLA76-lkk9UD0AICNYfP70NiGvHzO7MlIiJZy7LKl
-    ohRDu2TtvtxhWKcjXQ>
-X-ME-Received: <xmr:BoyoaE74HPhL5phI5_FIc1Z9NIMQwqfKQui5F9YhsB2GAQ50PI2nPoBNXY4HN9wP6iGyFlofoARUwgas62nSod95Ok0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieegudduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephffvve
-    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhsohhn
-    uceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrth
-    htvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueethefg
-    vdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmh
-    hpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohep
-    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnoh
-    hvohesshhquhgvsggsrdgtrgdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehl
-    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrd
-    horhhgpdhrtghpthhtohepkhgvrghntddtgeeksehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrgh
-X-ME-Proxy: <xmx:BoyoaDeplyLWQ4e90pTHMVb8djWdPc15RJLhiIC0aD1-VK1NS0jDKQ>
-    <xmx:BoyoaJ7k_TuQekTbgegj5U6kogtxvfItdU6ca2szEQ2XUNn1DLcPVg>
-    <xmx:BoyoaKsf3bMVucCGS390ocd_xPGAGjH4xI5aTZkCe0DEc810CDIp5A>
-    <xmx:BoyoaJh9iw2EylujCyDzCVOWOpwv_LH4bc7rU3eFzzd5G_7_pRb_CA>
-    <xmx:BoyoaAKmNw5vwcaYI1CcS24lohHcbYNqkIBiybTa7Rq9YdOyGK6PptXh>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 22 Aug 2025 11:25:57 -0400 (EDT)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	kean0048@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] platform/x86: think-lmi: Add extra TC BIOS error messages
-Date: Fri, 22 Aug 2025 11:25:43 -0400
-Message-ID: <20250822152549.4077684-3-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8XNCmWI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755877312; x=1787413312;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=N/oyzhidX2HrDrlgYBW47gzWyPuSs9DczFIHP0fsa5c=;
+  b=a8XNCmWIEuo3XVar/CFZXFDeoXC6SAf9gtpuwqJKSRJCNRvnWfFDfu72
+   ugNmHjfw7qngbXqS5heLJjdj89bvQpJng1gL8l/OGLv6gdoYRyL/xFmit
+   4+Kjtzo/I8IaN2g84KjjWfkV905rs1V5LOltBU1PhmO6RuFlqV4bLFk1K
+   K6xLM8aVuuRpHnCaKp0h16gy4u3SHSOi+umHKwUyO4kZqfKJxK0K9IV6B
+   G/OX/HcuLqX0Pfs+EOk2GGasJOoAmsHW/t5fb59AvEybVnd4nUdnXqpuS
+   Gg/PZzjSWO6O4wnNYgfj7hcQwYTKOtoQ/pQK8H+pX7KkT7gF09oHnWGyy
+   Q==;
+X-CSE-ConnectionGUID: fCA5GRbASZePgCQVRQu+6Q==
+X-CSE-MsgGUID: r7MH1E8ZRq2La5bjkMNWEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="58253474"
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="58253474"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 08:41:51 -0700
+X-CSE-ConnectionGUID: UcBtj7crSeaUHBOK/4zC0w==
+X-CSE-MsgGUID: ZZbOSGfnQxypp+njWbRpdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
+   d="scan'208";a="168634368"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.115])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 08:41:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 22 Aug 2025 18:41:46 +0300 (EEST)
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+cc: hansg@kernel.org, kean0048@gmail.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: think-lmi: Add certificate GUID
+ structure
 In-Reply-To: <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
+Message-ID: <6d726a7d-b9c7-d4c2-2e1c-4d32f5cda731@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-82937277-1755876860=:937"
+Content-ID: <619fd5cf-0c47-3a89-0101-5ec3307a1162@linux.intel.com>
 
-Add extra error messages that are used by ThinkCenter platforms.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Kean Ren <kean0048@gmail.com>
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- drivers/platform/x86/lenovo/think-lmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--8323328-82937277-1755876860=:937
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <6fde09a1-13b3-5e95-6d77-2e1bb6c4cc18@linux.intel.com>
 
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index f7843f3a3325..7c20d522e243 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -218,10 +218,21 @@ static struct tlmi_cert_guids *cert_guid = &thinkpad_cert_guid;
- 
- static const struct tlmi_err_codes tlmi_errs[] = {
- 	{"Success", 0},
-+	{"Set Certificate operation was successful.", 0},
- 	{"Not Supported", -EOPNOTSUPP},
- 	{"Invalid Parameter", -EINVAL},
- 	{"Access Denied", -EACCES},
- 	{"System Busy", -EBUSY},
-+	{"Set Certificate operation failed with status:Invalid Parameter.", -EINVAL},
-+	{"Set Certificate operation failed with status:Invalid certificate type.", -EINVAL},
-+	{"Set Certificate operation failed with status:Invalid password format.", -EINVAL},
-+	{"Set Certificate operation failed with status:Password retry count exceeded.", -EACCES},
-+	{"Set Certificate operation failed with status:Password Invalid.", -EACCES},
-+	{"Set Certificate operation failed with status:Operation aborted.", -EBUSY},
-+	{"Set Certificate operation failed with status:No free slots to write.", -ENOSPC},
-+	{"Set Certificate operation failed with status:Certificate not found.", -EEXIST},
-+	{"Set Certificate operation failed with status:Internal error.", -EFAULT},
-+	{"Set Certificate operation failed with status:Certificate too large.", -EFBIG},
- };
- 
- static const char * const encoding_options[] = {
--- 
-2.43.0
+On Fri, 22 Aug 2025, Mark Pearson wrote:
 
+> Add a certificate GUID structure to make it easier to add different
+> options for other platforms that need different GUIDs.
+>=20
+> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+>  drivers/platform/x86/lenovo/think-lmi.c | 41 ++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x=
+86/lenovo/think-lmi.c
+> index 0992b41b6221..88bae5b33c57 100644
+> --- a/drivers/platform/x86/lenovo/think-lmi.c
+> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+> @@ -177,6 +177,28 @@ MODULE_PARM_DESC(debug_support, "Enable debug comman=
+d support");
+>  #define TLMI_CERT_SVC BIT(7) /* Admin Certificate Based */
+>  #define TLMI_CERT_SMC BIT(8) /* System Certificate Based */
+> =20
+> +struct tlmi_cert_guids {
+> +=09char *thumbprint;
+> +=09char *set_bios_setting;
+> +=09char *save_bios_setting;
+> +=09char *cert_to_password;
+> +=09char *clear_bios_cert;
+> +=09char *update_bios_cert;
+> +=09char *set_bios_cert;
+> +};
+> +
+> +static struct tlmi_cert_guids thinkpad_cert_guid =3D {
+> +=09LENOVO_CERT_THUMBPRINT_GUID,
+
+Don't use the anonymous initialization but name the members for better=20
+readability.
+
+> +=09LENOVO_SET_BIOS_SETTING_CERT_GUID,
+> +=09LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +=09LENOVO_CERT_TO_PASSWORD_GUID,
+> +=09LENOVO_CLEAR_BIOS_CERT_GUID,
+> +=09LENOVO_UPDATE_BIOS_CERT_GUID,
+> +=09LENOVO_SET_BIOS_CERT_GUID
+
+Always remember to add comma to any non-terminator entry.
+
+=2E..And thanks for reworking these, they look so simple now to review. :-)
+
+> +};
+> +
+> +static struct tlmi_cert_guids *cert_guid =3D &thinkpad_cert_guid;
+> +
+>  static const struct tlmi_err_codes tlmi_errs[] =3D {
+>  =09{"Success", 0},
+>  =09{"Not Supported", -EOPNOTSUPP},
+> @@ -668,7 +690,10 @@ static ssize_t cert_thumbprint(char *buf, const char=
+ *arg, int count)
+>  =09const union acpi_object *obj;
+>  =09acpi_status status;
+> =20
+> -=09status =3D wmi_evaluate_method(LENOVO_CERT_THUMBPRINT_GUID, 0, 0, &in=
+put, &output);
+> +=09if (!cert_guid->thumbprint)
+> +=09=09return -EOPNOTSUPP;
+
+Either mention this in the changelog or move it into the next patch
+that is the one needing the check. The latter of those seems more logical=
+=20
+as this is the only GUID you're NULL checking.
+
+--=20
+ i.
+
+> +
+> +=09status =3D wmi_evaluate_method(cert_guid->thumbprint, 0, 0, &input, &=
+output);
+>  =09if (ACPI_FAILURE(status)) {
+>  =09=09kfree(output.pointer);
+>  =09=09return -EIO;
+> @@ -751,7 +776,7 @@ static ssize_t cert_to_password_store(struct kobject =
+*kobj,
+>  =09=09kfree_sensitive(passwd);
+>  =09=09return -ENOMEM;
+>  =09}
+> -=09ret =3D tlmi_simple_call(LENOVO_CERT_TO_PASSWORD_GUID, auth_str);
+> +=09ret =3D tlmi_simple_call(cert_guid->cert_to_password, auth_str);
+>  =09kfree(auth_str);
+>  =09kfree_sensitive(passwd);
+> =20
+> @@ -797,7 +822,7 @@ static ssize_t certificate_store(struct kobject *kobj=
+,
+>  =09=09if (!auth_str)
+>  =09=09=09return -ENOMEM;
+> =20
+> -=09=09ret =3D tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
+> +=09=09ret =3D tlmi_simple_call(cert_guid->clear_bios_cert, auth_str);
+>  =09=09kfree(auth_str);
+> =20
+>  =09=09return ret ?: count;
+> @@ -834,7 +859,7 @@ static ssize_t certificate_store(struct kobject *kobj=
+,
+>  =09=09=09kfree(new_cert);
+>  =09=09=09return -EACCES;
+>  =09=09}
+> -=09=09guid =3D LENOVO_UPDATE_BIOS_CERT_GUID;
+> +=09=09guid =3D cert_guid->update_bios_cert;
+>  =09=09/* Format: 'Certificate,Signature' */
+>  =09=09auth_str =3D cert_command(setting, new_cert, signature);
+>  =09} else {
+> @@ -845,7 +870,7 @@ static ssize_t certificate_store(struct kobject *kobj=
+,
+>  =09=09=09kfree(new_cert);
+>  =09=09=09return -EACCES;
+>  =09=09}
+> -=09=09guid =3D LENOVO_SET_BIOS_CERT_GUID;
+> +=09=09guid =3D cert_guid->set_bios_cert;
+>  =09=09/* Format: 'Certificate, password' */
+>  =09=09auth_str =3D cert_command(setting, new_cert, setting->password);
+>  =09}
+> @@ -1071,13 +1096,13 @@ static ssize_t current_value_store(struct kobject=
+ *kobj,
+>  =09=09=09goto out;
+>  =09=09}
+> =20
+> -=09=09ret =3D tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_st=
+r);
+> +=09=09ret =3D tlmi_simple_call(cert_guid->set_bios_setting, set_str);
+>  =09=09if (ret)
+>  =09=09=09goto out;
+>  =09=09if (tlmi_priv.save_mode =3D=3D TLMI_SAVE_BULK)
+>  =09=09=09tlmi_priv.save_required =3D true;
+>  =09=09else
+> -=09=09=09ret =3D tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +=09=09=09ret =3D tlmi_simple_call(cert_guid->save_bios_setting,
+>  =09=09=09=09=09       tlmi_priv.pwd_admin->save_signature);
+>  =09} else if (tlmi_priv.opcode_support) {
+>  =09=09/*
+> @@ -1282,7 +1307,7 @@ static ssize_t save_settings_store(struct kobject *=
+kobj, struct kobj_attribute *
+>  =09=09=09=09ret =3D -EINVAL;
+>  =09=09=09=09goto out;
+>  =09=09=09}
+> -=09=09=09ret =3D tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +=09=09=09ret =3D tlmi_simple_call(cert_guid->save_bios_setting,
+>  =09=09=09=09=09       tlmi_priv.pwd_admin->save_signature);
+>  =09=09=09if (ret)
+>  =09=09=09=09goto out;
+>=20
+--8323328-82937277-1755876860=:937--
