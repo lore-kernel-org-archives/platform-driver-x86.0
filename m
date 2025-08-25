@@ -1,411 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C2226A09F;
-	Mon, 25 Aug 2025 12:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9497276057;
+	Mon, 25 Aug 2025 13:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756124113; cv=none; b=PfRsm5ZTIMA+7Vmb0oEqI9T5bM1Jp+nqnY4JR1OY0dKQPA7Iknnhtyec+E9Co0QByTcMVTaE90AGUU7NHokbgfCIrjlh5yYLmnQXVqQmI4gxKj7u83shi0NSj3HG0aT6iWnVMQxSauqT9MNAQAZ6ILag22qH8u0SDmFkpHvpVUU=
+	t=1756129025; cv=none; b=KQJDX0i9JQRSXGUzlBCTbSecLIQWRnH6kp2mHEv8fjUQQpJWYh7VooApjuI910p9zJvta02GvZZf1k1r6ZXaYms3IL5/gvmY/UOAqmJNnJEX0q4JWc35H2t3HtR9aC9AOBw76ayuqw3UAJH93ui3tjsKrTCBWMa4hQ4y8wi+TsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756124113; c=relaxed/simple;
-	bh=I1v5FGDEpmLOz/xWeQas7bSx+T6EsGdIIPVu/1iJbCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qmRtl9xyFHlm1kdtMwU4JQ2nbuULDUKA2WJ+KsmTXabgdlysMfycWLpi5zo92m+5sw04GkMxT1J3POesxhAoSrMWK/qtSWoCuY+uU4CZAKEQ2IW/MND/W7YMgrcMEQ0TjYT5H6eCi5ZpKY1QadPpHnpWge+8QVLJ5I/Sr/SPcUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezCW5Q64; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756129025; c=relaxed/simple;
+	bh=itp++X7BYMDX5+/+FeQOCqCW0R/HDrEBOWoU0zLtfvs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=AcZBuv1lINFk0KB+dI+Z0nJIGEFx1+apcNI4sEKE65ylsfgd2ZfCJjCEG2Cdi3vnmLEg93Ir6OdtcTfao9p7NqFggalcyUsPW9F333MLyBLDZlQaqwWtVUgux3b7Dgwy09544zEuDAlQnob/+JuQvQjRYHBjeYKBcOQbPGf2Dp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sgBDxhaS; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezCW5Q64"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3B2C113D0;
-	Mon, 25 Aug 2025 12:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756124113;
-	bh=I1v5FGDEpmLOz/xWeQas7bSx+T6EsGdIIPVu/1iJbCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ezCW5Q64XPnJXg2gtCf84HVf7LpxgXhaZGgIu517KAbpSs84QrrK2QVb4bdm5OeFE
-	 39nHDdUJfA6Tt33sInXHTaKL2udF0by1E8r3UCLB7cY4Ypm9m9PsrWyM2VUwg3Woe6
-	 u8YQ1xFUzODa6JlwMg8z/1aQ6U9HNCu7MSiu9J8lM5gkviTwIkzEx+8UCR1EiRJIea
-	 0h4z0Ml/6JKrElMRxbr+Rf08bY9jv4BkhtkmtdAcsIVJRpBDmLV5BKzehKkHWrEHEu
-	 7/9LkcW7GZ4HHvL3FhTQy+6rVEfmZvemPVXOo+Opq7HXjSZXzCzAwHb2DJ1sORaF91
-	 /Z6QH3W+YynRA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Shyam-sundar.S-k@amd.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.16] platform/x86/amd: pmc: Drop SMU F/W match for Cezanne
-Date: Mon, 25 Aug 2025 08:14:54 -0400
-Message-ID: <20250825121505.2983941-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250825121505.2983941-1-sashal@kernel.org>
-References: <20250825121505.2983941-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sgBDxhaS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1756129011; x=1756733811; i=markus.elfring@web.de;
+	bh=itp++X7BYMDX5+/+FeQOCqCW0R/HDrEBOWoU0zLtfvs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sgBDxhaSBQhJJ60HZuPUJOBYxWYfVdIWuBLxzlQkS8XId8xb0ZqI8UaEUTTd27v/
+	 IpmFka1PQm1FL047YQE+qjsMekgP6sMCuCE5IlA22OsEPHTZPvpoXJ1ILUt9v4v0a
+	 yW6xwbkMdgnnCaRDLGsYkKpKhXPwaS2Uvpeb+3v1YixdJFdzruPLFgOilhscxAGKG
+	 MjYb6QnbhlS1H/T8CR6VgVXQ+KzozZGKXBCsEsMmxQUoYEWRb5b+cx6IBOVUNEx3n
+	 InSbNCGYgpqu0e2tMVKD6iGBSHPIZrmbJ1P9Cpq/JzhGntngxRC2UHALXujKe+1YR
+	 nQ3ZGTxZoTBwtL6CQA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.250]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MTvw0-1uzmUL1rda-00QYCL; Mon, 25
+ Aug 2025 15:36:51 +0200
+Message-ID: <813948c1-e534-49f8-951a-0b81ae543c7b@web.de>
+Date: Mon, 25 Aug 2025 15:36:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+ platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Kean Ren <kean0048@gmail.com>
+References: <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v2 1/3] platform/x86: think-lmi: Add certificate GUID
+ structure
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
 Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.16.3
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ewe6oaSWGQekhZdjDZ5VBP9HKh6HSeNS6Y0s/MvEU3x0is1Ff+5
+ 4J0aeLEOYbQgnA7kBPWQ7O5y+39SXEfUVMaAwl8/mqJHriw0jaXWrI3mHQWbo3JIG7R6jeD
+ tYGJRbcSWwNiwiW7vf7JAEpKCByZZDGs986TRBENkAyu3gqn4IrYVmkWtwfncPh2D4qJEoQ
+ DxAZsaHcfuGjlazf5WuVA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:EeNlRPJ1woE=;WoQLqCjBATKPUjUlsJSuamwiSUc
+ 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
+ mvoRbgBNPZ9o+YIDM64tGP0HJSCS
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+> Add a certificate GUID structure to make it easier to add different
+> options for other platforms that need different GUIDs.
 
-[ Upstream commit 5b9e07551faa7bb2f26cb039cc6e8d00bc4d0831 ]
+Would a cover letter become helpful for such a patch series?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.17-rc3#n310
 
-Chris reported that even on a BIOS that has a new enough SMU F/W
-version there is still a spurious IRQ1.  Although the solution was
-added to SMU F/W 64.66.0 it turns out there needs to be a matching
-SBIOS change to activate it.  Thus Linux shouldn't be avoiding the
-IRQ1 workaround on newer SMU F/W because there is no indication the
-BIOS change is in place.
-
-Drop the match for 64.66.0+ and instead match all RN/CZN/BRC (they
-all share same SMU F/W). Adjust the quirk infrastructure to allow
-quirking the workaround on or off and also adjust existing quirks
-to match properly.
-
-Unfortunately this may cause some systems that did have the SBIOS
-change in place to regress in keyboard wakeup but we don't have a
-way to know.  If a user reports a keyboard wakeup regression they can
-run with amd_pmc.disable_workarounds=1 to deactivate the workaround
-and share DMI data so that their system can be quirked not to use
-the workaround in the upstream kernel.
-
-Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4449
-Tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Link: https://lore.kernel.org/r/20250724185156.1827592-1-superm1@kernel.org
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Now I have a better understanding. Let me analyze the commit to
-determine if it should be backported:
-
-**Backport Status: YES**
-
-## Extensive Explanation:
-
-This commit should be backported to stable kernel trees for the
-following reasons:
-
-### 1. **Fixes a Real User-Impacting Bug**
-The commit addresses a spurious IRQ1 (keyboard interrupt) issue that
-causes unintended system wakeups from suspend. The commit message
-references a specific bug report
-(https://gitlab.freedesktop.org/drm/amd/-/issues/4449) where users are
-experiencing this problem. This directly impacts user experience with
-system suspend/resume functionality.
-
-### 2. **Regression Fix for Previous Workaround**
-The code shows this is fixing an incomplete workaround that was
-previously implemented. The original workaround avoided applying the
-IRQ1 disable on SMU firmware version 64.66.0+, assuming the firmware fix
-was sufficient. However, the commit message reveals that:
-- The SMU firmware fix requires a matching SBIOS change to be activated
-- Linux has no way to detect if the SBIOS change is present
-- This means systems with newer SMU firmware but without the SBIOS
-  change still experience the spurious IRQ1 issue
-
-### 3. **Limited Scope and Low Risk**
-The changes are confined to the AMD PMC driver quirks handling:
-- Removes the SMU firmware version check from `amd_pmc_wa_irq1()`
-  function
-- Adjusts the quirk infrastructure to allow both s2idle bug and spurious
-  8042 fixes
-- Updates DMI matches to use the combined quirk where appropriate
-- The changes are self-contained within the platform-specific driver
-
-### 4. **Hardware-Specific Fix**
-The fix targets specific AMD CPU models (Renoir/Cezanne/Barcelo -
-RN/CZN/BRC) that share the same SMU firmware. This hardware-specific
-nature means:
-- It won't affect other platforms
-- The risk is limited to AMD systems that already have the issue
-- The workaround provides a module parameter
-  (`amd_pmc.disable_workarounds=1`) for users who might experience
-  regressions
-
-### 5. **Addresses Known Hardware/Firmware Limitation**
-The commit acknowledges a hardware/firmware limitation where:
-- A fix exists in SMU firmware 64.66.0+
-- But it requires SBIOS activation that Linux cannot detect
-- This is a defensive approach to ensure all affected systems get the
-  workaround
-
-### 6. **Provides User Control**
-The commit message mentions that users who experience keyboard wakeup
-regression can use `amd_pmc.disable_workarounds=1` to disable the
-workaround and provide DMI data for future quirking. This gives users an
-escape hatch if needed.
-
-### 7. **Follows Stable Kernel Criteria**
-This commit meets the stable kernel backport criteria:
-- **Fixes a real bug**: Spurious IRQ1 wakeups affecting suspend/resume
-- **Already tested**: Has a "Tested-by" tag from the bug reporter
-- **Small and contained**: Changes are limited to the AMD PMC driver
-- **No new features**: Only adjusts existing workaround logic
-- **Clear impact**: Users experience unwanted system wakeups
-
-### Code Analysis Details:
-The key change in `drivers/platform/x86/amd/pmc/pmc.c` removes the SMU
-version check:
-```c
-- /* cezanne platform firmware has a fix in 64.66.0 */
-- if (pdev->cpu_id == AMD_CPU_ID_CZN) {
-- if (!pdev->major) {
-- rc = amd_pmc_get_smu_version(pdev);
-- if (rc)
-- return rc;
-- }
-- if (pdev->major > 64 || (pdev->major == 64 && pdev->minor > 65))
-- return 0;
-- }
-```
-
-This ensures the workaround is always applied for affected CPUs,
-regardless of SMU firmware version.
-
-The quirks restructuring in `pmc-quirks.c` creates a combined quirk
-(`quirk_s2idle_spurious_8042`) that applies both fixes where needed,
-showing careful consideration of the various affected systems.
-
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 54 ++++++++++++++---------
- drivers/platform/x86/amd/pmc/pmc.c        | 13 ------
- 2 files changed, 34 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index ded4c84f5ed1..7ffc659b2794 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -28,10 +28,15 @@ static struct quirk_entry quirk_spurious_8042 = {
- 	.spurious_8042 = true,
- };
- 
-+static struct quirk_entry quirk_s2idle_spurious_8042 = {
-+	.s2idle_bug_mmio = FCH_PM_BASE + FCH_PM_SCRATCH,
-+	.spurious_8042 = true,
-+};
-+
- static const struct dmi_system_id fwbug_list[] = {
- 	{
- 		.ident = "L14 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20X5"),
-@@ -39,7 +44,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XF"),
-@@ -47,7 +52,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "X13 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XH"),
-@@ -55,7 +60,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
-@@ -63,7 +68,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UD"),
-@@ -71,7 +76,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14 Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UE"),
-@@ -79,7 +84,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UH"),
-@@ -87,7 +92,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "T14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20UJ"),
-@@ -95,7 +100,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen1 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "20Y1"),
-@@ -103,7 +108,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21A0"),
-@@ -111,7 +116,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "P14s Gen2 AMD",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "21A1"),
-@@ -152,7 +157,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 14AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82VF"),
-@@ -160,7 +165,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 15AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82VG"),
-@@ -168,7 +173,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad 1 15AMN7",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82X5"),
-@@ -176,7 +181,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad Slim 3 14AMN8",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XN"),
-@@ -184,7 +189,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	},
- 	{
- 		.ident = "IdeaPad Slim 3 15AMN8",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
-@@ -193,7 +198,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/4434 */
- 	{
- 		.ident = "Lenovo Yoga 6 13ALC6",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82ND"),
-@@ -202,7 +207,7 @@ static const struct dmi_system_id fwbug_list[] = {
- 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/2684 */
- 	{
- 		.ident = "HP Laptop 15s-eq2xxx",
--		.driver_data = &quirk_s2idle_bug,
-+		.driver_data = &quirk_s2idle_spurious_8042,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Laptop 15s-eq2xxx"),
-@@ -285,6 +290,16 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
- {
- 	const struct dmi_system_id *dmi_id;
- 
-+	/*
-+	 * IRQ1 may cause an interrupt during resume even without a keyboard
-+	 * press.
-+	 *
-+	 * Affects Renoir, Cezanne and Barcelo SoCs
-+	 *
-+	 * A solution is available in PMFW 64.66.0, but it must be activated by
-+	 * SBIOS. If SBIOS is known to have the fix a quirk can be added for
-+	 * a given system to avoid workaround.
-+	 */
- 	if (dev->cpu_id == AMD_CPU_ID_CZN)
- 		dev->disable_8042_wakeup = true;
- 
-@@ -295,6 +310,5 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
- 	if (dev->quirks->s2idle_bug_mmio)
- 		pr_info("Using s2idle quirk to avoid %s platform firmware bug\n",
- 			dmi_id->ident);
--	if (dev->quirks->spurious_8042)
--		dev->disable_8042_wakeup = true;
-+	dev->disable_8042_wakeup = dev->quirks->spurious_8042;
- }
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 0b9b23eb7c2c..bd318fd02ccf 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -530,19 +530,6 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
- {
- 	struct device *d;
--	int rc;
--
--	/* cezanne platform firmware has a fix in 64.66.0 */
--	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
--		if (!pdev->major) {
--			rc = amd_pmc_get_smu_version(pdev);
--			if (rc)
--				return rc;
--		}
--
--		if (pdev->major > 64 || (pdev->major == 64 && pdev->minor > 65))
--			return 0;
--	}
- 
- 	d = bus_find_device_by_name(&serio_bus, NULL, "serio0");
- 	if (!d)
--- 
-2.50.1
-
+Regards,
+Markus
