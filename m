@@ -1,58 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729652E974B;
-	Mon, 25 Aug 2025 11:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CD82D8782;
+	Mon, 25 Aug 2025 11:30:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756121437; cv=none; b=YFxn4vN7+6J8ZqIi7agb5LWmj9G0oxr9Dx8hi14Stcykdzkm7/4ENShSCvqhGg1MWA5ZmPVmb7KrG4wt3hJhFnoNPa3r5lNp/3sK7tACdti5Eh6L+72286GvJfM9BRK1CSA1dPnWFDEg2bsAb7Ldj+AcgbMy5ew0qv3Bgqzum9I=
+	t=1756121442; cv=none; b=i8UeAqiPL6ITeHohDWZbxu8qv01dUbwKnLxm3nq5ZUGPKmPUt7Ic/hsDaOvteVTtufDx+qN5BzUU1WDeSfDg3XSZkaq+9zHfnQm0Azm1Pj6kpm+bU31DblWEFVo/06377ZKVFj1VgHdfYa2rT7ID2Z9/pL4wy0IH39RxRm8Xys4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756121437; c=relaxed/simple;
-	bh=x87kohJdjsaIQ5rPClNEVIdNcKm6NdmBwtjY2tDmXvw=;
+	s=arc-20240116; t=1756121442; c=relaxed/simple;
+	bh=Sec8KA9l8Vb622XFZIKMLKf9Dg56IzeQGQdTFcGQoj0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gGjUX4eiv1Dl2mJ70GcK9CdJClCrokcfKE2ZyJb0juC1tGJdDQQJjrP59rktVx7S/MbZsv2GDXl2VRUam8GQTptiwMH789XFET4oRbj94VKXKq2D5pAmWIqcPc/rVn/Dcxanjg03grNoY5NWge5vyPgdIbmVjgjCCR++P2ouuHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O+Ugn9t0; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=qP1wwav49mq9jrS7Rclqm/oKI4Csgy1juC9KdqAQ4to/aDnjWrhIgCOKld4oVqryBOVLcS3P8nmfGS3PGdb0tLh1rpXvnue8uZXU+KSmepMX8DyySgxMnjHgNJUGRHooEQGOavNR97onunIwx+VR/qmetSIEWzV2EuvNCwwKbko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DcvtnzHO; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O+Ugn9t0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DcvtnzHO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756121436; x=1787657436;
+  t=1756121442; x=1787657442;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=x87kohJdjsaIQ5rPClNEVIdNcKm6NdmBwtjY2tDmXvw=;
-  b=O+Ugn9t0wdwkIw1FR+AbbmYfuKjsnsdLz41YtTLGQCbzv0sliYqZBhVM
-   qnJgbS7Phgatat/lYwNQERyLobWatguDMYMIR8jzSknBgFre1aSrn8ybE
-   kvKDLTOngIT2dPckV75eaLw9/2gWX5f8iH4kdWym2XXVHgHV4jG7d6Ta6
-   sHob7iZvGS257obwAdKUQw6jjjdALWPLUMxfwbtrcPFRI69m8VJ/9bVP9
-   RbRPQK6CWnI2KaGq1/v9N0DnfltNSp/GrZky9mT4W9vAVjsWtJ4hu28VO
-   0/RmG3mRjdsI0ekvt+Q/PRAWv5Wt2bTnfRVyEqdcf2kbhtWJoNlpBONlo
+  bh=Sec8KA9l8Vb622XFZIKMLKf9Dg56IzeQGQdTFcGQoj0=;
+  b=DcvtnzHOHNLYYFLIeBxphX07+3pmAoZxk5szw3aYY3f6CgNU9M6s6d9a
+   60wMLaf35z5In3tbgjBP4aHBLp5U2drcEVNUTp8p4SHlwInR0PXh5FWN2
+   XByyFCxjYJ5Z8M0rerGInQWguxm4SfExfZWrfT7cofg2aWiahlx8IDv8R
+   QXKhLBJjdInU47g7VRp+M5sKnkiZehlTu1Toa5KVyyIMhIPFGWhUpts+8
+   B6UpB2FWxvbgBHiODwpZ6S43XOw0fDJvF09wDZimvMYiyLaF1yIgEYGzJ
+   8HDv6spO1JLf+atg/ugY8cLkpnmr3T+tFd+2uwnBzO8ufSHLleWcnnOJ+
    g==;
-X-CSE-ConnectionGUID: +FxdGT0FTsqxeMjlCyvwsw==
-X-CSE-MsgGUID: CpfGyiZRRueizSVwOGIANg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58273598"
+X-CSE-ConnectionGUID: lZOX780fQIGWNCQmb8+V6w==
+X-CSE-MsgGUID: wY1C8XlOQI+jFKIIpNGt5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58273605"
 X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="58273598"
+   d="scan'208";a="58273605"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 04:30:35 -0700
-X-CSE-ConnectionGUID: Aivx+ec4TRm+Rqv8x6pr5A==
-X-CSE-MsgGUID: eQzjb8SmS4CSq4vS3N1dvQ==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 04:30:41 -0700
+X-CSE-ConnectionGUID: hxRdr1AcQ7WR98KlUw62qw==
+X-CSE-MsgGUID: Td45XEktTUWqP/vg5x0A3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="170101388"
+   d="scan'208";a="170101398"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.85])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 04:30:32 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 04:30:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: mario.limonciello@amd.com, perry.yuan@amd.com, hansg@kernel.org, 
- Zhen Ni <zhen.ni@easystack.cn>
-Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20250822083329.710857-1-zhen.ni@easystack.cn>
-References: <20250822083329.710857-1-zhen.ni@easystack.cn>
-Subject: Re: [PATCH] platform/x86/amd: hfi: Fix pcct_tbl leak in
- amd_hfi_metadata_parser()
-Message-Id: <175612142874.7176.15802059886261111644.b4-ty@linux.intel.com>
-Date: Mon, 25 Aug 2025 14:30:28 +0300
+To: platform-driver-x86@vger.kernel.org, 
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D . Jones" <luke@ljones.dev>, Mathieu Fenniak <mathieu@fenniak.net>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250808154710.8981-1-lkml@antheas.dev>
+References: <20250808154710.8981-1-lkml@antheas.dev>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Remove extra keys from
+ ignore_key_wlan quirk
+Message-Id: <175612143487.7176.12842954767446670180.b4-ty@linux.intel.com>
+Date: Mon, 25 Aug 2025 14:30:34 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,12 +65,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 22 Aug 2025 16:33:29 +0800, Zhen Ni wrote:
+On Fri, 08 Aug 2025 17:47:09 +0200, Antheas Kapenekakis wrote:
 
-> Fix a permanent ACPI table memory leak when amd_hfi_metadata_parser()
-> fails due to invalid PCCT table length or memory allocation errors.
+> Currently, the ignore_key_wlan quirk applies to keycodes 0x5D, 0x5E, and
+> 0x5F. However, the relevant code for the Asus Zenbook Duo is only 0x5F.
+> Since this code is emitted by other Asus devices, such as from the Z13
+> for its ROG button, remove the extra codes before expanding the quirk.
 > 
+> For the Duo devices, which are the only ones that use this quirk, there
+> should be no effect.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -77,8 +84,10 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/amd: hfi: Fix pcct_tbl leak in amd_hfi_metadata_parser()
-      commit: d3a8ca2ebe6e3f2b1fb0e8e74f909d109a1d77c7
+[1/2] platform/x86: asus-wmi: Remove extra keys from ignore_key_wlan quirk
+      commit: cf3940ac737d05c85395f343fe33a3cfcadb47db
+[2/2] platform/x86: asus-wmi: Fix ROG button mapping, tablet mode on ASUS ROG Z13
+      commit: 132bfcd24925d4d4531a19b87acb8474be82a017
 
 --
  i.
