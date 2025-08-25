@@ -1,111 +1,120 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAAD2F0694;
-	Mon, 25 Aug 2025 16:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518072FF17D;
+	Mon, 25 Aug 2025 16:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756137692; cv=none; b=KQQ174xf1jfBVyGFyde8mQXluIuVmoaO8XE88O80P0fm/T3x3JOQDHNq65BNeuCWRdrcAuTZY709gTURw5wn4m6CRKbTC2b2DLSVK/4eNNtqwLHTX9U+5KTO5l+4iAHUmlFL9xCnT1Yb9N9ZV32rEnCRSHgs3j5dgmbEt/NXrYo=
+	t=1756140997; cv=none; b=c8tJF1ABd3yMDt60nQ6FbsSuxzFoemiqrrz7QIVHq7TrtvNLwAWcLV7/a5Sq9YeRJr3UTehw2Ko6xkv2UlUCZ7JiQPAyIVEi6VyruEEMcqbpuHt1LLoK/3a8LhECM32nnQKO4lOw77gWUnQy7vgDbyB72/o13f1zCf1mHVNtrOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756137692; c=relaxed/simple;
-	bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NmyBWj/K0XBhg9dLHgOQjUsEOA1sQYoJZjTfCfgHQ15jdpJi3S1uLu0mNl/0Z8zbspdBVl/qwnCXzZOAQ7OMsTNBcnc7V7AxN3LWaYTLezxXZvYFfHF2h5VAVWK1t5jfu25nuraLhPX3p41/CuZU31O9oVswURvFfaDP54gIM7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=e+aZLe/D; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P8xAx12V; arc=none smtp.client-ip=202.12.124.147
+	s=arc-20240116; t=1756140997; c=relaxed/simple;
+	bh=gbO/zfSLZKwIkdcWa8lq6pAh0F/PKrMcuam1wSYANZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AsO7t7iKhDWpr1/5keO4Pcu+jLhdEEiZ6jqdFKFP4Q5qZRXkeHbECNMANC43Sqm3LVrCXmCe6SEiHlrpgQyvSM/qMrSHAmWECB+1JBoCsKWrpmMa+2Bya84FKuAYML+hR5+wg1MUU1AXHp6UHAnFp7bEM2Bx6xGMdhcRIMkQj5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=MWVXxX6l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eW4tXBo1; arc=none smtp.client-ip=202.12.124.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="e+aZLe/D";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P8xAx12V"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id 539F81D00061;
-	Mon, 25 Aug 2025 12:01:23 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Mon, 25 Aug 2025 12:01:23 -0400
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="MWVXxX6l";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eW4tXBo1"
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 41BAE7A0149;
+	Mon, 25 Aug 2025 12:56:34 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Mon, 25 Aug 2025 12:56:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1756137683;
-	 x=1756224083; bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=; b=
-	e+aZLe/DAVbHygByt+EzlyrGto1kihLj/hWt4fipKxZ7UGbFfEwDPQ4INPRO03cg
-	fpsKof5SWIIIYnor0ASipjnIJBsCEJThV4jhUf9pMbQZwC7DdX+xoHyktBw+bF/1
-	sNUFo/8dshdILysxBmTbS/InPY46GSCwpcyxQdJyDjo6ZWG3ms1fTh49+sJKxRSd
-	MumWTZlPyf/RCzn8dS7+U5/ij0/hO9w3iiAOx1qYozK7pye+wjOxPs7cEr88VB0h
-	2dSe3Nw0qvM2QoxJRQO/u4YLh0GPW7zhHn7GDukTOUQqqNBqSpuIP0CNPsZRDLed
-	kzEi6iXDIO7HeI58rhadcw==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1756140994;
+	 x=1756227394; bh=2oO4BZcpU5QLF9yoO1Z3iTLwTVA/fCrME0TR5ifc14k=; b=
+	MWVXxX6lSxQ4J54jotb0smHj9qDbdNjSC6FS2eFR470drPaxdir39+ha8MSEReK1
+	6D7PMcQEj5ZvSCogTiBglgrFVglV18eBWWUKuMsvODEoY/7n9tkVoElVmz/PMHWX
+	JDtE+ib14s0GhFZ3vQ6hgOIoudct8B9Fvj88lCmB0x9I5TueRbVgc9cIWfqn48Bl
+	54ywlKc9gdIdLvWck3lhIGX2EUKHUi5Po3H46DdHL+7fslqH9E6Tk4MkhJFfT7tD
+	JFPH2gFwV/wm/G3/VcooSyg74+sx+iNYaB2RVYBvwk1BS7dfk+CzUAf9rm5xy5R4
+	7l/xBoK+AuzxvhIojVTw9Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1756137683; x=
-	1756224083; bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=; b=P
-	8xAx12V3Xth+HP/dkyAOuIp2iEY+OVKN3x1FaHakkY0t6x8pl3s0NnCOpYH3EzIK
-	aWcRW/5dVH0HyRHeQdumiJH5a0wXZ4D/2c2w1osx+li3fWPpmLc4PnxuqHVLlnKH
-	WrjYtwvVwNjw+HvpwaTn2fzuihAAirf2G0qCtsA9FZBLR8CiiwxxshEcyKIEGdvh
-	zAFqk4lHCCUhhWLK7S/y8RLD8n/y0zMKPSz6wtEUtQGp1FBZFBHZ+7oh6XB5eui9
-	hT92BcWaWyvcN/7TuY8tfyyvdV33Pp5Rl5BwzFSEcwg8/ozFuOfZgLTeffDQjMdW
-	LT7WQ0CqifsSzZfGALy4A==
-X-ME-Sender: <xms:0oisaMmJILOXtDDDINCFu53-uIUUg_3zDJt8BZ-BqUOp2yVI5-v6Fg>
-    <xme:0oisaL1c5xtrn-p-tQL6TOEPaZa0vJyP5R1MfKrNTEgfszaWSTfkfZAnpNBbqrSx8
-    A2S1rOos8BLiMcioo4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujedvkedvucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1756140994; x=
+	1756227394; bh=2oO4BZcpU5QLF9yoO1Z3iTLwTVA/fCrME0TR5ifc14k=; b=e
+	W4tXBo1QmxLm3ssGRGxy5nlugGczaTY+XiA5iupj1SMYhOHlXhsqOr7IESiVGR92
+	bQjw7WrFqjHYQb0D54t134NaBONI6dMyGmMFwdl72ldU8x+9CoJnpSOKPNYS71WK
+	jY47dpZ/oh7Ft1o2OKIYl1ZVu/ugQRTl2gQpd3dRVHFaVTynV67uVPvqWQ9SAKOl
+	H3f7hi3G5xl6yAFc9Lvjr8/olSJGsNrb4Q/lSx87szNR7s6/wg6IpglZoTEw/f03
+	LJohnxbJOSEfoyFAwap9A3ALxeWLP5AmtVGv2fD15thRgFgPvRGVuarCjxm3zEp6
+	dVSrzAs10e0DMTMB0uvtQ==
+X-ME-Sender: <xms:wZWsaBEWFJRr_Uj1mqVo7SU9jHd_D8-TMiUbDeQ4BkDLMXVWe55tYA>
+    <xme:wZWsaNshFTwoGWo7Ai5XJsk7voTSR-dA2Ais82appNRe64ELO5n08d8wdkyRsZPls
+    I8MM8S5W7qnRJCCqaE>
+X-ME-Received: <xmr:wZWsaIswHLD1r0QVnvcavB1Nu3Vj71B9VhXzW1nf02kWCGPExuZP4mNCDoHlMr8D9Da_I0eeFdvoC_wx9Pj2k1TrGiUUWA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujedvledvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpedtffevgfethfevteduvdefleevkedtuddvlefghefg
-    ieekffejteejveffkedthfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
-    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepiedpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtohepkhgvrghntddtgeeksehgmhgrihhlrdgtohhmpdhr
-    tghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhord
-    hjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhn
-    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplh
-    grthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepmhgrrhhkuhhsrdgvlhhfrhhinhhgseifvggsrdguvg
-X-ME-Proxy: <xmx:0oisaFXiOWgLRUFjk-PAZdWeLgAX5_eFdtsODmogQlpvB5HIvVtfHQ>
-    <xmx:0oisaDKYnak1qaqwLWUnEfhqQvHjNJ0fbwXwRSP2df6rG-lS_a04pg>
-    <xmx:0oisaH0nngfUwVtDBU-b4FeClhimbjLJWffDfypgNGAMxB4KZEzUgg>
-    <xmx:0oisaJ7ywWqsAiukMfu8aO7CTFl6--VO_BnAy8Bqv4zACz0jjh0oig>
-    <xmx:04isaEFogNO1n1_RXJm4TzzH7GGTJb0QoZjSL7aqDwwXfj7Qw_rHlbjz>
+    rghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephffvve
+    fufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpeforghrkhcurfgvrghrshho
+    nhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrg
+    htthgvrhhnpeffffefudeuueduueduhfefkeeiueeihfdukeeuffekfffhheeigfehveek
+    hefhhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthho
+    peeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnhes
+    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehkvggrnhdttdegkeesghhmrghilhdrtghomhdprhgtphht
+    thhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:wZWsaDBpBYUKtOnrV8Bo6zMyq_GtECa_8llfF41nqeOLoEd0qORfBQ>
+    <xmx:wZWsaKNXvqYPZ0JivKTXvej6zwhkdefaFgSU9BPZlfCrqdmRboCyNg>
+    <xmx:wZWsaMyWwG2y3k-P_We1XxjLSRtup7JziN_hQcn3Z0xxrLgE5FoDXQ>
+    <xmx:wZWsaKXc2ABsGYa4ufYzYmxmjczklWTJ3DJTZgGX-6uUtMtIxWvorg>
+    <xmx:wpWsaCf4_n7Rs1__TNmGUA-eetWuBgnwOAV9kuJU-EU55-K00tMzbzEt>
 Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8FF712CE0071; Mon, 25 Aug 2025 12:01:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 25 Aug 2025 12:56:32 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	kean0048@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] platform/x86: think-lmi: ThinkCenter certificate
+Date: Mon, 25 Aug 2025 12:03:35 -0400
+Message-ID: <20250825160351.971852-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AxLiYJmP0NXg
-Date: Mon, 25 Aug 2025 12:01:02 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Markus Elfring" <Markus.Elfring@web.de>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- RenHai <kean0048@gmail.com>
-Message-Id: <22906b4c-7811-4a6b-975b-ba7a73e6ed23@app.fastmail.com>
-In-Reply-To: <813948c1-e534-49f8-951a-0b81ae543c7b@web.de>
-References: <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
- <813948c1-e534-49f8-951a-0b81ae543c7b@web.de>
-Subject: Re: [PATCH v2 1/3] platform/x86: think-lmi: Add certificate GUID structure
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Markus
+Patch series to implement certificate based authentication on
+ThinkCenter platforms
 
-On Mon, Aug 25, 2025, at 9:36 AM, Markus Elfring wrote:
->> Add a certificate GUID structure to make it easier to add different
->> options for other platforms that need different GUIDs.
->
-> Would a cover letter become helpful for such a patch series?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.17-rc3#n310
->
-Yep - I'll add that (good timing - I was just about to push v3)
+Patch 1 introduce a certificate GUID structure to make it easier to
+support different GUIDs for certificate authentication
+Patch 2 implements the changes needed to support ThinkCenter platforms
+Patch3 adds some extra error message handling as used on ThinkCenter
+platforms.
 
-Thanks for the review
-Mark
+Tested on M75q Gen 5
+
+Mark Pearson (3):
+  platform/x86: think-lmi: Add certificate GUID structure
+  platform/x86: think-lmi: Certificate support for ThinkCenter
+  platform/x86: think-lmi: Add extra TC BIOS error messages
+
+ drivers/platform/x86/lenovo/think-lmi.c | 103 ++++++++++++++++++++----
+ drivers/platform/x86/lenovo/think-lmi.h |   1 +
+ 2 files changed, 90 insertions(+), 14 deletions(-)
+
+-- 
+2.43.0
 
