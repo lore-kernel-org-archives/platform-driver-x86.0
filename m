@@ -1,213 +1,111 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CF923D297;
-	Mon, 25 Aug 2025 13:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAAD2F0694;
+	Mon, 25 Aug 2025 16:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756129408; cv=none; b=gpRH0UQIJLsWNsT+mk3wi2X7VpCiN4D1jCGMhuHHAPZ6j9RabRERkowNKvFZaK8xAdEE/74Cdq44WA1RD4MrZcxsWMEuRlH2BRcQN6eYuZWPbRm4w4OnndRtttXsfrINcFFoan+hxZSMdjlu8oEOCVIDT69EM8r7ctAqzo8hnlU=
+	t=1756137692; cv=none; b=KQQ174xf1jfBVyGFyde8mQXluIuVmoaO8XE88O80P0fm/T3x3JOQDHNq65BNeuCWRdrcAuTZY709gTURw5wn4m6CRKbTC2b2DLSVK/4eNNtqwLHTX9U+5KTO5l+4iAHUmlFL9xCnT1Yb9N9ZV32rEnCRSHgs3j5dgmbEt/NXrYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756129408; c=relaxed/simple;
-	bh=hQMwXvLwmQEv1kEvo1+9eCKCllPAT+aam54JtX7RwQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eyXcScnTu6cgE5ntPhszV9/X46z6rkI3UAfCmHaQnbr2s3j3bEHg9JCbJtjX4mtWHRJd3i5Oj3Oz+PxY9o9bI2D6Ouojh46oOBt8jPnmIt25HqfF8aJ2chxOVveO9h9OLfrpQGhpbANqQ4tVkpdMbRbOWk3SyNAd0o1psKTEjpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCr5k46v; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756137692; c=relaxed/simple;
+	bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NmyBWj/K0XBhg9dLHgOQjUsEOA1sQYoJZjTfCfgHQ15jdpJi3S1uLu0mNl/0Z8zbspdBVl/qwnCXzZOAQ7OMsTNBcnc7V7AxN3LWaYTLezxXZvYFfHF2h5VAVWK1t5jfu25nuraLhPX3p41/CuZU31O9oVswURvFfaDP54gIM7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=e+aZLe/D; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P8xAx12V; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCr5k46v"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-afcb732eee6so763533366b.0;
-        Mon, 25 Aug 2025 06:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756129405; x=1756734205; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jAbKVYpYb9nh9ya4q0qpbx2OQpViyyQmlpd1mwtIPFY=;
-        b=TCr5k46vkdO0EJSjFFVjZxe1+IglZ9VemDdyZNgptfYQrmF90+VXp3CX2ji7Yxd8v+
-         xmo64m6HgUnqwMU352Ok0Oc5+KPgDiLimk8stgQsLjE+CGaFjrngSCZ79/uvm5jV7itS
-         BEtu4Azkb/IwpjEEVg1BEpSwAyyuxJSxVvQ3/8EQ7N93E1bykFDpDU4mYMNIud84Z05f
-         82f3Wh0X8ZYfQmzsY8upg2fPjx3Y01Nu5tVWc/CPjRT9tzROytAkMSnR5HrOX/ph+Ugf
-         llFcPhqFWpAG5I5fz2jXHTMrkIdyuqdDLXr8/AB7LuhRR8XBh/BUxwocm5LAeB03Hk+p
-         SJPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756129405; x=1756734205;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAbKVYpYb9nh9ya4q0qpbx2OQpViyyQmlpd1mwtIPFY=;
-        b=q4ueCMckbKzZML+aIAU5DjExwmYXmT7/xJVMF8GFbMHw4FAuwiRIq9rW2sx/e4hFjp
-         VOSX0fjdh9xLNVFaJa96p3O7qZayubI5pIsQStk7GHUv4mKkxIZX1UzV8Xb/Ged5tbvY
-         3N0X5OEjerasKChfgYE3Ox11ibKJqSaqYbuYkKWZC1kbMLwG4TpvU7JnP8wmOQSqsHfh
-         EDZc0fadS1hDPDo01nPg0qPmNjJW1dxs1OHQs/t6iPMk4TRv+/yRNfEfZkQBVLd9722P
-         rBCri1EOCEc+pHaa6YvyK9HJQVDxPKrsLK3gVKddSo/4FlG0Ku/kSiOVG3LuHtCpvZPc
-         iGbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuHT4x9IEC5uXU0DqT8kTDhK41wz4PI5I2IYV/tkUV8PgNI6VEEa3UbjR6WdqdRmB1v7lgQznJQ2jG@vger.kernel.org, AJvYcCX/iIX55n4d5u+yHV4rwZe2IcX8HyTZGKKQQuMs+SC199Nq4tLtNwLIQ7h2yjWtple4FTH1Zihkbj8Bm9o=@vger.kernel.org, AJvYcCXmIGF6BI7QjX1Bbw5zwFEGwf3Rl0gPkdjlOIUW8TzXUQZXw8lfdgAqPTjADHBW43mWaYOeA9Wep/PL2Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj2Hkin+/6OoRpEbNxgaWLvz7sWJGnuhlB8c3pkYAuARpiV7yy
-	Yiic5LIpw1/WHi7iRWbUm2BmpkLOQydTQksKKuk0yL0EqRgLm6iJ2Rw=
-X-Gm-Gg: ASbGnctSUOHCFgdoq47Ab2ZpFbwg4xZbOGzCgPEEb/aPRes8lZzkfT6a+mZGkSpA48I
-	yROY0y8XdngOxkO61lcA/sxfgRrckuYARBoe7kzThHTjd8z1cz+/Sa9OPTIH+lMhzPe0GuXaojs
-	+OMkKoilh0Ak0QuRX8VqrHp5ZJ2lpbWrBnnwT1JjPWYBp6fEwgkpvbHDIA17p+Z4H9cbNRFL688
-	P+P5KjJOi94xbvnk9pPymSa/SGjXrcOd87MHBAKFeFSfb4M7sw10ufO8v5xGFiDtuB/x1Uy4dVX
-	YUW0Vbcd3NWW+XMrCUy70HiDi5QNbScHi2w4I9Vrb0593BTXFxYZPHuoNX89E4ro2E9ZPYKB5e6
-	1KH2lb6Kd3e5NRUxzPLAZKfEz750zLhoBxygYxxxPoHTEKhqhnYcIsw9sh2cWSFz51uWsZXqqKF
-	BXbKotB6szqw==
-X-Google-Smtp-Source: AGHT+IHLJ4qg6ex2bm+0hQ+1u00bCZ4MtkgwHM+oSFotZaHnr+IyLH+ElzkG+gFK7XgWDVfoZZ4PwA==
-X-Received: by 2002:a17:907:3e13:b0:af4:12f6:420 with SMTP id a640c23a62f3a-afe29441ab7mr1037855666b.13.1756129404949;
-        Mon, 25 Aug 2025 06:43:24 -0700 (PDT)
-Received: from [10.104.197.164] (mob-194-230-160-118.cgn.sunrise.net. [194.230.160.118])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe70f0121bsm326761666b.55.2025.08.25.06.43.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Aug 2025 06:43:24 -0700 (PDT)
-Message-ID: <eac8ce16-4e63-4092-8729-dc73b3433ece@gmail.com>
-Date: Mon, 25 Aug 2025 15:43:16 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="e+aZLe/D";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P8xAx12V"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 539F81D00061;
+	Mon, 25 Aug 2025 12:01:23 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Mon, 25 Aug 2025 12:01:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1756137683;
+	 x=1756224083; bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=; b=
+	e+aZLe/DAVbHygByt+EzlyrGto1kihLj/hWt4fipKxZ7UGbFfEwDPQ4INPRO03cg
+	fpsKof5SWIIIYnor0ASipjnIJBsCEJThV4jhUf9pMbQZwC7DdX+xoHyktBw+bF/1
+	sNUFo/8dshdILysxBmTbS/InPY46GSCwpcyxQdJyDjo6ZWG3ms1fTh49+sJKxRSd
+	MumWTZlPyf/RCzn8dS7+U5/ij0/hO9w3iiAOx1qYozK7pye+wjOxPs7cEr88VB0h
+	2dSe3Nw0qvM2QoxJRQO/u4YLh0GPW7zhHn7GDukTOUQqqNBqSpuIP0CNPsZRDLed
+	kzEi6iXDIO7HeI58rhadcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1756137683; x=
+	1756224083; bh=RcK/LTYohFtxhRLXoxsNlDp9lcoVpoPktWnOwvHEx44=; b=P
+	8xAx12V3Xth+HP/dkyAOuIp2iEY+OVKN3x1FaHakkY0t6x8pl3s0NnCOpYH3EzIK
+	aWcRW/5dVH0HyRHeQdumiJH5a0wXZ4D/2c2w1osx+li3fWPpmLc4PnxuqHVLlnKH
+	WrjYtwvVwNjw+HvpwaTn2fzuihAAirf2G0qCtsA9FZBLR8CiiwxxshEcyKIEGdvh
+	zAFqk4lHCCUhhWLK7S/y8RLD8n/y0zMKPSz6wtEUtQGp1FBZFBHZ+7oh6XB5eui9
+	hT92BcWaWyvcN/7TuY8tfyyvdV33Pp5Rl5BwzFSEcwg8/ozFuOfZgLTeffDQjMdW
+	LT7WQ0CqifsSzZfGALy4A==
+X-ME-Sender: <xms:0oisaMmJILOXtDDDINCFu53-uIUUg_3zDJt8BZ-BqUOp2yVI5-v6Fg>
+    <xme:0oisaL1c5xtrn-p-tQL6TOEPaZa0vJyP5R1MfKrNTEgfszaWSTfkfZAnpNBbqrSx8
+    A2S1rOos8BLiMcioo4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujedvkedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpedtffevgfethfevteduvdefleevkedtuddvlefghefg
+    ieekffejteejveffkedthfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
+    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepiedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepkhgvrghntddtgeeksehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhord
+    hjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhn
+    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplh
+    grthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepmhgrrhhkuhhsrdgvlhhfrhhinhhgseifvggsrdguvg
+X-ME-Proxy: <xmx:0oisaFXiOWgLRUFjk-PAZdWeLgAX5_eFdtsODmogQlpvB5HIvVtfHQ>
+    <xmx:0oisaDKYnak1qaqwLWUnEfhqQvHjNJ0fbwXwRSP2df6rG-lS_a04pg>
+    <xmx:0oisaH0nngfUwVtDBU-b4FeClhimbjLJWffDfypgNGAMxB4KZEzUgg>
+    <xmx:0oisaJ7ywWqsAiukMfu8aO7CTFl6--VO_BnAy8Bqv4zACz0jjh0oig>
+    <xmx:04isaEFogNO1n1_RXJm4TzzH7GGTJb0QoZjSL7aqDwwXfj7Qw_rHlbjz>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8FF712CE0071; Mon, 25 Aug 2025 12:01:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/11] [RFC] leds: led-class: Add devicetree support to
- led_get()
-To: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Daniel Scally <djrscally@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
- Mark Pearson <markpearson@lenovo.com>, Andy Yeh <andy.yeh@intel.com>,
- Hao Yao <hao.yao@intel.com>, linux-media@vger.kernel.org,
- Andy Shevchenko <andy.shevchenko@gmail.com>, artur@madrzak.eu
-References: <20230120114524.408368-1-hdegoede@redhat.com>
- <20230120114524.408368-6-hdegoede@redhat.com>
-Content-Language: en-US
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20230120114524.408368-6-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AxLiYJmP0NXg
+Date: Mon, 25 Aug 2025 12:01:02 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Markus Elfring" <Markus.Elfring@web.de>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ RenHai <kean0048@gmail.com>
+Message-Id: <22906b4c-7811-4a6b-975b-ba7a73e6ed23@app.fastmail.com>
+In-Reply-To: <813948c1-e534-49f8-951a-0b81ae543c7b@web.de>
+References: <20250822152549.4077684-1-mpearson-lenovo@squebb.ca>
+ <813948c1-e534-49f8-951a-0b81ae543c7b@web.de>
+Subject: Re: [PATCH v2 1/3] platform/x86: think-lmi: Add certificate GUID structure
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+Hi Markus
 
-On 1/20/23 12:45, Hans de Goede wrote:
-> Turn of_led_get() into a more generic __of_led_get() helper function,
-> which can lookup LEDs in devicetree by either name or index.
+On Mon, Aug 25, 2025, at 9:36 AM, Markus Elfring wrote:
+>> Add a certificate GUID structure to make it easier to add different
+>> options for other platforms that need different GUIDs.
 >
-> And use this new helper to add devicetree support to the generic
-> (non devicetree specific) [devm_]led_get() function.
+> Would a cover letter become helpful for such a patch series?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.17-rc3#n310
 >
-> This uses the standard devicetree pattern of adding a -names string array
-> to map names to the indexes for an array of resources.
->
-> Note the new led-names property for LED consumers is not added
-> to the devicetree documentation because there seems to be no
-> documentation for the leds property itself to extend it with this.
-> It seems that how LED consumers should be described is not documented
-> at all ATM.
->
-> This patch is marked as RFC because of both the missing devicetree
-> documentation and because there are no devicetree users of
-> the generic [devm_]led_get() function for now.
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Yep - I'll add that (good timing - I was just about to push v3)
 
+Thanks for the review
+Mark
 
-Hi,
-
-It appears this patch was marked as RFC due some missing dt-bindings and 
-not having direct DT consumers at the time, and was eventually left out. 
-With recent inflow of arm64-power laptops (Snapdragon X1E/X1P) which 
-mostly use MIPI cameras, this feature becomes more desired. I have 
-rebased this patch onto 6.17-rc2, and can confirm its (still) working as 
-expected (with respective DT changes) on Dell XPS 9345.
-
-What would be the best approach to revive this patch? For Hans to respin 
-this? Alternatively I could respin it myself keeping the original 
-authorship.
-Regarding missing dt-binding documentation, would 
-`Documentation/devicetree/bindings/leds/common.yaml` be the good place 
-for it? Afaiu it was mentioned that no  appropriate LED bindings exists 
-in this series (3yo), but this binding is ~6yo, so perhaps its not a 
-right place after all.
-
-Thank you in advance,
-Alex
-
-> ---
->   drivers/leds/led-class.c | 37 ++++++++++++++++++++++++++++---------
->   1 file changed, 28 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 0c4b8d8d2b4f..2f3af6e30208 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -234,19 +234,18 @@ static struct led_classdev *led_module_get(struct device *led_dev)
->   	return led_cdev;
->   }
->   
-> -/**
-> - * of_led_get() - request a LED device via the LED framework
-> - * @np: device node to get the LED device from
-> - * @index: the index of the LED
-> - *
-> - * Returns the LED device parsed from the phandle specified in the "leds"
-> - * property of a device tree node or a negative error-code on failure.
-> - */
-> -struct led_classdev *of_led_get(struct device_node *np, int index)
-> +static struct led_classdev *__of_led_get(struct device_node *np, int index,
-> +					 const char *name)
->   {
->   	struct device *led_dev;
->   	struct device_node *led_node;
->   
-> +	/*
-> +	 * For named LEDs, first look up the name in the "led-names" property.
-> +	 * If it cannot be found, then of_parse_phandle() will propagate the error.
-> +	 */
-> +	if (name)
-> +		index = of_property_match_string(np, "led-names", name);
->   	led_node = of_parse_phandle(np, "leds", index);
->   	if (!led_node)
->   		return ERR_PTR(-ENOENT);
-> @@ -256,6 +255,19 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
->   
->   	return led_module_get(led_dev);
->   }
-> +
-> +/**
-> + * of_led_get() - request a LED device via the LED framework
-> + * @np: device node to get the LED device from
-> + * @index: the index of the LED
-> + *
-> + * Returns the LED device parsed from the phandle specified in the "leds"
-> + * property of a device tree node or a negative error-code on failure.
-> + */
-> +struct led_classdev *of_led_get(struct device_node *np, int index)
-> +{
-> +	return __of_led_get(np, index, NULL);
-> +}
->   EXPORT_SYMBOL_GPL(of_led_get);
->   
->   /**
-> @@ -329,9 +341,16 @@ EXPORT_SYMBOL_GPL(devm_of_led_get);
->   struct led_classdev *led_get(struct device *dev, char *con_id)
->   {
->   	struct led_lookup_data *lookup;
-> +	struct led_classdev *led_cdev;
->   	const char *provider = NULL;
->   	struct device *led_dev;
->   
-> +	if (dev->of_node) {
-> +		led_cdev = __of_led_get(dev->of_node, -1, con_id);
-> +		if (!IS_ERR(led_cdev) || PTR_ERR(led_cdev) != -ENOENT)
-> +			return led_cdev;
-> +	}
-> +
->   	mutex_lock(&leds_lookup_lock);
->   	list_for_each_entry(lookup, &leds_lookup_list, list) {
->   		if (!strcmp(lookup->dev_id, dev_name(dev)) &&
