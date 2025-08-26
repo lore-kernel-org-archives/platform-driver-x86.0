@@ -1,273 +1,288 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4AC286D76
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Aug 2025 20:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402E030CD81;
+	Tue, 26 Aug 2025 20:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756240145; cv=none; b=VfZWG+XDRnVdEFPJ6iBGXWSyoBZHNYF2YP/8jvZkPG8KF7qGsUEWEHmWMWEIDoHo3KYsZmBXa3co+ByxJYOir67/mDDih2YO0/E+66tgdmPttoEwrdbeDM0mf2If24TarDgukOzOJ0GDnotxE17NxCPOD+mlO23c3rcRX0NhhpU=
+	t=1756240823; cv=none; b=NM9gYbPHZACCkBZnIosNAcwbgxBNGN0PgOw4PzRlzCHWN9MFQrMlHcHa+LQemvYnmX6WV7+80pYAs4RNC6+bHbLatckYU7y4Dk5faYj/AnIM8Z5n7lMNRpTPPa0drfYl3FGYxt1EXaaeO5fR3XzB6AOmuy3RD0am+4t9GU3gmcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756240145; c=relaxed/simple;
-	bh=aR/IIkt40/e1sC8qscAJstk4c0TuoBd/p0GIfDEXoXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F9lXLreWvqF8211TPVmY9NOx1Ti+wEZzhKJH622Ot00bTiLdnxoLGyQZQ9Fo2xKPUT7XxXi3CHQkd7jzPbuPJ4XLESJPn3KeVyWQIXZjvTkYfZz5CKJbI95//u2JGQ80iSbVfuo1fbfACuHr5szaifUsbm7at31vJf0H8aZ9cB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WdzbJZb+; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1756240823; c=relaxed/simple;
+	bh=GhpOGo4RZ153MgfBnG4eLx6oXoIOzID0mHPt/bMurIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VxMcCgEXysIDnVp7DvleNlsmV1w2YLP2wsbVZlp36CyFsWlffcPVl0SOLo0tOamCZDsWLFaM4V8uHC47/kWRS/sVw+RYsdE+hiHRHI3BTZQEIFQzUd70GB7VBaYTxEWr+6wk8wKh/lFPJ4lywVeQm4EKYVTfkjv+ek6sHONkwiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WsrL/x64; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WdzbJZb+"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WsrL/x64"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1756240141; x=1756844941; i=w_armin@gmx.de;
-	bh=aR/IIkt40/e1sC8qscAJstk4c0TuoBd/p0GIfDEXoXE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=WdzbJZb+orPX3RNAwVYvUwJBPdyfChDFeU5z7h3/BAwc5HkZhOauh0vO5LYQ8Sxq
-	 fU5b7ROJiwmH2ywV62RzF2DPzGXN2vyh9VDf4/jhGkJ0q5yrFgEQs+67RVptnIxK8
-	 t3pr/CbJ7qPjwU21XWOLtzzuRYL0gmDWqo5u2MRGo6SQJbYqZCZ7O8mQmaX0HDmkh
-	 B6UvhJg8CV85BrYWxwiFUlSDwdEAp93tl9ldVTaA+T28Q2L5ri+hm+/nWLMqjcQUr
-	 XilKTUqTlTDnXmEQ6itW7+5CX2fZPnOWhRWbdQ3XT/jpzNMZu6Q+HPq+McuIHLPXB
-	 6PU8wuae1jYYgAC+dg==
+	s=s31663417; t=1756240818; x=1756845618; i=w_armin@gmx.de;
+	bh=uLyBfhgH5aiYwW97ZclpfkwgeTbWJkasjUGB464pPMs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WsrL/x646/SzD1sPlOKDxMnJsdBguW+cTKpVNNLx/Xc1NXb2EMNAf6Y7OhyuMaXz
+	 OmvIdpyT2yehdYdc1sMV9agd5B6ZDNq/L5ZdaogHa14ZqFnsQBYRDljTQTbUAMHXR
+	 5YzamN+conuZgru02GZ47tqwkLH1diPSNFLOxxxiuC2f0cx6DzQKijAp/zrMCPl/I
+	 Om84KB50Yl9ZpK5166z3VxHFQUA3lshvosTdsyV+OjQOZxnzi30rIwbTUFS8EWBC7
+	 ETZHqm/B4Lp71NxeV/vMVOD5AHzsbwvEdh4bfSQNCFh8KKfRDbQ4NJmBck7Riqxdf
+	 P0Zm7327I4I2aC7Oiw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.49.234.1] ([176.2.184.62]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MhlGk-1uMKJ23vuq-00fb11; Tue, 26
- Aug 2025 22:29:01 +0200
-Message-ID: <ed4d6056-4616-4a5d-8067-2fc748ac3bbd@gmx.de>
-Date: Tue, 26 Aug 2025 22:28:58 +0200
+Received: from localhost.localdomain ([176.2.184.62]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M8ygO-1utk191ZR8-004shm; Tue, 26 Aug 2025 22:40:18 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: jlee@suse.com
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lynne@bune.city
+Subject: [PATCH] platform/x86: acer-wmi: Stop using ACPI bitmap for platform profile choices
+Date: Tue, 26 Aug 2025 22:40:07 +0200
+Message-Id: <20250826204007.5088-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: acer-wmi driver fails to initialise with Linux kernel
- >6.14
-To: Lynne Megido <lynne@bune.city>, platform-driver-x86@vger.kernel.org
-References: <3f56e68f-85df-4c0a-982c-43f9d635be38@bune.city>
- <13f268a6-ec17-4a97-ae69-4aec723d4329@gmx.de>
- <a720d568-ea56-4e27-9d28-66b60a681e69@bune.city>
- <b56c74bc-ce71-4ab8-a804-3d5d3de247b1@gmx.de>
- <5cbe2fe6-dc96-4f92-9c06-12c309c63185@bune.city>
- <8c08ade6-3b33-438d-b734-a82623c5ba7f@gmx.de>
- <290b8e1a-1d7d-48a3-a8e2-0cba711f6848@bune.city>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <290b8e1a-1d7d-48a3-a8e2-0cba711f6848@bune.city>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MjeNi+NAzUVeAEe2UbdIm/HdcUbZQhMJBMmxe/jK+IMIWnG77yo
- nxZ6b3dv7PVaDvYN6fmZ6SQOezmfa+CGYqkefw0WD9NDbuzeVej7MiKTX/nW1vsGlJuKGeI
- Ps46Mtyq+2YaiOR3feI20EU1ed6SjcXgL75MFQsswtozlWsgHxqWgRZsm0J+6WUfcO12AgC
- /V/NkB+3OfmBKqgQqPS6w==
+X-Provags-ID: V03:K1:WC/v40Hn5GdgY11w8TArpadD/cT1VePFSl1q+3EgkrcDkAvzVPT
+ 8HUJ0Plr+m31mij8Uk6lpfJBjxwM9kDZZLBrxVfehT9NsnCu5yyKUgoapykNgwyMpt7+Qto
+ 9kVYm2kkPtpf7uf9jUlsqjaao+l6gdajmYA1t9UNYqufSmwxOs996eg72hFn9DdR0fXadC1
+ Fs6w6UcE/M9uAqJz36fnQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nn2umAtwxiE=;m1C3aTH17WLqfNIljZM+tA/eax6
- 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
- CR2bSGh+D3U579u1Eas
+UI-OutboundReport: notjunk:1;M01:P0:NWvmMfXZ+kg=;X5b2T1PdCWR8sl6HdJjt7vN/Gwa
+ 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
 
-Am 24.08.25 um 05:35 schrieb Lynne Megido:
+It turns out that the platform firmware on some models does not return
+valid data when reading the bitmap of supported platform profiles.
+This prevents the driver from loading on said models, even when the
+platform profile interface itself works.
 
->
-> On 22/8/25 22:28, Armin Wolf wrote:
->> Am 15.08.25 um 04:57 schrieb Lynne Megido:
->>
->>>
->>> On 14/8/25 22:11, Armin Wolf wrote:
->>>> Am 13.08.25 um 00:41 schrieb Lynne Megido:
->>>>
->>>>> > Can you first load this driver and share the dmesg output then?
->>>>>
->>>>> Sure, I've done that:
->>>>>
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 45ms 8.51% 7GiB/31GiB
->>>>> =E2=9D=AF make
->>>>> make -C /lib/modules/`uname -r`/build M=3D`pwd` modules
->>>>> make[1]: Entering directory '/usr/src/kernels/6.15.9-201.fc42.x86_64=
-'
->>>>> make[2]: Entering directory '/home/lynne/Downloads/acer-wmi'
->>>>> =C2=A0 CC [M]=C2=A0 acer-wmi.o
->>>>> =C2=A0 MODPOST Module.symvers
->>>>> =C2=A0 CC [M]=C2=A0 acer-wmi.mod.o
->>>>> =C2=A0 CC [M]=C2=A0 .module-common.o
->>>>> =C2=A0 LD [M]=C2=A0 acer-wmi.ko
->>>>> =C2=A0 BTF [M] acer-wmi.ko
->>>>> Skipping BTF generation for acer-wmi.ko due to unavailability of=20
->>>>> vmlinux
->>>>> make[2]: Leaving directory '/home/lynne/Downloads/acer-wmi'
->>>>> make[1]: Leaving directory '/usr/src/kernels/6.15.9-201.fc42.x86_64'
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 66ms 1.87% 9GiB/31GiB
->>>>> =E2=9D=AF sudo modprobe -r acer-wmi
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 40ms 2.45% 8GiB/31GiB
->>>>> =E2=9D=AF sudo modprobe sparse_keymap
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 36ms 1.15% 8GiB/31GiB
->>>>> =E2=9D=AF sudo modprobe platform_profile
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 33ms 1.22% 8GiB/31GiB
->>>>> =E2=9D=AF sudo modprobe wmi_bmof
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 42ms 2.76% 8GiB/31GiB
->>>>> =E2=9D=AF sudo insmod acer-wmi.ko
->>>>> lynne@pasiphael:~/Downloads/acer-wmi 43ms 2.37% 10GiB/31GiB
->>>>> =E2=9D=AF sudo dmesg | tail -n 6
->>>>> [=C2=A0 179.600745] acer_wmi: Acer Laptop ACPI-WMI Extras
->>>>> [=C2=A0 179.600775] acer_wmi: Function bitmap for Communication Butt=
-on:=20
->>>>> 0x801
->>>>> [=C2=A0 179.610473] input: Acer WMI hotkeys as=20
->>>>> /devices/virtual/input/input36
->>>>> [=C2=A0 179.629948] acer_wmi: Supported platform profiles: 0
->>>>> [=C2=A0 179.629951] acer-wmi acer-wmi: Failed to register=20
->>>>> platform_profile class device with empty choices
->>>>> [=C2=A0 179.634840] acer-wmi acer-wmi: probe with driver acer-wmi=20
->>>>> failed with error -22
->>>>>
->>>> I see, did the platform profile interface work on your machine=20
->>>> before kernel 6.14?
->>>>
->>> I'm currently running Linux 6.12 from this COPR:
->>> https://copr.fedorainfracloud.org/coprs/kwizart/kernel-longterm-6.12/
->>>
->>>
->>> The built-in acer-wmi driver functions properly with this kernel.
->>>
->>> The modified version you sent to me fails to build for 6.12, however -
->>> although I assume this is to be expected.
->>>
->>> Unloading (modprobe -r) and loading (modprobe) the built-in driver on
->>> 6.12 produces this output:
->>>
->>>
->>> ```
->>> [ =C2=A0252.074562] acer_wmi: Acer Laptop WMI Extras unloaded
->>> [ =C2=A0255.247887] acer_wmi: Acer Laptop ACPI-WMI Extras
->>> [ =C2=A0255.247945] acer_wmi: Function bitmap for Communication Button=
-:=20
->>> 0x801
->>> [ =C2=A0255.261125] input: Acer WMI hotkeys as=20
->>> /devices/virtual/input/input34
->>>
->>> ```
->>
->> Alright, i attached another version of the acer-wmi driver for you to=
+Fix this by stop using said bitmap until we have figured out how
+the OEM software itself detects available platform profiles.
+
+Tested-by: Lynne Megido <lynne@bune.city>
+Reported-by: Lynne Megido <lynne@bune.city>
+Closes: https://lore.kernel.org/platform-driver-x86/3f56e68f-85df-4c0a-982=
+c-43f9d635be38@bune.city/
+Fixes: 191e21f1a4c3 ("platform/x86: acer-wmi: use an ACPI bitmap to set th=
+e platform profile choices")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/acer-wmi.c | 71 ++++++---------------------------
+ 1 file changed, 12 insertions(+), 59 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
+mi.c
+index 69336bd778ee..13eb22b35aa8 100644
+=2D-- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -129,6 +129,7 @@ enum acer_wmi_predator_v4_oc {
+ enum acer_wmi_gaming_misc_setting {
+ 	ACER_WMID_MISC_SETTING_OC_1			=3D 0x0005,
+ 	ACER_WMID_MISC_SETTING_OC_2			=3D 0x0007,
++	/* Unreliable on some models */
+ 	ACER_WMID_MISC_SETTING_SUPPORTED_PROFILES	=3D 0x000A,
+ 	ACER_WMID_MISC_SETTING_PLATFORM_PROFILE		=3D 0x000B,
+ };
+@@ -794,9 +795,6 @@ static bool platform_profile_support;
+  */
+ static int last_non_turbo_profile =3D INT_MIN;
 =20
->> test that
->> should properly load on your machine. Can you test that all platform=20
->> profiles
->> supported by this driver work as expected?
->>
->
-> Ah, that works!
->
-> ```
-> =E2=9D=AFsudo dmesg | tail -n 3
-> [ =C2=A0126.945282] acer_wmi: Acer Laptop ACPI-WMI Extras
-> [ =C2=A0126.945323] acer_wmi: Function bitmap for Communication Button: =
-0x801
-> [ =C2=A0126.955315] input: Acer WMI hotkeys as /devices/virtual/input/in=
-put35
-> ```
->
-> Pressing the button now cycles between profiles as it did before.
->
->
->>>
->>>>> > Additionally could you share the output of "acpidump"?
->>>>>
->>>> Thanks, but next time please attach the resulting text file to the=20
->>>> email instead.
->>>>
->>>> Armin Wolf
->>>>
->>> My apologies, I'm not familiar with mailing list etiquette. I'll do=20
->>> that in future.
->>> Thanks for your patience and effort in troubleshooting this issue.
->>>
->>> Lynne
->>
->> No problem, but please use reply-all so that everyone including the=20
->> mailing list gets this message
->> (could also have been my fault).
->>
->> Thanks,
->> Armin Wolf
->
->
-> Whoops, my bad.
->
->
-> Thank you so much for all your help, Armin. The provided acer-wmi=20
-> version works great on
-> Linux 6.15.10.
->
-> Lynne
->
-Nice, i will send the necessary patch right away.
-
-Thanks,
-Armin Wolf
+-/* The most performant supported profile */
+-static int acer_predator_v4_max_perf;
+-
+ enum acer_predator_v4_thermal_profile {
+ 	ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET		=3D 0x00,
+ 	ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED	=3D 0x01,
+@@ -2014,7 +2012,7 @@ acer_predator_v4_platform_profile_set(struct device =
+*dev,
+ 	if (err)
+ 		return err;
+=20
+-	if (tp !=3D acer_predator_v4_max_perf)
++	if (tp !=3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
+ 		last_non_turbo_profile =3D tp;
+=20
+ 	return 0;
+@@ -2023,55 +2021,14 @@ acer_predator_v4_platform_profile_set(struct devic=
+e *dev,
+ static int
+ acer_predator_v4_platform_profile_probe(void *drvdata, unsigned long *cho=
+ices)
+ {
+-	unsigned long supported_profiles;
+-	int err;
++	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
++	set_bit(PLATFORM_PROFILE_BALANCED, choices);
++	set_bit(PLATFORM_PROFILE_QUIET, choices);
++	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+=20
+-	err =3D WMID_gaming_get_misc_setting(ACER_WMID_MISC_SETTING_SUPPORTED_PR=
+OFILES,
+-					   (u8 *)&supported_profiles);
+-	if (err)
+-		return err;
+-
+-	/* Iterate through supported profiles in order of increasing performance=
+ */
+-	if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_ECO, &supported_profiles))=
+ {
+-		set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+-		acer_predator_v4_max_perf =3D ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
+-		last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_ECO;
+-	}
+-
+-	if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET, &supported_profiles=
+)) {
+-		set_bit(PLATFORM_PROFILE_QUIET, choices);
+-		acer_predator_v4_max_perf =3D ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET;
+-		last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_QUIET;
+-	}
+-
+-	if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED, &supported_profi=
+les)) {
+-		set_bit(PLATFORM_PROFILE_BALANCED, choices);
+-		acer_predator_v4_max_perf =3D ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED=
+;
+-		last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
+-	}
+-
+-	if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANCE, &supported_pr=
+ofiles)) {
+-		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+-		acer_predator_v4_max_perf =3D ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMA=
+NCE;
+-
+-		/* We only use this profile as a fallback option in case no prior
+-		 * profile is supported.
+-		 */
+-		if (last_non_turbo_profile < 0)
+-			last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_PERFORMANC=
+E;
+-	}
+-
+-	if (test_bit(ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO, &supported_profiles=
+)) {
+-		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+-		acer_predator_v4_max_perf =3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
+-
+-		/* We need to handle the hypothetical case where only the turbo profile
+-		 * is supported. In this case the turbo toggle will essentially be a
+-		 * no-op.
+-		 */
+-		if (last_non_turbo_profile < 0)
+-			last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
+-	}
++	/* Set default non-turbo profile */
++	last_non_turbo_profile =3D ACER_PREDATOR_V4_THERMAL_PROFILE_BALANCED;
+=20
+ 	return 0;
+ }
+@@ -2108,19 +2065,15 @@ static int acer_thermal_profile_change(void)
+ 		if (cycle_gaming_thermal_profile) {
+ 			platform_profile_cycle();
+ 		} else {
+-			/* Do nothing if no suitable platform profiles where found */
+-			if (last_non_turbo_profile < 0)
+-				return 0;
+-
+ 			err =3D WMID_gaming_get_misc_setting(
+ 				ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, &current_tp);
+ 			if (err)
+ 				return err;
+=20
+-			if (current_tp =3D=3D acer_predator_v4_max_perf)
++			if (current_tp =3D=3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
+ 				tp =3D last_non_turbo_profile;
+ 			else
+-				tp =3D acer_predator_v4_max_perf;
++				tp =3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO;
+=20
+ 			err =3D WMID_gaming_set_misc_setting(
+ 				ACER_WMID_MISC_SETTING_PLATFORM_PROFILE, tp);
+@@ -2128,7 +2081,7 @@ static int acer_thermal_profile_change(void)
+ 				return err;
+=20
+ 			/* Store last profile for toggle */
+-			if (current_tp !=3D acer_predator_v4_max_perf)
++			if (current_tp !=3D ACER_PREDATOR_V4_THERMAL_PROFILE_TURBO)
+ 				last_non_turbo_profile =3D current_tp;
+=20
+ 			platform_profile_notify(platform_profile_device);
+=2D-=20
+2.39.5
 
