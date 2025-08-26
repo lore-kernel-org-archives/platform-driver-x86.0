@@ -1,72 +1,62 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10036AD2C
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Aug 2025 22:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5011B221555;
+	Tue, 26 Aug 2025 03:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756162465; cv=none; b=T28eKx7A5djcoWuGsiZ6Obk6of49qVTr4cfpLJpKfbM2Ad3TFczCwhj9OKcV9QetnnJoFoHDZJjIdc5a2TF7Y2PRd7FIYWK3gWsCP6QrgMoJgrTWepzT1/srbNvVWF/aOUVfl4O1hkfjoBbr4/PCBXZUP8+XhNuX0q1SvYwC84I=
+	t=1756180123; cv=none; b=eZpGuKZRby3Z+w3Hd3b2+IckZHTjCT2iBOuLzfDR3uWhOOhQGBZPficKZ9qvyL8Kgsd27mlCp4H5y4IQaREFKxDntEgbmi4+zUVJbg2lbRyiCBj68ixahEOWIPVf1VGi98rtk+/C189OWhJmd78PCqtVWY1HPuBi/F10+4AXGyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756162465; c=relaxed/simple;
-	bh=cyB6ntSQWZieR7i9QmBo4HNmZebc4T68wbksa0NnWiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MQgk0sshal7aFsZf8fcU2o99ElM2o8ece+5f9eVIXe7AYAGRCBSzmsz8WJvwmyrB0j/jyl5djuLUO5v9pb9vLRU2efZFHi4CYXcly1khp9DjHfrD0pXaVT8sJd1RvEQsPLaENEQgJD4yjJG5/UkYGfE67rg4jql41QdwKn6BMuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LZx6XZzZ; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756180123; c=relaxed/simple;
+	bh=kdQrN3Exz+If6GXV/yoBbkLICbBDkRKr987eNd/lBo4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GfuPmZQIxq2voUa3DCGSHYlSxxshpPoOdvxkc5r8WeNLtvLFsoLojdV47aYyXOEEToVwlJC1NlPNeMddT6Iw2pQ+9Nt5GfgXKZM3t1ThIXVpR62Rm+pOE4Dv3JlPu0KmJTDR5kwFfmEVc3kgV1PtlqCG7cFvdjfKK2wNNPvBCrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXJ5Hw5J; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZx6XZzZ"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7e870325db1so506963985a.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Aug 2025 15:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756162462; x=1756767262; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cGvHT825RWzHtKIFxtRKcHFs+l/Ovrzl5g5WTZd7VAs=;
-        b=LZx6XZzZ0+uaBl3l+w4IayaE8E/oJ48r11IaHxsb52E/YaAHgxgRt2P73+s216cgw2
-         Cjq5breNhhrsAQmgnfKwIKy3NvztinnRq71NlkpgJygHi1LIxc/4B42zEJxDTWF4cHIm
-         qz0D0EK8dw5w7YngIT+49pY8SorKbjtpGeasvYLxgPJdo78hWy5tQ9JMzYD5w2wy/J7a
-         PxPfJqdfjC+PmXNVEf5HjMR2h5Tl1G8DnJjCm4Ga7aUcvUHbHp8F6bb8tyZ81+s6HT9p
-         kGd1v1g2BIII6Ro31wW1JBA9djCHWCZlxiRd1dL2yDQg5yU1euNecL8/2f/ZS9+IItJH
-         9P6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756162462; x=1756767262;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cGvHT825RWzHtKIFxtRKcHFs+l/Ovrzl5g5WTZd7VAs=;
-        b=hJGDyldlboZvYhOOdyJ2mySGO3c6MMJWTl0VPJyvdFHTx0EX06ECSWytj1aR8taWwS
-         TKcnSCiPQxnhObrwZBUTxm6PjQQpzOyrmreLFqK+sfX/hGYzzEyo7a2cAa0r+H4Zkkfl
-         vu6w1nQKRbH0LFKj5aqWXJPUhxRfxkZ9BLANEXtW2jy3Hgef/1+g6g2DQmPnpMbU2OWL
-         IoIy+Xwi7tHzEAdIy8OyJza7+sYSU4CIMGqco0mARODgj6AXWDOCknkJjVxHc/CyY46t
-         1+dMHH3UQEHUwCmJTC/YLDoJltIWPkwVDAuIFydPDR+6S/GAV/Bxhf4XmqedkE4P9E47
-         X1RA==
-X-Gm-Message-State: AOJu0YzdnZpq1GjcnwGAfL/6ZoMyrfbfTbLkibuBRBrMxQxg8FbfCpFb
-	hCD+SSKEuImHzEv+BrubDoLYYScqZgNL7Q3xGjMBFVc7W+nEl/SFLToeadiTPg==
-X-Gm-Gg: ASbGncuVv/fjXYDcgQvLFJ84d178ldX5v1NtoeYYUEUtp3xERYYYGMWiuyn6xxuNZ/u
-	74qO0Kk9JlmuBFGmTmo5hTziH4ek3s7irqwpLUtWAPK/7GrLUY/NEa/6oD/HnlxbsAYjaAaWmnZ
-	1ZwLoBLzB5W+L4hMIGdtxLkOT3CdjOpUZweTeuIh+tO/xHdSkV7eWGuTe6wAUyNzLz+u39slFQh
-	ws/NqFRwD7WDa3FAnmXaIsHQer298tBf4ONFd+79/2JMg5d/nX9gq4RDc/lHkqlBX8FnG8srFTl
-	jxtZkQyokya3Pm8tt80+BnU7025I4CuTAVZsEoxVHBFwoNNXym+DY5nYQvOkdwFi82NHI5pV7G2
-	1EwzMb58NGyMpjriHxves6xnOFlC2EwTgmyfPuAG7KQvJ45mgJe5w+yT+dpYeHjrOaFUXD43Zvq
-	z3Jy5kneeXY8fB3/53NIDMjAoan5qca1AE3P1P
-X-Google-Smtp-Source: AGHT+IEai5dHwebzPShKwVuZ7OQz4af5ohSGdlv7QAO91aFGWrKpzubKNlRMqMNmEeHKadHFVPxsog==
-X-Received: by 2002:a05:620a:371a:b0:7e8:2afc:c0f4 with SMTP id af79cd13be357-7ea10fe36ebmr1455916285a.29.1756162462544;
-        Mon, 25 Aug 2025 15:54:22 -0700 (PDT)
-Received: from davidm-laptop.home (hlfxns018gw-47-54-39-96.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.54.39.96])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ebed79a712sm570754185a.17.2025.08.25.15.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Aug 2025 15:54:22 -0700 (PDT)
-From: David McFarland <corngood@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: David McFarland <corngood@gmail.com>
-Subject: [PATCH 1/1] platform/x86/intel: disable wakeup_mode during hibernation
-Date: Mon, 25 Aug 2025 19:53:56 -0300
-Message-ID: <20250825225404.143288-2-corngood@gmail.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250825225404.143288-1-corngood@gmail.com>
-References: <20250825225404.143288-1-corngood@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXJ5Hw5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756180122; x=1787716122;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kdQrN3Exz+If6GXV/yoBbkLICbBDkRKr987eNd/lBo4=;
+  b=AXJ5Hw5J6CWtK5WLeGGsFWrQWLineoxLAXgePQ28QJix8kpb9MIFiYO1
+   7aC1QqlUexQuUszMPXSXJSPS1ePtqckAJWw67afbAGVZunUFddPwHt5CX
+   bC9KB+LOqrz/z+i5i3zSjYtnOxYDA0SVncOkIss7CrwzogKAUL87scc5g
+   Gvb+ZKtV3V9PddvhMDStydO08ZS18eC5j6zC/6e8AJkHyxVYcRN1vzD8U
+   q2aVQBwWa1C+6VfMpxsvWa++Ltm7I5hzMK3G6zBDBDI3Dm9hRrvmAbTTG
+   QHJ8TAVIwJz7CjocKgFjX1YcepDIL1WPbQxr2w+hDW7quiss7c/XD2xFN
+   g==;
+X-CSE-ConnectionGUID: wC4fKeWET9Oz8fboB9r7bw==
+X-CSE-MsgGUID: /G/c/P01RQmfZEBLFFd4Jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="83814478"
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="83814478"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:48:41 -0700
+X-CSE-ConnectionGUID: B+qH/LhmQN2AUEn/jH+6kA==
+X-CSE-MsgGUID: lhXwQ4hAR4u/obFcaWvylg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="173862084"
+Received: from liyifan1-desk.bj.intel.com ([10.238.156.127])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:48:38 -0700
+From: Li Yifan <yifan2.li@intel.com>
+To: irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Cc: yifan2.li@intel.com,
+	xi.pardee@intel.com,
+	Xi Pardee <xi.pardee@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/pmc: Add Bartlett Lake support to intel_pmc_core
+Date: Mon, 25 Aug 2025 23:45:50 -0400
+Message-Id: <20250826034550.2284738-1-yifan2.li@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,39 +65,28 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218634
----
- drivers/platform/x86/intel/hid.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Add Bartlett Lake P-core only product support to intel_pmc_core
+driver. Bartlett Lake hybrid product reuses Raptor Lake model name
+so it is already enabled.
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index f25a427cccda..6ed85d48ee93 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -406,6 +406,14 @@ static int intel_hid_pl_suspend_handler(struct device *device)
- 	return 0;
- }
- 
-+static int intel_hid_pl_freeze_handler(struct device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(device);
-+
-+	priv->wakeup_mode = false;
-+	return intel_hid_pl_suspend_handler(device);
-+}
-+
- static int intel_hid_pl_resume_handler(struct device *device)
- {
- 	intel_hid_pm_complete(device);
-@@ -420,7 +428,7 @@ static int intel_hid_pl_resume_handler(struct device *device)
- static const struct dev_pm_ops intel_hid_pl_pm_ops = {
- 	.prepare = intel_hid_pm_prepare,
- 	.complete = intel_hid_pm_complete,
--	.freeze  = intel_hid_pl_suspend_handler,
-+	.freeze  = intel_hid_pl_freeze_handler,
- 	.thaw  = intel_hid_pl_resume_handler,
- 	.restore  = intel_hid_pl_resume_handler,
- 	.suspend  = intel_hid_pl_suspend_handler,
+Acked-by: Xi Pardee <xi.pardee@linux.intel.com>
+Signed-off-by: Li Yifan <yifan2.li@intel.com>
+---
+ drivers/platform/x86/intel/pmc/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 540cd2fb0673..d040290e80ff 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1625,6 +1625,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&tgl_l_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&adl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_pmc_dev),
++	X86_MATCH_VFM(INTEL_BARTLETTLAKE,       &adl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&mtl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE,		&arl_pmc_dev),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&arl_h_pmc_dev),
 -- 
-2.50.1
+2.25.1
 
