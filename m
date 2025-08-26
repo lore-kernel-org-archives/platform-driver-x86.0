@@ -1,664 +1,382 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BAF36CC83;
-	Tue, 26 Aug 2025 18:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A10B31A577;
+	Tue, 26 Aug 2025 18:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756233594; cv=none; b=L0gzjguh2paXiWjjd/B5Lec6gj3Rvcpq9ayPCxJUF2vCUtbKLynHQP1uudZEvFWi+YOBnsAnZeh/ZUnknrFWPv4YXx3Z15cqLyA9wmba7I8FRUQAxCDKMHKmUJuGuIRg9nnFUh9K6Xq2LS/xZLA9nhFD8c9a2Bu1FPt+tlNu1mU=
+	t=1756233822; cv=none; b=Vb1CPlpOtevJF5taAdM/S2sIrU+VhwVqdCovwt0WEWtwbnNw4vAYu4CCQYpHBg8j7+yO7edX4To6EY7+y+Zu2LjRZj26V8yDhUUF5IppYHzpyKyCNHaWOLfam9yV/QU+mN7GhOQY1dX3aQ+XHRzGN2sUHLPLNERUykAgzHkMIZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756233594; c=relaxed/simple;
-	bh=h76RmvjiZ35JdLJBJiLroYkvqbDNO1sLmrlwtQmcCMQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n4Qkffva6dXYAvOmNRb7C0JNSIPXkClymq7IZi9ayaaap6khPk71b73nWaz4qMX5J+LHJeAf/rI6ka5TeZM6LVGNo2OLp+p323kZHBl9xXmfCBLSBkoOFd1hS54LpGh48ijkhUk5anckWuB7JWjBFmFn1cjFNP+HBv+JnsZQwyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7T9xzjb; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1756233822; c=relaxed/simple;
+	bh=qqMP+yLDGB1vt8AMEhU+Uk4amKpA4giXrUNi3KsGGMw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=B96YcHzk68iYLuZf0IqeNApHg7wehp2N4RLrgl7fXszRsjxz32TNinhjBl7LEVE3ZSOy6PvnsUQtoEUStAn09QcFzdEu0wKeuash6f51rR+Te20ZNEdeK3145nBO6CAYBEab9+GHMTavC66AgAMDIy/a8T6xMB6fHZpJ13PtUBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=BdCCf62V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aHB8GSWX; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7T9xzjb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756233592; x=1787769592;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=h76RmvjiZ35JdLJBJiLroYkvqbDNO1sLmrlwtQmcCMQ=;
-  b=A7T9xzjbhREry8nuNgHuIyUclR1DDpP5/LE+r6nQqqUQIvTqAvvtbVIN
-   t1vYPpQamonBDiX1mLik5z0Dwz6EhQ4jt8jTljHjtBwZwTzJMBR2K89dT
-   ziOmR65rrOuK2bgwSRAKQkkrbv53Iz9B6BwibHP9nbh8Wv8uGZh7zzw2t
-   KvVgPI4n7MNGm7wi/eEy3TbN9NwlkzPD9STrnU+c0KypW6KbfgJenD+8P
-   xtGO1ZGmrNXgKi7HCpJTsfY/lpJy+zpkndp5JORkL0+D2P+KyYFBfQ+8i
-   7FcrN6tYmKbc5f4QcJXn41MNZWKPAiotn6iVf2jgpKOX/g+7Ma7Gz8UTU
-   w==;
-X-CSE-ConnectionGUID: AAhhKoeDR4SG4wCo0UYbsg==
-X-CSE-MsgGUID: c6usapuNSw2usdQ04KsugA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="69921015"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="69921015"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 11:39:50 -0700
-X-CSE-ConnectionGUID: 5kXw+1WBR8uKrCjmTpqzgg==
-X-CSE-MsgGUID: p9vLdci7R0a8qLmfxyGU+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="200537409"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.125.109.33])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 11:39:49 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v1 2/2] platform/x86/intel/pmc: Add Wildcat Lake support to intel_pmc_core
-Date: Tue, 26 Aug 2025 11:39:43 -0700
-Message-ID: <20250826183946.802684-2-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250826183946.802684-1-xi.pardee@linux.intel.com>
-References: <20250826183946.802684-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="BdCCf62V";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aHB8GSWX"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 45AAC7A0158;
+	Tue, 26 Aug 2025 14:43:38 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Tue, 26 Aug 2025 14:43:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1756233818;
+	 x=1756320218; bh=+ZHM48sHy6BH1KbNq5pOM5FQr8Uolurz9cVjGfFa6+8=; b=
+	BdCCf62V4LkS1aWHlfsP4kvYyr/cb0DOtjCyvbrJvnr3zR2SnXxsLnDIpSBUQZ+/
+	9pxgJnJAzT9gAq/zKGqK95XFdecpeC2kOo2keGs7likVknKh6D6kUPLdCBqWPUIz
+	B16hBR7UmDol3m3C7O4WtAvjNdqNLlzEopjOjS8GDVvQXGyBoguiuoMZuAtXnyaK
+	0Q8guMqr2rVKwAthv5IToIK4Mf24fH6gE4XG0xjxVRC3xQ0l/YafyHgtGGHiDpYB
+	fSruY438Q90jWHEjH45ovCtcYRVu2bE1BwmC5FuCFMvFMI62GdcBLaJBaBMydD91
+	SGT8CVBkHsarkMbYTrBTpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756233818; x=
+	1756320218; bh=+ZHM48sHy6BH1KbNq5pOM5FQr8Uolurz9cVjGfFa6+8=; b=a
+	HB8GSWXM2lyl7DgyTzTChjxnknoh6SiKHTd40ynrBzF4y5Txb0SGHG8j3IiQ/opc
+	YYyL2ad6jn44DJDuhLVUPvN1Fj2oVuieWNmPYo97VU98RGpF64KgGyqIurSc7C5t
+	xhyVxIKeERc0YcfXY1LZw461N+DjBB/8SEByrTLyfBDM3vkri5xljA2LN0l75R4w
+	/+beZP2oGO6FNNABwYkIFsKn5gKRoY9kHCzcK+jYo5CsNZujx6qVWZyyIY8uCGcF
+	to2bEguNouinjNvDUFyb0Ip1EYRUovzKw2z6siOSHcEH+CVaAjtXrMqUeof0yZJo
+	djSnEPW3qpW8TybV7hLeQ==
+X-ME-Sender: <xms:WACuaNLzsnpTkl9G7nsbsEC2OrfYqoXtTGcMMblNVxf86YbtgpBz8w>
+    <xme:WACuaJKYzi6SFcKilIOKlg5rzqPc3940PIlXy1Uialj1ZBL9XM8JGfZolZuXCIyJ8
+    O5v99T4xRRZq9k6sw4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeeitdduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpeegvdegueffhfdtleeigfejhffggfeivdejgeelueej
+    uedtudetheejudehtdeitdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
+    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghi
+    lhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhope
+    hhmhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvg
+    hlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhs
+    ohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohepmhgrrhgtrdgsuhhrkhhhrghrug
+    htsehprhhothhotghordgtohhnshhulhhtihhnghdprhgtphhtthhopehlihhnuhigqdhh
+    fihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
+    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:WACuaAyZUDWXuMiL-oXDg5hO2wRQvSYslAFroYuh0tg8Vo0nU5nPVw>
+    <xmx:WACuaBpboi87eTTzqyHgNwT2XiuSkqsb8WJt9DcLzG62akDE8uqAzw>
+    <xmx:WACuaL02ZHDB-ZrYGaFcg54dY3N-J3DvVpx7E4JGjgkNRsAGjemF9A>
+    <xmx:WACuaJzej8mf1Q-4-TcQcWbRhYZfoP-6OkvsU6hyfsD72c1p4Ryxdw>
+    <xmx:WgCuaFlczN2jt_V-P3Av2niZHbEjvDQ0XPfApb92LIPvymZBhFKFGyZ3>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A2CD02CE007E; Tue, 26 Aug 2025 14:43:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AqlvLU1YwUxg
+Date: Tue, 26 Aug 2025 14:43:09 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Armin Wolf" <W_Armin@gmx.de>,
+ "Marc Burkhardt" <marc.burkhardt@protoco.consulting>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
+Message-Id: <38204315-49e8-4428-bb8b-81e8f520130d@app.fastmail.com>
+In-Reply-To: <b4640a0d-c5db-4d40-a336-97fb16e8d405@gmx.de>
+References: <20250818204353.857304-1-marc.burkhardt@protoco.consulting>
+ <196b8004-3b09-48d4-891a-80eee2efbf3c@app.fastmail.com>
+ <ebaa2ff317a21291a086a55b204d2d68@protoco.consulting>
+ <b4640a0d-c5db-4d40-a336-97fb16e8d405@gmx.de>
+Subject: Re: [RFC PATCH v1] platform/x86: thinkpad_acpi: Add parameter to suppress
+ invalid thermal sensors
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add Wildcat Lake support to intel_pmc_core driver
+Hi,
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/Makefile |   2 +-
- drivers/platform/x86/intel/pmc/core.c   |   1 +
- drivers/platform/x86/intel/pmc/core.h   |   8 +
- drivers/platform/x86/intel/pmc/ptl.c    |   6 +-
- drivers/platform/x86/intel/pmc/wcl.c    | 486 ++++++++++++++++++++++++
- 5 files changed, 499 insertions(+), 4 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmc/wcl.c
+On Fri, Aug 22, 2025, at 7:54 AM, Armin Wolf wrote:
+> Am 21.08.25 um 19:32 schrieb Marc Burkhardt:
+>
+>> Am 2025-08-20 00:03, schrieb Mark Pearson:
+>>
+>> Hi Mark,
+>>
+>> thanks for replying.
+>>
+>>> Hi Marc,
+>>>
+>>> On Mon, Aug 18, 2025, at 4:39 PM, Marc Burkhardt wrote:
+>>>> While moving an existing Icinga installation to a Lenovo P15 20SU I=20
+>>>> came
+>>>> across broken JSON output from a "sensors -Aj" command consumed by =
+the
+>>>> Icinga check_lm_sensors plugin. After fiddling around trying to bui=
+ld a
+>>>> fix in either lm_sensors or Icinga I found out the error was rooted=
+ in
+>>>> some sysfs file that was created but threw errors while being read.=20
+>>>> On my
+>>>> Lenovo ThinkPad the default fallback to 8 temperature sensors creat=
+es
+>>>> sysfs entries like in my case "temp8_input" that fail when read,=20
+>>>> causing
+>>>> the issue in user-space.
+>>>>
+>>>> This patch adds a module parameter (suppress_sensor) using
+>>>> module_param_array() to allow users to specify a comma-separated=20
+>>>> list of
+>>>> zero-based sensor indices to suppress sysfs file creation (e.g.
+>>>> suppress_sensor=3D3,7). Instead of a model-specific quirk, this pro=
+vides
+>>>> flexible configuration for any ThinkPad with similar issues and is=20
+>>>> working
+>>>> out-of-the-box without additional models being marked for the quirk=
+.=20
+>>>> The
+>>>> parameter uses a fixed-size array based on=20
+>>>> TPACPI_MAX_THERMAL_SENSORS (16)
+>>>> consistent with the driver=E2=80=99s thermal sensor handling (ie.
+>>>> ibm_thermal_sensors_struct or sensor_dev_attr_thermal_temp_input).
+>>>>
+>>>> Logging via pr_info() reports the number of suppressed sensors at=20
+>>>> module
+>>>> initialization, and pr_info() logs each suppressed sensor during sy=
+sfs
+>>>> attribute creation. Invalid sensor indices are logged once via=20
+>>>> pr_warn()
+>>>> to avoid repetitive warnings. Tested on a ThinkPad P15 with
+>>>> suppress_sensor=3D3,7, confirming suppression of temp4_input and=20
+>>>> temp8_input
+>>>> with no sysfs errors. Bounds checking for uncommon values is in=20
+>>>> place or
+>>>> will be logged.
+>>>>
+>>>> The patch applies to the current
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=20
+>>>> although
+>>>> it was initially written for a 6.16.0 kernel.
+>>>>
+>>>> I look forward to any feedback on the patch and/or handling of=20
+>>>> submission.
+>>>> Please CC: for now as I am not (yet) subscribed. Thank you.
+>>>>
+>>>> Signed-off-by: Marc Burkhardt <marc.burkhardt@protoco.consulting>
+>>>> ---
+>>>> Notes:
+>>>> I haven't posted on LKML or send a patch for over a decade now so
+>>>> please forgive any possible mistakes I made regarding current coding
+>>>> conventions or more generally in submitting this patch. The patch w=
+as
+>>>> running for some time here with faulty sensors removed from sysfs=20
+>>>> and no
+>>>> problems otherwise detected and was surely run through checkpatch.p=
+l=20
+>>>> before
+>>>> submission. get_maintainer.pl was helpful to find the hopefully rig=
+ht
+>>>> people for CC:ing but I am otherweise totally unaware of any current
+>>>> procedures or best-practices when it comes to submitting a patch.
+>>>>
+>>>> drivers/platform/x86/lenovo/thinkpad_acpi.c | 35=20
+>>>> +++++++++++++++++++++++++++++
+>>>> =C2=A01 file changed, 35 insertions(+)
+>>>>
+>>>> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>>>> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>>>> index cc19fe520ea9..30ff01f87403 100644
+>>>> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>>>> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>>>> @@ -6019,6 +6019,30 @@ struct ibm_thermal_sensors_struct {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 s32 temp[TPACPI_MAX_THERMAL_SENSORS];
+>>>> =C2=A0};
+>>>>
+>>>> +static int suppress_sensor[TPACPI_MAX_THERMAL_SENSORS];
+>>>> +static unsigned int suppress_sensor_count;
+>>>> +
+>>>> +static bool is_sensor_suppressed(int index)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+>>>> +=C2=A0=C2=A0=C2=A0 bool logged =3D false;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < suppress_sensor_count; i++) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (suppress_sensor[i] =
+=3D=3D index)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ return true;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!logged &&
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ (suppress_sensor[i] < 0
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 || suppress_sensor[i] >=3D=20
+>>>> TPACPI_MAX_THERMAL_SENSORS)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ pr_warn("Invalid sensor index %d in suppress_sensor\n",
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 suppress_sensor[i]);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ logged =3D true;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 return false;
+>>>> +}
+>>>> +
+>>>> =C2=A0static const struct tpacpi_quirk thermal_quirk_table[] __init=
+const =3D {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 /* Non-standard address for thermal regist=
+ers on some ThinkPads */
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 TPACPI_Q_LNV3('R', '1', 'F', true),=C2=A0=C2=
+=A0=C2=A0 /* L13 Yoga Gen 2 */
+>>>> @@ -6313,6 +6337,11 @@ static umode_t thermal_attr_is_visible(struct
+>>>> kobject *kobj,
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 int idx =3D sensor_attr->index;
+>>>>
+>>>> +=C2=A0=C2=A0=C2=A0 if (is_sensor_suppressed(idx)) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_info("Sensor %d supp=
+ressed\n", idx);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 switch (thermal_read_mode) {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 case TPACPI_THERMAL_NONE:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> @@ -11653,6 +11682,9 @@ static void __init
+>>>> thinkpad_acpi_init_banner(void)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 thinkpad_id.model_str,
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 (thinkpad_id.nummodel_str) ?
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 thinkpad_id.nummodel_str : "unknown");
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 pr_info("Suppressing %d user-supplied sensor(s)=
+ via parameter
+>>>> suppress_sensor\n",
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 suppress_sensor_count);
+>>>> =C2=A0}
+>>>>
+>>>> =C2=A0/* Module init, exit, parameters */
+>>>> @@ -11785,6 +11817,9 @@ MODULE_PARM_DESC(experimental,
+>>>> =C2=A0module_param_named(debug, dbg_level, uint, 0);
+>>>> =C2=A0MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
+>>>>
+>>>> +module_param_array(suppress_sensor, int, &suppress_sensor_count,=20
+>>>> 0444);
+>>>> +MODULE_PARM_DESC(suppress_sensor, "Comma-separated sensor indices =
+to
+>>>> suppress (e.g., 3,7)");
+>>>> +
+>>>> =C2=A0module_param(force_load, bool, 0444);
+>>>> =C2=A0MODULE_PARM_DESC(force_load,
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Attempts to=
+ load the driver even on a mis-identified=20
+>>>> ThinkPad when
+>>>> true");
+>>>
+>>> The P15 is one of the Linux certified platforms...though it's a bit=20
+>>> older now.
+>>>
+>>> I'd be more interested in figuring out which sensors are returning a=
+n=20
+>>> error and figuring out how we address that. I have access to the FW=20
+>>> and platform team for questions (though this platform is a bit older=20
+>>> now, so if we need FW fixes that will be trickier). My gut feeling i=
+s=20
+>>> we shouldn't be creating sysfs entries if the sensors don't exist or=20
+>>> aren't accessible.
+>>
+>> That is what my patch does - it prevents creating the sysfs entries=20
+>> but not based on a check for validity of the sensor in code (as=20
+>> probably desired by Ilpo when I understand a previous mail correctly)=20
+>> but rather on a user-provided configuration via the new parameter. I=20
+>> reply to the other mail as well soon.
+>>
+> Such sensors are meant to be ignored using /etc/sensors3.conf (provide=
+d=20
+> by libsensors) unless the driver itself can
+> automatically determine this by asking the platform firmware. I sugges=
+t=20
+> that you use this mechanism instead of adding
+> additional module parameters.
+>
+> Thanks,
+> Armin Wolf
+>
+> (I also CCed the hwmon mailing list as libsensors originally came from=
+ there)
+>
+>>>
+>>> I do have a P15 so can check it out (I'm going to have to blow some=20
+>>> dust off it). If you've got the details on which sensors need=20
+>>> suppressing that would be useful. I have seen previously where it's=20
+>>> trying to access a GPU sensor on a UMA model.
+>>
+>> On my hardware it's sensor temp8_input which is unreadable at all und=20
+>> sensor temp4_input that has a constant value of 0, no matter how hot,=20
+>> cold or loud the machine is running. I am, however, able to monitor=20
+>> GPU temps via nvidia _and_ thinkpad ACPI. The values are mostly equal=
+,=20
+>> differ a bit due to internal timing sometimes.
+>>
+>>>
 
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-index 5f68c8503a566..bb960c8721d77 100644
---- a/drivers/platform/x86/intel/pmc/Makefile
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- intel_pmc_core-y			:= core.o spt.o cnp.o icl.o \
--					   tgl.o adl.o mtl.o arl.o lnl.o ptl.o
-+					   tgl.o adl.o mtl.o arl.o lnl.o ptl.o wcl.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
- intel_pmc_core_pltdrv-y			:= pltdrv.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 540cd2fb0673b..7d55af8e303cf 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1631,6 +1631,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&arl_h_pmc_dev),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_pmc_dev),
- 	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&ptl_pmc_dev),
-+	X86_MATCH_VFM(INTEL_WILDCATLAKE_L,	&wcl_pmc_dev),
- 	{}
- };
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 160b175ce7066..47101f0dd09ce 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -298,6 +298,10 @@ enum ppfear_regs {
- #define PTL_PMC_LTR_CUR_PLT			0x1C2C
- #define PTL_PCD_PMC_MMIO_REG_LEN		0x31A8
- 
-+/* Wildcat Lake */
-+#define WCL_PMC_LTR_RESERVED			0x1B64
-+#define WCL_PCD_PMC_MMIO_REG_LEN		0x3178
-+
- /* SSRAM PMC Device ID */
- /* LNL */
- #define PMC_DEVID_LNL_SOCM	0xa87f
-@@ -508,6 +512,9 @@ extern const struct pmc_bit_map mtl_socm_vnn_misc_status_map[];
- extern const struct pmc_bit_map mtl_socm_signal_status_map[];
- extern const struct pmc_reg_map mtl_socm_reg_map;
- extern const struct pmc_reg_map mtl_ioep_reg_map;
-+extern const struct pmc_bit_map ptl_pcdp_clocksource_status_map[];
-+extern const struct pmc_bit_map ptl_pcdp_vnn_req_status_3_map[];
-+extern const struct pmc_bit_map ptl_pcdp_signal_status_map[];
- 
- void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
- int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore);
-@@ -531,6 +538,7 @@ extern struct pmc_dev_info arl_pmc_dev;
- extern struct pmc_dev_info arl_h_pmc_dev;
- extern struct pmc_dev_info lnl_pmc_dev;
- extern struct pmc_dev_info ptl_pmc_dev;
-+extern struct pmc_dev_info wcl_pmc_dev;
- 
- void cnl_suspend(struct pmc_dev *pmcdev);
- int cnl_resume(struct pmc_dev *pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/ptl.c b/drivers/platform/x86/intel/pmc/ptl.c
-index 394515af60d60..1bbec9856867d 100644
---- a/drivers/platform/x86/intel/pmc/ptl.c
-+++ b/drivers/platform/x86/intel/pmc/ptl.c
-@@ -162,7 +162,7 @@ static const struct pmc_bit_map ptl_pcdp_ltr_show_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map ptl_pcdp_clocksource_status_map[] = {
-+const struct pmc_bit_map ptl_pcdp_clocksource_status_map[] = {
- 	{"AON2_OFF_STS",                 BIT(0),	1},
- 	{"AON3_OFF_STS",                 BIT(1),	0},
- 	{"AON4_OFF_STS",                 BIT(2),	1},
-@@ -382,7 +382,7 @@ static const struct pmc_bit_map ptl_pcdp_vnn_req_status_2_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map ptl_pcdp_vnn_req_status_3_map[] = {
-+const struct pmc_bit_map ptl_pcdp_vnn_req_status_3_map[] = {
- 	{"DTS0_VNN_REQ_STS",             BIT(7),	0},
- 	{"GPIOCOM5_VNN_REQ_STS",         BIT(11),	1},
- 	{}
-@@ -421,7 +421,7 @@ static const struct pmc_bit_map ptl_pcdp_vnn_misc_status_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map ptl_pcdp_signal_status_map[] = {
-+const struct pmc_bit_map ptl_pcdp_signal_status_map[] = {
- 	{"LSX_Wake0_STS",		 BIT(0),	0},
- 	{"LSX_Wake1_STS",		 BIT(1),	0},
- 	{"LSX_Wake2_STS",		 BIT(2),	0},
-diff --git a/drivers/platform/x86/intel/pmc/wcl.c b/drivers/platform/x86/intel/pmc/wcl.c
-new file mode 100644
-index 0000000000000..a97a110f00e8e
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/wcl.c
-@@ -0,0 +1,486 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This file contains platform specific structure definitions
-+ * and init function used by Wildcat Lake PCH.
-+ *
-+ * Copyright (c) 2025, Intel Corporation.
-+ *
-+ */
-+
-+#include <linux/pci.h>
-+
-+#include "core.h"
-+
-+static const struct pmc_bit_map wcl_pcdn_pfear_map[] = {
-+	{"PMC_0",               BIT(0)},
-+	{"FUSE_OSSE",           BIT(1)},
-+	{"ESPISPI",             BIT(2)},
-+	{"XHCI",                BIT(3)},
-+	{"SPA",                 BIT(4)},
-+	{"RSVD",                BIT(5)},
-+	{"MPFPW2",              BIT(6)},
-+	{"GBE",                 BIT(7)},
-+
-+	{"SBR16B21",            BIT(0)},
-+	{"SBR16B5",             BIT(1)},
-+	{"SBR8B1",              BIT(2)},
-+	{"SBR8B0",              BIT(3)},
-+	{"P2SB0",               BIT(4)},
-+	{"D2D_DISP_1",          BIT(5)},
-+	{"LPSS",                BIT(6)},
-+	{"LPC",                 BIT(7)},
-+
-+	{"SMB",                 BIT(0)},
-+	{"ISH",                 BIT(1)},
-+	{"DBG_SBR16B",          BIT(2)},
-+	{"NPK_0",               BIT(3)},
-+	{"D2D_NOC_1",           BIT(4)},
-+	{"FIA_P",               BIT(5)},
-+	{"FUSE",                BIT(6)},
-+	{"DBG_PSF",             BIT(7)},
-+
-+	{"DISP_PGA1",           BIT(0)},
-+	{"XDCI",                BIT(1)},
-+	{"EXI",                 BIT(2)},
-+	{"CSE",                 BIT(3)},
-+	{"KVMCC",               BIT(4)},
-+	{"PMT",                 BIT(5)},
-+	{"CLINK",               BIT(6)},
-+	{"PTIO",                BIT(7)},
-+
-+	{"USBR0",               BIT(0)},
-+	{"SBR16B22",            BIT(1)},
-+	{"SMT1",                BIT(2)},
-+	{"MPFPW1",              BIT(3)},
-+	{"SMS2",                BIT(4)},
-+	{"SMS1",                BIT(5)},
-+	{"CSMERTC",             BIT(6)},
-+	{"CSMEPSF",             BIT(7)},
-+
-+	{"D2D_NOC_0",           BIT(0)},
-+	{"ESE",                 BIT(1)},
-+	{"FIACPCB_P",           BIT(2)},
-+	{"RSVD",                BIT(3)},
-+	{"SBR8B2",              BIT(4)},
-+	{"OSSE_SMT1",           BIT(5)},
-+	{"D2D_DISP",            BIT(6)},
-+	{"P2SB1",               BIT(7)},
-+
-+	{"U3FPW1",              BIT(0)},
-+	{"SBR16B3",             BIT(1)},
-+	{"PSF4",                BIT(2)},
-+	{"CNVI",                BIT(3)},
-+	{"UFSX2",               BIT(4)},
-+	{"ENDBG",               BIT(5)},
-+	{"DBC",                 BIT(6)},
-+	{"SBRG",                BIT(7)},
-+
-+	{"RSVD",                BIT(0)},
-+	{"NPK1",                BIT(1)},
-+	{"SBR16B7",             BIT(2)},
-+	{"SBR16B4",             BIT(3)},
-+	{"FIA_XG",              BIT(4)},
-+	{"PSF6",                BIT(5)},
-+	{"UFSPW1",              BIT(6)},
-+	{"FIA_U",               BIT(7)},
-+
-+	{"PSF8",                BIT(0)},
-+	{"PSF0",                BIT(1)},
-+	{"RSVD",                BIT(2)},
-+	{"FIACPCB_U",           BIT(3)},
-+	{"TAM",                 BIT(4)},
-+	{"SBR16B0",             BIT(5)},
-+	{"TBTLSX",              BIT(6)},
-+	{"THC0",                BIT(7)},
-+
-+	{"THC1",                BIT(0)},
-+	{"PMC_1",               BIT(1)},
-+	{"FIACPCB_XG",          BIT(2)},
-+	{"TCSS",                BIT(3)},
-+	{"DISP_PGA",            BIT(4)},
-+	{"SBR16B20",            BIT(5)},
-+	{"SBR8B20",             BIT(6)},
-+	{"DBG_SBR",             BIT(7)},
-+
-+	{"SPC",                 BIT(0)},
-+	{"ACE_0",               BIT(1)},
-+	{"ACE_1",               BIT(2)},
-+	{"ACE_2",               BIT(3)},
-+	{"ACE_3",               BIT(4)},
-+	{"ACE_4",               BIT(5)},
-+	{"ACE_5",               BIT(6)},
-+	{"ACE_6",               BIT(7)},
-+
-+	{"ACE_7",               BIT(0)},
-+	{"ACE_8",               BIT(1)},
-+	{"ACE_9",               BIT(2)},
-+	{"ACE_10",              BIT(3)},
-+	{"SBR16B2",             BIT(4)},
-+	{"SBR8B4",              BIT(5)},
-+	{"OSSE",                BIT(6)},
-+	{"SBR16B1",             BIT(7)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map *ext_wcl_pcdn_pfear_map[] = {
-+	wcl_pcdn_pfear_map,
-+	NULL
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_ltr_show_map[] = {
-+	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
-+	{"RSVD",		WCL_PMC_LTR_RESERVED},
-+	{"SATA",		CNP_PMC_LTR_SATA},
-+	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
-+	{"XHCI",		CNP_PMC_LTR_XHCI},
-+	{"SOUTHPORT_F",		ADL_PMC_LTR_SPF},
-+	{"ME",			CNP_PMC_LTR_ME},
-+	{"SATA1",		CNP_PMC_LTR_EVA},
-+	{"SOUTHPORT_C",		CNP_PMC_LTR_SPC},
-+	{"HD_AUDIO",		CNP_PMC_LTR_AZ},
-+	{"CNV",			CNP_PMC_LTR_CNV},
-+	{"LPSS",		CNP_PMC_LTR_LPSS},
-+	{"SOUTHPORT_D",		CNP_PMC_LTR_SPD},
-+	{"SOUTHPORT_E",		CNP_PMC_LTR_SPE},
-+	{"SATA2",		PTL_PMC_LTR_SATA2},
-+	{"ESPI",		CNP_PMC_LTR_ESPI},
-+	{"SCC",			CNP_PMC_LTR_SCC},
-+	{"ISH",			CNP_PMC_LTR_ISH},
-+	{"UFSX2",		CNP_PMC_LTR_UFSX2},
-+	{"EMMC",		CNP_PMC_LTR_EMMC},
-+	{"WIGIG",		ICL_PMC_LTR_WIGIG},
-+	{"THC0",		TGL_PMC_LTR_THC0},
-+	{"THC1",		TGL_PMC_LTR_THC1},
-+	{"SOUTHPORT_G",		MTL_PMC_LTR_SPG},
-+	{"ESE",			MTL_PMC_LTR_ESE},
-+	{"IOE_PMC",		MTL_PMC_LTR_IOE_PMC},
-+	{"DMI3",		ARL_PMC_LTR_DMI3},
-+	{"OSSE",		LNL_PMC_LTR_OSSE},
-+
-+	/* Below two cannot be used for LTR_IGNORE */
-+	{"CURRENT_PLATFORM",	PTL_PMC_LTR_CUR_PLT},
-+	{"AGGREGATED_SYSTEM",	PTL_PMC_LTR_CUR_ASLT},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_power_gating_status_0_map[] = {
-+	{"PMC_PGD0_PG_STS",              BIT(0),	0},
-+	{"FUSE_OSSE_PGD0_PG_STS",        BIT(1),	0},
-+	{"ESPISPI_PGD0_PG_STS",          BIT(2),	0},
-+	{"XHCI_PGD0_PG_STS",             BIT(3),	1},
-+	{"SPA_PGD0_PG_STS",              BIT(4),	1},
-+	{"RSVD_5",                       BIT(5),	0},
-+	{"MPFPW2_PGD0_PG_STS",           BIT(6),	0},
-+	{"GBE_PGD0_PG_STS",              BIT(7),	1},
-+	{"SBR16B21_PGD0_PG_STS",         BIT(8),	0},
-+	{"SBR16B5_PGD0_PG_STS",          BIT(9),	0},
-+	{"SBR8B1_PGD0_PG_STS",           BIT(10),	0},
-+	{"SBR8B0_PGD0_PG_STS",           BIT(11),	0},
-+	{"P2SB0_PG_STS",                 BIT(12),	1},
-+	{"D2D_DISP_PGD1_PG_STS",         BIT(13),	0},
-+	{"LPSS_PGD0_PG_STS",             BIT(14),	1},
-+	{"LPC_PGD0_PG_STS",              BIT(15),	0},
-+	{"SMB_PGD0_PG_STS",              BIT(16),	0},
-+	{"ISH_PGD0_PG_STS",              BIT(17),	0},
-+	{"DBG_SBR16B_PGD0_PG_STS",       BIT(18),	0},
-+	{"NPK_PGD0_PG_STS",              BIT(19),	0},
-+	{"D2D_NOC_PGD1_PG_STS",          BIT(20),	0},
-+	{"FIA_P_PGD0_PG_STS",            BIT(21),	0},
-+	{"FUSE_PGD0_PG_STS",             BIT(22),	0},
-+	{"DBG_PSF_PGD0_PG_STS",          BIT(23),	0},
-+	{"DISP_PGA1_PGD0_PG_STS",        BIT(24),	0},
-+	{"XDCI_PGD0_PG_STS",             BIT(25),	1},
-+	{"EXI_PGD0_PG_STS",              BIT(26),	0},
-+	{"CSE_PGD0_PG_STS",              BIT(27),	1},
-+	{"KVMCC_PGD0_PG_STS",            BIT(28),	1},
-+	{"PMT_PGD0_PG_STS",              BIT(29),	1},
-+	{"CLINK_PGD0_PG_STS",            BIT(30),	1},
-+	{"PTIO_PGD0_PG_STS",             BIT(31),	1},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_power_gating_status_1_map[] = {
-+	{"USBR0_PGD0_PG_STS",            BIT(0),	1},
-+	{"SBR16B22_PGD0_PG_STS",         BIT(1),	0},
-+	{"SMT1_PGD0_PG_STS",             BIT(2),	1},
-+	{"MPFPW1_PGD0_PG_STS",           BIT(3),	0},
-+	{"SMS2_PGD0_PG_STS",             BIT(4),	1},
-+	{"SMS1_PGD0_PG_STS",             BIT(5),	1},
-+	{"CSMERTC_PGD0_PG_STS",          BIT(6),	0},
-+	{"CSMEPSF_PGD0_PG_STS",          BIT(7),	0},
-+	{"D2D_NOC_PGD0_PG_STS",          BIT(8),	0},
-+	{"ESE_PGD0_PG_STS",              BIT(9),	1},
-+	{"FIACPCB_P_PGD0_PG_STS",        BIT(10),	0},
-+	{"SBR8B2_PGD0_PG_STS",           BIT(12),	0},
-+	{"OSSE_SMT1_PGD0_PG_STS",        BIT(13),	1},
-+	{"D2D_DISP_PGD0_PG_STS",         BIT(14),	0},
-+	{"P2SB1_PGD0_PG_STS",            BIT(15),	1},
-+	{"U3FPW1_PGD0_PG_STS",           BIT(16),	0},
-+	{"SBR16B3_PGD0_PG_STS",          BIT(17),	0},
-+	{"PSF4_PGD0_PG_STS",             BIT(18),	0},
-+	{"CNVI_PGD0_PG_STS",             BIT(19),	0},
-+	{"UFSX2_PGD0_PG_STS",            BIT(20),	1},
-+	{"ENDBG_PGD0_PG_STS",            BIT(21),	0},
-+	{"DBC_PGD0_PG_STS",              BIT(22),	0},
-+	{"SBRG_PGD0_PG_STS",             BIT(23),	0},
-+	{"NPK_PGD1_PG_STS",              BIT(25),	0},
-+	{"SBR16B7_PGD0_PG_STS",          BIT(26),	0},
-+	{"SBR16B4_PGD0_PG_STS",          BIT(27),	0},
-+	{"FIA_XG_PSF_PGD0_PG_STS",       BIT(28),	0},
-+	{"PSF6_PGD0_PG_STS",             BIT(29),	0},
-+	{"UFSPW1_PGD0_PG_STS",           BIT(30),	0},
-+	{"FIA_U_PGD0_PG_STS",            BIT(31),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_power_gating_status_2_map[] = {
-+	{"PSF8_PGD0_PG_STS",             BIT(0),	0},
-+	{"PSF0_PGD0_PG_STS",             BIT(1),	0},
-+	{"FIACPCB_U_PGD0_PG_STS",        BIT(3),	0},
-+	{"TAM_PGD0_PG_STS",              BIT(4),	1},
-+	{"SBR16B0_PGD0_PG_STS",          BIT(5),	0},
-+	{"TBTLSX_PGD0_PG_STS",           BIT(6),	1},
-+	{"THC0_PGD0_PG_STS",             BIT(7),	1},
-+	{"THC1_PGD0_PG_STS",             BIT(8),	1},
-+	{"PMC_PGD1_PG_STS",              BIT(9),	0},
-+	{"FIACPCB_XG_PGD0_PG_STS",       BIT(10),	0},
-+	{"TCSS_PGD0_PG_STS",             BIT(11),	0},
-+	{"DISP_PGA_PGD0_PG_STS",         BIT(12),	0},
-+	{"SBR8B4_PGD0_PG_STS",           BIT(13),	0},
-+	{"SBR8B20_PGD0_PG_STS",          BIT(14),	0},
-+	{"DBG_PGD0_PG_STS",              BIT(15),	0},
-+	{"SPC_PGD0_PG_STS",              BIT(16),	1},
-+	{"ACE_PGD0_PG_STS",              BIT(17),	0},
-+	{"ACE_PGD1_PG_STS",              BIT(18),	0},
-+	{"ACE_PGD2_PG_STS",              BIT(19),	0},
-+	{"ACE_PGD3_PG_STS",              BIT(20),	0},
-+	{"ACE_PGD4_PG_STS",              BIT(21),	0},
-+	{"ACE_PGD5_PG_STS",              BIT(22),	0},
-+	{"ACE_PGD6_PG_STS",              BIT(23),	0},
-+	{"ACE_PGD7_PG_STS",              BIT(24),	0},
-+	{"ACE_PGD8_PG_STS",              BIT(25),	0},
-+	{"ACE_PGD9_PG_STS",              BIT(26),	0},
-+	{"ACE_PGD10_PG_STS",             BIT(27),	0},
-+	{"SBR16B2_PG_PGD0_PG_STS",       BIT(28),	0},
-+	{"SBR16B20_PGD0_PG_STS",         BIT(29),	0},
-+	{"OSSE_PGD0_PG_STS",             BIT(30),	1},
-+	{"SBR16B1_PGD0_PG_STS",          BIT(31),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_d3_status_0_map[] = {
-+	{"LPSS_D3_STS",                  BIT(3),	1},
-+	{"XDCI_D3_STS",                  BIT(4),	1},
-+	{"XHCI_D3_STS",                  BIT(5),	1},
-+	{"SPA_D3_STS",                   BIT(12),	0},
-+	{"SPC_D3_STS",                   BIT(14),	0},
-+	{"OSSE_D3_STS",                  BIT(15),	0},
-+	{"ESPISPI_D3_STS",               BIT(18),	0},
-+	{"PSTH_D3_STS",                  BIT(21),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_d3_status_1_map[] = {
-+	{"OSSE_SMT1_D3_STS",             BIT(16),	0},
-+	{"GBE_D3_STS",                   BIT(19),	0},
-+	{"ITSS_D3_STS",                  BIT(23),	0},
-+	{"CNVI_D3_STS",                  BIT(27),	0},
-+	{"UFSX2_D3_STS",                 BIT(28),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_d3_status_2_map[] = {
-+	{"CSMERTC_D3_STS",               BIT(1),	0},
-+	{"ESE_D3_STS",                   BIT(2),	0},
-+	{"CSE_D3_STS",                   BIT(4),	0},
-+	{"KVMCC_D3_STS",                 BIT(5),	0},
-+	{"USBR0_D3_STS",                 BIT(6),	0},
-+	{"ISH_D3_STS",                   BIT(7),	0},
-+	{"SMT1_D3_STS",                  BIT(8),	0},
-+	{"SMT2_D3_STS",                  BIT(9),	0},
-+	{"SMT3_D3_STS",                  BIT(10),	0},
-+	{"CLINK_D3_STS",                 BIT(14),	0},
-+	{"PTIO_D3_STS",                  BIT(16),	0},
-+	{"PMT_D3_STS",                   BIT(17),	0},
-+	{"SMS1_D3_STS",                  BIT(18),	0},
-+	{"SMS2_D3_STS",                  BIT(19),	0},
-+	{"OSSE_SMT2_D3_STS",             BIT(22),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_d3_status_3_map[] = {
-+	{"THC0_D3_STS",                  BIT(14),	1},
-+	{"THC1_D3_STS",                  BIT(15),	1},
-+	{"OSSE_SMT3_D3_STS",             BIT(16),	0},
-+	{"ACE_D3_STS",                   BIT(23),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_vnn_req_status_0_map[] = {
-+	{"LPSS_VNN_REQ_STS",             BIT(3),	1},
-+	{"OSSE_VNN_REQ_STS",             BIT(15),	1},
-+	{"ESPISPI_VNN_REQ_STS",          BIT(18),	1},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_vnn_req_status_1_map[] = {
-+	{"NPK_VNN_REQ_STS",              BIT(4),	1},
-+	{"DFXAGG_VNN_REQ_STS",           BIT(8),	0},
-+	{"EXI_VNN_REQ_STS",              BIT(9),	1},
-+	{"OSSE_SMT1_VNN_REQ_STS",        BIT(16),	1},
-+	{"P2D_VNN_REQ_STS",              BIT(18),	1},
-+	{"GBE_VNN_REQ_STS",              BIT(19),	1},
-+	{"SMB_VNN_REQ_STS",              BIT(25),	1},
-+	{"LPC_VNN_REQ_STS",              BIT(26),	0},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_vnn_req_status_2_map[] = {
-+	{"CSMERTC_VNN_REQ_STS",          BIT(1),	1},
-+	{"ESE_VNN_REQ_STS",              BIT(2),	1},
-+	{"CSE_VNN_REQ_STS",              BIT(4),	1},
-+	{"ISH_VNN_REQ_STS",              BIT(7),	1},
-+	{"SMT1_VNN_REQ_STS",             BIT(8),	1},
-+	{"CLINK_VNN_REQ_STS",            BIT(14),	1},
-+	{"SMS1_VNN_REQ_STS",             BIT(18),	1},
-+	{"SMS2_VNN_REQ_STS",             BIT(19),	1},
-+	{"GPIOCOM4_VNN_REQ_STS",         BIT(20),	1},
-+	{"GPIOCOM3_VNN_REQ_STS",         BIT(21),	1},
-+	{"GPIOCOM1_VNN_REQ_STS",         BIT(23),	1},
-+	{"GPIOCOM0_VNN_REQ_STS",         BIT(24),	1},
-+	{"DISP_SHIM_VNN_REQ_STS",        BIT(31),	1},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_vnn_misc_status_map[] = {
-+	{"CPU_C10_REQ_STS",              BIT(0),	0},
-+	{"TS_OFF_REQ_STS",               BIT(1),	0},
-+	{"PNDE_MET_REQ_STS",             BIT(2),	1},
-+	{"FW_THROTTLE_ALLOWED_REQ_STS",  BIT(4),	0},
-+	{"VNN_SOC_REQ_STS",              BIT(6),	1},
-+	{"ISH_VNNAON_REQ_STS",           BIT(7),	0},
-+	{"D2D_NOC_CFI_QACTIVE_REQ_STS",	 BIT(8),	1},
-+	{"D2D_NOC_GPSB_QACTIVE_REQ_STS", BIT(9),	1},
-+	{"PLT_GREATER_REQ_STS",          BIT(11),	1},
-+	{"ALL_SBR_IDLE_REQ_STS",         BIT(12),	0},
-+	{"PMC_IDLE_FB_OCP_REQ_STS",      BIT(13),	0},
-+	{"PM_SYNC_STATES_REQ_STS",       BIT(14),	0},
-+	{"EA_REQ_STS",                   BIT(15),	0},
-+	{"MPHY_CORE_OFF_REQ_STS",        BIT(16),	0},
-+	{"BRK_EV_EN_REQ_STS",            BIT(17),	0},
-+	{"AUTO_DEMO_EN_REQ_STS",         BIT(18),	0},
-+	{"ITSS_CLK_SRC_REQ_STS",         BIT(19),	1},
-+	{"ARC_IDLE_REQ_STS",             BIT(21),	0},
-+	{"FIA_DEEP_PM_REQ_STS",          BIT(23),	0},
-+	{"XDCI_ATTACHED_REQ_STS",        BIT(24),	1},
-+	{"ARC_INTERRUPT_WAKE_REQ_STS",   BIT(25),	0},
-+	{"D2D_DISP_DDI_QACTIVE_REQ_STS", BIT(26),	1},
-+	{"PRE_WAKE0_REQ_STS",            BIT(27),	1},
-+	{"PRE_WAKE1_REQ_STS",            BIT(28),	1},
-+	{"PRE_WAKE2_REQ_STS",            BIT(29),	1},
-+	{}
-+};
-+
-+static const struct pmc_bit_map wcl_pcdn_rsc_status_map[] = {
-+	{"Memory",		0,		1},
-+	{"PSF0",		0,		1},
-+	{"PSF6",		0,		1},
-+	{"PSF8",		0,		1},
-+	{"SAF_CFI_LINK",	0,		1},
-+	{"SB",			0,		1},
-+	{}
-+};
-+
-+static const struct pmc_bit_map *wcl_pcdn_lpm_maps[] = {
-+	ptl_pcdp_clocksource_status_map,
-+	wcl_pcdn_power_gating_status_0_map,
-+	wcl_pcdn_power_gating_status_1_map,
-+	wcl_pcdn_power_gating_status_2_map,
-+	wcl_pcdn_d3_status_0_map,
-+	wcl_pcdn_d3_status_1_map,
-+	wcl_pcdn_d3_status_2_map,
-+	wcl_pcdn_d3_status_3_map,
-+	wcl_pcdn_vnn_req_status_0_map,
-+	wcl_pcdn_vnn_req_status_1_map,
-+	wcl_pcdn_vnn_req_status_2_map,
-+	ptl_pcdp_vnn_req_status_3_map,
-+	wcl_pcdn_vnn_misc_status_map,
-+	ptl_pcdp_signal_status_map,
-+	NULL
-+};
-+
-+static const struct pmc_bit_map *wcl_pcdn_blk_maps[] = {
-+	wcl_pcdn_power_gating_status_0_map,
-+	wcl_pcdn_power_gating_status_1_map,
-+	wcl_pcdn_power_gating_status_2_map,
-+	wcl_pcdn_rsc_status_map,
-+	wcl_pcdn_vnn_req_status_0_map,
-+	wcl_pcdn_vnn_req_status_1_map,
-+	wcl_pcdn_vnn_req_status_2_map,
-+	ptl_pcdp_vnn_req_status_3_map,
-+	wcl_pcdn_d3_status_0_map,
-+	wcl_pcdn_d3_status_1_map,
-+	wcl_pcdn_d3_status_2_map,
-+	wcl_pcdn_d3_status_3_map,
-+	ptl_pcdp_clocksource_status_map,
-+	wcl_pcdn_vnn_misc_status_map,
-+	ptl_pcdp_signal_status_map,
-+	NULL
-+};
-+
-+static const struct pmc_reg_map wcl_pcdn_reg_map = {
-+	.pfear_sts = ext_wcl_pcdn_pfear_map,
-+	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
-+	.ltr_show_sts = wcl_pcdn_ltr_show_map,
-+	.msr_sts = msr_map,
-+	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
-+	.regmap_length = WCL_PCD_PMC_MMIO_REG_LEN,
-+	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
-+	.ppfear_buckets = LNL_PPFEAR_NUM_ENTRIES,
-+	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
-+	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.lpm_num_maps = PTL_LPM_NUM_MAPS,
-+	.ltr_ignore_max = LNL_NUM_IP_IGN_ALLOWED,
-+	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-+	.etr3_offset = ETR3_OFFSET,
-+	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
-+	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
-+	.lpm_en_offset = MTL_LPM_EN_OFFSET,
-+	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
-+	.lpm_sts = wcl_pcdn_lpm_maps,
-+	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
-+	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
-+	.s0ix_blocker_maps = wcl_pcdn_blk_maps,
-+	.s0ix_blocker_offset = LNL_S0IX_BLOCKER_OFFSET,
-+};
-+
-+#define WCL_NPU_PCI_DEV                0xfd3e
-+
-+/*
-+ * Set power state of select devices that do not have drivers to D3
-+ * so that they do not block Package C entry.
-+ */
-+static void wcl_d3_fixup(void)
-+{
-+	pmc_core_set_device_d3(WCL_NPU_PCI_DEV);
-+}
-+
-+static int wcl_resume(struct pmc_dev *pmcdev)
-+{
-+	wcl_d3_fixup();
-+	return cnl_resume(pmcdev);
-+}
-+
-+static int wcl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
-+{
-+	wcl_d3_fixup();
-+	return generic_core_init(pmcdev, pmc_dev_info);
-+}
-+
-+struct pmc_dev_info wcl_pmc_dev = {
-+	.map = &wcl_pcdn_reg_map,
-+	.suspend = cnl_suspend,
-+	.resume = wcl_resume,
-+	.init = wcl_core_init,
-+};
--- 
-2.43.0
+I tried this on my P15, and I do get an error when the GPU sensor is acc=
+essed as it's not available (no Nvidia card on mine).
 
+A suggestion (based a bit on Armin's suggestions): If the is_visible fun=
+ction is changed so if the sensor returns an error (or not available) th=
+en the sysfs entry isn't displayed.=20
+I think that would prevent errors/access issues from user space - at lea=
+st it worked on my system.
+
+Something like the below (I can send this up as a proper patch if it mak=
+es sense)
+
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platf=
+orm/x86/lenovo/thinkpad_acpi.c
+index cc19fe520ea9..075d15df183c 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -6312,6 +6312,8 @@ static umode_t thermal_attr_is_visible(struct kobj=
+ect *kobj,
+                                        to_sensor_dev_attr(dev_attr);
+=20
+        int idx =3D sensor_attr->index;
++       s32 value;
++       int res;
+=20
+        switch (thermal_read_mode) {
+        case TPACPI_THERMAL_NONE:
+@@ -6334,6 +6336,11 @@ static umode_t thermal_attr_is_visible(struct kob=
+ject *kobj,
+=20
+        }
+=20
++       /* Check if sensor is available */
++       res =3D thermal_get_sensor(idx, &value);
++       if ((res) || (value =3D=3D TPACPI_THERMAL_SENSOR_NA))
++               return 0;
++
+        return attr->mode;
+ }
+
+I think this would generally be useful for removing unwanted sensors wit=
+hout having to do extra steps?
+
+Mark
