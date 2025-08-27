@@ -1,84 +1,177 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF437464
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 03:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F392749F0
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 05:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756265398; cv=none; b=t2pGworTLtbehC27PncfSwhlusquqmB7Rd/+a3HcpHzOO4AJHudJyuTstpyeti3OoXD4bbEduJRKCSH4W1C+PldPU+RF2E5zrJsGtO9q1QpQaIvMtEfb893FjmxCpBPTHUMzNB3TtOPwFFYSwV7wf+dx6nuP+sGZkHQrJN71Vog=
+	t=1756272295; cv=none; b=FibE0R2LCEUu7o9qckYlnaBMeAy6F8YKBdErrfg00eTPQDaaLDz2eSyCEgW+bjwhO+Qx49BjBJc+0zuR3a5sj+pKQHkJDfkZiS09GD/xelParvz/+BC0d6Cdcejf3iqB1VHHI2oKpAaSnA95BNjJBJApJ3bApt/UJ5iR7rR3YDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756265398; c=relaxed/simple;
-	bh=DJYZ9TjBVzAUvdAanuIsrRfpLYewga3iPjAAuEtDJRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=o5c+rX4j1rHt6Q8LD6vCsIixF1bzxqxeoP8ee2N85+2AzvkBVFSerrV1qK7NMwckshvHuF3tnEypLBUhTOWh3TNER7SY1gcin58UBV9eHGX5ULCULYetZsMggUaOUfryNTZIt7nGbxTQ6mws325mVtqBSVx0u0VVd62eOC+uMzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zu3P63J3; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756272295; c=relaxed/simple;
+	bh=ddlFw/qlOGkmq6rrOarImW8+DPpQrMpmV1aUJHh34pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M2K5r1cSwYapndEQDHhfbz5GTCSUjG75GsogU8e8ZPHueu9bpf7ZndfQk1Zz7QBhjjlJeARmAEleepeUYB7KGH+83dLPFjJQwuKqY8hAccA9qglu1B1IbfBP0b2E2i6VPrqwIvWgnOzKupkWNHO3PPyI8/B4qSv3mspRSqqAcsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzV0BBzM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agDB9rje; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzV0BBzM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agDB9rje; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zu3P63J3"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-246d8e25f51so20988625ad.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Aug 2025 20:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756265396; x=1756870196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0I7ZYSajwtsZUN3YsQ/1hmOB05BML8R1PlMcsy+HPxM=;
-        b=Zu3P63J3w4Hn4d+Nlr9c6EupO8LF+66/nx9GWfJLKrfLCr+UrKPB+x5ddhaO7ET92V
-         EDz9xCBl50ELKQtOMdVIDRKHUaI7sSKd2LOOlYMiuAMMuyWgWNjShtmqNLD8P2X0SKh9
-         Wi6Gf7lWkRf7QJmeZ5dGj/CgHlfamLCjXa/QjYFuyD55LfdH7DN8YoVxKE1eAA20iFHB
-         gkL7jKLNwt698YuknTqAr5AhvU0182mGMzmlphPidcv89LrfGaGnu2Xil7wF5rbsWxWl
-         EBdiaNP9S+lFPVMTVe6KJB+pAp+kioPT1/CQUVxP4Z36ZAiKIikiKZtXWndQLNJol7/2
-         oaCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756265396; x=1756870196;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0I7ZYSajwtsZUN3YsQ/1hmOB05BML8R1PlMcsy+HPxM=;
-        b=ti4TrmfDBWvl4XJJIPOAIxji35wFYAcb7Qj+hIJ9pX4bcxVvRVrtkySAbn48ybfxaC
-         7S25dJhqQCDzMKB3KwoMbzy28RSTLbB4Ihc97SiywCQxZlQ5/cUZ92it2CIIF8bzLHKM
-         +CLGT0VWHMcy1aNWT5eHnDW7D98E5f5foQix3xtcnd3aPvLDf/3M+Z6o6xgfm1TpU3MQ
-         TnxI7GFASbatG6WW6y3p3kaQFfuQDSG/odmAba/v6SN4BTogXOzof4vrZXlGzQ8sqCsU
-         kwfCaHWjY8rnVpzogwRv4Cpx/jI57mnitOvWoNLewKBZGKdqCCJSeNJ2pG8koPpcJc+6
-         dFTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPeTndeINyBkPLK4fc0yhE1Qsyas9WTZYpvfqNllENl+9qBbZxZ8iyD8mNrWnbDF4Xkqyg0xXCxPR0CifSsJCqErXM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmLWASRsCNo1WgK9YiqHE+W7LVb5qp46nxDwaHL9tuyLKbmjPE
-	pyJ7nR/A0UW3SkVL987eSuQAjYYZuVfSFOU1OXzce2XglSsLJFUziXEv
-X-Gm-Gg: ASbGncucHjjXIQEcf8DLZ46iK8VysEvhCU+IsBZ3vYXti+uUgmFNLTrsMmWfWW2EOP6
-	Bn3iiaOX5T4+UAO0cqTcsTZBUDBHt83KHEHxZilOM35kwKC5GZO8FFjzt3rCMXFpx7nCME0UGoN
-	Jn+LFXamNMl2LJllTq5GtPIdwP+CKNKygMJIMovC9NP0xQxwsNImrLo4SioHmV27Masr89+Pw6n
-	s70sw+o/FNgo8NTTjoVDErOpWNv+YgngCq2zYSqaDaErIcAZuW4T1g7wn8iaH3SimxEuFe0d18f
-	SYRMOY2z8+3zqky/H6jwc+gfmcIgznZld+/ZxBQe/4OPNPeEIJRDsDM/i/+vi4A3D/2KAUzkNEw
-	frcwdEqu/fy2khUtSjd35N0sWfH4Qrb4=
-X-Google-Smtp-Source: AGHT+IFOHvLqI1x4EFNUeKe41QxxkYINCXO2JBJFxNFcpIhQU5Vk+vFpX5hbzAc5GnqCtGsHRGPRWA==
-X-Received: by 2002:a17:902:fc4b:b0:246:76ed:e25d with SMTP id d9443c01a7336-24676edecf2mr181446805ad.50.1756265396497;
-        Tue, 26 Aug 2025 20:29:56 -0700 (PDT)
-Received: from nowy-laptop ([110.46.146.116])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-246e1b6fae5sm64319245ad.140.2025.08.26.20.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 20:29:56 -0700 (PDT)
-Date: Wed, 27 Aug 2025 12:29:52 +0900
-From: SungHwan Jung <onenowy@gmail.com>
-To: lynne@bune.city
-Cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org
-Subject: Re: PROBLEM: acer-wmi driver fails to initialise with Linux kernel
- >6.14
-Message-ID: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzV0BBzM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agDB9rje";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzV0BBzM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agDB9rje"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1758621D59;
+	Wed, 27 Aug 2025 05:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756272291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
+	b=NzV0BBzMqa3OvXYNbbwD42dfIV3HVuTImlhzT5BD3xB1XX0j2M5XLE3AT8U4HaiCMANmmg
+	cFqtqksaRGscdlXHalAhvqNpxZkjRjRpt7L3zza16aCt2iaI5C9gp/Wx+iCgzMCZwLmO+g
+	oV+SbRQD/+U4c7Ba1Vx4lyZjF/kiGrM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756272291;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
+	b=agDB9rjePOx8HNNHSEf/jOLd0rLH0AbSU74gJKfOiYtsScs04cUBPTJAL+zLEsWrLYzoCl
+	/5M2lNdtKzdDpRAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NzV0BBzM;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=agDB9rje
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756272291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
+	b=NzV0BBzMqa3OvXYNbbwD42dfIV3HVuTImlhzT5BD3xB1XX0j2M5XLE3AT8U4HaiCMANmmg
+	cFqtqksaRGscdlXHalAhvqNpxZkjRjRpt7L3zza16aCt2iaI5C9gp/Wx+iCgzMCZwLmO+g
+	oV+SbRQD/+U4c7Ba1Vx4lyZjF/kiGrM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756272291;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
+	b=agDB9rjePOx8HNNHSEf/jOLd0rLH0AbSU74gJKfOiYtsScs04cUBPTJAL+zLEsWrLYzoCl
+	/5M2lNdtKzdDpRAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C984F13867;
+	Wed, 27 Aug 2025 05:24:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ZL+AL6KWrmgXRwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 27 Aug 2025 05:24:50 +0000
+From: Takashi Iwai <tiwai@suse.de>
+To: "Luke D . Jones" <luke@ljones.dev>
+Cc: Corentin Chary <corentin.chary@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: asus-wmi: Fix racy registrations
+Date: Wed, 27 Aug 2025 07:24:33 +0200
+Message-ID: <20250827052441.23382-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <290b8e1a-1d7d-48a3-a8e2-0cba711f6848@bune.city>
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 1758621D59
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,linux.intel.com,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Score: -1.51
 
-The same issue also occurs on other distributions (Arch Linux, Ubuntu), but it 
-does not happen frequently. In most cases, it can be resolved by manually 
-reloading the acer_wmi module or by applying a delayed load after some time. 
-However, on Fedora, once the issue occurs, manually reloading the module does 
-not resolve it. In fact, even when it is working normally, manually reloading 
-the module causes it to stop working again. (This does not happen on other 
-distributions.) Could you test this on the latest live image of another 
-distribution?
+asus_wmi_register_driver() may be called from multiple drivers
+concurrently, which can lead to the racy list operations, eventually
+corrupting the memory and hitting Oops on some ASUS machines.
+Also, the error handling is missing, and it forgot to unregister ACPI
+lps0 dev ops in the error case.
+
+This patch covers those issues by introducing a simple mutex at
+acpi_wmi_register_driver() & *_unregister_driver, and adding the
+proper call of asus_s2idle_check_unregister() in the error path.
+
+Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
+Link: https://bugzilla.suse.com/show_bug.cgi?id=1246924
+Link: https://lore.kernel.org/07815053-0e31-4e8e-8049-b652c929323b@kernel.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/platform/x86/asus-wmi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index f7191fdded14..e72a2b5d158e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -5088,16 +5088,22 @@ static int asus_wmi_probe(struct platform_device *pdev)
+ 
+ 	asus_s2idle_check_register();
+ 
+-	return asus_wmi_add(pdev);
++	ret = asus_wmi_add(pdev);
++	if (ret)
++		asus_s2idle_check_unregister();
++
++	return ret;
+ }
+ 
+ static bool used;
++static DEFINE_MUTEX(register_mutex);
+ 
+ int __init_or_module asus_wmi_register_driver(struct asus_wmi_driver *driver)
+ {
+ 	struct platform_driver *platform_driver;
+ 	struct platform_device *platform_device;
+ 
++	guard(mutex)(&register_mutex);
+ 	if (used)
+ 		return -EBUSY;
+ 
+@@ -5120,6 +5126,7 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
+ 
+ void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
+ {
++	guard(mutex)(&register_mutex);
+ 	asus_s2idle_check_unregister();
+ 
+ 	platform_device_unregister(driver->platform_device);
+-- 
+2.50.1
+
