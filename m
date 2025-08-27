@@ -1,139 +1,221 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5B331A566
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 08:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6341EDA09;
+	Wed, 27 Aug 2025 11:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756284773; cv=none; b=qczC1eujjOfQAY1LeV9nf0+VfvU4E+ayOrV2SW22miLU6PQvxv6e2cxu+sKmJoT49o4lvzigCPN6IxUXby80JCY2QZQG26KdIrmgBcv3r3pNzatygoxBlVs9pdZZJM2cJeSdhGhAXFC5IsFm9oZS8BP/ZIJihQlyiS1NbjO2xp8=
+	t=1756295358; cv=none; b=tN6+7C34u4McBX6CxyYtZVFqIlKMbY/1AwOjBAf12GXPxC0tmwvLJ01KSrkv9qtCzP7wIgmhFeEPsq/FA2IErwojmvjdrgh/WWc9otbjhotTXXwVI7nKB7IB+J0GPcZ5n2nSSrbbXosb/gPRAF3K89KQYP5C2qKPhBPnUHixW5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756284773; c=relaxed/simple;
-	bh=/bZBwbWjM4t3HbXeNHFI0WpHTt8bpmx5ELQVsl5o5Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hDg22KRoVeGnO5jsVIv2XqbijflDj7r3uKpuwQVmUCDCr6wNYTvlMNRyelfT0mkP2m+WIfJaQ+VTTdCY2n2ilFySkgi2nC+PMwnTzY4a+h6HVFWjSyTSwFBEthTNBe8AtVP/T5Pun+zEL8ZYhW4Yo5Y6r325KaHHpG25LenHk8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvJ54BPx; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756295358; c=relaxed/simple;
+	bh=znhfLiwONlPw/MZzbudWQ/KtJzWSWLhDzuDkeba+KRo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dKniIgw1sHv0r3ISn4d5HGAplfdx0OL/szx0iTvlhymdZ8m1lcINHqZUzdjX8oD6IenFlt0sT6eAvfANWGmOVYg5ZfbJiorvoRmSUlZGxdoxlakbYDF7KgBCBr1nr9olJfhVYsG6LHKVcrT3KzY02o+6QFTf6L3PTBKZpKlVTCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhFNmels; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvJ54BPx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-244580523a0so64710665ad.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 01:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756284771; x=1756889571; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/OJ4XJbogpaWF3M2MsUSzvzZbDWhRAXNIjduAuCcoIc=;
-        b=FvJ54BPxq0gD1RDq0c3wJyCe2/VGeQznSCphUMPhiI/fqaYdW5LkKJSSCf9VJ+z5t9
-         V+AJLI/NCoANPZrg22t1gPulRym/ghe0s2k60qCjOYK5HjQC3XoZQvrTFWLkA2QQ8VXQ
-         +5nbIxh7yjuJjjNWRaOj753CdvCeCrL+APbbVUyCbuIor2P3HeQOPioFT5wMKT9evlZe
-         FVTjbxDQBcp/IbW1zjdSL7OyoRqV4zE6ASblfuVsB3AlplKdvZr1x+frDW9os5s3kxav
-         UcAlsZMSiArPqUZCppm7yxm11uE9PbDmwJD2s6uW2RfA9r0hV/QUzfIrP1OzeWyncBSy
-         8b5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756284771; x=1756889571;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/OJ4XJbogpaWF3M2MsUSzvzZbDWhRAXNIjduAuCcoIc=;
-        b=vP4l/fO7K9o4QDRRPBauFFADPu0iLqINxxnA7vxYQaPYfO2UjZGCUxMz7NWIlLq0KE
-         9EHGbPJ+xvHMVkE808eKb/fuCwKtwsFOmN4sa6YsecpgHZd0cG8/7uJQE7R6CzQdbYMh
-         nBHxeNxPiX36eUsw3AAzv9tD8AN0kiaT2JtRuHXTxGFFetD4uTNcRCGSxz3dtNlHB37c
-         CrhO3fzQjGmKjRIJupy4FfQcgmhy2QdrtzdqfKil+0IvNSWnQidUR/jJCUYxQknyaY9i
-         YItRJ+TDfsH6fE5PCguytFi+sb1XGQ4fq+a8yZIRlY5r2zF2M6E0Lg0guB9EymPAj1uS
-         EpFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUci8oIypXK5SMHkQtwmOTVMREcIFojwp1SQ8mOvBk60o1rYChcobQwWbKLUhVNGEjU4qoClBbLWUsMTuqS+UuuZIIq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnl6feJu70rhFByYG2x98h5BtLRLSld0m8iRkDcJ/QyBCGOrY9
-	8NdxY6g4bLFdNlLQVkkOfl6zgdHU2g2FjOyfCJP93LRkrswndP0y0qKTkg+Gt6Jo
-X-Gm-Gg: ASbGncuQ0OPO07Wgp5uhfnBGvAn6m0k4RInukWub98fwXwPVrNYIr8wioY9MdrRe2zY
-	QxC4piZad7Hf8y0VaP4FZjkEeHeCKNfxtb9fJdq12WdZZB3svkT5XJUNk/qBGmdvwWODpM1YEbY
-	yCk/5pGNDdMNCM5dZ6ZwOFHN0Vs9AaWT0ke99BxnzV4a4jc/wbM1Rx5CjyVAaD/Hhw7r8wQMZ1t
-	ahHVhY0Gpswuqb1EW/skbL9vKItFSlo46hZ2ihXFdoVycmBORhac5hm4acvLLw4CmsYhHFSzP4M
-	Bs3A+LTG/hTuEI83dPHzsvkoJocRhyEylj3zrvmOSSMvG9riAW7yXCLHdOd8QQolYcuOSKCme4d
-	UD/yqPsMkm861+3nnZ1Rm
-X-Google-Smtp-Source: AGHT+IE0/JIO3RJ1muxsQGQrhVgnFf8WrAz0AtfSTcuCaMlojOVjzhhRokdQHAiL3/k+V2Ky6Z9Vbw==
-X-Received: by 2002:a17:903:3843:b0:242:cd69:faa6 with SMTP id d9443c01a7336-2462ef03864mr276867985ad.29.1756284771346;
-        Wed, 27 Aug 2025 01:52:51 -0700 (PDT)
-Received: from nowy-laptop ([110.46.146.116])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2466889ddbbsm116667285ad.152.2025.08.27.01.52.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 01:52:51 -0700 (PDT)
-Date: Wed, 27 Aug 2025 17:52:46 +0900
-From: SungHwan Jung <onenowy@gmail.com>
-To: Lynne Megido <lynne@bune.city>
-Cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org
-Subject: Re: PROBLEM: acer-wmi driver fails to initialise with Linux kernel
- >6.14
-Message-ID: <jvfcaqkeljzzuhi7f55usgjcqob6wxqoddwhe575elnyioqrdw@on2kdd5l6lom>
-References: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
- <831b9f1a-a4e5-4328-9db1-f703c8341704@bune.city>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhFNmels"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756295357; x=1787831357;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=znhfLiwONlPw/MZzbudWQ/KtJzWSWLhDzuDkeba+KRo=;
+  b=jhFNmelscrPcHGL7D60jKPGu9xtIDHsl6Se0sVtp8lr3PbqQBDfedFu6
+   odAMsIKBw5Ec52S35T+5dyAk3C/cNS4Q++U0ozLBKESiu5reQn1Vli++u
+   skFOiqXCQoZBCREAbFeR45NgNPGMim4t7rAu6Htu9lzrs/JYlgC1P6MPb
+   dy5mgCKRQ9q/guVrJI4MuBtgJm7UxmWO0ob13HBM+PQFvdnzFQbjWNx9p
+   2WOXiQ4/wcz+AdjMi0NJeSChIEc8NJSq8qwx/67m0hVxRpumyn9LMlI9C
+   X0gjEVOVAgy3UMrG3pdswPka3xqrWTyMdvZUPevjsdAbYxfgj620odUgZ
+   w==;
+X-CSE-ConnectionGUID: t02bfFOPRSeVh2PZfED7ZA==
+X-CSE-MsgGUID: X7OUtA9IQ0+Vavw/txMWww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="57563662"
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="57563662"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 04:49:15 -0700
+X-CSE-ConnectionGUID: zvvBl4BYSyOUXekQlljAAA==
+X-CSE-MsgGUID: VXomUqURQ/O9wweXrTn6IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="175121283"
+Received: from gabaabhi-mobl2.amr.corp.intel.com ([10.125.109.50])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 04:49:14 -0700
+Message-ID: <abdd6c22714984782fbbb7dab5a7e1ab0fa4799c.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel: power-domains validate domain in
+ tpmi_cpu_online()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: David Arcari <darcari@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Tero Kristo
+ <tero.kristo@linux.intel.com>,  linux-kernel@vger.kernel.org
+Date: Wed, 27 Aug 2025 04:49:12 -0700
+In-Reply-To: <adbc0e8b-199a-42af-a45e-cb3791923554@redhat.com>
+References: <20250826164331.1372856-1-darcari@redhat.com>
+	 <00466c7a41bd4a0120a7798318ac5bba8878ada5.camel@linux.intel.com>
+	 <adbc0e8b-199a-42af-a45e-cb3791923554@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <831b9f1a-a4e5-4328-9db1-f703c8341704@bune.city>
 
-On Wed, Aug 27, 2025 at 05:13:15PM +1000, Lynne Megido wrote:
-> 
-> I'll test a live image with a recent kernel to see how that goes. I don't
-> have the
-> time for that today, but I'll get to that when I can.
+On Tue, 2025-08-26 at 21:39 -0400, David Arcari wrote:
+>=20
+> Hi Srinivas,
+>=20
+> On 8/26/25 4:26 PM, srinivas pandruvada wrote:
+> > Hi David,
+> >=20
+> > On Tue, 2025-08-26 at 12:43 -0400, David Arcari wrote:
+> > > Although tpmi_get_power_domain_mask() calls
+> > > tpmi_domain_is_valid()
+> > > prior to indexing tpmi_power_domain_mask[],
+> > Because this an API call so that caller parameter needs to be
+> > sanitized.
+> >=20
+> > > =C2=A0 tpmi_cpu_online() does
+> > > not.
+> > This is hotplug callback, which should have correct topology
+> > information.
+> >=20
+> > > =C2=A0 In the case where a VM creates non-contiguous package ids the
+> > > result can be memory corruption. This can be prevented by adding
+> > > the same validation in tpmi_cpu_online().
+> > >=20
+> >=20
+> > This driver is getting loaded means MSR 0x54 is virtualised
+> > otherwise
+> > this driver will not load.
+>=20
+> I don't have direct access to the system, but this appears to be the=20
+> case.=C2=A0 The driver is reading MSR 0x54:
+>=20
+> drivers/platform/x86/intel/tpmi_power_domains.c:#define=20
+> MSR_PM_LOGICAL_ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x54
+> drivers/platform/x86/intel/tpmi_power_domains.c:=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ret =3D=20
+> rdmsrl_safe(MSR_PM_LOGICAL_ID, &data);
+> drivers/platform/x86/intel/tpmi_power_domains.c:=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ret =3D=20
+> rdmsrl_safe(MSR_PM_LOGICAL_ID, &data);
+>=20
+>=20
+> > Not sure this is an upstream kernel or not.
+>=20
+> This was not an upstream kernel, but I don't see anything in the=20
+> upstream driver that would have prevented the access that is
+> occurring.
+>=20
+The issue here the topology_max_packages() is 2 but cpu 1 package ID is
+also 2. So everywhere topology_max_packages() is used there may be
+issue as you have to verify the package ID is fine.
 
-Thank you for your reply.
 
-If, in your testing, the system also works correctly on other distributions 
-without the patch—or if the issue there can be resolved without the patch 
-simply by manual or delayed loading—then adding EPROBE_DEFER should be 
-sufficient on those distributions. For Fedora, if the configuration that 
-contributes to the more severe behavior is adjusted, the problem should also 
-be resolved by adding EPROBE_DEFER alone, just like on the other distributions, 
-without removing the ACPI bitmap-related code.
- 
-> However, I can attest that the issue you mention where the module doesn't
-> work after
-> failing once on Fedora doesn't occur on my system. I just started my laptop
-> with
-> Fedora's 6.15 kernel, and the `acer-wmi` module loaded at startup, and
-> failed (as
-> expected). I then unloaded it and loaded the patched driver, which worked:
-> 
-> 
-> ```
-> 
-> lynne@pasiphael:~/Downloads/acer-wmi2s315ms3.78%11GiB/31GiB
-> ❯sudo dmesg | rg acer
-> [    1.248981] acer_wmi: Acer Laptop ACPI-WMI Extras
-> [    1.249000] acer_wmi: Function bitmap for Communication Button: 0x801
-> [    1.280006] acer-wmi acer-wmi: Failed to register platform_profile class
-> device with empty choices
-> [    1.284834] acer-wmi acer-wmi: probe with driver acer-wmi failed with
-> error -22
-> [    8.127947] acer_wmi: Unknown function number - 9 - 0
-> [   33.811949] acer_wmi: Acer Laptop WMI Extras unloaded
-> [   34.414034] acer_wmi: Acer Laptop ACPI-WMI Extras
-> [   34.414080] acer_wmi: Function bitmap for Communication Button: 0x801
-> [   47.616969] acer_wmi: Unknown function number - 9 - 1
-> 
-> ```
-> 
-> As you can see, despite the built-in module failing to load at boot, I was
-> able to
-> successfully insert the new module later without needing to blacklist the
-> built-in
-> module and reboot.
-> 
-> 
-> Lynne
-> 
+Repost the patch by adding the above root cause in the description, so
+we know why we need this change.
 
-I tested without applying the patch. The issue occurs more frequently on 
-Fedora than on other distributions, and manual loading has no effect. 
-Therefore, I suspect that certain default configurations in Fedora make the 
-issue more noticeable.
+Thanks,
+Srinivas
 
-Thank you.
+> >=20
+> > Some comments below.
+> >=20
+> > > Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU
+> > > mapping")
+> > >=20
+> > Andy already pointed about new line here.
+> >=20
+> > > Cc: Hans de Goede <hansg@kernel.org>
+> > > Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> > > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Ingo Molnar <mingo@kernel.org>
+> > > Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> > > Cc: David Arcari <darcari@redhat.com>
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: Tero Kristo <tero.kristo@linux.intel.com>
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Signed-off-by: David Arcari <darcari@redhat.com>
+> > > ---
+> > > =C2=A0=C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 3 +++
+> > > =C2=A0=C2=A01 file changed, 3 insertions(+)
+> > >=20
+> > > diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > index 9d8247bb9cfa..ae5b58679e29 100644
+> > > --- a/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+> > > @@ -194,6 +194,9 @@ static int tpmi_cpu_online(unsigned int cpu)
+> > > =C2=A0=C2=A0	if (ret)
+> > > =C2=A0=C2=A0		return 0;
+> > > =C2=A0=20
+> > Need some more information.
+> >=20
+> > The only case this check is required if
+> > topology_physical_package_id(cpu) is returning greater or equal to
+> > topology_max_packages(). If this true in this case, please check
+> > the
+> > value of info->pkg_id. If this is bad then then some other places
+> > also
+> > this may have issue. info->punit_domain_id is already checked for
+> > valid
+> > value in tpmi_get_logical_id().
+>=20
+> That is correct.=C2=A0 In the case of the crash we have:
+>=20
+> crash> p/x __max_logical_packages
+> $1 =3D 0x2
+>=20
+> static inline unsigned int topology_max_packages(void)
+> {
+> 	return __max_logical_packages;
+> }
+>=20
+>=20
+> $2 =3D {
+> =C2=A0=C2=A0 hnode =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0 next =3D 0xffff9651bbc37010,
+> =C2=A0=C2=A0=C2=A0=C2=A0 pprev =3D 0xffffffffc0b7a640 <tpmi_cpu_hash>
+> =C2=A0=C2=A0 },
+> =C2=A0=C2=A0 linux_cpu =3D 1,
+> =C2=A0=C2=A0 pkg_id =3D 2 '\002',
+> =C2=A0=C2=A0 punit_thread_id =3D 0 '\000',
+> =C2=A0=C2=A0 punit_core_id =3D 0 '\000',
+> =C2=A0=C2=A0 punit_domain_id =3D 0 '\000'
+> }
+>=20
+> The pkg_id of 2 leads to the bad reference.
+>=20
+> FWIW this change has been tested and resolves the issue.
+>=20
+> Let me know if there is any other information I can provide.=C2=A0 I will
+> be=20
+> out of the office on Wednesday, so response may be delayed.
+>=20
+> Best,
+> -DA
+>=20
+> >=20
+> > Thanks,
+> > Srinivas
+> >=20
+> > > +	if (!tpmi_domain_is_valid(info))
+> > > +		return 0;
+> > > +
+> > > =C2=A0=C2=A0	index =3D info->pkg_id * MAX_POWER_DOMAINS + info-
+> > > > punit_domain_id;
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0	guard(mutex)(&tpmi_lock);
+> >=20
+> >=20
+>=20
+
