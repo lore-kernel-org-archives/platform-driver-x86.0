@@ -1,177 +1,314 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F392749F0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 05:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763BC29CB48
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Aug 2025 07:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756272295; cv=none; b=FibE0R2LCEUu7o9qckYlnaBMeAy6F8YKBdErrfg00eTPQDaaLDz2eSyCEgW+bjwhO+Qx49BjBJc+0zuR3a5sj+pKQHkJDfkZiS09GD/xelParvz/+BC0d6Cdcejf3iqB1VHHI2oKpAaSnA95BNjJBJApJ3bApt/UJ5iR7rR3YDY=
+	t=1756278816; cv=none; b=kDHB6kf094Em6A+8aEoSNy+XHtDK1JskKk/KwiP/PJLtTNLw/fYqTuti1r6Tpa9I5FN87x7b4lrig+7KiN004nvJkpH0ACWHBm8AyY9UW3kVo1HAsOrcvQFTepEZ7XXaqU2haDKIzm8J5OXVpahHvwOMlPs5XZbg0jZSSWs61/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756272295; c=relaxed/simple;
-	bh=ddlFw/qlOGkmq6rrOarImW8+DPpQrMpmV1aUJHh34pk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M2K5r1cSwYapndEQDHhfbz5GTCSUjG75GsogU8e8ZPHueu9bpf7ZndfQk1Zz7QBhjjlJeARmAEleepeUYB7KGH+83dLPFjJQwuKqY8hAccA9qglu1B1IbfBP0b2E2i6VPrqwIvWgnOzKupkWNHO3PPyI8/B4qSv3mspRSqqAcsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzV0BBzM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agDB9rje; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NzV0BBzM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agDB9rje; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1756278816; c=relaxed/simple;
+	bh=/EeDadjuC6Ja66IUYOzdo6jLQwMxrgpl+Z6KMGs15Es=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dz37XkJrHQszM6iAh2FnlUi9BWsQ7pG3zdGC7fPm6kNqV1m2cCCgZDxo2Y3gOtOYwuAAeLX/zWA1iCUiphLSQwkJKgYEBw3yv33T+aC5EG66vZmj5ONSE1Eq8IiEG0+h+OLCKIkYdOguAC5npLTiwsbkcsPs/JewuitO/FRvoFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bune.city; spf=pass smtp.mailfrom=bune.city; dkim=pass (2048-bit key) header.d=bune.city header.i=@bune.city header.b=lYPgdNXG; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bune.city
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bune.city
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzV0BBzM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agDB9rje";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NzV0BBzM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agDB9rje"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=bune.city header.i=@bune.city header.b="lYPgdNXG"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1758621D59;
-	Wed, 27 Aug 2025 05:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756272291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
-	b=NzV0BBzMqa3OvXYNbbwD42dfIV3HVuTImlhzT5BD3xB1XX0j2M5XLE3AT8U4HaiCMANmmg
-	cFqtqksaRGscdlXHalAhvqNpxZkjRjRpt7L3zza16aCt2iaI5C9gp/Wx+iCgzMCZwLmO+g
-	oV+SbRQD/+U4c7Ba1Vx4lyZjF/kiGrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756272291;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
-	b=agDB9rjePOx8HNNHSEf/jOLd0rLH0AbSU74gJKfOiYtsScs04cUBPTJAL+zLEsWrLYzoCl
-	/5M2lNdtKzdDpRAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NzV0BBzM;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=agDB9rje
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1756272291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
-	b=NzV0BBzMqa3OvXYNbbwD42dfIV3HVuTImlhzT5BD3xB1XX0j2M5XLE3AT8U4HaiCMANmmg
-	cFqtqksaRGscdlXHalAhvqNpxZkjRjRpt7L3zza16aCt2iaI5C9gp/Wx+iCgzMCZwLmO+g
-	oV+SbRQD/+U4c7Ba1Vx4lyZjF/kiGrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1756272291;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=BGshCphT136+Q4sfRRF7efgjNpZ2QZ9axcWbncoYV3s=;
-	b=agDB9rjePOx8HNNHSEf/jOLd0rLH0AbSU74gJKfOiYtsScs04cUBPTJAL+zLEsWrLYzoCl
-	/5M2lNdtKzdDpRAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C984F13867;
-	Wed, 27 Aug 2025 05:24:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZL+AL6KWrmgXRwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 27 Aug 2025 05:24:50 +0000
-From: Takashi Iwai <tiwai@suse.de>
-To: "Luke D . Jones" <luke@ljones.dev>
-Cc: Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: Fix racy registrations
-Date: Wed, 27 Aug 2025 07:24:33 +0200
-Message-ID: <20250827052441.23382-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.50.1
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4cBbNM2LmFz9tWn;
+	Wed, 27 Aug 2025 09:13:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bune.city; s=MBO0001;
+	t=1756278803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/EeDadjuC6Ja66IUYOzdo6jLQwMxrgpl+Z6KMGs15Es=;
+	b=lYPgdNXGD3nTrm2z4qIcerWM+TjipYdZQ5S4A2u9WO8WLACUzI2v0hwbTfODV/U/vL6gD7
+	XrXhm3okbgy40rfTNCJs56LXk4qsh5wiuNRY9h+/2VvGGE5n5Z3g0bN1NCuyOXZKYhTgEu
+	WiAZsbdM3QKMnOLvrrPb5Q5cAt2fg3gtsf0iNP7ELy2FDBCVvyBsUm57o066kdmfKUvVa5
+	nMZZ4R2lkTM64o/+OisXInFyzr1aTMqJGd1d6zKpROfI0HCSQNXs48YP1sBVm0ClTvDzfa
+	8ne2eWRy8k+Jn7LzyrwcCDGy1X/kb4ANQab6ibQfwkMV2B2MKCOxU6zuNPcAhA==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=pass (outgoing_mbo_mout: domain of lynne@bune.city designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=lynne@bune.city
+Message-ID: <831b9f1a-a4e5-4328-9db1-f703c8341704@bune.city>
+Date: Wed, 27 Aug 2025 17:13:15 +1000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1758621D59
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,linux.intel.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -1.51
+Subject: Re: PROBLEM: acer-wmi driver fails to initialise with Linux kernel
+ >6.14
+To: SungHwan Jung <onenowy@gmail.com>
+Cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org
+References: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
+Content-Language: en-AU
+From: Lynne Megido <lynne@bune.city>
+Autocrypt: addr=lynne@bune.city; keydata=
+ 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
+ chJ4omUM9fg=
+In-Reply-To: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------TNbLiXq0FNerqEcvkTObmGwu"
+X-Rspamd-Queue-Id: 4cBbNM2LmFz9tWn
 
-asus_wmi_register_driver() may be called from multiple drivers
-concurrently, which can lead to the racy list operations, eventually
-corrupting the memory and hitting Oops on some ASUS machines.
-Also, the error handling is missing, and it forgot to unregister ACPI
-lps0 dev ops in the error case.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------TNbLiXq0FNerqEcvkTObmGwu
+Content-Type: multipart/mixed; boundary="------------0vrTpaMaTDV08YaaxCIhjeVN";
+ protected-headers="v1"
+From: Lynne Megido <lynne@bune.city>
+To: SungHwan Jung <onenowy@gmail.com>
+Cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org
+Message-ID: <831b9f1a-a4e5-4328-9db1-f703c8341704@bune.city>
+Subject: Re: PROBLEM: acer-wmi driver fails to initialise with Linux kernel
+ >6.14
+References: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
+In-Reply-To: <pyvalwtuobljjedr7e6xn2attiazy6m7ks4uv3zz5zumwsowag@yvkdhmdtgzvb>
 
-This patch covers those issues by introducing a simple mutex at
-acpi_wmi_register_driver() & *_unregister_driver, and adding the
-proper call of asus_s2idle_check_unregister() in the error path.
+--------------0vrTpaMaTDV08YaaxCIhjeVN
+Content-Type: multipart/mixed; boundary="------------xDLsE45p1C3g8n4ssyj6cS0Y"
 
-Fixes: feea7bd6b02d ("platform/x86: asus-wmi: Refactor Ally suspend/resume")
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1246924
-Link: https://lore.kernel.org/07815053-0e31-4e8e-8049-b652c929323b@kernel.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/platform/x86/asus-wmi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+--------------xDLsE45p1C3g8n4ssyj6cS0Y
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f7191fdded14..e72a2b5d158e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -5088,16 +5088,22 @@ static int asus_wmi_probe(struct platform_device *pdev)
- 
- 	asus_s2idle_check_register();
- 
--	return asus_wmi_add(pdev);
-+	ret = asus_wmi_add(pdev);
-+	if (ret)
-+		asus_s2idle_check_unregister();
-+
-+	return ret;
- }
- 
- static bool used;
-+static DEFINE_MUTEX(register_mutex);
- 
- int __init_or_module asus_wmi_register_driver(struct asus_wmi_driver *driver)
- {
- 	struct platform_driver *platform_driver;
- 	struct platform_device *platform_device;
- 
-+	guard(mutex)(&register_mutex);
- 	if (used)
- 		return -EBUSY;
- 
-@@ -5120,6 +5126,7 @@ EXPORT_SYMBOL_GPL(asus_wmi_register_driver);
- 
- void asus_wmi_unregister_driver(struct asus_wmi_driver *driver)
- {
-+	guard(mutex)(&register_mutex);
- 	asus_s2idle_check_unregister();
- 
- 	platform_device_unregister(driver->platform_device);
--- 
-2.50.1
+DQpPbiAyNy84LzI1IDEzOjI5LCBTdW5nSHdhbiBKdW5nIHdyb3RlOg0KPiBUaGUgc2FtZSBp
+c3N1ZSBhbHNvIG9jY3VycyBvbiBvdGhlciBkaXN0cmlidXRpb25zIChBcmNoIExpbnV4LCBV
+YnVudHUpLCBidXQgaXQNCj4gZG9lcyBub3QgaGFwcGVuIGZyZXF1ZW50bHkuIEluIG1vc3Qg
+Y2FzZXMsIGl0IGNhbiBiZSByZXNvbHZlZCBieSBtYW51YWxseQ0KPiByZWxvYWRpbmcgdGhl
+IGFjZXJfd21pIG1vZHVsZSBvciBieSBhcHBseWluZyBhIGRlbGF5ZWQgbG9hZCBhZnRlciBz
+b21lIHRpbWUuDQo+IEhvd2V2ZXIsIG9uIEZlZG9yYSwgb25jZSB0aGUgaXNzdWUgb2NjdXJz
+LCBtYW51YWxseSByZWxvYWRpbmcgdGhlIG1vZHVsZSBkb2VzDQo+IG5vdCByZXNvbHZlIGl0
+LiBJbiBmYWN0LCBldmVuIHdoZW4gaXQgaXMgd29ya2luZyBub3JtYWxseSwgbWFudWFsbHkg
+cmVsb2FkaW5nDQo+IHRoZSBtb2R1bGUgY2F1c2VzIGl0IHRvIHN0b3Agd29ya2luZyBhZ2Fp
+bi4gKFRoaXMgZG9lcyBub3QgaGFwcGVuIG9uIG90aGVyDQo+IGRpc3RyaWJ1dGlvbnMuKSBD
+b3VsZCB5b3UgdGVzdCB0aGlzIG9uIHRoZSBsYXRlc3QgbGl2ZSBpbWFnZSBvZiBhbm90aGVy
+DQo+IGRpc3RyaWJ1dGlvbj8NCg0KDQpJJ2xsIHRlc3QgYSBsaXZlIGltYWdlIHdpdGggYSBy
+ZWNlbnQga2VybmVsIHRvIHNlZSBob3cgdGhhdCBnb2VzLiBJIA0KZG9uJ3QgaGF2ZSB0aGUN
+CnRpbWUgZm9yIHRoYXQgdG9kYXksIGJ1dCBJJ2xsIGdldCB0byB0aGF0IHdoZW4gSSBjYW4u
+DQoNCg0KSG93ZXZlciwgSSBjYW4gYXR0ZXN0IHRoYXQgdGhlIGlzc3VlIHlvdSBtZW50aW9u
+IHdoZXJlIHRoZSBtb2R1bGUgDQpkb2Vzbid0IHdvcmsgYWZ0ZXINCmZhaWxpbmcgb25jZSBv
+biBGZWRvcmEgZG9lc24ndCBvY2N1ciBvbiBteSBzeXN0ZW0uIEkganVzdCBzdGFydGVkIG15
+IA0KbGFwdG9wIHdpdGgNCkZlZG9yYSdzIDYuMTUga2VybmVsLCBhbmQgdGhlIGBhY2VyLXdt
+aWAgbW9kdWxlIGxvYWRlZCBhdCBzdGFydHVwLCBhbmQgDQpmYWlsZWQgKGFzDQpleHBlY3Rl
+ZCkuIEkgdGhlbiB1bmxvYWRlZCBpdCBhbmQgbG9hZGVkIHRoZSBwYXRjaGVkIGRyaXZlciwg
+d2hpY2ggd29ya2VkOg0KDQoNCmBgYA0KDQpseW5uZUBwYXNpcGhhZWw6fi9Eb3dubG9hZHMv
+YWNlci13bWkyczMxNW1zMy43OCUxMUdpQi8zMUdpQg0K4p2vc3VkbyBkbWVzZyB8IHJnIGFj
+ZXINClsgwqDCoMKgMS4yNDg5ODFdIGFjZXJfd21pOiBBY2VyIExhcHRvcCBBQ1BJLVdNSSBF
+eHRyYXMNClsgwqDCoMKgMS4yNDkwMDBdIGFjZXJfd21pOiBGdW5jdGlvbiBiaXRtYXAgZm9y
+IENvbW11bmljYXRpb24gQnV0dG9uOiAweDgwMQ0KWyDCoMKgwqAxLjI4MDAwNl0gYWNlci13
+bWkgYWNlci13bWk6IEZhaWxlZCB0byByZWdpc3RlciBwbGF0Zm9ybV9wcm9maWxlIA0KY2xh
+c3MgZGV2aWNlIHdpdGggZW1wdHkgY2hvaWNlcw0KWyDCoMKgwqAxLjI4NDgzNF0gYWNlci13
+bWkgYWNlci13bWk6IHByb2JlIHdpdGggZHJpdmVyIGFjZXItd21pIGZhaWxlZCB3aXRoIA0K
+ZXJyb3IgLTIyDQpbIMKgwqDCoDguMTI3OTQ3XSBhY2VyX3dtaTogVW5rbm93biBmdW5jdGlv
+biBudW1iZXIgLSA5IC0gMA0KWyDCoMKgMzMuODExOTQ5XSBhY2VyX3dtaTogQWNlciBMYXB0
+b3AgV01JIEV4dHJhcyB1bmxvYWRlZA0KWyDCoMKgMzQuNDE0MDM0XSBhY2VyX3dtaTogQWNl
+ciBMYXB0b3AgQUNQSS1XTUkgRXh0cmFzDQpbIMKgwqAzNC40MTQwODBdIGFjZXJfd21pOiBG
+dW5jdGlvbiBiaXRtYXAgZm9yIENvbW11bmljYXRpb24gQnV0dG9uOiAweDgwMQ0KWyDCoMKg
+NDcuNjE2OTY5XSBhY2VyX3dtaTogVW5rbm93biBmdW5jdGlvbiBudW1iZXIgLSA5IC0gMQ0K
+DQpgYGANCg0KQXMgeW91IGNhbiBzZWUsIGRlc3BpdGUgdGhlIGJ1aWx0LWluIG1vZHVsZSBm
+YWlsaW5nIHRvIGxvYWQgYXQgYm9vdCwgSSANCndhcyBhYmxlIHRvDQpzdWNjZXNzZnVsbHkg
+aW5zZXJ0IHRoZSBuZXcgbW9kdWxlIGxhdGVyIHdpdGhvdXQgbmVlZGluZyB0byBibGFja2xp
+c3QgDQp0aGUgYnVpbHQtaW4NCm1vZHVsZSBhbmQgcmVib290Lg0KDQoNCkx5bm5lDQoNCg==
 
+--------------xDLsE45p1C3g8n4ssyj6cS0Y
+Content-Type: application/pgp-keys; name="OpenPGP_0xF0A184B5213D9F90.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xF0A184B5213D9F90.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xsFNBF361HkBEACmcec2sVdVpfCfSVtoYbVSqDz5xLaHKUUBRFcULF9dbWCIYbb3
+mYe6eMiWpgTtFdXGcWCUuAvtCEbA7hXbNGgJsE7O+uA70/rclVzsdgaDc13rooMa
+xS6BvxRm1Cxdk3rHz6Q4kW2PNx1G3mAMNdBupigqXA9Aa8hoqG1oBaN96JEmZhM/
+z0KYHknpQ836oEAlxvMRFLSmnTxDhd4KIq6Y1c4Y08ra/vNWEf5XT4nGyOizDvIq
+PXTpUV0ZCZszaMnHBlRfpcJjocYRyB3siMC3fh71xriO2quQev3CZSkvY96eHjLs
+e/HI47w4MpTmgHmcbH+ZtotW/W64vxsRRY7xL4Y/kloz0fmHj5Y0v/X0oVp7XUIs
+1s3abObOsEKCU5+JbBVqUvD7gz1tmWEjDcEX4GmMu73BvKiLjIodIOoUeIngjIJ5
+bnllCcMmySYn7Xw8fDzP2cyveS8Z2ho6FNuUYhV/30OhiS7U91pAZIedFeSiS5yU
+O/1uDq+pfCFilm8xVFUJiODUVZG4EYzxmYEWCnjSQFuzKKBz7PjH5lfb+CWVkddZ
+qPvrxWC5ED92/QSK3d215HuBGtb0GhuhY7KfUPr56j1DSKZJQAy5saLihEg+aF0j
+h601fvY0yMsACqmnZ6sVd2ggjUFVR5Y5Aupq4tonHhGx2hYv57lX+r8agwARAQAB
+zThMeW5uZSBQYWlnZSBMYXdzb24gKGh0dHBzOi8vYnVuZS5jaXR5KSA8bHlubmVA
+YnVuZS5jaXR5PsLBjgQTAQgAOBYhBFJhC2V3uNhbyGISS/ChhLUhPZ+QBQJd+tR5
+AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEPChhLUhPZ+Qhs4P/jDN9NsY
+QCB8VxN2g3i7dyN2hJAX7/8sNAGLKD+jyJcNFb0/zlK/l5Qz8zLz2hYY/ZPE88QJ
+dwITrJLk+3sTdXGDhDmOjobmtJEnv89M8hArygxzBekGkYXBZdkxRlBL7VEfBMS3
+Tqm2txtjte+g5NbAQRPJiITFnLQWRA+MAoXB13AdOg6ylkJjE1BTthNUwqfMcK2B
+TCUCGUTOY4e4NFrIsPODSt3LYJwQxmrDOvhPRXn2Be2IUV94HPqKe81e8tv8JWsh
+a82Y10zFaI4n9cgIjrVuuQFIViVubocREfkCGCrPeinVo4vwNdoobC8kYC7IZ6ce
+Bsa1J/2orDnisLDikvZ2KCeCms7c1JNiPuUrgkhMuDpxxBiYrR8I0Y0R5k6YN2Cn
+sDyEVPyjEeJsF3FFX9U5KqWtyog5WUr5fjGaWiVi8P1r6AEipoQCizdsk4rd0jxD
+ny06lOIizCeXaz8WJKjUvj4ND1n0NUNbITJOWPNcPbMCq5buTo+6FsV5SJgyIi+p
+DFiiTBoo/d+EgwFjgYfaLJ/DzJP9mVNy1mxC33JT17ir0YYGxfUPKKyf8qq97h8m
+b6Irlf5zEnJCraZD4zNjft8UeFALlC6FvRVU9ulW6ld4wS/yC0o8i+SFT7QIWD4s
+V4YbgdRCfcxObODGhjEvJhwWgqZQVzYTY01x0cmEyYIBEAABAQAAAAAAAAAAAAAA
+AP/Y/+AAEEpGSUYAAQEAAAEAAQAA/9sAQwAIBgYHBgUIBwcHCQkICgwUDQwLCwwZ
+EhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSwwMTQ0NB8nOT04MjwuMzQy/9sAQwEJ
+CQkMCwwYDQ0YMiEcITIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
+MjIyMjIyMjIyMjIyMjIy/8AAEQgAhwCHAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEB
+AAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUS
+ITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5
+OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeY
+mZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq
+8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALUR
+AAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1Lw
+FWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdo
+aWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLD
+xMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A
+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
+P+DbYvcxkef6wGA0p9CR8IYT4hdyEniiZQz1+A=3D=3D
+=3DiUs0
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------xDLsE45p1C3g8n4ssyj6cS0Y--
+
+--------------0vrTpaMaTDV08YaaxCIhjeVN--
+
+--------------TNbLiXq0FNerqEcvkTObmGwu
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEUmELZXe42FvIYhJL8KGEtSE9n5AFAmiusAsFAwAAAAAACgkQ8KGEtSE9n5BW
+pBAAmWPm847b+5DPIfZNCAgInn+5yMIJXDR94Q9T1jYJIfUFnAbS1yGRaqL+/KUEH9m2iVVYXCuy
+GQSSCE8gfI7WtrTcfgnUvB5vfswVvTtHh6ae5OLTYZwz27lPXiyeFzLDHfQpcELKnOYTHTCPFb7p
+pBbD0982mQg+dXoJTc3C5axHJEZyiAnsdS7hWO/XA+CNkgN0SHQlYH5HmINWCKXYri09eomp7n2e
+on/R9E8kQyg/IpaZLxrn7R3pf5ebUH1SrUYWqsCTxjmHWPZ6dyyf8LbljhnIo2UddwmgZS7cj9sw
+/lbOffibf1vvgGR9QwqQP3r+cvYdT+tBrAushXUZ8BszNhIC0Lk3pEHgkC6gGpNv3OFEldFW2ueR
+Js9UEZMtKIGUAo1UaCMZ9nd1pj8QUmzt5nHbPnZ+T/8eyv0k4PJemr7lujt4jL+P5ZFsTw7V3Ljr
+cU7jOE9U5AnwpfDkENj4yAFUjL5/aWansbVSXZkbFSRoxU6K9zr6/FFHLw3oIRyplNIZmiiTk0jh
+fXsnDOEC5w5w7BHCDOZbdDo5OBsHCAHQ93e5VRX/8xUdbEAkHsWmmz/s3ieTO+MRndAgqLp82VEH
+uMMff9ODpfqrhEYxro1B7PBK0UlTTCgnKKl69T7tzdN7IPVW3lm8rce7N2TYXYKmIgg7Nzz7qRKl
+4ec=
+=pWlX
+-----END PGP SIGNATURE-----
+
+--------------TNbLiXq0FNerqEcvkTObmGwu--
