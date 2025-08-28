@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6DC30F959;
-	Thu, 28 Aug 2025 12:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118BA30F7FB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 28 Aug 2025 12:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756382887; cv=none; b=DzoK16LimNpEn+Vba2D7GzT+OO/psteAb/XxxlPDMBfgwYGAHsnuqdFdJsYK3/Ke5FqnQeDAQF3ZLaaHKbAQt5Peftu4CTm47gbFnNQURX1hU1e9RzZkrePY3h8VIoTrly2s1OOBK8yV7OgS6np+bi66FSvtOAqrUMIXnbhu278=
+	t=1756382894; cv=none; b=E/cAm2hyVrOHZVEQwurrh4Gil8qoMIQxukFX+dEj6cZcQiU20HAUpIrlwmapjKhwWPdQWpipRWZvIjA2gzjXzPxM+1f5ltPUJ2T6HKV1V/PHPYXddzLaOXkDShjYYLUhy4QGimwhpIoXHBBF2ijw8UDxWGJT3fOFyDdEra+aEsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756382887; c=relaxed/simple;
-	bh=fGu7UiqbNorOhv8zDirn9Y3nlFS1+FY8EBnaTT0MIJE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AkVxnzWJuVMlFSqYZ7Oi4P2cotdrzl6CI87UhPh5dCEStkh5GmGzxndCogAZsQeNvsyapaA/qhoxUENBF7/U/PwEHe7lCBcXDQh8StOzzuqRYpE0HTcf9R2BW1eAv/Pk2bnI7X33wpF2AbJt7YfMUeKSrpSmylrDG52WK5RnXOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AcJacZD2; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1756382894; c=relaxed/simple;
+	bh=Im6hEnJY+ANKdk+G/k4X5dBt3bisUIspWc3OQGXJpuw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MJOmUiCtOj0zYCoi6Mho2Jl4fodVu0w9JC/byfkeW4mFSQi1QLdgVV96UYhzju9P9RUySxXnDvuoQRKPSohARLPlY4R4lOe5f6OyJur2zeFkqSkeq5u41aJZ0acrUuAuUlxBgBl/aA+eg9Qs4+8oTe8+hF/Owk/yxSpJ63LrT8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZIF6BkRn; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AcJacZD2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZIF6BkRn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756382886; x=1787918886;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=fGu7UiqbNorOhv8zDirn9Y3nlFS1+FY8EBnaTT0MIJE=;
-  b=AcJacZD2v34sPtf+rH/955QuiS1gy/rfm4ixdsSQuEgo/zM8acy6jy3J
-   gs32uoEJq+omSc+wqEnZ92niV3eN3eJGCAzM3VvZHd1f9YAKyrfIrjLAo
-   /1oq/zWilJ2nQYPyta4v2ohmIUirOwhUtPGiDE97vidXTx8ZwLrwuIdte
-   GAp03ipNmx5O0r9SehqdijzFw3Y6QcxnFpcYG0uG73nTzsi3KvuwWx0Ck
-   RJ9kzwyl08o+wg0oijux+9Yt1DGMzUBBP/vFHTI9QCRd23rWKDzPDYOga
-   fEjhebnJgRW+fKy8fMBWYWkc9YHJM7/BNxjzK9jDC7TMlKDwIq9BSmp9K
-   g==;
-X-CSE-ConnectionGUID: ngFEoFpWRDCmY1rXPbs0IQ==
-X-CSE-MsgGUID: +rzwPn+oSRaVlwRxEeaZ+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="58749731"
+  t=1756382893; x=1787918893;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=Im6hEnJY+ANKdk+G/k4X5dBt3bisUIspWc3OQGXJpuw=;
+  b=ZIF6BkRnHUYG4CDBKHLjK54ea3f5eE9r6l3rN1LKDD1sHN9wXC+HJoF4
+   QDQVeN7eEIQrgvBcxkid6PM5tRJDSXxQJAn1iZq6bAs+FDMhWe4O0arxg
+   C2Hg5Hpv0z6HbCcQH0cZaDCbGhvRCJCIUxjx44hPOkfJU8tnc5Kdjvtv3
+   JRXrOJXvuvztwJLpUO5D5x95/qmXvj4BG+MA15SDgmELsCI5uV7KQgc03
+   tjz23GZw2xLZFgP38BPuY5vMVqj+aQH+e4NdeUynTvqTIDAQIbi++Ep1H
+   cfy6Sbyc42aZ5rbzjnFu+s4V2a84qpVdbyGOSYfss0WvmqugJueMmQ/Zm
+   w==;
+X-CSE-ConnectionGUID: zSicF96zRmOStSQycEvDyA==
+X-CSE-MsgGUID: NNzojufxQq6AzOiwht/ssA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="58749742"
 X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="58749731"
+   d="scan'208";a="58749742"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:08:06 -0700
-X-CSE-ConnectionGUID: 4KNUiPnrRcudC5/EIZ4MuA==
-X-CSE-MsgGUID: MfSGpmeRRs+OrrmYPKLwJg==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:08:13 -0700
+X-CSE-ConnectionGUID: YP1Qxa8JT1eVHow/eWo6zw==
+X-CSE-MsgGUID: gFYlBLG+TrWJnYMboxQGng==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="175375435"
+   d="scan'208";a="175375451"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:08:03 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:08:10 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
- David E Box <david.e.box@intel.com>, Hans de Goede <hansg@kernel.org>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Qianfeng Rong <rongqianfeng@vivo.com>
-In-Reply-To: <20250819135155.338380-1-rongqianfeng@vivo.com>
-References: <20250819135155.338380-1-rongqianfeng@vivo.com>
-Subject: Re: [PATCH] platform/x86/intel/pmc: use kcalloc() instead of
- kzalloc()
-Message-Id: <175638287905.13908.5051712719471737806.b4-ty@linux.intel.com>
-Date: Thu, 28 Aug 2025 15:07:59 +0300
+To: platform-driver-x86@vger.kernel.org, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Yen-Chi Huang <jesse.huang@portwell.com.tw>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250813191416.6860-2-wsa+renesas@sang-engineering.com>
+References: <20250813191416.6860-2-wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v2] platform/x86: portwell-ec: don't print superfluous
+ errors
+Message-Id: <175638288570.13908.13643395419185818250.b4-ty@linux.intel.com>
+Date: Thu, 28 Aug 2025 15:08:05 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,18 +64,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 19 Aug 2025 21:51:55 +0800, Qianfeng Rong wrote:
+On Wed, 13 Aug 2025 21:13:44 +0200, Wolfram Sang wrote:
 
-> Replace devm_kzalloc() with devm_kcalloc() in pmc_core_get_tgl_lpm_reqs().
-> As noted in the kernel documentation [1], open-coded multiplication in
-> allocator arguments is discouraged because it can lead to integer
-> overflow.
+> The watchdog core will handle error messages already.
 > 
-> Using devm_kcalloc() provides built-in overflow protection, making the
-> memory allocation safer when calculating the allocation size compared
-> to explicit multiplication.
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -84,8 +77,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel/pmc: use kcalloc() instead of kzalloc()
-      commit: 55df384148396c0503cfc51a9c7177df6a423843
+[1/1] platform/x86: portwell-ec: don't print superfluous errors
+      commit: ba9eddc43f2f05a99d3f7535c9367845aca35904
 
 --
  i.
