@@ -1,60 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E12321F3C;
-	Thu, 28 Aug 2025 16:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D2F321F53;
+	Thu, 28 Aug 2025 16:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756398071; cv=none; b=IOzn27oeZRVeNK9SSxhWHX0mCa1s+3ynN4oNzD/U8ZOenNkK3vV3Rk+KcjutHeo0KhcSKtYH/Ay3zr2/W5YH2CT6IwNqZUJwpi/6fBfDn6JewMgnORY/pRWiRhQY9DWPuyZOnbVIzJyheSyG0poXhp2gniI+fuL+be8ELHO80mc=
+	t=1756398080; cv=none; b=o+8fqjhcWi81YzrhJXN4XVGLtUJvODE/LRPtasSYZvdPmyubgnSu7yTTzeBOmYHJlY/0mo2lxVINTm4dk9Gf/ThCiiI12mgzQe1CPwBCWwUr7159SjcKgWOeXJ3aIJgAs4D8N/WFaF+qYiL5UU+mdtilbpIq9JC8BgCfGT3+eKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756398071; c=relaxed/simple;
-	bh=ZeEpATc3yG+2ZfhU0QiMwUkrn5ohROR4JCkKzybZ1hA=;
+	s=arc-20240116; t=1756398080; c=relaxed/simple;
+	bh=YwuiUsz+P8AATREFYLW14z1WuL0G237X/TVpTrOl7GE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RaiTDCRqURAosr4VyWYE7sFbhiwqhi6TxgkzmPZ+umeklMs6R+giTyCc8OmyfRPk6J3n3UvIODSG0PwPnVEmudyerq8AIbHQDiBSnYuq/3n2VfYrfh3o7dyTm42LkHazkd88vf1NQYuy3hNMjMu1dwLXiHN1wETDYyWuUhfTBzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jN6ux4rW; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=SdDlegs4S1yWHsLtaSGHi79yQKNUxkyaFuDoRxq3Oj4y95NZo7zLSZZql3nD4XxbwnXbrFNRf1Jf1pFwbZvXhVxngcMs0JT56uiJN22okjv0xpfZ8i7mCrWLYC3RPmw83kHIM9Fp1YXD2TXnY/t76kS8myyOm500mvWVFhjAR4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iozSEQxX; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jN6ux4rW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iozSEQxX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756398071; x=1787934071;
+  t=1756398078; x=1787934078;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ZeEpATc3yG+2ZfhU0QiMwUkrn5ohROR4JCkKzybZ1hA=;
-  b=jN6ux4rWSmRXOShNsKXV2d+jVvEtAXewlTYfs15PNxs4nTtrY3Dqf1un
-   5A/yt978l24xEo8mKTc4NgJk1iO4i8oEUVnZYHAc5FEixHt1xiLDbjOkK
-   YqTysc/fDiO2B7uUvRksZcVmjyERQiBYRzpMIJSa/cxvxUR//hBvZ4mQ7
-   uWsWPn+bYX40zjvxvN88jNwf95ZtEQ5FB7oD9HZu1V6aIgfe0icwMKfbt
-   mPOnaigPI6Kqt8UnKzU7SQ674PdVksvUQjfpU53upmwGSWocxOA/KGJmy
-   CF01BLafk1ouaCJpkJqVimWRRS6GI7MhM1zkdj9YpD6bjtazQl691WcDr
-   Q==;
-X-CSE-ConnectionGUID: b5nmVEtbT7aPhKOSpwmyKA==
-X-CSE-MsgGUID: DPRXOp9vSXqtPWkJSbOaYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58619085"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="58619085"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:21:10 -0700
-X-CSE-ConnectionGUID: 8aH4qTP6T+qWtCo7+xBgDQ==
-X-CSE-MsgGUID: b/Myq2S8TLuj0mYOIA11hw==
+  bh=YwuiUsz+P8AATREFYLW14z1WuL0G237X/TVpTrOl7GE=;
+  b=iozSEQxX+v36eYLzaL1mpWZtGzCM1bufrzB8QvPQ/AdZxXwYH2hGXIfp
+   sGEA4GWMNB+81gbI9iQ6tInl5iawBWXH4zHQ8eQgSKZlp43eoqAhg9/Vo
+   NcIvKpYkqaleF+HbRBd9kTLUNbyljyFavPxU9+lpRK5q2gh6voodprINF
+   KQZeB9HmCqIYRWxLlhrtzuYh40aeUNWOIqQWVKu4aVKkFDIzqAFSvErMC
+   LCrGceT5//JGBG5JH1Y6iq3IS7LJQWYwLBYqrALJ/OBgHeIL8d/RgMkxr
+   yjmgNSgLpMoNjNEjype1twI696pyI9cONKD34NKad8FtbNwzODJVZMcKF
+   w==;
+X-CSE-ConnectionGUID: evNjdfR0TjO4bn0r/O9Jbg==
+X-CSE-MsgGUID: iW5QUTEuToKlm/QMmm49sQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="70114246"
+X-IronPort-AV: E=Sophos;i="6.18,220,1751266800"; 
+   d="scan'208";a="70114246"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:21:17 -0700
+X-CSE-ConnectionGUID: 9xQMODj0TouGF7h4jGjmrA==
+X-CSE-MsgGUID: j/n9pne9Tu+gohnM7lWEmg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,220,1751266800"; 
-   d="scan'208";a="175431347"
+   d="scan'208";a="170066123"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:21:06 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:21:15 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- Li Yifan <yifan2.li@intel.com>
-Cc: xi.pardee@intel.com, Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <20250826034550.2284738-1-yifan2.li@intel.com>
-References: <20250826034550.2284738-1-yifan2.li@intel.com>
-Subject: Re: [PATCH] platform/x86/intel/pmc: Add Bartlett Lake support to
- intel_pmc_core
-Message-Id: <175639806138.20700.307320901060487185.b4-ty@linux.intel.com>
-Date: Thu, 28 Aug 2025 19:21:01 +0300
+To: hansg@kernel.org, kuba@kernel.org, edip@medip.dev
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250814204529.18467-4-edip@medip.dev>
+References: <20250814204529.18467-4-edip@medip.dev>
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: Add support for Fn+P hotkey
+Message-Id: <175639807009.20700.4627166069727617723.b4-ty@linux.intel.com>
+Date: Thu, 28 Aug 2025 19:21:10 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,13 +61,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 25 Aug 2025 23:45:50 -0400, Li Yifan wrote:
+On Thu, 14 Aug 2025 23:45:32 +0300, edip@medip.dev wrote:
 
-> Add Bartlett Lake P-core only product support to intel_pmc_core
-> driver. Bartlett Lake hybrid product reuses Raptor Lake model name
-> so it is already enabled.
+> Add support for the Fn+P hotkey found on newer HP Victus (and probably
+> newer Omen) laptops. This hotkey is intended for use with Omen Gaming Hub
+> to change the performance profile (see [1]).
 > 
+> Pressing Fn+P under linux produced the following warning in dmesg:
 > 
+> > hp_wmi: Unknown event_id - 27 - 0x7
+> 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -80,8 +80,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel/pmc: Add Bartlett Lake support to intel_pmc_core
-      commit: 3010da6ecf2225e41a79b06bc5f4c9750a4d35cb
+[1/1] platform/x86: hp-wmi: Add support for Fn+P hotkey
+      commit: 23408874e90ee299ab731bc0e0a9b3339dfc3c6e
 
 --
  i.
