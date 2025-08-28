@@ -1,165 +1,271 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013032.outbound.protection.outlook.com [52.101.127.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A3530E85C;
-	Thu, 28 Aug 2025 12:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756384025; cv=fail; b=skXf2LfxaxcyqPATKbSG+0dta4HaEcAyQ+phzXBpJclP1/x9zMT52WRO+bQga4pi4TsgzSc+SimrxJMBLgV04UN13kndSRqi+hwclQP5rg+IPmeGr8EDRSo4HLNyjbIG64E4e9/hKcJvaOa4qe0b88jp5jl/eEyBpEbOYGNfId4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756384025; c=relaxed/simple;
-	bh=m6UqP/WxcHkSlrp/ME2N1jUWO4EkWMUysC64Rc0Tpag=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hH9JdASFey8FFwNk6FyRQUWjny7HRoe1dpv5r7oIQqFpzgMsru+P/1P5UMxghO3jt1xwg4qIfJ4YSecYg1GIigbK+uEYv8poKa9dfHNI4rB+3JURNMrmmXLxwnW14Q1+9YemH9pS1V4SWLeb4IQFR2/OEMk0k1EskhxAzLoAF4w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=qdSSxH4o; arc=fail smtp.client-ip=52.101.127.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194F307493;
+	Thu, 28 Aug 2025 12:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756384821; cv=none; b=OolGtr1ZiMIKCG2Jbtj9wg7FdXmvnE+/uLRCXILxM6cCNNwBWGekwRlosUuAORFT47AtCQXmQuV5rMFu/gl/4oHdrWROnaPU/9raa1lHSG8nuvHEzJkMbNlHFxIJt+r+CuaLbrUvkf1XXG4Nygiv1U5O64UbZPLyqeh2fgqj4mw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756384821; c=relaxed/simple;
+	bh=2VmTLH+GUpJ9OuIxl1JVogVGrELPLutOGpHuVKBzArk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=j+084XHk6pjvTU8U6rZc6b4sOzFsthlG+C8MYlzwdESwDkKAM5oVfrUMXdoHMzX1kELTg0YKD8mOhiscwF2noAR1svy4fmF1bMxufCi/yb3m/MYXiGf9HeqoUgJQOctsy4IqT4iM0jp6h20SXoe7OceuKbUaLAbKE02E8zmDnH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y6UUSVoF; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="qdSSxH4o"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mazfSsatzh86D19bLeFltEVHdTE/gAe4qYKBc+MbBi3wrIzFVnbJ0rdFM1RM6K6jmqyY1wFqbBy5YNF+dY7h9XWP9zOVNvtkZ2Auobde7ojqn7+uoIeLyKETo2nAPWxE6x/z/ZMn1zohXUUYZAfxepSltvNcu1E06HhZygMze6oukTXji8tD+euv1zxo8k+Ap7MWFQuLN2SUFTphIh8iJpGB5xlYcG4llXVYb4X10cTe2a/lujUSiI/1d+fRdExXU4jwwtm07046T84FKyPtKye+SJ6KwMF9OCP3jz5LE0+rHie4XYjxPqNB5Ep73qa3GQLE9KvL+UlIKxw/2/M7kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b+VVy0KUhlcA98WHEyI5lZWy+jXmjrmQXKWYacVcAr0=;
- b=cPtWA6H8Q1duOfTSEGiHW5qve74da6HSXpfQIZ2hpMQzUzAcPbMa0qBcCZoSYExJmfC9nbZGfKUkONuo/ptEz7R0e29pq93gZzR/Xacum6Hiti8cpOrux0p1AaJHeAHlc1JRSWNVIxp4KMD/Awl0x0OwuRJZ/Rah1jDTDOqf3uGBtkyn5jGpsd9CLB7NfIgyw63uTNYC7tzKxtwDFCp+upUDE7YvOu4+GZkyxqJo3f13vcfVLCi6hvDpe9LcDslLP0u5MKimU2c2/I8s7G/Kk7TCNyPXJexFGL0D6uLQaInS+CoqbzkIdCix5llqIrgkjPYWmePsfozg2lUMsuO0Mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b+VVy0KUhlcA98WHEyI5lZWy+jXmjrmQXKWYacVcAr0=;
- b=qdSSxH4oAcXre2Zkr6s3qaLBge2QW9KfYr0fidht3RscnYWFCOsm4AAyD0kVT6BPwU2hEqLGh1HXURaHwIfpVWa4umUKZAKJWGN6xYjvMVRoW3qvPF4scWUOyk8B6UTR3qov30hg7GR3awrLHsZ44f/c7BiolcDj+zbCk4MO8j0/SVRcn5v6vVZmnSqa6onukNTTPaiZ2o13ltvx+I81/0DATtnf6R61KcuhkkVGGTdVnE+FSGFG4Xx+bYJuLk1XXj65P5Ske3om3H8KzyBzx5gJKt6Knmi0AdyFRjJ6mwuN0gG84KJDiCD6Hrq7yg2ncfUwGkpC/UJLzBJxyTbdRg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5576.apcprd06.prod.outlook.com (2603:1096:101:c9::14)
- by KL1PR06MB7287.apcprd06.prod.outlook.com (2603:1096:820:143::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.15; Thu, 28 Aug
- 2025 12:27:01 +0000
-Received: from SEZPR06MB5576.apcprd06.prod.outlook.com
- ([fe80::5c0a:2748:6a72:99b6]) by SEZPR06MB5576.apcprd06.prod.outlook.com
- ([fe80::5c0a:2748:6a72:99b6%7]) with mapi id 15.20.9073.014; Thu, 28 Aug 2025
- 12:27:01 +0000
-From: Liao Yuanhong <liaoyuanhong@vivo.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Liao Yuanhong <liaoyuanhong@vivo.com>
-Subject: [PATCH] platform/x86/amd/pmf: Remove redundant ternary operators
-Date: Thu, 28 Aug 2025 20:26:48 +0800
-Message-Id: <20250828122649.39574-1-liaoyuanhong@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0007.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::11) To SEZPR06MB5576.apcprd06.prod.outlook.com
- (2603:1096:101:c9::14)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y6UUSVoF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756384819; x=1787920819;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=2VmTLH+GUpJ9OuIxl1JVogVGrELPLutOGpHuVKBzArk=;
+  b=Y6UUSVoF5VmA4/pE7zZSxojleiROVDjNC0ZKag8CVhsAbEoNjQ/pRRJE
+   B/+ykElTNmCcGqFhuNk97ThOUCFyJ7idqWJsOcpJZsZJzX2HU5NXTQJFT
+   uadOf/ZH0c9cxDd5xjG/2fvo4wZjbsgsIf2KTqiCJPjoafEdrVZ21RANy
+   ttk4oYPexJdNUOaci+dnJQ5I+fo+S0QKoMk8JBRBBkASXBV1yD+yQnKsl
+   pF+rSH7y1VQ7NDLdz6r13Gvugt6TkM4tuwJmhWL7rsMl5xjclmf80o9ux
+   xQi5i5JhGyFZUINsnPDpZEum+vf2Cy+GJEyqZgSY3cNeamrTOSkXOc0k2
+   A==;
+X-CSE-ConnectionGUID: p4PyXm5hSTCk6GccuJ2v8Q==
+X-CSE-MsgGUID: PtI5XezbRuyq2ujh3qODTQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="57850356"
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="57850356"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:40:17 -0700
+X-CSE-ConnectionGUID: usVPx47uS2y4byRhi9nU5A==
+X-CSE-MsgGUID: RhTMv+oyQSaFJsHHsSXriw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="169350485"
+Received: from puneetse-mobl.amr.corp.intel.com ([10.125.109.99])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:40:17 -0700
+Message-ID: <f1d159766f721aa11ce4b989b91c96a89eed3eeb.camel@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86/intel-uncore-freq: Present unique
+ domain ID per package
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 28 Aug 2025 05:40:14 -0700
+In-Reply-To: <1fc59985-e56f-24dd-1015-95d4c2b8d6e7@linux.intel.com>
+References: <20250825214336.410962-1-srinivas.pandruvada@linux.intel.com>
+	 <1fc59985-e56f-24dd-1015-95d4c2b8d6e7@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5576:EE_|KL1PR06MB7287:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7610576-7191-4df1-03ca-08dde62e3033
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ltEEmLjvV9Bi+zPjtGbJGFrqoHBCTx1CE2Qs0we8saVm1VOGEShsp4PK/SYN?=
- =?us-ascii?Q?eCsWpQy/dzAxDNuoON9Js55g4YF2N371YHsrVO54vdx2QXRgowupc6d4cKbk?=
- =?us-ascii?Q?APO2zf/CZFM1Wm8U/tNf0I3tdXsiCCKXFRWWbkmdf9221YNyHZUNF9p54Qq2?=
- =?us-ascii?Q?DrNQw9X1WEivlWE2k9uTidg7kYpsyt5XhdTjjA3wcKooWDMQlsw1mf9qNtx8?=
- =?us-ascii?Q?hvq7cdAjixDJCJEUNHtJ+WOHMWQbCtQF8bVPyIlTev7NtuvSMEI7ntBVf1im?=
- =?us-ascii?Q?Gx7FJSb98KrpNCCPbVcEivL6XMA7d1jETfsZEoBxDF9Yrax5Mx20Vafx7UKp?=
- =?us-ascii?Q?OLstR9S9QwB/M0m1uxMyTKUNM0vY9IXvq7nJtiFUUno/vP4buasUFl8g3Hoj?=
- =?us-ascii?Q?FtQDOPbO9IARdiReBnYzW7He35Z7R/A50MW+TN8QQ9zwGzWaF4GN3MQXO/b8?=
- =?us-ascii?Q?+yPyph92EfJJ240utUrS6HFWa5WZViNyWi125rKbmrMYs3smv7dM16lBFKVO?=
- =?us-ascii?Q?BHtDCwvyJcCR2ZuEou6lF+FgBFCormIHJGtuuxfz2yUFRG6VCz7DqhFqZmnR?=
- =?us-ascii?Q?7apCFT11I0Ax7i1CFh/5h3Ee/kjwGqJLTMlhuTvg91k8iyoWpGtcP2byE1rq?=
- =?us-ascii?Q?skkf8FpuDRUCKf7OF1at96/2JoYdv1zz2UvOHupUnhmNtEgxhKy//iwhP0ro?=
- =?us-ascii?Q?PigbvQHJxu5lNZ11s6uJkry3XCaVORuEHxatfmGnJOxd68MsnnNEq8I0c6Yl?=
- =?us-ascii?Q?dqie+qrxNxcYrmUWP8cNdStvnAIAH3nraVFvX2mGT1tA2Ogzdrgwt7gDUvGV?=
- =?us-ascii?Q?3FihUaKjuer2L9PiNJHmTe6i3Yme4jw+3AIKY0nkHb0tJe+3nHd5WaqfsaFO?=
- =?us-ascii?Q?Pr0PWYUtXHMIlVtUjLk3poBUCGkvqWsxdWihjXRz7sWd2eqQHphc39pLMhkq?=
- =?us-ascii?Q?tQydcRwQXlt5LfewRzTxVStrzxaiZtofXJt+CG/TZqnPj66JpZKpcJ6mBXaT?=
- =?us-ascii?Q?MGFULb0UleqwAn8QkWyqrzatttZvMMTBRHJ+ck1qDYJ6rptUO3O2vXHd36hG?=
- =?us-ascii?Q?/hWRE2QJvNaFkmjCBmrtKG3oraheh7NtJUdxd3HdY6gjheP67KBVHG8o0T+C?=
- =?us-ascii?Q?ZfgwxtkVhlkeGAijvsjM4cKSLqHQIvxoJCcljGpxIN4WtqDEcxXcdpet6pg9?=
- =?us-ascii?Q?3OzyQqCRaEVWorFmvA0B5i82jy2c4m4FIBFGM8mkSymtKYTuPvHsgoU1F19I?=
- =?us-ascii?Q?tEIoqHPOwuJOh67D5PW/VVrvrPzu3XCtnaKwKERqm7svZhmGxWubfgNnitIQ?=
- =?us-ascii?Q?/Ad7Swr0ahuUTykl8vDqaf/hfpRO0nQBHmsFjf7e3439ypqT32P1l382xMh7?=
- =?us-ascii?Q?GIkX+50mb1Fksu/xH4qmrKvQc4yE4HQPdHlKfCiJigrjWEOQm4+s88wiU9Wr?=
- =?us-ascii?Q?vZ13cH0uZlpkxz4ciAWjMY9EeuQJrCBKSAAbkAWJc1bPIRPk9Nr7DA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5576.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SoaMBhgaVWqSwz4i+fzKUj/i2lQZKvyNUYZRe8cFU4OzGXHMVje3OHOk0rQu?=
- =?us-ascii?Q?MzOYb//kOowkkALroerZ1SWrB4b3jKVYfkB+c0c4LPK0HhBHipPXDpxaWbg7?=
- =?us-ascii?Q?j0T1RTMrKI4TQeBUyT18irBPDdqpvt+uDd7DTY0g3UDcPeCfKnuaXlXzvn5q?=
- =?us-ascii?Q?vVStuzFlYKowTKBuMxbnY8ndlb24r8QLlXbDpKilzcbznli1A1vehOiWD3zz?=
- =?us-ascii?Q?hTIz0dHu23zSAWcDwPjZLzQB1HUEffsuac10XBW1IV31hE9aEpipCKzZSknL?=
- =?us-ascii?Q?ocFn0S4dILxU1SuwYgEqplx934vIjlPFAf7fgxs/0jKaxQId6KI3PBUTzq0r?=
- =?us-ascii?Q?HPy4yQLLYfhkVWqbpK2sLdvJVcHWwBn5y9ncPEpWoUUp0HNzlwhJjsD7ZELH?=
- =?us-ascii?Q?dWRdopmNY9OqNPFaDcYTKGz1krXeVsciYnyHQe/gIDWMcWM0bISqX2buTb7H?=
- =?us-ascii?Q?qBxVIxb5Uvp/GscZEXFfgFIBdr51VopSX9jXIH/Bf9nUjGThFfwC3SmEiFNr?=
- =?us-ascii?Q?AAcpHXZQlJYAW1TQKTZrP9/S8lcBVrA3W+DorNIuGaUKTlycH2/lovG3vpsq?=
- =?us-ascii?Q?tcH42xKa7mXPrzP0lEm1w9F6wXS6el9lz6y/Pi5oK3nAL1gAZokB5xw2yZKJ?=
- =?us-ascii?Q?amQiGpZ54RqEzlJirEUyRIFDDtJ6xIHPbhPRyZOTpik1i/B0esaOyp4We7Vi?=
- =?us-ascii?Q?ist48zdsiEUbKd+0RZZM88H/HTlxLHkFAE0oHWyF7IkcsUEJtCqwFXLz30sA?=
- =?us-ascii?Q?JRwDQUretkYoiFernsfY08cwDXJxQFE/9GKrHYO136pozwWbnD8P52u65+Hp?=
- =?us-ascii?Q?EBGp6wgQmsSZsf8n6DEKwArIe+Carr7YYsSy3DhREY1h0lna+BIYj2GvTDt/?=
- =?us-ascii?Q?RXX3cYy0p87+0HWLTpQ7mmvfcDFpG8tCA2HOg/GdCYDDbumf0BkJw2UdBr22?=
- =?us-ascii?Q?MJcJ5SylkCndbdmRuuk/YHsO8QblZGXWiX+ZYnv4Cjp66uEBPHSx9RoHhivB?=
- =?us-ascii?Q?609c7VdsaXWnro+f2E+W3gxX6L2pPRCgXHoZ5osurJUWfiItcNoSdOteASJs?=
- =?us-ascii?Q?lXFCbHXW9bN1e/EvHyP/ayig+hZvtNZF5kbuCOdRSjcW5+/ijZBaKNM2Ba6h?=
- =?us-ascii?Q?agPiMsX9/3BzIGgutP+NIt8VBTFhqUyiBPjEEtvz/9X4iYpBBirO6WCTJ71v?=
- =?us-ascii?Q?WHwkF7tRANka+bBygmtE6ihxj3ETYOcURL8pjyqYCmHDzqsk5gza34Qx/qgi?=
- =?us-ascii?Q?mQsEKGOug/X2aL7h1hu9NYY99JsN0yc+7lzdhgXnMHWnxDuAbfF6pwFoijnt?=
- =?us-ascii?Q?XM9GWmYIQzXY311c021XMScGren4g8yK/VLF2Z5DLDY+mtHyDWa0VJEireyo?=
- =?us-ascii?Q?diNR71QozYe5IkP/5q0dAf2T2E3uh/Hb+WUGQYngwqOWxzgGlYKeT659GEvk?=
- =?us-ascii?Q?eZoUKlsxJAymdizIxoDNfCQZlx8iHNkAE7ICJ+uk2Odan0yZ95+2S904r8iF?=
- =?us-ascii?Q?WyzKGkYPwum4aDC+6SSXCKL7BU6mvyk6kT29cPrvPs1GG5ldbUbuDi776wcg?=
- =?us-ascii?Q?d8GASWNgf37eumIUgmzOXdGs9jfgUMesVCtMqqz+?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7610576-7191-4df1-03ca-08dde62e3033
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5576.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2025 12:27:01.0211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a0WiwJrMPQFdboG6S9wF3ZYCqKrr8HaXIs8HmFHwTBRnOAQdhgtHmsxvbDpdhNzDZrZSnuS5urvkhUVVxDC7og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7287
 
-For ternary operators in the form of "a ? true : false", if 'a' itself
-returns a boolean result, the ternary operator can be omitted. Remove
-redundant ternary operators to clean up the code.
+On Thu, 2025-08-28 at 13:36 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 25 Aug 2025, Srinivas Pandruvada wrote:
+>=20
+> > In partitioned systems, the domain ID is unique in the partition
+> > and a
+> > package can have multiple partitions.
+> >=20
+> > Some user-space tools, such as turbostat, assume the domain ID is
+> > unique
+> > per package. These tools map CPU power domains, which are unique to
+> > a
+> > package. However, this approach does not work in partitioned
+> > systems.
+> >=20
+> > There is no architectural definition of "partition" to present to
+> > user
+> > space.
+> >=20
+> > To support these tools, set the domain_id to be unique per package.
+> > For
+> > compute die IDs, uniqueness can be achieved using the platform info
+> > cdie_mask, mirroring the behavior observed in non-partitioned
+> > systems.
+> >=20
+> > For IO dies, which lack a direct CPU relationship, any unique
+> > logical
+> > ID can be assigned. Here domain IDs for IO dies are configured
+> > after all
+> > compute domain IDs. During the probe, keep the index of the next IO
+> > domain ID after the last IO domain ID of the current partition.
+> > Since
+> > CPU packages are symmetric, partition information is same for all
+> > packages.
+> >=20
+> > The Intel Speed Select driver has already implemented a similar
+> > change
+> > to make the domain ID unique, with compute dies listed first,
+> > followed
+> > by I/O dies.
+> >=20
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> > v2:
+> > - Add some comments
+> > - Change update_domain_id() to set_domian_id() to set domain_id
+> > instead of update
+> > - cluster_info->uncore_data.domain_id +=3D * is changed to add
+> > multiple steps to
+> > get to this equation
+> > - Handle case when only when no compute dies in partition=20
+> >=20
+> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 76
+> > ++++++++++++++++++-
+> > =C2=A01 file changed, 75 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-tpmi.c
+> > index cb4905bad89b..a30a99048db9 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > tpmi.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > tpmi.c
+> > @@ -369,6 +369,79 @@ static void uncore_set_agent_type(struct
+> > tpmi_uncore_cluster_info *cluster_info)
+> > =C2=A0	cluster_info->uncore_data.agent_type_mask =3D
+> > FIELD_GET(UNCORE_AGENT_TYPES, status);
+> > =C2=A0}
+> > =C2=A0
+> > +#define MAX_PARTITIONS	2
+> > +
+> > +/* IO domain ID start index for a partition */
+> > +static u8 io_die_start[MAX_PARTITIONS];
+> > +
+> > +/* Next IO domain ID index after the current partition IO die IDs
+> > */
+> > +static u8 io_die_index_next;
+> > +
+> > +/* Lock to protect io_die_start, io_die_index_next */
+> > +static DEFINE_MUTEX(domain_lock);
+> > +
+> > +static void set_domain_id(int id,=C2=A0 int num_resources,
+> > +			=C2=A0 struct oobmsm_plat_info *plat_info,
+> > +			=C2=A0 struct tpmi_uncore_cluster_info
+> > *cluster_info)
+> > +{
+> > +	u8 part_io_index =3D 0, cdie_range, pkg_io_index, max_dies;
+> > +
+> > +	if (plat_info->partition >=3D MAX_PARTITIONS) {
+> > +		cluster_info->uncore_data.domain_id =3D id;
+> > +		return;
+> > +	}
+> > +
+> > +	if (cluster_info->uncore_data.agent_type_mask &
+> > AGENT_TYPE_CORE) {
+> > +		cluster_info->uncore_data.domain_id =3D
+> > cluster_info->cdie_id;
+> > +		return;
+> > +	}
+> > +
+> > +	/* Unlikely but cdie_mask may have holes, so take range */
+> > +	cdie_range =3D fls(plat_info->cdie_mask) - ffs(plat_info-
+> > >cdie_mask) + 1;
+> > +	max_dies =3D topology_max_dies_per_package();
+> > +
+> > +	/*
+> > +	 * If the CPU doesn't enumerate dies, then just current
+> > cdie range
+> > +	 * the max.
+>=20
+> This sound broken grammar to my non-native ear. Did you mean:
+>=20
+> ..., then just use current cdie range as the max.
+>=20
+> ?
+Yes, I have swallowed "as" in my non native year!
 
-Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
----
- drivers/platform/x86/amd/pmf/sps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+>=20
+> > +	 */
+> > +	if (cdie_range > max_dies)
+> > +		max_dies =3D cdie_range;
+> > +
+> > +	guard(mutex)(&domain_lock);
+> > +
+> > +	if (!io_die_index_next)
+> > +		io_die_index_next =3D max_dies;
+> > +
+> > +	if (!io_die_start[plat_info->partition]) {
+> > +		io_die_start[plat_info->partition] =3D
+> > io_die_index_next;
+> > +		/*
+> > +		 * number of IO dies =3D num_resources - cdie_range.
+> > Hence
+> > +		 * next partition io_die_index_next is set after
+> > IO dies
+> > +		 * in the current partition.
+> > +		 */
+> > +		io_die_index_next +=3D (num_resources - cdie_range);
+> > +	}
+> > +
+> > +	/*
+> > +	 * Index from IO die start within the partition:
+> > +	 * This is the first valid domain after the cdies. If
+> > there are
+> > +	 * no cdies in a partition just start from 0.
+> > +	 * For example the current resource index 5 and cdies end
+> > at
+> > +	 * index 3 (cdie_cnt =3D 4). Then the io only index 5 - 4 =3D
+> > 1.
+> > +	 */
+> > +	if (cdie_range)
+>=20
+> "start from 0" sounds a bit alarming to me as if that condition could
+> happen also after starting, that is, more than once within a
+> partition=20
+> which would result in using part_io_index =3D 0 twice?
+You are correct. This is possible to create configuration like this. I
+will remove this check.
 
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index 49e14ca94a9e..c28f3c5744c2 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -283,7 +283,7 @@ int amd_pmf_set_sps_power_limits(struct amd_pmf_dev *pmf)
- 
- bool is_pprof_balanced(struct amd_pmf_dev *pmf)
- {
--	return (pmf->current_profile == PLATFORM_PROFILE_BALANCED) ? true : false;
-+	return pmf->current_profile == PLATFORM_PROFILE_BALANCED;
- }
- 
- static int amd_pmf_profile_get(struct device *dev,
--- 
-2.34.1
+Thanks,
+Srinivas
+
+>=20
+> > +		part_io_index =3D id - cdie_range;
+> > +
+> > +	/*
+> > +	 * Add to the IO die start index for this partition in
+> > this package
+> > +	 * to make unique in the package.
+> > +	 */
+> > +	pkg_io_index =3D io_die_start[plat_info->partition] +
+> > part_io_index;
+> > +
+> > +	/* Assign this to domain ID */
+> > +	cluster_info->uncore_data.domain_id =3D pkg_io_index;
+> > +}
+> > +
+> > =C2=A0/* Callback for sysfs read for TPMI uncore values. Called under
+> > mutex locks. */
+> > =C2=A0static int uncore_read(struct uncore_data *data, unsigned int
+> > *value, enum uncore_index index)
+> > =C2=A0{
+> > @@ -605,11 +678,12 @@ static int uncore_probe(struct
+> > auxiliary_device *auxdev, const struct auxiliary_
+> > =C2=A0			cluster_info->uncore_data.package_id =3D
+> > pkg;
+> > =C2=A0			/* There are no dies like Cascade Lake */
+> > =C2=A0			cluster_info->uncore_data.die_id =3D 0;
+> > -			cluster_info->uncore_data.domain_id =3D i;
+> > =C2=A0			cluster_info->uncore_data.cluster_id =3D j;
+> > =C2=A0
+> > =C2=A0			set_cdie_id(i, cluster_info, plat_info);
+> > =C2=A0
+> > +			set_domain_id(i, num_resources, plat_info,
+> > cluster_info);
+> > +
+> > =C2=A0			cluster_info->uncore_root =3D tpmi_uncore;
+> > =C2=A0
+> > =C2=A0			if (TPMI_MINOR_VERSION(pd_info-
+> > >ufs_header_ver) >=3D UNCORE_ELC_SUPPORTED_VERSION)
+> >=20
+>=20
 
