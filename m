@@ -1,121 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0203043AE;
-	Thu, 28 Aug 2025 16:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B29E27E1AC;
+	Thu, 28 Aug 2025 16:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756397939; cv=none; b=HNd9wc2p1F2lnZMut0Cy+95fVnInVRkclWpcA9Uo9atxrY+x9NNGtS1OB4ZwvHT4l7czWbfzShA2ZQSGme9u34gLQT8Szf11hVskluxALa/jIky60gVVu0sQCAqeJJnU9K6DFsrjQxq7eVUDyqsTZd91CSv10AXkAsQjf+zv4wg=
+	t=1756398055; cv=none; b=EvJUnHLhxOy37BDayA7ycMLUsCqZ8iGkR+SXSjXsLCUleH9xZW/aupDqK5twmPko8TFxh6niC97apmN+L6lyE1ImnkoustGyPFVb2nJWBaDIwOj4bbuHbL26JGUbDIwZ0N0jpHdwZPFdvlFSgxNi2uRz2WqpwIqf9JkA9w6GzOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756397939; c=relaxed/simple;
-	bh=ifE9A5bNwclDjbgiVS6mrQPoH/qd5pskFhM3diTrrjA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gruYpoY8QI8M0iUg0+zUZvtP0r9E9JJa2gJw8KlGSm5nDmkKY5sbtzk4wBxqgwYjcckGsFPo4qfT2JjmBXtGR6pL3OBCT/ipFWoj61Pm0C3PmvB8kyjwl7dUd+6+3eNAjMIxbEQXeplNQQqksmZXNy+bAnedYBelNmiIbLoapKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pfa5R/Vl; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1756398055; c=relaxed/simple;
+	bh=6gspWONwjRhKsfL5MZRWR855vZx/5z8rz/5fstT6nOw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HkdqnO7FynZzIEF0k8GIEDAjYCQSVi4e5+GULsGh/T4VMbSdDdO6dcxnTD6zdLxRH89RC61siullOfmEUHcniTwGr/i/f8QbINE7z0frpk8s9qpRvPzWuEC5nsHK92IYjAIDUpLDS9E6ZZu+xZlwKBLS0EvTakBz6tEw4Mvh114=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GcWKu52i; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pfa5R/Vl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GcWKu52i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756397937; x=1787933937;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ifE9A5bNwclDjbgiVS6mrQPoH/qd5pskFhM3diTrrjA=;
-  b=Pfa5R/Vll4JUCZkGlsoyUpfilvJd+ij3VU685/F15iFDEzon9xcpoBDJ
-   1ll26zkYwcKS4URnh7zxcW8gFLSAfwSm7NsqFIddC7UXqCbv+MtVDSNhr
-   fZR4cpVGAnAolBTn3Nj1j+534Z90gEtdDyDJwrYgeQUwnBaT/UWOLBuuP
-   RIyq1TqiCPrIQJfOtn5XLtyo1NcGiFumrZ6gRPAGAXjPx8PGIpKRTCF6o
-   nZUr6szDNJNv/9+M+Q1wHWYKCI8pUfkUYncw/FTDBycsC+3IJojKY4kef
-   5cY9ov/+3qtnN/2dErg3lzlck25Q8NYO8oVj9hYhc7pFRar3qEfSm6+4a
-   g==;
-X-CSE-ConnectionGUID: u5gSx2EDSAWEKks0a7XoFg==
-X-CSE-MsgGUID: uQ8hr/NrSLmFHt+tZ6PFqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58526874"
-X-IronPort-AV: E=Sophos;i="6.18,220,1751266800"; 
-   d="scan'208";a="58526874"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:18:57 -0700
-X-CSE-ConnectionGUID: 33jqXWwmTvmYPKXfxw0dXQ==
-X-CSE-MsgGUID: wEOQvljhRU6071pCjgYMBw==
+  t=1756398055; x=1787934055;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=6gspWONwjRhKsfL5MZRWR855vZx/5z8rz/5fstT6nOw=;
+  b=GcWKu52in22f5trxmetsgHoj3/7FXwF6xDIEdEMegtlafSZVozoAI7fP
+   x1EbfLDftXz+z8ITpWq/2SbVpcaUcggDIqkh069/ZHIHbziGUEqomHdpq
+   e5WwaMPhK9WvNV+SxRuCAvv8GBqbfWrDZyPLutG1UTioerP5+utxA4r48
+   4ehTuwbV6JH3uUXDCD/+2VVQFp8RnIkRs/4gs5WKmFM/dxG1+owuXwkeI
+   BdUcDJoe4h7/pd01WId9Bf9m+uAIjedcWT9E03MaYj4FK1cJVhUWXNpWy
+   z6nAhMq5NjWdVTxxGVutUz/WZJPL7ux2AH/FyJ7oawTCpHazIjb24K1qh
+   Q==;
+X-CSE-ConnectionGUID: DwyPnVDeTjyt38Szg0LW+Q==
+X-CSE-MsgGUID: 1gggCqp+RuqsPHWfwW3ZCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58619066"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="58619066"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:20:54 -0700
+X-CSE-ConnectionGUID: xlk3QZfOSUyfXGFlTcRWHg==
+X-CSE-MsgGUID: U3wCk/hqQ/a0o+XdwHPHOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,220,1751266800"; 
-   d="scan'208";a="170051691"
+   d="scan'208";a="175431312"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:18:54 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 09:20:51 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 28 Aug 2025 19:18:51 +0300 (EEST)
-To: Anton Khirnov <anton@khirnov.net>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: asus-wmi: map more keys on ExpertBook
- B9
-In-Reply-To: <20250827152954.4844-1-anton@khirnov.net>
-Message-ID: <f4c39474-739f-855f-50ec-1aa0d24e8e4f@linux.intel.com>
-References: <e39cf267-0784-4b56-a989-349e84487bbf@kernel.org> <20250827152954.4844-1-anton@khirnov.net>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hansg@kernel.org>, Werner Sembach <wse@tuxedocomputers.com>
+Cc: Christoffer Sandberg <cs@tuxedo.de>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250827131424.16436-1-wse@tuxedocomputers.com>
+References: <20250827131424.16436-1-wse@tuxedocomputers.com>
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add TUXEDO IB Pro Gen10 AMD to
+ spurious 8042 quirks list
+Message-Id: <175639804659.20700.7196322883688733944.b4-ty@linux.intel.com>
+Date: Thu, 28 Aug 2025 19:20:46 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, 27 Aug 2025, Anton Khirnov wrote:
+On Wed, 27 Aug 2025 15:13:51 +0200, Werner Sembach wrote:
 
-> * there is a dedicated "noise cancel" key in top row, between mic mute
->   and PrintScreen; it sends 0xCA when pressed by itself (mapped to F13),
->   0xCB with Fn (mapped to F14)
-> * Fn+f sends 0x9D; it is not documented in the manual, but some web
->   search results mention "asus intelligent performance"; mapped to FN_F
+> Prevents instant wakeup ~1s after suspend.
 > 
-> Signed-off-by: Anton Khirnov <anton@khirnov.net>
-> ---
-> Hi Hans,
-> would you mind applying this version of the patch, with the Fn+space
-> mapping left out for now?
+> It seems to be kernel/system dependent if the IRQ actually manages to wake
+> the system every time or if it gets ignored (and everything works as
+> expected).
+> 
+> 
+> [...]
 
-Hi Anton,
 
-These days I'm the one handling pdx86 patches. I took this into the
-review-ilpo-fixes branch and reinstated Hans' ack.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-My experience is that long delays are nothing unusual when interacting 
-with Dimitry so don't get discouraged by that when it comes to the
-rest of v2 content. Once Dimitry has okay'ed the input side change, please 
-resubmit the rest.
+The list of commits applied:
+[1/1] platform/x86/amd/pmc: Add TUXEDO IB Pro Gen10 AMD to spurious 8042 quirks list
+      commit: c96f86217bb28e019403bb8f59eacd8ad5a7ad1a
 
 --
  i.
 
-> Thanks
-> ---
-> 
->  drivers/platform/x86/asus-nb-wmi.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index f84c3d03c1de..dba3c1488db2 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -618,6 +618,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0x93, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + DVI */
->  	{ KE_KEY, 0x95, { KEY_MEDIA } },
->  	{ KE_KEY, 0x99, { KEY_PHONE } }, /* Conflicts with fan mode switch */
-> +	{ KE_KEY, 0X9D, { KEY_FN_F } },
->  	{ KE_KEY, 0xA0, { KEY_SWITCHVIDEOMODE } }, /* SDSP HDMI only */
->  	{ KE_KEY, 0xA1, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + HDMI */
->  	{ KE_KEY, 0xA2, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + HDMI */
-> @@ -632,6 +633,8 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_IGNORE, 0xC0, }, /* External display connect/disconnect notification */
->  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
-> +	{ KE_KEY, 0xCA, { KEY_F13 } }, /* Noise cancelling on Expertbook B9 */
-> +	{ KE_KEY, 0xCB, { KEY_F14 } }, /* Fn+noise-cancel */
->  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
->  	{ KE_IGNORE, 0xCF, },	/* AC mode */
->  	{ KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
-> 
