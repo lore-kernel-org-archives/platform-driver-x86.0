@@ -1,271 +1,423 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194F307493;
-	Thu, 28 Aug 2025 12:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D18330F950;
+	Thu, 28 Aug 2025 13:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756384821; cv=none; b=OolGtr1ZiMIKCG2Jbtj9wg7FdXmvnE+/uLRCXILxM6cCNNwBWGekwRlosUuAORFT47AtCQXmQuV5rMFu/gl/4oHdrWROnaPU/9raa1lHSG8nuvHEzJkMbNlHFxIJt+r+CuaLbrUvkf1XXG4Nygiv1U5O64UbZPLyqeh2fgqj4mw=
+	t=1756386374; cv=none; b=daG3pIvK+wB8lk0xwA5kdfBzAZHjmn0VZLWteGbUo1/AQvZUtGdfOgZk6CR0XBSlesYZQZ/CggpNvnpT/TIv7p8b8E6tTi/qNyceZYmBNEatBNl7LDSw71yvBsG2LsE82umKqQAUw9fDtP6n4LaZjV/Y4+JGXVN7ECxFFJggyHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756384821; c=relaxed/simple;
-	bh=2VmTLH+GUpJ9OuIxl1JVogVGrELPLutOGpHuVKBzArk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j+084XHk6pjvTU8U6rZc6b4sOzFsthlG+C8MYlzwdESwDkKAM5oVfrUMXdoHMzX1kELTg0YKD8mOhiscwF2noAR1svy4fmF1bMxufCi/yb3m/MYXiGf9HeqoUgJQOctsy4IqT4iM0jp6h20SXoe7OceuKbUaLAbKE02E8zmDnH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y6UUSVoF; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1756386374; c=relaxed/simple;
+	bh=ljmem/hJ8l6d7CS1/FApUAtPhayV+8cGoWMF2/X4Vu8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NNqEkqxuC3SYzNnlph/JAfrp3H/ZgnhJJAlYCaysipMddffPGcu1yaR3u5zjLWKctcqoSfwVFfWSFB3WXP3zPIEeh0GCazHZ3dkRuLJ6pYFvQKbxyc1Z7rO/rC0iaz4t3JKZ1nig7m+jrXUvKagHaYmdPfYAzQRQWXyZbBx1IYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+SjYuzP; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y6UUSVoF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+SjYuzP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756384819; x=1787920819;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=2VmTLH+GUpJ9OuIxl1JVogVGrELPLutOGpHuVKBzArk=;
-  b=Y6UUSVoF5VmA4/pE7zZSxojleiROVDjNC0ZKag8CVhsAbEoNjQ/pRRJE
-   B/+ykElTNmCcGqFhuNk97ThOUCFyJ7idqWJsOcpJZsZJzX2HU5NXTQJFT
-   uadOf/ZH0c9cxDd5xjG/2fvo4wZjbsgsIf2KTqiCJPjoafEdrVZ21RANy
-   ttk4oYPexJdNUOaci+dnJQ5I+fo+S0QKoMk8JBRBBkASXBV1yD+yQnKsl
-   pF+rSH7y1VQ7NDLdz6r13Gvugt6TkM4tuwJmhWL7rsMl5xjclmf80o9ux
-   xQi5i5JhGyFZUINsnPDpZEum+vf2Cy+GJEyqZgSY3cNeamrTOSkXOc0k2
+  t=1756386372; x=1787922372;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ljmem/hJ8l6d7CS1/FApUAtPhayV+8cGoWMF2/X4Vu8=;
+  b=F+SjYuzPZLKfVE4+d5Dgj38Cit9gA+DRemBdKwwEt3hcTa1oG3I3jKE7
+   QsHTqC/aGPlOPO92m7YeSsbUexxLNmkRX62vmvEoGBamkX4CqxTF8VcBh
+   JS7gHyY9hxvOaLof08A1D5/EMX1Rr9Ft1mcvRHxfT2Y+9QXujmN95QY8j
+   NdPADkq5lO4Y47nPRj/LWCWLnACqMc23dw8d15SV1C5urpre21Wt4Lesz
+   Okq0Qc4rbxlAvVFKCirJ4uDHFCjQ0Q6N0IryI03czxCpw79DKVvLgBWny
+   Z7GifMu0hcn8d1luxNUBBIjUF2Rtje8oSbYQpyjOAlo1st7mH6kSj2uDc
    A==;
-X-CSE-ConnectionGUID: p4PyXm5hSTCk6GccuJ2v8Q==
-X-CSE-MsgGUID: PtI5XezbRuyq2ujh3qODTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="57850356"
+X-CSE-ConnectionGUID: W2KHwIX2Q9esaevNTV1Isg==
+X-CSE-MsgGUID: KgrjC6drQUu3czGTRSVj9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="58363794"
 X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="57850356"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:40:17 -0700
-X-CSE-ConnectionGUID: usVPx47uS2y4byRhi9nU5A==
-X-CSE-MsgGUID: RhTMv+oyQSaFJsHHsSXriw==
+   d="scan'208";a="58363794"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 06:06:11 -0700
+X-CSE-ConnectionGUID: GesujiZVSbKcUuzPwIoR6A==
+X-CSE-MsgGUID: p/1z6pCkRrycBupP6P0IQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="169350485"
-Received: from puneetse-mobl.amr.corp.intel.com ([10.125.109.99])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 05:40:17 -0700
-Message-ID: <f1d159766f721aa11ce4b989b91c96a89eed3eeb.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86/intel-uncore-freq: Present unique
- domain ID per package
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 28 Aug 2025 05:40:14 -0700
-In-Reply-To: <1fc59985-e56f-24dd-1015-95d4c2b8d6e7@linux.intel.com>
-References: <20250825214336.410962-1-srinivas.pandruvada@linux.intel.com>
-	 <1fc59985-e56f-24dd-1015-95d4c2b8d6e7@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+   d="scan'208";a="170008031"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 06:06:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 28 Aug 2025 16:06:05 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] platform/x86:intel/pmc: Show substate requirement
+ for S0ix blockers
+In-Reply-To: <20250815224611.2460255-5-xi.pardee@linux.intel.com>
+Message-ID: <cd1b9ca5-27be-bcc1-6aa6-65d7196022e7@linux.intel.com>
+References: <20250815224611.2460255-1-xi.pardee@linux.intel.com> <20250815224611.2460255-5-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 2025-08-28 at 13:36 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 25 Aug 2025, Srinivas Pandruvada wrote:
->=20
-> > In partitioned systems, the domain ID is unique in the partition
-> > and a
-> > package can have multiple partitions.
-> >=20
-> > Some user-space tools, such as turbostat, assume the domain ID is
-> > unique
-> > per package. These tools map CPU power domains, which are unique to
-> > a
-> > package. However, this approach does not work in partitioned
-> > systems.
-> >=20
-> > There is no architectural definition of "partition" to present to
-> > user
-> > space.
-> >=20
-> > To support these tools, set the domain_id to be unique per package.
-> > For
-> > compute die IDs, uniqueness can be achieved using the platform info
-> > cdie_mask, mirroring the behavior observed in non-partitioned
-> > systems.
-> >=20
-> > For IO dies, which lack a direct CPU relationship, any unique
-> > logical
-> > ID can be assigned. Here domain IDs for IO dies are configured
-> > after all
-> > compute domain IDs. During the probe, keep the index of the next IO
-> > domain ID after the last IO domain ID of the current partition.
-> > Since
-> > CPU packages are symmetric, partition information is same for all
-> > packages.
-> >=20
-> > The Intel Speed Select driver has already implemented a similar
-> > change
-> > to make the domain ID unique, with compute dies listed first,
-> > followed
-> > by I/O dies.
-> >=20
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > ---
-> > v2:
-> > - Add some comments
-> > - Change update_domain_id() to set_domian_id() to set domain_id
-> > instead of update
-> > - cluster_info->uncore_data.domain_id +=3D * is changed to add
-> > multiple steps to
-> > get to this equation
-> > - Handle case when only when no compute dies in partition=20
-> >=20
-> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 76
-> > ++++++++++++++++++-
-> > =C2=A01 file changed, 75 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-tpmi.c
-> > index cb4905bad89b..a30a99048db9 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > tpmi.c
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > tpmi.c
-> > @@ -369,6 +369,79 @@ static void uncore_set_agent_type(struct
-> > tpmi_uncore_cluster_info *cluster_info)
-> > =C2=A0	cluster_info->uncore_data.agent_type_mask =3D
-> > FIELD_GET(UNCORE_AGENT_TYPES, status);
-> > =C2=A0}
-> > =C2=A0
-> > +#define MAX_PARTITIONS	2
-> > +
-> > +/* IO domain ID start index for a partition */
-> > +static u8 io_die_start[MAX_PARTITIONS];
-> > +
-> > +/* Next IO domain ID index after the current partition IO die IDs
-> > */
-> > +static u8 io_die_index_next;
-> > +
-> > +/* Lock to protect io_die_start, io_die_index_next */
-> > +static DEFINE_MUTEX(domain_lock);
-> > +
-> > +static void set_domain_id(int id,=C2=A0 int num_resources,
-> > +			=C2=A0 struct oobmsm_plat_info *plat_info,
-> > +			=C2=A0 struct tpmi_uncore_cluster_info
-> > *cluster_info)
-> > +{
-> > +	u8 part_io_index =3D 0, cdie_range, pkg_io_index, max_dies;
-> > +
-> > +	if (plat_info->partition >=3D MAX_PARTITIONS) {
-> > +		cluster_info->uncore_data.domain_id =3D id;
-> > +		return;
-> > +	}
-> > +
-> > +	if (cluster_info->uncore_data.agent_type_mask &
-> > AGENT_TYPE_CORE) {
-> > +		cluster_info->uncore_data.domain_id =3D
-> > cluster_info->cdie_id;
-> > +		return;
-> > +	}
-> > +
-> > +	/* Unlikely but cdie_mask may have holes, so take range */
-> > +	cdie_range =3D fls(plat_info->cdie_mask) - ffs(plat_info-
-> > >cdie_mask) + 1;
-> > +	max_dies =3D topology_max_dies_per_package();
-> > +
-> > +	/*
-> > +	 * If the CPU doesn't enumerate dies, then just current
-> > cdie range
-> > +	 * the max.
->=20
-> This sound broken grammar to my non-native ear. Did you mean:
->=20
-> ..., then just use current cdie range as the max.
->=20
-> ?
-Yes, I have swallowed "as" in my non native year!
+On Fri, 15 Aug 2025, Xi Pardee wrote:
 
->=20
->=20
-> > +	 */
-> > +	if (cdie_range > max_dies)
-> > +		max_dies =3D cdie_range;
-> > +
-> > +	guard(mutex)(&domain_lock);
-> > +
-> > +	if (!io_die_index_next)
-> > +		io_die_index_next =3D max_dies;
-> > +
-> > +	if (!io_die_start[plat_info->partition]) {
-> > +		io_die_start[plat_info->partition] =3D
-> > io_die_index_next;
-> > +		/*
-> > +		 * number of IO dies =3D num_resources - cdie_range.
-> > Hence
-> > +		 * next partition io_die_index_next is set after
-> > IO dies
-> > +		 * in the current partition.
-> > +		 */
-> > +		io_die_index_next +=3D (num_resources - cdie_range);
-> > +	}
-> > +
-> > +	/*
-> > +	 * Index from IO die start within the partition:
-> > +	 * This is the first valid domain after the cdies. If
-> > there are
-> > +	 * no cdies in a partition just start from 0.
-> > +	 * For example the current resource index 5 and cdies end
-> > at
-> > +	 * index 3 (cdie_cnt =3D 4). Then the io only index 5 - 4 =3D
-> > 1.
-> > +	 */
-> > +	if (cdie_range)
->=20
-> "start from 0" sounds a bit alarming to me as if that condition could
-> happen also after starting, that is, more than once within a
-> partition=20
-> which would result in using part_io_index =3D 0 twice?
-You are correct. This is possible to create configuration like this. I
-will remove this check.
+> Add support to read and show S0ix blocker substate requirements.
+> Starting from Panther Lake, substate requirement data is provided
+> based on S0ix blockers instead of all low power mode requirements.
+> For platforms that support this new feature, add support to display
+> substate requirements based on S0ix blockers.
+> 
+> Change the "substate_requirements" attribute of Intel PMC Core
+> driver to show the substate requirements for each S0ix blocker
+> and the corresponding S0ix blocker value.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c  |   4 +
+>  drivers/platform/x86/intel/pmc/core.c | 126 ++++++++++++++++++++++++--
+>  drivers/platform/x86/intel/pmc/core.h |  14 +++
+>  drivers/platform/x86/intel/pmc/lnl.c  |   2 +
+>  drivers/platform/x86/intel/pmc/mtl.c  |   2 +
+>  5 files changed, 138 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 9d66d65e75779..17ad87b392abe 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -725,9 +725,11 @@ struct pmc_dev_info arl_pmc_dev = {
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &arl_socs_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = arl_resume,
+>  	.init = arl_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
+>  
+>  struct pmc_dev_info arl_h_pmc_dev = {
+> @@ -735,7 +737,9 @@ struct pmc_dev_info arl_h_pmc_dev = {
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = arl_h_resume,
+>  	.init = arl_h_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index cbfdcdc50ad21..a0b948a875a5a 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -851,6 +851,68 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
+>  	}
+>  }
+>  
+> +static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
+> +{
+> +	struct pmc_dev *pmcdev = s->private;
+> +	unsigned int pmc_index;
+> +
+> +	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); pmc_index++) {
+> +		const struct pmc_bit_map **maps;
+> +		unsigned int arr_size, r_idx;
+> +		u32 offset, counter;
+> +		u32 *lpm_req_regs;
+> +		struct pmc *pmc;
+> +
+> +		pmc = pmcdev->pmcs[pmc_index];
+> +		if (!pmc || !pmc->lpm_req_regs)
+> +			continue;
+> +
+> +		lpm_req_regs = pmc->lpm_req_regs;
+> +		maps = pmc->map->s0ix_blocker_maps;
+> +		offset = pmc->map->s0ix_blocker_offset;
+> +		arr_size = pmc_core_lpm_get_arr_size(maps);
+> +
+> +		/* Display the header */
+> +		pmc_core_substate_req_header_show(s, pmc_index, HEADER_VALUE);
+> +
+> +		for (r_idx = 0; r_idx < arr_size; r_idx++) {
+> +			const struct pmc_bit_map *map;
+> +
+> +			for (map = maps[r_idx]; map->name; map++) {
+> +				int mode;
+> +
+> +				if (!map->blk)
+> +					continue;
+> +
+> +				counter = pmc_core_reg_read(pmc, offset);
+> +				seq_printf(s, "pmc%d: %34s |", pmc_index, map->name);
 
-Thanks,
-Srinivas
+For printing unsigned int, use %u.
 
->=20
-> > +		part_io_index =3D id - cdie_range;
-> > +
-> > +	/*
-> > +	 * Add to the IO die start index for this partition in
-> > this package
-> > +	 * to make unique in the package.
-> > +	 */
-> > +	pkg_io_index =3D io_die_start[plat_info->partition] +
-> > part_io_index;
-> > +
-> > +	/* Assign this to domain ID */
-> > +	cluster_info->uncore_data.domain_id =3D pkg_io_index;
-> > +}
-> > +
-> > =C2=A0/* Callback for sysfs read for TPMI uncore values. Called under
-> > mutex locks. */
-> > =C2=A0static int uncore_read(struct uncore_data *data, unsigned int
-> > *value, enum uncore_index index)
-> > =C2=A0{
-> > @@ -605,11 +678,12 @@ static int uncore_probe(struct
-> > auxiliary_device *auxdev, const struct auxiliary_
-> > =C2=A0			cluster_info->uncore_data.package_id =3D
-> > pkg;
-> > =C2=A0			/* There are no dies like Cascade Lake */
-> > =C2=A0			cluster_info->uncore_data.die_id =3D 0;
-> > -			cluster_info->uncore_data.domain_id =3D i;
-> > =C2=A0			cluster_info->uncore_data.cluster_id =3D j;
-> > =C2=A0
-> > =C2=A0			set_cdie_id(i, cluster_info, plat_info);
-> > =C2=A0
-> > +			set_domain_id(i, num_resources, plat_info,
-> > cluster_info);
-> > +
-> > =C2=A0			cluster_info->uncore_root =3D tpmi_uncore;
-> > =C2=A0
-> > =C2=A0			if (TPMI_MINOR_VERSION(pd_info-
-> > >ufs_header_ver) >=3D UNCORE_ELC_SUPPORTED_VERSION)
-> >=20
->=20
+> +				pmc_for_each_mode(mode, pmcdev) {
+> +					bool required = *lpm_req_regs & BIT(mode);
+> +
+> +					seq_printf(s, " %9s |", required ? "Required" : " ");
+> +				}
+> +				seq_printf(s, " %9d |\n", counter);
+
+Use %u for u32.
+
+> +				offset += map->blk * S0IX_BLK_SIZE;
+> +				lpm_req_regs++;
+> +			}
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int pmc_core_substate_blk_req_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, pmc_core_substate_blk_req_show, inode->i_private);
+> +}
+> +
+> +const struct file_operations pmc_core_substate_blk_req_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= pmc_core_substate_blk_req_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+>  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  {
+>  	struct pmc_dev *pmcdev = s->private;
+> @@ -941,7 +1003,19 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  	}
+>  	return 0;
+>  }
+> -DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
+> +
+> +static int pmc_core_substate_req_regs_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, pmc_core_substate_req_regs_show, inode->i_private);
+> +}
+> +
+> +const struct file_operations pmc_core_substate_req_regs_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= pmc_core_substate_req_regs_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+>  
+>  static unsigned int pmc_core_get_crystal_freq(void)
+>  {
+> @@ -1274,7 +1348,7 @@ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+>  	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+>  }
+>  
+> -static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+> +static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	struct pmc *primary_pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	struct dentry *dir;
+> @@ -1341,7 +1415,7 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  	if (primary_pmc->lpm_req_regs) {
+>  		debugfs_create_file("substate_requirements", 0444,
+>  				    pmcdev->dbgfs_dir, pmcdev,
+> -				    &pmc_core_substate_req_regs_fops);
+> +				    pmc_dev_info->sub_req_show);
+>  	}
+>  
+>  	if (primary_pmc->map->pson_residency_offset && pmc_core_is_pson_residency_enabled(pmcdev)) {
+> @@ -1409,8 +1483,7 @@ static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *m
+>   * +----+---------------------------------------------------------+
+>   *
+>   */
+> -static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+> -				    struct telem_endpoint *ep)
+> +int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep)
+>  {
+>  	const u8 *lpm_indices;
+>  	int num_maps, mode_offset = 0;
+> @@ -1448,7 +1521,37 @@ static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+>  	return ret;
+>  }
+>  
+> -static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+> +int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+> +				 struct telem_endpoint *ep)
+> +{
+> +	u32 num_blocker, sample_id;
+> +	unsigned int index;
+> +	u32 *req_offset;
+> +	int ret;
+> +
+> +	num_blocker = pmc->map->num_s0ix_blocker;
+> +	sample_id = pmc->map->blocker_req_offset;
+> +
+> +	pmc->lpm_req_regs = devm_kcalloc(&pmcdev->pdev->dev, num_blocker,
+> +					 sizeof(u32), GFP_KERNEL);
+> +	if (!pmc->lpm_req_regs)
+> +		return -ENOMEM;
+> +
+> +	req_offset = pmc->lpm_req_regs;
+> +	for (index = 0; index < num_blocker; index++) {
+> +		ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
+> +		if (ret) {
+> +			dev_err(&pmcdev->pdev->dev,
+> +				"couldn't read Low Power Mode requirements: %d\n", ret);
+> +			return ret;
+> +		}
+> +		sample_id++;
+> +		req_offset++;
+
+These two look superfluous variables as they move in-sync with index and 
+xx + index or xx[index] could be used instead? I can see the pointer one 
+might make things a bit nicer looking, but if you preserve it, it should 
+be incremented inside the for loop's increment, not here.
+
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
+>  	struct telem_endpoint *ep;
+> @@ -1456,11 +1559,12 @@ static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+>  	u32 guid;
+>  	int ret;
+>  
+> -	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
+> +	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, pmc_dev_info->pci_func));
+>  	if (!pcidev)
+>  		return -ENODEV;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
+> +		int (*sub_req)(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep);
+>  		struct pmc *pmc;
+>  
+>  		pmc = pmcdev->pmcs[i];
+> @@ -1477,7 +1581,9 @@ static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+>  			return -EPROBE_DEFER;
+>  		}
+>  
+> -		ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
+> +		sub_req = pmc_dev_info->sub_req;
+> +		ret = sub_req(pmcdev, pmc, ep);
+> +
+
+Please don't separate a call and its error handling with empty lines.
+
+Why is the sub_req variable necessary?
+
+>  		pmt_telem_unregister_endpoint(ep);
+>  		if (ret)
+>  			return ret;
+> @@ -1592,7 +1698,7 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
+>  
+>  	if (ssram) {
+> -		ret = pmc_core_get_telem_info(pmcdev, pmc_dev_info->pci_func);
+> +		ret = pmc_core_get_telem_info(pmcdev, pmc_dev_info);
+>  		if (ret)
+>  			goto unmap_regbase;
+>  	}
+> @@ -1766,7 +1872,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(primary_pmc);
+>  	pmc_core_do_dmi_quirks(primary_pmc);
+>  
+> -	pmc_core_dbgfs_register(pmcdev);
+> +	pmc_core_dbgfs_register(pmcdev, pmc_dev_info);
+>  	pm_report_max_hw_sleep(FIELD_MAX(SLP_S0_RES_COUNTER_MASK) *
+>  			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
+>  
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index 4a94a4ee031e6..bfe8fba808063 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -344,6 +344,8 @@ struct pmc_bit_map {
+>   * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
+>   * @slps0_dbg_offset:	PWRMBASE offset to SLP_S0_DEBUG_REG*
+>   * @s0ix_blocker_offset PWRMBASE offset to S0ix blocker counter
+> + * @num_s0ix_blocker:	Number of S0ix blockers
+> + * @blocker_req_offset:	Telemetry offset to S0ix blocker low power mode substate requirement table
+>   *
+>   * Each PCH has unique set of register offsets and bit indexes. This structure
+>   * captures them to have a common implementation.
+> @@ -369,6 +371,8 @@ struct pmc_reg_map {
+>  	const u32 ltr_ignore_max;
+>  	const u32 pm_vric1_offset;
+>  	const u32 s0ix_blocker_offset;
+> +	const u32 num_s0ix_blocker;
+> +	const u32 blocker_req_offset;
+>  	/* Low Power Mode registers */
+>  	const int lpm_num_maps;
+>  	const int lpm_num_modes;
+> @@ -474,18 +478,22 @@ enum pmc_index {
+>   *			SSRAM support.
+>   * @map:		Pointer to a pmc_reg_map struct that contains platform
+>   *			specific attributes of the primary PMC
+> + * @sub_req_show:	File operations to show substate requirements
+>   * @suspend:		Function to perform platform specific suspend
+>   * @resume:		Function to perform platform specific resume
+>   * @init:		Function to perform platform specific init action
+> + * @sub_req:		Function to achieve low power mode substate requirements
+>   */
+>  struct pmc_dev_info {
+>  	u8 pci_func;
+>  	u32 dmu_guid;
+>  	struct pmc_info *regmap_list;
+>  	const struct pmc_reg_map *map;
+> +	const struct file_operations *sub_req_show;
+>  	void (*suspend)(struct pmc_dev *pmcdev);
+>  	int (*resume)(struct pmc_dev *pmcdev);
+>  	int (*init)(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+> +	int (*sub_req)(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep);
+>  };
+>  
+>  extern const struct pmc_bit_map msr_map[];
+> @@ -531,6 +539,12 @@ extern struct pmc_dev_info ptl_pmc_dev;
+>  
+>  void cnl_suspend(struct pmc_dev *pmcdev);
+>  int cnl_resume(struct pmc_dev *pmcdev);
+> +int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep);
+> +int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+> +				 struct telem_endpoint *ep);
+> +
+> +extern const struct file_operations pmc_core_substate_req_regs_fops;
+> +extern const struct file_operations pmc_core_substate_blk_req_fops;
+>  
+>  #define pmc_for_each_mode(mode, pmcdev)						\
+>  	for (unsigned int __i = 0, __cond;					\
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+> index e08a77c778c2c..6fa027e7071f4 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -574,7 +574,9 @@ struct pmc_dev_info lnl_pmc_dev = {
+>  	.pci_func = 2,
+>  	.regmap_list = lnl_pmc_info_list,
+>  	.map = &lnl_socm_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = lnl_resume,
+>  	.init = lnl_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index faa13a7ee688f..0b87e10f864e6 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -997,7 +997,9 @@ struct pmc_dev_info mtl_pmc_dev = {
+>  	.dmu_guid = MTL_PMT_DMU_GUID,
+>  	.regmap_list = mtl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = mtl_resume,
+>  	.init = mtl_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
+> 
+
+-- 
+ i.
 
