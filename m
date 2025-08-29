@@ -1,113 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B7D2BE63D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 29 Aug 2025 11:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF4A1D5CD1;
+	Fri, 29 Aug 2025 12:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756467584; cv=none; b=GOW5CeXrq37rFpvMImduIA0R2TT4WJf8B4R27/VxJ0/ZV22MiufoL9rKMwjacDLbtYivHVU3TV5SSCJWiUhnAZdculq6wdxR54tmxfA8WbvFB9VMsI7QkHy+BPC7TD/FvlpbHH3UYp6vSgH2I5RGkyx0WSuEriOJuprniiY33wU=
+	t=1756469978; cv=none; b=POK2qlj2zIBb+xVf1dIaJnv3WgkxVxaLCDcYr4fJ+oEF6f8vZlHAdIzcST+bgL0WUv8vCLZeJHTK6dYasniZHElzsZp6/GQhbGRUhqcJkijCo3fdoXK/BQ8K6xx9ZTIR4G3HEQ1RMAsNG59M04RlAw2CpERpA5CsDHWWs4JFBGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756467584; c=relaxed/simple;
-	bh=GcVg7H5GYHJLW2KJundL2qfLw8rTfpO5ga5T9Uu4FXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QnTSSZ4PVHeSpEBiaqR16aFGg+J+9/AW29nen8KoI+SkMixlvvgxBAWPD/Y+8S8a+42nrXOLpkhBvXtwJIJOpgB6XeqJRgwLGeescxeRZjK7c/Fs00LaKQafWLkXsUMxODKhQpNkPMsDI0x7xXwwkiI5XkMibGPdMIj1vloElRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRKOX5j4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756469978; c=relaxed/simple;
+	bh=TW9ww/OJ96DkQ4jnsZMuk/RiQgbviuSM68aPie1Vb1Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sZKb9UMhoPsly0uEPwkVfEqP2QFs1VnF/uHcE1qo40UfpqNlaCoXmdk36jWw3X8+AA8/61kav5e8RAPCweiatPs9IPQjoALU+I3uOn5TArFDwotAhW1mf4IrByV5CQaAjLG3vDfNunKAwErJBQRRRTuu/6jGvvMooQvV57HK7HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AoCpZ/4K; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRKOX5j4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756467581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lDHdptYlOehnaEBDjbhXnX1ikqfddk1tmMgrKqqAskk=;
-	b=PRKOX5j4DkTpjpJmsMilGb/3Ycw+BoMhpl0kY7g/wqhNqnpeyLA5PE7j+2NJkHGWYCdJFJ
-	ZECtMcAHj1gwWK7XvxCldkOacT+T4nwZEJVy+zle42RRatZcNEH/hPERSCs2WaQs6pkGfZ
-	C1pstPpJjxrJejSoTLUVpyZujokPHKw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-L-Xc2mkXNHaTPGW0TI8iZQ-1; Fri,
- 29 Aug 2025 07:39:38 -0400
-X-MC-Unique: L-Xc2mkXNHaTPGW0TI8iZQ-1
-X-Mimecast-MFC-AGG-ID: L-Xc2mkXNHaTPGW0TI8iZQ_1756467576
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 499C91956087;
-	Fri, 29 Aug 2025 11:39:36 +0000 (UTC)
-Received: from dba-icx.bos.redhat.com (prarit2023-dbaguest.khw.eng.bos2.dc.redhat.com [10.26.1.94])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A7701800296;
-	Fri, 29 Aug 2025 11:39:34 +0000 (UTC)
-From: David Arcari <darcari@redhat.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: David Arcari <darcari@redhat.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tero Kristo <tero.kristo@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86/intel: power-domains: Use topology_logical_package_id() for package ID
-Date: Fri, 29 Aug 2025 07:38:59 -0400
-Message-ID: <20250829113859.1772827-1-darcari@redhat.com>
-In-Reply-To: <20250826164331.1372856-1-darcari@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AoCpZ/4K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756469977; x=1788005977;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=TW9ww/OJ96DkQ4jnsZMuk/RiQgbviuSM68aPie1Vb1Y=;
+  b=AoCpZ/4Kzi+U40NeyH2+HzIi30FiWYgLa8zN7JRq0duWtKgo4wtVQ3Bl
+   dlULctLYsB4+eRf1Vx6wb2+1y9TzW1GaQB6mNSCDLS6PHjeeHJt9YtYMK
+   OADkisFS6gb5PwJhTV2YohbueP9MD1GytdMBPdri1rPrzMfBUu5yXmYP4
+   uYCUxjNY/YDUjh1sCt/Eaj8x9gNdlWXGJ0cUSrZJbXssjOOKJIbpM9QlT
+   ohmHVwyFPs6DxkiLjNm7ui9pwRMYzLpsPvyGerYUSkR8fFkoYJrwh9gBv
+   10yb7ck3mTfQBfNztyNT7iwozZQzIz7pa+XX+//Aq10KZa1sYn2vabpej
+   Q==;
+X-CSE-ConnectionGUID: 3ypNout4RQ2cCvbhCF090g==
+X-CSE-MsgGUID: r4OjR0CuQ6CdPgwlr5Ia8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58696968"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="58696968"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 05:19:36 -0700
+X-CSE-ConnectionGUID: D+4io8c1RvGAwvomgKaZyg==
+X-CSE-MsgGUID: kTCHItCbQN+w0Zdjv2z7lA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
+   d="scan'208";a="170540779"
+Received: from spandruv-mobl4.amr.corp.intel.com ([10.125.109.134])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2025 05:19:35 -0700
+Message-ID: <c0cf2c2fefaed36fbb68d682f2fc368607f90da8.camel@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86/intel: power-domains: Use
+ topology_logical_package_id() for package ID
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: David Arcari <darcari@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Tero Kristo
+ <tero.kristo@linux.intel.com>,  linux-kernel@vger.kernel.org
+Date: Fri, 29 Aug 2025 05:19:33 -0700
+In-Reply-To: <20250829113859.1772827-1-darcari@redhat.com>
 References: <20250826164331.1372856-1-darcari@redhat.com>
+	 <20250829113859.1772827-1-darcari@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Currently, tpmi_get_logical_id() calls topology_physical_package_id()
-to set the pkg_id of the info structure. Since some VM hosts assign non
-contiguous package IDs, topology_physical_package_id() can return a
-larger value than topology_max_packages(). This will result in an
-invalid reference into tpmi_power_domain_mask[] as that is allocatead
-based on topology_max_packages() as the maximum package ID.
+On Fri, 2025-08-29 at 07:38 -0400, David Arcari wrote:
+> Currently, tpmi_get_logical_id() calls topology_physical_package_id()
+> to set the pkg_id of the info structure. Since some VM hosts assign
+> non
+> contiguous package IDs, topology_physical_package_id() can return a
+> larger value than topology_max_packages(). This will result in an
+> invalid reference into tpmi_power_domain_mask[] as that is allocatead
+> based on topology_max_packages() as the maximum package ID.
+>=20
+> Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU
+> mapping")
+> Signed-off-by: David Arcari <darcari@redhat.com>
+    Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Fixes: 17ca2780458c ("platform/x86/intel: TPMI domain id and CPU mapping")
-Signed-off-by: David Arcari <darcari@redhat.com>
----
-v2: fixed underlying issue in tpmi_get_logcal_id() instead of
-    preventing access in tpmi_cpu_online().
-
-Cc: Hans de Goede <hansg@kernel.org>
-Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: David Arcari <darcari@redhat.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tero Kristo <tero.kristo@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org
- drivers/platform/x86/intel/tpmi_power_domains.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
-index 9d8247bb9cfa..8641353b2e06 100644
---- a/drivers/platform/x86/intel/tpmi_power_domains.c
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-@@ -178,7 +178,7 @@ static int tpmi_get_logical_id(unsigned int cpu, struct tpmi_cpu_info *info)
- 
- 	info->punit_thread_id = FIELD_GET(LP_ID_MASK, data);
- 	info->punit_core_id = FIELD_GET(MODULE_ID_MASK, data);
--	info->pkg_id = topology_physical_package_id(cpu);
-+	info->pkg_id = topology_logical_package_id(cpu);
- 	info->linux_cpu = cpu;
- 
- 	return 0;
--- 
-2.50.0
+> ---
+> v2: fixed underlying issue in tpmi_get_logcal_id() instead of
+> =C2=A0=C2=A0=C2=A0 preventing access in tpmi_cpu_online().
+>=20
+> Cc: Hans de Goede <hansg@kernel.org>
+> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> Cc: David Arcari <darcari@redhat.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Tero Kristo <tero.kristo@linux.intel.com>
+> Cc: linux-kernel@vger.kernel.org
+> =C2=A0drivers/platform/x86/intel/tpmi_power_domains.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c
+> b/drivers/platform/x86/intel/tpmi_power_domains.c
+> index 9d8247bb9cfa..8641353b2e06 100644
+> --- a/drivers/platform/x86/intel/tpmi_power_domains.c
+> +++ b/drivers/platform/x86/intel/tpmi_power_domains.c
+> @@ -178,7 +178,7 @@ static int tpmi_get_logical_id(unsigned int cpu,
+> struct tpmi_cpu_info *info)
+> =C2=A0
+> =C2=A0	info->punit_thread_id =3D FIELD_GET(LP_ID_MASK, data);
+> =C2=A0	info->punit_core_id =3D FIELD_GET(MODULE_ID_MASK, data);
+> -	info->pkg_id =3D topology_physical_package_id(cpu);
+> +	info->pkg_id =3D topology_logical_package_id(cpu);
+> =C2=A0	info->linux_cpu =3D cpu;
+> =C2=A0
+> =C2=A0	return 0;
 
