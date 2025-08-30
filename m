@@ -1,55 +1,55 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B52225485A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA525277C96
 	for <platform-driver-x86@vger.kernel.org>; Sat, 30 Aug 2025 05:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756532069; cv=none; b=Q7HDTiYC3hAfx2txJnGAtwoy0PKcViBzKOHLThGJ4TE7polCSZ+fvOR6enMlEklfnMSOb90i0xYG8GHxJZoC5G/onXCFntPKeabB1ew+14RHuOZeZ3ltt/37msWOBnUS2/vsCGhasDoHOLVowWYw9qAcs8QNMO2rdn5nEEtPO5c=
+	t=1756532070; cv=none; b=GJOP0pu6omevhnotQgk700Zs8Io7KEaPQvwl1pcMAX6V98F+2Bmtzw0/xHsAIhvYPOw4UqVrHeuhIOaYibkClZntgbbF+dwS+ktEmDzRvmQniuYlhGiQG9gfSX5/Y0Ou32cbzM+aO71EEXtsH3YoxkULQ7atS4LfZH0X3znF/SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756532069; c=relaxed/simple;
-	bh=yh1s/4XdOm4bfUnjYYkKcPd+/Q0qGHqKo6VPnyJx6aw=;
+	s=arc-20240116; t=1756532070; c=relaxed/simple;
+	bh=i5MsBomPmvZvARXlPhnQZIJJ76sehIpcVJk6xtGPPmM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N8YVxny08EYsdsRTtJ6MJVmUxWMN/g32fHlysUcAyOESMlmvUfXahTlBD9nay8oYT2zeOIZK3Fq1Kd3W/TJLJLFUM41mhfLD0Q2nBFbRI5eAbvGqK/QKbXbyzlckBQf/x/+HFLGtaL/lVERxTq9VJu5m/VybKhfgeudHBpw1C5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=36vHN7AF; arc=none smtp.client-ip=209.85.208.74
+	 To:Cc:Content-Type; b=ZzneNtzfpYtiIeDhrkte/dbdohjfVVITZ3upNDy7l1Y9es5oIxLuGUVILrh074wjDCu/TQuqmry7ZDz5+/fWYuzMoVkhJULct6C4mKKgdZUav1zIXJlmOmBbDTwlrKcEnc2oTX/0OShGIj4qM0Bb/hwb0I9PkzzD/i9LnmihidQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eA6s4Mca; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="36vHN7AF"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-61d2ab4bc04so129674a12.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eA6s4Mca"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-61c6d735e9bso2469656a12.0
         for <platform-driver-x86@vger.kernel.org>; Fri, 29 Aug 2025 22:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756532066; x=1757136866; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756532067; x=1757136867; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGlMhdHsRDhXgZTq2403xXjFFF1JZ/LTlsCLMGC7kp8=;
-        b=36vHN7AFl/J69y0HFghxDuQ/x/ZRvkhRijIq1XGBn5f3m/uV3dH8nTH9IvMd0A2DnH
-         U/m/R7H7bkRhfT1ZOGhyoaVoYEVsm3xF2tTGv011Q1b6jCWdzGe9rLydS8j7z3c7tLO6
-         KCsJvzXtkmyd3jWrnQQg733qok+UX/KlOR+mXGrFPEDsuI9d+E2rT6dQmVAPF+BMJXVA
-         mS1EKpYrCjKpPxsUKMKMW2SbEMdmBH9nrzLThLSLnshHWcWilaQqGMK9sdeLLxMUS3kW
-         7YVdkHd1iqiqevQqU0zu3KNFqG19kOKIA1kQ8dMvTfxapNxeE49iXRLWirCLY34z8hZo
-         HBRA==
+        bh=7Zimki/zwOp+r6f1xZDKXQKE3q1yeo7Wm/nsMmZAsYU=;
+        b=eA6s4McaBUlBbr0UXKNluSszylGsOMF8dpj6lB3vRyT+9e5hSpjdVoxdsZZL0YHavR
+         AKw2uvCnhUlhTizS3te/5C0ozwo9qjJwfxQxQSM/yQZZkGi9pmNsRl6rK/5ftwWAOekv
+         oe1hcS+VI34IOwysZKX5xg67PMNexaxOnAWXB/FC5VB9QY0E9y0kZhAVxoh4+exwpZ+8
+         7JrObqey5uprBbR69apjp5aa4zH/tMMR1fVHrFqfVntS9y+6N3qi76VaAndjXs02rZ0n
+         9GifpnF4/3+3Sc5oRmoVnWepeiAiNhOVALIjHMCYnzdf7WQKTYuc4SXUIZtDNS7IUuwP
+         ziLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756532066; x=1757136866;
+        d=1e100.net; s=20230601; t=1756532067; x=1757136867;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGlMhdHsRDhXgZTq2403xXjFFF1JZ/LTlsCLMGC7kp8=;
-        b=lXJ4IiG2niRe7pExW+SdDl7QyLRAPFjHV7LwPAQcDYeRn8YNEN/id/HSD3+NstcAJJ
-         unuZa19vVA02FWlZoNU2xPprAb4jIAwDZBJIdthtDdecRNVx5CPKPXAqDuVnFAFTAR+6
-         2CkMflTyH58EFSUGmI5871cA6w5Q3JwEgAJDVRWxcJ7IouA/TwNvxt+o/1O5+YYsRZLP
-         ZESyRooLzOEv5SCd8L5FuOn6IZ9h5qMIhcj5Jk++mTu3IrROre8tXcfNphuIjeGPg0hv
-         C6CNb1XU9jBOVRRFkjsYhNO0ar4wuk++bbnxzeZHmuNW/0mGcaDMHI3h3t/bWEEJt/Ig
-         9PhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjAkUakqEypSvXmIbUtDgmPkQF+Msur7XULDC64ct9eheH6ZTMJKoO+9TBGZKrT57I2gqQjqkdYxk8oYv06P1wt1VJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy08olZT69VFg+dORFUhQAj0IYr37lxfbGzJP8VQjmBdArw4JT2
-	uLf/O+qIdG+e/JTRCe6eqWmvffWq6r2782ClLe+DAWVEWOuaT+4ZMJC7Hg/P4Em0IDxv5mcIK2U
-	ftfqkww==
-X-Google-Smtp-Source: AGHT+IEu5x1ALBVIzEezIw0LvztceM59QoeusqIvEaPTRqp1/Ww5fpBS+OVA8nT4EL6qEP+OLj4cZeZZbLo=
-X-Received: from edf15.prod.google.com ([2002:a05:6402:21cf:b0:61c:a931:8740])
- (user=srosek job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:84d:b0:61c:ea57:6d6a
- with SMTP id 4fb4d7f45d1cf-61d26fd0f04mr806898a12.24.1756532066455; Fri, 29
- Aug 2025 22:34:26 -0700 (PDT)
-Date: Sat, 30 Aug 2025 05:33:56 +0000
+        bh=7Zimki/zwOp+r6f1xZDKXQKE3q1yeo7Wm/nsMmZAsYU=;
+        b=PwD/HgD0udmYqsWBBK1zDCJ1ix0yEJNldtUVfMw5UUOSqzn+FdOPbtYzZ2OCwA8xY0
+         4zd0900p4Yl7Dck/kBKaLvmiYvXqVs+19OyPUhOiwTANpi2weNdZdfd8iNvIHsnrOfaq
+         /O7QeBLK4hN04UOTS3CgOABO6bTxf9GhP7DEH9+u+XiNBzQbxrhmQDtysGvitSI4fdI8
+         meqL5/HRj/FlWqRs57N4ZAWAfssXUScei6jhIUCDANCbV2aMXFlkhR7LEE/hidbw6sY1
+         EY0bjBE8JO4bvx/cnZXov5rMvN/jsVkYTT+2aBGtgjblu1UnOyWw9xDhbQKQuA6eeKd8
+         76Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Raue+aVa0frpauLK+jr0HHXaUYu5OcPza4WYgsX4pvXPvKLU8Cc6n3v0keMvBHKxeGl/8rihPeKeItBu312P82jj@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd4oZ9Mdy3xOVliupqPsBaH3tp7Uedp2BEgdU+A2s4msWYXZTU
+	yF1LqnzkcYlhSVG/CWloBd1bX8tjFbUOGKwAFKNONiDGsG+9gGjvl5v5EBvDK93eRnUp3Uijcij
+	qj/sgKg==
+X-Google-Smtp-Source: AGHT+IG6CJVeBMWJnX2c9NmFJfVhMO1R4hI+uZwvcabTMAXAbkOVLBEDSkpq+WoKzeKeuA0Me6o57/hbQiA=
+X-Received: from edad25.prod.google.com ([2002:a05:6402:4019:b0:618:b715:a0e8])
+ (user=srosek job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:270e:b0:617:b28c:e134
+ with SMTP id 4fb4d7f45d1cf-61d260cc308mr874895a12.0.1756532067341; Fri, 29
+ Aug 2025 22:34:27 -0700 (PDT)
+Date: Sat, 30 Aug 2025 05:33:57 +0000
 In-Reply-To: <20250830053404.763995-1-srosek@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250830053404.763995-1-srosek@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250830053404.763995-5-srosek@google.com>
-Subject: [PATCH v1 04/12] ACPI: DPTF: Move INT3402 device IDs to header
+Message-ID: <20250830053404.763995-6-srosek@google.com>
+Subject: [PATCH v1 05/12] ACPI: DPTF: Move INT3403 device IDs to header
 From: Slawomir Rosek <srosek@google.com>
 To: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
 	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
@@ -73,62 +73,114 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.
 	Slawomir Rosek <srosek@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The ACPI INT3402 device IDs are shared between the DPTF core
+The ACPI INT3403 device IDs are shared between the DPTF core
 and thermal drivers, thus they are moved to the common header.
 
 Signed-off-by: Slawomir Rosek <srosek@google.com>
 ---
- drivers/acpi/dptf/int340x_thermal.c                     | 2 +-
- drivers/acpi/int340x_thermal.h                          | 3 +++
- drivers/thermal/intel/int340x_thermal/int3402_thermal.c | 3 ++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/acpi/dptf/int340x_thermal.c                    |  9 +--------
+ drivers/acpi/int340x_thermal.h                         | 10 ++++++++++
+ .../thermal/intel/int340x_thermal/int3403_thermal.c    | 10 ++--------
+ 3 files changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
-index 8fa85c866675..cf2e95a4f65a 100644
+index cf2e95a4f65a..f042bf22b664 100644
 --- a/drivers/acpi/dptf/int340x_thermal.c
 +++ b/drivers/acpi/dptf/int340x_thermal.c
-@@ -15,7 +15,7 @@
- static const struct acpi_device_id int340x_thermal_device_ids[] = {
+@@ -16,7 +16,7 @@ static const struct acpi_device_id int340x_thermal_device_ids[] = {
  	ACPI_INT3400_DEVICE_IDS,
  	ACPI_INT3401_DEVICE_IDS,
--	{"INT3402"},
-+	ACPI_INT3402_DEVICE_IDS,
- 	{"INT3403"},
+ 	ACPI_INT3402_DEVICE_IDS,
+-	{"INT3403"},
++	ACPI_INT3403_DEVICE_IDS,
  	{"INT3404"},
  	{"INT3406"},
+ 	{"INT3407"},
+@@ -25,37 +25,30 @@ static const struct acpi_device_id int340x_thermal_device_ids[] = {
+ 	{"INT340A"},
+ 	{"INT340B"},
+ 	{"INT3532"},
+-	{"INTC1043"},
+ 	{"INTC1044"},
+ 	{"INTC1045"},
+-	{"INTC1046"},
+ 	{"INTC1047"},
+ 	{"INTC1048"},
+ 	{"INTC1049"},
+ 	{"INTC1050"},
+ 	{"INTC1060"},
+ 	{"INTC1061"},
+-	{"INTC1062"},
+ 	{"INTC1063"},
+ 	{"INTC1064"},
+ 	{"INTC1065"},
+ 	{"INTC1066"},
+-	{"INTC1069"},
+ 	{"INTC106A"},
+ 	{"INTC106B"},
+ 	{"INTC106C"},
+ 	{"INTC106D"},
+-	{"INTC10A1"},
+ 	{"INTC10A2"},
+ 	{"INTC10A3"},
+ 	{"INTC10A4"},
+ 	{"INTC10A5"},
+-	{"INTC10D5"},
+ 	{"INTC10D6"},
+ 	{"INTC10D7"},
+ 	{"INTC10D8"},
+ 	{"INTC10D9"},
+-	{"INTC10FD"},
+ 	{"INTC10FE"},
+ 	{"INTC10FF"},
+ 	{"INTC1100"},
 diff --git a/drivers/acpi/int340x_thermal.h b/drivers/acpi/int340x_thermal.h
-index 3ecd6c4bf2ca..cc1dfa56fc09 100644
+index cc1dfa56fc09..3b34b5338618 100644
 --- a/drivers/acpi/int340x_thermal.h
 +++ b/drivers/acpi/int340x_thermal.h
-@@ -21,4 +21,7 @@
- #define ACPI_INT3401_DEVICE_IDS	\
- 	{"INT3401"}
+@@ -24,4 +24,14 @@
+ #define ACPI_INT3402_DEVICE_IDS	\
+ 	{"INT3402"}
  
-+#define ACPI_INT3402_DEVICE_IDS	\
-+	{"INT3402"}
++#define ACPI_INT3403_DEVICE_IDS	\
++	{"INT3403"},	\
++	{"INTC1043"},	\
++	{"INTC1046"},	\
++	{"INTC1062"},	\
++	{"INTC1069"},	\
++	{"INTC10A1"},	\
++	{"INTC10D5"},	\
++	{"INTC10FD"}
 +
  #endif
-diff --git a/drivers/thermal/intel/int340x_thermal/int3402_thermal.c b/drivers/thermal/intel/int340x_thermal/int3402_thermal.c
-index 57b90005888a..213d4535f2c1 100644
---- a/drivers/thermal/intel/int340x_thermal/int3402_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3402_thermal.c
-@@ -11,6 +11,7 @@
- #include <linux/acpi.h>
+diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+index ba63796761eb..d246c69d4872 100644
+--- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+@@ -12,6 +12,7 @@
  #include <linux/thermal.h>
+ #include <linux/platform_device.h>
  #include "int340x_thermal_zone.h"
 +#include "../../../../drivers/acpi/int340x_thermal.h"
  
- #define INT3402_PERF_CHANGED_EVENT	0x80
- #define INT3402_THERMAL_EVENT		0x90
-@@ -84,7 +85,7 @@ static void int3402_thermal_remove(struct platform_device *pdev)
+ #define INT3403_TYPE_SENSOR		0x03
+ #define INT3403_TYPE_CHARGER		0x0B
+@@ -269,14 +270,7 @@ static void int3403_remove(struct platform_device *pdev)
  }
  
- static const struct acpi_device_id int3402_thermal_match[] = {
--	{"INT3402", 0},
-+	ACPI_INT3402_DEVICE_IDS,
- 	{}
+ static const struct acpi_device_id int3403_device_ids[] = {
+-	{"INT3403", 0},
+-	{"INTC1043", 0},
+-	{"INTC1046", 0},
+-	{"INTC1062", 0},
+-	{"INTC1069", 0},
+-	{"INTC10A1", 0},
+-	{"INTC10D5", 0},
+-	{"INTC10FD", 0},
++	ACPI_INT3403_DEVICE_IDS,
+ 	{"", 0},
  };
- 
+ MODULE_DEVICE_TABLE(acpi, int3403_device_ids);
 -- 
 2.51.0.318.gd7df087d1a-goog
 
