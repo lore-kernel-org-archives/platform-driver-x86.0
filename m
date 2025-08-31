@@ -1,207 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail0.khirnov.net (red.khirnov.net [176.97.15.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5C621C9ED;
-	Sat, 30 Aug 2025 15:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599B21A314F;
+	Sun, 31 Aug 2025 09:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.97.15.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756566836; cv=none; b=D7ksFy3UfBsm4WZF9MQ/geFJjayraj2jGczLkl4J1Osc9vUDNwSUUQNo2l11fv6uk/iFVphjUGn/Pu0mL5abSTYdEAL+Y3Scj9KIYstLm0szEmpxXpYI9sQoQI3W1DeWnnDO66D+pHtVxmrNKWm5EJIwkpBnHnabvbwsVYmNslw=
+	t=1756632669; cv=none; b=CC5d5+B4CYlrmnBWK0/hAOpQ7qK3wy/rm9GzYyW2J+3V9Me1BmnzaMVDKKJ+tMG3ChAQITAfXeCvwL12daAyqYEesYfLy/Qahl35HcQvjY2lKRiSrVfdOq7DrspGixPGdYs8sOMU8/DumoDw3oTVzkHS0WqCgcqzDEupKp3WqrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756566836; c=relaxed/simple;
-	bh=GeVA+T7o7ntpTg+xDppGN4AZE4VBs4ETAWnGCIdbQ8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bPJ8j417CoPk70OVSlzrkV4xuipR4d8xiJk6yF9AEhFwLYb8NQt6kLiBeTdyxPNmH3szw+ISnSRvyhr9HnEt/kCv++mM2yW7wxJNxtW16Nubuq89ItxYIeAIX7Foy6qVZocgyeGfIUhCsYDU/Hf4BYoImzlfh+NfUlwjYb5loz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ox4seuAJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756632669; c=relaxed/simple;
+	bh=dQMY8OkWhke69WUhDU9fABOMfsaOVxXhKAEKmnlkERw=;
+	h=Content-Type:Subject:From:To:Cc:In-Reply-To:References:Date:
+	 Message-ID:MIME-Version; b=GEArR5Fziemz2PiVVdQkc+qx3lqEZTl9zUHBx4h1tXd04e7DI0NCCskbgoOBNUWGfSgZPJYlEmjKRrPtep/fX6AKq3jcTXreezx7VDkt1atxn/cRfYCMHl6oHZG/kg7MHckcd9u7S2SlrENNAEw7CoA6814yUgWuDYQdbFITGSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net; spf=pass smtp.mailfrom=khirnov.net; dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b=iQVLxYJD; arc=none smtp.client-ip=176.97.15.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khirnov.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ox4seuAJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F2B4C4CEEB;
-	Sat, 30 Aug 2025 15:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756566836;
-	bh=GeVA+T7o7ntpTg+xDppGN4AZE4VBs4ETAWnGCIdbQ8Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ox4seuAJ4kJOea08PjWUf2rQDKdDH6Y6LSCx026o7RHkuepgKM12vZxYgapVNr172
-	 HzXtoIE2YhIl83+6AdAqviwgPxuI+sHg1h5L9ttGwdHcQnBbd9QPOdobVoRo7stSGd
-	 JrYxLORc5aI7feU745QB4RYzxl0NGYLwEqFgRIfnsRmqJPQ0RvtIbRbb9M0HMvMvn/
-	 xcrlHk4FbAQ4v7Uw0ir8EJpiwOYO4oWrx7F/7pNe94iewApCLdSJlYgtxBpxJ9m8Kt
-	 S6cJkpp8byAk3mls4OMtKSVrBtYZnFdl8N+yUppAyWpO7FWBmpWCeo2WgZq/LDSOv1
-	 kXi9XHajbSFTQ==
-Message-ID: <c6f2b153-b783-4087-b7e4-30ca207b7572@kernel.org>
-Date: Sat, 30 Aug 2025 17:13:51 +0200
+	dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b="iQVLxYJD"
+Authentication-Results: mail0.khirnov.net;
+	dkim=pass (2048-bit key; unprotected) header.d=khirnov.net header.i=@khirnov.net header.a=rsa-sha256 header.s=mail header.b=iQVLxYJD;
+	dkim-atps=neutral
+Received: from localhost (localhost [IPv6:::1])
+	by mail0.khirnov.net (Postfix) with ESMTP id 988812456B0;
+	Sun, 31 Aug 2025 11:21:52 +0200 (CEST)
+Received: from mail0.khirnov.net ([IPv6:::1])
+ by localhost (mail0.khirnov.net [IPv6:::1]) (amavis, port 10024) with ESMTP
+ id FBhgZ5AaUlCs; Sun, 31 Aug 2025 11:21:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=khirnov.net; s=mail;
+	t=1756632110; bh=dQMY8OkWhke69WUhDU9fABOMfsaOVxXhKAEKmnlkERw=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
+	b=iQVLxYJDK2gdKgcNoMZDk7n5aaGK2jRwjtj9+Mx8fgTJLpcVXc71fBmLyv4IkjnHe
+	 gv9Rm5rfOn1sPVJtLmb0JwBiXRI1wcifx0aatLJvhFkUZXwRbNl/2nH16ApVbIE3cK
+	 cRfhiKEeP7Aml+XD5cdpuZ0LL7RSJh3yyi7XiTyQiO8kX8GQu8AbMc680gzNiyZffx
+	 r0061FSZOvjslModXCTHIZZgBf76r6s58M5RL0gHOkQslGthj8kaxlPEHHksSsKs7/
+	 G1o7fS6wiXlpuYhB7cSv+0jhbxDXzjfZjksRMHr8jnjlZlSgMkErg6E+CmxVW/GDaw
+	 F5dTb0gi9cG+A==
+Received: from lain.khirnov.net (lain.khirnov.net [IPv6:2001:67c:1138:4306::3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
+	(Client CN "lain.khirnov.net", Issuer "smtp.khirnov.net SMTP CA" (verified OK))
+	by mail0.khirnov.net (Postfix) with ESMTPS id 310962456AB;
+	Sun, 31 Aug 2025 11:21:50 +0200 (CEST)
+Received: by lain.khirnov.net (Postfix, from userid 1000)
+	id 062751601BA; Sun, 31 Aug 2025 11:21:50 +0200 (CEST)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Subject:
+  Re: [PATCH v3] platform/x86: asus-wmi: map more keys on ExpertBook B9
+From:  Anton Khirnov <anton@khirnov.net>
+To:  Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:  Hans de Goede <hansg@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To:  <f4c39474-739f-855f-50ec-1aa0d24e8e4f@linux.intel.com>
+References:  <e39cf267-0784-4b56-a989-349e84487bbf@kernel.org>
+ <20250827152954.4844-1-anton@khirnov.net>
+ <f4c39474-739f-855f-50ec-1aa0d24e8e4f@linux.intel.com>
+Date: Sun, 31 Aug 2025 11:21:49 +0200
+Message-ID: <175663210999.18450.17751420471718227766@lain.khirnov.net>
+User-Agent: alot/0.8.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 11/12] ACPI: platform: Add macro for acpi platform
- driver
-To: Slawomir Rosek <srosek@google.com>, "Rafael J . Wysocki"
- <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- AceLan Kao <acelan.kao@canonical.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Zhang Rui <rui.zhang@intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Tomasz Nowicki <tnowicki@google.com>, Stanislaw Kardach
- <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20250830053404.763995-1-srosek@google.com>
- <20250830053404.763995-12-srosek@google.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20250830053404.763995-12-srosek@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Slawomir,
+Hi Ilpo,
+Quoting Ilpo J=C3=A4rvinen (2025-08-28 18:18:51)
+> Hi Anton,
+>=20
+> These days I'm the one handling pdx86 patches. I took this into the
+> review-ilpo-fixes branch and reinstated Hans' ack.
 
-On 30-Aug-25 7:34 AM, Slawomir Rosek wrote:
-> Introduce module_acpi_platform_driver() macro to simplify dynamic
-> enumeration of ACPI device objects on the platform bus by loadable
-> modules. Move common code from the intel-hid and intel-vbtn drivers
-> to the ACPI platform core.
-> 
-> Signed-off-by: Slawomir Rosek <srosek@google.com>
+Thank you, much appreciated.
 
-Thank you for your interesting patch.
+> My experience is that long delays are nothing unusual when interacting=20
+> with Dimitry so don't get discouraged by that when it comes to the
+> rest of v2 content. Once Dimitry has okay'ed the input side change, please =
 
-> ---
->  drivers/acpi/acpi_platform.c      | 27 ++++++++++++++++++++
->  drivers/platform/x86/intel/hid.c  | 41 +------------------------------
->  drivers/platform/x86/intel/vbtn.c | 30 +---------------------
->  include/linux/platform_device.h   | 17 +++++++++++++
->  4 files changed, 46 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/acpi/acpi_platform.c b/drivers/acpi/acpi_platform.c
-> index 48d15dd785f6..adf32ffa6be6 100644
-> --- a/drivers/acpi/acpi_platform.c
-> +++ b/drivers/acpi/acpi_platform.c
-> @@ -190,6 +190,33 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev,
->  }
->  EXPORT_SYMBOL_GPL(acpi_create_platform_device);
->  
-> +static acpi_status
-> +__acpi_platform_driver_register_cb(acpi_handle handle, u32 lvl,
-> +				void *context, void **rv)
-> +{
-> +	const struct acpi_device_id *ids = context;
-> +	struct acpi_device *dev = acpi_fetch_acpi_dev(handle);
-> +
-> +	if (dev && acpi_match_device_ids(dev, ids) == 0)
-> +		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL))) {
-> +			dev_info(&dev->dev,
-> +				 "created platform device\n");
-> +		}
-> +
-> +	return AE_OK;
-> +}
-> +
-> +int __acpi_platform_driver_register(struct platform_driver *drv,
-> +				struct module *owner)
-> +{
-> +	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT, ACPI_UINT32_MAX,
-> +			    __acpi_platform_driver_register_cb, NULL,
-> +			    (void *)drv->driver.acpi_match_table, NULL);
-> +
-> +	return __platform_driver_register(drv, owner);
-> +}
-> +EXPORT_SYMBOL_GPL(__acpi_platform_driver_register);
-> +
->  void __init acpi_platform_init(void)
->  {
->  	acpi_reconfig_notifier_register(&acpi_platform_notifier);
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index f25a427cccda..e2e0fc95e177 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -766,43 +766,4 @@ static struct platform_driver intel_hid_pl_driver = {
->  	.remove = intel_hid_remove,
->  };
->  
-> -/*
-> - * Unfortunately, some laptops provide a _HID="INT33D5" device with
-> - * _CID="PNP0C02".  This causes the pnpacpi scan driver to claim the
-> - * ACPI node, so no platform device will be created.  The pnpacpi
-> - * driver rejects this device in subsequent processing, so no physical
-> - * node is created at all.
-> - *
-> - * As a workaround until the ACPI core figures out how to handle
-> - * this corner case, manually ask the ACPI platform device code to
-> - * claim the ACPI node.
-> - */
+> resubmit the rest.
 
-This comment contains useful info, please preserve the comment changing
-the last paragraph to:
+Sure, I will.
 
- * As a workaround until the ACPI core figures out how to handle
- * this corner case, manually ask the ACPI platform device code to
- * claim the ACPI node by using module_acpi_platform_driver()
- * instead of the regular module_platform_driver().
-
-> -static acpi_status __init
-> -check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
-> -{
-> -	const struct acpi_device_id *ids = context;
-> -	struct acpi_device *dev = acpi_fetch_acpi_dev(handle);
-> -
-> -	if (dev && acpi_match_device_ids(dev, ids) == 0)
-> -		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
-> -			dev_info(&dev->dev,
-> -				 "intel-hid: created platform device\n");
-> -
-> -	return AE_OK;
-> -}
-> -
-> -static int __init intel_hid_init(void)
-> -{
-> -	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-> -			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
-> -			    (void *)intel_hid_ids, NULL);
-> -
-> -	return platform_driver_register(&intel_hid_pl_driver);
-> -}
-> -module_init(intel_hid_init);
-> -
-> -static void __exit intel_hid_exit(void)
-> -{
-> -	platform_driver_unregister(&intel_hid_pl_driver);
-> -}
-> -module_exit(intel_hid_exit);
-> +module_acpi_platform_driver(intel_hid_pl_driver);
-> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> index 232cd12e3c9f..42932479de35 100644
-> --- a/drivers/platform/x86/intel/vbtn.c
-> +++ b/drivers/platform/x86/intel/vbtn.c
-
-...
-
-> -static int __init intel_vbtn_init(void)
-> -{
-> -	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-> -			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
-> -			    (void *)intel_vbtn_ids, NULL);
-
-Too bad there is no comment here. I wonder if this is necessary
-at all, or if this was just copy & pasted from the intel/hid.c
-driver.
-
-git blame is not really helpful here, the acpi_walk_namespace()
-was added in 332e081225fc2 ("intel-vbtn: new driver for Intel Virtual
-Button").
-
-So it looks like this is just copy paste and maybe a regular
-module_platform_driver() will be sufficient here. But changing
-behavior like that is out of scope for this patch-set, so please
-keep using module_acpi_platform_driver()
-
-Otherwise this looks good to me.
-
-Regards,
-
-Hans
-
-
+Cheers,
+--=20
+Anton Khirnov
