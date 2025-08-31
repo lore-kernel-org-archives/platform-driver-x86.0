@@ -1,124 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0637D2580D1;
-	Sun, 31 Aug 2025 21:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33322765C5
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Aug 2025 23:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756675758; cv=none; b=NVoW6b7kPxJX6VS4KSxs9Bv4Q/6fdtVU7UUtNwCyDHJaKNe9ZUwytnRrU2LrmMGd+BV04qdzzFD9X3BP3rTBTV2gL7nmuVw4Mvr8e+IUHsX6G1YWXILLsBK1CCTJJqttWyAgVNWP1rH5QGrNhgTVpH6dfNUuSu+Js4tIzKeLXJk=
+	t=1756684426; cv=none; b=Jslz2Xufs4SZeoO/ziIRCzn7QFZlrfSwm6+Jrkx0Ap+uw49rATVghJ4QtdXeDKqGcuYqrXWuRvlJJeqCV1Yn+kTobjDfZES88+hYrv5YFkX0HAjka9PhYH6DMCSlIfzc29UT5sqDMBzfyb3Xa3BXwHJMt5tmpL/MhatAoqN8cHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756675758; c=relaxed/simple;
-	bh=HjxjDXbNtCQOwloSI6X9nCdoCGhNWNgzFGup/yOEOxo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mNZuIX7/lC+xIXmqsv9xdraPKdxcE2tDavIFYaYkslcXRJXVhzf2Nv7QJRwqmCiuPdCSJCFP3OiSKpJUFc9yCorcHqiGohhsju7GPhxxXzz5igXwvRRTfCZmtjHRDo4HMUuL+Y6vbGAyq/DazKVqXocooO4RkMbJZuGBKJTkkeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8LlZQdi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756684426; c=relaxed/simple;
+	bh=XRMa5Nyj+EgloZQpXXnlKBtZMQtSW8HakSaIrjYylq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CbT26a670HySkzUN2MZIVPwPXeeYeqU4PIS05BEemkXN3fH4sbj6EEhFexTXOcoTeOtVaADnTGRn1eXXy7THNJPbQcA1L37dFFgeg8VrigXOP0LG+1+1zObGp1jE9Sm77j/KlQfF+MQlYoS/lOj0nCOh7ywoO5UmNgRiJZrLZd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WyYY5Txf; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8LlZQdi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727DAC19422;
-	Sun, 31 Aug 2025 21:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756675757;
-	bh=HjxjDXbNtCQOwloSI6X9nCdoCGhNWNgzFGup/yOEOxo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=k8LlZQdiSuECiq8reC9r2m6YgIXjYTUo014J7YjxvG2BI7fIdBuVjVfLnj0Crvpy9
-	 oJNDsOaXERxhgN0ijjZTVtQkXuHMS6FNV85P3y8GlHMcmJiJqHj2wMG2ERpCXC2nE/
-	 IQwuzq0yZ2x7D2Elr6UM+SqqZLkvAirum/UdnLdNsYtZM8qHxmXq67i8Flk1RPsvqy
-	 71lFIhgiAlOycDS3uh/NJRC7Ph8mSZNGsio9t7s33bkWp6S73TVt2yU/l/WCsxjxcG
-	 ZQwAChSebff6blVqSw4Z5ugfUtxfrYpc5SejwKbXxhCiBhj51ldKNXDiswFHU9bx4x
-	 HwvJe2fVs5A0A==
-Received: by venus (Postfix, from userid 1000)
-	id AA459180FA9; Sun, 31 Aug 2025 23:29:14 +0200 (CEST)
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH 0/3] platform: arm64: thinkpad-t14s-ec: new driver
-Date: Sun, 31 Aug 2025 23:28:30 +0200
-Message-Id: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WyYY5Txf"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-affc2eb83c5so255879966b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Aug 2025 16:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756684423; x=1757289223; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SZzD5VUgp4Ev3IaBux7GJ+EciqXgORSO/NRjzJxU14E=;
+        b=WyYY5TxfZD16+oQWcLRNZOp3lIFjfq+YJ8lojszzWE8stWRL8uXucw/MsdhtudYDko
+         H5mH3OSLOfaPVRzBUotRXAxbhtrvzBIe68W90cRV3MDZ053vDnGTs9PGi+bLgwyATU5i
+         9QW2H2ZUsZNaYoiSXR2uYw1gltQ1QRDwfeq8wgJ5tQJtiJpbYpKdRB8aXNPms9JHvwtC
+         heQ0/hUumb0DDvuO1RW99Lk6xf+MLuMsr5/jRA8dYRWjur9Nh9gZI1pkLqZv25wHjo7i
+         /Q3eT3ZfE9e1nFWJ5Smk94GNF+a4mzau+2fK48SDuYeHnCQw1cnPeAz+LhWrLjgHC0JP
+         5swg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756684423; x=1757289223;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SZzD5VUgp4Ev3IaBux7GJ+EciqXgORSO/NRjzJxU14E=;
+        b=NOqNXx7Kf+muJalvZKyYqmRpDhpyr5tlMjoWmxukF0j4FDg/RCNfVnT6LQ4RYBt+Sp
+         ERLlYPSwicwNuE6osqG9w/mq2zvEO03eo3x3pTDiEr3esdvLRQLZ82qIpvawPiCynNGf
+         ysAyluTxkpV5VcQNaawbr7fVXgoeTME0Vc3CUGQeKEnDBe5a2ChfiMEy1okT9iiSASjg
+         emsL34sRu2opmGFa+gungxSGGsKHwhYwIn9xXcCdEFS+3XM+8hozp+P2F/8fdmWBGenV
+         utqD8heg6oeCqBdzAnEJY9yryyA8q2Yo+64CdCwpznj9pn4oQIim1Nw6oPp0JhkM6Mfr
+         S9vA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFoFFE1Dl+pPcDYuJMbxA9e7v6i4wLujRVas/WHnLaEdCUxNXgy78k8DzIa4pwY9bir5REQO/2J5/3Su370gLaS7f+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzonpU+JNr05nbg0K4Fp0IFfOLJE3NXYXiVtr569kDb7hEAKcbr
+	Z65+ppn+9DB/8cF9dAWZLjFXEBTZc3Rj59PmLFj71kcNH2jVrgVz821Ad1uL1Efggrk=
+X-Gm-Gg: ASbGncvs8dKWnN0bJPZJOG7g09I+4oqVwKUGb0/PRumqp7wVuMAuhqDSZ22AjL3j3Sr
+	G+TXXrdCETyUQRBncSWQ9Zpty6FYChlcce1tRLcGrkIkSrpZlQbXNN8mzBjiMSj9auT0UPEOpLK
+	acwA9b0HGSSEAkTkSxGJVVh/7C6Lp0bnmi43TMhvovwiC0UXgv33/7DLWPemllfZ9mHYdDgnUWI
+	GuSC6vM0NkBRM6GiIeJm4ML4Mqk+R5M7kszi6qcI9cwmadM3/0NHSdwrXXcuAW40HLoYpd40kDN
+	nCJjrauD69yFc5kDU+KIQfi9KWO2jcr/W9F3BXrbuFBM71swilI/mWFpd791oZ0wpbTvEkzNv4n
+	GxDLXbxpsD7j4chdViSt5o5O8+aArciMe/dyu7XH2uWYzJ4zo7xIIvT+F129dPLA9qkJGik9dmG
+	sUfDMR4ymtHRan2qjQ+9KfVp2tXc3ukw==
+X-Google-Smtp-Source: AGHT+IFVA35Nb2ITQ5xm+F2H5nsoLi18hCULy2IxfZciFpoZhuuHzO03Eo2afLQfaNulmRaf+6lTnw==
+X-Received: by 2002:a17:907:72d5:b0:afe:a6d3:b4a2 with SMTP id a640c23a62f3a-b01d8a39b3fmr584547966b.11.1756684423063;
+        Sun, 31 Aug 2025 16:53:43 -0700 (PDT)
+Received: from [192.168.0.19] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0432937e0esm59177966b.3.2025.08.31.16.53.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 Aug 2025 16:53:42 -0700 (PDT)
+Message-ID: <d3161da3-1337-4a39-a16d-ad586f838c0f@linaro.org>
+Date: Mon, 1 Sep 2025 00:53:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH++tGgC/x3MQQqAIBBA0avErBtQK4iuEi3UmXIITDQiiO6et
- HyL/x8onIULTM0DmS8pcsQK3Tbgg40bo1A1GGUGNXYazyBxT5bw1H1B9kjEznTkyK4OapYyr3L
- /y3l53w+Iv7BMYgAAAA==
-X-Change-ID: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: platform: Add Lenovo Thinkpad T14s EC
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
  Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  linux-arm-msm@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2319;
- i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=HjxjDXbNtCQOwloSI6X9nCdoCGhNWNgzFGup/yOEOxo=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBotL6kS908FD6dq6aodhRrf1QqQCY0apxy4/jKo
- MhxLHN3jiuJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaLS+pAAKCRDY7tfzyDv6
- mgQ0EACIPLqw2p0ytn13LICAsUIUlatISjuhde94+jEpt/RgwumC1GNPa8akvExtI/q3Qw5TfBr
- MeSOXD+h0FwuBFMl+m6BuGCrOM5VkMt2aSMHeO3I1iu4/c+dC9qzKffTB3UMd4n1XJw8dzsT8ng
- 9Ox2UZq1R4fRmjEFsQBgDdHbBwkgE5zoBdlX4iEceE7zpxSVOXP4Nqk6UR7KhxswDHfdVojwyhh
- BQsSzb9NAAVgz4PyJyp6vLvycO1yy7fzWkvWFqP0P3FUnS/zd90qsDcpcMt01Ek9lOHH1P/SOW0
- EJ+1PSqQ029hJLzNlcmkP27IWY9Wm5j/eKFFYbWvXayzGYWs7WTnrdPeGgJKr61uHYUBl8GczFz
- et7HkvmL14u8cf4+maZUQECX41f9/zFsLCCPtwU+24THx0eErUlH+Zx6oZ5ogM1XeZckH3+6fF5
- Rv6CVySWWg+FRB9qt5zua6kmDjBXQhDBCNbkYh2Pjk4h37AQOeJdv0yU76CR9Par2eu3T0I5x4F
- WiG2CYPMRMgdAbcMmFjRfuhzEShtSXvOFp9QrR9m4wNaR0kowHIfomd3ujPkEY8zBz7DBBWmLXn
- YHjCOGEZbfZWZplFSSkphuLI6Tdr5RinOkp4tyXU5LoqBO0jfUIptJMMz+elsX8IRKWBLo0zOH5
- lrArceJ9ZZCTctw==
-X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
- fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
+References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+ <20250831-thinkpad-t14s-ec-v1-1-6e06a07afe0f@collabora.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250831-thinkpad-t14s-ec-v1-1-6e06a07afe0f@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Introduce driver for the ThinkPad T14s Gen6 Snapdragon EC. In theory
-it seems to be compatible with the ThinkPad ACPI driver, but these
-devices are booted with device tree. As the name implies, the existing
-ThinkPad ACPI driver only supports the ACPI interface. Looking at
-the implementation, the ACPI DSDT contains many mapping functions
-to translate the low level I2C messages into the interface used by
-the ThinkPad ACPI driver. Adding DT support to the ThinkPad ACPI driver
-would require adding all those translation functions, which would add
-more or less the same amount of code as writing a separate driver using
-the low level interface directly. I don't think it's sensible to make
-the existing ACPI driver even more complicated, so I went for a separate
-driver.
-
-I managed to get system LEDs, audio LEDs, extra keys and the keyboard
-backlight control working. The EC also seems to be used for some thermal
-bits, which I haven't looked into deeply. As far as I understand most
-thermal and fan control is handled by a different controller
-(0x36@i2c5) anyways.
-
-Apart from that the EC is involved in proper system suspend, which
-is something I do not yet understand (I don't have any documentation
-apart from the dis-assembled DSDT and existing ACPI driver). Right
-now I disabled wake capabilities for the IRQ, since it would wake
-up the system when closing the LID. Hopefully a way to mask specific
-events will be found in the future.
-
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
-Sebastian Reichel (3):
-      dt-bindings: platform: Add Lenovo Thinkpad T14s EC
-      platform: arm64: thinkpad-t14s-ec: new driver
-      arm64: dts: qcom: x1e80100-t14s: add EC
-
- .../bindings/platform/lenovo,thinkpad-t14s-ec.yaml |  49 ++
- MAINTAINERS                                        |   6 +
- .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    |  23 +
- drivers/platform/arm64/Kconfig                     |  20 +
- drivers/platform/arm64/Makefile                    |   1 +
- drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 597 +++++++++++++++++++++
- 6 files changed, 696 insertions(+)
----
-base-commit: c8bc81a52d5a2ac2e4b257ae123677cf94112755
-change-id: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
-
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
-
+On 31/08/2025 22:28, Sebastian Reichel wrote:
+> Add binding for the EC found in the Thinkpad T14s Gen6 Snapdragon,
+> which is based on the Qualcomm X1 Elite. Some of the system LEDs
+> and extra keys are only accessible via the EC.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+>   .../bindings/platform/lenovo,thinkpad-t14s-ec.yaml | 49 ++++++++++++++++++++++
+>   1 file changed, 49 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/platform/lenovo,thinkpad-t14s-ec.yaml b/Documentation/devicetree/bindings/platform/lenovo,thinkpad-t14s-ec.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..bab20df2d9ede9a3cb0359944b26b3d18ff7d9b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/platform/lenovo,thinkpad-t14s-ec.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/platform/lenovo,thinkpad-t14s-ec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Lenovo Thinkpad T14s Embedded Controller.
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description:
+> +  The Qualcomm Snapdragon-based Lenovo Thinkpad T14s has an Embedded Controller
+> +  (EC) which handles things such as keyboard backlight, LEDs or non-standard keys.
+> +  This binding describes the interface, on an I2C bus, to this EC.
+> +
+> +properties:
+> +  compatible:
+> +    const: lenovo,thinkpad-t14s-ec
+> +
+> +  reg:
+> +    const: 0x28
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c1 {
+> +        clock-frequency = <400000>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        embedded-controller@28 {
+> +            compatible = "lenovo,thinkpad-t14s-ec";
+> +            reg = <0x28>;
+> +            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
+> +        };
+> +    };
+> +...
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
