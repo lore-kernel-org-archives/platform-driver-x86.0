@@ -1,173 +1,111 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E07E2FB626
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Sep 2025 09:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F99303C8D
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Sep 2025 09:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756717441; cv=none; b=SDnSE23Gbgi26xAY2gNQe5QBdopQ/CwvlMTIukmgCL+jshfSRC+BMjTCJt2DjMm/OPkqA6FNghMYQ+EaxLPscbqSkGIn+IZB5RFq3OUXqbaUFQvtmaNtCJC/nFrlSeC8AiGif6CHRBqo3XpUkmu3qZfqsU0aepKwnBVYBluSNYE=
+	t=1756718031; cv=none; b=By6RIPwfhyZ0L9eocOq8xMwaNpI6zynX8C9pf5c4zpw3rirF+Swg9msdvwykoP4DT4ZQXzCiSdq8zAUvvdd1R0gyOn/qNSOngpqvA6JtCNzwGK57YPc3VsB1rRG9Qf60py76HsU2Z9xsETf/AdozsdDrbY+tt3pr6uyqwF7MhPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756717441; c=relaxed/simple;
-	bh=BRVffIraDrTcVxvFJdlUUUnJJYHLdGtchn0lCofCxlk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lfkrq/i0gIjtH/SU3rOsP1ZDSovdpQlsX4gR8WHUt+EnyWTEmfIi8l0SD9f48mtJ3nf/JmbFLqdhSjWh2nuXRXvdvtSOqYJN1el1frKVIt8b+6nrd6FrFF7vZQdjoI/XUfDjq3hskt57MHQKJ0WI3pyISG6Wx3BjqwGq8xqUWKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uLsPWZpO; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756718031; c=relaxed/simple;
+	bh=wSXND9Mzzzv6AKNal40JGhqkoUZKxKU4k6agDL9RM1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=evpnUroz3k+tEB5N1oxsqscueG2XfJwuKhw+QAEw/XKGSwujb0FqouG2vUbGaXvdN1igLoF51Ex2waq8OtZf3GxQYjmzpPzJXGO0Q8d5NmarEFLc8NTUU+ytC1JnfWwFqQKx6E6Nlu4jnPn7/XA3aEzaBRxZXchETqDvh2yNv3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NytbhHQq; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uLsPWZpO"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-45b89147cfbso10438835e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Sep 2025 02:03:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NytbhHQq"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-affc2eb83c5so311778966b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Sep 2025 02:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756717437; x=1757322237; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MLxQeBkb7pg30Hm1b4BwH3XF1UA4XXnA9/e/abfa5DU=;
-        b=uLsPWZpO019pbS6/8j8oIeTYmgvvc0Ex3Jaa+l0/de6ZS0cox4UQD8OmLDE9g4lidC
-         VdVG/JIYaHK8wonXs2kyiOId1/FJRwxzbS9SPmNKlWxdx28wcFexYlFalBwiCGVSa1Fv
-         qv4ggfNjlB7jWQNTz2rBnAmEvuAE86tioWV1tnb3yqAmmWDxvrZDlu9em/6bEZSJBoEZ
-         a2weE2PMsHZyhb1/uX9ngo/SqovPnAJobqXXsEJMUIs+wS5a0N6WuAf5rq2EOiGqyjPw
-         AUZOUc0rWcO1msp0xKiZoC84VHXPWRSddvx1GZHSHY6nWeuG+dO6pZQFv1KiTARIsBtu
-         khQg==
+        d=gmail.com; s=20230601; t=1756718028; x=1757322828; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wSXND9Mzzzv6AKNal40JGhqkoUZKxKU4k6agDL9RM1A=;
+        b=NytbhHQqZndoJjjTfs2tGDS6cPIXhzkbpy4AWzEMhttlmnY6OiodK7Mli6Ai8vVFow
+         H2xcH9myOO8LkAUNTo6S31HCEbnB+5G3XrKLUznMrJd/c/fdVi6zYzBYvc+apCNYutzy
+         Q7MOtg0Of5QmEdrbULpfOMnL1c0fJ2eC5xXz49krm8m9HJrhQ4bPoaN8XDjQwCH2oPT1
+         ffwprSZOWw2e1RulTkGMqv9892S3YhZzO+S//tH3dJkE2IL82ywjtoJygHqkgMRvQbmz
+         bfq84KqwIntCJo6t8gJZjHEuQj7o6SsBX/d1R2Ptp9gp3XcwqWTwxwgVcFU3j4/JucaR
+         LG1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756717437; x=1757322237;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:reply-to:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MLxQeBkb7pg30Hm1b4BwH3XF1UA4XXnA9/e/abfa5DU=;
-        b=G+J/gb7ds72p73MTDempKqOOzF+cE5p6tmYtTxFBlNHMtA6zpsVaJaDAb2c2xdv1T4
-         XUR01/62qGWge5a2Lifqz6W72mLJ3mautTsUV/OOFSiTsBQa/S3PU7PLnWm+8NBDTrje
-         nPbwEdjAW15XpY0ELGc+3xPW7ukcmUkscn+pGIKaRpTNNe81AzEEtTTCeNhkKY+drEft
-         dEMwHrMiFCT5YaKVN59h0wesax+yRBagV5+ftkFPj7WvHB3cHAXZoqoQAUNQAcqpXWJv
-         t45ArQvmDdCWPelK6F8/5txlGP6A1NBjvCBmDZiINUjywEa0XqYKASGEGeinWftrV6PG
-         zYyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVM9vM9d2USgFCVMMVDMWVhTx+Gpft5vO3+MCygwYU5pFyhkC9kWc2Ltli8VAeuNOf4YKBPxBrJQ/9qkO/a9RF5Mmup@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq90LltRTzZWhWOkIma2GtJ9FhERwPOGzO42r+7M2ImVuh+2cL
-	Xxo9KlwhfCE64nFge4rAseCUtrnr/nHSs+sPCSI4fYck9nNuS9rfSE1+dtOCWwjRuWp9/JV/okR
-	s4ebznww=
-X-Gm-Gg: ASbGncsP+FVkh0IYDUl6oCq748wBMCKIIV0LyOc4N7P+WaYDoeWLNSRQGebrGXFB4Ox
-	lApw0pyktqRko7LZ7DJ99BqT6PHzOOOQdsQJynJS2lelqT/bJHzIsCiAgy1WJ8+/QEO+gtxYN/0
-	DtXwNNO4Vrv0Jxad5qangahNZXbh7frbPvagdQVYjdeDS6g46KVYWXBjZyEXsC+clcs8sWDcrdg
-	wpxVWBLFXFTlyYaNa9C1RXyOuzZsEOyi5SKBOfWUsQg+7+ZnjXJUCZEkZm1Kek93m6vBcJ2gZNk
-	SKYNuuXB+92OR1Kr/mDEZs1Tru5OAVYvtzRlSMTZErM5HhtZPPcONNtdikmZVQhR6aAQBgmThou
-	YfWGmuhHc5hZOTq3x3KA9qny89D9SwHLmW5A54bU7gqIBKwf/gNBAe+QmqPM2ob7svk3OdOHP3d
-	nbgxcfDnM=
-X-Google-Smtp-Source: AGHT+IFRon1/4eAXp3QDGK+LmMCItN7KW9fmyhhUSOX/aEte7rl35eC/lBri5/0sH+daAyHsLqfoNA==
-X-Received: by 2002:a05:600c:4692:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-45b855983f8mr46646315e9.20.1756717437302;
-        Mon, 01 Sep 2025 02:03:57 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:881c:7d0e:ad0a:d9a? ([2a01:e0a:3d9:2080:881c:7d0e:ad0a:d9a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7d9548edsm93591505e9.5.2025.09.01.02.03.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 02:03:56 -0700 (PDT)
-Message-ID: <d39a0299-bbda-4284-b7ab-81648a787305@linaro.org>
-Date: Mon, 1 Sep 2025 11:03:55 +0200
+        d=1e100.net; s=20230601; t=1756718028; x=1757322828;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wSXND9Mzzzv6AKNal40JGhqkoUZKxKU4k6agDL9RM1A=;
+        b=cu4toLMRVkyXGLiX5RQ8HzwHzSdu5CI7OXo0voEJRtqRdcE4IkcCtW2LCvReYuqJ9C
+         w141GLGeTaKeQyKIg0uK/npMo9/VWYf/TaldDENNyvIi1l8H7rlc7ExZ3JBD4C6Lxsbw
+         Z/FwMHy43p1znw4GK9PXv108bMbwz/0VyhMGEhasGK+1sXEB3OpVFOlrlcphafK1ILMR
+         owOij2+Godslas2G9qUbMoVqFnWPe+cZP/DCyHBGPg4nELqJLLUWH+KOrBKTe/I4t7b1
+         CsETPt3wwDJ0tlrIR0tC9RyzrCCN4JF7S0RT2+klV3IX01oa4fVz9f4qkXimZu5doOuR
+         DmNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNprR37KrifnkchDtrHbnPG9y/FHGtGNeGqONlhc7KHCKsV2HT7dZfEMXhS2RnA30KlJJC5rwyPJV5epHIiVtkznM2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4BHCI4mUIQmmb6wwl0QZ5X8c39IF4GjBm0UppIZwMSodv+zTZ
+	2rSac+U6lT9vj+ro2Iyqd71Mydz0/1p9e7g2x8Rlr8Lgih7vdUqFuKQXRumjryOmTBwfk0GBYdt
+	J5PKZ+XetOtUZ+xojdOzp1smlnK61Fpk=
+X-Gm-Gg: ASbGncsqeBj9mho6k415YFLaYm2RipOrhhQv2+2/96zELs8Ze8k3Fb72v7hVHu0m+1m
+	r4P2ygqrOZoDV6q3Jciw1apP36x5ya16Iky8vsZmZsaetp5cZPIj9lRTnn2EjgBu3M9grN8Mvds
+	BsbPnpty+2UzfaWzLkW3IXgDC+JS3tpYt7MC4ZauQtAPa6SuhGuAGXi0qi+95wvLLY4p4i+HeTy
+	2+ToUVWB+T8HmUt5AZh
+X-Google-Smtp-Source: AGHT+IGKzU/Qu8oWqZyjPmHjYRgdP3F7jO5h2HM/vL8SzLp9FSu8wVYC2JORN0Hj5G5vGAhsqQfF22GMBGwOV6hxUOM=
+X-Received: by 2002:a17:907:9301:b0:afe:b878:a164 with SMTP id
+ a640c23a62f3a-b01d9772bd0mr693556966b.50.1756718028220; Mon, 01 Sep 2025
+ 02:13:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 0/3] platform: arm64: thinkpad-t14s-ec: new driver
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250831105315.15349-1-hansg@kernel.org> <20250831105315.15349-2-hansg@kernel.org>
+In-Reply-To: <20250831105315.15349-2-hansg@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 1 Sep 2025 12:13:10 +0300
+X-Gm-Features: Ac12FXyhMM4x_CwXMI2s9Ys5BZN_GNBs1keXVfpZqwPvgkJ0dWirmqVEEUbCSyg
+Message-ID: <CAHp75VeJutOpvhh5-97RS73GMrJB5HyNggLtVjw9d3RM8Y_WEQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add support for
+ Acer A1-840 tablet
+To: Hans de Goede <hansg@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31/08/2025 23:28, Sebastian Reichel wrote:
-> Introduce driver for the ThinkPad T14s Gen6 Snapdragon EC. In theory
-> it seems to be compatible with the ThinkPad ACPI driver, but these
-> devices are booted with device tree. As the name implies, the existing
-> ThinkPad ACPI driver only supports the ACPI interface. Looking at
-> the implementation, the ACPI DSDT contains many mapping functions
-> to translate the low level I2C messages into the interface used by
-> the ThinkPad ACPI driver. Adding DT support to the ThinkPad ACPI driver
-> would require adding all those translation functions, which would add
-> more or less the same amount of code as writing a separate driver using
-> the low level interface directly. I don't think it's sensible to make
-> the existing ACPI driver even more complicated, so I went for a separate
-> driver.
-> 
-> I managed to get system LEDs, audio LEDs, extra keys and the keyboard
-> backlight control working. The EC also seems to be used for some thermal
-> bits, which I haven't looked into deeply. As far as I understand most
-> thermal and fan control is handled by a different controller
-> (0x36@i2c5) anyways.
-> 
-> Apart from that the EC is involved in proper system suspend, which
-> is something I do not yet understand (I don't have any documentation
-> apart from the dis-assembled DSDT and existing ACPI driver). Right
-> now I disabled wake capabilities for the IRQ, since it would wake
-> up the system when closing the LID. Hopefully a way to mask specific
-> events will be found in the future.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
-> Sebastian Reichel (3):
->        dt-bindings: platform: Add Lenovo Thinkpad T14s EC
->        platform: arm64: thinkpad-t14s-ec: new driver
->        arm64: dts: qcom: x1e80100-t14s: add EC
-> 
->   .../bindings/platform/lenovo,thinkpad-t14s-ec.yaml |  49 ++
->   MAINTAINERS                                        |   6 +
->   .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    |  23 +
->   drivers/platform/arm64/Kconfig                     |  20 +
->   drivers/platform/arm64/Makefile                    |   1 +
->   drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 597 +++++++++++++++++++++
->   6 files changed, 696 insertions(+)
-> ---
-> base-commit: c8bc81a52d5a2ac2e4b257ae123677cf94112755
-> change-id: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
-> 
-> Best regards,
+On Sun, Aug 31, 2025 at 1:53=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
+ote:
+>
+> From: Hans de Goede <hdegoede@redhat.com>
+>
+> Add support for the Acer Iconia One 8 A1-840 (non FHD version) tablet.
+>
+> This tablet has the usual issues for tablets shipped with Android as
+> factory OS. The DSDT is broken in various ways, so i2c_clients for
+> various devices as well as the INT3496 platform-device for OTG extcon
+> handling need to be instantiated manually by x86-android-tablets.
+>
+> This table is special in that it is the first time a Bay Trail device
+> has been found to use the Dollar Cove TI PMIC and the first time that
+> the PMIC's Coulomb Counter is used as fuel-gauge.
+>
+> So far this PMIC has only been used together with Cherry Trail SoCs
+> and always in combination with a separate full-featured fuel-gauge IC.
 
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on Thinkpad T14S OLED
+Indeed, an interesting combination. Perhaps due to some cost savings on the=
+ BoM.
 
-All worked :-)
+...
 
-Thanks !
+Both patches LGTM, but I have a question. Do you plan to move to
+software nodes for the GPIOs, so Dmitry will have less work to convert
+them? If so, perhaps it should be a patch in the middle to convert the
+new file to use swnode, or the precursor that converts the whole
+driver beforehand. What do you think?
 
-Neil
+
+--=20
+With Best Regards,
+Andy Shevchenko
