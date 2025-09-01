@@ -1,802 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112D978F5D;
-	Mon,  1 Sep 2025 09:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756720322; cv=none; b=lZEBlapdCeswxSHwbom0LK+i0KecJXM/PUlg9JZ6inFAN3ZdySY1o01s6cN0ZlDtiNdTnEvTsDRJt4Y/ZzpDImw7joFbzXCbHiplR8mo5+VI4XD8YpZD3I/9yrjIQNSpdxF/RBv8s0V0rR39ovBsvSF1PE12QHn8P9EC4+4+5H4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756720322; c=relaxed/simple;
-	bh=3Hk353XPtWzoXqWng1xA6KlDUVTJSs6tMddhlQyDxWc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qwc9g1nXrse2/ktrAL9D8RD0JYeksJk1oAB1hIJwWQhExakJvAG2kqbrSOHDeZpBNYPw9nyUE3lMzxYgSXZDVycqtCaKwe+ygXbXvHG4RHkHy7gzvFYQ9RzwfxYkfoBSHs9eK7w/nWLTMYNVgN4q2ksaD4OHvgpceMOt1sYRUMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RcFBZwcs; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8875422EE5
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Sep 2025 11:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756724530; cv=fail; b=KwRRkXg0RtA4IP25QyV6Gjro5qZSA6wxg5wp3qCjlWXuG6gQyf7WB61na94YYSfL1pUfN4FRr/nm2iGV6dmW6ylPJp29my34hjBImjlqGrxNSarRjNWnJ2b4GimvT7R+ZTbTmqr7YTr2UWUawyQkzu9yVRsZvk0Vu7Vr0HC0Taw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756724530; c=relaxed/simple;
+	bh=nWi01cURTyRe+3rotarIcNdsBmmB72qzBTTXB2cSqgY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HHbt6HwaDzvQoHzvgJ8XoITdNbzAnDh85tUJvyX2ydnsfC7HfIOfPt6ukhMLa4yuBgGkvMgUf0UYXbdxvdpSI5jiWnbyyAPcNj0NtwEj+Dpil+QxMVi70s4yfgerctg5P3vFPlRbgjnOexMYmkqrJFUi1biLEbU8qB398BHYSH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LBlmP1Cn; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RcFBZwcs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756720320; x=1788256320;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=3Hk353XPtWzoXqWng1xA6KlDUVTJSs6tMddhlQyDxWc=;
-  b=RcFBZwcsCg+blBmIamG2y1YGXByLLwg29QYdXKsbzLSlReCYJlMPQ78h
-   +/4Cq8I2Of3BjTQwDsNHuJnsLn9W6qDb3jS/aWWnmZdV2GZ8q4e7m3yc5
-   PbDYJFgMkIpe/AznrunBnnMyuRN8u7oFtjl/36WnXohw2hwh5Nvk8BpPa
-   rB2uJ06+p3RN27S0p7kJy4fCTnt4jGSzRr3LNe13cfRVtBFfyaJLqPpcl
-   2+ZMGqgMpevgutcXnff9p1w7WJGZjyrMGR1THmmPKaeBEIJJo0IquuaIH
-   QDnAxnwDL66q3kzgijOUdhMFF09Z10mhPGUKtJE4TtlCCz0d41TL3ogTQ
-   w==;
-X-CSE-ConnectionGUID: o1IlogKYRciRLJsg9dz/nQ==
-X-CSE-MsgGUID: IGbap6WFTGKllb935eG5JA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11539"; a="61609773"
-X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
-   d="scan'208";a="61609773"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 02:51:58 -0700
-X-CSE-ConnectionGUID: IOvuHHInT4e1PwvBoJ1wgg==
-X-CSE-MsgGUID: AQqoBV/1QrqJBg+v82ZOXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
-   d="scan'208";a="171423710"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.193])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 02:51:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 1 Sep 2025 12:51:49 +0300 (EEST)
-To: Sebastian Reichel <sre@kernel.org>
-cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konradybcio@kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-In-Reply-To: <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
-Message-ID: <b6ee6eb5-0db0-88fc-af53-598edfa56020@linux.intel.com>
-References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com> <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LBlmP1Cn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cV3ke+5rLZscPQZGXj5xTt9DL2Wr3m1yNo4By/ZBpvdoRbPUkPQGX8x/nsqhfNWwfU20nOz3A32nO4xMbQ4l6Mpi2cPs6EIhbgk5C2cbSER+S2081pve5N2KdS8i2f9qIdPuB2jCME2qM1FhpiBIACz40nz3l4JBsCjf7deOYZkYFaCYIDCZsjlZzkTyM/5qF/OnDUbWjw4lYeCGvNAs++aIHPw2BQPxfLuPukPQGMupwWzS7yyBP0+87essjrGFaUTdisgsFflY0rFNVZn7ehiomj4e8HzT8gx9P9qT6/BN4CDGRjAfWE4UZISJUH8mG4UX8RjwGQ1/+FNUcDO4Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RKTF0i3wF/X3HKwcXnOjk166rE7DHvE5j0VyAaoPZcI=;
+ b=XPnlYZPmPCC0qaL2xD1FyYK3Zj1yMUSOgyRmWHJyN1Ww26aCkhcqKI5yxp9TFTiELI3+kZfnkWCb4/3LTVndcWHa40HMu4+lSAR49Dcd+MKdnhIlPZYoJjSD5+1cv/arVH2pjofp1W3snepABNsmLW6bwgpROh+CN8dx7EjAjxCCwYblrWhdRjKu0VmyfRA5uLwDYx0V9WKVv+kLU0p7FPzefdLNoY/mrdwjYrawmUPuZpHal1pT5VzuWQWeLW1Su+AHnDcM2oudKvGmeIZeZQyJoqXN/hLHG8174oA3GGAQGmwhbau0pSQxFnVdqz+lLeBS+aVNAQGPgvEGuuncNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RKTF0i3wF/X3HKwcXnOjk166rE7DHvE5j0VyAaoPZcI=;
+ b=LBlmP1CnAUIejSZaFpPbZS5O5kc3DUlblcgCB5Ia0AOWgZgsyTNVHcyQto1/catzWdpyopZkn+mXWRuI04jifD4EpqQ+JQlpooFrpTxwnH19JkXGKxJ1gWphi3TdukHtJz/xohvKpa1V/GGRX24sZTPSHNl5MedhjxxWqOEnQqY=
+Received: from MN0P220CA0025.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:52e::33)
+ by IA1PR12MB6601.namprd12.prod.outlook.com (2603:10b6:208:3a3::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Mon, 1 Sep
+ 2025 11:02:04 +0000
+Received: from BN1PEPF00004683.namprd03.prod.outlook.com
+ (2603:10b6:208:52e:cafe::72) by MN0P220CA0025.outlook.office365.com
+ (2603:10b6:208:52e::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9073.27 via Frontend Transport; Mon,
+ 1 Sep 2025 11:02:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00004683.mail.protection.outlook.com (10.167.243.89) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.9094.14 via Frontend Transport; Mon, 1 Sep 2025 11:02:04 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 1 Sep
+ 2025 06:02:03 -0500
+Received: from airavat.amd.com (10.180.168.240) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.10; Mon, 1 Sep
+ 2025 04:02:01 -0700
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+	<mario.limonciello@amd.com>, <Yijun.Shen@dell.com>, Shyam Sundar S K
+	<Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v5 RESEND 0/9] Enhancements to PMF Driver for Improved Custom BIOS Input Handling
+Date: Mon, 1 Sep 2025 16:31:31 +0530
+Message-ID: <20250901110140.2519072-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To satlexmb09.amd.com
+ (10.181.42.218)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004683:EE_|IA1PR12MB6601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69d64fd8-5da5-478c-7cd0-08dde946fbfe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?JcgBQJmAp3UiI2EuMZ+eF5xtcqz+zKsLuWDQOtVt7PD+kO4Q9PDAm1CPkrxK?=
+ =?us-ascii?Q?P7TqGJwOVqzQuYnmROcNXayRGRJR+qrjdMshXY0DzSwjbi5P9RaChfPTe5X/?=
+ =?us-ascii?Q?ZkERCK83KSKIFnwsfJ6B3ju6HNv28zuyR3VqIm/sCyWqJEL4CNygLaa6DGY6?=
+ =?us-ascii?Q?beL849ESJoJyQNBTXyG7QaJ5CqSLf72ds2u9k6vrRwTOLC/XdEe36JGJloPJ?=
+ =?us-ascii?Q?G1no894xt3sUS03BydCM8VBC3WIcLg6/WkfIzQqGQ5MHwhy27z//0TnQStT2?=
+ =?us-ascii?Q?E9Ts+DIDSblrSxay0ZO7bXLP3QM59g1uGjAGBxCLDNRW3tnrJjTJlMKp3Zcf?=
+ =?us-ascii?Q?0bWRdx+ifUaaHTImJ0BN5mQZSSFKEdmijv//4GJiqCTAo7fWKVBSHKnM5C7K?=
+ =?us-ascii?Q?3+F8K5cjTjG/egbo7UmZEBXrAIVisqN+4oJtDfbACKPhuEfI0NrEf4wMWHps?=
+ =?us-ascii?Q?0P9V5kjRimdBJSHjV3YaAz2nqMa56Wi31DPXCoeIlJtdPKtKRB8ySeG0PlzF?=
+ =?us-ascii?Q?CmkBQAYUDPVTsokxTsxi1ZXAFN3JqnYonq/DpQQUZ4FNiwcOPFvCGQaqDKM3?=
+ =?us-ascii?Q?Isg5z887p2V0pP5pETbLNmFWmS3fK/nv2u9WJi1Ef5yyOT2BW8MUCKiCEgtR?=
+ =?us-ascii?Q?vCC4B5ZdVQstQMY53n2pcwBXDIju5UOVoALVH+asAtQm5cQn75FGAUb3E4J9?=
+ =?us-ascii?Q?2bul8u8VRvrdE8PZ36HANP49vgZCzVhRJzLf7nP45VH/OwircoF6n62SroJf?=
+ =?us-ascii?Q?gV21YeVXG6cGebOPnbko6FDwjjVm7NdIkqSozFfBrZIT9GtL0Xz8YecWSgQj?=
+ =?us-ascii?Q?t9mr7Qj88lo75bZ36+NhqmOtBWU4bcZIrCUpALATryl0bolnq9t2IIv4NV7Y?=
+ =?us-ascii?Q?a14qPSBBcV/saKk2uIYq6EOD2wNt3fhuaNhu09bfaLE34E+FBFsDt+XQQA1V?=
+ =?us-ascii?Q?cblEwa7d+jQ/egc4rBS/e02c7IDDt438Yzu26LQrpXwRqzc78XfeYiIr1dFA?=
+ =?us-ascii?Q?x1NeS+CU+E563lcTw/LyGK6RcPK02+R+qKo3+VJCjyCNU304Jb15MFyPk1mt?=
+ =?us-ascii?Q?ge+TKr3HmR0JuzJ2Wa0VSYmlmpfpcbDqMnCe7qEiU/LL7r6nQyU6tXSN5AfJ?=
+ =?us-ascii?Q?M8G+OnhmI5ncQJRWePK3lyAvK8SjBJsNzo3PouOd5kk9T8trZGJQs8ep5jXq?=
+ =?us-ascii?Q?aMau5oA+KxuMMd4N4+/LQMHTQH7ceR0zhc5yHCxxl0WNgUeLSStYyr7J+E7l?=
+ =?us-ascii?Q?b8nee9KsCUNU4Hne16gHjlz9yh/Gk7BV6uA53CV5LmJqlGc17qHvqoamZCDm?=
+ =?us-ascii?Q?NewZvfmyGmIxA6q/PGOvbIhoXIg2GiqlfOpIs7j/YyZxW3Rab9A+QnE3gnue?=
+ =?us-ascii?Q?satMYcSshO5RZrxKUjlxVP0eIlaMEVkKMJ6a/yz97eke3sOyOUyE09F9mUkK?=
+ =?us-ascii?Q?m2MONvO/9peAuwXePVI/oj86t4Ys8/JYrncQ1Z9udUb4GfLXRUSmQr7p7S3F?=
+ =?us-ascii?Q?6ybeiPtEbDP+DxZerRvD7Bp1bxWVuQvQZsuv?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 11:02:04.0803
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69d64fd8-5da5-478c-7cd0-08dde946fbfe
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004683.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6601
 
-On Sun, 31 Aug 2025, Sebastian Reichel wrote:
+This patch series includes the following changes to the PMF driver:
 
-> Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which
-> is in theory compatible with ThinkPad ACPI. On Linux the system
-> is booted with device tree, which is not supported by the ThinkPad
-> ACPI driver. Also most of the hardware compatibility is handled
-> via ACPI tables, which are obviously not used when booting via
-> device tree. Thus adding DT compatibility to the existing driver
-> is not worth it (almost no code sharing).
-> 
-> The driver currently exposes features, which are not available
-> via other means:
-> 
->  * Extra Keys
->  * System LEDs
->  * Keyboard Backlight Control
-> 
-> The driver has been developed by reading the ACPI DSDT. There
-> are some more features around thermal control, which are not
-> yet supported by the driver.
-> 
-> The speaker mute and mic mute LEDs need some additional changes
-> in the ALSA UCM to be set automatically.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  MAINTAINERS                                   |   6 +
->  drivers/platform/arm64/Kconfig                |  20 +
->  drivers/platform/arm64/Makefile               |   1 +
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 597 ++++++++++++++++++++++++++
->  4 files changed, 624 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e94d68c980c5f8bef2e1caf26b1a775df6aa1d84..589466169c222b2e088c6112a1e724c95e948f72 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25092,6 +25092,12 @@ W:	http://thinkwiki.org/wiki/Ibm-acpi
->  T:	git git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git
->  F:	drivers/platform/x86/lenovo/thinkpad_acpi.c
->  
-> +THINKPAD T14S EMBEDDED CONTROLLER DRIVER
-> +M:	Sebastian Reichel <sre@kernel.org>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/platform/lenovo,thinkpad-t14s-ec.yaml
-> +F:	drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +
->  THINKPAD LMI DRIVER
->  M:	Mark Pearson <mpearson-lenovo@squebb.ca>
->  L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index 06288aebc5599435065a37f8dacd046b5def80bd..10f905d7d6bfa5fad30a0689d3a20481268c781e 100644
-> --- a/drivers/platform/arm64/Kconfig
-> +++ b/drivers/platform/arm64/Kconfig
-> @@ -70,4 +70,24 @@ config EC_LENOVO_YOGA_C630
->  
->  	  Say M or Y here to include this support.
->  
-> +config EC_LENOVO_THINKPAD_T14S
-> +	tristate "Lenovo Thinkpad T14s Embedded Controller driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on I2C
-> +	depends on INPUT
-> +	select INPUT_SPARSEKMAP
-> +	select LEDS_CLASS
-> +	select NEW_LEDS
-> +	select SND_CTL_LED if SND
-> +	help
-> +	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
-> +	  Lenovo Thinkpad T14s, which provides access to keyboard backlight
-> +	  and status LEDs.
-> +
-> +	  This driver provides support for the mentioned laptop where this
-> +	  information is not properly exposed via the standard Qualcomm
-> +	  devices.
-> +
-> +	  Say M or Y here to include this support.
-> +
->  endif # ARM64_PLATFORM_DEVICES
-> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> index 46a99eba3264cc40e812567d1533bb86031a6af3..60c131cff6a15bb51a49c9edab95badf513ee0f6 100644
-> --- a/drivers/platform/arm64/Makefile
-> +++ b/drivers/platform/arm64/Makefile
-> @@ -8,3 +8,4 @@
->  obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
->  obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
->  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
-> +obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ab783870e8eadfe13d83500c7f39440291e42cc9
-> --- /dev/null
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -0,0 +1,597 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2025, Sebastian Reichel
-> + */
-> +
-> +#define DEBUG
+- Implement support for modifying PMF PPT and PPT APU thresholds
+- Enable custom BIOS input support for AMD_CPU_ID_PS
+- Add the is_apmf_bios_input_notifications_supported() helper function
+- Correct the handling mechanism for custom BIOS inputs
+- Maintain a record of past custom BIOS inputs
+- Process early custom BIOS inputs
+- Initiate enact() earlier to address the initial custom BIOS input
 
-?
 
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/leds.h>
-> +#include <linux/lockdep.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define THINKPAD_T14S_EC_CMD_ECRD 0x02
-> +#define THINKPAD_T14S_EC_CMD_ECWR 0x03
-> +#define THINKPAD_T14S_EC_CMD_EVT 0xf0
-> +
-> +#define THINKPAD_T14S_EC_REG_LED	0x0c
-> +#define THINKPAD_T14S_EC_REG_KBD_BL1	0x0d
-> +#define THINKPAD_T14S_EC_REG_KBD_BL2	0xe1
-> +#define THINKPAD_T14S_EC_KBD_BL1_MASK	GENMASK_U8(7, 6)
+Changes based on review-ilpo-next with tip
+'commit ee1cb9b0e6a8 ("platform/x86/amd/hsmp: Replace dev_err() with dev_info() for non-fatal errors")'
 
-+ linux/bits.h
+v5:
+-----
+- Use unsigned int instead of int
+- Use switch and fallthrough mechanism for install/uninstall acpi handlers
+  v1 and v2. 
+- Use a switch case for amd_pmf_update_bios_inputs()
 
-> +#define THINKPAD_T14S_EC_KBD_BL1_SHIFT	6
-> +#define THINKPAD_T14S_EC_KBD_BL2_MASK	GENMASK_U8(3, 2)
-> +#define THINKPAD_T14S_EC_KBD_BL2_SHIFT	2
+v4:
+-----
+- Rephrase commit messages
+- Simply the code with loop + helper functions
+- rename variable names for consistency
 
-Use FIELD_GET/PREP() and drop any _SHIFT defines. Don't forget to add 
-linux/bitfield.h when using FIELD_*().
+v3:
+-----
+- Add amd_pmf_set_ta_custom_bios_input() and amd_pmf_get_ta_custom_bios_input() to simply handling
+- Address other remarks by Ilpo on v2.
 
-> +#define THINKPAD_T14S_EC_REG_AUD	0x30
-> +#define THINKPAD_T14S_EC_MIC_MUTE_LED	BIT(5)
-> +#define THINKPAD_T14S_EC_SPK_MUTE_LED	BIT(6)
-> +
-> +#define THINKPAD_T14S_EC_EVT_NONE			0x00
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_4			0x13
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F7			0x16
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_SPACE		0x1F
-> +#define THINKPAD_T14S_EC_EVT_KEY_TP_DOUBLE_TAP		0x20
-> +#define THINKPAD_T14S_EC_EVT_AC_CONNECTED		0x26
-> +#define THINKPAD_T14S_EC_EVT_AC_DISCONNECTED		0x27
-> +#define THINKPAD_T14S_EC_EVT_KEY_POWER			0x28
-> +#define THINKPAD_T14S_EC_EVT_LID_OPEN			0x2A
-> +#define THINKPAD_T14S_EC_EVT_LID_CLOSED			0x2B
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F12			0x62
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_TAB			0x63
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F8			0x64
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F10			0x65
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F4			0x6A
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_D			0x6B
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_T			0x6C
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_H			0x6D
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_M			0x6E
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_L			0x6F
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_RIGHT_SHIFT		0x71
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_ESC			0x74
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_N			0x79
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_F11			0x7A
-> +#define THINKPAD_T14S_EC_EVT_KEY_FN_G			0x7E
-> +
-> +enum thinkpad_t14s_ec_led_status_t {
-> +	THINKPAD_EC_LED_OFF = 0x00,
-> +	THINKPAD_EC_LED_ON = 0x80,
-> +	THINKPAD_EC_LED_BLINK = 0xc0,
+v2:
+-----
+- Use array to store the BIOS inputs instead of individual variables
+- Remove additional spaces
+- Replace GEN_MASK() with a meaningful macro
+- Merge patch6 and 7 into a single one
+- add amd_pmf_handle_early_preq() common routine for early pending request
 
-Align values.
+Shyam Sundar S K (9):
+  platform/x86/amd/pmf: Add support for adjusting PMF PPT and PPT APU
+    thresholds
+  platform/x86/amd/pmf: Fix the custom bios input handling mechanism
+  platform/x86/amd/pmf: Extend custom BIOS inputs for more policies
+  platform/x86/amd/pmf: Update ta_pmf_action structure member
+  platform/x86/amd/pmf: Add helper to verify BIOS input notifications
+    are enable/disable
+  platform/x86/amd/pmf: Add custom BIOS input support for AMD_CPU_ID_PS
+  platform/x86/amd/pmf: Preserve custom BIOS inputs for evaluating the
+    policies
+  platform/x86/amd/pmf: Call enact function sooner to process early
+    pending requests
+  platform/x86/amd/pmf: Add debug logs for pending requests and custom
+    BIOS inputs
 
-> +};
-> +
-> +struct thinkpad_t14s_ec_led_classdev {
-> +	struct led_classdev led_classdev;
-> +	int led;
-> +	enum thinkpad_t14s_ec_led_status_t cache;
-> +	struct thinkpad_t14s_ec *ec;
-> +};
-> +
-> +struct thinkpad_t14s_ec {
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	struct thinkpad_t14s_ec_led_classdev led_pwr_btn;
-> +	struct thinkpad_t14s_ec_led_classdev led_chrg_orange;
-> +	struct thinkpad_t14s_ec_led_classdev led_chrg_white;
-> +	struct thinkpad_t14s_ec_led_classdev led_lid_logo_dot;
-> +	struct led_classdev kbd_backlight;
-> +	struct led_classdev led_mic_mute;
-> +	struct led_classdev led_spk_mute;
-> +	struct input_dev *inputdev;
-> +};
-> +
-> +static const struct regmap_config thinkpad_t14s_ec_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0xff,
-> +};
-> +
-> +static int thinkpad_t14s_ec_write(void *context, unsigned int reg,
-> +				  unsigned int val)
-> +{
-> +	char buf[5] = {THINKPAD_T14S_EC_CMD_ECWR, reg, 0x00, 0x01, val};
-
-Please use u8 instead of char for anything that is binary data.
-
-> +	struct thinkpad_t14s_ec *ec = context;
-> +	struct i2c_client *client = to_i2c_client(ec->dev);
-> +	int ret;
-> +
-> +	ret = i2c_master_send(client, buf, sizeof(buf));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int thinkpad_t14s_ec_read(void *context, unsigned int reg,
-> +				 unsigned int *val)
-> +{
-> +	char buf[4] = {THINKPAD_T14S_EC_CMD_ECRD, reg, 0x00, 0x01};
-
-Ditto.
-
-> +	struct thinkpad_t14s_ec *ec = context;
-> +	struct i2c_client *client = to_i2c_client(ec->dev);
-> +	struct i2c_msg request, response;
-> +	u8 result;
-> +	int ret;
-> +
-> +	request.addr = client->addr;
-> +	request.flags = I2C_M_STOP;
-> +	request.len = sizeof(buf);
-> +	request.buf = buf;
-> +	response.addr = client->addr;
-> +	response.flags = I2C_M_RD;
-> +	response.len = 1;
-> +	response.buf = &result;
-> +
-> +	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
-> +
-> +	ret = __i2c_transfer(client->adapter, &request, 1);
-> +	if (ret < 0)
-> +		goto out;
-> +	ret = __i2c_transfer(client->adapter, &response, 1);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	*val = result;
-> +	ret = 0;
-> +
-> +out:
-> +	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
-> +	return ret;
-> +}
-> +
-> +static const struct regmap_bus thinkpad_t14s_ec_regmap_bus = {
-> +	.reg_write = thinkpad_t14s_ec_write,
-> +	.reg_read = thinkpad_t14s_ec_read,
-> +};
-> +
-> +static int thinkpad_t14s_ec_read_evt(struct thinkpad_t14s_ec *ec, u8 *val)
-> +{
-> +	char buf[4] = {THINKPAD_T14S_EC_CMD_EVT, 0x00, 0x00, 0x01};
-> +	struct i2c_client *client = to_i2c_client(ec->dev);
-> +	struct i2c_msg request, response;
-> +	int ret;
-> +
-> +	request.addr = client->addr;
-> +	request.flags = I2C_M_STOP;
-> +	request.len = sizeof(buf);
-> +	request.buf = buf;
-> +	response.addr = client->addr;
-> +	response.flags = I2C_M_RD;
-> +	response.len = 1;
-> +	response.buf = val;
-> +
-> +	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
-> +
-> +	ret = __i2c_transfer(client->adapter, &request, 1);
-> +	if (ret < 0)
-> +		goto out;
-> +	ret = __i2c_transfer(client->adapter, &response, 1);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	ret = 0;
-> +
-> +out:
-> +	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
-> +	return ret;
-> +}
-> +
-> +static int thinkpad_t14s_led_set_status(struct thinkpad_t14s_ec *ec,
-> +			struct thinkpad_t14s_ec_led_classdev *led,
-> +			const enum thinkpad_t14s_ec_led_status_t ledstatus)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_write(ec->regmap, THINKPAD_T14S_EC_REG_LED,
-> +			   led->led | ledstatus);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	led->cache = ledstatus;
-> +	return 0;
-> +}
-> +
-> +static int thinkpad_t14s_led_set(struct led_classdev *led_cdev,
-> +				 enum led_brightness brightness)
-> +{
-> +	struct thinkpad_t14s_ec_led_classdev *led = container_of(led_cdev,
-> +			struct thinkpad_t14s_ec_led_classdev, led_classdev);
-> +	enum thinkpad_t14s_ec_led_status_t new_state;
-> +
-> +	if (brightness == LED_OFF)
-> +		new_state = THINKPAD_EC_LED_OFF;
-> +	else if (led->cache != THINKPAD_EC_LED_BLINK)
-> +		new_state = THINKPAD_EC_LED_ON;
-> +	else
-> +		new_state = THINKPAD_EC_LED_BLINK;
-> +
-> +	return thinkpad_t14s_led_set_status(led->ec, led, new_state);
-> +}
-> +
-> +static int thinkpad_t14s_led_blink_set(struct led_classdev *led_cdev,
-> +				       unsigned long *delay_on,
-> +				       unsigned long *delay_off)
-> +{
-> +	struct thinkpad_t14s_ec_led_classdev *led = container_of(led_cdev,
-> +			struct thinkpad_t14s_ec_led_classdev, led_classdev);
-> +
-> +	/* Can we choose the flash rate? */
-> +	if (*delay_on == 0 && *delay_off == 0) {
-> +		/* yes. set them to the hardware blink rate (1 Hz) */
-> +		*delay_on = 500; /* ms */
-> +		*delay_off = 500; /* ms */
-> +	} else if ((*delay_on != 500) || (*delay_off != 500))
-> +		return -EINVAL;
-
-Please add a define for this delay with unit in the define's name so you 
-can use that instead of literals and unit comments. Since the times are 
-the same, I don't think off/on needs own defines.
-
-> +
-> +	return thinkpad_t14s_led_set_status(led->ec, led, THINKPAD_EC_LED_BLINK);
-> +}
-> +
-> +static int thinkpad_t14s_init_led(struct thinkpad_t14s_ec *ec,
-> +				  struct thinkpad_t14s_ec_led_classdev *led,
-> +				  u8 id, const char *name)
-> +{
-> +	led->led_classdev.name = name;
-> +	led->led_classdev.flags = LED_RETAIN_AT_SHUTDOWN;
-> +	led->led_classdev.max_brightness = 1;
-> +	led->led_classdev.brightness_set_blocking = thinkpad_t14s_led_set;
-> +	led->led_classdev.blink_set = thinkpad_t14s_led_blink_set;
-> +	led->ec = ec;
-> +	led->led = id;
-> +
-> +	return devm_led_classdev_register(ec->dev, &led->led_classdev);
-> +}
-> +
-> +static int thinkpad_t14s_leds_probe(struct thinkpad_t14s_ec *ec)
-> +{
-> +	int ret;
-> +
-> +	ret = thinkpad_t14s_init_led(ec, &ec->led_pwr_btn, 0,
-> +				     "platform::power");
-> +	if (ret)
-> +		return ret;
-> +	ret = thinkpad_t14s_init_led(ec, &ec->led_chrg_orange, 1,
-> +				     "platform:amber:battery-charging");
-> +	if (ret)
-> +		return ret;
-> +	ret = thinkpad_t14s_init_led(ec, &ec->led_chrg_white, 2,
-> +				     "platform:white:battery-full");
-> +	if (ret)
-> +		return ret;
-> +	ret = thinkpad_t14s_init_led(ec, &ec->led_lid_logo_dot, 10,
-> +				     "platform::lid_logo_dot");
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int thinkpad_t14s_kbd_bl_set(struct led_classdev *led_cdev,
-> +				    enum led_brightness brightness)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, kbd_backlight);
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(ec->regmap, THINKPAD_T14S_EC_REG_KBD_BL1,
-> +				 THINKPAD_T14S_EC_KBD_BL1_MASK,
-> +				 brightness << THINKPAD_T14S_EC_KBD_BL1_SHIFT);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(ec->regmap, THINKPAD_T14S_EC_REG_KBD_BL2,
-> +				 THINKPAD_T14S_EC_KBD_BL2_MASK,
-> +				 brightness << THINKPAD_T14S_EC_KBD_BL2_SHIFT);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static enum led_brightness thinkpad_t14s_kbd_bl_get(struct led_classdev *led_cdev)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, kbd_backlight);
-> +	int ret, val;
-
-Why is val signed?
-
-> +
-> +	ret = regmap_read(ec->regmap, THINKPAD_T14S_EC_REG_KBD_BL1, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	val &= THINKPAD_T14S_EC_KBD_BL1_MASK;
-> +
-> +	return val >> THINKPAD_T14S_EC_KBD_BL1_SHIFT;
-> +}
-> +
-> +static void thinkpad_t14s_kbd_bl_update(struct thinkpad_t14s_ec *ec)
-> +{
-> +	enum led_brightness brightness = thinkpad_t14s_kbd_bl_get(&ec->kbd_backlight);
-> +
-> +	led_classdev_notify_brightness_hw_changed(&ec->kbd_backlight, brightness);
-> +}
-> +
-> +static int thinkpad_t14s_kbd_backlight_probe(struct thinkpad_t14s_ec *ec)
-> +{
-> +	ec->kbd_backlight.name = "platform::kbd_backlight";
-> +	ec->kbd_backlight.flags = LED_BRIGHT_HW_CHANGED;
-> +	ec->kbd_backlight.max_brightness = 2;
-> +	ec->kbd_backlight.brightness_set_blocking = thinkpad_t14s_kbd_bl_set;
-> +	ec->kbd_backlight.brightness_get = thinkpad_t14s_kbd_bl_get;
-> +
-> +	return devm_led_classdev_register(ec->dev, &ec->kbd_backlight);
-> +}
-> +
-> +static enum led_brightness thinkpad_t14s_audio_led_get(struct thinkpad_t14s_ec *ec,
-> +						       u8 led_bit)
-> +{
-> +	int ret, val;
-> +
-> +	ret = regmap_read(ec->regmap, THINKPAD_T14S_EC_REG_AUD, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return !!(val && led_bit);
-
-Please don't rely on implicit conversion for bool -> enum led_brightness!
-
-> +}
-> +
-> +static enum led_brightness thinkpad_t14s_audio_led_set(struct thinkpad_t14s_ec *ec,
-> +						       u8 led_bit,
-> +						       enum led_brightness brightness)
-> +{
-> +	u8 val = brightness ? led_bit : 0;
-> +
-> +	return regmap_update_bits(ec->regmap, THINKPAD_T14S_EC_REG_AUD, led_bit, val);
-> +}
-> +
-> +static enum led_brightness thinkpad_t14s_mic_mute_led_get(struct led_classdev *led_cdev)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, led_mic_mute);
-> +
-> +	return thinkpad_t14s_audio_led_get(ec, THINKPAD_T14S_EC_MIC_MUTE_LED);
-> +}
-> +
-> +static int thinkpad_t14s_mic_mute_led_set(struct led_classdev *led_cdev,
-> +					  enum led_brightness brightness)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, led_mic_mute);
-> +
-> +	return thinkpad_t14s_audio_led_set(ec, THINKPAD_T14S_EC_MIC_MUTE_LED, brightness);
-> +}
-> +
-> +static enum led_brightness thinkpad_t14s_spk_mute_led_get(struct led_classdev *led_cdev)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, led_spk_mute);
-> +
-> +	return thinkpad_t14s_audio_led_get(ec, THINKPAD_T14S_EC_SPK_MUTE_LED);
-> +}
-> +
-> +static int thinkpad_t14s_spk_mute_led_set(struct led_classdev *led_cdev,
-> +					  enum led_brightness brightness)
-> +{
-> +	struct thinkpad_t14s_ec *ec = container_of(led_cdev,
-> +					struct thinkpad_t14s_ec, led_spk_mute);
-> +
-> +	return thinkpad_t14s_audio_led_set(ec, THINKPAD_T14S_EC_SPK_MUTE_LED, brightness);
-> +}
-> +
-> +static int thinkpad_t14s_kbd_audio_led_probe(struct thinkpad_t14s_ec *ec)
-> +{
-> +	int ret;
-> +
-> +	ec->led_mic_mute.name = "platform::micmute";
-> +	ec->led_mic_mute.max_brightness = 1,
-> +	ec->led_mic_mute.default_trigger = "audio-micmute",
-> +	ec->led_mic_mute.brightness_set_blocking = thinkpad_t14s_mic_mute_led_set;
-> +	ec->led_mic_mute.brightness_get = thinkpad_t14s_mic_mute_led_get;
-> +
-> +	ec->led_spk_mute.name = "platform::mute";
-> +	ec->led_spk_mute.max_brightness = 1,
-> +	ec->led_spk_mute.default_trigger = "audio-mute",
-> +	ec->led_spk_mute.brightness_set_blocking = thinkpad_t14s_spk_mute_led_set;
-> +	ec->led_spk_mute.brightness_get = thinkpad_t14s_spk_mute_led_get;
-> +
-> +	ret = devm_led_classdev_register(ec->dev, &ec->led_mic_mute);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_led_classdev_register(ec->dev, &ec->led_spk_mute);
-> +}
-> +
-> +/*
-> + * using code 0x16 ignores the provided KEY code and use KEY_MUTE,
-> + * so all codes have a 0x1000 offset
-> + */
-> +static const struct key_entry thinkpad_t14s_keymap[] = {
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_4, { KEY_SLEEP } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_N, { KEY_VENDOR } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F4, { KEY_MICMUTE } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F7, { KEY_SWITCHVIDEOMODE } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F8, { KEY_MODE } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F10, { KEY_SELECTIVE_SCREENSHOT } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F11, { KEY_LINK_PHONE } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_F12, { KEY_BOOKMARKS } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_SPACE, { KEY_KBDILLUMTOGGLE } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_ESC, { KEY_FN_ESC } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_TAB, { KEY_ZOOM } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_FN_RIGHT_SHIFT, { KEY_FN_RIGHT_SHIFT } },
-> +	{ KE_KEY, 0x1000 + THINKPAD_T14S_EC_EVT_KEY_TP_DOUBLE_TAP, { KEY_PROG4 } },
-> +	{ KE_END }
-> +};
-> +
-> +static int thinkpad_t14s_input_probe(struct thinkpad_t14s_ec *ec)
-> +{
-> +	int ret;
-> +
-> +	ec->inputdev = devm_input_allocate_device(ec->dev);
-> +	if (!ec->inputdev)
-> +		return -ENOMEM;
-> +
-> +	ec->inputdev->name = "ThinkPad Extra Buttons";
-> +	ec->inputdev->phys = "thinkpad/input0";
-> +	ec->inputdev->id.bustype = BUS_HOST;
-> +	ec->inputdev->dev.parent = ec->dev;
-> +
-> +	ret = sparse_keymap_setup(ec->inputdev, thinkpad_t14s_keymap, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = input_register_device(ec->inputdev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t thinkpad_t14s_ec_irq_handler(int irq, void *data)
-> +{
-> +	struct thinkpad_t14s_ec *ec = data;
-> +	int ret;
-> +	u8 val;
-> +
-> +	ret = thinkpad_t14s_ec_read_evt(ec, &val);
-> +	if (ret < 0) {
-> +		dev_err(ec->dev, "Failed to read event\n");
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	switch (val) {
-> +	case THINKPAD_T14S_EC_EVT_NONE:
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_SPACE:
-> +		thinkpad_t14s_kbd_bl_update(ec);
-> +		fallthrough;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F4:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F7:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_4:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F8:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F12:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_TAB:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F10:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_N:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_F11:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_ESC:
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_RIGHT_SHIFT:
-> +	case THINKPAD_T14S_EC_EVT_KEY_TP_DOUBLE_TAP:
-> +		sparse_keymap_report_event(ec->inputdev, 0x1000 + val, 1, true);
-
-This 0x1000 should be defined.
-
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_AC_CONNECTED:
-> +		dev_dbg(ec->dev, "AC connected\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_AC_DISCONNECTED:
-> +		dev_dbg(ec->dev, "AC disconnected\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_POWER:
-> +		dev_dbg(ec->dev, "power button\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_LID_OPEN:
-> +		dev_dbg(ec->dev, "LID open\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_LID_CLOSED:
-> +		dev_dbg(ec->dev, "LID closed\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_G:
-> +		dev_dbg(ec->dev, "FN + G - toggle double-tapping\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_L:
-> +		dev_dbg(ec->dev, "FN + L - low performance mode\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_M:
-> +		dev_dbg(ec->dev, "FN + M - medium performance mode\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_H:
-> +		dev_dbg(ec->dev, "FN + H - high performance mode\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_T:
-> +		dev_dbg(ec->dev, "FN + T - toggle intelligent cooling mode\n");
-> +		break;
-> +	case THINKPAD_T14S_EC_EVT_KEY_FN_D:
-> +		dev_dbg(ec->dev, "FN + D - toggle privacy guard mode\n");
-> +		break;
-> +	default:
-> +		dev_info(ec->dev, "Unknown EC event: 0x%02x\n", val);
-> +		break;
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int thinkpad_t14s_ec_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct thinkpad_t14s_ec *ec;
-> +	int ret;
-> +
-> +	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
-> +
-> +	ec->dev = dev;
-> +
-> +	ec->regmap = devm_regmap_init(dev, &thinkpad_t14s_ec_regmap_bus,
-> +				      ec, &thinkpad_t14s_ec_regmap_config);
-> +	if (IS_ERR(ec->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(ec->regmap),
-> +				     "Failed to init regmap\n");
-> +
-> +	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-> +					thinkpad_t14s_ec_irq_handler,
-> +					IRQF_ONESHOT, dev_name(dev), ec);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get IRQ\n");
-> +
-> +	ret = thinkpad_t14s_leds_probe(ec);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = thinkpad_t14s_kbd_backlight_probe(ec);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = thinkpad_t14s_kbd_audio_led_probe(ec);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = thinkpad_t14s_input_probe(ec);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * Disable wakeup support by default, because the driver currently does
-> +	 * not support masking any events and the laptop should not wake up when
-> +	 * the LID is closed.
-> +	 */
-> +	device_wakeup_disable(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id thinkpad_t14s_ec_of_match[] = {
-> +	{ .compatible = "lenovo,thinkpad-t14s-ec" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, thinkpad_t14s_ec_of_match);
-> +
-> +static const struct i2c_device_id thinkpad_t14s_ec_i2c_id_table[] = {
-> +	{ "thinkpad-t14s-ec", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, thinkpad_t14s_ec_i2c_id_table);
-> +
-> +static struct i2c_driver thinkpad_t14s_ec_i2c_driver = {
-> +	.driver = {
-> +		.name = "thinkpad-t14s-ec",
-> +		.of_match_table = thinkpad_t14s_ec_of_match
-
-Please add a comma to any non-terminator entry.
-
-> +	},
-> +	.probe = thinkpad_t14s_ec_probe,
-> +	.id_table = thinkpad_t14s_ec_i2c_id_table,
-> +};
-> +module_i2c_driver(thinkpad_t14s_ec_i2c_driver);
-> +
-> +MODULE_AUTHOR("Sebastian Reichel <sre@kernel.org>");
-> +MODULE_DESCRIPTION("Lenovo Thinkpad T14s Embedded Controller");
-> +MODULE_LICENSE("GPL");
-> 
-> 
+ drivers/platform/x86/amd/pmf/acpi.c   | 87 +++++++++++++++++++++++++--
+ drivers/platform/x86/amd/pmf/pmf.h    | 77 +++++++++++++++++++++---
+ drivers/platform/x86/amd/pmf/spc.c    | 80 +++++++++++++++++++++---
+ drivers/platform/x86/amd/pmf/tee-if.c | 22 ++++++-
+ 4 files changed, 240 insertions(+), 26 deletions(-)
 
 -- 
- i.
+2.34.1
 
