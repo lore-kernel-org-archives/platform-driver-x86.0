@@ -1,83 +1,138 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68633064BC;
-	Mon,  1 Sep 2025 16:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C3BA4A;
+	Mon,  1 Sep 2025 23:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756744957; cv=none; b=T8gbIrJBfhxVefXBZnq1Dh2AU7PW6+F0xIANbwZjs+kaGajKyRzGaPX1OMXifEMUN6v9jWzA7xiHGSz4TPqmfnfYn4uWOl+7WOuOpNfWG5wSV3OwaC8QIvliPkR63BcTl1E9nYzhHLxuwtAv6s9/drHXLpJ/6y/ye5iO+EeBwTY=
+	t=1756770770; cv=none; b=ed+NSPlNfWBYVCvoKKjO0WlJKqOi/cSlOgvPT9wsGWOdr3C5vzx6Gk4XzO72ezgm8pa9rsWs1DcFvfraKyeaKesHEij+PRjMj3npUXyNAptt3RrweygafjGbce/2x4kvMouWYaugQa9MFpKwlgXvo4a4Bosdr3LLRikdJdaVkfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756744957; c=relaxed/simple;
-	bh=rwy4hJQt+vskzsTbZyc+BvIX5n0i4joe0ogOSuZi1JE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GhODSo6cuywOxrH4XsD1pvp1PHqU8q4yRgDVZkUlBfW1ZzBbh4tsNmrDnrqzSf54XYDVty8uBx8XGReeoWmqv9y5NpDwjMAyZ/oBi4fre+YeLdJiRtzOExY6KO6bdNExDSO1+rUZnHQQ83BgRWVUlK58MHH0+2pDUgc1UDHHzYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=L7SsYloe; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1756770770; c=relaxed/simple;
+	bh=ySL3otziA7UIaxbbqT0x4Y5NEYj27gmjQAiTXYQIEWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ty//WH51dV2mNsbX5clHQRqbZnUieQ8HQRerj5GUXyycXg8juqRnGTLwUHVGGzge5ZokhFwp+NYoi11QoeR+ssJujV5HwzJoFTShkxF8EBYXfs/3i7o0JU2dGnC2BCUoOCXVq8mm+UJQGHuy1ARm+rpsVkXnP+PA122Dg/NcEG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=do8P0G4b; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="L7SsYloe"
-Received: from wse-pc.fritz.box (p5de4594b.dip0.t-ipconnect.de [93.228.89.75])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 2A8B82FC0086;
-	Mon,  1 Sep 2025 18:42:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1756744945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=05H55qefxhrcHoKJSJs+OJG0LsEhUd9T0o+TmR6Tyeg=;
-	b=L7SsYloePxU8nb89uhYOnmNbgQnYpOVUrZO/Pacq9OxdAtDLxd0Fbv/fez6nUGB5xCHBb/
-	xwH59raZo8tcv7xAWAJOuur7Z0ApLmGz8vyWDlil0f2ktxFtsJbOlL2kbfQTAE3vw4SbYa
-	8LimEhRa2Ft+z2dIXUqU+KiCZIW0Tww=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Christoffer Sandberg <cs@tuxedo.de>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/pmc: Add Stellaris Slim Gen6 AMD to spurious 8042 quirks list
-Date: Mon,  1 Sep 2025 18:42:11 +0200
-Message-ID: <20250901164216.46740-1-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="do8P0G4b"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-74542b1b2bcso4878419a34.3;
+        Mon, 01 Sep 2025 16:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756770768; x=1757375568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6r3kPaa7qmMxm8jAGLunwNptKQKbXCsbl3cGO36lMIA=;
+        b=do8P0G4b9ypp4X/C79iKg+JrugLGqOLaHQh1kZA9LmDv8y4SJrMpFw6LqEE8Dm3rb1
+         A5uWrIqyxq0vkem/kBSHb8Mx+9m6afsiCZXoNaSsJewvqyhZzQNm24bDabiWxS4ABv7k
+         0I7jGO4TVIqI3VJQ8V+H4M6w7MKNlCiR5Cvcu1H+xhB+tq0ZJamk5F1PfFzFVuc9ShY+
+         mnExXOzkoKI45Xyq/OzH0nPQ2dhhadrTk+xofbuceHtGOlt7OytOgoAg54pcbipDpV5N
+         S43vlibVT0AhpwjS2rZHIlBQhhct0F2DwG6lt7FIw7CAhlGfE1ZFU8H8lbbXygGp2xHz
+         oYBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756770768; x=1757375568;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6r3kPaa7qmMxm8jAGLunwNptKQKbXCsbl3cGO36lMIA=;
+        b=lyO1Kbw2sjD3OarjTGHT7HQA1tB/71+Vbc8BPcxGfqe2ZS9l0ndOCCaIFBn7CtaxfY
+         QltO3OofAGxuM/u65Tuaa3t8+D2j+UnXbbuGjMnG3d5u2n1n2hqrkMltz2KOVdYKOV6J
+         zNBmAdfd0A0GHnpz9FvWCSev6ahm5IuvALpjCCxJufM+pBNNRlXwBiXa+VZsQMMopd51
+         3zHsHZi78IABUpl9+uwJtorEfwCSvWoAYLGMHlKXcCIuKqEIjVQdTcaxbWDrPkyQMsLQ
+         nwaFCmR5evbVPFDHRgyZY+U1RpnPcPahTcmyTD9dq0Jo9Bd2ubrMZvkrewWi2Q5Uc32y
+         Xf6w==
+X-Forwarded-Encrypted: i=1; AJvYcCV/tAYtjj7aBTGaizXJWCLZQzgrMrLQ7143qaiF6gsU6koKI+LLl6pCmvS3p5q+s1OxGrTUK7vIM+hxKig=@vger.kernel.org, AJvYcCWNCT9V/Oq+t8HNMsH1Hq7h50hhG13KeOA7PlXYRyFu0Cfu7AFPYntaUVOj3Tq2GYWEpQr5TWLzPaY63m7fguZbW+KeUg==@vger.kernel.org, AJvYcCWY67CUIvxCH7gXGJoKIO2eUXWSmDKeHNV/EKVVUd+RceMrcAcKizmVbwxd8QJFVxWIv8roJza9qNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyeh1dmyDR3auw9zzoyxiwrij+Il8o1qshyE9Ov13V3WA6RgCRZ
+	C/QEUeVU0ZTI+oQBVMF+rhkUwOxJ+kjqFaZKWiCGayHZsNog7rJabyTYYQ82MhzU
+X-Gm-Gg: ASbGncvTClPm7R+a7WplD2f+qboT7kcs5SceCjWf86x6gvAGpFMIcVgVukNqIihrzdt
+	BbgEreI8Lau2rv9bLaXyMQ7YXNZaIm1CttD7WwlDrBi3OqSLFdx8hJldFLVE7umg/p19ZoNC4cm
+	HX8qqIza3JRfqaiqcaz9YxGaaKNHVtZ5Yqitu1MtDDu6A5LtZ88cXrw3ekcUVarEr1d7SxpeRzA
+	LqnOHXudNV/hcQXhzJaEkgjXMSEWyVIIYJt3F165d/Dh4uVo/Ky78HAGwFl2MujnTLKjS1gYmlC
+	PdVjXNpotGCba1lxX7Ud83g3nX/nJtp8dTtEdWraP3S4gEI2i8oHW58us8BLTaKMS3bcCN6T1ax
+	xrJmveMispkyZNc8pvPEKd23uz1+W0++0/IawXAXpQa/5ObiR
+X-Google-Smtp-Source: AGHT+IHLKG3EObyepXaGIZ3bopXpKCKFp4fmkpuPtoCKOCje+S/ItQ6mA95RukM2lXrCgat7c8Sqfw==
+X-Received: by 2002:a05:6830:498f:b0:743:8af2:1af7 with SMTP id 46e09a7af769-74569e7c0bemr5446665a34.23.1756770768095;
+        Mon, 01 Sep 2025 16:52:48 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-50d8f0d4605sm2658409173.21.2025.09.01.16.52.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Sep 2025 16:52:47 -0700 (PDT)
+Message-ID: <60e6b6da-ba46-4a75-b571-8b62f3186008@gmail.com>
+Date: Mon, 1 Sep 2025 18:52:44 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/6] platform/x86:intel/pmc: Show substate requirement
+ for S0ix blockers
+To: Xi Pardee <xi.pardee@linux.intel.com>, irenic.rajneesh@gmail.com,
+ david.e.box@linux.intel.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20250815224611.2460255-1-xi.pardee@linux.intel.com>
+ <20250815224611.2460255-5-xi.pardee@linux.intel.com>
+Content-Language: en-US
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <20250815224611.2460255-5-xi.pardee@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Christoffer Sandberg <cs@tuxedo.de>
+On 8/15/25 5:46 PM, Xi Pardee wrote:
+> Add support to read and show S0ix blocker substate requirements.
+> Starting from Panther Lake, substate requirement data is provided
+> based on S0ix blockers instead of all low power mode requirements.
+> For platforms that support this new feature, add support to display
+> substate requirements based on S0ix blockers.
+> 
+> Change the "substate_requirements" attribute of Intel PMC Core
+> driver to show the substate requirements for each S0ix blocker
+> and the corresponding S0ix blocker value.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c  |   4 +
+>  drivers/platform/x86/intel/pmc/core.c | 126 ++++++++++++++++++++++++--
+>  drivers/platform/x86/intel/pmc/core.h |  14 +++
+>  drivers/platform/x86/intel/pmc/lnl.c  |   2 +
+>  drivers/platform/x86/intel/pmc/mtl.c  |   2 +
+>  5 files changed, 138 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 9d66d65e75779..17ad87b392abe 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -725,9 +725,11 @@ struct pmc_dev_info arl_pmc_dev = {
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &arl_socs_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = arl_resume,
+>  	.init = arl_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
+>  
+>  struct pmc_dev_info arl_h_pmc_dev = {
+> @@ -735,7 +737,9 @@ struct pmc_dev_info arl_h_pmc_dev = {
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> +	.sub_req_show = &pmc_core_substate_req_regs_fops,
+>  	.suspend = cnl_suspend,
+>  	.resume = arl_h_resume,
+>  	.init = arl_h_core_init,
+> +	.sub_req = pmc_core_pmt_get_lpm_req,
+>  };
 
-Prevents instant wakeup ~1s after suspend
+The cover letter and commit messages say Panther Lake, but I see a bunch
+of "arl" here. Is this just confusing file and struct names, or is my
+Arrow Lake 265K getting idle-blocker-cause debug info? If so it should
+probably be mentioned in the changelog.
 
-Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
----
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Same question about patch 5.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index 7ffc659b27944..8b8944483b859 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -248,6 +248,13 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
- 		}
- 	},
-+	{
-+		.ident = "TUXEDO Stellaris Slim 15 AMD Gen6",
-+		.driver_data = &quirk_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
-+		}
-+	},
- 	{}
- };
- 
--- 
-2.43.0
-
+- Russell Haley
