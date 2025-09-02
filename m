@@ -1,140 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF13305E2D;
-	Tue,  2 Sep 2025 13:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8D3306D3F;
+	Tue,  2 Sep 2025 14:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756819080; cv=none; b=rTGs4OSCN6D6dJMonw4IMBnLwt2uuxJSUsdd2Ku1nb0uGvtamSW0fJGyXf9Cn9NbjZZ+NQ5myV6bqlBw4YnFo/YDMtqgJfA0ixyQQf0YFeyMOJ2+SvOVKycSW0uzO/QF4z6gNyVgw61Hnzv5Se9QHIsj7p3twxbdl1dUDh7DinU=
+	t=1756822509; cv=none; b=ourctuisEuVXCazBZDVd0tVq3e92QTE6jEGQ+LC8SoPZ3Xv8S74tDwI437VdfzmEJPiaSAZLBp/Qce49JgGo5fEcJGjUcUDGJNWDvMfetKSJYeghb9GrjwUpNzDCC9l3EJyOeSzrzrH5Y+gRsr1wjU4XbATEbNnzgMFp8vDNAP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756819080; c=relaxed/simple;
-	bh=z7FwtaZZzwjQdtwpEuB9tpjcm7SAnUfcPFRtC2LIdKE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=dvAOuJzNKekDZQwW85fZo04NWnx13Iq1bzFriQMvSBT1wVKxug31BUb+lfvkrFhm+gvrR9Sh3DCGo2el610wqFcb4BqyI7vgP0Z1Jq8zJOGP1L3LHcqbzV+cpvjC4XW8qMdaEtjheMIY13hkqd7WSuMuNh2Mm8H6lqIRi1OeCjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzukxrmN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756822509; c=relaxed/simple;
+	bh=AzjacirOkMcaHgcTNtMXMfIJ3ECddX4hiUTAjzyta00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y9WG9lk11R+M4n62gi6cbYD1nsCh7FAQsj8ddzApJjXwCLntaNNSfqSwRaPYsl7EttCYM9mpAzjEffCf10jxzetzeIJ4sHMPOLLGqHgJM/bZcNW/tmLkGzQRmxUY7BdXPGt0TMek63U7Nqhxn3IRfyzJ0dvbUE+F4LOcwe3lMtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nu4L7qDR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzukxrmN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81D4FC4CEF4;
-	Tue,  2 Sep 2025 13:17:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nu4L7qDR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D88C4CEED;
+	Tue,  2 Sep 2025 14:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756819079;
-	bh=z7FwtaZZzwjQdtwpEuB9tpjcm7SAnUfcPFRtC2LIdKE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rzukxrmNB9iuxVkdbLPuZC7Jsk6tKQen9VhnAzMxmcSdjTjYKti1y9nmRy4XxvXeM
-	 P6Y9wpxGAyPpsGuDQHHa8ZLzzZu7iluNZucOW+brNBoFVAta612ujIY2C4h5+M19ow
-	 y6elkUFGOczdPhqYIS2bPxnwcuZ8Foin2gsvKXCFdXHP3yBjJgCjJumt0C3IAlko7J
-	 YT2sHWnL2vOpl3AS1PY1GtcidjdV9DBKWxRemNtoMaWafUwiOG9kO+1swdU2E7L9sZ
-	 JOarBQsSwx4J+vuSxV8XLcqnG0Ulv1olpNWzddGSmfOPK+PFo/NLt0+qB2nGsQ3ZW3
-	 riarxr8TeyyVg==
-Date: Tue, 02 Sep 2025 08:17:56 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1756822509;
+	bh=AzjacirOkMcaHgcTNtMXMfIJ3ECddX4hiUTAjzyta00=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nu4L7qDRGSAZC6ZudUMo6R6dxEQccdqn2pqsXz84JRgk6dlAUXynuEo57QG8UTVlK
+	 c+XRMfhelJyk9xoQ4B5E/ClqS7wy7hqsIeZFprmPP708mQqdoi46/7Rha6UUQhNn2Z
+	 3ivGs9HZsNRBkwCP+Jb0R+QWIinB3J9hewbHpHVXDchPrc6/Dm6T0MEHvOa21gEQhu
+	 J1kQrXZdgw4+Jn4oIGJ/PfLAijTOoqChFw6e4DJMKcX/Dfv0RQUxsvaJMHbIc00oZk
+	 vxnbxRv6k2w+wa+n/YyASz3eLqrXxLzA78icRuftWY7gh6RaH2I2x7Ex0ANx//P2Dg
+	 1z3cUB57MsFVg==
+Message-ID: <3830aeee-91d7-48ee-b67e-8aefbbd2124e@kernel.org>
+Date: Tue, 2 Sep 2025 09:15:07 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-In-Reply-To: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
-References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
-Message-Id: <175678731124.877987.10991214512843096912.robh@kernel.org>
-Subject: Re: [PATCH 0/3] platform: arm64: thinkpad-t14s-ec: new driver
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add Stellaris Slim Gen6 AMD to
+ spurious 8042 quirks list
+To: Werner Sembach <wse@tuxedocomputers.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
+ <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: Christoffer Sandberg <cs@tuxedo.de>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250901164216.46740-1-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250901164216.46740-1-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Sun, 31 Aug 2025 23:28:30 +0200, Sebastian Reichel wrote:
-> Introduce driver for the ThinkPad T14s Gen6 Snapdragon EC. In theory
-> it seems to be compatible with the ThinkPad ACPI driver, but these
-> devices are booted with device tree. As the name implies, the existing
-> ThinkPad ACPI driver only supports the ACPI interface. Looking at
-> the implementation, the ACPI DSDT contains many mapping functions
-> to translate the low level I2C messages into the interface used by
-> the ThinkPad ACPI driver. Adding DT support to the ThinkPad ACPI driver
-> would require adding all those translation functions, which would add
-> more or less the same amount of code as writing a separate driver using
-> the low level interface directly. I don't think it's sensible to make
-> the existing ACPI driver even more complicated, so I went for a separate
-> driver.
+On 9/1/2025 11:42 AM, Werner Sembach wrote:
+> From: Christoffer Sandberg <cs@tuxedo.de>
 > 
-> I managed to get system LEDs, audio LEDs, extra keys and the keyboard
-> backlight control working. The EC also seems to be used for some thermal
-> bits, which I haven't looked into deeply. As far as I understand most
-> thermal and fan control is handled by a different controller
-> (0x36@i2c5) anyways.
+> Prevents instant wakeup ~1s after suspend
 > 
-> Apart from that the EC is involved in proper system suspend, which
-> is something I do not yet understand (I don't have any documentation
-> apart from the dis-assembled DSDT and existing ACPI driver). Right
-> now I disabled wake capabilities for the IRQ, since it would wake
-> up the system when closing the LID. Hopefully a way to mask specific
-> events will be found in the future.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 > ---
-> Sebastian Reichel (3):
->       dt-bindings: platform: Add Lenovo Thinkpad T14s EC
->       platform: arm64: thinkpad-t14s-ec: new driver
->       arm64: dts: qcom: x1e80100-t14s: add EC
+>   drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
->  .../bindings/platform/lenovo,thinkpad-t14s-ec.yaml |  49 ++
->  MAINTAINERS                                        |   6 +
->  .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    |  23 +
->  drivers/platform/arm64/Kconfig                     |  20 +
->  drivers/platform/arm64/Makefile                    |   1 +
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 597 +++++++++++++++++++++
->  6 files changed, 696 insertions(+)
-> ---
-> base-commit: c8bc81a52d5a2ac2e4b257ae123677cf94112755
-> change-id: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
-> 
-> Best regards,
-> --
-> Sebastian Reichel <sebastian.reichel@collabora.com>
-> 
-> 
-> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index 7ffc659b27944..8b8944483b859 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -248,6 +248,13 @@ static const struct dmi_system_id fwbug_list[] = {
+>   			DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
+>   		}
+>   	},
+> +	{
+> +		.ident = "TUXEDO Stellaris Slim 15 AMD Gen6",
+> +		.driver_data = &quirk_spurious_8042,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
+> +		}
+> +	},
+>   	{}
+>   };
+>   
 
+FYI - this seems to conflict with other changes on review-ilpo-fixes and 
+fixes branches.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/drivers/platform/x86/amd/pmc/pmc-quirks.c?h=review-ilpo-fixes&id=c96f86217bb28e019403bb8f59eacd8ad5a7ad1a
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+Also - a few other comments.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+1) Do you have line of sight to a firmware (BIOS or EC) fix?  If so; it 
+would be better to specify a specific firmware release that is affected.
 
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit c8bc81a52d5a2ac2e4b257ae123677cf94112755
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com:
-
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s-oled.dtb: ec@28 (lenovo,thinkpad-t14s-ec): 'wakeup-source' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/platform/lenovo,thinkpad-t14s-ec.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: ec@28 (lenovo,thinkpad-t14s-ec): 'wakeup-source' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/platform/lenovo,thinkpad-t14s-ec.yaml#
-
-
-
-
-
+2) Shouldn't you also have DMI_SYS_VENDOR or some other matching keys 
+else set?  Or is it really all these boards with this specific name?
