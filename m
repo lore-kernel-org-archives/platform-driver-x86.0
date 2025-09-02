@@ -1,168 +1,146 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C84D22301;
-	Tue,  2 Sep 2025 04:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1E2280309;
+	Tue,  2 Sep 2025 10:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756787955; cv=none; b=cHDXuAv8arUR0hNoKqf1tuZ8ITk6jTb6PdywQKgxlU4F8YkSMddUFhw+Q388pbqAZc5M/e8ZESbTkU0wkP+BtDrJCofQeV4vgHad6OSgAdN1FA4irPwzMi2awLBFss3eHyy5e3R1K5MWRBs9pDsGNLqlYhZWfo/UZSJrkkc2l3c=
+	t=1756808852; cv=none; b=Gj2jYV5pTKAnAse7xu6x8CPDwvmCi1Jg0zRYOG6P/TFpCzyd/bIUL/1bZ5dQdUIIkOq6sXiERmlR95JLvO6rLnarl4slKeLI2MiofkyvWIhhprpA3tHYQFCGPbZohUY+lPI+5CGQYjq+W87DUEcbXTlN2ZMQ6D+nYDR+iTFuWy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756787955; c=relaxed/simple;
-	bh=Uj4llZNFTHcTy9cJ7yoCbWpoxt2Zbuk+5mCNaChS8rE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHMzfRcvwg0C1o0DuTCFO9ZkiAZmr71H346RmDD+MsU3ChDY6SPoJdka0/LGOyCeY1fiLe/yrMZLTekEm20h0ex0mSq+Y8gWY0ZAiBbfZy1pFV2DlZfFiMe8D/8dX9TPiNge50wou0F6NqSRnyJ6Fr6mZ64yeZxcArPOm5g94/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRLXJ27T; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756808852; c=relaxed/simple;
+	bh=9vY2iPUojXBGZ3yZLfzoQea5xlgAlLhFfTMphrasNFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ime6xR87acm1F63bl5WgaDwIeJ6NQr+nWHziPHoHX1ctQ+jpSIOjM0UfKHg+kZrDejSbIBNthcXQvY/IRs7AjUKy94EIwFefNF/zs98G4+c2ZxNFE79zDW/HU1krC80z082eUCZiwTM6/wKX//jPgJwRJTdUCIjjuMMfgMq7FtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZueIHmC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRLXJ27T"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3276f46c1caso4575805a91.1;
-        Mon, 01 Sep 2025 21:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756787953; x=1757392753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uj4llZNFTHcTy9cJ7yoCbWpoxt2Zbuk+5mCNaChS8rE=;
-        b=SRLXJ27T7WMv4hcElPsToV02Pdif0EsmCqBDEPLJXbElszyyRZOJbe0TBmCKzQMrbU
-         YFAF9ufLG7Is1Vv5fotn8zES+0oqlATKvR/CUvhIdh71Pp/+Vm1vsyPczUHDQE9wK0J7
-         IWso87h//2Ma/MtFUdp+k/Ek71wMaMzm9z1yd5I5luj9px/O3VUKDX3NtWKwldW3gMXr
-         tfeN69J5wr8OUaHaeIpZOS7mxoQAKYenwNF6yzgJgzB39KVXF9RZLSGKGiqQNqDycSa3
-         t1x91JSFe/oH3SsNwl9A2fKcG30dpAvcbXA7eDphVCALKDlb/EFzvVDy+d7WhTrBKE6/
-         rbrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756787953; x=1757392753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uj4llZNFTHcTy9cJ7yoCbWpoxt2Zbuk+5mCNaChS8rE=;
-        b=TzXCpfSbu5HcCU2azgSJ0Emp+ay07JTX3DUu1ZuXp9YFVs5+R3znW/2BlQED8JBW29
-         KVG1O6EY4n6E/jE/M/jvvsFSHFcy3HpVi0+Jvr2WYEnC0bPOc0XPkfuOnjIH4D4lLaU5
-         3aKfbVToWcGTUmPua32zxOLHycFn+F4db2HmY7BJ66r2FmTgFDVXzdD0bZNFqX2l7iIF
-         taJBh34BUaoMxLcMz91UQa/49bsjQlCpkZ7f6DFo/ibd6D5AjaTmB359HvJpZWnhAAGr
-         c6Xiv440EClmNoiZnx1Yg5AqDGRs1V3epIEddWabrAJnhvHM/wgjZLFm/POWdd3POIBC
-         6+vg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvl5frjZ94yCLuo9OJy0+j48SK+z+gZrG2gKwZUC5oMptmKon9sAspQSbPSGFeQPWceICYgN8Nb42XeDI=@vger.kernel.org, AJvYcCXW3gqXjLF3kNxb7RUCDpSMQ23p71wYRPz/AcB4B+IGdespWZruybfaj9VbcmlRmB1pAzh2OCWBvt9JEj3RkZtvXa/tog==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN4l82yuLNeX9V3kS7KNO06QQqo8KMT9w+0xupdSf4u4GLc8+4
-	J4WuezKgcqCF68ERZv1dsDeJic+dahXkG1Oh7M9wlgMKIZSSIepMe+P0
-X-Gm-Gg: ASbGncthNQ0l4MGIGN4esTAW45frRpLKQFeUuiGV31E0w2Wn7oalhiarns2ihpZ/STv
-	dWAaeDrFPnyPAfAh2gxl3iaxc5lG09kToHYR2FzFyuZcqA/FHXrIQYplBeCRrtkSO7rrutslRcc
-	Vh6NgQRcVjEvg4s17L0RxC644kpZLyyC1D+TwpNOZ+GHeMXzZ5RSvMUX4zZF4c4J02Cr7MomX3y
-	D/C8HUSiqwAc9rlkfpnaJproYPdk2rO4Ex4yxoaAFteWqLWkCgT+vMkNkR2+G5jyW7jsuPwlOZq
-	4jSXj4T/2zXCyEsn4ZwnVkq+ckRKlhtA5DTct94j1SyI9O9Gd4xVg1X0vvRKUIfCvIQ9UBzsH2x
-	R0nHfeRTkjFXedPzvSo3tI1hxo/R+58lQ/J8r
-X-Google-Smtp-Source: AGHT+IEGNoaMYGpe1zjMENuHS4YoZHiS3pXmXy0cqbrMPjfcUXWgRA5FxJgRVChd2o+0OneLfEKUjQ==
-X-Received: by 2002:a17:90b:1a8e:b0:327:53f0:6368 with SMTP id 98e67ed59e1d1-32815412b74mr13049298a91.2.1756787953247;
-        Mon, 01 Sep 2025 21:39:13 -0700 (PDT)
-Received: from cacher.localnet ([111.94.119.234])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-329e6d6d4b2sm286573a91.0.2025.09.01.21.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Sep 2025 21:39:12 -0700 (PDT)
-From: Fa-Iz Faadhillah Ibrahim <faiz.faadhillah@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: basak.sb2006@gmail.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jlee@suse.com, kuurtb@gmail.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- rayanmargham4@gmail.com
-Subject:
- Re: [RFC PATCH v2 0/3] platform/x86: acer-wmi: Add fan control support
-Date: Tue, 02 Sep 2025 11:39:09 +0700
-Message-ID: <5007139.GXAFRqVoOG@cacher>
-In-Reply-To: <5b7f6b40-8d4f-470e-ae84-b51d4177af39@gmx.de>
-References:
- <f5d8b82d-c711-4611-b257-b4297f172bb1@gmx.de>
- <1bb3edd6-405f-4615-831f-301dba525bc3@gmail.com>
- <5b7f6b40-8d4f-470e-ae84-b51d4177af39@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZueIHmC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED27C4CEED;
+	Tue,  2 Sep 2025 10:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756808852;
+	bh=9vY2iPUojXBGZ3yZLfzoQea5xlgAlLhFfTMphrasNFU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tZueIHmCfFvlETbVgfvgVVDCvWiCpO+6mviNIrMtE8a4njLtAkQrXUVBb42sDXXG/
+	 n9Tlt3oFrvb49i2vS8i+2LO+qvN+pX3016ic3+IoXt8UDH5ZuiMwwzFi+vuZ4oH2wV
+	 Ui7725GUuUjB+BLir2miG0mjz9fE20KQDmVWwcD1OyPWrSS0Sjnr8qqQClilH+YUN2
+	 bQk6l1vAi1ZSWz7Q9BNsxdIS3A8WU/bLI6UGygQdrpbdp8DVAPzF1RlQ7EGsB/SSjl
+	 3Fp3rqj/zs/ye6sBFYQV20SV7O5ZPclb/Z4Y+/840688ztXokhAMb8xBoonfeWEXyx
+	 X5u17DKhHRKVA==
+Message-ID: <c0ca6ca1-ffee-4b12-bf96-ee9efb93c4d2@kernel.org>
+Date: Tue, 2 Sep 2025 12:27:24 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
+To: Sebastian Reichel <sre@kernel.org>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-arm-msm@vger.kernel.org
+References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+ <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
+ <ea0b329e-ab3e-4655-8f27-e7a74784302a@app.fastmail.com>
+ <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@kernel.org>
+In-Reply-To: <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Monday, September 1, 2025 2:33:53=E2=80=AFAM Western Indonesia Time Armi=
-n Wolf=20
-wrote:
-> Am 23.08.25 um 03:27 schrieb Fa-Iz Faadhillah Ibrahim:
-> > On 8/22/25 7:02 PM, Armin Wolf wrote:
-> >> Am 15.08.25 um 08:17 schrieb Fa-Iz Faadhillah Ibrahim:
-> >>>> > This experimental patch series aims to add fan control support to
-> >>>>=20
-> >>>> the > acer-wmi driver. The patches are compile-tested only and need
-> >>>> to be > tested on real hardware to verify that they actually work.
-> >>>>=20
-> >>>> > > I CCed two users who requested support for this feature. I
-> >>>>=20
-> >>>> would be > very happy if both of you could test those patches and
-> >>>> report back. > > I am ready to help you both with compiling a
-> >>>> custom linux kernel for > testing this series.
-> >>>> Any updates from the two people with Acer hardware?
-> >>>>=20
-> >>>> Thanks,
-> >>>> Armin Wolf
-> >>>=20
-> >>> Hello, I've tried your patch on my Predator Helios Neo 16 (PHN16-72)
-> >>> using quirks from PH16-72 and it looks like fan control works just
-> >>> fine.
-> >>> On other note, can you please add PHN16-72 to the quirk table?
-> >>> if you need anything to test please do notify.
-> >>>=20
-> >>> Thanks,
-> >>> Fa-Iz Faadhillah Ibrahim
-> >>=20
-> >> Hi,
-> >>=20
-> >> sorry for taking a bit long to respond, i am currently on vacation.
-> >> Nice to know that the experimental patches work :).
-> >> Can you send me the output of "acpidump" on your machine?
-> >=20
-> > Hello,
-> >=20
-> > Sorry for disturbing your vacation, hope you're having a great time :).
-> > Output of "acpidump" attached below.
-> >=20
-> > P.S. Sorry for the messed up formatting before, first time here so I'm
-> > still learning how this works, hopefully it'll be okay now.
-> >=20
-> > Thanks,
-> > Fa-Iz Faadhillah Ibrahim
->=20
-> Thanks.
->=20
-> Would it be OK for you if i send the non-RFC patches once i am back home
-> (around 15.09.)? The reason for this is that i made some improvements to
-> the RFC patches, but those improved patches are only stored on my develop
-> machine at home.
-Of course, I'll try it once you send the patches.
-I'm wondering, where should I send a feature request and a bug report? it=20
-would be nice to have the battery limit function upstreamed, and I discover=
-ed=20
-some bugs here and there as well.=20
+On 9/1/25 6:10 PM, Sebastian Reichel wrote:
+> Hello Mark,
+> 
+> On Mon, Sep 01, 2025 at 09:48:39AM -0400, Mark Pearson wrote:
+>> On Sun, Aug 31, 2025, at 5:28 PM, Sebastian Reichel wrote:
+>>> Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which
+>>> is in theory compatible with ThinkPad ACPI. On Linux the system
+>>> is booted with device tree, which is not supported by the ThinkPad
+>>> ACPI driver. Also most of the hardware compatibility is handled
+>>> via ACPI tables, which are obviously not used when booting via
+>>> device tree. Thus adding DT compatibility to the existing driver
+>>> is not worth it (almost no code sharing).
+>>>
+>>> The driver currently exposes features, which are not available
+>>> via other means:
+>>>
+>>>  * Extra Keys
+>>>  * System LEDs
+>>>  * Keyboard Backlight Control
+>>>
+>>> The driver has been developed by reading the ACPI DSDT. There
+>>> are some more features around thermal control, which are not
+>>> yet supported by the driver.
+>>>
+>>
+>> Thanks for working on this - it's great.
+> 
+> It's a personal scratch your own itch project, as I daily drive the
+> machine.
+> 
+>> I'll see if I can get the EC spec so I can do some checking on the
+>> values (I thought I had it already, but I can't find it). If this
+>> file can be used for other platforms then it might be good to
+>> rename the file to not be specific to the t14s? I'm curious if it
+>> can be used on the X13s or the Yoga platform.
+> 
+> Maybe. I only have the T14s (apart of my older Intel/AMD ThinkPads,
+> which use the ACPI driver). The ACPI DSDT functions completley
+> abstract the lowlevel I2C interface, so in theory every ThinkPad
+> could have a completley different EC and still use the same ACPI
+> driver. So this needs to be checked per-device. Hopefully the low
+> level interface is similar in those, so that we don't need to spam
+> the kernel tree with multiple different EC drivers :)
+> 
+>> Couple of notes
+>>  - I do agree it doesn't make sense to add this to thinkpad_acpi.
+>>    That file is too big anyway.
+>>  - If there are other pieces like this where some detail of the
+>>    platform is needed, please do let me know. I never got enough
+>>    time to work on this platform directly, and it wasn't in our
+>>    Linux program, but I do have access and support from the
+>>    platform team for getting details on it. If I can help, so not
+>>    too much reverse engineering is needed, I'm happy to.
+> 
+> Thanks for the offer.
+> 
+> I would be interested in bits around system suspend. Right now
+> support on X1E is limited to sending the CPU into suspend. Much of
+> the machine seems to be still powered. Right now the keyboard
+> backlight and all the status LEDs stay on and the LID + power led
+> does not go into the typical breathing pattern. Additionally I had
+> to disable wakeup capabilities for the EC interrupt, as closing the
+> LID generates an event and thus an interrupt, which wakes the
+> system. Obviousy that is undesired from user's perspective. My guess
+> is, that there might be some register to mask events, but I haven't
+> found it so far. Alternatively the EC might mask them automatically
+> when the system is send into suspend, which I also have not yet
+> figured out :) The only bit I know is, that EC register 0xE0 is
+> involved in modern standby.
+> 
+> Apart from that and (probably) unrelated to the EC: I noticed that
+> accessing the built-in webcam (with the X1E camera patches from
+> Bryan O'Donoghue) does not enable the status LED. It would be
+> nice if you can check how that is wired, so that it can be enabled
+> when a camera stream is started.
 
-Thanks,
-=46a-Iz Faadhillah Ibrahim
->=20
-> Thanks,
-> Armin Wolf
->=20
-> >> Thanks,
-> >> Armin Wolf
-> >>=20
-> >>>> > Changes since v2: > - remove duplicate include and replace
-> >>>>=20
-> >>>> hwmon_pwm_mode with > hwmon_pwm_enable in second patch > > Armin
-> >>>> Wolf (3): > platform/x86: acer-wmi: Fix setting of fan behavior >
-> >>>> platform/x86: acer-wmi: Add fan control support > platform/x86:
-> >>>> acer-wmi: Enable fan control for PH16-72 and PT14-51 > >
-> >>>> drivers/platform/x86/acer-wmi.c | 298
-> >>>> +++++++++++++++++++++++++++++--- > 1 file changed, 273
-> >>>> insertions(+), 25 deletions(-) > > -- > 2.39.5 > >
-> >>>> --------------------------------------------------------------------=
-=2D--
-> >>>> -
+FWIW a couple years ago I tried to do something similar for the X13s
+EC, and the software interface looks somewhat familiar..
 
+This never ended up becoming anything big, but just in case this is
+useful for anyone:
 
+https://github.com/SoMainline/linux/commit/c0cc2c60177a33597c33586bfe27b5f440e36745
 
-
+Konrad
