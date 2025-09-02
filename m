@@ -1,103 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7272D5C95;
-	Tue,  2 Sep 2025 12:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF13305E2D;
+	Tue,  2 Sep 2025 13:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756817774; cv=none; b=OflUV30N9gXKLZY2hp1scbAjUj1nG7/F7KbOGURtB9TKkMiYSECYRchaPr+iogtlSvc0M3LDgz+FL4yizQttHuOfFP4CCFOnGUcufEgK+5v8aovMvDfMsQmQGbHUPGGCFhnaPGC4Wuqs26I/xM+E9Z44vn1YgwlaY6H4MBQhDP0=
+	t=1756819080; cv=none; b=rTGs4OSCN6D6dJMonw4IMBnLwt2uuxJSUsdd2Ku1nb0uGvtamSW0fJGyXf9Cn9NbjZZ+NQ5myV6bqlBw4YnFo/YDMtqgJfA0ixyQQf0YFeyMOJ2+SvOVKycSW0uzO/QF4z6gNyVgw61Hnzv5Se9QHIsj7p3twxbdl1dUDh7DinU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756817774; c=relaxed/simple;
-	bh=6fXt4bhKhGQeDgocLc+VTGxwmm9hlaSYbwbrhqO4eo4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lucBmrwg++jHdYRdZCeDdEewQV8yTkO9VH8r6aYoCyLEEhM0cDDeEv8/AIXY67ZL3LWYQcVHHiNWJD5xn5U+4WUcSIpBx3RR4JXNSxUZLX+nXr1non7c0csbBC4IV4YCXN7SAqCKcTorBGJl/TCEpKSfyYL+WcrC63s32vPSHTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwazNMHJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756819080; c=relaxed/simple;
+	bh=z7FwtaZZzwjQdtwpEuB9tpjcm7SAnUfcPFRtC2LIdKE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=dvAOuJzNKekDZQwW85fZo04NWnx13Iq1bzFriQMvSBT1wVKxug31BUb+lfvkrFhm+gvrR9Sh3DCGo2el610wqFcb4BqyI7vgP0Z1Jq8zJOGP1L3LHcqbzV+cpvjC4XW8qMdaEtjheMIY13hkqd7WSuMuNh2Mm8H6lqIRi1OeCjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzukxrmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwazNMHJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F86C4CEF4;
-	Tue,  2 Sep 2025 12:56:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzukxrmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81D4FC4CEF4;
+	Tue,  2 Sep 2025 13:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756817774;
-	bh=6fXt4bhKhGQeDgocLc+VTGxwmm9hlaSYbwbrhqO4eo4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pwazNMHJ405xvwddvksWXCvf2Bzxx2noy2IUYDoxR08pNT70eoYJ6avMGFl9/Brfy
-	 djIhKc4IwsWYRDzf4ckgbuj4YCoKw+9YxQrmPP2zcN5BTWN72msT/8L7gG1b4AnNXA
-	 H4LLv6NBYhzDqxK03/Bs/TmEL+LOYNY+NS+YPvoSxcEaL2K4fCDy8dQcwcD1Yoj3r7
-	 9WeAzZMLfWuw825r0YE0Jvdw3d0z5Gpm6BLaVjSBhLdAAnUEwVxIWvjvouZoMk16IB
-	 vPb54RivBXsgQ9vEkrWC7YCee6GXl108+ujfuPj+LCZ1l3MNDksA1EisuEfyh34BqK
-	 8exw6nerb4i/Q==
-From: Lee Jones <lee@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
- Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Russell King <linux@armlinux.org.uk>, Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Geert Uytterhoeven <geert@linux-m68k.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Matti Vaittinen <mazziesaccount@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Jeff Johnson <jjohnson@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- "Dr. David Alan Gilbert" <linux@treblig.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
- linux-media@vger.kernel.org, patches@opensource.cirrus.com, 
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
- ath10k@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
- linux-usb@vger.kernel.org, linux-sound@vger.kernel.org
-In-Reply-To: <20250808151822.536879-1-arnd@kernel.org>
-References: <20250808151822.536879-1-arnd@kernel.org>
-Subject: Re: (subset) [PATCH 00/21] gpiolib: fence off legacy interfaces
-Message-Id: <175681776381.2341743.17892612215782644085.b4-ty@kernel.org>
-Date: Tue, 02 Sep 2025 13:56:03 +0100
+	s=k20201202; t=1756819079;
+	bh=z7FwtaZZzwjQdtwpEuB9tpjcm7SAnUfcPFRtC2LIdKE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=rzukxrmNB9iuxVkdbLPuZC7Jsk6tKQen9VhnAzMxmcSdjTjYKti1y9nmRy4XxvXeM
+	 P6Y9wpxGAyPpsGuDQHHa8ZLzzZu7iluNZucOW+brNBoFVAta612ujIY2C4h5+M19ow
+	 y6elkUFGOczdPhqYIS2bPxnwcuZ8Foin2gsvKXCFdXHP3yBjJgCjJumt0C3IAlko7J
+	 YT2sHWnL2vOpl3AS1PY1GtcidjdV9DBKWxRemNtoMaWafUwiOG9kO+1swdU2E7L9sZ
+	 JOarBQsSwx4J+vuSxV8XLcqnG0Ulv1olpNWzddGSmfOPK+PFo/NLt0+qB2nGsQ3ZW3
+	 riarxr8TeyyVg==
+Date: Tue, 02 Sep 2025 08:17:56 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c81fc
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+In-Reply-To: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+Message-Id: <175678731124.877987.10991214512843096912.robh@kernel.org>
+Subject: Re: [PATCH 0/3] platform: arm64: thinkpad-t14s-ec: new driver
 
-On Fri, 08 Aug 2025 17:17:44 +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+
+On Sun, 31 Aug 2025 23:28:30 +0200, Sebastian Reichel wrote:
+> Introduce driver for the ThinkPad T14s Gen6 Snapdragon EC. In theory
+> it seems to be compatible with the ThinkPad ACPI driver, but these
+> devices are booted with device tree. As the name implies, the existing
+> ThinkPad ACPI driver only supports the ACPI interface. Looking at
+> the implementation, the ACPI DSDT contains many mapping functions
+> to translate the low level I2C messages into the interface used by
+> the ThinkPad ACPI driver. Adding DT support to the ThinkPad ACPI driver
+> would require adding all those translation functions, which would add
+> more or less the same amount of code as writing a separate driver using
+> the low level interface directly. I don't think it's sensible to make
+> the existing ACPI driver even more complicated, so I went for a separate
+> driver.
 > 
-> Commit 678bae2eaa81 ("gpiolib: make legacy interfaces optional") was
-> merged for linux-6.17, so now it is possible to use the legacy interfaces
-> conditionally and eventually have the support left out of the kernel
-> whenever it is not needed.
+> I managed to get system LEDs, audio LEDs, extra keys and the keyboard
+> backlight control working. The EC also seems to be used for some thermal
+> bits, which I haven't looked into deeply. As far as I understand most
+> thermal and fan control is handled by a different controller
+> (0x36@i2c5) anyways.
 > 
-> [...]
+> Apart from that the EC is involved in proper system suspend, which
+> is something I do not yet understand (I don't have any documentation
+> apart from the dis-assembled DSDT and existing ACPI driver). Right
+> now I disabled wake capabilities for the IRQ, since it would wake
+> up the system when closing the LID. Hopefully a way to mask specific
+> events will be found in the future.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+> Sebastian Reichel (3):
+>       dt-bindings: platform: Add Lenovo Thinkpad T14s EC
+>       platform: arm64: thinkpad-t14s-ec: new driver
+>       arm64: dts: qcom: x1e80100-t14s: add EC
+> 
+>  .../bindings/platform/lenovo,thinkpad-t14s-ec.yaml |  49 ++
+>  MAINTAINERS                                        |   6 +
+>  .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    |  23 +
+>  drivers/platform/arm64/Kconfig                     |  20 +
+>  drivers/platform/arm64/Makefile                    |   1 +
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 597 +++++++++++++++++++++
+>  6 files changed, 696 insertions(+)
+> ---
+> base-commit: c8bc81a52d5a2ac2e4b257ae123677cf94112755
+> change-id: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
+> 
+> Best regards,
+> --
+> Sebastian Reichel <sebastian.reichel@collabora.com>
+> 
+> 
+> 
 
-Applied, thanks!
 
-[12/21] mfd: arizona: make legacy gpiolib interface optional
-        commit: 12f6c0afc8987d72017a3ecf7c1183cb951b0d24
-[13/21] mfd: si476x: add GPIOLIB_LEGACY dependency
-        commit: 1ae250257e43b3fba225e4f8ea7d87125dc861ae
-[14/21] mfd: aat2870: add GPIOLIB_LEGACY dependency
-        commit: 3144986f37911f131f373743f294b2941a8ef37c
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
---
-Lee Jones [李琼斯]
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit c8bc81a52d5a2ac2e4b257ae123677cf94112755
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com:
+
+arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s-oled.dtb: ec@28 (lenovo,thinkpad-t14s-ec): 'wakeup-source' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/platform/lenovo,thinkpad-t14s-ec.yaml#
+arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: ec@28 (lenovo,thinkpad-t14s-ec): 'wakeup-source' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/platform/lenovo,thinkpad-t14s-ec.yaml#
+
+
+
+
 
