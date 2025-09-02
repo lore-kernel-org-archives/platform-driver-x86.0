@@ -1,144 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC552DECBF;
-	Tue,  2 Sep 2025 15:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952A721CA14;
+	Tue,  2 Sep 2025 22:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756826724; cv=none; b=nz8STClqCIbRGYHyfYWHR65uU9tbZyXm5FfKfIXNDVWktEV060KYGfQNyW3cBTnG3wFwxLqkv++klrPn07xBXuBg4tcGawlQwEAKbagARWTOKs3Xvfd2z5ZqEcakw70PEaoctMG9h0dBDJryKujUE5iO5iLWCJroUgHSkqFNhlo=
+	t=1756853912; cv=none; b=l6xckb0T1TuhbPMoZ8MDid52nxM0g+WvdE0yRLMA7eYF+CErxmLHX9TaOxMijswMCaHfn+dzthxXHf39OvOtxYfzkO6wLDOXtV6Qt8O+GUOzLujBh6QcyziwjWOB6DzZgpTQ2Jcp2KT/OgQyvAnleYu1fxIPH7P0idGYAUxZbvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756826724; c=relaxed/simple;
-	bh=l/nS55o1t/A9e4SaZ6nyh5QjR04WTvooR5oRakfTc+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PtvSB+ODDAES7hgJVP+8eTcDfTHWxvFGQ0LakTj94eZxVsSds/A4Xx707d8FrankCCSoZd+azqn6MlgnavujvgK33VsKFt1IujqXwY9R5S138Dt278P61PbpCEySNVlfCcduVKZRE2FA1PBPLQmVw6Giw8f/N5fmHWgJkVLfqP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5erzpUr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756853912; c=relaxed/simple;
+	bh=HZ+4oNUpiGLCoLpGRHJFkB1WlvwYbjQhQz4lqmkFw/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJL79A9HgJRAd5Ojdb42lQFY4cppV3xi8VJf2103FSMIVR/l59gCn8E/1RXfZehBB5Ek98X5msppGhGR96yNQUJVjILP0q4+kmlmP1R65qiW+f7qmczNTH4UGbJuwTfkIzBjbCUAZrj0mLn0Hp3rF79Lgw839jk/YN+We0kghfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQFgBCF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5erzpUr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EE8C4CEF5;
-	Tue,  2 Sep 2025 15:25:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQFgBCF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E99C9C4CEED;
+	Tue,  2 Sep 2025 22:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756826723;
-	bh=l/nS55o1t/A9e4SaZ6nyh5QjR04WTvooR5oRakfTc+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p5erzpUrIssF2EgMkfCi2998Dqdtqw9bJugMrhWgNbyUvWK39HQJHU7B1c22D/CNf
-	 oPySDfoRaSszCd6hwqRPbyNHatGHFcTFQJSOUdGVZX9g7hPJpUBJS5SE40Eor+XUeY
-	 5bjoWATTQZ4RqtxGPtL5TQwIKlvmNBdxgN9f/RGKBLMIIRHrsE0sE7BL5aga3LvGz6
-	 WX6FiLDcE3VG2gziPqAWMpUH6hyfON1OvxjHIGA1foP5iNwQ5+BY9pxGGAkOaQ0uIJ
-	 jRY20mOeLG20gFJwT2LnOe2AKaG+792J7ClaX3hC2Q8N6LkAM+Sk9R5ZCwYEUzTejB
-	 6h6n8cfxPc2gw==
-Message-ID: <5f33c919-571b-45b7-b2bb-c755b4195035@kernel.org>
-Date: Tue, 2 Sep 2025 10:25:20 -0500
+	s=k20201202; t=1756853912;
+	bh=HZ+4oNUpiGLCoLpGRHJFkB1WlvwYbjQhQz4lqmkFw/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kQFgBCF/U0FWMcovgYqXIpwcyRnDjA/7XQk1bEubZdyiWI+e9Wn11+SihIr+l6b6Z
+	 q2XZrXUo1QxCNgq9LjOplryFDSDfxo/+fqWi4co49s4sBZHBGlw380sexc8rT2LQls
+	 qflb8OCgcxR+at9Ngrwx/JDhMtVVZzAo4VH4fjcUzNOI/LSS2kRdFLl9kKCObbyGyK
+	 EOvj5NgmMIWJT+fhien43lekl8ZKWt1pbVDPLZX5kGZWanOoXQ15coQHSuS6K623oY
+	 58DpSB0QorwrEPU3Scll52edl+uMRAijY8ITe72QztrzWz1ysUErQHAgemtA190wNL
+	 wEClwjnQR7HeA==
+Received: by venus (Postfix, from userid 1000)
+	id BC367180C64; Wed, 03 Sep 2025 00:58:29 +0200 (CEST)
+Date: Wed, 3 Sep 2025 00:58:29 +0200
+From: Sebastian Reichel <sre@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
+Message-ID: <5qtornbvoc7soqud5o3e3uwvtifuy5vocmjsdwggydl6jrvmmm@5nc5ob4cj6ec>
+References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
+ <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
+ <ea0b329e-ab3e-4655-8f27-e7a74784302a@app.fastmail.com>
+ <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
+ <c0ca6ca1-ffee-4b12-bf96-ee9efb93c4d2@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmc: Add Stellaris Slim Gen6 AMD to
- spurious 8042 quirks list
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
- <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Christoffer Sandberg <cs@tuxedo.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250901164216.46740-1-wse@tuxedocomputers.com>
- <3830aeee-91d7-48ee-b67e-8aefbbd2124e@kernel.org>
- <c154022c-c00d-46ba-86fb-2030ccab0272@tuxedocomputers.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <c154022c-c00d-46ba-86fb-2030ccab0272@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 9/2/2025 9:37 AM, Werner Sembach wrote:
-> 
-> Am 02.09.25 um 16:15 schrieb Mario Limonciello:
->> On 9/1/2025 11:42 AM, Werner Sembach wrote:
->>> From: Christoffer Sandberg <cs@tuxedo.de>
->>>
->>> Prevents instant wakeup ~1s after suspend
->>>
->>> Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
->>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>> ---
->>>   drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/ 
->>> platform/x86/amd/pmc/pmc-quirks.c
->>> index 7ffc659b27944..8b8944483b859 100644
->>> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
->>> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
->>> @@ -248,6 +248,13 @@ static const struct dmi_system_id fwbug_list[] = {
->>>               DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
->>>           }
->>>       },
->>> +    {
->>> +        .ident = "TUXEDO Stellaris Slim 15 AMD Gen6",
->>> +        .driver_data = &quirk_spurious_8042,
->>> +        .matches = {
->>> +            DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
->>> +        }
->>> +    },
->>>       {}
->>>   };
->>
->> FYI - this seems to conflict with other changes on review-ilpo-fixes 
->> and fixes branches.
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform- 
->> drivers-x86.git/commit/drivers/platform/x86/amd/pmc/pmc-quirks.c? 
->> h=review-ilpo-fixes&id=c96f86217bb28e019403bb8f59eacd8ad5a7ad1a
-> Sorry, i will rebase and send a v2.
->>
->> Also - a few other comments.
->>
->> 1) Do you have line of sight to a firmware (BIOS or EC) fix?  If so; 
->> it would be better to specify a specific firmware release that is 
->> affected.
-> 
-> No
-> 
-> @Christoffer you have more knowledge of how realistic it is to get this 
-> fixed by the odm?
-
-OK, even if you don't get a solution in the firmware in this generation 
-it's good to understand this issue and root cause it so that you can 
-have it fixed properly next generation.
-
-It's not always realistic but ideally bringing a new product to market 
-shouldn't require a quirk.
-
-> 
-> But even then, we still don't have fwupd support to get the fw update 
-> out easily
-> 
-
-😢
-
->>
->> 2) Shouldn't you also have DMI_SYS_VENDOR or some other matching keys 
->> else set?  Or is it really all these boards with this specific name?
-> 
-> I was following the style of the i8042 quirk list where we also always 
-> only did boardnames
-> 
-> Ofc we only tested the boards the odm has sent to us
-> 
-> best regards,
-> 
-> Werner Sembach
-> 
-
-But this isn't a hardware problem with the board itself, it's a firmware 
-problem.  The board ID you're using is just a convenient proxy for it.
-
-I've seen the debugging for a few issues like this and it can be all 
-across the board.  A few examples:
-
-* polarity issues
-* debounce issues
-* incorrectly set PCD (Kinda like a Kconfig for BIOS)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qi5ko5qyws4ixtkn"
+Content-Disposition: inline
+In-Reply-To: <c0ca6ca1-ffee-4b12-bf96-ee9efb93c4d2@kernel.org>
 
 
+--qi5ko5qyws4ixtkn
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
+MIME-Version: 1.0
+
+Hi,
+
+On Tue, Sep 02, 2025 at 12:27:24PM +0200, Konrad Dybcio wrote:
+> On 9/1/25 6:10 PM, Sebastian Reichel wrote:
+> > Hello Mark,
+> >=20
+> > On Mon, Sep 01, 2025 at 09:48:39AM -0400, Mark Pearson wrote:
+> >> On Sun, Aug 31, 2025, at 5:28 PM, Sebastian Reichel wrote:
+> >>> Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which
+> >>> is in theory compatible with ThinkPad ACPI. On Linux the system
+> >>> is booted with device tree, which is not supported by the ThinkPad
+> >>> ACPI driver. Also most of the hardware compatibility is handled
+> >>> via ACPI tables, which are obviously not used when booting via
+> >>> device tree. Thus adding DT compatibility to the existing driver
+> >>> is not worth it (almost no code sharing).
+> >>>
+> >>> The driver currently exposes features, which are not available
+> >>> via other means:
+> >>>
+> >>>  * Extra Keys
+> >>>  * System LEDs
+> >>>  * Keyboard Backlight Control
+> >>>
+> >>> The driver has been developed by reading the ACPI DSDT. There
+> >>> are some more features around thermal control, which are not
+> >>> yet supported by the driver.
+> >>>
+> >>
+> >> Thanks for working on this - it's great.
+> >=20
+> > It's a personal scratch your own itch project, as I daily drive the
+> > machine.
+> >=20
+> >> I'll see if I can get the EC spec so I can do some checking on the
+> >> values (I thought I had it already, but I can't find it). If this
+> >> file can be used for other platforms then it might be good to
+> >> rename the file to not be specific to the t14s? I'm curious if it
+> >> can be used on the X13s or the Yoga platform.
+> >=20
+> > Maybe. I only have the T14s (apart of my older Intel/AMD ThinkPads,
+> > which use the ACPI driver). The ACPI DSDT functions completley
+> > abstract the lowlevel I2C interface, so in theory every ThinkPad
+> > could have a completley different EC and still use the same ACPI
+> > driver. So this needs to be checked per-device. Hopefully the low
+> > level interface is similar in those, so that we don't need to spam
+> > the kernel tree with multiple different EC drivers :)
+> >=20
+> >> Couple of notes
+> >>  - I do agree it doesn't make sense to add this to thinkpad_acpi.
+> >>    That file is too big anyway.
+> >>  - If there are other pieces like this where some detail of the
+> >>    platform is needed, please do let me know. I never got enough
+> >>    time to work on this platform directly, and it wasn't in our
+> >>    Linux program, but I do have access and support from the
+> >>    platform team for getting details on it. If I can help, so not
+> >>    too much reverse engineering is needed, I'm happy to.
+> >=20
+> > Thanks for the offer.
+> >=20
+> > I would be interested in bits around system suspend. Right now
+> > support on X1E is limited to sending the CPU into suspend. Much of
+> > the machine seems to be still powered. Right now the keyboard
+> > backlight and all the status LEDs stay on and the LID + power led
+> > does not go into the typical breathing pattern. Additionally I had
+> > to disable wakeup capabilities for the EC interrupt, as closing the
+> > LID generates an event and thus an interrupt, which wakes the
+> > system. Obviousy that is undesired from user's perspective. My guess
+> > is, that there might be some register to mask events, but I haven't
+> > found it so far. Alternatively the EC might mask them automatically
+> > when the system is send into suspend, which I also have not yet
+> > figured out :) The only bit I know is, that EC register 0xE0 is
+> > involved in modern standby.
+> >=20
+> > Apart from that and (probably) unrelated to the EC: I noticed that
+> > accessing the built-in webcam (with the X1E camera patches from
+> > Bryan O'Donoghue) does not enable the status LED. It would be
+> > nice if you can check how that is wired, so that it can be enabled
+> > when a camera stream is started.
+>=20
+> FWIW a couple years ago I tried to do something similar for the X13s
+> EC, and the software interface looks somewhat familiar..
+>=20
+> This never ended up becoming anything big, but just in case this is
+> useful for anyone:
+>=20
+> https://github.com/SoMainline/linux/commit/c0cc2c60177a33597c33586bfe27b5=
+f440e36745
+
+I had a quick look and I would say that looks quite different:
+
+ * The EC read/write/event function uses the same command bytes, but does
+   not have 0x00 0x01 between the register and the value, so
+   different functions would be needed for T14s and X13s
+ * Almost all event codes are different
+ * The register numbers are also different
+
+So my fears, that the ACPI functions allow more or less completely
+changing the low level interface were true :(
+
+Greetings,
+
+-- Sebastian
+
+--qi5ko5qyws4ixtkn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmi3dpEACgkQ2O7X88g7
++pqgIxAAnNJ6g2A4b9AJC9DHzSkhP+4QkQx4L88tugHkGwF38hMDRXwkTattrnt2
+ZVwffm/tX+Lj/Ot97URcOmAKqVS8Ti56iDYWE41lLz2F98x+rFEP1yiGEs3l19St
+PsyxAQIbVdE6FKXfB/DMls1ydD4bGiidQ7w0TSU4QWkxZEm79uFrM3N82L8xpEVZ
+hTVxdG7TQMcDnKbzgyAd4u6oC+9xMeq30YllaN0GLvFJHf+0s1icq2NHGhb/r9pG
+UnL5jxKgate0zfqRIY2KILrDBAuSqYR9y6hl5y7RpxpNFyRtBSgMSZ0Tq1aj9L8y
+ilCbTpUJLQ8CUbXNYV0yM2sngdZD+NIvwoIFzVnEbFe96HZYo+gMPpWpV5dwuOpN
+H0JS5CODz6Fw9VDbBBtzGquLvRGU5kEdQB/2pk5CJk2ps6J3J3limNQ7ncLR8Kzb
+iZxstncS//AXgoLe+Ylpw9kE/PgUOYPL6729SqdkmYM9+v1zYxudz6POJHIf6yr+
+yK6prEyqK+JDY7kg/2PGzB7yI+Z4bt+ST4YsITwMhu3MoZgAWfl+Cj1MKhuUH6lW
+bgruP4LUx3Gvw3QUBTb551IWFJlVplq8CILfXJiHWNG45xIDzcQPGIZf+f6ah2z9
+Kwtg+l/G8ee+NkDa1TKy78BEMNeJKLT3TBSvP1oMLGshVGwXj8M=
+=jva8
+-----END PGP SIGNATURE-----
+
+--qi5ko5qyws4ixtkn--
