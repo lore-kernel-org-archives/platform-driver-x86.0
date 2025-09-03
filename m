@@ -1,92 +1,57 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052942D3ECA;
-	Wed,  3 Sep 2025 17:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECCD31354F;
+	Wed,  3 Sep 2025 19:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756921113; cv=none; b=GKqUFaFwyJciqUFw0otY28BOWli40SVBKiWs9HxWq5cV/6AotnsugQZuaYdMxsU2irwCEoLp7aYKbNfdIDSqxIs2aZ2IbzBlOKk53bYBK8uBjEf1fCiWEpCuengIXjBFeDbBayBCBtmOvDgszg6HHmGKjxXRpKpRH2bz/HZK98A=
+	t=1756926719; cv=none; b=n5E/FCKrztGF91bcdHjPqgKdnjiNr/1WkDL8fcCmM/9mUaEKzTqw+6KC6+36bwtZvjNmOoSsPQ3cIZmzEGonx0GslvCiC7yPFTtJppd2cF7Q5kmsqUeFnag5MOpntMkezqPJC9S3CuMSV4JtlVTVA6Pg3XWBXdX3Z9/tjdvwCD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756921113; c=relaxed/simple;
-	bh=ItYGcVqP6A+V+mcjkV8fZFfy5Z68J8sXqML1UZMt3XY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F++9krzyZ74I0RsHkSOFZ6nIrw1cUlMYQilGs50Wnw5QEB15PArUUr552iBOMXUlB5pqGoH2yQrhRfm0Lbs6/cHWtJID5H1nlLteJlr/J2lqAHE1USCtyNZqkxJlIuSjnUdxq33VParJyUtast6Oo4DKHMmA0sma8fHm6u49Fbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=yMI8zHJh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=THoCJYib; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1756926719; c=relaxed/simple;
+	bh=hyfKl4l2BY6XBcrAZ/Yq/Yz5itwr8Le9qXuyvsd4mMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oq44Bx0Y8mid3Dik6+uzwcBmhSBFHqel7KSub+17eK53EDoxfxjr2sI3cpqjX/cBC+JXAcUBVHeLwBBBlTJckHoHQqlhSvhL+7E0tfbywlTlksf5vAEkmxHNkL4WOj/Z+wdJ5jvq911nBY7wAm1jwXL93p3zS980xOJoNVJdX4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcQ5zTTh; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="yMI8zHJh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="THoCJYib"
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id EAC5D1D00443;
-	Wed,  3 Sep 2025 13:38:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Wed, 03 Sep 2025 13:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1756921109; x=
-	1757007509; bh=DYnOaiAueoSQYCxZ7k7x4ZOs2okglK8ZwDzjOK2+1KQ=; b=y
-	MI8zHJhL1TSpRYdxh4roANDGmiggsB27SOmLphvP8bkQOt2BnpBTPHpeytghDFDE
-	EbzIzkefbeY9bvF7lWWozWaQNwaPz6bsI83F2osEbeSLJW7RDAqRPnC1J5bPSUQo
-	YgDqenqqzaG7vvvhRa7h7Jm5vMQ0+eUspMQMsH3VBVVzv9cKKwsovywmY17ALKcD
-	8G4cMlUB5BjDNHHOmDrmcGLX6zzQbPksYFifvT/lBrSLJcilwhSNJTgv2wWiS4bf
-	VD4jK7CGwKYKTpngTZw1Nn2bsqHQCQBCTxHGbAHz7pYeAsYuvqaoF+BsjK2NacRT
-	APa8aA4ATehAFs+AnNyiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1756921109; x=1757007509; bh=D
-	YnOaiAueoSQYCxZ7k7x4ZOs2okglK8ZwDzjOK2+1KQ=; b=THoCJYibrYIfSW9z9
-	txc0msb6Y64SSwO5zqzlXcG0MykBYHMM8XvFR/IysM7Grtryt07nbN0DtVzlKb64
-	bQQqQvLAGRsclK+Y6MJlwFgyp2jcbZ8vf3bZmD29jH47jB67j9V66h6l78S6SXdL
-	bGn4rUlWk3k07l1x1pLZsrq6CF3uA4KcFut1Y11ZTvgUIfePp7ACe1P+/4g2D8PC
-	eov/88Mrix5w95mSc5jWocycqYTzVqvV0LNmnskLsdJkm9jvr7cq+9jbyaFIJSRk
-	3Lvu6OAEBWKyYasnD61P7ts6yBa0YWEcYSNoZSS8EUAJTEv1Zkg7DIUvaT71k6B0
-	QkcTg==
-X-ME-Sender: <xms:FX24aBO1v_zN7KevQZgcTvd_oTIelYNFQOJCmC8pNgRGWKpIXZ8aIg>
-    <xme:FX24aLWh208WJp92lb7X3Wl6tBhaMXyiOEAwAyX3qp5yuZ7WllLe9w3-982PIZSh3
-    -ibmMA27vhetzVowVI>
-X-ME-Received: <xmr:FX24aF18dlvOklDm2ut7Pm2J2fupYQBHZRFIq-t1iCHFscIbkHvTbio6nHYQFCIlT7XRq8qzOXP4DH82COzy83gqJMSDXA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdefjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephffvvefuff
-    fkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhsohhnuceo
-    mhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvg
-    hrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueethefgvdff
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvg
-    grrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepiedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnohhvoh
-    esshhquhgvsggsrdgtrgdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
-    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepkhgvrghntddtgeeksehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    phhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:FX24aJpdLpwFNY6ohIG4uq7GU8dzYjqkJtH0tH6Yoc08diDdo8TpXA>
-    <xmx:FX24aMWkfYwxpyL4Bh3w1EJdPZaQlNOqCBQUSBFMOrKH_oIf82G0NA>
-    <xmx:FX24aEb62LZ_A13tFWkiaPpzwyWQ22V9_P82-xX5HCb1Go3sD_R5gQ>
-    <xmx:FX24aJfTEooNIyq0rsH2_JOa-16XOPQv0fedbxABVZyGoM3vDzBCAg>
-    <xmx:FX24aJLTWGGFjSBmE-RlW-6UqDivG_DRA5nOCZ4fWvfc5Cej9mAXhW6X>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Sep 2025 13:38:28 -0400 (EDT)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	kean0048@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3] platform/x86: think-lmi: Certificate support for ThinkCenter
-Date: Wed,  3 Sep 2025 13:38:13 -0400
-Message-ID: <20250903173824.1472244-3-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250903173824.1472244-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20250903173824.1472244-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcQ5zTTh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756926717; x=1788462717;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hyfKl4l2BY6XBcrAZ/Yq/Yz5itwr8Le9qXuyvsd4mMs=;
+  b=fcQ5zTThZEKjXLGcr/OtHelHTmGPSYJC58dbubN+FaQSZGyYIG/7uq7g
+   C2yMR5vOae2wAWDOqmZAR1oPHIETnYRHEKXB/Uk/ab1OVv5RHcOEMlP8r
+   IMGICoC/krSzrSIrsGvss5nUZAS05gs/yz9ynmT+VERdk8ED1arUEIoIx
+   7Ru9ejMmDXZBF5QLNh55i+ZOauKXDOh94JKqJqmKVF75rEuGLeUBsYwnK
+   b1Lg/yPjjDDDCnisQVmxPgUSKJNiGd/RmGcUnuym23jIyjfbc7s1huufO
+   lAWYbQBWRlxYB92yzXgOCdwp+pRbYM4ap4LPIiRrGrd/Imb/J/LGiGm7e
+   w==;
+X-CSE-ConnectionGUID: mzwfs8CHR1SAoy1CuhLp+w==
+X-CSE-MsgGUID: buUZh/P2SJK15kpJVoDOvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="58285531"
+X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
+   d="scan'208";a="58285531"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 12:11:56 -0700
+X-CSE-ConnectionGUID: zVtr/cu9QmSJu3oXqda6Sg==
+X-CSE-MsgGUID: aOMavMB3Sx+TgX9JmpmsPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
+   d="scan'208";a="176945273"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by orviesa005.jf.intel.com with ESMTP; 03 Sep 2025 12:11:56 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3] platform/x86/intel-uncore-freq: Present unique domain ID per package
+Date: Wed,  3 Sep 2025 12:11:54 -0700
+Message-ID: <20250903191154.1081159-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -95,179 +60,143 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ThinkCenter platforms use a different set of GUIDs along with some
-differences in implementation details for their support of
-certificate based authentication.
+In partitioned systems, the domain ID is unique in the partition and a
+package can have multiple partitions.
 
-Update the think-lmi driver to work correctly on these platforms.
+Some user-space tools, such as turbostat, assume the domain ID is unique
+per package. These tools map CPU power domains, which are unique to a
+package. However, this approach does not work in partitioned systems.
 
-Tested on M75q Gen 5.
+There is no architectural definition of "partition" to present to user
+space.
 
-Signed-off-by: Kean Ren <kean0048@gmail.com>
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+To support these tools, set the domain_id to be unique per package. For
+compute die IDs, uniqueness can be achieved using the platform info
+cdie_mask, mirroring the behavior observed in non-partitioned systems.
+
+For IO dies, which lack a direct CPU relationship, any unique logical
+ID can be assigned. Here domain IDs for IO dies are configured after all
+compute domain IDs. During the probe, keep the index of the next IO
+domain ID after the last IO domain ID of the current partition. Since
+CPU packages are symmetric, partition information is same for all
+packages.
+
+The Intel Speed Select driver has already implemented a similar change
+to make the domain ID unique, with compute dies listed first, followed
+by I/O dies.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-Changes in v2:
- - split patch up into series
-Changes in v3:
- - Move check for no thumbprint GUID to this patch
- - Add structure fields and missing comma
-Changes in v4:
- - Moved cert_guid into tlmi_priv
- - applied const where needed
+v3:
+-Fix comment
+- when cdie range is 0 but more than one IO die, just start wherver there
+ is a valid instance of IO instead of 0 always
+v2:
+- Add some comments
+- Change update_domain_id() to set_domian_id() to set domain_id instead of update
+- cluster_info->uncore_data.domain_id += * is changed to add multiple steps to
+get to this equation
+- Handle case when only when no compute dies in partition
 
- drivers/platform/x86/lenovo/think-lmi.c | 56 +++++++++++++++++++++----
- drivers/platform/x86/lenovo/think-lmi.h |  1 +
- 2 files changed, 50 insertions(+), 7 deletions(-)
+ .../uncore-frequency/uncore-frequency-tpmi.c  | 74 ++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index de287987f20c..f2bef523d6ce 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -119,6 +119,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * You must reboot the computer before the changes will take effect.
-  */
- #define LENOVO_SET_BIOS_CERT_GUID    "26861C9F-47E9-44C4-BD8B-DFE7FA2610FE"
-+#define LENOVO_TC_SET_BIOS_CERT_GUID "955aaf7d-8bc4-4f04-90aa-97469512f167"
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index cb4905bad89b..8007ad7c88da 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -369,6 +369,77 @@ static void uncore_set_agent_type(struct tpmi_uncore_cluster_info *cluster_info)
+ 	cluster_info->uncore_data.agent_type_mask = FIELD_GET(UNCORE_AGENT_TYPES, status);
+ }
  
- /*
-  * Name: UpdateBiosCert
-@@ -128,6 +129,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * You must reboot the computer before the changes will take effect.
-  */
- #define LENOVO_UPDATE_BIOS_CERT_GUID "9AA3180A-9750-41F7-B9F7-D5D3B1BAC3CE"
-+#define LENOVO_TC_UPDATE_BIOS_CERT_GUID "5f5bbbb2-c72f-4fb8-8129-228eef4fdbed"
- 
- /*
-  * Name: ClearBiosCert
-@@ -137,6 +139,8 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * You must reboot the computer before the changes will take effect.
-  */
- #define LENOVO_CLEAR_BIOS_CERT_GUID  "B2BC39A7-78DD-4D71-B059-A510DEC44890"
-+#define LENOVO_TC_CLEAR_BIOS_CERT_GUID  "97849cb6-cb44-42d1-a750-26a596a9eec4"
++#define MAX_PARTITIONS	2
 +
- /*
-  * Name: CertToPassword
-  * Description: Switch from certificate to password authentication.
-@@ -145,6 +149,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * You must reboot the computer before the changes will take effect.
-  */
- #define LENOVO_CERT_TO_PASSWORD_GUID "0DE8590D-5510-4044-9621-77C227F5A70D"
-+#define LENOVO_TC_CERT_TO_PASSWORD_GUID "ef65480d-38c9-420d-b700-ab3d6c8ebaca"
- 
- /*
-  * Name: SetBiosSettingCert
-@@ -153,6 +158,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * Format: "Item,Value,Signature"
-  */
- #define LENOVO_SET_BIOS_SETTING_CERT_GUID  "34A008CC-D205-4B62-9E67-31DFA8B90003"
-+#define LENOVO_TC_SET_BIOS_SETTING_CERT_GUID  "19ecba3b-b318-4192-a89b-43d94bc60cea"
- 
- /*
-  * Name: SaveBiosSettingCert
-@@ -161,6 +167,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  * Format: "Signature"
-  */
- #define LENOVO_SAVE_BIOS_SETTING_CERT_GUID "C050FB9D-DF5F-4606-B066-9EFC401B2551"
-+#define LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID "0afaf46f-7cca-450a-b455-a826a0bf1af5"
- 
- /*
-  * Name: CertThumbprint
-@@ -187,6 +194,16 @@ static const struct tlmi_cert_guids thinkpad_cert_guid = {
- 	.set_bios_cert = LENOVO_SET_BIOS_CERT_GUID,
- };
- 
-+static const struct tlmi_cert_guids thinkcenter_cert_guid = {
-+	.thumbprint = NULL,
-+	.set_bios_setting = LENOVO_TC_SET_BIOS_SETTING_CERT_GUID,
-+	.save_bios_setting = LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID,
-+	.cert_to_password = LENOVO_TC_CERT_TO_PASSWORD_GUID,
-+	.clear_bios_cert = LENOVO_TC_CLEAR_BIOS_CERT_GUID,
-+	.update_bios_cert = LENOVO_TC_UPDATE_BIOS_CERT_GUID,
-+	.set_bios_cert = LENOVO_TC_SET_BIOS_CERT_GUID,
-+};
++/* IO domain ID start index for a partition */
++static u8 io_die_start[MAX_PARTITIONS];
 +
- static const struct tlmi_err_codes tlmi_errs[] = {
- 	{"Success", 0},
- 	{"Not Supported", -EOPNOTSUPP},
-@@ -678,6 +695,9 @@ static ssize_t cert_thumbprint(char *buf, const char *arg, int count)
- 	const union acpi_object *obj;
- 	acpi_status status;
- 
-+	if (!tlmi_priv.cert_guid->thumbprint)
-+		return -EOPNOTSUPP;
++/* Next IO domain ID index after the current partition IO die IDs */
++static u8 io_die_index_next;
 +
- 	status = wmi_evaluate_method(tlmi_priv.cert_guid->thumbprint, 0, 0, &input, &output);
- 	if (ACPI_FAILURE(status)) {
- 		kfree(output.pointer);
-@@ -856,8 +876,16 @@ static ssize_t certificate_store(struct kobject *kobj,
- 			return -EACCES;
- 		}
- 		guid = tlmi_priv.cert_guid->set_bios_cert;
--		/* Format: 'Certificate, password' */
--		auth_str = cert_command(setting, new_cert, setting->password);
-+		if (tlmi_priv.thinkcenter_mode) {
-+			/* Format: 'Certificate, password, encoding, kbdlang' */
-+			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s", new_cert,
-+					     setting->password,
-+					     encoding_options[setting->encoding],
-+					     setting->kbdlang);
-+		} else {
-+			/* Format: 'Certificate, password' */
-+			auth_str = cert_command(setting, new_cert, setting->password);
-+		}
- 	}
- 	kfree(new_cert);
- 	if (!auth_str)
-@@ -1593,6 +1621,15 @@ static int tlmi_analyze(struct wmi_device *wdev)
- 		wmi_has_guid(LENOVO_SAVE_BIOS_SETTING_CERT_GUID))
- 		tlmi_priv.certificate_support = true;
- 
-+	/* ThinkCenter uses different GUIDs for certificate support */
-+	if (wmi_has_guid(LENOVO_TC_SET_BIOS_CERT_GUID) &&
-+	    wmi_has_guid(LENOVO_TC_SET_BIOS_SETTING_CERT_GUID) &&
-+	    wmi_has_guid(LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID)) {
-+		tlmi_priv.certificate_support = true;
-+		tlmi_priv.thinkcenter_mode = true;
-+		pr_info("ThinkCenter modified support being used\n");
++/* Lock to protect io_die_start, io_die_index_next */
++static DEFINE_MUTEX(domain_lock);
++
++static void set_domain_id(int id,  int num_resources,
++			  struct oobmsm_plat_info *plat_info,
++			  struct tpmi_uncore_cluster_info *cluster_info)
++{
++	u8 part_io_index, cdie_range, pkg_io_index, max_dies;
++
++	if (plat_info->partition >= MAX_PARTITIONS) {
++		cluster_info->uncore_data.domain_id = id;
++		return;
 +	}
 +
- 	/*
- 	 * Try to find the number of valid settings of this machine
- 	 * and use it to create sysfs attributes.
-@@ -1738,11 +1775,16 @@ static int tlmi_analyze(struct wmi_device *wdev)
- 	}
++	if (cluster_info->uncore_data.agent_type_mask & AGENT_TYPE_CORE) {
++		cluster_info->uncore_data.domain_id = cluster_info->cdie_id;
++		return;
++	}
++
++	/* Unlikely but cdie_mask may have holes, so take range */
++	cdie_range = fls(plat_info->cdie_mask) - ffs(plat_info->cdie_mask) + 1;
++	max_dies = topology_max_dies_per_package();
++
++	/*
++	 * If the CPU doesn't enumerate dies, then use current cdie range
++	 * as the max.
++	 */
++	if (cdie_range > max_dies)
++		max_dies = cdie_range;
++
++	guard(mutex)(&domain_lock);
++
++	if (!io_die_index_next)
++		io_die_index_next = max_dies;
++
++	if (!io_die_start[plat_info->partition]) {
++		io_die_start[plat_info->partition] = io_die_index_next;
++		/*
++		 * number of IO dies = num_resources - cdie_range. Hence
++		 * next partition io_die_index_next is set after IO dies
++		 * in the current partition.
++		 */
++		io_die_index_next += (num_resources - cdie_range);
++	}
++
++	/*
++	 * Index from IO die start within the partition:
++	 * This is the first valid domain after the cdies.
++	 * For example the current resource index 5 and cdies end at
++	 * index 3 (cdie_cnt = 4). Then the IO only index 5 - 4 = 1.
++	 */
++	part_io_index = id - cdie_range;
++
++	/*
++	 * Add to the IO die start index for this partition in this package
++	 * to make unique in the package.
++	 */
++	pkg_io_index = io_die_start[plat_info->partition] + part_io_index;
++
++	/* Assign this to domain ID */
++	cluster_info->uncore_data.domain_id = pkg_io_index;
++}
++
+ /* Callback for sysfs read for TPMI uncore values. Called under mutex locks. */
+ static int uncore_read(struct uncore_data *data, unsigned int *value, enum uncore_index index)
+ {
+@@ -605,11 +676,12 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 			cluster_info->uncore_data.package_id = pkg;
+ 			/* There are no dies like Cascade Lake */
+ 			cluster_info->uncore_data.die_id = 0;
+-			cluster_info->uncore_data.domain_id = i;
+ 			cluster_info->uncore_data.cluster_id = j;
  
- 	if (tlmi_priv.certificate_support) {
--		tlmi_priv.cert_guid = &thinkpad_cert_guid;
--		tlmi_priv.pwd_admin->cert_installed =
--			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
--		tlmi_priv.pwd_system->cert_installed =
--			tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
-+		if (tlmi_priv.thinkcenter_mode) {
-+			tlmi_priv.cert_guid = &thinkcenter_cert_guid;
-+			tlmi_priv.pwd_admin->cert_installed = tlmi_priv.pwdcfg.core.password_mode;
-+		} else {
-+			tlmi_priv.cert_guid = &thinkpad_cert_guid;
-+			tlmi_priv.pwd_admin->cert_installed =
-+				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SVC;
-+			tlmi_priv.pwd_system->cert_installed =
-+				tlmi_priv.pwdcfg.core.password_state & TLMI_CERT_SMC;
-+		}
- 	}
- 	return 0;
+ 			set_cdie_id(i, cluster_info, plat_info);
  
-diff --git a/drivers/platform/x86/lenovo/think-lmi.h b/drivers/platform/x86/lenovo/think-lmi.h
-index 59aa03c3f846..017644323d46 100644
---- a/drivers/platform/x86/lenovo/think-lmi.h
-+++ b/drivers/platform/x86/lenovo/think-lmi.h
-@@ -120,6 +120,7 @@ struct think_lmi {
- 	enum save_mode save_mode;
- 	bool save_required;
- 	bool reboot_required;
-+	bool thinkcenter_mode;
++			set_domain_id(i, num_resources, plat_info, cluster_info);
++
+ 			cluster_info->uncore_root = tpmi_uncore;
  
- 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
- 	struct device *class_dev;
+ 			if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) >= UNCORE_ELC_SUPPORTED_VERSION)
 -- 
-2.43.0
+2.49.0
 
