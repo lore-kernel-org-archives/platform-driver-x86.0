@@ -1,102 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C421B960
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42F5313E1D;
+	Wed,  3 Sep 2025 17:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756865455; cv=none; b=atL25/LZ9iLONBKwSoHYEANJa9QavAdrjCbSK/3i3dczpCzvlCBkC5JfSJGJywLA0w0t5/Gg0Rbc7oIy28ROjmp+NxYlEjC7vTx65hmWjJyJJLYq06wuJ/ahe8fSs9bQ/lMEOzt/jHvu4bz4U/xuRYytjP9yFZOoKMxom/VYVaQ=
+	t=1756919308; cv=none; b=ugfACrW53AFnhmmPOAscTu4+6hS654SO3bWDcSnRWb2+WW+QMi0Er4XU7wCMusFSKXuhUTrYAWMX5sFwdeVBP1kxQIqnv9nU8tmvzQICjk1sFjBLqrC3nDCzwBaB9iyO2EvA2vpxWLbj3IHBxCoHyyTioRG7N1+aKuRqL3LI/8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756865455; c=relaxed/simple;
-	bh=Il/3GQR4HH+rjb6uqnVyC6XsR/zah9BpaEpwIgi7AJ8=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=iznMyQRynXiRZjvk2WEbN6TstHZpRqxYvPEVxJiVdMJ9FJLr12w8Whp1naf60d6YN/mTNEIdN/2CDSVqOV2TnBGg9ybaXyz1rEDscze0fD9gTIHQHPMQkFIHTgPGdjwcP9SzWvRB1KIJzXtB+DvmUkOxKS0uCJaFi3+JfXfa0q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSK4j6HR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756919308; c=relaxed/simple;
+	bh=NB8QgCqzFMNbHyvhlII7K/CnDnXfXYtmILcedNKdDtg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MhWsC3cm1Q75bL+x6YqHoqcJbUVzz9f22GawXwG6m0TTUjoVuA3D3XOh3jahL+vW0/O9cfWEyHbljjdAe0HcZyymKmEKd4niWxRB1tyR9+2k6jQg2anLjRWI172ybKTsPsE7NqJTWzSV9aPH7Sl4So9H4jaPMP95D6gr6t/bBu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CtpPerlR; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSK4j6HR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 90EDFC4CEF8
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756865454;
-	bh=Il/3GQR4HH+rjb6uqnVyC6XsR/zah9BpaEpwIgi7AJ8=;
-	h=From:To:Subject:Date:From;
-	b=NSK4j6HRgZ1Vskk/M1fPvEUzgbJRL31MzHVGLdVGDx2ZGCqqRDHIgwp0LB/ktI/9w
-	 uM6slPvZs4+PeT2+pbZbUyZaIV5HZ6ZGkshBUt5Z2q1euQwNVn2v2g+6mxzAIg6W0Y
-	 xFVqug8lk0EvtEy45dd9d1F+2IdHAkRLQYYdILuknMoC5SvLGyGK5pkR9/Jc72Ga99
-	 eOWiDcW6Dz8MHDfxUZW9/PPD8hohukI1pkNJubSYAy9GyJqwot2f5GwHe5fmGUfcqp
-	 xyqTnsHfoS7l59xtLQQmWP/y8+x9ajvLnu2kB1cycyOrKNQM40MOhnTdlpDTUnaMSf
-	 b2UGf6b866u+g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 838FFC41612; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220529] New: ideapad_laptop doesn't detect fn_lock in Lenovo
- ideapad D330-10IGM
-Date: Wed, 03 Sep 2025 02:10:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: howl.nsp@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression
-Message-ID: <bug-220529-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CtpPerlR"
+Received: from [192.168.42.116] (p5de4594b.dip0.t-ipconnect.de [93.228.89.75])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 9FB932FC005B;
+	Wed,  3 Sep 2025 19:08:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1756919295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tRqRfjYcBm2bOUiZmVAHhsKibPriU5ZkVd7sC+K84j8=;
+	b=CtpPerlRlxjQIRKNMcJ46hAzI9agXWcJwijTM2Z2k5bm7uuK79fMStKBhncldFge2E6qXk
+	3Y/yBbdE2JO4RDojY7JeB33jYAmQxCz4Lo6lKfGBceR5hw8k86t5ShQQ+h7uHiVvVdE0Sy
+	k2kCQEmKANHqOnr+w2zo3uSulV5KqPw=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <003d760c-0314-4ea2-b2b5-860021e0daf8@tuxedocomputers.com>
+Date: Wed, 3 Sep 2025 19:08:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] platform/x86: Add Uniwill laptop driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, rdunlap@infradead.org,
+ alok.a.tiwari@oracle.com, linux-leds@vger.kernel.org, lee@kernel.org,
+ pobrn@protonmail.com
+References: <20250831192708.9654-1-W_Armin@gmx.de>
+ <20250831192708.9654-2-W_Armin@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <20250831192708.9654-2-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220529
+Hi,
 
-            Bug ID: 220529
-           Summary: ideapad_laptop doesn't detect fn_lock in Lenovo
-                    ideapad D330-10IGM
-           Product: Drivers
-           Version: 2.5
-          Hardware: All
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: howl.nsp@gmail.com
-        Regression: No
+started to look into the driver regarding TUXEDO NB02 devices support, starting 
+with the FN-Keys:
 
-In dmesg "ideapad_acpi VPC2004:00: FnLock control not available" is shown a=
-nd
-this message is bring up by not having FnLock LED:
+Am 31.08.25 um 21:27 schrieb Armin Wolf:
+> +static const struct key_entry uniwill_keymap[] = {
+> +	/* Reported via keyboard controller */
+> +	{ KE_IGNORE,    UNIWILL_OSD_CAPSLOCK,                   { KEY_CAPSLOCK }},
+> +	{ KE_IGNORE,    UNIWILL_OSD_NUMLOCK,                    { KEY_NUMLOCK }},
+> +
+> +	/* Reported when the user locks/unlocks the super key */
+> +	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE,      { KEY_UNKNOWN }},
+> +	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE,     { KEY_UNKNOWN }},
 
-        err =3D ideapad_fn_lock_led_init(priv);
-        if (err) {
-                if (err !=3D -ENODEV)
-                        dev_warn(&pdev->dev, "Could not set up FnLock LED:
-%d\n", err);
-                else
-                        dev_info(&pdev->dev, "FnLock control not available\=
-n");
-        }
+Can you also add
 
-This laptop have FnLock feature but lacks led to show it's state so
-ideapad_laptop module discards it.
+{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED,     { KEY_UNKNOWN }},
 
---=20
-You may reply to this email to add a comment.
+?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE and UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE are 
+always sent in pair with UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED (at least on my test 
+device) and without this line an unknown key event is generated (as that is not 
+explicitly marked as KE_IGNORE without the line).
+
+> +
+> +	/* Reported in manual mode when toggling the airplane mode status */
+> +	{ KE_KEY,       UNIWILL_OSD_RFKILL,                     { KEY_RFKILL }},
+> +
+> +	/* Reported when user wants to cycle the platform profile */
+> +	{ KE_IGNORE,    UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_UNKNOWN }},
+This is a physical button on the gaming devices from Uniwill, my suggestion 
+would be to bind it to F14 (because another ODM has a very similar key that 
+already sends F14 by default) and then let userspace handle it (KDE for example 
+has energy profiles that could be bound to it).
+> +
+> +	/* Reported when the user wants to adjust the brightness of the keyboard */
+> +	{ KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN,               { KEY_KBDILLUMDOWN }},
+> +	{ KE_KEY,       UNIWILL_OSD_KBDILLUMUP,                 { KEY_KBDILLUMUP }},
+> +
+> +	/* Reported when the user wants to toggle the microphone mute status */
+> +	{ KE_KEY,       UNIWILL_OSD_MIC_MUTE,                   { KEY_MICMUTE }},
+> +
+> +	/* Reported when the user locks/unlocks the Fn key */
+> +	{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC }},
+> +
+> +	/* Reported when the user wants to toggle the brightness of the keyboard */
+> +	{ KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE,             { KEY_KBDILLUMTOGGLE }},
+> +
+> +	/* FIXME: find out the exact meaning of those events */
+> +	{ KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H,       { KEY_UNKNOWN }},
+> +	{ KE_IGNORE,    UNIWILL_OSD_BAT_ERM_UPDATE,             { KEY_UNKNOWN }},
+> +
+> +	/* Reported when the user wants to toggle the benchmark mode status */
+> +	{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN }},
+> +
+> +	{ KE_END }
+> +};
+
+Any reason for still having KEY_* defines even on the ignored events? Looking at 
+other drivers KE_IGNORE events usually don't have it.
+
+Best regards,
+
+Werner
+
+
