@@ -1,190 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952A721CA14;
-	Tue,  2 Sep 2025 22:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C421B960
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756853912; cv=none; b=l6xckb0T1TuhbPMoZ8MDid52nxM0g+WvdE0yRLMA7eYF+CErxmLHX9TaOxMijswMCaHfn+dzthxXHf39OvOtxYfzkO6wLDOXtV6Qt8O+GUOzLujBh6QcyziwjWOB6DzZgpTQ2Jcp2KT/OgQyvAnleYu1fxIPH7P0idGYAUxZbvE=
+	t=1756865455; cv=none; b=atL25/LZ9iLONBKwSoHYEANJa9QavAdrjCbSK/3i3dczpCzvlCBkC5JfSJGJywLA0w0t5/Gg0Rbc7oIy28ROjmp+NxYlEjC7vTx65hmWjJyJJLYq06wuJ/ahe8fSs9bQ/lMEOzt/jHvu4bz4U/xuRYytjP9yFZOoKMxom/VYVaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756853912; c=relaxed/simple;
-	bh=HZ+4oNUpiGLCoLpGRHJFkB1WlvwYbjQhQz4lqmkFw/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TJL79A9HgJRAd5Ojdb42lQFY4cppV3xi8VJf2103FSMIVR/l59gCn8E/1RXfZehBB5Ek98X5msppGhGR96yNQUJVjILP0q4+kmlmP1R65qiW+f7qmczNTH4UGbJuwTfkIzBjbCUAZrj0mLn0Hp3rF79Lgw839jk/YN+We0kghfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQFgBCF/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756865455; c=relaxed/simple;
+	bh=Il/3GQR4HH+rjb6uqnVyC6XsR/zah9BpaEpwIgi7AJ8=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=iznMyQRynXiRZjvk2WEbN6TstHZpRqxYvPEVxJiVdMJ9FJLr12w8Whp1naf60d6YN/mTNEIdN/2CDSVqOV2TnBGg9ybaXyz1rEDscze0fD9gTIHQHPMQkFIHTgPGdjwcP9SzWvRB1KIJzXtB+DvmUkOxKS0uCJaFi3+JfXfa0q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSK4j6HR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQFgBCF/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E99C9C4CEED;
-	Tue,  2 Sep 2025 22:58:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSK4j6HR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 90EDFC4CEF8
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756853912;
-	bh=HZ+4oNUpiGLCoLpGRHJFkB1WlvwYbjQhQz4lqmkFw/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kQFgBCF/U0FWMcovgYqXIpwcyRnDjA/7XQk1bEubZdyiWI+e9Wn11+SihIr+l6b6Z
-	 q2XZrXUo1QxCNgq9LjOplryFDSDfxo/+fqWi4co49s4sBZHBGlw380sexc8rT2LQls
-	 qflb8OCgcxR+at9Ngrwx/JDhMtVVZzAo4VH4fjcUzNOI/LSS2kRdFLl9kKCObbyGyK
-	 EOvj5NgmMIWJT+fhien43lekl8ZKWt1pbVDPLZX5kGZWanOoXQ15coQHSuS6K623oY
-	 58DpSB0QorwrEPU3Scll52edl+uMRAijY8ITe72QztrzWz1ysUErQHAgemtA190wNL
-	 wEClwjnQR7HeA==
-Received: by venus (Postfix, from userid 1000)
-	id BC367180C64; Wed, 03 Sep 2025 00:58:29 +0200 (CEST)
-Date: Wed, 3 Sep 2025 00:58:29 +0200
-From: Sebastian Reichel <sre@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-Message-ID: <5qtornbvoc7soqud5o3e3uwvtifuy5vocmjsdwggydl6jrvmmm@5nc5ob4cj6ec>
-References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
- <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
- <ea0b329e-ab3e-4655-8f27-e7a74784302a@app.fastmail.com>
- <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
- <c0ca6ca1-ffee-4b12-bf96-ee9efb93c4d2@kernel.org>
+	s=k20201202; t=1756865454;
+	bh=Il/3GQR4HH+rjb6uqnVyC6XsR/zah9BpaEpwIgi7AJ8=;
+	h=From:To:Subject:Date:From;
+	b=NSK4j6HRgZ1Vskk/M1fPvEUzgbJRL31MzHVGLdVGDx2ZGCqqRDHIgwp0LB/ktI/9w
+	 uM6slPvZs4+PeT2+pbZbUyZaIV5HZ6ZGkshBUt5Z2q1euQwNVn2v2g+6mxzAIg6W0Y
+	 xFVqug8lk0EvtEy45dd9d1F+2IdHAkRLQYYdILuknMoC5SvLGyGK5pkR9/Jc72Ga99
+	 eOWiDcW6Dz8MHDfxUZW9/PPD8hohukI1pkNJubSYAy9GyJqwot2f5GwHe5fmGUfcqp
+	 xyqTnsHfoS7l59xtLQQmWP/y8+x9ajvLnu2kB1cycyOrKNQM40MOhnTdlpDTUnaMSf
+	 b2UGf6b866u+g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 838FFC41612; Wed,  3 Sep 2025 02:10:54 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220529] New: ideapad_laptop doesn't detect fn_lock in Lenovo
+ ideapad D330-10IGM
+Date: Wed, 03 Sep 2025 02:10:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: howl.nsp@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-220529-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qi5ko5qyws4ixtkn"
-Content-Disposition: inline
-In-Reply-To: <c0ca6ca1-ffee-4b12-bf96-ee9efb93c4d2@kernel.org>
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220529
 
---qi5ko5qyws4ixtkn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-MIME-Version: 1.0
+            Bug ID: 220529
+           Summary: ideapad_laptop doesn't detect fn_lock in Lenovo
+                    ideapad D330-10IGM
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: howl.nsp@gmail.com
+        Regression: No
 
-Hi,
+In dmesg "ideapad_acpi VPC2004:00: FnLock control not available" is shown a=
+nd
+this message is bring up by not having FnLock LED:
 
-On Tue, Sep 02, 2025 at 12:27:24PM +0200, Konrad Dybcio wrote:
-> On 9/1/25 6:10 PM, Sebastian Reichel wrote:
-> > Hello Mark,
-> >=20
-> > On Mon, Sep 01, 2025 at 09:48:39AM -0400, Mark Pearson wrote:
-> >> On Sun, Aug 31, 2025, at 5:28 PM, Sebastian Reichel wrote:
-> >>> Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which
-> >>> is in theory compatible with ThinkPad ACPI. On Linux the system
-> >>> is booted with device tree, which is not supported by the ThinkPad
-> >>> ACPI driver. Also most of the hardware compatibility is handled
-> >>> via ACPI tables, which are obviously not used when booting via
-> >>> device tree. Thus adding DT compatibility to the existing driver
-> >>> is not worth it (almost no code sharing).
-> >>>
-> >>> The driver currently exposes features, which are not available
-> >>> via other means:
-> >>>
-> >>>  * Extra Keys
-> >>>  * System LEDs
-> >>>  * Keyboard Backlight Control
-> >>>
-> >>> The driver has been developed by reading the ACPI DSDT. There
-> >>> are some more features around thermal control, which are not
-> >>> yet supported by the driver.
-> >>>
-> >>
-> >> Thanks for working on this - it's great.
-> >=20
-> > It's a personal scratch your own itch project, as I daily drive the
-> > machine.
-> >=20
-> >> I'll see if I can get the EC spec so I can do some checking on the
-> >> values (I thought I had it already, but I can't find it). If this
-> >> file can be used for other platforms then it might be good to
-> >> rename the file to not be specific to the t14s? I'm curious if it
-> >> can be used on the X13s or the Yoga platform.
-> >=20
-> > Maybe. I only have the T14s (apart of my older Intel/AMD ThinkPads,
-> > which use the ACPI driver). The ACPI DSDT functions completley
-> > abstract the lowlevel I2C interface, so in theory every ThinkPad
-> > could have a completley different EC and still use the same ACPI
-> > driver. So this needs to be checked per-device. Hopefully the low
-> > level interface is similar in those, so that we don't need to spam
-> > the kernel tree with multiple different EC drivers :)
-> >=20
-> >> Couple of notes
-> >>  - I do agree it doesn't make sense to add this to thinkpad_acpi.
-> >>    That file is too big anyway.
-> >>  - If there are other pieces like this where some detail of the
-> >>    platform is needed, please do let me know. I never got enough
-> >>    time to work on this platform directly, and it wasn't in our
-> >>    Linux program, but I do have access and support from the
-> >>    platform team for getting details on it. If I can help, so not
-> >>    too much reverse engineering is needed, I'm happy to.
-> >=20
-> > Thanks for the offer.
-> >=20
-> > I would be interested in bits around system suspend. Right now
-> > support on X1E is limited to sending the CPU into suspend. Much of
-> > the machine seems to be still powered. Right now the keyboard
-> > backlight and all the status LEDs stay on and the LID + power led
-> > does not go into the typical breathing pattern. Additionally I had
-> > to disable wakeup capabilities for the EC interrupt, as closing the
-> > LID generates an event and thus an interrupt, which wakes the
-> > system. Obviousy that is undesired from user's perspective. My guess
-> > is, that there might be some register to mask events, but I haven't
-> > found it so far. Alternatively the EC might mask them automatically
-> > when the system is send into suspend, which I also have not yet
-> > figured out :) The only bit I know is, that EC register 0xE0 is
-> > involved in modern standby.
-> >=20
-> > Apart from that and (probably) unrelated to the EC: I noticed that
-> > accessing the built-in webcam (with the X1E camera patches from
-> > Bryan O'Donoghue) does not enable the status LED. It would be
-> > nice if you can check how that is wired, so that it can be enabled
-> > when a camera stream is started.
->=20
-> FWIW a couple years ago I tried to do something similar for the X13s
-> EC, and the software interface looks somewhat familiar..
->=20
-> This never ended up becoming anything big, but just in case this is
-> useful for anyone:
->=20
-> https://github.com/SoMainline/linux/commit/c0cc2c60177a33597c33586bfe27b5=
-f440e36745
+        err =3D ideapad_fn_lock_led_init(priv);
+        if (err) {
+                if (err !=3D -ENODEV)
+                        dev_warn(&pdev->dev, "Could not set up FnLock LED:
+%d\n", err);
+                else
+                        dev_info(&pdev->dev, "FnLock control not available\=
+n");
+        }
 
-I had a quick look and I would say that looks quite different:
+This laptop have FnLock feature but lacks led to show it's state so
+ideapad_laptop module discards it.
 
- * The EC read/write/event function uses the same command bytes, but does
-   not have 0x00 0x01 between the register and the value, so
-   different functions would be needed for T14s and X13s
- * Almost all event codes are different
- * The register numbers are also different
+--=20
+You may reply to this email to add a comment.
 
-So my fears, that the ACPI functions allow more or less completely
-changing the low level interface were true :(
-
-Greetings,
-
--- Sebastian
-
---qi5ko5qyws4ixtkn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmi3dpEACgkQ2O7X88g7
-+pqgIxAAnNJ6g2A4b9AJC9DHzSkhP+4QkQx4L88tugHkGwF38hMDRXwkTattrnt2
-ZVwffm/tX+Lj/Ot97URcOmAKqVS8Ti56iDYWE41lLz2F98x+rFEP1yiGEs3l19St
-PsyxAQIbVdE6FKXfB/DMls1ydD4bGiidQ7w0TSU4QWkxZEm79uFrM3N82L8xpEVZ
-hTVxdG7TQMcDnKbzgyAd4u6oC+9xMeq30YllaN0GLvFJHf+0s1icq2NHGhb/r9pG
-UnL5jxKgate0zfqRIY2KILrDBAuSqYR9y6hl5y7RpxpNFyRtBSgMSZ0Tq1aj9L8y
-ilCbTpUJLQ8CUbXNYV0yM2sngdZD+NIvwoIFzVnEbFe96HZYo+gMPpWpV5dwuOpN
-H0JS5CODz6Fw9VDbBBtzGquLvRGU5kEdQB/2pk5CJk2ps6J3J3limNQ7ncLR8Kzb
-iZxstncS//AXgoLe+Ylpw9kE/PgUOYPL6729SqdkmYM9+v1zYxudz6POJHIf6yr+
-yK6prEyqK+JDY7kg/2PGzB7yI+Z4bt+ST4YsITwMhu3MoZgAWfl+Cj1MKhuUH6lW
-bgruP4LUx3Gvw3QUBTb551IWFJlVplq8CILfXJiHWNG45xIDzcQPGIZf+f6ah2z9
-Kwtg+l/G8ee+NkDa1TKy78BEMNeJKLT3TBSvP1oMLGshVGwXj8M=
-=jva8
------END PGP SIGNATURE-----
-
---qi5ko5qyws4ixtkn--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
