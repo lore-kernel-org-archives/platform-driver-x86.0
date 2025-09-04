@@ -1,99 +1,131 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C961B303C8F;
-	Thu,  4 Sep 2025 13:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3247F272E41;
+	Thu,  4 Sep 2025 13:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756992312; cv=none; b=CVppR8fEYL7h+ev/W7OygwrchVDWtny/pGmavzYldVdZyqph/6Hu/e2sObdlh9UGokOTWHyXfkJCSgCABy8D+9nAF9dUPvczoHT8A6NQ9hg2Pb4IqPZJ4aD+r3cFo+f0SttX3UaUki4zJeRGBUbbj2FdfBpxtihhm7b2S45+gTM=
+	t=1756994074; cv=none; b=WKOiN20oM7YrGjaJEGJm+EzAY1BwnkEuxkYNaRR21c51b+LoWlOuPdoERyxb/YXWjuHJZgmE9KW7T+kxLslVZG1bUFVlyS6WGa6yeLZP93enuBK94Awyup/oYO7bCirjY6keZXvGMg0wEnKUEIf/0x/AKy/5qCH0tMZ/D4c1GcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756992312; c=relaxed/simple;
-	bh=bQUAriiAuroBfSipJWUaV90q4Lm0SHqTWn2SZmuqEPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rsurhw0Hmc/t7kLmwZLyzoZMp5vDlYuiPXQghLViWBS7o6c3W5rpB9m06Jh8+5f7hsh93UDZIg5PgiQSB0pCnFmYsaeLIHzVWQsbS5W7BHo20SS8LYJA/B4fOOKenshh25DBBbxs1CWAw/85quoo0fBxacrFfwOuQcJ9kRGDjy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=M4Dh/9Ss; arc=none smtp.client-ip=78.46.171.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1756994074; c=relaxed/simple;
+	bh=yizNSmYKll/I9v1A1YDZ1yRBbMjUVek6yUuASN23Gjo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=U5N9aTDMcWbPhfyfOQmEdK/JFPjl9aqigGFHjLsIxN4WqNPhZ51JClDe9sv90BFZjxTp4FeZDOxpOLsTphp/3DFGRLI0EQIs+7nJ/MS+kcm+rPbhGGAoCAgpVbPM85VMTeHgOc7SamCDuSdOnBnVMQbCUj/2gySl4lb7MLnNgTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=pswt4fBT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cEejrdHe; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="M4Dh/9Ss"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 4971EC6B06;
-	Thu,  4 Sep 2025 16:24:59 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id DD250C69D9;
-	Thu,  4 Sep 2025 16:24:58 +0300 (EEST)
-Received: from antheas-z13 (x5996a855.customers.hiper-net.dk [89.150.168.85])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id EFD3F1FE9CA;
-	Thu,  4 Sep 2025 16:24:57 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1756992298;
-	bh=oGbCRbQsWN+PQEVyqIMQqWOAxDT3DCy81vGw9DcQKxE=; h=From:To:Subject;
-	b=M4Dh/9Ssnu1zkJY5ARMMrZIHRnJVBvKPMEpXBTYad9I4rscM6eDWh3IzXAWQ005Qa
-	 O9NN34Okowsz/0Ts2gABFWMac2OORQ5meTWQ30GSylutt4lR/N9xDkO3WWcvIP/8rA
-	 n9G8Smz5b26RC1ZtwmMeAc+w9ktJB7mwvETmz5d/WxyREaI8quPov6tjUYN8cYNZCL
-	 UFW+qI+C4nvyog0oSc0vqmcppIQpB9MU/3uGvX+JcamjIaUgwCW7lOW+TvwW52eTHw
-	 BNxE90ddZoPnMZctBIhr3GAjC94BXYB+VtutyhW3Mv9LePey31AzLVS49dAJs2FOxZ
-	 6O0peOB64BTNg==
-Authentication-Results: linux3247.grserver.gr;
-	spf=pass (sender IP is 89.150.168.85) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Eileen <eileen@one-netbook.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1 2/2] platform/x86: oxpec: Add support for AOKZOE A1X
-Date: Thu,  4 Sep 2025 15:22:52 +0200
-Message-ID: <20250904132252.3041613-2-lkml@antheas.dev>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250904132252.3041613-1-lkml@antheas.dev>
-References: <20250904132252.3041613-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="pswt4fBT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cEejrdHe"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 2BEDA140026F;
+	Thu,  4 Sep 2025 09:54:31 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Thu, 04 Sep 2025 09:54:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1756994071;
+	 x=1757080471; bh=QHTyeTwg544q5gmqzTQTcSX3Fd3rpZ72Ve8h4qh1aS0=; b=
+	pswt4fBT2oiukMBvIiWEqWwpWAw09oZyi6OgPfYJqPes54lARcwO37wgvpQUHlH/
+	1oFExGG4qoLjhxU5jaiotq+kd93XNVVQE4nKDs3kh8zUQ8f/c9Zyk9ZAF199VW4w
+	uTL0+YBwNWNeX6E0NIcOkn6OoGa08kSbFGZx5nlvU7Fubgx41BhQRiHxFYWvr0V4
+	VFWODJ/D1fd8PvLM237yHNnF+d2Sp5Cn8BszFRe/clHHMbZzWDOeKDL8/jCgp2PP
+	mwV7qskPwb1XI0i18ZKKX16xe0ty5dBrCIc9VB9x/+PK+wTfgjZ9dWFWAbiCrOCB
+	/GvcYSI9UekxAzyKZCp7nQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756994071; x=
+	1757080471; bh=QHTyeTwg544q5gmqzTQTcSX3Fd3rpZ72Ve8h4qh1aS0=; b=c
+	EejrdHeiJLpzN4A5pMt59pe64pchEN1oFubBUSyqtDFvDMvZ30RIg/FP29Q+kl7T
+	dh1tNU3HRXPU6hSjqAOLA73UptF68ol5sl/bygHq0OdWACp0CydsW8dAqlVbaR1k
+	7lx3iXkFWKKYKV2SE8ZUyIFNROVvvzJ3R61nXfVeVg9E3qfXB7yPt3RzSyi7Avmr
+	qIavVVAo1mIkWWa89Rt3fBhpwRb1Rvd78wpdFsY14zBfZDc1ExQiYhm6bi5iykPN
+	nQfhyzJUMhDQkg8sUwMNhRsMYzAPInazIdRri1anzzgZohV5nDj3/HgsVAXdpRDi
+	uCjk+D5XIRkw5do9/e12w==
+X-ME-Sender: <xms:Fpq5aBf8kwyJDUyPF2yMx-2eA2Wd7OgFPfDQL-nLit5N28FgYnFcQQ>
+    <xme:Fpq5aPMbqe6JXXZch1SmEMP4YPIp9cNTqICLDwQ3i_WUAysNPZVBoIMMAT0_TVV5y
+    SJI1EY4FZ7uan3KIHs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeiudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhkucfr
+    vggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqe
+    enucggtffrrghtthgvrhhnpefhveekjeeuueekfefhleeljeehuedugfetffdvteekffej
+    udelffdvjeekfeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggp
+    rhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkvggrnhdttd
+    egkeesghhmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrd
+    gtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:Fpq5aO5REiiw6eDv_ViQQfFQTm9s7Y9dBHzNHGNjSz-ukPWdnuZMuw>
+    <xmx:Fpq5aAURlLnMVC902C2jBLTaYMql2dQkCeFTsLVGHNRrGniAjYPOlg>
+    <xmx:Fpq5aN4s3_WvSnmJkDFfV4fwHTMZiwAM6rOyEtSABkkn6RDv5oyvhw>
+    <xmx:Fpq5aLpdc3k7s7yQwgt4oThK1kbxcFpTPIzHY4vw1fINlwLY4FfoPQ>
+    <xmx:F5q5aLXLsONKkrLGGts6u9UWX0UzDCV0u2psXJSdZFzDn0R7xuIEk94y>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BAEC42CE0072; Thu,  4 Sep 2025 09:54:30 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <175699229858.1084194.12051309279760000304@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+X-ThreadId: AhK4IBiDdJJ-
+Date: Thu, 04 Sep 2025 09:54:05 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hansg@kernel.org>, RenHai <kean0048@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <4b057170-3edd-4770-b6e3-b2369d910b44@app.fastmail.com>
+In-Reply-To: <175699218574.16699.13124325115196828575.b4-ty@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250903173824.1472244-1-mpearson-lenovo@squebb.ca>
+ <175699218574.16699.13124325115196828575.b4-ty@linux.intel.com>
+Subject: Re: [PATCH v4 0/3] platform/x86: think-lmi: ThinkCenter certificate
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Very similar to OneXFly devices. Uses the same registers.
+Hi Ilpo,
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/oxpec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Thu, Sep 4, 2025, at 9:23 AM, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 03 Sep 2025 13:38:11 -0400, Mark Pearson wrote:
+>
+>> Patch series to implement certificate based authentication on
+>> ThinkCenter platforms
+>>=20
+>> Patch 1 introduce a certificate GUID structure to make it easier to
+>> support different GUIDs for certificate authentication
+>> Patch 2 implements the changes needed to support ThinkCenter platforms
+>> Patch 3 adds some extra error message handling as used on ThinkCenter
+>> platforms.
+>>=20
+>> [...]
+>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
+>
+Thanks for the reviews along the way
+Mark
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 4f540a9932fe..54377b282ff8 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -124,6 +124,13 @@ static const struct dmi_system_id dmi_table[] = {
- 		},
- 		.driver_data = (void *)aok_zoe_a1,
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
--- 
-2.51.0
-
-
+> The list of commits applied:
+> [1/3] platform/x86: think-lmi: Add certificate GUID structure
+>       commit: c778f7ac13d5e94db821cf8e1078aa318cc15460
+> [2/3] platform/x86: think-lmi: Certificate support for ThinkCenter
+>       commit: 07b93b747cb713478991388b3d55c3ce9267e037
+> [3/3] platform/x86: think-lmi: Add extra TC BIOS error messages
+>       commit: a0d6959c345d89d811288a718e3f6b145dcadc8c
+>
+> --
+>  i.
