@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABFD1D6187;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892481D90DD;
 	Fri,  5 Sep 2025 01:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757034579; cv=none; b=E7QGR9xyGOiWaqZmnsjgYuJdx6ma/Boy3Ep2clKoOElBi2njMdxvZTJ30h8r12C88mE0343xTIQ2RF0J8C2vPnNH8JK0AM7+eqA3Kb6toz50MvlQ2P1Prb1egA4otI+Jz/Swvtm8gx7uH1VFbKtcBcJ2wt1D8AgMuneOBAQSbhc=
+	t=1757034579; cv=none; b=QjrXpVHecS6ksFdxBW//HRFXq3548AmqukNCrkT+3uiUFpI/dUzvAMeNsNZj+YFTnZ++Rtumg7ZACS0SEq1w5Z3XXQhuXwXmNRpFowtFYzGMzPQvwLFkxoSHro6SkirvIAC59bUs31xpk2rT847I/hGQVMbKerfDg2CnTPvjX6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757034579; c=relaxed/simple;
-	bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
+	bh=8KymmQbiX0xMeNo9k7iaOAyWLVkxoe2n8Vei2/uCabE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D5wciAZ2EFE9WQKniT8LEyVNSLi8m0cmsSAOwOP4RIhDbHH/IXViffhgSxvN1kgsu8MfvkooWo1tq3nkb1xnAZcalGXmbyx0Qz8xEkjcdqHL2N/nnsdNK3K2kRizQUYC4qb2fcH09uBGTh+DCvFNWBz9OmF6+q/dtzhxEG1lwXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2AmBSm8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gbjQnGZhhorAfKS5PRuSpTIyeuS6fypxNfNZ8ZYWGKea7moeqRIt8BZ1Q5Ehn7CkAAGgwg0y8Arp8AlcMazemyjTBCplFjE6M6c2MWRXod6Xxz4faLed42hRJhSXQDWNZLCGhrG91bgNbL9hyn4foQwl3M79s3kTxYNOi3kP4Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNrn1mKh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2AmBSm8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5ABCC4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNrn1mKh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C929BC4CEF6;
 	Fri,  5 Sep 2025 01:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757034578;
-	bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
+	s=k20201202; t=1757034579;
+	bh=8KymmQbiX0xMeNo9k7iaOAyWLVkxoe2n8Vei2/uCabE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=f2AmBSm8YMArcVUliSPJNz90rqjkSOBesAHIdKd4w+5u2d9vk4pvLGjZ2YJvRRX0U
-	 NhBbjtQZ9xbRKN7aFU8DGnLhK5POd4noWOChDo+KQ+eEzOUqH/cUXpMCbkvqYfIN92
-	 Z+O3MsxFCrWDuxde3Fl6hIrkkIdH7vG9PwwO5kp+Bd2SxV3rl2d8gOvB+9Oy1znY1a
-	 kd5/7NWtcA1tsEvKPqFJ4MztVC9zhLvgyuYaW9CiIVkotgB/WzhzTwM1YdCyXWDwgU
-	 /W6gGz++5wbx2Houh+SCW2asFoZBczGXloSgC20OuJm4ifXaWrMXR/xihzbuwa3fD7
-	 1kPqm2Z6gOvMQ==
+	b=SNrn1mKhIPievf8XKAES92Rp1xn4On/b27/H0IeKLQxTkPc+XfHH5O1Bbw3L+dA9n
+	 9mhz6wPfSAPX4Bjc7VcIV/HwqPL/rb7QsfE/qQVDbMxvJ//naso21Dv2c/8LlMDlCF
+	 swlqqskyIm/JATjks62fgFrFdqqLeF+kZxXTuO+DXfawR8XJdgwAI1Unk2lmn4pcIN
+	 V3AkoZ69j16zQdxVLvhQcKDSlhxjQ/a22PNasoQEfNN3nIMexuGUegfrQz/XpjD486
+	 vxacBSMEybUMeIs3gePJsh9QD+R499AQBG/asdKgnUH/fMLmAuyn4SBeOJBl+zCdKN
+	 T43aO2eiy5S3g==
 Received: by venus (Postfix, from userid 1000)
-	id 0F6B11807F9; Fri, 05 Sep 2025 03:09:36 +0200 (CEST)
+	id 1205A180B21; Fri, 05 Sep 2025 03:09:36 +0200 (CEST)
 From: Sebastian Reichel <sre@kernel.org>
-Date: Fri, 05 Sep 2025 03:09:31 +0200
-Subject: [PATCH v2 1/3] dt-bindings: platform: Add Lenovo Thinkpad T14s EC
+Date: Fri, 05 Sep 2025 03:09:33 +0200
+Subject: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-t14s: add EC
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250905-thinkpad-t14s-ec-v2-1-7da5d70aa423@collabora.com>
+Message-Id: <20250905-thinkpad-t14s-ec-v2-3-7da5d70aa423@collabora.com>
 References: <20250905-thinkpad-t14s-ec-v2-0-7da5d70aa423@collabora.com>
 In-Reply-To: <20250905-thinkpad-t14s-ec-v2-0-7da5d70aa423@collabora.com>
 To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -56,90 +56,75 @@ Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2026;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1495;
  i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoujhOmGuixH2xpw/UqtKyc2QNtG+U/J+Hpo649
- 7ksgz0ts1yJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaLo4TgAKCRDY7tfzyDv6
- mlr9D/4wUrcb6P3ZGOgFkGr3Tdl/X+CDMWImhL95PHFBxZPPJdm4zNrZOnVpW2gCGkJuX+0MwL/
- kXq8dRBQ0k/yJcjv5uPthggz77ptRciuX39RKOiFGHBJfQU8d+snFw0hM5z69MDwIdggiVoX8zC
- 68gTc3AxD2wWcV2t93vDAVyAXszZRrkyL9enSPefeLrgFX2h6gGQoq60RVxfhxUruVSZHok8eJ5
- 83ekeX0Z5xOwnDwX+3FsbZO/v5sFRthXTa5J3x4JQkfv0TrEjJE54U+5scMWk9LzPcKCd+a/bVP
- Yh4jsh/9na0C1ti5n38iQJuxmemSEUPjKfw0mIA852N53q7ayohOacQyf4F6QbfClVms85n4IhW
- ym2w4D5IghcC2GWVrtQuXq+ORaDBt2MKrhZguGblFVk1OO+8R/fDhrDH/gwUnbwKBRb+SlfjmHV
- ThSfrCSbDeSTMbY7VYNO3hwiW0NIgXo1I35czSi0kOGmWbKwIJ6O7cG378NzJc9WwErTTMsWL5g
- d/XK9wI4IA3xNCIL85WzwKzBnILcJMrglVgU1FciF2N09vJIoY9WYO1nOrybPyGhvO1zaqfrVmn
- iI/3/wveI9ZRMzBEXlYdUc08gLBKsFAFpZx89scMcTchEmI5iHO6nfbGa1JcU1SFELWMxGz/Unp
- dgfc12jRbPdzdqA==
+ bh=8KymmQbiX0xMeNo9k7iaOAyWLVkxoe2n8Vei2/uCabE=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoujhPvE9AY5hTWjabvJxj7CzoIutmwtI5VhXP8
+ Idz38UxTxiJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaLo4TwAKCRDY7tfzyDv6
+ muUDD/0betVnb3gFiWMeGJzcMFu4nzBItk37KoMJBMjfK+xh2r52dxf4hrjTiKKUT4Q3f9AlpX8
+ 8Ij13BezBd3tVjs0ptBRBhLCj6GHHaKrS9M2CQgSqIggbt36csn8XL9dUFmuqoiJ1JFZfQNJ02L
+ ndU/vNk86nq8SLyU7A5wOu88jO0T7Qp7xRquS7FGyh5LowDhq1w9CF731SK+i0q+9R7NqkNqdf0
+ xkGGmy4m7jIvi24AH+8qmb8cWYmoISVsvkKPLEOowk0Q8SMO4ZRpQstS+pytUWlVW8th+jEsO1N
+ OFUEQ9jGjVvVoKjx3pVfFXCAIE/YL4pdhNIXNB+6tr6wAz6SntuRyuEYiRK6/Gvcn/TZ616v4VV
+ 9ixsYscpvaOFCZUOyvUqr8akICgZncSBJingXjQyXgU4iQs5MObxH1NGipfSMv5f6N0Ed5ElA29
+ RZjXgy66vcsx1jY1VHfPVVNWEk4Brbzk84f/giNHEbXGNQ8UWjtmwCNaDMX3S1N5a4NjR0z2cie
+ 8T9z5xeyvSMvdqJTds0/1zKJX51XTqwdsG4WOXAtWurqIhzzk4iKtlrU7y7hOC2ksY8GhQ0ZiVC
+ ZWnVJvyX4LxmmMs5H7iZjRNFJV89MZGf6SEgPdBYwNOxNmc8cCcTiaMNx4q0EwhvNdEEprrFDo4
+ xZqTzyrKLSr+66g==
 X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Add binding for the EC found in the Thinkpad T14s Gen6 Snapdragon,
-which is based on the Qualcomm X1 Elite. Some of the system LEDs
-and extra keys are only accessible via the EC.
+Describe ThinkPad Embedded Controller in the T14s device tree,
+which adds LED and special key support.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on Thinkpad T14S OLED
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- .../lenovo,thinkpad-t14s-ec.yaml                   | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..c87ccb5b30868c7a616ec08b869286d627dd7406
---- /dev/null
-+++ b/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/embedded-controller/lenovo,thinkpad-t14s-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
+index ac1dddf27da30e6a9f7e1d1ecbd5192bf2d0671e..f70489aba870289edbcf84ec22fdb004e010868b 100644
+--- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
+@@ -887,6 +887,24 @@ eusb6_repeater: redriver@4f {
+ 	};
+ };
+ 
++&i2c6 {
++	clock-frequency = <400000>;
 +
-+title: Lenovo Thinkpad T14s Embedded Controller
++	status = "okay";
 +
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
++	embedded-controller@28 {
++		compatible = "lenovo,thinkpad-t14s-ec";
++		reg = <0x28>;
 +
-+description:
-+  The Qualcomm Snapdragon-based Lenovo Thinkpad T14s has an Embedded Controller
-+  (EC) which handles things such as keyboard backlight, LEDs or non-standard
-+  keys.
++		interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
 +
-+properties:
-+  compatible:
-+    const: lenovo,thinkpad-t14s-ec
++		pinctrl-0 = <&ec_int_n_default>;
++		pinctrl-names = "default";
 +
-+  reg:
-+    const: 0x28
++		wakeup-source;
++	};
++};
 +
-+  interrupts:
-+    maxItems: 1
+ &i2c7 {
+ 	clock-frequency = <400000>;
+ 
+@@ -1267,6 +1285,12 @@ &tlmm {
+ 			       <72 2>, /* Secure EC I2C connection (?) */
+ 			       <238 1>; /* UFS Reset */
+ 
++	ec_int_n_default: ec-int-n-state {
++		pins = "gpio66";
++		function = "gpio";
++		bias-disable;
++	};
 +
-+  wakeup-source: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |+
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        embedded-controller@28 {
-+            compatible = "lenovo,thinkpad-t14s-ec";
-+            reg = <0x28>;
-+            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
-+            wakeup-source;
-+        };
-+    };
-+...
+ 	eusb3_reset_n: eusb3-reset-n-state {
+ 		pins = "gpio6";
+ 		function = "gpio";
 
 -- 
 2.50.1
