@@ -1,198 +1,146 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A5F267AF6;
-	Thu,  4 Sep 2025 18:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABFD1D6187;
+	Fri,  5 Sep 2025 01:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757012201; cv=none; b=V6ydmWuLNGbB//0xksOCqA0eISi1SUbIkF1wmktAha9x74sgwrnYS1pEiLWU+5yyWeR9Z3pID4CkRLHIIMa/aXcRrOTMdjvWs5wfl0fnfOfhmaOHSCahy4F1NdfgPniWkm4gb6Dw5rJAejxNGLGy9sEC0dUL2eFW3cglkClpXaw=
+	t=1757034579; cv=none; b=E7QGR9xyGOiWaqZmnsjgYuJdx6ma/Boy3Ep2clKoOElBi2njMdxvZTJ30h8r12C88mE0343xTIQ2RF0J8C2vPnNH8JK0AM7+eqA3Kb6toz50MvlQ2P1Prb1egA4otI+Jz/Swvtm8gx7uH1VFbKtcBcJ2wt1D8AgMuneOBAQSbhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757012201; c=relaxed/simple;
-	bh=+8yYrN9eZg46gNH7uB5YrYrugTVxjxh4HzNwHnrPdkc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=fzA4ENSD1G1iVqb2W52mLWFZpv9XRbPEPpy1KsQnmDkSGas9x05kfDQ/FUB5bFY3DQt9WkxSgzwpksDDUp8YU1BnMsM6gSF5h0aTRYiZWXjREuCnBOnwSaSPMrFWqChDJ2nbGsV1VFvtrApZILlVWD+/Xwd3ysN9S8YLSPHTeF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lzrKdoY4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MOlxFmiI; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1757034579; c=relaxed/simple;
+	bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D5wciAZ2EFE9WQKniT8LEyVNSLi8m0cmsSAOwOP4RIhDbHH/IXViffhgSxvN1kgsu8MfvkooWo1tq3nkb1xnAZcalGXmbyx0Qz8xEkjcdqHL2N/nnsdNK3K2kRizQUYC4qb2fcH09uBGTh+DCvFNWBz9OmF6+q/dtzhxEG1lwXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2AmBSm8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lzrKdoY4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MOlxFmiI"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 9AF82EC0266;
-	Thu,  4 Sep 2025 14:56:37 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 04 Sep 2025 14:56:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1757012197;
-	 x=1757098597; bh=7rzgU6/+xZPjOX1WExw5X2Safwl0wrZ8s4OUB4n+T4s=; b=
-	lzrKdoY4RXoZYIOSzL1zRt3ov+2mI3ng8ht5UikURkuG5rmJSkPUCOTs8JXXgY67
-	xjcunljgJgVL218DysfG1jTi14D0aUTMPSK4s910KentdF1oiwtSXcpHLPqJZHSu
-	9S1QKEQUpzPQnpAU73oKMHp2bpvwcEh4LrtZiFCJd8l4H9ltfI0ySmeBNy3qYzc7
-	9bOQI+I7fmzoQoxpXXIwQolLEtvQSkMsIg0/4J2fq5YFarS/sKeg+bGJaabR6kxg
-	mVJ86GjJXCvRiZjpRJcdY5SNtDExfLvfPL+pX3Lu09Coyyj+3ASRDaS+eyX2zB+u
-	a/pcscmh7H62zzUnI9WJ8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757012197; x=
-	1757098597; bh=7rzgU6/+xZPjOX1WExw5X2Safwl0wrZ8s4OUB4n+T4s=; b=M
-	OlxFmiIPvxSU/oDSlanMmImcNr8eWRk64kQpqv+12v9zTpU5rkxIX5pB2gOHJzp8
-	RrXYw4X1ON+WvMS9X0cVHBap/JOpHeLDR27SjxoQgXjPumcvKkOfClsJ+2O2/bgB
-	GUF70alkrnM5B6HV5JMt4xVWGpsxsNsR8bOhoZ732BVQAITF7+UQ8Potk5547myk
-	PlFI0nuWeBUWu6/ZUxa2zBWbaRbnRwFxeGJ6qiJYQ7vI9kNf4F9vAk2KWc0n9Xon
-	h+hGwmDIE8sf1UH0TJlXCeoLdOVBHj9mXRkwiYf9XDgVMqNOTwidN+2SaKg2zh3A
-	+nMFjq9eUwT/OxVPHqTwg==
-X-ME-Sender: <xms:5OC5aGBFmhwp6koGHj6-xjfzuh-IqcLf_VBw6XpZYC0JCVvbpR7Mzg>
-    <xme:5OC5aAjmeUScbnss4AsYArx60cG8mw_oC81XoI6kKuDI6zuF2zncLXHbAyLzclRe7
-    KJyucYcUWocOVdUZK8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeijeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhkucfr
-    vggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqe
-    enucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedvgeek
-    hfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggp
-    rhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkh
-    hjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhmhhhsehhmhhh
-    rdgvnhhgrdgsrhdprhgtphhtthhopegrnhguvghrshhsohhnsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    hhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhonhhrrgguhigstghioh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrh
-    gvsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:5OC5aLpUcBHmQYc76N1Gwun1b6jafEN_ctWEu4v5VzaDwlDLm77u_Q>
-    <xmx:5OC5aAhLZzYRa7zeWbx33A82psAapANHW27wH0KqhR8odPU_tYXRWw>
-    <xmx:5OC5aCZuKuQZKyoIZsaZaCeT1bRVrilZbqXn52TosN3HlEe2resgDw>
-    <xmx:5OC5aAlIDpQXPeOtxvnwK2F_grRXDOFA0PAGBf8tnu8xzp8PnsUjEQ>
-    <xmx:5eC5aNvYwlgegQRoz1S-cXSuW8HAXhDkcLPsSMAdBGtu14F7zyvNmDeF>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2CC642CE0072; Thu,  4 Sep 2025 14:56:36 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2AmBSm8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5ABCC4CEF0;
+	Fri,  5 Sep 2025 01:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757034578;
+	bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=f2AmBSm8YMArcVUliSPJNz90rqjkSOBesAHIdKd4w+5u2d9vk4pvLGjZ2YJvRRX0U
+	 NhBbjtQZ9xbRKN7aFU8DGnLhK5POd4noWOChDo+KQ+eEzOUqH/cUXpMCbkvqYfIN92
+	 Z+O3MsxFCrWDuxde3Fl6hIrkkIdH7vG9PwwO5kp+Bd2SxV3rl2d8gOvB+9Oy1znY1a
+	 kd5/7NWtcA1tsEvKPqFJ4MztVC9zhLvgyuYaW9CiIVkotgB/WzhzTwM1YdCyXWDwgU
+	 /W6gGz++5wbx2Houh+SCW2asFoZBczGXloSgC20OuJm4ifXaWrMXR/xihzbuwa3fD7
+	 1kPqm2Z6gOvMQ==
+Received: by venus (Postfix, from userid 1000)
+	id 0F6B11807F9; Fri, 05 Sep 2025 03:09:36 +0200 (CEST)
+From: Sebastian Reichel <sre@kernel.org>
+Date: Fri, 05 Sep 2025 03:09:31 +0200
+Subject: [PATCH v2 1/3] dt-bindings: platform: Add Lenovo Thinkpad T14s EC
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A0cV_uEw7IB3
-Date: Thu, 04 Sep 2025 14:56:07 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Sebastian Reichel" <sre@kernel.org>
-Cc: "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-arm-msm@vger.kernel.org
-Message-Id: <ec295b0c-4a65-4cfe-8d38-99c5c4db9099@app.fastmail.com>
-In-Reply-To: 
- <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
-References: <20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com>
- <20250831-thinkpad-t14s-ec-v1-2-6e06a07afe0f@collabora.com>
- <ea0b329e-ab3e-4655-8f27-e7a74784302a@app.fastmail.com>
- <pslvca6j5fpr5dgvciwlaz3fubnkjq5olfontaaytt56xs4bvk@5typdoosbreo>
-Subject: Re: [PATCH 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250905-thinkpad-t14s-ec-v2-1-7da5d70aa423@collabora.com>
+References: <20250905-thinkpad-t14s-ec-v2-0-7da5d70aa423@collabora.com>
+In-Reply-To: <20250905-thinkpad-t14s-ec-v2-0-7da5d70aa423@collabora.com>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2026;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=aacuTxsB1l7ADsGb1f2QWOpaKSMadCrdUyplnxNl4/g=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoujhOmGuixH2xpw/UqtKyc2QNtG+U/J+Hpo649
+ 7ksgz0ts1yJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaLo4TgAKCRDY7tfzyDv6
+ mlr9D/4wUrcb6P3ZGOgFkGr3Tdl/X+CDMWImhL95PHFBxZPPJdm4zNrZOnVpW2gCGkJuX+0MwL/
+ kXq8dRBQ0k/yJcjv5uPthggz77ptRciuX39RKOiFGHBJfQU8d+snFw0hM5z69MDwIdggiVoX8zC
+ 68gTc3AxD2wWcV2t93vDAVyAXszZRrkyL9enSPefeLrgFX2h6gGQoq60RVxfhxUruVSZHok8eJ5
+ 83ekeX0Z5xOwnDwX+3FsbZO/v5sFRthXTa5J3x4JQkfv0TrEjJE54U+5scMWk9LzPcKCd+a/bVP
+ Yh4jsh/9na0C1ti5n38iQJuxmemSEUPjKfw0mIA852N53q7ayohOacQyf4F6QbfClVms85n4IhW
+ ym2w4D5IghcC2GWVrtQuXq+ORaDBt2MKrhZguGblFVk1OO+8R/fDhrDH/gwUnbwKBRb+SlfjmHV
+ ThSfrCSbDeSTMbY7VYNO3hwiW0NIgXo1I35czSi0kOGmWbKwIJ6O7cG378NzJc9WwErTTMsWL5g
+ d/XK9wI4IA3xNCIL85WzwKzBnILcJMrglVgU1FciF2N09vJIoY9WYO1nOrybPyGhvO1zaqfrVmn
+ iI/3/wveI9ZRMzBEXlYdUc08gLBKsFAFpZx89scMcTchEmI5iHO6nfbGa1JcU1SFELWMxGz/Unp
+ dgfc12jRbPdzdqA==
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Hi Sebastian,
+Add binding for the EC found in the Thinkpad T14s Gen6 Snapdragon,
+which is based on the Qualcomm X1 Elite. Some of the system LEDs
+and extra keys are only accessible via the EC.
 
-On Mon, Sep 1, 2025, at 12:10 PM, Sebastian Reichel wrote:
-> Hello Mark,
->
-> On Mon, Sep 01, 2025 at 09:48:39AM -0400, Mark Pearson wrote:
->> On Sun, Aug 31, 2025, at 5:28 PM, Sebastian Reichel wrote:
->> > Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which
->> > is in theory compatible with ThinkPad ACPI. On Linux the system
->> > is booted with device tree, which is not supported by the ThinkPad
->> > ACPI driver. Also most of the hardware compatibility is handled
->> > via ACPI tables, which are obviously not used when booting via
->> > device tree. Thus adding DT compatibility to the existing driver
->> > is not worth it (almost no code sharing).
->> >
->> > The driver currently exposes features, which are not available
->> > via other means:
->> >
->> >  * Extra Keys
->> >  * System LEDs
->> >  * Keyboard Backlight Control
->> >
->> > The driver has been developed by reading the ACPI DSDT. There
->> > are some more features around thermal control, which are not
->> > yet supported by the driver.
->> >
->> 
->> Thanks for working on this - it's great.
->
-> It's a personal scratch your own itch project, as I daily drive the
-> machine.
->
->> I'll see if I can get the EC spec so I can do some checking on the
->> values (I thought I had it already, but I can't find it). If this
->> file can be used for other platforms then it might be good to
->> rename the file to not be specific to the t14s? I'm curious if it
->> can be used on the X13s or the Yoga platform.
->
-> Maybe. I only have the T14s (apart of my older Intel/AMD ThinkPads,
-> which use the ACPI driver). The ACPI DSDT functions completley
-> abstract the lowlevel I2C interface, so in theory every ThinkPad
-> could have a completley different EC and still use the same ACPI
-> driver. So this needs to be checked per-device. Hopefully the low
-> level interface is similar in those, so that we don't need to spam
-> the kernel tree with multiple different EC drivers :)
->
-Looks like you're right to make this platform specific. At least for now it looks like the definitions are tied to the platform.
-Strange as we have a common spec on the x86 Thinkpads, but at least for now this is t14s Qualcomm specific.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+ .../lenovo,thinkpad-t14s-ec.yaml                   | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
->> Couple of notes
->>  - I do agree it doesn't make sense to add this to thinkpad_acpi.
->>    That file is too big anyway.
->>  - If there are other pieces like this where some detail of the
->>    platform is needed, please do let me know. I never got enough
->>    time to work on this platform directly, and it wasn't in our
->>    Linux program, but I do have access and support from the
->>    platform team for getting details on it. If I can help, so not
->>    too much reverse engineering is needed, I'm happy to.
->
-> Thanks for the offer.
->
-I did get back some details - not quite as much as I wanted, but enough to confirm that all your definitions look correct.
-Main point of interest is they didn't send me the BL2 details - so not sure if that is needed?
+diff --git a/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..c87ccb5b30868c7a616ec08b869286d627dd7406
+--- /dev/null
++++ b/Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/embedded-controller/lenovo,thinkpad-t14s-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lenovo Thinkpad T14s Embedded Controller
++
++maintainers:
++  - Sebastian Reichel <sre@kernel.org>
++
++description:
++  The Qualcomm Snapdragon-based Lenovo Thinkpad T14s has an Embedded Controller
++  (EC) which handles things such as keyboard backlight, LEDs or non-standard
++  keys.
++
++properties:
++  compatible:
++    const: lenovo,thinkpad-t14s-ec
++
++  reg:
++    const: 0x28
++
++  interrupts:
++    maxItems: 1
++
++  wakeup-source: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |+
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        embedded-controller@28 {
++            compatible = "lenovo,thinkpad-t14s-ec";
++            reg = <0x28>;
++            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
++            wakeup-source;
++        };
++    };
++...
 
-> I would be interested in bits around system suspend. Right now
-> support on X1E is limited to sending the CPU into suspend. Much of
-> the machine seems to be still powered. Right now the keyboard
-> backlight and all the status LEDs stay on and the LID + power led
-> does not go into the typical breathing pattern. Additionally I had
-> to disable wakeup capabilities for the EC interrupt, as closing the
-> LID generates an event and thus an interrupt, which wakes the
-> system. Obviousy that is undesired from user's perspective. My guess
-> is, that there might be some register to mask events, but I haven't
-> found it so far. Alternatively the EC might mask them automatically
-> when the system is send into suspend, which I also have not yet
-> figured out :) The only bit I know is, that EC register 0xE0 is
-> involved in modern standby.
->
-I still have some more digging to do here I'm afraid.
+-- 
+2.50.1
 
-> Apart from that and (probably) unrelated to the EC: I noticed that
-> accessing the built-in webcam (with the X1E camera patches from
-> Bryan O'Donoghue) does not enable the status LED. It would be
-> nice if you can check how that is wired, so that it can be enabled
-> when a camera stream is started.
->
-Ack. Don't know the details on that yet.
-
-Mark
