@@ -1,91 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4F63054E7
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Sep 2025 18:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634902D3756
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Sep 2025 19:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757356494; cv=none; b=jKAKGmkLwENudaeJMWQsRiLq67IFWyKeySWJ7StEu0druhmRKTfyfH9DH/HAHZqxxVwi8twuBpBZ2o8hN5bzW6bGx+ah/zngtu/L6XWVJHpeCaTYBO6/IQIzjmDTTOQJ9PXwCBhMU9kncxUTsDAsm01Z+/CgpLghhmdcPinVhNU=
+	t=1757361524; cv=none; b=jAFqQ3caweCEU7peAfk1K3s3/1VeNVXLV4mo2xIBPG8KM3jMgtskfiOSegsY+fyhGKig+Lc7fyGhgvyYAXmg77o2mkGpbclge6zUZ+QQk4Uj3xSq15CzpHaXhqtNxX3Kq20F3ZmZu3n99fJhz7aW+VGdQ4nmHqcHwQcWk4DmHuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757356494; c=relaxed/simple;
-	bh=PAlmJvsmZ46EvvydE/Qv2VdG/HalsbRiL/sQ6GHnA0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E2m5/0/titzUOGDss78AKY9B3tG5ZXlzAkxW1/mWlyxKYtTPq/qrGhPZWmI984E3bCOoikFP2wYcrBb4wpCLxHY+EvB/IRhaANKXbTnPxvl7c6N27gFNWKIIt+3E8Zr90zA199iTCJW2p1k6PYybCLpRNBsOBJpbCuDPB3UaZZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PveKNxtK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757361524; c=relaxed/simple;
+	bh=nVFLUtDGB/jwN6aSzOzSMLQI/z/oN77nrjNB/Oo0tKA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GOu7x+FZhiMmnP/4d8lhblUR25Xc/3Yeh+3hcIZhONsZvX1EaeKHR45jyfuJodIhFeUZwC7meYOup9+0lRZ8QY/d+CUCcL4+33ENk3b5Ri3PoCXdJziYUtLBYST2oGYAuqJwYKMxpGCHbgPSYGZJSrSjUVbHCvucqC2i2k8p3/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDRduKLJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PveKNxtK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E964C4CEF1;
-	Mon,  8 Sep 2025 18:34:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDRduKLJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D58DAC4CEF5
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Sep 2025 19:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757356493;
-	bh=PAlmJvsmZ46EvvydE/Qv2VdG/HalsbRiL/sQ6GHnA0U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=PveKNxtKnSLRefeyBVKwGVEj7sT6tK5gmLdQuvDZ7DDcHFIvvadg8wH6vhxWH1tAo
-	 RLhA91CoA3yLDtUpQG/IPuV7Gm+GvunAVXqebg5/ysINmdzVHBTc+vO2f+1q4g+GPe
-	 8XRGwtZ1a+M37hKfKThhvgU6E2cvOat/5YJxISMozSeDOMkRqabM2SR4Z1G/RxmLiT
-	 f9rKR5QVFghVItiXcG66wra04Pb7+ZC1dVWoofBxObpbXH9nXe3DVEfbhY/AmI3vaZ
-	 WozRFH1zRfXhWhzyJCFjocOQuFMz9LszJRfiffXPu6AYPV/Vf8gS16rJGLxnj9FxsY
-	 +4yOTOTpEi80g==
-Message-ID: <87ba801a-1467-42c3-9785-663e6f8b2bc8@kernel.org>
-Date: Mon, 8 Sep 2025 13:34:52 -0500
+	s=k20201202; t=1757361523;
+	bh=nVFLUtDGB/jwN6aSzOzSMLQI/z/oN77nrjNB/Oo0tKA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=YDRduKLJ2JqKg94fo15N1CbA/0UxQiyQgPn1NXiEa5GqMgADYX5C4Me0DmGWH/1O8
+	 wSzZiOdf+U0Bq0a0QvsMuE3/nIgLqEBmZTaKmDmL/kUuXALyxGTbA1UytJiyJ4QmM8
+	 MKeDR/dj++R5lSp4076t8h8HNgICZLybCTyj8Zw9LIN2K6Ks14LkrIfO8swa8uG6vz
+	 Q5aLl4TO6D1zgR97GrZZVxiwnrmkxgss9Y8hQsF0k/BMMAs3crsxCp+mPlFQLR7tTC
+	 wPRnJWm5LAQFuYdHPkqdmT7sQU/9Jh3/lrxtXG3VRlx0baoANmVOMWpiSwZ0aC7Yt+
+	 hhlfLevEbVRbA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id C9A27C3279F; Mon,  8 Sep 2025 19:58:43 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Mon, 08 Sep 2025 19:58:43 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: petar.vidosavljevic@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-218305-215701-jptE6aZ1aR@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd/pmc: Add MECHREVO Yilong15Pro to
- spurious_8042 list
-To: aprilgrimoire <aprilgrimoire@proton.me>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <IvSc_IN5Pa0wRXElTk_fEl-cTpMZxg6TCQk_7aRUkTd9vJUp_ZeC0NdXZ0z6Tn7B-XiqqqQvCH65lq6FqhuECBMEYWcHQmWm1Jo7Br8kpeg=@proton.me>
-Content-Language: en-US
-From: "Mario Limonciello (kernel.org)" <superm1@kernel.org>
-In-Reply-To: <IvSc_IN5Pa0wRXElTk_fEl-cTpMZxg6TCQk_7aRUkTd9vJUp_ZeC0NdXZ0z6Tn7B-XiqqqQvCH65lq6FqhuECBMEYWcHQmWm1Jo7Br8kpeg=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
+Petar Vidosavljevic (petar.vidosavljevic@gmail.com) changed:
 
-On 9/7/2025 4:06 AM, aprilgrimoire wrote:
-> The firmware of Mechrevo Yilong15Pro emits a spurious keyboard interrupt on
-> events including closing the lid. When a user closes the lid on an already
-> suspended system this causes the system to wake up.
-> Add Mechrevo Yilong15Pro Series (GM5HG7A) to the list of quirk
-> spurious_8042 to work around this issue.
-> 
-> Link: https://lore.kernel.org/linux-pm/6ww4uu6Gl4F5n6VY5dl1ufASfKzs4DhMxAN8BuqUpCoqU3PQukVSVSBCl_lKIzkQ-S8kt1acPd58eyolhkWN32lMLFj4ViI0Tdu2jwhnYZ8=@proton.me/
-> 
-> Signed-off-by: April Grimoire <aprilgrimoire@proton.me>
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |petar.vidosavljevic@gmail.c
+                   |                            |om
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+--- Comment #100 from Petar Vidosavljevic (petar.vidosavljevic@gmail.com) -=
+--
+(In reply to Peter Ries from comment #99)
+> (In reply to Henri from comment #95)
+> > For me, the patch did not completely fix the issue. From time to time, I
+> > still experience my Ryzen to be stuck at 544 Mhz after unplugging it fr=
+om
+> > the power, while sleeping.
+> >=20
+> > Laptop: HP Elitebook 845 G10
+> > Processor: Ryzen 7 7840U
+> >=20
+> > OS: NixOS 25.05
+> > Kernel: 6.15.5 (linuxPackages_latest)
+> >=20
+> > I have also run (an 4 month old version of) the s2_idle script, with the
+> > output being here: https://paste.debian.net/hidden/a701167b/
+>=20
+> I have same hardware with latest BIOS. Running Arch based Endeavour OS.
+> Kernel 6.16.3-arch1-1 ATM.
+>=20
+> I still have this annoying bug. Thought it was gone, but obviously I didn=
+'t
+> unplug while in suspend that often. But the last days I worked more away
+> from desk and needed to unplug when suspended and irregularily (every 5th
+> time may be) the CPU is stuck in low states 544MHz.
 
-> ---
-> v2:
->   - Fix subject prefix and wording.
->   - Rebase onto platform-drivers-x86 fixes branch.
-> 
->   drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> index 18fb44139d..4d0a38e06f 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> @@ -239,6 +239,14 @@ static const struct dmi_system_id fwbug_list[] = {
->   			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
->   		}
->   	},
-> +	{
-> +		.ident = "MECHREVO Yilong15Pro Series GM5HG7A",
-> +		.driver_data = &quirk_spurious_8042,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Yilong15Pro Series GM5HG7A"),
-> +		}
-> +	},
->   	/* https://bugzilla.kernel.org/show_bug.cgi?id=220116 */
->   	{
->   		.ident = "PCSpecialist Lafite Pro V 14M",
+I'm also still encountering this issue.  Kernel:
+6.16.3-200.fc42.x86_64
 
+My hardware is:
+HP Elitebook 845 G10 - 7840U
+
+Some of the output when running "sudo dmidecode --type bios":
+BIOS Information
+        Vendor: HP
+        Version: V82 Ver. 01.09.00
+        Release Date: 04/14/2025
+        BIOS Revision: 9.0
+        Firmware Revision: 96.55
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
