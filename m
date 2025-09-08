@@ -1,50 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D94D15C158;
-	Sun,  7 Sep 2025 21:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19282E7BCC
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Sep 2025 07:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757282267; cv=none; b=Fvip7YGGiSDD8pde8S6JUUm1xa1JFF0ceKACxgZkyVf2ZzXZ4Miv0TPzuMOC8IxkYxaRLGU0xpXyfY3uc7yXhWhOvOMnOjEDYw5Oz7MbCEqbpiR8Q9lL2MJstUAQozHrwoZt0Or/viFihrtLaCvgSGbOgwOwJHsjr8XcSV1H3cE=
+	t=1757316500; cv=none; b=a3XI8v5w0qYOJ/GAKllORuokRjDpHl//ZTR8EPLG8YMB963J1F1vrTUKENtfc9r8Sy3J6NhzWLHCUFnQENLYzB3juwkBYx7SKwL14aZUZs6Rx9RXKmyZC9DE+r/Q7grJpGmUnsh3WXOLhpGwA4HEM8QVTw+j8corOCEL7b/733g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757282267; c=relaxed/simple;
-	bh=6zYMH1MVEsgh10pOGjfHOiDIdOOCUVBlEhSYwL149ls=;
+	s=arc-20240116; t=1757316500; c=relaxed/simple;
+	bh=qbzdEVIeV69/mmAKbuz9lop8NzAL+wErgvl0Fl2CZ2I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ScWsmiGK6h9wxdvrUNvCadbm3qsfNxd/dk10P4uduma6dO5N5GiJ6pU7UJ57jkEVwGQ+1EneuR2qrPe8zNLGTVhwYVdPLSnoAUNvxaOrY38Yfu8EYatADe0JNvzBBI3k1w5/g0y1ghABi0DMQALsGcZ8h1dwqWG+FlQJ1CeroCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JLOTAgvd; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=o40MOCIIQbx+k5ffzEZ8Ca4dJIxiqcPtW+5B43D/KVDKTKzOVRzBppsjxAEBRTa7SqPfnq3ACGS7qisfnDi/nWC9RU3mp2PQsBA+2RUJBw61z09g59wWPQFpu7hk7ciVyJbKaxidNpHcrMHvPPEiT1vM8cSFum0XPfcmgk5syFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eozoCN0Q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLOTAgvd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757282265; x=1788818265;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6zYMH1MVEsgh10pOGjfHOiDIdOOCUVBlEhSYwL149ls=;
-  b=JLOTAgvd26gSDNon1vPG0LenFf0twoEtswL8rCzkiKF2fswZG1K2RHii
-   czEMTBab6o8OUtFgvzYYm26ClUEo8fnbnnQ5VJsLkKXQcnZK7XtHGhu6M
-   L+oj/fVOhbSrL8ELkdSImErFf75yZz3SJmub0+xtXlNGZZ932lZSEQQ4L
-   3wlGtoKbkLjsZm4lhIiILBJWw8MepsZ6sjETifs51Y7B8AQQytRoHHGMA
-   uw2OJr4cSg+5g4IHwvE3L6MaQFKvBUY/g5dGO1W3WvH42VQiT55Ob3oC0
-   izrufiZ/loqj/UxUBW29QayfvDqA2E3lT2Tr6nVdvtWah4sa/+Y/CPAF+
-   g==;
-X-CSE-ConnectionGUID: zRjJ1f43RL+rHX0w0XMR2g==
-X-CSE-MsgGUID: BxHUrfaYSQmUs7BoUmYg5Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11546"; a="77157636"
-X-IronPort-AV: E=Sophos;i="6.18,247,1751266800"; 
-   d="scan'208";a="77157636"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2025 14:57:44 -0700
-X-CSE-ConnectionGUID: 3vdC14feQY+U0x+beM3OMQ==
-X-CSE-MsgGUID: YTyHKPHDSRm5A5pOJRI2+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,247,1751266800"; 
-   d="scan'208";a="176700792"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.246.166.73]) ([10.246.166.73])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2025 14:57:43 -0700
-Message-ID: <7fae6fc8-6df5-4d1f-90ec-b6bf159e62da@linux.intel.com>
-Date: Sun, 7 Sep 2025 14:57:43 -0700
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eozoCN0Q"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 587LiXKd011604
+	for <platform-driver-x86@vger.kernel.org>; Mon, 8 Sep 2025 07:28:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ERLf/ncv7o04qbtewCDq3K9ys9j1usVy2WEVFXE0/HM=; b=eozoCN0QzM4MqTN0
+	oAUlUWFjDBGVTzSNld5ige4n+UtQK7ecqJS+f11o3jTUqtOliXC2DwWmNpKIjfoj
+	nn+mRfGiqv3B9bekNuzLXtV4EU3a+FwNIXL8dK8EFjjSYnXmYZWDBZdTkqOvZWE+
+	ObfJ5P0AXapQxq4fkh2QvRYFQAp+Ipwh/dtyhDXVxCZil9c/TYr19Zq8xD15D84B
+	CffZ7ZSl/PzaUgugo+CDWZ9aE4VfrzK7XHa7E0yHz/jxtIufe0janLjiZ6Xql5Vq
+	lUVFRkqU2LqX0lvKGCrGPcNeA/tD0HJUmcjz9WVaJUICgWPVOqpSd+gPicvFhR8Q
+	OCvmWw==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 490bws3q41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 08 Sep 2025 07:28:18 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b5f92a6936so8519931cf.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Sep 2025 00:28:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757316497; x=1757921297;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ERLf/ncv7o04qbtewCDq3K9ys9j1usVy2WEVFXE0/HM=;
+        b=OVlDNdQ56P7P+fsGWHZWvdgtLfwJ9jTJ7l5A2Qam/72okl4vzRvSZ4WKxMnEzick5w
+         2v/54RoFkElZtobQGk4945cSVNtJ3OoOaJJjCrmplchcacE/Dn3pifxwYZxrJkl67621
+         UbfDHkBml5Qw8D5yLuAo7kawo32bZt8gtHm2aNDPA1A4j+/I1ZZEB1OFQGtApINwXJ2S
+         25W8AgKnubLCZFR2QV9xx7ChJvgbXpwT89fdiGFFeOLjByeaDiqLzs0O+AAtr2JBHJKH
+         ZWRQRGbUqh2iM6Ilsd+iQfrWU+OS/W+4jmtJek/gKYIU0+P8ZumffwJ4HCxfXQ5jxS7O
+         tRmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFGGgCdjvjYqaddYRHxBZmmyZ/m0580tKkXEdOj2KWNpJakXfgyZc8sra8eimF29ZV89bLgfwl6niJjypiJqZDEEGt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyClvxC3LKI3pdkcv8Y8NmeGgMwrCFNnQCDxnitoIuRviUlvEjh
+	H5h7w2HvoKbW4MZxBV2TwEJ9yT+jIEChsv+VMShgKc3K9wA3L42wY3KVxDZduK+kXDpEFLSh+SK
+	O4l1rWdo8mkMuiAFZA+8qNlt/KA0QDvGo0ezjxi85HHIWGbK0vo93i/Ni4wpiwe7RLTykoFp8kT
+	3N
+X-Gm-Gg: ASbGncspbSrgYwaWrQJkReIIKF5pCDclQR20IVmi5JoGFVa0fT4Bd2JVtotWZEuQjD1
+	oVOamTPJjuLbKfJ+KSv69tS/CmRERHdSIf46i157jBTtblvNXVD0XOPt1GG+VF7iR76P2udB7oO
+	bhHY3svY4Nf2Ord0W7nf2f0idaLPtYd2rKptccYO0WfIEqPl7kNbjspLvDcO/VxbFRMihnJnzK7
+	i7CCuSAPFfdpLf0KtzU6BFPAXZytsvcOGwSYW9qqR8+qK8Kt0YIWybP8B6aDj3vUFxSDSvDdeGn
+	s7iEohx7zz9wk9iyHLleHX6nfjY19UO/4UjkblOvZU1fIGm/DSPPwJHEAfgCMtUEcnHaC1VsdpE
+	O8StWpfzC6KVduYLPQJ1Ylg==
+X-Received: by 2002:ac8:5e09:0:b0:4b5:f68b:86a0 with SMTP id d75a77b69052e-4b5f83aa98fmr49543321cf.5.1757316496581;
+        Mon, 08 Sep 2025 00:28:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGAgl00GaYehU+zuRCAg7V4DAYv8tb/FWR4y4Uvtjs+MAr65Vw5x+XLudGsUA/GY92sb/oiQ==
+X-Received: by 2002:ac8:5e09:0:b0:4b5:f68b:86a0 with SMTP id d75a77b69052e-4b5f83aa98fmr49543111cf.5.1757316496019;
+        Mon, 08 Sep 2025 00:28:16 -0700 (PDT)
+Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b01902d0e99sm2167090466b.12.2025.09.08.00.28.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Sep 2025 00:28:15 -0700 (PDT)
+Message-ID: <f16a858d-fb41-4cc9-a138-7bfe5ee2800f@oss.qualcomm.com>
+Date: Mon, 8 Sep 2025 09:28:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,456 +76,126 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] platform/x86:intel/pmc: Show device and function
- number
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20250815224611.2460255-1-xi.pardee@linux.intel.com>
- <20250815224611.2460255-6-xi.pardee@linux.intel.com>
- <c9aa04ae-f942-cf73-d046-78d0f90f373d@linux.intel.com>
+Subject: Re: [PATCH v3 2/3] platform: arm64: thinkpad-t14s-ec: new driver
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20250906-thinkpad-t14s-ec-v3-0-3ce6ec21ae89@collabora.com>
+ <20250906-thinkpad-t14s-ec-v3-2-3ce6ec21ae89@collabora.com>
 Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <c9aa04ae-f942-cf73-d046-78d0f90f373d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250906-thinkpad-t14s-ec-v3-2-3ce6ec21ae89@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ztMUGvtlGc3bBkT6W4p6t7wIJXairZJB
+X-Proofpoint-GUID: ztMUGvtlGc3bBkT6W4p6t7wIJXairZJB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAxOCBTYWx0ZWRfX7Htb8PVL2Qgh
+ VJlXrty3ENmmnP3MiqYWgj3rQQpolMiTIUNY7O42z5C0Tu7k00Hdw4rcyjt2GNxXkgI6sTNLgSz
+ S90HVdWiqieBgs2rV9an5ogB5hp9+JNWIw0HoDegcLF3oANblo1eCHY6UxWlHN1SCpXguD96i+K
+ h7qeuv4mvVSBYcPQMFliQ4X+jQCL6h8GD5lgIcCJzXdcpV/ns0R8PrAavkm5ECAzPWsLzFBViDG
+ yOUdfhXiKpsABwxVuRuWvE5gkFYXW/kUXxnJ4PkixQc+UmILZe6J0MbWfHLWjfHDk+ZJjtPdhhF
+ mTTMVVSQMfTnjs8aAWGwjRlYnyQet8KcKBgQ7PK7RqpZlTz5bjT7dwww4EgkteJ2IMPOB/cZ3n1
+ T7XhcGiY
+X-Authority-Analysis: v=2.4 cv=G4kcE8k5 c=1 sm=1 tr=0 ts=68be8592 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=l0D_vPNz536yW1AJoQEA:9
+ a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-08_02,2025-09-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060018
 
-Hi Ilpo,
+On 9/6/25 3:12 AM, Sebastian Reichel wrote:
+> Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which is in
+> theory compatible with ThinkPad ACPI. On Linux the system is booted with
+> device tree, which is not supported by the ThinkPad ACPI driver
+> (drivers/platform/x86/lenovo/thinkpad_acpi.c). Also most of the hardware
+> compatibility is handled via ACPI tables, which are obviously not used
+> when booting via device tree. Thus adding DT compatibility to the
+> existing driver is not worth it as there is almost no code sharing.
 
-Thanks for the review.
+[...]
 
-On 8/28/2025 6:56 AM, Ilpo Järvinen wrote:
-> On Fri, 15 Aug 2025, Xi Pardee wrote:
->
->> Add support to show device and function number for S0ix blockers. This
->> feature depends on S0ix blocker substate requirement table and BDF
->> association table. This feature is available for platforms starting from
->> Pather Lake.
->>
->> Only a subset of S0ix blockers has device and function number associated
->> to it. Get the availability information from the substate requirement
->> table. Get the device and function number mapping information for each
->> S0ix blocker from the BDF association table.
->>
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 182 +++++++++++++++++++++++++-
->>   drivers/platform/x86/intel/pmc/core.h |  23 +++-
->>   2 files changed, 203 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index a0b948a875a5a..69ee40cbb8b8a 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -1017,6 +1017,38 @@ const struct file_operations pmc_core_substate_req_regs_fops = {
->>   	.release	= single_release,
->>   };
->>   
->> +static int pmc_core_bdf_show(struct seq_file *s, void *unused)
->> +{
->> +	struct pmc_dev *pmcdev = s->private;
->> +	unsigned int pmcidx;
->> +
->> +	seq_printf(s, "%36s | %15s | %15s |\n", "Element", "Device Number", "Function Number");
->> +	for (pmcidx = 0; pmcidx < ARRAY_SIZE(pmcdev->pmcs); pmcidx++) {
-> Change this to pmc_idx and lets make it the only form that are added from
-> this point on.
->
-> The other ones should be converted to it eventually, I once had a cleanup
-> patch to rename them but IIRC I dropped it to not conflict with some
-> feature worked. Maybe you can fit a rename change into some series so I
-> won't end up conflicting your feature work :-).
-I will remove this patch from this patch series and send this one 
-separately later and include a cleanup patch to rename all pmc index to 
-pmc_idx.
->
->> +		const char *name = NULL;
->> +		struct list_head *cur;
->> +		struct bdf_entry *bdf;
->> +		struct pmc *pmc;
->> +
->> +		pmc = pmcdev->pmcs[pmcidx];
->> +		if (!pmc)
->> +			continue;
->> +
->> +		list_for_each(cur, pmc->bdf_list) {
->> +			bdf = list_entry(cur, struct bdf_entry, node);
->> +			if (bdf->name != name) {
->> +				seq_printf(s, "pmc%d: %30s | %15x | %15x |\n", pmcidx,
-> %u
-Will change it in next version.
->
->> +					   bdf->name, bdf->dev_num, bdf->fun_num);
->> +				name = bdf->name;
->> +			} else {
->> +				seq_printf(s, "%54x | %15x |\n",
->> +					   bdf->dev_num, bdf->fun_num);
->> +			}
->> +		}
->> +	}
->> +	return 0;
->> +}
->> +DEFINE_SHOW_ATTRIBUTE(pmc_core_bdf);
->> +
->>   static unsigned int pmc_core_get_crystal_freq(void)
->>   {
->>   	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
->> @@ -1418,6 +1450,10 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev, struct pmc_dev_info
->>   				    pmc_dev_info->sub_req_show);
->>   	}
->>   
->> +	if (primary_pmc->bdf_list) {
->> +		debugfs_create_file("bdf", 0444, pmcdev->dbgfs_dir, pmcdev, &pmc_core_bdf_fops);
->> +	}
-> Unnecessary braces.
-Will change it in next version.
->
->> +
->>   	if (primary_pmc->map->pson_residency_offset && pmc_core_is_pson_residency_enabled(pmcdev)) {
->>   		debugfs_create_file("pson_residency_usec", 0444,
->>   				    pmcdev->dbgfs_dir, primary_pmc, &pmc_core_pson_residency);
->> @@ -1521,7 +1557,7 @@ int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct tel
->>   	return ret;
->>   }
->>   
->> -int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
->> +static int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
->>   				 struct telem_endpoint *ep)
->>   {
->>   	u32 num_blocker, sample_id;
->> @@ -1551,6 +1587,150 @@ int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
->>   	return 0;
->>   }
->>   
->> +static const char *pmc_core_get_next_bdf_ip_name(struct pmc *pmc, unsigned int *r_idx,
->> +						 unsigned int *i_idx, u32 **lpm_req_regs)
->> +{
->> +	const struct pmc_bit_map **maps;
->> +	unsigned int arr_size;
->> +	bool reset = FALSE;
-> FALSE is a define in some obscure header (which you probably didn't
-> include intentionally anyway ;-)).
->
-> Please use false.
-Will change it to false in next version.
->
->> +
->> +	maps = pmc->map->s0ix_blocker_maps;
->> +	arr_size = pmc_core_lpm_get_arr_size(maps);
->> +
->> +	// Iteration reaches the end of the bitmap array
-> This driver has used exclusively /* */ comments.
-Will change it in next version.
->
->> +	if (!maps[*r_idx][*i_idx].name)
->> +		(*r_idx)++;
->> +
->> +	// Iteration reaches the end of the maps
->> +	if (*r_idx >= arr_size)
->> +		return NULL;
->> +
->> +	for (; *r_idx < arr_size; (*r_idx)++) {
->> +		const char *ip_name;
-> Can't you put this to the innermost block?
-Will move it in next version.
->
->> +		if (reset)
-> Why you need this?
 
-The purpose of this function is to return the name of the NEXT s0ix 
-blocker with BDF information.
+couple nits, feel free to ignore
 
-r_idx and i_idx are used to keep track of the current position of the 
-iteration, therefore i_idx could not be reset to 0 at the first run of 
-the inner for loop. After the first run of inner for loop reset should 
-be set to true so in next run of the outer for loop i_idx could be reset 
-to 0 (which mean the iteration reaches the next s0ix blocker map).
+> +#define T14S_EC_EVT_NONE			0x00
+> +#define T14S_EC_EVT_KEY_FN_4			0x13
+> +#define T14S_EC_EVT_KEY_FN_F7			0x16
+> +#define T14S_EC_EVT_KEY_FN_SPACE		0x1F
+> +#define T14S_EC_EVT_KEY_TP_DOUBLE_TAP		0x20
+> +#define T14S_EC_EVT_AC_CONNECTED		0x26
+> +#define T14S_EC_EVT_AC_DISCONNECTED		0x27
+> +#define T14S_EC_EVT_KEY_POWER			0x28
+> +#define T14S_EC_EVT_LID_OPEN			0x2A
+> +#define T14S_EC_EVT_LID_CLOSED			0x2B
+> +#define T14S_EC_EVT_KEY_FN_F12			0x62
+> +#define T14S_EC_EVT_KEY_FN_TAB			0x63
+> +#define T14S_EC_EVT_KEY_FN_F8			0x64
+> +#define T14S_EC_EVT_KEY_FN_F10			0x65
+> +#define T14S_EC_EVT_KEY_FN_F4			0x6A
+> +#define T14S_EC_EVT_KEY_FN_D			0x6B
+> +#define T14S_EC_EVT_KEY_FN_T			0x6C
+> +#define T14S_EC_EVT_KEY_FN_H			0x6D
+> +#define T14S_EC_EVT_KEY_FN_M			0x6E
+> +#define T14S_EC_EVT_KEY_FN_L			0x6F
+> +#define T14S_EC_EVT_KEY_FN_RIGHT_SHIFT		0x71
+> +#define T14S_EC_EVT_KEY_FN_ESC			0x74
+> +#define T14S_EC_EVT_KEY_FN_N			0x79
+> +#define T14S_EC_EVT_KEY_FN_F11			0x7A
+> +#define T14S_EC_EVT_KEY_FN_G			0x7E
 
->
->> +			*i_idx = 0;
->> +
->> +		for (; maps[*r_idx][*i_idx].name; reset = TRUE, (*i_idx)++) {
-> true
->
-> This is hard enough to understand even without that "for (;". Would
-> probably be better to use while () instead.
-Will change to while loop in next version.
->> +			if (!maps[*r_idx][*i_idx].blk)
->> +				continue;
->> +
->> +			bool exist = **lpm_req_regs & BIT(BDF_EXIST_BIT);
->> +			(*lpm_req_regs)++;
->> +			if (exist) {
->> +				ip_name = maps[*r_idx][*i_idx].name;
->> +				(*i_idx)++;
->> +				return ip_name;
->> +			}
->> +		}
->> +	}
->> +	return NULL;
->> +}
-> TBH, this entire function is horrible mess, two nested iterators as
-> pointers, etc.
->
-> I'm very far from following all what going on here.
->
-> I suppose I've not seen this patch previously?
+Please use lowercase hex consistently across the file
 
-To achieve the NEXT name of the s0ix blocker with BDF information we 
-need to iterate through two (set of) maps in parallel. The 
-s0ix_blocker_maps provide names of all s0ix blockers and the 
-lpm_req_regs map shows that which s0ix blocker has associated BDF 
-information.
+[...]
 
-if maps[*r_idx][*i_idx].blk is set, that means it is a s0ix blocker. For 
-each s0ix blocker, if **lpm_req_regs & BIT(BDF_EXIST_BIT) is set, that 
-means this blocker has associated BDF information. Pointers are used to 
-keep track of the current position of the two (set of) maps so the 
-function provides the NEXT name of the s0ix blocker with associated BDF 
-info.
+> +enum thinkpad_t14s_ec_led_status_t {
+> +	T14S_EC_LED_OFF =	0x00,
+> +	T14S_EC_LED_ON =	0x80,
+> +	T14S_EC_LED_BLINK =	0xc0,
 
-I will probably switch to use a temporary data structure, such as list, 
-to store all s0ix blockers with BDF info and then iterate through this 
-list in pmc_core_process_bdf() call instead. That will make the logic 
-easier to follow and maintain. I will also add more comments to next 
-version of this patch.
+These conveniently translate to: BIT(7) and BIT(6)|BIT(7), meaning
+BIT(7) could mean "ON" and BIT(6) could mean "pulse" (can you pulse
+a disabled LED? arcane secrets..)
 
->
->> +static int pmc_core_process_bdf(struct pmc_dev *pmcdev,  struct pmc *pmc, u32 data,
->> +				unsigned int *r_idx, unsigned int *i_idx, u32 **lpm_req_regs,
->> +				const char **name)
->> +{
->> +	unsigned int i;
->> +
->> +	if (!data)
->> +		return 0;
->> +
->> +	if (!*name)
->> +		return -EINVAL;
->> +
->> +	for (i = BDF_FUN_LOW_BIT; i <= BDF_FUN_HIGH_BIT; i++) {
-> I think you can iterate 0 ... __fls(FIELD_MAX()).
+[...]
 
-Each 16 bit represents one device and the associated function numbers 
-for one s0ix blocker.
+> +	if (brightness == LED_OFF)
+> +		new_state = T14S_EC_LED_OFF;
+> +	else if (led->cache != T14S_EC_LED_BLINK)
 
-Bit 4-0 indicates the device number.
+==s are easier to logically follow than !=, but this is totally
+potayto/potahto
 
-Bit 12-5 indicates function numbers.
+[...]
 
-Bit 15 indicates if the next 16 bit is associated to the same s0ix 
-blocker as the current word.
+> +static int thinkpad_t14s_led_blink_set(struct led_classdev *led_cdev,
+> +				       unsigned long *delay_on,
+> +				       unsigned long *delay_off)
+> +{
+> +	struct thinkpad_t14s_ec_led_classdev *led = container_of(led_cdev,
+> +			struct thinkpad_t14s_ec_led_classdev, led_classdev);
+> +
+> +	if (*delay_on == 0 && *delay_off == 0) {
+> +		/* We can choose the blink rate */
 
-Between bit 12 and bit 5, each bit position represents one function 
-number. Bit 5 represents function 0 and bit 12 represents function 7. I 
-will add more comments in the next version.
+"can't"?
 
-Will change to use __fls(FIELD_MAX()) in next version.
+Needless to say, amazing work on piecing all this together, Sebastian!
 
->
->> +		struct bdf_entry *b_entry;
->> +		u32 function_data;
->> +
->> +		function_data = (data & BIT(i));
->> +		if (function_data) {
-> Why the extra variable???
-Will remove the function_data variable in next version.
->
->> +			b_entry = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*b_entry), GFP_KERNEL);
->> +			if (!b_entry)
->> +				return -ENOMEM;
->> +			b_entry->dev_num = data & GENMASK(BDF_DEV_HIGH_BIT, BDF_DEV_LOW_BIT);
->> +			b_entry->fun_num = i - BDF_FUN_LOW_BIT;
-> What "fun" stands for? Should it be "func" as is the typical short for
-> "function" in BDF?
-Will change to func_num in next version.
->
->> +			b_entry->name = *name;
->> +			list_add_tail(&b_entry->node, pmc->bdf_list);
->> +		}
->> +	}
->> +
->> +	if (!(data & BIT(BDF_REQ_BIT)))
->> +		*name = pmc_core_get_next_bdf_ip_name(pmc, r_idx, i_idx, lpm_req_regs);
->> +
->> +	return 0;
->> +}
->> +
->> +static int pmc_core_pmt_get_bdf(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep)
->> +{
->> +	unsigned int sample_id, max_sample_id, header_id, size, r_idx, i_idx;
->> +	struct bdf_entry *entry;
->> +	u32 *lpm_reg_regs;
->> +	const char *name;
->> +	int ret;
->> +
->> +	header_id = pmc->map->bdf_offset;
->> +	sample_id = header_id;
->> +	max_sample_id = sample_id + pmc->map->bdf_table_size;
->> +	lpm_reg_regs = pmc->lpm_req_regs;
->> +	r_idx = 0;
->> +	i_idx = 0;
->> +
->> +	name = pmc_core_get_next_bdf_ip_name(pmc, &r_idx, &i_idx, &lpm_reg_regs);
->> +	if (!name)
->> +		return -EINVAL;
->> +
->> +	pmc->bdf_list = devm_kzalloc(&pmcdev->pdev->dev, sizeof(struct list_head), GFP_KERNEL);
-> Should use sizeof(*xx).
->
-> But why you need to allocate the list head and not have it in place
-> within the pmc's struct?
-
-The memory for bdf_list is only allocated when the bdf information is 
-available to achieve.
-
-intel_pmc_core driver can check if the memory is allocated to decide 
-whether to create a file in debugfs for bdf in pmc_core_dbgfs_register().
-
->
->> +	if (!pmc->bdf_list)
->> +		return -ENOMEM;
->> +
->> +	INIT_LIST_HEAD(pmc->bdf_list);
->> +
->> +	for (; sample_id < max_sample_id; sample_id++) {
->> +		u32 data;
->> +
->> +		ret = pmt_telem_read32(ep, sample_id, &data, 1);
->> +		if (ret) {
->> +			dev_err(&pmcdev->pdev->dev,
->> +				"couldn't read bdf: %d\n", ret);
-> One line.
-Will change it in next version.
->
->> +			return ret;
->> +		}
->> +
->> +		if (sample_id == header_id) {
->> +			size = (data & GENMASK(BDF_SIZE_HIGH_BIT, BDF_SIZE_LOW_BIT))
->> +			       >> BDF_SIZE_LOW_BIT;
-> Define the field and use FIELD_GET().
-Will change it in next version.
->
->> +			header_id += size + 1;
-> No, I just cannot understand what's going on here, it's hopeless. Always
-> when I think I've finally understood what its all about you throw a curve
-> ball like this.
-
-There is one header line (32 bit) between each type of s0ix blocker in 
-the bdf association table. The bit 23-26 in header line indicates the 
-size of each section of one specific type of s0ix blocker in this table.
-
-header_id is used  to keep track of the id of each header so we will 
-process the header line differently from the other lines.
-
-I will add more detailed comment in next version.
-
->
-> In case this series is in any kind of hurry. I suggest you send the series
-> without this patch and we work out this patch separately on top of the
-> applied patches (I expect the patch 1-5 to be fine on next iteration).
-
-I will send this patch separately from the other patches in this series.
-
->
->> +			continue;
->> +		}
->> +
->> +		ret = pmc_core_process_bdf(pmcdev, pmc, data, &r_idx, &i_idx, &lpm_reg_regs, &name);
->> +		if (ret)
->> +			return ret;
->> +		data = data >> BDF_SIZE;
->> +		ret = pmc_core_process_bdf(pmcdev, pmc, data, &r_idx, &i_idx, &lpm_reg_regs, &name);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	list_for_each_entry(entry, pmc->bdf_list, node) {
->> +		dev_dbg(&pmcdev->pdev->dev, "bdf info: name %s, dev_num %x, fun_num %x",
->> +			entry->name, entry->dev_num, entry->fun_num);
->> +	}
->> +	return 0;
->> +}
->> +
->> +int pmc_core_pmt_get_sub_req_bdf(struct pmc_dev *pmcdev, struct pmc *pmc,
->> +				 struct telem_endpoint *ep)
->> +{
->> +	int ret;
->> +
->> +	ret = pmc_core_pmt_get_blk_sub_req(pmcdev, pmc, ep);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return pmc_core_pmt_get_bdf(pmcdev, pmc, ep);
->> +}
->> +
->>   static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->>   {
->>   	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
->> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
->> index bfe8fba808063..6ff2d171dc2ba 100644
->> --- a/drivers/platform/x86/intel/pmc/core.h
->> +++ b/drivers/platform/x86/intel/pmc/core.h
->> @@ -317,6 +317,24 @@ enum ppfear_regs {
->>   #define PMC_DEVID_MTL_IOEP	0x7ecf
->>   #define PMC_DEVID_MTL_IOEM	0x7ebf
->>   
->> +/* BDF offset */
->> +#define BDF_EXIST_BIT		3
->> +#define BDF_SIZE_HIGH_BIT	23
->> +#define BDF_SIZE_LOW_BIT	16
->> +#define BDF_DEV_HIGH_BIT	4
->> +#define BDF_DEV_LOW_BIT		0
->> +#define BDF_FUN_HIGH_BIT	12
->> +#define BDF_FUN_LOW_BIT		5
->> +#define BDF_REQ_BIT		15
->> +#define BDF_SIZE		16
-> Use BIT(), GENMASK() for most right here. All?
-
-Will change to use BIT() and GENMASK() in next version.
-
-Thanks for reviewing the patch.
-
-Xi
-
->
->> +
->> +struct bdf_entry {
->> +	struct list_head node;
->> +	const char *name;
->> +	u32 dev_num;
->> +	u32 fun_num;
->> +};
->> +
->>   extern const char *pmc_lpm_modes[];
->>   
->>   struct pmc_bit_map {
->> @@ -373,6 +391,8 @@ struct pmc_reg_map {
->>   	const u32 s0ix_blocker_offset;
->>   	const u32 num_s0ix_blocker;
->>   	const u32 blocker_req_offset;
->> +	const u32 bdf_offset;
->> +	const u32 bdf_table_size;
->>   	/* Low Power Mode registers */
->>   	const int lpm_num_maps;
->>   	const int lpm_num_modes;
->> @@ -418,6 +438,7 @@ struct pmc {
->>   	const struct pmc_reg_map *map;
->>   	u32 *lpm_req_regs;
->>   	u32 ltr_ign;
->> +	struct list_head *bdf_list;
->>   };
->>   
->>   /**
->> @@ -540,7 +561,7 @@ extern struct pmc_dev_info ptl_pmc_dev;
->>   void cnl_suspend(struct pmc_dev *pmcdev);
->>   int cnl_resume(struct pmc_dev *pmcdev);
->>   int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct telem_endpoint *ep);
->> -int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
->> +int pmc_core_pmt_get_sub_req_bdf(struct pmc_dev *pmcdev, struct pmc *pmc,
->>   				 struct telem_endpoint *ep);
->>   
->>   extern const struct file_operations pmc_core_substate_req_regs_fops;
->>
+Konrad
