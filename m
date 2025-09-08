@@ -1,194 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720CC1C863B;
-	Mon,  8 Sep 2025 21:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA0B2E0B5C;
+	Mon,  8 Sep 2025 22:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757368794; cv=none; b=QogpHh7wI42Rvp+4m6ur10VXaHm2XrCw7PuLfNnJ6j9bqh9FD3GzU4QzekKWFJbiP0E/ukUsMMWhJW8ugeIHiqrxUpcdD0hBgHiP639u8EcXrThBgRCBa963iO5dsfur7vho5f0mq4kj+rCRBZeXlNgO3Cm0oXv8oOMOuSPHRn0=
+	t=1757370960; cv=none; b=T86q+AniJUOtq7s0bTP4C2vQxboD7XPqUYr880diJzptFm6EUnOZodE4L3aHsqdXCYZCPvisR226y4EGbwKBIKc2zrLXUFcItVU+PaFXjaR3aVhnJlbnvXbUDzcd96kuBt3Iwx2KNqvsKFyOO4arT3CXw0qldlXwbb1YlxhkD7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757368794; c=relaxed/simple;
-	bh=pcF4XTkfaUSr501beAEhTtxZ4XbyrQgb5NrCV68riMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=avdKpwQi6tiLafEmpI6NT3aThXYyqo21T7Cx5MB65s49k//FWoK6pfJG+65UuO6ILHQJZi6HHCux52g0SMT2ZIMx7q6Zpa/lWCy0nxQOETyd+KPAnbBoDiIMUFWDhSS+Rs9Lnc6PMnxRTJVbKPRmfRp/iXqt0SRFC2+ijLzj0Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF7dlFDI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757370960; c=relaxed/simple;
+	bh=9JCQcoZ6SyxRiC8mfnatzWhX/1/ju52mg6bWSNkXm+s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mtHPrUl0P8Z1It66yX0qgL1tfz8mL9WrAta+RiSkP+PQI61o546UbHCMzO/1y4WVb8EIkEu9itvaMcsSUanZFAZBiv6WZKHaqQm4JmC5cQ8/jDUboWgU+42B/Wme7ygQmtqE+HC1BqaPrk2+rPdplm4rbftltIpQ29UaBPcjqFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EyRS6PlQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF7dlFDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAAE2C4CEF7;
-	Mon,  8 Sep 2025 21:59:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EyRS6PlQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE71C4CEF1;
+	Mon,  8 Sep 2025 22:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757368793;
-	bh=pcF4XTkfaUSr501beAEhTtxZ4XbyrQgb5NrCV68riMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LF7dlFDIec05cBgnVwxuxzoPA9lzwFIN7E4r1Czq8H/zWMtRppnYjb86LObWJMAla
-	 QIb5LV7exXDnBK6CkPoZZMNsxkZz+nTFuLmEsKfaJlTTel6NQz2S8RorNT4hcf94Kd
-	 PSMDOFekS3F1n/83o/BqNnZhsBBrKv3wyoG1M4bSFlJ5M4xG7Y8p7UtdJ2ZwR9zT8l
-	 Ni7CG3qNIa/bgSxUX5McQtF+hucb7jFTDeViD7qE23qHsu8jNG9jdTdkyhigkqQALS
-	 TpoaJNphMRb7u6Oo8zeQZCt6ApVotucTqmrrlwdwpPvsYXNEddAJDb2fCg0J8w6JfW
-	 rZLmq2Ftfk08A==
+	s=k20201202; t=1757370959;
+	bh=9JCQcoZ6SyxRiC8mfnatzWhX/1/ju52mg6bWSNkXm+s=;
+	h=From:Subject:Date:To:Cc:From;
+	b=EyRS6PlQ71J6iTIVu9UOrtjokNmOQYgWM6havGo3QP4nnuoDIB931W77CyU1eNEPi
+	 FQ0plhqAP0zG8wvzXrdMpioPjilxE4BlVb8jnUiATqb9vn0AwpbavvZI+uJFZ6vCQE
+	 LOpCqb+UHkzmm92rI89mduHaGZ97oF4v4eBptEAfAfV5UKtlqZL0TqR2hsrK8BaVFO
+	 AEDSfGCh15Uy+xSZajOMK1stTKVv8eSXlkdkxFejI6T6sWE5uccUJu108nV1yyQBKl
+	 b7snjQVLIWTTk7qgJiCUcB3bRCl8KT6T4YAsIrKYVhUyxPDMBsVkLavue4WGpe/4Q+
+	 5JXF4apvZTpmg==
 Received: by venus (Postfix, from userid 1000)
-	id B0FCA180B26; Mon, 08 Sep 2025 23:59:51 +0200 (CEST)
-Date: Mon, 8 Sep 2025 23:59:51 +0200
+	id 8F2E2180B21; Tue, 09 Sep 2025 00:35:57 +0200 (CEST)
 From: Sebastian Reichel <sre@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-Message-ID: <kshw3zf3rbpc4ytb6ofucannuv2uax6lz74q53qs73xcbxpl5z@qr6mgnj6olkm>
-References: <20250906-thinkpad-t14s-ec-v3-0-3ce6ec21ae89@collabora.com>
- <20250906-thinkpad-t14s-ec-v3-2-3ce6ec21ae89@collabora.com>
- <f16a858d-fb41-4cc9-a138-7bfe5ee2800f@oss.qualcomm.com>
+Subject: [PATCH v4 0/3] platform: arm64: thinkpad-t14s-ec: new driver
+Date: Tue, 09 Sep 2025 00:35:49 +0200
+Message-Id: <20250909-thinkpad-t14s-ec-v4-0-caf6159daaee@collabora.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="b42yzd7r3ovd6qno"
-Content-Disposition: inline
-In-Reply-To: <f16a858d-fb41-4cc9-a138-7bfe5ee2800f@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAEVav2gC/33NywrCMBCF4VcpWRvJpVdXvoe4mCQTG6xNSUpRS
+ t/dtBtFisv/wHwzk4jBYSSnbCYBJxed71Pkh4zoFvobUmdSE8FEwWrJ6di6/j6AoSPPI0VNjUE
+ lpFEGrCLpbAho3XMjL9fUrYujD6/tw8TX9Q82ccpoiawEVoFFZs/adx0oH+Co/YOs4CQ+SMOKH
+ UQkpDJQmIoB5ELuIfIbKXcQmRCpsUQtOGDd/CLLsrwBWpqZez4BAAA=
+X-Change-ID: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4850;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=9JCQcoZ6SyxRiC8mfnatzWhX/1/ju52mg6bWSNkXm+s=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBov1pMmNPzN2B534BYR3XqGAuq1dhnRHXfUDWVY
+ xLEPTE61eeJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaL9aTAAKCRDY7tfzyDv6
+ miD8D/9uo459C7AnYkinDRYbcXNaOsOYpensNXYlBvrVVUT3905+Ki+ejmkS7JiKGrTum+3kNWe
+ lwLGw4WaUhtmb/aFqOdrd6Uh0roctYqxkeKqCNpMk7ywW5R8aqtPqNjtzKk4FlIW1P5nzjZWkHo
+ 8SzSnhmca1l+aD6imZieHSrd/hPaEsu4lSW4yrvFttbfqQyd5/AO99ixk1AG5/nlhLQ5RGDM9Bx
+ 22oCEPVeBrsvWZEeAis43vfsyDNWrsKTFXIom0bEoV+EFsEGoOjb/xuLvjAXurp9ihIcn5xbX/1
+ yLtAT1J2CMsU+HW8wDupdTpyux2jyVA/Y17nLNE/44FsN34bO9vCvD4taDCTq1JzGj5N4hYxTio
+ yzUI1jWNWcvt4JZ3+oOksBIzlscHvpOhqWpgwqzZiJ9Pz7ZqkC57BebUfzZcc62tG4bvZW7aS+3
+ tCVrTRcd0X2OO7vzvCCkyyEnqMQsL/TbYq7N7txVgZR/HwRuXbnghIRuBCfGc6q0DdQhsWB+Fhb
+ FCNwz2ss1UoAsxehhjmy3QheH25Mq1SIL5tiPU+re868wlFe4bJF8q9W85w5C6cgcYW6iPKNynG
+ UnqBtXdLiQY8hSXsDPLtr/0l3GE/cgdNacsMKI80mg/9VMnLpT2N2F3xD/hUE1KRU3UIgKtfuTH
+ sb/KyimXN1fTRiA==
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
+Introduce driver for the ThinkPad T14s Gen6 Snapdragon EC. In theory
+it seems to be compatible with the ThinkPad ACPI driver, but these
+devices are booted with device tree. As the name implies, the existing
+ThinkPad ACPI driver only supports the ACPI interface. Looking at
+the implementation, the ACPI DSDT contains many mapping functions
+to translate the low level I2C messages into the interface used by
+the ThinkPad ACPI driver. Adding DT support to the ThinkPad ACPI driver
+would require adding all those translation functions, which would add
+more or less the same amount of code as writing a separate driver using
+the low level interface directly. I don't think it's sensible to make
+the existing ACPI driver even more complicated, so I went for a separate
+driver.
 
---b42yzd7r3ovd6qno
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/3] platform: arm64: thinkpad-t14s-ec: new driver
-MIME-Version: 1.0
+I managed to get system LEDs, audio LEDs, extra keys and the keyboard
+backlight control working. The EC also seems to be used for some thermal
+bits, which I haven't looked into deeply. As far as I understand most
+thermal and fan control is handled by a different controller
+(0x36@i2c5) anyways.
 
-Hi,
+Apart from that the EC is involved in proper system suspend, which
+is something I do not yet understand (I don't have any documentation
+apart from the dis-assembled DSDT and existing ACPI driver). Right
+now I disabled wake capabilities for the IRQ, since it would wake
+up the system when closing the LID. Hopefully a way to mask specific
+events will be found in the future.
 
-On Mon, Sep 08, 2025 at 09:28:12AM +0200, Konrad Dybcio wrote:
-> On 9/6/25 3:12 AM, Sebastian Reichel wrote:
-> > Introduce EC driver for the ThinkPad T14s Gen6 Snapdragon, which is in
-> > theory compatible with ThinkPad ACPI. On Linux the system is booted with
-> > device tree, which is not supported by the ThinkPad ACPI driver
-> > (drivers/platform/x86/lenovo/thinkpad_acpi.c). Also most of the hardware
-> > compatibility is handled via ACPI tables, which are obviously not used
-> > when booting via device tree. Thus adding DT compatibility to the
-> > existing driver is not worth it as there is almost no code sharing.
->=20
-> [...]
->=20
-> couple nits, feel free to ignore
+Changes in v4:
+- Link to v3: https://lore.kernel.org/r/20250906-thinkpad-t14s-ec-v3-0-3ce6ec21ae89@collabora.com
+- Add thermal zone event IDs and handle them with a custom dev_dbg() message
+- Use lower case letters in all hexadecimal numbers
+- Improve comment when userspace does not choose blink timings
+- Change logic to use == instead of != comparison for led cache check
 
-I will do a v4 adding events for thermal zone status update (just
-debug prints for now), as I noticed the unknown event id messages
-in my dmesg after doing a full kernel compile.
+Changes in v3:
+- Link to v2: https://lore.kernel.org/r/20250905-thinkpad-t14s-ec-v2-0-7da5d70aa423@collabora.com
+- Add <linux/container_of.h> include (Ilpo Järvinen)
+- Add <linux/dev_printk.h> include (Ilpo Järvinen)
+- Add <linux/interrupt.h> include (Ilpo Järvinen)
+- Align CMD defines (Ilpo Järvinen)
+- Rename thinkpad_t14s_led_set() to thinkpad_t14s_led_brightness_set() (Ilpo Järvinen)
+- Replace && with & in thinkpad_t14s_audio_led_get(); good catch! (Konrad Dybcio)
+- Use regmap_assign_bits in thinkpad_t14s_audio_led_set (Konrad Dybcio)
+- Directly return input_register_device() at the end of
+  thinkpad_t14s_input_probe (Konrad Dybcio)
+- Remove THINKPAD_ prefix (Konrad Dybcio)
+- Also use T14S_EC_ prefix for LEDs states (myself)
+- Collect Reviewed-by tags
 
-> > +#define T14S_EC_EVT_NONE			0x00
-> > +#define T14S_EC_EVT_KEY_FN_4			0x13
-> > +#define T14S_EC_EVT_KEY_FN_F7			0x16
-> > +#define T14S_EC_EVT_KEY_FN_SPACE		0x1F
-> > +#define T14S_EC_EVT_KEY_TP_DOUBLE_TAP		0x20
-> > +#define T14S_EC_EVT_AC_CONNECTED		0x26
-> > +#define T14S_EC_EVT_AC_DISCONNECTED		0x27
-> > +#define T14S_EC_EVT_KEY_POWER			0x28
-> > +#define T14S_EC_EVT_LID_OPEN			0x2A
-> > +#define T14S_EC_EVT_LID_CLOSED			0x2B
-> > +#define T14S_EC_EVT_KEY_FN_F12			0x62
-> > +#define T14S_EC_EVT_KEY_FN_TAB			0x63
-> > +#define T14S_EC_EVT_KEY_FN_F8			0x64
-> > +#define T14S_EC_EVT_KEY_FN_F10			0x65
-> > +#define T14S_EC_EVT_KEY_FN_F4			0x6A
-> > +#define T14S_EC_EVT_KEY_FN_D			0x6B
-> > +#define T14S_EC_EVT_KEY_FN_T			0x6C
-> > +#define T14S_EC_EVT_KEY_FN_H			0x6D
-> > +#define T14S_EC_EVT_KEY_FN_M			0x6E
-> > +#define T14S_EC_EVT_KEY_FN_L			0x6F
-> > +#define T14S_EC_EVT_KEY_FN_RIGHT_SHIFT		0x71
-> > +#define T14S_EC_EVT_KEY_FN_ESC			0x74
-> > +#define T14S_EC_EVT_KEY_FN_N			0x79
-> > +#define T14S_EC_EVT_KEY_FN_F11			0x7A
-> > +#define T14S_EC_EVT_KEY_FN_G			0x7E
->=20
-> Please use lowercase hex consistently across the file
->=20
-> [...]
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20250831-thinkpad-t14s-ec-v1-0-6e06a07afe0f@collabora.com
+- Apply Reviewed-by tags from Bryan O'Donoghue
+- Apply Tested-by tags from Neil Armstrong
+- Update DT binding description, location and examples (Krzysztof Kozlowski)
+- Add missing wakeup-source to DT binding (Rob Herring Bot)
+- Update DTS newlines, pinctrl order, nodename (Konrad Dybcio)
+- Updates to EC driver
+  - Add bits.h and bitfield.h include (Ilpo Järvinen)
+  - Drop mutex.h (myself, leftover from development)
+  - Drop DEBUG define (Ilpo Järvinen)
+  - Add THINKPAD_T14S_EC_BLINK_RATE_ON_OFF_MS (Bryan O'Donoghue, Ilpo Järvinen)
+  - Add THINKPAD_T14S_EC_KEY_EVT_OFFSET (Ilpo Järvinen)
+  - Add THINKPAD_T14S_EC_KEY_ENTRY (myself, to keep line length sane
+    after THINKPAD_T14S_EC_KEY_EVT_OFFSET)
+  - Align values of thinkpad_t14s_ec_led_status_t (Ilpo Järvinen)
+  - Use u8 instead of char for I2C command buffers (Ilpo Järvinen)
+  - Add some more newlines after goto/return (Bryan O'Donoghue)
+  - Use FIELD_PREP/FIELD_GET instead of _SHIFT (Ilpo Järvinen)
+  - Explicitly map to LED_ON/LED_OFF in audio_led_get (Ilpo Järvinen)
+  - Add missing , after .driver.of_match_table (Ilpo Järvinen)
+  - Change from KEY_MODE to KEY_PERFORMANCE (myself after seeing a patch
+    for HID lenovo being sent to the list)
 
-Changed in v4.
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+Sebastian Reichel (3):
+      dt-bindings: platform: Add Lenovo Thinkpad T14s EC
+      platform: arm64: thinkpad-t14s-ec: new driver
+      arm64: dts: qcom: x1e80100-t14s: add EC
 
-> > +enum thinkpad_t14s_ec_led_status_t {
-> > +	T14S_EC_LED_OFF =3D	0x00,
-> > +	T14S_EC_LED_ON =3D	0x80,
-> > +	T14S_EC_LED_BLINK =3D	0xc0,
->=20
-> These conveniently translate to: BIT(7) and BIT(6)|BIT(7), meaning
-> BIT(7) could mean "ON" and BIT(6) could mean "pulse" (can you pulse
-> a disabled LED? arcane secrets..)
+ .../lenovo,thinkpad-t14s-ec.yaml                   |  50 ++
+ MAINTAINERS                                        |   6 +
+ .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi    |  24 +
+ drivers/platform/arm64/Kconfig                     |  20 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c      | 619 +++++++++++++++++++++
+ 6 files changed, 720 insertions(+)
+---
+base-commit: 76eeb9b8de9880ca38696b2fb56ac45ac0a25c6c
+change-id: 20250831-thinkpad-t14s-ec-ddeb23dbdafb
 
-FIELD_PREP would also be an option, but I don't think this becomes
-more readable by using either and kept this as-is.
+Best regards,
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
-> [...]
->=20
-> > +	if (brightness =3D=3D LED_OFF)
-> > +		new_state =3D T14S_EC_LED_OFF;
-> > +	else if (led->cache !=3D T14S_EC_LED_BLINK)
->=20
-> =3D=3Ds are easier to logically follow than !=3D, but this is totally
-> potayto/potahto
->=20
-> [...]
-
-Changed in v4.
-
-> > +static int thinkpad_t14s_led_blink_set(struct led_classdev *led_cdev,
-> > +				       unsigned long *delay_on,
-> > +				       unsigned long *delay_off)
-> > +{
-> > +	struct thinkpad_t14s_ec_led_classdev *led =3D container_of(led_cdev,
-> > +			struct thinkpad_t14s_ec_led_classdev, led_classdev);
-> > +
-> > +	if (*delay_on =3D=3D 0 && *delay_off =3D=3D 0) {
-> > +		/* We can choose the blink rate */
->=20
-> "can't"?
-
-I will change this to:
-
-"Userspace does not provide a blink rate; we can choose it"
-
-> Needless to say, amazing work on piecing all this together,
-> Sebastian!
-
-Thanks. Btw. I tried the suspend logic from your X13s EC driver as
-the ACPI DSDT ECNT functions are exactly the same for X13s and T14s
-and you obviously got the logic from there. But I haven't noticed
-any difference and the PM handler is commented out in your driver.
-Thinkpads typically have a breathing animation on their power and
-LID leds when the machine is suspended. My expectation is, that the
-EC enables at least this animation when being programmed correctly.
-
-Greetings,
-
--- Sebastian
-
---b42yzd7r3ovd6qno
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmi/UdQACgkQ2O7X88g7
-+priXQ//UJN4u610JRMKybsrPycmlYGKHFJl87pyIrZfaQykkmH48LxrKrbP71qG
-T9e/NWDXuIiJc58+Lc9hrEx8OcFtR3Bg9xAI75ydiu4J46JjgRFQeAlLdhmz6e1W
-qSNgrbh7n3V4UL1nJk9FI1PM+8XZ5D+F7/Sje2Sh8hvm+PA0PCUIDHkMzuylYdPt
-F6HQv8M+RIDsKzDORP2TfDnOo4SL0i+prRGZ2lC6e4vidWPXXMfe5+zLmJrPbYHa
-gsH7zzIEa0zI5UG3VCvxb5DJLfUOybjIr4hSYZMdPhV6k2AsikQYa8l7CVcH0IDz
-EB0xwrNs36fYgW9WxerByOAQm9vcshV1otCYMBPtqrOtOD1bqEwyYKTW+Zrk0BRr
-PMvKHqSPXc662xnbjLa/nfxsuNWTv4dXVY3zWzW2YCB1E1rDWu755RDArdEPGvSd
-o3qN4BurUXc2fEqk2Soiz5MfIwRZTm2gLfmSH9gDLvlK9ZTU3UamS9KeOT3GXxxu
-RPXdsDpfojWigdzxZmMwL/wu2vY95jeYtlLaFKslPdggkLLAgK7phcF6O9MmlDH4
-cO6HTc4ukH9f/MvpvjNxwpuHPQ14JEW5Nn+0agsJpulqBhv0hTMhQT5Iex10AuYd
-ElZf4Pkq/XnseDDmZkao9sNVydIJhOXr+IVcFFVbT9EqKM+ryZs=
-=xR/1
------END PGP SIGNATURE-----
-
---b42yzd7r3ovd6qno--
