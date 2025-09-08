@@ -1,92 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BD4224B06;
-	Mon,  8 Sep 2025 10:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DF52139C9;
+	Mon,  8 Sep 2025 10:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757326813; cv=none; b=XNtkH5HmGn/I+tc73kzk6IOnly9eIrMP7d8zQjm0RjD/aosKQaPIBik1DqUKqvOwJPRNHELAGaExeglq+BjVbX6woUlH1AYC4vTtAjLccPrQi+CUnpAILezyZM6a/JOFThkkh/vKTivPStl4lDxjdGoReJs/e8m4uHUkEtTOFbs=
+	t=1757327850; cv=none; b=CDtOkfhD/R4NG8ZiE/slb+b9j4wIP5z4cAZT4xsRQVvMhvffk2F1ZcCrKr1RHMxwa6WKF9ibNp6Odx3qJ7j1m/dwyQMiIP5bP0/d16AOHLkz0dGZ6nJBsS/dmxco48s1GwLbeDKAazKzXSlv+C5B7Lh/6iifq5vnYjBvureyleM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757326813; c=relaxed/simple;
-	bh=OweT5wP6hwTBU1Yru5QcAgQX5SgoKUGndphwz5l61As=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RboyR0aH03cU2Sdu3616Rmbdq9X5zHH4Bo/dWVoPNGO81I2B6W0hlHr4WHdwRMlxzMPLeQoA2BjdrhkWsj0EE44FSxKTSyT1EuCCQ5k3Ok6rewB9kWU697P/GrZLiRZXWiLbvbxx+v1YzMTvHw1NiH4TeWc6oyGkG5phgiYoeB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c1y9Mv/B; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1757327850; c=relaxed/simple;
+	bh=PdqRhfEIId3G/UjxVjpB4/kkLUvCR3+Q6zKK5U2Rspg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=URCTPFHjVS1f7+2/5EvgDawZhAlCtUqmhbrqUgUt+JTe9fU6LdlUNbGVE/Xke6IyawYt8Z/z2wcFoaRlvYbNLxYBxW9XuMPzkink39P8QWOXqgsVqmyyC3LWwjOKyBOSlabXh5BydpupPAwNQS2vOBkyyXUTdFdThcT0c3Jq0mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzV7w4Fe; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c1y9Mv/B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzV7w4Fe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757326811; x=1788862811;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=OweT5wP6hwTBU1Yru5QcAgQX5SgoKUGndphwz5l61As=;
-  b=c1y9Mv/BEyo2FD5bBgrMNrdG53IsZMlfPfHB2BHtwjjf1DnESFOcd4hz
-   9dBQus+V46a2QStSb0AtmVwHJ0ueBMAeIErg/saoviS6+uNwv/uJV1uaJ
-   DxyJZVbjob06wbgY40m5+2L3+dzNuVvF/IctA8wbO6K4f8lch+I1WkQFC
-   oWF8SW+cGSzp6skfBXt3Dg99GV/TdRk82o77NslEstd9NNqOimnmi7wBq
-   NiYLdFifRgto6WuQlBERd+4Xz4FwZBV+hSrjDoz9lWb7n9+v35LG8iQ9b
-   zP38nytgpjnuuKzwNpaGoNXSSYvhKM14ueFKtm1Y0rNgQq1mqaa9LcdFb
-   Q==;
-X-CSE-ConnectionGUID: ank5ncz2TryGkARgYcYXmA==
-X-CSE-MsgGUID: Owq3SJelR5W3ip2I0z4IAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11546"; a="69832681"
+  t=1757327849; x=1788863849;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PdqRhfEIId3G/UjxVjpB4/kkLUvCR3+Q6zKK5U2Rspg=;
+  b=DzV7w4Fe58lZZBLnqaKYdGsDdLtvl7z+3eXHo62xXqxWWmMR68e8FH/I
+   aXu5Q0bQbaSMp7WXGbt+2YIWQMUKnOnoc6Ykq0+rpLcLaM5pVED4g7CF6
+   IFigO5AV2fEQtPPa9qp+em6mJnZK4BEl3tFJIdyf3Yucg4LZcbtQPbqkS
+   bxyaoeel4vfzR7PF++zm9M19UNt0p/Of0CPmryEVACwu7GUSpXPhFNh6K
+   v7O0DPzZK1/T54IhhREzj3vH/Z04d1pc8hPTqm696T/64ctotxTkBtPO3
+   8PqSDHI0Q9Zad64oOAwoolC3/XlDZkEWzVMceeKNLx9HtvuCjouVmhgd3
+   w==;
+X-CSE-ConnectionGUID: fbhUFVKCTiybPWOb0Z5lyw==
+X-CSE-MsgGUID: I+pYNLrTTmeWXZqV09PSiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11546"; a="70284100"
 X-IronPort-AV: E=Sophos;i="6.18,248,1751266800"; 
-   d="scan'208";a="69832681"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 03:20:10 -0700
-X-CSE-ConnectionGUID: TvKimishStGvUfij36qUJw==
-X-CSE-MsgGUID: yaJaZeayQuiCzqChB87Iuw==
+   d="scan'208";a="70284100"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 03:37:27 -0700
+X-CSE-ConnectionGUID: Gmr9I4MrS1WXVyjef4Fwww==
+X-CSE-MsgGUID: /7QXt5PUSze1Rm/WWC4sVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,248,1751266800"; 
-   d="scan'208";a="172874946"
+   d="scan'208";a="172681489"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.11])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 03:20:09 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 03:37:25 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <530b930c981c436c172c0308b348d4ae4ef72800.1757251867.git.christophe.jaillet@wanadoo.fr>
-References: <530b930c981c436c172c0308b348d4ae4ef72800.1757251867.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH] platform/x86: quickstart: Use devm_mutex_init()
-Message-Id: <175732680243.1850.14932546889344278549.b4-ty@linux.intel.com>
-Date: Mon, 08 Sep 2025 13:20:02 +0300
+Date: Mon, 8 Sep 2025 13:37:22 +0300 (EEST)
+To: Daniel <dany97@live.ca>
+cc: LKML <linux-kernel@vger.kernel.org>, matan@svgalib.org, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: lg-laptop: Fix WMAB call in
+ fan_mode_store
+In-Reply-To: <MN2PR06MB55980FFA32BF5DABCE34333EDC0DA@MN2PR06MB5598.namprd06.prod.outlook.com>
+Message-ID: <45f04f10-a003-fc42-2551-a2e180358ca8@linux.intel.com>
+References: <d2e91809-8872-7a3f-743f-b4091e8196d2@linux.intel.com> <MN2PR06MB55980FFA32BF5DABCE34333EDC0DA@MN2PR06MB5598.namprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Sun, 07 Sep 2025 15:32:26 +0200, Christophe JAILLET wrote:
+On Sat, 6 Sep 2025, Daniel wrote:
 
-> Use devm_mutex_init() instead of hand-writing it.
+> > Is it okay to remove preserving the other bits?
 > 
-> This saves some LoC, improves readability and saves some space in the
-> generated .o file.
+> The WMAB call reads only the lower nibble or the upper nibble from the
+> lowest byte.  Similarly when the fan status is read from WMAB, something
+> of the form ((x << 4) | x) is always returned.
+
+So the upper portion of the mask in the old code was overkill? Please note 
+that down into the changelog so it's recorded into the git history. This 
+avoids somebody having to wonder why a seemingly unrelated change like 
+that was made if somebody looks at this commit after a few years from the 
+git history.
+
+> > Please name these field with defined GENMASK() and then use FIELD_PREP()
+> > here for both fields.
 > 
-> Before:
-> ======
->    text	   data	    bss	    dec	    hex	filename
->    7607	   2616	     64	  10287	   282f	drivers/platform/x86/quickstart.o
-> 
-> [...]
+> I don't see why something like that should be necessary, seems overkill,
+> but if you insist then I'll do it.
 
+Yes, I insist. When we touch older code, the expectation is to use modern 
+style and helpers. In here, naming the fields will improve readability 
+and document the fields more explicitly.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+> I'll try to send another patch sometime soon, I've been very busy.
 
-The list of commits applied:
-[1/1] platform/x86: quickstart: Use devm_mutex_init()
-      commit: c4f8b11bacd562f38c85f4f81a0a4426b267df70
+Don't worry, there's time. :-)
 
---
+-- 
  i.
 
