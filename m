@@ -1,353 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6734E2FABE0;
-	Mon,  8 Sep 2025 11:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA02319E83C;
+	Mon,  8 Sep 2025 12:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757329434; cv=none; b=aYmVHY9LX5R6BIUa2zoeXpxL6SdtuS/03MCpWnOlaxCG0BnCrPZFvECi7yDo+w6MqpcYnWtAn3d0wa4E0XnUunljpdcCtUzUUNT4GYXEtz+ADMD/iK6ScxoHpOihKufG5rdP5ozJUC8yBqm0PqLq4SZe2yxiyOfh3mtHCEpt7gA=
+	t=1757335726; cv=none; b=eN1y6xvu+K38dHJsGC7TFmwaWCDVZB5er9Y2ZZfk5S+3kyRWLyVzjGs8Xo8gvTPc4oLHxwgYp4pGVOxYMQX+7/8FIZYwhel+dzgSGqg8En8sCeqZpPiNdMBtxCUSKA6oqSbdL9ppKPE2+sP8g8TxcMm9VukY7cYV5WPF9IKsoDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757329434; c=relaxed/simple;
-	bh=nnDO52lb3fZnH4BbFRvfPh9V5QmWlluTdmnAisy1PlU=;
+	s=arc-20240116; t=1757335726; c=relaxed/simple;
+	bh=l9OVqk8HYCSdxP7Ig8AbEPR9sLrHUEKh7OgJJGlVtqk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=h2FztI7BXmmVG4QcPXOFoKybkC20NRW0Fd46foUaqc1Cm8u1tApVLv5goO8Gnw2JikojNI7DDotqd4G5/jYyyg6u6o/diAVDwnBVVk8MA8DOy9HxYR8Gi3AEyVfVEigmJfJWvm00n85LgFuDbOD61+Kl3o68wwrEBSDzXaukAtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tq/BLgxF; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=T3cHmQcfZt3aTvxkPhJawg3XHaSQfKOYbMR+IbgYv5pRw9Dc901mXhpdu2yDvqT8NmaslAI0L9ulAnc8TQkaiS80AXXhgwKSQ7/Nn6A0ia45T3Rmy+st8W+zvXtVO9l5q1U72/nwGh/K2+NcsWnQa1oX2OheOBz6z/+C/rmavl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UP4LvblI; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tq/BLgxF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UP4LvblI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757329433; x=1788865433;
+  t=1757335725; x=1788871725;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=nnDO52lb3fZnH4BbFRvfPh9V5QmWlluTdmnAisy1PlU=;
-  b=Tq/BLgxFh+c157SbAwTlpxUyD/0iGHCgSbBOrjDLdiMCDInXv4ubpbep
-   DeTKdw7kUM5cmxJ7nkfVDCvUP6eNI/QYOQhEGl26fMYbBIUYEnBLYWMWL
-   smDg3vylbPc6YqKpVaHh7SQJNKZlDSaSwq6wLNfmEnYUgsHUcbkAmOWPa
-   K/SXxKDrv+srITq6SZE95hK4XoaDsr+SD3AFFaVsZB0OIRuhVI2eL46WJ
-   J1yEyU2r44bIRbNhlORS76lzfb1uICYr64inZlOAdkN/N7rVwvWAGEVYE
-   XkDc4925hTDyggavCvtx/OR4gDigr1CmLAKs9XHosVZXFlVgPvzCE2pxW
-   w==;
-X-CSE-ConnectionGUID: tfOclQoTQr+wf/cxMtm+lg==
-X-CSE-MsgGUID: f+N67MXvSfuZc/z2zKeR9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11546"; a="63222574"
+   references:mime-version;
+  bh=l9OVqk8HYCSdxP7Ig8AbEPR9sLrHUEKh7OgJJGlVtqk=;
+  b=UP4LvblI0PTRtfyQMXtbrpTXu85TbkXbbazuUukL3OznecR4LAEJdyhG
+   pwsAWWNo82SjQh55+QRB/txuLfl3iIWsrVznb9ozQ3Dat8jWIkWzK0UOe
+   RWCDT+Qtln20J2RgokoL7FdE1JOrwDK14cio/dFuQuYR5LPtSBnvCZB5C
+   lkevtmmGilynyyjVszAwtNMr5PoQDYakO0S3Dciv2cMLdGbpeIFoEeCbZ
+   iN9VZlBA6bTMaZc8keRpFGHHYnOl7M6yeGeInKCGhp7oaqolSih7Vrp9V
+   0PiYs9crTR2JXRbB6ckYM6CzV7LNwOmY5JLU5I+WYH0bJFDCHtVj4DASp
+   A==;
+X-CSE-ConnectionGUID: yIMIqgIWTJO3amTlBpPAsA==
+X-CSE-MsgGUID: W0xUiwAfSwaGSSxR/0d+yQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11547"; a="58802949"
 X-IronPort-AV: E=Sophos;i="6.18,248,1751266800"; 
-   d="scan'208";a="63222574"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 04:03:52 -0700
-X-CSE-ConnectionGUID: vS4iXOewTwKYh/36n4l1Tw==
-X-CSE-MsgGUID: mT7o05c6SvC10/MUHnrVdw==
+   d="scan'208";a="58802949"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 05:48:44 -0700
+X-CSE-ConnectionGUID: U8UIiLaNRLegZav0CF2MSA==
+X-CSE-MsgGUID: cvmWh0axR8+1qhbZWE7gaw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,248,1751266800"; 
-   d="scan'208";a="176817028"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.11])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 04:03:49 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2025 05:48:41 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Sep 2025 14:03:45 +0300 (EEST)
-To: Xi Pardee <xi.pardee@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] platform/x86:intel/pmc: Show device and function
- number
-In-Reply-To: <7fae6fc8-6df5-4d1f-90ec-b6bf159e62da@linux.intel.com>
-Message-ID: <ed041865-c5aa-1312-e401-8cf333ac0820@linux.intel.com>
-References: <20250815224611.2460255-1-xi.pardee@linux.intel.com> <20250815224611.2460255-6-xi.pardee@linux.intel.com> <c9aa04ae-f942-cf73-d046-78d0f90f373d@linux.intel.com> <7fae6fc8-6df5-4d1f-90ec-b6bf159e62da@linux.intel.com>
+Date: Mon, 8 Sep 2025 15:48:37 +0300 (EEST)
+To: Hans de Goede <hansg@kernel.org>
+cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
+    Peter Korsgaard <peter.korsgaard@barco.com>, 
+    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+    Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
+ gpio-leds/keys
+In-Reply-To: <ae657b82-acd3-4a1f-ba21-3ce394531819@kernel.org>
+Message-ID: <ceb10a43-424f-45e8-68b5-d506573a63e3@linux.intel.com>
+References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr> <aJnlnx2qF6P61jJN@smile.fi.intel.com> <7c2d08e3-d1e2-433e-b726-307246ab17e9@kernel.org> <aJoQE2CQv3nzaSqc@smile.fi.intel.com> <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+ <c60ccef1-7213-4dd7-8c10-e8ef03675bd8@kernel.org> <4151a14f-8427-41a9-84cf-e901080d0eb1@kernel.org> <7bylxufp3r5qzf5axqrtytamkveaw5dpsidmdyiany4wkexbpd@s4yremtvct4a> <ae657b82-acd3-4a1f-ba21-3ce394531819@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1559071104-1757328370=:938"
-Content-ID: <45d0b3af-16cb-d41d-b9d8-351e9de031af@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 12 Aug 2025, Hans de Goede wrote:
 
---8323328-1559071104-1757328370=:938
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <c4323cb8-65e8-c085-f405-05909754bedc@linux.intel.com>
+> Hi,
+> 
+> On 11-Aug-25 7:59 PM, Dmitry Torokhov wrote:
+> > On Mon, Aug 11, 2025 at 07:44:01PM +0200, Hans de Goede wrote:
+> >> On 11-Aug-25 7:40 PM, Hans de Goede wrote:
+> >>> Hi,
+> >>>
+> >>> On 11-Aug-25 5:49 PM, Dmitry Torokhov wrote:
+> >>>> On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
+> >>>>> On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
+> >>>>>> On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
+> >>>>>>> On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
+> >>>>>
+> >>>>> ...
+> >>>>>
+> >>>>>>> Otherwise LGTM as here it looks like we establish platform device ourselves and
+> >>>>>>> hence no need some additional magic Hans mentioned in the other series.
+> >>>>>>
+> >>>>>> Not entirely like with the x86-android-tablets patches this
+> >>>>>> declares a software-node for the gpiochip:
+> >>>>>>
+> >>>>>> static const struct software_node gpiochip_node = {
+> >>>>>> 	.name = DRIVER_NAME,
+> >>>>>> };
+> >>>>>>
+> >>>>>> and registers that node, but nowhere does it actually
+> >>>>>> get assigned to the gpiochip.
+> >>>>>>
+> >>>>>> This is going to need a line like this added to probe():
+> >>>>>>
+> >>>>>> 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
+> >>>>>>
+> >>>>>> note the software_node_fwnode() call MUST be made after
+> >>>>>> registering the software-nodes (group).
+> >>>>>>
+> >>>>>> Other then needing this single line things are indeed
+> >>>>>> much easier when the code containing the software
+> >>>>>> properties / nodes is the same code as which is
+> >>>>>> registering the gpiochip.
+> >>>>>
+> >>>>> Ah, good point!
+> >>>>
+> >>>> This is wrong though, the software node need not be attached to the
+> >>>> gpiochip (and I wonder if it is even safe to do so). It simply provides
+> >>>> a name by which gpiochip is looked up in swnode_get_gpio_device().
+> >>>
+> >>> Ah interesting. This is very different from how fwnodes generally
+> >>> work though. Generally speaking when a PROPERTY_ENTRY_REF() is used
+> >>> like PROPERTY_ENTRY_GPIO() does then the lookup is done by matching
+> >>> the reference to the fwnode of the type of device to which the
+> >>> reference points.
+> >>>
+> >>> IOW the standard way how this works for most other subsystems
+> >>> is that gpiolib-swnode.c: swnode_get_gpio_device() would call
+> >>> gpio_device_find() with a compare function which uses
+> >>> device_match_fwnode().
+> >>>
+> >>> I see that instead it uses the swnode name and passes that to
+> >>> gpio_device_find_by_label().
+> >>>
+> >>> I must say that AFAIK this is not how swnodes are supposed to
+> >>> be used the swnode name field is supposed to only be there
+> >>> for debugging use and may normally be left empty all together.
+> > 
+> > Hmm, given that I wrote both the references support for software nodes
+> > and gpiolib-swnode.c they work exactly as I wanted them ;) Yes, in
+> > general name is optional, but for GPIOs it is needed.
+> > 
+> >>>
+> >>> I guess using the swnode-name + gpio_device_find_by_label()
+> >>> works but it goes against the design of how fw-nodes
+> >>> and especially fwnode-references are supposed to be used...
+> >>>
+> >>> Having a fwnode reference pointing to what is in essence
+> >>> a dangling (not attached to any device) fwnode is weird.
+> > 
+> > I agree it is a bit weird, but this allows to disconnect the board file
+> > from the GPIO driver and makes it easier to convert to device tree down
+> > the road as it can be done in a piecemeal fashion. If you want fwnode
+> > actually attached to the gpiochip then:
+> > 
+> > 1. You can't really have static/const initializers in most of the cases
+> > 2. Fishing it out from an unrelated subsystem is much harder than
+> > matching on a name.
+> 
+> Ok lets keep using the current swnode.name based approach then.
+> 
+> That certainly makes things easier for the x86-android-tablets
+> code.
 
-On Sun, 7 Sep 2025, Xi Pardee wrote:
+Hi all,
 
-> Hi Ilpo,
->=20
-> Thanks for the review.
->=20
-> On 8/28/2025 6:56 AM, Ilpo J=E4rvinen wrote:
-> > On Fri, 15 Aug 2025, Xi Pardee wrote:
-> >=20
-> > > Add support to show device and function number for S0ix blockers. Thi=
-s
-> > > feature depends on S0ix blocker substate requirement table and BDF
-> > > association table. This feature is available for platforms starting f=
-rom
-> > > Pather Lake.
-> > >=20
-> > > Only a subset of S0ix blockers has device and function number associa=
-ted
-> > > to it. Get the availability information from the substate requirement
-> > > table. Get the device and function number mapping information for eac=
-h
-> > > S0ix blocker from the BDF association table.
-> > >=20
-> > > Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
-> > > ---
-> > >   drivers/platform/x86/intel/pmc/core.c | 182 +++++++++++++++++++++++=
-++-
-> > >   drivers/platform/x86/intel/pmc/core.h |  23 +++-
-> > >   2 files changed, 203 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/intel/pmc/core.c
-> > > b/drivers/platform/x86/intel/pmc/core.c
-> > > index a0b948a875a5a..69ee40cbb8b8a 100644
-> > > --- a/drivers/platform/x86/intel/pmc/core.c
-> > > +++ b/drivers/platform/x86/intel/pmc/core.c
+I'm left uncertain if there are any remaining concerns with all these gpio 
+conversion patches (the 3 independent ones and the larger 
+x86-android-tablets series)? While I see there were a few back and forth
+items between you three, it sounded like there's nothing left to do and it 
+was all just based on wrong impressions/understanding, is that correct 
+deduction from my part?
 
+There was also an almost promise from Hans to test the x86-android-tablets 
+series, is that still on plan/pending?
 
-> > > +=09=09const char *name =3D NULL;
-> > > +=09=09struct list_head *cur;
-> > > +=09=09struct bdf_entry *bdf;
-> > > +=09=09struct pmc *pmc;
-> > > +
-> > > +=09=09pmc =3D pmcdev->pmcs[pmcidx];
-> > > +=09=09if (!pmc)
-> > > +=09=09=09continue;
-> > > +
-> > > +=09=09list_for_each(cur, pmc->bdf_list) {
-> > > +=09=09=09bdf =3D list_entry(cur, struct bdf_entry, node);
-> > > +=09=09=09if (bdf->name !=3D name) {
-> > > +=09=09=09=09seq_printf(s, "pmc%d: %30s | %15x | %15x |\n",
-> > > pmcidx,
-> > %u
-> Will change it in next version.
-
-I don't remember if I mentioned it earlier but if you're going to address=
-=20
-the review comment fully. There's no need to "ack" them like this. I=20
-trust you make the changes you don't contest.
-
-By doing so, we can both save time by only focusing on the points which=20
-are contested or need further discussion. :-)
-
-
-> > > +=09if (!maps[*r_idx][*i_idx].name)
-> > > +=09=09(*r_idx)++;
-> > > +
-> > > +=09// Iteration reaches the end of the maps
-> > > +=09if (*r_idx >=3D arr_size)
-> > > +=09=09return NULL;
-> > > +
-> > > +=09for (; *r_idx < arr_size; (*r_idx)++) {
-> > > +=09=09const char *ip_name;
-> > Can't you put this to the innermost block?
-> Will move it in next version.
-> >=20
-> > > +=09=09if (reset)
-> > Why you need this?
->=20
-> The purpose of this function is to return the name of the NEXT s0ix block=
-er
-> with BDF information.
->=20
-> r_idx and i_idx are used to keep track of the current position of the
-> iteration, therefore i_idx could not be reset to 0 at the first run of th=
-e
-> inner for loop. After the first run of inner for loop reset should be set=
- to
-> true so in next run of the outer for loop i_idx could be reset to 0 (whic=
-h
-> mean the iteration reaches the next s0ix blocker map).
-
-But why you cannot reset i_idx after the inner for () loop and drop=20
-this reset variable entirely?
-
-> > > +=09=09=09*i_idx =3D 0;
-> > > +
-> > > +=09=09for (; maps[*r_idx][*i_idx].name; reset =3D TRUE, (*i_idx)++) =
-{
-> > true
-> >=20
-> > This is hard enough to understand even without that "for (;". Would
-> > probably be better to use while () instead.
-> Will change to while loop in next version.
-> > > +=09=09=09if (!maps[*r_idx][*i_idx].blk)
-> > > +=09=09=09=09continue;
-> > > +
-> > > +=09=09=09bool exist =3D **lpm_req_regs & BIT(BDF_EXIST_BIT);
-> > > +=09=09=09(*lpm_req_regs)++;
-> > > +=09=09=09if (exist) {
-> > > +=09=09=09=09ip_name =3D maps[*r_idx][*i_idx].name;
-> > > +=09=09=09=09(*i_idx)++;
-> > > +=09=09=09=09return ip_name;
-> > > +=09=09=09}
-> > > +=09=09}
-> > > +=09}
-> > > +=09return NULL;
-> > > +}
-> > TBH, this entire function is horrible mess, two nested iterators as
-> > pointers, etc.
-> >=20
-> > I'm very far from following all what going on here.
-> >=20
-> > I suppose I've not seen this patch previously?
->=20
-> To achieve the NEXT name of the s0ix blocker with BDF information we need=
- to
-> iterate through two (set of) maps in parallel. The s0ix_blocker_maps prov=
-ide
-> names of all s0ix blockers and the lpm_req_regs map shows that which s0ix
-> blocker has associated BDF information.
->=20
-> if maps[*r_idx][*i_idx].blk is set, that means it is a s0ix blocker. For =
-each
-> s0ix blocker, if **lpm_req_regs & BIT(BDF_EXIST_BIT) is set, that means t=
-his
-> blocker has associated BDF information. Pointers are used to keep track o=
-f the
-> current position of the two (set of) maps so the function provides the NE=
-XT
-> name of the s0ix blocker with associated BDF info.
->=20
-> I will probably switch to use a temporary data structure, such as list, t=
-o
-> store all s0ix blockers with BDF info and then iterate through this list =
-in
-> pmc_core_process_bdf() call instead. That will make the logic easier to f=
-ollow
-> and maintain. I will also add more comments to next version of this patch=
-=2E
-
-My out-of-band suggestion was to convert i_idx into a correctly typed=20
-pointer  as it's the last-level array, you only need to do two things for=
-=20
-the pointer:
-
-- set it to start of the next array when r_idx increases.
-- increment the pointer with ++.
-
-> > > +static int pmc_core_process_bdf(struct pmc_dev *pmcdev,  struct pmc =
-*pmc,
-> > > u32 data,
-> > > +=09=09=09=09unsigned int *r_idx, unsigned int *i_idx, u32
-> > > **lpm_req_regs,
-> > > +=09=09=09=09const char **name)
-> > > +{
-> > > +=09unsigned int i;
-> > > +
-> > > +=09if (!data)
-> > > +=09=09return 0;
-> > > +
-> > > +=09if (!*name)
-> > > +=09=09return -EINVAL;
-> > > +
-> > > +=09for (i =3D BDF_FUN_LOW_BIT; i <=3D BDF_FUN_HIGH_BIT; i++) {
-> > I think you can iterate 0 ... __fls(FIELD_MAX()).
->=20
-> Each 16 bit represents one device and the associated function numbers for=
- one
-> s0ix blocker.
->=20
-> Bit 4-0 indicates the device number.
->=20
-> Bit 12-5 indicates function numbers.
->=20
-> Bit 15 indicates if the next 16 bit is associated to the same s0ix blocke=
-r as
-> the current word.
->
-> Between bit 12 and bit 5, each bit position represents one function numbe=
-r.
-> Bit 5 represents function 0 and bit 12 represents function 7. I will add =
-more
-> comments in the next version.
->=20
-> Will change to use __fls(FIELD_MAX()) in next version.
-
-Yes, these are fields which are to be defined with GENMASK()/BIT(). Then=20
-this code just has to figure out how to deal with that change and my=20
-suggestion was to use fls construct. If you find better approach, those=20
-can be used as well but my point is that this iteration should be sourced=
-=20
-from the GENMASK_U16(12, 5).
-
-> > > +=09name =3D pmc_core_get_next_bdf_ip_name(pmc, &r_idx, &i_idx,
-> > > &lpm_reg_regs);
-> > > +=09if (!name)
-> > > +=09=09return -EINVAL;
-> > > +
-> > > +=09pmc->bdf_list =3D devm_kzalloc(&pmcdev->pdev->dev, sizeof(struct
-> > > list_head), GFP_KERNEL);
-> > Should use sizeof(*xx).
-> >=20
-> > But why you need to allocate the list head and not have it in place
-> > within the pmc's struct?
->=20
-> The memory for bdf_list is only allocated when the bdf information is
-> available to achieve.
->
-> intel_pmc_core driver can check if the memory is allocated to decide whet=
-her
-> to create a file in debugfs for bdf in pmc_core_dbgfs_register().
-
-But can't you use empty list check for that?
-
-> > > +=09if (!pmc->bdf_list)
-> > > +=09=09return -ENOMEM;
-> > > +
-> > > +=09INIT_LIST_HEAD(pmc->bdf_list);
-
-> > > +
-> > > +=09for (; sample_id < max_sample_id; sample_id++) {
-> > > +=09=09u32 data;
-> > > +
-> > > +=09=09ret =3D pmt_telem_read32(ep, sample_id, &data, 1);
-> > > +=09=09if (ret) {
-> > > +=09=09=09dev_err(&pmcdev->pdev->dev,
-> > > +=09=09=09=09"couldn't read bdf: %d\n", ret);
-> > One line.
-> Will change it in next version.
-> >=20
-> > > +=09=09=09return ret;
-> > > +=09=09}
-> > > +
-> > > +=09=09if (sample_id =3D=3D header_id) {
-> > > +=09=09=09size =3D (data & GENMASK(BDF_SIZE_HIGH_BIT,
-> > > BDF_SIZE_LOW_BIT))
-> > > +=09=09=09       >> BDF_SIZE_LOW_BIT;
-> > Define the field and use FIELD_GET().
-> Will change it in next version.
-> >=20
-> > > +=09=09=09header_id +=3D size + 1;
-> > No, I just cannot understand what's going on here, it's hopeless. Alway=
-s
-> > when I think I've finally understood what its all about you throw a cur=
-ve
-> > ball like this.
->=20
-> There is one header line (32 bit) between each type of s0ix blocker in th=
-e bdf
-> association table. The bit 23-26 in header line indicates the size of eac=
-h
-> section of one specific type of s0ix blocker in this table.
->=20
-> header_id is used=A0 to keep track of the id of each header so we will pr=
-ocess
-> the header line differently from the other lines.
->=20
-> I will add more detailed comment in next version.
-
-I suspect naming the fields with defines and using FIELD_GET() will=20
-already get you far.
-
-Perhaps BDF_SIZE (=3Dwhat remains when you take those custom coded bit fiel=
-d=20
-postfix out of the current naming) should be renamed into something like=20
-BDF_SECTION_SIZE for better clarity.
-
---=20
+-- 
  i.
---8323328-1559071104-1757328370=:938--
+
