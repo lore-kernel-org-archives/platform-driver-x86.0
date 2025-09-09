@@ -1,83 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CA9350830;
-	Tue,  9 Sep 2025 14:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD68B350D69;
+	Tue,  9 Sep 2025 17:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757429312; cv=none; b=mU5ebUTedYYzqY5XX1+yNZhmZlLkTAxjnrGc567kkTzIMLqsWVW1tXNOoxkIkBuHvR+KVyDkGGhx/TK7l4XxMXZ939MEcnND2r01VuQMf0QenH99Cpi2NAIuOZbxpaEh97DpjUH316hsVN0KA5+q9UQEgxn74fI+zBwhJb7n45I=
+	t=1757438916; cv=none; b=N/whpmkgi/UfXnTGlZSzYKTBI1zGtkRwaOmjdvsuPNzywtIeuutIv2jOfj2/W8bJtELXeTV81Q/c4W0WDqUUfDooRzU1f0rs+kB1sliSNWkIEBZrpUttxdWlfuzW4aT3tkU04cs9qBo6gC/sUcAJ/V+OxMIqReARWt0+NKR+VVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757429312; c=relaxed/simple;
-	bh=8YgkUz49Kg03aMh6xKCDGPD/kwT6eIsnyki1Ba/c6Kg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G1coyjfwiXNRzO2Wx4KWngUztPg+rDQJeO00IwqVAQWj+4B8XlS3NVGvCsxVla3vRJ+CYyP7yMX1Z1h39MXw0vyCuBKgTrSvS02A19Io3b9SpRL5IjhaMuhvdLXdXD2u1HiRruIQT3lBr76v8mPvL65nQbEmhUAqT3MDMpYCuZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6fl8IW6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757438916; c=relaxed/simple;
+	bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AmL7395+74rJeT4ke912EGHFauiLAQDsMOatbCnFj/NEIWqFS0qndQtyt4HdTvcOUz+DIba6A8R+kw5BxnO3rlt4dZA+EmxidWMAhUyoxE15p1ZkddfmTNVvVOKhT/v25u6Sf94LJkcI6Sigl/PHlVyp/+v7QHiG7BfMjT4XNaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZ+8ZOl1; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6fl8IW6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE26C4CEFB;
-	Tue,  9 Sep 2025 14:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757429312;
-	bh=8YgkUz49Kg03aMh6xKCDGPD/kwT6eIsnyki1Ba/c6Kg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r6fl8IW6HczvSMGyYFQt04OiMC94+9/KN0ZfxyiWbgOIJb8g25KcvzBEwaxFdSkO0
-	 JHnfJ5Ay6yfjHBkxLefHDetfnRTBAvnnhfU5tEbX1vEDgMQYNr/SFzYwNpEzxEWbgF
-	 D1Vr4hutDrengKxhPiU5Ki9VXpFjDCqVFp3usKCq2qBecgu3B6q2c/8j+kpaRF8SfZ
-	 oUpVFlt/vPPHIg7FUFXeamN3TsB4eSZUbz7j/kwsqYKmDgyzUZ+shoPldZxAalqade
-	 Npxr0ElKipY3Zif+ntfd9S/WJZXX1eK4YhCbPwQ6Du9Uu9f7opl1EqpMg7CvPG8SXK
-	 qJYa4vBwC3N9w==
-From: Hans de Goede <hansg@kernel.org>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Aleksandrs Vinarskis <alex@vinarskis.com>,
-	platform-driver-x86@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: int3472: Use "privacy" as con_id for the LED lookup
-Date: Tue,  9 Sep 2025 16:48:23 +0200
-Message-ID: <20250909144823.27540-3-hansg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250909144823.27540-1-hansg@kernel.org>
-References: <20250909144823.27540-1-hansg@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ+8ZOl1"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-62bec18abe6so2175514a12.3;
+        Tue, 09 Sep 2025 10:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757438913; x=1758043713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
+        b=nZ+8ZOl1iJ0UP8ow7NOihV5de2g9NyXed2BMZCTD/Y4vIJHk+vzbJtmbtq6g0o12VS
+         BJMuKn1gGcmA3CdY7xzn47KTCcV+77W0tEkPfb4w7Ojbx8GrAMOyWSNdvThK5rs7qBtS
+         KYTnxi80NFzb7JTRRwPZV2hXa3viBNQmuPiJ093dnRmbTw2+0ldZFh0/iVcZ0X5qahRP
+         kINtP4TIZJ4KQjGJXktZefvW0v1deasII0gWIHf/TxPBHZ3cAyV0YEJs2ZHE5ujj/nvH
+         ZvEkB86ykDeufmTKgqLX/64iVt0EMeYQH8p9HXoFJRpS7v7cyR2HRyZY0++4LXvPBO6Y
+         Hjkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757438913; x=1758043713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
+        b=bcOv+8oCubhjw8ugNVB9t68E2S0dTbnvO+SJNKTBZGvzvdwU3WrNtKNmNeONkegAlQ
+         zQCg5Q/sPua1m2/kU1C1jM65p5kXvgtgRN7VgLpQe4VEshwvWebGZe89gNIy2LnhEcIx
+         HhANBlhzP/GvGjvGzLCvSSVr2vZxY0FndSEJEP1tb5CELdZtiwh3a93Ad4f0hO2q01+t
+         uKU+DQtoANoWv/h5hMuI+rRgVV2eGn/iiNaOa1F7XyQG3HWuUdD0HY3bCnCVOsect5UW
+         /N6q/KOMJk6MeNfihH67yANLJ0B+sS06WL3yNfMs7q5hPAtE6QJmXRavjeMGMV385bmY
+         WgTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjXRyUHyCgqcWue7hH0DakHpqyX+xAjAdRvrCBqPp0ak7lzj2SgfPzKo8OQx+/Bbqf23cQ5d37mBRlt4lxuTlAjv/m5w==@vger.kernel.org, AJvYcCW/5BW5bsjl2q3iGWgMPTPn+wBfPnD2mMjiHC1P6sIgTkqAIGGl4+mVlzEHf/CZ139QHJ3Kg2wy04au7g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfcujxZrDrvsaDSzGapIt1LzLsW0ohDQxV9hJ8BnoMIwuAq83T
+	vghQVc6oC9E5WlJUvQjy3T9q4frbi7jzwymBPuECy/DS/3ipiHGMSo7bHw1oY+BrXwUEjla8RkA
+	Nj3yRJhkehll6VMGqsHZ6prnPcgKt2qTxypLc
+X-Gm-Gg: ASbGncsgQLLCCO0b7vMDGj7iXr0ROsuxwWX/2RhZsd+uMlBFxQ5cIjov2H8R/viTmBF
+	vG4vw+OnYsVZ9o7AHkRVm3m8lYd0rK+/3JDClpaHg9bk1JfVuqucOyIYZ6/2UZUsz1nraAaAkf9
+	eV/PxxO27iRqIEzfMezz7xyTTcwQWSl7awu//VBE9A+BkaKQReIE+YwiJcpDRrW84vFLgAAKvc0
+	Rv0i0SBLfPv/yINfARPhDf4jgl3MTY=
+X-Google-Smtp-Source: AGHT+IFAJeaUp1KqCZcTWSjVOoiuhPKEQKWLblb+EOdfEYXnH33Q1y1OAePc/rgDG3baBx51xYftfmyPsorrAyop9y8=
+X-Received: by 2002:a17:907:3d16:b0:b04:59d5:fb78 with SMTP id
+ a640c23a62f3a-b04b1702bbemr1223814266b.62.1757438912867; Tue, 09 Sep 2025
+ 10:28:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250909144823.27540-1-hansg@kernel.org>
+In-Reply-To: <20250909144823.27540-1-hansg@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 9 Sep 2025 20:27:56 +0300
+X-Gm-Features: Ac12FXzFWQpBo73mGBBcdjQhL6zHm3vVxpctuL_IuNMJ_sM5q5iJeIH4pymcwic
+Message-ID: <CAHp75VeMMKCTDNWhdZJH2F=cmUObbpoYcDUch2jpsLBBNs_EhQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] v4l2-subdev/int3472: Use "privacy" as con_id for the
+ LED lookup
+To: Hans de Goede <hansg@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Aleksandrs Vinarskis <alex@vinarskis.com>, platform-driver-x86@vger.kernel.org, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-During DT-binding review for extending the V4L2 camera sensor privacy LED
-support to systems using devicetree, it has come up that having a "-led"
-suffix for the LED name / con_id is undesirable since it already is clear
-that it is a LED.
+On Tue, Sep 9, 2025 at 5:48=E2=80=AFPM Hans de Goede <hansg@kernel.org> wro=
+te:
+>
+> During DT-binding review for extending the V4L2 camera sensor privacy LED
+> support to systems using devicetree, it has come up that having a "-led"
+> suffix for the LED name / con_id is undesirable since it already is clear
+> that it is a LED:
+>
+> https://lore.kernel.org/linux-media/0e030e7d-0a1a-4a00-ba18-ed26107d07fa@=
+oss.qualcomm.com/
+>
+> There was discussion about making an exception for "privacy-led" since
+> that is already used on x86/ACPI platforms, but I'm afraid that will set
+> a bad example which ends up being copy and pasted, so lets just drop
+> the "-led" prefix from the x86/ACPI side, which we can do since there
+> this is only an in-kernel "API".
 
-Drop the "-led" suffix from the privacy LED's lookup table con_id.
+Since it's an in-kernel API, why can't these two be simply squashed?
 
-Signed-off-by: Hans de Goede <hansg@kernel.org>
----
-Note this needs to be merged in the same kernel cycle as the matching
-"media: v4l2-subdev: Use "privacy" as con_id when getting the privacy LED"
-patch.
----
- drivers/platform/x86/intel/int3472/led.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-index f1d6d7b0cb75..b1d84b968112 100644
---- a/drivers/platform/x86/intel/int3472/led.c
-+++ b/drivers/platform/x86/intel/int3472/led.c
-@@ -43,7 +43,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
- 
- 	int3472->pled.lookup.provider = int3472->pled.name;
- 	int3472->pled.lookup.dev_id = int3472->sensor_name;
--	int3472->pled.lookup.con_id = "privacy-led";
-+	int3472->pled.lookup.con_id = "privacy";
- 	led_add_lookup(&int3472->pled.lookup);
- 
- 	return 0;
--- 
-2.51.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
