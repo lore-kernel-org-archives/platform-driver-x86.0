@@ -1,118 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48312E54D3
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Sep 2025 04:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEA81A3166;
+	Tue,  9 Sep 2025 08:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757392065; cv=none; b=dF9EGnFrtplWc7dcOkct1Zh3hDbJyaXuHZLvKOQlqfjGG6RUGIHg31Dh8tFW5YfN9449dZoepJ+aU7COfLSrP+cp342DYk/Z5GHTws/NAZqGUbX6l+jxESFFZ3wMOHtKXiN/fw7rihbridd8Mb8Zqw6BQhmtEo0X4PxbJbZ8xEQ=
+	t=1757407789; cv=none; b=SY/fVUq6aRrudxOVBr9pn9IMgwrc4HzUec6C7fBr77HpjlAyDEM91tzQzRIdzMBZg2KFBEjEw31whLHcp9wVPpNwi9f8xUmGuNfIIl2tOEquo4ZM8SaoFLrV9s/t7x3tX093fLF2K9eyr0FIFtGEqcGUZLMYpbK+wJfpNA5UG+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757392065; c=relaxed/simple;
-	bh=qvklgSfS/TkTtZ3f6UD9xWaMDORAGH1HpgT64VGxKy8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MFiXLhSRj8RzT5woSmTghyTfjQ222ip5b1jnnrmo51IchyXzjwK+KimcNytAm2rpm3hqCt0Pv9moZAPpRB0gxEIblOuL/LHiN1vKV8BPU8wH3mbRO8m/ptdbZNTLdbhB/vxtwwsQr6uIshS9w+6Xi/F7yNKw38GPyoV71kOIAcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn5qOBVs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757407789; c=relaxed/simple;
+	bh=U25/owoSrzhIxMHSI97lUXuNNRgb83tQCnaAv3qpKog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d5vn3QUfEKACgQUJhkSqSjdXPqfx4USbn0Jds4aMQiBSD4a/+2cFT8QtrC3ENst+CqmKQe6d8yumPUsAM4sTN1Zx9h5tPZP8npzE6PkwwCQSwfT576va8AZOt/Fo1yTaP/qERn/ssrzinCApl8r/w6b8TpOhX9aXz6aDb4OtH5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=M+dxBd0n; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn5qOBVs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 52B4CC4CEFA
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Sep 2025 04:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757392065;
-	bh=qvklgSfS/TkTtZ3f6UD9xWaMDORAGH1HpgT64VGxKy8=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Sn5qOBVsM/rvCR7Kw9UAW3jshUwEtQeUYAS9prajDgHU4nbDMMKxHymPg/bRhLpH4
-	 3tmcDvXsLg6VQOGREpOrjpVryKIT1+nPHzyklEKXof5SjX5Y++HfvkvNsa5u4SNh2E
-	 s9NE49wjsihcQmx77SrnQ7ZpB5kBWPxicH8VHyOn6v/QahxhE08BX7q4BRrjnYsod6
-	 RNNr3wUJzPbcNZuNPJjqq0+7jSy3HIo0k7eL4sqjoI3UGHfFixVmm1y56Vx8z62FZa
-	 m5k1aOekRFCIjBwjNWWZSTojJYde8DRH7qa59zBTmljCHch12mB9GybVjWDFlanBw+
-	 7RX0erTe93yKw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4B131C41613; Tue,  9 Sep 2025 04:27:45 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Tue, 09 Sep 2025 04:27:44 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: petar.vidosavljevic@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-SwXBaKitjA@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="M+dxBd0n"
+Received: from [192.168.42.116] (p5de4594b.dip0.t-ipconnect.de [93.228.89.75])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 251F12FC004A;
+	Tue,  9 Sep 2025 10:49:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1757407777;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+bppQV6AkR/A5IUC3YmhzDjEpwAY2Y3fezHekpCr7vc=;
+	b=M+dxBd0nwspH7i31hBK+NftFn+6usNMpph46Ths5SFTEKQ/OinivHZ+Yl6PfxqCvWWBls5
+	Nre9C7QVfX0T73W+EgZBvLbs0I3q6DEzqeRvLmEIZPXuVzJEH68LOZK0M1rShT+5UV5uSE
+	kQZRa9Ph/Sp/QnzkT83Ixr19QO3uj5I=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <7e640ad2-4502-4741-95bc-10045499066e@tuxedocomputers.com>
+Date: Tue, 9 Sep 2025 10:49:36 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] platform/x86: Add Uniwill laptop driver
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, rdunlap@infradead.org,
+ alok.a.tiwari@oracle.com, linux-leds@vger.kernel.org, lee@kernel.org,
+ pobrn@protonmail.com
+References: <20250831192708.9654-1-W_Armin@gmx.de>
+ <20250831192708.9654-2-W_Armin@gmx.de>
+ <003d760c-0314-4ea2-b2b5-860021e0daf8@tuxedocomputers.com>
+ <8d6f8cf4-3c60-4b5b-87d1-e4fe4bce06e7@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <8d6f8cf4-3c60-4b5b-87d1-e4fe4bce06e7@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #102 from Petar Vidosavljevic (petar.vidosavljevic@gmail.com) -=
---
-(In reply to Mario Limonciello (AMD) from comment #101)
-> Those of you that can still reproduce this, does reverting
-> https://github.com/torvalds/linux/commit/
-> 4dbd11796f3a8eb95647507befc41995458a4023 change anything?  That commit is
-> correct so we wouldn't revert it in mainline, but it might give a hint th=
-at
-> there are multiple timing problems.
->=20
-> Please give it a solid shake out (at least 10 cycles that you unplug power
-> adapter during suspend) before reporting back.
+Am 05.09.25 um 20:46 schrieb Armin Wolf:
+> Am 03.09.25 um 19:08 schrieb Werner Sembach:
+>
+>> Hi,
+>>
+>> started to look into the driver regarding TUXEDO NB02 devices support, 
+>> starting with the FN-Keys:
+>>
+>> Am 31.08.25 um 21:27 schrieb Armin Wolf:
+>>> +static const struct key_entry uniwill_keymap[] = {
+>>> +    /* Reported via keyboard controller */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_CAPSLOCK,                   { KEY_CAPSLOCK }},
+>>> +    { KE_IGNORE,    UNIWILL_OSD_NUMLOCK,                    { KEY_NUMLOCK }},
+>>> +
+>>> +    /* Reported when the user locks/unlocks the super key */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE,      { KEY_UNKNOWN }},
+>>> +    { KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE,     { KEY_UNKNOWN }},
+>>
+>> Can you also add
+>>
+>> { KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED,     { KEY_UNKNOWN }},
+>>
+>> ?
+>>
+>> UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE and UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE are 
+>> always sent in pair with UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED (at least on my 
+>> test device) and without this line an unknown key event is generated (as that 
+>> is not explicitly marked as KE_IGNORE without the line).
+>
+> OK.
+I found more similar cases that probably don't happen on your devices, but i 
+will just create a patch once this got merged. I think that will be easier.
+>
+>>
+>>> +
+>>> +    /* Reported in manual mode when toggling the airplane mode status */
+>>> +    { KE_KEY,       UNIWILL_OSD_RFKILL,                     { KEY_RFKILL }},
+>>> +
+>>> +    /* Reported when user wants to cycle the platform profile */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_UNKNOWN }},
+>> This is a physical button on the gaming devices from Uniwill, my suggestion 
+>> would be to bind it to F14 (because another ODM has a very similar key that 
+>> already sends F14 by default) and then let userspace handle it (KDE for 
+>> example has energy profiles that could be bound to it).
+>>> +
+>>> +    /* Reported when the user wants to adjust the brightness of the 
+>>> keyboard */
+>>> +    { KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN,               { 
+>>> KEY_KBDILLUMDOWN }},
+>>> +    { KE_KEY,       UNIWILL_OSD_KBDILLUMUP,                 { 
+>>> KEY_KBDILLUMUP }},
+>>> +
+>>> +    /* Reported when the user wants to toggle the microphone mute status */
+>>> +    { KE_KEY,       UNIWILL_OSD_MIC_MUTE,                   { KEY_MICMUTE }},
+>>> +
+>>> +    /* Reported when the user locks/unlocks the Fn key */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC }},
+>>> +
+>>> +    /* Reported when the user wants to toggle the brightness of the 
+>>> keyboard */
+>>> +    { KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE,             { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>> +
+>>> +    /* FIXME: find out the exact meaning of those events */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H,       { KEY_UNKNOWN }},
+>>> +    { KE_IGNORE,    UNIWILL_OSD_BAT_ERM_UPDATE,             { KEY_UNKNOWN }},
+>>> +
+>>> +    /* Reported when the user wants to toggle the benchmark mode status */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN }},
+>>> +
+>>> +    { KE_END }
+>>> +};
+>>
+>> Any reason for still having KEY_* defines even on the ignored events? Looking 
+>> at other drivers KE_IGNORE events usually don't have it.
+>>
+>> Best regards,
+>>
+>> Werner
+>
+> I decided to ignore UNIWILL_OSD_FN_LOCK because i do not know if the Fn + Esc 
+> key presses are filtered by the EC or also received by the OS.
 
-An update that might warrant some investigation.  I updated to the latest HP
-BIOS, which is:
+Sorry for the misunderstanding.
 
-Version: V82 Ver. 01.09.02
-Release Date: 08/04/2025
+What i meant was: Why is it for example
 
-I thought I'd see if the new BIOS fixed anything, but I was able to get stu=
-ck
-in the low power mode pretty easily so I figured nothing changed on this fr=
-ont.
- However, I found steps where I can consistently get into low power mode and
-get out of it without a reboot.  Here are the components in play:
+{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC }},
 
-HP Elitebook 845 G10 - 7840U
-HP 65W USB C charger
-Dell WD19TB Thunderbolt Dock
+and
 
-Here are the steps:
-1) Laptop in use plugged into WD19TB (normal performance)
-2) Unplug USB-C cable from dock
-3) Close lid of laptop
-4) Plug in HP 65W charger
-5) Wait a few seconds
-6) Unplug HP charger
-7) Open Laptop - See that the CPU is stuck in low power mode
-8) Plug laptop into Dell dock - CPU is no longer stuck in low power mode
+{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN }},
 
-Now if I return to step 3 and follow the steps, in step 7 the CPU will be in
-low power mode consistently.  It seems plugging into the dock resets the low
-power mode.
+instead of just
 
-I'm not sure if any of this info helps.  I'd be happy to run the scripts to
-capture logs tomorrow, but I thought this data might be useful
+{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK},
 
---=20
-You may reply to this email to add a comment.
+and
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE},
+
+?
+
+>
+> Thanks,
+> Armin Wolf
+>
