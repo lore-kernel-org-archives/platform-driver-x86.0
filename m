@@ -1,126 +1,287 @@
-Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB84343D9C;
-	Tue,  9 Sep 2025 18:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C983A3019D0;
+	Tue,  9 Sep 2025 19:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757441686; cv=none; b=H4IslfaUeEc7WNXP8zMsC7HqOnhbc6aw+KGVFGOzTjdjgdhYueUEBb89wZ3nrDs8lHko3T7gBUlgySx4kixoTkpxK+C1yBHIdMgSeAB8oFWiUwWNR59pYYg9j/bYAAd4f6cBa/o8KpSU+H4Nk+68V7eelJlLFXLmByGXKTkJ2Fc=
+	t=1757445243; cv=none; b=ELE7+z/RLpZdVXNSpynXKKUOg3MShqTZWLk59fq71xQDXFuTtIecDlqNr71+Fd1UplNRpggPpgGDRktJ6Zc3ol0nfBuPLIQ2lTUIgVFXc8CxDiTqqusr9l3Yhl7XbMGe1RgN7EOJWtscnZkoIHJHoyfa3kPhgSKOQmhguhxzdvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757441686; c=relaxed/simple;
-	bh=rfCwCuZ0Y+olP4LfcdQvUQ9BnW95/GthbIGb7VOHB20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aKws7UFJ1n/CVdzA1tT+cW+1483dB+1IWfrgxilACXGdft/fh1TILBPMQxeD1mv7zvkKh5NN7lp1VcFx+zqZyX2VxKqIj3dRoSSQovI/ohBtD/U62CI4MD5FHUieHZ6KG4yWPlrZhVqHeMRgm4BhFvHudjqBWH5GMn71AvBAv8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=LHo+5Esc; arc=none smtp.client-ip=37.27.248.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1757445243; c=relaxed/simple;
+	bh=cLT7Fh+31UoPpula9NRXuzPBF3PSz27rAIBxf3ZAKcI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OSOo7CkPHmXtyYYxCKD45SJpeD1lyLsPunjKHaRQeT3c0ZNgbb1xTt6cNnOCjnP67qcbw4zyTG4zU9asBtg8o4fa3HBrefpU6xZ3xlRTZkiRvlmIbMbMOiLQehZeQXVFW/gc2nsBxKkjSKxsGUY3seSE1l4AcNAOGrJq2lP+YBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=bvk7wa4o; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="LHo+5Esc"
-Received: from relay10 (localhost.localdomain [127.0.0.1])
-	by relay10.grserver.gr (Proxmox) with ESMTP id 3079B45DB0;
-	Tue,  9 Sep 2025 21:14:33 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay10.grserver.gr (Proxmox) with ESMTPS id 6791445D37;
-	Tue,  9 Sep 2025 21:14:32 +0300 (EEST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id A596B1FDB50;
-	Tue,  9 Sep 2025 21:14:31 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1757441672;
-	bh=261/qkYL8Ozg1pmeT0ZInbHgX/pEncdMpFE/xyghcBA=;
-	h=Received:From:Subject:To;
-	b=LHo+5EscDDdxWFlc54RDvZigpiShU5s6BzZ/HanjHkRwGUi3HynwzBIpJCmbERjSr
-	 zf3oYWMHXsS6yLr3YQeFPhoSvxydl0l7WULswje/UYMLxrZ06BNYPXFCCzuObYj79H
-	 9nR4FLmccwDXKnSNQzP0Xm5FWgYpMlf/sdyXF0Td9Kzc1e6Hhy7RP8K8KaC5+fvy4z
-	 7Vgo9HTvTHwLMndEsiYuaPZqSk3nLgzrkwVQZ1vDfpup631rGDhNtlqR7nFAzBaipR
-	 mlXb7dJVF4xuw4Gk7XzAfbMQxVJFCT1ID5w3XKx0jxadvjS57kmP8ZLhdWdStap4z9
-	 hgCMTH49tl75w==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.172) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f172.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f172.google.com with SMTP id
- 38308e7fff4ca-336b071e7e5so48935651fa.1;
-        Tue, 09 Sep 2025 11:14:31 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyHbDh4dIw54hdpMDoQjgXEPhjcgfrOJB2zjDGdtt+B9LmC6Jw2
-	bRvt935dOmO+Q4H6d9cevgcpS4Wzy2xLfm+CPx/sYvqFnL0jhD+xdkAsbPa/laVcopz/k32dnE0
-	hpo/xq5bMb2gvx9SR98cXOcup7QxJJ00=
-X-Google-Smtp-Source: 
- AGHT+IGl4tJNPX39/QxJHsyiL/+sEMH7ruK1LlHUwq13DB98ZUZJmJdHD5spz4J0iJNsulb8E9jifUGh54axpmui5UQ=
-X-Received: by 2002:a2e:bea7:0:b0:32b:53b1:c8ab with SMTP id
- 38308e7fff4ca-33b52891a4bmr30941051fa.22.1757441670945; Tue, 09 Sep 2025
- 11:14:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="bvk7wa4o"
+Received: from [192.168.42.116] (p5de4594b.dip0.t-ipconnect.de [93.228.89.75])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 7B4B62FC0052;
+	Tue,  9 Sep 2025 21:13:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1757445236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1JRIvqcv/zz6QLi+ryFNU95kpIHeA6gbiLcJYEwwq48=;
+	b=bvk7wa4oDkpkwJeWqWST7GE3pppWgn11zD+l59iYhpZAl9n+UCA1T30tIoIPSVlM5QJKru
+	yYME0RUAyC/gtV9hC1Esh9BhSVc2XPA8sptdFqpWcTMFQZRZ7O8uOanloeez/gr53a/Wtk
+	pl/f04QMVE4x/SAqOASeV3WtTpS+2pw=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <cb7d0111-927f-40fe-b0f7-73e3a5136746@tuxedocomputers.com>
+Date: Tue, 9 Sep 2025 21:13:55 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904132252.3041613-1-lkml@antheas.dev>
-In-Reply-To: <20250904132252.3041613-1-lkml@antheas.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Tue, 9 Sep 2025 20:14:19 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwGrWWbOy52BgdzjnMUBVPvizhHnM-bqMVLn4F-0xh_D0g@mail.gmail.com>
-X-Gm-Features: Ac12FXwsGsNa0hHChPm_RWw63nfh9TJ-nDMpQskUb4u7CfhFR7kilECV0LA8VQg
-Message-ID: 
- <CAGwozwGrWWbOy52BgdzjnMUBVPvizhHnM-bqMVLn4F-0xh_D0g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Add support for OneXPlayer
- X1Pro EVA-02
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
- Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Eileen <eileen@one-netbook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <175744167196.1963518.1717473078307626244@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] platform/x86: Add Uniwill laptop driver
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, rdunlap@infradead.org,
+ alok.a.tiwari@oracle.com, linux-leds@vger.kernel.org, lee@kernel.org,
+ pobrn@protonmail.com
+References: <20250831192708.9654-1-W_Armin@gmx.de>
+ <20250831192708.9654-2-W_Armin@gmx.de>
+ <cf5b6334-7558-4115-92e4-28b4b531490a@tuxedocomputers.com>
+ <8400b8c2-5ee6-47db-889a-e3224010357d@gmx.de>
+ <8cffb232-052a-4eff-84ea-af6254b837f9@tuxedocomputers.com>
+Content-Language: en-US
+In-Reply-To: <8cffb232-052a-4eff-84ea-af6254b837f9@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 4 Sept 2025 at 15:25, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> It is a special edition of X1Pro with Intel and a different color.
-                                                            /---------\
-Small oversight here. I was told by Eileen this is an AMD unit, which
-is true. I had recalled the user told me it was AMD. So these two
-words should be removed. Functionality-wise the patch is ok.
 
-Antheas
+Am 09.09.25 um 11:18 schrieb Werner Sembach:
+> Hi,
+>
+> Am 08.09.25 um 18:29 schrieb Armin Wolf:
+>>>> +static ssize_t fn_lock_show(struct device *dev, struct device_attribute 
+>>>> *attr, char *buf)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_read(data->regmap, EC_ADDR_BIOS_OEM, &value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return sysfs_emit(buf, "%s\n", str_enable_disable(value & 
+>>>> FN_LOCK_STATUS));
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(fn_lock);
+>>>
+>>> The fn_lock register value does not automatically get updated by pressing 
+>>> the fn+esc key (unlicke the super_key_lock), so the driver needs to do that 
+>>> manually.
+>>>
+>>> Another posibility is: uniwill sometimes have a "config" and an "immediate" 
+>>> value for a setting, waybe we have the config value here (and have the 
+>>> immediate value for the super_key_lock)
+>>>
+>>> Also I realized: The value here is preserved on hot, but not on cold 
+>>> reboots, maybe this should be initialized by the driver for consistency?
+>>>
+>> fn_lock should not change when the users presses Fn + ESC, instead this 
+>> setting controls whether the EC will enter Fn lock mode when the user presses
+>> this key combination.
+>
+> At least on my device Fn + ESC does toggle the Fn lock regardless of this 
+> setting. How I love these Uniwill inconsistencies ...
+>
+> I talked with Christoffer and he said that the "Intel Project" line from 
+> Uniwill does behave differently at multiple locations
+>
+> If the devices really behave differently we have the first mutually exclusive 
+> feature here: FN Lock Enable vs FN Lock Toggle
+
+Thinking about how to name this to make it consistent and clear by name only 
+what is happening, my idea would be:
+
+- fn_lock_toggle_enable (for the behavior on your device)
+
+- fn_lock_enable (for the behavior on my devices)
+
+- super_key_toggle_enable (for the behavior on your device)
+
+- super_key_enable (for the behavior on my devices)
+
+- touchpad_toggle_enable (for the behavior on your device)
+
+There is no touchpad_enable as this is handled by userspace.
 
 >
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/oxpec.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>> Additionally, some models seem to allow users to change those settings inside 
+>> the BIOS itself, so i am against overwriting the
+>> boot configuration when loading the driver.
+> That's probably what's sets the value on cold boot.
+>>>> +static ssize_t super_key_lock_show(struct device *dev, struct 
+>>>> device_attribute *attr, char *buf)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return sysfs_emit(buf, "%s\n", str_enable_disable(!(value & 
+>>>> SUPER_KEY_LOCK_STATUS)));
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(super_key_lock);
+>>>
+>>> I did not know what "super_key_lock" was supposed to mean at first, a more 
+>>> fitting name would be super_key_enable imho.
+>>>
+>>> Cold vs hot reboot volatility not tested, but wouldn't hurt to initialize 
+>>> imho as i don't trust uniwill to be consistent in this point across multiple 
+>>> device generations.
+>>>
+>> This sysfs attribute controls whether or not the super key can be locked 
+>> using a key combination i forgot about. Initializing those settings
+>> is something best done by userspace, i suggest to use a udev rule for that.
 >
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index eb076bb4099b..4f540a9932fe 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -306,6 +306,13 @@ static const struct dmi_system_id dmi_table[] = {
->                 },
->                 .driver_data = (void *)oxp_x1,
->         },
-> +       {
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro EVA-02"),
-> +               },
-> +               .driver_data = (void *)oxp_x1,
-> +       },
->         {},
->  };
+> No again, at least on the devices i have here: the key combination is fn+f9, 
+> but not present on all devides (the fn functions get shifted quite around on 
+> different uniwill devices anyway)
 >
+> The combination still works when this is set to disable and just sets it to 
+> enable.
 >
-> base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
-> --
-> 2.51.0
+>>
+>>>> +
+>>>> +static ssize_t touchpad_toggle_store(struct device *dev, struct 
+>>>> device_attribute *attr,
+>>>> +                     const char *buf, size_t count)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = sysfs_match_string(uniwill_enable_disable_strings, buf);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    if (ret)
+>>>> +        value = 0;
+>>>> +    else
+>>>> +        value = TOUCHPAD_TOGGLE_OFF;
+>>>> +
+>>>> +    ret = regmap_update_bits(data->regmap, EC_ADDR_OEM_4, 
+>>>> TOUCHPAD_TOGGLE_OFF, value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return count;
+>>>> +}
+>>>> +
+>>>> +static ssize_t touchpad_toggle_show(struct device *dev, struct 
+>>>> device_attribute *attr, char *buf)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return sysfs_emit(buf, "%s\n", str_enable_disable(!(value & 
+>>>> TOUCHPAD_TOGGLE_OFF)));
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(touchpad_toggle);
+>>> What exactly does this do? Seems like a noop on my testing devices. Also is 
+>>> touchpad disable not already handled by userspace?
+>>
+>> This settings controls whether or not the user can disable the internal 
+>> touchpad using a specific key combination.
 >
+> Ok, this function seems to be not present on non Intel project devices from 
+> Uniwill. Here the touchpad toggle just sends a key combination (Super + 
+> Control + KEY_ZENKAKUHANKAKU or F24 depending on kernel version) and lets 
+> userspace handle the rest.
 >
-
+> Never mind then.
+>
+>>>> +static const struct hwmon_ops uniwill_ops = {
+>>>> +    .visible = 0444,
+>>>> +    .read = uniwill_read,
+>>>> +    .read_string = uniwill_read_string,
+>>>> +};
+>>>
+>>> .visible should hide gpu temp sensor on devices that don't have a dgpu and 
+>>> therefore not gpu temp sensor (the value is stuck at 0 on these devices)
+>>>
+>>> also the number of fan might also not always be exactly 2
+>>>
+>> I see, i will introduce separate feature flags for each sensor.
+> thanks
+>>>> +static int __init uniwill_init(void)
+>>>> +{
+>>>> +    const struct dmi_system_id *id;
+>>>> +    int ret;
+>>>> +
+>>>> +    id = dmi_first_match(uniwill_dmi_table);
+>>>> +    if (!id) {
+>>>> +        if (!force)
+>>>> +            return -ENODEV;
+>>>> +
+>>>> +        /* Assume that the device supports all features */
+>>>> +        supported_features = UINT_MAX;
+>>>
+>>> in the future there might be mutually exclusive feature (for example when 
+>>> Uniwil repurposes EC registers)
+>>>
+>>> my suggestion would be to have a "force_supported_features" in addition that 
+>>> overwrites the supported_features list (also for devices that are in the list)
+>>>
+>>> so something like:
+>>>
+>>> if (!id && !force)
+>>>
+>>>     return -ENODEV
+>>>
+>>> if (force)
+>>>
+>>>     supported_features = force_supported_features
+>>>
+>>> else
+>>>
+>>>     supported_features = (uintptr_t)id->driver_data;
+>>>
+>> Interesting idea, but i would prefer to keep the individual feature bit 
+>> definitions private. Because of this i suggest we
+>> look into this idea once we actually encounter such a situation where we have 
+>> conflicting feature bits.
+>
+> Then maybe just have all the features as separate module parameters?
+>
+> On this note: Maybe also do the FN Key handling based on a feature bit? Not 
+> that i see a particular reason why you wouldn't want to have it, but for 
+> consistency and debugging reasons (and also if sometimes ins the future an 
+> incompatibility arises here because Uniwill repurposed a wmi event or something).
+>
+> Just thinking out loud.
+>
+>>
+>> Thanks,
+>> Armin Wolf
+>
+> Best regards,
+>
+> Werner
+>
