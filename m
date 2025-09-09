@@ -1,101 +1,126 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD68B350D69;
-	Tue,  9 Sep 2025 17:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB84343D9C;
+	Tue,  9 Sep 2025 18:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757438916; cv=none; b=N/whpmkgi/UfXnTGlZSzYKTBI1zGtkRwaOmjdvsuPNzywtIeuutIv2jOfj2/W8bJtELXeTV81Q/c4W0WDqUUfDooRzU1f0rs+kB1sliSNWkIEBZrpUttxdWlfuzW4aT3tkU04cs9qBo6gC/sUcAJ/V+OxMIqReARWt0+NKR+VVo=
+	t=1757441686; cv=none; b=H4IslfaUeEc7WNXP8zMsC7HqOnhbc6aw+KGVFGOzTjdjgdhYueUEBb89wZ3nrDs8lHko3T7gBUlgySx4kixoTkpxK+C1yBHIdMgSeAB8oFWiUwWNR59pYYg9j/bYAAd4f6cBa/o8KpSU+H4Nk+68V7eelJlLFXLmByGXKTkJ2Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757438916; c=relaxed/simple;
-	bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
+	s=arc-20240116; t=1757441686; c=relaxed/simple;
+	bh=rfCwCuZ0Y+olP4LfcdQvUQ9BnW95/GthbIGb7VOHB20=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AmL7395+74rJeT4ke912EGHFauiLAQDsMOatbCnFj/NEIWqFS0qndQtyt4HdTvcOUz+DIba6A8R+kw5BxnO3rlt4dZA+EmxidWMAhUyoxE15p1ZkddfmTNVvVOKhT/v25u6Sf94LJkcI6Sigl/PHlVyp/+v7QHiG7BfMjT4XNaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZ+8ZOl1; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=aKws7UFJ1n/CVdzA1tT+cW+1483dB+1IWfrgxilACXGdft/fh1TILBPMQxeD1mv7zvkKh5NN7lp1VcFx+zqZyX2VxKqIj3dRoSSQovI/ohBtD/U62CI4MD5FHUieHZ6KG4yWPlrZhVqHeMRgm4BhFvHudjqBWH5GMn71AvBAv8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=LHo+5Esc; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ+8ZOl1"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-62bec18abe6so2175514a12.3;
-        Tue, 09 Sep 2025 10:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757438913; x=1758043713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
-        b=nZ+8ZOl1iJ0UP8ow7NOihV5de2g9NyXed2BMZCTD/Y4vIJHk+vzbJtmbtq6g0o12VS
-         BJMuKn1gGcmA3CdY7xzn47KTCcV+77W0tEkPfb4w7Ojbx8GrAMOyWSNdvThK5rs7qBtS
-         KYTnxi80NFzb7JTRRwPZV2hXa3viBNQmuPiJ093dnRmbTw2+0ldZFh0/iVcZ0X5qahRP
-         kINtP4TIZJ4KQjGJXktZefvW0v1deasII0gWIHf/TxPBHZ3cAyV0YEJs2ZHE5ujj/nvH
-         ZvEkB86ykDeufmTKgqLX/64iVt0EMeYQH8p9HXoFJRpS7v7cyR2HRyZY0++4LXvPBO6Y
-         Hjkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757438913; x=1758043713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5iMq1cHF+x9HBFpSpJaAJUWXufWBN+foQpYtq/Nd65g=;
-        b=bcOv+8oCubhjw8ugNVB9t68E2S0dTbnvO+SJNKTBZGvzvdwU3WrNtKNmNeONkegAlQ
-         zQCg5Q/sPua1m2/kU1C1jM65p5kXvgtgRN7VgLpQe4VEshwvWebGZe89gNIy2LnhEcIx
-         HhANBlhzP/GvGjvGzLCvSSVr2vZxY0FndSEJEP1tb5CELdZtiwh3a93Ad4f0hO2q01+t
-         uKU+DQtoANoWv/h5hMuI+rRgVV2eGn/iiNaOa1F7XyQG3HWuUdD0HY3bCnCVOsect5UW
-         /N6q/KOMJk6MeNfihH67yANLJ0B+sS06WL3yNfMs7q5hPAtE6QJmXRavjeMGMV385bmY
-         WgTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjXRyUHyCgqcWue7hH0DakHpqyX+xAjAdRvrCBqPp0ak7lzj2SgfPzKo8OQx+/Bbqf23cQ5d37mBRlt4lxuTlAjv/m5w==@vger.kernel.org, AJvYcCW/5BW5bsjl2q3iGWgMPTPn+wBfPnD2mMjiHC1P6sIgTkqAIGGl4+mVlzEHf/CZ139QHJ3Kg2wy04au7g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfcujxZrDrvsaDSzGapIt1LzLsW0ohDQxV9hJ8BnoMIwuAq83T
-	vghQVc6oC9E5WlJUvQjy3T9q4frbi7jzwymBPuECy/DS/3ipiHGMSo7bHw1oY+BrXwUEjla8RkA
-	Nj3yRJhkehll6VMGqsHZ6prnPcgKt2qTxypLc
-X-Gm-Gg: ASbGncsgQLLCCO0b7vMDGj7iXr0ROsuxwWX/2RhZsd+uMlBFxQ5cIjov2H8R/viTmBF
-	vG4vw+OnYsVZ9o7AHkRVm3m8lYd0rK+/3JDClpaHg9bk1JfVuqucOyIYZ6/2UZUsz1nraAaAkf9
-	eV/PxxO27iRqIEzfMezz7xyTTcwQWSl7awu//VBE9A+BkaKQReIE+YwiJcpDRrW84vFLgAAKvc0
-	Rv0i0SBLfPv/yINfARPhDf4jgl3MTY=
-X-Google-Smtp-Source: AGHT+IFAJeaUp1KqCZcTWSjVOoiuhPKEQKWLblb+EOdfEYXnH33Q1y1OAePc/rgDG3baBx51xYftfmyPsorrAyop9y8=
-X-Received: by 2002:a17:907:3d16:b0:b04:59d5:fb78 with SMTP id
- a640c23a62f3a-b04b1702bbemr1223814266b.62.1757438912867; Tue, 09 Sep 2025
- 10:28:32 -0700 (PDT)
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="LHo+5Esc"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 3079B45DB0;
+	Tue,  9 Sep 2025 21:14:33 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id 6791445D37;
+	Tue,  9 Sep 2025 21:14:32 +0300 (EEST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id A596B1FDB50;
+	Tue,  9 Sep 2025 21:14:31 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1757441672;
+	bh=261/qkYL8Ozg1pmeT0ZInbHgX/pEncdMpFE/xyghcBA=;
+	h=Received:From:Subject:To;
+	b=LHo+5EscDDdxWFlc54RDvZigpiShU5s6BzZ/HanjHkRwGUi3HynwzBIpJCmbERjSr
+	 zf3oYWMHXsS6yLr3YQeFPhoSvxydl0l7WULswje/UYMLxrZ06BNYPXFCCzuObYj79H
+	 9nR4FLmccwDXKnSNQzP0Xm5FWgYpMlf/sdyXF0Td9Kzc1e6Hhy7RP8K8KaC5+fvy4z
+	 7Vgo9HTvTHwLMndEsiYuaPZqSk3nLgzrkwVQZ1vDfpup631rGDhNtlqR7nFAzBaipR
+	 mlXb7dJVF4xuw4Gk7XzAfbMQxVJFCT1ID5w3XKx0jxadvjS57kmP8ZLhdWdStap4z9
+	 hgCMTH49tl75w==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.172) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f172.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f172.google.com with SMTP id
+ 38308e7fff4ca-336b071e7e5so48935651fa.1;
+        Tue, 09 Sep 2025 11:14:31 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyHbDh4dIw54hdpMDoQjgXEPhjcgfrOJB2zjDGdtt+B9LmC6Jw2
+	bRvt935dOmO+Q4H6d9cevgcpS4Wzy2xLfm+CPx/sYvqFnL0jhD+xdkAsbPa/laVcopz/k32dnE0
+	hpo/xq5bMb2gvx9SR98cXOcup7QxJJ00=
+X-Google-Smtp-Source: 
+ AGHT+IGl4tJNPX39/QxJHsyiL/+sEMH7ruK1LlHUwq13DB98ZUZJmJdHD5spz4J0iJNsulb8E9jifUGh54axpmui5UQ=
+X-Received: by 2002:a2e:bea7:0:b0:32b:53b1:c8ab with SMTP id
+ 38308e7fff4ca-33b52891a4bmr30941051fa.22.1757441670945; Tue, 09 Sep 2025
+ 11:14:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909144823.27540-1-hansg@kernel.org>
-In-Reply-To: <20250909144823.27540-1-hansg@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 9 Sep 2025 20:27:56 +0300
-X-Gm-Features: Ac12FXzFWQpBo73mGBBcdjQhL6zHm3vVxpctuL_IuNMJ_sM5q5iJeIH4pymcwic
-Message-ID: <CAHp75VeMMKCTDNWhdZJH2F=cmUObbpoYcDUch2jpsLBBNs_EhQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] v4l2-subdev/int3472: Use "privacy" as con_id for the
- LED lookup
-To: Hans de Goede <hansg@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Aleksandrs Vinarskis <alex@vinarskis.com>, platform-driver-x86@vger.kernel.org, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
+References: <20250904132252.3041613-1-lkml@antheas.dev>
+In-Reply-To: <20250904132252.3041613-1-lkml@antheas.dev>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 9 Sep 2025 20:14:19 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGrWWbOy52BgdzjnMUBVPvizhHnM-bqMVLn4F-0xh_D0g@mail.gmail.com>
+X-Gm-Features: Ac12FXwsGsNa0hHChPm_RWw63nfh9TJ-nDMpQskUb4u7CfhFR7kilECV0LA8VQg
+Message-ID: 
+ <CAGwozwGrWWbOy52BgdzjnMUBVPvizhHnM-bqMVLn4F-0xh_D0g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] platform/x86: oxpec: Add support for OneXPlayer
+ X1Pro EVA-02
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Eileen <eileen@one-netbook.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <175744167196.1963518.1717473078307626244@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Tue, Sep 9, 2025 at 5:48=E2=80=AFPM Hans de Goede <hansg@kernel.org> wro=
-te:
+On Thu, 4 Sept 2025 at 15:25, Antheas Kapenekakis <lkml@antheas.dev> wrote:
 >
-> During DT-binding review for extending the V4L2 camera sensor privacy LED
-> support to systems using devicetree, it has come up that having a "-led"
-> suffix for the LED name / con_id is undesirable since it already is clear
-> that it is a LED:
+> It is a special edition of X1Pro with Intel and a different color.
+                                                            /---------\
+Small oversight here. I was told by Eileen this is an AMD unit, which
+is true. I had recalled the user told me it was AMD. So these two
+words should be removed. Functionality-wise the patch is ok.
+
+Antheas
+
 >
-> https://lore.kernel.org/linux-media/0e030e7d-0a1a-4a00-ba18-ed26107d07fa@=
-oss.qualcomm.com/
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/platform/x86/oxpec.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
-> There was discussion about making an exception for "privacy-led" since
-> that is already used on x86/ACPI platforms, but I'm afraid that will set
-> a bad example which ends up being copy and pasted, so lets just drop
-> the "-led" prefix from the x86/ACPI side, which we can do since there
-> this is only an in-kernel "API".
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index eb076bb4099b..4f540a9932fe 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -306,6 +306,13 @@ static const struct dmi_system_id dmi_table[] = {
+>                 },
+>                 .driver_data = (void *)oxp_x1,
+>         },
+> +       {
+> +               .matches = {
+> +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro EVA-02"),
+> +               },
+> +               .driver_data = (void *)oxp_x1,
+> +       },
+>         {},
+>  };
+>
+>
+> base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
+> --
+> 2.51.0
+>
+>
 
-Since it's an in-kernel API, why can't these two be simply squashed?
-
-
---=20
-With Best Regards,
-Andy Shevchenko
