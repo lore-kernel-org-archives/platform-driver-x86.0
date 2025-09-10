@@ -1,124 +1,303 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9F93112D6;
-	Wed, 10 Sep 2025 09:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8850F239E65
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Sep 2025 10:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757495379; cv=none; b=O94+ybQARROSCVttwCdqZp0W5W/6IwALFOCrOTU3TJwTe2PbAKi7HXyp3Bs2zGYP5ddVxaXg/yzEi7CjO/LZskbeTOmIUXkXjI5wOMOakpxWP5qZFDuZ3Svf/lg5feUHBby3cbb+PX6QqCoWwTFgesgEgoqfU4dCwUrntTNZcPE=
+	t=1757500311; cv=none; b=KQMQ76pLqR2Tg4HMGYl4YaMDZVTxn+vAM8+ZBc+UaYOaQT3QzN2/OJEWGBNrTzO3OkzzPOw+kGdIQVpN3t3RXTVoJDGTf7hy3I97Yi4Fed25aLsyWe+D9oE6Iqyp2YwcQTU35K3Bo0RH7eSXyJz9+NMzOll+MBw3b+/vLp8ZLIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757495379; c=relaxed/simple;
-	bh=vzHBUoEGBOvofKP8vbq3Vmp2N5vrx4eWL5JDuvkjsZo=;
+	s=arc-20240116; t=1757500311; c=relaxed/simple;
+	bh=pPLnocAZJ3iQOCTIuhqZQb7Pb0LPKM1i14LyDkgpjJk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=D4LXnq9nnHK0UhvONuXgy0pz49k5wUH7Bwic5aYgSnJL+36scKW4rMs0m6lAGIP/GEqPRdrIAe2u4TgtPEn3T6CwAao1hSNfLrO9rRn8YdbkxuskkKayS9p+RszC9J4HDCWwpjhx3RBNJV/OXJxWAMRgP1NeASDtgwXZjCHMayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Srk1nfSE; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=RJrOGXh0lZ5Pb9DHLxJjiBuOwIcGl3F1hdkv+zoJFbMedcJNVM5F9zVkcRyJXq2H++9nfrUs1Mmv8MtG1Iz/FYxuPi9+WBz1qXX1lIvDuOVmJ5sHkGqTKqb7k3G7rgSnydIqK2dVGWjMwQ/O6hgFPZuT60649G0e6BShayFFCVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T35ry8e/; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Srk1nfSE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T35ry8e/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757495378; x=1789031378;
+  t=1757500310; x=1789036310;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=vzHBUoEGBOvofKP8vbq3Vmp2N5vrx4eWL5JDuvkjsZo=;
-  b=Srk1nfSEQBZR1u/ktoWqJxHjW/tDukCOu9BMGlq1Wbfv1tj++rvpijd1
-   q2WzCfn2b5+sKTUu9hBcWGbG07dsqdxIHCdwbkL6QCLa47smT5JTXEmcj
-   2nw6DA13SmDuztq32pLTW4RJCZH7RVCVV6qroqmGWs0Ue/ZI77Yf/wd1X
-   6ABqCa9JKcwApHpuXedoebY2K3Aj3aZkayjAYBjr7QlP+oocJtoV1H+hd
-   UOK0nH6xDNGwzHnVjO3XYD/JRgd5oso2OXKpzOkoOgoqhE2+w4+iXSdNQ
-   QwoNSWBlu8CaMlz/LkjZ57Cr1bz+dz3PA6RCDmudALCekAfVl4Ub2uFVE
-   w==;
-X-CSE-ConnectionGUID: zLjh1S5TTe27OZPuvwefVw==
-X-CSE-MsgGUID: H1orJlqfSdCWm+Hun55E6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="63428718"
-X-IronPort-AV: E=Sophos;i="6.18,253,1751266800"; 
-   d="scan'208";a="63428718"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 02:09:38 -0700
-X-CSE-ConnectionGUID: OSEEgtn+SkGHlX2hxgoFWw==
-X-CSE-MsgGUID: xoNWjnI4QYydX0OEaza6rg==
+   references:mime-version;
+  bh=pPLnocAZJ3iQOCTIuhqZQb7Pb0LPKM1i14LyDkgpjJk=;
+  b=T35ry8e/K1Mdwp+fWZrBWmJ87YHKZW/lxZNbnx7qW+8nozbbyUE0fD7W
+   ZrWKd34QN+FGZuvQK1wsEGdjFuQ29OFmZspCSTsjQUzFQ3Li0V7WrlM7A
+   t6nGNnA+TgwKqCcQdiw72+sfZwcp3QEIvKB/KBdig21pzrcGXv00kEaKK
+   zJwjperxTFmrPGkLt/YyJR/yS7DLkzjfAM4PL3sRffljVjgVUaTye06gr
+   YJboiF+rbe8RiiHgcpjD6EAP4W188OAw3eZpkXLITbuDeen0Fy7yFFOTQ
+   nSCHyckuSmJpw3BH5IxkLtIrbpEKJbFDC9Vny0cSq/OM0qksS/49oMoMh
+   g==;
+X-CSE-ConnectionGUID: gnT7X0sKSB6gMwaiJA7/ig==
+X-CSE-MsgGUID: BCiULIeQR5CCB04fMSScFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="77413050"
+X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
+   d="scan'208";a="77413050"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 03:31:49 -0700
+X-CSE-ConnectionGUID: IE0wcd/JTqaseO4puoNsZg==
+X-CSE-MsgGUID: fUlgBf+/RQS3uhYndNb9Lg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,253,1751266800"; 
-   d="scan'208";a="177663643"
+X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
+   d="scan'208";a="210474791"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 02:09:34 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 03:31:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Sep 2025 12:09:30 +0300 (EEST)
-To: Hans de Goede <hansg@kernel.org>
-cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-    Andy Shevchenko <andy@kernel.org>, 
-    Sakari Ailus <sakari.ailus@linux.intel.com>, 
-    Aleksandrs Vinarskis <alex@vinarskis.com>, 
-    platform-driver-x86@vger.kernel.org, 
-    Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/2] v4l2-subdev/int3472: Use "privacy" as con_id for
- the LED lookup
-In-Reply-To: <e3edf119-2dfe-4857-842d-fb2a52470eb9@kernel.org>
-Message-ID: <0706ca2e-cee8-8f3c-b652-ac0cf0f087f8@linux.intel.com>
-References: <20250909144823.27540-1-hansg@kernel.org> <CAHp75VeMMKCTDNWhdZJH2F=cmUObbpoYcDUch2jpsLBBNs_EhQ@mail.gmail.com> <e3edf119-2dfe-4857-842d-fb2a52470eb9@kernel.org>
+Date: Wed, 10 Sep 2025 13:31:42 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, mario.limonciello@amd.com, 
+    Yijun Shen <Yijun.Shen@dell.com>, Yijun Shen <Yijun.Shen@Dell.com>
+Subject: Re: [PATCH v5 RESEND 6/9] platform/x86/amd/pmf: Add custom BIOS
+ input support for AMD_CPU_ID_PS
+In-Reply-To: <20250901110140.2519072-7-Shyam-sundar.S-k@amd.com>
+Message-ID: <2ba64be3-34c8-b9e5-549a-8548571168c2@linux.intel.com>
+References: <20250901110140.2519072-1-Shyam-sundar.S-k@amd.com> <20250901110140.2519072-7-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-904436684-1757494513=:937"
-Content-ID: <72606396-7cf1-9d82-bccb-50a45a8c5bac@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 1 Sep 2025, Shyam Sundar S K wrote:
 
---8323328-904436684-1757494513=:937
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <38679c28-ef95-e083-61a6-3304ffe1b171@linux.intel.com>
+> The PMF ACPI Specification (APMF) has been revised to version 1.3 to allow
+> for additional custom BIOS inputs, enabling OEMs to have more precise
+> thermal management of the system. This update includes adding support to
+> the driver using the new data structure received from the BIOS through the
+> existing APMF interfaces.
+> 
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/acpi.c | 58 ++++++++++++++++++++++++++---
+>  drivers/platform/x86/amd/pmf/pmf.h  | 22 +++++++++++
+>  drivers/platform/x86/amd/pmf/spc.c  | 36 +++++++++++++++---
+>  3 files changed, 105 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index 4982311ac045..41c34c26ceec 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -320,6 +320,11 @@ int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v
+>  	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS, req, sizeof(*req));
+>  }
+>  
+> +int apmf_get_sbios_requests_v1(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v1 *req)
+> +{
+> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS, req, sizeof(*req));
+> +}
+> +
+>  int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req)
+>  {
+>  	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS,
+> @@ -338,6 +343,18 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
+>  		dev_err(pmf_dev->dev, "Failed to get v2 SBIOS requests: %d\n", ret);
+>  }
+>  
+> +static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
+> +{
+> +	struct amd_pmf_dev *pmf_dev = data;
+> +	int ret;
+> +
+> +	guard(mutex)(&pmf_dev->cb_mutex);
+> +
+> +	ret = apmf_get_sbios_requests_v1(pmf_dev, &pmf_dev->req1);
+> +	if (ret)
+> +		dev_err(pmf_dev->dev, "Failed to get v1 SBIOS requests: %d\n", ret);
+> +}
+> +
+>  static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
+>  {
+>  	struct amd_pmf_dev *pmf_dev = data;
+> @@ -427,6 +444,11 @@ int apmf_get_dyn_slider_def_dc(struct amd_pmf_dev *pdev, struct apmf_dyn_slider_
+>  	return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_DC, data, sizeof(*data));
+>  }
+>  
+> +static apmf_event_handler_t apmf_event_handlers[] = {
+> +	[PMF_IF_V1] = apmf_event_handler_v1,
+> +	[PMF_IF_V2] = apmf_event_handler_v2,
+> +};
+> +
+>  int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
+>  {
+>  	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
+> @@ -446,13 +468,26 @@ int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
+>  		apmf_event_handler(ahandle, 0, pmf_dev);
+>  	}
+>  
+> -	if (pmf_dev->smart_pc_enabled && pmf_dev->pmf_if_version == PMF_IF_V2) {
+> +	if (!pmf_dev->smart_pc_enabled)
+> +		return -EINVAL;
 
-On Tue, 9 Sep 2025, Hans de Goede wrote:
-> On 9-Sep-25 7:27 PM, Andy Shevchenko wrote:
-> > On Tue, Sep 9, 2025 at 5:48=E2=80=AFPM Hans de Goede <hansg@kernel.org>=
- wrote:
-> >>
-> >> During DT-binding review for extending the V4L2 camera sensor privacy =
-LED
-> >> support to systems using devicetree, it has come up that having a "-le=
-d"
-> >> suffix for the LED name / con_id is undesirable since it already is cl=
-ear
-> >> that it is a LED:
-> >>
-> >> https://lore.kernel.org/linux-media/0e030e7d-0a1a-4a00-ba18-ed26107d07=
-fa@oss.qualcomm.com/
-> >>
-> >> There was discussion about making an exception for "privacy-led" since
-> >> that is already used on x86/ACPI platforms, but I'm afraid that will s=
-et
-> >> a bad example which ends up being copy and pasted, so lets just drop
-> >> the "-led" prefix from the x86/ACPI side, which we can do since there
-> >> this is only an in-kernel "API".
-> >=20
-> > Since it's an in-kernel API, why can't these two be simply squashed?
->=20
-> Good question, this is only a runtime thing when running on actual
-> hw with a privacy LED. So having this separately will not break
-> the build in the middle.
->=20
-> As such it seems better to have this as 2 patches since it involves
-> 2 different subsystems.
+Hi,
 
-But it's still only a single logical change, and not something with=20
-monsterous complexity which would warrant splitting it at the subsystem=20
-boundary.
+Is this change okay? Previously this function returned 0 in this case.
 
-Or do you immediately know about something that would conflict with either=
-=20
-of these changes which would warrant splitting it per subsystem to avoid=20
-merge challenges? If not, I agree with Andy this should just be squashed=20
-into a single patch.
-
-Another question, is the "privacy_led" suffix added into pled.name still
-acceptable despite the "led" suffix?
-
---=20
+-- 
  i.
---8323328-904436684-1757494513=:937--
+
+> +
+> +	switch (pmf_dev->pmf_if_version) {
+> +	case PMF_IF_V1:
+> +		if (!is_apmf_bios_input_notifications_supported(pmf_dev))
+> +			break;
+> +		fallthrough;
+> +	case PMF_IF_V2:
+>  		status = acpi_install_notify_handler(ahandle, ACPI_ALL_NOTIFY,
+> -						     apmf_event_handler_v2, pmf_dev);
+> +				apmf_event_handlers[pmf_dev->pmf_if_version], pmf_dev);
+>  		if (ACPI_FAILURE(status)) {
+> -			dev_err(pmf_dev->dev, "failed to install notify handler for custom BIOS inputs\n");
+> +			dev_err(pmf_dev->dev,
+> +				"failed to install notify handler v%d for custom BIOS inputs\n",
+> +				pmf_dev->pmf_if_version);
+>  			return -ENODEV;
+>  		}
+> +		break;
+> +	default:
+> +		break;
+>  	}
+>  
+>  	return 0;
+> @@ -506,8 +541,21 @@ void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
+>  	    is_apmf_func_supported(pmf_dev, APMF_FUNC_SBIOS_REQUESTS))
+>  		acpi_remove_notify_handler(ahandle, ACPI_ALL_NOTIFY, apmf_event_handler);
+>  
+> -	if (pmf_dev->smart_pc_enabled && pmf_dev->pmf_if_version == PMF_IF_V2)
+> -		acpi_remove_notify_handler(ahandle, ACPI_ALL_NOTIFY, apmf_event_handler_v2);
+> +	if (!pmf_dev->smart_pc_enabled)
+> +		return;
+> +
+> +	switch (pmf_dev->pmf_if_version) {
+> +	case PMF_IF_V1:
+> +		if (!is_apmf_bios_input_notifications_supported(pmf_dev))
+> +			break;
+> +		fallthrough;
+> +	case PMF_IF_V2:
+> +		acpi_remove_notify_handler(ahandle, ACPI_ALL_NOTIFY,
+> +					   apmf_event_handlers[pmf_dev->pmf_if_version]);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  }
+>  
+>  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 6ddd1a6e9115..647993e94674 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -120,6 +120,8 @@ struct cookie_header {
+>  #define APTS_MAX_STATES		16
+>  #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
+>  
+> +typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
+> +
+>  /* APTS PMF BIOS Interface */
+>  struct amd_pmf_apts_output {
+>  	u16 table_version;
+> @@ -187,6 +189,24 @@ struct apmf_sbios_req {
+>  	u8 skin_temp_hs2;
+>  } __packed;
+>  
+> +/* As per APMF spec 1.3 */
+> +struct apmf_sbios_req_v1 {
+> +	u16 size;
+> +	u32 pending_req;
+> +	u8 rsvd;
+> +	u8 cql_event;
+> +	u8 amt_event;
+> +	u32 fppt;
+> +	u32 sppt;
+> +	u32 sppt_apu_only;
+> +	u32 spl;
+> +	u32 stt_min_limit;
+> +	u8 skin_temp_apu;
+> +	u8 skin_temp_hs2;
+> +	u8 enable_cnqf;
+> +	u32 custom_policy[10];
+> +} __packed;
+> +
+>  struct apmf_sbios_req_v2 {
+>  	u16 size;
+>  	u32 pending_req;
+> @@ -379,6 +399,7 @@ struct amd_pmf_dev {
+>  	struct apmf_sbios_req_v2 req; /* To get custom bios pending request */
+>  	struct mutex cb_mutex;
+>  	u32 notifications;
+> +	struct apmf_sbios_req_v1 req1;
+>  };
+>  
+>  struct apmf_sps_prop_granular_v2 {
+> @@ -835,6 +856,7 @@ void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev);
+>  void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev);
+>  void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
+>  int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req);
+> +int apmf_get_sbios_requests_v1(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v1 *req);
+>  int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v2 *req);
+>  
+>  void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+> index 06b7760b2a8b..1b612e79a3d8 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -132,22 +132,46 @@ static void amd_pmf_set_ta_custom_bios_input(struct ta_pmf_enact_table *in, int
+>  	}
+>  }
+>  
+> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pending_req,
+> +				       const struct amd_pmf_pb_bitmap *inputs,
+> +				       const u32 *custom_policy, struct ta_pmf_enact_table *in)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+> +		if (!(pending_req & inputs[i].bit_mask))
+> +			continue;
+> +		amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
+> +	}
+> +}
+> +
+>  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+>  					   struct ta_pmf_enact_table *in)
+>  {
+> -	unsigned int i;
+> +	if (!(pdev->req.pending_req || pdev->req1.pending_req))
+> +		return;
+>  
+> -	if (!pdev->req.pending_req)
+> +	if (!pdev->smart_pc_enabled)
+>  		return;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+> -		if (!(pdev->req.pending_req & custom_bios_inputs[i].bit_mask))
+> -			continue;
+> -		amd_pmf_set_ta_custom_bios_input(in, i, pdev->req.custom_policy[i]);
+> +	switch (pdev->pmf_if_version) {
+> +	case PMF_IF_V1:
+> +		if (!is_apmf_bios_input_notifications_supported(pdev))
+> +			return;
+> +		amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bios_inputs_v1,
+> +					   pdev->req1.custom_policy, in);
+> +		break;
+> +	case PMF_IF_V2:
+> +		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bios_inputs,
+> +					   pdev->req.custom_policy, in);
+> +		break;
+> +	default:
+> +		break;
+>  	}
+>  
+>  	/* Clear pending requests after handling */
+>  	memset(&pdev->req, 0, sizeof(pdev->req));
+> +	memset(&pdev->req1, 0, sizeof(pdev->req1));
+>  }
+>  
+>  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
+> 
