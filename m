@@ -1,125 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2369F2367A0;
-	Wed, 10 Sep 2025 10:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085A73164D2;
+	Wed, 10 Sep 2025 10:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757501566; cv=none; b=SkiWgROOOVwWGfNMg8IW4hXtOp6dJLmRyYSpv1gm3HEOuAdn8+0rdj3NbWa07CMrmyPK6GaoR0hmuUUHwpRZUz2hoU0hyJZ50sO1rN6cbYRF3fl0Ygp0peBgPDBttCukpgYG6I+eIJeGpDS3XNtU7FwLgLNbhx97y0JDv6VNfSE=
+	t=1757501781; cv=none; b=jewBsUXi+w3VTMWs76oGjLB6EIob6XqKEIXrwcPMxXeDMKfLWmyltSTRdnQoOA8FSgL6Z+czRUG4pDUzB1jjZNh1kfmDgZI4MpQHh+oEpFDh4CeJLuMAv5BYx+ofJ8Dz4cY2EMY4jbx/Oby66La+HVmJM5WLH32jh3sTmBneISg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757501566; c=relaxed/simple;
-	bh=OzTmT5N55TNnY5rWJ90RfRXqjhMrJ7pTaYY+peQxtH8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JG4cvJxIWpqB5r5+NJP1scK5WBXBL04rKnNKBnmeQsCjKCWifHQdrRuL+zncrCdymol6h0dWV7gNThcoNQAj8h/AJ+Sb/sZiAEkNoLgEjQwk5YNzku3sJtbDJkJkHeaR29VJKOUZfOe427+t4Vnr/fDvHmG/TWi6lMNqo8efRP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3PQ22dk; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1757501781; c=relaxed/simple;
+	bh=Xou+v3jeq2nQmIHLiC5MNDsiYxU46MmPvSS8fVvhtHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jkgyGB/gJmi6c6ICk2ydppvNmxaGz7e9OtXhXNjJzfKdtfCfuebSnDRz2J6WCen7OjLW/2tTEmSWruJWmMXT6oK77mP5hM/SrzkLVtHK//h14Z2RHGDRyw+nd2UexiDzi4qfZ45kMI+bGHwzA54+JqN5vzYBHHUE5RgBuFed/AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFDYSzcz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3PQ22dk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757501566; x=1789037566;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OzTmT5N55TNnY5rWJ90RfRXqjhMrJ7pTaYY+peQxtH8=;
-  b=j3PQ22dkE0vWA3Zkyshzxp32sv5MIT2oUNqu5NXw+D0nwOWFUrHA0FN3
-   SUajSNC1GJsLeb60I+VJIZUQUnB7nCr5QFlAfEWirDP93jj7/cf2+PBaN
-   RggHIaJx9mlgABBkmg40uaU2nablJA+9HhBscAHVCAzpSeyf29gusPe3t
-   hlFKGVGG4YHaQGo9MU2FYOS8raRDqjOLXPIq98ky8zP4e1HoXynyvxx9S
-   H4V0Nj00I5wb4KkUbTvUIcNbq7GTAu/osItGXXiCdNYsjfOXgnipxU4Gi
-   wLmfbbJl1BxuLax5qjfmpVNZzylbdoINbW8WEgW+L2wGoQ/BbXaq9yM3N
-   g==;
-X-CSE-ConnectionGUID: 7VJJCSNzQEG9HALRntCVZQ==
-X-CSE-MsgGUID: ho7hstZtQsm7uJK1Igi6jA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="77263627"
-X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
-   d="scan'208";a="77263627"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 03:52:44 -0700
-X-CSE-ConnectionGUID: AHUKg8BHQ6q8XsL9mBZ4lg==
-X-CSE-MsgGUID: BmhXujFtRq6yxeGmikIqpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,254,1751266800"; 
-   d="scan'208";a="197027768"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 03:52:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Sep 2025 13:52:36 +0300 (EEST)
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Andy Shevchenko <andy.shevchenko@gmail.com>, 
-    Andy Shevchenko <andy@kernel.org>, 
-    Aleksandrs Vinarskis <alex@vinarskis.com>, 
-    platform-driver-x86@vger.kernel.org, 
-    Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
-Subject: Re: [PATCH 0/2] v4l2-subdev/int3472: Use "privacy" as con_id for
- the LED lookup
-In-Reply-To: <aMEr4Qtui91NQqkk@kekkonen.localdomain>
-Message-ID: <4b8ca004-83ad-0958-a31c-7ef3e1215954@linux.intel.com>
-References: <20250909144823.27540-1-hansg@kernel.org> <CAHp75VeMMKCTDNWhdZJH2F=cmUObbpoYcDUch2jpsLBBNs_EhQ@mail.gmail.com> <e3edf119-2dfe-4857-842d-fb2a52470eb9@kernel.org> <aMEr4Qtui91NQqkk@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFDYSzcz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AB5C4CEF5;
+	Wed, 10 Sep 2025 10:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757501780;
+	bh=Xou+v3jeq2nQmIHLiC5MNDsiYxU46MmPvSS8fVvhtHI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AFDYSzcz3HumgzAULFhu6JeUWLXGxDABvMZGyh/Vis5mDkUiY1gfFfQD5kJMS33xR
+	 /5VxtS862LyHm5LS6W35R2dmjTQWflsyfKlDQPvtVY/5RVNE1WKqfxUomrkR2tb8Om
+	 ezLhwwk0Ik9k9sZf1nWNFaC5FqBdG0+cQgj/rhB+UmSudtzpefdQlqkblX12n7MkWD
+	 mTVfP1pVR6TgGmQymsrjLt9QDstnHJt2PgN8dz6fyj+RUg4Ox/M+Em79YoSiK8z0OM
+	 AvCKZrcVDnbOAbVaKC3BeATqw6Ff1wTz3h4C9Y7XhGZN2eEbnfPK4lyyqliYLel728
+	 IiogSJYzAAzuQ==
+Message-ID: <323da8ba-4b7e-40dd-a012-380394be1ca5@kernel.org>
+Date: Wed, 10 Sep 2025 12:56:16 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-617673000-1757501556=:937"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-617673000-1757501556=:937
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
+ gpio-leds/keys
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Santosh Kumar Yadav <santoshkumar.yadav@barco.com>,
+ Peter Korsgaard <peter.korsgaard@barco.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
+ <aJnlnx2qF6P61jJN@smile.fi.intel.com>
+ <7c2d08e3-d1e2-433e-b726-307246ab17e9@kernel.org>
+ <aJoQE2CQv3nzaSqc@smile.fi.intel.com>
+ <uakyig6sp2sfuwtt2aq7ds5dcbsjrgcijenunefqzc46inpees@xc6bfr4mjnan>
+ <c60ccef1-7213-4dd7-8c10-e8ef03675bd8@kernel.org>
+ <4151a14f-8427-41a9-84cf-e901080d0eb1@kernel.org>
+ <7bylxufp3r5qzf5axqrtytamkveaw5dpsidmdyiany4wkexbpd@s4yremtvct4a>
+ <ae657b82-acd3-4a1f-ba21-3ce394531819@kernel.org>
+ <ceb10a43-424f-45e8-68b5-d506573a63e3@linux.intel.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <ceb10a43-424f-45e8-68b5-d506573a63e3@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Wed, 10 Sep 2025, Sakari Ailus wrote:
+Hi Ilpo,
 
-> Hi Hans, Andy, Ilpo,
->=20
-> On Tue, Sep 09, 2025 at 10:40:35PM +0200, Hans de Goede wrote:
-> > Hi Andy,
-> >=20
-> > On 9-Sep-25 7:27 PM, Andy Shevchenko wrote:
-> > > On Tue, Sep 9, 2025 at 5:48=E2=80=AFPM Hans de Goede <hansg@kernel.or=
-g> wrote:
-> > >>
-> > >> During DT-binding review for extending the V4L2 camera sensor privac=
-y LED
-> > >> support to systems using devicetree, it has come up that having a "-=
-led"
-> > >> suffix for the LED name / con_id is undesirable since it already is =
-clear
-> > >> that it is a LED:
-> > >>
-> > >> https://lore.kernel.org/linux-media/0e030e7d-0a1a-4a00-ba18-ed26107d=
-07fa@oss.qualcomm.com/
-> > >>
-> > >> There was discussion about making an exception for "privacy-led" sin=
-ce
-> > >> that is already used on x86/ACPI platforms, but I'm afraid that will=
- set
-> > >> a bad example which ends up being copy and pasted, so lets just drop
-> > >> the "-led" prefix from the x86/ACPI side, which we can do since ther=
-e
-> > >> this is only an in-kernel "API".
-> > >=20
-> > > Since it's an in-kernel API, why can't these two be simply squashed?
-> >=20
-> > Good question, this is only a runtime thing when running on actual
-> > hw with a privacy LED. So having this separately will not break
-> > the build in the middle.
-> >=20
-> > As such it seems better to have this as 2 patches since it involves
-> > 2 different subsystems.
->=20
-> Seems good to me.
->=20
-> Ilpo: are you fine with merging this via the media tree?
+On 8-Sep-25 2:48 PM, Ilpo Järvinen wrote:
+> On Tue, 12 Aug 2025, Hans de Goede wrote:
+> 
+>> Hi,
+>>
+>> On 11-Aug-25 7:59 PM, Dmitry Torokhov wrote:
+>>> On Mon, Aug 11, 2025 at 07:44:01PM +0200, Hans de Goede wrote:
+>>>> On 11-Aug-25 7:40 PM, Hans de Goede wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 11-Aug-25 5:49 PM, Dmitry Torokhov wrote:
+>>>>>> On Mon, Aug 11, 2025 at 06:45:23PM +0300, Andy Shevchenko wrote:
+>>>>>>> On Mon, Aug 11, 2025 at 04:20:33PM +0200, Hans de Goede wrote:
+>>>>>>>> On 11-Aug-25 2:44 PM, Andy Shevchenko wrote:
+>>>>>>>>> On Sun, Aug 10, 2025 at 09:31:37PM -0700, Dmitry Torokhov wrote:
+>>>>>>>
+>>>>>>> ...
+>>>>>>>
+>>>>>>>>> Otherwise LGTM as here it looks like we establish platform device ourselves and
+>>>>>>>>> hence no need some additional magic Hans mentioned in the other series.
+>>>>>>>>
+>>>>>>>> Not entirely like with the x86-android-tablets patches this
+>>>>>>>> declares a software-node for the gpiochip:
+>>>>>>>>
+>>>>>>>> static const struct software_node gpiochip_node = {
+>>>>>>>> 	.name = DRIVER_NAME,
+>>>>>>>> };
+>>>>>>>>
+>>>>>>>> and registers that node, but nowhere does it actually
+>>>>>>>> get assigned to the gpiochip.
+>>>>>>>>
+>>>>>>>> This is going to need a line like this added to probe():
+>>>>>>>>
+>>>>>>>> 	p50->gc.fwnode = software_node_fwnode(&gpiochip_node);
+>>>>>>>>
+>>>>>>>> note the software_node_fwnode() call MUST be made after
+>>>>>>>> registering the software-nodes (group).
+>>>>>>>>
+>>>>>>>> Other then needing this single line things are indeed
+>>>>>>>> much easier when the code containing the software
+>>>>>>>> properties / nodes is the same code as which is
+>>>>>>>> registering the gpiochip.
+>>>>>>>
+>>>>>>> Ah, good point!
+>>>>>>
+>>>>>> This is wrong though, the software node need not be attached to the
+>>>>>> gpiochip (and I wonder if it is even safe to do so). It simply provides
+>>>>>> a name by which gpiochip is looked up in swnode_get_gpio_device().
+>>>>>
+>>>>> Ah interesting. This is very different from how fwnodes generally
+>>>>> work though. Generally speaking when a PROPERTY_ENTRY_REF() is used
+>>>>> like PROPERTY_ENTRY_GPIO() does then the lookup is done by matching
+>>>>> the reference to the fwnode of the type of device to which the
+>>>>> reference points.
+>>>>>
+>>>>> IOW the standard way how this works for most other subsystems
+>>>>> is that gpiolib-swnode.c: swnode_get_gpio_device() would call
+>>>>> gpio_device_find() with a compare function which uses
+>>>>> device_match_fwnode().
+>>>>>
+>>>>> I see that instead it uses the swnode name and passes that to
+>>>>> gpio_device_find_by_label().
+>>>>>
+>>>>> I must say that AFAIK this is not how swnodes are supposed to
+>>>>> be used the swnode name field is supposed to only be there
+>>>>> for debugging use and may normally be left empty all together.
+>>>
+>>> Hmm, given that I wrote both the references support for software nodes
+>>> and gpiolib-swnode.c they work exactly as I wanted them ;) Yes, in
+>>> general name is optional, but for GPIOs it is needed.
+>>>
+>>>>>
+>>>>> I guess using the swnode-name + gpio_device_find_by_label()
+>>>>> works but it goes against the design of how fw-nodes
+>>>>> and especially fwnode-references are supposed to be used...
+>>>>>
+>>>>> Having a fwnode reference pointing to what is in essence
+>>>>> a dangling (not attached to any device) fwnode is weird.
+>>>
+>>> I agree it is a bit weird, but this allows to disconnect the board file
+>>> from the GPIO driver and makes it easier to convert to device tree down
+>>> the road as it can be done in a piecemeal fashion. If you want fwnode
+>>> actually attached to the gpiochip then:
+>>>
+>>> 1. You can't really have static/const initializers in most of the cases
+>>> 2. Fishing it out from an unrelated subsystem is much harder than
+>>> matching on a name.
+>>
+>> Ok lets keep using the current swnode.name based approach then.
+>>
+>> That certainly makes things easier for the x86-android-tablets
+>> code.
+> 
+> Hi all,
+> 
+> I'm left uncertain if there are any remaining concerns with all these gpio 
+> conversion patches (the 3 independent ones and the larger 
+> x86-android-tablets series)? While I see there were a few back and forth
+> items between you three, it sounded like there's nothing left to do and it 
+> was all just based on wrong impressions/understanding, is that correct 
+> deduction from my part?
 
-Yes, but please take the v2 instead which has the changes squashed=20
-together.
+Yes that is correct. The current patches theoretically (untested) is good
+to go. The only thing which still needs to happen is test it.
 
---=20
- i.
+> There was also an almost promise from Hans to test the x86-android-tablets 
+> series, is that still on plan/pending?
 
---8323328-617673000-1757501556=:937--
+Yes I hope to be able to test this the x86-android-tablets series this
+week (likely in the weekend). Once that has been tested I think we can
+assume that the 3 independent patches will also work and merge all of
+them.
+
+Regards,
+
+Hans
+
+
+
