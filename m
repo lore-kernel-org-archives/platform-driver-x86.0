@@ -1,76 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126717AE1D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 14:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426AC1F4E34
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 14:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757600286; cv=none; b=agj0abwrvmdiSI09HixQdpg5KokeMVCOWSbaF2LOECuL/Oqc6fZsKgiqvfwbri921+w0HZj31Q6u8DgqQjVpg3Q0JYQR6oXKQ++nbHhsN1IcK8S0sgwcHZcdK2N7/vFpv1rKy1RSRoF+0JSzJHZ1eyO9mTIT/VJ5fj1VqEiZxWU=
+	t=1757600294; cv=none; b=UJINcVyj/83OsFaCyCcrUb74JdDJ2MNXGKCaVa39fmaWXz7N7qs6jWe/YO067CiwUFjnLXNqGZIpppUwecFPPItxEJAzLTFS7+XCtzNhun20ihPHDwdrh37vyyqomcdAFsoNxjrypu+lrgcoMLuXT+8xyNdifl26cuxYIfBAjDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757600286; c=relaxed/simple;
-	bh=TJ3qw/1Gi7ZEtcqri87L5DQVPeMD3J43ju5foEVL9qo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ln6XgxnCfvq1I+AP6Lv1JswdMT9kW5ks+JSNg2WPKF3CQ5lj4f8NaP8GOABfRfplUH9HAcXQS20/MILyTAaY3yJzeGcTQXfcV/CtlSUN4Arg3UrEjsH1Zd9DkPrCqZehG1nhvNXetGvReZFpku5feoRaSKPwZ4/lErdAlMqhL8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7uHZkg6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757600294; c=relaxed/simple;
+	bh=P+ekWSl6BBa+CStulHQMxssqwBzzkBz3JggX4x3K5Qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uNNHRNoIZaQiHlsiSZcdd7iwkzW+koLm2fok0D2D2zPa5I6AiVC8UyfALCGngn8WjOufJ/KgEBM5czrktgErzuFcfPy/UZyJ8Urancrd5nhC0M5JlL9+Ls96UI0dWOYvce8ZtG2OVifYJwZo6Uc+nil4xbt03zYByX5v/79Z63E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNjywTyf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7uHZkg6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D40B1C4CEFA
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 14:18:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNjywTyf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B3D1C4CEF0;
+	Thu, 11 Sep 2025 14:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757600285;
-	bh=TJ3qw/1Gi7ZEtcqri87L5DQVPeMD3J43ju5foEVL9qo=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=d7uHZkg6CnMyx0mhjKFnM7E4nT15q8xGWWVY6Vppj9VF9KQJzqvZRD0Y543ueMQ2B
-	 11sgAXS6dFtAHhp+MbTNDx1WdodMh0SGn41/f9ASL4kDZXkipsrFmze8+VClf6Peq/
-	 IKG7rjttwUw68AxMkWOXwKOEI15W9Y3zIloaMbbeHtfs2jwXY/h85nf+h8X+lI2FtK
-	 804zavHA9VDlWoEn8Rqp41OlVTnfVzdJ/LTalpn/imXupstQ6Uhv2+oBZbK4qCcONd
-	 kyrAR8re5ceKMDYrytPi7F5UAyGwae0PlwNuly3EKCG9FVw6Man2MMLDcJeqdQ3Yho
-	 W+TuBk9Ieag1A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id C80D6C433E1; Thu, 11 Sep 2025 14:18:05 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Thu, 11 Sep 2025 14:18:05 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-gUm1sF88TA@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1757600293;
+	bh=P+ekWSl6BBa+CStulHQMxssqwBzzkBz3JggX4x3K5Qc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=lNjywTyfpo8fApKPe4nd8CQ8j2qbIgK/1CUVHXNZRdsL+TDMcYBj8m28eQu/EC+aY
+	 tWKqhrVr2xXlOUl/uPXOn9mTFSxFIsRneeS0LwLAtNZ8L1pwgf16Se2ToGfiXGlKgS
+	 0aK/0y/CZUTlI4iBk5GXtWoTI3fpUf0C4749XtybLqNAl/Q1LG3cAEQz0JZDIpNuNs
+	 ySm25Kx4cBxLVnow4oW+gNxv8kEgephMHZnuQOdh8nQn5IqcPXfxW6U5GSHHE6ShJ0
+	 ePJSpDecoNLB/mMKmxVCrnPnL4gryRG1tV0Dg6NkPhuRQRrswbDKa0MdTuHlpAFQES
+	 ULeK/n6D58WeA==
+Message-ID: <321a7ad0-03e1-4a73-a0b3-e9f9ecf2c7d5@kernel.org>
+Date: Thu, 11 Sep 2025 16:18:11 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: lenovo: Reassign KEY_CUT to
+ KEY_SELECTIVE_SCREENSHOT for Ideapad laptops
+To: =?UTF-8?B?VG9tw6HFoSBIbnlr?= <tomashnyk@gmail.com>,
+ platform-driver-x86@vger.kernel.org
+References: <1757599473382.2879968666.2275695113@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <1757599473382.2879968666.2275695113@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Hi,
 
---- Comment #109 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
---
-I still see the GPE status bit loop.  Sorry but I don't have any suggestions
-for you right now.
+On 11-Sep-25 4:13 PM, Tomáš Hnyk wrote:
+> This key is produced by FN+PRINT_SCREEN and as per Lenovo documentation,
+> it should be "Open the Snipping tool". This corresponds to
+> KEY_SELECTIVE_SCRENSHOT, whose keycode is 0x27a. Previously, keycodes
+> under 248 were preferred due to X11 limitations, so KEY_CUT was used.
+> This is now being corrected.
+> 
+> Signed-off-by: Tomáš Hnyk <tomashnyk@gmail.com>
+> ---
+>  Fixes https://bugzilla.kernel.org/show_bug.cgi?id=220566
 
---=20
-You may reply to this email to add a comment.
+Thanks, patch looks good to me:
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
+
+
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index fcebfbaf0460..556d50fb7996 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -1328,7 +1328,7 @@ static const struct key_entry ideapad_keymap[] = {
+>     /* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
+>     { KE_KEY,   0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+>     /* shift + prtsc */
+> -   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> +   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+>     { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+>     { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+> 
+
