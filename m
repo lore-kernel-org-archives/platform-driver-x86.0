@@ -1,83 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70B623D7D4
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 04:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205461F3BAC
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 06:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757565251; cv=none; b=moe6Y/YYlmEQuj78j4ln4jL44kwByAdg5be/iR7c4j7sFK76picz998waZUyyJhbwRf4980GHgJVeX9lflFKW0j4nht1xF81rmA+OhLkPdVx2cvEBEShAWFs5LlIKn2xCoxbppNXCm2c6rZJ8+OAQw6RaqiFPk5n0kI/bn9f/K8=
+	t=1757573953; cv=none; b=SNv00SnoX9nKL87fJn5hprYAGe+5q+WNYPXK6mSiZCAwttQzm7O4XiUlQLzWanuuLHhKEGYBB6MZk8HAhI728hnCENORnxuLF6qSvgAApEmC0IwLJfEenVaVKSN0IF6/g+c6tczksINkoc0lMaIOhj0HqjqGjmwx0b/z3NxmfW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757565251; c=relaxed/simple;
-	bh=7jPp5lctn8xHCVIGbW97Q802tg3uiEe6EdRYhgVK5Rk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O4uA47fUq3TEwe8jXGFJQbnPo3I6mlU20AfEPsFARfylOI5xB0ZoMYa1rzIeSxENjTewJ/0rUYh70k7YXQ1U2ILnSs+wIoKL9CIAGfO1EW73xZRtJ9BY2ifIO2Im0pxlRcRpMBJgmCz8iUYEk43ruEliQFyfUTSPTWnK7DFDxF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrioVHm3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757573953; c=relaxed/simple;
+	bh=U2ICFLUC8AFk7vYooJBSybSbcMlKO106luwllWtS6I8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FGRXpCVryturaQ6p4hOKyDiyx4cp7/x5PrDlo+I0qo0bXY4sNvBgLEjGqdOMVCsJqX0T1bCCLa08iKpzEH9u22Kg3vCu3/G1K1E5PVvTjoK855Y85qH5FngMT0N1d5Qu34AsZ9Og1XbeXxSGmtK0wlOMDWfIdSjVU0lREk3NSW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRjXuv23; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrioVHm3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 659F8C4CEFB
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 04:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757565250;
-	bh=7jPp5lctn8xHCVIGbW97Q802tg3uiEe6EdRYhgVK5Rk=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=JrioVHm3N6V3ttm6wpsjLYNPNv8C/OKXwZWVS4hdOfdMtY9wTFC8iv0SdkSW5e0wf
-	 OK7fL0s/mBx+TtK2FVgH26aslQnwGmyglT9skRup/1WMpUSd+n4NszTHanDe5BHgC9
-	 x3dFl2y7StUvR7VGtBI88ll7q6VeLFe2F0pK+hLfAbi0MNWUQmCsqJA0XxqOVnsO9k
-	 MaEwQePkNaKOv6kyHZ9Ka8cuYf+cGzE7uIzx4cUtE1ufhV1oMuvxgjSi13Uof0aUQZ
-	 3oA2Bme+SPeL+ssjUG6lfo0yAirXVD5WlsC65O6xN/l2knfEoiaEl7hnFFB69vKOZP
-	 Un+tz7ooXExlg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 5EB20C41613; Thu, 11 Sep 2025 04:34:10 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Thu, 11 Sep 2025 04:34:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: petar.vidosavljevic@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-8RjNNrUPL5@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRjXuv23"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757573952; x=1789109952;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=U2ICFLUC8AFk7vYooJBSybSbcMlKO106luwllWtS6I8=;
+  b=GRjXuv23CUaklxh9ABm5YW+iQ57yvApWdYfvFMjNKMux0spkpBxPWMx+
+   HUKr8uBE5zn61DMmoH9Fbzh7fCCXIx8fhQEqAWmfUtgPUpUJH8fJVPi8d
+   RMFcu8urVhIKS+EwhmTSRSFBmlL+iWfXawoDfuKwjwtCCduQ43tO6/yTa
+   Bg5Pg98ff4f4jESksAmpv1B+tPgY++xns+a725gpPKQOcFHSCX/4fotuv
+   Ic6OyROlbTBYFl3YR6ZBa/1R/HjcHa2uiCc95j3gyxs2r3JSlaC+ael8V
+   MgD5wH8laTbUjW3zAv82AVtvxHuYvQVB3U0W/DoCzc2pjKwC3lqI1WTg3
+   w==;
+X-CSE-ConnectionGUID: TkjYF31BR/imZLBR6xPbhg==
+X-CSE-MsgGUID: hfElX/AZStKfcMJVrrILRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="85340398"
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="85340398"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 23:59:12 -0700
+X-CSE-ConnectionGUID: 2j55oxvgRsKLtsaHHv6gkg==
+X-CSE-MsgGUID: VrVFggXSRLamfu1IMTRgbw==
+X-ExtLoop1: 1
+Received: from opintica-mobl1 (HELO localhost) ([10.245.245.187])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 23:59:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Sep 2025 09:59:05 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, mario.limonciello@amd.com, 
+    Yijun Shen <Yijun.Shen@dell.com>
+Subject: Re: [PATCH v5 RESEND 6/9] platform/x86/amd/pmf: Add custom BIOS
+ input support for AMD_CPU_ID_PS
+In-Reply-To: <7f93331e-0576-40f1-a692-9d41da778dc9@amd.com>
+Message-ID: <6287dfa9-9938-278a-fbc1-e3b142c42a3c@linux.intel.com>
+References: <20250901110140.2519072-1-Shyam-sundar.S-k@amd.com> <20250901110140.2519072-7-Shyam-sundar.S-k@amd.com> <2ba64be3-34c8-b9e5-549a-8548571168c2@linux.intel.com> <7f93331e-0576-40f1-a692-9d41da778dc9@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-250792108-1757573945=:944"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---- Comment #108 from Petar Vidosavljevic (petar.vidosavljevic@gmail.com) -=
---
-(In reply to Mario Limonciello (AMD) from comment #106)
-> I notice that pretty much the EC is stuck in a GPE status bit loop.
+--8323328-250792108-1757573945=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 10 Sep 2025, Shyam Sundar S K wrote:
+> On 9/10/2025 16:01, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 1 Sep 2025, Shyam Sundar S K wrote:
+> >=20
+> >> The PMF ACPI Specification (APMF) has been revised to version 1.3 to a=
+llow
+> >> for additional custom BIOS inputs, enabling OEMs to have more precise
+> >> thermal management of the system. This update includes adding support =
+to
+> >> the driver using the new data structure received from the BIOS through=
+ the
+> >> existing APMF interfaces.
+> >>
+> >> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> >> ---
+> >>  drivers/platform/x86/amd/pmf/acpi.c | 58 ++++++++++++++++++++++++++--=
+-
+> >>  drivers/platform/x86/amd/pmf/pmf.h  | 22 +++++++++++
+> >>  drivers/platform/x86/amd/pmf/spc.c  | 36 +++++++++++++++---
+> >>  3 files changed, 105 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x8=
+6/amd/pmf/acpi.c
+> >> index 4982311ac045..41c34c26ceec 100644
+> >> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> >> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> >> @@ -320,6 +320,11 @@ int apmf_get_sbios_requests_v2(struct amd_pmf_dev=
+ *pdev, struct apmf_sbios_req_v
+> >>  =09return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS, r=
+eq, sizeof(*req));
+> >>  }
+> >> =20
+> >> +int apmf_get_sbios_requests_v1(struct amd_pmf_dev *pdev, struct apmf_=
+sbios_req_v1 *req)
+> >> +{
+> >> +=09return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS, r=
+eq, sizeof(*req));
+> >> +}
+> >> +
+> >>  int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbi=
+os_req *req)
+> >>  {
+> >>  =09return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS,
+> >> @@ -338,6 +343,18 @@ static void apmf_event_handler_v2(acpi_handle han=
+dle, u32 event, void *data)
+> >>  =09=09dev_err(pmf_dev->dev, "Failed to get v2 SBIOS requests: %d\n", =
+ret);
+> >>  }
+> >> =20
+> >> +static void apmf_event_handler_v1(acpi_handle handle, u32 event, void=
+ *data)
+> >> +{
+> >> +=09struct amd_pmf_dev *pmf_dev =3D data;
+> >> +=09int ret;
+> >> +
+> >> +=09guard(mutex)(&pmf_dev->cb_mutex);
+> >> +
+> >> +=09ret =3D apmf_get_sbios_requests_v1(pmf_dev, &pmf_dev->req1);
+> >> +=09if (ret)
+> >> +=09=09dev_err(pmf_dev->dev, "Failed to get v1 SBIOS requests: %d\n", =
+ret);
+> >> +}
+> >> +
+> >>  static void apmf_event_handler(acpi_handle handle, u32 event, void *d=
+ata)
+> >>  {
+> >>  =09struct amd_pmf_dev *pmf_dev =3D data;
+> >> @@ -427,6 +444,11 @@ int apmf_get_dyn_slider_def_dc(struct amd_pmf_dev=
+ *pdev, struct apmf_dyn_slider_
+> >>  =09return apmf_if_call_store_buffer(pdev, APMF_FUNC_DYN_SLIDER_DC, da=
+ta, sizeof(*data));
+> >>  }
+> >> =20
+> >> +static apmf_event_handler_t apmf_event_handlers[] =3D {
+> >> +=09[PMF_IF_V1] =3D apmf_event_handler_v1,
+> >> +=09[PMF_IF_V2] =3D apmf_event_handler_v2,
+> >> +};
+> >> +
+> >>  int apmf_install_handler(struct amd_pmf_dev *pmf_dev)
+> >>  {
+> >>  =09acpi_handle ahandle =3D ACPI_HANDLE(pmf_dev->dev);
+> >> @@ -446,13 +468,26 @@ int apmf_install_handler(struct amd_pmf_dev *pmf=
+_dev)
+> >>  =09=09apmf_event_handler(ahandle, 0, pmf_dev);
+> >>  =09}
+> >> =20
+> >> -=09if (pmf_dev->smart_pc_enabled && pmf_dev->pmf_if_version =3D=3D PM=
+F_IF_V2) {
+> >> +=09if (!pmf_dev->smart_pc_enabled)
+> >> +=09=09return -EINVAL;
+> >=20
+> > Hi,
+> >=20
+> > Is this change okay? Previously this function returned 0 in this case.
+> >=20
 >=20
-> > No notify handler for Notify, ignoring (PMF_, 81) node 00000000be324725
+> Yes - this change is okay and was introduced to address your v4
+> remarks w.r.t to code optimization.
 >=20
-> Can you try with blacklisting the PMF driver (modprobe.blacklist=3Damd_pm=
-f)?
+> This function still returns 0 upon success but this additional check
+> is to make sure we don't enter the underlying code block for smart pc
+> if the feature is not enabled.
 
-Let me know if you need me to try anything else.
+Code flow within this function is fine but this doesn't answer my main=20
+concern related to the returned value. Is it okay for this function to=20
+return -EINVAL if smart pc feature is not enabled? Previously this=20
+function returned 0 also if smart pc was not enabled.
+
+(Maybe you wanted to say it's okay to change the returned value from 0 to=
+=20
+-EINVAL but it's notindicated by your words, thus reiterating the=20
+question.)
 
 --=20
-You may reply to this email to add a comment.
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--8323328-250792108-1757573945=:944--
