@@ -1,152 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131F830748D;
-	Wed, 10 Sep 2025 21:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E41F29A1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 04:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757538399; cv=none; b=AiWFIKKPGuXTbYoRhy02V36tXq8616B3yLD6UJzEgw8Aj7Q+f0u283RH+WEFiTUlw/K3qSv5QDwcU+89qdsKx9rOqF/CLHgrT/Snqcl72v0HWWxRyylW9glq7KN3GnPKMAieqmwYJjxEOh9Bl5fN4Ss+FDzBMr8GoynGHtS3bdo=
+	t=1757565161; cv=none; b=FyEHdPrCABi4m9gec7Zgbuaos7xApmeJkJZW4ZPkorJPXS2fMKqsJJm20QnYF/sw10/YtWyvt1JrcQF8GW50fOMST2DJcNyIvIqbwuWKq1+km5Dn+h/QIYhp3AY3ql8y67RaAk2UA3srHDVfjIdOrzwXsplIizPiYd1cMkjt8Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757538399; c=relaxed/simple;
-	bh=/2NkNQuE+1Dc77xeUbrmiQTm9He187B/H7jaxccCAT0=;
+	s=arc-20240116; t=1757565161; c=relaxed/simple;
+	bh=HvbeGbW+1lk2L6RsTNrTZY9BDdScxVWc+tDNwKBQvC0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEuG8IfZ1ks8WfuTIuZ75fPhJZLhSZSmCVVvqssHS40+RHW8ZxER5prtGJZ931AGsSTaDYXr2fuPB9RaFs2dBBAwiVRANcm5jKFnARIy0+L2h+anjEzmdQMakUz4q3qXcDTiJcIIrGHMtGL5QNo1UCXJxGqJCX6My/4msf8QBqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oA05b95i; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:MIME-Version; b=pbVB98yqzADy+fDJiyIIDD8TUHdHMKDYwyqkc/HAE6sHHYYYYkmc3FAtLHkzC2ntyAm5j8LDUYPcmICc7VV7EgV88NqkcBjgSrUZgoqD6Ofvd8mrLxtzxFwwhR5UempgXWKnVTTA9111PvxEqdWNfO4eCKngAooccyvo+c5qvU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZGy0lCW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oA05b95i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757538398; x=1789074398;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=/2NkNQuE+1Dc77xeUbrmiQTm9He187B/H7jaxccCAT0=;
-  b=oA05b95izTlMomR5OeHIlchS59ctfobNZl++CrE1bGk5ARB7KEAnMnr0
-   MX5UgjGCkBrUa0qAcx/o3wbeZ2v1ohM/tySNLWNLo9bjH76o9Gs4StqNe
-   8M8XjvAqNm2yxmQCElFijrPlfxakHjYp+CekVGyHoVmVQi8xM3kBRd+eI
-   j762K4HDQU0iHDCGWX1O7++iReYGt87w8E51m1wp29B4QCO/h/UCI/inx
-   Sb44N21BciPf3cFVM2mrT6ilC9MAKV5ePrB+x+oZHERRQt6ZMuTeSZifZ
-   Rnfh0/itqoTiP3fEiKgNR0h2sXpBAxe49iwmFHiIP69X8kgt5HIgkHe2U
-   Q==;
-X-CSE-ConnectionGUID: v8JiLHclSbK59q0HV1oclw==
-X-CSE-MsgGUID: trrnCr/gTKysX+HtW4CL5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="82448493"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="82448493"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 14:06:37 -0700
-X-CSE-ConnectionGUID: /3VqNt5mR2mC3+b6bx44FA==
-X-CSE-MsgGUID: rBjPClj+TxG8OkMrRJ9Dcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
-   d="scan'208";a="177842755"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.125.110.232])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 14:06:37 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v4 5/5] platform/x86:intel/pmc: Enable SSRAM support for Panther Lake
-Date: Wed, 10 Sep 2025 14:06:25 -0700
-Message-ID: <20250910210629.11198-6-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250910210629.11198-1-xi.pardee@linux.intel.com>
-References: <20250910210629.11198-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZGy0lCW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 914D6C4CEFB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 04:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757565160;
+	bh=HvbeGbW+1lk2L6RsTNrTZY9BDdScxVWc+tDNwKBQvC0=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=EZGy0lCW4oa7u9zzsiJ1v/vVHRi2I6edICfiSaMoh37UFhLzPYb1sYXJjOm57oZNm
+	 zgMjjAeVuTVD+a65T/wT9O4rzcMVys2llVFhSSKCi1vICQg5BklWgTs7b1Dgm1EgJX
+	 zCy34i68FNkHwgD3O2p1SQUBov6vj5ZEGkol67p0SHcp5ACdm7zF7gYUW6vn1vHHmd
+	 /anqqHTckiI3TehH0HggcSxYLnTKVB33QGbq1MtUkT8Hdc6Tmqvb4v5VSzM4eBvsj8
+	 SYsDVQBTo1BTXt6wb5gZ6T1pUpeG8y4mVXHBQS0GmdLD9wz1dkTAv86AjUnvS4adlc
+	 r4ESdzmCIsIcQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 86A0FC4160E; Thu, 11 Sep 2025 04:32:40 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Thu, 11 Sep 2025 04:32:40 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: petar.vidosavljevic@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-218305-215701-ql1IC8QYwQ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Enable Panther Lake platforms to achieve PMC information from
-Intel PMC SSRAM Telemetry driver and substate requirements data
-from telemetry region.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.h |  2 ++
- drivers/platform/x86/intel/pmc/ptl.c  | 31 +++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+--- Comment #107 from Petar Vidosavljevic (petar.vidosavljevic@gmail.com) -=
+--
+Created attachment 308659
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308659&action=3Dedit
+petar_amd-s2idle-report-2025-09-10
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index b554805db689d..f4dadb696a314 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -297,6 +297,8 @@ enum ppfear_regs {
- #define PTL_PMC_LTR_CUR_ASLT			0x1C28
- #define PTL_PMC_LTR_CUR_PLT			0x1C2C
- #define PTL_PCD_PMC_MMIO_REG_LEN		0x31A8
-+#define PTL_NUM_S0IX_BLOCKER			106
-+#define PTL_BLK_REQ_OFFSET			55
- 
- /* Wildcat Lake */
- #define WCL_PMC_LTR_RESERVED			0x1B64
-diff --git a/drivers/platform/x86/intel/pmc/ptl.c b/drivers/platform/x86/intel/pmc/ptl.c
-index 1bbec9856867d..1b35b84e06fa2 100644
---- a/drivers/platform/x86/intel/pmc/ptl.c
-+++ b/drivers/platform/x86/intel/pmc/ptl.c
-@@ -10,6 +10,17 @@
- 
- #include "core.h"
- 
-+/* PMC SSRAM PMT Telemetry GUIDS */
-+#define PCDP_LPM_REQ_GUID 0x47179370
-+
-+/*
-+ * Die Mapping to Product.
-+ * Product PCDDie
-+ * PTL-H   PCD-H
-+ * PTL-P   PCD-P
-+ * PTL-U   PCD-P
-+ */
-+
- static const struct pmc_bit_map ptl_pcdp_pfear_map[] = {
- 	{"PMC_0",               BIT(0)},
- 	{"FUSE_OSSE",           BIT(1)},
-@@ -515,6 +526,22 @@ static const struct pmc_reg_map ptl_pcdp_reg_map = {
- 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
- 	.s0ix_blocker_maps = ptl_pcdp_blk_maps,
- 	.s0ix_blocker_offset = LNL_S0IX_BLOCKER_OFFSET,
-+	.num_s0ix_blocker = PTL_NUM_S0IX_BLOCKER,
-+	.blocker_req_offset = PTL_BLK_REQ_OFFSET,
-+};
-+
-+static struct pmc_info ptl_pmc_info_list[] = {
-+	{
-+		.guid	= PCDP_LPM_REQ_GUID,
-+		.devid	= PMC_DEVID_PTL_PCDH,
-+		.map	= &ptl_pcdp_reg_map,
-+	},
-+	{
-+		.guid   = PCDP_LPM_REQ_GUID,
-+		.devid  = PMC_DEVID_PTL_PCDP,
-+		.map    = &ptl_pcdp_reg_map,
-+	},
-+	{}
- };
- 
- #define PTL_NPU_PCI_DEV                0xb03e
-@@ -543,8 +570,12 @@ static int ptl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
- }
- 
- struct pmc_dev_info ptl_pmc_dev = {
-+	.pci_func = 2,
-+	.regmap_list = ptl_pmc_info_list,
- 	.map = &ptl_pcdp_reg_map,
-+	.sub_req_show = &pmc_core_substate_blk_req_fops,
- 	.suspend = cnl_suspend,
- 	.resume = ptl_resume,
- 	.init = ptl_core_init,
-+	.sub_req = pmc_core_pmt_get_blk_sub_req,
- };
--- 
-2.43.0
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
