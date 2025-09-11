@@ -1,60 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E99031B129
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 13:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D295337682
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 14:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757596683; cv=none; b=f12jqFC2oeCV1PtY9pcmDeWBMxoO3GURfRGsiwveZU5DzvHC/A4ras7JZM7RrBqrEuVUOUrOz4oTdLHyXV7BSzXE3X0RN+tMNDj8aszssp8x0dZhKz7jsC7C5Z6uCpY6TVx3eatc3okvxvhFmBHBBxe05//uBFr3XtsA6r4FSN0=
+	t=1757599994; cv=none; b=uWUjCRFCYJBsEV8Gux2ERbmyFaaSuZ5RT09hxENPk9h4iAddM5YAHwJvB6cY6ZwROZ1OS+4YCEIv5TzKVfZn0r+uF/E565OkBCY32dcqv9WXlic0L59Y9XTsfPb3Fr/GJ7Nr5/poZ+PDzgcnAbrRluLbO736S3QDCUhlRJBF5gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757596683; c=relaxed/simple;
-	bh=iSRK+zy5HHoPZHojkwDtGAqPMp7q86+gK+EAZes6DNg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dmiYow3mdCbzPGXLr2Ggs3cwY4QaSGeyZABdTh4qJ3ROkgzfIv5t5247oj0frMLki37nFy1TSDVOUQswB2GC4uIiljkwOkIG5PKxLpUpFRr+EhjTH/IpD1PZC24ZHt/X7Py4llu+4BhbJcCoOIUNkzbCJwguSLraI/FMeuW42tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzTrcRIf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757599994; c=relaxed/simple;
+	bh=3sJAiwFDTGoPglp8BEUZn5NCqMe11hpfvRmq3s/gQCs=;
+	h=Content-Type:Message-Id:From:To:Subject:Date:MIME-Version; b=d0KgGc50pNrOjrveePq5ctHuHnSXqfXKVO3+E7PXH+8voDeXWtQE5rIglZAhQGYn2JXEpMSNNO4WgW2sja5PcekxwWz/Mg+PgGhhyhcIOTd8c4WKcIv2/nFsB01Fg7zbIaQyHiDYY5FBoRIGZydRMdUz/Dg7KYlr9ltt6eKrlsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BJtOZnXP; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzTrcRIf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 44699C4CEF1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 13:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757596683;
-	bh=iSRK+zy5HHoPZHojkwDtGAqPMp7q86+gK+EAZes6DNg=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=DzTrcRIfDU1voCl/8EzZ5m2dfzXeuzIBHyWGgBtobHfegyw3pXSUdqVE/PFh2lIo0
-	 /vbeAqsldMnTnGRQz7HTJUA6GAaPhun2SuMIDRlsbEwSML3llUhPLGfa95U8KZXpGm
-	 hGr5M5wygE5Dm1dxLTuxJb/JE5s59lIOlZ+2cONmL3VCfiz1pRMtaIj6cfC5mcrZXB
-	 rkNj9kzrbA+OV4uliAoI4SP6v/XWtIUr3Gl+pa5mpRX53hSL94wFqcfIeu1vDF+5Rz
-	 YPuPtBUQTMfBeGb9WDHqArOjM7L6gd2/dZE56FLccdfef/5LjmQnufmIB5rY0aCqTj
-	 Vj/4px2vKZ6qQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2F492C433E1; Thu, 11 Sep 2025 13:18:03 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJtOZnXP"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45ddfe0b66dso1601975e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Sep 2025 07:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757599990; x=1758204790; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:user-agent:date:subject:to
+         :from:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OcAnTzjFz6WYD7ARxbtJyu4G4O3NEvA32iyOHj5NWnY=;
+        b=BJtOZnXPNcVYoYzTaFjFoDoTIRpZtVLtshJHjHRM8w+nyTzHqD85Hx0j2iFxKlJWku
+         2GL8p2G5vXXPWE4ppYH0+/Xl/tL2exTQhLt39/r8+N7GvP9vEmkqjfT/pjCnIHa0dryA
+         F6grDGaf70sHs8CTRktr7uxsNkz58iiY0Xs3+QkjzcjA36byxnA8L/0VCgZVXI5gTT0K
+         ExfrkOCbLHNhnw3zS614/bD3eZ+T8dlVTyX57Pf92iRdzpAikwOG5ysVxKJueNWqxvv8
+         OiFMF+AQNHsevJrTPsBBz8fEN83h46eNSSnOZD4pZhnwiox9WMAOVj92Xmi443ZYnFog
+         zXrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757599990; x=1758204790;
+        h=mime-version:content-transfer-encoding:user-agent:date:subject:to
+         :from:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OcAnTzjFz6WYD7ARxbtJyu4G4O3NEvA32iyOHj5NWnY=;
+        b=RhqNOsFLNbB3yQoroW38XETBKGFlnC5WxsgPIEe273mif8Vi1Uk12yi27pf8/nRnGc
+         VSfm9yVeyzd6/2z6Z/l3mgverTYkyLLLB35imCYWlw+h30XI6ceiZ3Ps5AETKJZMVtsQ
+         g618pWauuvLH6MkvQ2R3niiTQ2XKQJTdURmnFcOEWQMb1Ru0W7SGnvxA2ZoufA3nzfIk
+         TSx+AANkmQimiQoTA5DBaSKdfpyDfXzXvvb4orclTUjDUdtU690RnDYpKLU33GhOqaQy
+         QpwqoihjOBF3m01zm0T/iSuXeDXiurT4DPPbLkrFqcUSrTl+oWSEc0SL0ZpCrTrFYC+v
+         CPvw==
+X-Gm-Message-State: AOJu0YwXP5bXRWgUMYQ4505lr+oaoGxWKTELt96w+pOwhINhq4CiDDVc
+	/C/Ty7meU7Hl1tWMIG4QkZsguW4LqhhbqrHOp5XBTCVVcnEOtikDOGPZQo8WXc3a
+X-Gm-Gg: ASbGncvdjqLEXsJ5G8Lh4zATukWGJ0wdBP7lzjtHS0n0V+osrxjWLRl6R19IbnsHLYY
+	5y1fRL9ve67CdDy6grF5KccPSQr3OSgIwsVume+tnQ3vvJzfZJ6kSjxz7XObqADUmVfhVxDWBxJ
+	1lTlzIO4UySEUkEaqDL/0MdGdqGTd+YO4J6aQ8KnKH5zZJfreYGa9bDRAi6NnKLmHFr/uCJNLTg
+	xaVVkyfkC6sqesMICtw7pjMlSFa0ZtYhHnXhj8oWEsbMRir09xucE+WAqJGjU9nxieRTo7NfGiy
+	tng41skeZp32gu/2GFj72cBvSpUk6nn1xp9aBQxCnamOKlgh7HCZXIegDnDCgviLpOWSAToy2iY
+	AtHq070Vtm5CGbbchskUsmjofCbXkJKXcxw==
+X-Google-Smtp-Source: AGHT+IHmrkWX8A3dUo8RhcFCTNgrZwDk+6uoXf91B1ecpZp81R8lrndXJWYtUabjsDrEwyG3PNx5gA==
+X-Received: by 2002:a05:600c:870f:b0:45d:d401:2777 with SMTP id 5b1f17b1804b1-45ddde84ce8mr92867945e9.2.1757599990137;
+        Thu, 11 Sep 2025 07:13:10 -0700 (PDT)
+Received: from noip.localdomain ([2a03:a900:1000:22b1::9d4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd329sm2663478f8f.31.2025.09.11.07.13.09
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Sep 2025 07:13:09 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Message-Id: <1757599473382.2879968666.2275695113@gmail.com>
+From: =?UTF-8?Q?Tom=C3=A1=C5=A1_Hnyk?= <tomashnyk@gmail.com>
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220566] Lenovo Ideapad laptops wrongly assign "Cut" intstead of
- "Selective_screenshot" to the corresponding hardware key
-Date: Thu, 11 Sep 2025 13:18:02 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: hansg@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-220566-215701-wVNyfa2NI2@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220566-215701@https.bugzilla.kernel.org/>
-References: <bug-220566-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] platform/x86: lenovo: Reassign KEY_CUT to
+  KEY_SELECTIVE_SCREENSHOT for Ideapad laptops
+Date: Thu, 11 Sep 2025 14:13:09 +0000
+X-Mailer: Vivaldi Mail
+User-Agent: Vivaldi Mail/7.5.3735.62
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,30 +73,33 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
+This key is produced by FN+PRINT_SCREEN and as per Lenovo documentation,
+it should be "Open the Snipping tool". This corresponds to
+KEY_SELECTIVE_SCRENSHOT, whose keycode is 0x27a. Previously, keycodes
+under 248 were preferred due to X11 limitations, so KEY_CUT was used.
+This is now being corrected.
 
-Hans de Goede (hansg@kernel.org) changed:
+Signed-off-by: Tom=C3=A1=C5=A1 Hnyk <tomashnyk@gmail.com>
+---
+ Fixes https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |hansg@kernel.org
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- Comment #1 from Hans de Goede (hansg@kernel.org) ---
-I believe that you are right. Chances are KEY_CUT was selected in the past
-because it has a keycode < 248 where as KEY_SELECTIVE_SCREENSHOT is 0x27a .
-
-And keycodes >=3D 248 do not work under X11.
-
-We have slowly been moving all these to use the correct keycodes though, th=
-ere
-are options to remap this in userspace if desired.
-
-So yes you're right and this should be changed to KEY_SELECTIVE_SCREENSHOT .
-
-Can you submit a patch to make this change?
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c =
+b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index fcebfbaf0460..556d50fb7996 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -1328,7 +1328,7 @@ static const struct key_entry ideapad_keymap[] =3D {
+    /* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() =
+*/
+    { KE_KEY,   0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+    /* shift + prtsc */
+-   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+    { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+    { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
 
 --=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+2.51.0
