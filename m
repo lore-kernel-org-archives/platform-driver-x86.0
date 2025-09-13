@@ -1,91 +1,89 @@
-Received: from www.redadmin.org (ag129037.ppp.asahi-net.or.jp [157.107.129.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6C7EAF9;
-	Sat, 13 Sep 2025 17:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=157.107.129.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757784864; cv=pass; b=uBKkDyD1M8iaaN4SpCSNFO++cqldx6ikalX1WvQY2hnhaTUyoaaLKzO2lMqkoERdx6HIQH2bh3eUg+sOYUWP5+YQihicAJrwQtKYG4Cmu/Zte/wZZ52lVcljjPS9orJKhjNmnw9pFHTwOcB9S4XhHi6KglzeefJtFVXlALH5BPc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757784864; c=relaxed/simple;
-	bh=GimA55GhBUtSka0KXGQTI8PV1VvmRaA5WdoDN040dOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKbgxlJuZ8IyMD/W01dX/iHtj1EnUGh2xg8plleg8AmePLmDkWJC+MJKBPm9sfPZBSARZ5zDAIEecD6hI8nMCgF2AOULAjROUKkzWz6bLhNUkHviOKMTIYRBJm1oNL9RpUn1D2U6loTSDe3WUm8JospfbQHZQNeKL98iM5nN53I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org; spf=pass smtp.mailfrom=redadmin.org; dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b=BeTEbU+0; arc=pass smtp.client-ip=157.107.129.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redadmin.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B710A11CBA
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757785061; cv=none; b=SJzgQoGzga5WOJ23NCpHvtRL3WbgegZyT4QkpdAMDPATNgfMBzX33gwmGZtNAVZTxjV40vNn0HlWC6/JT4sZF5lkk/ZYWuoG8mCT2ttBcteVhMeZ5+ZdpaJqddaXCHKCXP0+GwCccvku4A/dhOUNsia2ZXZNkcGm4QTGjiZuElo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757785061; c=relaxed/simple;
+	bh=QsWoLMrvNMFOQnEAPuQzqaG3iNe/hu0jYmtBD7eNSu0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LTq6h3UqbmU3Qhcd4XaDbxeQG1yksSLwX4b+6CotXklEwQzrDEjPKjM13w78ScyoxTIQprydwH9Ai4OmrSHJB5hCkpxsp2u8LfmW+/yWpSOSgZNRqe0fSHq3iF5wsJ0KVgzmp5I6wKSzDonSrpprI3O7wF0ICxnETrKHFexmX0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAX+CLui; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b="BeTEbU+0"
-Received: from localhost (localhost [127.0.0.1])
-	by www.redadmin.org (Postfix) with ESMTP id B4971104A17ED;
-	Sun, 14 Sep 2025 02:34:18 +0900 (JST)
-X-Virus-Scanned: amavis at redadmin.org
-Received: from www.redadmin.org ([127.0.0.1])
- by localhost (redadmin.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 3rczm48LwjkC; Sun, 14 Sep 2025 02:34:15 +0900 (JST)
-Received: by www.redadmin.org (Postfix, from userid 1000)
-	id 78ABA10B40B73; Sun, 14 Sep 2025 02:34:15 +0900 (JST)
-Authentication-Results: www.redadmin.org; arc=none smtp.remote-ip=127.0.0.1
-ARC-Seal: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space; t=1757784855;
-	cv=none; b=wWvmP5jxZKNXBzoVF3JU5k68JFDd4LinCthVgR+nbeXMoWDRpFX/B1ykUVgi6zPFeaRPsi7XhEHwXnL0m++UUZmZeXjWn2Wce+ajKWZ9IsiQC7JMOYtNJLHJ0d3YDN3TXZ2qC9CmQvWZSDX2/NKbSuJ/ghs9TCLvy5pDavsPEbU=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space;
-	t=1757784855; c=relaxed/relaxed;
-	bh=GimA55GhBUtSka0KXGQTI8PV1VvmRaA5WdoDN040dOA=;
-	h=DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=jfL4wqfqcAs7V2U/2znYz2CAsulYrEDj8IejZHUBp4CAyJfRsxexKTabCplU4F0GSinZynXR1xCAPlUaBVExS+UytWKmR8olifG4BvQq1EOrxiddmhmHN43qWBGy7FlboU5VCvjPVtBsYVLC3O9d5z+3cnxwTi2niozfe1tGeoM=
-ARC-Authentication-Results: i=1; www.redadmin.org
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.redadmin.org 78ABA10B40B73
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redadmin.org;
-	s=20231208space; t=1757784855;
-	bh=GimA55GhBUtSka0KXGQTI8PV1VvmRaA5WdoDN040dOA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BeTEbU+0CmPkRd7IruFHfKNdAkDgMR6Mrg6sVnktbkIzdCcQQobTp33MS9z1ZfYVx
-	 enGOifIH7q6cSheJfHFAJfu3ItRZF7BiDBrnsXLdMpc9UZFng3aDo+4gaw4LjKobNa
-	 E25F/chCdb0tjAOMtvg6hi9e3OFZXBrrLux9v7Yk=
-From: Akiyoshi Kurita <weibu@redadmin.org>
-To: platform-driver-x86@vger.kernel.org,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	W_Armin@gmx.de
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	corbet@lwn.net,
-	Akiyoshi Kurita <weibu@redadmin.org>
-Subject: [PATCH] docs: w1: ds2482: fix typo in buses
-Date: Sun, 14 Sep 2025 02:34:13 +0900
-Message-ID: <20250913173413.951378-1-weibu@redadmin.org>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAX+CLui"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 42F87C4CEFB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757785061;
+	bh=QsWoLMrvNMFOQnEAPuQzqaG3iNe/hu0jYmtBD7eNSu0=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=CAX+CLui/zjuqJEnGv0pGBEYeicaxe0jaRR8VF57FQc4bagyLD2i+mp0Turjtj4n1
+	 tIX5M/HjleAhxuflasfsWlrqdHkaPQQgJVnt+kcskR4EgbYrFr/EYufDjWJoWRLBzP
+	 fNtd4AwUwHZhnZQfNu6HTp1ey58/KprH0FjBkE/hRmlueJs+eriBs78FU7wJCHlUer
+	 uvp6AcY3cuBoHk3zVMUh3nemYYKyS3gcmdwG25kCc/rX7NiiGagFe5LEVbTOQnfabS
+	 ZNObIc8u7mD7C4ulA24ylJYjCRBd30v25SlyXOdJhr5ObG5iIXHs7Ow/HKNfe3Zlos
+	 opYtEWlATUDNQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 3B05CC41614; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Sat, 13 Sep 2025 17:37:40 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-4o9Hy3yDBs@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-Correct a spelling mistake in ds2482.rst
-("busses" -> "buses").
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-No functional change.
+--- Comment #112 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
+--
+That's quite an interesting result.  Let me ask this - how quickly are you
+unplugging / plugging in the adapter?  Particularly after you've closed the=
+ lid
+but before unplugging the adapter.
 
-Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
----
- Documentation/w1/masters/ds2482.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Without the revert if you follow this (specific) timing does it still happe=
+n?
 
-diff --git a/Documentation/w1/masters/ds2482.rst b/Documentation/w1/masters=
-/ds2482.rst
-index 17ebe8f660cd..5862024e4b15 100644
---- a/Documentation/w1/masters/ds2482.rst
-+++ b/Documentation/w1/masters/ds2482.rst
-@@ -22,7 +22,7 @@ Description
- -----------
-=20
- The Maxim/Dallas Semiconductor DS2482 is a I2C device that provides
--one (DS2482-100) or eight (DS2482-800) 1-wire busses.
-+one (DS2482-100) or eight (DS2482-800) 1-wire buses.
-=20
-=20
- General Remarks
+1) Close lid
+2) Wait 10 seconds
+3) Unplug adapter
+4) Wait 10 seconds
+5) Plug in adapter
+6) Wait 10 seconds
+7) Open laptop, check frequency
+
 --=20
-2.47.3
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
