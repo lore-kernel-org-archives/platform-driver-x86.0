@@ -1,89 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www.redadmin.org (ag129037.ppp.asahi-net.or.jp [157.107.129.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B710A11CBA
-	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757785061; cv=none; b=SJzgQoGzga5WOJ23NCpHvtRL3WbgegZyT4QkpdAMDPATNgfMBzX33gwmGZtNAVZTxjV40vNn0HlWC6/JT4sZF5lkk/ZYWuoG8mCT2ttBcteVhMeZ5+ZdpaJqddaXCHKCXP0+GwCccvku4A/dhOUNsia2ZXZNkcGm4QTGjiZuElo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757785061; c=relaxed/simple;
-	bh=QsWoLMrvNMFOQnEAPuQzqaG3iNe/hu0jYmtBD7eNSu0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LTq6h3UqbmU3Qhcd4XaDbxeQG1yksSLwX4b+6CotXklEwQzrDEjPKjM13w78ScyoxTIQprydwH9Ai4OmrSHJB5hCkpxsp2u8LfmW+/yWpSOSgZNRqe0fSHq3iF5wsJ0KVgzmp5I6wKSzDonSrpprI3O7wF0ICxnETrKHFexmX0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAX+CLui; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B1A11CBA;
+	Sat, 13 Sep 2025 17:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=157.107.129.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757785085; cv=pass; b=NMfjrIHmuFM8B6kyHuJd0uGbGV3oWRkvr1KqeQNRvVucOiCTngUbWQullSZhhwtuTRrIR+gS4yzMAk1mDNfW9XryT6ai6H3gHXU03Y+g0tt890J5xDIztuX/f2Mn5uBdZ3dmQPsJdHpvH0yX2GDxD0Gt/0hPD0xmESmTHi1gi3k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757785085; c=relaxed/simple;
+	bh=dWCb/vnvK0BtdkWp3MFmAB/oC5jsmUMTgwfKeUuN9M0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FqNrw2lZ2BUKRLNSPteWrVQi10M6xH2OcvF2wRksP2JbJe8rHD8KT7uI8U2oAjMKrzCNNnTF5NfsJxcFEblTQkW7TFqLpn0zP24VRe35pu2cE1N/MxjRf2IqHaE/NDEKJCm32+etUD2/4IdcjEEFgbfLwamd3zQXy6ew9g9Hdvc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org; spf=pass smtp.mailfrom=redadmin.org; dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b=p0ViBRQa; arc=pass smtp.client-ip=157.107.129.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redadmin.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAX+CLui"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 42F87C4CEFB
-	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757785061;
-	bh=QsWoLMrvNMFOQnEAPuQzqaG3iNe/hu0jYmtBD7eNSu0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=CAX+CLui/zjuqJEnGv0pGBEYeicaxe0jaRR8VF57FQc4bagyLD2i+mp0Turjtj4n1
-	 tIX5M/HjleAhxuflasfsWlrqdHkaPQQgJVnt+kcskR4EgbYrFr/EYufDjWJoWRLBzP
-	 fNtd4AwUwHZhnZQfNu6HTp1ey58/KprH0FjBkE/hRmlueJs+eriBs78FU7wJCHlUer
-	 uvp6AcY3cuBoHk3zVMUh3nemYYKyS3gcmdwG25kCc/rX7NiiGagFe5LEVbTOQnfabS
-	 ZNObIc8u7mD7C4ulA24ylJYjCRBd30v25SlyXOdJhr5ObG5iIXHs7Ow/HKNfe3Zlos
-	 opYtEWlATUDNQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3B05CC41614; Sat, 13 Sep 2025 17:37:41 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Sat, 13 Sep 2025 17:37:40 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-4o9Hy3yDBs@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b="p0ViBRQa"
+Received: from localhost (localhost [127.0.0.1])
+	by www.redadmin.org (Postfix) with ESMTP id 6EC52107E491D;
+	Sun, 14 Sep 2025 02:38:01 +0900 (JST)
+X-Virus-Scanned: amavis at redadmin.org
+Received: from www.redadmin.org ([127.0.0.1])
+ by localhost (redadmin.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id bFH5I1WReXb6; Sun, 14 Sep 2025 02:37:57 +0900 (JST)
+Received: by www.redadmin.org (Postfix, from userid 1000)
+	id 1850E10B40B73; Sun, 14 Sep 2025 02:37:57 +0900 (JST)
+Authentication-Results: www.redadmin.org; arc=none smtp.remote-ip=127.0.0.1
+ARC-Seal: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space; t=1757785077;
+	cv=none; b=krwGIjBFcsRPbmWtsuD0CzEb2FggGl48J/m7jiXhJ10t88iJXAg/HOUZQTkIv6d2oKNNPiWSC0QT6EIKJ+bYL78RCzep4hdiC3rjYwjcHDTFwMb9A7PfkrnBrzUCWJUWineogXX+YecHrsRGaQM+6/G45v0VFgYMpDzxKANNahY=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space;
+	t=1757785077; c=relaxed/relaxed;
+	bh=pB4FLnsJZ/3z3o0EVbQQcG9ZUrnntGwHKSlQlpuIDMM=;
+	h=DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=Ncnmt9zW7OmM5mMK5CBhTB2LjFsSbLHHq4TYL0Gth14222djV9aZt3NJl/qv+xbzPnW2G6ZFbNjdDgMi+nOkloG3bp6AGTQBHJVRnhE5qakEMzDctx9L3cuXg6+W2ogV1QdxL0OTtLok1zf/zpl9TXcE6XQTgyX6tJIqNmEmM3k=
+ARC-Authentication-Results: i=1; www.redadmin.org
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.redadmin.org 1850E10B40B73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redadmin.org;
+	s=20231208space; t=1757785077;
+	bh=pB4FLnsJZ/3z3o0EVbQQcG9ZUrnntGwHKSlQlpuIDMM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p0ViBRQaZoLfPtweriyKLR2PAyVkhWLYjSL89QLIYpgXPpfW7hxKhF42kKdRRx81r
+	 LAjcBVGfGpqJ/7XlKFTI88r5o1W6AOC5rH+CdjvuSdMvYPXpG+KDsCkxIiqyv0Eghx
+	 5BG2U7sBHBrcQyjd5O/uTA94zdIaAxIt3ZNfkQW0=
+From: Akiyoshi Kurita <weibu@redadmin.org>
+To: platform-driver-x86@vger.kernel.org,
+	mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	W_Armin@gmx.de
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	corbet@lwn.net,
+	Akiyoshi Kurita <weibu@redadmin.org>
+Subject: [PATCH] docs: wmi: lenovo-wmi-gamezone: fix typo in frequency
+Date: Sun, 14 Sep 2025 02:37:54 +0900
+Message-ID: <20250913173754.951858-1-weibu@redadmin.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Fix a spelling mistake in lenovo-wmi-gamezone.rst
+("freqency" -> "frequency").
 
---- Comment #112 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
---
-That's quite an interesting result.  Let me ask this - how quickly are you
-unplugging / plugging in the adapter?  Particularly after you've closed the=
- lid
-but before unplugging the adapter.
+No functional change.
 
-Without the revert if you follow this (specific) timing does it still happe=
-n?
+Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
+---
+ Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-1) Close lid
-2) Wait 10 seconds
-3) Unplug adapter
-4) Wait 10 seconds
-5) Plug in adapter
-6) Wait 10 seconds
-7) Open laptop, check frequency
-
+diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentat=
+ion/wmi/devices/lenovo-wmi-gamezone.rst
+index 997263e51a7d..167548929ac2 100644
+--- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
++++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+@@ -153,7 +153,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>=
+`_ utility:
+     [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
+     [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
+     [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalu=
+e;
+-    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffs=
+etFreq;
++    [WmiDataId(4), read, Description("OC Offset frequency")] uint32 OCOffs=
+etFreq;
+     [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMin=
+Offset;
+     [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMax=
+Offset;
+     [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetS=
+cale;
 --=20
-You may reply to this email to add a comment.
+2.47.3
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
