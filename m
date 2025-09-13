@@ -1,82 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www.redadmin.org (ag129037.ppp.asahi-net.or.jp [157.107.129.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC25125A9
-	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 18:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757789303; cv=none; b=sCvdoQPhwn6Jv04hkVStXMqVooThn1RQAoN4N+dr7dBaKR59+jOn4wwIrW9N+jNvHs72eXsWN8SjczEzpjibg5FcG6uCPuhjHE5bhe/L92YWXFGxWVS2zarhNx9k5rwqifxGlWk6iH8iyVr2iICP24eR4PAquuM9v1dvgl7G+Pk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757789303; c=relaxed/simple;
-	bh=0+UeIBcl4+zEHxvoDMK6l1CxCRIO755dTNyWJdkwMgo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nwewjErFNI2/sN1TQxyGqIwTzITMeX71H/tOE/EBUQSPuwQ99xWuAvoP1xBQx7Y4zhXZwG1n+thbQnCbHtNt//cxeQjZ8AzwbrSzMA5PwmPrIscCI1SU3bNsWhNaBHjiB4rpwcd5GEqt6oU8un6jApEYdlwc8sQnThTYGbRUO+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tC6h2dEw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85382214236;
+	Sat, 13 Sep 2025 19:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=157.107.129.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757790415; cv=pass; b=u55teX2dKPHIpG+Lm+nEAaLLsa4ZoaVM2tlHWQEm605zcoe1MxDoiQ+ocucK/iEZMCOHZwfU/5i8KTqd6gXAiiJU+B+OYPcsu5iWLTEAJeJKApFdaarpApBP5K0CzBHFtkUKfYzzumbq0mKfUiYYkkErYZ9+OOs+EfljdAZvMsk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757790415; c=relaxed/simple;
+	bh=Ue+heATPxUSmCAzJfwMONOybrBlnu8e7QJ1gGPBQrAA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=rBs0clNoFPFZ0uNRfX9z38QGGkn8DTz0ui5bqVEveqeCGS65a0a5KlL5qDQtA0XP/GIMYC2r6gXGvyEMRJMT9D1Ipsv+jfKylZoSisYDQ/RZkcUZI/TyVZBbDqAPcYXdkD4HhODu0WRrMxZbHgCt6st3vLhAzyjOGqSxPGgeKzI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org; spf=pass smtp.mailfrom=redadmin.org; dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b=zPJVTfEw; arc=pass smtp.client-ip=157.107.129.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redadmin.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tC6h2dEw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E83C6C4CEFC
-	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Sep 2025 18:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757789302;
-	bh=0+UeIBcl4+zEHxvoDMK6l1CxCRIO755dTNyWJdkwMgo=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=tC6h2dEwe/eDz5aNSj+MO5JpYsAke6COZvK1L8kqpwF0NL1yG4vPiX5OTNRF58CrF
-	 Rv3w89jC76YN4e0BKTL5bCn8VQ61IUhse3Vhh8PGxPpcxszoJMeIRbwOl+9taREDu+
-	 iWpZL08gDVGixKyqfU2gWZy51T3q4NRCtfzHK+YtuuP4ft14+DCSsHdtFfjsw8K3ec
-	 s9jHy2zBMv8UjqoykNuuvlf/R8lwGRLtdOrmi/LNMDjf0X0+K3K6+aK+mHXu27msie
-	 G4Ce06op5WrDj3YeLJ/j9jd8t7VFuC6JSW3fjzrFDuqSj5iMNnCUAuHXTXiPwv8xlD
-	 imKw/v0kEUwAA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E14D4C41612; Sat, 13 Sep 2025 18:48:22 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Sat, 13 Sep 2025 18:48:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: marciosr10@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-CAdruFGxMP@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b="zPJVTfEw"
+Received: from localhost (localhost [127.0.0.1])
+	by www.redadmin.org (Postfix) with ESMTP id 217691032C8F2;
+	Sun, 14 Sep 2025 04:06:49 +0900 (JST)
+X-Virus-Scanned: amavis at redadmin.org
+Received: from www.redadmin.org ([127.0.0.1])
+ by localhost (redadmin.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5nHA9VnH-mq9; Sun, 14 Sep 2025 04:06:45 +0900 (JST)
+Received: from webmail.redadmin.org (redadmin.org [192.168.11.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: weibu@redadmin.org)
+	by www.redadmin.org (Postfix) with ESMTPSA id 6C88B104A17E4;
+	Sun, 14 Sep 2025 04:06:45 +0900 (JST)
+DMARC-Filter: OpenDMARC Filter v1.4.2 www.redadmin.org 6C88B104A17E4
+Authentication-Results: www.redadmin.org; arc=none smtp.remote-ip=192.168.11.50
+ARC-Seal: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space; t=1757790405;
+	cv=none; b=dzugCXHCu1Qqiqfz978psy1rcIlI5EJU7LqyMKgsA2SFf0t4Irvl0OwuJXWj1e+Tz3WGVx3c5mXKbjFN9T0MnsRs2HIe0c6YlhQs4YDxey4YKsSBdHfI4LIr+bBDN/l8NzIIAGJZi8uOdpHec7iFDcrd/6igTwPDxvnOpzSG0RE=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space;
+	t=1757790405; c=relaxed/relaxed;
+	bh=VGmRmgzF9O/74mQ+eSoKjnDJ4Ms8RvM/BPlTQbxlWGE=;
+	h=DKIM-Filter:DKIM-Signature:MIME-Version:Date:From:To:Cc:Subject:
+	 In-Reply-To:References:Message-ID:X-Sender:Content-Type:
+	 Content-Transfer-Encoding; b=0jYSsai07BFA9uQBCC5ZGAF0oeMHA7I/gj7EGT1htl+XSbrJuOe1eANiyM1KnSfdva6rokcjazaXROo15y/8nf/b5mAR322k4B/uHpMpRMc8bB5VqFr/GgULeiI58kPgUJvb/QEb6N+xk9UevdZbBRXQExaRfb+Phrie7b5AJzA=
+ARC-Authentication-Results: i=1; www.redadmin.org
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.redadmin.org 6C88B104A17E4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redadmin.org;
+	s=20231208space; t=1757790405;
+	bh=VGmRmgzF9O/74mQ+eSoKjnDJ4Ms8RvM/BPlTQbxlWGE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=zPJVTfEwci/XqBoANtKoWSENSH2K9tSm+5inR1gDvBVpqqzEp7OQmkdZQkWZdphIp
+	 3Wz41/EJIo8o0QRvzd2iVUtuqkc+ByPgyxaK/z/7ADSemmANa3UQ2qcWjWljwP0OBx
+	 yhKlHsE5SInYwJlG99UzT1+D1MSUJBlYnuDtO2lo=
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Sun, 14 Sep 2025 04:06:45 +0900
+From: weibu@redadmin.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, mpearson-lenovo@squebb.ca,
+ derekjohn.clark@gmail.com, W_Armin@gmx.de, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, corbet@lwn.net
+Subject: Re: [PATCH] docs: w1: ds2482: fix typo in buses
+In-Reply-To: <208fa944-6aef-4acb-ba39-d351d364c53e@infradead.org>
+References: <20250913173413.951378-1-weibu@redadmin.org>
+ <208fa944-6aef-4acb-ba39-d351d364c53e@infradead.org>
+Message-ID: <453591332395354ff5fed38bf0ea9349@redadmin.org>
+X-Sender: weibu@redadmin.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Thanks, Randy. I went with “buses” since it’s the more common spelling 
+in our docs for hardware/data bus.
+I’m happy to follow Jon’s preference—please feel free to take it as is, 
+or I can drop/respin if “busses” is preferred.
 
---- Comment #116 from M=C3=A1rcio (marciosr10@gmail.com) ---
-(In reply to Mario Limonciello (AMD) from comment #114)
-> I suppose we could make a quirk for always forcing time before suspend
-> entry.  I don't really want to do it generically because this isn't needed
-> for most people.
->=20
-> Can you give me your s2idle report that reproduced this?  I'll make you a
-> quirk to for you and Petar to try and break.
+Best,
+Akiyoshi
 
-https://paste.centos.org/view/c963f968
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+2025-09-14 03:42 に Randy Dunlap さんは書きました:
+> On 9/13/25 10:34 AM, Akiyoshi Kurita wrote:
+>> Correct a spelling mistake in ds2482.rst
+>> ("busses" -> "buses").
+>> 
+>> No functional change.
+>> 
+>> Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
+>> ---
+>>  Documentation/w1/masters/ds2482.rst | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/w1/masters/ds2482.rst 
+>> b/Documentation/w1/masters/ds2482.rst
+>> index 17ebe8f660cd..5862024e4b15 100644
+>> --- a/Documentation/w1/masters/ds2482.rst
+>> +++ b/Documentation/w1/masters/ds2482.rst
+>> @@ -22,7 +22,7 @@ Description
+>>  -----------
+>> 
+>>  The Maxim/Dallas Semiconductor DS2482 is a I2C device that provides
+>> -one (DS2482-100) or eight (DS2482-800) 1-wire busses.
+>> +one (DS2482-100) or eight (DS2482-800) 1-wire buses.
+>> 
+>> 
+> 
+> Well, I'll leave that one up to Jon. The $internet says that
+> "buses" is preferred but also says:
+> "In both British English and American English, busses is a less
+> common but still acceptable variant."
