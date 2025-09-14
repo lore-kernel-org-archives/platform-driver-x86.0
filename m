@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C1E1F583D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 02:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F355E1E5B9E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757815460; cv=none; b=fdcDiDCanuMzp/z1z6lXQFXfyj7xGnLgs33iHMhzg06+QODkYud9FVYYBT13PkdJJ0dAPB+pol901u0q5VUPIVNXNmOUEJavXO1sXvBKoWuDtpp944OtA0XeYV4SQtyExwyoHSDGLBPmIPE6uZ9Quzl6ehiDCVO0D/rL3tdWjjI=
+	t=1757851300; cv=none; b=Dz1/30/Q9haI1EiMeG/ccz69JlEINtA3jhhyCuGEYxyGse4xdb5v5N6NImIMrIp3jvei4185GuAF63bLla9eKZQOIwv773KuVZfX4sGXtrYVIRFc5JK2aClqQORciG5cW2gvcx2NKrIdqzaaDRKl7JIteMXWFMmiWWuc+4yIiPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757815460; c=relaxed/simple;
-	bh=ta2qU6rbxPEM8AqSQnhpUFhI47rqmfIRD+3RgctlPmk=;
+	s=arc-20240116; t=1757851300; c=relaxed/simple;
+	bh=xfUqn1Ld2oGyMrjecDTXzGpZQb/BO15W/R+58PG7AS0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uQgspiXm7kaj/0PIJtBeiEicUgIiT5SAYYX9H47XtHsNYtSeCCJJVrSHtOrI1yXO5xO58vb2Wk1BrB/0WNsHFIY9Ia1z39Y6hkM+y5qdzonwvo1vdJbKMfaTB9LwdlMb8z1u85troj214WM7H4FsbA9emoFbQGV6ouHsLhl5We0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ohn+vLcW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=aA4TAs8OAObMTFajepfDx+gqACbIxxXTgBNwfvNB05n6hz6OQO3XWOWJdzSDfLarwdwK9PTzxhvGx8bJZEnkkS9psO7CHp9khGLK4hRdkb4gP/9LBGwJ9UEnhuhkCgxNk+MOCsEJO2fYuSr0aVigP+sYIJjj9Glcen3J1gTkCk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqGSUjgY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ohn+vLcW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CCF7C4CEFA
-	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 02:04:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqGSUjgY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D479C4CEF0
+	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757815460;
-	bh=ta2qU6rbxPEM8AqSQnhpUFhI47rqmfIRD+3RgctlPmk=;
+	s=k20201202; t=1757851299;
+	bh=xfUqn1Ld2oGyMrjecDTXzGpZQb/BO15W/R+58PG7AS0=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Ohn+vLcWKNsaHwFaqtVwd8Gr4QauuvEXJt17+UCZ+0tUvONDeOio2pM+OiccTLph8
-	 KBjCLqZFsZCPH/snzJ1y0TZNUVyWnEmP7yXVqF9oLWtX1l7QhTPoQVpK+5p2NUZojj
-	 FYdf97JR4WJTwfq5coHx/IY/E5YLoLJNfOK3rdwtxFqDmgaHyJWj8rsF4HpBoHie2v
-	 oiS1pTL/qfMpoBOENzCZtu61oAfuRGbNi0LL6226EdhQ7bZVNQf+Ac/W+V3J8g5VMZ
-	 e0GnJ/G5iaRhUwMw6aP+he96jedXuAI7kGrOu9RGYysncI5ZTLQx1ltWwrCZOJ90dZ
-	 ENaB2Aic9mZqA==
+	b=HqGSUjgYjlT9JbJONT2qSlEu5AYklckxSlKISV9YJOmvw83u4jpOAUnfrCLBxzdT8
+	 aKkXtvczH4FMPH5eu9I0R/Wg+RDDzyDtRrkXtMmGw6UBzO/TMBmceYJ7USTCJVnzmt
+	 7OwBDF1e7IsGl0NMvAP95ERPdX/1g4np4M2t4E9gZOBsRLEFzebvTQwq2G1h1KvW2i
+	 yfMHfhg6nq0pzTl/z57ODN+eLV4uxk+CkXkp6IkKtEfEfgcDmItFrs4C0ZKW3INE2g
+	 EVSwYUg/++qKNZxfWQwxc17p7yNkIBrrN1bEMoHnxlwww9wZ5KZ6wbt6imN+5G5nik
+	 302cEi0sLmeuA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 45A4FC41614; Sun, 14 Sep 2025 02:04:20 +0000 (UTC)
+	id 6476DC41613; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Sun, 14 Sep 2025 02:04:19 +0000
+Date: Sun, 14 Sep 2025 12:01:38 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: marciosr10@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.description
-Message-ID: <bug-218305-215701-LPMy3zW7JB@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-218305-215701-qbLcxt5o6h@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,14 +64,18 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-M=C3=A1rcio (marciosr10@gmail.com) changed:
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
            What    |Removed                     |Added
 ----------------------------------------------------------------------------
- Attachment #308672|s2idle_report HP Zbook      |s2idle_report HP Zbook
-        description|Firefly 14 inch G10 A       |Firefly 14 inch G10
-                   |Mobile Workstation PC       |
-                   |(version: SBKPF,SBKPFV2)    |
+ Attachment #308671|0                           |1
+        is obsolete|                            |
+
+--- Comment #119 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
+--
+Created attachment 308674
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308674&action=3Dedit
+updated patch with two quirks for HP systems
 
 --=20
 You may reply to this email to add a comment.
