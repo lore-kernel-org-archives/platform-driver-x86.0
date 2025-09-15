@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F355E1E5B9E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B40025C818
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Sep 2025 05:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757851300; cv=none; b=Dz1/30/Q9haI1EiMeG/ccz69JlEINtA3jhhyCuGEYxyGse4xdb5v5N6NImIMrIp3jvei4185GuAF63bLla9eKZQOIwv773KuVZfX4sGXtrYVIRFc5JK2aClqQORciG5cW2gvcx2NKrIdqzaaDRKl7JIteMXWFMmiWWuc+4yIiPQ=
+	t=1757915369; cv=none; b=KRKX6jdOzHPfPfqiKZm/uuPXmRPdwA5mHs3q+2pWC359KVKz5Axa8SX7VDnDk1+mJ0jMIl9aHTb1quU4xC6KmbCPTDfm0IOyk7pM7iNQUQ02QL3iaBnd8FZ1CT4LU9N6f0zo2SMyPhM9KSNrWfWXRqSfp0EoK1Jr02Cu5/cOzvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757851300; c=relaxed/simple;
-	bh=xfUqn1Ld2oGyMrjecDTXzGpZQb/BO15W/R+58PG7AS0=;
+	s=arc-20240116; t=1757915369; c=relaxed/simple;
+	bh=pv+86Q6oF/9ZqmmgKYXXjJekPMEVNgFny03+GKAfYc4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aA4TAs8OAObMTFajepfDx+gqACbIxxXTgBNwfvNB05n6hz6OQO3XWOWJdzSDfLarwdwK9PTzxhvGx8bJZEnkkS9psO7CHp9khGLK4hRdkb4gP/9LBGwJ9UEnhuhkCgxNk+MOCsEJO2fYuSr0aVigP+sYIJjj9Glcen3J1gTkCk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqGSUjgY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=FptUcgNUZfum31p+U4cjSOMozefcXHoTqUD736D2C8ymnUCjCJQCuzXkavht9pdvgqpG1UfLVi3EnKB3pvTvf0QeXwGHRzHqN4dd0T0uO8vmNY4jsdUYz4QYlmhrWYF1//8QhUzMLx7U6GkdF45xAjwxlpI4JmbvUOd2/gI2o2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfPe6+Wj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqGSUjgY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D479C4CEF0
-	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfPe6+Wj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 899E6C4CEFE
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Sep 2025 05:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757851299;
-	bh=xfUqn1Ld2oGyMrjecDTXzGpZQb/BO15W/R+58PG7AS0=;
+	s=k20201202; t=1757915368;
+	bh=pv+86Q6oF/9ZqmmgKYXXjJekPMEVNgFny03+GKAfYc4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=HqGSUjgYjlT9JbJONT2qSlEu5AYklckxSlKISV9YJOmvw83u4jpOAUnfrCLBxzdT8
-	 aKkXtvczH4FMPH5eu9I0R/Wg+RDDzyDtRrkXtMmGw6UBzO/TMBmceYJ7USTCJVnzmt
-	 7OwBDF1e7IsGl0NMvAP95ERPdX/1g4np4M2t4E9gZOBsRLEFzebvTQwq2G1h1KvW2i
-	 yfMHfhg6nq0pzTl/z57ODN+eLV4uxk+CkXkp6IkKtEfEfgcDmItFrs4C0ZKW3INE2g
-	 EVSwYUg/++qKNZxfWQwxc17p7yNkIBrrN1bEMoHnxlwww9wZ5KZ6wbt6imN+5G5nik
-	 302cEi0sLmeuA==
+	b=pfPe6+WjZReQSbZ4u0hvQLlT8hvCtBLBGX4HOSO7P8QHlH56QgiV4OF5eOnAyeF9o
+	 9YiZf7sA3jfQ6qR+T9JaLEl1NNaIXVYGa0HGCfSICRMtNyMMZTN43VhGgmnrgg70kh
+	 h1RnAVcjYr5vOe/QTF04ewYr0Us+E7YkCrm36IsReXzL4ObNGq5eauj1qJN5W5DXrt
+	 BGi9lmPu+DXQW76yKfl7vqvJENJAXBlz8nXXDN1r58traaqU1lKBhixkfQV5Z7A+Sl
+	 r0m6uOD7l9SZ6oVG6lw9cY7labxPD2O6tCTU/IxG8hEMVpNEwNCvx8krzWs4hWAD+2
+	 uuknSZwSPWV+Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6476DC41613; Sun, 14 Sep 2025 12:01:39 +0000 (UTC)
+	id 82FE0C53BC5; Mon, 15 Sep 2025 05:49:28 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Sun, 14 Sep 2025 12:01:38 +0000
+Date: Mon, 15 Sep 2025 05:49:28 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Who: petar.vidosavljevic@gmail.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
-Message-ID: <bug-218305-215701-qbLcxt5o6h@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-lemXZedKuC@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,18 +64,22 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
- Attachment #308671|0                           |1
-        is obsolete|                            |
-
---- Comment #119 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
+--- Comment #120 from Petar Vidosavljevic (petar.vidosavljevic@gmail.com) -=
 --
-Created attachment 308674
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308674&action=3Dedit
-updated patch with two quirks for HP systems
+I compiled the quirk/patch yesterday morning.  Executing the steps I outlin=
+ed
+above hasn't resulted in the low-power mode behavior.  So far it hasn't rea=
+ched
+that state once, which is amazing. :)  I'm kind of curious how other people=
+ in
+the thread with Elitebook 845 G10 aren't experiencing this still.
+
+So just curious, what are the next steps?  Is this going to be pushed to the
+mainline?  I never tested removing the patch
+(https://github.com/torvalds/linux/commit/4dbd11796f3a8eb95647507befc419954=
+58a4023).
+ Is that something I should do?  I'm happy to do additional testing for a
+permanent solution.
 
 --=20
 You may reply to this email to add a comment.
