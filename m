@@ -1,187 +1,148 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010061.outbound.protection.outlook.com [52.101.46.61])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F15D2F99B8
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Sep 2025 09:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757929348; cv=fail; b=sf6RDDphBJdCdwdlgt1R5v9rrKjqcheOk/A9tqUo2pGWZYZ7GuEEF5YakujfiWfpjGHSTtczE9G0HBTvZW2plSBf7FvEscLH7wDmTD5G3b/IzFiUb42xeag8b+vKMfzYpJdQTpNt71ICTKrMouqMhrIIpTvvJIHzpGFHgyUDsFk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757929348; c=relaxed/simple;
-	bh=q6yDTudTQRpyodWQs1OJ9m8orUGuXKDRoa9JuN6C1B0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qv/SHIC3vMjg8DLcVy5gr6v/DoWBLfTC/UQVzTrBre3SepghTLIRkzb86Unoa8TFcmibw2wrHFeD7iZgqMdspn1nvXVzwfpSk1QpA1vljHgubBbT2fiC9DN6N5mzcDZ+4FoLJ+Emh+iVr1ktGXnamzswW0jFiXvruFWnaYrqs1w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L7pTxoBf; arc=fail smtp.client-ip=52.101.46.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED6F2D7805
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Sep 2025 10:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757931116; cv=none; b=ZHmVP6CGwCvHAjdx7ODPj9VZIcNSZmJ9wzbZ9REao5WnEgP/yaW8JYT8aJlQiFNOENCtjxHR/Yf6w34hXReLAzUSlL0COHkzPvjwL3ds9Zoq4BQCjtXOzncT563s13BpHD2zWCAdv1jvw//aNTCChjEBCGYi7Yk7Z4LdqwAUkA0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757931116; c=relaxed/simple;
+	bh=4F7cUk1cYjqKfsZI3rD8wSweAXIPmwzLqMsV026UQvQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=D/+IDk9m8YxGrrzO7/sUQM5N/sbtpJv2FwUmUy1H+86N1slv8zVv607iNsWLMF86ZMTt0C1OqBQONVwa+Io0GI16CLRyd7ywVXmyjlUqWaUqi1/9rWOtCeOdjkmVBiEOr27TM6QQ4YsphZtZRimJIeXQjEfTOZ/sXfPRIBnReCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lutwp46h; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L7pTxoBf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FcWiGL1f2wjF5QUEf4ipYdC83kVFRNti2D5PvRhacBV6wDflWFJaZVRiTO0Xy+a/7RaxrcEEMAJF5UAhc43NboFrcKbY0fnZAiHz2W1xhpAON9LB1rBzZG/L3G7ooz8fcAOEmpuU4epiulIyywl5QqM+qNA9wY9lr0z3JeHL6o7/02V0uktbmuHSUI7VNfByuNO+2NuUr45rXfej7DwiS67mF77qlu2KUxEWIjquy4Hbxa5JGvdaP/5rQAcBfMOmTcrVDiA1cgK6CWKOOqAuS61p78j5RJFJtBPCj5Wtos17G1EOlMcxU78YXrgBpc3B0rx3yTwRLI3H/zO07SqWaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rlCb90iJXN5RdbeLko+nfaon9KP4S/HLu5V+xACEVVc=;
- b=TngH/rPY50UMS29obfw5qwQX0GSLrMNjRK96A/XwwOt2KEjy5SPOUO+HU/GnZiCPDCZSlNDXMjprdlJ3WN0IKq8Zgm8B0R/f+i8ziUmOkh/aYbe5Mf3ZMfAFQ7OKXU/eZ/i190jSITfx9G2uH0Ho5xO81P8WaKC59C4yj2cmB1cxDauObEM1ZykGHripDW+c3c5GViL4ZivzpKnI1MOYICp25/503uyscWsxNY0fT/RJwG+rTzu3vj5fEOVv6x/YO9pnExqE1X+CYWdSdXRZ3UnJXzDcJexr8h4dVdmwpnWXQn8OSevrXNpeOeGX1qs8+2vd0ULX3W+SNGGRlN4Bxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lyndeno.ca smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rlCb90iJXN5RdbeLko+nfaon9KP4S/HLu5V+xACEVVc=;
- b=L7pTxoBfrsuLNlU8ltL+ZknaMQ21jZrbWCuxWl2Gqn/SxoG0IAEXu2SElkSehUl/h92HUkPRtsTh0nnOgWEN+F3zSmi68hvw5cbayjrHtZ7qdgiwpbH0dbJPjy8sFQI2/MlRC79c6bYJJC1V2xxEpC4w8iULNnVvDG6oRbz2VOs=
-Received: from BL0PR05CA0017.namprd05.prod.outlook.com (2603:10b6:208:91::27)
- by MN2PR12MB4142.namprd12.prod.outlook.com (2603:10b6:208:1dd::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Mon, 15 Sep
- 2025 09:42:22 +0000
-Received: from BN3PEPF0000B072.namprd04.prod.outlook.com
- (2603:10b6:208:91:cafe::a9) by BL0PR05CA0017.outlook.office365.com
- (2603:10b6:208:91::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.12 via Frontend Transport; Mon,
- 15 Sep 2025 09:42:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN3PEPF0000B072.mail.protection.outlook.com (10.167.243.117) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9115.13 via Frontend Transport; Mon, 15 Sep 2025 09:42:22 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 15 Sep
- 2025 02:42:19 -0700
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <lsanche@lyndeno.ca>, <hdegoede@redhat.com>,
-	<ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Yijun Shen <Yijun.Shen@Dell.com>
-Subject: [PATCH] platform/x86/dell: Set USTT mode according to BIOS after reboot
-Date: Mon, 15 Sep 2025 15:11:54 +0530
-Message-ID: <20250915094154.2765361-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lutwp46h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757931114; x=1789467114;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=4F7cUk1cYjqKfsZI3rD8wSweAXIPmwzLqMsV026UQvQ=;
+  b=lutwp46htsux92SZQYmnHEd+YzsnL/GROon2/OEepJ0gC9MJUw0yh2Bu
+   +JZ0GsXgreaJHgnaITW4+g1LCMRtZtEol340T0xJSDSyV6G3h1jx8iPPn
+   6zk2+tAAkVeUg2gSbVncgpHFs5k+RhK3VP//EJu4Z/dmNuX2AQTNhvIhm
+   Po1TEMPv6mnpR7PfbuVdbgLFiDhJauP7mr+6b4rTcyViq2M7Ja3Ra5lXz
+   2MOGdVbHXHyRzJnqgVeH44Mdos7rPCDXtPn5XOOEUjOqAW3eAi/CXFzcF
+   lKbcXZbBa7O276a9z4wg8yjiYY3cJplfhnAwd2Pp78A+qN44K8dqZx3UK
+   g==;
+X-CSE-ConnectionGUID: HtwYG/GwRu+p1eSbUwoC5A==
+X-CSE-MsgGUID: C6kJ4E6qRVG9Ip1+g2eLTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11553"; a="77631089"
+X-IronPort-AV: E=Sophos;i="6.18,265,1751266800"; 
+   d="scan'208";a="77631089"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 03:11:53 -0700
+X-CSE-ConnectionGUID: s87nDyQOT6iz/NYRhie4SA==
+X-CSE-MsgGUID: 5wM8WBLPRwqtE+ToW7M6Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,265,1751266800"; 
+   d="scan'208";a="174182264"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.39])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 03:11:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 15 Sep 2025 13:11:48 +0300 (EEST)
+To: =?ISO-8859-15?Q?Tom=E1=A8_Hnyk?= <tomashnyk@gmail.com>
+cc: platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: lenovo: Reassign KEY_CUT to 
+ KEY_SELECTIVE_SCREENSHOT for Ideapad laptops
+In-Reply-To: <1757599473382.2879968666.2275695113@gmail.com>
+Message-ID: <219e020c-11e8-fdea-0ad6-656101999e88@linux.intel.com>
+References: <1757599473382.2879968666.2275695113@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B072:EE_|MN2PR12MB4142:EE_
-X-MS-Office365-Filtering-Correlation-Id: 51436d34-27c8-4732-f5b8-08ddf43c2b9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4OY237IuOhP+lEG+Aj5s78iwGV+2JiRPEQsqCcfy1ZDEHV3+HvPL4RWh5hTX?=
- =?us-ascii?Q?mWM3QmAPAuJee82qk0ZOVd42VrYI6xJCgbsPbMUjeKC8Ykd+XAbtV2ZmcLXL?=
- =?us-ascii?Q?emoA0tosWwURZrCiU72khofhYyvG7Egq0krQvUB/kZU6NuehldMy2WHNwCbm?=
- =?us-ascii?Q?lhrjdoosmtI8Di/hSrS7FRtF09DABRekKa7wIfYif9IHTojYcGfJ6UXeWh2W?=
- =?us-ascii?Q?ZqAr5mgtgumDKTf4YypATSQUSgQ2pHW/cdCwNUTHQX/fI6Oeg6z8ZynmMQKe?=
- =?us-ascii?Q?CTypiPndL504uMySpf7kjmopq9xFI9PSdMRd7nsFJwnycjmmBjdKNrPMaOLG?=
- =?us-ascii?Q?qLm93LHKM7GEZWUuG3VRjIWoAlJNOoO/thHtL7Q9NY9vJATLcM4pXuFvnNKF?=
- =?us-ascii?Q?XR53B+aYzd5o/V31s9uroDI/85xE4iJrvZ5m3/cqKWNpcUZggRlDJtIVA65o?=
- =?us-ascii?Q?TkQ3HQ3hMitKCqtwB8rToMEKF4gl1Pjgil9yCdXIPl1bQoMiP7ab21kHVNP3?=
- =?us-ascii?Q?hETFhT3zwVLOxRn+V6B6rKpjmUX0gOkISiTm/00UZmSC7JnSnLO75mDiXGIO?=
- =?us-ascii?Q?mCxSL8gGGDMy2Lx5JODtX6LD/o2TSjEDemuNJMvcEbp5eB3fol4ZWp4vRkde?=
- =?us-ascii?Q?xiJ4BogTAXEFvZt6VL0gDgxjjKv9nrovp+c+KKxswymFTmfNKihJTnoHTlXb?=
- =?us-ascii?Q?1vlTf8AXPEC3t8i/6TIINhGny4enuVK4jjjev+IDOdHz48zIK8Yoe3DA2h5p?=
- =?us-ascii?Q?ZyhZ/bThLencFd//3pnQnrDWI9P0Uq6vvP7HyilXbzCuF2jTX4/vDY6puEvZ?=
- =?us-ascii?Q?B8/MTXYdguVGUl9cjP1vQnEAEKBnDdjxWjP7uqCQaQTHX+4ZKYa7Ez/USGg5?=
- =?us-ascii?Q?JtK0WLcugDbMU4xHw2U5/z4xu16+r83PMr2bLonzyBp5JKkd48xHsa+0fWCJ?=
- =?us-ascii?Q?1Y2xCC57gM3utpbe87DKgQt9vMr+5B3XWZ9M5Ns7gSeW4p804d5r9hZZkgl8?=
- =?us-ascii?Q?C74e+D4galAPvzqQIa0zJd+srDPMivTtZ3M2661dJpbwI4mFeTG54uK6hj9H?=
- =?us-ascii?Q?s/eEvIzRrS8OgGwMkOEEnd2vkGOMfP2a6M8amD5e/cW7laVAuQvxJcTFA+mt?=
- =?us-ascii?Q?X0q9kT36970co3Tt7T/Ct8eRC0Wh1L+EAOaLGQ3ltTwBYw6mndDB9Ym7uUr3?=
- =?us-ascii?Q?NxVl/eduZEu4EWUoHCfAiEqauf0iiFQVvqro6kpDo2/CyWU2lv3tycHF6P/m?=
- =?us-ascii?Q?C/345GdVqUjPudyjVs/Kf5ICfMobVJVL4ihM3+4UVwQfrTzxA0kc4GLkCTSw?=
- =?us-ascii?Q?/M0lwlD4CRpmqntXmg1gghmlqARvSwTMgeDu4JxJ97VVR3ErppEqw+OCox2+?=
- =?us-ascii?Q?31j47MHMsivjm/g23Jxd177vhi72gXYw/cLA4gbVS7UOqP/IrNnLfvzQcBsz?=
- =?us-ascii?Q?tspB8XyQ2+tnuHzqrFXbXx8vEDUfh0xquDwil/AMwfWUr/rNspZGOX1c+VDd?=
- =?us-ascii?Q?MjFtd+z5aEeFgKS7KKChKcWkrIaZ7TaPGCJM?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2025 09:42:22.2864
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51436d34-27c8-4732-f5b8-08ddf43c2b9a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B072.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4142
+Content-Type: multipart/mixed; BOUNDARY="8323328-904851415-1757930044=:1043"
+Content-ID: <fa23f448-f940-ff1a-df01-26f0e923dbf4@linux.intel.com>
 
-After a reboot, if the user changes the thermal setting in the BIOS, the
-BIOS applies this change. However, the current `dell-pc` driver does not
-recognize the updated USTT value, resulting in inconsistent thermal
-profiles between Windows and Linux.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-To ensure alignment with Windows behavior, the proposed change involves
-reading the current USTT setting during driver initialization and updating
-the dell-pc USTT profile accordingly whenever a change is detected.
+--8323328-904851415-1757930044=:1043
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <fa4055fb-daf3-8387-a85a-8f68f73f84f1@linux.intel.com>
 
-Cc: Yijun Shen <Yijun.Shen@Dell.com>
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/dell/dell-pc.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On Thu, 11 Sep 2025, Tom=E1=A8 Hnyk wrote:
 
-diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
-index 48cc7511905a..22248cfe21c5 100644
---- a/drivers/platform/x86/dell/dell-pc.c
-+++ b/drivers/platform/x86/dell/dell-pc.c
-@@ -228,6 +228,8 @@ static int thermal_platform_profile_get(struct device *dev,
- 
- static int thermal_platform_profile_probe(void *drvdata, unsigned long *choices)
- {
-+	int current_mode;
-+
- 	if (supported_modes & DELL_QUIET)
- 		__set_bit(PLATFORM_PROFILE_QUIET, choices);
- 	if (supported_modes & DELL_COOL_BOTTOM)
-@@ -237,6 +239,28 @@ static int thermal_platform_profile_probe(void *drvdata, unsigned long *choices)
- 	if (supported_modes & DELL_PERFORMANCE)
- 		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 
-+	/* Read current thermal mode from the BIOS and set the mode explicitly */
-+	current_mode = thermal_get_mode();
-+	if (current_mode < 0)
-+		return current_mode;
-+
-+	switch (current_mode) {
-+	case DELL_BALANCED:
-+		thermal_set_mode(DELL_BALANCED);
-+		break;
-+	case DELL_PERFORMANCE:
-+		thermal_set_mode(DELL_PERFORMANCE);
-+		break;
-+	case DELL_COOL_BOTTOM:
-+		thermal_set_mode(DELL_COOL_BOTTOM);
-+		break;
-+	case DELL_QUIET:
-+		thermal_set_mode(DELL_QUIET);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.34.1
+> This key is produced by FN+PRINT_SCREEN and as per Lenovo documentation,
+> it should be "Open the Snipping tool". This corresponds to
+> KEY_SELECTIVE_SCRENSHOT, whose keycode is 0x27a. Previously, keycodes
+> under 248 were preferred due to X11 limitations, so KEY_CUT was used.
+> This is now being corrected.
 
+Hi Tomas,
+
+Thanks for the patch.
+
+Please use "platform/x86: ideapad-laptop:" as the prefix for shortlog and=
+=20
+remove "for Ideapad laptops" as prefix already covers that information.
+
+I'd rehrapse the commit message to something along the lines of:
+
+As per Lenovo documentation, Fn+Print-Screen should "Open the Snipping=20
+tool" which corresponds to KEY_SELECTIVE_SCREENSHOT (keycode 0x27a). It
+is currently assigned to KEY_CUT because keycodes under 248 were
+preferred due to X11 limitations.
+
+Reassign Fn+Print-Screen from KEY_CUT to KEY_SELECTIVE_SCREENSHOT.
+
+
+Note also there should be double E in SCREENSHOT.
+
+> Signed-off-by: Tom=E1=A8 Hnyk <tomashnyk@gmail.com>
+> ---
+>  Fixes https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
+
+Fixes: (note the colon) tag should refer to a commit you're fixing with=20
+this patch (not really applicable here). It also has a certain formatting=
+=20
+requirements which are explained in Documentation/process in case you need=
+=20
+to use that tag one day.
+
+Closes: is the correct tag to use for bug tickets so please change to=20
+that.
+
+Also, please place all tags before your signed-off-by line as anything you=
+=20
+put after --- line will be automatically cut by maintainer tools.
+=20
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platf=
+orm/x86/lenovo/ideapad-laptop.c
+> index fcebfbaf0460..556d50fb7996 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -1328,7 +1328,7 @@ static const struct key_entry ideapad_keymap[] =3D =
+{
+>     /* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() =
+*/
+>     { KE_KEY,   0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+>     /* shift + prtsc */
+> -   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> +   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+>     { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+>     { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+
+This patch is corrupted by spaces. (This is a quite common problem, no=20
+need to apologize).
+
+After fixing the forementioned issues, please send v2. You may want to=20
+try first to send the patch only to yourself and try applying the patch=20
+you received from yourself to check that nothing corrupted the patch while=
+=20
+sending it.
+
+--=20
+ i.
+--8323328-904851415-1757930044=:1043--
