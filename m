@@ -1,101 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E08C1F5F6;
-	Mon, 15 Sep 2025 10:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA852C2369;
+	Mon, 15 Sep 2025 14:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757932519; cv=none; b=ISvkpklw6eSvSDqsJ5NDkgJHXv9hfkHYiCKJ1bVBr2hb3o//TvAk9st+ZhOcV3dfSS4+fuPJr8Wsyu4dKwAt4+G29bvuD5KsyHrR8HMrTEEDuyuM6n80bztopVMqm5o4hlqbeDUJ/2pEin7o7NrXyMLL3OQXr+nXesJ667LZzs8=
+	t=1757947655; cv=none; b=f1lTUCXeiAILts0CdqvIkyaKIQ5DchG9vgnsC2sS/263YBzDsqJnKHdyyoOvY8wExheRQXt1WqD5/kbnJUx3VRQiUGiaAGWYKbMDRFwYc1smsArBju+RHdyCf4l1flVeq/G0KEH4UKzp8DOtiNEpmL6uzYBA+BbC3Os9K7YALgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757932519; c=relaxed/simple;
-	bh=/MPjI/zUoIcYG27E6oC5iuD/D6wLU15O8vIYfKQFP1o=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=p8IemmCNZA8mZW1s+vvWqb1byW5tJMPZZ+1XrsV7VAmn8Pn3T4i3js2rE4w00hvBh1J8QU2nQYv/7Tv3HHuWk1p+e7NAxtknGr+/ig+GmMOWzQGfESkRgZclX8sdKYFOLU7LhmYaqmB+RIjAJAwc8OYjeZKrK3OzhQNsvslqSFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dpxKzI9C; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1757947655; c=relaxed/simple;
+	bh=isLYgistNjdaFJ+IvtazUqH5mG3/5S4jIQ9w4kszCSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVg0I1YgvMEg6THzFX1Amg6ntsPeQYBAZlJpsxO+LLo+U1BNLaujkA8Du9YXn4w2VxPqiQ5trNz+IY3mOprFKAuo+LHFCX/O+3Es3NOLmgt4veSfYTw1oatRr8oyvf1SQYsAF9XJFt4Z5r8qx02u47khU7mH7vXRXbK8DbWFUVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4wlMhtj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dpxKzI9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757932518; x=1789468518;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/MPjI/zUoIcYG27E6oC5iuD/D6wLU15O8vIYfKQFP1o=;
-  b=dpxKzI9CBxS9rSM2rqPWji6VWOCtzxPu77ClovNdtCHc2tmhQIbF7RTl
-   BJQmY/+IzoApEu3YXAYU5JOH/TTMyAYEUDmPAcwdV0ZzYseBxyaKy9Az/
-   wgC/c07Iz29nQJQ4W/B8HVrH9K3zgLck5UWL8CEsvPmRlPWfsjoy5u6Wm
-   xwToWUdIiN2OhMzRZxpPgJFQDuK59ZnwJiZ+ySY3nyhxG6POUJMrCsmRP
-   ctot9pRakDPxn/fqsKNQFRFzyVBI5PhiBCIB6+3bvdPKg/LrqJzFqtYqG
-   CjaAgXvJZkgsSrq+YxsqBhfkS1OpdKjkPM4mkuk5KSffeY3iYjDzoSEpA
-   A==;
-X-CSE-ConnectionGUID: NsGXjZv/QOqHtGU7zJzMzg==
-X-CSE-MsgGUID: 089pDJHBS6aYuPlczc5hzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11553"; a="63815056"
-X-IronPort-AV: E=Sophos;i="6.18,265,1751266800"; 
-   d="scan'208";a="63815056"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 03:35:15 -0700
-X-CSE-ConnectionGUID: c1BiExxOToWDc8KwEh0PRw==
-X-CSE-MsgGUID: Cv/TE8bwQaGDMDPGTwgGxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,265,1751266800"; 
-   d="scan'208";a="205366000"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.39])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 03:35:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 15 Sep 2025 13:35:07 +0300 (EEST)
-To: Akiyoshi Kurita <weibu@redadmin.org>
-cc: platform-driver-x86@vger.kernel.org, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com, 
-    W_Armin@gmx.de, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net
-Subject: Re: [PATCH] docs: wmi: lenovo-wmi-gamezone: fix typo in frequency
-In-Reply-To: <20250913173754.951858-1-weibu@redadmin.org>
-Message-ID: <c8b5c80d-beb0-796b-dc31-7daf4cadcc37@linux.intel.com>
-References: <20250913173754.951858-1-weibu@redadmin.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4wlMhtj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B8BC4CEF1;
+	Mon, 15 Sep 2025 14:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757947654;
+	bh=isLYgistNjdaFJ+IvtazUqH5mG3/5S4jIQ9w4kszCSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D4wlMhtjYAOghN/Bw6VK9WtBE24NGMCF8oPJ9UZHSrMfKsq0/B3OdwmPRJ5yz1sGa
+	 OVjs4KV9tXx/GrndpwGtSpX48JUEtmtPKsZ5MbGv/LUPTizKZALqwjzGu68hOzB5ql
+	 FzXbyT1kXtp13oCs381JOyrWuZsJoBQ1XLv0n8ABkubTTcZuuiM2AYOM0ViN4MerAQ
+	 4VptVba9101kMNZ6kWvM9QXHn8hbA+JcFNVeucYKaF4NxAi5UCp3fD0SxzrBmMyZNx
+	 xky7ydLOm6XZ+ESqYeA6gQ8Jr0QLzQJu1SEJOQ0Zj/U6soM2QrlUeKptugAFYg0kGa
+	 6T1Qt47mcIgCw==
+Date: Mon, 15 Sep 2025 15:47:27 +0100
+From: Daniel Thompson <danielt@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: lee@kernel.org, jingoohan1@gmail.com, neil.armstrong@linaro.org,
+	jessica.zhang@oss.qualcomm.com, deller@gmx.de,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	airlied@gmail.com, simona@ffwll.ch, fnkl.kernel@gmail.com,
+	j@jannau.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+	sven@kernel.org, alyssa@rosenzweig.io, neal@gompa.dev,
+	support.opensource@diasemi.com, duje.mihanovic@skole.hr,
+	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v2 06/15] backlight: Include <linux/of.h>
+Message-ID: <aMgm__4sUSKYxqDt@aspen.lan>
+References: <20250715122643.137027-1-tzimmermann@suse.de>
+ <20250715122643.137027-7-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715122643.137027-7-tzimmermann@suse.de>
 
-On Sun, 14 Sep 2025, Akiyoshi Kurita wrote:
+On Tue, Jul 15, 2025 at 02:24:43PM +0200, Thomas Zimmermann wrote:
+> Include <linux/of.h> to avoid dependency on backlight header to
+> include it.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-> Fix a spelling mistake in lenovo-wmi-gamezone.rst
-> ("freqency" -> "frequency").
-> 
-> No functional change.
-> 
-> Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
-> ---
->  Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> index 997263e51a7d..167548929ac2 100644
-> --- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> +++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> @@ -153,7 +153,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
->      [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
->      [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
->      [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalue;
-> -    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffsetFreq;
-> +    [WmiDataId(4), read, Description("OC Offset frequency")] uint32 OCOffsetFreq;
->      [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMinOffset;
->      [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMaxOffset;
->      [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetScale;
-
-Hi,
-
-There's a pre-existing patch to this [1] which I'm not very likely to 
-apply anyway as the typo is in the original interface and this section is 
-not exactly documentation for normal users.
-
-[1] https://patchwork.kernel.org/project/platform-driver-x86/patch/20250817170644.5855-1-rakuram.e96@gmail.com/
-
--- 
- i.
-
+Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
