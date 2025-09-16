@@ -1,106 +1,151 @@
-Received: from sender4-of-o56.zoho.com (sender4-of-o56.zoho.com [136.143.188.56])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8DB2DECBF
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 06:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758005808; cv=pass; b=htno6cqnck+bLd679hXRUuDGPI0Q0TkPq7UyGBe7U8J2rd3/YpI4k3xczXuYcQN7zN+gvdeA31S9GWFThb72Pff6NYcH3HH0k48wxUAaE4CIIKZZUB4rSEjbOPBrFz6j3o2lgXex9kUn2lIzIsr/iGT0mhSyg9hdVdnlf5Qi1aA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758005808; c=relaxed/simple;
-	bh=2ElekgoP82bRDA2XTPtDRvsB0NhhfFnhnDFOdTZZeaQ=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=qYITM0XnfwleRsEqW5ePA+FlsFL5R3jN7NnoTDTA5czW8lL265vBo4kvzT0awoTa30QnW8KmQnzkL5Wxgl4jXlVfPkm7BRjy1o+ks1H2Dpl0jE8fCEPHuvOaNRKv2AzxnPcYIkKO8tcoMBziJhaYsjJZQnN05iVWMDpKlDDKtLk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net; spf=pass smtp.mailfrom=chandra.net; dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b=BldtF4tK; dkim=pass (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b=rNmQzgIF; arc=pass smtp.client-ip=136.143.188.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chandra.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E3219AD48
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 06:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758005970; cv=none; b=LwN85D9xhSVau90EVGLXHGVoMQdv6l4C8gUrmecmiDq4SF6/lb8tubujV8epetfDXDQL/W6BIWhOcjl5hYMFwNeV8Hl/yswNHPIu1iDuPilk7Xfs9kIarhcJiyMW/B4g0XUjiAEhPKsMqEkBmu+79pLjfI+NCfhP2rzG57NbbNw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758005970; c=relaxed/simple;
+	bh=9aI1e3THEjDxHBmOMPGIdPryXTzJxDzPnyCZcmd9iMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rWgO/CgX31bL4Dp+NPiWWLvAZFeAOt+HyWDKPkuk8JrnZx0AvQZwyfoNHpULTnwFSvnwnGLlYHTYUdgT3L+GaYuTtkuOBP3TpSbGJy80LihJJefKBde5q/huQte+9MpSTSLR0tGGX90GedG/AzRmHy2iz60bkv7h9dOmxJYBh4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CpUQU3ov; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b="BldtF4tK";
-	dkim=pass (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b="rNmQzgIF"
-ARC-Seal: i=1; a=rsa-sha256; t=1758005795; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VlqzTWboknyVMS0wNolxA9qWvIVfJ63J4fUZteSuzhcAboOzRALvZx/ur5F2XVsw2E6dVQB+Ui097yM0bj9iCFDYntQWMivi7xM8cFBkr1E2Gz6NYLs3OQjZGMho5b9xIT1sUZU5QO5zbLPnhNRLZ/MWohHkhFtLFhOqbCPQsJA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758005795; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SPC/G5PnX/WQkOMXSnJNr0bQACNmAwA7EvPAc4AjU8Q=; 
-	b=ZjcXpuIn0Ha4295GUJWX/SzhFnUSsmdksWrML9j9qe9Ywe4rl+fL/Tea7oBhiZr2wppJlGUPEA233JYXwJiApYN/ig//1vFFIo3NZo1e0IbcSi0OyAyEAYGWHAl+b86kDK7BtnSp5DddMdPMP5dCxFu6hY/gVJjzMNxw5fOijMI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=chandra.net;
-	spf=pass  smtp.mailfrom=rahul@chandra.net;
-	dmarc=pass header.from=<rahul@chandra.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758005795;
-	s=zmail; d=chandra.net; i=rahul@chandra.net;
-	h=From:From:In-Reply-To:Content-Type:References:Date:Date:Cc:Cc:To:To:MIME-Version:Message-ID:Subject:Subject:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=SPC/G5PnX/WQkOMXSnJNr0bQACNmAwA7EvPAc4AjU8Q=;
-	b=BldtF4tKZyZ2cbgNJvMxgu9P+01Hy20pCTqGdQQHrUov/p7YowjzxOWvdufkqAsZ
-	nuH1WHjPhj/L3i+G1uVagdrh7WDhgR3nVcTgT/hkZGUXCG1rIONkxr4wp4Ky/Z4fq1l
-	e3S+YeAEUS181Xo8cTJ2RLaAOuUml1dt9Xw3b1AM=
-Received: by mx.zohomail.com with SMTPS id 1758005793969944.2437608825524;
-	Mon, 15 Sep 2025 23:56:33 -0700 (PDT)
-Received: from sogo.mynetworksettings.com (pool-173-70-162-2.nwrknj.fios.verizon.net [173.70.162.2])
-	by mailserver.projecteclipse.org (Postfix) with ESMTPSA id 41531ECFCB;
-	Tue, 16 Sep 2025 06:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=chandra.net;
-	s=default; t=1758005792;
-	bh=2ElekgoP82bRDA2XTPtDRvsB0NhhfFnhnDFOdTZZeaQ=;
-	h=From:In-Reply-To:References:Date:Cc:To:Subject:From;
-	b=rNmQzgIFZwWpAEvxS6D+D99hUDEDH8/KwlodjSFzesYbVl1KQTs/03qn4KKBnFznV
-	 vA/FK46c8psMmRwTBdDvvgYmQHJC1qGxizsaQAhBJA2FBvKWL+Jpa+yC1H+3hDnO/M
-	 McI5Z5WbuE5rjemnt2ISPUwsKMT6dceR9Xicofjqd41L4p2344r+HqHwYPs3EF0UwO
-	 y0HyNueNiIfjCeJqOqlWA6HMptQ+XkmhY2PLR972hvvxRId3bm5jpL9jt6HWl1UyKk
-	 q4ER/dCUteWDw/cpBS9HRD5Kp8Xs/E9QdSUE0pdfnrbmvAYcsscz1ED4litPVY7COr
-	 nfBVBvmqX51jA==
-From: "Rahul Chandra" <rahul@chandra.net>
-In-Reply-To: <1e1-68c90980-99-13ea166@216761407>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 173.70.162.2, 192.168.1.147
-References: <1e1-68c90780-93-13ea166@216760021>  <CAGwozwFaB9YMKqc1tbmRvjjAZLZRZJKKEjYFDH38EbdeBRvWmA@mail.gmail.com> <1e1-68c90980-99-13ea166@216761407>
-Date: Tue, 16 Sep 2025 02:56:32 -0400
-Cc: "Antheas Kapenekakis" <lkml@antheas.dev>, platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, mathieu@fenniak.net, corentin.chary@gmail.com, luke@ljones.dev
-To: "Rahul Chandra" <rahul@chandra.net>
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CpUQU3ov"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id 55F0EC8905
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 09:50:44 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id CA5F9C8909
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 09:50:43 +0300 (EEST)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 3D3551FF5E4
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 09:50:43 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1758005443;
+	bh=+ajQr3+adlwS6DeNjuFC3YEIP8t8As81nrR/XzzqN24=;
+	h=Received:From:Subject:To;
+	b=CpUQU3ovup51hK/ACWCAioBqL/kleJQWFtQ2HbSLZuXawB4ea6kz3j6OcbDinxLbH
+	 Aqr9ksKYfTEGtt44jskroHLPZUYCZvXrnBQXsIKG9QYisY+Fon/NSuTHuNB8WKvzFQ
+	 eHzBjiPkxjhyFFzcv5+GGGo8boyZanGy4wat1iutGiqUiIbZ/AcSV37KUwHmw+h6v9
+	 JXGWh2j6xw2Y3+G+5Sdgu1RCITvSx6HttDPCxL8048KdJeM+sOPH0r3IEAx3PjsIl5
+	 sNPonKxExh2oUvcHgfoZj9MdOU1vX7HoTvVUWwVu5rNKvC0klyAvcwRQ8RY4raqOMN
+	 AqJuVv9UqFa8Q==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f178.google.com with SMTP id
+ 38308e7fff4ca-336d84b58edso46610591fa.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 15 Sep 2025 23:50:43 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yzq/djBmlRfQmsaEGvPzocIo4Gaa+a3STx7Ja5ffJJcSHwK6p30
+	js7zMcI2gvvizUs409IQxa9uTp7eItZopiDxx20tarRSimiVFZA6Jd5iHasydSvRTJ+4JJsn6PG
+	hYT7TKO29GkNorxXBKeN3eu578sEiVzk=
+X-Google-Smtp-Source: 
+ AGHT+IE0J7JSZkBQCVTNLE0DZWlP+dKj0Vq9K8gUlDgM+IwR5B+KsGh1toyYx/MhGzCzIfu3GOzpWADfhqEs1vJV8V4=
+X-Received: by 2002:a05:651c:255a:10b0:336:ac3a:73b5 with SMTP id
+ 38308e7fff4ca-3513c029a14mr35125071fa.19.1758005442585; Mon, 15 Sep 2025
+ 23:50:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <10020-68c90a00-7-4ac6c580@106289939>
-Subject: =?utf-8?q?Re=3A?= [PATCH v2 1/2] =?utf-8?q?platform/x86=3A?=
- =?utf-8?q?_asus-wmi=3A?= Remove extra keys from 
- =?utf-8?q?ignore=5Fkey=5Fwlan?= quirk
-User-Agent: SOGoMail 5.12.1
+References: <1e1-68c90780-93-13ea166@216760021>
+In-Reply-To: <1e1-68c90780-93-13ea166@216760021>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 16 Sep 2025 08:50:31 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFaB9YMKqc1tbmRvjjAZLZRZJKKEjYFDH38EbdeBRvWmA@mail.gmail.com>
+X-Gm-Features: AS18NWC5jmCLMhahY7wIS4c4kno0aJ-xFq4wP31Ej4cIScYNW5fJFje4kLcqD8g
+Message-ID: 
+ <CAGwozwFaB9YMKqc1tbmRvjjAZLZRZJKKEjYFDH38EbdeBRvWmA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Remove extra keys from
+ ignore_key_wlan quirk
+To: Rahul Chandra <rahul@chandra.net>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	mathieu@fenniak.net, corentin.chary@gmail.com, luke@ljones.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+X-PPP-Message-ID: 
+ <175800544344.2626281.7665463748878159788@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Tuesday, September 16, 2025 02:54 EDT, "Rahul Chandra" <rahul@chandr=
-a.net> wrote:
+On Tue, 16 Sept 2025 at 08:46, Rahul Chandra <rahul@chandra.net> wrote:
+>
+> Added some cc's
+>
+> *Note I have a UX8406CA (the 2025 Arrowlake model, I assume it is the sam=
+e on the MA)
 
-> On Tuesday, September 16, 2025 02:50 EDT, Antheas Kapenekakis <lkml@a=
-ntheas.dev> wrote:
->=20
-> > On Tue, 16 Sept 2025 at 08:46, Rahul Chandra <rahul@chandra.net> wr=
-ote:
+I must have mistakenly thought that the important code on both devices
+is 0x5F. Perhaps on the duo is 0x5D instead or it emits events on
+both. Can you verify which codes are used on the Duo?
+
+Antheas
+
+> --
+> Rahul
+> On Tuesday, September 16, 2025 02:36 EDT, "Rahul Chandra" <rahul@chandra.=
+net> wrote:
+>
+> > On Monday, August 25, 2025 07:30 EDT, Ilpo J=C3=A4rvinen <ilpo.jarvinen=
+@linux.intel.com> wrote:
+> >
+> > > On Fri, 08 Aug 2025 17:47:09 +0200, Antheas Kapenekakis wrote:
 > > >
-> > > Added some cc's
+> > > > Currently, the ignore_key_wlan quirk applies to keycodes 0x5D, 0x5E=
+, and
+> > > > 0x5F. However, the relevant code for the Asus Zenbook Duo is only 0=
+x5F.
+> > > > Since this code is emitted by other Asus devices, such as from the =
+Z13
+> > > > for its ROG button, remove the extra codes before expanding the qui=
+rk.
+> > > >
+> > > > For the Duo devices, which are the only ones that use this quirk, t=
+here
+> > > > should be no effect.
+> > > >
+> > > > [...]
 > > >
-> > > *Note I have a UX8406CA (the 2025 Arrowlake model, I assume it is=
- the same on the MA)
-> >=20
-> > I must have mistakenly thought that the important code on both devi=
-ces
-> > is 0x5F. Perhaps on the duo is 0x5D instead or it emits events on
-> > both. Can you verify which codes are used on the Duo?
-> >=20
-> weird,
-> scankey -s reports
-> 0xe0 0x73  0xe0 0xf3, the 0xe0 is for the extended scancode set but I=
-'m confused on the other 2 codes. the WLAN quirk definitely worked befo=
-re (I submitted the patch for it for the CA)
-
-It's for keyboard detach/retach, both attaching and re-attaching report=
- the same code.
-
-
---=20
-Rahul
+> > >
+> > > Thank you for your contribution, it has been applied to my local
+> > > review-ilpo-fixes branch. Note it will show up in the public
+> > > platform-drivers-x86/review-ilpo-fixes branch only once I've pushed m=
+y
+> > > local branch there, which might take a while.
+> > >
+> > > The list of commits applied:
+> > > [1/2] platform/x86: asus-wmi: Remove extra keys from ignore_key_wlan =
+quirk
+> > >       commit: cf3940ac737d05c85395f343fe33a3cfcadb47db
+> > > [2/2] platform/x86: asus-wmi: Fix ROG button mapping, tablet mode on =
+ASUS ROG Z13
+> >
+> >
+> > Hi, with these commits on the branch the "Airplane Mode on detach/attac=
+h" bug comes back (The bug the quirk was intended to fix) . I think the Duo=
+ emits 0x5D (toggle, because it deactivates and activates on attach/detach)=
+ however I have not confirmed this. This is a regression from the previous =
+patch and I propose that we either revert the commit or fix the keycode. I =
+am not submitting a patch because I don't know if 5D is used for a differen=
+t purpose on the ROG devices, can someone confirm?
+> >
+> > --
+> > Rahul
+> >
+> >
+>
+>
 
