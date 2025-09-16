@@ -1,91 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB48E26E6FB;
-	Tue, 16 Sep 2025 19:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EBB27B331
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 20:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758050024; cv=none; b=p++NtuswKVus07X3cZJ27/KwithnU/Fp5kmuqzuXbQQU62Iwr5qeWvXuF8+nTDgX7LfQZZM7eplnmxVE3hfLnljqg/t4MlbSJjhjNGvY55Elk03NZfyp+XeSOCeMFkTKjS+wvZ9epYFXQH0Ja4cfV26B/MhxrDO+XnqHDgkk+WQ=
+	t=1758053199; cv=none; b=EQaJQ0SzC30aPbD/RH0I++JHYlabjCMmiz27jAdUUsXIEOCQIDhGTA3aTWtw8jx8iV0aS1mmIPetXFrpC+SvDXvntZli7wZYclujLMjjVjjT8f3wvAA0PfZehRn8Wstu/NHvYexyw3g3DfyL99A8QpjlQKfmlL0zl/UR4os4EoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758050024; c=relaxed/simple;
-	bh=4H86ltejAj4xv3Dw7e4TEmv58rhAupO55xtgdM1BKZ8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ORnBYZPcIB3H2dK1ebZ/hqCgxiCX9n2rz5b7yK2uzKk4IFOYtZxe6rSzW64Zrtxn5/929J5IiJs08hDkw0+PthkAWPRsXI/1cjCSibqQtxqVtjMuXa5JdlvefnqbXEt7px7cyv+PBYhkp78lI+KoUH3LTVgtTBUd6oKjAaP+ECk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xnn8ARJf; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1758053199; c=relaxed/simple;
+	bh=sgYmSPXr5fJEn+ksoOyt6N70CNWy742OaZOeIXzvKEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nEL5Pwcz9tiw8rIthc9BR/qX0bPokxP4vfXp1y0prMP1lRlJD2J513SZImRmOSIQ6Ta2u1Xa/1FS/9XOIXq3I0HKxT7kVUe56JiC1jInga7WNckrrGydj75ofiAO3bdzccRoqIMgMhn37X519Wk7nJWudregJw743VizycsG95A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGytgli2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xnn8ARJf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758050023; x=1789586023;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4H86ltejAj4xv3Dw7e4TEmv58rhAupO55xtgdM1BKZ8=;
-  b=Xnn8ARJfYdxYVGNiAmbxKYB+dQYzx4c2tPxf/BWHhOrVM6gO7TlbSiLr
-   x9G4JtgOOCGCb+c5ECwTdz9BBbD4g9zFJwErMOxHHcTQ49HKFxw9pq8GK
-   hb46LYb4kDtYKSRYa5AKdnRFv8hlt3RFnUQfRFcL793FhJGnJJ+dBSGBu
-   vImeIMGITh1fyVFklVxxVyYOMI6+g7Wuz4N1BSfgW2/BHiv44Lz5oguGY
-   goEJXM8rA3GcIwnmqAWSxBru7SciazxdoHnCh+x5GzNN5vjAFKwGsv7TJ
-   z1qpCFyI7sLH7u6l36dZgeFHqPtsU+u7w0PVzSSZW2m5W3IsT/bGopK5E
-   A==;
-X-CSE-ConnectionGUID: pJtCI0czSUudhylZIRlLtQ==
-X-CSE-MsgGUID: dzrsNPo5Qeae9s1ITfQTSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11555"; a="60486687"
-X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
-   d="scan'208";a="60486687"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 12:13:42 -0700
-X-CSE-ConnectionGUID: VG1XlTvuTcaB2lgyu4GJUg==
-X-CSE-MsgGUID: AuwKAfJPQiuNAbpBtjA+hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
-   d="scan'208";a="174595260"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.125.111.195])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 12:13:42 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] platform/x86:intel/pmc: Replace dev_warn() with dev_dbg()
-Date: Tue, 16 Sep 2025 12:13:32 -0700
-Message-ID: <20250916191339.1748512-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGytgli2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 930DAC116C6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 20:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758053198;
+	bh=sgYmSPXr5fJEn+ksoOyt6N70CNWy742OaZOeIXzvKEk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pGytgli2fZqIFFSPD4nEJRarafpTfU7+HzOmQ4CrN2CjEOk4ppBUfuubssvHpkzrF
+	 Yq1Fu3JhenEJhBau9+SeBigC14UAXOKsIezP4Fx7i+c2SSYg7JmRNu0H+7xAQEjo71
+	 rg7BXNu5OtLeDuJtpfEqyONbSEfwBrBKai/4f3qtNYNZFKyEs0XUriJ7IUEsVYR1l3
+	 sgi7Um57l/zNJ55jX7gV8lA9nsst8AZcGh+Lr1JpsYDXDKsADdMKhLSbEKryyd1axR
+	 K3vczRqSxgpFXlvYuZ6R54wUd/hu+zQa8K+QEPSaOlYmNzqghDusF5TeByeZsS7KsJ
+	 /4SEXhXmAz//g==
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-74c1251df00so2989024a34.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 13:06:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUGlpHii57JEbSio1OlPCGClnbRqfYFP3RSkRfugMbEc4ey2N2rMSo6CF4dGTqO8ObYR/NmvtFzRxrQLbJpeNKzfC//@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+E1qLVPgxhUU/aciZ+nbLpX9JBbRHhc6jGtaP3H+YqY1+nd1F
+	k4vwoezH208Wpxejco8/Y2BY5Rk8E8KoWZThcKwIqAOi4qO7q9Wq4V8lylW/nS3AqeQH1Xg+W6l
+	eTR7YgoC0SEeQQ0O0BiVwyUNXJ8/GVLY=
+X-Google-Smtp-Source: AGHT+IEgzjAAkbMDY4awbYDp3Kq0/fxmVwsoGjHomqpd9a5KNX9ogTaPcgxeatr4pPDlCJhtFOK6MLyI7Ue0IaNcehc=
+X-Received: by 2002:a05:6808:689b:10b0:439:b491:401b with SMTP id
+ 5614622812f47-43b8d87c7bbmr8034409b6e.10.1758053197833; Tue, 16 Sep 2025
+ 13:06:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250830053404.763995-1-srosek@google.com> <CAJZ5v0hShKgPB42p4dOgKoRuMCkGhe+ZHMeAuFQO0Soa1ty_LQ@mail.gmail.com>
+ <CAF3aWvHTXiODVE72Q33KDS51j4QA7gXVSsvdRnvsHdBv4NzCfw@mail.gmail.com>
+In-Reply-To: <CAF3aWvHTXiODVE72Q33KDS51j4QA7gXVSsvdRnvsHdBv4NzCfw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 16 Sep 2025 22:06:26 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gTUj0zj3rZP+0iQAhsqMaLnN0K5RYpeH+ViS+GMKPHfw@mail.gmail.com>
+X-Gm-Features: AS18NWDo9e7e7lAfAdBG6Gzab9UFwhygJIWaLVvGXMJwbkP1bC1WNNPO2W6V_JU
+Message-ID: <CAJZ5v0gTUj0zj3rZP+0iQAhsqMaLnN0K5RYpeH+ViS+GMKPHfw@mail.gmail.com>
+Subject: Re: [PATCH v1 00/12] ACPI: DPTF: Move INT340X enumeration from DPTF
+ core to thermal drivers
+To: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
+	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace dev_warn() with dev_dbg() to reduce unnecessary warning messages.
-When the low power mode priority register contains invalid data, the Intel
-PMC Core driver can still utilize the default priority list. This scenario
-is more suited for debug information rather than warning.
+Hi,
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Sep 15, 2025 at 7:13=E2=80=AFPM S=C5=82awomir Rosek <srosek@google.=
+com> wrote:
+>
+> Hi Rafael,
+>
+> First of all I would like to apologize for the late reply and thank
+> you for your comments.
+>
+> On Mon, Sep 1, 2025 at 10:49=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.=
+org> wrote:
+> >
+> > On Sat, Aug 30, 2025 at 7:34=E2=80=AFAM Slawomir Rosek <srosek@google.c=
+om> wrote:
+> > >
+> > > The Intel Dynamic Platform and Thermal Framework (DPTF) relies on
+> > > the INT340X ACPI device objects. The temperature information and
+> > > cooling ability are exposed to the userspace via those objects.
+> > >
+> > > Since kernel v3.17 the ACPI bus scan handler is introduced to prevent
+> > > enumeration of INT340X ACPI device objects on the platform bus unless
+> > > related thermal drivers are enabled. However, using the IS_ENABLED()
+> > > macro in the ACPI scan handler forces the kernel to be recompiled
+> > > when thermal drivers are enabled or disabled, which is a significant
+> > > limitation of its modularity. The IS_ENABLED() macro is particularly
+> > > problematic for the Android Generic Kernel Image (GKI) project which
+> > > uses unified core kernel while SoC/board support is moved to loadable
+> > > vendor modules.
+> > >
+> > > This patch set moves enumeration of INT340X ACPI device objects on
+> > > the platform bus from DPTF core to thermal drivers. It starts with
+> > > some code cleanup and reorganization to eventually remove IS_ENABLED(=
+)
+> > > macro from the ACPI bus scan handler. Brief list of changes is listed
+> > > below:
+> > >
+> > > 1) Remove SOC DTS thermal driver case from the ACPI scan handler
+> > >    since its dependency on INT340X driver is unrelated to DPTF
+> > > 2) Move all INT340X ACPI device ids to the common header and update
+> > >    the DPTF core and thermal drivers accordingly
+> > > 3) Move dynamic enumeration of ACPI device objects on the platform bu=
+s
+> > >    from the intel-hid and intel-vbtn drivers to the ACPI platform cor=
+e
+> > > 4) Move enumeration of INT340X ACPI device objects on the platform bu=
+s
+> > >    from DPTF core to thermal drivers using ACPI platform core methods
+> > >
+> > >
+> > > Slawomir Rosek (12):
+> > >   ACPI: DPTF: Ignore SoC DTS thermal while scanning
+> > >   ACPI: DPTF: Move INT3400 device IDs to header
+> > >   ACPI: DPTF: Move INT3401 device IDs to header
+> > >   ACPI: DPTF: Move INT3402 device IDs to header
+> > >   ACPI: DPTF: Move INT3403 device IDs to header
+> > >   ACPI: DPTF: Move INT3404 device IDs to header
+> > >   ACPI: DPTF: Move INT3406 device IDs to header
+> > >   ACPI: DPTF: Move INT3407 device IDs to header
+> >
+> > Please avoid sending multiple patches with the same subject,
+> > especially in one patch series.
+> >
+> > Thanks!
+> >
+>
+> The subjects are quite similar but they are not exactly the same.
+>
+> Originally the ACPI bus scan handler was added in 3230bbfce8a9
+> ("ACPI: introduce ACPI int340x thermal scan handler") to prevent
+> enumeration of ACPI device objects in range INT3401~INT340B
+> and only the INT3400 master device had their platform driver added
+> in 816cab931f28 ("Thermal: introduce int3400 thermal driver").
+>
+> These days, however, each of INT3400~INT3407 device ID, representing
+> a different kind of thermal device, has its own platform driver.
+> Most of them, depending on X Lake generation, can also be enumerated
+> on the ACPI bus using INTC1XXXX device ID. In addition INT3408~INT340B
+> and some of The Wildcat Lake device IDs are not supported by any
+> platform driver.
+>
+> To make the review process easier and minimize the risk of mistakes
+> I decided to create separe patch for each ID in range INT3400~INT3407.
+> The INT3400, INT3404 and INT3407 device ID can probably be renamed to
+> Thermal Core, Fan and Power device ID, respectively, but I am not sure
+> about the others.
+>
+> Alternatively they can be squashed into a single patch which moves
+> all INT340X device IDs to the common header.
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index de2dbf4ad65e0..5729810e5a485 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1244,7 +1244,7 @@ void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
- 		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
- 			pri_order[mode_order[mode]] = mode;
- 	else
--		dev_warn(&pmcdev->pdev->dev,
-+		dev_dbg(&pmcdev->pdev->dev,
- 			 "Assuming a default substate order for this platform\n");
- 
- 	/*
--- 
-2.43.0
-
+Yes, please.
