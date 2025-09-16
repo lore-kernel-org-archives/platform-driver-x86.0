@@ -1,262 +1,205 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012039.outbound.protection.outlook.com [40.107.209.39])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08622BE7A6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 09:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758016764; cv=fail; b=ZSjcQFAHXgPxmlBV2zixYIFAnOZ9SVxhYQRAucHFlHwonKOTsENukhLBsaZDvat0d7rZmzkEracWoL8lWqGQsygrCs0qNChZrC4vNIRNAMiNVx6sFukaF90ZtIF1TxEgdP8GZDt3G3RGpmO9CKnY7bxVp0BXQVPVE4bkY9eQ3Rk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758016764; c=relaxed/simple;
-	bh=z3heQRxhXX+SSAfDGvkThsrDtN5KsOKoFJLd7FNDXx8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KlO1TZNrqPZYbqQqfcyx6Gs+f1PGcfuXw/ImVlr9TnEvPxZycUDta7dBMRBGRMefgkgTYGcXItAu0W9Np3y28XoV+95/7Di9O4+16KFdG8eR68AVhfjM9jw4TRpMApixYnsh2zNxnQgna7iJsqwQvDM9f0n1AUoZIUATbLitIAo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xCmw8i9C; arc=fail smtp.client-ip=40.107.209.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71592DC790;
+	Tue, 16 Sep 2025 10:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758016852; cv=none; b=nml1mK3venldWcFxuKUsCzpShzErqiKbaKj04qzIMSy8AhLYWba6rQIoNiW8X/tyOn59VxyaVDo25lYiSxlOT3cz0yFL8tJBs/dIAhXSvGno/kf88sewhS0B1eWpsS8ZE3NEm+6Q5H48Sq2SvOmIzWG4200SICn+ijVileToXhQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758016852; c=relaxed/simple;
+	bh=nnWkI+m8+0vYJKqfeJTqSu3Ryof79mvbjAFUpnfISi0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OCRVkUTp+EpZSPtB3shvisLHEaRDa2qmZCnUtMiGYoyQiYIlXFs+sjoKYi9Y8+1d1HwM7wsFA0Agdf50QvrRWel7EzVRMNePwEKCRQCg6FrgCKsMB+C5xM34SiDx62xeRhKMK/oTA3R38CguC7JdUyIPckc7SvJ1YgM/bNVl84c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ltBWmCDG; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xCmw8i9C"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q3D/fXz8RJAQiKPYIDONpWtESAjFy33je3zRrcsBsGNEmTArdIkvIZQMrbNpePFQ7n1XaH9yOF51zS0+KSXogVW4QI1fGHm/mCzHLVctfhN1frsriLti8uc97h9QpToDjjmDhntcmsiaBs2FXRp6hN3f7Dg+U1oAsFLCE+z70qDXTQXkCEaIEL9czJAgSvf0O7LllDlir5/JDz8fals/CKwWYJz+oRk+6hVH1C00AV21mBlnIzFFO/EBpw6IXhWcr5hL4bw6nV4LRGYZXpE/w1qTFaO4DK5WBtvSJf/Cau4+1aRwwY5UEPcr6vBDRCSRO849Gyrw2fiz6i4TZWtJfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8RL/XGIJQPEGbe3mYystC5mxiNL02NH9VxCgW8LDqws=;
- b=T1leah3nRmNr96z9BtwjKWiJuFdLKvci1ATUbHjhybSQ3dWGHPEePijC3EAT7qp5Haqm1YkwllGtZ5ZnUUGF4faQEjlXEF4rhIvnWS+TXdYmSjqq98AN5FVXA5SKPjLkv+1FqpdnVNP8HMrqDVOJkzszoV6aSE0ZkRFsskDJ02cyiEVEmR/HaL+eDcORbyrozqtKZdbeuQO8nhA3lsBr/sbH63aS5bL2z+NtMVMjzZZhDcWduqj399J7g0FuIUaEpTQURmN03MvYltY/BHhY40oQ9ey1rHrdtD3c4xI9OrTXVkjGXErbH/4rAOcnh6rtZoZ+0Xk6z8B9cE9hjK/h2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8RL/XGIJQPEGbe3mYystC5mxiNL02NH9VxCgW8LDqws=;
- b=xCmw8i9CRXpLPQ3uyoZPHZLZ1rvycERfAe76YdcNneQDMA7gcmQmp4w4J3GYIhpCFXaApMnnXoDUvdjlDPlxMuAPeJIw305hj2k8FKWRrjnwNCQCBoLuf3iSUUUckk5Mj7lTGYbPsQ1Oit/JyF44QdVedeqq47qDb/C3a73bvbk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5184.namprd12.prod.outlook.com (2603:10b6:5:397::18)
- by DS0PR12MB8270.namprd12.prod.outlook.com (2603:10b6:8:fe::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Tue, 16 Sep
- 2025 09:59:18 +0000
-Received: from DM4PR12MB5184.namprd12.prod.outlook.com
- ([fe80::c8eb:eeb9:cd73:b236]) by DM4PR12MB5184.namprd12.prod.outlook.com
- ([fe80::c8eb:eeb9:cd73:b236%5]) with mapi id 15.20.9115.022; Tue, 16 Sep 2025
- 09:59:18 +0000
-Message-ID: <8b3548e8-eff8-4f7c-8dc5-077df69de76a@amd.com>
-Date: Tue, 16 Sep 2025 15:29:11 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/dell: Set USTT mode according to BIOS after
- reboot
-To: Mario Limonciello <superm1@kernel.org>, lsanche@lyndeno.ca,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- Yijun Shen <Yijun.Shen@Dell.com>
-References: <20250915094154.2765361-1-Shyam-sundar.S-k@amd.com>
- <9c25dc53-aff7-4ecb-b3cd-9ed9ed8cac23@kernel.org>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <9c25dc53-aff7-4ecb-b3cd-9ed9ed8cac23@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0092.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::10) To DM4PR12MB5184.namprd12.prod.outlook.com
- (2603:10b6:5:397::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ltBWmCDG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758016851; x=1789552851;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nnWkI+m8+0vYJKqfeJTqSu3Ryof79mvbjAFUpnfISi0=;
+  b=ltBWmCDGR4betB+nrYLxAErjzZV7cssee8KJIVFslaVQK+dsfFVRO5CO
+   Z3I/npG18Z036eAoxGEwfnso5Ihm+q5EuwomonEtC2AXsS6pBMdtgnULw
+   YQLLppZprntCrI5PXYNGkq/umWjwSdT9qoRfu4FPNvnvdlBUIdFaqBMXR
+   64xiiXO0Rug8bMl5ofmEI/ojQatO2yx+zUpGiVlUteEFkyZK/l2iiJZdE
+   bDiDQFc6QFFbbuoZE0jpjUrOOGqdcuGTmSpxtZTXjanVFY4ngXlTtVAoC
+   qtymRf8yZvC/CcrXfHKri4VKcl/pu6bqKDx7edP86nGAjIgttEYXl/rEm
+   g==;
+X-CSE-ConnectionGUID: L/J7B8hbQ4CulhbRfe3z3g==
+X-CSE-MsgGUID: 6UOP2e5OSCi4scNQ65LIAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="47864320"
+X-IronPort-AV: E=Sophos;i="6.18,268,1751266800"; 
+   d="scan'208";a="47864320"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 03:00:50 -0700
+X-CSE-ConnectionGUID: 9GZO1RTbQ3ym2PTWmdN9zQ==
+X-CSE-MsgGUID: 6mcQDqfQStmbofMssFefnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,268,1751266800"; 
+   d="scan'208";a="175328592"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 03:00:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Sep 2025 13:00:43 +0300 (EEST)
+To: Ciju Rajan K <crajank@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, 
+    Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: christophe.jaillet@wanadoo.fr, platform-driver-x86@vger.kernel.org, 
+    vadimp@nvidia.com
+Subject: Re: [PATCH platform-next 2/2] platform/mellanox: mlxreg-hotplug:
+ Add support for handling interrupt storm
+In-Reply-To: <20250916054731.1412031-3-crajank@nvidia.com>
+Message-ID: <34d028ac-f907-1505-a2fc-f455a10cfa5e@linux.intel.com>
+References: <20250916054731.1412031-1-crajank@nvidia.com> <20250916054731.1412031-3-crajank@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5184:EE_|DS0PR12MB8270:EE_
-X-MS-Office365-Filtering-Correlation-Id: 404589fa-981f-4d55-3360-08ddf507b396
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c1NoUjVTNHA5UVpVQkZMR2oraTZtK3VEeHRPaElZSFdZa1huYzhkV0h4MFJ1?=
- =?utf-8?B?YWtjYVN2Unc5dTRBOGFrZ3QxRmtiR1dlWGRhL1pKa1F4OXN1Uy9mR2d0UjJ3?=
- =?utf-8?B?L2VNd0F0NGxjUzFQQ2dhN3V5NVpZbEJvQzhQNW13VnZGenc4QnRsNWd4eGxE?=
- =?utf-8?B?eXFxcGRTSElCSDFEM3BOUmtPQ00yNi8xZjdBUk90MEsyNU5TVGMvWXNlMWJE?=
- =?utf-8?B?eVN6eVdMZDRjRUt2OGZaS0kyK1dsTDQ2bmhXSDg0ZjY1SlBOaEUzK25idHNp?=
- =?utf-8?B?Yk9EVk8vbW5Ua1FwV2I3U01saFJNNmRFUys1cGFjdnNKMyttSy85ZmRQbWhu?=
- =?utf-8?B?cUUySGF3Y2s2ZmxiS2crcVBuaDVVdHdLRlZCU25IYTlia3VYazJQM2x1RktV?=
- =?utf-8?B?QmkzVzg3TXBtK2lNSFBUcEhhSXNoa2RmcmdSbVZQVW1jT1QydUNRUnpUcG5V?=
- =?utf-8?B?TktLUHJnTTk2MXVDTUZNanlrL3lkemgyejRtSWluMDEvSWRpeU5NZzMxVGFj?=
- =?utf-8?B?c3pTLzNzR0RNWE40MkpwcllqKzlrZ2VGdlR3N3JBclR4STdGb3V0WWw3Sy94?=
- =?utf-8?B?Z2ZYbFFNb3VubjNXcXNRSmJEMWx5Y3k3R2dHSmpWdjRMbHU0M3dkVW51NFVC?=
- =?utf-8?B?M0UwS2FyTnFUU3ZBMDBFcVV5WHZBMWlXdUE5ODRYUVhtTWhrMkQ1R0l1d294?=
- =?utf-8?B?SVV3dkNhMXdzNHJOU0FBdDgyeXRLdXBBVU10czNFcVFLQktRVGtHWTM4RnR1?=
- =?utf-8?B?TUVET1RDeDVFVFdvKzM1eFByVDhVR29RY1ZOUGREaTlZeDNIcmNGSi9hb2RS?=
- =?utf-8?B?Z1I0c01ncUU3SjQ4VEZqMHk0aFhxOEQveklpTFhKZDVkRGt5RElJRk4yd3ZI?=
- =?utf-8?B?Q0NKSUMyNkdUU0Y2S3R3clh5ektxMDhnc2R3NEc2NEFrSWhubEx6andLTGFy?=
- =?utf-8?B?akFOelBXQWZ0eHFVZGwrWXpBYWp0UzFFOW0zaUhBSy9zSktTSjZqd0VBZHA3?=
- =?utf-8?B?djFRR3RGTVF2a0J1cnFXVjJvWHBEcjRoSit4MWt6RzlwN2dYZjJIekw1RnZp?=
- =?utf-8?B?Mlp4K09kN3pvRjVSdXB0OVpUeXlHZGttWEw3bEFKZ3JNaFlsZ3lpTVl5YjFX?=
- =?utf-8?B?Wi9UcmpJc2hvdzhIbWVFSWlnN0VaUVZWUmZkQ2RrSjVEOFFVeVZNb0lETE1R?=
- =?utf-8?B?ejNkNDhwYkRKT3FEbTFBcENHdUtVOWQrbEtGZWxHckNlNW5XdkVjRWpBb1RP?=
- =?utf-8?B?UkZ4ZlhOYXlaTTgyMFB1bVBMazVmZ3VsL1hrMFJoa2Z1UWxKeG9IMnJtVFFp?=
- =?utf-8?B?TWdHeTJyWlNDZGlmcXdUMXN3VkphV2ZYaEhpaEJxRkxvaWRTMmxrYjh2RS9V?=
- =?utf-8?B?Zzk2S0t1dXhCeU9BYnhPcFR0S1V5K01pa3VWVVRMa3g0VUlIV284V1c1ZXI3?=
- =?utf-8?B?NTlsb1BqVkd0RVNaTCt3dnoyWG1aMyt5SWYxbWZLVnNnSXduVStZUlczNTFU?=
- =?utf-8?B?NHRkUlNZZFFCd0RhSWp0Qy9HbGZkNEtqR0tBSGtzZlRiVW41U2hNQ2c4eVF6?=
- =?utf-8?B?S1RHVXFUa0xkc0xOMzJMblpVZUZVSjFTdEk2bDlDM2tST2FCWUpJY2F2WTN3?=
- =?utf-8?B?SEtXTHpxVHM3UVcyekFRTEUvV3lLaC9MM3JaMnhENFJCWk5jY21Bazc1NUJD?=
- =?utf-8?B?YTZtQkpJbjYrRG94T2NyOC8vYjZ6M0FOZXU1TktrSzJlVGEySnA5bjYxbk44?=
- =?utf-8?B?anFsajR5blNFSnNHdEF6WDlBOWY4UHRNNlNkM2VMR1NLRXE1ZS9IUHVKci9L?=
- =?utf-8?B?YkxVZHFKVWE5YnVFbUN1YkdFdkFVRGFvUlZTaUhoR0lyOFdqOXc5dFVJR2R4?=
- =?utf-8?B?L2R5NWJ2ZUFJcXR3YzNHT0hGODVucXkxTG80OFdQbUIreTlVeGtGMGxoMEQ2?=
- =?utf-8?Q?43NnswiCOYE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5184.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjB6ZnpFam1BTktYRlI1aTNPRjBhQkZiZGlTVmhwUzNEWm5sK1NFMWEyc0ox?=
- =?utf-8?B?cnVtWW45VUsxOEtzcTJrWDJIdFhoeFBic1B0ek9sSHlIc2lncGdXdUVaNzB3?=
- =?utf-8?B?Vk53aVg4UEtidkp6R3o4Uk8wVjkvNk15OURmc0cyeUtOa3JWSnJSb1JSMktU?=
- =?utf-8?B?WHVTekpDN2NOa20vRGtQM2NWMi94aytkdFRGT090S2V5SmNLOWFVZUh3dUNL?=
- =?utf-8?B?NWZpL0hrT3pURE1PQjhpazJTZ095eGM2WnVmUExrclI3aWpYT2JDVURCNDdv?=
- =?utf-8?B?bFAwanh0OGt6YmFrWGxyU2RTRkJGai9JREtZczduTVduNE43a1lQaVRxT2F3?=
- =?utf-8?B?NnoycGlEL0J1QjRuU045ME9iVEl0cHRrRzJ5OFdVODNVcXpLVXVBVk9sQWJO?=
- =?utf-8?B?UElJZUZTaUJaYVhmU2NtampDR3Q2c2FlNGp0T052Rm13K3IxODhNSUlhT2Jk?=
- =?utf-8?B?UTYrU2VSWElFRlY2TUtQZStITkwzeDk5ZWFaWHlnaFBVUkM5NGZBQUJucjh0?=
- =?utf-8?B?Y1N4bVEyTmIwRzlXNTBqcEpwM2ZUcWhianFZcUhKL2UzYTdiT1VmbCs5clB0?=
- =?utf-8?B?R043bk16Yk5BSVlFSFl4SGNRcXBNMVBBaXBhTXR5MGZYbTZYekI0MGpMTzNU?=
- =?utf-8?B?MUt0akU0RVBGMXZIdGIvWVNYN29hZG1aZ3B0eGc5VjVqMnZTN0VlSXNmWVpk?=
- =?utf-8?B?TktNRERaUWZUcnpCUWZpekU1YSt1b0hVYzhic3lmc3VwOWc4b2JWa1pKUC9E?=
- =?utf-8?B?Vy9wOERPMGFaZ3RlQVNWbFJEb3MwMVdEb2FJK0xqaEp3N1lkVnhjRzRmVzBO?=
- =?utf-8?B?cUZCSmJRUG80V3dpT2daYTV6Zkw3L04xVmVCWkFMQ0E4cnR5Zkg5aU41TDJP?=
- =?utf-8?B?djVDSkpzZUtNVWhxSFVvMEU4M212R1kwaEVBTWFvUEU4TDBHYWhBQUJwbkdm?=
- =?utf-8?B?RWIxVHpoa3c5NCt2UEFJUjRCOTdmL3BCY01QbXhSS1B6bWR4SzRwbFA0QkRL?=
- =?utf-8?B?NGtZNjFGVWlQdVlnQ0ZKMldna1JKbDJVOHBOTUorTGhDNWg3cUdHZVhGMEVs?=
- =?utf-8?B?QnNJcXBodWZNV21XaDlsUFkxNUErNjl3azZOMU9wdE1VT0VCUFlldVg5YXEr?=
- =?utf-8?B?S1VBM3YvTWpzbWIycTNQYXpCOXRvQUNZbm5sYWhhZE1JZkw5aGt1eTFqaDJz?=
- =?utf-8?B?OTRkTG0vSVlKYzB6d0c5OE1KenRvem5ab2NEd3VNUWlvYnZneU90aWVrTFpL?=
- =?utf-8?B?ZTVrVWV2MGtCc0dFU1dpNUExalRCaFE1d3FTWTJ2QURyOGxqTjBNRXg5dlVK?=
- =?utf-8?B?L1o0RTRzQWdSNEVBdVhuQkZvRS9BUDhDem5vc0UyY05KMVBDSzc3blNmNHVw?=
- =?utf-8?B?clBsNG1MRWlsQnprbEtjaUMrYTYyMlk2MzYyLzlhVWJmK2tTc2I1cjlCd0FY?=
- =?utf-8?B?VjMyS0NaakgramN0YTFSS1pvUUt6UThzZmdTRWVsZGt5UmZFd1FjdHo5Qmxh?=
- =?utf-8?B?anozZEJNZ2xQYmhNOTJBcWkvWnJKZlJjYmU4YXdDOUx6QkhOTkxRQTlDdGEw?=
- =?utf-8?B?ZGpCZmtRZ1BhTUVCNWdxOUV4S1FLRk0zTVl4Z2pkSGNGaUh6eHhwbnliY1RG?=
- =?utf-8?B?ei9nS1o3S2VJb3dlK3VpZ0d6QWtnOWtGbkxybWM3Qis3VnloNktmaEhGY2g5?=
- =?utf-8?B?Umphd2lyQ1Jhd2JuL0RkODBwenl6clNiTk1YZ2hFWWNPTlloRHNSdzU3RnEz?=
- =?utf-8?B?WjVsYVN3TExnc3l2eXdDRDVMUmFlcXFEM1RwSG5SK1NETTBwZGJCMlY5QzBv?=
- =?utf-8?B?bGtoWC9iRk5BOXR2cXY0K0JVS2tGbHl6Ukp6QUU1MjJETVl3NHpJOENUeDU5?=
- =?utf-8?B?amRUQld6NUpETmV4Y3V1OEVmc1AyNmMraVVpVEVIZTc0YzBxd2g4alU1dEFw?=
- =?utf-8?B?ci9IanZIeTd3d0FBZm12czRsSFR5TTRSWm4xNkMzcTZ1d21FOFV4Z0dJL1h5?=
- =?utf-8?B?TldiaElFeThnQ3RBeTN5R2cwV2JDaWg2RGVTZno3VThLRzNUREYrN1MwS1pG?=
- =?utf-8?B?MzVzVjMzK3dmT05LNzJPRXRxRms1QUtVWHkxRm1HZ0Z1WGZpdThhZ3FySW5y?=
- =?utf-8?Q?x8InaXud/mOSQ+4cedYwjOggd?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 404589fa-981f-4d55-3360-08ddf507b396
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5184.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 09:59:18.8483
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QQTJq58zG3EzYfwKPYNu7eXl2najATFhdMGIsmqTzLQYwyZ9Vde6ZvC3krUnARKIUD1+QQsr4EtW89NseSvnyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8270
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Mario,
++ Thomas, lkml
 
-On 9/16/2025 00:30, Mario Limonciello wrote:
-> On 9/15/25 4:41 AM, Shyam Sundar S K wrote:
->> After a reboot, if the user changes the thermal setting in the BIOS,
->> the
->> BIOS applies this change. However, the current `dell-pc` driver does
->> not
->> recognize the updated USTT value, resulting in inconsistent thermal
->> profiles between Windows and Linux.
->>
->> To ensure alignment with Windows behavior, the proposed change involves
->> reading the current USTT setting during driver initialization and
->> updating
->> the dell-pc USTT profile accordingly whenever a change is detected.
-> 
-> No need to refer to "this change" or "proposed change" in a commit
-> message.
+On Tue, 16 Sep 2025, Ciju Rajan K wrote:
 
-Ack.
+> In case of broken hardware, it is possible that broken device will
+> flood interrupt handler with false events. For example, if fan or
+> power supply has damaged presence pin, it will cause permanent
+> generation of plugged in / plugged out events. As a result, interrupt
+> handler will consume a lot of CPU resources and will keep raising
+> "UDEV" events to the user space.
+> 
+> This patch provides a mechanism to detect device causing interrupt
+> flooding and mask interrupt for this specific device, to isolate
+> from interrupt handling flow. Use the following criteria: if the
+> specific interrupt was generated 'N' times during 'T' seconds,
+> such device is to be considered as broken and will be closed for
+> getting interrupts. User will be notified through the log error
+> and will be instructed to replace broken device.
+> 
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> Signed-off-by: Ciju Rajan K <crajank@nvidia.com>
 
-> 
->>
->> Cc: Yijun Shen <Yijun.Shen@Dell.com>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->>   drivers/platform/x86/dell/dell-pc.c | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/
->> x86/dell/dell-pc.c
->> index 48cc7511905a..22248cfe21c5 100644
->> --- a/drivers/platform/x86/dell/dell-pc.c
->> +++ b/drivers/platform/x86/dell/dell-pc.c
->> @@ -228,6 +228,8 @@ static int thermal_platform_profile_get(struct
->> device *dev,
->>     static int thermal_platform_profile_probe(void *drvdata,
->> unsigned long *choices)
->>   {
->> +    int current_mode;
->> +
->>       if (supported_modes & DELL_QUIET)
->>           __set_bit(PLATFORM_PROFILE_QUIET, choices);
->>       if (supported_modes & DELL_COOL_BOTTOM)
->> @@ -237,6 +239,28 @@ static int thermal_platform_profile_probe(void
->> *drvdata, unsigned long *choices)
->>       if (supported_modes & DELL_PERFORMANCE)
->>           __set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
->>   +    /* Read current thermal mode from the BIOS and set the mode
->> explicitly */
-> 
-> It's got to do with extra ACPI actions that happen "by the act" of
-> setting a profile, right?
-> 
-> I think it's worth explaining in more detail in the comment /why/ this
-> helps so it doesn't get removed some day in the future as part of an
-> optimization.
-> 
->> +    current_mode = thermal_get_mode();
->> +    if (current_mode < 0)
->> +        return current_mode;
->> +
->> +    switch (current_mode) {
->> +    case DELL_BALANCED:
->> +        thermal_set_mode(DELL_BALANCED);
->> +        break;
->> +    case DELL_PERFORMANCE:
->> +        thermal_set_mode(DELL_PERFORMANCE);
->> +        break;
->> +    case DELL_COOL_BOTTOM:
->> +        thermal_set_mode(DELL_COOL_BOTTOM);
->> +        break;
->> +    case DELL_QUIET:
->> +        thermal_set_mode(DELL_QUIET);
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +
-> 
-> Why even have the switch/case?  If thermal_get_mode() returns an
-> invalid value you already will return current_mode.
-> 
-> IE I'd think it's as simple as:
-> 
-> /*
->  * Make sure that ACPI is in sync with the profile set by USTT.
->  */
-> current_mode = thermal_get_mode();
-> if (current_mode < 0)
->     return current_mode;
-> thermal_set_mode(current_mode);
-> 
->>       return 0;
->>   }
+I've a general question on this approach, probably more directed towards 
+Hans, Thomas, or others who might have some insight.
 
-Okay, will make this in v2.
+Are drivers expected to build their own workarounds for interrupt storms 
+due to broken HW such as this? It sounds something that should be at least 
+in part handled by something generic, while the lower-most level masking 
+and detection might still need to be done by the driver to handle the HW 
+specific aspects, there seems to be a generic aspect in all this.
 
-Thanks,
-Shyam
+Is there something generic for this already? If not, should there be 
+instead of adding this in full into an end-of-the-food-chain driver?
+
+
+> ---
+>  drivers/platform/mellanox/mlxreg-hotplug.c | 35 ++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+> index d246772aafd6..97b84c584d5e 100644
+> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
+> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/hwmon-sysfs.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/jiffies.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/mlxreg.h>
+>  #include <linux/platform_device.h>
+> @@ -30,6 +31,11 @@
+>  #define MLXREG_HOTPLUG_ATTRS_MAX	128
+>  #define MLXREG_HOTPLUG_NOT_ASSERT	3
+>  
+> +/* Interrupt storm definitions */
+> +#define MLXREG_HOTPLUG_WM_COUNTER 100
+> +/* Time window in milliseconds */
+> +#define MLXREG_HOTPLUG_WM_WINDOW 3000
+
+Define's name should indicate the unit so please postfix it with _MS.
+
+> +
+>  /**
+>   * struct mlxreg_hotplug_priv_data - platform private data:
+>   * @irq: platform device interrupt number;
+> @@ -344,7 +350,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+>  			   struct mlxreg_core_item *item)
+>  {
+>  	struct mlxreg_core_data *data;
+> -	unsigned long asserted;
+> +	unsigned long asserted, wmark_low_ts_window;
+>  	u32 regval, bit;
+>  	int ret;
+>  
+> @@ -366,11 +372,34 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+>  	for_each_set_bit(bit, &asserted, 8) {
+>  		int pos;
+>  
+> +		/* Skip already marked storming bit. */
+> +		if (item->storming_bits & BIT(bit))
+> +			continue;
+> +
+>  		pos = mlxreg_hotplug_item_label_index_get(item->mask, bit);
+>  		if (pos < 0)
+>  			goto out;
+>  		data = item->data + pos;
+> +
+> +		/* Interrupt storm handling logic. */
+> +		if (data->wmark_low_cntr == 0)
+> +			data->wmark_low_ts = jiffies;
+> +
+> +		if (data->wmark_low_cntr == MLXREG_HOTPLUG_WM_COUNTER - 1) {
+> +			data->wmark_high_ts = jiffies;
+
+Why does this timestamp have to be saved?
+
+> +			wmark_low_ts_window = data->wmark_low_ts +
+> +					      msecs_to_jiffies(MLXREG_HOTPLUG_WM_WINDOW);
+
+Why not just calculate the ending of the window right at the beginning?
+I'd call the member e.g. ->wmark_window (or ->wmark_window_end).
+
+> +			if (time_after(data->wmark_high_ts, wmark_low_ts_window)) {
+> +				dev_err(priv->dev, "Storming bit %d (label: %s) - interrupt masked permanently. Replace broken HW.",
+> +					bit, data->label);
+> +				/* Mark bit as storming. */
+> +				item->storming_bits |= BIT(bit);
+
+Why not using continue here for consistency with the other skip above?
+
+If you add the continue, you can remove the else and deindent the zero 
+assignment by one level:
+
+> +			} else {
+> +				data->wmark_low_cntr = 0;
+> +			}
+> +		}
+> +		data->wmark_low_cntr++;
+>  		if (regval & BIT(bit)) {
+>  			if (item->inversed)
+>  				mlxreg_hotplug_device_destroy(priv, data, item->kind);
+> @@ -390,9 +419,9 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+>  	if (ret)
+>  		goto out;
+>  
+> -	/* Unmask event. */
+> +	/* Unmask event, exclude storming bits. */
+>  	ret = regmap_write(priv->regmap, item->reg + MLXREG_HOTPLUG_MASK_OFF,
+> -			   item->mask);
+> +			   item->mask & ~item->storming_bits);
+>  
+>   out:
+>  	if (ret)
+> 
+
+
+-- 
+ i.
+
