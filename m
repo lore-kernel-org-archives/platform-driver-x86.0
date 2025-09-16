@@ -1,66 +1,75 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011040.outbound.protection.outlook.com [52.101.62.40])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010013.outbound.protection.outlook.com [52.101.46.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEBF192D68
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 04:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF65223DF6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 05:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757997492; cv=fail; b=E3SS3MNC2I7zPdklf4TBq90LjnBIdnbD8BDfE9Mp8SOBJsQxVNJw1fDSvePIZ9q2JKm+cWg64ZZx9c5E1SjOtS4Zmcy4ofQGfRE9isVT8hFUBE7VgrtFBK40/32k9bfL2Zj5p4xE7ZyQjI+1CZBHi0fUi11gcV/p39eb+I5XtwU=
+	t=1758001674; cv=fail; b=KN/FLgeJ7tQsiBEXmCRy3C0AmJAlCyLUFD2sFqZnzND181l5vY4x3HZRZbRftKcVjK2XkjXcJvfF2S0K20w1WINAFny/KWZzCAz9tF2PCo1FCoBjpfIZKIQ7/pv9PwZfapJxOjFeTFXUwPRXq94mBLAXHqnmRqILcQhORxctVwk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757997492; c=relaxed/simple;
-	bh=dEXalsMB5MieVPxryHhvl6ywTT9pGx7G6H+f80esprc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LIj8MlsggCx06xJ2rFt/VVvo0zQmx1Xi4pnQYA9bpvCwl8W8wM2MwL0Q0JMSeJhzLXLPT24X3wmYcbGy92a6fX8JQFA9ZfcaK2y5ZGMxPZfU9JJX341coirZFJq92KTlcXW9fSFGFL7L9cumDx+Tahn6hoP3YuMTJeAwfGmWhOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dsYZ/t2y; arc=fail smtp.client-ip=52.101.62.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1758001674; c=relaxed/simple;
+	bh=6Eu3qbMtK4VkE60PevYcJfhvJUmRGE3uELePE7hb1rs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PNSXrODooyYI+z1lMgPE6hXaKeqSeBeDcqThdwuTieVnjND++mWkE5vMBiS9ITI6nzsmUER/oIn1wCuzHou0+VAlvXkek+27ixRTNjPf72cyZXFuPTNuVvQIwKYqXkTA2vLNldq3RASGvSZ2w1rKkWdmBdzd54hbxeNmxbD6MB4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mu2G/h2L; arc=fail smtp.client-ip=52.101.46.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dsYZ/t2y"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mu2G/h2L"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=js9yVVaG2tgfZipj0YDcFBdG7gE5dAmUaNdq/rtSs5gXVQwTQApLzGDDeB/RVwOjhA6SNFRDRDYUVfpzRHkmuP/xvvkpmZAIJ7fvU3bqjnWLnztVQkM9Q+K1oRfU1KAQNeAAyIBwde3m1ko8oPHoBAVRIJnHAlX8Qcsx67xsGFVDezIGeu20ckv6Oy70J76Z9/EUDWaHpvGP4Yt4mGE65hvZZoEji7f9YijHgqhgKqrJt87v2pSUh1SXQiymFjiUvwMdX+891+PuLdPPvH4plO9rZRbVoPPXV/+Bk7HzAZDi8ShcWbV6uphWjRW3V33kyyAnoYcAZ7dxtgkIV84g0g==
+ b=wtbpcv+Ev4+Iqmd869HS3t0QcWKMRv4LX5UmIDjE9odaNu05M8kyHnSK9jZZy96ktiwnlM8qNDVtsmRT8FU4w+ZuJZEN+8Dbsj0TO/rhO+Vfqa4WV8kNyqbmM2ORCyLPq7MmlBAMV7ZujctBHg9CnELSXL/nlo0ijUWkqe8VbgKuzDPGN8A0zD1SiaBObdsJnfHtxsg+lDlTotbAx7YXnPFhmxLPohk/yDYG9AtaTCNGUN9hln+NfL6Pn4wLCYgXp3gpMUL/bfO1fLqWLKMNEYt3JLZEgvMHPMol0XCSr9ODAIiWuKtAl8MPFDTuq/kmZF6gxm7Vm9IvnomTHFE3GA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cKOk5cqAql2wRTNrSIMHEYkopWjQldI3lRdYGhGpfq4=;
- b=o7MnZg+oWN37m7v2v6xOynPvcYxswcGadxbGjqdcj/88HjoKP72e5vZKkXye5/QntWEFr71jFndF0FecbTmfiLSwEJFYIv1SdDaimCabdt24z0L5qvmI/z3KT5CsnyVCh+EL+munlAulwoIuxRB4mHq3779fJckktQbSHIWOg2pMbJlFpik9wCm6VdAea4IJQhiieBOnmBwVetevdU4zkrkpYcCfM+cY6IT4Fe5jn2vPGuFGCcKT2FN8pTIXkmqRX1K9wxe/oXK4l8s0SSNJaxlScKYv9d0x4z5O8ecplbKyoAuSx5T9DyAb7Dj/n2RHrQ98tICn3h5Z0aZRwrFQLg==
+ bh=Qc/69g42tBGdptjZaegG+hgtuIeop199GehqalrCxVM=;
+ b=iB8eF5+QCiyvo7s1SNckl5E0jdYp4gKUa0ZzPtimsLMTIyKnAQ3CBniNG2aMxkVt1rWHJGYhAl4td7qP7aXf9vn9+zktYLOSZo4OsYcxaX6H+6Hk5gwbdErCh7/I/AMdPqIQdFg6uj+HnWkHfX3kuirWq+VAZAn8TonRptB6rEBmnyczrCYeyZpMMnvH58RhPQIoYtdJiOvyG/w+qJ2L5bSO/5BROFyBf5VqmiA0MGdEQ7ddEKf+L9RZguP7vkYEshmJL+hUH5R3tnt64QvbHTwmLjDKP2aqUl6b2CRF0zaRfk4tgy86bJ2a8JH3zzcizy/00jN9KAtYpAfyGnJ7GA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cKOk5cqAql2wRTNrSIMHEYkopWjQldI3lRdYGhGpfq4=;
- b=dsYZ/t2ym7QmzmcDxtSfssD8b7tstWu3ZC3xTi5wFtBriqlAdtY9eYNeInJR90Vm19vqCIxf+a9Zxid/j3fcMxLo8+icl9EdVbMyXLuglYPalQWLAJjY00YC8HKkuiFZROuHKqzRDfziDod3ivPqOVRRG/aa7h8EBjeM4KXPrAE=
-Received: from DM5PR07CA0094.namprd07.prod.outlook.com (2603:10b6:4:ae::23) by
- LV9PR12MB9829.namprd12.prod.outlook.com (2603:10b6:408:2eb::9) with Microsoft
+ bh=Qc/69g42tBGdptjZaegG+hgtuIeop199GehqalrCxVM=;
+ b=mu2G/h2LH3hNBz7GATacdAQCQuOP097P1bduY7sioG9UlCjA1OZC7SascG/WQta/IFht6G3iSGQ+7mVxiJ1Cjl6dKq0CP/urT43FC8YwFLLsW0sqj7a6b935pxsNbQh6ZR1yPNhu7Zm3r15dKUe7DaxFV6z5pcKu+FuM8mbHTbgQpIMu4GWlMQjFNojVWYvmJPLAI3R/oU5BMDYq6VFG5rz8okP0RHCM8XdxfFNmD/5h+boy2b59+Tysus9WoxokQ6SdRBfeEOx06g7K6v6K4fbo66Zwt4SL/0cD9vHnPvJj6+H2JBJlVrFMJMMofUTFUSNWMK3LhrzNwvTTNdYTVQ==
+Received: from CH2PR17CA0030.namprd17.prod.outlook.com (2603:10b6:610:53::40)
+ by SJ2PR12MB8882.namprd12.prod.outlook.com (2603:10b6:a03:537::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Tue, 16 Sep
+ 2025 05:47:48 +0000
+Received: from DS2PEPF0000343C.namprd02.prod.outlook.com
+ (2603:10b6:610:53:cafe::31) by CH2PR17CA0030.outlook.office365.com
+ (2603:10b6:610:53::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.20 via Frontend Transport; Tue,
+ 16 Sep 2025 05:47:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS2PEPF0000343C.mail.protection.outlook.com (10.167.18.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9115.19; Tue, 16 Sep 2025 04:38:06 +0000
-Received: from DS3PEPF000099D3.namprd04.prod.outlook.com
- (2603:10b6:4:ae:cafe::6d) by DM5PR07CA0094.outlook.office365.com
- (2603:10b6:4:ae::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.22 via Frontend Transport; Tue,
- 16 Sep 2025 04:38:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS3PEPF000099D3.mail.protection.outlook.com (10.167.17.4) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 04:38:06 +0000
-Received: from trento15c5.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 15 Sep
- 2025 21:38:00 -0700
-From: Suma Hegde <suma.hegde@amd.com>
-To: <platform-driver-x86@vger.kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
-	<suma.hegde@amd.com>
-Subject: [PATCH] platform/x86/amd/hsmp: Replace amd_num_nodes() with topology_max_packages()
-Date: Tue, 16 Sep 2025 04:37:36 +0000
-Message-ID: <20250916043736.3279947-1-suma.hegde@amd.com>
-X-Mailer: git-send-email 2.25.1
+ 15.20.9137.12 via Frontend Transport; Tue, 16 Sep 2025 05:47:48 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 15 Sep
+ 2025 22:47:37 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 15 Sep
+ 2025 22:47:37 -0700
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.127.8.9) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 15 Sep 2025 22:47:35 -0700
+From: Ciju Rajan K <crajank@nvidia.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <christophe.jaillet@wanadoo.fr>, <platform-driver-x86@vger.kernel.org>,
+	<vadimp@nvidia.com>, Ciju Rajan K <crajank@nvidia.com>
+Subject: [PATCH platform-next 0/2] Support for handling interrupt storm
+Date: Tue, 16 Sep 2025 08:47:29 +0300
+Message-ID: <20250916054731.1412031-1-crajank@nvidia.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,106 +78,64 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
+X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D3:EE_|LV9PR12MB9829:EE_
-X-MS-Office365-Filtering-Correlation-Id: c75fd004-b866-4189-af32-08ddf4dad4af
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343C:EE_|SJ2PR12MB8882:EE_
+X-MS-Office365-Filtering-Correlation-Id: c71f9719-a20f-406b-1b3d-08ddf4e49170
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LFc7L0tNA4l7wvUtsvZkTfjeVRfhRdPD1KnVnF2a0lK1YWZZS6zaT26psoAg?=
- =?us-ascii?Q?SziYXnI0Dp7/X7Wy89OHp7FFvGskRUBxznIp/Fqx/2CwFmpFZ4Yu4S9OlkA+?=
- =?us-ascii?Q?o7l54uL0pFR5+4/0TJGO6pVDDcVwvzq3DWPU9B1xMxmDPZE68YM80moOYLZt?=
- =?us-ascii?Q?9cGDFbhct8Vm7CNXIkd5EgE07o3pyBPLCVfAOolFasMuD8AP/fkg9dsBPFd9?=
- =?us-ascii?Q?LtUFzClvrghrZzoixoUu9MuyyW2G10lmML233ztd5RzufIElLH4vCkYGTz+s?=
- =?us-ascii?Q?pM5CPRRVtpUPtfu2mDiiUOSvFDWoDCriVWG5zy4h+yj8H1JAQBVd9geZwaRE?=
- =?us-ascii?Q?ph+Wp4qADL+N8WbQvFE7Ehi+Hq3gBneshJtpLY87vkZLW0R6KxdJ78lc46Or?=
- =?us-ascii?Q?5LNWuAnvIkwumcd1DpEx6sknLlWsojC8LHuTYQICB9XipVCL+RP+90/FfQjc?=
- =?us-ascii?Q?5i3eUUtlcQmQJcD5LT3O7sDOj/UWqcyVnGQPThyEtpDN7mXPvxFaf8/C0pus?=
- =?us-ascii?Q?S4jHFm2V/zgFgsLkostqnCeDZpzP7GYgHBYK8xqrnPQxLivEYc9L/732RWMA?=
- =?us-ascii?Q?4gDQcS67A6SAI3NALOOVMmyrAl7IQ5qLNOz2+vTgPmXMrn/nrPo/MhXHmt5R?=
- =?us-ascii?Q?gOU5tQgBksdUezfspJ5ft+QPT4AwqkVuJqK2lkgP2Z5L8uoc0dXOqQ6HIcGa?=
- =?us-ascii?Q?2+VCqVpyPBA3qFCRTgY0avAOWueKTKiYPu0ADuNPGei5KLnnYhFhGCkFi2cW?=
- =?us-ascii?Q?dc/Arwl9o3dtRthvv6I7sVRp/TOeEQ0pO8eQgVC6ItUIiRcmMR3kR8kGtn/P?=
- =?us-ascii?Q?GkymXuRMiyL1Hzkx696s4PWDzjGOZLowF8MI+7fR9puW1Kjt/7u0Q0Q57gdB?=
- =?us-ascii?Q?fNNw2gfXj/UYI0N7EH2cYHYU4ZuRCenYKCp2iPY2gMyTDigJ9q5mLHrPYJth?=
- =?us-ascii?Q?xzpviXjvIinTwBUuAYAclPnZqTRPLMnqNAgZIYwuXShQo8egJF4wUZOF248z?=
- =?us-ascii?Q?ChUPk0GM83G2ZByCc6c2xKbekGxm9ZYjmvKxYsCGv/Xwh/Ouhz/8AcLAnYum?=
- =?us-ascii?Q?7SVdo6X09LrlIRp6RgvNfThHHxDdVoNdlXNX3LVNMbs4eNxzVi09GFabqY4U?=
- =?us-ascii?Q?6WtG/UFVtmeeFw4zBWTm5jKX7XjVjXsPLneZHYheA6OMfkHr8wIkAeLJI0XW?=
- =?us-ascii?Q?2ygIYoZP5nJa3+Q4adNAcplIhE9+1irTdFvlINKKvHjW/BR5yj45JfzRdUf1?=
- =?us-ascii?Q?Kd7esNtsFzg5SGuxIeFSPPgwVEJ2quBLAuOPrPX79CwnKZhpLVLPH6cc+8XK?=
- =?us-ascii?Q?Y6FRRM+IE2WjoahZemRmLfH5qvHgfd6DWAvffcph2/4b2YV/kCbHXZYR5mS0?=
- =?us-ascii?Q?HwzYeGzs8JthVDMo5Q0Qlko+pKpvtMer2lAtn7fsGXL5YUDuaB934kyTzn4g?=
- =?us-ascii?Q?3O5NUgbYCfwIEXSB8UbjUcoS+I8IBBZgoyOZM2pibtKXj026GCkWxnaFJOwM?=
- =?us-ascii?Q?mjyT6Kg2Fb3rSgOUvNWo6pvhBerd2Aj11awg?=
+	=?us-ascii?Q?7ghmC5LQp6Hr55o7Jh0nRfnaXpsYYVrKya6oMe0NC/Trr7KY5/bpZHAbZSvT?=
+ =?us-ascii?Q?7fMCbdrE/5N0GHWCPK7+/b4vOZr5WmALTHiklFJQIvTFpyMAT1qW4zWZ6iw1?=
+ =?us-ascii?Q?Eu7u+5SjvtoPkYqWkP4snqf5iypYW3uI9VC7SsNJuodG+AoPHnfzkCRWavMn?=
+ =?us-ascii?Q?ukdc9cYAvXoNCQoGa5mgxo0xJB+nHsNsShQhaoYFU/Q4Mx9Acy2PcGW+4K20?=
+ =?us-ascii?Q?XXEKtujvILrv6dyLd9DJgLsFRgLp2b4h497f0Wk9T7ZcEI8GOHUa1qsVgqgl?=
+ =?us-ascii?Q?4LrhsdNZP/RO9FoJU1jKBdBbyd6S5I+HLlHsSngwuf5sTZmk21xSMYQ7aF/+?=
+ =?us-ascii?Q?2BAc+HBgeA4xiGysaV0piG3AByfDHxwa+2pK5W1gQeM18KTWHNt5OOrSQFp8?=
+ =?us-ascii?Q?2D2OU08UzpYEW8wKftIjtvGsNZi8czT0OeGeRgS37dWJv1Z3HcuEnowf8LG2?=
+ =?us-ascii?Q?P1WvPRMwm+Wo10U3ITM3CiyztI14PlXlGXP48XH4XsSmxO/1Pi5WNwbyWHI/?=
+ =?us-ascii?Q?Ja8x999kjJw1BBYtMxA/kMnNyVt4DLTzQBMT76h9zCpomyt4M3gr+tQYmAH2?=
+ =?us-ascii?Q?XotVlNr/jfBZYsOxYH3hjdldSMV53U5mHfRVPo9HeXlGJ7jlSLz2EY1N3Sh9?=
+ =?us-ascii?Q?kwpobGyES3dXg/pNyL8hPnA/UAyKAhbS+NJYVqNssa2zFtGO+SxINOe/ukkV?=
+ =?us-ascii?Q?T95ZHoDjlBE8aL+ElAD5vA3A/eBL6TfYhQnC8RI7rSkV3Mj/SV/zHSvsHhhC?=
+ =?us-ascii?Q?GpUorYwGIAUgqA9IcjSnxBgdFJLmAcbPRV32q6sdGBtxV243g71r24Dj5OhL?=
+ =?us-ascii?Q?rG7veQTJ79vHgLGYi2tnJtBUqo4pb1HaRcdljuOZo2uOUZZeOi3CRqqrxSG0?=
+ =?us-ascii?Q?xVR00Y5fKvoKOoDpWO8+rrlzu4Lyd0VZznq+pg5mBsGRKyCWmqZVgB/IjY8p?=
+ =?us-ascii?Q?/sghcZ6AHDkmrBAh7EOEECtoxgSDrFRcuuIimd4V7MVe8PbFTIFU0yPmnduO?=
+ =?us-ascii?Q?yioeKG6LKv4P7IXXzd7ivBU9P4YN6tMEWU9pebhtJV/tIPvMeOcNlUXgxJs1?=
+ =?us-ascii?Q?cF2xTkq6ZLqkiuAqMoVhVW5Xvx3shlBbxL5b9b3f58kjP4GJu8buDWTQJQuy?=
+ =?us-ascii?Q?8bcJHm1KWKYSHoIQJGr5onLP/5dDsuLVdYGAHjGkW+1a7EBzkP8m7FS9m3no?=
+ =?us-ascii?Q?yTACo63J/DMY0Rcv7ndMprYIMPNWMJlrM7NekxPHeCgPiDHbPhQdd2PtHTbC?=
+ =?us-ascii?Q?hSBp0qwRG/m8XGUS2mWavuoVqtbhthWMlMYle1hSe3W89bZnQx3GgGcWUmUr?=
+ =?us-ascii?Q?jbanndlSeMhY+E6jXlRq9tstO42YjUHS23KmcOy37y0Uu8LtFSybRDZLwtSQ?=
+ =?us-ascii?Q?lLIGLBTa8UzqQILqegI8DI11TDk7nHOuT3tc4DTjGmhyx5Eu6vn4TiFuBgyK?=
+ =?us-ascii?Q?lP9TuFzZaYBCzH908b0je19259zWZvhcN9zpyq6/0R3Qseg3jwkFZJkEZLAz?=
+ =?us-ascii?Q?hvZ2iyXEOSNGizR8ePm6u56yqkp+yMgBVCpM?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 04:38:06.4009
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2025 05:47:48.4840
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c75fd004-b866-4189-af32-08ddf4dad4af
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: c71f9719-a20f-406b-1b3d-08ddf4e49170
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D3.namprd04.prod.outlook.com
+	DS2PEPF0000343C.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR12MB9829
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8882
 
-The amd_num_nodes() function returns the number of data fabrics present.
-On older EPYC processors, there was one data fabric per socket.
-However, newer EPYC processors have more than one data fabric per
-socket, leading to a situation where the number of sockets is not equal
-to the number of data fabrics. Therefore, it is appropriate to use
-topology_max_packages() to know the number of sockets in the system.
+This patcheset contain:
+ Patch #1 Add fields for interrupt storm handling
+ Patch #2 Add support for handling interrupt storm
 
-Also remove node.h header inclusion and socket number comparison against
-data fabric nodes.
+ drivers/platform/mellanox/mlxreg-hotplug.c | 35 ++++++++++++++++++++--
+ include/linux/platform_data/mlxreg.h       |  8 +++++
+ 2 files changed, 40 insertions(+), 3 deletions(-)
 
-plat.c is supported only for legacy platforms where socket number and
-data fabric numbers are same. So it can remain unchanged.
-
-Signed-off-by: Suma Hegde <suma.hegde@amd.com>
----
- drivers/platform/x86/amd/hsmp/acpi.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index c2df8b421430..5faa3ce922ee 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -22,12 +22,11 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/sysfs.h>
-+#include <linux/topology.h>
- #include <linux/uuid.h>
- 
- #include <uapi/asm-generic/errno-base.h>
- 
--#include <asm/amd/node.h>
--
- #include "hsmp.h"
- 
- #define DRIVER_NAME		"hsmp_acpi"
-@@ -586,9 +585,9 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	if (!hsmp_pdev->is_probed) {
--		hsmp_pdev->num_sockets = amd_num_nodes();
--		if (hsmp_pdev->num_sockets == 0 || hsmp_pdev->num_sockets > MAX_AMD_NUM_NODES) {
--			dev_err(&pdev->dev, "Wrong number of sockets\n");
-+		hsmp_pdev->num_sockets = topology_max_packages();
-+		if (!hsmp_pdev->num_sockets) {
-+			dev_err(&pdev->dev, "No CPU sockets detected\n");
- 			return -ENODEV;
- 		}
- 
 -- 
-2.25.1
+2.47.2
 
