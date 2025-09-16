@@ -1,148 +1,91 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD3223ABA1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 18:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB48E26E6FB;
+	Tue, 16 Sep 2025 19:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758046608; cv=none; b=b8ZzokeMyq7XCJpbROE5ejimL5TXmwLko5Yt0yIJYZXyBVVXb3wcJbVCAHFDPn8IskxFun21tghJ77FYnpxpiZs0oyqYnrHVcLulyfXyfovGgKGlpf0B6evqQDxhCk+ccad4WtnizR17XR1oUeiHyVONRPL4FARd2AlwxZW8cbc=
+	t=1758050024; cv=none; b=p++NtuswKVus07X3cZJ27/KwithnU/Fp5kmuqzuXbQQU62Iwr5qeWvXuF8+nTDgX7LfQZZM7eplnmxVE3hfLnljqg/t4MlbSJjhjNGvY55Elk03NZfyp+XeSOCeMFkTKjS+wvZ9epYFXQH0Ja4cfV26B/MhxrDO+XnqHDgkk+WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758046608; c=relaxed/simple;
-	bh=KgDXxyN4h8+xT7k6U8+wBHVRrBybTUzvB4TmmhMu6Qk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FQIVOhE8BJjGbuPOM+FiHjXZtw+r+AAI6S0+i7qbZBJe/oh+D28+GbSgkCuXI390W+J9ZYlaF5bSDoqrNI6KMuEA61N2B4Qag2VFUZrmrGvK9u5LvCr6ZPkHJey5ZMjSdXKeRkV95sO/yy/dmIOBCdSB9M/NLDr2idOXHHMBD8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=j+jr7g+f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KEmSvmc6; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1758050024; c=relaxed/simple;
+	bh=4H86ltejAj4xv3Dw7e4TEmv58rhAupO55xtgdM1BKZ8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ORnBYZPcIB3H2dK1ebZ/hqCgxiCX9n2rz5b7yK2uzKk4IFOYtZxe6rSzW64Zrtxn5/929J5IiJs08hDkw0+PthkAWPRsXI/1cjCSibqQtxqVtjMuXa5JdlvefnqbXEt7px7cyv+PBYhkp78lI+KoUH3LTVgtTBUd6oKjAaP+ECk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xnn8ARJf; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="j+jr7g+f";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KEmSvmc6"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 400547A02E4;
-	Tue, 16 Sep 2025 14:16:44 -0400 (EDT)
-Received: from phl-imap-09 ([10.202.2.99])
-  by phl-compute-06.internal (MEProxy); Tue, 16 Sep 2025 14:16:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1758046604;
-	 x=1758133004; bh=omFMLs1ejXBF9QYuFtsOAYIhRH95dqCxoJApSLtLKLw=; b=
-	j+jr7g+fB4D4Y1Om7NI4P05vqEHDB7KQP/Au5ACyXX3PEf7oQC/dfMLc3CfwOgtH
-	UjVb44Pk/bxrWcC9dg4KHA23ZDET8ALl3prDU2Uw+u0xGkKhCEQGmBKCZcgFKF9t
-	yJqHZIVim9/AytRg/b6dSf5Ky2ZEEfAnT2CB/4zkFqAih+x8O41TqIve6aXQxlHm
-	NBeDKsEXwzf5nlnyRJf+1osMVAiPUddmuAOUtxZfETkjq0hXegUeyN8Gqe3GMUFh
-	CbOmWfgSZYK0WTu+wHZd8Ya/rr4ZUCqsTVcIeSzoe5dEgGxiJ8yExNXqXa91mp8J
-	Y3luLrOW02VREgn0wTQUGw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1758046604; x=
-	1758133004; bh=omFMLs1ejXBF9QYuFtsOAYIhRH95dqCxoJApSLtLKLw=; b=K
-	EmSvmc6xbtDuhnPJbcM13xLmp4KqPZCf1lB8UYlSMTVNGeMv+57DeKD6PSrrYP64
-	l3bhkp/T23ykb842ZA2QGBjmhnqXu21C8Jip6TdXNTOadAZAJcXxkg8CJK3hduok
-	BjZ4ZvXZ3qXenW6ll8VdirZ6EnEKQWPRXmjF8LaT6gZuig0h2quqBsDI3IewfzbR
-	oxmZhi1k/tZ269wxSxXvSMfd/J4sXvG8FypfY7Q4d+ozvsrV2oJMekdImoB0OVtK
-	fDXmBv5BZtrMoa3q2UVAMpttd4drZZpFEQTVh/13KfLWuaEIT/VnWyCt1JQFdlW6
-	aHGqSyWgZZLc1uWeYATEg==
-X-ME-Sender: <xms:i6nJaNbtp55ndV6PB8FxBMQHUR23c1VZyaddXqqMoiTRYTSjifDnzA>
-    <xme:i6nJaEakbIpDlVDdG2menAdAXucK2v66agVJ34lLFNAUaG9JgUReCGGJdVnpQ5y1u
-    kkK3b1Cgf79o5DtmSk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdfnhihnugho
-    nhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecuggftrf
-    grthhtvghrnhepudeftdeuffefkedujeehheduvdevvdfhteeuueffvddtvedtleellefh
-    vdekjedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eplhhsrghntghhvgeslhihnhguvghnohdrtggrpdhnsggprhgtphhtthhopeejpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehprghtihhlrdhrvgguugihsegrmhgurdgtoh
-    hmpdhrtghpthhtohepshhhhigrmhdqshhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhr
-    tghpthhtohephihijhhunhdrshhhvghnseguvghllhdrtghomhdprhgtphhtthhopehsuh
-    hpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhn
-    vghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvse
-    hrvgguhhgrthdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdig
-    keeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:i6nJaNzMMz0uK8aKOXAlCqO5K2BBqJWEMGPwhTk-T91d-Xf4VvyOZQ>
-    <xmx:i6nJaE49xq-64rOQivxRnXxzgie5KY5CaD5PnkD3C8YM-zJqUqzS0g>
-    <xmx:i6nJaE8pzah61Y_68a7WpzFxZf6BpeB6fXvqY1Ch1H7RXuvib6gK4g>
-    <xmx:i6nJaJpO2Fx-6rc8euWgptlZHyYyXauT3fv33YwUvig3DZ2l9l5viA>
-    <xmx:jKnJaMwqGlxzRk4F96-bRdPe1anBSOjbklyuCdDFYkvHgS-E20ALM-g4>
-Feedback-ID: i1719461a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 549383020073; Tue, 16 Sep 2025 14:16:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xnn8ARJf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758050023; x=1789586023;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4H86ltejAj4xv3Dw7e4TEmv58rhAupO55xtgdM1BKZ8=;
+  b=Xnn8ARJfYdxYVGNiAmbxKYB+dQYzx4c2tPxf/BWHhOrVM6gO7TlbSiLr
+   x9G4JtgOOCGCb+c5ECwTdz9BBbD4g9zFJwErMOxHHcTQ49HKFxw9pq8GK
+   hb46LYb4kDtYKSRYa5AKdnRFv8hlt3RFnUQfRFcL793FhJGnJJ+dBSGBu
+   vImeIMGITh1fyVFklVxxVyYOMI6+g7Wuz4N1BSfgW2/BHiv44Lz5oguGY
+   goEJXM8rA3GcIwnmqAWSxBru7SciazxdoHnCh+x5GzNN5vjAFKwGsv7TJ
+   z1qpCFyI7sLH7u6l36dZgeFHqPtsU+u7w0PVzSSZW2m5W3IsT/bGopK5E
+   A==;
+X-CSE-ConnectionGUID: pJtCI0czSUudhylZIRlLtQ==
+X-CSE-MsgGUID: dzrsNPo5Qeae9s1ITfQTSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11555"; a="60486687"
+X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
+   d="scan'208";a="60486687"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 12:13:42 -0700
+X-CSE-ConnectionGUID: VG1XlTvuTcaB2lgyu4GJUg==
+X-CSE-MsgGUID: AuwKAfJPQiuNAbpBtjA+hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,269,1751266800"; 
+   d="scan'208";a="174595260"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.125.111.195])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 12:13:42 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH] platform/x86:intel/pmc: Replace dev_warn() with dev_dbg()
+Date: Tue, 16 Sep 2025 12:13:32 -0700
+Message-ID: <20250916191339.1748512-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AnC-NQ9vsPjN
-Date: Tue, 16 Sep 2025 12:15:53 -0600
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: "Mario Limonciello" <superm1@kernel.org>,
- "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- "Yijun Shen" <Yijun.Shen@dell.com>
-Message-Id: <caf582a4-ae29-475e-b321-fa255b6f9379@app.fastmail.com>
-In-Reply-To: <907c1952-5aea-42f3-9a13-71e2044d406e@kernel.org>
-References: <20250916115142.188535-1-Shyam-sundar.S-k@amd.com>
- <907c1952-5aea-42f3-9a13-71e2044d406e@kernel.org>
-Subject: Re: [PATCH v2] platform/x86/dell: Set USTT mode according to BIOS after reboot
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 16, 2025, at 7:15 AM, Mario Limonciello wrote:
-> On 9/16/25 6:51 AM, Shyam Sundar S K wrote:
->> After a reboot, if the user changes the thermal setting in the BIOS, the
->> BIOS applies this change. However, the current `dell-pc` driver does not
->> recognize the updated USTT value, resulting in inconsistent thermal
->> profiles between Windows and Linux.
->> 
->> To ensure alignment with Windows behavior, read the current USTT settings
->> during driver initialization and update the dell-pc USTT profile
->> accordingly whenever a change is detected.
->> 
->> Cc: Yijun Shen <Yijun.Shen@Dell.com>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>> ---
->>   drivers/platform/x86/dell/dell-pc.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->> 
->> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86/dell/dell-pc.c
->> index 48cc7511905a..becdd9aaef29 100644
->> --- a/drivers/platform/x86/dell/dell-pc.c
->> +++ b/drivers/platform/x86/dell/dell-pc.c
->> @@ -228,6 +228,8 @@ static int thermal_platform_profile_get(struct device *dev,
->>   
->>   static int thermal_platform_profile_probe(void *drvdata, unsigned long *choices)
->>   {
->> +	int current_mode;
->> +
->>   	if (supported_modes & DELL_QUIET)
->>   		__set_bit(PLATFORM_PROFILE_QUIET, choices);
->>   	if (supported_modes & DELL_COOL_BOTTOM)
->> @@ -237,6 +239,13 @@ static int thermal_platform_profile_probe(void *drvdata, unsigned long *choices)
->>   	if (supported_modes & DELL_PERFORMANCE)
->>   		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
->>   
->> +	/* Make sure that ACPI is in sync with the profile set by USTT */
->> +	current_mode = thermal_get_mode();
->> +	if (current_mode < 0)
->> +		return current_mode;
->> +
->> +	thermal_set_mode(current_mode);
->> +
->>   	return 0;
->>   }
->>
+Replace dev_warn() with dev_dbg() to reduce unnecessary warning messages.
+When the low power mode priority register contains invalid data, the Intel
+PMC Core driver can still utilize the default priority list. This scenario
+is more suited for debug information rather than warning.
 
-Thank you for this patch.
+Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Lyndon Sanche <lsanche@lyndeno.ca>
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index de2dbf4ad65e0..5729810e5a485 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1244,7 +1244,7 @@ void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+ 		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
+ 			pri_order[mode_order[mode]] = mode;
+ 	else
+-		dev_warn(&pmcdev->pdev->dev,
++		dev_dbg(&pmcdev->pdev->dev,
+ 			 "Assuming a default substate order for this platform\n");
+ 
+ 	/*
+-- 
+2.43.0
+
