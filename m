@@ -1,59 +1,64 @@
-Received: from sender4-of-o56.zoho.com (sender4-of-o56.zoho.com [136.143.188.56])
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522062E92D6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 07:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758008246; cv=pass; b=hXiLxpPo6tlgMcQSY1xyORcBQ2y87G818AV1cv9e6s5+j55lC2A8WHpMc7Po5lMYs4qWbRZEoUib6fr6vzvjZEI0WzOqrWH+jM4a18xOsW1ym+lA0zdGRY4chsZy36SzMZTq96ViNgIBD54cZt5PFy/Fw3cFlOmWilVlXZHffNQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758008246; c=relaxed/simple;
-	bh=u4Nn8GG86KZIB3AiZ5vx4em0kut/8t0+jx8fbL+wkjQ=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=euKcJ7vJ8u9LxeArSHYvmwJ7fEm4/aWaZDpo7qH1VLhr5/510Zs42Z1h7mPgA1UCuseSWtuvRaUkpk0udOekgWir4PdLbA/1F+Pq59AxCYO2BHG8ZC/cGKx3IUGL7Gq9ejLntJHTlo8uhMJIxUDMqaof1CSwNwXN+BL7fzip/E4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net; spf=pass smtp.mailfrom=chandra.net; dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b=KayKwPQk; dkim=pass (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b=BUahSSsB; arc=pass smtp.client-ip=136.143.188.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=chandra.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chandra.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275E12E091D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 07:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758008436; cv=none; b=mpkNGkJ1Q8Y5o1o9rq/PTXmpJMTqkbFTYvUeWSdqsqT67Y3TJ2EC4n4sAhGEvyiHlwZ56vgl2AXBuy6S/UyPYgzXDfAnSRuLR/XDibhMLVeg05v0wU4EGKhR2D8i7hYXdejK0guXFngj5DRbLigntVwDDOeZGDZrE7LbQXqNqlU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758008436; c=relaxed/simple;
+	bh=4RpDvEcB9srxfiKhRkIgWBez9KG/1aGYcRhYliWbMj8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nQfFwRnWQsM7wd5u3iXufxjUbvSGSELv+bASZHlMRnyu8Ce2eFK0TeCf4J/IlZ6SxsUNRwOk4neNgEgp8RwBIjOuEZECmL5Q7aGb3NEGxdaKJXH5AjeWcRLdwYpECOiSIAiXT0W7Z8zTwHbUHCP/BvKYwR6Qvn4O88s1SKU/z/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=HTQSU53H; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chandra.net header.i=rahul@chandra.net header.b="KayKwPQk";
-	dkim=pass (2048-bit key) header.d=chandra.net header.i=@chandra.net header.b="BUahSSsB"
-ARC-Seal: i=1; a=rsa-sha256; t=1758008230; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=f0kgeLU3KLkY88cZs4vZwgFpQoJCOoAQxDK2Se0GhlDXrztCeDZKYlsQwLYDxu47mjsFxPJKealHSanSOoKl7tJ7Le/QeHKdLPaKFtmtKvsRZWSZsBkj0sdmy00dI5SBcmDBhM/ANhzvEEV4m65gkEVddELxdx4tFtwyf/CKGz0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1758008230; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WI3edm056e6icAGKQAkR3z7O8wZM+ycHXpe5Iptg8Cg=; 
-	b=l420e+o5YIwH1ewvo8c7yxTnyaYDe5qK565NCPvg9jcb1cEFOZxVs6S3K5lYRtSF8AZJFiS1vhl7I/pXtFUuRMUzidm7f7usSHUZN9sc8vQkwRa9WDPjf57ZBaPyJIz72jNLXbG6hQ5SQqKrjWT2s3z5RSxa3SFa7iXPcE1Cb4c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=chandra.net;
-	spf=pass  smtp.mailfrom=rahul@chandra.net;
-	dmarc=pass header.from=<rahul@chandra.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1758008230;
-	s=zmail; d=chandra.net; i=rahul@chandra.net;
-	h=From:From:In-Reply-To:Content-Type:References:Date:Date:Cc:Cc:To:To:MIME-Version:Message-ID:Subject:Subject:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=WI3edm056e6icAGKQAkR3z7O8wZM+ycHXpe5Iptg8Cg=;
-	b=KayKwPQk5HkZChXpQVjiN2z4aohPl3K0AqDPqTcqj3geUfg+XYj0S9bRxL7NQAqk
-	SgEpD3HSEQa2XiamaWvEmPxUKafjsrm+Oz6gO3RfWw+xGuJ3ciHE0LWxMe8dBWD0LwP
-	LXUuwpsjpzOebsUy9eCMHdWDJpNAO/vzcsquHH/w=
-Received: by mx.zohomail.com with SMTPS id 1758008228002895.3955202551084;
-	Tue, 16 Sep 2025 00:37:08 -0700 (PDT)
-Received: from sogo.mynetworksettings.com (pool-173-70-162-2.nwrknj.fios.verizon.net [173.70.162.2])
-	by mailserver.projecteclipse.org (Postfix) with ESMTPSA id 2716DED080;
-	Tue, 16 Sep 2025 07:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=chandra.net;
-	s=default; t=1758008226;
-	bh=u4Nn8GG86KZIB3AiZ5vx4em0kut/8t0+jx8fbL+wkjQ=;
-	h=From:In-Reply-To:References:Date:Cc:To:Subject:From;
-	b=BUahSSsBsdpBGdT4xaV16vsYlaUsqHY4UNUk8SQrbZd7jYgXWslUki7CTv22wcTR4
-	 Qc25cqIL41RaG8RuZdvAe/Dk93inrNh4D2KQvwwe5OHFB/QdB5bCtBkoV4az/2C0tB
-	 ZWpfCnmARd7Wcm6vIanDqQO8+DkKmovS1anMgocDEzkdGayhaHYX2bXx+FZiy8Ef4R
-	 kpwdeZKqspR2RW1DEreHFse4SEkN5cRJ1vEabyZLlpMCFDYNAnQSO/fjhwGHIEwHhb
-	 ZdohnGdfnn/gVLFqEd/brpoPb340z/LSZcpJsHkJ3Iw9pQVBw1vAu3t++oj37Moq+D
-	 HB/BgI8y15IIw==
-From: "Rahul Chandra" <rahul@chandra.net>
-In-Reply-To:  <CAGwozwHusY+Ri_Wt1PujPcdGiBZ3QrpUNKUrZUhGwcuaZ2TLqQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 173.70.162.2, 192.168.1.147
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="HTQSU53H"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id 5A8FABDD7E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 10:40:32 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id ADBF7BDD04
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 10:40:31 +0300 (EEST)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 293771FF726
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Sep 2025 10:40:31 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1758008431;
+	bh=KZJuJ2+swjNY50YC9g4GsQXHAR0TO8Ukv1LmHQXXqqY=;
+	h=Received:From:Subject:To;
+	b=HTQSU53HyXzumofZXLBMPErZ3zbaCfW4O4gBKmWXHofew/AX9Yks8tRFJRoZisaoz
+	 m24DUdKhxt10fNlEdipk+N43fZO7Je3QjKdPi3/7l37DQtZXlLRvf0YhmgaGtE9+L/
+	 fBOpHj1xR85CW8WiS63YdxskU5+9H316kjuEVGt3myHhFDLqYrxy5Zn1pL/VleYMtG
+	 z5+aT9k/nJayuHBDT+1CcZRI5OIH7aj5C4+ZrM/A5MRpuF54hBMLRnNC4KkfDmTf5Z
+	 o1xXxWW3ZCdLYBqRGTiOQXit+Zs77q9TLUtLXuaFeGPjhUqb1e4AokX5fj+NJNwjUn
+	 BWqS2uRt6v5pw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.182) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f182.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f182.google.com with SMTP id
+ 38308e7fff4ca-336dd55aae1so47566861fa.1
+        for <platform-driver-x86@vger.kernel.org>;
+ Tue, 16 Sep 2025 00:40:31 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yw5XAHDqR4lYk3ZbS8ok78axXUJK2/7AYWF2Vhqzvhz2EZpQAhK
+	csQi4A1qQ/6hHL3ytDOIv0zR8lPtB2d8twocfy+FiU+mFIUkPuCGo2KZfKBASa6dZruuBxhGNtF
+	mZ0E39lH41K/fRGMavDmPzmd4+iQimgM=
+X-Google-Smtp-Source: 
+ AGHT+IGEpW6S2Q1Z6FWNgCpS0FXUFWO8UmYYMEqKTEtKEhUbJema5EUuBKCECTFWIn6vXnGwoXwybIG9kNZYbNd4olc=
+X-Received: by 2002:a2e:a9a8:0:b0:356:25da:89f8 with SMTP id
+ 38308e7fff4ca-35625da9513mr26023821fa.16.1758008430685; Tue, 16 Sep 2025
+ 00:40:30 -0700 (PDT)
+Precedence: bulk
+X-Mailing-List: platform-driver-x86@vger.kernel.org
+List-Id: <platform-driver-x86.vger.kernel.org>
+List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 References: <1e1-68c90780-93-13ea166@216760021>
  <CAGwozwFaB9YMKqc1tbmRvjjAZLZRZJKKEjYFDH38EbdeBRvWmA@mail.gmail.com>
  <1e1-68c90980-99-13ea166@216761407> <10020-68c90a00-7-4ac6c580@106289939>
@@ -62,138 +67,115 @@ References: <1e1-68c90780-93-13ea166@216760021>
  <CAGwozwEwenJcPkGohLGmeb+dWHyitddUqz7Vm3W6vGCwo6osUg@mail.gmail.com>
  <1e1-68c90e80-a3-13ea166@216795694>
  <CAGwozwEzrkg1bbrfq8t+vDgag-H4CyzMonG6O3Td8iwNr6bh8A@mail.gmail.com>
- <1df-68c91080-1f-25b5f500@10458835>  <CAGwozwHusY+Ri_Wt1PujPcdGiBZ3QrpUNKUrZUhGwcuaZ2TLqQ@mail.gmail.com>
-Date: Tue, 16 Sep 2025 03:37:05 -0400
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, mathieu@fenniak.net, corentin.chary@gmail.com, luke@ljones.dev
-To: "Antheas Kapenekakis" <lkml@antheas.dev>
-Precedence: bulk
-X-Mailing-List: platform-driver-x86@vger.kernel.org
-List-Id: <platform-driver-x86.vger.kernel.org>
-List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <1df-68c91380-23-25b5f500@113479119>
-Subject: =?utf-8?q?Re=3A?= [PATCH v2 1/2] =?utf-8?q?platform/x86=3A?=
- =?utf-8?q?_asus-wmi=3A?= Remove extra keys from 
- =?utf-8?q?ignore=5Fkey=5Fwlan?= quirk
-User-Agent: SOGoMail 5.12.1
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+ <1df-68c91080-1f-25b5f500@10458835>
+ <CAGwozwHusY+Ri_Wt1PujPcdGiBZ3QrpUNKUrZUhGwcuaZ2TLqQ@mail.gmail.com>
+ <1df-68c91380-23-25b5f500@113479119>
+In-Reply-To: <1df-68c91380-23-25b5f500@113479119>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 16 Sep 2025 09:40:19 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwH4C3P=kAtbsCZ0VO-_vFrto5aAy1Sfm2txH_w2LLPeEA@mail.gmail.com>
+X-Gm-Features: AS18NWB1iCHTxbh7vMGo-HyryM9VwNw7DfrR61lMqkAF8mVzgS80iMd58l-G3k4
+Message-ID: 
+ <CAGwozwH4C3P=kAtbsCZ0VO-_vFrto5aAy1Sfm2txH_w2LLPeEA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Remove extra keys from
+ ignore_key_wlan quirk
+To: Rahul Chandra <rahul@chandra.net>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	mathieu@fenniak.net, corentin.chary@gmail.com, luke@ljones.dev
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <175800843139.3265506.12942156919001055651@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Tuesday, September 16, 2025 03:26 EDT, Antheas Kapenekakis <lkml@ant=
-heas.dev> wrote:
-
-> On Tue, 16 Sept 2025 at 09:24, Rahul Chandra <rahul@chandra.net> wrot=
-e:
-> >
-> > On Tuesday, September 16, 2025 03:17 EDT, Antheas Kapenekakis <lkml=
-@antheas.dev> wrote:
-> >
-> > > On Tue, 16 Sept 2025 at 09:15, Rahul Chandra <rahul@chandra.net> =
-wrote:
-> > > >
-> > > > On Tuesday, September 16, 2025 03:11 EDT, Antheas Kapenekakis <=
-lkml@antheas.dev> wrote:
-> > > >
-> > > > > On Tue, 16 Sept 2025 at 09:08, Rahul Chandra <rahul@chandra.n=
-et> wrote:
-> > > > > >
-> > > > > > On Tuesday, September 16, 2025 03:06 EDT, "Rahul Chandra" <=
-rahul@chandra.net> wrote:
-> > > > > >
-> > > > > > > On Tuesday, September 16, 2025 02:57 EDT, Antheas Kapenek=
-akis <lkml@antheas.dev> wrote:
-> > > > > > >
-> > > > > > > > On Tue, 16 Sept 2025 at 08:56, Rahul Chandra <rahul@cha=
-ndra.net> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tuesday, September 16, 2025 02:54 EDT, "Rahul Chan=
-dra" <rahul@chandra.net> wrote:
-> > > > > > > > >
-> > > > > > > > > > On Tuesday, September 16, 2025 02:50 EDT, Antheas K=
-apenekakis <lkml@antheas.dev> wrote:
-> > > > > > > > > >
-> > > > > > > > > > > On Tue, 16 Sept 2025 at 08:46, Rahul Chandra <rah=
-ul@chandra.net> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > Added some cc's
-> > > > > > > > > > > >
-> > > > > > > > > > > > *Note I have a UX8406CA (the 2025 Arrowlake mod=
-el, I assume it is the same on the MA)
-> > > > > > > > > > >
-> > > > > > > > > > > I must have mistakenly thought that the important=
- code on both devices
-> > > > > > > > > > > is 0x5F. Perhaps on the duo is 0x5D instead or it=
- emits events on
-> > > > > > > > > > > both. Can you verify which codes are used on the =
-Duo?
-> > > > > > > > > > >
-> > > > > > > > > > weird,
-> > > > > > > > > > scankey -s reports
-> > > > > > > > > > 0xe0 0x73  0xe0 0xf3, the 0xe0 is for the extended =
-scancode set but I'm confused on the other 2 codes. the WLAN quirk defi=
-nitely worked before (I submitted the patch for it for the CA)
-> > > > > > > > >
-> > > > > > > > > It's for keyboard detach/retach, both attaching and r=
-e-attaching report the same code.
-> > > > > > > >
-> > > > > > > > Use evtest to find the MSC code that is used.
-> > > > > > >
-> > > > > > > Hmm it is sending 5E... But it is still activating and de=
-activating and reactivating airplane mode (WLAN)
-> > > > > > >
-> > > > > > > Event: time 1758006247.925931, type 4 (EV=5FMSC), code 4 =
-(MSC=5FSCAN), value 5e
-> > > > > > > Event: time 1758006247.925931, type 1 (EV=5FKEY), code 23=
-8 (KEY=5FWLAN), value 1
-> > > > > > > Event: time 1758006247.925931, -------------- SYN=5FREPOR=
-T ------------
-> > > > > > > Event: time 1758006247.925937, type 1 (EV=5FKEY), code 23=
-8 (KEY=5FWLAN), value 0
-> > > > > > > Event: time 1758006247.925937, -------------- SYN=5FREPOR=
-T ------------
-> > > > > > > Event: time 1758006255.123129, type 4 (EV=5FMSC), code 4 =
-(MSC=5FSCAN), value 5e
-> > > > > > > Event: time 1758006255.123129, type 1 (EV=5FKEY), code 23=
-8 (KEY=5FWLAN), value 1
-> > > > > > > Event: time 1758006255.123129, -------------- SYN=5FREPOR=
-T ------------
-> > > > > >
-> > > > > >
-> > > > > > Sorry I'm dumb yes 5E is a new code forgot we had 5F curren=
-tly, guess we should add 5E then, can you write up the patch or should =
-I?
-> > > > >
-> > > > > Cleanest patch is a revert of "Remove extra keys from ignore=5F=
-key=5Fwlan
-> > > > > quirk". Should work for both -next and stable. I can write a =
-patch and
-> > > > > add a ReportedBy for you. I will make sure to list 0x5E as th=
-e keycode
-> > > > > used on the Duo. It is not ideal those three keycodes are gro=
-uped
-> > > > > together, but it should be fine for now.
-> > > >
-> > > >
-> > > > Great sounds good thanks! What should we do about 5D? Just keep=
- it in? I don't know what key on the board emits 5D (if any) since it d=
-oesn't have an airplane mode key.
+On Tue, 16 Sept 2025 at 09:37, Rahul Chandra <rahul@chandra.net> wrote:
+>
+> On Tuesday, September 16, 2025 03:26 EDT, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>
+> > On Tue, 16 Sept 2025 at 09:24, Rahul Chandra <rahul@chandra.net> wrote:
 > > >
-> > > If you can compile your own kernel, can you check 0x5F is not use=
-d in
-> > > your device? Yeah, let's keep 0x5D for now.
+> > > On Tuesday, September 16, 2025 03:17 EDT, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+> > >
+> > > > On Tue, 16 Sept 2025 at 09:15, Rahul Chandra <rahul@chandra.net> wrote:
+> > > > >
+> > > > > On Tuesday, September 16, 2025 03:11 EDT, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+> > > > >
+> > > > > > On Tue, 16 Sept 2025 at 09:08, Rahul Chandra <rahul@chandra.net> wrote:
+> > > > > > >
+> > > > > > > On Tuesday, September 16, 2025 03:06 EDT, "Rahul Chandra" <rahul@chandra.net> wrote:
+> > > > > > >
+> > > > > > > > On Tuesday, September 16, 2025 02:57 EDT, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+> > > > > > > >
+> > > > > > > > > On Tue, 16 Sept 2025 at 08:56, Rahul Chandra <rahul@chandra.net> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Tuesday, September 16, 2025 02:54 EDT, "Rahul Chandra" <rahul@chandra.net> wrote:
+> > > > > > > > > >
+> > > > > > > > > > > On Tuesday, September 16, 2025 02:50 EDT, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > > On Tue, 16 Sept 2025 at 08:46, Rahul Chandra <rahul@chandra.net> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Added some cc's
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > *Note I have a UX8406CA (the 2025 Arrowlake model, I assume it is the same on the MA)
+> > > > > > > > > > > >
+> > > > > > > > > > > > I must have mistakenly thought that the important code on both devices
+> > > > > > > > > > > > is 0x5F. Perhaps on the duo is 0x5D instead or it emits events on
+> > > > > > > > > > > > both. Can you verify which codes are used on the Duo?
+> > > > > > > > > > > >
+> > > > > > > > > > > weird,
+> > > > > > > > > > > scankey -s reports
+> > > > > > > > > > > 0xe0 0x73  0xe0 0xf3, the 0xe0 is for the extended scancode set but I'm confused on the other 2 codes. the WLAN quirk definitely worked before (I submitted the patch for it for the CA)
+> > > > > > > > > >
+> > > > > > > > > > It's for keyboard detach/retach, both attaching and re-attaching report the same code.
+> > > > > > > > >
+> > > > > > > > > Use evtest to find the MSC code that is used.
+> > > > > > > >
+> > > > > > > > Hmm it is sending 5E... But it is still activating and deactivating and reactivating airplane mode (WLAN)
+> > > > > > > >
+> > > > > > > > Event: time 1758006247.925931, type 4 (EV_MSC), code 4 (MSC_SCAN), value 5e
+> > > > > > > > Event: time 1758006247.925931, type 1 (EV_KEY), code 238 (KEY_WLAN), value 1
+> > > > > > > > Event: time 1758006247.925931, -------------- SYN_REPORT ------------
+> > > > > > > > Event: time 1758006247.925937, type 1 (EV_KEY), code 238 (KEY_WLAN), value 0
+> > > > > > > > Event: time 1758006247.925937, -------------- SYN_REPORT ------------
+> > > > > > > > Event: time 1758006255.123129, type 4 (EV_MSC), code 4 (MSC_SCAN), value 5e
+> > > > > > > > Event: time 1758006255.123129, type 1 (EV_KEY), code 238 (KEY_WLAN), value 1
+> > > > > > > > Event: time 1758006255.123129, -------------- SYN_REPORT ------------
+> > > > > > >
+> > > > > > >
+> > > > > > > Sorry I'm dumb yes 5E is a new code forgot we had 5F currently, guess we should add 5E then, can you write up the patch or should I?
+> > > > > >
+> > > > > > Cleanest patch is a revert of "Remove extra keys from ignore_key_wlan
+> > > > > > quirk". Should work for both -next and stable. I can write a patch and
+> > > > > > add a ReportedBy for you. I will make sure to list 0x5E as the keycode
+> > > > > > used on the Duo. It is not ideal those three keycodes are grouped
+> > > > > > together, but it should be fine for now.
+> > > > >
+> > > > >
+> > > > > Great sounds good thanks! What should we do about 5D? Just keep it in? I don't know what key on the board emits 5D (if any) since it doesn't have an airplane mode key.
+> > > >
+> > > > If you can compile your own kernel, can you check 0x5F is not used in
+> > > > your device? Yeah, let's keep 0x5D for now.
+> > >
+> > >
+> > > Yeah give it like 15 minutes to finish, just to be clear I am compiling a kernel with 0x5E & 0x5D ignored but with 0x5F allowed and running evtest?
 > >
-> >
-> > Yeah give it like 15 minutes to finish, just to be clear I am compi=
-ling a kernel with 0x5E & 0x5D ignored but with 0x5F allowed and runnin=
-g evtest?
->=20
-> Allow all three, see which does what. I am finishing the patch.
+> > Allow all three, see which does what. I am finishing the patch.
+>
+>
+> Just tried it, still just 5E can't get 5F or 5D to show up.
 
+Great. Patch is sent. Thanks for the report.
 
-Just tried it, still just 5E can't get 5F or 5D to show up.=20
+By the way, I am getting mail errors from an icloud account, so one of
+you is not receiving the whole chain.
 
+Antheas
 
---=20
-Rahul
+>
+> --
+> Rahul
+>
+>
 
