@@ -1,75 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C20314D03
-	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Sep 2025 15:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2006D4A04;
+	Wed, 17 Sep 2025 19:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758124050; cv=none; b=ueX4ADuxNIpoP9elQHp5pCI/3sat4+UVAmntTGl6+XSZL5uCDn6ZgqaHQMqZYK+U4Zk0H/ou1cu9p/tau2MgHEyowmHmmqh2ZQLo9+ztec18Avi+QSnRtoRCYxFImTSLMUmFB7sRrTNf8vJ4+PuR9YLdkeAiPJqlTawGDeqjuVw=
+	t=1758136258; cv=none; b=luQJ84HZ1m9/0S63HdfvW9QT+ZvRwuUBXk1G9rfXFRWab78JYYG8XPKFIrYV3thWZccoPyP4qUOEMnyTtwD2S76DKZ1ZQzyJsQ6A8Nc5r4TNucXl+kI328ZuxUO2SLnf3UbBly6M9ZuxjVf6qCi/QrII0TUiNOhuDOkgd5BiMe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758124050; c=relaxed/simple;
-	bh=i59uP+6YC9C5sV20rF/G84S8pIiXbwLJI/DqiwGClMs=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SWvK8UAyWxmY5rzuaeBHmc0R7JTlQTlbMzYbYfLI11CfJlIHJGC4z5Wubpvi+gdGWofMIPUKjEkokQFrvR3YCqdR3IWgaqpLRdFR7vVCMLzeB9iyFIgmYistqfMR2pDMqCDJJcVAoR9s+W7sC1zp0ThBLZWAkwHtB+BVC8EUio0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5eXcLXR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758136258; c=relaxed/simple;
+	bh=cvre8E18jeT6sBsn7mM9lLOpUG2V4cHMviqd0cUZ/Go=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=huhuWhYirdWQdQ3xDd0UGncfJktR3HpZIEafFo007VzIvVgvPN4oJqDeIA2r58EplV5M3Mt+X2E5QpqWTm9+ck5eJmnNy6+v5t+djbzPyPiJAnptrzGqEj0c5rqa5w9aES09qBUGs8mRD88GeVdZ42CAxGt0XYheY+fLwGAx6s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=QnwPvJgQ; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sI+FMK6y; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5eXcLXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E31FC4CEF5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Sep 2025 15:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758124049;
-	bh=i59uP+6YC9C5sV20rF/G84S8pIiXbwLJI/DqiwGClMs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=s5eXcLXRohMFx2EA45pJ8SepUpMsfDFuwCV2t0xP0S87NrKfYxnGPVYF2zFDNl/jD
-	 12GBE9Nni+H332th5jxjCyngu/6q3ZDYbbRMsIl0oivYQ0Hj7TcOgGN2w49AbcOKap
-	 Eu7B4qraV1Dlq4oHinndtIoZT5Ggmmc6Mdp08TuIeAQWGp1RpxdHUlCgB0yTgfqhCi
-	 8rjfTVLxIi5QS0g6A2MMccjhnWtu+ieBd4GhcAdgl37jyk2VHGfskMAfjWZP89/ZRt
-	 h8ae+d5sZdYg0ObYsro/hEQg44FV7MOElbuNHoh+0dAskp92Oaz6qEuaKPZb18tygH
-	 O+Uw2vDS+9Bpg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7369CC41613; Wed, 17 Sep 2025 15:47:29 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Wed, 17 Sep 2025 15:47:29 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-NrRZvS2sQu@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="QnwPvJgQ";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sI+FMK6y"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Subject:Date:From; t=1758136208; bh=jUDJNUGPMmGoGJReBhLdS9j
+	gZvs7HFmg75694Psa0N4=; b=QnwPvJgQgQEIjFUJ092WX+5VnetTc9mO2+VyZg01XYt/TScUWP
+	21vTdQsTv5Q9rtzwXYKBf/80zpphW2EulMDX2I5E70xIfHFzmYikvzSgn2Cwilk4plokXRKV5Sa
+	nL2cT9WsKXTeW0O+VPJ0wup8nPAQFP+LmH7nnI0nGbUZtKBqH0cUXkG+D3QfI0N2sPnMo6eAlP/
+	YVr+73UyuHMepSNeSvppQsrmGuiwOmHDw9TXPwUhzsO9Vxli1mcWiLj7WTzV4PXpXcBnstLdOBX
+	1W53fgYrdkMsVHKYyTDMWj0nK1tO6yYDNC0K2+sHKvzQQo5NfN+wWLPlK7TM59Hoh7w==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Subject:Date:From; t=1758136208; bh=jUDJNUGPMmGoGJReBhLdS9j
+	gZvs7HFmg75694Psa0N4=; b=sI+FMK6yfNuHDv87ZLFSarK00xCSPeOjs/99JSwJ53Q458pgXA
+	XvCvnPw1of16KuDvpsg8rP6fbXCSEUU2QEDA==;
+From: Nickolay Goppen <setotau@mainlining.org>
+Date: Wed, 17 Sep 2025 22:10:01 +0300
+Subject: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude E6530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
+X-B4-Tracking: v=1; b=H4sIAIgHy2gC/x3MSwqEMAwA0KtI1gZq669eRWZR2swYCCptFUG8+
+ xSXb/NuSBSZEkzVDZFOTrytBU1dgV/c+iPkUAxa6U7ZZsBAIiicjJxKBxSXOR+BkPrOKBy8Ga3
+ 3rh2tgXLskb58vf/8eZ4/uGE/7m8AAAA=
+X-Change-ID: 20250917-dell-lis3lv02d-latitude-e6530-7c389cca4893
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nickolay Goppen <setotau@mainlining.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758136207; l=2859;
+ i=setotau@mainlining.org; s=20250815; h=from:subject:message-id;
+ bh=cvre8E18jeT6sBsn7mM9lLOpUG2V4cHMviqd0cUZ/Go=;
+ b=5KwfJvyXXPUxxbHp8fEkCAufC3hdm0JeHRGtVBxrLGkx+o6ftF8JLYczSt3ibJMoSWqXAr4G7
+ +dygItdCGAaAuVu8Z4sDiYpL6WZy8+odkb91rIbuP9It+xgEiGNBggw
+X-Developer-Key: i=setotau@mainlining.org; a=ed25519;
+ pk=Og7YO6LfW+M2QfcJfjaUaXc8oOr5zoK8+4AtX5ICr4o=
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
+lis3lv02d_devices[].
 
---- Comment #131 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
---
-C is the only one I saw a kernel log, that's the one I looked at.
+The address was verified as below:
 
---=20
-You may reply to this email to add a comment.
+    $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.3
+    $ ls -d i2c-*
+    i2c-20
+    $ sudo modprobe i2c-dev
+    $ sudo i2cdetect 20
+    WARNING! This program can confuse your I2C bus, cause data loss and worse!
+    I will probe file /dev/i2c-20.
+    I will probe address range 0x08-0x77.
+    Continue? [Y/n] Y
+         0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+    00:                         08 -- -- -- -- -- -- --
+    10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+    20: -- -- -- -- -- -- -- -- -- UU -- 2b -- -- -- --
+    30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+    40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
+    50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+    60: -- 61 -- -- -- -- -- -- -- -- -- -- -- -- -- --
+    70: -- -- -- -- -- -- -- --
+    $ cat /proc/cmdline
+    BOOT_IMAGE=/vmlinuz-linux-cachyos-bore root=UUID=<redacted> rw loglevel=3 quiet dell_lis3lv02d.probe_i2c_addr=1
+    $ sudo dmesg
+    [    0.000000] Linux version 6.16.6-2-cachyos-bore (linux-cachyos-bore@cachyos) (gcc (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP PREEMPT_DYNAMIC Thu, 11 Sep 2025 16:01:12 +0000
+    […]
+    [    0.000000] DMI: Dell Inc. Latitude E6530/07Y85M, BIOS A22 11/30/2018
+    […]
+    [    5.166442] i2c i2c-20: Probing for lis3lv02d on address 0x29
+    [    5.167854] i2c i2c-20: Detected lis3lv02d on address 0x29, please report this upstream to platform-driver-x86@vger.kernel.org so that a quirk can be added
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Signed-off-by: Nickolay Goppen <setotau@mainlining.org>
+---
+Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
+lis3lv02d_devices[].
+---
+ drivers/platform/x86/dell/dell-lis3lv02d.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
+index 732de5f556f83b4f91fbf174986331c02c2a5c79..77905a9ddde9dd5d44a3193d053fb3d4e319ceb8 100644
+--- a/drivers/platform/x86/dell/dell-lis3lv02d.c
++++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
+@@ -48,6 +48,7 @@ static const struct dmi_system_id lis3lv02d_devices[] __initconst = {
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude 5500",      0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6330",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6430",     0x29),
++	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6530",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision 3551",     0x29),
+ 	DELL_LIS3LV02D_DMI_ENTRY("Precision M6800",    0x29),
+
+---
+base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+change-id: 20250917-dell-lis3lv02d-latitude-e6530-7c389cca4893
+
+Best regards,
+-- 
+Nickolay Goppen <setotau@mainlining.org>
+
