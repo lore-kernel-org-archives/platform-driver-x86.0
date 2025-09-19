@@ -1,73 +1,73 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E2928643D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 21:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B684323B60A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 21:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758316811; cv=none; b=A6RI661Ia4hON6KHuexCGB2aMDCY1uSQCG5PpBq6jeM4oH6i5mUr20mWx6OIW1fyMBvRJGG7Bnby/C1JIPiLQfjLpPJHQGF/57Zitjh3wKVgWCO2llcAPEgpA9Ov5XgAEmZPmCz+QQQJrUpZD8NdjWKXeZ9jAofVbkA3gehsv8k=
+	t=1758316920; cv=none; b=RYwgK9nNpZ5lnmcdcIGNQFURCMFL3WWUAyS+nnrmAosvXznxMsBBEnPO6sM7J10enpVdXa0zoXHPBBpA7dPKqD9/SNggSCDZ4Pyasn4mAvqAMfoaMaq40JFtNX3VnXEVZ0o0LvfoPg84z9JcP8P9XolO71bzOf608CnXIB2EN08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758316811; c=relaxed/simple;
-	bh=l3VwbGD2WfWOTvzV2uVrXsRffSm/zRB9ZXRdHCPZmFU=;
+	s=arc-20240116; t=1758316920; c=relaxed/simple;
+	bh=2E3mUBxH6R6Jug+ATNrGmXgQzZyUHAlwKykD5PH+RhY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mk/Zx9JGJDh0axb7OepNBrNBNIZzW9BX1U+UUgCWA6ruKxltMUP3GIXrjvBtLI4LbFEgp/AnUCQU//p452y8T31K+pzjoPfVtkamybwVv+Flm6doQy2KsBtStI/K+C7RwXSFXCXggMs0a7JMtIp14u2p8gAewESyyOgZap7nIxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RpAjPMQ5; arc=none smtp.client-ip=209.85.210.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLe7PxZi6cWgZTW2IW2mPLjCPMLV2HeDvoNLhDg44uCO2PJPVLDiEIGuOKTXPyfDJMxK5ENkBsDBY++m1rx4ODFib4hoae7VXqx4R5n6LHrxpgHanpCGHS9Cses9tjgBupNFbbO2NtchazXSokcBK8Zn4pUmrkAwOU4ijeBOKbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dHx28OaP; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpAjPMQ5"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-77e69f69281so1198025b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 14:20:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHx28OaP"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2445805aa2eso26081125ad.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 14:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758316809; x=1758921609; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758316918; x=1758921718; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dqYQ2QT7ewyLKOw+dRyNXshWySmfSzQS/h6+fwtLzlM=;
-        b=RpAjPMQ5AM9xqx/4TcZcmnM4AdJS+Neb3r+WfG/4VAAoEE+1v3e3ocKEcYyb5hIC+Z
-         0YzDWcpYoKhztYcBpHXQwZZ3NgxyurDGlBavS/h6NWYN5iwa3wktMI2THznWX+miFA2c
-         VptJKCOqK06aC+KB0DcPU7loTPzlJfVeDIOS/sBOMnoNSeXkj8zZhwxLddY08mQJ4SJt
-         Yc3083gBSLvdZ9R5qVaEOl4VRKQWnwk3HCVgSB5HCVfY3aYEaS0eF4vRwsqUXmC6Q9hq
-         t81Ne8aCVRVO0/kMyld6mYfSKZvHn9AjI90Ij2ShyDaUP180mot/UuGpw9At5vQUGwOP
-         EDqg==
+        bh=U+G5BcJeXL6jDC2bAibkklgz8WdwIScxof/3Q9gcq9M=;
+        b=dHx28OaPX3uHpx0R1XnCwagNlUq2dTYn4vmQ6cm2w3X8N6MPRInBq2jJ5pFmFwraKg
+         agVawfYANqsrWqUxj6Q5YPbU3zW592WDR/JL9/VGn15Ol28hF6dqpLcVb1cAcDTIYXnc
+         SiyYdZncu8gWakKVlgmJ7/utdty12dtAeW9Gys58ed6ZgzAN/VEa6v65jjwsQ5ckOsD6
+         JGUWMSzPO7KoohDSsR+4K5I4K1/RGWcO1HWSJvk71aBC/BZ1dS4qTXDXfrKgYx+KDwWx
+         xdySYnSBr00E4LZycAWn6ItHQJZJZIfB2BgffepLYAmzPkJBmSb8sJiF9hb50F0MnoZk
+         qFxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758316809; x=1758921609;
+        d=1e100.net; s=20230601; t=1758316918; x=1758921718;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dqYQ2QT7ewyLKOw+dRyNXshWySmfSzQS/h6+fwtLzlM=;
-        b=G7sGPYc/zws/QttcLf03TkGerzqWLzUL/JgBlAxTnkQhl4LM2sKydzgKRP9Vhpi+U+
-         /M62z/GR8LYbAQLaT1ncnXXWf/+9cNu2O3Ldba5Raj3ousY9U8ROf8OL0N7wH3SDOF4T
-         nmMRIbkqZMQDKvD2ozaFfUECGx0cQ+u45yjLZaYgnRzcjct32+IIejRyAMZNf01MAQmx
-         DlR6ujcUJdEEGKhFWxQur7AFQWvXoE2gHvRZrcy+VoqlszyGraPh/nwxY93PoGEAXF6Q
-         hbHaI5+wMIX1eqOHyOKI9cU6yUY3isJQDLWAq0oiG7YNLFhLzKECE/U5PGYwgDl7So8y
-         noeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEFArT9Q3m1AAim/Fin4Xc80JRsyZUdG66vZqTB/zISv4u6mrc0agVrf6NADh0FKKKxdNV/O095upSRMOCjMvsxlyf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYCqdiL835G7H8a7/iWG6A7yQiG3w3D5bs9nQgyXZxSGu0H0hX
-	mpKwUrS8KKpr0GHA1gkLeKTUN+haj8j4CND7/s4rL+yQvlm6iWazVDpq
-X-Gm-Gg: ASbGncsZW/OtyNSbZ/1g4akK6328MrYa+dSQL7qHZIm7UpQEFspsr9458ejZhhtjFbv
-	lC+LUEv4CVozgkmb0XxphpublNYgjcirvbf2Bx1xBmsYmCHZRPABD7nxEqqnoqvGREaN05kfXhZ
-	yv3ae8xXgdpVuSWqch+a7FwAJ5ZeI+y1O6fUy3f6WBLFEY9Sw6ym3P/yo0nAk+EqteTG68biArw
-	2hTO9QQY+qSS8brZLHwCwZl5WfFJ+R94o/Ep8YwnsHLtJni3BlZtekLSh/0EEP1LVC9Xr4CG2ox
-	46aNT3DFRzKAB3iQnnnoDK4fP7OjkcASyl31wFxJLBnnylXpPOq8jYJNWbiQJLoxITLWwK9CLib
-	CWBqbHjtKZsSD+JuSE0dbPo4=
-X-Google-Smtp-Source: AGHT+IHp4WxemJUVB+65lXGibV+5PLCBOWpAJHifWnEPVEiCDqK0BKpDugF8mR0vwG9Ac1Er0dA0Vg==
-X-Received: by 2002:a05:6a21:e081:b0:248:86a1:a242 with SMTP id adf61e73a8af0-2920104846amr6827953637.4.1758316809206;
-        Fri, 19 Sep 2025 14:20:09 -0700 (PDT)
+        bh=U+G5BcJeXL6jDC2bAibkklgz8WdwIScxof/3Q9gcq9M=;
+        b=Y1p3jRzNIfmd6qUOxAw54GYeMPxQTRKV633uX685pV2o8abIuww3suWwDWGFQ2vxlL
+         dz/1BuEoH5JPSCLkC5Qixnlh5yasINkT4fvD3rZY0RPAP627NHFyq/Q1YumE6pivsYb1
+         /svQuNA34GJLBK3xSDhQbYiSj+lxzGA0/VgQH1NAPY5H1zkYDLcQHupoIOgWhEhhp+w0
+         dODnaVrpocqSPAOR9oCFgFQezBn10qrEWc6Y5YNBQQ5jJEEHluym7a9kHgKMmt/zOELf
+         pNnvEu4Us+MpUwJasPwoe4uvytUu9rhWC8b1ujIDq8HPJHXV/TcL6O1RSp+WyIgwh8kY
+         UqrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSMglup7861Y8UTrsz+EWlxHc6h7xyjBSrWiCkyTPejvjE/HHycWYs5CAGQBZwU7SiVhMqYaMIGkevtrIcgHT8bqxh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKaodVY8nn4Ye1Qgwn9RNXFcdpzKrCJjMvTwW86D/yz7gABXjU
+	ISvCchlpH/cDlGfa9tHBcpZSlXhbkJmLDT0nxKNlOEv5H5C6zdw+ZJDQg1XtVA==
+X-Gm-Gg: ASbGnct6CZBCM2kJR2XmCNQlh565xSb7juucCAk6Bw9L0zBH3VBBeC1rUHQ8rDSddj3
+	TMEQlIuQcoeXqKQp5Zut1Ghw8XfvPaWe53H8JGZM6UxgUDX7jVALgjBJ1KOnx4wO452Vwoi1fWK
+	KAXGUNa9lMvDJMaVn7/QlYDqFJmFzbwfysYUEd7DNSfGc+UyZUMUGflmtAdBH5F7i+LW50Tupwj
+	cBc7P9JCvcSQvMnAr0mpyLbd32is7iliM+hKK0sLQZnYc1YPlq/SMcBbZAG3IZzmkUJO47PrI4d
+	wQhIrMYintXxJ27Txy15R0jONPIy1bgT2oV6ZovXkf4CZwqlkTTWSEoPceP/PodUpqmB5mNvb2J
+	P0FfrFRwB8j3GzouSVTHNLB4=
+X-Google-Smtp-Source: AGHT+IHorHQlFTnVCe5ov/QTPuyR/Y4MFsYkLceh7+ZdUsDWDbJsmQQ7ToA9HVIPBaE6+4IcBOkXJQ==
+X-Received: by 2002:a17:902:f64e:b0:246:80ef:87fc with SMTP id d9443c01a7336-269ba563fb1mr74693975ad.45.1758316917923;
+        Fri, 19 Sep 2025 14:21:57 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:5621:6657:a035:d5ee])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77cfe669092sm6040241b3a.47.2025.09.19.14.20.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269800541adsm64377475ad.4.2025.09.19.14.21.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Sep 2025 14:20:08 -0700 (PDT)
-Date: Fri, 19 Sep 2025 14:20:06 -0700
+        Fri, 19 Sep 2025 14:21:57 -0700 (PDT)
+Date: Fri, 19 Sep 2025 14:21:55 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Hans de Goede <hansg@kernel.org>
 Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 19/19] platform/x86: x86-android-tablets: Stop using
- EPROBE_DEFER
-Message-ID: <jxhsqa6hn47arltmkrbfj45o3zuy3n6p43jbrazejkvru6kj6l@k2n3i2czb3yi>
-References: <20250919204742.25581-1-hansg@kernel.org>
- <20250919204742.25581-20-hansg@kernel.org>
+	Arnd Bergmann <arnd@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] x86-android-tablets: convert to use GPIO
+ references
+Message-ID: <ley47cmpwn5lhacf7ddfufeaqhe7rqemmkp2sjrhxitdv3l6cm@ktafyk6eeeft>
+References: <20250810-x86-andoroid-tablet-v2-0-9c7a1b3c32b2@gmail.com>
+ <bc463249-a159-466d-8804-399805b8fa3f@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -76,20 +76,59 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250919204742.25581-20-hansg@kernel.org>
+In-Reply-To: <bc463249-a159-466d-8804-399805b8fa3f@kernel.org>
 
-On Fri, Sep 19, 2025 at 10:47:42PM +0200, Hans de Goede wrote:
-> Since the x86-android-tablets code uses platform_create_bundle() it cannot
-> use EPROBE_DEFER and the driver-core will translate EPROBE_DEFER to ENXIO.
+Hi Hans,
+
+On Fri, Sep 19, 2025 at 09:53:53PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Stop using EPROBE_DEFER instead log an error and return ENODEV, or for non
-> fatal cases log a warning and return 0.
+> On 11-Aug-25 4:22 AM, Dmitry Torokhov wrote:
+> > This series came about because now software nodes can be used to
+> > describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+> > eventually get rid of gpio_keys_platform_data structure.
+> > 
+> > So while I was doing the conversions from GPIO_LOOKUP() tables for
+> > gpio_keys devices I decided to convert the rest of them as well. Maybe
+> > some time in the future we can drop support for GPIO_LOOKUP() and rely
+> > on device properties exclusively.
+> > 
+> > This is completely untested.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > 
-> Signed-off-by: Hans de Goede <hansg@kernel.org>
+> Thank you for this series. While reviewing this I've found
+> a couple of issues. I've fixed these in my own tree and
+> I'll send out a v3 with this fixed + some extra patches.
+> 
+> The issues which I've found and fixed are:
+> 
+> - lenovo_yoga_tab2_830_1050_init_codec() is missing a pinctrl_put()
+>   in error-exit paths after the pinctrl_get_select() succeeds
+> 
+> - Adding a swnode to the yt3 spi device changes the name of the SPI/codec
+>   device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver looks
+>   up the code by name, update the machine driver to use the new name.
+> 
+> - In the "convert Yoga Tab2 fast charger to GPIO references" references
+>   the fwnode is added to the wrong device. The node should be added to
+>   the "serial0-0" device but that gets instantiated by
+>   drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+>   I've made yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
+>   the platform-device to the serdev it creates to fix this.
+> 
+> - Fix the commit message of "platform/x86: x86-android-tablets: convert
+>   gpio_keys devices to GPIO references" which contained a stray reference
+>   to wm5102.
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Thank you Hans for looking over the series and fixing up all the issues
+that I introduced.
 
-Thanks.
+> 
+> I've also added some follow-up patches with some cleanups, see the v3
+> cover-letter for details.
+
+I've reviewed ones that I felt comfortable reviewing, thanks again.
 
 -- 
 Dmitry
