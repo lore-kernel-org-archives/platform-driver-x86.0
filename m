@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0001127FD71
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37A41FB3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314882; cv=none; b=rbTMOvSem1BRsZ7+ao/KMIsn2IzdvTvtvLdCxYgnHc+bQZM0hg9GDhUt8CHV9R/LbdHUZVu+ZFpEmjqCVrgikFVUqPg9BgqB7Nq9wic0QSMlMVzvAuUiWATMO5aHDsD+c4AxPUiuGWzNmAlECw7YyaGDHszxd8+D/tIRUv6bmSg=
+	t=1758314883; cv=none; b=tYGbcqA7Olhte+G7pLmK43kpFndm7GvOkjbYlJDJlwV+T8dS7Ibl9uTfzHGI6ICQnECEjCFy/jgXCLlNNSm32J+WLl1w6wiHt/slqk9aPKb18z3vOInWnN2Rpl1BXtmUUFO9xxgrgOGqKQPPbiJxA6wOXYY643nBFnNlp68Y+vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314882; c=relaxed/simple;
-	bh=hsZjwHWfOrSs6gA5j0lD4MZsfSoSt7JsNQGLZNL2su0=;
+	s=arc-20240116; t=1758314883; c=relaxed/simple;
+	bh=0DLzpEtHZA6Kz3HisW/bXaIUn5lQH5Tx0fJOslzEo4o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MwnNQJqKDdCcao34INMG2BUcfRa/aVyTwy6yWUqrJeNXEVUTTSCVXPVU7TH/wHq/WzMkTN5pY3Mxs1Jc74hRzIfYQhCgOt85AabWFBuOw+d2ffUWwmEvLBKb1IrfFZRwJWcRwpnbJ/DgZAT42P00S5vyeJEjq6AukLa1mH7ilV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvMXyAk8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qv5GMOM5spDF+KEJrPKt9BN2hTj+617oV6u4ggjZh1BTZ2Elkj4YRWMUOPyxzRoewOAnQsPT00dNyRdNxj6o/nF7W8q4v6oVNjnrmDiZ8HjVl+eg8go47ddgWN6yyYUdBL3dXB6gpDtczK95tdMJ4Ly+vYn0ENHwsxCBEa+hobc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tILZgu2M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvMXyAk8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4B8C4CEF0;
-	Fri, 19 Sep 2025 20:48:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tILZgu2M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AB21C4CEF0;
+	Fri, 19 Sep 2025 20:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314881;
-	bh=hsZjwHWfOrSs6gA5j0lD4MZsfSoSt7JsNQGLZNL2su0=;
+	s=k20201202; t=1758314883;
+	bh=0DLzpEtHZA6Kz3HisW/bXaIUn5lQH5Tx0fJOslzEo4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QvMXyAk8oKD9zCp2Nrqh2KRijVH7H+M5ce98j/pi/lAeHMWJxhIpQ11oH23cjtipP
-	 4VZP/LWUcFqCWquywMtEsq6s1CCUkjJ4GKWbo0wt3B+XAqFrkG5dBHuiJ8PWHdMN/R
-	 GXB6Y0+PzAnrwaXLZcdmYh3B2Z/+kePt44oJ81iBfdKMOEYk3OJMN/T7mrTLj6MyQJ
-	 yDuB21qy0hyb2LgigDjwZn6HV+iTg/k9Cze0YJatxJyTcipvVI/+pPll+4vmjmevqI
-	 04OMu3p4lXgqEL5rtx3shulwi18y6uWqttP0HfiqXOIs0hqENGE3a1evg8QBLTSH5B
-	 DxGCBoW/QAIxw==
+	b=tILZgu2MypO/zu/4DzBiZ5lMchdFLBnc26zFVYUBCwVR6fz4N0D6jzYLwfwyjQN2n
+	 F2pNcViNGLZNS2iggrhWjjPlDo3+1aocJmsFu0GGL6Jsx21PyLlVA3pr8QvgNVUhqH
+	 zLki45zK0gnso6MAijNrY/KNMG7oL4d0fKCv/fNM5HkqGJwKk/8rdpgeA24n/hRrEN
+	 t987K8LTPKWEo4oeab4klCUiXR87+2+oEkVKZ5/XXEkApeWR22cPRhGPVaahbLOYmI
+	 CIoTWM9OXqADtOXPaH+FQl7ltnAj1Fg/iypy8EeJjG1cmTpIu4wnTZaCnc9bTVIVEc
+	 S4YQkxFfQVh7A==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 09/19] platform/x86: x86-android-tablets: convert Yoga Tab2 fast charger to GPIO references
-Date: Fri, 19 Sep 2025 22:47:32 +0200
-Message-ID: <20250919204742.25581-10-hansg@kernel.org>
+Subject: [PATCH v3 10/19] platform/x86: x86-android-tablets: remove support for GPIO lookup tables
+Date: Fri, 19 Sep 2025 22:47:33 +0200
+Message-ID: <20250919204742.25581-11-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
 References: <20250919204742.25581-1-hansg@kernel.org>
@@ -49,97 +49,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Now that gpiolib supports software nodes to describe GPIOs, switch the
-driver away from using GPIO lookup tables for the fast charger device
-to using PROPERTY_ENTRY_GPIO().
+Now that everything that used the lookup tables has been switched to
+using property entries to describe GPIOs, we can remove support for
+registering and unregistering the lookup tables.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Tested-by: Hans de Goede <hansg@kernel.org>
 Reviewed-by: Hans de Goede <hansg@kernel.org>
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
-Changes in v3:
-- Make yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
-  the platform-device to the serdev it creates
-- Mark lenovo_yoga_tab2_1380_fc_props[] __initconst
----
- .../lenovo/yoga-tab2-pro-1380-fastcharger.c   |  7 ++++++
- .../platform/x86/x86-android-tablets/lenovo.c | 23 +++++++------------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/platform/x86/x86-android-tablets/core.c           | 8 --------
+ .../x86/x86-android-tablets/x86-android-tablets.h         | 2 --
+ 2 files changed, 10 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-index 1b33c977f6d7..cca8e644f4e7 100644
---- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-+++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-@@ -255,6 +255,13 @@ static int yt2_1380_fc_pdev_probe(struct platform_device *pdev)
- 	if (!serdev)
- 		return -ENOMEM;
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 7b5942010c78..1eb59c999baf 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -153,7 +153,6 @@ static struct spi_device **spi_devs;
+ static struct platform_device **pdevs;
+ static struct serdev_device **serdevs;
+ static struct gpio_keys_button *buttons;
+-static struct gpiod_lookup_table * const *gpiod_lookup_tables;
+ static const struct software_node *bat_swnode;
+ static const struct software_node **gpiochip_node_group;
+ static void (*exit_handler)(void);
+@@ -394,9 +393,6 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
  
-+	/*
-+	 * Propagate pdev-fwnode set by x86-android-tablets to serdev.
-+	 * The pdev-fwnode is a managed node, so it will be auto-put on
-+	 * serdev_device_put().
-+	 */
-+	device_set_node(&serdev->dev, fwnode_handle_get(dev_fwnode(&pdev->dev)));
-+
- 	ret = serdev_device_add(serdev);
- 	if (ret) {
- 		serdev_device_put(serdev);
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index aaa946bb1e7c..7d1808a3437f 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -741,11 +741,18 @@ static const struct x86_i2c_client_info lenovo_yoga_tab2_1380_i2c_clients[] __in
- 	}
- };
- 
-+static const struct property_entry lenovo_yoga_tab2_1380_fc_props[] __initconst = {
-+	PROPERTY_ENTRY_GPIO("uart3_txd-gpios", &baytrail_gpiochip_nodes[0], 57, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("uart3_rxd-gpios", &baytrail_gpiochip_nodes[0], 61, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
- static const struct platform_device_info lenovo_yoga_tab2_1380_pdevs[] __initconst = {
- 	{
- 		/* For the Tablet 2 Pro 1380's custom fast charging driver */
- 		.name = "lenovo-yoga-tab2-pro-1380-fastcharger",
- 		.id = PLATFORM_DEVID_NONE,
-+		.properties = lenovo_yoga_tab2_1380_fc_props,
- 	},
- };
- 
-@@ -775,20 +782,6 @@ static int __init lenovo_yoga_tab2_1380_init(struct device *dev)
- 	return 0;
+ 	if (gpiochip_node_group)
+ 		software_node_unregister_node_group(gpiochip_node_group);
+-
+-	for (i = 0; gpiod_lookup_tables && gpiod_lookup_tables[i]; i++)
+-		gpiod_remove_lookup_table(gpiod_lookup_tables[i]);
  }
  
--static struct gpiod_lookup_table lenovo_yoga_tab2_1380_fc_gpios = {
--	.dev_id = "serial0-0",
--	.table = {
--		GPIO_LOOKUP("INT33FC:00", 57, "uart3_txd", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FC:00", 61, "uart3_rxd", GPIO_ACTIVE_HIGH),
--		{ }
--	},
--};
+ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+@@ -420,10 +416,6 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+ 	for (i = 0; dev_info->modules && dev_info->modules[i]; i++)
+ 		request_module(dev_info->modules[i]);
+ 
+-	gpiod_lookup_tables = dev_info->gpiod_lookup_tables;
+-	for (i = 0; gpiod_lookup_tables && gpiod_lookup_tables[i]; i++)
+-		gpiod_add_lookup_table(gpiod_lookup_tables[i]);
 -
--static struct gpiod_lookup_table * const lenovo_yoga_tab2_1380_gpios[] = {
--	&lenovo_yoga_tab2_1380_fc_gpios,
--	NULL
--};
--
- const struct x86_dev_info lenovo_yoga_tab2_1380_info __initconst = {
- 	.i2c_client_info = lenovo_yoga_tab2_1380_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_i2c_clients),
-@@ -796,9 +789,9 @@ const struct x86_dev_info lenovo_yoga_tab2_1380_info __initconst = {
- 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_pdevs),
- 	.gpio_button = &lenovo_yoga_tab2_830_1050_lid,
- 	.gpio_button_count = 1,
--	.gpiod_lookup_tables = lenovo_yoga_tab2_1380_gpios,
- 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
- 	.modules = lenovo_yoga_tab2_1380_modules,
-+	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
- 	.init = lenovo_yoga_tab2_1380_init,
- 	.exit = lenovo_yoga_tab2_830_1050_exit,
- };
+ 	switch (dev_info->gpiochip_type) {
+ 	case X86_GPIOCHIP_BAYTRAIL:
+ 		gpiochip_node_group = baytrail_gpiochip_node_group;
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index a54d09408866..d037e3962a51 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -17,7 +17,6 @@
+ #include <linux/spi/spi.h>
+ 
+ struct gpio_desc;
+-struct gpiod_lookup_table;
+ struct platform_device_info;
+ struct software_node;
+ 
+@@ -91,7 +90,6 @@ struct x86_gpio_button {
+ struct x86_dev_info {
+ 	const char * const *modules;
+ 	const struct software_node *bat_swnode;
+-	struct gpiod_lookup_table * const *gpiod_lookup_tables;
+ 	const struct x86_i2c_client_info *i2c_client_info;
+ 	const struct x86_spi_dev_info *spi_dev_info;
+ 	const struct platform_device_info *pdev_info;
 -- 
 2.51.0
 
