@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603B01FB3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D911FB3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314871; cv=none; b=IlOvs/SIamg+CeLQGyenU1z83pOykMjUuKYbe79Qgn76G2IdzXFb44iSL66S5Hv/8bxz0DKUGzNeBWog1j3FZofVkQbZ6xTP/O/34dflnbK7Zl307iOFddegwB3Oazecs1rTfEpjIISm2di4HjXmUxS6dTEG/HQ9fZB2Ne9Orsw=
+	t=1758314873; cv=none; b=XRECpFTWkOi6PH9eFvRWEitHj1FWj3E4OrihtvEENjFu76uPwUFDzY8sFEH3Kzkv6pUv9IAvIc5CAuNHSuMpHVRIVBfWId8EXQhmlKxJaANU3oCrMg5s+a/JUaUe6L51SZ7u3bBcGZMACiBICtvw9ce49LtwZVYmK8dOK0A4AOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314871; c=relaxed/simple;
-	bh=p0EcipZELlIcXYts9hU2YzUBzERRtwN5y+8fHzBVdS4=;
+	s=arc-20240116; t=1758314873; c=relaxed/simple;
+	bh=5icwLFiHW+yN7XpqOXvJS9dHLJbxET/jUm+6syudY3Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N9GYF26z3LmXDdrPzjLqeUGX18HjyZr7lM+JAX6RsvVO2ggAiSf+rt+L2NdqsPTQUumMaPXl+P48qM0CL+arjybfznMrRMkFIquPxpvTPmpkUGnoAUHXsWkiEZ3s/S6nkHO7SPjCS7Ut4Hh4V/ExuMOlExWgsQEdeZmEVzwe9BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S31oQpve; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N89hS0ZzYFj9WaoPlStiaANp3r+Bz7YF4b9vp9tM1r+UpgEKLkwEK8sA7d2g7Li9LhNzQ7mjfrzroMfKcKNrZ9d8WCcMJQS/cEcVMVigoJGEvMtVC2bchXL23JgMLgGgZnvawcOoUEZ74oDkpVu5UXtnTGWa5aIRH9ute/XeGI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLdYPFmq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S31oQpve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90AF5C4CEF7;
-	Fri, 19 Sep 2025 20:47:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLdYPFmq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FDADC4CEF0;
+	Fri, 19 Sep 2025 20:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314870;
-	bh=p0EcipZELlIcXYts9hU2YzUBzERRtwN5y+8fHzBVdS4=;
+	s=k20201202; t=1758314872;
+	bh=5icwLFiHW+yN7XpqOXvJS9dHLJbxET/jUm+6syudY3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S31oQpvecw3WObVaSX1YfN82/mgyAEMlHfDAWuf3gOHDWlRWnc1ig0cJLoiFtATbp
-	 ZGK1cnGniGAUErnYDO45GhMbu6UxK9Zc9z3VJVe5RuXplItO1nOfqyP036hPWsE92a
-	 7XP86DHD9wmkGXnq+tBhts7dKTwxbgMJh02VL1t+6w3BffaG66o3A6C2TRpCtDEYaP
-	 qbtCjEg+/zvC+QSbd0sQogdhGsHDlzne8AuvrNFkhfo6DGBPf9zhfV8oRlLICFHzZk
-	 84uU2rObk5reMhnq5X3UyqAvlyI2kb3Xmhvokb5yHkK9Bj3jFyE0y5LRHcto9cdIVV
-	 FqqrCJprjrmAg==
+	b=aLdYPFmqFfIBAw2dRrn5K9+4EI/V7GTTBXNYdsGkbhQZytpMzT6pT68NTFx1zEi2l
+	 teil6YHSwpMoKJfiG402sBSjClEpHB1pqZwKiLq+9t5y90Tfr3zrp0HRQO9njhlzLd
+	 pQ2ovr2vW+JfQZBw7FLj7mgn8CiDxcTNb5cuQQ8Kj7tPXEcxukOv4vrF+RyZxwkAf7
+	 FMrFJrIBfkAfiZsNehkX3LjArldKjeJveLBw2/K1iDUVpqEixLAGlLKJHeI0ZZSLck
+	 fg71AXhEbaD/4vdgyzlswZaM+QPtedys0k0tiFn3Luhwcv2Bs9cycPbgeLgXQD+M73
+	 y7OznQLsIEXDA==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 03/19] platform/x86: x86-android-tablets: convert HiDeep devices to GPIO references
-Date: Fri, 19 Sep 2025 22:47:26 +0200
-Message-ID: <20250919204742.25581-4-hansg@kernel.org>
+Subject: [PATCH v3 04/19] platform/x86: x86-android-tablets: convert Novatek devices to GPIO references
+Date: Fri, 19 Sep 2025 22:47:27 +0200
+Message-ID: <20250919204742.25581-5-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
 References: <20250919204742.25581-1-hansg@kernel.org>
@@ -50,95 +50,70 @@ Content-Transfer-Encoding: 8bit
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 Now that gpiolib supports software nodes to describe GPIOs, switch the
-driver away from using GPIO lookup tables for HiDeep touchscreens to using
-PROPERTY_ENTRY_GPIO() to keep all touchscreen properties together.
+driver away from using GPIO lookup tables for Novatek touchscreens to
+using PROPERTY_ENTRY_GPIO() to keep all touchscreen properties together.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Tested-by: Hans de Goede <hansg@kernel.org>
 Reviewed-by: Hans de Goede <hansg@kernel.org>
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- .../platform/x86/x86-android-tablets/lenovo.c | 26 +++----------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ .../platform/x86/x86-android-tablets/other.c  | 20 ++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index f8d261d37284..49388266201b 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -97,6 +97,7 @@ static const struct property_entry lenovo_yb1_x90_hideep_ts_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
- 	PROPERTY_ENTRY_U32("touchscreen-max-pressure", 16384),
- 	PROPERTY_ENTRY_BOOL("hideep,force-native-protocol"),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 7, GPIO_ACTIVE_LOW),
- 	{ }
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index e3907812c8bc..95c5001004a1 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -38,6 +38,15 @@ static const struct software_node acer_b1_750_bma250e_node = {
+ 	.properties = acer_b1_750_bma250e_props,
  };
  
-@@ -211,19 +212,6 @@ static const struct x86_gpio_button lenovo_yb1_x90_lid __initconst = {
- 	.pin = 19,
++static const struct property_entry acer_b1_750_novatek_props[] = {
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_LOW),
++	{ }
++};
++
++static const struct software_node acer_b1_750_novatek_node = {
++	.properties = acer_b1_750_novatek_props,
++};
++
+ static const struct x86_i2c_client_info acer_b1_750_i2c_clients[] __initconst = {
+ 	{
+ 		/* Novatek NVT-ts touchscreen */
+@@ -45,6 +54,7 @@ static const struct x86_i2c_client_info acer_b1_750_i2c_clients[] __initconst =
+ 			.type = "nt11205-ts",
+ 			.addr = 0x34,
+ 			.dev_name = "NVT-ts",
++			.swnode = &acer_b1_750_novatek_node,
+ 		},
+ 		.adapter_path = "\\_SB_.I2C4",
+ 		.irq_data = {
+@@ -74,16 +84,7 @@ static const struct x86_i2c_client_info acer_b1_750_i2c_clients[] __initconst =
+ 	},
  };
  
--static struct gpiod_lookup_table lenovo_yb1_x90_hideep_gpios = {
--	.dev_id = "i2c-hideep_ts",
+-static struct gpiod_lookup_table acer_b1_750_nvt_ts_gpios = {
+-	.dev_id = "i2c-NVT-ts",
 -	.table = {
--		GPIO_LOOKUP("INT33FF:00", 7, "reset", GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_LOW),
 -		{ }
 -	},
 -};
 -
--static struct gpiod_lookup_table * const lenovo_yb1_x90_gpios[] = {
--	&lenovo_yb1_x90_hideep_gpios,
--	NULL
--};
--
- static int __init lenovo_yb1_x90_init(struct device *dev)
- {
- 	/* Enable the regulators used by the touchscreens */
-@@ -252,7 +240,6 @@ const struct x86_dev_info lenovo_yogabook_x90_info __initconst = {
- 	.serdev_count = ARRAY_SIZE(lenovo_yb1_x90_serdevs),
- 	.gpio_button = &lenovo_yb1_x90_lid,
- 	.gpio_button_count = 1,
--	.gpiod_lookup_tables = lenovo_yb1_x90_gpios,
- 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yb1_x90_init,
- };
-@@ -819,6 +806,7 @@ static const struct property_entry lenovo_yt3_hideep_ts_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1600),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 2560),
- 	PROPERTY_ENTRY_U32("touchscreen-max-pressure", 255),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 7, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -1008,14 +996,6 @@ static int __init lenovo_yt3_init(struct device *dev)
- 	return 0;
- }
- 
--static struct gpiod_lookup_table lenovo_yt3_hideep_gpios = {
--	.dev_id = "i2c-hideep_ts",
--	.table = {
--		GPIO_LOOKUP("INT33FF:00", 7, "reset", GPIO_ACTIVE_LOW),
--		{ }
--	},
--};
--
- static struct gpiod_lookup_table lenovo_yt3_wm5102_gpios = {
- 	.dev_id = "spi1.0",
- 	.table = {
-@@ -1028,7 +1008,6 @@ static struct gpiod_lookup_table lenovo_yt3_wm5102_gpios = {
- };
- 
- static struct gpiod_lookup_table * const lenovo_yt3_gpios[] = {
--	&lenovo_yt3_hideep_gpios,
- 	&lenovo_yt3_wm5102_gpios,
+ static struct gpiod_lookup_table * const acer_b1_750_gpios[] = {
+-	&acer_b1_750_nvt_ts_gpios,
+ 	&int3496_reference_gpios,
  	NULL
  };
-@@ -1039,5 +1018,6 @@ const struct x86_dev_info lenovo_yt3_info __initconst = {
- 	.spi_dev_info = lenovo_yt3_spi_devs,
- 	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
- 	.gpiod_lookup_tables = lenovo_yt3_gpios,
-+	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yt3_init,
+@@ -94,6 +95,7 @@ const struct x86_dev_info acer_b1_750_info __initconst = {
+ 	.pdev_info = int3496_pdevs,
+ 	.pdev_count = 1,
+ 	.gpiod_lookup_tables = acer_b1_750_gpios,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
  };
+ 
+ /*
 -- 
 2.51.0
 
