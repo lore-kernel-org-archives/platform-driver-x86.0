@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3181D2C0F81
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F07274FFD
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314889; cv=none; b=kwARz/FN0lBxePyK6lprsOUHSZaivrQC1NsnTxHxVW3xG4uyH87Ay2xNZVL/bcQtVFfELOgP6BQs1JgmhEHQKZ85kNuinZDEAf0COtIxLXv/se/xGRGRd340i0ibIw7y9/XW2IMTmnGm7spmEgmiHSXFekiWjxLRYf1j/geBjaM=
+	t=1758314891; cv=none; b=GS4Cmyjo6uxmOJDPAePvTNDeWV4AXqU/LQ53HiiKOxZ7mGakbXFvXKjuJeNt+uYG18ctCDr19lai1Vr85NkcBUbrrTdS6d1dfP0pmUIPiRcKVWALk3Zc9xdVZAAbZQxZB0ryXc5T5EWJFloBwZyge79XroXKmroH3y/6boc5/4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314889; c=relaxed/simple;
-	bh=acc9Ss2iDb1hyreUpZQaAXFY/dZRIT4CfkGH279SXKc=;
+	s=arc-20240116; t=1758314891; c=relaxed/simple;
+	bh=wCr9YSImzVN+jYjWExdIlYx1sSlWJ/K38wV8katzxD8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DcfJqFe/5K6QCj8M5QAPOwhY3sQAZlK59Sb9klpRXUYnTbKU98XlHY9WqnqwDze92IMz3LczYaRD3ThTHYF96Z57FM1rZ4r6Te9o3/RX9KEkLG/1CQ3EHUgGo/210MLDhW0qlurACn/37/20LlGOBQy6RE3qddunVPpjY3jzX+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUkfRp2/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kFdMUfjRNXAIi417yaellXZzrpt83JYiQbboN8gEO648Sg+Rh9e3+Q19buiH4tT7vD2Idvo5bfvI01R0SKdkJm5EDDAbwrnmy+dSr6+DzFe3tygKlaJ9qN5l7ErIKkFwBDGOU/XWfjiC9Yvak0s29ncSlZBNz2PAe2xTHw6FhAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1/AkRbI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUkfRp2/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBCBC4CEF9;
-	Fri, 19 Sep 2025 20:48:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1/AkRbI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DED0C4CEFA;
+	Fri, 19 Sep 2025 20:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314889;
-	bh=acc9Ss2iDb1hyreUpZQaAXFY/dZRIT4CfkGH279SXKc=;
+	s=k20201202; t=1758314890;
+	bh=wCr9YSImzVN+jYjWExdIlYx1sSlWJ/K38wV8katzxD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZUkfRp2/gb8Rf7CXmhihZtrUEwev6/iSgwc3uUcLP2BEoIp/Qc+QbDhKxguv9N+S8
-	 D+HsFyaHB1r76/5+YtYH3qnY7HK0RJwpfJLwH+bVhQ0C+Q05Kaao7o8R9NpWcHWl04
-	 ZQ7+PBH1T9fw1cZ+IEuXhTyU50jh+ejV0flJYm84ZBl0i0wynkUDo5GuVkBGFCocpj
-	 Fb9GT8AHZQBd8UewKAyhMCPhQ8eN+WfVt5AMpWKJmoZnE5VVMNz2SbVbmfWJ4izX35
-	 o/7iwe0i0nrfzjUwKuk/azicpvIZg6mE1Sbh5EZE36PY6TCJ7Fw2oCGGkyRsK/EwmS
-	 /BYrIrYC4dITA==
+	b=H1/AkRbIkazmo45WNw/Eu/iKIDXJLy2QI45tOKj2+DIQlF1FaOxRqGK0dUvzIfTGb
+	 IKxb6xSHqXvOJB9+HtK+R9vwSc0ysJDFJtp10i/expnafSYMBwto3P9MpTayb9NPbG
+	 95ltZdtzsPcmBPhg7igvQUD/1Yxy2Kj9RfAwFnxmW3c40aPmh6NWw/+DWpdvG7vZZ+
+	 V65e057+7hoh4imiyY8CQO7jjl3ycM2PffaiURk/d+Jg6I5L56+hy8JBB+fU2WdgSt
+	 ohgrm+prXxqgfekOmCcxDvovue06IZogAXdBLP1M3cZbmiWAiccwwDA4Se+6k35e8h
+	 4u+pUvRKtdSEQ==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 13/19] platform/x86: x86-android-tablets: use swnode_group instead of manual registering
-Date: Fri, 19 Sep 2025 22:47:36 +0200
-Message-ID: <20250919204742.25581-14-hansg@kernel.org>
+Subject: [PATCH v3 14/19] platform/x86: x86-android-tablets: Update my email address
+Date: Fri, 19 Sep 2025 22:47:37 +0200
+Message-ID: <20250919204742.25581-15-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
 References: <20250919204742.25581-1-hansg@kernel.org>
@@ -47,139 +47,146 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace manually calling software_node_register_node_group() from init()
-with the new swnode_group registration mechanism.
-
-Note this also fixes a missing software_node_unregister_node_group()
-for lenovo_yt3_swnodes.
+hdegoede@redhat.com will stop working soon, replace it with my kernel.org
+address.
 
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- .../platform/x86/x86-android-tablets/lenovo.c | 21 +++++--------------
- .../platform/x86/x86-android-tablets/other.c  | 14 ++-----------
- 2 files changed, 7 insertions(+), 28 deletions(-)
+ drivers/platform/x86/x86-android-tablets/asus.c               | 2 +-
+ drivers/platform/x86/x86-android-tablets/core.c               | 4 ++--
+ drivers/platform/x86/x86-android-tablets/dmi.c                | 2 +-
+ drivers/platform/x86/x86-android-tablets/lenovo.c             | 2 +-
+ drivers/platform/x86/x86-android-tablets/other.c              | 2 +-
+ drivers/platform/x86/x86-android-tablets/shared-psy-info.c    | 2 +-
+ drivers/platform/x86/x86-android-tablets/shared-psy-info.h    | 2 +-
+ drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c    | 2 +-
+ .../platform/x86/x86-android-tablets/x86-android-tablets.h    | 2 +-
+ 9 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+index 39eb2f9dc031..7d29c7654d21 100644
+--- a/drivers/platform/x86/x86-android-tablets/asus.c
++++ b/drivers/platform/x86/x86-android-tablets/asus.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ 
+ #include <linux/gpio/machine.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 5675e888d84f..15d216be0bed 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -567,6 +567,6 @@ static void __exit x86_android_tablet_exit(void)
+ }
+ module_exit(x86_android_tablet_exit);
+ 
+-MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
+ MODULE_DESCRIPTION("X86 Android tablets DSDT fixups driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 278c6d151dc4..ebba7400d5c9 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ 
+ #include <linux/dmi.h>
 diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 66617f6ff13e..1f325b2947ab 100644
+index 1f325b2947ab..832be02495b5 100644
 --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
 +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -436,6 +436,7 @@ static const struct software_node *lenovo_yoga_tab2_830_1050_swnodes[] = {
- 	&crystalcove_gpiochip_node,
- 	&arizona_gpiochip_node,
- 	&lenovo_yoga_tab2_830_1050_wm5102,
-+	&generic_lipo_hv_4v35_battery_node,
- 	NULL
- };
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
-@@ -448,7 +449,7 @@ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
- 	.pdev_info = lenovo_yoga_tab2_830_1050_pdevs,
- 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_830_1050_pdevs),
- 	.gpio_button_swnodes = lenovo_yoga_tab2_830_1050_lid_swnodes,
--	.swnode_group = generic_lipo_hv_4v35_battery_swnodes,
-+	.swnode_group = lenovo_yoga_tab2_830_1050_swnodes,
- 	.modules = bq24190_modules,
- 	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
- 	.init = lenovo_yoga_tab2_830_1050_init,
-@@ -534,24 +535,16 @@ static int __init lenovo_yoga_tab2_830_1050_init_codec(void)
- 		goto err_unregister_mappings;
- 	}
- 
--	ret = software_node_register_node_group(lenovo_yoga_tab2_830_1050_swnodes);
--	if (ret) {
--		ret = dev_err_probe(codec_dev, ret, "registering software nodes\n");
--		goto err_put_pinctrl;
--	}
--
- 	ret = device_add_software_node(codec_dev, &lenovo_yoga_tab2_830_1050_wm5102);
- 	if (ret) {
- 		ret = dev_err_probe(codec_dev, ret, "adding software node\n");
--		goto err_unregister_swnodes;
-+		goto err_put_pinctrl;
- 	}
- 
- 	lenovo_yoga_tab2_830_1050_codec_dev = codec_dev;
- 	lenovo_yoga_tab2_830_1050_codec_pinctrl = pinctrl;
- 	return 0;
- 
--err_unregister_swnodes:
--	software_node_unregister_node_group(lenovo_yoga_tab2_830_1050_swnodes);
- err_put_pinctrl:
- 	pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
- err_unregister_mappings:
-@@ -604,7 +597,6 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
- 	if (lenovo_yoga_tab2_830_1050_codec_dev) {
- 		device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
- 		put_device(lenovo_yoga_tab2_830_1050_codec_dev);
--		software_node_unregister_node_group(lenovo_yoga_tab2_830_1050_swnodes);
- 	}
- 
- 	if (lenovo_yoga_tab2_830_1050_codec_pinctrl) {
-@@ -812,7 +804,7 @@ const struct x86_dev_info lenovo_yoga_tab2_1380_info __initconst = {
- 	.pdev_info = lenovo_yoga_tab2_1380_pdevs,
- 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_pdevs),
- 	.gpio_button_swnodes = lenovo_yoga_tab2_830_1050_lid_swnodes,
--	.swnode_group = generic_lipo_hv_4v35_battery_swnodes,
-+	.swnode_group = lenovo_yoga_tab2_830_1050_swnodes,
- 	.modules = lenovo_yoga_tab2_1380_modules,
- 	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
- 	.init = lenovo_yoga_tab2_1380_init,
-@@ -1071,10 +1063,6 @@ static int __init lenovo_yt3_init(struct device *dev)
- 	intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0x9b, 0x02, 0xff);
- 	intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0xa0, 0x02, 0xff);
- 
--	ret = software_node_register_node_group(lenovo_yt3_swnodes);
--	if (ret)
--		return dev_err_probe(dev, ret, "registering software nodes\n");
--
- 	return 0;
- }
- 
-@@ -1083,6 +1071,7 @@ const struct x86_dev_info lenovo_yt3_info __initconst = {
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
- 	.spi_dev_info = lenovo_yt3_spi_devs,
- 	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
-+	.swnode_group = lenovo_yt3_swnodes,
- 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yt3_init,
- };
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index 1362f4167e3d..174f02322e52 100644
+index 174f02322e52..bc473979e4f6 100644
 --- a/drivers/platform/x86/x86-android-tablets/other.c
 +++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -895,7 +895,6 @@ static int xiaomi_mipad2_brightness_set(struct led_classdev *led_cdev,
- static int __init xiaomi_mipad2_init(struct device *dev)
- {
- 	struct led_classdev *led_cdev;
--	int ret;
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
- 	xiaomi_mipad2_led_pwm = devm_pwm_get(dev, "pwm_soc_lpss_2");
- 	if (IS_ERR(xiaomi_mipad2_led_pwm))
-@@ -912,16 +911,7 @@ static int __init xiaomi_mipad2_init(struct device *dev)
- 	/* Turn LED off during suspend */
- 	led_cdev->flags = LED_CORE_SUSPENDRESUME;
+ #include <linux/acpi.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+index 62f41c14e6ba..29fc466f76fe 100644
+--- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
++++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
--	ret = devm_led_classdev_register(dev, led_cdev);
--	if (ret)
--		return dev_err_probe(dev, ret, "registering LED\n");
--
--	return software_node_register_node_group(ktd2026_node_group);
--}
--
--static void xiaomi_mipad2_exit(void)
--{
--	software_node_unregister_node_group(ktd2026_node_group);
-+	return devm_led_classdev_register(dev, led_cdev);
- }
- 
- /*
-@@ -956,6 +946,6 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
- const struct x86_dev_info xiaomi_mipad2_info __initconst = {
- 	.i2c_client_info = xiaomi_mipad2_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
-+	.swnode_group = ktd2026_node_group,
- 	.init = xiaomi_mipad2_init,
--	.exit = xiaomi_mipad2_exit,
+ #include <linux/gpio/machine.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+index e5ba1c65d62b..149befba3330 100644
+--- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
++++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ #ifndef __PDX86_SHARED_PSY_INFO_H
+ #define __PDX86_SHARED_PSY_INFO_H
+diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+index 5d02af1c5aaa..2f8cd8d9e0ab 100644
+--- a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
++++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+@@ -256,6 +256,6 @@ static struct i2c_driver atla10_ec_driver = {
  };
+ module_i2c_driver(atla10_ec_driver);
+ 
+-MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
+ MODULE_DESCRIPTION("Battery driver for Vexia EDU ATLA 10 tablet EC");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 4bf4bcdf50c0..8e7d04bcb3f8 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ #ifndef __PDX86_X86_ANDROID_TABLETS_H
+ #define __PDX86_X86_ANDROID_TABLETS_H
 -- 
 2.51.0
 
