@@ -1,113 +1,270 @@
-Received: from mail0.khirnov.net (red.khirnov.net [176.97.15.12])
+Received: from fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com [35.158.23.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434A72E040A;
-	Fri, 19 Sep 2025 07:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.97.15.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E585E2F9D92;
+	Fri, 19 Sep 2025 10:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.158.23.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758267184; cv=none; b=tTn829BMxwPvmTUARh7rQ9upIigk1f+LeSlti/dliccJ+G76PITSkPKxLT6IN9ZLL6SFJ5eDoDcOWV31osMRrt0lhf8JiwnHiCoQ4OGIK0WL3toU1xfG2ZzpULFOz7dCkE1Pg8F5A4vHkPzbCLg6+FvBAwiPByPT4AvRfJTo8XI=
+	t=1758277097; cv=none; b=bJLy4CScG7POYyXc4jEFc/AcXh5uTQm+v9tmgZ3uZmVSY48djaXgTIjz7Z/z5yj/G8dhHfP7CQCVJs/q2OgxlqJceVQE3gLABFl98s/LskGals93iZm5qAaPfFJ2+4PJlkGAtkd56k8zlO5ujiBE/6/jEPkCWI1KPvrB2wz7o2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758267184; c=relaxed/simple;
-	bh=KiOt8ViSetF92dGbwwJJbXNBeCN9qgGrUeYjqjUWq84=;
-	h=Content-Type:Subject:From:To:Cc:In-Reply-To:References:Date:
-	 Message-ID:MIME-Version; b=r5kBWtMtfyjLf6qrw9Wo+gqBvJvEVAafvM/cz8+v8vvBANvdYq1C06OFIJr9HXs7GJo7eXJPRL6btkHcSw+08cHRB6u2Z9zrIwkb0S6bDral7kiBOJXXRm31a36Qeul67Z4zJePSWRb0rx3wMjP7gJOQzpTEsgM4iyth9xtXhZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net; spf=pass smtp.mailfrom=khirnov.net; dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b=KFw2AhVf; arc=none smtp.client-ip=176.97.15.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=khirnov.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khirnov.net
+	s=arc-20240116; t=1758277097; c=relaxed/simple;
+	bh=YJdsYm70lqmrjZhD7jBaV8cdfUCAbDW2tpB1Od6r91s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rfusbx47aIUmLFcGr5FlFXMRAqoIPohepypI/ifHBLJwrVC8UL2ZrbzzhtH+izcjKNnFRDm8tEdqRw9C1/Xa83TT28buQVaNxOWVtHlgqwHwW3sRLzPYM6JPV9ms1Osn8OW47igbPJkVlkI9LW7MF0pATRWXeKRxSQX+KF6D26Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=rwwzqWKh; arc=none smtp.client-ip=35.158.23.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=khirnov.net header.i=@khirnov.net header.b="KFw2AhVf"
-Authentication-Results: mail0.khirnov.net;
-	dkim=pass (2048-bit key; unprotected) header.d=khirnov.net header.i=@khirnov.net header.a=rsa-sha256 header.s=mail header.b=KFw2AhVf;
-	dkim-atps=neutral
-Received: from localhost (localhost [IPv6:::1])
-	by mail0.khirnov.net (Postfix) with ESMTP id D4A6F245F5C;
-	Fri, 19 Sep 2025 09:23:55 +0200 (CEST)
-Received: from mail0.khirnov.net ([IPv6:::1])
- by localhost (mail0.khirnov.net [IPv6:::1]) (amavis, port 10024) with ESMTP
- id H9t21pwlKzaw; Fri, 19 Sep 2025 09:23:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=khirnov.net; s=mail;
-	t=1758266635; bh=KiOt8ViSetF92dGbwwJJbXNBeCN9qgGrUeYjqjUWq84=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
-	b=KFw2AhVfxRfL3h3d4/47fe/skYYyncitBk2ObWWwSAfbJgIPg7UMBCUGSWtKoo6jZ
-	 YsDsn03iSY0tT9380LHIoK98yTcGAgtXeC0TL5QxZA5C9Q79hDLHO5qIr5Mbv8GqEN
-	 0yZNpP+tN0wT/6R4RoTLpWr8X05Kp9t8IPh+IutIWVmCkKwrWB8dbNl0sndeRvpD8Q
-	 oVavc+qOvhCQJjssm0nHF+J4bNoXr3MVHqZkGTRbYB6H3P6HM5IY3BQt3YrMNX1n/0
-	 uQfXtL91W3unYfw9iXOdMTdK7fVKr/jmOkWz5y2MabBNlwB3GN98dFxK8ypau8eW77
-	 r9nwI7OZGBiXw==
-Received: from lain.khirnov.net (lain.khirnov.net [IPv6:2001:67c:1138:4306::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
-	(Client CN "lain.khirnov.net", Issuer "smtp.khirnov.net SMTP CA" (verified OK))
-	by mail0.khirnov.net (Postfix) with ESMTPS id DFA05245F57;
-	Fri, 19 Sep 2025 09:23:54 +0200 (CEST)
-Received: by lain.khirnov.net (Postfix, from userid 1000)
-	id C25F51601BA; Fri, 19 Sep 2025 09:23:54 +0200 (CEST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Subject:  Re: [PATCH v2 1/2] Input: allocate a keycode for Fn+space
-From:  Anton Khirnov <anton@khirnov.net>
-To:  Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:  Corentin Chary <corentin.chary@gmail.com>,
- "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
- Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org
-In-Reply-To:
-  <u3qzdpgoe2appwnmv2rkcmyg6htrmltna3geymp7llootdwbts@ycmhljii34bz>
-References:  <20250714150756.21197-1-anton@khirnov.net>
- <20250714150756.21197-2-anton@khirnov.net>
- <u3qzdpgoe2appwnmv2rkcmyg6htrmltna3geymp7llootdwbts@ycmhljii34bz>
-Date: Fri, 19 Sep 2025 09:23:54 +0200
-Message-ID: <175826663475.18450.7037268164142228744@lain.khirnov.net>
-User-Agent: alot/0.8.1
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="rwwzqWKh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1758277095; x=1789813095;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BxXd7aLvDai7evuJPWIvJpLyCQkjko3tn6jQCrrWhJk=;
+  b=rwwzqWKh6WYopnwgVXDtgH4CB1YKNPIN2CKQ2pI1rK3+ZNCFWLuq6XfQ
+   XUlb94TVuLV3RemJnDkAFODREwXdMc/QGF61UxXm2Qu3+PoTbw5eRw4Qr
+   QwupOaSSlgfDh/0mEfXZ9NqHyuYu2mcS4Q2CfBX10ckEBpBBNDfEwHgo/
+   OSQFJ3cQcVlM6TgG7L6KLoz0k6UInx8geQnrwvD7pGENxaADL10M7lUoo
+   HSYPKMTng97MaD69v1ynEfFptlPT8P9N09cDbMMo8WzmtQ7daJs2IWiZp
+   vDEMALpM/1BciPbQAyCEiVQvL0bggUq2Fq8maieI7mQjCezxF7dOWL2Td
+   w==;
+X-CSE-ConnectionGUID: kpLok2gGQZaUNR51qNOOOA==
+X-CSE-MsgGUID: O1O53yWdRsCFciLE9oPAkQ==
+X-IronPort-AV: E=Sophos;i="6.18,277,1751241600"; 
+   d="scan'208";a="2371468"
+Received: from ip-10-6-11-83.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.11.83])
+  by internal-fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2025 10:18:03 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [54.240.197.233:23074]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.8.212:2525] with esmtp (Farcaster)
+ id 2cb163fe-6002-4c0e-9495-7cf46795baf7; Fri, 19 Sep 2025 10:18:03 +0000 (UTC)
+X-Farcaster-Flow-ID: 2cb163fe-6002-4c0e-9495-7cf46795baf7
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Fri, 19 Sep 2025 10:18:02 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 19 Sep 2025
+ 10:17:34 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>,
+	<anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>,
+	<luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>,
+	<tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>,
+	<james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>,
+	<sunpeng.li@amd.com>, <alexander.deucher@amd.com>,
+	<christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+	<evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>,
+	<mihail.atanassov@arm.com>, <brian.starkey@arm.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>,
+	<jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>,
+	<dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>,
+	<dm-devel@redhat.com>, <rajur@chelsio.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+	<joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>,
+	<hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>,
+	<artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>,
+	<martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>,
+	<gregkh@linuxfoundation.org>, <clm@fb.com>, <josef@toxicpanda.com>,
+	<dsterba@suse.com>, <jack@suse.com>, <tytso@mit.edu>,
+	<adilger.kernel@dilger.ca>, <dushistov@mail.ru>,
+	<luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>,
+	<sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>,
+	<linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>,
+	<akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>,
+	<yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>,
+	<fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>,
+	<willy@infradead.org>, <farbere@amazon.com>, <sashal@kernel.org>,
+	<ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>,
+	<herve.codina@bootlin.com>, <Jason@zx2c4.com>, <bvanassche@acm.org>,
+	<keescook@chromium.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>,
+	<linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+	<freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>,
+	<linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>,
+	<linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>,
+	<linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <tipc-discussion@lists.sourceforge.net>,
+	<stable@vger.kernel.org>
+CC: <jonnyc@amazon.com>
+Subject: [PATCH 00/27 5.10.y] Backport minmax.h updates from v6.17-rc6
+Date: Fri, 19 Sep 2025 10:17:00 +0000
+Message-ID: <20250919101727.16152-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWC001.ant.amazon.com (10.13.139.202) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Hi Dmitry,
-Quoting Dmitry Torokhov (2025-09-19 07:12:38)
-> Hi Anton,
->=20
-> On Mon, Jul 14, 2025 at 05:07:57PM +0200, Anton Khirnov wrote:
-> > The Asus ExpertBook B9 laptop sends a WMI event when Fn+space is
-> > pressed. Since I could not find any information on what this combination
-> > is intended to do on this or any other Asus laptop, allocate a
-> > KEY_FN_SPACE keycode for it.
-> >=20
-> > Signed-off-by: Anton Khirnov <anton@khirnov.net>
-> > ---
-> >  include/uapi/linux/input-event-codes.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/=
-input-event-codes.h
-> > index 3b2524e4b667..a49b0782fd8a 100644
-> > --- a/include/uapi/linux/input-event-codes.h
-> > +++ b/include/uapi/linux/input-event-codes.h
-> > @@ -548,6 +548,7 @@
-> >  #define KEY_FN_S		0x1e3
-> >  #define KEY_FN_B		0x1e4
-> >  #define KEY_FN_RIGHT_SHIFT	0x1e5
-> > +#define KEY_FN_SPACE		0x1e6
->=20
-> I'd rather we did not add more codes with no defined meaning. I regret
-> that we have KEY_FN_* (with the exception of KEY_FN itself). Since
-> nobody knows what this key is supposed to do maybe map it to
-> KEY_RESERVED and whoever wants to use it can map it to a concrete key
-> code via udev?
+This series includes a total of 27 patches, to align minmax.h of
+v5.15.y with v6.17-rc6.
 
-The problem with that approach is that on this laptop we have TWO keys
-with unknown meanings - fn+space and fn+f (KEY_FN_F already exists).
-Using KEY_RESERVED for one of them would be inconsistent then.
+The set consists of 24 commits that directly update minmax.h:
+1) 92d23c6e9415 ("overflow, tracing: Define the is_signed_type() macro
+   once")
+2) 5efcecd9a3b1 ("minmax: sanity check constant bounds when clamping")
+3) 2122e2a4efc2 ("minmax: clamp more efficiently by avoiding extra
+   comparison")
+4) f9bff0e31881 ("minmax: add in_range() macro")
+5) c952c748c7a9 ("minmax: Introduce {min,max}_array()")
+6) 5e57418a2031 ("minmax: deduplicate __unconst_integer_typeof()")
+7) f6e9d38f8eb0 ("minmax: fix header inclusions")
+8) d03eba99f5bf ("minmax: allow min()/max()/clamp() if the arguments
+   have the same signedness.")
+9) f4b84b2ff851 ("minmax: fix indentation of __cmp_once() and
+   __clamp_once()")
+10) 4ead534fba42 ("minmax: allow comparisons of 'int' against 'unsigned
+    char/short'")
+11) 867046cc7027 ("minmax: relax check to allow comparison between
+    unsigned arguments and signed constants")
+12) 3a7e02c040b1 ("minmax: avoid overly complicated constant
+    expressions in VM code")
+14) 017fa3e89187 ("minmax: simplify and clarify min_t()/max_t()
+    implementation")
+15) 1a251f52cfdc ("minmax: make generic MIN() and MAX() macros
+    available everywhere")
+18) dc1c8034e31b ("minmax: simplify min()/max()/clamp()
+    implementation")
+19) 22f546873149 ("minmax: improve macro expansion and type
+    checking")
+20) 21b136cc63d2 ("minmax: fix up min3() and max3() too")
+21) 71ee9b16251e ("minmax.h: add whitespace around operators and after
+    commas")
+22) 10666e992048 ("minmax.h: update some comments")
+23) b280bb27a9f7 ("minmax.h: reduce the #define expansion of min(),
+    max() and clamp()")
+24) a5743f32baec ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi
+    test in clamp()")
+25) c3939872ee4a ("minmax.h: move all the clamp() definitions after the
+    min/max() ones")
+26) 495bba17cdf9 ("minmax.h: simplify the variants of clamp()")
+27) 2b97aaf74ed5 ("minmax.h: remove some #defines that are only
+    expanded once")
 
-Could you elaborate on why are you against KEY_FN_* codes? I understand
-they can be abused, but in some cases (such as this one) it genuinely
-seems the least bad way to characterize a key.
+2 prerequisite commits that adjust users of MIN and MAX macros (to
+prevent compilation issues):
+13) 4477b39c32fd ("minmax: add a few more MIN_T/MAX_T users")
+17) cb04e8b1d2f2 ("minmax: don't use max() in situations that want a C
+    constant expression")
 
-Cheers,
---=20
-Anton Khirnov
+1 additional commit introduced to resolve a build failures during the
+backport:
+16) lib: zstd: drop local MIN/MAX macros in favor of generic ones
+
+The primary motivation is to bring in commit (8).
+In mainline, this change allows min()/max()/clamp() to accept mixed
+argument types when both share the same signedness.
+Backported patches to v5.10.y that use such forms trigger compiler
+warnings, which in turn cause build failures when -Werror is enabled.
+
+Originaly I aligned 5.10.y to 5.15.y, but David Laight commented that I
+need to pick up the later changes (from Linus) as well.
+
+Andy Shevchenko (2):
+  minmax: deduplicate __unconst_integer_typeof()
+  minmax: fix header inclusions
+
+Bart Van Assche (1):
+  overflow, tracing: Define the is_signed_type() macro once
+
+David Laight (11):
+  minmax: allow min()/max()/clamp() if the arguments have the same
+    signedness.
+  minmax: fix indentation of __cmp_once() and __clamp_once()
+  minmax: allow comparisons of 'int' against 'unsigned char/short'
+  minmax: relax check to allow comparison between unsigned arguments and
+    signed constants
+  minmax.h: add whitespace around operators and after commas
+  minmax.h: update some comments
+  minmax.h: reduce the #define expansion of min(), max() and clamp()
+  minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
+  minmax.h: move all the clamp() definitions after the min/max() ones
+  minmax.h: simplify the variants of clamp()
+  minmax.h: remove some #defines that are only expanded once
+
+Eliav Farber (1):
+  lib: zstd: drop local MIN/MAX macros in favor of generic ones
+
+Herve Codina (1):
+  minmax: Introduce {min,max}_array()
+
+Jason A. Donenfeld (2):
+  minmax: sanity check constant bounds when clamping
+  minmax: clamp more efficiently by avoiding extra comparison
+
+Linus Torvalds (8):
+  minmax: avoid overly complicated constant expressions in VM code
+  minmax: add a few more MIN_T/MAX_T users
+  minmax: simplify and clarify min_t()/max_t() implementation
+  minmax: make generic MIN() and MAX() macros available everywhere
+  minmax: don't use max() in situations that want a C constant
+    expression
+  minmax: simplify min()/max()/clamp() implementation
+  minmax: improve macro expansion and type checking
+  minmax: fix up min3() and max3() too
+
+Matthew Wilcox (Oracle) (1):
+  minmax: add in_range() macro
+
+ arch/arm/mm/pageattr.c                        |   6 +-
+ arch/um/drivers/mconsole_user.c               |   2 +
+ arch/x86/mm/pgtable.c                         |   2 +-
+ drivers/edac/sb_edac.c                        |   4 +-
+ drivers/edac/skx_common.h                     |   1 -
+ .../drm/amd/display/modules/hdcp/hdcp_ddc.c   |   2 +
+ .../drm/amd/pm/powerplay/hwmgr/ppevvmath.h    |  14 +-
+ .../drm/arm/display/include/malidp_utils.h    |   2 +-
+ .../display/komeda/komeda_pipeline_state.c    |  24 +-
+ drivers/gpu/drm/drm_color_mgmt.c              |   2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |   6 -
+ drivers/gpu/drm/radeon/evergreen_cs.c         |   2 +
+ drivers/hwmon/adt7475.c                       |  24 +-
+ drivers/input/touchscreen/cyttsp4_core.c      |   2 +-
+ drivers/md/dm-integrity.c                     |   2 +-
+ drivers/media/dvb-frontends/stv0367_priv.h    |   3 +
+ .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   |  18 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +-
+ drivers/net/fjes/fjes_main.c                  |   4 +-
+ drivers/nfc/pn544/i2c.c                       |   2 -
+ drivers/platform/x86/sony-laptop.c            |   1 -
+ drivers/scsi/isci/init.c                      |   6 +-
+ .../pci/hive_isp_css_include/math_support.h   |   5 -
+ fs/btrfs/misc.h                               |   2 -
+ fs/btrfs/tree-checker.c                       |   2 +-
+ fs/ext2/balloc.c                              |   2 -
+ fs/ext4/ext4.h                                |   2 -
+ fs/ufs/util.h                                 |   6 -
+ include/linux/compiler.h                      |  15 +
+ include/linux/minmax.h                        | 267 ++++++++++++++----
+ include/linux/overflow.h                      |   1 -
+ include/linux/trace_events.h                  |   2 -
+ kernel/trace/preemptirq_delay_test.c          |   2 -
+ lib/btree.c                                   |   1 -
+ lib/decompress_unlzma.c                       |   2 +
+ lib/logic_pio.c                               |   3 -
+ lib/vsprintf.c                                |   2 +-
+ lib/zstd/zstd_internal.h                      |   2 -
+ mm/zsmalloc.c                                 |   1 -
+ net/ipv4/proc.c                               |   2 +-
+ net/ipv6/proc.c                               |   2 +-
+ net/netfilter/nf_nat_core.c                   |   6 +-
+ net/tipc/core.h                               |   2 +-
+ net/tipc/link.c                               |  10 +-
+ 44 files changed, 306 insertions(+), 164 deletions(-)
+
+-- 
+2.47.3
+
