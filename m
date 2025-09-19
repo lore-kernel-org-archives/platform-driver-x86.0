@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86246274FFD
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B7A28314D
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314896; cv=none; b=oi2B9pDXs4zK1ww67ZhEWCW+xqYtR9J56pdq+4TSi51tjxc3gtTfz/B1C9DWDWobHs80a8z229HJSWi2HuojJ/ZxPPaIHOiL7ljGGoHKDG+XF3zJzEXdlG3Wri6/Pk0vA+DVtsSUv+WDU4N1M17ayhEVEI2LVcYMeHo+kSfqWxQ=
+	t=1758314898; cv=none; b=S/Bl2vk/PQKTWHpUccD2Y5MlooBXwU1IwmJGiU+ugTL1UPJ/GTL9CG4qK/I5W+IG3aMMPWNnMOzdccyNYCtxEvLP2LmoQILcD34+zGDPT9/nUPVIwQvep+wz2KHG+jEPhPFlYOFOLob21cSqkBQhIqgYr45Ht61b/6Y441YyKh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314896; c=relaxed/simple;
-	bh=wWULpO+isX7u3ZPWRizCh6enKm0vnojMqlxgHL1WtWE=;
+	s=arc-20240116; t=1758314898; c=relaxed/simple;
+	bh=fp3FpPidzwczID0o7kssHr2k0Co4IP8npmoDJJZ9SAU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vn2NBMghy++87fgRqMCmw2tPnuNz569xu5geKiICaKaLjjoyQDD2n81vc4uvQ2rX0pS6kpxBsZ6KzaaVVtS8ppLo2TwbxPp11tjCm9tugSpyMkRSInkyZPS9xEkmGt8M2/Z6Conm+wkYq/iZM7m3Cp+4q1FGHWWqLUrbXgQv8ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oi5xY6Un; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qt3lc29sz+XMrB6DDfKE7J8o7dRvJpQueg2m7bHVZGrkPPogB7lfhba9dwdDNZaOoP979RMxopvpIBLR2/HJZ1gcKrSueSWtjOZ8QhJrSGBFPJ5UEe1XHUFzQTlXD5wJlzZ1C3Ab3fal0zAeQiSkPYRCEfvnHISSuSN4mAPPx2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmzLCXbd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oi5xY6Un"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035FCC4CEF7;
-	Fri, 19 Sep 2025 20:48:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmzLCXbd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8138C4CEF0;
+	Fri, 19 Sep 2025 20:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314896;
-	bh=wWULpO+isX7u3ZPWRizCh6enKm0vnojMqlxgHL1WtWE=;
+	s=k20201202; t=1758314898;
+	bh=fp3FpPidzwczID0o7kssHr2k0Co4IP8npmoDJJZ9SAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Oi5xY6Ungbqo0ie7Ce2jT/DhzbbmZh5M/WuEU4M7eQPxuTNtl69hFczvDobFGpmSw
-	 lQ9vLnsv6eWZtIyFQfzVLcQkkToC8VSkDVDuOoOCw1HkH0kjFh5K742dQWkAyiabEp
-	 bMZ2UgHl2tDn7XBRanUAULJXyfQG/mZRTlLJOr9OXBHY05ta7yW+sCAN5TU7Sd/HnX
-	 lAGegp4Cw1g83LCqa05ItdIqg3NhI9LU7WXl4YRy4w44Gm+uXru0JQDVw6quQW0lyv
-	 p9tr5/k3rVWZ4XTmzwJIFylGtQl+QHzLh8EHnQ2gcvVgrDcS8NaMVfxuP4/BuygXfy
-	 SXN8SRc+pnA8Q==
+	b=lmzLCXbdPp/xF1sogmjZy18Xb7/IsrXxv5ecG47hcxPzjFgdRbqQNt+u5ZCkOhJ+D
+	 mW81AN3MnQypIQhqFBt1UQyKo0OL2Ngldt5YSlp6j/FcSkANKd8NVs9f9H1MYrNYT5
+	 Esj1zPZsc/cGmW31we4k2yMLnezTMRodMnw3ATBNM3EZMWmgBRVACKKQZydXR2/o0z
+	 w8RD2vsoYqbUfBm8qnd6sVTbWbaVMFUQA0DjRoeVCnM73J+JCgy3yW96lzlrSGuabC
+	 FXtT6Tb+Dx6r1slavGl6JQ40BhVtD3EbWUj670ipOp22Ap4WSOOTFxibH0509fUP8V
+	 XUoiyH9KtRudA==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 17/19] platform/x86: x86-android-tablets: Simplify lenovo_yoga_tab2_830_1050_exit()
-Date: Fri, 19 Sep 2025 22:47:40 +0200
-Message-ID: <20250919204742.25581-18-hansg@kernel.org>
+Subject: [PATCH v3 18/19] platform/x86: x86-android-tablets: Fix modules lists for Lenovo devices
+Date: Fri, 19 Sep 2025 22:47:41 +0200
+Message-ID: <20250919204742.25581-19-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
 References: <20250919204742.25581-1-hansg@kernel.org>
@@ -47,41 +47,88 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-lenovo_yoga_tab2_830_1050_exit() only gets called after a successful
-lenovo_yoga_tab2_830_1050_init() call so there is no need to check
-if lenovo_yoga_tab2_830_1050_codec_[dev|pinctrl] are set.
+2 fixes for Lenovo tablets:
 
-Also change the exit() order to be the exact reverse of init().
+- The bq24190 charger on the Lenovo Yoga Tab2 830/1050 devices does not use
+  the crystal-cove PMIC charger IRQ, so these shouldn't use bq24190_modules
+  as that includes "intel_crystal_cove_charger"
+
+- Both the Tab2 and the Tab3 devices have a SPI audio-codec which init()
+  attaches properties to, resp. the whole SPI device gets instantiated by
+  the x86-android-tablets code. This requires the "spi_pxa2xx_platform"
+  module to be loaded before init() runs
 
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- drivers/platform/x86/x86-android-tablets/lenovo.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ .../platform/x86/x86-android-tablets/lenovo.c | 21 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 832be02495b5..08cabaa5e0c0 100644
+index 08cabaa5e0c0..e3d3a8290949 100644
 --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
 +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -594,15 +594,10 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
- {
- 	unregister_sys_off_handler(lenovo_yoga_tab2_830_1050_sys_off_handler);
+@@ -443,6 +443,12 @@ static const struct software_node *lenovo_yoga_tab2_830_1050_swnodes[] = {
+ static int __init lenovo_yoga_tab2_830_1050_init(struct device *dev);
+ static void lenovo_yoga_tab2_830_1050_exit(void);
  
--	if (lenovo_yoga_tab2_830_1050_codec_dev) {
--		device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
--		put_device(lenovo_yoga_tab2_830_1050_codec_dev);
--	}
++static const char * const lenovo_yoga_tab2_modules[] __initconst = {
++	"spi_pxa2xx_platform",	/* For the SPI codec device */
++	"bq24190_charger",	/* For the Vbus regulator for int3496/lc824206xa */
++	NULL
++};
++
+ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
+ 	.i2c_client_info = lenovo_yoga_tab2_830_1050_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(lenovo_yoga_tab2_830_1050_i2c_clients),
+@@ -450,7 +456,7 @@ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
+ 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_830_1050_pdevs),
+ 	.gpio_button_swnodes = lenovo_yoga_tab2_830_1050_lid_swnodes,
+ 	.swnode_group = lenovo_yoga_tab2_830_1050_swnodes,
+-	.modules = bq24190_modules,
++	.modules = lenovo_yoga_tab2_modules,
+ 	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ 	.init = lenovo_yoga_tab2_830_1050_init,
+ 	.exit = lenovo_yoga_tab2_830_1050_exit,
+@@ -767,11 +773,6 @@ static const struct platform_device_info lenovo_yoga_tab2_1380_pdevs[] __initcon
+ 	},
+ };
+ 
+-static const char * const lenovo_yoga_tab2_1380_modules[] __initconst = {
+-	"bq24190_charger",            /* For the Vbus regulator for lc824206xa */
+-	NULL
+-};
 -
--	if (lenovo_yoga_tab2_830_1050_codec_pinctrl) {
--		pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
--		pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
--	}
-+	device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
-+	pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
-+	pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
-+	put_device(lenovo_yoga_tab2_830_1050_codec_dev);
+ static int __init lenovo_yoga_tab2_1380_init(struct device *dev)
+ {
+ 	int ret;
+@@ -800,7 +801,7 @@ const struct x86_dev_info lenovo_yoga_tab2_1380_info __initconst = {
+ 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_pdevs),
+ 	.gpio_button_swnodes = lenovo_yoga_tab2_830_1050_lid_swnodes,
+ 	.swnode_group = lenovo_yoga_tab2_830_1050_swnodes,
+-	.modules = lenovo_yoga_tab2_1380_modules,
++	.modules = lenovo_yoga_tab2_modules,
+ 	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ 	.init = lenovo_yoga_tab2_1380_init,
+ 	.exit = lenovo_yoga_tab2_830_1050_exit,
+@@ -1061,12 +1062,18 @@ static int __init lenovo_yt3_init(struct device *dev)
+ 	return 0;
  }
  
- /*
++static const char * const lenovo_yt3_modules[] __initconst = {
++	"spi_pxa2xx_platform",	/* For the SPI codec device */
++	NULL
++};
++
+ const struct x86_dev_info lenovo_yt3_info __initconst = {
+ 	.i2c_client_info = lenovo_yt3_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
+ 	.spi_dev_info = lenovo_yt3_spi_devs,
+ 	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
+ 	.swnode_group = lenovo_yt3_swnodes,
++	.modules = lenovo_yt3_modules,
+ 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
+ 	.init = lenovo_yt3_init,
+ };
 -- 
 2.51.0
 
