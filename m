@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F392B1FB3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C202E1FB3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 20:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314866; cv=none; b=qWrlzQ/WIG1JXZeBcb+mtqUQygo/Z9jICfV+x55opU7/YMBgTFBLpNrJugsCFFz0Fo7lM0mFnwY/LNyVt7EGCHdp6GxQ0uKufyHhuNVXgI3WmktyfIzw/bsTXoqjYHvytC6thYTwsEq583Q8KA/9ewtb6pJNbKw1pOloYfW4tjQ=
+	t=1758314867; cv=none; b=nzoUfsBcZHWPUVgI3D0/JUlUZemqsU7yVK3n003eUvsEFU6/afcqFvohbdybmNl0/TDP/KaD45+p/3bPf/sT4ZOguaID4dTUT3WCecphMTSdCXd6EOvBFGZeAjcQPn6x/ISjuoFzUZewXpMnZldMb5Vr5HvqeRUcg+ONUlSkcGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314866; c=relaxed/simple;
-	bh=aT85lW44Erv3qIhOWH/eUsOSkwK6QwnI3JvL+m13Qrk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KWDQZQpo5RUgtv/sOmanAcF2D0MeV4359ZtDI/XwPF6pQqYqMvjlWR+X9SiLDUb5lC2x7nxnab4t/2I/P7IPkzTJQBySvrYRY4IXox/+0CwL+Seb6qGRXYOAzmeN0PNBEWMob/YXg5uy74OhtCFx/DgT819lFUwNPjkGUXXquuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjEmEMr7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758314867; c=relaxed/simple;
+	bh=6HAqw60/v6IH/hHWp0sEOaPA8jTBoF7J2DaCHlk0eGw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nkaY6V7CKb4F1A/iLiSRUlbqlTlrv2QpTvYeUNoAqfcHkwEyFaDLMlgMt4AV3fMfj3J1kXBb4LaLRieVST2QaUU2CZ0MVXV/wadreCFuWuEF0oWmdH/xa19qsgXtdNTNfid2FnrEQvslSouD2uuIFrQMzrVf1w8uux/qV8Pza10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AaWn31fF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjEmEMr7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9FAC4CEF0;
-	Fri, 19 Sep 2025 20:47:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AaWn31fF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F57C4CEF9;
+	Fri, 19 Sep 2025 20:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314865;
-	bh=aT85lW44Erv3qIhOWH/eUsOSkwK6QwnI3JvL+m13Qrk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cjEmEMr7Itw671+Vpl93Ms3hr1TjC4jRs7Oz4RVYurZCmmssmn71wwxsfJ4rMBKYJ
-	 etquWhnZSfrG1Ypw863fcHgmGgbJ1wXJs/Kd6ZT3uCjIbzrzLGn6PZmzPr60H0zXdC
-	 zPOOwIl2A0XlguuDS6j0veDkpy71yvPoJUdF1Ue83TKVH1bWMLRCR9yPimEJ+dzyH4
-	 FA3d5x3xmnh/bj9C8MjuzI/3wYQ7ppVWKqtxYPgTCJeygGqqDxW2eVN8elQMfFaTJN
-	 /l/dZeUhWwP6heEAUSRsNetF6sozpkhAB8Tp5zJFSlJNSZPRxjK8yHebuMT6Tg/ib0
-	 cgBgAMdTUjH6g==
+	s=k20201202; t=1758314867;
+	bh=6HAqw60/v6IH/hHWp0sEOaPA8jTBoF7J2DaCHlk0eGw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AaWn31fFLEnzzNle1aweRhkWBelKb6rjC7PUgcylDFlDI3SJmFOdfUREUU73qzt6v
+	 zClZ3wksyz1nhx4cj/VAM7tFcGEjuf4a02mhp9G89owzfNFVVYHVi6LwjClVJuO8T1
+	 4ZV6AfW1qd1jhv04CDJ02JcPw4wqM9ONPQmoc9g5v5wEnkOxrcqz0fu57U2vfkD3hd
+	 wX4REA58NEubMOuZOfzAmtf/0Sw1I8wJ07NnELsnVNbQLqhMuGgT8V49Kg8SIQKcHt
+	 GWuoJOYF5LmpF65nIkre7jEc7ylTnD2bNRl/QOjtIzwTo6Yn5TeaiRr48hr1Siosrg
+	 An5hldvn0Daag==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -32,10 +33,12 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 00/19] x86-android-tablets: convert to use GPIO references + Acer A1-840 support
-Date: Fri, 19 Sep 2025 22:47:23 +0200
-Message-ID: <20250919204742.25581-1-hansg@kernel.org>
+Subject: [PATCH v3 01/19] platform/x86: x86-android-tablets: convert Goodix devices to GPIO references
+Date: Fri, 19 Sep 2025 22:47:24 +0200
+Message-ID: <20250919204742.25581-2-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
+References: <20250919204742.25581-1-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -44,109 +47,392 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Dmitry's v2 cover-letter:
+Now that gpiolib supports software nodes to describe GPIOs, switch the
+driver away from using GPIO lookup tables for Goodix touchscreens to
+using PROPERTY_ENTRY_GPIO() to keep all touchscreen properties together.
 
-"This series came about because now software nodes can be used to
-describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
-eventually get rid of gpio_keys_platform_data structure.
+Since the tablets are using either Baytrail or Cherryview GPIO
+controllers x86_dev_info structure has been extended to carry gpiochip
+type information so that the code can instantiate correct set of
+software nodes representing the GPIO chip.
 
-So while I was doing the conversions from GPIO_LOOKUP() tables for
-gpio_keys devices I decided to convert the rest of them as well. Maybe
-some time in the future we can drop support for GPIO_LOOKUP() and rely
-on device properties exclusively."
+Because this adds a new point of failure in x86_android_tablet_probe(),
+x86_android_tablet_remove() is rearranged to handle cases where battery
+swnode has not been registered yet, and registering of GPIO lookup
+tables is moved earlier as it can not fail.
 
-Changes in v3:
-- Add missing pinctrl_put() in lenovo_yoga_tab2_830_1050_init_codec()
-  error-exit paths after the pinctrl_get_select() succeeds
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Tested-by: Hans de Goede <hansg@kernel.org>
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Hans de Goede <hansg@kernel.org>
+---
+ .../platform/x86/x86-android-tablets/asus.c   | 23 ++++---
+ .../platform/x86/x86-android-tablets/core.c   | 69 ++++++++++++++++---
+ .../platform/x86/x86-android-tablets/lenovo.c | 23 ++++---
+ .../platform/x86/x86-android-tablets/other.c  | 37 ++--------
+ .../x86-android-tablets/x86-android-tablets.h | 11 +++
+ 5 files changed, 105 insertions(+), 58 deletions(-)
 
-- Adding a swnode to the yt3 spi device changes the name of the SPI/codec
-  device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver looks
-  up the code by name, update the machine driver to use the new name.
-
-- Make yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
-  the platform-device to the serdev it creates to fix this.
-
-- Fix the commit message of "platform/x86: x86-android-tablets: convert
-  gpio_keys devices to GPIO references" which contained a stray reference
-  to wm5102.
-
-New patches in v3:
-
-- Change sw_bat register mechanism into a generic swnode_group mechanism
-
-- Use swnode_group mechanism to register groups needed, instead of having
-  init() callbacks manually do this
-
-- Changed my email address in the driver to hansg@kernel.org
-
-- Rebased "platform/x86: x86-android-tablets: Add support for Acer A1-840
-  tablet" on top, switched that to also use software-nodes for GPIOs and
-  added it to this series
-
-- Some Lenovo Yoga Tab 2 support fixes
-
-Regards,
-
-Hans
-
-
-
-Dmitry Torokhov (11):
-  platform/x86: x86-android-tablets: convert Goodix devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert Wacom devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert HiDeep devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert Novatek devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert EDT devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert int3496 devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert wm1502 devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert HID-I2C devices to GPIO
-    references
-  platform/x86: x86-android-tablets: convert Yoga Tab2 fast charger to
-    GPIO references
-  platform/x86: x86-android-tablets: remove support for GPIO lookup
-    tables
-  platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO
-    references
-
-Hans de Goede (8):
-  platform/x86: x86-android-tablets: replace bat_swnode with
-    swnode_group
-  platform/x86: x86-android-tablets: use swnode_group instead of manual
-    registering
-  platform/x86: x86-android-tablets: Update my email address
-  platform/x86: x86-android-tablets: Move Acer info to its own file
-  platform/x86: x86-android-tablets: Add support for Acer A1-840 tablet
-  platform/x86: x86-android-tablets: Simplify
-    lenovo_yoga_tab2_830_1050_exit()
-  platform/x86: x86-android-tablets: Fix modules lists for Lenovo
-    devices
-  platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
-
- .../lenovo/yoga-tab2-pro-1380-fastcharger.c   |   7 +
- .../platform/x86/x86-android-tablets/Makefile |   2 +-
- .../platform/x86/x86-android-tablets/acer.c   | 247 +++++++++++++
- .../platform/x86/x86-android-tablets/asus.c   | 108 +++---
- .../platform/x86/x86-android-tablets/core.c   | 121 ++++---
- .../platform/x86/x86-android-tablets/dmi.c    |  12 +-
- .../platform/x86/x86-android-tablets/lenovo.c | 291 ++++++++-------
- .../platform/x86/x86-android-tablets/other.c  | 338 ++++++------------
- .../x86/x86-android-tablets/shared-psy-info.c |  34 +-
- .../x86/x86-android-tablets/shared-psy-info.h |   8 +-
- .../x86/x86-android-tablets/vexia_atla10_ec.c |   2 +-
- .../x86-android-tablets/x86-android-tablets.h |  28 +-
- sound/soc/intel/boards/bytcr_wm5102.c         |   2 +-
- 13 files changed, 722 insertions(+), 478 deletions(-)
- create mode 100644 drivers/platform/x86/x86-android-tablets/acer.c
-
+diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+index 97cd14c1fd23..6c4468f4004b 100644
+--- a/drivers/platform/x86/x86-android-tablets/asus.c
++++ b/drivers/platform/x86/x86-android-tablets/asus.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
+ #include <linux/input.h>
+ #include <linux/platform_device.h>
+ 
+@@ -77,6 +78,16 @@ static const struct software_node asus_me176c_ug3105_node = {
+ 	.properties = asus_me176c_ug3105_props,
+ };
+ 
++static const struct property_entry asus_me176c_touchscreen_props[] = {
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[0], 60, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 28, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node asus_me176c_touchscreen_node = {
++	.properties = asus_me176c_touchscreen_props,
++};
++
+ static const struct x86_i2c_client_info asus_me176c_i2c_clients[] __initconst = {
+ 	{
+ 		/* bq24297 battery charger */
+@@ -132,6 +143,7 @@ static const struct x86_i2c_client_info asus_me176c_i2c_clients[] __initconst =
+ 			.type = "GDIX1001:00",
+ 			.addr = 0x14,
+ 			.dev_name = "goodix_ts",
++			.swnode = &asus_me176c_touchscreen_node,
+ 		},
+ 		.adapter_path = "\\_SB_.I2C6",
+ 		.irq_data = {
+@@ -152,18 +164,8 @@ static const struct x86_serdev_info asus_me176c_serdevs[] __initconst = {
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table asus_me176c_goodix_gpios = {
+-	.dev_id = "i2c-goodix_ts",
+-	.table = {
+-		GPIO_LOOKUP("INT33FC:00", 60, "reset", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("INT33FC:02", 28, "irq", GPIO_ACTIVE_HIGH),
+-		{ }
+-	},
+-};
+-
+ static struct gpiod_lookup_table * const asus_me176c_gpios[] = {
+ 	&int3496_gpo2_pin22_gpios,
+-	&asus_me176c_goodix_gpios,
+ 	NULL
+ };
+ 
+@@ -179,6 +181,7 @@ const struct x86_dev_info asus_me176c_info __initconst = {
+ 	.gpiod_lookup_tables = asus_me176c_gpios,
+ 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
+ 	.modules = bq24190_modules,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ };
+ 
+ /* Asus TF103C tablets have an Android factory image with everything hardcoded */
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index db76ba3abd7b..7b5942010c78 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -155,6 +155,7 @@ static struct serdev_device **serdevs;
+ static struct gpio_keys_button *buttons;
+ static struct gpiod_lookup_table * const *gpiod_lookup_tables;
+ static const struct software_node *bat_swnode;
++static const struct software_node **gpiochip_node_group;
+ static void (*exit_handler)(void);
+ 
+ static __init struct i2c_adapter *
+@@ -330,6 +331,34 @@ static __init int x86_instantiate_serdev(const struct x86_dev_info *dev_info, in
+ 	return ret;
+ }
+ 
++const struct software_node baytrail_gpiochip_nodes[] = {
++	{ .name = "INT33FC:00" },
++	{ .name = "INT33FC:01" },
++	{ .name = "INT33FC:02" },
++};
++
++static const struct software_node *baytrail_gpiochip_node_group[] = {
++	&baytrail_gpiochip_nodes[0],
++	&baytrail_gpiochip_nodes[1],
++	&baytrail_gpiochip_nodes[2],
++	NULL
++};
++
++const struct software_node cherryview_gpiochip_nodes[] = {
++	{ .name = "INT33FF:00" },
++	{ .name = "INT33FF:01" },
++	{ .name = "INT33FF:02" },
++	{ .name = "INT33FF:03" },
++};
++
++static const struct software_node *cherryview_gpiochip_node_group[] = {
++	&cherryview_gpiochip_nodes[0],
++	&cherryview_gpiochip_nodes[1],
++	&cherryview_gpiochip_nodes[2],
++	&cherryview_gpiochip_nodes[3],
++	NULL
++};
++
+ static void x86_android_tablet_remove(struct platform_device *pdev)
+ {
+ 	int i;
+@@ -360,10 +389,14 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
+ 	if (exit_handler)
+ 		exit_handler();
+ 
++	if (bat_swnode)
++		software_node_unregister(bat_swnode);
++
++	if (gpiochip_node_group)
++		software_node_unregister_node_group(gpiochip_node_group);
++
+ 	for (i = 0; gpiod_lookup_tables && gpiod_lookup_tables[i]; i++)
+ 		gpiod_remove_lookup_table(gpiod_lookup_tables[i]);
+-
+-	software_node_unregister(bat_swnode);
+ }
+ 
+ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+@@ -387,16 +420,36 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+ 	for (i = 0; dev_info->modules && dev_info->modules[i]; i++)
+ 		request_module(dev_info->modules[i]);
+ 
+-	bat_swnode = dev_info->bat_swnode;
+-	if (bat_swnode) {
+-		ret = software_node_register(bat_swnode);
++	gpiod_lookup_tables = dev_info->gpiod_lookup_tables;
++	for (i = 0; gpiod_lookup_tables && gpiod_lookup_tables[i]; i++)
++		gpiod_add_lookup_table(gpiod_lookup_tables[i]);
++
++	switch (dev_info->gpiochip_type) {
++	case X86_GPIOCHIP_BAYTRAIL:
++		gpiochip_node_group = baytrail_gpiochip_node_group;
++		break;
++	case X86_GPIOCHIP_CHERRYVIEW:
++		gpiochip_node_group = cherryview_gpiochip_node_group;
++		break;
++	case X86_GPIOCHIP_UNSPECIFIED:
++		gpiochip_node_group = NULL;
++		break;
++	}
++
++	if (gpiochip_node_group) {
++		ret = software_node_register_node_group(gpiochip_node_group);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	gpiod_lookup_tables = dev_info->gpiod_lookup_tables;
+-	for (i = 0; gpiod_lookup_tables && gpiod_lookup_tables[i]; i++)
+-		gpiod_add_lookup_table(gpiod_lookup_tables[i]);
++	if (dev_info->bat_swnode) {
++		ret = software_node_register(dev_info->bat_swnode);
++		if (ret) {
++			x86_android_tablet_remove(pdev);
++			return ret;
++		}
++		bat_swnode = dev_info->bat_swnode;
++	}
+ 
+ 	if (dev_info->init) {
+ 		ret = dev_info->init(&pdev->dev);
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 1241a97cda39..22fe76ef5b5a 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/efi.h>
+ #include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
+ #include <linux/mfd/arizona/pdata.h>
+ #include <linux/mfd/arizona/registers.h>
+ #include <linux/mfd/intel_soc_pmic.h>
+@@ -61,6 +62,16 @@ static struct lp855x_platform_data lenovo_lp8557_reg_only_pdata = {
+ 
+ /* Lenovo Yoga Book X90F / X90L's Android factory image has everything hardcoded */
+ 
++static const struct property_entry lenovo_yb1_x90_goodix_props[] = {
++	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[1], 53, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("irq-gpios", &cherryview_gpiochip_nodes[1], 56, GPIO_ACTIVE_HIGH),
++	{ }
++};
++
++static const struct software_node lenovo_yb1_x90_goodix_node = {
++	.properties = lenovo_yb1_x90_goodix_props,
++};
++
+ static const struct property_entry lenovo_yb1_x90_wacom_props[] = {
+ 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0001),
+ 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 150),
+@@ -108,6 +119,7 @@ static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst
+ 			.type = "GDIX1001:00",
+ 			.addr = 0x14,
+ 			.dev_name = "goodix_ts",
++			.swnode = &lenovo_yb1_x90_goodix_node,
+ 		},
+ 		.adapter_path = "\\_SB_.PCI0.I2C2",
+ 		.irq_data = {
+@@ -198,15 +210,6 @@ static const struct x86_gpio_button lenovo_yb1_x90_lid __initconst = {
+ 	.pin = 19,
+ };
+ 
+-static struct gpiod_lookup_table lenovo_yb1_x90_goodix_gpios = {
+-	.dev_id = "i2c-goodix_ts",
+-	.table = {
+-		GPIO_LOOKUP("INT33FF:01", 53, "reset", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("INT33FF:01", 56, "irq", GPIO_ACTIVE_HIGH),
+-		{ }
+-	},
+-};
+-
+ static struct gpiod_lookup_table lenovo_yb1_x90_hideep_gpios = {
+ 	.dev_id = "i2c-hideep_ts",
+ 	.table = {
+@@ -225,7 +228,6 @@ static struct gpiod_lookup_table lenovo_yb1_x90_wacom_gpios = {
+ 
+ static struct gpiod_lookup_table * const lenovo_yb1_x90_gpios[] = {
+ 	&lenovo_yb1_x90_hideep_gpios,
+-	&lenovo_yb1_x90_goodix_gpios,
+ 	&lenovo_yb1_x90_wacom_gpios,
+ 	NULL
+ };
+@@ -259,6 +261,7 @@ const struct x86_dev_info lenovo_yogabook_x90_info __initconst = {
+ 	.gpio_button = &lenovo_yb1_x90_lid,
+ 	.gpio_button_count = 1,
+ 	.gpiod_lookup_tables = lenovo_yb1_x90_gpios,
++	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
+ 	.init = lenovo_yb1_x90_init,
+ };
+ 
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index f7bd9f863c85..e3907812c8bc 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
+ #include <linux/input.h>
+ #include <linux/leds.h>
+ #include <linux/pci.h>
+@@ -297,6 +298,8 @@ static const struct software_node medion_lifetab_s10346_accel_node = {
+ static const struct property_entry medion_lifetab_s10346_touchscreen_props[] = {
+ 	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 3, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -340,24 +343,10 @@ static const struct x86_i2c_client_info medion_lifetab_s10346_i2c_clients[] __in
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table medion_lifetab_s10346_goodix_gpios = {
+-	.dev_id = "i2c-goodix_ts",
+-	.table = {
+-		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("INT33FC:02", 3, "irq", GPIO_ACTIVE_HIGH),
+-		{ }
+-	},
+-};
+-
+-static struct gpiod_lookup_table * const medion_lifetab_s10346_gpios[] = {
+-	&medion_lifetab_s10346_goodix_gpios,
+-	NULL
+-};
+-
+ const struct x86_dev_info medion_lifetab_s10346_info __initconst = {
+ 	.i2c_client_info = medion_lifetab_s10346_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(medion_lifetab_s10346_i2c_clients),
+-	.gpiod_lookup_tables = medion_lifetab_s10346_gpios,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ };
+ 
+ /* Nextbook Ares 8 (BYT) tablets have an Android factory image with everything hardcoded */
+@@ -543,6 +532,8 @@ static const struct property_entry whitelabel_tm800a550l_goodix_props[] = {
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gt912-tm800a550l.fw"),
+ 	PROPERTY_ENTRY_STRING("goodix,config-name", "gt912-tm800a550l.cfg"),
+ 	PROPERTY_ENTRY_U32("goodix,main-clk", 54),
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 3, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -578,24 +569,10 @@ static const struct x86_i2c_client_info whitelabel_tm800a550l_i2c_clients[] __in
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table whitelabel_tm800a550l_goodix_gpios = {
+-	.dev_id = "i2c-goodix_ts",
+-	.table = {
+-		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("INT33FC:02", 3, "irq", GPIO_ACTIVE_HIGH),
+-		{ }
+-	},
+-};
+-
+-static struct gpiod_lookup_table * const whitelabel_tm800a550l_gpios[] = {
+-	&whitelabel_tm800a550l_goodix_gpios,
+-	NULL
+-};
+-
+ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+ 	.i2c_client_info = whitelabel_tm800a550l_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(whitelabel_tm800a550l_i2c_clients),
+-	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ };
+ 
+ /*
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index dcf8d49e3b5f..a54d09408866 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -32,6 +32,12 @@ enum x86_acpi_irq_type {
+ 	X86_ACPI_IRQ_TYPE_PMIC,
+ };
+ 
++enum x86_gpiochip_type {
++	X86_GPIOCHIP_UNSPECIFIED = 0,
++	X86_GPIOCHIP_BAYTRAIL,
++	X86_GPIOCHIP_CHERRYVIEW,
++};
++
+ struct x86_acpi_irq_data {
+ 	char *chip;   /* GPIO chip label (GPIOINT) or PMIC ACPI path (PMIC) */
+ 	enum x86_acpi_irq_type type;
+@@ -99,6 +105,7 @@ struct x86_dev_info {
+ 	int (*init)(struct device *dev);
+ 	void (*exit)(void);
+ 	bool use_pci;
++	enum x86_gpiochip_type gpiochip_type;
+ };
+ 
+ int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
+@@ -106,6 +113,10 @@ int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
+ 				 struct gpio_desc **desc);
+ int x86_acpi_irq_helper_get(const struct x86_acpi_irq_data *data);
+ 
++/* Software nodes representing GPIO chips used by various tablets */
++extern const struct software_node baytrail_gpiochip_nodes[];
++extern const struct software_node cherryview_gpiochip_nodes[];
++
+ /*
+  * Extern declarations of x86_dev_info structs so there can be a single
+  * MODULE_DEVICE_TABLE(dmi, ...), while splitting the board descriptions.
 -- 
 2.51.0
 
