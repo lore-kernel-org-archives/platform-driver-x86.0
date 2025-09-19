@@ -1,139 +1,111 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5BB1DDC2C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 01:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161C2222585
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Sep 2025 05:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758244352; cv=none; b=CX0enNdmt5EWW36xmFnoq2GWDviaOUhNpxr3Nl/4H7Q+SRypNuSntwZiqjQgdeeCNGqlS15KPsZ4w5JYdSv4jo4zxHhJQs6JjCnXoqqbg6ctoOxwN/xfObo0Fp2aI2dYJop5fIbPI1wnhTTCn7/ehhUSwqwe2ouk5hzc7u0t07g=
+	t=1758258763; cv=none; b=LKb9DZQOdVg7ynHRP7aSIsgnDwm2W/gSFlCl/9LpOnq6kfMt4b1PP7PM/xK5cyBWKnnRlmKBTGsFmMHxHhVy3S9Y+2JklwXaUkqbJRZ7D7on2FV+O/3cFb+DNfQxhtmfF8Ttgp+73dt7r1L/+XW51DZAiLHpyRBxPPmNJJq6gk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758244352; c=relaxed/simple;
-	bh=NG9G6qkcd55l7sxI5pzc5l+YODe2sfMn5viC5nVCsbg=;
+	s=arc-20240116; t=1758258763; c=relaxed/simple;
+	bh=xy6Nn7ttzn5yTVwsCIsKB/jqw2UMP3C/WLclkEDlZtw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ezNVN4kYC6nWhbapySIgt3yDVY77CSvCj8KcsUVC8qCju6W+UiYJ3O17XDv/ZnawcF4kLyXcb8B0rAFbZKKXiieeQ/mlqwJ/p3OjkV2BpKW3cXnymeS4ODHcz3uizfKMHf/12viMvPcXXfLdQx9DSHWVjD1YxPQPziDOwPrgf0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WmWAhIhx; arc=none smtp.client-ip=209.85.210.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=qo0k+0vToZW/fq5nKNAwDFUjULMF5sg3D5qcOExomO98xpPfogGHERwIYHtU8XxS2GSkee63xVmnoqT3H2T7+pK9qfIQEa8fVH43xs8S+HSkYasZkQRw/d4zlzzufCXSWlYOI+wRt6UZTsbFwsu9f9ZH3CIXMkTxhTbTz32ci6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esfqcG3H; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmWAhIhx"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-77b91ed5546so1434890b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Sep 2025 18:12:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esfqcG3H"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7761bca481dso1527578b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Sep 2025 22:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758244351; x=1758849151; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A48yMdinMY4TsMoA5WhtjSNisYijRwjFPVTZOj60lQ0=;
-        b=WmWAhIhx1udw9SygcsB/pxfIw/Uw1Bv5PgEROxlmI4wIaaOmsQaoyZFx5oKJZbHKd/
-         ZLQLcIrGPqM1OWRCN0T7e2cOBiHrzSB3kQa6kITUV4+cxlQkv0tebCVlQO4CcGqzVhcR
-         2U5SjB1+ynG9DewR20KhFrn1vrcL2pu9PFZv+Wktz0lWmrRRpgx+9u4aHE+P75FsCZh3
-         TyWpSS5qI5pYg2mibIYv6mSmx6uSxKAIrFz0u8+qy+Yqe/iY+FAjtAlYQ9aJxHpsD7Up
-         1dMRsZR6xI7oEydr+nZCV1ZJfCy12qOM4BZcili7DJnokWUrzrsp/4TjmjfHrvrHXMVT
-         3Ivg==
+        d=gmail.com; s=20230601; t=1758258761; x=1758863561; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eL6RxCRsAs0clRDPdmdT9WoKuQoosuO1QexbLotddZg=;
+        b=esfqcG3Hff86cFTJ0Aw6FPqYH0OyHQhpAU7z2PkAeqEibdKfXdxo4dXy0XLVuHq1H2
+         M071+9XNex47atdDxZCKPzuV2cnS2igkjiz8Ec3Wok57pplke5G35ADxR2nIpG9Kgxji
+         Wpjb4S7zXBEhMKIXKWZ85g0x0DRSG7yY+dPeHv6OLoYfMpzID+gdnC24PtJvflVCo6/U
+         M+dITx3kGkG/8YBlA5ANAW0StrtvRGmExePHCpf1cWgWmITifR/+sYQrbilOZmQNjeGd
+         C0OA/yz9QVV2rSrLhRzSmVyoOOtHQEcsoQeA12yazsCIT/S9yu4iKnuB63QuS4eQFPz3
+         OMnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758244351; x=1758849151;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A48yMdinMY4TsMoA5WhtjSNisYijRwjFPVTZOj60lQ0=;
-        b=qdIxJe53UD/J11zsKyLp3uFZMDEeosrthsrHAQ8zLAiLW7YQNbeh19DmSe/4+0qVB7
-         hHXDW46CpMaVB4X62pVRAD807GY7r9mKzRoswUWNIIjNhmKauoe/KResrqRb5+VMVsNK
-         a4GErWWqrtZD/UahVq6ItAcDMDubhkXPBNkF9YeE6j31yJk1AqzLp0ZNySbREUQp+jv2
-         Q0U5PuMRnaLArIa1145wFs/hQdu8C+KoGYXRXq5aFSWOPUVImMCeI5nVqGx5YDafBDnK
-         YuLtTlbOqUzTrpGCBD6r+oipDSnDbuP/rslWC1adKKGQcbaXoVEOzD0xljzwFJBg1N20
-         0dTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZh96OOoSsZmSYoyttJaZnV/0f/nDjSa2F+NVPdsqmpHLCff5y1mEA+5MMxDU/UrIQeqXwPvze0iDeA8GYbhVCeU8f@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPq0JzuRgh0ZauyaX2mj0LtfALKbzUU5Fn8xK5Ozfmrvlj7uQR
-	njME1sQ09COdh/2UqMcr3CeTrqgXR/KhzE4Vhjrll2b+qvFdCmgmXUJJ
-X-Gm-Gg: ASbGnctk8bFhUIXa4BGxhq+G0Wzge7O1QAUSRwKIJdPUVp1SvgWhOlrfeEB+vMZeQ/w
-	pkR+VHUbZVQWe33/cOCzHeh7juhgLBqd7YvnX9T8up5ljaVUskMQrKWrVRF9Nq4RoYfGGgdgEIX
-	TIDzj46357wzl+Ve1Bh8QqI4ROcWNy7a4XDgQaW4XlOMRypWj+3CqttNPjvNaoDugefcbAMr9/g
-	JWFX04pOrCgNlEbxrCKzhCmVOJ85FHXDxPS4FpqSlUhaNwLkjazIit3r/aoP7DrE6oPGw2r7k9Q
-	jnhHHaF67YsocPdwTSl5++6HEGy3ov+KAnT1KQlUSLe3PtZWBI8pmFbSFlaOOgQxEAycXYtHBNS
-	wMiWtOpJPAeOYZjfkTR4sV5M=
-X-Google-Smtp-Source: AGHT+IGjYX11oCrTtfxdx4vWRKTaE6PAVgpbO6Y8EQGn0PtwNPXtesJFTQwPRO+jaBSBsmPP7H+GGQ==
-X-Received: by 2002:a17:903:944:b0:24c:b39f:baaa with SMTP id d9443c01a7336-269ba579989mr18144535ad.49.1758244350465;
-        Thu, 18 Sep 2025 18:12:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758258761; x=1758863561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eL6RxCRsAs0clRDPdmdT9WoKuQoosuO1QexbLotddZg=;
+        b=XPAeb8h9S35Y2kCnFvulcmrSYIX9vfWcd+CLSw/HNd2AjtkRsemVO+HMIiYgOXs/P9
+         APAgJSg1Lzooi6+3f66VgI7judsXTLd9RGHzjEldKN0Rk7XCmBWR14v2SG2Pb9fd/RU6
+         aEo4A38XyHHuwgf1K+hpi6JyfHWIfzYq1WZY4p8agyXyE+L0RDUGlC4FkL63z0mx/NEY
+         XGj7eEDCLsDKcgYs8HSz/+fVEOjL60Uk63uq+AjjmZ+HZIqHXCXEmPqpLKQvbrun7K4j
+         5X/q0c1NKUAHOGct2pcLw8QTWWDi+23sgk1Y9LhjGLtbabFzCj2Zwiz/3BPWNlIK7qXk
+         q5qw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuD0KXHwl5L56gGxCF9YLfCk0P22MmAhNdejTzITLnwZIpDc5IguWLxTdrrgVscvLp0ul4gPIKJCt7FcfZ5D0FwnsB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyldqi0KDlCNCzN0fGjIO23eGhTLeT1WABU1OP8YKXZNLaS0adO
+	QbNLGKwqi8hbB4rpZftKOhnVhY2zZ5VtOFbZoT2vE414d+0AGXNONeh3
+X-Gm-Gg: ASbGncsoALlhQuIc25MUjHyk5uLh6WallWWTHULz4wcCMO/RtEorAhoF/O3MdwNiNk7
+	+j43wlSuBSxLL7vZbPESwZGkrwK8DvLy2SMvQKeqEI1ernvQUr9CBDiKRRPpyUwzDCszsIa8COg
+	9kEzRaaN8/zr3cnHEp5kAOcLUMy3qIAobHuW5maUv71TW3GWoNXxWzbvCzEiDkulP9Sy6KDYdrf
+	N+TdJoARzulhW6lQPj3ZSROe+G9KHgw9YJlZPmTI7mHDoJqXiY41+Lv57IfyrTNxDnyVr4dyzwG
+	Ty3jY2YRxqn2SvRy//NlIFaxjg3LNIBQT3Fzv7xGWoZEzWRaVv3zSnvlRJ9B8RWvHBKcdE/c78e
+	HqpjgYIGk/dvvMpzdWKyg6gI=
+X-Google-Smtp-Source: AGHT+IEo/vf8ReoxNqGNHMuy27BBoFacP2Y+vR38N8AQmo9arUvUxjiFYOQoLJSYJK/Xk2XRvUObQg==
+X-Received: by 2002:a05:6a20:3ca2:b0:251:fbff:a8d with SMTP id adf61e73a8af0-2927182ba8cmr2982310637.49.1758258761206;
+        Thu, 18 Sep 2025 22:12:41 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:8e3e:e1c9:1151:50c3])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b55199e08f1sm402995a12.24.2025.09.18.18.12.29
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32ed276d2f8sm7071127a91.24.2025.09.18.22.12.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Sep 2025 18:12:29 -0700 (PDT)
-Date: Thu, 18 Sep 2025 18:12:27 -0700
+        Thu, 18 Sep 2025 22:12:40 -0700 (PDT)
+Date: Thu, 18 Sep 2025 22:12:38 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Vishnu Sankar <vishnuocv@gmail.com>, hmh@hmh.eng.br, 
-	ilpo.jarvinen@linux.intel.com, derekjohn.clark@gmail.com, mpearson-lenovo@squebb.ca, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Subject: Re: [PATCH v3 1/3] input: mouse: trackpoint: Add doubletap
- enable/disable support
-Message-ID: <fgizjuhcnl6rfawrqnabkhijf5uzbczen6k5zp6z44hycjqylx@6qzi54baxivx>
-References: <20250901135308.52340-1-vishnuocv@gmail.com>
- <CABxCQKtEcFozTtuV3sutU3OyobTbpA82Uy=MyU0FQePPT7S2Wg@mail.gmail.com>
- <6e834cb7-565b-4a4b-bf90-4765f5fc9cc9@kernel.org>
+To: Anton Khirnov <anton@khirnov.net>
+Cc: Corentin Chary <corentin.chary@gmail.com>, 
+	"Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Input: allocate a keycode for Fn+space
+Message-ID: <u3qzdpgoe2appwnmv2rkcmyg6htrmltna3geymp7llootdwbts@ycmhljii34bz>
+References: <20250714150756.21197-1-anton@khirnov.net>
+ <20250714150756.21197-2-anton@khirnov.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e834cb7-565b-4a4b-bf90-4765f5fc9cc9@kernel.org>
+In-Reply-To: <20250714150756.21197-2-anton@khirnov.net>
 
-On Thu, Sep 18, 2025 at 09:31:47AM +0200, Hans de Goede wrote:
-> Hi Vishnu,
-> 
-> On 18-Sep-25 4:37 AM, Vishnu Sankar wrote:
-> > Hello all,
-> > 
-> > Do we have any questions or concerns?
-> > Thanks in advance!
-> > 
-> > On Mon, Sep 1, 2025 at 10:53 PM Vishnu Sankar <vishnuocv@gmail.com> wrote:
-> >>
-> >> Add support for enabling and disabling doubletap on TrackPoint devices
-> >> that support this functionality. The feature is detected using firmware
-> >> ID and exposed via sysfs as `doubletap_enabled`.
-> 
-> Hmm, you seem to be using a firmware ID prefix match, combined with
-> a deny list of some firmware IDs with that prefix which do not support
-> this. How do we know this deny list is complete?
-> 
-> Also as Dmitry says you really should use the is_visible() callback
-> to not show the attribute at all on unsupported systems.
-> 
-> >> The feature is only available on newer ThinkPads (2023 and later).The driver
-> >> exposes this capability via a new sysfs attribute:
-> >> "/sys/bus/serio/devices/seriox/doubletap_enabled".
-> >>
-> >> The attribute is only created if the device is detected to be capable of
-> >> doubletap via firmware and variant ID checks. This functionality will be
-> >> used by platform drivers such as thinkpad_acpi to expose and control doubletap
-> >> via user interfaces.
-> 
-> Hmm, you refer to thinkpad_acpi as a possible consumer of this
-> functionality. But you only add a sysfs interface.
-> 
-> thinkpad_acpi will need some in kernel interface to use this.
-> 
-> Which brings me to my main question: thinkpad_acpi is the driver
-> receiving the doubletap events since these are send out-of-bound
-> and not through the ps/2 trackpoint protocol.
-> 
-> thinkpad_acpi already has the capability to filter out these doubletap
-> events and report nothing. Why is it necessary / better to disable
-> the doubletap at the trackpoint fw-level, rather then just filtering
-> it at the thinkpad_acpi level ?
-> 
-> I don't really see a big advantage in filtering these events at
-> the fw-level rather then in the kernel and we already have the
-> in kernel filtering.
+Hi Anton,
 
-That is an excellent observation, thank you Hans. The frequency of these
-events should be extremely low, so cost of simply ignoring events should
-be miniscule...
+On Mon, Jul 14, 2025 at 05:07:57PM +0200, Anton Khirnov wrote:
+> The Asus ExpertBook B9 laptop sends a WMI event when Fn+space is
+> pressed. Since I could not find any information on what this combination
+> is intended to do on this or any other Asus laptop, allocate a
+> KEY_FN_SPACE keycode for it.
+> 
+> Signed-off-by: Anton Khirnov <anton@khirnov.net>
+> ---
+>  include/uapi/linux/input-event-codes.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index 3b2524e4b667..a49b0782fd8a 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -548,6 +548,7 @@
+>  #define KEY_FN_S		0x1e3
+>  #define KEY_FN_B		0x1e4
+>  #define KEY_FN_RIGHT_SHIFT	0x1e5
+> +#define KEY_FN_SPACE		0x1e6
+
+I'd rather we did not add more codes with no defined meaning. I regret
+that we have KEY_FN_* (with the exception of KEY_FN itself). Since
+nobody knows what this key is supposed to do maybe map it to
+KEY_RESERVED and whoever wants to use it can map it to a concrete key
+code via udev?
 
 Thanks.
 
