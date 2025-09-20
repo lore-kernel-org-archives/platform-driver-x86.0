@@ -1,90 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCC819D8AC
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 12:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702C326738B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758373057; cv=none; b=S1cmkHbIaDT27sle2OwQ5s6OUchOwCVGUoAt29ogmdrklIRtXK7YMvwb+KukdNTX5pXrNpDmYR8ryvP3CmO0xr/5QtF6eCo5dKXoS7nh0kuHFsFrrBwy8bhymLC9tD/IzvM8mE8vGkV/tqnJ1p9Tz/8qsViucvWp7Wmj8qBPQFk=
+	t=1758398837; cv=none; b=b5ffW+k9o5GNVL0ykrLBpZsqxTd9mpVOVRRMVlGmg5Tr7a1NkmfffQB719DROUWwDS90zlMec38RAqZzPRrKhwtQPYLvzTUvyQroJmlIIN8dmdUMqv9PTQgXOa/eUkGQzNxS1qw55T1IsXwiJnNUxDMySkeobbfi+4K6xNJ7qZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758373057; c=relaxed/simple;
-	bh=qR/piaANZVx8aYLIJQ3ZhRB0K3UNoKpxkw339zrAJRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iDQNWTFHEB2uGvV6Zlx7CLDu0jk494hKESlmdx2lABvkuXeQ47ps0YsD+Yr/vAvycKKtYIgM2v8IPlq/SkdUL1EehrDj1Pgbd3XgpPnl5aDcT0zzpj/eZE5Wz1/TpQ58oKw+gu+eJYLU8Q4w4Lzp6O2IykcnsENkdusf3NS8hFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjriluqY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758398837; c=relaxed/simple;
+	bh=1GpgVxXGkfDZhZfHWNYan8HlhVMYsl/gncCEz8WUhLg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WH47wzVJNkIvBapujKHkXODzTkLpEf2qPxZ8ad3wJ5Mnnt/RX8YlARgoVjg8YJJrk/lsS866f614j4Fr3fQyUltGpa/hiJAl9uH0qc73IC39ap1wsqeTD2ctvfkB7i4iw5qnEsNUFUkqlZykQOGvtVF3i53XJcnNU5qz9fsARy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LB0EMCxy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjriluqY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49438C4CEEB;
-	Sat, 20 Sep 2025 12:57:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LB0EMCxy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8BAC4CEEB;
+	Sat, 20 Sep 2025 20:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758373056;
-	bh=qR/piaANZVx8aYLIJQ3ZhRB0K3UNoKpxkw339zrAJRw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GjriluqYnpOmiJQA+DGycyjCYIuSwgYnyc/T1nkbQrUGa5dNIblnM9JwXoWCXSbkF
-	 +DhIMdbRVjHUzec9WngLKPb/5XE4Ifd8/9X5CQC5Q1A+4P8TwMIYDZZexIpw9yjQhP
-	 fUImMMVvFeFUbm2evuWcW1+oZuvyVyHVGOoy4DuMv+SMbXm6yIYuh8pQBuHKPrub1A
-	 q24+MCZfXXiYUv6ZsUuH2WZon2/HkQe5Y46BtexSPiRjuoc9BoCag/yD4ZLbZwqxzO
-	 xNLr2R/gIOAU3pW7WUUxrYV7Gn32ZMBtB+wnwULVuvQ4m7IIixoPUn6RAj/jQBv2dA
-	 N31cPfY9YJdYw==
-Message-ID: <f4f5a904-9a2d-4fbb-b72d-d0c4e7e80991@kernel.org>
-Date: Sat, 20 Sep 2025 14:57:33 +0200
+	s=k20201202; t=1758398836;
+	bh=1GpgVxXGkfDZhZfHWNYan8HlhVMYsl/gncCEz8WUhLg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LB0EMCxybcF5hyi01y0S59dShPj0yVftdED0UTCdM0AzAs9VYtpDd6qipa7eTYf3G
+	 DMzdVChh+D4oe0P7nELQNDIPwBWhD3lJmb6pez4X7CVTjiHK3l50ejl1AcNzLLJF9A
+	 DefKJO//HmRFUVr3Oh4A/y0OHI22Z7uavC8ezZlPLfUD7A4gYeipK4wcEP4WG48bQg
+	 Y81FLf1gmMy6oCQTL7nc4sEClLcP3DWb1R1krOMXS+aQJCNGVn4qwqqOCOP9+SGGN7
+	 HPqZlpd9IPzA69+QBWfqOWJxffzjy+3ziCYfV5/eBmw+p7J2MTsW8H3DL/PQFQO64y
+	 rZiB0j4wQJVQA==
+From: Hans de Goede <hansg@kernel.org>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Arnd Bergmann <arnd@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v4 00/20] x86-android-tablets: convert to use GPIO references + Acer A1-840 support
+Date: Sat, 20 Sep 2025 22:06:53 +0200
+Message-ID: <20250920200713.20193-1-hansg@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/19] platform/x86: x86-android-tablets: convert Yoga
- Tab2 fast charger to GPIO references
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann
- <arnd@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20250919204742.25581-1-hansg@kernel.org>
- <20250919204742.25581-10-hansg@kernel.org>
- <CAHp75Vf6mzHPhm_sKZ68H=5nFCg2aEPdMke84ovB_knv4-+eJw@mail.gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <CAHp75Vf6mzHPhm_sKZ68H=5nFCg2aEPdMke84ovB_knv4-+eJw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+Hi all,
 
-On 20-Sep-25 1:05 PM, Andy Shevchenko wrote:
-> On Fri, Sep 19, 2025 at 11:48 PM Hans de Goede <hansg@kernel.org> wrote:
-> 
->> Now that gpiolib supports software nodes to describe GPIOs, switch the
->> driver away from using GPIO lookup tables for the fast charger device
->> to using PROPERTY_ENTRY_GPIO().
-> 
-> ...
-> 
->> +       /*
->> +        * Propagate pdev-fwnode set by x86-android-tablets to serdev.
->> +        * The pdev-fwnode is a managed node, so it will be auto-put on
->> +        * serdev_device_put().
->> +        */
->> +       device_set_node(&serdev->dev, fwnode_handle_get(dev_fwnode(&pdev->dev)));
-> 
-> I would rather split these two
-> 
-> /* Comment about propagating... */
-> device_set_node(..., dev_fwnode(...));
-> /* Comment about reference counting */
-> fwnode_handle_get(dev_fwnode(&serdev->dev));
-> 
-> (note the parameter to fwnode_handle_get(), which seems to me aligned
-> with the explanation given).
+Original cover-letter from Dmitry's v2 posting:
 
-Ack, noted.
+"This series came about because now software nodes can be used to
+describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+eventually get rid of gpio_keys_platform_data structure.
 
-I've made the requested changes for the upcoming v4.
+So while I was doing the conversions from GPIO_LOOKUP() tables for
+gpio_keys devices I decided to convert the rest of them as well. Maybe
+some time in the future we can drop support for GPIO_LOOKUP() and rely
+on device properties exclusively."
+
+Follow-up changes / new patches from me:
+
+Changes in v4:
+- "convert Yoga Tab2 fast charger to GPIO references" change:
+  Split propagating the platform-dev fwnode to the serdev and
+  the fwnode_handle_get() call on the serdev fwnode into 2 separate
+  statements
+- New patch: "Simplify node-group [un]registration"
+
+Changes in v3:
+- Add missing pinctrl_put() in lenovo_yoga_tab2_830_1050_init_codec()
+  error-exit paths after the pinctrl_get_select() succeeds
+
+- Adding a swnode to the yt3 spi device changes the name of the SPI/codec
+  device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver looks
+  up the code by name, update the machine driver to use the new name.
+
+- Make yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
+  the platform-device to the serdev it creates to fix this.
+
+- Fix the commit message of "platform/x86: x86-android-tablets: convert
+  gpio_keys devices to GPIO references" which contained a stray reference
+  to wm5102.
+
+New patches in v3:
+
+- Change sw_bat register mechanism into a generic swnode_group mechanism
+
+- Use swnode_group mechanism to register groups needed, instead of having
+  init() callbacks manually do this
+
+- Changed my email address in the driver to hansg@kernel.org
+
+- Rebased "platform/x86: x86-android-tablets: Add support for Acer A1-840
+  tablet" on top, switched that to also use software-nodes for GPIOs and
+  added it to this series
+
+- Some Lenovo Yoga Tab 2 support fixes
 
 Regards,
 
 Hans
 
+
+Dmitry Torokhov (11):
+  platform/x86: x86-android-tablets: convert Goodix devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert Wacom devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert HiDeep devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert Novatek devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert EDT devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert int3496 devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert wm1502 devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert HID-I2C devices to GPIO
+    references
+  platform/x86: x86-android-tablets: convert Yoga Tab2 fast charger to
+    GPIO references
+  platform/x86: x86-android-tablets: remove support for GPIO lookup
+    tables
+  platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO
+    references
+
+Hans de Goede (9):
+  platform/x86: x86-android-tablets: replace bat_swnode with
+    swnode_group
+  platform/x86: x86-android-tablets: use swnode_group instead of manual
+    registering
+  platform/x86: x86-android-tablets: Simplify node-group
+    [un]registration
+  platform/x86: x86-android-tablets: Update my email address
+  platform/x86: x86-android-tablets: Move Acer info to its own file
+  platform/x86: x86-android-tablets: Add support for Acer A1-840 tablet
+  platform/x86: x86-android-tablets: Simplify
+    lenovo_yoga_tab2_830_1050_exit()
+  platform/x86: x86-android-tablets: Fix modules lists for Lenovo
+    devices
+  platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
+
+ .../lenovo/yoga-tab2-pro-1380-fastcharger.c   |   5 +
+ .../platform/x86/x86-android-tablets/Makefile |   2 +-
+ .../platform/x86/x86-android-tablets/acer.c   | 247 +++++++++++++
+ .../platform/x86/x86-android-tablets/asus.c   | 108 +++---
+ .../platform/x86/x86-android-tablets/core.c   | 118 +++---
+ .../platform/x86/x86-android-tablets/dmi.c    |  12 +-
+ .../platform/x86/x86-android-tablets/lenovo.c | 291 ++++++++-------
+ .../platform/x86/x86-android-tablets/other.c  | 338 ++++++------------
+ .../x86/x86-android-tablets/shared-psy-info.c |  34 +-
+ .../x86/x86-android-tablets/shared-psy-info.h |   8 +-
+ .../x86/x86-android-tablets/vexia_atla10_ec.c |   2 +-
+ .../x86-android-tablets/x86-android-tablets.h |  28 +-
+ sound/soc/intel/boards/bytcr_wm5102.c         |   2 +-
+ 13 files changed, 714 insertions(+), 481 deletions(-)
+ create mode 100644 drivers/platform/x86/x86-android-tablets/acer.c
+
+-- 
+2.51.0
 
