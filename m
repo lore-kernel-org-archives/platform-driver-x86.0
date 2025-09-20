@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A1926A1AB
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6AE26B098
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758398863; cv=none; b=RQSqebR1llrLvG8R8kOG6yZ+JwXMo9ZypKbO/IwQRauTLWkvU6OitLaSUqqmkBRXD5cec4hiGY08SVQOam1xWlAQH+kvWA3ALwO6WptYZDVJH+C0CPM2JxZdtqTlidkfFNCAbcowc68IwCSLcnJUi13wUbv5Z3Y05riacUPYu64=
+	t=1758398865; cv=none; b=VFF5ORlCdDJf5613WxodAXtAJovFGM4FKHDxZ0oodlrENGYvU7d2lQ4Mgq/nlCtWZ++3mCMYxdpVU3hB+k/qDC8vgtAQMzGz49gxiLUge/UjlEYdAbuKY0CMb0pf7fNNVQEWgbMDUvHPCPX4ZKof7Y/qtCOhahOF0otynLEYTHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758398863; c=relaxed/simple;
-	bh=0lG5Xgc6dK5X6R83WKV27spoQmAkomY6MF9yiND7ItQ=;
+	s=arc-20240116; t=1758398865; c=relaxed/simple;
+	bh=bG6t3r215DvxE6cOQBthc2eJgc4cX81IiVnuRZV+Gbw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KDVR/FSV3dyMSEjVZTOlB4itPgSWwTrm+Ctg4l+bBruSy8rjGcXKTw7730Gv+ykarxyQUCMidR6Sv1qFkMp/4vjbs2gUgkIQs5iVhQ+8yxBHTf3LrvuknTXxTWnz0qrCj4h2EOZa/wMrvBRt3GMgH1CVpm2sr/sPE1aRaLdTpq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVQXvJpi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EA/HLn0UbT2djs9yLrWQq+27adv3TOy+76wXy7X2HhUQxM/fy8Fafr7ZRtTJ2RIsFZKYwDSdZ+ri1lHLHoCLhmeftUw5Uhe9HSSWcZSJT681hTF1jBaSGgNVtDMzf2nGeSPOEmMz+TOgAkNp10AxnX7wbwtX7g5Pr8ABDjhhOs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ua4mfZoW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVQXvJpi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70F2C4CEF0;
-	Sat, 20 Sep 2025 20:07:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ua4mfZoW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B800EC4CEF0;
+	Sat, 20 Sep 2025 20:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758398863;
-	bh=0lG5Xgc6dK5X6R83WKV27spoQmAkomY6MF9yiND7ItQ=;
+	s=k20201202; t=1758398865;
+	bh=bG6t3r215DvxE6cOQBthc2eJgc4cX81IiVnuRZV+Gbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oVQXvJpivFwcvsrQFBjvQpSE/mRWk5aAH4CNNfS5CtifhFXB7DquhrmCrwTtw2kWb
-	 TE4zSU/OKXzsig5LeaImPOl9wc90EpVY7Uk1MHcsEcFzJ+Br2d/Gwg9A74PEtP1mgc
-	 NzWv7/bQO8+SicCP604nFuV7Dm5IxNvbK4f2mys1kzmtjUDk/SFjUpMYo6tfsbay82
-	 +YjxsPjZ3aTK81W/UcIboMJgdXhrVAAnDLcg3eR8qaSNRnjGn4fnixBs8KivlQ5WTk
-	 xAkLXJuK15D4i4ULNDSauHHMY91jPAldLhaa+kLlxklG8U1GJi+rvrUZYfoA0Z837S
-	 Effksl+MZkB0A==
+	b=ua4mfZoWrZphdy9j+sYIf5XZ8R/xQF0f7cYjXFZrdLWD24i6gTW2/rRjSPxkHnnJv
+	 veTRVdkv1OHJBpQtWajoaQBdb4ygknrhLr5/jGBryCJlIOu2T2mTrFeqG5F36UT2Im
+	 NKnvIgfTaP6Unne2jnGL4YLJ7uGE53UBI0X+vh/ZbgFhRcGFKtiEXoTsmXSEcB/vAR
+	 uF6Dfsr+UWxmZXkt9vYP91VnnAQgPC4fgN3zLwV3k2CabDPKUHjKPx4xTjz7WjSwqE
+	 QeAzHn6euA7iB96640PNix6JIUHs/Oo7F6EN2oln13d/54xOTubQHkz6TKNy1aIawH
+	 f5JdHwqK4RvzA==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 14/20] platform/x86: x86-android-tablets: Simplify node-group [un]registration
-Date: Sat, 20 Sep 2025 22:07:07 +0200
-Message-ID: <20250920200713.20193-15-hansg@kernel.org>
+Subject: [PATCH v4 15/20] platform/x86: x86-android-tablets: Update my email address
+Date: Sat, 20 Sep 2025 22:07:08 +0200
+Message-ID: <20250920200713.20193-16-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250920200713.20193-1-hansg@kernel.org>
 References: <20250920200713.20193-1-hansg@kernel.org>
@@ -47,72 +47,147 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-software_node_register_node_group() / software_node_unregister_node_group()
-both accept a NULL node-group as argument.
+hdegoede@redhat.com will stop working soon, replace it with my kernel.org
+address.
 
-So there is no need to check for the node-group being NULL before calling
-these functions, remove the checks to simplify the code.
-
-Note the "if (gpio_button_swnodes)" check for registering is kept because
-that also guards the creation of a gpio-button platform-device.
-
-Suggested-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
- .../platform/x86/x86-android-tablets/core.c   | 31 +++++++------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+ drivers/platform/x86/x86-android-tablets/asus.c               | 2 +-
+ drivers/platform/x86/x86-android-tablets/core.c               | 4 ++--
+ drivers/platform/x86/x86-android-tablets/dmi.c                | 2 +-
+ drivers/platform/x86/x86-android-tablets/lenovo.c             | 2 +-
+ drivers/platform/x86/x86-android-tablets/other.c              | 2 +-
+ drivers/platform/x86/x86-android-tablets/shared-psy-info.c    | 2 +-
+ drivers/platform/x86/x86-android-tablets/shared-psy-info.h    | 2 +-
+ drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c    | 2 +-
+ .../platform/x86/x86-android-tablets/x86-android-tablets.h    | 2 +-
+ 9 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+index 39eb2f9dc031..7d29c7654d21 100644
+--- a/drivers/platform/x86/x86-android-tablets/asus.c
++++ b/drivers/platform/x86/x86-android-tablets/asus.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ 
+ #include <linux/gpio/machine.h>
 diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index 5675e888d84f..d0638664d1da 100644
+index d0638664d1da..a8e9fa97b676 100644
 --- a/drivers/platform/x86/x86-android-tablets/core.c
 +++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -387,14 +387,9 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
- 	if (exit_handler)
- 		exit_handler();
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
--	if (gpio_button_swnodes)
--		software_node_unregister_node_group(gpio_button_swnodes);
--
--	if (swnode_group)
--		software_node_unregister_node_group(swnode_group);
--
--	if (gpiochip_node_group)
--		software_node_unregister_node_group(gpiochip_node_group);
-+	software_node_unregister_node_group(gpio_button_swnodes);
-+	software_node_unregister_node_group(swnode_group);
-+	software_node_unregister_node_group(gpiochip_node_group);
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -558,6 +558,6 @@ static void __exit x86_android_tablet_exit(void)
  }
+ module_exit(x86_android_tablet_exit);
  
- static __init int x86_android_tablet_probe(struct platform_device *pdev)
-@@ -430,20 +425,16 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
- 		break;
- 	}
+-MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
+ MODULE_DESCRIPTION("X86 Android tablets DSDT fixups driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 278c6d151dc4..ebba7400d5c9 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
--	if (gpiochip_node_group) {
--		ret = software_node_register_node_group(gpiochip_node_group);
--		if (ret)
--			return ret;
--	}
-+	ret = software_node_register_node_group(gpiochip_node_group);
-+	if (ret)
-+		return ret;
+ #include <linux/dmi.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 1f325b2947ab..832be02495b5 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
--	if (dev_info->swnode_group) {
--		ret = software_node_register_node_group(dev_info->swnode_group);
--		if (ret) {
--			x86_android_tablet_remove(pdev);
--			return ret;
--		}
--		swnode_group = dev_info->swnode_group;
-+	ret = software_node_register_node_group(dev_info->swnode_group);
-+	if (ret) {
-+		x86_android_tablet_remove(pdev);
-+		return ret;
- 	}
-+	swnode_group = dev_info->swnode_group;
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index 174f02322e52..bc473979e4f6 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
  
- 	if (dev_info->init) {
- 		ret = dev_info->init(&pdev->dev);
+ #include <linux/acpi.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+index 62f41c14e6ba..29fc466f76fe 100644
+--- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
++++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ 
+ #include <linux/gpio/machine.h>
+diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+index e5ba1c65d62b..149befba3330 100644
+--- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
++++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ #ifndef __PDX86_SHARED_PSY_INFO_H
+ #define __PDX86_SHARED_PSY_INFO_H
+diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+index 5d02af1c5aaa..2f8cd8d9e0ab 100644
+--- a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
++++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
+@@ -256,6 +256,6 @@ static struct i2c_driver atla10_ec_driver = {
+ };
+ module_i2c_driver(atla10_ec_driver);
+ 
+-MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
+ MODULE_DESCRIPTION("Battery driver for Vexia EDU ATLA 10 tablet EC");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 4bf4bcdf50c0..8e7d04bcb3f8 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -5,7 +5,7 @@
+  * devices typically have a bunch of things hardcoded, rather than specified
+  * in their DSDT.
+  *
+- * Copyright (C) 2021-2023 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2021-2023 Hans de Goede <hansg@kernel.org>
+  */
+ #ifndef __PDX86_X86_ANDROID_TABLETS_H
+ #define __PDX86_X86_ANDROID_TABLETS_H
 -- 
 2.51.0
 
