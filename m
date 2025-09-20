@@ -1,73 +1,73 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD601C84AE
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B06D1F1932
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758366362; cv=none; b=PIleuxdHmwlJzQViniqV0/tmTGjyvJ6nnPoBB9Mw0ddL5ubFWL8qPl6o1gFB7K+rUUngiSx2KbHP2eS6Wia9CFcnQuOKJBv+ivqGi1yiMrrziLgX/uc4eluU/Dprf3ETHoW5wj7Ph7ugMjeItkDLvp6kwK4D54nj84r/wU5axrg=
+	t=1758366593; cv=none; b=s6gHQuavcE3hu8Lk7uxlzUxbnmglMAgu8T+VBy0NTXLty1iOqyKrBuDeGiNmrq0z6aNhNPL9ieDfk31KaN/cc4YeSFmM7BCrdy9dzJGvAjv4tHwSNJI1N/ZfLaIN20eG2JEpZzb2/5m7YbwJmVzXmjF9BrrRTa58H/nfbXtzPDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758366362; c=relaxed/simple;
-	bh=mCUNJdodkxy1pqJIg71yxNNsEit7RPMvTXGJNCHZN8Q=;
+	s=arc-20240116; t=1758366593; c=relaxed/simple;
+	bh=MeBzeZuJoOFs/wopGR56y4qk193qtqPcQMc5SVf+pjg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XaX3z5KD0H7d4MejKnuPmeSijuB+avtPt72rq15tv2INYU+M6nRrX9O81hkPLCSKskyiZIvOWJW97UoMFkCieCvwrh6QpNzxaZFVDfznMgo77jKaOGh8L8W2gCh8eFbJ7xzYMe3Cp9i9TWXqxB+AkG5i6B1s51iscJ2lSFinI8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHSsHx4r; arc=none smtp.client-ip=209.85.218.53
+	 To:Cc:Content-Type; b=bXXH4ak/xZMYFhtevFb4uLDbQcLMtI/RiZcSIJgjNwXsacWAGeYa2lvcuJmSvWpA1+tnHuykkp0t+aQMkbvfaGzz0HRyC3t/gWvZJ3ik9YdGoWwYn7XR+yh+NLL4PaVjfCCvrvMG8vO+CHjK02Xs1Yb4oTbovMuMU65zZYRvg0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMtswYyi; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHSsHx4r"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b149efbed4eso468507466b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMtswYyi"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b256c8ca246so282302566b.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758366359; x=1758971159; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758366590; x=1758971390; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y1HRbh1mAlx+ZSw9Lbnhf3Gb0XtR5LFugelrDStLu2Y=;
-        b=QHSsHx4rhQLCFuuYVSYYtuhTXXPP3TQr1mdzdXIvY1lfE/1PWcuof7NPvvsR9w3wBt
-         /JK5UOBlGR2P4EqQ1XGm1MWX1ESiUCeTagEkaqHjPkAGj3bX/EKdK7XsX4blYbggAL3Y
-         Rc/ckX7IMPu3cPCHuZ+KFzo4yr48Og5o79GtTd4YJuTrFHdjuZ/AH1MZmmzxpR9F2jFW
-         KDhxmobhsW9Pjvbdt+eabeU8J+qD6cBmxAC05KFVpcNag8GMZ6njceUe3mA0Iutj6l4q
-         dMiqf3APSdCuBTHng/Fj1o5FhPC2+/XCW0RAaA1T1CAodbO9gWblFheiB5iQ3AZkrvaq
-         rX8A==
+        bh=X17urZN/sTxWn0uDY3G1eFwtIfDtbusbjyQEUJk2cc4=;
+        b=cMtswYyic9wgOzYQ5dVU/rpF4wn6qC/uF55iBzxcPFsDVXIvVWv4FNkmJTpiC52qEW
+         TFLWxgG9tef4zpLuE2jOdjMPKHvroee+6xlqunoSMpbcqfkMhp4+Oo9JL9dkyWZ9IgZC
+         OqwUA57IUhlbtBJqt5vflO/XrompwvpX0jMLDO/y8NkGt+4XnpDt8By32Wtv041TE+7N
+         kzHHlnps9+ByIy44ToHbA/NXtfnm1SoKefmgzjtXXpC9XFHX9JH5/q0s2ShE+WkqLqEr
+         wz3bS40zR5etj+e8Gt6jxfWiV/41rIk0ckxSh4vHxQ8C36n897f41W9adegcQZ3jQTKi
+         rkGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758366359; x=1758971159;
+        d=1e100.net; s=20230601; t=1758366590; x=1758971390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y1HRbh1mAlx+ZSw9Lbnhf3Gb0XtR5LFugelrDStLu2Y=;
-        b=JZ+UyUcASU0ziyuTnESRba1hhJu0B9QuKLjXlRNeSY7I+To+GaZi2sBiFgMTI7uNFx
-         wt4/tJOx3VgGBtJHKk4s5yRjce9SDNLJhO7iarFedGio0/gkE0x6DMhQTzGKdH5Vlvev
-         wfvNvMfZDkFwenKgvJ6ZgZaaGLw9sYImFuH6re0hK5LtsYTBXz1ZcDSatLaZ36YPKEMS
-         BGt3MdDYIbgdTRF+7zRKzKZCXQBt1O72KYkHhEILeUhCS6nVrdEtZ9at3lagEUgv6IIA
-         fDWp1qvSQhJaAJgX2aJl2J2Ey6teBjd1+gv2hoJJYcPGq6i9DJ7vz208+9W2lKWYPz6d
-         aS4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWMj6pg4EKEHG5VKiGFif3ZpLg2CaGS4xx7aJMRj4jIxdxMMzrc+oBXerBaq/7nPxFbVORMQSDDwTzEpaKWbOak8nK/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCLiacoBnNBfMkuo9A88nkJmgcOQr/C7okyoFGhvSIaAe4DVkY
-	T3XpRoIpUCXkIsWtMw4Ip/Pbc7iCziHn9kgR5KEsoYdXelvKxEUC89luF39d9VW+Wr19nQsgrj6
-	PsZ4n8R1z27RPtT+RBuetR4MBs0f6SSM=
-X-Gm-Gg: ASbGnctFjzj9901utOYv+LVQWWdtend7LoMf7RTGa3M+WKTQjxmY2QoY16O6iuaDINl
-	1gAbo28CkzCL82zBOT6472+9lNSd/8RyyCHzqyD0QJaP12zmettepZQ531+ksTFBmAZQlYRAz/o
-	mlX6V6+bIsEqbgT4J/qjDEmrDVlvIpuHrHv5e78tYkZkZkoyr3OjAS/QrYLKN3QTAy6JlCw/59a
-	Uu/yp5l0TzTDSl6mQ==
-X-Google-Smtp-Source: AGHT+IGKtr95qUfd49e8EfSo2FxedZmtpgrJzwLngx98vhLa4l7bhCpsTj5TS1Ruj6gPujE44DnUdOlUac+ttVCZfxU=
-X-Received: by 2002:a17:907:3e0f:b0:b07:c90a:8ade with SMTP id
- a640c23a62f3a-b24ee5fac05mr727310566b.20.1758366359046; Sat, 20 Sep 2025
- 04:05:59 -0700 (PDT)
+        bh=X17urZN/sTxWn0uDY3G1eFwtIfDtbusbjyQEUJk2cc4=;
+        b=XkjmBRF+vzRhye6FqcQjLIjcwl+z321TVJqA40BWE3ogSoQpfi0t3n7ZhDpkbEXwvQ
+         YLwf6gH/XjMwCkXfeKCFD9ZyJFojeGZz3/cb9AvUO6DMEtiiaxAii387IRBRfjQNuja2
+         cVt8Mfr3zVpKefxGFClu7cTwlq3aQuXPujrRfMl+dq9Ym/X3qTF5QNPs4nKvxt+Cf91a
+         b5KM7pBhsnEJb2r8BOzJT8Ne1naskvN9JKbBr4tfMhpMe4iVPe6O2wdl7iz9bc8433xN
+         RY7RIwAOLPw3vRq+EThZl9Ej+qvonBo58gLsxwDxqYMGHoYWmDZKIuzq/FQw7HOXs7Ut
+         CG7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ne1dmxmLZnM0/st1w+nzM+P5DyF/h6lduQHgzZZHc+iWeq8KxN/Pn4YQ9To+q6foa9g4et7jrk9oM3egVBY6ArOs@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDN7IsPJgwangKI3ZkRPWCMcsdqmYpDA4tN4+wjLcAylA7vry6
+	bK+d9+/zVIlhyyu2wPyTYrXOSA/YEOmaSlBOV7Ro/Nhl6kyekREccvZrhM++zDOHhjvHq/hpN9a
+	N+UgZo2p5V4DMWxDCOmvqSxEP4atKGGc=
+X-Gm-Gg: ASbGncs1Ggj5opJ9bwgW6oqLB5B2bd197KXXwcJphdH4u4XxRf9YRVMKCCMTGowWk/k
+	D63qF3qKP9X3JGLiC4380BHCnT4THBfEAiXPkadWwtQvdTRIUpGB+P8/7gV0w5Wfb/Uy9B/YDiU
+	TGq1E0aaa1J+PZfiYBdkRdAsUNfF2rSFzvAKVKODL1BVlXpDebL68oPy/tQdYT3Kq3lbgjqdIdF
+	XhdZBI=
+X-Google-Smtp-Source: AGHT+IF54dSsYeQx2UXi5HYBY96/XUcVDjyXk2jaijgN1HlELV5LNjc9WB4iYPgd5A0uBk+UQ28KZt+rinwqeDpfb0g=
+X-Received: by 2002:a17:907:3e13:b0:b07:e04d:c89d with SMTP id
+ a640c23a62f3a-b24f62163a5mr799361366b.48.1758366589468; Sat, 20 Sep 2025
+ 04:09:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919204742.25581-1-hansg@kernel.org> <20250919204742.25581-10-hansg@kernel.org>
-In-Reply-To: <20250919204742.25581-10-hansg@kernel.org>
+References: <20250919204742.25581-1-hansg@kernel.org> <20250919204742.25581-13-hansg@kernel.org>
+In-Reply-To: <20250919204742.25581-13-hansg@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 20 Sep 2025 14:05:21 +0300
-X-Gm-Features: AS18NWCo-0fuW_h3T4HsV8gSZrKy0Ox66fedkIc6z8MqypV_UfVkjWxdj4R8crg
-Message-ID: <CAHp75Vf6mzHPhm_sKZ68H=5nFCg2aEPdMke84ovB_knv4-+eJw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/19] platform/x86: x86-android-tablets: convert Yoga
- Tab2 fast charger to GPIO references
+Date: Sat, 20 Sep 2025 14:09:12 +0300
+X-Gm-Features: AS18NWBhiA4laOphSIffzsMSG2oe6Knk43mxWv4B6Hgz6iL_r4wX0JsjRt_Dzts
+Message-ID: <CAHp75VcMNe02iCWyD3A4aCXOH4Q6Fm09xNO-OeaaBT4t5BPQPg@mail.gmail.com>
+Subject: Re: [PATCH v3 12/19] platform/x86: x86-android-tablets: replace
+ bat_swnode with swnode_group
 To: Hans de Goede <hansg@kernel.org>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Andy Shevchenko <andy@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
@@ -77,30 +77,42 @@ Content-Transfer-Encoding: quoted-printable
 
 On Fri, Sep 19, 2025 at 11:48=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
 rote:
-
-> Now that gpiolib supports software nodes to describe GPIOs, switch the
-> driver away from using GPIO lookup tables for the fast charger device
-> to using PROPERTY_ENTRY_GPIO().
+>
+> Now that we are using software-nodes are used in more places it is
+> useful to have a more generic mechanism to have the core code register
+> software-nodes.
+>
+> Replace the bat_swnode registration mechanism with a more generic
+> swnode_group registration mechanism.
 
 ...
 
-> +       /*
-> +        * Propagate pdev-fwnode set by x86-android-tablets to serdev.
-> +        * The pdev-fwnode is a managed node, so it will be auto-put on
-> +        * serdev_device_put().
-> +        */
-> +       device_set_node(&serdev->dev, fwnode_handle_get(dev_fwnode(&pdev-=
->dev)));
+> -       if (bat_swnode)
+> -               software_node_unregister(bat_swnode);
 
-I would rather split these two
+> +       if (swnode_group)
 
-/* Comment about propagating... */
-device_set_node(..., dev_fwnode(...));
-/* Comment about reference counting */
-fwnode_handle_get(dev_fwnode(&serdev->dev));
+Now this check is a dup and hence redundant.
 
-(note the parameter to fwnode_handle_get(), which seems to me aligned
-with the explanation given).
+> +               software_node_unregister_node_group(swnode_group);
+
+...
+
+> -       if (dev_info->bat_swnode) {
+> -               ret =3D software_node_register(dev_info->bat_swnode);
+> +       if (dev_info->swnode_group) {
+
+Ditto.
+
+> +               ret =3D software_node_register_node_group(dev_info->swnod=
+e_group);
+>                 if (ret) {
+>                         x86_android_tablet_remove(pdev);
+>                         return ret;
+>                 }
+> -               bat_swnode =3D dev_info->bat_swnode;
+> +               swnode_group =3D dev_info->swnode_group;
+>         }
 
 
 --=20
