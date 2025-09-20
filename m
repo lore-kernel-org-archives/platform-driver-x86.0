@@ -1,72 +1,73 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4851EDA0F
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD8E1DA3D
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758367322; cv=none; b=QxjLT46a2IF4eKm1ukxKSUJHSskIsliUJGPzgxm84wyBKkAL5YUsAUbDQPnO5e6acIq8eqrTDUGJZN8gZrPzrP4ro8RI/yE9FQrvyMJDpdUKyEfE9OLzo58cfRl6X1cZv1wZ7Xt1ZBzzGaR4b+mUBWNHq3FoJy4OVSNun28yhIw=
+	t=1758367394; cv=none; b=j8oWNfQ5AXRsdLUiPvGlWnB3TFfZ+vwKi8iuSptBm9reLa0TyguNx0eshaJI4QbVr2XZurgkyGzBAkckpVPhd/xd0gr6JAS8NcCUxtS7oSIJG5r9baOS0Jwk/4OY6n7HBruMQSyTQGQ1rUjW15jV6sRuk4KyDwxgkT6zZ75g1Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758367322; c=relaxed/simple;
-	bh=+rLdGsgYuGjcJfG8sQAGZkmn3LVzE0yyvTX6hXEiwRk=;
+	s=arc-20240116; t=1758367394; c=relaxed/simple;
+	bh=1CCoPqEd/yKz8xnOgfirS1uIg5glDSaaa2qfAaWqQRI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ta85YIdx8FEmyeB+n0TLrT/lyn/wU6PEYXMo7qiojO/h8lsvPOhcF4tgtpvLg6nHPsNwr1VVwdpZ3jUd4iJzlp1lM12qfhV+i0xwPnfjQOEyqBUPIVSzERtSoKBoR4OT/D7N6JqIgGqBp6aer9HNo02Oukjz+ifvP9JsLaVvNYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GQIYQBot; arc=none smtp.client-ip=209.85.208.51
+	 To:Cc:Content-Type; b=Ey3TJCeHAP2q1noEgwOy3O1GozFaTVonpWl63pg0m7x+5igqmVmkAT/ZHZu2Pwigqc4yelUV8j2O2aHhyzi/5FTgXIvi3GC5Gp0XoxXOYrYyFv8IwO+qNAR5qGKhJhOw1EbsdJgyYeJytJ6S4OxHQ48V/q9/gJHZTCU1JmCt/Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADkPIqjk; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQIYQBot"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-62fc14af3fbso3461239a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:22:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADkPIqjk"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b042eb09948so503304866b.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758367319; x=1758972119; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758367391; x=1758972191; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KiyE8MZvpn6pc3tcytojzE+pPGjzTAS+pzglCFec8LQ=;
-        b=GQIYQBotn5uxmnxUVaoj/bpt2iMHpIfVblbYjqZ67gXhivnk4fHc+kckZCU7F8Yhqh
-         /CzP5fiqg9r4nKoN/MBzWhxeVFK5RZ2VxSR8BwDkn2S1BU7nNI6k3LYYqoelV7o/uUuz
-         flf7bbR0zaCF3hulJPSOFAZjhTSqVtODDLtZvwxxNJhXVzkuGBvdACp9j4ezz3NlOiKi
-         NiWAz4ojC9nrdYbCC7V2j5MXP5lxWhEvyAO8gGx0yWVQL2Mk+lkJnHzB079r0fBqXuVz
-         z0yzdzg2RPGJXs0NIFi5bO1IQUl6vRViT1rEJRAhb/a46a66kU1MmlYgfR0eIWJ23SUf
-         iaWA==
+        bh=OsaEFpLGHi+oq+I6AGVTn2qW//8mvBvN/eTlJYgsAe4=;
+        b=ADkPIqjkFi3GqPc2tsXCJaFoXZrN253MvVptqyOumj6gUVSpkjfKDvMvZQQGECv5kG
+         y92ypnniaovKDLAHgoj1HQRuebaWrzWfiSyathebyI7skDQQsCCGxJy+Tug4U709syFe
+         rM/VEVN8ZJOXM/4u2/lY8am0Eespv/FGwvqATQK7yhweodttlQOAr/I1CY3w/unJ8avI
+         yJBHuR+aljuPHOzPxj9KmQvJZFivxu0UFC5TzEtnoGax7H2qPFiiv2NSoW6muq6XTnLO
+         fDGu1v2IlH4P1lUTofbl6siqM0DwflLaNPuM6ztrHrTv1XORZI4s8KNxhOvjz6JFeKTn
+         J66g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758367319; x=1758972119;
+        d=1e100.net; s=20230601; t=1758367391; x=1758972191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KiyE8MZvpn6pc3tcytojzE+pPGjzTAS+pzglCFec8LQ=;
-        b=UE1CAtvOO7CH59FJcApOjTM7KHWQZj7GZ0ZAakFQa04ZMWyn7xFSyYoTuvq5y4Xrhn
-         QFkJWxMWLKTgG/rwwvWzcltzf3qhnZ871WA7fAkF/UhJfviYJeogrgSYrAmIwDz9LzZt
-         v3rb0qXNg71PdZOL7lXH+1diWqtn8SgP2fZ9Vuwg11wsD6njHypTdaWu/pFCpwQYtg0m
-         Tz7MIjgVBocDX3FzCdIvgbOfSfiT0ekCwMZh6/RcjUOT9+4J1qcO8j4f3+UhakjGnmYo
-         3YQnDEtDjGPIOxifrSP+Mr69mqaAyF9fiTLf/N/q96Dg80H0xQCEE6zZEksEHabZyh0v
-         YBSA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7ujGsA0ZTQxHd3jJhpgBvYRljFsnEVN46OVOWpgRe3F2ULMotkYSm1yx4Z4RdtisIanmlQv+8rOdtsVkzO9D4rpEV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4g/kEOCj/1IrTqqUHQq4Ngptv+Dv6pevyRbMwzCBq30EfsFX1
-	oI3a3cSSNrFALepAVKOuKsLWTcrLDoLoP/GncGKduDNjKvtMPThmM/xxIKQsSWvX5nGjITKwm++
-	m/ix6aNyxSZ98EBcrTYG86T+77k+xH9E=
-X-Gm-Gg: ASbGncupn16EseT720nJz/WYc2gr0Sz571gO5c/opOKkkileuTcd0jiSQCKVQWOyqPw
-	FjsB/S4GBRhCtkgkCWOt6qLf80d8Vksbon9epCnTSccPqyXmDBN/EIMHEQCEV73RCpSt2C5qPkv
-	qIXGD+RafeGSzyRFYmFoSOAlTBa2ed5kMlsJgw7QfNydj3dWTS4PDNfcbe2rc2w+yqY1RvtNUfe
-	1/tDEk=
-X-Google-Smtp-Source: AGHT+IFeiEj70ZQcJf1tL5n90bZSJ1mtJg23x2oOz6LN7BEZQ2PsPZ07W9++FMfiH7Txpzjbyc+BQ8/h55OAooGAqks=
-X-Received: by 2002:a17:907:9619:b0:b07:87f5:7cb8 with SMTP id
- a640c23a62f3a-b24f4ebe4dcmr659495366b.45.1758367318853; Sat, 20 Sep 2025
- 04:21:58 -0700 (PDT)
+        bh=OsaEFpLGHi+oq+I6AGVTn2qW//8mvBvN/eTlJYgsAe4=;
+        b=PP0NsvnaqKwnYBgL3DYHhrQAnwKwchQfPegeGmDLTyklWDd98t3aCKn2lTpm+9ZtkM
+         7/kpjUSA8cBX+mF1YmACOrAofQs0fZqF/sBOTT+qt3Nt5dKSa4F+0z9iPqANRfoaNqGR
+         c48Et7b6EBJwST08Vuqji2CaSbQuMH8+1LSsmjmlmBr6yJxwdKduuRLmEjGtCKuSl5U+
+         kVgYcz0S6PRppCKf0MBWngPgOnUcGhItxn7gXWhTRdJRWWR5gpOF7A623pFuQPR/dUVq
+         zQuME2p/dXQA4KgYBxW5Z8/m+MyNZChr3pxii/p+HD/hJT9B2M0l5U8XhleyksLhHp3L
+         JcNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAie7u2+s7jkeXScBd6e3ryIteHNhsQtJBz10BeVjxbkBKw8P4oITRU0+3YlX2v+UwzHaV1MK4P33S8dSVwzwnQplh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP1JruXv6InQvlLO4Iv8B4nJmQPtlXfrFVoNH5meqn/1Y/0jz6
+	SPqnOhkZ1hJw4ncxKx6Y3hZgF1fOJO6lkdUkcDvszvb+eU9ifA02m+Ih5XdDijwkYmeM0F9P9m7
+	vHwGI9PXryPEh1qFb0T7ZYTPqRtiP2io=
+X-Gm-Gg: ASbGncsKsnt2LbGFzTfkiWrwFq4CcWaJlJdMcVrrBOcBEPBUQ3lH2K+27f7KxdNPisv
+	Zafi9iQ/23f21ptHdT9qa9uP6Kc3YlQSTBXVdqPQCfoEaa4Dc27XE43MhX0pw+5WBHm8V2EYW8E
+	ATEEnZN7541HB9hX7KSfGOF+26mxoysmdekCRTfQCjsAtbYLmTsZgAQUuMtK+qYd4C9PP33mgbX
+	jr3bDA=
+X-Google-Smtp-Source: AGHT+IHhohKjilWlG3i24BvVP0/pedlNZ/34S9BoxznHLr+0qXcHxdER9oWpSD2YE5NkGPH94TVMgX80qAvvVJOB9qU=
+X-Received: by 2002:a17:906:c155:b0:b04:2212:4211 with SMTP id
+ a640c23a62f3a-b24ef9754fbmr810473166b.16.1758367391232; Sat, 20 Sep 2025
+ 04:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919204742.25581-1-hansg@kernel.org> <20250919204742.25581-20-hansg@kernel.org>
-In-Reply-To: <20250919204742.25581-20-hansg@kernel.org>
+References: <20250919204742.25581-1-hansg@kernel.org>
+In-Reply-To: <20250919204742.25581-1-hansg@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 20 Sep 2025 14:21:22 +0300
-X-Gm-Features: AS18NWAiHZCu3tyYfpgDzY0BY37R5QgJGBY2AzyVA85gXRQhXzbUCQrwjx_ygno
-Message-ID: <CAHp75VeuZGUOhQAey6r7Q_mPOmBG4j_UdWerVp1LZpeyUKmZag@mail.gmail.com>
-Subject: Re: [PATCH v3 19/19] platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
+Date: Sat, 20 Sep 2025 14:22:34 +0300
+X-Gm-Features: AS18NWARi8xfpHuH-m8VbHvEX0Qk3Q79DzeGsHQVhtUMtz-HegdieOGT2ZlBj6o
+Message-ID: <CAHp75Vdw2-kvtEs_m4FSb5i59P1Qs-VFv88_tMxua+dYoZhs1w@mail.gmail.com>
+Subject: Re: [PATCH v3 00/19] x86-android-tablets: convert to use GPIO
+ references + Acer A1-840 support
 To: Hans de Goede <hansg@kernel.org>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Andy Shevchenko <andy@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
@@ -74,57 +75,54 @@ Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 19, 2025 at 11:48=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
+On Fri, Sep 19, 2025 at 11:47=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
 rote:
 >
-> Since the x86-android-tablets code uses platform_create_bundle() it canno=
-t
-> use EPROBE_DEFER and the driver-core will translate EPROBE_DEFER to ENXIO=
-.
+> Dmitry's v2 cover-letter:
 >
-> Stop using EPROBE_DEFER instead log an error and return ENODEV, or for no=
-n
-> fatal cases log a warning and return 0.
-
-
-...
-
-
->         struct pci_dev *pdev;
+> "This series came about because now software nodes can be used to
+> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+> eventually get rid of gpio_keys_platform_data structure.
 >
->         pdev =3D pci_get_domain_bus_and_slot(0, 0, info->ctrl.pci.devfn);
-> -       if (!pdev)
-> -               return ERR_PTR(-EPROBE_DEFER);
-> +       if (!pdev) {
-> +               pr_err("error could not get PCI serdev at devfn 0x%02x\n"=
-, info->ctrl.pci.devfn);
-
-TBH, I think this is unlikely to happen. If we have a PCI device, I
-hardly can imagine that we can't get it, yet it may be not enumerated,
-but the pdev seems to me won't ever be NULL. Am I mistaken?
-
-> +               return ERR_PTR(-ENODEV);
-> +       }
+> So while I was doing the conversions from GPIO_LOOKUP() tables for
+> gpio_keys devices I decided to convert the rest of them as well. Maybe
+> some time in the future we can drop support for GPIO_LOOKUP() and rely
+> on device properties exclusively."
 >
->         /* This puts our reference on pdev and returns a ref on the ctrl =
-*/
->         return get_serdev_controller_from_parent(&pdev->dev, 0, info->ctr=
-l_devname);
+> Changes in v3:
+> - Add missing pinctrl_put() in lenovo_yoga_tab2_830_1050_init_codec()
+>   error-exit paths after the pinctrl_get_select() succeeds
+>
+> - Adding a swnode to the yt3 spi device changes the name of the SPI/codec
+>   device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver loo=
+ks
+>   up the code by name, update the machine driver to use the new name.
+>
+> - Make yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
+>   the platform-device to the serdev it creates to fix this.
+>
+> - Fix the commit message of "platform/x86: x86-android-tablets: convert
+>   gpio_keys devices to GPIO references" which contained a stray reference
+>   to wm5102.
+>
+> New patches in v3:
+>
+> - Change sw_bat register mechanism into a generic swnode_group mechanism
+>
+> - Use swnode_group mechanism to register groups needed, instead of having
+>   init() callbacks manually do this
+>
+> - Changed my email address in the driver to hansg@kernel.org
+>
+> - Rebased "platform/x86: x86-android-tablets: Add support for Acer A1-840
+>   tablet" on top, switched that to also use software-nodes for GPIOs and
+>   added it to this series
+>
+> - Some Lenovo Yoga Tab 2 support fixes
 
-...
-
->         /* Reprobe the SDIO controller to enumerate the now enabled Wifi =
-module */
->         pdev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0x11, 0));
-> -       if (!pdev)
-> -               return -EPROBE_DEFER;
-> +       if (!pdev) {
-> +               pr_warn("Could not get PCI SDIO at devfn 0x%02x\n", PCI_D=
-EVFN(0x11, 0));
-> +               return 0;
-> +       }
-
-Ditto here.
+I'm in favour of this series,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+with some nit-picks here and there.
 
 --=20
 With Best Regards,
