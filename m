@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365B7261A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 12:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA3C1DED77;
+	Sat, 20 Sep 2025 12:53:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758372353; cv=none; b=TJunGMTPdEB/PcSGqKat/n7Mg4UzStorzZaYqJW/z7xPoAKPqPF+hRpMygvheTzc1HuoBnIYNteJ3nfOoF3Uk2DbZJ3a4i7e+eoim7A9BKGd+LfxUioTpuKprsuzBX/EynV1uuADn9U99vSipQroTNjEp96uO/FwEe06JuFn38Y=
+	t=1758372808; cv=none; b=k0qAKIfvJSZUJ+ppXxP+H432R3hpkWp42vaWELw0a7b0Jn6bsqeNWnfySLxSizTF8u32BdsovcoVA5NcrKkIQzIO4VCpTl2AQNfNJFjYsJ4xr+EjUHFLfuCpxy0EJcjMzBMXQ3e6vXFnRrnNjbaazfOQQgtVzCSW/8w52CPLej4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758372353; c=relaxed/simple;
-	bh=hMT0mPyrIJIdcrk2FGtXisGXbseBJQUzjJRj7zK/BNc=;
+	s=arc-20240116; t=1758372808; c=relaxed/simple;
+	bh=AjolLnj9vYvyau+Qw1nPzhy9BvsSmW3m/2cqU9XAPao=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YAy+48680e22KcPKWnVDiN3fDPNDxVdfAO0rEjUos6ZyHmsexJuoWWL8rP0n5X+6AIroSqiCFMbE95Yq1gpdma57NErw1KqAUnu03K71XFatqCLobxfgrE5h91xlxYwas5cMoZSJTHfBsqXJVCTATlCPvZycQFDcBLM38baWV60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6acjHE4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jH9JKF5acRWGiXYK6Sx6yWxw8Pj6hPxqtGbgC2vEXWCq5VmNjMcIWUnRzu2iTUxj1eYC5nlg5Zcq9QzCRCf9EIE7XwMZJG+eGoVZ63/hmvKDVrv+THg7UapVNBiTvsOLEvJcL5OIby9G0pgYT9Ta+1B2bJGP9VoNyW3phNcz6Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oE38RpO/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6acjHE4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51988C4CEEB;
-	Sat, 20 Sep 2025 12:45:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oE38RpO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BFC5C4CEEB;
+	Sat, 20 Sep 2025 12:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758372352;
-	bh=hMT0mPyrIJIdcrk2FGtXisGXbseBJQUzjJRj7zK/BNc=;
+	s=k20201202; t=1758372806;
+	bh=AjolLnj9vYvyau+Qw1nPzhy9BvsSmW3m/2cqU9XAPao=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l6acjHE4BvAVDDVEGX99QPVibpujn2aIWnImHmFsYxdoQLvPfx2RXznzpWpgjowly
-	 S4wcR8KqbeDC+i+CAUbQx5xxpSxpLJl0E1v4jZQC4guTvZbLQ7OBxDmQzcH5rLQ/PV
-	 jqwYvZQ3mYdHOFMHZxGiGJRHMS5K1vBVprud6BmpCSvfl2UOcBBIFwJ1Nqa24xYZVc
-	 kMARZJSK6N2zHppQDgUlcnm9UXUq38Ub+JUDEm+AriXjcABmundz4hcFxQ7urrBcm0
-	 eC74msUrRBz1SopdbtbcOkvpxErZi9+5hF2GAB1K9S9jDPmxR99exGDTCx8CQV0z+s
-	 HqGr0rZPPPzIg==
-Message-ID: <76983fbf-afff-42f4-8474-8b38792c1a0e@kernel.org>
-Date: Sat, 20 Sep 2025 14:45:49 +0200
+	b=oE38RpO/I8pKgAHj5xiMF0FsfNYrHNNAMCuM78kngaJdDK2tz8S1en4V4gi4D366Y
+	 DWt1779SayRUOHWDZPYqpYUlYwPGpezh+EF3ZxMNCG5xGofMRC7YjqGYf1MhEQ/mF0
+	 JkqHtiPpAJZpcw7gkjHhb6zrrWCj9G0m9y7YvS+xuRpOagr0ZsCG1fhOCbO+zO/pJH
+	 0RTUYOFlqrhC9MfevL6DIn31oqbYVT6FF0wpxiDQrTfU/PyVO0O8MHrolO/fQrN4lt
+	 olCdR12EwPhWXQnmXqM3DLxKNjGYAg5oc8y5/+eD3f/QJs9O5sOlK6+rmG49gCru8v
+	 TCAtF7WMXp78g==
+Message-ID: <e6b39e68-d950-40fe-a807-37b5d9e9204e@kernel.org>
+Date: Sat, 20 Sep 2025 14:53:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,76 +35,75 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/19] x86-android-tablets: convert to use GPIO
- references + Acer A1-840 support
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 00/11] x86-android-tablets: convert to use GPIO
+ references
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann
- <arnd@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20250919204742.25581-1-hansg@kernel.org>
- <CAHp75Vdw2-kvtEs_m4FSb5i59P1Qs-VFv88_tMxua+dYoZhs1w@mail.gmail.com>
+ Arnd Bergmann <arnd@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250810-x86-andoroid-tablet-v2-0-9c7a1b3c32b2@gmail.com>
+ <bc463249-a159-466d-8804-399805b8fa3f@kernel.org>
+ <ley47cmpwn5lhacf7ddfufeaqhe7rqemmkp2sjrhxitdv3l6cm@ktafyk6eeeft>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <CAHp75Vdw2-kvtEs_m4FSb5i59P1Qs-VFv88_tMxua+dYoZhs1w@mail.gmail.com>
+In-Reply-To: <ley47cmpwn5lhacf7ddfufeaqhe7rqemmkp2sjrhxitdv3l6cm@ktafyk6eeeft>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+Hi Dmitry,
 
-On 20-Sep-25 1:22 PM, Andy Shevchenko wrote:
-> On Fri, Sep 19, 2025 at 11:47 PM Hans de Goede <hansg@kernel.org> wrote:
+On 19-Sep-25 11:21 PM, Dmitry Torokhov wrote:
+> Hi Hans,
+> 
+> On Fri, Sep 19, 2025 at 09:53:53PM +0200, Hans de Goede wrote:
+>> Hi,
 >>
->> Dmitry's v2 cover-letter:
+>> On 11-Aug-25 4:22 AM, Dmitry Torokhov wrote:
+>>> This series came about because now software nodes can be used to
+>>> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+>>> eventually get rid of gpio_keys_platform_data structure.
+>>>
+>>> So while I was doing the conversions from GPIO_LOOKUP() tables for
+>>> gpio_keys devices I decided to convert the rest of them as well. Maybe
+>>> some time in the future we can drop support for GPIO_LOOKUP() and rely
+>>> on device properties exclusively.
+>>>
+>>> This is completely untested.
+>>>
+>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 >>
->> "This series came about because now software nodes can be used to
->> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
->> eventually get rid of gpio_keys_platform_data structure.
+>> Thank you for this series. While reviewing this I've found
+>> a couple of issues. I've fixed these in my own tree and
+>> I'll send out a v3 with this fixed + some extra patches.
 >>
->> So while I was doing the conversions from GPIO_LOOKUP() tables for
->> gpio_keys devices I decided to convert the rest of them as well. Maybe
->> some time in the future we can drop support for GPIO_LOOKUP() and rely
->> on device properties exclusively."
+>> The issues which I've found and fixed are:
 >>
->> Changes in v3:
->> - Add missing pinctrl_put() in lenovo_yoga_tab2_830_1050_init_codec()
->>   error-exit paths after the pinctrl_get_select() succeeds
+>> - lenovo_yoga_tab2_830_1050_init_codec() is missing a pinctrl_put()
+>>   in error-exit paths after the pinctrl_get_select() succeeds
 >>
 >> - Adding a swnode to the yt3 spi device changes the name of the SPI/codec
 >>   device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver looks
 >>   up the code by name, update the machine driver to use the new name.
 >>
->> - Make yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
+>> - In the "convert Yoga Tab2 fast charger to GPIO references" references
+>>   the fwnode is added to the wrong device. The node should be added to
+>>   the "serial0-0" device but that gets instantiated by
+>>   drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
+>>   I've made yoga-tab2-pro-1380-fastcharger.c propagate the fwnode set on
 >>   the platform-device to the serdev it creates to fix this.
 >>
 >> - Fix the commit message of "platform/x86: x86-android-tablets: convert
 >>   gpio_keys devices to GPIO references" which contained a stray reference
 >>   to wm5102.
->>
->> New patches in v3:
->>
->> - Change sw_bat register mechanism into a generic swnode_group mechanism
->>
->> - Use swnode_group mechanism to register groups needed, instead of having
->>   init() callbacks manually do this
->>
->> - Changed my email address in the driver to hansg@kernel.org
->>
->> - Rebased "platform/x86: x86-android-tablets: Add support for Acer A1-840
->>   tablet" on top, switched that to also use software-nodes for GPIOs and
->>   added it to this series
->>
->> - Some Lenovo Yoga Tab 2 support fixes
 > 
-> I'm in favour of this series,
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> with some nit-picks here and there.
+> Thank you Hans for looking over the series and fixing up all the issues
+> that I introduced.
 
-Thank you. I'll post a v4 to address your remarks soon.
+You're welcome and thank you for the reviews on the new patches.
 
 Regards,
 
 Hans
-
 
 
