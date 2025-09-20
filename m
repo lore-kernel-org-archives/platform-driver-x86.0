@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D148634C
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDAA26A1AB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758398850; cv=none; b=XPJz0Jxs3EYRKrP/04rEDM5eGT6w4/WgY5xtmsHHxTefeHBpLMGSM2mklTtvw5Rlipo+f2+GDuFiZ2FXkhG7CXr8n9eC/dSS1CEydn4OEbQk+ofaZuTKIEbdT9416KsWeyJU95Dk5Fdhb/qdAuSNE3DJ4f0X4QcUHDhxHE/XAFY=
+	t=1758398852; cv=none; b=Q6k5cFk4r7ROo35652q8o9BpzQ1h8Qg7JUJTQFqCF7xHIYduW55mA/4+YlKerDmkg9LBR8HDTdmYWYGQ+pAzxjPXqFdnYm62BqJdl74Sx1px/Ez3CasMdvNTzeu9oM1Ldz1XD9iEM0u1wCLJj+FHSWFhil03I8mPviNsVgTBcoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758398850; c=relaxed/simple;
-	bh=8IS4D4qz1N8cdVhAcr5CyPel+4XVbC9PmBQN/ptxpDs=;
+	s=arc-20240116; t=1758398852; c=relaxed/simple;
+	bh=+5PFru8OfdLYmptxjpJ/8AG8848g1K3/UsZEAKq521o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VDOmfeQ/NVtSxhNzRp5crAKTrJ/CIBThxMcpobdQodSon+SqWO3W/125Xhq5BXo6Q3EIZOPP1JUO1ZI7sQHag7r1UieRAgjavVZUcVDyRxkh7IXlAodB0yOHO5X8fSMxxKASP/xiCN1pRnLefI/cdHECXIiuohZBqTyG8p4rc0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5eixLRy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gpyBbPOCO2kPvuDpe4Usy9PnhAr72vvwpPw/2HGvOAF4RQ6RJ+dtdM7A4NXk/pnz6UDFZkHi944ompcjTcToDxwfhVzp0OmYvzanHymY3P6xy1KeJesFWvCnOj4JEbXJr8GryG+mSJrAORKlPJd8+yC5VCe9OS0e8igpRNiQmUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAtku7/U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5eixLRy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C00C4CEFA;
-	Sat, 20 Sep 2025 20:07:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAtku7/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8679DC4CEEB;
+	Sat, 20 Sep 2025 20:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758398850;
-	bh=8IS4D4qz1N8cdVhAcr5CyPel+4XVbC9PmBQN/ptxpDs=;
+	s=k20201202; t=1758398852;
+	bh=+5PFru8OfdLYmptxjpJ/8AG8848g1K3/UsZEAKq521o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5eixLRyzoPzULz9gZGWL+Bd0yD8JbhUPiIONF5T4zwroh0sY6hYYpMdGrKnAuy2v
-	 uXYESI3YHQyZQRaBFs/6ncKX5WzqKI959ojrZG3vnJBpmTvWswxRdk0M8LUxbk/wRA
-	 ezDMPaxm3VEyzM2+TjpuT2Xe/TRW+XRra/x3uqQSnEPRDHUp3B2KbHeTPjC7o326Hz
-	 31cYpw9jg7Tv4nRXD1gxqdCb94A7znIrldfCt9CeUNApEZ+3muXY/z1RjQ+lQNYmV6
-	 KQkOpMZZcHsbEIiTT3Pr6ELlJC0y2LZtb6/qlQQhORowdp7yYpgP58ZAo4atUbqKXe
-	 KMJi2CrZiabiQ==
+	b=VAtku7/UjadhBG8xt1FKLCR0k6vdUkZpWLInPe+9CqGtDvFZD81brOHn2U3104sB4
+	 GanWSZp5Ji7DFlEBR6VexgAiAk2oicSVR983zyma6rWqE2x5FBL7f8ogtP9k94W9n9
+	 G46IYBfQzsXR7qgyCeaBMv6RYsrTZ0YVC92bBvz9Z7Wp+Kqh09YbHUbw9/ga4psBzT
+	 GUzZTnm/x/9L1m6nccSRUoU0tYDuBCs5ewxMPE5S87jJ8XEn57x12gcPR7wqWJ/LyX
+	 ieG2q7A81UqKiZyozXwMtVwXCj10P5kNoHpHWhFhVephYgmOg5uAES5zMBo49j5Q+w
+	 /njEO3tD4y9VA==
 From: Hans de Goede <hansg@kernel.org>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -33,9 +33,9 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Arnd Bergmann <arnd@kernel.org>
 Cc: Hans de Goede <hansg@kernel.org>,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 07/20] platform/x86: x86-android-tablets: convert wm1502 devices to GPIO references
-Date: Sat, 20 Sep 2025 22:07:00 +0200
-Message-ID: <20250920200713.20193-8-hansg@kernel.org>
+Subject: [PATCH v4 08/20] platform/x86: x86-android-tablets: convert HID-I2C devices to GPIO references
+Date: Sat, 20 Sep 2025 22:07:01 +0200
+Message-ID: <20250920200713.20193-9-hansg@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250920200713.20193-1-hansg@kernel.org>
 References: <20250920200713.20193-1-hansg@kernel.org>
@@ -50,12 +50,8 @@ Content-Transfer-Encoding: 8bit
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 Now that gpiolib supports software nodes to describe GPIOs, switch the
-driver away from using GPIO lookup tables for wm1502 devices to using
-PROPERTY_ENTRY_GPIO().
-
-Adding a swnode to the yt3 spi device changes the name of the SPI/codec
-device and the sound/soc/intel/boards/bytcr_wm5102.c machine driver looks
-up the code by name, update the machine driver to use the new name.
+driver away from using GPIO lookup tables for HID-I2C touchscreens to
+using PROPERTY_ENTRY_GPIO() to keep all touchscreen properties together.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Tested-by: Hans de Goede <hansg@kernel.org>
@@ -63,223 +59,85 @@ Reviewed-by: Hans de Goede <hansg@kernel.org>
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Hans de Goede <hansg@kernel.org>
 ---
-Changes in v3:
-- Add pinctrl_put() to error-exit paths in lenovo_yoga_tab2_830_1050_init_codec()
-- Share arizona_gpiochip_node between yoga tablet2 and yoga tab3 settings
-- Give lenovo_yt3_wm5102 swnode a name so that the codec SPI-dev gets a stable name
-- Adjust sound/soc/intel/boards/bytcr_wm5102.c for the new SPI/codec dev-name
----
- .../platform/x86/x86-android-tablets/lenovo.c | 107 ++++++++++++------
- sound/soc/intel/boards/bytcr_wm5102.c         |   2 +-
- 2 files changed, 76 insertions(+), 33 deletions(-)
+ .../platform/x86/x86-android-tablets/other.c  | 32 +++----------------
+ 1 file changed, 4 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index db6337671357..aaa946bb1e7c 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -60,6 +60,14 @@ static struct lp855x_platform_data lenovo_lp8557_reg_only_pdata = {
- 	.initial_brightness = 128,
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index 2f12b68080ba..5309831243b3 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -571,6 +571,7 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+ static const struct property_entry vexia_edu_atla10_5v_touchscreen_props[] = {
+ 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
+ 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_LOW),
+ 	{ }
  };
  
-+static const struct software_node arizona_gpiochip_node = {
-+	.name = "arizona",
-+};
-+
-+static const struct software_node crystalcove_gpiochip_node = {
-+	.name = "gpio_crystalcove",
-+};
-+
- /* Lenovo Yoga Book X90F / X90L's Android factory image has everything hardcoded */
- 
- static const struct property_entry lenovo_yb1_x90_goodix_props[] = {
-@@ -383,19 +391,26 @@ static const struct platform_device_info lenovo_yoga_tab2_830_1050_pdevs[] __ini
- 
- #define LENOVO_YOGA_TAB2_830_1050_CODEC_NAME "spi-10WM5102:00"
- 
--static struct gpiod_lookup_table lenovo_yoga_tab2_830_1050_codec_gpios = {
--	.dev_id = LENOVO_YOGA_TAB2_830_1050_CODEC_NAME,
--	.table = {
--		GPIO_LOOKUP("gpio_crystalcove", 3, "reset", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FC:01", 23, "wlf,ldoena", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("arizona", 2, "wlf,spkvdd-ena", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("arizona", 4, "wlf,micd-pol", GPIO_ACTIVE_LOW),
--		{ }
--	},
-+static const struct property_entry lenovo_yoga_tab2_830_1050_wm1502_props[] = {
-+	PROPERTY_ENTRY_GPIO("reset-gpios",
-+			    &crystalcove_gpiochip_node, 3, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("wlf,ldoena-gpios",
-+			    &baytrail_gpiochip_nodes[1], 23, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("wlf,spkvdd-ena-gpios",
-+			    &arizona_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("wlf,micd-pol-gpios",
-+			    &arizona_gpiochip_node, 4, GPIO_ACTIVE_LOW),
-+	{ }
- };
- 
--static struct gpiod_lookup_table * const lenovo_yoga_tab2_830_1050_gpios[] = {
--	&lenovo_yoga_tab2_830_1050_codec_gpios,
-+static const struct software_node lenovo_yoga_tab2_830_1050_wm5102 = {
-+	.properties = lenovo_yoga_tab2_830_1050_wm1502_props,
-+};
-+
-+static const struct software_node *lenovo_yoga_tab2_830_1050_swnodes[] = {
-+	&crystalcove_gpiochip_node,
-+	&arizona_gpiochip_node,
-+	&lenovo_yoga_tab2_830_1050_wm5102,
- 	NULL
- };
- 
-@@ -409,7 +424,6 @@ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
- 	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_830_1050_pdevs),
- 	.gpio_button = &lenovo_yoga_tab2_830_1050_lid,
- 	.gpio_button_count = 1,
--	.gpiod_lookup_tables = lenovo_yoga_tab2_830_1050_gpios,
- 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
- 	.modules = bq24190_modules,
- 	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
-@@ -469,6 +483,7 @@ static const struct pinctrl_map lenovo_yoga_tab2_830_1050_codec_pinctrl_map =
- 	PIN_MAP_MUX_GROUP(LENOVO_YOGA_TAB2_830_1050_CODEC_NAME, "codec_32khz_clk",
- 			  "INT33FC:02", "pmu_clk2_grp", "pmu_clk");
- 
-+static struct device *lenovo_yoga_tab2_830_1050_codec_dev;
- static struct pinctrl *lenovo_yoga_tab2_830_1050_codec_pinctrl;
- static struct sys_off_handler *lenovo_yoga_tab2_830_1050_sys_off_handler;
- 
-@@ -495,12 +510,26 @@ static int __init lenovo_yoga_tab2_830_1050_init_codec(void)
- 		goto err_unregister_mappings;
+@@ -605,23 +606,10 @@ static const struct x86_i2c_client_info vexia_edu_atla10_5v_i2c_clients[] __init
  	}
- 
--	/* We're done with the codec_dev now */
--	put_device(codec_dev);
-+	ret = software_node_register_node_group(lenovo_yoga_tab2_830_1050_swnodes);
-+	if (ret) {
-+		ret = dev_err_probe(codec_dev, ret, "registering software nodes\n");
-+		goto err_put_pinctrl;
-+	}
- 
-+	ret = device_add_software_node(codec_dev, &lenovo_yoga_tab2_830_1050_wm5102);
-+	if (ret) {
-+		ret = dev_err_probe(codec_dev, ret, "adding software node\n");
-+		goto err_unregister_swnodes;
-+	}
-+
-+	lenovo_yoga_tab2_830_1050_codec_dev = codec_dev;
- 	lenovo_yoga_tab2_830_1050_codec_pinctrl = pinctrl;
- 	return 0;
- 
-+err_unregister_swnodes:
-+	software_node_unregister_node_group(lenovo_yoga_tab2_830_1050_swnodes);
-+err_put_pinctrl:
-+	pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
- err_unregister_mappings:
- 	pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
- err_put_device:
-@@ -548,6 +577,12 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
- {
- 	unregister_sys_off_handler(lenovo_yoga_tab2_830_1050_sys_off_handler);
- 
-+	if (lenovo_yoga_tab2_830_1050_codec_dev) {
-+		device_remove_software_node(lenovo_yoga_tab2_830_1050_codec_dev);
-+		put_device(lenovo_yoga_tab2_830_1050_codec_dev);
-+		software_node_unregister_node_group(lenovo_yoga_tab2_830_1050_swnodes);
-+	}
-+
- 	if (lenovo_yoga_tab2_830_1050_codec_pinctrl) {
- 		pinctrl_put(lenovo_yoga_tab2_830_1050_codec_pinctrl);
- 		pinctrl_unregister_mappings(&lenovo_yoga_tab2_830_1050_codec_pinctrl_map);
-@@ -750,7 +785,6 @@ static struct gpiod_lookup_table lenovo_yoga_tab2_1380_fc_gpios = {
  };
  
- static struct gpiod_lookup_table * const lenovo_yoga_tab2_1380_gpios[] = {
--	&lenovo_yoga_tab2_830_1050_codec_gpios,
- 	&lenovo_yoga_tab2_1380_fc_gpios,
- 	NULL
- };
-@@ -947,12 +981,34 @@ static struct arizona_pdata lenovo_yt3_wm5102_pdata = {
- 	},
- };
- 
-+static const struct property_entry lenovo_yt3_wm1502_props[] = {
-+	PROPERTY_ENTRY_GPIO("wlf,spkvdd-ena-gpios",
-+			    &cherryview_gpiochip_nodes[0], 75, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("wlf,ldoena-gpios",
-+			    &cherryview_gpiochip_nodes[0], 81, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 82, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("wlf,micd-pol-gpios", &arizona_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node lenovo_yt3_wm5102 = {
-+	.properties = lenovo_yt3_wm1502_props,
-+	.name = "wm5102",
-+};
-+
-+static const struct software_node *lenovo_yt3_swnodes[] = {
-+	&arizona_gpiochip_node,
-+	&lenovo_yt3_wm5102,
-+	NULL
-+};
-+
- static const struct x86_spi_dev_info lenovo_yt3_spi_devs[] __initconst = {
- 	{
- 		/* WM5102 codec */
- 		.board_info = {
- 			.modalias = "wm5102",
- 			.platform_data = &lenovo_yt3_wm5102_pdata,
-+			.swnode = &lenovo_yt3_wm5102,
- 			.max_speed_hz = 5000000,
- 		},
- 		.ctrl_path = "\\_SB_.PCI0.SPI1",
-@@ -999,31 +1055,18 @@ static int __init lenovo_yt3_init(struct device *dev)
- 	intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0x9b, 0x02, 0xff);
- 	intel_soc_pmic_exec_mipi_pmic_seq_element(0x6e, 0xa0, 0x02, 0xff);
- 
-+	ret = software_node_register_node_group(lenovo_yt3_swnodes);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "registering software nodes\n");
-+
- 	return 0;
- }
- 
--static struct gpiod_lookup_table lenovo_yt3_wm5102_gpios = {
--	.dev_id = "spi1.0",
+-static struct gpiod_lookup_table vexia_edu_atla10_5v_ft5416_gpios = {
+-	.dev_id = "i2c-FTSC1000",
 -	.table = {
--		GPIO_LOOKUP("INT33FF:00", 75, "wlf,spkvdd-ena", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FF:00", 81, "wlf,ldoena", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("INT33FF:00", 82, "reset", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("arizona", 2, "wlf,micd-pol", GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP("INT33FC:01", 26, "reset", GPIO_ACTIVE_LOW),
 -		{ }
 -	},
 -};
 -
--static struct gpiod_lookup_table * const lenovo_yt3_gpios[] = {
--	&lenovo_yt3_wm5102_gpios,
+-static struct gpiod_lookup_table * const vexia_edu_atla10_5v_gpios[] = {
+-	&vexia_edu_atla10_5v_ft5416_gpios,
 -	NULL
 -};
 -
- const struct x86_dev_info lenovo_yt3_info __initconst = {
- 	.i2c_client_info = lenovo_yt3_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
- 	.spi_dev_info = lenovo_yt3_spi_devs,
- 	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
--	.gpiod_lookup_tables = lenovo_yt3_gpios,
- 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yt3_init,
+ const struct x86_dev_info vexia_edu_atla10_5v_info __initconst = {
+ 	.i2c_client_info = vexia_edu_atla10_5v_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_5v_i2c_clients),
+-	.gpiod_lookup_tables = vexia_edu_atla10_5v_gpios,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
  };
-diff --git a/sound/soc/intel/boards/bytcr_wm5102.c b/sound/soc/intel/boards/bytcr_wm5102.c
-index a6dfbcfdf74e..da0fdb8d677d 100644
---- a/sound/soc/intel/boards/bytcr_wm5102.c
-+++ b/sound/soc/intel/boards/bytcr_wm5102.c
-@@ -552,7 +552,7 @@ static int snd_byt_wm5102_mc_probe(struct platform_device *pdev)
- 		acpi_dev_put(adev);
- 	} else {
- 		/* Special case for when the codec is missing from the DSTD */
--		strscpy(codec_name, "spi1.0", sizeof(codec_name));
-+		strscpy(codec_name, "spi-wm5102", sizeof(codec_name));
- 	}
  
- 	codec_dev = bus_find_device_by_name(&spi_bus_type, NULL, codec_name);
+ /*
+@@ -657,6 +645,7 @@ static const struct software_node vexia_edu_atla10_9v_accel_node = {
+ static const struct property_entry vexia_edu_atla10_9v_touchscreen_props[] = {
+ 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
+ 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
++	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[0], 60, GPIO_ACTIVE_LOW),
+ 	{ }
+ };
+ 
+@@ -749,19 +738,6 @@ static const struct x86_serdev_info vexia_edu_atla10_9v_serdevs[] __initconst =
+ 	},
+ };
+ 
+-static struct gpiod_lookup_table vexia_edu_atla10_9v_ft5416_gpios = {
+-	.dev_id = "i2c-FTSC1000",
+-	.table = {
+-		GPIO_LOOKUP("INT33FC:00", 60, "reset", GPIO_ACTIVE_LOW),
+-		{ }
+-	},
+-};
+-
+-static struct gpiod_lookup_table * const vexia_edu_atla10_9v_gpios[] = {
+-	&vexia_edu_atla10_9v_ft5416_gpios,
+-	NULL
+-};
+-
+ static int __init vexia_edu_atla10_9v_init(struct device *dev)
+ {
+ 	struct pci_dev *pdev;
+@@ -791,9 +767,9 @@ const struct x86_dev_info vexia_edu_atla10_9v_info __initconst = {
+ 	.i2c_client_count = ARRAY_SIZE(vexia_edu_atla10_9v_i2c_clients),
+ 	.serdev_info = vexia_edu_atla10_9v_serdevs,
+ 	.serdev_count = ARRAY_SIZE(vexia_edu_atla10_9v_serdevs),
+-	.gpiod_lookup_tables = vexia_edu_atla10_9v_gpios,
+ 	.init = vexia_edu_atla10_9v_init,
+ 	.use_pci = true,
++	.gpiochip_type = X86_GPIOCHIP_BAYTRAIL,
+ };
+ 
+ /*
 -- 
 2.51.0
 
