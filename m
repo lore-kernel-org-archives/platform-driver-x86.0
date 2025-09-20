@@ -1,100 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF946269B0D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 20:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089212749C5;
+	Sat, 20 Sep 2025 20:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758398874; cv=none; b=aKGfY7y6OmG8WuQ93J2yL1HEk6tCapYm+ybKXwkpEtaXAU84HQ7PKCi+JhnLMPerA4J0jL1BvNGE1yvQINzMLaDBZo3wmeQXorH2EDidcKUVAd3ea+GWNmmdi0eHi6JchOjCjGD/rG66tB5DSALuqaI5p2GUdpZQD2Kg6ZZk2Is=
+	t=1758399315; cv=none; b=UIHXCKdstJgnPjJRnAsUF6VIRMNdEgg8YlLcjsrloO6WkNCuBnDpg9Cda3WpZjJkAykJGx02tRR9QVr1DLaKYp3G5v9CqLcHThxwwb2F5bVNijw7myTSYr7B0uxiIoWewzoCAS+PnsGE8nBuQpEVYvMvg3Y/av8bIo+zD0QZmOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758398874; c=relaxed/simple;
-	bh=LZuFzT7SZwzJwKohAhn1Ak4A3vrn+S37CJBuiRAiD7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n/j3c2l3BLoUKVxxeqalno8w0c7bdKpYmeK2AnTBtnWt7r1Q+oYs8+XQKWk0zp0DRKqKNcdqj0ECJv4bHWvbApCVZNIYNdQoSWnJBhZvC6U1gJ/aPfyzMxsQlUwsw7TuI2VxYVko5GOgaMDzKizz8db/cDQYeJBhqr2maA6e0+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VT4AmeYO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758399315; c=relaxed/simple;
+	bh=p8GWNyTiPrRLq10UZXoXZeVU2CEg3/1/BhEweD1IdjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ELvpT5utfGgU40xM+18d2nbHK7EgvDOks8Z4zyUMHLZ+yHYbu6g9dKcAx2c1xiXiZ6gicMtwdmh2VENK9HcBEFCeNyS92zN4TdJ0vsanetgn15FNO1ABx2E6Yfw5pT8ZVHMTr3AJsgLZGi8U3r5AbPnfBIJ5r8WhwEMNKInEUvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/yRDD1A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VT4AmeYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28744C4CEF0;
-	Sat, 20 Sep 2025 20:07:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/yRDD1A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05288C4CEEB;
+	Sat, 20 Sep 2025 20:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758398874;
-	bh=LZuFzT7SZwzJwKohAhn1Ak4A3vrn+S37CJBuiRAiD7E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VT4AmeYOSdlxWPNw/G0ovSByDdWR4k/TXyTcY9KrvTNSxb2wOpwwrM+IXt/FAF20T
-	 aL7h09As2ODmgpjAhx88PHOiye0JB+HHDjgK+QUO4olJJGrQ50UTgxNOWf0ASLulXw
-	 ni5rJe7ROh+WMyxGYIv/mE571FyTSF7uzvmp3DIsS265gNS2QfN7B4yotIDdx56O8A
-	 R7hMWkaioWqhyCym7bUY5R0OMYhVkppRYuG8rysQihOiFVMT8pRd4N06EjKpun8h1m
-	 nrzqFB8VkIc7AhfCo0/XlJRm+AGrkNVQqPjArg6egetny5W8J8eOjhwihMoV1DMpZj
-	 RHzY64MpFVGUQ==
-From: Hans de Goede <hansg@kernel.org>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Arnd Bergmann <arnd@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 20/20] platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
-Date: Sat, 20 Sep 2025 22:07:13 +0200
-Message-ID: <20250920200713.20193-21-hansg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250920200713.20193-1-hansg@kernel.org>
-References: <20250920200713.20193-1-hansg@kernel.org>
+	s=k20201202; t=1758399314;
+	bh=p8GWNyTiPrRLq10UZXoXZeVU2CEg3/1/BhEweD1IdjQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b/yRDD1AJFWz/kFXXr19J2/RjE9i4GaD6/nNrDm9kWDUwYvaV46gt3cBGRS3y1N/L
+	 la9nK3L0voguX8KDDswI1IZm4S8P8ZUXdFw22R70SEckKv/f4tjG6g2SJvCA574x/o
+	 7qQzRMnZhSRFISwwo1ngtfTlHgfrhXjye15N7rxssbHKzyrr9UzlniwV4Illf0KpFZ
+	 STby39zuqWkgT88MuB0GiY2BbG/6e6Pbw06W1WS/xQ0+WrOiU4Or9SDoV9CJia+2RF
+	 WOkhgVA/XSNUdxGc6wPkP0vFjeTwxbzfFTLAbLnMwqB/mTZwHInVJcrq2FlB6Zqbw0
+	 HTXORrtf5Yw/g==
+Message-ID: <fcd107c9-ff59-464f-aead-7b2bcc05dce9@kernel.org>
+Date: Sat, 20 Sep 2025 22:15:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude E6530
+To: Nickolay Goppen <setotau@mainlining.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since the x86-android-tablets code uses platform_create_bundle() it cannot
-use EPROBE_DEFER and the driver-core will translate EPROBE_DEFER to ENXIO.
+Hi,
 
-Stop using EPROBE_DEFER instead log an error and return ENODEV, or for non
-fatal cases log a warning and return 0.
+On 17-Sep-25 9:10 PM, Nickolay Goppen wrote:
+> Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
+> lis3lv02d_devices[].
+> 
+> The address was verified as below:
+> 
+>     $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.3
+>     $ ls -d i2c-*
+>     i2c-20
+>     $ sudo modprobe i2c-dev
+>     $ sudo i2cdetect 20
+>     WARNING! This program can confuse your I2C bus, cause data loss and worse!
+>     I will probe file /dev/i2c-20.
+>     I will probe address range 0x08-0x77.
+>     Continue? [Y/n] Y
+>          0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>     00:                         08 -- -- -- -- -- -- --
+>     10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     20: -- -- -- -- -- -- -- -- -- UU -- 2b -- -- -- --
+>     30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
+>     50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+>     60: -- 61 -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     70: -- -- -- -- -- -- -- --
+>     $ cat /proc/cmdline
+>     BOOT_IMAGE=/vmlinuz-linux-cachyos-bore root=UUID=<redacted> rw loglevel=3 quiet dell_lis3lv02d.probe_i2c_addr=1
+>     $ sudo dmesg
+>     [    0.000000] Linux version 6.16.6-2-cachyos-bore (linux-cachyos-bore@cachyos) (gcc (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP PREEMPT_DYNAMIC Thu, 11 Sep 2025 16:01:12 +0000
+>     […]
+>     [    0.000000] DMI: Dell Inc. Latitude E6530/07Y85M, BIOS A22 11/30/2018
+>     […]
+>     [    5.166442] i2c i2c-20: Probing for lis3lv02d on address 0x29
+>     [    5.167854] i2c i2c-20: Detected lis3lv02d on address 0x29, please report this upstream to platform-driver-x86@vger.kernel.org so that a quirk can be added
+> 
+> Signed-off-by: Nickolay Goppen <setotau@mainlining.org>
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Hans de Goede <hansg@kernel.org>
----
- drivers/platform/x86/x86-android-tablets/core.c  | 6 ++++--
- drivers/platform/x86/x86-android-tablets/other.c | 6 ++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
+Thanks, patch looks good to me:
 
-diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index a8e9fa97b676..6588fae30356 100644
---- a/drivers/platform/x86/x86-android-tablets/core.c
-+++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -276,8 +276,10 @@ get_serdev_controller_by_pci_parent(const struct x86_serdev_info *info)
- 	struct pci_dev *pdev;
- 
- 	pdev = pci_get_domain_bus_and_slot(0, 0, info->ctrl.pci.devfn);
--	if (!pdev)
--		return ERR_PTR(-EPROBE_DEFER);
-+	if (!pdev) {
-+		pr_err("error could not get PCI serdev at devfn 0x%02x\n", info->ctrl.pci.devfn);
-+		return ERR_PTR(-ENODEV);
-+	}
- 
- 	/* This puts our reference on pdev and returns a ref on the ctrl */
- 	return get_serdev_controller_from_parent(&pdev->dev, 0, info->ctrl_devname);
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index ea7a01d7ccb4..7532af2d72d1 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -711,8 +711,10 @@ static int __init vexia_edu_atla10_9v_init(struct device *dev)
- 
- 	/* Reprobe the SDIO controller to enumerate the now enabled Wifi module */
- 	pdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0x11, 0));
--	if (!pdev)
--		return -EPROBE_DEFER;
-+	if (!pdev) {
-+		pr_warn("Could not get PCI SDIO at devfn 0x%02x\n", PCI_DEVFN(0x11, 0));
-+		return 0;
-+	}
- 
- 	ret = device_reprobe(&pdev->dev);
- 	if (ret)
--- 
-2.51.0
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+> ---
+> Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
+> lis3lv02d_devices[].
+> ---
+>  drivers/platform/x86/dell/dell-lis3lv02d.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
+> index 732de5f556f83b4f91fbf174986331c02c2a5c79..77905a9ddde9dd5d44a3193d053fb3d4e319ceb8 100644
+> --- a/drivers/platform/x86/dell/dell-lis3lv02d.c
+> +++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
+> @@ -48,6 +48,7 @@ static const struct dmi_system_id lis3lv02d_devices[] __initconst = {
+>  	DELL_LIS3LV02D_DMI_ENTRY("Latitude 5500",      0x29),
+>  	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6330",     0x29),
+>  	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6430",     0x29),
+> +	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6530",     0x29),
+>  	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
+>  	DELL_LIS3LV02D_DMI_ENTRY("Precision 3551",     0x29),
+>  	DELL_LIS3LV02D_DMI_ENTRY("Precision M6800",    0x29),
+> 
+> ---
+> base-commit: 038d61fd642278bab63ee8ef722c50d10ab01e8f
+> change-id: 20250917-dell-lis3lv02d-latitude-e6530-7c389cca4893
+> 
+> Best regards,
 
