@@ -1,73 +1,72 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B06D1F1932
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4851EDA0F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 11:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758366593; cv=none; b=s6gHQuavcE3hu8Lk7uxlzUxbnmglMAgu8T+VBy0NTXLty1iOqyKrBuDeGiNmrq0z6aNhNPL9ieDfk31KaN/cc4YeSFmM7BCrdy9dzJGvAjv4tHwSNJI1N/ZfLaIN20eG2JEpZzb2/5m7YbwJmVzXmjF9BrrRTa58H/nfbXtzPDo=
+	t=1758367322; cv=none; b=QxjLT46a2IF4eKm1ukxKSUJHSskIsliUJGPzgxm84wyBKkAL5YUsAUbDQPnO5e6acIq8eqrTDUGJZN8gZrPzrP4ro8RI/yE9FQrvyMJDpdUKyEfE9OLzo58cfRl6X1cZv1wZ7Xt1ZBzzGaR4b+mUBWNHq3FoJy4OVSNun28yhIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758366593; c=relaxed/simple;
-	bh=MeBzeZuJoOFs/wopGR56y4qk193qtqPcQMc5SVf+pjg=;
+	s=arc-20240116; t=1758367322; c=relaxed/simple;
+	bh=+rLdGsgYuGjcJfG8sQAGZkmn3LVzE0yyvTX6hXEiwRk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bXXH4ak/xZMYFhtevFb4uLDbQcLMtI/RiZcSIJgjNwXsacWAGeYa2lvcuJmSvWpA1+tnHuykkp0t+aQMkbvfaGzz0HRyC3t/gWvZJ3ik9YdGoWwYn7XR+yh+NLL4PaVjfCCvrvMG8vO+CHjK02Xs1Yb4oTbovMuMU65zZYRvg0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMtswYyi; arc=none smtp.client-ip=209.85.218.50
+	 To:Cc:Content-Type; b=ta85YIdx8FEmyeB+n0TLrT/lyn/wU6PEYXMo7qiojO/h8lsvPOhcF4tgtpvLg6nHPsNwr1VVwdpZ3jUd4iJzlp1lM12qfhV+i0xwPnfjQOEyqBUPIVSzERtSoKBoR4OT/D7N6JqIgGqBp6aer9HNo02Oukjz+ifvP9JsLaVvNYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GQIYQBot; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMtswYyi"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b256c8ca246so282302566b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:09:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQIYQBot"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-62fc14af3fbso3461239a12.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Sep 2025 04:22:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758366590; x=1758971390; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758367319; x=1758972119; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X17urZN/sTxWn0uDY3G1eFwtIfDtbusbjyQEUJk2cc4=;
-        b=cMtswYyic9wgOzYQ5dVU/rpF4wn6qC/uF55iBzxcPFsDVXIvVWv4FNkmJTpiC52qEW
-         TFLWxgG9tef4zpLuE2jOdjMPKHvroee+6xlqunoSMpbcqfkMhp4+Oo9JL9dkyWZ9IgZC
-         OqwUA57IUhlbtBJqt5vflO/XrompwvpX0jMLDO/y8NkGt+4XnpDt8By32Wtv041TE+7N
-         kzHHlnps9+ByIy44ToHbA/NXtfnm1SoKefmgzjtXXpC9XFHX9JH5/q0s2ShE+WkqLqEr
-         wz3bS40zR5etj+e8Gt6jxfWiV/41rIk0ckxSh4vHxQ8C36n897f41W9adegcQZ3jQTKi
-         rkGQ==
+        bh=KiyE8MZvpn6pc3tcytojzE+pPGjzTAS+pzglCFec8LQ=;
+        b=GQIYQBotn5uxmnxUVaoj/bpt2iMHpIfVblbYjqZ67gXhivnk4fHc+kckZCU7F8Yhqh
+         /CzP5fiqg9r4nKoN/MBzWhxeVFK5RZ2VxSR8BwDkn2S1BU7nNI6k3LYYqoelV7o/uUuz
+         flf7bbR0zaCF3hulJPSOFAZjhTSqVtODDLtZvwxxNJhXVzkuGBvdACp9j4ezz3NlOiKi
+         NiWAz4ojC9nrdYbCC7V2j5MXP5lxWhEvyAO8gGx0yWVQL2Mk+lkJnHzB079r0fBqXuVz
+         z0yzdzg2RPGJXs0NIFi5bO1IQUl6vRViT1rEJRAhb/a46a66kU1MmlYgfR0eIWJ23SUf
+         iaWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758366590; x=1758971390;
+        d=1e100.net; s=20230601; t=1758367319; x=1758972119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=X17urZN/sTxWn0uDY3G1eFwtIfDtbusbjyQEUJk2cc4=;
-        b=XkjmBRF+vzRhye6FqcQjLIjcwl+z321TVJqA40BWE3ogSoQpfi0t3n7ZhDpkbEXwvQ
-         YLwf6gH/XjMwCkXfeKCFD9ZyJFojeGZz3/cb9AvUO6DMEtiiaxAii387IRBRfjQNuja2
-         cVt8Mfr3zVpKefxGFClu7cTwlq3aQuXPujrRfMl+dq9Ym/X3qTF5QNPs4nKvxt+Cf91a
-         b5KM7pBhsnEJb2r8BOzJT8Ne1naskvN9JKbBr4tfMhpMe4iVPe6O2wdl7iz9bc8433xN
-         RY7RIwAOLPw3vRq+EThZl9Ej+qvonBo58gLsxwDxqYMGHoYWmDZKIuzq/FQw7HOXs7Ut
-         CG7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU+ne1dmxmLZnM0/st1w+nzM+P5DyF/h6lduQHgzZZHc+iWeq8KxN/Pn4YQ9To+q6foa9g4et7jrk9oM3egVBY6ArOs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDN7IsPJgwangKI3ZkRPWCMcsdqmYpDA4tN4+wjLcAylA7vry6
-	bK+d9+/zVIlhyyu2wPyTYrXOSA/YEOmaSlBOV7Ro/Nhl6kyekREccvZrhM++zDOHhjvHq/hpN9a
-	N+UgZo2p5V4DMWxDCOmvqSxEP4atKGGc=
-X-Gm-Gg: ASbGncs1Ggj5opJ9bwgW6oqLB5B2bd197KXXwcJphdH4u4XxRf9YRVMKCCMTGowWk/k
-	D63qF3qKP9X3JGLiC4380BHCnT4THBfEAiXPkadWwtQvdTRIUpGB+P8/7gV0w5Wfb/Uy9B/YDiU
-	TGq1E0aaa1J+PZfiYBdkRdAsUNfF2rSFzvAKVKODL1BVlXpDebL68oPy/tQdYT3Kq3lbgjqdIdF
-	XhdZBI=
-X-Google-Smtp-Source: AGHT+IF54dSsYeQx2UXi5HYBY96/XUcVDjyXk2jaijgN1HlELV5LNjc9WB4iYPgd5A0uBk+UQ28KZt+rinwqeDpfb0g=
-X-Received: by 2002:a17:907:3e13:b0:b07:e04d:c89d with SMTP id
- a640c23a62f3a-b24f62163a5mr799361366b.48.1758366589468; Sat, 20 Sep 2025
- 04:09:49 -0700 (PDT)
+        bh=KiyE8MZvpn6pc3tcytojzE+pPGjzTAS+pzglCFec8LQ=;
+        b=UE1CAtvOO7CH59FJcApOjTM7KHWQZj7GZ0ZAakFQa04ZMWyn7xFSyYoTuvq5y4Xrhn
+         QFkJWxMWLKTgG/rwwvWzcltzf3qhnZ871WA7fAkF/UhJfviYJeogrgSYrAmIwDz9LzZt
+         v3rb0qXNg71PdZOL7lXH+1diWqtn8SgP2fZ9Vuwg11wsD6njHypTdaWu/pFCpwQYtg0m
+         Tz7MIjgVBocDX3FzCdIvgbOfSfiT0ekCwMZh6/RcjUOT9+4J1qcO8j4f3+UhakjGnmYo
+         3YQnDEtDjGPIOxifrSP+Mr69mqaAyF9fiTLf/N/q96Dg80H0xQCEE6zZEksEHabZyh0v
+         YBSA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ujGsA0ZTQxHd3jJhpgBvYRljFsnEVN46OVOWpgRe3F2ULMotkYSm1yx4Z4RdtisIanmlQv+8rOdtsVkzO9D4rpEV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4g/kEOCj/1IrTqqUHQq4Ngptv+Dv6pevyRbMwzCBq30EfsFX1
+	oI3a3cSSNrFALepAVKOuKsLWTcrLDoLoP/GncGKduDNjKvtMPThmM/xxIKQsSWvX5nGjITKwm++
+	m/ix6aNyxSZ98EBcrTYG86T+77k+xH9E=
+X-Gm-Gg: ASbGncupn16EseT720nJz/WYc2gr0Sz571gO5c/opOKkkileuTcd0jiSQCKVQWOyqPw
+	FjsB/S4GBRhCtkgkCWOt6qLf80d8Vksbon9epCnTSccPqyXmDBN/EIMHEQCEV73RCpSt2C5qPkv
+	qIXGD+RafeGSzyRFYmFoSOAlTBa2ed5kMlsJgw7QfNydj3dWTS4PDNfcbe2rc2w+yqY1RvtNUfe
+	1/tDEk=
+X-Google-Smtp-Source: AGHT+IFeiEj70ZQcJf1tL5n90bZSJ1mtJg23x2oOz6LN7BEZQ2PsPZ07W9++FMfiH7Txpzjbyc+BQ8/h55OAooGAqks=
+X-Received: by 2002:a17:907:9619:b0:b07:87f5:7cb8 with SMTP id
+ a640c23a62f3a-b24f4ebe4dcmr659495366b.45.1758367318853; Sat, 20 Sep 2025
+ 04:21:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919204742.25581-1-hansg@kernel.org> <20250919204742.25581-13-hansg@kernel.org>
-In-Reply-To: <20250919204742.25581-13-hansg@kernel.org>
+References: <20250919204742.25581-1-hansg@kernel.org> <20250919204742.25581-20-hansg@kernel.org>
+In-Reply-To: <20250919204742.25581-20-hansg@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 20 Sep 2025 14:09:12 +0300
-X-Gm-Features: AS18NWBhiA4laOphSIffzsMSG2oe6Knk43mxWv4B6Hgz6iL_r4wX0JsjRt_Dzts
-Message-ID: <CAHp75VcMNe02iCWyD3A4aCXOH4Q6Fm09xNO-OeaaBT4t5BPQPg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/19] platform/x86: x86-android-tablets: replace
- bat_swnode with swnode_group
+Date: Sat, 20 Sep 2025 14:21:22 +0300
+X-Gm-Features: AS18NWAiHZCu3tyYfpgDzY0BY37R5QgJGBY2AzyVA85gXRQhXzbUCQrwjx_ygno
+Message-ID: <CAHp75VeuZGUOhQAey6r7Q_mPOmBG4j_UdWerVp1LZpeyUKmZag@mail.gmail.com>
+Subject: Re: [PATCH v3 19/19] platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
 To: Hans de Goede <hansg@kernel.org>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Andy Shevchenko <andy@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
@@ -78,42 +77,54 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Sep 19, 2025 at 11:48=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
 rote:
 >
-> Now that we are using software-nodes are used in more places it is
-> useful to have a more generic mechanism to have the core code register
-> software-nodes.
+> Since the x86-android-tablets code uses platform_create_bundle() it canno=
+t
+> use EPROBE_DEFER and the driver-core will translate EPROBE_DEFER to ENXIO=
+.
 >
-> Replace the bat_swnode registration mechanism with a more generic
-> swnode_group registration mechanism.
+> Stop using EPROBE_DEFER instead log an error and return ENODEV, or for no=
+n
+> fatal cases log a warning and return 0.
+
 
 ...
 
-> -       if (bat_swnode)
-> -               software_node_unregister(bat_swnode);
 
-> +       if (swnode_group)
+>         struct pci_dev *pdev;
+>
+>         pdev =3D pci_get_domain_bus_and_slot(0, 0, info->ctrl.pci.devfn);
+> -       if (!pdev)
+> -               return ERR_PTR(-EPROBE_DEFER);
+> +       if (!pdev) {
+> +               pr_err("error could not get PCI serdev at devfn 0x%02x\n"=
+, info->ctrl.pci.devfn);
 
-Now this check is a dup and hence redundant.
+TBH, I think this is unlikely to happen. If we have a PCI device, I
+hardly can imagine that we can't get it, yet it may be not enumerated,
+but the pdev seems to me won't ever be NULL. Am I mistaken?
 
-> +               software_node_unregister_node_group(swnode_group);
+> +               return ERR_PTR(-ENODEV);
+> +       }
+>
+>         /* This puts our reference on pdev and returns a ref on the ctrl =
+*/
+>         return get_serdev_controller_from_parent(&pdev->dev, 0, info->ctr=
+l_devname);
 
 ...
 
-> -       if (dev_info->bat_swnode) {
-> -               ret =3D software_node_register(dev_info->bat_swnode);
-> +       if (dev_info->swnode_group) {
+>         /* Reprobe the SDIO controller to enumerate the now enabled Wifi =
+module */
+>         pdev =3D pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0x11, 0));
+> -       if (!pdev)
+> -               return -EPROBE_DEFER;
+> +       if (!pdev) {
+> +               pr_warn("Could not get PCI SDIO at devfn 0x%02x\n", PCI_D=
+EVFN(0x11, 0));
+> +               return 0;
+> +       }
 
-Ditto.
-
-> +               ret =3D software_node_register_node_group(dev_info->swnod=
-e_group);
->                 if (ret) {
->                         x86_android_tablet_remove(pdev);
->                         return ret;
->                 }
-> -               bat_swnode =3D dev_info->bat_swnode;
-> +               swnode_group =3D dev_info->swnode_group;
->         }
-
+Ditto here.
 
 --=20
 With Best Regards,
