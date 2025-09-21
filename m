@@ -1,150 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AB918EB0;
-	Sun, 21 Sep 2025 17:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DDB54791
+	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Sep 2025 19:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758475727; cv=none; b=sOJy37ZvvJF/rleRS3I9lBsWgsAGi53Q3oecgGwlPpWKNDLb5yHMuzKhG/TjnU7nrN6PDBmu96r/NQmb/MCI1BaDmdKaaN1K2VGoeapNHb0Nhj92zm2Ybtoe32gaVf9U9Ynse7RykB0RwTEDQKQ+x0tNivJ6qVIuHb4Hir4mlsc=
+	t=1758483518; cv=none; b=q6iDL4paUjLGjT7jlMEVnUF51tesNlIU/cjNdlAJYcaP/mETetwEBMF19g6pA6OzKUgt5Rxr5gImKZGYHsrzW1N/bSvvGuKLK8jDFd5vcZjTP7RhtmjkEQhR9QobfmzlYxJehER3DVsaZm8ddGfY28b5OxCzIVH0R4gn+2fDHMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758475727; c=relaxed/simple;
-	bh=OhAKhAi+AnzI3Qc3qjl3chOvflGQ1Z6G7nQKCQgIA6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuPr5dIW1ixZuyWe44ZzOdSr41wfxfYgGXFy7a7pxwkDbkKRnRPNgsnZ0o4s8njNs/JgwyQiuLityq6PZVdZVBpcf9DMX1bw9BJr6PThPXIjlJcYu3m+6BryRzjSPCuFGL9MI2ZqDmdbwG97mDa9bsddGcdpuCbPDxCOgxre/mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oNji14LK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758483518; c=relaxed/simple;
+	bh=rz8cSsbJ1ENnW9XkFfFnDi0ojgwYEiBrnbPEUoeNqF4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CAkaSPfUIhWp+MB/SAmdKFnhz5Ai5CE6KfUvfgPFW2/lBsbgo5PZg9fDOwSXN9I2bfjEaXp+3YxcRPFXrBp3/qrQoeaqAnAwlVeNHYYIj1nvEiM6OhyXGi9YCu5gSC7gxv6xZ3mQSKChW0Hsn9cj/5Xik9mPOhD7+9slfZA15M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbSY3YmP; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oNji14LK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22692C4CEE7;
-	Sun, 21 Sep 2025 17:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1758475727;
-	bh=OhAKhAi+AnzI3Qc3qjl3chOvflGQ1Z6G7nQKCQgIA6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oNji14LKsaN74d6/6VxXQLAaEWqiMK1odhhlWG54PmdesR086HbzOQPsvLp4l8W8h
-	 erd/geKCs7blyB1imhKlNfDZtIHl2vwbNw8z3TSYAfWxPI4STRspwkbfLQuyq+0pRc
-	 wfxpVS7OtRaNl868jtRKMkgfZDW20Ck1f7t2BQsw=
-Date: Sun, 21 Sep 2025 19:28:44 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Eliav Farber <farbere@amazon.com>
-Cc: linux@armlinux.org.uk, jdike@addtoit.com, richard@nod.at,
-	anton.ivanov@cambridgegreys.com, dave.hansen@linux.intel.com,
-	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-	tony.luck@intel.com, qiuxu.zhuo@intel.com, mchehab@kernel.org,
-	james.morse@arm.com, rric@kernel.org, harry.wentland@amd.com,
-	sunpeng.li@amd.com, alexander.deucher@amd.com,
-	christian.koenig@amd.com, airlied@linux.ie, daniel@ffwll.ch,
-	evan.quan@amd.com, james.qian.wang@arm.com, liviu.dudau@arm.com,
-	mihail.atanassov@arm.com, brian.starkey@arm.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robdclark@gmail.com, sean@poorly.run,
-	jdelvare@suse.com, linux@roeck-us.net, fery@cypress.com,
-	dmitry.torokhov@gmail.com, agk@redhat.com, snitzer@redhat.com,
-	dm-devel@redhat.com, rajur@chelsio.com, davem@davemloft.net,
-	kuba@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com,
-	joabreu@synopsys.com, mcoquelin.stm32@gmail.com, malattia@linux.it,
-	hdegoede@redhat.com, mgross@linux.intel.com,
-	intel-linux-scu@intel.com, artur.paszkiewicz@intel.com,
-	jejb@linux.ibm.com, martin.petersen@oracle.com,
-	sakari.ailus@linux.intel.com, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, jack@suse.com, tytso@mit.edu,
-	adilger.kernel@dilger.ca, dushistov@mail.ru,
-	luc.vanoostenryck@gmail.com, rostedt@goodmis.org, pmladek@suse.com,
-	sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-	linux@rasmusvillemoes.dk, minchan@kernel.org, ngupta@vflare.org,
-	akpm@linux-foundation.org, kuznet@ms2.inr.ac.ru,
-	yoshfuji@linux-ipv6.org, pablo@netfilter.org, kadlec@netfilter.org,
-	fw@strlen.de, jmaloy@redhat.com, ying.xue@windriver.com,
-	willy@infradead.org, sashal@kernel.org, ruanjinjie@huawei.com,
-	David.Laight@aculab.com, herve.codina@bootlin.com, Jason@zx2c4.com,
-	bvanassche@acm.org, keescook@chromium.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-edac@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-btrfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-sparse@vger.kernel.org,
-	linux-mm@kvack.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, tipc-discussion@lists.sourceforge.net,
-	stable@vger.kernel.org, jonnyc@amazon.com
-Subject: Re: [PATCH 00/27 5.10.y] Backport minmax.h updates from v6.17-rc6
-Message-ID: <2025092136-unelected-skirt-d91d@gregkh>
-References: <20250919101727.16152-1-farbere@amazon.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbSY3YmP"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-62fce8b75a3so3640306a12.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Sep 2025 12:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758483515; x=1759088315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rz8cSsbJ1ENnW9XkFfFnDi0ojgwYEiBrnbPEUoeNqF4=;
+        b=lbSY3YmPk+N1vMBtbrmP5a4xSaow7KEb22UbZ3c0j/EfoiGvdiY+6FOjgyrxWVRcI7
+         zcU90un+P8rRvTr91cQo1HE3Uv6q20/eNhx6BmVhLZfn0Pj9PZivUQWBtH+krF1qEJpE
+         u+Tg4puc6/mGdcleJC3x5aEApvRXw6qqyRpDGlIiBbayqWwxroeWYGKeqdu8i7qJZm7H
+         Y9DBshQ/6lk3M+WRLi1l3cZgdjNhdfmY56dxeJ5Dsq9d2JQUsOHj0PPK+eKWO3VwCySC
+         +CsC3I7fvZYm5USZultoKS3EO9HyAKBF6r/9Hn+X9LZIINyece4X2eAfLE0yRpYekkMF
+         qrvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758483515; x=1759088315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rz8cSsbJ1ENnW9XkFfFnDi0ojgwYEiBrnbPEUoeNqF4=;
+        b=jODdLFCVGM5JZ7scuVbO908hDngGv3uZ/cvWYf6w+D9KEAVH/CHO6+URvOrSjYJp2T
+         b3RDk7KBKvtzCJb8ewa2PXayMVYQTVBgOV9xbtHmn/W5wnhIp2Lfk4hJ+Mxv9YEGIcY/
+         MjWb8lhpeU/OMCMaOAgBUzCqeLHgC1IFI65tRIk/n8/NewcCBZBCT1EjM9VWweU5bv52
+         5fe2XV3kXDoU8wLI3cZmiiX0DcJFhW751Vb5H0DHttjNEFSvW7RjNEb0nfY2BBVWc2sF
+         80V01BqzM09NSMCJKRxwX1BB4f0Pr5J6Pux4gNERFZ94Y1G7Xzq1ozzf/06QMHNprFzj
+         BiYA==
+X-Forwarded-Encrypted: i=1; AJvYcCViLaYSjnj6iQ9bkMurb2o5ckbGTWCEc6Ts0ImupRQ4LZHY4f1UtjlClmKGjmXUK7iZ3JVFu7OOM9NAAG1sk8IESNd+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo6ggRvpk2PCWkMNImrXTb34NNRSg6a8UZfjs5O9Eca+l7vY0G
+	CoiLnTdn3rAT5wBAxPIe6JcNqae6D9/tRX0Baf6jjjlx7nAvDSkOaRwcAajAsjudUB9YyDoctp3
+	z19ugTkUQXxBodN/K/a/CcOIrd2qaZR5HHN5M
+X-Gm-Gg: ASbGnctTFSxfumsYCwC68NBi6zERJqxeDDJjP+FPM6Q2k9PJqvwka/eX9wFotU/d5vj
+	rjDfGrRexzzMRNxWMH60KVQNm7tS/unywFPYhseobKLg5viFkUyY1DpR/UXF+JCpB/Zf2t7CLmr
+	0x3RNyLJ1Etizd6CkX8Iya+JieGZ8373jELlr871tkoLDMNhpyt66Wu8Y9qrTTel+eDF1yMcVs1
+	mPYbIo=
+X-Google-Smtp-Source: AGHT+IEU4BfxPaC1bnsApF6GLuLgh/hAOVRzCxnBKJF+dLwRdfA4k5/FBZAcsuXJW2MmGbWDc7H2QFkT3IEcx/OZMVI=
+X-Received: by 2002:a17:906:7954:b0:b04:6546:347e with SMTP id
+ a640c23a62f3a-b24f4ebffdbmr1039434866b.51.1758483515141; Sun, 21 Sep 2025
+ 12:38:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250919101727.16152-1-farbere@amazon.com>
+References: <20250920200713.20193-1-hansg@kernel.org> <20250920200713.20193-15-hansg@kernel.org>
+In-Reply-To: <20250920200713.20193-15-hansg@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 21 Sep 2025 22:37:58 +0300
+X-Gm-Features: AS18NWARx_r6Kdtw7NfV0U233SC6kqZ8wnS7Ugr4S_5zRPcBdABh401uOodN97s
+Message-ID: <CAHp75Veu5z2q0-dm84dEQ4=TUk1wvZ0_2QkQhiwdee-K5VTXFQ@mail.gmail.com>
+Subject: Re: [PATCH v4 14/20] platform/x86: x86-android-tablets: Simplify
+ node-group [un]registration
+To: Hans de Goede <hansg@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Arnd Bergmann <arnd@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 19, 2025 at 10:17:00AM +0000, Eliav Farber wrote:
-> This series includes a total of 27 patches, to align minmax.h of
-> v5.15.y with v6.17-rc6.
-> 
-> The set consists of 24 commits that directly update minmax.h:
-> 1) 92d23c6e9415 ("overflow, tracing: Define the is_signed_type() macro
->    once")
+On Sat, Sep 20, 2025 at 11:07=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
+rote:
+>
+> software_node_register_node_group() / software_node_unregister_node_group=
+()
+> both accept a NULL node-group as argument.
+>
+> So there is no need to check for the node-group being NULL before calling
+> these functions, remove the checks to simplify the code.
+>
+> Note the "if (gpio_button_swnodes)" check for registering is kept because
+> that also guards the creation of a gpio-button platform-device.
 
-But this isn't in 5.15.y, so how is this syncing things up?
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-I'm all for this, but I got confused here, at the first commit :)
-
-> 2) 5efcecd9a3b1 ("minmax: sanity check constant bounds when clamping")
-
-
-
-> 3) 2122e2a4efc2 ("minmax: clamp more efficiently by avoiding extra
->    comparison")
-> 4) f9bff0e31881 ("minmax: add in_range() macro")
-> 5) c952c748c7a9 ("minmax: Introduce {min,max}_array()")
-> 6) 5e57418a2031 ("minmax: deduplicate __unconst_integer_typeof()")
-> 7) f6e9d38f8eb0 ("minmax: fix header inclusions")
-> 8) d03eba99f5bf ("minmax: allow min()/max()/clamp() if the arguments
->    have the same signedness.")
-> 9) f4b84b2ff851 ("minmax: fix indentation of __cmp_once() and
->    __clamp_once()")
-> 10) 4ead534fba42 ("minmax: allow comparisons of 'int' against 'unsigned
->     char/short'")
-> 11) 867046cc7027 ("minmax: relax check to allow comparison between
->     unsigned arguments and signed constants")
-> 12) 3a7e02c040b1 ("minmax: avoid overly complicated constant
->     expressions in VM code")
-> 14) 017fa3e89187 ("minmax: simplify and clarify min_t()/max_t()
->     implementation")
-> 15) 1a251f52cfdc ("minmax: make generic MIN() and MAX() macros
->     available everywhere")
-> 18) dc1c8034e31b ("minmax: simplify min()/max()/clamp()
->     implementation")
-> 19) 22f546873149 ("minmax: improve macro expansion and type
->     checking")
-> 20) 21b136cc63d2 ("minmax: fix up min3() and max3() too")
-> 21) 71ee9b16251e ("minmax.h: add whitespace around operators and after
->     commas")
-> 22) 10666e992048 ("minmax.h: update some comments")
-> 23) b280bb27a9f7 ("minmax.h: reduce the #define expansion of min(),
->     max() and clamp()")
-> 24) a5743f32baec ("minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi
->     test in clamp()")
-> 25) c3939872ee4a ("minmax.h: move all the clamp() definitions after the
->     min/max() ones")
-> 26) 495bba17cdf9 ("minmax.h: simplify the variants of clamp()")
-> 27) 2b97aaf74ed5 ("minmax.h: remove some #defines that are only
->     expanded once")
-
-Some of these are also only in newer kernels, which, as you know, is
-generally a bad thing (i.e. I can't take patches only for older
-kernels.)
-
-I want these changes, as they are great, but can you perhaps provide
-patch series for newer kernels first so that I can then take these?
-
-thanks,
-
-greg k-h
+--=20
+With Best Regards,
+Andy Shevchenko
