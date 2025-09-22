@@ -1,208 +1,213 @@
-Received: from fra-out-002.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-002.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.65.3.180])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA9942AA9;
-	Mon, 22 Sep 2025 10:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.65.3.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5067B30AACF;
+	Mon, 22 Sep 2025 12:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758537944; cv=none; b=dSvbWoXA2HRZ6Ujekl86cZDka3epJp68Uk/E/q6g3AHmevdt5buJ4bihE2Cw6jBsTqhWLbWY+ivxr1IFHPsqIN0MBvT4zf0NAjAVgI0jH1j5iyhUX6AYvNVG6dPeyl74toA3PuA1YpW5szQXUvmowtOXxwqE3h6/pQvUzPPDThw=
+	t=1758545391; cv=none; b=vGQQGxvUmSo578duhJnsZKd/jgdxtIfL/ejjYqFjuQfeId03H66AcOGqTI0NT8i+lI3JUGCE8aeU8g1sdLEM7zVUzZQaswswxzcbB6MRqKGsdVhMeUipRBHzyMafEEE34YQ7EEN/X6SqYk5s6SKXb/Jf4Kl70V5tXBFp2QXnXac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758537944; c=relaxed/simple;
-	bh=pwDlNzth5nMROXqz5kAkkxuxkWM/ATKQc6A9J9A4BoY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Em4B+5Enbh8Gve84nQG/c6f3TmRwyGUI1mDq30HhqmhMpfvzxHV0ouwkVSWhhQQeLgcYr8VoaB0GLr9WE7JtLYB1uQjdqJoTeUlG5ROn7jT4OfvA8fOsnuN/qHY9t45lT3zx+yb7T4U5eQxPM4kB9ZuPrs3NV+7pETzca9EEeGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Sv99FDLC; arc=none smtp.client-ip=3.65.3.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1758545391; c=relaxed/simple;
+	bh=QISE8A7Cqsmeaq4jeNbGx6Y05LMPWcc33Y8e8eIZIOU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FEUEv74uAjK5/eHiVdg08ylko1ELtowN6OzqzDlmSd/X7uRFmMfq5HWZ73wV5pgZtxIXscy+I2iPAeDTsxG0LvurQu3nnyQX0Arz36CbJpF+YeokzBAI+OfSwaJpk+NaLZHdY8ihadk12V07qNqSH9TJH3qwiYOLsu1eQ44GnvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/PYCgsM; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Sv99FDLC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1758537942; x=1790073942;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=jHPTQZFCaC0QVf/rAslU2rF+GKEtXGi5htBMXx8M8BI=;
-  b=Sv99FDLCJke7R2kkVtUondV85mgv57Pd4ZaGqz37iM3HgwASx20V4P3A
-   gFaNPRrqOC7huGzjtnpB2mfIYOr4j8gpMzWXmlG04Zyj9AmeulsnVzR+T
-   8WETfPx/1sCchBsRAgmF0fanX8+IiedjGxLEv8FP7vTmQg6DG0sNangCe
-   ILlIAQPR387Vj6zpB16WEBW6iyB3JUoVcj4ARcW8dMsme/8mSV2DLwF6k
-   XRVl81i6aYl2tSCd9RqZsQ/zfMaJ24WT1DKm8kJQy5gNxTJyLdwtzeapA
-   dkUm2S5EopS94zo35BAhKupBenIlCx0kKER+1D+lMXecxMsx/ilOLgWH2
-   Q==;
-X-CSE-ConnectionGUID: 6hOHCxAKSfC6e+p5CvVdZw==
-X-CSE-MsgGUID: YBSxBrJDRxalvxjSB5/Ebw==
-X-IronPort-AV: E=Sophos;i="6.18,285,1751241600"; 
-   d="scan'208";a="2482713"
-Received: from ip-10-6-3-216.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.3.216])
-  by internal-fra-out-002.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 10:45:38 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [54.240.197.232:29409]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.10.226:2525] with esmtp (Farcaster)
- id f47c06f5-2d15-4c95-af11-de6ff2958513; Mon, 22 Sep 2025 10:45:38 +0000 (UTC)
-X-Farcaster-Flow-ID: f47c06f5-2d15-4c95-af11-de6ff2958513
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Mon, 22 Sep 2025 10:45:38 +0000
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19D018EUA004.ant.amazon.com (10.252.50.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Mon, 22 Sep 2025 10:45:37 +0000
-Received: from EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d]) by
- EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d%3]) with mapi id
- 15.02.2562.020; Mon, 22 Sep 2025 10:45:37 +0000
-From: "Farber, Eliav" <farbere@amazon.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "jdike@addtoit.com"
-	<jdike@addtoit.com>, "richard@nod.at" <richard@nod.at>,
-	"anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"luto@kernel.org" <luto@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "qiuxu.zhuo@intel.com"
-	<qiuxu.zhuo@intel.com>, "mchehab@kernel.org" <mchehab@kernel.org>,
-	"james.morse@arm.com" <james.morse@arm.com>, "rric@kernel.org"
-	<rric@kernel.org>, "harry.wentland@amd.com" <harry.wentland@amd.com>,
-	"sunpeng.li@amd.com" <sunpeng.li@amd.com>, "alexander.deucher@amd.com"
-	<alexander.deucher@amd.com>, "christian.koenig@amd.com"
-	<christian.koenig@amd.com>, "airlied@linux.ie" <airlied@linux.ie>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "evan.quan@amd.com" <evan.quan@amd.com>,
-	"james.qian.wang@arm.com" <james.qian.wang@arm.com>, "liviu.dudau@arm.com"
-	<liviu.dudau@arm.com>, "mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
-	"brian.starkey@arm.com" <brian.starkey@arm.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "robdclark@gmail.com" <robdclark@gmail.com>,
-	"sean@poorly.run" <sean@poorly.run>, "jdelvare@suse.com" <jdelvare@suse.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>, "fery@cypress.com"
-	<fery@cypress.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-	"agk@redhat.com" <agk@redhat.com>, "snitzer@redhat.com" <snitzer@redhat.com>,
-	"dm-devel@redhat.com" <dm-devel@redhat.com>, "rajur@chelsio.com"
-	<rajur@chelsio.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	"kuba@kernel.org" <kuba@kernel.org>, "peppe.cavallaro@st.com"
-	<peppe.cavallaro@st.com>, "alexandre.torgue@st.com"
-	<alexandre.torgue@st.com>, "joabreu@synopsys.com" <joabreu@synopsys.com>,
-	"mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "malattia@linux.it"
-	<malattia@linux.it>, "hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"mgross@linux.intel.com" <mgross@linux.intel.com>,
-	"intel-linux-scu@intel.com" <intel-linux-scu@intel.com>,
-	"artur.paszkiewicz@intel.com" <artur.paszkiewicz@intel.com>,
-	"jejb@linux.ibm.com" <jejb@linux.ibm.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "sakari.ailus@linux.intel.com"
-	<sakari.ailus@linux.intel.com>, "clm@fb.com" <clm@fb.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>, "dsterba@suse.com"
-	<dsterba@suse.com>, "jack@suse.com" <jack@suse.com>, "tytso@mit.edu"
-	<tytso@mit.edu>, "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-	"dushistov@mail.ru" <dushistov@mail.ru>, "luc.vanoostenryck@gmail.com"
-	<luc.vanoostenryck@gmail.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"pmladek@suse.com" <pmladek@suse.com>, "sergey.senozhatsky@gmail.com"
-	<sergey.senozhatsky@gmail.com>, "andriy.shevchenko@linux.intel.com"
-	<andriy.shevchenko@linux.intel.com>, "linux@rasmusvillemoes.dk"
-	<linux@rasmusvillemoes.dk>, "minchan@kernel.org" <minchan@kernel.org>,
-	"ngupta@vflare.org" <ngupta@vflare.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-	"yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>, "pablo@netfilter.org"
-	<pablo@netfilter.org>, "kadlec@netfilter.org" <kadlec@netfilter.org>,
-	"fw@strlen.de" <fw@strlen.de>, "jmaloy@redhat.com" <jmaloy@redhat.com>,
-	"ying.xue@windriver.com" <ying.xue@windriver.com>, "willy@infradead.org"
-	<willy@infradead.org>, "sashal@kernel.org" <sashal@kernel.org>,
-	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>, "David.Laight@aculab.com"
-	<David.Laight@aculab.com>, "herve.codina@bootlin.com"
-	<herve.codina@bootlin.com>, "Jason@zx2c4.com" <Jason@zx2c4.com>,
-	"bvanassche@acm.org" <bvanassche@acm.org>, "keescook@chromium.org"
-	<keescook@chromium.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-um@lists.infradead.org"
-	<linux-um@lists.infradead.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "amd-gfx@lists.freedesktop.org"
-	<amd-gfx@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>, "freedreno@lists.freedesktop.org"
-	<freedreno@lists.freedesktop.org>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, "linux-input@vger.kernel.org"
-	<linux-input@vger.kernel.org>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "netfilter-devel@vger.kernel.org"
-	<netfilter-devel@vger.kernel.org>, "coreteam@netfilter.org"
-	<coreteam@netfilter.org>, "tipc-discussion@lists.sourceforge.net"
-	<tipc-discussion@lists.sourceforge.net>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: RE: [PATCH 00/27 5.10.y] Backport minmax.h updates from v6.17-rc6
-Thread-Topic: [PATCH 00/27 5.10.y] Backport minmax.h updates from v6.17-rc6
-Thread-Index: AQHcK64HHJftfGNvN0Cy23wGYTG5SQ==
-Date: Mon, 22 Sep 2025 10:45:37 +0000
-Message-ID: <df8d65b372864d149035eb1f016f08ae@amazon.com>
-References: <20250919101727.16152-1-farbere@amazon.com>
- <2025092136-unelected-skirt-d91d@gregkh>
- <4f497306c58240a88c0bb001786c3ad2@amazon.com>
- <2025092203-untreated-sloppily-23b5@gregkh>
-In-Reply-To: <2025092203-untreated-sloppily-23b5@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/PYCgsM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758545389; x=1790081389;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QISE8A7Cqsmeaq4jeNbGx6Y05LMPWcc33Y8e8eIZIOU=;
+  b=S/PYCgsMTTHYKFkqtCuIfUf+eW7ZRham0wkTYYtOF+1B0oar4ezrCp0l
+   +jipNUpLIS3V0uSAh5FuP/R6ikqknoFZih0Jc3LdyTmz6HoLlGUt27cxE
+   Va9dczj9ixbEnS3YsoHx8T5SZOboKBPgX27lhciM3jfjYXNAqZ5oC3Qqe
+   PrSsydVbXImd/oY/j/fPStdu8fDYKaMdLn6pxypCCjSU0G65VAzQpYU1P
+   ZZiU+X44MrVAh3VZDkaaAtQwM7CPkRB3GP8pK48/QHssCBRDNluJWpdQa
+   C2cRPikzcp7OdEAGg5VwAZyJgshkBCdceo+O9PDkokqsb0g21DqpIgpmK
+   A==;
+X-CSE-ConnectionGUID: 7qzmV4TgRkafhY3KEtzggg==
+X-CSE-MsgGUID: zXXbzF2mQTq5wPVkWhjNbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60744801"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="60744801"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 05:49:48 -0700
+X-CSE-ConnectionGUID: kHkw89mPSoS2aqGw6BOOLA==
+X-CSE-MsgGUID: xTjQBUUxQ2it7GtE+Tbzig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
+   d="scan'208";a="207421434"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 05:49:45 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 22 Sep 2025 15:49:42 +0300 (EEST)
+To: Daniel <dany97@live.ca>
+cc: Markus.Elfring@web.de, hansg@kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, matan@svgalib.org, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: lg-laptop: Fix WMAB call in
+ fan_mode_store()
+In-Reply-To: <MN2PR06MB55984287A9BAB69F1711640DDC11A@MN2PR06MB5598.namprd06.prod.outlook.com>
+Message-ID: <ea57d978-3fd3-fd86-aec7-e814359e3e02@linux.intel.com>
+References: <78e9dde3-9f21-9b06-663b-e7a23451b9e7@linux.intel.com> <MN2PR06MB55984287A9BAB69F1711640DDC11A@MN2PR06MB5598.namprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-> On Sun, Sep 21, 2025 at 09:37:02PM +0000, Farber, Eliav wrote:
-> > > On Fri, Sep 19, 2025 at 10:17:00AM +0000, Eliav Farber wrote:
-> > > > This series includes a total of 27 patches, to align minmax.h of=20
-> > > > v5.15.y with v6.17-rc6.
-> > > >
-> > > > The set consists of 24 commits that directly update minmax.h:
-> > > > 1) 92d23c6e9415 ("overflow, tracing: Define the is_signed_type() ma=
-cro
-> > > >    once")
-> > >
-> > > But this isn't in 5.15.y, so how is this syncing things up?
-> > >
-> > > I'm all for this, but I got confused here, at the first commit :)
-> >
-> > It's a typo.
-> > It should be 5.10.y and not 5.15.y.
-> >
-> > > Some of these are also only in newer kernels, which, as you know, is=
-=20
-> > > generally a bad thing (i.e. I can't take patches only for older
-> > > kernels.)
-> > >
-> > > I want these changes, as they are great, but can you perhaps provide=
-=20
-> > > patch series for newer kernels first so that I can then take these?
-> >
-> > So you'd first like first to align 6.16 with 6.17, then 6.15 with=20
-> > 6.16, then 6.12 with 6.15, then 6.6 with 6.12, and so on until we=20
-> > eventually align 5.10 and even 5.4?
->
-> Yes please!
+On Fri, 19 Sep 2025, Daniel wrote:
 
-Stable 6.16.8 didn't require any changs.
+> > Is it good to reuse the input side define here for response side or
+> > should you have another with a more specific name? (This is put to
+> > status named variable so my natural expectation is that the field's
+> > name is somehow related to that.)
+> 
+> The fan mode really is sent back to us in *_LOWER and *_UPPER form,
+> exactly like how we send the fan mode.  (Only, the lower and upper
+> portions are guaranteed to be identical, so we just read the lower.)
+> Hence why I did not add a new define for the response side.
+> 
+> Should I add another define FAN_MODE_RESPONSE?
 
-I pulled the changes for 6.12.48:
-https://lore.kernel.org/stable/20250922103123.14538-1-farbere@amazon.com/T/=
-#t
-and 6.6.107:
-https://lore.kernel.org/stable/20250922103241.16213-1-farbere@amazon.com/T/=
-#t
+Ah okay so the variable name is misleading then as it's really "mode" 
+that is returned, not really "status"? I think this is fine then although 
+I'd prefer to have also another patch on top of this which would rename 
+that variable to mode.
 
-Once approved, I'll continue with other longterm branches.
+> -- >8 --
+> Subject: [PATCH v4] platform/x86: lg-laptop: Fix WMAB call in fan_mode_store()
+> 
+> On my LG Gram 16Z95P-K.AA75A8 (2022), writes to
+> /sys/devices/platform/lg-laptop/fan_mode have no effect and reads always
+> report a status of 0.
+> 
+> Disassembling the relevant ACPI tables reveals that in the WMAB call to
+> set the fan mode, the new mode is read either from bits 0,1 or bits 4,5
+> (depending on the value of some other EC register).  Thus when we call
+> WMAB twice, first with bits 4,5 zero, then bits 0,1 zero, the second
+> call undoes the effect of the first call.
+> 
+> Fix this by calling WMAB once, with the mode set in bits 0,1 and 4,5.
+> When the fan mode is returned from WMAB it always has this form, so
+> there is no need to preserve the other bits.  As a bonus, the driver
+> now supports the "Performance" fan mode seen in the LG-provided Windows
+> control app, which provides less aggressive CPU throttling but louder
+> fan noise and shorter battery life.
+> 
+> I can confirm with this patch reading/writing the fan mode now works
+> as expected on my laptop, although I have not tested it on any other
+> LG laptop.
+> 
+> Also, correct the documentation to reflect that 0 corresponds to the
+> default mode (what the Windows app calls "Optimal") and 1 corresponds
+> to the silent mode.
+> 
+> Signed-off-by: Daniel Lee <dany97@live.ca>
+> Tested-by: Daniel Lee <dany97@live.ca>
+> Fixes: dbf0c5a6b1f8e7bec5e17baa60a1e04c28d90f9b ("platform/x86: Add LG Gram laptop special features driver")
+> ---
+> V1 -> V2: Replace bitops with GENMASK() and FIELD_PREP()
+> V2 -> V3: Add parentheses next to function name in summary line
+>           Use full name in signoff
+> V3 -> V4: Add include for linux/bitfield.h
+>           Remove "FIELD" from bitmask macro names
+> 
+>  .../admin-guide/laptops/lg-laptop.rst         |  4 +--
+>  drivers/platform/x86/lg-laptop.c              | 30 ++++++++-----------
+>  2 files changed, 14 insertions(+), 20 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/laptops/lg-laptop.rst b/Documentation/admin-guide/laptops/lg-laptop.rst
+> index 67fd6932c..c4dd534f9 100644
+> --- a/Documentation/admin-guide/laptops/lg-laptop.rst
+> +++ b/Documentation/admin-guide/laptops/lg-laptop.rst
+> @@ -48,8 +48,8 @@ This value is reset to 100 when the kernel boots.
+>  Fan mode
+>  --------
+>  
+> -Writing 1/0 to /sys/devices/platform/lg-laptop/fan_mode disables/enables
+> -the fan silent mode.
+> +Writing 0/1/2 to /sys/devices/platform/lg-laptop/fan_mode sets fan mode to
+> +Optimal/Silent/Performance respectively.
+>  
+>  
+>  USB charge
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index 4b57102c7..0ef179f7a 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -8,6 +8,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/device.h>
+>  #include <linux/dev_printk.h>
+> @@ -75,6 +76,9 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+>  #define WMBB_USB_CHARGE 0x10B
+>  #define WMBB_BATT_LIMIT 0x10C
+>  
+> +#define FAN_MODE_LOWER GENMASK(1, 0)
+> +#define FAN_MODE_UPPER GENMASK(5, 4)
+> +
+>  #define PLATFORM_NAME   "lg-laptop"
+>  
+>  MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
+> @@ -274,29 +278,19 @@ static ssize_t fan_mode_store(struct device *dev,
+>  			      struct device_attribute *attr,
+>  			      const char *buffer, size_t count)
+>  {
+> -	bool value;
+> +	unsigned long value;
+>  	union acpi_object *r;
+> -	u32 m;
+>  	int ret;
+>  
+> -	ret = kstrtobool(buffer, &value);
+> +	ret = kstrtoul(buffer, 10, &value);
+>  	if (ret)
+>  		return ret;
+> +	if (value >= 3)
+> +		return -EINVAL;
+>  
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
+> -	if (!r)
+> -		return -EIO;
+> -
+> -	if (r->type != ACPI_TYPE_INTEGER) {
+> -		kfree(r);
+> -		return -EIO;
+> -	}
+> -
+> -	m = r->integer.value;
+> -	kfree(r);
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xffffff0f) | (value << 4));
+> -	kfree(r);
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xfffffff0) | value);
+> +	r = lg_wmab(dev, WM_FAN_MODE, WM_SET,
+> +		FIELD_PREP(FAN_MODE_LOWER, value) |
+> +		FIELD_PREP(FAN_MODE_UPPER, value));
+>  	kfree(r);
+>  
+>  	return count;
+> @@ -317,7 +311,7 @@ static ssize_t fan_mode_show(struct device *dev,
+>  		return -EIO;
+>  	}
+>  
+> -	status = r->integer.value & 0x01;
+> +	status = FIELD_GET(FAN_MODE_LOWER, r->integer.value);
+>  	kfree(r);
+>  
+>  	return sysfs_emit(buffer, "%d\n", status);
+> 
 
----
-Regards, Eliav
-
+-- 
+ i.
 
