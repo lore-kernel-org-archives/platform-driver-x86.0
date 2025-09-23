@@ -1,61 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116061E480;
-	Tue, 23 Sep 2025 10:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F6460B8A;
+	Tue, 23 Sep 2025 10:58:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758624907; cv=none; b=YhjB3z5FARvN6RbZmF3+T2bM4vEOkJaO0fiL0JKmL4laELoOSthW6GWcU8BE/5pB1qC1GrNjBtwgwwUqE1NgI7I6l63+kGa5zcDogNTs4uRygoPrG9k7fdYdGdundth+nYdeq8Ew1rpwlVblL1I4TgxqYiFjA8QiaogJtGBIrqk=
+	t=1758625134; cv=none; b=RTkGhgzwriXe+wtOb0FTTmldSL+Crr7RX1aWr9zTxY0dUimVQvw9hzbp2sJGWxMIeHH6oLy15R0S+nXMmv1+IR0yBAAmzluGhH5B0mR8j5AMoLRyQNPwAEIvriVPt6RuJjGdFUj4jhTDZQWcKMC4cxH8lio5Z0lkKF0RrjcuVsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758624907; c=relaxed/simple;
-	bh=dY5Rwh2Bs45b5H34L497f8DN6MS1f5fLA1XYV31QE30=;
+	s=arc-20240116; t=1758625134; c=relaxed/simple;
+	bh=7dXiJ5vxlZVNAbnCOicOtemenL/y6O2PAMg/vHblEZY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=U2NehB0hyK51ZTsU2uPMio/JkV3XmyExjvN1Q/1ogU7WZ2PPj6OIJeYIwMM8xEoUopG/AENyKy8c0E33Y+giieNGnq61V2dFxmMLHMGVBFr5dqZEKq0DEwmY5BqdiGxsRhemfu1zi8MlKMndfhLMeri8S47jmn9tIBWWvPAD0XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cHnfAyvU; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=HKOWKpEwaJFLYkcBm7KGnXlEm16V7oUPD73lKMnW1euC2/S6VPTYwFYBJsto2bcV6yVigLWw5c5usXzzm+ovwPpeEtXFSpmeA+5G2HSTjubUNGnDftVT4OsLfj9QQYoX/aNWJJhJDxcnW5kS0s2z0Caih3uLLt0iZyG/RZELtyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=diKdR+y+; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cHnfAyvU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="diKdR+y+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758624905; x=1790160905;
+  t=1758625133; x=1790161133;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=dY5Rwh2Bs45b5H34L497f8DN6MS1f5fLA1XYV31QE30=;
-  b=cHnfAyvUSo+YDxii3xIfhGzKc2LKJcQL1wyHg0nhBCIOECEFNH3QmzEC
-   JXZy1Q68dc0ccWTYUewC1xzZEtKh+tj/C5Al/ikSnbIKDF50NX/B0kC/n
-   cEsrmVRcOlR+lasYqSDnOt/yQ3smTqvGmggMNevbsXcbiS+VOdb2c+zfm
-   dEekuBuk30mRgnlEGKXePj/1p5wY78RSX8WgRZlSJJFzp4q7tYxOwTrTG
-   +HzqWvJqrxAFrNpO4ybRWt4c+nPvzifKuAXLQGE0o3mPnaDK1p06kSo9N
-   pG+JMf/tlG7ieis+jW+fmhF7VCCRpwRSow5SX+zrRzX2SD3/KTLskdxTy
+  bh=7dXiJ5vxlZVNAbnCOicOtemenL/y6O2PAMg/vHblEZY=;
+  b=diKdR+y+9+R3oUJ6mAI6xMWbRHsxY9tQWyzAVaEq9J2B2xjcAs44bkiv
+   pt3QimEmXcsAAoYoW5EWZqarCvWYqtoYlI6hIRQs8ab6Di/rJMj5axqv0
+   m/khn/SsAexzTZtnSV5DuqYLvGN9qkJ9CbjmV6rmKZse0NoMsfk5z7x4G
+   7YIb9QtMqFXKxrEHkkNlsgq0d7A89afHRS5GFuOKpXCouNJwH4ljElVNG
+   9D+WB7CHzhPjxtmMQTmRzkgPUJEsP1yAuqY0g5y9TqGJ4UITtFIvn+Et7
+   CPHxAJ7ceRlATTEOPzI4IM9U6/AvH6Oja7Ni+mnRvuoLYZVomp3olb00y
    g==;
-X-CSE-ConnectionGUID: giKm6m2vRIu+txj79dD2XQ==
-X-CSE-MsgGUID: agKWdt+MQq+VBRY5ApJeFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="61069889"
+X-CSE-ConnectionGUID: SDdyJsmsTEmWBLX4PPBP8A==
+X-CSE-MsgGUID: kllOLrlWTU+n8NOq9pBZEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="61070163"
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="61069889"
+   d="scan'208";a="61070163"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 03:55:04 -0700
-X-CSE-ConnectionGUID: SYmwqISISO2W6g760lAhmA==
-X-CSE-MsgGUID: Y8a2p1Z/QX6U6uTVIrbakg==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 03:58:52 -0700
+X-CSE-ConnectionGUID: ZDmbx+JvSiSh/Qn2HI9bKQ==
+X-CSE-MsgGUID: Bvuo/pZLTCO3Az+I4q/L6g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="177519668"
+   d="scan'208";a="177520223"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 03:55:01 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 03:58:49 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 23 Sep 2025 13:54:57 +0300 (EEST)
+Date: Tue, 23 Sep 2025 13:58:45 +0300 (EEST)
 To: Ciju Rajan K <crajank@nvidia.com>
 cc: hdegoede@redhat.com, tglx@linutronix.de, 
     Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
     LKML <linux-kernel@vger.kernel.org>, christophe.jaillet@wanadoo.fr, 
     platform-driver-x86@vger.kernel.org, vadimp@nvidia.com
-Subject: Re: [PATCH platform-next v2 2/2] [PATCH platform-next 2/2]
- platform/mellanox: mlxreg-hotplug: Add support for handling interrupt
- storm
-In-Reply-To: <20250923104452.2407460-3-crajank@nvidia.com>
-Message-ID: <066ef64c-c6e4-f070-9851-ba9358b0970e@linux.intel.com>
-References: <20250923104452.2407460-1-crajank@nvidia.com> <20250923104452.2407460-3-crajank@nvidia.com>
+Subject: Re: [PATCH platform-next v2 1/2] [PATCH platform-next 1/2]
+ platform_data/mlxreg: Add fields for interrupt storm handling
+In-Reply-To: <20250923104452.2407460-2-crajank@nvidia.com>
+Message-ID: <4d131477-f188-7a42-e382-6168299fa5cf@linux.intel.com>
+References: <20250923104452.2407460-1-crajank@nvidia.com> <20250923104452.2407460-2-crajank@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,105 +65,63 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 23 Sep 2025, Ciju Rajan K wrote:
 
-> In case of broken hardware, it is possible that broken device will
-> flood interrupt handler with false events. For example, if fan or
-> power supply has damaged presence pin, it will cause permanent
-> generation of plugged in / plugged out events. As a result, interrupt
-> handler will consume a lot of CPU resources and will keep raising
-> "UDEV" events to the user space.
+> Add fields for interrupt storm handling.
+> Extend structure mlxreg_core_data with the following fields:
+>  'wmark_cntr'   - interrupt storm counter.
+>  'wmark_window' - time window to count interrupts to check for storm.
 > 
-> This patch provides a mechanism to detect device causing interrupt
-> flooding and mask interrupt for this specific device, to isolate
-> from interrupt handling flow. Use the following criteria: if the
-> specific interrupt was generated 'N' times during 'T' seconds,
-> such device is to be considered as broken and will be closed for
-> getting interrupts. User will be notified through the log error
-> and will be instructed to replace broken device.
+> Extend structure mlxreg_core_item with the following field:
+>  'storming_bits' - interrupt storming bits mask.
 > 
 > Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
 > Signed-off-by: Ciju Rajan K <crajank@nvidia.com>
 > ---
->  drivers/platform/mellanox/mlxreg-hotplug.c | 32 ++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
+>  include/linux/platform_data/mlxreg.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-> index d246772aafd6..ae0115ea1fd1 100644
-> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
-> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-> @@ -11,6 +11,7 @@
->  #include <linux/hwmon-sysfs.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/jiffies.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/mlxreg.h>
->  #include <linux/platform_device.h>
-> @@ -30,6 +31,11 @@
->  #define MLXREG_HOTPLUG_ATTRS_MAX	128
->  #define MLXREG_HOTPLUG_NOT_ASSERT	3
+> diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+> index f6cca7a035c7..453c8dfd7eb9 100644
+> --- a/include/linux/platform_data/mlxreg.h
+> +++ b/include/linux/platform_data/mlxreg.h
+> @@ -131,6 +131,8 @@ struct mlxreg_hotplug_device {
+>   * @regnum: number of registers occupied by multi-register attribute;
+>   * @slot: slot number, at which device is located;
+>   * @secured: if set indicates that entry access is secured;
+> + * @wmark_cntr: interrupt storm counter;
+> + * @wmark_window: time window to count interrupts to check for storm;
+>   */
+>  struct mlxreg_core_data {
+>  	char label[MLXREG_CORE_LABEL_MAX_SIZE];
+> @@ -151,6 +153,8 @@ struct mlxreg_core_data {
+>  	u8 regnum;
+>  	u8 slot;
+>  	u8 secured;
+> +	unsigned int wmark_cntr;
+> +	unsigned long wmark_window;
+>  };
 >  
-> +/* Interrupt storm definitions */
-> +#define MLXREG_HOTPLUG_WM_COUNTER	100
-> +/* Time window in milliseconds */
-> +#define MLXREG_HOTPLUG_WM_WINDOW_MS	3000
-> +
 >  /**
->   * struct mlxreg_hotplug_priv_data - platform private data:
->   * @irq: platform device interrupt number;
-> @@ -366,11 +372,33 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
->  	for_each_set_bit(bit, &asserted, 8) {
->  		int pos;
+> @@ -167,6 +171,7 @@ struct mlxreg_core_data {
+>   * @ind: element's index inside the group;
+>   * @inversed: if 0: 0 for signal status is OK, if 1 - 1 is OK;
+>   * @health: true if device has health indication, false in other case;
+> + * @storming_bits: interrupt storming bits mask;
+>   */
+>  struct mlxreg_core_item {
+>  	struct mlxreg_core_data *data;
+> @@ -180,6 +185,7 @@ struct mlxreg_core_item {
+>  	u8 ind;
+>  	u8 inversed;
+>  	u8 health;
+> +	u32 storming_bits;
+>  };
 >  
-> +		/* Skip already marked storming bit. */
-> +		if (item->storming_bits & BIT(bit))
-> +			continue;
-> +
->  		pos = mlxreg_hotplug_item_label_index_get(item->mask, bit);
->  		if (pos < 0)
->  			goto out;
->  
->  		data = item->data + pos;
-> +
-> +		/* Interrupt storm handling logic. */
-> +		if (data->wmark_cntr == 0)
-> +			data->wmark_window = jiffies +
-> +				msecs_to_jiffies(MLXREG_HOTPLUG_WM_WINDOW_MS);
-
-Please use braces for multi-line if blocks.
-
-> +
-> +		if (data->wmark_cntr >= MLXREG_HOTPLUG_WM_COUNTER - 1) {
-> +			if (time_after(data->wmark_window, jiffies)) {
-> +				dev_err(priv->dev,
-> +					"Storming bit %d (label: %s) - interrupt masked permanently. Replace broken HW.",
-> +					bit, data->label);
-> +				/* Mark bit as storming. */
-> +				item->storming_bits |= BIT(bit);
-> +				continue;
-> +			}
-> +			data->wmark_cntr = 0;
-> +		}
-> +		data->wmark_cntr++;
-
-I think this should be in else block to allow recalculation of the time 
-window when the counter wraps.
-
->  		if (regval & BIT(bit)) {
->  			if (item->inversed)
->  				mlxreg_hotplug_device_destroy(priv, data, item->kind);
-> @@ -390,9 +418,9 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
->  	if (ret)
->  		goto out;
->  
-> -	/* Unmask event. */
-> +	/* Unmask event, exclude storming bits. */
->  	ret = regmap_write(priv->regmap, item->reg + MLXREG_HOTPLUG_MASK_OFF,
-> -			   item->mask);
-> +			   item->mask & ~item->storming_bits);
->  
->   out:
->  	if (ret)
+>  /**
 > 
+
+I don't know what's the benefit of having this as a separate patch, the 
+fields are getting used in patch 2 so it would feel natural to introduce 
+them there so the entire change would end up into the same commit.
 
 -- 
  i.
