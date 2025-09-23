@@ -1,176 +1,182 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013050.outbound.protection.outlook.com [40.93.201.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103863218D2;
-	Tue, 23 Sep 2025 12:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758629408; cv=fail; b=r7gFcnbujnIgoTX2CD02GSdXUmOISI42QeSMT6k+bDgT9UzNEyDtMshT49TCwWihCTl+LgJlWZgGFd9YxJVxBqcWcaIdbVOBFl0fsfwEgoRfrssMJOWt1mCiaAReGxsEhvT+gGoGOuvOR6BcFXAIeh636rfKFzCGTMY603bse+4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758629408; c=relaxed/simple;
-	bh=uNDvwWmIqG2zAfg3uOeSjy0g33hYHs2Zy6tZyZePXxw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eLLTKm4NbEEqIr0BbbvX/UCizUx8QtMxr4RdRHBW4gDADQwwU9MzzLdi/8lj5lF/7dV2ZzN+WygnOPoLkUF8s2laXwb5Td8Nl8E7lOqYmimgPivgxfJYM/XLthLszBWKooW9qxh8CIq9doPmv1iYkzEkn/NlEa8nbaCiU4nk0Hk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Y/ZFabT1; arc=fail smtp.client-ip=40.93.201.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10500307486
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 12:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758629782; cv=none; b=uG1vTwMnSNgfobOFF2KdRnI9Wy6Q5T491PjAZca421ye0usKc2ujjDxEKLMkoVaVkG8MBSG1BUGyFq0QwT9yRCdANdlkM+fiHOJuC0Tu3Wc+2n803b2r2xTtzfCHBw23Xvq7R8tOvrNeUEw/xfx63gFCWZ2dRHshglLCODH8MiU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758629782; c=relaxed/simple;
+	bh=onAIH1BP/hCHvY4ff9ZnzH9KjooBVNRPhLS+/jqM0V4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Da9NJS1K+Gj/w9hHUQ2P3jn2915e4mLYlPagrG5J4LCOIKDhN6/0KuFep2yL6kR7EYrM/rdj4b1qEeFTDoQRbx4QUu9YSBVDocoN/mTZwOpOnXvMNfHp5bC3v2BPPMsgYIQwpkReBeTYUIx+yzOC4PPo4OxG3487miaK5qaaLnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L/B5z0Xm; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Y/ZFabT1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JUXOxLgNlDJU7zKRsSZ4g9KkviuaCHRmgYU7RBqqUwtqX3osVjRYe4dcAdLJlbwuhtqe0NYAx2w5TLOyK0gX7KdCZrG/T5OPFqAPpyR+qP3cZlYehw1VzT9zDke9lvLa46JCoRym1Duj1LcQ5/of6pSGD66aEo3QeOB2PvYzSA6Gcxpr5q4YKsBOcN29h5JeYLqBqrqI4qyIp2aUR5ofFMHuI4dXDqzap+ug4Yb2z7syKjGRm7800oaKVz1++2vFJwqqQmOidhzqWkAYpWrQ0QueQOoEC29ijzzi1UDqWZA/9WHXPGoJImk4lcqUXEDFFULpEPc82cCiYrKH5arvyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jEn5tb/pr/1rRGN2K3iQJOiT2J+EAeRuoIc4mZdrSnQ=;
- b=D0Sdn+2JGadG2Byx5dGiJa8GGjoeHHSJRT0Rbynd1xqeX5uQyAPJujtccqXYFxp01zHiO3J6SWpR8flxcgDIlvXsG7cAaBKy/MM2BcDEvWutP0Idgl0I8Ojk6V0ldGBf22SXOFg/jWkSo1dv3fyaFhsNTNXkGY7wzAri8JMd5TKysLh+Y4xzIFNWP2Or6co53XMPot3E0ZrZf6ho/CqTjvvGxr2WPEbqMjBzOEV05wTSdKwjWI1hm/+xRLDHyxQ9hoBQrpbuaZAD+TBKeDMjS2v7XrsqO2wXLTjyJushCqp3gChhPc0SOp07Tq9Vnl/gV8hsZW2cpvqOAKTe846Yow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jEn5tb/pr/1rRGN2K3iQJOiT2J+EAeRuoIc4mZdrSnQ=;
- b=Y/ZFabT1fGH9Nq3pAjJyxHojfQJKeIcrcLGSz9w5enyRriGOHv3ZHaQSdDMuYJkgzgLMlNeaYWC6I4ANNMPOR+567PC5r5M5MBOXqveeJPCpknv2pVBnxR+OcbnnYkN2HaBaNV7jJ2EDupCqfNsLhM0vYDmV0UrrOpaw1AUszSSrGmXFjB7pyzijyAyCn3je2eufcXMiQnVZKg+07h3IjTqQd5r/wVyaTwIJpm/jD0Smq+DwB2SrI9EY5PYp9kGf0DFxYJjrP4VluuzpreoAGPlr7yGWVKuL3GdzDBx+gE5IvYUQr0SQ0gB0EDP+bnq7t6n8UC/kEoIG8+qCNAz40g==
-Received: from SN7PR12MB7324.namprd12.prod.outlook.com (2603:10b6:806:29b::12)
- by SA3PR12MB9107.namprd12.prod.outlook.com (2603:10b6:806:381::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Tue, 23 Sep
- 2025 12:10:04 +0000
-Received: from SN7PR12MB7324.namprd12.prod.outlook.com
- ([fe80::36df:d252:e8a1:b651]) by SN7PR12MB7324.namprd12.prod.outlook.com
- ([fe80::36df:d252:e8a1:b651%4]) with mapi id 15.20.9137.017; Tue, 23 Sep 2025
- 12:10:04 +0000
-From: Ciju Rajan K <crajank@nvidia.com>
-To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: "hdegoede@redhat.com" <hdegoede@redhat.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, "christophe.jaillet@wanadoo.fr"
-	<christophe.jaillet@wanadoo.fr>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>
-Subject: RE: [PATCH platform-next v2 1/2] [PATCH platform-next 1/2]
- platform_data/mlxreg: Add fields for interrupt storm handling
-Thread-Topic: [PATCH platform-next v2 1/2] [PATCH platform-next 1/2]
- platform_data/mlxreg: Add fields for interrupt storm handling
-Thread-Index: AQHcLHcm6Z0odC0pKUuQETaOejuC7rSgmSGAgAATrnA=
-Date: Tue, 23 Sep 2025 12:10:04 +0000
-Message-ID:
- <SN7PR12MB73249D16A95B8C87E9B8AE5FD61DA@SN7PR12MB7324.namprd12.prod.outlook.com>
-References: <20250923104452.2407460-1-crajank@nvidia.com>
- <20250923104452.2407460-2-crajank@nvidia.com>
- <4d131477-f188-7a42-e382-6168299fa5cf@linux.intel.com>
-In-Reply-To: <4d131477-f188-7a42-e382-6168299fa5cf@linux.intel.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7324:EE_|SA3PR12MB9107:EE_
-x-ms-office365-filtering-correlation-id: 71b6fe7f-08f6-43db-ab3d-08ddfa9a2100
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?VTeUGLyEGM0n/tD/N2SVoqoEUf0IPN0/gdxH8rYhVaSBSbCPLqwQBPxB2k?=
- =?iso-8859-1?Q?4fSzClIgoh3CtB6HHwLGl63ciyW2V8Rr1E3LSyvMp6JAqM90XyT39srSeN?=
- =?iso-8859-1?Q?I9CVdkycJUH7Lvyb45dDvoq2EPzyhjmz4UhU8QSaNaxAXlclrO3dI+kfeZ?=
- =?iso-8859-1?Q?NKeCcVu3YBpow6x3+0HiGS/HB72/Qlgx6elkuC1R40VSiKcJ/il9UjAlqt?=
- =?iso-8859-1?Q?8a5xMREACLQLAm4+GV22eEd49DBcgQXNaNMzkml7l3V6BcswsQ3w+26SD5?=
- =?iso-8859-1?Q?mI8iJXktmNCROc6B7ge9Bs50aJPyAvrSDq+yRhD1atRPdfXTSEkqXZhYtt?=
- =?iso-8859-1?Q?yXZTSG/2qHK/RTSvuWu17sh/sYsNZzDJIWaiXjsR9R2VjNY4ZAcWKHBDxt?=
- =?iso-8859-1?Q?QGJvPO60A22YIq3Uphc+jk9N3AKjxuM24z+qPzbvhxJ2dUcK1XQEtuDAzj?=
- =?iso-8859-1?Q?N7s78DtEFpRF0cmrRY6fvNJkU8BoKceIjsFr716pg2kiMowfU8P+yCODdA?=
- =?iso-8859-1?Q?jWda4Ac+qXMzfXDu0WsDP+emyWotBQPyt2/KqVx+rSFFG9vBiekbeVLlM2?=
- =?iso-8859-1?Q?FGylia++3Q0LRn/tINKLnEOVMVgDwSsXYoAQpliyP8cnEymJX+LAQMFfUU?=
- =?iso-8859-1?Q?Efc8Lc8Cug0J3GUozsstYNfjX0HpLC6U4C8zF6kdE111Mc+W2ivG+S2/cp?=
- =?iso-8859-1?Q?S2RY3tGQ9tmrgzMX3ZtjOJN7r2zf+lRB90D9ypDqCh1yk2kIlFOPlMonWV?=
- =?iso-8859-1?Q?rGrhI1lSY6D1nyzAMuW+UzgBkkYdn6SepUwifD1p9i1nqmBaaSCgnEPfyI?=
- =?iso-8859-1?Q?q6HsY9bpmNwWVZ1FZjQovrR9F+2ziF+n4CRkIOfq1K9zd2hSfJq+3b0wXS?=
- =?iso-8859-1?Q?e5hugbu8YMewQdZP/2hA3xeNPWakqeWIXCSB19fRZskU9jSzK5ilAoS9Xz?=
- =?iso-8859-1?Q?fAP1qvSRglD7DGf93rAU7KjOQm0uVhpWrZKcUCfPD6VXS+WqLPWu0C9zUg?=
- =?iso-8859-1?Q?WZiddwNwcYVBteyHRhtVvTR23+NE0zcIlfXk+HOJjEOSb0udqy7XOOHGrK?=
- =?iso-8859-1?Q?KqwAxCxdU/HfAc3wQLXQUkrwCrv37SrmOU7kDV6V8Lmisf0DC5eM5y/Bl8?=
- =?iso-8859-1?Q?tSlKV+3h/AKVYFXtNqccF6bKLjSd7GIzvYDm+9j41B16JRLSBI/mLALY30?=
- =?iso-8859-1?Q?xBfoK5h1wyoLpuEEZwV92h43DQTEl/LQ/cbVyRn3p/tUcqdbbYJsPptl7r?=
- =?iso-8859-1?Q?7840N/x40CDt+RoL1EsEhAvyePUCAI89b+s/qAGjHxTcLMHmzwGTxge8bL?=
- =?iso-8859-1?Q?ZswSDTJ1Sg45VhzLqfpyzi3pkCqPbxtfM9fUxmwJNjaJye5kKnap8eGu+0?=
- =?iso-8859-1?Q?E5FPur3iYrC8oMUjExJKWCIGWvQT9/S0uux3yjhnlRBUMbL8C80v8N07K9?=
- =?iso-8859-1?Q?Wc7WGN2HNbBN05LNNloli09gEFugbKrMneti3PqSQJ+hnyp0A0eikWXIH0?=
- =?iso-8859-1?Q?ZFZNX0Vg//aVaB0Nuuy/FpkkOI+yDwBQM2Jfa3c46U+w=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7324.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?dDJIkFA84CUBL7HzOci1Lfn7cl1nsJ4Su/+l+iIRKaG+GYbv83a04rbNOj?=
- =?iso-8859-1?Q?QFfKNbhNhmFc5/tlKMrObAtd2OR/h1D4hUFqzVxrgRrZUcZFQIYHUh4zij?=
- =?iso-8859-1?Q?ER0lPquIIT6hJHCFvalVcsJB2bEjry7nQ4VdIMq0CBX6z85vnH0MGLIBXB?=
- =?iso-8859-1?Q?FGuPekLgcIBLampu7pvMO+X//CYUZo21OYdnXkercVQuCbkfVKYX9Vi3XV?=
- =?iso-8859-1?Q?VHK0UMGpjVCdwxgWjXZR5ScUOTg39b3DuZkkEp9spUvpzm1eLF9yI04PWG?=
- =?iso-8859-1?Q?5cAb6IUIz6wo75Obya/Lprt3cTE6JCSRQgd8OCHf06R7h2oUgJdBXOPrmi?=
- =?iso-8859-1?Q?0vsVZegksok3dphC7cYNXJz1/nWbgK5mnLjGQs0VE8pFvksaL53tuMU6/I?=
- =?iso-8859-1?Q?FmacNCU4LX6uqefEZQoyGgqnR2DGOzdzM0heg8gzZorhFbRokj+Uz59eBp?=
- =?iso-8859-1?Q?djxdH91shUhAl/oIsT3pjEYFAnnXv2NBMvso6jY3hhu3ilG5k0+LV1MMZr?=
- =?iso-8859-1?Q?iMnM8l5cn98KDhaZUXA5fgyLtR9dOnYLWZUyquY3BfW7/iWeZGLywz1vCu?=
- =?iso-8859-1?Q?njpR/5BmjhmkzUQG3xGNWhVasiYLxJh/Vn7L0XjZUaUy2hDbAZO7ihRw7F?=
- =?iso-8859-1?Q?zIUm7451/ZZN8Ln3jzkx6+nWIPizeykiyHQmDLBeNpf3euP4nPERO4iuWK?=
- =?iso-8859-1?Q?+X5E5Yg/eEMKZ4qqJam+zheoRv8ucdLQCVg004PHSpCZNjIw+AMTyFl6SY?=
- =?iso-8859-1?Q?UqnE7WYT6NIOrkTYxWxZEN8ISKjebJVbxZCNOxoJJ9FE4U7PwLCvDbEGeZ?=
- =?iso-8859-1?Q?ISZn97EVZAJgH2OO1Dm7LkHqCbxUQQdD7MmnjlGiWerBhma2LMy6OZd1FO?=
- =?iso-8859-1?Q?sinvRObWu0qaP3qIT63/C1f8eK1/sOJtmMcBYh2ZfMVVUiqqMyTi3Xuy1+?=
- =?iso-8859-1?Q?kms/VZvGaBJtDBdLHVl5A7p+a21WHhyCAWjarDgpnq6iYxhOFQrYutDwxd?=
- =?iso-8859-1?Q?NC3DBnoheneGculf0UmQuptUWswJiex/wHnom/8EPBjk/GYsVRB2rS7oKO?=
- =?iso-8859-1?Q?t3pHzTvn8AIG4hWhwv+EBptDYpFnlN9kqVzvmVB6umeHrEOnU+D0b2Vy2w?=
- =?iso-8859-1?Q?+LmPhcUqsmT/21KuuAir4mSWPJ7YRitJxuc0LSGfXuy/xTtrPdJSP+VQpS?=
- =?iso-8859-1?Q?/pO8XlVeqNkfEmu/bUXPdZyxUL6UVHao2NF2WHtKI/tRXtPTcq1EJa2dTp?=
- =?iso-8859-1?Q?Hh/7AalIVE9+2Q66tLwRkALJemfuVw7HRvJ51LjhbmDE7JHspoXXVYNDXk?=
- =?iso-8859-1?Q?nuDxBO3ZDXzrwzNTg1Xs005EoRAicatd3D/TjVxUPH/bgfYd/tikZ5Q6lJ?=
- =?iso-8859-1?Q?X2fEp7C2BE1HotJZF5X41mvO2RPLobOcIqv2rPA4f22h97mOT7Fyshsxgy?=
- =?iso-8859-1?Q?RApCXgrNyGmES6aEfNymCrzIC3bSnYjLd+iGcphy4dhEC/Sy1U4wv7qTh6?=
- =?iso-8859-1?Q?kOl0arsZeDNCJE/7c1Q4ljNCcngt0Yc3oIVGrI2AQsnQygFLvgH1woJyiY?=
- =?iso-8859-1?Q?RRlID0W4bwQmz/FezObzy2tD+Dwa2hdACNWZUb3jBHfMjv3s87uC5mfOYe?=
- =?iso-8859-1?Q?yTYS0/VbMmYb8=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L/B5z0Xm"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-62fc0b7bf62so6238785a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 05:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758629779; x=1759234579; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PUp5hVqBdVTJiqJx7CBSL/4eHZpd8ctRM9Gr/BWHC6Y=;
+        b=L/B5z0XmYmzeYryC+z0gCepziq3AIuw9nyJRYqopexb6PBQy5N6Xq6iHWslMMw8LoM
+         FuErEwGd1rWaijkZla9GzTyC+etp6u6pxyGLJPluarxI6b+AixUR7T806c9ytXq5uaOn
+         kSoa7G8kTVsJW0EsWlNmvkf5K96VrnIl4GM8Rvrx8Wju8sttVUoPq8U9e34bl+yWQlAr
+         q56mq8OAM34hT9SdPjdjN//tywh3mVMZOyGx+p2rZJVZ3USpaOsno9nDGU4sEkT6HdUX
+         bzqX7GPL0lckmz+4Yy7ZBvF9hyGfGdPUMQMnSFVOou3knTZKeB1AlZoO5WvnjzJNorsS
+         ycgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758629779; x=1759234579;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PUp5hVqBdVTJiqJx7CBSL/4eHZpd8ctRM9Gr/BWHC6Y=;
+        b=w1YTLt7FwfxUqkHPtywGlCB9SvhXAzW958P/AzfqH9Cfm1mghfagdBDeUCuQNNUHL2
+         3TxMjXSTRwgz/jNRUtLhi+Fj1Eap3uCdQhK9wnJXqJUlupXSin7wRgG7NhbE8cfuhDtk
+         ne6d1e99MqH4RYCdLm7YCQpwHsKdL5ivxoF5xoTtargDF4zdMMNwfju93pbEGppOXwkH
+         wwrnpQC8DJkqy2nAsY3ikN2wabpVE98soFYLNxWWTT7v3mawQX7dNB8bdnM1ULKCUJcx
+         TvUIiekBha6zZAqdLL1/SNenKzOBGaA6BPoK/As+5CAtEXJYU6InZkMp9/N19UIfHAEA
+         YL4A==
+X-Forwarded-Encrypted: i=1; AJvYcCW1iPZMkGyIcWUyXul7c7BJEQEAzgWqyxznhYrBW1t5x+G+GuyRCvDmi0ROTv8h0MSoT4oQvm6sSs+YaTP1InM/7rdd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxabJFvdDx+oQHEWPFWC18ySZCjDdCDDEKVM/3fdOg7EXf0ioDc
+	J6iPqkHqFo/wwfo9nC02H9eBQFefNEkX6E0MQ35bS8zlDZ9vhBotUsnEPhk6q30vnt2/NoOTtL8
+	MTouokVHuAtSY65HYewM+f1TOv8dLQ+3gxkAnoweP0ZoVr3g3nFsQsgpZ/RoQ0w==
+X-Gm-Gg: ASbGncsnR1gJCKJMSmfe88Q1OMulMEqggAPf43qT8/KPRf4QVKOFUgfMBMsZSTvjc5z
+	kBPCpx1WLfvopDGSZRqrfHRThwv13ImWr/yxZ+5EMrvVKwpWMikTW935uh/XM8assFrgYfxdfxp
+	lBHgGPPAPKp9GYpb5F0v7uqil+kDN28vTweNH2sAj1IPjxxGATRrtRbTltLMZJ5YwNNE1gNnGLm
+	H9hW4aiSzopXx0=
+X-Google-Smtp-Source: AGHT+IEveYyZj5MyEVZQFYuTxHsz+ZNZHMmKqbmjzAUXJV1eHNokfwX3dejDcheTKNf1w0LWCArwX6JcEyNECgzztK0=
+X-Received: by 2002:a05:6402:44c5:b0:62f:67bb:d399 with SMTP id
+ 4fb4d7f45d1cf-63467821ef0mr1635778a12.29.1758629779214; Tue, 23 Sep 2025
+ 05:16:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7324.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71b6fe7f-08f6-43db-ab3d-08ddfa9a2100
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2025 12:10:04.1596
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Sqmh3SLWLmuB+VL3mjWi2Mw1jVeYpJj2qC/h1n/YFn/W59yF2mcuvbuGzzj3ODuaViiL2mpH0KsmxY4gYo3BVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9107
+References: <20250917120719.2390847-1-srosek@google.com> <20250917120719.2390847-2-srosek@google.com>
+In-Reply-To: <20250917120719.2390847-2-srosek@google.com>
+From: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
+Date: Tue, 23 Sep 2025 14:16:08 +0200
+X-Gm-Features: AS18NWDjTSTwRkbeN9yfpQFAD42r3vE_yfc3SX-fB05uAP2BGFyAB0dWxsKkdng
+Message-ID: <CAF3aWvHStokULYuGj9rZ4v9dESTxWYtzrx5H6FDP1kdjzfbjYw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, AceLan Kao <acelan.kao@canonical.com>, 
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, 
+	Alex Hung <alexhung@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ilpo,
+Hi Rafael
 
-Thanks for the review.
+On Wed, Sep 17, 2025 at 2:07=E2=80=AFPM Slawomir Rosek <srosek@google.com> =
+wrote:
+>
+> The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
+> critical overheating notification. The IRQ 86 is described in the _CRS
+> control method of INT3401 device, thus Intel SoC DTS thermal driver
+> requires INT3401 device to be enumerated.
+>
+> Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
+> macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
+> is updated to ensure proper enumeration of INT3401 device.
+>
+> Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel S=
+oC DTS thermal driver")
+> Signed-off-by: Slawomir Rosek <srosek@google.com>
+> ---
+>  drivers/acpi/dptf/int340x_thermal.c | 7 +------
+>  drivers/thermal/intel/Kconfig       | 1 +
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int3=
+40x_thermal.c
+> index a222df059a16..947fe50c2ef6 100644
+> --- a/drivers/acpi/dptf/int340x_thermal.c
+> +++ b/drivers/acpi/dptf/int340x_thermal.c
+> @@ -11,10 +11,9 @@
+>
+>  #include "../internal.h"
+>
+> -#define INT3401_DEVICE 0X01
+>  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
+>         {"INT3400"},
+> -       {"INT3401", INT3401_DEVICE},
+> +       {"INT3401"},
+>         {"INT3402"},
+>         {"INT3403"},
+>         {"INT3404"},
+> @@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acpi_=
+device *adev,
+>  {
+>         if (IS_ENABLED(CONFIG_INT340X_THERMAL))
+>                 acpi_create_platform_device(adev, NULL);
+> -       /* Intel SoC DTS thermal driver needs INT3401 to set IRQ descript=
+or */
+> -       else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
+> -                id->driver_data =3D=3D INT3401_DEVICE)
+> -               acpi_create_platform_device(adev, NULL);
+>         return 1;
+>  }
+>
+> diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfi=
+g
+> index e0268fac7093..47950859b790 100644
+> --- a/drivers/thermal/intel/Kconfig
+> +++ b/drivers/thermal/intel/Kconfig
+> @@ -45,6 +45,7 @@ config INTEL_SOC_DTS_IOSF_CORE
+>  config INTEL_SOC_DTS_THERMAL
+>         tristate "Intel SoCs DTS thermal driver"
+>         depends on X86 && PCI && ACPI
+> +       select INT340X_THERMAL
 
-> >  struct mlxreg_core_item {
-> >       struct mlxreg_core_data *data;
-> > @@ -180,6 +185,7 @@ struct mlxreg_core_item {
-> >       u8 ind;
-> >       u8 inversed;
-> >       u8 health;
-> > +     u32 storming_bits;
-> >  };
-> >
-> >  /**
-> >
->=20
-> I don't know what's the benefit of having this as a separate patch, the
-> fields are getting used in patch 2 so it would feel natural to introduce
-> them there so the entire change would end up into the same commit.
+This selection does not meet INT340X_THERMAL requirements so
+kernel tests are failing for randomly generated i386 config
+https://lore.kernel.org/all/202509181359.fLTuROj6-lkp@intel.com/
+I am considering two options:
 
-Combined into a single patch.
+1) Align SoC DTS thermal driver dependencies to match INT340X.
+Currently X86_64 and NET are missing. This is quite simple fix
+but after that enabling a SoC DTS thermal won't be possible
+for i386. From the other hand the driver requires ATOM Silvermont
+https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/int=
+el_soc_dts_thermal.c#L39
+which is a 64bit architecture, so I am not sure if support
+for i386 is really required.
 
-Thanks
-Ciju
+2) Don't select INT340X driver (the original patch does not)
+and use acpi_walk_namespace to enumerate INT3401 on the platform
+bus just before intel_soc_dts_iosf_init is called
+https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/int=
+el_soc_dts_thermal.c#L54
+The code would be cleaned up later with next version of patch 5/6
+and direct call to acpi_walk_namespace would be replaced with
+dedicated function exported by acpi platform core. Eventually,
+after the the last patch, there would be two drivers enumerating
+INT3401 which shouldn't be an issue since the acpi_walk_namespace
+uses global mutex while traversing the acpi device tree
+
+Please let me know your comment so I can prepare the next version.
+
+Thanks, Regards,
+Slawek
+
+>         select INTEL_SOC_DTS_IOSF_CORE
+>         help
+>           Enable this to register Intel SoCs (e.g. Bay Trail) platform di=
+gital
+> --
+> 2.51.0.384.g4c02a37b29-goog
+>
