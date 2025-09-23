@@ -1,146 +1,152 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D567423FC41;
-	Tue, 23 Sep 2025 14:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383CE13AD05
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 14:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758637312; cv=none; b=uU2JSVkxHAtsq/sy/dbu81knogoKHN6+TrszNjJ0CZiGYShxyOZ4X8ukdpklRMZV0ka4ax/oEgYDTidZL67muH7YdXv5WrQMYqvXI43htoQsk5FglETwTO5SEa9xgYmpo+RiP5nQ2RG7Aid280lDti1b5FJcleTu7UfHGCJFSF0=
+	t=1758638599; cv=none; b=YiM9gaFWiGA98u7tV5dEQ8iCSF7QO49xiWdPj8t7ur6HcyntCbxUIKhIPUejHYtYWu6pRoi//fUf1Z0XBGFwRZajF0vGh5zlK/wUPuUWhO4Nd2jpWjLuibMzWoh/ZcgHcfnQ08nzgamzxTSh4SerpuyTyfCoB6cyeVipKgPTHP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758637312; c=relaxed/simple;
-	bh=L74c9IIHIOX2Z92pjI2oltONH2cajKEvUUPh9QApO6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m5WG6BLotrUT5NJ67uwUqpePkXTz3Ztr0byGXRaPEoWQNl8cGSO2rshERD156AftHZjl3uYAxsi7hnHscMQDXtJlsGn7C4THykWj4i74UKMtieZdgJw4SfeuZD/DuSvgjwhjcc8eDSdSBhp+COgJnUHDo77PvgiRiEb1LS+DGmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BRbxAHrt; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1758638599; c=relaxed/simple;
+	bh=uInZkEnThjsrqzsYYM/nNBHKVWx0k34druq6hODmJEw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=vECR5D95/hCbjZcLHXy8lqeq7FVSryFIiPNys+EWEWB/r11Vj4V3fWVYYyh4yPtS0KG4MMIKHqgn4x5Ldl0htOd1xQNeo/12bP6KXqsMT5ZAYHdkZ43m+8m79lWQzGNpAj9dEeS9FZelzMWeGrwBsiiBc3hD8Ggu0lbkyrFJrdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCCMbyJm; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BRbxAHrt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1758637296; x=1759242096; i=markus.elfring@web.de;
-	bh=L74c9IIHIOX2Z92pjI2oltONH2cajKEvUUPh9QApO6g=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BRbxAHrtXeTVqlPZYl8YUcKR1rvqbMgzv4ghGzPFW7BgInUp3TXO2Cl91jsd7ls3
-	 vOufZBbRUysFqnB+xUv4Vgx5isUzPZOMtBFmtN1CLpRLrc2zObAVuHzHfDiHsXrdo
-	 8lLbr9nnNw3hbildEjzfP4KIR+ISD/P8UqraaehqJ8u32LsqdipMdK4EgFdEKvIQ8
-	 wxIUG507k2gt0n0YK61y+iOv8HbzTezXJRc5OJhFe3n0XpfCEE4yR+J5gtO3oLV5f
-	 g7jpOGRWFFLVjGa5qXqZ9nwszkmxGMM9kTt5qiCxKYg+8xk88KaY1VrrWHhNsIbK3
-	 K7T5DG7NX5LsGBE5gA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.248]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M4KJX-1v1L0r2jcf-00EwK3; Tue, 23
- Sep 2025 16:21:36 +0200
-Message-ID: <a307d75d-477b-4632-9444-c9b9f7883b07@web.de>
-Date: Tue, 23 Sep 2025 16:21:34 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCCMbyJm"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-90f5eb2feb8so103559241.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 07:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758638597; x=1759243397; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3b8Bn3OI9shHUmMHdw7vcndpKQnNIfOUqNzwetdyrC8=;
+        b=lCCMbyJmMwoUQnvukrYkiee3279dtwtUmSEKw7l7b7BW4Z7HostweIYtNTo7RkR5XT
+         qCtlm6zaimXGNBNzKOwfR2N2iblDwtV3Q+tfwr0iAN1FeW8ebw6jv0j9hHawAqhan0Js
+         iOFAXJR5/HZK856Hkio75CKIcJMKOss1JbK5MtCqJ/7CjvmlBllRM+1wdGUPjP0+vD/Y
+         AHlY4rRUaf6mz08IkdrTTPoOo6ENuv/wlSCP57pqogK5jrMYKnkrP5+PFPLLS07fDZ26
+         yDRumj1GWKZFaDNWBuyGXyHfXqjNcYuAKRpf2ws050HBI8nTp5shTaXlPC6JnTTW2WP5
+         CEyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758638597; x=1759243397;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3b8Bn3OI9shHUmMHdw7vcndpKQnNIfOUqNzwetdyrC8=;
+        b=n596M2oviwW4M3faMA6pdmIjJPN+RJkiq2MknkQURPEMMYVWD7jK6sGEOLnhd2mfqs
+         EKRNKNjcoCGflmXnJE9G0BeQo52Lm1/WxxTnH4swlQdC4gDkNzFYPuQMYhE2wHlPkpPv
+         flGNa1GStbpyabvBgYoYEGyWxfwAcft7uqIhFXmz6XbpHMTVxTb3nUTQXTKQTPs2xFnu
+         YXnZ5dZMXIM4SJ4HnIDlnHYPie8ouuKXadCYu21ndcYX9xN0GgRDx+XuIjuP7M/nuLce
+         YFZTVEnN+FSPEG6tdAFB3xPgkl6LSZTV5Y86nYkeOyB/2qclUQJOw8wOaHoXDq75jJSp
+         PJRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXV61tTBZx8rRYffxp/msheL1jmzvlh+SWZtq4XTflkq7hkYIcrEQ0Bs7AZ3Ss/nGrXXWNK+qkPoUdzOzUKrZzIo7X@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Aft2n46nV2/mMY5zZb3GhbqkxStoKWi2vn0W2RqGr3PNu+th
+	QDd0a3D1HwUk/F8QbynDf643Cs7yHanbsXKfOS/7Q+dmN0oJkS/PWnear9aMSA==
+X-Gm-Gg: ASbGnct5K1Q9tG2cKFg9oUdyLB0p1UadOQMMe211CxV8gdeafZCDn349nZRHKioaueG
+	WA9cfTz/pO8jLxET6/61o5hCY7kr3qGD6tmO/E5IllRDzz/QFsxxyHwYY1HDzKGW1SQPLVI6aCK
+	W5gZBimnnzaR3x42D1ErdAcYRMak6ujufVNfTcU6WfpIJzqsG8D/HuYYsmj1tMG/Q8y7nmRaZF0
+	myoZV/t+r7xl0FnI9by6SteGbJQuvaPJZFvygx4Tm1SfidQv5P3RERbX9yJZepkeEGnt+sOz5x6
+	R/6dpeqjwASbF1RSWJvvJULUiz9/npzeNJFLv1We9MV4GX4gxQ0kUyHDxIq49noGZrtH7hBt18i
+	7PemawsxKk+mnryc=
+X-Google-Smtp-Source: AGHT+IFntmRmNKNBwFj8+BYAAe/2k4/QtzQnh/MLK6ft99/mz1kQRDK5VUJJpPBWYKCCG4eikU9F7Q==
+X-Received: by 2002:a05:6102:3a10:b0:55d:34c:f231 with SMTP id ada2fe7eead31-5a57a2e78ddmr942753137.35.1758638596676;
+        Tue, 23 Sep 2025 07:43:16 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8f31bef21bbsm1563754241.13.2025.09.23.07.43.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Sep 2025 07:43:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v?] platform/x86: lg-laptop: Fix WMAB call in
- fan_mode_store()
-To: Daniel Lee <dany97@live.ca>, platform-driver-x86@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Matan Ziv-Av <matan@svgalib.org>
-References: <78e9dde3-9f21-9b06-663b-e7a23451b9e7@linux.intel.com>
- <MN2PR06MB55984287A9BAB69F1711640DDC11A@MN2PR06MB5598.namprd06.prod.outlook.com>
- <ea57d978-3fd3-fd86-aec7-e814359e3e02@linux.intel.com>
- <MN2PR06MB559873DBA3BA4491E08949ACDC1DA@MN2PR06MB5598.namprd06.prod.outlook.com>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <MN2PR06MB559873DBA3BA4491E08949ACDC1DA@MN2PR06MB5598.namprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QyfA4A9pYfhpRyXOflEKpb5xLHvy/LRETz8FRO+Mr3d3xntNoIX
- p+MnGRmksAT1nFttJXagl1fnAwnsEOf04LiCMZO2N8EkzN2KSuPSEGvRMnYMvSEAMRJ9elI
- ScNy7ntUFlsJtaO1to9F085Y3wfcVXTCFBjAv5iLKLOzNCAXZMBty3OZRWo81J5mq0oY7uw
- b5og0d7hkIMWgftXPCXiw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lPKyIRcc648=;qAuWgtJfRMUZDiE+55lCkenEZA8
- 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
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Sep 2025 09:43:14 -0500
+Message-Id: <DD09CP8SI4S3.D0SYL9FM7MR2@gmail.com>
+Cc: <kuurtb@gmail.com>
+Subject: Re: [PATCH] alieneware-wmi-wmax: Add AWCC support to Dell G15 5530
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "L Lawliet" <kmtechnical2006@gmail.com>,
+ <platform-driver-x86@vger.kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <CAE_EmHsRBLJauuYJinTaf=Q6MzexHWti2SWeX8DWPmF6FN-aNA@mail.gmail.com>
+In-Reply-To: <CAE_EmHsRBLJauuYJinTaf=Q6MzexHWti2SWeX8DWPmF6FN-aNA@mail.gmail.com>
 
-> I renamed the variable to `mode`.
->=20
-> Is there anything about the commit message I should change?
->=20
-> -- >8 --
-=E2=80=A6
+Hi tr1x_em,
 
-I imagine that you can adjust the inquiry format.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.17-rc7#n638
+Thank you for your patch!
 
-Regards,
-Markus
+I believe you patched my personal development tree. Upstream patches
+should be made on top of the pdx86 Linux tree:
+
+	[1] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers=
+-x86.git
+
+This should be Cc'd to subsystem maintainers too. You can get the full
+list of maintainers with the get_maintainer.pl script (which is also
+found in the tree above):
+
+$ ./scripts/get_maintainer.pl drivers/platform/x86/dell/alienware-wmi-wmax.=
+c
+
+There is also a few issues bellow.
+
+On Tue Sep 23, 2025 at 8:03 AM -05, L Lawliet wrote:
+> From 1dad6e971a889c7936d1a54ab38f146bd23ebbf3 Mon Sep 17 00:00:00 2001
+> From: tr1x_em <admin@trix.is-a.dev>
+> Date: Tue, 23 Sep 2025 18:24:58 +0530
+> Subject: [PATCH] alieneware-wmi-wmax: Add AWCC support to Dell G15 5530
+>
+
+Add a commit description too (even if it's a little redundant).
+
+> Signed-off-by: tr1x_em <admin@trix.is-a.dev>
+
+Patches can only be signed off with a known identity (which is usually
+your real name).
+
+> ---
+>  alienware-wmi-wmax.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/alienware-wmi-wmax.c b/alienware-wmi-wmax.c
+> index fd550c8..e7ba590 100644
+> --- a/alienware-wmi-wmax.c
+> +++ b/alienware-wmi-wmax.c
+
+Again, diffs should be taken from the root of the Linux tree.
+
+> @@ -209,6 +209,15 @@ static const struct dmi_system_id
+> awcc_dmi_table[] __initconst =3D {
+>          },
+>          .driver_data =3D &g_series_quirks,
+>      },
+> +    {
+> +        .ident =3D "Dell Inc. G15 5530",
+> +        .matches =3D
+> +            {
+> +                DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +                DMI_MATCH(DMI_PRODUCT_NAME, "G15 5530"),
+> +            },
+> +        .driver_data =3D &g_series_quirks,
+> +    },
+>      {
+>          .ident =3D "Dell Inc. G16 7630",
+>          .matches =3D {
+
+I believe your editor or email client messed up the formatting. Kernel
+source files use tabs instead of spaces.
+
+Please, check the "Submitting patches" guide if you have doubts:
+
+	[2] https://docs.kernel.org/process/submitting-patches.html
+
+
+--=20
+ ~ Kurt
+
