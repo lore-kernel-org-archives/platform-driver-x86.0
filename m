@@ -1,59 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C743191B4
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 09:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F67431D72D;
+	Tue, 23 Sep 2025 09:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758619644; cv=none; b=T4GqKU/ja2BsK071ojg13cFkhPpdJw3ZYBEmeHztRD8C8yiOw4SOuYSiHZyuwDZYdSjImtoa9OUbATFyVfpkDub+I34ZH7ivb71SOK9U0V4BxhhVtWwGubpyO6VXtbEQ6HKrUq0F3NpUaspl134FR6WUEvJOvTe8wasQBnh/I7I=
+	t=1758619650; cv=none; b=V08VEZR/nmUW70jVAhzbq+fmO6M+jRUlvGy/PIlT+YPHXhWWydVgadHEdZmBCCWB8T3a6mP5Jyani7alMoKVqBzOqzf8AxYmRiOkWGS598kMEC8VF/+05rNAyhf2ZGzdcBYGvq/0TZ5+yy4gz4o+bJFWq+NAix6PMcnRNLs8o/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758619644; c=relaxed/simple;
-	bh=nmbCGoz182kwhKb2SYQ5Qqf4ell1Ha+NQeNKrsal6QY=;
+	s=arc-20240116; t=1758619650; c=relaxed/simple;
+	bh=eyIIdTjx3ux5wRuz1p0zgd1DFnyWJOh3j0XIa9U2jd8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JCN0XSRcpdo7ClEsmKD2vcIVmAXWy6AYTpt4/L6ApbdNK0JHM70yf8YXj/DidRF/4Zjq8q4Hq0VF/sGSHv4YhUVb2nE44T2PDh7yg3a/YnFzvIrF6HQ0umqn04KPg5wae9+VQ6/MJPDzLkp/v7ldXIlgllDs4SOsW6IgjxDxK5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FLwRSzKF; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=WoPVOkEeWSo4l1tXRIkkihXc3OQznU4GcholyB5h4x6AgM2AdhD7DhLjn+QGksPpg2YnrdpYrd0PJDETjuKt+5nG1/WAhocqg4Jq6yWjS346q9Nbscfi9A6tsYNOze6CAbKajs6JE6Ou5WZUA+kvgvUT8VVzFdPZEVev2roBbB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IuncMa0P; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FLwRSzKF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IuncMa0P"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758619642; x=1790155642;
+  t=1758619649; x=1790155649;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=nmbCGoz182kwhKb2SYQ5Qqf4ell1Ha+NQeNKrsal6QY=;
-  b=FLwRSzKFKCn4ySxptZRSwtxRi3mqvgxB/7gaohfs3izlqFqPtByk5IFu
-   K48RRkkuhEvk1d7nYYFTuOFMf9Cn218gmTK9xVUUP8afbD68lvak8+aNd
-   WlnJHhIR/AA5Trj7mLYrYZBjpv/NEEg/wsawqHDlqzkhxuptnmV5r1yCB
-   tmCFB3ybSSaXxNC3HBPkmWFFdEM9eCRTw4p9YitRzTzvyPAXIGN+jPQ8Q
-   FWsq5JougkuJ54fO18Dpunq0fFqa5diMS12sAv+Jvrbx3o1NWjtNf7wqm
-   WynXqqOgrmTLDJQb4PO5b+Nl3jdLLAsYPVsNGEP9RiNZHEW22zhmQ7wFZ
-   Q==;
-X-CSE-ConnectionGUID: q1080wLbQNWaXFGVLTAtiw==
-X-CSE-MsgGUID: OIWminCvRvWGlS3UluKWNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60946375"
+  bh=eyIIdTjx3ux5wRuz1p0zgd1DFnyWJOh3j0XIa9U2jd8=;
+  b=IuncMa0PNQ7Igy2MNLMzkuTLnt9CQItwro1el+LVhAodhkHUt2OtDNDA
+   yVMkM4Yw71/y7S033Vb6CPmkBpMGi8RdJUIB7QeXf+2THCPXkBfj2Ceih
+   oH1lyMoGbMH8ZvUA2ERlVvStzAOJDSmzbIPHAawj7fxXCagZeLjAxnXfF
+   Aek4HpR9Yb+/Osr6iXf4rF3djmlf8RYUMNqW44IpsfTe7Es1spNlgp1/9
+   uD1+dAasUS2pvU2HFk5795HwQtpsd1VgB6VkwT72qri3XrSWdrs/3mtbD
+   Xqi9XIsWymgVvSErgqtYQKqDKiQT4c2U8UFBqoOD54LZSxi6GbQ7q+G9B
+   A==;
+X-CSE-ConnectionGUID: nQDanS68R8G3FZHm6TOniw==
+X-CSE-MsgGUID: hXKt3J9jSvKe2lVR6nUxug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60946384"
 X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60946375"
+   d="scan'208";a="60946384"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:21 -0700
-X-CSE-ConnectionGUID: bCrbjotpRQqEiJrkRHxuDg==
-X-CSE-MsgGUID: FvS9mRopR8yWW0jm8DOS9g==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:29 -0700
+X-CSE-ConnectionGUID: 6dUb6JBUStiEir0O2zGL7Q==
+X-CSE-MsgGUID: d8ytfTgFSq664iPAid0n/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="176300628"
+   d="scan'208";a="176300637"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:18 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: lsanche@lyndeno.ca, Hans de Goede <hansg@kernel.org>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com, 
- mario.limonciello@amd.com, Yijun Shen <Yijun.Shen@Dell.com>
-In-Reply-To: <20250916115142.188535-1-Shyam-sundar.S-k@amd.com>
-References: <20250916115142.188535-1-Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v2] platform/x86/dell: Set USTT mode according to BIOS
- after reboot
-Message-Id: <175861963337.17451.684255698191618037.b4-ty@linux.intel.com>
-Date: Tue, 23 Sep 2025 12:27:13 +0300
+To: Hans de Goede <hansg@kernel.org>, 
+ Nickolay Goppen <setotau@mainlining.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
+References: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
+Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude E6530
+Message-Id: <175861964166.17451.18306095476735575891.b4-ty@linux.intel.com>
+Date: Tue, 23 Sep 2025 12:27:21 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,19 +59,43 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Tue, 16 Sep 2025 17:21:42 +0530, Shyam Sundar S K wrote:
+On Wed, 17 Sep 2025 22:10:01 +0300, Nickolay Goppen wrote:
 
-> After a reboot, if the user changes the thermal setting in the BIOS, the
-> BIOS applies this change. However, the current `dell-pc` driver does not
-> recognize the updated USTT value, resulting in inconsistent thermal
-> profiles between Windows and Linux.
+> Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
+> lis3lv02d_devices[].
 > 
-> To ensure alignment with Windows behavior, read the current USTT settings
-> during driver initialization and update the dell-pc USTT profile
-> accordingly whenever a change is detected.
+> The address was verified as below:
+> 
+>     $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.3
+>     $ ls -d i2c-*
+>     i2c-20
+>     $ sudo modprobe i2c-dev
+>     $ sudo i2cdetect 20
+>     WARNING! This program can confuse your I2C bus, cause data loss and worse!
+>     I will probe file /dev/i2c-20.
+>     I will probe address range 0x08-0x77.
+>     Continue? [Y/n] Y
+>          0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>     00:                         08 -- -- -- -- -- -- --
+>     10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     20: -- -- -- -- -- -- -- -- -- UU -- 2b -- -- -- --
+>     30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
+>     50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
+>     60: -- 61 -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>     70: -- -- -- -- -- -- -- --
+>     $ cat /proc/cmdline
+>     BOOT_IMAGE=/vmlinuz-linux-cachyos-bore root=UUID=<redacted> rw loglevel=3 quiet dell_lis3lv02d.probe_i2c_addr=1
+>     $ sudo dmesg
+>     [    0.000000] Linux version 6.16.6-2-cachyos-bore (linux-cachyos-bore@cachyos) (gcc (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP PREEMPT_DYNAMIC Thu, 11 Sep 2025 16:01:12 +0000
+>     […]
+>     [    0.000000] DMI: Dell Inc. Latitude E6530/07Y85M, BIOS A22 11/30/2018
+>     […]
+>     [    5.166442] i2c i2c-20: Probing for lis3lv02d on address 0x29
+>     [    5.167854] i2c i2c-20: Detected lis3lv02d on address 0x29, please report this upstream to platform-driver-x86@vger.kernel.org so that a quirk can be added
 > 
 > [...]
 
@@ -84,8 +106,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/dell: Set USTT mode according to BIOS after reboot
-      commit: 2c61c45af153243baf591a77ec187be2b9cfe302
+[1/1] platform/x86: dell-lis3lv02d: Add Latitude E6530
+      commit: a15b5aefa8178846ed614745569fed0d1fb6cb87
 
 --
  i.
