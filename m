@@ -1,182 +1,100 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10500307486
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 12:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D21A9F90
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 13:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758629782; cv=none; b=uG1vTwMnSNgfobOFF2KdRnI9Wy6Q5T491PjAZca421ye0usKc2ujjDxEKLMkoVaVkG8MBSG1BUGyFq0QwT9yRCdANdlkM+fiHOJuC0Tu3Wc+2n803b2r2xTtzfCHBw23Xvq7R8tOvrNeUEw/xfx63gFCWZ2dRHshglLCODH8MiU=
+	t=1758632608; cv=none; b=XLhTxAwmFrcaWPQxG57rgtWAVQH0cP6FrwVPpk5ayCTpXsVnKRbqyNoh9h/2Y/8aX9IhMMu0fcnPf7VmZwmqgwiqKmnloshOTV7QddPJKV5giqHmvchrO3YSkfapzjltrdYp3Qslpk+TVZszDqlirUd6Mxt8CIDSOLC/U8JQEyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758629782; c=relaxed/simple;
-	bh=onAIH1BP/hCHvY4ff9ZnzH9KjooBVNRPhLS+/jqM0V4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Da9NJS1K+Gj/w9hHUQ2P3jn2915e4mLYlPagrG5J4LCOIKDhN6/0KuFep2yL6kR7EYrM/rdj4b1qEeFTDoQRbx4QUu9YSBVDocoN/mTZwOpOnXvMNfHp5bC3v2BPPMsgYIQwpkReBeTYUIx+yzOC4PPo4OxG3487miaK5qaaLnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L/B5z0Xm; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1758632608; c=relaxed/simple;
+	bh=wpp8SCNt3PBaPVv4+A2aOAq8RpTIFj3h8vfOWDnfAOk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XOE1IjYjggGnBorWPtgQNK50Jmr0RkuZt6inh7XX/2RSFk+kyzVuIWECwSICU5pY2KVTLQ3wqpb848nA83zeGOVNvVFBymv3TBpOwImvQlBmGlyFbf+RnfIMbj5LfBDeOB03TfQLVxJ2nHA2QoZff/MeGXMXtnbJ2eKGfmkFhHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KucNEHFg; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L/B5z0Xm"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-62fc0b7bf62so6238785a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 05:16:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KucNEHFg"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-905b08b09f5so631408241.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 06:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758629779; x=1759234579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PUp5hVqBdVTJiqJx7CBSL/4eHZpd8ctRM9Gr/BWHC6Y=;
-        b=L/B5z0XmYmzeYryC+z0gCepziq3AIuw9nyJRYqopexb6PBQy5N6Xq6iHWslMMw8LoM
-         FuErEwGd1rWaijkZla9GzTyC+etp6u6pxyGLJPluarxI6b+AixUR7T806c9ytXq5uaOn
-         kSoa7G8kTVsJW0EsWlNmvkf5K96VrnIl4GM8Rvrx8Wju8sttVUoPq8U9e34bl+yWQlAr
-         q56mq8OAM34hT9SdPjdjN//tywh3mVMZOyGx+p2rZJVZ3USpaOsno9nDGU4sEkT6HdUX
-         bzqX7GPL0lckmz+4Yy7ZBvF9hyGfGdPUMQMnSFVOou3knTZKeB1AlZoO5WvnjzJNorsS
-         ycgQ==
+        d=gmail.com; s=20230601; t=1758632605; x=1759237405; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=F73E6U53H/w94yrFY6Xvg9pWLVLRguXA2GtqyonH3bs=;
+        b=KucNEHFgxAPzUB958d5/7VRM8z9+yfFBO+ivjJ8NS7X/uJMqEgMm2ao29k3rA1KwKk
+         bLgGsKQUzobnUmTQT2ks6cpzieHN7//7eQAHa2PuGiM2b9kDBgsh741NW6IMLEOOd076
+         +yw6gnnqznUDNtO3ulFD93Uk91DtieEI8QKvHuDtO0EwRlKvEu3jQHMJUPVzHGS6aI3i
+         B7BBXqI5IXxD3kESgQkCm3by0vvazGXF1R7VuJP1PNF+zHVNEV7QoYkOC+yaEm95RTTq
+         2Ji4S3jdrfKZkDwEiI4t4GLFDIqxaCKp0uppamI/VElSp4Ov64/ihkGC/kaG5Kn0efm9
+         1Wlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758629779; x=1759234579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PUp5hVqBdVTJiqJx7CBSL/4eHZpd8ctRM9Gr/BWHC6Y=;
-        b=w1YTLt7FwfxUqkHPtywGlCB9SvhXAzW958P/AzfqH9Cfm1mghfagdBDeUCuQNNUHL2
-         3TxMjXSTRwgz/jNRUtLhi+Fj1Eap3uCdQhK9wnJXqJUlupXSin7wRgG7NhbE8cfuhDtk
-         ne6d1e99MqH4RYCdLm7YCQpwHsKdL5ivxoF5xoTtargDF4zdMMNwfju93pbEGppOXwkH
-         wwrnpQC8DJkqy2nAsY3ikN2wabpVE98soFYLNxWWTT7v3mawQX7dNB8bdnM1ULKCUJcx
-         TvUIiekBha6zZAqdLL1/SNenKzOBGaA6BPoK/As+5CAtEXJYU6InZkMp9/N19UIfHAEA
-         YL4A==
-X-Forwarded-Encrypted: i=1; AJvYcCW1iPZMkGyIcWUyXul7c7BJEQEAzgWqyxznhYrBW1t5x+G+GuyRCvDmi0ROTv8h0MSoT4oQvm6sSs+YaTP1InM/7rdd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxabJFvdDx+oQHEWPFWC18ySZCjDdCDDEKVM/3fdOg7EXf0ioDc
-	J6iPqkHqFo/wwfo9nC02H9eBQFefNEkX6E0MQ35bS8zlDZ9vhBotUsnEPhk6q30vnt2/NoOTtL8
-	MTouokVHuAtSY65HYewM+f1TOv8dLQ+3gxkAnoweP0ZoVr3g3nFsQsgpZ/RoQ0w==
-X-Gm-Gg: ASbGncsnR1gJCKJMSmfe88Q1OMulMEqggAPf43qT8/KPRf4QVKOFUgfMBMsZSTvjc5z
-	kBPCpx1WLfvopDGSZRqrfHRThwv13ImWr/yxZ+5EMrvVKwpWMikTW935uh/XM8assFrgYfxdfxp
-	lBHgGPPAPKp9GYpb5F0v7uqil+kDN28vTweNH2sAj1IPjxxGATRrtRbTltLMZJ5YwNNE1gNnGLm
-	H9hW4aiSzopXx0=
-X-Google-Smtp-Source: AGHT+IEveYyZj5MyEVZQFYuTxHsz+ZNZHMmKqbmjzAUXJV1eHNokfwX3dejDcheTKNf1w0LWCArwX6JcEyNECgzztK0=
-X-Received: by 2002:a05:6402:44c5:b0:62f:67bb:d399 with SMTP id
- 4fb4d7f45d1cf-63467821ef0mr1635778a12.29.1758629779214; Tue, 23 Sep 2025
- 05:16:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758632605; x=1759237405;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F73E6U53H/w94yrFY6Xvg9pWLVLRguXA2GtqyonH3bs=;
+        b=dPEaNVB/bfhJlB10Qa2pu4kGqb0Nh9V2NYCk+/10ipqE1S7216fDnASfNULiY80dTo
+         6XyCbi33hUxNZcxb4XR67bgaLQ6HXBxjaqMkerybBxR5YxWGDIQhB0tD8k6ixCZenhaP
+         zATFeHToMiUy5iYHMMy64GNSVQVpvY9nya4PNraQWHlhQ+Fsu3YrfpWOOt+Rvxl+mRXP
+         hN6b9jXzfE064qptiOeRxCj+lYoJCHHYMEEw+uu8/QUsh63rz1hkEY7KnQe4UxbVeK9+
+         rECt7GCa61xx0m8OQkFnVuepD4APk4asetU2CS2RZOHgMoyNdhaBfzuGiVOAEHKEXtdV
+         9xCw==
+X-Gm-Message-State: AOJu0Yzmf64H8yKJyGzb8+x0mttwDMhNs0rustr6o9U56OXAmYygkanL
+	2UWAhao0DquYD69emHeb3/TtKGx3kdks26nTwBf6pn6Mj7sV6RnFi57IOzhwUEmziQ1VsdknFGL
+	P0Xc9Zkd53M4hplCwYtjNeWPEwMtxZf8YUIsI
+X-Gm-Gg: ASbGncuHbwJUamvyJRkutC6p1GNmAi0UtmZlTWsULYTPvuUGP78TVHwyK8mYq+a1yYH
+	I47WGdcGMbQeHWJLFHXHGM9XHVbMruoqJe4L042SXa14t8qUiZS4TkNuH+5hFO8DGWahwKum+gy
+	IIWr325s/nB8EDTY6Z+iUxDBmZi9DUSiwoOjBbNsGsh0iN4rrsWPVix01dl81KrYHU3p7H+D7oo
+	z5TMK2OYxVxViRiH++yeJFp2/mHdTto0ot6DWIA
+X-Google-Smtp-Source: AGHT+IHlUWeOqqFgx2VTsTISGolyzU/GD3Ke+c7xkNJAb4YmxQpA1BUfEB/5oy78QGjTiQvX0lsEGSFbsAtvMLcCcj0=
+X-Received: by 2002:a05:6122:82a5:b0:544:9a46:7c85 with SMTP id
+ 71dfb90a1353d-54bcae5e609mr766920e0c.4.1758632604695; Tue, 23 Sep 2025
+ 06:03:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250917120719.2390847-1-srosek@google.com> <20250917120719.2390847-2-srosek@google.com>
-In-Reply-To: <20250917120719.2390847-2-srosek@google.com>
-From: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
-Date: Tue, 23 Sep 2025 14:16:08 +0200
-X-Gm-Features: AS18NWDjTSTwRkbeN9yfpQFAD42r3vE_yfc3SX-fB05uAP2BGFyAB0dWxsKkdng
-Message-ID: <CAF3aWvHStokULYuGj9rZ4v9dESTxWYtzrx5H6FDP1kdjzfbjYw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, AceLan Kao <acelan.kao@canonical.com>, 
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, 
-	Alex Hung <alexhung@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Zhang Rui <rui.zhang@intel.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
-	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+From: L Lawliet <kmtechnical2006@gmail.com>
+Date: Tue, 23 Sep 2025 18:33:13 +0530
+X-Gm-Features: AS18NWC4FI2cXc_-rPK5ZCfUi47wB_7ij5HGTYcX4J_DoBYNaluJZ_bZS72Vj38
+Message-ID: <CAE_EmHsRBLJauuYJinTaf=Q6MzexHWti2SWeX8DWPmF6FN-aNA@mail.gmail.com>
+Subject: [PATCH] alieneware-wmi-wmax: Add AWCC support to Dell G15 5530
+To: platform-driver-x86@vger.kernel.org
+Cc: kuurtb@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Rafael
+From 1dad6e971a889c7936d1a54ab38f146bd23ebbf3 Mon Sep 17 00:00:00 2001
+From: tr1x_em <admin@trix.is-a.dev>
+Date: Tue, 23 Sep 2025 18:24:58 +0530
+Subject: [PATCH] alieneware-wmi-wmax: Add AWCC support to Dell G15 5530
 
-On Wed, Sep 17, 2025 at 2:07=E2=80=AFPM Slawomir Rosek <srosek@google.com> =
-wrote:
->
-> The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
-> critical overheating notification. The IRQ 86 is described in the _CRS
-> control method of INT3401 device, thus Intel SoC DTS thermal driver
-> requires INT3401 device to be enumerated.
->
-> Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
-> macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
-> is updated to ensure proper enumeration of INT3401 device.
->
-> Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel S=
-oC DTS thermal driver")
-> Signed-off-by: Slawomir Rosek <srosek@google.com>
-> ---
->  drivers/acpi/dptf/int340x_thermal.c | 7 +------
->  drivers/thermal/intel/Kconfig       | 1 +
->  2 files changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int3=
-40x_thermal.c
-> index a222df059a16..947fe50c2ef6 100644
-> --- a/drivers/acpi/dptf/int340x_thermal.c
-> +++ b/drivers/acpi/dptf/int340x_thermal.c
-> @@ -11,10 +11,9 @@
->
->  #include "../internal.h"
->
-> -#define INT3401_DEVICE 0X01
->  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
->         {"INT3400"},
-> -       {"INT3401", INT3401_DEVICE},
-> +       {"INT3401"},
->         {"INT3402"},
->         {"INT3403"},
->         {"INT3404"},
-> @@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acpi_=
-device *adev,
->  {
->         if (IS_ENABLED(CONFIG_INT340X_THERMAL))
->                 acpi_create_platform_device(adev, NULL);
-> -       /* Intel SoC DTS thermal driver needs INT3401 to set IRQ descript=
-or */
-> -       else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
-> -                id->driver_data =3D=3D INT3401_DEVICE)
-> -               acpi_create_platform_device(adev, NULL);
->         return 1;
->  }
->
-> diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfi=
-g
-> index e0268fac7093..47950859b790 100644
-> --- a/drivers/thermal/intel/Kconfig
-> +++ b/drivers/thermal/intel/Kconfig
-> @@ -45,6 +45,7 @@ config INTEL_SOC_DTS_IOSF_CORE
->  config INTEL_SOC_DTS_THERMAL
->         tristate "Intel SoCs DTS thermal driver"
->         depends on X86 && PCI && ACPI
-> +       select INT340X_THERMAL
+Signed-off-by: tr1x_em <admin@trix.is-a.dev>
+---
+ alienware-wmi-wmax.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-This selection does not meet INT340X_THERMAL requirements so
-kernel tests are failing for randomly generated i386 config
-https://lore.kernel.org/all/202509181359.fLTuROj6-lkp@intel.com/
-I am considering two options:
-
-1) Align SoC DTS thermal driver dependencies to match INT340X.
-Currently X86_64 and NET are missing. This is quite simple fix
-but after that enabling a SoC DTS thermal won't be possible
-for i386. From the other hand the driver requires ATOM Silvermont
-https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/int=
-el_soc_dts_thermal.c#L39
-which is a 64bit architecture, so I am not sure if support
-for i386 is really required.
-
-2) Don't select INT340X driver (the original patch does not)
-and use acpi_walk_namespace to enumerate INT3401 on the platform
-bus just before intel_soc_dts_iosf_init is called
-https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/int=
-el_soc_dts_thermal.c#L54
-The code would be cleaned up later with next version of patch 5/6
-and direct call to acpi_walk_namespace would be replaced with
-dedicated function exported by acpi platform core. Eventually,
-after the the last patch, there would be two drivers enumerating
-INT3401 which shouldn't be an issue since the acpi_walk_namespace
-uses global mutex while traversing the acpi device tree
-
-Please let me know your comment so I can prepare the next version.
-
-Thanks, Regards,
-Slawek
-
->         select INTEL_SOC_DTS_IOSF_CORE
->         help
->           Enable this to register Intel SoCs (e.g. Bay Trail) platform di=
-gital
-> --
-> 2.51.0.384.g4c02a37b29-goog
->
+diff --git a/alienware-wmi-wmax.c b/alienware-wmi-wmax.c
+index fd550c8..e7ba590 100644
+--- a/alienware-wmi-wmax.c
++++ b/alienware-wmi-wmax.c
+@@ -209,6 +209,15 @@ static const struct dmi_system_id
+awcc_dmi_table[] __initconst = {
+         },
+         .driver_data = &g_series_quirks,
+     },
++    {
++        .ident = "Dell Inc. G15 5530",
++        .matches =
++            {
++                DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++                DMI_MATCH(DMI_PRODUCT_NAME, "G15 5530"),
++            },
++        .driver_data = &g_series_quirks,
++    },
+     {
+         .ident = "Dell Inc. G16 7630",
+         .matches = {
+-- 
+2.51.0
