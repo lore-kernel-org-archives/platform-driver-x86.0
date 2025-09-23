@@ -1,114 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012067.outbound.protection.outlook.com [40.107.200.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F67431D72D;
-	Tue, 23 Sep 2025 09:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758619650; cv=none; b=V08VEZR/nmUW70jVAhzbq+fmO6M+jRUlvGy/PIlT+YPHXhWWydVgadHEdZmBCCWB8T3a6mP5Jyani7alMoKVqBzOqzf8AxYmRiOkWGS598kMEC8VF/+05rNAyhf2ZGzdcBYGvq/0TZ5+yy4gz4o+bJFWq+NAix6PMcnRNLs8o/0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758619650; c=relaxed/simple;
-	bh=eyIIdTjx3ux5wRuz1p0zgd1DFnyWJOh3j0XIa9U2jd8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WoPVOkEeWSo4l1tXRIkkihXc3OQznU4GcholyB5h4x6AgM2AdhD7DhLjn+QGksPpg2YnrdpYrd0PJDETjuKt+5nG1/WAhocqg4Jq6yWjS346q9Nbscfi9A6tsYNOze6CAbKajs6JE6Ou5WZUA+kvgvUT8VVzFdPZEVev2roBbB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IuncMa0P; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2C726AEC;
+	Tue, 23 Sep 2025 10:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758624313; cv=fail; b=Uv+tkSfrBR5wcnvPkYUqF/6Xm5aoxMIk/YL3ZD8K8KxYs4l/4V1bE0DviTE+NMVMHij/QiMKC/15URi7j+rAVaR6R5mfrgcR8i3nAD3JMUDMLtoF95pAAIRsm4pO1jxFO/z+48ytcNxQlrXoYSK1V+B8ClutqvOejY03CC/R7b0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758624313; c=relaxed/simple;
+	bh=wKmAH8TovPsVjhprgG/qRPo7n7FkKiZdwuW0cr10GUc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GS5lkapsuBx/wgnijt1PGWD1pSXAgQonWsAhXQ2Q/ebDYa4rFryo6zdAebDshe3GwwCEO1bp8+EyX62yXKxyvE1GtUynmP1YJIFJkIoHHStVQ2FND/N7QvUWY58lX9/mchdXploWYvPNnqtszyDSEgu4kVaAgZuM4ISa2q6h88k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dYz8SYQ2; arc=fail smtp.client-ip=40.107.200.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IuncMa0P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758619649; x=1790155649;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=eyIIdTjx3ux5wRuz1p0zgd1DFnyWJOh3j0XIa9U2jd8=;
-  b=IuncMa0PNQ7Igy2MNLMzkuTLnt9CQItwro1el+LVhAodhkHUt2OtDNDA
-   yVMkM4Yw71/y7S033Vb6CPmkBpMGi8RdJUIB7QeXf+2THCPXkBfj2Ceih
-   oH1lyMoGbMH8ZvUA2ERlVvStzAOJDSmzbIPHAawj7fxXCagZeLjAxnXfF
-   Aek4HpR9Yb+/Osr6iXf4rF3djmlf8RYUMNqW44IpsfTe7Es1spNlgp1/9
-   uD1+dAasUS2pvU2HFk5795HwQtpsd1VgB6VkwT72qri3XrSWdrs/3mtbD
-   Xqi9XIsWymgVvSErgqtYQKqDKiQT4c2U8UFBqoOD54LZSxi6GbQ7q+G9B
-   A==;
-X-CSE-ConnectionGUID: nQDanS68R8G3FZHm6TOniw==
-X-CSE-MsgGUID: hXKt3J9jSvKe2lVR6nUxug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60946384"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60946384"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:29 -0700
-X-CSE-ConnectionGUID: 6dUb6JBUStiEir0O2zGL7Q==
-X-CSE-MsgGUID: d8ytfTgFSq664iPAid0n/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="176300637"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 02:27:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, 
- Nickolay Goppen <setotau@mainlining.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
-References: <20250917-dell-lis3lv02d-latitude-e6530-v1-1-8a6dec4e51e9@mainlining.org>
-Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude E6530
-Message-Id: <175861964166.17451.18306095476735575891.b4-ty@linux.intel.com>
-Date: Tue, 23 Sep 2025 12:27:21 +0300
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dYz8SYQ2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aZhi3iDVttZv4GLbxIv2tH+rQJYiyQHYQnN3WYCyRNF2y1+vpVjYnSvFQVwhkgOMaZ+SaxKSjzw6F2DbBt858pfYN7dcfBDOCiuTAC3IzrWyn6vFr6c0eggzLX6lqDX1ARIVYmS2o8Ehagn//xfNbmtt4gwEL/4TEqMPh+aeZ1QsKcre+KIw2VdMZ6UP1CnXnkQhvAYV39oNgvcitzoyD57vpWDL5dP5gIkfbNqWf46Fg7F6t00AO06YVSfIsvoUshg+jO9uRJS6pSKC2PY5TY/YH0DDx8HLVr/hSDURwRt2WrImodpHSx5QgrIW+WxfGJfb0xX1mWX5JNvWvnh+yA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tEVhDkSVjT07EFizSfeylSAPRjJXSjJwCCOxiaZ1yfE=;
+ b=R2UmifoIGo8jSEFgUBXfCZLel14t+carGEOvd1QT9bmNGY9Q8J5F/yrntdOr6jl7Q6UA8HaGoWbzCkzxntL5N42Zn0Mw910U61/Vawo3++/PiBUaPSqM+uFTPozU0VBIBfiYz00VyUvPWrLZ6CvaeeqzYfO4OfN9SmYUKHEiRhZMkwMtCVtlaSJckEwYpcmQKxzD7/nJL1OZcYZ5Y5uOAshme02hdQN85s/OuFYn2MvjuZiQqWtUGeMM2bjAxrda7f2AmvFx1KVnstGXXyL5HjrsRxlWRXy/CPTxaXbmWHI7ysVuKOJaWXmWrHg2TxypOkOpzPGbb5d2OkaWnE+/1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tEVhDkSVjT07EFizSfeylSAPRjJXSjJwCCOxiaZ1yfE=;
+ b=dYz8SYQ2yjx13SRwQSP9ZtNO4eFbcqhYO5ZB3fe4Vh4YcAwDPWYIICjW/SB2Ko3F/yFP60vNSqPzGLDLAVgWsa/ahpLlYGa4oENEX7TlrWzlfWr9vYojoImSvzh3wYtDBRB0+SxdVFQbfPxPKY/YaBnBSttE1lL6o42uyqBUYndziVzSetGO3Z57enVxAQ8PYoo7TAJZKzwVFl1wlP1pS1aAqSwNOW3AfPyLqf26UKhE7WPUIzRIfhqBkdlsuDBx8Rx+ExrO5R8c8EgrsFY04rtcF29WJ8vFCt7GL4JRrEsvGEEyqQ4yK/5mavaaMxlGfE3ehKwVTnaoeChAFCT42w==
+Received: from BN0PR03CA0046.namprd03.prod.outlook.com (2603:10b6:408:e7::21)
+ by SJ0PR12MB6901.namprd12.prod.outlook.com (2603:10b6:a03:47e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Tue, 23 Sep
+ 2025 10:45:07 +0000
+Received: from BN2PEPF000044A5.namprd04.prod.outlook.com
+ (2603:10b6:408:e7:cafe::3b) by BN0PR03CA0046.outlook.office365.com
+ (2603:10b6:408:e7::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.20 via Frontend Transport; Tue,
+ 23 Sep 2025 10:45:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN2PEPF000044A5.mail.protection.outlook.com (10.167.243.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Tue, 23 Sep 2025 10:45:07 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 23 Sep
+ 2025 03:44:59 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Tue, 23 Sep 2025 03:44:58 -0700
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Tue, 23 Sep 2025 03:44:56 -0700
+From: Ciju Rajan K <crajank@nvidia.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+	<tglx@linutronix.de>, <andriy.shevchenko@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>
+CC: <christophe.jaillet@wanadoo.fr>, <platform-driver-x86@vger.kernel.org>,
+	<vadimp@nvidia.com>, Ciju Rajan K <crajank@nvidia.com>
+Subject: [PATCH platform-next v2 0/2] Support for handling interrupt storm
+Date: Tue, 23 Sep 2025 13:44:50 +0300
+Message-ID: <20250923104452.2407460-1-crajank@nvidia.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A5:EE_|SJ0PR12MB6901:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c93079b-e940-4ed9-975b-08ddfa8e4349
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rpDJO0xk8g0aukXXkHe9QX0SEHfGkafrNolDT0rAgBujYGrdSF8yMkHjvGr9?=
+ =?us-ascii?Q?oFqq1fJsV04K4sLS7h5+kz61hFqgfkWXJQK8k10YnCBxq2psvNsZ7t5YaToe?=
+ =?us-ascii?Q?hAhyp3ehJoT6T2KYJJelBtd47nVnOkf5YC5xmbJTjBsJVXYCoWCniiPflHUS?=
+ =?us-ascii?Q?CLCaY8lh+MoQMxrUv/2ltF0U26gBqP87MbAVIoChSuu0mJFAFMDUYCJvSnYT?=
+ =?us-ascii?Q?CZ3fl9SapWfJu8x7iXq/K6x1KSxFtQAPPqqhNipriZHzS3vXOvzJalQPS5QG?=
+ =?us-ascii?Q?UkPUGgya9EZreNJkL4cQLEWUQDdqaTjxr2i9x6QPhgsWU/4Kx5+niU9naJVx?=
+ =?us-ascii?Q?ptclyVVD4gfQ0o8ImtMFuzuJkTd6SKIBVdASkiUIBr7ZiwdXWakaSwD9lRtv?=
+ =?us-ascii?Q?8Uc+7gtqOIdxk5tftt+LBiSUP765PhtjZENkwyLKyhPpWcTlKsyjSIxthsEY?=
+ =?us-ascii?Q?hzSWL2Veoh3JTaeJZ1DWAZmc3OI4ccwj9ODKjTPtn8Pv2iULEbNMwe/CbvjI?=
+ =?us-ascii?Q?2FbnjH48/piOBG2ZFq8bFQKHBuHbfuSlxY+9AxmKCncnl1XDurUY4/nQjbBq?=
+ =?us-ascii?Q?qNhVX6oRmNlboeMWS5XbC1ub1rrUQSrucI4Ttmj6IAHxYlXVFtPAe7sLStSU?=
+ =?us-ascii?Q?CwwCAHnl7R4LlrfmFRtHc/ZXMGfKsesFQRScfDxqSGsSD8NjVKmPG0fuGcE5?=
+ =?us-ascii?Q?rwnGawx3tKjh1zsoNkF14niX9NQgp89oL52RmlnlNUIlK9j+mnkpdTT6LNcc?=
+ =?us-ascii?Q?zenfKy2rxLO8xxeNUTuI1Av4FJyPfnC2sENiLh0JuNluvzYz3RsahfZbc1a6?=
+ =?us-ascii?Q?D8hdorLXTItuJx2qwmJ4R2AVLc/gaqeveH0uPjwI9qfq60NtWpc7CGiHcIzE?=
+ =?us-ascii?Q?31pVdQpO9D/QE5OjFitI9NUE7j9hbIpJQXXf1ukX1XZ/n+5C2TKbnaJn9DUz?=
+ =?us-ascii?Q?9RPtIKC/1h4ywMnXttx148ojY58SnffGxMgAoAYDqRyPw7EWLAI4gkg0a75W?=
+ =?us-ascii?Q?qTBJv5APem6HSyhCl7AVK0W25uiDy+rRJh9BbAbWWPkOIwcbqyaHwPVz37QM?=
+ =?us-ascii?Q?U5gitqTUU+G2fv4ARHo7mr82WsN+wXXGqmTowW5MQEaifm896vIQuizt9fvY?=
+ =?us-ascii?Q?YuCHFfGzrMiJK9j012mHtbEUmhhLiX9TUq7JYDJTwAG14m7oGyZwWId1c6o6?=
+ =?us-ascii?Q?NMIoFlphMJDyCBaYDFQXaf1WXGXN3V9PlEtPLVzdby8evvFoi8XY9mFbOXst?=
+ =?us-ascii?Q?rzjjwM6hjKXQNuYJ2KAR5TmrOOPeHth2md5+zDSOf1Eiosrpnqw2C6PJqqAU?=
+ =?us-ascii?Q?bj1r+B9+MaNIw9PnUC7eX2okOBid/NGWZ/ddHVWi5R14So8SxzxcBVxVQieF?=
+ =?us-ascii?Q?VGsYXblG+TuqUbC5SnMVzyQtv1chdLE81DldVYcEtzwgIwbvYFiwyXNPl1H+?=
+ =?us-ascii?Q?Mz0o9YQWi2+Xy1yFTfd4uMW/haAKb4A0Jkhpat63WK6o0zQtjqGtlx0qelei?=
+ =?us-ascii?Q?7VcKDMl2Rgw5zyGPlAl0NdmzqxWOJN1vMHmX?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2025 10:45:07.5713
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c93079b-e940-4ed9-975b-08ddfa8e4349
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A5.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6901
 
-On Wed, 17 Sep 2025 22:10:01 +0300, Nickolay Goppen wrote:
+This patcheset contain:
+ Patch #1 Add fields for interrupt storm handling
+ Patch #2 Add support for handling interrupt storm
 
-> Add 0x29 as the accelerometer address for the Dell Latitude E6530 to
-> lis3lv02d_devices[].
-> 
-> The address was verified as below:
-> 
->     $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.3
->     $ ls -d i2c-*
->     i2c-20
->     $ sudo modprobe i2c-dev
->     $ sudo i2cdetect 20
->     WARNING! This program can confuse your I2C bus, cause data loss and worse!
->     I will probe file /dev/i2c-20.
->     I will probe address range 0x08-0x77.
->     Continue? [Y/n] Y
->          0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
->     00:                         08 -- -- -- -- -- -- --
->     10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->     20: -- -- -- -- -- -- -- -- -- UU -- 2b -- -- -- --
->     30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->     40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
->     50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
->     60: -- 61 -- -- -- -- -- -- -- -- -- -- -- -- -- --
->     70: -- -- -- -- -- -- -- --
->     $ cat /proc/cmdline
->     BOOT_IMAGE=/vmlinuz-linux-cachyos-bore root=UUID=<redacted> rw loglevel=3 quiet dell_lis3lv02d.probe_i2c_addr=1
->     $ sudo dmesg
->     [    0.000000] Linux version 6.16.6-2-cachyos-bore (linux-cachyos-bore@cachyos) (gcc (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP PREEMPT_DYNAMIC Thu, 11 Sep 2025 16:01:12 +0000
->     […]
->     [    0.000000] DMI: Dell Inc. Latitude E6530/07Y85M, BIOS A22 11/30/2018
->     […]
->     [    5.166442] i2c i2c-20: Probing for lis3lv02d on address 0x29
->     [    5.167854] i2c i2c-20: Detected lis3lv02d on address 0x29, please report this upstream to platform-driver-x86@vger.kernel.org so that a quirk can be added
-> 
-> [...]
+v0->v2
 
+Comments pointed out by Ilpo:
+- Renamed the macro MLXREG_HOTPLUG_WM_WINDOW to MLXREG_HOTPLUG_WM_WINDOW_MS to indicate milli seconds
+- Removed the timestamp stored in wmark_high_ts and used jiffies directly
+- Calculating the time window and storing it in the new variable wmark_window.
+- Removed the variables wmark_low_ts and wmark_high_ts
+- Used continue statement inside the time window check
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Changes added by Ciju:
+- Renamed variable wmark_low_cntr to wmark_cntr
+- Fixed the time window to check for interrupt storm
 
-The list of commits applied:
-[1/1] platform/x86: dell-lis3lv02d: Add Latitude E6530
-      commit: a15b5aefa8178846ed614745569fed0d1fb6cb87
+Ciju Rajan K (2):
+  platform_data/mlxreg: Add fields for interrupt storm handling
+  platform/mellanox: mlxreg-hotplug: Add support for handling interrupt
+    storm
 
---
- i.
+ drivers/platform/mellanox/mlxreg-hotplug.c | 32 ++++++++++++++++++++--
+ include/linux/platform_data/mlxreg.h       |  6 ++++
+ 2 files changed, 36 insertions(+), 2 deletions(-)
+
+-- 
+2.47.2
 
