@@ -1,88 +1,101 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2036331BCA3;
-	Tue, 23 Sep 2025 08:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E519A313295;
+	Tue, 23 Sep 2025 08:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758616824; cv=none; b=h4HerdR522a7d4tj8onP6/Wd0UllRbC3sW2aEodUH2Ct7iyO6axvkoxWZLQWhLclJFAILmIYQ3kTZSpvrSqHW13S9ObEQiIZg6ghX5+rUMmT8SwUixQ4D06gg2ISaFsNQ682x0TNfWUCood5h2deFKVE0fhtIag5X2zvm7WQooA=
+	t=1758616907; cv=none; b=cp0p/rcs9dMj1NPUDhPi3bCliignGXhVAOFra5j7BPCkPm6v47tQY2JCxU0Ix/ecikidM0k1CUSawf5tFHsf3ZZpB/bCk2SqjRMID6azUKlI0VFL6BRl/p8laB1J5iqCjmTMCz4ETtZ/zb3Ec9p4+WUS9doFFK3EPTde8jH0w50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758616824; c=relaxed/simple;
-	bh=0T5YvI7oXGfgfqD2MrSUTwY0OsPf11NBpOQYsioFh2Q=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=P5/TX2mvlfDxvPDp43J++zGmqtmZwYf8nFmhlrXSF5u5LW9Seg9QQFNoFWi5HmmvEyabmD2xocVHf8g4QjO9VlChTsRC9py61a3cp0GWLNBbcxT3N3ihp3farOF3ge3bqGMPq0BcLeWkh9He53c3hnjOGaV4TOXfBFU7HETKeT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3wXVvem; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1758616907; c=relaxed/simple;
+	bh=lRpdbF/4V+EkIq17vmldPHeUjul5knfmqsC1F6Yw/+8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QDqXKjvDLe1hgFG6RneA2r4YFqATrZjVGn/A6vR/uFX54cqua+paRE0bz4C0jSbG1XJ2XIMsD1FdA1H9FFohZYjtWPHp2fQxaeuYWI64uebMzulaFk2uILwpBQhft4QR0zyXlKuNzEubkba8r8SlwCbrosX9wCiactMzbaUU+Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wvg6wV3J; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3wXVvem"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wvg6wV3J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758616824; x=1790152824;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=0T5YvI7oXGfgfqD2MrSUTwY0OsPf11NBpOQYsioFh2Q=;
-  b=N3wXVvemqT0WhlkTg+OydofygzbRASs+fRMLepSTKRoZkKMBKZg8eaOq
-   Bri/jOdQy9PL/Ja31cXknNG78hUy96weMMl5OQVZN4CZJAnWyXr5Y/QO0
-   7MBP7JoHqc/BnV47U1CvoYNJBLlWM9xTOgAcqigwZpWZkEK0lZZWi12Ll
-   vaAXUezzTmmBK4R9RkvZcy8n4ZOFtKFemZ3KCfn2pCDZfxK9G0nFTay56
-   GdUe67iemtAcINDiaJcD7oP64uqAtuszRAX7Ovll+qvAZ6Us2iXCuNK2j
-   h044W16SrW/dzeXd7/miT8gsjIkMkEHFDoAfZ/jRkPlrJ1ArP9FGlmJ6Z
-   w==;
-X-CSE-ConnectionGUID: R9fhJqRUTMa+aeYnkJGIiQ==
-X-CSE-MsgGUID: 8vagAAG5QFOAzNkDsuEM+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="71135537"
+  t=1758616906; x=1790152906;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lRpdbF/4V+EkIq17vmldPHeUjul5knfmqsC1F6Yw/+8=;
+  b=Wvg6wV3J23WSOOpq1Q/NsJZ5XkT9wQA61uJztEXhLaICPkR5zcxevFzE
+   cJjssxcjnvF9DZy6Wg3u7WCk1DbcCvJUXYFp1r69lE8EhTRr2XqvnBUAq
+   WZeAIDW6rP5z1f7SBYncY7/oGrPmlSTunrUmpZ4XPNKZUmDmp0IVrjw1U
+   +hRnDt5EfxLb4NZFgRJ6A/Q7wIl1vneRHTUPVPVrzo3UYs/4X5Ha9esOX
+   NtH+hqT6hwhklnHbvDBe9NP6RSg9Hu67AZ7j8HNTGJWzVbcJy14noyh7k
+   sB7lGELEJL2tfdcLKtM0loBuHl+etwgOptViJw4R3bMxW34aqSsmOYIEj
+   Q==;
+X-CSE-ConnectionGUID: jVGWtnEzTxmov9oCeOcTfA==
+X-CSE-MsgGUID: zGGRHlRGQBGVzicR0r3Pgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="71135645"
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="71135537"
+   d="scan'208";a="71135645"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 01:40:23 -0700
-X-CSE-ConnectionGUID: PZCXSkOxQOmK6hUgWXdWAQ==
-X-CSE-MsgGUID: 1XknE6b0TCaoaqezrcQGWw==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 01:41:46 -0700
+X-CSE-ConnectionGUID: YdeeOyQlQzqkRAoii6E46w==
+X-CSE-MsgGUID: 42y7GCWgTR6Nm3sQ8NnySA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,287,1751266800"; 
-   d="scan'208";a="176291354"
+   d="scan'208";a="176291562"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.234])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 01:40:20 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2025 01:41:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <20250916191339.1748512-1-xi.pardee@linux.intel.com>
-References: <20250916191339.1748512-1-xi.pardee@linux.intel.com>
-Subject: Re: [PATCH] platform/x86:intel/pmc: Replace dev_warn() with
- dev_dbg()
-Message-Id: <175861681457.3176.15667670615811075571.b4-ty@linux.intel.com>
-Date: Tue, 23 Sep 2025 11:40:14 +0300
+Date: Tue, 23 Sep 2025 11:41:35 +0300 (EEST)
+To: Rob Herring <robh@kernel.org>
+cc: Sebastian Reichel <sre@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, 
+    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: platform: Add Lenovo Thinkpad T14s
+ EC
+In-Reply-To: <20250919144042.GA875871-robh@kernel.org>
+Message-ID: <970a9db9-6bb4-7cf9-bd8f-249374580fef@linux.intel.com>
+References: <20250918-thinkpad-t14s-ec-v5-0-ac0bc6382c5c@collabora.com> <20250918-thinkpad-t14s-ec-v5-1-ac0bc6382c5c@collabora.com> <20250919144042.GA875871-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 16 Sep 2025 12:13:32 -0700, Xi Pardee wrote:
+On Fri, 19 Sep 2025, Rob Herring wrote:
 
-> Replace dev_warn() with dev_dbg() to reduce unnecessary warning messages.
-> When the low power mode priority register contains invalid data, the Intel
-> PMC Core driver can still utilize the default priority list. This scenario
-> is more suited for debug information rather than warning.
+> On Thu, Sep 18, 2025 at 11:20:26PM +0200, Sebastian Reichel wrote:
+> > Add binding for the EC found in the Thinkpad T14s Gen6 Snapdragon,
+> > which is based on the Qualcomm X1 Elite. Some of the system LEDs
+> > and extra keys are only accessible via the EC.
 > 
+> s/platform/embedded-controller/ in the subject.
+
+Thanks Rob.
+
+I took care of that shortlog change while applying to the review-ilpo-next 
+branch so no need to submit v6 because of it.
+
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > ---
+> >  .../lenovo,thinkpad-t14s-ec.yaml                   | 50 ++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> 
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > 
 
-
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86:intel/pmc: Replace dev_warn() with dev_dbg()
-      commit: bf726cdc9d4fabcf1ebd50f6fce5121acc7447bb
-
---
+-- 
  i.
 
