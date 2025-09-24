@@ -1,93 +1,124 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4323.protonmail.ch (mail-4323.protonmail.ch [185.70.43.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098D4158DAC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 06:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDBF266B72
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 07:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758695254; cv=none; b=E5O2Nry1Wnhjmnh6MA0+32KEeYZcrH4PEdaBECMEPjN706agnnHUapEb+n8YbRpeH8itd+5HR8zsKm6aVcN0iSE+Fwl4Votz1N4W5ZChouLtLYFQ3owfC8RcTcCYiAHwM+RLWnnaFNxk02RWKgynbrKSisyUkM7hgDb4vNcBJig=
+	t=1758697600; cv=none; b=YUUZHazLFzxfDqOchwR/RG1TpU1S7zRc5KHEpF5LQKMmgIYvtRx6rbC8Vf1dW1dfWAvCRSUMcYX+vnY6iHuZNXYIcOaOEC4s8m55aN0Pb7TfQ1c9A1znJ1jOv7G41lCGC/nTEPHYu0yTQM2NvPQc9QZr6hSimKzi3Z6EC8Z9yW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758695254; c=relaxed/simple;
-	bh=thSdD+XLVj9ksDk6itiukuHrdH82G5cb2lzJ3hDNa/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WDJlDEbq9cwCL+Uo6IIS06jDqZEkOUbE8UDK71aGV5yerK1eKMOq1U2oUhR3kbbo+lY7k2UyRT+eFFwkw5Y6vbCuxsJp3vJ85EUVf7VBfaFi6kcogII+9yyJDqqdaD9uyxF4knHNXhpAN79GiqaHOUwhHxX+8sF6rmyLnEx6Gvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trix.is-a.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trix.is-a.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso5971209a12.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 23:27:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758695252; x=1759300052;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kZ1xWK3nab1TsqaxpzRGSrmw5Oe/9F4mQRkje8mHRf8=;
-        b=ChJwR8XegLM9eT7tQ6Mr8FklVa8uzIGGWa9ZIjlIygFrwORt9SbQEqkW4NNmhvtuH4
-         tmplDIG24dc8TFG0qoCgHpYEqNdxFy5VyT1EwNJMj4fhkVfo862XJVtgSxKTJ+2VWH+X
-         V7lTS2CExez6PG99PrSm1oOc1VoX3Brd/q/ejkDFwvla4sg/x4GYE+/yb+g69qq9c5hz
-         cNQBoBUkbfHD6WXR3dyV6uyl4yFXxaNHixR6yczFn6Ww9gMRuo6qLiVZtqRac2teu3jI
-         xJtoJQjY2PYHb8husJNUBXnJntujDDfL6nCgvwrpStxW8w01m8fWFF0gArN2tmyN4ErG
-         M0cg==
-X-Gm-Message-State: AOJu0YxVsb5KwtVhymDnKJuzMkYoR1Vrdp3YGh40XX/dClHvIkxtmki9
-	vD6+9F7j/Bio3CKqULr0z0o46f1ffI+RbyqU9hRJUGnTT4PC+7geKycU23fcpDfy7g8=
-X-Gm-Gg: ASbGncuSTb6WXHYq3+SzROfBUE61FR6UXvB9BwaiDIQkRfwQMLxMgfa4fQpbmdptPTP
-	xuia2vMkAYl4st3PLTjntXSp34qgJ8xKVMaeJfz8AZfYKEux5vOe6s84G/EAv1rliPBlGRa9Feb
-	ruhfXmxNJ973OeV+nTX8ySb9Happv5TOKKuXw1BPVw0qKbwJN8QD1PSPd7bVGYsF24tL0Ro0WfM
-	UIVAXAowhq5aJW96sU6+XSanaya9Opc1QYS4xgj8cd196y5y8M+pdRhiSz2x/mrr4u4PTZwqPjx
-	Am1D3J/cSnp77WAx3E1iQ1ExS5YAhxuA7OgZJt21tvDLVkaIm4MAkJ+4D+EHZelfEjXFz7yehVN
-	0migJ9hQqdXtfCfKJ4W8A3cA=
-X-Google-Smtp-Source: AGHT+IHuq5yhIT3z80bU/wkBqpouwpma4+VpW7e1naUiZULHr9yq17YpLUKrLbpLsn+6n6aQkAR9nQ==
-X-Received: by 2002:a17:902:e5d0:b0:268:db2:b78f with SMTP id d9443c01a7336-27cc5fcd4e4mr59792205ad.44.1758695252263;
-        Tue, 23 Sep 2025 23:27:32 -0700 (PDT)
-Received: from archlinux ([2405:201:6804:217e:39f7:e9ae:d6fb:a075])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2698016c081sm182094155ad.41.2025.09.23.23.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 23:27:31 -0700 (PDT)
-From: tr1x_em <admin@trix.is-a.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: Dell.Client.Kernel@dell.com,
-	kuurtb@gmail.com,
-	tr1x_em <admin@trix.is-a.dev>
-Subject: [PATCH v2 1/1] alienware-wmi-wmax:Add AWCC support to Dell G15 5530
-Date: Wed, 24 Sep 2025 11:57:21 +0530
-Message-ID: <20250924062721.209621-2-admin@trix.is-a.dev>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250924062721.209621-1-admin@trix.is-a.dev>
-References: <20250924062721.209621-1-admin@trix.is-a.dev>
+	s=arc-20240116; t=1758697600; c=relaxed/simple;
+	bh=oUBI0d3ZCPt2cKz33OPp6FqJ544oXGlHTr6GYFfd2Eg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fBcoEgsg4iDzpo8J7x6Za5HQQYv3zzjhIBW1rCWAkXgOTPIQ8CsvbbexZFkw4Q2F6mNKicbH5uL1S9CtiIztKUCo2b8hyRIdiiKGG9B8KIDIvwiuWD01rNWDN5kPR5+NqlbCFkaq51PCIpNjhaRzTwumrR1GTJjCnb8rU3lnjy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=JQEGwDau; arc=none smtp.client-ip=185.70.43.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="JQEGwDau"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
+	s=protonmail; t=1758697595; x=1758956795;
+	bh=oUBI0d3ZCPt2cKz33OPp6FqJ544oXGlHTr6GYFfd2Eg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=JQEGwDauamSP06vMSMY1DMfsSkFwx7RaNvh/HN29DRdORKqk7yYYCEusoJSOBAE5s
+	 QFdMn3tLtroiCDdGvdLrDVX4enje5bGGFTZ0QY9sEd+nfP+gz9hH3aRSTbVO5pgT7Q
+	 tiXFBKFFkH6vqbc6b9GdlA70G1H5iRhdT9z2URuqZOKzZ2NrZD1VAWyJVN3hQhL2da
+	 N/UVCvVVAxtXZGzBUGlBH3qV7NA54zaLeb/mVvpSQ/xI2CTmm4s/lI163/GE0qw925
+	 twwXSpVs4xp0Y9HBKXNSQ7fvdT1RPaJFLObE+wRputMzzpUDEgzcKIwZmZ8dYO7m0v
+	 ge/F2uXp4Bvng==
+Date: Wed, 24 Sep 2025 07:06:28 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Hans de Goede <hansg@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] media: v4l2-subdev / pdx86: int3472: Use "privacy" as con_id for the privacy LED
+Message-ID: <qWUcwd3SUhjavnDhfi9XGxQGsawpzg7ULgHBZllrjxgmELw17JPeZYZuN4bc_VvmoVzd73AmdyZfOcWyFzTvdYUNOG_ORuJhlzPgkxdyN-A=@vinarskis.com>
+In-Reply-To: <ccdf3f79-b1ad-a7cd-5e40-0fb8f70d05d4@linux.intel.com>
+References: <20250910104702.7470-1-hansg@kernel.org> <20250910104702.7470-2-hansg@kernel.org> <ccdf3f79-b1ad-a7cd-5e40-0fb8f70d05d4@linux.intel.com>
+Feedback-ID: 158356072:user:proton
+X-Pm-Message-ID: a1fd173f53acf0b3a8a394808529889eb080dfeb
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Makes alienware-wmi load on G15 5530 by default Tested by me
 
-Signed-off-by: Saumya <admin@trix.is-a.dev>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Wednesday, September 10th, 2025 at 12:51, Ilpo J=C3=A4rvinen <ilpo.jarvi=
+nen@linux.intel.com> wrote:
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 31f9643a6..3b25a8283 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -209,6 +209,14 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &g_series_quirks,
- 	},
-+	{
-+		.ident = "Dell Inc. G15 5530",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5530"),
-+		},
-+		.driver_data = &g_series_quirks,
-+	},
- 	{
- 		.ident = "Dell Inc. G16 7630",
- 		.matches = {
---
-2.51.0
+>=20
+>=20
+> On Wed, 10 Sep 2025, Hans de Goede wrote:
+>=20
+> > During DT-binding review for extending the V4L2 camera sensor privacy L=
+ED
+> > support to systems using devicetree, it has come up that having a "-led=
+"
+> > suffix for the LED name / con_id is undesirable since it already is cle=
+ar
+> > that it is a LED.
+> >=20
+> > Drop the "-led" suffix from the con_id in both the lookup table in
+> > the int3472 code, as well as from the con_id led_get() argument in
+> > the v4l2-subdev code.
+> >=20
+> > Signed-off-by: Hans de Goede hansg@kernel.org
+> > ---
+> > drivers/media/v4l2-core/v4l2-subdev.c | 2 +-
+> > drivers/platform/x86/intel/int3472/led.c | 2 +-
+> > 2 files changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2=
+-core/v4l2-subdev.c
+> > index 113eb74eb7c1..babcc1120354 100644
+> > --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> > +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> > @@ -2602,7 +2602,7 @@ EXPORT_SYMBOL_GPL(v4l2_subdev_is_streaming);
+> > int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
+> > {
+> > #if IS_REACHABLE(CONFIG_LEDS_CLASS)
+> > - sd->privacy_led =3D led_get(sd->dev, "privacy-led");
+> > + sd->privacy_led =3D led_get(sd->dev, "privacy");
+> > if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) !=3D -ENOENT)
+> > return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led),
+> > "getting privacy LED\n");
+> > diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platfor=
+m/x86/intel/int3472/led.c
+> > index f1d6d7b0cb75..b1d84b968112 100644
+> > --- a/drivers/platform/x86/intel/int3472/led.c
+> > +++ b/drivers/platform/x86/intel/int3472/led.c
+> > @@ -43,7 +43,7 @@ int skl_int3472_register_pled(struct int3472_discrete=
+_device *int3472, struct gp
+> >=20
+> > int3472->pled.lookup.provider =3D int3472->pled.name;
+> > int3472->pled.lookup.dev_id =3D int3472->sensor_name;
+> > - int3472->pled.lookup.con_id =3D "privacy-led";
+> > + int3472->pled.lookup.con_id =3D "privacy";
+> > led_add_lookup(&int3472->pled.lookup);
+> >=20
+> > return 0;
+>=20
+>=20
+> Acked-by: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
+>=20
 
+Hi all,
+
+Anything still pending before this patch can land? As DT-binding change tha=
+t requires this [1] is already in linux-next it would be nice to land this =
+in the same cycle.
+
+Thanks,
+Alex
+
+[1] https://lore.kernel.org/all/20250910-leds-v5-0-bb90a0f897d5@vinarskis.c=
+om/
+
+>=20
+> --
+> i.
