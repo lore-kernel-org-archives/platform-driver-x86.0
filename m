@@ -1,63 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC992417C2;
-	Wed, 24 Sep 2025 12:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21892417C2;
+	Wed, 24 Sep 2025 12:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758718699; cv=none; b=U49n6cMueKU/cTm/EvyLcYKl02C43JdjZYwT1L5cPgAWvtBE4iFR9sCxLNhX/VTBbngM6Qrl4tlIA7eQPXxnVj3QMwod8OuTrNRmdE92mNFcNrGDqylEnP7aPtdP17+t2Yxhmg3SYEAwZp+iMDbLDNajiJgNHjVutQfEdvzvpsQ=
+	t=1758718707; cv=none; b=YHjJ0HbD9g13wUASYnlxJkhRzFNn6thO4PqhV9YYLU/faBe5ARauHlZUTbsGSh4frl8N84utU9PdngboFrUaEllUcpgSodoSMW/ZezaGl8onjSPchC0bZ848zJatDJjTJ2VKgQTiTmOyvZJTlres/Ys7iTPReroTDNVqvr2fv+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758718699; c=relaxed/simple;
-	bh=8q2piqw+En3iDfggstQ7qEcJddMj9hReIH0MXbimx6E=;
+	s=arc-20240116; t=1758718707; c=relaxed/simple;
+	bh=Qspc5dEwxdpjZ/rYHDAEPi8m3o0db6993aHytJX5kYQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mhGToTxSt2SuY97T1lOzzSYMmluqftEGgKjQc2FXjXC9kXwBVTcg28W08aOv5YkAXxo7ZJEGifaKVMLu66tpl6YHsu0qfBizNDGD2Ei1QJXrkcd/DfEoGW7Jbzn/yeUkWtnRWi2bu85BU1+2OOfT1cPgaI0ITwcJjVEgkpaBxg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FbQFgBYv; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=H4BQTt73gVigqew7239622GObOa937nIlq+TouUCcMGAcDnn8u9QfGo9TgsQnoWroXGP7OIvcRFibXVVrvkqPVWcSWzJumc+LfIF8hf+xT7t9NOAhYn/gPqKDqomO9Yk61sDiI+7olSCqJNsQdBQ0NDqlm5WVYLisBI1KOP9lfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D5yEGyD9; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FbQFgBYv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D5yEGyD9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758718697; x=1790254697;
+  t=1758718706; x=1790254706;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=8q2piqw+En3iDfggstQ7qEcJddMj9hReIH0MXbimx6E=;
-  b=FbQFgBYvB/CMEPUMgvx+pUcYjbjiXHtT1dfGKS/eCLhzqySgglLNRHvc
-   6iw6yaHVssghxuSGNspm20Q1p8vz+JXrukl2YMdy4gKaH/4PdHM2gZLdt
-   ZszvuqtkqMuTmV1wgUzbYnWW6pVkfRkA8qgXvJpi1KVkaWF6MI+PHrdS1
-   MifOEHC7t6+Wnri3RLr3KP0mQ8AHHwSjHpscR5CEmbVrTgCPs+Gq8U6AQ
-   zeFJHcu49rbegaEQ35J7Fsdz6tWQB3ggv6RF3oa4446aHW8devGy0K8l8
-   xtGMlIUtUaijHeojuO2dtkm0dlkrI6JJ0HIZnLm73nrNSwVH0fQTsc45j
+  bh=Qspc5dEwxdpjZ/rYHDAEPi8m3o0db6993aHytJX5kYQ=;
+  b=D5yEGyD9ys5ImTf9gaJfB+z6BSOJK0/GrQJMKMB6wJW6NT+MugZEPeXR
+   Gx+j7L7ZnY4ldVNpClOEUq86feV2UNXmOyAeXvOo1yslkQjJ6Ym2zfaV5
+   wR0UnUJe/bU9S+egyIj9ucf7Toa9uGjZrW9QvwOL5ct8IdtPQYxkSxY+M
+   slVzSOfJwexhZK1n2SJWF4vQazNXAVUptVyOIMzFbPGVxdM1aLvw1cqwH
+   oNaHx7RZ6GXFnenDCtYKZ07JY0g6VMCYKF2rt0Dvh06BDvRdAgJa0anRs
+   oUDaMk2Q6nP0Yms0/bSyUSXIQWKc8+vQ5L+bkWyOgWbYs6pGYVsVVX1lH
    A==;
-X-CSE-ConnectionGUID: AUpEcnifRbCL65zY8wSi4w==
-X-CSE-MsgGUID: H5V3KxhQTASLOyfMbvZ1lw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="71691179"
+X-CSE-ConnectionGUID: 0LvhTKCKROuoiUeGrfK1Tw==
+X-CSE-MsgGUID: DplH608yR8SNMQDxuuuJKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="71691191"
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="71691179"
+   d="scan'208";a="71691191"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:16 -0700
-X-CSE-ConnectionGUID: OGc/pHIXTFWUNoUQKKQzFw==
-X-CSE-MsgGUID: h1Euq0i8RWa66OxyS+U1Zw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:25 -0700
+X-CSE-ConnectionGUID: GHOSdtPYTAGcqnN0/DSxuw==
+X-CSE-MsgGUID: jK26LTCCRyaUw4/82EBZBA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="177799096"
+   d="scan'208";a="177799118"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.210])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:13 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:22 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
- Hans de Goede <hansg@kernel.org>, 
+To: Hans de Goede <hansg@kernel.org>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Arnd Bergmann <arnd@arndb.de>, 
+Cc: Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
-References: <2meuzip4qnxvle4bwk4hbow4j34ii3cwb46xd5inq5btif5mjg@iiygy6ir7vtr>
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: use software nodes for
- gpio-leds/keys
-Message-Id: <175871868912.14395.3763768947038329370.b4-ty@linux.intel.com>
-Date: Wed, 24 Sep 2025 15:58:09 +0300
+In-Reply-To: <dzecghqrsrbe74akboqih7xculdm53rbhxa7dimt2ysdevyskd@hxhd2j3vnlt5>
+References: <dzecghqrsrbe74akboqih7xculdm53rbhxa7dimt2ysdevyskd@hxhd2j3vnlt5>
+Subject: Re: [PATCH] platform/x86: meraki-mx100: Use static device
+ properties
+Message-Id: <175871869699.14395.10857529593213042993.b4-ty@linux.intel.com>
+Date: Wed, 24 Sep 2025 15:58:16 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,13 +66,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Sun, 10 Aug 2025 21:31:37 -0700, Dmitry Torokhov wrote:
+On Mon, 11 Aug 2025 15:47:09 -0700, Dmitry Torokhov wrote:
 
-> In preparation of dropping support for legacy GPIO API from gpio-keys
-> switch the driver to use software nodes/properties to describe
-> GPIO-connected LED and button.
+> Convert the Meraki MX100 board driver to use software nodes and static
+> device properties to describe the on-board LEDs and reset button.
 > 
+> This moves away from the legacy gpiod_lookup_table and platform_data
+> mechanisms, allowing consumer drivers like leds-gpio and gpio-keys
+> to rely on the unified device properties interface instead of
+> board-specific data.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -83,8 +85,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: barco-p50-gpio: use software nodes for gpio-leds/keys
-      commit: ff289dc249fd7699081494bd70a91b5718d27114
+[1/1] platform/x86: meraki-mx100: Use static device properties
+      commit: c33ca306d26336c9625c37e5e6585080d5882ac8
 
 --
  i.
