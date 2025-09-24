@@ -1,130 +1,75 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDCF52F99
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 01:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D4128F4
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 04:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758675948; cv=none; b=G2veFzuHN+GvN0A1CiJDx+mZKAWtvFentBaPtQ55STm03cdlWI4P8m9sOMfakoZ98vsp/+xotuxEhBbI8fhkMvTNLKpMd2qDNZJphh8IAA8GirhI7kpCJKOGeyM1sX92wHWDgTLwT20540WFpNW2xdyMeKDbgqPqwm301aU8uzk=
+	t=1758688330; cv=none; b=aD5eF/etCur4ZPXd7buYjewbsR2TP+V6ptontvkgL6n7SmaaBkmZ0mxINmVegDOlee2XdlQ0gfKjuWgAjTF1FwqSJA5BDo3pAzlIR+s3v7wN4BOgcq6NP/AZCJDfjLaMtzJKj4aGwrpOp99EHFmk7kw9cMWHc+LvLRC9tPSvy6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758675948; c=relaxed/simple;
-	bh=8jo18O7xt7bHr8Ver3XpX1CPraH2nNHY4R2C961OQT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zt6SWLLuTT2AQ/aIdTQaRKwqVAvift8xyyxBa2ZAUBKV1J3SynFuE1SAdKkT+g2velRaKRXGnJSvlToQYdoLlGFcQCUHDKTMjG/999R7I/pCKBrPBSbDDSgaJ8+DNmvx45BhGw6Xhr6Q6ofInJxrLdwqAMrv0xs4qSyq19zpSqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=AWg48Wgc; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1758688330; c=relaxed/simple;
+	bh=N+gkGHczie4nnKntZBVW8v1uYxKIbM1r0W+/++igDfY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SnN2RbydzM1iH87IJ5RQesSLN79cUiZeXdFp8D1ewNn8vIfTEVGXiyRFYUQuAh0eD8Ifs3lA+qHcTtQqKw0P+4ydA+YppRiJQho8UsHYdhsvHeYZhIPJWTRuQeJIp9jw2bhn+k40Iw3ruc40sEESGDQ7DLadFD9XOKUpbqDPqxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MErylRYB; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="AWg48Wgc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qsfXDlnot4oObBTUBaEOZ8UcN2V5wpkgLA0QfcIffJ8=; b=AWg48Wgc05XSJLMJxIrMMd9Cgy
-	sZgqE9CiIGCoIi5QZtwqKpufKxT648o/RAfFZOs5Fvrka26IMcD9pL7TRlz7nPgdHnZ5VdghjOcMB
-	9p7Y/MDswCE5nl8NakHniVF0KzRv0rahARZwmnIG4JAVxB13jTBG0Rle8OPgqRi+bKTQn8Zh5ySbp
-	ZM2kXlPfjmpjKnlm5nXPJp2+GZS1CiKu7Iu6Ta0KaiNCjrlwA6Lokial1T3VxSa1ZEPBF+arPyg9u
-	1uk4eirATJ3L11z7CUqvkM0U1Al4uYRRtEyFOj0zWqrpkYsrgs+z+dOTtfyhfH2gkRMdYeqJwbvwb
-	ouijEd1w==;
-Received: from 201-27-133-184.dsl.telesp.net.br ([201.27.133.184] helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1v1Dwp-00GWO7-Py; Wed, 24 Sep 2025 03:05:32 +0200
-Message-ID: <081cc0a2-f684-e5aa-e87f-05a54db87022@igalia.com>
-Date: Tue, 23 Sep 2025 22:05:23 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MErylRYB"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-54a8f6a2d80so1605363e0c.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2025 21:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758688328; x=1759293128; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=N+gkGHczie4nnKntZBVW8v1uYxKIbM1r0W+/++igDfY=;
+        b=MErylRYBzK8jxUKufKAb/lqC0r/nAoD1V1AkGDcM6s/RoNGAcxQsM8meesVyuGLvFf
+         m4/CbjFXJzEk0LeABOz8PZ0yqZXK7szGmVE7ndn4gT5hO93C4FCwChf6LPuLb1gJDczq
+         P78ZJpWAhDc82FkLz3PZhVRAngNk2UKYOlot8aWMijj5MgRMbNCPjQ/hxwdFTkjMTITR
+         o3xbYYVBv8uEixgkAD/r1gwKVSeqY4aIld+NCRlH4nT+ddVOk060qIWJwrY5K8JKRk7O
+         sL7JOykr5lg7DAbHPYQiBpD2AFrdbuaGJZpaPW8wikTacaiWZpFKjDoREwAvynPylHF/
+         fhFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758688328; x=1759293128;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N+gkGHczie4nnKntZBVW8v1uYxKIbM1r0W+/++igDfY=;
+        b=wZr5vWNDggSl8uBIvjvrPP/YT9tP57zK57ugFY0gD+0G09+ZXdKOvJ4MXbyqnPa/aE
+         dmIXSRgYdqCFCA/qSIuhUy929+L57YkWG5A+wO7VN8lCNq090l5wwviLL8V8t18N19Ph
+         jbfhW11+00ZFd8Sgsj3c3iy8PMsZP5oz1XMKUcrADcvxIuM7sgwe3v0qjYuH4Srn9Fnm
+         Xm06vd3kk7UkHvneo0Yg27EFndSdg+xir8/c3IYU9r9EDe0RLqokRztimzCzwADE14bh
+         6pfqTFTSGHZJwwKrhqJD9/YyD1vapWv5drCLOj1JjGCVrbZxzqc/GL4VryCjUeyRUa5s
+         oCLw==
+X-Gm-Message-State: AOJu0Yz3Y6j54RgLGJLNuAk01IH9ekhVQBC0IXLk0MtAFR2MbPYn3khp
+	WT+tlf/AH43qXjD9/P6xambGKN1Uv8EvFg9o8kOg/+0XRvpGbezewrjxo0SST24UDpDKzPWTG8O
+	bKSS13kq4/+kwzKISnXM1XLqpu67LGKVI6bHC
+X-Gm-Gg: ASbGncsFhDdpwHq1yUrf+59WNRqzjAOPKfJ6LJ31av+sD1f+alausHJs9z4nsfUgvuJ
+	hCa99vpTmUKbWWXy2sohyWvImJtLVyxRNNU6kgpLwl7U89YBEYnJ3E1bylgUOV9zqRRGUeWddZo
+	1htMNPCMI8G3aF/ajls8XeyIKkzE5P28UbKxAxaiNxyWLr8M/XUfsO+nJnIgJpbtOTk/EMgyL/C
+	yTnEwG7S6sfd0r/QJw3Pd78wK0moBKUUvPCEFVP
+X-Google-Smtp-Source: AGHT+IFZCKRRj53RAoF4Fb7EBOjd74bZ93rn9SgEIuzMPXYezKaUYSXyUHo6qmTz5CpDRFNIeSCzDrGcaGV/bZAwkGU=
+X-Received: by 2002:a05:6122:180f:b0:54b:be27:b541 with SMTP id
+ 71dfb90a1353d-54bcb11c332mr1307189e0c.8.1758688327688; Tue, 23 Sep 2025
+ 21:32:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/4] platform/x86/intel/pmc: Dump raw SLP_Sx_DBG registers
- and distinguish between them
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, irenic.rajneesh@gmail.com,
- david.e.box@intel.com, xi.pardee@linux.intel.com, kernel-dev@igalia.com,
- kernel@gpiccoli.net
-References: <20250922230812.1584253-1-gpiccoli@igalia.com>
- <20250922230812.1584253-3-gpiccoli@igalia.com>
- <db836cd7-c3aa-ee60-e622-c52fcdb78fb3@linux.intel.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <db836cd7-c3aa-ee60-e622-c52fcdb78fb3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAE_EmHsRBLJauuYJinTaf=Q6MzexHWti2SWeX8DWPmF6FN-aNA@mail.gmail.com>
+ <DD09CP8SI4S3.D0SYL9FM7MR2@gmail.com>
+In-Reply-To: <DD09CP8SI4S3.D0SYL9FM7MR2@gmail.com>
+From: L Lawliet <kmtechnical2006@gmail.com>
+Date: Wed, 24 Sep 2025 10:01:55 +0530
+X-Gm-Features: AS18NWD_TGv1LzrsuPZVmhj1XMyrQpG6eLmer_TA0Y_IyyYp_6mVRUASn1sXKhE
+Message-ID: <CAE_EmHtuc0RXyM6EwK2oF9Gm8h6+9bydWGBOwdvTi2A=4+hpbg@mail.gmail.com>
+Subject: Re: [PATCH] alieneware-wmi-wmax: Add AWCC support to Dell G15 5530
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ilpo, thanks a lot for your review, very nice points! Comments below:
-
-
-On 23/09/2025 04:59, Ilpo Järvinen wrote:
-> [...]
->> This should bring no functional change, the goal is only to improve
->> reading and allow full comparison between raw register values.
-> 
-> Hi,
-> 
-> I don't think that's exactly the definition of "no function change" if you 
-> intentionally make a change to the reading. :-)
->
-
-Hehe yeah, you're right - it changes the output, so that's a functional
-change indeed (imagine a userspace script parsing it...). I was thinking
-in functional change as in "no extra register reads are performed", but
-I agree with you and will drop this text from next version, thanks for
-pointing!
-
-
->[...]
->> +
->> +		if (dev)
->> +			dev_info(dev, "\nSLP_S%u_DBG:\t0x%x\n", cnt, data);
->> +		if (s)
->> +			seq_printf(s, "\nSLP_S%u_DBG:\t0x%x\n", cnt, data);
->>  		while (map->name) {
->>  			if (dev)
->> -				dev_info(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
->> -					map->name,
->> +				dev_info(dev, "SLP_S%u_DBG: %-32s\tState: %s\n",
-> 
-> I'm not sure about this change. To me it looks the naming is "SLP S0 DEBUG 
-> REGx (SLP_S0_DBG_x)" according to this:
-> 
-> https://edc.intel.com/content/www/tw/zh/design/publications/14th-generation-core-processors-ioe-p-registers/slp-s0-debug-reg2-slp-s0-dbg-2-offset-10bc/
-> 
-> ...So changing from S0 to S1 or S2 does not seem correct here?
-> 
-> I wonder if this really a problem to begin with as the names should be 
-> unique, no?
-
-Totally right again! Nice catch, it should be as you pointed, the
-different ID is at the end of the string.
-And no, it's definitely not a problem / big deal - I just took the
-opportunity to improve the output, but I messed up heh
-
-Lemme know if you prefer that I keep the old naming or fix it properly,
-like SLP_S0_DBG_2, etc.
-
-
-> [...]
-> This assumption seems somewhat fragile but maybe it's not worth 
-> engineering it beyond this at this point.
-
-Sorry, I couldn't understand this sentence. Can you clarify it for me?
-What assumption and what do you think we should do?
-
-
->[...] 
-> Also, please remember to add all maintainers as receipients when posting.
-
-My apologies - I checked MAINTAINERS directly and added everyone from
-INTEL PMC + Xi Pardee (many patches in the driver); but I should have
-used get_maintainers instead, which brings your name. Thanks for
-reviewing even when I forgot to add your email!!
-Cheers,
-
-
-Guilherme
+Thank you kurt for the review
+I made some silly mistakes would fix them as soon as possible and send
+a canonical patch
