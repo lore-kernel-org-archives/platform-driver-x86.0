@@ -1,62 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642362FFDF3;
-	Wed, 24 Sep 2025 12:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FA3502BE;
+	Wed, 24 Sep 2025 13:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758718716; cv=none; b=LPzEe9rvboD1o60JhYZpppoISubvokMYSlALWqZ2NYKkyTO6ac1y9rBLsNuGDXwMkgwF3/KCgGduTlOkgrCjvsD625eL3W+aMIQmws5l9wltfnd+lPVHjzaVx/1aP3WcRmWeY1tE1xCnVGW9nfVZslMIPrhc7DZNekFBBsknz8o=
+	t=1758719621; cv=none; b=CG89TDUBng7tZwn8sRRH0pUYpXttN1HNCZ2AgjL5MGMFbDWpCw/NcA4bWvn44l4hGybrdj0JY7X/ltdPJxH7PyMrqgvIy53xHHeTT74zFywR30kvm/26RAS/6dh4w5lX3AGQeaPU30QhlygoKQuDLe/Cez/0Y2OLl6OMIZZDJjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758718716; c=relaxed/simple;
-	bh=RYmcHouPkXIndj1/8phik3xCIYSxXkJc8hb0T8jy+Kw=;
+	s=arc-20240116; t=1758719621; c=relaxed/simple;
+	bh=0OJ7woFahki0UKCHjdUta5YVNsKKrcWxshhdkEoyQWw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TKrQ+1c1YUdK2yrr1s+bjaDrgSFawZji+98oTMI45tXiMQ6bUM7dZ5c9ZtSqig+m4O7BilWSiNvg/+QNNqxwuw/ItqhhQLOjoUQv1VE3hUhgsDedIKTEZEoFFejXjXFX1CWZasQbOQPM8ePnpCDCvXv5KT/SypeL25Csnmgfg7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hdWQGmUB; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=QSoO9BuMB5OtMHjQFiHcAr/ahraysEXupg3E6Y/6L+4/6/QrUjelSVcLXAzz9m7ZE0FwY9RC++Blqlq7VG8fZEe6Jfs2RUiTKv+Sk8ofm8w7J8jq/lmyt3r8FMNoBleHJWZeLpZgMDk3qYBs/2Xjae5W2N5QI67stJ/lLwObUcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+vdXMZ6; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hdWQGmUB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+vdXMZ6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758718714; x=1790254714;
+  t=1758719620; x=1790255620;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=RYmcHouPkXIndj1/8phik3xCIYSxXkJc8hb0T8jy+Kw=;
-  b=hdWQGmUB4EnqbluFt8yUbQbJhnlJACi3BricUZk4QasqqH0kxIMnZCjW
-   JOHrp2qT1jebhY7YT3ws6A5tNHXDA9KoAKbfsHoUgd21ln19xy3nQnujY
-   /yeWcwfZAjM4dLtzU2bbRBb59StvXCBhZl3PuM5lSz/+o/1Rsd1mvyJrB
-   KnPNhhtdTz+7nlIP+5gRHkPVXEYb3q7pvY3+M3uVzH185wEtGbnUSrleC
-   HGE/X7XuwnL5hB68OlwCDhGCxEVFjIPvu4OaaX9JceWHOk2bisFYdB7Hd
-   HdjblddCdhqs0y3ucKUH6sDC42aBuylxLUuPE34byE13/arpF0YfvnhwV
+  bh=0OJ7woFahki0UKCHjdUta5YVNsKKrcWxshhdkEoyQWw=;
+  b=Y+vdXMZ6F6x247PgMZG3VKRYoSyucx5LSqoow0Y4cMwnOy10pPsPq3SC
+   Tu17gnaF3uzazCBLLTHD+5eAsIzTEZS9H11zPz4Y5Pv8pStGb7mACshoe
+   1qolJwvQhtG4YnNiH7pRwKDvoM/75ZjNFAXpkurXWsEtNX9JqsXEaKz+K
+   TRE7u+nQzrxohUZNO9WxwJIzOjJXfC5Yw0s1ZpR6Jha6VfYca+0/sPocN
+   74YmpdIcg+J0pEmd1bjlOtd+xdImGeZ+MbbBObLV8NGp3BaFsUNgof2Qm
+   QKKXZIzThZXp6jg7MGwyNY4X7OmiwTNseVqiGfCBKz941HXJYJiGxWU73
    w==;
-X-CSE-ConnectionGUID: Rf6uUEFOQ8yCu2UfIpPDmQ==
-X-CSE-MsgGUID: g6KsZNBESUaX2FYmmJB84Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="71691219"
+X-CSE-ConnectionGUID: cGo3ipdcQZq6vRuwDjB+CA==
+X-CSE-MsgGUID: INUXLaL+QCiMHNgExCibTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="64851674"
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="71691219"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:33 -0700
-X-CSE-ConnectionGUID: w/A0LUR6StaiO769Z+KroQ==
-X-CSE-MsgGUID: FMKxu/nDSIKafl9oti9ezA==
+   d="scan'208";a="64851674"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 06:13:39 -0700
+X-CSE-ConnectionGUID: YuuV7RBHSA+DUuWNRA5dkw==
+X-CSE-MsgGUID: ulUX6XNNRFy3I4O+S2sdnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="177799161"
+   d="scan'208";a="182309531"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.210])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:30 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 06:13:36 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- "Enrico Weigelt, metux IT consult" <info@metux.net>, 
- Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <yaaegm5z2vtkl6ci5jpfnv42aywfjtoqw3bjgtli43ypask2r6@a7gg37rwkpx2>
-References: <yaaegm5z2vtkl6ci5jpfnv42aywfjtoqw3bjgtli43ypask2r6@a7gg37rwkpx2>
-Subject: Re: [PATCH] platform/x86: pcengines-apuv2: Use static device
- properties
-Message-Id: <175871870580.14395.9288938251452136390.b4-ty@linux.intel.com>
-Date: Wed, 24 Sep 2025 15:58:25 +0300
+To: Daniel <dany97@live.ca>
+Cc: Markus.Elfring@web.de, hansg@kernel.org, 
+ LKML <linux-kernel@vger.kernel.org>, matan@svgalib.org, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <MN2PR06MB559873DBA3BA4491E08949ACDC1DA@MN2PR06MB5598.namprd06.prod.outlook.com>
+References: <78e9dde3-9f21-9b06-663b-e7a23451b9e7@linux.intel.com>
+ <MN2PR06MB55984287A9BAB69F1711640DDC11A@MN2PR06MB5598.namprd06.prod.outlook.com>
+ <ea57d978-3fd3-fd86-aec7-e814359e3e02@linux.intel.com>
+ <MN2PR06MB559873DBA3BA4491E08949ACDC1DA@MN2PR06MB5598.namprd06.prod.outlook.com>
+Subject: Re: [PATCH v5] platform/x86: lg-laptop: Fix WMAB call in
+ fan_mode_store()
+Message-Id: <175871961048.19584.6234729612579222383.b4-ty@linux.intel.com>
+Date: Wed, 24 Sep 2025 16:13:30 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,26 +67,29 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 11 Aug 2025 15:50:05 -0700, Dmitry Torokhov wrote:
+On Tue, 23 Sep 2025 09:19:39 -0400, Daniel wrote:
 
-> Convert the PC Engines APUv2/v3 board driver to use software nodes
-> and static device properties for its on-board LEDs and front button.
+> On my LG Gram 16Z95P-K.AA75A8 (2022), writes to
+> /sys/devices/platform/lg-laptop/fan_mode have no effect and reads always
+> report a status of 0.
 > 
-> This change replaces the legacy gpiod_lookup_table and platform_data
-> with a modern software node implementation, which allows the leds-gpio
-> and gpio-keys drivers to use the standard device properties API.
+> Disassembling the relevant ACPI tables reveals that in the WMAB call to
+> set the fan mode, the new mode is read either from bits 0,1 or bits 4,5
+> (depending on the value of some other EC register).  Thus when we call
+> WMAB twice, first with bits 4,5 zero, then bits 0,1 zero, the second
+> call undoes the effect of the first call.
 > 
 > [...]
 
 
 Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: pcengines-apuv2: Use static device properties
-      commit: 5accc30cddb19143e3626f7df2bd1afe32983616
+[1/1] platform/x86: lg-laptop: Fix WMAB call in fan_mode_store()
+      commit: bab04f0166dfaf7d7dfb5fd96d8f961a1b4e1b2c
 
 --
  i.
