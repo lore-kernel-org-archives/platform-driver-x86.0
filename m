@@ -1,228 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B9F2D77F1;
-	Wed, 24 Sep 2025 11:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6502D2417C2
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 12:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758711667; cv=none; b=A8mgWHh4nZPnbE6hRhHIrKnwp0mkUS+yRryDQY3ahmGMkHGTiM+KCQwDs57diJ2KvecXJX56UVArf4Jxb6rwelfQ2AkUpU94vv9mBwvdcLW2XUCxf9lW1PKQouPZlv2Q7j+qWfH0wzZZf38vZ10Elw14DYpTBQCiUGzE2x/RHSw=
+	t=1758718691; cv=none; b=UqTVSJ5RPdf3j+WXVwdIu8aNi+0ZZZG4/9v3oh1tZwxDT+Lmdw29zOuR9a+DYztP7R7ZuSsfDVD7ok4XWCnQzSCr43Kob1GuwFjXiySaZywuPi1PdpfhNRLgoZTXpGuDFapgH/T4R0ln4dfz2sqd7qMx+yxxSSEX+gw7hsqdoT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758711667; c=relaxed/simple;
-	bh=FWi+sdP+3A5sl++XyQXcfBP4+Bq72Kxuhvvsb8DdlHM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A3MvcSEcqhWJvQVJAd+ttR3l2D1Nk8GD5CAoKSnnt8LHCk+YvFycZ2A3mTmqiSSm/83CV3/92M4gy6L9E2NId3aH4R+OswufHy4wkzW7qBtdpN9tzLM7xbQ11N0ODYDxJgeCRDJl4jJttQ0QdrU3u6GCEtPxCMVF03OPu/1cnyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9NBSlHU; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1758718691; c=relaxed/simple;
+	bh=7C9XIpDRduZIL8egsg1yNcrX4vd/VDAa2MiMWvwcvKw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=joQwMbtUHR2vRV/1nvN9VWFwuTox80hSlgsXNFNsDx96eLGhWX34jK3zFxmsmTBeY8+Ji4RvYDQ4uaxhcbGphW9vwZjx4GCuCtExqy6rP7vkPx2bq++4KC4vLcXuJYdAF/jhMguqNo83cFcjzk9Nqsl9Uq7lJJR7mkyQoIJ1Ifg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F7H959UX; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9NBSlHU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F7H959UX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758711666; x=1790247666;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FWi+sdP+3A5sl++XyQXcfBP4+Bq72Kxuhvvsb8DdlHM=;
-  b=m9NBSlHUJFnUC5A1DWcr9LZgayEKcdL3h8/VslEpt9WvidYKep//6jc7
-   X2PYe+Y9DDOZkL8l/UdY4h2HZt1jAWjen8UIJOorIbyeE+1hjBy6BBAip
-   Xe5fy8b2/yVWKM2uhXKZmbgwTo+G7zbFUDoSW0MpkFb6HJINNR0dDTnPt
-   pC9V8GE8FdrSE6o8vl7vlWYCBQ1k3Jme4Ss2lkq7AMen3FzcVeFw7A2ut
-   MzWwYWLWeePx7rKO2r9YDqNcTkceNAjZiSYt0xdashy6yRUTKlzMGHTV3
-   EToJsDSm7WlgMUbg3bHSXUw5NNFkxpJ9kBakt7qio6AjsKG1Lrvz6jkhG
-   Q==;
-X-CSE-ConnectionGUID: DHOi0KWEQdCgtnu4144Pvw==
-X-CSE-MsgGUID: gsCFcO6kRwCBRzlxiI/MMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="72361976"
+  t=1758718689; x=1790254689;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=7C9XIpDRduZIL8egsg1yNcrX4vd/VDAa2MiMWvwcvKw=;
+  b=F7H959UXppjLpNVYlTsrPuqEykNOViwb/TAc5TUwp3eKcc8grOrk2+SK
+   HZgbDl2vbRB5u07VT6sgiiUpQbLhh5sIts4ftrEEq0/hKuTplk1ElhNET
+   QBKkushoB6mZFVQDho3zjfW2SyAKHVQe8xjYZ2oS6NpmPbKkvwKlrVkCS
+   k/sx5X3IxOn4EmF5Q1PV8lNrQNv3VfHsOzMR4dJvzRyh1IVjA0lTcQoKs
+   9a5F0r+3+Jd2HT+z8RUs/K6UkovlANf88+POcFTPjPfDwX36jGI8yQpwD
+   2xw6lDyAYz6Un/EKH3f7hsfXrSafE2BA7/BZ/stRuGDbjnrFdYnGe4nm0
+   w==;
+X-CSE-ConnectionGUID: VG2gUxLaTW6FfCj+w39pfA==
+X-CSE-MsgGUID: QDmpr56BRAyFoN7JubsfNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="71691165"
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="72361976"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 04:00:45 -0700
-X-CSE-ConnectionGUID: dnRZxMOrTViMZYn0IV0trw==
-X-CSE-MsgGUID: MbDbjP3iQB2NzSuPYd6zqA==
+   d="scan'208";a="71691165"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:08 -0700
+X-CSE-ConnectionGUID: GDD8DG+2SkWDrvoF1n77BA==
+X-CSE-MsgGUID: 1ejfjuwqRCmCg7WACYgtPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
-   d="scan'208";a="181297301"
+   d="scan'208";a="177799075"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.210])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 04:00:40 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 05:58:06 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 24 Sep 2025 14:00:36 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: jlee@suse.com, basak.sb2006@gmail.com, rayanmargham4@gmail.com, 
-    kuurtb@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] platform/x86: acer-wmi: Fix setting of fan
- behavior
-In-Reply-To: <20250923215205.326367-2-W_Armin@gmx.de>
-Message-ID: <f1be3296-4cae-3c0e-3b5f-23774f20f37a@linux.intel.com>
-References: <20250923215205.326367-1-W_Armin@gmx.de> <20250923215205.326367-2-W_Armin@gmx.de>
+To: Andy Shevchenko <andy@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20250920200713.20193-1-hansg@kernel.org>
+References: <20250920200713.20193-1-hansg@kernel.org>
+Subject: Re: [PATCH v4 00/20] x86-android-tablets: convert to use GPIO
+ references + Acer A1-840 support
+Message-Id: <175871868070.14395.6462707674732594498.b4-ty@linux.intel.com>
+Date: Wed, 24 Sep 2025 15:58:00 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 23 Sep 2025, Armin Wolf wrote:
+On Sat, 20 Sep 2025 22:06:53 +0200, Hans de Goede wrote:
 
-> After studying the linuwu_sense driver
-> (https://github.com/0x7375646F/Linuwu-Sense) i was able to understand
-> the meaning of the SetGamingFanBehavior() WMI method:
+> Original cover-letter from Dmitry's v2 posting:
 > 
-> - the first 16-bit are a bitmap of all fans affected by a fan behavior
->   change request.
+> "This series came about because now software nodes can be used to
+> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+> eventually get rid of gpio_keys_platform_data structure.
 > 
-> - the next 8 bits contain four fan mode fields (2-bit), each being
->   associated with a bit inside the fan bitmap.
+> So while I was doing the conversions from GPIO_LOOKUP() tables for
+> gpio_keys devices I decided to convert the rest of them as well. Maybe
+> some time in the future we can drop support for GPIO_LOOKUP() and rely
+> on device properties exclusively."
 > 
-> There are three fan modes: auto, turbo and custom.
-> 
-> Use this newfound knowledge to fix the turbo fan handling by setting
-> the correct bits before calling SetGamingFanBehavior(). Also check
-> the result of the WMI method call and return an error should the ACPI
-> firmware signal failure.
-> 
-> Reviewed-by: Kurt Borja <kuurtb@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/acer-wmi.c | 76 +++++++++++++++++++++++----------
->  1 file changed, 53 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 69336bd778ee..a41555ee8589 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -68,10 +68,19 @@ MODULE_LICENSE("GPL");
->  #define ACER_WMID_SET_GAMING_LED_METHODID 2
->  #define ACER_WMID_GET_GAMING_LED_METHODID 4
->  #define ACER_WMID_GET_GAMING_SYS_INFO_METHODID 5
-> -#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
-> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR_METHODID 14
->  #define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
->  #define ACER_WMID_GET_GAMING_MISC_SETTING_METHODID 23
->  
-> +#define ACER_GAMING_FAN_BEHAVIOR_ID_MASK GENMASK_ULL(15, 0)
-> +#define ACER_GAMING_FAN_BEHAVIOR_SET_MODE_MASK GENMASK_ULL(23, 16)
-> +
-> +#define ACER_GAMING_FAN_BEHAVIOR_CPU BIT(0)
-> +#define ACER_GAMING_FAN_BEHAVIOR_GPU BIT(3)
-> +
-> +#define ACER_GAMING_FAN_BEHAVIOR_CPU_MODE_MASK GENMASK(1, 0)
-> +#define ACER_GAMING_FAN_BEHAVIOR_GPU_MODE_MASK GENMASK(7, 6)
-> +
->  #define ACER_GAMING_MISC_SETTING_STATUS_MASK GENMASK_ULL(7, 0)
->  #define ACER_GAMING_MISC_SETTING_INDEX_MASK GENMASK_ULL(7, 0)
->  #define ACER_GAMING_MISC_SETTING_VALUE_MASK GENMASK_ULL(15, 8)
-> @@ -121,6 +130,12 @@ enum acer_wmi_predator_v4_sensor_id {
->  	ACER_WMID_SENSOR_GPU_TEMPERATURE	= 0x0A,
->  };
->  
-> +enum acer_wmi_gaming_fan_mode {
-> +	ACER_WMID_FAN_MODE_AUTO		= 0x01,
-> +	ACER_WMID_FAN_MODE_TURBO	= 0x02,
-> +	ACER_WMID_FAN_MODE_CUSTOM	= 0x03,
-> +};
-> +
->  enum acer_wmi_predator_v4_oc {
->  	ACER_WMID_OC_NORMAL			= 0x0000,
->  	ACER_WMID_OC_TURBO			= 0x0002,
-> @@ -1565,9 +1580,6 @@ static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
->  	case ACER_CAP_TURBO_LED:
->  		method_id = ACER_WMID_SET_GAMING_LED_METHODID;
->  		break;
-> -	case ACER_CAP_TURBO_FAN:
-> -		method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
-> -		break;
->  	default:
->  		return AE_BAD_PARAMETER;
->  	}
-> @@ -1618,25 +1630,43 @@ static int WMID_gaming_get_sys_info(u32 command, u64 *out)
->  	return 0;
->  }
->  
-> +static int WMID_gaming_set_fan_behavior(u16 fan_bitmap, u8 mode_bitmap)
+> [...]
 
-Should the name be in plural as this sets all fans?
 
-Please also consider what I noted to patch 2 about this nesting of 
-FIELD_PREP()s. Getting rid of that effectively means the caller ORs all 
-bits together but I don't think that would make the code harder to read.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> +{
-> +	acpi_status status;
-> +	u64 input = 0;
-> +	u64 result;
-> +
-> +	input |= FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_ID_MASK, fan_bitmap);
-> +	input |= FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_SET_MODE_MASK, mode_bitmap);
-> +
-> +	status = WMI_gaming_execute_u64(ACER_WMID_SET_GAMING_FAN_BEHAVIOR_METHODID, input,
-> +					&result);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	/* The return status must be zero for the operation to have succeeded */
-> +	if (FIELD_GET(ACER_GAMING_FAN_BEHAVIOR_STATUS_MASK, result))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
->  static void WMID_gaming_set_fan_mode(u8 fan_mode)
->  {
-> -	/* fan_mode = 1 is used for auto, fan_mode = 2 used for turbo*/
-> -	u64 gpu_fan_config1 = 0, gpu_fan_config2 = 0;
-> -	int i;
-> -
-> -	if (quirks->cpu_fans > 0)
-> -		gpu_fan_config2 |= 1;
-> -	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> -		gpu_fan_config2 |= 1 << (i + 1);
-> -	for (i = 0; i < quirks->gpu_fans; ++i)
-> -		gpu_fan_config2 |= 1 << (i + 3);
-> -	if (quirks->cpu_fans > 0)
-> -		gpu_fan_config1 |= fan_mode;
-> -	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> -		gpu_fan_config1 |= fan_mode << (2 * i + 2);
-> -	for (i = 0; i < quirks->gpu_fans; ++i)
-> -		gpu_fan_config1 |= fan_mode << (2 * i + 6);
-> -	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
-> +	u16 mode_bitmap = 0;
-> +	u16 fan_bitmap = 0;
-> +
-> +	if (quirks->cpu_fans > 0) {
-> +		fan_bitmap |= ACER_GAMING_FAN_BEHAVIOR_CPU;
-> +		mode_bitmap |= FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_CPU_MODE_MASK, fan_mode);
-> +	}
-> +
-> +	if (quirks->gpu_fans > 0) {
-> +		fan_bitmap |= ACER_GAMING_FAN_BEHAVIOR_GPU;
-> +		mode_bitmap |= FIELD_PREP(ACER_GAMING_FAN_BEHAVIOR_GPU_MODE_MASK, fan_mode);
-> +	}
-> +
-> +	WMID_gaming_set_fan_behavior(fan_bitmap, mode_bitmap);
->  }
->  
->  static int WMID_gaming_set_misc_setting(enum acer_wmi_gaming_misc_setting setting, u8 value)
-> @@ -1923,7 +1953,7 @@ static int acer_toggle_turbo(void)
->  		WMID_gaming_set_u64(0x1, ACER_CAP_TURBO_LED);
->  
->  		/* Set FAN mode to auto */
-> -		WMID_gaming_set_fan_mode(0x1);
-> +		WMID_gaming_set_fan_mode(ACER_WMID_FAN_MODE_AUTO);
->  
->  		/* Set OC to normal */
->  		if (has_cap(ACER_CAP_TURBO_OC)) {
-> @@ -1937,7 +1967,7 @@ static int acer_toggle_turbo(void)
->  		WMID_gaming_set_u64(0x10001, ACER_CAP_TURBO_LED);
->  
->  		/* Set FAN mode to turbo */
-> -		WMID_gaming_set_fan_mode(0x2);
-> +		WMID_gaming_set_fan_mode(ACER_WMID_FAN_MODE_TURBO);
->  
->  		/* Set OC to turbo mode */
->  		if (has_cap(ACER_CAP_TURBO_OC)) {
-> 
+The list of commits applied:
+[01/20] platform/x86: x86-android-tablets: convert Goodix devices to GPIO references
+        commit: 18410aa9a7eb0d14e356938dd3731d80fbc63a9b
+[02/20] platform/x86: x86-android-tablets: convert Wacom devices to GPIO references
+        commit: da63c8c7efc659b43e41c17cf36f86fb3b1528df
+[03/20] platform/x86: x86-android-tablets: convert HiDeep devices to GPIO references
+        commit: b395bd659d69a2c541e1d29139c152820186da04
+[04/20] platform/x86: x86-android-tablets: convert Novatek devices to GPIO references
+        commit: b02961cfb5db0c8f3bae2e8a2ecd733bb7a80351
+[05/20] platform/x86: x86-android-tablets: convert EDT devices to GPIO references
+        commit: 390d5ea98d52c48d76a6698fecd76979d9486869
+[06/20] platform/x86: x86-android-tablets: convert int3496 devices to GPIO references
+        commit: 59c4c7c35fc0608e9d1950bac312ad468f2b13f4
+[07/20] platform/x86: x86-android-tablets: convert wm1502 devices to GPIO references
+        commit: 21b4d30ffb105b959937c997d66b9a9640e8faac
+[08/20] platform/x86: x86-android-tablets: convert HID-I2C devices to GPIO references
+        commit: baa146abe2e931dba74f77216bcb7d51ffb90fec
+[09/20] platform/x86: x86-android-tablets: convert Yoga Tab2 fast charger to GPIO references
+        commit: 2a20809592c230a0398bb49754b9ccd480efd2ad
+[10/20] platform/x86: x86-android-tablets: remove support for GPIO lookup tables
+        commit: 8aba782e0dd9480d593170c04a1382891f13a7df
+[11/20] platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO references
+        commit: 0cf7267b7fc08506a408b666d32a3a7d34409412
+[12/20] platform/x86: x86-android-tablets: replace bat_swnode with swnode_group
+        commit: a4808b2cea16d3f00891f059c824e8efb02eb79e
+[13/20] platform/x86: x86-android-tablets: use swnode_group instead of manual registering
+        commit: 3ac7425599611213f7a6a3f4b15d677da1b36eac
+[14/20] platform/x86: x86-android-tablets: Simplify node-group [un]registration
+        commit: e79c3a11e2ec9b350464c02a2649214deef53399
+[15/20] platform/x86: x86-android-tablets: Update my email address
+        commit: 982733083fd9c596d83a2a80b4b07e79e574d028
+[16/20] platform/x86: x86-android-tablets: Move Acer info to its own file
+        commit: 13ebe111502e6bd2b80f601ef04b9eeb32b3e7fe
+[17/20] platform/x86: x86-android-tablets: Add support for Acer A1-840 tablet
+        commit: 3aa776857ffb3430a4bec67a384277ee49f8d298
+[18/20] platform/x86: x86-android-tablets: Simplify lenovo_yoga_tab2_830_1050_exit()
+        commit: f6e9dcdf47c47d29bf5958f463ffc69afe2f3f7c
+[19/20] platform/x86: x86-android-tablets: Fix modules lists for Lenovo devices
+        commit: 973a8cce1bcb3af7cb1be57f71eb0363645edede
+[20/20] platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
+        commit: cbeab8fbf4dc51e9050892402ba44b35db6f2bd7
 
--- 
+--
  i.
 
