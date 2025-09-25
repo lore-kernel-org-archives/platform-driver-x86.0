@@ -1,94 +1,203 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9529B233134
-	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Sep 2025 03:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFC827AC59;
+	Thu, 25 Sep 2025 09:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758771620; cv=none; b=aq9jrJP+5H6QLbFe3JQuC1nik0bXMZVjAkVhCjLrqHSN3XPOYkBCqU8+CFoixhNEpgYVy3mmzxPy14/N2mKLI81OeOdtacGx8dvbb9Vh2FTeYbuHAKY4Jcstds3OH/0JPGZ1IeGyy0xi1SlbhoD4u/+sGTeYCC6rp8Zyu+KDNN0=
+	t=1758792234; cv=none; b=t+FQsbGWChqfke15pxVcIonk77A95wRqfS+HqWFg5x2Wh98rQaGzFwkfTSrO4JW50KY3ftP297pceEExbGgiQtUGCfByPWWtHR1P0/TK6KMIbUbZMjxYK7uIMSvvzANXyoeoKZfdrT23b61mqSFNls/I7qoApN/GZI5jFbSlee0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758771620; c=relaxed/simple;
-	bh=bmPJ0+VRgVJPS8VBru/tBQQdNc3lAi10Hkwzd7aKHPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uygWoPgeIqIjRPGS4yfWzEHMwL5sjuygSHvZ9B/dLBAcwqRy5Sm+y+Mfp5vVQdgXoqnBadpXJPIg3AiaV6Cl/U45aXiG3F+gy5W+0qn+QakJVEDWwBXOXd9MDXSpmO3td78FBJq8Pozb4syyqvl2ryUONOQjJ5KeGvK4EjHgr1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trix.is-a.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trix.is-a.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-244580523a0so5976055ad.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Sep 2025 20:40:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758771617; x=1759376417;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6u9OrtCloJY7NJyMif7w6nU0t5/g1w1ibY80MoE4gP8=;
-        b=JfvWQZP2LA+oBgpMPwwd83tcCRZAcZwNZ9bFQ/WzS/Km0r3CU54Gwp95se9G3Rrmoo
-         pQj+SjPSAVoWlEI9DZopoyoTjcUGmtj+hq6pELIY4bNYY0+xwkRUzJF9lOFsBttaVrpf
-         oo0wFR8/iGFciN04TXYXQv+jfbO5fmOFmmzlU5oP0E9h2aBEMmo7KZw8R8ge213ERexf
-         XVRX5MAnEXF4dNsPLs9gDjtFQ3S5DNhTLwxCwONINdD7fxNpuHQbHF/oZkP52787tupp
-         27VxhEo8eqt976VcQmCUYRiTa+o4Te4LKr9lHj4/3sXHUKEsX8lp0iXl/Y0hOXpWiY2B
-         kOWg==
-X-Gm-Message-State: AOJu0Yz3qwaU6xIwTpcMky1WV8R6kHAcs8eJE7XHGAS+i/4ECQuwymb9
-	CV3E04wikpbx/3VmR0AkAWMkLRik3MBZS3rpBiqH/h8heS2q4hzshwPDantndy4PprY=
-X-Gm-Gg: ASbGncugtk/jeC4R8Gnvpj0XaltZ/NNwj/366VWFGsIxXJv/INJGVFwgIHNw9pf3HRX
-	qOq2qlt4tNuPmV7VW2F/QmrB7BWUOVAzPX2H4GG7+UKGnXj2ZTgOw0RIj4J1YrmMiLJGtJvdFYz
-	9FS12JzijmD60IbrXimf09dzy1CAIkvjaFH79T7XT2q6mzQsE1jKz3IeKuZDreADb3Qcm0JYfGM
-	olPptuwxlw/X1RsNH2mOeUVEWhHuqvt+J53gXgbD05iKWIl84A3mSR693uPVMF2z0keBp+DjHmy
-	8/dFCZQGA/e/NWrnvgj+rjVrxRwySYIJWBPP5zBzYQHxEtKEgSozTy9I9RI+6zyBDjtF1A0ngC6
-	OMQ030CeU/9jphCVKc6zP6yo=
-X-Google-Smtp-Source: AGHT+IF88A7rwkV3P9jdms2ijhexCc0OkBmd1/k9fgklR9TyBXPssMEOtsJr0XggJFtz8XN7KZeAmQ==
-X-Received: by 2002:a17:903:234f:b0:276:76e1:2e87 with SMTP id d9443c01a7336-27ed4a4979amr18671325ad.44.1758771617403;
-        Wed, 24 Sep 2025 20:40:17 -0700 (PDT)
-Received: from archlinux ([2405:201:6804:217e:39f7:e9ae:d6fb:a075])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed69a9668sm8133595ad.112.2025.09.24.20.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 20:40:17 -0700 (PDT)
-From: tr1x_em <admin@trix.is-a.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: Dell.Client.Kernel@dell.com,
-	kuurtb@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	tr1x_em <admin@trix.is-a.dev>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530
-Date: Thu, 25 Sep 2025 09:10:03 +0530
-Message-ID: <20250925034010.31414-1-admin@trix.is-a.dev>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1758792234; c=relaxed/simple;
+	bh=9Vd9zg0JVBI7yLRIMM72AGWASsNCJnc82xMBZ35PrWk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BbazmzKUWsaf6Me2c2hImPPfu0WyOHqPMVeTD0lLE9ApPTBU6eI8lAXmkjkGL9ZwY0YZmLe7euQM6tLRB1Mr0fyGGRdjVAOCgd9P+HCFFjEa/QrFicy+EP06DlWleTVN2Sw5HS1jVgxRvU/WqBm1j1/M2bHZm7y3PEr7ULaBDac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hwdpB008; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hwdpB008"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758792232; x=1790328232;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9Vd9zg0JVBI7yLRIMM72AGWASsNCJnc82xMBZ35PrWk=;
+  b=hwdpB0087w4YvFZuGoaHDqHGBs8WWpwol8B1WGbK3aeSbCv7PKG1SQXG
+   iWeeEsJYPLqEaLI6KWwY4+mMj/Y/zkONcInK0+7YoM07fMTjvp4Gfh99r
+   umP2LYPFftXzDo0t/pf2AMBjCHSiZBMG6E3AWcFL+jxwnaFsmDtTOL7u2
+   Ip3Td/oCQu3E/+D90/e8tiTwIAqw0CjdDLHLGPpWGcjQQ16VKYegLMljO
+   MxZIrCj9herzvkMg+AG0M/Cy7rhe34Nz+xRAR2++dDGvxAUIDuVmYCIEr
+   6tI8yLXlJw6u5fmz9X/rW9JOVoKS7roKkAikOKrfaZhxOtNWVZRzgcIeh
+   Q==;
+X-CSE-ConnectionGUID: +mwF8UDYRhWcK0Kz7awJGQ==
+X-CSE-MsgGUID: o/FffolfTbOQNi1ZBosKVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61018019"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="61018019"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 02:23:51 -0700
+X-CSE-ConnectionGUID: MWZ7/qLHQuOhd28y8/DFPQ==
+X-CSE-MsgGUID: zlRQloHVQY2u7IUYJkPpXA==
+X-ExtLoop1: 1
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.48])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 02:23:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 25 Sep 2025 12:23:45 +0300 (EEST)
+To: Daniel <dany97@live.ca>
+cc: Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7] platform/x86: lg-laptop: Fix WMAB call in
+ fan_mode_store()
+In-Reply-To: <MN2PR06MB55989CB10E91C8DA00EE868DDC1CA@MN2PR06MB5598.namprd06.prod.outlook.com>
+Message-ID: <6368d0dc-6e7c-ce4f-9f9b-df26a84f8120@linux.intel.com>
+References: <MN2PR06MB55989CB10E91C8DA00EE868DDC1CA@MN2PR06MB5598.namprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Makes alienware-wmi load on G15 5530 by default
+On Wed, 24 Sep 2025, Daniel wrote:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Saumya <admin@trix.is-a.dev>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> When WMAB is called to set the fan mode, the new mode is read from either
+> bits 0-1 or bits 4-5 (depending on the value of some other EC register).
+> Thus when WMAB is called with bits 4-5 zeroed and called again with
+> bits 0-1 zeroed, the second call undoes the effect of the first call.
+> This causes writes to /sys/devices/platform/lg-laptop/fan_mode to have
+> no effect (and causes reads to always report a status of zero).
+> 
+> Fix this by calling WMAB once, with the mode set in bits 0,1 and 4,5.
+> When the fan mode is returned from WMAB it always has this form, so
+> there is no need to preserve the other bits.  As a bonus, the driver
+> now supports the "Performance" fan mode seen in the LG-provided Windows
+> control app, which provides less aggressive CPU throttling but louder
+> fan noise and shorter battery life.
+> 
+> Also correct the documentation to reflect that 0 corresponds to the
+> default mode (what the Windows app calls "Optimal") and 1 corresponds
+> to the silent mode.
+> 
+> Signed-off-by: Daniel Lee <dany97@live.ca>
+> Tested-by: Daniel Lee <dany97@live.ca>
+> Fixes: dbf0c5a6b1f8 ("platform/x86: Add LG Gram laptop special features driver")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204913#c4
+> ---
+> V1 -> V2: Replace bitops with GENMASK() and FIELD_PREP()
+> V2 -> V3: Add parentheses next to function name in summary line
+>           Use full name in signoff
+> V3 -> V4: Add include for linux/bitfield.h
+>           Remove "FIELD" from bitmask macro names
+> V4 -> V5: Rename `status` to `mode` in fan_mode_show()
+> V5 -> V6: Reword commit message body
+> V6 -> V7: Add Link: to relevant bugzilla comment
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 31f9643a6..3b25a8283 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -209,6 +209,14 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &g_series_quirks,
- 	},
-+	{
-+		.ident = "Dell Inc. G15 5530",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Dell G15 5530"),
-+		},
-+		.driver_data = &g_series_quirks,
-+	},
- 	{
- 		.ident = "Dell Inc. G16 7630",
- 		.matches = {
---
-2.51.0
+Thanks. I've replaced the commit in the review-ilpo-fixes branch with this 
+one.
+
+>  .../admin-guide/laptops/lg-laptop.rst         |  4 +--
+>  drivers/platform/x86/lg-laptop.c              | 34 ++++++++-----------
+>  2 files changed, 16 insertions(+), 22 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/laptops/lg-laptop.rst b/Documentation/admin-guide/laptops/lg-laptop.rst
+> index 67fd6932c..c4dd534f9 100644
+> --- a/Documentation/admin-guide/laptops/lg-laptop.rst
+> +++ b/Documentation/admin-guide/laptops/lg-laptop.rst
+> @@ -48,8 +48,8 @@ This value is reset to 100 when the kernel boots.
+>  Fan mode
+>  --------
+>  
+> -Writing 1/0 to /sys/devices/platform/lg-laptop/fan_mode disables/enables
+> -the fan silent mode.
+> +Writing 0/1/2 to /sys/devices/platform/lg-laptop/fan_mode sets fan mode to
+> +Optimal/Silent/Performance respectively.
+>  
+>  
+>  USB charge
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index 4b57102c7..6af6cf477 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -8,6 +8,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/device.h>
+>  #include <linux/dev_printk.h>
+> @@ -75,6 +76,9 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+>  #define WMBB_USB_CHARGE 0x10B
+>  #define WMBB_BATT_LIMIT 0x10C
+>  
+> +#define FAN_MODE_LOWER GENMASK(1, 0)
+> +#define FAN_MODE_UPPER GENMASK(5, 4)
+> +
+>  #define PLATFORM_NAME   "lg-laptop"
+>  
+>  MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
+> @@ -274,29 +278,19 @@ static ssize_t fan_mode_store(struct device *dev,
+>  			      struct device_attribute *attr,
+>  			      const char *buffer, size_t count)
+>  {
+> -	bool value;
+> +	unsigned long value;
+>  	union acpi_object *r;
+> -	u32 m;
+>  	int ret;
+>  
+> -	ret = kstrtobool(buffer, &value);
+> +	ret = kstrtoul(buffer, 10, &value);
+>  	if (ret)
+>  		return ret;
+> +	if (value >= 3)
+> +		return -EINVAL;
+>  
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
+> -	if (!r)
+> -		return -EIO;
+> -
+> -	if (r->type != ACPI_TYPE_INTEGER) {
+> -		kfree(r);
+> -		return -EIO;
+> -	}
+> -
+> -	m = r->integer.value;
+> -	kfree(r);
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xffffff0f) | (value << 4));
+> -	kfree(r);
+> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xfffffff0) | value);
+> +	r = lg_wmab(dev, WM_FAN_MODE, WM_SET,
+> +		FIELD_PREP(FAN_MODE_LOWER, value) |
+> +		FIELD_PREP(FAN_MODE_UPPER, value));
+>  	kfree(r);
+>  
+>  	return count;
+> @@ -305,7 +299,7 @@ static ssize_t fan_mode_store(struct device *dev,
+>  static ssize_t fan_mode_show(struct device *dev,
+>  			     struct device_attribute *attr, char *buffer)
+>  {
+> -	unsigned int status;
+> +	unsigned int mode;
+>  	union acpi_object *r;
+>  
+>  	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
+> @@ -317,10 +311,10 @@ static ssize_t fan_mode_show(struct device *dev,
+>  		return -EIO;
+>  	}
+>  
+> -	status = r->integer.value & 0x01;
+> +	mode = FIELD_GET(FAN_MODE_LOWER, r->integer.value);
+>  	kfree(r);
+>  
+> -	return sysfs_emit(buffer, "%d\n", status);
+> +	return sysfs_emit(buffer, "%d\n", mode);
+>  }
+>  
+>  static ssize_t usb_charge_store(struct device *dev,
+> 
+
+-- 
+ i.
 
