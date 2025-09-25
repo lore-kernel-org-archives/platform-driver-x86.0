@@ -1,203 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFC827AC59;
-	Thu, 25 Sep 2025 09:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AC82DCF77;
+	Thu, 25 Sep 2025 16:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758792234; cv=none; b=t+FQsbGWChqfke15pxVcIonk77A95wRqfS+HqWFg5x2Wh98rQaGzFwkfTSrO4JW50KY3ftP297pceEExbGgiQtUGCfByPWWtHR1P0/TK6KMIbUbZMjxYK7uIMSvvzANXyoeoKZfdrT23b61mqSFNls/I7qoApN/GZI5jFbSlee0=
+	t=1758816261; cv=none; b=NPJNNvcSQtWjiXgxl4ruiroUiklQxenHKmWrL2EFiPK39Je0lXXqYpY0aVotts5fZz2ayvtOaev9lyp2Gja4FDEC1Kp++ya5TYMxgpSnt/1TrUg/1paKrnbsVnvYWWfNVvKiOe2rZNcx4HpJ+HJKJD0bL97gjKsG8RXugX6tRSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758792234; c=relaxed/simple;
-	bh=9Vd9zg0JVBI7yLRIMM72AGWASsNCJnc82xMBZ35PrWk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BbazmzKUWsaf6Me2c2hImPPfu0WyOHqPMVeTD0lLE9ApPTBU6eI8lAXmkjkGL9ZwY0YZmLe7euQM6tLRB1Mr0fyGGRdjVAOCgd9P+HCFFjEa/QrFicy+EP06DlWleTVN2Sw5HS1jVgxRvU/WqBm1j1/M2bHZm7y3PEr7ULaBDac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hwdpB008; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1758816261; c=relaxed/simple;
+	bh=1E5ge8SOU4T5+pXfKHbQ+r48nul2YYUlxybztB9Rju4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEdRsl6lnh3Rn95PZqD4rzVVQVhyvw+tj/2bfYK+InSDNqPdVpDmnjhRi/Uqbs+1BeEg9ZFCc24e+eu7DEce1u/G9Ouq5gGt+ZT6jlk/A/myS8TsWOB4+1SaLWU4562yRbLA15B7dkFGC3Ph5FpqZUtylLFEIePp6IP5nQaIxzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngGZIyUo; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hwdpB008"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngGZIyUo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758792232; x=1790328232;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9Vd9zg0JVBI7yLRIMM72AGWASsNCJnc82xMBZ35PrWk=;
-  b=hwdpB0087w4YvFZuGoaHDqHGBs8WWpwol8B1WGbK3aeSbCv7PKG1SQXG
-   iWeeEsJYPLqEaLI6KWwY4+mMj/Y/zkONcInK0+7YoM07fMTjvp4Gfh99r
-   umP2LYPFftXzDo0t/pf2AMBjCHSiZBMG6E3AWcFL+jxwnaFsmDtTOL7u2
-   Ip3Td/oCQu3E/+D90/e8tiTwIAqw0CjdDLHLGPpWGcjQQ16VKYegLMljO
-   MxZIrCj9herzvkMg+AG0M/Cy7rhe34Nz+xRAR2++dDGvxAUIDuVmYCIEr
-   6tI8yLXlJw6u5fmz9X/rW9JOVoKS7roKkAikOKrfaZhxOtNWVZRzgcIeh
-   Q==;
-X-CSE-ConnectionGUID: +mwF8UDYRhWcK0Kz7awJGQ==
-X-CSE-MsgGUID: o/FffolfTbOQNi1ZBosKVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61018019"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="61018019"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 02:23:51 -0700
-X-CSE-ConnectionGUID: MWZ7/qLHQuOhd28y8/DFPQ==
-X-CSE-MsgGUID: zlRQloHVQY2u7IUYJkPpXA==
+  t=1758816259; x=1790352259;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=1E5ge8SOU4T5+pXfKHbQ+r48nul2YYUlxybztB9Rju4=;
+  b=ngGZIyUo5bP4tEE2KPLSNW08FpF8b3A15/bpW7Du17AB7E68kp3mVX67
+   0IlylcrSD8tTDleZ+ylSEuKVz990/CJgWFJkRWN7j4136A9MB6UUB9KLx
+   wd6rH0G1TXbrV5ITiTYli7rbpP+x3k7ylOBP1YZ8YJSB6u4XuWt+KjTwz
+   pJOR9puR5TFxnQ1iqt2D/tKXYJpgdjyNZBE4hKMruc6+oaC0iOnIvFp8l
+   9M7lAbG2mk0kRfv6woc7QvaWZJT8FLzC0XdSv4zzzjuD/PM1GscKSeKby
+   sNjOiucOfjAfsfnvdg7TfMPe+mDHmKOn/jp7dl5NgKn7HuzpO9qMSVra5
+   w==;
+X-CSE-ConnectionGUID: naWX1Z/UQ5CSKLWDoCIigA==
+X-CSE-MsgGUID: 59lGTJk7TBa5qi5hNhRflw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="71826111"
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="71826111"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:04:18 -0700
+X-CSE-ConnectionGUID: mUwjlDodTN2Q6XDzK41ODg==
+X-CSE-MsgGUID: /87D4KspTQuQf5shor0ScQ==
 X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.48])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 02:23:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 25 Sep 2025 12:23:45 +0300 (EEST)
-To: Daniel <dany97@live.ca>
-cc: Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7] platform/x86: lg-laptop: Fix WMAB call in
- fan_mode_store()
-In-Reply-To: <MN2PR06MB55989CB10E91C8DA00EE868DDC1CA@MN2PR06MB5598.namprd06.prod.outlook.com>
-Message-ID: <6368d0dc-6e7c-ce4f-9f9b-df26a84f8120@linux.intel.com>
-References: <MN2PR06MB55989CB10E91C8DA00EE868DDC1CA@MN2PR06MB5598.namprd06.prod.outlook.com>
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="182632907"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.57])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:04:17 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 0EC0011F99E;
+	Thu, 25 Sep 2025 19:04:14 +0300 (EEST)
+Date: Thu, 25 Sep 2025 19:04:13 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Aleksandrs Vinarskis <alex@vinarskis.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] media: v4l2-subdev / pdx86: int3472: Use
+ "privacy" as con_id for the privacy LED
+Message-ID: <aNVn_TeS--sdVFSf@kekkonen.localdomain>
+References: <20250910104702.7470-1-hansg@kernel.org>
+ <20250910104702.7470-2-hansg@kernel.org>
+ <ccdf3f79-b1ad-a7cd-5e40-0fb8f70d05d4@linux.intel.com>
+ <qWUcwd3SUhjavnDhfi9XGxQGsawpzg7ULgHBZllrjxgmELw17JPeZYZuN4bc_VvmoVzd73AmdyZfOcWyFzTvdYUNOG_ORuJhlzPgkxdyN-A=@vinarskis.com>
+ <97ebc9ec-1087-400c-9453-947c414937c3@kernel.org>
+ <aNPHwKQ2fJVgvVTI@kekkonen.localdomain>
+ <58e4a3a2-ede5-4121-99da-03a78b6d1481@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <58e4a3a2-ede5-4121-99da-03a78b6d1481@kernel.org>
 
-On Wed, 24 Sep 2025, Daniel wrote:
+Hi Hans,
 
-> When WMAB is called to set the fan mode, the new mode is read from either
-> bits 0-1 or bits 4-5 (depending on the value of some other EC register).
-> Thus when WMAB is called with bits 4-5 zeroed and called again with
-> bits 0-1 zeroed, the second call undoes the effect of the first call.
-> This causes writes to /sys/devices/platform/lg-laptop/fan_mode to have
-> no effect (and causes reads to always report a status of zero).
+On Wed, Sep 24, 2025 at 12:33:38PM +0200, Hans de Goede wrote:
+> Hi Sakari,
 > 
-> Fix this by calling WMAB once, with the mode set in bits 0,1 and 4,5.
-> When the fan mode is returned from WMAB it always has this form, so
-> there is no need to preserve the other bits.  As a bonus, the driver
-> now supports the "Performance" fan mode seen in the LG-provided Windows
-> control app, which provides less aggressive CPU throttling but louder
-> fan noise and shorter battery life.
+> On 24-Sep-25 12:28 PM, Sakari Ailus wrote:
+> > Hi Hans, Aleksandrs,
+> > 
+> > On Wed, Sep 24, 2025 at 11:58:38AM +0200, Hans de Goede wrote:
+> >> Hi All,
+> >>
+> >> On 24-Sep-25 9:06 AM, Aleksandrs Vinarskis wrote:
+> >>>
+> >>> On Wednesday, September 10th, 2025 at 12:51, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> >>>
+> >>>>
+> >>>>
+> >>>> On Wed, 10 Sep 2025, Hans de Goede wrote:
+> >>>>
+> >>>>> During DT-binding review for extending the V4L2 camera sensor privacy LED
+> >>>>> support to systems using devicetree, it has come up that having a "-led"
+> >>>>> suffix for the LED name / con_id is undesirable since it already is clear
+> >>>>> that it is a LED.
+> >>>>>
+> >>>>> Drop the "-led" suffix from the con_id in both the lookup table in
+> >>>>> the int3472 code, as well as from the con_id led_get() argument in
+> >>>>> the v4l2-subdev code.
+> >>>>>
+> >>>>> Signed-off-by: Hans de Goede hansg@kernel.org
+> >>>>> ---
+> >>>>> drivers/media/v4l2-core/v4l2-subdev.c | 2 +-
+> >>>>> drivers/platform/x86/intel/int3472/led.c | 2 +-
+> >>>>> 2 files changed, 2 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>> index 113eb74eb7c1..babcc1120354 100644
+> >>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>>>> @@ -2602,7 +2602,7 @@ EXPORT_SYMBOL_GPL(v4l2_subdev_is_streaming);
+> >>>>> int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
+> >>>>> {
+> >>>>> #if IS_REACHABLE(CONFIG_LEDS_CLASS)
+> >>>>> - sd->privacy_led = led_get(sd->dev, "privacy-led");
+> >>>>> + sd->privacy_led = led_get(sd->dev, "privacy");
+> >>>>> if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
+> >>>>> return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led),
+> >>>>> "getting privacy LED\n");
+> >>>>> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+> >>>>> index f1d6d7b0cb75..b1d84b968112 100644
+> >>>>> --- a/drivers/platform/x86/intel/int3472/led.c
+> >>>>> +++ b/drivers/platform/x86/intel/int3472/led.c
+> >>>>> @@ -43,7 +43,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+> >>>>>
+> >>>>> int3472->pled.lookup.provider = int3472->pled.name;
+> >>>>> int3472->pled.lookup.dev_id = int3472->sensor_name;
+> >>>>> - int3472->pled.lookup.con_id = "privacy-led";
+> >>>>> + int3472->pled.lookup.con_id = "privacy";
+> >>>>> led_add_lookup(&int3472->pled.lookup);
+> >>>>>
+> >>>>> return 0;
+> >>>>
+> >>>>
+> >>>> Acked-by: Ilpo Järvinen ilpo.jarvinen@linux.intel.com
+> >>>>
+> >>>
+> >>> Hi all,
+> >>>
+> >>> Anything still pending before this patch can land? As DT-binding change that requires this [1] is already in linux-next it would be nice to land this in the same cycle.
+> >>
+> >> Hmm, I was under the impression this was already merged but I do not see it in:
+> >>
+> >> https://gitlab.freedesktop.org/linux-media/media-committers/
+> >>
+> >> Sakari, can you pick this one up please, preferably for
+> >> 6.18 ?
+> > 
+> > Is the related DT binding change going to be merged for v6.18?
 > 
-> Also correct the documentation to reflect that 0 corresponds to the
-> default mode (what the Windows app calls "Optimal") and 1 corresponds
-> to the silent mode.
-> 
-> Signed-off-by: Daniel Lee <dany97@live.ca>
-> Tested-by: Daniel Lee <dany97@live.ca>
-> Fixes: dbf0c5a6b1f8 ("platform/x86: Add LG Gram laptop special features driver")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204913#c4
-> ---
-> V1 -> V2: Replace bitops with GENMASK() and FIELD_PREP()
-> V2 -> V3: Add parentheses next to function name in summary line
->           Use full name in signoff
-> V3 -> V4: Add include for linux/bitfield.h
->           Remove "FIELD" from bitmask macro names
-> V4 -> V5: Rename `status` to `mode` in fan_mode_show()
-> V5 -> V6: Reword commit message body
-> V6 -> V7: Add Link: to relevant bugzilla comment
+> Just be clear / make sure we are on the same page 6.18 will be what
+> is in -next now, so my request to merge this for 6.18 is a request
+> to get this into -next before the merge-window which will open next
+> Monday (or in the first fixes pull-req after the merge-window).
 
-Thanks. I've replaced the commit in the review-ilpo-fixes branch with this 
-one.
-
->  .../admin-guide/laptops/lg-laptop.rst         |  4 +--
->  drivers/platform/x86/lg-laptop.c              | 34 ++++++++-----------
->  2 files changed, 16 insertions(+), 22 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/laptops/lg-laptop.rst b/Documentation/admin-guide/laptops/lg-laptop.rst
-> index 67fd6932c..c4dd534f9 100644
-> --- a/Documentation/admin-guide/laptops/lg-laptop.rst
-> +++ b/Documentation/admin-guide/laptops/lg-laptop.rst
-> @@ -48,8 +48,8 @@ This value is reset to 100 when the kernel boots.
->  Fan mode
->  --------
->  
-> -Writing 1/0 to /sys/devices/platform/lg-laptop/fan_mode disables/enables
-> -the fan silent mode.
-> +Writing 0/1/2 to /sys/devices/platform/lg-laptop/fan_mode sets fan mode to
-> +Optimal/Silent/Performance respectively.
->  
->  
->  USB charge
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index 4b57102c7..6af6cf477 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -8,6 +8,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/acpi.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bits.h>
->  #include <linux/device.h>
->  #include <linux/dev_printk.h>
-> @@ -75,6 +76,9 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
->  #define WMBB_USB_CHARGE 0x10B
->  #define WMBB_BATT_LIMIT 0x10C
->  
-> +#define FAN_MODE_LOWER GENMASK(1, 0)
-> +#define FAN_MODE_UPPER GENMASK(5, 4)
-> +
->  #define PLATFORM_NAME   "lg-laptop"
->  
->  MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
-> @@ -274,29 +278,19 @@ static ssize_t fan_mode_store(struct device *dev,
->  			      struct device_attribute *attr,
->  			      const char *buffer, size_t count)
->  {
-> -	bool value;
-> +	unsigned long value;
->  	union acpi_object *r;
-> -	u32 m;
->  	int ret;
->  
-> -	ret = kstrtobool(buffer, &value);
-> +	ret = kstrtoul(buffer, 10, &value);
->  	if (ret)
->  		return ret;
-> +	if (value >= 3)
-> +		return -EINVAL;
->  
-> -	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
-> -	if (!r)
-> -		return -EIO;
-> -
-> -	if (r->type != ACPI_TYPE_INTEGER) {
-> -		kfree(r);
-> -		return -EIO;
-> -	}
-> -
-> -	m = r->integer.value;
-> -	kfree(r);
-> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xffffff0f) | (value << 4));
-> -	kfree(r);
-> -	r = lg_wmab(dev, WM_FAN_MODE, WM_SET, (m & 0xfffffff0) | value);
-> +	r = lg_wmab(dev, WM_FAN_MODE, WM_SET,
-> +		FIELD_PREP(FAN_MODE_LOWER, value) |
-> +		FIELD_PREP(FAN_MODE_UPPER, value));
->  	kfree(r);
->  
->  	return count;
-> @@ -305,7 +299,7 @@ static ssize_t fan_mode_store(struct device *dev,
->  static ssize_t fan_mode_show(struct device *dev,
->  			     struct device_attribute *attr, char *buffer)
->  {
-> -	unsigned int status;
-> +	unsigned int mode;
->  	union acpi_object *r;
->  
->  	r = lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
-> @@ -317,10 +311,10 @@ static ssize_t fan_mode_show(struct device *dev,
->  		return -EIO;
->  	}
->  
-> -	status = r->integer.value & 0x01;
-> +	mode = FIELD_GET(FAN_MODE_LOWER, r->integer.value);
->  	kfree(r);
->  
-> -	return sysfs_emit(buffer, "%d\n", status);
-> +	return sysfs_emit(buffer, "%d\n", mode);
->  }
->  
->  static ssize_t usb_charge_store(struct device *dev,
-> 
+Ack, I'll pick this as a fix for v6.18.
 
 -- 
- i.
+Kind regards,
 
+Sakari Ailus
