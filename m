@@ -1,168 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AC82DCF77;
-	Thu, 25 Sep 2025 16:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B97B125A0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Sep 2025 17:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758816261; cv=none; b=NPJNNvcSQtWjiXgxl4ruiroUiklQxenHKmWrL2EFiPK39Je0lXXqYpY0aVotts5fZz2ayvtOaev9lyp2Gja4FDEC1Kp++ya5TYMxgpSnt/1TrUg/1paKrnbsVnvYWWfNVvKiOe2rZNcx4HpJ+HJKJD0bL97gjKsG8RXugX6tRSo=
+	t=1758820635; cv=none; b=F/OEGKgzynQayQFyLSSiCs0+qLz3oYcjC4czTqBkvwEmcc5siQO61lPtTWh3mM8AQDiedjUvjJeh/s49YSCIS/+VX3+WdvjEiw/z9ndXubPKe+Z4zBV2Trw+NbZ6DFPXikOL5ZgNwB74RjX3jrAhSJRDpWxMKRQAtdBIAiIL9Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758816261; c=relaxed/simple;
-	bh=1E5ge8SOU4T5+pXfKHbQ+r48nul2YYUlxybztB9Rju4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pEdRsl6lnh3Rn95PZqD4rzVVQVhyvw+tj/2bfYK+InSDNqPdVpDmnjhRi/Uqbs+1BeEg9ZFCc24e+eu7DEce1u/G9Ouq5gGt+ZT6jlk/A/myS8TsWOB4+1SaLWU4562yRbLA15B7dkFGC3Ph5FpqZUtylLFEIePp6IP5nQaIxzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngGZIyUo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1758820635; c=relaxed/simple;
+	bh=ZGSbltVvr4IwNf8c443lbdomZkLl41N2Jp8rYuaKsXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YrDgj60yJJBIdmFIxK5U0yS8uOW1ENk7tuRvrhNVRwjXfGGSAGt6pEIXJMYxuaJl1idHfBi7MSAck/Ub4Uqngyhx4v7J77rxZ+1LBkEk9uHGoexPbUJuqCzWfDiI1WbkeKA5lJgrcsfRnVOwvmJrwl73Pf3OJos9QuJpPhdA0+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=R2IqIxSm; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngGZIyUo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758816259; x=1790352259;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1E5ge8SOU4T5+pXfKHbQ+r48nul2YYUlxybztB9Rju4=;
-  b=ngGZIyUo5bP4tEE2KPLSNW08FpF8b3A15/bpW7Du17AB7E68kp3mVX67
-   0IlylcrSD8tTDleZ+ylSEuKVz990/CJgWFJkRWN7j4136A9MB6UUB9KLx
-   wd6rH0G1TXbrV5ITiTYli7rbpP+x3k7ylOBP1YZ8YJSB6u4XuWt+KjTwz
-   pJOR9puR5TFxnQ1iqt2D/tKXYJpgdjyNZBE4hKMruc6+oaC0iOnIvFp8l
-   9M7lAbG2mk0kRfv6woc7QvaWZJT8FLzC0XdSv4zzzjuD/PM1GscKSeKby
-   sNjOiucOfjAfsfnvdg7TfMPe+mDHmKOn/jp7dl5NgKn7HuzpO9qMSVra5
-   w==;
-X-CSE-ConnectionGUID: naWX1Z/UQ5CSKLWDoCIigA==
-X-CSE-MsgGUID: 59lGTJk7TBa5qi5hNhRflw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="71826111"
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="71826111"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:04:18 -0700
-X-CSE-ConnectionGUID: mUwjlDodTN2Q6XDzK41ODg==
-X-CSE-MsgGUID: /87D4KspTQuQf5shor0ScQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="182632907"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.57])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:04:17 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 0EC0011F99E;
-	Thu, 25 Sep 2025 19:04:14 +0300 (EEST)
-Date: Thu, 25 Sep 2025 19:04:13 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Aleksandrs Vinarskis <alex@vinarskis.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] media: v4l2-subdev / pdx86: int3472: Use
- "privacy" as con_id for the privacy LED
-Message-ID: <aNVn_TeS--sdVFSf@kekkonen.localdomain>
-References: <20250910104702.7470-1-hansg@kernel.org>
- <20250910104702.7470-2-hansg@kernel.org>
- <ccdf3f79-b1ad-a7cd-5e40-0fb8f70d05d4@linux.intel.com>
- <qWUcwd3SUhjavnDhfi9XGxQGsawpzg7ULgHBZllrjxgmELw17JPeZYZuN4bc_VvmoVzd73AmdyZfOcWyFzTvdYUNOG_ORuJhlzPgkxdyN-A=@vinarskis.com>
- <97ebc9ec-1087-400c-9453-947c414937c3@kernel.org>
- <aNPHwKQ2fJVgvVTI@kekkonen.localdomain>
- <58e4a3a2-ede5-4121-99da-03a78b6d1481@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="R2IqIxSm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sVS2okRvDGmGXPK4KjhzCoeXLlcHDyro9z09xgjPEBA=; b=R2IqIxSm4t1Lq8XRhr4T9MwtkQ
+	WsNmMCs8RuR3jCyTcXrZT+vCrTuIItU/sqVu6ivZYBxdTWJK9dSYsWC/4U54eAjz9rhqZuTn4G6Zg
+	EjVy7Hulcd70agsyM5XHyxvZRD97O62WZ2wLj9m3vkQxQDzxmWhUgAyUBjXxA9f/vOZgEKgmL3JtU
+	AhygL05Qzn1FRLY/3hjerytBFcwaN2rg6dmf98asF+nywKd/OT4n+nFflci9/Ri1WMBYZIZCAxXCY
+	LEep5jsuLTN0tpVLqxPBjNVzshF23gf3WK5xGuBqvDg9tqwJGAPE+utwjc4BMaqwie62VtKRrE1nk
+	hq7uiAuw==;
+Received: from 201-27-133-184.dsl.telesp.net.br ([201.27.133.184] helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1v1pad-000342-Ds; Thu, 25 Sep 2025 19:17:07 +0200
+Message-ID: <5af4810f-b995-39c3-e844-3a7c4473aa62@igalia.com>
+Date: Thu, 25 Sep 2025 14:17:02 -0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 2/4] platform/x86/intel/pmc: Dump raw SLP_Sx_DBG registers
+ and distinguish between them
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, xi.pardee@linux.intel.com,
+ david.e.box@intel.com, irenic.rajneesh@gmail.com, kernel-dev@igalia.com,
+ kernel@gpiccoli.net
+References: <20250922230812.1584253-1-gpiccoli@igalia.com>
+ <20250922230812.1584253-3-gpiccoli@igalia.com>
+ <db836cd7-c3aa-ee60-e622-c52fcdb78fb3@linux.intel.com>
+ <081cc0a2-f684-e5aa-e87f-05a54db87022@igalia.com>
+ <ad1d5457-cae6-03f6-970d-0492727e66a0@linux.intel.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <ad1d5457-cae6-03f6-970d-0492727e66a0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <58e4a3a2-ede5-4121-99da-03a78b6d1481@kernel.org>
 
-Hi Hans,
-
-On Wed, Sep 24, 2025 at 12:33:38PM +0200, Hans de Goede wrote:
-> Hi Sakari,
+On 24/09/2025 06:57, Ilpo JÃ¤rvinen wrote:
+> [...]
+>> Lemme know if you prefer that I keep the old naming or fix it properly,
+>> like SLP_S0_DBG_2, etc.
 > 
-> On 24-Sep-25 12:28 PM, Sakari Ailus wrote:
-> > Hi Hans, Aleksandrs,
-> > 
-> > On Wed, Sep 24, 2025 at 11:58:38AM +0200, Hans de Goede wrote:
-> >> Hi All,
-> >>
-> >> On 24-Sep-25 9:06 AM, Aleksandrs Vinarskis wrote:
-> >>>
-> >>> On Wednesday, September 10th, 2025 at 12:51, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> >>>
-> >>>>
-> >>>>
-> >>>> On Wed, 10 Sep 2025, Hans de Goede wrote:
-> >>>>
-> >>>>> During DT-binding review for extending the V4L2 camera sensor privacy LED
-> >>>>> support to systems using devicetree, it has come up that having a "-led"
-> >>>>> suffix for the LED name / con_id is undesirable since it already is clear
-> >>>>> that it is a LED.
-> >>>>>
-> >>>>> Drop the "-led" suffix from the con_id in both the lookup table in
-> >>>>> the int3472 code, as well as from the con_id led_get() argument in
-> >>>>> the v4l2-subdev code.
-> >>>>>
-> >>>>> Signed-off-by: Hans de Goede hansg@kernel.org
-> >>>>> ---
-> >>>>> drivers/media/v4l2-core/v4l2-subdev.c | 2 +-
-> >>>>> drivers/platform/x86/intel/int3472/led.c | 2 +-
-> >>>>> 2 files changed, 2 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> index 113eb74eb7c1..babcc1120354 100644
-> >>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> @@ -2602,7 +2602,7 @@ EXPORT_SYMBOL_GPL(v4l2_subdev_is_streaming);
-> >>>>> int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
-> >>>>> {
-> >>>>> #if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> >>>>> - sd->privacy_led = led_get(sd->dev, "privacy-led");
-> >>>>> + sd->privacy_led = led_get(sd->dev, "privacy");
-> >>>>> if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
-> >>>>> return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led),
-> >>>>> "getting privacy LED\n");
-> >>>>> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-> >>>>> index f1d6d7b0cb75..b1d84b968112 100644
-> >>>>> --- a/drivers/platform/x86/intel/int3472/led.c
-> >>>>> +++ b/drivers/platform/x86/intel/int3472/led.c
-> >>>>> @@ -43,7 +43,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
-> >>>>>
-> >>>>> int3472->pled.lookup.provider = int3472->pled.name;
-> >>>>> int3472->pled.lookup.dev_id = int3472->sensor_name;
-> >>>>> - int3472->pled.lookup.con_id = "privacy-led";
-> >>>>> + int3472->pled.lookup.con_id = "privacy";
-> >>>>> led_add_lookup(&int3472->pled.lookup);
-> >>>>>
-> >>>>> return 0;
-> >>>>
-> >>>>
-> >>>> Acked-by: Ilpo Järvinen ilpo.jarvinen@linux.intel.com
-> >>>>
-> >>>
-> >>> Hi all,
-> >>>
-> >>> Anything still pending before this patch can land? As DT-binding change that requires this [1] is already in linux-next it would be nice to land this in the same cycle.
-> >>
-> >> Hmm, I was under the impression this was already merged but I do not see it in:
-> >>
-> >> https://gitlab.freedesktop.org/linux-media/media-committers/
-> >>
-> >> Sakari, can you pick this one up please, preferably for
-> >> 6.18 ?
-> > 
-> > Is the related DT binding change going to be merged for v6.18?
+> I'd prefer Xi or David comment on this whether to add the number there or 
+> not. This will end up being after the merge window material anyway so lets 
+> give them a few days.
 > 
-> Just be clear / make sure we are on the same page 6.18 will be what
-> is in -next now, so my request to merge this for 6.18 is a request
-> to get this into -next before the merge-window which will open next
-> Monday (or in the first fixes pull-req after the merge-window).
 
-Ack, I'll pick this as a fix for v6.18.
+Perfect for me, thanks!
 
--- 
-Kind regards,
 
-Sakari Ailus
+>> Sorry, I couldn't understand this sentence. Can you clarify it for me?
+>> What assumption and what do you think we should do?
+> 
+> I was just referring to the ++ line that you for some reason snipped. 
+> It assumed certain order of things in the input array which arms a 
+> trap. But then, we know all the current inputs are okay with this simple 
+> approach and I'm not sure if this code is getting much changes in the 
+> future so it might be over-engineering to store the number into the 
+> input array within the struct.
+> 
+
+OK, thanks for the clarification. Let's see the input from others and we
+take it from there =)
