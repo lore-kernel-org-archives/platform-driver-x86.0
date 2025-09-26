@@ -1,87 +1,97 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B97B125A0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Sep 2025 17:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482351A08CA;
+	Fri, 26 Sep 2025 01:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758820635; cv=none; b=F/OEGKgzynQayQFyLSSiCs0+qLz3oYcjC4czTqBkvwEmcc5siQO61lPtTWh3mM8AQDiedjUvjJeh/s49YSCIS/+VX3+WdvjEiw/z9ndXubPKe+Z4zBV2Trw+NbZ6DFPXikOL5ZgNwB74RjX3jrAhSJRDpWxMKRQAtdBIAiIL9Fg=
+	t=1758851188; cv=none; b=F0M2ZleJYY2ug4xalihtlkeIjgfRXvAYMhObbpMsPRzxigQuyIM734Qfmyc8r8IBMwG+x8er6iCkOn2SqXuTROPiaj8zdDt58uQ57B6h7psWwICx0V4x+vKznDBo5nXReNJYVv/cTLFPTh+fFIA1zfT36dLwLUW60aNtPH0maWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758820635; c=relaxed/simple;
-	bh=ZGSbltVvr4IwNf8c443lbdomZkLl41N2Jp8rYuaKsXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YrDgj60yJJBIdmFIxK5U0yS8uOW1ENk7tuRvrhNVRwjXfGGSAGt6pEIXJMYxuaJl1idHfBi7MSAck/Ub4Uqngyhx4v7J77rxZ+1LBkEk9uHGoexPbUJuqCzWfDiI1WbkeKA5lJgrcsfRnVOwvmJrwl73Pf3OJos9QuJpPhdA0+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=R2IqIxSm; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="R2IqIxSm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=sVS2okRvDGmGXPK4KjhzCoeXLlcHDyro9z09xgjPEBA=; b=R2IqIxSm4t1Lq8XRhr4T9MwtkQ
-	WsNmMCs8RuR3jCyTcXrZT+vCrTuIItU/sqVu6ivZYBxdTWJK9dSYsWC/4U54eAjz9rhqZuTn4G6Zg
-	EjVy7Hulcd70agsyM5XHyxvZRD97O62WZ2wLj9m3vkQxQDzxmWhUgAyUBjXxA9f/vOZgEKgmL3JtU
-	AhygL05Qzn1FRLY/3hjerytBFcwaN2rg6dmf98asF+nywKd/OT4n+nFflci9/Ri1WMBYZIZCAxXCY
-	LEep5jsuLTN0tpVLqxPBjNVzshF23gf3WK5xGuBqvDg9tqwJGAPE+utwjc4BMaqwie62VtKRrE1nk
-	hq7uiAuw==;
-Received: from 201-27-133-184.dsl.telesp.net.br ([201.27.133.184] helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1v1pad-000342-Ds; Thu, 25 Sep 2025 19:17:07 +0200
-Message-ID: <5af4810f-b995-39c3-e844-3a7c4473aa62@igalia.com>
-Date: Thu, 25 Sep 2025 14:17:02 -0300
+	s=arc-20240116; t=1758851188; c=relaxed/simple;
+	bh=tpjmJCLTops9cU9mUxoNkqsEStycO91Hn0t97rHZaPc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QmutMqrFT0m7y9sZu2AML9O4I/803F2Fb33AV0vUvFsszmaBJmid7Y9lxk5ya+7Ks4dH+ajMLRME3EwPlpOV1dh7QnbLQuXMm+oIO7JsD7Q6vEcs50iVHx4P8OfrOhKE5dXwQuhBoljOWTyKoLltDeFJYwyacYQGieqxM1exuLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowAA3kaNk8NVozmhSBg--.28246S2;
+	Fri, 26 Sep 2025 09:46:12 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: sre@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	bryan.odonoghue@linaro.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] platform: arm64: thinkpad-t14s-ec: Convert comma to semicolon
+Date: Fri, 26 Sep 2025 09:43:45 +0800
+Message-Id: <20250926014345.651176-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/4] platform/x86/intel/pmc: Dump raw SLP_Sx_DBG registers
- and distinguish between them
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, xi.pardee@linux.intel.com,
- david.e.box@intel.com, irenic.rajneesh@gmail.com, kernel-dev@igalia.com,
- kernel@gpiccoli.net
-References: <20250922230812.1584253-1-gpiccoli@igalia.com>
- <20250922230812.1584253-3-gpiccoli@igalia.com>
- <db836cd7-c3aa-ee60-e622-c52fcdb78fb3@linux.intel.com>
- <081cc0a2-f684-e5aa-e87f-05a54db87022@igalia.com>
- <ad1d5457-cae6-03f6-970d-0492727e66a0@linux.intel.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <ad1d5457-cae6-03f6-970d-0492727e66a0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAA3kaNk8NVozmhSBg--.28246S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF17ur4DKrWUZF4ktF1xGrg_yoW8WF18pF
+	1v9397tF48Wwnay3Zxtr4xZwn7X3yDZa4jka43C3y0kas0qr9FqrW0vFy3CF40qFWkWa1D
+	Xr15AFWYgF4YvwUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS
+	14v26r126r1DMxkIecxEwVAFwVWkMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+	73UjIFyTuYvjfUOl1vDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On 24/09/2025 06:57, Ilpo Järvinen wrote:
-> [...]
->> Lemme know if you prefer that I keep the old naming or fix it properly,
->> like SLP_S0_DBG_2, etc.
-> 
-> I'd prefer Xi or David comment on this whether to add the number there or 
-> not. This will end up being after the merge window material anyway so lets 
-> give them a few days.
-> 
+Replace comma between expressions with semicolons.
 
-Perfect for me, thanks!
+Using a ',' in place of a ';' can have unintended side effects.
+Although that is not the case here, it is seems best to use ';'
+unless ',' is intended.
 
+Found by inspection.
+No functional change intended.
+Compile tested only.
 
->> Sorry, I couldn't understand this sentence. Can you clarify it for me?
->> What assumption and what do you think we should do?
-> 
-> I was just referring to the ++ line that you for some reason snipped. 
-> It assumed certain order of things in the input array which arms a 
-> trap. But then, we know all the current inputs are okay with this simple 
-> approach and I'm not sure if this code is getting much changes in the 
-> future so it might be over-engineering to store the number into the 
-> input array within the struct.
-> 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-OK, thanks for the clarification. Let's see the input from others and we
-take it from there =)
+diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+index f721763e13cc..1d5d11adaf32 100644
+--- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
++++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+@@ -401,14 +401,14 @@ static int t14s_kbd_audio_led_probe(struct t14s_ec *ec)
+ 	int ret;
+ 
+ 	ec->led_mic_mute.name = "platform::micmute";
+-	ec->led_mic_mute.max_brightness = 1,
+-	ec->led_mic_mute.default_trigger = "audio-micmute",
++	ec->led_mic_mute.max_brightness = 1;
++	ec->led_mic_mute.default_trigger = "audio-micmute";
+ 	ec->led_mic_mute.brightness_set_blocking = t14s_mic_mute_led_set;
+ 	ec->led_mic_mute.brightness_get = t14s_mic_mute_led_get;
+ 
+ 	ec->led_spk_mute.name = "platform::mute";
+-	ec->led_spk_mute.max_brightness = 1,
+-	ec->led_spk_mute.default_trigger = "audio-mute",
++	ec->led_spk_mute.max_brightness = 1;
++	ec->led_spk_mute.default_trigger = "audio-mute";
+ 	ec->led_spk_mute.brightness_set_blocking = t14s_spk_mute_led_set;
+ 	ec->led_spk_mute.brightness_get = t14s_spk_mute_led_get;
+ 
+-- 
+2.25.1
+
