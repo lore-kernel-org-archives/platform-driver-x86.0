@@ -1,124 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847272472A4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Sep 2025 07:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00C210942
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Sep 2025 08:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758871149; cv=none; b=TRHtIDIrYICs/pp0qSP5PgO+r6TJ9tv3opGmDaML3IAl7/v6c9Dw0cWxJml/5uutbOoOcMKyTvCw9l13Xt0gIEcTjeODyKFciPP8Thp5WqhBRQBRcjmaqe0l7KHWJE9rkZObuw5kA9jQvFnVKrH+qPRLh+34wEWfP5cwoj/Ldi4=
+	t=1758874883; cv=none; b=FJHYvoA1sg/gVywXvMe+2YSp6E2D62Tvgo2yvdU4LO07HZconXNWc4aWzxCsBEqr7yUVETsQ0DOEQHTx8iINUqgezsSAKURJMZG++ZXMfhLDjGozjQaebAGU/h/3iXTFMyelJFvfXOfgFH6vNs08NSX0IfoZNufoRBjdhukGHwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758871149; c=relaxed/simple;
-	bh=FDV3uBNAbwFXT+M7fyNWH+HJ349lnbWYLaE+n4S8cdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AR4fNg4es95SnUOhoPAEnMcM3DZWPR9z/SxjUor+upQsPCLztpDEdjtefi/MUTYhefj64nBXwbRL3STQSle8GYryivGQuuGJ+Mxmzv9lNx4WHX1I5TAjDWRQ7nbs4HlRXwzYeHOOih3xRQsx5330KqALy+WjU3Mnki2b9qbCMTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xgy1FRMX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1758874883; c=relaxed/simple;
+	bh=HNadxYrXKBxG+es9Wwf3kkJTuTewMLB9poqxJhntsfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i2Z0tUNLH14X9IPcjUeji47irYJA3x5aLTO3n0qW7OHNZyTM4V8LEt0TaxahuJ375/zhZjJvkDLzgtdzWnP4tOXwviG6Fb4eTepc/GsP7MQBkU5SAhKbnGDVJT1CKfiCOwPXSDdPDf/KbOL1EYItH5LSlUec91Ho7Q2VzA7XGWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rAn9C7tE; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xgy1FRMX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758871146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tOPngMxA7p4GyjZLW1Z2fZxDxzYAemuo6fVS/hsRC0Y=;
-	b=Xgy1FRMXmgtRel2xJLVU1BWeTsYDDjt97BNyRgiyWw1t32CpKNkna5CmDXjeWzM+kj87fi
-	5q57v6WrxMh8Cj/CSuSv7ZL9nEELj7pJIZMGnFjkmUCNuxdUm5YvrirOv0b5jNOwhxphG4
-	ILXlgXikl1H0Vx+MidpT4hOQAoUAK7s=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-461-WXupIz9gN2W6w_oGF9ig3w-1; Fri, 26 Sep 2025 03:19:04 -0400
-X-MC-Unique: WXupIz9gN2W6w_oGF9ig3w-1
-X-Mimecast-MFC-AGG-ID: WXupIz9gN2W6w_oGF9ig3w_1758871144
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3f4fbdf144dso943805f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Sep 2025 00:19:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rAn9C7tE"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3e8ef75b146so1497951f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Sep 2025 01:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1758874878; x=1759479678; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YtlOdHVQKyDFwlgLpYjWciIJdDWqMWEqc8oTUdiH9po=;
+        b=rAn9C7tEShSkFpqpEGjuWwOa57MjOlje4O1s1JeylKQvWc8qz/t9NC/4aLns5DwGTW
+         TBPK1F39Syr66HI9D1gKpkoKmqaOyZXrorikh5s6W8pejbRMDP1xSod4DMs3DOBKToc2
+         xBzx8spYZS7iK09f88WN1+q7RcEx4lsLV4sal0Srfj7MgQtWawqGRw04kaDR8n2mp0AW
+         ROLqqHC0CjILgPvH7jr/iLEh9Wf82tsd9B96ap9654TjX8oQph63lGlB+InPxmD/Uez1
+         KHm+itP4VOxnLRxoHmnpEJzr9znemCuwmpQQY7LIxELvzOqLD6m90NvizdaWt7g7bPHB
+         7jQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758871144; x=1759475944;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tOPngMxA7p4GyjZLW1Z2fZxDxzYAemuo6fVS/hsRC0Y=;
-        b=H7lb7LbrHutbHWQrJw/oOY9o3cPpdOnYXRlxDbapUv7w3E0Jignre9LFl8xSc70Bi0
-         jI8dE3A2AUus5OogLeca020fIKAy2jAfE5g87bRShG7hseFiKVCqfki8OSp2pftN7OVA
-         4SMsfDAgEai2tnQtiZK2NP1Mdtj3GrDP1wGBJf438CpbXh59VqPQs5JBy3qejYzJOB9E
-         7FySivPV8ZULXLbFtVHEhROWyWLV3i3dpJkvA8kT8gmxod3DIRtDiuRMSZS1mEV/6r49
-         qRNzRxT/apVZAGpmCyfcITl98FKqKrusv1k0vqPgCCJW0uhCHzyClc+ZDrHRX/fuLbHk
-         gTNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMuxesLh4idAGaJYTDsukAMUtrI3PcbqFAvus5hWC4X3l6nd9An9c0y24UAxP+Cd2rEL6j81pXqdJrs/0I8cCOY5zw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjZvxcqWpx4cUrelPfz5THR2Nw6FZO3ShV5PZ3cJZps4zF7q/+
-	rNOiRjQDMsxT1rqlToeYOMmdMHqhM3pIeaHBOFgzF6EAqaUTVrsFPpkJjpW1Ojn59SD24kth8K4
-	vlIWrvVLH3j/TBAfHbnOaZZ88c4I2LF8mmEejpZ5JRac3JRGBLT78eiblI1tIzMhto52PBE5MTS
-	w=
-X-Gm-Gg: ASbGncsbkrHbt7fG34pit6DVOJofjMSkW9fFKCB7x9WQxCmbcdofMEAveXgarUY16zI
-	BDH9lKorPPSY7Rgz0wm7y5SIr46EY03ZQzZ3gk3HLipowb2dGbqANIEqSY9Op2ZJA7ks3jQmLC/
-	EAdGJGVabtAAvCRUTw8tNJ/nsZAqrvIZS0LCadokW5s/KItJo15ZuM3OsWCXHyRb6lL55XziX0s
-	m2FFBOXhJw8gXVJByicaCqGWo1liRKRtg8vyxYnNeoIE7/FCX5QZxcywCMWUPvISvulfhV8hHNe
-	cPZFl1h8TGXHtW+p77ryiT6xQyNR8zmYuRiXUV4EeBSEPzUCahU29stv6wrX7qq/be44IpKrnO+
-	5XbeZqz7uZBWrKQ==
-X-Received: by 2002:a05:6000:310b:b0:3e7:1f63:6e81 with SMTP id ffacd0b85a97d-40e4a711565mr5936587f8f.16.1758871143686;
-        Fri, 26 Sep 2025 00:19:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGlb1Wb38trve2rzHq8pOF44+10uFK3uhKPrtJDVZXfjYr23BydS246rnVqWWs+QAxza2wP6g==
-X-Received: by 2002:a05:6000:310b:b0:3e7:1f63:6e81 with SMTP id ffacd0b85a97d-40e4a711565mr5936558f8f.16.1758871143271;
-        Fri, 26 Sep 2025 00:19:03 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen12.rmtde.csb ([2a02:810d:7e01:ef00:ff56:9b88:c93b:ed43])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc92491efsm5994003f8f.62.2025.09.26.00.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Sep 2025 00:19:02 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Sebastian Reichel <sre@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: adjust file entry in THINKPAD T14S EMBEDDED CONTROLLER DRIVER
-Date: Fri, 26 Sep 2025 09:18:59 +0200
-Message-ID: <20250926071859.138396-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.51.0
+        d=1e100.net; s=20230601; t=1758874878; x=1759479678;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YtlOdHVQKyDFwlgLpYjWciIJdDWqMWEqc8oTUdiH9po=;
+        b=cCLRPM9dVkW2r9t54z80JP/awVhUMlU6KsUU8i4i44FlWDdqaM4QdE7XbhoWcWgcNe
+         CRu39kkuagk8pe5SZ/SqvOTC7xkDs/y0gEE9YtIUA4ufCDaQEOWY27EIH6fAATArIip4
+         nirBDSh43l8QgAYkyoNPsD9/QnckmoICzFDfmoILeoAhduJ1eOLkthpFTnHgx/jCmXgq
+         p7vNrgdL5xKQYbAC7TJvQp4wtlsUH1TmueORduyvdo9HnJgtif9+RLikGvMTKRiywsSO
+         VEiMYFZIjQhICLl0KIGRLpMN7SWWfNqE/oADCT0nhUSVQH1sPLb7eKGkqMEg4ef5hY/D
+         ayhQ==
+X-Gm-Message-State: AOJu0Yw5Xd96BwRkSqI/nKa9E9rqRVBkPJEPBeDO6575ZgLMEgTh/fNz
+	3+PBSjzPSD8fdDchfKDvI7ZebRxeedwS4okdkspVyZJY80HZWXc8DgZWttb5zFQXrv+tBYX8eCQ
+	wEzgwiYU=
+X-Gm-Gg: ASbGncvvLI5um1uv2SZ+3I0ACsWRMsTKcRFUuh3U6kzV10Lfzq+Wd9tBFfehWWutuCB
+	2CzhVHWzUhUqyUXLg/cgp+i+3vqhZXAy+F7yBs9/ekf4uUMN7EIfXoZ9jHKGnBDnEdO3UwcXghE
+	UMQpXdwKCMGz7/F+nzyBsmMhrXqX1ALpKppWhHDSPeIG/gfrKtg0ygKAhJV5CfxYw9pmjl3hUd5
+	LBur/rBA/H0S7Erf+Id2E4xEl24Nt2N1j2hMhAb8WZmgTnFSbabjJG2HM02+7zOfxCrY/EH5isl
+	42maHZRXL2FCkfopS5BBg4bk0kVMmyDyHzX6v6Ta6Ex+c4i3WJMZ5Vo6Lsrg5MiGQcUZ1gg60IC
+	iDqjROebV/UsfYxUQo9xcTIF2UTL8GD+sG0C+glbF8NIZ+0hZdU7n91+foaqMfhJDUnm+yPLEqm
+	xhILN5j5WguITXtBEMO1LeYVA1bOzSsfE=
+X-Google-Smtp-Source: AGHT+IFnD4bbmtza7gIkFTVOHPWGUxGK2GEJRJeFtGzkAHojXdJuptg+w2G7NqbWxgBQIDg4CRmB8w==
+X-Received: by 2002:a05:6000:2308:b0:3ea:c360:ff88 with SMTP id ffacd0b85a97d-40e4ba3a4e9mr6134848f8f.31.1758874878274;
+        Fri, 26 Sep 2025 01:21:18 -0700 (PDT)
+Received: from [192.168.0.19] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e33b9e3bdsm69822625e9.2.2025.09.26.01.21.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Sep 2025 01:21:17 -0700 (PDT)
+Message-ID: <2c915fe6-a6c4-4814-a7ba-8f9682775951@linaro.org>
+Date: Fri, 26 Sep 2025 09:21:17 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: Convert comma to
+ semicolon
+To: Chen Ni <nichen@iscas.ac.cn>, sre@kernel.org, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250926014345.651176-1-nichen@iscas.ac.cn>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-US
+In-Reply-To: <20250926014345.651176-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On 26/09/2025 02:43, Chen Ni wrote:
+> Replace comma between expressions with semicolons.
+> 
+> Using a ',' in place of a ';' can have unintended side effects.
+> Although that is not the case here, it is seems best to use ';'
+> unless ',' is intended.
+> 
+> Found by inspection.
+> No functional change intended.
+> Compile tested only.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>   drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> index f721763e13cc..1d5d11adaf32 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -401,14 +401,14 @@ static int t14s_kbd_audio_led_probe(struct t14s_ec *ec)
+>   	int ret;
+>   
+>   	ec->led_mic_mute.name = "platform::micmute";
+> -	ec->led_mic_mute.max_brightness = 1,
+> -	ec->led_mic_mute.default_trigger = "audio-micmute",
+> +	ec->led_mic_mute.max_brightness = 1;
+> +	ec->led_mic_mute.default_trigger = "audio-micmute";
+>   	ec->led_mic_mute.brightness_set_blocking = t14s_mic_mute_led_set;
+>   	ec->led_mic_mute.brightness_get = t14s_mic_mute_led_get;
+>   
+>   	ec->led_spk_mute.name = "platform::mute";
+> -	ec->led_spk_mute.max_brightness = 1,
+> -	ec->led_spk_mute.default_trigger = "audio-mute",
+> +	ec->led_spk_mute.max_brightness = 1;
+> +	ec->led_spk_mute.default_trigger = "audio-mute";
+>   	ec->led_spk_mute.brightness_set_blocking = t14s_spk_mute_led_set;
+>   	ec->led_spk_mute.brightness_get = t14s_spk_mute_led_get;
+>   
 
-In the activity of revising the patch series "platform: arm64:
-thinkpad-t14s-ec: new driver" from v1 to v2, the location of the dt-binding
-for lenovo,thinkpad-t14s-ec.yaml was changed, but the change of that
-location was not reflected in the corresponding MAINTAINERS section.
+This definitely deserves a Fixes tag.
 
-So, commit bee278e18e64 ("dt-bindings: embedded-controller: Add Lenovo
-Thinkpad T14s EC") adds the file lenovo,thinkpad-t14s-ec.yaml in the
-embedded-controller subdirectory, whereas commit 27221f91b83f ("platform:
-arm64: thinkpad-t14s-ec: new driver") refers for this file to the
-non-existing platform subdirectory.
+Then add
 
-Adjust the file entry to refer to the right location.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8fcf4e34eaa5..b641b5e60bf5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25466,7 +25466,7 @@ F:	drivers/platform/x86/lenovo/thinkpad_acpi.c
- THINKPAD T14S EMBEDDED CONTROLLER DRIVER
- M:	Sebastian Reichel <sre@kernel.org>
- S:	Maintained
--F:	Documentation/devicetree/bindings/platform/lenovo,thinkpad-t14s-ec.yaml
-+F:	Documentation/devicetree/bindings/embedded-controller/lenovo,thinkpad-t14s-ec.yaml
- F:	drivers/platform/arm64/lenovo-thinkpad-t14s.c
- 
- THINKPAD LMI DRIVER
--- 
-2.51.0
-
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
