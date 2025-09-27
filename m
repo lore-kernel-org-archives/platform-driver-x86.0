@@ -1,63 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D82330DD1E;
-	Fri, 26 Sep 2025 20:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AFB1DDC08;
+	Sat, 27 Sep 2025 15:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758919473; cv=none; b=rt7f5S/LbOwBXh4j+Iv4p4m2dT+ChbkkGu/5AhQ7qd+wqA3MoJcOMVqiuZee9xPNggpiC6oS+bSGYgD1T9zUlqcwn+/RplHLaJoL3KmbLdWsH3O0iueT1VpLXfBx0CC/VtOYaeA5Us9jZKuTRrSltrIm+BEc59FRKOSa6SihQkI=
+	t=1758987915; cv=none; b=DNbOTXqubKtTarmUI5z1czEUm2gvRVERbJ+XXrws5tR2kaiTK89QC7gazKE4Y8diw0+69d7cv6hyigw2C8YOGWV5RsIjN9yDhBnV9UblydEKxfF+sSHpcUC8xcpko+qDck44Fi256Vic1bSzTUel4/ZA6wjc6Wk1nCTMLUIUjwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758919473; c=relaxed/simple;
-	bh=5z8eh7qoAaoUbSoaeV5Ww06DIQ4yyQAAP+wCxcugZ7k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=J7RZ/yeSRwt5z9m/pqp6RiUhlJYw9IysuSkmCGkRy0uzxmP4a9j3u3iUcwO3vb7ISmSLs7XatJNHuMOQggrHD8kC13smePfFODrXjCqPEU8OmuURL1bks8/dkJNJp5IQcbBsQlUSBU6lBMbmhr7v/xutQ+R00W+DQdUkZ3ftdMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDZtipRe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758987915; c=relaxed/simple;
+	bh=06i685LcDNM6BzO58wldlV5tA/KtXEtqEukaMe+xteM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cxSEPaFKGqzgoyVcOeGUVKdzum8mMQFXBeRewp4Wd+3wH8+9tmclcghSRM7Hi7j/WjM+UCfrFPSIkTFoNmB4E0Rf+GLAprrsaAW4T9ce16nEXKXdALitxYXQhZuvb+WXb/mp/Fn3DvM86dT+FPE6VLDKPMLsk730knPMedz4zpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EeIDa1nO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jNGC4QJW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDZtipRe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D18C4CEF4;
-	Fri, 26 Sep 2025 20:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758919472;
-	bh=5z8eh7qoAaoUbSoaeV5Ww06DIQ4yyQAAP+wCxcugZ7k=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bDZtipReG0CnXa35Fq8T2QJ4rwJDYBfiNoz/9bZrMs+QWxJAqoMDiMOKSiK8mv78k
-	 DPXDjB5OcK+MWHWXOJbvpsjdlAYodklKxuhT8wH1fKpoy/GWuXTiqkavTf/X4VnITe
-	 5yQljw5RjaaCyseE5DVLjZxUEdlYLSVnszEkZl5rISBYxliBkmpbXZz0lgJ+bTNBcn
-	 d0Vz8uDw/3aJG5wjXVvQYOq7a6Au0ltq+xEmuTSlNnKXZeJvEPBL4lk3U/T05JZ/sS
-	 J2b48/L0jlFGeXg7zHQjyEk+iMOl5rT+6eRrVH4qS0I1VJSJIR9aUqLFjUqsed9LXV
-	 YNNy9zn5VNg2w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D2E39D0C3F;
-	Fri, 26 Sep 2025 20:44:29 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.17-5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20250926153552-300446329@linux.intel.com>
-References: <pdx86-pr-20250926153552-300446329@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20250926153552-300446329@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.17-5
-X-PR-Tracked-Commit-Id: 3ed17349f18774c24505b0c21dfbd3cc4f126518
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb97142197df73fbbb0e6f8629dc1f89ef6960f7
-Message-Id: <175891946795.51956.17047587010060469677.pr-tracker-bot@kernel.org>
-Date: Fri, 26 Sep 2025 20:44:27 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EeIDa1nO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jNGC4QJW"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758987904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eFyUFesXh9jwAhNOq4uvsEBGZOdhiu9YWCnDE/iJlAY=;
+	b=EeIDa1nOc6WSGzFtd1cyirs/Lweqy5WnPC0PgJRnWgVxw6FIqXyBUK1Wupx69Dr6hZSyy/
+	2ElwuogEeTa0x89TB+qpXPYuF8OUjt/HtdH7rWdISnB6r7UEhTvY8/sCmJqxDsRaJsk7wj
+	nRTpBSd3XO8WrBu9rV3ZKz6WJiGoFvQLJ/wfynFJOWMusmduSZU1dE3gLxv/cynYLpHEE7
+	FD0T3xqBuUZ+KfgyVwZ/NyZIIqrM6koE/KVoARAvzFLxeHM07D3PkhAGkJiH6lK2nqoiMm
+	wtyrY/xQcfMd52FIZFc5+7eAhoRd6Q9LMxB/+QuwuBvQLrUEmM5ORsc9jTcHGw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758987904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eFyUFesXh9jwAhNOq4uvsEBGZOdhiu9YWCnDE/iJlAY=;
+	b=jNGC4QJWK1BzfHMkHlKKOzqENxqv9AUDhlFoRjwNjl1X4PSSeHWvjGv3prtvrccl5W6c/P
+	O3pAuo1fhHpuYyBw==
+To: Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Ciju
+ Rajan K
+ <crajank@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, LKML
+ <linux-kernel@vger.kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Cc: christophe.jaillet@wanadoo.fr, platform-driver-x86@vger.kernel.org,
+ vadimp@nvidia.com
+Subject: Re: [PATCH platform-next 2/2] platform/mellanox: mlxreg-hotplug:
+ Add support for handling interrupt storm
+In-Reply-To: <34d028ac-f907-1505-a2fc-f455a10cfa5e@linux.intel.com>
+References: <20250916054731.1412031-1-crajank@nvidia.com>
+ <20250916054731.1412031-3-crajank@nvidia.com>
+ <34d028ac-f907-1505-a2fc-f455a10cfa5e@linux.intel.com>
+Date: Sat, 27 Sep 2025 17:45:02 +0200
+Message-ID: <87zfaf3nnl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Fri, 26 Sep 2025 15:35:52 +0300:
+On Tue, Sep 16 2025 at 13:00, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 16 Sep 2025, Ciju Rajan K wrote:
+>> This patch provides a mechanism to detect device causing interrupt
+>> flooding and mask interrupt for this specific device, to isolate
+>> from interrupt handling flow. Use the following criteria: if the
+>> specific interrupt was generated 'N' times during 'T' seconds,
+>> such device is to be considered as broken and will be closed for
+>> getting interrupts. User will be notified through the log error
+>> and will be instructed to replace broken device.
+>>=20
+>> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+>> Signed-off-by: Ciju Rajan K <crajank@nvidia.com>
+>
+> I've a general question on this approach, probably more directed towards=
+=20
+> Hans, Thomas, or others who might have some insight.
+>
+> Are drivers expected to build their own workarounds for interrupt storms=
+=20
+> due to broken HW such as this? It sounds something that should be at leas=
+t=20
+> in part handled by something generic, while the lower-most level masking=
+=20
+> and detection might still need to be done by the driver to handle the HW=
+=20
+> specific aspects, there seems to be a generic aspect in all this.
+>
+> Is there something generic for this already? If not, should there be=20
+> instead of adding this in full into an end-of-the-food-chain driver?
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.17-5
+We don't have a generic mechanism for that. The core handles only the
+case of unhandled runaway interrupts.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb97142197df73fbbb0e6f8629dc1f89ef6960f7
+I agree, that there should be some generic infrastructure for that.
 
-Thank you!
+Something like the incomplete below, which obviously needs some thoughts
+vs. shared interrupts and other details, but you get the idea.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+
+        tglx
+---
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1927,6 +1927,10 @@ static struct irqaction *__free_irq(stru
+ 		irq_release_resources(desc);
+ 		chip_bus_sync_unlock(desc);
+ 		irq_remove_timings(desc);
++		if (desc->irq_storm) {
++			kfree(desc->irq_storm);
++			desc->irq_storm =3D NULL;
++		}
+ 	}
+=20
+ 	mutex_unlock(&desc->request_mutex);
+--- a/kernel/irq/spurious.c
++++ b/kernel/irq/spurious.c
+@@ -22,6 +22,44 @@ static DEFINE_TIMER(poll_spurious_irq_ti
+ int irq_poll_cpu;
+ static atomic_t irq_poll_active;
+=20
++/* Runaway interrupt detection */
++struct irq_storm {
++	unsigned long		max_cnt;
++	unsigned long		last_cnt;
++	irq_storm_cb_t		cb;
++	void			*cb_arg;
++};
++
++bool irq_register_storm_detection(unsigned int irq, unsigned int max_freq,
++				  irq_storm_cb_t cb, void *cb_arg)
++{
++	struct irq_storm *is;
++	unsigned long cnt;
++	bool first;
++
++	if (max_freq < 500)
++		return false;
++
++	is =3D kzalloc(sizeof(*is), GFP_KERNEL);
++	if (!is)
++		return false;
++
++	/* Adjust to cnt/10ms */
++	is->max_cnt =3D max_freq / 100;
++	is->cb_arg =3D cb->arg;
++	is->cb =3D cb;
++
++	scoped_irqdesc_get_and_buslock(irq, 0) {
++		if (scoped_desc->action) {
++			is->last_cnt =3D scoped_desc->tot_cnt;
++			scoped_desc->irq_storm =3D is;
++			return true;
++		}
++	}
++	kfree(is);
++	return false;
++}
++
+ /*
+  * Recovery handler for misrouted interrupts.
+  */
+@@ -217,6 +255,19 @@ static inline bool try_misrouted_irq(uns
+ 	return action && (action->flags & IRQF_IRQPOLL);
+ }
+=20
++static void irq_storm_check(struct irq_desc *desc)
++{
++	unsigned long delta, now =3D jiffies;
++
++	if (!time_after_irq(now, desc->irq_storm.next_period))
++		return;
++	desc->irq_storm.next_period =3D now + msec_to_jiffies(10);
++	delta =3D desc->tot_cnt - desc->irq_storm.last_cnt;
++	desc->irq_storm.last_cnt =3D desc->tot_cnt;
++	if (delta > desc->irq_storm.max_cnt)
++		desc->irq_storm.cb(irq_desc_get_irq(desc), delta * 100, desc->irq_storm.=
+dev_id);
++}
++
+ #define SPURIOUS_DEFERRED	0x80000000
+=20
+ void note_interrupt(struct irq_desc *desc, irqreturn_t action_ret)
+@@ -231,6 +282,9 @@ void note_interrupt(struct irq_desc *des
+ 		return;
+ 	}
+=20
++	if (desc->irq_storm && action_ret =3D=3D IRQ_HANDLED)
++		irq_storm_check(desc);
++
+ 	/*
+ 	 * We cannot call note_interrupt from the threaded handler
+ 	 * because we need to look at the compound of all handlers
