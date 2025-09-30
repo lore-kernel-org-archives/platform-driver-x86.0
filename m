@@ -1,296 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C7A20E334;
-	Tue, 30 Sep 2025 02:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C46021A95D;
+	Tue, 30 Sep 2025 09:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759198736; cv=none; b=WlezMWvTFT0XDZzvjdVLcyTy4UDcbla1spF88ruxsc7xzPyRtygU8MtplRSebFCmVWUTIGdSxLfc2fZuQ9E5bnlNOaEhXvXiVHvjUfOH75ZjXDqpXnyRLfwD+aRTeN/UkhSfo6XTjpjOgdbJAfQWnewIy3lotwTXZ7mdP1Io4+w=
+	t=1759223741; cv=none; b=ZtF1/oTtGgwN54Lg8mYhlYwhwaBSnD2MlGGUi6PJdYOV23/6sj2cviKFsef1R8JFRNCsEpkOoBazGHTuskByXfAsyRJGG5B9onds41RU+QHAQUXEsr6X2H/V+gT1IrKmHWJ6k0RFE3Db4UW4fNSYx4VF/Hk3LZXeah1rlOhzxFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759198736; c=relaxed/simple;
-	bh=zFfs9ZtVBB2PFXc1pADLwOK/82RFFVK7/jIrMYSh/5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B6OuKozIIImW25ZYFGhe0vs7PwkaXp4E5lRh46JMxwB00cFToXqItYHKlHco86u0o8c55720Lkdk0RrmPFdToJuxW02BsHbsbDHvVis0zXe0qMMERSvE6ZlHB8oO70JrOIidpx4aQgCUTBN4e1aDJ/yDxuZvzwgUqHDilQ3TtYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BR2Afsuw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759223741; c=relaxed/simple;
+	bh=4u6qPEoom1yzsgPG/RiuqPrapQHxzaEyZJYu/J36gVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KgBh/ZNbWMJ2gTWSqX99WjikrJ2BCK5mtOdF8Z/axKCSKPZDUee8rBuPJKF9fvUm7SvC7yycjiX1NRi9QOPBfMZAXzinz/WmC0fIBbtZPRSYzvViB78xKKOLQ9DeW9/ndyTO74kTnXEKq6D6+WaPARIxF5gIKFJ5t8mlzd/Vjko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YsWpFlo+; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BR2Afsuw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7C7C4CEF4;
-	Tue, 30 Sep 2025 02:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759198736;
-	bh=zFfs9ZtVBB2PFXc1pADLwOK/82RFFVK7/jIrMYSh/5s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BR2AfsuwI4cBtDVro1BD1gRHnuiU0/swT7hD41JgQqlp72nvExpcFqM0pfmyTyNFN
-	 M+cDYfVfy9Hc/XNziMk2mrWVTCWKRtEXIF4741yHd0n2PRT4MVkKnYYS9zCRGgjY0H
-	 4bxOM7viQ+gE9hgwk5MdaZtFvA++Rvi2u0AwSF449/a/QEtRSrSvKQg8n2Qsay81C/
-	 cvkMsvmsdVA/Y5sLWI7vgctnmcTV3GM8pk4G+qwQJl5r9xVpxM9tF88sIaZ9tfzfHr
-	 hQEslLX8wlovHSbHhb+frS9KH13/MIh+4OMEUdt5dXuJtf0WELp5VSpg0ohuVSFVwn
-	 MPh+uLQKN6WJQ==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Christoffer Sandberg <cs@tuxedo.de>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Shyam-sundar.S-k@amd.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.16-6.6] platform/x86/amd/pmc: Add Stellaris Slim Gen6 AMD to spurious 8042 quirks list
-Date: Mon, 29 Sep 2025 22:18:18 -0400
-Message-ID: <20250930021831.688479-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250930021831.688479-1-sashal@kernel.org>
-References: <20250930021831.688479-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YsWpFlo+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759223739; x=1790759739;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4u6qPEoom1yzsgPG/RiuqPrapQHxzaEyZJYu/J36gVs=;
+  b=YsWpFlo+QmtmwfZKjNOwE+zdT5KiIIkifAtwf5TB0VpQp8+4JaCYGkJZ
+   7o1t+th/7IfLCET2v1x9NR7cU7EfQ5HwfNZzSG6BZB/wGvyVwrazmYvs2
+   iwwX8tLYTJIDljK5iMow5itmZ51LZ9bdsVCo0iiJSl0cYJIf1ViJYQC6D
+   LgTsUZWECA1swltCwuMT6uEDHWRmteKLu/nyzIehdOeoox91ZdBbLh7as
+   zNAJ6xWNvhJSR5aRoB5cUvKkPHyvzHuiSqvUtXgIQUWyYAVpFOfSCgvnc
+   NYHAD4xccGXkVtTLuBcWXkwoo4je9W4GJaTFOI6NQ3rrgSprWZw725nhS
+   Q==;
+X-CSE-ConnectionGUID: T5GJeV7SR36oYzmx70Owpg==
+X-CSE-MsgGUID: 2eU2UKyXQqeXLmlIy7X+wQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65296925"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="65296925"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 02:15:38 -0700
+X-CSE-ConnectionGUID: h3lsygxZT8yC8rzVkS8v2Q==
+X-CSE-MsgGUID: t5LwEXYPSNCNRRntXuKYNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
+   d="scan'208";a="178880006"
+Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 30 Sep 2025 02:15:34 -0700
+Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v3WSK-00015t-1L;
+	Tue, 30 Sep 2025 09:15:32 +0000
+Date: Tue, 30 Sep 2025 17:15:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net,
+	cs@tuxedo.de, wse@tuxedocomputers.com, ggo@tuxedocomputers.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, rdunlap@infradead.org,
+	alok.a.tiwari@oracle.com, linux-leds@vger.kernel.org,
+	lee@kernel.org, pobrn@protonmail.com
+Subject: Re: [PATCH v4 1/2] platform/x86: Add Uniwill laptop driver
+Message-ID: <202509301709.jGxwZmZX-lkp@intel.com>
+References: <20250928013253.10869-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.16.9
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250928013253.10869-2-W_Armin@gmx.de>
 
-From: Christoffer Sandberg <cs@tuxedo.de>
+Hi Armin,
 
-[ Upstream commit 12a3dd4d2cd9232d4e4df3b9a5b3d745db559941 ]
+kernel test robot noticed the following build errors:
 
-Prevents instant wakeup ~1s after suspend
+[auto build test ERROR on lwn/docs-next]
+[also build test ERROR on linus/master v6.17 next-20250929]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Link: https://patch.msgid.link/20250916164700.32896-1-wse@tuxedocomputers.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+url:    https://github.com/intel-lab-lkp/linux/commits/Armin-Wolf/platform-x86-Add-Uniwill-laptop-driver/20250928-093543
+base:   git://git.lwn.net/linux.git docs-next
+patch link:    https://lore.kernel.org/r/20250928013253.10869-2-W_Armin%40gmx.de
+patch subject: [PATCH v4 1/2] platform/x86: Add Uniwill laptop driver
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250930/202509301709.jGxwZmZX-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250930/202509301709.jGxwZmZX-lkp@intel.com/reproduce)
 
-LLM Generated explanations, may be completely bogus:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509301709.jGxwZmZX-lkp@intel.com/
 
----
+All errors (new ones prefixed by >>):
 
-## **BACKPORT RECOMMENDATION: YES**
+   drivers/platform/x86/uniwill/uniwill-acpi.c:1243:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    1243 |                 guard(mutex)(&data->battery_lock);
+         |                 ^
+   include/linux/cleanup.h:401:2: note: expanded from macro 'guard'
+     401 |         CLASS(_name, __UNIQUE_ID(guard))
+         |         ^
+   include/linux/cleanup.h:290:2: note: expanded from macro 'CLASS'
+     290 |         class_##_name##_t var __cleanup(class_##_name##_destructor) =   \
+         |         ^
+   <scratch space>:49:1: note: expanded from here
+      49 | class_mutex_t
+         | ^
+   drivers/platform/x86/uniwill/uniwill-acpi.c:1250:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+    1250 |                 guard(mutex)(&data->input_lock);
+         |                 ^
+   include/linux/cleanup.h:401:2: note: expanded from macro 'guard'
+     401 |         CLASS(_name, __UNIQUE_ID(guard))
+         |         ^
+   include/linux/cleanup.h:290:2: note: expanded from macro 'CLASS'
+     290 |         class_##_name##_t var __cleanup(class_##_name##_destructor) =   \
+         |         ^
+   <scratch space>:60:1: note: expanded from here
+      60 | class_mutex_t
+         | ^
+>> drivers/platform/x86/uniwill/uniwill-acpi.c:1249:2: error: cannot jump from switch statement to this case label
+    1249 |         default:
+         |         ^
+   drivers/platform/x86/uniwill/uniwill-acpi.c:1243:3: note: jump bypasses initialization of variable with __attribute__((cleanup))
+    1243 |                 guard(mutex)(&data->battery_lock);
+         |                 ^
+   include/linux/cleanup.h:401:15: note: expanded from macro 'guard'
+     401 |         CLASS(_name, __UNIQUE_ID(guard))
+         |                      ^
+   include/linux/compiler.h:166:29: note: expanded from macro '__UNIQUE_ID'
+     166 | #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+         |                             ^
+   include/linux/compiler_types.h:84:22: note: expanded from macro '__PASTE'
+      84 | #define __PASTE(a,b) ___PASTE(a,b)
+         |                      ^
+   include/linux/compiler_types.h:83:23: note: expanded from macro '___PASTE'
+      83 | #define ___PASTE(a,b) a##b
+         |                       ^
+   <scratch space>:47:1: note: expanded from here
+      47 | __UNIQUE_ID_guard1072
+         | ^
+   2 warnings and 1 error generated.
 
-### **Executive Summary**
-This commit should **definitively be backported to stable kernel
-trees**. It adds a single device (TUXEDO Stellaris Slim 15 AMD Gen6) to
-the spurious_8042 quirk list to prevent instant wakeup after suspend, a
-critical power management bug affecting real users.
 
----
+vim +1249 drivers/platform/x86/uniwill/uniwill-acpi.c
 
-## **Detailed Analysis**
+  1235	
+  1236	static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action, void *dummy)
+  1237	{
+  1238		struct uniwill_data *data = container_of(nb, struct uniwill_data, nb);
+  1239		struct uniwill_battery_entry *entry;
+  1240	
+  1241		switch (action) {
+  1242		case UNIWILL_OSD_BATTERY_ALERT:
+  1243			guard(mutex)(&data->battery_lock);
+  1244			list_for_each_entry(entry, &data->batteries, head) {
+  1245				power_supply_changed(entry->battery);
+  1246			}
+  1247	
+  1248			return NOTIFY_OK;
+> 1249		default:
+  1250			guard(mutex)(&data->input_lock);
+  1251			sparse_keymap_report_event(data->input_device, action, 1, true);
+  1252	
+  1253			return NOTIFY_OK;
+  1254		}
+  1255	}
+  1256	
 
-### **1. Nature of the Change (Code Analysis)**
-
-**Code Impact:**
-- **Lines changed:** +7 lines (pure addition, no deletions)
-- **Location:** `drivers/platform/x86/amd/pmc/pmc-quirks.c:256-264`
-- **Change type:** Adds one DMI table entry to the `fwbug_list[]` array
-
-**Specific code addition:**
-```c
-{
-    .ident = "TUXEDO Stellaris Slim 15 AMD Gen6",
-    .driver_data = &quirk_spurious_8042,
-    .matches = {
-        DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
-    }
-},
-```
-
-**What the quirk does:**
-- Sets `dev->disable_8042_wakeup = true` during driver initialization
-  (pmc-quirks.c:327)
-- During suspend, calls `amd_pmc_wa_irq1()` which disables IRQ1
-  (keyboard controller) as a wakeup source (pmc.c:530-545)
-- This prevents spurious keyboard interrupts from causing immediate
-  wakeup after suspend
-
-### **2. Bug Severity and User Impact**
-
-**Problem addressed:**
-- **Symptom:** System wakes up instantly (~1 second) after entering
-  suspend
-- **User impact:** Laptop cannot remain suspended, rendering suspend
-  functionality unusable
-- **Affected hardware:** TUXEDO Stellaris Slim 15 AMD Gen6 (board name:
-  GMxHGxx)
-- **Root cause:** Firmware bug causing spurious IRQ1 events during
-  suspend/resume transitions
-
-**Real-world impact:**
-- Makes suspend completely non-functional on affected devices
-- Causes battery drain for users expecting their laptop to remain
-  suspended
-- Forces users to shut down instead of suspend, losing workflow state
-
-### **3. Risk Assessment**
-
-**Minimal Risk - This is one of the safest types of kernel changes:**
-
-1. **Device-specific:** Only affects machines with exact DMI match
-   `DMI_BOARD_NAME = "GMxHGxx"`
-2. **Additive change:** No existing code modified, only adds new entry
-   to quirk table
-3. **Well-established pattern:** 24+ devices already use this exact
-   quirk successfully since 2023
-4. **Proven mechanism:**
-   - Initial implementation: December 2023 (commit a55bdad5dfd1)
-   - 2+ years of production use
-   - Zero functional regressions reported
-5. **Graceful fallback:** If keyboard device not found, quirk silently
-   skips (pmc.c:535-536)
-6. **User override available:** Can be disabled via
-   `amd_pmc.disable_workarounds=1` module parameter
-7. **Non-invasive:** Does not modify hardware/firmware, only disables
-   kernel wakeup handling
-
-**What could go wrong (theoretical):**
-- Keyboard wake disabled on this device (this is intentional and
-  desired)
-- DMI match could theoretically match wrong device (extremely unlikely
-  with specific board name)
-
-**Regression potential:** Near zero
-
-### **4. Precedent for Backporting**
-
-**Strong precedent - Similar commits ARE routinely backported:**
-
-| Commit | Device | Stable Status |
-|--------|--------|---------------|
-| c96f86217bb28 | TUXEDO IB Pro Gen10 AMD | ✅ Tagged `Cc:
-stable@vger.kernel.org`, backported to 6.16.y |
-| 8822e8be86d40 | MECHREVO Yilong15Pro | ✅ Auto-backported by stable
-maintainer (Sasha Levin) |
-| 9ba75ccad8570 | PCSpecialist Lafite Pro | ✅ Backported to 6.16.y and
-6.15.y |
-| 0887817e49538 | MECHREVO Wujie 14XA | ✅ Backported to 6.16.y and
-6.15.y |
-
-**Pattern observed:**
-- All recent quirk additions (2025) have been backported to stable trees
-- Both explicitly tagged (`Cc: stable`) and auto-selected by stable
-  maintainers
-- Demonstrates stable maintainers recognize these as appropriate
-  backports
-
-### **5. Stable Tree Rules Compliance**
-
-Evaluating against Documentation/process/stable-kernel-rules.rst:
-
-✅ **Fixes important bug:** Prevents system suspend functionality
-✅ **Build-tested:** Successfully merged to v6.17
-✅ **Simple change:** 7-line quirk table addition
-✅ **Self-contained:** No dependencies on other patches
-✅ **Clear justification:** "Prevents instant wakeup ~1s after suspend"
-✅ **Regression-free:** Matches pattern of 20+ successful quirk additions
-✅ **Already upstream:** Merged in v6.17 (commit 12a3dd4d2cd92)
-
-### **6. Technical Verification**
-
-**Mechanism verification:**
-- Quirk flag sets `dev->disable_8042_wakeup = true` (pmc-quirks.c:327)
-- During suspend handler, calls `amd_pmc_wa_irq1()` (pmc.c:696)
-- Function finds serio0 device and disables IRQ wake (pmc.c:539-540)
-- Same exact mechanism used by 24 other devices
-
-**Clean application:**
-- Patch applies directly after PCSpecialist Lafite entry
-- Both 6.16.y and 6.15.y have the surrounding context
-- No conflicts expected
-
-**Testing status:**
-- Submitted by TUXEDO Computers (hardware manufacturer)
-- Reviewed by Ilpo Järvinen (platform-drivers-x86 maintainer)
-- Merged to mainline without issues
-
-### **7. Historical Context**
-
-**Evolution of the quirk mechanism:**
-- 2023-01-20: Initial IRQ1 workaround for Cezanne SoCs (commit
-  8e60615e8932)
-- 2023-12-11: Introduced `spurious_8042` quirk field for device-specific
-  handling (commit a55bdad5dfd1)
-- 2024-2025: Expanded to 24+ devices across multiple manufacturers
-- 2025-01: Minor fix for hibernation warning (commit dd410d784402) -
-  only logging issue
-
-**Manufacturer context:**
-- TUXEDO Computers actively maintains Linux support for their devices
-- Previous TUXEDO quirk (InfinityBook Pro Gen10) already backported
-- Both use same TongFang barebones chassis requiring identical quirks
-
-### **8. Architectural Considerations**
-
-**Subsystem impact:**
-- Confined to AMD PMC (Power Management Controller) driver
-- Does not touch core PM subsystem
-- Does not affect non-AMD systems
-- Does not affect AMD systems without DMI match
-
-**Dependencies:**
-- No new dependencies introduced
-- Uses existing `quirk_spurious_8042` structure (present since v6.2)
-- Relies on established `amd_pmc_wa_irq1()` function (present since
-  v6.2)
-
----
-
-## **Final Recommendation**
-
-### **BACKPORT: YES**
-
-**Justification:**
-1. ✅ Fixes critical user-visible bug (broken suspend)
-2. ✅ Extremely low risk (device-specific quirk addition)
-3. ✅ Follows well-established pattern (24+ similar quirks)
-4. ✅ Strong backport precedent (all recent similar commits backported)
-5. ✅ Minimal code change (7 lines, pure addition)
-6. ✅ No regressions expected or reported
-7. ✅ Complies with stable kernel rules
-8. ✅ Already merged in mainline (v6.17)
-
-**Recommended stable trees:**
-- linux-6.16.y ✅ (recommended)
-- linux-6.15.y ✅ (recommended)
-- linux-6.14.y ✅ (if still maintained)
-- Potentially older if AMD PMC driver present and active
-
-**Backport priority:** **HIGH** - Critical hardware support fix with
-zero risk
-
----
-
-**Evidence summary:** This commit represents a textbook example of a
-stable backport candidate: it fixes a real, user-impacting bug with a
-tiny, self-contained change that follows an extensively proven pattern
-with no regression risk.
-
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index 18fb44139de25..837f23217637d 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -248,6 +248,13 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Lafite Pro V 14M"),
- 		}
- 	},
-+	{
-+		.ident = "TUXEDO Stellaris Slim 15 AMD Gen6",
-+		.driver_data = &quirk_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
-+		}
-+	},
- 	{
- 		.ident = "TUXEDO InfinityBook Pro 14/15 AMD Gen10",
- 		.driver_data = &quirk_spurious_8042,
 -- 
-2.51.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
