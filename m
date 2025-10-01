@@ -1,99 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE83629D270;
-	Wed,  1 Oct 2025 13:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BD9214A6A
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Oct 2025 19:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759326235; cv=none; b=uScI48fE+ItKV5hQaGKlgayWC4E8tyUnBiW+UkGrcV7Y0yINCcUI2foVhdORuNqbYWyRwTbLHJKg6Vwp9i+5dJsLzpQ9sqonin6iOUMeW86sq+TZV4z3zln4uuY6RIFrPKPAkT0bPhqDxxAWoPRPKThl35ocOSeULeiPe1hM6YA=
+	t=1759347203; cv=none; b=aMfAdvKO5ZSbe9HwZ3BfJfxOWeP75o2Jt1bZ2/suZRYGuYtq/8/oM+8PUeJLmwdc9rHh4yaTPTGqlYfQtt6IX+G0Sm8pgaPKn7GgVczCiqO619VHxNJmBUFeY5eRw4a6+9ObMVpIztgirlY3zcNiQ7n4AX5oMHXzLn78+w7X2ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759326235; c=relaxed/simple;
-	bh=YmUasciFTD3VpD/4siSJw5bG0HOrjO+PKhZbkV8qFZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjbyDPaNZrqBsrcgwi0oK3WwI4OhcpicuaRbXVvA/CM35ouIrP6+BIViQ+MKkMkBQptg+r70SwdYdGDaUS8tMEkX+U61z3czTAN31/pe5RSU0mGPHL5CYysu2B9KdrzXTmwZvAK04xx4sB3Zq2lPOWy/bOdtEZ9sN/jxXuWfduE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JD4uthE2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759347203; c=relaxed/simple;
+	bh=pcmTjHEZBX8fcLEcUvi2ZcYt2991FZW3Fd5xDq5NUoY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kJtNf+Gnod6Fza9m3xNWAEOgKiKF1e2Ih+sIqYKKqiAfX8VEx34fc28w8whDM1iGAwVhX4rXJnOkRqlRQNDGBNG8OP0KtCuJ7UMCrFoqbyQtGqof5+KYAIomdUpSOXNMYurov7D2d2UUi7pRW6lImSwVuBOnxEpzK+TSCwchgaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8anHiVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JD4uthE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD183C4CEF4;
-	Wed,  1 Oct 2025 13:43:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8anHiVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4531EC4CEFE
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Oct 2025 19:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759326235;
-	bh=YmUasciFTD3VpD/4siSJw5bG0HOrjO+PKhZbkV8qFZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JD4uthE2Rsh+qEXs6bIwdNbHH28S03NLE3YeLIr9LMR2OLYUtKYV9n/DL5uyZ+jw7
-	 A6al/dMkwCdpvZrNwL9k1W51fGeaxcoeZy8EZi7wex82438FEf92cYf/WYvKbTSIGb
-	 3P7KMqMWcHld7FSN1WQGX5/QB3KQFLCfoHihXZ34lZcUjnpL4ViRv7mYHn1t/+Xej/
-	 7PEtMZ7SQc3spbLwT9ARPzdQ24f401iS1uF5chparAU5Sd56Gc76ga46EZT+lXFP0f
-	 IATWexjuHSXee1lTgCifkNA3zrqgdGK2aGO9ZnqyKy8h3rDk4t9b1rYgnKwFszjDQJ
-	 MPEe5UjGia+PA==
-Date: Wed, 1 Oct 2025 14:43:48 +0100
-From: Lee Jones <lee@kernel.org>
-To: danielt@kernel.org, jingoohan1@gmail.com, neil.armstrong@linaro.org,
-	jessica.zhang@oss.qualcomm.com, deller@gmx.de,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	airlied@gmail.com, simona@ffwll.ch, fnkl.kernel@gmail.com,
-	j@jannau.net, ilpo.jarvinen@linux.intel.com, sven@kernel.org,
-	alyssa@rosenzweig.io, neal@gompa.dev,
-	support.opensource@diasemi.com, Hans de Goede <hansg@kernel.org>,
-	duje@dujemihanovic.xyz, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 00/15] backlight: Do not include <linux/fb.h>
- in header file
-Message-ID: <20251001134348.GT8757@google.com>
-References: <20250715122643.137027-1-tzimmermann@suse.de>
- <175803873238.3892705.12154571803108246655.b4-ty@kernel.org>
+	s=k20201202; t=1759347203;
+	bh=pcmTjHEZBX8fcLEcUvi2ZcYt2991FZW3Fd5xDq5NUoY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=C8anHiVLG+bRcxEBlsWnJMQ6on2YkXCWleaKNxnRg2t9zssUgk5gIVI+x7KkPiUX6
+	 A9l4Q4UNfa0+ecPvUhYliAzZnJCF+eTUHkLTeugKdLd9VDidDHpJNQGI7ZwX9qQAD5
+	 es02EqJy+6nz7Ik7VScOZ8/BuUD9i/2iWMYwAQq342iAujI5lm0oA8hH8p1HcRFSHc
+	 8FJxeQ4iCI89TmVt4jLxgzSytF/hhRnH2uydTeeqd4gEqr9GdCuz2y4WOet9zaXPIH
+	 KDwctwPBV3ApKfE4tpmVK3yzXkN/J144Rv2MQVNINf5Qrj5xtykjstP4oSn5h1HECU
+	 2lQ8mpPYxgRrQ==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-64c7c78369aso117624eaf.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Oct 2025 12:33:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkUNQmTas+7yIakirdg6dZzot/UGQa8VZl426x8PEiKOSEJ84tYzWHMZBNmKcORyL9QD7ciMHRL4QOKDzRqxTbq1kS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy03WQnqVOr7sLVaW/sLy1++qd06zuUctj2uuhyyAmgAco9o9tJ
+	LvhlXWOmD7ev8QTllUpayMlMDDWYgDrs66GJQ8LPp0PU1gZftKrxxHGcVwx+6E2SyAMl/Mh7IMr
+	u7IeG6vtHsYQk276f1fL02UA3Y2GaNN0=
+X-Google-Smtp-Source: AGHT+IGTZl9glwlZZ3zZMBlAPNdxo6duyuaFSx2GsTebbU3ia5HEgvSrVWBKJYE/hyGDJFSUuJ46DxT9ykDzZXiMBu4=
+X-Received: by 2002:a05:6820:2385:b0:63f:61c3:7e7f with SMTP id
+ 006d021491bc7-64bc0a2da77mr2168217eaf.8.1759347202443; Wed, 01 Oct 2025
+ 12:33:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <175803873238.3892705.12154571803108246655.b4-ty@kernel.org>
+References: <20250917120719.2390847-1-srosek@google.com> <20250917120719.2390847-2-srosek@google.com>
+ <CAF3aWvHStokULYuGj9rZ4v9dESTxWYtzrx5H6FDP1kdjzfbjYw@mail.gmail.com>
+In-Reply-To: <CAF3aWvHStokULYuGj9rZ4v9dESTxWYtzrx5H6FDP1kdjzfbjYw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 1 Oct 2025 21:33:11 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hCZ0FqS7ehm_Y21=q73CcOxYmYz0z-JRk2t_96HQ+TZQ@mail.gmail.com>
+X-Gm-Features: AS18NWB19ZO7VwJor5b_v9eillelUaEMgA6qNT5UWj3HIaGiJdQctMKxgUN3BnE
+Message-ID: <CAJZ5v0hCZ0FqS7ehm_Y21=q73CcOxYmYz0z-JRk2t_96HQ+TZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
+To: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	AceLan Kao <acelan.kao@canonical.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hansg@kernel.org>, Alex Hung <alexhung@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 16 Sep 2025, Lee Jones wrote:
+Hi,
 
-> On Tue, 15 Jul 2025 14:24:37 +0200, Thomas Zimmermann wrote:
-> > Remove the final dependencies on fbdev from the backlight subsystem.
-> > This is really just the include of <linux/fb.h> in backlight, but it
-> > has some fallout in other code.
-> > 
-> > Patches 1 to 14 fix all the implicit includes that come from fb.h
-> > throughout the kernel. It's all trivial, but touches various drivers.
-> > Maintainers are in CC. Patch 15 fixes the backlight header.
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [06/15] backlight: Include <linux/of.h>
->         commit: b12224c28d84d054dfb680c05cda61d1e2584bf5
-> [07/15] backlight: apple_dwi_bl: Include <linux/mod_devicetable.h>
->         commit: 945e411acde3800234d506f4304203a9b11890f8
-> [08/15] backlight: as3711_bl: Include <linux/of.h>
->         commit: 6789cd935a57464deaacdd14c84bc026aa228e72
-> [09/15] backlight: da9052_bl: Include <linux/mod_devicetable.h>
->         commit: e2e76f67bdbbc7b8df608e3dd1028059d838871e
-> [10/15] backlight: jornada720: Include <linux/io.h>
->         commit: ce4bb1a2f1cbcd5f6471f74ee5c7e1443a4cfd84
-> [11/15] backlight: ktd2801: Include <linux/mod_devicetable.h>
->         commit: 5f60004f152b432c6ae5dbacc172adc1fa215825
-> [12/15] backlight: led_bl: Include <linux/of.h>
->         commit: b38ed7c05a35f3a029c2fc5e43a94aa81e2ac843
-> [13/15] backlight: rave-sp: Include <linux/of.h> and <linux/mod_devicetable.h>
->         commit: 246da2b48e2ce973db255fc4b6faf42f73c03114
-> [14/15] backlight: rt4831: Include <linux/mod_devicetable.h>
->         commit: ba3b29a639fe5173033914db6ee58d8d9bb86aba
+Sorry for the delay.
 
-> [15/15] backlight: Do not include <linux/fb.h> in header file
->         commit: 9f218f9bb9d274b9d5d48a4c95e1b199141fc1f2
+On Tue, Sep 23, 2025 at 2:16=E2=80=AFPM S=C5=82awomir Rosek <srosek@google.=
+com> wrote:
+>
+> Hi Rafael
+>
+> On Wed, Sep 17, 2025 at 2:07=E2=80=AFPM Slawomir Rosek <srosek@google.com=
+> wrote:
+> >
+> > The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
+> > critical overheating notification. The IRQ 86 is described in the _CRS
+> > control method of INT3401 device, thus Intel SoC DTS thermal driver
+> > requires INT3401 device to be enumerated.
+> >
+> > Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
+> > macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
+> > is updated to ensure proper enumeration of INT3401 device.
+> >
+> > Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel=
+ SoC DTS thermal driver")
+> > Signed-off-by: Slawomir Rosek <srosek@google.com>
+> > ---
+> >  drivers/acpi/dptf/int340x_thermal.c | 7 +------
+> >  drivers/thermal/intel/Kconfig       | 1 +
+> >  2 files changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/in=
+t340x_thermal.c
+> > index a222df059a16..947fe50c2ef6 100644
+> > --- a/drivers/acpi/dptf/int340x_thermal.c
+> > +++ b/drivers/acpi/dptf/int340x_thermal.c
+> > @@ -11,10 +11,9 @@
+> >
+> >  #include "../internal.h"
+> >
+> > -#define INT3401_DEVICE 0X01
+> >  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
+> >         {"INT3400"},
+> > -       {"INT3401", INT3401_DEVICE},
+> > +       {"INT3401"},
+> >         {"INT3402"},
+> >         {"INT3403"},
+> >         {"INT3404"},
+> > @@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acp=
+i_device *adev,
+> >  {
+> >         if (IS_ENABLED(CONFIG_INT340X_THERMAL))
+> >                 acpi_create_platform_device(adev, NULL);
+> > -       /* Intel SoC DTS thermal driver needs INT3401 to set IRQ descri=
+ptor */
+> > -       else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
+> > -                id->driver_data =3D=3D INT3401_DEVICE)
+> > -               acpi_create_platform_device(adev, NULL);
+> >         return 1;
+> >  }
+> >
+> > diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kcon=
+fig
+> > index e0268fac7093..47950859b790 100644
+> > --- a/drivers/thermal/intel/Kconfig
+> > +++ b/drivers/thermal/intel/Kconfig
+> > @@ -45,6 +45,7 @@ config INTEL_SOC_DTS_IOSF_CORE
+> >  config INTEL_SOC_DTS_THERMAL
+> >         tristate "Intel SoCs DTS thermal driver"
+> >         depends on X86 && PCI && ACPI
+> > +       select INT340X_THERMAL
+>
+> This selection does not meet INT340X_THERMAL requirements so
+> kernel tests are failing for randomly generated i386 config
+> https://lore.kernel.org/all/202509181359.fLTuROj6-lkp@intel.com/
+> I am considering two options:
+>
+> 1) Align SoC DTS thermal driver dependencies to match INT340X.
+> Currently X86_64 and NET are missing. This is quite simple fix
+> but after that enabling a SoC DTS thermal won't be possible
+> for i386. From the other hand the driver requires ATOM Silvermont
+> https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/i=
+ntel_soc_dts_thermal.c#L39
+> which is a 64bit architecture, so I am not sure if support
+> for i386 is really required.
 
-I have removed this commit from Backlight, since it was causing too many
-issues.  Please resubmit it once the merge-window is closed.
+I wouldn't worry about this.  I'd just make SoC DTS thermal explicitly
+depend on X86_64.
 
--- 
-Lee Jones [李琼斯]
+> 2) Don't select INT340X driver (the original patch does not)
+> and use acpi_walk_namespace to enumerate INT3401 on the platform
+> bus just before intel_soc_dts_iosf_init is called
+> https://elixir.bootlin.com/linux/v6.17-rc7/source/drivers/thermal/intel/i=
+ntel_soc_dts_thermal.c#L54
+
+I'm not a big fan of using acpi_walk_namespace() for such things.
+
+Those namespace walks usually end up being quite expensive.
+
+> The code would be cleaned up later with next version of patch 5/6
+> and direct call to acpi_walk_namespace would be replaced with
+> dedicated function exported by acpi platform core. Eventually,
+> after the the last patch, there would be two drivers enumerating
+> INT3401 which shouldn't be an issue since the acpi_walk_namespace
+> uses global mutex while traversing the acpi device tree
+
+Well, this doesn't sound really straightforward.
+
+> Please let me know your comment so I can prepare the next version.
+
+I'd go for option 1).
+
+Thanks!
