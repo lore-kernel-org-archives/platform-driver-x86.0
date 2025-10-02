@@ -1,181 +1,203 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com [18.199.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE02F27B34F;
-	Thu,  2 Oct 2025 19:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BDC1C4A10;
+	Thu,  2 Oct 2025 20:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.199.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759433227; cv=none; b=NpRBpWhWpmg8CSJCF2bhuZOLTOELPleZDXR0+ERS+tYe+dv6Zdthjwd6poGAqYO93DxSNBgvXKRubEy41E2o9zdN1HYlpR7TN7kmleZTi9Ex9yY+zo7jbQVzhpQXOTj5JL5OeNRpWmlIUBFXJqFJbvUco43YpAD7SEXCdFnR2Lc=
+	t=1759438100; cv=none; b=K+GVbEpTNbkfmmKZJuUfWeqfMW+KUK3BT8VVpAti1fqFBLZZm1xnFyGyHsxzYgIXJiAEqwJxzOvY7yNIC6xLn/8f0Dm8M/kitCHBef5sOxs9OXPAtyN41pYmrqJBnKKThtG2dyyEewftW8r29C/fJdyC4Dh+qdz1IuWGnJ/BCgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759433227; c=relaxed/simple;
-	bh=kwynmBGx6WjHx+Ctsh9y8m3TCyLfdHivspaeVUInu9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V28Hfcb0dU5EOxXZoWhTA07fT0EIBAZZszLse8HI5tHsqHthoj30Q3ysj69SiHk88yLC1xvwyTyupjZJKT1ecgcEXf5OW3uJX4TifIn6j7Vby7QLUeNeht2i37QGgEsoCWj2Nr8eNXNJi4f/tz8xMu8j5iTenQoVuK23O5FMhDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kDFcxJjQ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1759438100; c=relaxed/simple;
+	bh=bviw9nxFl+Pcs5BgI3PsjE4MPxq5MTLeLBzb2MRs6wU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HI/w9BicTDimlsXKSTEtyLriS+SOLuyP832MDaEXvEEYZXrkTTxtd5Qor3jB+Hrbyvv9Z3eh5Ao6YkO3LkdIccEZS/FBS3KKwO0os7Gk2qy910gZYEWj2nhuaByvvjNDJoXN9X8q6xJkxtqsfy+2C9iM7dtSakuen3E7Yv2BjVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=q3/PqYwu; arc=none smtp.client-ip=18.199.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kDFcxJjQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1759433221; x=1760038021; i=w_armin@gmx.de;
-	bh=JpCaLjvuYrUaUDtpXtmYSrfUHCO9x7/ssEUOXgWgVhA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=kDFcxJjQHvbQXFJshoqMF/QQXvl+y5QPvsOGMoI79LWf/z55XnVwFPSxohP9E6YE
-	 HK9LERKJclnADt+gsgBwbo/BNVCMCgce/mo9X7m/IRC2lCptWSyXuyKqj+Z5xCRgd
-	 6JpP2YK7L/yKgtpRdwPUuJ6IoZyWl2SrPvc1bDY4rwpzxirg6ZvGVa8IYQtLajmJP
-	 n6tPCuOKPIrhlPVceo4Oj4FBMCifJ41G6MVYZ8/RRzKJYDiEqgWTnqcs3qJqDDnFv
-	 TYEvwTrB0dUQpYQbjiNfVoHZYTJC8xpihiF6S1B92gpbxpt97fSblbWyZ/dG+HMP8
-	 nqpRvIv2EpMmzD+NHw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([5.61.150.13]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLQxN-1umSSk2JOt-00MkLA; Thu, 02
- Oct 2025 21:27:01 +0200
-Message-ID: <6fddd622-e270-4cd7-8c36-c656e703178b@gmx.de>
-Date: Thu, 2 Oct 2025 21:26:59 +0200
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="q3/PqYwu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1759438098; x=1790974098;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M+i/1aQ96wGM9M7nei+/gyTh3TBikkVX3xpo2CVnia0=;
+  b=q3/PqYwupVqdMgi+xYFMoH6RBgn1ECDLmPbIeD9z+Avh4gVSQowjV29x
+   GeCy1dTiBY8rd31fq9Kfy7DqTGDl1vf0BbeQp4BJdUcI9rNMftKp7Zgas
+   1vg0SayZGs3xoP/Ey6f7v1G6STGSewmTi1SKAt9WKlSVP1cEe3s8xKEKU
+   21rArBqWBOl4b8CTml+mO+zfDPtMVZ5FH9vH9+YV3kCqFIkVFn1htF2WO
+   azwYO3Udm7C6MjMHMT+MYreXxtbtKClXePWqbQv/zugQZbWxBQ857QgWK
+   G+HhBZzq/fJwNKy0+PKjY/LXFvXAgRuTgq4aYn1l2ABEWXILbP5mTZPiI
+   Q==;
+X-CSE-ConnectionGUID: IhyaDtzFRjGPZrRB0Zf/EA==
+X-CSE-MsgGUID: UEvTypAIRPKTvxOhrDEKZg==
+X-IronPort-AV: E=Sophos;i="6.18,310,1751241600"; 
+   d="scan'208";a="2924446"
+Received: from ip-10-6-11-83.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.11.83])
+  by internal-fra-out-014.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 20:48:06 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [54.240.197.228:13797]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.1.121:2525] with esmtp (Farcaster)
+ id e9c967fc-a9f5-44c3-bb48-79cf233e2e24; Thu, 2 Oct 2025 20:48:06 +0000 (UTC)
+X-Farcaster-Flow-ID: e9c967fc-a9f5-44c3-bb48-79cf233e2e24
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
+ Thu, 2 Oct 2025 20:48:05 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Thu, 2 Oct 2025
+ 20:47:40 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <gregkh@linuxfoundation.org>, <jdike@addtoit.com>, <richard@nod.at>,
+	<anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>,
+	<luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>,
+	<tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <james.morse@arm.com>,
+	<rric@kernel.org>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>,
+	<jdelvare@suse.com>, <linux@roeck-us.net>, <linus.walleij@linaro.org>,
+	<dmitry.torokhov@gmail.com>, <maz@kernel.org>, <wens@csie.org>,
+	<jernej.skrabec@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>,
+	<dm-devel@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<mcoquelin.stm32@gmail.com>, <krzysztof.kozlowski@canonical.com>,
+	<malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>,
+	<dsterba@suse.com>, <jack@suse.com>, <tytso@mit.edu>,
+	<adilger.kernel@dilger.ca>, <dushistov@mail.ru>,
+	<luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>,
+	<senozhatsky@chromium.org>, <andriy.shevchenko@linux.intel.com>,
+	<linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>,
+	<akpm@linux-foundation.org>, <yoshfuji@linux-ipv6.org>, <dsahern@kernel.org>,
+	<pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>,
+	<jmaloy@redhat.com>, <ying.xue@windriver.com>, <shuah@kernel.org>,
+	<willy@infradead.org>, <farbere@amazon.com>, <sashal@kernel.org>,
+	<quic_akhilpo@quicinc.com>, <ruanjinjie@huawei.com>,
+	<David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>,
+	<amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
+	<linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-media@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>,
+	<linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>,
+	<linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <tipc-discussion@lists.sourceforge.net>,
+	<linux-kselftest@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH 00/19 5.15.y] Backport minmax.h updates from v6.17-rc7
+Date: Thu, 2 Oct 2025 20:47:14 +0000
+Message-ID: <20251002204733.35652-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] platform/x86: acer-wmi: Add fan control support
-To: Fa-Iz Faadhillah Ibrahim <faiz.faadhillah@gmail.com>, jlee@suse.com,
- basak.sb2006@gmail.com, rayanmargham4@gmail.com
-Cc: kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250923215205.326367-1-W_Armin@gmx.de>
- <6218970.lOV4Wx5bFT@cacher>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <6218970.lOV4Wx5bFT@cacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VhJR7P+LCuxuKkh00ULKYBXRI1Z7SdNzY1dLlltmhTg/pyN/Tai
- OYJSci2DwAUzEckVqtwxyrgQwpGATYYr5PTSEn7Gp/w4dwVIbEgr2SMiLcTBb4YOz1grkDw
- L8M587wiFgIMr//M9/VMUKy3re5+5T+0hWCrjCOX5UDsSMWSxOLot8QnGQZJBkPCUO0hbzv
- TOulilVg4TYn0V0hgju/Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5THdqEx1xRk=;uQBSautjYIi8+V+ReJbZC6M0i5k
- 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
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Am 29.09.25 um 04:04 schrieb Fa-Iz Faadhillah Ibrahim:
+This series backports 19 patches to update minmax.h in the 5.15.y branch,
+aligning it with v6.17-rc7.
 
-> On Wednesday, September 24, 2025 4:52=E2=80=AFAM Armin Wolf wrote:
->> This patch series aims to add fan control support to the acer-wmi
->> driver. The patches are compile-tested only and need to be tested
->> on real hardware to verify that they actually work.
->>
->> I CCed three users who requested support for this feature. I would be
->> very happy if one of you could test those patches and report back.
->>
->> Changes since v1:
->> - remove unnecessary blank line
->>
->> Changes since RFC v2:
->> - improve error handling when setting fan behavior
->> - Add Reviewed-by tags
->> - whitelist PHN16-72
->>
->> Changes since RFC v1:
->> - remove duplicate include and replace hwmon_pwm_mode with
->>    hwmon_pwm_enable in second patch
->>
->> Armin Wolf (4):
->>    platform/x86: acer-wmi: Fix setting of fan behavior
->>    platform/x86: acer-wmi: Add fan control support
->>    platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
->>    platform/x86: acer-wmi: Add support for PHN16-72
->>
->>   drivers/platform/x86/acer-wmi.c | 308 +++++++++++++++++++++++++++++--=
--
->>   1 file changed, 283 insertions(+), 25 deletions(-)
-> Hi,
->
-> I've tested your patch on my PHN16-72, Fan control works just fine, and =
-it does
-> detect my laptop properly.
->
-> Thanks,
-> Fa-Iz Faadhillah Ibrahim
->
-Thank you, i will send a improved patch series in the coming days. I would=
- be
-very happy if you cloud test those too.
+The ultimate goal is to synchronize all longterm branches so that they
+include the full set of minmax.h changes (6.12.y and 6.6.y were already
+backported by me and are now aligned, 6.1.y is in progress).
 
-Thanks,
-Armin Wolf
+The key motivation is to bring in commit d03eba99f5bf ("minmax: allow
+min()/max()/clamp() if the arguments have the same signedness"), which
+is missing in kernel 5.10.y.
+
+In mainline, this change enables min()/max()/clamp() to accept mixed 
+argument types, provided both have the same signedness. Without it,
+backported patches that use these forms may trigger compiler warnings,
+which escalate to build failures when -Werror is enabled.
+
+Andy Shevchenko (1):
+  minmax: deduplicate __unconst_integer_typeof()
+
+David Laight (8):
+  minmax: fix indentation of __cmp_once() and __clamp_once()
+  minmax.h: add whitespace around operators and after commas
+  minmax.h: update some comments
+  minmax.h: reduce the #define expansion of min(), max() and clamp()
+  minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
+  minmax.h: move all the clamp() definitions after the min/max() ones
+  minmax.h: simplify the variants of clamp()
+  minmax.h: remove some #defines that are only expanded once
+
+Herve Codina (1):
+  minmax: Introduce {min,max}_array()
+
+Linus Torvalds (8):
+  minmax: avoid overly complicated constant expressions in VM code
+  minmax: make generic MIN() and MAX() macros available everywhere
+  minmax: add a few more MIN_T/MAX_T users
+  minmax: simplify and clarify min_t()/max_t() implementation
+  minmax: simplify min()/max()/clamp() implementation
+  minmax: don't use max() in situations that want a C constant
+    expression
+  minmax: improve macro expansion and type checking
+  minmax: fix up min3() and max3() too
+
+Matthew Wilcox (Oracle) (1):
+  minmax: add in_range() macro
+
+ arch/arm/mm/pageattr.c                        |   6 +-
+ arch/um/drivers/mconsole_user.c               |   2 +
+ arch/x86/mm/pgtable.c                         |   2 +-
+ drivers/edac/sb_edac.c                        |   4 +-
+ drivers/edac/skx_common.h                     |   1 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
+ .../drm/amd/display/modules/hdcp/hdcp_ddc.c   |   2 +
+ .../drm/amd/pm/powerplay/hwmgr/ppevvmath.h    |  14 +-
+ .../amd/pm/swsmu/smu11/sienna_cichlid_ppt.c   |   2 +
+ .../drm/arm/display/include/malidp_utils.h    |   2 +-
+ .../display/komeda/komeda_pipeline_state.c    |  24 +-
+ drivers/gpu/drm/drm_color_mgmt.c              |   2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |   6 -
+ drivers/gpu/drm/radeon/evergreen_cs.c         |   2 +
+ drivers/hwmon/adt7475.c                       |  24 +-
+ drivers/input/touchscreen/cyttsp4_core.c      |   2 +-
+ drivers/irqchip/irq-sun6i-r.c                 |   2 +-
+ drivers/md/dm-integrity.c                     |   4 +-
+ drivers/media/dvb-frontends/stv0367_priv.h    |   3 +
+ .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   |  18 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +-
+ drivers/net/fjes/fjes_main.c                  |   4 +-
+ drivers/nfc/pn544/i2c.c                       |   2 -
+ drivers/platform/x86/sony-laptop.c            |   1 -
+ drivers/scsi/isci/init.c                      |   6 +-
+ .../pci/hive_isp_css_include/math_support.h   |   5 -
+ drivers/virt/acrn/ioreq.c                     |   4 +-
+ fs/btrfs/misc.h                               |   2 -
+ fs/btrfs/tree-checker.c                       |   2 +-
+ fs/ext2/balloc.c                              |   2 -
+ fs/ext4/ext4.h                                |   2 -
+ fs/ufs/util.h                                 |   6 -
+ include/linux/compiler.h                      |   9 +
+ include/linux/minmax.h                        | 264 +++++++++++++-----
+ kernel/trace/preemptirq_delay_test.c          |   2 -
+ lib/btree.c                                   |   1 -
+ lib/decompress_unlzma.c                       |   2 +
+ lib/logic_pio.c                               |   3 -
+ lib/vsprintf.c                                |   2 +-
+ lib/zstd/zstd_internal.h                      |   2 -
+ mm/zsmalloc.c                                 |   1 -
+ net/ipv4/proc.c                               |   2 +-
+ net/ipv6/proc.c                               |   2 +-
+ net/netfilter/nf_nat_core.c                   |   6 +-
+ net/tipc/core.h                               |   2 +-
+ net/tipc/link.c                               |  10 +-
+ tools/testing/selftests/vm/mremap_test.c      |   2 +
+ 47 files changed, 289 insertions(+), 183 deletions(-)
+
+-- 
+2.47.3
 
