@@ -1,55 +1,55 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B7626F2BF
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Oct 2025 11:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4CF2D8362
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Oct 2025 11:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759404851; cv=none; b=s/CvGdc1XX+EaqSg/nEQTSBpegHXvzTGLni+ou54U0GjbJZJVI2GQYBNwQcEmaPPtIu3joRyssUQUi6jmDBXEFFJ5u+Glic6u3ICebew6PzyA37rkbD14nOWy8CA4RurymacM+RNdvEWayDzKkVdhPb/19qIrU6vJg5o2JEV3BE=
+	t=1759404853; cv=none; b=FncQXLxvvOK/bzMjazfhHvu3gKN/WEWXOXSLbJ9TcoPxYTPGVwXe1BKLRvMOpXQr0tnFfxpp6KYsyQ+Fs08TvZES1YxclernjBTNuXT1utQ6aQ6tj/gidzlxEv34TNlfVsiHt1KZPSlrGefZb6Lu7pLLXczjwzqfZFofKRoSCtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759404851; c=relaxed/simple;
-	bh=OSzoS5rtTLi/B+hMV5Q0JgIBDtwwSwS8cCrabNTJlVo=;
+	s=arc-20240116; t=1759404853; c=relaxed/simple;
+	bh=jfsm2ihec0Ij6D1XgluxMV8iWwWlkJpjGypCPVRhAc4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HErsCpNIOVi3EsT6VpB/WZfGe47ahMbC+D46+PZJj738GaaTrk7quOInl7fbr3N2XdeLVvKYpl4q3o4BYjP5SE1lbUsoNcRtC+OKkEcX9Ezca4MxpuTrTv6iXWCW+fUCnyGTJtJixyNEdT02HUYZ+5lpa2hjvlNu1f3HxjBGbUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hLlJpLf1; arc=none smtp.client-ip=209.85.208.74
+	 To:Cc:Content-Type; b=eoc7+2n1l26vmDLMZ04ssoEtgG1b5CTAvAWOKx+7Mpe2k37g1S5mY09IJC7eG6sSQ1wU3PRjDmR7EUN1vBnuGlwvCve5VQYnnrFY+76rQJ1zRf2uaaxgymTrKr2MRlCcHtFGiaDfAwsMTxIaKWlP2NwVPj3oukgXRz837m7vEvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zfIP2mpK; arc=none smtp.client-ip=209.85.218.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--srosek.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hLlJpLf1"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-62fd1b03d74so1088339a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Oct 2025 04:34:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zfIP2mpK"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-b4635c413a7so79232966b.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Oct 2025 04:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759404847; x=1760009647; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759404850; x=1760009650; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kt82+dwcyqqy/z3wY/WnDR+0tOJqjHYe0Y3q58yXyz0=;
-        b=hLlJpLf1LBpyxi1QHdOwLXUB0LjIP5F3rOJbd4A+jwmBoL1PdHLmRBg0BYOmbykquh
-         uGDNak7CUUS1dToS5LW3PU+iNWM+twOgH7ITW6xH/AgD3qmgph8H5Gfz+WEK8dHcsECc
-         YHElEXWihUiBuPeeZQNm8CfkYMvQMzHL4bSWp6wMWMSI1Y3FgfSSQuiIRlyGFQ6lwARA
-         2v4CnCkFuDAnls5n7ehtNmB0x6XRmi+k0zHRcaWRh0ushvU6fbHdCTOLllSbbEYI3QlO
-         JF9tURnRyghVZefw6o97C4EWewyAEoQr7JphNoS5x2mohNwwdUsmx68k150O+gOenYnS
-         c8kg==
+        bh=nsF74hIKs6vv4bMpoGjNhgbv1OkZNlvSZ0wfNAU9kvo=;
+        b=zfIP2mpK2sWVGEV82fHhUhvz34cNDeXGN4XUjXTpCyMcvCI/k5TH9GVma8pEhsd+Dp
+         /0/heT8RNHbnpC6grX5LzrI9ni1qgBOrSHdq9L6VWf2iHsyz14/irHY9Fq7nij4kTMgD
+         FgM/u4iitWrdyyyUbduxbr69buo2MIFHME0/KZ05SKxSVfihLNsf9mPZUAWr+0IhvmMh
+         7whvpBd6rKEcCHgqXlIlyivZbinew4N4rKLGUK43Eboae8iMF7JX5ks8lE9GxxtH3J/S
+         ahvuMDmLxR4jrrcYb15WHyrSxaJubD+67T+32lq0c9jnZIudrIjhKcHsGN5cxJmT5a1o
+         EnVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759404847; x=1760009647;
+        d=1e100.net; s=20230601; t=1759404850; x=1760009650;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kt82+dwcyqqy/z3wY/WnDR+0tOJqjHYe0Y3q58yXyz0=;
-        b=j9vJt1MiKTjf0lrhgvIVYOZ+zj822xMbaEuOtmahP+wmhmLkVBFqto71acR1/Hrn96
-         TeIWngv3mvoBYMlRdiyms2eSpINybt+7OACUxEnSQj2ryLIVTw/aBBDCxjpKej1ZzjJm
-         /u5Ht3COp9lKUmBEPQ6/iMRo7c/z9fDrGLsaqIESV0EexfCxUfd/T5F1AKRRoPO7+qRV
-         rME1uOXGb4kVI0yfOffkmldZaSGs/+CyTbqCW3qKvPn2u40hrRWZqW1T21LbTthZ5Cjn
-         txbHCbUVv5R/3c1iupdZNTwodCjNBqqqmpp3+ywQc35z2ikExumsC7Xf3cDQILX4S1Bt
-         te3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWGCIFj5K8nIofmroux8+Yn+SgfPUWMjV0PsEfOvAp/I70gM9GquJrCh6DwsHFSty2mjTmT8OTysjLoYBTomMH3AksB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIoezf8A1YKIMQmRnWUqjTJAr6ft1h2hk/0/lnWShEAV5a8g+Y
-	9TtyOo2YluOJ9bvKCWmeWisXOVvydB78EkTQ5dtecJojE3v6U4OmZJEVzpTRs3sNvX6fhHa6f0A
-	15nEDJw==
-X-Google-Smtp-Source: AGHT+IE+4068072UB8enIKGqreBK+V8kMqDIEgu9uXCRHP5CJrH3i0Dac1P6YuynTCl4M7Vi7LVvL4CfTWc=
-X-Received: from edsf20.prod.google.com ([2002:aa7:d854:0:b0:62f:c143:5d77])
- (user=srosek job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:c60c:0:b0:634:bc7b:440e
- with SMTP id 4fb4d7f45d1cf-63678c9f531mr6099293a12.36.1759404847361; Thu, 02
- Oct 2025 04:34:07 -0700 (PDT)
-Date: Thu,  2 Oct 2025 11:33:59 +0000
+        bh=nsF74hIKs6vv4bMpoGjNhgbv1OkZNlvSZ0wfNAU9kvo=;
+        b=b+URAkgrjPujhmQZDMe+AGkY+U17NMtxPKK/AWpgShaMzFOHVRuBU4Yil4qukywT1P
+         nHNL0SlUUgYEDdXFSNRWCuhHXj1SC9g2ksO7MEyp1PmrX1vGcc4qHi6t2HdpiI/ak9Tg
+         M/F5pNHdXIB+3gHCq4F6Fz++KdCPPlS2xDHCUL8tAvW078BJsFQPBp2oIco5Gt14//8e
+         cwty3+gT0P33TxywstHwQZatRaJJUK3c7v13BB6jUqVmqaZQWkNEo2GMTiMskO6TJZUY
+         ZBGMgnzxQsyihgKnTLIMlsNRzQZtcaY9BP07ZI0FCUu+N1HDHwe18OO8s/ULpUNQqvrr
+         LPpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAXrULvsmjFzdJnF3bGhCJ26qPTlb8lYGf4/JUjOkQ7h8jZSqiMk+95rRS92U+xZNPX8yF3EtSbc9hDjJd/4axcmK6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ+dS5Ka0BmF6HlKHXDY5ExsGANCBoa3maNYZAGz9atoCTWWv+
+	E6wV8ilH4aV1UZTAlV+5fTnieKTQ6TMLtkhOs3GwR5N686EtYKyQO7vLkqijeQ9O0aY2Qye0E/q
+	1M7s0nQ==
+X-Google-Smtp-Source: AGHT+IHCAit/8YQcXIsfYzBnBeg8HNIVckd9DveCqqDF2kk0znWLWbMaqekiVc5odCp6J9aT9G9xhrXUKSA=
+X-Received: from ejcqa31.prod.google.com ([2002:a17:907:869f:b0:b3b:66f0:451b])
+ (user=srosek job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:2683:b0:b3c:a161:684c
+ with SMTP id a640c23a62f3a-b46e4b8f4d0mr817414866b.2.1759404849866; Thu, 02
+ Oct 2025 04:34:09 -0700 (PDT)
+Date: Thu,  2 Oct 2025 11:34:01 +0000
 In-Reply-To: <20251002113404.3117429-1-srosek@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251002113404.3117429-1-srosek@google.com>
 X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251002113404.3117429-2-srosek@google.com>
-Subject: [PATCH v3 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
+Message-ID: <20251002113404.3117429-4-srosek@google.com>
+Subject: [PATCH v3 3/6] ACPI: DPTF: Move PCH FIVR device IDs to header
 From: Slawomir Rosek <srosek@google.com>
 To: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
 	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
@@ -73,63 +73,81 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.
 	Slawomir Rosek <srosek@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
-critical overheating notification. The IRQ 86 is described in the _CRS
-control method of INT3401 device, thus Intel SoC DTS thermal driver
-requires INT3401 device to be enumerated.
+The ACPI PCH FIVR device IDs are shared between the DPTF core
+and PCH FIVR driver, thus they are moved to the common header.
 
-Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
-macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
-is updated to ensure proper enumeration of INT3401 device.
-
-Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel SoC DTS thermal driver")
 Signed-off-by: Slawomir Rosek <srosek@google.com>
 ---
+ drivers/acpi/dptf/dptf_pch_fivr.c   | 8 ++------
  drivers/acpi/dptf/int340x_thermal.c | 7 +------
- drivers/thermal/intel/Kconfig       | 3 ++-
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/acpi/int340x_thermal.h      | 8 ++++++++
+ 3 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
-index a222df059a16..947fe50c2ef6 100644
---- a/drivers/acpi/dptf/int340x_thermal.c
-+++ b/drivers/acpi/dptf/int340x_thermal.c
-@@ -11,10 +11,9 @@
+diff --git a/drivers/acpi/dptf/dptf_pch_fivr.c b/drivers/acpi/dptf/dptf_pch_fivr.c
+index 952216c67d58..cb81636a5d63 100644
+--- a/drivers/acpi/dptf/dptf_pch_fivr.c
++++ b/drivers/acpi/dptf/dptf_pch_fivr.c
+@@ -8,6 +8,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include "../int340x_thermal.h"
  
- #include "../internal.h"
- 
--#define INT3401_DEVICE 0X01
- static const struct acpi_device_id int340x_thermal_device_ids[] = {
- 	{"INT3400"},
--	{"INT3401", INT3401_DEVICE},
-+	{"INT3401"},
- 	{"INT3402"},
- 	{"INT3403"},
- 	{"INT3404"},
-@@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acpi_device *adev,
- {
- 	if (IS_ENABLED(CONFIG_INT340X_THERMAL))
- 		acpi_create_platform_device(adev, NULL);
--	/* Intel SoC DTS thermal driver needs INT3401 to set IRQ descriptor */
--	else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
--		 id->driver_data == INT3401_DEVICE)
--		acpi_create_platform_device(adev, NULL);
- 	return 1;
+ struct pch_fivr_resp {
+ 	u64 status;
+@@ -147,12 +148,7 @@ static void pch_fivr_remove(struct platform_device *pdev)
  }
  
-diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfig
-index e0268fac7093..f9e275538e29 100644
---- a/drivers/thermal/intel/Kconfig
-+++ b/drivers/thermal/intel/Kconfig
-@@ -44,7 +44,8 @@ config INTEL_SOC_DTS_IOSF_CORE
+ static const struct acpi_device_id pch_fivr_device_ids[] = {
+-	{"INTC1045", 0},
+-	{"INTC1049", 0},
+-	{"INTC1064", 0},
+-	{"INTC106B", 0},
+-	{"INTC10A3", 0},
+-	{"INTC10D7", 0},
++	ACPI_PCH_FIVR_DEVICE_IDS,
+ 	{"", 0},
+ };
+ MODULE_DEVICE_TABLE(acpi, pch_fivr_device_ids);
+diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int340x_thermal.c
+index 43afb6141b98..26522ddfcbaa 100644
+--- a/drivers/acpi/dptf/int340x_thermal.c
++++ b/drivers/acpi/dptf/int340x_thermal.c
+@@ -20,16 +20,11 @@ static const struct acpi_device_id int340x_thermal_device_ids[] = {
+ 	ACPI_INT3404_DEVICE_IDS,
+ 	ACPI_INT3406_DEVICE_IDS,
+ 	ACPI_INT3407_DEVICE_IDS,
++	ACPI_PCH_FIVR_DEVICE_IDS,
+ 	{"INT3408"},
+ 	{"INT3409"},
+ 	{"INT340A"},
+ 	{"INT340B"},
+-	{"INTC1045"},
+-	{"INTC1049"},
+-	{"INTC1064"},
+-	{"INTC106B"},
+-	{"INTC10A3"},
+-	{"INTC10D7"},
+ 	{"INTC10FF"},
+ 	{"INTC1102"},
+ 	{""},
+diff --git a/drivers/acpi/int340x_thermal.h b/drivers/acpi/int340x_thermal.h
+index 854e4d3bb739..dee53c444a32 100644
+--- a/drivers/acpi/int340x_thermal.h
++++ b/drivers/acpi/int340x_thermal.h
+@@ -65,4 +65,12 @@
+ 	{"INTC1100"},	\
+ 	{"INTC1101"}
  
- config INTEL_SOC_DTS_THERMAL
- 	tristate "Intel SoCs DTS thermal driver"
--	depends on X86 && PCI && ACPI
-+	depends on X86_64 && PCI && ACPI
-+	select INT340X_THERMAL
- 	select INTEL_SOC_DTS_IOSF_CORE
- 	help
- 	  Enable this to register Intel SoCs (e.g. Bay Trail) platform digital
++#define ACPI_PCH_FIVR_DEVICE_IDS	\
++	{"INTC1045"},	\
++	{"INTC1049"},	\
++	{"INTC1064"},	\
++	{"INTC106B"},	\
++	{"INTC10A3"},	\
++	{"INTC10D7"}
++
+ #endif
 -- 
 2.51.0.618.g983fd99d29-goog
 
