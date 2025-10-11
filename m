@@ -1,64 +1,64 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9922259B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Oct 2025 06:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988FD22156F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Oct 2025 06:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760164744; cv=none; b=WpH3ZFFF5GctG8mx/lTedSbNZO9I/j9gfK8RCRf2UrcK8e8BV7q6dYkDo14EyNXZwi1aTOAkhoys32486FytaDOCl85r/SrW5YHuE2jlMtmtY6qNQ6M+cVcuJ67v/OkQDVc4cfN9yhKJGC/zR6J10M/jK7TsYLwPKsc8Ubs18BY=
+	t=1760164747; cv=none; b=lfCaAwiw/PW1M7CaP/EhUzOYobj9WxyrOiPALFdM6kSO8J0RnLA/+KkxHapPAg0ZEI82KeiIadFXEN8DMdDoKa/nmNLDPQfQujubvmgXra9JEPJXQWzAD7LR0TFNMUMB8JNDiqIgAslbdzbzDCiutdX5B2aGet26sdeRFZa/0Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760164744; c=relaxed/simple;
-	bh=g+jmgjmrR4/YskSIPfMmE2GQi0643yZ1iVOqd15YojA=;
+	s=arc-20240116; t=1760164747; c=relaxed/simple;
+	bh=7arbrLemIr4ew2lWcbkmCuP17rRxN8N6CQQQW1PRSjg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S023yO1hzyZHMAvG6ONNL1ovEiwFbYzouf7jkwTDXjjoJsHesDbXPgdvweRrOmhUl3Vev7LeuRygS3ShSHoK0dGEKE18QYFsjhLJkyBGa9Fch0NtdjTE536QZjTrJ0JQ4qHs1u7sljNoFIpxwQ9xYJ+q2zbNhm/s5UKJ8Bb5Nxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft0tDwcy; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=QzCfhpprkoIKWA1zhlOt0875bm8zVH/LBpD+HvRTvHTebzqXjGJVSVRqipvj54cEX+JByajNX5jzXoOsFCLZCl2fDxmQbYbiEhsOfGeuhKFZExOh+Jjsn7b26lctjER4UJbbPu9SfAH5TxKfrY/AXap72Ltf75bPFK6k+ka2mv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wr4tG4nA; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft0tDwcy"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2681660d604so32119825ad.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Oct 2025 23:39:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr4tG4nA"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2698e4795ebso27165385ad.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Oct 2025 23:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760164742; x=1760769542; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760164745; x=1760769545; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=shA8rePJ19wVlfjQPju/k0dhMI8bALDCoGiOWjrRyo0=;
-        b=Ft0tDwcyQEFH5MP3p/bwbjW6tCR2ChKkxtiqgcrCNot+RrY8fgSo6C+KCDqCZESjqO
-         Ac8a52rhgZRO+6XU99CsHEZhHZcE/d4LZQJ7nY5BY1rmjGMqmsD0WCxaSVrR588eyB7i
-         ildADbIdRZU+23aonjY8nVRsksH3kglvBB46bbZd3tJFBIjH6GRfM2bqiRgBaVmk9TXW
-         v3jHNgnJb1QNK4FMFrt8Fa8Vh+24zZPShbxpr/uesRxm9CMPLbod1BN5gkqIYeMRosjO
-         sZqyaxWAq1Fzbp8LxHeUjdqyLcIGw07ZfWQeQ+qJNMKi/44ddsjV/Vcrbg4CLY+92n+7
-         qV8w==
+        bh=7RbdqxG92yzrMeciIeTBUuJ1kqttBeIBmVGrFI+VCiw=;
+        b=Wr4tG4nA8x+LeW0waMuaUpTRBdMPeAEFGGYqq2ZzBRu9VjqKjuJNwgFcz2GgbHQDgA
+         GzfdXP+JBFhcxdCo/0fhQ/HdIDb46szAl84qkOce4BVO9rKB13mxNl6BonQQjD3h16nY
+         UAuoJwIUIDrZwFcBmlk32+fi7crCHvCqzwYNERi80wC4AjfHQof2fn7Y0LQGYdaAeMok
+         xq1e1uGBqofC80zty71CTggdxgdESFs7dl7XdoGFNsrp5X7oAEkZGz6k2475JFVHwjyB
+         JmaUcmcI4EolgdIWYufgFesk0VLeDxkS5L5lPRpEIPgEjkusZH0ZX6+bWBUUOLVPVb/y
+         wS8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760164742; x=1760769542;
+        d=1e100.net; s=20230601; t=1760164745; x=1760769545;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=shA8rePJ19wVlfjQPju/k0dhMI8bALDCoGiOWjrRyo0=;
-        b=hwLYUMX9A28fjsvDGmVobIP67XL3LzHEewRJ/XAH1qNSraN36RjCs7o1VjpFI7EGo+
-         VN/iy1pau5te3vK7uVcR7t1qPbfuU7677l/Z+OXoUPSHi2ooOhlIiUsCPii+Zt+H9+Kz
-         U9podkk2LU2s0SLuREXzgf/nwV7AyzWN9O3diqY8Gg16KjN7B9Ha+yX5KYIz1+Cx32No
-         +qxTZyH1iFypZw3t+q1oy6+wobxfnN1g/+xIGFm3zl49Xac94Pi5O49OZ9TVL0y2U9nN
-         QacXxtWBufdysfinehuC/hUdoy/527AlQM4ssOsQQgnWtnj/eDZ551kb6VOvWI762NxS
-         0PHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmG8hh5YSKYqBbxVSEECRBGom6DRuThtOnF8pgYhjM0iLDwD09Tc8ZY2jwdKPNp5iKdX3vtjiA3kLKISksl/S6X6Sb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDW0p+IWronpaV8tXb2NOm07JgrxdOTLBGDuPqxX5/proc/mhX
-	wWPMwT+nPYTFVH5MLkbLwI6zkbQykVfk2z2bnkdT3ZdawjLO5sY+ib34
-X-Gm-Gg: ASbGncueOFAVnoS83wvL4/vwNZXeLGXvFTkGzkYON3Y/hsO92ELGzxGwFMA2v4akY61
-	wBfUL2CD1Lk22EkCPF/AXYXKrfJTO1vnhF2GTVHgD0OGEpNBXeVoeT3cEHq/K/IGe0tKDlQbxro
-	m+lM+X7Wjn19cR5YzFYXqQ3I/ge20Ef2B394JgfGKxy7EGCdYk9ta8lVNx3wr1eYIc2VrlNVbxN
-	xkBk+sA52oeidLxlwJlUGj8Y1qOaCqA9jKUpWBfoY/aLEeZljokf8xgH5fTAPgK6lQiCN0++LhP
-	xSuAulOEraX0PACQxwmgdquibmbqDoATZf+OngYemkh6eicufLVVU0uRwmOo4kCm931n7USzbHb
-	hY7KgfOORhSKSZ+9hr2caDZBHFQX1n1C/fJWjQz5NfU21L223/2CK0oXMWWKZW/flmpbRi7K31b
-	nMENSB8w==
-X-Google-Smtp-Source: AGHT+IG/jpwa1wPZmeP/lKNRuLiyl56EQ08bY9BGkYBnOH/Qya4CL3BuCNt+6P0B7CVbFnypfO2IcA==
-X-Received: by 2002:a17:902:fc4f:b0:280:fe18:8479 with SMTP id d9443c01a7336-290272e0ac5mr167833545ad.51.1760164741832;
-        Fri, 10 Oct 2025 23:39:01 -0700 (PDT)
+        bh=7RbdqxG92yzrMeciIeTBUuJ1kqttBeIBmVGrFI+VCiw=;
+        b=Cz/72hxRdKZbVGylMxm/6FHMueZH66QV4dpsCBJFcxjrovSw9x+UlED5RpAOD/NDl/
+         HMmhMdBsB9NDNIqO2K0k2zXYmBqRg/R5EQoHM71AZkocAMgseVMD2YDz7oHNoCFnPhBu
+         bgsJfczPcl72CqK2UL0o7wtGTTXIra2d9MFzROGHfJS8cddfI3JfsUQUrZPFXH/D7ccK
+         WqvHATXR9Sc4c7/glpf/Cy20xZczNYpI5LSlfWtJPVzO2mb+zM2yjtkj9YiaXjAcBZIx
+         +522+kan/gqAETAsG9XR5Fv+HCq+h4SgWhj1RiOSqshOqtdMjZRXNG8lD/idAe2GSkNk
+         JIrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCOhRqPMYbQX8jHsBoN/a1EvcMWvAKJMMiI3quXbEMOsB4pktj5S11Dzsgl92R/RezgA8sSSIk5HFQiADZdsibB8eZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMr2z4Z0WByCfMtU+6h+VZXizaTm1n10EGucDR9X/UFM+GMqJA
+	UzCpDXXs2EuXoK+4pkR9P2AOBDLd6k4w//lZjboIkS8EnAt0z5iSBgNd
+X-Gm-Gg: ASbGncurb+s3n6oc6ZwD7S7ePTeypF3oaoFvGfE1IXswArwUTNK0EcjuEwyQriLTEn4
+	O8otGEg9nwUIp4ghHs8uVGWeKcC7dSFkxGj4iCvdZ6u/g6vbl/9MsxaSpR76bAS3LEEne5slK3u
+	uI8jknQ91c447qcfmKB7htOdHUYAy797PmDaYgSqx+A02/vOZbrm9qPISPob7eHGtEbmTo8NjBW
+	9Vhz9U4lmQm8nmy9/qTZWCGnqmaWgRBuFMXxOo6wQmcZJKykAW6M3dhegkAlrqrSAcVDr8rCROR
+	SMx+Niit2bA8jG3e+Ii9Q2hBie0jUEbhZOgEOaGqSSnDyDVGuX+BMX+2NaF3AsHJOQ12M7OBLTI
+	eFrEonvoqQleyYFCsxRDZ2c/fsvvpmD99ATn5cg3po+5lxxHylhOI/f9fiTEIUM9hdhWdjp6bFZ
+	S/ejy2kw==
+X-Google-Smtp-Source: AGHT+IHB76D4GU47IgQDKRqpfK4084Sk1yZhLn2sQmzeSgViYiqrqYFWTIaGUTUGieei/ytOtwgbFg==
+X-Received: by 2002:a17:902:e94e:b0:279:daa1:6780 with SMTP id d9443c01a7336-2902741cf99mr193290735ad.52.1760164744934;
+        Fri, 10 Oct 2025 23:39:04 -0700 (PDT)
 Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f362efsm75647005ad.89.2025.10.10.23.39.00
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f362efsm75647005ad.89.2025.10.10.23.39.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Oct 2025 23:39:01 -0700 (PDT)
+        Fri, 10 Oct 2025 23:39:04 -0700 (PDT)
 From: Kuan-Wei Chiu <visitorckw@gmail.com>
 To: mario.limonciello@amd.com
 Cc: perry.yuan@amd.com,
@@ -68,9 +68,9 @@ Cc: perry.yuan@amd.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH 1/2] platform/x86/amd: hfi: Remove unused cpumask from cpuinfo struct
-Date: Sat, 11 Oct 2025 14:38:36 +0800
-Message-Id: <20251011063837.2318535-2-visitorckw@gmail.com>
+Subject: [PATCH 2/2] platform/x86/amd: hfi: Remove redundant assignment to .owner
+Date: Sat, 11 Oct 2025 14:38:37 +0800
+Message-Id: <20251011063837.2318535-3-visitorckw@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251011063837.2318535-1-visitorckw@gmail.com>
 References: <20251011063837.2318535-1-visitorckw@gmail.com>
@@ -82,73 +82,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cpus field within the struct amd_hfi_cpuinfo was allocated and set
-in the amd_hfi_online() CPU hotplug callback, and subsequently freed in
-the amd_hfi_offline() callback.
+The coccicheck tool reports the following warning for this driver:
 
-However, after being initialized, this cpumask was never read or used
-for any purpose within the driver. It represents dead code that serves
-no functional role.
+./hfi.c:509:3-8: No need to set .owner here. The core will do it.
 
-This change has no impact on the driver's functionality as the removed
-code was entirely superfluous.
+The manual assignment of .owner = THIS_MODULE; in the platform_driver
+struct is redundant. The platform_driver_register() function, which is
+called to register the driver, is a macro that automatically sets the
+driver's owner to THIS_MODULE.
+
+The driver core handles this assignment internally, making the explicit
+initialization in the struct definition unnecessary. Remove the
+unnecessary line.
 
 Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
 Build test only.
 
- drivers/platform/x86/amd/hfi/hfi.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/platform/x86/amd/hfi/hfi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index a465ac6f607e..5d5d2cf23a75 100644
+index 5d5d2cf23a75..83863a5e0fbc 100644
 --- a/drivers/platform/x86/amd/hfi/hfi.c
 +++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -12,7 +12,6 @@
- 
- #include <linux/acpi.h>
- #include <linux/cpu.h>
--#include <linux/cpumask.h>
- #include <linux/debugfs.h>
- #include <linux/gfp.h>
- #include <linux/init.h>
-@@ -95,7 +94,6 @@ struct amd_hfi_classes {
-  * struct amd_hfi_cpuinfo - HFI workload class info per CPU
-  * @cpu:		CPU index
-  * @apic_id:		APIC id of the current CPU
-- * @cpus:		mask of CPUs associated with amd_hfi_cpuinfo
-  * @class_index:	workload class ID index
-  * @nr_class:		max number of workload class supported
-  * @ipcc_scores:	ipcc scores for each class
-@@ -106,7 +104,6 @@ struct amd_hfi_classes {
- struct amd_hfi_cpuinfo {
- 	int		cpu;
- 	u32		apic_id;
--	cpumask_var_t	cpus;
- 	s16		class_index;
- 	u8		nr_class;
- 	int		*ipcc_scores;
-@@ -295,11 +292,6 @@ static int amd_hfi_online(unsigned int cpu)
- 
- 	guard(mutex)(&hfi_cpuinfo_lock);
- 
--	if (!zalloc_cpumask_var(&hfi_info->cpus, GFP_KERNEL))
--		return -ENOMEM;
--
--	cpumask_set_cpu(cpu, hfi_info->cpus);
--
- 	ret = amd_hfi_set_state(cpu, true);
- 	if (ret)
- 		pr_err("WCT enable failed for CPU %u\n", cpu);
-@@ -329,8 +321,6 @@ static int amd_hfi_offline(unsigned int cpu)
- 	if (ret)
- 		pr_err("WCT disable failed for CPU %u\n", cpu);
- 
--	free_cpumask_var(hfi_info->cpus);
--
- 	return ret;
- }
- 
+@@ -505,7 +505,6 @@ static int amd_hfi_probe(struct platform_device *pdev)
+ static struct platform_driver amd_hfi_driver = {
+ 	.driver = {
+ 		.name = AMD_HFI_DRIVER,
+-		.owner = THIS_MODULE,
+ 		.pm = &amd_hfi_pm_ops,
+ 		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
+ 	},
 -- 
 2.34.1
 
