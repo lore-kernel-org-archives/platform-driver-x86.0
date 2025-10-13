@@ -1,64 +1,64 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689BA2FB991
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 22:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA08E258ED9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 22:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760394384; cv=none; b=BPfuh4ecHl0DqDdHkreicFKedlScP2rq0ac1pRLLkyJshubgdZBcQDXKYvOW4SJ32Gi+m0+Z53kHw1edpqvfEFmkfhonL0E5V8BwVVFSOEkP/BLBrAquE9BUxhDcIfrmSEF1OEi/kETCpKMLMURP/KZzA6+Vlh8G5QZCQFQLPxE=
+	t=1760395864; cv=none; b=FLV+kQUcZQxlaNAsRceNRIFoLtTq8uuXgH1CVrlOnqfebmlN0bhHcsOlvEPlfQPJA+qwlvrjV/v30n59zWysZ0j5ssrpNlyrWcGxHrFIShXcyZjpjaNp2WRF4nRa9OYH/Xg/wgoBPeR7p3EYN7yXLCuaO9ezkymPzwoB66w/LTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760394384; c=relaxed/simple;
-	bh=PkgHu5j/+WZC8dxxMvvQgGA0OUwb3WA2z17XJVpa4xs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dxSLdBlCFdm6dPgGHRHNjZguGOC6L0zN9M8c64w7jtqOfUw95LtduxCG4ESvxilVPGYoBjTADI4waGIk2XyWfhxOjw/oxD/pPvwwxmRZCK8FGcDEOiQxjFZVaXapAHvzHXSsxv6U3t5+7grGoEvzmOZmkxOqumX1hAUkY3fC9F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gLYtQ7Ys; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1760395864; c=relaxed/simple;
+	bh=4hdMkBcIlxdNSHdJG1oVcukAr560whAOqOXRcMuQzJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fPEvlSfzQiYp6blIKSz1CQpl1sfO258nmgsRjFrvntwxb97KtlRCtVBNDQ6E9j5kc6gjbl8oX1pJYJNaEak0njoWAWYE9EiboZDpN8bwYt1nCyjoBCCmjdITr3BN6z/R2KrXe7DNJYEIiNj9+rEoObpgTa19tIzAr9HrVHcTDQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVg5gHbF; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLYtQ7Ys"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46e4ad36541so49196325e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 15:26:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVg5gHbF"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-4060b4b1200so3476225f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 15:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760394380; x=1760999180; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PkgHu5j/+WZC8dxxMvvQgGA0OUwb3WA2z17XJVpa4xs=;
-        b=gLYtQ7YsBo7AzYUCkXmoBeItwzG1NhP3leRiPI516P2Y1s0/X4xOk0//Y6R1wqDHWS
-         S6UGpbI25AShjZHc6WsPVoHQ8jO5EPOvxc38WFJJqY0vaEFyHJPMHdN0K4ehWGg/OVz+
-         icWfGlYInyQQvREwU18eK5ELCdmmB3H4lvysvN9Pw47MOlqOu73C6nIOfMt/2luagNCW
-         mWc6ZnMwhqe8hl3ekKrJO2R2Sjzp1UuJ9MyHZcHuxPFYcLt0RuTr5Sb4eo0G02Y/9el6
-         0qb9oZkJhF1NycJEsHbqDb6XuqXYXnW023eC4UEP4r+CYfnW/nH0LgoV/gdS1zTwwmxj
-         h/eQ==
+        d=gmail.com; s=20230601; t=1760395860; x=1761000660; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2x2QRbJMEe8ACU/qqjxgwqBfSWUAjEirSAkpltOyPQc=;
+        b=VVg5gHbFVCWrJ5jYEAIl9knwa9FpxaeUoNDJYs/zlJHR3L7pt7GgSbZECYzx9FftbH
+         swtXBY9LmMZMjlu4RG7Azody5MZyxQud0SXOf4eOJP5hqanF3bmncn9h1Z0zYIGJl+0s
+         rvhjiFcxvqG6RCtSvBclbn/tagzSWlNmg28nrKBokXTw0YHes+LNyu8lkLcKDeHAVMfc
+         EKxdee7kC73kkDgvwxMBaQFR2dfQkYWa17olIni3GwHcY9EY8UWz70TJvq60xMGlNiyh
+         Z3soMJagcFbgIKyFEs5Zz/j9wwM95/4uPzudF+zQkskobo6RXdk+AvboDW3a2zP42C2m
+         ugow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760394380; x=1760999180;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1760395860; x=1761000660;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PkgHu5j/+WZC8dxxMvvQgGA0OUwb3WA2z17XJVpa4xs=;
-        b=tJe7r+AUV1LmLicyWJFw6+XbDYrpDMLJ5GeVxKueSe614g65Y+wotjN8qnwbhTUbVL
-         a71WD+UAZcQ+xczFPWXo1xXTUIyzzH2S/cyq1aZrw/IolJhdnNdhc9LLraDQE/oG8Ec9
-         7rD07ubjMLhQwASnOWdRUts1S/6MoopppaxpQpI1fhNN4FNf157w6bz3s/qt8XDjX4vW
-         ldXAyX8pKU5uurqMyxvnqCajuq3AaN/CPZsl5KXo4/+RqpH0188nnZa9k9q7k03rmKhw
-         /btBtfHqrFh8B9l9qroCKTAPaGGm3dOS+VU3fLmyMXiE39Ut1LtKiNGsvbFqWi12EteU
-         iHUA==
-X-Gm-Message-State: AOJu0YzqxsepYB/TmsiGK9Mgdst8U4zGAU0PYBt/SdxKH83utuA+ak2S
-	nmyzEHZKk0D6qbAqBNPF5BxX3yZCe2jevxz8uN0BOT83mxSZ8UQQ2cAu
-X-Gm-Gg: ASbGncsunPmPqM1xJYzLKM4OSW/1WCr1QorV2EJ5SV57ODljPaMP5G9xncOyvNOe2kA
-	r+OVlnrt47Z9EyGrg7eKPeBqlU91NCn0mUTPp5geGTN7Fd7s2PNQlPG/+Y9sPHgZB0V5z/SEc+7
-	ipUH5kIDjcOlGm/UXpVQnHxRp2/MSurRmI2JZ3OqH3xLd0lwP3NU8LezD+v8COkj9oWUaUdGIDG
-	b4jbibVcRSaQ1KP9Iesks1T4uSPdbgsKVmbpt2PKYExiGS2O0Mq3Eqdr0hwZigy4kwYXAdrFKu/
-	OsdT5NsyuCweVJTs4fGvw7rvDR3aGx4qriMB+yl4lkvUDYxcWAtOvvx2aLpmdBUL5mXN5YGBeY1
-	PSIEa2rcfAs2QvmvVcZG29aqzwiL+0Yme6jKywadamjnRHeYVaM19WHE=
-X-Google-Smtp-Source: AGHT+IGuUeoawOT146YOKXJgt5RbjivzmbTwl+3N5kXPEcIIaQOuDmRFFng2/OfEvI724Fv9KUKwFw==
-X-Received: by 2002:a05:600c:c162:b0:45f:2cb5:ecff with SMTP id 5b1f17b1804b1-46fa9b02fa3mr181040145e9.31.1760394380232;
-        Mon, 13 Oct 2025 15:26:20 -0700 (PDT)
+        bh=2x2QRbJMEe8ACU/qqjxgwqBfSWUAjEirSAkpltOyPQc=;
+        b=AexVUvi8XhWMyYTwXxwa7okIhMy6ryBnfWgYlXkHx/UpdqmBEUhhutJ0/PWrq6+MGj
+         6IzI3hZOgMAoeRlCsHPZvgfSRRW98i9fFbAykY+duj0/0r468fFD1V7zoQtrYCtVAHRx
+         +8QiGTUjCuTWt1U6KGASiT1DlrxBSBlEeC6qupuoBHoeMbFGdhOOrLwcFGwH3pO0GKlE
+         4mvIL7HKvOxUddT+CCo8qPrswWVqwB2FMXMsw9IG5CwH/y4UTD2qVPdXvZnp/KcLkLTi
+         sBETvAISBJMscHpBeOOfTeABksI7PTA76dA7ZRnHVGOHdRpFsAC2oXprDRGJS3/eyH2r
+         hdmQ==
+X-Gm-Message-State: AOJu0YyD0+VIZg5N1orZzATogQ9x5TJjMI8sHMSp3e1NrMDtA8gM4Pxy
+	DPVySS3MBB02RMjjh1tJROs1/0p8VinI+1pLf2TbFASygyDlIvx5GGnd
+X-Gm-Gg: ASbGnctsV55Ft2CxI4saDXnPjVOzCbxWLLab200Ynf9cctQ/GjpjTvww+uDUrnzEK+X
+	uaN5DsZ9zeEEGo2k/0aoLOPVqUc2cDGOZqmPHCp+3RlC6IPagAgl8oouyCRVmGqq7zIyqQBvWF4
+	rw0AZN/4beiY7GljYB6wE7sgMObAYIPL9jm7Z7qqgXKS5LzBx62gJi5rbn2VExq+3zh0mAJG0yU
+	xluS3OLafpInEwOqJcs1pgZEWVXjdDntpy5ULZt5poiNhz/Y1opXVKfDAf2sx1AfS3Xgpk3ZV+q
+	JprX8CWd3LmG0chmAzkRKxsArHqrzpo+4bzjBj9qIpfPgfxOeTKf+Fm48abpyPtJFcHX1XfvbwD
+	1Zcti15FhBm1sM7qDitJ7lUf8U0M+4LKeC/E2oragu5KuQYLvJsWwWfYYedBzvaaZkA==
+X-Google-Smtp-Source: AGHT+IErRlsWPPy1/nZGHMbk1L2NiQXNQO1g/VPjoAtC8k8CVey+6Orod80+zbOAqUKI3rvyy/D/cg==
+X-Received: by 2002:a05:6000:1887:b0:3ec:e226:c580 with SMTP id ffacd0b85a97d-4267b339754mr15017773f8f.60.1760395860139;
+        Mon, 13 Oct 2025 15:51:00 -0700 (PDT)
 Received: from [192.168.1.121] ([176.206.100.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab500706sm139925205e9.3.2025.10.13.15.26.19
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce5cf71dsm19756058f8f.29.2025.10.13.15.50.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 15:26:19 -0700 (PDT)
-Message-ID: <c2b86d8f-d148-4ad8-aa46-f94b9598be80@gmail.com>
-Date: Tue, 14 Oct 2025 00:26:19 +0200
+        Mon, 13 Oct 2025 15:50:59 -0700 (PDT)
+Message-ID: <65e6c797-b878-4f0f-90ed-c2437d2becbe@gmail.com>
+Date: Tue, 14 Oct 2025 00:50:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,296 +66,234 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH v13 8/8] platform/x86: asus-armoury: add
- ppt_* and nv_* tuning knobs
-From: Denis Benato <benato.denis96@gmail.com>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Luke D . Jones" <luke@ljones.dev>,
- Derek John Clark <derekjohn.clark@gmail.com>,
- Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
-References: <20251013180534.1222432-1-benato.denis96@gmail.com>
- <20251013180534.1222432-9-benato.denis96@gmail.com>
- <cad7b458-5a7a-4975-94a1-d0c74f6f3de5@oracle.com>
- <f352e00c-50d9-4c13-941c-d6e254c44072@gmail.com>
+Subject: Re: [PATCH v6 4/7] HID: asus: listen to the asus-wmi brightness
+ device instead of creating one
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20251013201535.6737-1-lkml@antheas.dev>
+ <20251013201535.6737-5-lkml@antheas.dev>
+ <e1e6ee09-ea29-4328-9eae-f2a4a23b3edc@gmail.com>
+ <CAGwozwHP6ukxBRpOFU+XQL5gyNKu5f-HUJio-=F6rAGUmcm2tw@mail.gmail.com>
+ <bb149ff1-5fbc-41ff-a4e8-51f6b8631b5e@gmail.com>
+ <CAGwozwHogocd8FHn31tZY15-N_Kdaoy8cYqtdxte=H3Qioj_ug@mail.gmail.com>
 Content-Language: en-US, it-IT, en-US-large
-In-Reply-To: <f352e00c-50d9-4c13-941c-d6e254c44072@gmail.com>
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAGwozwHogocd8FHn31tZY15-N_Kdaoy8cYqtdxte=H3Qioj_ug@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 10/13/25 21:50, Denis Benato wrote:
-> On 10/13/25 20:25, ALOK TIWARI wrote:
+On 10/14/25 00:18, Antheas Kapenekakis wrote:
+> On Tue, 14 Oct 2025 at 00:06, Denis Benato <benato.denis96@gmail.com> wrote:
 >>
->> On 10/13/2025 11:35 PM, Denis Benato wrote:
->>> From: "Luke D. Jones" <luke@ljones.dev>
+>> On 10/13/25 23:57, Antheas Kapenekakis wrote:
+>>> On Mon, 13 Oct 2025 at 23:44, Denis Benato <benato.denis96@gmail.com> wrote:
+>>>> On 10/13/25 22:15, Antheas Kapenekakis wrote:
+>>>>> Some ROG laptops expose multiple interfaces for controlling the
+>>>>> keyboard/RGB brightness. This creates a name conflict under
+>>>>> asus::kbd_brightness, where the second device ends up being
+>>>>> named asus::kbd_brightness_1 and they are both broken.
+>>>> Can you please reference a bug report and/or an analysis of why they ends
+>>>> up being broken?
+>>> You can reference the V1 description [1]
 >>>
->>> Adds the ppt_* and nv_* tuning knobs that are available via WMI methods
->>> and adds proper min/max levels plus defaults.
->>>
->>> The min/max are defined by ASUS and typically gained by looking at what
->>> they allow in the ASUS Armoury Crate application - ASUS does not share
->>> the values outside of this. It could also be possible to gain the AMD
->>> values by use of ryzenadj and testing for the minimum stable value.
->>>
->>> The general rule of thumb for adding to the match table is that if the
->>> model range has a single CPU used throughout, then the DMI match can
->>> omit the last letter of the model number as this is the GPU model.
->>>
->>> If a min or max value is not provided it is assumed that the particular
->>> setting is not supported. for example ppt_pl2_sppt_min/max is not set.
->>> If a <ppt_setting>_def is not set then the default is assumed to be
->>> <ppt_setting>_max
->>>
->>> It is assumed that at least AC settings are available so that the
->>> firmware attributes will be created - if no DC table is available
->>> and power is on DC, then reading the attributes is -ENODEV.
->>>
->>> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
->>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->>> Tested-by: Mateusz Schyboll <dragonn@op.pl>
->>> ---
->>>   drivers/platform/x86/asus-armoury.c        |  296 ++++-
->>>   drivers/platform/x86/asus-armoury.h        | 1210 ++++++++++++++++++++
->>>   include/linux/platform_data/x86/asus-wmi.h |    3 +
->>>   3 files changed, 1503 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
->>> index e27f964aebf8..918aea6fba1e 100644
->>> --- a/drivers/platform/x86/asus-armoury.c
->>> +++ b/drivers/platform/x86/asus-armoury.c
->>> @@ -27,6 +27,7 @@
->>>   #include <linux/mutex.h>
->>>   #include <linux/platform_data/x86/asus-wmi.h>
->>>   #include <linux/printk.h>
->>> +#include <linux/power_supply.h>
->>>   #include <linux/types.h>
->>>     #include "asus-armoury.h"
->>> @@ -45,6 +46,17 @@
->>>   #define ASUS_MINI_LED_2024_STRONG 0x01
->>>   #define ASUS_MINI_LED_2024_OFF    0x02
->>>   +/* Power tunable attribute name defines */
->>> +#define ATTR_PPT_PL1_SPL        "ppt_pl1_spl"
->>> +#define ATTR_PPT_PL2_SPPT       "ppt_pl2_sppt"
->>> +#define ATTR_PPT_PL3_FPPT       "ppt_pl3_fppt"
->>> +#define ATTR_PPT_APU_SPPT       "ppt_apu_sppt"
->>> +#define ATTR_PPT_PLATFORM_SPPT  "ppt_platform_sppt"
->>> +#define ATTR_NV_DYNAMIC_BOOST   "nv_dynamic_boost"
->>> +#define ATTR_NV_TEMP_TARGET     "nv_temp_target"
->>> +#define ATTR_NV_BASE_TGP        "nv_base_tgp"
->>> +#define ATTR_NV_TGP             "nv_tgp"
->>> +
->>>   #define ASUS_POWER_CORE_MASK    GENMASK(15, 8)
->>>   #define ASUS_PERF_CORE_MASK        GENMASK(7, 0)
->>>   @@ -73,11 +85,26 @@ struct cpu_cores {
->>>       u32 max_power_cores;
->>>   };
->>>   +struct rog_tunables {
->>> +    const struct power_limits *power_limits;
->>> +    u32 ppt_pl1_spl;            // cpu
->>> +    u32 ppt_pl2_sppt;            // cpu
->>> +    u32 ppt_pl3_fppt;            // cpu
->>> +    u32 ppt_apu_sppt;            // plat
->>> +    u32 ppt_platform_sppt;        // plat
->>> +
->>> +    u32 nv_dynamic_boost;
->>> +    u32 nv_temp_target;
->>> +    u32 nv_tgp;
->>> +};
->>> +
->>>   static struct asus_armoury_priv {
->>>       struct device *fw_attr_dev;
->>>       struct kset *fw_attr_kset;
->>>         struct cpu_cores *cpu_cores;
->>> +    /* Index 0 for DC, 1 for AC */
->>> +    struct rog_tunables *rog_tunables[2];
->>>       u32 mini_led_dev_id;
->>>       u32 gpu_mux_dev_id;
->>>       /*
->>> @@ -719,7 +746,34 @@ static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
->>>   ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
->>>               "Set the max available efficiency cores");
->>>   +/* Define helper to access the current power mode tunable values */
->>> +static inline struct rog_tunables *get_current_tunables(void)
->>> +{
->>> +    return asus_armoury
->>> +        .rog_tunables[power_supply_is_system_supplied() ? 1 : 0];
->>> +}
->>> +
->>>   /* Simple attribute creation */
->>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, ATTR_PPT_PL1_SPL, ASUS_WMI_DEVID_PPT_PL1_SPL,
->>> +               "Set the CPU slow package limit");
->>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl2_sppt, ATTR_PPT_PL2_SPPT, ASUS_WMI_DEVID_PPT_PL2_SPPT,
->>> +               "Set the CPU fast package limit");
->>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl3_fppt, ATTR_PPT_PL3_FPPT, ASUS_WMI_DEVID_PPT_FPPT,
->> why not ASUS_WMI_DEVID_PPT_PL3_FPPT ? 
->>
-> I simply didn't touch anything that was not brought up, but I see that it appears to be a more consistent name.
->
-> Will use that name for v14, thanks!
-Unfortunately taking a closer look I discovered that macro has been introduced over
-2 years ago in commit e0b278e7b5da62c3ebb156a8b7d76a739da2d953
-"platform/x86: asus-wmi: expose dGPU and CPU tunables for ROG"
-and it is not introduced as part of this commit series.
+>>> [1] https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.dev/
+>> oh okay thanks. I would suggest to keep relevant parts in successive revisions,
+>> and most importantly repeat (a shorter description of) relevant parts on the proper
+>> commit since commit messages will (hopefully) become part of the kernel,
+>> because just reading messages of the current revision doesn't give the full picture
+>> of the what and why,
+> It's true I cut out the introduction, perhaps I shouldn't have, but it
+> will get thrown away anyway. I think the commit body is detailed
+> enough though.
+I am aware the cover letter won't be part of the kernel, it's why I asked for the
+relevant context to be repeated in the appropriate commit message.
 
-I think it would be best to create an ah-hoc commit when this driver is merged to change the name in both,
-or do I send the name change now and rework this driver? what do you think?
+I don't think commit messages are detailed enough: a few more explanation
+lines would surely help a reader as messages are more centered on the "what" and
+not the "why".
 
-Honestly given the large number of people already running this and the request of having it upstream
-the road that will make it merge sooner is the one I would like to take.
+Note: this comment of mine is not limited to this particular commit:
+look at how long the v1 cover letter is and how long commit messages are
+once combined. A lot that has been left out should really be included
+(personal opinion of mine, looking at this for the first time: it would have helped).
 
 Thanks,
 Denis
 
->>> +               "Set the CPU fastest package limit");
->>> +ATTR_GROUP_ROG_TUNABLE(ppt_apu_sppt, ATTR_PPT_APU_SPPT, ASUS_WMI_DEVID_PPT_APU_SPPT,
->>> +               "Set the APU package limit");
->>> +ATTR_GROUP_ROG_TUNABLE(ppt_platform_sppt, ATTR_PPT_PLATFORM_SPPT, ASUS_WMI_DEVID_PPT_PLAT_SPPT,
->>> +               "Set the platform package limit");
->>> +ATTR_GROUP_ROG_TUNABLE(nv_dynamic_boost, ATTR_NV_DYNAMIC_BOOST, ASUS_WMI_DEVID_NV_DYN_BOOST,
->>> +               "Set the Nvidia dynamic boost limit");
->>> +ATTR_GROUP_ROG_TUNABLE(nv_temp_target, ATTR_NV_TEMP_TARGET, ASUS_WMI_DEVID_NV_THERM_TARGET,
->>> +               "Set the Nvidia max thermal limit");
->>> +ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
->>> +               "Set the additional TGP on top of the base TGP");
->>> +ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
->>> +                 "Read the base TGP value");
->>> +
->>> +
->>>   ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
->>>                  "Show the current mode of charging");
->>>   @@ -746,6 +800,16 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->>>       { &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
->>>       { &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
->>>   +    { &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
->>> +    { &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_PPT_PL2_SPPT },
->>> +    { &ppt_pl3_fppt_attr_group, ASUS_WMI_DEVID_PPT_FPPT },
->>> +    { &ppt_apu_sppt_attr_group, ASUS_WMI_DEVID_PPT_APU_SPPT },
->>> +    { &ppt_platform_sppt_attr_group, ASUS_WMI_DEVID_PPT_PLAT_SPPT },
->>> +    { &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
->>> +    { &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
->>> +    { &nv_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
->>> +    { &nv_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
->>> +
->>>       { &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
->>>       { &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
->>>       { &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
->>> @@ -754,8 +818,75 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->>>       { &screen_auto_brightness_attr_group, ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS },
->>>   };
->>>   +/**
->>> + * is_power_tunable_attr - Determines if an attribute is a power-related tunable
->>> + * @name: The name of the attribute to check
->>> + *
->>> + * This function checks if the given attribute name is related to power tuning.
->>> + *
->>> + * Return: true if the attribute is a power-related tunable, false otherwise
->>> + */
->>> +static bool is_power_tunable_attr(const char *name)
->>> +{
->>> +    static const char * const power_tunable_attrs[] = {
->>> +        ATTR_PPT_PL1_SPL,    ATTR_PPT_PL2_SPPT,
->>> +        ATTR_PPT_PL3_FPPT,    ATTR_PPT_APU_SPPT,
->>> +        ATTR_PPT_PLATFORM_SPPT, ATTR_NV_DYNAMIC_BOOST,
->>> +        ATTR_NV_TEMP_TARGET,    ATTR_NV_BASE_TGP,
->>> +        ATTR_NV_TGP
->>> +    };
->>> +
->>> +    for (unsigned int i = 0; i < ARRAY_SIZE(power_tunable_attrs); i++) {
->>> +        if (!strcmp(name, power_tunable_attrs[i]))
->>> +            return true;
->>> +    }
->>> +
->>> +    return false;
->>> +}
->>> +
->>> +/**
->>> + * has_valid_limit - Checks if a power-related attribute has a valid limit value
->>> + * @name: The name of the attribute to check
->>> + * @limits: Pointer to the power_limits structure containing limit values
->>> + *
->>> + * This function checks if a power-related attribute has a valid limit value.
->>> + * It returns false if limits is NULL or if the corresponding limit value is zero.
->>> + *
->>> + * Return: true if the attribute has a valid limit value, false otherwise
->>> + */
->>> +static bool has_valid_limit(const char *name, const struct power_limits *limits)
->>> +{
->>> +    u32 limit_value = 0;
->>> +
->>> +    if (!limits)
->>> +        return false;
->>> +
->>> +    if (!strcmp(name, ATTR_PPT_PL1_SPL))
->>> +        limit_value = limits->ppt_pl1_spl_max;
->>> +    else if (!strcmp(name, ATTR_PPT_PL2_SPPT))
->>> +        limit_value = limits->ppt_pl2_sppt_max;
->>> +    else if (!strcmp(name, ATTR_PPT_PL3_FPPT))
->>> +        limit_value = limits->ppt_pl3_fppt_max;
->>> +    else if (!strcmp(name, ATTR_PPT_APU_SPPT))
->>> +        limit_value = limits->ppt_apu_sppt_max;
->>> +    else if (!strcmp(name, ATTR_PPT_PLATFORM_SPPT))
->>> +        limit_value = limits->ppt_platform_sppt_max;
->>> +    else if (!strcmp(name, ATTR_NV_DYNAMIC_BOOST))
->>> +        limit_value = limits->nv_dynamic_boost_max;
->>> +    else if (!strcmp(name, ATTR_NV_TEMP_TARGET))
->>> +        limit_value = limits->nv_temp_target_max;
->>> +    else if (!strcmp(name, ATTR_NV_BASE_TGP) ||
->>> +         !strcmp(name, ATTR_NV_TGP))
->>> +        limit_value = limits->nv_tgp_max;
->>> +
->>> +    return limit_value > 0;
->>> +}
->>> +
->>>   static int asus_fw_attr_add(void)
->>>   {
->>> +    const struct power_limits *limits;
->>> +    bool should_create;
->>> +    const char *name;
->>>       int err, i;
->>>         asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
->>> @@ -812,12 +943,30 @@ static int asus_fw_attr_add(void)
->>>           if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
->>>               continue;
->>>   -        err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
->>> -                     armoury_attr_groups[i].attr_group);
->>> -        if (err) {
->>> -            pr_err("Failed to create sysfs-group for %s\n",
->>> -                   armoury_attr_groups[i].attr_group->name);
->>> -            goto err_remove_groups;
->>> +        /* Always create by default, unless PPT is not present */
->>> +        should_create = true;
->>> +        name = armoury_attr_groups[i].attr_group->name;
->>> +
->>> +        /* Check if this is a power-related tunable requiring limits */
->>> +        if (asus_armoury.rog_tunables[1] && asus_armoury.rog_tunables[1]->power_limits &&
->>> +            is_power_tunable_attr(name)) {
->>> +            limits = asus_armoury.rog_tunables[1]->power_limits;
->>> +            /* Check only AC, if DC is not present then AC won't be either */
->>> +            should_create = has_valid_limit(name, limits);
->>> +            if (!should_create) {
->>> +                pr_debug("Missing max value on %s for tunable: %s\n",
->>> +                     dmi_get_system_info(DMI_BOARD_NAME), name);
->> dmi_get_system_info can return NULL 
-> ouch! v14 here I come.
->>> +            }
->>> +        }
->>> +
->>> +        if (should_create) {
->>> +            err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
->>> +                armoury_attr_groups[i].attr_group);
->>> +            if (err) {
->>> +                pr_err("Failed to create sysfs-group for %s\n",
->>> +                       armoury_attr_groups[i].attr_group->name);
->>> +                goto err_remove_groups;
->>> +            }
->>>           }
->>>       }
->>>  
->> Thanks,
->> Alok 
-> Thanks,
-> Denis B.
+> I am looping you in late, but since you are taking over
+> Luke's series and you ended up moving the quirks this series removes
+> and earlier series did not, you will have some merge conflicts.
+>
+> By the way, remember to sign off that series yourself as well, since
+> you are changing the commits.
+>
+> Antheas
+>
+>
+>> Regards,
+>> Denis
+>>>>> Therefore, register a listener to the asus-wmi brightness device
+>>>>> instead of creating a new one.
+>>>>>
+>>>>> Reviewed-by: Luke D. Jones <luke@ljones.dev>
+>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>>>> ---
+>>>>>  drivers/hid/hid-asus.c | 64 +++++++-----------------------------------
+>>>>>  1 file changed, 10 insertions(+), 54 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+>>>>> index a62559e3e064..0af19c8ef035 100644
+>>>>> --- a/drivers/hid/hid-asus.c
+>>>>> +++ b/drivers/hid/hid-asus.c
+>>>>> @@ -102,7 +102,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>>>>>  #define TRKID_SGN       ((TRKID_MAX + 1) >> 1)
+>>>>>
+>>>>>  struct asus_kbd_leds {
+>>>>> -     struct led_classdev cdev;
+>>>>> +     struct asus_hid_listener listener;
+>>>> It is my understanding from "register a listener .... instead of creating a new one"
+>>>> that you are attempting to use the same listener among many devices... so why isn't
+>>>> this a pointer? And more importantly: why do we have bool available, bool registered
+>>>> instead of either one or the other being replaced by this field being possibly NULL?
+>>> A listener is the handle that is passed to asus-wmi so that it can
+>>> communicate with hid-asus. Since the flow of communication flows from
+>>> asus-wmi -> hid-asus, the pointer is placed on asus-wmi.
+>>>
+>>> The boolean kbd_led_avail is used to signify whether the BIOS supports
+>>> RGB commands. If not, we still want the common handler to be there to
+>>> link multiple hid-asus devices together. At the same time, we need to
+>>> skip calling the bios commands for brightness, and hold a value for
+>>> the previous brightness outside the bios.
+>>>
+>>> The kbd_led_registered fixes the race condition that happens between
+>>> hid-asus and asus-wmi. Specifically, it ensures that the rgb listener
+>>> is only setup once, either once asus-wmi loads (if it supports RGB) or
+>>> when the first hid device loads.
+>>>
+>>> Best,
+>>> Antheas
+>>>
+>>>>>       struct hid_device *hdev;
+>>>>>       struct work_struct work;
+>>>>>       unsigned int brightness;
+>>>>> @@ -495,11 +495,11 @@ static void asus_schedule_work(struct asus_kbd_leds *led)
+>>>>>       spin_unlock_irqrestore(&led->lock, flags);
+>>>>>  }
+>>>>>
+>>>>> -static void asus_kbd_backlight_set(struct led_classdev *led_cdev,
+>>>>> -                                enum led_brightness brightness)
+>>>>> +static void asus_kbd_backlight_set(struct asus_hid_listener *listener,
+>>>>> +                                int brightness)
+>>>>>  {
+>>>>> -     struct asus_kbd_leds *led = container_of(led_cdev, struct asus_kbd_leds,
+>>>>> -                                              cdev);
+>>>>> +     struct asus_kbd_leds *led = container_of(listener, struct asus_kbd_leds,
+>>>>> +                                              listener);
+>>>>>       unsigned long flags;
+>>>>>
+>>>>>       spin_lock_irqsave(&led->lock, flags);
+>>>>> @@ -509,20 +509,6 @@ static void asus_kbd_backlight_set(struct led_classdev *led_cdev,
+>>>>>       asus_schedule_work(led);
+>>>>>  }
+>>>>>
+>>>>> -static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
+>>>>> -{
+>>>>> -     struct asus_kbd_leds *led = container_of(led_cdev, struct asus_kbd_leds,
+>>>>> -                                              cdev);
+>>>>> -     enum led_brightness brightness;
+>>>>> -     unsigned long flags;
+>>>>> -
+>>>>> -     spin_lock_irqsave(&led->lock, flags);
+>>>>> -     brightness = led->brightness;
+>>>>> -     spin_unlock_irqrestore(&led->lock, flags);
+>>>>> -
+>>>>> -     return brightness;
+>>>>> -}
+>>>>> -
+>>>>>  static void asus_kbd_backlight_work(struct work_struct *work)
+>>>>>  {
+>>>>>       struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
+>>>>> @@ -539,34 +525,6 @@ static void asus_kbd_backlight_work(struct work_struct *work)
+>>>>>               hid_err(led->hdev, "Asus failed to set keyboard backlight: %d\n", ret);
+>>>>>  }
+>>>>>
+>>>>> -/* WMI-based keyboard backlight LED control (via asus-wmi driver) takes
+>>>>> - * precedence. We only activate HID-based backlight control when the
+>>>>> - * WMI control is not available.
+>>>>> - */
+>>>>> -static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
+>>>>> -{
+>>>>> -     struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>>>>> -     u32 value;
+>>>>> -     int ret;
+>>>>> -
+>>>>> -     if (!IS_ENABLED(CONFIG_ASUS_WMI))
+>>>>> -             return false;
+>>>>> -
+>>>>> -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD &&
+>>>>> -                     dmi_check_system(asus_use_hid_led_dmi_ids)) {
+>>>>> -             hid_info(hdev, "using HID for asus::kbd_backlight\n");
+>>>>> -             return false;
+>>>>> -     }
+>>>>> -
+>>>>> -     ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
+>>>>> -                                    ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
+>>>>> -     hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
+>>>>> -     if (ret)
+>>>>> -             return false;
+>>>>> -
+>>>>> -     return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
+>>>>> -}
+>>>>> -
+>>>>>  /*
+>>>>>   * We don't care about any other part of the string except the version section.
+>>>>>   * Example strings: FGA80100.RC72LA.312_T01, FGA80100.RC71LS.318_T01
+>>>>> @@ -701,14 +659,11 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>>>>>       drvdata->kbd_backlight->removed = false;
+>>>>>       drvdata->kbd_backlight->brightness = 0;
+>>>>>       drvdata->kbd_backlight->hdev = hdev;
+>>>>> -     drvdata->kbd_backlight->cdev.name = "asus::kbd_backlight";
+>>>>> -     drvdata->kbd_backlight->cdev.max_brightness = 3;
+>>>>> -     drvdata->kbd_backlight->cdev.brightness_set = asus_kbd_backlight_set;
+>>>>> -     drvdata->kbd_backlight->cdev.brightness_get = asus_kbd_backlight_get;
+>>>>> +     drvdata->kbd_backlight->listener.brightness_set = asus_kbd_backlight_set;
+>>>>>       INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_backlight_work);
+>>>>>       spin_lock_init(&drvdata->kbd_backlight->lock);
+>>>>>
+>>>>> -     ret = devm_led_classdev_register(&hdev->dev, &drvdata->kbd_backlight->cdev);
+>>>>> +     ret = asus_hid_register_listener(&drvdata->kbd_backlight->listener);
+>>>>>       if (ret < 0) {
+>>>>>               /* No need to have this still around */
+>>>>>               devm_kfree(&hdev->dev, drvdata->kbd_backlight);
+>>>>> @@ -1105,7 +1060,7 @@ static int __maybe_unused asus_resume(struct hid_device *hdev) {
+>>>>>
+>>>>>       if (drvdata->kbd_backlight) {
+>>>>>               const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4,
+>>>>> -                             drvdata->kbd_backlight->cdev.brightness };
+>>>>> +                             drvdata->kbd_backlight->brightness };
+>>>>>               ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
+>>>>>               if (ret < 0) {
+>>>>>                       hid_err(hdev, "Asus failed to set keyboard backlight: %d\n", ret);
+>>>>> @@ -1241,7 +1196,6 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>>>>>       }
+>>>>>
+>>>>>       if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
+>>>>> -         !asus_kbd_wmi_led_control_present(hdev) &&
+>>>>>           asus_kbd_register_leds(hdev))
+>>>>>               hid_warn(hdev, "Failed to initialize backlight.\n");
+>>>>>
+>>>>> @@ -1282,6 +1236,8 @@ static void asus_remove(struct hid_device *hdev)
+>>>>>       unsigned long flags;
+>>>>>
+>>>>>       if (drvdata->kbd_backlight) {
+>>>>> +             asus_hid_unregister_listener(&drvdata->kbd_backlight->listener);
+>>>>> +
+>>>>>               spin_lock_irqsave(&drvdata->kbd_backlight->lock, flags);
+>>>>>               drvdata->kbd_backlight->removed = true;
+>>>>>               spin_unlock_irqrestore(&drvdata->kbd_backlight->lock, flags);
