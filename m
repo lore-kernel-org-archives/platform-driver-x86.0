@@ -1,350 +1,228 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4D82153D2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 19:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A632153D2;
+	Mon, 13 Oct 2025 20:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760385051; cv=none; b=K5qy843Dkcy2yCH3TcyzIln8xfQsG1QoOMF+GrabzU6rDo/3mX6XxaAwtr4x+8bYRWFwVmlvWdf7D6CIiY5At84DavhoihMIslbRnP9qgHUpifHgS1uDP6K6j5jflzgICkKb6FUxPHJGsGo+aGwV+Lpo2YrvpAJ7moc1rAl7cAA=
+	t=1760386671; cv=none; b=WeBTjy5t3xAqDm1AHd8FkcD+mOGdwipIlE0ooY4ZXDwEXa/OqAgiiCR4tKlE/meMLD7m9YU62DGY5ClFAWQcbg86FDuFeYbsY+I7V4JGIzp0b+oza5eoBoxLtpsR8uM/dlQt6+DthPZrENi6eStrIbTIwGDDbvOrD8KHZL2GTrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760385051; c=relaxed/simple;
-	bh=IpZ2LIfLn7br50AFqR+GMS2OYYPOPmfz3siYSEd3Veo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=isnfs47eCM1eZb14uSAKFMtnuVx8khfRzEr7VThTMMlQfz4mE0kc8rIqtvcV+K3N4m/Y0HfKTXTK7pE42OAFarWC+/PVuGqgCRbtX6lXelN7Mx8T47OsZDjrX9bD0rnAj3L3Oo+dRf0JgKaHIgMDyWpL2RW7YSMIAPanJYpUeNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBGmc0ng; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760386671; c=relaxed/simple;
+	bh=rlpDLaaREwfzK6sYx7OycZ3LKmEvwI0ygD0+uGbc7hw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nLYcsVj5Ixis/wxjhPWOZ2yxt1AhhJMMo4dJYT7U2MGSQ5rCbRMIUzQclaVTIzzQbivWEj/9PtTi6fuKzGJOJjsqgY/Vl0kem/pmTHWV0CxTQlx4SRFiYSRDn+9Pe+sbw95lQ+3xSXU7aMpeLjvyJb8RECXZjxobeAjvLkb2Uiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=RJ/rOLjJ; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBGmc0ng"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3f1aff41e7eso3371938f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Oct 2025 12:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760385048; x=1760989848; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IpZ2LIfLn7br50AFqR+GMS2OYYPOPmfz3siYSEd3Veo=;
-        b=hBGmc0ngXnpGdTYGl4I/w0AJCFkOVzquNgnoNyHSHr4KJ0XFmb7S/jzQOfY+3AK/+k
-         4R0CL/tAnGPp4AnuAxX4x7I4OlHq/dKqTLbrZiK0kpzYuXCZ0q150FO9ItWRiiETVi1U
-         TP8DNCX5bcCiKUlaljhyJ0DbzTo9XXeWiu+cIiq/7oqBeWsa4uf1USKfemyIBrLRFYkP
-         IUmJvEMPMP2PN2MylgH3v3zAKMQz7RdhGI9EFLlBscGKTo+VDFrbA4zZUXWyo65CPS5g
-         WGTCMdOiu9QZawmHNTX/28Pdn+f/ckagIyWiaKU2DUQBNyhuWt2n1+kSMnP7I+HuazUE
-         XW3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760385048; x=1760989848;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IpZ2LIfLn7br50AFqR+GMS2OYYPOPmfz3siYSEd3Veo=;
-        b=pVbNtAiQN8u7Ixk1nHpBBPveW+7A8WnRogEjpXXdXiqZ0nsHAG6psHENyRghDoHe4W
-         +9Lb6JKz9VVuEeRUVTUFn2fH+oa+CvIABA2A6bxonjDdZwFWTf2jq8ucGxjWuO20U5xE
-         pnS2Pf23L1G5uK0gRdv8ajtQs5+jexIQEQl6UhkIUUAiFMWFTtgsphLqI/3L6ifTTXFU
-         730EDGwoopB17iOCw572mn4tynyih/3LqQCBdbcI4Y/heiu0uzeMj+Crt/1UJym/PFB4
-         d1E6DiySKwjdvUWFUyjSqA0KhLpju3STtO9p50zvsIye12HOVieYH671SUpwK4vzoBDG
-         Rn6A==
-X-Gm-Message-State: AOJu0YwP+svEbMCMdKUDCCUeKJv73OCmaJyQ+jolXmqnj0nsGYEK1Nm7
-	xqropHGSLSEP8B7ITjtDxyR2vUWVHIpiZ96e01WANo3v40EtZBFEBMqr
-X-Gm-Gg: ASbGncuNLISwkWJxqrajnertMDeVsShjRzmwExhCHI8m7pNnT+WLJJjf8GWlaNZxsOC
-	FiNcwdnURLGLJZIxYxddPYC2Am/tmvJ8LfJwQU4BlPJ7iDYRWOdHlSgqul2yPokzL7a7YSGwwYZ
-	y9ZFPSygHZx5oL/4bp+YimXvFCsiuuvZf2P58b7AQT396UM0Xs/340F9F044Ry+M48TsO9fM3ye
-	cY2YVBzmbSCH2OvvK7dzxNSAD0nTwjiTuNPQBy8rOENXTASxJd14qWy+6pZ5/s3JGBhz2e3+cW7
-	0uGq4uc/UtczccBa4XhgeH/nEPkOVcsQEWntOJGAwvAESXiDTLCxnMxxaoY9oh6aI/EM6S+LyD2
-	VqAPeEeYubm09/KLoWbrW3EbCpAxXs86tMcPsi/ULPDzS9V+bRVPolo1IORsl7DZ4RQ==
-X-Google-Smtp-Source: AGHT+IFDkKfdXGMGrKifIat9/ZijU4iS6Co0IGdbV24nvBNnMccEyqzWqFXt0aEBxuJ3Vdj28WiFFA==
-X-Received: by 2002:a05:6000:26c9:b0:425:74e1:25f7 with SMTP id ffacd0b85a97d-4266e8e6d0amr14586408f8f.62.1760385047378;
-        Mon, 13 Oct 2025 12:50:47 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.100.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce5cf70fsm19148619f8f.27.2025.10.13.12.50.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 12:50:46 -0700 (PDT)
-Message-ID: <f352e00c-50d9-4c13-941c-d6e254c44072@gmail.com>
-Date: Mon, 13 Oct 2025 21:50:46 +0200
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="RJ/rOLjJ"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id 7DFA8BDA52;
+	Mon, 13 Oct 2025 23:17:42 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id BCFB8BD71C;
+	Mon, 13 Oct 2025 23:17:41 +0300 (EEST)
+Received: from antheas-z13 (x5996a8de.customers.hiper-net.dk [89.150.168.222])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 7FD731FDC0B;
+	Mon, 13 Oct 2025 23:17:39 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1760386661;
+	bh=qc+3LsItBV+z9wxTS44elVxHa73zsGTlYy1E2ZNNEr8=; h=From:To:Subject;
+	b=RJ/rOLjJaJT1A5NSGrhFEc/R2POqrlcTfRCclng2SzvAce4ds913Xf900NkZP7g32
+	 evdA5VXrrKMC4TMS7WL7/xEBN0ahi2NqJXs8ywFesLrNLXn/1bg+uHawt7H5Vr1vRy
+	 e3g6mr0lBdIeq8NwvT28UswO7PGEuGxk9UlVC+zkJ8DCAv43ldk5uTWoe5oVHM1QTN
+	 /3mY6NkGnVAx1HKvpL2oabeY2+6jkIfsSVs4ADuXomz7BjiXyrjF3pIipjlnRty+7x
+	 Z48FNBgOFQ1eBvOfubF2IcMcTzceVRbEmpe8Zi63lWwU6ZD29gz6ZfBL8BK5qGDU4C
+	 q5LKfyIcu66ag==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 89.150.168.222) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v6 1/7] HID: asus: refactor init sequence per spec
+Date: Mon, 13 Oct 2025 22:15:29 +0200
+Message-ID: <20251013201535.6737-2-lkml@antheas.dev>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251013201535.6737-1-lkml@antheas.dev>
+References: <20251013201535.6737-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH v13 8/8] platform/x86: asus-armoury: add
- ppt_* and nv_* tuning knobs
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Luke D . Jones" <luke@ljones.dev>,
- Derek John Clark <derekjohn.clark@gmail.com>,
- Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
-References: <20251013180534.1222432-1-benato.denis96@gmail.com>
- <20251013180534.1222432-9-benato.denis96@gmail.com>
- <cad7b458-5a7a-4975-94a1-d0c74f6f3de5@oracle.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <cad7b458-5a7a-4975-94a1-d0c74f6f3de5@oracle.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <176038666140.3397346.12049812251057801568@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
+
+Currently, asus_kbd_init() uses a reverse engineered init sequence
+from Windows, which contains the handshakes from multiple programs.
+Keep the main one, which is 0x5a (meant for brightness drivers).
+
+In addition, perform a get_response and check if the response is the
+same. To avoid regressions, print an error if the response does not
+match instead of rejecting device.
+
+Then, refactor asus_kbd_get_functions() to use the same ID it is called
+with, instead of hardcoding it to 0x5a so that it may be used for 0x0d
+in the future.
+
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/hid/hid-asus.c | 91 ++++++++++++++++++++++--------------------
+ 1 file changed, 48 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index a444d41e53b6..d0c783df99bc 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+ #define FEATURE_REPORT_ID 0x0d
+ #define INPUT_REPORT_ID 0x5d
+ #define FEATURE_KBD_REPORT_ID 0x5a
+-#define FEATURE_KBD_REPORT_SIZE 16
++#define FEATURE_KBD_REPORT_SIZE 64
+ #define FEATURE_KBD_LED_REPORT_ID1 0x5d
+ #define FEATURE_KBD_LED_REPORT_ID2 0x5e
+ 
+@@ -393,14 +393,37 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
+ 
+ static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
+ {
+-	const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
+-		     0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
++	/*
++	 * The handshake is first sent as a set_report, then retrieved
++	 * from a get_report. They should be equal.
++	 */
++	const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20,
++		0x54, 0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
++	u8 *readbuf;
+ 	int ret;
+ 
+ 	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
+-	if (ret < 0)
+-		hid_err(hdev, "Asus failed to send init command: %d\n", ret);
++	if (ret < 0) {
++		hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
++		return ret;
++	}
++
++	readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
++	if (!readbuf)
++		return -ENOMEM;
++
++	ret = hid_hw_raw_request(hdev, report_id, readbuf,
++				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
++				 HID_REQ_GET_REPORT);
++	if (ret < 0) {
++		hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
++	} else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
++		hid_warn(hdev, "Asus handshake returned invalid response: %*ph\n",
++			FEATURE_KBD_REPORT_SIZE, readbuf);
++		// Do not return error if handshake is wrong to avoid regressions
++	}
+ 
++	kfree(readbuf);
+ 	return ret;
+ }
+ 
+@@ -422,7 +445,7 @@ static int asus_kbd_get_functions(struct hid_device *hdev,
+ 	if (!readbuf)
+ 		return -ENOMEM;
+ 
+-	ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
++	ret = hid_hw_raw_request(hdev, report_id, readbuf,
+ 				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
+ 				 HID_REQ_GET_REPORT);
+ 	if (ret < 0) {
+@@ -638,50 +661,32 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+ 	unsigned char kbd_func;
+ 	int ret;
+ 
+-	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+-		/* Initialize keyboard */
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+-		if (ret < 0)
+-			return ret;
+-
+-		/* The LED endpoint is initialised in two HID */
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+-		if (ret < 0)
+-			return ret;
+-
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+-		if (ret < 0)
+-			return ret;
+-
+-		if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+-			ret = asus_kbd_disable_oobe(hdev);
+-			if (ret < 0)
+-				return ret;
+-		}
+-
+-		if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+-			intf = to_usb_interface(hdev->dev.parent);
+-			udev = interface_to_usbdev(intf);
+-			validate_mcu_fw_version(hdev,
+-				le16_to_cpu(udev->descriptor.idProduct));
+-		}
++	ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
++	if (ret < 0)
++		return ret;
+ 
+-	} else {
+-		/* Initialize keyboard */
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+-		if (ret < 0)
+-			return ret;
++	/* Get keyboard functions */
++	ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
++	if (ret < 0)
++		return ret;
+ 
+-		/* Get keyboard functions */
+-		ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
++	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
++		ret = asus_kbd_disable_oobe(hdev);
+ 		if (ret < 0)
+ 			return ret;
++	}
+ 
+-		/* Check for backlight support */
+-		if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+-			return -ENODEV;
++	if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
++		intf = to_usb_interface(hdev->dev.parent);
++		udev = interface_to_usbdev(intf);
++		validate_mcu_fw_version(
++			hdev, le16_to_cpu(udev->descriptor.idProduct));
+ 	}
+ 
++	/* Check for backlight support */
++	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
++		return -ENODEV;
++
+ 	drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+ 					      sizeof(struct asus_kbd_leds),
+ 					      GFP_KERNEL);
+-- 
+2.51.0
 
 
-On 10/13/25 20:25, ALOK TIWARI wrote:
->
->
-> On 10/13/2025 11:35 PM, Denis Benato wrote:
->> From: "Luke D. Jones" <luke@ljones.dev>
->>
->> Adds the ppt_* and nv_* tuning knobs that are available via WMI methods
->> and adds proper min/max levels plus defaults.
->>
->> The min/max are defined by ASUS and typically gained by looking at what
->> they allow in the ASUS Armoury Crate application - ASUS does not share
->> the values outside of this. It could also be possible to gain the AMD
->> values by use of ryzenadj and testing for the minimum stable value.
->>
->> The general rule of thumb for adding to the match table is that if the
->> model range has a single CPU used throughout, then the DMI match can
->> omit the last letter of the model number as this is the GPU model.
->>
->> If a min or max value is not provided it is assumed that the particular
->> setting is not supported. for example ppt_pl2_sppt_min/max is not set.
->> If a <ppt_setting>_def is not set then the default is assumed to be
->> <ppt_setting>_max
->>
->> It is assumed that at least AC settings are available so that the
->> firmware attributes will be created - if no DC table is available
->> and power is on DC, then reading the attributes is -ENODEV.
->>
->> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
->> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Tested-by: Mateusz Schyboll <dragonn@op.pl>
->> ---
->>   drivers/platform/x86/asus-armoury.c        |  296 ++++-
->>   drivers/platform/x86/asus-armoury.h        | 1210 ++++++++++++++++++++
->>   include/linux/platform_data/x86/asus-wmi.h |    3 +
->>   3 files changed, 1503 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
->> index e27f964aebf8..918aea6fba1e 100644
->> --- a/drivers/platform/x86/asus-armoury.c
->> +++ b/drivers/platform/x86/asus-armoury.c
->> @@ -27,6 +27,7 @@
->>   #include <linux/mutex.h>
->>   #include <linux/platform_data/x86/asus-wmi.h>
->>   #include <linux/printk.h>
->> +#include <linux/power_supply.h>
->>   #include <linux/types.h>
->>     #include "asus-armoury.h"
->> @@ -45,6 +46,17 @@
->>   #define ASUS_MINI_LED_2024_STRONG 0x01
->>   #define ASUS_MINI_LED_2024_OFF    0x02
->>   +/* Power tunable attribute name defines */
->> +#define ATTR_PPT_PL1_SPL        "ppt_pl1_spl"
->> +#define ATTR_PPT_PL2_SPPT       "ppt_pl2_sppt"
->> +#define ATTR_PPT_PL3_FPPT       "ppt_pl3_fppt"
->> +#define ATTR_PPT_APU_SPPT       "ppt_apu_sppt"
->> +#define ATTR_PPT_PLATFORM_SPPT  "ppt_platform_sppt"
->> +#define ATTR_NV_DYNAMIC_BOOST   "nv_dynamic_boost"
->> +#define ATTR_NV_TEMP_TARGET     "nv_temp_target"
->> +#define ATTR_NV_BASE_TGP        "nv_base_tgp"
->> +#define ATTR_NV_TGP             "nv_tgp"
->> +
->>   #define ASUS_POWER_CORE_MASK    GENMASK(15, 8)
->>   #define ASUS_PERF_CORE_MASK        GENMASK(7, 0)
->>   @@ -73,11 +85,26 @@ struct cpu_cores {
->>       u32 max_power_cores;
->>   };
->>   +struct rog_tunables {
->> +    const struct power_limits *power_limits;
->> +    u32 ppt_pl1_spl;            // cpu
->> +    u32 ppt_pl2_sppt;            // cpu
->> +    u32 ppt_pl3_fppt;            // cpu
->> +    u32 ppt_apu_sppt;            // plat
->> +    u32 ppt_platform_sppt;        // plat
->> +
->> +    u32 nv_dynamic_boost;
->> +    u32 nv_temp_target;
->> +    u32 nv_tgp;
->> +};
->> +
->>   static struct asus_armoury_priv {
->>       struct device *fw_attr_dev;
->>       struct kset *fw_attr_kset;
->>         struct cpu_cores *cpu_cores;
->> +    /* Index 0 for DC, 1 for AC */
->> +    struct rog_tunables *rog_tunables[2];
->>       u32 mini_led_dev_id;
->>       u32 gpu_mux_dev_id;
->>       /*
->> @@ -719,7 +746,34 @@ static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
->>   ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
->>               "Set the max available efficiency cores");
->>   +/* Define helper to access the current power mode tunable values */
->> +static inline struct rog_tunables *get_current_tunables(void)
->> +{
->> +    return asus_armoury
->> +        .rog_tunables[power_supply_is_system_supplied() ? 1 : 0];
->> +}
->> +
->>   /* Simple attribute creation */
->> +ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, ATTR_PPT_PL1_SPL, ASUS_WMI_DEVID_PPT_PL1_SPL,
->> +               "Set the CPU slow package limit");
->> +ATTR_GROUP_ROG_TUNABLE(ppt_pl2_sppt, ATTR_PPT_PL2_SPPT, ASUS_WMI_DEVID_PPT_PL2_SPPT,
->> +               "Set the CPU fast package limit");
->> +ATTR_GROUP_ROG_TUNABLE(ppt_pl3_fppt, ATTR_PPT_PL3_FPPT, ASUS_WMI_DEVID_PPT_FPPT,
->
-> why not ASUS_WMI_DEVID_PPT_PL3_FPPT ? 
->
-I simply didn't touch anything that was not brought up, but I see that it appears to be a more consistent name.
-
-Will use that name for v14, thanks!
-
->> +               "Set the CPU fastest package limit");
->> +ATTR_GROUP_ROG_TUNABLE(ppt_apu_sppt, ATTR_PPT_APU_SPPT, ASUS_WMI_DEVID_PPT_APU_SPPT,
->> +               "Set the APU package limit");
->> +ATTR_GROUP_ROG_TUNABLE(ppt_platform_sppt, ATTR_PPT_PLATFORM_SPPT, ASUS_WMI_DEVID_PPT_PLAT_SPPT,
->> +               "Set the platform package limit");
->> +ATTR_GROUP_ROG_TUNABLE(nv_dynamic_boost, ATTR_NV_DYNAMIC_BOOST, ASUS_WMI_DEVID_NV_DYN_BOOST,
->> +               "Set the Nvidia dynamic boost limit");
->> +ATTR_GROUP_ROG_TUNABLE(nv_temp_target, ATTR_NV_TEMP_TARGET, ASUS_WMI_DEVID_NV_THERM_TARGET,
->> +               "Set the Nvidia max thermal limit");
->> +ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
->> +               "Set the additional TGP on top of the base TGP");
->> +ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
->> +                 "Read the base TGP value");
->> +
->> +
->>   ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
->>                  "Show the current mode of charging");
->>   @@ -746,6 +800,16 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->>       { &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
->>       { &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
->>   +    { &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
->> +    { &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_PPT_PL2_SPPT },
->> +    { &ppt_pl3_fppt_attr_group, ASUS_WMI_DEVID_PPT_FPPT },
->> +    { &ppt_apu_sppt_attr_group, ASUS_WMI_DEVID_PPT_APU_SPPT },
->> +    { &ppt_platform_sppt_attr_group, ASUS_WMI_DEVID_PPT_PLAT_SPPT },
->> +    { &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
->> +    { &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
->> +    { &nv_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
->> +    { &nv_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
->> +
->>       { &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
->>       { &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
->>       { &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
->> @@ -754,8 +818,75 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->>       { &screen_auto_brightness_attr_group, ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS },
->>   };
->>   +/**
->> + * is_power_tunable_attr - Determines if an attribute is a power-related tunable
->> + * @name: The name of the attribute to check
->> + *
->> + * This function checks if the given attribute name is related to power tuning.
->> + *
->> + * Return: true if the attribute is a power-related tunable, false otherwise
->> + */
->> +static bool is_power_tunable_attr(const char *name)
->> +{
->> +    static const char * const power_tunable_attrs[] = {
->> +        ATTR_PPT_PL1_SPL,    ATTR_PPT_PL2_SPPT,
->> +        ATTR_PPT_PL3_FPPT,    ATTR_PPT_APU_SPPT,
->> +        ATTR_PPT_PLATFORM_SPPT, ATTR_NV_DYNAMIC_BOOST,
->> +        ATTR_NV_TEMP_TARGET,    ATTR_NV_BASE_TGP,
->> +        ATTR_NV_TGP
->> +    };
->> +
->> +    for (unsigned int i = 0; i < ARRAY_SIZE(power_tunable_attrs); i++) {
->> +        if (!strcmp(name, power_tunable_attrs[i]))
->> +            return true;
->> +    }
->> +
->> +    return false;
->> +}
->> +
->> +/**
->> + * has_valid_limit - Checks if a power-related attribute has a valid limit value
->> + * @name: The name of the attribute to check
->> + * @limits: Pointer to the power_limits structure containing limit values
->> + *
->> + * This function checks if a power-related attribute has a valid limit value.
->> + * It returns false if limits is NULL or if the corresponding limit value is zero.
->> + *
->> + * Return: true if the attribute has a valid limit value, false otherwise
->> + */
->> +static bool has_valid_limit(const char *name, const struct power_limits *limits)
->> +{
->> +    u32 limit_value = 0;
->> +
->> +    if (!limits)
->> +        return false;
->> +
->> +    if (!strcmp(name, ATTR_PPT_PL1_SPL))
->> +        limit_value = limits->ppt_pl1_spl_max;
->> +    else if (!strcmp(name, ATTR_PPT_PL2_SPPT))
->> +        limit_value = limits->ppt_pl2_sppt_max;
->> +    else if (!strcmp(name, ATTR_PPT_PL3_FPPT))
->> +        limit_value = limits->ppt_pl3_fppt_max;
->> +    else if (!strcmp(name, ATTR_PPT_APU_SPPT))
->> +        limit_value = limits->ppt_apu_sppt_max;
->> +    else if (!strcmp(name, ATTR_PPT_PLATFORM_SPPT))
->> +        limit_value = limits->ppt_platform_sppt_max;
->> +    else if (!strcmp(name, ATTR_NV_DYNAMIC_BOOST))
->> +        limit_value = limits->nv_dynamic_boost_max;
->> +    else if (!strcmp(name, ATTR_NV_TEMP_TARGET))
->> +        limit_value = limits->nv_temp_target_max;
->> +    else if (!strcmp(name, ATTR_NV_BASE_TGP) ||
->> +         !strcmp(name, ATTR_NV_TGP))
->> +        limit_value = limits->nv_tgp_max;
->> +
->> +    return limit_value > 0;
->> +}
->> +
->>   static int asus_fw_attr_add(void)
->>   {
->> +    const struct power_limits *limits;
->> +    bool should_create;
->> +    const char *name;
->>       int err, i;
->>         asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
->> @@ -812,12 +943,30 @@ static int asus_fw_attr_add(void)
->>           if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
->>               continue;
->>   -        err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
->> -                     armoury_attr_groups[i].attr_group);
->> -        if (err) {
->> -            pr_err("Failed to create sysfs-group for %s\n",
->> -                   armoury_attr_groups[i].attr_group->name);
->> -            goto err_remove_groups;
->> +        /* Always create by default, unless PPT is not present */
->> +        should_create = true;
->> +        name = armoury_attr_groups[i].attr_group->name;
->> +
->> +        /* Check if this is a power-related tunable requiring limits */
->> +        if (asus_armoury.rog_tunables[1] && asus_armoury.rog_tunables[1]->power_limits &&
->> +            is_power_tunable_attr(name)) {
->> +            limits = asus_armoury.rog_tunables[1]->power_limits;
->> +            /* Check only AC, if DC is not present then AC won't be either */
->> +            should_create = has_valid_limit(name, limits);
->> +            if (!should_create) {
->> +                pr_debug("Missing max value on %s for tunable: %s\n",
->> +                     dmi_get_system_info(DMI_BOARD_NAME), name);
->
-> dmi_get_system_info can return NULL 
-ouch! v14 here I come.
->
->> +            }
->> +        }
->> +
->> +        if (should_create) {
->> +            err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
->> +                armoury_attr_groups[i].attr_group);
->> +            if (err) {
->> +                pr_err("Failed to create sysfs-group for %s\n",
->> +                       armoury_attr_groups[i].attr_group->name);
->> +                goto err_remove_groups;
->> +            }
->>           }
->>       }
->>  
-> Thanks,
-> Alok 
-Thanks,
-Denis B.
