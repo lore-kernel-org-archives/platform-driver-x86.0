@@ -1,79 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D19C1FB1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 22:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14732188596
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 23:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760481423; cv=none; b=W3JFRseFxH5TA+tbFQWF0n0dJQhYlsQljTkp8r6d+4BsDI8SWC5AHwAf3P4svVkGC8aEFdKEpzYbcn4IhQdef+77U7y4T/uGw7s8lHcAPYohwN7ya5XhpogxFOeVQGY+S/YYxxTPHwZVpi/9ZFAFg716H8+PD489bd42cwIadmc=
+	t=1760486148; cv=none; b=jUFzHk+H5K5IXJHM2P4MzhfQbIegopIHI81STAYEVyDD6PyqWRCzqQSTcksBlvT9D7PSN46wrNljQX4ENJKh/ONVm6X+cGY67YOaIHnU2hbufUI8AETlCydR8B8VUdp6iGZ/5bzsL9NNWbjsS/F7svFR93uisaJo7LOaFw/r/a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760481423; c=relaxed/simple;
-	bh=Yx0hWpXtK0hJ3KVAx+55KVSc/PXrWb9NJ3nGaK28V1Q=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qbpS/bBZjlVzvwR2CDQuZtoHzaxXju9/zqDqLQoRjFxOKKr6ANA3d/Hya7QN139c+8zo/JpufF/lo8Y3GOCi52pm0xZwE3ykAHZ+7myMqVj2N2UUS3lEABaaBynYO1XzGEXgnNVIdBKfGp2kMsjxNM9n6KA+8+pjAMiHJPo9t38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTTm53Aw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760486148; c=relaxed/simple;
+	bh=rs3BHRt4QqaqakQmurZBTZeMTAPLEe8u9uNfm8hfUEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GkfE4CMYtNwClsowpPA9tHR/aAxcD79qtsQQaz9XsDumfitrER1BpNrrojND3nfPig1WDScp8qOY5fwnfCmIBqPN7c0FRVMEbbzJ5+8oLKn4HrVuTVU7WesFgLvPtcPRJf/tBCKCszVWioa7ejypjN0ttKN0Z2bOWTCAUuJ9SDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eVOsjGZF; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTTm53Aw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E75F6C116C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 22:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760481422;
-	bh=Yx0hWpXtK0hJ3KVAx+55KVSc/PXrWb9NJ3nGaK28V1Q=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FTTm53AwpOx4NRvpiiqu3FIm40SBYmzTRDBRcLNxhDqzNDkhmkQj8Oh+pX+jpk8uW
-	 zdmYcORrRCz1K3/IXaw3qzhR4+vIW4ckHMPbnAid4iNrJCDl2TuLbGdVywT9jr7Anl
-	 n6D/ETZpF/hDd6y9ExbdKpWC+3pA+/4dAe9w0xZuKj5lLR0QV0po/LJqrysChNBtWx
-	 HD1rXOha1pKvSOuwngJSpjEj4hgmvDiH0RpjN8NowAdrC7ERXY5akd9jqro7uNkTx2
-	 CW0Diqq7p7GUtqm7fGAGx9pcQ9DRm39ud0n/ZMGFHCizRgjMk6BNoNMGQKpd2cNCQc
-	 sRobhKRvxOFKw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id DCCE2C53BC5; Tue, 14 Oct 2025 22:37:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220662] hp-wmi: Add fan control support for HP Victus s0022nt
- (DMI: 8BD4)
-Date: Tue, 14 Oct 2025 22:37:02 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: falper2003@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220662-215701-vFpXTqSJbv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220662-215701@https.bugzilla.kernel.org/>
-References: <bug-220662-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eVOsjGZF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760486146; x=1792022146;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rs3BHRt4QqaqakQmurZBTZeMTAPLEe8u9uNfm8hfUEI=;
+  b=eVOsjGZFbw2Cz7FyMXEeCvrB5X4KuOPmw7CFozSiClbTJ/haJFWIDmWh
+   Vz6TIMxgNwkQBLVk6e88QhqXFtFSEjfdlYggpmj/TDQtuctLD7nEu/q1X
+   Y7LXDDXAV7e06p9PRMKyZQHWdsL6FUMGJCw8tpwWgojOf6rWx7KmqqpNI
+   aZ3lIbGuPTQCFfR/ucKigumT8mZN8J6D+IupawYwIpVTIe5PuXuZ0NaBV
+   7d+39R1KXcjlZXH0BKbzQZxJS0MW9XKzP4LTXUqwA8Vjue1t0PGh5gFU9
+   QK+i144qKCznQUHzixX6hSI5dTnCqSindqu3Lvpt5Xh2/2cMM+KbMXUz+
+   w==;
+X-CSE-ConnectionGUID: z4UqB4VmQTO1sVArszzFHw==
+X-CSE-MsgGUID: GoMniHNJTeqhYS8jfOO1jg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="50218109"
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="50218109"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 16:55:45 -0700
+X-CSE-ConnectionGUID: 3n1GFmuzQkaoYg+kweqxug==
+X-CSE-MsgGUID: RJ/WIFLeTB2SC3wmtf8YLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="181156641"
+Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.124.130.255]) ([10.124.130.255])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 16:55:45 -0700
+Message-ID: <280be57c-5159-4e5b-9d8e-15cd67b84cc4@linux.intel.com>
+Date: Tue, 14 Oct 2025 16:55:43 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] platform/x86/intel/pmc: Always dump LPM status regs
+ on unsuccessful paths
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: irenic.rajneesh@gmail.com, david.e.box@intel.com, kernel-dev@igalia.com,
+ kernel@gpiccoli.net
+References: <20250922230812.1584253-1-gpiccoli@igalia.com>
+ <20250922230812.1584253-4-gpiccoli@igalia.com>
+ <dcd817d1-6ce5-4c09-a65b-21507424849b@linux.intel.com>
+ <71fef5d2-15fe-27ce-4004-998aadc9a8cb@igalia.com>
+Content-Language: en-US
+From: Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <71fef5d2-15fe-27ce-4004-998aadc9a8cb@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220662
 
---- Comment #1 from FatihAlper (falper2003@gmail.com) ---
-As I try to find a solution, i found out this
-[https://github.com/Vilez0/hp-wmi-fan-and-backlight-control?tab=3Dreadme-ov=
--file]
-GitHub repo that can manpulate fan speeds and change keyboard rgb settings.=
- I
-dont know much about kernel development but it might be useful.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+On 10/14/2025 12:58 PM, Guilherme G. Piccoli wrote:
+> Thanks Xi! Response inline:
+>
+> On 14/10/2025 16:29, Xi Pardee wrote:
+>> [...]
+>>
+>> Entering the S0ix state requires the system to reach the deepest package
+>> C-state, PC10. If the system fails to achieve PC10 residency during
+>> suspend, the slps0_dbg_maps data becomes irrelevant and may mislead
+>> users. For this reason, the driver hides this information when PC10
+>> residency is not attained.
+>>
+> Indeed, I agree - this is even mentioned in the spec.
+>
+> But the patch here doesn't change that (or shouldn't - except if I did
+> something wrong heh).
+>
+> The idea of this patch is to dump the LPM registers in any failure path,
+> the ones printed by pmc_core_lpm_display() - not related with the
+> slps0_dbg_maps.
+>
+> Lemme know your thoughts on this.
+> Cheers,
+>
+>
+> Guilherme
+When the system fails to enter the S0ix state during suspend, there are 
+two scenarios to consider:
+1. If the system achieves PC10 residency, debugging S0ix can focus on 
+the information provided by slps0_dbg_maps or lpm_sts.
+2. If the system does not achieve PC10 residency, the PMC core driver 
+supplies package C-state residency information instead.
+It is important to note that the data presented by 
+pmc_core_lpm_display() is only relevant when PC10 residency has been 
+attained.
+This difference helps ensure that users are provided with accurate and 
+meaningful information relevant to the power state achieved during suspend.
+Thanks!
+Xi
+>
