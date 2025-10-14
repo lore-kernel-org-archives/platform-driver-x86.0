@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8297215B0EC
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 19:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D532951B3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 19:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760469849; cv=none; b=hP+8PhOfjYPzZjyTbFQ+xdAfUU5SMWj4K14f5Ugg40RlqBLqSOEtoCxxAMk4TrJK1OIBXqBhWbDqnPqBhNZVYjQkm4Pq9DfqYiTny1QrhQm209lDssgOKL39DP3RQBX+tPzQ9RDqhHdS0ykprFduxl0+6R8uA1nzweEqnS2lbP4=
+	t=1760470152; cv=none; b=FZSgnvYmYJxS1jMeWClPnv6J9i4BOozQjJQjFCsHNuISy4HG3zJnAQdjKBrkC3xHxxUvtDrqQ6rFLpnSFmY8ayexrhjw4FHxvqapjc5Kcjtg7518CZtRinUTQt7gWEM8SzlqR7/EzCGQXZDpj4EgjVAbTb9miNVReFrXoIT4oNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760469849; c=relaxed/simple;
-	bh=dCxTkikJ/4hsArTQOtpHlXCDNekVFz82Gp2jmdjph7s=;
+	s=arc-20240116; t=1760470152; c=relaxed/simple;
+	bh=vBfPzKgSZ0fy39F3irRjEFiGNRZZTYUkjdyb2waFAKE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dgLj161iuekcWInBB0sE9Da0sVZ0k0jIwag3Mgb8XJ48GFJK2I2Wh7P2FfePMqZ9S4cJGlF1BmG64pb6oHv7PglXippNhf2VYVhsYQ/rRw4h+Fz6VExJwcQE7nnJIgawmwIM/OgGoh/wFja+tVJ2+z82vWKD9HYUULKX69aw38s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isge8QNK; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=otdx7FMwONW0bEbIt45+jfvzuXNo8uolkMAfttdo/iMooDFZDedT66Q/5mXzEYUxM/lrLS5z/8XUwC19kCVbgx9dFs8GvFSZiT77/mNpjIHvApQFSNulB+TwBhAiP34tlTyO2HWkNi5DcFRlwys1wF99AFk0htPTM8BJVCVTBVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=idtEA2Zh; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isge8QNK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="idtEA2Zh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760469847; x=1792005847;
+  t=1760470150; x=1792006150;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=dCxTkikJ/4hsArTQOtpHlXCDNekVFz82Gp2jmdjph7s=;
-  b=isge8QNKPm1DapkFCzJIQFoSlS4xnXTWtvE2GKqZOwD1V3/uS0fNF+fP
-   gjHLQSa5ubNBj9K/oDeoZalnyT3ePYcGR5bsvGtWwRj5AJAt3ZNBelPsX
-   CFprCn+2fByBaDyrpu/yknAcHdHDm8yJGzghUEjt5HU7D97vYNauYaclJ
-   MbpnT6r1ClquolXwKxBA/9PNo51Y3ysYBy23HLO2ttYTg7WxrmvooGZri
-   nvalMTWisggw/nD/f1ZCJe3ebOWzrX0OFzIGWwBOc4dBn3S1MJNeohi81
-   MKDvAvQqTqEFM5G5g8ELkXmt8VpfLGN0aXnlYN524Qj7liHdujQa4T1cF
-   w==;
-X-CSE-ConnectionGUID: wwuXiUMESGCSQfvjxFoUMw==
-X-CSE-MsgGUID: bdAQEsD5TLOa5brRAaDsFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62672472"
+  bh=vBfPzKgSZ0fy39F3irRjEFiGNRZZTYUkjdyb2waFAKE=;
+  b=idtEA2ZhiKASV4DXGWfprTSlHvtbD3OSq2UrdiD8YBj44mF14mqGiDIG
+   +8d9RwxXF0oxRg7gl8UB0JHStjzqNpHy1l8F7T6AX9jqwF84XgPBc9BVF
+   B0JwedQYc9e7+dqFJUEq8zlQbgU1INeQeNk7dE7nTjmec22nzXrfFp0Ce
+   /Kzy+nz+dBzweQuYdZ8EJemcgzc9EU933qGlilRlSHMU9PziQBVW1RH4S
+   Q/Vn+E8+/6i7t1vfUqKT8gLn4gyFx6lU6VRSUu5tA6BfSZtjIn3RHqN2N
+   GeThowGSuILTuvSrB984GfXe9nhhP3EZa6uVQp7d0SJhmDEpIVj8vRw7y
+   A==;
+X-CSE-ConnectionGUID: QkEM9TnvTYmem5Cv7r6vsQ==
+X-CSE-MsgGUID: WrZIyUeHRY+SucVqrpVPOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62672870"
 X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
-   d="scan'208";a="62672472"
+   d="scan'208";a="62672870"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 12:24:06 -0700
-X-CSE-ConnectionGUID: qF50uZFISvWl44oCE8r9Wg==
-X-CSE-MsgGUID: WjhzB1oRQV2Tiwpw+VbD6Q==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 12:29:09 -0700
+X-CSE-ConnectionGUID: 4ww2mY5vTXaVvC7wMPmJJQ==
+X-CSE-MsgGUID: HcM2zoyOSkSVRlk1DBPKKg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
-   d="scan'208";a="219111151"
+   d="scan'208";a="219111863"
 Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.124.130.255]) ([10.124.130.255])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 12:24:07 -0700
-Message-ID: <c38c3b32-fce0-437c-b174-bf602927b0bb@linux.intel.com>
-Date: Tue, 14 Oct 2025 12:24:05 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 12:29:10 -0700
+Message-ID: <dcd817d1-6ce5-4c09-a65b-21507424849b@linux.intel.com>
+Date: Tue, 14 Oct 2025 12:29:08 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,128 +52,83 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4][RFC] platform/x86/intel/pmc: Re-add SLP_S0_DBG
- register dump on Tiger Lake
+Subject: Re: [PATCH 3/4] platform/x86/intel/pmc: Always dump LPM status regs
+ on unsuccessful paths
 To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
  platform-driver-x86@vger.kernel.org
 Cc: irenic.rajneesh@gmail.com, david.e.box@intel.com, kernel-dev@igalia.com,
  kernel@gpiccoli.net
 References: <20250922230812.1584253-1-gpiccoli@igalia.com>
- <20250922230812.1584253-5-gpiccoli@igalia.com>
+ <20250922230812.1584253-4-gpiccoli@igalia.com>
 Content-Language: en-US
 From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <20250922230812.1584253-5-gpiccoli@igalia.com>
+In-Reply-To: <20250922230812.1584253-4-gpiccoli@igalia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-My response is in line.
+My response is inline.
 
 Thanks!
+
 Xi
 
 On 9/22/2025 3:52 PM, Guilherme G. Piccoli wrote:
-> Commit a018e28f0880 ("platform/x86: intel_pmc_core: Remove slp_s0 attributes from tgl_reg_map")
-> removed the SLP_Sx_DBG register dump on suspend/resume s0ix-related failures
-> on Tiger Lake. The mentioned reason was related to potential sub-states.
+> Right now, there are 2 fail paths on pmc_core_resume_common(): either
+> after (some) package(s) didn't enter Cx state, or after s0ix was
+> not successfully entered.
 >
-> Let's re-enable the SLP_Sx_DBG register dumping on failures, also fixing
-> the register mapping (according to the spec[0]) and adding it also to
-> Tiger Lake H, as a means to improve debug of suspend/resume failures .
+> The code has a debug output, dumping LPM registers, but *only*
+> on s0ix fail path, not when packages fail to enter some Cx state.
 >
-> If we do have the sub-states, but not in all cases, better to have some
-> platforms with more debug information than entirely suppress this info.
->
-> [0] Refer to: "Intel 500 Series Chipset Family PCH datasheet - Vol 2"
-> (Doc ID: 636174). Link (from Sep/2025):
-> www.intel.com/content/www/us/en/content-details/636174/intel-500-series-chipset-family-platform-controller-hub-pch-datasheet-volume-2-of-2.html
+> Let's make it output the LPM registers in both fail cases, in order to
+> help debugging issues.
 >
 > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-
-Starting with Tiger Lake platforms, the slp_s0_dbg register maps are 
-deprecated. The data provided by these registers may no longer be valid.
-
-On Tiger Lake and newer platforms, the intel_pmc_core driver introduces 
-substate_status_registers and other updated attributes that offer 
-information useful for debugging S0ix-related issues.
-
 > ---
->   drivers/platform/x86/intel/pmc/tgl.c | 48 ++++++++++++++++++++++++++++
->   1 file changed, 48 insertions(+)
+>   drivers/platform/x86/intel/pmc/core.c | 22 ++++++++++++++--------
+>   1 file changed, 14 insertions(+), 8 deletions(-)
 >
-> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-> index 02e731ed3391..cdabe9b5c20b 100644
-> --- a/drivers/platform/x86/intel/pmc/tgl.c
-> +++ b/drivers/platform/x86/intel/pmc/tgl.c
-> @@ -185,12 +185,58 @@ static const struct pmc_bit_map *tgl_lpm_maps[] = {
->   	NULL
->   };
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index c8ce5d6ec30c..aeb5e47cf5bb 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1882,16 +1882,22 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev)
+>   					 msr_map[i].name, pc_cnt);
+>   			}
+>   		}
+> -		return 0;
+> +	} else {
+> +		/* The real interesting case - S0ix failed - lets ask PMC why. */
+> +		dev_warn(dev, "CPU did not enter SLP_S0!!! (S0ix cnt=%llu)\n",
+> +			 pmcdev->s0ix_counter);
+> +
+> +		/*
+> +		 * Notice that SLP_S0_DBG regs are captured on C10 entry,
+> +		 * according to the spec. So if we didn't enter C10 (i.e.,
+> +		 * the  above if-block was executed) seems to make no sense
+> +		 * in dumping them.
+> +		 */
+> +		if (pmc->map->slps0_dbg_maps)
+> +			pmc_core_slps0_display(pmc, dev, NULL);
+> +
+>   	}
 >   
-> +/*
-> + * The following SLP_S0_DBG register mappings are based on the
-> + * "Intel 500 Series Chipset Family PCH datasheet - Vol 2"
-> + * specification (Doc ID: 636174).
-> + */
-> +
-> +static const struct pmc_bit_map tgl_slps0_dbg0_map[] = {
-> +	{"AUDIO_D3",		BIT(0)},
-> +	{"OTG_D3",		BIT(1)},
-> +	{"XHCI_D3",		BIT(2)},
-> +	{"LPIO_D3",		BIT(3)},
-> +	{"SATA_D3",		BIT(5)},
-> +	{}
-> +};
-> +
-> +static const struct pmc_bit_map tgl_slps0_dbg1_map[] = {
-> +	{"USB2_PLL_OFF",	BIT(1)},
-> +	{"AUDIO_PLL_OFF",	BIT(2)},
-> +	{"MAIN_PLL_OFF",	BIT(4)},
-> +	{"XOSC_OFF",		BIT(5)},
-> +	{"PCIE_CLKREQS_OFF",	BIT(7)},
-> +	{"AUDIO_ROSC_OFF",	BIT(8)},
-> +	{}
-> +};
-> +
-> +static const struct pmc_bit_map tgl_slps0_dbg2_map[] = {
-> +	{"HSIO_CORE_GATED",	BIT(0)},
-> +	{"CSME_GATED",		BIT(1)},
-> +	{"GBE_NO_LINK",		BIT(4)},
-> +	{"PCIE_LOW_POWER",	BIT(6)},
-> +	{"ISH_VNN_REQ_ACT",	BIT(8)},
-> +	{"CNV_VNN_REQ_ACT",	BIT(10)},
-> +	{"PMSYNC_STATE_IDLE",	BIT(12)},
-> +	{"ASLT_GT_THRES",	BIT(13)},
-> +	{}
-> +};
-> +
-> +const struct pmc_bit_map *tgl_slps0_dbg_maps[] = {
-> +	tgl_slps0_dbg0_map,
-> +	tgl_slps0_dbg1_map,
-> +	tgl_slps0_dbg2_map,
-> +	NULL
-> +};
-> +
->   static const struct pmc_reg_map tgl_reg_map = {
->   	.pfear_sts = ext_tgl_pfear_map,
->   	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-> +	.slps0_dbg_maps = tgl_slps0_dbg_maps,
->   	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
->   	.ltr_show_sts = cnp_ltr_show_map,
->   	.msr_sts = msr_map,
-> +	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
->   	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
->   	.regmap_length = CNP_PMC_MMIO_REG_LEN,
->   	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
-> @@ -213,9 +259,11 @@ static const struct pmc_reg_map tgl_reg_map = {
->   static const struct pmc_reg_map tgl_h_reg_map = {
->   	.pfear_sts = ext_tgl_pfear_map,
->   	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-> +	.slps0_dbg_maps = tgl_slps0_dbg_maps,
->   	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
->   	.ltr_show_sts = cnp_ltr_show_map,
->   	.msr_sts = msr_map,
-> +	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
->   	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
->   	.regmap_length = CNP_PMC_MMIO_REG_LEN,
->   	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
+> -	/* The real interesting case - S0ix failed - lets ask PMC why. */
+> -	dev_warn(dev, "CPU did not enter SLP_S0!!! (S0ix cnt=%llu)\n",
+> -		 pmcdev->s0ix_counter);
+> -
+> -	if (pmc->map->slps0_dbg_maps)
+> -		pmc_core_slps0_display(pmc, dev, NULL);
+> -
+>   	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
+>   		struct pmc *pmc = pmcdev->pmcs[i];
+>   
+
+Entering the S0ix state requires the system to reach the deepest package 
+C-state, PC10. If the system fails to achieve PC10 residency during 
+suspend, the slps0_dbg_maps data becomes irrelevant and may mislead 
+users. For this reason, the driver hides this information when PC10 
+residency is not attained.
+
