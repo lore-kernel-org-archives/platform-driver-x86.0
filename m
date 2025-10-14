@@ -1,360 +1,245 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010009.outbound.protection.outlook.com [52.101.201.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123172FC87F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 11:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760439806; cv=fail; b=gtp7Y2dgSGMSCLHp/tClCw861OfstCcG09OG3dLuTZ7uIVkr7MoHfOLcZB5K6tuUsPXVMRij8gEuoYsn2BxZVw9VZ/4ksB8BcGOWtAy73jPsXLGw1Tma78tsQ4GWCwLnw7nM6Ip/BayDDrefs1xHX/fANF+A2HUfn55z47U6Zpg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760439806; c=relaxed/simple;
-	bh=0R8N0IBSsoZckDy8c+eWcr6NM5GkTT2XcPOJU6bcNGg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sNGEj7Zw9cGwSX47xldWw9dAwcG0nO7DmOhnQlOGeC3vMdZk6TFhZNKmXol6DdLI8dygRt+IW0Gea9eV6Q5e2CvNmxX+6hCXYDZbfmiExdouUfObw9wp7Rhtq90WQO4RajPeca6vdNDTZhB09fqRmBW2hVPaF7usPXTqc9lWFOc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rxG0BTGp; arc=fail smtp.client-ip=52.101.201.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A0F28CF49;
+	Tue, 14 Oct 2025 11:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760440307; cv=none; b=VCgTJ0Rq68bCnFSfVxw2316pjy2p5vyNlQJp0NMkbCLwIKQkRHJeDSddgFq/OYrCLjTb/wszHiymdGUVpcq7Sm5+p8kRp40Nu8YGDorKxyu2g60mdZBXl7/IPX3X4pfdbgTqqVDllrJk1sKvzQ4CweJtwfyFwR6J33717XH7qe4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760440307; c=relaxed/simple;
+	bh=meSVJTi1mW46sLNzzcKKnwV7IsLT4dwh+FcQz2ZXjTQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jaX0fuGvvGdeYkfQq5CX+e14jM+Jcrv5WPLXS7X1zeuItk46YJioRHRGAr4V4T2GpQBK2tCKHFBvfSyaOgy8Y43ZU0lPqUnNYkPEx0h+lZlrjV2zL2mm8wG5ZbgBdHjkp68YlfeOIgLB48fSrQL8j/Zn5bYB0Du92fYAXUOg3KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BF3BvXf0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rxG0BTGp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J/+8fIi6efMZqc8dx+KdEzLDbEvVUXWWoxFK0EptYgkXP62QLR6JMD4SX3zQ67yUnusW1byNY9FEYk31Lk4cOWLhYSRuLzVmD/XSm1j9pEc9KJS8rkQZ25Sy60kAFJmQooa29iUA5Cxho7qF9pAQmXZU5rQPHavTANzwYW2E+v3V5P7Ci5LyunIgu8yvgGO/L5gRTOKu+Ksb4crqxY/B6LPLOe/SglYmxcW4v8RnlQZfs7bEf/EwFzMv4gj3wrnW2VU06axZCt9ny1xFXZLSoCXOlndAcysyH4GIBb+JoPmPiD1kwIWxTk5XZivObZdt7c9TYvrAE+DRkTNJHDhqmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T1qSW3ZjqysFT9x8FYK3LGfLEjHT3J6pRUcITA2U+ME=;
- b=wBh47goawH3wAr2TqvXTzUft8dGcS2/P01z/zHrjf4Ep0LtPcbhB1UlhUwIuChHGq2XviAV6pJtPR1dvhBr5NoL2T4Ed2mh7jmx1ISP03HSB7/8aYoNzeMYHOPVi3ER1Wq8bq6BgZrhk4zlLGFH/rDHv2vKuTfUenwVSRi6DLpPQJvllUoBfMCbebBi4t82WM3jg7BGPFdN+wLkAyNKawrwdILPVtEVsLf5HEtnSG0MX2YhwxnTjv+z+xLMZ/8lFlOzxcxDcd9v7g/XWcpaeKZE9qxSPi/kiVpqEjaIjCdcXYcL0zXOMpmpetC0nXGq/xFnnH/UgQZBZpGEv701/5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T1qSW3ZjqysFT9x8FYK3LGfLEjHT3J6pRUcITA2U+ME=;
- b=rxG0BTGpVnojyYnAx3qyakDS+07ZwZeEgLWdF9sL1+WQXshviHUDfax0l3igMCUvh+aI5ZQgNhqth3HFez/q7HOFha4iGEpKY5JBZi8S+w0BMab1WW85PXZta0PLsZpKxlYdU8yUw2xMzx1L1VaZpE2WVdtnCXDeBJGWdYes/C0=
-Received: from BLAPR03CA0008.namprd03.prod.outlook.com (2603:10b6:208:32b::13)
- by CH1PPF946CC24FA.namprd12.prod.outlook.com (2603:10b6:61f:fc00::61c) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Tue, 14 Oct
- 2025 11:03:20 +0000
-Received: from MN1PEPF0000ECD4.namprd02.prod.outlook.com
- (2603:10b6:208:32b:cafe::b) by BLAPR03CA0008.outlook.office365.com
- (2603:10b6:208:32b::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.13 via Frontend Transport; Tue,
- 14 Oct 2025 11:03:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MN1PEPF0000ECD4.mail.protection.outlook.com (10.167.242.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.7 via Frontend Transport; Tue, 14 Oct 2025 11:03:20 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 14 Oct
- 2025 04:03:17 -0700
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-	<mario.limonciello@amd.com>, <Yijun.Shen@Dell.com>, Shyam Sundar S K
-	<Shyam-sundar.S-k@amd.com>
-Subject: [PATCH] platform/x86/amd/pmf: Use ring buffer to store custom BIOS input values
-Date: Tue, 14 Oct 2025 16:31:41 +0530
-Message-ID: <20251014110141.1844925-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BF3BvXf0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760440305; x=1791976305;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=meSVJTi1mW46sLNzzcKKnwV7IsLT4dwh+FcQz2ZXjTQ=;
+  b=BF3BvXf0DCMv3cLZQKLxt4K6e7gxuLyX0Mbt+OvDuZxYNqKnDD4s+1ba
+   Kt/R+A0HCi3HboG28s5oLoyf6xEtOIfTOtGAOW16IPbQ/oR+/6rQ3SQ8X
+   By14KCon5DOmOh0odzdxPS15uzsU7al+35otBd4Jus9R02FgH2saUnJ2D
+   8kuO8RZZwZJIPwxfceNdnY3Oswr7k8Yt3V6gC+Pdco0EJqvSvm5oYVsYG
+   yClQluSm6vqUF+CChbCl8WzOihaa18m3fa+tSbxq9r8+dAORPHZXVpghN
+   eR2l1R8tQdXzLSP1jUps4HrAPI8PiLQEy8aXG18dR5mKy/I3aHWjVVprZ
+   Q==;
+X-CSE-ConnectionGUID: C6o9AYy0QTix9oA6zVpLsw==
+X-CSE-MsgGUID: MNDVyYEPRfeEXrwAyt0fNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="62635649"
+X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
+   d="scan'208";a="62635649"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 04:11:43 -0700
+X-CSE-ConnectionGUID: dhg34kS9QqGS+LVgKu+xkg==
+X-CSE-MsgGUID: JnA4JK0tTl6PvexWiuHQBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,228,1754982000"; 
+   d="scan'208";a="182306444"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.195])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 04:11:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 14 Oct 2025 14:11:35 +0300 (EEST)
+To: Denis Benato <benato.denis96@gmail.com>
+cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    "Limonciello, Mario" <mario.limonciello@amd.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
+Subject: Re: [External] : [PATCH v13 8/8] platform/x86: asus-armoury: add
+ ppt_* and nv_* tuning knobs
+In-Reply-To: <c2b86d8f-d148-4ad8-aa46-f94b9598be80@gmail.com>
+Message-ID: <926a5d91-e69f-cecb-90c1-64b83424b1a2@linux.intel.com>
+References: <20251013180534.1222432-1-benato.denis96@gmail.com> <20251013180534.1222432-9-benato.denis96@gmail.com> <cad7b458-5a7a-4975-94a1-d0c74f6f3de5@oracle.com> <f352e00c-50d9-4c13-941c-d6e254c44072@gmail.com>
+ <c2b86d8f-d148-4ad8-aa46-f94b9598be80@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD4:EE_|CH1PPF946CC24FA:EE_
-X-MS-Office365-Filtering-Correlation-Id: d372f8d7-09cc-45bb-4e70-08de0b114936
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Cfgp15TbBNNONsDaJq+4vJ5VA5L6R6YbDp09EX12I1VjxNctls5gRb55g682?=
- =?us-ascii?Q?BqiPNl8hWISx9ABj3lB5tcFAYB59j51hpEIQh8H0tB8VYvtjdnT/zzb4fQhp?=
- =?us-ascii?Q?UOeAH7NgIMxvywTIjTQ3fBTxaq9uvVKszYIe6C7qdXW9AsnxOSuyJ3WETQRL?=
- =?us-ascii?Q?oW5qfCmsVS7JqP4GqptPyNaEtGm2GZakoQY+zPHuHiUgkvbil4fitlhy8cMh?=
- =?us-ascii?Q?AxQux4VgSBvb/8qcXJQIphViplphOKpuiPRwwGgYNcrYihZkY77TWmhqynz8?=
- =?us-ascii?Q?yFcoDeVBjfVvXzXLCsOpekQjsGLun8roo6WR8+gsJVpyuWNkhApWY01pdcOb?=
- =?us-ascii?Q?w5S5l2JcdRE7y91zyG/wJXjBBR63PtgoClRQOl9ofT8PgoXBFaXzjQOTUrZR?=
- =?us-ascii?Q?f7spKTyiq6FLAuthMwlUKywotB72UBaPURtA0/vK8ne2zb22MeqzjQGCOxh5?=
- =?us-ascii?Q?QrcCEN2PcShoUuX8ZTCxNbSvb1oXSxxSZYkh0aquViwgwBjRI9NpppCV4ySi?=
- =?us-ascii?Q?QEH5O1DntreHLmPUKGThvK65mMFkoSYiI/llqZh1BTKgDkcTsvJ7ahRYGStF?=
- =?us-ascii?Q?xhwSM4FKpN74b4irEGaeCV+QEt6vUP6uSmw7+q3uOs8eC8Xit8IXbnvkReZo?=
- =?us-ascii?Q?6o7ORLEGb5EzDpyLdX6jinPRHnjXETKmlxOThBl2i53NhS4i3ZPDLGbdRQtJ?=
- =?us-ascii?Q?Cqof5/QZg1rg4yqdJOF8GnUqyNBBvC9OHj+417nhBmeRds75qfz7b713MuUn?=
- =?us-ascii?Q?8zo5kpS1dulVGKtMhEOGDkqnDw+Ib1ikEporDqZd+9BYYod3zdIvKkk6E3D2?=
- =?us-ascii?Q?E7Aaf+criHL1hppWxfDZrcB43fjrvyxsXgXAJV4rEliNwyDDpF7Rulvy5Xam?=
- =?us-ascii?Q?l4wJSgt28dInptWGOjRMmA3FEB+eGj7+JYvFiUbzEg5zZqmOTyk4KBIt6cqQ?=
- =?us-ascii?Q?E9TiauPxrOWFKg8/HeUM0aGDqVnTSUKlTrsRmJLTMiyjvU+6imYQL32kDuhQ?=
- =?us-ascii?Q?ksGBBF29M9SSLJalVrhdA1PlWCOfEQf/U9wQrhERfghRdPJz+egZSINfqRXH?=
- =?us-ascii?Q?wjNUkUxOv5rgeNg+Wbr6ZGQtSk5VmfFEoQPa8PR6IoSp6iWE9NcF+5Pujk+2?=
- =?us-ascii?Q?4lBZ2ggyLA+2rzNGg20NmiocdDzaqCb0gzbNKKOjhGUKrG17pamCrdTJAk4U?=
- =?us-ascii?Q?RuWbsBh0eJbb6eYkYSiN5HETC/gejHrupb7sWKlcBkx8YDZ0P6aKCZVqVfyN?=
- =?us-ascii?Q?M0/HG1pMkrYYYvhmsiRqotHiYURA30+n/RnRbpH1R/dkEXzG364Ta3cnOYQt?=
- =?us-ascii?Q?bgw705DY4g5W11o4E+IzeNv6yo6PSfR6zJ+Vi+kKGzKK4/OzsTId3mDaUsLD?=
- =?us-ascii?Q?5/Fxpm4Q8xIS/pwMbua8CA4oo0uG9jsHX4cplIYF7y74gTczGH8/efbUd1IJ?=
- =?us-ascii?Q?jLdCk1Hw/QcxTLwiKALVRH/l7/PcRAloTShzI4VwNZJmWtAGb7/t2qk8Bl0s?=
- =?us-ascii?Q?ylaXNlNRmYgEzDHBm9FpgauUHNB0T5ZyPLdvhFnL3e2iiKbHocEokDCCyQ?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 11:03:20.3398
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d372f8d7-09cc-45bb-4e70-08de0b114936
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD4.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF946CC24FA
+Content-Type: multipart/mixed; boundary="8323328-702730880-1760440295=:925"
 
-Custom BIOS input values can be updated by multiple sources, such as power
-mode changes and sensor events, each triggering a custom BIOS input event.
-When these events occur in rapid succession, new data may overwrite
-previous values before they are processed, resulting in lost updates.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-To address this, introduce a fixed-size, power-of-two ring buffer to
-capture every custom BIOS input event, storing both the pending request
-and its associated input values. Access to the ring buffer is synchronized
-using a mutex.
+--8323328-702730880-1760440295=:925
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The previous use of memset() to clear the pending request structure after
-each event is removed, as each BIOS input value is now copied into the
-buffer as a snapshot. Consumers now process entries directly from the ring
-buffer, making explicit clearing of the pending request structure
-unnecessary.
+On Tue, 14 Oct 2025, Denis Benato wrote:
 
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/acpi.c   | 40 +++++++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/core.c   |  2 ++
- drivers/platform/x86/amd/pmf/pmf.h    | 20 ++++++++++++++
- drivers/platform/x86/amd/pmf/spc.c    | 24 ++++++++++------
- drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
- 5 files changed, 79 insertions(+), 9 deletions(-)
+>=20
+> On 10/13/25 21:50, Denis Benato wrote:
+> > On 10/13/25 20:25, ALOK TIWARI wrote:
+> >>
+> >> On 10/13/2025 11:35 PM, Denis Benato wrote:
+> >>> From: "Luke D. Jones" <luke@ljones.dev>
+> >>>
+> >>> Adds the ppt_* and nv_* tuning knobs that are available via WMI metho=
+ds
+> >>> and adds proper min/max levels plus defaults.
+> >>>
+> >>> The min/max are defined by ASUS and typically gained by looking at wh=
+at
+> >>> they allow in the ASUS Armoury Crate application - ASUS does not shar=
+e
+> >>> the values outside of this. It could also be possible to gain the AMD
+> >>> values by use of ryzenadj and testing for the minimum stable value.
+> >>>
+> >>> The general rule of thumb for adding to the match table is that if th=
+e
+> >>> model range has a single CPU used throughout, then the DMI match can
+> >>> omit the last letter of the model number as this is the GPU model.
+> >>>
+> >>> If a min or max value is not provided it is assumed that the particul=
+ar
+> >>> setting is not supported. for example ppt_pl2_sppt_min/max is not set=
+=2E
+> >>> If a <ppt_setting>_def is not set then the default is assumed to be
+> >>> <ppt_setting>_max
+> >>>
+> >>> It is assumed that at least AC settings are available so that the
+> >>> firmware attributes will be created - if no DC table is available
+> >>> and power is on DC, then reading the attributes is -ENODEV.
+> >>>
+> >>> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
+> >>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> >>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> >>> Tested-by: Mateusz Schyboll <dragonn@op.pl>
+> >>> ---
+> >>> =C2=A0 drivers/platform/x86/asus-armoury.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 296 ++++-
+> >>> =C2=A0 drivers/platform/x86/asus-armoury.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 1210 ++++++++++++++++++++
+> >>> =C2=A0 include/linux/platform_data/x86/asus-wmi.h |=C2=A0=C2=A0=C2=A0=
+ 3 +
+> >>> =C2=A0 3 files changed, 1503 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x=
+86/asus-armoury.c
+> >>> index e27f964aebf8..918aea6fba1e 100644
+> >>> --- a/drivers/platform/x86/asus-armoury.c
+> >>> +++ b/drivers/platform/x86/asus-armoury.c
+> >>> @@ -27,6 +27,7 @@
+> >>> =C2=A0 #include <linux/mutex.h>
+> >>> =C2=A0 #include <linux/platform_data/x86/asus-wmi.h>
+> >>> =C2=A0 #include <linux/printk.h>
+> >>> +#include <linux/power_supply.h>
+> >>> =C2=A0 #include <linux/types.h>
+> >>> =C2=A0 =C2=A0 #include "asus-armoury.h"
+> >>> @@ -45,6 +46,17 @@
+> >>> =C2=A0 #define ASUS_MINI_LED_2024_STRONG 0x01
+> >>> =C2=A0 #define ASUS_MINI_LED_2024_OFF=C2=A0=C2=A0=C2=A0 0x02
+> >>> =C2=A0 +/* Power tunable attribute name defines */
+> >>> +#define ATTR_PPT_PL1_SPL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "=
+ppt_pl1_spl"
+> >>> +#define ATTR_PPT_PL2_SPPT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "ppt_p=
+l2_sppt"
+> >>> +#define ATTR_PPT_PL3_FPPT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "ppt_p=
+l3_fppt"
+> >>> +#define ATTR_PPT_APU_SPPT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "ppt_a=
+pu_sppt"
+> >>> +#define ATTR_PPT_PLATFORM_SPPT=C2=A0 "ppt_platform_sppt"
+> >>> +#define ATTR_NV_DYNAMIC_BOOST=C2=A0=C2=A0 "nv_dynamic_boost"
+> >>> +#define ATTR_NV_TEMP_TARGET=C2=A0=C2=A0=C2=A0=C2=A0 "nv_temp_target"
+> >>> +#define ATTR_NV_BASE_TGP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "=
+nv_base_tgp"
+> >>> +#define ATTR_NV_TGP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 "nv_tgp"
+> >>> +
+> >>> =C2=A0 #define ASUS_POWER_CORE_MASK=C2=A0=C2=A0=C2=A0 GENMASK(15, 8)
+> >>> =C2=A0 #define ASUS_PERF_CORE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 GENMASK(7, 0)
+> >>> =C2=A0 @@ -73,11 +85,26 @@ struct cpu_cores {
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 max_power_cores;
+> >>> =C2=A0 };
+> >>> =C2=A0 +struct rog_tunables {
+> >>> +=C2=A0=C2=A0=C2=A0 const struct power_limits *power_limits;
+> >>> +=C2=A0=C2=A0=C2=A0 u32 ppt_pl1_spl;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // cpu
+> >>> +=C2=A0=C2=A0=C2=A0 u32 ppt_pl2_sppt;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // cpu
+> >>> +=C2=A0=C2=A0=C2=A0 u32 ppt_pl3_fppt;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // cpu
+> >>> +=C2=A0=C2=A0=C2=A0 u32 ppt_apu_sppt;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // plat
+> >>> +=C2=A0=C2=A0=C2=A0 u32 ppt_platform_sppt;=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 // plat
+> >>> +
+> >>> +=C2=A0=C2=A0=C2=A0 u32 nv_dynamic_boost;
+> >>> +=C2=A0=C2=A0=C2=A0 u32 nv_temp_target;
+> >>> +=C2=A0=C2=A0=C2=A0 u32 nv_tgp;
+> >>> +};
+> >>> +
+> >>> =C2=A0 static struct asus_armoury_priv {
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *fw_attr_dev;
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct kset *fw_attr_kset;
+> >>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cpu_cores *cpu_cores;
+> >>> +=C2=A0=C2=A0=C2=A0 /* Index 0 for DC, 1 for AC */
+> >>> +=C2=A0=C2=A0=C2=A0 struct rog_tunables *rog_tunables[2];
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 mini_led_dev_id;
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 gpu_mux_dev_id;
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> >>> @@ -719,7 +746,34 @@ static ssize_t cores_efficiency_current_value_st=
+ore(struct kobject *kobj,
+> >>> =C2=A0 ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
+> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 "Set the max available efficiency cores");
+> >>> =C2=A0 +/* Define helper to access the current power mode tunable val=
+ues */
+> >>> +static inline struct rog_tunables *get_current_tunables(void)
+> >>> +{
+> >>> +=C2=A0=C2=A0=C2=A0 return asus_armoury
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .rog_tunables[power_suppl=
+y_is_system_supplied() ? 1 : 0];
+> >>> +}
+> >>> +
+> >>> =C2=A0 /* Simple attribute creation */
+> >>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, ATTR_PPT_PL1_SPL, ASUS_WMI_DEVID=
+_PPT_PL1_SPL,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 "Set the CPU slow package limit");
+> >>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl2_sppt, ATTR_PPT_PL2_SPPT, ASUS_WMI_DEV=
+ID_PPT_PL2_SPPT,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 "Set the CPU fast package limit");
+> >>> +ATTR_GROUP_ROG_TUNABLE(ppt_pl3_fppt, ATTR_PPT_PL3_FPPT, ASUS_WMI_DEV=
+ID_PPT_FPPT,
+> >> why not ASUS_WMI_DEVID_PPT_PL3_FPPT ?=C2=A0
+> >>
+> > I simply didn't touch anything that was not brought up, but I see that =
+it appears to be a more consistent name.
+> >
+> > Will use that name for v14, thanks!
+> Unfortunately taking a closer look I discovered that macro has been intro=
+duced over
+> 2 years ago in commit e0b278e7b5da62c3ebb156a8b7d76a739da2d953
+> "platform/x86: asus-wmi: expose dGPU and CPU tunables for ROG"
+> and it is not introduced as part of this commit series.
+>=20
+> I think it would be best to create an ah-hoc commit when this driver is m=
+erged to change the name in both,
+> or do I send the name change now and rework this driver? what do you thin=
+k?
+>=20
+> Honestly given the large number of people already running this and the re=
+quest of having it upstream
+> the road that will make it merge sooner is the one I would like to take.
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 13c4fec2c7ef..8a5eb3eeba55 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -331,6 +331,42 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
- 									 req, sizeof(*req));
- }
- 
-+/* Store custom BIOS inputs data in ring buffer */
-+static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev)
-+{
-+	struct cbi_ring_buffer *rb = &pmf_dev->cbi_buf;
-+	struct bios_input_entry entry = { };
-+	int i;
-+
-+	guard(mutex)(&pmf_dev->rb_mutex);
-+
-+	switch (pmf_dev->cpu_id) {
-+	case AMD_CPU_ID_PS:
-+		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
-+			entry.val[i] = pmf_dev->req1.custom_policy[i];
-+		entry.preq = pmf_dev->req1.pending_req;
-+		break;
-+	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-+		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
-+			entry.val[i] = pmf_dev->req.custom_policy[i];
-+		entry.preq = pmf_dev->req.pending_req;
-+		break;
-+	default:
-+		return;
-+	}
-+
-+	if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RB_SZ) > 0) {
-+		rb->data[rb->head] = entry;
-+		rb->head = (rb->head + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-+	} else {
-+		/* Rare case: ensures the newest BIOS input value is kept */
-+		rb->data[rb->head] = entry;
-+		rb->head = (rb->head + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-+		rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-+	}
-+}
-+
- static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
- {
- 	if (!pdev->cb_flag)
-@@ -356,6 +392,8 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
- 	dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->req.pending_req);
- 
- 	amd_pmf_handle_early_preq(pmf_dev);
-+
-+	amd_pmf_custom_bios_inputs_rb(pmf_dev);
- }
- 
- static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
-@@ -374,6 +412,8 @@ static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
- 	dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->req1.pending_req);
- 
- 	amd_pmf_handle_early_preq(pmf_dev);
-+
-+	amd_pmf_custom_bios_inputs_rb(pmf_dev);
- }
- 
- static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index bc544a4a5266..98aa9712b7f6 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -468,6 +468,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	mutex_init(&dev->lock);
- 	mutex_init(&dev->update_mutex);
- 	mutex_init(&dev->cb_mutex);
-+	mutex_init(&dev->rb_mutex);
- 
- 	apmf_acpi_init(dev);
- 	platform_set_drvdata(pdev, dev);
-@@ -494,6 +495,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
- 	mutex_destroy(&dev->lock);
- 	mutex_destroy(&dev->update_mutex);
- 	mutex_destroy(&dev->cb_mutex);
-+	mutex_destroy(&dev->rb_mutex);
- }
- 
- static const struct attribute_group *amd_pmf_driver_groups[] = {
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index bd19f2a6bc78..31dfd671f44b 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -12,6 +12,7 @@
- #define PMF_H
- 
- #include <linux/acpi.h>
-+#include <linux/circ_buf.h>
- #include <linux/input.h>
- #include <linux/platform_device.h>
- #include <linux/platform_profile.h>
-@@ -119,6 +120,7 @@ struct cookie_header {
- 
- #define APTS_MAX_STATES		16
- #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
-+#define CUSTOM_BIOS_INPUT_RB_SZ	64	/* Must be power of two for CIRC_* macros */
- 
- typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
- 
-@@ -358,6 +360,22 @@ struct pmf_bios_inputs_prev {
- 	u32 custom_bios_inputs[10];
- };
- 
-+/**
-+ * struct bios_input_entry - Snapshot of custom BIOS input event
-+ * @val: Array of custom BIOS input values
-+ * @preq: Pending request value associated with this event
-+ */
-+struct bios_input_entry {
-+	u32 val[10];
-+	u32 preq;
-+};
-+
-+struct cbi_ring_buffer {
-+	struct bios_input_entry data[CUSTOM_BIOS_INPUT_RB_SZ];
-+	int head;
-+	int tail;
-+};
-+
- struct amd_pmf_dev {
- 	void __iomem *regbase;
- 	void __iomem *smu_virt_addr;
-@@ -406,6 +424,8 @@ struct amd_pmf_dev {
- 	struct apmf_sbios_req_v1 req1;
- 	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
- 	bool cb_flag;			     /* To handle first custom BIOS input */
-+	struct cbi_ring_buffer cbi_buf;
-+	struct mutex rb_mutex;		     /* Protects ring buffer access */
- };
- 
- struct apmf_sps_prop_granular_v2 {
-diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index 85192c7536b8..436ecbf07aec 100644
---- a/drivers/platform/x86/amd/pmf/spc.c
-+++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -150,14 +150,26 @@ static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pending_req
- static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
- 					   struct ta_pmf_enact_table *in)
- {
-+	struct cbi_ring_buffer *rb = &pdev->cbi_buf;
-+	struct bios_input_entry entry = { };
- 	unsigned int i;
- 
-+	guard(mutex)(&pdev->rb_mutex);
-+
- 	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
- 		amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bios_inputs[i]);
- 
--	if (!(pdev->req.pending_req || pdev->req1.pending_req))
-+	if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RB_SZ) == 0)
-+		return;	/* return if ring buffer is empty */
-+
-+	entry = rb->data[rb->tail];
-+
-+	/* If no active custom BIOS input pending request, do not consume further work */
-+	if (!entry.preq)
- 		return;
- 
-+	rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-+
- 	if (!pdev->smart_pc_enabled)
- 		return;
- 
-@@ -165,20 +177,14 @@ static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
- 	case PMF_IF_V1:
- 		if (!is_apmf_bios_input_notifications_supported(pdev))
- 			return;
--		amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bios_inputs_v1,
--					   pdev->req1.custom_policy, in);
-+		amd_pmf_update_bios_inputs(pdev, entry.preq, custom_bios_inputs_v1, entry.val, in);
- 		break;
- 	case PMF_IF_V2:
--		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bios_inputs,
--					   pdev->req.custom_policy, in);
-+		amd_pmf_update_bios_inputs(pdev, entry.preq, custom_bios_inputs, entry.val, in);
- 		break;
- 	default:
- 		break;
- 	}
--
--	/* Clear pending requests after handling */
--	memset(&pdev->req, 0, sizeof(pdev->req));
--	memset(&pdev->req1, 0, sizeof(pdev->req1));
- }
- 
- static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index 6e8116bef4f6..add742e33e1e 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
- 		status = ret == TA_PMF_TYPE_SUCCESS;
- 		if (status) {
- 			dev->cb_flag = true;
-+			dev->cbi_buf.head = 0;
-+			dev->cbi_buf.tail = 0;
- 			break;
- 		}
- 		amd_pmf_tee_deinit(dev);
--- 
-2.34.1
+Just add a patch to the series to rename the existing define. Such a=20
+simple patch certainly isn't going to delay the rest, it's the large=20
+patches which take huge amounts of time to go through.
 
+
+--=20
+ i.
+
+--8323328-702730880-1760440295=:925--
