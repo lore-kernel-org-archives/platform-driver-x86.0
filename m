@@ -1,75 +1,93 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D031A30649D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Oct 2025 20:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FE21FC3;
+	Tue, 14 Oct 2025 21:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760473292; cv=none; b=BKvYDTFRTRCNXP/FUC+nz5AjQrVSfzeypuwswn7qR8zcu6viewa04IdNMO/Hz6AnjCnr85U1YkxRZXcJEFZFClxDtOk3HMWavAZiGa3ciCwLTOnE8wXqxzJR9lEVbRLtKYze0mC8GV7KS9VrJoyu8LrZ0BQwQX1usdrwAR/ltu8=
+	t=1760478382; cv=none; b=WBXqsxV98f48NWjWX8ejCx4vKwrjv3fTjpMMc5ESvgcu8p9bv3DTi7rhGUSRHOymzb9ffQy9Xepg1xQoHJ3w5tiCevdlzbK/PLVwWowUc6UhcQUqMubs9YJ54ttWNAMMj7MgKP0kEHazy5RQQaPKWaIo6NBON1IiH3jFuOV3Fmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760473292; c=relaxed/simple;
-	bh=M5nivzv2G1+l+sDR1UEnkDvnIf060iONM0I9mgQZnTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z01N8c4zW1m0Z7Uv5HxWsBvl/7MMWWxNJkjXCFyrcKi/rihRLVjmA0A3lLRGtXXvniRpKGiws7I9PyEYvPIomBKVKDup+q2c9ExEIpkbHl+RudSWy2LzgyACJDx1drDL12DfsmMaqjV7eUAT6moxH/d2LvK6jhDbl4ghI3wovms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ox67y8eL; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1760478382; c=relaxed/simple;
+	bh=AHlYYVa0PMPbNm5l5VSaMdqIRIUjjT7JizLHywZe0bM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ZsYD5tBcLnDt441p46uy6fi6zF4jFDqYkQ5H2fe00Y9ylUno4kCmmETBcCL19NO+8eKnGHTcmroLHUiHcPyCWZHy/PPK4A9TFTNHY84Tei0a0od1rgnpzBtSIYbR8AJ0T7N0/sVvQv8CfU1LpQx/PwpZNy3ttSU5yGmTWNSm5cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTthmD62; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ox67y8eL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=45h6VZExRTu6jXukMHz/6nvLlZKKAnizQvlnUyDcoR0=; b=Ox67y8eLhRKdRyWYT2B3YEpS2e
-	X3c3sZbL7lc1aa5T84AB7OinN9Q7TUZ+dXsmEi7I08IpNfaXv3auZCNLMa1zqwG44BDj3xhiPS1vX
-	fQRnGMXEzvu4lxsYr6fKQnpaJrTgjPpAEGmo4KQg0ngCDrPzbSwSlkHFmWbznoCN5vOC4PI2glwrx
-	UeDpeUzG6PEOeQbJWuwXbcMUZ73R47wdd7X1PCs3Xmb08qUSzEVJb/NWn2W8TG490DFE7WGZsxB9v
-	9Tiqpf31V9i/oOn7+hrretv/ClK7U/kg+0OPnRhzxyXete+erc7uLH7hqqkQv7g89L+rqvTKcN8X9
-	LlbbYEzw==;
-Received: from 201-43-219-13.dsl.telesp.net.br ([201.43.219.13] helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1v8lWP-009c4w-IC; Tue, 14 Oct 2025 22:21:25 +0200
-Message-ID: <7afc43e7-7145-5d23-ba94-828fe607b263@igalia.com>
-Date: Tue, 14 Oct 2025 17:21:18 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTthmD62"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760478380; x=1792014380;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AHlYYVa0PMPbNm5l5VSaMdqIRIUjjT7JizLHywZe0bM=;
+  b=MTthmD62Ap7iQ+jBWnZJhD5XNjFJUeQR7elFZb/FfRSxd6xWfyV2MVjR
+   V/bRE5dKTNjsNVPStPiAJ7osUnTbL6mPbGQ5fzOjqesz9UDDHGSVl9879
+   03zsPHepVDoFjr2eCgDSnHlFDO/ZqlKflziPKpExmdEgF+wyw1Y6j82z+
+   dI8MZigfrZrgkiuZBkF7bFsLWunVA3e1ywemMr8+wJm25dJkzH9EQdeTk
+   4Cyb1m9bfrvK+6PWUiEwsFMp8SbQEs3mp2Gds9bl/BKGOqrqEa6L6AUOM
+   Nxmr4TTmXpbgQrTBbLEPX4d6jf5DQ1aiS49LIe883sFuY+/RZFB7T4GPO
+   Q==;
+X-CSE-ConnectionGUID: bJXuC0WzSRWTgpqn+Loitg==
+X-CSE-MsgGUID: NzlGMQLBRgKdNeAm3ZH9sw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62682436"
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="62682436"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 14:46:20 -0700
+X-CSE-ConnectionGUID: TXjJl8f3QcycRJhLETeo+g==
+X-CSE-MsgGUID: UjJTXJ/TTUeVridYWt63uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="187300315"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.125.111.190])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 14:46:19 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH 0/6] Update Arrow Lake telemetry GUID
+Date: Tue, 14 Oct 2025 14:45:28 -0700
+Message-ID: <20251014214548.629023-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 4/4][RFC] platform/x86/intel/pmc: Re-add SLP_S0_DBG
- register dump on Tiger Lake
-Content-Language: en-US
-To: Xi Pardee <xi.pardee@linux.intel.com>, platform-driver-x86@vger.kernel.org
-Cc: irenic.rajneesh@gmail.com, david.e.box@intel.com, kernel-dev@igalia.com,
- kernel@gpiccoli.net
-References: <20250922230812.1584253-1-gpiccoli@igalia.com>
- <20250922230812.1584253-5-gpiccoli@igalia.com>
- <c38c3b32-fce0-437c-b174-bf602927b0bb@linux.intel.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <c38c3b32-fce0-437c-b174-bf602927b0bb@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14/10/2025 16:24, Xi Pardee wrote:
-> [...]
-> 
-> Starting with Tiger Lake platforms, the slp_s0_dbg register maps are 
-> deprecated. The data provided by these registers may no longer be valid.
-> 
-> On Tiger Lake and newer platforms, the intel_pmc_core driver introduces 
-> substate_status_registers and other updated attributes that offer 
-> information useful for debugging S0ix-related issues.
-> 
+This patch series updates the Arrow Lake DMU telemetry GUID and enhances
+the infrastructure for managing lpm_req_guid. Additionally, it includes
+two patches that improve the intel_pmc_core driver.
 
-Thanks for the clarification Xi.
-So, this one is clearly a patch to drop in a potential re-submission!
-Cheers,
+The first three patches update the Arrow Lake DMU telemetry GUID and add
+support for multiple possible GUIDs. The fourth patch standardizes the
+naming convention for PMC variable indices. The fifth patch enhances
+lpm_req_guid management. The final patch removes an unnecessary variable. 
 
+Xi Pardee (6):
+  platform/x86:intel/pmc: Update Arrow Lake telemetry GUID
+  platform/x86:intel/pmc: Add support for multiple DMU GUIDs
+  platform/x86:intel/pmc: Add DMU GUID to Arrow Lake U/H
+  platform/x86:intel/pmc: Rename PMC index variable to pmc_idx
+  platform/x86:intel/pmc: Relocate lpm_req_guid to pmc_reg_map
+  platform/x86:intel/pmc: Remove redundant has_die_c6 variable
 
-Guilherme
+ drivers/platform/x86/intel/pmc/arl.c  |  12 +--
+ drivers/platform/x86/intel/pmc/core.c | 150 +++++++++++++-------------
+ drivers/platform/x86/intel/pmc/core.h |  14 +--
+ drivers/platform/x86/intel/pmc/lnl.c  |   2 +-
+ drivers/platform/x86/intel/pmc/mtl.c  |   9 +-
+ drivers/platform/x86/intel/pmc/ptl.c  |   3 +-
+ 6 files changed, 97 insertions(+), 93 deletions(-)
+
+-- 
+2.43.0
+
