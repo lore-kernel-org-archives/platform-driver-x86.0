@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C322C3768;
-	Wed, 15 Oct 2025 08:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2B62FF144;
+	Wed, 15 Oct 2025 08:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760517103; cv=none; b=buFh59Ht4aqJDSQ7Yau6J9AFJHcYD9XgNi6YZvw8u/MOY2F8CfZFV3XzBwV9gTM6zhG7X0ONzCQO/Bk3IDJIFSHlE8Y45cwHD62YjRiHpcB6EkAn131/0Xk6L5/HX/A0ql5t+PNfeA/QPsCfeK4dbiMLXbYkGgsJm1OAvMdG6/M=
+	t=1760517111; cv=none; b=dipJ00GEbQpEPEFdPcHfr2cGAeDWqkDZsZXLiw49+UOwTN/LzFOMU00zLcOgj0nS8Sm+OV9cPHPZ76fPwcKmMOSSVmEmIi6IlsA23NgDopVJn0qBYkmq0zt0mdLH1nDgv0gQsVqS3TvPkOKtS6PjfJGYpJcxhvPvP7G2r/ndWfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760517103; c=relaxed/simple;
-	bh=vGOeCv4g5wJUr2d69Swblev+/O+d9MiV6r9slTYVX2w=;
+	s=arc-20240116; t=1760517111; c=relaxed/simple;
+	bh=guKDLKwMOZkIZbenBsHD/FzS0zw8aMJTh7zDKWF5km0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YGYy1/yNEAvPRFeofirdxD5yS3MA7JFY3VA0VFhK8oKYcE7l0TTfB+HjXYZrR3JjsEK6+mAdan02sCON3YojXqhONbGSWa9pdFFWQMgzdS6KYp6BOdM2DZHZYPy2PbL833SQtaF6GWY1CcOdAldbZijQrK13ekTQ5xERtbLqnpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AR/r7LPX; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=KaR6kY9tE86wEiiTOJbd7zPLZQYqqsGbNoeNxwX/5buKaNaNVf9+svbKjbMZiVZhsCYcYb8CkgzPgnEKAZMC0OeAKaQj/MeaWDFgllcz+A3bnrfJm8fQkjSzQpN4tlM4EVKHTTI8aR1sYexRNpdao9hcXzmgODD5+c0QD5OqOSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eYHV1u+A; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AR/r7LPX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eYHV1u+A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760517101; x=1792053101;
+  t=1760517109; x=1792053109;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=vGOeCv4g5wJUr2d69Swblev+/O+d9MiV6r9slTYVX2w=;
-  b=AR/r7LPXTiAeWyJl/6uVjSy6Tq4FGfwADo5xxNyTprlO9jvxS2zEj2Q1
-   0S4y6nZ4VHA4Ib5fCGIsV/b3FVQfpNWoH4i7W+yOXuc56r86LEpt2yXU/
-   HgCNz6pWt/+rwlfsnopr6iUXqDYHWcZlS9jTn2d26xBVNryk4uJ3tw6P1
-   SkGiU5H/k+vAUsEMjabaRuyHotDm0Fs8XU1qvZYxX2SB4K2WAh5q1db1k
-   ARSHeFqRjWiFzBd9MTFbTvK4bZYkLZ53D2xxucveyvEdeLLcblIdPArgv
-   XCW6UAGhof7aSOpvG3Q48aKpMEwvTVswym1CcSe8MAuZAOXPX9H+7iRnx
-   g==;
-X-CSE-ConnectionGUID: lLrtS4a3RXutGHAcFWCL0A==
-X-CSE-MsgGUID: nlUNKqYKStqkb4EKDQSkLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62578145"
+  bh=guKDLKwMOZkIZbenBsHD/FzS0zw8aMJTh7zDKWF5km0=;
+  b=eYHV1u+AfzVtCQWiDB1d71DBz+ziG5gtFx8/sEupQMhZIUjx744yAA7v
+   5gzV+Am2Bis2eUgsR7n0cj4MPItre0x8ctqsI0ulGIUD9w/bDAc5ThYZU
+   x9C2HLaHD63wA6tEsAyUPkkPpIguiFg+Hy52jN2Mbt9W0eDcmKr1HkmcW
+   /fd7t9tF/kJnDdfLE/KeK4sWf5H1Q873+zMdDJdiI1wpFPvAthqNUHOGz
+   yknvP/fhgjEy7SWBMEQERqG408AUwDPDEij6JgTVzZHyk1WjQkZMLtTfw
+   8G/f1jFH3rIin1EhHDP71ToNed3+fmXGtF5hYRM8N39o41M91SBRt9qAe
+   Q==;
+X-CSE-ConnectionGUID: t+R2niTOTBmruY2tGxXL+A==
+X-CSE-MsgGUID: A9q5uAOyQV6+nHrHUAppNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62780927"
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="62578145"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:41 -0700
-X-CSE-ConnectionGUID: ihZ5pECcSn6P1sqshJt/Lw==
-X-CSE-MsgGUID: 1PNjbuSHRBy4S3Pz6P7UUg==
+   d="scan'208";a="62780927"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:48 -0700
+X-CSE-ConnectionGUID: 3ABDQyxlSeifXXo30MTHDw==
+X-CSE-MsgGUID: lFdrMuSsTuOQBwTYBJu90Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="186123046"
+   d="scan'208";a="182895295"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:38 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <benato.denis96@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>, 
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20251003184949.1083030-1-benato.denis96@gmail.com>
-References: <20251003184949.1083030-1-benato.denis96@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add Denis Benato as maintainer for asus
- notebooks
-Message-Id: <176051709353.2196.14158204802807967075.b4-ty@linux.intel.com>
-Date: Wed, 15 Oct 2025 11:31:33 +0300
+To: platform-driver-x86@vger.kernel.org, tr1x_em <admin@trix.is-a.dev>
+Cc: Dell.Client.Kernel@dell.com, kuurtb@gmail.com, hansg@kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20250925034010.31414-1-admin@trix.is-a.dev>
+References: <20250925034010.31414-1-admin@trix.is-a.dev>
+Subject: Re: [PATCH v3] platform/x86: alienware-wmi-wmax: Add AWCC support
+ to Dell G15 5530
+Message-Id: <176051710151.2196.15376523198051741903.b4-ty@linux.intel.com>
+Date: Wed, 15 Oct 2025 11:31:41 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,10 +63,9 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 03 Oct 2025 20:49:49 +0200, Denis Benato wrote:
+On Thu, 25 Sep 2025 09:10:03 +0530, tr1x_em wrote:
 
-> Add myself as maintainer for "ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS
-> DRIVERS" as suggested by Hans de Goede and Armin Wolf.
+> Makes alienware-wmi load on G15 5530 by default
 > 
 > 
 
@@ -77,8 +76,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] MAINTAINERS: add Denis Benato as maintainer for asus notebooks
-      commit: f4f868baf292550acbfc35839213de9da0d9e8ab
+[1/1] platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530
+      commit: 34cbd6e07fddf36e186c8bf26a456fb7f50af44e
 
 --
  i.
