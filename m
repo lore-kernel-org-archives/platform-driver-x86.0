@@ -1,214 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5572C3276;
-	Wed, 15 Oct 2025 12:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE33326D68
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Oct 2025 12:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760530744; cv=none; b=d/f8oNeVc0HJRdEaKPRpmbAHkmzH8TuYGvj2C35eUmvTCxerIcQHyHZOWIUcP7/hj1fMlEvEoyrWtfGiXpOdsjpztgzLSwPi75Ws8hQsUZG3d3iDrJBOVeH/1wrcztn+2OU1K2qTg28Vyz8xOi/uV1VNmjRD/e6n+R2VPWUR7ts=
+	t=1760531245; cv=none; b=UK9jTNFjFSAxGEiFYG5mSGwIiIvIpC16219HmlBl/QTSWckCPAXIAV6gDRwcc/K/gUcN4TQfA10TDuSQyMSOT2I0mxDSUBlfgvR1FufK+/O49kwmProDDO6sxn5ft7lbFRNBA9MjcirI+qA2z+NiJYhYT07TJec2c4lm2uhuTXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760530744; c=relaxed/simple;
-	bh=SNfAT6Qi2YRkuxaiDCzuRehdTEWuoCDQmIGd3jVCIFg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qpFrtR4a4uyOqU5AczndC2sLBTkF7irMhAKPqzl1x1cMXhIC+rWu9GGOoid8E3wcr0v28KquByEWIzeoMGRPWK81tyBP7xq2ViFKTrE4941jP0MyA+ZnyHLnrtx1+kQcIouQENdpwnz34Zg2GiIJYgiuebrnTk4/r0Gga4gPLIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5siGw88; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760531245; c=relaxed/simple;
+	bh=aUedLoKamCVVxyfQfUAMTvYhMOssaT/HBZaPQZ62VXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SroY2ErsI9dHhDiZO1SuF9OqnYlag7eVic8KRFwLorPfZ9WDOCnrpdxHRKyeSZ/mPbFB06NNogzzIW0d9Z8VixHCaOdVpTu7z0R5oRK3TeLFIFy34x9sEwAyB+NkiEP89/huqe79MDppWVj3HlCFfP7nI+p7+RP23tuudpOvaMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kggi3Oau; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5siGw88"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760530742; x=1792066742;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SNfAT6Qi2YRkuxaiDCzuRehdTEWuoCDQmIGd3jVCIFg=;
-  b=X5siGw885Pqh3iZ2psnOj4Vu3QbC211d0UxOGiOcKKxlSF4X5wDo1L8j
-   Bg+Cj9mFQno+TPCsZwXCnEQgv2FM7TFnQPhTvJBRw2ZRVvs6Rryu0Av2x
-   IaRakihrRDZ/yAsOaHPU80gKKeENIpUtBHoZxPTI4tMDbyfTa3XghOU2U
-   1xcHLxdIGjtyRSPFBwJri5FHj+AQnubW6EXGHGUWdeaYclt/cU9SvD8cp
-   BmFj+ZE9bb0x9VebStOaqIUbsuJLrpUlAGB//WhFWfXmySjsU0OX785eo
-   zBgzt9ELHBAd65ySxbrarnQ34zfbbsNvlDbxNFe3cefz9PqvtwEV6JU73
-   g==;
-X-CSE-ConnectionGUID: O7K/CJXgQRmOIdSBnFIDkg==
-X-CSE-MsgGUID: p1gOTzK4TMSGBvvbDTV0wQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="66531623"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="66531623"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 05:19:00 -0700
-X-CSE-ConnectionGUID: P279CeMpQfmkJ8dPe1BsAQ==
-X-CSE-MsgGUID: 4ECa931ARhu0KwNTHsYZ8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
-   d="scan'208";a="182151147"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 05:18:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 15 Oct 2025 15:18:53 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH v6 6/7] platform/x86: asus-wmi: add keyboard brightness
- event handler
-In-Reply-To: <20251013201535.6737-7-lkml@antheas.dev>
-Message-ID: <4e4af3e9-26d3-ad03-7868-7fd7dbd541f3@linux.intel.com>
-References: <20251013201535.6737-1-lkml@antheas.dev> <20251013201535.6737-7-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kggi3Oau"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-421b93ee372so3459033f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Oct 2025 05:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760531242; x=1761136042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wjoMwghPIohukayZuKoD3nhrdjl4TgPiMFjbi9Rs2ZQ=;
+        b=kggi3OausfVTItOIOXYoMEOqhRi8NYmPY3ahpQC1RmvWivK/BuwGKF2deu79YDnZ8/
+         BLXC+yS12xXtRNzg7+A2hl6xBtXeqDMN6IPaXzBSWmKb7pFRjXB6GQ1Uunz2lszcYhzZ
+         KrPmuBM9xrHh1CQ9VDeQuLYmgHAHNnyu936+WhKHAm2OIqqe7+XaBlXpspLrWUnrB9KQ
+         +ZfvcQgxjsqdUWE8hv4ldikppo/msRcYCF9LFiaIGWzf/GunwY9tGpKrS8S3VeuoT0ov
+         +ro2nHRbhgvpMmCQPcjWEMpD0jJ5Z+c2YH1peYGjR1Bmen1kXlipzaNYK1ZMD/hs/zDf
+         P5JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760531242; x=1761136042;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wjoMwghPIohukayZuKoD3nhrdjl4TgPiMFjbi9Rs2ZQ=;
+        b=XKoLcqs2XD/rn7PmuPcxMZv+kAL3kFYFsOHGNr2sqEQ7kj/zotF3FiZaH1jZK9lVtI
+         ISM2lYLTDzsh9afNy+PXYGgew/o1ontlU5OHzLQ0DWj8+IXkVCQRxKcQG5NytozlIMNz
+         Lvc3GQ0geBMuKTTpy/FOR7/JPV9E1Gf/y6a4JhqAOI3XkmwWKqnUw8QECYE55j5R5Shi
+         9peYIHNlEu8E+3dQkj7puU2AAgfxqeGxtL4utUsmhfCpcS3dPsbRGImlZmCsSRlZDfhG
+         S73xDJ5GQkjTMQjgigMVzUgHQepZWrd2gqnuVTH1TdObEqbEOg8m4EMVM3+oyAHEyOr/
+         AUaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWg9ADtBchHNsBbquZPeToi5C1zxtt3aKx5CiqVZ498IVnygWSPEaM+75Z7ba4+Ho60Rmml3CgosN6D9GUBgZai5IbO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSmPurwxsmXmCMAhgnMR/yRKTgmA42i7fTbXxnxFspjaww2+jH
+	2aChQTkHhFLYjY20Wfpj5HmRp1T46JTTE9O0t7PxmO97uOIi5hoSxxxh
+X-Gm-Gg: ASbGncuU3MfBp5l0kNZcOH7fnfy2WqGEWQR43p97vS1P5BRGLYEP8bs6DB1dKNJsd5r
+	oS60QWs3ZXN6Bb/vEGul133NBHjnlnlj+1VHwWgkQsUym95zpTmqJWvCMpYbjMnA/EIzhdncZSN
+	518WkUmTR8L/01IFpMcBYS6LIJPPEe//sLfZt1Ml7frtkDHXqNmWrlLCaaMj8H+nL1dJV1iP4/y
+	7GcldZGyMsUgKzEN5EWfLygooG9xJA12yip5hnbHdPCyrYk+B0mdN8qT1NodCDNZkmY2w+N9bD/
+	e2H5sewlzUtzsbduJGAj1QeqNWW7JblE2qGkzsRINejBCtiJUSFJ4LR9WuyOuqTw5YxM9RJmust
+	sycY2+GjYNkN+4XTq1/63P6lTW3h47TaM4BzD2eeT8y0cw4YLRzgTlenvQBu/n5nmlA==
+X-Google-Smtp-Source: AGHT+IGI57IQUmf9nN0SU1CXBFc9/Ki3m5/W+fcXygdYAFCm/ofKw82VShjxAzRHnUdy1iKY85Q3rw==
+X-Received: by 2002:a05:6000:25c6:b0:3fa:5925:4b11 with SMTP id ffacd0b85a97d-4266e8dd4a0mr18552082f8f.42.1760531242037;
+        Wed, 15 Oct 2025 05:27:22 -0700 (PDT)
+Received: from [192.168.1.121] ([176.206.100.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce57cc0esm29129909f8f.6.2025.10.15.05.27.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Oct 2025 05:27:20 -0700 (PDT)
+Message-ID: <ada4c640-1d35-4e79-bc00-e88bc60f646d@gmail.com>
+Date: Wed, 15 Oct 2025 14:27:20 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 0/9] platform/x86: Add asus-armoury driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hdegoede@redhat.com>, "Luke D . Jones" <luke@ljones.dev>,
+ Alok Tiwari <alok.a.tiwari@oracle.com>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
+References: <20251015014736.1402045-1-benato.denis96@gmail.com>
+ <0752fcde-6c25-4cde-b35f-2204e24ff0f1@amd.com>
+ <8e381c36-3bdf-a1d6-8e51-53243ba8bf4d@linux.intel.com>
+ <97c56897-ed9b-4d4d-ba54-d6e2abbc8b0d@gmail.com>
+ <66bb61ca-94ae-7f0a-ce9f-f5c13b51eb01@linux.intel.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <66bb61ca-94ae-7f0a-ce9f-f5c13b51eb01@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 13 Oct 2025, Antheas Kapenekakis wrote:
 
-> Currenlty, the keyboard brightness control of Asus WMI keyboards is
+On 10/15/25 14:06, Ilpo Järvinen wrote:
+> On Wed, 15 Oct 2025, Denis Benato wrote:
+>
+>> On 10/15/25 11:38, Ilpo Järvinen wrote:
+>>> On Wed, 15 Oct 2025, Mario Limonciello wrote:
+>>>> On 10/14/2025 8:47 PM, Denis Benato wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> the TL;DR:
+>>>>> 1. Introduce new module to contain bios attributes, using
+>>>>> fw_attributes_class
+>>>>> 2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+>>>>> 3. Remove those in the next LTS cycle
+>>>>>
+>>>>> The idea for this originates from a conversation with Mario Limonciello
+>>>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
+>>>>>
+>>>>> It is without a doubt much cleaner to use, easier to discover, and the
+>>>>> API is well defined as opposed to the random clutter of attributes I had
+>>>>> been placing in the platform sysfs. Given that Derek is also working on a
+>>>>> similar approach to Lenovo in part based on my initial work I'd like to
+>>>>> think
+>>>>> that the overall approach is good and may become standardised for these
+>>>>> types
+>>>>> of things.
+>>>>>
+>>>>> Regarding PPT: it is intended to add support for "custom" platform profile
+>>>>> soon. If it's a blocker for this patch series being accepted I will drop the
+>>>>> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+>>>>> separately to avoid holding the bulk of the series up. Ideally I would like
+>>>>> to get the safe limits in so users don't fully lose functionality or
+>>>>> continue
+>>>>> to be exposed to potential instability from setting too low, or be mislead
+>>>>> in to thinking they can set limits higher than actual limit.
+>>>>>
+>>>>> The bulk of the PPT patch is data, the actual functional part is relatively
+>>>>> small and similar to the last version.
+>>>>>
+>>>>> Unfortunately I've been rather busy over the months and may not cover
+>>>>> everything in the v7 changelog but I've tried to be as comprehensive as I
+>>>>> can.
+>>>>>
+>>>>> Regards,
+>>>>> Luke
+>>>> As a general comment that applies to a few patches in the series.
+>>>>
+>>>> The S-o-b means that YOU sign off on them, it's like a chain of custody.
+>>>>
+>>>> Any patches that you're sending need your own S-o-B, even if they're 100% the
+>>>> same as the original from Luke.
+>>> There's also Co-developed-by tag which may be appropriate in cases where 
+>>> both have touched the patch.
+>>>
+>> I have re-read the submission documentation and confirmed I need at least
+>> S-o-b for all of them. Is it acceptable if I simply answer to the email with my S-o-b
+>> and Co-developed-by (on patches I have touched) or do I need to resend
+>> the whole patchset creating a v15?
+> Hi Denis,
+>
+> Please wait a bit with v15, I'll try to take a look at this series 
+> hopefully before the end of this week and I suspect there will be more 
+> changes needed as a result (not to doubt your effort but it's long time 
+> since I've looked at it).
+>
+Sure! I will fix everything that needs fixing! I'm just happy seeing progress
+since this is a work that is both extensively used (valve and other distros)
+and very requested.
 
-There's a typo here but preferrably avoid "currently" altogether where 
-possible.
-
-> handled in the kernel, which leads to the shortcut going from
-> brightness 0, to 1, to 2, and 3.
-> 
-> However, for HID keyboards it is exposed as a key and handled by the
-> user's desktop environment. For the toggle button, this means that
-> brightness control becomes on/off. In addition, in the absence of a
-> DE, the keyboard brightness does not work.
-> 
-> Therefore, expose an event handler for the keyboard brightness control
-> which can then be used by hid-asus.
-> 
-> Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> Tested-by: Luke D. Jones <luke@ljones.dev>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c            | 41 +++++++++++++++++++++-
->  include/linux/platform_data/x86/asus-wmi.h | 13 +++++++
->  2 files changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index a2a7cd61fd59..58407a3b6d41 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1579,6 +1579,45 @@ void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
->  }
->  EXPORT_SYMBOL_GPL(asus_hid_unregister_listener);
->  
-> +static void do_kbd_led_set(struct led_classdev *led_cdev, int value);
-> +
-> +int asus_hid_event(enum asus_hid_event event)
-> +{
-> +	unsigned long flags;
-> +	int brightness;
-> +
-> +	spin_lock_irqsave(&asus_ref.lock, flags);
-> +	if (!asus_ref.asus || !asus_ref.asus->kbd_led_registered) {
-
-Please add a local variable for asus_ref.asus. Check other 
-patches/functions too if its use is repeated in some function many times, 
-the local var seems to be in order.
-
-> +		spin_unlock_irqrestore(&asus_ref.lock, flags);
-
-Use guard() instead.
-
-> +		return -EBUSY;
-> +	}
-> +	brightness = asus_ref.asus->kbd_led_wk;
-> +
-> +	switch (event) {
-> +	case ASUS_EV_BRTUP:
-> +		brightness += 1;
-> +		break;
-> +	case ASUS_EV_BRTDOWN:
-> +		brightness -= 1;
-> +		break;
-> +	case ASUS_EV_BRTTOGGLE:
-> +		if (brightness >= ASUS_EV_MAX_BRIGHTNESS)
-> +			brightness = 0;
-> +		else
-> +			brightness += 1;
-> +		break;
-> +	}
-> +
-> +	do_kbd_led_set(&asus_ref.asus->kbd_led, brightness);
-> +	led_classdev_notify_brightness_hw_changed(&asus_ref.asus->kbd_led,
-> +						  asus_ref.asus->kbd_led_wk);
-> +
-> +	spin_unlock_irqrestore(&asus_ref.lock, flags);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(asus_hid_event);
-> +
->  /*
->   * These functions actually update the LED's, and are called from a
->   * workqueue. By doing this as separate work rather than when the LED
-> @@ -1878,7 +1917,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  	asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
->  	asus->kbd_led.brightness_set = kbd_led_set;
->  	asus->kbd_led.brightness_get = kbd_led_get;
-> -	asus->kbd_led.max_brightness = 3;
-> +	asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
->  	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
->  
->  	if (asus->kbd_led_avail)
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 1f85d76387a8..e78e0fbccede 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -168,6 +168,14 @@ struct asus_hid_listener {
->  	void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
->  };
->  
-> +enum asus_hid_event {
-> +	ASUS_EV_BRTUP,
-> +	ASUS_EV_BRTDOWN,
-> +	ASUS_EV_BRTTOGGLE,
-
-Where does "BRT" come from. To me it doesn't associate with brightness 
-(might be due to me being non-native). If there's a good reason why it's 
-that way, fine but otherwise I suggest changing it so that it becomes 
-easier to understand.
-
-It's not a big problem as is because the context in the code above allows 
-decrypting the meaning but without the other names, I'd have been totally 
-lost what it means.
-
-> +};
-> +
-> +#define ASUS_EV_MAX_BRIGHTNESS 3
-> +
->  #if IS_REACHABLE(CONFIG_ASUS_WMI)
->  void set_ally_mcu_hack(enum asus_ally_mcu_hack status);
->  void set_ally_mcu_powersave(bool enabled);
-> @@ -176,6 +184,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
->  
->  int asus_hid_register_listener(struct asus_hid_listener *cdev);
->  void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
-> +int asus_hid_event(enum asus_hid_event event);
->  #else
->  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
->  {
-> @@ -200,6 +209,10 @@ static inline int asus_hid_register_listener(struct asus_hid_listener *bdev)
->  static inline void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
->  {
->  }
-> +static inline int asus_hid_event(enum asus_hid_event event)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif
->  
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
-> 
-
--- 
- i.
-
+Thanks for your time!
