@@ -1,465 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013013.outbound.protection.outlook.com [40.93.196.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09AE257AD3;
-	Wed, 15 Oct 2025 14:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760537500; cv=none; b=KyfFS9CtoLBAwjb5YOuduN8QbOma4Bcpe+UPAwzAMEF4Mga5Bwyd/WiMLYQ2umboGESkbS5EZCrghZfShB2wkDppmc0X3u9ui9/qbq9afEkyFSrwzbm81CqFnBbAgiAeTgTaBaIr38VQ+sZ5avKG951YOhNI5R/n+Vu8H4otv30=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760537500; c=relaxed/simple;
-	bh=mVb1ZW+mVEu5ARkVMgH8uGQHEinX0IdwA7+KJ0X2LkQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i610/03A7KBuQzrn7Ej9G+PJH1Z/no/Jd0LHSPcy11LkOkmC0uLFYmDyTODmuPe5Va+7f1/XUu/tlSc+CUUYZpmFLWFykZKgs7qP8crWs6S/14ZVvpxm5DEvkgKSZ/EQGrZqsezoSP8+Sgs7DVZ+p7RInB+BUnlrV+73ds8XlRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=czx1OdQ2; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222C62D3ECA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Oct 2025 14:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760540128; cv=fail; b=NzWhBl9VJj5++mk8aBSb0/0O/8ihveGKFc3ERnXLNeUU0upkP9/20bnWau4A7Lgrm40PN8Zi8W7ukcyQWbwaNtfgutdeo2iDQF0NWc8pwxusoasej2Gg/eih/SWu5o2mC3b9Yl2A0MGpSkrJQY9m2DFVCcmoB7m1e7o9OMS0V9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760540128; c=relaxed/simple;
+	bh=sbF0toWR/QvgKdqIXSymf42pXy2P2V9z/qIgEVxqNng=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gvYmlOSeF1H6L4fRVHzM8BYzckxRVkhHon2JJBg3VZ5Q9ADBKc+mrg/BYZ/7Z5tnxUD+wCg6NJJDcomDLoaD8pWg9/OED/H9DiVfj8+pNjo6VRxib7U8Lf2s4yvFNh+3HHrY9wYCTTUfBpTQIY67fHfjPYucZZk0wtDxdSroXp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zbeNgyZE; arc=fail smtp.client-ip=40.93.196.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="czx1OdQ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760537499; x=1792073499;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mVb1ZW+mVEu5ARkVMgH8uGQHEinX0IdwA7+KJ0X2LkQ=;
-  b=czx1OdQ2Ib+xmhpg48iu0ZcbIT/reiJCqb0Be9J1u3kiIQ6TQrk3qsDS
-   6/To8a+2ViQ4BYXRUxuHANusxY8v3dR47UQn5jtyAv9znAx4pEDMEPY6s
-   U6ZebWzm+IarArvsFxg1AVGsJyQt4chf+U0wiPKsGZ1wnUrh2m4pFlynO
-   cBWt2EF3WU2qiFPdtquMTlUeZixaAUlkDdO26iW9q6BwROuL/7SeAMxmc
-   sRsdwfsS+sIxLnKiBqYir0ooY7k+ozWJph97flSii4ttqK6WD4Bhdos+M
-   NsNKiHV3PmlHwZ8uOcvkso89HfswB3jwKMn+25phB/2hnqYah5x6GazK6
-   Q==;
-X-CSE-ConnectionGUID: Gqmm3mfjRZmTFvLq+l7ZqQ==
-X-CSE-MsgGUID: L9TH5QBVTpWUDVfimL/QZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11583"; a="62611718"
-X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
-   d="scan'208";a="62611718"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 07:11:36 -0700
-X-CSE-ConnectionGUID: BOAT4eXwQbeLfmXv5q0Ffw==
-X-CSE-MsgGUID: Dw+Pl5WESkqoQASSyAGRxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
-   d="scan'208";a="182144832"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 07:11:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 15 Oct 2025 17:11:26 +0300 (EEST)
-To: Denis Benato <benato.denis96@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    "Limonciello, Mario" <mario.limonciello@amd.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>, 
-    Derek John Clark <derekjohn.clark@gmail.com>, 
-    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
-Subject: Re: [PATCH v14 5/9] platform/x86: asus-armoury: add core count
- control
-In-Reply-To: <20251015014736.1402045-6-benato.denis96@gmail.com>
-Message-ID: <52531cf2-566e-b365-0d62-642cb53dca80@linux.intel.com>
-References: <20251015014736.1402045-1-benato.denis96@gmail.com> <20251015014736.1402045-6-benato.denis96@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zbeNgyZE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BPNr92iK3TG6XqYk7KNH43GNuEYmm2Dzip5fDBwfjERs7ISst82IxYkRiaG6WsXvXK6vZS2gTWkOufwr7h+MhwGaJnjEZFx4maqNDbyEGjZIKbIgQR5g0iMkOhJP1zNsSdxvbu1cxXB3EgcBRnEscICs78AhANlro4wvHh1eG5cIKR+HU/+fj7Tt2tuLkHIMZeoK2zJJR1JyVHoOroVLQBB5MBbmPm9Pl5t8376ORCUGpBCyVFZtGsAWh+Lp6AgfuITPUQgDXA95DmGx+vgFKz46r1QgnesBlB5FE3AvxbSyn+dBTSdEgHutJRNpphStlj+PrSoo+lmguDSAWm1NFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WMuofGRYiBgzsQLApyN85oGGN1QvWKbuw3YWYGrh0n0=;
+ b=xE3Ya2wbbSXRw6/BdviyXFogQFiw6fguAI8v0oedbl9EXgypfqmYdbW90BW2+cTFxPV7anxhJjgdZQKkg21q/frCrOwpTMtzMXbQ3hDmK6g/0DkFXFB4tAy3erUtvp/F+hDJSMmL8CkbTNMZ4k/uKCwXjW/xTAan9i4+ai52bR4HTi2GQzrokcIu/D2yimUxQuq4Y6WLCOH5O7l8g8Ehuxu2W8IC4W4HqjE0kpnAvePhPj9YE3xRVSIb0suJ1f2rworIcevh2PTeY6Dn+mmTnnTQ2MgXRup8ndrfKO5A4ElGJn8VmWX9p/mc8Z++KtnXsTcDIc7n6TJz1ifsjpmtEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WMuofGRYiBgzsQLApyN85oGGN1QvWKbuw3YWYGrh0n0=;
+ b=zbeNgyZEt1Ks/1t11C6uaMZ/yDMlducJM7X4Zj3E3AxpOTY9+3JEnbrhk+/DtPIuKzDasAIjXQA8u7j4PZPzDpJAup5IusHm2F4VxRiVpSxt1xJn9YyvKDE0+Wo4XqMJL4O2I67SpJ5DRQhbrdVSYxJNc43pZRsylYPUNVYF94k=
+Received: from PH7P221CA0054.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:33c::34)
+ by DM4PR12MB8499.namprd12.prod.outlook.com (2603:10b6:8:181::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Wed, 15 Oct
+ 2025 14:55:24 +0000
+Received: from CO1PEPF000044F6.namprd21.prod.outlook.com
+ (2603:10b6:510:33c:cafe::f) by PH7P221CA0054.outlook.office365.com
+ (2603:10b6:510:33c::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.10 via Frontend Transport; Wed,
+ 15 Oct 2025 14:55:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF000044F6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.0 via Frontend Transport; Wed, 15 Oct 2025 14:55:23 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 15 Oct
+ 2025 07:55:21 -0700
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+	<mario.limonciello@amd.com>, <Yijun.Shen@Dell.com>, Shyam Sundar S K
+	<Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v2 1/2] platform/x86/amd/pmf: Add BIOS_INPUTS_MAX macro to replace hardcoded array size
+Date: Wed, 15 Oct 2025 20:24:56 +0530
+Message-ID: <20251015145457.3231583-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F6:EE_|DM4PR12MB8499:EE_
+X-MS-Office365-Filtering-Correlation-Id: faad45c4-bc5e-41f5-f256-08de0bfadeb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IH5vtqNtoXwTTqejhBYxGLwC6e/SuxkkZbpqt9hOgiyglX4xx6ThheSzSbRh?=
+ =?us-ascii?Q?pFwf8X9jk+BbUKGl+2BM+eRKvbcj1bUCiR5BAgeIJOVX3OVnaAIt2E9XzMGw?=
+ =?us-ascii?Q?sdOvhd7SnB2VkvZGj2vPdAnVH7WZXPTqNUYXQKvZNOrBBaxVQskQInT2RDLo?=
+ =?us-ascii?Q?KT9wxPnOfAJbL9g/0RJAGunfC9AcveMIhILXzsjgOXihCdVtT0CqdS0itxaB?=
+ =?us-ascii?Q?vuNkdq38dlA8tx/PuO3UxO0+86H2iz1hpHsdi+r04vE9CYfX1CgY9QpHhc7T?=
+ =?us-ascii?Q?2NvzH+I+prN5IPPyEgR5WURjlKFW3TUW09chbO6WCnPlWrPAurXPw6KUozVu?=
+ =?us-ascii?Q?5o1fCM+rIt1tEi/SsyZbYb3k+LEnhffjrlHmuJ1vGOpAjjAOjkMNwDhJwBv6?=
+ =?us-ascii?Q?RRWqn5yExFuEGrs46DmD+FRW5A8dNvH+aoqcvs/X3+XePCMxkBouKqzNKIMO?=
+ =?us-ascii?Q?xmOsZdcuApryeVuDBaQnsEmIqrYCod/Io2B674y73s3QsgTWWE/RLiRzVPO3?=
+ =?us-ascii?Q?ciEsepYe3XdkZOHXueG1OgwrPuqo1AlvqBVIIbH87YE7RlYdsAhI2s6vnXns?=
+ =?us-ascii?Q?7mlPYXIOCodx8aj0Yg9RODwlfBnSiuoqK0DVhsJ8OJuB+JypjQHZnHUppLw8?=
+ =?us-ascii?Q?OFrjQ8qTsE45OrMyXV2+qnXOkqNsfhr9HHypyh5zW7i1JJVRRkEM3Rm58jxn?=
+ =?us-ascii?Q?2j2ZnaMGQUf3y6FcaPvF5SmEYxFPxHLtX8XdSQvXjp54Yf7XjSrBfEm0pM8L?=
+ =?us-ascii?Q?1MAiMn+ylkgTNAPy+n+igMhy0amluPn8yqAxLb4r53JI2wg8juCYFlEKFyhs?=
+ =?us-ascii?Q?XFr9iJAGPfKxanVdhNl7mQpAr6TzjLKOnerfjMR22M1AWNqdtCrpWMYimCPo?=
+ =?us-ascii?Q?kEPdVBgThwNcsUJLeoF3xogQ/4xRC8s9xQ3fGvMzjIRvNJp7JtqtGI52IpWK?=
+ =?us-ascii?Q?xWzIxznlGEDId0YLIlrJgC9/QEzwtdMagd1baxMnVdEfaJgc8eo1ohkZSE6F?=
+ =?us-ascii?Q?cHuDzC2heMV79vRXBHPvySF6IN12eU2+nwFaM/9ay7LWxhZWQT9Xi/O29ur/?=
+ =?us-ascii?Q?3qSUYS2fVcvLbhghOz9jly+KV5vohddbIU/iA5E7Eyeh3BIgkeJ8u49qJcaO?=
+ =?us-ascii?Q?m/XaILkel7fWgkeEf9FwpQcpHccDV1VuwGWpIKn53BQ4H9l2avGpWBm+wXRE?=
+ =?us-ascii?Q?EH5dKb6LZNYNQ2wJ3FLbXi9NwZpejxKnY7lngj11K3f6zKWYe8MKewAb6z0H?=
+ =?us-ascii?Q?JM9vvnIN0TdJPn7ZSh/ccbUrcYi5cQggN8hsb4GHeusJnMFPDhP2XUaxBKbz?=
+ =?us-ascii?Q?gi6cQszxpe8eeoSfwtHvr5MUsblczfJGgVPEyp5tqJArDmyYSef7CZghNUd+?=
+ =?us-ascii?Q?0QupipPfoL3WySRAjw8ikJU3Ff1PDFlE1LjlU62j0cZlC5AsispWJKFKuoYl?=
+ =?us-ascii?Q?s/6sBPMipZ07ppHIA4VlD6iQddkeaDo8grD95pfXGAlY2P3wT4JDg72zsJfN?=
+ =?us-ascii?Q?fQzsi+Ydf703Ii7C8tnIGUa8KrTkP/rt6ZFPpbhHSaNnjAd8bW41Nkp8A5bl?=
+ =?us-ascii?Q?lkWzCI7o2IYOSsuZLvI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 14:55:23.7783
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: faad45c4-bc5e-41f5-f256-08de0bfadeb1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F6.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8499
 
-On Wed, 15 Oct 2025, Denis Benato wrote:
+Define a new macro BIOS_INPUTS_MAX, to represent the maximum number of
+BIOS input values. Replace hardcoded array sizes in relevant structures
+with this macro to improve readability and maintainability.
 
-> From: "Luke D. Jones" <luke@ljones.dev>
-> 
-> Implement Intel core enablement under the asus-armoury module using the
-> fw_attributes class.
-> 
-> This allows users to enable or disable preformance or efficiency cores
-> depending on their requirements. After change a reboot is required.
-> 
-> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-armoury.c        | 258 ++++++++++++++++++++-
->  drivers/platform/x86/asus-armoury.h        |  28 +++
->  include/linux/platform_data/x86/asus-wmi.h |   5 +
->  3 files changed, 290 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 3b49a27e397d..3d963025d84e 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -45,13 +45,49 @@
->  #define ASUS_MINI_LED_2024_STRONG 0x01
->  #define ASUS_MINI_LED_2024_OFF    0x02
->  
-> +#define ASUS_POWER_CORE_MASK	GENMASK(15, 8)
-> +#define ASUS_PERF_CORE_MASK		GENMASK(7, 0)
-> +
-> +enum cpu_core_type {
-> +	CPU_CORE_PERF = 0,
-> +	CPU_CORE_POWER,
-> +};
-> +
-> +enum cpu_core_value {
-> +	CPU_CORE_DEFAULT = 0,
-> +	CPU_CORE_MIN,
-> +	CPU_CORE_MAX,
-> +	CPU_CORE_CURRENT,
-> +};
-> +
-> +#define CPU_PERF_CORE_COUNT_MIN 4
-> +#define CPU_POWR_CORE_COUNT_MIN 0
-> +
-> +/* Tunables provided by ASUS for gaming laptops */
-> +struct cpu_cores {
-> +	u32 cur_perf_cores;
-> +	u32 min_perf_cores;
-> +	u32 max_perf_cores;
-> +	u32 cur_power_cores;
-> +	u32 min_power_cores;
-> +	u32 max_power_cores;
-> +};
-> +
->  static struct asus_armoury_priv {
->  	struct device *fw_attr_dev;
->  	struct kset *fw_attr_kset;
->  
-> +	struct cpu_cores *cpu_cores;
->  	u32 mini_led_dev_id;
->  	u32 gpu_mux_dev_id;
-> -} asus_armoury;
-> +	/*
-> +	 * Mutex to prevent big/little core count changes writing to same
-> +	 * endpoint at the same time. Must lock during attr store.
-> +	 */
-> +	struct mutex cpu_core_mutex;
-> +} asus_armoury = {
-> +	.cpu_core_mutex = __MUTEX_INITIALIZER(asus_armoury.cpu_core_mutex)
-> +};
->  
->  struct fw_attrs_group {
->  	bool pending_reboot;
-> @@ -93,6 +129,8 @@ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
->  static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
->  {
->  	return !strcmp(attr->attr.name, "gpu_mux_mode") ||
-> +	       !strcmp(attr->attr.name, "cores_performance") ||
-> +	       !strcmp(attr->attr.name, "cores_efficiency") ||
->  	       !strcmp(attr->attr.name, "panel_hd_mode");
->  }
->  
-> @@ -171,6 +209,12 @@ static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
->  	return sysfs_emit(buf, "enumeration\n");
->  }
->  
-> +static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +			     char *buf)
-> +{
-> +	return sysfs_emit(buf, "integer\n");
-> +}
-> +
->  /* Mini-LED mode **************************************************************/
->  static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
->  						struct kobj_attribute *attr, char *buf)
-> @@ -474,6 +518,207 @@ static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_at
->  }
->  ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
->  
-> +static int init_max_cpu_cores(void)
-> +{
-> +	u32 cores;
-> +	int err;
-> +
-> +	asus_armoury.cpu_cores = kzalloc(sizeof(struct cpu_cores), GFP_KERNEL);
-> +	if (!asus_armoury.cpu_cores)
-> +		return -ENOMEM;
-> +
-> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES_MAX, &cores);
-> +	if (err)
-> +		return err;
-> +
-> +	if ((cores & ASUS_WMI_DSTS_PRESENCE_BIT) == 0) {
+Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+v2:
+ - New patch spinned from v1
+ - Add new BIOS_INPUTS_MAX macro and replace hardcoded values
 
-This pattern seems to happen more than once, I wonder if there should be 
-an interface that returns error when the presence bit is not there (and 
-returns the value without ASUS_WMI_DSTS_PRESENCE_BIT so the caller doesn't 
-need to clear it like apu_mem_current_value_show() does).
+ drivers/platform/x86/amd/pmf/pmf.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index bd19f2a6bc78..2145df4128cd 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -119,6 +119,7 @@ struct cookie_header {
+ 
+ #define APTS_MAX_STATES		16
+ #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
++#define BIOS_INPUTS_MAX		10
+ 
+ typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
+ 
+@@ -204,7 +205,7 @@ struct apmf_sbios_req_v1 {
+ 	u8 skin_temp_apu;
+ 	u8 skin_temp_hs2;
+ 	u8 enable_cnqf;
+-	u32 custom_policy[10];
++	u32 custom_policy[BIOS_INPUTS_MAX];
+ } __packed;
+ 
+ struct apmf_sbios_req_v2 {
+@@ -216,7 +217,7 @@ struct apmf_sbios_req_v2 {
+ 	u32 stt_min_limit;
+ 	u8 skin_temp_apu;
+ 	u8 skin_temp_hs2;
+-	u32 custom_policy[10];
++	u32 custom_policy[BIOS_INPUTS_MAX];
+ } __packed;
+ 
+ struct apmf_fan_idx {
+@@ -355,7 +356,7 @@ enum power_modes_v2 {
+ };
+ 
+ struct pmf_bios_inputs_prev {
+-	u32 custom_bios_inputs[10];
++	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
+ };
+ 
+ struct amd_pmf_dev {
+@@ -451,7 +452,7 @@ struct os_power_slider {
+ struct amd_pmf_notify_smart_pc_update {
+ 	u16 size;
+ 	u32 pending_req;
+-	u32 custom_bios[10];
++	u32 custom_bios[BIOS_INPUTS_MAX];
+ } __packed;
+ 
+ struct fan_table_control {
 -- 
- i.
+2.34.1
 
-> +		pr_err("ACPI does not support CPU core count control\n");
-> +		err = -ENODEV;
-> +		goto init_max_cpu_cores_err;
-> +	}
-> +
-> +	asus_armoury.cpu_cores->max_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
-> +	asus_armoury.cpu_cores->max_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
-> +
-> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES, &cores);
-> +	if (err) {
-> +		pr_err("Could not get CPU core count: error %d\n", err);
-> +		goto init_max_cpu_cores_err;
-> +	}
-> +
-> +	asus_armoury.cpu_cores->cur_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
-> +	asus_armoury.cpu_cores->cur_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
-> +
-> +	asus_armoury.cpu_cores->min_perf_cores = CPU_PERF_CORE_COUNT_MIN;
-> +	asus_armoury.cpu_cores->min_power_cores = CPU_POWR_CORE_COUNT_MIN;
-> +
-> +	return 0;
-> +
-> +init_max_cpu_cores_err:
-> +	kfree(asus_armoury.cpu_cores);
-> +	return err;
-> +}
-> +
-> +static ssize_t cores_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf,
-> +				enum cpu_core_type core_type, enum cpu_core_value core_value)
-> +{
-> +	u32 cores;
-> +
-> +	switch (core_value) {
-> +	case CPU_CORE_DEFAULT:
-> +	case CPU_CORE_MAX:
-> +		if (core_type == CPU_CORE_PERF)
-> +			return sysfs_emit(buf, "%u\n",
-> +					  asus_armoury.cpu_cores->max_perf_cores);
-> +		else
-> +			return sysfs_emit(buf, "%u\n",
-> +					  asus_armoury.cpu_cores->max_power_cores);
-> +	case CPU_CORE_MIN:
-> +		if (core_type == CPU_CORE_PERF)
-> +			return sysfs_emit(buf, "%u\n",
-> +					  asus_armoury.cpu_cores->min_perf_cores);
-> +		else
-> +			return sysfs_emit(buf, "%u\n",
-> +					  asus_armoury.cpu_cores->min_power_cores);
-> +	default:
-> +		break;
-> +	}
-> +
-> +	if (core_type == CPU_CORE_PERF)
-> +		cores = asus_armoury.cpu_cores->cur_perf_cores;
-> +	else
-> +		cores = asus_armoury.cpu_cores->cur_power_cores;
-> +
-> +	return sysfs_emit(buf, "%u\n", cores);
-> +}
-> +
-> +static ssize_t cores_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +					 const char *buf, enum cpu_core_type core_type)
-> +{
-> +	u32 new_cores, perf_cores, power_cores, out_val, min, max;
-> +	int result, err;
-> +
-> +	result = kstrtou32(buf, 10, &new_cores);
-> +	if (result)
-> +		return result;
-> +
-> +	scoped_guard(mutex, &asus_armoury.cpu_core_mutex) {
-> +		if (core_type == CPU_CORE_PERF) {
-> +			perf_cores = new_cores;
-> +			power_cores = asus_armoury.cpu_cores->cur_power_cores;
-> +			min = asus_armoury.cpu_cores->min_perf_cores;
-> +			max = asus_armoury.cpu_cores->max_perf_cores;
-> +		} else {
-> +			perf_cores = asus_armoury.cpu_cores->cur_perf_cores;
-> +			power_cores = new_cores;
-> +			min = asus_armoury.cpu_cores->min_power_cores;
-> +			max = asus_armoury.cpu_cores->max_power_cores;
-> +		}
-> +
-> +		if (new_cores < min || new_cores > max)
-> +			return -EINVAL;
-> +
-> +		out_val = FIELD_PREP(ASUS_PERF_CORE_MASK, perf_cores) |
-> +			FIELD_PREP(ASUS_POWER_CORE_MASK, power_cores);
-> +
-> +		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES, out_val, &result);
-> +		if (err) {
-> +			pr_warn("Failed to set CPU core count: %d\n", err);
-> +			return err;
-> +		}
-> +
-> +		if (result > 1) {
-> +			pr_warn("Failed to set CPU core count (result): 0x%x\n", result);
-> +			return -EIO;
-> +		}
-> +	}
-> +
-> +	pr_info("CPU core count changed, reboot required\n");
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +	asus_set_reboot_and_signal_event();
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t cores_performance_min_value_show(struct kobject *kobj,
-> +						struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MIN);
-> +}
-> +
-> +static ssize_t cores_performance_max_value_show(struct kobject *kobj,
-> +						struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MAX);
-> +}
-> +
-> +static ssize_t cores_performance_default_value_show(struct kobject *kobj,
-> +						    struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_DEFAULT);
-> +}
-> +
-> +static ssize_t cores_performance_current_value_show(struct kobject *kobj,
-> +						    struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_CURRENT);
-> +}
-> +
-> +static ssize_t cores_performance_current_value_store(struct kobject *kobj,
-> +						     struct kobj_attribute *attr,
-> +						     const char *buf, size_t count)
-> +{
-> +	int err;
-> +
-> +	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_PERF);
-> +	if (err)
-> +		return err;
-> +
-> +	return count;
-> +}
-> +ATTR_GROUP_CORES_RW(cores_performance, "cores_performance",
-> +		    "Set the max available performance cores");
-> +
-> +static ssize_t cores_efficiency_min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +					       char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MIN);
-> +}
-> +
-> +static ssize_t cores_efficiency_max_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +					       char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MAX);
-> +}
-> +
-> +static ssize_t cores_efficiency_default_value_show(struct kobject *kobj,
-> +						   struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_DEFAULT);
-> +}
-> +
-> +static ssize_t cores_efficiency_current_value_show(struct kobject *kobj,
-> +						   struct kobj_attribute *attr, char *buf)
-> +{
-> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_CURRENT);
-> +}
-> +
-> +static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
-> +						    struct kobj_attribute *attr, const char *buf,
-> +						    size_t count)
-> +{
-> +	int err;
-> +
-> +	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_POWER);
-> +	if (err)
-> +		return err;
-> +
-> +	return count;
-> +}
-> +ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
-> +		    "Set the max available efficiency cores");
-> +
->  /* Simple attribute creation */
->  ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
->  		       "Show the current mode of charging");
-> @@ -495,6 +740,8 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->  	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
->  	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
->  	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
-> +	{ &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
-> +	{ &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
->  
->  	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
->  	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-> @@ -598,6 +845,7 @@ static int asus_fw_attr_add(void)
->  static int __init asus_fw_init(void)
->  {
->  	char *wmi_uid;
-> +	int err;
->  
->  	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
->  	if (!wmi_uid)
-> @@ -610,6 +858,14 @@ static int __init asus_fw_init(void)
->  	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
->  		return -ENODEV;
->  
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_CORES_MAX)) {
-> +		err = init_max_cpu_cores();
-> +		if (err) {
-> +			pr_err("Could not initialise CPU core control %d\n", err);
-> +			return err;
-> +		}
-> +	}
-> +
->  	return asus_fw_attr_add();
->  }
->  
-> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-> index 61675e7b5a60..a6c4caefdef9 100644
-> --- a/drivers/platform/x86/asus-armoury.h
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -161,4 +161,32 @@
->  		.name = _fsname, .attrs = _attrname##_attrs			\
->  	}
->  
-> +/* CPU core attributes need a little different in setup */
-> +#define ATTR_GROUP_CORES_RW(_attrname, _fsname, _dispname)		\
-> +	__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1);	\
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-> +	static struct kobj_attribute attr_##_attrname##_current_value =	\
-> +		__ASUS_ATTR_RW(_attrname, current_value);		\
-> +	static struct kobj_attribute attr_##_attrname##_default_value = \
-> +		__ASUS_ATTR_RO(_attrname, default_value);		\
-> +	static struct kobj_attribute attr_##_attrname##_min_value =	\
-> +		__ASUS_ATTR_RO(_attrname, min_value);			\
-> +	static struct kobj_attribute attr_##_attrname##_max_value =	\
-> +		__ASUS_ATTR_RO(_attrname, max_value);			\
-> +	static struct kobj_attribute attr_##_attrname##_type =		\
-> +		__ASUS_ATTR_RO_AS(type, int_type_show);			\
-> +	static struct attribute *_attrname##_attrs[] = {		\
-> +		&attr_##_attrname##_current_value.attr,			\
-> +		&attr_##_attrname##_default_value.attr,			\
-> +		&attr_##_attrname##_min_value.attr,			\
-> +		&attr_##_attrname##_max_value.attr,			\
-> +		&attr_##_attrname##_scalar_increment.attr,		\
-> +		&attr_##_attrname##_display_name.attr,			\
-> +		&attr_##_attrname##_type.attr,				\
-> +		NULL							\
-> +	};								\
-> +	static const struct attribute_group _attrname##_attr_group = {	\
-> +		.name = _fsname, .attrs = _attrname##_attrs		\
-> +	}
-> +
->  #endif /* _ASUS_ARMOURY_H_ */
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index a4f6bab93a6f..9a79dae97adf 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -137,6 +137,11 @@
->  /* dgpu on/off */
->  #define ASUS_WMI_DEVID_DGPU		0x00090020
->  
-> +/* Intel E-core and P-core configuration in a format 0x0[E]0[P] */
-> +#define ASUS_WMI_DEVID_CORES		0x001200D2
-> + /* Maximum Intel E-core and P-core availability */
-> +#define ASUS_WMI_DEVID_CORES_MAX	0x001200D3
-> +
->  #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
->  
->  /* gpu mux switch, 0 = dGPU, 1 = Optimus */
-> 
