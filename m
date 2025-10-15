@@ -1,158 +1,196 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE33326D68
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Oct 2025 12:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B32B213E6D;
+	Wed, 15 Oct 2025 13:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760531245; cv=none; b=UK9jTNFjFSAxGEiFYG5mSGwIiIvIpC16219HmlBl/QTSWckCPAXIAV6gDRwcc/K/gUcN4TQfA10TDuSQyMSOT2I0mxDSUBlfgvR1FufK+/O49kwmProDDO6sxn5ft7lbFRNBA9MjcirI+qA2z+NiJYhYT07TJec2c4lm2uhuTXY=
+	t=1760533419; cv=none; b=dLVyPyxJ9j4AWp6WAhGQ1aZSzlyXwYl4JNq37m/gmzE7yUy53mTXD2RNBw2sSAPFBD1ckNRni8OqiiIoPUHZDB9WQdj/iwFReUyQgttiFkweFgJNBIOYAgqkjPP8k2Ub1Xa6v+Y6pL/r+arbOiDGV0zSdqIVv86lIdi9uqIczCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760531245; c=relaxed/simple;
-	bh=aUedLoKamCVVxyfQfUAMTvYhMOssaT/HBZaPQZ62VXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SroY2ErsI9dHhDiZO1SuF9OqnYlag7eVic8KRFwLorPfZ9WDOCnrpdxHRKyeSZ/mPbFB06NNogzzIW0d9Z8VixHCaOdVpTu7z0R5oRK3TeLFIFy34x9sEwAyB+NkiEP89/huqe79MDppWVj3HlCFfP7nI+p7+RP23tuudpOvaMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kggi3Oau; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760533419; c=relaxed/simple;
+	bh=HhtINpPIPLb/glwrYf7B5rzF/7mG8Y33z4HikwXoA54=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KyJRojtnPWu8MPHRnZHmdNi1HDl+K9+J2FUA53RivnD0xF6P+nm3ng8sRlQF3xv6R9RMM+IHLaHpnNLdwP5do1e1mzAgqvvi6McFRY82POLsuWojJVCFmRo1NvAmc1WGCVm1GvsXQUs+TqG7uIV0fwMSMZfBX9DlKWY9csojK0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j78GEepZ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kggi3Oau"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-421b93ee372so3459033f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Oct 2025 05:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760531242; x=1761136042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wjoMwghPIohukayZuKoD3nhrdjl4TgPiMFjbi9Rs2ZQ=;
-        b=kggi3OausfVTItOIOXYoMEOqhRi8NYmPY3ahpQC1RmvWivK/BuwGKF2deu79YDnZ8/
-         BLXC+yS12xXtRNzg7+A2hl6xBtXeqDMN6IPaXzBSWmKb7pFRjXB6GQ1Uunz2lszcYhzZ
-         KrPmuBM9xrHh1CQ9VDeQuLYmgHAHNnyu936+WhKHAm2OIqqe7+XaBlXpspLrWUnrB9KQ
-         +ZfvcQgxjsqdUWE8hv4ldikppo/msRcYCF9LFiaIGWzf/GunwY9tGpKrS8S3VeuoT0ov
-         +ro2nHRbhgvpMmCQPcjWEMpD0jJ5Z+c2YH1peYGjR1Bmen1kXlipzaNYK1ZMD/hs/zDf
-         P5JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760531242; x=1761136042;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wjoMwghPIohukayZuKoD3nhrdjl4TgPiMFjbi9Rs2ZQ=;
-        b=XKoLcqs2XD/rn7PmuPcxMZv+kAL3kFYFsOHGNr2sqEQ7kj/zotF3FiZaH1jZK9lVtI
-         ISM2lYLTDzsh9afNy+PXYGgew/o1ontlU5OHzLQ0DWj8+IXkVCQRxKcQG5NytozlIMNz
-         Lvc3GQ0geBMuKTTpy/FOR7/JPV9E1Gf/y6a4JhqAOI3XkmwWKqnUw8QECYE55j5R5Shi
-         9peYIHNlEu8E+3dQkj7puU2AAgfxqeGxtL4utUsmhfCpcS3dPsbRGImlZmCsSRlZDfhG
-         S73xDJ5GQkjTMQjgigMVzUgHQepZWrd2gqnuVTH1TdObEqbEOg8m4EMVM3+oyAHEyOr/
-         AUaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg9ADtBchHNsBbquZPeToi5C1zxtt3aKx5CiqVZ498IVnygWSPEaM+75Z7ba4+Ho60Rmml3CgosN6D9GUBgZai5IbO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSmPurwxsmXmCMAhgnMR/yRKTgmA42i7fTbXxnxFspjaww2+jH
-	2aChQTkHhFLYjY20Wfpj5HmRp1T46JTTE9O0t7PxmO97uOIi5hoSxxxh
-X-Gm-Gg: ASbGncuU3MfBp5l0kNZcOH7fnfy2WqGEWQR43p97vS1P5BRGLYEP8bs6DB1dKNJsd5r
-	oS60QWs3ZXN6Bb/vEGul133NBHjnlnlj+1VHwWgkQsUym95zpTmqJWvCMpYbjMnA/EIzhdncZSN
-	518WkUmTR8L/01IFpMcBYS6LIJPPEe//sLfZt1Ml7frtkDHXqNmWrlLCaaMj8H+nL1dJV1iP4/y
-	7GcldZGyMsUgKzEN5EWfLygooG9xJA12yip5hnbHdPCyrYk+B0mdN8qT1NodCDNZkmY2w+N9bD/
-	e2H5sewlzUtzsbduJGAj1QeqNWW7JblE2qGkzsRINejBCtiJUSFJ4LR9WuyOuqTw5YxM9RJmust
-	sycY2+GjYNkN+4XTq1/63P6lTW3h47TaM4BzD2eeT8y0cw4YLRzgTlenvQBu/n5nmlA==
-X-Google-Smtp-Source: AGHT+IGI57IQUmf9nN0SU1CXBFc9/Ki3m5/W+fcXygdYAFCm/ofKw82VShjxAzRHnUdy1iKY85Q3rw==
-X-Received: by 2002:a05:6000:25c6:b0:3fa:5925:4b11 with SMTP id ffacd0b85a97d-4266e8dd4a0mr18552082f8f.42.1760531242037;
-        Wed, 15 Oct 2025 05:27:22 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.100.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce57cc0esm29129909f8f.6.2025.10.15.05.27.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Oct 2025 05:27:20 -0700 (PDT)
-Message-ID: <ada4c640-1d35-4e79-bc00-e88bc60f646d@gmail.com>
-Date: Wed, 15 Oct 2025 14:27:20 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j78GEepZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760533417; x=1792069417;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HhtINpPIPLb/glwrYf7B5rzF/7mG8Y33z4HikwXoA54=;
+  b=j78GEepZiumCR6wvW//yUz2NXAB/MXqekrVt6TtRP9zY3J14bfj7Hf+/
+   HMJEoxPsl1O6CZBTpllROR7qWfexjhFTNmSSYQhY3m1pcSSPpIwtK+Fle
+   u3fSSVWltjnX+adpFcaLWupiCy/PrPJ+hjOwIIFUZN4YTXr6RDwQ9IBm7
+   QvIcQ1kSINEevdB6fwuJNmVPKk8ESGjG8P1sv2D7j9TpQYTLt34LTvD9a
+   CjIMhHrJ/ZFDFV5hFSdkeqbgeSTlRcLbTcz9rDDdgqsjl+/tQHz8FkC3B
+   9eEKvxMoKdpUp89sRir5FH1FTEkYp00yfHT4k9iw9r/ir93d9SR34/Cbd
+   w==;
+X-CSE-ConnectionGUID: UWyUj9Q3RfaIMFjjb6qX5Q==
+X-CSE-MsgGUID: 59SAuU4vRImAVsvC6ioAEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11583"; a="74047237"
+X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
+   d="scan'208";a="74047237"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 06:03:37 -0700
+X-CSE-ConnectionGUID: r5GEHzXHRBy6V1yPhzIOkw==
+X-CSE-MsgGUID: a+3Owq7+SMK0HuKTErxwpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,231,1754982000"; 
+   d="scan'208";a="186181634"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 06:03:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 15 Oct 2025 16:03:28 +0300 (EEST)
+To: Denis Benato <benato.denis96@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    "Limonciello, Mario" <mario.limonciello@amd.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
+Subject: Re: [PATCH v14 1/9] platform/x86: asus-wmi: export symbols used for
+ read/write WMI
+In-Reply-To: <20251015014736.1402045-2-benato.denis96@gmail.com>
+Message-ID: <84616b3a-0ef1-f7df-378d-834075608b86@linux.intel.com>
+References: <20251015014736.1402045-1-benato.denis96@gmail.com> <20251015014736.1402045-2-benato.denis96@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 0/9] platform/x86: Add asus-armoury driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>, "Luke D . Jones" <luke@ljones.dev>,
- Alok Tiwari <alok.a.tiwari@oracle.com>,
- Derek John Clark <derekjohn.clark@gmail.com>,
- Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
-References: <20251015014736.1402045-1-benato.denis96@gmail.com>
- <0752fcde-6c25-4cde-b35f-2204e24ff0f1@amd.com>
- <8e381c36-3bdf-a1d6-8e51-53243ba8bf4d@linux.intel.com>
- <97c56897-ed9b-4d4d-ba54-d6e2abbc8b0d@gmail.com>
- <66bb61ca-94ae-7f0a-ce9f-f5c13b51eb01@linux.intel.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <66bb61ca-94ae-7f0a-ce9f-f5c13b51eb01@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 15 Oct 2025, Denis Benato wrote:
 
-On 10/15/25 14:06, Ilpo Järvinen wrote:
-> On Wed, 15 Oct 2025, Denis Benato wrote:
->
->> On 10/15/25 11:38, Ilpo Järvinen wrote:
->>> On Wed, 15 Oct 2025, Mario Limonciello wrote:
->>>> On 10/14/2025 8:47 PM, Denis Benato wrote:
->>>>> Hi all,
->>>>>
->>>>> the TL;DR:
->>>>> 1. Introduce new module to contain bios attributes, using
->>>>> fw_attributes_class
->>>>> 2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
->>>>> 3. Remove those in the next LTS cycle
->>>>>
->>>>> The idea for this originates from a conversation with Mario Limonciello
->>>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
->>>>>
->>>>> It is without a doubt much cleaner to use, easier to discover, and the
->>>>> API is well defined as opposed to the random clutter of attributes I had
->>>>> been placing in the platform sysfs. Given that Derek is also working on a
->>>>> similar approach to Lenovo in part based on my initial work I'd like to
->>>>> think
->>>>> that the overall approach is good and may become standardised for these
->>>>> types
->>>>> of things.
->>>>>
->>>>> Regarding PPT: it is intended to add support for "custom" platform profile
->>>>> soon. If it's a blocker for this patch series being accepted I will drop the
->>>>> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
->>>>> separately to avoid holding the bulk of the series up. Ideally I would like
->>>>> to get the safe limits in so users don't fully lose functionality or
->>>>> continue
->>>>> to be exposed to potential instability from setting too low, or be mislead
->>>>> in to thinking they can set limits higher than actual limit.
->>>>>
->>>>> The bulk of the PPT patch is data, the actual functional part is relatively
->>>>> small and similar to the last version.
->>>>>
->>>>> Unfortunately I've been rather busy over the months and may not cover
->>>>> everything in the v7 changelog but I've tried to be as comprehensive as I
->>>>> can.
->>>>>
->>>>> Regards,
->>>>> Luke
->>>> As a general comment that applies to a few patches in the series.
->>>>
->>>> The S-o-b means that YOU sign off on them, it's like a chain of custody.
->>>>
->>>> Any patches that you're sending need your own S-o-B, even if they're 100% the
->>>> same as the original from Luke.
->>> There's also Co-developed-by tag which may be appropriate in cases where 
->>> both have touched the patch.
->>>
->> I have re-read the submission documentation and confirmed I need at least
->> S-o-b for all of them. Is it acceptable if I simply answer to the email with my S-o-b
->> and Co-developed-by (on patches I have touched) or do I need to resend
->> the whole patchset creating a v15?
-> Hi Denis,
->
-> Please wait a bit with v15, I'll try to take a look at this series 
-> hopefully before the end of this week and I suspect there will be more 
-> changes needed as a result (not to doubt your effort but it's long time 
-> since I've looked at it).
->
-Sure! I will fix everything that needs fixing! I'm just happy seeing progress
-since this is a work that is both extensively used (valve and other distros)
-and very requested.
+> From: "Luke D. Jones" <luke@ljones.dev>
+> 
+> Export symbols for reading/writing WMI symbols using a namespace.
+> Existing functions:
+> - asus_wmi_evaluate_method
+> - asus_wmi_set_devstate
+> New function:
+> - asus_wmi_get_devstate_dsts
+> 
+> The new function is intended for use with DSTS WMI method only and
+> avoids requiring the asus_wmi driver data to select the WMI method.
+> 
+> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 40 ++++++++++++++++++++--
+>  include/linux/platform_data/x86/asus-wmi.h |  5 +++
+>  2 files changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index e72a2b5d158e..38ab5306e05a 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -390,7 +390,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+>  {
+>  	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
+>  }
+> -EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
+> +EXPORT_SYMBOL_NS_GPL(asus_wmi_evaluate_method, "ASUS_WMI");
+>  
+>  static int asus_wmi_evaluate_method5(u32 method_id,
+>  		u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 *retval)
+> @@ -554,12 +554,46 @@ static int asus_wmi_get_devstate(struct asus_wmi *asus, u32 dev_id, u32 *retval)
+>  	return 0;
+>  }
+>  
+> -int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param,
+> -				 u32 *retval)
+> +/**
+> + * asus_wmi_get_devstate_dsts() - Get the WMI function state.
+> + * @dev_id: The WMI method ID to call.
+> + * @retval: A pointer to where to store the value returned from WMI.
 
-Thanks for your time!
+Please add empty line here (or just * to be precise).
+
+> + * @return: 0 on success and retval is filled.
+> + * @return: -ENODEV if the method ID is unsupported.
+
+%0
+%-ENODEV
+
+Return:
+
+I've never seen it used for more than one line. It's possible (I think) to 
+get the multi-line formatting with * *, please see 
+Documentation/doc-guide/kernel-doc.rst
+
+> + * @return: everything else is an error from WMI call.
+> + */
+> +int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval)
+> +{
+> +	int err;
+> +
+> +	err = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, retval);
+> +	if (err)
+> +		return err;
+> +
+> +	if (*retval == ASUS_WMI_UNSUPPORTED_METHOD)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(asus_wmi_get_devstate_dsts, "ASUS_WMI");
+> +
+> +/**
+> + * asus_wmi_set_devstate() - Set the WMI function state.
+> + * @dev_id: The WMI function to call.
+> + * @ctrl_param: The argument to be used for this WMI function.
+> + * @retval: A pointer to where to store the value returned from WMI.
+> + * @return: 0 on success and retval is filled.
+> + * @return: everything else is an error from WMI call.
+> + *
+> + * A asus_wmi_set_devstate() call must be paired with a
+> + * asus_wmi_get_devstate_dsts() to check if the WMI function is supported.
+
+Please put Return: as last (again, separating with an empty line from 
+the description).
+
+> + */
+> +int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval)
+>  {
+>  	return asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, dev_id,
+>  					ctrl_param, retval);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(asus_wmi_set_devstate, "ASUS_WMI");
+>  
+>  /* Helper for special devices with magic return codes */
+>  static int asus_wmi_get_devstate_bits(struct asus_wmi *asus,
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 8a515179113d..dbd44d9fbb6f 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -166,6 +166,7 @@ enum asus_ally_mcu_hack {
+>  #if IS_REACHABLE(CONFIG_ASUS_WMI)
+>  void set_ally_mcu_hack(enum asus_ally_mcu_hack status);
+>  void set_ally_mcu_powersave(bool enabled);
+> +int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval);
+>  int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval);
+>  int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+>  #else
+> @@ -179,6 +180,10 @@ static inline int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval)
+>  {
+>  	return -ENODEV;
+>  }
+> +static inline int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval)
+> +{
+> +	return -ENODEV;
+> +}
+>  static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+>  					   u32 *retval)
+>  {
+> 
+
+-- 
+ i.
+
