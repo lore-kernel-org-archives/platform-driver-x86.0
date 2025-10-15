@@ -1,114 +1,104 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1164519006B
-	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Oct 2025 11:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D55516F288;
+	Sat, 18 Oct 2025 17:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760785820; cv=none; b=A3N2J4A+O4VSppl7CTP3tmT5zEzp9dxorXGRNnMvaj75dkoOHZkc/ODAdsf1vHWKQi937tyFb3IYiw1jPktivUU3RAfVIeJP+tqQHXFrb14IJC1eev1EXE7dNJsWiHLARNa5cTQpVVfuLonkje3bJSD8vvmEHRR7gm/36Rk83WI=
+	t=1760808765; cv=none; b=DQCpYqB6gaHm9v/ENgB4qzTGCcWt/0iJCm4c0wE73nnwfLogmqOLrdhI0nsbZcX5k77TqMJ5UJ+EUfnT0KXTEB5SfSpMJQ1pYRxVutxSKu8DlQII6sppV7qNKJQpzFhKRxFBfvz8H+ZALYnJZYnwpc1Dh694hIzupPjyLLUnH24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760785820; c=relaxed/simple;
-	bh=MLxqorXdvcv7lnsXASS4c5Irld6fzMTb/EY6v1VT920=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mE8zusR2fVS5qaNvihxVuLJA2hHrDBhJa5i07K3GIcOlfdNCsKQPE/aV/zUOMMD8wMvkmemmhUb8X7y5lRcsw/L7aDRbZklXKABNLUmmhqyJWiD3DuE7/wCM85NN1gnM4QwpyP9WFQfn9fXwSgVlWuV/bH3Fn3jSy+YVddDF2o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mH2H+2l0; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760808765; c=relaxed/simple;
+	bh=qlpQysAtLjPPuAYZ6sv95mF/8IWgUqrTAOsaiQyTKcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pancImxg1Vq9ZQXT8kSyJpyzO6BSehrPImlTmJHuJlyJzIIsti5coZIk0iL2dh7lDc8F/62eD8qX4Yk+KzqoYQ2WNeJmOzwu0xyIoZIH8VWBDhdw276Ls3xOR69kjLN2PDOVgtsvyKliXDoHLXohoA25a6B8EARi/5qJnxjJztQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oDGhkZ/3; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mH2H+2l0"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2697899a202so26358195ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Oct 2025 04:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760785818; x=1761390618; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=debOBBhLS/T41VMYsoca2iRTO//ldaNhfWag6mugk3A=;
-        b=mH2H+2l0PrChjCqjj+ZUbd2Zj+wcZw6Pu/N54nNl/uXuveW0KandwC/aCQZWZ1hCP5
-         kkjUI8j4gURzaNRAch5mwxiycCe+UUODL4vLNDglf4r/ctBSuz4klglVwWBxUD672S+v
-         CZyHm15Ylkzw5MOI8OIv2Xlnm3OhJkB+LYBpmZMjdRLzx35CAP5yZIm4QTtiBHTdYam7
-         AzZlXjexGli+BhimezORsNEQy7xLOlZn90OmANo5ax8BS8FXV98raGLB2NYfKDbeR/fE
-         CpuIj712sRof4V84+bCY9LMK1slEbHV1wq5ryYzuw2CcoGXINjNlir0sDTCsXokeQKYM
-         SJmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760785818; x=1761390618;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=debOBBhLS/T41VMYsoca2iRTO//ldaNhfWag6mugk3A=;
-        b=JRqkF9f1irq6z9iFLNTSQ3qhW18zh2FlERYv62lyeBsJh2LDP/Oe0pHwxPEg6j3DkK
-         LFHsKBnNLGbVAlqzVx74SLRnZs4Dp43VPOWY4ehRvq+Kp1BewCuwfJGhNqhPj2728d6W
-         35MAOuq0kqssyFPfoAWy52qnDJjcYO/oi6xgQDHeelBaqffPYpM/GfPB9D6kNHtZTumr
-         y7cH2DN23DAveKqv3g83AHW9OA+1IWQy95Da9wniCNTJDEusxa+4PPnDa4xWcFz4oufw
-         vjctjew2lx8Jqg2dkD4iwnBTxprzc+hFov5X/35rqf7tt7o2Sq/XvqqYncbVXUzYpy+2
-         +iRg==
-X-Gm-Message-State: AOJu0YxLqi670Fg5uTvyjTWH8UMtQ7qNhm2Bzu3UUF6ceI4CuimMUfoh
-	S1PLdl/vcoPp9W93hZN75Z6aBlEoQJW+cWLaQb+zGGA3zcpHKABzXTDr53yTq6CaG3Y=
-X-Gm-Gg: ASbGncszfJycM3IyMQSsjYveSV6pNzmQpH9bYkrD2PO0FLxTpWLzOnZ7xhZzyUfmeoW
-	4aUIEPxNOrKXGZSJ2ErZdH9v1zXJsdslfVgNL911k0GaiamtNEW9eWO7fuwFEuLtEuWo4L5ax8q
-	Kcw99IQgQKv3ziOX6g0iAv2t9mL1IEgtu8PnWLhzpc49Suo8pueYxmdeGDPuP4taY9Vf+nWLbxR
-	iVM3ppkX7hmrmeDjsl556shMZiQQwhcBLgtk7695Ndaif3d2WMkmKrdOrI1AO8WbWAkdpL+UASI
-	UYliislQspRoO/s2SCdVzfDfMy72LQpGuLS7mSRj+8SPIed2EVRDmLS8xy8TiBZNZZ2o9ia8MzK
-	x9CPKLITI+GSVMpBqNw09tmDWhr2p+43718R20HBJyXQ4iLq3FFnq2QRoNTwj79tPxu9cYI/IwN
-	tD8GmabM87
-X-Google-Smtp-Source: AGHT+IHeLfXi5/LBkKRJJSY/OrLC73akNLogCWriuseeF+35Bp/pV4QSbXkBJEeW/NAUJ3a9BxqfxQ==
-X-Received: by 2002:a17:903:1252:b0:267:c1ae:8f04 with SMTP id d9443c01a7336-290c73ff868mr68917465ad.20.1760785818210;
-        Sat, 18 Oct 2025 04:10:18 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:225c:9e18:7101:be84:75eb])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471d5612sm22993455ad.65.2025.10.18.04.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 04:10:17 -0700 (PDT)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	Krishna Chomal <krishna.chomal108@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add Omen 16-wf1xxx fan support
-Date: Sat, 18 Oct 2025 16:40:01 +0530
-Message-ID: <20251018111001.56625-1-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oDGhkZ/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760808763; x=1792344763;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=qlpQysAtLjPPuAYZ6sv95mF/8IWgUqrTAOsaiQyTKcA=;
+  b=oDGhkZ/3VLPO+zQg5BZCWS+kpcvh3eOU6SBEdQuW34HdwbfUkioBzhYX
+   6eDjQGhZK7TFwKR3IOab6uvFtYUhqlGNX6O5J6p1PQW9LJI+oqfHIMuwF
+   WMC5+31aZIqToZYdsClZdJgolCPJMB/sgidc51NmmG73gFwrlqPSw1U1r
+   28wIvGEBQztHLk315Wgrtg1TVC/qzyjnXTcawwXeXG5MeoowQdLA8vEkQ
+   fR5IETa4e5TCvQ4Geg87qONTXx7LSI3p56+Luf10fBj4EGKcoXHgyKLoL
+   qvTyIqHA9YDFrk1WJKstLKja/rGI6OZsGPDgjWX2uXF7zyS8Jjqu5cV8d
+   A==;
+X-CSE-ConnectionGUID: fQa55HwCScShkpdTlmL1+g==
+X-CSE-MsgGUID: BbWVGR17SMqnEpZhoY1o8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73670177"
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="73670177"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 10:32:42 -0700
+X-CSE-ConnectionGUID: 8aq9F9SlRYu5dgklS0iwnQ==
+X-CSE-MsgGUID: o/yGeldTQnGCOKW0QObD2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="220131692"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.194])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 10:32:41 -0700
+Received: from andy by ashevche-desk with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1v935F-00000000L8i-2abO;
+	Wed, 15 Oct 2025 18:06:33 +0300
+Date: Wed, 15 Oct 2025 18:06:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: luke@ljones.dev,
+	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Denis Benato <benato.denis96@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH] MAINTAINERS: add Denis Benato as maintainer for asus
+ notebooks
+Message-ID: <aO-4ebdTkIoUgBO8@smile.fi.intel.com>
+References: <20251003184949.1083030-1-benato.denis96@gmail.com>
+ <46762a7e-e8cb-45fb-8d62-062915133463@kernel.org>
+ <36720829-6ba3-4178-952c-4236622edfa2@kernel.org>
+ <ebe38602-1832-391f-b043-cae0c10d7e30@linux.intel.com>
+ <E7993E86-3805-4E93-A714-0D4A33FBA759@ljones.dev>
+ <7c741d8d-dc07-7316-3999-cd69f2af67a3@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7c741d8d-dc07-7316-3999-cd69f2af67a3@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The newer HP Omen laptops, such as Omen 16-wf1xxx, use the same
-WMI-based thermal profile interface as Victus 16-r1000 and 16-s1000
-models.
+On Mon, Oct 06, 2025 at 12:12:12PM +0300, Ilpo Järvinen wrote:
+> On Mon, 6 Oct 2025, luke@ljones.dev wrote:
 
-Add the DMI board name "8C78" to the victus_s_thermal_profile_boards
-list to enable proper fan and thermal mode control.
+...
 
-Tested on: HP Omen 16-wf1xxx (board 8C78)
-Result:
-* Fan RPMs are readable
-* echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable
-  allows the fans to run on max RPM.
+> My opinion is we remove that address, there's little point in keeping 
+> people around when they've stopped communicating years ago. For this 
+> driver it's easy, but that address also appears for samsung-laptop.c
+> which doesn't have another maintainer.
 
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The latter case should also switch to Orphaned or get removed the whole
+MAINTAINERS record for it.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8b3533d6ba09..596fbdfea64c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -92,9 +92,11 @@ static const char * const victus_thermal_profile_boards[] = {
- 	"8A25"
- };
- 
--/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops */
-+/* DMI Board names of newer Victus S series and some Omen laptops sharing the
-+ * same WMI thermal profile.
-+ */
- static const char * const victus_s_thermal_profile_boards[] = {
--	"8C99", "8C9C"
-+	"8C99", "8C9C", "8C78"
- };
- 
- enum hp_wmi_radio {
+But before doing that have you checked `git log --grep'$First $Last'` (i.e. w/o
+email) to see if there is any new activity? Also any other emails available
+from googling / duckduckgo'ing?
+
+
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
