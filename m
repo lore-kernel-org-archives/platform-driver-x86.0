@@ -1,84 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2B62FF144;
-	Wed, 15 Oct 2025 08:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4DE3164D0;
+	Wed, 15 Oct 2025 08:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760517111; cv=none; b=dipJ00GEbQpEPEFdPcHfr2cGAeDWqkDZsZXLiw49+UOwTN/LzFOMU00zLcOgj0nS8Sm+OV9cPHPZ76fPwcKmMOSSVmEmIi6IlsA23NgDopVJn0qBYkmq0zt0mdLH1nDgv0gQsVqS3TvPkOKtS6PjfJGYpJcxhvPvP7G2r/ndWfQ=
+	t=1760518001; cv=none; b=Gkb+9Ue2PRDXOKHkfcf93uGjChJN2vKd18gp3igJ7JjCuJDReTNRYDE80nSzUfQWivKSJNCnUv9MvgHNcvVsOT/gPiDBBUmurJX9oAt7TyOyLhoSmDZYedZtmyNb+LNMukDKe1nWHdqe0NJ7uBXGPBf0C0oq+GOE6bH8p1jv8Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760517111; c=relaxed/simple;
-	bh=guKDLKwMOZkIZbenBsHD/FzS0zw8aMJTh7zDKWF5km0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KaR6kY9tE86wEiiTOJbd7zPLZQYqqsGbNoeNxwX/5buKaNaNVf9+svbKjbMZiVZhsCYcYb8CkgzPgnEKAZMC0OeAKaQj/MeaWDFgllcz+A3bnrfJm8fQkjSzQpN4tlM4EVKHTTI8aR1sYexRNpdao9hcXzmgODD5+c0QD5OqOSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eYHV1u+A; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760518001; c=relaxed/simple;
+	bh=+o0GsnWnYYH2rYb7oBqdNplXJeBCnaXsrfz/PIRSmqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=avc3pWubYDpgHl6cQ60Bc5v5DzKrOGO37wxbRhX+qUa1Oy054AxmGUK1b1pCcDqTYGDhrZgzQPoqpC1+WciA0GH7FIn5Mibk6T2LuymuFLQyiY8CLMjuxUqZd8YuCGqO7im6haaJCtQJ5z2WnyMTQnGOYP1ZnoWeAxZoNPlTWuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=k2hrtOR+; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eYHV1u+A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760517109; x=1792053109;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=guKDLKwMOZkIZbenBsHD/FzS0zw8aMJTh7zDKWF5km0=;
-  b=eYHV1u+AfzVtCQWiDB1d71DBz+ziG5gtFx8/sEupQMhZIUjx744yAA7v
-   5gzV+Am2Bis2eUgsR7n0cj4MPItre0x8ctqsI0ulGIUD9w/bDAc5ThYZU
-   x9C2HLaHD63wA6tEsAyUPkkPpIguiFg+Hy52jN2Mbt9W0eDcmKr1HkmcW
-   /fd7t9tF/kJnDdfLE/KeK4sWf5H1Q873+zMdDJdiI1wpFPvAthqNUHOGz
-   yknvP/fhgjEy7SWBMEQERqG408AUwDPDEij6JgTVzZHyk1WjQkZMLtTfw
-   8G/f1jFH3rIin1EhHDP71ToNed3+fmXGtF5hYRM8N39o41M91SBRt9qAe
-   Q==;
-X-CSE-ConnectionGUID: t+R2niTOTBmruY2tGxXL+A==
-X-CSE-MsgGUID: A9q5uAOyQV6+nHrHUAppNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62780927"
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="62780927"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:48 -0700
-X-CSE-ConnectionGUID: 3ABDQyxlSeifXXo30MTHDw==
-X-CSE-MsgGUID: lFdrMuSsTuOQBwTYBJu90Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="182895295"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.75])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 01:31:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, tr1x_em <admin@trix.is-a.dev>
-Cc: Dell.Client.Kernel@dell.com, kuurtb@gmail.com, hansg@kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250925034010.31414-1-admin@trix.is-a.dev>
-References: <20250925034010.31414-1-admin@trix.is-a.dev>
-Subject: Re: [PATCH v3] platform/x86: alienware-wmi-wmax: Add AWCC support
- to Dell G15 5530
-Message-Id: <176051710151.2196.15376523198051741903.b4-ty@linux.intel.com>
-Date: Wed, 15 Oct 2025 11:31:41 +0300
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="k2hrtOR+"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id 1320AC572A;
+	Wed, 15 Oct 2025 11:46:30 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id 444CAC4F7A;
+	Wed, 15 Oct 2025 11:46:29 +0300 (EEST)
+Received: from antheas-z13 (x5996a8de.customers.hiper-net.dk [89.150.168.222])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 45F74200A81;
+	Wed, 15 Oct 2025 11:46:27 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1760517989;
+	bh=jxquyYtL0fSzRfx4rbJSB5tzEASoEkljMua5h0I9tcQ=; h=From:To:Subject;
+	b=k2hrtOR+XeiXptuYzn6V0a933K1f0fldmX3nam6a97Qp8mnlZaA6jahaCVYtotF56
+	 xYnQIv/4zm7djFvbqCi99ZEaO3VEg2cwOJ4jsTiQWg/EdUSL9wA1q+tAPUX0D0jnuc
+	 dEnhqjrIp7kKpglOnrxsB3MnrsrMKXdIypYNjZpcqN29o6lpFK0BEf8SMefQR+vFSU
+	 BbIHNXlUiKyTFqyMiaTHAjynjWmsx6RV+wI7E9CP3QuCJidiktSPp0Kmal7pyZWdTU
+	 MPJI3L/jnSIcyjyynQXsB2WMltYMvTVoFBr4IGOCyVTeEauch5rAlK+gbjfEGJxW8l
+	 LeMJk089GzM+g==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 89.150.168.222) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v2 0/6] platform/x86: ayaneo-ec: Add Ayaneo Embedded
+ Controller platform driver
+Date: Wed, 15 Oct 2025 10:44:08 +0200
+Message-ID: <20251015084414.1391595-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <176051798894.920664.10794098439892525348@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Thu, 25 Sep 2025 09:10:03 +0530, tr1x_em wrote:
+This series introduces a platform driver for Ayaneo devices, ayaneo-ec.
+This driver provides hwmon support, power management, and module management
+(for the new Ayaneo 3 device). Module management is done through the new
+firmware attributes sysfs interface.
 
-> Makes alienware-wmi load on G15 5530 by default
-> 
-> 
+Luckily, all Ayaneo devices with an ACPI mapped EC use the same registers.
+Older devices also use a memory mapped region for RGB[1], but that is
+replaced by HID in the new Ayaneo 3. Therefore, this allows for a simple
+driver design that provides robust future support. The memory mapped region
+can be upstreamed as a different RGB driver in the future or remain
+out-of-tree[1].
+
+This change also allows cleaning up the oxpec driver, by removing Ayaneo
+devices from it. In parallel, charge limiting is added for these devices.
+
+[1] https://github.com/ShadowBlip/ayaneo-platform
+
+---
+
+V1: https://lore.kernel.org/all/20250820160628.99678-1-lkml@antheas.dev/
+
+Changes since V1:
+  - Use plain sysfs attrs for magic module attributes
+  - Combine quirk for power and modules, so attribute tree is simpler
+  - Use switch statement in hwmon
+  - Add hibernation hook for charge bypass in last patch
+    - Restoring fan speed is a liability so it is omitted, see patch notes
+      Note that for EC managed fan curves, it would be acceptable
+    - Regmap comment: Using regmap is unprecedented for ACPI mapped ECs
+      and overkill for one value (> 100 LOC)
+  - fixp_linear_interpolate() comment: it requires importing an extra header,
+    is not used for static parameters in other modules, and expands to the
+    same equation for parameters used, so it is omitted
+
+Antheas Kapenekakis (6):
+  platform/x86: ayaneo-ec: Add Ayaneo Embedded Controller platform
+    driver
+  platform/x86: ayaneo-ec: Add hwmon support
+  platform/x86: ayaneo-ec: Add charge control support
+  platform/x86: ayaneo-ec: Add controller power and modules attributes
+  platform/x86: ayaneo-ec: Move Ayaneo devices from oxpec to ayaneo-ec
+  platform/x86: ayaneo-ec: Add suspend hook
+
+ .../ABI/testing/sysfs-platform-ayaneo         |  19 +
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/Kconfig                  |  17 +-
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/ayaneo-ec.c              | 541 ++++++++++++++++++
+ drivers/platform/x86/oxpec.c                  | 115 +---
+ 6 files changed, 585 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo
+ create mode 100644 drivers/platform/x86/ayaneo-ec.c
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.51.0
 
-The list of commits applied:
-[1/1] platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530
-      commit: 34cbd6e07fddf36e186c8bf26a456fb7f50af44e
-
---
- i.
 
