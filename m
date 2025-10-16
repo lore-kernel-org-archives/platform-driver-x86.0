@@ -1,52 +1,52 @@
 Received: from mx0a-00154904.pphosted.com (mx0a-00154904.pphosted.com [148.163.133.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00953254BC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Oct 2025 09:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2662321421
+	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Oct 2025 09:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760606227; cv=fail; b=QvfEWpSSRYhrpxPV4B5eg1LMuUPUguSpC8ayI0lGQz6njLGBY+/undGNc62kUeUbAwA9Qc46WDjbdrtFmcI9uc/iDC3bHfXlovqrew4tBh+IgmHmco/9ovROW/bgQouGoYfKuWdoIr9ClIcSWaW6MXsFF3mmNNs/hRx1A5EIMOg=
+	t=1760608793; cv=fail; b=QB1BUnmJWH575z5CicnirPgTUnTqrFj/+41DFjmfXTwfJmmCTBTJD02o0XILnrXFDEz5CgMW3hU2bSuJic2/D5emgK0Elx1YZWNbu1honkIclvGRqh2aPBwiQIgyh0R9dz0Xz5rRBYfOPJ17qY8Lb9wCbF4qKupnci4eTBXpC6k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760606227; c=relaxed/simple;
-	bh=Cop1ov1yPH+YipuI81fjOOXyVqk2JS4quFGQwBz3hqY=;
+	s=arc-20240116; t=1760608793; c=relaxed/simple;
+	bh=T3RbGxwM+AFPVHr4qw3Q6OElRJpbEHrbwIQa3UlOvNs=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QJrlhWP0nX+TWCrEkLuzKLFGC/4ugCC2eCbXEfgkgyDcoHYAD9lmZllzU4jCreb/DxNB+v7ADPfpAr4HThgFaxhvAwAwVpgzvdJ6rh0S7deeaN8I0ID9eFPOYLws4AiqmzHIY60RKHVbna/6e2wDsF8HMKdatmr8WOsaKI9Vm4Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=dCPbtHcG; arc=fail smtp.client-ip=148.163.133.20
+	 Content-Type:MIME-Version; b=W/loCPXjukdGRBQ/xnM0OztugYIMkDZEVJCxDPbtKlyq69USW983KqBiS5OBJuAfj0IiI3PQ+ux00g4FaElSEpzzl6nagdA6C2httm4S0j4o2DlJzrtrfEPNs7DlbHzozzXl9zzQK0lire2RzdCi9DuMmHGdLvNzkH5SdPqQqS4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=T1FGncm4; arc=fail smtp.client-ip=148.163.133.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="dCPbtHcG"
-Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
-	by mx0a-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59G3Yaf1004400;
-	Thu, 16 Oct 2025 04:13:55 -0400
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="T1FGncm4"
+Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
+	by mx0a-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59G3ADmX007659;
+	Thu, 16 Oct 2025 04:13:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=smtpout1; bh=s
-	Yx/JbsUm5v7/0X3YNOWpPaeLAbYiZ/ohrAWRTPko+g=; b=dCPbtHcGDTJ8fUGVw
-	Re5MipAGPbvyzh+Q5sfny6p7youNot9nkcXwk5mkMYndJsWz2Jxvt39SCleQdl3X
-	W8U7HWVv2xxKr2hUdzzIG7mpQsHTvgTFlqq+23/FHT1FM9kTsnQfwwEJLWaJGLWN
-	NSr4OHnfaU8rVGdOAAUoamSWsLl2R0CaDyet9i3Sbh6/kYNoWbfx8EuELGt/4TQz
-	trToH/HPbabC0w8iRVdrook0zRp4bd3w91u+fSKAEfpDV7pUGqKm4xhhr3uAglZk
-	8+9JUpUnI3LqIiyXDQJizm/mlmr3oI+p7y/fJd9Jew7cvPrErFCSOSITZAEXOENj
-	Sn8uw==
+	:message-id:mime-version:references:subject:to; s=smtpout1; bh=I
+	G3UImp01uTpIgNM7pE2awvpjpEv+rM0CD7qNqDvlAY=; b=T1FGncm48tT3SzWL+
+	hw1OEIwj6c4uKwqUJXjPgEtBzJBnH6R1OO27pfYIsT6ZHQFTsWWP6xnj2LhenBFS
+	VRwI99BWgxD4MNTlFPYCtpGau39OOiC59HnFh+cY9vT5377WuhZxUrE6MvPBiSGj
+	bHgCs4hN6p76jUMDsKX9xxyGsN1xzo+AXkilvhf8DuSobI6bkdQr17d1w+KMKO8C
+	IkK7B9HHoHdbfqTD3faHIyFaqXaVCnFC8ymSks+wJz0LN9Eg6FE23zkHL/OuorMG
+	h3ijU7/PGe/pdkNxcNUqW+ktF9vpioEmx8D1idkZjc4Kuwz9nBsocHv5O0LOd+L3
+	NcdXw==
 Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-	by mx0a-00154904.pphosted.com (PPS) with ESMTPS id 49qjjgyb6s-1
+	by mx0a-00154904.pphosted.com (PPS) with ESMTPS id 49qk8j77db-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Oct 2025 04:13:55 -0400 (EDT)
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-	by mx0b-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59G2g4rB029085;
-	Thu, 16 Oct 2025 04:13:55 -0400
-Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010028.outbound.protection.outlook.com [52.101.85.28])
-	by mx0b-00154901.pphosted.com (PPS) with ESMTPS id 49tm2m64e7-2
+	Thu, 16 Oct 2025 04:13:50 -0400 (EDT)
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+	by mx0a-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59G5F5IA028702;
+	Thu, 16 Oct 2025 04:13:50 -0400
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010071.outbound.protection.outlook.com [52.101.61.71])
+	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 49ttd3a0nu-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Oct 2025 04:13:54 -0400 (EDT)
+	Thu, 16 Oct 2025 04:13:49 -0400 (EDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ffpet/EA2PUct/ybSSrXuetVpKX+5t/rh+2IlF2PL3vqlV7DYYzSw3IVAZKCh0xwXs3c2iKcmL8Oh7KPuea0YpsLYPn70JH8DJzZ3Jg4+fhqveQu6FuzHJqhU4QBvt/yg2a2oXd3N9qAmnrKaK5pTC84SfB4y3oDp4ERJgWOZ5zPTgwPe6UFVgcTQKWmAka4i85azOL4Izdye9XVoj/kben30vLWwN3gs2AZ1ylpJLM8ejHxDa6edYrf+2zPA05021avYgTFDCOZ5NbvZSSJq8SuWw+9OW5MMr4hpqcvWWPLIvLN12n5iDQScoitZLK5k04DDE63AjWSTXQT1WAqXQ==
+ b=YNTb8QCOekT92Z60A5COmtNOkJr+Wkur3uf91XfbnR/k1d/OGrXxb7f/Wj4tICcsVw22Ll3GqTnivBbp86yNQURve+xqzzgbJK770V43xtqT2jjOMXm87cFKTkn2cjbqzJ1uBXCfGZp360DvuUMTXswUAbgd5NxN+0iYIT+vaHYujBMtIKKRrEkxvnRBcGFDb7i2ifh0DTnE/DK9tu7VykgEN/MATCErsBQysJ6RHGdu1F1I0MA7InLdbWpRqCkhRcLYrWmEpu8zqVerkosoemKAA4h7nzYlvcVcH7F+DQ9L9Pyw+WWe1D2jGjMRyAwp1Jae64cyFK12bFjAWiKuTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sYx/JbsUm5v7/0X3YNOWpPaeLAbYiZ/ohrAWRTPko+g=;
- b=y0ztgo3X210C0GPsbGmtf/sV9O7XK+YLhdoCkxbYeSI8Xatrh1pMWhORXMo9Rk9DBBXP4ina4atJmxxnIuf/ycpm1SxCB3wQAXEP4yHOMMW/9vc0+UBR0SuajczaZOD63vSRBowL9OZOf7obj1nD0hyhVS4SChjVYCmbsvmW+pT5rsWRhZpJT/D+TvDDNGhmBBKOOyAmVeO5wTwuOHQSz3039J8dverbILrju79aBuM1qw9eT2D/tWDd7lSjGTxjseuvyvvsidBCP+1MlxY8FTYZyAu9Tvh64kW2/UtZ0AZte1ibTDQwezGiaLOcAAh8WirebmsFD8setzuqyqoa1w==
+ bh=IG3UImp01uTpIgNM7pE2awvpjpEv+rM0CD7qNqDvlAY=;
+ b=WXogH4YAmP1BqfO54RjmIk2e7AzNfqzsDNwLuSSWs4C98LamFhEdMqAGvJQOWZJdz4EiHGdYJvEIkXapPtRIDXXZODDCT/vsDTqUM5EehPB1q8Ra7UhfZOCIiM2I8Fwij1cYF97RuU1I05ryPUcjlATzjkWqxn0McuUnUMfiRdh/4TkPXcGoNdBh1F4ENNDC8eEi57FytTVYYJ10LdXmgqrTXirzYQ4bN/hnoSD5t+siyDhAIz07Kf6PguTWFYjzDemqq3b2WVPhawzG9FdEk6Y3E+p28wHCgeQU6dKPzStOG/m8WMuG4gsYXAdgfqsPlvy0PgKNzF5zfHI/gzEM6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
  dkim=pass header.d=dell.com; arc=none
@@ -54,11 +54,11 @@ Received: from BY5PR19MB3922.namprd19.prod.outlook.com (2603:10b6:a03:228::23)
  by IA0PPF69F4F1B2D.namprd19.prod.outlook.com (2603:10b6:20f:fc04::cab) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.13; Thu, 16 Oct
- 2025 08:13:51 +0000
+ 2025 08:13:46 +0000
 Received: from BY5PR19MB3922.namprd19.prod.outlook.com
  ([fe80::de91:63a:a814:6ed5]) by BY5PR19MB3922.namprd19.prod.outlook.com
  ([fe80::de91:63a:a814:6ed5%6]) with mapi id 15.20.9228.012; Thu, 16 Oct 2025
- 08:13:50 +0000
+ 08:13:45 +0000
 From: "Shen, Yijun" <Yijun.Shen@dell.com>
 To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         "hdegoede@redhat.com"
@@ -69,91 +69,90 @@ CC: "platform-driver-x86@vger.kernel.org"
 	<platform-driver-x86@vger.kernel.org>,
         Patil Rajesh <Patil.Reddy@amd.com>,
         "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Subject: RE: [PATCH v2 2/2] platform/x86/amd/pmf: Use ring buffer to store
- custom BIOS input values
-Thread-Topic: [PATCH v2 2/2] platform/x86/amd/pmf: Use ring buffer to store
- custom BIOS input values
-Thread-Index: AQHcPePDPrax3rx520qTJzSIrwAZ8bTEbTkQ
-Date: Thu, 16 Oct 2025 08:13:50 +0000
+Subject: RE: [PATCH v2 1/2] platform/x86/amd/pmf: Add BIOS_INPUTS_MAX macro to
+ replace hardcoded array size
+Thread-Topic: [PATCH v2 1/2] platform/x86/amd/pmf: Add BIOS_INPUTS_MAX macro
+ to replace hardcoded array size
+Thread-Index: AQHcPePAcH9ewoNQDEKnZfdRbdsbvLTEbMuQ
+Date: Thu, 16 Oct 2025 08:13:45 +0000
 Message-ID:
- <BY5PR19MB3922172E5F4A12C9CF79DBA1EBE9A@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <BY5PR19MB3922EC2D74B59ED0C7E58A16EBE9A@BY5PR19MB3922.namprd19.prod.outlook.com>
 References: <20251015145457.3231583-1-Shyam-sundar.S-k@amd.com>
- <20251015145457.3231583-2-Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20251015145457.3231583-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20251015145457.3231583-1-Shyam-sundar.S-k@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ActionId=78397bd2-f025-4319-91a6-deddb2ff3029;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ContentBits=0;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Enabled=true;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Method=Privileged;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Name=Public
+ MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ActionId=a125f0a7-f523-4f52-bd5a-5d3db968359f;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ContentBits=0;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Enabled=true;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Method=Privileged;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Name=Public
  No Visual
- Label;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SetDate=2025-10-16T08:11:53Z;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Tag=10,
+ Label;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SetDate=2025-10-16T08:10:22Z;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Tag=10,
  0, 1, 1;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: BY5PR19MB3922:EE_|IA0PPF69F4F1B2D:EE_
-x-ms-office365-filtering-correlation-id: ace2c124-fac6-430b-d6c4-08de0c8bf091
+x-ms-office365-filtering-correlation-id: c73915cf-1bf3-4843-162b-08de0c8bed65
 x-ld-processed: 945c199a-83a2-4e80-9f8c-5a91be5752dd,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?sWZ6cM0uvt98cSrjtF5SgHAZ8Q1G4IAlvOiQ1lDESzJMoAATaRUbJ4Jb1EyJ?=
- =?us-ascii?Q?d4LFYr9QUNtmL218T83j81MVxsYEuKa0vBsFRoigQSkY4Ttg3IyEdDtMkhtj?=
- =?us-ascii?Q?HnvPTjXWiERGYUgdXoD/Wx9Cso0k4VyF7u2F1ewzorWZazxuE77t8FQGz2Lw?=
- =?us-ascii?Q?P/O5gulopRFp/6vczxfU7QeQvaUjoct1dAG81rWMES1eEse2U+gSGzqFLIdI?=
- =?us-ascii?Q?e09y4Ai+2YdLlDBOn9NZFVY2DDM8UlX3D/ktRKdWzL3MlEXRTjQMJMo10s1Z?=
- =?us-ascii?Q?+jSe5p2gDvGQ9T4pPovskCbnRDk/kShIYt7/dudFCBijqORNRJekdhetaJES?=
- =?us-ascii?Q?CDZhEyj+BrVeG3Kjha2pi09WWvPCzSzHs5hrF1tAC/swMGr9ZyYdphMazZIN?=
- =?us-ascii?Q?w73c+dR76XkUfd/rIk9f9E5HwOXNN3WfqeTzCSoZZFDyJNyV9nD3HJweMSZt?=
- =?us-ascii?Q?H2X0+XeasPdq7rCzre4uR+/F5lxUWwqYxasLlNezXuO8++zXAYQmkP8ERYsI?=
- =?us-ascii?Q?4WKjBFPGsWSf9dJTsUakTFwhSF5h/uhh+MHk7xcFtpKXnnlg9ch1gJA4pvB9?=
- =?us-ascii?Q?ilSIp6k8N7yaoYfJxyayIS3dwaES8NI5bW4co+Vh4QGyQ3qu0JJinnNBlGfq?=
- =?us-ascii?Q?WH1gbQzh0D8BYi6JyX9K+qtBuDGmEjxuyUh9OQ+4gqIzf5QScpQhvZVQjye5?=
- =?us-ascii?Q?Ie7K64GtpnOC9Q/YxzeVs2SteCkE6K8HCxXGjiNKtGd25zIYzxFmcn5IFB2U?=
- =?us-ascii?Q?gSHTE2E5L/FEvT+A18BBc+ZcwVP7h0vafbk/fNa4MJbuZxPHIfuPDpvi0vOg?=
- =?us-ascii?Q?Ol8e08AYP+CjbA5O5fGKjr8MqxCyurphzUJf76zSn8O3lgKSX00hsH8dKVWd?=
- =?us-ascii?Q?QnT8CoMLRO77hziJnUXD40bibYoGiHY/qK5PlzJtbb7SIINbKFMd0eGb/W7a?=
- =?us-ascii?Q?9w/2bDOrSPCXlIgSZsLdQlhAusAvQ+fyCcf/uW2EI8W+keRSwrG2RJApwtbO?=
- =?us-ascii?Q?ikd3dIKVj9v7e3Pf4QXeu7qVlZ/8R1xb5ajSLgsyxBFYr7GS1lQtixWCsdre?=
- =?us-ascii?Q?YhRLQK9XHrCUZwjd/qSboV0XHOE+SNUnQme9125XkZjWM6sq3FLCN0qmkiVN?=
- =?us-ascii?Q?djriGztNlne/GcTNCbe1AINNm8aleHPsGYu6gqiIyLmy7Uw4gcJKL/joVnKo?=
- =?us-ascii?Q?b6Z8VKOI7Dqmu+9A4ivL1ZlHtglWBHL7e9PbN5AlHeMYnNo+lw330psjsPl2?=
- =?us-ascii?Q?PupID5lKFOEWH9KZCPHSqyr3aI2wXkP3zXVw/+pflRiX7otYDhlMsREdwHiv?=
- =?us-ascii?Q?McptreAc0dYwYqs4x2xXObMJmoKrMsuvVcLKe0squjI56kBHjB4sUAx5OKTX?=
- =?us-ascii?Q?hkUySyQqvc0+QWeFCpygqn0ki2FNqY6iCYtpMIomR1TSKt06l9/4jdDv4ykw?=
- =?us-ascii?Q?N9rXrxN8re584q/dAtShxTY18dBCRvF/WvEwtOP+PSqeRJ0i7ezfeeqebv/A?=
- =?us-ascii?Q?GOo4GOaTdSixeYWGKKAWRm/GKGT/TzPAfDKj?=
+ =?us-ascii?Q?IPKL/n0dODErTVBbyQ/53UgWWrW4UXcm4hfcQyfMfmpV7Mnn7uHPHiKmpbTI?=
+ =?us-ascii?Q?h5LPlmqkPduJzNwuRVp4SbaKmzJ8mdub41a3BNsODTS5eMUnejBr3ckuLrmc?=
+ =?us-ascii?Q?AT97sUZru+i/qAnTv3QOOk2Zn+/dFKOMNFL9mdSFhNIdo9bgLakiqLTK1lcn?=
+ =?us-ascii?Q?lAxMvmdODf0Y1PRhq9tlyEkyUpDTXojg76BeU4v1ZhbFHE+oYpO5jhkhroeZ?=
+ =?us-ascii?Q?Mnebu5NkpIa6kZbBf8dX9yj9fkthRrgl2IEK0dVzb8O7V/1AUf+ZJaMwWjno?=
+ =?us-ascii?Q?jKFhW0+egG/ClyPDSasYfToKK9OtzQzarLRWokglYlD3yxRYe/YwViCVskln?=
+ =?us-ascii?Q?vcr7ivhFCla3aKgQg/levQtCOa925yp40TmOog9rKCfalx4pzKWkUVYvRqwl?=
+ =?us-ascii?Q?i5ukNX67xV909QJBm/qhWoJ42iS2TvPyXAUbk8LxJuY4nojpPdNrYtKS8JBP?=
+ =?us-ascii?Q?SdgK5MdkO8aBb3o6tJ7Jp7ucYy7QG87ldHTDt3K8axM3ldD1N6vCXNAVg2xn?=
+ =?us-ascii?Q?JRTWJuLvHDEXkbiSBu7AhsdeC3/dq8Bb9PXAAZpR7VfwHLcRkvnfvQrvm30d?=
+ =?us-ascii?Q?wLM04u82gZ8oXR8yKsAaV7fr8hmsKwvoeB9I49AZg88oL40HhACm2b4b4Mz/?=
+ =?us-ascii?Q?jbd+qlcHqq2Vres+aHTZ+VQgfbJzbBkRfXmTclntdVGAt+Gn1vA5EaVsGhbM?=
+ =?us-ascii?Q?6oL3Whjl9NuKnPHcPrvfu+O6pypSbCIsD0I0TCT1I0rteAdbS1CYtVjbNEur?=
+ =?us-ascii?Q?GzSPgepKlkRIDfYo3dqUSoOGIJiWT8EBBIacnpT1wcmnYjMmZGUmxrlxfCQm?=
+ =?us-ascii?Q?XrIn0qbsSrJy1gi99+iccIPiuy/Xt3frR+agU4VE6vHln6m2MHZSUcZDzTU8?=
+ =?us-ascii?Q?2b+CpYvlSnHLWi/NTQLlysPoO5+4D3eK7eZ/gMO24h9l24ylQ1sgQLES71eX?=
+ =?us-ascii?Q?WM52cHiPRQnxyuixOZMHoD2uP91sCI6HVzlbz2RatDfrP+kNtvDNAFicAiRM?=
+ =?us-ascii?Q?4XoTg+//Ds9Uk2bWOlOGdoSH6Yx8vSsT++ciEkNX0N2eKw6diR8DrGRWD36R?=
+ =?us-ascii?Q?AvYn2ixhyUJMvthZ8AYpay8F4xPttutnEnErxlv4BUDUn6phAHs40r/gobvS?=
+ =?us-ascii?Q?fMUY85dGnfsp227UnFOJXxdts/Kgde8CJVnsQF6zGnHDHJCdIveg94Th926e?=
+ =?us-ascii?Q?wl5g/voCTpwczVriO+cwmxxQi4UtM5YilCbIIwPqKlii+tQfVXa9lJSNelF5?=
+ =?us-ascii?Q?LtRuSdgJDy7j6/92c7bLaon1tT7j9rPxyj2tesX9zhlgbw8DObQULxy+Rkax?=
+ =?us-ascii?Q?J43aGDecrjNJ4S42v/32DdjhA3RT1d/Tc7FHhBtDyUOsM1mcwDCi0NiF12uE?=
+ =?us-ascii?Q?9AjISDB+V5iVEx/ye5CX5MrfMZ/dt3U4mXExvQEkHraElNAkyecDOzvYaWek?=
+ =?us-ascii?Q?epk8RXCEaexnpADLSICJBvRhnlg5kxItgtze7rbzRhDVMGR0Y865MUCPuu8S?=
+ =?us-ascii?Q?sSbfVIU5vQFOuieo7h1fltlleE2elCgRWTkF?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR19MB3922.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?y5oN/CA0d4c9Y9BbJoekmkJBINadgivfxOALq6o898cRjYb9Go6AJcz5sYIQ?=
- =?us-ascii?Q?0zduRyNCBcgtOHd3QtCfjIviNE0o3HQ6qBY0HinSP79Q53fyDgZ7zW9YXVAw?=
- =?us-ascii?Q?whp2YAtSbfyRz87uwvgbyLaKIp/ZE9+NA8XMKkFIAPjuRvslovsk0uklKbIE?=
- =?us-ascii?Q?42Ze8wm+c5uIKWt6bfbNApeH7USkEJ8uZp33ynMtjTvApoKlV0Y981daJ8jA?=
- =?us-ascii?Q?IJpprhPpDxOpoiRn5hW2FNrtpWbEVF6jhbUR/r1T5GjhrdTUb9Wo0s3LtS3O?=
- =?us-ascii?Q?HDSiXbvVlveJkbrGX+yTy8yKoJEpXjZlh/wnE7U/E+oRCmo++f64Msebwegd?=
- =?us-ascii?Q?lLb9FrKQr7u+EfPfmgFHixjtyY8OJsz7XedXj1vQSfXbBp5vKklWBXBcQ234?=
- =?us-ascii?Q?+eTBsOiVJEFTl92BLI5D9jYjqEFPm3v9r3BQsqD4W/jyzyZIT49u4lrNU0wG?=
- =?us-ascii?Q?xbVy1sSPDeazXcECnqmQt2yC6jUu0m/8UFU1YsAUFDImYN3hiC4XQ7AUHcik?=
- =?us-ascii?Q?I37nrG4XlgXHClVT7y9Pw/wm7x907euC+4ub5GXvtZKWv7s52GCb697+2VwB?=
- =?us-ascii?Q?ROO5Xrc0xxX6elSSDKO8pzZXcNGrU8QivE2eWALTyhFkLlm2U7Zm2Bgte3zF?=
- =?us-ascii?Q?xRHHkCr/5ca1WpOw3Q7mriEdMIb97MxgWnQwvDa1Ie0b3cFqTsFZTUKF2M4Y?=
- =?us-ascii?Q?9HhpavLq+8XBXO9y+RoQ9dV4MseF5cpdNhxXY7ysG2BGGns1AVa776ObVhkZ?=
- =?us-ascii?Q?PufM/frYxrxMurEBW2RtAS2bS7dqFFPypkEBNRuRS/TZObI+53NnHiqOxaQS?=
- =?us-ascii?Q?rheephMsiHoEHMH7Tp9RFLhkDpZ7XTqO2T4btX1/UgSYTR1NNHDJ3HjV2lK/?=
- =?us-ascii?Q?4I3H4YUrB9NmTdbv/qaZkKX47ga2RcDRrpSBQ1n8l/sS0iEox+EZVh6aUIcx?=
- =?us-ascii?Q?umwrvjTOcx3vwr7I5O5Lu7IGbxe2dOmDqGxB3nzClFvg4a3Seeu7Uxn5ezHU?=
- =?us-ascii?Q?obA3ZaokaU2ftgbFEPpIvfvgFi84fQM+T2PyDBMhrVgsMxiFnsmft/+BNGIP?=
- =?us-ascii?Q?mR1BZkwLITrVYgiGzz6XsQD2A2isnmdn1eLrJaQT0Qhm6og3cWrfKP7M91J0?=
- =?us-ascii?Q?kvARXQUbGjPwNhoBha8RE1luvp8BcnNZ8JDM1KlGSMped1pzsd2wWcwRuEIM?=
- =?us-ascii?Q?DXybykrl1wjlphrdu2BVyc2UO84MYYhXvYaf5CpJLtViI5yIQaa8CgcCqZ70?=
- =?us-ascii?Q?zdqc2+23pC9WKkqyqbaQF13PAJbhAhjvO9ZMCzN2XzdhZGum4vhEYBS31Mnu?=
- =?us-ascii?Q?3eKEvUIWwqm8HiP4cLputqPWqL0AgPxdre3ruoty6UjHoF49jFdZfI7AnhE4?=
- =?us-ascii?Q?ujF85lXUXZcoCYuYcNmo15Z1mCN6+hWTT9wvKY77/hDOgRJavMtNcyJ6UJbk?=
- =?us-ascii?Q?e4JWXcNMBw3/dpJmch1kWoxPfIjmYb9ypIhIBrXTyjUs8aqUgwcoflxfXKMU?=
- =?us-ascii?Q?yf6LA1RRfSkGNLcNvOT7wYwyAGf331euRzYPXtrp3OmUc299sh0h3KFcDSIi?=
- =?us-ascii?Q?eAcfAPI6ZfiBt2AE0iP/AR8pxRI1RdpFyodX4xpi?=
+ =?us-ascii?Q?DI5JPaovhKe+kGj1Qree75fSrrAjc1DkYeOnJ2VNI/LV+mfTaujpOu8JGP2+?=
+ =?us-ascii?Q?T413tTzOREcsF3+eSpE25YhXNvzxBChh/Jxjhm628jgbrUfO045gi+l7+ywu?=
+ =?us-ascii?Q?n644gBA7h7BB11JcdQ1aAsJBDQ/b6hJMPup3LZzOancx8zORbgB959lDLc2u?=
+ =?us-ascii?Q?SJGzNnDjymKrsesWWJKUVo98TYez8B64mjVKsLJEa0V42k+t96s9GQWYQc/9?=
+ =?us-ascii?Q?qQWnnTL4717KA50WCyy2+OkdTclvn7/SxjiPgdcEsfNNWXTFovk3zR1scZso?=
+ =?us-ascii?Q?P9MkicjxHWTtLVmT7iZLhZ34IsnPtKupTV7oMgOYSXBcj9iBp7512B9cRYlL?=
+ =?us-ascii?Q?iMp5B0OihAKAKBgVQpihk+U8fAbTtitCpows2PHoQ6hS5Bq9tzP1+83sknQ8?=
+ =?us-ascii?Q?pd0FeXkHJ5e17a8ThXfKD7Qu80up3nfb/na1a0CGSDIkbCqN3K/N5KScqV7c?=
+ =?us-ascii?Q?jB6XLVud9X4G+Ef6PS8mAcnKiULp1EMtnxVa8/g1YanFeLS+iFI8CzvP+KHe?=
+ =?us-ascii?Q?ek4EoXwTpjFsx6ektKYel0Q5Auc/lVoeBPOojhsvEpMQWDzP7k+X0Cj8vuyP?=
+ =?us-ascii?Q?BlqZTRPTN0piB32sy/kVfVdvKGjm9NHPnrb2l9FijIslRxC3z36PWDI9xmwV?=
+ =?us-ascii?Q?wx6Q12dfQ+jIwRSpyINVpqLpGaheOIt1l05WoIRpShsluj9WkJX5JDS4/c3x?=
+ =?us-ascii?Q?c4RkH+EpIJ+Qa0yiRxXr8pTJ/s7SerVKGyO/sOl8+MyvPBCe6OBgzdi8cWbq?=
+ =?us-ascii?Q?l3lLcSpuz5R4UBRPL86wMw62yWbDpb80/jaaXOVgnjg74kBssS6Hsd36bEbI?=
+ =?us-ascii?Q?Aoko+hrreVI5tB/sCaftk7bzLsHOJgqKlr1dVgvEmbtOD3ukFcpMd3F5quAc?=
+ =?us-ascii?Q?68EXn9wPy2gF1Et8aKmwxiR57v0TpoWR2GS/YUkkYE+ph+PF9jyEtCCPLrge?=
+ =?us-ascii?Q?L0aXIH3QIPHhwCFZh5jkPHu1I/Oc0M2bo1zdJS4P82qBFbjyzP/Ni15Ed3m7?=
+ =?us-ascii?Q?7iZ6JKdruMmAkKD/RFO0o4dDPhX4BMN5giTOrOECLTsXyXA3fnng2HMk7XP+?=
+ =?us-ascii?Q?RetY+O/bNo2Jzvn38f495kbnMEaw7NG3OL5RZG2j6A0wZeZ3WMxnq4mQymLv?=
+ =?us-ascii?Q?UkKlRbgd2R6irNEVxJLUkHRiAlLd6mIYVANVkP8RPfq8PioVgBGynqJMCuq5?=
+ =?us-ascii?Q?St57KGXBeShu7BBAEQi3vk7vfsz0j8Rl84I3LKzftELPvfvaU1XvMa6IstLc?=
+ =?us-ascii?Q?EsFk4zZSNWKXwARHaMSRTjDmhwaTZ9mSA89hjJrdYuZcPcYXSyUF9z8HlKPo?=
+ =?us-ascii?Q?SjhgTJiPJU5x0Wfne+3XWEYNSGymHLGPy5gfR7K3fleFJnjYYbQtqB4qOc47?=
+ =?us-ascii?Q?6zbS85KJX/7AHKWYLtZNYXSh4yf243AHGAtnSXSD/fU+vB0yvYdvfQfO7Asj?=
+ =?us-ascii?Q?pyMtP9vL9QEgeXZOGIn6rh44dlJ4jrDV+6eP3aZ+WJDoERHSTxtx1y94Q6J+?=
+ =?us-ascii?Q?bgbjjQmg4j+1clNjAXUQ4jsLhLbRQ/dnTX5mcPaXGgUMDbTd5cmlpyXgCooU?=
+ =?us-ascii?Q?CFBbHLgxJ2LS2xI5++TGJUAKZRU97RE+kXcoyQIb?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -165,42 +164,43 @@ MIME-Version: 1.0
 X-OriginatorOrg: Dell.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR19MB3922.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ace2c124-fac6-430b-d6c4-08de0c8bf091
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2025 08:13:50.8809
+X-MS-Exchange-CrossTenant-Network-Message-Id: c73915cf-1bf3-4843-162b-08de0c8bed65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2025 08:13:45.5937
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UcX/onZT2l4mlo+eilkJ+xNptlVkZnI2pGVB2KlixaKVPViMn0VD82VenVmflVFOcuZ/167/bFZaLecm96LFJw==
+X-MS-Exchange-CrossTenant-userprincipalname: kH/wpsSPb6b+s0uge1UBTQSyX6FOtRNgsuPJ2eZAYgnTiulNwxgq5+Hyg3G6FdnOq0ufegkRSdqXi1ayBcaGkg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF69F4F1B2D
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-16_01,2025-10-13_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 impostorscore=0 adultscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510150167
-X-Authority-Analysis: v=2.4 cv=N94k1m9B c=1 sm=1 tr=0 ts=68f0a943 cx=c_pps
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510160037
+X-Authority-Analysis: v=2.4 cv=JeyxbEKV c=1 sm=1 tr=0 ts=68f0a93e cx=c_pps
  a=j0++y401J6f/BxNAf5EDow==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
  a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=zd2uoN0lAAAA:8 a=20KFwNOVAAAA:8
- a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=iLNU1ar6AAAA:8 a=J7jYAKZhG0HNVBjvtuUA:9
+ a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=iLNU1ar6AAAA:8 a=TZ8jbInKXgbE110Mas4A:9
  a=CjuIK1q_8ugA:10 a=gbU3OgOOxF9bX48Letew:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAzNiBTYWx0ZWRfX5LebFJuJRvTY
- ek/p1D3+iRjavYrMKTTHkRSPulku+9fw9SyCiqBDKF18b9AuhdZFsTUBCa3EI3rexXKMp0JaXoR
- Q2yVWdqoklpZyg09V5MhgT7QRgCJWsYhWTjwUZrpt226RnEM1sDy/Aq8ugMrjmBiknOM3USVmme
- S87+VY1PpNdt8cYnd/CQm8AiqkC+Ofq+uu6JG8P06xZPEzpOSwivN12Fr6UHwIWEJ1JzrwPdTnQ
- i5TNpJqqGueoA1lcD1iorBA2DNf75ST3UeDqPcR4/SqwiFd0uAvpRunifJZhVRPNZ3Ad0uWlbcP
- O1J19FPhhHiIy+559YZsek+xtc/K2BH1YuGjAbI8agUzL071FzL9FhijDlDxIPjuRWDB414NH4W
- mz70pMKO/SxfB9vD6nF8aMHwshTPUQ==
-X-Proofpoint-ORIG-GUID: 3gZPW4FJTlMkf28I2J5jQMpZr9GLrxd4
-X-Proofpoint-GUID: 3gZPW4FJTlMkf28I2J5jQMpZr9GLrxd4
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110036
+X-Proofpoint-ORIG-GUID: vDRNAYyPnVYVbVzaMVBE1Hq2DR0E_8J1
+X-Proofpoint-GUID: vDRNAYyPnVYVbVzaMVBE1Hq2DR0E_8J1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDA0MCBTYWx0ZWRfX37dM0RKrzUDR
+ 7Vx24aqkhDa5o0zuq/jdQPma/KYbHJWjIBac4t9flSMoRkqOfNQolmnFMoGVcdIywt+ppGSL/5Z
+ RbJZmDO3RAd+LODTZIPXIPbZ3UgFLol6kyj3nVZJY48MQoC56x/+2mGqvkPmRcldXdOhEzoSR19
+ vzWGKpxqTlsbH3a1rHedr9cA10JLY97e1UYKjUAbItJZBnl71/tA65RDMVbIOaQRZ2MQ34RuFoA
+ fqUpm1SB85Z4cnpq/cuZkr3QCbvq7eKACp994g8EszjtZvca7XQApCC1KSj/oPeAJq7WKrt/8eM
+ UraqX6r5TNGuCIEP1gnQL1mHksvxxIJECU8JYuKgx5fPWj4u7KFgLAFmoF3VJveTXiCeN4TQ33O
+ 9JXFeMboarO7DOrIFKX15z2rfvDHBA==
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ bulkscore=0 impostorscore=0 phishscore=0 adultscore=0 spamscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510020000
+ definitions=main-2510110040
 
 > -----Original Message-----
 > From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
@@ -210,32 +210,16 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
 > <Patil.Reddy@amd.com>; Limonciello, Mario
 > <Mario.Limonciello@amd.com>; Shen, Yijun <Yijun.Shen@dell.com>; Shyam
 > Sundar S K <Shyam-sundar.S-k@amd.com>
-> Subject: [PATCH v2 2/2] platform/x86/amd/pmf: Use ring buffer to store
-> custom BIOS input values
+> Subject: [PATCH v2 1/2] platform/x86/amd/pmf: Add BIOS_INPUTS_MAX
+> macro to replace hardcoded array size
 >=20
 >=20
 > [EXTERNAL EMAIL]
 >=20
-> Custom BIOS input values can be updated by multiple sources, such as powe=
-r
-> mode changes and sensor events, each triggering a custom BIOS input event=
-.
-> When these events occur in rapid succession, new data may overwrite
-> previous values before they are processed, resulting in lost updates.
->=20
-> To address this, introduce a fixed-size, power-of-two ring buffer to capt=
-ure
-> every custom BIOS input event, storing both the pending request and its
-> associated input values. Access to the ring buffer is synchronized using =
-a
-> mutex.
->=20
-> The previous use of memset() to clear the pending request structure after
-> each event is removed, as each BIOS input value is now copied into the bu=
-ffer
-> as a snapshot. Consumers now process entries directly from the ring buffe=
-r,
-> making explicit clearing of the pending request structure unnecessary.
+> Define a new macro BIOS_INPUTS_MAX, to represent the maximum number
+> of BIOS input values. Replace hardcoded array sizes in relevant structure=
+s
+> with this macro to improve readability and maintainability.
 >=20
 > Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 > Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
@@ -247,253 +231,61 @@ Tested-By: Yijun Shen <Yijun.Shen@Dell.com>
 
 > ---
 > v2:
->  - Add dev_WARN_ONCE()
->  - Change variable name rb_mutex to cbi_mutex
->  - Move tail increment logic above pending request check
+>  - New patch spinned from v1
+>  - Add new BIOS_INPUTS_MAX macro and replace hardcoded values
 >=20
->  drivers/platform/x86/amd/pmf/acpi.c   | 41 +++++++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/core.c   |  2 ++
->  drivers/platform/x86/amd/pmf/pmf.h    | 20 +++++++++++++
->  drivers/platform/x86/amd/pmf/spc.c    | 23 +++++++++------
->  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
->  5 files changed, 79 insertions(+), 9 deletions(-)
+>  drivers/platform/x86/amd/pmf/pmf.h | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c
-> b/drivers/platform/x86/amd/pmf/acpi.c
-> index 13c4fec2c7ef..870a56f1fe07 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -331,6 +331,43 @@ int apmf_get_sbios_requests(struct amd_pmf_dev
-> *pdev, struct apmf_sbios_req *req
->  									 req,
-> sizeof(*req));
->  }
->=20
-> +/* Store custom BIOS inputs data in ring buffer */ static void
-> +amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev) {
-> +	struct cbi_ring_buffer *rb =3D &pmf_dev->cbi_buf;
-> +	struct bios_input_entry entry =3D { };
-> +	int i;
-> +
-> +	guard(mutex)(&pmf_dev->cbi_mutex);
-> +
-> +	switch (pmf_dev->cpu_id) {
-> +	case AMD_CPU_ID_PS:
-> +		for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
-> +			entry.val[i] =3D pmf_dev->req1.custom_policy[i];
-> +		entry.preq =3D pmf_dev->req1.pending_req;
-> +		break;
-> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> +		for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
-> +			entry.val[i] =3D pmf_dev->req.custom_policy[i];
-> +		entry.preq =3D pmf_dev->req.pending_req;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RB_SZ) > 0)
-> {
-> +		rb->data[rb->head] =3D entry;
-> +		rb->head =3D (rb->head + 1) & (CUSTOM_BIOS_INPUT_RB_SZ -
-> 1);
-> +	} else {
-> +		/* Rare case: ensures the newest BIOS input value is kept */
-> +		dev_WARN_ONCE(pmf_dev->dev, 1, "Overwriting BIOS input
-> value, data may be lost\n");
-> +		rb->data[rb->head] =3D entry;
-> +		rb->head =3D (rb->head + 1) & (CUSTOM_BIOS_INPUT_RB_SZ -
-> 1);
-> +		rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-> +	}
-> +}
-> +
->  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)  {
->  	if (!pdev->cb_flag)
-> @@ -356,6 +393,8 @@ static void apmf_event_handler_v2(acpi_handle
-> handle, u32 event, void *data)
->  	dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev-
-> >req.pending_req);
->=20
->  	amd_pmf_handle_early_preq(pmf_dev);
-> +
-> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->  }
->=20
->  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void
-> *data) @@ -374,6 +413,8 @@ static void
-> apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
->  	dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n",
-> pmf_dev->req1.pending_req);
->=20
->  	amd_pmf_handle_early_preq(pmf_dev);
-> +
-> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->  }
->=20
->  static void apmf_event_handler(acpi_handle handle, u32 event, void *data=
-)
-> diff --git a/drivers/platform/x86/amd/pmf/core.c
-> b/drivers/platform/x86/amd/pmf/core.c
-> index bc544a4a5266..8b97eba00dd3 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -468,6 +468,7 @@ static int amd_pmf_probe(struct platform_device
-> *pdev)
->  	mutex_init(&dev->lock);
->  	mutex_init(&dev->update_mutex);
->  	mutex_init(&dev->cb_mutex);
-> +	mutex_init(&dev->cbi_mutex);
->=20
->  	apmf_acpi_init(dev);
->  	platform_set_drvdata(pdev, dev);
-> @@ -494,6 +495,7 @@ static void amd_pmf_remove(struct platform_device
-> *pdev)
->  	mutex_destroy(&dev->lock);
->  	mutex_destroy(&dev->update_mutex);
->  	mutex_destroy(&dev->cb_mutex);
-> +	mutex_destroy(&dev->cbi_mutex);
->  }
->=20
->  static const struct attribute_group *amd_pmf_driver_groups[] =3D { diff =
---git
-> a/drivers/platform/x86/amd/pmf/pmf.h
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h
 > b/drivers/platform/x86/amd/pmf/pmf.h
-> index 2145df4128cd..6cb1e228c48e 100644
+> index bd19f2a6bc78..2145df4128cd 100644
 > --- a/drivers/platform/x86/amd/pmf/pmf.h
 > +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -12,6 +12,7 @@
->  #define PMF_H
+> @@ -119,6 +119,7 @@ struct cookie_header {
 >=20
->  #include <linux/acpi.h>
-> +#include <linux/circ_buf.h>
->  #include <linux/input.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_profile.h>
-> @@ -120,6 +121,7 @@ struct cookie_header {
 >  #define APTS_MAX_STATES		16
 >  #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
->  #define BIOS_INPUTS_MAX		10
-> +#define CUSTOM_BIOS_INPUT_RB_SZ	64	/* Must be power of two for
-> CIRC_* macros */
+> +#define BIOS_INPUTS_MAX		10
 >=20
 >  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void
 > *data);
 >=20
-> @@ -359,6 +361,22 @@ struct pmf_bios_inputs_prev {
->  	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
+> @@ -204,7 +205,7 @@ struct apmf_sbios_req_v1 {
+>  	u8 skin_temp_apu;
+>  	u8 skin_temp_hs2;
+>  	u8 enable_cnqf;
+> -	u32 custom_policy[10];
+> +	u32 custom_policy[BIOS_INPUTS_MAX];
+>  } __packed;
+>=20
+>  struct apmf_sbios_req_v2 {
+> @@ -216,7 +217,7 @@ struct apmf_sbios_req_v2 {
+>  	u32 stt_min_limit;
+>  	u8 skin_temp_apu;
+>  	u8 skin_temp_hs2;
+> -	u32 custom_policy[10];
+> +	u32 custom_policy[BIOS_INPUTS_MAX];
+>  } __packed;
+>=20
+>  struct apmf_fan_idx {
+> @@ -355,7 +356,7 @@ enum power_modes_v2 {  };
+>=20
+>  struct pmf_bios_inputs_prev {
+> -	u32 custom_bios_inputs[10];
+> +	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
 >  };
 >=20
-> +/**
-> + * struct bios_input_entry - Snapshot of custom BIOS input event
-> + * @val: Array of custom BIOS input values
-> + * @preq: Pending request value associated with this event  */ struct
-> +bios_input_entry {
-> +	u32 val[BIOS_INPUTS_MAX];
-> +	u32 preq;
-> +};
-> +
-> +struct cbi_ring_buffer {
-> +	struct bios_input_entry data[CUSTOM_BIOS_INPUT_RB_SZ];
-> +	int head;
-> +	int tail;
-> +};
-> +
 >  struct amd_pmf_dev {
->  	void __iomem *regbase;
->  	void __iomem *smu_virt_addr;
-> @@ -407,6 +425,8 @@ struct amd_pmf_dev {
->  	struct apmf_sbios_req_v1 req1;
->  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS
-> inputs */
->  	bool cb_flag;			     /* To handle first custom BIOS
-> input */
-> +	struct cbi_ring_buffer cbi_buf;
-> +	struct mutex cbi_mutex;		     /* Protects ring buffer
-> access */
->  };
+> @@ -451,7 +452,7 @@ struct os_power_slider {  struct
+> amd_pmf_notify_smart_pc_update {
+>  	u16 size;
+>  	u32 pending_req;
+> -	u32 custom_bios[10];
+> +	u32 custom_bios[BIOS_INPUTS_MAX];
+>  } __packed;
 >=20
->  struct apmf_sps_prop_granular_v2 {
-> diff --git a/drivers/platform/x86/amd/pmf/spc.c
-> b/drivers/platform/x86/amd/pmf/spc.c
-> index 85192c7536b8..669680ce580a 100644
-> --- a/drivers/platform/x86/amd/pmf/spc.c
-> +++ b/drivers/platform/x86/amd/pmf/spc.c
-> @@ -150,12 +150,23 @@ static void amd_pmf_update_bios_inputs(struct
-> amd_pmf_dev *pdev, u32 pending_req  static void
-> amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->  					   struct ta_pmf_enact_table *in)
->  {
-> +	struct cbi_ring_buffer *rb =3D &pdev->cbi_buf;
-> +	struct bios_input_entry entry =3D { };
->  	unsigned int i;
->=20
-> +	guard(mutex)(&pdev->cbi_mutex);
-> +
->  	for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
->  		amd_pmf_set_ta_custom_bios_input(in, i, pdev-
-> >cb_prev.custom_bios_inputs[i]);
->=20
-> -	if (!(pdev->req.pending_req || pdev->req1.pending_req))
-> +	if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RB_SZ) =3D=3D 0)
-> +		return;	/* return if ring buffer is empty */
-> +
-> +	entry =3D rb->data[rb->tail];
-> +	rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RB_SZ - 1);
-> +
-> +	/* If no active custom BIOS input pending request, do not consume
-> further work */
-> +	if (!entry.preq)
->  		return;
->=20
->  	if (!pdev->smart_pc_enabled)
-> @@ -165,20 +176,14 @@ static void
-> amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->  	case PMF_IF_V1:
->  		if (!is_apmf_bios_input_notifications_supported(pdev))
->  			return;
-> -		amd_pmf_update_bios_inputs(pdev, pdev-
-> >req1.pending_req, custom_bios_inputs_v1,
-> -					   pdev->req1.custom_policy, in);
-> +		amd_pmf_update_bios_inputs(pdev, entry.preq,
-> custom_bios_inputs_v1,
-> +entry.val, in);
->  		break;
->  	case PMF_IF_V2:
-> -		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req,
-> custom_bios_inputs,
-> -					   pdev->req.custom_policy, in);
-> +		amd_pmf_update_bios_inputs(pdev, entry.preq,
-> custom_bios_inputs,
-> +entry.val, in);
->  		break;
->  	default:
->  		break;
->  	}
-> -
-> -	/* Clear pending requests after handling */
-> -	memset(&pdev->req, 0, sizeof(pdev->req));
-> -	memset(&pdev->req1, 0, sizeof(pdev->req1));
->  }
->=20
->  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct
-> ta_pmf_enact_table *in) diff --git a/drivers/platform/x86/amd/pmf/tee-if.=
-c
-> b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 6e8116bef4f6..add742e33e1e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev
-> *dev)
->  		status =3D ret =3D=3D TA_PMF_TYPE_SUCCESS;
->  		if (status) {
->  			dev->cb_flag =3D true;
-> +			dev->cbi_buf.head =3D 0;
-> +			dev->cbi_buf.tail =3D 0;
->  			break;
->  		}
->  		amd_pmf_tee_deinit(dev);
+>  struct fan_table_control {
 > --
 > 2.34.1
 
