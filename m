@@ -1,44 +1,46 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010044.outbound.protection.outlook.com [52.101.46.44])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011057.outbound.protection.outlook.com [52.101.52.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BF933469C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Oct 2025 10:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8EB31064A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Oct 2025 10:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760696779; cv=fail; b=KRY1pyfenx7hj1mAsk2IXwTejdYvU80FpJ+2Z4FWK5+Rxyq5q54GwztdDOTELvCRUlJCwrrCbJsFemD6va31p1UGTa9al718xrk1uhBRURV7SgQC+zkd1KSoD/y1s9UH5Xx6Bbcy2jsccNU9sL7kaxccI9Wo0MGiRRz9EQs+i5E=
+	t=1760696784; cv=fail; b=qZ8JFJdYc27MKCrqh2iDrptsfMniax9p7kg2f39kfaNJTwrOg6TZxRd0OFcrlKLM9aw0h8eKuNwYa9H+Wv8kFPCSFKNMQIn95Ql2NLw65l16xfhP+qrTNQWp6Tjaa21UQfTf7tYX2Fcf7LyVG0ZYQTloj2txaYLVomID+kyoTOY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760696779; c=relaxed/simple;
-	bh=yTNretyBcUq/bZwdJSG1ceM7aJ7kui5376BRTgye1f8=;
+	s=arc-20240116; t=1760696784; c=relaxed/simple;
+	bh=m43vJEp47bzZ5/DpFTE279afwClrBrJv7fc+I8LQQIg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ef7p+y2MMJ1TIWgKpMaTtj/EeMwa2NzPjPG8Urt2EJtgSbkE8QFaJntxoNyrfRtzUOm/Wfd2gailqx3ANkjQH5AUx6CsKVxODbM23rT0LEyg0ylceTk1U/6zldK01hSq+8PEI9bcHBTuYSQpKmh/EESgzZpZSa8JrxluhbHY7qo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Vvc7nH1v; arc=fail smtp.client-ip=52.101.46.44
+	 MIME-Version:Content-Type; b=s3x8DyhZqocFRkVOyCK8qIivn9vOeAvmVCiTnPpC3TauOnl69p3jIfML5AwVsn39e5RBKhCnhZAegKQccttvz/5ej2fa2ogQkB4viWs0RvlQdZvOemdgE+aWSlLllc4Q8MTTYjmcVBj6UZ2nXPj8MsELzewkZYffExp6aUqPQNc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fBP/iDkd; arc=fail smtp.client-ip=52.101.52.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Vvc7nH1v"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fBP/iDkd"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B8WXulun8EuuaOfZNjzEcrqHN6VKhOY7QtGon8DONQ0jvFwShxVvEf6nw76KNfq24LSg8E55WDmRRhbS5D8dtNwfNmDVqgHjV41cn+6QTJffesgnSonYlnnaz1EUyMYq4SZNxG42rJ6rfV/3HB2mPrfUtM7eT1uZjAc27hwRN8hjwWdPdkRC9R72PDwWHwXFY/mAw2ujf+JnvpgB3eFFixhUBP3j7ZSNIoBYTficghL1+kK1Ewo9AzOEThno8Rt4r0nE8G/SEm08rykRvsgVew1bVmGurRC4A4ifJKKQV2Z1fdcVgzOwWSlltoDJrZZvu3Rpwyi9Y+PPEhVlnMHbow==
+ b=qQP16bQVcMPAq5mDDUzuEfLIbyjgPH95wdKZv85RbGSHu7Aur6mPj5FQfqY0jNvLlM/8Gp3tlzcT6Eis5r+NCelK+vEfQhWFD2TY0oNr5GXuMpqqyRw4MrPTQZmlZonqjLVMH68hVRp6nQfz2Fqt3HMN8IIXMruYFG5fUmlJeJkYDxzHYFbpoBGU2pgSP7o25L7J/mvb9lOryS3f4yObfQHNRBQQcV5aLGh08v9LmWCIoUXFXZXbeeLtnCvxrvSz5CjABz/fS+TJEkOsDelr20mlGOM3a5qhbfbJqROtTj2GGiqFFcifuwO2zucC9vPPR4IxKQH6e19wEVC1DnN2Cg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=178zLNcW9p4TzKKrC06+TjRw8ZC5iJTE5rUXC6OlRw8=;
- b=WeIeuVWoeqDeWs8Y6xlopHVe6pYEkwpajCHS/QW2/H1FoWSttmmULnSW74tIZnnbR32wBZU4oE0WLBiZThKZnS6JFBzxEU+jDRtacbG3WRJs0ssvXlpOuBZnaSxnGX5D4BCwzHmaezpBduLO7r95dkYYuSxooOwgXLtCSi7YEm7Rpi68yARouWuzI8p6pgawDyiMYPlg9FFs68P4OOxOjOqRkGp2yJb3uLBqXBBv8XsYk2qnz4UgT9Vf/qgaQ/D/00i27eQoqYzGhESnohZmHdoby6FANFcdhTXyXu0nRv0L6pw7UVxndNXo3FPnn0qwRrvd2qTp/Wk35m+2S/yMfg==
+ bh=6NF7ViurUyEm9qoMaFops1YyaogQuHlnXYArMDbZKVs=;
+ b=p9p06Osp742iRUtBRA3OosDAv8RqxS77jgPwkgVtD7xkbNfJ1aMFGBX1znxQhbOiG0Q2xm3rlBAP1ClyMmDF2fzBNwpDRNl/NfMEskb3eW9iz5pBwWRMgeYe4PcTZtN8htfGlaLyxwVovZZLCOHy6aEkiRVZy5c2LwdKxBKwK7m/FWPAmRli12FQf3ZSRthwmmr1ieJbGwm0ui9KFEyJEKuKUjc+kNPr5qAWZ0g+t2jqi/t7gLawx0pgmGNvz/Yu/S4ynWM74vvcmJ8oFJKYPCABJRAq+a1ehB2+XSDQ+1SkI/O6FbD+bMvDz/H1k6PE/GfTxURUdYkIwA5CgzrFKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=178zLNcW9p4TzKKrC06+TjRw8ZC5iJTE5rUXC6OlRw8=;
- b=Vvc7nH1vWm7IGRNNqD7vE0/vLZ9Lx6xWsHuTxCLgXgYkO23P5beD/DotzUcgvlXHdZYhydEzpfhekg6mCo3eNlkS9anXuHVamzWqY8KlG3veHPAbuitcfGX0lrJQPPLKj+miWXGcngPNu6QKD0NfqGPsowdyCbQ/snRwW84NRJ0=
-Received: from SN6PR01CA0033.prod.exchangelabs.com (2603:10b6:805:b6::46) by
- DS7PR12MB6261.namprd12.prod.outlook.com (2603:10b6:8:97::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.13; Fri, 17 Oct 2025 10:26:14 +0000
-Received: from SA2PEPF000015C9.namprd03.prod.outlook.com (2603:10b6:805:b6::4)
- by SN6PR01CA0033.outlook.office365.com (2603:10b6:805:b6::46) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.13
- via Frontend Transport; Fri, 17 Oct 2025 10:26:47 +0000
+ bh=6NF7ViurUyEm9qoMaFops1YyaogQuHlnXYArMDbZKVs=;
+ b=fBP/iDkd0xH315x3kUlhLs5i/6Ie3aT96pq8UZ4qCblxRmTiR5GyLNu3fubyOMd8B1lM50k+p4VY63xWYTm0pXI5wiGGdjPIu/WTfLtdM6a1kkqAYbmK1Gl5HpJrS53BNEfbEqlPdO/2/U6M1pAqVFVf7vuGKX0GTHTRrDHUmf8=
+Received: from SN6PR01CA0013.prod.exchangelabs.com (2603:10b6:805:b6::26) by
+ CH3PR12MB7667.namprd12.prod.outlook.com (2603:10b6:610:14f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.12; Fri, 17 Oct
+ 2025 10:26:17 +0000
+Received: from SA2PEPF000015C9.namprd03.prod.outlook.com
+ (2603:10b6:805:b6:cafe::61) by SN6PR01CA0013.outlook.office365.com
+ (2603:10b6:805:b6::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.13 via Frontend Transport; Fri,
+ 17 Oct 2025 10:26:49 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,19 +50,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  SA2PEPF000015C9.mail.protection.outlook.com (10.167.241.199) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.7 via Frontend Transport; Fri, 17 Oct 2025 10:26:13 +0000
+ 15.20.9253.7 via Frontend Transport; Fri, 17 Oct 2025 10:26:16 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 17 Oct
- 2025 03:26:11 -0700
+ 2025 03:26:13 -0700
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
 	<mario.limonciello@amd.com>, <Yijun.Shen@Dell.com>, <Sanket.Goswami@amd.com>,
 	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 1/3] platform/x86/amd/pmf: add util layer and user-space misc device interface
-Date: Fri, 17 Oct 2025 15:55:42 +0530
-Message-ID: <20251017102544.1470934-2-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 2/3] platform/x86/amd/pmf: cache BIOS output values for user-space telemetry via util IOCTL
+Date: Fri, 17 Oct 2025 15:55:43 +0530
+Message-ID: <20251017102544.1470934-3-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251017102544.1470934-1-Shyam-sundar.S-k@amd.com>
 References: <20251017102544.1470934-1-Shyam-sundar.S-k@amd.com>
@@ -76,307 +78,366 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|DS7PR12MB6261:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d50e467-1690-46a5-b4ee-08de0d67996c
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|CH3PR12MB7667:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a815f8a-6d7e-4aba-b27c-08de0d679b1d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vfzA+Np+gLncnZzsU/IEn9GBets9A43HNEr2reVcKP21TAdq0Dcp+Rr7pr3K?=
- =?us-ascii?Q?uZMonGLgBJqd18MrtHwgJ8S+QJZsvta2XiJt6ing/U5sbAuUOB9+VS+4hOyf?=
- =?us-ascii?Q?wXDwXsj53ogWIwkQ5ooOvYRFQJXDpcCbUq/UcF3yO1XYCps91x14P3qagUKn?=
- =?us-ascii?Q?orX5k34hTXO7W0pGrJdifR0JPK0FzA5phSfPdruna1GeAqvUyzv2WfSyE6d6?=
- =?us-ascii?Q?c1EF6zF9H6MjFA7nql7tAlxAc1qQ3IrNHv/b4C+D8F7y22wX3K9F04YjHRz8?=
- =?us-ascii?Q?9Vog6TFKWq6AjVLcm4uIvgoSaR2rMyzUc2U6kvPH+gegTKnJIngHPnFbvoYK?=
- =?us-ascii?Q?C8Lvmhz/Yh06DnPV3hpg4+Fwstv4c9pvttKkDuPEIFNLY3YuDKf36n4LDxaz?=
- =?us-ascii?Q?9vaNNPIYw8D1ydhv5hpYzPbEuELlPmSJYd3q5uHyxC6RWtyJz7NnQ+7JJqiJ?=
- =?us-ascii?Q?ez0sIw886G3ghftO0K5HBdCISZ5/xR00bLef/VwEf+uSidMtH1eSnIOGvt2v?=
- =?us-ascii?Q?GNI1eNGIRjOemLajwtELYSrWjox/5rXxk1FP34GnM26Ds8UsWbGgBC1u6fEu?=
- =?us-ascii?Q?V52WJ9TED5wvMYmvDJSGW9fWjnP4/QoFxJh8W1bdnxFjj9Z1vqmkAiPNLAw9?=
- =?us-ascii?Q?oOLfHucuReiCfkDfom4Vn9JHPAI5VRq4fMgj3qwbE1p81sOR9zL2f3Y8t+AX?=
- =?us-ascii?Q?n/8fNp9POOt7Gry+70YCTlFvg+FlvR3f5cmgW/6UjfR7chXs8aZ+G2hvqQdl?=
- =?us-ascii?Q?xGC+1dubkf2gvxai0UlHnv428dXtkqFq71xSIMteG63z/lg+kICpoAYLC+1Q?=
- =?us-ascii?Q?cmP0KKYPUNfzJLarin5O3hjMW1bhkmzhNQk6illgpkYE/D46jkZDrNBs6BT2?=
- =?us-ascii?Q?tRitBtihjRG6E96yTJbx2Ejy36T2I3NtsQadBR2aDiBAwycUfqROm08VsBB9?=
- =?us-ascii?Q?nb6/RmHznQ5C4zez5eShb/ClAqmx9BFGAH6P8ITVBG8a72r3w4E2zlHEPAAQ?=
- =?us-ascii?Q?qVWwpgjNLEjvhRL7wJUEcj6LSIPQ7fRLejDD+hreWe7fc1q7U2e2bspgefDY?=
- =?us-ascii?Q?wdEV1fad7uXkqSqK4SnZ1qeCWWm5rfZ7ORSP3Qz5kIq+1aLd0myijnK+fnD6?=
- =?us-ascii?Q?Gyo8vHyyAaA7/JuOqxoPj6SrxVoZbdt1xAYAyAKulR9kfDqtClDzoAunBwjX?=
- =?us-ascii?Q?2le5/qEMYU7VFjBst3Jg0xNPhRnVlVgfIChwIW7kW1eu2ku0ibBH0XsjoaX5?=
- =?us-ascii?Q?XHiE50bwJLbAlqboIJ1D/Hnu2r1T0orvzSj15ZzygfkOlWq56Q87ajQ57HsV?=
- =?us-ascii?Q?RzuR7yjAqPjfcRXAyeAj6OipXVoUkcUu532PVq9VdMXmOkHL2kHiylSPxpg+?=
- =?us-ascii?Q?EIFyBrtdUPxwsNtqvKPzGzOnRqhwcnjOoJJW1OObIDfp7PTzHn3m6spE0qiT?=
- =?us-ascii?Q?YnLvcNutLBe+e7hv1qffq0Ak8piVDvTHMw+NGqO/HrnESkYhX0InlXQrHKdx?=
- =?us-ascii?Q?qG2y2xq3bfZKUrMwbXNV5uu517L8RH55YM6R+JS+3EjzJMAdtcJkkpD9ulDC?=
- =?us-ascii?Q?DxQqKOtZexmbSB4aKk0=3D?=
+	=?us-ascii?Q?Y6zuJ4mtUp1SX9xhP2eQONf6RPx4BfUvuJktlbpIBW5gq+IyIHk03rlt2ZPw?=
+ =?us-ascii?Q?yk3Y4v39oWgBG9k+LTKZ2XyB+yZn+hCdhri2bgyhKiLlQnrTJy3BT6KvTmIG?=
+ =?us-ascii?Q?C1imi+uajWlTuyCC5kWQhRD+IN2snaTH7j6CeWVGd8dDRD8EuqBLqr/6NOHv?=
+ =?us-ascii?Q?6PLD1l/HAyKyVwfXsR4N/uQ56WFgej0P0H9p3KIEThYlvfDZ+UI1th9/z6JD?=
+ =?us-ascii?Q?06Y0l6q6CjXqdZFYdI/DOB86MN+IF6h2EpImVtX9IbMZjYXDBqF6RrsdFEin?=
+ =?us-ascii?Q?/hbKbY/AzQ/QN1KEP+hThwPiz20tGSRAyo//F2gXEeWiwcjZTFnFSWF3Gmwr?=
+ =?us-ascii?Q?n8WIb04Inl5mTxtNbv/3JcAHrMYJqOly0+mlFTj+N0xlbWQFAKSxKyVSW8Xt?=
+ =?us-ascii?Q?QjI0t9HS0cmHi/J1Svl2cWLfqp+Hv/B1tiypuiFTearhVRdtaiw0uPX51w0l?=
+ =?us-ascii?Q?myfOcivUrsyHuP+lej4GcCk0dKjo+Q3+nxYPaGKDktw9rT1vVQIz3IGYDShE?=
+ =?us-ascii?Q?4CdOhYGdPptjuQhsushCzy2rbj2emnrvx3ULQiE7NrHX4G3bahP0w01K1e0N?=
+ =?us-ascii?Q?gFG1B9DKYtbUjyPCIuxU2q163HXscB6y+RAE6eSucEWZmj8pvEuay9585rDO?=
+ =?us-ascii?Q?VUi4xUdcNEsh7G2xeKrfBgsjFEl9sht0jmG9HTCdHcE4VKxkclBErwW9N6R0?=
+ =?us-ascii?Q?RxjgftIBRQtV7KlIfS/4vMfRaRmlH0h03j7jkBPNfbSSne6/LPf/XHqaIHiz?=
+ =?us-ascii?Q?/qN3xPiao+YGeB7ZQwSrjWRnVdqOR3fJWpcj0UzZKSMysn8DKO5EcCD1Asmz?=
+ =?us-ascii?Q?7zFKcMOSVmx9W5V5htwCxZqajiD9T3eXb2dB40BmxKUtA02fYdZmucqV1GN8?=
+ =?us-ascii?Q?7b/UbewGWraghO87tVLK+dy9wkXqvOiMmzdoT9H8qXwu7hg664NYE//GeW52?=
+ =?us-ascii?Q?JQZ+44cSQg3Owwhww9HZ+J1JllhSw604jyYcOEFejBZQtUKGLX/w1UTjIDRK?=
+ =?us-ascii?Q?nUwIrdbbqCZ7uV+wgxmwVwwOmkyqhcpLk85v0ZsJj+DuXF+2GNe1EpCTQ+fh?=
+ =?us-ascii?Q?e4P0r1tFYclInFXHsqVGgV/ktxB4O9UkDZAjV7KpNz7zQTDCQIpRiBysqKfS?=
+ =?us-ascii?Q?cueO/Yf33Ka/zacKZ6OJe0PWGw/3NGkWlya43gsCZscKX1THyGtMODRNY1A8?=
+ =?us-ascii?Q?T+nhwGznhezMoSrFFQ3U4GX4g87KuSWlNX1O4bVN0F4EZ7Sk9zUTP3xVJuNi?=
+ =?us-ascii?Q?QiHCtHeJXt8iQTbsIhClL9q9Vvq0e8WiZRFAp0UWK/YMaHuO5rU9Ik04wSYM?=
+ =?us-ascii?Q?p/Rfv0caKBKopP4xSRPl50Aale5e67oBnZh2PbWkaYvqXRJ6Pz8aSC4YUYBU?=
+ =?us-ascii?Q?eBSTL+rXFiN4CBHkGs11JW0ITHYJ/vBh0QsliTQcyRNeK46MzLwbS1YwnfKu?=
+ =?us-ascii?Q?+siyT5u1HS7nPFAS1EcgESMUD1neiJvL1tOPvw8zuKesgooqVy1JYECAqI/8?=
+ =?us-ascii?Q?KcNGsIAC6HIQ7D6UJzjKfKbS/Lvj8+3BopsGtMVedZKxY0G3x2K5Jcw/NHrn?=
+ =?us-ascii?Q?Ecyc8wparge6RvNAX/M=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 10:26:13.9368
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 10:26:16.7747
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d50e467-1690-46a5-b4ee-08de0d67996c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a815f8a-6d7e-4aba-b27c-08de0d679b1d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SA2PEPF000015C9.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6261
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7667
 
-Add a util layer to AMD PMF that exposes a minimal user-space interface
-via a misc character device for metrics monitoring and feature discovery.
-This creates /dev/amdpmf_interface with a basic ioctl to report support
-for PMF features (Smart PC Builder, Auto Mode, Static Power Slider,
-Dynamic Power Slider AC/DC), enabling smoother integration with
-user-space tools such as AMD SystemDeck[1].
-
-AMD SystemDeck is a widely used user-space tool for monitoring and
-controlling power and thermal behavior. It helps designers keep major
-components within their thermal limits to ensure proper operation.
-Maintaining temperatures within specification enhances overall system
-stability and reliability.
-
-[1] https://docs.amd.com/v/u/en-US/68773_0.50
+Add a bios_output[] cache to amd_pmf_dev and store the latest values for
+BIOS output policies when applying PMF policies. This enables the AMD PMF
+util layer to expose these BIOS outputs alongside selected thermal and
+power telemetry to user space via /dev/amdpmf_interface and a new IOCTL,
+supporting real-time monitoring tools such as SystemDeck.
 
 Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/Kconfig  |  10 +++
- drivers/platform/x86/amd/pmf/Makefile |   2 +
- drivers/platform/x86/amd/pmf/core.c   |  19 +++++
- drivers/platform/x86/amd/pmf/pmf.h    |  10 +++
- drivers/platform/x86/amd/pmf/util.c   | 115 ++++++++++++++++++++++++++
- 5 files changed, 156 insertions(+)
- create mode 100644 drivers/platform/x86/amd/pmf/util.c
+ drivers/platform/x86/amd/pmf/pmf.h    |   1 +
+ drivers/platform/x86/amd/pmf/tee-if.c |  10 ++
+ drivers/platform/x86/amd/pmf/util.c   | 190 ++++++++++++++++++++++++++
+ 3 files changed, 201 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-index 25b8f7ae3abd..81ea4934e199 100644
---- a/drivers/platform/x86/amd/pmf/Kconfig
-+++ b/drivers/platform/x86/amd/pmf/Kconfig
-@@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
- 	 in the PMF config store.
- 
- 	 Say Y here to enable more debug logs and Say N here if you are not sure.
-+
-+config AMD_PMF_UTIL_SUPPORT
-+	bool "AMD PMF Util layer support"
-+	depends on AMD_PMF
-+	help
-+	Enabling this option permits the driver to interface with user
-+	space for capturing AMD PMF metrics and updating them to the
-+	user space tool for smooth monitoring.
-+
-+	Say Y here to enable it and Say N here if you are not sure.
-diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-index 5978464e0eb7..bf7aad80b9e9 100644
---- a/drivers/platform/x86/amd/pmf/Makefile
-+++ b/drivers/platform/x86/amd/pmf/Makefile
-@@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
- amd-pmf-y 			:= core.o acpi.o sps.o \
- 				   auto-mode.o cnqf.o \
- 				   tee-if.o spc.o
-+# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
-+amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index bc544a4a5266..ac2b80db019e 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -53,6 +53,19 @@ static bool force_load;
- module_param(force_load, bool, 0444);
- MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
- 
-+#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-+struct amd_pmf_dev *pmf_handle;
-+
-+struct amd_pmf_dev *amd_pmf_get_handle(void)
-+{
-+	struct amd_pmf_dev *pmf = pmf_handle;
-+
-+	return pmf;
-+}
-+#else
-+struct amd_pmf_dev *amd_pmf_get_handle(void) { return NULL; }
-+#endif
-+
- static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-@@ -465,6 +478,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	if (!dev->regbase)
- 		return -ENOMEM;
- 
-+#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-+	pmf_handle = dev;
-+#endif
-+
- 	mutex_init(&dev->lock);
- 	mutex_init(&dev->update_mutex);
- 	mutex_init(&dev->cb_mutex);
-@@ -477,6 +494,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
- 		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
- 
-+	amd_pmf_cdev_register();
- 	dev_info(dev->dev, "registered PMF device successfully\n");
- 
- 	return 0;
-@@ -489,6 +507,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
- 	amd_pmf_deinit_features(dev);
- 	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
- 		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
-+	amd_pmf_cdev_unregister();
- 	apmf_acpi_deinit(dev);
- 	amd_pmf_dbgfs_unregister(dev);
- 	mutex_destroy(&dev->lock);
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index bd19f2a6bc78..3b1aae8a60a5 100644
+index 3b1aae8a60a5..5880d6fc3afb 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -823,6 +823,7 @@ struct ta_pmf_shared_memory {
+@@ -406,6 +406,7 @@ struct amd_pmf_dev {
+ 	struct apmf_sbios_req_v1 req1;
+ 	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
+ 	bool cb_flag;			     /* To handle first custom BIOS input */
++	u32 bios_output[10];
  };
  
- /* Core Layer */
-+struct amd_pmf_dev *amd_pmf_get_handle(void);
- int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
- void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
- int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index);
-@@ -888,4 +889,13 @@ void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_tab
- void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
- int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev);
+ struct apmf_sps_prop_granular_v2 {
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index 6e8116bef4f6..8ea309aade95 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -183,42 +183,52 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+ 			break;
  
-+/* Util Layer */
-+#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-+int amd_pmf_cdev_register(void);
-+void amd_pmf_cdev_unregister(void);
-+#else
-+static inline int amd_pmf_cdev_register(void) { return 0; }
-+static inline void amd_pmf_cdev_unregister(void) {}
-+#endif
-+
- #endif /* PMF_H */
+ 		case PMF_POLICY_BIOS_OUTPUT_1:
++			dev->bios_output[0] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(0), 0);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_2:
++			dev->bios_output[1] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(1), 1);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_3:
++			dev->bios_output[2] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(2), 2);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_4:
++			dev->bios_output[3] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(3), 3);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_5:
++			dev->bios_output[4] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(4), 4);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_6:
++			dev->bios_output[5] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(5), 5);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_7:
++			dev->bios_output[6] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(6), 6);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_8:
++			dev->bios_output[7] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(7), 7);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_9:
++			dev->bios_output[8] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(8), 8);
+ 			break;
+ 
+ 		case PMF_POLICY_BIOS_OUTPUT_10:
++			dev->bios_output[9] = val;
+ 			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(9), 9);
+ 			break;
+ 		}
 diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
-new file mode 100644
-index 000000000000..483e4531535e
---- /dev/null
+index 483e4531535e..307c22791a07 100644
+--- a/drivers/platform/x86/amd/pmf/util.c
 +++ b/drivers/platform/x86/amd/pmf/util.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * AMD Platform Management Framework Util Layer
-+ *
-+ * Copyright (c) 2025, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-+ *	    Sanket Goswami <Sanket.Goswami@amd.com>
-+ */
-+
-+#include <linux/miscdevice.h>
-+#include <linux/uaccess.h>
-+
-+#include "pmf.h"
-+
-+#define IOCTL_PMF_QUERY_FEATURE_SUPPORT		0
-+
-+/* AMD PMF Feature IDs */
-+#define PMF_FEATURE_AUTO_MODE		0
-+#define PMF_FEATURE_STATIC_POWER_SLIDER		2
-+#define PMF_FEATURE_POLICY_BUILDER		4
-+#define PMF_FEATURE_DYNAMIC_POWER_SLIDER_AC	5
-+#define PMF_FEATURE_DYNAMIC_POWER_SLIDER_DC	6
-+
-+#define AMD_PMF_FEATURE_VERSION         0x02
-+
-+struct amd_pmf_feature_support {
-+	bool feature_supported;
-+	unsigned long feature_version;
-+	unsigned long feature_id;
+@@ -15,6 +15,7 @@
+ #include "pmf.h"
+ 
+ #define IOCTL_PMF_QUERY_FEATURE_SUPPORT		0
++#define IOCTL_PMF_GET_METRICS_DATA			38
+ 
+ /* AMD PMF Feature IDs */
+ #define PMF_FEATURE_AUTO_MODE		0
+@@ -25,12 +26,197 @@
+ 
+ #define AMD_PMF_FEATURE_VERSION         0x02
+ 
++enum pmf_metrics_id {
++	IOCTL_POWER_SOURCE,
++	IOCTL_POWER_SLIDER_POSITION,
++	IOCTL_PLATFORM_TYPE,
++	IOCTL_LAPTOP_PLACEMENT,
++	IOCTL_LID_STATE,
++	IOCTL_HETERO_STATE,
++	IOCTL_SKIN_TEMP,
++	IOCTL_USER_PRESENCE,
++	IOCTL_DISPLAY_NUM,
++	IOCTL_BATTERY_PERCENTAGE,
++	IOCTL_BIOS_INPUT_1,
++	IOCTL_BIOS_INPUT_2,
++	IOCTL_BIOS_INPUT_3,
++	IOCTL_BIOS_INPUT_4,
++	IOCTL_BIOS_INPUT_5,
++	IOCTL_BIOS_INPUT_6,
++	IOCTL_BIOS_INPUT_7,
++	IOCTL_BIOS_INPUT_8,
++	IOCTL_BIOS_INPUT_9,
++	IOCTL_BIOS_INPUT_10,
++	IOCTL_GFX_WORKLOAD,
++	IOCTL_DESIGNED_BATTERY_CAPACITY = 24,
++	IOCTL_FULLY_CHARGED_BATTERY_CAPACITY,
++	IOCTL_BATTERY_DRAIN_RATE,
++	IOCTL_AMBIENT_LIGHT = 29,
++	IOCTL_AVG_C0_RES = 36,
++	IOCTL_MAX_C0_RES,
++	IOCTL_SOCKET_POWER = 50,
++	IOCTL_TA_BIN_VER,
++	IOCTL_BIOS_OUTPUT_1,
++	IOCTL_BIOS_OUTPUT_2,
++	IOCTL_BIOS_OUTPUT_3,
++	IOCTL_BIOS_OUTPUT_4,
++	IOCTL_BIOS_OUTPUT_5,
++	IOCTL_BIOS_OUTPUT_6,
++	IOCTL_BIOS_OUTPUT_7,
++	IOCTL_BIOS_OUTPUT_8,
++	IOCTL_BIOS_OUTPUT_9,
++	IOCTL_BIOS_OUTPUT_10,
++	IOCTL_MAX,
 +};
 +
-+static int amd_pmf_get_feature_status(void __user *argp, unsigned long feat_id)
++struct amd_pmf_metrics_key {
++	enum pmf_metrics_id control_code;
++	long long val;
++};
++
+ struct amd_pmf_feature_support {
+ 	bool feature_supported;
+ 	unsigned long feature_version;
+ 	unsigned long feature_id;
+ };
+ 
++static int amd_pmf_get_metrics_data(struct device *dev, void __user *argp)
 +{
-+	struct amd_pmf_feature_support info;
++	struct ta_pmf_shared_memory *ta_sm = NULL;
++	struct ta_pmf_enact_table *in = NULL;
++	struct amd_pmf_metrics_key output;
 +	struct amd_pmf_dev *pdev;
 +
 +	pdev = amd_pmf_get_handle();
 +	if (!pdev)
 +		return -EINVAL;
 +
-+	switch (feat_id) {
-+	case PMF_FEATURE_AUTO_MODE:
-+		info.feature_supported = is_apmf_func_supported(pdev, APMF_FUNC_AUTO_MODE);
++	memset(pdev->shbuf, 0, pdev->policy_sz);
++	ta_sm = pdev->shbuf;
++	in = &ta_sm->pmf_input.enact_table;
++
++	if (copy_from_user(&output, argp, sizeof(output)))
++		return -EFAULT;
++
++	switch (output.control_code) {
++	case IOCTL_POWER_SOURCE:
++		output.val = in->ev_info.power_source;
 +		break;
-+	case PMF_FEATURE_STATIC_POWER_SLIDER:
-+		info.feature_supported = is_apmf_func_supported(pdev,
-+								APMF_FUNC_STATIC_SLIDER_GRANULAR);
++	case IOCTL_POWER_SLIDER_POSITION:
++		output.val = in->ev_info.power_slider;
 +		break;
-+	case PMF_FEATURE_POLICY_BUILDER:
-+		info.feature_supported = pdev->smart_pc_enabled;
++	case IOCTL_PLATFORM_TYPE:
++		output.val = in->ev_info.platform_type;
 +		break;
-+	case PMF_FEATURE_DYNAMIC_POWER_SLIDER_AC:
-+		info.feature_supported = is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_AC);
++	case IOCTL_LAPTOP_PLACEMENT:
++		output.val = in->ev_info.device_state;
 +		break;
-+	case PMF_FEATURE_DYNAMIC_POWER_SLIDER_DC:
-+		info.feature_supported = is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_DC);
++	case IOCTL_LID_STATE:
++		output.val = in->ev_info.lid_state;
++		break;
++	case IOCTL_SKIN_TEMP:
++		output.val = in->ev_info.skin_temperature / 100;
++		break;
++	case IOCTL_USER_PRESENCE:
++		output.val = in->ev_info.user_present;
++		break;
++	case IOCTL_BATTERY_PERCENTAGE:
++		output.val = in->ev_info.bat_percentage;
++		break;
++	case IOCTL_BIOS_INPUT_1:
++		output.val = in->ev_info.bios_input_1[0];
++		break;
++	case IOCTL_BIOS_INPUT_2:
++		output.val = in->ev_info.bios_input_1[1];
++		break;
++	case IOCTL_BIOS_INPUT_3:
++		output.val = in->ev_info.bios_input_2[0];
++		break;
++	case IOCTL_BIOS_INPUT_4:
++		output.val = in->ev_info.bios_input_2[1];
++		break;
++	case IOCTL_BIOS_INPUT_5:
++		output.val = in->ev_info.bios_input_2[2];
++		break;
++	case IOCTL_BIOS_INPUT_6:
++		output.val = in->ev_info.bios_input_2[3];
++		break;
++	case IOCTL_BIOS_INPUT_7:
++		output.val = in->ev_info.bios_input_2[4];
++		break;
++	case IOCTL_BIOS_INPUT_8:
++		output.val = in->ev_info.bios_input_2[5];
++		break;
++	case IOCTL_BIOS_INPUT_9:
++		output.val = in->ev_info.bios_input_2[6];
++		break;
++	case IOCTL_BIOS_INPUT_10:
++		output.val = in->ev_info.bios_input_2[7];
++		break;
++	case IOCTL_GFX_WORKLOAD:
++		output.val = in->ev_info.gfx_busy;
++		break;
++	case IOCTL_DESIGNED_BATTERY_CAPACITY:
++		output.val = in->ev_info.bat_design;
++		break;
++	case IOCTL_FULLY_CHARGED_BATTERY_CAPACITY:
++		output.val = in->ev_info.full_charge_capacity;
++		break;
++	case IOCTL_BATTERY_DRAIN_RATE:
++		output.val = in->ev_info.drain_rate;
++		break;
++	case IOCTL_AMBIENT_LIGHT:
++		output.val = in->ev_info.ambient_light;
++		break;
++	case IOCTL_AVG_C0_RES:
++		output.val = in->ev_info.avg_c0residency;
++		break;
++	case IOCTL_MAX_C0_RES:
++		output.val = in->ev_info.max_c0residency;
++		break;
++	case IOCTL_SOCKET_POWER:
++		output.val = in->ev_info.socket_power;
++		break;
++	case IOCTL_BIOS_OUTPUT_1:
++		output.val = pdev->bios_output[0];
++		break;
++	case IOCTL_BIOS_OUTPUT_2:
++		output.val = pdev->bios_output[1];
++		break;
++	case IOCTL_BIOS_OUTPUT_3:
++		output.val = pdev->bios_output[2];
++		break;
++	case IOCTL_BIOS_OUTPUT_4:
++		output.val = pdev->bios_output[3];
++		break;
++	case IOCTL_BIOS_OUTPUT_5:
++		output.val = pdev->bios_output[4];
++		break;
++	case IOCTL_BIOS_OUTPUT_6:
++		output.val = pdev->bios_output[5];
++		break;
++	case IOCTL_BIOS_OUTPUT_7:
++		output.val = pdev->bios_output[6];
++		break;
++	case IOCTL_BIOS_OUTPUT_8:
++		output.val = pdev->bios_output[7];
++		break;
++	case IOCTL_BIOS_OUTPUT_9:
++		output.val = pdev->bios_output[8];
++		break;
++	case IOCTL_BIOS_OUTPUT_10:
++		output.val = pdev->bios_output[9];
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	info.feature_version = AMD_PMF_FEATURE_VERSION;
-+	if (copy_to_user(argp, &info, sizeof(info)))
++	if (copy_to_user(argp, &output, sizeof(output)))
 +		return -EFAULT;
 +
 +	return 0;
 +}
 +
-+static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-+{
-+	void __user *argp = (void __user *)arg;
-+	struct amd_pmf_feature_support output;
-+	int ret = -ENOTTY;
-+
-+	ret = copy_from_user(&output, argp, sizeof(output));
-+	if (ret)
-+		return -EFAULT;
-+
-+	switch (cmd) {
-+	case IOCTL_PMF_QUERY_FEATURE_SUPPORT:
-+		ret = amd_pmf_get_feature_status(argp, output.feature_id);
+ static int amd_pmf_get_feature_status(void __user *argp, unsigned long feat_id)
+ {
+ 	struct amd_pmf_feature_support info;
+@@ -70,6 +256,7 @@ static int amd_pmf_get_feature_status(void __user *argp, unsigned long feat_id)
+ 
+ static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
++	struct device *dev = filp->private_data;
+ 	void __user *argp = (void __user *)arg;
+ 	struct amd_pmf_feature_support output;
+ 	int ret = -ENOTTY;
+@@ -82,6 +269,9 @@ static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long
+ 	case IOCTL_PMF_QUERY_FEATURE_SUPPORT:
+ 		ret = amd_pmf_get_feature_status(argp, output.feature_id);
+ 		break;
++	case IOCTL_PMF_GET_METRICS_DATA:
++		ret = amd_pmf_get_metrics_data(dev, argp);
 +		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct file_operations pmf_if_ops = {
-+	.unlocked_ioctl = amd_pmf_set_ioctl,
-+};
-+
-+#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-+static struct miscdevice amd_pmf_util_if = {
-+	.minor		= MISC_DYNAMIC_MINOR,
-+	.name		= "amdpmf_interface",
-+	.fops		= &pmf_if_ops,
-+};
-+
-+int amd_pmf_cdev_register(void)
-+{
-+	return misc_register(&amd_pmf_util_if);
-+}
-+
-+void amd_pmf_cdev_unregister(void)
-+{
-+	misc_deregister(&amd_pmf_util_if);
-+}
-+#else
-+int amd_pmf_cdev_register(void) { return 0; }
-+void amd_pmf_cdev_unregister(void) {}
-+#endif
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
 2.34.1
 
