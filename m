@@ -1,191 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB83934F46B;
-	Fri, 17 Oct 2025 13:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC4F32E12C
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Oct 2025 14:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760707283; cv=none; b=l0DiRWROyC2ScmHyeTVAtQ9CvoonrJY9AykH3wAFpWho0KLYluwZbCjfB5m50x6xqg75/iSEJR+h+/ztNLb17RcxMRWo9Zltof8yC1ijvNAxc6vzbHwycGY3DJpKdk9rfTjyCEv4+/+nR5Mhy0zHeMHNQmQYRV4StTIMJmppsPM=
+	t=1760712179; cv=none; b=gaiPSO6nSgIxeItmxvS2SvMu7M4VaGLYh2BtbJBu2xcOzPPertSQSoes82OxU6d8rm3bZAAev6c5XbWhiljpip8s/Va2BMqENA8Xa5ZfPfycr2IiKocy/i6BBK5ltITlfzjA0wx3w4zBgFdmorMM1mhbYf8Vwbbl1FQL/9qEe9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760707283; c=relaxed/simple;
-	bh=TsK5Tt2ouVurdxip4F9N9xRTQrAAUe+nydbZDh4kkR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jXovPer1XGE9i0oWcEKkKPE9H45oERvcGMttqIX3lysyrlYiLhCgjvj94GlHc9Z9HLMtsocHGpP6+x3pCDjfLMQcfu1CZVYUF/LXetWft0/CdKTRT4Sbl3PM/WYzgNf3YpCSPP8mRcDi1U0sSw3KI4y8BcxTPxbCIwyywRP0Azo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WO0rcs1L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760712179; c=relaxed/simple;
+	bh=Xx7XdhV/7kyHbdK+hFaFGxPdJ2gUXJJwY77QDduTYHY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PUyrAX1gmiT/0RJsp+VZkf5iydI0HsOATfvCS+/a2nZNmPjkrQc5EH7DOuln6ZkhTDfT8b7RGNo3L7zadknTvX1VVX1QwSN3sADijqn8i05v/Aifgqa0hpagzgbDkUvPAKza1vhwZnr3uVoXsdQU0mc97pCYHaDM9vxj7I+/uTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TZXy9W3p; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WO0rcs1L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD3EC4CEE7;
-	Fri, 17 Oct 2025 13:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760707282;
-	bh=TsK5Tt2ouVurdxip4F9N9xRTQrAAUe+nydbZDh4kkR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WO0rcs1LB08EtrlI4UYOZp3vA2LU4PF6GUqMUMIpmEXqmoXG3Qcm749CWSEMtRx21
-	 yd1cGcnjGwOdTi+mZWhyxu/7KjiFh8ulKGdwL02YJnjsySVFFQu9HMse0CT5qdfDbQ
-	 MZ11xTjtf2Wz3cpg9lhgccKHoyKXK7QAQW5csdhc=
-Date: Fri, 17 Oct 2025 15:21:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Farber, Eliav" <farbere@amazon.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"jdike@addtoit.com" <jdike@addtoit.com>,
-	"richard@nod.at" <richard@nod.at>,
-	"anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"rric@kernel.org" <rric@kernel.org>,
-	"harry.wentland@amd.com" <harry.wentland@amd.com>,
-	"sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-	"alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-	"christian.koenig@amd.com" <christian.koenig@amd.com>,
-	"airlied@linux.ie" <airlied@linux.ie>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>,
-	"evan.quan@amd.com" <evan.quan@amd.com>,
-	"james.qian.wang@arm.com" <james.qian.wang@arm.com>,
-	"liviu.dudau@arm.com" <liviu.dudau@arm.com>,
-	"mihail.atanassov@arm.com" <mihail.atanassov@arm.com>,
-	"brian.starkey@arm.com" <brian.starkey@arm.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"robdclark@gmail.com" <robdclark@gmail.com>,
-	"sean@poorly.run" <sean@poorly.run>,
-	"jdelvare@suse.com" <jdelvare@suse.com>,
-	"linux@roeck-us.net" <linux@roeck-us.net>,
-	"fery@cypress.com" <fery@cypress.com>,
-	"dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-	"agk@redhat.com" <agk@redhat.com>,
-	"snitzer@redhat.com" <snitzer@redhat.com>,
-	"dm-devel@redhat.com" <dm-devel@redhat.com>,
-	"rajur@chelsio.com" <rajur@chelsio.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-	"alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-	"joabreu@synopsys.com" <joabreu@synopsys.com>,
-	"mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-	"malattia@linux.it" <malattia@linux.it>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"mgross@linux.intel.com" <mgross@linux.intel.com>,
-	"intel-linux-scu@intel.com" <intel-linux-scu@intel.com>,
-	"artur.paszkiewicz@intel.com" <artur.paszkiewicz@intel.com>,
-	"jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-	"sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-	"clm@fb.com" <clm@fb.com>,
-	"josef@toxicpanda.com" <josef@toxicpanda.com>,
-	"dsterba@suse.com" <dsterba@suse.com>,
-	"xiang@kernel.org" <xiang@kernel.org>,
-	"chao@kernel.org" <chao@kernel.org>,
-	"jack@suse.com" <jack@suse.com>, "tytso@mit.edu" <tytso@mit.edu>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-	"dushistov@mail.ru" <dushistov@mail.ru>,
-	"luc.vanoostenryck@gmail.com" <luc.vanoostenryck@gmail.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"pmladek@suse.com" <pmladek@suse.com>,
-	"sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-	"minchan@kernel.org" <minchan@kernel.org>,
-	"ngupta@vflare.org" <ngupta@vflare.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-	"yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-	"pablo@netfilter.org" <pablo@netfilter.org>,
-	"kadlec@netfilter.org" <kadlec@netfilter.org>,
-	"fw@strlen.de" <fw@strlen.de>,
-	"jmaloy@redhat.com" <jmaloy@redhat.com>,
-	"ying.xue@windriver.com" <ying.xue@windriver.com>,
-	"willy@infradead.org" <willy@infradead.org>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>,
-	"David.Laight@aculab.com" <David.Laight@aculab.com>,
-	"herve.codina@bootlin.com" <herve.codina@bootlin.com>,
-	"Jason@zx2c4.com" <Jason@zx2c4.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"nathan@kernel.org" <nathan@kernel.org>,
-	"bvanassche@acm.org" <bvanassche@acm.org>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	"freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-	"linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-	"coreteam@netfilter.org" <coreteam@netfilter.org>,
-	"tipc-discussion@lists.sourceforge.net" <tipc-discussion@lists.sourceforge.net>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Isabella Basso <isabbasso@riseup.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Sander Vanheule <sander@svanheule.net>,
-	Vlastimil Babka <vbabka@suse.cz>, Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH v2 01/27 5.10.y] overflow, tracing: Define the
- is_signed_type() macro once
-Message-ID: <2025101740-scion-flavoring-3a21@gregkh>
-References: <20251017090519.46992-1-farbere@amazon.com>
- <20251017090519.46992-2-farbere@amazon.com>
- <2025101708-obtuse-ellipse-e355@gregkh>
- <CH0PR18MB54337BD648C23CBE40C1060CC6F6A@CH0PR18MB5433.namprd18.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZXy9W3p"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso1657937a12.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Oct 2025 07:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760712177; x=1761316977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CWOesE9+ukIK9ZiHh+lbkgu9u3o79T9+p9YpsPsRmb0=;
+        b=TZXy9W3pShhFUSTGxQjyxBwrE9KC2qX0Egwu2vzQhBWZfrUuJ/ZKxOF/Xuc9FsdTEs
+         qI/IMahV8U6b4hD6NnYFieKG19ma9PbNTB6N7UC2CUpTVht0gikUj2M25Hm6vy82oFLS
+         UUBIgEctKo0j5Is2j/wmIoYS3oU4WumET/urzvDE3OdwnHuCUNNKUQP55fHa73z8czI8
+         VFQH30nB7/3FJVY+IDghM9aVn++EBTp/lhTPaY5Jsiavv8Ym/rLCzqKUjOYMyFShYM7/
+         vfo2zvHjOus0oJOj71tH1aWaNBrkYq3UwzrqOODQnv17eOAnEmJ92XluWzNX55EjPzoY
+         In6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760712177; x=1761316977;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CWOesE9+ukIK9ZiHh+lbkgu9u3o79T9+p9YpsPsRmb0=;
+        b=QZxEjQ5xShCM158Q1gz5PwXsuo0yFvZSw5hnNt/zHYHvBbDucOf8obN0Uinvysb2E9
+         mdxvbopHh/zYcRH0p5J7DtJVNvGzXmuspNapFmzvCCWI+EpSzPdNO8g1lVDU5giHE1Uo
+         DKT5G8XlG0u1ejYEkdsvzzpmc7rBLB7SlIgcDPhj7KE1zYcL8mhPPlTYeDsOlgrlHQc2
+         8sWv6/WIfD3NY3G4xj7/7NnAN+mJR3HzcFZS43aOBm0PJfCBNYg+aa2L/GESxk5mKUtd
+         JsCgAU0y2Y9k8nGFApO1uCDdxnoCFSjSfglNFwFUXL7KbBnH/IXTXwve9Lfa7FMrp69X
+         dZSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVc+SA2rurXhFEsXBiYMydhHAMzSHEhqs90/JtkQA0y5lPgl0WzvvzhdzNbucwJAbgMt9esmd8ut2gE0xPCHKJN0tuu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD/pe6iuuWdBfuTeGVY8BvCdrHpgMQvn0BAvsxmmTtLgI2YY6W
+	nZJXf6B+dyT7IGUQB+Lj2nY+fqMzyvVu7in/TWxJdxdJiRfVOmJw0HOB
+X-Gm-Gg: ASbGncugc9/a5W9SdVQ/iGzssYqmM6UvMSUlJw8gfRXpO8Vk5gszUO3P7Yry1uzugoQ
+	jpfx3N9XSluJV9/RSayez9tNGiE6kXq0LS1zBPf4UQUlHDhle07ykNPmAlVGDlalF0nFXvdzAyx
+	oac/6cwFAHmZGn6V83DFo63LAqwINgDG5nBm8iCgc9kgGXAJGVa4QFWQoktZ/JGtC6I2JyKQc/o
+	hO2uYBccLoN9Tm2pxaCZe5+JJLapNxMFlw/fc+VexYfrZ2nfCsSjalcksaDFxfUtC8Ad0kIoGgE
+	At5WpNFIufyzwflwdnP1E1SqQUxjtpKXS8h64sKuvv6iFheI19lp19S9SEj8RDI6F3ppUlIEgfP
+	shTWI1H/8GrDDmq51PMHycR6SRYPW2SUsb7QHSpsZXpsmB1QeScz6JXSiaTBSFupQDNXc6RBwJH
+	pWuhvns//dbzhqEktkpYRsPuVVjUhB
+X-Google-Smtp-Source: AGHT+IEJKRDsRmaiczSDYsoY6FCHyVAPf70YNE0uDneNM7ZCLgU1sUXAy2/5HTm7bMMrNP2iuBaHgA==
+X-Received: by 2002:a17:903:2b06:b0:269:b30c:c9b8 with SMTP id d9443c01a7336-290cba4e91fmr47934175ad.56.1760712177453;
+        Fri, 17 Oct 2025 07:42:57 -0700 (PDT)
+Received: from cacher.localnet ([111.94.119.234])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29099a7de45sm66292355ad.54.2025.10.17.07.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Oct 2025 07:42:56 -0700 (PDT)
+From: Fa-Iz Faadhillah Ibrahim <faiz.faadhillah@gmail.com>
+To: jlee@suse.com, basak.sb2006@gmail.com, rayanmargham4@gmail.com,
+ Armin Wolf <W_Armin@gmx.de>
+Cc: kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] platform/x86: acer-wmi: Add fan control support
+Date: Fri, 17 Oct 2025 21:42:53 +0700
+Message-ID: <12762215.O9o76ZdvQC@cacher>
+In-Reply-To: <20251016180008.465593-1-W_Armin@gmx.de>
+References: <20251016180008.465593-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH0PR18MB54337BD648C23CBE40C1060CC6F6A@CH0PR18MB5433.namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Oct 17, 2025 at 12:16:27PM +0000, Farber, Eliav wrote:
-> > On Fri, Oct 17, 2025 at 09:04:53AM +0000, Eliav Farber wrote:
-> > > From: Bart Van Assche <bvanassche@acm.org>
-> > >
-> > > [ Upstream commit 92d23c6e94157739b997cacce151586a0d07bb8a ]
-> >
-> > This isn't in 5.15.y, why is it needed in 5.10.y?
-> 
-> This is the mainline commit:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/overflow.h?h=v6.18-rc1&id=92d23c6e94157739b997cacce151586a0d07bb8a
-> 
-> The commit hash is 92d23c6e94157739b997cacce151586a0d07bb8a, which is
-> the one I used for the backport.
-> 
-> And here is the corresponding commit in the 5.15.y branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/include/linux/overflow.h?h=v5.15.194&id=ed6e37e30826b12572636c6bbfe6319233690c90
-> However, the commit message there references a different hash:
-> a49a64b5bf195381c09202c524f0f84b5f3e816f.
+On Friday, October 17, 2025 1:00=E2=80=AFAM Armin Wolf wrote:
+> This patch series aims to add fan control support to the acer-wmi
+> driver. The patches are compile-tested only and need to be tested
+> on real hardware to verify that they actually work.
+>=20
+> I CCed three users who requested support for this feature. I would be
+> very happy if one of you could test those patches and report back.
+>=20
+> Changes since v3:
+> - fix error in WMID_gaming_set_fan_behavior()
+>=20
+> Changes since v2:
+> - get rid of nested bit masks
+>=20
+> Changes since v1:
+> - remove unnecessary blank line
+>=20
+> Changes since RFC v2:
+> - improve error handling when setting fan behavior
+> - Add Reviewed-by tags
+> - whitelist PHN16-72
+>=20
+> Changes since RFC v1:
+> - remove duplicate include and replace hwmon_pwm_mode with
+>   hwmon_pwm_enable in second patch
+>=20
+> Armin Wolf (4):
+>   platform/x86: acer-wmi: Fix setting of fan behavior
+>   platform/x86: acer-wmi: Add fan control support
+>   platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
+>   platform/x86: acer-wmi: Add support for PHN16-72
+>=20
+>  drivers/platform/x86/acer-wmi.c | 292 +++++++++++++++++++++++++++++---
+>  1 file changed, 269 insertions(+), 23 deletions(-)
+Hello,
 
-Ugh, that hash is invalid, I missed that :(
+I've tested your patch, had a weird thing where i need to reboot to windows=
+=20
+first to make fan control works again, but it all works well now, both CPU =
+and=20
+GPU fan control works just fine.
 
-Thanks for the info, I'll go work on queueing these up.
+Thanks,
+=46a-Iz Faadhillah Ibrahim
 
-greg k-h
+
+
