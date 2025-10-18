@@ -1,64 +1,70 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755112F12B5;
-	Sat, 18 Oct 2025 10:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1164519006B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Oct 2025 11:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760782834; cv=none; b=MJpoC8m5QPGhilpbfy4YUAldMH1zAlYupBtNUoXySGMGTaEIoKqlG8Z0yQRydKxV+tUj6IWgHgBcJw5bmt7dKIrQVKqn7eMpk1QGtHgWWHtiOEirl0ueVNQWJSeJaT8qBi0hn8q/Z7pUZqf/YReD/jf/Iw42S0fhfyO75YnGaxo=
+	t=1760785820; cv=none; b=A3N2J4A+O4VSppl7CTP3tmT5zEzp9dxorXGRNnMvaj75dkoOHZkc/ODAdsf1vHWKQi937tyFb3IYiw1jPktivUU3RAfVIeJP+tqQHXFrb14IJC1eev1EXE7dNJsWiHLARNa5cTQpVVfuLonkje3bJSD8vvmEHRR7gm/36Rk83WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760782834; c=relaxed/simple;
-	bh=vfkNCxmZ3FfbFVLnGdM0fIjyjQ/J2HoPeEIo/zeXWkg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O9Y8PY00xaGFVoJFiIAe3AC5HItkWJnawCyXBEAMdlVOAvbL/tm2d/VJHHR22scz69Lo+LavVSHIRxvLp8N7FmJVc4Tm3LX95pVkqVmnzpzJbdoGOMQRIsFqgA+kPci5NsLsjfD+BVvOVGBA6LVphGHqIcWarytEqAvweSnX+Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=NnkaYQSV; arc=none smtp.client-ip=88.99.38.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1760785820; c=relaxed/simple;
+	bh=MLxqorXdvcv7lnsXASS4c5Irld6fzMTb/EY6v1VT920=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mE8zusR2fVS5qaNvihxVuLJA2hHrDBhJa5i07K3GIcOlfdNCsKQPE/aV/zUOMMD8wMvkmemmhUb8X7y5lRcsw/L7aDRbZklXKABNLUmmhqyJWiD3DuE7/wCM85NN1gnM4QwpyP9WFQfn9fXwSgVlWuV/bH3Fn3jSy+YVddDF2o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mH2H+2l0; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="NnkaYQSV"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id 51488BDFB8;
-	Sat, 18 Oct 2025 13:20:25 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id DB904BDDC7;
-	Sat, 18 Oct 2025 13:20:24 +0300 (EEST)
-Received: from antheas-z13 (x5996a8de.customers.hiper-net.dk [89.150.168.222])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id B59D91FC4B1;
-	Sat, 18 Oct 2025 13:20:22 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1760782824;
-	bh=QiRO9WlHDWgo9VPXQOmXp8+aYWrSrjdksndf9lPZtzA=; h=From:To:Subject;
-	b=NnkaYQSVPdE3vLg2B01zDdZky8SModwLJZyIgEw7sr30B8v7sgxlihFS3CnMnvf9Z
-	 uvaSoxOVGrC4HXZnsdnbCqg2sVte5ANjm+vWZPmNEw+/dy2RaXGwLyhmfZ+Va9tBGu
-	 Lv5vVv/mAJeE5CiiCJz25/Z1FE0l4YsVgct/xXc924SuDU/e2nLK5TNKdmsMRsNpAR
-	 gS2/IxJsLmJxcLDN+LYLkOISXS4O6weWGdcY+euU7ebV7kbezfbg9BUB1/gtXDg57L
-	 BCZ9NzU8IYgWl4W3rCe54hpF7OJohiwhLWPFTSHPdomEwlw31AetVVEoFOeDWyXASZ
-	 OhyCaTvKeGtlQ==
-Authentication-Results: linux3247.grserver.gr;
-	spf=pass (sender IP is 89.150.168.222) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v7 9/9] HID: asus: add support for the asus-wmi brightness
- handler
-Date: Sat, 18 Oct 2025 12:17:59 +0200
-Message-ID: <20251018101759.4089-10-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mH2H+2l0"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2697899a202so26358195ad.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Oct 2025 04:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760785818; x=1761390618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=debOBBhLS/T41VMYsoca2iRTO//ldaNhfWag6mugk3A=;
+        b=mH2H+2l0PrChjCqjj+ZUbd2Zj+wcZw6Pu/N54nNl/uXuveW0KandwC/aCQZWZ1hCP5
+         kkjUI8j4gURzaNRAch5mwxiycCe+UUODL4vLNDglf4r/ctBSuz4klglVwWBxUD672S+v
+         CZyHm15Ylkzw5MOI8OIv2Xlnm3OhJkB+LYBpmZMjdRLzx35CAP5yZIm4QTtiBHTdYam7
+         AzZlXjexGli+BhimezORsNEQy7xLOlZn90OmANo5ax8BS8FXV98raGLB2NYfKDbeR/fE
+         CpuIj712sRof4V84+bCY9LMK1slEbHV1wq5ryYzuw2CcoGXINjNlir0sDTCsXokeQKYM
+         SJmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760785818; x=1761390618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=debOBBhLS/T41VMYsoca2iRTO//ldaNhfWag6mugk3A=;
+        b=JRqkF9f1irq6z9iFLNTSQ3qhW18zh2FlERYv62lyeBsJh2LDP/Oe0pHwxPEg6j3DkK
+         LFHsKBnNLGbVAlqzVx74SLRnZs4Dp43VPOWY4ehRvq+Kp1BewCuwfJGhNqhPj2728d6W
+         35MAOuq0kqssyFPfoAWy52qnDJjcYO/oi6xgQDHeelBaqffPYpM/GfPB9D6kNHtZTumr
+         y7cH2DN23DAveKqv3g83AHW9OA+1IWQy95Da9wniCNTJDEusxa+4PPnDa4xWcFz4oufw
+         vjctjew2lx8Jqg2dkD4iwnBTxprzc+hFov5X/35rqf7tt7o2Sq/XvqqYncbVXUzYpy+2
+         +iRg==
+X-Gm-Message-State: AOJu0YxLqi670Fg5uTvyjTWH8UMtQ7qNhm2Bzu3UUF6ceI4CuimMUfoh
+	S1PLdl/vcoPp9W93hZN75Z6aBlEoQJW+cWLaQb+zGGA3zcpHKABzXTDr53yTq6CaG3Y=
+X-Gm-Gg: ASbGncszfJycM3IyMQSsjYveSV6pNzmQpH9bYkrD2PO0FLxTpWLzOnZ7xhZzyUfmeoW
+	4aUIEPxNOrKXGZSJ2ErZdH9v1zXJsdslfVgNL911k0GaiamtNEW9eWO7fuwFEuLtEuWo4L5ax8q
+	Kcw99IQgQKv3ziOX6g0iAv2t9mL1IEgtu8PnWLhzpc49Suo8pueYxmdeGDPuP4taY9Vf+nWLbxR
+	iVM3ppkX7hmrmeDjsl556shMZiQQwhcBLgtk7695Ndaif3d2WMkmKrdOrI1AO8WbWAkdpL+UASI
+	UYliislQspRoO/s2SCdVzfDfMy72LQpGuLS7mSRj+8SPIed2EVRDmLS8xy8TiBZNZZ2o9ia8MzK
+	x9CPKLITI+GSVMpBqNw09tmDWhr2p+43718R20HBJyXQ4iLq3FFnq2QRoNTwj79tPxu9cYI/IwN
+	tD8GmabM87
+X-Google-Smtp-Source: AGHT+IHeLfXi5/LBkKRJJSY/OrLC73akNLogCWriuseeF+35Bp/pV4QSbXkBJEeW/NAUJ3a9BxqfxQ==
+X-Received: by 2002:a17:903:1252:b0:267:c1ae:8f04 with SMTP id d9443c01a7336-290c73ff868mr68917465ad.20.1760785818210;
+        Sat, 18 Oct 2025 04:10:18 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225c:9e18:7101:be84:75eb])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-292471d5612sm22993455ad.65.2025.10.18.04.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Oct 2025 04:10:17 -0700 (PDT)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add Omen 16-wf1xxx fan support
+Date: Sat, 18 Oct 2025 16:40:01 +0530
+Message-ID: <20251018111001.56625-1-krishna.chomal108@gmail.com>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251018101759.4089-1-lkml@antheas.dev>
-References: <20251018101759.4089-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,46 +72,43 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <176078282453.1199146.7999947917705390951@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
 
-If the asus-wmi brightness handler is available, send the
-keyboard brightness events to it instead of passing them
-to userspace. If it is not, fall back to sending them to it.
+The newer HP Omen laptops, such as Omen 16-wf1xxx, use the same
+WMI-based thermal profile interface as Victus 16-r1000 and 16-s1000
+models.
 
-Reviewed-by: Luke D. Jones <luke@ljones.dev>
-Tested-by: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+Add the DMI board name "8C78" to the victus_s_thermal_profile_boards
+list to enable proper fan and thermal mode control.
+
+Tested on: HP Omen 16-wf1xxx (board 8C78)
+Result:
+* Fan RPMs are readable
+* echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable
+  allows the fans to run on max RPM.
+
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
- drivers/hid/hid-asus.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/platform/x86/hp/hp-wmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 96cff7690987..c2c25825cb42 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -324,6 +324,17 @@ static int asus_event(struct hid_device *hdev, struct hid_field *field,
- 			 usage->hid & HID_USAGE);
- 	}
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8b3533d6ba09..596fbdfea64c 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -92,9 +92,11 @@ static const char * const victus_thermal_profile_boards[] = {
+ 	"8A25"
+ };
  
-+	if (usage->type == EV_KEY && value) {
-+		switch (usage->code) {
-+		case KEY_KBDILLUMUP:
-+			return !asus_hid_event(ASUS_EV_BRTUP);
-+		case KEY_KBDILLUMDOWN:
-+			return !asus_hid_event(ASUS_EV_BRTDOWN);
-+		case KEY_KBDILLUMTOGGLE:
-+			return !asus_hid_event(ASUS_EV_BRTTOGGLE);
-+		}
-+	}
-+
- 	return 0;
- }
+-/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops */
++/* DMI Board names of newer Victus S series and some Omen laptops sharing the
++ * same WMI thermal profile.
++ */
+ static const char * const victus_s_thermal_profile_boards[] = {
+-	"8C99", "8C9C"
++	"8C99", "8C9C", "8C78"
+ };
  
+ enum hp_wmi_radio {
 -- 
 2.51.0
-
 
