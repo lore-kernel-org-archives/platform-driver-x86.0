@@ -1,171 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0665B3321C0;
-	Mon, 20 Oct 2025 17:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC37331A76;
+	Mon, 20 Oct 2025 17:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760980430; cv=none; b=Gqpcw4Qse4yjEfwnQBNlvQxqT+cMelgHxqyFEPPUK/ftjtZy8G19Ecrtf9R9d3S3Zwd8/wKMytx474DgCxwPU6CHTgG14AvMYuV3uzVk4mjo4Iho4X+7frFh3V4teGPsiprbEDdJxZTP1u/nvjL5ZheMXla9w28WqEaaFNLu6ZE=
+	t=1760980521; cv=none; b=jCa3XqlhX2kdljWpDTkYr2W1QPDDEXlZSnbySc6O9QEDgHkHiEFpB8el0dru8UeooB/ek/v+8AlovHZDAyJCy8ZIfcF/ydVIS8Zx/lfeiveqlFPdnjGb4ZhuiIODc+zL+DVU287laCV/YkJc+/el6F6j4jUbxRnPpEqBzBsZTXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760980430; c=relaxed/simple;
-	bh=MWv04xSJYsa76DaBRhw3qx15wxPMPwpfCH6q31svkR8=;
+	s=arc-20240116; t=1760980521; c=relaxed/simple;
+	bh=m5XgqvCMLKOPS6aEhK02O0QsfN9A8cDAQIgY2sw4YPE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iQaz10DjaAZHj/0L2tzf6WuYYt1oYXhLXXg9L8qH3Xp5QpvRjMK9oqC1m9GtMGMIyC+uIbdnt4HuXy85f7i6jrtR0U/dUu4tZy+DNY9H5LzwOzzdhLDbnVMbl289IFaEZd1TD/LjEZIM1TZeXzJcD0WgkSNXM4v3LcjpL4KlhxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9zR1c8T; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=rhxl8jf46aPlN3QuA6AWDHR6H7dnLqeTsVQopMdfwsqdqvHSKx8LiJ9DwVc/HhXp1BGkGutx74zjVK9of712ryPiegZtv7Xk5qS8CCfmn3j01+UUNnM/SO0aQesWBAq0k73mxXHq1xJDfKykiK6sBONMoiahThTeyKxJYfFyJ8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h9iU/zzc; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9zR1c8T"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h9iU/zzc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760980428; x=1792516428;
+  t=1760980519; x=1792516519;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MWv04xSJYsa76DaBRhw3qx15wxPMPwpfCH6q31svkR8=;
-  b=K9zR1c8TTOpWp/3rx1yd5y/odVhe1aSrxo8/Yk3N41cZ7fJuc1KTEEUs
-   QMdLsAmuliTAx3mIgki8LTgqY/88CXw9x9JjdnYwLMtEsNaa4odPCEUL7
-   IcFqNdvULigkfwKoFvYvq16gIlosafEDrQsoR4zM3EyT6k28zjo+C8PQN
-   QBVTN25jgm2Dx7TqE6ByRl3PeUNQDpMhY1uFtzgU+j5GZiCfo303R3yqx
-   a697VEYTqFTLZfknppyuNRTu/OcIzToIRD001/kk6W20xUqpCBF+3RTf4
-   +Dwy5Ch7T8ioYQZfnmnsgv/NsClUzoRj7pB+vCEHyUSMz1Eq6ELoD/TOU
-   w==;
-X-CSE-ConnectionGUID: 6STwdro6St+89pzX848rrQ==
-X-CSE-MsgGUID: KST0aSWUSbeZI4IzNnrf9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63140093"
+   references:mime-version:content-id;
+  bh=m5XgqvCMLKOPS6aEhK02O0QsfN9A8cDAQIgY2sw4YPE=;
+  b=h9iU/zzcX/5bgoj0yUaozl1JVM4V7RkZDSeHdgEX5IEcmRS3Tqs0ee/2
+   Vfy/97EvPPolQBj9a4NTwlNLvTFl6dqHJ5DZe8iz8lV1zmqWaAFu6h22Y
+   56A5BhCRBaaQAN9CN61cgSdnulXfKReUkvcLoJaCKBRV1Z0U0rivcu1PJ
+   7ac4FgOShDa3jgh6K+GBY6ReWkDlB2U9z3Weyh2SkztGAJO0P/7J3S0wY
+   aBy1sb2ToWuzyZoHJ8oVlr/wqPpnb7zSGkOdtDmLao6l87aYEyMR2fQ6l
+   cMCK6ipLJeDLL92MQj2I/0TFN5ahEHiQB14ih9qJMcB683POEtuMclu75
+   Q==;
+X-CSE-ConnectionGUID: 5DiHel4MT0u762TNNIe/nw==
+X-CSE-MsgGUID: cKdZJy7+T7aohe/cyzwlVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63246383"
 X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="63140093"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 10:13:48 -0700
-X-CSE-ConnectionGUID: JClSjXbkTECJq2/+PRnRHg==
-X-CSE-MsgGUID: WNJ1EUrsTO2tE5aozU+K1w==
+   d="scan'208";a="63246383"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 10:15:19 -0700
+X-CSE-ConnectionGUID: OE/6APKQQwOzoNNa3KyOfw==
+X-CSE-MsgGUID: GwMjsxubRqmTcwurR36DTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,243,1754982000"; 
-   d="scan'208";a="182565302"
+   d="scan'208";a="182523518"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.76])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 10:13:43 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 10:15:14 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 20 Oct 2025 20:13:40 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: Denis Benato <benato.denis96@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v6 0/7] HID: asus: Fix ASUS ROG Laptop's Keyboard backlight
- handling
-In-Reply-To: <CAGwozwGqZ_yuNQ+TgtW4R79g4JWxZg-Q-vA7thKy_vSdpbY_yA@mail.gmail.com>
-Message-ID: <9da9e311-ae0c-5f05-5041-c1de383b3f59@linux.intel.com>
-References: <20251013201535.6737-1-lkml@antheas.dev> <160c3adf-9333-4486-ba4c-d3359ea73337@gmail.com> <CAGwozwGzOQ-LCk6B202-CuKq=gepn6Mt4LitJJZ7dfMLaDVs7Q@mail.gmail.com> <c075a9f4-8103-dbcc-a1e7-4eaec5e90597@linux.intel.com>
- <CAGwozwH3VnTsx8p5N6S1yp4Z9mFfPUdZ4frrnPAveLH2a00K6g@mail.gmail.com> <CAGwozwGqZ_yuNQ+TgtW4R79g4JWxZg-Q-vA7thKy_vSdpbY_yA@mail.gmail.com>
+Date: Mon, 20 Oct 2025 20:15:10 +0300 (EEST)
+To: Denis Benato <benato.denis96@gmail.com>
+cc: Mario Limonciello <superm1@kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Luke D . Jones" <luke@ljones.dev>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    Alok Tiwari <alok.a.tiwari@oracle.com>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
+Subject: Re: [PATCH v14 5/9] platform/x86: asus-armoury: add core count
+ control
+In-Reply-To: <13b9890e-d1b7-446a-9e93-2034c60a0a88@gmail.com>
+Message-ID: <f3a69b7e-a698-2dd5-731a-f7db0eabd8f3@linux.intel.com>
+References: <20251015014736.1402045-1-benato.denis96@gmail.com> <20251015014736.1402045-6-benato.denis96@gmail.com> <25bd0c90-2de0-ef66-c18d-661180b71fd4@linux.intel.com> <13b9890e-d1b7-446a-9e93-2034c60a0a88@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1986902853-1760980420=:976"
+Content-Type: multipart/mixed; BOUNDARY="8323328-1335968388-1760968966=:976"
+Content-ID: <712727e6-b337-99a7-dd34-2583cc52593f@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1986902853-1760980420=:976
-Content-Type: text/plain; charset=UTF-8
+--8323328-1335968388-1760968966=:976
+Content-Type: text/plain; CHARSET=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <6c501b7b-fcf3-6ef9-fcf2-d9521bcca58d@linux.intel.com>
 
-On Fri, 17 Oct 2025, Antheas Kapenekakis wrote:
-> On Thu, 16 Oct 2025 at 18:16, Antheas Kapenekakis <lkml@antheas.dev> wrot=
-e:
+On Sat, 18 Oct 2025, Denis Benato wrote:
+> On 10/17/25 14:48, Ilpo J=E4rvinen wrote:
+> > On Wed, 15 Oct 2025, Denis Benato wrote:
 > >
-> > On Thu, 16 Oct 2025 at 17:09, Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > >
-> > > On Thu, 16 Oct 2025, Antheas Kapenekakis wrote:
-> > > > On Thu, 16 Oct 2025 at 13:57, Denis Benato <benato.denis96@gmail.co=
-m> wrote:
-> > > > > On 10/13/25 22:15, Antheas Kapenekakis wrote:
-> > > > > > This is a two part series which does the following:
-> > > > > >   - Clean-up init sequence
-> > > > > >   - Unify backlight handling to happen under asus-wmi so that a=
-ll Aura
-> > > > > >     devices have synced brightness controls and the backlight b=
-utton works
-> > > > > >     properly when it is on a USB laptop keyboard instead of one=
- w/ WMI.
-> > > > > >
-> > > > > > For more context, see cover letter of V1. Since V5, I removed s=
-ome patches
-> > > > > > to make this easier to merge.
-> > > > > >
-> > > > > > All comments with these patches had been addressed since V4.
-> > > > > I have loaded this patchset for users of asus-linux project to tr=
-y out.
-> > > > >
-> > > > > One of them opened a bug report about a kernel bug that happens
-> > > > > consistently when closing the lid of his laptop [1].
-> > > > >
-> > > > > He also sent another piece of kernel log, but didn't specify anyt=
-hing more
-> > > > > about this [2].
-> > > > >
-> > > > > [1] https://pastebin.com/akZx1w10
-> > > > > [2] https://pastebin.com/sKdczPgf
-> > > >
-> > > > Can you provide a link to the bug report? [2] seems unrelated.
-> > > >
-> > > > As for [1], it looks like a trace that stems from a sysfs write to
-> > > > brightness stemming from userspace that follows the same chain it
-> > > > would on a stock kernel and times out. Is it present on a stock
-> > > > kernel?
-> > > >
-> > > > Ilpo should know more about this, could the spinlock be interfering=
-?
-> > >
-> > > [1] certainly seems to do schedule() from do_kbd_led_set() so it's no=
-t
-> > > possible to use spinlock there.
-> > >
-> > > So we're back to what requires the spinlock? And what the spinlock
-> > > protects?
+> >> From: "Luke D. Jones" <luke@ljones.dev>
+> >>
+> >> Implement Intel core enablement under the asus-armoury module using th=
+e
+> >> fw_attributes class.
+> >>
+> >> This allows users to enable or disable preformance or efficiency cores
+> >> depending on their requirements. After change a reboot is required.
+> >>
+> >> Signed-off-by: Denis Benato <benato.denis96@gmail.com>
+> >> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> >> ---
+> >>  drivers/platform/x86/asus-armoury.c        | 258 ++++++++++++++++++++=
+-
+> >>  drivers/platform/x86/asus-armoury.h        |  28 +++
+> >>  include/linux/platform_data/x86/asus-wmi.h |   5 +
+> >>  3 files changed, 290 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x8=
+6/asus-armoury.c
+> >> index 3b49a27e397d..3d963025d84e 100644
+> >> --- a/drivers/platform/x86/asus-armoury.c
+> >> +++ b/drivers/platform/x86/asus-armoury.c
+
+> >> +static ssize_t cores_value_show(struct kobject *kobj, struct kobj_att=
+ribute *attr, char *buf,
+> >> +=09=09=09=09enum cpu_core_type core_type, enum cpu_core_value core_va=
+lue)
+> >> +{
+> >> +=09u32 cores;
+> >> +
+> >> +=09switch (core_value) {
+> >> +=09case CPU_CORE_DEFAULT:
+> >> +=09case CPU_CORE_MAX:
+> >> +=09=09if (core_type =3D=3D CPU_CORE_PERF)
+> >> +=09=09=09return sysfs_emit(buf, "%u\n",
+> >> +=09=09=09=09=09  asus_armoury.cpu_cores->max_perf_cores);
+> >> +=09=09else
+> >> +=09=09=09return sysfs_emit(buf, "%u\n",
+> >> +=09=09=09=09=09  asus_armoury.cpu_cores->max_power_cores);
+> >> +=09case CPU_CORE_MIN:
+> >> +=09=09if (core_type =3D=3D CPU_CORE_PERF)
+> >> +=09=09=09return sysfs_emit(buf, "%u\n",
+> >> +=09=09=09=09=09  asus_armoury.cpu_cores->min_perf_cores);
+> >> +=09=09else
+> >> +=09=09=09return sysfs_emit(buf, "%u\n",
+> >> +=09=09=09=09=09  asus_armoury.cpu_cores->min_power_cores);
+> >> +=09default:
+> >> +=09=09break;
+> >> +=09}
+> >> +
+> >> +=09if (core_type =3D=3D CPU_CORE_PERF)
+> >> +=09=09cores =3D asus_armoury.cpu_cores->cur_perf_cores;
+> >> +=09else
+> >> +=09=09cores =3D asus_armoury.cpu_cores->cur_power_cores;
+> > Why isn't this inside the switch?? The logic in this function looks ver=
+y=20
+> > mixed up.
 > >
-> > For that invocation, since it is coming from the cdev device owned by
-> > asus_wmi, it protects asus_ref.listeners under do_kbd_led_set.
-> > asus_wmi is protected by the fact it is owned by that device. Spinlock
-> > is not required in this invocation due to not being an IRQ.
-> >
-> > Under asus_hid_event (second to last patch), which is called from an
-> > IRQ, a spinlock is required for protecting both listeners and the
-> > asus_ref.asus, and I suspect that scheduling from an IRQ is not
-> > allowed either. Is that correct?
->=20
-> So it is a bit tricky here. When the IRQ fires, it needs to know
-> whether asus-wmi will handle the keyboard brightness event so that it
-> falls back to emitting it.
->=20
-> If we want it to know for sure, it needs to access asus_wmi, so it
-> needs a spinlock or an IRQ friendly lock. This way, currently,
-> asus_hid_event will return -EBUSY if there is no led device so the
-> event propagates through hid.
+> > If I'd be you, I'd consider converting the asus_armoury.cpu_cores to a=
+=20
+> > multi-dimensional array. It would make this just bounds checks and one=
+=20
+> > line to get the data.
 >
-> If we say that it is good enough to know that it was compiled with
-> IS_REACHABLE(CONFIG_ASUS_WMI), ie the actual implementation of
-> asus_hid_event in asus-wmi will never return an error, then,
-> asus_hid_event can schedule a task to fire the event without a lock,
-> and that task can use a normal locking primitive.
->=20
-> If the task needs to be assigned to a device or have a handle,
-> asus_hid_listener can be provided to asus_hid_event, so that it is
-> owned by the calling device.
->=20
-> What would the appropriate locking primitive be in this case?
+> Please note that this interface has the potential to brick in an irrevers=
+ible
+> way laptops and it has happened.
 
-If you can move the non-check content out of asus_hid_event(), then you=20
-can nest mutex & spinlock for updating asus_ref. On reader side,=20
-asus_hid_event() only takes the spinlock and the rest of the readers=20
-(non-irq ones) can take just the mutex.
+This function only prints values held by kernel in its internal storage?=20
+How can that brick something?
 
+> Of all the code CPU core handling it the most delicate code of all since
+> a wrong value here means permanent irreversible damage.
+>=20
+> I am more than happy making changes that can be easily verified,
+> but others more complex changes will put (at least) my own hardware
+> at risk.
+
+Understood.
+
+> If you think benefit outweighs risks I will try my best.
+> >> +=09return sysfs_emit(buf, "%u\n", cores);
+> >> +}
+> >> +
+> >> +static ssize_t cores_current_value_store(struct kobject *kobj, struct=
+ kobj_attribute *attr,
+> >> +=09=09=09=09=09 const char *buf, enum cpu_core_type core_type)
+> >> +{
+> >> +=09u32 new_cores, perf_cores, power_cores, out_val, min, max;
+> >> +=09int result, err;
+> >> +
+> >> +=09result =3D kstrtou32(buf, 10, &new_cores);
+> >> +=09if (result)
+> >> +=09=09return result;
+> >> +
+> >> +=09scoped_guard(mutex, &asus_armoury.cpu_core_mutex) {
+> >> +=09=09if (core_type =3D=3D CPU_CORE_PERF) {
+> >> +=09=09=09perf_cores =3D new_cores;
+> >> +=09=09=09power_cores =3D asus_armoury.cpu_cores->cur_power_cores;
+> >> +=09=09=09min =3D asus_armoury.cpu_cores->min_perf_cores;
+> >> +=09=09=09max =3D asus_armoury.cpu_cores->max_perf_cores;
+> >> +=09=09} else {
+> >> +=09=09=09perf_cores =3D asus_armoury.cpu_cores->cur_perf_cores;
+> >> +=09=09=09power_cores =3D new_cores;
+> >> +=09=09=09min =3D asus_armoury.cpu_cores->min_power_cores;
+> >> +=09=09=09max =3D asus_armoury.cpu_cores->max_power_cores;
+> >> +=09=09}
+> >> +
+> >> +=09=09if (new_cores < min || new_cores > max)
+> >> +=09=09=09return -EINVAL;
+> >> +
+> >> +=09=09out_val =3D FIELD_PREP(ASUS_PERF_CORE_MASK, perf_cores) |
+> >> +=09=09=09FIELD_PREP(ASUS_POWER_CORE_MASK, power_cores);
+> >> +
+> >> +=09=09err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES, out_val, &r=
+esult);
+> >> +=09=09if (err) {
+> >> +=09=09=09pr_warn("Failed to set CPU core count: %d\n", err);
+> >> +=09=09=09return err;
+> >> +=09=09}
+> >> +
+> >> +=09=09if (result > 1) {
+> >> +=09=09=09pr_warn("Failed to set CPU core count (result): 0x%x\n", res=
+ult);
+> >> +=09=09=09return -EIO;
+> >> +=09=09}
+> >> +=09}
+> >> +
+> >> +=09pr_info("CPU core count changed, reboot required\n");
+> >
+> > This interface has a problematic behavior. If user wants to adjust both=
+=20
+> > core counts one after another (without reboot in between), the new valu=
+e=20
+> > of the first core count will be overwritten on the second store.
+> >
+> > You might have to store also the value that will be used after the next=
+=20
+> > boot to solve it but how the divergence should be presented to user is=
+=20
+> > another question to which I don't have a good answer.
+>
+> Given what I have written above I am thinking more along the lines of all=
+owing
+> only one change at the time, giving absolute priority to the ability to d=
+emonstrate
+> not all P-cores can be disabled all at once, or after a reboot hardware w=
+ill be
+> irreversibly lost. It cannot be recovered the same way as I did with APU =
+mem.
+>=20
+> To summarize I am more inclined in allowing only small changes,
+> or to postpone this patch entirely while we think to a better, safer solu=
+tion.
+
+Fair enough, please mention this as in the changelog as a justification=20
+and to warn other messing with the code.
+
+> > This seems a more general problem, that is, how to represent values whi=
+ch=20
+> > are only enacted after booting (current vs to-be-current) as it doesn't=
+=20
+> > fit to the current, min, max, possible_values, type model.
+> >
+> Enabling eGPU on a laptop with a dGPU that is active makes the PCI-e
+> spam PCI AER uncorrectable errors and renders both GPUs unusable.
+>=20
+> I have gone with storing the value at driver load time and treating it
+> as the boot value for 2/9 (eGPU), but I am very open to suggestions!
+
+I'm not entirely sure what you're trying to say here. My point is that=20
+there's no way for user to know what value something will be changed to=20
+(the "to-be-current" value) except through rebooting the system (when the=
+=20
+"to-be-current" value becomes the "current").
 
 --=20
  i.
-
---8323328-1986902853-1760980420=:976--
+--8323328-1335968388-1760968966=:976--
