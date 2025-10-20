@@ -1,63 +1,63 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61AA333747
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 21:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0D1334C03
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 21:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760995089; cv=none; b=vCnTyG0sSuMXolUqdFvv4gJeIUxjQVJjPZ8OfzxMOkQ0s5Xxl1JdmJZwjNEM7FaZL+73BE0+lLiJzs2J6ZPWdNQc+HjcoxBnd/ScOOkyYTjYlMNbOwPFtNPrcCLDtebod7mf0IlXv8HKhF785cJpS54PFQmkgX2AZ7Kna/VvcPg=
+	t=1760995090; cv=none; b=nTFLoMxCy1alTKejV/9sMZ25z3dolReRmr5b62XFepAsAjw+95Lqegu5UsapghYC9i/JjLF/GGDsBeK5ISTrV88AboT26CcXuKuxHuhgy0Omp8rFv3C90/+RSOywS/RgHdoURJxWPR/iEgGfxCAHrmdnRTvfvjITwSPmfSZ895M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760995089; c=relaxed/simple;
-	bh=dDKQb2Jp752Rl00PjZyJdgg+I14sXcmVVgxBGh7MIOM=;
+	s=arc-20240116; t=1760995090; c=relaxed/simple;
+	bh=HgqVTv99Oe1TMTKtq8WDEVdlbo40uTW7mB5QSTqT1mc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ua7U2Du4ocQgbkPpxT+SaEXFr3dT7tR3z1wV4YhLzP5LQheE9tzS7uV1blC7tsLRQlx7AtSQFpnRvs/lhseZV0XL87jKVLqJT10Q5Ubqyeu3OudQbV/U+7haS1aVzlSTfzTIDiks5rXsnRvdxJKZRbuqpoUU9GVNTj9fat7Xk1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bt1vaaQI; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=TP334QRj7bA4nZKsP5cG2bNdmPbbE2EkFLg919emAuEfTYQ4UXG5ONd0fgbpWVS8n2I7IiHNhyEBr56DLVgL8HvnSKmq9Jt99KjGcx7kSr1y0qiIrD9UAzuP77yyXCmwo3x0YA2nkPhOb57KJU9A1v4Ou8a7UuIDGKUPHjOUqt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXc5Q6Ed; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bt1vaaQI"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-427007b1fe5so3152937f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 14:18:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXc5Q6Ed"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4283be7df63so1314193f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 14:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760995082; x=1761599882; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760995086; x=1761599886; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=24k/+IQksUqDs45sTJ+Ur00fPTiqMg/ZZl9NEKDMYks=;
-        b=bt1vaaQIEfnVdrPDqoyPNiY26r37VBO49kIz+cklmze59FDmjTzy7wLPqs5C3UBGWm
-         q47DDdDQ520vZdKz1/H6wCd5OTC9qsw4NY8BcJ2aMHtnaHPM46uWyk8OPz/5Emct1dJ7
-         aOkxNtuniEFChhM+O41d7ibpniVL2r0Wt/9SZTiYKZlhKX41xx/WISY7Bu6+ZjmZU4MK
-         L0tlh8uFF3/GJhzGotGbzaemDlLb/KJw/LNTUhZ5gb9l3jek2jXMAlNZod6Hcafmm+o+
-         Of38DYHRTLmdEqNBKWsIOGkajtzfQa/qFN1PiUC0lTA+QK2YT7qrfDix8IZD1Ch6xNVP
-         0PVA==
+        bh=Boo3GY/hmsGMPee3Iyy6fPXSxK2W3/FelglgywD3Yfs=;
+        b=FXc5Q6EdohA1biaT+5LrlPrnnkJ7j2NqnHEtskPqm3dpe2NthcxO7/NvAWCo4rkXPp
+         ckQi/KigG69dFLMtlw7OcZDHlnZua/SooPUwwsxgkVplYAFOoH2+btS0c5fHBO+/a/iF
+         qv0XQIxftQ7bv2G4Qdjw3oor8h/b76C/XMghqzPhRQAUphTUVeOrzQqjdwqdz+t8k7A6
+         +Epo4D3NqE24Ya2xBhwuR7SoV71h6CGdJGLp8rh9hNj68y3sa00glXWVXaJotEV39tyV
+         T1T4MqoSOPUG9AIzN9eP+C2Ryq0e+wNIYHXaQ4R35uF9nInYMXxQS5Yav+BgfzzPQrVY
+         7Ptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760995082; x=1761599882;
+        d=1e100.net; s=20230601; t=1760995086; x=1761599886;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=24k/+IQksUqDs45sTJ+Ur00fPTiqMg/ZZl9NEKDMYks=;
-        b=vEdqwnHONL8yqWJhwm/EjsWPgQ19M8H1MFHkYao9R1JwfJLnEnYHlCZDSfrCTFD8L8
-         d4pL5IWWNJ8lAoRkEwDRVVikSsnqjH1cutmy/W1srl0A2VO/y8vDJRes7KzyvuTJZMaW
-         Sl/YIZgDLTbigR9XKmqxqFkEyMgML4XofM3SL8zjYrGMItDSsI6mr1cYQGU9xcJiV7ap
-         lMnUEOmS0XDkOX6OK8y0GoDMLndvgzSHlt+ubTaYwwGtPr0SBasvZWoaHu+iX82V8tu8
-         oP03pTz2cpvX3e2ENGdWVSEeGdHHg8q5RRZk5YDvzrwb62i55Do9kxvcYeIo6CYDX1jN
-         Gjzw==
-X-Gm-Message-State: AOJu0YxCZfnHX5Mlh7Xhl50923bIunasw8ssj5C8X5TKokRlIxhLM9X7
-	7aYQBetsJhp42zldhiMupIdcIUkjZekiy4YIl6J2GDHLzcGzvBQIz7rI
-X-Gm-Gg: ASbGncsQqd5SbGX1a6kYKAqDtY+kzHo3uuPTpGH01UwZgFSHRcArTeWx+ZaZT4s2RDy
-	pPSAlJnjwvnqmn20UX03KOAd8H/V9Yee1K0j2o/YPhCwlbywmH76saruMMcZ7YNbrxv0ybBH++9
-	0yQg4ByDRtsYkdDFnQpT9ioH5vyBaKgtmB7DM9iEIlMbeK19OF2giEuzlO2OkI+W56N5EEeZvLN
-	ON4J4paRlIqOYGkD8cERjRVuVmEkApIkvgCyYeYIbph4sbL7FHZWdXm9OLZwUP7yjn5rguGoUK9
-	aVVcysmDIt5RtxmFKUbRI2FRZyML2Ka8C68DKQMEfrek5az/Fa1YXnG5HJbb9WtRJ6CUtVh0AOA
-	NPqTx6X2xwJd51NrJB+3C+zLYO0cpxQQeLI0eunNzFoynMYdIrwzEt778hzX7bPwEhIFoHw7UVc
-	159KC7dX7V+Fgl
-X-Google-Smtp-Source: AGHT+IFLrKXoNgxDPNQk6LahfMwrO+Tj4kcxzlq3EU2jhpKwtDEEELftfcXKg9PZZJJInoIlYy9/pg==
-X-Received: by 2002:a5d:5888:0:b0:426:f38a:a51 with SMTP id ffacd0b85a97d-42704d8d684mr11154732f8f.22.1760995082423;
-        Mon, 20 Oct 2025 14:18:02 -0700 (PDT)
+        bh=Boo3GY/hmsGMPee3Iyy6fPXSxK2W3/FelglgywD3Yfs=;
+        b=Cs2fLf9EF6zg24hTIxAvapwmQ6wRvE/ML34RTdq0a4KKcZrOIBn8G+qEwpx1KVdplz
+         9uLSzH3/G54iC+HkkSxY5kuxXWCiTR9/nY0txXWY8iQ3D+fW76qdiq4XAlvkE1Ju5iP1
+         uLotzcNvDGIUXE1vmWBOqQM+yJGrVqmgHC/Gmr2VyhMnB+ZB6ygMcJXQX2Mb6PyW5l9k
+         9Iva7seKkSlRSlqXd1wQ9jDDRLE/ki1hTqjrrZ7xMw28k7rjmGH0Vs91dKHCLllRM+j/
+         osgjwo7Q2PubX5TQJQua1W33/JmUrIl3JPC9h33C4/BUq62Q8MBPCII7UzY11IWiZ4SN
+         rOow==
+X-Gm-Message-State: AOJu0YwcjJVGiPaACKMIQrupfmtCO+amM/XrPLNfTC2clbfE5JHczkX/
+	S+j/cYFCMDqP4ckruBNc1XLPteVQ5A80yOvFSQ++X4TPwNyzjU2bmB9H
+X-Gm-Gg: ASbGncuILCbly6Uz1IiZ+baj/ApVtrYCVchCqEK8Uj3o4yWFgLd0OWJp8tEn//OSv4g
+	ddr6WtJjelNZRSE2Bi0Y8mtRQ8cX999MjUzEdwWi+4Rp5bK+fDGIHsEz7ucM17hqUJQHeob4oO3
+	wTJkRlp/RrCLzX9KjVXr37ArMynFrwg9K0qxomvMTLvHkQXFABe8SAwMzGu+Y094OQ2917/JRKm
+	vv/uyU+DWRS1bDy1tn/MIL2lWo8K7VGl5aWh6SLL3ahZMArRCBOs1mLVybgS4s68+sEDXUONC0O
+	qAV7WmOnZd97t/Ua47jzrZIMyBGpZH3qvs3T/Ye7iGulB2pMng8fQGzZi2Ph+w6xK+/6agqKf19
+	cGv+JUWpxfEVw0P7Tqo+CTwC09jig/mqoojg0CTq2G79Qn2R2KlcPcDaqgbwh5YH2JYysurWd3l
+	DoFYEFm6oFjBVZ
+X-Google-Smtp-Source: AGHT+IEj9obIyMvZHzNlNwHynowf/HXSKQgHqY2Pu2eK/wmlzn9FsqhlARXp/9iF+oKGbDrD7VKywQ==
+X-Received: by 2002:a05:6000:186e:b0:3e0:c28a:abbb with SMTP id ffacd0b85a97d-42704d51e46mr10469556f8f.13.1760995086173;
+        Mon, 20 Oct 2025 14:18:06 -0700 (PDT)
 Received: from denis-pc ([151.49.75.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a976sm17254971f8f.32.2025.10.20.14.18.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a976sm17254971f8f.32.2025.10.20.14.18.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 14:18:02 -0700 (PDT)
+        Mon, 20 Oct 2025 14:18:05 -0700 (PDT)
 From: Denis Benato <benato.denis96@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Mateusz Schyboll" <dragonn@op.pl>,
 	porfet828@gmail.com,
 	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v15 4/9] platform/x86: asus-armoury: add apu-mem control support
-Date: Mon, 20 Oct 2025 23:17:35 +0200
-Message-ID: <20251020211740.719676-5-benato.denis96@gmail.com>
+Subject: [PATCH v15 8/9] platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
+Date: Mon, 20 Oct 2025 23:17:39 +0200
+Message-ID: <20251020211740.719676-9-benato.denis96@gmail.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251020211740.719676-1-benato.denis96@gmail.com>
 References: <20251020211740.719676-1-benato.denis96@gmail.com>
@@ -84,181 +84,53 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Luke D. Jones" <luke@ljones.dev>
+Maintain power-related WMI macros naming consistency:
+rename ASUS_WMI_DEVID_PPT_FPPT to ASUS_WMI_DEVID_PPT_PL3_FPPT.
 
-Implement the APU memory size control under the asus-armoury module using
-the fw_attributes class.
+Link: https://lore.kernel.org/all/cad7b458-5a7a-4975-94a1-d0c74f6f3de5@oracle.com/
 
-This allows the APU allocated memory size to be adjusted depending on
-the users priority. A reboot is required after change.
-
-Co-developed-by: Denis Benato <benato.denis96@gmail.com>
+Suggested-by: ALOK TIWARI <alok.a.tiwari@oracle.com>
 Signed-off-by: Denis Benato <benato.denis96@gmail.com>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- drivers/platform/x86/asus-armoury.c        | 105 ++++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h |   2 +
- 2 files changed, 104 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-wmi.c            | 4 ++--
+ include/linux/platform_data/x86/asus-wmi.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 20edf4f5370a..fe80d5d04300 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -160,11 +160,12 @@ static int armoury_get_devstate(struct kobj_attribute *attr, u32 *retval, u32 de
-  * armoury_set_devstate() - Set the WMI function state.
-  * @attr: The kobj_attribute associated to called WMI function.
-  * @dev_id: The WMI method ID to call.
-- * @retval:
-- * * Pointer to where to store the value returned from WMI or NULL.
-+ * @retval: Where to store the value returned from WMI or NULL.
-  *
-  * Intended usage is from sysfs attribute setting associated WMI function.
-- * Before calling set the presence of the function should be checked.
-+ * Before calling the presence of the function should be checked.
-+ *
-+ * Every WMI write MUST go through this function to enforce safety checks.
-  *
-  * Results !1 is usually considered a fail by ASUS, but some WMI methods
-  * (like eGPU or CPU cores) do use > 1 to return a status code or similar:
-@@ -172,6 +173,7 @@ static int armoury_get_devstate(struct kobj_attribute *attr, u32 *retval, u32 de
-  * and should perform relevant checks.
-  *
-  * Returns:
-+ * * %-EINVAL	- attempt to set a dangerous or unsupported value.
-  * * %-EIO	- WMI function returned an error.
-  * * %0		- successful and retval is filled.
-  * * %other	- error from WMI call.
-@@ -182,6 +184,26 @@ static int armoury_set_devstate(struct kobj_attribute *attr,
- 	u32 result;
- 	int err;
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 6de633d4a748..64cfc0bf98dd 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1218,7 +1218,7 @@ static ssize_t ppt_fppt_store(struct device *dev,
+ 	if (value < PPT_TOTAL_MIN || value > PPT_TOTAL_MAX)
+ 		return -EINVAL;
  
-+	/*
-+	 * Prevent developers from bricking devices or issuing dangerous
-+	 * commands that can be difficult or impossible to recover from.
-+	 */
-+	switch (dev_id) {
-+	case ASUS_WMI_DEVID_APU_MEM:
-+		/*
-+		 * A hard reset might suffice to save the device,
-+		 * but there is no value in sending these commands.
-+		 */
-+		if (value == 0x100 || value == 0x101) {
-+			pr_err("Refusing to set APU memory to unsafe value: 0x%x\n", value);
-+			return -EINVAL;
-+		}
-+		break;
-+	default:
-+		/* No known problems are known for this dev_id */
-+		break;
-+	}
-+
- 	err = asus_wmi_set_devstate(dev_id, value, retval ? retval : &result);
+-	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_FPPT, value, &result);
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_PL3_FPPT, value, &result);
  	if (err) {
- 		if (attr)
-@@ -592,6 +614,82 @@ static ssize_t egpu_enable_possible_values_show(struct kobject *kobj, struct kob
- }
- ASUS_ATTR_GROUP_ENUM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
- 
-+/* Device memory available to APU */
-+
-+/*
-+ * Values map for APU reserved memory (index + 1 number of GB).
-+ * Some looks out of order, but are actually correct.
-+ */
-+static u32 apu_mem_map[] = {
-+	[0] = 0x000, /* called "AUTO" on the BIOS, is the minimum available */
-+	[1] = 0x102,
-+	[2] = 0x103,
-+	[3] = 0x104,
-+	[4] = 0x105,
-+	[5] = 0x107,
-+	[6] = 0x108,
-+	[7] = 0x109,
-+	[8] = 0x106,
-+};
-+
-+static ssize_t apu_mem_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
-+					  char *buf)
-+{
-+	int err;
-+	u32 mem;
-+
-+	err = armoury_get_devstate(attr, &mem, ASUS_WMI_DEVID_APU_MEM);
-+	if (err)
-+		return err;
-+
-+	/* After 0x000 is set, a read will return 0x100 */
-+	if (mem == 0x100)
-+		return sysfs_emit(buf, "0\n");
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(apu_mem_map); i++) {
-+		if (apu_mem_map[i] == mem)
-+			return sysfs_emit(buf, "%u\n", i);
-+	}
-+
-+	pr_warn("Unrecognised value for APU mem 0x%08x\n", mem);
-+	return -EIO;
-+}
-+
-+static ssize_t apu_mem_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	int result, err;
-+	u32 requested, mem;
-+
-+	result = kstrtou32(buf, 10, &requested);
-+	if (result)
-+		return result;
-+
-+	if (requested >= ARRAY_SIZE(apu_mem_map))
-+		return -EINVAL;
-+	mem = apu_mem_map[requested];
-+
-+	err = armoury_set_devstate(attr, mem, NULL, ASUS_WMI_DEVID_APU_MEM);
-+	if (err) {
-+		pr_warn("Failed to set apu_mem 0x%x: %d\n", mem, err);
-+		return err;
-+	}
-+
-+	pr_info("APU memory changed to %uGB, reboot required\n", requested + 1);
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	asus_set_reboot_and_signal_event();
-+
-+	return count;
-+}
-+
-+static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
-+					    char *buf)
-+{
-+	return attr_enum_list(buf, ARRAY_SIZE(apu_mem_map));
-+}
-+ASUS_ATTR_GROUP_ENUM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
-+
- /* Simple attribute creation */
- ASUS_ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
- 			    "Show the current mode of charging");
-@@ -611,6 +709,7 @@ static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
- 	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
- 	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
-+	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
- 
- 	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
- 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+ 		pr_warn("Failed to set ppt_fppt: %d\n", err);
+ 		return err;
+@@ -4602,7 +4602,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 	else if (attr == &dev_attr_ppt_pl1_spl.attr)
+ 		devid = ASUS_WMI_DEVID_PPT_PL1_SPL;
+ 	else if (attr == &dev_attr_ppt_fppt.attr)
+-		devid = ASUS_WMI_DEVID_PPT_FPPT;
++		devid = ASUS_WMI_DEVID_PPT_PL3_FPPT;
+ 	else if (attr == &dev_attr_ppt_apu_sppt.attr)
+ 		devid = ASUS_WMI_DEVID_PPT_APU_SPPT;
+ 	else if (attr == &dev_attr_ppt_platform_sppt.attr)
 diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 10acd5d52e38..a4f6bab93a6f 100644
+index 260796fee301..3d236f8498d8 100644
 --- a/include/linux/platform_data/x86/asus-wmi.h
 +++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -137,6 +137,8 @@
- /* dgpu on/off */
- #define ASUS_WMI_DEVID_DGPU		0x00090020
+@@ -108,7 +108,7 @@
+ #define ASUS_WMI_DEVID_PPT_PL1_SPL		0x001200A3
+ #define ASUS_WMI_DEVID_PPT_APU_SPPT		0x001200B0
+ #define ASUS_WMI_DEVID_PPT_PLAT_SPPT	0x001200B1
+-#define ASUS_WMI_DEVID_PPT_FPPT			0x001200C1
++#define ASUS_WMI_DEVID_PPT_PL3_FPPT		0x001200C1
+ #define ASUS_WMI_DEVID_NV_DYN_BOOST		0x001200C0
+ #define ASUS_WMI_DEVID_NV_THERM_TARGET	0x001200C2
  
-+#define ASUS_WMI_DEVID_APU_MEM		0x000600C1
-+
- /* gpu mux switch, 0 = dGPU, 1 = Optimus */
- #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
- #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
 -- 
 2.51.1
 
