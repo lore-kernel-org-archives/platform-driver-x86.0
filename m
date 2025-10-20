@@ -1,63 +1,63 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2CA3346BC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 21:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B8A33375E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 21:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760995091; cv=none; b=iw3DEbE1Nco9r57/YTy0+Bims3Yuh4LL+RyT+15RuA5MZPOPytkSTy1SQeqoXc23nzZZDbwAN8HUGllECc7B3vMPvU5E8gMe8hnJeaVuqmVaZ02hKWfjc31jDh5ZzLG3V58mUGBdj7YnHsWkrum4W9+c1pinc8tmKQ0XJCfsi88=
+	t=1760995094; cv=none; b=PopvJpMIQcK8OtcO5qJCR/VIkHtWW2Ecbsjl0XtTvZfoT795uLsiUPx43tL9iy7ZGE374DaRv/O4Tzv7UxVaBHW2mOt35to+yanSlDuGdKmH1yPAGrGUimt1V9GN2SyO5d/0FhY4pORNU67okB4LLka3WC4Zktk7bJnvcc68D/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760995091; c=relaxed/simple;
-	bh=EYbxRsklhtHtd95cm4tsuK4kNgK7N+DBs44i6sxjiz8=;
+	s=arc-20240116; t=1760995094; c=relaxed/simple;
+	bh=z+CUcUTj7+VqDNuTjuT6ehZw7yVMAp9CMvA6563budo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FvZrP2cfSS3Gpk8haLgdGhUnPrzu49Nux04cvbKwTJpJpxelf3qAy9lmQnHF4k/ITbDVZWrijOii/sH/RA+gS5HAl1HPqUu66Cej8IT5hvptYhumq4EZm/yitkeAWo7urckqWLt9LGn24BRXCMzPRSxyCZ8V3yeOFR2MmIGO8pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W0mfOJNd; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=REHkOqvJhbna+7eu61iayrhKnvL+wP0myeEA4WnBKHmm3AbhwsJ7DsKjVQklDcyoRzt3TEEKJFP0oatC/ex8ZVhD9gQbEhDyMg9Dc4DKFqrTK7CfYBOUL1lcx+MERf5hFnWb8k1XfiaCu79rz3BpqB6VUsC+J+6Sqbn3e9tje+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/0TXMe7; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0mfOJNd"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-471076f819bso38315435e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 14:18:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/0TXMe7"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47106fc51faso56420505e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 14:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760995086; x=1761599886; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760995088; x=1761599888; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O8S1ji7PEyADR0wkX50xChdrFSlFaOFL4aD3skFdXec=;
-        b=W0mfOJNdSki8Imsupw3EdTKY+qzSPxjMXWwSiK9cj0NIewqXpvjEpATvJ4u2XRH7aL
-         fde9urdrkYrBs8u0pbgR899Su+0OiZmzyYiCBPt2ds6Hr0DDYhBKbH5yiYg7PU0FpZSw
-         j/fVGM4h//gbCabvYRaABD2zuBLHBb8Wx9Rwsdbfh36vEolETTKkX2hLE0vQOYPg7IYs
-         THKzJhcXyulY7pFrmhtNhjTVTSu51FLOtIAgUg60+7iKCo08wieiDMyViJ3rYw/eMPNI
-         GzJOE6/QRU6VGKtQ4d+WhzyNdmkUMQ3DqAQ23aYj/6UUoe4Waw9YaRdsgYJo9JJ7NGx6
-         jS0w==
+        bh=JqgdTeItPru02uryxoaTF51KtDO292skFB8iHyBTK8M=;
+        b=P/0TXMe79YFLXq4xHToU36vxRZTErYy4C8aZ/5wWDc0lgaqltKZh1tzOcftJucoSGR
+         a/QvFGuZNgzMmLghOBDSoVSJz0C5XcCQihKfQ6cJJcTBc2aU91GZdOer2Ym0jh+RQopT
+         lA/Q4rrc7VYnyQqtHim3OfC9nqwgxNdJ9tvmRmBhtSDE70d88COjHtz8hvAS/W0uKaT/
+         N3UeCE+kSXQQeS4c/WRphJYdfOHUuAVCBnvJ40s8U5gPMMI97bbAHyC8RSOIj8xK3vZX
+         4qEtvVtZk3uxNpJaHsZvj4mnciYlql2XK0LlF3XGxGwi4sg9uLOXm0o9a/6OkbjiUtrQ
+         Xa4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760995086; x=1761599886;
+        d=1e100.net; s=20230601; t=1760995088; x=1761599888;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O8S1ji7PEyADR0wkX50xChdrFSlFaOFL4aD3skFdXec=;
-        b=aOieCbFVe4Yo+0BiDlNBYcY1xwe4Qx9930LNeZ/PHlTngpZFL0IIvPi4dVnQSA1xnu
-         vhFex0eaqQvz0g5rQZHJefwAlVNgszzi0SAZrTD5lQnA/rEp6u8jQVyiSPiPwC1Xn7rA
-         RGzrgkhpB8jtQ8BlWRodPmZtJKIYzk1NA5TOfYgcCRskUBsYwz1y0mAorYJ/zommHIij
-         6Ek1DbojcwsCF9p4jcrI6lTPpqnDKHQ0BP8P/pbqu9tV3ky46VBwCVtFE23HZ2u2XiMa
-         4BHxuoZEGy1JFnd8E32RWx5Lrdb6UeD9Wv9XKIwcGQ/JJfwhfnolO4/Lc7Jdw1zGfziZ
-         Fwbw==
-X-Gm-Message-State: AOJu0YwtIGRQrep2QfBqQZfNOgFCC0nviwLX/cD+QTniDaQMXtGwauUN
-	A0fQpIOsPgeyxBj0/pbAPjEgGnS2bWYP/43QyoNY7sCf/m9Vq5r1lwvdYCnP9Q==
-X-Gm-Gg: ASbGncvlxdvOLY1aDerr5nuAj6og/JZkdQz+x5ILqignzbEZBiAAmf3T0a/3KNEXQsz
-	nKgfRMbfg2l+U27WNXU59E+83/Jh1FdGBWiJoom8RVxqSDbvkNYQOB6U6OmfNrDQ2xu9HgKcP9L
-	xwqwPFhkdPxA36Hr70WBCFCTMLXbg3gi67IAlZ+7jL1zmtK6hIoyKtHNJEe9IPejN4sHgGz1FAV
-	BR5devwVCwfdL/3oCr6Mq1RCBqbAZClArohITBbnstyGOTHkFKZ8WzVWhSf2sh44TIOGTzdYFux
-	9vHvYwkEH3Hj/5z1MU76R5QSzs/a/S78eF9OWGw4d2Akxo+wLUabY2kvmltrb9NkhwuWaRsWBh6
-	LO29g+VP13akVAPioXeoaUS40yQOBeuoZRAU/0pw4mCiQa5j8HdA3lvdpfHM63bbLVIFoSi6g+/
-	PRGx7SyR83g5HY
-X-Google-Smtp-Source: AGHT+IEqxXX/KGUgXpJqqHoOUaJnHg0/BSwG8fwQL7ufr9rX7FnJCEa27hDLjpgorSaJEmR1of3atw==
-X-Received: by 2002:a05:600c:34c7:b0:46f:b42e:e360 with SMTP id 5b1f17b1804b1-47117931edcmr107036765e9.40.1760995085329;
-        Mon, 20 Oct 2025 14:18:05 -0700 (PDT)
+        bh=JqgdTeItPru02uryxoaTF51KtDO292skFB8iHyBTK8M=;
+        b=tAPdS+OiUCUoN41i37t0RH7VqfpTzyLtlkyfgdZ2+qB+kFN3Xjm2jAQt8bETZjTDi5
+         zCKFgT+K+M2gldug7/nm2D0cQ56TNcg0HpAtHbrgrn717GqJWePW+Lgr7/JTCmcCLB6Y
+         fgtSbXZFKkP2MZORfMsMRExCpIuW3gdfDBZwQqFWS6z2tXNvAM1M7roumjIgerXYEv76
+         sg/hreCJksZgMamYDaZa4pHXkpqKF6mEDjgsFA/CCxoGnxN3ADG6+UtORr6oqUoNwiUe
+         vylb19gh+IQcfQrMYWWSgadr5aotjAbypMJop+z9OAVECtElO/YkGnsoDccDK+qGzJkW
+         705g==
+X-Gm-Message-State: AOJu0Yyy2uHf9mw4QEKPSGJZ8pmKxHbRnPzSKvSNp53+HUkZcpsm9GbV
+	dpmg/oqJI3LH8Bj5vs/snTBsDOfhfag841jtZbW1lKafqA169JkyHwkU
+X-Gm-Gg: ASbGncsxL7NwYzmx2MxAtA6ySHrV9Pz4HmByYljc8tHDonHyE/od9WNuy8PE6mcxTbx
+	zCJ/AeiZArtrZZC0QMtEQFPIUGcrL2S+TG8ZVhlkgXQCnT8HyZKlnEGFc1ioLJ9bCSHN9YMITow
+	J4vlE84f9usGt02DhZFsk2hKKqqdtTYMjWkfJ4LQ9pInwIUvxJpBp9K8LVCdNd35n2mOFhC2B36
+	hh3cdAgAKRF5la4KZ3velira7QWipgwtexkZne3kZi56ZGHcQtOWzpgEF+m3pbOdzLU5ltGrMgI
+	vCg6fwQN8vsmn7Bgj023EGbp1Un13eI0d8OAhGtZBKX1iAImJkJzR01Uh1h71Xnz1aR4zi24x1r
+	F2Fr26QjnOe02KSilLcOQTA0cOqbbbtPlHFPyFjZrzAAg+B4qx2exGJAS2wlOtCIaWzRD41B8ye
+	jOC1VlfI6Hkt2I
+X-Google-Smtp-Source: AGHT+IG59S9Bp7qkueTJwmwG9LBAdpC4Qaoovs0T9CBGAPzfHlSsBPQJeSNG5nISdXIAevQ+KpCTjw==
+X-Received: by 2002:a05:6000:186a:b0:3ff:17ac:a347 with SMTP id ffacd0b85a97d-42704d7be45mr11365865f8f.27.1760995087453;
+        Mon, 20 Oct 2025 14:18:07 -0700 (PDT)
 Received: from denis-pc ([151.49.75.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a976sm17254971f8f.32.2025.10.20.14.18.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a976sm17254971f8f.32.2025.10.20.14.18.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 14:18:05 -0700 (PDT)
+        Mon, 20 Oct 2025 14:18:06 -0700 (PDT)
 From: Denis Benato <benato.denis96@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Mateusz Schyboll" <dragonn@op.pl>,
 	porfet828@gmail.com,
 	Denis Benato <benato.denis96@gmail.com>
-Subject: [PATCH v15 7/9] platform/x86: asus-wmi: deprecate bios features
-Date: Mon, 20 Oct 2025 23:17:38 +0200
-Message-ID: <20251020211740.719676-8-benato.denis96@gmail.com>
+Subject: [PATCH v15 9/9] platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+Date: Mon, 20 Oct 2025 23:17:40 +0200
+Message-ID: <20251020211740.719676-10-benato.denis96@gmail.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251020211740.719676-1-benato.denis96@gmail.com>
 References: <20251020211740.719676-1-benato.denis96@gmail.com>
@@ -86,590 +86,1696 @@ Content-Transfer-Encoding: 8bit
 
 From: "Luke D. Jones" <luke@ljones.dev>
 
-With the existence of the asus-armoury module the attributes no longer
-need to live under the /sys/devices/platform/asus-nb-wmi/ path.
+Adds the ppt_* and nv_* tuning knobs that are available via WMI methods
+and adds proper min/max levels plus defaults.
 
-Deprecate all those that were implemented in asus-bioscfg with the goal
-of removing them fully in the next LTS cycle.
+The min/max are defined by ASUS and typically gained by looking at what
+they allow in the ASUS Armoury Crate application - ASUS does not share
+the values outside of this. It could also be possible to gain the AMD
+values by use of ryzenadj and testing for the minimum stable value.
 
+The general rule of thumb for adding to the match table is that if the
+model range has a single CPU used throughout, then the DMI match can
+omit the last letter of the model number as this is the GPU model.
+
+If a min or max value is not provided it is assumed that the particular
+setting is not supported. for example ppt_pl2_sppt_min/max is not set.
+If a <ppt_setting>_def is not set then the default is assumed to be
+<ppt_setting>_max
+
+It is assumed that at least AC settings are available so that the
+firmware attributes will be created - if no DC table is available
+and power is on DC, then reading the attributes is -ENODEV.
+
+Co-developed-by: Denis Benato <benato.denis96@gmail.com>
 Signed-off-by: Denis Benato <benato.denis96@gmail.com>
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Tested-by: Denis Benato <benato.denis96@gmail.com>
+Tested-by: Mateusz Schyboll <dragonn@op.pl>
+Tested-by: Porfet Lillian <porfet828@gmail.com>
 ---
- .../ABI/testing/sysfs-platform-asus-wmi       |  17 +++
- drivers/platform/x86/Kconfig                  |  11 ++
- drivers/platform/x86/asus-wmi.c               | 121 ++++++++++++++----
- 3 files changed, 124 insertions(+), 25 deletions(-)
+ drivers/platform/x86/asus-armoury.c        |  296 ++++-
+ drivers/platform/x86/asus-armoury.h        | 1238 ++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |    3 +
+ 3 files changed, 1531 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 28144371a0f1..89acb6638df8 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -63,6 +63,7 @@ Date:		Aug 2022
- KernelVersion:	6.1
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Switch the GPU hardware MUX mode. Laptops with this feature can
- 		can be toggled to boot with only the dGPU (discrete mode) or in
- 		standard Optimus/Hybrid mode. On switch a reboot is required:
-@@ -75,6 +76,7 @@ Date:		Aug 2022
- KernelVersion:	5.17
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Disable discrete GPU:
- 			* 0 - Enable dGPU,
- 			* 1 - Disable dGPU
-@@ -84,6 +86,7 @@ Date:		Aug 2022
- KernelVersion:	5.17
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Enable the external GPU paired with ROG X-Flow laptops.
- 		Toggling this setting will also trigger ACPI to disable the dGPU:
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index 63579034756a..9f0bbdc45ca0 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -30,6 +30,7 @@
+ #include <linux/pci.h>
+ #include <linux/platform_data/x86/asus-wmi.h>
+ #include <linux/printk.h>
++#include <linux/power_supply.h>
+ #include <linux/sysfs.h>
  
-@@ -95,6 +98,7 @@ Date:		Aug 2022
- KernelVersion:	5.17
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Enable an LCD response-time boost to reduce or remove ghosting:
- 			* 0 - Disable,
- 			* 1 - Enable
-@@ -104,6 +108,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Get the current charging mode being used:
- 			* 1 - Barrel connected charger,
- 			* 2 - USB-C charging
-@@ -114,6 +119,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Show if the egpu (XG Mobile) is correctly connected:
- 			* 0 - False,
- 			* 1 - True
-@@ -123,6 +129,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Change the mini-LED mode:
- 			* 0 - Single-zone,
- 			* 1 - Multi-zone
-@@ -133,6 +140,7 @@ Date:		Apr 2024
- KernelVersion:	6.10
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		List the available mini-led modes.
+ #include "asus-armoury.h"
+@@ -48,9 +49,23 @@
+ #define ASUS_MINI_LED_2024_STRONG 0x01
+ #define ASUS_MINI_LED_2024_OFF    0x02
  
- What:		/sys/devices/platform/<platform>/ppt_pl1_spl
-@@ -140,6 +148,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
- 		Shown on Intel+Nvidia or AMD+Nvidia based systems:
- 
-@@ -150,6 +159,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the Slow Package Power Tracking Limit of CPU: PL2 on Intel, SPPT,
- 		on AMD. Shown on Intel+Nvidia or AMD+Nvidia based systems:
- 
-@@ -160,6 +170,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the Fast Package Power Tracking Limit of CPU. AMD+Nvidia only:
- 			* min=5, max=250
- 
-@@ -168,6 +179,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the APU SPPT limit. Shown on full AMD systems only:
- 			* min=5, max=130
- 
-@@ -176,6 +188,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the platform SPPT limit. Shown on full AMD systems only:
- 			* min=5, max=130
- 
-@@ -184,6 +197,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the dynamic boost limit of the Nvidia dGPU:
- 			* min=5, max=25
- 
-@@ -192,6 +206,7 @@ Date:		Jun 2023
- KernelVersion:	6.5
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set the target temperature limit of the Nvidia dGPU:
- 			* min=75, max=87
- 
-@@ -200,6 +215,7 @@ Date:		Apr 2024
- KernelVersion:	6.10
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set if the BIOS POST sound is played on boot.
- 			* 0 - False,
- 			* 1 - True
-@@ -209,6 +225,7 @@ Date:		Apr 2024
- KernelVersion:	6.10
- Contact:	"Luke Jones" <luke@ljones.dev>
- Description:
-+        DEPRECATED, WILL BE REMOVED SOON: please use asus-armoury
- 		Set if the MCU can go in to low-power mode on system sleep
- 			* 0 - False,
- 			* 1 - True
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8b827680754c..a17288401746 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -296,6 +296,17 @@ config ASUS_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called asus-wmi.
- 
-+config ASUS_WMI_DEPRECATED_ATTRS
-+	bool "BIOS option support in WMI platform (DEPRECATED)"
-+	depends on ASUS_WMI
-+	default y
-+	help
-+	  Say Y to expose the configurable BIOS options through the asus-wmi
-+	  driver.
++/* Power tunable attribute name defines */
++#define ATTR_PPT_PL1_SPL        "ppt_pl1_spl"
++#define ATTR_PPT_PL2_SPPT       "ppt_pl2_sppt"
++#define ATTR_PPT_PL3_FPPT       "ppt_pl3_fppt"
++#define ATTR_PPT_APU_SPPT       "ppt_apu_sppt"
++#define ATTR_PPT_PLATFORM_SPPT  "ppt_platform_sppt"
++#define ATTR_NV_DYNAMIC_BOOST   "nv_dynamic_boost"
++#define ATTR_NV_TEMP_TARGET     "nv_temp_target"
++#define ATTR_NV_BASE_TGP        "nv_base_tgp"
++#define ATTR_NV_TGP             "nv_tgp"
 +
-+	  This can be used with or without the asus-armoury driver which
-+	  has the same attributes, but more, and better features.
+ #define ASUS_POWER_CORE_MASK	GENMASK(15, 8)
+ #define ASUS_PERF_CORE_MASK	GENMASK(7, 0)
+ 
++#define ASUS_ROG_TUNABLE_DC 0
++#define ASUS_ROG_TUNABLE_AC 1
 +
- config ASUS_NB_WMI
- 	tristate "Asus Notebook WMI Driver"
- 	depends on ASUS_WMI
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ff98267e5981..6de633d4a748 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -338,6 +338,13 @@ struct asus_wmi {
- /* Global to allow setting externally without requiring driver data */
- static enum asus_ally_mcu_hack use_ally_mcu_hack = ASUS_WMI_ALLY_MCU_HACK_INIT;
- 
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-+static void asus_wmi_show_deprecated(void)
-+{
-+	pr_notice_once("Accessing attributes through /sys/bus/platform/asus_wmi is deprecated and will be removed in a future release. Please switch over to /sys/class/firmware_attributes.\n");
-+}
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-+
- /* WMI ************************************************************************/
- 
- static int asus_wmi_evaluate_method3(u32 method_id,
-@@ -730,6 +737,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
- }
- 
- /* Charging mode, 1=Barrel, 2=USB ******************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t charge_mode_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -740,12 +748,16 @@ static ssize_t charge_mode_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
-+
- 	return sysfs_emit(buf, "%d\n", value & 0xff);
- }
- 
- static DEVICE_ATTR_RO(charge_mode);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* dGPU ********************************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t dgpu_disable_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -756,6 +768,8 @@ static ssize_t dgpu_disable_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
-+
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -809,8 +823,10 @@ static ssize_t dgpu_disable_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(dgpu_disable);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* eGPU ********************************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t egpu_enable_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -821,6 +837,8 @@ static ssize_t egpu_enable_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
-+
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -877,8 +895,10 @@ static ssize_t egpu_enable_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(egpu_enable);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Is eGPU connected? *********************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t egpu_connected_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -889,12 +909,16 @@ static ssize_t egpu_connected_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
-+
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
- static DEVICE_ATTR_RO(egpu_connected);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* gpu mux switch *************************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t gpu_mux_mode_show(struct device *dev,
- 				 struct device_attribute *attr, char *buf)
- {
-@@ -905,6 +929,8 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
-+
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -963,6 +989,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(gpu_mux_mode);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* TUF Laptop Keyboard RGB Modes **********************************************/
- static ssize_t kbd_rgb_mode_store(struct device *dev,
-@@ -1086,6 +1113,7 @@ static const struct attribute_group *kbd_rgb_mode_groups[] = {
+ enum cpu_core_type {
+ 	CPU_CORE_PERF = 0,
+ 	CPU_CORE_POWER,
+@@ -78,6 +93,19 @@ struct cpu_cores {
+ 	u32 max_power_cores;
  };
  
- /* Tunable: PPT: Intel=PL1, AMD=SPPT *****************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t ppt_pl2_sppt_store(struct device *dev,
- 				    struct device_attribute *attr,
- 				    const char *buf, size_t count)
-@@ -1124,6 +1152,8 @@ static ssize_t ppt_pl2_sppt_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 
-+	asus_wmi_show_deprecated();
++struct rog_tunables {
++	const struct power_limits *power_limits;
++	u32 ppt_pl1_spl;			// cpu
++	u32 ppt_pl2_sppt;			// cpu
++	u32 ppt_pl3_fppt;			// cpu
++	u32 ppt_apu_sppt;			// plat
++	u32 ppt_platform_sppt;		// plat
 +
- 	return sysfs_emit(buf, "%u\n", asus->ppt_pl2_sppt);
- }
- static DEVICE_ATTR_RW(ppt_pl2_sppt);
-@@ -1166,6 +1196,8 @@ static ssize_t ppt_pl1_spl_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 
-+	asus_wmi_show_deprecated();
++	u32 nv_dynamic_boost;
++	u32 nv_temp_target;
++	u32 nv_tgp;
++};
 +
- 	return sysfs_emit(buf, "%u\n", asus->ppt_pl1_spl);
- }
- static DEVICE_ATTR_RW(ppt_pl1_spl);
-@@ -1209,6 +1241,8 @@ static ssize_t ppt_fppt_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ struct asus_armoury_priv {
+ 	struct device *fw_attr_dev;
+ 	struct kset *fw_attr_kset;
+@@ -98,6 +126,9 @@ struct asus_armoury_priv {
+ 	struct cpu_cores *cpu_cores;
+ 	bool cpu_cores_changeable;
  
-+	asus_wmi_show_deprecated();
++	/* Index 0 for DC, 1 for AC */
++	struct rog_tunables *rog_tunables[2];
 +
- 	return sysfs_emit(buf, "%u\n", asus->ppt_fppt);
- }
- static DEVICE_ATTR_RW(ppt_fppt);
-@@ -1252,6 +1286,8 @@ static ssize_t ppt_apu_sppt_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	u32 mini_led_dev_id;
+ 	u32 gpu_mux_dev_id;
+ };
+@@ -918,6 +949,15 @@ static ssize_t cores_performance_current_value_store(struct kobject *kobj,
+ ASUS_ATTR_GROUP_CORES_RW(cores_performance, "cores_performance",
+ 			 "Set the max available performance cores");
  
-+	asus_wmi_show_deprecated();
++/* Define helper to access the current power mode tunable values */
++static inline struct rog_tunables *get_current_tunables(void)
++{
++	if (power_supply_is_system_supplied())
++		return asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC];
 +
- 	return sysfs_emit(buf, "%u\n", asus->ppt_apu_sppt);
- }
- static DEVICE_ATTR_RW(ppt_apu_sppt);
-@@ -1295,6 +1331,8 @@ static ssize_t ppt_platform_sppt_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 
-+	asus_wmi_show_deprecated();
++	return asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC];
++}
 +
- 	return sysfs_emit(buf, "%u\n", asus->ppt_platform_sppt);
- }
- static DEVICE_ATTR_RW(ppt_platform_sppt);
-@@ -1338,6 +1376,8 @@ static ssize_t nv_dynamic_boost_show(struct device *dev,
+ static ssize_t cores_efficiency_min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 					       char *buf)
  {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
+@@ -973,6 +1013,24 @@ ASUS_ATTR_GROUP_BOOL_RW(screen_auto_brightness, "screen_auto_brightness",
+ 			"Set the panel brightness to Off<0> or On<1>");
+ ASUS_ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
+ 			"Show the eGPU connection status");
++ASUS_ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, ATTR_PPT_PL1_SPL, ASUS_WMI_DEVID_PPT_PL1_SPL,
++			    "Set the CPU slow package limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(ppt_pl2_sppt, ATTR_PPT_PL2_SPPT, ASUS_WMI_DEVID_PPT_PL2_SPPT,
++			    "Set the CPU fast package limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(ppt_pl3_fppt, ATTR_PPT_PL3_FPPT, ASUS_WMI_DEVID_PPT_PL3_FPPT,
++			    "Set the CPU fastest package limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(ppt_apu_sppt, ATTR_PPT_APU_SPPT, ASUS_WMI_DEVID_PPT_APU_SPPT,
++			    "Set the APU package limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(ppt_platform_sppt, ATTR_PPT_PLATFORM_SPPT, ASUS_WMI_DEVID_PPT_PLAT_SPPT,
++			    "Set the platform package limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(nv_dynamic_boost, ATTR_NV_DYNAMIC_BOOST, ASUS_WMI_DEVID_NV_DYN_BOOST,
++			    "Set the Nvidia dynamic boost limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(nv_temp_target, ATTR_NV_TEMP_TARGET, ASUS_WMI_DEVID_NV_THERM_TARGET,
++			    "Set the Nvidia max thermal limit");
++ASUS_ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
++			    "Set the additional TGP on top of the base TGP");
++ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
++				  "Read the base TGP value");
  
-+	asus_wmi_show_deprecated();
+ /* If an attribute does not require any special case handling add it here */
+ static const struct asus_attr_group armoury_attr_groups[] = {
+@@ -983,6 +1041,16 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+ 	{ &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
+ 	{ &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
+ 
++	{ &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
++	{ &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_PPT_PL2_SPPT },
++	{ &ppt_pl3_fppt_attr_group, ASUS_WMI_DEVID_PPT_PL3_FPPT },
++	{ &ppt_apu_sppt_attr_group, ASUS_WMI_DEVID_PPT_APU_SPPT },
++	{ &ppt_platform_sppt_attr_group, ASUS_WMI_DEVID_PPT_PLAT_SPPT },
++	{ &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
++	{ &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
++	{ &nv_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
++	{ &nv_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
 +
- 	return sysfs_emit(buf, "%u\n", asus->nv_dynamic_boost);
- }
- static DEVICE_ATTR_RW(nv_dynamic_boost);
-@@ -1381,9 +1421,12 @@ static ssize_t nv_temp_target_show(struct device *dev,
- {
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
+ 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+ 	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
+@@ -991,8 +1059,75 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+ 	{ &screen_auto_brightness_attr_group, ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS },
+ };
  
-+	asus_wmi_show_deprecated();
++/**
++ * is_power_tunable_attr - Determines if an attribute is a power-related tunable
++ * @name: The name of the attribute to check
++ *
++ * This function checks if the given attribute name is related to power tuning.
++ *
++ * Return: true if the attribute is a power-related tunable, false otherwise
++ */
++static bool is_power_tunable_attr(const char *name)
++{
++	static const char * const power_tunable_attrs[] = {
++		ATTR_PPT_PL1_SPL,	ATTR_PPT_PL2_SPPT,
++		ATTR_PPT_PL3_FPPT,	ATTR_PPT_APU_SPPT,
++		ATTR_PPT_PLATFORM_SPPT, ATTR_NV_DYNAMIC_BOOST,
++		ATTR_NV_TEMP_TARGET,	ATTR_NV_BASE_TGP,
++		ATTR_NV_TGP
++	};
 +
- 	return sysfs_emit(buf, "%u\n", asus->nv_temp_target);
- }
- static DEVICE_ATTR_RW(nv_temp_target);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Ally MCU Powersave ********************************************************/
- 
-@@ -1424,6 +1467,7 @@ void set_ally_mcu_powersave(bool enabled)
- }
- EXPORT_SYMBOL_NS_GPL(set_ally_mcu_powersave, "ASUS_WMI");
- 
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t mcu_powersave_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -1434,6 +1478,8 @@ static ssize_t mcu_powersave_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
++	for (unsigned int i = 0; i < ARRAY_SIZE(power_tunable_attrs); i++) {
++		if (!strcmp(name, power_tunable_attrs[i]))
++			return true;
++	}
 +
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -1469,6 +1515,7 @@ static ssize_t mcu_powersave_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(mcu_powersave);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Battery ********************************************************************/
- 
-@@ -2342,6 +2389,7 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
- }
- 
- /* Panel Overdrive ************************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t panel_od_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -2352,6 +2400,8 @@ static ssize_t panel_od_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
++	return false;
++}
 +
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -2388,9 +2438,10 @@ static ssize_t panel_od_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(panel_od);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Bootup sound ***************************************************************/
--
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t boot_sound_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
- {
-@@ -2401,6 +2452,8 @@ static ssize_t boot_sound_show(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
-+	asus_wmi_show_deprecated();
++/**
++ * has_valid_limit - Checks if a power-related attribute has a valid limit value
++ * @name: The name of the attribute to check
++ * @limits: Pointer to the power_limits structure containing limit values
++ *
++ * This function checks if a power-related attribute has a valid limit value.
++ * It returns false if limits is NULL or if the corresponding limit value is zero.
++ *
++ * Return: true if the attribute has a valid limit value, false otherwise
++ */
++static bool has_valid_limit(const char *name, const struct power_limits *limits)
++{
++	u32 limit_value = 0;
 +
- 	return sysfs_emit(buf, "%d\n", result);
- }
- 
-@@ -2436,8 +2489,10 @@ static ssize_t boot_sound_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(boot_sound);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Mini-LED mode **************************************************************/
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t mini_led_mode_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
++	if (!limits)
++		return false;
++
++	if (!strcmp(name, ATTR_PPT_PL1_SPL))
++		limit_value = limits->ppt_pl1_spl_max;
++	else if (!strcmp(name, ATTR_PPT_PL2_SPPT))
++		limit_value = limits->ppt_pl2_sppt_max;
++	else if (!strcmp(name, ATTR_PPT_PL3_FPPT))
++		limit_value = limits->ppt_pl3_fppt_max;
++	else if (!strcmp(name, ATTR_PPT_APU_SPPT))
++		limit_value = limits->ppt_apu_sppt_max;
++	else if (!strcmp(name, ATTR_PPT_PLATFORM_SPPT))
++		limit_value = limits->ppt_platform_sppt_max;
++	else if (!strcmp(name, ATTR_NV_DYNAMIC_BOOST))
++		limit_value = limits->nv_dynamic_boost_max;
++	else if (!strcmp(name, ATTR_NV_TEMP_TARGET))
++		limit_value = limits->nv_temp_target_max;
++	else if (!strcmp(name, ATTR_NV_BASE_TGP) ||
++		 !strcmp(name, ATTR_NV_TGP))
++		limit_value = limits->nv_tgp_max;
++
++	return limit_value > 0;
++}
++
+ static int asus_fw_attr_add(void)
  {
-@@ -2468,6 +2523,8 @@ static ssize_t mini_led_mode_show(struct device *dev,
++	const struct power_limits *limits;
++	bool should_create;
++	const char *name;
+ 	int err, i;
+ 
+ 	asus_armoury.fw_attr_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
+@@ -1049,12 +1184,29 @@ static int asus_fw_attr_add(void)
+ 		if (!armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+ 			continue;
+ 
+-		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
+-					 armoury_attr_groups[i].attr_group);
+-		if (err) {
+-			pr_err("Failed to create sysfs-group for %s\n",
+-			       armoury_attr_groups[i].attr_group->name);
+-			goto err_remove_groups;
++		/* Always create by default, unless PPT is not present */
++		should_create = true;
++		name = armoury_attr_groups[i].attr_group->name;
++
++		/* Check if this is a power-related tunable requiring limits */
++		if (asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] &&
++		    asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]->power_limits &&
++		    is_power_tunable_attr(name)) {
++			limits = asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]->power_limits;
++			/* Check only AC: if not present then DC won't be either */
++			should_create = has_valid_limit(name, limits);
++			if (!should_create)
++				pr_debug("Missing max value for tunable %s\n", name);
++		}
++
++		if (should_create) {
++			err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
++						 armoury_attr_groups[i].attr_group);
++			if (err) {
++				pr_err("Failed to create sysfs-group for %s\n",
++				       armoury_attr_groups[i].attr_group->name);
++				goto err_remove_groups;
++			}
  		}
  	}
  
-+	asus_wmi_show_deprecated();
+@@ -1083,6 +1235,132 @@ static int asus_fw_attr_add(void)
+ 
+ /* Init / exit ****************************************************************/
+ 
++/* Set up the min/max and defaults for ROG tunables */
++static void init_rog_tunables(void)
++{
++	const struct power_limits *ac_limits, *dc_limits;
++	struct rog_tunables *ac_rog_tunables = NULL, *dc_rog_tunables = NULL;
++	const struct power_data *power_data;
++	const struct dmi_system_id *dmi_id;
 +
- 	return sysfs_emit(buf, "%d\n", value);
- }
- 
-@@ -2538,10 +2595,13 @@ static ssize_t available_mini_led_mode_show(struct device *dev,
- 		return sysfs_emit(buf, "0 1 2\n");
- 	}
- 
-+	asus_wmi_show_deprecated();
++	/* Match the system against the power_limits table */
++	dmi_id = dmi_first_match(power_limits);
++	if (!dmi_id) {
++		pr_warn("No matching power limits found for this system\n");
++		return;
++	}
 +
- 	return sysfs_emit(buf, "0\n");
- }
- 
- static DEVICE_ATTR_RO(available_mini_led_mode);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Quirks *********************************************************************/
- 
-@@ -3829,6 +3889,7 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
- 	return throttle_thermal_policy_write(asus);
- }
- 
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t throttle_thermal_policy_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
++	/* Get the power data for this system */
++	power_data = dmi_id->driver_data;
++	if (!power_data) {
++		pr_info("No power data available for this system\n");
++		return;
++	}
++
++	/* Initialize AC power tunables */
++	ac_limits = power_data->ac_data;
++	if (ac_limits) {
++		ac_rog_tunables = kzalloc(sizeof(*asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]),
++				GFP_KERNEL);
++		if (!ac_rog_tunables)
++			goto err_nomem;
++
++		asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] = ac_rog_tunables;
++		ac_rog_tunables->power_limits = ac_limits;
++
++		/* Set initial AC values */
++		ac_rog_tunables->ppt_pl1_spl =
++			ac_limits->ppt_pl1_spl_def ?
++				ac_limits->ppt_pl1_spl_def :
++				ac_limits->ppt_pl1_spl_max;
++
++		ac_rog_tunables->ppt_pl2_sppt =
++			ac_limits->ppt_pl2_sppt_def ?
++				ac_limits->ppt_pl2_sppt_def :
++				ac_limits->ppt_pl2_sppt_max;
++
++		ac_rog_tunables->ppt_pl3_fppt =
++			ac_limits->ppt_pl3_fppt_def ?
++				ac_limits->ppt_pl3_fppt_def :
++				ac_limits->ppt_pl3_fppt_max;
++
++		ac_rog_tunables->ppt_apu_sppt =
++			ac_limits->ppt_apu_sppt_def ?
++				ac_limits->ppt_apu_sppt_def :
++				ac_limits->ppt_apu_sppt_max;
++
++		ac_rog_tunables->ppt_platform_sppt =
++			ac_limits->ppt_platform_sppt_def ?
++				ac_limits->ppt_platform_sppt_def :
++				ac_limits->ppt_platform_sppt_max;
++
++		ac_rog_tunables->nv_dynamic_boost =
++			ac_limits->nv_dynamic_boost_max;
++		ac_rog_tunables->nv_temp_target =
++			ac_limits->nv_temp_target_max;
++		ac_rog_tunables->nv_tgp = ac_limits->nv_tgp_max;
++
++		pr_debug("AC power limits initialized for %s\n", dmi_id->matches[0].substr);
++	} else {
++		pr_debug("No AC PPT limits defined\n");
++	}
++
++	/* Initialize DC power tunables */
++	dc_limits = power_data->dc_data;
++	if (dc_limits) {
++		dc_rog_tunables = kzalloc(sizeof(*asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC]),
++					  GFP_KERNEL);
++		if (!dc_rog_tunables) {
++			kfree(ac_rog_tunables);
++			goto err_nomem;
++		}
++
++		asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC] = dc_rog_tunables;
++		dc_rog_tunables->power_limits = dc_limits;
++
++		/* Set initial DC values */
++		dc_rog_tunables->ppt_pl1_spl =
++			dc_limits->ppt_pl1_spl_def ?
++				dc_limits->ppt_pl1_spl_def :
++				dc_limits->ppt_pl1_spl_max;
++
++		dc_rog_tunables->ppt_pl2_sppt =
++			dc_limits->ppt_pl2_sppt_def ?
++				dc_limits->ppt_pl2_sppt_def :
++				dc_limits->ppt_pl2_sppt_max;
++
++		dc_rog_tunables->ppt_pl3_fppt =
++			dc_limits->ppt_pl3_fppt_def ?
++				dc_limits->ppt_pl3_fppt_def :
++				dc_limits->ppt_pl3_fppt_max;
++
++		dc_rog_tunables->ppt_apu_sppt =
++			dc_limits->ppt_apu_sppt_def ?
++				dc_limits->ppt_apu_sppt_def :
++				dc_limits->ppt_apu_sppt_max;
++
++		dc_rog_tunables->ppt_platform_sppt =
++			dc_limits->ppt_platform_sppt_def ?
++				dc_limits->ppt_platform_sppt_def :
++				dc_limits->ppt_platform_sppt_max;
++
++		dc_rog_tunables->nv_dynamic_boost =
++			dc_limits->nv_dynamic_boost_max;
++		dc_rog_tunables->nv_temp_target =
++			dc_limits->nv_temp_target_max;
++		dc_rog_tunables->nv_tgp = dc_limits->nv_tgp_max;
++
++		pr_debug("DC power limits initialized for %s\n", dmi_id->matches[0].substr);
++	} else {
++		pr_debug("No DC PPT limits defined\n");
++	}
++
++	return;
++
++err_nomem:
++	pr_err("Failed to allocate memory for tunables\n");
++}
++
+ static int __init asus_fw_init(void)
  {
-@@ -3872,6 +3933,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-  * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-  */
- static DEVICE_ATTR_RW(throttle_thermal_policy);
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- /* Platform profile ***********************************************************/
- static int asus_wmi_platform_profile_get(struct device *dev,
-@@ -4473,27 +4535,29 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_camera.attr,
- 	&dev_attr_cardr.attr,
- 	&dev_attr_touchpad.attr,
--	&dev_attr_charge_mode.attr,
--	&dev_attr_egpu_enable.attr,
--	&dev_attr_egpu_connected.attr,
--	&dev_attr_dgpu_disable.attr,
--	&dev_attr_gpu_mux_mode.attr,
- 	&dev_attr_lid_resume.attr,
- 	&dev_attr_als_enable.attr,
- 	&dev_attr_fan_boost_mode.attr,
--	&dev_attr_throttle_thermal_policy.attr,
--	&dev_attr_ppt_pl2_sppt.attr,
--	&dev_attr_ppt_pl1_spl.attr,
--	&dev_attr_ppt_fppt.attr,
--	&dev_attr_ppt_apu_sppt.attr,
--	&dev_attr_ppt_platform_sppt.attr,
--	&dev_attr_nv_dynamic_boost.attr,
--	&dev_attr_nv_temp_target.attr,
--	&dev_attr_mcu_powersave.attr,
--	&dev_attr_boot_sound.attr,
--	&dev_attr_panel_od.attr,
--	&dev_attr_mini_led_mode.attr,
--	&dev_attr_available_mini_led_mode.attr,
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-+		&dev_attr_charge_mode.attr,
-+		&dev_attr_egpu_enable.attr,
-+		&dev_attr_egpu_connected.attr,
-+		&dev_attr_dgpu_disable.attr,
-+		&dev_attr_gpu_mux_mode.attr,
-+		&dev_attr_ppt_pl2_sppt.attr,
-+		&dev_attr_ppt_pl1_spl.attr,
-+		&dev_attr_ppt_fppt.attr,
-+		&dev_attr_ppt_apu_sppt.attr,
-+		&dev_attr_ppt_platform_sppt.attr,
-+		&dev_attr_nv_dynamic_boost.attr,
-+		&dev_attr_nv_temp_target.attr,
-+		&dev_attr_mcu_powersave.attr,
-+		&dev_attr_boot_sound.attr,
-+		&dev_attr_panel_od.attr,
-+		&dev_attr_mini_led_mode.attr,
-+		&dev_attr_available_mini_led_mode.attr,
-+		&dev_attr_throttle_thermal_policy.attr,
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 	NULL
- };
- 
-@@ -4515,7 +4579,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_LID_RESUME;
- 	else if (attr == &dev_attr_als_enable.attr)
- 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
--	else if (attr == &dev_attr_charge_mode.attr)
-+	else if (attr == &dev_attr_fan_boost_mode.attr)
-+		ok = asus->fan_boost_mode_available;
-+
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-+	if (attr == &dev_attr_charge_mode.attr)
- 		devid = ASUS_WMI_DEVID_CHARGE_MODE;
- 	else if (attr == &dev_attr_egpu_enable.attr)
- 		ok = asus->egpu_enable_available;
-@@ -4553,6 +4621,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		ok = asus->mini_led_dev_id != 0;
- 	else if (attr == &dev_attr_available_mini_led_mode.attr)
- 		ok = asus->mini_led_dev_id != 0;
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- 	if (devid != -1) {
- 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
-@@ -4808,6 +4877,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	char *wmi_uid;
+@@ -1113,6 +1391,9 @@ static int __init asus_fw_init(void)
+ 		asus_armoury.cpu_cores_changeable = true;
  	}
  
- 	/* ensure defaults for tunables */
-+#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- 	asus->ppt_pl2_sppt = 5;
- 	asus->ppt_pl1_spl = 5;
- 	asus->ppt_apu_sppt = 5;
-@@ -4830,17 +4900,18 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX;
- 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO))
- 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
--
--	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
--		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
--	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
--		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
-+#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
- 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
- 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
- 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
-+		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
-+	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
-+		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
++	init_rog_tunables();
 +
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
++	/* Must always be last step to ensure data is available */
+ 	return asus_fw_attr_add();
+ }
+ 
+@@ -1135,6 +1416,9 @@ static void __exit asus_fw_exit(void)
+ 	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
+ 	kset_unregister(asus_armoury.fw_attr_kset);
+ 	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
++
++	kfree(asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]);
++	kfree(asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC]);
+ }
+ 
+ module_init(asus_fw_init);
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index c9f89f873251..e3d8d396331c 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -8,6 +8,7 @@
+ #ifndef _ASUS_ARMOURY_H_
+ #define _ASUS_ARMOURY_H_
+ 
++#include <linux/dmi.h>
+ #include <linux/types.h>
+ #include <linux/platform_device.h>
+ 
+@@ -188,4 +189,1241 @@
+ 		.name = _fsname, .attrs = _attrname##_attrs		\
+ 	}
+ 
++#define ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname)	\
++	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
++	static struct kobj_attribute attr_##_attrname##_current_value =		\
++		__ASUS_ATTR_RO(_attrname, current_value);			\
++	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
++	static struct kobj_attribute attr_##_attrname##_type =			\
++		__ASUS_ATTR_RO_AS(type, int_type_show);				\
++	static struct attribute *_attrname##_attrs[] = {			\
++		&attr_##_attrname##_current_value.attr,				\
++		&attr_##_attrname##_display_name.attr,				\
++		&attr_##_attrname##_type.attr, NULL				\
++	};									\
++	static const struct attribute_group _attrname##_attr_group = {		\
++		.name = _fsname, .attrs = _attrname##_attrs			\
++	}
++
++/*
++ * ROG PPT attributes need a little different in setup as they
++ * require rog_tunables members.
++ */
++
++#define __ROG_TUNABLE_SHOW(_prop, _attrname, _val)				\
++	static ssize_t _attrname##_##_prop##_show(				\
++		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
++	{									\
++		struct rog_tunables *tunables = get_current_tunables();		\
++										\
++		if (!tunables || !tunables->power_limits)			\
++			return -ENODEV;						\
++										\
++		return sysfs_emit(buf, "%d\n", tunables->power_limits->_val);	\
++	}									\
++	static struct kobj_attribute attr_##_attrname##_##_prop =		\
++		__ASUS_ATTR_RO(_attrname, _prop)
++
++#define __ROG_TUNABLE_SHOW_DEFAULT(_attrname)					\
++	static ssize_t _attrname##_default_value_show(				\
++		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
++	{									\
++		struct rog_tunables *tunables = get_current_tunables();		\
++										\
++		if (!tunables || !tunables->power_limits)			\
++			return -ENODEV;						\
++										\
++		return sysfs_emit(						\
++			buf, "%d\n",						\
++			tunables->power_limits->_attrname##_def ?		\
++				tunables->power_limits->_attrname##_def :	\
++				tunables->power_limits->_attrname##_max);	\
++	}									\
++	static struct kobj_attribute attr_##_attrname##_default_value =		\
++		__ASUS_ATTR_RO(_attrname, default_value)
++
++#define __ROG_TUNABLE_RW(_attr, _wmi)						\
++	static ssize_t _attr##_current_value_store(				\
++		struct kobject *kobj, struct kobj_attribute *attr,		\
++		const char *buf, size_t count)					\
++	{									\
++		struct rog_tunables *tunables = get_current_tunables();		\
++										\
++		if (!tunables || !tunables->power_limits)			\
++			return -ENODEV;						\
++										\
++		if (tunables->power_limits->_attr##_min ==			\
++		    tunables->power_limits->_attr##_max)			\
++			return -EINVAL;						\
++										\
++		return attr_uint_store(kobj, attr, buf, count,			\
++				       tunables->power_limits->_attr##_min,	\
++				       tunables->power_limits->_attr##_max,	\
++				       &tunables->_attr, _wmi);			\
++	}									\
++	static ssize_t _attr##_current_value_show(				\
++		struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
++	{									\
++		struct rog_tunables *tunables = get_current_tunables();		\
++										\
++		if (!tunables)							\
++			return -ENODEV;						\
++										\
++		return sysfs_emit(buf, "%u\n", tunables->_attr);		\
++	}									\
++	static struct kobj_attribute attr_##_attr##_current_value =		\
++		__ASUS_ATTR_RW(_attr, current_value)
++
++#define ASUS_ATTR_GROUP_ROG_TUNABLE(_attrname, _fsname, _wmi, _dispname)	\
++	__ROG_TUNABLE_RW(_attrname, _wmi);				\
++	__ROG_TUNABLE_SHOW_DEFAULT(_attrname);				\
++	__ROG_TUNABLE_SHOW(min_value, _attrname, _attrname##_min);	\
++	__ROG_TUNABLE_SHOW(max_value, _attrname, _attrname##_max);	\
++	__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1);	\
++	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
++	static struct kobj_attribute attr_##_attrname##_type =		\
++		__ASUS_ATTR_RO_AS(type, int_type_show);			\
++	static struct attribute *_attrname##_attrs[] = {		\
++		&attr_##_attrname##_current_value.attr,			\
++		&attr_##_attrname##_default_value.attr,			\
++		&attr_##_attrname##_min_value.attr,			\
++		&attr_##_attrname##_max_value.attr,			\
++		&attr_##_attrname##_scalar_increment.attr,		\
++		&attr_##_attrname##_display_name.attr,			\
++		&attr_##_attrname##_type.attr,				\
++		NULL							\
++	};								\
++	static const struct attribute_group _attrname##_attr_group = {	\
++		.name = _fsname, .attrs = _attrname##_attrs		\
++	}
++
++/* Default is always the maximum value unless *_def is specified */
++struct power_limits {
++	u8 ppt_pl1_spl_min;
++	u8 ppt_pl1_spl_def;
++	u8 ppt_pl1_spl_max;
++	u8 ppt_pl2_sppt_min;
++	u8 ppt_pl2_sppt_def;
++	u8 ppt_pl2_sppt_max;
++	u8 ppt_pl3_fppt_min;
++	u8 ppt_pl3_fppt_def;
++	u8 ppt_pl3_fppt_max;
++	u8 ppt_apu_sppt_min;
++	u8 ppt_apu_sppt_def;
++	u8 ppt_apu_sppt_max;
++	u8 ppt_platform_sppt_min;
++	u8 ppt_platform_sppt_def;
++	u8 ppt_platform_sppt_max;
++	/* Nvidia GPU specific, default is always max */
++	u8 nv_dynamic_boost_def; // unused. exists for macro
++	u8 nv_dynamic_boost_min;
++	u8 nv_dynamic_boost_max;
++	u8 nv_temp_target_def; // unused. exists for macro
++	u8 nv_temp_target_min;
++	u8 nv_temp_target_max;
++	u8 nv_tgp_def; // unused. exists for macro
++	u8 nv_tgp_min;
++	u8 nv_tgp_max;
++};
++
++struct power_data {
++		const struct power_limits *ac_data;
++		const struct power_limits *dc_data;
++		bool requires_fan_curve;
++};
++
++/*
++ * For each available attribute there must be a min and a max.
++ * _def is not required and will be assumed to be default == max if missing.
++ */
++static const struct dmi_system_id power_limits[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA401W"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 75,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 30,
++				.ppt_pl2_sppt_min = 31,
++				.ppt_pl2_sppt_max = 44,
++				.ppt_pl3_fppt_min = 45,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA507N"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA507R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80
++			},
++			.dc_data = NULL,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA507X"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 85,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA507Z"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 105,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 15,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 85,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 45,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 60,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA607P"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 30,
++				.ppt_pl1_spl_def = 100,
++				.ppt_pl1_spl_max = 135,
++				.ppt_pl2_sppt_min = 30,
++				.ppt_pl2_sppt_def = 115,
++				.ppt_pl2_sppt_max = 135,
++				.ppt_pl3_fppt_min = 30,
++				.ppt_pl3_fppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 115,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_def = 60,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 25,
++				.ppt_pl3_fppt_max = 80,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA608WI"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 90,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 90,
++				.ppt_pl2_sppt_max = 90,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 90,
++				.ppt_pl3_fppt_max = 90,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 115,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 65,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA617NS"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 80,
++				.ppt_platform_sppt_min = 30,
++				.ppt_platform_sppt_max = 120,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 25,
++				.ppt_apu_sppt_max = 35,
++				.ppt_platform_sppt_min = 45,
++				.ppt_platform_sppt_max = 100,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA617NT"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 80,
++				.ppt_platform_sppt_min = 30,
++				.ppt_platform_sppt_max = 115,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 45,
++				.ppt_platform_sppt_min = 30,
++				.ppt_platform_sppt_max = 50,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA617XS"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 80,
++				.ppt_platform_sppt_min = 30,
++				.ppt_platform_sppt_max = 120,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 25,
++				.ppt_apu_sppt_max = 35,
++				.ppt_platform_sppt_min = 45,
++				.ppt_platform_sppt_max = 100,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FX507VI"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 135,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 45,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 60,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FX507Z"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 15,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 45,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 60,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GA401Q"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_max = 80,
++			},
++			.dc_data = NULL,
++		},
++	},
++	{
++		.matches = {
++			// This model is full AMD. No Nvidia dGPU.
++			DMI_MATCH(DMI_BOARD_NAME, "GA402R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 80,
++				.ppt_platform_sppt_min = 30,
++				.ppt_platform_sppt_max = 115,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_apu_sppt_min = 25,
++				.ppt_apu_sppt_def = 30,
++				.ppt_apu_sppt_max = 45,
++				.ppt_platform_sppt_min = 40,
++				.ppt_platform_sppt_max = 60,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GA402X"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 35,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_def = 65,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 35,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 65,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 35,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GA503R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 35,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 65,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 25,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 60,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GA605W"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 85,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 31,
++				.ppt_pl2_sppt_max = 44,
++				.ppt_pl3_fppt_min = 45,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GU603Z"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 60,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 40,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 40,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			}
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GU604V"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 65,
++				.ppt_pl1_spl_max = 120,
++				.ppt_pl2_sppt_min = 65,
++				.ppt_pl2_sppt_max = 150,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 40,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 40,
++				.ppt_pl2_sppt_max = 60,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GU605CW"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 45,
++				.ppt_pl1_spl_max = 85,
++				.ppt_pl2_sppt_min = 56,
++				.ppt_pl2_sppt_max = 110,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 80,
++				.nv_tgp_def = 90,
++				.nv_tgp_max = 110,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 85,
++				.ppt_pl2_sppt_min = 32,
++				.ppt_pl2_sppt_max = 110,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 38,
++				.ppt_pl2_sppt_max = 53,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GV301Q"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 45,
++				.ppt_pl2_sppt_min = 65,
++				.ppt_pl2_sppt_max = 80,
++			},
++			.dc_data = NULL,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GV301R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 45,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 54,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 35,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GV601R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 35,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 100,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 80,
++				.ppt_pl3_fppt_max = 125,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 28,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 60,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 80,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GV601V"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_def = 100,
++				.ppt_pl1_spl_max = 110,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 40,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 40,
++				.ppt_pl2_sppt_max = 60,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "GX650P"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 110,
++				.ppt_pl1_spl_max = 130,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 125,
++				.ppt_pl2_sppt_max = 130,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 125,
++				.ppt_pl3_fppt_max = 135,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_def = 25,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 35,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_def = 42,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G513I"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				/* Yes this laptop is very limited */
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_max = 80,
++			},
++			.dc_data = NULL,
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G513QM"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				/* Yes this laptop is very limited */
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 100,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_max = 190,
++			},
++			.dc_data = NULL,
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G513R"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 35,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 54,
++				.ppt_pl2_sppt_max = 100,
++				.ppt_pl3_fppt_min = 54,
++				.ppt_pl3_fppt_max = 125,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 50,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 50,
++				.ppt_pl3_fppt_min = 28,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G614J"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 140,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 175,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 55,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 70,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G634J"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 140,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 175,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 55,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 70,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G713PV"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 30,
++				.ppt_pl1_spl_def = 120,
++				.ppt_pl1_spl_max = 130,
++				.ppt_pl2_sppt_min = 65,
++				.ppt_pl2_sppt_def = 125,
++				.ppt_pl2_sppt_max = 130,
++				.ppt_pl3_fppt_min = 65,
++				.ppt_pl3_fppt_def = 125,
++				.ppt_pl3_fppt_max = 130,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 75,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G733C"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 170,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 175,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 35,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G733P"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 30,
++				.ppt_pl1_spl_def = 100,
++				.ppt_pl1_spl_max = 130,
++				.ppt_pl2_sppt_min = 65,
++				.ppt_pl2_sppt_def = 125,
++				.ppt_pl2_sppt_max = 130,
++				.ppt_pl3_fppt_min = 65,
++				.ppt_pl3_fppt_def = 125,
++				.ppt_pl3_fppt_max = 130,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 65,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 75,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G814J"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 140,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 140,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 55,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 70,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G834J"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_max = 140,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 175,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 55,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 70,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "H7606W"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 20,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 85,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 31,
++				.ppt_pl2_sppt_max = 44,
++				.ppt_pl3_fppt_min = 45,
++				.ppt_pl3_fppt_max = 65,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "RC71"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_max = 30,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_max = 43,
++				.ppt_pl3_fppt_min = 15,
++				.ppt_pl3_fppt_max = 53,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_def = 15,
++				.ppt_pl1_spl_max = 25,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_def = 20,
++				.ppt_pl2_sppt_max = 30,
++				.ppt_pl3_fppt_min = 15,
++				.ppt_pl3_fppt_def = 25,
++				.ppt_pl3_fppt_max = 35,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "RC72"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_max = 30,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_max = 43,
++				.ppt_pl3_fppt_min = 15,
++				.ppt_pl3_fppt_max = 53,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_def = 17,
++				.ppt_pl1_spl_max = 25,
++				.ppt_pl2_sppt_min = 15,
++				.ppt_pl2_sppt_def = 24,
++				.ppt_pl2_sppt_max = 30,
++				.ppt_pl3_fppt_min = 15,
++				.ppt_pl3_fppt_def = 30,
++				.ppt_pl3_fppt_max = 35,
++			},
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "RC73"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 14,
++				.ppt_pl2_sppt_max = 45,
++				.ppt_pl3_fppt_min = 19,
++				.ppt_pl3_fppt_max = 55,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 7,
++				.ppt_pl1_spl_def = 17,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl2_sppt_min = 13,
++				.ppt_pl2_sppt_def = 21,
++				.ppt_pl2_sppt_max = 45,
++				.ppt_pl3_fppt_min = 19,
++				.ppt_pl3_fppt_def = 26,
++				.ppt_pl3_fppt_max = 55,
++			},
++		},
++	},
++	{}
++};
++
+ #endif /* _ASUS_ARMOURY_H_ */
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 3d236f8498d8..8fedf818563f 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -145,6 +145,9 @@
+ 
+ #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+ 
++#define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
++#define ASUS_WMI_DEVID_DGPU_SET_TGP	0x00120098
++
+ /* gpu mux switch, 0 = dGPU, 1 = Optimus */
+ #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
+ #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
 -- 
 2.51.1
 
