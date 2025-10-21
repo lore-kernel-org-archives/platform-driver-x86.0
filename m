@@ -1,40 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C632F25E7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 23:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D286625A2AE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761003177; cv=none; b=X/j8wVOH1b9TIVz472scjyq6CvMniNF/aYifSn/i648QUYznoeEyaC16BpTuonMrk41OM8gsHP/oWyLZg14u0Rs/4Mys9JOdmQgt1l1NpZu29NTX48t1XCuexYKPbFASWekk0neF+b438gnKqilnZQhAE/d0JFKiWkttkNTQx4I=
+	t=1761033670; cv=none; b=rbl/VeBaI4lps2MYk/+4fNyN8JuSxC0OSIBl+XtqR73zJMoo346ZUXRqorvBPpfEnpgiDOTd7EVL0uikwCmJ9DwcZHynvtzcMLssYiqLQ3E4pcik39pTt4rpwbQJbk6XDpxvN+Fa3yuslePmZYHUzMQR8MNSYa1Px7qrKmotKsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761003177; c=relaxed/simple;
-	bh=7wu8dPisdmsEz+CEvvX5pmbXW7IrJ0wciIquVP15XuQ=;
+	s=arc-20240116; t=1761033670; c=relaxed/simple;
+	bh=SqSNvib7VsUQlUGRYoNXMbx0lC1Lm4aw5d9UHesMUXI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tAObIZZhgO7SkPawATJdrEIJZNtinbQYo22ZtMtcIF8gWXGXpV3H7XgFraXUAjF8wr3f4cDoAAlkirI0mbz43/ZSGktdDw8MO9SfnRjp8MdWmQH+TamVt1KbzGZbo5aPHE4oDlaDsRWvJ+rGUNJpyEQ/qmGMGgPmuHLStAR9wRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Py9J/k/C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=lIbFi0ywIM/bK2Z/uuIJYUq0JUKplWtsqpb/B17u5VR/CdJP6W0TLFVReBJ6CRDsflk6cK0kTdjUWsPir3JDb2yLDc9E+hGBMp2bH5QOYMCwoM7xqLfSVyoLuylv3p26hOqFN0yc6zFM4iAfz4yQIwG2WAodpM2FlTOymLP2hnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EC0bSEU5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Py9J/k/C"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B9D17C4CEFB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Oct 2025 23:32:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EC0bSEU5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46A9FC4CEF5
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761003176;
-	bh=7wu8dPisdmsEz+CEvvX5pmbXW7IrJ0wciIquVP15XuQ=;
+	s=k20201202; t=1761033669;
+	bh=SqSNvib7VsUQlUGRYoNXMbx0lC1Lm4aw5d9UHesMUXI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Py9J/k/CTrffT+VWj/cuJ7FGucXe9YQIY63fPa+5ifKO164+N0kanKNA+wjU3b4QJ
-	 tKIviW6nUpcAp9++Z69O4ZrHuo/Bs8gBrKsJ7uzk+5QiwRuPVsD4L0C9eWdpNUkrGs
-	 HKv1PkmUTfnwSO/FQoPy1Uj0m4glXiQs2CqnZ7V90qh0CAO9KmmnqZHqprKjAIz7jo
-	 oapjwlZszyDNfGZ3FAqk3LXCnJJNzpGJE1rRtQhuMyZN7YZiGiXWxb2f8e2rdqzmPL
-	 NK6XyJrDKS4zJ0HRQp1Bsr9i/YfZIDbWfOtZVd/CsMn/YuvwnmWfpeal/hGC4dJoXV
-	 2tbFUxA5R6UBQ==
+	b=EC0bSEU5goiqWBzht6s85tqa59gz/8JlRfSQM+XpxekdR4VwNKvSvL6inMilWbCdM
+	 X+LxEuFYomJ+N+VkmJ8j0i0lIwvKJ4PEJ31OYdEDKCLu0t/pPMvisD14cefh1tVTP8
+	 2oJzZC+Rp3H09ZRO/Awa3x+Hl94xYDQUmCeD0DpXEvmVpcWXiWjY03ulRdopOFmB0W
+	 tjph9gCbUEjyf9Sq16/vK6P/GSZ0gyR8OK3MkyVBcBpaXRil5JeW9lBxwb3NCzFq5n
+	 l4DgeNY9P4OY+zYZbihIX3y60s2flnhY2bf3O5b8St0vYkE4X7j9JQVHcekf3y2QEQ
+	 MAmChyqi7Ae6Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A9D9FC433E1; Mon, 20 Oct 2025 23:32:56 +0000 (UTC)
+	id 33AEBC4160E; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjA2MzldIFtCVUddIGhwLXdtaTogT01FTiAxNi13ZjB4?=
- =?UTF-8?B?eHggKGJvYXJkIDhCQUIpIOKAkyBmYW5zIHN0dWNrIGF0IDAgUlBNLCBCb29z?=
- =?UTF-8?B?dC9XTUkgcXVlcmllcyByZWplY3RlZCAoaHBfd21pOiBxdWVyeSAweDRjIGVy?=
- =?UTF-8?B?cm9yIDB4Nik=?=
-Date: Mon, 20 Oct 2025 23:32:56 +0000
+Subject: [Bug 220646] Regression: kernel 6.16.8 fails to boot on Intel Raptor
+ Lake Z790 (ahci/xhci error -12)
+Date: Tue, 21 Oct 2025 08:01:09 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -43,16 +41,16 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: juanm4morales@gmail.com
-X-Bugzilla-Status: NEW
+X-Bugzilla-Who: vedran@miletic.net
+X-Bugzilla-Status: NEEDINFO
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc cf_kernel_version
-Message-ID: <bug-220639-215701-lVp44AkocL@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220639-215701@https.bugzilla.kernel.org/>
-References: <bug-220639-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-220646-215701-doOLhjbsxp@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220646-215701@https.bugzilla.kernel.org/>
+References: <bug-220646-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -64,15 +62,47 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220639
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220646
 
-Juan Martin Morales (juanm4morales@gmail.com) changed:
+Vedran Mileti=C4=87 (vedran@miletic.net) changed:
 
            What    |Removed                     |Added
 ----------------------------------------------------------------------------
-                 CC|                            |ilpo.jarvinen@linux.intel.c
-                   |                            |om
-     Kernel Version|6.16.10-arch1-1             |6.17.3-arch2-1
+                 CC|                            |vedran@miletic.net
+
+--- Comment #2 from Vedran Mileti=C4=87 (vedran@miletic.net) ---
+(In reply to Jean-Nicolas from comment #0)
+> Hardware:
+> - MSI MAG Z790 TOMAHAWK WIFI (MS-7D91), Intel i9-14900KF
+> - Chipset: Intel Raptor Lake (Z790)
+> - Storage: Samsung SSD 860 EVO (SATA), Corsair MP600 NVMe
+> - GPU: NVIDIA RTX 4070 Ti
+>=20
+> Issue:
+> - Booting 6.16.8+kali-amd64 fails with:
+>     ahci: failed to start port (errno=3D-12)
+>     xhci_hcd 0000:00:14.0: init failed, error -12
+> - System drops into initramfs, USB keyboard not functional at that point.
+> - GRUB works (disk visible to firmware).
+> - Booting older kernel 6.12.38+kali-amd64 works fine on same hardware.
+>=20
+> Additional:
+> - Also see:
+>     platform INT3515:01: deferred probe pending: Error creating i2c-clien=
+t,
+> idx 0
+> - This message appears on both kernels, but is not fatal on 6.12.
+>=20
+> Steps to reproduce:
+> 1. Boot system with kernel 6.16.8.
+> 2. Observe ahci/xhci errors and initramfs hang.
+> 3. Reboot and select 6.12.38 =E2=86=92 boots normally.
+>=20
+> Conclusion:
+> Regression between 6.12 and 6.16 affecting Intel Raptor Lake SATA AHCI and
+> USB XHCI controllers.
+
+Is your BIOS set to Intel RST or AHCI mode?
 
 --=20
 You may reply to this email to add a comment.
