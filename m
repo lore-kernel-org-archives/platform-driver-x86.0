@@ -1,111 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D286625A2AE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0187A26FA6F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 23:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761033670; cv=none; b=rbl/VeBaI4lps2MYk/+4fNyN8JuSxC0OSIBl+XtqR73zJMoo346ZUXRqorvBPpfEnpgiDOTd7EVL0uikwCmJ9DwcZHynvtzcMLssYiqLQ3E4pcik39pTt4rpwbQJbk6XDpxvN+Fa3yuslePmZYHUzMQR8MNSYa1Px7qrKmotKsQ=
+	t=1761088580; cv=none; b=VzdRTpnRvtvNUzgtqlVS0iXL5Z+4OAMPHvC7s2N4SaLdHrAxeNS39TZYDHAie0UcBLtOkoqSFJgvRGSIM9QKsz1bQLZn8Zbh/ONym2Dn6/TA/CVTtvjLP7msoeLoA97YQwn2tlOLj3TNovufmoMzlIRCEO/HkimW4gFHKmx+y00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761033670; c=relaxed/simple;
-	bh=SqSNvib7VsUQlUGRYoNXMbx0lC1Lm4aw5d9UHesMUXI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lIbFi0ywIM/bK2Z/uuIJYUq0JUKplWtsqpb/B17u5VR/CdJP6W0TLFVReBJ6CRDsflk6cK0kTdjUWsPir3JDb2yLDc9E+hGBMp2bH5QOYMCwoM7xqLfSVyoLuylv3p26hOqFN0yc6zFM4iAfz4yQIwG2WAodpM2FlTOymLP2hnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EC0bSEU5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761088580; c=relaxed/simple;
+	bh=MkrCXOKD8Uo8t+/oSxngnI6HGdowLk7sk5mgxdJXK2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type; b=JIw/YLvPPm4i1bPuztYKHFtoxxPbFK3sJNDvDln2EMfFnj1bIWRXUGRYkvmUKBawQIBcDfF5T6jRxekYQxGrpojwGLHsVYXbtO0lWfTP4j4r0MJYn8F+JlgL0WRybBAfr8M1PtpP8eYySRBxvWhxVsiApdcXhJCWnyiRmuQP+8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft4MRMs1; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EC0bSEU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46A9FC4CEF5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761033669;
-	bh=SqSNvib7VsUQlUGRYoNXMbx0lC1Lm4aw5d9UHesMUXI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=EC0bSEU5goiqWBzht6s85tqa59gz/8JlRfSQM+XpxekdR4VwNKvSvL6inMilWbCdM
-	 X+LxEuFYomJ+N+VkmJ8j0i0lIwvKJ4PEJ31OYdEDKCLu0t/pPMvisD14cefh1tVTP8
-	 2oJzZC+Rp3H09ZRO/Awa3x+Hl94xYDQUmCeD0DpXEvmVpcWXiWjY03ulRdopOFmB0W
-	 tjph9gCbUEjyf9Sq16/vK6P/GSZ0gyR8OK3MkyVBcBpaXRil5JeW9lBxwb3NCzFq5n
-	 l4DgeNY9P4OY+zYZbihIX3y60s2flnhY2bf3O5b8St0vYkE4X7j9JQVHcekf3y2QEQ
-	 MAmChyqi7Ae6Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 33AEBC4160E; Tue, 21 Oct 2025 08:01:09 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220646] Regression: kernel 6.16.8 fails to boot on Intel Raptor
- Lake Z790 (ahci/xhci error -12)
-Date: Tue, 21 Oct 2025 08:01:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: vedran@miletic.net
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-220646-215701-doOLhjbsxp@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220646-215701@https.bugzilla.kernel.org/>
-References: <bug-220646-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft4MRMs1"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-36a6a39752bso62018791fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 16:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761088577; x=1761693377; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
+        b=Ft4MRMs1CRt/VtZB7365S+5OjFQ3X19yt34APhWDzMNH0J+8X8dGyOJrZCXu15+h5y
+         wcaCWKC8CrSSC2MSDmLpn1GBZSskH6QUCsjNeuLA76d3jxSXj/nRYrD08XKERpeh69tt
+         2A+fheMaFzkS1BqQDBGpSXi2U8yRSzh0dioUm6N1mpPj6oMpC6U8ltBMMsFA1Jx2PUYU
+         qoo1B7vEs/T/13Whpkgxi04mDs0C75Mu+qczMN5zZyeospktm5lCGxjyBeI67mKS2hQo
+         3hKgGPv6pAX+bJht5qptzFz4DSqz3UnpP2WTsseirQEiSn/jVL7krnWWZ07XYtD5KmhS
+         cfOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761088577; x=1761693377;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
+        b=erIBXOsUCNfp7giDXzC8zVpoyjbMwd9oa1EhactpJTFRIvqR3IBJcajbF9qsVypcwI
+         qQL/NqNAeNeN94cVnBrXjs8ruCpbHSqgIlEXZOwV2shTkI5RNxTnDFbVBpJQUeYXmHY6
+         5kIgjD+rEy/LLRqCfmBW6CramqT4JyMeSipDwvj7IfUDOYPBCIlMaGPCwvoPwThdyQcz
+         JKdQYOkJj4zzcLwqJeiFkqqZ/T5u+xnzTuqGcrfm4sF37BB5fBQI0M+rGz3AYMnkEFAB
+         wuuxZ0p8cMQzZvlzW8XUAV3cnXZ/hER4MtTPJWxB9pvyiHo2tS4HA0rhC5Pi7BUcY9OW
+         DVcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzY53zpct40FzJGZyWzsgIyk6ZH4dUZOFVAvXWdwLFwWwKIN7JFyIGq18IJgPvxmXhvdEyqP700jSDhQUxRStSi/n9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg9HCpONhX5iC4boODZO5l94ALb3+DCN9FVF881G9djegePMcy
+	5g4okopWxPreY92f690+wMWk0jyqkmdk4hPge0rn2vBNEQZ71kC6+uX3
+X-Gm-Gg: ASbGncuYc64ONDyy/3gHovTvYU1wH/kXXiNvY0LJ4axaRF0+8wWkR7suSWlzI+53ccn
+	fS/HSmhRwLFNkAo3rYCAMFTWCQEMQD21eDdjYARYkbcFNgMSfO03EMGK9x8IC8y7YR6F/H0WE/h
+	kL50Bn2eiR8o4aoKl/pCpxgKJBvDAPjQ85koan35oiHhZBDmrC6F85b90nepTdPRCdwAbH2fFLm
+	TNmSLT8JvTceaSLEcWRio5X2Ouefht4NAM2UsxtHfBFZMX7EINcOwd2FI4NfplfYIPkGu4cjhiH
+	pWOOnLbBElP5EBU9CSj5b4eUQ8zMW/KNEbZon7PSBMYxNMWX8xRR20F79z4Q5TYJUmjV+Dc3OEb
+	TJ8/VR2uqiplH1T2S4HszhfW4RYX3fEhUWQN0d1aD1eZddBYDuM9QaJmC6+ZUS4mNggqgbzPmWo
+	Rj3cMC+H9sW/Hv6PqrPKevBW9bYDo=
+X-Google-Smtp-Source: AGHT+IFXQQCdVjndGUlAQt55SyUCqt01O1JPB+Zj0At2Wm92ggmQB/7qIpSekj8luvKqPDpYm3P0Fw==
+X-Received: by 2002:a2e:a813:0:b0:372:8f0d:b0bc with SMTP id 38308e7fff4ca-37797833eabmr54004851fa.9.1761088576811;
+        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
+Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-377a9664a97sm32800741fa.50.2025.10.21.16.16.14
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
+Date: Wed, 22 Oct 2025 01:16:10 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: yazen.ghannam@amd.com
+Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
+ linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux@roeck-us.net, mario.limonciello@amd.com,
+ naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
+ suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
+Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
+ count
+Message-ID: <20251022011610.60d0ba6e.michal.pecio@gmail.com>
+In-Reply-To: <20250107222847.3300430-7-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220646
+> Currently, the total AMD node count is determined by searching and
+> counting CPU/node devices using PCI IDs.
+> 
+> However, AMD node information is already available through topology
+> CPUID/MSRs. The recent topology rework has made this info easier to
+> access.
+> 
+> Replace the node counting code with a simple product of topology info.
+> 
+> Every node/northbridge is expected to have a 'misc' device. Clear
+> everything out if a 'misc' device isn't found on a node.
 
-Vedran Mileti=C4=87 (vedran@miletic.net) changed:
+Hi,
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |vedran@miletic.net
+I have a weird/buggy AM3 machine (Asus M4A88TD-M EVO, Phenom 965) where
+the kernel believes there are two packages and this assumption fails.
 
---- Comment #2 from Vedran Mileti=C4=87 (vedran@miletic.net) ---
-(In reply to Jean-Nicolas from comment #0)
-> Hardware:
-> - MSI MAG Z790 TOMAHAWK WIFI (MS-7D91), Intel i9-14900KF
-> - Chipset: Intel Raptor Lake (Z790)
-> - Storage: Samsung SSD 860 EVO (SATA), Corsair MP600 NVMe
-> - GPU: NVIDIA RTX 4070 Ti
->=20
-> Issue:
-> - Booting 6.16.8+kali-amd64 fails with:
->     ahci: failed to start port (errno=3D-12)
->     xhci_hcd 0000:00:14.0: init failed, error -12
-> - System drops into initramfs, USB keyboard not functional at that point.
-> - GRUB works (disk visible to firmware).
-> - Booting older kernel 6.12.38+kali-amd64 works fine on same hardware.
->=20
-> Additional:
-> - Also see:
->     platform INT3515:01: deferred probe pending: Error creating i2c-clien=
-t,
-> idx 0
-> - This message appears on both kernels, but is not fatal on 6.12.
->=20
-> Steps to reproduce:
-> 1. Boot system with kernel 6.16.8.
-> 2. Observe ahci/xhci errors and initramfs hang.
-> 3. Reboot and select 6.12.38 =E2=86=92 boots normally.
->=20
-> Conclusion:
-> Regression between 6.12 and 6.16 affecting Intel Raptor Lake SATA AHCI and
-> USB XHCI controllers.
+[    0.072051] CPU topo: Max. logical packages:   2
+[    0.072052] CPU topo: Max. logical dies:       2
+[    0.072052] CPU topo: Max. dies per package:   1
+[    0.072057] CPU topo: Max. threads per core:   1
+[    0.072058] CPU topo: Num. cores per package:     4
+[    0.072059] CPU topo: Num. threads per package:   4
 
-Is your BIOS set to Intel RST or AHCI mode?
+It's currently on v6.12 series and working OK, but I remember trying
+v6.15 at one point and finding that EDAC and GART IOMMU were broken
+because the NB driver failed to initialize. This fixed it:
 
---=20
-You may reply to this email to add a comment.
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -496,8 +496,8 @@ void __init topology_init_possible_cpus(void)
+        total_cpus = allowed;
+        set_nr_cpu_ids(allowed);
+ 
+-       cnta = domain_weight(TOPO_PKG_DOMAIN);
+-       cntb = domain_weight(TOPO_DIE_DOMAIN);
++       cnta = 1;
++       cntb = 1;
+        __max_logical_packages = cnta;
+        __max_dies_per_package = 1U << (get_count_order(cntb) - get_count_order(cnta));
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+It was a few weeks ago and the machine is currently back on v6.12,
+but I'm almost sure I tracked it down to this exact code:
+
+> +	amd_northbridges.num = amd_num_nodes();
+> [...]
+> +		/*
+> +		 * Each Northbridge must have a 'misc' device.
+> +		 * If not, then uninitialize everything.
+> +		 */
+> +		if (!node_to_amd_nb(i)->misc) {
+> +			amd_northbridges.num = 0;
+> +			kfree(nb);
+> +			return -ENODEV;
+> +		}
+
+Thanks,
+Michal
