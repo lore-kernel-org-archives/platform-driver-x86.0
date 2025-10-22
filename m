@@ -1,153 +1,263 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8398F34DB6F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 18:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47056348870;
+	Wed, 22 Oct 2025 18:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761158432; cv=none; b=EEdxD7FCnkpbrESnrufcUngRgl084GIJBCTbuWG1GPIsg0hPJh5bBOOOdaYaidb6okdQ3CiFM1VSauyNzXdIsXATLlZxpzj68/Qvi8otZbvp+7QjsRr2TgXG1qdpFD9iWZ/uqL8RMnfteagnMLPM3OG6yFs3St3vAjJi+X8dw0c=
+	t=1761158625; cv=none; b=pXRqx6jRiF2sTLABj+gpz+unHxxkTd4zwkC8qer1JReX3qPqqLfZZpscnNGOMkVSAE9GndUXowRR1Qz8hF5meuSUe38zkrt8Y3UmjlBx1588E0BC5rLzmPgctawj1EuPHLBNH+HWGRu6CwuQ8OfDQF7wgVxcrG+0kS1MbAV60As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761158432; c=relaxed/simple;
-	bh=xhOJrQU+0i4XkQm9Y/1PUfrkUyl17OmwI5a5oWKZvzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G7dbqUn9lsmWVPjKGZcVsB/UG+J8EaagUSfpJkj0oQ4Q+/zPz1kna0+ipI0q8ZDtEDAxIvlMC3lZp0WbM1x8nKNyy9Aa25QpVNJccFm6C5iIUR72QNT7INUkARmUBWQgmFv6D2IhEjdh9CVHK3l0nAZVP4L42cLG5qT63BXceUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXKfTVJ6; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761158625; c=relaxed/simple;
+	bh=SnpoFE5xVRVea+Sw7bk4vBkAKnlGJ1/m3pcGoKD3y/s=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=OUbKdKzysSxBZAo+cKx22TKP98eHVpFzD6mTruf+VYk0pjD2+S89/qJJek+NzNxZL4hr6Svpd61e2eqYkRQqDKQ9bk/V6IRkbHKzvI94qnFNrEEvPdx6WvP+qX3jXPKroPsXI03NpgKEEdI9fy1NBY78AtBnCEXqqxHQJHnpKIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=L5gDZGF7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zEkprsMX; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXKfTVJ6"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-292fd52d527so18124455ad.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 11:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761158430; x=1761763230; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TpGfJbgMg4lko9LHO0NpToLK8f5wZg8c9uHEuwrOot0=;
-        b=DXKfTVJ6zQBy/5pUeMQRSA0lFnDjJrzOlFtbC4RcaqqKZ2HKAxZO3fegT58jzcTzZx
-         qxkkO4r6rTM0VtKCVGZslGYMl/aJdYqIclyRr+UFUc/b+6kM78zIDY+t9embF+eIHUXk
-         +wlhv5KAbMzovyTiByVsqja09OCerNBQG+eFRpugzei5tFNw+VvmEPNAlb9Fdr45f+6X
-         Dxs0SsCJBPzU3XYTDKRT9n0LdSOCP8y2W7+WVv5cetzR1Uh0xs6MuePrAWSZdX6LoSdp
-         tWKceeUS0BU0nnChtRea1T6RkVNAd6JHpO18gNKgrD226ZE/4rMDK291keKvAAkX5lui
-         Y35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761158430; x=1761763230;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TpGfJbgMg4lko9LHO0NpToLK8f5wZg8c9uHEuwrOot0=;
-        b=QIltGB4kFsC7GUHdbHFpHeaMqwN0ZIF2fgJSfWx0oF+1aRkviZ28tiNHcRPDm/rcuI
-         78roEuE0hhVww1bmfJZEbzJbVB8v+kO/FzGkCgDKS1+GLb73zxyrVRHONaKj9KqvbjzJ
-         D6cGoiDMS9rD9Gy0zJQKp9uayfTwCybGEUhQbIP/+2pC8x54rcYEkAFMEM9HNJONe+fr
-         kHPD95bCL0jdulJ0koLu2PXMAsEFiM4MLLVWFVhWgc3aE3aKRsl1QUIzKMwcxqEvs59Z
-         7WIxn0iSB3gwNCr6gZk86SSreodIbyN+NfCmDSO34Q2M8fEI7vDRZS/Wlehk0476qwv8
-         L8eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyfRqT1dPRybMxtTwDPNMAD3sVhAG2fqI8rQ8D1kbVR5yHqYJdRiL4pZPLfDYX6tsOg2mzlrT238yrsBDS+FGmqE6y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwNtdjHpyD0tl+bGL/GzJuwndppelT3jaMXru1EbfzL2yJswpu
-	bPRnqp7AHDPYilp1M349KlZ+UOTj+iiJLlVkzN9HmE4nh1CpKAz/6AiA
-X-Gm-Gg: ASbGnctTDvLINUxGjmt4SHF7WxuSUDGu5YlfjWoaX5mKYdTdC9lx8X7EzhflV26TvI/
-	oaPl7lNOKYwCoVn4E7v6YzR+Km1LZcvfa47rkeKtioJDpjftaiHCFDKaOANKI8ke1mKFziE3IB+
-	vxgUZq6tyfpG9HRHJXWpn5KBYifiUUYkyJbbaDqqueCcoSK1cHGsRIY30F83N/EVqme0wltlTn6
-	59S7zrmrFx75dcx71IqYoIQDCPyIKDYfTSFmuDrmzAJqnFSYwi1diEGA+2pZqrfcbOqI/aX6Ejt
-	iatZW5dF5Ndwhu+D0IDWF7xwlws90zH67mMa7Uc9Dlg2HGqSm1j0jGTy5j/myYa+FQj4JBzjHXq
-	WAMdU14FzZXzig09k/5eOWgM0bWiwrx1tFdVKnM9Hl8PrfqiNCAi5YD6ULCDLCKCnJzbUOSDhOb
-	9TCtRchLMa3Os19E+MikDTjzpIfcRhX5MsDEUf0EM=
-X-Google-Smtp-Source: AGHT+IFAG6+7VmJaJSQdqYZKmA+6iNmKnqsMRAuBCE8dSkzwMSEsAKIBXG6J3+FDac/HnAvFImXAOg==
-X-Received: by 2002:a17:902:e88e:b0:250:1c22:e78 with SMTP id d9443c01a7336-290c9c89c9amr293067705ad.1.1761158429640;
-        Wed, 22 Oct 2025 11:40:29 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:53a9:459c:bdc:6273])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29246ebce3asm145271355ad.17.2025.10.22.11.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 11:40:29 -0700 (PDT)
-Date: Wed, 22 Oct 2025 11:40:26 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/2] Input: Add keycodes for electronic privacy screen
- on/off an use these in dell-wmi
-Message-ID: <jnlyr7m3q7etnipczqp22ix2ijovvoqnxnopjyrey7mtbryu3c@x7snlzka3euz>
-References: <20251020152331.52870-1-hansg@kernel.org>
- <wcrbaqheqhzpjcg3au2c5xshwwed5bjyvl5u5pske6ru7lggjs@yjpnfdbkogba>
- <dfda82fc-1c35-4986-929d-d27ba877aab6@kernel.org>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="L5gDZGF7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zEkprsMX"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4AEA21400105;
+	Wed, 22 Oct 2025 14:43:41 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Wed, 22 Oct 2025 14:43:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1761158621;
+	 x=1761245021; bh=a5gBAyzs5ZMXhns/nsTEBnOvmf2BeF0u5fAf5dTyws8=; b=
+	L5gDZGF7jRuiCRvNw9fBGwJfR4apNfCgzzuyqi2vLUWcXfc82lUtGuwFnYYcDoqc
+	hGl6/PEIR94Ah6sJU6udAS8aF0fp3HzxbBb1pu2fwh618DcmFaBkG7Cz6E+sMvFP
+	qD06SU4vvtXRhvRYGiVl9kvuMZ9j0cP4g0l3U4cPFHd8D0iDmVippRTc66Vba1lR
+	nYSt33TH3gShUwvineJL6BgiOTmPFYcZ7aKmAjg+KqIIK1im4Ln3D/lacEl0YN4j
+	0k18VgON1UM59wnB2Zt8TGXD3QzkwkqLoCIdUQQL/bHpxu/aSCff8fSKBJN8YThT
+	8Kyz1uV3dAQy5Y0bYLh/dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1761158621; x=
+	1761245021; bh=a5gBAyzs5ZMXhns/nsTEBnOvmf2BeF0u5fAf5dTyws8=; b=z
+	EkprsMX0KK7YLaXFGGlFpzOvnCcoCeRQfTonrcX7936BQpnuklenjrmdzELw/7sT
+	c2qhZYQ0uXrzcKRpNC267OWvPu/RR3o4j2xu7FbI+lExRdtOetCNi3IEGxuuBtlV
+	c5aUI/jc/pZfqFCoTFFTIEyVH+Q0+Ygao3RBvqc1AkqPYJcPWDGtmSjROKB1m/sy
+	Xc+bbDfQ7wgNurnTAVM0utW+lpHyC0Qq0y2f5K439Jv0R1la4BmwZCj/ies9ILlD
+	9vGW7ZMnPvR2StHpr47LOWXwLIrqt+hsQ2VIxNLpjB6Z63+lbN8HeM1SzTD0cTV8
+	umosIC6uMmm7FK46+Tj6g==
+X-ME-Sender: <xms:3CX5aK-8YwXN0pguwQvWJ2JZseLf58kKq6_5ZnPnK0A2oiF36Kapiw>
+    <xme:3CX5aFhk33UjBVonRl6O-JIHOiIf7CX6sDezTo7PZMJsYtWfHQ6qqxnmMm9RvzC_Y
+    Yv4AbH9o8nm91woBkaA1fT1DTlKcLywROjZ44b2c6drYJg42dO9mQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddugeegfeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
+    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
+    sggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
+    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhkvghprghn
+    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdr
+    tghomhdprhgtphhtthhopehisehrohhnghdrmhhovgdprhgtphhtthhopehlihhnuhigqd
+    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhf
+    ohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:3CX5aCh-9PIS9rM8vvCVcky8Ugn6P7i9mATUtrWcJQX97Uk_o51EWg>
+    <xmx:3CX5aCGiuqYxOFaOtlhXJaDyJVY_kvZxPAJNlu-Nd3V753JXRhuR-w>
+    <xmx:3CX5aARsGVOuLp29HxZtdkfCSn6CQmOm5pm7Vj24XyrBogvWx61D3Q>
+    <xmx:3CX5aHyzd7nHP28BvF7YJRvLZhepMUNQLrVyOCtsjs2gUr76QWZ07w>
+    <xmx:3SX5aMPDvQfaCLvYRdREBMYKPbxFihdU6toRgmTp8rNUVJGff8ZpaNvq>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D09042CE0067; Wed, 22 Oct 2025 14:43:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfda82fc-1c35-4986-929d-d27ba877aab6@kernel.org>
+X-ThreadId: ArVEV3phbwOF
+Date: Wed, 22 Oct 2025 20:43:20 +0200
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Ike Panhc" <ikepanhc@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <f0454d78-0fe9-431d-a0c9-6f7db7809039@app.fastmail.com>
+In-Reply-To: <20251020192443.33088-3-i@rong.moe>
+References: <20251020192443.33088-1-i@rong.moe>
+ <20251020192443.33088-3-i@rong.moe>
+Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Add charge_types:Fast (Rapid
+ Charge)
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 22, 2025 at 08:24:46PM +0200, Hans de Goede wrote:
-> Hi Dmitry,
+Hi Rong
+
+On Mon, Oct 20, 2025, at 9:24 PM, Rong Zhang wrote:
+> The GBMD/SBMC interface supports Rapid Charge mode (charge_types: Fast)
+> in addition to Conservation Mode (charge_types: Long_Life).
+>
+> Expose these two modes while carefully maintaining their mutually
+> exclusive state, which aligns with the behavior of manufacturer
+> utilities on Windows.
+>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 61 ++++++++++++++++++--
+>  1 file changed, 56 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c 
+> b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 9f956f51ec8db..d2bfaa532020a 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -62,13 +62,26 @@ enum {
+>  	CFG_OSD_CAM_BIT      = 31,
+>  };
 > 
-> On 22-Oct-25 7:54 PM, Dmitry Torokhov wrote:
-> > Hi Hans,
-> > 
-> > On Mon, Oct 20, 2025 at 05:23:29PM +0200, Hans de Goede wrote:
-> >> Hi All,
-> >>
-> >> Here is a patch series for adding support for the electronic privacy screen
-> >> on/off events send on e.g. Dell Latitude 7300 models.
-> >>
-> >> On these laptops the firmware does not allow querying the presence nor
-> >> the status of the eprivacy screen at boot. This makes it impossible to
-> >> implement the drm connector eprivacy properties API (1) since drm objects
-> >> do not allow adding new properties after creation and the presence of
-> >> the eprivacy cannot be detected at boot.
-> >>
-> >> So instead this series adds 2 evdev keycodes for eprivacy screen on + off
-> >> and modifies the dell-wmi driver to use these, so that we can still
-> >> propagate these events to userspace for e.g. a DE to show an OSD.
-> >>
-> >> Dmitry, can we get your ack for the addition of the 2 new keycodes?
-> >> I think it will be easiest if Ilpo merges the entire series through
-> >> the pdx86 tree with your ack for the keycodes.
-> > 
-> > Yes, that should be fine, although I wonder if this is best modeled as a
-> > pair of keys or a single switch? I know we have touchpad on/off but I
-> > wonder if it was the best option... Probably more convenient at some
-> > point if it was done through the atkbd.
+> +/*
+> + * There are two charge modes supported by the GBMD/SBMC interface:
+> + * - "Rapid Charge": increase power to speed up charging
+> + * - "Conservation Mode": stop charging at 60-80% (depends on model)
+> + *
+> + * The interface doesn't prohibit enabling both modes at the same time.
+> + * However, doing so is essentially meaningless, and the manufacturer utilities
+> + * on Windows always make them mutually exclusive.
+> + */
+> +
+>  enum {
+> +	GBMD_RAPID_CHARGE_STATE_BIT = 2,
+>  	GBMD_CONSERVATION_STATE_BIT = 5,
+>  };
 > 
-> EV_SW has the same problem as the drm property API. The mere presence
-> of advertising a new SW_PRIVACY_SCREEN capability on an /dev/input/event#
-> node would convey to userspace that there is an eprivacy-screen and we
-> also would need to know the initial state (on/off) for using an EV_SW
-> for this and we know neither presence nor status before hand (1).
-
-How is this different form presence of KEY_PRIVACY_SCREEN_ON/OFF? They
-also imply that there is a privacy screen.
-
-If we really do not know if there is functionality present or not maybe
-you can register a 2nd input device for the privacy switch upon
-receiving the first event for it?
-
+>  enum {
+>  	SBMC_CONSERVATION_ON  = 3,
+>  	SBMC_CONSERVATION_OFF = 5,
+> +	SBMC_RAPID_CHARGE_ON  = 7,
+> +	SBMC_RAPID_CHARGE_OFF = 8,
+>  };
 > 
-> The real issue is that the firmware does not tell us if there is
-> an eprivacy screen. As mentioned the first time we find out is when
-> the eprivacy screen gets toggled on or off.
+>  enum {
+> @@ -632,6 +645,10 @@ static ssize_t conservation_mode_show(struct device *dev,
+>  			return err;
+>  	}
 > 
-> We are having similar issues with SW_TABLET_MODE which userspace
-> uses to e.g. show / not show an on screen keyboard when a text
-> entry field is focussed. So the mere presence of SW_TABLET_MODE
-> can influence userspace without ever sending any events and we
-> have all kind of special handling in various foo-laptop and
-> intel-vbtn, etc. drivers for this, which I would like to avoid
-> here.
-
-Probably have a similar solution: delay registration of corresponding
-input device until you know the existence/state?
-
+> +	/*
+> +	 * For backward compatibility, ignore Rapid Charge while reporting the
+> +	 * state of Conservation Mode.
+> +	 */
+>  	return sysfs_emit(buf, "%d\n", 
+> !!test_bit(GBMD_CONSERVATION_STATE_BIT, &result));
+>  }
 > 
-> So having ON / OFF EV_KEY events which we only generate when
-> there is an actual eprivacy on/off event are by far the most KISS
-> and fool proof solution.
+> @@ -651,6 +668,16 @@ static ssize_t conservation_mode_store(struct device *dev,
+> 
+>  	guard(mutex)(&priv->gbmd_sbmc_mutex);
+> 
+> +	/*
+> +	 * Prevent mutually exclusive modes from being set at the same time,
+> +	 * but do not disable Rapid Charge while disabling Conservation Mode.
+> +	 */
+> +	if (state) {
+> +		err = exec_sbmc(priv->adev->handle, SBMC_RAPID_CHARGE_OFF);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+>  	err = exec_sbmc(priv->adev->handle, state ? SBMC_CONSERVATION_ON : 
+> SBMC_CONSERVATION_OFF);
+>  	if (err)
+>  		return err;
+> @@ -2015,14 +2042,21 @@ static int ideapad_psy_ext_set_prop(struct 
+> power_supply *psy,
+>  				    const union power_supply_propval *val)
+>  {
+>  	struct ideapad_private *priv = ext_data;
+> -	unsigned long op;
+> +	unsigned long op1, op2;
+> +	int err;
+> 
+>  	switch (val->intval) {
+> +	case POWER_SUPPLY_CHARGE_TYPE_FAST:
+> +		op1 = SBMC_CONSERVATION_OFF;
+> +		op2 = SBMC_RAPID_CHARGE_ON;
+> +		break;
+>  	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
+> -		op = SBMC_CONSERVATION_ON;
+> +		op1 = SBMC_RAPID_CHARGE_OFF;
+> +		op2 = SBMC_CONSERVATION_ON;
+>  		break;
+>  	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
+> -		op = SBMC_CONSERVATION_OFF;
+> +		op1 = SBMC_RAPID_CHARGE_OFF;
+> +		op2 = SBMC_CONSERVATION_OFF;
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> @@ -2030,7 +2064,11 @@ static int ideapad_psy_ext_set_prop(struct 
+> power_supply *psy,
+> 
+>  	guard(mutex)(&priv->gbmd_sbmc_mutex);
+> 
+> -	return exec_sbmc(priv->adev->handle, op);
+> +	err = exec_sbmc(priv->adev->handle, op1);
+> +	if (err)
+> +		return err;
+> +
+> +	return exec_sbmc(priv->adev->handle, op2);
+>  }
+> 
+>  static int ideapad_psy_ext_get_prop(struct power_supply *psy,
+> @@ -2042,6 +2080,7 @@ static int ideapad_psy_ext_get_prop(struct 
+> power_supply *psy,
+>  	struct ideapad_private *priv = ext_data;
+>  	unsigned long result;
+>  	int err;
+> +	bool is_rapid_charge, is_conservation;
+> 
+>  	scoped_guard(mutex, &priv->gbmd_sbmc_mutex) {
+>  		err = eval_gbmd(priv->adev->handle, &result);
+> @@ -2049,7 +2088,18 @@ static int ideapad_psy_ext_get_prop(struct 
+> power_supply *psy,
+>  			return err;
+>  	}
+> 
+> -	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
+> +	is_rapid_charge = test_bit(GBMD_RAPID_CHARGE_STATE_BIT, &result);
+> +	is_conservation = test_bit(GBMD_CONSERVATION_STATE_BIT, &result);
+> +
+> +	if (unlikely(is_rapid_charge && is_conservation)) {
+> +		dev_err(&priv->platform_device->dev,
+> +			"unexpected charge_types: both [Fast] and [Long_Life] are 
+> enabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (is_rapid_charge)
+> +		val->intval = POWER_SUPPLY_CHARGE_TYPE_FAST;
+> +	else if (is_conservation)
+>  		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
+>  	else
+>  		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+> @@ -2074,6 +2124,7 @@ static const struct power_supply_ext 
+> ideapad_battery_ext = {
+>  	.properties		= ideapad_power_supply_props,
+>  	.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),
+>  	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +				   BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+>  				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
+>  	.get_property		= ideapad_psy_ext_get_prop,
+>  	.set_property		= ideapad_psy_ext_set_prop,
+> -- 
+> 2.51.0
 
-This assumes you assign special meaning to it (i.e. pretend that it is
-not really there until you see events).
+I can't comment on the functionality as I don't have hooks into the Ideapad team to confirm - but the implementation looks good to me.
 
-Thanks.
-
--- 
-Dmitry
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
