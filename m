@@ -1,130 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF00619D074;
-	Wed, 22 Oct 2025 11:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7276B347BA9;
+	Wed, 22 Oct 2025 13:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761131112; cv=none; b=hDcIyfa8h0ClprzyVYKv/kHrwTDWKmlX57qzOCVV8igeOo8A2noTt8a45wPJHLXjQFfpKQ2cXPxMOMcc7p5e3NsBqkt2yzQ4kX2Jx+xvTlAgPoT0Iotv8GTz3PnhzoN0Ux3S4INWg4aWolO17I8ELoKkdZigQ/PGogBfUG8SRsk=
+	t=1761140318; cv=none; b=abxtlD46X/nsVBy83jjzZZFBO0olghhRQLxp4vjVrQc//2+m3n1PoBsxk7KwHNkzRb0awTIigNGh1pssirdO1zWb9D8sKrFRg3IYLucBQu5n0HkBYrwK1CuDnoKfBfQ8D8e9bTEp96cSW/UDerkZ3oT4gJuiAA5crTj1eIUUWmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761131112; c=relaxed/simple;
-	bh=osJGDS37NazLmjN0e6+Zu9bkiQjkOAcBm/73aoNH/iA=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=nSi2zuLjXbcEb9+cVNbpokg3Na73SANUVrw3DKoRLescixqxvQPOCRjg/kqepQmpekskX8t5iNH64nM2RNlItzIlCaz6WxPJ1BdvIzr3cIdhIe5/W7ht+k7BegOQuV8KPpZizSqmJ+c91TUw+MFV9VSQk+t3cdf4xg1ivg0gA9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCjDfkdy; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1761140318; c=relaxed/simple;
+	bh=Jk07LSuW7o+FzSpWG5F/znIOgaI7RMdvCBmOLObpTrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8Uy6olmUMGv6KmS7rlbTDnlkQSV36OIjeq6OX83LrteG4fna/s+Ec295UB/8Mob0CN6/cu2HuA6hV3mC2+bB9whXMgKhOBD1j+oVMtcJXqDGlYd/ucP2qbJQmd7TxHZXX6VElYM6GnZeID5kBzajgEp0Cg1BLmb6tNofq4iIc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLQaWKGa; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCjDfkdy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLQaWKGa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761131111; x=1792667111;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=osJGDS37NazLmjN0e6+Zu9bkiQjkOAcBm/73aoNH/iA=;
-  b=hCjDfkdytGypOAeAx+aRdNmMteUPYI2qgLACeUqyphs56LDRqHLU9uZG
-   BbxeOKzuys4L6D61+sAefUmZCuDo90H9p2J2F1Z6eRvi0AUV9x74qQNc2
-   55VM4cH6qu7bw7FvHnqYnp9L47vouGBebb4dR259ciAOZnhMZiPT9m6nQ
-   4LxX2kO7NOGT/D56PI+oUA9SpIGEMV+1WvV7V8cKazOdcD50Sx9R/LD6j
-   0HGHomO1HH7E7bmLNcWknpIPcEvqoPOISaHcs5RgVFbFgKyRep9FZNB+8
-   /P+G6zvNWAXkZqYcRQ5dGNq01q6CgnXFzJWtMrZs3p6/ExlKGLx6Vovg0
-   g==;
-X-CSE-ConnectionGUID: 3r8a6+afQnGx5UOJGOunSw==
-X-CSE-MsgGUID: RdUgsiIOSkiAzo783yijVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73879463"
+  t=1761140316; x=1792676316;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jk07LSuW7o+FzSpWG5F/znIOgaI7RMdvCBmOLObpTrE=;
+  b=kLQaWKGakS5bZ4CROE0NWa6b4DlfasmPgIn0r/Tu/uoUwTC86FaNcV9V
+   3WbXZy4cV1YwwCLVJAo2jHUcAehvAnoBPmZP+NOqFlNn4WHKCUYC9ErPe
+   yls1Fptkt22qRB136R3Uf9uuv9s7QmO/wLIl5rtfWpuLQdxVUU3NICk9f
+   qwkK3O/txsGtwE8OFI42k13LqKs/iEIq+efTtMbaFnFRxFg6aCWE5MKP9
+   S+iwX+mBx1AkGEECK3P0h2vzFEKdr5Zw/kFIf0SHlj07S43lUsB6J3NS/
+   n/acIKiypT3qTdlFu6y49X5Cajc6UwTv1ABUrKA5UdrljWjvC2o7exNAY
+   w==;
+X-CSE-ConnectionGUID: UCKfzWVMTkaad839hsanFA==
+X-CSE-MsgGUID: 2ZnMFXJfTdW6RLJkzAXauw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74406847"
 X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="73879463"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:05:09 -0700
-X-CSE-ConnectionGUID: KbyYTW4fRwyWB2Ywo1bl4g==
-X-CSE-MsgGUID: +HuE0kZFRdaeDr9iRCCCiw==
+   d="scan'208";a="74406847"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 06:38:36 -0700
+X-CSE-ConnectionGUID: ql/oeXATRQWxWC8SoZ9/Ng==
+X-CSE-MsgGUID: ip3xF8XMTfupYz0ejroGyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="183013092"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:05:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 22 Oct 2025 14:03:49 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.18-2
-Message-ID: <pdx86-pr-20251022140349-2206824358@linux.intel.com>
+   d="scan'208";a="183463464"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 22 Oct 2025 06:38:33 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vBZ2s-000COn-2a;
+	Wed, 22 Oct 2025 13:38:30 +0000
+Date: Wed, 22 Oct 2025 21:38:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
+ kbd led handlers
+Message-ID: <202510222013.EBLC609m-lkp@intel.com>
+References: <20251018101759.4089-6-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251018101759.4089-6-lkml@antheas.dev>
 
-Hi Linus,
+Hi Antheas,
 
-Here is a platform-drivers-x86 fixes PR for v6.18.
+kernel test robot noticed the following build warnings:
 
-Fixes and New HW Support
+[auto build test WARNING on 3a8660878839faadb4f1a6dd72c3179c1df56787]
 
-- alienware-wmi-wmax:
+url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/HID-asus-simplify-RGB-init-sequence/20251018-182410
+base:   3a8660878839faadb4f1a6dd72c3179c1df56787
+patch link:    https://lore.kernel.org/r/20251018101759.4089-6-lkml%40antheas.dev
+patch subject: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple kbd led handlers
+config: i386-randconfig-141-20251020 (https://download.01.org/0day-ci/archive/20251022/202510222013.EBLC609m-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
 
-  - Fix NULL pointer dereference in sleep handlers
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510222013.EBLC609m-lkp@intel.com/
 
-  - Add AWCC support to Dell G15 5530
+New smatch warnings:
+drivers/platform/x86/asus-wmi.c:1623 kbd_led_update_all() warn: always true condition '(value >= 0) => (0-u32max >= 0)'
 
-- mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
+Old smatch warnings:
+drivers/platform/x86/asus-wmi.c:2288 asus_new_rfkill() warn: '*rfkill' is an error pointer or valid
 
-Regards, i.
+vim +1623 drivers/platform/x86/asus-wmi.c
 
+  1589	
+  1590	static void kbd_led_update_all(struct work_struct *work)
+  1591	{
+  1592		enum led_brightness value;
+  1593		struct asus_wmi *asus;
+  1594		bool registered, notify;
+  1595		int ret;
+  1596	
+  1597		asus = container_of(work, struct asus_wmi, kbd_led_work);
+  1598	
+  1599		scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+  1600			registered = asus->kbd_led_registered;
+  1601			value = asus->kbd_led_wk;
+  1602			notify = asus->kbd_led_notify;
+  1603		}
+  1604	
+  1605		if (!registered) {
+  1606			/*
+  1607			 * This workqueue runs under asus-wmi, which means probe has
+  1608			 * completed and asus-wmi will keep running until it finishes.
+  1609			 * Therefore, we can safely register the LED without holding
+  1610			 * a spinlock.
+  1611			 */
+  1612			ret = devm_led_classdev_register(&asus->platform_device->dev,
+  1613						    &asus->kbd_led);
+  1614			if (!ret) {
+  1615				scoped_guard(spinlock_irqsave, &asus_ref.lock)
+  1616					asus->kbd_led_registered = true;
+  1617			} else {
+  1618				pr_warn("Failed to register keyboard backlight LED: %d\n", ret);
+  1619				return;
+  1620			}
+  1621		}
+  1622	
+> 1623		if (value >= 0)
+  1624			do_kbd_led_set(&asus->kbd_led, value);
+  1625		if (notify) {
+  1626			scoped_guard(spinlock_irqsave, &asus_ref.lock)
+  1627				asus->kbd_led_notify = false;
+  1628			led_classdev_notify_brightness_hw_changed(&asus->kbd_led, value);
+  1629		}
+  1630	}
+  1631	
 
-The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df56787:
-
-  Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-2
-
-for you to fetch changes up to 34cbd6e07fddf36e186c8bf26a456fb7f50af44e:
-
-  platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530 (2025-10-15 11:22:35 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.18-2
-
-Fixes and New HW Support
-
-- alienware-wmi-wmax:
-
-  - Fix NULL pointer dereference in sleep handlers
-
-  - Add AWCC support to Dell G15 5530
-
-- mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
-
-The following is an automated shortlog grouped by driver:
-
-alienware-wmi-wmax:
- -  Add AWCC support to Dell G15 5530
- -  Fix NULL pointer dereference in sleep handlers
-
-MAINTAINERS:
- -  add Denis Benato as maintainer for asus notebooks
-
-mlxbf-pmc:
- -  add sysfs_attr_init() to count_clock init
-
-----------------------------------------------------------------
-David Thompson (1):
-      platform/mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
-
-Denis Benato (1):
-      MAINTAINERS: add Denis Benato as maintainer for asus notebooks
-
-Kurt Borja (1):
-      platform/x86: alienware-wmi-wmax: Fix NULL pointer dereference in sleep handlers
-
-tr1x_em (1):
-      platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530
-
- MAINTAINERS                                    |  1 +
- drivers/platform/mellanox/mlxbf-pmc.c          |  1 +
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 12 ++++++++++--
- 3 files changed, 12 insertions(+), 2 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
