@@ -1,480 +1,134 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724B526E6E8
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 16:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A693E270EDF
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 17:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761149947; cv=none; b=k9ngFZLY8R0/yPx15QZVZWDR98UTGydWVhMe2LgN0lCVTrqWR7lxaa+6VJsA/XX3jigjDK7Ho0ToMlZm35g3w71UXApon6c68fInwo0Hi5OKCl7SDAZPrW4/4kv6prKlmAh8Jket0cUgVEYFIEoH80JKc8FUXti3TsASJSXYNVo=
+	t=1761152570; cv=none; b=c9hFXeA6UO33QqFQ1cn4lsQsKXL+gyL9kRM5WGfQch1DZkCdGjmLSjVT/TFFCRimu26eiAddDQs7JdL0huBgUuUshSkGQL3DMdQam708+ebUO8Q1a0DCnncV1HKtIbOGO++RBWUpsr7OlBErS3CFCMsgO07y+rFzh1m2jXM56gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761149947; c=relaxed/simple;
-	bh=mZRhVk79C/dYwsdJ+ID7rxuTrgp20byn7PKbbXk4O88=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=byMwrNdic5qXph1SPEXGh8mnjJ1Vai8UzKys9UX2jy6KGc9t4hCZk9dKWXfRqVX/cdruX3RDWi1ovR5y6K8MqR5JqJIAImXQ/27KpNZv4R/hg6beKqRG71rP5W23eNTNhfScbmXmNM1J5dayclsnLjU4lQiG1vbvOF/jL3eiZvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gZsmwWXI; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761152570; c=relaxed/simple;
+	bh=uQ64JgFOmAzJd+mPkZtVG+ihpVKVYP1nw4V7fBIcKF4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ay1/PAfp1CFwybC2s+l0b4t8BTtgB614FWT0AxOpTuPMkSZVPsBA65QIl2nFbX6Gx9jUWJOhqelLWUsZIrCGTSls8tosZ3fNfnnYc4deuHCeeeueye41421LFMikOXrmx0Y+UQaH/Jy3kKWY9WwwjSPAco0iKndQS8A2gEqOqoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRlhloua; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZsmwWXI"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-591ea9ccfc2so1727870e87.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 09:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761149942; x=1761754742; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fj3gXCZQxoSLzkfOwicoliC+/5szKPduOfFGQrQ8S+E=;
-        b=gZsmwWXIRIPmtRdCyQkgYjZAa8JnLRu0+ISDExHaqD2dk0BOdiu8TUcWA2o9BRsGae
-         Tn84ITqVeyCNl2GAwZTtzuNxH3YyLgboZFYFLVJ7/8I4xcQyBMviV/UbFXqa03mJ8nRh
-         IRg70lr5P0PAd4HzLEWFvNFPRjMBhaRcEEMLJs16iF2QPmfy270pHt06Kj/AOSytLz4B
-         IaMX43MceSwU9erfcqX668TdvP+8bbHHonrMGfeUJFwpiwD4rDTIV/MVeuSsn2Rq1uy1
-         f8Lm/GhFI22jR2UJlRAeQO/xVd7vFibPgVjE285L4xbgK1ZUInZMJeVv/PWoji07SJb7
-         CPuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761149942; x=1761754742;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fj3gXCZQxoSLzkfOwicoliC+/5szKPduOfFGQrQ8S+E=;
-        b=vzfTrSJ2/3TcBDsh3ff/A1f5Nj2ya3Sm0kpNNa+hDfUBmY6hGOtlPq3NtySWeHRuIO
-         eE77ZXrWrOdPiWazxwAa1kMjUgHZ06i+OsOqlkDf55cR1ONCau7hCqoyS6og/yLahriU
-         iYRSNZjaSuoq/kv3iay5vITx3LK5z4HHyoFuxBUCk1cQckue8bMA/xxjgP0OVIIhzqb4
-         TCbIakSlK0rnwd2wlWfus0N0IM1UFMvGOh9Qwi/SC1573M4+IfsQEFduSuBNMOyPRZFE
-         GFf9dqJ/hv0dXnZBrH9kB1QXsPJQO1/2ncrMV+UrOHPsudxLToNlK7hqNp1lAkYeoBDv
-         AYFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJldZGEw+P+qFYlKQXXqgK3bvRXVRtVZCWMuE4/IOzDSUWlpUAdyk8oe7JY6qIjleJ/BDpttvrcStonEOkRmozIrjR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAHdWK+zdxECJhbYO2wGB5VBv/vS+v6gaALo1HZ78hJuBPNYxD
-	mvnaU2YlF0OfRPT0Okh79opa4zPveib9la6B+Qj8Y4K4lOIE+9fU//cb
-X-Gm-Gg: ASbGncsVDdaJOcH1qclgxnnLtKWL0bV/WrNnuO38m7Ce8gsDDlkbYO+ljA0GUiM5KSr
-	+rXD+2Pjt7UqNjEGqorTUtuIg20/6WieqjTNA8HnKJJQyI446oKHqH4ttnUgPPH2OvNeN5yDULI
-	JuwfgoD7zvYKsgUn4xccT4i69ZhyqRaS4BXP+wuKkTrVjVPOBFl/RH+lJnsqxwgl+qd4G9ghN+p
-	mqnd9oFfyEtOMfNWLWuWsxSYHK4NdhyPplJoqudANOM6iCqMXaxFQ0VBpSS+lna82xXegh16Q3O
-	kPDVr024BXc6kuee068mcXrCeZiBjNHTjBTDzK0efjebTlj2fYhGnGRJZNskTd91xvutaH+FiIr
-	t6m2jL9QsxXPfWoyzc4b1dx1Zt6e/LffQb55v6ZE8UVLXMPeXgjymTlSI+T/xxA5ncNxHZK0yvl
-	0arqUBV8MYePiSexebHC1dG33oNuI=
-X-Google-Smtp-Source: AGHT+IF1ip2zebDWZhEeMlc8T8ha3b/cc6VhTqp46PdFccaoITUtCi83uvY+G68iEudrzqEFEHL3sw==
-X-Received: by 2002:a05:6512:2243:b0:55f:6cc3:45a6 with SMTP id 2adb3069b0e04-592f1862b23mr813506e87.13.1761149942233;
-        Wed, 22 Oct 2025 09:19:02 -0700 (PDT)
-Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-592ed460b53sm1070527e87.39.2025.10.22.09.19.00
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 22 Oct 2025 09:19:01 -0700 (PDT)
-Date: Wed, 22 Oct 2025 18:18:56 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux@roeck-us.net, mario.limonciello@amd.com,
- naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
- suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-Message-ID: <20251022181856.0e3cfc92.michal.pecio@gmail.com>
-In-Reply-To: <20251022160904.GA174761@yaz-khff2.amd.com>
-References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
-	<20251022011610.60d0ba6e.michal.pecio@gmail.com>
-	<20251022133901.GB7243@yaz-khff2.amd.com>
-	<20251022173831.671843f4.michal.pecio@gmail.com>
-	<20251022160904.GA174761@yaz-khff2.amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRlhloua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45254C19423
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 17:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761152570;
+	bh=uQ64JgFOmAzJd+mPkZtVG+ihpVKVYP1nw4V7fBIcKF4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sRlhlouas6aCSesmJCpwCgMhuTYNTUv7lLIogOIis+naR8orH2qBwGRtTp6L6Ym66
+	 RbcQ7kgKTBSTA+jqhjHc3DQQ1YbldHrndwPhqSaMfrG050duDP5+xUoknxXHlTR3mU
+	 Y0dgMGREzd843297p5wlSOff3M2Mu3mv9Z2ETUSuhXNudblRQlCxwmeCSJufh2i6N3
+	 P+udSZiF6AFs2XTUVollvSIgeXqIEBQ3hM0cAsWlwqkq0b6WcnRTqrggySzQPibwcZ
+	 fsg3g0A4uEOsnYjqUcU2O+GgQXs4AlT00CfvPE3IzWq/bCWbTP4AqZRrcbmzWpTlSy
+	 Jt+0iQQIs/nRw==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7bb79ad6857so3742703a34.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 10:02:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVLzObxt0Dq9fF+Ld2Kea6vVTcdjqqcUHodp25yD2fdUBcdIKgU/dea3nu4htUUBoYS8rDQIFp/ITG0vy3P2+kvP4mi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxJwUc0RIYsri5tJJ9YJgjmqEgyeoPqb2/TX736NIwXHVaEoO7
+	Ir618a8wfaGpiZOcMa+YVbAwDgguwPPkYvBpu24wj3uF6uX6k/lVZHGJlDZl6VS/VS3QY0XbfUd
+	PhSiPCg8Z4ytxoI8zUNkIfjM7/7IEseU=
+X-Google-Smtp-Source: AGHT+IFsSLkS4AfOy5xcoE1SIc1rw+OhHunu+bX6yReuGG38wf86nNthgdGGvrwVmspSg8ngis0UUdzl53ovX1AjJdc=
+X-Received: by 2002:a05:6808:14c8:b0:43f:75f0:3894 with SMTP id
+ 5614622812f47-443a2e90865mr8908912b6e.22.1761152569474; Wed, 22 Oct 2025
+ 10:02:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20251002113404.3117429-1-srosek@google.com>
+In-Reply-To: <20251002113404.3117429-1-srosek@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 22 Oct 2025 19:02:38 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hO3+eznWztqO2B78wpLXr3EZ+Nj0yOxqesfpb20ykOYQ@mail.gmail.com>
+X-Gm-Features: AS18NWBlxJkUSv4HdoHV9K7LgQY0Hep2BdtAsCZ074SA2uAIDpGbEU_yqZ8QlaI
+Message-ID: <CAJZ5v0hO3+eznWztqO2B78wpLXr3EZ+Nj0yOxqesfpb20ykOYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] ACPI: DPTF: Move INT340X enumeration from DPTF
+ core to thermal drivers
+To: Slawomir Rosek <srosek@google.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, AceLan Kao <acelan.kao@canonical.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 22 Oct 2025 12:09:04 -0400, Yazen Ghannam wrote:
-> On Wed, Oct 22, 2025 at 05:38:31PM +0200, Michal Pecio wrote:
-> > On Wed, 22 Oct 2025 09:39:01 -0400, Yazen Ghannam wrote:  
-> > > Can you please share the full output from dmesg and lspci?
-> > > 
-> > > Also, can you please share the raw CPUID output (cpuid -r)?  
-> > 
-> > Not sure which "cpuid" software you mean?  
-> 
-> Many distros package a "cpuid" user space app that will print and decode
-> the x86 CPUID feature bits.
+On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@google.com> w=
+rote:
+>
+> The Intel Dynamic Platform and Thermal Framework (DPTF) relies on
+> the INT340X ACPI device objects. The temperature information and
+> cooling ability are exposed to the userspace via those objects.
+>
+> Since kernel v3.17 the ACPI bus scan handler is introduced to prevent
+> enumeration of INT340X ACPI device objects on the platform bus unless
+> related thermal drivers are enabled. However, using the IS_ENABLED()
+> macro in the ACPI scan handler forces the kernel to be recompiled
+> when thermal drivers are enabled or disabled, which is a significant
+> limitation of its modularity. The IS_ENABLED() macro is particularly
+> problematic for the Android Generic Kernel Image (GKI) project which
+> uses unified core kernel while SoC/board support is moved to loadable
+> vendor modules.
+>
+> This patch set moves enumeration of INT340X ACPI device objects on
+> the platform bus from DPTF core to thermal drivers. It starts with
+> some code cleanup and reorganization to eventually remove IS_ENABLED()
+> macro from the ACPI bus scan handler. Brief list of changes is listed
+> below:
+>
+> 1) Remove SOC DTS thermal driver case from the ACPI scan handler
+>    since its dependency on INT340X driver is unrelated to DPTF
+> 2) Move all INT340X ACPI device ids to the common header and update
+>    the DPTF core and thermal drivers accordingly
+> 3) Move dynamic enumeration of ACPI device objects on the platform bus
+>    from the intel-hid and intel-vbtn drivers to the ACPI platform core
+> 4) Move enumeration of INT340X ACPI device objects on the platform bus
+>    from DPTF core to thermal drivers using ACPI platform core methods
+>
+> Link to v1: https://lore.kernel.org/all/20250830053404.763995-1-srosek@go=
+ogle.com/
+> Link to v2: https://lore.kernel.org/all/20250917120719.2390847-1-srosek@g=
+oogle.com/
+>
+> In v3 the SoC DTS thermal explicitly depends on X86_64.
+>
+> Slawomir Rosek (6):
+>   ACPI: DPTF: Ignore SoC DTS thermal while scanning
+>   ACPI: DPTF: Move INT340X device IDs to header
+>   ACPI: DPTF: Move PCH FIVR device IDs to header
+>   ACPI: DPTF: Remove not supported INT340X IDs
+>   ACPI: platform: Add macro for acpi platform driver
+>   ACPI: DPTF: Move INT340X enumeration to modules
+>
+>  drivers/acpi/acpi_platform.c                  | 27 +++++++
+>  drivers/acpi/dptf/dptf_pch_fivr.c             | 10 +--
+>  drivers/acpi/dptf/dptf_power.c                | 20 +----
+>  drivers/acpi/dptf/int340x_thermal.c           | 76 ++++---------------
+>  drivers/acpi/fan.h                            | 10 +--
+>  drivers/acpi/fan_core.c                       |  2 +-
+>  drivers/acpi/int340x_thermal.h                | 76 +++++++++++++++++++
+>  drivers/platform/x86/intel/hid.c              | 33 +-------
+>  drivers/platform/x86/intel/vbtn.c             | 30 +-------
+>  drivers/thermal/intel/Kconfig                 |  3 +-
+>  .../intel/int340x_thermal/int3400_thermal.c   | 12 +--
+>  .../intel/int340x_thermal/int3401_thermal.c   |  5 +-
+>  .../intel/int340x_thermal/int3402_thermal.c   |  5 +-
+>  .../intel/int340x_thermal/int3403_thermal.c   | 12 +--
+>  .../intel/int340x_thermal/int3406_thermal.c   |  5 +-
+>  include/linux/platform_device.h               | 17 +++++
+>  16 files changed, 164 insertions(+), 179 deletions(-)
+>  create mode 100644 drivers/acpi/int340x_thermal.h
+>
+> --
 
-OK, here's some "cpuid_tool" from libcpuid.
-
-version=0.8.1
-
-_________________ Logical CPU #0 _________________
-basic_cpuid[0]=00000005 68747541 444d4163 69746e65
-basic_cpuid[1]=00100f43 00040800 00802009 178bfbff
-basic_cpuid[2]=00000000 00000000 00000000 00000000
-basic_cpuid[3]=00000000 00000000 00000000 00000000
-basic_cpuid[4]=00000000 00000000 00000000 00000000
-basic_cpuid[5]=00000040 00000040 00000003 00000000
-basic_cpuid[6]=00000000 00000000 00000000 00000000
-basic_cpuid[7]=00000000 00000000 00000000 00000000
-basic_cpuid[8]=00000000 00000000 00000000 00000000
-basic_cpuid[9]=00000000 00000000 00000000 00000000
-basic_cpuid[10]=00000000 00000000 00000000 00000000
-basic_cpuid[11]=00000000 00000000 00000000 00000000
-basic_cpuid[12]=00000000 00000000 00000000 00000000
-basic_cpuid[13]=00000000 00000000 00000000 00000000
-basic_cpuid[14]=00000000 00000000 00000000 00000000
-basic_cpuid[15]=00000000 00000000 00000000 00000000
-basic_cpuid[16]=00000000 00000000 00000000 00000000
-basic_cpuid[17]=00000000 00000000 00000000 00000000
-basic_cpuid[18]=00000000 00000000 00000000 00000000
-basic_cpuid[19]=00000000 00000000 00000000 00000000
-basic_cpuid[20]=00000000 00000000 00000000 00000000
-basic_cpuid[21]=00000000 00000000 00000000 00000000
-basic_cpuid[22]=00000000 00000000 00000000 00000000
-basic_cpuid[23]=00000000 00000000 00000000 00000000
-basic_cpuid[24]=00000000 00000000 00000000 00000000
-basic_cpuid[25]=00000000 00000000 00000000 00000000
-basic_cpuid[26]=00000000 00000000 00000000 00000000
-basic_cpuid[27]=00000000 00000000 00000000 00000000
-basic_cpuid[28]=00000000 00000000 00000000 00000000
-basic_cpuid[29]=00000000 00000000 00000000 00000000
-basic_cpuid[30]=00000000 00000000 00000000 00000000
-basic_cpuid[31]=00000000 00000000 00000000 00000000
-ext_cpuid[0]=8000001b 68747541 444d4163 69746e65
-ext_cpuid[1]=00100f43 10001c16 000037ff efd3fbff
-ext_cpuid[2]=20444d41 6e656850 74286d6f 4920296d
-ext_cpuid[3]=34582049 35363920 6f725020 73736563
-ext_cpuid[4]=0000726f 00000000 00000000 00000000
-ext_cpuid[5]=ff30ff10 ff30ff20 40020140 40020140
-ext_cpuid[6]=20800000 42004200 02008140 0030b140
-ext_cpuid[7]=00000000 00000000 00000000 000001f9
-ext_cpuid[8]=00003030 00000000 00002003 00000000
-ext_cpuid[9]=00000000 00000000 00000000 00000000
-ext_cpuid[10]=00000001 00000040 00000000 0000000f
-ext_cpuid[11]=00000000 00000000 00000000 00000000
-ext_cpuid[12]=00000000 00000000 00000000 00000000
-ext_cpuid[13]=00000000 00000000 00000000 00000000
-ext_cpuid[14]=00000000 00000000 00000000 00000000
-ext_cpuid[15]=00000000 00000000 00000000 00000000
-ext_cpuid[16]=00000000 00000000 00000000 00000000
-ext_cpuid[17]=00000000 00000000 00000000 00000000
-ext_cpuid[18]=00000000 00000000 00000000 00000000
-ext_cpuid[19]=00000000 00000000 00000000 00000000
-ext_cpuid[20]=00000000 00000000 00000000 00000000
-ext_cpuid[21]=00000000 00000000 00000000 00000000
-ext_cpuid[22]=00000000 00000000 00000000 00000000
-ext_cpuid[23]=00000000 00000000 00000000 00000000
-ext_cpuid[24]=00000000 00000000 00000000 00000000
-ext_cpuid[25]=f0300000 60100000 00000000 00000000
-ext_cpuid[26]=00000003 00000000 00000000 00000000
-ext_cpuid[27]=0000001f 00000000 00000000 00000000
-ext_cpuid[28]=00000000 00000000 00000000 00000000
-ext_cpuid[29]=00000000 00000000 00000000 00000000
-ext_cpuid[30]=00000000 00000000 00000000 00000000
-ext_cpuid[31]=00000000 00000000 00000000 00000000
-intel_fn4[0]=00000000 00000000 00000000 00000000
-intel_fn4[1]=00000000 00000000 00000000 00000000
-intel_fn4[2]=00000000 00000000 00000000 00000000
-intel_fn4[3]=00000000 00000000 00000000 00000000
-intel_fn4[4]=00000000 00000000 00000000 00000000
-intel_fn4[5]=00000000 00000000 00000000 00000000
-intel_fn4[6]=00000000 00000000 00000000 00000000
-intel_fn4[7]=00000000 00000000 00000000 00000000
-intel_fn11[0]=00000000 00000000 00000000 00000000
-intel_fn11[1]=00000000 00000000 00000000 00000000
-intel_fn11[2]=00000000 00000000 00000000 00000000
-intel_fn11[3]=00000000 00000000 00000000 00000000
-intel_fn12h[0]=00000000 00000000 00000000 00000000
-intel_fn12h[1]=00000000 00000000 00000000 00000000
-intel_fn12h[2]=00000000 00000000 00000000 00000000
-intel_fn12h[3]=00000000 00000000 00000000 00000000
-intel_fn14h[0]=00000000 00000000 00000000 00000000
-intel_fn14h[1]=00000000 00000000 00000000 00000000
-intel_fn14h[2]=00000000 00000000 00000000 00000000
-intel_fn14h[3]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[0]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[1]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[2]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[3]=00000000 00000000 00000000 00000000
-amd_fn80000026h[0]=00000000 00000000 00000000 00000000
-amd_fn80000026h[1]=00000000 00000000 00000000 00000000
-amd_fn80000026h[2]=00000000 00000000 00000000 00000000
-amd_fn80000026h[3]=00000000 00000000 00000000 00000000
-
-_________________ Logical CPU #1 _________________
-basic_cpuid[0]=00000005 68747541 444d4163 69746e65
-basic_cpuid[1]=00100f43 01040800 00802009 178bfbff
-basic_cpuid[2]=00000000 00000000 00000000 00000000
-basic_cpuid[3]=00000000 00000000 00000000 00000000
-basic_cpuid[4]=00000000 00000000 00000000 00000000
-basic_cpuid[5]=00000040 00000040 00000003 00000000
-basic_cpuid[6]=00000000 00000000 00000000 00000000
-basic_cpuid[7]=00000000 00000000 00000000 00000000
-basic_cpuid[8]=00000000 00000000 00000000 00000000
-basic_cpuid[9]=00000000 00000000 00000000 00000000
-basic_cpuid[10]=00000000 00000000 00000000 00000000
-basic_cpuid[11]=00000000 00000000 00000000 00000000
-basic_cpuid[12]=00000000 00000000 00000000 00000000
-basic_cpuid[13]=00000000 00000000 00000000 00000000
-basic_cpuid[14]=00000000 00000000 00000000 00000000
-basic_cpuid[15]=00000000 00000000 00000000 00000000
-basic_cpuid[16]=00000000 00000000 00000000 00000000
-basic_cpuid[17]=00000000 00000000 00000000 00000000
-basic_cpuid[18]=00000000 00000000 00000000 00000000
-basic_cpuid[19]=00000000 00000000 00000000 00000000
-basic_cpuid[20]=00000000 00000000 00000000 00000000
-basic_cpuid[21]=00000000 00000000 00000000 00000000
-basic_cpuid[22]=00000000 00000000 00000000 00000000
-basic_cpuid[23]=00000000 00000000 00000000 00000000
-basic_cpuid[24]=00000000 00000000 00000000 00000000
-basic_cpuid[25]=00000000 00000000 00000000 00000000
-basic_cpuid[26]=00000000 00000000 00000000 00000000
-basic_cpuid[27]=00000000 00000000 00000000 00000000
-basic_cpuid[28]=00000000 00000000 00000000 00000000
-basic_cpuid[29]=00000000 00000000 00000000 00000000
-basic_cpuid[30]=00000000 00000000 00000000 00000000
-basic_cpuid[31]=00000000 00000000 00000000 00000000
-ext_cpuid[0]=8000001b 68747541 444d4163 69746e65
-ext_cpuid[1]=00100f43 10001c16 000037ff efd3fbff
-ext_cpuid[2]=20444d41 6e656850 74286d6f 4920296d
-ext_cpuid[3]=34582049 35363920 6f725020 73736563
-ext_cpuid[4]=0000726f 00000000 00000000 00000000
-ext_cpuid[5]=ff30ff10 ff30ff20 40020140 40020140
-ext_cpuid[6]=20800000 42004200 02008140 0030b140
-ext_cpuid[7]=00000000 00000000 00000000 000001f9
-ext_cpuid[8]=00003030 00000000 00002003 00000000
-ext_cpuid[9]=00000000 00000000 00000000 00000000
-ext_cpuid[10]=00000001 00000040 00000000 0000000f
-ext_cpuid[11]=00000000 00000000 00000000 00000000
-ext_cpuid[12]=00000000 00000000 00000000 00000000
-ext_cpuid[13]=00000000 00000000 00000000 00000000
-ext_cpuid[14]=00000000 00000000 00000000 00000000
-ext_cpuid[15]=00000000 00000000 00000000 00000000
-ext_cpuid[16]=00000000 00000000 00000000 00000000
-ext_cpuid[17]=00000000 00000000 00000000 00000000
-ext_cpuid[18]=00000000 00000000 00000000 00000000
-ext_cpuid[19]=00000000 00000000 00000000 00000000
-ext_cpuid[20]=00000000 00000000 00000000 00000000
-ext_cpuid[21]=00000000 00000000 00000000 00000000
-ext_cpuid[22]=00000000 00000000 00000000 00000000
-ext_cpuid[23]=00000000 00000000 00000000 00000000
-ext_cpuid[24]=00000000 00000000 00000000 00000000
-ext_cpuid[25]=f0300000 60100000 00000000 00000000
-ext_cpuid[26]=00000003 00000000 00000000 00000000
-ext_cpuid[27]=0000001f 00000000 00000000 00000000
-ext_cpuid[28]=00000000 00000000 00000000 00000000
-ext_cpuid[29]=00000000 00000000 00000000 00000000
-ext_cpuid[30]=00000000 00000000 00000000 00000000
-ext_cpuid[31]=00000000 00000000 00000000 00000000
-intel_fn4[0]=00000000 00000000 00000000 00000000
-intel_fn4[1]=00000000 00000000 00000000 00000000
-intel_fn4[2]=00000000 00000000 00000000 00000000
-intel_fn4[3]=00000000 00000000 00000000 00000000
-intel_fn4[4]=00000000 00000000 00000000 00000000
-intel_fn4[5]=00000000 00000000 00000000 00000000
-intel_fn4[6]=00000000 00000000 00000000 00000000
-intel_fn4[7]=00000000 00000000 00000000 00000000
-intel_fn11[0]=00000000 00000000 00000000 00000000
-intel_fn11[1]=00000000 00000000 00000000 00000000
-intel_fn11[2]=00000000 00000000 00000000 00000000
-intel_fn11[3]=00000000 00000000 00000000 00000000
-intel_fn12h[0]=00000000 00000000 00000000 00000000
-intel_fn12h[1]=00000000 00000000 00000000 00000000
-intel_fn12h[2]=00000000 00000000 00000000 00000000
-intel_fn12h[3]=00000000 00000000 00000000 00000000
-intel_fn14h[0]=00000000 00000000 00000000 00000000
-intel_fn14h[1]=00000000 00000000 00000000 00000000
-intel_fn14h[2]=00000000 00000000 00000000 00000000
-intel_fn14h[3]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[0]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[1]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[2]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[3]=00000000 00000000 00000000 00000000
-amd_fn80000026h[0]=00000000 00000000 00000000 00000000
-amd_fn80000026h[1]=00000000 00000000 00000000 00000000
-amd_fn80000026h[2]=00000000 00000000 00000000 00000000
-amd_fn80000026h[3]=00000000 00000000 00000000 00000000
-
-_________________ Logical CPU #2 _________________
-basic_cpuid[0]=00000005 68747541 444d4163 69746e65
-basic_cpuid[1]=00100f43 02040800 00802009 178bfbff
-basic_cpuid[2]=00000000 00000000 00000000 00000000
-basic_cpuid[3]=00000000 00000000 00000000 00000000
-basic_cpuid[4]=00000000 00000000 00000000 00000000
-basic_cpuid[5]=00000040 00000040 00000003 00000000
-basic_cpuid[6]=00000000 00000000 00000000 00000000
-basic_cpuid[7]=00000000 00000000 00000000 00000000
-basic_cpuid[8]=00000000 00000000 00000000 00000000
-basic_cpuid[9]=00000000 00000000 00000000 00000000
-basic_cpuid[10]=00000000 00000000 00000000 00000000
-basic_cpuid[11]=00000000 00000000 00000000 00000000
-basic_cpuid[12]=00000000 00000000 00000000 00000000
-basic_cpuid[13]=00000000 00000000 00000000 00000000
-basic_cpuid[14]=00000000 00000000 00000000 00000000
-basic_cpuid[15]=00000000 00000000 00000000 00000000
-basic_cpuid[16]=00000000 00000000 00000000 00000000
-basic_cpuid[17]=00000000 00000000 00000000 00000000
-basic_cpuid[18]=00000000 00000000 00000000 00000000
-basic_cpuid[19]=00000000 00000000 00000000 00000000
-basic_cpuid[20]=00000000 00000000 00000000 00000000
-basic_cpuid[21]=00000000 00000000 00000000 00000000
-basic_cpuid[22]=00000000 00000000 00000000 00000000
-basic_cpuid[23]=00000000 00000000 00000000 00000000
-basic_cpuid[24]=00000000 00000000 00000000 00000000
-basic_cpuid[25]=00000000 00000000 00000000 00000000
-basic_cpuid[26]=00000000 00000000 00000000 00000000
-basic_cpuid[27]=00000000 00000000 00000000 00000000
-basic_cpuid[28]=00000000 00000000 00000000 00000000
-basic_cpuid[29]=00000000 00000000 00000000 00000000
-basic_cpuid[30]=00000000 00000000 00000000 00000000
-basic_cpuid[31]=00000000 00000000 00000000 00000000
-ext_cpuid[0]=8000001b 68747541 444d4163 69746e65
-ext_cpuid[1]=00100f43 10001c16 000037ff efd3fbff
-ext_cpuid[2]=20444d41 6e656850 74286d6f 4920296d
-ext_cpuid[3]=34582049 35363920 6f725020 73736563
-ext_cpuid[4]=0000726f 00000000 00000000 00000000
-ext_cpuid[5]=ff30ff10 ff30ff20 40020140 40020140
-ext_cpuid[6]=20800000 42004200 02008140 0030b140
-ext_cpuid[7]=00000000 00000000 00000000 000001f9
-ext_cpuid[8]=00003030 00000000 00002003 00000000
-ext_cpuid[9]=00000000 00000000 00000000 00000000
-ext_cpuid[10]=00000001 00000040 00000000 0000000f
-ext_cpuid[11]=00000000 00000000 00000000 00000000
-ext_cpuid[12]=00000000 00000000 00000000 00000000
-ext_cpuid[13]=00000000 00000000 00000000 00000000
-ext_cpuid[14]=00000000 00000000 00000000 00000000
-ext_cpuid[15]=00000000 00000000 00000000 00000000
-ext_cpuid[16]=00000000 00000000 00000000 00000000
-ext_cpuid[17]=00000000 00000000 00000000 00000000
-ext_cpuid[18]=00000000 00000000 00000000 00000000
-ext_cpuid[19]=00000000 00000000 00000000 00000000
-ext_cpuid[20]=00000000 00000000 00000000 00000000
-ext_cpuid[21]=00000000 00000000 00000000 00000000
-ext_cpuid[22]=00000000 00000000 00000000 00000000
-ext_cpuid[23]=00000000 00000000 00000000 00000000
-ext_cpuid[24]=00000000 00000000 00000000 00000000
-ext_cpuid[25]=f0300000 60100000 00000000 00000000
-ext_cpuid[26]=00000003 00000000 00000000 00000000
-ext_cpuid[27]=0000001f 00000000 00000000 00000000
-ext_cpuid[28]=00000000 00000000 00000000 00000000
-ext_cpuid[29]=00000000 00000000 00000000 00000000
-ext_cpuid[30]=00000000 00000000 00000000 00000000
-ext_cpuid[31]=00000000 00000000 00000000 00000000
-intel_fn4[0]=00000000 00000000 00000000 00000000
-intel_fn4[1]=00000000 00000000 00000000 00000000
-intel_fn4[2]=00000000 00000000 00000000 00000000
-intel_fn4[3]=00000000 00000000 00000000 00000000
-intel_fn4[4]=00000000 00000000 00000000 00000000
-intel_fn4[5]=00000000 00000000 00000000 00000000
-intel_fn4[6]=00000000 00000000 00000000 00000000
-intel_fn4[7]=00000000 00000000 00000000 00000000
-intel_fn11[0]=00000000 00000000 00000000 00000000
-intel_fn11[1]=00000000 00000000 00000000 00000000
-intel_fn11[2]=00000000 00000000 00000000 00000000
-intel_fn11[3]=00000000 00000000 00000000 00000000
-intel_fn12h[0]=00000000 00000000 00000000 00000000
-intel_fn12h[1]=00000000 00000000 00000000 00000000
-intel_fn12h[2]=00000000 00000000 00000000 00000000
-intel_fn12h[3]=00000000 00000000 00000000 00000000
-intel_fn14h[0]=00000000 00000000 00000000 00000000
-intel_fn14h[1]=00000000 00000000 00000000 00000000
-intel_fn14h[2]=00000000 00000000 00000000 00000000
-intel_fn14h[3]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[0]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[1]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[2]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[3]=00000000 00000000 00000000 00000000
-amd_fn80000026h[0]=00000000 00000000 00000000 00000000
-amd_fn80000026h[1]=00000000 00000000 00000000 00000000
-amd_fn80000026h[2]=00000000 00000000 00000000 00000000
-amd_fn80000026h[3]=00000000 00000000 00000000 00000000
-
-_________________ Logical CPU #3 _________________
-basic_cpuid[0]=00000005 68747541 444d4163 69746e65
-basic_cpuid[1]=00100f43 03040800 00802009 178bfbff
-basic_cpuid[2]=00000000 00000000 00000000 00000000
-basic_cpuid[3]=00000000 00000000 00000000 00000000
-basic_cpuid[4]=00000000 00000000 00000000 00000000
-basic_cpuid[5]=00000040 00000040 00000003 00000000
-basic_cpuid[6]=00000000 00000000 00000000 00000000
-basic_cpuid[7]=00000000 00000000 00000000 00000000
-basic_cpuid[8]=00000000 00000000 00000000 00000000
-basic_cpuid[9]=00000000 00000000 00000000 00000000
-basic_cpuid[10]=00000000 00000000 00000000 00000000
-basic_cpuid[11]=00000000 00000000 00000000 00000000
-basic_cpuid[12]=00000000 00000000 00000000 00000000
-basic_cpuid[13]=00000000 00000000 00000000 00000000
-basic_cpuid[14]=00000000 00000000 00000000 00000000
-basic_cpuid[15]=00000000 00000000 00000000 00000000
-basic_cpuid[16]=00000000 00000000 00000000 00000000
-basic_cpuid[17]=00000000 00000000 00000000 00000000
-basic_cpuid[18]=00000000 00000000 00000000 00000000
-basic_cpuid[19]=00000000 00000000 00000000 00000000
-basic_cpuid[20]=00000000 00000000 00000000 00000000
-basic_cpuid[21]=00000000 00000000 00000000 00000000
-basic_cpuid[22]=00000000 00000000 00000000 00000000
-basic_cpuid[23]=00000000 00000000 00000000 00000000
-basic_cpuid[24]=00000000 00000000 00000000 00000000
-basic_cpuid[25]=00000000 00000000 00000000 00000000
-basic_cpuid[26]=00000000 00000000 00000000 00000000
-basic_cpuid[27]=00000000 00000000 00000000 00000000
-basic_cpuid[28]=00000000 00000000 00000000 00000000
-basic_cpuid[29]=00000000 00000000 00000000 00000000
-basic_cpuid[30]=00000000 00000000 00000000 00000000
-basic_cpuid[31]=00000000 00000000 00000000 00000000
-ext_cpuid[0]=8000001b 68747541 444d4163 69746e65
-ext_cpuid[1]=00100f43 10001c16 000037ff efd3fbff
-ext_cpuid[2]=20444d41 6e656850 74286d6f 4920296d
-ext_cpuid[3]=34582049 35363920 6f725020 73736563
-ext_cpuid[4]=0000726f 00000000 00000000 00000000
-ext_cpuid[5]=ff30ff10 ff30ff20 40020140 40020140
-ext_cpuid[6]=20800000 42004200 02008140 0030b140
-ext_cpuid[7]=00000000 00000000 00000000 000001f9
-ext_cpuid[8]=00003030 00000000 00002003 00000000
-ext_cpuid[9]=00000000 00000000 00000000 00000000
-ext_cpuid[10]=00000001 00000040 00000000 0000000f
-ext_cpuid[11]=00000000 00000000 00000000 00000000
-ext_cpuid[12]=00000000 00000000 00000000 00000000
-ext_cpuid[13]=00000000 00000000 00000000 00000000
-ext_cpuid[14]=00000000 00000000 00000000 00000000
-ext_cpuid[15]=00000000 00000000 00000000 00000000
-ext_cpuid[16]=00000000 00000000 00000000 00000000
-ext_cpuid[17]=00000000 00000000 00000000 00000000
-ext_cpuid[18]=00000000 00000000 00000000 00000000
-ext_cpuid[19]=00000000 00000000 00000000 00000000
-ext_cpuid[20]=00000000 00000000 00000000 00000000
-ext_cpuid[21]=00000000 00000000 00000000 00000000
-ext_cpuid[22]=00000000 00000000 00000000 00000000
-ext_cpuid[23]=00000000 00000000 00000000 00000000
-ext_cpuid[24]=00000000 00000000 00000000 00000000
-ext_cpuid[25]=f0300000 60100000 00000000 00000000
-ext_cpuid[26]=00000003 00000000 00000000 00000000
-ext_cpuid[27]=0000001f 00000000 00000000 00000000
-ext_cpuid[28]=00000000 00000000 00000000 00000000
-ext_cpuid[29]=00000000 00000000 00000000 00000000
-ext_cpuid[30]=00000000 00000000 00000000 00000000
-ext_cpuid[31]=00000000 00000000 00000000 00000000
-intel_fn4[0]=00000000 00000000 00000000 00000000
-intel_fn4[1]=00000000 00000000 00000000 00000000
-intel_fn4[2]=00000000 00000000 00000000 00000000
-intel_fn4[3]=00000000 00000000 00000000 00000000
-intel_fn4[4]=00000000 00000000 00000000 00000000
-intel_fn4[5]=00000000 00000000 00000000 00000000
-intel_fn4[6]=00000000 00000000 00000000 00000000
-intel_fn4[7]=00000000 00000000 00000000 00000000
-intel_fn11[0]=00000000 00000000 00000000 00000000
-intel_fn11[1]=00000000 00000000 00000000 00000000
-intel_fn11[2]=00000000 00000000 00000000 00000000
-intel_fn11[3]=00000000 00000000 00000000 00000000
-intel_fn12h[0]=00000000 00000000 00000000 00000000
-intel_fn12h[1]=00000000 00000000 00000000 00000000
-intel_fn12h[2]=00000000 00000000 00000000 00000000
-intel_fn12h[3]=00000000 00000000 00000000 00000000
-intel_fn14h[0]=00000000 00000000 00000000 00000000
-intel_fn14h[1]=00000000 00000000 00000000 00000000
-intel_fn14h[2]=00000000 00000000 00000000 00000000
-intel_fn14h[3]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[0]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[1]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[2]=00000000 00000000 00000000 00000000
-amd_fn8000001dh[3]=00000000 00000000 00000000 00000000
-amd_fn80000026h[0]=00000000 00000000 00000000 00000000
-amd_fn80000026h[1]=00000000 00000000 00000000 00000000
-amd_fn80000026h[2]=00000000 00000000 00000000 00000000
-amd_fn80000026h[3]=00000000 00000000 00000000 00000000
+Srinivas, do you have any input on this series?
