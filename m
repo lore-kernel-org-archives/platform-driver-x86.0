@@ -1,171 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C913E38FA3;
-	Wed, 22 Oct 2025 19:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2791A2F6587
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 20:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761160538; cv=none; b=CSkpcgB2b93MVAGSB/u3uLBe+PhgiUQ9FchC+Qb2iZV1osb7w7nIJd4X00wizVmmuTIum1n4Ye6AWxp7aNN8yeyJZE8GbqCvuT2ubIk2NriRXCSTHHheY5mJqEjIloeEo0InlGm8/kx+W4dcQmnmw2JOmkeiURwE1+iJaZePU3k=
+	t=1761163483; cv=none; b=hJFjkRTDDJlRRrOervZyllmz7Du+aiCe4FJ/kvadhiulUfe2vXQveH9lmbpbP0uqjFWrSwIIrpFZlnhMFoIx0Q75QQ82ycCR+dW5E7tFCnAnj80jZ9pQRgDtk7wGvWvSq+e6wohQBFEQGQOjXm1xRbMY7drJIwcSCbpwwAgMcxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761160538; c=relaxed/simple;
-	bh=K1cwuC7d5MGbG5QJ3GxeB3KOwKsGVep9hVvVh+UTYVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gvuA1uNIbckLunh57n0gbxioqMBxqdk87Ezlr9z+hw/PDDqGtV/pOLBEIqL7up5bQGMaJikLxaKvkX993B3BRo0GUfQYHBGlG0o261yDgCXNUo/jCQxah59Ui9Q11/rjBD3LeuyxdW7jh2tms3NPNY59P6PiRt1iTZxzpDSv6mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSygiUh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761163483; c=relaxed/simple;
+	bh=pzKQpScBojcwimzec515EKqq3HVMVsbUfOukrN3jcX4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=jdf+wjjrqGpPzI8ieWa8ETaThd7ODwuogxfMzEJk2uKW49PonwApGdq3kWY/4vVN1taOObyaFWM52gAQrPFjrBab5AXuFDvxVjblY+2Cqpp8QVyZGdoa/jLloUn8AbplzAZ7B1mgVR1fZmvPiiboNIDVnq7Ya3Y83uaoDCCrQro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EMd1og8l; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSygiUh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CCBC113D0;
-	Wed, 22 Oct 2025 19:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761160538;
-	bh=K1cwuC7d5MGbG5QJ3GxeB3KOwKsGVep9hVvVh+UTYVo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MSygiUh14ly9ROYbXi2ONrtSGTnB/JyIyy3GvqKCDbgWO/Guh9DFbbAF7F9ybOr6r
-	 SALKXpLP6KftqOB1rFGd4LEMpk7EpJLqcpNCuZAfLSARqtLdIZXEMPEQxsezWtXckC
-	 U3JJwO7oU1c4BJojiX1cLjtH/+nbDTnTqUwD093tGEhkxtcT5jES1n8mM63JIkOfms
-	 G7tlPckQ7IoKynJ6louhLrr1ku3T1rdIe12c/OLQoRLTGP3uIjjoeEBLdRMzfDUNlK
-	 yiASFTaqCmCBY6Hre2LBI+6Fzph2WvJjfjKjuiTIQUGxsuEa9ENN8TayaZ4/WpKofF
-	 3UIdVUUBOyOAw==
-Message-ID: <7f2a89c3-de22-43fa-b714-626f12fc52be@kernel.org>
-Date: Wed, 22 Oct 2025 21:15:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMd1og8l"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4e8b4e4ce70so53841cf.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 13:04:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761163481; x=1761768281; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=syfHP/FixWx6a5wca9WL1CTN+RPYcNgwgP9r+XYSx/Q=;
+        b=EMd1og8lN3VEbabcdtRAXmhTFfi54Dq9CLBQmHvHVO6YrfZFe9+oa/AQ3LU/Q+Diqp
+         YcTIA+d5bCAPDfm5QfwmZHEF7T3Qha11ZSD9GGipm8xlOK9A8AZS3KrrGC86rFfE7JyF
+         XXlnPtNDv8cPhvE+jrDirlMSKxDzlUorrbZ6+5LRPww9KxBr0rwBdfd7b+WN+igPsLJN
+         S+HPwh/G3LjNOvBgu1115ahbiwE4FIm6DM8w2f4KMcB02vpOpGI7ibShfN+i3E8Z61ze
+         wEe2szx6LyS+88b9gIWdF1u5deMAcquPWVxJkb15BpHlBszNJJSNiRkGgPc7yRHMDW8u
+         JapA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761163481; x=1761768281;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=syfHP/FixWx6a5wca9WL1CTN+RPYcNgwgP9r+XYSx/Q=;
+        b=e/QN5bpsOynQENzYpTLPem6BFYGNXv65p6Flqx4HmTAeLImbRpj3adG7RqVnblNMaa
+         IFhe7ZgaDReCS92S+opVBMx5G+zN2duyrtOePirwdT/lcdWtRF8MejxSWkCt9mMUtAje
+         esxsUF4pypF4B0Qop5lxWu6XzmvQ2l9KDWMeWUvUFfxRgF6JE4EN+aeJuzHbgR2xyFOH
+         6ER3fI/WOhQIVOAkX+Jqp5sey8+SlLxlFJmLeYgffHkB+Tgus6ePUQlyFjNIr80Homa0
+         sNMMnqqBQBlZGqlzhgBlsj1F7+A/7gPWg9n2hACTHh0eazkja/xfUvUexNB+E8ov+rPZ
+         +WEg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1gk2se0M0D+wSAp9tHfkdurRv+BR5CqJmr7OSOlfU0MT/+7KLOIbcGUuNr6ZZmrevod7xmdZ6JDfRAHXA1d1tl3lR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyySkNvBoCICAK4/wrnH4PW7/V+hUYiIznq4MCRqxMxWZqWjKM2
+	O0OdNg9U5nAyt6UfPcIA90MTkZWn6JbGpf+osUm/LnufPx8m8IfB8hgcOpLoLLxA1KkBNkVy4mm
+	NYxD6XROVB8/3PIfchvS/XM9NtLz+Wdw=
+X-Gm-Gg: ASbGncsFfVi64qypl/2bf86g7YYOz4t6iZ0ElG5U2cZGXikqnEWV+LljXlGuYMcIpRQ
+	58Lc5KKsoBnV7gcMaTRh/OhwmGMxf+dzNSN/JMcZ5j1Wz37utFiFJlROJLMYNmPHcdJhdkcoXZS
+	NBZvsCLedeug/Z020mCfvnNfn/QDGTTeB4QNfMm7gyHX1NXyBnwJ/1DYOdIdkLWMNeGzdzHhpl/
+	eSSLiIlmt6JkuMMSegVE6f8YKT02vheT0vAGnsu+ofAtwG0XqXktm/khYL2siA=
+X-Google-Smtp-Source: AGHT+IE1HWyHR8dNmsL/vupWShf0EnMmBLwIZCUAx2VkzgWhdpLJSHSZLdM+SlzZoEX3Akpmw3L27v7UDRGKoE9XmG8=
+X-Received: by 2002:a05:622a:5cc:b0:4e8:a51e:cdbc with SMTP id
+ d75a77b69052e-4e8a51ed369mr228082021cf.43.1761163480648; Wed, 22 Oct 2025
+ 13:04:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Input: Add keycodes for electronic privacy screen
- on/off an use these in dell-wmi
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20251020152331.52870-1-hansg@kernel.org>
- <wcrbaqheqhzpjcg3au2c5xshwwed5bjyvl5u5pske6ru7lggjs@yjpnfdbkogba>
- <dfda82fc-1c35-4986-929d-d27ba877aab6@kernel.org>
- <jnlyr7m3q7etnipczqp22ix2ijovvoqnxnopjyrey7mtbryu3c@x7snlzka3euz>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <jnlyr7m3q7etnipczqp22ix2ijovvoqnxnopjyrey7mtbryu3c@x7snlzka3euz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Lars Francke <lars.francke@gmail.com>
+Date: Wed, 22 Oct 2025 22:04:04 +0200
+X-Gm-Features: AS18NWCDJ6rJiqppxhoJehMFE8nmq0piGouVGcS-qrA3NzToKDxrGF9TcWGHqlI
+Message-ID: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
+Subject: AMD PMF: CCP PSP fails to reinitialize after hibernation causing TEE errors
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-On 22-Oct-25 8:40 PM, Dmitry Torokhov wrote:
-> On Wed, Oct 22, 2025 at 08:24:46PM +0200, Hans de Goede wrote:
->> Hi Dmitry,
->>
->> On 22-Oct-25 7:54 PM, Dmitry Torokhov wrote:
->>> Hi Hans,
->>>
->>> On Mon, Oct 20, 2025 at 05:23:29PM +0200, Hans de Goede wrote:
->>>> Hi All,
->>>>
->>>> Here is a patch series for adding support for the electronic privacy screen
->>>> on/off events send on e.g. Dell Latitude 7300 models.
->>>>
->>>> On these laptops the firmware does not allow querying the presence nor
->>>> the status of the eprivacy screen at boot. This makes it impossible to
->>>> implement the drm connector eprivacy properties API (1) since drm objects
->>>> do not allow adding new properties after creation and the presence of
->>>> the eprivacy cannot be detected at boot.
->>>>
->>>> So instead this series adds 2 evdev keycodes for eprivacy screen on + off
->>>> and modifies the dell-wmi driver to use these, so that we can still
->>>> propagate these events to userspace for e.g. a DE to show an OSD.
->>>>
->>>> Dmitry, can we get your ack for the addition of the 2 new keycodes?
->>>> I think it will be easiest if Ilpo merges the entire series through
->>>> the pdx86 tree with your ack for the keycodes.
->>>
->>> Yes, that should be fine, although I wonder if this is best modeled as a
->>> pair of keys or a single switch? I know we have touchpad on/off but I
->>> wonder if it was the best option... Probably more convenient at some
->>> point if it was done through the atkbd.
->>
->> EV_SW has the same problem as the drm property API. The mere presence
->> of advertising a new SW_PRIVACY_SCREEN capability on an /dev/input/event#
->> node would convey to userspace that there is an eprivacy-screen and we
->> also would need to know the initial state (on/off) for using an EV_SW
->> for this and we know neither presence nor status before hand (1).
-> 
-> How is this different form presence of KEY_PRIVACY_SCREEN_ON/OFF? They
-> also imply that there is a privacy screen.
+while I've been active in the open-source ecosystem for years, this is
+my first report to the kernel. Please be gentle if I made mistakes.
 
-I've never seen userspace change behavior depending on which keycodes
-are advertised as possibly being send by a device.
+I'm debugging hibernation & sleep issues with my HP ZBook Ultra G1a.
+It has a AMD RYZEN AI MAX+ PRO 395 w/ Radeon 8060S.
 
-Typically userspace does not care of the initial state of keys (it
-assumes they all start unpressed), where as for switches the initial
-state matters and we cannot query the initial state here.
+After resuming from hibernation I get this log line once a second:
+  amd-pmf AMDI0105:00: TEE enact cmd failed. err: ffff000e, ret:0
 
-> If we really do not know if there is functionality present or not maybe
-> you can register a 2nd input device for the privacy switch upon
-> receiving the first event for it?
+Right after hibernation and before the first of those errors I get:
+  ccp 0000:c3:00.2: tee: command 0x5 timed out, disabling PSP
 
-Yes that is one of the hacks which we use for SW_TABLET_MODE, but
-I do really see this as a hack and I would like to avoid this if
-possible.
+On boot it looks good:
+  ccp 0000:c3:00.2: psp enabled
 
->> The real issue is that the firmware does not tell us if there is
->> an eprivacy screen. As mentioned the first time we find out is when
->> the eprivacy screen gets toggled on or off.
->>
->> We are having similar issues with SW_TABLET_MODE which userspace
->> uses to e.g. show / not show an on screen keyboard when a text
->> entry field is focussed. So the mere presence of SW_TABLET_MODE
->> can influence userspace without ever sending any events and we
->> have all kind of special handling in various foo-laptop and
->> intel-vbtn, etc. drivers for this, which I would like to avoid
->> here.
-> 
-> Probably have a similar solution: delay registration of corresponding
-> input device until you know the existence/state?
+I had to google what TEE, CCP and PSP mean so it's partial guesswork
+on my end that these are related. It looks like PSP hardware(?)
+doesn't come out of hibernation properly and is disabled which means
+all further calls to it fail and I get the error message.
+It looks scary but seems harmless?
 
-Right that is already done in some cases. What complicates things
-wrt SW_TABLET_MODE is that we would like to have it present as soon
-as the driver probes so that a 2-in-1 which is booted in tablet mode
-behaves correctly from the start. Most of the firmware APIs for
-SW_TABLET_MODE support getting the initial state, but their implementation
-can be unreliable. So we only fallback to the delayed registration
-for known unreliable models, which requires quirks...
+Commit 11e298f3548a6fe5e6ad78f811abfba15e6ebbc1 from 2024 has
+more or less exactly my error message but it doesn't seem
+to be fixed for this case.
+https://lore.kernel.org/all/20240216064112.962582-2-Shyam-sundar.S-k@amd.com/
+(I picked my recipients partially from that mail & maintainers.pl output)
 
-This is getting a bit offtopic but it does show why I'm not in
-favor of using EV_SW style input-devices when there is no reliable
-initial state.
+My Environment
+- Kernel: 6.17.4-arch2-1
+- Hardware: HP ZBook Ultra G1a with AMD Ryzen AI Max+ Pro 395
+- Distribution: Arch Linux
 
->> So having ON / OFF EV_KEY events which we only generate when
->> there is an actual eprivacy on/off event are by far the most KISS
->> and fool proof solution.
-> 
-> This assumes you assign special meaning to it (i.e. pretend that it is
-> not really there until you see events).
+I can (try to) test patches and provide additional debug output if needed.
+I have not tried any of the 6.18 RCs yet but I'll try to figure out
+how I can install them next. Looking at the git history I can't
+see any changes between 6.17.4 and 6.18 that seem relevant though.
 
-As I see it there are 2 cases:
+Thanks for your help!
 
-1. We can query the presence and status of the eprivacy screen at
-boot, this would map nicely to a SW_EPRIVACY_SCREEN, but we already
-have the drm properties API for this and this was put in DRM because
-this ties the privacy screen to a specific output which is useful
-to know.
-
-2. The first thing we findout / hear about an eprivacy screen is
-a eprivacy on/off hotkey press. Notice the "hotkey" there iow
-this event gets send as the result of a key-press event.
-
-For 2. I think that just modelling this as the key events which
-these also happen to actually be is much simpler then dynamically
-registering a second input device on the first such a key press
-
-and I also think that the userspace side will be simpler with
-just key-press events rather then having to deal with the dynamic
-second device registration + reading an EV_SW .
-
-Regards,
-
-Hans
-
-
-
+Cheers,
+Lars
