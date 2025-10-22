@@ -1,212 +1,88 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983122F7462
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 20:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946562F0698;
+	Wed, 22 Oct 2025 21:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761164689; cv=none; b=WjjlMvuTMkqjWifUCebeyecWJK42E1XEMd1BGYTJMakomYG7zbwxQxMycLa8A8q7qvAgK9tYMpNsLeQ1+ZN+zod8fLcaB4WruchgsLPb4GHRq0aVx4zvUEkBBalleQzN2FaaW+7Aie/q8W4bMO8qMezGEQMtFleQXh6FQjnTYpw=
+	t=1761167863; cv=none; b=VI/5/fVu570AnGgxcUoAu8Px5cbaqD9nUL5YHx4fBsOqqeYH3IzSvWyNGgJ6eypbQojyms2OASEyFePqw9iIRip0J/cm486BskUTCNznfATjvEExRGuYAz0tR8YszmJK3KVBFKGobn5tgubPm+dwh8IhgXW1ljWpyGDS/8ABUPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761164689; c=relaxed/simple;
-	bh=Lh6dW7DHWi6v7GhAsSzdgwRm4VvmSILNHb9M+uDnhAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6nYvJs8rt2VYDjtUVsJY2n1YybbFaB43tndy5+pYqOy1bSbst3LkN3/oJWRiOWl+pJuzKzLNQx+146iTc86S0vd9Uyh4iq6aVHoExU6lL5Kd3qFYjFyJRexqqfFKaUVcs3DF9GAfduOok1vFdJ366IVgCMJ5EVJogxs9E/y/kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhTz/Stu; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761167863; c=relaxed/simple;
+	bh=sclpuT7WvkjmnRQlVfG9mH4zGbkipTjnUhVQVYvaZM8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bjjl8ksvDpZvR9RDwsWIqqD+X7+KcOjmPKpLktoLR55Q04Hwv37SZv5/AKEEbMSojwAGZMYgh+R6yJMia1VqCcbkuF+UYhxRhCiFIWXsUw0JYQyK1oUaSvYLNRe2pfZ1EtiLHHnkg2CL1MI5BJ86oFLNW/BKL0o5xUCYHDR12yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jttfmhjh; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhTz/Stu"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-782e93932ffso50797b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 13:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761164687; x=1761769487; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Bx7FEgIxtf1pLVS5K11GWxotS0kabqxZBF1gAq0R14=;
-        b=EhTz/StuV5KGOW51hwUQPno8AFrJT5vv4ZfHJf93X/y68CpuCuN2hrH0WlVlaQT6qu
-         Ktufo4fHl9l8EnBV8UYku7cWAW8N/d0qzdYo4gFZO9a/bf+oMXry4rm40rrm2gDg64Ei
-         JmrBSYcDVj8uzCXFjvy55Z37EVXNBrSghfy9bakVuuOX8dbEQKd0OqnUDoHCqCwrJ1jF
-         0hqcp7ztgVxKTCcmydYgsGkLcF4NQ1B8OgPf4/L1mZIq6AqptWUooHEdbIxqCpXCdrSZ
-         u8KhqUuihUNhjBv9ZRziT8KkVRR+sVmjyyiJAZ9bFXyUiuHEDuc+862AmhGZkCszVM21
-         PikQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761164687; x=1761769487;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Bx7FEgIxtf1pLVS5K11GWxotS0kabqxZBF1gAq0R14=;
-        b=gU6BB4VHjr2EYZS2XzoIVumWMHrCYfF+/+vnQA9Q1/jVj0lx0GXof6uEnuzJ7gQPdr
-         GjX+dVrDvLNDS8hjmXj+JWgw+zfiw/SrFostosPdheDQlK7Ww1EOREavqvLbu/8DY1jI
-         0UI3cpnvsQ9TrJJoSIO+vp6rGlQhjeny6cciXdy8wZN3RN2UJGIGN3Q7Ps8sLVyJfZdY
-         LuHejJsbArFLh1SxwL9i3ImOuyf78H/JJMnDJsKRN9I2Lu6YvmXyeUCjeijqn7lG33fB
-         PAAI7wXegeHz9e9o7DxqDTpqKzxFZg+jz5fY+aspmx5/IZL+HHkwFR2ldaOFXWMhKJw3
-         2ccA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxWdil+A7/lB60NOqMrvzPdEX8fBoegFtIvISFpymycerTE8HTW52hh8wUo62KmOHYrOoZeeBzDJL35sei4EL3Y/Ms@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx18zuZ9vO/ZlppNIbnE69A+mQF7oEKiQHhPvQkH5HvpW+2ixz0
-	RGDskzSjqDqSxCqHLS/bSijz/044umaFmMSA04WfRY7cnT+xvJh6a90X
-X-Gm-Gg: ASbGncv/tV7/73qDJW5Rx+oVPegzphRYT1Eq58DWlYKTGX6yfx8pTKib/I41ueyDdyT
-	zx1qkrQXPhwPKfkhJcfWKxidmnw7a/DxkXozm9Pr4cRHfHlJdn3JHBBLTtKjTmiHIi/n4k0xMAt
-	p4e5G7XI/aOVsfaW3fafsryZw0pwPlq8+En60b3Z6vdHHDI2pgyqQ7YGHZO9T+FrQVOp6kAb2S3
-	CvcjFLBjqCsKmuUg+YdO6aO1aSwvFM1a7fDMHay6rdjOCjpSuNLwfgiOidiZu45NQ+D029aT2xR
-	mzIg1mAqqQpmPPIduEelM4GzGosTGd9t1KetIr/vRwkNe+HdYDTI2+hWlpOrdWycjVwX44CwrNu
-	09d3PgJW97Cu8NIAtK+VJaL7+l2Hslutmdyj/VkfAdWsISxM/wp35ienWin0ly/iHBmsqDFfVyB
-	RgrksoW4fxd31a2gilIElusvgo9eNFSxOXnCiCgQSk2SjGtFETUw==
-X-Google-Smtp-Source: AGHT+IGOo2oLikL23UA8DEpFwJqGrva5sRrlgk0zACArWqx5qkwzdKQ9hLvW9AadUTvO7cSP3eya3Q==
-X-Received: by 2002:a05:6a20:939d:b0:2fb:62bb:e0e with SMTP id adf61e73a8af0-334a8610fe8mr26702608637.32.1761164686718;
-        Wed, 22 Oct 2025 13:24:46 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:53a9:459c:bdc:6273])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a274abf6d5sm114634b3a.33.2025.10.22.13.24.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 13:24:46 -0700 (PDT)
-Date: Wed, 22 Oct 2025 13:24:44 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/2] Input: Add keycodes for electronic privacy screen
- on/off an use these in dell-wmi
-Message-ID: <3df27pbmdhv3x5zsfdnyttkliqdetunxwhc5e6yfbqhcbz4e45@l7ddhswxl4tk>
-References: <20251020152331.52870-1-hansg@kernel.org>
- <wcrbaqheqhzpjcg3au2c5xshwwed5bjyvl5u5pske6ru7lggjs@yjpnfdbkogba>
- <dfda82fc-1c35-4986-929d-d27ba877aab6@kernel.org>
- <jnlyr7m3q7etnipczqp22ix2ijovvoqnxnopjyrey7mtbryu3c@x7snlzka3euz>
- <7f2a89c3-de22-43fa-b714-626f12fc52be@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jttfmhjh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761167861; x=1792703861;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sclpuT7WvkjmnRQlVfG9mH4zGbkipTjnUhVQVYvaZM8=;
+  b=JttfmhjhbvhtQ0rNDbztckGwnX4vNDit5rJcmnjCYaJIaUn3C8NMTLIh
+   dwn6R3PlvG12FF5mgq792E74yiwE9c5Aoompq9tEfCkrfrK/2i0eYXfpR
+   dZp544QZJ/jO6BNpbEf2H0jgNHaush147LurSDQD2LOlA0Nbi2gsf+YZd
+   JZ59Udg362FhJEfsml++4y0MzrrymCIRGwAJs6KGI3obBhaUSL/1vBg5R
+   m0TrM7wm7q5Mx3GztiKUQmPANgPKnab2qh5KYXh2g0rnJiI2q3Cto8Hz/
+   nr/khI221vug1L6L4zSQK4zr/cTFA5wv7V6mtodVxxtYykGAsfLm0Xzzf
+   w==;
+X-CSE-ConnectionGUID: hVB8DH9rTQirMPMzayL3eQ==
+X-CSE-MsgGUID: 2sD/tOMkRLqfn3oCYvayWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63367766"
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="63367766"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 14:17:41 -0700
+X-CSE-ConnectionGUID: nKgXXpXgTlSX9pda04+DDw==
+X-CSE-MsgGUID: lUJw4KBDTGS5sUg4t7p7Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="184461936"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 14:17:40 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] platform/x86: intel-uncore-freq: Add additional client processors
+Date: Wed, 22 Oct 2025 14:17:33 -0700
+Message-ID: <20251022211733.3565526-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f2a89c3-de22-43fa-b714-626f12fc52be@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 22, 2025 at 09:15:35PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 22-Oct-25 8:40 PM, Dmitry Torokhov wrote:
-> > On Wed, Oct 22, 2025 at 08:24:46PM +0200, Hans de Goede wrote:
-> >> Hi Dmitry,
-> >>
-> >> On 22-Oct-25 7:54 PM, Dmitry Torokhov wrote:
-> >>> Hi Hans,
-> >>>
-> >>> On Mon, Oct 20, 2025 at 05:23:29PM +0200, Hans de Goede wrote:
-> >>>> Hi All,
-> >>>>
-> >>>> Here is a patch series for adding support for the electronic privacy screen
-> >>>> on/off events send on e.g. Dell Latitude 7300 models.
-> >>>>
-> >>>> On these laptops the firmware does not allow querying the presence nor
-> >>>> the status of the eprivacy screen at boot. This makes it impossible to
-> >>>> implement the drm connector eprivacy properties API (1) since drm objects
-> >>>> do not allow adding new properties after creation and the presence of
-> >>>> the eprivacy cannot be detected at boot.
-> >>>>
-> >>>> So instead this series adds 2 evdev keycodes for eprivacy screen on + off
-> >>>> and modifies the dell-wmi driver to use these, so that we can still
-> >>>> propagate these events to userspace for e.g. a DE to show an OSD.
-> >>>>
-> >>>> Dmitry, can we get your ack for the addition of the 2 new keycodes?
-> >>>> I think it will be easiest if Ilpo merges the entire series through
-> >>>> the pdx86 tree with your ack for the keycodes.
-> >>>
-> >>> Yes, that should be fine, although I wonder if this is best modeled as a
-> >>> pair of keys or a single switch? I know we have touchpad on/off but I
-> >>> wonder if it was the best option... Probably more convenient at some
-> >>> point if it was done through the atkbd.
-> >>
-> >> EV_SW has the same problem as the drm property API. The mere presence
-> >> of advertising a new SW_PRIVACY_SCREEN capability on an /dev/input/event#
-> >> node would convey to userspace that there is an eprivacy-screen and we
-> >> also would need to know the initial state (on/off) for using an EV_SW
-> >> for this and we know neither presence nor status before hand (1).
-> > 
-> > How is this different form presence of KEY_PRIVACY_SCREEN_ON/OFF? They
-> > also imply that there is a privacy screen.
-> 
-> I've never seen userspace change behavior depending on which keycodes
-> are advertised as possibly being send by a device.
+Add Intel uncore frequency driver support for Pantherlake, Wildcatlake
+and Novalake processors.
 
-On Chrome OS we are trying to go by what peripherals report, but I can
-see that it might not work for a generic Linux distro.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> 
-> Typically userspace does not care of the initial state of keys (it
-> assumes they all start unpressed), where as for switches the initial
-> state matters and we cannot query the initial state here.
-> 
-> > If we really do not know if there is functionality present or not maybe
-> > you can register a 2nd input device for the privacy switch upon
-> > receiving the first event for it?
-> 
-> Yes that is one of the hacks which we use for SW_TABLET_MODE, but
-> I do really see this as a hack and I would like to avoid this if
-> possible.
-> 
-> >> The real issue is that the firmware does not tell us if there is
-> >> an eprivacy screen. As mentioned the first time we find out is when
-> >> the eprivacy screen gets toggled on or off.
-> >>
-> >> We are having similar issues with SW_TABLET_MODE which userspace
-> >> uses to e.g. show / not show an on screen keyboard when a text
-> >> entry field is focussed. So the mere presence of SW_TABLET_MODE
-> >> can influence userspace without ever sending any events and we
-> >> have all kind of special handling in various foo-laptop and
-> >> intel-vbtn, etc. drivers for this, which I would like to avoid
-> >> here.
-> > 
-> > Probably have a similar solution: delay registration of corresponding
-> > input device until you know the existence/state?
-> 
-> Right that is already done in some cases. What complicates things
-> wrt SW_TABLET_MODE is that we would like to have it present as soon
-> as the driver probes so that a 2-in-1 which is booted in tablet mode
-> behaves correctly from the start. Most of the firmware APIs for
-> SW_TABLET_MODE support getting the initial state, but their implementation
-> can be unreliable. So we only fallback to the delayed registration
-> for known unreliable models, which requires quirks...
-> 
-> This is getting a bit offtopic but it does show why I'm not in
-> favor of using EV_SW style input-devices when there is no reliable
-> initial state.
-> 
-> >> So having ON / OFF EV_KEY events which we only generate when
-> >> there is an actual eprivacy on/off event are by far the most KISS
-> >> and fool proof solution.
-> > 
-> > This assumes you assign special meaning to it (i.e. pretend that it is
-> > not really there until you see events).
-> 
-> As I see it there are 2 cases:
-> 
-> 1. We can query the presence and status of the eprivacy screen at
-> boot, this would map nicely to a SW_EPRIVACY_SCREEN, but we already
-> have the drm properties API for this and this was put in DRM because
-> this ties the privacy screen to a specific output which is useful
-> to know.
-> 
-> 2. The first thing we findout / hear about an eprivacy screen is
-> a eprivacy on/off hotkey press. Notice the "hotkey" there iow
-> this event gets send as the result of a key-press event.
-> 
-> For 2. I think that just modelling this as the key events which
-> these also happen to actually be is much simpler then dynamically
-> registering a second input device on the first such a key press
-> 
-> and I also think that the userspace side will be simpler with
-> just key-press events rather then having to deal with the dynamic
-> second device registration + reading an EV_SW .
-
-OK, I agree that if you have a reliable way of querying the state you
-can simply go with the DRM properties solution.
-
-Since this keys are in effect notification only, not something that
-userspace needs to actively handle, I don't suppose you can add another
-state to the DRM privacy-screen hw-state: "unknown" and update it when  
-the state becomes known?
-
-Thanks.
-
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 2a6897035150..0dfc552b2802 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -256,6 +256,10 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE, NULL),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE_H, NULL),
+ 	X86_MATCH_VFM(INTEL_LUNARLAKE_M, NULL),
++	X86_MATCH_VFM(INTEL_PANTHERLAKE_L, NULL),
++	X86_MATCH_VFM(INTEL_WILDCATLAKE_L, NULL),
++	X86_MATCH_VFM(INTEL_NOVALAKE, NULL),
++	X86_MATCH_VFM(INTEL_NOVALAKE_L, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
 -- 
-Dmitry
+2.43.0
+
