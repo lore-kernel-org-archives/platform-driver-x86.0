@@ -1,141 +1,130 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0187A26FA6F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 23:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF00619D074;
+	Wed, 22 Oct 2025 11:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761088580; cv=none; b=VzdRTpnRvtvNUzgtqlVS0iXL5Z+4OAMPHvC7s2N4SaLdHrAxeNS39TZYDHAie0UcBLtOkoqSFJgvRGSIM9QKsz1bQLZn8Zbh/ONym2Dn6/TA/CVTtvjLP7msoeLoA97YQwn2tlOLj3TNovufmoMzlIRCEO/HkimW4gFHKmx+y00=
+	t=1761131112; cv=none; b=hDcIyfa8h0ClprzyVYKv/kHrwTDWKmlX57qzOCVV8igeOo8A2noTt8a45wPJHLXjQFfpKQ2cXPxMOMcc7p5e3NsBqkt2yzQ4kX2Jx+xvTlAgPoT0Iotv8GTz3PnhzoN0Ux3S4INWg4aWolO17I8ELoKkdZigQ/PGogBfUG8SRsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761088580; c=relaxed/simple;
-	bh=MkrCXOKD8Uo8t+/oSxngnI6HGdowLk7sk5mgxdJXK2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=JIw/YLvPPm4i1bPuztYKHFtoxxPbFK3sJNDvDln2EMfFnj1bIWRXUGRYkvmUKBawQIBcDfF5T6jRxekYQxGrpojwGLHsVYXbtO0lWfTP4j4r0MJYn8F+JlgL0WRybBAfr8M1PtpP8eYySRBxvWhxVsiApdcXhJCWnyiRmuQP+8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft4MRMs1; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761131112; c=relaxed/simple;
+	bh=osJGDS37NazLmjN0e6+Zu9bkiQjkOAcBm/73aoNH/iA=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=nSi2zuLjXbcEb9+cVNbpokg3Na73SANUVrw3DKoRLescixqxvQPOCRjg/kqepQmpekskX8t5iNH64nM2RNlItzIlCaz6WxPJ1BdvIzr3cIdhIe5/W7ht+k7BegOQuV8KPpZizSqmJ+c91TUw+MFV9VSQk+t3cdf4xg1ivg0gA9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCjDfkdy; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft4MRMs1"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-36a6a39752bso62018791fa.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Oct 2025 16:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761088577; x=1761693377; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
-        b=Ft4MRMs1CRt/VtZB7365S+5OjFQ3X19yt34APhWDzMNH0J+8X8dGyOJrZCXu15+h5y
-         wcaCWKC8CrSSC2MSDmLpn1GBZSskH6QUCsjNeuLA76d3jxSXj/nRYrD08XKERpeh69tt
-         2A+fheMaFzkS1BqQDBGpSXi2U8yRSzh0dioUm6N1mpPj6oMpC6U8ltBMMsFA1Jx2PUYU
-         qoo1B7vEs/T/13Whpkgxi04mDs0C75Mu+qczMN5zZyeospktm5lCGxjyBeI67mKS2hQo
-         3hKgGPv6pAX+bJht5qptzFz4DSqz3UnpP2WTsseirQEiSn/jVL7krnWWZ07XYtD5KmhS
-         cfOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761088577; x=1761693377;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R3iS90oGUh2sChEA1Qdr/sH9FOKItDj8EpmJAd2/xNI=;
-        b=erIBXOsUCNfp7giDXzC8zVpoyjbMwd9oa1EhactpJTFRIvqR3IBJcajbF9qsVypcwI
-         qQL/NqNAeNeN94cVnBrXjs8ruCpbHSqgIlEXZOwV2shTkI5RNxTnDFbVBpJQUeYXmHY6
-         5kIgjD+rEy/LLRqCfmBW6CramqT4JyMeSipDwvj7IfUDOYPBCIlMaGPCwvoPwThdyQcz
-         JKdQYOkJj4zzcLwqJeiFkqqZ/T5u+xnzTuqGcrfm4sF37BB5fBQI0M+rGz3AYMnkEFAB
-         wuuxZ0p8cMQzZvlzW8XUAV3cnXZ/hER4MtTPJWxB9pvyiHo2tS4HA0rhC5Pi7BUcY9OW
-         DVcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzY53zpct40FzJGZyWzsgIyk6ZH4dUZOFVAvXWdwLFwWwKIN7JFyIGq18IJgPvxmXhvdEyqP700jSDhQUxRStSi/n9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg9HCpONhX5iC4boODZO5l94ALb3+DCN9FVF881G9djegePMcy
-	5g4okopWxPreY92f690+wMWk0jyqkmdk4hPge0rn2vBNEQZ71kC6+uX3
-X-Gm-Gg: ASbGncuYc64ONDyy/3gHovTvYU1wH/kXXiNvY0LJ4axaRF0+8wWkR7suSWlzI+53ccn
-	fS/HSmhRwLFNkAo3rYCAMFTWCQEMQD21eDdjYARYkbcFNgMSfO03EMGK9x8IC8y7YR6F/H0WE/h
-	kL50Bn2eiR8o4aoKl/pCpxgKJBvDAPjQ85koan35oiHhZBDmrC6F85b90nepTdPRCdwAbH2fFLm
-	TNmSLT8JvTceaSLEcWRio5X2Ouefht4NAM2UsxtHfBFZMX7EINcOwd2FI4NfplfYIPkGu4cjhiH
-	pWOOnLbBElP5EBU9CSj5b4eUQ8zMW/KNEbZon7PSBMYxNMWX8xRR20F79z4Q5TYJUmjV+Dc3OEb
-	TJ8/VR2uqiplH1T2S4HszhfW4RYX3fEhUWQN0d1aD1eZddBYDuM9QaJmC6+ZUS4mNggqgbzPmWo
-	Rj3cMC+H9sW/Hv6PqrPKevBW9bYDo=
-X-Google-Smtp-Source: AGHT+IFXQQCdVjndGUlAQt55SyUCqt01O1JPB+Zj0At2Wm92ggmQB/7qIpSekj8luvKqPDpYm3P0Fw==
-X-Received: by 2002:a2e:a813:0:b0:372:8f0d:b0bc with SMTP id 38308e7fff4ca-37797833eabmr54004851fa.9.1761088576811;
-        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
-Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-377a9664a97sm32800741fa.50.2025.10.21.16.16.14
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 21 Oct 2025 16:16:16 -0700 (PDT)
-Date: Wed, 22 Oct 2025 01:16:10 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: yazen.ghannam@amd.com
-Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux@roeck-us.net, mario.limonciello@amd.com,
- naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
- suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-Message-ID: <20251022011610.60d0ba6e.michal.pecio@gmail.com>
-In-Reply-To: <20250107222847.3300430-7-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCjDfkdy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761131111; x=1792667111;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=osJGDS37NazLmjN0e6+Zu9bkiQjkOAcBm/73aoNH/iA=;
+  b=hCjDfkdytGypOAeAx+aRdNmMteUPYI2qgLACeUqyphs56LDRqHLU9uZG
+   BbxeOKzuys4L6D61+sAefUmZCuDo90H9p2J2F1Z6eRvi0AUV9x74qQNc2
+   55VM4cH6qu7bw7FvHnqYnp9L47vouGBebb4dR259ciAOZnhMZiPT9m6nQ
+   4LxX2kO7NOGT/D56PI+oUA9SpIGEMV+1WvV7V8cKazOdcD50Sx9R/LD6j
+   0HGHomO1HH7E7bmLNcWknpIPcEvqoPOISaHcs5RgVFbFgKyRep9FZNB+8
+   /P+G6zvNWAXkZqYcRQ5dGNq01q6CgnXFzJWtMrZs3p6/ExlKGLx6Vovg0
+   g==;
+X-CSE-ConnectionGUID: 3r8a6+afQnGx5UOJGOunSw==
+X-CSE-MsgGUID: RdUgsiIOSkiAzo783yijVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73879463"
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="73879463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:05:09 -0700
+X-CSE-ConnectionGUID: KbyYTW4fRwyWB2Ywo1bl4g==
+X-CSE-MsgGUID: +HuE0kZFRdaeDr9iRCCCiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
+   d="scan'208";a="183013092"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 04:05:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 22 Oct 2025 14:03:49 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.18-2
+Message-ID: <pdx86-pr-20251022140349-2206824358@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> Currently, the total AMD node count is determined by searching and
-> counting CPU/node devices using PCI IDs.
-> 
-> However, AMD node information is already available through topology
-> CPUID/MSRs. The recent topology rework has made this info easier to
-> access.
-> 
-> Replace the node counting code with a simple product of topology info.
-> 
-> Every node/northbridge is expected to have a 'misc' device. Clear
-> everything out if a 'misc' device isn't found on a node.
+Hi Linus,
 
-Hi,
+Here is a platform-drivers-x86 fixes PR for v6.18.
 
-I have a weird/buggy AM3 machine (Asus M4A88TD-M EVO, Phenom 965) where
-the kernel believes there are two packages and this assumption fails.
+Fixes and New HW Support
 
-[    0.072051] CPU topo: Max. logical packages:   2
-[    0.072052] CPU topo: Max. logical dies:       2
-[    0.072052] CPU topo: Max. dies per package:   1
-[    0.072057] CPU topo: Max. threads per core:   1
-[    0.072058] CPU topo: Num. cores per package:     4
-[    0.072059] CPU topo: Num. threads per package:   4
+- alienware-wmi-wmax:
 
-It's currently on v6.12 series and working OK, but I remember trying
-v6.15 at one point and finding that EDAC and GART IOMMU were broken
-because the NB driver failed to initialize. This fixed it:
+  - Fix NULL pointer dereference in sleep handlers
 
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -496,8 +496,8 @@ void __init topology_init_possible_cpus(void)
-        total_cpus = allowed;
-        set_nr_cpu_ids(allowed);
- 
--       cnta = domain_weight(TOPO_PKG_DOMAIN);
--       cntb = domain_weight(TOPO_DIE_DOMAIN);
-+       cnta = 1;
-+       cntb = 1;
-        __max_logical_packages = cnta;
-        __max_dies_per_package = 1U << (get_count_order(cntb) - get_count_order(cnta));
+  - Add AWCC support to Dell G15 5530
 
-It was a few weeks ago and the machine is currently back on v6.12,
-but I'm almost sure I tracked it down to this exact code:
+- mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
 
-> +	amd_northbridges.num = amd_num_nodes();
-> [...]
-> +		/*
-> +		 * Each Northbridge must have a 'misc' device.
-> +		 * If not, then uninitialize everything.
-> +		 */
-> +		if (!node_to_amd_nb(i)->misc) {
-> +			amd_northbridges.num = 0;
-> +			kfree(nb);
-> +			return -ENODEV;
-> +		}
+Regards, i.
 
-Thanks,
-Michal
+
+The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df56787:
+
+  Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-2
+
+for you to fetch changes up to 34cbd6e07fddf36e186c8bf26a456fb7f50af44e:
+
+  platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530 (2025-10-15 11:22:35 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.18-2
+
+Fixes and New HW Support
+
+- alienware-wmi-wmax:
+
+  - Fix NULL pointer dereference in sleep handlers
+
+  - Add AWCC support to Dell G15 5530
+
+- mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
+
+The following is an automated shortlog grouped by driver:
+
+alienware-wmi-wmax:
+ -  Add AWCC support to Dell G15 5530
+ -  Fix NULL pointer dereference in sleep handlers
+
+MAINTAINERS:
+ -  add Denis Benato as maintainer for asus notebooks
+
+mlxbf-pmc:
+ -  add sysfs_attr_init() to count_clock init
+
+----------------------------------------------------------------
+David Thompson (1):
+      platform/mellanox: mlxbf-pmc: add sysfs_attr_init() to count_clock init
+
+Denis Benato (1):
+      MAINTAINERS: add Denis Benato as maintainer for asus notebooks
+
+Kurt Borja (1):
+      platform/x86: alienware-wmi-wmax: Fix NULL pointer dereference in sleep handlers
+
+tr1x_em (1):
+      platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530
+
+ MAINTAINERS                                    |  1 +
+ drivers/platform/mellanox/mlxbf-pmc.c          |  1 +
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 12 ++++++++++--
+ 3 files changed, 12 insertions(+), 2 deletions(-)
