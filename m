@@ -1,263 +1,439 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47056348870;
-	Wed, 22 Oct 2025 18:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6BF34FF50
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 18:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761158625; cv=none; b=pXRqx6jRiF2sTLABj+gpz+unHxxkTd4zwkC8qer1JReX3qPqqLfZZpscnNGOMkVSAE9GndUXowRR1Qz8hF5meuSUe38zkrt8Y3UmjlBx1588E0BC5rLzmPgctawj1EuPHLBNH+HWGRu6CwuQ8OfDQF7wgVxcrG+0kS1MbAV60As=
+	t=1761158779; cv=none; b=bn5sZsWK2uR54dTV2ARHgVW7vRPOF9G1dWBkrm3qa/mW4WfuaS2Zy6E9ohN8kgd78KksHrmJIXyTkFB7DnYIGSOqI1c089kDK3ZnuWzcQe03BVAm2dF6G9creACANA82FArnMTxcyRWRUspvbJ46eVHW76A53yXYzdC385VJL2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761158625; c=relaxed/simple;
-	bh=SnpoFE5xVRVea+Sw7bk4vBkAKnlGJ1/m3pcGoKD3y/s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=OUbKdKzysSxBZAo+cKx22TKP98eHVpFzD6mTruf+VYk0pjD2+S89/qJJek+NzNxZL4hr6Svpd61e2eqYkRQqDKQ9bk/V6IRkbHKzvI94qnFNrEEvPdx6WvP+qX3jXPKroPsXI03NpgKEEdI9fy1NBY78AtBnCEXqqxHQJHnpKIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=L5gDZGF7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zEkprsMX; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1761158779; c=relaxed/simple;
+	bh=CRfotCoe9SQHv1OTWomqUA/H7RP+2gFgJgYZ+czZZb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mpVrxKf42y2+ad1cDeYQGU6W/34no2J6uxh9bLgeaeET9gdSUwhK8MCU63FI1oeb/lvUtIHn6DgxhfXzu8btRokgsmFUkzjlD6UbNyOGu0Cg0+7cyaK/Khjn6BsKBMa+gMPHxke+LPFsBKBfOuHtSVRPeo3vqKwy+24KXaoE38w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uP8/rY+I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="L5gDZGF7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zEkprsMX"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4AEA21400105;
-	Wed, 22 Oct 2025 14:43:41 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Wed, 22 Oct 2025 14:43:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1761158621;
-	 x=1761245021; bh=a5gBAyzs5ZMXhns/nsTEBnOvmf2BeF0u5fAf5dTyws8=; b=
-	L5gDZGF7jRuiCRvNw9fBGwJfR4apNfCgzzuyqi2vLUWcXfc82lUtGuwFnYYcDoqc
-	hGl6/PEIR94Ah6sJU6udAS8aF0fp3HzxbBb1pu2fwh618DcmFaBkG7Cz6E+sMvFP
-	qD06SU4vvtXRhvRYGiVl9kvuMZ9j0cP4g0l3U4cPFHd8D0iDmVippRTc66Vba1lR
-	nYSt33TH3gShUwvineJL6BgiOTmPFYcZ7aKmAjg+KqIIK1im4Ln3D/lacEl0YN4j
-	0k18VgON1UM59wnB2Zt8TGXD3QzkwkqLoCIdUQQL/bHpxu/aSCff8fSKBJN8YThT
-	8Kyz1uV3dAQy5Y0bYLh/dg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1761158621; x=
-	1761245021; bh=a5gBAyzs5ZMXhns/nsTEBnOvmf2BeF0u5fAf5dTyws8=; b=z
-	EkprsMX0KK7YLaXFGGlFpzOvnCcoCeRQfTonrcX7936BQpnuklenjrmdzELw/7sT
-	c2qhZYQ0uXrzcKRpNC267OWvPu/RR3o4j2xu7FbI+lExRdtOetCNi3IEGxuuBtlV
-	c5aUI/jc/pZfqFCoTFFTIEyVH+Q0+Ygao3RBvqc1AkqPYJcPWDGtmSjROKB1m/sy
-	Xc+bbDfQ7wgNurnTAVM0utW+lpHyC0Qq0y2f5K439Jv0R1la4BmwZCj/ies9ILlD
-	9vGW7ZMnPvR2StHpr47LOWXwLIrqt+hsQ2VIxNLpjB6Z63+lbN8HeM1SzTD0cTV8
-	umosIC6uMmm7FK46+Tj6g==
-X-ME-Sender: <xms:3CX5aK-8YwXN0pguwQvWJ2JZseLf58kKq6_5ZnPnK0A2oiF36Kapiw>
-    <xme:3CX5aFhk33UjBVonRl6O-JIHOiIf7CX6sDezTo7PZMJsYtWfHQ6qqxnmMm9RvzC_Y
-    Yv4AbH9o8nm91woBkaA1fT1DTlKcLywROjZ44b2c6drYJg42dO9mQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddugeegfeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
-    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
-    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhkvghprghn
-    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdr
-    tghomhdprhgtphhtthhopehisehrohhnghdrmhhovgdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhf
-    ohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:3CX5aCh-9PIS9rM8vvCVcky8Ugn6P7i9mATUtrWcJQX97Uk_o51EWg>
-    <xmx:3CX5aCGiuqYxOFaOtlhXJaDyJVY_kvZxPAJNlu-Nd3V753JXRhuR-w>
-    <xmx:3CX5aARsGVOuLp29HxZtdkfCSn6CQmOm5pm7Vj24XyrBogvWx61D3Q>
-    <xmx:3CX5aHyzd7nHP28BvF7YJRvLZhepMUNQLrVyOCtsjs2gUr76QWZ07w>
-    <xmx:3SX5aMPDvQfaCLvYRdREBMYKPbxFihdU6toRgmTp8rNUVJGff8ZpaNvq>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D09042CE0067; Wed, 22 Oct 2025 14:43:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uP8/rY+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C75C4CEE7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 18:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761158778;
+	bh=CRfotCoe9SQHv1OTWomqUA/H7RP+2gFgJgYZ+czZZb4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uP8/rY+IcoT+nErXGNLyRG1KKIwvegWXdNgcgeITeuk/Lgjf0juBcQX6ZHsontW7d
+	 UhFWZl5ZzZL4/5UhNY/CRmLR6oyJMF12Hfjtprq9KWU1VQnQ2IQDQ4+RDqF1veMRFo
+	 KjYMM8jdFnSdlIcfMlaa+9YDTcS4klIZFBjacLZyG7i0bGn6gYuq61bSGsGqpjyKUN
+	 XoXanA5WV7aIrgkG10JZKf6UbOJjIcSw1LdlKb1Xl9FsKr/dq3QzpCLfA55RruvB4G
+	 GpEjidfk7u5WbjzTHxcDhPjvNMyxKD4rfoQKbxR6PatcGkEXp5OoPW76u7wzY73+cZ
+	 iox/cCg1nNGBA==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-3c9991e6ad1so828438fac.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 11:46:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgVe4y5r7hpXGEwEXmnAHBSCtz+ZTTOldN/wIaOu8tl3imLGBD6x6tEWRe4908/FJlNtxG74rO9q7ZthibaWqXTZG0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGBaud40tkBxj1j+hlwAzmoq6/ubN35JtAD1YGrgy3QfybkE80
+	sAYlIwN2+Q2xAvvPIi9BhLSvEpYidPjBhhv1F4Z1pLVFdcTt1RVarImQsnZWl11Q68onRMQQI7c
+	AbR5EZEMEenshIguKczaQcGG4fC7N3Rk=
+X-Google-Smtp-Source: AGHT+IF0Go3QZaY0sR7Uk0LlJ2916uwfYqqfe08bbNZiqAW3ZIsbhLDPDgT5JfxOs8NV3Tzc2+SzVQNws7PoG4UOIHc=
+X-Received: by 2002:a05:6870:c985:b0:3c1:d7af:de66 with SMTP id
+ 586e51a60fabf-3cdb084746dmr959589fac.7.1761158777900; Wed, 22 Oct 2025
+ 11:46:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ArVEV3phbwOF
-Date: Wed, 22 Oct 2025 20:43:20 +0200
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Ike Panhc" <ikepanhc@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <f0454d78-0fe9-431d-a0c9-6f7db7809039@app.fastmail.com>
-In-Reply-To: <20251020192443.33088-3-i@rong.moe>
-References: <20251020192443.33088-1-i@rong.moe>
- <20251020192443.33088-3-i@rong.moe>
-Subject: Re: [PATCH 2/2] platform/x86: ideapad-laptop: Add charge_types:Fast (Rapid
- Charge)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-3-srosek@google.com>
+In-Reply-To: <20251002113404.3117429-3-srosek@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 22 Oct 2025 20:46:05 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iQToOkedruYqsowSm8=fxpnyJf86JJHB36E8+aCSZ5Hw@mail.gmail.com>
+X-Gm-Features: AS18NWDpbczN0ssars57S7xFDLVK0_R40wGVzPrhxdZ80ZVrBubL70Dv_3WqrJI
+Message-ID: <CAJZ5v0iQToOkedruYqsowSm8=fxpnyJf86JJHB36E8+aCSZ5Hw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] ACPI: DPTF: Move INT340X device IDs to header
+To: Slawomir Rosek <srosek@google.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
+	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rong
+On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@google.com> w=
+rote:
+>
+> The ACPI INT340X device IDs are shared between the DPTF core
+> and thermal drivers, thus they are moved to the common header.
+>
+> Signed-off-by: Slawomir Rosek <srosek@google.com>
 
-On Mon, Oct 20, 2025, at 9:24 PM, Rong Zhang wrote:
-> The GBMD/SBMC interface supports Rapid Charge mode (charge_types: Fast)
-> in addition to Conservation Mode (charge_types: Long_Life).
->
-> Expose these two modes while carefully maintaining their mutually
-> exclusive state, which aligns with the behavior of manufacturer
-> utilities on Windows.
->
-> Signed-off-by: Rong Zhang <i@rong.moe>
+I've actually started to wonder if int340x_thermal_handler is needed at all=
+.
+
+It just creates a platform device if the given ACPI device ID is in
+its list, but acpi_default_enumeration() would do that too with the
+caveat that it would also be done for CONFIG_INT340X_THERMAL unset.
+That should not be a problem though because if CONFIG_INT340X_THERMAL,
+there are no drivers that will bind to those platform devices, so the
+net outcome should be the same.
+
+Thus I'm wondering if the way to go might be to drop
+int340x_thermal_handler and simply keep the device IDs in the drivers
+that use them for device binding.
+
 > ---
->  drivers/platform/x86/lenovo/ideapad-laptop.c | 61 ++++++++++++++++++--
->  1 file changed, 56 insertions(+), 5 deletions(-)
+>  drivers/acpi/dptf/dptf_power.c                | 18 +----
+>  drivers/acpi/dptf/int340x_thermal.c           | 51 +++-----------
+>  drivers/acpi/fan.h                            | 10 +--
+>  drivers/acpi/int340x_thermal.h                | 68 +++++++++++++++++++
+>  .../intel/int340x_thermal/int3400_thermal.c   | 10 +--
+>  .../intel/int340x_thermal/int3401_thermal.c   |  3 +-
+>  .../intel/int340x_thermal/int3402_thermal.c   |  3 +-
+>  .../intel/int340x_thermal/int3403_thermal.c   | 10 +--
+>  .../intel/int340x_thermal/int3406_thermal.c   |  3 +-
+>  9 files changed, 90 insertions(+), 86 deletions(-)
+>  create mode 100644 drivers/acpi/int340x_thermal.h
 >
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c 
-> b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> index 9f956f51ec8db..d2bfaa532020a 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -62,13 +62,26 @@ enum {
->  	CFG_OSD_CAM_BIT      = 31,
+> diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_powe=
+r.c
+> index 776914f31b9e..d7c59f016083 100644
+> --- a/drivers/acpi/dptf/dptf_power.c
+> +++ b/drivers/acpi/dptf/dptf_power.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+>  #include <linux/platform_device.h>
+> +#include "../int340x_thermal.h"
+>
+>  /*
+>   * Presentation of attributes which are defined for INT3407 and INT3532.
+> @@ -224,22 +225,7 @@ static void dptf_power_remove(struct platform_device=
+ *pdev)
+>  }
+>
+>  static const struct acpi_device_id int3407_device_ids[] =3D {
+> -       {"INT3407", 0},
+> -       {"INT3532", 0},
+> -       {"INTC1047", 0},
+> -       {"INTC1050", 0},
+> -       {"INTC1060", 0},
+> -       {"INTC1061", 0},
+> -       {"INTC1065", 0},
+> -       {"INTC1066", 0},
+> -       {"INTC106C", 0},
+> -       {"INTC106D", 0},
+> -       {"INTC10A4", 0},
+> -       {"INTC10A5", 0},
+> -       {"INTC10D8", 0},
+> -       {"INTC10D9", 0},
+> -       {"INTC1100", 0},
+> -       {"INTC1101", 0},
+> +       ACPI_INT3407_DEVICE_IDS,
+>         {"", 0},
 >  };
-> 
+>  MODULE_DEVICE_TABLE(acpi, int3407_device_ids);
+> diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int3=
+40x_thermal.c
+> index 947fe50c2ef6..43afb6141b98 100644
+> --- a/drivers/acpi/dptf/int340x_thermal.c
+> +++ b/drivers/acpi/dptf/int340x_thermal.c
+> @@ -9,63 +9,28 @@
+>  #include <linux/acpi.h>
+>  #include <linux/module.h>
+>
+> +#include "../int340x_thermal.h"
+>  #include "../internal.h"
+>
+>  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
+> -       {"INT3400"},
+> -       {"INT3401"},
+> -       {"INT3402"},
+> -       {"INT3403"},
+> -       {"INT3404"},
+> -       {"INT3406"},
+> -       {"INT3407"},
+> +       ACPI_INT3400_DEVICE_IDS,
+> +       ACPI_INT3401_DEVICE_IDS,
+> +       ACPI_INT3402_DEVICE_IDS,
+> +       ACPI_INT3403_DEVICE_IDS,
+> +       ACPI_INT3404_DEVICE_IDS,
+> +       ACPI_INT3406_DEVICE_IDS,
+> +       ACPI_INT3407_DEVICE_IDS,
+>         {"INT3408"},
+>         {"INT3409"},
+>         {"INT340A"},
+>         {"INT340B"},
+> -       {"INT3532"},
+> -       {"INTC1040"},
+> -       {"INTC1041"},
+> -       {"INTC1042"},
+> -       {"INTC1043"},
+> -       {"INTC1044"},
+>         {"INTC1045"},
+> -       {"INTC1046"},
+> -       {"INTC1047"},
+> -       {"INTC1048"},
+>         {"INTC1049"},
+> -       {"INTC1050"},
+> -       {"INTC1060"},
+> -       {"INTC1061"},
+> -       {"INTC1062"},
+> -       {"INTC1063"},
+>         {"INTC1064"},
+> -       {"INTC1065"},
+> -       {"INTC1066"},
+> -       {"INTC1068"},
+> -       {"INTC1069"},
+> -       {"INTC106A"},
+>         {"INTC106B"},
+> -       {"INTC106C"},
+> -       {"INTC106D"},
+> -       {"INTC10A0"},
+> -       {"INTC10A1"},
+> -       {"INTC10A2"},
+>         {"INTC10A3"},
+> -       {"INTC10A4"},
+> -       {"INTC10A5"},
+> -       {"INTC10D4"},
+> -       {"INTC10D5"},
+> -       {"INTC10D6"},
+>         {"INTC10D7"},
+> -       {"INTC10D8"},
+> -       {"INTC10D9"},
+> -       {"INTC10FC"},
+> -       {"INTC10FD"},
+> -       {"INTC10FE"},
+>         {"INTC10FF"},
+> -       {"INTC1100"},
+> -       {"INTC1101"},
+>         {"INTC1102"},
+>         {""},
+>  };
+> diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+> index 8a28a72a7c6a..4015ac56c009 100644
+> --- a/drivers/acpi/fan.h
+> +++ b/drivers/acpi/fan.h
+> @@ -11,16 +11,10 @@
+>  #define _ACPI_FAN_H_
+>
+>  #include <linux/kconfig.h>
+> +#include "int340x_thermal.h"
+>
+>  #define ACPI_FAN_DEVICE_IDS    \
+> -       {"INT3404", }, /* Fan */ \
+> -       {"INTC1044", }, /* Fan for Tiger Lake generation */ \
+> -       {"INTC1048", }, /* Fan for Alder Lake generation */ \
+> -       {"INTC1063", }, /* Fan for Meteor Lake generation */ \
+> -       {"INTC106A", }, /* Fan for Lunar Lake generation */ \
+> -       {"INTC10A2", }, /* Fan for Raptor Lake generation */ \
+> -       {"INTC10D6", }, /* Fan for Panther Lake generation */ \
+> -       {"INTC10FE", }, /* Fan for Wildcat Lake generation */ \
+> +       ACPI_INT3404_DEVICE_IDS, \
+>         {"PNP0C0B", } /* Generic ACPI fan */
+>
+>  #define ACPI_FPS_NAME_LEN      20
+> diff --git a/drivers/acpi/int340x_thermal.h b/drivers/acpi/int340x_therma=
+l.h
+> new file mode 100644
+> index 000000000000..854e4d3bb739
+> --- /dev/null
+> +++ b/drivers/acpi/int340x_thermal.h
+> @@ -0,0 +1,68 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
 > +/*
-> + * There are two charge modes supported by the GBMD/SBMC interface:
-> + * - "Rapid Charge": increase power to speed up charging
-> + * - "Conservation Mode": stop charging at 60-80% (depends on model)
-> + *
-> + * The interface doesn't prohibit enabling both modes at the same time.
-> + * However, doing so is essentially meaningless, and the manufacturer utilities
-> + * on Windows always make them mutually exclusive.
+> + * The ACPI INT340X device IDs are shared between the DPTF core
+> + * and thermal drivers.
 > + */
 > +
->  enum {
-> +	GBMD_RAPID_CHARGE_STATE_BIT = 2,
->  	GBMD_CONSERVATION_STATE_BIT = 5,
->  };
-> 
->  enum {
->  	SBMC_CONSERVATION_ON  = 3,
->  	SBMC_CONSERVATION_OFF = 5,
-> +	SBMC_RAPID_CHARGE_ON  = 7,
-> +	SBMC_RAPID_CHARGE_OFF = 8,
->  };
-> 
->  enum {
-> @@ -632,6 +645,10 @@ static ssize_t conservation_mode_show(struct device *dev,
->  			return err;
->  	}
-> 
-> +	/*
-> +	 * For backward compatibility, ignore Rapid Charge while reporting the
-> +	 * state of Conservation Mode.
-> +	 */
->  	return sysfs_emit(buf, "%d\n", 
-> !!test_bit(GBMD_CONSERVATION_STATE_BIT, &result));
+> +#ifndef _ACPI_INT340X_H_
+> +#define _ACPI_INT340X_H_
+> +
+> +#define ACPI_INT3400_DEVICE_IDS        \
+> +       {"INT3400"},    \
+> +       {"INTC1040"},   \
+> +       {"INTC1041"},   \
+> +       {"INTC1042"},   \
+> +       {"INTC1068"},   \
+> +       {"INTC10A0"},   \
+> +       {"INTC10D4"},   \
+> +       {"INTC10FC"}
+> +
+> +#define ACPI_INT3401_DEVICE_IDS        \
+> +       {"INT3401"}
+> +
+> +#define ACPI_INT3402_DEVICE_IDS        \
+> +       {"INT3402"}
+> +
+> +#define ACPI_INT3403_DEVICE_IDS        \
+> +       {"INT3403"},    \
+> +       {"INTC1043"},   \
+> +       {"INTC1046"},   \
+> +       {"INTC1062"},   \
+> +       {"INTC1069"},   \
+> +       {"INTC10A1"},   \
+> +       {"INTC10D5"},   \
+> +       {"INTC10FD"}
+> +
+> +#define ACPI_INT3404_DEVICE_IDS        \
+> +       {"INT3404", }, /* Fan */ \
+> +       {"INTC1044", }, /* Fan for Tiger Lake generation */ \
+> +       {"INTC1048", }, /* Fan for Alder Lake generation */ \
+> +       {"INTC1063", }, /* Fan for Meteor Lake generation */ \
+> +       {"INTC106A", }, /* Fan for Lunar Lake generation */ \
+> +       {"INTC10A2", }, /* Fan for Raptor Lake generation */ \
+> +       {"INTC10D6", }, /* Fan for Panther Lake generation */ \
+> +       {"INTC10FE", } /* Fan for Wildcat Lake generation */
+> +
+> +#define ACPI_INT3406_DEVICE_IDS        \
+> +       {"INT3406"}
+> +
+> +#define ACPI_INT3407_DEVICE_IDS        \
+> +       {"INT3407"},    \
+> +       {"INT3532"},    \
+> +       {"INTC1047"},   \
+> +       {"INTC1050"},   \
+> +       {"INTC1060"},   \
+> +       {"INTC1061"},   \
+> +       {"INTC1065"},   \
+> +       {"INTC1066"},   \
+> +       {"INTC106C"},   \
+> +       {"INTC106D"},   \
+> +       {"INTC10A4"},   \
+> +       {"INTC10A5"},   \
+> +       {"INTC10D8"},   \
+> +       {"INTC10D9"},   \
+> +       {"INTC1100"},   \
+> +       {"INTC1101"}
+> +
+> +#endif
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 908cc1bf57f1..6311125c3ebd 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/thermal.h>
+>  #include "acpi_thermal_rel.h"
+> +#include "../../../../drivers/acpi/int340x_thermal.h"
+>
+>  #define INT3400_THERMAL_TABLE_CHANGED 0x83
+>  #define INT3400_ODVP_CHANGED 0x88
+> @@ -683,14 +684,7 @@ static void int3400_thermal_remove(struct platform_d=
+evice *pdev)
 >  }
-> 
-> @@ -651,6 +668,16 @@ static ssize_t conservation_mode_store(struct device *dev,
-> 
->  	guard(mutex)(&priv->gbmd_sbmc_mutex);
-> 
-> +	/*
-> +	 * Prevent mutually exclusive modes from being set at the same time,
-> +	 * but do not disable Rapid Charge while disabling Conservation Mode.
-> +	 */
-> +	if (state) {
-> +		err = exec_sbmc(priv->adev->handle, SBMC_RAPID_CHARGE_OFF);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->  	err = exec_sbmc(priv->adev->handle, state ? SBMC_CONSERVATION_ON : 
-> SBMC_CONSERVATION_OFF);
->  	if (err)
->  		return err;
-> @@ -2015,14 +2042,21 @@ static int ideapad_psy_ext_set_prop(struct 
-> power_supply *psy,
->  				    const union power_supply_propval *val)
->  {
->  	struct ideapad_private *priv = ext_data;
-> -	unsigned long op;
-> +	unsigned long op1, op2;
-> +	int err;
-> 
->  	switch (val->intval) {
-> +	case POWER_SUPPLY_CHARGE_TYPE_FAST:
-> +		op1 = SBMC_CONSERVATION_OFF;
-> +		op2 = SBMC_RAPID_CHARGE_ON;
-> +		break;
->  	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> -		op = SBMC_CONSERVATION_ON;
-> +		op1 = SBMC_RAPID_CHARGE_OFF;
-> +		op2 = SBMC_CONSERVATION_ON;
->  		break;
->  	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-> -		op = SBMC_CONSERVATION_OFF;
-> +		op1 = SBMC_RAPID_CHARGE_OFF;
-> +		op2 = SBMC_CONSERVATION_OFF;
->  		break;
->  	default:
->  		return -EINVAL;
-> @@ -2030,7 +2064,11 @@ static int ideapad_psy_ext_set_prop(struct 
-> power_supply *psy,
-> 
->  	guard(mutex)(&priv->gbmd_sbmc_mutex);
-> 
-> -	return exec_sbmc(priv->adev->handle, op);
-> +	err = exec_sbmc(priv->adev->handle, op1);
-> +	if (err)
-> +		return err;
-> +
-> +	return exec_sbmc(priv->adev->handle, op2);
+>
+>  static const struct acpi_device_id int3400_thermal_match[] =3D {
+> -       {"INT3400", 0},
+> -       {"INTC1040", 0},
+> -       {"INTC1041", 0},
+> -       {"INTC1042", 0},
+> -       {"INTC1068", 0},
+> -       {"INTC10A0", 0},
+> -       {"INTC10D4", 0},
+> -       {"INTC10FC", 0},
+> +       ACPI_INT3400_DEVICE_IDS,
+>         {}
+>  };
+>
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3401_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3401_thermal.c
+> index 96d6277a5a8c..e0603f218d2e 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3401_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3401_thermal.c
+> @@ -11,9 +11,10 @@
+>
+>  #include "int340x_thermal_zone.h"
+>  #include "processor_thermal_device.h"
+> +#include "../../../../drivers/acpi/int340x_thermal.h"
+>
+>  static const struct acpi_device_id int3401_device_ids[] =3D {
+> -       {"INT3401", 0},
+> +       ACPI_INT3401_DEVICE_IDS,
+>         {"", 0},
+>  };
+>  MODULE_DEVICE_TABLE(acpi, int3401_device_ids);
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3402_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3402_thermal.c
+> index 57b90005888a..213d4535f2c1 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3402_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3402_thermal.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/thermal.h>
+>  #include "int340x_thermal_zone.h"
+> +#include "../../../../drivers/acpi/int340x_thermal.h"
+>
+>  #define INT3402_PERF_CHANGED_EVENT     0x80
+>  #define INT3402_THERMAL_EVENT          0x90
+> @@ -84,7 +85,7 @@ static void int3402_thermal_remove(struct platform_devi=
+ce *pdev)
 >  }
-> 
->  static int ideapad_psy_ext_get_prop(struct power_supply *psy,
-> @@ -2042,6 +2080,7 @@ static int ideapad_psy_ext_get_prop(struct 
-> power_supply *psy,
->  	struct ideapad_private *priv = ext_data;
->  	unsigned long result;
->  	int err;
-> +	bool is_rapid_charge, is_conservation;
-> 
->  	scoped_guard(mutex, &priv->gbmd_sbmc_mutex) {
->  		err = eval_gbmd(priv->adev->handle, &result);
-> @@ -2049,7 +2088,18 @@ static int ideapad_psy_ext_get_prop(struct 
-> power_supply *psy,
->  			return err;
->  	}
-> 
-> -	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
-> +	is_rapid_charge = test_bit(GBMD_RAPID_CHARGE_STATE_BIT, &result);
-> +	is_conservation = test_bit(GBMD_CONSERVATION_STATE_BIT, &result);
-> +
-> +	if (unlikely(is_rapid_charge && is_conservation)) {
-> +		dev_err(&priv->platform_device->dev,
-> +			"unexpected charge_types: both [Fast] and [Long_Life] are 
-> enabled\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (is_rapid_charge)
-> +		val->intval = POWER_SUPPLY_CHARGE_TYPE_FAST;
-> +	else if (is_conservation)
->  		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
->  	else
->  		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> @@ -2074,6 +2124,7 @@ static const struct power_supply_ext 
-> ideapad_battery_ext = {
->  	.properties		= ideapad_power_supply_props,
->  	.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),
->  	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> +				   BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
->  				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
->  	.get_property		= ideapad_psy_ext_get_prop,
->  	.set_property		= ideapad_psy_ext_set_prop,
-> -- 
-> 2.51.0
-
-I can't comment on the functionality as I don't have hooks into the Ideapad team to confirm - but the implementation looks good to me.
-
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>
+>  static const struct acpi_device_id int3402_thermal_match[] =3D {
+> -       {"INT3402", 0},
+> +       ACPI_INT3402_DEVICE_IDS,
+>         {}
+>  };
+>
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> index ba63796761eb..d246c69d4872 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/thermal.h>
+>  #include <linux/platform_device.h>
+>  #include "int340x_thermal_zone.h"
+> +#include "../../../../drivers/acpi/int340x_thermal.h"
+>
+>  #define INT3403_TYPE_SENSOR            0x03
+>  #define INT3403_TYPE_CHARGER           0x0B
+> @@ -269,14 +270,7 @@ static void int3403_remove(struct platform_device *p=
+dev)
+>  }
+>
+>  static const struct acpi_device_id int3403_device_ids[] =3D {
+> -       {"INT3403", 0},
+> -       {"INTC1043", 0},
+> -       {"INTC1046", 0},
+> -       {"INTC1062", 0},
+> -       {"INTC1069", 0},
+> -       {"INTC10A1", 0},
+> -       {"INTC10D5", 0},
+> -       {"INTC10FD", 0},
+> +       ACPI_INT3403_DEVICE_IDS,
+>         {"", 0},
+>  };
+>  MODULE_DEVICE_TABLE(acpi, int3403_device_ids);
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3406_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3406_thermal.c
+> index e21fcbccf4ba..d05ca8bc4061 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3406_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3406_thermal.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/backlight.h>
+>  #include <linux/thermal.h>
+>  #include <acpi/video.h>
+> +#include "../../../../drivers/acpi/int340x_thermal.h"
+>
+>  #define INT3406_BRIGHTNESS_LIMITS_CHANGED      0x80
+>
+> @@ -187,7 +188,7 @@ static void int3406_thermal_remove(struct platform_de=
+vice *pdev)
+>  }
+>
+>  static const struct acpi_device_id int3406_thermal_match[] =3D {
+> -       {"INT3406", 0},
+> +       ACPI_INT3406_DEVICE_IDS,
+>         {}
+>  };
+>
+> --
+> 2.51.0.618.g983fd99d29-goog
+>
+>
