@@ -1,108 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F02E337B99;
-	Wed, 22 Oct 2025 18:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F9D348881
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 18:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761157490; cv=none; b=gQXDTUULbpVl6FBBxobqabGokhbbYjHFj+d4bs8slMyMora9W7gjoy1h5udmkzzBYluXYgfhYBGjgJLQDhGaL67YjwzylgpR4qCame53kVvJtnJoYfHEm7bM16iRT1eyQRTtqMWp1Gyu7o9dj1gAIqB/hMTg3f11n4CErAw6nv0=
+	t=1761158035; cv=none; b=SsYaIKrTjkV9M/54ZqNXmJ3ABpepiyQDHaFmW1r6pKuQxGd2neIotZFjDu5N3aN2oMlNGK9gGnATmn/sgUAjJ8XZhDqWPCDW6L8/E3oS9rKrQrxorO1Z0nQHYAIhkQzJc4nNUbFhY3S4deV5dKpOLBTNX3Z1Z4lV1zANkNPUoHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761157490; c=relaxed/simple;
-	bh=YMgy1Ds7gABIkmFt4M2UjitqThoC0UBB0eMJyuzg/JI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwz0RvLrRiKlSZXL6PZ9qK9tYSAOpXeaKItC8EhsRUQ3SSKxphe40bYp1auwF7bdRVzHbmFt6Ymr6eG2EzEJR43PAq5f0r4ERH3Amn9hucNIpZhdy9ewmFuC2TTIiyvNRdn93q4xDbLV5qxWPqntu+r6Z8Y2kkDTDqhAKHNau1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRaDBV7B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761158035; c=relaxed/simple;
+	bh=HnMd6ESDOQPNkHtYkXXBggLVB+O/NgfKnQ0epXgTK1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gnMJgOrFs+ZshPhS+F4aObxEMDAjuQ1KXo/o8JKqFZ/xxz5diejX/1tJ3jD+514DDVJMrdrPLLSu8KpCfB6LqLuacz2Bb92Y2UlJlt6UwJUtCZcuX0SbwB8ucxxKod/QBgs9cwgpjicCJ0PJmeApdfy7LDh/3/8AX2/FK0xwpC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epRDjPKR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRaDBV7B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5ACC4CEF7;
-	Wed, 22 Oct 2025 18:24:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epRDjPKR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7816CC19422
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 18:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761157490;
-	bh=YMgy1Ds7gABIkmFt4M2UjitqThoC0UBB0eMJyuzg/JI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NRaDBV7BSlQ+fb8qMnzn4JSE4ZnZSEptP1ucoFNGo7DmpoRxw6QNWJC8Vi4HLO0lI
-	 VDA4SkqmXclAw21G6vrF8jU5M5PBJstHQBFfQ/P63KWhGIcgOXAqijxdg5Bk6PsrEA
-	 X6v9XjjhnwEGXdGsx2NX+EM4RtpQsGzdQfmm46uhyLuBIAXLs9BdbyMIQKceKUEFh3
-	 rPwv9eJutN5UbrU5h/aQgnRnghyWAN7ehZkGkrSOUPT8BSxncBonkY4u6MYfb3oAb8
-	 +0lXXwDRdSq4gfO19ukhtudJ/ybcHk2uU1/Cgj+NvsbaItvfIYXDVOLC1v/XCTfC2w
-	 OmHInGidXFexg==
-Message-ID: <dfda82fc-1c35-4986-929d-d27ba877aab6@kernel.org>
-Date: Wed, 22 Oct 2025 20:24:46 +0200
+	s=k20201202; t=1761158035;
+	bh=HnMd6ESDOQPNkHtYkXXBggLVB+O/NgfKnQ0epXgTK1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=epRDjPKRCa9BxTAl/maqOnCFs1ZYsOn5Ff45yfJ8lt1ez+NhK+IabdLZgpqlmCD/D
+	 zKSPA79zjPYg5yekdsOjQ0emuKANc7+dkt8QMV1HiV2dCnWf5wt/F9TYgDgE/BzzIN
+	 qMw5WfzLodb+7FVfka4Zbn2HgXDA/5cC3d275udo+xYHRvAVZLxAGQEo5zmRS354sw
+	 Gf3SWH+ogk8qvUI4z3DknXeoTAamqgaPaGPSG3lBsJEpDoIs6CWOc1umdqPYaKJtRn
+	 6DbXVb2OmddqGQ92VRQiEA7mnzX1I+R5lWYMmb45opBxbR2CA+FxZ5fzJfA6xd3X8R
+	 ZazyqYsMwdaRw==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4439f1cb764so3637953b6e.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Oct 2025 11:33:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWOW1W+YyyvUyCDgUCk5MfuUGdwE+/M8H29nVcM4hsk2xRdcbG2nOy2qGuJ+PQsxHR5y0r+UibyxZoWp5cAtVwZHUgD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqkVMmy1b6ECyzopM9SPEe/Y8DEAZHWcttT68mmM6Tpp1fj058
+	M4HoW7EqekDn+EmPL0RUcLSo8GW8T+8WJVJ1HHk4I6dNzTdtw3rYRn4z8O20ABNwkAgCWEVsl48
+	fjgy9Z3w6/aTQT9liTqZgKoXhZthjsac=
+X-Google-Smtp-Source: AGHT+IH1IqVM6euAMndvLHW5UlV1j14MYMhRCeJ6OM2UaHr7gpeL9K3LN5TVDVQPxH3fDyMM2m8mNxGtYP3Yupx2W1o=
+X-Received: by 2002:a05:6808:3442:b0:441:8f74:fbb with SMTP id
+ 5614622812f47-443a3186027mr9639045b6e.56.1761158034616; Wed, 22 Oct 2025
+ 11:33:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Input: Add keycodes for electronic privacy screen
- on/off an use these in dell-wmi
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20251020152331.52870-1-hansg@kernel.org>
- <wcrbaqheqhzpjcg3au2c5xshwwed5bjyvl5u5pske6ru7lggjs@yjpnfdbkogba>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <wcrbaqheqhzpjcg3au2c5xshwwed5bjyvl5u5pske6ru7lggjs@yjpnfdbkogba>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-2-srosek@google.com>
+In-Reply-To: <20251002113404.3117429-2-srosek@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 22 Oct 2025 20:33:41 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ho8MhU8jj=YMyDKdTQWZt24LjoCaoEgJRsdi3YykkBBQ@mail.gmail.com>
+X-Gm-Features: AS18NWAQt62Xl-VqxhnNXIPFUkqK65I3ztD52Ptw3B2aZq-oo8JKqxO0ZlzYWTc
+Message-ID: <CAJZ5v0ho8MhU8jj=YMyDKdTQWZt24LjoCaoEgJRsdi3YykkBBQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
+To: Slawomir Rosek <srosek@google.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
+	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry,
+On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@google.com> w=
+rote:
+>
+> The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
+> critical overheating notification. The IRQ 86 is described in the _CRS
+> control method of INT3401 device, thus Intel SoC DTS thermal driver
+> requires INT3401 device to be enumerated.
 
-On 22-Oct-25 7:54 PM, Dmitry Torokhov wrote:
-> Hi Hans,
-> 
-> On Mon, Oct 20, 2025 at 05:23:29PM +0200, Hans de Goede wrote:
->> Hi All,
->>
->> Here is a patch series for adding support for the electronic privacy screen
->> on/off events send on e.g. Dell Latitude 7300 models.
->>
->> On these laptops the firmware does not allow querying the presence nor
->> the status of the eprivacy screen at boot. This makes it impossible to
->> implement the drm connector eprivacy properties API (1) since drm objects
->> do not allow adding new properties after creation and the presence of
->> the eprivacy cannot be detected at boot.
->>
->> So instead this series adds 2 evdev keycodes for eprivacy screen on + off
->> and modifies the dell-wmi driver to use these, so that we can still
->> propagate these events to userspace for e.g. a DE to show an OSD.
->>
->> Dmitry, can we get your ack for the addition of the 2 new keycodes?
->> I think it will be easiest if Ilpo merges the entire series through
->> the pdx86 tree with your ack for the keycodes.
-> 
-> Yes, that should be fine, although I wonder if this is best modeled as a
-> pair of keys or a single switch? I know we have touchpad on/off but I
-> wonder if it was the best option... Probably more convenient at some
-> point if it was done through the atkbd.
+I don't think that the specific interrupt number is relevant here.  It
+would be sufficient to say something like "The IRQ used by the Intel
+SoC DTS thermal device for critical overheating notification is listed
+in _CRS of device INT3401 which therefore needs to be enumerated for
+Intel SoC DTS thermal to work."
 
-EV_SW has the same problem as the drm property API. The mere presence
-of advertising a new SW_PRIVACY_SCREEN capability on an /dev/input/event#
-node would convey to userspace that there is an eprivacy-screen and we
-also would need to know the initial state (on/off) for using an EV_SW
-for this and we know neither presence nor status before hand (1).
+> Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
+> macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
+> is updated to ensure proper enumeration of INT3401 device.
 
-The real issue is that the firmware does not tell us if there is
-an eprivacy screen. As mentioned the first time we find out is when
-the eprivacy screen gets toggled on or off.
+It is not entirely clear what happens in this patch after reading the
+above paragraph.
 
-We are having similar issues with SW_TABLET_MODE which userspace
-uses to e.g. show / not show an on screen keyboard when a text
-entry field is focussed. So the mere presence of SW_TABLET_MODE
-can influence userspace without ever sending any events and we
-have all kind of special handling in various foo-laptop and
-intel-vbtn, etc. drivers for this, which I would like to avoid
-here.
+I would rather continue the previous thought by saying that the
+enumeration happens by binding the int3401_thermal driver to the
+INT3401 platform device.  Thus CONFIG_INT340X_THERMAL is in fact
+necessary for enumerating it, so checking CONFIG_INTEL_SOC_DTS_THERMAL
+in int340x_thermal_handler_attach() is pointless and INT340X_THERMAL
+may as well be selected by INTEL_SOC_DTS_THERMAL.
 
-So having ON / OFF EV_KEY events which we only generate when
-there is an actual eprivacy on/off event are by far the most KISS
-and fool proof solution.
+> Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel S=
+oC DTS thermal driver")
 
-Regards,
+Why do you want this tag to be added?
 
-Hans
+> Signed-off-by: Slawomir Rosek <srosek@google.com>
+> ---
+>  drivers/acpi/dptf/int340x_thermal.c | 7 +------
+>  drivers/thermal/intel/Kconfig       | 3 ++-
+>  2 files changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/int3=
+40x_thermal.c
+> index a222df059a16..947fe50c2ef6 100644
+> --- a/drivers/acpi/dptf/int340x_thermal.c
+> +++ b/drivers/acpi/dptf/int340x_thermal.c
+> @@ -11,10 +11,9 @@
+>
+>  #include "../internal.h"
+>
+> -#define INT3401_DEVICE 0X01
+>  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
+>         {"INT3400"},
+> -       {"INT3401", INT3401_DEVICE},
+> +       {"INT3401"},
+>         {"INT3402"},
+>         {"INT3403"},
+>         {"INT3404"},
+> @@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acpi_=
+device *adev,
+>  {
+>         if (IS_ENABLED(CONFIG_INT340X_THERMAL))
+>                 acpi_create_platform_device(adev, NULL);
+> -       /* Intel SoC DTS thermal driver needs INT3401 to set IRQ descript=
+or */
+> -       else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
+> -                id->driver_data =3D=3D INT3401_DEVICE)
+> -               acpi_create_platform_device(adev, NULL);
+>         return 1;
+>  }
+>
+> diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfi=
+g
+> index e0268fac7093..f9e275538e29 100644
+> --- a/drivers/thermal/intel/Kconfig
+> +++ b/drivers/thermal/intel/Kconfig
+> @@ -44,7 +44,8 @@ config INTEL_SOC_DTS_IOSF_CORE
+>
+>  config INTEL_SOC_DTS_THERMAL
+>         tristate "Intel SoCs DTS thermal driver"
+> -       depends on X86 && PCI && ACPI
+> +       depends on X86_64 && PCI && ACPI
 
+AFAICS NET needs to be added to the dependency list above or selecting
+INT340X_THERMAL below may not actually cause it to be built.
 
+> +       select INT340X_THERMAL
+>         select INTEL_SOC_DTS_IOSF_CORE
+>         help
+>           Enable this to register Intel SoCs (e.g. Bay Trail) platform di=
+gital
+> --
