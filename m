@@ -1,273 +1,212 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A13D1C84C0;
-	Thu, 23 Oct 2025 19:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA44A2327A3
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 20:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761248782; cv=none; b=acSQrQzdw+Be66BXOXAn/55+KzElMqvpSd73+oEKFxcLgbxK3PagTU9P/+JMaWkaCpMRWF+R+wNeyrl4BaZZu/4xMSzdKCVypfW7qUL3ZWdt1gGKRkXsu2RXdQLdNypVI788t2D21/Oui1Q5keFsPSgXOhOJRhlFYoetRFBZi1A=
+	t=1761249902; cv=none; b=urayohuPIsNetTbXNfgvHfzexe+X7bhRGt6s0Xd30j4Xrt3o0WSJs5Ba5dg12MjSDZGCaPnnINxgWBQmLlTWqNiaZKRVCpPfaSAWVTwW+AIpZPCzlHUHwlSJ2iAt+KbB6trVNVuiblB2bifIgD3gspCWVIHGYfkH9mBz9bpbrJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761248782; c=relaxed/simple;
-	bh=KKFSCrkYKiHFsGtOVseMby2CyZjFoxswfFb6ypbEFpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cyqnwrAlB4DcR9HMO2wuMmhd13PPzFzdI/LpyZtjNGH5XhFCV7hY9HFNPAvLYEJF6ynoFs2w+Qc9WYfeO/EbCNp6jBFkeyqErnC4wPPcq4hce3baO13DKpA2FRA728GECjfS69wnYPBtMbGT/xNQvhp0gq1Q0SJvNgc2DEGTxo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=il3KoVlt; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1761249902; c=relaxed/simple;
+	bh=MjTzNEw/IYXYD9kw5r1g0n9RlqwGEqe55Q/x9SL42Yo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zwwk1U6EARXcAgS+e235g/pDhi5XW2nO9tQVz4eO2uiGuSGh/hD1KAW6T0hnKFWJJV6poNGJG/O01a2+LB0nmp+HpcpCGsOjbgQbEsRrC5DR/peqZQVsIes41FU7C+JCVSWh90FbmuFCX2PnhFFgERN+Lk0XC9zewuo8rJBsLRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e7cZT1LO; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="il3KoVlt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=bpNI0HuA3PADHUPJY21BNj2h2p3hk8LZedpLkbW++zU=; b=il3KoVlta/gxNiStDgUViksEdI
-	FNOqMM7f68LyfeUzuh0QWA/W8HOvLRYebqvy46ghkaRKlOrTYThXQ+6v+JLX4bCXVJ1ZBCGQSwraX
-	FbORV3zKseL8K3so0WBFUL9PQKBdqHfyuiXKPwsdJEM4ECYXLIqfCnCG7znV8qjV/2FWMv1gk0MDy
-	0r+texIR3p9VuKAcrg23EbsM/LWDS4Lv9/YIOSyjgHuS85SLHQZJkd3XJ4Xr9AMu36FicQdQwAb3J
-	8qMIsFDvLnlwVqjE4jsI9uwF28gfibTJchSezJiUcj+hcvg+YiIVO+UglIgOkxYxopTRpi8syyzQK
-	xqW5dqkw==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vC1GK-00000007P3s-24rJ;
-	Thu, 23 Oct 2025 19:46:16 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: ISST: isst_if.h: fix all kernel-doc warnings
-Date: Thu, 23 Oct 2025 12:46:14 -0700
-Message-ID: <20251023194615.180824-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.51.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7cZT1LO"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4710022571cso13054515e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 13:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761249899; x=1761854699; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QSp3ympZ3+O5RJFTp67NWvTt3blfkpzAhzcIg0++r6w=;
+        b=e7cZT1LOvZkl7WbTIcLMm9L5YTvQxliY01QA3YC6Ow3w6TH+Sj6WPBpoQKqrmHYVNd
+         NC4vJBE/6cPVp3mQMecixJyq5vFrtQIXEPkE4dAGL2ib+uXHHW+SR4vbzjy+BBSSb8QV
+         6D8ZTBmcqtfwTBs+egQonfRGe6u8FmqB4hFOI1tyzBL1WjUsD0/z4BfP9jM57VVhSHvV
+         2ZGPUjNnkQCe2WkLhzdropKKRHDwASEz6K0xHBYOWrhODPcOZsgYgc/8DSLNj6BnbxXS
+         di+9bSjRPJkNu+2lq54skZwNS1KbycAPH4mK8b9u5WbzgAOUzQOUrZLOCRVDsr34raoX
+         dM3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761249899; x=1761854699;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QSp3ympZ3+O5RJFTp67NWvTt3blfkpzAhzcIg0++r6w=;
+        b=nwdAaOGHAyv/LVmYeb0rbpMV1EUs7DGnWv6TNbFFUXq70xkDuN6lM4k8EHNwcnGBiD
+         OprlF3cphqGnJWpPFcncXHAPog4teGKu/covFOfl+RrfNDbKC8KlSoN7XH+J1hk+wTlz
+         PDedzreNq+26CRUVzbON3+GquAsgMXRbskBqO16gYFkxq7RuHpkmyehRVX6DtQcHLkuV
+         3/cy2r6k2xbSvSFheYcHbAeDsv40u8aU3iC0jEArckqHMdW8ZOReTK8YxDgMG2aHryEG
+         cIqZzsrN1BgTRtfgjbk9sru0fVxcdgQtroiAuyXs3ms0Kd+0mrX+jmRamnZMVX6VlfXa
+         NI7g==
+X-Gm-Message-State: AOJu0YxYfY5q2dZR8xcn0iBitrtW3oEuSoPrhzbXdVKUfUa2I/JmxoPd
+	JpgnVa7/ML4gX4Uj1OwNgKCZs1dT5T54BDL3YcbRRJveVjR1SZa5wGI1
+X-Gm-Gg: ASbGncuKdJZpPsTdIAkKWo6Y9NWYJYOh9wm8VSndJ+gPT6UtNpCx5HmxnYCiehJjlDc
+	TUXbRKp6Mg1beJ6J6kHYUOCWYAvdUR+OObPhmevT8XycUxQzk7373RAPSgpBR06Tzl0Gvzc14ha
+	omD4W0u7ar1QQzJ58tvVJXl/GGuISyO/SdiuSYguOV/Ge7SJsptCcOw1Ox6SLXpzeiDSyaEt0un
+	oCZFQk6cVZ12ZIxSSnPlkqTY0iEcAWq+FrYTq1JS3f2Rh1xTacRUOB6gIjkjWimoKK5Fhv7froS
+	6PDkXBWBWrZoeCXkjuMuwgj/BgtFXAeQDFofQWQ/GGPnQf3sGNZf9P1huqy+Bdd9M1IJ91Nmm7W
+	oHd7BVTPn6MdE/LGmmHa3keWYrn4iqZ73PGDpSzM44njtMwWMm7JAWSSGHvfvAyrgif/xT8yBqV
+	rSDrSOaYTkJoYjRKwmSYlvqjSx/YSCABOx
+X-Google-Smtp-Source: AGHT+IFnIWHXC3BcAZTme+7RJNULJRLszP7Sn8bvFSiN+JB/Gadbl3G7cChfitx/q87/RS6AnSn23w==
+X-Received: by 2002:a5d:5f46:0:b0:3eb:4e88:585 with SMTP id ffacd0b85a97d-42704d966ddmr19117238f8f.29.1761249899082;
+        Thu, 23 Oct 2025 13:04:59 -0700 (PDT)
+Received: from [192.168.1.121] ([151.49.75.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4298b9963ccsm3851616f8f.7.2025.10.23.13.04.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Oct 2025 13:04:58 -0700 (PDT)
+Message-ID: <3947f772-691b-46a2-af68-15825e7f4939@gmail.com>
+Date: Thu, 23 Oct 2025 22:04:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/9] HID: asus: simplify RGB init sequence
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20251018101759.4089-1-lkml@antheas.dev>
+ <20251018101759.4089-2-lkml@antheas.dev>
+ <e6328da3-8099-4540-9cb0-4fc28b359ee7@gmail.com>
+ <CAGwozwG+gf09PQf9o9YkKFYVgVn-1w5CDVrpOe4uFavVYCNijQ@mail.gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAGwozwG+gf09PQf9o9YkKFYVgVn-1w5CDVrpOe4uFavVYCNijQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Fix all kernel-doc warnings in <uapi/linux/isst_if.h>:
 
-- don't use "[]" in the variable name in kernel-doc
-- add a few missing entries
-- change "power_domain" to "power_domain_id" in kernel-doc to match
-  the struct member name
-- add a leading '@' on a few existing kernel-doc lines
-- use '_' instead of '-' in struct member names
+On 10/23/25 20:06, Antheas Kapenekakis wrote:
+> On Thu, 23 Oct 2025 at 19:38, Denis Benato <benato.denis96@gmail.com> wrote:
+>>
+>> On 10/18/25 12:17, Antheas Kapenekakis wrote:
+>>> Currently, RGB initialization forks depending on whether a device is
+>>> NKEY. Then, NKEY devices are initialized using 0x5a, 0x5d, 0x5e
+>>> endpoints, and non-NKEY devices with 0x5a and then a
+>>> backlight check, which is omitted for NKEY devices.
+>>>
+>>> Remove the fork, using a common initialization sequence for both,
+>>> where they are both only initialized with 0x5a, then checked for
+>>> backlight support. This patch should not affect existing functionality.
+>>>
+>>> 0x5d and 0x5e endpoint initializations are performed by Windows
+>>> userspace programs associated with different usages that reside under
+>>> the vendor HID. Specifically, 0x5d is used by Armoury Crate, which
+>>> controls RGB and 0x5e by an animation program for certain Asus laptops.
+>>> Neither is used currently in the driver.
+>> What benefits do we get from removing the unused initialization?
+>>
+>> If this has never caused any troubles I don't see the reason for removing
+>> them. Moreover the lighting protocol is known and I might as well add
+>> support for it in the near future,
+> I already have a patch that adds RGB and delay inits that endpoint. It
+> got removed to make this easier to merge. See [1].
+>
+> [1] https://lore.kernel.org/lkml/20250324210151.6042-10-lkml@antheas.dev/
+I have to main concerns about this:
 
-Examples (but not all 27 warnings):
+1. taking away initialization commands in one patchset to make it
+easier to merge another unrelated patch doesn't seem the right thing
+to do if the other patch it's not in the same series.
 
-Warning: include/uapi/linux/isst_if.h:63 struct member 'cpu_map'
- not described in 'isst_if_cpu_maps'
-Warning: ../include/uapi/linux/isst_if.h:95 struct member 'req_count'
- not described in 'isst_if_io_regs'
-Warning: include/uapi/linux/isst_if.h:132 struct member 'mbox_cmd'
- not described in 'isst_if_mbox_cmds'
-Warning: ../include/uapi/linux/isst_if.h:183 struct member 'supported'
- not described in 'isst_core_power'
-Warning: ../include/uapi/linux/isst_if.h:206 struct member
- 'power_domain_id' not described in 'isst_clos_param'
-Warning: ../include/uapi/linux/isst_if.h:239 struct member 'assoc_info'
- not described in 'isst_if_clos_assoc_cmds'
-Warning: ../include/uapi/linux/isst_if.h:286 struct member 'sst_tf_support'
- not described in 'isst_perf_level_info'
-Warning: ../include/uapi/linux/isst_if.h:375 struct member 'trl_freq_mhz'
- not described in 'isst_perf_level_data_info'
-Warning: ../include/uapi/linux/isst_if.h:475 struct member 'max_buckets'
- not described in 'isst_turbo_freq_info'
+I can see [1] has been removed from the set for a later moment in time,
+it's fine if it needs more work, just send something that function in the
+same way and do not remove initialization commands when unnecessary,
+especially since there will be for sure future development.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-Question:  struct sst_header (in isst_tpmi_core.c) says:
- * @cap_mask:		Bitmask of the supported sub features. 1=the sub feature is enabled.
- *			0=disabled.
- *			Bit[8]= SST_CP enable (1), disable (0)
- *			bit[9]= SST_PP enable (1), disable (0)
-but cap_mask is a u8 field. Should these Bit numbers be 0 and 1?
-The source code seems to use BIT(0) and BIT(1) for these.
+2. Your patchset resolves around keyboard backlight control and how
+the keyboard device is exposed to userspace: it's fine but I do not see
+the point in removing initialization commands that has nothing to do
+with the issue we are trying to solve here.
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
----
- include/uapi/linux/isst_if.h |   50 +++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 23 deletions(-)
+Please leave 0x5E and 0x5D initialization commands where they are now.
 
---- linux-next-20251022.orig/include/uapi/linux/isst_if.h
-+++ linux-next-20251022/include/uapi/linux/isst_if.h
-@@ -52,7 +52,7 @@ struct isst_if_cpu_map {
- /**
-  * struct isst_if_cpu_maps - structure for CPU map IOCTL
-  * @cmd_count:	Number of CPU mapping command in cpu_map[]
-- * @cpu_map[]:	Holds one or more CPU map data structure
-+ * @cpu_map:	Holds one or more CPU map data structure
-  *
-  * This structure used with ioctl ISST_IF_GET_PHY_ID to send
-  * one or more CPU mapping commands. Here IOCTL return value indicates
-@@ -82,8 +82,8 @@ struct isst_if_io_reg {
- 
- /**
-  * struct isst_if_io_regs - structure for IO register commands
-- * @cmd_count:	Number of io reg commands in io_reg[]
-- * @io_reg[]:	Holds one or more io_reg command structure
-+ * @req_count:	Number of io reg commands in io_reg[]
-+ * @io_reg:	Holds one or more io_reg command structure
-  *
-  * This structure used with ioctl ISST_IF_IO_CMD to send
-  * one or more read/write commands to PUNIT. Here IOCTL return value
-@@ -120,7 +120,7 @@ struct isst_if_mbox_cmd {
- /**
-  * struct isst_if_mbox_cmds - structure for mailbox commands
-  * @cmd_count:	Number of mailbox commands in mbox_cmd[]
-- * @mbox_cmd[]:	Holds one or more mbox commands
-+ * @mbox_cmd:	Holds one or more mbox commands
-  *
-  * This structure used with ioctl ISST_IF_MBOX_COMMAND to send
-  * one or more mailbox commands to PUNIT. Here IOCTL return value
-@@ -152,7 +152,7 @@ struct isst_if_msr_cmd {
- /**
-  * struct isst_if_msr_cmds - structure for msr commands
-  * @cmd_count:	Number of mailbox commands in msr_cmd[]
-- * @msr_cmd[]:	Holds one or more msr commands
-+ * @msr_cmd:	Holds one or more msr commands
-  *
-  * This structure used with ioctl ISST_IF_MSR_COMMAND to send
-  * one or more MSR commands. IOCTL return value indicates number of
-@@ -167,8 +167,9 @@ struct isst_if_msr_cmds {
-  * struct isst_core_power - Structure to get/set core_power feature
-  * @get_set:	0: Get, 1: Set
-  * @socket_id:	Socket/package id
-- * @power_domain: Power Domain id
-+ * @power_domain_id: Power Domain id
-  * @enable:	Feature enable status
-+ * @supported:	Power domain supports SST_CP interface
-  * @priority_type: Priority type for the feature (ordered/proportional)
-  *
-  * Structure to get/set core_power feature state using IOCTL
-@@ -187,11 +188,11 @@ struct isst_core_power {
-  * struct isst_clos_param - Structure to get/set clos praram
-  * @get_set:	0: Get, 1: Set
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-- * clos:	Clos ID for the parameters
-- * min_freq_mhz: Minimum frequency in MHz
-- * max_freq_mhz: Maximum frequency in MHz
-- * prop_prio:	Proportional priority from 0-15
-+ * @power_domain_id:	Power Domain id
-+ * @clos:	Clos ID for the parameters
-+ * @min_freq_mhz: Minimum frequency in MHz
-+ * @max_freq_mhz: Maximum frequency in MHz
-+ * @prop_prio:	Proportional priority from 0-15
-  *
-  * Structure to get/set per clos property using IOCTL
-  * ISST_IF_CLOS_PARAM.
-@@ -209,7 +210,7 @@ struct isst_clos_param {
- /**
-  * struct isst_if_clos_assoc - Structure to assign clos to a CPU
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @logical_cpu: CPU number
-  * @clos:	Clos ID to assign to the logical CPU
-  *
-@@ -228,6 +229,7 @@ struct isst_if_clos_assoc {
-  * @get_set:	Request is for get or set
-  * @punit_cpu_map: Set to 1 if the CPU number is punit numbering not
-  *		   Linux CPU number
-+ * @assoc_info: CLOS data for this CPU
-  *
-  * Structure used to get/set associate CPUs to clos using IOCTL
-  * ISST_IF_CLOS_ASSOC.
-@@ -257,7 +259,7 @@ struct isst_tpmi_instance_count {
- /**
-  * struct isst_perf_level_info - Structure to get information on SST-PP levels
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @logical_cpu: CPU number
-  * @clos:	Clos ID to assign to the logical CPU
-  * @max_level: Maximum performance level supported by the platform
-@@ -267,8 +269,8 @@ struct isst_tpmi_instance_count {
-  * @feature_state: SST-BF and SST-TF (enabled/disabled) status at current level
-  * @locked: SST-PP performance level change is locked/unlocked
-  * @enabled: SST-PP feature is enabled or not
-- * @sst-tf_support: SST-TF support status at this level
-- * @sst-bf_support: SST-BF support status at this level
-+ * @sst_tf_support: SST-TF support status at this level
-+ * @sst_bf_support: SST-BF support status at this level
-  *
-  * Structure to get SST-PP details using IOCTL ISST_IF_PERF_LEVELS.
-  */
-@@ -289,7 +291,7 @@ struct isst_perf_level_info {
- /**
-  * struct isst_perf_level_control - Structure to set SST-PP level
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @level:	level to set
-  *
-  * Structure used change SST-PP level using IOCTL ISST_IF_PERF_SET_LEVEL.
-@@ -303,7 +305,7 @@ struct isst_perf_level_control {
- /**
-  * struct isst_perf_feature_control - Structure to activate SST-BF/SST-TF
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @feature:	bit 0 = SST-BF state, bit 1 = SST-TF state
-  *
-  * Structure used to enable SST-BF/SST-TF using IOCTL ISST_IF_PERF_SET_FEATURE.
-@@ -320,7 +322,7 @@ struct isst_perf_feature_control {
- /**
-  * struct isst_perf_level_data_info - Structure to get SST-PP level details
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @level:	SST-PP level for which caller wants to get information
-  * @tdp_ratio: TDP Ratio
-  * @base_freq_mhz: Base frequency in MHz
-@@ -341,8 +343,8 @@ struct isst_perf_feature_control {
-  * @pm_fabric_freq_mhz: Fabric (Uncore) minimum frequency
-  * @max_buckets: Maximum trl buckets
-  * @max_trl_levels: Maximum trl levels
-- * @bucket_core_counts[TRL_MAX_BUCKETS]: Number of cores per bucket
-- * @trl_freq_mhz[TRL_MAX_LEVELS][TRL_MAX_BUCKETS]: maximum frequency
-+ * @bucket_core_counts: Number of cores per bucket
-+ * @trl_freq_mhz: maximum frequency
-  * for a bucket and trl level
-  *
-  * Structure used to get information on frequencies and TDP for a SST-PP
-@@ -402,7 +404,7 @@ struct isst_perf_level_fabric_info {
- /**
-  * struct isst_perf_level_cpu_mask - Structure to get SST-PP level CPU mask
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @level:	SST-PP level for which caller wants to get information
-  * @punit_cpu_map: Set to 1 if the CPU number is punit numbering not
-  *		   Linux CPU number. If 0 CPU buffer is copied to user space
-@@ -430,7 +432,7 @@ struct isst_perf_level_cpu_mask {
- /**
-  * struct isst_base_freq_info - Structure to get SST-BF frequencies
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @level:	SST-PP level for which caller wants to get information
-  * @high_base_freq_mhz: High priority CPU base frequency
-  * @low_base_freq_mhz: Low priority CPU base frequency
-@@ -453,9 +455,11 @@ struct isst_base_freq_info {
- /**
-  * struct isst_turbo_freq_info - Structure to get SST-TF frequencies
-  * @socket_id:	Socket/package id
-- * @power_domain:	Power Domain id
-+ * @power_domain_id:	Power Domain id
-  * @level:	SST-PP level for which caller wants to get information
-  * @max_clip_freqs: Maximum number of low priority core clipping frequencies
-+ * @max_buckets: Maximum trl buckets
-+ * @max_trl_levels: Maximum trl levels
-  * @lp_clip_freq_mhz: Clip frequencies per trl level
-  * @bucket_core_counts: Maximum number of cores for a bucket
-  * @trl_freq_mhz: Frequencies per trl level for each bucket
+>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>> ---
+>>>  drivers/hid/hid-asus.c | 56 ++++++++++++++----------------------------
+>>>  1 file changed, 19 insertions(+), 37 deletions(-)
+>>>
+>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+>>> index a444d41e53b6..7ea1037c3979 100644
+>>> --- a/drivers/hid/hid-asus.c
+>>> +++ b/drivers/hid/hid-asus.c
+>>> @@ -638,50 +638,32 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>>>       unsigned char kbd_func;
+>>>       int ret;
+>>>
+>>> -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+>>> -             /* Initialize keyboard */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> -
+>>> -             /* The LED endpoint is initialised in two HID */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> -
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> -
+>>> -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>> -                     ret = asus_kbd_disable_oobe(hdev);
+>>> -                     if (ret < 0)
+>>> -                             return ret;
+>>> -             }
+>>> -
+>>> -             if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+>>> -                     intf = to_usb_interface(hdev->dev.parent);
+>>> -                     udev = interface_to_usbdev(intf);
+>>> -                     validate_mcu_fw_version(hdev,
+>>> -                             le16_to_cpu(udev->descriptor.idProduct));
+>>> -             }
+>>> +     ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>>
+>>> -     } else {
+>>> -             /* Initialize keyboard */
+>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>> -             if (ret < 0)
+>>> -                     return ret;
+>>> +     /* Get keyboard functions */
+>>> +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>>
+>>> -             /* Get keyboard functions */
+>>> -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>> +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>> +             ret = asus_kbd_disable_oobe(hdev);
+>>>               if (ret < 0)
+>>>                       return ret;
+>>> +     }
+>>>
+>>> -             /* Check for backlight support */
+>>> -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>> -                     return -ENODEV;
+>>> +     if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+>>> +             intf = to_usb_interface(hdev->dev.parent);
+>>> +             udev = interface_to_usbdev(intf);
+>>> +             validate_mcu_fw_version(
+>>> +                     hdev, le16_to_cpu(udev->descriptor.idProduct));
+>>>       }
+>>>
+>>> +     /* Check for backlight support */
+>>> +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>> +             return -ENODEV;
+>>> +
+>>>       drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+>>>                                             sizeof(struct asus_kbd_leds),
+>>>                                             GFP_KERNEL);
