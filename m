@@ -1,147 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA91830BF6A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C64259CBD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761237020; cv=none; b=JUGMREE9qA0b8XgHxhJlnmUz9AJRF5am+GdTT23Nb5lhnNtSKGWUiCq4LmY40hlv6+4HB/n6cMNB/5ZSnSdf+NNaQIp3FWJaEb3tHaFU2Wh118V0b5XCoABpn8brchqvh9bfYt+B6V/POqdejLm7egsTGvYIxZyCoV6eufXbNYM=
+	t=1761237126; cv=none; b=m07HLl0nWg3KUin1ZzXk3xZAPqVrjG8hr1XJBnFynDyQtRWl6VaykjG0zYJIdyMuW2huO/MD+wgZkQ+84+q/5lIM69oDaPzO7XOe9Vo89S1spCZqQ5J2RgxaTVuaGcfgCyog380MgJJsoFQdaNEDZF3k6fvGISAOTzJnoFw+1ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761237020; c=relaxed/simple;
-	bh=a3M7W3BWeRUGRfhK+snn/DeGWrSLsPNKDdfBeO+UoHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u96qaJvrLs2qr+S1RLaHJnyRNCgR96ywo8y1Pac2sh11XIVF8BQ7oGROGxYgzEzSZz037fY7AaB+eFiYHUPBOEiPiuDko9yaTy0e0WIFvYOwaFcjcMZ9nIkLmxVonxE/vXNa8f3oLWADGZu9AHpNcnOy9jyQY3f4iRU32uqMb/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvlkFrke; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761237126; c=relaxed/simple;
+	bh=78weOO8Ux2KH5nxBXBMycmrZ0njLHapCj22wQXG6s3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bc8WmOvBI1u5dCsqRr/VvdzF1T86wgO92zR9TgjNaLoQecmb7WLmzAfMswKbLEvW5yXIs5vykK6IxeJEYAzbsjYeX+w2TP1ykiQZ8t/HvqkwjEEtUwnZAwngSDZISxC1sb0n92LOibcAZfeteB7hovIVAF8M3zFCr43GcXtH4eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPOj2ISn; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvlkFrke"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695A0C113D0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761237020;
-	bh=a3M7W3BWeRUGRfhK+snn/DeGWrSLsPNKDdfBeO+UoHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qvlkFrkeuyZbSOa0eJlFoW8mhuEYTiaMZH9yDPoiP4l42l3jFy8HwP+yXzSCXg1YW
-	 BkK10VNt9Gv2UJIre5u0Yq+07wbILujdGj1zpuIOZI++3X/iLyS45I3HsS3HEfINj4
-	 7XoCij7u/D3+V7GfL5RApPd4/dcNDhPSwVKhwF28rdriAs1GOyFmTignQq8HDIdvkA
-	 vcry+txW8kDEHPBiABUMcyJ6Cvg5inb9rUIDkcaLplYqovTVAKSNUR5soWWoJcOlk8
-	 V8/a6/CvbgI3xsAVANuIcPiG2yCCIXhynJXjoHYKheSzSKZ8eJYaY3yXqoi3wbooY7
-	 dnnrYVBZVG09w==
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7c278c25aefso1034820a34.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 09:30:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+td/KjNejIcdYHHXa440TZ8CvJeZaOlcEgf5GTSztZysEUMmDCqtCHMmXR7sum+1KF3mBhNf3My6wRN+ouX/b+3AM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZv/TKf4Ca0PpjcipGSfev/SAk55LG7cdP0oePDzCaz2LnpFBi
-	2wkyily2RcE5JaQ1IIUF3edYQazZQqawEjtznkBaOkwXWrX5QJWmZ0dVNoksXB1LZazrgrKo2Rv
-	QTsO17lqCsatDGhjeaLxyI8wExLV5T88=
-X-Google-Smtp-Source: AGHT+IHDq1EztUjEhZbcmsAypXJ2oBtJE39079rPcy57qhSiOK4J+4PcxlPfYPQJor2CNvKDZhuPPyoPZkpMwe3ojAk=
-X-Received: by 2002:a05:6808:6f94:b0:43f:9caf:645e with SMTP id
- 5614622812f47-443a2dd813emr11123727b6e.6.1761237019735; Thu, 23 Oct 2025
- 09:30:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPOj2ISn"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-592f7e50da2so926880e87.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 09:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761237123; x=1761841923; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYfGw1tMl9yOFknFdOBqe6dPAFpDn53Uc6QGIFFot64=;
+        b=CPOj2ISnBOnl4iCLFjfOJucUjxSETQ6CbG9YSwqBFSEtUTBKLWXy1+l5lRnxaCN+vH
+         5uAUmszSCO+dvRy/VltRs7a5vL4NA9TH53ib6KPH/mIZRTptY/FlisIt9/uLWoaZpoqz
+         361PvGn55/JcW0isPzu7mKYsQkRjhJLoiO9MWai5bCUA29N3QOxNidyWB+WL2SvM1q0L
+         joWZijH0p0d6BdXVHP6/tp/LUxDExuctyAjCAzQ3Yoqeb8rBtix6+bYdI3KpjsQIE6r3
+         ek/c48hGWOxpMbmGsZUKtVPm/xdT9PE+bto7m926fVmtZjrpul23esgn5BJ5rHgRqIkL
+         0gYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761237123; x=1761841923;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYfGw1tMl9yOFknFdOBqe6dPAFpDn53Uc6QGIFFot64=;
+        b=GCdt7nsALK4fg29QZZpCb6j+pVuGWTvb1Sw/LlETqDZXX2yl9qJD2Th59llRYdOWFe
+         5MXTfp1ascK9Y3QgY/APrYttrjXkxGWD2t9rsVgNrbcyKJrKGgDtX2vywhDy80VNTAO/
+         7ymq/Z/fz2Oh4oBDafFYoSz4dgIGO3ZeperXOYwZjr/5wwjst4BiFm+jP0i2Y4ApeqKh
+         AzIO1UqI6dVoBLPAnYh1n/0AvKyamTgQxwYeJ/Ydw7l847sTlXspO6V4Ey16xGuhmIlg
+         Vuz01ZmhP7MQu1EkgxIU0NeamUYxeUZ4aEpYSpC8Z6BgGqw87ZyroBUAYbzcBnMxpEwV
+         yC6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2LGTWN9M3zwuarMuyR6uwZp7R8cckO2Nm3hP5fON9US97Rd/dgbvaMrj/TBlbRq3vsQaWxl159W0QrQtxaCmiNrsW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgQXQXKhXXQp9o3Wzwe8D8qFI7QTWIgp9IJ+OWKCctEXb/R4jc
+	PZNTiPITJk3bB3tABvFdLsJi37Y9Yo/UV0SwrR3uis59cjKNgElYed57
+X-Gm-Gg: ASbGncsK2yEOY07TQWfgioC6H7Q0gwDxYSUfE817a25V8PsISERpA/tjraIbyiQwmA8
+	R7KtQCzgL32dWYdgTbtqDDKAxtTQaLimrqkgB2czNF+P7b0VL5h/+x6Q0L/HkpGJgtxAJ2k/Ga1
+	u2wXLhYZ5euR9+h/OR4JCSK/gVzu6cZxbAb1zDUHCHTl+VxbD9z5U6SWrdv0NPwKTtFfGjhIav1
+	mQ55k0tysa9VtOfNJP5ZKEE3fsJpgKgNikARJ/ANIHfmz8GZ98N/Yf23qzQp9+MqmsZUJ55U8Fn
+	xCVWcl0MPRUo6mkq1F5et71WWXd7X55rHYUEGhgsJh/81Z4bGtxMjvlSsU2Xz/FHiRK9xNlBZK8
+	11Wa9N4op1vEcJt6lyL7PDe5DS4dSKicVP51cbFScJOZ/5daSJ34MjZmycSUE4FEC2lCNcJml1J
+	X1jhYfPNUqn6PMMobM
+X-Google-Smtp-Source: AGHT+IFKo/4nyXPNKUqA7IAS5KBLXbS3dKQTgE6kBFLo6yQ7yPWiD+r65VS0c92Ld+0Cdijp698faQ==
+X-Received: by 2002:a05:6512:12c4:b0:57a:8eb7:1ea2 with SMTP id 2adb3069b0e04-592dc07e150mr2493948e87.27.1761237122517;
+        Thu, 23 Oct 2025 09:32:02 -0700 (PDT)
+Received: from foxbook (bey128.neoplus.adsl.tpnet.pl. [83.28.36.128])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-592f4d2d367sm828133e87.103.2025.10.23.09.32.00
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Thu, 23 Oct 2025 09:32:01 -0700 (PDT)
+Date: Thu, 23 Oct 2025 18:31:54 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
+ linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux@roeck-us.net, mario.limonciello@amd.com,
+ naveenkrishna.chatradhi@amd.com, platform-driver-x86@vger.kernel.org,
+ suma.hegde@amd.com, tony.luck@intel.com, x86@kernel.org
+Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
+ count
+Message-ID: <20251023183154.1e807af6.michal.pecio@gmail.com>
+In-Reply-To: <20251023160906.GA730672@yaz-khff2.amd.com>
+References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
+	<20251022011610.60d0ba6e.michal.pecio@gmail.com>
+	<20251022133901.GB7243@yaz-khff2.amd.com>
+	<20251022173831.671843f4.michal.pecio@gmail.com>
+	<20251022160904.GA174761@yaz-khff2.amd.com>
+	<20251022181856.0e3cfc92.michal.pecio@gmail.com>
+	<20251023135935.GA619807@yaz-khff2.amd.com>
+	<20251023170107.0cc70bad.michal.pecio@gmail.com>
+	<20251023160906.GA730672@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-3-srosek@google.com>
- <CAJZ5v0iQToOkedruYqsowSm8=fxpnyJf86JJHB36E8+aCSZ5Hw@mail.gmail.com>
- <CAF3aWvFSomq+cm2sj+KjkYw=WODsrwH-VLDL=yOc6o9dqc5hWA@mail.gmail.com>
- <CAJZ5v0g72U3+u_KedKpZh2TuN-iYbXPcnZhN16oDvi4UqUTr7Q@mail.gmail.com> <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com>
-In-Reply-To: <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 23 Oct 2025 18:30:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
-X-Gm-Features: AS18NWCx-ccLUIcSua3zctE2K3sw3aOfu-2Tq4ZHKx5jLgRgn6u4OwXeYMA0b5c
-Message-ID: <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] ACPI: DPTF: Move INT340X device IDs to header
-To: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
-	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
-	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="MP_/L/dcs+e8mHMeXY=3blTIATs"
 
-On Thu, Oct 23, 2025 at 6:27=E2=80=AFPM S=C5=82awomir Rosek <srosek@google.=
-com> wrote:
->
-> On Thu, Oct 23, 2025 at 5:11=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
-org> wrote:
-> >
-> > On Thu, Oct 23, 2025 at 4:41=E2=80=AFPM S=C5=82awomir Rosek <srosek@goo=
-gle.com> wrote:
-> > >
-> > > On Wed, Oct 22, 2025 at 8:46=E2=80=AFPM Rafael J. Wysocki <rafael@ker=
-nel.org> wrote:
-> > > >
-> > > > On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@googl=
-e.com> wrote:
-> > > > >
-> > > > > The ACPI INT340X device IDs are shared between the DPTF core
-> > > > > and thermal drivers, thus they are moved to the common header.
-> > > > >
-> > > > > Signed-off-by: Slawomir Rosek <srosek@google.com>
-> > > >
-> > > > I've actually started to wonder if int340x_thermal_handler is neede=
-d at all.
-> > > >
-> > > > It just creates a platform device if the given ACPI device ID is in
-> > > > its list,
-> > >
-> > > That's true. It creates platform device for the given ACPI device ID,
-> > > but only if CONFIG_INT340X_THERMAL is enabled.
-> > >
-> > > > but acpi_default_enumeration() would do that too with the
-> > > > caveat that it would also be done for CONFIG_INT340X_THERMAL unset.
-> > >
-> > > Not exactly. scan handler returns ret=3D1, so device is marked as enu=
-merated
-> > > https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/acpi/scan.c=
-#L2314
-> > >
-> > > > That should not be a problem though because if CONFIG_INT340X_THERM=
-AL,
-> > > > there are no drivers that will bind to those platform devices, so t=
-he
-> > > > net outcome should be the same.
-> > >
-> > > If CONFIG_INT340X_THERMAL is not set and there are no drivers to atta=
-ch
-> > > to platform devices and int340x_thermal_handler is removed then you a=
-re
-> > > right, acpi_default_enumeration() will enumerate ACPI bus anyway and
-> > > create platform devices for all ACPI device IDs. However, for me it l=
-ooks
-> > > like it was intentional to prevent this behaviour unless INT340X driv=
-ers
-> > > are "present" in the system (were enabled for build so should be).
-> > > I am not sure how DPTF works and what may happen if platform devices =
-are
-> > > visible in sysfs while drivers are not loaded.
-> >
-> > Such a dependency would be unexpected and confusing.
-> >
-> > Also, I'm not sure why it would be useful because the lack of drivers
-> > means that the devices in question are not handled, so no
-> > functionality related to them is provided by the kernel.
-> >
-> > > >
-> > > > Thus I'm wondering if the way to go might be to drop
-> > > > int340x_thermal_handler and simply keep the device IDs in the drive=
-rs
-> > > > that use them for device binding.
-> > >
-> > > Even better. If it's not required for DPTF to prevent enumeration
-> > > on the platform bus I can simply remove the scan handler.
-> >
-> > I would at least try to do that.
->
-> Makes sense, so I'll give it a try. Removing handler will result with
-> only two patches, one to update dts_doc_thermal kconfig and second
-> to remove the dptf scan handler, the rest won't be needed for a new
-> patchset. Should I send it as v4?
+--MP_/L/dcs+e8mHMeXY=3blTIATs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Yes, please!
+On Thu, 23 Oct 2025 12:09:06 -0400, Yazen Ghannam wrote:
+> On Thu, Oct 23, 2025 at 05:01:07PM +0200, Michal Pecio wrote:
+> > On Thu, 23 Oct 2025 09:59:35 -0400, Yazen Ghannam wrote:  
+> > > Thanks Michal.
+> > > 
+> > > I don't see anything obviously wrong.  
+> > 
+> > Which code is responsible for setting up those bitmaps which
+> > are counted by topology_init_possible_cpus()?
+> > 
+> > I guess I could add some printks there and reboot.
+> >   
+> 
+> The kernel seems to think there are 6 CPUs on your system:
+> 
+> [    0.072059] CPU topo: Allowing 4 present CPUs plus 2 hotplug CPUs
+
+I thought this is because I have NR_CPUS set to 6, as this config
+originally came from the X6 machine, but I am not sure.
+
+> 
+> We don't seem them enabled, but they may still get APIC IDs. If so, then
+> the IDs would be beyond the core shift of 2.
+> 
+> APIC IDs b'0 00 -> CPU0 on logical package 0
+> 	 b'0 01 -> CPU1 on logical package 0
+> 	 b'0 10 -> CPU2 on logical package 0
+> 	 b'0 11 -> CPU3 on logical package 0
+> 	 b'1 00 -> CPU0 on logical package 1
+> 	 b'1 01 -> CPU1 on logical package 1
+> 
+> 
+> Please try booting with "possible_cpus=4".
+
+OK, will try it next time I'm rebooting.
+
+> The "number of possible CPUs" comes from the ACPI Multiple APIC
+> Description Table (MADT). This has the signature "APIC".
+> 
+> Can you please provide the disassembly of this table?
+
+Interesting, it looks like there are indeed 6 LAPICs there.
+BIOS bug? Attaching apic.dsl.
+
+> Can you please share the dmesg output from that system? And the ACPI
+> table too?
+
+Will try later but I don't recall any anomalies there.
+I remember checking the topology output and it made sense:
+1 package, 1 die, 6 cores, 6 threads.
+
+--MP_/L/dcs+e8mHMeXY=3blTIATs
+Content-Type: text/x-dsl
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=apic.dsl
+
+/*
+ * Intel ACPI Component Architecture
+ * AML/ASL+ Disassembler version 20211217 (64-bit version)
+ * Copyright (c) 2000 - 2021 Intel Corporation
+ * 
+ * Disassembly of apic.dat, Thu Oct 23 18:19:16 2025
+ *
+ * ACPI Data Table [APIC]
+ *
+ * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue (in hex)
+ */
+
+[000h 0000   4]                    Signature : "APIC"    [Multiple APIC Description Table (MADT)]
+[004h 0004   4]                 Table Length : 0000007C
+[008h 0008   1]                     Revision : 01
+[009h 0009   1]                     Checksum : F5
+[00Ah 0010   6]                       Oem ID : "080912"
+[010h 0016   8]                 Oem Table ID : "APIC1703"
+[018h 0024   4]                 Oem Revision : 20120809
+[01Ch 0028   4]              Asl Compiler ID : "MSFT"
+[020h 0032   4]        Asl Compiler Revision : 00000097
+
+[024h 0036   4]           Local Apic Address : FEE00000
+[028h 0040   4]        Flags (decoded below) : 00000001
+                         PC-AT Compatibility : 1
+
+[02Ch 0044   1]                Subtable Type : 00 [Processor Local APIC]
+[02Dh 0045   1]                       Length : 08
+[02Eh 0046   1]                 Processor ID : 01
+[02Fh 0047   1]                Local Apic ID : 00
+[030h 0048   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[034h 0052   1]                Subtable Type : 00 [Processor Local APIC]
+[035h 0053   1]                       Length : 08
+[036h 0054   1]                 Processor ID : 02
+[037h 0055   1]                Local Apic ID : 01
+[038h 0056   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[03Ch 0060   1]                Subtable Type : 00 [Processor Local APIC]
+[03Dh 0061   1]                       Length : 08
+[03Eh 0062   1]                 Processor ID : 03
+[03Fh 0063   1]                Local Apic ID : 02
+[040h 0064   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[044h 0068   1]                Subtable Type : 00 [Processor Local APIC]
+[045h 0069   1]                       Length : 08
+[046h 0070   1]                 Processor ID : 04
+[047h 0071   1]                Local Apic ID : 03
+[048h 0072   4]        Flags (decoded below) : 00000001
+                           Processor Enabled : 1
+                      Runtime Online Capable : 0
+
+[04Ch 0076   1]                Subtable Type : 00 [Processor Local APIC]
+[04Dh 0077   1]                       Length : 08
+[04Eh 0078   1]                 Processor ID : 05
+[04Fh 0079   1]                Local Apic ID : 84
+[050h 0080   4]        Flags (decoded below) : 00000000
+                           Processor Enabled : 0
+                      Runtime Online Capable : 0
+
+[054h 0084   1]                Subtable Type : 00 [Processor Local APIC]
+[055h 0085   1]                       Length : 08
+[056h 0086   1]                 Processor ID : 06
+[057h 0087   1]                Local Apic ID : 85
+[058h 0088   4]        Flags (decoded below) : 00000000
+                           Processor Enabled : 0
+                      Runtime Online Capable : 0
+
+[05Ch 0092   1]                Subtable Type : 01 [I/O APIC]
+[05Dh 0093   1]                       Length : 0C
+[05Eh 0094   1]                  I/O Apic ID : 04
+[05Fh 0095   1]                     Reserved : 00
+[060h 0096   4]                      Address : FEC00000
+[064h 0100   4]                    Interrupt : 00000000
+
+[068h 0104   1]                Subtable Type : 02 [Interrupt Source Override]
+[069h 0105   1]                       Length : 0A
+[06Ah 0106   1]                          Bus : 00
+[06Bh 0107   1]                       Source : 00
+[06Ch 0108   4]                    Interrupt : 00000002
+[070h 0112   2]        Flags (decoded below) : 0000
+                                    Polarity : 0
+                                Trigger Mode : 0
+
+[072h 0114   1]                Subtable Type : 02 [Interrupt Source Override]
+[073h 0115   1]                       Length : 0A
+[074h 0116   1]                          Bus : 00
+[075h 0117   1]                       Source : 09
+[076h 0118   4]                    Interrupt : 00000009
+[07Ah 0122   2]        Flags (decoded below) : 000F
+                                    Polarity : 3
+                                Trigger Mode : 3
+
+Raw Table Data: Length 124 (0x7C)
+
+    0000: 41 50 49 43 7C 00 00 00 01 F5 30 38 30 39 31 32  // APIC|.....080912
+    0010: 41 50 49 43 31 37 30 33 09 08 12 20 4D 53 46 54  // APIC1703... MSFT
+    0020: 97 00 00 00 00 00 E0 FE 01 00 00 00 00 08 01 00  // ................
+    0030: 01 00 00 00 00 08 02 01 01 00 00 00 00 08 03 02  // ................
+    0040: 01 00 00 00 00 08 04 03 01 00 00 00 00 08 05 84  // ................
+    0050: 00 00 00 00 00 08 06 85 00 00 00 00 01 0C 04 00  // ................
+    0060: 00 00 C0 FE 00 00 00 00 02 0A 00 00 02 00 00 00  // ................
+    0070: 00 00 02 0A 00 09 09 00 00 00 0F 00              // ............
+
+--MP_/L/dcs+e8mHMeXY=3blTIATs--
