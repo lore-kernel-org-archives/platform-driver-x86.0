@@ -1,60 +1,41 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746331F4262
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA91830BF6A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761236858; cv=none; b=AkNuOFSkL1zwofZsv/J9Bsa6y6I9UY/kZ+wFzOp+kyHqmDF5pnA51p8Qw3sTAsvDyWGf1Oo7ANC+O5h69vw3VbXi7Lpr/6HRnwgLEErrwP27RL0nL4kiCY6OcTaX+4BIvLToJtjeIcwOaFhdGS/JssNZTSGJoQ5bwe1VWGLB+Dk=
+	t=1761237020; cv=none; b=JUGMREE9qA0b8XgHxhJlnmUz9AJRF5am+GdTT23Nb5lhnNtSKGWUiCq4LmY40hlv6+4HB/n6cMNB/5ZSnSdf+NNaQIp3FWJaEb3tHaFU2Wh118V0b5XCoABpn8brchqvh9bfYt+B6V/POqdejLm7egsTGvYIxZyCoV6eufXbNYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761236858; c=relaxed/simple;
-	bh=97MO41jRSpevZOQY5X/s6jqv4fmMPnX3F7sJNNlsleo=;
+	s=arc-20240116; t=1761237020; c=relaxed/simple;
+	bh=a3M7W3BWeRUGRfhK+snn/DeGWrSLsPNKDdfBeO+UoHk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fi9m+kbvFOpLeIHLjlyt4TzpBZBKfKbJxjHKvaA0LrkCBj0JFl+tDCIT7MujVlCRMcbAa4w9Y6AMJDvYRwAFxX2sjG2kuNvo/7JOM1eyK3ytiqqbEbpBZ5ww4sDh29hYJxvqCsslPdfzNiPsR2VPLWizWobLTPug4Gk70D3tr+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Prdk/SBo; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=u96qaJvrLs2qr+S1RLaHJnyRNCgR96ywo8y1Pac2sh11XIVF8BQ7oGROGxYgzEzSZz037fY7AaB+eFiYHUPBOEiPiuDko9yaTy0e0WIFvYOwaFcjcMZ9nIkLmxVonxE/vXNa8f3oLWADGZu9AHpNcnOy9jyQY3f4iRU32uqMb/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvlkFrke; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Prdk/SBo"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-63e076e24f2so2169463a12.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 09:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761236855; x=1761841655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=97MO41jRSpevZOQY5X/s6jqv4fmMPnX3F7sJNNlsleo=;
-        b=Prdk/SBofghIdtzCeMBtAvJyI7nlROk7g2TwGmQ3o5R9VZEILaksGldZ+H2+iWi+s6
-         l9FTfZS16hPTzScJA8prerCGLoP8y5i0SMRHOavog3f5yLoguaOY27V0bQjIYLQxzDPB
-         YRNs1PweZsaccigXXB26VDi6eTdwxqA7xvgL6sJJ3JJVbW/L5weyVsJ86S5NOj5LPNfU
-         lBnesfC7nyGsGXVmCIbuR2WyESddOYcgzF+I2kXb/RjmVSVad6+BvHP7phcphn3ElSUx
-         WGg/iCfqqncmWwMLn/dLnmM7aK69LVSCwJrok4e+iWRH+mv24SY0z8jy461KcIaPov0O
-         Kp/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761236855; x=1761841655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=97MO41jRSpevZOQY5X/s6jqv4fmMPnX3F7sJNNlsleo=;
-        b=S+0tm64TN3I1+qxf2qj8kKwTOUtFeSVuUM8jTJFtRW5DGGEOimBboWJYFtsIWcbUbe
-         SiEgkZn6QpuxLERZHPZIbJZsYy7SzANlSHtW08zjcjnrZhJ6uZBrplLgMP6t14vhCBZr
-         ZmO4c1P3QLEuU0g3jlGEdy4eFrIqAXB/T5ZVAm8AMvF2Y0311KuuUaQcp8lLw5LodCGS
-         xNAJnnsKrKfTYAN+HxzfV2PiT/Q2jcSHMt+OJ973elTE4pgurgtj5+Rm9Y8Cqu7tFVc3
-         9mg3Bn0mB8XokPLpu5w5PyWksO24mKdaOzZhkP8NroHeLgviB4eIPBGOHc/ZgOyJUMP8
-         DO2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWPvofsQfjf9CUmIFS88vpkf7iNQj/J0VB2e9MxhQTaH3Hbt0gTXxmGhTDueQ2yF6NvkvT/x+j5jHINSQNmzD35Ugyt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeHUFH9nwfe439paf68d++WS7SRV7ZYdOms4DzfX3VEpe2utHA
-	Kx5q4n7K7hgSn05mbBSEFUIO+diwV9SlzhECtpskDlrRIWPBLA/7J5ewKR/nIiFoQOrX1VXEyfb
-	FR8SWw/bZ/HibAV1mzF9Ow66SP1eUNfJJFk48xb96
-X-Gm-Gg: ASbGncve3MILVIWU6jRDk0hJw+r6tretrcrwxCc735Hnn7qjJCKa5W8wa4GzzeP5AUM
-	zYclRDwCePORlxMOHuUCW3tb2LlNsWcMfWFI0HJJ3uUALlzXnpI8Fx6Cns32lKHDiGYSQf1maXa
-	HCWlMjZVhqYYoKxylVBcBWlJtVAqIjbxSdKSkCU6BKG8lGU2Q9b4cj7zmtLCGazN3kfW5ZHyJCU
-	hb8eRIZxPyVwdYS0miyk4wzyQVNnEX+7/3GjKLuOfMBmsJZfkQNP+Rw04rJewxsjyjo1w0c+zWZ
-	5VvR2bQ+V8UJv5iGTZeDuPNXUw==
-X-Google-Smtp-Source: AGHT+IGRu6yI1emkCCw3nvVlzdH/6fU0sebXYjptgLv/4PO9Xk3ol/HgZ5f+hbDRyxJrRiKEy/KfoNbWzUlcluN7VUM=
-X-Received: by 2002:a50:9e2a:0:b0:639:e9a4:a5f1 with SMTP id
- 4fb4d7f45d1cf-63c1f6cef09mr20904049a12.27.1761236854479; Thu, 23 Oct 2025
- 09:27:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvlkFrke"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695A0C113D0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 16:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761237020;
+	bh=a3M7W3BWeRUGRfhK+snn/DeGWrSLsPNKDdfBeO+UoHk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qvlkFrkeuyZbSOa0eJlFoW8mhuEYTiaMZH9yDPoiP4l42l3jFy8HwP+yXzSCXg1YW
+	 BkK10VNt9Gv2UJIre5u0Yq+07wbILujdGj1zpuIOZI++3X/iLyS45I3HsS3HEfINj4
+	 7XoCij7u/D3+V7GfL5RApPd4/dcNDhPSwVKhwF28rdriAs1GOyFmTignQq8HDIdvkA
+	 vcry+txW8kDEHPBiABUMcyJ6Cvg5inb9rUIDkcaLplYqovTVAKSNUR5soWWoJcOlk8
+	 V8/a6/CvbgI3xsAVANuIcPiG2yCCIXhynJXjoHYKheSzSKZ8eJYaY3yXqoi3wbooY7
+	 dnnrYVBZVG09w==
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7c278c25aefso1034820a34.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 09:30:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+td/KjNejIcdYHHXa440TZ8CvJeZaOlcEgf5GTSztZysEUMmDCqtCHMmXR7sum+1KF3mBhNf3My6wRN+ouX/b+3AM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZv/TKf4Ca0PpjcipGSfev/SAk55LG7cdP0oePDzCaz2LnpFBi
+	2wkyily2RcE5JaQ1IIUF3edYQazZQqawEjtznkBaOkwXWrX5QJWmZ0dVNoksXB1LZazrgrKo2Rv
+	QTsO17lqCsatDGhjeaLxyI8wExLV5T88=
+X-Google-Smtp-Source: AGHT+IHDq1EztUjEhZbcmsAypXJ2oBtJE39079rPcy57qhSiOK4J+4PcxlPfYPQJor2CNvKDZhuPPyoPZkpMwe3ojAk=
+X-Received: by 2002:a05:6808:6f94:b0:43f:9caf:645e with SMTP id
+ 5614622812f47-443a2dd813emr11123727b6e.6.1761237019735; Thu, 23 Oct 2025
+ 09:30:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,18 +44,20 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-3-srosek@google.com>
  <CAJZ5v0iQToOkedruYqsowSm8=fxpnyJf86JJHB36E8+aCSZ5Hw@mail.gmail.com>
- <CAF3aWvFSomq+cm2sj+KjkYw=WODsrwH-VLDL=yOc6o9dqc5hWA@mail.gmail.com> <CAJZ5v0g72U3+u_KedKpZh2TuN-iYbXPcnZhN16oDvi4UqUTr7Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g72U3+u_KedKpZh2TuN-iYbXPcnZhN16oDvi4UqUTr7Q@mail.gmail.com>
-From: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
-Date: Thu, 23 Oct 2025 18:27:23 +0200
-X-Gm-Features: AWmQ_blF7s0d_2rpPBOJV_yCAuUzVG3-BC5mVNgcU7WAEA9ki3dMFD97y8RMCx8
-Message-ID: <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com>
+ <CAF3aWvFSomq+cm2sj+KjkYw=WODsrwH-VLDL=yOc6o9dqc5hWA@mail.gmail.com>
+ <CAJZ5v0g72U3+u_KedKpZh2TuN-iYbXPcnZhN16oDvi4UqUTr7Q@mail.gmail.com> <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com>
+In-Reply-To: <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 23 Oct 2025 18:30:08 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
+X-Gm-Features: AS18NWCx-ccLUIcSua3zctE2K3sw3aOfu-2Tq4ZHKx5jLgRgn6u4OwXeYMA0b5c
+Message-ID: <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
 Subject: Re: [PATCH v3 2/6] ACPI: DPTF: Move INT340X device IDs to header
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, AceLan Kao <acelan.kao@canonical.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Zhang Rui <rui.zhang@intel.com>, 
+To: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
+	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
 	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
 	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
@@ -82,74 +65,83 @@ Cc: Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 23, 2025 at 5:11=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Thu, Oct 23, 2025 at 4:41=E2=80=AFPM S=C5=82awomir Rosek <srosek@googl=
-e.com> wrote:
-> >
-> > On Wed, Oct 22, 2025 at 8:46=E2=80=AFPM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@google.=
+On Thu, Oct 23, 2025 at 6:27=E2=80=AFPM S=C5=82awomir Rosek <srosek@google.=
 com> wrote:
+>
+> On Thu, Oct 23, 2025 at 5:11=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
+org> wrote:
+> >
+> > On Thu, Oct 23, 2025 at 4:41=E2=80=AFPM S=C5=82awomir Rosek <srosek@goo=
+gle.com> wrote:
+> > >
+> > > On Wed, Oct 22, 2025 at 8:46=E2=80=AFPM Rafael J. Wysocki <rafael@ker=
+nel.org> wrote:
 > > > >
-> > > > The ACPI INT340X device IDs are shared between the DPTF core
-> > > > and thermal drivers, thus they are moved to the common header.
+> > > > On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@googl=
+e.com> wrote:
+> > > > >
+> > > > > The ACPI INT340X device IDs are shared between the DPTF core
+> > > > > and thermal drivers, thus they are moved to the common header.
+> > > > >
+> > > > > Signed-off-by: Slawomir Rosek <srosek@google.com>
 > > > >
-> > > > Signed-off-by: Slawomir Rosek <srosek@google.com>
+> > > > I've actually started to wonder if int340x_thermal_handler is neede=
+d at all.
+> > > >
+> > > > It just creates a platform device if the given ACPI device ID is in
+> > > > its list,
 > > >
-> > > I've actually started to wonder if int340x_thermal_handler is needed =
-at all.
+> > > That's true. It creates platform device for the given ACPI device ID,
+> > > but only if CONFIG_INT340X_THERMAL is enabled.
 > > >
-> > > It just creates a platform device if the given ACPI device ID is in
-> > > its list,
-> >
-> > That's true. It creates platform device for the given ACPI device ID,
-> > but only if CONFIG_INT340X_THERMAL is enabled.
-> >
-> > > but acpi_default_enumeration() would do that too with the
-> > > caveat that it would also be done for CONFIG_INT340X_THERMAL unset.
-> >
-> > Not exactly. scan handler returns ret=3D1, so device is marked as enume=
-rated
-> > https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/acpi/scan.c#L=
-2314
-> >
-> > > That should not be a problem though because if CONFIG_INT340X_THERMAL=
-,
-> > > there are no drivers that will bind to those platform devices, so the
-> > > net outcome should be the same.
-> >
-> > If CONFIG_INT340X_THERMAL is not set and there are no drivers to attach
-> > to platform devices and int340x_thermal_handler is removed then you are
-> > right, acpi_default_enumeration() will enumerate ACPI bus anyway and
-> > create platform devices for all ACPI device IDs. However, for me it loo=
-ks
-> > like it was intentional to prevent this behaviour unless INT340X driver=
-s
-> > are "present" in the system (were enabled for build so should be).
-> > I am not sure how DPTF works and what may happen if platform devices ar=
-e
-> > visible in sysfs while drivers are not loaded.
->
-> Such a dependency would be unexpected and confusing.
->
-> Also, I'm not sure why it would be useful because the lack of drivers
-> means that the devices in question are not handled, so no
-> functionality related to them is provided by the kernel.
->
+> > > > but acpi_default_enumeration() would do that too with the
+> > > > caveat that it would also be done for CONFIG_INT340X_THERMAL unset.
 > > >
-> > > Thus I'm wondering if the way to go might be to drop
-> > > int340x_thermal_handler and simply keep the device IDs in the drivers
-> > > that use them for device binding.
+> > > Not exactly. scan handler returns ret=3D1, so device is marked as enu=
+merated
+> > > https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/acpi/scan.c=
+#L2314
+> > >
+> > > > That should not be a problem though because if CONFIG_INT340X_THERM=
+AL,
+> > > > there are no drivers that will bind to those platform devices, so t=
+he
+> > > > net outcome should be the same.
+> > >
+> > > If CONFIG_INT340X_THERMAL is not set and there are no drivers to atta=
+ch
+> > > to platform devices and int340x_thermal_handler is removed then you a=
+re
+> > > right, acpi_default_enumeration() will enumerate ACPI bus anyway and
+> > > create platform devices for all ACPI device IDs. However, for me it l=
+ooks
+> > > like it was intentional to prevent this behaviour unless INT340X driv=
+ers
+> > > are "present" in the system (were enabled for build so should be).
+> > > I am not sure how DPTF works and what may happen if platform devices =
+are
+> > > visible in sysfs while drivers are not loaded.
 > >
-> > Even better. If it's not required for DPTF to prevent enumeration
-> > on the platform bus I can simply remove the scan handler.
+> > Such a dependency would be unexpected and confusing.
+> >
+> > Also, I'm not sure why it would be useful because the lack of drivers
+> > means that the devices in question are not handled, so no
+> > functionality related to them is provided by the kernel.
+> >
+> > > >
+> > > > Thus I'm wondering if the way to go might be to drop
+> > > > int340x_thermal_handler and simply keep the device IDs in the drive=
+rs
+> > > > that use them for device binding.
+> > >
+> > > Even better. If it's not required for DPTF to prevent enumeration
+> > > on the platform bus I can simply remove the scan handler.
+> >
+> > I would at least try to do that.
 >
-> I would at least try to do that.
+> Makes sense, so I'll give it a try. Removing handler will result with
+> only two patches, one to update dts_doc_thermal kconfig and second
+> to remove the dptf scan handler, the rest won't be needed for a new
+> patchset. Should I send it as v4?
 
-Makes sense, so I'll give it a try. Removing handler will result with
-only two patches, one to update dts_doc_thermal kconfig and second
-to remove the dptf scan handler, the rest won't be needed for a new
-patchset. Should I send it as v4?
+Yes, please!
