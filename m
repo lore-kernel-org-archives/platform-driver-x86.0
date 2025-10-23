@@ -1,173 +1,196 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012068.outbound.protection.outlook.com [40.93.195.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC7828E00;
-	Thu, 23 Oct 2025 13:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761227985; cv=fail; b=iaFBv8NToLHs1UmyWsXIUlZ+PGIrG49SedPsMY9cBbMrGh6cFg71rOpgjhBxClyAVas0Oqh+QpwRKol68g47YnUWcw6oG+02xjwpKg1xl0a/65ojkyXhQACRzmX6x5Q8eG2tIVN3WLXUPPGxk3ZwvRVeSdx9m9SmU2ZuIdyjx3Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761227985; c=relaxed/simple;
-	bh=vdeI2j2aL4sOlZYMXD8cWIo4esfdj+jEP2LIwDcPU7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NFeOY0szvhXvFP7k51QZwfO0oKQOkTkCjUezFz5CbGZoViZi92hdSUUrQecvkiGnnMQLkpTF2VRUpRGLSb1n4hiOrKe3uSqWSWUNF2/q7hNIVGWOkFQ3j3TD4f8CCcVccpJW/D8NML4ZDNOi4fJwF/5zcIHquCPLtHptZXz/Y6s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=V6qssH8P; arc=fail smtp.client-ip=40.93.195.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D51832D438
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 14:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761230198; cv=none; b=jaTxPtxFM/utUM7qogyaaSg2DZI/6rjd0CpBkcI1glUljJb8WafiouSqtVSRHDNTNeNTHtfitvhn1gNxzYHc0XvGbf8e1blCUTw+PEJyZX6X7hGDXusOTOqjiwtvgwQsF2xr4zRkm6vuvBIN3EK2lo2bi47CLILWdObYSgiro1U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761230198; c=relaxed/simple;
+	bh=6SbX77KMhHRrNsvoj/jcXSU2W+9DAHYXAss5hQALgcc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MYuqQty3V+4e+5+yZBTsaPXAzIVGLcpBxCmB7vgoRcrYgeIQQIqcyTEzmi16Lsya1hc8LRGSbtVa38K3rJn1IHELJ+YeDT79L0aVYVw0s1uo2UP4P2AHm2aX4FzviRvT04P02K2vDVkaFVPIvbC+GE+z7wIEOSINF088VulTj30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gj5KQBxJ; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V6qssH8P"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SakdzM5Jg5ELLemdK3zqJTi6rvQsdNaaAQeVNevU67dc58zG7HHz9CVw8pu5HOy4uIXKggzYHFJH75V0wT98q5iyI1QQ87NjcpcqzzwGS8bYgvnIGqM9Q5/0wE33zJSa8dY3aLWpu3z3+t4eRVAWUxKO/kAz4gBxosFDpSQ63m5rG5MeAaUwuNCcfLVzSprW3/h3EBwmhCHi2g/Kg5Mvk2TrXVhmwDJsFB1/N3apUtcTbQGX7FlvPbAes0/fM9b6BPADBEeE30BO8GWRX3TsJ6B5xm3jZy0gSoaEHbKXQKYgoQDWu2mbqNGD3a7YumfvsSLWRBT50h8Bs6IUzyYVMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S/E1k9lUTnvsMxCa/kjJ3lCG15IbZz2ZmYbE7HE1yyg=;
- b=JlfjtHhjQFsbGhI+hXqBByyDQUWK8/FU/eMHVcogIn1cJYaGts/2i248R4t7gE9xjS89GGjxR6t2j6PA4SBPbgjCpPGZXEGo7+p4CT5HEj2Y5gxLQk/CsSB74NTQthQyLu70YrolTcj8eAmlKZWNvAqTt17gw/uGAYDdzFtoVceiPcPvjo9GEBt5pPiFdmGpwcLB4OTA9T53ULxdt3vIduVo5czJ1Jm7KjoFvdc1CqJSV7kP0FnSO4OG0WSY5/JORxYwZ3NCyQx54hq4pLwUXFlBV+amdy07Av4P+iswu3BWW6O0A0dswHJBfQOwlYcVsO50sFGLbtto9L+KZWMxGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S/E1k9lUTnvsMxCa/kjJ3lCG15IbZz2ZmYbE7HE1yyg=;
- b=V6qssH8Pxubg1ViQrLGLSVNq1Fg4nyIcDBJpRnMNZDUMoU7Bzty24t1kDWt6NtVk3ZV32KSX0IICgzizy+yfiR8o/okz3tdNHQyr32fzLX+YKhKqWZGWzNxScNuHJbt9YBWMMW3OxZRonHoxHrcQOQjV1KDdyKpxlh9FTrd+gHY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- MW3PR12MB4457.namprd12.prod.outlook.com (2603:10b6:303:2e::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.10; Thu, 23 Oct 2025 13:59:41 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.9253.011; Thu, 23 Oct 2025
- 13:59:40 +0000
-Date: Thu, 23 Oct 2025 09:59:35 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Shyam-sundar.S-k@amd.com, bhelgaas@google.com, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
-	linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux@roeck-us.net, mario.limonciello@amd.com,
-	naveenkrishna.chatradhi@amd.com,
-	platform-driver-x86@vger.kernel.org, suma.hegde@amd.com,
-	tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH v3 06/12] x86/amd_nb: Use topology info to get AMD node
- count
-Message-ID: <20251023135935.GA619807@yaz-khff2.amd.com>
-References: <20250107222847.3300430-7-yazen.ghannam@amd.com>
- <20251022011610.60d0ba6e.michal.pecio@gmail.com>
- <20251022133901.GB7243@yaz-khff2.amd.com>
- <20251022173831.671843f4.michal.pecio@gmail.com>
- <20251022160904.GA174761@yaz-khff2.amd.com>
- <20251022181856.0e3cfc92.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022181856.0e3cfc92.michal.pecio@gmail.com>
-X-ClientProxiedBy: BL1PR13CA0307.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::12) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gj5KQBxJ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-63e0cec110eso1560841a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Oct 2025 07:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761230194; x=1761834994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cXNTVYS30VFNX/nxAcwXSrix5DBuflIOXbRt+GIcMzU=;
+        b=Gj5KQBxJWxh/M201LrhXjI8kuSqBcisMSOlzlPE+FsZSFwfmyzCsUnLbEzTzwuF+BW
+         GCJx6F5lV66qW8EmScac0b3U6z3uFK+dyGLPQLsCzsLNb/s9ZRamTfMULF+k9ab2IZaP
+         2GBmTuEmmArtNhscOQoe64aQOsXhsm29PgZcwu6PivlAgtWiBlbaZ0TX8NViSGtnLnV6
+         XCGbbl4+JbKwbzItV211SjGvFDW8UhsGtDZwfLHGTsrjXjmJSUGJTrotqSonlrKuhxzX
+         5amEiJf83VTLfqCjTJP2nEE/L5UAPp1DgvgAGkeUncniTxsS4hPnFMuyJclc1FBBP1g/
+         0fjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761230194; x=1761834994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cXNTVYS30VFNX/nxAcwXSrix5DBuflIOXbRt+GIcMzU=;
+        b=Z2WBX7WrskFPf75qc/u1ca3lXmd42/jQB7oei8gfsWLAbGCKL6IB8OZPHZhWat6duO
+         NjWEwaZVHlqZuuINlZtRVjH1gUeOOBRhz8j17ycdwOyGNpDxViphg47h1hB7xxlBV1nA
+         1vF10iT4T0OB9UeuDDovLJilSLJy9RY20V3iAFd5Ac0QYsCFiOYwgeQZhM1vlER5i7Ya
+         GAe8ukZv0/sGT0rh7MJYC9KGtRygCpaTyhITx8C3dG8OGNqGsnvV7muPEdvoAgQsHy5k
+         /gcrBht40Hk0gEVr6vGx3+JkHK68pLXNc+woZlZFSMP8/hPwaHOBGblB2WqwjGo3/QoJ
+         tMKg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2oK+0L7Mvfh5QHDqSee2vAhq+DTFVK5hiQpJnDSCI1i/O1mCy8f1RCe0qY4yc4D2WAP+L8ybjDfd4fmiWEviPK2uY@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt6Os0p/UB3cErIT7zJyX4LILmC2ye40wmrOe0xLZpPZGpQR4P
+	j6SixSycywrDOMg2PKw0G/5kyTVJAIyQTKAFAF1o720V9wN7TAGMVcc+acvCen7WMep1kBPiIFr
+	KSKNhqDdEr9flYYqSN+NlZ6my48Jc09awo7mZtmZ5
+X-Gm-Gg: ASbGncv9KnNDwSDp84N3rBE7vm3b0wii73xQoPmH4ZC6TJakOCl/4vNeeenmtOhqt/Z
+	AJfX5hoMBbxGnxU6Eoqs9xQkO1QuhPPPPv4gznfULu/w/zQDgFPHZXwdUDwkzSJ6ZQcyJCr04q6
+	y4xpOJZyUQgGix66znU7nDrK6Ck+40XQczGmCvw3tLAKLJm9cxG12hlLlEByHaYh7lnRPKPZlCF
+	11CvSRtTeOqqRg0TKUXGsRet75KFQvn9lKt9qESUq3jq9pF0TDRBOM2juaHGA==
+X-Google-Smtp-Source: AGHT+IEwsNRvXeDDD+XmrSc/iLBDBTiJrYhaLXqZS6FAuaZGxcrkK6uq1Vmem+KIO35upB/9HHIrwdu9vYMM5bG1F6o=
+X-Received: by 2002:a05:6402:2803:b0:63c:4d42:992b with SMTP id
+ 4fb4d7f45d1cf-63c4d429b05mr20027500a12.13.1761230191952; Thu, 23 Oct 2025
+ 07:36:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|MW3PR12MB4457:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66b6e7cc-d1f2-4fc6-a980-08de123c6923
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UwvuSV6bNnmPPNBTi6IYukygjR2gC+fg9j7upNsyoX5AhPpn33e9hkGzmD8w?=
- =?us-ascii?Q?3ep7cjDWmbX3IqbeRxlrORgWeVS9S/XHGAPjFGHmb2mt3Hd4U5riMiPNyNQQ?=
- =?us-ascii?Q?CIi11jHMNl9rY7/ySsc9OLZrSJz0ZZQ+6xcMlZyHe7jxgYGNCPHvqLLjZfV4?=
- =?us-ascii?Q?YDZU4QIxn0kdF5B7r2Lrw0gxWw1FwH4b+aW0pmfAUd2nomtDupkLiXQd+Ohj?=
- =?us-ascii?Q?WJHgiDNpA1TJZmABosKFoisOKzDrOjpVf1NydRaYXPsuJBSkgAn/QJFJ+ex3?=
- =?us-ascii?Q?6fG5E7HdtPwNuoKDHOCGr0ku8arJFeHE7hudjkif/NMf8gL3l7j634+1pZFZ?=
- =?us-ascii?Q?00QtUrjlOBG+QnUd/KaQL8BpHP85sxIXe2T/9W3ig1bvKLePIshVQIQlX7VH?=
- =?us-ascii?Q?MXADAn6gn6Ly7Kq3ejwTV3NZJEtsM7W6L/Fr3U0qTTG276Kr88flWIyVbBtL?=
- =?us-ascii?Q?ITys5YS84175dhfmCgmOTCcFx6rxGQsXTfOgX/4Os/cfuhfy3gPAs/6JAinu?=
- =?us-ascii?Q?RGq+8HUCLndr93goFacsGPX/mCrzfdSzvNHoHFNTFn4P+YQhvCaM23cIULCv?=
- =?us-ascii?Q?Tjc2sApQRiinpRNG/jVsL4TxGpC62kEQ5qmvxOAVK/JcTLNGfljq5LrUEMKy?=
- =?us-ascii?Q?YViWCs426Z4x0WDDe+uvj0AFKrLD3CWc7RyX06xQ6y/dHdoqn6E7gyMQYt6G?=
- =?us-ascii?Q?zINs1ktKX6s5UcFxBn+0mjTcFYQC7g3IaIhf6Gr0wC8tZwBX/pTdOMvA/S6k?=
- =?us-ascii?Q?ApGSpUHkNOwcgc3ujVC8dVTMPOtdylNrah5ltyrMp4/hA3PjMHVubNqHcgrg?=
- =?us-ascii?Q?ZCehFvLdJd2DWo8UFXJrOUPkzFpyWDI4a8Rcjv+EXt9d47DAwse443Yt+PE0?=
- =?us-ascii?Q?MFtXxXoSNBGryn4vfPlnvX6blBILiP+mFl45LdG1nTXTxbXDhy34llASf75h?=
- =?us-ascii?Q?8sOuIu/Kx1tfA+PgzDohDz/6lRe5M6szT+YRVIWQTjZJf3UIURsGtoH3D6/q?=
- =?us-ascii?Q?m9BjeHvckytxshnfmE+beXxFeEwg9tiGrZY3Rym/t0hb7yHhO0eDfztrGpwa?=
- =?us-ascii?Q?YWi8wxQPTRmjBcPLhV5+UL5pxtOJmr7gOdt+L7IMwEKLcyow2y5vlvBY2TdE?=
- =?us-ascii?Q?izUfs2+Y/WMfEu/qa/edDRQoXFvqrqewts+JmxmAe3IbJ8xEEUzie1P6PNiS?=
- =?us-ascii?Q?vOKsKQdy2wBpxAACpWfIP16ORi2BIdKhYHSVTd8XBCxtPjLqHcgtWaJ98Yw6?=
- =?us-ascii?Q?KAAwCvlyO15CwBlkxJFV343GF6cSwC1h7dLlRP8L1Zpa+DjVhqgnjLG8wW4/?=
- =?us-ascii?Q?1ohKgCOKMTDIS9+v1JqQZv1nKtkXSAMU2FkCHwEGYJAy+hGBTmPd+HvyXaU3?=
- =?us-ascii?Q?GuOUmQXTuYwRRiJZ1nbPLI6XNq0UMM8GPr5UJuD+ay/EkQBSR9foRNmaSLQa?=
- =?us-ascii?Q?nTW/IDnSXqmkfXx1U/3sDb/AKc7ZsBnf?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zCCwHBDOlXYvkYch2B1h88/VrqXH6g7akclSEBpYsjPvxrILY01oRFmRqKU0?=
- =?us-ascii?Q?uNqknRUU08ZfBSgz6/n+ywkq05r4H8I/Hl8xzz/ZOG9U0AY5qH6+OmpY4m5Z?=
- =?us-ascii?Q?naOHVvqt8LDhtXdD1Ib228S/Zv2jzoh188eApmdtCzCHOblmxESOfsnvwj0c?=
- =?us-ascii?Q?2GBTsLKePdyC+5IanqSP54N+awqdOyi8kSVTT5oSGDc4LgmEZv+76uieFt4F?=
- =?us-ascii?Q?TcmcEJYOxudXz98n/Dw3qXiiq69o+Guq3R/THl4MG7ARS8okkFcZuNdHsLnp?=
- =?us-ascii?Q?1wuaDiXDPpB2YNk4bBIFRFQO0b7OA27CGufJ/PFiRgLe3B3G3wiiqOf7aGKV?=
- =?us-ascii?Q?hC+a4hQ09JOpnfVeXMUOe5TgyQSuxxZEBXP3IR0+Far6Uc+z9Y0xW1jCf5Zf?=
- =?us-ascii?Q?mud262xWnUuP1yRvA4Rfc603by5nN3bMni6eXseq2oIKkMRm4BQd1Wzbl33W?=
- =?us-ascii?Q?q3Vy0Rv6S6YiN4Exvuffa7Pr8eYlQ6mjccDhdSsQF3MQBNencMfdXuOqgYSH?=
- =?us-ascii?Q?un1SucGLRYh4xxmKzGDppT9iYbuvJtL/H5ImfEzUCEMszg5L6B1zrqb2Ci/u?=
- =?us-ascii?Q?rfqxCJHL5+rRkJeVtcxciw/k5J215Xk/tlmdaxGrkpktRVNHDyyVQ8Umw/2G?=
- =?us-ascii?Q?TN4GLXgZEhkmYIK7BrfLg2aPxnLHmOjkStF6JQFmJKyYbHMQQjeJdDgSkGq6?=
- =?us-ascii?Q?TdRXo+DMBE1NYJLkg4JLvu2/k/ILzSaJBHx8BHpReIt5V18YxmXBiM8uffCe?=
- =?us-ascii?Q?n4syZIz3yLaRSULM2TGY6s3urOCKThC7NDtX6421pbO747l8mi1HKsSt0SP2?=
- =?us-ascii?Q?JlNdxucGZCY9XZdZxdSS6dlBAcsTnuGsxMIg/FtVtCNXVWqEAYEPC8kvnHkO?=
- =?us-ascii?Q?vX3YVPsv+ngxP8ZCrDLoHzQZ0gkEgsxq8htuaWO+RiP60T3/GZZMpre2zhid?=
- =?us-ascii?Q?eXE5mQOrxWeRioHt4YengEafqAxdWVktJ7vl3bpm3CGfj3cR+TRZ8a58h6WC?=
- =?us-ascii?Q?UELcRnkzsR1PRl8XZId4QrcTko0p+hIEHnVWLP13aDxzIRs1EE0LJXcb8iGC?=
- =?us-ascii?Q?FfhvdMpDQtGqWYccxf0AEz4nGR/h1JLxF5SoA5ZlcS0dgARJugNjtoXcwlsW?=
- =?us-ascii?Q?Vr8Jm2XFGZJkTmEDi3BdSzkjNUZuVzLmuhw2LrxYamES+EQgZt/fhg5WfZkP?=
- =?us-ascii?Q?tc+AXte3KBzl6QKfG4isG7mR/ifHkBDdlGJexWTcAMNwNg++lt6AgRoO0in3?=
- =?us-ascii?Q?Fh7MCZhN6G+taw1GYD0J9d9omFpVho3qzIoTvFaU9MXyJutk+QHbZcoCtpky?=
- =?us-ascii?Q?UtNsLVFhBaiTgZL1k3fliqwvzoyPrFKMKqI3l7wMQghv6oTW2zHXuTIOSc2t?=
- =?us-ascii?Q?uRFYac9y1Y38YXvjOABmIABLn7wI4+eaw7g+CLdKnTDeX/Ip24R/XoSlzx9v?=
- =?us-ascii?Q?XpPZaPIk7c8EvjGcPtyUvpGKykLNCW7DvVVrG32aCYPHtaKx/ll8WHR6Raxb?=
- =?us-ascii?Q?iRgGKdTSTIIgtAQfYhv9Cjw61d1YTToyJx50cyuMZOSXLNpqsM0z8uFmJZXf?=
- =?us-ascii?Q?MMiR7KHIi6qU0S+ZKirfZ7SeaNvSA251B8m+a2yA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66b6e7cc-d1f2-4fc6-a980-08de123c6923
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 13:59:40.6676
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JyI3po089zPNx9thK2QgaJWggkabgcKSacNaoOhGJNbS7RBUllfpFdQJmctem7c/MLQJdLoCthr8FI7eF010Xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4457
+References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-2-srosek@google.com>
+ <CAJZ5v0ho8MhU8jj=YMyDKdTQWZt24LjoCaoEgJRsdi3YykkBBQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ho8MhU8jj=YMyDKdTQWZt24LjoCaoEgJRsdi3YykkBBQ@mail.gmail.com>
+From: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
+Date: Thu, 23 Oct 2025 16:36:19 +0200
+X-Gm-Features: AS18NWCCKcnrVe2CW2nVbYqluebjUROI6nTw0-aVicYPavviUkzAPbVgCIg7Gns
+Message-ID: <CAF3aWvGdvHxA_fJm1EE2byL0LQUC3K2LGeDLxr3EpRzSQ=3Waw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] ACPI: DPTF: Ignore SoC DTS thermal while scanning
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, AceLan Kao <acelan.kao@canonical.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Zhang Rui <rui.zhang@intel.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
+	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 22, 2025 at 06:18:56PM +0200, Michal Pecio wrote:
-> On Wed, 22 Oct 2025 12:09:04 -0400, Yazen Ghannam wrote:
-> > On Wed, Oct 22, 2025 at 05:38:31PM +0200, Michal Pecio wrote:
-> > > On Wed, 22 Oct 2025 09:39:01 -0400, Yazen Ghannam wrote:  
-> > > > Can you please share the full output from dmesg and lspci?
-> > > > 
-> > > > Also, can you please share the raw CPUID output (cpuid -r)?  
-> > > 
-> > > Not sure which "cpuid" software you mean?  
-> > 
-> > Many distros package a "cpuid" user space app that will print and decode
-> > the x86 CPUID feature bits.
-> 
-> OK, here's some "cpuid_tool" from libcpuid.
-> 
+On Wed, Oct 22, 2025 at 8:33=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@google.com>=
+ wrote:
+> >
+> > The Intel SoC DTS thermal driver on Baytrail platform uses IRQ 86 for
+> > critical overheating notification. The IRQ 86 is described in the _CRS
+> > control method of INT3401 device, thus Intel SoC DTS thermal driver
+> > requires INT3401 device to be enumerated.
+>
+> I don't think that the specific interrupt number is relevant here.  It
+> would be sufficient to say something like "The IRQ used by the Intel
+> SoC DTS thermal device for critical overheating notification is listed
+> in _CRS of device INT3401 which therefore needs to be enumerated for
+> Intel SoC DTS thermal to work."
 
-Thanks Michal.
+Above text is copied from the original change which is linked below.
+I will rephrase it as you suggested.
 
-I don't see anything obviously wrong.
+>
+> > Since dependency on INT3401 device is unrelated to DPTF the IS_ENABLE()
+> > macro is removed from ACPI DPTF INT340X scan handler, instead Kconfig
+> > is updated to ensure proper enumeration of INT3401 device.
+>
+> It is not entirely clear what happens in this patch after reading the
+> above paragraph.
+>
+> I would rather continue the previous thought by saying that the
+> enumeration happens by binding the int3401_thermal driver to the
+> INT3401 platform device.  Thus CONFIG_INT340X_THERMAL is in fact
+> necessary for enumerating it, so checking CONFIG_INTEL_SOC_DTS_THERMAL
+> in int340x_thermal_handler_attach() is pointless and INT340X_THERMAL
+> may as well be selected by INTEL_SOC_DTS_THERMAL.
 
-Can you please share your kernel config file for the v6.12.31 build?
+Sure, I will rephrase it to clearly describe what happens here.
 
-Thanks,
-Yazen
+>
+> > Fixes: 014d9d5d0cc1 ("ACPI/int340x_thermal: enumerate INT3401 for Intel=
+ SoC DTS thermal driver")
+>
+> Why do you want this tag to be added?
+
+Just for context. The IS_ENABLE is added to the scan handler in 014d9d5d0cc=
+1
+and this change is about to fix that. I can remove the tag if it's not need=
+ed.
+
+>
+> > Signed-off-by: Slawomir Rosek <srosek@google.com>
+> > ---
+> >  drivers/acpi/dptf/int340x_thermal.c | 7 +------
+> >  drivers/thermal/intel/Kconfig       | 3 ++-
+> >  2 files changed, 3 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/acpi/dptf/int340x_thermal.c b/drivers/acpi/dptf/in=
+t340x_thermal.c
+> > index a222df059a16..947fe50c2ef6 100644
+> > --- a/drivers/acpi/dptf/int340x_thermal.c
+> > +++ b/drivers/acpi/dptf/int340x_thermal.c
+> > @@ -11,10 +11,9 @@
+> >
+> >  #include "../internal.h"
+> >
+> > -#define INT3401_DEVICE 0X01
+> >  static const struct acpi_device_id int340x_thermal_device_ids[] =3D {
+> >         {"INT3400"},
+> > -       {"INT3401", INT3401_DEVICE},
+> > +       {"INT3401"},
+> >         {"INT3402"},
+> >         {"INT3403"},
+> >         {"INT3404"},
+> > @@ -76,10 +75,6 @@ static int int340x_thermal_handler_attach(struct acp=
+i_device *adev,
+> >  {
+> >         if (IS_ENABLED(CONFIG_INT340X_THERMAL))
+> >                 acpi_create_platform_device(adev, NULL);
+> > -       /* Intel SoC DTS thermal driver needs INT3401 to set IRQ descri=
+ptor */
+> > -       else if (IS_ENABLED(CONFIG_INTEL_SOC_DTS_THERMAL) &&
+> > -                id->driver_data =3D=3D INT3401_DEVICE)
+> > -               acpi_create_platform_device(adev, NULL);
+> >         return 1;
+> >  }
+> >
+> > diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kcon=
+fig
+> > index e0268fac7093..f9e275538e29 100644
+> > --- a/drivers/thermal/intel/Kconfig
+> > +++ b/drivers/thermal/intel/Kconfig
+> > @@ -44,7 +44,8 @@ config INTEL_SOC_DTS_IOSF_CORE
+> >
+> >  config INTEL_SOC_DTS_THERMAL
+> >         tristate "Intel SoCs DTS thermal driver"
+> > -       depends on X86 && PCI && ACPI
+> > +       depends on X86_64 && PCI && ACPI
+>
+> AFAICS NET needs to be added to the dependency list above or selecting
+> INT340X_THERMAL below may not actually cause it to be built.
+
+Right. Previously I tried to "select NET" (INTEL_SOC_DTS_THERMAL does not
+depend on NET directly so it seemed to be more appropriate to me) but got
+circular dependency error so I assumed it is ensured somehow. Now I checked
+again and you are right, I was able to disable NET and get unmet dependenci=
+es.
+I will add dependency on NET. Thanks
+
+>
+> > +       select INT340X_THERMAL
+> >         select INTEL_SOC_DTS_IOSF_CORE
+> >         help
+> >           Enable this to register Intel SoCs (e.g. Bay Trail) platform =
+digital
+> > --
