@@ -1,236 +1,309 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1A32F6178
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 17:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003AE314A6B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 18:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761325365; cv=none; b=pRg2BVypgPPIyd7snAeg1bCzFlxhK9kuqrwhXEhhnBfsRC+jD0FEc3lSFxg4ApC0cW4gYp2oFRwrw8I5bYkNM9xw5QuTxhepuuqSn+ayUosRrzyJBC9sz4yBvwpLw1jmAMIQCae01AWKJP6/uHU3xataT7QpU1Rmt95LCE+wBow=
+	t=1761332028; cv=none; b=mhFBM0o8910W4sEour62KErCQP+IPTAN9uUjBzYRmvZF8/O1/EaHywuO3IvszUhWyjla4FbY1li+HyaLCL2jinoADN1EDK5R/fNct1CU0u322APCRbISAvmniQf6l0gksd6ww3JZU4PIvK8fZFcStAQdWIn/ZqqTW4bNlSmO3Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761325365; c=relaxed/simple;
-	bh=hD80H0V8rXW/qoP6mffHOe7I0HPWaOhp2Wm8uxk56c8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P4ueiE6ZNZDGfJ8Pgj/pYp1tsoMqkLYMJfN7ZNqDjdknNd+rBEDhHlUMDZrH+CO4GdE3UsgqcZKXrEyJBcxWMJaYxrJHL0zlAKmFLjlPyMzrUG8cyytwCYGobRvUYKS77yx6w+w+Qw6820aUouX7E7uA7AlifUUegTTsQs/P8jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=jSWJxxsv; arc=none smtp.client-ip=178.156.171.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1761332028; c=relaxed/simple;
+	bh=dJcE6rcNqwGVWonbMZZ8d5SPMUehDoxU7j+tQaUNSk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YNhad9re0y+u7qcYNJ3t8rZ6fu6WmZvzr1cLH0VR8uFxsVYR3PTmexrQl2WmUsM/wBLRu1unDB5EMms0Qg/fsRGw9L3bISqHYkSbRFV/PunaHv+RczFssQ5RV0zhYNIdHR2IcgpNppYhn68FjqlWNvk/gKC7Vt1iAHgsNtSFDeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvloN1Ia; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="jSWJxxsv"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 8DD705E4CD
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 20:02:42 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 7DD715E654
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 20:02:41 +0300 (EEST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 2B0B5200ABA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 20:02:40 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1761325360;
-	bh=gEpcV/HllkCVq7Z16MNUlS+YOxDPPWPkkI0cYqhx9mY=;
-	h=Received:From:Subject:To;
-	b=jSWJxxsv3+DwFHc63M61OgUhJdgJnOS/8tbzl9X1EIjEhpRRUZo0T47tNj8pXzOca
-	 XKGE/+ZXMV1bFwt3/T/ruq/W7+TE+iJW2UytElIUCh8PaGFd7KELLiakgXUCKSk+lf
-	 LcZgEfCNgnSfZ2t6ybHq4SeeOeHpWf9ahDS2+X0iMOqpn+XRvo79GbqFfu6vao8MNx
-	 PsmpTyv5cY85xQJzMaSerHZw3WQ9tioQx+b5wxSOuwvkeNLyQkCR8bP83je8ZjFF+I
-	 Y/vsG2BjTqR3RcSiS6q2JblaIIJUk0ldsWfzbPlPENXZW8XNZDmqV6KiIKBBGUS/ZI
-	 DNpzAsCDcd25A==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.167.42) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f42.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lf1-f42.google.com with SMTP id
- 2adb3069b0e04-592f7e50da2so2458731e87.0
-        for <platform-driver-x86@vger.kernel.org>;
- Fri, 24 Oct 2025 10:02:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXRCj5/aRIBFKS+WkzGHudTJ0KI90sRV3PIcUpOdTXUOR5TZXavtrUYm5upkXV4tBwqfrirkgVNbovTeIvfkxfopUI/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfdJLT4pRk+6hZiZVSLhWwBsyMMgeNevfCDz8DKOE3ydnv1f/+
-	LbVeE9f2AuLrKkeD2XLinehV5N70j2JRivIp6rzK7BpHG9JGOuzidOiwB9HdK+KjdpdjP11klmc
-	9ZRY9BnfyQibGxREcbwTvTeNAZssByyc=
-X-Google-Smtp-Source: 
- AGHT+IEKrbCWuSYfAPJP4FkxTmteHnnI6gTvT9z5rV+Fp3wvMV/cQLvS3MdjFpKV8WdMVw+XDdwelcyJodCs7o5l9/c=
-X-Received: by 2002:a05:6512:33d4:b0:57c:4428:4f14 with SMTP id
- 2adb3069b0e04-592fc1379fcmr1181236e87.24.1761325359526; Fri, 24 Oct 2025
- 10:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvloN1Ia"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3ece1102998so1637954f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 11:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761332024; x=1761936824; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QxF1QW8cAyFKj/tjgXZgmpujjZS1k0LEfT4PktZPYzk=;
+        b=gvloN1IaYUerFI5NoXiNgTHGqaNVxhSW7x7b1ISdufaIdoTvjBaV7DfoGtd2fjpxJ2
+         l2Y3PZonWcMOtagKss7/BCKeDFWwrIgw8enwVNWzsrIQacYKyY2nfwwwu8r6xbyZQ1VX
+         jM9HvMKRk+bNpuDUWy5Kv104AAiLEY/04TQIRUHYi99aLyuabvf5/Mf0s5zy4Rtx12wX
+         BjunqX/CD6LPqxUBxulVOGFQA0gBQDtzm6ljgN3niuLrLUrOwFMaC1Ogl+lqOpjYMRRs
+         BncKJqLgDW0n2I0CZeWANInTo6gyZfPI43rDLeBpMpZdVJnK0VehV/jX2XLzQwnZDoyD
+         KR4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761332024; x=1761936824;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QxF1QW8cAyFKj/tjgXZgmpujjZS1k0LEfT4PktZPYzk=;
+        b=LdGAff0TttXWWA12jEf9Kl7va2oxC+ALCk6lHKX7vw1Tvp/hMC9wl2AvD5lqKgGTUs
+         ewEmfLgF3JMTyKE+GoKpiWXrkA/JKLuWjJwEBRMDYg7A6Ez0TMxZ8fNdGMBtV6+DBPxn
+         ESwkU8RtAZSFK87jzMRxdOkKq6HXOns9lKRhdCQ0nQbfV3GYmlqzJ8bfXkDq5ma2vX1t
+         sVnhAlo6aXxp/I64eAw37HyChIOs4Pg0a9MzPg3UrX1LYdplQxlBQL1hk85NV3JHyNje
+         NHBC+z6nyqmJCtsbbn+nT/inRdK1wN23DJhDW1inK7vWPPGPSyn3guRELDo76lqvoqOO
+         IlEA==
+X-Gm-Message-State: AOJu0YyomIbbWvfa0we2irbyP5EEZx5QjmCm2lH00cHic0XiJznfubZ1
+	QyyoYfCeIO4OZKOCBQxsplGU8nk91fFTiPkRjexrFji+/cIhvnwB0on0
+X-Gm-Gg: ASbGncuH5qNkqtC3NZ3mire80i8kVPqxf8k4d32q4O8Z2MpPR1V4ekh/2VWYbvtnNcc
+	hsZXDIqLeEb5PPj8dqKyQHqLq7QOIvRdgk5zhq2Sdz/GG+wzYUzocb4CveHPNdYGV9NsnNN3PnL
+	v5R9C7qbgAl58oEUTfslgJKqSGrLFKLWy62nRY1g84u/L9gMDMxGvYHPh9tKWLb+M3GEDkeUy4y
+	j6g8OV1YM2JfGR2cMqiU4utOeR/5KT84zzox+wZ30bCr8z+sGa+6Ef7SSkwFIm1fgMwDtK1GUel
+	8clg8ANtclLt96F5yxetCr9CzLiNeDnP1bsCr8yYCyQTFmr2ZI4DvHUgznYFTodOiHhwoHihg7+
+	ravbLy3eAF9B8Y5TWtxTzgcVZL+XCwY+1+Pvexx1+asWJr088N2f1N92wmRRVdlST180IopCX0p
+	ES8q9e1pokCpAk5/TRsvLRnQ==
+X-Google-Smtp-Source: AGHT+IFLcBIoGTjq6nBKEAvczGM6M/mt/a9F1rriOiDcfQKHqScAvYjeSwrNyN0wRYJijROBaRQUyA==
+X-Received: by 2002:a5d:5f55:0:b0:427:a3d:7695 with SMTP id ffacd0b85a97d-4298a059e96mr5880410f8f.26.1761332024030;
+        Fri, 24 Oct 2025 11:53:44 -0700 (PDT)
+Received: from [192.168.1.121] ([151.61.20.236])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898ccc60sm10713573f8f.34.2025.10.24.11.53.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Oct 2025 11:53:43 -0700 (PDT)
+Message-ID: <0d18666a-78e1-4e69-8fd2-f15052db0cee@gmail.com>
+Date: Fri, 24 Oct 2025 20:53:42 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251024152152.3981721-1-lkml@antheas.dev>
- <20251024152152.3981721-4-lkml@antheas.dev>
- <61da9864-b7c8-43f1-b437-36756077b545@amd.com>
- <27439123-98aa-4096-a4e4-3c8eecb3aaca@amd.com>
- <CAGwozwHAJAvgZEgn1M0ioRP4dT2urMUtQQzNXKXydu0ueoOzsA@mail.gmail.com>
- <CAGwozwH+UneR7uB0h_yrEWTBM=-uHapmzL3JnmrJ8S2v5WQ2SQ@mail.gmail.com>
- <d6f72b8f-1961-406a-aed8-5f4570ce98d1@amd.com>
-In-Reply-To: <d6f72b8f-1961-406a-aed8-5f4570ce98d1@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 24 Oct 2025 19:02:28 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwF7HBoX_hOgc5uKM1JeuFLD3anmQMQf8eqhxQBcK_9sHA@mail.gmail.com>
-X-Gm-Features: AWmQ_bljBDAjdQtCzD1QjfP5Tp0acAevQsmyEaeqADBBZ8vrysgtBsbkhNv-Txc
-Message-ID: 
- <CAGwozwF7HBoX_hOgc5uKM1JeuFLD3anmQMQf8eqhxQBcK_9sHA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] drm/amdgpu: only send the SMU RLC notification on
- S3
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176132536047.2708894.3034201005321212998@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/9] HID: asus: simplify RGB init sequence
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20251018101759.4089-1-lkml@antheas.dev>
+ <20251018101759.4089-2-lkml@antheas.dev>
+ <e6328da3-8099-4540-9cb0-4fc28b359ee7@gmail.com>
+ <CAGwozwG+gf09PQf9o9YkKFYVgVn-1w5CDVrpOe4uFavVYCNijQ@mail.gmail.com>
+ <3947f772-691b-46a2-af68-15825e7f4939@gmail.com>
+ <CAGwozwFbQWyuQB6EwLMLon5muff2WudR+oVL62DqP_MXGW+p-Q@mail.gmail.com>
+ <b91de7c7-74b8-4cf5-82a4-f3d4eaf418d4@gmail.com>
+ <CAGwozwGj-yXHXBan38_NV7G5T66bnjm7om2bz_Bha35AHhtCJQ@mail.gmail.com>
+ <CAGwozwEh32XMcGJPKMRBWd63ybYOxW1Wx4QjU-QErjQgLHwX2g@mail.gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAGwozwEh32XMcGJPKMRBWd63ybYOxW1Wx4QjU-QErjQgLHwX2g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 24 Oct 2025 at 18:52, Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
->
->
-> On 10/24/2025 11:45 AM, Antheas Kapenekakis wrote:
-> > On Fri, 24 Oct 2025 at 18:24, Antheas Kapenekakis <lkml@antheas.dev> wrote:
-> >>
-> >> On Fri, 24 Oct 2025 at 18:20, Mario Limonciello
-> >> <mario.limonciello@amd.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 10/24/2025 10:54 AM, Mario Limonciello wrote:
-> >>>>
-> >>>>
-> >>>> On 10/24/2025 10:21 AM, Antheas Kapenekakis wrote:
-> >>>>> From: Alex Deucher <alexander.deucher@amd.com>
-> >>>>>
-> >>>>> For S0ix, the RLC is not powered down. Rework the Van Gogh logic to
-> >>>>> skip powering it down and skip part of post-init.
-> >>>>>
-> >>>>> Fixes: 8c4e9105b2a8 ("drm/amdgpu: optimize RLC powerdown notification
-> >>>>> on Vangogh")
-> >>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
-> >>>>> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> >>>>> Tested-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >>>>> ---
-> >>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c       | 8 +++++---
-> >>>>>    drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c        | 6 ++++++
-> >>>>>    drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c | 3 +++
-> >>>>>    3 files changed, 14 insertions(+), 3 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/
-> >>>>> drm/amd/amdgpu/amdgpu_device.c
-> >>>>> index 3d032c4e2dce..220b12d59795 100644
-> >>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> >>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> >>>>> @@ -5243,9 +5243,11 @@ int amdgpu_device_suspend(struct drm_device
-> >>>>> *dev, bool notify_clients)
-> >>>>>        if (amdgpu_sriov_vf(adev))
-> >>>>>            amdgpu_virt_release_full_gpu(adev, false);
-> >>>>> -    r = amdgpu_dpm_notify_rlc_state(adev, false);
-> >>>>> -    if (r)
-> >>>>> -        return r;
-> >>>>> +    if (!adev->in_s0ix) {
-> >>>>> +        r = amdgpu_dpm_notify_rlc_state(adev, false);
-> >>>>> +        if (r)
-> >>>>> +            return r;
-> >>>>> +    }
-> >>>>
-> >>>> Just FYI this is going to clash with my unwind failed suspend series [1].
-> >>>>
-> >>>> This is fine, just whichever "lands" first the other will need to rework
-> >>>> a little bit and I wanted to mention it.
-> >>>>
-> >>>> Link: https://lore.kernel.org/amd-gfx/20251023165243.317153-2-
-> >>>> mario.limonciello@amd.com/ [1]
-> >>>>
-> >>>> This does have me wondering though why amdgpu_dpm_notify_rlc_state() is
-> >>>> even in amdgpu_device_suspend()?  This is only used on Van Gogh.
-> >>>> Should we be pushing this deeper into amdgpu_device_ip_suspend_phase2()?
-> >>>>
-> >>>> Or should we maybe overhaul this to move the RLC notification into
-> >>>> a .set_mp1_state callback instead so it's more similar to all the other
-> >>>> ASICs?
-> >>>>
-> >>>
-> >>> My proposal as such is here:
-> >>>
-> >>> https://lore.kernel.org/amd-gfx/20251024161216.345691-1-mario.limonciello@amd.com/
-> >>>
-> >>> It would need some testing though to make sure it didn't break Steam
-> >>> Deck or Steam Deck OLED.
-> >>
-> >> I will give it a quick go on my OLED.
-> >
-> > Horribly broken. Did not enter S3 and when waking up fan maxed out and
-> > it bootlooped. Journalctl stops on suspend entry. It works on the Xbox
-> > ally though
-> >
-> > My series works on both
->
-> OK.
->
-> Can you try Alex's idea instead?  Just comment out the RLC notification
-> code in amdgpu_device_suspend().
->
-> It's supposed to already be called in smu_disable_dpms() anyway.
 
-Yes, removing those lines works.
+On 10/24/25 18:20, Antheas Kapenekakis wrote:
+> On Fri, 24 Oct 2025 at 01:25, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>> On Fri, 24 Oct 2025 at 00:53, Denis Benato <benato.denis96@gmail.com> wrote:
+>>>
+>>> On 10/23/25 23:30, Antheas Kapenekakis wrote:
+>>>> On Thu, 23 Oct 2025 at 22:05, Denis Benato <benato.denis96@gmail.com> wrote:
+>>>>> On 10/23/25 20:06, Antheas Kapenekakis wrote:
+>>>>>> On Thu, 23 Oct 2025 at 19:38, Denis Benato <benato.denis96@gmail.com> wrote:
+>>>>>>> On 10/18/25 12:17, Antheas Kapenekakis wrote:
+>>>>>>>> Currently, RGB initialization forks depending on whether a device is
+>>>>>>>> NKEY. Then, NKEY devices are initialized using 0x5a, 0x5d, 0x5e
+>>>>>>>> endpoints, and non-NKEY devices with 0x5a and then a
+>>>>>>>> backlight check, which is omitted for NKEY devices.
+>>>>>>>>
+>>>>>>>> Remove the fork, using a common initialization sequence for both,
+>>>>>>>> where they are both only initialized with 0x5a, then checked for
+>>>>>>>> backlight support. This patch should not affect existing functionality.
+>>>>>>>>
+>>>>>>>> 0x5d and 0x5e endpoint initializations are performed by Windows
+>>>>>>>> userspace programs associated with different usages that reside under
+>>>>>>>> the vendor HID. Specifically, 0x5d is used by Armoury Crate, which
+>>>>>>>> controls RGB and 0x5e by an animation program for certain Asus laptops.
+>>>>>>>> Neither is used currently in the driver.
+>>>>>>> What benefits do we get from removing the unused initialization?
+>>>>>>>
+>>>>>>> If this has never caused any troubles I don't see the reason for removing
+>>>>>>> them. Moreover the lighting protocol is known and I might as well add
+>>>>>>> support for it in the near future,
+>>>>>> I already have a patch that adds RGB and delay inits that endpoint. It
+>>>>>> got removed to make this easier to merge. See [1].
+>>>>>>
+>>>>>> [1] https://lore.kernel.org/lkml/20250324210151.6042-10-lkml@antheas.dev/
+>>>>> I have to main concerns about this:
+>>>>>
+>>>>> 1. taking away initialization commands in one patchset to make it
+>>>>> easier to merge another unrelated patch doesn't seem the right thing
+>>>>> to do if the other patch it's not in the same series.
+>>>>>
+>>>>> I can see [1] has been removed from the set for a later moment in time,
+>>>>> it's fine if it needs more work, just send something that function in the
+>>>>> same way and do not remove initialization commands when unnecessary,
+>>>>> especially since there will be for sure future development.
+>>>> The initialization was removed as part of general cleanup. Not to make
+>>>> it easier to merge the RGB patch. In addition, the RGB patch only runs
+>>>> the init in a lazy fashion, so if nobody uses the RGB sysfs the init
+>>>> does not run and the behavior is the same.
+>>> There are a few problems here:
+>>> 1. sope creep: either do a cleanup or solve bugs. The fact that your flow z13
+>>> doesn't load hid-asus correctly has nothing to do with the initialization of anime.
+>>> The fact that hid-asus is driving leds instead of asus-wmi has nothing to do with
+>>> anime matrix initialization either.
+>>> 2. not sending the initialization can get hardware misbehave because it
+>>> is left in an uninitialized state.
+>>> 3. there are absolutely zero reasons to do that. There are even less reasons
+>>> as to do it as part of this patchset.
+>>>
+>>>>> 2. Your patchset resolves around keyboard backlight control and how
+>>>>> the keyboard device is exposed to userspace: it's fine but I do not see
+>>>>> the point in removing initialization commands that has nothing to do
+>>>>> with the issue we are trying to solve here.
+>>>>>
+>>>>> Please leave 0x5E and 0x5D initialization commands where they are now.
+>>>> I mean the second part of the patchset does that. The first part is a
+>>>> cleanup. What would be the reason for keeping 0x5E and 0x5D? They are
+>>>> only used when initializing those endpoints to write further commands
+>>>> to them and for identification. The current driver does not write
+>>>> commands to those endpoints and identifies itself over 0x5A.
+>>> There are no bugs opened that ties initialization of devices to bugs.
+>>> Quite the opposite: I can guarantee you that removing part of the
+>>> init will introduce regressions.
+>>>
+>>> The onus is on you to provide strong evidence that the removal is
+>>> a necessary act.
+>>>
+>>> Regardless it is not in the scope of this patchset: remove it.
+>>>> I do get that it is a bit risky as some laptops might be hardcoded to
+>>>> wait for 0x5D to turn on RGB. Which is why we had the last patch until
+>>>> V4. But we have yet to find a laptop that has this problem, so I find
+>>>> it difficult to justify keeping the init.
+>>> Yes it's risky to remove initialization sequences for a device that is
+>>> in every modern ASUS laptop and is tied to the EC.
+>>>> Do note that you might need to add the 0x5D init to your userspace
+>>>> program for certain laptops if you haven't already. But that is ok,
+>>>> since in doing so you are also validating you are speaking to an Asus
+>>>> device, which is important.
+>>> This doesn't make much sense: why would anyone remove
+>>> a command from the kernel, that can be very well essential to some models
+>>> (sleep can break, for example) just to add it back in a userspace program?
+>>>
+>>> What does it mean I have to validate I am speaking to an asus device?
+>>> Software selects devices by known attribute, one of them is the vid:pid....
+>>> Beside what does this have to do with the removal of initialization commands
+>>> from the kernel?
+>>>
+>>> Even late initializing devices can lead to problems. Windows doesn't do that:
+>>> as soon as asus drivers are loaded all relevant initialization sequences are
+>>> sent; Windows is the only officially supported OS: do not introduce commands
+>>> flow divergence without strong reasons backing it up.
+>> If you think keeping 0x5D init is that important, I can spin patch [1]
+>> into this series. But then this quirk will stay in the kernel forever.
+>> I can even add 0x5E since that does not affect newer devices, which I
+>> care for simplifying the sequence.
+Fully initializing the device tied to the EC in the same windows does
+is not a "quirk". Please stop calling it that.
 
-> >
-> >
-> >>
-> >>>>>        return 0;
-> >>>>>    }
-> >>>>> diff --git a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c b/drivers/gpu/
-> >>>>> drm/amd/pm/swsmu/amdgpu_smu.c
-> >>>>> index fb8086859857..244b8c364d45 100644
-> >>>>> --- a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
-> >>>>> +++ b/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
-> >>>>> @@ -2040,6 +2040,12 @@ static int smu_disable_dpms(struct smu_context
-> >>>>> *smu)
-> >>>>>            smu->is_apu && (amdgpu_in_reset(adev) || adev->in_s0ix))
-> >>>>>            return 0;
-> >>>>> +    /* vangogh s0ix */
-> >>>>> +    if ((amdgpu_ip_version(adev, MP1_HWIP, 0) == IP_VERSION(11, 5, 0) ||
-> >>>>> +         amdgpu_ip_version(adev, MP1_HWIP, 0) == IP_VERSION(11, 5,
-> >>>>> 2)) &&
-> >>>>> +        adev->in_s0ix)
-> >>>>> +        return 0;
-> >>>>> +
-> >>>>
-> >>>> How about for GPU reset, does PMFW handle this too?
-> >>>>
-> >>>>>        /*
-> >>>>>         * For gpu reset, runpm and hibernation through BACO,
-> >>>>>         * BACO feature has to be kept enabled.
-> >>>>> diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c b/
-> >>>>> drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c
-> >>>>> index 2c9869feba61..0708d0f0938b 100644
-> >>>>> --- a/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c
-> >>>>> +++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c
-> >>>>> @@ -2217,6 +2217,9 @@ static int vangogh_post_smu_init(struct
-> >>>>> smu_context *smu)
-> >>>>>        uint32_t total_cu = adev->gfx.config.max_cu_per_sh *
-> >>>>>            adev->gfx.config.max_sh_per_se * adev-
-> >>>>>> gfx.config.max_shader_engines;
-> >>>>> +    if (adev->in_s0ix)
-> >>>>> +        return 0;
-> >>>>> +
-> >>>>>        /* allow message will be sent after enable message on Vangogh*/
-> >>>>>        if (smu_cmn_feature_is_enabled(smu, SMU_FEATURE_DPM_GFXCLK_BIT) &&
-> >>>>>                (adev->pg_flags & AMD_PG_SUPPORT_GFX_PG)) {
-> >>>>
-> >>>
-> >>>
-> >
->
->
+It will stay on the kernel until we have strong evidence that it is causing
+problems, at that point we simply avoid doing it for problematic laptops.
 
+If adding other commands doesn't introduce regressions or are otherwise
+easy to bisect and makes more hardware working please do.
+>> Luke said these two pairs are the important ones to keep.
+>>
+>> I'm not sure what to do.
+> I was asked by a 2025 Asus Zenbook Duo user to add his IDs in [1]. In
+> doing so, I updated the rgb and legacy init patches for the new series
+> and added a quirk for early init of the duo keyboards.
+I will take a look when I can, but if you haven't removed anything
+that shouldn't pose any risk. None that I can think of at the moment anyway.
+> The series is 14 patches long, I don't think my email can take it :(
+linux.dev accounts for maintainers are provided free of charge
+and I had to ask for an account too. I suggest you do the same.
+> Should we merge the first part of this series with the legacy init,
+> then do the backlight refactor, and finally the new Duo stuff + rgb?
+I think so. My only doubt is about the per_app quirk. Other than
+that looks good and solves one problem while also better representing
+the hardware, so I can't think of any blockers.
+> Antheas
+>
+Thanks,
+Denis
+>> Antheas
+>>
+>> [1] https://lore.kernel.org/all/20250325184601.10990-12-lkml@antheas.dev/
+>>
+>>>> Antheas
+>>>>
+>>> Denis
+>>>>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>>>>>>> ---
+>>>>>>>>  drivers/hid/hid-asus.c | 56 ++++++++++++++----------------------------
+>>>>>>>>  1 file changed, 19 insertions(+), 37 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+>>>>>>>> index a444d41e53b6..7ea1037c3979 100644
+>>>>>>>> --- a/drivers/hid/hid-asus.c
+>>>>>>>> +++ b/drivers/hid/hid-asus.c
+>>>>>>>> @@ -638,50 +638,32 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>>>>>>>>       unsigned char kbd_func;
+>>>>>>>>       int ret;
+>>>>>>>>
+>>>>>>>> -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+>>>>>>>> -             /* Initialize keyboard */
+>>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>>>>>>> -             if (ret < 0)
+>>>>>>>> -                     return ret;
+>>>>>>>> -
+>>>>>>>> -             /* The LED endpoint is initialised in two HID */
+>>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+>>>>>>>> -             if (ret < 0)
+>>>>>>>> -                     return ret;
+>>>>>>>> -
+>>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+>>>>>>>> -             if (ret < 0)
+>>>>>>>> -                     return ret;
+>>>>>>>> -
+>>>>>>>> -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>>>>>>> -                     ret = asus_kbd_disable_oobe(hdev);
+>>>>>>>> -                     if (ret < 0)
+>>>>>>>> -                             return ret;
+>>>>>>>> -             }
+>>>>>>>> -
+>>>>>>>> -             if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+>>>>>>>> -                     intf = to_usb_interface(hdev->dev.parent);
+>>>>>>>> -                     udev = interface_to_usbdev(intf);
+>>>>>>>> -                     validate_mcu_fw_version(hdev,
+>>>>>>>> -                             le16_to_cpu(udev->descriptor.idProduct));
+>>>>>>>> -             }
+>>>>>>>> +     ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>>>>>>> +     if (ret < 0)
+>>>>>>>> +             return ret;
+>>>>>>>>
+>>>>>>>> -     } else {
+>>>>>>>> -             /* Initialize keyboard */
+>>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+>>>>>>>> -             if (ret < 0)
+>>>>>>>> -                     return ret;
+>>>>>>>> +     /* Get keyboard functions */
+>>>>>>>> +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>>>>>>> +     if (ret < 0)
+>>>>>>>> +             return ret;
+>>>>>>>>
+>>>>>>>> -             /* Get keyboard functions */
+>>>>>>>> -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+>>>>>>>> +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+>>>>>>>> +             ret = asus_kbd_disable_oobe(hdev);
+>>>>>>>>               if (ret < 0)
+>>>>>>>>                       return ret;
+>>>>>>>> +     }
+>>>>>>>>
+>>>>>>>> -             /* Check for backlight support */
+>>>>>>>> -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>>>>>>> -                     return -ENODEV;
+>>>>>>>> +     if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+>>>>>>>> +             intf = to_usb_interface(hdev->dev.parent);
+>>>>>>>> +             udev = interface_to_usbdev(intf);
+>>>>>>>> +             validate_mcu_fw_version(
+>>>>>>>> +                     hdev, le16_to_cpu(udev->descriptor.idProduct));
+>>>>>>>>       }
+>>>>>>>>
+>>>>>>>> +     /* Check for backlight support */
+>>>>>>>> +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+>>>>>>>> +             return -ENODEV;
+>>>>>>>> +
+>>>>>>>>       drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+>>>>>>>>                                             sizeof(struct asus_kbd_leds),
+>>>>>>>>                                             GFP_KERNEL);
