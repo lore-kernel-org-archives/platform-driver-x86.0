@@ -1,216 +1,335 @@
-Received: from mail-24424.protonmail.ch (mail-24424.protonmail.ch [109.224.244.24])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395A820CCCA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 19:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87B82FFF93
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Oct 2025 21:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761334936; cv=none; b=ar8ATF5LxSe0p2DxHWsoPuPBILDFhcKcyyk04SebHJAa0LXaKPJLQ2a+varoThVHQ/s21gJD4ihhnvhYyUrB6+LTmFLZPEKHkJ1/Mufeyu1lFWQ92Oc45+ulmdYmYZSzmOOpC6DUwcIiyC0ydBm2N5T6tfYvWxQnv22/oDOANPA=
+	t=1761340878; cv=none; b=qxpYw2l7cvAXzDuQ9AbjejauNsfXtFm+PR/y5GHKepoSBR6AEzq0f42WCsVST2/w/8c+fdZ3StG0+Q8ZFkgV79wzi8s9DACFDSedKjC4gkuYvkFtLnOgppyU7AI+LLZ0d0voksza4Y5J7eOIhUwdwvfvJjPMZ9yrj27u/FqIrxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761334936; c=relaxed/simple;
-	bh=kCE4hQqEWxJAfxYHCODFTKKrCkWdXeIwBDkRGzVfQxY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YwD2G6xfN5y2N9SjxkVnlPu3mvIUR8QINeC932+VUBVHZLquN6GTnYy9+Bl/KiwU9o/MAVJrjyvKW4fuJIfz69/weF2Viw0yjU5nrPGKgpBzZMfOtcl6GQmtdhwbjXJpKJ8IntVUBut+7Z0ebs02Apvfnbo0ZQ/V75/65nZBJq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=ZzZ0nVaA; arc=none smtp.client-ip=109.224.244.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1761340878; c=relaxed/simple;
+	bh=42oxsLgzbLDlDqc96/3PxCj+ZDz+eMeZNwunrSQHBok=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HkTeWXbHBzg7X+z12FPxcjc6b8Nzm3K0RAlkvDMYq0a4wFUJQmG+jfu9rHVI5B+D/3JAp4j49jMdzJeKhfxJgNlmRiVF59vxK12KWBopBsZzanFv6LyQAaFDpvDs4AGQ1hA3FpvPMd8D2W06D1Iy1tNgB74Uv/IVPhCGQ3pjSSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=JmaOprMj; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ZzZ0nVaA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1761334923; x=1761594123;
-	bh=kCE4hQqEWxJAfxYHCODFTKKrCkWdXeIwBDkRGzVfQxY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=ZzZ0nVaAefHMTsXGvHV9qGz3qVbJyLDHft2atyZlq2tddMm2cPQlEjrQBBe9SE3Fc
-	 PYvjgiTX/MiktOI1NvBYXkL5eyxC8P5dYOvBAYCYnd/q9qQesh6hdOqP/Yrae5LoC7
-	 5qhuYQJTejW1FNZSEP8I+Ah2cQEzl2GHdJQ8j0ZSIVbpuOKGRop/AhRqOzPzB/jF58
-	 VWpW1y7ErvyrJHfl/9opvYLhTdn2fNnqd/xl8iXYAFgdW4AKXy5woouf1tHKvp6aC+
-	 Hwqq3PqRAkJw1yEwWLYgrGIeNtvySuJSeRX4CB1nP65woQ/X54i6hvngqyCixo+lQj
-	 ZEyWbPUECm8bQ==
-Date: Fri, 24 Oct 2025 19:41:59 +0000
-To: Hans de Goede <hansg@kernel.org>
-From: Bugaddr <Bugaddr@protonmail.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness unexpectedly
-Message-ID: <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
-In-Reply-To: <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org>
-References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com> <1536ce4a-5844-447f-9e86-197c71c6d364@gmx.de> <0RyizLnGQaxXLOtK-q6h-mHCTA2ergYBAIS-DkF1MPD9T5nx79rlaKdIOUBRft7Ghpy11OPo2OZM4waIjDbdnv2fnafWBDxWEYL75XZKtUo=@protonmail.com> <0b485b76-fb44-44a4-afab-d35fa31043db@gmx.de> <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com> <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de> <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org>
-Feedback-ID: 43498376:user:proton
-X-Pm-Message-ID: 12631321d302a2436448d06b0f1ef6c0412af05e
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="JmaOprMj"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id F1E08BD507
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2025 00:21:11 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id D6ED8BD524
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2025 00:21:10 +0300 (EEST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 06E40200B38
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2025 00:21:09 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1761340870;
+	bh=41lguz1E648WqGwnRa9TE6H3BXRHH76TIXgwQsRAU3k=;
+	h=Received:From:Subject:To;
+	b=JmaOprMjSrSDRaaH55S9nCWPJ0phlycCnboffj6GGQkc5J6kwTo/dTTo3WmDodTs/
+	 II9muh46WgVpYfz4Tt6F1WMrMWmEU5rLFnDvUDIlMf3M1XFAjv0K9k5i/+PhYJZxdd
+	 XWicYMnNhTyMmADwn3Mi3MqgRgU5TnUkUO0p985NrUVkmIZ7KIjh4TnRRZv29m21tK
+	 pAZuU8p12bcTtgERuaLkl75y3rgclswdOjh/Td/JVfxk3aMpF6uME9KCZq9OsH6bNJ
+	 AKsQlSUvC5uZdTJuCq318dgNVBi7d1rzBeqqfAo4Yi8X5exvHU4xuwtyT3PVFFP9N5
+	 O6bDooeV3gcrg==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f175.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f175.google.com with SMTP id
+ 38308e7fff4ca-3761e5287c9so30127891fa.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Fri, 24 Oct 2025 14:21:09 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxg7p8FzKpRXJeiM8/HKLdyFvWdSwD/ZmfvOSOiB02Oikgva0On
+	7MjOY+et6GdOC9sX9snMpbuFasWfxr2A8jubp+yWvyA3PSH36zjWlywUZjiKJ1tZJ+677wI7XYN
+	D1grpJo456BKUYlqw7ciJgiRaHYe2bvE=
+X-Google-Smtp-Source: 
+ AGHT+IHlLVftaQ0DARz53tAyi5sW2/ToZvfsip34OZK+rWVjr6Fz6nYHXnZMZMQ0YiUcM5yubEe9tjjNyOP4aMcEN5g=
+X-Received: by 2002:a05:651c:1595:b0:36d:501:76d5 with SMTP id
+ 38308e7fff4ca-37797a0e6fdmr80125651fa.26.1761340869339; Fri, 24 Oct 2025
+ 14:21:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20251018101759.4089-1-lkml@antheas.dev>
+ <20251018101759.4089-2-lkml@antheas.dev>
+ <e6328da3-8099-4540-9cb0-4fc28b359ee7@gmail.com>
+ <CAGwozwG+gf09PQf9o9YkKFYVgVn-1w5CDVrpOe4uFavVYCNijQ@mail.gmail.com>
+ <3947f772-691b-46a2-af68-15825e7f4939@gmail.com>
+ <CAGwozwFbQWyuQB6EwLMLon5muff2WudR+oVL62DqP_MXGW+p-Q@mail.gmail.com>
+ <b91de7c7-74b8-4cf5-82a4-f3d4eaf418d4@gmail.com>
+ <CAGwozwGj-yXHXBan38_NV7G5T66bnjm7om2bz_Bha35AHhtCJQ@mail.gmail.com>
+ <CAGwozwEh32XMcGJPKMRBWd63ybYOxW1Wx4QjU-QErjQgLHwX2g@mail.gmail.com>
+ <0d18666a-78e1-4e69-8fd2-f15052db0cee@gmail.com>
+In-Reply-To: <0d18666a-78e1-4e69-8fd2-f15052db0cee@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Fri, 24 Oct 2025 23:20:57 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHyC8P4KzZFY7t=WF3ANiJ4q6HgbiAMUNAGHE899Jd6rQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkSj9mbUNEfcngWuhh-_ZH4TZcXGNf9AJjuIXYubhecLTYSfixw47baQIc
+Message-ID: 
+ <CAGwozwHyC8P4KzZFY7t=WF3ANiJ4q6HgbiAMUNAGHE899Jd6rQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/9] HID: asus: simplify RGB init sequence
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <176134087031.3664887.17820125660592650820@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
+On Fri, 24 Oct 2025 at 20:53, Denis Benato <benato.denis96@gmail.com> wrote:
+>
+>
+> On 10/24/25 18:20, Antheas Kapenekakis wrote:
+> > On Fri, 24 Oct 2025 at 01:25, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+> >> On Fri, 24 Oct 2025 at 00:53, Denis Benato <benato.denis96@gmail.com> wrote:
+> >>>
+> >>> On 10/23/25 23:30, Antheas Kapenekakis wrote:
+> >>>> On Thu, 23 Oct 2025 at 22:05, Denis Benato <benato.denis96@gmail.com> wrote:
+> >>>>> On 10/23/25 20:06, Antheas Kapenekakis wrote:
+> >>>>>> On Thu, 23 Oct 2025 at 19:38, Denis Benato <benato.denis96@gmail.com> wrote:
+> >>>>>>> On 10/18/25 12:17, Antheas Kapenekakis wrote:
+> >>>>>>>> Currently, RGB initialization forks depending on whether a device is
+> >>>>>>>> NKEY. Then, NKEY devices are initialized using 0x5a, 0x5d, 0x5e
+> >>>>>>>> endpoints, and non-NKEY devices with 0x5a and then a
+> >>>>>>>> backlight check, which is omitted for NKEY devices.
+> >>>>>>>>
+> >>>>>>>> Remove the fork, using a common initialization sequence for both,
+> >>>>>>>> where they are both only initialized with 0x5a, then checked for
+> >>>>>>>> backlight support. This patch should not affect existing functionality.
+> >>>>>>>>
+> >>>>>>>> 0x5d and 0x5e endpoint initializations are performed by Windows
+> >>>>>>>> userspace programs associated with different usages that reside under
+> >>>>>>>> the vendor HID. Specifically, 0x5d is used by Armoury Crate, which
+> >>>>>>>> controls RGB and 0x5e by an animation program for certain Asus laptops.
+> >>>>>>>> Neither is used currently in the driver.
+> >>>>>>> What benefits do we get from removing the unused initialization?
+> >>>>>>>
+> >>>>>>> If this has never caused any troubles I don't see the reason for removing
+> >>>>>>> them. Moreover the lighting protocol is known and I might as well add
+> >>>>>>> support for it in the near future,
+> >>>>>> I already have a patch that adds RGB and delay inits that endpoint. It
+> >>>>>> got removed to make this easier to merge. See [1].
+> >>>>>>
+> >>>>>> [1] https://lore.kernel.org/lkml/20250324210151.6042-10-lkml@antheas.dev/
+> >>>>> I have to main concerns about this:
+> >>>>>
+> >>>>> 1. taking away initialization commands in one patchset to make it
+> >>>>> easier to merge another unrelated patch doesn't seem the right thing
+> >>>>> to do if the other patch it's not in the same series.
+> >>>>>
+> >>>>> I can see [1] has been removed from the set for a later moment in time,
+> >>>>> it's fine if it needs more work, just send something that function in the
+> >>>>> same way and do not remove initialization commands when unnecessary,
+> >>>>> especially since there will be for sure future development.
+> >>>> The initialization was removed as part of general cleanup. Not to make
+> >>>> it easier to merge the RGB patch. In addition, the RGB patch only runs
+> >>>> the init in a lazy fashion, so if nobody uses the RGB sysfs the init
+> >>>> does not run and the behavior is the same.
+> >>> There are a few problems here:
+> >>> 1. sope creep: either do a cleanup or solve bugs. The fact that your flow z13
+> >>> doesn't load hid-asus correctly has nothing to do with the initialization of anime.
+> >>> The fact that hid-asus is driving leds instead of asus-wmi has nothing to do with
+> >>> anime matrix initialization either.
+> >>> 2. not sending the initialization can get hardware misbehave because it
+> >>> is left in an uninitialized state.
+> >>> 3. there are absolutely zero reasons to do that. There are even less reasons
+> >>> as to do it as part of this patchset.
+> >>>
+> >>>>> 2. Your patchset resolves around keyboard backlight control and how
+> >>>>> the keyboard device is exposed to userspace: it's fine but I do not see
+> >>>>> the point in removing initialization commands that has nothing to do
+> >>>>> with the issue we are trying to solve here.
+> >>>>>
+> >>>>> Please leave 0x5E and 0x5D initialization commands where they are now.
+> >>>> I mean the second part of the patchset does that. The first part is a
+> >>>> cleanup. What would be the reason for keeping 0x5E and 0x5D? They are
+> >>>> only used when initializing those endpoints to write further commands
+> >>>> to them and for identification. The current driver does not write
+> >>>> commands to those endpoints and identifies itself over 0x5A.
+> >>> There are no bugs opened that ties initialization of devices to bugs.
+> >>> Quite the opposite: I can guarantee you that removing part of the
+> >>> init will introduce regressions.
+> >>>
+> >>> The onus is on you to provide strong evidence that the removal is
+> >>> a necessary act.
+> >>>
+> >>> Regardless it is not in the scope of this patchset: remove it.
+> >>>> I do get that it is a bit risky as some laptops might be hardcoded to
+> >>>> wait for 0x5D to turn on RGB. Which is why we had the last patch until
+> >>>> V4. But we have yet to find a laptop that has this problem, so I find
+> >>>> it difficult to justify keeping the init.
+> >>> Yes it's risky to remove initialization sequences for a device that is
+> >>> in every modern ASUS laptop and is tied to the EC.
+> >>>> Do note that you might need to add the 0x5D init to your userspace
+> >>>> program for certain laptops if you haven't already. But that is ok,
+> >>>> since in doing so you are also validating you are speaking to an Asus
+> >>>> device, which is important.
+> >>> This doesn't make much sense: why would anyone remove
+> >>> a command from the kernel, that can be very well essential to some models
+> >>> (sleep can break, for example) just to add it back in a userspace program?
+> >>>
+> >>> What does it mean I have to validate I am speaking to an asus device?
+> >>> Software selects devices by known attribute, one of them is the vid:pid....
+> >>> Beside what does this have to do with the removal of initialization commands
+> >>> from the kernel?
+> >>>
+> >>> Even late initializing devices can lead to problems. Windows doesn't do that:
+> >>> as soon as asus drivers are loaded all relevant initialization sequences are
+> >>> sent; Windows is the only officially supported OS: do not introduce commands
+> >>> flow divergence without strong reasons backing it up.
+> >> If you think keeping 0x5D init is that important, I can spin patch [1]
+> >> into this series. But then this quirk will stay in the kernel forever.
+> >> I can even add 0x5E since that does not affect newer devices, which I
+> >> care for simplifying the sequence.
+> Fully initializing the device tied to the EC in the same windows does
+> is not a "quirk". Please stop calling it that.
+>
+> It will stay on the kernel until we have strong evidence that it is causing
+> problems, at that point we simply avoid doing it for problematic laptops.
+>
+> If adding other commands doesn't introduce regressions or are otherwise
+> easy to bisect and makes more hardware working please do.
 
+It is not an init sequence. It is a handshake with the userspace
+program that proves to the program it is talking with a genuine asus
+device and to the device with the correct program. For all devices
+that I have tested it seems to NOOP.
 
+0x5a is the only one used for a driver and it does brightness control.
+0x5d/0x5e are used with userspace Windows programs. 0x5d does RGB.
+Moreover, the application 0xff310076 only has a single report ID under
+it, 0x5a. 0x5d and 0x5e belong to different hid applications that are
+not currently checked by the driver (but when they exist they reside
+under the same hid endpoint, with a multi-application collection that
+bifurcates in Windows to multiple hid devices).
 
+So it makes sense to remove the redundant handshakes. If some laptops
+require 0x5d to enable shortcuts as Luke said, I have a patch that
+does that and is straightforward to do. But since the shortcut
+response comes from the 0x5a endpoint, I find it unlikely for it to
+require a handshake over a different endpoint to init.
 
-On Wednesday, October 15th, 2025 at 3:43 PM, Hans de Goede <hansg@kernel.or=
-g> wrote:
+> >> Luke said these two pairs are the important ones to keep.
+> >>
+> >> I'm not sure what to do.
+> > I was asked by a 2025 Asus Zenbook Duo user to add his IDs in [1]. In
+> > doing so, I updated the rgb and legacy init patches for the new series
+> > and added a quirk for early init of the duo keyboards.
+> I will take a look when I can, but if you haven't removed anything
+> that shouldn't pose any risk. None that I can think of at the moment anyway.
+> > The series is 14 patches long, I don't think my email can take it :(
+> linux.dev accounts for maintainers are provided free of charge
+> and I had to ask for an account too. I suggest you do the same.
+> > Should we merge the first part of this series with the legacy init,
+> > then do the backlight refactor, and finally the new Duo stuff + rgb?
+> I think so. My only doubt is about the per_app quirk. Other than
+> that looks good and solves one problem while also better representing
+> the hardware, so I can't think of any blockers.
+> > Antheas
+> >
+> Thanks,
+> Denis
+> >> Antheas
+> >>
+> >> [1] https://lore.kernel.org/all/20250325184601.10990-12-lkml@antheas.dev/
+> >>
+> >>>> Antheas
+> >>>>
+> >>> Denis
+> >>>>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> >>>>>>>> ---
+> >>>>>>>>  drivers/hid/hid-asus.c | 56 ++++++++++++++----------------------------
+> >>>>>>>>  1 file changed, 19 insertions(+), 37 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> >>>>>>>> index a444d41e53b6..7ea1037c3979 100644
+> >>>>>>>> --- a/drivers/hid/hid-asus.c
+> >>>>>>>> +++ b/drivers/hid/hid-asus.c
+> >>>>>>>> @@ -638,50 +638,32 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+> >>>>>>>>       unsigned char kbd_func;
+> >>>>>>>>       int ret;
+> >>>>>>>>
+> >>>>>>>> -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+> >>>>>>>> -             /* Initialize keyboard */
+> >>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> >>>>>>>> -             if (ret < 0)
+> >>>>>>>> -                     return ret;
+> >>>>>>>> -
+> >>>>>>>> -             /* The LED endpoint is initialised in two HID */
+> >>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+> >>>>>>>> -             if (ret < 0)
+> >>>>>>>> -                     return ret;
+> >>>>>>>> -
+> >>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+> >>>>>>>> -             if (ret < 0)
+> >>>>>>>> -                     return ret;
+> >>>>>>>> -
+> >>>>>>>> -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+> >>>>>>>> -                     ret = asus_kbd_disable_oobe(hdev);
+> >>>>>>>> -                     if (ret < 0)
+> >>>>>>>> -                             return ret;
+> >>>>>>>> -             }
+> >>>>>>>> -
+> >>>>>>>> -             if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+> >>>>>>>> -                     intf = to_usb_interface(hdev->dev.parent);
+> >>>>>>>> -                     udev = interface_to_usbdev(intf);
+> >>>>>>>> -                     validate_mcu_fw_version(hdev,
+> >>>>>>>> -                             le16_to_cpu(udev->descriptor.idProduct));
+> >>>>>>>> -             }
+> >>>>>>>> +     ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> >>>>>>>> +     if (ret < 0)
+> >>>>>>>> +             return ret;
+> >>>>>>>>
+> >>>>>>>> -     } else {
+> >>>>>>>> -             /* Initialize keyboard */
+> >>>>>>>> -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> >>>>>>>> -             if (ret < 0)
+> >>>>>>>> -                     return ret;
+> >>>>>>>> +     /* Get keyboard functions */
+> >>>>>>>> +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+> >>>>>>>> +     if (ret < 0)
+> >>>>>>>> +             return ret;
+> >>>>>>>>
+> >>>>>>>> -             /* Get keyboard functions */
+> >>>>>>>> -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+> >>>>>>>> +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+> >>>>>>>> +             ret = asus_kbd_disable_oobe(hdev);
+> >>>>>>>>               if (ret < 0)
+> >>>>>>>>                       return ret;
+> >>>>>>>> +     }
+> >>>>>>>>
+> >>>>>>>> -             /* Check for backlight support */
+> >>>>>>>> -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+> >>>>>>>> -                     return -ENODEV;
+> >>>>>>>> +     if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
+> >>>>>>>> +             intf = to_usb_interface(hdev->dev.parent);
+> >>>>>>>> +             udev = interface_to_usbdev(intf);
+> >>>>>>>> +             validate_mcu_fw_version(
+> >>>>>>>> +                     hdev, le16_to_cpu(udev->descriptor.idProduct));
+> >>>>>>>>       }
+> >>>>>>>>
+> >>>>>>>> +     /* Check for backlight support */
+> >>>>>>>> +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+> >>>>>>>> +             return -ENODEV;
+> >>>>>>>> +
+> >>>>>>>>       drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+> >>>>>>>>                                             sizeof(struct asus_kbd_leds),
+> >>>>>>>>                                             GFP_KERNEL);
+>
 
-> Hi,
->=20
-> On 11-Oct-25 5:08 PM, Armin Wolf wrote:
->=20
-> > Am 04.10.25 um 18:33 schrieb Bugaddr:
-> >=20
-> > > Sent with Proton Mail secure email.
-> > >=20
-> > > On Thursday, October 2nd, 2025 at 3:26 AM, Armin Wolf W_Armin@gmx.de =
-wrote:
-> > >=20
-> > > > Am 18.09.25 um 21:18 schrieb Bugaddr:
-> > > >=20
-> > > > > > Am 13.06.25 um 19:12 schrieb Bugaddr:
-> > > > > >=20
-> > > > > > > Hello,
-> > > > > > > I'm writing to report what appears to be a bug affecting the =
-Acer AN515-58 laptop, and I would appreciate any assistance in investigatin=
-g or resolving it.
-> > > > > > >=20
-> > > > > > > When I press Fn + F10=E2=80=94which is intended to increase t=
-he keyboard backlight brightness=E2=80=94the display brightness unexpectedl=
-y decreases along with it. Furthermore, the display brightness continues to=
- lower incrementally, until I manually press Fn + Brightness Up to stop and=
- reverse it.
-> > > > > > >=20
-> > > > > > > After pressing Fn + Brightness Up, the display brightness beh=
-avior returns to normal, and the issue does not reoccur=E2=80=94however, fr=
-om that point onward, the Brightness Down key no longer works.
-> > > > > > >=20
-> > > > > > > This behavior is consistent and reproducible. I'm happy to as=
-sist with any debugging, log collection, or kernel testing as needed.
-> > > > > > >=20
-> > > > > > > Best regards,
-> > > > > > > Bugaddr
-> > > > > > > Hi,
-> > > > > > > can you share the output of "acpidump"?
-> > > > > >=20
-> > > > > > Thanks,
-> > > > > > Armin Wolf
-> > > > > > Sorry for late reply, but checkout this:
-> > > > > > https://paste.rs/Nqca3
-> > > > > > Thanks,
-> > > > > > Bugaddr
-> > > >=20
-> > > > Hi,
-> > > >=20
-> > > > sorry for the late response. It seems that you forgot to paste part=
-s of the DSDT table. Could you please store the output
-> > > > of acpidump inside a file (sudo acpidump > acpidump.log) and attach=
- it to the email? Also please put the whole mailing list
-> > > >=20
-> > > > on the CC next time.
-> > > >=20
-> > > > Thanks,
-> > > > Armin Wolf
-> > > > Hey, please checkout the attached acpidump
-> > >=20
-> > > Thanks,
-> > > Bugaddr
-> >=20
-> > Alright, the following ACPI bytecode is likely responsible for sending =
-those brightness down events:
-> >=20
-> > Method (_Q11, 0, NotSerialized) // _Qxx: EC Query, xx=3D0x00-0xFF
-> > {
-> > Debug =3D "=3D=3D=3D=3D=3DQUERY_11=3D=3D=3D=3D=3D"
-> > ^^^WMID.FEBC [Zero] =3D One /* Acer hotkey event
-> > ^^^WMID.FEBC [One] =3D HTBN /* Hotkey scancode /
-> > ^^^WMID.FEBC [One] =3D BRTS / Unknown, BIOS error? /
-> > ^^^WMID.FEBC [Zero] =3D 0x04 / Unknown, BIOS error? /
-> > Notify (WMID, 0xBC) / Notify acer-wmi driver /
-> > If (IGDS) / Integrated GPU device state? /
-> > {
-> > Notify (^^^GFX0.DD1F, 0x87) / Decrease brightness on Intel iGPU /
-> > }
-> > Else
-> > {
-> > Notify (^^^PEG1.PEGP.LCD0, 0x87) / Decrease brightness on discrete GPU =
-*/
-> > }
-> > }
-> >=20
-> > I think the brightness problems are caused by the kernel using the wron=
-g backlight interface.
-> > Can you please try the following things:
-> >=20
-> > 1. Unload the acer-wmi driver using "modprobe -r acer-wmi".
-> > 2. Boot the kernel with "acpi_backlight=3Dvendor" if the problem still =
-occurs.
->=20
->=20
-> Using acpi_backlight=3Dvendor on a recent laptop-model like this one is u=
-nlikely
-> to be the right thing to do. acpi_backlight=3Dvendor is for vendor specif=
-ic
-> backlight control firmware interfaces from before things were standardize=
-d
-> on using the ACPI video firmware interface around Windows XP (IIRC), not
-> sure if it was XP or some other Windows release but standardizing on
-> the API video firmware interface happened a long long time ago and then
-> things moved to mostly using direct hw access (acpi_backlight=3Dnative)
-> starting with Windows Vista.
->=20
-> acpi_backlight=3Dvideo could still be something which might be the prefer=
-red
-> way on some devices and also goes through ACPI calls, but using
-> acpi_backlight=3Dvendor is weird.
->=20
-> OTOH I learned a while ago that apparently if multiple backlight interfac=
-es
-> are present Windows simply sends the new brightness value to all interfac=
-es.
->=20
-> Anyways Bugaddr please do give acpi_backlight=3Dvendor (and maybe also
-> acpi_backlight=3Dvideo) a try as asked by Armin, this will still be
-> a good data point to have.
->=20
-> Regards,
->=20
-> Hans
-
-Here are the logs:
-
-# Logs after setting acpi_backlight=3Dvendor & removing acer-wmi
-
-1. I am unable to change the display brightness either up/down
-2. Caps_lock light turns on automatically when pressing fn+brightness_up ke=
-y & turned off automatically as soon as other keys are pressed
-3. Was able to change the keyboard brightness
-4. no logs while pressing fn+keyboard_brightness_up/down
-
-wmi PNP0C14:00 000000bc 00000000
-video/brightnessup BRTUP 00000086 00000000
-wmi PNP0C14:00 000000bc 00000000
-wmi PNP0C14:00 000000bc 00000000
-video/brightnessdown BRTDN 00000087 00000000
-wmi PNP0C14:00 000000bc 00000000
-
-# Logs after setting acpi_backlight=3Dvideo
-
-## Logs while testing the brightnes buttons first time after boot after rem=
-oving acer-wmi, was able to change the display brightness
-
-wmi PNP0C14:00 000000bc 00000000
-video/brightnessup BRTUP 00000086 00000000
-wmi PNP0C14:00 000000bc 00000000
-wmi PNP0C14:00 000000bc 00000000
-video/brightnessdown BRTDN 00000087 00000000
-wmi PNP0C14:00 000000bc 00000000
-
-## Logs after pressing fn+keyboard_brightness_up (the display brightness su=
-ddenly goes to 0) & keyboard brightness also changes
-
-video/brightnessdown BRTDN 00000087 00000000 K
-
-** I am on latest bios update & acpi_backlight=3Dnative also dont work
-
-Regards,
-Bugaddr
