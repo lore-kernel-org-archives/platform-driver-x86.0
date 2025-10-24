@@ -1,41 +1,42 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB622D94A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0E1324B34;
 	Fri, 24 Oct 2025 15:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761319328; cv=none; b=OlAF2fR/wSDb4ipjVc+DDGYGINfqQsPCv65hahcD3kFsxk8Si05TZ8s8UfpPK97xCTseQ9byQb/kEyeP9xDhl3FnFJVD8/G8pRmfcDlibbJPTz+xEsCwE9mdV01XYOKw97srYOwG/N0FT7hUC8iPz5m5svjhw2sFBS4iuI2EY5s=
+	t=1761319329; cv=none; b=Q6vEaMZm+hEWSDXOh2+AS1IqmPSnc8eDShAJlVpQE3+SHDFbHzrk1MgHBY1dW2PrmuhjcSelR3zPu16fO3HH0vP/USjoH8B2tw7qCbHbuIj0PzjlHJpwOxNubuZX5Cr0HIbCquVKVdgPAL5voAY8or4v3AedYFC39uObgfazzu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761319328; c=relaxed/simple;
-	bh=n+SbHga5ia3gKeK3j+i35OyQjj3ugyicaDWhX6StU8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LskNiArAf2opi3m/qd19e7GLnSn0SuW7KWWwQtOJ6nkVqUpyK5KDKIEJvlMuM80FR+5p4sKjF/spggAfoF+gYaevXXdWgIsOPeeJcTbmBl/ENwQMt8pEkg9Bv/AJpsQ8GZueHQ9HlPcWg9hbnZy531BN045JdPvp+kaObi18n0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=i39qhKqz; arc=none smtp.client-ip=178.156.171.147
+	s=arc-20240116; t=1761319329; c=relaxed/simple;
+	bh=igXnLMGIRHRQSQecw9JgC1k/EuG7mF53Mh3ai/1f01A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uv0LDS8xAAPqMhbOlGe/6Egku1rGTW40ebPMEm8WK0vk7jAECv/BlGyUmxThLPSCsyGznZxJiWsKYOSJdqPm6RMQwWDTsm7gaXYFWbnML/OokAvhiWp9L4gRxOhS2fV+0xGRc42cPfwqeDJsqnlaQT7BlCZo7jFEiqLW8AwA1eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=AYLkTAHl; arc=none smtp.client-ip=78.46.171.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="i39qhKqz"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 3EFCE5E681;
-	Fri, 24 Oct 2025 18:21:58 +0300 (EEST)
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="AYLkTAHl"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id CA228C5A82;
+	Fri, 24 Oct 2025 18:21:57 +0300 (EEST)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 248575E672;
-	Fri, 24 Oct 2025 18:21:56 +0300 (EEST)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id 2A579C5A87;
+	Fri, 24 Oct 2025 18:21:57 +0300 (EEST)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id CE7E31FD894;
-	Fri, 24 Oct 2025 18:21:54 +0300 (EEST)
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 5953F1FEBB1;
+	Fri, 24 Oct 2025 18:21:56 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1761319315;
-	bh=pfGMDfUmZV6asO0wJ+O/PWLq8q1d5Rkx+DwIVdVCa/4=; h=From:To:Subject;
-	b=i39qhKqzo9Xe+IuKI2dC1EPOT/osV17zvohXQgWNSESKAAZWslQPzWoXEC+ccLs9K
-	 sKDfVicjhjC8E7ab0kAeZwt7fmhL1JvKJgD0K3hM3ojYXeQhkYLkXUXHJGbiiWP3Ak
-	 rXbuPBS0pv14boH11EFs4GlxA4ICWVC6uZre2R2WWJ+eRzuP/4gKwX5oC+v7ouNv3Y
-	 jYs037oWKAqDtNQvmS59A7INEf89U1Tu2vJAAkzB0XinuN+OEjrwT+UGltdKBkKBLQ
-	 N4gMNkWCdoHlA5klScfex7VVA6CPQRYBVKjdThW44qo3Juht5nP5wzbjHJ+/t8nejI
-	 jPakxd7YssRtw==
+	s=default; t=1761319316;
+	bh=hLl9L6FmJ2+jw5uzij78J0TvSORsHyEja4HNdumtbcg=; h=From:To:Subject;
+	b=AYLkTAHl2zEvVpnisOCJHBHE/KILffPOL9Du/FjcVB7tdAptyAqB4JLdWgRv62TbD
+	 MKIYu1J0tG+TMxagKm3OXyjsaPoKG2s7fzG5q9CHiYKlhY0lXxwZl1oL8f5OCgBk9P
+	 CJRJ7Vxj+CFHriKIg9r93G6x7JfyUh8U7jNoUGi6IVD2BrnLruJgTzfs44XKejtHIK
+	 yJ53ZMVCqocXO8kLSoqYhVv+L5z5FEb8F2yG7P+XLz6BGrP4udFWIf8bJSN9o+B6Jh
+	 ZHSfx4kK1IMn5OxcXpj/7mtQhl7Z3wLgbexBxBfEAyZNrs8eIxwPCczVVkoy1AXZ49
+	 fLFDOCOhtrr/A==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -49,10 +50,12 @@ Cc: amd-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1 0/3] platform/x86/amd: Add S0ix support to the Xbox Ally
-Date: Fri, 24 Oct 2025 17:21:49 +0200
-Message-ID: <20251024152152.3981721-1-lkml@antheas.dev>
+Subject: [PATCH v1 2/3] platform/x86/amd/pmc: Add spurious_8042 to Xbox Ally
+Date: Fri, 24 Oct 2025 17:21:51 +0200
+Message-ID: <20251024152152.3981721-3-lkml@antheas.dev>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251024152152.3981721-1-lkml@antheas.dev>
+References: <20251024152152.3981721-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,50 +64,45 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <176131931531.2356012.12308341767640511320@linux3247.grserver.gr>
+ <176131931683.2356082.7233897172878535812@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-The Xbox Ally features a Van Gogh SoC that on the Steam Deck uses S3.
-Therefore, kernel support for S0ix was previously absent. Introduce
-this support in three patches:
+The Xbox Ally features a Van Gogh SoC that has spurious interrupts
+during resume. We get the following logs:
 
-1) Add Van Gogh to AMD PMC driver
-2) Enable spurious_8042 quirk, as it is common in those generations
-3) Adjust the Van Gogh init logic to avoid powering down the rlc
-   and tweak post init
+atkbd_receive_byte: 20 callbacks suppressed
+atkbd serio0: Spurious ACK on isa0060/serio0. Some program might be trying to access hardware directly.
 
-This allows the Xbox Ally to properly enter and exit S0ix suspend.
-Perhaps it also allows the Steam Deck to use s2idle without crashing,
-note it is not currently possible [1].
+So, add the spurious_8042 quirk for it. It does not have a keyboard, so
+this does not result in any functional loss.
 
-Currently, around 1/10 times the SoC misses the PMC hint and does not
-enter S0ix, so perhaps 1 or 3 need tweaking further. It wakes up always,
-however.
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-@Alex: I tweaked the text on patch 3 a bit. You can resend it separately
-after the issue with 1/10 failures is fixed.
-
-[1]: https://github.com/evlaV/linux-integration/commit/5ab73e9069017aa1b5351f91513ba540ce5905fb
-
-Alex Deucher (1):
-  drm/amdgpu: only send the SMU RLC notification on S3
-
-Antheas Kapenekakis (2):
-  platform/x86/amd/pmc: Add support for Van Gogh SoC
-  platform/x86/amd/pmc: Add spurious_8042 to Xbox Ally
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c       | 8 +++++---
- drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c        | 6 ++++++
- drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c | 3 +++
- drivers/platform/x86/amd/pmc/pmc-quirks.c        | 8 ++++++++
- drivers/platform/x86/amd/pmc/pmc.c               | 3 +++
- drivers/platform/x86/amd/pmc/pmc.h               | 1 +
- 6 files changed, 26 insertions(+), 3 deletions(-)
-
-
-base-commit: 6fab32bb6508abbb8b7b1c5498e44f0c32320ed5
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index d63aaad7ef59..eb641ce0e982 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -122,6 +122,14 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "21A1"),
+ 		}
+ 	},
++	{
++		.ident = "ROG Xbox Ally RC73YA",
++		.driver_data = &quirk_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "RC73YA"),
++		}
++	},
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=218024 */
+ 	{
+ 		.ident = "V14 G4 AMN",
 -- 
 2.51.0
 
