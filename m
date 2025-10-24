@@ -1,64 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D435235B132;
-	Fri, 24 Oct 2025 06:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E471EE7DC;
+	Fri, 24 Oct 2025 07:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761286535; cv=none; b=qtdQvxwwDQNDGFhWQ1Ml2RquhzSwG/ty1h2ntdfbbxCmvx8swMpKeDNgV8SzXxC7VkgbxNgTpYLQHDOaGCS1zfCPJfogHERBG+HqvXZoNBP2n+Sh4Qlk0CjOdwd2G/FAFoXrDMKftioXq5Co3/S35flKDA2SleYnOOQeVzhwZrI=
+	t=1761290762; cv=none; b=KGMmmCdRi1zGfMvfZWciidNvi8gKvQ6Bk4yFlUxrPwVKipI/GBNXAgyCEXni2eZXSGePd2YwjtKrepZEiqAH2lycATJQLj/3gGpDe701ClPpkq8++sknxoWYQJxS5nGCi7zefsQazdgeGuWPDHdGhfYUJ3i7PN3Vn31BJdQVyi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761286535; c=relaxed/simple;
-	bh=yZOXALz3vhxcH1L7uqfvS2PVeWLmdO7dhTHHIuBg0kU=;
+	s=arc-20240116; t=1761290762; c=relaxed/simple;
+	bh=0N7yLI9ieWoPqqSuDXrLYITQPFd5DRrzMbTU7U2jF0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBpZ+2jlJCmKricxbYKzmOBoQpF7yr7+7CelpC78t6va13pG2swgcgpz99yZHQok0JSgUrC9zhJWh7A4WlXZNycKQ29goP5GxXpXZbRnMZkv59adkHZIMWMKvLMYrisi2MvvjrLo1JPQ27C4c52h+UTndEL3dhv553hzTF5h3FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sy5aAW1X; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iRkGLHEOyN4Yo4tsyF6uF/ghoUW0Jw5t5x7rJGkPc3aA3fls6hmTcQjCA9vLgKYQZR/TMhgiefxUt4J9zhQxsT/KRZ693mbmMRJfwWwxgH+Wr0kMyBAzCDkAfx7RFIslAm58TN4BFqaqWLye6a5sFOuWW1EGkE+ByM4KsYPw0H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j22hTJkz; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sy5aAW1X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j22hTJkz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761286534; x=1792822534;
+  t=1761290761; x=1792826761;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=yZOXALz3vhxcH1L7uqfvS2PVeWLmdO7dhTHHIuBg0kU=;
-  b=Sy5aAW1XujWOonI8pxwXLRxooE3sffJeFAesqmfzSEuyLVBobclcoSgR
-   9j/mMLMihOg3qQp8l39PeS0dB0uvsHe7ukCpIoeN8Fvp2+GlNpPkdzT2F
-   qfshpUGhRtrNvYQMvVVJxKHp7nX7sy4S1Rd5IcpnnRL9CLNlxAx+pSLJe
-   U+LLq5mocYf05b6TO2ksHt8hXUcjxeeY75f+6ME4TsIw2rtBdncniD1nt
-   AK94ksbjV0i72+e87RrQyDytOYz1mhm34+5irrfV1iG7YZdcRhdGOajwo
-   kbjBOXomc1w9xFeotp7dHEdhBfqiQdkqtPZhQCqvs6XXF9DFO9KCHX8Or
-   Q==;
-X-CSE-ConnectionGUID: bA5f3SjnRSmLJWU6AGRdUg==
-X-CSE-MsgGUID: cbZErmSNTvuyDMPCMynBEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62674638"
+  bh=0N7yLI9ieWoPqqSuDXrLYITQPFd5DRrzMbTU7U2jF0Q=;
+  b=j22hTJkzTadOXqUu4sFmVoKSTNCJA/jIXB0y5/XcVGfu99pu42YBS7qW
+   Zvm8gDNQn9WIVKhCJm38quyg/mDnQppOKkWhdU4zZcLa5aEgBM79FezDx
+   nNhYBnLOmSHOr9aYbpdw4xJshFVUV2Rbn6ygmyLiK7Is8gcUTV52SZEkw
+   QPVNDP1Jeq/Hv/36y3LJZ+eVjRzc5sWwDgi5FAE2q3t+fvBZs24pqAzsO
+   keYVKYBmBMiJrEh+McQbruodNYrS9Vss51IHDSy0p6qbuTOSuYNAN7MqT
+   lp0IZ/rr4XHeKejhg29weimFLIMw5KtoW8K+A31fySBzRZjEscNyZZAQK
+   A==;
+X-CSE-ConnectionGUID: v/nzPAY5S5eu5LOkasHaEA==
+X-CSE-MsgGUID: B4brBiV4S6O1CABoaJDdDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67114668"
 X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
-   d="scan'208";a="62674638"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 23:15:32 -0700
-X-CSE-ConnectionGUID: e1S+j2yYQ3CzE8gYBn+JAw==
-X-CSE-MsgGUID: vwynUzDDTwKQLBdFI5XYHg==
+   d="scan'208";a="67114668"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:26:00 -0700
+X-CSE-ConnectionGUID: fW9MN2wrR7W4MfzQWm8O/g==
+X-CSE-MsgGUID: kT2alW3hTEKaCji85JT9pA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
-   d="scan'208";a="184422919"
-Received: from opintica-mobl1 (HELO ashevche-desk.local) ([10.245.245.60])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 23:15:31 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vCB5D-000000024nY-1erw;
-	Fri, 24 Oct 2025 09:15:27 +0300
-Date: Fri, 24 Oct 2025 09:15:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+   d="scan'208";a="188753802"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.64])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:25:57 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 4107F11F879;
+	Fri, 24 Oct 2025 10:25:55 +0300 (EEST)
+Date: Fri, 24 Oct 2025 10:25:55 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 To: Qiu Wenbo <qiuwenbo@gnome.org>
 Cc: Daniel Scally <djrscally@gmail.com>, Hans de Goede <hansg@kernel.org>,
 	Qiu Wenbo <qiuwenbo@kylinsec.com.cn>,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>
 Subject: Re: [PATCH] platform/x86: int3472: Fix double free of GPIO device
  during unregister
-Message-ID: <aPsZf-sL3a44hdDd@smile.fi.intel.com>
+Message-ID: <aPsqA8Zbneaeh3ZL@kekkonen.localdomain>
 References: <20251024050537.92440-1-qiuwenbo@gnome.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,10 +68,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20251024050537.92440-1-qiuwenbo@gnome.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+
+Hi Qiu,
+
+Thanks for the patch.
 
 On Fri, Oct 24, 2025 at 01:05:37PM +0800, Qiu Wenbo wrote:
+> From: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
 > 
 > regulator_unregister() already frees the associated GPIO device. On
 > ThinkPad X9 (Lunar Lake), this causes a double free issue that leads to
@@ -88,18 +90,11 @@ On Fri, Oct 24, 2025 at 01:05:37PM +0800, Qiu Wenbo wrote:
 > 
 > Fixes: 1e5d088a52c2 ("platform/x86: int3472: Stop using devm_gpiod_get()")
 
-> 
+Shouldn't this be also cc'd to stable@
 
-Should not be a blank line here.
-
-> Signed-off-by: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
-> ---
-
-The change sounds reasonable to me. FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Sakari Ailus
