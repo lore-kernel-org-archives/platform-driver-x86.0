@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A4F30505C;
-	Sat, 25 Oct 2025 16:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4732741DA;
+	Sat, 25 Oct 2025 16:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761408822; cv=none; b=nqqCTDHmD8beO0oZ7RHcvrXkJLMVxvncWNy2g+OHzAVAWxlnPGFVYPlzDg5G5KTuftBawLrkeGLsvpDsCI38Ux5A4XtBdxuSG4lV2H9juoupBhLGKm34GituYKMBJgZs0gWQ0z1ShFtOsA3vrH2dLKBsNF5gOKMQ4eDHV7vRDNM=
+	t=1761408918; cv=none; b=mz9XtXYdM3HlWUDclkxCsiK3J91ELw0l98zP7Z4XYdt2B5luU7nlQqP3NbJ4C2K67mxXK2TLWjT19x5t9fPYm2iamHKCfsZilL7DY/8mcBMGqKuo6bfHQj6teRLa9wbsiOmVzKxN0JoIZ0LxMiDVS+4zJRfEXgaVhJimnpKi14c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761408822; c=relaxed/simple;
-	bh=5OAOeHTcbADLXMuRZH9wy4isX8zkwFuM85Qa2+sanXA=;
+	s=arc-20240116; t=1761408918; c=relaxed/simple;
+	bh=7LlleGvQTKPFRUPTQ4TnmBZHLhxAptbV69fH3thPF8U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d4ePArfx3JRtceEpLbLHPXUM5G4aRSgrj3TcFYBHZSpFJgfKwTwFupCCqbA/rMpjOpqKtAcx5b+AMsYkpoCJRuYvVUBZGMk6VsYOhWU2n4zvlpQgcclTCawiU/tmnszqnGmEZcE6sdLpUVY9rVM0dyk/oC+c6xvQECNURidfCiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVDL2e1r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=MMhv5W14BX9pvoMZvQjdOppsgDCVDWQhH0IJcCJIYfnaPsXrosdRErKLDexEjFSjzgHhXXWwywzxFIamgDNdLqrSskBZ4tmtkfC76mgmgY61DylFgeMy7Gsdtr9dgigbdglOSZyPp1nmXLpY+9GPsENGF21Juof9h0iQP25Kbgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq6oZuQb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVDL2e1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE40DC4AF0B;
-	Sat, 25 Oct 2025 16:13:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq6oZuQb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD16BC4CEFB;
+	Sat, 25 Oct 2025 16:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761408822;
-	bh=5OAOeHTcbADLXMuRZH9wy4isX8zkwFuM85Qa2+sanXA=;
+	s=k20201202; t=1761408918;
+	bh=7LlleGvQTKPFRUPTQ4TnmBZHLhxAptbV69fH3thPF8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MVDL2e1re0CVkjFGQI/WCCgZW0mZwUxNDHZNBWUCyV727aNW4P6YGPDbwxrslQxZD
-	 WJ+T1Z6YEXn42perCT60C+NloMi4jhnBRAPXrDGkTVF4JzvSvCS1poG9LFaRAIbov5
-	 f1Pv/cCBekaJ6p9g6CTo9AhmCKuS7PcdfZJ3o3dwkPMIQ0S5Etcwvu4jOsWV0r8hom
-	 KA4HoHtu9uHO/CfN6AImjABMlbUUzMeS89j7e1lw57QKJBuKJuT6HEplFsi7penYOP
-	 ZyrAEEQi+uN27JZK6WuoON5YmlZLWVc930CE2wXhBo1N8tjsWUNS1gN+5LkH88ACkB
-	 tMu80u/MhwKDg==
+	b=Gq6oZuQbf4i3rLcXJdwu9YpqvITnKP6eV8pDf45bzAS8eFpFOIs36xKq91LhrOnGp
+	 swFs2q48Efspilihq70k5N0SJUxg/PQ3U/gCQbOCrGbVhU47DYtuZlcsuy+Fox0/CI
+	 1NOk/pnBs8hGyHgMy/kyD3UOoasbAm715NJHGg8Fbp7YG8BL6lPN28XyYL/BVGtUEi
+	 ggM57AVwwx4fIR2L9lZDNtKGHoc/Gzgqbv7Q3BQI+N0BkJccJYf+ge2tzn1bePbtTK
+	 +q6Q4PH/N9FNOp6Dq4eQL5z2x3jCc4qGYZdcKt5kkUvZDKZsPR+mlMV5CWM9WDH5A2
+	 lB3fTQSLyM4TQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Kean Ren <kean0048@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
+	derekjohn.clark@gmail.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-6.12] platform/x86/intel-uncore-freq: Fix warning in partitioned system
-Date: Sat, 25 Oct 2025 11:55:16 -0400
-Message-ID: <20251025160905.3857885-85-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.17] platform/x86: think-lmi: Add extra TC BIOS error messages
+Date: Sat, 25 Oct 2025 11:56:02 -0400
+Message-ID: <20251025160905.3857885-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -51,30 +53,16 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.17.5
 Content-Transfer-Encoding: 8bit
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-[ Upstream commit 6d47b4f08436cb682fb2644e6265a3897fd42a77 ]
+[ Upstream commit a0d6959c345d89d811288a718e3f6b145dcadc8c ]
 
-A partitioned system configured with only one package and one compute
-die, warning will be generated for duplicate sysfs entry. This typically
-occurs during the platform bring-up phase.
+Add extra error messages that are used by ThinkCenter platforms.
 
-Partitioned systems expose dies, equivalent to TPMI compute domains,
-through the CPUID. Each partitioned system must contains at least one
-compute die per partition, resulting in a minimum of two dies per
-package. Hence the function topology_max_dies_per_package() returns at
-least two, and the condition "topology_max_dies_per_package() > 1"
-prevents the creation of a root domain.
-
-In this case topology_max_dies_per_package() will return 1 and root
-domain will be created for partition 0 and a duplicate sysfs warning
-for partition 1 as both partitions have same package ID.
-
-To address this also check for non zero partition in addition to
-topology_max_dies_per_package() > 1.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Link: https://lore.kernel.org/r/20250819211034.3776284-1-srinivas.pandruvada@linux.intel.com
+Signed-off-by: Kean Ren <kean0048@gmail.com>
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Link: https://lore.kernel.org/r/20250903173824.1472244-4-mpearson-lenovo@squebb.ca
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -84,91 +72,93 @@ LLM Generated explanations, may be completely bogus:
 YES
 
 - What it fixes
-  - Prevents duplicate sysfs root-domain creation on partitioned systems
-    that expose only one die per package via CPU topology, which leads
-    to a duplicate-name error and probe failure for the second
-    partition.
-  - The duplicate arises because both partitions share the same
-    `package_id`, so the root-domain sysfs name “package_%02d_die_%02d”
-    collides.
+  - On ThinkCentre systems, BIOS WMI calls for certificate operations
+    can return TC‑specific strings that this driver did not recognize.
+    Unknown strings fall back to -EPERM, so a successful operation could
+    be reported as failure, and real failures would be collapsed into a
+    generic error. This creates real user-facing breakage for sysfs
+    writes that manage BIOS certificates.
 
-- Precise change
-  - Adds a guard to skip creating the per-package root domain if the
-    device is for a non-zero partition:
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      tpmi.c:713
-      - Changed from `if (topology_max_dies_per_package() > 1)` to `if
-        (topology_max_dies_per_package() > 1 || plat_info->partition)`.
-  - This ensures only partition 0 attempts the root-domain sysfs,
-    avoiding a collision on partition 1.
+- Where the bug is
+  - Error mapping logic: `tlmi_errstr_to_err()` maps BIOS strings to
+    errno by scanning `tlmi_errs[]`, and returns -EPERM on no match:
+    drivers/platform/x86/lenovo/think-lmi.c:247–257.
+  - All BIOS WMI method wrappers use this path via `tlmi_simple_call()`:
+    drivers/platform/x86/lenovo/think-lmi.c:273–300. Any non-zero
+    mapping is propagated as the sysfs write result.
 
-- Why the issue occurs
-  - Platform partition information is provided via TPMI
-    (`tpmi_get_platform_data`), including `partition` and `package_id`:
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      tpmi.c:590
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      tpmi.c:597
-  - The `partition` field comes from `struct oobmsm_plat_info`, where it
-    denotes the per-package partition id:
-    - include/linux/intel_vsec.h:164
-  - Root-domain sysfs naming uses `package_id` and `die_id`:
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      common.c:274
-      - `sprintf(data->name, "package_%02d_die_%02d", data->package_id,
-        data->die_id);`
-  - On partitioned systems where `topology_max_dies_per_package()`
-    (CPUID-based) returns 1, both partition 0 and 1 attempt to create
-    the same “package_%02d_die_%02d” entry, causing a duplicate.
+- What changed
+  - Added ThinkCentre-specific strings to the mapping table
+    `tlmi_errs[]`:
+    - Success string: `"Set Certificate operation was successful."` →
+      `0`
+    - Specific failure strings: invalid parameter/type/password, retry
+      exceeded, password invalid, operation aborted, no free slots,
+      certificate not found, internal error, certificate too large →
+      appropriate `-EINVAL`, `-EACCES`, `-EBUSY`, `-ENOSPC`, `-EEXIST`,
+      `-EFAULT`, `-EFBIG`
+    - Location: drivers/platform/x86/lenovo/think-lmi.c:207–224
+  - This ensures ThinkCentre BIOS responses are properly interpreted
+    instead of defaulting to -EPERM.
 
-- User-visible impact of the bug
-  - The duplicate sysfs group creation fails; in the TPMI probe path
-    this failure tears down all already-created cluster entries for that
-    device:
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      tpmi.c:721 calls `uncore_freq_add_entry(...)`
-    - drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-      tpmi.c:722–723 jumps to `remove_clusters` on error, removing
-      entries
-  - So this is not just a warning; it can cause probe failure for the
-    second partition, removing uncore controls for that partition.
+- Why it matters in practice
+  - Certificate operations in this driver (e.g., install/update/clear
+    certificate, cert→password) call `tlmi_simple_call()` with
+    ThinkCentre certificate GUIDs (see call sites in
+    `certificate_store()` and `cert_to_password_store()`):
+    drivers/platform/x86/lenovo/think-lmi.c:841, 895–906, 795. With the
+    old table, a genuine success response like `"Set Certificate
+    operation was successful."` would be treated as an error (-EPERM),
+    causing sysfs writes such as `.../authentication/*/certificate` to
+    fail even though the BIOS accepted the operation.
+  - The new entries also surface more precise errno for failures,
+    improving diagnostics for userspace tools and admins.
 
-- Why the fix is safe and minimal
-  - One-line condition change in a single driver; no API/ABI changes.
-  - Only alters behavior when `plat_info->partition != 0`, a case where
-    creating the root domain would conflict. Non-partitioned systems
-    (`partition == 0`) and multi-die systems
-    (`topology_max_dies_per_package() > 1`) are unaffected.
-  - The logic remains consistent with existing behavior that already
-    skips root-domain creation on multi-die systems.
+- Risk and scope
+  - Minimal: a localized addition to a string→errno table; no control
+    flow or architectural changes.
+  - Affects only Lenovo think-lmi driver behavior on ThinkCentre
+    platforms when handling certificate-related WMI responses.
+  - No user-visible API changes beyond correcting erroneous return
+    codes; improves correctness and debuggability.
 
-- Stable backport criteria
-  - Fixes a real bug that affects users of partitioned platforms
-    (duplicate sysfs + probe failure).
-  - Small, contained change with minimal regression risk.
-  - No architectural changes or new features; confined to `platform/x86`
-    Intel uncore-frequency TPMI path.
+- Stable backport fit
+  - Fixes a real user-impacting bug (false -EPERM on success, ambiguous
+    errors).
+  - Small, self-contained, and low-risk.
+  - Confined to platform/x86/lenovo/think-lmi.
 
-Given the above, this is a clear, low-risk bug fix that prevents a
-probe-time failure on partitioned systems and should be backported to
-stable.
+Given the above, this is a good candidate for stable backporting.
 
- .../platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/lenovo/think-lmi.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index bfcf92aa4d69d..3e531fd1c6297 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -638,7 +638,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
+index 0992b41b6221d..e6a2c8e94cfdc 100644
+--- a/drivers/platform/x86/lenovo/think-lmi.c
++++ b/drivers/platform/x86/lenovo/think-lmi.c
+@@ -179,10 +179,21 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
  
- 	auxiliary_set_drvdata(auxdev, tpmi_uncore);
+ static const struct tlmi_err_codes tlmi_errs[] = {
+ 	{"Success", 0},
++	{"Set Certificate operation was successful.", 0},
+ 	{"Not Supported", -EOPNOTSUPP},
+ 	{"Invalid Parameter", -EINVAL},
+ 	{"Access Denied", -EACCES},
+ 	{"System Busy", -EBUSY},
++	{"Set Certificate operation failed with status:Invalid Parameter.", -EINVAL},
++	{"Set Certificate operation failed with status:Invalid certificate type.", -EINVAL},
++	{"Set Certificate operation failed with status:Invalid password format.", -EINVAL},
++	{"Set Certificate operation failed with status:Password retry count exceeded.", -EACCES},
++	{"Set Certificate operation failed with status:Password Invalid.", -EACCES},
++	{"Set Certificate operation failed with status:Operation aborted.", -EBUSY},
++	{"Set Certificate operation failed with status:No free slots to write.", -ENOSPC},
++	{"Set Certificate operation failed with status:Certificate not found.", -EEXIST},
++	{"Set Certificate operation failed with status:Internal error.", -EFAULT},
++	{"Set Certificate operation failed with status:Certificate too large.", -EFBIG},
+ };
  
--	if (topology_max_dies_per_package() > 1)
-+	if (topology_max_dies_per_package() > 1 || plat_info->partition)
- 		return 0;
- 
- 	tpmi_uncore->root_cluster.root_domain = true;
+ static const char * const encoding_options[] = {
 -- 
 2.51.0
 
