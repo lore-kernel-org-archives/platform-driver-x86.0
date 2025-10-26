@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEC8286D70
-	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Oct 2025 21:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278A020CCCA;
+	Sun, 26 Oct 2025 21:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761513386; cv=none; b=Iqiuu3/4msvc5r/DlZIFBm4EhJHFn3uAANnmxyJG+veldSexDY2zXwbKYY1hrQRKBK8hpSMrfUqm/eR4IHo1prCHmi8GwKN634FvLgLqFfAXUVnKWaDLd4lzG6p9zkqetzl1n4Y0zxy0wq8d+GfTBZdZwfoo3RdLjHHcgH3h8ls=
+	t=1761513545; cv=none; b=iuWPUl39f2woIRD2ZBe4sqAP5atxCMuzjLjFplvO6h8NSWp4NhE8fyHndsmX21AKf6/yUDsuaEZM4n1llYMd6eJ2TWtSL3STbYOyGUOqm/mYyAtBCSr/hrLWGqiWRNWLETzBaEYQ6RtqJW21jzA9aOrdFBPZDWCvbVtR5ZCDyJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761513386; c=relaxed/simple;
-	bh=glc21ekWasgPIN8FH4budqg0TYeTSN7avtWCIVontyE=;
+	s=arc-20240116; t=1761513545; c=relaxed/simple;
+	bh=tA8eZgWnlCi9ZrV541Lh/Wxe1Vmica+1ovXprSbL1us=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tNi2fWvZbnhcXnIHwitXxNevzJCmEeT/4rwmn81NzUn3+in+urFPQfsZDnmTyik+kRlHJN+eUICOjZvnm4gZTu//bC/cQMu+dh5tiXZlk6WOsiiYLrzqDhkd/CJFb64dSsUC13yiDDGcajS9kdnlzr03AuT6cFiUzJTZjpdeJzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVrpe3Hj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=auC/ZGw9zp7eUu1Z2n/5udo3TjpAXfrUCjYcGm1yeqczSPiIY2ebBkwGP4qdWAflroGJTD+tNj9PI8zkk7EPnY6ZszT06tWXVOgoWhl+AmldLzKJGLPit4rxPefnv4I0jBTQAB/xWoYb6P2/02zBjxzHOPpabmmAC5KMQBc2rjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R07RrYKZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVrpe3Hj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D43C4CEE7;
-	Sun, 26 Oct 2025 21:16:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R07RrYKZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D1EC4CEE7;
+	Sun, 26 Oct 2025 21:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761513385;
-	bh=glc21ekWasgPIN8FH4budqg0TYeTSN7avtWCIVontyE=;
+	s=k20201202; t=1761513543;
+	bh=tA8eZgWnlCi9ZrV541Lh/Wxe1Vmica+1ovXprSbL1us=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nVrpe3Hj0p9mfCc0OPNee8q76sEiz1tRodw6JJ6FxFHvaf53/Nn9yOqc5owySQtKZ
-	 ybJP461urKAJBlVjMXwv4MNgGI005T0/fIGRfX1eNytH8OHxK2Qpc1H8hpQuRVZnnB
-	 dmV2x0I3lAoKCs87ivj2CYDXhjsjB44xL9ORkbIV9pMmI2G8WxlKLDWA8d+GhYr6R7
-	 TJ3+bu3Psv/bCT0Dgg/LmAFKAa+nhsdk83qzfNd8C9MfRW5NaY1mTsYa1Rm91OkicJ
-	 O3PUa8KsHvvyWZKMYEVsVzaJzXIxJydSCMI31Ermjxc5B7uCWTfs3ZlKo70yKQiR2y
-	 NObMqCpilyFMA==
-Message-ID: <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org>
-Date: Sun, 26 Oct 2025 16:16:23 -0500
+	b=R07RrYKZeksMACcEBL/HG8Vov3V7OO5DDZEOItUdwyrDOY4mueahyXmzgfaySfAdd
+	 i/h/OPlsfItn9gZfoZpFEKNzMS1frHD744DIoy8TgD7Q0U+QXjc2JYR8ioF1Xvw9iU
+	 aO/SFeYjVjRVjpidZbNJ5Nk294XUlpqFeRcHu9q7z7crw6NM7/peas1MrdqvH748hd
+	 Du323oiBTfopmYhLEicmqC02dOvXKXsg13yeDAYwwKzkvsdhvknXk00WttE0ZIKDzd
+	 tq9ep6tRWU6fwl3Ael1olm4BfTWk6F3Fv0lgaTsY9FX3cWbkMK/JkFEhL1u2HAigPg
+	 vfhcgsmj0BdMA==
+Message-ID: <e3f19e6b-9500-4283-aae8-24ebba2bbb60@kernel.org>
+Date: Sun, 26 Oct 2025 16:19:01 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,36 +35,156 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-To: Lars Francke <lars.francke@gmail.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
- platform-driver-x86@vger.kernel.org, Patil Rajesh <Patil.Reddy@amd.com>
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com>
- <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
- <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com>
- <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
- <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: lenovo-wmi-gamezone Use explicit allow
+ list
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+References: <20251026081240.997038-1-derekjohn.clark@gmail.com>
+ <20251026081240.997038-4-derekjohn.clark@gmail.com>
+ <4c3a594b-7a57-4b5e-85c8-e9337d70c7e6@kernel.org>
+ <1411B6CE-132B-4450-BB27-9ED44BD897B0@gmail.com>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
+In-Reply-To: <1411B6CE-132B-4450-BB27-9ED44BD897B0@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/26/25 3:39 PM, Lars Francke wrote:
->> Can you try this attached patch which inserts that flow to see if it
->> helps?
-> 
-> I haven't build my own kernel in a good 20 years, I'm on it though.
-> I've applied it on top of 6.17.5 - is that good or do I need something
-> newer (6.18 or similar)?
-> 
-> Thanks!
+On 10/26/25 2:22 PM, Derek J. Clark wrote:
+> On October 26, 2025 10:50:40 AM PDT, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>>
+>> On 10/26/25 3:12 AM, Derek J. Clark wrote:
+>>> The stubbed extreme mode issue seems to be more prevalent than previously
+>>> thought with multiple users having reported BIOS bugs from setting
+>>> "performance" when using userspace tools such as PPD. To avoid this ever
+>>> being possible, make enabling extreme mode an explicit allow list instead.
+>>> These users will still be able to set extreme mode using the Fn+Q keyboard
+>>> chord, so no functionality is lost. Currently no models have been
+>>> validated with extreme mode.
+>>
+>> So what exactly happens when a user uses FN+Q to change to extreme mode but it's now in the allow list?  Does it report as "custom" mode?
+>>
+> It turns out I got a correction after posting this that I'll need to include for v2. Extreme is never actually set using Fn+Q and can only be set in software. In that case, functionality is lost (though extreme should match custom mode default values, so only slightly). The only chance this could happen realistically would be if a user switched from windows in extreme mode and then booted windows, since the setting is retained.
 
-6.17.5 should be fine.  But I suggest you add both patches.  It would be 
-a nice confirmation if the other patch fixes your power off after 
-hibernate issue.
+Is retaining the setting across reboots/OSes the "expected" behavior? 
+Or should it be resetting to balanced at startup?
+
+If you set it explicitly to balanced when the module is loaded that 
+would help to alleviate any of these corner cases.
+> 
+> TBS, I'm asking some folks to test exactly that situation so we can know definitely. My assumption was that it would report extreme normally but not be setable.
+> 
+>> I feel like this is going to turn into an impedance mismatch.  I'm leaning it's better to just expose extreme mode so that userspace knows what's actually going on.
+> 
+> It's possible, I'll wait for confirmation of the behavior from someone with the affected hardware.
+
+OK.
+
+> 
+> Thanks,
+> Derek
+> 
+>> I feel the bug situation will actually improve because PPD and Tuned have no idea what extreme mode means so it won't be "easy" to get into it.  This at least will allow discovery of BIOS bugs as well that can then get reported and fixed in BIOS.
+>>
+>>>
+>>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>>> ---
+>>>    .../wmi/devices/lenovo-wmi-gamezone.rst       | 10 +++---
+>>>    drivers/platform/x86/lenovo/wmi-gamezone.c    | 33 ++-----------------
+>>>    2 files changed, 8 insertions(+), 35 deletions(-)
+>>>
+>>> diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>>> index 6c908f44a08e..79051dc62022 100644
+>>> --- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>>> +++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>>> @@ -31,11 +31,11 @@ The following platform profiles are supported:
+>>>    Extreme
+>>>    ~~~~~~~~~~~~~~~~~~~~
+>>>    Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
+>>> -enabled in their BIOS.
+>>> -
+>>> -For some newer devices the "Extreme Mode" profile is incomplete in the BIOS
+>>> -and setting it will cause undefined behavior. A BIOS bug quirk table is
+>>> -provided to ensure these devices cannot set "Extreme Mode" from the driver.
+>>> +enabled in their BIOS. For some newer devices the "Extreme Mode" profile
+>>> +is incomplete in the BIOS and setting it will cause undefined behavior. To
+>>> +prevent ever setting this on unsupported hardware, an explicit allow quirk
+>>> +table is provided with all validated devices. This ensures only fully
+>>> +supported devices can set "Extreme Mode" from the driver.
+>>>      Custom Profile
+>>>    ~~~~~~~~~~~~~~
+>>> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
+>>> index faabbd4657bd..0488162a7194 100644
+>>> --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
+>>> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
+>>> @@ -47,10 +47,6 @@ struct quirk_entry {
+>>>    	bool extreme_supported;
+>>>    };
+>>>    -static struct quirk_entry quirk_no_extreme_bug = {
+>>> -	.extreme_supported = false,
+>>> -};
+>>> -
+>>>    /**
+>>>     * lwmi_gz_mode_call() - Call method for lenovo-wmi-other driver notifier.
+>>>     *
+>>> @@ -241,31 +237,8 @@ static int lwmi_gz_profile_set(struct device *dev,
+>>>    	return 0;
+>>>    }
+>>>    +/* Explicit allow list */
+>>>    static const struct dmi_system_id fwbug_list[] = {
+>>> -	{
+>>> -		.ident = "Legion Go 8APU1",
+>>> -		.matches = {
+>>> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>>> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8APU1"),
+>>> -		},
+>>> -		.driver_data = &quirk_no_extreme_bug,
+>>> -	},
+>>> -	{
+>>> -		.ident = "Legion Go S 8APU1",
+>>> -		.matches = {
+>>> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>>> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8APU1"),
+>>> -		},
+>>> -		.driver_data = &quirk_no_extreme_bug,
+>>> -	},
+>>> -	{
+>>> -		.ident = "Legion Go S 8ARP1",
+>>> -		.matches = {
+>>> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>>> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8ARP1"),
+>>> -		},
+>>> -		.driver_data = &quirk_no_extreme_bug,
+>>> -	},
+>>>    	{},
+>>>      };
+>>> @@ -278,7 +251,7 @@ static const struct dmi_system_id fwbug_list[] = {
+>>>     * Anything version 5 or lower does not. For devices with a version 6 or
+>>>     * greater do a DMI check, as some devices report a version that supports
+>>>     * extreme mode but have an incomplete entry in the BIOS. To ensure this
+>>> - * cannot be set, quirk them to prevent assignment.
+>>> + * cannot be set, quirk them to enable assignment.
+>>>     *
+>>>     * Return: bool.
+>>>     */
+>>> @@ -292,7 +265,7 @@ static bool lwmi_gz_extreme_supported(int profile_support_ver)
+>>>      	dmi_id = dmi_first_match(fwbug_list);
+>>>    	if (!dmi_id)
+>>> -		return true;
+>>> +		return false;
+>>>      	quirks = dmi_id->driver_data;
+>>>    
+>>
+> 
+
