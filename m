@@ -1,243 +1,754 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E7E1E32D7
-	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Oct 2025 19:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761506535; cv=none; b=a7E8PNttvIQ184s9VlG921ovmbLH3YrlxmFEFG53wDjPya//myfPYuLW8kR8dQQgnmsYipp4gGjDwmTlsaMObTN8MI4TWDm15V+t+oma3rCWpw3lKt0S7BTyA6KPMBaAz8NiOZuavZe6F6I/hpbqXdVpbAgToSxYNe1HNphxDS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761506535; c=relaxed/simple;
-	bh=5hh5H/oXzBOIk5wRb5bURfhtxKr6bwusAlI0LKPWHHs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Xrwidf5PGkGCBjojIdBUFxZWy0J5pS19fQQoRl1QtcSRsFQO19+dq1rrBLAamIe8pP3vTxu1GlyDk6MMK73t0EzTTMTXweFUIh6a+hrFfavYV0wAe1wtejgyjAbX07I8pHt2/B3JbpqwGwsE8lwHlbxz23WCbsA1W40xj2joHXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyO/C/Ke; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233D71E1E00;
+	Sun, 26 Oct 2025 19:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761508076; cv=pass; b=jjbHY2fbSe5SQU/8yHhoHw3n2wdDR7NVtRW5HvekbX0MyTi/WrHjCqYkdWN0egO3rzZogZ/7oCqpvVpwF5dxKmPAmKiLmQ9BLrN3L5H9BMZmb4AEXK46QTF2bgVKLyGpXol9B88nwx4p+rT+3BHIW2Z13oYRCLQvV1/leZQF4C0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761508076; c=relaxed/simple;
+	bh=+RNCyXa5w52X8C1BWZy7t/36pktAzlYxyCCeQSo9o7g=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=IISiLWnXluOBL7bRC661XRNI9oAEU3ZNYUKPee1FSCjVvwqoaNnO/Pjwg264c4yNa7xZ5tKyuM+kEBJr/XYkpPmUnYABVY5GYFK5yDU5BgTM35Z/EuqzyUb1DULLQNnoDpzKjY2ZDgPd+dt3+2Uize5bbV9XcjBPBG7OmpPtPPg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=fn9tinKz; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyO/C/Ke"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-28e7cd6dbc0so48936765ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Oct 2025 12:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761506533; x=1762111333; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1cH1BE6LpM8SseHBjfqUwIPHTH/EsEqQa5n5M8ASBCQ=;
-        b=OyO/C/KewCtnyWNqEnLPQLrZ73QwD76MOyotmGev7xz2s7imCpmHaRYEPY7DV45D+K
-         MKkdY1zczZW15vyi8OTrYRwaFtwy/8QVg3NaogDYLJTsPCzbM2EfnKtb2ukQo8Xnz+eK
-         +pknXZm2w62b/xNwKYB+Yh+IJOlAAzEI0LaIknGBexGEO7ASCP5phW2ZPj/Z0li9VX8d
-         VsvYC1/Vr4CbSwBVEJw0Zi17vdbhfb436x+Qys7fa3o9+lr9ClOSfz0Ei/bquDN7Upx9
-         9YYrdXnbDf38R7cFxteMeHxt3/acSADznoOqG35+YXDmvvIMxodllZZM0SpDHB88141v
-         Tv4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761506533; x=1762111333;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1cH1BE6LpM8SseHBjfqUwIPHTH/EsEqQa5n5M8ASBCQ=;
-        b=uhXVsHoRGTL2Xn8yRXwT4oQTDug9YpEoOTqUnSSwNMoaY+5DyeRrzyT39UoFOu5bAY
-         Y9kpNk4SKralEHTBNs0jrj47jBX2linD93P1qROB6hZEbHjztcWsgZGm/FUzQyZEC8et
-         10No1yhcmvCuQAyQ7jOAMZl1mCiW8Vm3JS22gneoxOJRMEs6GTpDXQrdm8g/bpOKvNz0
-         pTiLK7VT9lSQxkSca68XPE0JqYuzaa75/x/vyje+aasMjiORAqPjIon6XylDoxQ5fTmJ
-         HVwFhw6i+v1OCb6SylHX24VrNZhoxI3pw4OYwUcqzfgB/U29LX6/h/tqPKVDBk8Z3kkE
-         PKbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYz0Ab0F9MFMIAeul4/cHKd8z9sefYUMElTFQZBndx+V7jxBmXkWOXAjlXltUlhJpbG8lIjB+3IDKdh+M3F3fUgOAn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxivRQSnzVyKt5rC8jbuVq6TB46/5QEDdg0ZipLxLeXf57e0ND1
-	66gXhMgsWqvSIVjzzVPwCscKLQ0q9bzCxiPllbgCVTsmyColCGgxcNDp
-X-Gm-Gg: ASbGncu65tLtR3AuYUvx+zT4bB/Yh1J+BT1qhfOPW9GsPnAMsLe39ImqPNjZOZltJZH
-	dp9sLeBxhKBQe3BUypN4rEyA8nYyyz/wJq+OVeFbmhYIA+nXthoXbqbb9gGGIUYCset0c7Q85Gi
-	IVaEreP1h6IJbch30AxVJFB/AL1P5wDqzGqRfYvJV26/JZcb/nj9vlox6RkO3fTVHKFSFnjSKKB
-	sL8uz4J9TgiWslVhjx95YYi04l8O5J6e5g3onoHmSeLP8zIWuFIO0GEhc1ZsUwPfDGzzECANcEZ
-	LF735V4dDWEMnpfAPE8Nty/yF1qPvuqFAx0MmnhoMD8/xpOyk5e3yd4VPYdBDlY286TOJBr7p//
-	/W8noCC9q3nmrYQQLvXCdRio2dIUqQHz5bkQjvegwfK6EKF7Gor6ab7fQffXk/Dp6H2Zlb2B+gy
-	aHYj6BqFJwHTAnCJOKRP/p0PLFuD7qlwQACguudwppFXRudLcOc5Dr1WmEyQDnqsaEvMmbKR4Hr
-	/OBDoAKzQ==
-X-Google-Smtp-Source: AGHT+IFMIx69T+JS0cQNaPJFmjTEG7wAJoCKtPMQG11v348ofORNvuy7yrfbSjNjsTsoBsw5YAadrg==
-X-Received: by 2002:a17:903:32c6:b0:28b:4ca5:d522 with SMTP id d9443c01a7336-2948ba3bb60mr129121165ad.39.1761506532935;
-        Sun, 26 Oct 2025 12:22:12 -0700 (PDT)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33fed81b40fsm5863762a91.16.2025.10.26.12.22.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Oct 2025 12:22:12 -0700 (PDT)
-Date: Sun, 26 Oct 2025 12:22:10 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-CC: Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_3/3=5D_platform/x86=3A_lenovo?=
- =?US-ASCII?Q?-wmi-gamezone_Use_explicit_allow_list?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <4c3a594b-7a57-4b5e-85c8-e9337d70c7e6@kernel.org>
-References: <20251026081240.997038-1-derekjohn.clark@gmail.com> <20251026081240.997038-4-derekjohn.clark@gmail.com> <4c3a594b-7a57-4b5e-85c8-e9337d70c7e6@kernel.org>
-Message-ID: <1411B6CE-132B-4450-BB27-9ED44BD897B0@gmail.com>
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="fn9tinKz"
+ARC-Seal: i=1; a=rsa-sha256; t=1761508049; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Hwps+Xaqiy/QZ3SQku9ZGY/3Xf0gtkBQCkIHTFufNpB67I5Uzk/oyU4yWIEmBAYsHRZvULYLmkmhDQ0fQcmonmgjMxlBS4uKG3a4F/YF5Z9fMUGfSdP2GDrjTQdoxm+6xgWSgZzYM5uzGYK/ccLFFnIVuXbNyQodeMG9hSSfELo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761508049; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HApt658oQSNyaovbOlP+uq9k8sXD7EqjmkusPmFYdGY=; 
+	b=gxDd4NclScBl6DCvy3ptmyrHAh6gLdwtMEuBZaeuEny0FIMbu88LEd/m8/wTrPHs9nn4Sf/Xi7q9xi/fS6PcDF4jZNyxWM28W7uC+0IdZy0wM4r9t2OuQZw7c8UMlp/v/Tq3CouVsRxqxBb9Wqe8N+2Kc1qiUKs0Ps2tsP/qBT8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761508049;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=HApt658oQSNyaovbOlP+uq9k8sXD7EqjmkusPmFYdGY=;
+	b=fn9tinKzIrRcIZcqSGl1036XQETjGIQ5YsWm9VSWGgZ1GKtRwZaQjPha1bbtqBEe
+	DVdWI2pUQ9SW5UShToNuFSO0ZC7vANMrffSWL8FHzX/uCnCjGkOr40A+UbVty2jhuzI
+	G6Djrlg1VMww17PCF7mbnD2Gpp8iRKdwS8YPPNFo=
+Received: by mx.zohomail.com with SMTPS id 1761508048425502.2006898630765;
+	Sun, 26 Oct 2025 12:47:28 -0700 (PDT)
+Message-ID: <d498a1ca58eac5689dae68fffc29440ba75a5faf.camel@rong.moe>
+Subject: Re: [PATCH 4/6] platform/x86: lenovo-wmi-other: Add HWMON for fan
+ speed RPM
+From: Rong Zhang <i@rong.moe>
+To: Derek John Clark <derekjohn.clark@gmail.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Guenter Roeck <linux@roeck-us.net>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org
+In-Reply-To: <CAFqHKTkOZUfDb8cGbGnVPCS9wNbOBsiyOk_MkZR-2_Za6ZPMng@mail.gmail.com>
+References: <20251019210450.88830-1-i@rong.moe>
+	 <20251019210450.88830-5-i@rong.moe>
+	 <CAFqHKTkOZUfDb8cGbGnVPCS9wNbOBsiyOk_MkZR-2_Za6ZPMng@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 27 Oct 2025 03:42:22 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
+X-ZohoMailClient: External
 
-On October 26, 2025 10:50:40 AM PDT, Mario Limonciello <superm1@kernel=2Eor=
-g> wrote:
->
->
->On 10/26/25 3:12 AM, Derek J=2E Clark wrote:
->> The stubbed extreme mode issue seems to be more prevalent than previous=
-ly
->> thought with multiple users having reported BIOS bugs from setting
->> "performance" when using userspace tools such as PPD=2E To avoid this e=
-ver
->> being possible, make enabling extreme mode an explicit allow list inste=
-ad=2E
->> These users will still be able to set extreme mode using the Fn+Q keybo=
-ard
->> chord, so no functionality is lost=2E Currently no models have been
->> validated with extreme mode=2E
->
->So what exactly happens when a user uses FN+Q to change to extreme mode b=
-ut it's now in the allow list?  Does it report as "custom" mode?
->
-It turns out I got a correction after posting this that I'll need to inclu=
-de for v2=2E Extreme is never actually set using Fn+Q and can only be set i=
-n software=2E In that case, functionality is lost (though extreme should ma=
-tch custom mode default values, so only slightly)=2E The only chance this c=
-ould happen realistically would be if a user switched from windows in extre=
-me mode and then booted windows, since the setting is retained=2E
+Hi Derek,
 
-TBS, I'm asking some folks to test exactly that situation so we can know d=
-efinitely=2E My assumption was that it would report extreme normally but no=
-t be setable=2E
+On Sat, 2025-10-25 at 22:23 -0700, Derek John Clark wrote:
+> On Sun, Oct 19, 2025 at 2:05=E2=80=AFPM Rong Zhang <i@rong.moe> wrote:
+> >=20
+> > Register an HWMON device for fan spped RPM according to Capability Data
+> > 00 provided by lenovo-wmi-capdata. The corresponding HWMON nodes are:
+> >=20
+> >  - fanX_enable: enable/disable the fan (tunable)
+> >  - fanX_input: current RPM
+> >  - fanX_target: target RPM (tunable)
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> >  .../wmi/devices/lenovo-wmi-other.rst          |   5 +
+> >  drivers/platform/x86/lenovo/Kconfig           |   1 +
+> >  drivers/platform/x86/lenovo/wmi-other.c       | 324 +++++++++++++++++-
+> >  3 files changed, 317 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documenta=
+tion/wmi/devices/lenovo-wmi-other.rst
+> > index adbd7943c6756..cb6a9bfe5a79e 100644
+> > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > @@ -31,6 +31,11 @@ under the following path:
+> >=20
+> >    /sys/class/firmware-attributes/lenovo-wmi-other/attributes/<attribut=
+e>/
+> >=20
+> > +Besides, this driver also exports fan speed RPM to HWMON:
+> > + - fanX_enable: enable/disable the fan (tunable)
+> > + - fanX_input: current RPM
+> > + - fanX_target: target RPM (tunable)
+> > +
+> >  LENOVO_CAPABILITY_DATA_00
+> >  -------------------------
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86=
+/lenovo/Kconfig
+> > index fb96a0f908f03..be9af04511462 100644
+> > --- a/drivers/platform/x86/lenovo/Kconfig
+> > +++ b/drivers/platform/x86/lenovo/Kconfig
+> > @@ -263,6 +263,7 @@ config LENOVO_WMI_GAMEZONE
+> >  config LENOVO_WMI_TUNING
+> >         tristate "Lenovo Other Mode WMI Driver"
+> >         depends on ACPI_WMI
+> > +       select HWMON
+> >         select FW_ATTR_CLASS
+> >         select LENOVO_WMI_DATA
+> >         select LENOVO_WMI_EVENTS
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform=
+/x86/lenovo/wmi-other.c
+> > index 20c6ff0be37a1..f8771ed3c6642 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -14,7 +14,15 @@
+> >   * These attributes typically don't fit anywhere else in the sysfs and=
+ are set
+> >   * in Windows using one of Lenovo's multiple user applications.
+> >   *
+> > + * Besides, this driver also exports tunable fan speed RPM to HWMON.
+> > + *
+> >   * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> > + *   - fw_attributes
+> > + *   - binding to Capability Data 01
+> > + *
+> > + * Copyright (C) 2025 Rong Zhang <i@rong.moe>
+> > + *   - HWMON
+> > + *   - binding to Capability Data 00
+> >   */
+> >=20
+> >  #include <linux/acpi.h>
+> > @@ -25,6 +33,7 @@
+> >  #include <linux/device.h>
+> >  #include <linux/export.h>
+> >  #include <linux/gfp_types.h>
+> > +#include <linux/hwmon.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/kdev_t.h>
+> >  #include <linux/kobject.h>
+> > @@ -43,12 +52,20 @@
+> >=20
+> >  #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+> >=20
+> > +#define LWMI_SUPP_VALID BIT(0)
+> > +#define LWMI_SUPP_MAY_GET (LWMI_SUPP_VALID | BIT(1))
+> > +#define LWMI_SUPP_MAY_SET (LWMI_SUPP_VALID | BIT(2))
+> > +
+> >  #define LWMI_DEVICE_ID_CPU 0x01
+> >=20
+> >  #define LWMI_FEATURE_ID_CPU_SPPT 0x01
+> >  #define LWMI_FEATURE_ID_CPU_SPL 0x02
+> >  #define LWMI_FEATURE_ID_CPU_FPPT 0x03
+> >=20
+> > +#define LWMI_DEVICE_ID_FAN 0x04
+> > +
+> > +#define LWMI_FEATURE_ID_FAN_RPM 0x03
+> > +
+> >  #define LWMI_TYPE_ID_NONE 0x00
+> >=20
+> >  #define LWMI_FEATURE_VALUE_GET 17
+> > @@ -59,7 +76,18 @@
+> >  #define LWMI_ATTR_MODE_ID_MASK GENMASK(15, 8)
+> >  #define LWMI_ATTR_TYPE_ID_MASK GENMASK(7, 0)
+> >=20
+> > +/* Only fan1 and fan2 are present on supported devices. */
+> > +#define LWMI_FAN_ID_BASE 1
+> > +#define LWMI_FAN_NR 2
+> > +#define LWMI_FAN_ID(x) ((x) + LWMI_FAN_ID_BASE)
+> > +
+> > +#define LWMI_ATTR_ID_FAN_RPM(x)                                       =
+         \
+> > +       (FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, LWMI_DEVICE_ID_FAN) |       =
+ \
+> > +        FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, LWMI_FEATURE_ID_FAN_RPM) | =
+ \
+> > +        FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, LWMI_FAN_ID(x)))
+> > +
+> >  #define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
+> > +#define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
+> >=20
+> >  static BLOCKING_NOTIFIER_HEAD(om_chain_head);
+> >  static DEFINE_IDA(lwmi_om_ida);
+> > @@ -76,15 +104,256 @@ struct lwmi_om_priv {
+> >         struct component_master_ops *ops;
+> >=20
+> >         /* only valid after capdata bind */
+> > +       struct cd_list *cd00_list;
+> >         struct cd_list *cd01_list;
+> >=20
+> > +       struct device *hwmon_dev;
+> >         struct device *fw_attr_dev;
+> >         struct kset *fw_attr_kset;
+> >         struct notifier_block nb;
+> >         struct wmi_device *wdev;
+> >         int ida_id;
+> > +
+> > +       struct fan_info {
+> > +               u32 supported;
+> > +               long target;
+> > +       } fan_info[LWMI_FAN_NR];
+> >  };
+> >=20
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D HWMON (component: lenovo-wmi-capdata 00) =
+=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +
+> > +/**
+> > + * lwmi_om_fan_get_set() - Get or set fan RPM value of specified fan
+> > + * @priv: Driver private data structure
+> > + * @channel: Fan channel index (0-based)
+> > + * @val: Pointer to value (input for set, output for get)
+> > + * @set: True to set value, false to get value
+> > + *
+> > + * Communicates with WMI interface to either retrieve current fan RPM
+> > + * or set target fan speed.
+> > + *
+> > + * Return: 0 on success, or an error code.
+> > + */
+> > +static int lwmi_om_fan_get_set(struct lwmi_om_priv *priv, int channel,=
+ u32 *val, bool set)
+> > +{
+> > +       struct wmi_method_args_32 args;
+> > +       u32 method_id, retval;
+> > +       int err;
+> > +
+> > +       method_id =3D set ? LWMI_FEATURE_VALUE_SET : LWMI_FEATURE_VALUE=
+_GET;
+> > +       args.arg0 =3D LWMI_ATTR_ID_FAN_RPM(channel);
+> > +       args.arg1 =3D set ? *val : 0;
+> > +
+> > +       err =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, method_id,
+> > +                                   (unsigned char *)&args, sizeof(args=
+), &retval);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       if (!set)
+> > +               *val =3D retval;
+> > +       else if (retval !=3D 1)
+> > +               return -EIO;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +/**
+> > + * lwmi_om_hwmon_is_visible() - Determine visibility of HWMON attribut=
+es
+> > + * @drvdata: Driver private data
+> > + * @type: Sensor type
+> > + * @attr: Attribute identifier
+> > + * @channel: Channel index
+> > + *
+> > + * Determines whether a HWMON attribute should be visible in sysfs
+> > + * based on hardware capabilities and current configuration.
+> > + *
+> > + * Return: permission mode, or 0 if invisible.
+> > + */
+> > +static umode_t lwmi_om_hwmon_is_visible(const void *drvdata, enum hwmo=
+n_sensor_types type,
+> > +                                       u32 attr, int channel)
+> > +{
+> > +       struct lwmi_om_priv *priv =3D (struct lwmi_om_priv *)drvdata;
+> > +       bool r =3D false, w =3D false;
+> > +
+> > +       if (type =3D=3D hwmon_fan) {
+> > +               switch (attr) {
+> > +               case hwmon_fan_enable:
+> > +               case hwmon_fan_target:
+> > +                       r =3D w =3D priv->fan_info[channel].supported &=
+ LWMI_SUPP_MAY_SET;
+> > +                       break;
+> > +               case hwmon_fan_input:
+> > +                       r =3D priv->fan_info[channel].supported & LWMI_=
+SUPP_MAY_GET;
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+>=20
+> There is another method in capdata00 that could be useful here
+>=20
+> Fan Test For Diagnostic Software
+> uint32 IDs //0x04050000
+> uint32 Capability //9:by project
+> bit 3: 0: not support LENOVO_FAN_TEST_DATA, 1 support LENOVO_FAN_TEST_DAT=
+A
+> bit 2: 0: not support SetFeatureValue(), 1: support SetFeatureValue()
+> bit 1: 0: not support GetFeatureValue(), 1: support GetFeatureValue()
+> bit 0: 0: not support fan test for diagnostic software, 1: support an
+> test for diagnostic software
 
->I feel like this is going to turn into an impedance mismatch=2E  I'm lean=
-ing it's better to just expose extreme mode so that userspace knows what's =
-actually going on=2E
+The information is useful, thanks for that!
 
-It's possible, I'll wait for confirmation of the behavior from someone wit=
-h the affected hardware=2E
+A quick look at the decompiled ASL code of my device's ACPI tables:
+
+   Package (0x03)
+   {
+       0x04050000,
+       0x07,
+       One
+   },
+
+I've confirmed that the corresponding ACPI method didn't modify the
+return value of 0x04050000.
+
+0x07 means my device supports this interface, GetFeatureValue() and
+SetFeatureValue(); but does not support LENOVO_FAN_TEST_DATA. Is BIT(3)
+only defined in some models (but not on my device)? The data returned
+by LENOVO_FAN_TEST_DATA seems correct and is probably the min/max auto
+points.
+
+My device didn't implement {Get,Set}FeatureValue(0x04050000). What will
+it do when it's implemented?
+
+> I'll discuss below, but it seems like knowing min/max is a good idea
+> before making the sysfs visible.
+>=20
+> > +       if (!r)
+> > +               return 0;
+> > +
+> > +       return w ? 0644 : 0444;
+> > +}
+> > +
+> > +/**
+> > + * lwmi_om_hwmon_read() - Read HWMON sensor data
+> > + * @dev: Device pointer
+> > + * @type: Sensor type
+> > + * @attr: Attribute identifier
+> > + * @channel: Channel index
+> > + * @val: Pointer to store value
+> > + *
+> > + * Reads current sensor values from hardware through WMI interface.
+> > + *
+> > + * Return: 0 on success, or an error code.
+> > + */
+> > +static int lwmi_om_hwmon_read(struct device *dev, enum hwmon_sensor_ty=
+pes type,
+> > +                             u32 attr, int channel, long *val)
+> > +{
+> > +       struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> > +       u32 retval =3D 0;
+> > +       int err;
+> > +
+> > +       if (type =3D=3D hwmon_fan) {
+> > +               switch (attr) {
+> > +               case hwmon_fan_input:
+> > +                       err =3D lwmi_om_fan_get_set(priv, channel, &ret=
+val, false);
+> > +                       if (err)
+> > +                               return err;
+> > +
+> > +                       *val =3D retval;
+> > +                       return 0;
+> > +               case hwmon_fan_enable:
+> > +               case hwmon_fan_target:
+> > +                       /* -ENODATA before first set. */
+>=20
+> Why not query the interface in realtime to know the system state? That
+> would avoid this problem.
+
+My implementation follows the approach of corsair-cpro
+(drivers/hwmon/corsair-cpro.c). hwmon_fan_target is about "how much RPM
+*should* the fan reach?", while hwmon_fan_input is about "how much RPM
+does the fan *really* reach?"
+
+Calling SetFeatureValue(0x040300*) sets the former, while calling
+GetFeatureValue(0x040300*) queries the latter. IIUC, using
+GetFeatureValue(0x040300*) for hwmon_fan_target violates the
+definition, especially when the fan is in auto mode.
+
+> > +                       err =3D (int)priv->fan_info[channel].target;
+> > +                       if (err < 0)
+> > +                               return err;
+> > +
+> > +                       if (attr =3D=3D hwmon_fan_enable)
+> > +                               *val =3D priv->fan_info[channel].target=
+ !=3D 1;
+> > +                       else
+> > +                               *val =3D priv->fan_info[channel].target=
+;
+> > +                       return 0;
+> > +               }
+> > +       }
+> > +
+> > +       return -EOPNOTSUPP;
+> > +}
+> > +
+> > +/**
+> > + * lwmi_om_hwmon_write() - Write HWMON sensor data
+> > + * @dev: Device pointer
+> > + * @type: Sensor type
+> > + * @attr: Attribute identifier
+> > + * @channel: Channel index
+> > + * @val: Value to write
+> > + *
+> > + * Writes configuration values to hardware through WMI interface.
+> > + *
+> > + * Return: 0 on success, or an error code.
+> > + */
+> > +static int lwmi_om_hwmon_write(struct device *dev, enum hwmon_sensor_t=
+ypes type,
+> > +                              u32 attr, int channel, long val)
+> > +{
+> > +       struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> > +       u32 raw;
+> > +       int err;
+> > +
+> > +       if (type =3D=3D hwmon_fan) {
+> > +               switch (attr) {
+> > +               case hwmon_fan_enable:
+> > +               case hwmon_fan_target:
+> > +                       if (attr =3D=3D hwmon_fan_enable) {
+> > +                               if (val =3D=3D 0)
+> > +                                       raw =3D 1; /* stop */
+> > +                               else if (val =3D=3D 1)
+> > +                                       raw =3D 0; /* auto */
+> > +                               else
+> > +                                       return -EINVAL;
+> > +                       } else {
+> > +                               /*
+> > +                                * val > U16_MAX seems safe but meaning=
+less.
+> > +                                */
+> > +                               if (val < 0 || val > U16_MAX)
+>=20
+> I think it might be prudent to only permit these settings if fan speed
+> params can't be known. Pragmatically it ensures userspace is aware of
+> the range of the interface. Per the documentation it should be "safe"
+> as is, but setting below the min fan speed will return it to "auto"
+> mode and the hwmon will be out of sync. Anything above should just be
+> set to the max, if the BIOS is working properly.
+
+On my device, the data returned by LENOVO_FAN_TEST_DATA seems to be the
+min/max auto points. The fan can spin much slower/faster than the
+min/max RPM. Setting below the "real" min RPM stops the fan - setting 0
+is the only way to return it to auto mode.
+
+   # grep . fan1_*
+   grep: fan1_enable: No data available
+   fan1_input:2200
+   fan1_max:5000
+   fan1_min:2200
+   grep: fan1_target: No data available
+   # echo 800 >fan1_target
+   # cat fan1_input
+   800
+   # echo 700 >fan1_target
+   # cat fan1_input
+   700
+   # echo 10000 >fan1_target
+   # cat fan1_input
+   6500
+   # echo 100 >fan1_target
+   # cat fan1_input
+   0
+   # taskset -c 2 stress-ng -c 1 >/dev/null &
+   [1] 37967
+   # cat fan1_input
+   0
+   # echo 0 >fan1_target
+   # cat fan1_input
+   2200
+   # cat fan1_input
+   2600
+
+> IMO the fan speed data is essential to ensuring the hwmon interface is
+> usable and synced. I'd move that patch before this one in the series
+> and make the 0x04050000 method reporting IsSupported required for any
+> of the attributes to be visible, with value checks against the min/max
+> when setting a given fan.
+
+I agree that setting the RPM too low/high may results in HWMON being
+out of sync, which is usually not desired. Will=C2=A0do these in v2.
+
+My extra idea:
+- drop the parameter "ignore_fan_cap".
+- new parameter "expose_all_fans": does not hide fans when missing from
+  LENOVO_FAN_TEST_DATA or when 0x04050000 reports unsupported.
+  0x040300* is always checked to hide missing fans.
+- new parameter "enforce_fan_rpm_range": defaults to true, checks
+  against the min/max RPM from LENOVO_FAN_TEST_DATA while setting
+  target RPM. dev_warn_once() when it exceeds min/max RPM.
+
+> > +                                       return -EINVAL;
+> > +                               raw =3D val;
+> > +                       }
+> > +
+> > +                       err =3D lwmi_om_fan_get_set(priv, channel, &raw=
+, true);
+> > +                       if (err)
+> > +                               return err;
+> > +
+> > +                       priv->fan_info[channel].target =3D raw;
+> > +                       return 0;
+> > +               }
+> > +       }
+> > +
+> > +       return -EOPNOTSUPP;
+> > +}
+> > +
+> > +static const struct hwmon_channel_info * const lwmi_om_hwmon_info[] =
+=3D {
+> > +       /* Must match LWMI_FAN_NR. */
+> > +       HWMON_CHANNEL_INFO(fan,
+> > +                          HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TAR=
+GET,
+> > +                          HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TAR=
+GET),
+> > +       NULL
+> > +};
+> > +
+> > +static const struct hwmon_ops lwmi_om_hwmon_ops =3D {
+> > +       .is_visible =3D lwmi_om_hwmon_is_visible,
+> > +       .read =3D lwmi_om_hwmon_read,
+> > +       .write =3D lwmi_om_hwmon_write,
+> > +};
+> > +
+> > +static const struct hwmon_chip_info lwmi_om_hwmon_chip_info =3D {
+> > +       .ops =3D &lwmi_om_hwmon_ops,
+> > +       .info =3D lwmi_om_hwmon_info,
+> > +};
+> > +
+> > +/**
+> > + * lwmi_om_hwmon_add() - Register HWMON device
+> > + * @priv: Driver private data
+> > + *
+> > + * Initializes capability data and registers the HWMON device.
+> > + *
+> > + * Return: 0 on success, or an error code.
+> > + */
+> > +static int lwmi_om_hwmon_add(struct lwmi_om_priv *priv)
+> > +{
+> > +       struct capdata00 capdata00;
+> > +       int i, err;
+> > +
+> > +       for (i =3D 0; i < LWMI_FAN_NR; i++) {
+>=20
+> There is an assumption here that isn't accurate. Each fan ID
+> corresponds to a specific fan functionality. 01 is CPU Fan, 02 is GPU
+> Fan, 02 is GPU Power Fan, and 04 is System Fan. Not every fan needs to
+> exist, so an ID table might look like this (example from docs):
+>=20
+> illustrate=EF=BC=9A
+> UINT32 NumOfFans =3D 3;
+> NoteBook:
+> 1: CPU Fan ID
+> 2: GPU Fan ID
+> 3: GPU Power Fan ID
+> 4: System Fan ID
+> UINT32 FanId [1,2,4]
+> UINT32 FanMaxSpeed[5400, 5400, 9000];
+> UINT32 FanMinSpeed[1900, 1900, 2000];
+
+Thanks for the information. My device only defines 0x0403000{1,2} in
+LENOVO_CAPABILITY_DATA_00, so I assumed LWMI_FAN_NR =3D=3D 2.
+
+> In such a case, "count" would be 3, but the idx should be 4 going to
+> the hardware because the GPU Power Fan isn't present, while the case
+> fan is.
+
+LWMI_FAN_NR has nothing to do with the actual "count". It is about "how
+many HWMON fan channels are defined?" It exists because HWMON channels
+are defined statically - we hide defined channels when they are missing
+from LENOVO_CAPABILITY_DATA_00 (and LENOVO_FAN_TEST_DATA, if
+available).
+
+The implementation of lenovo-wmi-other doesn't use NumOfFans either -
+it queries LENOVO_FAN_TEST_DATA using fan ID directly. NumOfFans is
+only used when lenovo-wmi-capdata retrieves the data.
+
+This implementation has another advantage: the X in fanX_* is always
+the same as the fan ID in
+LENOVO_CAPABILITY_DATA_00/LENOVO_FAN_TEST_DATA even in your example
+where fan 3 is missing - fan3_* is invisible, fan{1,2,4}_* are exposed.
+
+Given the information, I will define 4 fan channels in v2.
+
+> Thanks,
+> Derek
 
 Thanks,
-Derek
+Rong
 
->I feel the bug situation will actually improve because PPD and Tuned have=
- no idea what extreme mode means so it won't be "easy" to get into it=2E  T=
-his at least will allow discovery of BIOS bugs as well that can then get re=
-ported and fixed in BIOS=2E
->
->>=20
->> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> ---
->>   =2E=2E=2E/wmi/devices/lenovo-wmi-gamezone=2Erst       | 10 +++---
->>   drivers/platform/x86/lenovo/wmi-gamezone=2Ec    | 33 ++--------------=
----
->>   2 files changed, 8 insertions(+), 35 deletions(-)
->>=20
->> diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst b/Docu=
-mentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->> index 6c908f44a08e=2E=2E79051dc62022 100644
->> --- a/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->> +++ b/Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->> @@ -31,11 +31,11 @@ The following platform profiles are supported:
->>   Extreme
->>   ~~~~~~~~~~~~~~~~~~~~
->>   Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" prof=
-ile
->> -enabled in their BIOS=2E
->> -
->> -For some newer devices the "Extreme Mode" profile is incomplete in the=
- BIOS
->> -and setting it will cause undefined behavior=2E A BIOS bug quirk table=
- is
->> -provided to ensure these devices cannot set "Extreme Mode" from the dr=
-iver=2E
->> +enabled in their BIOS=2E For some newer devices the "Extreme Mode" pro=
-file
->> +is incomplete in the BIOS and setting it will cause undefined behavior=
-=2E To
->> +prevent ever setting this on unsupported hardware, an explicit allow q=
-uirk
->> +table is provided with all validated devices=2E This ensures only full=
-y
->> +supported devices can set "Extreme Mode" from the driver=2E
->>     Custom Profile
->>   ~~~~~~~~~~~~~~
->> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone=2Ec b/drivers/pla=
-tform/x86/lenovo/wmi-gamezone=2Ec
->> index faabbd4657bd=2E=2E0488162a7194 100644
->> --- a/drivers/platform/x86/lenovo/wmi-gamezone=2Ec
->> +++ b/drivers/platform/x86/lenovo/wmi-gamezone=2Ec
->> @@ -47,10 +47,6 @@ struct quirk_entry {
->>   	bool extreme_supported;
->>   };
->>   -static struct quirk_entry quirk_no_extreme_bug =3D {
->> -	=2Eextreme_supported =3D false,
->> -};
->> -
->>   /**
->>    * lwmi_gz_mode_call() - Call method for lenovo-wmi-other driver noti=
-fier=2E
->>    *
->> @@ -241,31 +237,8 @@ static int lwmi_gz_profile_set(struct device *dev,
->>   	return 0;
->>   }
->>   +/* Explicit allow list */
->>   static const struct dmi_system_id fwbug_list[] =3D {
->> -	{
->> -		=2Eident =3D "Legion Go 8APU1",
->> -		=2Ematches =3D {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8APU1"),
->> -		},
->> -		=2Edriver_data =3D &quirk_no_extreme_bug,
->> -	},
->> -	{
->> -		=2Eident =3D "Legion Go S 8APU1",
->> -		=2Ematches =3D {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8APU1"),
->> -		},
->> -		=2Edriver_data =3D &quirk_no_extreme_bug,
->> -	},
->> -	{
->> -		=2Eident =3D "Legion Go S 8ARP1",
->> -		=2Ematches =3D {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8ARP1"),
->> -		},
->> -		=2Edriver_data =3D &quirk_no_extreme_bug,
->> -	},
->>   	{},
->>     };
->> @@ -278,7 +251,7 @@ static const struct dmi_system_id fwbug_list[] =3D =
-{
->>    * Anything version 5 or lower does not=2E For devices with a version=
- 6 or
->>    * greater do a DMI check, as some devices report a version that supp=
-orts
->>    * extreme mode but have an incomplete entry in the BIOS=2E To ensure=
- this
->> - * cannot be set, quirk them to prevent assignment=2E
->> + * cannot be set, quirk them to enable assignment=2E
->>    *
->>    * Return: bool=2E
->>    */
->> @@ -292,7 +265,7 @@ static bool lwmi_gz_extreme_supported(int profile_s=
-upport_ver)
->>     	dmi_id =3D dmi_first_match(fwbug_list);
->>   	if (!dmi_id)
->> -		return true;
->> +		return false;
->>     	quirks =3D dmi_id->driver_data;
->>  =20
->
-
+> > +               err =3D lwmi_cd00_get_data(priv->cd00_list, LWMI_ATTR_I=
+D_FAN_RPM(i),
+> > +                                        &capdata00);
+> > +               if (err)
+> > +                       continue;
+> > +
+> > +               priv->fan_info[i] =3D (struct fan_info) {
+> > +                       .supported =3D capdata00.supported,
+> > +                       .target =3D -ENODATA,
+> > +               };
+> > +       }
+> > +
+> > +       priv->hwmon_dev =3D hwmon_device_register_with_info(&priv->wdev=
+->dev, LWMI_OM_HWMON_NAME,
+> > +                                                         priv, &lwmi_o=
+m_hwmon_chip_info, NULL);
+> > +
+> > +       return PTR_ERR_OR_ZERO(priv->hwmon_dev);
+> > +}
+> > +
+> > +/**
+> > + * lwmi_om_hwmon_remove() - Unregister HWMON device
+> > + * @priv: Driver private data
+> > + *
+> > + * Unregisters the HWMON device and resets all fans to automatic mode.
+> > + * Ensures hardware doesn't remain in manual mode after driver removal=
+.
+> > + */
+> > +static void lwmi_om_hwmon_remove(struct lwmi_om_priv *priv)
+> > +{
+> > +       hwmon_device_unregister(priv->hwmon_dev);
+> > +}
+> > +
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D fw_attributes (component: lenovo-wmi-capda=
+ta 01) =3D=3D=3D=3D=3D=3D=3D=3D */
+> > +
+> >  struct tunable_attr_01 {
+> >         struct capdata01 *capdata;
+> >         struct device *dev;
+> > @@ -564,15 +833,17 @@ static void lwmi_om_fw_attr_remove(struct lwmi_om=
+_priv *priv)
+> >         device_unregister(priv->fw_attr_dev);
+> >  }
+> >=20
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D Self (master: lenovo-wmi-other) =3D=3D=3D=
+=3D=3D=3D=3D=3D */
+> > +
+> >  /**
+> >   * lwmi_om_master_bind() - Bind all components of the other mode drive=
+r
+> >   * @dev: The lenovo-wmi-other driver basic device.
+> >   *
+> > - * Call component_bind_all to bind the lenovo-wmi-capdata01 driver to =
+the
+> > - * lenovo-wmi-other master driver. On success, assign the capability d=
+ata 01
+> > - * list pointer to the driver data struct for later access. This point=
+er
+> > - * is only valid while the capdata01 interface exists. Finally, regist=
+er all
+> > - * firmware attribute groups.
+> > + * Call component_bind_all to bind the lenovo-wmi-capdata devices to t=
+he
+> > + * lenovo-wmi-other master driver. On success, assign the capability d=
+ata
+> > + * list pointers to the driver data struct for later access. These poi=
+nters
+> > + * are only valid while the capdata interfaces exist. Finally, registe=
+r the
+> > + * HWMON device and all firmware attribute groups.
+> >   *
+> >   * Return: 0 on success, or an error code.
+> >   */
+> > @@ -586,26 +857,47 @@ static int lwmi_om_master_bind(struct device *dev=
+)
+> >         if (ret)
+> >                 return ret;
+> >=20
+> > -       priv->cd01_list =3D binder.cd01_list;
+> > -       if (!priv->cd01_list)
+> > +       if (!binder.cd00_list && !binder.cd01_list)
+> >                 return -ENODEV;
+> >=20
+> > -       return lwmi_om_fw_attr_add(priv);
+> > +       priv->cd00_list =3D binder.cd00_list;
+> > +       if (priv->cd00_list) {
+> > +               ret =3D lwmi_om_hwmon_add(priv);
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> > +       priv->cd01_list =3D binder.cd01_list;
+> > +       if (priv->cd01_list) {
+> > +               ret =3D lwmi_om_fw_attr_add(priv);
+> > +               if (ret) {
+> > +                       if (priv->cd00_list)
+> > +                               lwmi_om_hwmon_remove(priv);
+> > +                       return ret;
+> > +               }
+> > +       }
+> > +
+> > +       return 0;
+> >  }
+> >=20
+> >  /**
+> >   * lwmi_om_master_unbind() - Unbind all components of the other mode d=
+river
+> >   * @dev: The lenovo-wmi-other driver basic device
+> >   *
+> > - * Unregister all capability data attribute groups. Then call
+> > - * component_unbind_all to unbind the lenovo-wmi-capdata01 driver from=
+ the
+> > - * lenovo-wmi-other master driver. Finally, free the IDA for this devi=
+ce.
+> > + * Unregister the HWMON device and all capability data attribute group=
+s. Then
+> > + * call component_unbind_all to unbind the lenovo-wmi-capdata driver f=
+rom the
+> > + * lenovo-wmi-other master driver.
+> >   */
+> >  static void lwmi_om_master_unbind(struct device *dev)
+> >  {
+> >         struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> >=20
+> > -       lwmi_om_fw_attr_remove(priv);
+> > +       if (priv->cd00_list)
+> > +               lwmi_om_hwmon_remove(priv);
+> > +
+> > +       if (priv->cd01_list)
+> > +               lwmi_om_fw_attr_remove(priv);
+> > +
+> >         component_unbind_all(dev, NULL);
+> >  }
+> >=20
+> > @@ -624,6 +916,9 @@ static int lwmi_other_probe(struct wmi_device *wdev=
+, const void *context)
+> >         if (!priv)
+> >                 return -ENOMEM;
+> >=20
+> > +       /* Sentinel for on-demand ida_free(). */
+> > +       priv->ida_id =3D -EIDRM;
+> > +
+> >         priv->wdev =3D wdev;
+> >         dev_set_drvdata(&wdev->dev, priv);
+> >=20
+> > @@ -654,7 +949,9 @@ static void lwmi_other_remove(struct wmi_device *wd=
+ev)
+> >         struct lwmi_om_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> >=20
+> >         component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> > -       ida_free(&lwmi_om_ida, priv->ida_id);
+> > +
+> > +       if (priv->ida_id >=3D 0)
+> > +               ida_free(&lwmi_om_ida, priv->ida_id);
+> >  }
+> >=20
+> >  static const struct wmi_device_id lwmi_other_id_table[] =3D {
+> > @@ -679,5 +976,6 @@ MODULE_IMPORT_NS("LENOVO_WMI_CD");
+> >  MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+> >  MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
+> >  MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> > +MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
+> >  MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
+> >  MODULE_LICENSE("GPL");
+> > --
+> > 2.51.0
+> >=20
