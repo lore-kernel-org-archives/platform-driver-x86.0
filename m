@@ -1,150 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C2031D39A;
-	Sat, 25 Oct 2025 16:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295561D90DF
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Oct 2025 04:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761409700; cv=none; b=I9aF82a8LYYJEb7cDgEMgMH96BtQnTIoRPOWdCZ3Qx/I8ZGvyAs9xNxFzluBoo+/Xqt42NwqdgyH7KFbdxH+8nPkUfzAdVByHG325L7elcX70FMKAkOdXeq8++lXSqCtZVTvags2Dth61TzWkLeBjWgZW42FES+td9nj/IQGLWU=
+	t=1761453573; cv=none; b=dL0OY/gHWOQijy/P5OlSH67/RSK1YR8rWf1INDZYu0MQwSrYuSXwamYuQfyW6blCjg41RXISQlUliiAmYt+oMagZbd1+X4pvKo02vChjlQg2hIoL/nH/L/XRnLIrz3RH9jod2NSodRI23vqf55Eevd99OtvVFW49d+6WAEW0hGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761409700; c=relaxed/simple;
-	bh=hhVmO8Q3TJXMPMBlG9yOr4wrre1e8Mf+8pKaavnKWGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q9+HG1SxlEizvlK0q/L2BUev6K5/eiKMp36zXeTImivrstwh6vXv7C+2zSpRrxabnvQc8ZZmwH2ySwdmrrCSUoXWq0hoGg2LN/aWGS/BUaaoqmacMry3B7zNhbqAY5oKiI7Y7o5dDEy1gW2Y2zFEhWk5meozvUAAGyDxg1RgojI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6sEz8x8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761453573; c=relaxed/simple;
+	bh=vy5Ll0U3YbQyrkACgE52PX3IgmUHRgbRz926G0fQUbc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K1cUqYJpFeOLT1OkyFu0BNf3XleJKqrBXPLdd0TEUx+7PqvycGn6y11ful8a73XrHyvZiRbGZTtKNAk0cW/nAo+vG54Q8bVCewgoZrVS/TVVLzAWGOxSX9mcyIY8Aimng0m79sUrtRE07+rDOsYhSMuqlaZwkZma/uX06FzthJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FFrEbDiz; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6sEz8x8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFF1C4CEFB;
-	Sat, 25 Oct 2025 16:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761409700;
-	bh=hhVmO8Q3TJXMPMBlG9yOr4wrre1e8Mf+8pKaavnKWGQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B6sEz8x8nVe1gy7Cg2Xzdx0vjDROwXi7PN8vh7dJwgjb/JPwpDXwNIFiOqTxeBpGY
-	 WtKk0UbE9y0VdH38SewDOXuLTCO8k8HyNRx+mBf9LhKEItIbRwTSD5pz5yIRxM3PGy
-	 1dlMpzVSytZhei5WWsb86aNfjmWHwXlW7k5cWVCBZamXC1ZUzVkGLFeBpdfVagCahq
-	 7N5z8Yl8SinNLhN5dqVzwvPlG96iJfZVBQ9TLr/9FqsQ/sJO3oiAavvmxDYDWk4UQg
-	 xA0SQ+FufAxJ7jdzkAhl8ZmajV6ukW2p7TvpyuzAPDB9v3F37RTlhd9Halnpag8xdv
-	 +/eVu2t8P6qmw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17] platform/x86: x86-android-tablets: Stop using EPROBE_DEFER
-Date: Sat, 25 Oct 2025 12:00:57 -0400
-Message-ID: <20251025160905.3857885-426-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFrEbDiz"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4eba67d4b1bso11825821cf.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2025 21:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761453571; x=1762058371; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TzNBy14nkOw/dB7piX3Hy0f3suS2Ffjp6ed0FqlTWN0=;
+        b=FFrEbDizYcYQXrXTCB40m234l9thWm8De0B984BBu8FOlDoc1N9y378nJivBZ9f+j5
+         7MwFSw6F6oudMjFQY+TXsojLr5kY4Pi2oQjwlnv6R5igxTeCjI9Wp3vvhZOFMbk9LUDR
+         zK9QMvDdjDuk1tXcvedcgoKXh5Yw7qQrBjw2qXYk4hhuYL8VQKGBGFpLQ71BozBvk3e5
+         Bkz4d0lKjRZ+qXhl9xdaAgFFl9sunDVeVMu0a4uuiGS6Mokrupyi6jrkJwQ5lRX3OSHK
+         klL/PgUFwR4MdDdeeumvQeGuIQS+HYLejW2hiuM074zkrRGLBS8Qi9armgbvNiGv/Qv8
+         6xNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761453571; x=1762058371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TzNBy14nkOw/dB7piX3Hy0f3suS2Ffjp6ed0FqlTWN0=;
+        b=Q39Vko20HFvcITEStpmvpaPFGrGBzPZe9O5JHwSJQBX0yTvoyy3L+uKtYGXmMY23g9
+         KJ+rzymQRtI5GeyZrq0l0K8DOTzEE+IGfV98bWvdSJnhpTJWq3w6K9NOTbEfCMCt2NAu
+         iq3uNZ4ck1EebuurAPI4nppew5IT6tYvsXqRuE8nAVAZZRk3UFQ/ylrwky9rtWXYNIR0
+         6bpRryjJoj12ji4wTrENk3Ltz/9lg6GSkSC7eQspPYjerDsu4ZfussEO70vNBAoTULtn
+         7ODrW+7IsxypQYkzwiF1YJk9aU7lIfl3L8PeYjsyT9zJuw7FueN5ldYh5WgLlhjtQDc8
+         YOww==
+X-Forwarded-Encrypted: i=1; AJvYcCX2PyzCIfR+H+8W4wfmintaMoaT0iJVymncVrzM6JzA9WWgG49YOwP8aNplMiz15p8ThtlnY8Y3qzo8NRqKU6OvGPWy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyB8py6YuZlD86XKE6dq0r1z5n70eylW0yO2scbqG5JXgtPtyz
+	iedagbqEXYLkzbYztZaUlA4Gv97vuGwNEUP6zBL8YeJ3P+hZ4Hg2bka7IV4eUyC6Z4JNTPyie8V
+	igb1yUX1NWRV06QmDqLYkhcsZOhqNkXs=
+X-Gm-Gg: ASbGnctHhv6oDBL0e+Vq5shpfUjAuamqwjgQ2Hq1mpTvyYV/igQMEaWFCm83O4ZxxKV
+	GHCGyJymI6Uf6PuOIa+UV2Pu+yiOah7nj8KNWUUU3TaDtAALS+kEQ9WlKYvhFeZob1RPVZQnHTu
+	h2eruRY8gpRyMr/j3u41IJ+lcJFkv2K70U+nBam/7mRZ6FTCwyhIJG1CFwLUDV8r6mZlGzBGJdE
+	z/BiFfpuKXrSKP7wPHRoYLwnPY6J6KQGdTZjltgvKvghAeqdJ56upux8q2z9f+jN8ZFieqt
+X-Google-Smtp-Source: AGHT+IEePRJIChmr7Nbfg/5hSN4J3EvnJhbGxzJiKb29WiBVfr4CZE7zQb1z1WDIkxp0P7UbkfzSOlj646+w1Eg72rA=
+X-Received: by 2002:ac8:5e14:0:b0:4e8:9eec:3a91 with SMTP id
+ d75a77b69052e-4eb940f0b2emr81094931cf.26.1761453570970; Sat, 25 Oct 2025
+ 21:39:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Transfer-Encoding: 8bit
+References: <20251019210450.88830-1-i@rong.moe>
+In-Reply-To: <20251019210450.88830-1-i@rong.moe>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Sat, 25 Oct 2025 21:39:20 -0700
+X-Gm-Features: AWmQ_blNweRWEnJyzm71NgB5DybncgYqy6Cjc9ibrZM10MakZmaDOcTATakkos4
+Message-ID: <CAFqHKTkBbtSHfu1bXn8tyjvPSmCOMoWdLyNMv=DRQke679SEPA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] platform/x86: lenovo-wmi-{capdata,other}: Add HWMON
+ for fan speed
+To: Rong Zhang <i@rong.moe>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hans de Goede <hansg@kernel.org>
+On Sun, Oct 19, 2025 at 2:05=E2=80=AFPM Rong Zhang <i@rong.moe> wrote:
+>
+> Lenovo WMI Other Mode interface also supports querying or setting fan
+> speed RPM. This capability is decribed by LENOVO_CAPABILITY_DATA_00.
+> Besides, LENOVO_FAN_TEST_DATA provides reference data for self-test of
+> cooling fans, including minimum and maximum fan speed RPM.
+>
+> This patchset turns lenovo-wmi-capdata01 into a unified driver (now
+> named lenovo-wmi-capdata) for LENOVO_CAPABILITY_DATA_{00,01} and
+> LENOVO_FAN_TEST_DATA; then adds HWMON support for lenovo-wmi-other:
+>
+>  - fanX_enable: enable/disable the fan (tunable)
+>  - fanX_input: current RPM
+>  - fanX_max: maximum RPM
+>  - fanX_min: minimum RPM
+>  - fanX_target: target RPM (tunable)
+>
+> This implementation doesn't require all capability data to be available,
+> and is capable to expose interfaces accordingly:
+>
+>  - Having LENOVO_CAPABILITY_DATA_00: exposes fanX_{enable,input,target}
+>  - Having LENOVO_CAPABILITY_DATA_01: exposes firmware_attributes
+>  - Having LENOVO_FAN_TEST_DATA: exposes fanX_{max,min}
+>
+> Rong Zhang (6):
+>   platform/x86: Rename lenovo-wmi-capdata01 to lenovo-wmi-capdata
+>   platform/x86: lenovo-wmi-{capdata,other}: Support multiple Capability
+>     Data
+>   platform/x86: lenovo-wmi-capdata: Add support for Capability Data 00
+>   platform/x86: lenovo-wmi-other: Add HWMON for fan speed RPM
+>   platform/x86: lenovo-wmi-capdata: Add support for Fan Test Data
+>   platform/x86: lenovo-wmi-other: Report min/max RPM and hide dummy fans
+>
+>  .../wmi/devices/lenovo-wmi-other.rst          |  32 +
+>  drivers/platform/x86/lenovo/Kconfig           |   5 +-
+>  drivers/platform/x86/lenovo/Makefile          |   2 +-
+>  drivers/platform/x86/lenovo/wmi-capdata.c     | 545 ++++++++++++++++++
+>  drivers/platform/x86/lenovo/wmi-capdata.h     |  46 ++
+>  drivers/platform/x86/lenovo/wmi-capdata01.c   | 302 ----------
+>  drivers/platform/x86/lenovo/wmi-capdata01.h   |  25 -
+>  drivers/platform/x86/lenovo/wmi-other.c       | 422 +++++++++++++-
+>  8 files changed, 1028 insertions(+), 351 deletions(-)
+>  create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.c
+>  create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.h
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.c
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.h
+>
+>
+> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+> --
+> 2.51.0
+>
 
-[ Upstream commit 01fd7cf3534aa107797d130f461ba7bcad30414d ]
+The series' intention looks good overall. The composable methods for
+additional capdata interfaces is a welcome change. I have a few
+comments I'll add for a couple of the patches. My apologies for the
+slow review timeline, I've been on travel and wanted to test the
+changes before submitting a review.
 
-Since the x86-android-tablets code uses platform_create_bundle() it cannot
-use EPROBE_DEFER and the driver-core will translate EPROBE_DEFER to ENXIO.
+For testing I'm using my Legion Go 2. It apparently doesn't have the
+FAN_TEST_DATA GUID, and the hwmon interface errors on all inputs
+despite being visible. I know for the Legion Go series they use a fan
+table with 10 auto_set points in the Other Method interface tied to
+the platform profile, but the documentation I have says the methods
+you're adding here should be available on all models, so that is a bit
+strange.
 
-Stop using EPROBE_DEFER instead log an error and return ENODEV, or for
-non-fatal cases log a warning and return 0.
+dmesg output:
+[    3.995549] lenovo_wmi_cd 362A3AFE-3D96-4665-8530-96DAD5BB300E-13:
+registered LENOVO_CAPABILITY_DATA_00 with 33 items
+[    4.000266] lenovo_wmi_cd 7A8F5407-CB67-4D6E-B547-39B3BE018154-9:
+registered LENOVO_CAPABILITY_DATA_01 with 80 items
+[    4.005603] lenovo_wmi_other
+DC2A8805-3A8C-41BA-A6F7-092E0089CD3B-3: bound
+362A3AFE-3D96-4665-8530-96DAD5BB300E-13 (ops lwmi_cd_component_ops
+[lenovo_wmi_capdata])
+[    4.005611] lenovo_wmi_other
+DC2A8805-3A8C-41BA-A6F7-092E0089CD3B-3: bound
+7A8F5407-CB67-4D6E-B547-39B3BE018154-9 (ops lwmi_cd_component_ops
+[lenovo_wmi_capdata])
+[    4.005614] lenovo_wmi_other
+DC2A8805-3A8C-41BA-A6F7-092E0089CD3B-3: fan capdata unavailable
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Hans de Goede <hansg@kernel.org>
-Link: https://patch.msgid.link/20250920200713.20193-21-hansg@kernel.org
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+Testing results:
+(deck@lego2 hwmon5)$ ls
+device  fan1_enable  fan1_input  fan1_target  name  power  subsystem  ueven=
+t
+(deck@lego2 hwmon5)$ cat fan1_enable
+cat: fan1_enable: No data available
+(1)(deck@lego2 hwmon5)$ echo 1 | sudo tee fan1_enable
+[sudo] password for deck:
+1
+tee: fan1_enable: Input/output error
+(1)(deck@lego2 hwmon5)$ echo 0 | sudo tee fan1_enable
+0
+tee: fan1_enable: Input/output error
+(1)(deck@lego2 hwmon5)$ echo 3000 | sudo tee fan1_target
+3000
+tee: fan1_target: Input/output error
+(1)(deck@lego2 hwmon5)$ cat fan1_input
+cat: fan1_input: No such device or address
 
-LLM Generated explanations, may be completely bogus:
-
-YES
-- `__platform_driver_probe()` sets `drv->prevent_deferred_probe = true`
-  and `platform_probe()` converts any `-EPROBE_DEFER` into `-ENXIO` with
-  only a warning (drivers/base/platform.c:935,1408-1410). The
-  x86-android-tablets driver is created through
-  `platform_create_bundle()` (core.c:523-530), so any deferral request
-  from this code path is doomed to a permanent failure of the bundle.
-- Before this commit `get_serdev_controller_by_pci_parent()` returned
-  `ERR_PTR(-EPROBE_DEFER)` when the PCI parent was missing, which
-  immediately tripped the `prevent_deferred_probe` guard and killed the
-  whole probe with an opaque `-ENXIO`. The patch replaces that with an
-  explicit error message and `-ENODEV` (core.c:276-282), aligning the
-  driver with the documented restriction in `x86_android_tablet_probe()`
-  that “it cannot use -EPROBE_DEFER” (core.c:411-416). This removes the
-  bogus deferral while keeping the failure visible to users and
-  diagnostic logs intact.
-- The more severe issue was in `vexia_edu_atla10_9v_init()`: if the
-  expected SDIO PCI function was absent, the code returned
-  `-EPROBE_DEFER`, which, once translated to `-ENXIO`, caused
-  `x86_android_tablet_probe()` to unwind and prevented every board quirk
-  (touchscreen, sensors, etc.) from being instantiated. The fix
-  downgrades this path to a warning and success return
-  (other.c:701-716), allowing the tablet support driver to finish
-  probing even when that optional Wi-Fi controller is missing or late to
-  appear.
-- No behaviour changes occur on the success paths; only error-handling
-  logic is touched, so the regression risk is very low. The change is
-  self-contained, affects just two helper functions, and has no
-  dependency on the rest of the series. Given that the preexisting code
-  can leave entire tablet models without platform devices because of an
-  impossible deferral, this is an important bugfix that fits stable
-  backport criteria.
-
- drivers/platform/x86/x86-android-tablets/core.c  | 6 ++++--
- drivers/platform/x86/x86-android-tablets/other.c | 6 ++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index 2a9c471785050..8c8f10983f289 100644
---- a/drivers/platform/x86/x86-android-tablets/core.c
-+++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -277,8 +277,10 @@ get_serdev_controller_by_pci_parent(const struct x86_serdev_info *info)
- 	struct pci_dev *pdev;
- 
- 	pdev = pci_get_domain_bus_and_slot(0, 0, info->ctrl.pci.devfn);
--	if (!pdev)
--		return ERR_PTR(-EPROBE_DEFER);
-+	if (!pdev) {
-+		pr_err("error could not get PCI serdev at devfn 0x%02x\n", info->ctrl.pci.devfn);
-+		return ERR_PTR(-ENODEV);
-+	}
- 
- 	/* This puts our reference on pdev and returns a ref on the ctrl */
- 	return get_serdev_controller_from_parent(&pdev->dev, 0, info->ctrl_devname);
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index f7bd9f863c85e..aa4f8810974d5 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -809,8 +809,10 @@ static int __init vexia_edu_atla10_9v_init(struct device *dev)
- 
- 	/* Reprobe the SDIO controller to enumerate the now enabled Wifi module */
- 	pdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0x11, 0));
--	if (!pdev)
--		return -EPROBE_DEFER;
-+	if (!pdev) {
-+		pr_warn("Could not get PCI SDIO at devfn 0x%02x\n", PCI_DEVFN(0x11, 0));
-+		return 0;
-+	}
- 
- 	ret = device_reprobe(&pdev->dev);
- 	if (ret)
--- 
-2.51.0
-
+Thanks,
+Derek
