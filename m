@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837585C96
-	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Oct 2025 17:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ABD2264CF;
+	Sun, 26 Oct 2025 17:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761500671; cv=none; b=ihsyVGFj/6KbZWXNEMwMHYHxQcApc5akt5mwCs+ZXgShQP7VKB313mJcPrIQJTivhJbvbOGjBfFLoSvcg8Y2wqqXCNOLSmt7tGgAm2qu8ZtkvaTdOvDDsK/eOBaT9Q2Y7Rna9KFaQEK7odrqMO/hkI0IsZGnezC5cDrGkiqFbJE=
+	t=1761501043; cv=none; b=WYyv+uM4hY6xnes0QfD+5o09nzvai9Zx94gnORquGemYNIt2MKT3gFlm+Lmwf9lVgiRzHdJK2r3ORIXml+mz9P8bmtQNvlwiJL3K3jQgw4y05ZyPhGdYNVs0S0kylfyWaOGlnTGu7brx6tHanhNA2CXGVrx98+8wNF2IReY+C9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761500671; c=relaxed/simple;
-	bh=Fr2yYU0eXlXpfb8Q7mUd0Jj7dy5WARRNOmcfBfV8mBM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JZqe1BY1mcW+ILUH8us9M6f4y1zT6SFBXQE61MfQsoKpcuwWZlLJDJqICCwikOYX3ecu1I1xqu7vv/47b/ryOXQCTran+CSDCOXXtHiJ1OqxS0MIBDHGxdKfW8PU36G27z/KicVTmENvJL35H+eNqIYpol+UHq64y3QFG/2hGYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPQ7Okjr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761501043; c=relaxed/simple;
+	bh=liSMpe60PodcwFd6ppXcZD7qBvCHIlF/WVEGjJ6nEmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Adh+yvX2TwRJfTYF6Q4WQOst6n5nG/cPQW3onWNLq37UMGGaTQvWJDcujW6qbkXQiNGulFlq4zX6bPjTpJkq0jekiW6GCtsJiY4aa7jp+FNYB5URr9JXBmaSNFaZAPxJaipIylogDVE+iuJawAM/PYdYP6bU8f30uSbDoya2HDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3HXg6wC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPQ7Okjr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1FCC4CEE7;
-	Sun, 26 Oct 2025 17:44:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3HXg6wC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A33C6C4CEE7;
+	Sun, 26 Oct 2025 17:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761500671;
-	bh=Fr2yYU0eXlXpfb8Q7mUd0Jj7dy5WARRNOmcfBfV8mBM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=mPQ7Okjr2k/oYM9muSnsSzg4s126/TtlRLwV6KVh4MjLIi44Zde1Iq18atUfhkcO8
-	 PN+1lkpP/b52/zG4+CHKmktfaErT7XLtU5+hQM5tRYSDbIySv4f2p5Ue4DOcX7D9u/
-	 WIKZ+TtHP3LT3nhBz0hBQNhi4FujBcxdRZaaxNya16OSc8O6rcYYDFEqexySna+PLZ
-	 Z7zSI7UB/xknWbGBzOqHfki8VPshri/DJ0aQmPzxJSCJaWjfJCFXd9OmjpISJwR+wL
-	 fNY7hQGAg4I/cw9MHrOTiatnrnW0AmL+6/jTLRTB/dgdRBbnWsGYiztR+nBdlMnK2a
-	 sQdoBV7YReWTg==
-Message-ID: <c6f2002f-abc4-4d63-a143-1c3e466cbeff@kernel.org>
-Date: Sun, 26 Oct 2025 12:44:29 -0500
+	s=k20201202; t=1761501042;
+	bh=liSMpe60PodcwFd6ppXcZD7qBvCHIlF/WVEGjJ6nEmQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D3HXg6wCG/CDSXsMFjPaXG/GwA37ZfhaeIelkYutujxiyzaE5+B7JmW3/U7Sssjup
+	 TVjVCF4a+yyuY/sccrejEoTq3wPAtpAI9iZqE8T+1HRdNx1c12yCPH7DFhf63eqwAd
+	 5wjnIUd3Mm1dwcyR02VnhgZtN8WvSOvWoTcOujl71z8lc3T8BfFkfPY38SWyqhPVW+
+	 x2EMPTaPA/76tQPUCzw+AaNKKJA1CsDKzdaKo4IyHBOPmPfJimZ4s5xoiOLMyowXTO
+	 S+H0dK6fBnjop0T3kiTj5z0RJ78YkvRwFTbg0feFzn0DlDt/0w8fwgypD+oPQWHXGy
+	 CkfJVY1GDMhmg==
+Message-ID: <4c3a594b-7a57-4b5e-85c8-e9337d70c7e6@kernel.org>
+Date: Sun, 26 Oct 2025 12:50:40 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,109 +35,142 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-From: Mario Limonciello <superm1@kernel.org>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Lars Francke <lars.francke@gmail.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
- platform-driver-x86@vger.kernel.org, Patil Rajesh <Patil.Reddy@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com>
- <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
- <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com>
- <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: lenovo-wmi-gamezone Use explicit allow
+ list
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+References: <20251026081240.997038-1-derekjohn.clark@gmail.com>
+ <20251026081240.997038-4-derekjohn.clark@gmail.com>
 Content-Language: en-US
-In-Reply-To: <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20251026081240.997038-4-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 10/26/25 12:40 PM, Mario Limonciello wrote:
-> 
-> 
-> On 10/26/25 11:49 AM, Shyam Sundar S K wrote:
->> + Mario
->>
->> On 10/26/2025 22:16, Lars Francke wrote:
->>> Hi,
->>>
->>> thank you Mario for the super quick response.
->>> It arrived so fast I missed it.
->>>
->>> On Sun, Oct 26, 2025 at 3:17 PM Shyam Sundar S K
->>> <Shyam-sundar.S-k@amd.com> wrote:
->>>>> After resuming from hibernation I get this log line once a second:
->>>>>    amd-pmf AMDI0105:00: TEE enact cmd failed. err: ffff000e, ret:0
->>>>
->>>> Can you please share full dmesg log? Perhaps with both ccp and amd_tee
->>>> drivers enabled with dynamic debug.
->>>
->>> I have (with AI help, but reviewed manually) created a shell script to
->>> collect the necessary information. I have attached the full dmesg file
->>> to this mail but am not sure if that is proper etiquette here?
->>>
->>> I put up the script & more debug information in a dedicated
->>> repository: https://github.com/lfrancke/amd-pmf-hibernate/tree/main
->>>
->>>>> Right after hibernation and before the first of those errors I get:
->>>>>    ccp 0000:c3:00.2: tee: command 0x5 timed out, disabling PSP
->>>>>
-> 
-> This comes from tee_wait_cmd_completion().  Looking at the suspend/ 
-> resume handling code from ccp.ko, I notice that we don't actually have 
-> any special handling for the TEE ring for S4.  Normally that ring is 
-> initialized at bootup (by sending PSP_CMD_TEE_RING_INIT to PSP).
-> 
-> During the S4 resume flow I don't expect that this has happened and is 
-> needed explicitly in the restore() call.
-> 
-> Can you try this attached patch which inserts that flow to see if it helps?
-> 
-> Note mostly to myself: I need to double check flows but I think restore 
-> also needs a pm_hibernate_is_recovering() check in this case too if this 
-> works.
-> 
->>>>> On boot it looks good:
->>>>>    ccp 0000:c3:00.2: psp enabled
->>>>
->>>> Do you see this message after hibernation exit?
->>>
->>> Yes. On a fresh boot it works without issues but after the first
->>> hibernate I get these.
->>>
->>>
->>>>> Commit 11e298f3548a6fe5e6ad78f811abfba15e6ebbc1 from 2024 has
->>>>> more or less exactly my error message but it doesn't seem
->>>>> to be fixed for this case.
->>>>> https://lore.kernel.org/all/20240216064112.962582-2-Shyam-sundar.S- 
->>>>> k@amd.com/
->>>>
->>>> This was a case fixed for S2Idle cases, but I seem to understand that
->>>> you are attempting hibernate here, right?
->>>
->>> Correct. I use hibernate.
->>>
->>> The issue I'm really trying to debug is a separate one (I'll report
->>> separately): Hibernate doesn't reliably turn off the laptop. Image is
->>> being written successfully but I have to press the power button for
->>> 4s.
-> 
-> Potential theory on root cause is that it's the same regression reported 
-> here [1].
-> 
-> If so the root cause is [2], and the fix is [3].
-> 
-> Link:
-> https://lore.kernel.org/linux-pm/a2563b83-e5d7-4d02- 
-> a317-54d51e718d32@kernel.org/T/ 
-> #m19966ea259837e4b02c6d0a55d67acfe15fc64ae [1]
-> Link: https://git.kernel.org/torvalds/c/469d80a3712c6  [2]
+On 10/26/25 3:12 AM, Derek J. Clark wrote:
+> The stubbed extreme mode issue seems to be more prevalent than previously
+> thought with multiple users having reported BIOS bugs from setting
+> "performance" when using userspace tools such as PPD. To avoid this ever
+> being possible, make enabling extreme mode an explicit allow list instead.
+> These users will still be able to set extreme mode using the Fn+Q keyboard
+> chord, so no functionality is lost. Currently no models have been
+> validated with extreme mode.
 
-Sorry - minor correction.  Root cause is [4].
-> Link: https://lore.kernel.org/linux-pm/20251026033115.436448-1- 
-> superm1@kernel.org/ [3]
+So what exactly happens when a user uses FN+Q to change to extreme mode 
+but it's now in the allow list?  Does it report as "custom" mode?
 
-Link: https://git.kernel.org/torvalds/c/449c9c02537a [4]
+I feel like this is going to turn into an impedance mismatch.  I'm 
+leaning it's better to just expose extreme mode so that userspace knows 
+what's actually going on.
+
+I feel the bug situation will actually improve because PPD and Tuned 
+have no idea what extreme mode means so it won't be "easy" to get into 
+it.  This at least will allow discovery of BIOS bugs as well that can 
+then get reported and fixed in BIOS.
+
+> 
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+>   .../wmi/devices/lenovo-wmi-gamezone.rst       | 10 +++---
+>   drivers/platform/x86/lenovo/wmi-gamezone.c    | 33 ++-----------------
+>   2 files changed, 8 insertions(+), 35 deletions(-)
+> 
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> index 6c908f44a08e..79051dc62022 100644
+> --- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> +++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+> @@ -31,11 +31,11 @@ The following platform profiles are supported:
+>   Extreme
+>   ~~~~~~~~~~~~~~~~~~~~
+>   Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
+> -enabled in their BIOS.
+> -
+> -For some newer devices the "Extreme Mode" profile is incomplete in the BIOS
+> -and setting it will cause undefined behavior. A BIOS bug quirk table is
+> -provided to ensure these devices cannot set "Extreme Mode" from the driver.
+> +enabled in their BIOS. For some newer devices the "Extreme Mode" profile
+> +is incomplete in the BIOS and setting it will cause undefined behavior. To
+> +prevent ever setting this on unsupported hardware, an explicit allow quirk
+> +table is provided with all validated devices. This ensures only fully
+> +supported devices can set "Extreme Mode" from the driver.
+>   
+>   Custom Profile
+>   ~~~~~~~~~~~~~~
+> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> index faabbd4657bd..0488162a7194 100644
+> --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
+> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> @@ -47,10 +47,6 @@ struct quirk_entry {
+>   	bool extreme_supported;
+>   };
+>   
+> -static struct quirk_entry quirk_no_extreme_bug = {
+> -	.extreme_supported = false,
+> -};
+> -
+>   /**
+>    * lwmi_gz_mode_call() - Call method for lenovo-wmi-other driver notifier.
+>    *
+> @@ -241,31 +237,8 @@ static int lwmi_gz_profile_set(struct device *dev,
+>   	return 0;
+>   }
+>   
+> +/* Explicit allow list */
+>   static const struct dmi_system_id fwbug_list[] = {
+> -	{
+> -		.ident = "Legion Go 8APU1",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8APU1"),
+> -		},
+> -		.driver_data = &quirk_no_extreme_bug,
+> -	},
+> -	{
+> -		.ident = "Legion Go S 8APU1",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8APU1"),
+> -		},
+> -		.driver_data = &quirk_no_extreme_bug,
+> -	},
+> -	{
+> -		.ident = "Legion Go S 8ARP1",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go S 8ARP1"),
+> -		},
+> -		.driver_data = &quirk_no_extreme_bug,
+> -	},
+>   	{},
+>   
+>   };
+> @@ -278,7 +251,7 @@ static const struct dmi_system_id fwbug_list[] = {
+>    * Anything version 5 or lower does not. For devices with a version 6 or
+>    * greater do a DMI check, as some devices report a version that supports
+>    * extreme mode but have an incomplete entry in the BIOS. To ensure this
+> - * cannot be set, quirk them to prevent assignment.
+> + * cannot be set, quirk them to enable assignment.
+>    *
+>    * Return: bool.
+>    */
+> @@ -292,7 +265,7 @@ static bool lwmi_gz_extreme_supported(int profile_support_ver)
+>   
+>   	dmi_id = dmi_first_match(fwbug_list);
+>   	if (!dmi_id)
+> -		return true;
+> +		return false;
+>   
+>   	quirks = dmi_id->driver_data;
+>   
+
