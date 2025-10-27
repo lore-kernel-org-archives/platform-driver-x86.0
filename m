@@ -1,106 +1,126 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CEB2DE6F5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 11:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B9919ADBA;
+	Mon, 27 Oct 2025 12:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761563600; cv=none; b=r85Fo5570Wh1Cd3inuLZrRrrWe71k/uAaS8d8ONWiCgiUhVP8/mT+0ViM6wbwj64wkQHjsygpPI4u4kmZKk0VOSQ46YVoF2utOmoiPKkDo44O6wKu0eYL4VPZ8jDoeYlVeuy1npRW2yNwQjH9pLOaPA9gSyPlDTh86PpukBnso4=
+	t=1761566815; cv=none; b=dpsOoHXy0lXlw3YoeKGFcKzVfgmIztw/kxzUEbOFBoDbnTOC2tUoU17MaWOkG7gdzMOZ9hGucBVIHIgX6REJ13BgpFlju71zr/OWLpZbD1+xP+5yfCpz0i9dZIUua1kVISCkkgi1hUbM33TLmVgQzeefXJRZwkgpCINqKSH4Eg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761563600; c=relaxed/simple;
-	bh=kyGyfd0WDHuOLYm/3W8XMaV5zq5cyOUzMxoYlFvv3OI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eezLwRWuzUbhQrSQwrewnw7CjitXwNBJi1rnyDhbk7dmzvteAQK+yV9srVftmnZxdB6gL6WpxY3kSW0rENeWpONjpGn99abHSUNiWbKb3vwYuEgYv3ifvRxUvXX8jiZ6b5w1WEtw8NbSNb+XaKnnRj9eKqiemcbwpNnORKCbngk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTlWR+1U; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761566815; c=relaxed/simple;
+	bh=bd9xs45Eax+hvL9RuVs0Ic37ps90njj6saptvTUvmPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plXUFL4DZDo7Bh8SHTA201ytig7Mb4fNh0hw9sRKmJmnLpFeZdxEjV+IMnVPeZLo/bPEKI1Km2619WzpjJX7tMEwv7lVM5LyGtj4jI0y+iJxwBIPMzoAR80Yy3X9Orhp2UYpzlFXxoxlUo48+3E0FX42jOvFyKZ04vLCU9IC7wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cG7a4pxy; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTlWR+1U"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-89048f76ec2so514843585a.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 04:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761563598; x=1762168398; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7h2yc+ZK9f44i4Nk0bu/mR8+N9LW8ltI7/IqUFSyAAY=;
-        b=hTlWR+1UQNCId8xVh+7Jz1p0Cyn1v4HA2cJ58QC4mqOCdM87XO+Y9Mh/pMpSV/A6+r
-         DQ1QnXGHBrg8ejFy03dZ2kEZKswSNMrQeXJ8twQcm+azusWgfxQcNfDGLJqZOr4ffNSN
-         /PMeO0iRO5n//2PFXtgS4+WYwfQuVRpyzYVETV0HY/pFPQcFdx14oTS82BrsodS90qHV
-         3DPNK3HBNlnZ4x2NoFEmut+4brpLNd4OrEN0qHkFb0efiFAa0wv6OSrWdsMVaWcEbDD9
-         lV5nM4Ky7Tg4NcoMVSpKuWCET2IK/ye/Kiklqo6U0n1U7nrB0Oj61nIpaxDyyq/vO+yu
-         Ck6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761563598; x=1762168398;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7h2yc+ZK9f44i4Nk0bu/mR8+N9LW8ltI7/IqUFSyAAY=;
-        b=gFWZat4TcXakfyeodQmOOd0IqWCx52z5EuVZelC2S8PMBnm6pEcgPoZtOm4zGreYtp
-         NcT/F/WZGH3Z5EG11c3zyqGeDpLKSTIT+7YO1QKqCfDV10L8jN6Ggq49u2+ruBwkPgZG
-         DRVhdLSso+EukOsx+DMGQ+y/FchL9k8isdYmajt7Ya5MMfdejOVTEBPDnYpVPonNdfeq
-         0AayWdNy4xCHPKP9cXjla4KXDrxPM9je7J3EOyBO8drsZUmo90vYKs//ypor7/BBBYcW
-         DTDQAsv92SLNo61buuOt5lbxcaga9QCACFTcPbaKsE4x2zKWGxZawlEPBaoW1ip+a/7z
-         yB1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3tz+vtlqJ0+WGNk7hu2MXOx2sDX23Q/wyNqLPZhxcl4pHbJY037N6Cp4qn3aSh6Xu1DQrEeGwr5rZIGDICN6pKoBn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9rB3/Na+MteYk2ebEfdMl67WGzGgLbe/u++ximQhJcExqxz1D
-	fqv+x5fA5iG079UCWB1EX0cqARYK8iarY0+VWSEwhgGfPn8MjyXhNUPgExxF9L1ar06MJgNzd1g
-	6U5cwDTCiMRwdq1Bsjvq+LpgToUyoM3Q=
-X-Gm-Gg: ASbGncvoOCJvAZhotQhwHckIwUOTFaKZKsLW1GhgCwmCi3YJ+oIhY77hzjfp5fbcVNh
-	KdIzGkgiMbFC5VFCrgYfmxIza20YvAgdyvLGUIiqpX2ht4k3oiywPN4VFZMc4CCrdK4eWFk/Xnu
-	fVlznAqN8VH9wKJeGD640DEubhAsHppxAZyLRN/bxmGonSlgbrRJgCR1T7+riO1M3D78b2NsJbT
-	64bMsGAc6JtjOD8Le0Ma0DqF0wV1hcbmM5jSbtHf7uIsgzYi6Grr+kx0He/cg==
-X-Google-Smtp-Source: AGHT+IGPwWOJrFyXvXb7T3DVKbJtMm7vnQxOJ2TbX9Lqjn9OHCO+mEXPS2o1+agHQbmiCQgssSgQDykdd+k50w2tOmQ=
-X-Received: by 2002:a05:620a:1a1d:b0:891:937a:b095 with SMTP id
- af79cd13be357-891937ab177mr4195077385a.16.1761563598182; Mon, 27 Oct 2025
- 04:13:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cG7a4pxy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761566814; x=1793102814;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bd9xs45Eax+hvL9RuVs0Ic37ps90njj6saptvTUvmPo=;
+  b=cG7a4pxyr2n67lUzIztUhw268a1weIjKb1bKGk9Sr9P2nllsGu5k6IXq
+   aoCUu2JLaO0FDmacOj0KgFKslQQy5rCC7+/XtYCxg8/gJDkBTzuIyLWQU
+   iAfyoIA556M2mjHa+rzI8GUAGMSwR61O1FVg+mKRZl8pW7KEx1eqiuQRK
+   U65js38h7HsFY+SRQGsTDUyY1b84P4BnjVKBSHC3z+p4DG3EWNH/Vm4+f
+   m5aYD5w0A2vlKb0/q5yWpfxIxRa3czSGB9sLPB71nRo3M0fbFItmY+Ujx
+   ITEzLUR/7LP1lc9uPexzdJAsaqWPDEXM1+Bk5N9QbSIWI8yen/P5y+g//
+   A==;
+X-CSE-ConnectionGUID: Lz+g3NiFQLugMEyqtO0Low==
+X-CSE-MsgGUID: x28Dy2qqQE2YsVFEM4N9CA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63531889"
+X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
+   d="scan'208";a="63531889"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 05:06:53 -0700
+X-CSE-ConnectionGUID: hS2F1AicRM+iMguUpBzz+g==
+X-CSE-MsgGUID: 7AnycQYeQaSEkVKEkGdAlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,258,1754982000"; 
+   d="scan'208";a="189396668"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.5])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 05:06:51 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vDLzs-000000030Sc-3dn1;
+	Mon, 27 Oct 2025 14:06:48 +0200
+Date: Mon, 27 Oct 2025 14:06:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ciju Rajan K <crajank@nvidia.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+	platform-driver-x86@vger.kernel.org, vadimp@nvidia.com
+Subject: Re: [PATCH platform-next v3 1/1] [PATCH platform-next]
+ platform/mellanox: mlxreg-hotplug: Add support for handling interrupt storm
+Message-ID: <aP9gWId8aav-LjA-@smile.fi.intel.com>
+References: <20250923134954.3016697-1-crajank@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com> <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
- <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com> <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
- <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
- <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org> <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
- <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org>
-In-Reply-To: <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org>
-From: Lars Francke <lars.francke@gmail.com>
-Date: Mon, 27 Oct 2025 12:12:41 +0100
-X-Gm-Features: AWmQ_bnAKpS2UBBL9rJVVUrVWJTmwd-mf7__pzMMQzKVp-stwbQLqIozMh3z2S4
-Message-ID: <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Patil Rajesh <Patil.Reddy@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250923134954.3016697-1-crajank@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-> One way to be sure it's applied is to add a pr_info() message into the
-> new function.  Then you'll know exactly when the new function is called
-> in the logs.
->
-> But assuming that was in place then I feel this will still require some
-> other coordination work with the PMF driver then too.
+On Tue, Sep 23, 2025 at 04:49:54PM +0300, Ciju Rajan K wrote:
+> In case of broken hardware, it is possible that broken device will
+> flood interrupt handler with false events. For example, if fan or
+> power supply has damaged presence pin, it will cause permanent
+> generation of plugged in / plugged out events. As a result, interrupt
+> handler will consume a lot of CPU resources and will keep raising
+> "UDEV" events to the user space.
+> 
+> This patch provides a mechanism to detect device causing interrupt
+> flooding and mask interrupt for this specific device, to isolate
+> from interrupt handling flow. Use the following criteria: if the
+> specific interrupt was generated 'N' times during 'T' seconds,
+> such device is to be considered as broken and will be closed for
+> getting interrupts. User will be notified through the log error
+> and will be instructed to replace broken device.
+> 
+> Add fields for interrupt storm handling.
+> Extend structure mlxreg_core_data with the following fields:
+>  'wmark_cntr'   - interrupt storm counter.
+>  'wmark_window' - time window to count interrupts to check for storm.
+> 
+> Extend structure mlxreg_core_item with the following field:
+>  'storming_bits' - interrupt storming bits mask.
 
-I did that now, thanks for the hint.
-I added a pr_info to the sp_restore method but it is never printed.
-Just to confirm that I'm building and booting the right kernel I also
-added a debug line right before the "TEE enact" error:
+...
 
-Oct 27 10:50:06 lars-laptop kernel: Lars patch worked
-Oct 27 10:50:06 lars-laptop kernel: amd-pmf AMDI0105:00: TEE enact cmd
-failed. err: ffff000e, ret:0
+>  	for_each_set_bit(bit, &asserted, 8) {
+>  		int pos;
+>  
+> +		/* Skip already marked storming bit. */
+> +		if (item->storming_bits & BIT(bit))
+> +			continue;
 
-In other words: I'm pretty certain I have your patch applied but
-sp_restore is never called which I think was the intention.
+Instead, just mask "asserted" correspondingly before for-loop.
 
-I did play around a bit in the code but all I achieved are NULL
-pointer crashes :)
-It looks like "i2c_hid_core_pm" might be a typo/copy & paste error? I
-assume it should be "sp_pci_pm_ops"?
+...
 
-Cheers,
-Lars
+> struct mlxreg_core_data {
+
+>  	u8 regnum;
+>  	u8 slot;
+>  	u8 secured;
+> +	unsigned int wmark_cntr;
+> +	unsigned long wmark_window;
+
+Is it okay to use variadic (arch-dependent) types? The context suggests that
+this data sturcture has fixed-width fields.
+
+>  };
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
