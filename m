@@ -1,302 +1,391 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013000.outbound.protection.outlook.com [40.107.201.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905C11DDC1B;
-	Mon, 27 Oct 2025 13:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761572188; cv=fail; b=Mqk6eCjh5URWhPkVSrKiEcEKpdN/KBVDJojyqcWrUqoNHRAVAjn+XNSU7YUWb9sshHEUIxFZYd4xUU1C7k49l2/OobBcZhh5Kb7O7DNlMB7zEzkE6QJbLCMtKSMU9BCQwNTQZZSJ3fQU0020OZCvnyNpu1zs6ulZDNKGObmjQlo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761572188; c=relaxed/simple;
-	bh=foiYDdHX1iEuwUh1n+FytvwFbAGL4gTjHzMLnvMBoU4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Yb6eQ+oQoulZPsxpoX00ny5k1U+dA6zWzikHjUrYPNZD0D8XdZpCT2jSn/OiC4rD7BhP76krOZ7xfr7Gugiq9G0/nyxUAwbHbNskwwzZf1Z33I8ydkG6fz5Kp+9AxLr0hwBEKFFMsiGM4QffrlTBir94xTSm63XxeUZMC+Us2Sk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DlmdvC+q; arc=fail smtp.client-ip=40.107.201.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600FA30146F
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 16:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761581937; cv=none; b=nlvFHzzotmg6lAMYwLNb50jCz2FOHHiq/6bkIEtF016G8fDYcusrW9D3pQ01wdI5J4P2Dm4/H5/OQXv8Onflui9b8YuuPNb4lWSsou2l2c3Id6CEsIMpAwKfxE/olHN1wxWmNEI+unz7iDqNUZoe39ZhBmhwAjGHzS5lSJ1YvtQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761581937; c=relaxed/simple;
+	bh=zsT7zZQ16JLkPYuQn6BoiNw5YF/oFnCqPcl68j3Al84=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=crbjuYmJpKJuMFKa9k3pvpCGaenbqwS8m/m8XXK/GLm4pGqTZHQjNV8pA2ZuSpWV7Te0CsgKjU6kIpsbfWxoEjXwA6K8TeRln8x9PWm0jMBeN3D/kYLbl0H9khtNn+yus5gGTirR66LKRYJ7YckJVFR5JaOgUD75aEWFER/1kmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HixY/BzX; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DlmdvC+q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vKwk74HnLzJ23d8NJhIIf1MktzfxdMS4VEKbA0FMYLEhXJoVNartlCgloMX1GkrYJBVqa0yUrfUsjaI9UDS4ROgTCcFsCQTNxt41UkzXyepZho0d8vDLymi7oAom6E5jPIjhEb1/KMGlN2PoiQIsC5mAUFdMi0tUmj3Ny29jNyjYLH97RsUJyTt38+UtJ4fRGSuPUmaObXj+sGxyigHgeg5XQufZRa4sUJtR0dv7Uy9/YbW3PnsA75NML+sbWb0KinXr39IxE9whlS3ia2kOprv+X9BDyL0qr7nIFFv/aDGjnLdXBvf3jz1bwYLECxuY2rqb5LAOE5TZW3/+n/5dIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xx7slpf3KQbb/dGSdgVTsHTZ6khyd6NCKiRgOYPiF3k=;
- b=t0IinbWiYg36yf3vB7pwuB6A7IycF7d0sOKkNP/5mJsOQ+7ZoaF9YFH1UySx6E3oLQScTkJvvp4hMIwmzCevruFwcAsdfdc4QRbb7me6ZDKkqpYnTy9RrvCeZe3H39mrJro1s9MjejDu7Z4snBFJfZvKXE8qnPNQy53TgJ9cDMSBdtjnIxNH8EgO9QAFD6a2ibTKsA03XTee6AZKCCauOm5a8AfQqEQ51p+shCFn2ja2KXKTv75e18mWF4XUMFQpITkF3SkmPb++PyaGzZ0V6OX3Idg1o0gVziK+Ph+afy4yB7f3f3pDcs5tCrr5RHJMUfObuNjI07hvaITiKu92AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xx7slpf3KQbb/dGSdgVTsHTZ6khyd6NCKiRgOYPiF3k=;
- b=DlmdvC+qpcej14dwwRcYxyQ2p/WPOeZL6Nr1dVFRUsxQiwV0FpcRjkiM8a+TFZtvDrz6WwA9H2VaXLpuRfFvFWaXgMlUQoAjLSXlxWr1iC9wJHURPfwNM2w1oGWQDzD1vlk+5lU4DaaHNo3cjWfrjMaVUl1mE58DJkeFjUTmg3g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA1PR12MB6410.namprd12.prod.outlook.com (2603:10b6:208:38a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.18; Mon, 27 Oct
- 2025 13:36:19 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9253.017; Mon, 27 Oct 2025
- 13:36:19 +0000
-Message-ID: <d93da523-f3dd-44d7-b9b4-b85b469aa628@amd.com>
-Date: Mon, 27 Oct 2025 08:36:14 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] platform/x86/amd/pmc: Add support for Van Gogh SoC
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Perry Yuan
- <perry.yuan@amd.com>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Sanket Goswami <Sanket.Goswami@amd.com>
-References: <20251024152152.3981721-1-lkml@antheas.dev>
- <20251024152152.3981721-2-lkml@antheas.dev>
- <3792db59-7dc1-4e34-9436-84df4b6c3e10@amd.com>
- <CAGwozwFTDD2QrHy37axhanwQYv6ty9K_hfhxS05djKpv8HfY6g@mail.gmail.com>
- <2684d3ab-d7cf-4eab-acd4-91bdd5debb6b@amd.com>
- <058eda7c-ab93-40a5-b387-54f7a18f3922@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <058eda7c-ab93-40a5-b387-54f7a18f3922@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR13CA0082.namprd13.prod.outlook.com
- (2603:10b6:806:23::27) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HixY/BzX"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-88f8f346c2cso499905085a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 09:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761581934; x=1762186734; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5SgkIdwlfLMfm8ZM/BxNBC1+cCb5qTtnAPJbSp1A90=;
+        b=HixY/BzX9ffGhjAQEPn/7J9gT0s6XK8wwH/EiTpsTcB5JvOZJ0MdMpetX0rB0GhjoJ
+         GoF5cTe/k/+9PHkXyce2pT02szd8S4QXwTUXkWW8cb1znB0uOs3L+A/lUKO5735S9JCy
+         Xj/6HRhN4XTlMBxFLO9F3J/M7I4VUBUPbnWeLXzEGWTU4UDe2DwaCni1QCkhVHcxGbaE
+         AXHUsOfWDHubzYsdEs/lPrwdhfInbALHE8WkD7df/GGQRK4LRbWzHPPgTQmOHgHjKOhh
+         I9wdNiP28efbMUhyZ14BokbGwZKoSJ//IZH7uE9WnGY8coO9UPFiskKFPhXekjSLCdIn
+         E86w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761581934; x=1762186734;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e5SgkIdwlfLMfm8ZM/BxNBC1+cCb5qTtnAPJbSp1A90=;
+        b=njJW6M+NFpn7psscAXnb/OFSEgu/9gv5NLS4XiJsfEega06p3KR9cFcubdINiZ9JQe
+         zU0w6xLzH5xDBHrB65f9DAIWvYbZXQbOFdVBlv9WVvUVuspWak18QajyFtXEGtq6/6mz
+         NbbpmqRqfy2lLGUDb2K/8Jw8chFFcRbio+ps/6CxvfaV9o6/QZEUYs1wj5wiWvr5XX1o
+         jyHlxEtBEAdjfplc1bv7UaGepWFW8ZvMrmqMXwNDNlGLR2wqgLlBH2KNN1ZSh54tMgb9
+         7f/rOrGYY4kxA8ajhvryt7qobJyzIl+vqOzOaHBImgV+rR8iWGus8WtqrpvafxMCz1C1
+         1mIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUohGYnOy8kXEWlHVSK2a48zOo2keLnjHEzy6xvDQZ/m/172CpEZNUFWPv+jdAnz7+afBXkx6bmhQaVXPEGLt62HHVE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxabYM1/sl5FniOsQgZdhq1XCpmJI8KB1u7JXSEP6zlLZ5qnQyp
+	7kUWkm/zD/1AhR5N6QIIM9E2JBmQqB2FYQE9V33bZhoO8ic87+6n4l/8c3+1AxF9RQQyJOsbR2k
+	Bm0lf8jrE7q8gVNnbNmTKs5ogisaVRgOoSw99McBuMQ==
+X-Gm-Gg: ASbGncviEVEuTAV0rRCoQWJ+enKxm0JL1xaViCj7KAXV3aSEkwfK4NrVt8iL5zEbIyF
+	WsuWSv6mcnNbTAWe9SWHsz30xhSAknduKoz/5LRv+oyvpQQ5bbsmP8D0CRkEY12fEMu9EC1F+Xh
+	zx7G5ESxDJ+nRUYXlBNnPnqURtq3GVU0n9busiYEB/ixjs/E/D6j/7qdZ70mZRrE/z4nL33vMB+
+	fpkDjhQke3lB7m38d9vM6zJ+AetI8Nf7wZNRdtEorMwy1LtUNCt61v2ybAasw==
+X-Google-Smtp-Source: AGHT+IGPGibNspILG16zeQKyfS5YMe+O7UH7NZrJRV21JS+Uh7khuAef/EjQneecp42ZZN8c8JrE4mQlcQKvOht90qY=
+X-Received: by 2002:a05:620a:394f:b0:891:937a:b095 with SMTP id
+ af79cd13be357-8a6f3c36631mr70674885a.16.1761581932438; Mon, 27 Oct 2025
+ 09:18:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB6410:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0f466a7c-224c-494e-0943-08de155dcf6e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WEE1ZDRnWWtSZFhkQk9jdUwyd1Fnenp1TGtQYXZwTVFBRjlESkFEbXkybFBM?=
- =?utf-8?B?QXJSSFI0QndqWC9VaUEvMjhvNzRONHpHbEZTQlR1Q0lISWN2REgxVTVpQWxI?=
- =?utf-8?B?Yk5FK1RSTDJiM1JhSTdrWkNKdXErRTVsajMvL1RkVkcvSCs5MzZybnFjYkJy?=
- =?utf-8?B?WWcra0h3bGJ6UW5XamdBZklkUlhIdzNkWnY0eXVvaDJmcXA5Wit2YmJ5ME5W?=
- =?utf-8?B?ajhKdVI5QXRxdjBEUkU5SjFWSyt2MmxnNkhxaGRxVzJ2RTVSZmRuUGM5cFhz?=
- =?utf-8?B?SmRhb3ZUQk9XN0grTXBWR2RUVnBCZzRVVjBvZVNJS0NCY3RzblVHV05FdGVP?=
- =?utf-8?B?TGczanlGSktXRXlIYk91ZHRFUk9Gck9IMm1HbThlT2RVL0MzNThPbGlSS3R0?=
- =?utf-8?B?T1BOZG5oT1VhWXd2c0FPc25Pa0RQZEJoNlNHTnB2VE93WDlham1xcExqaGNh?=
- =?utf-8?B?RitkdVEwcTBySCtLYTRzWGdiWjVXamhQQkt6N28rWmdIM3AzNElVZmlITDFS?=
- =?utf-8?B?czFNcG9oclE4ZTNBZFJCWUNHU2tqc2srZWNOV01MV1NRMWl3dWM4ZlVyMXp6?=
- =?utf-8?B?MjN2TjBBRWJERVFaOHdZbmo3aHpyT0xtSllPUHBEVGlwcnkrMDBZa2NhWWty?=
- =?utf-8?B?a3NvK2pGQXJ0SVU2TXNpNU5rR0tsMHBTV2J0RXRteG5YR0tEZXk5ZHlYb2RG?=
- =?utf-8?B?ditOUU13T1FNWHkxSWlyNENWMm92T2dKSG82eDAvT1FvZFY1ekZCVWRTYk9j?=
- =?utf-8?B?dU1hZ3V6YjFVLzVoOEhMY1pKdGpUYTY3dk1pUEFEZWk5QU1laExxZXNCSE05?=
- =?utf-8?B?aWxLR1RWSWlyU1BkRnZxT3UxbmhnS085SEpUN05QOU9vOHcxWFJYbEFVUUJV?=
- =?utf-8?B?N0lZMTFSK3ZTSlB6emt4RDIrc2JrN2QzL3NLZytUV3ZrTE9mTGUyemZVYU9O?=
- =?utf-8?B?VEpJQ1pRTkpEVXdodWxHeEpPUEhtSFV0cFhna1FZVmcvQy96d1NTcmxZUUNt?=
- =?utf-8?B?ZGdMNGRIc3VLdkZkMGtWN1pVOXNpMkV1UGNNV3hKYWdRelhOVjNmanJ0RGZN?=
- =?utf-8?B?ZjJ0U2p3QUhmV095ejhoRko2anU4bW81S3lrczZBOEttZUlIdXR3SzJXa0RK?=
- =?utf-8?B?QmVtclREdndaQ3dSZm5kN2xKWW53U2dFZmc3bm1GbjUrRGdIc2d0RlA2dDRt?=
- =?utf-8?B?TlY2NTBsVzRtL0ZCVVJ6SGRaQ1R5dnFpL0U1RTduQm1DNDNicG5IeGllc01z?=
- =?utf-8?B?SU1sYklnQkh4cWIrcUUxaHloUU9BSUlJVXIwL0NPK0lhVi83MlozdVBQQ1Vh?=
- =?utf-8?B?dWJYWmgzTFRRUmNseVFZMGlEQVNyTzQ1SnQ2bFhqcVgyUGJxS3RWVGdmZ2Iv?=
- =?utf-8?B?Sndjd2s0enc5STkrYjc4amtqZHlLR2g1M2RucnJsTUlIZGZhamlUQ0g2WW5I?=
- =?utf-8?B?OFpHMWN6NVdYMENMeitLZlk4MEkxU3lWYkVkem9tSXVxUW9jUXV4dm9PeXdk?=
- =?utf-8?B?VnMraHEwS2o0UlVaM1ZQMVR4ZGJwR1JkeEFUWHU1b2dsYWczbmdBMmtrOWdN?=
- =?utf-8?B?YkJqTmhKYTZ5eGxZTE0zbTRyUFN5SWNsZEk0QXFENHZ4Ymt1dHYvM0VBYkpm?=
- =?utf-8?B?eEtEbTl0M0V5MXhpMlQrdzlLMVlmVlpIa0IxV2tESjhzc3ExN2FuTElhejhD?=
- =?utf-8?B?NHV2ZnRFOU4vZ0kzMUI1dGFFNnA2aHNnTTJVMm9Gak5QWnVLWHBNZTBmM2U4?=
- =?utf-8?B?NHN5QmZidUd1TWR5eUxocTBUMnJrNDk0bGhkVk5ORmdRcS95Ym1jYU5Edkd4?=
- =?utf-8?B?YUhsSzJLTGFXdWFtVFFCNjRPWlBQSmQyaHFUZUZvRXJseVNUYy8yTWtvN1U0?=
- =?utf-8?B?b3NUUHRiRStIdDB6U1dvZnArSllkaFJ3bUR5NkdYaTI1dkVYNVR3SFVDanVM?=
- =?utf-8?Q?H5HRDjpv/On+XIECvMFs98ECkJO4dq5a?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTVjbGoxaktNMlpMUXp4dlBFUEpGUTlWenIwL3lYT3cvUFNwNEc5VmpMRXpt?=
- =?utf-8?B?d1ZKdkNVOS9NaHNUMldaWEsxekFMaHQ1dTNyNkZHQWY3SThuSmlmZm9WbTls?=
- =?utf-8?B?UTQ4NWxaM3Bmc1ZLN3doNmdLWGRLeFFBMk82MHR2WlN2bWkrNlBaWmtFbzNR?=
- =?utf-8?B?TUFIZmM5U2dmRG1vWHExZks0SU51ZVE5Wjc1L0dSMDdKVFl6SXZ1dXFWS2U3?=
- =?utf-8?B?RE15cFY4SVdGVE1Vbis1SnlVWTFIUUVFMTdQbE9jSUVTdGhkUW5QdnE1V04z?=
- =?utf-8?B?NFZSYnI5TW5UQ0VRNURWUVcxY0ZoTE56SHRVSTBQZlRmMmJCVFdEeXBUTkc0?=
- =?utf-8?B?b2NvR3lXWnRzc1B6YUFhSlArOVRQVVdsWjA0NFdhMnVNZ2J2ZjBQR0F5VGFE?=
- =?utf-8?B?MzJLSnlKM1NhcklqOFRDUlQ4NjNSVkR5eitGVExvcFhBQklGYmFmNU9qd24v?=
- =?utf-8?B?TjdYbVZtRGx3UWlxOG5BZ3FFeVpmQkY2R0NEencya0cvM0NpQTM1OWFtZXl3?=
- =?utf-8?B?am9MekNiVmxWZkJsbjVRNjc1cGkyc2RvNnQ5WUpvNjdxbHd6dXMyNGxHMW0y?=
- =?utf-8?B?eE1LYnZRbFVnczdGNGhTU2pKNkRnVFNEVHlUaXJ2a1EzR0xwSlNXcTRyLzI0?=
- =?utf-8?B?OFFkK3BHWWkwQXJNOGpNZFAreEtMS0ZtMjY4cHRzdmJuM0JmelVocU9hSnBs?=
- =?utf-8?B?bC9jZ2pUMDlsK29uamFQY3NZT0N0S3ZwdllxL2pWMjZydTJZMUs4VWNORjlK?=
- =?utf-8?B?QWcxVmp0YXppYUpZWi9oU3dPRzlqWEpiSzVHM2M4Z3VUeXpLTll4RnkyRXV1?=
- =?utf-8?B?VnJEUGsvOUVvQkNUZ081Q3VLNlpaK21PV1BLYkl5TWRENGFiK2tFZUwzOEVt?=
- =?utf-8?B?Vnp3VnVubDlPTlUvVmJVUUZjVTlvMzZ2ZzdwNENuRmE4UXJ0eXZtMWdScm11?=
- =?utf-8?B?YXFCUTZ6RnhSYnJxY2dwNFBIWHNVb1JwRVQydXc5dE1ZbVlNVTdWMG92Z0VH?=
- =?utf-8?B?N3FtVCtlQkErK2RrZ2FyTlhTUGg0ejVabmg0aVNNWC9qWjM1Q1dNbDYxNjJE?=
- =?utf-8?B?MHpveTVSMVI0Qk9uUTVpei96V0pWaGVIWEpDZnZBNEwwL0JPQmZpSXVSM3N4?=
- =?utf-8?B?SndkaXVZMnk1L2wrclpEU1R0OHJDUURrWWt3ZzBMdkRMaUl0Q0pCQ3lZOCtS?=
- =?utf-8?B?Q1hKelI0dE5HdzFUbU9iY1NIb2U0MElmUWsyRmxpWk5UYkRYbERXem1UNTFz?=
- =?utf-8?B?OXE4NGExUlhGL1NnaFF6TzdrVjJ2VVB0RFJWTTI1U2tmZkc1czY0NTdiemlp?=
- =?utf-8?B?Q3V1Z2szbGtaOS94dG41dC9pWjl3ZUFuTngzblc3alVsRjQ4cnB0Ymp3SEp1?=
- =?utf-8?B?MW1ZcWN1d0NjQ0RoNGxrcmNCUVNGdlYxcDVqTUhYYmFYQUdISGNDM1lqWEg5?=
- =?utf-8?B?WGNreThka3ZnQVhkeWpNdG02UTJ0K0piTitKWU5heG1aZkpBU245bU1HRHhR?=
- =?utf-8?B?V1ZjTzhJT3Z3OFlzbnBYWG5wdnBVVTBFdmtFbFNSWjkwR1BaWHpWZnBnanZG?=
- =?utf-8?B?QldRWE5rN0ExS3BRcXZ0dXdkZWlMMmJ6U0QwWWoyc2M0MXI0amw3cEhOb3NS?=
- =?utf-8?B?dGF1MUh1dVplUkZ2aU9qbS9OOEFqdHE1ZnNBSE8xUTR5Tm5XVlliT1poMjdM?=
- =?utf-8?B?TGthVmsvcnAwMXB5UjVvY0p2d3E1L2gwWGZ5Nms0NzBySGJRaUt5elpyZHhC?=
- =?utf-8?B?TnJCSElQTjdTcU5zN2VGNzFUWW42L1g2MEJmR0VLenoyNlJBcXVRU1RiYWkr?=
- =?utf-8?B?VnY3QnJZcHV3eTJ2eDJ5aXlTK2pFN0JjWHc3cTRwRFNvOG5JbFhTU2Z6aG5E?=
- =?utf-8?B?UnFFMm0yUE1USTFXeXFLUVlDSW9uUlgvdVhsd3lGWWk4V2VnamE2eDh4UXUy?=
- =?utf-8?B?V2oxYjRBOFlhc0F2amt4SlMxQ3BUdUhyV1I5bFhXanliWjRRb1dBVE52NC9h?=
- =?utf-8?B?UU9NWVExdkY0WlZZcGZoYjVlR3VIVlVYWkQ4K01FNjhMRjQvMExCZFFvV3kv?=
- =?utf-8?B?MGZud0JpR0FsbUN3VXpweWVaY0NrN0tjNStjSTBuS0xvK3NNc0V6SWdJUmJl?=
- =?utf-8?Q?6BnnseIRlNTSwKYIPNH2nooR4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f466a7c-224c-494e-0943-08de155dcf6e
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2025 13:36:19.1791
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yOsKjXHCABP2FZ/nvr9iprZETPInllSY4cmuOYixGmbzV0Q54bg9hnDWXFfqMmnZqhhKKu0MMhz5MuY1NlC7jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6410
+References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
+ <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com> <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
+ <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com> <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
+ <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
+ <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org> <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
+ <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org> <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
+ <b6462189-5de6-4297-8d10-fce795c38ceb@amd.com> <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
+In-Reply-To: <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
+From: Lars Francke <lars.francke@gmail.com>
+Date: Mon, 27 Oct 2025 17:18:15 +0100
+X-Gm-Features: AWmQ_bnRbfPyH1tGaP7a94cga1tZwERnmHmTJyn3R3Hb38Fi5DhxmAwE1z9GpkM
+Message-ID: <CAD-Ua_ixbf1ApMPMMSner28-fRg7BuhTu3QSw1U=ozqgS9fUjQ@mail.gmail.com>
+Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
+ TEE errors
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org, 
+	Patil Rajesh <Patil.Reddy@amd.com>
+Content-Type: multipart/mixed; boundary="0000000000005421df06422641a0"
 
-On 10/27/25 3:22 AM, Shyam Sundar S K wrote:
-> 
-> 
-> On 10/24/2025 22:02, Mario Limonciello wrote:
->>
->>
->> On 10/24/2025 11:08 AM, Antheas Kapenekakis wrote:
->>> On Fri, 24 Oct 2025 at 17:43, Mario Limonciello
->>> <mario.limonciello@amd.com> wrote:
->>>>
->>>>
->>>>
->>>> On 10/24/2025 10:21 AM, Antheas Kapenekakis wrote:
->>>>> The ROG Xbox Ally (non-X) SoC features a similar architecture to the
->>>>> Steam Deck. While the Steam Deck supports S3 (s2idle causes a crash),
->>>>> this support was dropped by the Xbox Ally which only S0ix suspend.
->>>>>
->>>>> Since the handler is missing here, this causes the device to not
->>>>> suspend
->>>>> and the AMD GPU driver to crash while trying to resume afterwards
->>>>> due to
->>>>> a power hang.
->>>>>
->>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
->>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->>>>> ---
->>>>>     drivers/platform/x86/amd/pmc/pmc.c | 3 +++
->>>>>     drivers/platform/x86/amd/pmc/pmc.h | 1 +
->>>>>     2 files changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/
->>>>> platform/x86/amd/pmc/pmc.c
->>>>> index bd318fd02ccf..cae3fcafd4d7 100644
->>>>> --- a/drivers/platform/x86/amd/pmc/pmc.c
->>>>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->>>>> @@ -106,6 +106,7 @@ static void amd_pmc_get_ip_info(struct
->>>>> amd_pmc_dev *dev)
->>>>>         switch (dev->cpu_id) {
->>>>>         case AMD_CPU_ID_PCO:
->>>>>         case AMD_CPU_ID_RN:
->>>>> +     case AMD_CPU_ID_VG:
->>>>>         case AMD_CPU_ID_YC:
->>>>>         case AMD_CPU_ID_CB:
->>>>>                 dev->num_ips = 12;
->>>>> @@ -517,6 +518,7 @@ static int amd_pmc_get_os_hint(struct
->>>>> amd_pmc_dev *dev)
->>>>>         case AMD_CPU_ID_PCO:
->>>>>                 return MSG_OS_HINT_PCO;
->>>>>         case AMD_CPU_ID_RN:
->>>>> +     case AMD_CPU_ID_VG:
->>>>>         case AMD_CPU_ID_YC:
->>>>>         case AMD_CPU_ID_CB:
->>>>>         case AMD_CPU_ID_PS:
->>>>> @@ -717,6 +719,7 @@ static const struct pci_device_id
->>>>> pmc_pci_ids[] = {
->>>>>         { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
->>>>>         { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
->>>>>         { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SHP) },
->>>>> +     { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
->>>>>         { PCI_DEVICE(PCI_VENDOR_ID_AMD,
->>>>> PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
->>>>>         { PCI_DEVICE(PCI_VENDOR_ID_AMD,
->>>>> PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
->>>>>         { }
->>>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/
->>>>> platform/x86/amd/pmc/pmc.h
->>>>> index 62f3e51020fd..fe3f53eb5955 100644
->>>>> --- a/drivers/platform/x86/amd/pmc/pmc.h
->>>>> +++ b/drivers/platform/x86/amd/pmc/pmc.h
->>>>> @@ -156,6 +156,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
->>>>>     #define AMD_CPU_ID_RN                       0x1630
->>>>>     #define AMD_CPU_ID_PCO                      AMD_CPU_ID_RV
->>>>>     #define AMD_CPU_ID_CZN                      AMD_CPU_ID_RN
->>>>> +#define AMD_CPU_ID_VG                        0x1645
->>>>
->>>> Can you see if 0xF14 gives you a reasonable value for the idle mask if
->>>> you add it to amd_pmc_idlemask_read()?  Make a new define for it
->>>> though,
->>>> it shouldn't use the same define as 0x1a platforms.
->>>
->>> It does not work. Reports 0. I also tested the other ones, but the
->>> 0x1a was the same as you said. All report 0x0.
->>
->> It's possible the platform doesn't report an idle mask.
->>
->> 0xF14 is where I would have expected it to report.
->>
->> Shyam - can you look into this to see if it's in a different place
->> than 0xF14 for Van Gogh?
-> 
-> Van Gogh is before Cezzane? I am bit surprised that pmc is getting
-> loaded there.
+--0000000000005421df06422641a0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-IIRC the first Van Gogh parts actually came after Cezanne.  Around 
-Rembrandt timeframe.  But nothing used s2idle at that time.  So I wasn't 
-sure whether idle mask support was present.
+I changed the name and removed the macro and now get this with the
+attached patch (I added the "sp_restore called" log line)
 
-I think that the Xbox Ally X is the first Van Gogh based part that has 
-s2idle support.  My wonder was if idle mask reading made it into the 
-updated PMFW on the Xbox Ally X but the offset was wrong.
-> 
-> Antheas - what is the output of
-> 
-> #lspci -s 00:00.0
-> 
-> 0xF14 index is meant for 1Ah (i.e. Strix and above)
-> 
->>
->>>
->>> Any idea why the OS hint only works 90% of the time?
-> 
-> What is the output of amd_pmc_dump_registers() when 10% of the time
-> when the OS_HINT is not working?
-> 
-> What I can surmise is, though pmc driver is sending the hint PMFW is
-> not taking any action (since the support in FW is missing)
-> 
->>
->> If we get the idle mask reporting working we would have a better idea
->> if that is what is reported wrong.
->>
-> 
-> IIRC, The concept of idlemask came only after cezzane that too after a
-> certain PMFW version. So I am not sure if idlemask actually exists.
-> 
-> 
->> If I was to guess though; maybe GFX is still active.
->>
->> Depending upon what's going wrong smu_fw_info might have some more
->> information too.
-> 
-> That's a good point to try it out.
-> 
-> Thanks,
-> Shyam
-> 
+Oct 27 12:44:47 lars-laptop kernel: sp_restore called
+Oct 27 12:44:47 lars-laptop kernel: ACPI: EC: event unblocked
+Oct 27 12:44:47 lars-laptop kernel: usb usb1: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb2: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb5: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb6: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb7: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb3: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb4: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: usb usb8: root hub lost power or was re=
+set
+Oct 27 12:44:47 lars-laptop kernel: amdxdna 0000:c4:00.1: [drm]
+firmware resuming...
+Oct 27 12:44:47 lars-laptop kernel: [drm] PCIE GART of 512M enabled
+(table at 0x00000083FFB00000).
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: PSP
+is resuming...
+Oct 27 12:44:47 lars-laptop kernel: ccp 0000:c3:00.2: tee: ring init
+command failed (0x0000000d)
+Oct 27 12:44:47 lars-laptop kernel: ccp 0000:c3:00.2: PM:
+dpm_run_callback(): pci_pm_restore returns -5
+Oct 27 12:44:47 lars-laptop kernel: ccp 0000:c3:00.2: PM: failed to
+restore async: error -5
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu:
+reserve 0x8c00000 from 0x83e0000000 for PSP TMR
+Oct 27 12:44:47 lars-laptop kernel: nvme nvme0: 32/0/0 default/read/poll qu=
+eues
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: format 3 timestamp
+0x66300c2d
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: Mon 29 Apr 2024 22:07:57
+GMT Daylight Time
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: format 3 timestamp
+0x66300c2d
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: Mon 29 Apr 2024 22:07:57
+GMT Daylight Time
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: format 3 timestamp
+0x66300c2d
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: Mon 29 Apr 2024 22:07:57
+GMT Daylight Time
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: format 3 timestamp
+0x66300c2d
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01.wmfw: Mon 29 Apr 2024 22:07:57
+GMT Daylight Time
+Oct 27 12:44:47 lars-laptop kernel: amdxdna 0000:c4:00.1: [drm]
+hardware context resuming...
+Oct 27 12:44:47 lars-laptop kernel: usb 3-2: WARN: invalid context
+state for evaluate context command.
+Oct 27 12:44:47 lars-laptop kernel: usb 3-2: reset full-speed USB
+device number 2 using xhci_hcd
+Oct 27 12:44:47 lars-laptop kernel: usb 3-5: reset high-speed USB
+device number 4 using xhci_hcd
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: DSP1: Firmware: 1a00d6 vendor: 0x2
+v3.11.18, 41 algorithms
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: DSP1: Firmware: 1a00d6 vendor: 0x2
+v3.11.18, 41 algorithms
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01-amp3.bin: v3.11.18
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: DSP1: misc:
+C:\ProductSetting\HP\Chiron\Tuning_Relese\20250216\init\Right_Tweeter
+(131118.360100.80216)-init.bin
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01-amp1.bin: v3.11.18
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: DSP1: misc:
+C:\ProductSetting\HP\Chiron\Tuning_Relese\20250216\init\Left_Woofer
+(131118.360200.80216)-init.bin
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: DSP1: Firmware: 1a00d6 vendor: 0x2
+v3.11.18, 41 algorithms
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: DSP1: Firmware: 1a00d6 vendor: 0x2
+v3.11.18, 41 algorithms
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01-amp2.bin: v3.11.18
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: DSP1: misc:
+C:\ProductSetting\HP\Chiron\Tuning_Relese\20250216\init\Left_Tweeter
+(131118.360300.80216)-init.bin
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: DSP1:
+cirrus/cs35l54-b0-dsp1-misc-103c8d01-amp4.bin: v3.11.18
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: DSP1: misc:
+C:\ProductSetting\HP\Chiron\Tuning_Relese\20250216\init\Right_Woofer
+(131118.360000.80216)-init.bin
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: RAS:
+optional ras ta ucode is not available
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: RAP:
+optional rap ta ucode is not available
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu:
+SECUREDISPLAY: optional securedisplay ta ucode is not available
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: SMU
+is resuming...
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: SMU
+is resumed successfully!
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: [drm]
+DMUB hardware initialized: version=3D0x09003100
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+gfx_0.0.0 uses VM inv eng 0 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.0.0 uses VM inv eng 1 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.1.0 uses VM inv eng 4 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.2.0 uses VM inv eng 6 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.3.0 uses VM inv eng 7 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.0.1 uses VM inv eng 8 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.1.1 uses VM inv eng 9 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.2.1 uses VM inv eng 10 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+comp_1.3.1 uses VM inv eng 11 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+sdma0 uses VM inv eng 12 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+vcn_unified_0 uses VM inv eng 0 on hub 8
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+vcn_unified_1 uses VM inv eng 1 on hub 8
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+jpeg_dec_0 uses VM inv eng 4 on hub 8
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+jpeg_dec_1 uses VM inv eng 6 on hub 8
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Oct 27 12:44:47 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: ring
+vpe uses VM inv eng 7 on hub 8
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: Calibration applied
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: Calibration applied
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.2: Tuning PID: 0x131118, SID: 0x360100,
+TID: 0x80216
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.0: Tuning PID: 0x131118, SID: 0x360200,
+TID: 0x80216
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: Calibration applied
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: Calibration applied
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.1: Tuning PID: 0x131118, SID: 0x360300,
+TID: 0x80216
+Oct 27 12:44:47 lars-laptop kernel: cs35l56-hda
+i2c-CSC3554:00-cs35l54-hda.3: Tuning PID: 0x131118, SID: 0x360000,
+TID: 0x80216
+Oct 27 12:44:47 lars-laptop kernel: BUG: kernel NULL pointer
+dereference, address: 00000000000003fc
+Oct 27 12:44:47 lars-laptop kernel: #PF: supervisor read access in kernel m=
+ode
+Oct 27 12:44:47 lars-laptop kernel: #PF: error_code(0x0000) - not-present p=
+age
 
+Then I have to reboot. I'm happy to try more patches - but I have way
+too little knowledge about any of this to be of any other help I'm
+afraid.
+
+Thanks,
+Lars
+
+On Mon, Oct 27, 2025 at 2:10=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
+rg> wrote:
+>
+> On 10/27/25 7:11 AM, Shyam Sundar S K wrote:
+> >
+> >
+> > On 10/27/2025 16:42, Lars Francke wrote:
+> >>> One way to be sure it's applied is to add a pr_info() message into th=
+e
+> >>> new function.  Then you'll know exactly when the new function is call=
+ed
+> >>> in the logs.
+> >>>
+> >>> But assuming that was in place then I feel this will still require so=
+me
+> >>> other coordination work with the PMF driver then too.
+> >>
+> >> I did that now, thanks for the hint.
+> >> I added a pr_info to the sp_restore method but it is never printed.
+> >> Just to confirm that I'm building and booting the right kernel I also
+> >> added a debug line right before the "TEE enact" error:
+> >>
+> >> Oct 27 10:50:06 lars-laptop kernel: Lars patch worked
+> >> Oct 27 10:50:06 lars-laptop kernel: amd-pmf AMDI0105:00: TEE enact cmd
+> >> failed. err: ffff000e, ret:0
+> >>
+> >> In other words: I'm pretty certain I have your patch applied but
+> >> sp_restore is never called which I think was the intention.
+> >>
+> >> I did play around a bit in the code but all I achieved are NULL
+> >> pointer crashes :)
+> >> It looks like "i2c_hid_core_pm" might be a typo/copy & paste error? I
+> >> assume it should be "sp_pci_pm_ops"?
+> >
+> > Yes =E2=80=94 that should be sp_pci_pm_ops. Keep the pr_info in sp_rest=
+ore();
+> > if that log appears but the issue remains, the PMF driver will need to
+> > be updated to support the .restore callback.
+> >
+>
+> Yes; sorry about that.  If you need me to spin a new one, let me know.
+>
+> But I am still suspecting we're going to need PMF driver changes too
+> because if the ring is not active then it's going to mean the TA wasn't
+> running.
+
+--0000000000005421df06422641a0
+Content-Type: text/x-patch; charset="US-ASCII"; name="0001-tee-patch.patch"
+Content-Disposition: attachment; filename="0001-tee-patch.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mh9c22yi0>
+X-Attachment-Id: f_mh9c22yi0
+
+ZGlmZiAtLWdpdCBpL2RyaXZlcnMvY3J5cHRvL2NjcC9zcC1kZXYuYyB3L2RyaXZlcnMvY3J5cHRv
+L2NjcC9zcC1kZXYuYwppbmRleCAzNDY3ZjZkYjRmNTAuLjZjYzk5MWIwMWFlMiAxMDA2NDQKLS0t
+IGkvZHJpdmVycy9jcnlwdG8vY2NwL3NwLWRldi5jCisrKyB3L2RyaXZlcnMvY3J5cHRvL2NjcC9z
+cC1kZXYuYwpAQCAtMjEsNiArMjEsNyBAQAogCiAjaW5jbHVkZSAic2V2LWRldi5oIgogI2luY2x1
+ZGUgImNjcC1kZXYuaCIKKyNpbmNsdWRlICJ0ZWUtZGV2LmgiCiAjaW5jbHVkZSAic3AtZGV2Lmgi
+CiAKIE1PRFVMRV9BVVRIT1IoIlRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+
+Iik7CkBAIC0yMzAsNiArMjMxLDE5IEBAIGludCBzcF9yZXN1bWUoc3RydWN0IHNwX2RldmljZSAq
+c3ApCiAJcmV0dXJuIDA7CiB9CiAKK2ludCBzcF9yZXN0b3JlKHN0cnVjdCBzcF9kZXZpY2UgKnNw
+KQoreworCXByX2luZm8oInNwX3Jlc3RvcmUgY2FsbGVkXG4iKTsKKwlpZiAoc3AtPmRldl92ZGF0
+YS0+cHNwX3ZkYXRhLT50ZWUpIHsKKwkJaW50IHIgPSB0ZWVfcmVzdG9yZShzcC0+cHNwX2RhdGEp
+OworCisJCWlmIChyKQorCQkJcmV0dXJuIHI7CisJfQorCXByX2luZm8oInNwX3Jlc3RvcmUgZG9u
+ZVxuIik7CisJcmV0dXJuIHNwX3Jlc3VtZShzcCk7Cit9CisKIHN0cnVjdCBzcF9kZXZpY2UgKnNw
+X2dldF9wc3BfbWFzdGVyX2RldmljZSh2b2lkKQogewogCXN0cnVjdCBzcF9kZXZpY2UgKmksICpy
+ZXQgPSBOVUxMOwpkaWZmIC0tZ2l0IGkvZHJpdmVycy9jcnlwdG8vY2NwL3NwLWRldi5oIHcvZHJp
+dmVycy9jcnlwdG8vY2NwL3NwLWRldi5oCmluZGV4IDZmOWQ3MDYzMjU3ZC4uMzdiMzhhZmFhYjE0
+IDEwMDY0NAotLS0gaS9kcml2ZXJzL2NyeXB0by9jY3Avc3AtZGV2LmgKKysrIHcvZHJpdmVycy9j
+cnlwdG8vY2NwL3NwLWRldi5oCkBAIC0xNDEsNiArMTQxLDcgQEAgdm9pZCBzcF9kZXN0cm95KHN0
+cnVjdCBzcF9kZXZpY2UgKnNwKTsKIAogaW50IHNwX3N1c3BlbmQoc3RydWN0IHNwX2RldmljZSAq
+c3ApOwogaW50IHNwX3Jlc3VtZShzdHJ1Y3Qgc3BfZGV2aWNlICpzcCk7CitpbnQgc3BfcmVzdG9y
+ZShzdHJ1Y3Qgc3BfZGV2aWNlICpzcCk7CiBpbnQgc3BfcmVxdWVzdF9jY3BfaXJxKHN0cnVjdCBz
+cF9kZXZpY2UgKnNwLCBpcnFfaGFuZGxlcl90IGhhbmRsZXIsCiAJCSAgICAgICBjb25zdCBjaGFy
+ICpuYW1lLCB2b2lkICpkYXRhKTsKIHZvaWQgc3BfZnJlZV9jY3BfaXJxKHN0cnVjdCBzcF9kZXZp
+Y2UgKnNwLCB2b2lkICpkYXRhKTsKZGlmZiAtLWdpdCBpL2RyaXZlcnMvY3J5cHRvL2NjcC9zcC1w
+Y2kuYyB3L2RyaXZlcnMvY3J5cHRvL2NjcC9zcC1wY2kuYwppbmRleCBlN2JiODAzOTEyYTYuLjk4
+YmIwZDc0YzhlYiAxMDA2NDQKLS0tIGkvZHJpdmVycy9jcnlwdG8vY2NwL3NwLXBjaS5jCisrKyB3
+L2RyaXZlcnMvY3J5cHRvL2NjcC9zcC1wY2kuYwpAQCAtMzUzLDYgKzM1MywxMyBAQCBzdGF0aWMg
+aW50IF9fbWF5YmVfdW51c2VkIHNwX3BjaV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQogCXJl
+dHVybiBzcF9yZXN1bWUoc3ApOwogfQogCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIHNwX3Bj
+aV9yZXN0b3JlKHN0cnVjdCBkZXZpY2UgKmRldikKK3sKKwlzdHJ1Y3Qgc3BfZGV2aWNlICpzcCA9
+IGRldl9nZXRfZHJ2ZGF0YShkZXYpOworCisJcmV0dXJuIHNwX3Jlc3RvcmUoc3ApOworfQorCiAj
+aWZkZWYgQ09ORklHX0NSWVBUT19ERVZfU1BfUFNQCiBzdGF0aWMgY29uc3Qgc3RydWN0IHNldl92
+ZGF0YSBzZXZ2MSA9IHsKIAkuY21kcmVzcF9yZWcJCT0gMHgxMDU4MCwJLyogQzJQTVNHXzMyICov
+CkBAIC01NDQsNyArNTUxLDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBz
+cF9wY2lfdGFibGVbXSA9IHsKIH07CiBNT0RVTEVfREVWSUNFX1RBQkxFKHBjaSwgc3BfcGNpX3Rh
+YmxlKTsKIAotc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKHNwX3BjaV9wbV9vcHMsIHNwX3BjaV9z
+dXNwZW5kLCBzcF9wY2lfcmVzdW1lKTsKKworY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgc3BfcGNp
+X3BtX29wcyA9IHsKKwkuc3VzcGVuZCA9IHBtX3NsZWVwX3B0cihzcF9wY2lfc3VzcGVuZCksCisJ
+LnJlc3VtZSA9IHBtX3NsZWVwX3B0cihzcF9wY2lfcmVzdW1lKSwKKwkuZnJlZXplID0gcG1fc2xl
+ZXBfcHRyKHNwX3BjaV9zdXNwZW5kKSwKKwkudGhhdyA9IHBtX3NsZWVwX3B0cihzcF9wY2lfcmVz
+dW1lKSwKKwkucG93ZXJvZmYgPSBwbV9zbGVlcF9wdHIoc3BfcGNpX3N1c3BlbmQpLAorCS5yZXN0
+b3JlID0gcG1fc2xlZXBfcHRyKHNwX3BjaV9yZXN0b3JlKSwKK307CiAKIHN0YXRpYyBzdHJ1Y3Qg
+cGNpX2RyaXZlciBzcF9wY2lfZHJpdmVyID0gewogCS5uYW1lID0gImNjcCIsCmRpZmYgLS1naXQg
+aS9kcml2ZXJzL2NyeXB0by9jY3AvdGVlLWRldi5jIHcvZHJpdmVycy9jcnlwdG8vY2NwL3RlZS1k
+ZXYuYwppbmRleCA1ZTFkODA3MjQ2NzguLmE3NDcwNDc3MTE3ZCAxMDA2NDQKLS0tIGkvZHJpdmVy
+cy9jcnlwdG8vY2NwL3RlZS1kZXYuYworKysgdy9kcml2ZXJzL2NyeXB0by9jY3AvdGVlLWRldi5j
+CkBAIC0zNjUsMyArMzY1LDExIEBAIGludCBwc3BfY2hlY2tfdGVlX3N0YXR1cyh2b2lkKQogCXJl
+dHVybiAwOwogfQogRVhQT1JUX1NZTUJPTChwc3BfY2hlY2tfdGVlX3N0YXR1cyk7CisKK2ludCB0
+ZWVfcmVzdG9yZShzdHJ1Y3QgcHNwX2RldmljZSAqcHNwKQoreworCWlmICghcHNwIHx8ICFwc3At
+PnRlZV9kYXRhKQorCQlyZXR1cm4gLUVOT0RFVjsKKworCXJldHVybiB0ZWVfaW5pdF9yaW5nKHBz
+cC0+dGVlX2RhdGEpOworfQpcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUKZGlmZiAtLWdpdCBp
+L2RyaXZlcnMvY3J5cHRvL2NjcC90ZWUtZGV2Lmggdy9kcml2ZXJzL2NyeXB0by9jY3AvdGVlLWRl
+di5oCmluZGV4IGVhOWEyYjdjMDVmNS4uYzIzNDE2Y2I3YmIzIDEwMDY0NAotLS0gaS9kcml2ZXJz
+L2NyeXB0by9jY3AvdGVlLWRldi5oCisrKyB3L2RyaXZlcnMvY3J5cHRvL2NjcC90ZWUtZGV2LmgK
+QEAgLTExMSw1ICsxMTEsNiBAQCBzdHJ1Y3QgdGVlX3JpbmdfY21kIHsKIAogaW50IHRlZV9kZXZf
+aW5pdChzdHJ1Y3QgcHNwX2RldmljZSAqcHNwKTsKIHZvaWQgdGVlX2Rldl9kZXN0cm95KHN0cnVj
+dCBwc3BfZGV2aWNlICpwc3ApOworaW50IHRlZV9yZXN0b3JlKHN0cnVjdCBwc3BfZGV2aWNlICpw
+c3ApOwogCiAjZW5kaWYgLyogX19URUVfREVWX0hfXyAqLwo=
+--0000000000005421df06422641a0--
