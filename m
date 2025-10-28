@@ -1,33 +1,33 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000172D595B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 09:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE40E20010A;
+	Tue, 28 Oct 2025 09:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761642197; cv=none; b=gzx6tQMQ5Lf4DilyolWueK6Xz6oiBAyF5nF7VWd6fo2e2YhvR4AxejPZ21RDUzIpN289dTCA7tjbReC/Smp5Jygj+N3q6FwM6OeYlVVmr2FDh1XKR/N5CDUnnUQkrzdM8rdElPReLS/3406UciWRzg4u0OCdcLD/kmlavtEiRgQ=
+	t=1761644091; cv=none; b=tGcbVCKhP5DKVYNL3LeCdYy4nz+mUpt9Ud4dcrv75riCtw3w8JKKf2d4G1ZX8vhDGzSwH5167K5yIf5+Yj0PjIzBgC9aJoqoWtQsYN0PRRaIC6lSXvCKPO62BWstap6mCGvEmNX6dIi8eaY86mtHIWGR4RY/KBCSUXEuVbNRSmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761642197; c=relaxed/simple;
-	bh=0KEWipz1V8+1I9gmXJPlHbemV+H9wCPTHrqoRZyO5HY=;
+	s=arc-20240116; t=1761644091; c=relaxed/simple;
+	bh=L9lNgr55ANumsILgGWhwxvlIwl0om32wQMHzK7ZhExY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pdis5qAQY6PVpGf1UBIqmD6vskfC4LlJ9UktTZ0SBnHWT9nHlKzIbVbftHK3B1ViytznHUO0CROk5klxN1/B1JsoZf7gCQBCammgymev6w9zCLgQNhqfoJ/CISBwIgZVbfRiErxQZGK0XRNACZR1uqfXn8kadEckp79bHXEVBAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mCywzS2i; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=hBo4Ey2jnN+AicPRpH1oXD8AMr8k9QA8Ir5eH/n3uIFQxKIraErMnxKijoOhUqcBFhKgZRmcC0mv8lQQOw/KY01Z/VPENOVWJ7jogFFCow3v4I1JQDM7HxMsOTUJ6Wpv8p45RWpJijGAPL4sb/yY0Fgj6bP4zNj2CavD7YWZJ9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prLKEUFS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mCywzS2i"
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B974B1D29;
-	Tue, 28 Oct 2025 10:01:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1761642082;
-	bh=0KEWipz1V8+1I9gmXJPlHbemV+H9wCPTHrqoRZyO5HY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prLKEUFS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBE6C4CEE7;
+	Tue, 28 Oct 2025 09:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761644091;
+	bh=L9lNgr55ANumsILgGWhwxvlIwl0om32wQMHzK7ZhExY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mCywzS2ikEOA4tRkwzoDcNXTP10GvATGDi/xdppQeDMxbfNAnNbfeytqU42rCuxBY
-	 z9fgXGCGkc7mWmwUnzE8KI5m7WF5EOUcdfcjhSkLu5nV7z7zRlT4nPyKFRka/hozx5
-	 SNR3lvenOd/o4m1Z2wJNIwSrDJ32V/U5ePk1cl8I=
-Message-ID: <3a11dd34-d0fa-4a60-a134-5b577e5f9f59@ideasonboard.com>
-Date: Tue, 28 Oct 2025 09:03:08 +0000
+	b=prLKEUFSFgbsrhe2453Je3WCYbwObHMZ+9DQNfk+FdC3+6fJOT5wlC1Wc8jnHuI48
+	 XP2wnBAkeIamnF3s1wDtwDXeidokFM+MclfWSUhX8QBR7zTaFJK2VttyO1LeMVKvzl
+	 fzZ43L4OKaf+VWOH9cemGUsVUOXHpWYKY3HVGQZFGhvvRz+yIyNJj4rbcWvR86n6s+
+	 UUR7G606qNzguNBCmCIL3+ct8+HhBN4VSQedlPfK9xz5dFZQXW5TeZgkdXVqrHshI0
+	 MPHlBaamjcmEVBHVf2D4sFSSCzjTvS+MULSC/Vs07t0TYvlVW1ux4Q7C+xtJJ3vt3M
+	 1ZVvkQZndpIug==
+Message-ID: <37667f90-7333-4316-8858-8445f8f81409@kernel.org>
+Date: Tue, 28 Oct 2025 10:34:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,47 +35,95 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] MAINTAINERS: Update int3472 maintainers
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v2] platform/x86: int3472: Fix double free of GPIO device
+ during unregister
+To: Qiu Wenbo <qiuwenbo@gnome.org>, Daniel Scally <djrscally@gmail.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251024050537.92440-1-qiuwenbo@gnome.org>
+ <20251028063009.289414-1-qiuwenbo@gnome.org>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20251028063009.289414-1-qiuwenbo@gnome.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi,
 
-On 28/10/2025 08:49, Sakari Ailus wrote:
-> Add myself as the maintainer of the int3472 driver. Also update Daniel's
-> e-mail address while at it.
+On 28-Oct-25 7:30 AM, Qiu Wenbo wrote:
+> From: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> regulator_unregister() already frees the associated GPIO device. On
+> ThinkPad X9 (Lunar Lake), this causes a double free issue that leads to
+> random failures when other drivers (typically Intel THC) attempt to
+> allocate interrupts. The root cause is that the reference count of the
+> pinctrl_intel_platform module unexpectedly drops to zero when this
+> driver defers its probe.
+> 
+> This behavior can also be reproduced by unloading the module directly.
+> 
+> Fix the issue by removing the redundant release of the GPIO device
+> during regulator unregistration.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 1e5d088a52c2 ("platform/x86: int3472: Stop using devm_gpiod_get()")
+> Signed-off-by: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
 > ---
-
-Thanks Sakari!
-
-Acked-by: Daniel Scally <dan.scally@ideasonboard.com>
-
-(or whatever tag is appropriate...)
-
->   MAINTAINERS | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> Changes since V1:
+>  - Add Reviewed-by: from Andy Shevchenko and Sakari Ailus
+>  - Add Cc to stable@
+>  - Remove the blank line after Fixes:
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 252b06d4240c..ebc9f33f3f19 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12887,7 +12887,8 @@ F:	tools/testing/selftests/sgx/*
->   K:	\bSGX_
->   
->   INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
-> -M:	Daniel Scally <djrscally@gmail.com>
-> +M:	Daniel Scally <dan.scally@ideasonboard.com>
-> +M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->   S:	Maintained
->   F:	drivers/platform/x86/intel/int3472/
->   F:	include/linux/platform_data/x86/int3472.h
+>  drivers/platform/x86/intel/int3472/clk_and_regulator.c | 5 +----
+>  include/linux/platform_data/x86/int3472.h              | 1 -
+>  2 files changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> index 476ec24d37020..9e052b164a1ab 100644
+> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> @@ -245,15 +245,12 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+>  	if (IS_ERR(regulator->rdev))
+>  		return PTR_ERR(regulator->rdev);
+>  
+> -	int3472->regulators[int3472->n_regulator_gpios].ena_gpio = gpio;
+>  	int3472->n_regulator_gpios++;
+>  	return 0;
+>  }
+>  
+>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472)
+>  {
+> -	for (int i = 0; i < int3472->n_regulator_gpios; i++) {
+> +	for (int i = 0; i < int3472->n_regulator_gpios; i++)
+>  		regulator_unregister(int3472->regulators[i].rdev);
+> -		gpiod_put(int3472->regulators[i].ena_gpio);
+> -	}
+>  }
+> diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+> index 1571e9157fa50..b1b837583d544 100644
+> --- a/include/linux/platform_data/x86/int3472.h
+> +++ b/include/linux/platform_data/x86/int3472.h
+> @@ -100,7 +100,6 @@ struct int3472_gpio_regulator {
+>  	struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
+>  	char supply_name_upper[GPIO_SUPPLY_NAME_LENGTH];
+>  	char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+> -	struct gpio_desc *ena_gpio;
+>  	struct regulator_dev *rdev;
+>  	struct regulator_desc rdesc;
+>  };
 
