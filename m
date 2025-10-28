@@ -1,46 +1,64 @@
-Received: from smtp.gnome.org (smtp.gnome.org [44.216.4.43])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E314280325;
-	Tue, 28 Oct 2025 06:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.216.4.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91952DBF75
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761633094; cv=none; b=hT5roZCx8Lf17DjURjiEoPqzXMWU8KRey3WuYmGAX1oMksEIZLxoDPUJecnHK/kLn0hSMbTvJ24GbIfBQwka8veb1WudHgDbwp9s98VSLO+zWAJckH3Cb7HDRVbPPLPrI53wI1JVyu8zBbsLT9ucbB9NELmXYGnK01LWtpeIMEU=
+	t=1761641406; cv=none; b=cxelHCPt1nD2XVxQzp0wP4+GdntwdwMRc2ROoFEDHksbhCaiSGqQxWyRcdbOcjfUjcSNdGM5sWBfJ1ObVK6UakeSfrnQIwpWR93SFcBcTtEv18vVTmWiEOyyWmBLcDwuynTBmuXIaubzwuRNF5FOuGez25Cq+M5dKfjy2DIoD9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761633094; c=relaxed/simple;
-	bh=zdg2WR5ElEOcFpZPdBEjMwQHKx2E+JT6vJwGPJcp43k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YTiRZssUo7VXwF9H4Qfx6y0017D9Oh5b1bAHsam250qp/6/eSvLwaHggZToFyCsp4JLiOkLcvRHp+w1tPqJHTDxBrYtUwORRfDEwGn1njdDpSV2eDBeZ4LHlYBsiKuDIZeWuR2+VPQTDdUrDjZK3vrDukC/mlpYG0SiRS6XO75c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnome.org; spf=pass smtp.mailfrom=gnome.org; dkim=pass (1024-bit key) header.d=gnome.org header.i=@gnome.org header.b=PhVqOnrZ; arc=none smtp.client-ip=44.216.4.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnome.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnome.org
+	s=arc-20240116; t=1761641406; c=relaxed/simple;
+	bh=WBDgWgw3JzodLFZ0JOIOkukU0O6cyimC7wTtJ67I9GI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RSjtSD0TEDdWbEIMvOG5l7D7qoCH2lH5A5D556eFsd8XzuuXX+02n7XNTBMxyzShnAyI9kfMSmDiayXV6ZPZU6i96VMrlt4bdSZa7hdvDRPPeMnkws7Nmnd5AMCDMrdxtdlgpLmYnSwXUQZbXDIE1nrJ/DD2qpzlww/ho09SwHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bS5BQLXA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gnome.org header.i=@gnome.org header.b="PhVqOnrZ"
-Received: from localhost.localdomain (unknown [61.185.218.172])
-	by smtp.gnome.org (Postfix) with ESMTPSA id 62CDD1098412F;
-	Tue, 28 Oct 2025 06:31:23 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp.gnome.org 62CDD1098412F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gnome.org;
-	s=default; t=1761633086;
-	bh=yh01/ijVBeH4YcUsL82QrdCb3TZ1vLYINr3BHOaQgsQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PhVqOnrZHWSlcqtqwReeE0KmCPGBsMe/JlrcVgQb0UHN1ZCfBYeQBP4AZCkOnxVIr
-	 rupvqUOqV7d8cc0/+TX0fnGrpkx4vULFTkFgJVuz7N6PieWxiiaCH1gZ4vSSAKHzl+
-	 gywkY8VoXsDWiP3WB7sPk2YCedHQemiq7IlOmhXg=
-From: Qiu Wenbo <qiuwenbo@gnome.org>
-To: Daniel Scally <djrscally@gmail.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: int3472: Fix double free of GPIO device during unregister
-Date: Tue, 28 Oct 2025 14:30:09 +0800
-Message-ID: <20251028063009.289414-1-qiuwenbo@gnome.org>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <20251024050537.92440-1-qiuwenbo@gnome.org>
-References: <20251024050537.92440-1-qiuwenbo@gnome.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bS5BQLXA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761641404; x=1793177404;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WBDgWgw3JzodLFZ0JOIOkukU0O6cyimC7wTtJ67I9GI=;
+  b=bS5BQLXAKpsujQjZXJMRCTzKwppzufp76pQjJvjCu4YFiV86YWCeVy7k
+   b08ioqh57wuA+Pusbz04219+61P4sDhreRlsBf1hng77Dmvck+vyk7/Np
+   Kz+4ToUHpgT8Dbzv7HGqwo+Re1EYu0DXzMX6PPic8Ig9p7KsBMejGqpYL
+   vKsqg1IA6mmNI8y5WvHVL9VPRxMeMzxcJt9Vn1KyVMm9jVwVaOqeknEOR
+   aUYo1A9WhcI44ofhw3zG+y5QWqhfVrH0DTG5ZaOpy8Y6Wprc+KukJ1jA9
+   jmliqWsRsoyLc3B7IquxOkvt/36HCmt05fh/ipUj4eAQpr+lXilC8fODp
+   g==;
+X-CSE-ConnectionGUID: frneirkERfSVFXIbw7GjAQ==
+X-CSE-MsgGUID: 5vAVH51GR9KaeUltWZng/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="81365708"
+X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
+   d="scan'208";a="81365708"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 01:50:03 -0700
+X-CSE-ConnectionGUID: 7f1N61LQTmuPgFHujch98Q==
+X-CSE-MsgGUID: RSOiwENXTuSXyqRzKLiBYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
+   d="scan'208";a="184986224"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.104])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 01:50:02 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C242911F830;
+	Tue, 28 Oct 2025 10:49:59 +0200 (EET)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1vDfOx-00000001ehr-2jOR;
+	Tue, 28 Oct 2025 10:49:59 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Daniel Scally <dan.scally@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] MAINTAINERS: Update int3472 maintainers
+Date: Tue, 28 Oct 2025 10:49:59 +0200
+Message-ID: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,68 +67,28 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
+Add myself as the maintainer of the int3472 driver. Also update Daniel's
+e-mail address while at it.
 
-regulator_unregister() already frees the associated GPIO device. On
-ThinkPad X9 (Lunar Lake), this causes a double free issue that leads to
-random failures when other drivers (typically Intel THC) attempt to
-allocate interrupts. The root cause is that the reference count of the
-pinctrl_intel_platform module unexpectedly drops to zero when this
-driver defers its probe.
-
-This behavior can also be reproduced by unloading the module directly.
-
-Fix the issue by removing the redundant release of the GPIO device
-during regulator unregistration.
-
-Cc: stable@vger.kernel.org
-Fixes: 1e5d088a52c2 ("platform/x86: int3472: Stop using devm_gpiod_get()")
-Signed-off-by: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
-Changes since V1:
- - Add Reviewed-by: from Andy Shevchenko and Sakari Ailus
- - Add Cc to stable@
- - Remove the blank line after Fixes:
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- drivers/platform/x86/intel/int3472/clk_and_regulator.c | 5 +----
- include/linux/platform_data/x86/int3472.h              | 1 -
- 2 files changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 476ec24d37020..9e052b164a1ab 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -245,15 +245,12 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 	if (IS_ERR(regulator->rdev))
- 		return PTR_ERR(regulator->rdev);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 252b06d4240c..ebc9f33f3f19 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12887,7 +12887,8 @@ F:	tools/testing/selftests/sgx/*
+ K:	\bSGX_
  
--	int3472->regulators[int3472->n_regulator_gpios].ena_gpio = gpio;
- 	int3472->n_regulator_gpios++;
- 	return 0;
- }
- 
- void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472)
- {
--	for (int i = 0; i < int3472->n_regulator_gpios; i++) {
-+	for (int i = 0; i < int3472->n_regulator_gpios; i++)
- 		regulator_unregister(int3472->regulators[i].rdev);
--		gpiod_put(int3472->regulators[i].ena_gpio);
--	}
- }
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-index 1571e9157fa50..b1b837583d544 100644
---- a/include/linux/platform_data/x86/int3472.h
-+++ b/include/linux/platform_data/x86/int3472.h
-@@ -100,7 +100,6 @@ struct int3472_gpio_regulator {
- 	struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
- 	char supply_name_upper[GPIO_SUPPLY_NAME_LENGTH];
- 	char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
--	struct gpio_desc *ena_gpio;
- 	struct regulator_dev *rdev;
- 	struct regulator_desc rdesc;
- };
+ INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+-M:	Daniel Scally <djrscally@gmail.com>
++M:	Daniel Scally <dan.scally@ideasonboard.com>
++M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ S:	Maintained
+ F:	drivers/platform/x86/intel/int3472/
+ F:	include/linux/platform_data/x86/int3472.h
 -- 
-2.51.2
+2.47.3
 
