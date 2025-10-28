@@ -1,107 +1,116 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.gnome.org (smtp.gnome.org [44.216.4.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F07F202963
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 21:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E314280325;
+	Tue, 28 Oct 2025 06:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.216.4.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761600241; cv=none; b=FhHwNpsasPCpDSoX6+VeawDdYDuO3Mgskvy6Gj7rbfBkDxhumhx8TQcuJpisdGkNkJfw5AmfLiWiCDSvMrLIhVTd/ZzDM9vw0HXzwoIKTBfES+68b54boEe48sXPltEDQ15tYF3yH1jNzaKOLAWCFIfDI8jyRjoyHCLJmGdwwm0=
+	t=1761633094; cv=none; b=hT5roZCx8Lf17DjURjiEoPqzXMWU8KRey3WuYmGAX1oMksEIZLxoDPUJecnHK/kLn0hSMbTvJ24GbIfBQwka8veb1WudHgDbwp9s98VSLO+zWAJckH3Cb7HDRVbPPLPrI53wI1JVyu8zBbsLT9ucbB9NELmXYGnK01LWtpeIMEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761600241; c=relaxed/simple;
-	bh=1wUE/REmV5er33ZrZ90tFYHgY3DZ5ahpENtsLCHltQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YAak0sgjLgvh80eA+hGqO1c+rEqJRuM4nY3ImQa0n/ugpNd1AtSV20c5amv9OsNRggI4fbruvij0052AvWmcRAjLxu1cbacc3Ta89w8Srr3ORMb7SdkvOqvIaxtb1Ro68f/4r+a6R6hc7y9PEeqZ43O2hRryX8+Y6wl5sjEGDcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDhtBduH; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761633094; c=relaxed/simple;
+	bh=zdg2WR5ElEOcFpZPdBEjMwQHKx2E+JT6vJwGPJcp43k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YTiRZssUo7VXwF9H4Qfx6y0017D9Oh5b1bAHsam250qp/6/eSvLwaHggZToFyCsp4JLiOkLcvRHp+w1tPqJHTDxBrYtUwORRfDEwGn1njdDpSV2eDBeZ4LHlYBsiKuDIZeWuR2+VPQTDdUrDjZK3vrDukC/mlpYG0SiRS6XO75c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnome.org; spf=pass smtp.mailfrom=gnome.org; dkim=pass (1024-bit key) header.d=gnome.org header.i=@gnome.org header.b=PhVqOnrZ; arc=none smtp.client-ip=44.216.4.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnome.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnome.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDhtBduH"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ed06acf75dso4909211cf.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Oct 2025 14:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761600239; x=1762205039; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1wUE/REmV5er33ZrZ90tFYHgY3DZ5ahpENtsLCHltQ4=;
-        b=nDhtBduHgBv4T1qTPhAgyMw8bdG3q06XmpqSmDhW5SN2o8ZVvPaRZJiqSQ7GvPk0Vx
-         P143sxm45kpVvaiAhab0n8/D/YwEPqaeWr8qRqPHqmjCDj+J6hGDTBtWTropYxZEOFYH
-         UQ7Z8tDuL/fq9gujDjBCooMU2g/F8w99FvFkq0BV11iGWZSjhs+iOF0PfPv6t/UkweLy
-         +4zjv7XEM65ZXAEAhkeUkFYluLv87EueFrV5l0myY8sMhprKFswnIjL9VBfC732Naz3d
-         jajdw9MJSymFh6GXLuffFCzlKJ9KOSMrTGKfQ5eelGqcm6nc7AjeATnVkdDWvk3yxlVd
-         t/3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761600239; x=1762205039;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1wUE/REmV5er33ZrZ90tFYHgY3DZ5ahpENtsLCHltQ4=;
-        b=RULD5xjC/gWJtoKF13HmyOy0f0leuL+WI5nAOEAyz77DZx4BbBKODxbp3WCJ5zgJZe
-         GZP+CnmvZjDKQKORgParD9w76ggam43wm+spfnFZ5JFC34le80foqVF73LDZRnom2NA1
-         QZ2jhtjoS2Pg6s2Ekg+duBySe3dg0l5W8MNLVRvl+MRlyhPgrJulk2SwXsKlALON8Qgp
-         Ia8mkSyDD/ITf4bixSYbrU72ZhgLlJ4KNvZC+4n2YnFrrFF/CQR1v5aOSY8k4GGDrC7y
-         c1CHvcImH7y/+Q4MaEYTev9PTvr9eWkoibZLXbrksJn1d0q7akZqdFf5C/SDxGBVHGQg
-         DjAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyxhMJBMpIJQlzTrLsrpv02g7e6NSB9WQDO/d7uPAeCgGnDEbOSp2uxAoEtMpCZVnnvH+L8wuRR9LtY14ZOoNYZDwt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyiKuFVcygOHXDs7KS3HcGlelReV4bg2NIQHk3rL8ErPMwk6HL
-	ZEe/zO/7PewzL8RmeHe1dZzVbqpDY5lZreGruIIAaWrqGD6trHy2Ma6jFZMe33cDa5YkTDxTLYY
-	lQmcSVH+LsmgFVlttO5dNtRcszTGw7mZtaBcoiWzvSQ==
-X-Gm-Gg: ASbGnctOwYXmW32jJ/Sa4ihh3U2rOUaRPyoMLfG1+M+58TYbm4Kf8KE1JUvcBjmmqgX
-	tagsUpJmuldFNFY9/DuQHWae1dYu4xD1MpzX2TpC19Z8VAKg4Rm7APS7wJ3Ypnnba+QwHZy5CDS
-	hOLo4Z94aNy2q88Ow+rcbMBvAtHANx15hPuh98sPhgACKgn1RscS014kjg5pvg9KwiOrUZMuU1u
-	M6RxZ841iu1fZPam8xRcbAAR/QfiVC8iM8eKp5tVtZsAJQst6YLG9NWMJvKO0ULsy+hWDguGKXq
-	mLi8tL1/ofz7/rnmnNz4R/Z/i2sGNgxm7ywrfpXkOA==
-X-Google-Smtp-Source: AGHT+IFOvVopDmgN4RksSnWU6rbsGeLztMA8VoVJJ+bCzz92P51NM0XSr2iqGbLrm/m5Iy9Olan/7ACjw1iFDDbEq/8=
-X-Received: by 2002:a05:622a:3ce:b0:4e8:a560:d980 with SMTP id
- d75a77b69052e-4ed08a4fa74mr14082871cf.38.1761600239099; Mon, 27 Oct 2025
- 14:23:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=gnome.org header.i=@gnome.org header.b="PhVqOnrZ"
+Received: from localhost.localdomain (unknown [61.185.218.172])
+	by smtp.gnome.org (Postfix) with ESMTPSA id 62CDD1098412F;
+	Tue, 28 Oct 2025 06:31:23 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp.gnome.org 62CDD1098412F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gnome.org;
+	s=default; t=1761633086;
+	bh=yh01/ijVBeH4YcUsL82QrdCb3TZ1vLYINr3BHOaQgsQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PhVqOnrZHWSlcqtqwReeE0KmCPGBsMe/JlrcVgQb0UHN1ZCfBYeQBP4AZCkOnxVIr
+	 rupvqUOqV7d8cc0/+TX0fnGrpkx4vULFTkFgJVuz7N6PieWxiiaCH1gZ4vSSAKHzl+
+	 gywkY8VoXsDWiP3WB7sPk2YCedHQemiq7IlOmhXg=
+From: Qiu Wenbo <qiuwenbo@gnome.org>
+To: Daniel Scally <djrscally@gmail.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: int3472: Fix double free of GPIO device during unregister
+Date: Tue, 28 Oct 2025 14:30:09 +0800
+Message-ID: <20251028063009.289414-1-qiuwenbo@gnome.org>
+X-Mailer: git-send-email 2.51.2
+In-Reply-To: <20251024050537.92440-1-qiuwenbo@gnome.org>
+References: <20251024050537.92440-1-qiuwenbo@gnome.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com> <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
- <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com> <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
- <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
- <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org> <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
- <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org> <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
- <b6462189-5de6-4297-8d10-fce795c38ceb@amd.com> <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
- <CAD-Ua_ixbf1ApMPMMSner28-fRg7BuhTu3QSw1U=ozqgS9fUjQ@mail.gmail.com>
- <6f81529b-7ae6-4d63-b0f3-7787a668698e@kernel.org> <CAD-Ua_hAxj5PskiFdiEA7Qt1bWEhKRvCNAyQj0BQmZ2vDnV4aQ@mail.gmail.com>
- <3896a83f-c7b4-4ba4-a223-946562fb21a3@kernel.org> <CAD-Ua_i7VY+a1Mpn6_iubouYCLYOcx7ZYaKNBgtGQw6w8wuU0A@mail.gmail.com>
-In-Reply-To: <CAD-Ua_i7VY+a1Mpn6_iubouYCLYOcx7ZYaKNBgtGQw6w8wuU0A@mail.gmail.com>
-From: Lars Francke <lars.francke@gmail.com>
-Date: Mon, 27 Oct 2025 22:23:22 +0100
-X-Gm-Features: AWmQ_bkKblCzLtsjxiTh7_BxsBCKsGXzLTYuViKMeAZecUHuetvvgpaRStwBKzI
-Message-ID: <CAD-Ua_h2GcpLwAfujyVvS7cF8o0txvpfCF-33baH_Q1D3jUewQ@mail.gmail.com>
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Patil Rajesh <Patil.Reddy@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-This is with a bunch of log statements added. Not sure if it helps.
+From: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
 
-Oct 27 22:04:57 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu: PSP
-is resuming...
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: tee: ring init
-command failed (0x0000000d)
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: sp_restore:
-tee_restore returned -5
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: sp_restore:
-tee_restore failed, returning -5
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: sp_pci_restore:
-sp_restore returned -5
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: sp_pci_restore:
-EXIT (ret=-5)
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2:
-======================================
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: PM:
-dpm_run_callback(): pci_pm_restore returns -5
-Oct 27 22:04:57 lars-laptop kernel: ccp 0000:c3:00.2: PM: failed to
-restore async: error -5
-Oct 27 22:04:57 lars-laptop kernel: amdgpu 0000:c3:00.0: amdgpu:
-reserve 0x8c00000 from 0x83e0000000 for PSP TMR
+regulator_unregister() already frees the associated GPIO device. On
+ThinkPad X9 (Lunar Lake), this causes a double free issue that leads to
+random failures when other drivers (typically Intel THC) attempt to
+allocate interrupts. The root cause is that the reference count of the
+pinctrl_intel_platform module unexpectedly drops to zero when this
+driver defers its probe.
+
+This behavior can also be reproduced by unloading the module directly.
+
+Fix the issue by removing the redundant release of the GPIO device
+during regulator unregistration.
+
+Cc: stable@vger.kernel.org
+Fixes: 1e5d088a52c2 ("platform/x86: int3472: Stop using devm_gpiod_get()")
+Signed-off-by: Qiu Wenbo <qiuwenbo@kylinsec.com.cn>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+Changes since V1:
+ - Add Reviewed-by: from Andy Shevchenko and Sakari Ailus
+ - Add Cc to stable@
+ - Remove the blank line after Fixes:
+
+ drivers/platform/x86/intel/int3472/clk_and_regulator.c | 5 +----
+ include/linux/platform_data/x86/int3472.h              | 1 -
+ 2 files changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+index 476ec24d37020..9e052b164a1ab 100644
+--- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
++++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+@@ -245,15 +245,12 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 	if (IS_ERR(regulator->rdev))
+ 		return PTR_ERR(regulator->rdev);
+ 
+-	int3472->regulators[int3472->n_regulator_gpios].ena_gpio = gpio;
+ 	int3472->n_regulator_gpios++;
+ 	return 0;
+ }
+ 
+ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472)
+ {
+-	for (int i = 0; i < int3472->n_regulator_gpios; i++) {
++	for (int i = 0; i < int3472->n_regulator_gpios; i++)
+ 		regulator_unregister(int3472->regulators[i].rdev);
+-		gpiod_put(int3472->regulators[i].ena_gpio);
+-	}
+ }
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index 1571e9157fa50..b1b837583d544 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -100,7 +100,6 @@ struct int3472_gpio_regulator {
+ 	struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT * 2];
+ 	char supply_name_upper[GPIO_SUPPLY_NAME_LENGTH];
+ 	char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+-	struct gpio_desc *ena_gpio;
+ 	struct regulator_dev *rdev;
+ 	struct regulator_desc rdesc;
+ };
+-- 
+2.51.2
+
