@@ -1,83 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C9D316188
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 16:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22472853E0;
+	Tue, 28 Oct 2025 16:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761669492; cv=none; b=qbiqblTHSzn0hi2azT+q2B3HvFbaSYzngZiVBughofXth9epCVwsEAFMKBjfTOJMnsoGI9M7EuND1TSVflfDylzq1OwVbBtjh7FDulxs2Wrg3whrshwIUUwohd5ZualYgBx7SYUunYyVvkME9ZQc/dw8CzCL4a7d8WK01H8gRmE=
+	t=1761670302; cv=none; b=W6TX8/YGnqEFyYZ0sSc6DHAeg1EUHOHpEhsjIVupBW7fTvX84sEu5fczOWTo6BSOSDRA+vcx9bPliXscikVIGqxVXYPwBmzJWrHGgtUTqR14h4ancPEkCqydX16dy63JXF3Odb0hYygN+jbA5B/FA1xQzwy9EZnjjzqyMVQWY7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761669492; c=relaxed/simple;
-	bh=Gwf1myynrsWTLsrQDL6mhbIKeQj0Ir/k21n6sev5wBQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RSmbPHSg4p6Yg4fsS0ryjW7DIs9ku5/N/fx2Hux0YEf3tMZ012kCiXKElE1l0V8r/DWgqVK43xyLDtqWTEC2HRx2M+in1CTU9QLsd5hGJx9Pa9Z1Y834J/c7bMoKdd6QpcLWkGfB5FTC1N1we0cbM+IbDuQTa/BOqlVKn4xfPzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JV0Vci0z; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1761670302; c=relaxed/simple;
+	bh=yoaFau88fu7GEnNGlir2HFlv0ume3b9rIw67jXjurk4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pBcqSlHYk9X+YMQ2lu0keJA9+hKHZSOYBLzT5P462lahyf8eIALLWr546RPU7GI1+DqrioMGyzSBr+Z2Y10Og49/KfYDrTz0ngTj3ZQtaDSER94rnflP1znK6PQsDX6kflXMTNCHPZ0Dh54mO0Qt4CpCw9J1TW5aNiBZ9NXOHHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YR2Bzabm; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JV0Vci0z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YR2Bzabm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761669490; x=1793205490;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Gwf1myynrsWTLsrQDL6mhbIKeQj0Ir/k21n6sev5wBQ=;
-  b=JV0Vci0zJRwixZNd4siCGbyVJ8/fhb+L+3SSAVC/bU2sfilLcAq/LxLP
-   Mki4AV0nHEqqADg5sMI9jvw1MrIOz5NiSXp9PloaH361/NMWrCZLhqEtz
-   ku8dI2nzJtY//FmXowSU3EJfCdP6rTJrD5MBVXH9Pc+kvtsSyUfwIbYt8
-   uzH2s9aVl15LF3uBLU0AYElF56LfcwRvEc8nb51qDmAIXwFlI+hwViRQ4
-   XPAD7eY+hLJmz72zIX+lC3pULdilkiczqnbLjjIkqJPqJL5rqVNA9Cgo0
-   2xtfDfadMMrQ2a9WcfVX+qmfqBXWgjLQQP+KCcTYwVdlk1H1vWBuLNaTO
-   Q==;
-X-CSE-ConnectionGUID: DYZlsaEJT5O4tMoZQ85vAw==
-X-CSE-MsgGUID: +1JlWdu9QwGk9cf2NILJRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67640366"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="67640366"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:40 -0700
-X-CSE-ConnectionGUID: Hj8KI9rmTI2SRfiemqcZtA==
-X-CSE-MsgGUID: p3QJ6cphQouWtDFAPnTc6Q==
+  t=1761670301; x=1793206301;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=yoaFau88fu7GEnNGlir2HFlv0ume3b9rIw67jXjurk4=;
+  b=YR2BzabmLd9xBZwbgt5I96w/ctQJsmsUOI6HgxC1YBv/GoPSoJ9JZCuJ
+   Qkt4qLIz1gaxhEVBkbnPgHdiXtVv4M/xh/b0tCwg6eU+93GwB7S2rp9Un
+   Zs/zBweZbJ4lqed/vx4KjluDyrFsJCxrCIwaOAAFySyEh2id4KJSfROMR
+   TxNRYsg8jDwmJITA6sXkuMtrkeM+O89bT008+ug+RtclGbDHC4vMOo+NB
+   4ALGlUNvhcHGfbHf6enyI/EhxUkWE3VSmyzTCLSHShBhCeFUb37l+DzxK
+   2oFvcORhKcpxLcoarMQVZKlI9W6NZxq8uTV24hsivY406yy6jxws9k5fE
+   g==;
+X-CSE-ConnectionGUID: rTSIRKnjQReO4DqGBt8TjA==
+X-CSE-MsgGUID: 45UUK/iIQDGABh1X+qFlLw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="67616639"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="67616639"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:51:40 -0700
+X-CSE-ConnectionGUID: dp86btRNTFOOHhcMBxtn+w==
+X-CSE-MsgGUID: 1bU5Q4avTXS9EZJaPHIXmw==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
+   d="scan'208";a="189718688"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:38 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:51:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Daniel Scally <dan.scally@ideasonboard.com>, 
- Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
-References: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 1/1] MAINTAINERS: Update int3472 maintainers
-Message-Id: <176166945291.2044.458036116871888011.b4-ty@linux.intel.com>
-Date: Tue, 28 Oct 2025 18:37:32 +0200
+Date: Tue, 28 Oct 2025 18:51:34 +0200 (EET)
+To: Lazar Aleksic <kripticni.dev@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform: x86: Kconfig: fix minor typo in help for
+ WIRELESS_HOTKEY
+In-Reply-To: <20251017183521.16268-1-kripticni.dev@gmail.com>
+Message-ID: <453fa860-feb7-fe7f-34eb-4b023262cb41@linux.intel.com>
+References: <20251017183521.16268-1-kripticni.dev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 28 Oct 2025 10:49:59 +0200, Sakari Ailus wrote:
+On Fri, 17 Oct 2025, Lazar Aleksic wrote:
 
-> Add myself as the maintainer of the int3472 driver. Also update Daniel's
-> e-mail address while at it.
+> From: kripticni <kripticni.dev@gmail.com>
 > 
+> Fixed a misspelling of Xiaomi
 > 
+> Signed-off-by: kripticni <kripticni.dev@gmail.com>
 
+Hi,
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Thanks for the patch. In order to apply it, we need to have your name in 
+the Signed-off so please send v2 with that corrected.
 
-The list of commits applied:
-[1/1] MAINTAINERS: Update int3472 maintainers
-      commit: 7f7d28c69eda3692bcf102b7096b93fd45c75b1d
-
---
+-- 
  i.
+
+
+> ---
+>  drivers/platform/x86/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 46e62feeda3c..c122016d82f1 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -432,7 +432,7 @@ config WIRELESS_HOTKEY
+>  	depends on INPUT
+>  	help
+>  	 This driver provides supports for the wireless buttons found on some AMD,
+> -	 HP, & Xioami laptops.
+> +	 HP, & Xiaomi laptops.
+>  	 On such systems the driver should load automatically (via ACPI alias).
+>  
+>  	 To compile this driver as a module, choose M here: the module will
+> 
 
