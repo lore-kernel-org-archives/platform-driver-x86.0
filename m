@@ -1,58 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAAE336EDA;
-	Tue, 28 Oct 2025 16:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C9D316188
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 16:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761669471; cv=none; b=p9giWaeUoCTwlhMw8/OcqJ1lEd2vOmdmsQkjNwDl8Ut0BPXkf70QUGc6kNgf1ieR8FnQafHUOa57fr4DrB0xzm6O7Ap6ZOXijnBGrdJzm9ynjHd8la+QjonPE3CsOwccVRsxvVw9HnzIu6mg3IVlgNAi8JTv7O6cONKrtp/IhnE=
+	t=1761669492; cv=none; b=qbiqblTHSzn0hi2azT+q2B3HvFbaSYzngZiVBughofXth9epCVwsEAFMKBjfTOJMnsoGI9M7EuND1TSVflfDylzq1OwVbBtjh7FDulxs2Wrg3whrshwIUUwohd5ZualYgBx7SYUunYyVvkME9ZQc/dw8CzCL4a7d8WK01H8gRmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761669471; c=relaxed/simple;
-	bh=ZnXEqSNV3/vRNUYQ71ZmPOGbFbWmKd7kEWK/wEQ5t5Y=;
+	s=arc-20240116; t=1761669492; c=relaxed/simple;
+	bh=Gwf1myynrsWTLsrQDL6mhbIKeQj0Ir/k21n6sev5wBQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WHW9GcgkGnH2V6rQOlnOv/mRYKVjy65PUDXF/pDjpsF4/jdFIGv64nHJ/fIWwtZojndPjKpNmfKwuChoPxhTOvZURUigeXquWfjBgq9qUCSaUPst+98OzEVjdQoF7NYK66NXWVBTcpEm3YXd3kxoLFP9Pn6ymKfYavuxArbqW2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAtRlfNc; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version:Content-Type; b=RSmbPHSg4p6Yg4fsS0ryjW7DIs9ku5/N/fx2Hux0YEf3tMZ012kCiXKElE1l0V8r/DWgqVK43xyLDtqWTEC2HRx2M+in1CTU9QLsd5hGJx9Pa9Z1Y834J/c7bMoKdd6QpcLWkGfB5FTC1N1we0cbM+IbDuQTa/BOqlVKn4xfPzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JV0Vci0z; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAtRlfNc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JV0Vci0z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761669470; x=1793205470;
+  t=1761669490; x=1793205490;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ZnXEqSNV3/vRNUYQ71ZmPOGbFbWmKd7kEWK/wEQ5t5Y=;
-  b=ZAtRlfNcJ6nBuRNcPJZoGot2XEba9P4XLmytGagWjmxESAn3WYHsNUTB
-   loCIUn86fqVEvsYIYr0PhbIR0945rkiJo4S9bzLCAicawNRWPWPwgTzcQ
-   ymbxJetIhoDWZOM+eVoDkZZmRHFrAv0MEzxMHFOjCEe9wW856/KuSpna1
-   WTz1DYLBQuV7M/ZvbloGsRWzlhsRgTVa7kNkOglHUlzBW15WK7tq5Ncb1
-   5sI+jXdsRO8iXz4w+XIU8IOZ3ceKhcqsyMeChtjKm5nvoEW9PjB+yKB8B
-   lTbvPgeVw30kFzz1EMIP+dfdQb6EARsEagukFcTo4jj2RXT33N2P+zGhR
-   A==;
-X-CSE-ConnectionGUID: ClSs5O+3Rz69Zs6RLWJenQ==
-X-CSE-MsgGUID: hE8X/StYQciF3PKEh9QYmw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63478810"
+  bh=Gwf1myynrsWTLsrQDL6mhbIKeQj0Ir/k21n6sev5wBQ=;
+  b=JV0Vci0zJRwixZNd4siCGbyVJ8/fhb+L+3SSAVC/bU2sfilLcAq/LxLP
+   Mki4AV0nHEqqADg5sMI9jvw1MrIOz5NiSXp9PloaH361/NMWrCZLhqEtz
+   ku8dI2nzJtY//FmXowSU3EJfCdP6rTJrD5MBVXH9Pc+kvtsSyUfwIbYt8
+   uzH2s9aVl15LF3uBLU0AYElF56LfcwRvEc8nb51qDmAIXwFlI+hwViRQ4
+   XPAD7eY+hLJmz72zIX+lC3pULdilkiczqnbLjjIkqJPqJL5rqVNA9Cgo0
+   2xtfDfadMMrQ2a9WcfVX+qmfqBXWgjLQQP+KCcTYwVdlk1H1vWBuLNaTO
+   Q==;
+X-CSE-ConnectionGUID: DYZlsaEJT5O4tMoZQ85vAw==
+X-CSE-MsgGUID: +1JlWdu9QwGk9cf2NILJRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="67640366"
 X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="63478810"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:48 -0700
-X-CSE-ConnectionGUID: 82srgfKTRSKHcLRbhypuqg==
-X-CSE-MsgGUID: djNFIc1QS0WFeCoIAH4n5A==
+   d="scan'208";a="67640366"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:40 -0700
+X-CSE-ConnectionGUID: Hj8KI9rmTI2SRfiemqcZtA==
+X-CSE-MsgGUID: p3QJ6cphQouWtDFAPnTc6Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="209005374"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:45 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 09:37:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-In-Reply-To: <20251020152331.52870-1-hansg@kernel.org>
-References: <20251020152331.52870-1-hansg@kernel.org>
-Subject: Re: [PATCH 0/2] Input: Add keycodes for electronic privacy screen
- on/off an use these in dell-wmi
-Message-Id: <176166946030.2044.306996624771048978.b4-ty@linux.intel.com>
-Date: Tue, 28 Oct 2025 18:37:40 +0200
+To: platform-driver-x86@vger.kernel.org, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Daniel Scally <dan.scally@ideasonboard.com>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
+References: <20251028084959.394795-1-sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Update int3472 maintainers
+Message-Id: <176166945291.2044.458036116871888011.b4-ty@linux.intel.com>
+Date: Tue, 28 Oct 2025 18:37:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,18 +61,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 20 Oct 2025 17:23:29 +0200, Hans de Goede wrote:
+On Tue, 28 Oct 2025 10:49:59 +0200, Sakari Ailus wrote:
 
-> Here is a patch series for adding support for the electronic privacy screen
-> on/off events send on e.g. Dell Latitude 7300 models.
+> Add myself as the maintainer of the int3472 driver. Also update Daniel's
+> e-mail address while at it.
 > 
-> On these laptops the firmware does not allow querying the presence nor
-> the status of the eprivacy screen at boot. This makes it impossible to
-> implement the drm connector eprivacy properties API (1) since drm objects
-> do not allow adding new properties after creation and the presence of
-> the eprivacy cannot be detected at boot.
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -83,10 +75,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/2] Input: Add keycodes for electronic privacy screen on/off hotkeys
-      commit: 8f3eaad9812f62e7006ad08602444b32c3101824
-[2/2] platform/x86: dell-wmi-base: Handle electronic privacy screen on/off events
-      commit: 4173edb076b3ae30d734d55fce0ebac63139b656
+[1/1] MAINTAINERS: Update int3472 maintainers
+      commit: 7f7d28c69eda3692bcf102b7096b93fd45c75b1d
 
 --
  i.
