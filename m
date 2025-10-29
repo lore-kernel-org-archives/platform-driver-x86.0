@@ -1,109 +1,132 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8637819CCFD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 23:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7095E1D63F7;
+	Wed, 29 Oct 2025 03:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761695191; cv=none; b=IGFcR9yV0NMSBFjTzoUiPiMuZ2js6YBa5p+pGx6cQfaDJ6wzB+QVHsS5PXPl+AtxoJyxo7wSkSibKtIo+ycmmf8TRnuccajxZNDnPDalV8YMf+MnGjKUrV3d7xkydkWG2bweBkKDDVt1rXf/IOu/klRwREGFRiP1fRHRSBAwR08=
+	t=1761709002; cv=none; b=FVRq9U5tw1Ndpr8vYKGywZ7CsQz0LTwo0iMroOHpSaGeM2vioDT6FWbbJGPrkwQesTZHF6uVvVDirzE+evzFNBss8Zt+FKVW+QHnyaUgMU8a6gTOd3nQFBhQ+VOn2IhySraeMB96JgQFQGPkv4nrhh4AXOJn0olxjSlWgkYJ98A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761695191; c=relaxed/simple;
-	bh=MwoQy59dVEppfa04glBdVCRdHIoLSeADwlPJN/bsnok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qCPtcKqoTNnLke9eT4FmD9tzSyzgRKdgYuLR2suQ+atLt7pObSzOWid2R3RzjB+Pxe+DUEl+kiQvPodqUlLCrH7Sc8Q3lhzyARpxJDcqZSey3k8r1Yjnw9QtrF/P5wxo925QrNRI3v0Y9i6P9ih9vN/eygj1HZMPObpqWBidxJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0V7tNzZ; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761709002; c=relaxed/simple;
+	bh=9qRhhGvfTLdwJr1iXuuFQyovRxzJtOp6LSdJdw5KdG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bf+ZuwtJrnGsFZruTVHq+LUclh5JSltFLaXwFdz3d5lneCKD/SYU1/qHG0K2uPOqpMjBgUY2ds8NhAyIufw6JV7sNR5Rj2sm00Tezd6ZXF5PsMGYCW4AA93oJ88BCoX/jfAk6yWEeyfsqTcNHDR2AlsPB+6TNroJAa5NqUm/A5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpH1A/HY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0V7tNzZ"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-89f4779fe03so428337785a.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Oct 2025 16:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761695188; x=1762299988; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MwoQy59dVEppfa04glBdVCRdHIoLSeADwlPJN/bsnok=;
-        b=j0V7tNzZ+Kp5/HmQyHTN3V2z67L0bcgH52g80w5gApC6l9OT7ZGGOCBf92xFS5OcFv
-         TZW/4kPFOW5eyqAwabDtAqucOeYfj71DvJTH4izrJzzX2lcsUdvHIIovZj30KVxkxZni
-         ThL4vKaP9YzaSRPgNDo7ETFb5vJ4+BocjcSzoEJPu83PDuZa+/6DnvyiJSOOK2nzVw20
-         UWfFbBwvJyPiHF5HPNOG9P6+Avxv5rOQmQu0+OCjhgPCSOxeWam5kRD2PVyIUVnkx2iS
-         sM6tMdiNlPxEGmM5vW26Whq70vOZKHXfG3buN0Fiot6o+CBDJ05y4WH8jNVuvJ2pHNeG
-         CizQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761695188; x=1762299988;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MwoQy59dVEppfa04glBdVCRdHIoLSeADwlPJN/bsnok=;
-        b=ICDZpHGn17qDvNy6K27inbVnon4o+4szz9MUQYQeoA8vYL4Fl6r8qir9Ub0SheOCou
-         BsMO4bSWrGR7MTGl0fgs+3GtpoQXj6g9VjYRiZaKTU61immYSdGwCL+qd+3of16FbIK6
-         UHZhaYd8bHA5MSDpr0IMlE4Fe00t1/kW8KFHq2EMfcwGY8YWZnmItNZK+u2TlFTsTVwp
-         Gor16HmylNjQHnn40+Kct4hfjVewVGS6FdglNIhbD0E+9lHlHx+5BOQ4cO5BjnsztI5j
-         Dry2Y78avy4jmyPhW2jKtDdfEzJP40mgeSfSgbnAKzfb4ffKcYbRVDND0oD76blAqMh+
-         Dnsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWewlyKnwlQI47Fhgg2ycgiFlkaH49EmcsYq8Ln7mR07qYdxWPwHfhtEC/pQIxN9Li+OuRIB5V4JsrebLIGJ6x4AQ4T@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/o4DDRIa5btso3nWsnUwEM7PLBDTYH3bhh+lan27V1Zw9nlzK
-	4tff2iy0rLGiy8uF8x9BibQQc44GeRQtZMVibVSXuhijIqaNDwfhCEgke7ImDKwf17Uu/5ZhfDA
-	uPRWXpjI3dOcIQYhY8aqPTUNIB7nKdnd2K87yAQo=
-X-Gm-Gg: ASbGnctES+J5ul7DB+Ec3Fxmc/jBJhadRkimaZ7q2TFoKOGn5gRUR6kJbxPWXkQhp53
-	/wR8DBzKjOn38mt+Zlr6Iw2SYEh2t5BCKz/BYG2pbJxh2M6MxF3fjdPIPFV/0RhuuGmCLH2Bor6
-	ZqtwuzFJWonoovb81Wpz5IG4eulqsMej09bOE8yEmg174PVXPqPTa0U9oOPqyPj/+RRx/UUBCM2
-	hiWM0vOgIL0jNfQSE9ibXDcW0A8OtFU3ISZjAlxJIQGiFv547U4uAqYlDKFLCXRwOYN2dk0pWEQ
-	zYXJIYnifmltG/cwQ9gyJra5V5GFaTfPLCreA55Yfg==
-X-Google-Smtp-Source: AGHT+IGnGXhr7XsSiDeYPx+Ej4VOw1XVXr8mGYLW4gvtrYACbCkBg99g5+PEHlLE4Lv3JdN1glPIL3B3b9ZoyOp4fZ8=
-X-Received: by 2002:a05:620a:1a91:b0:8a7:23f0:535f with SMTP id
- af79cd13be357-8a8e407c7a7mr145328485a.18.1761695188403; Tue, 28 Oct 2025
- 16:46:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpH1A/HY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE63C4CEFB;
+	Wed, 29 Oct 2025 03:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761709001;
+	bh=9qRhhGvfTLdwJr1iXuuFQyovRxzJtOp6LSdJdw5KdG0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FpH1A/HYi7A29fNt3+fwne0WZzA4OmnRhuKHdbzj8q0cGh1l1OtfY4w4ehiNVzPpk
+	 5MOJWGuwyyS3croOtob3R3CgH/TIxvnxQCEKR8pL6QPAREbv38KjK7IfbWx1gGmKKk
+	 o8cjRy8t0OW3nz4PdYzjiJpjbx0Lzo+W9nSswK4DO7G+4yOsvOxAuDtAPWEicv32cO
+	 2fyoOWiSeUrR6YSayAtVDdFu5TdNiGqJN8fUIeymNNfKtS4pYGREKKLphmm9/DPmmr
+	 EqpFIm6nKOQWxrkT9HlrH5DjJLpbQvMPC6GxKG339XjPNdPW1MjG9KTDJE0LahVRGC
+	 ohujoBaMYZriQ==
+Message-ID: <b98a8486-e90a-4bd5-b3a7-3b2ba1b16398@kernel.org>
+Date: Tue, 28 Oct 2025 22:36:39 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <92785bc4-e8e6-40b4-8ca6-43ef32c0b965@amd.com> <CAD-Ua_imV_eB3uYAbZV=AWaVMPMM4CpqzmYFDN7AvJs5q1yg_g@mail.gmail.com>
- <099ba5b9-600f-4604-94c4-781d4d91b091@amd.com> <84d6bd41-64ff-4380-ad87-54cfbb5bc1a0@gmail.com>
- <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
- <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org> <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
- <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org> <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
- <b6462189-5de6-4297-8d10-fce795c38ceb@amd.com> <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
- <CAD-Ua_ixbf1ApMPMMSner28-fRg7BuhTu3QSw1U=ozqgS9fUjQ@mail.gmail.com>
- <6f81529b-7ae6-4d63-b0f3-7787a668698e@kernel.org> <CAD-Ua_hAxj5PskiFdiEA7Qt1bWEhKRvCNAyQj0BQmZ2vDnV4aQ@mail.gmail.com>
- <089b2cca-4c84-47b0-a96a-0363ffd642d7@amd.com>
-In-Reply-To: <089b2cca-4c84-47b0-a96a-0363ffd642d7@amd.com>
-From: Lars Francke <lars.francke@gmail.com>
-Date: Wed, 29 Oct 2025 00:45:52 +0100
-X-Gm-Features: AWmQ_bnd2cylpOlPcySTatC1VTGg6fGmoeG5qKVSzzAW34pH2QIirASd_XhHmng
-Message-ID: <CAD-Ua_gxPsTbG_3shtqAZX_E4ns5hHPZbTszQAXH2jbfLxP_Rg@mail.gmail.com>
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Mario Limonciello <superm1@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	John Allen <john.allen@amd.com>, platform-driver-x86@vger.kernel.org, 
-	Patil Rajesh <Patil.Reddy@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] platform/x86: ayaneo-ec: Add suspend hook
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+References: <20251015084414.1391595-1-lkml@antheas.dev>
+ <20251015084414.1391595-7-lkml@antheas.dev>
+ <38a49942-58d3-49cf-90d7-1af570918ae5@kernel.org>
+ <CAGwozwEmjms0H=GPbevuOjJfed6x69wmg8E9begBhUKbF8B2AQ@mail.gmail.com>
+ <000cd38e-7052-4987-b5bc-b8de176363cf@kernel.org>
+ <CAGwozwFDsn0xm_mG4ypEym=K8c81qqi=qtJL=06nP6SzdFaFoQ@mail.gmail.com>
+Content-Language: en-US
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <CAGwozwFDsn0xm_mG4ypEym=K8c81qqi=qtJL=06nP6SzdFaFoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 28, 2025 at 6:12=E2=80=AFPM Shyam Sundar S K
-<Shyam-sundar.S-k@amd.com> wrote:
 
-> Can you try the attached patches now?
->
-> First patch is the same which Mario shared last time and the 2nd one
-> is on PMF to handle the .restore() callback for hibernate.
->
-> I have tried this on 6.18-rc3 (though this should not matter)
 
-I just did and I'm afraid that the patches made it even worse for some reas=
-on.
-Hibernate works but when rebooting I end up in the console, the cursor
-is blinking but I can't do anything - no keyboard input, nothing. And
-what's even weirder is that after a reboot I have nothing in my
-journal on that boot. Not a single line. I have no idea how to debug
-this behavior, sorry. Usually when my patches broke the system I would
-still get logs. If you have any idea what I can do to debug let me
-know.
+On 10/28/2025 4:39 PM, Antheas Kapenekakis wrote:
+> On Tue, 28 Oct 2025 at 22:21, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>> On 10/28/25 3:34 PM, Antheas Kapenekakis wrote:
+>>>>> The fan speed is also lost during hibernation, but since hibernation
+>>>>> failures are common with this class of devices
+>> Why are hibernation failures more common in this class of device than
+>> anything else?  The hibernation flow is nearly all done in Linux driver
+>> code (with the exception of ACPI calls that move devices into D3 and out
+>> of D0).
+> 
+> I should correct myself here and say hibernation in general in Linux
+> leaves something to be desired.
+> 
+> Until secure boot supports hibernation, that will be the case because
+> not enough people use it.
 
-Thanks,
-Lars
+The upstream kernel has no tie between UEFI secure boot and hibernation. 
+  I think you're talking about some distro kernels that tie UEFI secure 
+boot to lockdown.  Lockdown does currently prohibit hibernation.
+
+> 
+> I have had it break for multiple reasons, not incl. the ones below and
+> the ones we discussed last year where games are loaded.
+> 
+> For a few months I fixed some of the bugs but it is not sustainable.
+> 
+>> Perhaps you're seeing a manifestation of a general issue that we're
+>> working on a solution for here:
+>>
+>> https://lore.kernel.org/linux-pm/20251025050812.421905-1-safinaskar@gmail.com/
+>>
+>> https://lore.kernel.org/linux-pm/20251026033115.436448-1-superm1@kernel.org/
+>>
+>> https://lore.kernel.org/linux-pm/5935682.DvuYhMxLoT@rafael.j.wysocki/T/#u
+>>
+>> Or if you're on an older kernel and using hybrid sleep we had a generic
+>> issue there as well which was fixed in 6.18-rc1.
+>>
+>> Nonetheless; don't make policy decisions based upon kernel bugs.  Fix
+>> the kernel bugs.
+> 
+> My problem is I cannot in good conscience restore a fan speed before
+> the program responsible for it is guaranteed to thaw.
+> 
+> The best solution I can come up with would be in freeze save if manual
+> control is enabled, disable it, and then on resume set a flag that
+> makes the first write to fan speed also set pwm to manual.
+> 
+> This way suspend->hibernate flows, even if hibernation hangs when
+> creating the image, at least have proper fan control because they are
+> unattended, and resume hangs work similarly.
+> 
+> Antheas
+> 
+
+This sounds like a workable approach for what I understand to be your 
+current design; but let me suggest some other ideas.
+
+What happens if you're running something big and the OOM comes and 
+whacks the process?  Now you don't have fan control running anymore.
+
+So I see two options to improve things.
+
+1) You can have userspace send a "heartbeat" to kernel space.  This can 
+be as simple as a timestamp of reading a sysfs file.  If userspace 
+doesn't read the file in X ms then you turn off manual control.
+
+2) You move everything to a kthread.  Userspace can read some input 
+options or maybe pick a few curve settings, but leave all the important 
+logic in that kthread.
+
+
