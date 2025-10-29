@@ -1,244 +1,90 @@
-Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07FB2DBF73
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Oct 2025 10:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF48228CA9;
+	Wed, 29 Oct 2025 11:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761734993; cv=none; b=X7+V/Axgp+7BJ6meEwqjnsJsiZ2Qn3oLvQyrYAchV76Mc2lktGVpD5EYBr05i3sQpIZkOGUy4XDsQrWZKvOyRhS8hDdW9Go4gif0Yy586Eo9dthZbsnc5Wl2I6Mimw1NmfrYV55Mfyt8PRbx7+Ux54x6oIVqDKXj1O8DwdJueZA=
+	t=1761736417; cv=none; b=X2Cm9EbZ6+r4ErbSb5H5WK4m0401XVY9SDrAT9Y2fj5fuw028F0fzReD/GFUfnSgGWkmrgNy1LryWvUc/SB77rUwm06LbGkDpouYkUaraPcfuF394x+flpd22KENssKAMKXdtphP/YP7Y1v3vIT5QilDBvF+Y9onSojhDoFj9do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761734993; c=relaxed/simple;
-	bh=IIq44rl+mr1Wp82ZrLo2CH1EDvG0+UdDllQ256vRX90=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kuSC92yxjJoO+VUZMPprU4cX62POdZKBvQY73vohfNVc9lLhLV1HWVzm6H7fx+9IvLMt7mNn3LmblWv4LrGM0NIHqY8yqrs6FTMFIHK5dTPwmsq1o9eOrGIeCxFTG7swLib/RsCfQFIrT6+FPXNZKruuliJwA3OCbdEoLrbLFqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=E5uWtjcq; arc=none smtp.client-ip=37.27.248.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1761736417; c=relaxed/simple;
+	bh=NSnH+E+jSW6jSODYU4V9JtFGATLzpMIWV0ZGRvO47SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qmTQMcHghWC1rEgiqgtPy85UneNlmriiGxi/0x4Lr0k27DKgj+XeEmD0hbfgxvrSOdGqjlGK57J92CBXojt9CDPoIgCeB3iXFy/NDZn4RHAZ5/n0qSU0McWRfjJxjap4xZ0Ix47HTsfMFam50ss6XLnnA6b3Ixdw2D+CGKyCYKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d4B11zFT; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="E5uWtjcq"
-Received: from relay10 (localhost.localdomain [127.0.0.1])
-	by relay10.grserver.gr (Proxmox) with ESMTP id 24068425EE
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Oct 2025 12:49:49 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay10.grserver.gr (Proxmox) with ESMTPS id 0991842601
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Oct 2025 12:49:48 +0200 (EET)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 26096200AF0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Oct 2025 12:49:47 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1761734987;
-	bh=YzboKqHz4MGEBiI9ZGSTeK6nDzkE1Vet4xctU+oGO+4=;
-	h=Received:From:Subject:To;
-	b=E5uWtjcqTJfLnq0wN1fnbKqCYZ7rjQfDYRAEt+jJBQ5OlZKSwSbagmBNclUl4bKxj
-	 k0JbjJz+jaWiub3W4BdU+TE5a3P8prejduxccqnGtWijq4PuE794egwOidKk7f1peU
-	 7MM9lRlikwIAOcDmecR+oVcbgkum4qKxwTbjVQWmzUQ4eXSQ2S6tVrH+tiPiGc4E/6
-	 c5vOTvQcifdRx6D/wZmPHvc3DtUyxGXXnz7LUHoGcbV7YNjTB2RCTWA/P66WMjhL2f
-	 Yn1kxLkBbFkS5LwVWdmSU2qFad+08MYZ9RLFBFKod/JFdfqa/RxvdbG20hv4/+NIe7
-	 BcNTdcHZxWVZg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.182) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f182.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f182.google.com with SMTP id
- 38308e7fff4ca-378d50e1cccso75042721fa.0
-        for <platform-driver-x86@vger.kernel.org>;
- Wed, 29 Oct 2025 03:49:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCW6hl7+Dft6h1Cf4VrX2A6qf/FwmkRM8a6cTA6Aj5RR6oPlNkMAsx2L13C91nyacEesjvCiz+jScFbYAEnQD8BF9XPK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyowC4U9EOo4TUQQSLaAu8iQMWGlLDsi4ESMlwinZAv0kbwvFct
-	TD4BgX7+WaZGpujq/SbRmHEl4IulgrANq5lzj8uL2g3uhuDNa8i7+Ptv7z+roEmvziovS4M0kGC
-	u74nQ+CQtrS8Od3G5G7JOHv2REPSF98Y=
-X-Google-Smtp-Source: 
- AGHT+IGLkcBo2YE6+nk2WVHAihUx5ZgzY8UsQ5edI3i6F2uozYbRe/gYLNU+toxWgQnXlgZRb69N90edzuvtETqFAmY=
-X-Received: by 2002:a2e:b894:0:b0:375:d1e4:21e1 with SMTP id
- 38308e7fff4ca-37a0537809bmr7537381fa.42.1761734986535; Wed, 29 Oct 2025
- 03:49:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4B11zFT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761736416; x=1793272416;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=NSnH+E+jSW6jSODYU4V9JtFGATLzpMIWV0ZGRvO47SI=;
+  b=d4B11zFTjoWd9i9vq99xkrHgI3Kr7d/NFqD/Xdba8XesYGXaB7GHynD6
+   bMVCmO1/mv1isIf/8E3jYNDT/xccVyMt88s2/nSdfQBYmdVVLVjN86xDg
+   S9tbHoPl1xOuu599LtD02aL4mevk4hNXiWfWVQjmWEPpTNirwNFXawLKR
+   jlcQK9r4MwfSCsuSAvmlOpmR0CosRn2C9wTrtaeD8jbWwZ8lyY+uRFk2U
+   /RzQrQAuqUM3GY+5rSnOVc7lCR2y6cGCaJtTuI6JauRZMZcdjwVdVjPAk
+   lziRJ0s6m6NTA+7W3VJu5ocJqKP5lLQ5LS5gXZFYa6S5ZIi99y7EPzP+A
+   w==;
+X-CSE-ConnectionGUID: Yev54jRvTViEkChWp6/UGA==
+X-CSE-MsgGUID: fQSziircSr2rrS5C8JehXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="89322928"
+X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
+   d="scan'208";a="89322928"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 04:13:35 -0700
+X-CSE-ConnectionGUID: PCKALzsOTA6gs24ryGIYNw==
+X-CSE-MsgGUID: dAa9QsizQbiGV73T38XL0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
+   d="scan'208";a="185977478"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 04:13:33 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vE47P-00000003am4-08ZS;
+	Wed, 29 Oct 2025 13:13:31 +0200
+Date: Wed, 29 Oct 2025 13:13:30 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Raag Jadav <raag.jadav@intel.com>, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, linus.walleij@linaro.org,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] gpio: elkhartlake: Convert to auxiliary driver
+Message-ID: <aQH22oSGllHuOkBI@smile.fi.intel.com>
+References: <20251029062050.4160517-1-raag.jadav@intel.com>
+ <20251029062050.4160517-3-raag.jadav@intel.com>
+ <CAMRc=Mcz3df6KUx6q5MLGfB06jQhBTGfhCM7yovHBE3k1vn+nQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015084414.1391595-1-lkml@antheas.dev>
- <20251015084414.1391595-7-lkml@antheas.dev>
- <38a49942-58d3-49cf-90d7-1af570918ae5@kernel.org>
- <CAGwozwEmjms0H=GPbevuOjJfed6x69wmg8E9begBhUKbF8B2AQ@mail.gmail.com>
- <000cd38e-7052-4987-b5bc-b8de176363cf@kernel.org>
- <CAGwozwFDsn0xm_mG4ypEym=K8c81qqi=qtJL=06nP6SzdFaFoQ@mail.gmail.com>
- <b98a8486-e90a-4bd5-b3a7-3b2ba1b16398@kernel.org>
- <CAGwozwHa3GSNGyRRp4=bR+Wsy2VLgwAbSmcdWb2=5rEyi7jdQw@mail.gmail.com>
- <8f7c2544-2b9d-4997-942a-5bd3ea72e3a3@roeck-us.net>
-In-Reply-To: <8f7c2544-2b9d-4997-942a-5bd3ea72e3a3@roeck-us.net>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 29 Oct 2025 11:49:35 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwFNMC+g00LhR+tPsLWPLOiYh0NA0p9yawcunVaMKsNXXw@mail.gmail.com>
-X-Gm-Features: AWmQ_bliZI2wVWuas-TjaUUj25C4sBY23d8b5zBjs37RXuHeg5KuBtzdh6q0BdQ
-Message-ID: 
- <CAGwozwFNMC+g00LhR+tPsLWPLOiYh0NA0p9yawcunVaMKsNXXw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] platform/x86: ayaneo-ec: Add suspend hook
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
- platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176173498746.2957313.4746862966541866514@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mcz3df6KUx6q5MLGfB06jQhBTGfhCM7yovHBE3k1vn+nQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, 29 Oct 2025 at 11:22, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 10/29/25 01:48, Antheas Kapenekakis wrote:
-> > On Wed, 29 Oct 2025 at 04:36, Mario Limonciello (AMD) (kernel.org)
-> > <superm1@kernel.org> wrote:
-> >>
-> >>
-> >>
-> >> On 10/28/2025 4:39 PM, Antheas Kapenekakis wrote:
-> >>> On Tue, 28 Oct 2025 at 22:21, Mario Limonciello <superm1@kernel.org> wrote:
-> >>>>
-> >>>> On 10/28/25 3:34 PM, Antheas Kapenekakis wrote:
-> >>>>>>> The fan speed is also lost during hibernation, but since hibernation
-> >>>>>>> failures are common with this class of devices
-> >>>> Why are hibernation failures more common in this class of device than
-> >>>> anything else?  The hibernation flow is nearly all done in Linux driver
-> >>>> code (with the exception of ACPI calls that move devices into D3 and out
-> >>>> of D0).
-> >>>
-> >>> I should correct myself here and say hibernation in general in Linux
-> >>> leaves something to be desired.
-> >>>
-> >>> Until secure boot supports hibernation, that will be the case because
-> >>> not enough people use it.
-> >>
-> >> The upstream kernel has no tie between UEFI secure boot and hibernation.
-> >>    I think you're talking about some distro kernels that tie UEFI secure
-> >> boot to lockdown.  Lockdown does currently prohibit hibernation.
-> >>
-> >>>
-> >>> I have had it break for multiple reasons, not incl. the ones below and
-> >>> the ones we discussed last year where games are loaded.
-> >>>
-> >>> For a few months I fixed some of the bugs but it is not sustainable.
-> >>>
-> >>>> Perhaps you're seeing a manifestation of a general issue that we're
-> >>>> working on a solution for here:
-> >>>>
-> >>>> https://lore.kernel.org/linux-pm/20251025050812.421905-1-safinaskar@gmail.com/
-> >>>>
-> >>>> https://lore.kernel.org/linux-pm/20251026033115.436448-1-superm1@kernel.org/
-> >>>>
-> >>>> https://lore.kernel.org/linux-pm/5935682.DvuYhMxLoT@rafael.j.wysocki/T/#u
-> >>>>
-> >>>> Or if you're on an older kernel and using hybrid sleep we had a generic
-> >>>> issue there as well which was fixed in 6.18-rc1.
-> >>>>
-> >>>> Nonetheless; don't make policy decisions based upon kernel bugs.  Fix
-> >>>> the kernel bugs.
-> >>>
-> >>> My problem is I cannot in good conscience restore a fan speed before
-> >>> the program responsible for it is guaranteed to thaw.
-> >>>
-> >>> The best solution I can come up with would be in freeze save if manual
-> >>> control is enabled, disable it, and then on resume set a flag that
-> >>> makes the first write to fan speed also set pwm to manual.
-> >>>
-> >>> This way suspend->hibernate flows, even if hibernation hangs when
-> >>> creating the image, at least have proper fan control because they are
-> >>> unattended, and resume hangs work similarly.
-> >>>
-> >>> Antheas
-> >>>
-> >>
-> >> This sounds like a workable approach for what I understand to be your
-> >> current design; but let me suggest some other ideas.
-> >>
-> >> What happens if you're running something big and the OOM comes and
-> >> whacks the process?  Now you don't have fan control running anymore.
-> >>
-> >> So I see two options to improve things.
-> >>
-> >> 1) You can have userspace send a "heartbeat" to kernel space.  This can
-> >> be as simple as a timestamp of reading a sysfs file.  If userspace
-> >> doesn't read the file in X ms then you turn off manual control.
+On Wed, Oct 29, 2025 at 11:40:17AM +0100, Bartosz Golaszewski wrote:
+> On Wed, Oct 29, 2025 at 7:21 AM Raag Jadav <raag.jadav@intel.com> wrote:
 > >
-> > The OOT scenario is something I have not handled yet specifically, or
-> > have had happen.
+> > Since PCI device should not be abusing platform device, MFD parent to
+> > platform child path is no longer being pursued for this driver. Convert
+> > it to auxiliary driver, which will be used by EHL PSE auxiliary device.
 > >
-> > Systemd will restart the service in the case of OOT after 5 seconds
-> > and in the case of a crash there are multiple fallbacks to ensure the
-> > custom curve turns off.
-> >
-> > Most of the hibernation hangs that I have experienced happen before
-> > journalctl turns on, so I assumed that it's before userspace
-> > unfreezes. I am also not sure if restore() gets to run in those cases
-> > or not.
-> >
-> > Re: heart beat, read below.
-> >
-> >> 2) You move everything to a kthread.  Userspace can read some input
-> >> options or maybe pick a few curve settings, but leave all the important
-> >> logic in that kthread.
-> >
-> > I think this is what Luke tried to do with the Zotac Zone. But in the
-> > end, the kernel is limited to what calculations it can do, esp.
-> > floating point and what it can access, so you end up with a worse
-> > curve with limited extendability, and a driver specific ABI. And we
-> > also risk duplicating all of this code on hwmon drivers and making it
-> > harder to access.
-> >
-> > I think part of this reason is why the platform side of the Zotac
-> > stuff has not been upstreamed, even though the driver itself other
-> > than that is pretty straightforward with an established ABI by now.
-> > And it is also the reason we have not been able to add the module to
-> > Bazzite, because 1) we cannot validate the new fan curve calculations
-> > without a device and 2) they are worse that what we provide through
-> > userspace (a polynomial ramp-up which embeds hysteresis to avoid
-> > jittering, plus choice for both Edge and Tctl sensors).
-> >
-> > In summary, I think there would great potential for a common set of
-> > "hwmon" helpers that can use a temperature function and a speed set
-> > function to handle a basic multi-point curve for basic, e.g., udev
-> > use-cases. To that end, there could be a helper with a 5 second
-> > timeout that turns off the custom speed. But it would be good for that
-> > to be implemented globally, so it does not block device hw enablement.
-> >
->
-> Maybe I misunderstand. If so, apologies.
->
-> Thermal _control_ is what the thermal subsystem is for. hwmon is for
-> hardware monitoring, not control. You may do whatever you like
-> in platform drivers, including the duplication of termal subsystem
-> functionality, but please do not get hwmon involved. That includes
-> any kind of helpers to compute any kind of temperature curves.
+> Are there build-time dependencies between this and patch 1/2?
 
-I have no preference for which subsystem these helpers are placed if
-implemented. But if thermal handlers are implemented they need to be
-global. This includes timeouts for manual control and basic fan curves
-(for which the ABI belongs to hwmon).
+There is a new header file which is shared IIUC. So, yes.
 
-I cannot make manufacturer specific workarounds for X platform 6 point
-curve because it was determined XYZ this and that, when the
-manufacturer provides direct control.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Speaking of which, what is the policy for hwmon when it comes to
-settings after hibernation. I am being asked to add a restore hook for
-hwmon settings here, but other relevant drivers do not have it
-(asuswmi, gpdfan, oxpec), is a new requirement for hwmon?
-
-Antheas
-
-> Thanks,
-> Guenter
->
->
 
