@@ -1,244 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D46827F00A;
-	Thu, 30 Oct 2025 16:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA5B3BBF2;
+	Thu, 30 Oct 2025 17:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761842422; cv=none; b=ApgEZc44OfDy6sdEUkrdhwHPfG8SE6MR4YN78NBZyQABOxDv+DDXfy58KR7chYv1vdYY5PkO5RZsUpw1p/VS41tC64GABDL/1Sy9JzR3PZZ4r9lfoKcWvj+wUnyfjzSqun2VQlAfJX4UOGtBYkqEHIBkBmaifqfbSklkQsthNok=
+	t=1761844470; cv=none; b=KCQKAA56qlu52E0AvKQ8GHqo/75A/5oFhqwD+iW1UHUiZQ9xjmWJnZaqGBD3c8OU1K+UqQ9q3xHdhoZPQVF0aGDR7VdrXUubGuSZwSUOUc3oy+lQONojTR1lOQWtjcIaE5Bu/05FDs2ehByseLgwergMZgQ6fDERu1OBZoQcph4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761842422; c=relaxed/simple;
-	bh=6zaf1AkfMTrzijapQzcYoe3olI0nI3PJPsNC0HZeLeQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ss+/BPuneYjYBWaHsfRGRtmgFsiDjzGXrVdoINoQYFjpWvw3VJ1x/LrUtWpXswdh4n6nOedKJA4W5rxPA0xns0uKcW3fLufQ4fTZJPzN2wKRP9odx5GL7nBaxQqzIF1mVhptrP+WWCatWOv/9iorUbnpasuZTmZkjaLJNCFyxcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m2zPdWJl; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1761844470; c=relaxed/simple;
+	bh=dOQ7RyggXLz+Bco9hcUhv4zdopMrkMyQ9gG2BmgTGIM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eGiRzFn7F9WC8H2mGyVGl8IjtS/7Y2WdPVlY1K//MMwvL1yotGz/Htxd3CoSqjHOM/y0SUf6x7uX0tEf/ISxW/MM46Fzl8BLLyvj/eKcae/ZqnG71Y1FbxBor6WUP4PWJAXVXmGYh9VFKJ7UEj2aH8elp+wwFTr1F2uikbw3kfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lcwLuiIN; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m2zPdWJl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lcwLuiIN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761842420; x=1793378420;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6zaf1AkfMTrzijapQzcYoe3olI0nI3PJPsNC0HZeLeQ=;
-  b=m2zPdWJlgf0jwjZmW7xhSfMZVRqRhag2vOBmX6t1OJ/zhDIjVHSZKfDw
-   xv+AgBMKLW6j2B8O+Py9cRcJ9u+z8A7QKL+Y3iyvGpwm0q0VjQM+wDfB8
-   PfwXqdTYSd7kqvrZeTDlFpAWcjHfY6Tl+pQEM1CX5Pj80d7Sz34XrDIpk
-   I0NRMZDyeVAS7beC23Rx9lU90repKgyRKrZw38esKsWri10hnYNJJMQpe
-   /nBV/bq9KC0tj/DHH0TeCQsy+ZhGQEHMCVTtYwAY9ycmevqlrzkklukKN
-   6ClkbIHUcuvGjQqkGMf1VQqBVo6Nuy3EXLRdY1pQ2jnIgI4bKxZoPIkAA
-   g==;
-X-CSE-ConnectionGUID: OjoD/LwmTZ+TKNFw+F73eA==
-X-CSE-MsgGUID: g3NRcw94RBq46y+e5drwnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="64141396"
+  t=1761844468; x=1793380468;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=dOQ7RyggXLz+Bco9hcUhv4zdopMrkMyQ9gG2BmgTGIM=;
+  b=lcwLuiIN6EJp7mIOmBCZpfU8+aua8ODSEF0IV5uhL0QqH600zWJSy/qi
+   hibI5CwWpmEQ65ZRQ9hxZtjocSidbHXdDAPdxt7zuNYSp15YQDEOUdkYJ
+   zs5fHb4kmlTmCBmKCp8wzKIrSDysYw+W5HHx0bC7VWDfeW3RVevORgP3b
+   XTMeiStAcbZvpj/nSSRhzB6T+I2FT29jBoR/ljOBmmJuLE8Pd2FBPZdX1
+   ERTQLe8TDQw9Z8j/yxPyFDo/j/xX1revMPJ2ws46h3qDFmVIlbSZOd3tP
+   WL8QmjFyt797qEIcfg5jbleS7WNfOUdxStpzuDtVMQo/+DTa3asDlrhD5
+   w==;
+X-CSE-ConnectionGUID: ofKBcoWpQnqGQ1gO7R6YYw==
+X-CSE-MsgGUID: 3G6QfNruQjWMKemj6zr9TA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="81622961"
 X-IronPort-AV: E=Sophos;i="6.19,267,1754982000"; 
-   d="scan'208";a="64141396"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 09:40:19 -0700
-X-CSE-ConnectionGUID: RxNI84BRTSmlMbJHaVxfgQ==
-X-CSE-MsgGUID: cIvDThhhTNOXKfwwyxQrxw==
+   d="scan'208";a="81622961"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 10:14:27 -0700
+X-CSE-ConnectionGUID: fOxHfABhTwCclH0/t2tOYA==
+X-CSE-MsgGUID: oBKnwXkERNe7BDfY5uW58w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,267,1754982000"; 
-   d="scan'208";a="216659690"
+   d="scan'208";a="186353670"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.175])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 09:40:16 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 10:14:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 30 Oct 2025 18:40:12 +0200 (EET)
-To: Rong Zhang <i@rong.moe>
-cc: Ike Panhc <ikepanhc@gmail.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform/x86: ideapad-laptop: Protect GBMD/SBMC
- calls with mutex
-In-Reply-To: <20251020192443.33088-2-i@rong.moe>
-Message-ID: <2bae2ea7-2ef9-0cfa-0c2c-39a7043b2aa5@linux.intel.com>
-References: <20251020192443.33088-1-i@rong.moe> <20251020192443.33088-2-i@rong.moe>
+To: jlee@suse.com, basak.sb2006@gmail.com, faiz.faadhillah@gmail.com, 
+ rayanmargham4@gmail.com, Armin Wolf <W_Armin@gmx.de>
+Cc: kuurtb@gmail.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20251016180008.465593-1-W_Armin@gmx.de>
+References: <20251016180008.465593-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v4 0/4] platform/x86: acer-wmi: Add fan control support
+Message-Id: <176184445966.9294.1634498748221184246.b4-ty@linux.intel.com>
+Date: Thu, 30 Oct 2025 19:14:19 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 21 Oct 2025, Rong Zhang wrote:
+On Thu, 16 Oct 2025 20:00:04 +0200, Armin Wolf wrote:
 
-> The upcoming changes for Rapid Charge support require two consecutive
-> SBMC calls to switch charge_types. Hence, a mutex is required.
+> This patch series aims to add fan control support to the acer-wmi
+> driver. The patches are compile-tested only and need to be tested
+> on real hardware to verify that they actually work.
 > 
-> The reason for not using rw_semaphore for this purpose is that allowing
-> simultaneous GBMD calls is not really useful and doesn't deserve the
-> overhead.
+> I CCed three users who requested support for this feature. I would be
+> very happy if one of you could test those patches and report back.
 > 
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
->  drivers/platform/x86/lenovo/ideapad-laptop.c | 91 ++++++++++++--------
->  1 file changed, 56 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> index fcebfbaf04605..9f956f51ec8db 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -158,6 +158,7 @@ struct ideapad_rfk_priv {
->  struct ideapad_private {
->  	struct acpi_device *adev;
->  	struct mutex vpc_mutex; /* protects the VPC calls */
-> +	struct mutex gbmd_sbmc_mutex; /* protects GBMD/SBMC calls */
->  	struct rfkill *rfk[IDEAPAD_RFKILL_DEV_NUM];
->  	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
->  	struct platform_device *platform_device;
-> @@ -455,37 +456,40 @@ static int debugfs_status_show(struct seq_file *s, void *data)
->  	struct ideapad_private *priv = s->private;
->  	unsigned long value;
->  
-> -	guard(mutex)(&priv->vpc_mutex);
-> -
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &value))
-> -		seq_printf(s, "Backlight max:  %lu\n", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
-> -		seq_printf(s, "Backlight now:  %lu\n", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &value))
-> -		seq_printf(s, "BL power value: %s (%lu)\n", value ? "on" : "off", value);
-> -
-> -	seq_puts(s, "=====================\n");
-> -
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_RF, &value))
-> -		seq_printf(s, "Radio status: %s (%lu)\n", value ? "on" : "off", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_WIFI, &value))
-> -		seq_printf(s, "Wifi status:  %s (%lu)\n", value ? "on" : "off", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BT, &value))
-> -		seq_printf(s, "BT status:    %s (%lu)\n", value ? "on" : "off", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_3G, &value))
-> -		seq_printf(s, "3G status:    %s (%lu)\n", value ? "on" : "off", value);
-> +	scoped_guard(mutex, &priv->vpc_mutex) {
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &value))
-> +			seq_printf(s, "Backlight max:  %lu\n", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
-> +			seq_printf(s, "Backlight now:  %lu\n", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &value))
-> +			seq_printf(s, "BL power value: %s (%lu)\n", value ? "on" : "off", value);
+> [...]
 
-Thanks for the patches. I've taken them into the review-ilpo-next branch.
 
-Unrelated to this series itself, these ? "on" : "off" constructs could be 
-changed to use str_on_off().
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/4] platform/x86: acer-wmi: Fix setting of fan behavior
+      commit: d8e8362b09d31b0a343c0414015d93fbb250d57d
+[2/4] platform/x86: acer-wmi: Add fan control support
+      commit: 0cc5153f133919bf1e41f3d4c176839aa846d1e0
+[3/4] platform/x86: acer-wmi: Enable fan control for PH16-72 and PT14-51
+      commit: d727823c134a79f28f16543aec4dced646a1f793
+[4/4] platform/x86: acer-wmi: Add support for PHN16-72
+      commit: 45cf02f298f33e1c582f77c08bf6d61daf163f27
 
 --
  i.
 
-> +
-> +		seq_puts(s, "=====================\n");
-> +
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_RF, &value))
-> +			seq_printf(s, "Radio status: %s (%lu)\n", value ? "on" : "off", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_WIFI, &value))
-> +			seq_printf(s, "Wifi status:  %s (%lu)\n", value ? "on" : "off", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_BT, &value))
-> +			seq_printf(s, "BT status:    %s (%lu)\n", value ? "on" : "off", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_3G, &value))
-> +			seq_printf(s, "3G status:    %s (%lu)\n", value ? "on" : "off", value);
-> +
-> +		seq_puts(s, "=====================\n");
-> +
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value))
-> +			seq_printf(s, "Touchpad status: %s (%lu)\n", value ? "on" : "off", value);
-> +		if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
-> +			seq_printf(s, "Camera status:   %s (%lu)\n", value ? "on" : "off", value);
-> +	}
->  
->  	seq_puts(s, "=====================\n");
->  
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value))
-> -		seq_printf(s, "Touchpad status: %s (%lu)\n", value ? "on" : "off", value);
-> -	if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
-> -		seq_printf(s, "Camera status:   %s (%lu)\n", value ? "on" : "off", value);
-> -
-> -	seq_puts(s, "=====================\n");
-> +	scoped_guard(mutex, &priv->gbmd_sbmc_mutex) {
-> +		if (!eval_gbmd(priv->adev->handle, &value))
-> +			seq_printf(s, "GBMD: %#010lx\n", value);
-> +	}
->  
-> -	if (!eval_gbmd(priv->adev->handle, &value))
-> -		seq_printf(s, "GBMD: %#010lx\n", value);
->  	if (!eval_hals(priv->adev->handle, &value))
->  		seq_printf(s, "HALS: %#010lx\n", value);
->  
-> @@ -622,9 +626,11 @@ static ssize_t conservation_mode_show(struct device *dev,
->  
->  	show_conservation_mode_deprecation_warning(dev);
->  
-> -	err = eval_gbmd(priv->adev->handle, &result);
-> -	if (err)
-> -		return err;
-> +	scoped_guard(mutex, &priv->gbmd_sbmc_mutex) {
-> +		err = eval_gbmd(priv->adev->handle, &result);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	return sysfs_emit(buf, "%d\n", !!test_bit(GBMD_CONSERVATION_STATE_BIT, &result));
->  }
-> @@ -643,6 +649,8 @@ static ssize_t conservation_mode_store(struct device *dev,
->  	if (err)
->  		return err;
->  
-> +	guard(mutex)(&priv->gbmd_sbmc_mutex);
-> +
->  	err = exec_sbmc(priv->adev->handle, state ? SBMC_CONSERVATION_ON : SBMC_CONSERVATION_OFF);
->  	if (err)
->  		return err;
-> @@ -2007,15 +2015,22 @@ static int ideapad_psy_ext_set_prop(struct power_supply *psy,
->  				    const union power_supply_propval *val)
->  {
->  	struct ideapad_private *priv = ext_data;
-> +	unsigned long op;
->  
->  	switch (val->intval) {
->  	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> -		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_ON);
-> +		op = SBMC_CONSERVATION_ON;
-> +		break;
->  	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-> -		return exec_sbmc(priv->adev->handle, SBMC_CONSERVATION_OFF);
-> +		op = SBMC_CONSERVATION_OFF;
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> +
-> +	guard(mutex)(&priv->gbmd_sbmc_mutex);
-> +
-> +	return exec_sbmc(priv->adev->handle, op);
->  }
->  
->  static int ideapad_psy_ext_get_prop(struct power_supply *psy,
-> @@ -2028,9 +2043,11 @@ static int ideapad_psy_ext_get_prop(struct power_supply *psy,
->  	unsigned long result;
->  	int err;
->  
-> -	err = eval_gbmd(priv->adev->handle, &result);
-> -	if (err)
-> -		return err;
-> +	scoped_guard(mutex, &priv->gbmd_sbmc_mutex) {
-> +		err = eval_gbmd(priv->adev->handle, &result);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	if (test_bit(GBMD_CONSERVATION_STATE_BIT, &result))
->  		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-> @@ -2292,6 +2309,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> +	err = devm_mutex_init(&pdev->dev, &priv->gbmd_sbmc_mutex);
-> +	if (err)
-> +		return err;
-> +
->  	err = ideapad_check_features(priv);
->  	if (err)
->  		return err;
-> 
