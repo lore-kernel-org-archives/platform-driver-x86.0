@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC0D3644AA
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Oct 2025 15:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61472363BB3
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Oct 2025 15:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761838883; cv=none; b=uZOwRHuPGciv+8nFkqbM5kmGY/6RPHzrTcFywAK/fJB3ux5X7ry6PYphYZumxsn9FbHPh7r/h0h1Z+e3s04ijg6lUdziXdIJ8tpx6TElnURsqkLKuky2o0HCA1PoKO4upGGr6CzlThzqod6ULpIlV4IDciv+LiT1qijd4Haphow=
+	t=1761838910; cv=none; b=nojzbSU9KLxl+jN8NUCzR++sKSfvTWJjRLwMVOuMhExbiTlYoWP9PS2mhwxgRe1qWXPyaTY7T9geswO0ENHYGAtAnmytAy02T9GkelrG+Z2QHchukDqhEv9RZKyG5dN8DoTSepFbBNWQqSYzIfXE/buOlGL0nW15C0D3WjPmfHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761838883; c=relaxed/simple;
-	bh=7XAPhwEBpgMkN97lMt024GhriyZ8rpLl9hdyeRRmrYw=;
+	s=arc-20240116; t=1761838910; c=relaxed/simple;
+	bh=c0Ii3s9MDrEs3DlwFdhGNarnYo5ldHxXyFiS0mMsBG4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cLhBr6dWWA5LHfvbsD7jUx2G/Vwq6qHp6zdIGQZHtjCZ1AWWtcMBcDqdRgE+mq8N9B1ojcpbi10BGWtNaX0+LXy6EFB637LsTwUFNRrFSY1WGP4h6WnDsp5nQe3uNPOaP9Xumq4bY5W3PsyoZmoEBpJFGWXrxl/bVZGbIL9IP/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeSll0Ck; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=SYcaR8qzEX+XA5+T3KaOxWhiXJe67ZV97M5n8KJzoSNhcmzqXXrWw8/88dbTgnqmb02ssqqLmXLsd+hX8RK5IBVE7i48bkgWfM173tjljTTClzLBYBUubW35a0zqL4S92lUE0sOtHTJ3h/F1zEwsEz8tOLOMJRMlO8YaFBhhDWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUmaUOl2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeSll0Ck"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57150C4CEFF
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Oct 2025 15:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUmaUOl2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 11898C4CEF1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Oct 2025 15:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761838883;
-	bh=7XAPhwEBpgMkN97lMt024GhriyZ8rpLl9hdyeRRmrYw=;
+	s=k20201202; t=1761838910;
+	bh=c0Ii3s9MDrEs3DlwFdhGNarnYo5ldHxXyFiS0mMsBG4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=oeSll0CkwXTVAQM1AMGSoeU4LF83WLeeFlalL19NSzFZoUnonwa9c0s73Nf2VewM1
-	 WxrnhN5ps4j0NnJkRMmxzC0Hiu1TBtSQk7oAwaAeCa65QF/552Nmnf0eDexwLcfBPP
-	 8VeLRrpN3ZwBMod9HwIAP8MICw92fzwRvfqhF7ctk9/WTxguxEcyNfWHDv0C3g2qaH
-	 qU7FQIg//SV0s2z7R5ZNaiaTVI6OaRQ77HvTRK/iSBTi/OcvnSsicFpHhriaPvprg/
-	 1rkru8y/PVKLgN+laI4fGMfXSLHLpWjlAxJjNkRArAM3Ufy2N3+2YUS86nqSptqg4O
-	 X019ZmqsGjwdw==
+	b=JUmaUOl2XCqoRTUXHrpw6Ls5C39zPYtXLGYf+3NkgTMHo4+FDNIbHqepjQPLsU/30
+	 l39HKvHs38i2sdrENQ2/FCJoJmr8BFdUX+fZ6V1bR5pYgpx8FFgov8OsTBtaCKtLkQ
+	 sskY1BIX9cfEuOluE0SM5VdpMWpUR9+7kYATvUDDpQGrFcJppuKZr8m5uff7CwRRUH
+	 ThVNN+QLPhT5RlIw6Jh+HZh2M4lB31pre8Cm2oQbahw03oxBikBrHRIQmWVD5UgLg2
+	 GHBqHFkMv572N/UAtit7QUOqYASUCcWC8zDtW49WcaIJVZCYGRWgquES8hqvikWwZ2
+	 HgqTA6w9aJIoQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4FABFC3279F; Thu, 30 Oct 2025 15:41:23 +0000 (UTC)
+	id 0CE1DC41612; Thu, 30 Oct 2025 15:41:50 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220722] Non existent battery reporting for a laptop with
  touchscreen MSI
-Date: Thu, 30 Oct 2025 15:41:23 +0000
+Date: Thu, 30 Oct 2025 15:41:49 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-220722-215701-uqltQM2FMx@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220722-215701-G04YVuuOzE@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220722-215701@https.bugzilla.kernel.org/>
 References: <bug-220722-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220722
 
---- Comment #4 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Created attachment 308872
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D308872&action=3Dedit
-potential patch
+--- Comment #5 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+@Andr=C3=A9:
+
+Can you test this patch and see if it helps?
 
 --=20
 You may reply to this email to add a comment.
