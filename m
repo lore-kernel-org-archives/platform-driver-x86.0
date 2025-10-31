@@ -1,127 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F718348445;
-	Fri, 31 Oct 2025 11:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4394E325734
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 12:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761911971; cv=none; b=q4UzlR6PLYFyigmGAlHQRuOJdGvDbxqFwyMOKwlMTM65qjBdK+R685gKaPHSdmE8ft8RyFUQV0RMUajOLvJ+bcf+uM6tJyCdcQOO7lH6ZCxa6PF4yxAxRZ/qhPk+nuOcNvb10O4BBYCGzYx8gs8p/YC4Va1Lq+jhD7WtRBRF1t8=
+	t=1761912844; cv=none; b=IQchuFK9rfXWgCHMpb4XteFR2EtCB6u1GE9MGDNxC0l5y8X8QhOBfcll/VaOQJSz7gYFxe9JPOGpI6EPeJz1TRICjV+5hOAUDSEhaMEROFUEOuZQZXHQsd+Da7E1SoO2Z6VBIPYguFrYujMBLDYR9KkD2fthOMHfcaotI/obWLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761911971; c=relaxed/simple;
-	bh=5UoaEdpVLL2NdA+CQijxmw2u67i+mScHjsVkMhIYhCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niMg8lAPxIDyZ/RY7+ho00WYLlZR0fcE85l/T+6ayZMlXm4zZEcokV/V9AHICKx5tGGEvBp+5zlPC26lWH1abrJaEUBD3TyQn3KA/0GpnaFY6XaXh5X8xQ3B5+6FPSWeRrdOmJGidgTtMD5IrB886vgSCUfVdEtkAHH9l0bh7Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TE3YZzT/; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761912844; c=relaxed/simple;
+	bh=KAsRDWgv2NXfZ3B+X8i2YPvusK0gxuSGNIOhrjdxmG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n83szsyE5gJyx9y8XIaXc6rWrVdjT51G+XpN9akIPJcqYcjMFWylw2bhVQ7O/cv5y2xDrf621k4WzDyyzdP+C546QnUU4dZv9YUkw4ysOmzo6EnaO5GZTaS8aPNg+6tACx4C9c+GJ6nQeQY9O70Hyeup1oDvUyIescwdRNbHMpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=eT0nrUjh; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TE3YZzT/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761911970; x=1793447970;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5UoaEdpVLL2NdA+CQijxmw2u67i+mScHjsVkMhIYhCg=;
-  b=TE3YZzT/CCwUFWt0np9TlRsLBwgSXdkejuoWH1GnWx1X0amP4rdwXLMr
-   PKA6t1Wh1kgGE2i8Whs2ZMGCDOavBqIAjUtyQcWVdYEIrTZTW+uPSUcnK
-   6xJGpRz5qCXQvHxdpyx9NAL+rXbZ+204WDkxsYmWSOob5ULvFaNZyYcXm
-   AgL38hHS557HvBLWIdyXCplyYq+EyjeNKvLEbNTEs+3ET+rbkRoXYOGJG
-   UAnMhD+l0rVXFaxp6lpO7ojxhyCxZLVnQUZUrdOcyI+Wsb2EEkYFOqXGR
-   2z8HUspEKF+/nkMpCL0fOfDTT+SLwrvjiQvtx6mrXN+EyO2AkPBQ7er1t
-   A==;
-X-CSE-ConnectionGUID: pp9hEsglQDWHRwCf3IBZ5Q==
-X-CSE-MsgGUID: NVM/QxTPRnCSbQYIkRD5Nw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="64170104"
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="64170104"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 04:59:29 -0700
-X-CSE-ConnectionGUID: I7fU5kdvSxu/0BY7bP+Iag==
-X-CSE-MsgGUID: DMmdcyxFQAeGVXU6xmQtlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="190302969"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 04:59:26 -0700
-Date: Fri, 31 Oct 2025 12:59:24 +0100
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aQSknEvFB_HRjwd-@black.igk.intel.com>
-References: <20251029062050.4160517-1-raag.jadav@intel.com>
- <20251029062050.4160517-2-raag.jadav@intel.com>
- <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
- <aQSCpF8aR1lskaPy@black.igk.intel.com>
- <aQSJJv7d2hllsObY@smile.fi.intel.com>
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="eT0nrUjh"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id 662B1C5C27
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:55 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id C3531C5AB6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:54 +0200 (EET)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 12A651FF522
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:54 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1761912834;
+	bh=XDLMqD7nEFshp2WG4Ildq72xmi2MAqdYc3+r4s9+n3I=;
+	h=Received:From:Subject:To;
+	b=eT0nrUjhVFveiNfFRD7Pv3eMlLmFmE6wcSEawFuKHm9YQW+lA3S4zi05RP3anCNm3
+	 S92ke++BzJnJCF6MWKbDok933QbSIjbpkNWBmMXLIGQKHpSYMaFws0h8WTIOke/xQ1
+	 kV19qB+J1pC98qqghYcT3mn36I9CqJOvDbAOYE9gID56XRSokSMk9cGG+oETpkI7Lw
+	 I7ggWR3g+HCSk7o4MLsWGw1QrCTy9bvA9zNXGqKCMjpQpmuHpvvqLcIamWYHls3X1W
+	 XC/LoKFJRlGfEGZf7i7ZYk6G77fMrvN3fKH/ToSFFme6Qf+6fsJR+ACAAPsrvzxkfE
+	 Z2XyETkI76b0w==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f171.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f171.google.com with SMTP id
+ 38308e7fff4ca-378d50162e0so23704571fa.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Fri, 31 Oct 2025 05:13:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXUumdpRx/5ULyp/NTrwXaLHnc17P2vEcDCdsDWR6QeVxmB15TnhDWt4SKVBfYsmR9t8hr2pI/0KUlpRHCOxc9slwv9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKsoEfsAuzsbLYO3v/dU5UknQaw7J8ehtoTru39eBnQRSrJgow
+	uaBantIdWl9E8UkyG6Vax7QEzLxrkK7IyaVxOBQta5MGK6YPyPIPRqJ0mXVcwrKgGrEcSI/cxV5
+	wzn0qWNd1z7LjhDQNjp5O7cyJFNVf2ZU=
+X-Google-Smtp-Source: 
+ AGHT+IHLvg+QVKJLRgPQGaJgLJOka5UXPrAEhFAvF8BSPVZ7o3I8EUXF/J/4/XYlnPpyRCbSAkYX/I4BHhW+qLfd2Gs=
+X-Received: by 2002:a05:651c:19a1:b0:360:e364:bb3d with SMTP id
+ 38308e7fff4ca-37a18cf70a1mr12519561fa.0.1761912833609; Fri, 31 Oct 2025
+ 05:13:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQSJJv7d2hllsObY@smile.fi.intel.com>
+References: <20251018101759.4089-6-lkml@antheas.dev>
+ <202510222013.EBLC609m-lkp@intel.com>
+ <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
+ <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
+In-Reply-To: <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Fri, 31 Oct 2025 13:13:42 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
+X-Gm-Features: AWmQ_blJS4pzpONNbJGbKFFyV7UhrXL_Gbz5apymTl2RdEt79wy1YgZX4ddGWr4
+Message-ID: 
+ <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
+Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
+ kbd led handlers
+To: Jiri Kosina <jikos@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Denis Benato <benato.denis96@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <176191283428.2961539.6787677734838428051@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Fri, Oct 31, 2025 at 12:02:14PM +0200, Andy Shevchenko wrote:
-> On Fri, Oct 31, 2025 at 10:34:28AM +0100, Raag Jadav wrote:
-> > On Wed, Oct 29, 2025 at 10:36:19AM +0200, Andy Shevchenko wrote:
-> > > On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
-> 
-> ...
-> 
-> > > > +#define EHL_PSE_IO_DEV_OFFSET	SZ_4K
-> > > > +#define EHL_PSE_IO_DEV_SIZE	SZ_4K
-> > > 
-> > > Not sure if SZ_4K is a good idea for the _OFFSET, the _SIZE is fine. Also why
-> > > do we need two? If the devices are of the same size, we don't need to have a
-> > > separate offset.
-> > 
-> > Yes but they're semantically different, atleast as per DEFINE_RES_MEM().
-> > Either way works for me.
-> 
-> They are "slices" in the HW, see also my "if the devices..." passage.
-> 
-> If you want to use SZ_* in _OFFSET, I would write it as (1 * SZ_4K) to point
-> out that size constant here is the _unit_ and not the size semantically.
-> Currently the definitions have the same values semantically, but you pointed
-> out that they should not be.
+On Fri, 31 Oct 2025 at 09:27, Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
+>
+> > >   1589
+> > >   1590  static void kbd_led_update_all(struct work_struct *work)
+> > >   1591  {
+> > >   1592          enum led_brightness value;
+> > >   1593          struct asus_wmi *asus;
+> > >   1594          bool registered, notify;
+> > >   1595          int ret;
+> >                               /\ value should have been an int and
+> > placed here. It can take the value -1 hence the check
+>
+> Thanks, that needs to be fixed before the final merge.
+>
+> > Are there any other comments on the series?
+> >
+> > The only issue I am aware of is that Denis identified a bug in asusd
+> > (asusctl userspace program daemon) in certain Asus G14/G16 laptops
+> > that cause laptop keys to become sticky, I have had users also report
+> > that bug in previous versions of the series. WIthout asusd running,
+> > keyboards work fine incl. with brightness control (did not work
+> > before). Given it will take two months for this to reach mainline, I
+> > think it is a fair amount of time to address the bug.
+>
+> One thing that is not clear to me about this -- is this causing a visible
+> user-space behavior regression before vs. after the patchset with asusctl?
+>
+> If so, I am afraid this needs to be root-caused and fixed before the set
+> can be considered for inclusion.
 
-Fair. Will consolidate.
+Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on
+ROG") adds HID_QUIRK_INPUT_PER_APP and the extra devices seem to
+confuse asusd. Since the devices are the same as with hid-asus not
+loaded, it is specific to that program.
 
-> > > > +	io_dev = kzalloc(sizeof(*io_dev), GFP_KERNEL);
-> > > > +	if (!io_dev)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Why devm_kzalloc() can't be used? I don't see if the device lifetime is anyhow
-> > > different to this object. Am I wrong?
-> > 
-> > Looks like it but I don't know the code well enough to tell if there're
-> > corner cases, so just following the documented rules. Your call.
-> 
-> Do you expect this to be called in non-probe() contexts? If no --> devm.
-> Otherwise some comments are needed.
+We can delay that patch until Denis who took over maintenance of the
+program can have a deeper look. I will still keep the last part of
+that patch that skips the input check, because that causes errors in
+devices that do not create an input device (e.g., lightbar).
 
-Sure.
+Antheas
 
-> > > > +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
-> > > 
-> > > Hmm... Is it okay to use double underscored variant? Only a single driver uses
-> > > this so far... Care to elaborate?
-> > 
-> > The regular variant uses KBUILD_MODNAME which comes with 'intel' prefix
-> > after commit df7f9acd8646, and with that we overshoot the max id string
-> > length for leaf drivers.
-> 
-> At bare minimum this needs a comment, but I think ideally we need to bump the
-> limit by factor of 2.
+> Thanks,
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
+>
 
-Which will probably require a wider discussion, so perhaps let's pursue it
-separately?
-
-Raag
