@@ -1,87 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9102F6594;
-	Fri, 31 Oct 2025 08:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19B72EDD6C;
+	Fri, 31 Oct 2025 09:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761899219; cv=none; b=tIEgvFQShEo0QVpOwF3PAmV9a7TgtQAWdcU7jYoMRxx4jLl5seZnWsyow+XdIKh4JOL0Fzr3E/NrKt+VLIwWCixqi6QHl+7vO/5NaBcwpO57kF6pqwtkZN5XLQGRn+sog7fpq9m+QWPyuwfJQ8ItRpOp6nbioTcO6piH6fmhBPA=
+	t=1761903279; cv=none; b=aJAQzmC8S0g0XmHL0odxfm6ACogxwsIeByuVJwjoki5mvI4nrCmBChsk2ZtlJbbn2BNaDy7EAsqefNVpdJ2ziJ99Kr1Vha+4PECjW4pjbRE7psKW4TUNkoDzfwH9ehXJOhOFIaRHoG5M8nfrbDjwX62y/0VTkqvfE8KavaKj1Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761899219; c=relaxed/simple;
-	bh=BecWedi4L8EHtB6kBN5qc40HWVT3Y0Xx/1LMaYJrUJ0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=G612UoXwBWvYWZ1F/TmTcahXKWBa5koENk4lCK9plh9OOUocnB8ypcx24tIA5udkZc6S52WL8Zm0jOFeSbsP8fYOXWVt+Awczt1gZR+viMt5RBcyEVIZ2img9fjKudhNI6QKR6lnq7Sg2vQoRNq3RURSXfo46Tox1z3419mdFjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1B4rxuu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761903279; c=relaxed/simple;
+	bh=fplWNQM+nEHUuRwf47LqYBcModH+iInvHdt/56pXO6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PbVKOnMX6ceSFv30vw3wpL5qyYMdVjY8W7hPJtjiIz+oLcp/urWbesM51JcWV7fgLHxgiuatmco1Lui09Sl5m/1Xyu+C/TNtI6AFlJpNsZZItdPh4hE1pK7TzkqbTOjsvVp/hfs4EokOO2+T2Zk+uv9FIZ8ouXx9dfoqKpqYW78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxenNpof; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1B4rxuu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB83DC4CEE7;
-	Fri, 31 Oct 2025 08:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761899219;
-	bh=BecWedi4L8EHtB6kBN5qc40HWVT3Y0Xx/1LMaYJrUJ0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=O1B4rxuudVo33kOmChl54gnIRHNTNPAxVPuJdNyWgGMJhW6EPL+CMSkcKizIB86P/
-	 atTUQetYvc8OodgQl9CkBA8Mbp+3wis/QzdEyb7qUm6wJX3jFy9NF/sEyEaVcSB6cM
-	 QDhXUlsFbJWWDBPZmAev7Fg5cMv5wUb5uuSkoqrprGCSaqH1/fGHlmJSXXHdJT7bWV
-	 32tnAlgHioj2Zb2QNkRjaq8N6Y30ROWUt8rORJBA3yer2vkWsy99flrKGiaZw00qnn
-	 xUeKRvPruwYJVoNq95mQCUMTZp+Zxs8qk9aXD1W0qGXNPGrkcSrFJmvGz/XagOJlbe
-	 VvFVD7ENENCHQ==
-Date: Fri, 31 Oct 2025 09:26:56 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
- kbd led handlers
-In-Reply-To: <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
-Message-ID: <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
-References: <20251018101759.4089-6-lkml@antheas.dev> <202510222013.EBLC609m-lkp@intel.com> <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxenNpof"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761903278; x=1793439278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fplWNQM+nEHUuRwf47LqYBcModH+iInvHdt/56pXO6M=;
+  b=fxenNpofEgI4CvG56Y1wUYWmBn4i0EX5LQKiPBsS6Px/W5/NbxWw/E/o
+   an8Zgjyh7WBPMLNwA05qdXX1J3f90CZggISxIU0NW3pgMe6a2exDavLHm
+   poMu3CM8Ulc2vQ0gVJPMZMF7pS7B27Be51besTr6Bhfvq1UYtByuRUdxD
+   ZeSlIU27N5pXY3vcOBPv5Def5wZPDXsWsVknRDwkg8smWJqkvUwoyTcWq
+   ABIKvh8/OihSY5MC8PSZPEg4Wy7HuLgeo1Z57OJALc54izl+iQMheSmxj
+   eMBOZhj6Naz7bqb3Oy5tASCW1e5hoXCUWDSJ0XaisUxa/pjBRdFef4sby
+   g==;
+X-CSE-ConnectionGUID: viATyxmNTduBe8Hc8bpE7Q==
+X-CSE-MsgGUID: T8pCofUnRCKmDI9oXwhSAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="63948818"
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="63948818"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 02:34:34 -0700
+X-CSE-ConnectionGUID: UX/N6EEXTjK+qtkm7WMGNQ==
+X-CSE-MsgGUID: 7BJGvyzfQoulIJN7fVarYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="186526656"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 02:34:31 -0700
+Date: Fri, 31 Oct 2025 10:34:28 +0100
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
+ PSE I/O
+Message-ID: <aQSCpF8aR1lskaPy@black.igk.intel.com>
+References: <20251029062050.4160517-1-raag.jadav@intel.com>
+ <20251029062050.4160517-2-raag.jadav@intel.com>
+ <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
 
-On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
-
-> >   1589
-> >   1590  static void kbd_led_update_all(struct work_struct *work)
-> >   1591  {
-> >   1592          enum led_brightness value;
-> >   1593          struct asus_wmi *asus;
-> >   1594          bool registered, notify;
-> >   1595          int ret;
->                               /\ value should have been an int and
-> placed here. It can take the value -1 hence the check
-
-Thanks, that needs to be fixed before the final merge.
-
-> Are there any other comments on the series?
+On Wed, Oct 29, 2025 at 10:36:19AM +0200, Andy Shevchenko wrote:
+> On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
+> > Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
+> > devices that expose two different capabilities of GPIO and Timed I/O
+> > as a single PCI function through shared MMIO with below layout.
+> > 
+> > GPIO: 0x0000 - 0x1000
+> > TIO:  0x1000 - 0x2000
+> > 
+> > This driver enumerates the PCI parent device and creates auxiliary child
+> > devices for these capabilities. The actual functionalities are provided
+> > by their respective auxiliary drivers.
 > 
-> The only issue I am aware of is that Denis identified a bug in asusd
-> (asusctl userspace program daemon) in certain Asus G14/G16 laptops
-> that cause laptop keys to become sticky, I have had users also report
-> that bug in previous versions of the series. WIthout asusd running,
-> keyboards work fine incl. with brightness control (did not work
-> before). Given it will take two months for this to reach mainline, I
-> think it is a fair amount of time to address the bug.
+> ...
+> 
+> > +#include <linux/auxiliary_bus.h>
+> > +#include <linux/dev_printk.h>
+> > +#include <linux/device/devres.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/gfp_types.h>
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/sizes.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/types.h>
+> 
+> > +#define EHL_PSE_IO_DEV_OFFSET	SZ_4K
+> > +#define EHL_PSE_IO_DEV_SIZE	SZ_4K
+> 
+> Not sure if SZ_4K is a good idea for the _OFFSET, the _SIZE is fine. Also why
+> do we need two? If the devices are of the same size, we don't need to have a
+> separate offset.
 
-One thing that is not clear to me about this -- is this causing a visible 
-user-space behavior regression before vs. after the patchset with asusctl?
+Yes but they're semantically different, atleast as per DEFINE_RES_MEM().
+Either way works for me.
 
-If so, I am afraid this needs to be root-caused and fixed before the set 
-can be considered for inclusion.
+...
 
-Thanks,
+> > +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
+> > +{
+> > +	struct auxiliary_device *aux_dev;
+> > +	struct device *dev = &pci->dev;
+> > +	struct ehl_pse_io_dev *io_dev;
+> > +	resource_size_t start;
+> > +	int ret;
+> > +
+> > +	io_dev = kzalloc(sizeof(*io_dev), GFP_KERNEL);
+> > +	if (!io_dev)
+> > +		return -ENOMEM;
+> 
+> Why devm_kzalloc() can't be used? I don't see if the device lifetime is anyhow
+> different to this object. Am I wrong?
 
--- 
-Jiri Kosina
-SUSE Labs
+Looks like it but I don't know the code well enough to tell if there're
+corner cases, so just following the documented rules. Your call.
 
+> > +	start = pci_resource_start(pci, 0);
+> > +	io_dev->irq = pci_irq_vector(pci, idx);
+> > +	io_dev->mem = DEFINE_RES_MEM(start + (EHL_PSE_IO_DEV_OFFSET * idx), EHL_PSE_IO_DEV_SIZE);
+> > +
+> > +	aux_dev = &io_dev->aux_dev;
+> > +	aux_dev->name = name;
+> > +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
+> > +	aux_dev->dev.parent = dev;
+> > +	aux_dev->dev.release = ehl_pse_io_dev_release;
+> > +
+> > +	ret = auxiliary_device_init(aux_dev);
+> > +	if (ret)
+> > +		goto free_io_dev;
+> > +
+> > +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
+> 
+> Hmm... Is it okay to use double underscored variant? Only a single driver uses
+> this so far... Care to elaborate?
+
+The regular variant uses KBUILD_MODNAME which comes with 'intel' prefix
+after commit df7f9acd8646, and with that we overshoot the max id string
+length for leaf drivers.
+
+> > +	if (ret)
+> > +		goto uninit_aux_dev;
+> > +
+> > +	return 0;
+> > +
+> > +uninit_aux_dev:
+> > +	/* io_dev will be freed with the put_device() and .release sequence */
+> 
+> Right...
+> 
+> > +	auxiliary_device_uninit(aux_dev);
+> > +free_io_dev:
+> > +	kfree(io_dev);
+> 
+> ...and this is a double free, correct?
+
+Yeah, my sheer incompetence at stealing code :(
+
+Raag
