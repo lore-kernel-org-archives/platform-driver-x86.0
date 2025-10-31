@@ -1,105 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5547054774;
-	Fri, 31 Oct 2025 03:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9102F6594;
+	Fri, 31 Oct 2025 08:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761882364; cv=none; b=YnhcRjggxjDMh4cM/nb5SnbpHcGJ4TeXe0c0vKSKMbcFYqAbXfPjFhbhkHGQD3GoVWU3KxtRuL5S4+23S+r3Md9WZwJ4CBtsRWxx4Fr6bCkRA8a0PZUMtqJ7BrHAkt5dTvdScqqYHs25ghi3r6JNTidw3sav7A/LzBSUjmkTxK0=
+	t=1761899219; cv=none; b=tIEgvFQShEo0QVpOwF3PAmV9a7TgtQAWdcU7jYoMRxx4jLl5seZnWsyow+XdIKh4JOL0Fzr3E/NrKt+VLIwWCixqi6QHl+7vO/5NaBcwpO57kF6pqwtkZN5XLQGRn+sog7fpq9m+QWPyuwfJQ8ItRpOp6nbioTcO6piH6fmhBPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761882364; c=relaxed/simple;
-	bh=Pr6AZ9+2RkdlqDw+fjABCpLag/dByYgaK04YYWRiFKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxCCOll1yO/aAeaKmib+lZ/Wgb8HIPrmUv73Ug8lGGgQfPRucZ8htyb2qvB6eCOVDrYr10JwXo9ajjMrgkFhxUB6vtluqR4mk5/KKJPgezrN1xCryuVwUWBNAmC4RW5N3oWAKxvxcz4FBfILWD34CLyCixvdHMvaH/gWdvFfSJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnnzh4VD; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761899219; c=relaxed/simple;
+	bh=BecWedi4L8EHtB6kBN5qc40HWVT3Y0Xx/1LMaYJrUJ0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G612UoXwBWvYWZ1F/TmTcahXKWBa5koENk4lCK9plh9OOUocnB8ypcx24tIA5udkZc6S52WL8Zm0jOFeSbsP8fYOXWVt+Awczt1gZR+viMt5RBcyEVIZ2img9fjKudhNI6QKR6lnq7Sg2vQoRNq3RURSXfo46Tox1z3419mdFjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1B4rxuu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnnzh4VD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761882362; x=1793418362;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Pr6AZ9+2RkdlqDw+fjABCpLag/dByYgaK04YYWRiFKk=;
-  b=dnnzh4VDqeHXHxBNzkZKiXSoLrLD3trrDBI6N80fRmAZCpfA7NJa6YYX
-   mx1orCO1AotTdonD9Rhotrf7yB0qv9kPHAcj2Li9k9yiw5Xm3Ei+nCxNB
-   CMNmfYmmprRITrzyX2LNmWjOJVpLcMS+H/+S+UYIio8uqMinld2jAW5WP
-   IK6ixWUud7SpfPKUc+pKJqcpWsmicDYsd3eLnPtrab+ETo/edAK3gbXIM
-   X1VoZ/Imx3a8v1un/UgYgxk9rpbCE0XGgpDQjHJvwu+p37W3rCLq4twzv
-   frknSk2bgAHGavVWxaQL5iy3WUPpxfndKK0hfMOiwDvqk+57R7JnCy/ZS
-   Q==;
-X-CSE-ConnectionGUID: KsIv2iEURByefRlwMZQryg==
-X-CSE-MsgGUID: XYHlS+kVTICgLmljnjD6Fg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="64186951"
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="64186951"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 20:46:01 -0700
-X-CSE-ConnectionGUID: wdSfgDtiQZypuda1fr0N3g==
-X-CSE-MsgGUID: ubT6KOiHRa+xbnHNpFJw3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,268,1754982000"; 
-   d="scan'208";a="186869283"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 30 Oct 2025 20:45:59 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vEg5M-000MkO-23;
-	Fri, 31 Oct 2025 03:45:56 +0000
-Date: Fri, 31 Oct 2025 11:45:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Denis Benato <denis.benato@linux.dev>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Limonciello, Mario" <mario.limonciello@amd.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Alok Tiwari <alok.a.tiwari@oracle.com>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	Mateusz Schyboll <dragonn@op.pl>,
-	Denis Benato <benato.denis96@gmail.com>, porfet828@gmail.com
-Subject: Re: [PATCH v16 2/9] platform/x86: asus-armoury: move existing
- tunings to asus-armoury module
-Message-ID: <202510311115.gURckMs4-lkp@intel.com>
-References: <20251030130320.1287122-3-denis.benato@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1B4rxuu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB83DC4CEE7;
+	Fri, 31 Oct 2025 08:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761899219;
+	bh=BecWedi4L8EHtB6kBN5qc40HWVT3Y0Xx/1LMaYJrUJ0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=O1B4rxuudVo33kOmChl54gnIRHNTNPAxVPuJdNyWgGMJhW6EPL+CMSkcKizIB86P/
+	 atTUQetYvc8OodgQl9CkBA8Mbp+3wis/QzdEyb7qUm6wJX3jFy9NF/sEyEaVcSB6cM
+	 QDhXUlsFbJWWDBPZmAev7Fg5cMv5wUb5uuSkoqrprGCSaqH1/fGHlmJSXXHdJT7bWV
+	 32tnAlgHioj2Zb2QNkRjaq8N6Y30ROWUt8rORJBA3yer2vkWsy99flrKGiaZw00qnn
+	 xUeKRvPruwYJVoNq95mQCUMTZp+Zxs8qk9aXD1W0qGXNPGrkcSrFJmvGz/XagOJlbe
+	 VvFVD7ENENCHQ==
+Date: Fri, 31 Oct 2025 09:26:56 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org, 
+    linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
+ kbd led handlers
+In-Reply-To: <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
+Message-ID: <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
+References: <20251018101759.4089-6-lkml@antheas.dev> <202510222013.EBLC609m-lkp@intel.com> <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251030130320.1287122-3-denis.benato@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Denis,
+On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
 
-kernel test robot noticed the following build warnings:
+> >   1589
+> >   1590  static void kbd_led_update_all(struct work_struct *work)
+> >   1591  {
+> >   1592          enum led_brightness value;
+> >   1593          struct asus_wmi *asus;
+> >   1594          bool registered, notify;
+> >   1595          int ret;
+>                               /\ value should have been an int and
+> placed here. It can take the value -1 hence the check
 
-[auto build test WARNING on hid/for-next]
-[also build test WARNING on linus/master v6.18-rc3 next-20251030]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks, that needs to be fixed before the final merge.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Denis-Benato/platform-x86-asus-wmi-export-symbols-used-for-read-write-WMI/20251030-211412
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/20251030130320.1287122-3-denis.benato%40linux.dev
-patch subject: [PATCH v16 2/9] platform/x86: asus-armoury: move existing tunings to asus-armoury module
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20251031/202510311115.gURckMs4-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251031/202510311115.gURckMs4-lkp@intel.com/reproduce)
+> Are there any other comments on the series?
+> 
+> The only issue I am aware of is that Denis identified a bug in asusd
+> (asusctl userspace program daemon) in certain Asus G14/G16 laptops
+> that cause laptop keys to become sticky, I have had users also report
+> that bug in previous versions of the series. WIthout asusd running,
+> keyboards work fine incl. with brightness control (did not work
+> before). Given it will take two months for this to reach mainline, I
+> think it is a fair amount of time to address the bug.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510311115.gURckMs4-lkp@intel.com/
+One thing that is not clear to me about this -- is this causing a visible 
+user-space behavior regression before vs. after the patchset with asusctl?
 
-All warnings (new ones prefixed by >>):
+If so, I am afraid this needs to be root-caused and fixed before the set 
+can be considered for inclusion.
 
->> Warning: drivers/platform/x86/asus-armoury.c:179 function parameter 'value' not described in 'armoury_set_devstate'
+Thanks,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jiri Kosina
+SUSE Labs
+
