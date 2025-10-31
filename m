@@ -1,145 +1,109 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4394E325734
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 12:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4FC1DF258;
+	Fri, 31 Oct 2025 12:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761912844; cv=none; b=IQchuFK9rfXWgCHMpb4XteFR2EtCB6u1GE9MGDNxC0l5y8X8QhOBfcll/VaOQJSz7gYFxe9JPOGpI6EPeJz1TRICjV+5hOAUDSEhaMEROFUEOuZQZXHQsd+Da7E1SoO2Z6VBIPYguFrYujMBLDYR9KkD2fthOMHfcaotI/obWLU=
+	t=1761914978; cv=none; b=tLzx2W7iIEmsZLs5nbY9//vOfFLKmV2m6e5aB0dJpdoIGFEmu43woQ1tuD+Wo96gUzl9wYgtBnYGRipVYF2Fcbcw1Kl+6VrmoqCEhcKUZc4lNbhEwyTEezhGdIgKA6tWSWdtvZh90tW2hrWpaYYQS3HHmtJ61x+vW43R8lBEnZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761912844; c=relaxed/simple;
-	bh=KAsRDWgv2NXfZ3B+X8i2YPvusK0gxuSGNIOhrjdxmG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n83szsyE5gJyx9y8XIaXc6rWrVdjT51G+XpN9akIPJcqYcjMFWylw2bhVQ7O/cv5y2xDrf621k4WzDyyzdP+C546QnUU4dZv9YUkw4ysOmzo6EnaO5GZTaS8aPNg+6tACx4C9c+GJ6nQeQY9O70Hyeup1oDvUyIescwdRNbHMpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=eT0nrUjh; arc=none smtp.client-ip=78.46.171.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1761914978; c=relaxed/simple;
+	bh=Z7L6m8wsINOWDCAVOMhW7SBbSW/51fBJ3qOHGI5fHqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ep91X1L5NCndNZHEiPL6Tto9LL/2Dvzq2O2xoS++fDi92cZUVlp8UuP1Y6Y6+LURvlGnKywtXlpJlEYzsofejjKJbCZojdMz0/Fgvo9hE1S/uwKXuGMRzy+adxQQMcwiUBJ1qNJxjJxWhADTnOnr8gZBI7ywgCtfkNJjzHpeRfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyXZMplB; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="eT0nrUjh"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 662B1C5C27
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:55 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id C3531C5AB6
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:54 +0200 (EET)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 12A651FF522
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Oct 2025 14:13:54 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1761912834;
-	bh=XDLMqD7nEFshp2WG4Ildq72xmi2MAqdYc3+r4s9+n3I=;
-	h=Received:From:Subject:To;
-	b=eT0nrUjhVFveiNfFRD7Pv3eMlLmFmE6wcSEawFuKHm9YQW+lA3S4zi05RP3anCNm3
-	 S92ke++BzJnJCF6MWKbDok933QbSIjbpkNWBmMXLIGQKHpSYMaFws0h8WTIOke/xQ1
-	 kV19qB+J1pC98qqghYcT3mn36I9CqJOvDbAOYE9gID56XRSokSMk9cGG+oETpkI7Lw
-	 I7ggWR3g+HCSk7o4MLsWGw1QrCTy9bvA9zNXGqKCMjpQpmuHpvvqLcIamWYHls3X1W
-	 XC/LoKFJRlGfEGZf7i7ZYk6G77fMrvN3fKH/ToSFFme6Qf+6fsJR+ACAAPsrvzxkfE
-	 Z2XyETkI76b0w==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f171.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f171.google.com with SMTP id
- 38308e7fff4ca-378d50162e0so23704571fa.2
-        for <platform-driver-x86@vger.kernel.org>;
- Fri, 31 Oct 2025 05:13:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXUumdpRx/5ULyp/NTrwXaLHnc17P2vEcDCdsDWR6QeVxmB15TnhDWt4SKVBfYsmR9t8hr2pI/0KUlpRHCOxc9slwv9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKsoEfsAuzsbLYO3v/dU5UknQaw7J8ehtoTru39eBnQRSrJgow
-	uaBantIdWl9E8UkyG6Vax7QEzLxrkK7IyaVxOBQta5MGK6YPyPIPRqJ0mXVcwrKgGrEcSI/cxV5
-	wzn0qWNd1z7LjhDQNjp5O7cyJFNVf2ZU=
-X-Google-Smtp-Source: 
- AGHT+IHLvg+QVKJLRgPQGaJgLJOka5UXPrAEhFAvF8BSPVZ7o3I8EUXF/J/4/XYlnPpyRCbSAkYX/I4BHhW+qLfd2Gs=
-X-Received: by 2002:a05:651c:19a1:b0:360:e364:bb3d with SMTP id
- 38308e7fff4ca-37a18cf70a1mr12519561fa.0.1761912833609; Fri, 31 Oct 2025
- 05:13:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyXZMplB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761914976; x=1793450976;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Z7L6m8wsINOWDCAVOMhW7SBbSW/51fBJ3qOHGI5fHqY=;
+  b=PyXZMplBh2yC5RN4mgUpKFrfpEH2i6tDtPf37r0MLFIRB3DJIFXS1Moa
+   QG9U9LP0Oxh3fiqM8WuSZvbbK9cs63ejTsKXOeQIbYfuUjltvujdJaMtb
+   kpvc9NAP7ls85LMR8aYEKV6ZRNM9iEJNTtLQYEw6GUw2zev5X5JBdRViI
+   db0DiP+dVtKKro1UeWzvrw79/wx2ZJLuUC6iziBdm4QOfP5rN/9iaLFke
+   7pHSxc4yTpFMz2gKwg6XYfcE7u7l3el6r9pMUrjDJZwxpI/9pkYGA8+P5
+   L0b/mJ/sExDViQd/84TKTm/CtrXIg+Rt3y9ESLLGqG550XS9DrqRIpG3R
+   Q==;
+X-CSE-ConnectionGUID: xie/SgGrTMqW38sKaLYPgg==
+X-CSE-MsgGUID: YRP7xDc7Q9S/6EnTFO3EFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="66687914"
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="66687914"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:49:36 -0700
+X-CSE-ConnectionGUID: CHxpcvBjQwCzu/7SrInovw==
+X-CSE-MsgGUID: KLsAn9VmSaiy00ffU25Gug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
+   d="scan'208";a="186106363"
+Received: from mgoodin-mobl3.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.66])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:49:34 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vEoZN-00000004GS3-1eMG;
+	Fri, 31 Oct 2025 14:49:29 +0200
+Date: Fri, 31 Oct 2025 14:49:28 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
+ PSE I/O
+Message-ID: <aQSwWLVKH_3TthTW@smile.fi.intel.com>
+References: <20251029062050.4160517-1-raag.jadav@intel.com>
+ <20251029062050.4160517-2-raag.jadav@intel.com>
+ <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
+ <aQSCpF8aR1lskaPy@black.igk.intel.com>
+ <aQSJJv7d2hllsObY@smile.fi.intel.com>
+ <aQSknEvFB_HRjwd-@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251018101759.4089-6-lkml@antheas.dev>
- <202510222013.EBLC609m-lkp@intel.com>
- <CAGwozwGDBj2e83JBW71G_z6hMD5PsOXTQLqFVdPKZ6sU54tsGw@mail.gmail.com>
- <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
-In-Reply-To: <39n24387-0o0n-50p8-s2rn-9qoqs6sq8336@xreary.bet>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 31 Oct 2025 13:13:42 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
-X-Gm-Features: AWmQ_blJS4pzpONNbJGbKFFyV7UhrXL_Gbz5apymTl2RdEt79wy1YgZX4ddGWr4
-Message-ID: 
- <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
-Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
- kbd led handlers
-To: Jiri Kosina <jikos@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Denis Benato <benato.denis96@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176191283428.2961539.6787677734838428051@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQSknEvFB_HRjwd-@black.igk.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, 31 Oct 2025 at 09:27, Jiri Kosina <jikos@kernel.org> wrote:
->
-> On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
->
-> > >   1589
-> > >   1590  static void kbd_led_update_all(struct work_struct *work)
-> > >   1591  {
-> > >   1592          enum led_brightness value;
-> > >   1593          struct asus_wmi *asus;
-> > >   1594          bool registered, notify;
-> > >   1595          int ret;
-> >                               /\ value should have been an int and
-> > placed here. It can take the value -1 hence the check
->
-> Thanks, that needs to be fixed before the final merge.
->
-> > Are there any other comments on the series?
-> >
-> > The only issue I am aware of is that Denis identified a bug in asusd
-> > (asusctl userspace program daemon) in certain Asus G14/G16 laptops
-> > that cause laptop keys to become sticky, I have had users also report
-> > that bug in previous versions of the series. WIthout asusd running,
-> > keyboards work fine incl. with brightness control (did not work
-> > before). Given it will take two months for this to reach mainline, I
-> > think it is a fair amount of time to address the bug.
->
-> One thing that is not clear to me about this -- is this causing a visible
-> user-space behavior regression before vs. after the patchset with asusctl?
->
-> If so, I am afraid this needs to be root-caused and fixed before the set
-> can be considered for inclusion.
+On Fri, Oct 31, 2025 at 12:59:24PM +0100, Raag Jadav wrote:
+> On Fri, Oct 31, 2025 at 12:02:14PM +0200, Andy Shevchenko wrote:
+> > On Fri, Oct 31, 2025 at 10:34:28AM +0100, Raag Jadav wrote:
+> > > On Wed, Oct 29, 2025 at 10:36:19AM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
 
-Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on
-ROG") adds HID_QUIRK_INPUT_PER_APP and the extra devices seem to
-confuse asusd. Since the devices are the same as with hid-asus not
-loaded, it is specific to that program.
+...
 
-We can delay that patch until Denis who took over maintenance of the
-program can have a deeper look. I will still keep the last part of
-that patch that skips the input check, because that causes errors in
-devices that do not create an input device (e.g., lightbar).
+> > > > > +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
+> > > > 
+> > > > Hmm... Is it okay to use double underscored variant? Only a single driver uses
+> > > > this so far... Care to elaborate?
+> > > 
+> > > The regular variant uses KBUILD_MODNAME which comes with 'intel' prefix
+> > > after commit df7f9acd8646, and with that we overshoot the max id string
+> > > length for leaf drivers.
+> > 
+> > At bare minimum this needs a comment, but I think ideally we need to bump the
+> > limit by factor of 2.
+> 
+> Which will probably require a wider discussion, so perhaps let's pursue it
+> separately?
 
-Antheas
+Send a patch starting a discussion. Looking at the history of bumping other
+cases it's usually well accepted when properly justified. And since it's now
+32, bumping to 40 maybe enough for several more years.
 
-> Thanks,
->
-> --
-> Jiri Kosina
-> SUSE Labs
->
->
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
