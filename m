@@ -1,109 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4FC1DF258;
-	Fri, 31 Oct 2025 12:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030E932548D;
+	Fri, 31 Oct 2025 13:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761914978; cv=none; b=tLzx2W7iIEmsZLs5nbY9//vOfFLKmV2m6e5aB0dJpdoIGFEmu43woQ1tuD+Wo96gUzl9wYgtBnYGRipVYF2Fcbcw1Kl+6VrmoqCEhcKUZc4lNbhEwyTEezhGdIgKA6tWSWdtvZh90tW2hrWpaYYQS3HHmtJ61x+vW43R8lBEnZQ=
+	t=1761915928; cv=none; b=rFVtl+rSy0FbJhcyNQjva9pLuIPmyY+HlT5N7zrvdkNVgHAdJ0cRWovmMEY9Dy9eyaFGgZi1VDqOoFyawcIaFC4l+KYeSy/SOnU6/+Lw+OFk3DXJKr1+qamzHlYzJtu8YLNpj5mk2tzVph0w01FdEvlMzd2Me2yPkdMQ8kQ3958=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761914978; c=relaxed/simple;
-	bh=Z7L6m8wsINOWDCAVOMhW7SBbSW/51fBJ3qOHGI5fHqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ep91X1L5NCndNZHEiPL6Tto9LL/2Dvzq2O2xoS++fDi92cZUVlp8UuP1Y6Y6+LURvlGnKywtXlpJlEYzsofejjKJbCZojdMz0/Fgvo9hE1S/uwKXuGMRzy+adxQQMcwiUBJ1qNJxjJxWhADTnOnr8gZBI7ywgCtfkNJjzHpeRfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyXZMplB; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1761915928; c=relaxed/simple;
+	bh=d2k8BDYCwAf8v+dGV9tcaTrmfQ4UjRPuay0/M32F87w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l3SgSQhyW/X2fJwq0Uuw4tquaME6y8SbnRxdea5LfFgoT5g6ftQvEP7liyIK7Z8+q0P2wyoLA27GZCLmdMNwq+BrqM3kS8zTKOkrkXSjsZ1UIzKBs9SLD/0tbPL5qy7mnVXS6akzcd+kyEcQOj4ygtIbE3gPED1dehO0KDeXZ5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OuWmANOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyXZMplB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761914976; x=1793450976;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z7L6m8wsINOWDCAVOMhW7SBbSW/51fBJ3qOHGI5fHqY=;
-  b=PyXZMplBh2yC5RN4mgUpKFrfpEH2i6tDtPf37r0MLFIRB3DJIFXS1Moa
-   QG9U9LP0Oxh3fiqM8WuSZvbbK9cs63ejTsKXOeQIbYfuUjltvujdJaMtb
-   kpvc9NAP7ls85LMR8aYEKV6ZRNM9iEJNTtLQYEw6GUw2zev5X5JBdRViI
-   db0DiP+dVtKKro1UeWzvrw79/wx2ZJLuUC6iziBdm4QOfP5rN/9iaLFke
-   7pHSxc4yTpFMz2gKwg6XYfcE7u7l3el6r9pMUrjDJZwxpI/9pkYGA8+P5
-   L0b/mJ/sExDViQd/84TKTm/CtrXIg+Rt3y9ESLLGqG550XS9DrqRIpG3R
-   Q==;
-X-CSE-ConnectionGUID: xie/SgGrTMqW38sKaLYPgg==
-X-CSE-MsgGUID: YRP7xDc7Q9S/6EnTFO3EFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="66687914"
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="66687914"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:49:36 -0700
-X-CSE-ConnectionGUID: CHxpcvBjQwCzu/7SrInovw==
-X-CSE-MsgGUID: KLsAn9VmSaiy00ffU25Gug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="186106363"
-Received: from mgoodin-mobl3.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.66])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:49:34 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vEoZN-00000004GS3-1eMG;
-	Fri, 31 Oct 2025 14:49:29 +0200
-Date: Fri, 31 Oct 2025 14:49:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aQSwWLVKH_3TthTW@smile.fi.intel.com>
-References: <20251029062050.4160517-1-raag.jadav@intel.com>
- <20251029062050.4160517-2-raag.jadav@intel.com>
- <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
- <aQSCpF8aR1lskaPy@black.igk.intel.com>
- <aQSJJv7d2hllsObY@smile.fi.intel.com>
- <aQSknEvFB_HRjwd-@black.igk.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OuWmANOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5338C4CEE7;
+	Fri, 31 Oct 2025 13:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761915927;
+	bh=d2k8BDYCwAf8v+dGV9tcaTrmfQ4UjRPuay0/M32F87w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OuWmANOxQyavr2OndYJ4s3kbVDHfKfszLhmIgVZKhHzwjBDqzGTubQ2YBAqu1rGxT
+	 urxkoJBdqH1PYxSlKvzMPdcgEtBKR5biV0TAQIWLQKobGNrpYa/Dv1F14VthpK/dlJ
+	 eObnmE2o8jK0A6/AHnHwrLoI1CzA1Qo1NnO4e2Vu43c0wNGKDUK5wmEDalNoWlv94l
+	 mhcbnmHRPH44Us/d4K2hu6TErPnmo17QZLj2rzxcpcgPL4GTRlPSJOPq7kT9LO4GiP
+	 CnzKCaxWN71vt8Z6SZtqm8kkeV0N72WKRzfjCih97B2qpiYqvZTsgLeSIncB+GsXFA
+	 ZVa5oSOiGoo5w==
+Message-ID: <a10c7757-567d-4312-b72d-159ab0c41ece@kernel.org>
+Date: Fri, 31 Oct 2025 08:05:26 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQSknEvFB_HRjwd-@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] platform/x86/amd/pmc: Add support for Van Gogh SoC
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Perry Yuan <perry.yuan@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20251024152152.3981721-1-lkml@antheas.dev>
+ <20251024152152.3981721-2-lkml@antheas.dev>
+Content-Language: en-US
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <20251024152152.3981721-2-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 31, 2025 at 12:59:24PM +0100, Raag Jadav wrote:
-> On Fri, Oct 31, 2025 at 12:02:14PM +0200, Andy Shevchenko wrote:
-> > On Fri, Oct 31, 2025 at 10:34:28AM +0100, Raag Jadav wrote:
-> > > On Wed, Oct 29, 2025 at 10:36:19AM +0200, Andy Shevchenko wrote:
-> > > > On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
 
-...
 
-> > > > > +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
-> > > > 
-> > > > Hmm... Is it okay to use double underscored variant? Only a single driver uses
-> > > > this so far... Care to elaborate?
-> > > 
-> > > The regular variant uses KBUILD_MODNAME which comes with 'intel' prefix
-> > > after commit df7f9acd8646, and with that we overshoot the max id string
-> > > length for leaf drivers.
-> > 
-> > At bare minimum this needs a comment, but I think ideally we need to bump the
-> > limit by factor of 2.
+On 10/24/2025 10:21 AM, Antheas Kapenekakis wrote:
+> The ROG Xbox Ally (non-X) SoC features a similar architecture to the
+> Steam Deck. While the Steam Deck supports S3 (s2idle causes a crash),
+> this support was dropped by the Xbox Ally which only S0ix suspend.
 > 
-> Which will probably require a wider discussion, so perhaps let's pursue it
-> separately?
+> Since the handler is missing here, this causes the device to not suspend
+> and the AMD GPU driver to crash while trying to resume afterwards due to
+> a power hang.
+> 
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-Send a patch starting a discussion. Looking at the history of bumping other
-cases it's usually well accepted when properly justified. And since it's now
-32, bumping to 40 maybe enough for several more years.
+Having seen that a few things were tried for the idle mask which don't 
+work I think this patch makes sense as is.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
+> ---
+>   drivers/platform/x86/amd/pmc/pmc.c | 3 +++
+>   drivers/platform/x86/amd/pmc/pmc.h | 1 +
+>   2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index bd318fd02ccf..cae3fcafd4d7 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -106,6 +106,7 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
+>   	switch (dev->cpu_id) {
+>   	case AMD_CPU_ID_PCO:
+>   	case AMD_CPU_ID_RN:
+> +	case AMD_CPU_ID_VG:
+>   	case AMD_CPU_ID_YC:
+>   	case AMD_CPU_ID_CB:
+>   		dev->num_ips = 12;
+> @@ -517,6 +518,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+>   	case AMD_CPU_ID_PCO:
+>   		return MSG_OS_HINT_PCO;
+>   	case AMD_CPU_ID_RN:
+> +	case AMD_CPU_ID_VG:
+>   	case AMD_CPU_ID_YC:
+>   	case AMD_CPU_ID_CB:
+>   	case AMD_CPU_ID_PS:
+> @@ -717,6 +719,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SHP) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
+>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
+>   	{ }
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+> index 62f3e51020fd..fe3f53eb5955 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> @@ -156,6 +156,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+>   #define AMD_CPU_ID_RN			0x1630
+>   #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
+>   #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
+> +#define AMD_CPU_ID_VG			0x1645
+>   #define AMD_CPU_ID_YC			0x14B5
+>   #define AMD_CPU_ID_CB			0x14D8
+>   #define AMD_CPU_ID_PS			0x14E8
 
