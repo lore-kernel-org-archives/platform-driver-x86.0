@@ -1,288 +1,258 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17342459DC;
-	Sun,  2 Nov 2025 19:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762111768; cv=pass; b=NQkDvLdDaM82d30OyKqbKSy2PskNPjXUQmeTHvJ1mnskUNzWcFlbx+HuEHTC/NHXysctWrcnkfy4gMQGLDNEe7tKZjBHsVJ3h2qcL1P4KCp0aIkhI1WAYztjTF3lhLQt2FzoPwa93h/4/B4k1C7GWYvJW7gatUPIY6aVx27c1Zo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762111768; c=relaxed/simple;
-	bh=xI8gSN/CSQba+kPswBAGUoivllbpm5/IDEYRG784vVk=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=q+bP67AoWdC3icdfr4/0CXs7i21/XuH6jyv/V9ZdhJQN1NULYMsEE+YHZc/nq7dd3mjhk+WVXU3gm9X6to9QiP+GISo7JE3XwByVdYWZQXmVxrPY8D/dKQrK3w9LgXYuvf7MpCvOewGoawKoEwYEWpxCENVrBQRscn/8QSNR/xQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=0bAyLzNM; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282001B81CA
+	for <platform-driver-x86@vger.kernel.org>; Sun,  2 Nov 2025 21:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762120416; cv=none; b=l1YtD9d8ackmKBeDjrSmGhLiGvzunbbpJnbaySMJVtXpRz2cZgfH3mTYHhNGmDxR8/NamhBEl1uQI3/9kzcFSpy3NED2p47l8d7EEj/5CiXnc8i4aBlGkM7nQdcPFIhQ+3fqEtOI4Er6LksnocLwgNIda/lQshsO9fEKpa8mHYM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762120416; c=relaxed/simple;
+	bh=mAwM1txL/K/sVNhyWAiPketR8BnjawTyb752L1tVlSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QGksLVNvmcXYQCIjurOHdHgjMPYsxS9JYZy1EYUn1g6VegXWAHTTddUpD2855jGXPn5qlPKd2DNeCIZiZUgCSSuPU8Ohce4tdeamROcwMePo2VOgNv2quZHsEs+caN81LFKk58lW9oc1uR4hHHnYvpwPGpKjSVeFt5r/fHFjn0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pJKx3knJ; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="0bAyLzNM"
-ARC-Seal: i=1; a=rsa-sha256; t=1762111754; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IdmuaNWuhk4vU4RIbalmSzvugq2B8iu9eaAjxMbRZcdpl9EPBrSym//+mdRQYnlByE7cu04Wb/9ERwy9ka0UYc7mYIDIZ8Ha1r9l4t9ziRBF1YTt+6ojD3sfFgT1JL8+fxEyUrBulmQq6+uao1LR2kRUY6ii+PwEQcHCPakBoy4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1762111754; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=l1Qv/0MGW/nxjqKOKbDWrbcl7Vnbg9Nz8Sz9CZ2ObIc=; 
-	b=djOT4jp0zFOmIyXVhJU8gYqDtzlwyhxpPCbTMy+MfIKwt+GKQ/l/QwVLkak/xGZS/eovhazN+dZ+5NfnZkPlCJWVOlAZQrBXcidoDreKRyNoH3kNtniW/xxHaiF1B9WTav1RgWYXKMMerUKb9vFQkU7M24LFAU8PPcm5GRYu/CY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1762111754;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=l1Qv/0MGW/nxjqKOKbDWrbcl7Vnbg9Nz8Sz9CZ2ObIc=;
-	b=0bAyLzNM/cYlEybUzUMS3G4k5uOcRd09QDLSxpjKTU6euijjlvZQPSdyiwmH/7/m
-	6semumWOcdcpHOqkd6mxy8uWOIOxvcIWJ9Dke78jt/oDodIWXH2mYLARelmyDLsbTpl
-	3n69BRSLJ17iLtlqQ4SRRLFWcQxLHOYfEcjCnovc=
-Received: by mx.zohomail.com with SMTPS id 1762111750972319.9707538202438;
-	Sun, 2 Nov 2025 11:29:10 -0800 (PST)
-Message-ID: <1fd710f18bdfcf5d5c157697cdbe874465ee0130.camel@rong.moe>
-Subject: Re: [PATCH 0/2] platform/x86: ideapad-laptop: Add
- charge_types:Fast (Rapid Charge)
-From: Rong Zhang <i@rong.moe>
-To: Jelle van der Waa <jelle@vdwaa.nl>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>
-Cc: Ike Panhc <ikepanhc@gmail.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,  "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-In-Reply-To: <5d1ae6eb34378570ed1f9b62d945c95bda8a5b86.camel@rong.moe>
-References: <20251020192443.33088-1-i@rong.moe>
-		 <dfa70284-04ce-482d-8d79-cc0ee8b4bf6d@vdwaa.nl>
-	 <5d1ae6eb34378570ed1f9b62d945c95bda8a5b86.camel@rong.moe>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Nov 2025 03:24:06 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pJKx3knJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762120409;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ifAmEBnnyjj9NoLpieTaZJwOClqHI/cS1sfUwXoR0qg=;
+	b=pJKx3knJpBStf1M2Qb3NrhSUsOaq0bIfHVHbU5Gi9/doyDd69nNbnSexJMWGNRku4IYjrR
+	sAELCLNGrxMnTMcIE2aANhXZLnR92VPyaamPJhOI2ukneHsLLcWntEt6USua7x8muvJrLu
+	eyoUMn6R5uyXp1WavqjuqaYF+JpwJy8=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Alok Tiwari" <alok.a.tiwari@oracle.com>,
+	"Derek John Clark" <derekjohn.clark@gmail.com>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	porfet828@gmail.com,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH v17 0/9] platform/x86: Add asus-armoury driver
+Date: Sun,  2 Nov 2025 22:53:10 +0100
+Message-ID: <20251102215319.3126879-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-5 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 2025-11-03 at 02:57 +0800, Rong Zhang wrote:
-> Hi Jelle,
->=20
-> On Sun, 2025-11-02 at 17:09 +0100, Jelle van der Waa wrote:
-> > On 10/20/25 21:24, Rong Zhang wrote:
-> > > The GBMD/SBMC interface on IdeaPad/ThinkBook supports Rapid Charge mo=
-de
-> > > (charge_types: Fast) in addition to Conservation Mode (charge_types:
-> > > Long_Life).
-> > >=20
-> > > This patchset exposes these two modes while carefully maintaining the=
-ir
-> > > mutually exclusive state, which aligns with the behavior of manufactu=
-rer
-> > > utilities on Windows.
-> > >=20
-> > > Tested on ThinkBook 14 G7+ ASP.
-> >=20
-> > Tested this patch on my Lenovo Ideapad U330p, it now advertises that=
-=20
-> > `Fast` is a supported charge_type although my laptop does not seem to=
-=20
-> > support it:
-> >=20
-> > [root@archlinux jelle]# cat /sys/class/power_supply/BAT1/charge_types
-> > Fast [Standard] Long_Life
-> > [root@archlinux jelle]# echo 'Fast' >=20
-> > /sys/class/power_supply/BAT1/charge_types
-> > [root@archlinux jelle]# cat /sys/class/power_supply/BAT1/charge_types
-> > Fast [Standard] Long_Life
->=20
-> Ahh, then we need an approach to determine if it is supported on a
-> specific device.
->=20
-> Glancing at the disassembled DSDT.dsl of my device, I found:
->=20
->    Method (GBMD, 0, NotSerialized)
->    {
->    	[...]
->    	If ((One =3D=3D QCGS))
->    	{
->    		Local0 |=3D 0x00020000
->    	}
->    	[...]
->    }
->=20
-> BIT(17) of GBMD is 1 on my device. Maybe QCGS means "Quick CharGe
-> Supported?"
->=20
-> With this assumption, I did some random Internet digging. The same bit
-> on other devices is called QKSP ("QuicK charge SuPported?"), SQCG
-> ("Support Quick CharGe?"), or QCBX (see below).
->=20
->    Method (GBMD, 0, NotSerialized)
->    {
->    	[...]
->    	If ((One =3D=3D QCBX))
->    	{
->    		If ((One =3D=3D QCHO))
->    		{
->    			Local0 |=3D 0x04
->    		}
->    	}
->    	[...]
->    	If ((One =3D=3D QCBX))
->    	{
->    		Local0 |=3D 0x00020000
->    	}
->    	[...]
->    }
->=20
-> https://badland.io/static/acpidump.txt
->=20
-> 0x04 is BIT(2)/GBMD_RAPID_CHARGE_STATE_BIT. With all these pieces of
-> information, I presume BIT(17) of GBMD is what we are searching for.
->=20
-> > I'm wondering if the battery extension API allows to not advertise a=
-=20
-> > property if it isn't supported or if it should at least return -EINVAL.
->=20
-> We can achieve this by defining multiple struct power_supply_ext. See
-> drivers/power/supply/cros_charge-control.c.
->=20
-> Could you test the patch below (based on "review-ilpo-next")?
+Hi all,
 
-Note: this patch is just a quick PoC (I am going to sleep now, zzz...).
-ideapad_psy_ext_{get,set}_prop need to be reorganized to properly
-support your device. If `cat charge_types' doesn't show `Fast', we're
-in the right direction.
+the TL;DR:
+1. Introduce new module to contain bios attributes, using fw_attributes_class
+2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+3. Remove those in the next LTS cycle
 
-Thanks,
-Rong
+The idea for this originates from a conversation with Mario Limonciello
+https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
 
-> @Ilpo:
->=20
-> This patch series has been merge into your "review-ilpo-next" branch.
->=20
-> Should I reorganize the series and send a [PATCH v2]? Or should I just
-> send the patch below (after adding a commit message, ofc)?
->=20
-> > Greetings,
-> >=20
-> > Jelle van der Waa
->=20
-> Thanks,
-> Rong
->=20
-> ---
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platf=
-orm/x86/lenovo/ideapad-laptop.c
-> index 931a72a2a487..b9927493cb93 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -75,6 +75,7 @@ enum {
->  enum {
->  	GBMD_RAPID_CHARGE_STATE_BIT =3D 2,
->  	GBMD_CONSERVATION_STATE_BIT =3D 5,
-> +	GBMD_RAPID_CHARGE_SUPPORTED_BIT =3D 17,
->  };
-> =20
->  enum {
-> @@ -180,6 +181,7 @@ struct ideapad_private {
->  	struct ideapad_dytc_priv *dytc;
->  	struct dentry *debug;
->  	struct acpi_battery_hook battery_hook;
-> +	const struct power_supply_ext *battery_ext;
->  	unsigned long cfg;
->  	unsigned long r_touchpad_val;
->  	struct {
-> @@ -2119,30 +2121,42 @@ static const enum power_supply_property ideapad_p=
-ower_supply_props[] =3D {
->  	POWER_SUPPLY_PROP_CHARGE_TYPES,
->  };
-> =20
-> -static const struct power_supply_ext ideapad_battery_ext =3D {
-> -	.name			=3D "ideapad_laptop",
-> -	.properties		=3D ideapad_power_supply_props,
-> -	.num_properties		=3D ARRAY_SIZE(ideapad_power_supply_props),
-> -	.charge_types		=3D (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> -				   BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
-> -				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
-> -	.get_property		=3D ideapad_psy_ext_get_prop,
-> -	.set_property		=3D ideapad_psy_ext_set_prop,
-> -	.property_is_writeable	=3D ideapad_psy_prop_is_writeable,
-> -};
-> +#define DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(_name, _charge_types)			\
-> +	static const struct power_supply_ext _name =3D {					\
-> +		.name			=3D "ideapad_laptop",				\
-> +		.properties		=3D ideapad_power_supply_props,			\
-> +		.num_properties		=3D ARRAY_SIZE(ideapad_power_supply_props),	\
-> +		.charge_types		=3D _charge_types,				\
-> +		.get_property		=3D ideapad_psy_ext_get_prop,			\
-> +		.set_property		=3D ideapad_psy_ext_set_prop,			\
-> +		.property_is_writeable	=3D ideapad_psy_prop_is_writeable,		\
-> +	}
-> +
-> +DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v1,
-> +	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
-> +);
-> +
-> +DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v2,
-> +	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
-> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
-> +);
-> =20
->  static int ideapad_battery_add(struct power_supply *battery, struct acpi=
-_battery_hook *hook)
->  {
->  	struct ideapad_private *priv =3D container_of(hook, struct ideapad_priv=
-ate, battery_hook);
-> =20
-> -	return power_supply_register_extension(battery, &ideapad_battery_ext,
-> +	return power_supply_register_extension(battery, priv->battery_ext,
->  					       &priv->platform_device->dev, priv);
->  }
-> =20
->  static int ideapad_battery_remove(struct power_supply *battery,
->  				  struct acpi_battery_hook *hook)
->  {
-> -	power_supply_unregister_extension(battery, &ideapad_battery_ext);
-> +	struct ideapad_private *priv =3D container_of(hook, struct ideapad_priv=
-ate, battery_hook);
-> +
-> +	power_supply_unregister_extension(battery, priv->battery_ext);
-> =20
->  	return 0;
->  }
-> @@ -2167,14 +2181,22 @@ static int ideapad_check_features(struct ideapad_=
-private *priv)
->  		priv->features.fan_mode =3D true;
-> =20
->  	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC"))=
- {
-> -		priv->features.conservation_mode =3D true;
-> -		priv->battery_hook.add_battery =3D ideapad_battery_add;
-> -		priv->battery_hook.remove_battery =3D ideapad_battery_remove;
-> -		priv->battery_hook.name =3D "Ideapad Battery Extension";
-> -
-> -		err =3D devm_battery_hook_register(&priv->platform_device->dev, &priv-=
->battery_hook);
-> -		if (err)
-> -			return err;
-> +		/* Not acquiring gbmd_sbmc_mutex as race condition is impossible on in=
-it */
-> +		if (!eval_gbmd(handle, &val)) {
-> +			priv->features.conservation_mode =3D true;
-> +			priv->battery_ext =3D test_bit(GBMD_RAPID_CHARGE_SUPPORTED_BIT, &val)
-> +					  ? &ideapad_battery_ext_v2
-> +					  : &ideapad_battery_ext_v1;
-> +
-> +			priv->battery_hook.add_battery =3D ideapad_battery_add;
-> +			priv->battery_hook.remove_battery =3D ideapad_battery_remove;
-> +			priv->battery_hook.name =3D "Ideapad Battery Extension";
-> +
-> +			err =3D devm_battery_hook_register(&priv->platform_device->dev,
-> +							 &priv->battery_hook);
-> +			if (err)
-> +				return err;
-> +		}
->  	}
-> =20
->  	if (acpi_has_method(handle, "DYTC"))
+It is without a doubt much cleaner to use, easier to discover, and the
+API is well defined as opposed to the random clutter of attributes I had
+been placing in the platform sysfs. Given that Derek is also working on a
+similar approach to Lenovo in part based on my initial work I'd like to think
+that the overall approach is good and may become standardised for these types
+of things.
+
+Regarding PPT: it is intended to add support for "custom" platform profile
+soon. If it's a blocker for this patch series being accepted I will drop the 
+platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+separately to avoid holding the bulk of the series up. Ideally I would like
+to get the safe limits in so users don't fully lose functionality or continue
+to be exposed to potential instability from setting too low, or be mislead
+in to thinking they can set limits higher than actual limit.
+
+The bulk of the PPT patch is data, the actual functional part is relatively
+small and similar to the last version.
+
+Unfortunately I've been rather busy over the months and may not cover
+everything in the v7 changelog but I've tried to be as comprehensive as I can.
+
+Regards,
+Luke
+
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - Too many changes to list, but all concerns raised in previous submission addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+- v3
+  - All concerns addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+- v4
+  - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch series
+  - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+  - Split the PPT knobs out to a separate patch
+  - Split the hd_panel setting out to a new patch
+  - Clarify some of APU MEM configuration and convert int to hex
+  - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+  - Fixup cyclic dependency in Kconfig
+- v5
+  - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig detail, edit commit msg
+  - cleanup ppt* tuning patch
+  - proper error handling in module init, plus pr_err()
+  - ppt tunables have a notice if there is no match to get defaults
+  - better error handling in cpu core handling
+    - don't continue if failure
+  - use the mutex to gate WMI writes
+- V6
+  - correctly cleanup/unwind if module init fails
+- V7
+  - Remove review tags where the code changed significantly
+  - Add auto_screen_brightness WMI attribute support
+  - Move PPT patch to end
+  - Add support min/max PPT values for 36 laptops (and two handhelds)
+  - reword commit for "asus-wmi: export symbols used for read/write WMI"
+  - asus-armoury: move existing tunings to asus-armoury
+    - Correction to license header
+    - Remove the (initial) mutex use (added for core count only in that patch)
+    - Clarify some doc comments (attr_int_store)
+    - Cleanup pr_warn in dgpu/egpu/mux functions
+    - Restructure logic in asus_fw_attr_add()
+    - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
+  - asus-armoury: add core count control:
+    - add mutex to prevent possible concurrent write to the core
+      count WMI due to separated bit/little attributes
+  - asus-armoury: add ppt_* and nv_* tuning knobs:
+    - Move to end of series
+    - Refactor to use a table of allowed min/max values to
+      ensure safe settings
+    - General code cleanup
+  - Ensure checkpatch.pl returns clean for all
+- V8
+  - asus-armoury: move existing tunings to asus-armoury module
+    - Further cleanup: https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a8a8e38
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - Address concerns in https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc06522c5e41
+    - Refactor struct asus_armoury_priv to record both AC and DC settings
+    - Tidy macros and functions affected by the above to be clearer as a result
+    - Move repeated strings such as "ppt_pl1_spl" to #defines
+    - Split should_create_tunable_attr() in to two functions to better clarify:
+      - is_power_tunable_attr()
+      - has_valid_limit()
+    - Restructure init_rog_tunables() to initialise AC and DC in a
+      way that makes more sense.
+    - Ensure that if DC setting table is not available then attributes
+      return -ENODEV only if on DC mode.
+- V9
+  - asus-armoury: move existing tunings to asus-armoury module
+    - return -EBUSY when eGPU/dGPU cannot be deactivated
+  - asus-armoury: add apu-mem control support
+    - discard the WMI presence bit fixing the functionality
+  - asus-armoury: add core count control
+    - replace mutex lock/unlock with guard
+    - move core count alloc for initialization in init_max_cpu_cores()
+- v10
+  - platform/x86: asus-wmi: export symbols used for read/write WMI
+    - fix error with redefinition of asus_wmi_set_devstate
+  - asus-armoury: move existing tunings to asus-armoury module
+    - hwmon or other -> hwmon or others
+    - fix wrong function name in documentation (attr_uint_store)
+    - use kstrtouint where appropriate
+    - (*) fix unreachable code warning: the fix turned out to be partial
+    - improve return values in case of error in egpu_enable_current_value_store
+  - asus-armoury: asus-armoury: add screen auto-brightness toggle
+    - actually register screen_auto_brightness attribute
+- v11
+  - cover-letter:
+    - reorganize the changelog of v10
+  - asus-armoury: move existing tunings to asus-armoury module
+    - move the DMIs list in its own include, fixing (*) for good
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - fix warning about redefinition of ppt_pl2_sppt_def for GV601R
+- v12
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - add min/max values for FA608WI and FX507VI
+- v13
+  - asus-armoury: add ppt_* and nv_* tuning knobs
+    - fix a typo in a comment about _def attributes
+    - add min/max values for GU605CW and G713PV
+  - asus-armoury: add apu-mem control support
+    - fix a possible out-of-bounds read in apu_mem_current_value_store
+- v14
+  - platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
+    - added patch to rename the symbol for consistency
+  - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+    - remove the unchecked usage of dmi_get_system_info while
+      also increasing consistency with other messages
+- v15
+  - platform/x86: asus-wmi: export symbols used for read/write WMI
+    - fix kernel doc
+  - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+    - avoid direct calls to asus-wmi and provide helpers instead
+    - rework xg mobile activation logic
+    - add helper for enum allowed attributes
+    - improve mini_led_mode_current_value_store
+    - improved usage of kstrtouint, kstrtou32 and kstrtobool
+    - unload attributes in reverse order of loading
+  - platform/x86: asus-armoury: add apu-mem control support
+    - fix return value in apu_mem_current_value_show
+  - platform/x86: asus-armoury: add core count control
+    - put more safeguards in place against possible bricking of laptops
+    - improve loading logic
+  - platform/x86: asus-wmi: deprecate bios features
+    - modified deprecation message
+  - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+    - make _store(s) to interfaces unusable in DC to fail,
+      instead of accepting 0 as a value (0 is also invalid)
+    - make it easier to understand AC vs DC logic
+    - improved init_rog_tunables() logic
+    - commas after every field in the table for consistency
+    - add support for RC73 handheld
+-v16
+  - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+    - add support for GU605CX
+-v17
+  - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+    - fix RC73 -> RC73AX as another RC73 exists
+  - platform/x86: asus-armoury: add core count control
+    - be more tolerant on out-or-range current CPU cores count
+  - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+    - fix usage of undeclared static functions in macros
+
+Denis Benato (1):
+  platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
+
+Luke D. Jones (8):
+  platform/x86: asus-wmi: export symbols used for read/write WMI
+  platform/x86: asus-armoury: move existing tunings to asus-armoury
+    module
+  platform/x86: asus-armoury: add panel_hd_mode attribute
+  platform/x86: asus-armoury: add apu-mem control support
+  platform/x86: asus-armoury: add core count control
+  platform/x86: asus-armoury: add screen auto-brightness toggle
+  platform/x86: asus-wmi: deprecate bios features
+  platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
+ drivers/hid/hid-asus.c                        |    1 +
+ drivers/platform/x86/Kconfig                  |   23 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/asus-armoury.c           | 1441 ++++++++++++++++
+ drivers/platform/x86/asus-armoury.h           | 1495 +++++++++++++++++
+ drivers/platform/x86/asus-wmi.c               |  177 +-
+ .../platform_data/x86/asus-wmi-leds-ids.h     |   50 +
+ include/linux/platform_data/x86/asus-wmi.h    |   63 +-
+ 9 files changed, 3192 insertions(+), 76 deletions(-)
+ create mode 100644 drivers/platform/x86/asus-armoury.c
+ create mode 100644 drivers/platform/x86/asus-armoury.h
+ create mode 100644 include/linux/platform_data/x86/asus-wmi-leds-ids.h
+
+-- 
+2.51.2
+
