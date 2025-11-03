@@ -1,210 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D6E27FB0E;
-	Mon,  3 Nov 2025 16:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3048B1AF0AF
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 19:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762188690; cv=none; b=dvQqZ70/C8I//MRkDhznVZ7AExbDXicicI4Gn2xaJWie3H1Oje4gnu0Ra5WdTEQTqpfCOQklNUTCLtFLe8cZTjiimN+E+71mSRgi+T/UKwuvjnM2+62OjLK1azmsRnoriVIUdp3WYELGtFO1CJ9EBfBZ+oOeOJ7954/YbrnkAvo=
+	t=1762196526; cv=none; b=Io+jLFQ3WLnVM1xeGfl2hsVXHzyChznYJ6R30sP86UPRRGh01i2ixSHzwL26150uRtE3UjXz02mzKfPZr2kCA1E4vOpqoEVZNNIhTYw9uIPkrkMq2152WZoY5HroSiE76g9v/n0hgvL/RR8+AGqio3pKbSUOYdKqsPAseTTlgCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762188690; c=relaxed/simple;
-	bh=sN+98ByzUm8Os03m/cZBXr3Td4C41MX5sIc3TY8J9Vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UmohlTvVc8zNB+xxFNRqj2OayjOovW4ztgPngyJb9vTgryCpq3+QLYkeZZMlaW3SVwU0spnTDUvVmPqyFdbHXGUlhfxGatB72OwGbCSgPcYqNDpcg+ehUnj8uvC539RhUS2Amo5MAjJudLPDdYtYP86+9cxBwC2+2PXSR5n+HW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHyUfYpU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762196526; c=relaxed/simple;
+	bh=DbFAwez0cjMr7osbfexuB3kDFZnSvUx7kQxtUW3PIsc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JurunK2R6s1mJqluwDGzWyOOF4Wa26g72AVORBz/hmJQV4JBd5JG3jgzTdLiC23Bv1dENcglaLfdNyKxCZFMot3ZeSIE+ssG5mqieNmhOjWvfUSnVtPUpwurgtx5Ey7pJC2/U3zaj/Lql0Svfxo34WtEI/WSwLoIzNcxYbIiYaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7RcTaat; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHyUfYpU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71A9C113D0;
-	Mon,  3 Nov 2025 16:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762188689;
-	bh=sN+98ByzUm8Os03m/cZBXr3Td4C41MX5sIc3TY8J9Vg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DHyUfYpU9kkzwADlRGsWDkQ0q3DQDUEp2yey8cyG8jNH8ertLKSPzurpNNUVTZQr5
-	 okAsr/owmllkRmJHXAXmURVzM7hTUJxJRLvjlDy3TMFLsdwHVnph6YSRACpxFMyfYw
-	 oPtJhxuEIEWIa+d3NEXw3EPvfogbih/HT/C7i8jKnIIFgV/alpWbIDxbCCp48kIqcK
-	 LZRtNn3EWVqewOEWJ/uOMmIhHCwA1e82sRBdLL7KoVLIj1sXmGwCg8yaA6GIrufELB
-	 5sZhKD5mTmIduXYh09qIdtZi3a6pOOLEtKXSUh7YA4JRHnKN6tGIkFh0VBfNd7oDMN
-	 +0UcExpyBd/Ew==
-Message-ID: <4c06dc85-9b16-47b3-9622-58e699c700c0@kernel.org>
-Date: Mon, 3 Nov 2025 10:51:27 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7RcTaat"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-932e6d498b2so4262297241.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Nov 2025 11:02:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762196523; x=1762801323; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JCgyYYl17212afWq0WmdVNHdmhfE4WpVfwvlvWkdR/I=;
+        b=N7RcTaat+sbzxC9Umtmn4+rvXHFsVIoj/FJ/zTHEKLmoLmxdoFeYS9RDheteD6khOX
+         2KQChajtn9cnBzWKlrtajuIxjgJzeSa9NI52+nVuzgV5xbnRbX/g7/65F+39HreoF8IZ
+         WKb2qF88Dl1Km3jspNDf5erwdt6ydN90mQdwndCkmgYohsJ5JUqunieSd6gxbxFUWnb6
+         ZFhRCvISnHkXllWrcB0G1sc1/JR4JTJZbv2BmBlJ1R22wbKdrVVMeCEwIPHn7ULfARB1
+         PS3o2bvu9RrpSA3qh+durUZvt9+2yif+pMrIW0peRatXwvPc//qo+nlvarnnGevj5KEo
+         JkpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762196523; x=1762801323;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JCgyYYl17212afWq0WmdVNHdmhfE4WpVfwvlvWkdR/I=;
+        b=TgCSVQ+bskMXEoTgcZMNit49AKshRy1oRqHVJQfEzU4066GBahK+tI7LQ6zCcswQD9
+         jULEh9cYXq7kyNlk1NvtkCLNtP/CbBzOvudpruSgQOeS8UwPCNwK0ee5mJc8zyfeaqg/
+         YG89Ox2Ib2Ou7j4MkFHUmfTuPCygRcMRqz60zWMRbNohVf43VrqBdGJSyeDo1AsxG1Ql
+         sv+LXzcAniIbUWdFW/ZkByZHhM7hPB7/stwRpfwcT2/TM15ixUuLlPwcA9bX/7rmB+kV
+         zCaHZ6p6fI2ISXGmjILuIROsiOeXwdkY6aK7FMQFumQupFgJHfvCcPXHfxljXS/KVqy1
+         qO5w==
+X-Gm-Message-State: AOJu0YxsNP9mlN3IAIpvHDB4t5mqAq7wYni6L6f0r9c/K59iHZ2fXGW/
+	TSQLOxsozRybIexMBiJhi02/04uAzncGhrFjWYanibJgVPhe+/6N/Fti
+X-Gm-Gg: ASbGncudIUfOpgoudN2yiMryzfuAK4lAuXkz7KiXobaOybNQ/n0p5FTYVS4oCYvziCG
+	3CZJWQesWzmG1WvMgcTFaNpwE9cBSelbVhg+qSo7g8mNKtMYlrZ8zJ9pgJmnPODT0rhx0O1ySlI
+	DOmFU19SoKtOCNWm1vQMuvood1K1w5BvzzHpWmVU8ky7EwvTD2h5qy7YbNUhonKRwc3oX1RbVuO
+	RmkeqGLyH29zpg+Cpa3bdTC8pNXIJeSImomMMeEjY8waHyE7vnCu0ygAKJMcVJRXPCJvY9U4GL5
+	4wlU51Ww6FEBpigdGhiJHvqejMzgQdgERYckzwNanx5Y1zzQu4ZAf108Nf0Dv3XV+yehB1nY+5Y
+	NwDyFsXe/PVG6BWJJnTD/2BYkDi4eZXhtYkZqYsYw2QIVFnyQsHbi7seC5Gk36xJqARIzTWRrjT
+	0dag==
+X-Google-Smtp-Source: AGHT+IF6ZrnGeB7r0RyVBzECaRGawNu02DZMNOtb1XSlboch2JDalhSDF7ll1MdUkogMoDYfu5R1OA==
+X-Received: by 2002:a05:6122:250d:b0:54a:992c:8164 with SMTP id 71dfb90a1353d-5593e404ef5mr4706586e0c.7.1762196521682;
+        Mon, 03 Nov 2025 11:02:01 -0800 (PST)
+Received: from [192.168.100.70] ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55973c834e3sm358469e0c.11.2025.11.03.11.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Nov 2025 11:01:57 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/5] platform/x86: alienware-wmi-wmax: Add AWCC support for
+ most models
+Date: Mon, 03 Nov 2025 14:01:43 -0500
+Message-Id: <20251103-family-supp-v1-0-a241075d1787@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] platform/x86: ayaneo-ec: Add suspend hook
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Derek John Clark <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-References: <20251031163651.1465981-1-lkml@antheas.dev>
- <20251031163651.1465981-7-lkml@antheas.dev>
-Content-Language: en-US
-From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
-In-Reply-To: <20251031163651.1465981-7-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABf8CGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDA0Nj3bTE3MycSt3i0oIC3UTjxESLFOOkJCPzRCWgjoKi1LTMCrBp0bG
+ 1tQCitVuzXQAAAA==
+X-Change-ID: 20251013-family-supp-a3aa8d3bb27a
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>, 
+ Cihan Ozakca <cozakca@outlook.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1014; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=DbFAwez0cjMr7osbfexuB3kDFZnSvUx7kQxtUW3PIsc=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDJkcf2QaPmz/etjZoiJ2e5P879lyZ5g6bLuqbQNPnTxsd
+ GvixoTAjlIWBjEuBlkxRZb2hEXfHkXlvfU7EHofZg4rE8gQBi5OAZjI5DKGX0y5/8XlvLrZfqpn
+ Wn4KD9fbGWHfIsP287keg9qReZe2+jMyHFXv8m3y3L3lRosPV12jKMuEOW8/HL5ac21rndztYzb
+ CvAA=
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
+Hi all,
 
+This patchset adds support for almost all models listed as supported by
+the AWCC windows tool.
 
-On 10/31/2025 11:36 AM, Antheas Kapenekakis wrote:
-> The Ayaneo EC resets after hibernation, losing the charge control state.
-> Add a small PM hook to restore this state on hibernation resume.
-> 
-> The fan speed is also lost during hibernation, but since hibernation
-> failures are common with this class of devices, setting a low fan speed
-> when the userspace program controlling the fan will potentially not
-> take over could cause the device to overheat, so it is not restored.
-> 
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->   drivers/platform/x86/ayaneo-ec.c | 73 ++++++++++++++++++++++++++++++++
->   1 file changed, 73 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
-> index 9548e3d22093..e1ad5968d3b4 100644
-> --- a/drivers/platform/x86/ayaneo-ec.c
-> +++ b/drivers/platform/x86/ayaneo-ec.c
-> @@ -41,6 +41,8 @@
->   #define AYANEO_MODULE_LEFT	BIT(0)
->   #define AYANEO_MODULE_RIGHT	BIT(1)
->   
-> +#define AYANEO_CACHE_LEN	1
-> +
->   struct ayaneo_ec_quirk {
->   	bool has_fan_control;
->   	bool has_charge_control;
-> @@ -51,6 +53,9 @@ struct ayaneo_ec_platform_data {
->   	struct platform_device *pdev;
->   	struct ayaneo_ec_quirk *quirks;
->   	struct acpi_battery_hook battery_hook;
-> +
-> +	bool restore_charge_limit;
-> +	bool restore_pwm;
->   };
->   
->   static const struct ayaneo_ec_quirk quirk_fan = {
-> @@ -207,10 +212,14 @@ static int ayaneo_ec_read(struct device *dev, enum hwmon_sensor_types type,
->   static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
->   			   u32 attr, int channel, long val)
->   {
-> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(
-> +		to_platform_device(dev));
-> +	int ret;
->   	switch (type) {
->   	case hwmon_pwm:
->   		switch (attr) {
->   		case hwmon_pwm_enable:
-> +			data->restore_pwm = false;
->   			switch (val) {
->   			case 1:
->   				return ec_write(AYANEO_PWM_ENABLE_REG,
-> @@ -224,6 +233,15 @@ static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
->   		case hwmon_pwm_input:
->   			if (val < 0 || val > 255)
->   				return -EINVAL;
-> +			if (data->restore_pwm) {
-> +				// Defer restoring PWM control to after
-> +				// userspace resumes successfully
-> +				ret = ec_write(AYANEO_PWM_ENABLE_REG,
-> +					       AYANEO_PWM_MODE_MANUAL);
-> +				if (ret)
-> +					return ret;
-> +				data->restore_pwm = false;
-> +			}
->   			return ec_write(AYANEO_PWM_REG, (val * 100) / 255);
->   		default:
->   			break;
-> @@ -474,10 +492,65 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +static int ayaneo_freeze(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
-> +	int ret;
-> +	u8 tmp;
-> +
-> +	if (data->quirks->has_charge_control) {
-> +		ret = ec_read(AYANEO_CHARGE_REG, &tmp);
-> +		if (ret)
-> +			return ret;
-> +
-> +		data->restore_charge_limit = tmp == AYANEO_CHARGE_VAL_INHIBIT;
-> +	}
-> +
-> +	if (data->quirks->has_fan_control) {
-> +		ret = ec_read(AYANEO_PWM_ENABLE_REG, &tmp);
-> +		if (ret)
-> +			return ret;
-> +
-> +		data->restore_pwm = tmp == AYANEO_PWM_MODE_MANUAL;
+This is important because the "old" interface, which this driver
+defaults, is supported by very few and old models, while most Dell
+gaming laptops support the newer AWCC interface.
 
-Why bother with the temp variable in the first place?
+Thanks!
 
-You could just make the data type of restore_pwm a u8 and then:
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+Kurt Borja (5):
+      platform/x86: alienware-wmi-wmax: Fix "Alienware m16 R1 AMD" quirk order
+      platform/x86: alienware-wmi-wmax: Drop redundant DMI entries
+      platform/x86: alienware-wmi-wmax: Add support for the whole "M" family
+      platform/x86: alienware-wmi-wmax: Add support for the whole "X" family
+      platform/x86: alienware-wmi-wmax: Add support for the whole "G" family
 
-ec_read(AYANEO_PWM_ENABLE_REG, data->restore_pwm);
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 104 +++++--------------------
+ 1 file changed, 20 insertions(+), 84 deletions(-)
+---
+base-commit: bd34bf518a5ffeb8eb7c8b9907ba97b606166f7b
+change-id: 20251013-family-supp-a3aa8d3bb27a
 
-
-> +
-> +		// Release the fan when entering hibernation to avoid
-> +		// overheating if hibernation fails and hangs
-
-Multi-line comments should be done with /* */
-
-> +		if (data->restore_pwm) {
-> +			ret = ec_write(AYANEO_PWM_ENABLE_REG, AYANEO_PWM_MODE_AUTO);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ayaneo_restore(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	if (data->quirks->has_charge_control && data->restore_charge_limit) {
-> +		ret = ec_write(AYANEO_CHARGE_REG, AYANEO_CHARGE_VAL_INHIBIT);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops ayaneo_pm_ops = {
-> +	.freeze = ayaneo_freeze,
-> +	.restore = ayaneo_restore,
-> +};
-
-Why are freeze and restore special?  Userspace is frozen for the suspend 
-sequence of any flow.  Hangs could happen in suspend just like they can 
-in hibernate.  If you're going to protect users from this I would expect 
-parity for "regular" suspend/resume.
-
-Can you just use SIMPLE_DEV_PM_OPS and rename the functions accordingly?
-
-> +
->   static struct platform_driver ayaneo_platform_driver = {
->   	.driver = {
->   		.name = "ayaneo-ec",
->   		.dev_groups = ayaneo_ec_groups,
-> +		.pm = &ayaneo_pm_ops,
->   	},
->   	.probe = ayaneo_ec_probe,
->   };
+-- 
+ ~ Kurt
 
