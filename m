@@ -1,214 +1,210 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FFF314B82
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 16:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D6E27FB0E;
+	Mon,  3 Nov 2025 16:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762187438; cv=none; b=OPuiG7mkh0KqCHTYFGjCyfS7FbX/GxRPTgvmL1kfC933U8z9PvDpc8BOpdmYnYGVV6YoxnjWcsqnCtafM+vZ2CAMMRdyqtQqCyAXmw1I3uZRKGKCwuReC9N1DtX7bBDyKQ0RayGc1TsjwyVJhMaSPo3yCip3VO82LTpSI8ax2rU=
+	t=1762188690; cv=none; b=dvQqZ70/C8I//MRkDhznVZ7AExbDXicicI4Gn2xaJWie3H1Oje4gnu0Ra5WdTEQTqpfCOQklNUTCLtFLe8cZTjiimN+E+71mSRgi+T/UKwuvjnM2+62OjLK1azmsRnoriVIUdp3WYELGtFO1CJ9EBfBZ+oOeOJ7954/YbrnkAvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762187438; c=relaxed/simple;
-	bh=3jHO59Spn4QAaN4bMhxNmHfKwqFWC6l3wa2Li9DQ1oo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gi9i/75wbeGYJkQuzCY8zyby6hZ43wupYw5NZwdcfyhM7xxElip2FDoEhHFQtvj49pZIZ3lfUvsg24r8JeDfJHjXLAIsBBKD1Vf0xr//l0SrhtWaatUfzrLQtqbszslpZl1o38nUDGkUCzcLmcKtxIFlBb51htpUtXSWnILjVpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ofmBnPmX; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1762188690; c=relaxed/simple;
+	bh=sN+98ByzUm8Os03m/cZBXr3Td4C41MX5sIc3TY8J9Vg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UmohlTvVc8zNB+xxFNRqj2OayjOovW4ztgPngyJb9vTgryCpq3+QLYkeZZMlaW3SVwU0spnTDUvVmPqyFdbHXGUlhfxGatB72OwGbCSgPcYqNDpcg+ehUnj8uvC539RhUS2Amo5MAjJudLPDdYtYP86+9cxBwC2+2PXSR5n+HW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHyUfYpU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofmBnPmX"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-634cef434beso10396871a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Nov 2025 08:30:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762187435; x=1762792235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3jHO59Spn4QAaN4bMhxNmHfKwqFWC6l3wa2Li9DQ1oo=;
-        b=ofmBnPmXOeDvNaVosLFTlkpXACP+535o18d9ZkWZ140rFLY0AJ6j43ttXDkdb0T+HT
-         jR/Vndkku8XfOu0lxklkLs9c/IQkt0o5HwEXqZZRPLqykPRpifpEpTSYjI5//srbEgWF
-         jq6KBcBKFfTL7ba6OECRhCEcsIui6vahFEnpIqZp1ENJ5fpDiHzy/q9TSZ7ojsgcfkzC
-         QeHKaIEWqbN2i3vtqVrv7tpUGHEHIKjwTRkZYBDYh+klcbad/NJg+XOHvAntdcYe8zNR
-         v0TfrreHQwx/dAPPMKI+GIts+cHBL2mLZ1tfcs3N0/JqMtAngcAxy29KmDzPsHy1ZVCz
-         B3Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762187435; x=1762792235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3jHO59Spn4QAaN4bMhxNmHfKwqFWC6l3wa2Li9DQ1oo=;
-        b=AhQxA6C9p6jlktzGI8wp9pSrmjxbGrRee4H438OeuT53LCM9PTD0LsA4CD8xx8Glz2
-         5weGnagLQhy38nL25X/rJZ09NzJTBkitK+HGBhhnvtUF/DCoyneOAqHyzIQLO2pftvXb
-         hs5BxBw8zU2hdVjrv4l1l1b4cBrhu7zHqzkDRJkZMXCL2ssg8ez/ZHkQylbcFt1opIDE
-         pmHo2BNkMUB9b2/LL8rgaPrQF8z8mrFG62FY1sQ6YRQSm6xCTHfKeo2npFj0glCFQuK4
-         xA3QP3pUFUHzF6uPvtWAd4UvSsIjH19OGV189I2SsQ2O68uBVfRIRrP0LprBF4nVsBDU
-         zlXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFOGpC/DcDEBmfFSd3GMcnsFa411bJY8iKVPgSu1F6sgercUklRoEbv+FZK3Ikjgid+gO83wHWQ21Bd3KuMLlD7ziN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/XeDwDE//RS5m0sC7aWMjoa22XbMmL8IHTHBwUUS/rWYvW/WW
-	kpZe78rPEoRTz2T0eYAGhZpzvX+EiG9PJpff1kRwlpElst8NFj55DW/GeUKjXQU9fgN7KOd7qqc
-	doFukiGXdX6gOWhGfoIWzbT13wPJwXuN1gxavrmCE
-X-Gm-Gg: ASbGncufWwHZFl6F3Xda+wGh9INOESpng/yew0FWSi+zmdDeh/Anm/0Lh91L43/HysE
-	8AP7nLSseqUSWCHxBOWDGCJ4maYEhG4BLXFZM9U6DSYmjLJEbJsDNHNhucAezOkdw/d3blYnGdy
-	6xxrpfdihxmnt6Fa/AyozKRJeUBsHl4W6j2pqPybWc+O50yblgLbuD9r4e2ImRIyjdhqlbY+5AM
-	7/vhTFB4wDyOANLL1S15CWXWKvSeXcj7wKuaUlC+tmp6dYoYTffLeJxNqa6+g==
-X-Google-Smtp-Source: AGHT+IEazeo19yYwXbrlW+SfBjEyqX4LiokguCi4PzahYxjLvk/Xq8fmQ/+sYzRyHdMWvx9uISoizNeAkPmwtH/q/P8=
-X-Received: by 2002:a17:907:7209:b0:b6d:ba71:a17f with SMTP id
- a640c23a62f3a-b705212b184mr2030477366b.18.1762187434663; Mon, 03 Nov 2025
- 08:30:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHyUfYpU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71A9C113D0;
+	Mon,  3 Nov 2025 16:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762188689;
+	bh=sN+98ByzUm8Os03m/cZBXr3Td4C41MX5sIc3TY8J9Vg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DHyUfYpU9kkzwADlRGsWDkQ0q3DQDUEp2yey8cyG8jNH8ertLKSPzurpNNUVTZQr5
+	 okAsr/owmllkRmJHXAXmURVzM7hTUJxJRLvjlDy3TMFLsdwHVnph6YSRACpxFMyfYw
+	 oPtJhxuEIEWIa+d3NEXw3EPvfogbih/HT/C7i8jKnIIFgV/alpWbIDxbCCp48kIqcK
+	 LZRtNn3EWVqewOEWJ/uOMmIhHCwA1e82sRBdLL7KoVLIj1sXmGwCg8yaA6GIrufELB
+	 5sZhKD5mTmIduXYh09qIdtZi3a6pOOLEtKXSUh7YA4JRHnKN6tGIkFh0VBfNd7oDMN
+	 +0UcExpyBd/Ew==
+Message-ID: <4c06dc85-9b16-47b3-9622-58e699c700c0@kernel.org>
+Date: Mon, 3 Nov 2025 10:51:27 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251002113404.3117429-1-srosek@google.com> <20251002113404.3117429-3-srosek@google.com>
- <CAJZ5v0iQToOkedruYqsowSm8=fxpnyJf86JJHB36E8+aCSZ5Hw@mail.gmail.com>
- <CAF3aWvFSomq+cm2sj+KjkYw=WODsrwH-VLDL=yOc6o9dqc5hWA@mail.gmail.com>
- <CAJZ5v0g72U3+u_KedKpZh2TuN-iYbXPcnZhN16oDvi4UqUTr7Q@mail.gmail.com>
- <CAF3aWvFc5ZZo3VaJSr68FwGuCFYJU=tXsJ6Fm1vmNLs4B=+8dg@mail.gmail.com> <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gJYOcTCACj6jKYL6juAYpUvJUf89kZ6ZxU3fMOpBjFzQ@mail.gmail.com>
-From: =?UTF-8?Q?S=C5=82awomir_Rosek?= <srosek@google.com>
-Date: Mon, 3 Nov 2025 17:30:22 +0100
-X-Gm-Features: AWmQ_bkxaBBdR7r8KnybjDiudQOBfZf1J4aHlS3iONHtKxrvEfx-n7LoFV4QQ9k
-Message-ID: <CAF3aWvGN2ipXNPs_3UNppJppwo+2J1uvjVTD2tyXoQ6ATdkuPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] ACPI: DPTF: Move INT340X device IDs to header
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, AceLan Kao <acelan.kao@canonical.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Zhang Rui <rui.zhang@intel.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
-	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] platform/x86: ayaneo-ec: Add suspend hook
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+References: <20251031163651.1465981-1-lkml@antheas.dev>
+ <20251031163651.1465981-7-lkml@antheas.dev>
+Content-Language: en-US
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <20251031163651.1465981-7-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 23, 2025 at 6:30=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Thu, Oct 23, 2025 at 6:27=E2=80=AFPM S=C5=82awomir Rosek <srosek@googl=
-e.com> wrote:
-> >
-> > On Thu, Oct 23, 2025 at 5:11=E2=80=AFPM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > On Thu, Oct 23, 2025 at 4:41=E2=80=AFPM S=C5=82awomir Rosek <srosek@g=
-oogle.com> wrote:
-> > > >
-> > > > On Wed, Oct 22, 2025 at 8:46=E2=80=AFPM Rafael J. Wysocki <rafael@k=
-ernel.org> wrote:
-> > > > >
-> > > > > On Thu, Oct 2, 2025 at 1:34=E2=80=AFPM Slawomir Rosek <srosek@goo=
-gle.com> wrote:
-> > > > > >
-> > > > > > The ACPI INT340X device IDs are shared between the DPTF core
-> > > > > > and thermal drivers, thus they are moved to the common header.
-> > > > > >
-> > > > > > Signed-off-by: Slawomir Rosek <srosek@google.com>
-> > > > >
-> > > > > I've actually started to wonder if int340x_thermal_handler is nee=
-ded at all.
-> > > > >
-> > > > > It just creates a platform device if the given ACPI device ID is =
-in
-> > > > > its list,
-> > > >
-> > > > That's true. It creates platform device for the given ACPI device I=
-D,
-> > > > but only if CONFIG_INT340X_THERMAL is enabled.
-> > > >
-> > > > > but acpi_default_enumeration() would do that too with the
-> > > > > caveat that it would also be done for CONFIG_INT340X_THERMAL unse=
-t.
-> > > >
-> > > > Not exactly. scan handler returns ret=3D1, so device is marked as e=
-numerated
-> > > > https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/acpi/scan=
-.c#L2314
-> > > >
-> > > > > That should not be a problem though because if CONFIG_INT340X_THE=
-RMAL,
-> > > > > there are no drivers that will bind to those platform devices, so=
- the
-> > > > > net outcome should be the same.
-> > > >
-> > > > If CONFIG_INT340X_THERMAL is not set and there are no drivers to at=
-tach
-> > > > to platform devices and int340x_thermal_handler is removed then you=
- are
-> > > > right, acpi_default_enumeration() will enumerate ACPI bus anyway an=
-d
-> > > > create platform devices for all ACPI device IDs. However, for me it=
- looks
-> > > > like it was intentional to prevent this behaviour unless INT340X dr=
-ivers
-> > > > are "present" in the system (were enabled for build so should be).
-> > > > I am not sure how DPTF works and what may happen if platform device=
-s are
-> > > > visible in sysfs while drivers are not loaded.
-> > >
-> > > Such a dependency would be unexpected and confusing.
-> > >
-> > > Also, I'm not sure why it would be useful because the lack of drivers
-> > > means that the devices in question are not handled, so no
-> > > functionality related to them is provided by the kernel.
-> > >
-> > > > >
-> > > > > Thus I'm wondering if the way to go might be to drop
-> > > > > int340x_thermal_handler and simply keep the device IDs in the dri=
-vers
-> > > > > that use them for device binding.
-> > > >
-> > > > Even better. If it's not required for DPTF to prevent enumeration
-> > > > on the platform bus I can simply remove the scan handler.
-> > >
-> > > I would at least try to do that.
-> >
-> > Makes sense, so I'll give it a try. Removing handler will result with
-> > only two patches, one to update dts_doc_thermal kconfig and second
-> > to remove the dptf scan handler, the rest won't be needed for a new
-> > patchset. Should I send it as v4?
->
-> Yes, please!
 
-I removed the scan handler and tested it on i7-9750H using Ubuntu
-24.04, Linux 6.12.56
-and DPTF 9.0.11402. With CONFIG_INT340X_THERMAL enabled DPTF daemon
-starts without
-errors, with CONFIG_INT340X_THERMAL disabled the int340x devices are enumer=
-ated
-on the platform bus and DPTF fails to retrieve TCC Offset on initialization=
-:
 
-2025-11-03T09:03:07.108038+01:00 localhost kernel: Consider using
-thermal netlink events interface
-2025-11-03T09:03:07.109139+01:00 localhost DPTF[4098]:
-ERROR:[<ACTION>ActionSysfsGet@esif_uf_action_sysfs_os_lin.c#1205]<176215698=
-7108
-ms>: Error retrieving TCC Offset value from sysfs.
+On 10/31/2025 11:36 AM, Antheas Kapenekakis wrote:
+> The Ayaneo EC resets after hibernation, losing the charge control state.
+> Add a small PM hook to restore this state on hibernation resume.
+> 
+> The fan speed is also lost during hibernation, but since hibernation
+> failures are common with this class of devices, setting a low fan speed
+> when the userspace program controlling the fan will potentially not
+> take over could cause the device to overheat, so it is not restored.
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>   drivers/platform/x86/ayaneo-ec.c | 73 ++++++++++++++++++++++++++++++++
+>   1 file changed, 73 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
+> index 9548e3d22093..e1ad5968d3b4 100644
+> --- a/drivers/platform/x86/ayaneo-ec.c
+> +++ b/drivers/platform/x86/ayaneo-ec.c
+> @@ -41,6 +41,8 @@
+>   #define AYANEO_MODULE_LEFT	BIT(0)
+>   #define AYANEO_MODULE_RIGHT	BIT(1)
+>   
+> +#define AYANEO_CACHE_LEN	1
+> +
+>   struct ayaneo_ec_quirk {
+>   	bool has_fan_control;
+>   	bool has_charge_control;
+> @@ -51,6 +53,9 @@ struct ayaneo_ec_platform_data {
+>   	struct platform_device *pdev;
+>   	struct ayaneo_ec_quirk *quirks;
+>   	struct acpi_battery_hook battery_hook;
+> +
+> +	bool restore_charge_limit;
+> +	bool restore_pwm;
+>   };
+>   
+>   static const struct ayaneo_ec_quirk quirk_fan = {
+> @@ -207,10 +212,14 @@ static int ayaneo_ec_read(struct device *dev, enum hwmon_sensor_types type,
+>   static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
+>   			   u32 attr, int channel, long val)
+>   {
+> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(
+> +		to_platform_device(dev));
+> +	int ret;
+>   	switch (type) {
+>   	case hwmon_pwm:
+>   		switch (attr) {
+>   		case hwmon_pwm_enable:
+> +			data->restore_pwm = false;
+>   			switch (val) {
+>   			case 1:
+>   				return ec_write(AYANEO_PWM_ENABLE_REG,
+> @@ -224,6 +233,15 @@ static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
+>   		case hwmon_pwm_input:
+>   			if (val < 0 || val > 255)
+>   				return -EINVAL;
+> +			if (data->restore_pwm) {
+> +				// Defer restoring PWM control to after
+> +				// userspace resumes successfully
+> +				ret = ec_write(AYANEO_PWM_ENABLE_REG,
+> +					       AYANEO_PWM_MODE_MANUAL);
+> +				if (ret)
+> +					return ret;
+> +				data->restore_pwm = false;
+> +			}
+>   			return ec_write(AYANEO_PWM_REG, (val * 100) / 255);
+>   		default:
+>   			break;
+> @@ -474,10 +492,65 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +static int ayaneo_freeze(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
+> +	int ret;
+> +	u8 tmp;
+> +
+> +	if (data->quirks->has_charge_control) {
+> +		ret = ec_read(AYANEO_CHARGE_REG, &tmp);
+> +		if (ret)
+> +			return ret;
+> +
+> +		data->restore_charge_limit = tmp == AYANEO_CHARGE_VAL_INHIBIT;
+> +	}
+> +
+> +	if (data->quirks->has_fan_control) {
+> +		ret = ec_read(AYANEO_PWM_ENABLE_REG, &tmp);
+> +		if (ret)
+> +			return ret;
+> +
+> +		data->restore_pwm = tmp == AYANEO_PWM_MODE_MANUAL;
 
-For comparison, with CONFIG_INT340X_THERMAL disabled on the pure Linux 6.12=
-.56
-the int340x are not enumerated on the platform bus and DPTF initialization =
-fails
-as follow:
+Why bother with the temp variable in the first place?
 
-2025-11-03T08:43:31.725514+01:00 localhost kernel: Consider using
-thermal netlink events interface
-2025-11-03T08:43:31.727119+01:00 localhost DPTF[4046]:
-ERROR:[<LINUX>GetManagerSysfsPath@esif_uf_sysfs_enumerate_os_lin.c#1004]<17=
-62155811726
-ms>: GetManagerSysfsPathFromAcpiId failed
-2025-11-03T08:43:31.727934+01:00 localhost DPTF[4046]:
-ERROR:[<ACTION>ActionSysfsGet@esif_uf_action_sysfs_os_lin.c#1205]<176215581=
-1727
-ms>: Error retrieving TCC Offset value from sysfs.
-2025-11-03T08:43:31.729027+01:00 localhost DPTF[4046]:
-ERROR:[<ACTION>GetGddvData@esif_uf_action_sysfs_os_lin.c#2818]<176215581172=
-8
-ms>: g_ManagerSysfsPath Invalid
+You could just make the data type of restore_pwm a u8 and then:
 
-Link to v4: https://lore.kernel.org/all/20251103162516.2606158-1-srosek@goo=
-gle.com/
+ec_read(AYANEO_PWM_ENABLE_REG, data->restore_pwm);
 
-Thanks!
+
+> +
+> +		// Release the fan when entering hibernation to avoid
+> +		// overheating if hibernation fails and hangs
+
+Multi-line comments should be done with /* */
+
+> +		if (data->restore_pwm) {
+> +			ret = ec_write(AYANEO_PWM_ENABLE_REG, AYANEO_PWM_MODE_AUTO);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ayaneo_restore(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	if (data->quirks->has_charge_control && data->restore_charge_limit) {
+> +		ret = ec_write(AYANEO_CHARGE_REG, AYANEO_CHARGE_VAL_INHIBIT);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops ayaneo_pm_ops = {
+> +	.freeze = ayaneo_freeze,
+> +	.restore = ayaneo_restore,
+> +};
+
+Why are freeze and restore special?  Userspace is frozen for the suspend 
+sequence of any flow.  Hangs could happen in suspend just like they can 
+in hibernate.  If you're going to protect users from this I would expect 
+parity for "regular" suspend/resume.
+
+Can you just use SIMPLE_DEV_PM_OPS and rename the functions accordingly?
+
+> +
+>   static struct platform_driver ayaneo_platform_driver = {
+>   	.driver = {
+>   		.name = "ayaneo-ec",
+>   		.dev_groups = ayaneo_ec_groups,
+> +		.pm = &ayaneo_pm_ops,
+>   	},
+>   	.probe = ayaneo_ec_probe,
+>   };
+
