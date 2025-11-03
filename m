@@ -1,138 +1,281 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587ED34D3B8
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 19:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D292C21D4
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 21:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762196587; cv=none; b=WpK4JRS5AqFgLmPMPp3nD9BenLzEcJ65wkGLeu388MlUV7+77WrdWXxhSV82VDk3hPuyur4AbNiI6cYBFVHaV/01DEUsIpmRQZrufQyMTk/Rd0qDZhZwVrX4YC0SOHoPB4in7/CADoeHVQ8x+mC7KIVB3jNOs9zrP2iKuqN7uzU=
+	t=1762204847; cv=none; b=CK/4wHHk2yvTAoSDX08AGdfZyvQlNnhKq2+5ty02ezPb5Gzuykt3BIGstLt+/My9++8DVuotgi8Oucsp0HRpCG0VJae87odWFDqJUVuCczsCXkrkFuZcejgUa4XZqiNilr6k99EJWyzFitG81fksq2tbt9ZvdY8CFFv0XM24Epw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762196587; c=relaxed/simple;
-	bh=En0VkMeE1rhng04vLBUHmQuBemFFPSrfkQh+Rs4KkmM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bQyMt/Wz4MnbFo94eS0Te1c5GWT+YQdjENt0Ehtsys3M7t3mqrC4HPw/w10zo7BICAcJdl+JxQljQdUMQ/aixDu5NmEs36MHhA3I6pHB9Er5q1ZeqdLPfxZ4F/rIu7cRv7g8SAWq+rOPmlQmlKIT0qflX9KIv/BKYZtmZaMRWa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c5y/rDu1; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762204847; c=relaxed/simple;
+	bh=2mBLr68M7NJhiOpHbVgB7qzxv5+10McxDb8xDny4T3o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fJ+gtc872z9jmvWcjLv3SENd42J1QE0Q5DN0OFg0iFxrjJGsRSKTrKB1WoEdn2oExLGgPRiAVpJorskpuhhE15D5g8SnmlVmqDzYr5pcSsCOWJMsX2tA9eRsdF6sFzIUHFIjvYWtDPXdHRbQsEqQb6Pn74PatyodHZa3jwZq7wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CzbmMEIL; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5y/rDu1"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-55960aa131dso552386e0c.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Nov 2025 11:03:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762196584; x=1762801384; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+fPkWCp8swfwdbGWYqTdbJKnDJR2KGTgvfV0JdTw2mg=;
-        b=c5y/rDu16souczz6G5t48zu2c3+emph3xz5YFJd+d/4FTAS57KTh9ykRk1STVeBGHR
-         EC9FT6fDi7IJy0IA+EVkr4jcgYZs50wxtYZ2iLnEAw3S+mw89+Ul/zVa49pVcBTcQC5x
-         J7LhgLxBtDCDWVpynrplUlFExcA+4PbkBsT8gJL7n4FzbkQJ2oGbAc3qh8zBFdWMM3kz
-         ZkkH0Aoe1ZOsUwsER47UGqqO3j5xdwZnpCqRn+OjIbAFcKg+baHioBrdccafFQpgdd4Q
-         jjLw2AtCViX9qBDrPF0yF3D5v60OO/YIEycbzX9c9yLbNfISexur3URiNw+aOOnYvMbC
-         EbtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762196584; x=1762801384;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+fPkWCp8swfwdbGWYqTdbJKnDJR2KGTgvfV0JdTw2mg=;
-        b=wnoK9JHoh15GG++P8FzMfddIMO2WfL2P4hThWpSnPnizLdhq56bUiuvbcI+37kjBAJ
-         m4+HPXNIKscO3ltbcgamzTbUhIrdrv2zVa4RiInwTtP94Lx3lco+10NRLrtJ9c0jGhNv
-         /tOD3gveACjsot99Fpbyzazyq0Fow9HwduBffKnoVrZt2mMPQVk89vEuuPzz3JzZHtF0
-         c289n03JJys30LQQGxm5BPXQ2hnDH7Sw1D0uX8D3aKAHiOhf2Ml7hgKEw+qYQV2/1hbG
-         o4ytd2Gs1EOKJjfjk2LvYeykdXZV4ToBZ5+af8x7jjW9FFldGhuleE/C/rjwUAMKM6kP
-         kc0A==
-X-Gm-Message-State: AOJu0YxtIN33ClaqbnHrK7ZdL+KK6vC2zmJ7S+jkhQK8kE7y2MTgdctA
-	3m/AQ0X0+SJkTLRTUTBznTQdrZrfczLxEaupayHbuD7fxnPLF9o2CW1K
-X-Gm-Gg: ASbGncurGDdjWH7cwREt6BgFP+A+EF7CmftaI/Ss+ZHvAp7iS0IdlRW05gTd0lBkDN7
-	jFQ0TmSqZc5C9101MBH2mo5qPc68CQEDTixxKxgIhcXyzoTOSe5xUm8Rh+wKE6htmf2QD9mtfrr
-	X5SJi5eYBEWrrye8Ra159lpyHP2OJkG/I93wT5eVGjYj1tWTi8f3YXx4pd1/23EO77zBhckpUyY
-	wxoVY008vDmapqRc/RnqcoyYr3mWLlfKItaXOu71wdnqF5feRfnfWLNqae4py97P19RmMHAH1gX
-	WM5/jF3Sf/g2E+pIt84ISgdwtFDINdfY+OZ5cPMWlvWrBtWIL6esSiZvytQ6FK9B9n2dj8v0qqg
-	cGbUH+KbIRWDBnViKEEYNBjABIysgqze/lA/3s36wO5dlHlIKKGYErU4Ip2i6LJz6BLwgmGGgod
-	sKAA==
-X-Google-Smtp-Source: AGHT+IGv0Ms552SbiF0xYh+qZjLVNlpg4qJjDFX+UdDbb0FzhrWHb1LMmGGXktjG/NSchg1Cn7WvNw==
-X-Received: by 2002:a05:6122:3c48:b0:559:6723:628c with SMTP id 71dfb90a1353d-55967236824mr1385199e0c.16.1762196528942;
-        Mon, 03 Nov 2025 11:02:08 -0800 (PST)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55973c834e3sm358469e0c.11.2025.11.03.11.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 11:02:08 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Mon, 03 Nov 2025 14:01:47 -0500
-Subject: [PATCH 4/5] platform/x86: alienware-wmi-wmax: Add support for the
- whole "X" family
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CzbmMEIL"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 5285042AA2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 23:20:36 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id 52FAE42AB4
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 23:20:35 +0200 (EET)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 753B41FE5CD
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 23:20:34 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1762204834;
+	bh=eMvraY0FuRoBewOx/lpCLrT7P1MbkUW2oFwcdkRiWQ4=;
+	h=Received:From:Subject:To;
+	b=CzbmMEIL0rcdXI1gCN56sGwFP+iF21439ZAOZ94X2LMvoc80avVrTHShgCPoJoYWb
+	 +qGwaVthpXJzXbRJZQ+/RExnJDXDkKhXor/OhA/kBUw6ngXX7tfegEiSCL/waSOlxm
+	 cFsMLxYZKo9Y2pH6q/EasMDh9XuXHu40kBqHUueNJ/bkqJnGb08S7yykvU1V7H8K+I
+	 aNw1NWH7Qwnl3V5KRfR0DsHRd8fH9/W4tdQ1D4fpzwZNMjE222I3V9Q53HvEEXc1jh
+	 SprwMti9ALklJicTj828HSecAkS0rq/coa7JhSYEzJPfqLOXRhBt5DBdY/xWraBrUm
+	 1bhEL4Ovt78cg==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f181.google.com with SMTP id
+ 38308e7fff4ca-378d54f657fso46481881fa.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 03 Nov 2025 13:20:34 -0800 (PST)
+X-Gm-Message-State: AOJu0YxAsyO9dCaqAxKs70ACNskYjsL4AZiHbdovxxj1mIUgvQr4PYe5
+	OKf/Ik7TF1mbwHnUBaBj0bij3pZb5pxsGEqStoBGsMPPnS/Y0CGxU0rfXkvsDEljLQ6DgW23oW5
+	FQMIoibRwJd/LEgt1kiB5BjpHQPtmR8M=
+X-Google-Smtp-Source: 
+ AGHT+IFAvDEp/2KhwJ/Pe4w4cvk6bF+g7sOqfOPwSZKB/7UN9eNMQ+REoOD8PvJN6y/CgmiJbUfryJa/BWPxYQFFciQ=
+X-Received: by 2002:a05:651c:1118:20b0:378:dcec:c914 with SMTP id
+ 38308e7fff4ca-37a18de015amr29738891fa.34.1762204833924; Mon, 03 Nov 2025
+ 13:20:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-family-supp-v1-4-a241075d1787@gmail.com>
-References: <20251103-family-supp-v1-0-a241075d1787@gmail.com>
-In-Reply-To: <20251103-family-supp-v1-0-a241075d1787@gmail.com>
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>, 
- stable@vger.kernel.org
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1438; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=En0VkMeE1rhng04vLBUHmQuBemFFPSrfkQh+Rs4KkmM=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJkcf5TmVPTPaTpoEeaU/NO6Zw/DvPWhpmcb/aSEnNrla
- z9/0bvWUcrCIMbFICumyNKesOjbo6i8t34HQu/DzGFlAhnCwMUpABPRWcTI0KNpq/5E8tnJYoao
- A3vaCnOFo72Xz2y+KMIb9Ss9+h77dUaGrd2HMw/MdS1PZwj6U1aV8eXP3LJVXBtUIgKz9z2pcVb
- lBgA=
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+References: <20251031163651.1465981-1-lkml@antheas.dev>
+ <20251031163651.1465981-7-lkml@antheas.dev>
+ <4c06dc85-9b16-47b3-9622-58e699c700c0@kernel.org>
+In-Reply-To: <4c06dc85-9b16-47b3-9622-58e699c700c0@kernel.org>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 3 Nov 2025 22:20:21 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFZoKm4Bj785-HwpbNdjHwswWWY8dwX_vLHPwsUxC52Yg@mail.gmail.com>
+X-Gm-Features: AWmQ_bkN6m-eRm4e6RtAYI09Pr38i9dq6OhTOF71yXmiNVNucoN4KsIu55fvbVU
+Message-ID: 
+ <CAGwozwFZoKm4Bj785-HwpbNdjHwswWWY8dwX_vLHPwsUxC52Yg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] platform/x86: ayaneo-ec: Add suspend hook
+To: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <176220483476.4107711.16130673330267092570@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Add support for the whole "Alienware X" laptop family.
+On Mon, 3 Nov 2025 at 17:51, Mario Limonciello (AMD) (kernel.org)
+<superm1@kernel.org> wrote:
+>
+>
+>
+> On 10/31/2025 11:36 AM, Antheas Kapenekakis wrote:
+> > The Ayaneo EC resets after hibernation, losing the charge control state.
+> > Add a small PM hook to restore this state on hibernation resume.
+> >
+> > The fan speed is also lost during hibernation, but since hibernation
+> > failures are common with this class of devices, setting a low fan speed
+> > when the userspace program controlling the fan will potentially not
+> > take over could cause the device to overheat, so it is not restored.
+> >
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >   drivers/platform/x86/ayaneo-ec.c | 73 ++++++++++++++++++++++++++++++++
+> >   1 file changed, 73 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
+> > index 9548e3d22093..e1ad5968d3b4 100644
+> > --- a/drivers/platform/x86/ayaneo-ec.c
+> > +++ b/drivers/platform/x86/ayaneo-ec.c
+> > @@ -41,6 +41,8 @@
+> >   #define AYANEO_MODULE_LEFT  BIT(0)
+> >   #define AYANEO_MODULE_RIGHT BIT(1)
+> >
+> > +#define AYANEO_CACHE_LEN     1
+> > +
+> >   struct ayaneo_ec_quirk {
+> >       bool has_fan_control;
+> >       bool has_charge_control;
+> > @@ -51,6 +53,9 @@ struct ayaneo_ec_platform_data {
+> >       struct platform_device *pdev;
+> >       struct ayaneo_ec_quirk *quirks;
+> >       struct acpi_battery_hook battery_hook;
+> > +
+> > +     bool restore_charge_limit;
+> > +     bool restore_pwm;
+> >   };
+> >
+> >   static const struct ayaneo_ec_quirk quirk_fan = {
+> > @@ -207,10 +212,14 @@ static int ayaneo_ec_read(struct device *dev, enum hwmon_sensor_types type,
+> >   static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
+> >                          u32 attr, int channel, long val)
+> >   {
+> > +     struct ayaneo_ec_platform_data *data = platform_get_drvdata(
+> > +             to_platform_device(dev));
+> > +     int ret;
+> >       switch (type) {
+> >       case hwmon_pwm:
+> >               switch (attr) {
+> >               case hwmon_pwm_enable:
+> > +                     data->restore_pwm = false;
+> >                       switch (val) {
+> >                       case 1:
+> >                               return ec_write(AYANEO_PWM_ENABLE_REG,
+> > @@ -224,6 +233,15 @@ static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
+> >               case hwmon_pwm_input:
+> >                       if (val < 0 || val > 255)
+> >                               return -EINVAL;
+> > +                     if (data->restore_pwm) {
+> > +                             // Defer restoring PWM control to after
+> > +                             // userspace resumes successfully
+> > +                             ret = ec_write(AYANEO_PWM_ENABLE_REG,
+> > +                                            AYANEO_PWM_MODE_MANUAL);
+> > +                             if (ret)
+> > +                                     return ret;
+> > +                             data->restore_pwm = false;
+> > +                     }
+> >                       return ec_write(AYANEO_PWM_REG, (val * 100) / 255);
+> >               default:
+> >                       break;
+> > @@ -474,10 +492,65 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
+> >       return 0;
+> >   }
+> >
+> > +static int ayaneo_freeze(struct device *dev)
+> > +{
+> > +     struct platform_device *pdev = to_platform_device(dev);
+> > +     struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
+> > +     int ret;
+> > +     u8 tmp;
+> > +
+> > +     if (data->quirks->has_charge_control) {
+> > +             ret = ec_read(AYANEO_CHARGE_REG, &tmp);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             data->restore_charge_limit = tmp == AYANEO_CHARGE_VAL_INHIBIT;
+> > +     }
+> > +
+> > +     if (data->quirks->has_fan_control) {
+> > +             ret = ec_read(AYANEO_PWM_ENABLE_REG, &tmp);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             data->restore_pwm = tmp == AYANEO_PWM_MODE_MANUAL;
+>
+> Why bother with the temp variable in the first place?
+>
+> You could just make the data type of restore_pwm a u8 and then:
+>
+> ec_read(AYANEO_PWM_ENABLE_REG, data->restore_pwm);
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+For restore_pwm it needs to be a bool because it is applied lazily on
+resume only if manual. charge limit could be a u8 (it was on the
+previous patch) but I chose to do a bool to match restore_pwm and so
+that I also only apply it selectively.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 53d09978efbd..c545eca9192f 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -146,26 +146,18 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 		.driver_data = &generic_quirks,
- 	},
- 	{
--		.ident = "Alienware x15 R1",
-+		.ident = "Alienware x15",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R1"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15"),
- 		},
- 		.driver_data = &generic_quirks,
- 	},
- 	{
--		.ident = "Alienware x15 R2",
-+		.ident = "Alienware x17",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x15 R2"),
--		},
--		.driver_data = &generic_quirks,
--	},
--	{
--		.ident = "Alienware x17 R2",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R2"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware x17"),
- 		},
- 		.driver_data = &generic_quirks,
- 	},
+>
+> > +
+> > +             // Release the fan when entering hibernation to avoid
+> > +             // overheating if hibernation fails and hangs
+>
+> Multi-line comments should be done with /* */
+>
+> > +             if (data->restore_pwm) {
+> > +                     ret = ec_write(AYANEO_PWM_ENABLE_REG, AYANEO_PWM_MODE_AUTO);
+> > +                     if (ret)
+> > +                             return ret;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ayaneo_restore(struct device *dev)
+> > +{
+> > +     struct platform_device *pdev = to_platform_device(dev);
+> > +     struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
+> > +     int ret;
+> > +
+> > +     if (data->quirks->has_charge_control && data->restore_charge_limit) {
+> > +             ret = ec_write(AYANEO_CHARGE_REG, AYANEO_CHARGE_VAL_INHIBIT);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops ayaneo_pm_ops = {
+> > +     .freeze = ayaneo_freeze,
+> > +     .restore = ayaneo_restore,
+> > +};
+>
+> Why are freeze and restore special?  Userspace is frozen for the suspend
+> sequence of any flow.  Hangs could happen in suspend just like they can
+> in hibernate.  If you're going to protect users from this I would expect
+> parity for "regular" suspend/resume.
+>
+> Can you just use SIMPLE_DEV_PM_OPS and rename the functions accordingly?
 
--- 
-2.51.2
+Well, the ops here do two functions. First, they restore fan and
+charge limiting state, which is only required for hibernation (both
+are maintained during sleep).
+
+Second, they ensure from entry to exit there is an automatic fan
+curve. For hibernation, the failure rate is 30%-80% depending on
+kernel version and userspace load (incl. which devices such as GPU are
+loaded and how much). Both entry and exit can fail equally. In which
+case the device may be stuck with an inappropriate fan speed for
+minutes. Moreover, even without a failure, hibernation entry and exit
+take around 1-2 minutes to complete so it is a nice touch to release
+the manual speed for entry to maintain a reasonable fan speed.
+
+For sleep, it is different. It always works, so there is no failure
+rate. Then, it requires around 3 seconds for entry and 2 seconds for
+exit, so for successful entry and exit using an automatic fan speed is
+not needed. Introducing restoring auto speed a failsafe risks
+introducing a user-visible flaw where the fan would spike before and
+after sleep. It could potentially introduce other bugs as it does
+unnecessary writes. So this is not a good reason for introducing this.
+
+So ops are not required for sleep for either reason they were
+implemented for hibernation
+
+Ack on the rest
+
+Antheas
+
+> > +
+> >   static struct platform_driver ayaneo_platform_driver = {
+> >       .driver = {
+> >               .name = "ayaneo-ec",
+> >               .dev_groups = ayaneo_ec_groups,
+> > +             .pm = &ayaneo_pm_ops,
+> >       },
+> >       .probe = ayaneo_ec_probe,
+> >   };
+>
+>
 
