@@ -1,155 +1,183 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5C5280308
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 04:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466B727B4EE
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 07:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762144152; cv=none; b=i/TeQy2oY3pJefHH6YwJfszYcIlhsOsumyJUqIClKpc2ihuQvzgo/HrK5ZtRWM9hwxaL6f2ulJcDZK2eL3UBm6MppCBN5cQiBi2aY9c34GWiLtyinK7j6fb4RLEF6QxjGPOB8JNhxJa7Z0nh9LNy7hVmkc8QO1Zy3js/PX1wR1s=
+	t=1762155415; cv=none; b=aPPgepHyQ11kX1lb3Wg6aMD2y4JHGdKt46UvIaHm0mKiH3aLyorL/Qm4xHJk091lb95oZAWZixz7PTyXjC6iT/kRNgNQLNiXKdl/t5boV0Up4eOPeOfpy5M0JurFwliOXH0f3eU5HxUXw5JSpn9mmiB6fTsLWz/soEBqbD5Fef4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762144152; c=relaxed/simple;
-	bh=BRyq2xvMBfZJNr2slPuwGEUwckfTGKdksrZ8m6uaT8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HeqvgShhxetOWSH+MGwKjwxPOLDFwHi8IhH0xv/2z/eqeFpRXBn+10kfql5gUdcPwNRTxYsZzsCObVvNbtaoc8rnhdYgPbJyiRiss0C5VvZr1BMGyIkmxNbyJakgnFbanEcaj1NK+q3qZK5jCGLlIDotwf2dZoQZkB/D2l4F5s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+mZZQll; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762155415; c=relaxed/simple;
+	bh=OaRYJEMKiBNKo5VTIT7XMkJlfhT7ucKBBu2OtNNEmIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ss4A2rv/UhVtrtdUBAC7EeJF0WierjCgJUq+saDqpvcnqm68bE0nNM5FEOM6AJrobL9u2vJ0HQFJNXnGZV7aRdexVh7vOe2H61W/T5r3Kgu/O1JkV9K8ritHbaTF3evwBDCYI6eEwJjiPGxQsZUr7ajUppw1+yv05MXa0ruWOQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=N8SW2CGQ; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+mZZQll"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-29555415c5fso20506745ad.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 02 Nov 2025 20:29:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762144149; x=1762748949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zejBsmGw8Dammq1NbHzRkUXu6Tc3VRpWHGPbCKlc5tw=;
-        b=Z+mZZQllbVd1w80ndj33spWHb3PKU04g054vtrTNuA8mQV8iG9Nej6G+4PdgJ/EmCG
-         L5SNo9Pi7toyodkQsLsPl89RHC4EjPMIc2ZGP/WzMzMPyYYgX5zEVC9JubSfCTtaJ29X
-         EbR8JWU9+ojC10/JUfSqdc+T4Tf7zMlCf4uN9aR8I8drUfl7tu7jBpNLJfEk83mQB1l1
-         10rmv6F10LTNvgaeOknWC+xuQOwCS3ao2HkBlvgQVstVm2Ed1fiHpMDvPBZ2DqHdqoMv
-         TbRllIuara4v5xR97QrQ1yTTpyaNNw6vHYy1Hc8Wt7Utv2cJ7+xDqQNdlIyMh81UKR+N
-         Augw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762144149; x=1762748949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zejBsmGw8Dammq1NbHzRkUXu6Tc3VRpWHGPbCKlc5tw=;
-        b=WaWXdHGzuPz/ybPA2gHr6IjeWgz9C3FJe5fO6Aq4QsETL5OcrIyIB6exhHBr2Bqu6X
-         etBUfyDixrJTlU0nRhQ3eWsY9y6vVi8DlHflEjOM5uCWsJlcrHqGQP26G0T9GrOywSXu
-         DPjRHxTJ4mtoMCZJYJABePX40Zk+5L0XyZ65xOnic33F470uZKsq2ePDhxICC7sotF++
-         HiOpv188xgjGXhsS+wY9mzrg8jV3Qc4VnLuaB3pwzptUqlQTjHpnJwa/9gwFZwKhPlS4
-         bhR44MXXp1jfTfU2h/iT73MB5DjB98F9TwNYBlSjXcv4nckfis9FlaKwA0GtJL3i+b9+
-         SV+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWjcE63p9JtUk79BxvQZaVgfOjLWOUA3mrCZDsTDNfod+nuN9IzMacm/DqwiAFCwQC95Q4ff31er5tX/0AoE+UEucmr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD0q0aL8P7huZILKBzekoHlIf7gYPT5Co5jBbvry4xH0hJ/6OX
-	Ts7lsbYUsMqIKJahWgDHpzA3Nsnjnfv32zIgHZr0UHdD8e80R6X7gwNqD34k6Cpi
-X-Gm-Gg: ASbGncv/rlNWo+d7ZJLHN28J3Mb8RmdnB6m7LMEgc8fQGVZhUtnXKN63yVfzRF3il84
-	vXp1VLnDuaTWiCHy8mNZcPYMvN3s+DOJKb5oGt+Uv0rRpIadAx3ARJtwLkisbS0Fkn9pmWqBCzd
-	XaWge9HtVGeGEQwJa7d1hz9tPsmxGSS8sj+1XbGLrzAMDpjCOlo+YbIaRPfXgq8clzP12KfHn2D
-	U/GFtxIl7dBTnehSh4k3G+Uam8g+mAYSk7ertQlo2FieMVe3VecUYvcS1mHybPuABv0hxWsIQJa
-	fTIJ44m92mhqQLVBFeDFDgeu2uBp7FwaaZBF6ffWuDgdQo+AtMyjXYUwZzTpsnL8EZgrBe1VNs6
-	iWJgmdSLTh4NK/315JlNSS7zqjqH+w9rMe6UUHtkw7k18JMImOYO1gS4O3JuuYtd18rAtf5hRQx
-	3vxC1k2CsdQ/A7LYF0wEDqM5LjvK5Sm4m+yznyPwriqPuumGdAI0AxON9o
-X-Google-Smtp-Source: AGHT+IFMAMIRr2XRxTxO6CYjUyJFceUddY16xeDxgm+N4RkpDVMPqTEsA7hTMjJvGq6jveVSi+he1Q==
-X-Received: by 2002:a17:903:32cb:b0:295:f1f:65f with SMTP id d9443c01a7336-2951a4debf5mr127576615ad.31.1762144148913;
-        Sun, 02 Nov 2025 20:29:08 -0800 (PST)
-Received: from bliptop (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-295268cbad5sm103047725ad.45.2025.11.02.20.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Nov 2025 20:29:08 -0800 (PST)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Denis Benato <benato.denis96@gmail.com>,
-	kernel test robot <lkp@intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>
-Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple kbd led handlers
-Date: Sun,  2 Nov 2025 20:28:48 -0800
-Message-ID: <20251103042848.9302-1-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
-References: <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="N8SW2CGQ"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id 41D42BDCE2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 09:36:50 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id 4F476BDCB0
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 09:36:49 +0200 (EET)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 9A9F6201C85
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Nov 2025 09:36:48 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1762155409;
+	bh=lId5btvnlLv7AjRTb+KNTFWfyIMssZyD9eSSG/b09bE=;
+	h=Received:From:Subject:To;
+	b=N8SW2CGQIcvAV3MeIi5SRk1eCt3cjsEJ2HLuXypap8iQ9ySAKtsnoZvEE3JT4tDZC
+	 W/NOz1TrWGG+ZFMxyNQw8IiEljWrqXrjMiNwf8ZYWgA+DGRZTccsdnrfE9rpZLOUS8
+	 ihWsWxDDO5u3x91IDnkYAAPE8Dq9U/hdYIf2j+J2P6YN1X8hBe+zesLAxG48Db13lp
+	 maiw2MYfhpU2o98UFMmvendzP099+chpWDqIb/7SUqhPZQTY3yNOobSOGVnyPOunOD
+	 PC8+NoaqpQ00fjUBrpzYIlDXoT7mXh9xRL9pXUibnXecTKxBij6RVK44vg5rBLqWPa
+	 lA208rPCUTPGg==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-378ccb8f84aso43863741fa.3
+        for <platform-driver-x86@vger.kernel.org>;
+ Sun, 02 Nov 2025 23:36:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXaYtXzhJX2F27V+r48bt4gDHtqDisIC7wQi7wlO3RQw5XwC/HlkkiO6Q/bbfmwyYgcvufUG0oJmWS6xJSTIvYmXMhX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjaA40OPp2IMiHuU4ujDO9hjr+XGRKXHoldxBm+K9ovz2+qxDG
+	LbfBaF3ZvW2PR8s7g5lR9kClPGU0JUbkgEqQlLfKgc3nm4b1ewL5TB2MKgvpgMZ28k0VMLTeiKd
+	aPtCNm4jlC7QtQMN6/iqiP+ociWjeulU=
+X-Google-Smtp-Source: 
+ AGHT+IEuVil72PPfbgUsFCufv9vPMhS5r0pukoVpH0LeLpj1BHDFWuuNRXSa/8h81m8xTd84Rd5gzgjQC+Zc51aMTy8=
+X-Received: by 2002:a05:651c:118:b0:378:ebd7:ad0 with SMTP id
+ 38308e7fff4ca-37a18d9ba7amr29405611fa.17.1762155408150; Sun, 02 Nov 2025
+ 23:36:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: 
+ <CAGwozwFgd91n2HnHn0VEL3BTGkj8QCRnp2jfCsMB38JqK8znNg@mail.gmail.com>
+ <20251103042848.9302-1-derekjohn.clark@gmail.com>
+In-Reply-To: <20251103042848.9302-1-derekjohn.clark@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 3 Nov 2025 08:36:36 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHCnHwOVw08ZJ4LOFD8kDv+kevvF1-PkjBq2+VMBBx9TQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkj4Xq9k2xN-diBUgPzwPA2ELNl1IQAb0hQMZ1JD3a1vz1JCGPu-UpaF2w
+Message-ID: 
+ <CAGwozwHCnHwOVw08ZJ4LOFD8kDv+kevvF1-PkjBq2+VMBBx9TQ@mail.gmail.com>
+Subject: Re: [PATCH v7 5/9] platform/x86: asus-wmi: Add support for multiple
+ kbd led handlers
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Denis Benato <benato.denis96@gmail.com>, kernel test robot <lkp@intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <176215540891.644411.9875370156891768985@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
->On Fri, 31 Oct 2025 at 09:27, Jiri Kosina <jikos@kernel.org> wrote:
->>
->> On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
->>
->> > >   1589
->> > >   1590  static void kbd_led_update_all(struct work_struct *work)
->> > >   1591  {
->> > >   1592          enum led_brightness value;
->> > >   1593          struct asus_wmi *asus;
->> > >   1594          bool registered, notify;
->> > >   1595          int ret;
->> >                               /\ value should have been an int and
->> > placed here. It can take the value -1 hence the check
->>
->> Thanks, that needs to be fixed before the final merge.
->>
->> > Are there any other comments on the series?
->> >
->> > The only issue I am aware of is that Denis identified a bug in asusd
->> > (asusctl userspace program daemon) in certain Asus G14/G16 laptops
->> > that cause laptop keys to become sticky, I have had users also report
->> > that bug in previous versions of the series. WIthout asusd running,
->> > keyboards work fine incl. with brightness control (did not work
->> > before). Given it will take two months for this to reach mainline, I
->> > think it is a fair amount of time to address the bug.
->>
->> One thing that is not clear to me about this -- is this causing a visible
->> user-space behavior regression before vs. after the patchset with asusctl?
->>
->> If so, I am afraid this needs to be root-caused and fixed before the set
->> can be considered for inclusion.
+On Mon, 3 Nov 2025 at 05:29, Derek J. Clark <derekjohn.clark@gmail.com> wrote:
+>
+> >On Fri, 31 Oct 2025 at 09:27, Jiri Kosina <jikos@kernel.org> wrote:
+> >>
+> >> On Thu, 23 Oct 2025, Antheas Kapenekakis wrote:
+> >>
+> >> > >   1589
+> >> > >   1590  static void kbd_led_update_all(struct work_struct *work)
+> >> > >   1591  {
+> >> > >   1592          enum led_brightness value;
+> >> > >   1593          struct asus_wmi *asus;
+> >> > >   1594          bool registered, notify;
+> >> > >   1595          int ret;
+> >> >                               /\ value should have been an int and
+> >> > placed here. It can take the value -1 hence the check
+> >>
+> >> Thanks, that needs to be fixed before the final merge.
+> >>
+> >> > Are there any other comments on the series?
+> >> >
+> >> > The only issue I am aware of is that Denis identified a bug in asusd
+> >> > (asusctl userspace program daemon) in certain Asus G14/G16 laptops
+> >> > that cause laptop keys to become sticky, I have had users also report
+> >> > that bug in previous versions of the series. WIthout asusd running,
+> >> > keyboards work fine incl. with brightness control (did not work
+> >> > before). Given it will take two months for this to reach mainline, I
+> >> > think it is a fair amount of time to address the bug.
+> >>
+> >> One thing that is not clear to me about this -- is this causing a visible
+> >> user-space behavior regression before vs. after the patchset with asusctl?
+> >>
+> >> If so, I am afraid this needs to be root-caused and fixed before the set
+> >> can be considered for inclusion.
+>
+> >Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on
+> >ROG") adds HID_QUIRK_INPUT_PER_APP and the extra devices seem to
+> >confuse asusd. Since the devices are the same as with hid-asus not
+> >loaded, it is specific to that program.
+> >
+> >
+> Hi Antheas.
+>
+> While you have previously expressed to me directly that you wish InputPlumber
+> didn't exist, it still very much does, in fact, exist. I also know that you are
+> explicitly aware that InputPlumber is a consumer of this interface, so your
+> comment that asusctl is the only affected program is something you know to be
+> false. This is not even the first time you have renamed an input device that
+> you knew InputPlumber was a consumer of without notifying me[1].
+>
+> I can't abide you outright lying to the maintainers here and I'm sick and tired
+> of having to watch your every move on the LKML. Either become a good citizen of
+> kernel maintenance, or get out of it.
 
->Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on
->ROG") adds HID_QUIRK_INPUT_PER_APP and the extra devices seem to
->confuse asusd. Since the devices are the same as with hid-asus not
->loaded, it is specific to that program.
+Hi Derek,
+I am not aware if your software is affected or not by this series as I
+have not received reports about it.
+
+If it is, please add:
+"ASUSTeK Computer Inc. N-KEY Device"
+
+As a name match to your software (should only take 5 minutes).
+
+I worked with Luke and Dennis on it for the better part of a year so
+hopefully they forwarded to you if it affects you or not.
+
+Your software relies on OOT drivers for most devices incl. the Ally so
+I am unsure if it is affected in reality. E.g., it would not be
+affected in SteamOS and CachyOS. In the future, it would be good to
+avoid name matches for your software as it makes it very fragile,
+which is a discussion we have had before. I do not think device evdev
+names constitute an ABI technically.
+
+Best,
+Antheas
+
+> Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on ROG")
+> Nacked-By: Derek J. Clark <derekjohn.clark@gmail.com>
+>
+> - Derek
+>
+> [1] https://lore.kernel.org/linux-input/Z74vZD7ZtKBTDlwy@google.com/
+>
+> >We can delay that patch until Denis who took over maintenance of the
+> >program can have a deeper look. I will still keep the last part of
+> >that patch that skips the input check, because that causes errors in
+> >devices that do not create an input device (e.g., lightbar).
+> >
+> >Antheas
 >
 >
-Hi Antheas.
-
-While you have previously expressed to me directly that you wish InputPlumber
-didn't exist, it still very much does, in fact, exist. I also know that you are
-explicitly aware that InputPlumber is a consumer of this interface, so your
-comment that asusctl is the only affected program is something you know to be
-false. This is not even the first time you have renamed an input device that
-you knew InputPlumber was a consumer of without notifying me[1].
-
-I can't abide you outright lying to the maintainers here and I'm sick and tired
-of having to watch your every move on the LKML. Either become a good citizen of
-kernel maintenance, or get out of it.
-
-Commit 591ba2074337 ("HID: asus: prevent binding to all HID devices on ROG")
-Nacked-By: Derek J. Clark <derekjohn.clark@gmail.com>
-
-- Derek
-
-[1] https://lore.kernel.org/linux-input/Z74vZD7ZtKBTDlwy@google.com/
-
->We can delay that patch until Denis who took over maintenance of the
->program can have a deeper look. I will still keep the last part of
->that patch that skips the input check, because that causes errors in
->devices that do not create an input device (e.g., lightbar).
->
->Antheas
 
