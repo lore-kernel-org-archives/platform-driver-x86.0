@@ -1,307 +1,158 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823F1224AE0
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Nov 2025 02:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6E72192F2
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Nov 2025 16:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762222407; cv=none; b=jZfvwwox6/C9gfy2Jia7EV4IUbLZsz9afQZAYcw4dsOYISTqBTcFenyaGaUeKVletveCQT4e5kFXqxGIyr7ia0dYZh58wws2waj4hKodWCF+va5FrFyQg//5TEUiCvgXib2XR1VnVaagh7ZX/4bVCZso248m8K7EDjSrZ4/XJVs=
+	t=1762273000; cv=none; b=remtjqdikBuF7gpFcpHtEzH0sNZ7M8JuFpzdORWd3YOSgPNGVHLbIoLzKGgW4Ydir1mORErnUwHo7LTa4nE6TDDSAAhMvQ0xuv2c1FWLs6vLriNxBD/0uaGBIjrmjobN3B3vn2updv5EfQMP0+NBVkv0TUUAxDhOUAr/sDrayxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762222407; c=relaxed/simple;
-	bh=CDf3jvgq+OCuQr+KDgZ0aSe5ajPPr56IV5hu/qxDurg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nE/xDjeBf3B+1thAKWl6SGpUw3rQ+u4bp5ja0mUErslD3inoIv3WA723kQMwpP7IPRA82Omy/KRXK9cHo0h8UvandI38zk9r6R3rHk8hoVT//swxU/PY1WP5jsS+YfifCZrSh0rFhaxPdRksjNqRLfcu38jkrfgnqQmymfAGsM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kv8hiwBC; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762273000; c=relaxed/simple;
+	bh=LtMhAHX1jtzCvhZLFV5nAlL58ZyBXOqpcvxurpOdyqY=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=mkWPWdKcWqmuIwPFzos5XJkH3VBBbA5zrJjP9wh59hzXRoQwkpCVG7I00n8DEW7aAm4nQh28bVduWN2+FWeO0t33+mLo9/aHwz7m/2yRR6Jc/WHf5UPPwV69eLkj4OfN4eyYoAE5nrViojMNvsSZAHhBnQ34DnXMdUPqM3NJGIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SAig8+7W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kv8hiwBC"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-559748bcf99so678903e0c.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Nov 2025 18:13:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762222404; x=1762827204; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BPYsJYFrtqkibhcoOmwhJR6RFtPleupdkLO0gfGpmxA=;
-        b=Kv8hiwBC9H2XCwdEwU+I4dgsyb2XhBe36rxE/9yRCOb98FJ4VwQMRT5FgPwiRJ44xe
-         IGp59AMRudkabj1CUg0EiBHkmsoq5l+lP1ajUDvjWIYtE8+HqPoayZF27wdDGLZ1ZSAR
-         IonCmYY7d/YoWyulGzPMQU+RaGhiZcal5W12BxK00dmM7Na8eVm67vsJm/UzqwPRmn7r
-         v3so+u43jiSZ+vChYaeKaHVIG2/2m1B5l1vRgzjA3hw3EquLJjxqxaz7nl+jgHapFZsB
-         qPda00Lt0TO0I9c8ZSW8oiS58I11p8sTea8/suJWc1fF9raZLLOANSH2iRD+orq83VNo
-         8xEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762222404; x=1762827204;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BPYsJYFrtqkibhcoOmwhJR6RFtPleupdkLO0gfGpmxA=;
-        b=mC+ZUPN4podqOtuN98xRL9HXaMUJEIS64EVshSQgplopJocF8SDv/jouW7N0c3eES9
-         PhF5WczMe6S8UUY9AgKoRfVZxWuKi2i+dSs7CvXfFS2WYC631ScVoB1HEXh7wtjyqDHz
-         BqJwxERj8rrjiUKGj632IHDlBtUz2AU/Lrf/eaiciYq8AfuRlV32qoSmuH2/6lxBveLV
-         QpoEWpZC8buJBCLEeF0puZRcgek6AD74rUwkz+2NkqoK4VaCyP1q8gIU6LrVMpbub6+g
-         Ux+2wrBxj0CQRSOeuAWjRQRicC2r2LL4mPO9SnOp3MiB330qdpPWZhArFjWyM5TQ+3VP
-         lB2Q==
-X-Gm-Message-State: AOJu0Yy8dNrAilFJ7vKLbHNi5uiQ/EKwe1FcpTyIHRQAHjIrDpRmVFRu
-	kPdyxQWx9ZaBUIQEo6tOHs3pH7NeHeL+gL/dwCJfnU84raERpgFgENSb
-X-Gm-Gg: ASbGnctbVJG/qYwRvE94/R1YgA2rT3w5UliMJErMMwVylUkEcyppVzP3zt/5MgzZAp6
-	reDLeZdMH9t1wOJdwpRGEU5MqBTpTsJZNVAjtzcJu77bRfq3Pwc45YNZzNjdJOfNuR1fi0CJFdP
-	wuW6TwkAnQV/0dWP8hLF/Vj/H9HOWvHh+mpXSDmePrDNHCQaWugeScJob9J3zof/v2Ut1rrRY9n
-	cfZ5H2BC1nkiJ7czzBIcgG7tVpR9mT8g6NYBuIYeXAhG6tJrO9YaZmajsW5G/D2TlKULmbreWVR
-	Gz9F3FqjVdzuLKuKKw35tjshhfcm1nh3MHIJ4DNDK6fdGQimoas47a/vhKVPkWWELM7AAzLRsxr
-	tLYGFxdgDS+fAMFVeu9VtYXLw22vdH48VclCa2JVMQw6XOi7VyAPaoPXwtyzzpb5yAqvWfDCLx2
-	HPltMZHOo2f38G
-X-Google-Smtp-Source: AGHT+IGanpj09wBC/6zuLxGU5hrabV1DX2/aEqDzKrdWNViKcc2hyV067fO9fqkKk4kK8FelPY9Usw==
-X-Received: by 2002:a05:6102:588d:b0:5db:c9cd:673d with SMTP id ada2fe7eead31-5dbc9cd6b9amr1979494137.26.1762222404397;
-        Mon, 03 Nov 2025 18:13:24 -0800 (PST)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93542852924sm747524241.0.2025.11.03.18.13.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 18:13:24 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Mon, 03 Nov 2025 21:12:46 -0500
-Subject: [PATCH] platform/x86: alienware-wmi-wmax: Simplify FW profile to
- pprof matching
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SAig8+7W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6338C4CEF8;
+	Tue,  4 Nov 2025 16:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762273000;
+	bh=LtMhAHX1jtzCvhZLFV5nAlL58ZyBXOqpcvxurpOdyqY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SAig8+7WNNFcusp/CspPI5CYigvIcq0V3Rksxbe+W4ORHkXD9F+t/j8GbtfC3Yqq1
+	 UEdXThbkouuY1o48FUU80g4SKC6Zt0H+wCA9fJ3cyttQFydnxqrj76XP27ioQ58pVn
+	 nM9A0SKAPhYFpRub6sSdYZMd6luQv6f4idRmNPhFw+IuVJ6MjJBy1KRCKhPcilS84l
+	 78iJv2eHRUuYMu728umRDkbmLnk+xQu9djHLNUEa3J/xcReIko9SIIBqTfWKZwb/ft
+	 aIJUBCwKHmW05OD4Fd7EEnDhdo9anKO4Zs3HxSOdDKHg4gdrqHJCax083YGm4BiN6+
+	 WDLJv/Mt6aMfg==
+Content-Type: multipart/mixed; boundary="------------08w3coA2wTd9HxMwM9z3Jy8p"
+Message-ID: <9885395c-fbf0-447e-a9b5-2231a3071dc7@kernel.org>
+Date: Tue, 4 Nov 2025 10:16:38 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-aw-gmode-v1-1-eba7b7be0a9c@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAB1hCWkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyMj3cRy3fTc/JRU3cQkc0vLJCNDU8sUIyWg8oKi1LTMCrBR0bG1tQC
- WgsseWgAAAA==
-X-Change-ID: 20250622-aw-gmode-ab799b2159d2
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6862; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=CDf3jvgq+OCuQr+KDgZ0aSe5ajPPr56IV5hu/qxDurg=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJmcicqzwg355a4++1RsGfjqvOb6iavvzq7cbvNGsGB5/
- /0n0k8rO0pZGMS4GGTFFFnaExZ9exSV99bvQOh9mDmsTCBDGLg4BWAiNasYGXZsVfJQLuBJ37J2
- +8EjritenpjNbBd1/9QHz+gPh876cs5n+B9e5fdB8VzBqRSpf23/9B/Ff7wuYTXtzJctrgF5V7m
- 7+9gA
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+User-Agent: Mozilla Thunderbird
+Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
+ TEE errors
+To: Lars Francke <lars.francke@gmail.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
+ platform-driver-x86@vger.kernel.org, Patil Rajesh <Patil.Reddy@amd.com>,
+ "Shen, Yijun" <Yijun.Shen@dell.com>
+References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
+ <CAD-Ua_iHZtBJFXjBytXEhBwS9tJ79JUA7EB911hUZ0=OyoyLDQ@mail.gmail.com>
+ <29af4c8f-e93b-49da-ad22-f5641f0046bb@kernel.org>
+ <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
+ <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org>
+ <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
+ <b6462189-5de6-4297-8d10-fce795c38ceb@amd.com>
+ <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
+ <CAD-Ua_ixbf1ApMPMMSner28-fRg7BuhTu3QSw1U=ozqgS9fUjQ@mail.gmail.com>
+ <6f81529b-7ae6-4d63-b0f3-7787a668698e@kernel.org>
+ <CAD-Ua_hAxj5PskiFdiEA7Qt1bWEhKRvCNAyQj0BQmZ2vDnV4aQ@mail.gmail.com>
+ <089b2cca-4c84-47b0-a96a-0363ffd642d7@amd.com>
+ <CAD-Ua_gxPsTbG_3shtqAZX_E4ns5hHPZbTszQAXH2jbfLxP_Rg@mail.gmail.com>
+ <eee498d1-6c12-4988-9a70-1e108848da62@kernel.org>
+ <CAD-Ua_hX_PYxYUfFDcTv3R4pV0s5ninRSK+-1zxtttMhSPoQtg@mail.gmail.com>
+ <c31b5a46-5dea-48c6-bfe9-b3efc989f0de@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <c31b5a46-5dea-48c6-bfe9-b3efc989f0de@kernel.org>
 
-Drop profile matching micro-optimizations to improve readability and
-long-term maintainability.
+This is a multi-part message in MIME format.
+--------------08w3coA2wTd9HxMwM9z3Jy8p
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Additionally, is_awcc_thermal_profile_id is implicitly ignoring the
-AWCC_PROFILE_SPECIAL_GMODE ID. State this explicitly with code and a
-comment.
+On 10/30/25 8:35 AM, Mario Limonciello (AMD) (kernel.org) wrote:
+> 
+> 
+> On 10/29/2025 7:22 PM, Lars Francke wrote:
+>> On Wed, Oct 29, 2025 at 4:38 AM Mario Limonciello (AMD) (kernel.org)
+>> <superm1@kernel.org> wrote:
+>>> On 10/28/2025 6:45 PM, Lars Francke wrote:
+>>>> On Tue, Oct 28, 2025 at 6:12 PM Shyam Sundar S K
+>>>> <Shyam-sundar.S-k@amd.com> wrote:
+>>>>
+>>>>> Can you try the attached patches now?
+>>>>>
+>>>>> First patch is the same which Mario shared last time and the 2nd one
+>>>>> is on PMF to handle the .restore() callback for hibernate.
+>>>>>
+>>>>> I have tried this on 6.18-rc3 (though this should not matter)
+>>>>
+>>>> I just did and I'm afraid that the patches made it even worse for 
+>>>> some reason.
+>>>> Hibernate works but when rebooting I end up in the console, the cursor
+>>>> is blinking but I can't do anything - no keyboard input, nothing. And
+>>>> what's even weirder is that after a reboot I have nothing in my
+>>>> journal on that boot. Not a single line. I have no idea how to debug
+>>>> this behavior, sorry. Usually when my patches broke the system I would
+>>>> still get logs. If you have any idea what I can do to debug let me
+>>>> know.
+>>>>
+>>>> Thanks,
+>>>> Lars
+>>>>
+>>>
+>>> FWIW I tested Shyam's PMF + my CCP patch and didn't observe this 
+>>> behavior.
+>>
+>> Thanks. I tested the patches on 6.18-rc3 and I observed the same 
+>> behavior.
+>>
+>>> Can you please add this patch and see if it improves things?
+>>>
+>>> https://lore.kernel.org/linux-pm/5935682.DvuYhMxLoT@rafael.j.wysocki/ 
+>>> T/#u
+>>
+>> I tried this as well, didn't change anything.
+>> I'll try again in a couple of days with various combinations of
+>> patches just to make sure that I haven't made a mistake.
+>>
+>> Lars
+> 
+> I have a suspicion.  With all those patches added (mine, Rafael's and 
+> Shyam's) can you please try to hibernate and then after resuming run:
+> 
+> # rmmod amd-pmf
+> 
+> And see if system hangs/reboots in a similar way?
+> 
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 124 ++++++++++++-------------
- 1 file changed, 57 insertions(+), 67 deletions(-)
+Can you please add this patch to the other two and try again?
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 31f9643a6a3b..9af87471549c 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -283,11 +283,6 @@ enum AWCC_THERMAL_TABLES {
- 	AWCC_THERMAL_TABLE_USTT			= 0xA,
- };
- 
--enum AWCC_SPECIAL_THERMAL_CODES {
--	AWCC_SPECIAL_PROFILE_CUSTOM		= 0x00,
--	AWCC_SPECIAL_PROFILE_GMODE		= 0xAB,
--};
--
- enum AWCC_TEMP_SENSOR_TYPES {
- 	AWCC_TEMP_SENSOR_CPU			= 0x01,
- 	AWCC_TEMP_SENSOR_FRONT			= 0x03,
-@@ -314,17 +309,18 @@ enum AWCC_FAN_TYPES {
- };
- 
- enum awcc_thermal_profile {
--	AWCC_PROFILE_USTT_BALANCED,
--	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
--	AWCC_PROFILE_USTT_COOL,
--	AWCC_PROFILE_USTT_QUIET,
--	AWCC_PROFILE_USTT_PERFORMANCE,
--	AWCC_PROFILE_USTT_LOW_POWER,
--	AWCC_PROFILE_LEGACY_QUIET,
--	AWCC_PROFILE_LEGACY_BALANCED,
--	AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE,
--	AWCC_PROFILE_LEGACY_PERFORMANCE,
--	AWCC_PROFILE_LAST,
-+	AWCC_PROFILE_SPECIAL_CUSTOM			= 0x00,
-+	AWCC_PROFILE_LEGACY_QUIET			= 0x96,
-+	AWCC_PROFILE_LEGACY_BALANCED			= 0x97,
-+	AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE	= 0x98,
-+	AWCC_PROFILE_LEGACY_PERFORMANCE			= 0x99,
-+	AWCC_PROFILE_USTT_BALANCED			= 0xA0,
-+	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE		= 0xA1,
-+	AWCC_PROFILE_USTT_COOL				= 0xA2,
-+	AWCC_PROFILE_USTT_QUIET				= 0xA3,
-+	AWCC_PROFILE_USTT_PERFORMANCE			= 0xA4,
-+	AWCC_PROFILE_USTT_LOW_POWER			= 0xA5,
-+	AWCC_PROFILE_SPECIAL_GMODE			= 0xAB,
- };
- 
- struct wmax_led_args {
-@@ -380,19 +376,6 @@ struct awcc_priv {
- 	u32 gpio_count;
- };
- 
--static const enum platform_profile_option awcc_mode_to_platform_profile[AWCC_PROFILE_LAST] = {
--	[AWCC_PROFILE_USTT_BALANCED]			= PLATFORM_PROFILE_BALANCED,
--	[AWCC_PROFILE_USTT_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
--	[AWCC_PROFILE_USTT_COOL]			= PLATFORM_PROFILE_COOL,
--	[AWCC_PROFILE_USTT_QUIET]			= PLATFORM_PROFILE_QUIET,
--	[AWCC_PROFILE_USTT_PERFORMANCE]			= PLATFORM_PROFILE_PERFORMANCE,
--	[AWCC_PROFILE_USTT_LOW_POWER]			= PLATFORM_PROFILE_LOW_POWER,
--	[AWCC_PROFILE_LEGACY_QUIET]			= PLATFORM_PROFILE_QUIET,
--	[AWCC_PROFILE_LEGACY_BALANCED]			= PLATFORM_PROFILE_BALANCED,
--	[AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
--	[AWCC_PROFILE_LEGACY_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
--};
--
- static struct awcc_quirks *awcc;
- 
- /*
-@@ -610,21 +593,41 @@ const struct attribute_group wmax_deepsleep_attribute_group = {
- /*
-  * AWCC Helpers
-  */
--static bool is_awcc_thermal_profile_id(u8 code)
-+static int awcc_profile_to_pprof(enum awcc_thermal_profile profile,
-+				 enum platform_profile_option *pprof)
- {
--	u8 table = FIELD_GET(AWCC_THERMAL_TABLE_MASK, code);
--	u8 mode = FIELD_GET(AWCC_THERMAL_MODE_MASK, code);
-+	switch (profile) {
-+	case AWCC_PROFILE_SPECIAL_CUSTOM:
-+		*pprof = PLATFORM_PROFILE_CUSTOM;
-+		break;
-+	case AWCC_PROFILE_LEGACY_QUIET:
-+	case AWCC_PROFILE_USTT_QUIET:
-+		*pprof = PLATFORM_PROFILE_QUIET;
-+		break;
-+	case AWCC_PROFILE_LEGACY_BALANCED:
-+	case AWCC_PROFILE_USTT_BALANCED:
-+		*pprof = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE:
-+	case AWCC_PROFILE_USTT_BALANCED_PERFORMANCE:
-+		*pprof = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case AWCC_PROFILE_LEGACY_PERFORMANCE:
-+	case AWCC_PROFILE_USTT_PERFORMANCE:
-+	case AWCC_PROFILE_SPECIAL_GMODE:
-+		*pprof = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case AWCC_PROFILE_USTT_COOL:
-+		*pprof = PLATFORM_PROFILE_COOL;
-+		break;
-+	case AWCC_PROFILE_USTT_LOW_POWER:
-+		*pprof = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
--	if (mode >= AWCC_PROFILE_LAST)
--		return false;
--
--	if (table == AWCC_THERMAL_TABLE_LEGACY && mode >= AWCC_PROFILE_LEGACY_QUIET)
--		return true;
--
--	if (table == AWCC_THERMAL_TABLE_USTT && mode <= AWCC_PROFILE_USTT_LOW_POWER)
--		return true;
--
--	return false;
-+	return 0;
- }
- 
- static int awcc_wmi_command(struct wmi_device *wdev, u32 method_id,
-@@ -1273,24 +1276,7 @@ static int awcc_platform_profile_get(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	switch (out_data) {
--	case AWCC_SPECIAL_PROFILE_CUSTOM:
--		*profile = PLATFORM_PROFILE_CUSTOM;
--		return 0;
--	case AWCC_SPECIAL_PROFILE_GMODE:
--		*profile = PLATFORM_PROFILE_PERFORMANCE;
--		return 0;
--	default:
--		break;
--	}
--
--	if (!is_awcc_thermal_profile_id(out_data))
--		return -ENODATA;
--
--	out_data = FIELD_GET(AWCC_THERMAL_MODE_MASK, out_data);
--	*profile = awcc_mode_to_platform_profile[out_data];
--
--	return 0;
-+	return awcc_profile_to_pprof(out_data, profile);
- }
- 
- static int awcc_platform_profile_set(struct device *dev,
-@@ -1327,7 +1313,6 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
- {
- 	enum platform_profile_option profile;
- 	struct awcc_priv *priv = drvdata;
--	enum awcc_thermal_profile mode;
- 	u8 id, offset = 0;
- 	int ret;
- 
-@@ -1349,15 +1334,20 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
- 		if (ret)
- 			return ret;
- 
--		if (!is_awcc_thermal_profile_id(id)) {
-+		/*
-+		 * G-Mode profile ID is not listed consistently across modeles
-+		 * that support it, therefore we handle it through quirks.
-+		 */
-+		if (id == AWCC_PROFILE_SPECIAL_GMODE)
-+			continue;
-+
-+		ret = awcc_profile_to_pprof(id, &profile);
-+		if (ret) {
- 			dev_dbg(&priv->wdev->dev, "Unmapped thermal profile ID 0x%02x\n", id);
- 			continue;
- 		}
- 
--		mode = FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
--		profile = awcc_mode_to_platform_profile[mode];
- 		priv->supported_profiles[profile] = id;
--
- 		__set_bit(profile, choices);
- 	}
- 
-@@ -1366,14 +1356,14 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
- 
- 	if (awcc->gmode) {
- 		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =
--			AWCC_SPECIAL_PROFILE_GMODE;
-+			AWCC_PROFILE_SPECIAL_GMODE;
- 
- 		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 	}
- 
- 	/* Every model supports the "custom" profile */
- 	priv->supported_profiles[PLATFORM_PROFILE_CUSTOM] =
--		AWCC_SPECIAL_PROFILE_CUSTOM;
-+		AWCC_PROFILE_SPECIAL_CUSTOM;
- 
- 	__set_bit(PLATFORM_PROFILE_CUSTOM, choices);
- 
+Thanks,
+--------------08w3coA2wTd9HxMwM9z3Jy8p
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-crypto-ccp-Prevent-calling-psp_tee_process_cmd-with-.patch"
+Content-Disposition: attachment;
+ filename*0="0001-crypto-ccp-Prevent-calling-psp_tee_process_cmd-with-.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
 
----
-base-commit: 1c72d9c3e0c61468de878d906a65d4cc845718fb
-change-id: 20250622-aw-gmode-ab799b2159d2
+RnJvbSA0ZGNiYTM1N2YxMGIwNTU4YmMzNmY2ZmIxNWY0MjEwYzQzZjQ0ZGJmIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25j
+aWVsbG9AYW1kLmNvbT4KRGF0ZTogVHVlLCA0IE5vdiAyMDI1IDA5OjQ1OjMzIC0wNjAwClN1
+YmplY3Q6IFtQQVRDSF0gY3J5cHRvL2NjcDogUHJldmVudCBjYWxsaW5nIHBzcF90ZWVfcHJv
+Y2Vzc19jbWQoKSB3aXRoCiBpbnZhbGlkIHJpbmcKCnBzcF90ZWVfcHJvY2Vzc19jbWQoKSBp
+cyBleHBvcnRlZCBhbmQgY2FuIGJlIGNhbGxlZCBieSBvdGhlciBtb2R1bGVzCmF0IGEgdGlt
+ZSB0aGF0IHRoZSByaW5nIGlzbid0IHJlYWR5LiAgUHJldmVudCBmYWlsdXJlcyBieSBjaGVj
+a2luZwpmb3IgYSB2YWxpZCByaW5nLgoKU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVs
+bG8gPG1hcmlvLmxpbW9uY2llbGxvQGFtZC5jb20+Ci0tLQogZHJpdmVycy9jcnlwdG8vY2Nw
+L3RlZS1kZXYuYyB8IDMgKysrCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCgpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2NwL3RlZS1kZXYuYyBiL2RyaXZlcnMvY3J5
+cHRvL2NjcC90ZWUtZGV2LmMKaW5kZXggNjY0NjhkZTA4ZmMzLi45NzJmYzg0OGQwZjIgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvY3J5cHRvL2NjcC90ZWUtZGV2LmMKKysrIGIvZHJpdmVycy9j
+cnlwdG8vY2NwL3RlZS1kZXYuYwpAQCAtMzM2LDYgKzMzNiw5IEBAIGludCBwc3BfdGVlX3By
+b2Nlc3NfY21kKGVudW0gdGVlX2NtZF9pZCBjbWRfaWQsIHZvaWQgKmJ1Ziwgc2l6ZV90IGxl
+biwKIAogCXRlZSA9IHBzcC0+dGVlX2RhdGE7CiAKKwlpZiAoIXRlZS0+cmJfbWdyLnJpbmdf
+c3RhcnQpCisJCXJldHVybiAtRU5PREVWOworCiAJcmV0ID0gdGVlX3N1Ym1pdF9jbWQodGVl
+LCBjbWRfaWQsIGJ1ZiwgbGVuLCAmcmVzcCk7CiAJaWYgKHJldCkKIAkJcmV0dXJuIHJldDsK
+LS0gCjIuNTEuMgoK
 
--- 
- ~ Kurt
-
+--------------08w3coA2wTd9HxMwM9z3Jy8p--
