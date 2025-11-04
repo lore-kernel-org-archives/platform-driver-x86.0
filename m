@@ -1,300 +1,620 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0452ED165;
-	Tue,  4 Nov 2025 20:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762289172; cv=none; b=US+0qwnKBa+nW6kLXJS8i+NrnxknCLam9mC4H4utSqrDV0ykUVZw0s6igH/MDsy95I68KeDWThN4SPlisuCJQGI2H0zmg9Y6ctlU74I/aJQ2Py3z4dkHKNYZVurDNu7MYGYR34HyUg2B6aXzxjr42tZrScT/apTilGHQJbsmCIo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762289172; c=relaxed/simple;
-	bh=x4A52WzdsmxngpNH8+MvtYuknxjuaZpJ62kjIbeYyhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YOwP+vKdv2yzC5GJWwn9RZZaUy3VP5DcU4zKHj+CtlxKfGPvOnwm0yraQ0Fn0k7eMoNZsVomWQSKURneXYjjbGZGYhzNbGWyS6hULZeugO2BhP5uXkxpMVf7/epAX1HdQ/FImFHOboy4Xe4VYLAQBBdpz0Ver6v6d895uG3JMu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=O4YLFnPF; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B85D27E;
+	Tue,  4 Nov 2025 20:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762289334; cv=pass; b=jCZXGBrE1kC3B2HWJRXyM02jkYq+MUw3nb1AiPMIdoPXBKCnRat0D34od9LYTgKsi4lKE4mbJjYVFys5WwiLUZTDanqu33Hibwpb2J8cb6aUNSq7YBzTa0gIJHKgjjQnaxrRH0RU11VV5USqdCYv+8cpKQs5eHJQxSqUrsPYJSA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762289334; c=relaxed/simple;
+	bh=JdY1aNujMiMrxiL2I55cCJ61Rm9VKSb0vuBTDXOn1DY=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=CHHDYttnziecYJlT7mpVEFoc1la5kOFY37u937+FVldANip/3/q+gKCDbDwgwD620B7Igt7Kxsuoghpi+bDK1RBLaKcdAGh0WrT6BXY5WLGQzgYLVkxx8PdnUrkxZSy3bv8hgDfjl33q5fK3JekibG1sc9GGrFSFcaiyj5L04fI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=M9wOa5d4; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="O4YLFnPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1762289160; x=1762893960; i=w_armin@gmx.de;
-	bh=lzNQRY1Kb1yI7hH4FYsUrDSOUJVAglm57BSX732SI7U=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=O4YLFnPFIjiHNleHj48cIJ50PBn80L/nI6B1aXOPqOrfjTI+Di0eDqL7Two5W+MR
-	 8/X37OexGZbWeAGWu+Kbkd3r/dMwWnUGywcDsZvwAAejZ8dwuY1YWdTaya2WIlgdr
-	 7Y0cOVkyY0gytfBlb5DE37N7iaq5Nq2K+umzQgVVgShoz5mgOMgy3sUqWN0cEocEz
-	 WBa0Jhi881hYO2Dbsjjk4YHXmk34asF4q1wPJ/CnO/sHwHweV+DZKx5Q8u0b3pFvx
-	 VaMGzIdbuI9wYw3wTbL3TPrG2OmoSxJr0fIbu5pDb13K3TSCbJG+hxoKJfL+jMqJ/
-	 f/8yeBe6VD0zYCKMGw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N6sn1-1wJ3rk3SAx-00xWti; Tue, 04 Nov 2025 21:46:00 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/4] platform/x86: wmi: Move WMI core code into a separate directory
-Date: Tue,  4 Nov 2025 21:45:40 +0100
-Message-Id: <20251104204540.13931-5-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251104204540.13931-1-W_Armin@gmx.de>
-References: <20251104204540.13931-1-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="M9wOa5d4"
+ARC-Seal: i=1; a=rsa-sha256; t=1762289310; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=D9WAyCTQY/TzRKZq5rUl7boJN8TFb58biWhbSs9iIJgRrbkk8mH4V9LOCqita2stflZ0yalJg66p+u+nMpzzELZmsEt0NngmPoxSFlgCCHdf7N6N49HVv+31edQ94uls2OcCOO5lHPz2F7RnRt85OCnNp9PQs5D6BT4rHIbOD/I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1762289310; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+AEnSoUPtd8zUzeC8ApRI6Zy8NzxIcVRMdSUtjoFYPI=; 
+	b=lDU0x+u0COCqn8KjkUkEMAN5mULpG5vi+xeF7d8EWXMd5VXIwnCnkS9g3INGorV1K5BGmQwaM7j3zbDFoa2B84KIOYjxdU5H/4XN7KmKhOvQDsyD9fzRuFJkTGvOlj7ceyTB/wlSd8GdcEzZwD62unf51wDAHhncwBg5FcZPoQY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1762289309;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=+AEnSoUPtd8zUzeC8ApRI6Zy8NzxIcVRMdSUtjoFYPI=;
+	b=M9wOa5d4+JtgTDni0tnW8Ys56vniVt2139ZQiNIJwKFjX2YmaS8wjVDZZA2cfZ5z
+	3ECXH2se7ZX60Qg92vDA+45AnlJSMf2QSCq8kWgoAE0CDMLKsaBYtHULxniLOONylcI
+	Fjf2cRuqGL2Eabc50pDX73ckc7EZrKN/r7AIOyfo=
+Received: by mx.zohomail.com with SMTPS id 1762289307486381.83977599800426;
+	Tue, 4 Nov 2025 12:48:27 -0800 (PST)
+Message-ID: <b7f5fb95dcd7a0f9ad5dc68f6ede1655c913dc65.camel@rong.moe>
+Subject: Re: [PATCH v3 3/6] platform/x86: lenovo-wmi-{capdata,other}:
+ Support multiple Capability Data
+From: Rong Zhang <i@rong.moe>
+To: Armin Wolf <W_Armin@gmx.de>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede
+ <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+ platform-driver-x86@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+In-Reply-To: <8c14706f-f3cc-45e9-bdef-db2c9171f46e@gmx.de>
+References: <20251031155349.24693-1-i@rong.moe>
+	 <20251031155349.24693-4-i@rong.moe>
+	 <8c14706f-f3cc-45e9-bdef-db2c9171f46e@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 05 Nov 2025 04:43:16 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yfGdNrQmTknkoY6OCz3hi5tLFH0Bc518RojyonoJYRLh81dtkg6
- oeFMCuXnhiQJGy6Em7myyqS8mIzXLxud5ZdqI55rDzi67+vA/jrG4XFtJX71FZm7w1siknM
- I67xlR/7RtnuXk2JI60P7LHtKKA3w5d9UJKuans6RGY2MzKgoayX5bpwVCk47akXaDAdGqb
- vnTtWGNaV29lZ742kQgxA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:599g5XI5hvw=;BIFkHj3pZjRK2/6LyAtLlpiWAbF
- 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
- +mAd93QWv1HK7Iyqs=
+User-Agent: Evolution 3.56.2-5 
+X-ZohoMailClient: External
 
-Move the WMI core code into a separate directory to prepare for
-future additions to the WMI driver.
+Hi Armin,
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/driver-api/wmi.rst           |  2 +-
- MAINTAINERS                                |  2 +-
- drivers/platform/x86/Kconfig               | 30 +------------------
- drivers/platform/x86/Makefile              |  2 +-
- drivers/platform/x86/wmi/Kconfig           | 34 ++++++++++++++++++++++
- drivers/platform/x86/wmi/Makefile          |  8 +++++
- drivers/platform/x86/{wmi.c =3D> wmi/core.c} |  0
- 7 files changed, 46 insertions(+), 32 deletions(-)
- create mode 100644 drivers/platform/x86/wmi/Kconfig
- create mode 100644 drivers/platform/x86/wmi/Makefile
- rename drivers/platform/x86/{wmi.c =3D> wmi/core.c} (100%)
+On Tue, 2025-11-04 at 21:20 +0100, Armin Wolf wrote:
+> Am 31.10.25 um 16:51 schrieb Rong Zhang:
+>=20
+> > The current implementation are heavily bound to capdata01. Rewrite it s=
+o
+> > that it is suitable to utilize other Capability Data as well.
+> >=20
+> > No functional change intended.
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > Tested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Fix function parameter 'type' not described in 'lwmi_cd_match' (thank=
+s
+> >    kernel test bot)
+> > ---
+> >   drivers/platform/x86/lenovo/wmi-capdata.c | 208 +++++++++++++++++----=
+-
+> >   drivers/platform/x86/lenovo/wmi-capdata.h |   7 +-
+> >   drivers/platform/x86/lenovo/wmi-other.c   |  27 ++-
+> >   3 files changed, 190 insertions(+), 52 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platfo=
+rm/x86/lenovo/wmi-capdata.c
+> > index c5e74b2bfeb3..1f7fc09b7c3f 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> > @@ -12,8 +12,13 @@
+> >    *
+> >    * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> >    *   - Initial implementation (formerly named lenovo-wmi-capdata01)
+> > + *
+> > + * Copyright (C) 2025 Rong Zhang <i@rong.moe>
+> > + *   - Unified implementation
+> >    */
+> >  =20
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> >   #include <linux/acpi.h>
+> >   #include <linux/cleanup.h>
+> >   #include <linux/component.h>
+> > @@ -36,6 +41,25 @@
+> >   #define ACPI_AC_CLASS "ac_adapter"
+> >   #define ACPI_AC_NOTIFY_STATUS 0x80
+> >  =20
+> > +enum lwmi_cd_type {
+> > +	LENOVO_CAPABILITY_DATA_01,
+> > +};
+> > +
+> > +#define LWMI_CD_TABLE_ITEM(_type)		\
+> > +	[_type] =3D {				\
+> > +		.guid_string =3D _type##_GUID,	\
+> > +		.name =3D #_type,			\
+> > +		.type =3D _type,			\
+> > +	}
+> > +
+> > +static const struct lwmi_cd_info {
+> > +	const char *guid_string;
+> > +	const char *name;
+> > +	enum lwmi_cd_type type;
+> > +} lwmi_cd_table[] =3D {
+> > +	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_01),
+> > +};
+> > +
+> >   struct lwmi_cd_priv {
+> >   	struct notifier_block acpi_nb; /* ACPI events */
+> >   	struct wmi_device *wdev;
+> > @@ -44,15 +68,19 @@ struct lwmi_cd_priv {
+> >  =20
+> >   struct cd_list {
+> >   	struct mutex list_mutex; /* list R/W mutex */
+> > +	enum lwmi_cd_type type;
+> >   	u8 count;
+> > -	struct capdata01 data[];
+> > +
+> > +	union {
+> > +		DECLARE_FLEX_ARRAY(struct capdata01, cd01);
+> > +	};
+> >   };
+> >  =20
+> >   /**
+> >    * lwmi_cd_component_bind() - Bind component to master device.
+> >    * @cd_dev: Pointer to the lenovo-wmi-capdata driver parent device.
+> >    * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
+> > - * @data: cd_list object pointer used to return the capability data.
+> > + * @data: lwmi_cd_binder object pointer used to return the capability =
+data.
+> >    *
+> >    * On lenovo-wmi-other's master bind, provide a pointer to the local =
+capdata
+> >    * list. This is used to call lwmi_cd*_get_data to look up attribute =
+data
+> > @@ -64,9 +92,15 @@ static int lwmi_cd_component_bind(struct device *cd_=
+dev,
+> >   				  struct device *om_dev, void *data)
+> >   {
+> >   	struct lwmi_cd_priv *priv =3D dev_get_drvdata(cd_dev);
+> > -	struct cd_list **cd_list =3D data;
+> > +	struct lwmi_cd_binder *binder =3D data;
+> >  =20
+> > -	*cd_list =3D priv->list;
+> > +	switch (priv->list->type) {
+> > +	case LENOVO_CAPABILITY_DATA_01:
+> > +		binder->cd01_list =3D priv->list;
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> >  =20
+> >   	return 0;
+> >   }
+> > @@ -76,30 +110,33 @@ static const struct component_ops lwmi_cd_componen=
+t_ops =3D {
+> >   };
+> >  =20
+> >   /**
+> > - * lwmi_cd01_get_data - Get the data of the specified attribute
+> > + * lwmi_cd*_get_data - Get the data of the specified attribute
+> >    * @list: The lenovo-wmi-capdata pointer to its cd_list struct.
+> >    * @attribute_id: The capdata attribute ID to be found.
+> > - * @output: Pointer to a capdata01 struct to return the data.
+> > + * @output: Pointer to a capdata* struct to return the data.
+> >    *
+> > - * Retrieves the capability data 01 struct pointer for the given
+> > - * attribute for its specified thermal mode.
+> > + * Retrieves the capability data struct pointer for the given
+> > + * attribute.
+> >    *
+> >    * Return: 0 on success, or -EINVAL.
+> >    */
+> > -int lwmi_cd01_get_data(struct cd_list *list, u32 attribute_id, struct =
+capdata01 *output)
+> > -{
+> > -	u8 idx;
+> > -
+> > -	guard(mutex)(&list->list_mutex);
+> > -	for (idx =3D 0; idx < list->count; idx++) {
+> > -		if (list->data[idx].id !=3D attribute_id)
+> > -			continue;
+> > -		memcpy(output, &list->data[idx], sizeof(list->data[idx]));
+> > -		return 0;
+> > +#define DEF_LWMI_CDXX_GET_DATA(_cdxx, _cd_type, _output_t)					\
+> > +	int lwmi_##_cdxx##_get_data(struct cd_list *list, u32 attribute_id, _=
+output_t *output)	\
+> > +	{											\
+> > +		u8 idx;										\
+> > +		if (WARN_ON(list->type !=3D _cd_type))						\
+> > +			return -EINVAL;								\
+> > +		guard(mutex)(&list->list_mutex);						\
+> > +		for (idx =3D 0; idx < list->count; idx++) {					\
+> > +			if (list->_cdxx[idx].id !=3D attribute_id)				\
+> > +				continue;							\
+> > +			memcpy(output, &list->_cdxx[idx], sizeof(list->_cdxx[idx]));		\
+> > +			return 0;								\
+> > +		}										\
+> > +		return -EINVAL;									\
+> >   	}
+> >  =20
+> > -	return -EINVAL;
+> > -}
+> > +DEF_LWMI_CDXX_GET_DATA(cd01, LENOVO_CAPABILITY_DATA_01, struct capdata=
+01);
+> >   EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD");
+> >  =20
+> >   /**
+> > @@ -112,10 +149,21 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_=
+WMI_CD");
+> >    */
+> >   static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+> >   {
+> > +	size_t size;
+> >   	int idx;
+> > +	void *p;
+> > +
+> > +	switch (priv->list->type) {
+> > +	case LENOVO_CAPABILITY_DATA_01:
+> > +		p =3D &priv->list->cd01[0];
+> > +		size =3D sizeof(priv->list->cd01[0]);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> >  =20
+> >   	guard(mutex)(&priv->list->list_mutex);
+> > -	for (idx =3D 0; idx < priv->list->count; idx++) {
+> > +	for (idx =3D 0; idx < priv->list->count; idx++, p +=3D size) {
+> >   		union acpi_object *ret_obj __free(kfree) =3D NULL;
+> >  =20
+> >   		ret_obj =3D wmidev_block_query(priv->wdev, idx);
+> > @@ -123,11 +171,10 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pri=
+v)
+> >   			return -ENODEV;
+> >  =20
+> >   		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
+> > -		    ret_obj->buffer.length < sizeof(priv->list->data[idx]))
+> > +		    ret_obj->buffer.length < size)
+> >   			continue;
+> >  =20
+> > -		memcpy(&priv->list->data[idx], ret_obj->buffer.pointer,
+> > -		       ret_obj->buffer.length);
+> > +		memcpy(p, ret_obj->buffer.pointer, size);
+> >   	}
+> >  =20
+> >   	return 0;
+> > @@ -136,20 +183,28 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pri=
+v)
+> >   /**
+> >    * lwmi_cd_alloc() - Allocate a cd_list struct in drvdata
+> >    * @priv: lenovo-wmi-capdata driver data.
+> > + * @type: The type of capability data.
+> >    *
+> >    * Allocate a cd_list struct large enough to contain data from all WM=
+I data
+> >    * blocks provided by the interface.
+> >    *
+> >    * Return: 0 on success, or an error.
+> >    */
+> > -static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+> > +static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, enum lwmi_cd_type =
+type)
+> >   {
+> >   	struct cd_list *list;
+> >   	size_t list_size;
+> >   	int count, ret;
+> >  =20
+> >   	count =3D wmidev_instance_count(priv->wdev);
+> > -	list_size =3D struct_size(list, data, count);
+> > +
+> > +	switch (type) {
+> > +	case LENOVO_CAPABILITY_DATA_01:
+> > +		list_size =3D struct_size(list, cd01, count);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> >  =20
+> >   	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
+> >   	if (!list)
+> > @@ -159,6 +214,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+> >   	if (ret)
+> >   		return ret;
+> >  =20
+> > +	list->type =3D type;
+> >   	list->count =3D count;
+> >   	priv->list =3D list;
+> >  =20
+> > @@ -168,6 +224,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
+> >   /**
+> >    * lwmi_cd_setup() - Cache all WMI data block information
+> >    * @priv: lenovo-wmi-capdata driver data.
+> > + * @type: The type of capability data.
+> >    *
+> >    * Allocate a cd_list struct large enough to contain data from all WM=
+I data
+> >    * blocks provided by the interface. Then loop through each data bloc=
+k and
+> > @@ -175,11 +232,11 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *pri=
+v)
+> >    *
+> >    * Return: 0 on success, or an error code.
+> >    */
+> > -static int lwmi_cd_setup(struct lwmi_cd_priv *priv)
+> > +static int lwmi_cd_setup(struct lwmi_cd_priv *priv, enum lwmi_cd_type =
+type)
+> >   {
+> >   	int ret;
+> >  =20
+> > -	ret =3D lwmi_cd_alloc(priv);
+> > +	ret =3D lwmi_cd_alloc(priv, type);
+> >   	if (ret)
+> >   		return ret;
+> >  =20
+> > @@ -235,9 +292,13 @@ static void lwmi_cd01_unregister(void *data)
+> >  =20
+> >   static int lwmi_cd_probe(struct wmi_device *wdev, const void *context=
+)
+> >   {
+> > +	const struct lwmi_cd_info *info =3D context;
+> >   	struct lwmi_cd_priv *priv;
+> >   	int ret;
+> >  =20
+> > +	if (!info)
+> > +		return -EINVAL;
+> > +
+> >   	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> >   	if (!priv)
+> >   		return -ENOMEM;
+> > @@ -245,21 +306,34 @@ static int lwmi_cd_probe(struct wmi_device *wdev,=
+ const void *context)
+> >   	priv->wdev =3D wdev;
+> >   	dev_set_drvdata(&wdev->dev, priv);
+> >  =20
+> > -	ret =3D lwmi_cd_setup(priv);
+> > +	ret =3D lwmi_cd_setup(priv, info->type);
+> >   	if (ret)
+> > -		return ret;
+> > +		goto out;
+> >  =20
+> > -	priv->acpi_nb.notifier_call =3D lwmi_cd01_notifier_call;
+> > +	if (info->type =3D=3D LENOVO_CAPABILITY_DATA_01) {
+> > +		priv->acpi_nb.notifier_call =3D lwmi_cd01_notifier_call;
+> >  =20
+> > -	ret =3D register_acpi_notifier(&priv->acpi_nb);
+> > -	if (ret)
+> > -		return ret;
+> > +		ret =3D register_acpi_notifier(&priv->acpi_nb);
+> > +		if (ret)
+> > +			goto out;
+> >  =20
+> > -	ret =3D devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister, &p=
+riv->acpi_nb);
+> > -	if (ret)
+> > -		return ret;
+> > +		ret =3D devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister,
+> > +					       &priv->acpi_nb);
+> > +		if (ret)
+> > +			goto out;
+> > +	}
+> > +
+> > +	ret =3D component_add(&wdev->dev, &lwmi_cd_component_ops);
+> >  =20
+> > -	return component_add(&wdev->dev, &lwmi_cd_component_ops);
+> > +out:
+> > +	if (ret) {
+> > +		dev_err(&wdev->dev, "failed to register %s: %d\n",
+> > +			info->name, ret);
+> > +	} else {
+> > +		dev_info(&wdev->dev, "registered %s with %u items\n",
+> > +			 info->name, priv->list->count);
+> > +	}
+> > +	return ret;
+> >   }
+> >  =20
+> >   static void lwmi_cd_remove(struct wmi_device *wdev)
+> > @@ -267,8 +341,12 @@ static void lwmi_cd_remove(struct wmi_device *wdev=
+)
+> >   	component_del(&wdev->dev, &lwmi_cd_component_ops);
+> >   }
+> >  =20
+> > +#define LWMI_CD_WDEV_ID(_type)				\
+> > +	.guid_string =3D _type##_GUID,			\
+> > +	.context =3D &lwmi_cd_table[_type]
+> > +
+> >   static const struct wmi_device_id lwmi_cd_id_table[] =3D {
+> > -	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
+> > +	{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_01) },
+> >   	{}
+> >   };
+> >  =20
+> > @@ -284,21 +362,61 @@ static struct wmi_driver lwmi_cd_driver =3D {
+> >   };
+> >  =20
+> >   /**
+> > - * lwmi_cd01_match() - Match rule for the master driver.
+> > - * @dev: Pointer to the capability data 01 parent device.
+> > - * @data: Unused void pointer for passing match criteria.
+> > + * lwmi_cd_match() - Match rule for the master driver.
+> > + * @dev: Pointer to the capability data parent device.
+> > + * @type: Pointer to capability data type (enum lwmi_cd_type *) to mat=
+ch.
+> >    *
+> >    * Return: int.
+> >    */
+> > -int lwmi_cd01_match(struct device *dev, void *data)
+> > +static int lwmi_cd_match(struct device *dev, void *type)
+> > +{
+> > +	struct lwmi_cd_priv *priv;
+> > +
+> > +	if (dev->driver !=3D &lwmi_cd_driver.driver)
+> > +		return false;
+> > +
+> > +	priv =3D dev_get_drvdata(dev);
+> > +	return priv->list->type =3D=3D *(enum lwmi_cd_type *)type;
+> > +}
+> > +
+> > +/**
+> > + * lwmi_cd_match_add_all() - Add all match rule for the master driver.
+> > + * @master: Pointer to the master device.
+> > + * @matchptr: Pointer to the returned component_match pointer.
+> > + *
+> > + * Adds all component matches to the list stored in @matchptr for the =
+@master
+> > + * device. @matchptr must be initialized to NULL. This matches all ava=
+ilable
+> > + * capdata types on the machine.
+> > + */
+> > +void lwmi_cd_match_add_all(struct device *master, struct component_mat=
+ch **matchptr)
+> >   {
+> > -	return dev->driver =3D=3D &lwmi_cd_driver.driver;
+> > +	int i;
+> > +
+> > +	if (WARN_ON(*matchptr))
+> > +		return;
+> > +
+> > +	for (i =3D 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
+> > +		if (!lwmi_cd_table[i].guid_string ||
+> > +		    !wmi_has_guid(lwmi_cd_table[i].guid_string))
+> > +			continue;
+>=20
+> I am still not happy about this. AFAIK as soon as the ordinary capdata WM=
+I devices are bound together,
+> the firmware tells you whether or not the additional fan data WMI device =
+is available. Maybe you can do
+> something like this:
+>=20
+> 1. Bind both capdata WMI devices as usual.
+> 2. Check if a fan data WMI device is available (you can use a DMI-based q=
+uirk list for devices were
+>     the firmware reports invalid data).
+> 3. Register an additional component that binds to the fan data WMI device=
+.
+> 4. Bind both the additional component and the component registered by the=
+ fan data WMI device.
+> 5. Register the hwmon device with additional fan data.
+>=20
+> If the fan data WMI device is not available, you can simply skip steps 3 =
+and 4 and simply
+> register the hwmon device with any additional fan data.
+>=20
+> What do you think?
 
-diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/w=
-mi.rst
-index 4e8dbdb1fc67..66f0dda153b0 100644
-=2D-- a/Documentation/driver-api/wmi.rst
-+++ b/Documentation/driver-api/wmi.rst
-@@ -16,5 +16,5 @@ which will be bound to compatible WMI devices by the dri=
-ver core.
- .. kernel-doc:: include/linux/wmi.h
-    :internal:
-=20
--.. kernel-doc:: drivers/platform/x86/wmi.c
-+.. kernel-doc:: drivers/platform/x86/wmi/core.c
-    :export:
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..abc0ff6769a8 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -402,7 +402,7 @@ S:	Maintained
- F:	Documentation/ABI/testing/sysfs-bus-wmi
- F:	Documentation/driver-api/wmi.rst
- F:	Documentation/wmi/
--F:	drivers/platform/x86/wmi.c
-+F:	drivers/platform/x86/wmi/
- F:	include/uapi/linux/wmi.h
-=20
- ACRN HYPERVISOR SERVICE MODULE
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 46e62feeda3c..ef59425580f3 100644
-=2D-- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -16,35 +16,7 @@ menuconfig X86_PLATFORM_DEVICES
-=20
- if X86_PLATFORM_DEVICES
-=20
--config ACPI_WMI
--	tristate "WMI"
--	depends on ACPI
--	help
--	  This driver adds support for the ACPI-WMI (Windows Management
--	  Instrumentation) mapper device (PNP0C14) found on some systems.
--
--	  ACPI-WMI is a proprietary extension to ACPI to expose parts of the
--	  ACPI firmware to userspace - this is done through various vendor
--	  defined methods and data blocks in a PNP0C14 device, which are then
--	  made available for userspace to call.
--
--	  The implementation of this in Linux currently only exposes this to
--	  other kernel space drivers.
--
--	  This driver is a required dependency to build the firmware specific
--	  drivers needed on many machines, including Acer and HP laptops.
--
--	  It is safe to enable this driver even if your DSDT doesn't define
--	  any ACPI-WMI devices.
--
--config ACPI_WMI_LEGACY_DEVICE_NAMES
--	bool "Use legacy WMI device naming scheme"
--	depends on ACPI_WMI
--	help
--	  Say Y here to force the WMI driver core to use the old WMI device nami=
-ng
--	  scheme when creating WMI devices. Doing so might be necessary for some
--	  userspace applications but will cause the registration of WMI devices =
-with
--	  the same GUID to fail in some corner cases.
-+source "drivers/platform/x86/wmi/Kconfig"
-=20
- config WMI_BMOF
- 	tristate "WMI embedded Binary MOF driver"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c7db2a88c11a..c9f6e9275af8 100644
-=2D-- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -5,7 +5,7 @@
- #
-=20
- # Windows Management Interface
--obj-$(CONFIG_ACPI_WMI)		+=3D wmi.o
-+obj-y				+=3D wmi/
- obj-$(CONFIG_WMI_BMOF)		+=3D wmi-bmof.o
-=20
- # WMI drivers
-diff --git a/drivers/platform/x86/wmi/Kconfig b/drivers/platform/x86/wmi/K=
-config
-new file mode 100644
-index 000000000000..9e7c84876ef5
-=2D-- /dev/null
-+++ b/drivers/platform/x86/wmi/Kconfig
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# ACPI WMI Core
-+#
-+
-+config ACPI_WMI
-+	tristate "WMI"
-+	depends on ACPI
-+	help
-+	  This driver adds support for the ACPI-WMI (Windows Management
-+	  Instrumentation) mapper device (PNP0C14) found on some systems.
-+
-+	  ACPI-WMI is a proprietary extension to ACPI to expose parts of the
-+	  ACPI firmware to userspace - this is done through various vendor
-+	  defined methods and data blocks in a PNP0C14 device, which are then
-+	  made available for userspace to call.
-+
-+	  The implementation of this in Linux currently only exposes this to
-+	  other kernel space drivers.
-+
-+	  This driver is a required dependency to build the firmware specific
-+	  drivers needed on many machines, including Acer and HP laptops.
-+
-+	  It is safe to enable this driver even if your DSDT doesn't define
-+	  any ACPI-WMI devices.
-+
-+config ACPI_WMI_LEGACY_DEVICE_NAMES
-+	bool "Use legacy WMI device naming scheme"
-+	depends on ACPI_WMI
-+	help
-+	  Say Y here to force the WMI driver core to use the old WMI device nami=
-ng
-+	  scheme when creating WMI devices. Doing so might be necessary for some
-+	  userspace applications but will cause the registration of WMI devices =
-with
-+	  the same GUID to fail in some corner cases.
-diff --git a/drivers/platform/x86/wmi/Makefile b/drivers/platform/x86/wmi/=
-Makefile
-new file mode 100644
-index 000000000000..71b702936b59
-=2D-- /dev/null
-+++ b/drivers/platform/x86/wmi/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for linux/drivers/platform/x86/wmi
-+# ACPI WMI core
-+#
-+
-+wmi-y			:=3D core.o
-+obj-$(CONFIG_ACPI_WMI)	+=3D wmi.o
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi/core.c
-similarity index 100%
-rename from drivers/platform/x86/wmi.c
-rename to drivers/platform/x86/wmi/core.c
-=2D-=20
-2.39.5
+Thanks for your suggestion. Will adopt it in v4.
 
+> Thanks,
+> Armin Wolf
+
+Thanks,
+Rong
+
+> > +
+> > +		component_match_add(master, matchptr, lwmi_cd_match,
+> > +				    (void *)&lwmi_cd_table[i].type);
+> > +		if (IS_ERR(matchptr))
+> > +			return;
+> > +	}
+> > +
+> > +	if (!*matchptr) {
+> > +		pr_warn("a master driver requested capability data, but nothing is a=
+vailable\n");
+> > +		*matchptr =3D ERR_PTR(-ENODEV);
+> > +	}
+> >   }
+> > -EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD");
+> > +EXPORT_SYMBOL_NS_GPL(lwmi_cd_match_add_all, "LENOVO_WMI_CD");
+> >  =20
+> >   module_wmi_driver(lwmi_cd_driver);
+> >  =20
+> >   MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
+> >   MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> > +MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
+> >   MODULE_DESCRIPTION("Lenovo Capability Data WMI Driver");
+> >   MODULE_LICENSE("GPL");
+> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platfo=
+rm/x86/lenovo/wmi-capdata.h
+> > index 2a4746e38ad4..1e5fce7836cb 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-capdata.h
+> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+> > @@ -7,6 +7,7 @@
+> >  =20
+> >   #include <linux/types.h>
+> >  =20
+> > +struct component_match;
+> >   struct device;
+> >   struct cd_list;
+> >  =20
+> > @@ -19,7 +20,11 @@ struct capdata01 {
+> >   	u32 max_value;
+> >   };
+> >  =20
+> > +struct lwmi_cd_binder {
+> > +	struct cd_list *cd01_list;
+> > +};
+> > +
+> >   int lwmi_cd01_get_data(struct cd_list *list, u32 attribute_id, struct=
+ capdata01 *output);
+> > -int lwmi_cd01_match(struct device *dev, void *data);
+> > +void lwmi_cd_match_add_all(struct device *master, struct component_mat=
+ch **matchptr);
+> >  =20
+> >   #endif /* !_LENOVO_WMI_CAPDATA_H_ */
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform=
+/x86/lenovo/wmi-other.c
+> > index c6dc1b4cff84..20c6ff0be37a 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -579,14 +579,14 @@ static void lwmi_om_fw_attr_remove(struct lwmi_om=
+_priv *priv)
+> >   static int lwmi_om_master_bind(struct device *dev)
+> >   {
+> >   	struct lwmi_om_priv *priv =3D dev_get_drvdata(dev);
+> > -	struct cd_list *tmp_list;
+> > +	struct lwmi_cd_binder binder =3D { 0 };
+> >   	int ret;
+> >  =20
+> > -	ret =3D component_bind_all(dev, &tmp_list);
+> > +	ret =3D component_bind_all(dev, &binder);
+> >   	if (ret)
+> >   		return ret;
+> >  =20
+> > -	priv->cd01_list =3D tmp_list;
+> > +	priv->cd01_list =3D binder.cd01_list;
+> >   	if (!priv->cd01_list)
+> >   		return -ENODEV;
+> >  =20
+> > @@ -618,6 +618,7 @@ static int lwmi_other_probe(struct wmi_device *wdev=
+, const void *context)
+> >   {
+> >   	struct component_match *master_match =3D NULL;
+> >   	struct lwmi_om_priv *priv;
+> > +	int ret;
+> >  =20
+> >   	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> >   	if (!priv)
+> > @@ -626,12 +627,26 @@ static int lwmi_other_probe(struct wmi_device *wd=
+ev, const void *context)
+> >   	priv->wdev =3D wdev;
+> >   	dev_set_drvdata(&wdev->dev, priv);
+> >  =20
+> > -	component_match_add(&wdev->dev, &master_match, lwmi_cd01_match, NULL)=
+;
+> > +	lwmi_cd_match_add_all(&wdev->dev, &master_match);
+> >   	if (IS_ERR(master_match))
+> >   		return PTR_ERR(master_match);
+> >  =20
+> > -	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_op=
+s,
+> > -					       master_match);
+> > +	ret =3D component_master_add_with_match(&wdev->dev, &lwmi_om_master_o=
+ps,
+> > +					      master_match);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (likely(component_master_is_bound(&wdev->dev, &lwmi_om_master_ops)=
+))
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * The bind callbacks of both master and components were never called=
+ in
+> > +	 * this case - this driver won't work at all. Failing...
+> > +	 */
+> > +	dev_err(&wdev->dev, "unbound master; is any component failing to be p=
+robed?");
+> > +
+> > +	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> > +	return -EXDEV;
+> >   }
+> >  =20
+> >   static void lwmi_other_remove(struct wmi_device *wdev)
