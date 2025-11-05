@@ -1,234 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392F93002B0;
-	Wed,  5 Nov 2025 09:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839CE306B00;
+	Wed,  5 Nov 2025 10:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762335703; cv=none; b=OnRu5Q7dfjEFoI4Yjz9NG+e+fT8lMviIGgKEtBwiXkgdORI4IcyZwdkJFftVNceTXDhCJK9tJ5HQiy7wr/dVTgEiCUHDD1MbvP5pZb/QQoyw+XoomBcGM8iRePvDtVFNOgbSeISnnci5gMQ0hmSam5zI+huxKjaPaiRAMglavXw=
+	t=1762339481; cv=none; b=JbW37Mb9adnmI9aHdEbeba8V19Rq2qZhrIGFgwEmNZTV0IX5OrWXORs85gZDTT4SyxnnazkGrOAeb4Y4i26X7RpkX8RvdifobshiJwu8CetL4nf790Xxb7QGx/DjIupE+bp9ijWNMWlM72/TKY1JrPSo+4geQaox1eoLKh7WtHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762335703; c=relaxed/simple;
-	bh=5tXtCUIfRqWrWbLKsdxhcyUYXlvRPrVVqFxnnUlJGjQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=heqCAa7n/TnnY2vnqPZiylZaCK7sKhWuDr+rwsTOjviqFcTg55fGAbKtIjCcOK4Aq0k6DdJ5+5gEQZJ29ixZvVs9aZQ8PB8SoNROmM76yWAgBUfy072T7z5tayOvIBwG3tOLW6ksv2iS0oN5egfHdoMYXlCFiy03shl2WXa0MyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1f5KIWt; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1762339481; c=relaxed/simple;
+	bh=D2OPaV/N+ShGujg/usR9RQSQG6FixJvGWqb+QpPi9Mo=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=THAd/yVsl84+wqAQ+AMqBFw0ffhiGNKi75fihndUVZC4G5OqpHvv55JkcyY4vtwQoI5NZm25uEyn+Xbj8ohi6IlnZ8RrwcKtlV4LW62XQZP7AtPwAoZeQB6yO/DYAFlIJwumGQVjnwqTm2M7fCOJ6J8I1dOJ8zXnooLplg6C95I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UmElAKMg; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1f5KIWt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UmElAKMg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762335701; x=1793871701;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5tXtCUIfRqWrWbLKsdxhcyUYXlvRPrVVqFxnnUlJGjQ=;
-  b=Y1f5KIWtQDm5jVeWzvJAxvWJZfz29vcoozcJdO1FJDpi4G4wg4cvpoY5
-   g3uAYGoMjpwztqGz4WWtDs7kjboQ/9swezqr4f1ukr9ES3Uif6oMonegi
-   1t84r9C+Fz+NgYaErCV4rcZO4mM4ge089ywQlVNw8LkRUW01PVbDn8n/U
-   Nrl0PuWYhjh5y2GtWfRwM7OH78QNcRXwsi6MNTEGLskF33BtqgnTlNBN8
-   OpoGER8ZwxgBpNpef6SnFscM1m364oYWiXwkHLHJwzzrYhcHgvWMEKQRZ
-   RlHQ2yNCcS43pRlVN8tMIlFul9Q6Y9DOZy1WNRpCLNqyjalPxMnxJM6lT
+  t=1762339478; x=1793875478;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=D2OPaV/N+ShGujg/usR9RQSQG6FixJvGWqb+QpPi9Mo=;
+  b=UmElAKMgJ+Uw6+gP0wpAuEutJ9MQUkud1xDmJ0Dp5lQqcXBUXuQmmFTJ
+   p/idRz0VQWjmwl2+28vQ0EZN4Jr1av2sHjU++E80hO5tC9aqwG8ciQr2o
+   YsVixNJ0y6Sz90W4mjyuKeBl+rVNSilD1DvUS9JOST98SA6mWUVEJRmeG
+   5lsvOZIfRSCch77laI/XWxli6HPltNNiWB46Dk3k1uTWgfr/tmcafnQKK
+   APpou0OH52P6tLjJM7X6EtLQpkrOYNFW3Vda8wVB34IDXO7C2XL0W00By
+   +tXHq0LKyHVI6dAf2ghbi2m9Sep0ZgNYvrRna/e6LHVJ4ydHqSYaxryyu
    w==;
-X-CSE-ConnectionGUID: nFA3uAfHSHepTC5aSHaqoA==
-X-CSE-MsgGUID: AfK+miADSlSfaiG9Ypm9bQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="74738820"
+X-CSE-ConnectionGUID: hMx4K+ufQkO8b7z1Qb0gfA==
+X-CSE-MsgGUID: Z50TqMSoTiCfcSzY6ESZWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="67066128"
 X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="74738820"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 01:41:40 -0800
-X-CSE-ConnectionGUID: Bu8yP39LREG8PeNXmrKQIg==
-X-CSE-MsgGUID: dlRRebcJTSGLmClil0Aagg==
+   d="scan'208";a="67066128"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:44:37 -0800
+X-CSE-ConnectionGUID: mTPu+iCOT5KTheZ9VmPT4w==
+X-CSE-MsgGUID: lGLGeO5rRAC2khOwzosehQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="186697438"
+   d="scan'208";a="187111770"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.252])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 01:41:38 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:44:35 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 5 Nov 2025 11:41:34 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: viro@zeniv.linux.org.uk, brauner@kernel.org, 
-    Hans de Goede <hansg@kernel.org>, jack@suse.cz, 
-    linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 4/4] platform/x86: wmi: Move WMI core code into a separate
- directory
-In-Reply-To: <20251104204540.13931-5-W_Armin@gmx.de>
-Message-ID: <7d0b6d80-4061-9eb5-5aa3-6a37bac3e2b1@linux.intel.com>
-References: <20251104204540.13931-1-W_Armin@gmx.de> <20251104204540.13931-5-W_Armin@gmx.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 05 Nov 2025 12:37:05 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.18-3
+Message-ID: <pdx86-pr-20251105123705-1390915696@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Nov 2025, Armin Wolf wrote:
+Hi Linus,
 
-> Move the WMI core code into a separate directory to prepare for
-> future additions to the WMI driver.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  Documentation/driver-api/wmi.rst           |  2 +-
->  MAINTAINERS                                |  2 +-
->  drivers/platform/x86/Kconfig               | 30 +------------------
->  drivers/platform/x86/Makefile              |  2 +-
->  drivers/platform/x86/wmi/Kconfig           | 34 ++++++++++++++++++++++
->  drivers/platform/x86/wmi/Makefile          |  8 +++++
->  drivers/platform/x86/{wmi.c => wmi/core.c} |  0
->  7 files changed, 46 insertions(+), 32 deletions(-)
->  create mode 100644 drivers/platform/x86/wmi/Kconfig
->  create mode 100644 drivers/platform/x86/wmi/Makefile
->  rename drivers/platform/x86/{wmi.c => wmi/core.c} (100%)
-> 
-> diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/wmi.rst
-> index 4e8dbdb1fc67..66f0dda153b0 100644
-> --- a/Documentation/driver-api/wmi.rst
-> +++ b/Documentation/driver-api/wmi.rst
-> @@ -16,5 +16,5 @@ which will be bound to compatible WMI devices by the driver core.
->  .. kernel-doc:: include/linux/wmi.h
->     :internal:
->  
-> -.. kernel-doc:: drivers/platform/x86/wmi.c
-> +.. kernel-doc:: drivers/platform/x86/wmi/core.c
->     :export:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 46126ce2f968..abc0ff6769a8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -402,7 +402,7 @@ S:	Maintained
->  F:	Documentation/ABI/testing/sysfs-bus-wmi
->  F:	Documentation/driver-api/wmi.rst
->  F:	Documentation/wmi/
-> -F:	drivers/platform/x86/wmi.c
-> +F:	drivers/platform/x86/wmi/
->  F:	include/uapi/linux/wmi.h
->  
->  ACRN HYPERVISOR SERVICE MODULE
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 46e62feeda3c..ef59425580f3 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -16,35 +16,7 @@ menuconfig X86_PLATFORM_DEVICES
->  
->  if X86_PLATFORM_DEVICES
->  
-> -config ACPI_WMI
-> -	tristate "WMI"
-> -	depends on ACPI
-> -	help
-> -	  This driver adds support for the ACPI-WMI (Windows Management
-> -	  Instrumentation) mapper device (PNP0C14) found on some systems.
-> -
-> -	  ACPI-WMI is a proprietary extension to ACPI to expose parts of the
-> -	  ACPI firmware to userspace - this is done through various vendor
-> -	  defined methods and data blocks in a PNP0C14 device, which are then
-> -	  made available for userspace to call.
-> -
-> -	  The implementation of this in Linux currently only exposes this to
-> -	  other kernel space drivers.
-> -
-> -	  This driver is a required dependency to build the firmware specific
-> -	  drivers needed on many machines, including Acer and HP laptops.
-> -
-> -	  It is safe to enable this driver even if your DSDT doesn't define
-> -	  any ACPI-WMI devices.
-> -
-> -config ACPI_WMI_LEGACY_DEVICE_NAMES
-> -	bool "Use legacy WMI device naming scheme"
-> -	depends on ACPI_WMI
-> -	help
-> -	  Say Y here to force the WMI driver core to use the old WMI device naming
-> -	  scheme when creating WMI devices. Doing so might be necessary for some
-> -	  userspace applications but will cause the registration of WMI devices with
-> -	  the same GUID to fail in some corner cases.
-> +source "drivers/platform/x86/wmi/Kconfig"
->  
->  config WMI_BMOF
->  	tristate "WMI embedded Binary MOF driver"
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index c7db2a88c11a..c9f6e9275af8 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -5,7 +5,7 @@
->  #
->  
->  # Windows Management Interface
-> -obj-$(CONFIG_ACPI_WMI)		+= wmi.o
-> +obj-y				+= wmi/
+Here is a platform-drivers-x86 fixes PR for v6.18.
 
-Is there a good reason for the first part of the change?
-That is, do you anticipate need for something outside of what this would 
-cover:
+Fixes and New Hotkey Support
 
-obj-$(CONFIG_ACPI_WMI)               += wmi/
+- input + dell-wmi-base: Electronic privacy screen on/off hotkey support
 
-Other than that, this series looks fine.
+- int3472: Fix unregister double free
 
--- 
- i.
+- wireless-hotkey: Fix Kconfig typo
+
+Regards, i.
 
 
->  obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
->  
->  # WMI drivers
-> diff --git a/drivers/platform/x86/wmi/Kconfig b/drivers/platform/x86/wmi/Kconfig
-> new file mode 100644
-> index 000000000000..9e7c84876ef5
-> --- /dev/null
-> +++ b/drivers/platform/x86/wmi/Kconfig
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# ACPI WMI Core
-> +#
-> +
-> +config ACPI_WMI
-> +	tristate "WMI"
-> +	depends on ACPI
-> +	help
-> +	  This driver adds support for the ACPI-WMI (Windows Management
-> +	  Instrumentation) mapper device (PNP0C14) found on some systems.
-> +
-> +	  ACPI-WMI is a proprietary extension to ACPI to expose parts of the
-> +	  ACPI firmware to userspace - this is done through various vendor
-> +	  defined methods and data blocks in a PNP0C14 device, which are then
-> +	  made available for userspace to call.
-> +
-> +	  The implementation of this in Linux currently only exposes this to
-> +	  other kernel space drivers.
-> +
-> +	  This driver is a required dependency to build the firmware specific
-> +	  drivers needed on many machines, including Acer and HP laptops.
-> +
-> +	  It is safe to enable this driver even if your DSDT doesn't define
-> +	  any ACPI-WMI devices.
-> +
-> +config ACPI_WMI_LEGACY_DEVICE_NAMES
-> +	bool "Use legacy WMI device naming scheme"
-> +	depends on ACPI_WMI
-> +	help
-> +	  Say Y here to force the WMI driver core to use the old WMI device naming
-> +	  scheme when creating WMI devices. Doing so might be necessary for some
-> +	  userspace applications but will cause the registration of WMI devices with
-> +	  the same GUID to fail in some corner cases.
-> diff --git a/drivers/platform/x86/wmi/Makefile b/drivers/platform/x86/wmi/Makefile
-> new file mode 100644
-> index 000000000000..71b702936b59
-> --- /dev/null
-> +++ b/drivers/platform/x86/wmi/Makefile
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for linux/drivers/platform/x86/wmi
-> +# ACPI WMI core
-> +#
-> +
-> +wmi-y			:= core.o
-> +obj-$(CONFIG_ACPI_WMI)	+= wmi.o
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi/core.c
-> similarity index 100%
-> rename from drivers/platform/x86/wmi.c
-> rename to drivers/platform/x86/wmi/core.c
-> 
+The following changes since commit 34cbd6e07fddf36e186c8bf26a456fb7f50af44e:
+
+  platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530 (2025-10-15 11:22:35 +0300)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-3
+
+for you to fetch changes up to bd34bf518a5ffeb8eb7c8b9907ba97b606166f7b:
+
+  platform: x86: Kconfig: fix minor typo in help for WIRELESS_HOTKEY (2025-10-28 20:13:21 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.18-3
+
+Fixes and New Hotkey Support
+
+- input + dell-wmi-base: Electronic privacy screen on/off hotkey support
+
+- int3472: Fix unregister double free
+
+- wireless-hotkey: Fix Kconfig typo
+
+The following is an automated shortlog grouped by driver:
+
+dell-wmi-base:
+ -  Handle electronic privacy screen on/off events
+
+Input:
+ -  Add keycodes for electronic privacy screen on/off hotkeys
+
+int3472:
+ -  Fix double free of GPIO device during unregister
+
+MAINTAINERS:
+ -  Update int3472 maintainers
+
+x86: Kconfig:
+ -  fix minor typo in help for WIRELESS_HOTKEY
+
+----------------------------------------------------------------
+Hans de Goede (2):
+      Input: Add keycodes for electronic privacy screen on/off hotkeys
+      platform/x86: dell-wmi-base: Handle electronic privacy screen on/off events
+
+Lazar Aleksic (1):
+      platform: x86: Kconfig: fix minor typo in help for WIRELESS_HOTKEY
+
+Qiu Wenbo (1):
+      platform/x86: int3472: Fix double free of GPIO device during unregister
+
+Sakari Ailus (1):
+      MAINTAINERS: Update int3472 maintainers
+
+ MAINTAINERS                                            |  3 ++-
+ drivers/platform/x86/Kconfig                           |  2 +-
+ drivers/platform/x86/dell/dell-wmi-base.c              | 12 ++++++++++++
+ drivers/platform/x86/intel/int3472/clk_and_regulator.c |  5 +----
+ include/linux/platform_data/x86/int3472.h              |  1 -
+ include/uapi/linux/input-event-codes.h                 | 12 ++++++++++++
+ 6 files changed, 28 insertions(+), 7 deletions(-)
