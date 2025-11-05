@@ -1,63 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC37F33E348;
-	Wed,  5 Nov 2025 19:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C95325482
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Nov 2025 20:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762371225; cv=none; b=fj05C2x9b7KW5//mHubPO7E70/VkIjbRlDOU26480wLLfQmMEOYuDwZvg/a2czuV+D1MzTEpwb4O6lQE/UtxcTJwxXeh4idAbQ9HTIqSwvdn4GVZ+dASTRtb/fqycjk7u6gnQ2jqRoj5iDrq9PCgEXVOUo+5CNfKbI8dnSlFJgA=
+	t=1762372856; cv=none; b=EBgkF1GZoRxt41EUFsO+xGWLHge6eaUuOrUKwXCgRt68j5NKNgjNK1r9qa+EIGSN1GQHzHraZ+qv0Y5W8Uh3TJWeqnTl7Mj/sCrPDe2F6RKNqUWS67QjCSU+AfFx6KDInRR7O6/6iSRob49adqotTWFJ2E6yYarTJ558bdfM6Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762371225; c=relaxed/simple;
-	bh=o+ehvjx6xMazLwaTTEpM60bcjrwiknNDf+ZNdwbSMCc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jpmYkkg1GdcKZqWm+otJOc9dv7SqsvlMvAje8wGpKIXuzIC9dPRztSpry9wpc5dCnx1C6ix2jnUDc1ZVBk5gbPnBlJrjlxRGoYJUKwIzkho6CzjJhgMvJvYcunzkY1bZNpx0DSvi4GqjaZOcsuM3U1K2vlYG9E5AEtZMobXekAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jri2REDU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762372856; c=relaxed/simple;
+	bh=b78/d9dJgvMm9uyR4WmL44r99JuGz7vOwPfLn4HPwb4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rhA/vMGhmPhoM2NM8+FuQaLZGo7rlQ9u3bE9etNOtOv8q/FBeOchc4Opk2hT2bjATde/Z0um1T1qrC4TfnV9tYVlGM1/GAqdkFJS9+5LH06QQy82VC/Lb2eJbDUT/uTmK8eySqOf+tUv81BZhsAVc2Na+2uDHKhuVOGFaN6x5iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBgwonGc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jri2REDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC69C4CEF5;
-	Wed,  5 Nov 2025 19:33:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBgwonGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19A77C116B1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Nov 2025 20:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762371224;
-	bh=o+ehvjx6xMazLwaTTEpM60bcjrwiknNDf+ZNdwbSMCc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Jri2REDU3KCqTbj/x4IPG4xvhRKuuavBJOqlTL/IXc6HUeVL5j2TNvQyG5ezbMT39
-	 40T+5nl7jqMfXb22gavMH7dmszvgA4FhqH6rNoJhxtrzYWKviwzZHz628LLeI+55Ll
-	 dKULsK1sQBDHx8urd3b+Qcl4cZpuZfDpvrnSUR4d2csoeQTwQ3FpnZjZTyRSz7b6np
-	 EpnzB6lOVMAQZcoJIa4SyrkwRqZbdOdC29uYgQBuGLC0xu5NlmRbeC+0N64XcoGEpM
-	 h2aNqD6VOXARzNuZamv5GfXNeve134MAgUA0MahsHIQTeiRl6TwXtVKqVSK1pQmEaZ
-	 xsOj7qNIOTJ1A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DA4380AADC;
-	Wed,  5 Nov 2025 19:33:19 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.18-3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20251105123705-1390915696@linux.intel.com>
-References: <pdx86-pr-20251105123705-1390915696@linux.intel.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20251105123705-1390915696@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-3
-X-PR-Tracked-Commit-Id: bd34bf518a5ffeb8eb7c8b9907ba97b606166f7b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5624d4c3781673da84e6144c359803ca31b66214
-Message-Id: <176237119793.3730612.10491389502619948857.pr-tracker-bot@kernel.org>
-Date: Wed, 05 Nov 2025 19:33:17 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+	s=k20201202; t=1762372856;
+	bh=b78/d9dJgvMm9uyR4WmL44r99JuGz7vOwPfLn4HPwb4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=JBgwonGcdxnfbP3Gv6nJJOpRa2DHABUdcJsXJTkFKvlLu/l6Rikc82/OkWUNYfMmF
+	 kIr1R1DZFQPX3/gxWPjayPMn2t2ztj++TslJowOL8a7zGUeiRW6H6CmW1EfcqlKtis
+	 hTKtYxqOybKnTjuLoLdvw0/THHNWbRDSlIUTun0OazZ64yLNHi4N86q9MGLfWY1dJ5
+	 nwKVhLXktJmCQLht3BYh/IoyOOP8Mzc8tT3CElFqyDhgU/K8sl+6BImb60TtzZyeoC
+	 S5cfNzEg62gykImCr3d1vcVUgNzZPeR62yC0ItKDcodKi1b5gKCC9xYOHu5ESyMyO5
+	 8H5jY9PQi5XAg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 13EC3C41613; Wed,  5 Nov 2025 20:00:56 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219904] pc speaker not working (just pop's/click's) on intel
+ chipsets gen 6, 7 and probably more
+Date: Wed, 05 Nov 2025 20:00:55 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: tobias.diendorfer@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219904-215701-rnoEVOsauc@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219904-215701@https.bugzilla.kernel.org/>
+References: <bug-219904-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-The pull request you sent on Wed, 05 Nov 2025 12:37:05 +0200:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219904
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-3
+--- Comment #12 from popy (tobias.diendorfer@gmail.com) ---
+Just for info, they released an F35 BIOS for the "H610i DDR4" board.
+I flashed it and the issue is the same.
+Up until now, no answer on my ticket on thair esupport page.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5624d4c3781673da84e6144c359803ca31b66214
+--=20
+You may reply to this email to add a comment.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+You are receiving this mail because:
+You are watching the assignee of the bug.=
