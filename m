@@ -1,135 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839CE306B00;
-	Wed,  5 Nov 2025 10:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D767A2EC08E;
+	Wed,  5 Nov 2025 11:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762339481; cv=none; b=JbW37Mb9adnmI9aHdEbeba8V19Rq2qZhrIGFgwEmNZTV0IX5OrWXORs85gZDTT4SyxnnazkGrOAeb4Y4i26X7RpkX8RvdifobshiJwu8CetL4nf790Xxb7QGx/DjIupE+bp9ijWNMWlM72/TKY1JrPSo+4geQaox1eoLKh7WtHI=
+	t=1762341224; cv=none; b=bof2HkEhxCNK6bRYIQEYqU26CWNb5DNIP5ooRPymglt8zE/d22O0Xfcfl4ECH802XojVU0h6uN2qhNHMaXsdVFWhESq0HdYIjOqfBPOqHVKD6+Kd9PyDfihJCjC1bSXJnmGx+9Z4s+/Aa9GlMXeIfwl2y5IgVFez+CrdGF2yx40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762339481; c=relaxed/simple;
-	bh=D2OPaV/N+ShGujg/usR9RQSQG6FixJvGWqb+QpPi9Mo=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=THAd/yVsl84+wqAQ+AMqBFw0ffhiGNKi75fihndUVZC4G5OqpHvv55JkcyY4vtwQoI5NZm25uEyn+Xbj8ohi6IlnZ8RrwcKtlV4LW62XQZP7AtPwAoZeQB6yO/DYAFlIJwumGQVjnwqTm2M7fCOJ6J8I1dOJ8zXnooLplg6C95I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UmElAKMg; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1762341224; c=relaxed/simple;
+	bh=2aGosNtczcNohEjXFwGjxLifkatvaMBrclLO64v3Xbw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AB6tUUO/jqZUPWMt260u5GBZ/n6ZoZNqOW8BH/cwaIaiW6j2e0oqU1iFWcJ7joc57eXoDXIp41RFzynRKik0P7tPCD0wXAOoDW9onjA5lFR7btYELdy8/nSfhkeCIECmCFJDEaJmZUwl7e+/XLGp3Secv0x3fpHbVyRj178m9Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G66uxeWm; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UmElAKMg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G66uxeWm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762339478; x=1793875478;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=D2OPaV/N+ShGujg/usR9RQSQG6FixJvGWqb+QpPi9Mo=;
-  b=UmElAKMgJ+Uw6+gP0wpAuEutJ9MQUkud1xDmJ0Dp5lQqcXBUXuQmmFTJ
-   p/idRz0VQWjmwl2+28vQ0EZN4Jr1av2sHjU++E80hO5tC9aqwG8ciQr2o
-   YsVixNJ0y6Sz90W4mjyuKeBl+rVNSilD1DvUS9JOST98SA6mWUVEJRmeG
-   5lsvOZIfRSCch77laI/XWxli6HPltNNiWB46Dk3k1uTWgfr/tmcafnQKK
-   APpou0OH52P6tLjJM7X6EtLQpkrOYNFW3Vda8wVB34IDXO7C2XL0W00By
-   +tXHq0LKyHVI6dAf2ghbi2m9Sep0ZgNYvrRna/e6LHVJ4ydHqSYaxryyu
-   w==;
-X-CSE-ConnectionGUID: hMx4K+ufQkO8b7z1Qb0gfA==
-X-CSE-MsgGUID: Z50TqMSoTiCfcSzY6ESZWw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="67066128"
+  t=1762341222; x=1793877222;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2aGosNtczcNohEjXFwGjxLifkatvaMBrclLO64v3Xbw=;
+  b=G66uxeWmRTjEBcuwj8zsFLWJmGCzFP3AyJlQZLyUlm9gGzGJs1ig4mvA
+   t69dgchDGQutvw7h2KNwn5eCr4P/SnlyMAcRuN7vbHsZWWd7T35qMhMlw
+   tBcOYXh50iZ8Ly8f97fAveJn16rULIMZSWas5FhQBDsykTv8EPchX9gTM
+   AHtYv42ynLf78Ec9O0UPJvSLIiS8c4YnjPDX1RW5A4JKVl0CslhYRmiC6
+   yI6a+PvKIMlhUx0dbvkHPMt+uDtyEVolBL3jdQ5xKB9/KwQjkKSl0O6Qg
+   dzTbPo7b9IPsDEAUSYRvTKW/acGOU3MJ01o7Sd1Ge6RxjLkF52uzr9ZnZ
+   g==;
+X-CSE-ConnectionGUID: n0dsXC6BR2iV3gvjbwROGA==
+X-CSE-MsgGUID: VvQmtkG+Ts6i9ngC8qss0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="87080984"
 X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="67066128"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:44:37 -0800
-X-CSE-ConnectionGUID: mTPu+iCOT5KTheZ9VmPT4w==
-X-CSE-MsgGUID: lGLGeO5rRAC2khOwzosehQ==
+   d="scan'208";a="87080984"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:13:41 -0800
+X-CSE-ConnectionGUID: ESxCjw/iRtqvZNdqiXk8nQ==
+X-CSE-MsgGUID: mqWzchRRRr6i6Oo6ivB/ug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="187111770"
+   d="scan'208";a="186677694"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.252])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:44:35 -0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:13:37 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 05 Nov 2025 12:37:05 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.18-3
-Message-ID: <pdx86-pr-20251105123705-1390915696@linux.intel.com>
+Date: Wed, 5 Nov 2025 13:13:33 +0200 (EET)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Alex Deucher <alexander.deucher@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+    amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Sanket Goswami <Sanket.Goswami@amd.com>
+Subject: Re: [PATCH v1 1/3] platform/x86/amd/pmc: Add support for Van Gogh
+ SoC
+In-Reply-To: <CAGwozwGLfcYdpetwTk=QH+k29u8SdroFxfkxb-KbAXh36sr1XQ@mail.gmail.com>
+Message-ID: <100c2f25-d1f4-5b82-4a76-a08394ece471@linux.intel.com>
+References: <20251024152152.3981721-1-lkml@antheas.dev> <20251024152152.3981721-2-lkml@antheas.dev> <3792db59-7dc1-4e34-9436-84df4b6c3e10@amd.com> <CAGwozwFTDD2QrHy37axhanwQYv6ty9K_hfhxS05djKpv8HfY6g@mail.gmail.com> <2684d3ab-d7cf-4eab-acd4-91bdd5debb6b@amd.com>
+ <058eda7c-ab93-40a5-b387-54f7a18f3922@amd.com> <13fd3b12-03a0-457f-a5da-fe018b032211@amd.com> <CAGwozwGLfcYdpetwTk=QH+k29u8SdroFxfkxb-KbAXh36sr1XQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Linus,
+On Mon, 27 Oct 2025, Antheas Kapenekakis wrote:
 
-Here is a platform-drivers-x86 fixes PR for v6.18.
+> On Mon, 27 Oct 2025 at 09:36, Shyam Sundar S K <Shyam-sundar.S-k@amd.com> wrote:
+> >
+> >
+> >
+> > On 10/27/2025 13:52, Shyam Sundar S K wrote:
+> > >
+> > >
+> > > On 10/24/2025 22:02, Mario Limonciello wrote:
+> > >>
+> > >>
+> > >> On 10/24/2025 11:08 AM, Antheas Kapenekakis wrote:
+> > >>> On Fri, 24 Oct 2025 at 17:43, Mario Limonciello
+> > >>> <mario.limonciello@amd.com> wrote:
+> > >>>>
+> > >>>>
+> > >>>>
+> > >>>> On 10/24/2025 10:21 AM, Antheas Kapenekakis wrote:
+> > >>>>> The ROG Xbox Ally (non-X) SoC features a similar architecture to the
+> > >>>>> Steam Deck. While the Steam Deck supports S3 (s2idle causes a crash),
+> > >>>>> this support was dropped by the Xbox Ally which only S0ix suspend.
+> > >>>>>
+> > >>>>> Since the handler is missing here, this causes the device to not
+> > >>>>> suspend
+> > >>>>> and the AMD GPU driver to crash while trying to resume afterwards
+> > >>>>> due to
+> > >>>>> a power hang.
+> > >>>>>
+> > >>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
+> > >>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > >>>>> ---
+> > >>>>>    drivers/platform/x86/amd/pmc/pmc.c | 3 +++
+> > >>>>>    drivers/platform/x86/amd/pmc/pmc.h | 1 +
+> > >>>>>    2 files changed, 4 insertions(+)
+> > >>>>>
+> > >>>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/
+> > >>>>> platform/x86/amd/pmc/pmc.c
+> > >>>>> index bd318fd02ccf..cae3fcafd4d7 100644
+> > >>>>> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> > >>>>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> > >>>>> @@ -106,6 +106,7 @@ static void amd_pmc_get_ip_info(struct
+> > >>>>> amd_pmc_dev *dev)
+> > >>>>>        switch (dev->cpu_id) {
+> > >>>>>        case AMD_CPU_ID_PCO:
+> > >>>>>        case AMD_CPU_ID_RN:
+> > >>>>> +     case AMD_CPU_ID_VG:
+> > >>>>>        case AMD_CPU_ID_YC:
+> > >>>>>        case AMD_CPU_ID_CB:
+> > >>>>>                dev->num_ips = 12;
+> > >>>>> @@ -517,6 +518,7 @@ static int amd_pmc_get_os_hint(struct
+> > >>>>> amd_pmc_dev *dev)
+> > >>>>>        case AMD_CPU_ID_PCO:
+> > >>>>>                return MSG_OS_HINT_PCO;
+> > >>>>>        case AMD_CPU_ID_RN:
+> > >>>>> +     case AMD_CPU_ID_VG:
+> > >>>>>        case AMD_CPU_ID_YC:
+> > >>>>>        case AMD_CPU_ID_CB:
+> > >>>>>        case AMD_CPU_ID_PS:
+> > >>>>> @@ -717,6 +719,7 @@ static const struct pci_device_id
+> > >>>>> pmc_pci_ids[] = {
+> > >>>>>        { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
+> > >>>>>        { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
+> > >>>>>        { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SHP) },
+> > >>>>> +     { PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
+> > >>>>>        { PCI_DEVICE(PCI_VENDOR_ID_AMD,
+> > >>>>> PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
+> > >>>>>        { PCI_DEVICE(PCI_VENDOR_ID_AMD,
+> > >>>>> PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
+> > >>>>>        { }
+> > >>>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/
+> > >>>>> platform/x86/amd/pmc/pmc.h
+> > >>>>> index 62f3e51020fd..fe3f53eb5955 100644
+> > >>>>> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> > >>>>> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> > >>>>> @@ -156,6 +156,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+> > >>>>>    #define AMD_CPU_ID_RN                       0x1630
+> > >>>>>    #define AMD_CPU_ID_PCO                      AMD_CPU_ID_RV
+> > >>>>>    #define AMD_CPU_ID_CZN                      AMD_CPU_ID_RN
+> > >>>>> +#define AMD_CPU_ID_VG                        0x1645
+> > >>>>
+> > >>>> Can you see if 0xF14 gives you a reasonable value for the idle mask if
+> > >>>> you add it to amd_pmc_idlemask_read()?  Make a new define for it
+> > >>>> though,
+> > >>>> it shouldn't use the same define as 0x1a platforms.
+> > >>>
+> > >>> It does not work. Reports 0. I also tested the other ones, but the
+> > >>> 0x1a was the same as you said. All report 0x0.
+> > >>
+> > >> It's possible the platform doesn't report an idle mask.
+> > >>
+> > >> 0xF14 is where I would have expected it to report.
+> > >>
+> > >> Shyam - can you look into this to see if it's in a different place
+> > >> than 0xF14 for Van Gogh?
+> > >
+> > > Van Gogh is before Cezzane? I am bit surprised that pmc is getting
+> > > loaded there.
+> > >
+> > > Antheas - what is the output of
+> > >
+> > > #lspci -s 00:00.0
+> >
+> > OK. I get it from the diff.
+> >
+> > +#define AMD_CPU_ID_VG                        0x1645
+> >
+> > S0 its 0x1645 that indicates SoC is 17h family and 90h model.
+> >
+> > What is the PMFW version running on your system?
+> > amd_pmc_get_smu_version() tells you that information.
+> 
+> cat /sys/devices/platform/AMDI0005:00/smu_fw_version
+> 63.18.0
+> cat /sys/devices/platform/AMDI0005:00/smu_program
+> 7
+> 
+> > Can you see if you put the scratch information same as Cezzane and if
+> > that works? i.e.
+> >
+> > AMD_PMC_SCRATCH_REG_CZN(0x94) instead of AMD_PMC_SCRATCH_REG_1AH(0xF14)
+> 
+> I tried all idle masks and they return 0
 
-Fixes and New Hotkey Support
+Hi Shyam & Antheas,
 
-- input + dell-wmi-base: Electronic privacy screen on/off hotkey support
+This discussion seems to have died down without clear indication what's 
+the best course of action here. Should I still wait?
 
-- int3472: Fix unregister double free
-
-- wireless-hotkey: Fix Kconfig typo
-
-Regards, i.
+There's no particular hurry from my side but it seems Mario gave his 
+Reviewed-by already and there hasn't been any follow-ups between you two, 
+I'm left a bit unsure how to interpret that.
 
 
-The following changes since commit 34cbd6e07fddf36e186c8bf26a456fb7f50af44e:
+In addition, is the patch 3/3 entire independent from these two PMC ones?
+(If yes, I don't know why they were submitted as a series as that just 
+manages to add a little bit of uncertainty when combined into a series.)
 
-  platform/x86: alienware-wmi-wmax: Add AWCC support to Dell G15 5530 (2025-10-15 11:22:35 +0300)
+Thanks in advance,
 
-are available in the Git repository at:
+--
+ i.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-3
+> Antheas
+> 
+> > Thanks,
+> > Shyam
+> >
+> >
+> > >
+> > > 0xF14 index is meant for 1Ah (i.e. Strix and above)
+> > >
+> > >>
+> > >>>
+> > >>> Any idea why the OS hint only works 90% of the time?
+> > >
+> > > What is the output of amd_pmc_dump_registers() when 10% of the time
+> > > when the OS_HINT is not working?
+> > >
+> > > What I can surmise is, though pmc driver is sending the hint PMFW is
+> > > not taking any action (since the support in FW is missing)
+> > >
+> > >>
+> > >> If we get the idle mask reporting working we would have a better idea
+> > >> if that is what is reported wrong.
+> > >>
+> > >
+> > > IIRC, The concept of idlemask came only after cezzane that too after a
+> > > certain PMFW version. So I am not sure if idlemask actually exists.
+> > >
+> > >
+> > >> If I was to guess though; maybe GFX is still active.
+> > >>
+> > >> Depending upon what's going wrong smu_fw_info might have some more
+> > >> information too.
+> > >
+> > > That's a good point to try it out.
+> > >
+> > > Thanks,
+> > > Shyam
+> > >
+> >
+> >
+> 
+> 
 
-for you to fetch changes up to bd34bf518a5ffeb8eb7c8b9907ba97b606166f7b:
+-- 
+ i.
 
-  platform: x86: Kconfig: fix minor typo in help for WIRELESS_HOTKEY (2025-10-28 20:13:21 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.18-3
-
-Fixes and New Hotkey Support
-
-- input + dell-wmi-base: Electronic privacy screen on/off hotkey support
-
-- int3472: Fix unregister double free
-
-- wireless-hotkey: Fix Kconfig typo
-
-The following is an automated shortlog grouped by driver:
-
-dell-wmi-base:
- -  Handle electronic privacy screen on/off events
-
-Input:
- -  Add keycodes for electronic privacy screen on/off hotkeys
-
-int3472:
- -  Fix double free of GPIO device during unregister
-
-MAINTAINERS:
- -  Update int3472 maintainers
-
-x86: Kconfig:
- -  fix minor typo in help for WIRELESS_HOTKEY
-
-----------------------------------------------------------------
-Hans de Goede (2):
-      Input: Add keycodes for electronic privacy screen on/off hotkeys
-      platform/x86: dell-wmi-base: Handle electronic privacy screen on/off events
-
-Lazar Aleksic (1):
-      platform: x86: Kconfig: fix minor typo in help for WIRELESS_HOTKEY
-
-Qiu Wenbo (1):
-      platform/x86: int3472: Fix double free of GPIO device during unregister
-
-Sakari Ailus (1):
-      MAINTAINERS: Update int3472 maintainers
-
- MAINTAINERS                                            |  3 ++-
- drivers/platform/x86/Kconfig                           |  2 +-
- drivers/platform/x86/dell/dell-wmi-base.c              | 12 ++++++++++++
- drivers/platform/x86/intel/int3472/clk_and_regulator.c |  5 +----
- include/linux/platform_data/x86/int3472.h              |  1 -
- include/uapi/linux/input-event-codes.h                 | 12 ++++++++++++
- 6 files changed, 28 insertions(+), 7 deletions(-)
