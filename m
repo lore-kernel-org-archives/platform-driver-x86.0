@@ -1,158 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1551F8723;
-	Wed,  5 Nov 2025 08:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9922ED87F;
+	Wed,  5 Nov 2025 08:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762330833; cv=none; b=N55aHgL9kbpVVwPMTwzmN+3jnho/SPnh8DxkXM11oykmGCTyTmPiUn+1MC+qzbFcaMhw8DMk5mMKQQY5Cal0+OmoBGKhsODMyQaRg9aNuA01nuUqXJ4DZQrLK2CznqDOex8U0IRWkXetiN/D2nDgefhjy0C0l860G+vrLX/7qXQ=
+	t=1762333152; cv=none; b=GbpPQli4s5uhVFznqmc1q54jh0CI8yHpekbbSbNPoe5foUczU8roOvWr+ovC7aLAymQPn/QgAioWMeHYp53EWBp7UtQSMLVAROJ7KyjkuTsyHHPfeMQhY7VGKNh+yYcsGdAoUvxU4JVibXmb4UNiAHD2/9JbBHoX8luPeH+h7A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762330833; c=relaxed/simple;
-	bh=0M+R2+DmnukaFATQy9kB0vDjA0hW6zSfLQJSFybEGrg=;
+	s=arc-20240116; t=1762333152; c=relaxed/simple;
+	bh=BlzFLQmpEqDuYR1gwH2rICRuzj+79Eg0r5tvJ5quCPs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tN1l32Ylm1/8gHV+CT4QGw7/1uUqa8saulpDRb9FsdUXoVXIrgL9uZSa8IR5wF/OkOGblKqRTQ2bdab4ILKCR5/3Z8jl05hLf6LDXZtQNb6idXpBVVhfyDZgpBJGs3U8sdG1r7+9sXTrOhkJ9OBqb2HAftfhFbx2Vj08Fw9V42Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Obs/NTMD; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=ngnjROuCPuaBqIrmI24Us09L4pjn6UjJkNkVZ0phHWt2Tw/GPGVHWF/GVkiCNdmb9UCf0JPmpzPCmHJa5CziYCrTfZ7W1qVarFca6rbpzBeCiIC1LafMBbyd5Hr+WEvivTqwrQAEzM9OLZ3+DXj4M6Vn/rJGkcUvUqmxnP3ACmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kTqpbmI9; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Obs/NTMD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTqpbmI9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762330832; x=1793866832;
+  t=1762333151; x=1793869151;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=0M+R2+DmnukaFATQy9kB0vDjA0hW6zSfLQJSFybEGrg=;
-  b=Obs/NTMD+LhYAHm9BnT0igdMMbgCRgK3UPmeUjg6thxTLcWcntlVq/Xl
-   Zv0kuOukkXg8kXId06E4BDElSZhYZvYREHF86qBbJtz0h48jt1mKdz6tq
-   LDJDIlIz4pa1xcDFOnHiopQfsG/ft5WVWIlNJQcmr1ICBwkl/4kvye+Ef
-   tab9Qsfq/ANlEObW3R5QNB0IprKHv3L8xUQwiSV7UiH37Ut3/N5sFqVUx
-   BclP4ohhrkudmIfEOMY+0Sl/Tk9N5/6NuD6XYO6R5pp54isJ3dciNOiLu
-   BRJsPTrCc8peWeOUIs06CGr/INHPaM0UG+g96fQb816slwz0z3I2PHHAP
-   A==;
-X-CSE-ConnectionGUID: /4PvmQGyR9Wcjv203zZrPw==
-X-CSE-MsgGUID: bISFOcOUScq0G50W2oteUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="75787420"
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="75787420"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:20:31 -0800
-X-CSE-ConnectionGUID: 4jG+jyGmS8SbnIz1fUaBOQ==
-X-CSE-MsgGUID: 7TBVQ5uSRPqQAMaFhontoQ==
+  bh=BlzFLQmpEqDuYR1gwH2rICRuzj+79Eg0r5tvJ5quCPs=;
+  b=kTqpbmI9Yo1vA24RR2KJhjk/iK8rt8ladgRb/pR/ntB99XqoD6BEAlMu
+   ffpqrgOsrPz+ntM+wv5yw2uiwXU82R9N/yvgv8TqLKQtvAgs9jm7ArpP3
+   iYppbr24UI6Zgy34udwipJORltuKr6O3WO65HD9UuA8px4krKCbnoeCPh
+   jS6AhOCQ37ySTEs+dEBz2371I/83+4ZDJAQv1mSw3eEymKiG5TC9tXF1N
+   9+33bk/0GIY0Luj4aCvlUGpsNWgZa/aPa1OFPYHuXgVdTGHIihMcMdaFZ
+   stJSxXPVo0FvIeamA6OArUY/1tERQsKou7bfNAV3k9sU4kOACLGX6XnCN
+   g==;
+X-CSE-ConnectionGUID: bJFx9x24QNulKfQB5+A+qg==
+X-CSE-MsgGUID: n2T0rdiNR46bxk9DFJv8oQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="68279517"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="68279517"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:59:10 -0800
+X-CSE-ConnectionGUID: Q9sGarmDTV6ZXf9wOjCpaQ==
+X-CSE-MsgGUID: 2zOkKx1ETBC0SF0T9Ucg1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="187081224"
+   d="scan'208";a="186687662"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.252])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:20:27 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 00:59:07 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 5 Nov 2025 10:20:24 +0200 (EET)
+Date: Wed, 5 Nov 2025 10:59:03 +0200 (EET)
 To: Rong Zhang <i@rong.moe>
-cc: Ike Panhc <ikepanhc@gmail.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+cc: Jelle van der Waa <jelle@vdwaa.nl>, Ike Panhc <ikepanhc@gmail.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
     "Derek J. Clark" <derekjohn.clark@gmail.com>, 
     Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, kernel test robot <lkp@intel.com>, 
-    Julia Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Use str_on_off() helper
-In-Reply-To: <20251031184435.44819-1-i@rong.moe>
-Message-ID: <b533597c-a2ba-4446-70fa-5a88926d5fd3@linux.intel.com>
-References: <20251031184435.44819-1-i@rong.moe>
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] platform/x86: ideapad-laptop: Add charge_types:Fast
+ (Rapid Charge)
+In-Reply-To: <5d1ae6eb34378570ed1f9b62d945c95bda8a5b86.camel@rong.moe>
+Message-ID: <f2885370-f466-6bf2-70d1-e7f3177111db@linux.intel.com>
+References: <20251020192443.33088-1-i@rong.moe>  <dfa70284-04ce-482d-8d79-cc0ee8b4bf6d@vdwaa.nl> <5d1ae6eb34378570ed1f9b62d945c95bda8a5b86.camel@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-322173085-1762330824=:33477"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 3 Nov 2025, Rong Zhang wrote:
 
---8323328-322173085-1762330824=:33477
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Hi Jelle,
+> 
+> On Sun, 2025-11-02 at 17:09 +0100, Jelle van der Waa wrote:
+> > On 10/20/25 21:24, Rong Zhang wrote:
+> > > The GBMD/SBMC interface on IdeaPad/ThinkBook supports Rapid Charge mode
+> > > (charge_types: Fast) in addition to Conservation Mode (charge_types:
+> > > Long_Life).
+> > > 
+> > > This patchset exposes these two modes while carefully maintaining their
+> > > mutually exclusive state, which aligns with the behavior of manufacturer
+> > > utilities on Windows.
+> > > 
+> > > Tested on ThinkBook 14 G7+ ASP.
+> > 
+> > Tested this patch on my Lenovo Ideapad U330p, it now advertises that 
+> > `Fast` is a supported charge_type although my laptop does not seem to 
+> > support it:
+> > 
+> > [root@archlinux jelle]# cat /sys/class/power_supply/BAT1/charge_types
+> > Fast [Standard] Long_Life
+> > [root@archlinux jelle]# echo 'Fast' > 
+> > /sys/class/power_supply/BAT1/charge_types
+> > [root@archlinux jelle]# cat /sys/class/power_supply/BAT1/charge_types
+> > Fast [Standard] Long_Life
+>
+> Ahh, then we need an approach to determine if it is supported on a
+> specific device.
+> 
+> Glancing at the disassembled DSDT.dsl of my device, I found:
+> 
+>    Method (GBMD, 0, NotSerialized)
+>    {
+>    	[...]
+>    	If ((One == QCGS))
+>    	{
+>    		Local0 |= 0x00020000
+>    	}
+>    	[...]
+>    }
+> 
+> BIT(17) of GBMD is 1 on my device. Maybe QCGS means "Quick CharGe
+> Supported?"
+> 
+> With this assumption, I did some random Internet digging. The same bit
+> on other devices is called QKSP ("QuicK charge SuPported?"), SQCG
+> ("Support Quick CharGe?"), or QCBX (see below).
+> 
+>    Method (GBMD, 0, NotSerialized)
+>    {
+>    	[...]
+>    	If ((One == QCBX))
+>    	{
+>    		If ((One == QCHO))
+>    		{
+>    			Local0 |= 0x04
+>    		}
+>    	}
+>    	[...]
+>    	If ((One == QCBX))
+>    	{
+>    		Local0 |= 0x00020000
+>    	}
+>    	[...]
+>    }
+> 
+> https://badland.io/static/acpidump.txt
+> 
+> 0x04 is BIT(2)/GBMD_RAPID_CHARGE_STATE_BIT. With all these pieces of
+> information, I presume BIT(17) of GBMD is what we are searching for.
+> 
+> > I'm wondering if the battery extension API allows to not advertise a 
+> > property if it isn't supported or if it should at least return -EINVAL.
+> 
+> We can achieve this by defining multiple struct power_supply_ext. See
+> drivers/power/supply/cros_charge-control.c.
+> 
+> Could you test the patch below (based on "review-ilpo-next")?
+> 
+> @Ilpo:
+> 
+> This patch series has been merge into your "review-ilpo-next" branch.
+> 
+> Should I reorganize the series and send a [PATCH v2]? Or should I just
+> send the patch below (after adding a commit message, ofc)?
 
-On Sat, 1 Nov 2025, Rong Zhang wrote:
+Hi Rong,
 
-> Use the str_on_off() helper instead of open-coding the same operation.
-> This improves code readability.
->=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@inria.fr>
-> Closes: https://lore.kernel.org/r/202510311551.xjWbHTrm-lkp@intel.com/
-> Suggested-by: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Link: https://lore.kernel.org/r/2bae2ea7-2ef9-0cfa-0c2c-39a7043b2aa5@linu=
-x.intel.com/
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
-> This patch is based on 'review-ilpo-next' of pdx86/platform-drivers-x86,
-> hence depends on my previous patch ("platform/x86: ideapad-laptop:
-> Protect GBMD/SBMC calls with mutex").
-> ---
->  drivers/platform/x86/lenovo/ideapad-laptop.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platf=
-orm/x86/lenovo/ideapad-laptop.c
-> index d2bfaa532020..931a72a2a487 100644
-> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-> @@ -475,25 +475,25 @@ static int debugfs_status_show(struct seq_file *s, =
-void *data)
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
->  =09=09=09seq_printf(s, "Backlight now:  %lu\n", value);
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &value))
-> -=09=09=09seq_printf(s, "BL power value: %s (%lu)\n", value ? "on" : "off=
-", value);
-> +=09=09=09seq_printf(s, "BL power value: %s (%lu)\n", str_on_off(value), =
-value);
+I've dropped those two v1 patches from the review-ilpo-next branch.
 
-This change should also add the include for str_on_off().
+(They are still in for-next but will be gone from there as well on the 
+next review-ilpo-next -> for-next propagation.)
 
---
+So please send the full series with this fixed as v2. You can include the 
+str_on_off() change also within the v2 series.
+
+-- 
  i.
 
-> =20
->  =09=09seq_puts(s, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D\n");
-> =20
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_RF, &value))
-> -=09=09=09seq_printf(s, "Radio status: %s (%lu)\n", value ? "on" : "off",=
- value);
-> +=09=09=09seq_printf(s, "Radio status: %s (%lu)\n", str_on_off(value), va=
-lue);
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_WIFI, &value))
-> -=09=09=09seq_printf(s, "Wifi status:  %s (%lu)\n", value ? "on" : "off",=
- value);
-> +=09=09=09seq_printf(s, "Wifi status:  %s (%lu)\n", str_on_off(value), va=
-lue);
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_BT, &value))
-> -=09=09=09seq_printf(s, "BT status:    %s (%lu)\n", value ? "on" : "off",=
- value);
-> +=09=09=09seq_printf(s, "BT status:    %s (%lu)\n", str_on_off(value), va=
-lue);
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_3G, &value))
-> -=09=09=09seq_printf(s, "3G status:    %s (%lu)\n", value ? "on" : "off",=
- value);
-> +=09=09=09seq_printf(s, "3G status:    %s (%lu)\n", str_on_off(value), va=
-lue);
-> =20
->  =09=09seq_puts(s, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D\n");
-> =20
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value))
-> -=09=09=09seq_printf(s, "Touchpad status: %s (%lu)\n", value ? "on" : "of=
-f", value);
-> +=09=09=09seq_printf(s, "Touchpad status: %s (%lu)\n", str_on_off(value),=
- value);
->  =09=09if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
-> -=09=09=09seq_printf(s, "Camera status:   %s (%lu)\n", value ? "on" : "of=
-f", value);
-> +=09=09=09seq_printf(s, "Camera status:   %s (%lu)\n", str_on_off(value),=
- value);
->  =09}
-> =20
->  =09seq_puts(s, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D\n");
->=20
-> base-commit: ba06b928f05bfd2785260819f6b34b658a04a4e6
->=20
---8323328-322173085-1762330824=:33477--
+> > Greetings,
+> > 
+> > Jelle van der Waa
+> 
+> Thanks,
+> Rong
+> 
+> ---
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 931a72a2a487..b9927493cb93 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -75,6 +75,7 @@ enum {
+>  enum {
+>  	GBMD_RAPID_CHARGE_STATE_BIT = 2,
+>  	GBMD_CONSERVATION_STATE_BIT = 5,
+> +	GBMD_RAPID_CHARGE_SUPPORTED_BIT = 17,
+>  };
+>  
+>  enum {
+> @@ -180,6 +181,7 @@ struct ideapad_private {
+>  	struct ideapad_dytc_priv *dytc;
+>  	struct dentry *debug;
+>  	struct acpi_battery_hook battery_hook;
+> +	const struct power_supply_ext *battery_ext;
+>  	unsigned long cfg;
+>  	unsigned long r_touchpad_val;
+>  	struct {
+> @@ -2119,30 +2121,42 @@ static const enum power_supply_property ideapad_power_supply_props[] = {
+>  	POWER_SUPPLY_PROP_CHARGE_TYPES,
+>  };
+>  
+> -static const struct power_supply_ext ideapad_battery_ext = {
+> -	.name			= "ideapad_laptop",
+> -	.properties		= ideapad_power_supply_props,
+> -	.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),
+> -	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> -				   BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+> -				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
+> -	.get_property		= ideapad_psy_ext_get_prop,
+> -	.set_property		= ideapad_psy_ext_set_prop,
+> -	.property_is_writeable	= ideapad_psy_prop_is_writeable,
+> -};
+> +#define DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(_name, _charge_types)			\
+> +	static const struct power_supply_ext _name = {					\
+> +		.name			= "ideapad_laptop",				\
+> +		.properties		= ideapad_power_supply_props,			\
+> +		.num_properties		= ARRAY_SIZE(ideapad_power_supply_props),	\
+> +		.charge_types		= _charge_types,				\
+> +		.get_property		= ideapad_psy_ext_get_prop,			\
+> +		.set_property		= ideapad_psy_ext_set_prop,			\
+> +		.property_is_writeable	= ideapad_psy_prop_is_writeable,		\
+> +	}
+> +
+> +DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v1,
+> +	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +);
+> +
+> +DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v2,
+> +	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+> +	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +);
+>  
+>  static int ideapad_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+>  {
+>  	struct ideapad_private *priv = container_of(hook, struct ideapad_private, battery_hook);
+>  
+> -	return power_supply_register_extension(battery, &ideapad_battery_ext,
+> +	return power_supply_register_extension(battery, priv->battery_ext,
+>  					       &priv->platform_device->dev, priv);
+>  }
+>  
+>  static int ideapad_battery_remove(struct power_supply *battery,
+>  				  struct acpi_battery_hook *hook)
+>  {
+> -	power_supply_unregister_extension(battery, &ideapad_battery_ext);
+> +	struct ideapad_private *priv = container_of(hook, struct ideapad_private, battery_hook);
+> +
+> +	power_supply_unregister_extension(battery, priv->battery_ext);
+>  
+>  	return 0;
+>  }
+> @@ -2167,14 +2181,22 @@ static int ideapad_check_features(struct ideapad_private *priv)
+>  		priv->features.fan_mode = true;
+>  
+>  	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
+> -		priv->features.conservation_mode = true;
+> -		priv->battery_hook.add_battery = ideapad_battery_add;
+> -		priv->battery_hook.remove_battery = ideapad_battery_remove;
+> -		priv->battery_hook.name = "Ideapad Battery Extension";
+> -
+> -		err = devm_battery_hook_register(&priv->platform_device->dev, &priv->battery_hook);
+> -		if (err)
+> -			return err;
+> +		/* Not acquiring gbmd_sbmc_mutex as race condition is impossible on init */
+> +		if (!eval_gbmd(handle, &val)) {
+> +			priv->features.conservation_mode = true;
+> +			priv->battery_ext = test_bit(GBMD_RAPID_CHARGE_SUPPORTED_BIT, &val)
+> +					  ? &ideapad_battery_ext_v2
+> +					  : &ideapad_battery_ext_v1;
+> +
+> +			priv->battery_hook.add_battery = ideapad_battery_add;
+> +			priv->battery_hook.remove_battery = ideapad_battery_remove;
+> +			priv->battery_hook.name = "Ideapad Battery Extension";
+> +
+> +			err = devm_battery_hook_register(&priv->platform_device->dev,
+> +							 &priv->battery_hook);
+> +			if (err)
+> +				return err;
+> +		}
+>  	}
+>  
+>  	if (acpi_has_method(handle, "DYTC"))
+> 
