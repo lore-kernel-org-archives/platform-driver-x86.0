@@ -1,111 +1,127 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60C02D6629
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Nov 2025 16:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707D2E54D3;
+	Thu,  6 Nov 2025 17:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762448256; cv=none; b=CwMAkUYQhwMm8BYZFuatBf3EuQGnNki1RkzDvhJFN/lj/1jsjKKj8qMje8BKld9ZiUC6/RdUtGF4QUmrFPkKRnP3o2tNutfstJ1osEyR6GYV+4gWl8EobeVwI3mV8ORBLZXdxRUxgKYKSwSaOmCRnE8fbjzGob2oB/HWplichRQ=
+	t=1762448792; cv=none; b=nQLnfXewdhhFsY8ecrjy7lryZRK7RwWNLG0qlhwTtYnfXYOw6y/vctQCpJuWuwZX3wBJziTu9UL9WWPdqaKQIme03ggdAVz49gcPhYIie0inAp9ZKoZrj9m+Z+FLnnT5L87qk/k+T8z7LJF4RpWjjfBrHCMB6TfKHtKMqf1tvAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762448256; c=relaxed/simple;
-	bh=hBDgCtgFgAJQ+dFgpCAhZa6Nwb6Otzu4vBYt89g6zhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bdc6wJJfelWatPYGnMvaQXBExaifgKPCtcdIYxKTxBvJbztnAyUfbDJ0CXkizIiy40tHk4Nkei9jJdUzY249T8f2Ql4ycr3G2H/zznZkqkCLoyRO0Li7OLTJALBMalvEf6rkqkduQ2BZNRxXa5kyoYhqdpRv17SVyXvf8QEwxJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YzBP2mjo; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762448792; c=relaxed/simple;
+	bh=FUbMYbaELvLrs8bf13pLYSXjByOOd4CHpAy3KOf73zU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PAN9Uy+kIpQeYHOpOok8+aULaTrlG0R8fZ5vp5hrT1WrSVpFpW7ihhjc3hxbzwYzDuGYUrS+JXFHm+2SzSXaqgST+PDr7ysjJfj6EfHHtSsa8tPBsnXSeDkCqDWdIlDU/RsVA7XWbHpIUOl26sGtMXMBt7tvCwrP8NKGD/5b0NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hOdgNQwH; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzBP2mjo"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4283be7df63so651554f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Nov 2025 08:57:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762448253; x=1763053053; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=43X08dmID9sHRRXmcYSgNQdluMQg9kQE7si7yBN+Lnw=;
-        b=YzBP2mjoYJlN+ibY9A1ZN+YiX938uhrqDxm4UkvB4ICKAcjE0UBtG71OBZwOO0fm81
-         /m9lJ6D+E71KXVUR0xltwsxwPu4mJyQmbUEYf9AEsKjBXe6UgyFqo+Jg0LIBoAV+7pCg
-         VuRyfhqYcyeka3I8J3jzpyh6BfqfZHqbZ9VuoSZMpUrmUxgnYPkkCLk0MStmp68sU/ml
-         BGvjaMSSOYzBvKauKDzAJW7h6kFgFte2SPVB5Fo3boQS9lnvLvJofxRG3eZFOkgnhY0q
-         qD/6BzbXunpquYgnCyNSy2H3Es5ImYHkezlEDHdhwxTuACaS0QLwPLKuKHVt888rYW3X
-         CItA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762448253; x=1763053053;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=43X08dmID9sHRRXmcYSgNQdluMQg9kQE7si7yBN+Lnw=;
-        b=BVAw+MpgvSxUVaAXEs1swDBt278fVSkndlzlGvCITAnvvu6JC6cSWdANxYPLg624As
-         EKrMpo+vSOpc5g7sw7+244MivO0z1qrH+X1bRsdgSJNrMceIRTt5xAZS+DY/G22PT6xr
-         g7xlWf9qu9p6u+ZoK9usSYGGOVisqJrNKJvKpLZ0+QqrreNVFGzpPAtfLbtyH0K/bxh/
-         1fox0kC6VOFypK/JaSyRfH+tAQ1GDOdAA8c3LAj9DQbtlCCYqdsHEOWZq2/9krToKYMf
-         qlTu/ZC8dSdfT7NiRZUlp0NgrdaZFKAklh/xLOaQzzl91EUgJIk1f/7GotoBZcymPe20
-         Werw==
-X-Gm-Message-State: AOJu0Yx1qDaSH7HcpnlKzmKAOPXe6C6X4pSF8wsZ/fadAVtHDLkmVBWa
-	fFHqGyjs2EMoKr/N9bWGkRfwsPaMLu5Y0I+QYh1BoolQkgKXnDvgGSzQ
-X-Gm-Gg: ASbGncu5zbAqbl3NKhzISmNVBvli6Vc/YA6gnqRRe/fefk0QUpvrQ/+Ki6PgicwmZ+Z
-	OZiir6rUwLYuiBwxvCks6yky24HkabXeE0nNK5tLBBoD41BaNj32prc7Xf/4g2Zlx1RXrKl8aZV
-	/12UNu3wDfBSQGZHBPW0o5SR+TI0PguFijWulEteKHe2W88TqChXDf9/i8eoDxdGaPSc37u31Nk
-	SYMgREyznmMAS2O2UdWgGmEd9MHleKixP6bpqCIhjUuVKaoivslvgsVKzU02tM2KWpk6SJ92pxt
-	DO2utaG1FmmqqxktyKWqTxfIoIwr4Rk6Vv9cZWzGNkuOStJZEdLCvx90+Wigsk7J7F+uDXMM/Mr
-	04z6UeBDQTnFkdKnhH4TcfOpmZNvcNKea3tPtwkprSU/5sXyo2L83lDtEDkVm8Y6foMcBDpWifb
-	W1blAcDIrGv/Ze9dv9Qcg=
-X-Google-Smtp-Source: AGHT+IFS3q2CQsG6hf1nqt/xuzgOKYXHnA+wB0Q9tXjzEjx/qrI7jVB+0ubmL/kqbQM56u/55k8zCg==
-X-Received: by 2002:a05:6000:4013:b0:429:d3c9:b889 with SMTP id ffacd0b85a97d-429e32c81d5mr6488088f8f.1.1762448252844;
-        Thu, 06 Nov 2025 08:57:32 -0800 (PST)
-Received: from cachyos-x8664.ujaen.es ([150.214.100.106])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac675cbefsm80306f8f.27.2025.11.06.08.57.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 08:57:32 -0800 (PST)
-From: Marcos Vega <marcosmola2@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marcos Vega <marcosmola2@gmail.com>
-Subject: [PATCH v2] [PATCH v2] platform/x86: hp-wmi: Fixed Omen MAX 16-ah0xx board name
-Date: Thu,  6 Nov 2025 17:56:57 +0100
-Message-ID: <20251106165657.23241-1-marcosmola2@gmail.com>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <81699228-710c-144c-0909-1fe5be0604ca@linux.intel.com>
-References: <81699228-710c-144c-0909-1fe5be0604ca@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hOdgNQwH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762448790; x=1793984790;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FUbMYbaELvLrs8bf13pLYSXjByOOd4CHpAy3KOf73zU=;
+  b=hOdgNQwHOA0S9nOentNv8xnf5ySG5gMk/Fiev/dS6B80yAoXJHsyvNaT
+   6R9wWqWg11BTAXIqwaFQqk6nMesNLHIvEMowrJIcid7oiThggIVsaQIM5
+   XZdvYZMBKaYAgFNRg1v5fFHD5rbrqz5maKZdJmw1Mpwh0L7TIS8lpQ0po
+   vImqgPUomDIOADdDGLN1WoKo7rJAnni1b3+WcGAEiNWj0qbuYKiKbhzEU
+   RpYYac2X6SJPefSof4YE/j1su4QEX1ymEpYukn/DQd0dMnws1ebx1JjPq
+   KxqN7ee+1NMZ1ozHBLSjbnysmXIeymDamHY5csINCahk+ukkJl6aTbYb8
+   w==;
+X-CSE-ConnectionGUID: 3B/KXMkVR6GI5t4LA1CoBw==
+X-CSE-MsgGUID: PS538C+nTSKZB7Su3MoKMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64630388"
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="64630388"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 09:06:29 -0800
+X-CSE-ConnectionGUID: WrSmznYITU+IH82s+lGP1g==
+X-CSE-MsgGUID: DLBTkHZ8RQaDaINnNIc9PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="225055223"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 09:06:28 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 6 Nov 2025 19:06:24 +0200 (EET)
+To: Marcos Vega <marcosmola2@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] [PATCH v2] platform/x86: hp-wmi: Fixed Omen MAX
+ 16-ah0xx board name
+In-Reply-To: <20251106165657.23241-1-marcosmola2@gmail.com>
+Message-ID: <f89e0a02-91a2-e98c-d06a-6b7060bb2848@linux.intel.com>
+References: <81699228-710c-144c-0909-1fe5be0604ca@linux.intel.com> <20251106165657.23241-1-marcosmola2@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-17423666-1762448784=:981"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-17423666-1762448784=:981
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-You are totally right, after more thorough testing, I realised I had made a mistake,
-board 8D41 must only go on victus_s_thermal_profile_boards.
+On Thu, 6 Nov 2025, Marcos Vega wrote:
 
-I send the correct commit in hopes to fix this.
-This is my first time contributing to the kernel, ¡thank you for your patience!
+> You are totally right, after more thorough testing, I realised I had made=
+ a mistake,
+> board 8D41 must only go on victus_s_thermal_profile_boards.
+>=20
+> I send the correct commit in hopes to fix this.
+> This is my first time contributing to the kernel, =C2=A1thank you for you=
+r patience!
 
-Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+It's no problem.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8b3533d6ba09..7a3cad80f0b5 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -92,9 +92,10 @@ static const char * const victus_thermal_profile_boards[] = {
- 	"8A25"
- };
- 
--/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops */
-+/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops, as well
-+   as some Omen boards using this profile */
- static const char * const victus_s_thermal_profile_boards[] = {
--	"8C99", "8C9C"
-+	"8C99", "8C9C", "8D41"
- };
- 
- enum hp_wmi_radio {
--- 
-2.51.2
+Please, send v3 with the usual changelog (see also below for one=20
+additional comment).
 
+In case you need to add (additional) comments like here now is, those=20
+should be placed under --- line so our tools will automatically remove=20
+them when applying.
+
+It's also custom to add patch version history below --- line so the=20
+reviewers know what was changed.
+
+> Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
+p-wmi.c
+> index 8b3533d6ba09..7a3cad80f0b5 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -92,9 +92,10 @@ static const char * const victus_thermal_profile_board=
+s[] =3D {
+>  =09"8A25"
+>  };
+> =20
+> -/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops */
+> +/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops, as we=
+ll
+> +   as some Omen boards using this profile */
+>  static const char * const victus_s_thermal_profile_boards[] =3D {
+> -=09"8C99", "8C9C"
+> +=09"8C99", "8C9C", "8D41"
+
+It would be better to base this on top of the review-ilpo-fixes branch=20
+which currently has many additions to this so I can easily apply this=20
+patch there too.
+
+As this is a new prefix (8D), place it on own line and include the=20
+trailing comma (I just decided while dealing with all these recent ID=20
+patches, we really want to have these better organized than in the other=20
+disorganized array).
+
+--=20
+ i.
+
+--8323328-17423666-1762448784=:981--
