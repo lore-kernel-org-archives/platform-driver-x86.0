@@ -1,186 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3953254BA;
-	Thu,  6 Nov 2025 12:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679C030E0C0;
+	Thu,  6 Nov 2025 12:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762430872; cv=none; b=ADZNKDOTJb9SeGLxE4H9nCMxgv64f+z5u/8jNPffl+vQW1XCAm/ElpPrUakhwi2A0/XryPuu5MPuLi8GN2od2gzN1yBR2x1w59Q2ck3jpN6q57MH9N3Y4FM41pS69qME+kmGKH92rCY5Dv6mnG4cli2DWXLtVduTX4GVAIE3b+U=
+	t=1762431652; cv=none; b=bEdXof+0M4nHgw7RgGMcfqCUzHIzvpr9u8jsIYiIKRymfD2G7F+O5cHz4wFGkH6gOu0ER8tZtlWNmcIMocbbv412p1jd18bTCHJmKuTuy0gtxfXcs0k2ZZZKzenBVDlk0BVr5m17QI4iAV4vRORnLi30kq6UzlGuheX73qK7bRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762430872; c=relaxed/simple;
-	bh=HQnwmTY2Dss65rcWJxxHBnyzveJ0YCY7uZJ1ZSggDdo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qwhVE+YDj1XY8cNleRVddmb/awWAAALXh9vpTQiUPBycJaIi2pIEMEHsNt6wF+8cSVDMhdFNX0gW5o7DF1YaGwVSUjiWnNA7NdqWRJeEJo0JPsdEcR/z9iP08nWg61gqWLWD6uJF1qxXk+JQphIrRU1un11PtJjYMtzgiFLUNxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GzmvCtRE; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1762431652; c=relaxed/simple;
+	bh=Ehdwcafh5mxaP5S+PGqr3JnEJUeuqwfYf/112kGr5Q0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tZ2fAE9q5VPISi3YmzfW5fJg1q8uw0MeR+2odW85Un44ImwMUYAz1zZeeHidhReOMKcplQYvGX0XVwNt0zyp1JpdvQyRgMB5gy82vrZRQEAIakA8f7YDCz6yEyjzfiHKuS/1BPC08D4+lOM2opI3myUm5Qm5+fcAEymugwXRhHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T1k6kuZ9; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GzmvCtRE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T1k6kuZ9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762430870; x=1793966870;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HQnwmTY2Dss65rcWJxxHBnyzveJ0YCY7uZJ1ZSggDdo=;
-  b=GzmvCtREoI3htLN3H3+HaqE1sPg2uTuxBmedOiGk/6N2PGGex0zE3Dsd
-   7DdbuP4U/vvUTYqbmlUo3vG1AUyZNTv9TAfQkhOOljblK+QDVyplqF6LF
-   N/iikIw9J3tI+U526SVT+RGB9W8mpNPSAixrHxgji6J/Gkw7ILKlqQ0tx
-   wRtMUMKUOqDxe9wH3CFs/XKTuFU+6kkcOMqLyHx2Y+8PKvThaZPaOTgS8
-   S+nW3iEZcPnae0fbifKmZ1/bTjqGOrcx3F8XnICB0Mfohb6veePVHN9i/
-   ezEZdDG1XBfqnCh5QgDyPrJWXj6HzOOqcYagF66LEPWc9HoFWwkk0mRXa
+  t=1762431650; x=1793967650;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=Ehdwcafh5mxaP5S+PGqr3JnEJUeuqwfYf/112kGr5Q0=;
+  b=T1k6kuZ9r51L29SxbnvCBwdIhDXYxyTTx/D7454de9Ktp9VF1mKorLGX
+   uMrD49P0aLWmOQe+qHxtKLul75DHF8HGb+GFD2DzqB28ycDu/Gf2tTNHi
+   z9HMbLDkoSdYJVAub8t2yl9zOLMashNMUWeNan/WFRnTixfAodV0JWSNC
+   uIyv9xlKIOZoBGAsBKGnaZNztVFEaoVTFc4yXo74ZyOZYaIau4e5GjQH0
+   S1ooIJkKs0W1/gpkE+4LvGdKd2C97dARi3+4RPhp/MYn2I5B5ufxfBU86
+   vfA2kID/ffLn3SF9jODPAnBpSDa/KiWWdMVPlpCUGqvI2vSr3BtjLdqfy
    Q==;
-X-CSE-ConnectionGUID: WFK7Z+EpTV6MuCl4uz/2tA==
-X-CSE-MsgGUID: N42lsTsZQQmLAMyHG+Hlww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="67176580"
+X-CSE-ConnectionGUID: mGHFoaJWQY2rMabnC79w/g==
+X-CSE-MsgGUID: we9Nst1/Qk2QMsP5wD3VBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="75916820"
 X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="67176580"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:07:49 -0800
-X-CSE-ConnectionGUID: WzyiCRXqSrOCN0LYSzDGnA==
-X-CSE-MsgGUID: IVHaVMzJTEmhEwIy7odAyA==
+   d="scan'208";a="75916820"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:20:50 -0800
+X-CSE-ConnectionGUID: vTVVDgZmRka0ymoFsYVvUg==
+X-CSE-MsgGUID: 0eaqcrS/QMa7KbsJMeQKWQ==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="187688589"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:07:46 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:20:48 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Nov 2025 14:07:43 +0200 (EET)
-To: Sebastian Reichel <sre@kernel.org>
-cc: Hans de Goede <hansg@kernel.org>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] platform: arm64: thinkpad-t14s-ec: add system PM
- hooks
-In-Reply-To: <20251106-thinkpad-t14s-ec-improvements-v1-3-109548ae75c0@collabora.com>
-Message-ID: <06de8e30-c5e1-46b5-d7f6-f5ab441e5b29@linux.intel.com>
-References: <20251106-thinkpad-t14s-ec-improvements-v1-0-109548ae75c0@collabora.com> <20251106-thinkpad-t14s-ec-improvements-v1-3-109548ae75c0@collabora.com>
+To: Marcos Vega <marcosmola2@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20251106115017.77782-1-marcosmola2@gmail.com>
+References: <20251106115017.77782-1-marcosmola2@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add Omen MAX 16-ah0xx fan
+ support and thermal profile
+Message-Id: <176243164304.2946.1841460166696016305.b4-ty@linux.intel.com>
+Date: Thu, 06 Nov 2025 14:20:43 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Thu, 6 Nov 2025, Sebastian Reichel wrote:
+On Thu, 06 Nov 2025 12:50:17 +0100, Marcos Vega wrote:
 
-> Improve support for system suspend. The register information has been
-> extracted from the ACPI DSDT code handling Windows Modern Standby. In
-> addition to writing to the 0xE0 register, the ACPI function also does
-> some changes to the thermal configuration. This part is not implemented.
-
-This doesn't cover why you do that repeated writing, please include 
-explanation for it.
-
-> After this patch the laptop's power and LID LEDs will switch into the
-> typical breathing animation when the system is suspended and enabled
-> normally again after resuming.
+> New HP Omen laptops follow the same WMI thermal profile as Victus 16-r1000 and 16-s1000.
 > 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 53 +++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 8 deletions(-)
+> Add DMI board 8D41 to omen_thermal_profile_boards as well as victus_s_thermal_profile_boards.
 > 
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> index cf6a1d3b2617..066074a1314b 100644
-> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -25,14 +25,17 @@
->  #define T14S_EC_CMD_ECWR	0x03
->  #define T14S_EC_CMD_EVT		0xf0
->  
-> -#define T14S_EC_REG_LED		0x0c
-> -#define T14S_EC_REG_KBD_BL1	0x0d
-> -#define T14S_EC_REG_KBD_BL2	0xe1
-> -#define T14S_EC_KBD_BL1_MASK	GENMASK_U8(7, 6)
-> -#define T14S_EC_KBD_BL2_MASK	GENMASK_U8(3, 2)
-> -#define T14S_EC_REG_AUD		0x30
-> -#define T14S_EC_MIC_MUTE_LED	BIT(5)
-> -#define T14S_EC_SPK_MUTE_LED	BIT(6)
-> +#define T14S_EC_REG_LED				0x0c
-> +#define T14S_EC_REG_KBD_BL1			0x0d
-> +#define T14S_EC_REG_MODERN_STANDBY		0xe0
-> +#define T14S_EC_MODERN_STANDBY_ENTRY		BIT(1)
-> +#define T14S_EC_MODERN_STANDBY_EXIT		BIT(0)
-> +#define T14S_EC_REG_KBD_BL2			0xe1
-> +#define T14S_EC_KBD_BL1_MASK			GENMASK_U8(7, 6)
-> +#define T14S_EC_KBD_BL2_MASK			GENMASK_U8(3, 2)
-> +#define T14S_EC_REG_AUD				0x30
-> +#define T14S_EC_MIC_MUTE_LED			BIT(5)
-> +#define T14S_EC_SPK_MUTE_LED			BIT(6)
->  
->  #define T14S_EC_EVT_NONE			0x00
->  #define T14S_EC_EVT_KEY_FN_4			0x13
-> @@ -202,6 +205,14 @@ static int t14s_ec_read_evt(struct t14s_ec *ec, u8 *val)
->  	return ret;
->  }
->  
-> +static void t14s_ec_write_sequence(struct t14s_ec *ec, u8 reg, u8 val, u8 cnt)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < cnt; i++)
-> +		regmap_write(ec->regmap, reg, val);
-> +}
-> +
->  static int t14s_led_set_status(struct t14s_ec *ec,
->  			       struct t14s_ec_led_classdev *led,
->  			       const enum t14s_ec_led_status_t ledstatus)
-> @@ -554,6 +565,7 @@ static int t14s_ec_probe(struct i2c_client *client)
->  		return -ENOMEM;
->  
->  	ec->dev = dev;
-> +	i2c_set_clientdata(client, ec);
->  
->  	ec->regmap = devm_regmap_init(dev, &t14s_ec_regmap_bus,
->  				      ec, &t14s_ec_regmap_config);
-> @@ -593,6 +605,26 @@ static int t14s_ec_probe(struct i2c_client *client)
->  	return 0;
->  }
->  
-> +static int t14s_ec_suspend(struct device *dev)
-> +{
-> +	struct t14s_ec *ec = dev_get_drvdata(dev);
-> +
-> +	t14s_ec_write_sequence(ec, T14S_EC_REG_MODERN_STANDBY,
-> +			       T14S_EC_MODERN_STANDBY_ENTRY, 3);
-> +
-> +	return 0;
-> +}
-> +
-> +static int t14s_ec_resume(struct device *dev)
-> +{
-> +	struct t14s_ec *ec = dev_get_drvdata(dev);
-> +
-> +	t14s_ec_write_sequence(ec, T14S_EC_REG_MODERN_STANDBY,
-> +			       T14S_EC_MODERN_STANDBY_EXIT, 3);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id t14s_ec_of_match[] = {
->  	{ .compatible = "lenovo,thinkpad-t14s-ec" },
->  	{}
-> @@ -605,10 +637,15 @@ static const struct i2c_device_id t14s_ec_i2c_id_table[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, t14s_ec_i2c_id_table);
->  
-> +static const struct dev_pm_ops t14s_ec_pm_ops = {
-> +	SYSTEM_SLEEP_PM_OPS(t14s_ec_suspend, t14s_ec_resume)
+> Tested on: HP Omen MAX 16-ah0xx (8D41)
+> Result:
+> * RPMs can be read
+> * echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable allows the fans to run on max RPM.
+> 
+> [...]
 
-Add #include for the struct and macro.
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: hp-wmi: Add Omen MAX 16-ah0xx fan support and thermal profile
+      commit: 836a26660b97c62b1ed734e38a78bd20949dfa22
+
+--
  i.
 
-
-> +};
-> +
->  static struct i2c_driver t14s_ec_i2c_driver = {
->  	.driver = {
->  		.name = "thinkpad-t14s-ec",
->  		.of_match_table = t14s_ec_of_match,
-> +		.pm = &t14s_ec_pm_ops,
->  	},
->  	.probe = t14s_ec_probe,
->  	.id_table = t14s_ec_i2c_id_table,
-> 
-> 
