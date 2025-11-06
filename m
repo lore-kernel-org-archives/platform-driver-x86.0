@@ -1,127 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707D2E54D3;
-	Thu,  6 Nov 2025 17:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC831314D06
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Nov 2025 19:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762448792; cv=none; b=nQLnfXewdhhFsY8ecrjy7lryZRK7RwWNLG0qlhwTtYnfXYOw6y/vctQCpJuWuwZX3wBJziTu9UL9WWPdqaKQIme03ggdAVz49gcPhYIie0inAp9ZKoZrj9m+Z+FLnnT5L87qk/k+T8z7LJF4RpWjjfBrHCMB6TfKHtKMqf1tvAI=
+	t=1762456092; cv=none; b=gBKIfwEBH1b5E9AoBuSGcCukJuudccsUIucenex4sgqHdd80m7PEhnhGen7hOkaucIJId9zF6ivE5SWeGItbaMfIKGp1dl4bLOXkmTBVTHbmP6oev28LxpHpwyQUk4KGfKsMNGTLmlAJP5648rEOI67zJMLfWrk1aRX7luFfzB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762448792; c=relaxed/simple;
-	bh=FUbMYbaELvLrs8bf13pLYSXjByOOd4CHpAy3KOf73zU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PAN9Uy+kIpQeYHOpOok8+aULaTrlG0R8fZ5vp5hrT1WrSVpFpW7ihhjc3hxbzwYzDuGYUrS+JXFHm+2SzSXaqgST+PDr7ysjJfj6EfHHtSsa8tPBsnXSeDkCqDWdIlDU/RsVA7XWbHpIUOl26sGtMXMBt7tvCwrP8NKGD/5b0NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hOdgNQwH; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762456092; c=relaxed/simple;
+	bh=0/jEOxtSFPK0PmIemOfKHGwBErRDUi05GZgJASgkD0U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FpjTRiLeglM4919Zp/O25QJ+Oh0Wu6J2meCFveVrwa8sjVAgjrPsV8zfxbL48Vq0Zuee4IR7gdru5t8qKML/NbV/lQ2gt9d9IolrrnhV0WQXamoU3a6l7i4B3IiFCZGPnyH6UPVxxZxyJBNIZck/w1S/nfDLyFTts+yB3lzDj5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=endXWJF9; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hOdgNQwH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762448790; x=1793984790;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FUbMYbaELvLrs8bf13pLYSXjByOOd4CHpAy3KOf73zU=;
-  b=hOdgNQwHOA0S9nOentNv8xnf5ySG5gMk/Fiev/dS6B80yAoXJHsyvNaT
-   6R9wWqWg11BTAXIqwaFQqk6nMesNLHIvEMowrJIcid7oiThggIVsaQIM5
-   XZdvYZMBKaYAgFNRg1v5fFHD5rbrqz5maKZdJmw1Mpwh0L7TIS8lpQ0po
-   vImqgPUomDIOADdDGLN1WoKo7rJAnni1b3+WcGAEiNWj0qbuYKiKbhzEU
-   RpYYac2X6SJPefSof4YE/j1su4QEX1ymEpYukn/DQd0dMnws1ebx1JjPq
-   KxqN7ee+1NMZ1ozHBLSjbnysmXIeymDamHY5csINCahk+ukkJl6aTbYb8
-   w==;
-X-CSE-ConnectionGUID: 3B/KXMkVR6GI5t4LA1CoBw==
-X-CSE-MsgGUID: PS538C+nTSKZB7Su3MoKMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64630388"
-X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="64630388"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 09:06:29 -0800
-X-CSE-ConnectionGUID: WrSmznYITU+IH82s+lGP1g==
-X-CSE-MsgGUID: DLBTkHZ8RQaDaINnNIc9PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="225055223"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 09:06:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Nov 2025 19:06:24 +0200 (EET)
-To: Marcos Vega <marcosmola2@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] [PATCH v2] platform/x86: hp-wmi: Fixed Omen MAX
- 16-ah0xx board name
-In-Reply-To: <20251106165657.23241-1-marcosmola2@gmail.com>
-Message-ID: <f89e0a02-91a2-e98c-d06a-6b7060bb2848@linux.intel.com>
-References: <81699228-710c-144c-0909-1fe5be0604ca@linux.intel.com> <20251106165657.23241-1-marcosmola2@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="endXWJF9"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b70ca7d1e78so20569466b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Nov 2025 11:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762456088; x=1763060888; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TOmMRtW5FXW0MAi6xEIHqEbujsChcuuW9+3rNb6Efhc=;
+        b=endXWJF9xcQC0qfiou69PkWTY5x/2hS9s+O8kGB9yyZM1joqCEym2VuuBtyKZqVd/R
+         OcgjZ5LvV4mRGsdCN6hH3Rg1IhcYkkKYAxEKwGe5y1e08bDlbQPPuyEZ6s3IOH+bjDg5
+         7zG22JJVIZwDcBrHbWVsZmLgTAT1MjkhiRReAn01JsrEOKPFKLzol5pbaaTWaWkBZwLU
+         0AI9Lkd6GVjq90NCTejZ2zq6xM0RXRRZ7VDWpnG9hDXUbqwLypBG+YzHmwEN5o9m6ElY
+         ow2PPt66IzX+Xu/Weqvx0/UTGPm9hvUx2QzoQQcq8xxzbRAdlhGzt+fHv2c3Zy+Cjho9
+         TmvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762456088; x=1763060888;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TOmMRtW5FXW0MAi6xEIHqEbujsChcuuW9+3rNb6Efhc=;
+        b=CdC4tlCBXZ83FPLqkpLPcq3AP+H1RJqEGo2OfOfO+FvvE5ugXSj7tbPGxG/iH6J9q2
+         MVkxHKwT4LnKUP97PIYi7y8nxHwcPLBunWfhmt0giWgt9H9zJmE+G5lmF4+TMq/x1NiB
+         gEziWcaSee/5zW+EC61VP2IzXMErTr2qwKSxRCrQSseXCEwVC6ONa8ehOEeiaR4rMoHk
+         3ioJJbjcBXam+jDE9fc2d1UiCyzxNtl4hkv/sWA2hRL+ut0MS2cLMH8cm22KqEceGsdp
+         NaQtNPVgnSS69O+8UMtKooL7au7T4OXu+1fqZp5SVsy/YXNCSHU66SFj9+vMSh5lTp81
+         /mSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdtEKTzRNcrFykNovS//LYAOK0CVyWYk4/3qJWs494ScTUkoe9j/ZB24lgDGcwqJfO6r6jxDiVHHwhjXvAyB8NcQci@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7ByWY7poLaVvzAY05lVtBsfVArbhak6ftgpZ+nGX8srFGuPsW
+	v5Eybn9izFUgcDhc3l5ubNWBoO2fpZqh5DNPMfgB50dj4ympCYWg3Y48sezMYCmhTqM=
+X-Gm-Gg: ASbGncscYuU6kcmuou5MrkqkX7lcIlYmHbdM8CecypZHtxiqoCDsP2q5Rc9os1u8Y3i
+	Dgc+TMPyy6nNIULUKzxM0XOSuKB7j76JdHefCC/GxU5yF9h27KOuwPEWQsGkoNVtDoCi8puZdy1
+	+AEVTr5/3acbiY6or3HVa/aWggWQ6yJ/HrywKHil8PsCehOA5/qS/A5T1M3O2fJm2SNRJSb+eSp
+	GFKmH15ZoCO7NA7nAiRfpL+zNZgBL4YQxVpYlVc0af+wxjADGqr9ajlw6ZwZlPSODzCPxFB7Ld8
+	9x4LgKLk/8CvPlPXf3MqqJLHxlN3FRQf8LSd1HpUT9RYU7MgO4u9x/zTKvAB0M72dctYBn+pFRc
+	wz2xkKRw7Q6EG1kt6/ayR+/6eJsZ2M+fFYc0CJZo+U9iddhLCQ4uzpd3AjCysxfYpKjrbn4Hv4v
+	n7Kh6CMsrywmvEGsXzT1sF/hTYKMk=
+X-Google-Smtp-Source: AGHT+IFGWzZTlk6Pep5z9JJh/2iQFwbYfqTOhkd0VSyzz3YH59510NL660TZKF8rj5tPeiZrlMyDNQ==
+X-Received: by 2002:a17:907:3f24:b0:b65:c8b8:144f with SMTP id a640c23a62f3a-b72c0996c95mr16124866b.6.1762456087865;
+        Thu, 06 Nov 2025 11:08:07 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.219.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b72bfa2510esm26739566b.72.2025.11.06.11.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 11:08:07 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 00/13] of: Add wrappers to match root node with OF device
+ ID tables
+Date: Thu, 06 Nov 2025 20:07:07 +0100
+Message-Id: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-17423666-1762448784=:981"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANzxDGkC/yWMMQqAMAwAvyKZDbQSi/gVcYiaagartCKC+HeLL
+ gc33N2QJKokaIsbopyadAtZbFnAuHCYBXXKDpWpamuNw4Fw87jyMS4/NQhOfDASOxq8IddYgtz
+ vUbxe37vrn+cFIRAvI2sAAAA=
+X-Change-ID: 20251106-b4-of-match-matchine-data-4a64bf046814
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Daniel Lezcano <daniel.lezcano@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2925;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=0/jEOxtSFPK0PmIemOfKHGwBErRDUi05GZgJASgkD0U=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBpDPIG5LkF6rev9ukV/+9Qtp68gNcluS7tTEY5b
+ xPa3VIbKtCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaQzyBgAKCRDBN2bmhouD
+ 12G3D/9mfBQ7HGLDU/SZRXrLmtiPXCTDREluXdWUYAg8kpONNNEE75+x3up7wKYhs7S49bz7J27
+ LN8BPJka1h7vYjEBYECOIAX9bwtTdR1QgpU+tJJRaN37ZNfdhdTG0SRuIbUpU5ONVnCTVbD+yzf
+ 7zBhrdKxAlht4mclM1I6Gnv97bmFqpGq/Pp5p4YJBGUrlBvuzoL8u9W9CA+xxXjW93uVjGixBu8
+ omyiKyhRMdLgPamka6AttrpGLvvpFJVQChi30yQdAEQVdbp+zHnz4jkteGLGPjH6jy4+PLURMgC
+ 9FJfaviKGJDnBQYR1Vd/kpu9tnP/tW69frilBMHYt5kyIHvL5H31PJaQ+iBNmpavlBaLTjuylT+
+ 5sTnNNeO2R2ewpIY2kWOYuIrjiGSYc+zeHjf8l/zFKVa3zpvFMpjcomXpu0vHESDLc9qBRt8EG5
+ oRhuhAqACjuTy33Nt3xExzTEAmOENK7qDzWl2xWbiFO1sLRbMA2auneH6jgY+Vb9yIqwNUv2zJA
+ /jZShiOwmSnJMha7tiydbA6xvwNQhNMBW1Rs5WJzcEmzRwCWNGTqmhZHOSAQsES3xDV/pFdvbJY
+ 81lzvN3L/XYxoZ0HV75pW19zvzOuwUG+sbhLwIDHO5mlCNQ4qN/lssv+82nTDl+i971szhjo8Kd
+ Jzhgda147d1CC0A==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Dependency/merging
+==================
+All patches depend on the first patch, thus everything could go via
+Rob's tree with people's acks.
 
---8323328-17423666-1762448784=:981
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Description
+===========
+Several drivers duplicate same code for getting reference to the root
+node, matching it against 'struct of_device_id' table and getting out
+the match data from the table entry.
 
-On Thu, 6 Nov 2025, Marcos Vega wrote:
+There is a of_machine_compatible_match() wrapper but it takes array of
+strings, which is not suitable for many drivers since they want the
+driver data associated with each compatible.
 
-> You are totally right, after more thorough testing, I realised I had made=
- a mistake,
-> board 8D41 must only go on victus_s_thermal_profile_boards.
->=20
-> I send the correct commit in hopes to fix this.
-> This is my first time contributing to the kernel, =C2=A1thank you for you=
-r patience!
+Add two wrappers, similar to existing of_device_get_match_data():
+1. of_machine_device_match() doing only matching against 'struct
+   of_device_id' and returning bool.
+2. of_machine_get_match_data() doing the matching and returning
+   associated driver data for found compatible.
 
-It's no problem.
+Best regards,
+Krzysztof
 
-Please, send v3 with the usual changelog (see also below for one=20
-additional comment).
+---
+Krzysztof Kozlowski (13):
+      of: Add wrappers to match root node with OF device ID tables
+      cpufreq: dt-platdev: Simplify with of_machine_get_match_data()
+      cpufreq: mediatek: Simplify with of_machine_get_match_data()
+      cpufreq: sun50i: Simplify with of_machine_device_match()
+      cpufreq: ti: Simplify with of_machine_device_match()
+      cpuidle: big_little: Simplify with of_machine_device_match()
+      firmware: qcom: scm: Simplify with of_machine_device_match()
+      irqchip/atmel-aic: Simplify with of_machine_get_match_data()
+      platform: surface: Simplify with of_machine_get_match_data()
+      powercap: dtpm: Simplify with of_machine_get_match_data()
+      soc: qcom: Simplify with of_machine_get_match_data()
+      soc: qcom: ubwc: Simplify with of_machine_get_match_data()
+      soc: tegra: Simplify with of_machine_device_match()
 
-In case you need to add (additional) comments like here now is, those=20
-should be placed under --- line so our tools will automatically remove=20
-them when applying.
+ drivers/cpufreq/cpufreq-dt-platdev.c               | 15 ++-----
+ drivers/cpufreq/mediatek-cpufreq.c                 | 12 +-----
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c             | 11 +----
+ drivers/cpufreq/ti-cpufreq.c                       | 13 +-----
+ drivers/cpuidle/cpuidle-big_little.c               | 11 +----
+ drivers/firmware/qcom/qcom_scm.c                   | 17 +-------
+ drivers/irqchip/irq-atmel-aic-common.c             | 15 ++-----
+ drivers/of/base.c                                  | 47 ++++++++++++++++++++++
+ .../platform/surface/surface_aggregator_registry.c | 13 +-----
+ drivers/powercap/dtpm.c                            | 16 +-------
+ drivers/soc/qcom/qcom_pd_mapper.c                  | 17 +-------
+ drivers/soc/qcom/ubwc_config.c                     | 14 ++-----
+ drivers/soc/tegra/common.c                         | 12 +-----
+ include/linux/of.h                                 | 13 ++++++
+ 14 files changed, 82 insertions(+), 144 deletions(-)
+---
+base-commit: e5efebeef746a24f45b98dbdfcf334285848b32a
+change-id: 20251106-b4-of-match-matchine-data-4a64bf046814
 
-It's also custom to add patch version history below --- line so the=20
-reviewers know what was changed.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
-p-wmi.c
-> index 8b3533d6ba09..7a3cad80f0b5 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -92,9 +92,10 @@ static const char * const victus_thermal_profile_board=
-s[] =3D {
->  =09"8A25"
->  };
-> =20
-> -/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops */
-> +/* DMI Board names of Victus 16-r1000 and Victus 16-s1000 laptops, as we=
-ll
-> +   as some Omen boards using this profile */
->  static const char * const victus_s_thermal_profile_boards[] =3D {
-> -=09"8C99", "8C9C"
-> +=09"8C99", "8C9C", "8D41"
-
-It would be better to base this on top of the review-ilpo-fixes branch=20
-which currently has many additions to this so I can easily apply this=20
-patch there too.
-
-As this is a new prefix (8D), place it on own line and include the=20
-trailing comma (I just decided while dealing with all these recent ID=20
-patches, we really want to have these better organized than in the other=20
-disorganized array).
-
---=20
- i.
-
---8323328-17423666-1762448784=:981--
