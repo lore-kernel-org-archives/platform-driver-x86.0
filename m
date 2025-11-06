@@ -1,104 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37597E0E8;
-	Thu,  6 Nov 2025 05:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8F0221DAD;
+	Thu,  6 Nov 2025 07:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762406944; cv=none; b=b8t10mgC6tJxxgkSUZcq+t/CHPemVVHDB8+PMLjIYSn+NkEms2lc4cEblySqylXpEowuSxAJsPb65xHFOedxYz7j8Jexsi6MHBeNjZVHNTmDNoEkQ9Lv9RTgd+u2P695GoMdDyAEMvALkKCHCAb13uI751zX4d8W1FYW/n/0fao=
+	t=1762414857; cv=none; b=NfyRehZ5sbbv1TESR+OoEtCgNsQqrU0SXaq+wbzUkcY1P2eZf2TE0PiXFHrg/+WTkb6q480X2ojsi1ea2guyRSR4klcous9kieRfktcjJTQe6+p0XR3Bgyy/tnOTW6TI2qA9KmYM3emOSCHaM+aAVdeYpqyqtSMDl/M8OIeXHuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762406944; c=relaxed/simple;
-	bh=SDi/IUonZvuhkgWL3E7UkZNf3RlJpPo6eT08EePiTQQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L64l8wstZ5gWx/PKrJTcp/wLWYq4XXmCB+/s0ocmiQgQx+yA9yf5vnkti7KqAj7DZzdNDvyhJUQYNmIk+iF829DNhCD5QID208jDqkBhGKclU1A+fO7XY0vIj7v6AGgv7Yyzi9ewQ+FAmL2vgKc8wDdkk9nbzJ9304WuYYP33ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kvO91TYy; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762414857; c=relaxed/simple;
+	bh=l54FqTT8+G2I20BWvp4G3THSGvmDym14v4+4abueHe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhxLatKvfhOD36+IF42RfdHwfYpvOiZwcw/mU3DRjY5o2ycARokIYtECuutZPxiF6/A7/qA0MXUHv4pM/gPOcmlBRK+6LGljqCFYqi/8zhXbHUb0NFFJyXF9AgzhSWL86QPgOCW/y8Pvv/LMGlfvxqABE0yR4eCEoHjlphqJ9bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iXR00yiB; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kvO91TYy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iXR00yiB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762406943; x=1793942943;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SDi/IUonZvuhkgWL3E7UkZNf3RlJpPo6eT08EePiTQQ=;
-  b=kvO91TYyMbUKZO4bopUwT3Yb8EAAcxYu+bxZ3uUeLFK/EqO40zt379QJ
-   vwdARVqDTc8zrRz03wmg8vyJVFYAmkoo9aUo2X2XaQj0HQAY2tT2yzzMJ
-   u5vsJ68zmBIb0dTSDsIXhQcjI63IpixfCpZr3Iz7iDS/8uyQ5Hseh0WIv
-   LxPkfijeLu+tDy/MW9PN60LhuJsMH023N3uIPVaipnxhbaRf8qW4veCzE
-   rhTMFSeRNE3y6FWibOs6ZzPIA7vpS8cDqr2nNCKJGoLC1q+4HVNG3R0sG
-   zqCmg+68/rPalH7U1FPXj4KSEx8xuR4gygLCb48ana6g8YILLPNymNJnn
-   w==;
-X-CSE-ConnectionGUID: zO0qOAQETWenGuQZGZP6aA==
-X-CSE-MsgGUID: gBohU+E6R5OAXBe39/i4Og==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64231837"
+  t=1762414856; x=1793950856;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l54FqTT8+G2I20BWvp4G3THSGvmDym14v4+4abueHe4=;
+  b=iXR00yiBlVGlxATB8ZTfXNAVVih+yq9X76sjXsbHafgJHZrm+QlPlgEj
+   oPIq8X2De69dOQl2xDEapiHhOcfpgq8Aeck2DTrPQBMa4RvFV7PYJV+ig
+   wtT7YXvzpO1otNMdUdNYBlVnEF6tUCKm84ypEOb/ZY+WbDpu9ihYpPlgE
+   Q4jDt7B3s2tRliVMBWnbzEiCtfZO9G8q8hq8a2ACC9p4wrhVPzYaMC3VX
+   KsiQpX0BdZLHGsqX7KdE1EuJMRIKWwu3GXKF5jj85tZl04kRQGXHALN88
+   SJ96gTL2sogNfpFKt//AAT5/mCST2UAMq6cdrOh9nlmkiG8N03rqRCMX/
+   g==;
+X-CSE-ConnectionGUID: LdLkZN5mRJaqGOVFRXNvUg==
+X-CSE-MsgGUID: HNCU9iQGRxGdVihtdF3cBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64695217"
 X-IronPort-AV: E=Sophos;i="6.19,283,1754982000"; 
-   d="scan'208";a="64231837"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 21:29:02 -0800
-X-CSE-ConnectionGUID: S7RToC0AQdubFxpLJ7xohQ==
-X-CSE-MsgGUID: l8r+7CoSTRWHdpZdAYQX2g==
+   d="scan'208";a="64695217"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 23:40:56 -0800
+X-CSE-ConnectionGUID: nsiaQgEeT4K/OWpx4RaWgA==
+X-CSE-MsgGUID: OXLDFMmSTYizPHwtzBxCjQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,283,1754982000"; 
-   d="scan'208";a="188108603"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by fmviesa009.fm.intel.com with ESMTP; 05 Nov 2025 21:28:58 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: kees@kernel.org,
-	broonie@kernel.org,
-	gregkh@linuxfoundation.org,
-	arnd@arndb.de,
-	andriy.shevchenko@linux.intel.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2] mod_devicetable: Bump auxiliary_device_id name size
-Date: Thu,  6 Nov 2025 10:58:38 +0530
-Message-Id: <20251106052838.433673-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="187634823"
+Received: from jjgreens-desk21.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.221.229])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 23:40:52 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vGubv-000000061OU-13on;
+	Thu, 06 Nov 2025 09:40:47 +0200
+Date: Thu, 6 Nov 2025 09:40:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: kees@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+	arnd@arndb.de, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mod_devicetable: Bump auxiliary_device_id name size
+Message-ID: <aQxQ_orRY1ceokdU@smile.fi.intel.com>
+References: <20251106052838.433673-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251106052838.433673-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-We have an upcoming driver named "intel_ehl_pse_io". This creates an
-auxiliary child device for it's GPIO sub-functionality, which matches
-against "intel_ehl_pse_io.gpio-elkhartlake" and overshoots the current
-maximum limit of 32 bytes for auxiliary device id string. Bump the size
-to 40 bytes to satisfy such cases.
+On Thu, Nov 06, 2025 at 10:58:38AM +0530, Raag Jadav wrote:
+> We have an upcoming driver named "intel_ehl_pse_io". This creates an
+> auxiliary child device for it's GPIO sub-functionality, which matches
+> against "intel_ehl_pse_io.gpio-elkhartlake" and overshoots the current
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
-v2: Describe the use case (Greg, Andy)
+Looking at the name there is another question: Why do we need 'elkhartlake in
+the GPIO driver's name now? It's a dup to 'ehl' in the first part.
 
-Triggered by [1].
+> maximum limit of 32 bytes for auxiliary device id string. Bump the size
+> to 40 bytes to satisfy such cases.
 
-[1] https://lore.kernel.org/r/aQSwWLVKH_3TthTW@smile.fi.intel.com
+> ---
+> v2: Describe the use case (Greg, Andy)
 
- include/linux/mod_devicetable.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the update!
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 6077972e8b45..24eb5a88a5c5 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -867,7 +867,7 @@ struct mhi_device_id {
- 	kernel_ulong_t driver_data;
- };
- 
--#define AUXILIARY_NAME_SIZE 32
-+#define AUXILIARY_NAME_SIZE 40
- #define AUXILIARY_MODULE_PREFIX "auxiliary:"
- 
- struct auxiliary_device_id {
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
