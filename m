@@ -1,105 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99971DA23;
-	Thu,  6 Nov 2025 12:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5872F291D;
+	Thu,  6 Nov 2025 12:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762431973; cv=none; b=dyJS2LAZ9vhMS3EagnJxj73rRxURGCsQXu2t5tX8u39DWKtkqI0oMYSXb42ZaMPVsytYXKWD35QOMCOg6UP31NPI5vYZ4nmTMVB2N3IcgNvIkYaxN4o1OfvAFvwJg5nU0lnWfLYHWW51nN/rD7FLCMp6GdenftkRTkGy7V5VK5s=
+	t=1762432152; cv=none; b=O1rHWT+GOOMIzytw5fsD3McgCMnyANV5C0MPMhuKV6TxQ9LqDscIg1OmNQbsRr7RSJbUnIkdiQF8YgvZz/NA1+z2bX+xaP37pesO7+1ZvVAbzZPeIIo0cT1PANElr/2OUBeLQlrjqC5yU4aezJzODFqZ1VSonzQdD0zTiIh5f3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762431973; c=relaxed/simple;
-	bh=ZP5wovO+j4hfcwNDZDeeimIUq2gu+TUgl4x0zXenIq0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oqFmKNJoZ0AAW0EW02KdsVLNlP3pV7Zlro/ttsL/ahBckjjluLiaRSWYk2wLAvuvA8Oam0+EqGPnPvPh1MI/JxC9tc974pQ8e33JBpwr1Q3DfV4AAyuoxxJUvN/77+LEG8cX3rpUmiM0CVeczvw0ORb41v+OWB2j/6fF4WAYTeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ime/d6rH; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1762432152; c=relaxed/simple;
+	bh=ERJmoxOB7bQoI4DfXgSXp3efgxUaQ2oFpC72NQoTjNE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nMh8oAsCxXEEMf83x5tfP9wOLjBdoVg8o0In1v4IE8T9ipZOhy+jzMyhcL10a/3ODLhYfghJ7nOsVOaGgCP66tTErke0UTut4NysF3OMK8K07uBqeSAx+5CZ2h5y502EvG6gO87/NfjeeSWQx9rUsdaqC1YKyb8KEj3keG9kw6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A69ZaGeM; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ime/d6rH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A69ZaGeM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762431971; x=1793967971;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZP5wovO+j4hfcwNDZDeeimIUq2gu+TUgl4x0zXenIq0=;
-  b=Ime/d6rH+ap66STTlOGptq1OsVeHCwdLQ9pSgt6Wj687r2e0TmyfkInL
-   Uu9q7k2s2hey3vg1jJd+rpZlpkGsG+2Af8U4JOyozgu7LPz036vGxvjJb
-   exHOfFKgWLVujV//zYcsGHh6ObZySGBXaaznTU1JfG36T0FrGEkwsYJEH
-   qLMbD9yykPx/zBBls7JWAJRg4KR2KOulEB/iXlvg5WZi+AO/pKnyRuL7V
-   2XmZceCgyNgJRXxMnyRxh0SOwX8J4rI3DwENIn/xc4Q3p47d8blZh8tfF
-   SA+eFv4BgGp6dIE4YMqm2j8R55JHDBNvo+8ILKQPP8QNsJeLsOvf2/PBW
-   A==;
-X-CSE-ConnectionGUID: wDh3OCVfQvSzZjV8ah1qoQ==
-X-CSE-MsgGUID: u3qOKSOrTyefFOq7BaZWlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="68424824"
+  t=1762432151; x=1793968151;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=ERJmoxOB7bQoI4DfXgSXp3efgxUaQ2oFpC72NQoTjNE=;
+  b=A69ZaGeMzOXQtpHQxGi8vowHedNT4FIuzPAGjADnh8j/GgmzuEM3nVSP
+   YKnLV0/Z9ENMd+r9cQmd1gdfAUdATwXxPrUvcs/yMU3n8Z8dWXQL/p65/
+   F2Rd7s9AYW1XYDn7AOJ75s+kIUESzvka23RFDP1N+5c5ldRgJRsdt8awG
+   oOKWfXPON/aAamsoM6x3K1adeD6wRdF9UAwQVJwSjCEsFr+LFTqATuMLL
+   SKCMZvHjd0yMPd6alsN1ET57crf3AqxN7l32dY70QODE/LcPN6pO9hgXn
+   OebOiCUs19JgkIAspq4kBmkRTIGx87TFpeXYYKPnAxWoFnKQoiky304RU
+   w==;
+X-CSE-ConnectionGUID: mGC0JFiuQG2KsmRHWuOpPQ==
+X-CSE-MsgGUID: Xa4SnWk/SEaxxw3wLqhBwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="74856166"
 X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="68424824"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:26:09 -0800
-X-CSE-ConnectionGUID: 1oGosF+SSvG6dqyepFyS6g==
-X-CSE-MsgGUID: WToDPPAJRiubM7evEB2BuA==
+   d="scan'208";a="74856166"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:29:10 -0800
+X-CSE-ConnectionGUID: AcGVl4vVTTGtZVAXTAT2kQ==
+X-CSE-MsgGUID: KH7u5L8WRHeVIBmF1iHtAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
-   d="scan'208";a="224994212"
+   d="scan'208";a="187591818"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:26:08 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 04:29:07 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Nov 2025 14:26:03 +0200 (EET)
-To: Marcos Vega <marcosmola2@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add Omen MAX 16-ah0xx fan support
- and thermal profile
-In-Reply-To: <176243164304.2946.1841460166696016305.b4-ty@linux.intel.com>
-Message-ID: <81699228-710c-144c-0909-1fe5be0604ca@linux.intel.com>
-References: <20251106115017.77782-1-marcosmola2@gmail.com> <176243164304.2946.1841460166696016305.b4-ty@linux.intel.com>
+To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <20251105215020.1984036-1-xi.pardee@linux.intel.com>
+References: <20251105215020.1984036-1-xi.pardee@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/vsec: Add support for Wildcat
+ Lake
+Message-Id: <176243214239.3161.9066799480591024469.b4-ty@linux.intel.com>
+Date: Thu, 06 Nov 2025 14:29:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-220971142-1762431963=:981"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 05 Nov 2025 13:50:14 -0800, Xi Pardee wrote:
 
---8323328-220971142-1762431963=:981
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Add Wildcat Lake PMT telemetry support.
+> 
+> 
 
-On Thu, 6 Nov 2025, Ilpo J=C3=A4rvinen wrote:
 
-> On Thu, 06 Nov 2025 12:50:17 +0100, Marcos Vega wrote:
->=20
-> > New HP Omen laptops follow the same WMI thermal profile as Victus 16-r1=
-000 and 16-s1000.
-> >=20
-> > Add DMI board 8D41 to omen_thermal_profile_boards as well as victus_s_t=
-hermal_profile_boards.
-> >=20
-> > Tested on: HP Omen MAX 16-ah0xx (8D41)
-> > Result:
-> > * RPMs can be read
-> > * echo 0 | sudo tee /sys/devices/platform/hp-wmi/hwmon/*/pwm1_enable al=
-lows the fans to run on max RPM.
-> >=20
-> > [...]
->=20
->=20
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-fixes branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-> local branch there, which might take a while.
->=20
-> The list of commits applied:
-> [1/1] platform/x86: hp-wmi: Add Omen MAX 16-ah0xx fan support and thermal=
- profile
->       commit: 836a26660b97c62b1ed734e38a78bd20949dfa22
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-Actually, I take this back, I don't think you're supposed to add it to=20
-both lists.
+The list of commits applied:
+[1/2] platform/x86/intel/vsec: Add support for Wildcat Lake
+      commit: afc0f9ee9e1684288cbcb57b93f7e225eb8b6c44
+[2/2] platform/x86:intel/pmc: Enable SSRAM support for Wildcat Lake
+      commit: 9c8249cfdf5aa2b843b0cbef81eb0898493694fe
 
---=20
+--
  i.
 
---8323328-220971142-1762431963=:981--
