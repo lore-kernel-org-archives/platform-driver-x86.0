@@ -1,101 +1,84 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ED22D8791
-	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Nov 2025 11:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5572D3EF6
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Nov 2025 13:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762516415; cv=none; b=QeoWE0bi5wHDWSQE7xRafk8dyWrfQFcth3ImPEHn1zjf/Ew2FgLcCT07vYhGBji2kjbi9umc9aOu9vzNETEjra7Vfe2t7pQPDWX2N/LQz3djW7+F5C/7mm342SqWyybgCNt+KwhQpZPzZ7HIv47Whd4XqlBRPIy9ixwn3VLrqMg=
+	t=1762521170; cv=none; b=aC2WDCFvPab0VhFCXqCHzesyTNGMOclFf5vKaWNi1YOltPmEXHZD7mqZrgPENvhaobr9EIeY3mYu6OVEOjw2TyJxnwV2N3HaL6e7XIo1/6Z5NMELMnVJ21/+hBO93OUylbvBrul4gqIzIVvqkrQB/tTGuNgx1Stht1wz+9opCyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762516415; c=relaxed/simple;
-	bh=1uPytD9cNXILOzbFqyP1ntfxFWFE3K2vK34d+qbZFkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kUJ2wlbdx56JXRNZs2mWYvKKg2arcMkukbKBYWiFJVe3QIW5KuJwBPINKRWeylA9ZeE0w+/STXJykkKzBdKDCG18P4Mhbm2/oWHMa2OFAX0TiGVAWlByvJtTrBU1FvL/ucCAiw88HXy8Ixwof6dRDvBiZe9cOxBO3UPaSAte7Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcNsv8tr; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762521170; c=relaxed/simple;
+	bh=FWO/8gHk53RYXD8wsffSK2ke0SFZ1bG9gjIfGIFTJuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r7JA9jrdia5n8CK/CFiWAP3pGLpMriSARm1I5tZfb5Q0C0jR8czXCO/27W8UG6c+2NWxrWI6T6oBjseui9nr8lkp0qhCKnNV70LL94qtCjBw8kgr6q3CE4bluhuUwxawrG886HwxDnZc5IX3UAnoRd+Ko0FoLciXr1M+JUAGE2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmUk856L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcNsv8tr"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-475ca9237c2so3352045e9.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Nov 2025 03:53:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762516412; x=1763121212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8r8f1qu/iMBIK0e1tyUt5/U+CjeN6Py2r6FC9iGdjx0=;
-        b=gcNsv8trIUJRibDmpOgB9/n7filrQilafkOW859fBiALJ0aQy2ay2WYFDk/kEJ/S5p
-         j96Td3VjLBMgEv0RbI7D70GfL4aujklLqxzjmoJMe7Jgp0FL5uAdjhZckZrkG7LKODN6
-         04aIL33CWytKHns3b+jWGqVOz+8zHagEX2MLQH77pqMbb17kStbDflbPGuSZfFefM1f7
-         K20hoI1ZqTSHa3zN6t9B1GJDqeXNXJ07XCdWu+E7679uyJ/QFG7qw/WA/9WJjsEF9CF4
-         l30MuUUbx8dAxj/L+igA6IxDklBzJjDqef+o9uqGCb3r13PrCMuUZsQz6JF/FcYCWcKh
-         +VKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762516412; x=1763121212;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8r8f1qu/iMBIK0e1tyUt5/U+CjeN6Py2r6FC9iGdjx0=;
-        b=WMFbrKqAqLd5tyyRk72D5BDpSY7gKoDJRumIurANRXxniRg/dJxhG53kxVpiwJxwq2
-         M/fMWJxlcYLuBSaTtOcyuR+OvsApWfUs9HboEl+J0EZMWdaYtyjzSH5fJRiipvCBAPsm
-         GQdmz+r+OR0u0dzBUhbgoikkYF9Rxc/5QVQvbQ19xctRC4aG+SuVEtsqLfJadrb9zMp2
-         ejiwFsq861HsJLl07u3K+tIagruZ2FXnSu88/qfKH837/LiZhKAFH8MHuhn/Dsq1xyWY
-         cQ+/QXnXjwJgc+kgU6Zen9pwCmqoFEaqqNubkwO4HZXr4cbxOR2YcruER24OMChZPio1
-         m54w==
-X-Gm-Message-State: AOJu0YzrQIhSILgCCd816CYf7bzef74R4yvt4XBYKIcGIbfi45uOiRnF
-	hpZCL+IDnnE5dGmT7/SrRFssOtsHs3IrwBpbuVqwiaXaWR/AZ4Y/PJ48
-X-Gm-Gg: ASbGnct0M+T0ywzs+Zmqg9ps708wsVDdWVckXbOgYSa/A1bN6CiFLhRBRJ0i1nOpNj7
-	PwQDv0Db0Qz1n3fcVUypG7Yz0zc8opT3uQp9/j32I3UqDTj/c/MSoJ819dMz/d/CvDwbf3x6Zum
-	752CDOBN58fUtOM1ZbIi7RkW68bumZwDIZ8+8+rUVXDHkC+lRREBsmppFDJrXFFIUnH9xY9RXXc
-	FfGzNC463xyPPzdADaT8CXfzrI8YgsBF9xJreyLcevRRQLMoiHabuX2rP0egeKdzYk6uo2gNcJt
-	KxMjtEbxzXduxwM0k45vyQLgcmpL0yMWzV6nRRw+JLwuO2A2WlRHdXn1U+BTrFX4fLPdodAfa7t
-	4OTxFWqwAiXQk+vSpZB0JhhulltFJSDAbPI9ZWaCmqIrXLox0zCcX4QALB1cqhdGv4NAmDmPJ1E
-	jmqTmVbJkKx1/pPCZcP+PCw83UYF7i51JyeXhehnklTz3wttnE
-X-Google-Smtp-Source: AGHT+IFWKADxiyQRK8XMw8urX99fnaTBXKiKvDJ4GU3ZZiNzGs554m++E5HS9HHRIqK6ssi0vxgiwQ==
-X-Received: by 2002:a05:600c:1f94:b0:477:632c:5b91 with SMTP id 5b1f17b1804b1-4776bca7bf0mr21320125e9.16.1762516411907;
-        Fri, 07 Nov 2025 03:53:31 -0800 (PST)
-Received: from cachyos-x8664 (202.red-80-28-106.staticip.rima-tde.net. [80.28.106.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47767749916sm81206805e9.4.2025.11.07.03.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 03:53:31 -0800 (PST)
-From: Marcos Vega <marcosmola2@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marcos Vega <marcosmola2@gmail.com>
-Subject: [PATCH v3] platform/x86: hp-wmi: Moved Omen MAX 16-ah0xx board name
-Date: Fri,  7 Nov 2025 12:48:53 +0100
-Message-ID: <20251107114853.80838-1-marcosmola2@gmail.com>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <f89e0a02-91a2-e98c-d06a-6b7060bb2848@linux.intel.com>
-References: <f89e0a02-91a2-e98c-d06a-6b7060bb2848@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmUk856L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C67C2BCB6
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Nov 2025 13:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762521169;
+	bh=FWO/8gHk53RYXD8wsffSK2ke0SFZ1bG9gjIfGIFTJuI=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=VmUk856LB3Ktid9JTM1p/HRUccXaDtTvjP+q4dhPWT4wSln/qPkV/VQu6vernisKV
+	 TOiBfbwqozLZk5euuhK+PjZQPMezUhrIMdpfuKw2WKuqOZ9jIxlM+qYSwGmHlb53q7
+	 YFWTsYSshNNpUqj4G0nHtU6ckASu72pJffLn1WR8CTKW3neiXm4XGYq8wXTMRuiXF0
+	 YQTpO7XP/wsIoQ4PycZ9vGqeoMSSJWdUR0iew6wB1xUFKvfd1ZL3P5VabnSdmxy6IY
+	 Em8ZkCAL4zE8XdO+35qZJIBafvwOzJSsIhwygOORffdFKPGIo4jxcwhjKvwckqScZx
+	 kHA3V9Bh9hbtw==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37a33b06028so6457221fa.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Nov 2025 05:12:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX/zlppwBihYI5++7K5X3mYCm78LLCcT9eE4Du6dARrk+5cTo6RtRMZjFqfpqhyXsFgXoph3InUXPz+tpSObktvRtbg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwf1XJwyZG8240qfsKUh/FxD4h4Kj+RZG/6VmUpFgABaeI5bKW
+	LCcOWRj2tmXVCh79cKcOrifwmNYs4X6BW7hBnYNbus+a4fUmkRE60VwhLyYPlLpePuQ5l9yqfwB
+	MAOAdde4IzmyvMFttbUvWra5EO1Fnwl8=
+X-Google-Smtp-Source: AGHT+IEi60U+MS5fuwhOECte6O05g72+EAD4tfI6rsUD0G2v7W8zO7uqdgB+Fmi8wi+riCfy3k40Cuh7KGFUeVlePak=
+X-Received: by 2002:a05:651c:4014:b0:373:a675:cd5f with SMTP id
+ 38308e7fff4ca-37a73335a70mr6546391fa.39.1762521167522; Fri, 07 Nov 2025
+ 05:12:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org> <20251106-b4-of-match-matchine-data-v1-4-d780ea1780c2@linaro.org>
+In-Reply-To: <20251106-b4-of-match-matchine-data-v1-4-d780ea1780c2@linaro.org>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Fri, 7 Nov 2025 22:12:34 +0900
+X-Gmail-Original-Message-ID: <CAGb2v65fcCEqJEdSuH+n1BFtoBxSCxEXaxAk7norRWzpPoT2cg@mail.gmail.com>
+X-Gm-Features: AWmQ_bknqHyNaA5_RcBhQtheiViI_1Nkl4lCccfeS9SBJtkNwcoPaIb-tzaunfo
+Message-ID: <CAGb2v65fcCEqJEdSuH+n1BFtoBxSCxEXaxAk7norRWzpPoT2cg@mail.gmail.com>
+Subject: Re: [PATCH 04/13] cpufreq: sun50i: Simplify with of_machine_device_match()
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Yangtao Li <tiny.windzz@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixed placement of board 8D41 so its categorized adequately in victus_s_thermal_profile_boards.
-Rebased to review-ilpo-fixes as pointed out by maintainer.
+On Fri, Nov 7, 2025 at 4:08=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Replace open-coded getting root OF node and matching against it with
+> new of_machine_device_match() helper.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index e10c75d91f24..47989f6a1753 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -96,6 +96,7 @@ static const char * const victus_thermal_profile_boards[] = {
- static const char * const victus_s_thermal_profile_boards[] = {
- 	"8BBE", "8BD4", "8BD5",
- 	"8C78", "8C99", "8C9C",
-+	"8D41"
- };
- 
- enum hp_wmi_radio {
--- 
-2.51.2
+Acked-by: Chen-Yu Tsai <wens@kernel.org>
