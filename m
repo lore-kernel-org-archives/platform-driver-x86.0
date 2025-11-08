@@ -1,110 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933D932D7F7
-	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Nov 2025 19:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1981D95A3
+	for <platform-driver-x86@vger.kernel.org>; Sat,  8 Nov 2025 11:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762544913; cv=none; b=Gnn+95e34eVJGjFDUrjKA47S6F4o0iXJDl0o6eP81yVK9OXt4S1oTC4bKziA5Bqei8tycs1RTaLxnoqD6w5ast2KTn1Xn+DsbbOXRg39AmbmMfpKTJmFf2nCeFy9prkySimSEwbTEICz3Oguy4wrEbL8EZ3TXN5n3o/sjl1Btqg=
+	t=1762602499; cv=none; b=HL88F4SaVuvgfW5Bd4wqE5TsVqx1/bQhIyAmPzMR8cGUku9+MrPXScNyJ6niEIGi8dx5mAAwrDqM2N+x4z3IBpSc679JDZii4cdyg9fn6iMpeUpkegLtzVNSNQSu8O6k9/hb4vDu+eyzEO6HJ3K/7vvTHs9FX93ZNoUBDf0CGYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762544913; c=relaxed/simple;
-	bh=jVmrd4OImxyn7gwQSEP1GTQ4NDcZIuueF+51qwhy7Bs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FSM0tHj0CeGjfUH8xXxErWLcM0BhwDDmSBM5+NUSESjhYnAtWwMbVTebN8Eb07VHaiZbCOyZrvoKR5yG0TQJ2Hs0GygqRIJoVHNAwpAUQuYI8+yL98rySFt1Ms8wDusiBpsk4V24tROOnrEZA7b4Co4ziwgHeg0oFJOkqJyuV9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ef58Lus/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762602499; c=relaxed/simple;
+	bh=5cdTnkkVED9/2W3bxFBK7nQFcUSBpM8zbejc4QhIme4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NiN42S9h1boel8tqFUiJQB6gQqSRf7MlNUMd2mOdDTl7v5Q9D9Jyjw3SkFhIjSZpQXUexd9+y+ugOw4oqWgo5o3ZTPN7IRvlCnh8Vf50t+E8rC7DabCugfh0Bd6g5YxJPK8drTvrGCS/6v8bPE+Wc6c2ZNl0iU75hTRQk8xXzjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9VmHVR7; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ef58Lus/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2ECC116C6
-	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Nov 2025 19:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762544913;
-	bh=jVmrd4OImxyn7gwQSEP1GTQ4NDcZIuueF+51qwhy7Bs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ef58Lus/T4l61OLQyp3LuWhB4ykyNSOTnZve3WeJtIWNIjIu7DtTPYdUo65b51np3
-	 5nP2Aix/uRNEDOV5f2XfNiAuSy392lJ8pE+H/4WHede8R/gBk1mnBQhAHtOFDag0Y3
-	 AYjc54nhVDMP7en0zClM8jMTStFGzRjtybyDdJCXQPQ3IC1lHuTYZpDPyGT6RmL/1d
-	 IQV0lIs6BG6DGx5XrKEihBaOL2et+TZvewZR40aTB3SELTNaNyG7+icgZvTIveuZg+
-	 ND1S3YOz0Oelwtg3vTBIjVwoRM/oorpAtqakl/9fyJTUcEgn3M0IjTZioDTwD3K2I6
-	 tfvcbpQ9uNr/Q==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-656b7f02b56so578428eaf.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Nov 2025 11:48:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVuv/GlnK1KcvPY1vAePkAO6o0v4lTcg0AqmXXjw384xbj+5nbW/zqODZCQx6JcWzGUs1T1zkoXS/xowplwB8xYIpIt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrLWP/jfn2RoigG0sDyzo9NDUwdmRTJrs7BbU0gOdavnJC+Jxz
-	Vq0Il8Znn6JcBsUV1u3lnpThSP4uyaI0f9Pzka2+XJL8FU9Prs0L2Y4z3e5PEf4IKPcdnD2LrpG
-	H9Zfa5BOhxjnHZD3U2ZO847w1/hyeyCw=
-X-Google-Smtp-Source: AGHT+IFfjcZQMaSMf/O0E7bHDvyenSz2TU7wnFXyLVZ2U6iGaSEGM0Li0KrPZeYcaNcWs96gi7YlfQIKTtL1lzqsBTE=
-X-Received: by 2002:a05:6808:4f13:b0:43d:2e06:4e84 with SMTP id
- 5614622812f47-4501c747f7fmr1415267b6e.13.1762544912008; Fri, 07 Nov 2025
- 11:48:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9VmHVR7"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-47774d3536dso2277195e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Nov 2025 03:48:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762602496; x=1763207296; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWQxduQP/C2sgZ0tZge6y0YoRp0qJh93EXdH14IqjbM=;
+        b=D9VmHVR7/4RGo1PqM68bkpT3d+lBJegKTUNIEpOGPf8AyAYKlziy1hfkrR3TE2Cu9i
+         l1zf6PoHhtUGKPbhELbJ7A30QeK6ZV9u0RnFGNnlSLnCodNhiFxuFooW7AAqIhmueKTQ
+         HVxQ0phI0z/n5zPVGw9HN9XHZzxal6GrhugvV9bl1u3yb2mIEqpabFdZb44fLfh9Rr8/
+         OhIMqGsw3J+01TWsTw1R32Sr/90xy3P2ULRm3oma5gDLAPpfjljDvj7+zp1lPouwqx5G
+         BgBj8Vb8M2hBVCWqYPASlr7Hpmdh854PdFVutxSJ51whJPAhI93dbzzmDCtcOQXsfO9Z
+         y4sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762602496; x=1763207296;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TWQxduQP/C2sgZ0tZge6y0YoRp0qJh93EXdH14IqjbM=;
+        b=A23MvpisuUnifp8f15OP3L3lxLODkXfXGLCW/mti6XiiXtFRPsw8SuxlMaRRf59UFF
+         qrvT6O3TUa4TM/FPM1UtndOHq2rPneniIvdKiq7QS50kLyej2vP7paczmgDE9iY1dI9r
+         RDPhAW6x8nf97MVn9ZWiXszDdzZ3nmdXBTYbbV4U5vvVOmf1mI14G/m8O5WAGRyovL8v
+         itECYNYvLYbkjkX5+F30kEN168pg7rLiYc7AixduvcPMd0QL4N5HR6SNj9hVenQxW2x2
+         J4pU2ze6sFPZbMsDeFbABeK9UV9ajiVKB5+VQfNJolZiAEzSbXAK5tTDeSfWGnGM03bN
+         e+kQ==
+X-Gm-Message-State: AOJu0YwLiaUmXUPe+e2miOt8ps17IXevIbV+Ag6ba2rxvrGqWpFdnPfP
+	Y8bKWw4cxm2zWJeFPJwHM3l7p0u7iKvfi34lTR9aZ1udNis/2EfzXZKl
+X-Gm-Gg: ASbGncs/MRnlDBQuDjO6V03I2n/lqvgbRhncZJIgH9MrClMOgb+gznUsy2ZyYsKn1bX
+	6k6WIOOLnICKEnDEYMBGR/0cv1WuTAO7fKJeOyW6K8FThZrfbH4bP43IYh5ASdGw40eGR5Aj7Fn
+	7Qh8/khAwNqkR7epj7EdOR1Xm1AKY/Qk7UC4pOoObhkHG1s2Zf87Hlf1pH4LpY/QXqWSJT8hyur
+	YFJQWs/yGly6Qdmsjv9bGdczHcl9yDrkaAMtXoo/+0TNYz5JZVCg5DxTaGrG9yb2pcUDyyTD7FP
+	TaG3hMZaYvBdcM2qpMKoqehjd20+G/p/6qs17jhtYN81ZEJ9Cel9p5nCTtbFLjfDp/dqD1th3vA
+	Kn8tuGW9Vc6Uv5gcEJyAdj7xsY1osjmTnXJy/Ln9NwaMGMCWwAm4wPMo82B3hv+c15SdsccQNoK
+	MQ6Z+v+TqOkMn2rCV3rSugwAzJklERxHMK0xQZZKQ3XK9alfU0
+X-Google-Smtp-Source: AGHT+IHgxO1mIr8DQpSXmsqzg3ZZ+VysGIJ7PpFEGvZJqatwD9Nv+m3blSWxKLvi/w/mZvDvXnK+2g==
+X-Received: by 2002:a05:600c:6b06:b0:477:14ba:28da with SMTP id 5b1f17b1804b1-4776dc5daa2mr33610405e9.5.1762602495708;
+        Sat, 08 Nov 2025 03:48:15 -0800 (PST)
+Received: from cachyos-x8664 (202.red-80-28-106.staticip.rima-tde.net. [80.28.106.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bcd521fsm123410945e9.6.2025.11.08.03.48.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Nov 2025 03:48:15 -0800 (PST)
+From: Marcos Vega <marcosmola2@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marcos Vega <marcosmola2@gmail.com>
+Subject: [PATCH v4] platform/x86: hp-wmi: Moved Omen MAX 16-ah0xx board name
+Date: Sat,  8 Nov 2025 12:47:41 +0100
+Message-ID: <20251108114739.9255-3-marcosmola2@gmail.com>
+X-Mailer: git-send-email 2.51.2
+In-Reply-To: <63905a5b-1dc5-e0d1-6c8d-e590c7e7c7f5@linux.intel.com>
+References: <63905a5b-1dc5-e0d1-6c8d-e590c7e7c7f5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251103162516.2606158-1-srosek@google.com>
-In-Reply-To: <20251103162516.2606158-1-srosek@google.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Nov 2025 20:48:21 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jPdfut_QHz9f0x+SSexD_i8xEb5bhkzMv_m=a598Hqxw@mail.gmail.com>
-X-Gm-Features: AWmQ_bk_tz9nQGJAp7GZKrIe43u7pcO4azGS2YQ7FnFcvmD2-6KLrj0eNLfHFuw
-Message-ID: <CAJZ5v0jPdfut_QHz9f0x+SSexD_i8xEb5bhkzMv_m=a598Hqxw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] ACPI: DPTF: Move INT340X enumeration from DPTF
- scan handler to ACPI core
-To: Slawomir Rosek <srosek@google.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Hung <alexhung@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, 
-	AceLan Kao <acelan.kao@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Tomasz Nowicki <tnowicki@google.com>, 
-	Stanislaw Kardach <skardach@google.com>, Michal Krawczyk <mikrawczyk@google.com>, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 3, 2025 at 5:25=E2=80=AFPM Slawomir Rosek <srosek@google.com> w=
-rote:
->
-> The Intel Dynamic Platform and Thermal Framework (DPTF) relies on
-> the INT340X ACPI device objects. The temperature information and
-> cooling ability are exposed to the userspace via those objects.
->
-> Since kernel v3.17 the ACPI bus scan handler is introduced to prevent
-> enumeration of INT340X ACPI device objects on the platform bus unless
-> related thermal drivers are enabled. However, using the IS_ENABLED()
-> macro in the ACPI scan handler forces the kernel to be recompiled
-> when thermal drivers are enabled or disabled, which is a significant
-> limitation of its modularity. The IS_ENABLED() macro is particularly
-> problematic for the Android Generic Kernel Image (GKI) project which
-> uses unified core kernel while SoC/board support is moved to loadable
-> vendor modules.
->
-> The DPTF requires thermal drivers to be loaded at runtime, thus
-> ACPI bus scan handler is not needed and acpi_default_enumeration()
-> may create all platform devices, regardless of the actual setting
-> of CONFIG_INT340X_THERMAL.
->
-> Link to v1: https://lore.kernel.org/all/20250830053404.763995-1-srosek@go=
-ogle.com/
-> Link to v2: https://lore.kernel.org/all/20250917120719.2390847-1-srosek@g=
-oogle.com/
-> Link to v3: https://lore.kernel.org/all/20251002113404.3117429-1-srosek@g=
-oogle.com/
->
-> In v4 the SoC DTS thermal explicitly depends on the X86_64 and NET,
-> so the INT340X driver may safely be selected by the SoC DTS thermal
-> driver. In addition most of previously submitted patches are dropped
-> as they are not necessary, instead the ACPI bus scan handler is simply
-> removed from the kernel, thus all platform devices are enumerated by
-> the acpi_default_enumeration().
->
-> Slawomir Rosek (2):
->   ACPI: DPTF: Ignore SoC DTS thermal while scanning
->   ACPI: DPTF: Remove int340x thermal scan handler
+Fixed placement of board 8D41 so its categorized adequately in victus_s_thermal_profile_boards.
 
-Both patches applied as 6.19 material, but the subject of the first
-patch has been changed to "thermal: intel: Select INT340X_THERMAL from
-INTEL_SOC_DTS_THERMAL".
+Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
+---
+Thank you for all the tips on proper kernel writing, I'll try to do it properly and learn for my next patch.
 
-Thanks!
+v4:
+- Added trailing comma
+
+
+ drivers/platform/x86/hp/hp-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index e10c75d91f24..ad9d9f97960f 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -96,6 +96,7 @@ static const char * const victus_thermal_profile_boards[] = {
+ static const char * const victus_s_thermal_profile_boards[] = {
+ 	"8BBE", "8BD4", "8BD5",
+ 	"8C78", "8C99", "8C9C",
++	"8D41",
+ };
+ 
+ enum hp_wmi_radio {
+-- 
+2.51.2
+
