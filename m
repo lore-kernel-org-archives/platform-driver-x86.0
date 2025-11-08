@@ -1,107 +1,168 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1981D95A3
-	for <platform-driver-x86@vger.kernel.org>; Sat,  8 Nov 2025 11:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890761DFE26
+	for <platform-driver-x86@vger.kernel.org>; Sat,  8 Nov 2025 14:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762602499; cv=none; b=HL88F4SaVuvgfW5Bd4wqE5TsVqx1/bQhIyAmPzMR8cGUku9+MrPXScNyJ6niEIGi8dx5mAAwrDqM2N+x4z3IBpSc679JDZii4cdyg9fn6iMpeUpkegLtzVNSNQSu8O6k9/hb4vDu+eyzEO6HJ3K/7vvTHs9FX93ZNoUBDf0CGYI=
+	t=1762612705; cv=none; b=Hlj3tdzaUJd373FMYGVZbq1LUPR0mshHBq9NU7mDgXgS9rvHGbdH4RfSo1ZdIZ8t71A8aVd928VunhFzMzqrGsPMBn9kA9tbf/Gu+6BM7SqeZHQOuHsL3EUf8R2F0GI38+dod7Lq+zvxjCxHJZn+rHHqVBJiz44HOLxY+jSXz1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762602499; c=relaxed/simple;
-	bh=5cdTnkkVED9/2W3bxFBK7nQFcUSBpM8zbejc4QhIme4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NiN42S9h1boel8tqFUiJQB6gQqSRf7MlNUMd2mOdDTl7v5Q9D9Jyjw3SkFhIjSZpQXUexd9+y+ugOw4oqWgo5o3ZTPN7IRvlCnh8Vf50t+E8rC7DabCugfh0Bd6g5YxJPK8drTvrGCS/6v8bPE+Wc6c2ZNl0iU75hTRQk8xXzjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9VmHVR7; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762612705; c=relaxed/simple;
+	bh=cvwRyGoCNZb0l5Vkp0pBpQx4b8i+JQ5q1UuAHIXap0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+IG0WjQZ7DHAk7MxcSmEBCAqJQlQjvZXiDv6ugkVSSkUVrVDRJjAhNvZ2BnR3O3MJ8dGsFBIB0/JH0AkKZrsT0b8Zw829/TYOgUvWYi8pz8VlHWAKhbk74wEKbW32UkWEXoYiN1Ahxc7CCkAxkbkrA55Ic44yLsDoFcrctoN3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QT7EnM/G; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9VmHVR7"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-47774d3536dso2277195e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Nov 2025 03:48:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QT7EnM/G"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-429c84bf326so117527f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Nov 2025 06:38:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762602496; x=1763207296; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TWQxduQP/C2sgZ0tZge6y0YoRp0qJh93EXdH14IqjbM=;
-        b=D9VmHVR7/4RGo1PqM68bkpT3d+lBJegKTUNIEpOGPf8AyAYKlziy1hfkrR3TE2Cu9i
-         l1zf6PoHhtUGKPbhELbJ7A30QeK6ZV9u0RnFGNnlSLnCodNhiFxuFooW7AAqIhmueKTQ
-         HVxQ0phI0z/n5zPVGw9HN9XHZzxal6GrhugvV9bl1u3yb2mIEqpabFdZb44fLfh9Rr8/
-         OhIMqGsw3J+01TWsTw1R32Sr/90xy3P2ULRm3oma5gDLAPpfjljDvj7+zp1lPouwqx5G
-         BgBj8Vb8M2hBVCWqYPASlr7Hpmdh854PdFVutxSJ51whJPAhI93dbzzmDCtcOQXsfO9Z
-         y4sg==
+        d=linaro.org; s=google; t=1762612702; x=1763217502; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjskvN6jH7m+Duu1eq+hr6O2GRgMWF9LB47syyf4F5w=;
+        b=QT7EnM/GZuEExeh23wss394j1sChWEkQDOwj0Wv2YvhVCBXmVZySghX9dEjHVZRtXu
+         UccGkzVXKEr0J1viKmtSdOHoYE9YKsXUUgBAZUoEoYSXVouYCUHqM+Kth7OsSJmPpoLC
+         4khBt3zsMjXOYf9eNBwfjNxdwonfnU5dai0IqOT+adRXWXMLNgJUK4ds/M+VjwXv3ytD
+         lPJEjEdeLPUzvHfZ+E91UqCP8RcmJjnLcv9CIwf6dpRyXguQwsAMyz/Jv7xZ4Kbdik6A
+         6D6EOjUsuUIo4yK5dwzelSJ3uxOcnkXxiVk28h6OeMZl88w52m1zR1dtOlUNdBl1jkZH
+         AGpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762602496; x=1763207296;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=TWQxduQP/C2sgZ0tZge6y0YoRp0qJh93EXdH14IqjbM=;
-        b=A23MvpisuUnifp8f15OP3L3lxLODkXfXGLCW/mti6XiiXtFRPsw8SuxlMaRRf59UFF
-         qrvT6O3TUa4TM/FPM1UtndOHq2rPneniIvdKiq7QS50kLyej2vP7paczmgDE9iY1dI9r
-         RDPhAW6x8nf97MVn9ZWiXszDdzZ3nmdXBTYbbV4U5vvVOmf1mI14G/m8O5WAGRyovL8v
-         itECYNYvLYbkjkX5+F30kEN168pg7rLiYc7AixduvcPMd0QL4N5HR6SNj9hVenQxW2x2
-         J4pU2ze6sFPZbMsDeFbABeK9UV9ajiVKB5+VQfNJolZiAEzSbXAK5tTDeSfWGnGM03bN
-         e+kQ==
-X-Gm-Message-State: AOJu0YwLiaUmXUPe+e2miOt8ps17IXevIbV+Ag6ba2rxvrGqWpFdnPfP
-	Y8bKWw4cxm2zWJeFPJwHM3l7p0u7iKvfi34lTR9aZ1udNis/2EfzXZKl
-X-Gm-Gg: ASbGncs/MRnlDBQuDjO6V03I2n/lqvgbRhncZJIgH9MrClMOgb+gznUsy2ZyYsKn1bX
-	6k6WIOOLnICKEnDEYMBGR/0cv1WuTAO7fKJeOyW6K8FThZrfbH4bP43IYh5ASdGw40eGR5Aj7Fn
-	7Qh8/khAwNqkR7epj7EdOR1Xm1AKY/Qk7UC4pOoObhkHG1s2Zf87Hlf1pH4LpY/QXqWSJT8hyur
-	YFJQWs/yGly6Qdmsjv9bGdczHcl9yDrkaAMtXoo/+0TNYz5JZVCg5DxTaGrG9yb2pcUDyyTD7FP
-	TaG3hMZaYvBdcM2qpMKoqehjd20+G/p/6qs17jhtYN81ZEJ9Cel9p5nCTtbFLjfDp/dqD1th3vA
-	Kn8tuGW9Vc6Uv5gcEJyAdj7xsY1osjmTnXJy/Ln9NwaMGMCWwAm4wPMo82B3hv+c15SdsccQNoK
-	MQ6Z+v+TqOkMn2rCV3rSugwAzJklERxHMK0xQZZKQ3XK9alfU0
-X-Google-Smtp-Source: AGHT+IHgxO1mIr8DQpSXmsqzg3ZZ+VysGIJ7PpFEGvZJqatwD9Nv+m3blSWxKLvi/w/mZvDvXnK+2g==
-X-Received: by 2002:a05:600c:6b06:b0:477:14ba:28da with SMTP id 5b1f17b1804b1-4776dc5daa2mr33610405e9.5.1762602495708;
-        Sat, 08 Nov 2025 03:48:15 -0800 (PST)
-Received: from cachyos-x8664 (202.red-80-28-106.staticip.rima-tde.net. [80.28.106.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bcd521fsm123410945e9.6.2025.11.08.03.48.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Nov 2025 03:48:15 -0800 (PST)
-From: Marcos Vega <marcosmola2@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marcos Vega <marcosmola2@gmail.com>
-Subject: [PATCH v4] platform/x86: hp-wmi: Moved Omen MAX 16-ah0xx board name
-Date: Sat,  8 Nov 2025 12:47:41 +0100
-Message-ID: <20251108114739.9255-3-marcosmola2@gmail.com>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <63905a5b-1dc5-e0d1-6c8d-e590c7e7c7f5@linux.intel.com>
-References: <63905a5b-1dc5-e0d1-6c8d-e590c7e7c7f5@linux.intel.com>
+        d=1e100.net; s=20230601; t=1762612702; x=1763217502;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CjskvN6jH7m+Duu1eq+hr6O2GRgMWF9LB47syyf4F5w=;
+        b=XesFv7HNRB9uyw4CllSXTlD9id12FKg2ThpuNMg1/eF2pGMamUzVIEcDjIaq6k5H+p
+         jzJOnf39w71F3WfKOzxZuTRdk3ELznM9eebmM4FFkHU8DSvhj8lJ7RSYcung/tjRUsZM
+         6AseOz3wqZZg9i4khzX8vmh33AWXkE4DboimzVNbYEreNtdMpchDlHMfJI6OFUpC9fpw
+         QB41M4nuVe9Uk7dJxM/pbEVJhizl3eEGq8pqrdI1vQ+wptSlh7ppeyrHf1DL+KakkwQ8
+         v7nAHVK6fFHf4TZJYtmGz3xl90k4I1fOYozDHcLtuFbWLmvsIbI+71N7hdF1E+vlrgec
+         lWJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMiYimlimQA/SPkBJhlbdj1v3IsMfsPdaCCGw7oLKI3Jmp0Uu2Qk0tf6gF7crhZu7j+eembGG6f5EX2it8JGwNiJT4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfFU+YX6wnypGZtEKJh9G6qwCj2NaLbRiE14mVAW/pTH9iRocr
+	gnEH575lUj4J8GvLibu2WTHK1DpR6WyLqX6nyJS8W4wjr7qsnKfoDU8GszFdjh6Lrsk=
+X-Gm-Gg: ASbGncvsQ12HQpmRfT+iajNlhDiDOKKZ68f+p5NiPglVJfuzvO5L6XJov0MYpTMvo4q
+	RdzmCG3lf/wM5ejO8/CGzrEv4Rg1QZ+37ZO5mofDrJYF+WZhbKXe/s29wK6/cwWWxYEEIIwb4zP
+	zyTgBEQrjp31sIKMyMPep3jFYRaChSxNiX8dS8Inyuf8mC3UAHewRYd1zFeyFJ18anTJDXG8DuY
+	qrTBKzTRrXHI6eyEY/4MQJrRQtYj8+dUnRs1mmUeGDZ6Oy3gUpJwlij4JA95Uisv4aXSauKi/qy
+	kKv97VC4i5K7VcA+fg18dAUbibtNx3OHomDxn/nzPWds78vUM5LyWhJjEzf0GWxZvjc8VVfJGwU
+	JanVEsij0suZ+6zo6FRfh17y8TUEKzvsOqDAm1R+lsK9We+T9eFb4g7w1gzLOTPZ4kJuEpMH8ca
+	1m89txsIfV8p+GC94HARkahmftH8IlnDU=
+X-Google-Smtp-Source: AGHT+IFiBiRhpsly3YGEqjvxj+Py3Q4DK+JCa0siSF6z5aJmBhaLltU7plhNOwZpv/U5i5Vxxf3qew==
+X-Received: by 2002:a05:600c:4ed1:b0:477:bb0:5e13 with SMTP id 5b1f17b1804b1-477732aa00amr11266585e9.8.1762612701759;
+        Sat, 08 Nov 2025 06:38:21 -0800 (PST)
+Received: from [192.168.1.29] ([178.197.219.123])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776a278a32sm56562505e9.12.2025.11.08.06.38.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Nov 2025 06:38:20 -0800 (PST)
+Message-ID: <07cbc020-ece3-4483-b078-c265e3400d2b@linaro.org>
+Date: Sat, 8 Nov 2025 15:38:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/13] cpufreq: ti: Simplify with
+ of_machine_device_match()
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-tegra@vger.kernel.org
+References: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org>
+ <20251106-b4-of-match-matchine-data-v1-5-d780ea1780c2@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+AhsD
+ BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEm9B+DgxR+NWWd7dUG5NDfTtBYpsFAmgXUEoF
+ CRaWdJoACgkQG5NDfTtBYpudig/+Inb3Kjx1B7w2IpPKmpCT20QQQstx14Wi+rh2FcnV6+/9
+ tyHtYwdirraBGGerrNY1c14MX0Tsmzqu9NyZ43heQB2uJuQb35rmI4dn1G+ZH0BD7cwR+M9m
+ lSV9YlF7z3Ycz2zHjxL1QXBVvwJRyE0sCIoe+0O9AW9Xj8L/dmvmRfDdtRhYVGyU7fze+lsH
+ 1pXaq9fdef8QsAETCg5q0zxD+VS+OoZFx4ZtFqvzmhCs0eFvM7gNqiyczeVGUciVlO3+1ZUn
+ eqQnxTXnqfJHptZTtK05uXGBwxjTHJrlSKnDslhZNkzv4JfTQhmERyx8BPHDkzpuPjfZ5Jp3
+ INcYsxgttyeDS4prv+XWlT7DUjIzcKih0tFDoW5/k6OZeFPba5PATHO78rcWFcduN8xB23B4
+ WFQAt5jpsP7/ngKQR9drMXfQGcEmqBq+aoVHobwOfEJTErdku05zjFmm1VnD55CzFJvG7Ll9
+ OsRfZD/1MKbl0k39NiRuf8IYFOxVCKrMSgnqED1eacLgj3AWnmfPlyB3Xka0FimVu5Q7r1H/
+ 9CCfHiOjjPsTAjE+Woh+/8Q0IyHzr+2sCe4g9w2tlsMQJhixykXC1KvzqMdUYKuE00CT+wdK
+ nXj0hlNnThRfcA9VPYzKlx3W6GLlyB6umd6WBGGKyiOmOcPqUK3GIvnLzfTXR5DOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCaBdQXwUJFpZbKgAKCRAbk0N9O0Fim07TD/92Vcmzn/jaEBcq
+ yT48ODfDIQVvg2nIDW+qbHtJ8DOT0d/qVbBTU7oBuo0xuHo+MTBp0pSTWbThLsSN1AuyP8wF
+ KChC0JPcwOZZRS0dl3lFgg+c+rdZUHjsa247r+7fvm2zGG1/u+33lBJgnAIH5lSCjhP4VXiG
+ q5ngCxGRuBq+0jNCKyAOC/vq2cS/dgdXwmf2aL8G7QVREX7mSl0x+CjWyrpFc1D/9NV/zIWB
+ G1NR1fFb+oeOVhRGubYfiS62htUQjGLK7qbTmrd715kH9Noww1U5HH7WQzePt/SvC0RhQXNj
+ XKBB+lwwM+XulFigmMF1KybRm7MNoLBrGDa3yGpAkHMkJ7NM4iSMdSxYAr60RtThnhKc2kLI
+ zd8GqyBh0nGPIL+1ZVMBDXw1Eu0/Du0rWt1zAKXQYVAfBLCTmkOnPU0fjR7qVT41xdJ6KqQM
+ NGQeV+0o9X91X6VBeK6Na3zt5y4eWkve65DRlk1aoeBmhAteioLZlXkqu0pZv+PKIVf+zFKu
+ h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
+ vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <20251106-b4-of-match-matchine-data-v1-5-d780ea1780c2@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fixed placement of board 8D41 so its categorized adequately in victus_s_thermal_profile_boards.
+On 06/11/2025 20:07, Krzysztof Kozlowski wrote:
+>  static int ti_cpufreq_probe(struct platform_device *pdev)
+>  {
+>  	u32 version[VERSION_COUNT];
+> @@ -564,8 +554,7 @@ static int __init ti_cpufreq_init(void)
+>  	const struct of_device_id *match;
+>  
+>  	/* Check to ensure we are on a compatible platform */
+> -	match = ti_cpufreq_match_node();
+> -	if (match)
+> +	if (of_machine_device_match(ti_cpufreq_of_match))
+>  		platform_device_register_data(NULL, "ti-cpufreq", -1, match,
+>  					      sizeof(*match));
 
-Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
----
-Thank you for all the tips on proper kernel writing, I'll try to do it properly and learn for my next patch.
+This is obviously wrong patch... weird my W=1 builds did not flag it.
 
-v4:
-- Added trailing comma
-
-
- drivers/platform/x86/hp/hp-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index e10c75d91f24..ad9d9f97960f 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -96,6 +96,7 @@ static const char * const victus_thermal_profile_boards[] = {
- static const char * const victus_s_thermal_profile_boards[] = {
- 	"8BBE", "8BD4", "8BD5",
- 	"8C78", "8C99", "8C9C",
-+	"8D41",
- };
- 
- enum hp_wmi_radio {
--- 
-2.51.2
-
+Best regards,
+Krzysztof
