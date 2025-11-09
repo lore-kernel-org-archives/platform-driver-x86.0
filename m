@@ -1,38 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9952A1EBA19
-	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Nov 2025 06:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A3920ED
+	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Nov 2025 14:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762671361; cv=none; b=PCSqgEycZ+6uY1CcvW+GJYrFIr/Ll+EWsl7iM/jnh5E2AZiLx35Ii46Cco+OSiTFg0GfzyYLWQ7QIRHgd6jE1pGwvilTxfOVXpTiftEIAAKlmqH7NGlQK3s6XnEKFxhPsysD6G4SKbVFLmEeqM9pD4H047Z8xj3F/vGW8wk9apA=
+	t=1762696833; cv=none; b=JgCl7yGtF0vgZD7Gxad8EveE6k5RAz8l4lft57xNOoe9zuE7OOO+8cUpvf3UnveWkz/P/pQoyKJRprjagn59ChcuFKK6URjp8viT2wg3JC9ZbcIsqweJ8n1mAKGvLHAHJv/U5Um8A63GWruVjyHtw6ZOPs5RfRQeF9L/xsa09ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762671361; c=relaxed/simple;
-	bh=eY3nxzM2dX7uBnCMrZP2PbUh4s+l+W6mmCNvyJdX9sc=;
+	s=arc-20240116; t=1762696833; c=relaxed/simple;
+	bh=LyZ+q8U9FI+W4ULTSIxexdqHKfqyL3Owps+d6u2HMTI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dv0k+ETmkO3xHurYWTwEvilmP0AccjrYujMwoYulIgrLerZWAQZQIy9ZfE2TecKXjiR1q1dBhPIkWZeBlbqHZJ/6ACj97Z7sfiIx958OVdksGMEKcDi/PaonWetJSGVHFdEwIkk5WLE0RNfUB0OW0Ok58KA9uR+anu0tyYn5u4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcrDLLAg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=eAjL1v3RPoDYUxA6zvG2YrMolCaTQFJ1Irct5/lf9GMx2S7gpYklqtXYwcIOn87w2XnxUMvyqOL0hYUyAJhiD5Uwe9lFU69yfFju/RIHzpTKTfcbCzngK1mccRPQjDEDgbjyzRCoTpMeoekDs83M+ukGR2QCA9m/VOOkErsuwNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOLb5SLT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcrDLLAg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2722CC4CEF8
-	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Nov 2025 06:56:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOLb5SLT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B55A0C19424
+	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Nov 2025 14:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762671361;
-	bh=eY3nxzM2dX7uBnCMrZP2PbUh4s+l+W6mmCNvyJdX9sc=;
+	s=k20201202; t=1762696833;
+	bh=LyZ+q8U9FI+W4ULTSIxexdqHKfqyL3Owps+d6u2HMTI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=tcrDLLAg3YJ5nMNBO4cPPjKpkW0w5acHdUpP5XiU+/Y6CtZyHlJ3qeNITxJdBpuD/
-	 4XMqwzThsHQMgYkOa5ow0slxQuV2WxONdf9h31SgaqVGxbvBejqGtk4WQZMOn3g9w+
-	 EsSAiTmCOcMhnjuKzfwoUrYWDMi2XdRC6uB/Nsragy2vyjnf2VJexY6WPvJeVVMZtS
-	 NkbQZ3RAHjRifpV7eK6MldrXBGN5wJ6fRc2G5UKdmZ+T6bXX5h23pKmOKxGJ6QCEOb
-	 WMzEAn+8SITZ0Qkdg4KzJKhfe+oPgqLExcW5TrIYCNAx4Y6G/hTwjHjceyPkfpY2Lf
-	 GXByv0OV50K4g==
+	b=qOLb5SLTcNWudpG3AtJI10cp1tNPn8jSLk3NK89Eop9QOaO9kkM06P12QoISrhIWD
+	 JDdcmuP1GSisSZrFf1NRyGEpDgomen+fBnD14J7uLePzIy2rX6NkMab7QIFfjAwkhX
+	 wiQliGQ0n2ndOeQbaK5C44my8RHlNWceHt0KkRXBD0BJ1gw3I5ePOGYIbT0fovLzD1
+	 Utn2CuKFwR6Gve3DsT6UXo2LJ6CBOhIM9ZbCb3G7DKJkoai2b3h1oLJHhpiorFhXJM
+	 DOlUAKXQRNHXdIhvkIl3S2nuKRgAm38tPdg5PYUpUosKZSuxfuK32f+N15DbeK4KNC
+	 Vc5Uma6XXQy3w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 0AA98CAB786; Sun,  9 Nov 2025 06:56:01 +0000 (UTC)
+	id AE2ABCAB786; Sun,  9 Nov 2025 14:00:33 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Sun, 09 Nov 2025 06:55:57 +0000
+Subject: =?UTF-8?B?W0J1ZyAyMjA2MzldIFtCVUddIGhwLXdtaTogT01FTiAxNi13ZjB4?=
+ =?UTF-8?B?eHggKGJvYXJkIDhCQUIpIOKAkyBmYW5zIHN0dWNrIGF0IDAgUlBNLCBCb29z?=
+ =?UTF-8?B?dC9XTUkgcXVlcmllcyByZWplY3RlZCAoaHBfd21pOiBxdWVyeSAweDRjIGVy?=
+ =?UTF-8?B?cm9yIDB4Nik=?=
+Date: Sun, 09 Nov 2025 14:00:32 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,17 +42,17 @@ X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: REOPENED
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: edip@medip.dev
+X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-KvVDVX59S9@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-220639-215701-Bhiz4HqnqB@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220639-215701@https.bugzilla.kernel.org/>
+References: <bug-220639-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -62,37 +64,29 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220639
 
---- Comment #140 from Artem S. Tashkinov (aros@gmx.com) ---
-(In reply to Peter Ries from comment #138)
-> Hello,=20
->=20
-> I most of the time jsut read/follow this thread as my testing knowledge is
-> limited. For a whilt things seem to have gotten better, but with latest
-> Kernel update on Arch (6.17.2-arch1-1) I now nearly everytime have low CPU
-> frueq 5xx MHz or 1.1 GHz as max. After a normal suspend/resume cycle when
-> plugged!
->=20
-> Have HP 845 G10 and EndeavourOS (Arch) all most up to date.
->=20
-> Just curious if anyone else has this.
->=20
-> I will run my laptop on 6.12 LTS Kernel for a while to see if it gets bet=
-ter.
->=20
-> BR and thanks for al the efforts or Mario and the testers :)
->=20
->=20
-> Can we somehow get HP to do "their job"? Write emails, sign letters, ...?
->=20
-> BR
-> Peter
+Edip Hazuri (edip@medip.dev) changed:
 
-If you're still under warranty, open a support case and provide all the
-details.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |edip@medip.dev
 
-Even better, call their US business support hotline.
+--- Comment #3 from Edip Hazuri (edip@medip.dev) ---
+Hi!
+
+I think the problem is because your device isn't marked for the proper ther=
+mal
+profile
+based on your device release year, it probably have victus_s thermal profil=
+e,
+Can you append your DMI board id in hp-wmi
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
+vers/platform/x86/hp/hp-wmi.c#n97
+and try it
+
+if it doesn't work you can try the other profiles, probably one of them will
+work.
 
 --=20
 You may reply to this email to add a comment.
