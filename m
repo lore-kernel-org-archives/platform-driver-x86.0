@@ -1,188 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903792EA47C;
-	Mon, 10 Nov 2025 05:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AB1F4CB3;
+	Mon, 10 Nov 2025 07:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762752504; cv=none; b=RLGcyfqQqcKxX0c/oAy0M9Tb0UQFzPQCEErd+KBYLvuQsSh905PQSHZzH2Uo+SYcQS+EdYyuBHPcHdGZJ+C5WTN4t/WEGiJ/kB9UCrbVGf/66uEODLc0HlAY28OioBq80DuxuZC54rzkhLoXOWw9JokJhe4qvPG+vG7U7GISH+E=
+	t=1762759518; cv=none; b=r+ceRTXpPzfgknrmPiTKsKGcaRfSJKVQeg0vOa42tNsVP+1cTPAAHXlveu19w9GYbE46/Pcucg+1xj8mc8UP8eKQ3tqaUUr6QGAo0feCM10xKbn/Aip0L/akIRKY64kn/8tvYioy2iHcU+FFpJQKstC7u8EYaNnz1z4kk23l6n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762752504; c=relaxed/simple;
-	bh=JFVXTRN70n6U6zcNqFyPmW01tE9kHwKyej8zmUkWDIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VdZIbmBMSWgU1IVn0Hoz11UEN5B3DKC2iOKJo+IXRw/J71XecQhkokvYYi9ZQdIeqDGvXvoVA/0n3Iex5odbjVR7vwpqwd3MJ3lS0my9L4jEuFmWKM1jzHZS2CO9spBmBquqHHpaCcY6GIkYtgH0eOC9y95WwUjfPgoDbB0W1o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mN3SdaEv; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762759518; c=relaxed/simple;
+	bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ikr3P9vdLkPfZclkLCaVlrp8kxu/rsPSpEW1kyontLG6uWIMIl0CHIZHWC/ZHTTtox+a6BNq7qzS2YtVzIv8Jv1+VXciAxJUEAO2NoaR1iw29jzfTRiFQexjo2auBkBs3cF7iNZw09/sZNbk3i92mmLpKFdT65P0ZRPgOPXZ3hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOwOJrBO; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mN3SdaEv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOwOJrBO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762752502; x=1794288502;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JFVXTRN70n6U6zcNqFyPmW01tE9kHwKyej8zmUkWDIM=;
-  b=mN3SdaEvD3qhf8yUjHZLXVGJtazeC6aCLPXClnHssPAfr2c4LWWjkj7m
-   0f+FIT1IMRdAzdWIfMdpFjT+wPyemi5VAiY5JpqkLD/hyb1FWhAiTC73z
-   xEZ6C5YVnCqtvZ/h5E+rA3I/Ak6vT0I+DCpMHepyNFM6BM3SFaf1AN1XG
-   dKEA5MsYGYZY7tmCWYg9S83AJpeZL4VVU0RBGiBBfHe+uR1KVIEiyFadH
-   oJRx0vALY0vv8R+ZhlJwnorIP8XL7a48rnW5gGWld0DvoDfsvniwSP5hR
-   M8YlqXbuQU7JgN48FBXuZeejKUCHuDmy+dwwGW61ECc3k4yVRTFXvaavB
-   w==;
-X-CSE-ConnectionGUID: qtpWSxd3Q1SmUP7ZG91AdQ==
-X-CSE-MsgGUID: iL9sYBAWSOqiEHGEHiemRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="67405761"
+  t=1762759516; x=1794295516;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
+  b=ZOwOJrBOUguOffWw8rs4HuPPS6naQj4R+o6NS+hfjzwTt5iJgMlKPD0x
+   7oELdRkrKVmZAgBIIOZo7psCSsrv+GJTHpbkOPg2PU3MTWjRGtTppoH81
+   Z12H531NWZAY4jOnMplu8i17ck2xxXnl1FzSBpwtyp6KTn3EUkzEicTZ4
+   ZhYOAJF3YBxPCGtK5AGfcF/ZbSc6WH4p5c+QcGXXLHjmj7ZHPDTKML6Ka
+   X7xe+dbKjHOYOownd8HsPAOQPgiEPLJiHwgD2TGRBnu0grnEoNvJIXIiE
+   4h/9PIq4bWS0lzKpzz7MjtHUhKrYoYQ1Z+egX4pMghh1z2duen7B08ZMG
+   g==;
+X-CSE-ConnectionGUID: FAmmRx7iQr6biIo1J1T56A==
+X-CSE-MsgGUID: lxIyMJghThm9MZ/XIXzhCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="82203042"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="67405761"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 21:28:22 -0800
-X-CSE-ConnectionGUID: YIvLMsgAT1OHh2BjdlF9pg==
-X-CSE-MsgGUID: 2HEyzd6qSt6Xia/7nqAl/g==
+   d="scan'208";a="82203042"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:15 -0800
+X-CSE-ConnectionGUID: fuKwWC63QiqVT31K8ZW59A==
+X-CSE-MsgGUID: ckUc5Ax7TbygHM3AOyKOlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="192691687"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa003.jf.intel.com with ESMTP; 09 Nov 2025 21:28:19 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 2/2] gpio: elkhartlake: Convert to auxiliary driver
-Date: Mon, 10 Nov 2025 10:56:41 +0530
-Message-ID: <20251110052728.383339-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251110052728.383339-1-raag.jadav@intel.com>
+   d="scan'208";a="193783537"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:13 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vIMH0-00000007NGo-2IKU;
+	Mon, 10 Nov 2025 09:25:10 +0200
+Date: Mon, 10 Nov 2025 09:25:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
+ PSE I/O
+Message-ID: <aRGTVguXqO2oNCCW@smile.fi.intel.com>
 References: <20251110052728.383339-1-raag.jadav@intel.com>
+ <20251110052728.383339-2-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251110052728.383339-2-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Since PCI device should not be abusing platform device, MFD parent to
-platform child path is no longer being pursued for this driver. Convert
-it to auxiliary driver, which will be used by EHL PSE auxiliary device.
+On Mon, Nov 10, 2025 at 10:56:40AM +0530, Raag Jadav wrote:
+> Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
+> devices that expose two different capabilities of GPIO and Timed I/O
+> as a single PCI function through shared MMIO with below layout.
+> 
+> GPIO: 0x0000 - 0x1000
+> TIO:  0x1000 - 0x2000
+> 
+> This driver enumerates the PCI parent device and creates auxiliary child
+> devices for these capabilities. The actual functionalities are provided
+> by their respective auxiliary drivers.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/Kconfig            |  2 +-
- drivers/gpio/gpio-elkhartlake.c | 34 ++++++++++++++++-----------------
- 2 files changed, 17 insertions(+), 19 deletions(-)
+...
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 7ee3afbc2b05..d4b4451b4696 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1413,7 +1413,7 @@ config HTC_EGPIO
- 
- config GPIO_ELKHARTLAKE
- 	tristate "Intel Elkhart Lake PSE GPIO support"
--	depends on X86 || COMPILE_TEST
-+	depends on INTEL_EHL_PSE_IO
- 	select GPIO_TANGIER
- 	help
- 	  Select this option to enable GPIO support for Intel Elkhart Lake
-diff --git a/drivers/gpio/gpio-elkhartlake.c b/drivers/gpio/gpio-elkhartlake.c
-index 95de52d2cc63..08daf2fc59e6 100644
---- a/drivers/gpio/gpio-elkhartlake.c
-+++ b/drivers/gpio/gpio-elkhartlake.c
-@@ -2,43 +2,42 @@
- /*
-  * Intel Elkhart Lake PSE GPIO driver
-  *
-- * Copyright (c) 2023 Intel Corporation.
-+ * Copyright (c) 2023, 2025 Intel Corporation.
-  *
-  * Authors: Pandith N <pandith.n@intel.com>
-  *          Raag Jadav <raag.jadav@intel.com>
-  */
- 
-+#include <linux/auxiliary_bus.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/pm.h>
- 
-+#include <linux/ehl_pse_io_aux.h>
-+
- #include "gpio-tangier.h"
- 
- /* Each Intel EHL PSE GPIO Controller has 30 GPIO pins */
- #define EHL_PSE_NGPIO		30
- 
--static int ehl_gpio_probe(struct platform_device *pdev)
-+static int ehl_gpio_probe(struct auxiliary_device *aux_dev, const struct auxiliary_device_id *id)
- {
--	struct device *dev = &pdev->dev;
-+	struct ehl_pse_io_dev *io_dev = auxiliary_dev_to_ehl_pse_io_dev(aux_dev);
-+	struct device *dev = &aux_dev->dev;
- 	struct tng_gpio *priv;
--	int irq, ret;
--
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	priv->reg_base = devm_ioremap_resource(dev, &io_dev->mem);
- 	if (IS_ERR(priv->reg_base))
- 		return PTR_ERR(priv->reg_base);
- 
- 	priv->dev = dev;
--	priv->irq = irq;
-+	priv->irq = io_dev->irq;
- 
- 	priv->info.base = -1;
- 	priv->info.ngpio = EHL_PSE_NGPIO;
-@@ -51,25 +50,24 @@ static int ehl_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "tng_gpio_probe error\n");
- 
--	platform_set_drvdata(pdev, priv);
-+	auxiliary_set_drvdata(aux_dev, priv);
- 	return 0;
- }
- 
--static const struct platform_device_id ehl_gpio_ids[] = {
--	{ "gpio-elkhartlake" },
-+static const struct auxiliary_device_id ehl_gpio_ids[] = {
-+	{ EHL_PSE_IO_NAME "." EHL_PSE_GPIO_NAME },
- 	{ }
- };
--MODULE_DEVICE_TABLE(platform, ehl_gpio_ids);
-+MODULE_DEVICE_TABLE(auxiliary, ehl_gpio_ids);
- 
--static struct platform_driver ehl_gpio_driver = {
-+static struct auxiliary_driver ehl_gpio_driver = {
- 	.driver	= {
--		.name	= "gpio-elkhartlake",
- 		.pm	= pm_sleep_ptr(&tng_gpio_pm_ops),
- 	},
- 	.probe		= ehl_gpio_probe,
- 	.id_table	= ehl_gpio_ids,
- };
--module_platform_driver(ehl_gpio_driver);
-+module_auxiliary_driver(ehl_gpio_driver);
- 
- MODULE_AUTHOR("Pandith N <pandith.n@intel.com>");
- MODULE_AUTHOR("Raag Jadav <raag.jadav@intel.com>");
+> +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
+> +{
+> +	struct auxiliary_device *aux_dev;
+> +	struct device *dev = &pci->dev;
+> +	struct ehl_pse_io_dev *io_dev;
+> +	resource_size_t start, offset;
+> +	int ret;
+> +
+> +	io_dev = devm_kzalloc(dev, sizeof(*io_dev), GFP_KERNEL);
+> +	if (!io_dev)
+> +		return -ENOMEM;
+> +
+> +	start = pci_resource_start(pci, 0);
+> +	offset = EHL_PSE_IO_DEV_SIZE * idx;
+> +
+> +	io_dev->irq = pci_irq_vector(pci, idx);
+> +	io_dev->mem = DEFINE_RES_MEM(start + offset, EHL_PSE_IO_DEV_SIZE);
+> +
+> +	aux_dev = &io_dev->aux_dev;
+> +	aux_dev->name = name;
+> +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
+> +	aux_dev->dev.parent = dev;
+> +	aux_dev->dev.release = ehl_pse_io_dev_release;
+> +
+> +	ret = auxiliary_device_init(aux_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = auxiliary_device_add(aux_dev);
+> +	if (ret) {
+> +		auxiliary_device_uninit(aux_dev);
+> +		return ret;
+> +	}
+
+Can it be now auxiliary_device_create() ?
+
+> +	return devm_add_action_or_reset(dev, ehl_pse_io_dev_destroy, aux_dev);
+> +}
+
+...
+
+> +#define auxiliary_dev_to_ehl_pse_io_dev(auxiliary_dev) \
+> +	container_of(auxiliary_dev, struct ehl_pse_io_dev, aux_dev)
+
+Wondering if we may use container_of_const()
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
