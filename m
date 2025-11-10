@@ -1,206 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A6623B60A;
-	Mon, 10 Nov 2025 10:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F801BCA1C;
+	Mon, 10 Nov 2025 11:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762772079; cv=none; b=FESYJVqIJ9QI45AHCRJRLHbW1eN17hzVXwtgiG8XJ2tN+EUIWAIwJvlv3BMrUBQisFB/t6PfRJ599csKYG+Swwug97hT5F3t1RHI8poKIW6+orGutqUwd3fAWHkutUM/p2gipwjJw1ST9s403CIjz+7WRkygJY9NPgxG4GTF1l8=
+	t=1762772431; cv=none; b=HQdUBamg11qH0/DVbltliqy225bKrGnTp2TguLHrGJQg70UHIgARLiyUQtoPRQRduVT8NjKGjg7xMBNERPLCGJtG+BzzHh2IhRocjzdqQZIbi4/BSLrottDALgKJ6lrsc5O02Q71ZwwhLegdubpOvuimx/HsdfwlNwL38KEhwhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762772079; c=relaxed/simple;
-	bh=xfHWXZ5U+Nf/hxvBKohYTokiVQ1v9bOujNlt/FgRHyA=;
+	s=arc-20240116; t=1762772431; c=relaxed/simple;
+	bh=8ift9Rg3TQGD5vHXV0+nocKMqDeBl8HFojWB0fbU0RA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=m9GnyRB00hn74o4195nNilW0OCHEzXbG9VIh7OOlcnW7uVqlacd9mEbI37C+Bc5BD/PHCdQEMMJ21vIfJplvL8zx7hDkAUVoA2q5AiyyC9TYcS2yvtP6WGaOYqHHp+sHLM8CTBruCpQvGzTmBg+kiPzwD2J2SLTj63SWRHiWs58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkLxrBqA; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=DVW+XVoWsxMAg3RfFRgPkiDWlV3M51JW7dQCybQjIgYfACl5R2qGajGJny9ao4EqtwvGFtFk2PrLiAC0hWIdd51E8FP4AskYwCdJpgDPb1/RVe+XhRvYYe9zdovJ2M2Nm7d4g6A1kJzTAae131ZsxH/kOjM8qY9mTshHffhMxp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C61FmnxD; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkLxrBqA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C61FmnxD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762772077; x=1794308077;
+  t=1762772430; x=1794308430;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=xfHWXZ5U+Nf/hxvBKohYTokiVQ1v9bOujNlt/FgRHyA=;
-  b=hkLxrBqA4+VsVFFg0tZZCBIqujjEijo8YJERqLxzxj0+2l9ewrrH8rKC
-   MlE0oHx8V07aozPAfGGmL8SvWTEMZrZa7UQit3go/bbX00y9PbEYvRv13
-   MmuUdKDGHVUQuf8y91/BN2BJv7jphMJRcrKAoAoyKO55mZRAhNLSUjICV
-   cd+jpt+F9jtvgU9oLazACUJdH7BgkNYxTcMXkX22wUeCIxkXZgUXcjf/a
-   199muXRfldvGpnb+gzJFLVR8hEcESmIW/KUEpa1b76+eVlAYj9q+sdnVQ
-   lrAZ4LZ+uBQiQBz8bZW1lHkOPG8LL5YdwEuWFVVJVblMZGPVhGwL41Pse
+  bh=8ift9Rg3TQGD5vHXV0+nocKMqDeBl8HFojWB0fbU0RA=;
+  b=C61FmnxDMzjnq5OcTr8fEAgXvUaogZwKXdJFCf44WQmWu1OHneuUDpvW
+   AJ6nBfe7b5bxcSIqlU2XO2nyDPT1lzf30wUTipoIIz94MCDYQ6Rezfao3
+   69H2TdEqN7R2hQBfSoMnSuGuns/zVZ2R/WJ5W1tQV7oTv5VMzAO0Esuwm
+   nCFNrITNBB6HBF3gCrLfMxOtWV76Aj8LXy90BXfAoG63j0q9UUDIMzp4i
+   NzbbuVzXaT9MwmVBX+aGyP0lZuKOeZfkzLghz0I49gaayrThuFfO/22+y
+   5jc2n9Q8MuiUlxEpuTyTFcbZKyNOBVvPut4Dp89ytOEZBw0dQ/npN6hLj
    Q==;
-X-CSE-ConnectionGUID: AFE1l21DR0Sci64tqj1bLA==
-X-CSE-MsgGUID: NlmzAmQCR3yjDY/PCA1v9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="52377792"
+X-CSE-ConnectionGUID: FZPqlVxrS5GZEQutX041GQ==
+X-CSE-MsgGUID: tEybnN6KQIyJ3OvX1LMa5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="75926054"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="52377792"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:54:37 -0800
-X-CSE-ConnectionGUID: hR0t+bTVSgebUyWMAjs7KA==
-X-CSE-MsgGUID: qO2TakuTTcmIC2Kj3pyLmg==
+   d="scan'208";a="75926054"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:00:29 -0800
+X-CSE-ConnectionGUID: lZJkAA9YRPmu1LvJEaWzTw==
+X-CSE-MsgGUID: FUJNAYtlSESH/OWPvyJgqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="192903766"
+   d="scan'208";a="188809151"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:54:33 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:00:26 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Nov 2025 12:54:29 +0200 (EET)
+Date: Mon, 10 Nov 2025 13:00:20 +0200 (EET)
 To: Armin Wolf <W_Armin@gmx.de>
-cc: viro@zeniv.linux.org.uk, brauner@kernel.org, 
-    Hans de Goede <hansg@kernel.org>, jack@suse.cz, 
+cc: Mario Limonciello <superm1@kernel.org>, viro@zeniv.linux.org.uk, 
+    brauner@kernel.org, Hans de Goede <hansg@kernel.org>, jack@suse.cz, 
     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
     platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 4/4] platform/x86: wmi: Move WMI core code into a separate
- directory
-In-Reply-To: <8722f933-010f-44c4-9df7-1417207a34b3@gmx.de>
-Message-ID: <92ccfd06-37e1-b465-a072-846d242c47c2@linux.intel.com>
-References: <20251104204540.13931-1-W_Armin@gmx.de> <20251104204540.13931-5-W_Armin@gmx.de> <7d0b6d80-4061-9eb5-5aa3-6a37bac3e2b1@linux.intel.com> <8722f933-010f-44c4-9df7-1417207a34b3@gmx.de>
+Subject: Re: [PATCH 0/4] platform/x86: wmi: Prepare for future changes
+In-Reply-To: <17515e4d-6e3b-4eb9-99eb-840933315d55@gmx.de>
+Message-ID: <6dcc3eda-f06a-22b3-fff6-f4805f709f5f@linux.intel.com>
+References: <20251104204540.13931-1-W_Armin@gmx.de> <e40a0d9c-7f38-44ab-a954-b09c9687ea88@kernel.org> <17515e4d-6e3b-4eb9-99eb-840933315d55@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2023958081-1762772069=:1060"
+Content-Type: multipart/mixed; boundary="8323328-673320136-1762772420=:1060"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-2023958081-1762772069=:1060
+--8323328-673320136-1762772420=:1060
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Wed, 5 Nov 2025, Armin Wolf wrote:
 
-> Am 05.11.25 um 10:41 schrieb Ilpo J=C3=A4rvinen:
+> Am 04.11.25 um 21:52 schrieb Mario Limonciello:
 >=20
-> > On Tue, 4 Nov 2025, Armin Wolf wrote:
-> >=20
-> > > Move the WMI core code into a separate directory to prepare for
-> > > future additions to the WMI driver.
+> > On 11/4/25 2:45 PM, Armin Wolf wrote:
+> > > After over a year of reverse engineering, i am finally ready to
+> > > introduce support for WMI-ACPI marshalling inside the WMI driver core=
+=2E
+> > marshaling> Since the resulting patch series is quite large, i am plann=
+ing
+> > to
+> > > submit the necessary patches as three separate patch series.
 > > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   Documentation/driver-api/wmi.rst           |  2 +-
-> > >   MAINTAINERS                                |  2 +-
-> > >   drivers/platform/x86/Kconfig               | 30 +------------------
-> > >   drivers/platform/x86/Makefile              |  2 +-
-> > >   drivers/platform/x86/wmi/Kconfig           | 34 +++++++++++++++++++=
-+++
-> > >   drivers/platform/x86/wmi/Makefile          |  8 +++++
-> > >   drivers/platform/x86/{wmi.c =3D> wmi/core.c} |  0
-> > >   7 files changed, 46 insertions(+), 32 deletions(-)
-> > >   create mode 100644 drivers/platform/x86/wmi/Kconfig
-> > >   create mode 100644 drivers/platform/x86/wmi/Makefile
-> > >   rename drivers/platform/x86/{wmi.c =3D> wmi/core.c} (100%)
-> > >=20
-> > > diff --git a/Documentation/driver-api/wmi.rst
-> > > b/Documentation/driver-api/wmi.rst
-> > > index 4e8dbdb1fc67..66f0dda153b0 100644
-> > > --- a/Documentation/driver-api/wmi.rst
-> > > +++ b/Documentation/driver-api/wmi.rst
-> > > @@ -16,5 +16,5 @@ which will be bound to compatible WMI devices by th=
-e
-> > > driver core.
-> > >   .. kernel-doc:: include/linux/wmi.h
-> > >      :internal:
-> > >   -.. kernel-doc:: drivers/platform/x86/wmi.c
-> > > +.. kernel-doc:: drivers/platform/x86/wmi/core.c
-> > >      :export:
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 46126ce2f968..abc0ff6769a8 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -402,7 +402,7 @@ S:=09Maintained
-> > >   F:=09Documentation/ABI/testing/sysfs-bus-wmi
-> > >   F:=09Documentation/driver-api/wmi.rst
-> > >   F:=09Documentation/wmi/
-> > > -F:=09drivers/platform/x86/wmi.c
-> > > +F:=09drivers/platform/x86/wmi/
-> > >   F:=09include/uapi/linux/wmi.h
-> > >     ACRN HYPERVISOR SERVICE MODULE
-> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
-> > > index 46e62feeda3c..ef59425580f3 100644
-> > > --- a/drivers/platform/x86/Kconfig
-> > > +++ b/drivers/platform/x86/Kconfig
-> > > @@ -16,35 +16,7 @@ menuconfig X86_PLATFORM_DEVICES
-> > >     if X86_PLATFORM_DEVICES
-> > >   -config ACPI_WMI
-> > > -=09tristate "WMI"
-> > > -=09depends on ACPI
-> > > -=09help
-> > > -=09  This driver adds support for the ACPI-WMI (Windows Management
-> > > -=09  Instrumentation) mapper device (PNP0C14) found on some systems.
-> > > -
-> > > -=09  ACPI-WMI is a proprietary extension to ACPI to expose parts of =
-the
-> > > -=09  ACPI firmware to userspace - this is done through various vendo=
-r
-> > > -=09  defined methods and data blocks in a PNP0C14 device, which are =
-then
-> > > -=09  made available for userspace to call.
-> > > -
-> > > -=09  The implementation of this in Linux currently only exposes this=
- to
-> > > -=09  other kernel space drivers.
-> > > -
-> > > -=09  This driver is a required dependency to build the firmware spec=
-ific
-> > > -=09  drivers needed on many machines, including Acer and HP laptops.
-> > > -
-> > > -=09  It is safe to enable this driver even if your DSDT doesn't defi=
-ne
-> > > -=09  any ACPI-WMI devices.
-> > > -
-> > > -config ACPI_WMI_LEGACY_DEVICE_NAMES
-> > > -=09bool "Use legacy WMI device naming scheme"
-> > > -=09depends on ACPI_WMI
-> > > -=09help
-> > > -=09  Say Y here to force the WMI driver core to use the old WMI devi=
-ce
-> > > naming
-> > > -=09  scheme when creating WMI devices. Doing so might be necessary f=
-or
-> > > some
-> > > -=09  userspace applications but will cause the registration of WMI
-> > > devices with
-> > > -=09  the same GUID to fail in some corner cases.
-> > > +source "drivers/platform/x86/wmi/Kconfig"
-> > >     config WMI_BMOF
-> > >   =09tristate "WMI embedded Binary MOF driver"
-> > > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Mak=
-efile
-> > > index c7db2a88c11a..c9f6e9275af8 100644
-> > > --- a/drivers/platform/x86/Makefile
-> > > +++ b/drivers/platform/x86/Makefile
-> > > @@ -5,7 +5,7 @@
-> > >   #
-> > >     # Windows Management Interface
-> > > -obj-$(CONFIG_ACPI_WMI)=09=09+=3D wmi.o
-> > > +obj-y=09=09=09=09+=3D wmi/
-> > Is there a good reason for the first part of the change?
-> > That is, do you anticipate need for something outside of what this woul=
-d
-> > cover:
+> > > This is supposed to be the first of the three patch series. Its main
+> > > purpose is to prepare the WMI driver core for the upcoming changes.
+> > > The first patch fixes an issue inside the nls utf16 to utf8 conversio=
+n
+> > > code, while the next two patches fix some minor issues inside the WMI
+> > > driver core itself. The last patch finally moves the code of the WMI
+> > > driver core into a separate repository to allow for future additions
+> > > without cluttering the main directory.
 > >=20
-> > obj-$(CONFIG_ACPI_WMI)               +=3D wmi/
+> > One question I have here on the patch to move things.
 > >=20
-> > Other than that, this series looks fine.
+> > Since Windows on ARM (WoA) laptops are a thing - is this still actually=
+ x86
+> > specific?=C2=A0 I am wondering if this should be moving to a different =
+subsystem
+> > altogether like ACPI; especially now with this impending other large pa=
+tch
+> > series you have on your way.
 >=20
-> The final version will look like this:
+> I know of a few WoA laptops that contain ACPI-WMI devices, meaning this d=
+river
+> is indeed not x86-specific.
+> However i need to make some changes to the WMI driver core (and actually =
+tests
+> it on a AArch64 VM) first
+> before moving it out of drivers/platform/x86.
 >=20
-> wmi-y                   :=3D core.o marshalling.o string.o
-> obj-$(CONFIG_ACPI_WMI)  +=3D wmi.o
->=20
-> # Unit tests
-> obj-y                   +=3D tests/
->=20
-> So i think this change is necessary.
+> Once i am actually ready for this i would prefer to move the whole stuff =
+to
+> drivers/platform, as drivers/acpi
+> IMHO is better suited for core ACPI drivers.
 
-Fair enough.
+So no need to put it under drivers/platform/x86/wmi/ then at all. It=20
+can move directly to drivers/platform/wmi/ and you work there towards=20
+making it non-x86-specific.
 
 --=20
  i.
 
---8323328-2023958081-1762772069=:1060--
+>=20
+> Thanks,
+> Armin Wolf
+>=20
+> > >=20
+> > > Armin Wolf (4):
+> > > =C2=A0=C2=A0 fs/nls: Fix utf16 to utf8 conversion
+> > > =C2=A0=C2=A0 platform/x86: wmi: Use correct type when populating ACPI=
+ objects
+> > > =C2=A0=C2=A0 platform/x86: wmi: Remove extern keyword from prototypes
+> > > =C2=A0=C2=A0 platform/x86: wmi: Move WMI core code into a separate di=
+rectory
+> > >=20
+> > > =C2=A0 Documentation/driver-api/wmi.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > =C2=A0 MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > =C2=A0 drivers/platform/x86/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 30 +-----------------=
+-
+> > > =C2=A0 drivers/platform/x86/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > > =C2=A0 drivers/platform/x86/wmi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 34 ++++++++++++++++++++++
+> > > =C2=A0 drivers/platform/x86/wmi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 8 +++++
+> > > =C2=A0 drivers/platform/x86/{wmi.c =3D> wmi/core.c} | 34 ++++++++++++=
++---------
+> > > =C2=A0 fs/nls/nls_base.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 16 +++++++---
+> > > =C2=A0 include/linux/wmi.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 15 ++++------
+> > > =C2=A0 9 files changed, 84 insertions(+), 59 deletions(-)
+> > > =C2=A0 create mode 100644 drivers/platform/x86/wmi/Kconfig
+> > > =C2=A0 create mode 100644 drivers/platform/x86/wmi/Makefile
+> > > =C2=A0 rename drivers/platform/x86/{wmi.c =3D> wmi/core.c} (98%)
+> > >=20
+> >=20
+> > Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>=20
+--8323328-673320136-1762772420=:1060--
