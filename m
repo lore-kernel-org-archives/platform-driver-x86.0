@@ -1,161 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F3B30C361;
-	Mon, 10 Nov 2025 12:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0261A704B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762778436; cv=none; b=MbxkwL2FAnihRSMOxO4uWTab9HO4078j8gI2aW9fSQDdvVGn16nOcyLKX/cHbnOvXI3UWGQTx98yNLAiWsnkDr+NTOaHbhfsWSc4mSLIXK1uq4m1Y8u0LD8zg7sO57hCD8Y0yNiou4Flb+bETiAJddrRLj4rQE/pFxPBTPzQiCc=
+	t=1762779851; cv=none; b=EqQWcctFJe/AR1fXJkTUhbN4AlR+MXnwqTmcKWyJQ3KqLUDW9DAJsCDdan0VzsbWVC6dzZmSMkZAcEWX8uhW6RndCydOlZbuBBefIPpcwy1Tq72bzVxJ6W25DnBAUeMI+04e1HesDpmvMgB/Kv+DOy2898Os1Uu0mJQDhYix00M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762778436; c=relaxed/simple;
-	bh=o5s6iOHGuFplHT4BVEmvNUwBVxn0U3ZG8rddqsXhE2w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DbqGUCNpPrOiV97Yk86aGJtWc54l3zBT7oqqw6wveiGKEAF+snklGFF4gaSgoNHomrdqPgzF9XREuBKylcKJ7nfph49o7f4pBl+Gn69bnf+7lcCvW8r6qWlEocx+ptIIV9MhlQU+NQhr67SFy8Lvt8K28F2Gm8Q572v3MKwr/rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjWFX7zL; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762779851; c=relaxed/simple;
+	bh=qSml4dR6lltRLlIdFL4qJPIWCDYHLkMfeR6SRe3/EaM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zsq6PGvLwyCMR0MfgKoO160H8xoWmpl4RJ7BP0v4N2ZhD+m2B13+bEpnOF23QPoNJFGea5i/XaUORjGoKLCurHieBqDVvWvJu0wUGY4TmvFBTh6O7kxtr/kMQJyCZR6r8rljpEYQh33nGbTB8wmBoKV+DW0B6riXH3Xa5tOdbuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6YYv8sT; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjWFX7zL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762778435; x=1794314435;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o5s6iOHGuFplHT4BVEmvNUwBVxn0U3ZG8rddqsXhE2w=;
-  b=jjWFX7zL8oTQ7Hesv7CLjQAeDS774dMrzuY+jqL72eFxSN54zm8B7/8P
-   C4Nu4w0iaQpcrSz12xZXb/2htYLqeR71uFnjs5UfbuGeLdn/Im4Zj5liF
-   tGArtMDCaNnXJcVRyMKVOc9xKu+FAMT9QfDXTRn5/Dr+RpLBHIR0WZq7i
-   HRE8H/EDBJHxEzwg0OycKoVJ/akckg8KBWK3q/J+fNJwT50wH97cex38P
-   tGGm7duDEIX3B7IMUXNxZkkFsPr6teyORc0AYr9Vk+PBBszJzwz4L3qmZ
-   suVnCz+IjvfcduKarrV+GA+PMdeABtJQNDbU4zs12q08yh+osQCHSxOQ+
-   A==;
-X-CSE-ConnectionGUID: VEojoamET/iGVhtzXpP+hQ==
-X-CSE-MsgGUID: CYET8PXQT3C0KIMaxSy6Xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="68469260"
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="68469260"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:40:35 -0800
-X-CSE-ConnectionGUID: aDqJRHSXQseGdVu2Nirjww==
-X-CSE-MsgGUID: dhmiP5ImSk21p6AZCrYnqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="219318608"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:40:31 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Nov 2025 14:40:27 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, lkml@antheas.dev
-Subject: Re: [PATCH 1/2] platform/x86: msi-wmi-platform: Only load on MSI
- devices
-In-Reply-To: <20251110111253.16204-2-W_Armin@gmx.de>
-Message-ID: <3014ce29-a707-2d77-71e6-11a631221804@linux.intel.com>
-References: <20251110111253.16204-1-W_Armin@gmx.de> <20251110111253.16204-2-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6YYv8sT"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37a492d3840so29536031fa.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 05:04:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762779848; x=1763384648; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tyc6bfyu3NMGAozQ9Ctuh4LDZmKtgcpPgmPqOdgLGBw=;
+        b=P6YYv8sTa8Fc4D0LyTPX+T1MEmuv8ngfosGW0hu/llivlPPgEyIWYxQ7WWvV3zZ6/H
+         oJD+8UszABWmY62UFeQR2u0UAar8Imtz8JJFHISRjeGq085mvrMgbnh5KmgMCsyoyVVT
+         xT3hpgC/G/JaEknXtoFoHfPHoFnaTmZh/lsKtLoHvuc1rI0Ya3nJn5srVAjBs5HTqRz5
+         pgZMooY2ddGI2Xf3DRrzhUP2VAqMcKNKCFYoFiTbcg2DuPWKo4JiIUjNr6+ZzIZPz72d
+         WmJzouQ24kqUfYWGT4jVZIrYXIgtzUGu2I6q/LNZ93mSc7b5ZZ+JrYoVFfpVncAM4YxM
+         yQ3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762779848; x=1763384648;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tyc6bfyu3NMGAozQ9Ctuh4LDZmKtgcpPgmPqOdgLGBw=;
+        b=X6ce9KOx//kKAifnij2tPnJzU0U06pwzFe0nMLVjtgUiuruytIylJgA85mcNqtxghT
+         3xTxFv6TUZRGCH0jCsjdDOw0trZRehkF2SNoJAUNxii9B4vAAeNQRMRZbnLHErbLha0c
+         q/mVck6e0aSMpCk/Ah33SaspCqJ5iVVspIZjkTz8UMRgTjUiunZSb40Ou+xmUT1jovTU
+         X15ZHrE7dxpbEIHEAaArwz4/uccx3c+ri6JnfIbCRqxGRBBokiI2qBpq204XCMKWPYPe
+         X90Tit/wfyDBe5IdNFXPBNKQQB7xYvKkk68d8N8Cx7WZGB9FVFYQgj/SKLmwX3mHT81J
+         shag==
+X-Forwarded-Encrypted: i=1; AJvYcCVgPoKv7olH/cB484TYwbtxiVASKoGc3crv6HW8/lrUiYMEzmC61/34iS/WUEVuIrwvZt61HVzIcl96Snw8TmVqcaXQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1XXk7+X3heKPJKAz+rJ2VMMANX9Egc9/ruqivPX6309rOkxAg
+	fiV2KUWvVtJlw0aBZtwlVm7OB5/6UWH16q/eaqB0l7xxzelXkEcVntlAd+udR9wtV2pVJJzgBCN
+	yfQPQoaChxFMjldM/2YQUADZrbDM4JFs=
+X-Gm-Gg: ASbGnct4FSVfZflw4NhuU/N178sJ31RFWWHI0HYOBdciRCDC2ywi9q1TZ86voXlJiNf
+	PnmyCSt23dwufqjmSx6P6E/mlfKP4Pfns8/b4J0d3uz4KEpRxoRq9zRCFK32A4lN19LOLY+UArx
+	kufdpzOsgHWfoirH0lOF8bXgQS+51AtM+wbE2rD0w3CKx5ghFQn5PaSMXDCfxq/MnB5G12p0uRb
+	jucIFAiwfgI8lHkpXDaUHCNJbv/BfnkXQ1k1B4JIeYwoiEh9DRDz5f3TsHqiHPQE1Tj5KzlmHZw
+	hx7meIS8
+X-Google-Smtp-Source: AGHT+IFfptFLjKBZdFf/9r5iFPQ/UizXxNLlZGOI8ZfHNzHB4jb8cPVVdTdeeDX920MIourK5cKt+7ct4peMYMyXZwE=
+X-Received: by 2002:a2e:8a96:0:b0:379:348:80e2 with SMTP id
+ 38308e7fff4ca-37a7b18b449mr21486651fa.9.1762779847136; Mon, 10 Nov 2025
+ 05:04:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20251110111253.16204-1-W_Armin@gmx.de> <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
+In-Reply-To: <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
+From: Antheas Kapenekakis <antheas.dk@gmail.com>
+Date: Mon, 10 Nov 2025 14:03:54 +0100
+X-Gm-Features: AWmQ_bkXT8T6DFe5CSK8FsrrAE2eMiXshrtUANklstA09fQrxADG21t1qBB1G2Q
+Message-ID: <CAGwozwGTY0DECm2OrOwrRgbAd1CdPuMe=Fg=4oOEm5of6u5Rzw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] platform/x86: msi-wmi-platform: Fix autoloading
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 10 Nov 2025, Armin Wolf wrote:
+On Mon, 10 Nov 2025 at 12:31, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>
+> On Mon, 10 Nov 2025 at 12:13, Armin Wolf <W_Armin@gmx.de> wrote:
+> >
+> > As already noted by Antheas Kapenekakis back in May, the
+> > msi-wmi-platform driver fails to automatically load on MSI Claw
+> > devices. Back then i suspected an issue with the device firmware,
+> > however i just found out that i made a silly mistake when specifying
+> > the GUID string of the driver, preventing the WMI driver core from
+> > matching it to its WMI device.
+>
+> Can you add a closes with a link to that discussion and a reported by?
+>
+> > Additionally i noticed that said GUID was copied from the Windows
+> > driver samples, meaning that it might be shared across different
+> > vendors. Because of this we have to prevent this driver from loading
+> > on non-MSI devices.
+> >
+> > Compile-tested only.
+>
+> I will try to test this in one to two days and will add a tested by.
 
-> It turns out that the GUID used by the msi-wmi-platform driver
-> (ABBC0F60-8EA1-11D1-00A0-C90629100000) is not unique, but was instead
-> copied from the WIndows Driver Samples. This means that this driver
-> could load on devices from other manufacturers that also copied this
-> GUID, potentially causing hardware errors.
+Hi Ilpo,
+did you receive this email? I was getting some bounces from your email
+host last week so Im sending this from my gmail
 
-How unclever of them to copy-paste an unique identifier from an example...
+I can test this series later today and add a Tested-by as it's only
+compile tested.
 
-I've applied this series to the review-ilpo-fixes branch.
+Antheas
 
-> Prevent this by only loading on devices whitelisted via DMI. The DMI
-> matches where taken from the msi-ec driver.
-> 
-> Fixes: 9c0beb6b29e7 ("platform/x86: wmi: Add MSI WMI Platform driver")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/Kconfig            |  1 +
->  drivers/platform/x86/msi-wmi-platform.c | 41 ++++++++++++++++++++++++-
->  2 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 46e62feeda3c..d96728a0f18d 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -545,6 +545,7 @@ config MSI_WMI
->  config MSI_WMI_PLATFORM
->  	tristate "MSI WMI Platform features"
->  	depends on ACPI_WMI
-> +	depends on DMI
->  	depends on HWMON
->  	help
->  	  Say Y here if you want to have support for WMI-based platform features
-> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-> index dc5e9878cb68..bd2687828a2e 100644
-> --- a/drivers/platform/x86/msi-wmi-platform.c
-> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> @@ -14,6 +14,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
->  #include <linux/device/driver.h>
-> +#include <linux/dmi.h>
->  #include <linux/errno.h>
->  #include <linux/hwmon.h>
->  #include <linux/kernel.h>
-> @@ -448,7 +449,45 @@ static struct wmi_driver msi_wmi_platform_driver = {
->  	.probe = msi_wmi_platform_probe,
->  	.no_singleton = true,
->  };
-> -module_wmi_driver(msi_wmi_platform_driver);
-> +
-> +/*
-> + * MSI reused the WMI GUID from the WMI-ACPI sample code provided by Microsoft,
-> + * so other manufacturers might use it as well for their WMI-ACPI implementations.
-> + */
-> +static const struct dmi_system_id msi_wmi_platform_whitelist[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
-> +static int __init msi_wmi_platform_module_init(void)
-> +{
-> +	if (!dmi_check_system(msi_wmi_platform_whitelist)) {
-> +		if (!force)
-> +			return -ENODEV;
-> +
-> +		pr_warn("Ignoring DMI whitelist\n");
-> +	}
-> +
-> +	return wmi_driver_register(&msi_wmi_platform_driver);
-> +}
-> +
-> +static void __exit msi_wmi_platform_module_exit(void)
-> +{
-> +	wmi_driver_unregister(&msi_wmi_platform_driver);
-> +}
-> +
-> +module_init(msi_wmi_platform_module_init);
-> +module_exit(msi_wmi_platform_module_exit);
-> +
->  
->  MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
->  MODULE_DESCRIPTION("MSI WMI platform features");
-> 
-
--- 
- i.
-
+>
+> Thanks,
+> Antheas
+>
+> > Armin Wolf (2):
+> >   platform/x86: msi-wmi-platform: Only load on MSI devices
+> >   platform/x86: msi-wmi-platform: Fix typo in WMI GUID
+> >
+> >  .../wmi/driver-development-guide.rst          |  1 +
+> >  drivers/platform/x86/Kconfig                  |  1 +
+> >  drivers/platform/x86/msi-wmi-platform.c       | 43 ++++++++++++++++++-
+> >  3 files changed, 43 insertions(+), 2 deletions(-)
+> >
+> > --
+> > 2.39.5
+> >
+> >
