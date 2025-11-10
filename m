@@ -1,134 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED030AACE;
-	Mon, 10 Nov 2025 11:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBB230CD83
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 11:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762773485; cv=none; b=oo4JdF2RlU6hnVBqWkLBcW0UdBGjh67udB0G5oaTSVC9Ddnc3D9hCmoG7XWgXTdLXPVtQ1ZdSjxzwBaGNRFDFESf2SMUdy/kSDiSruOknKLZ6irFJ4KBGeOta4niNxIVnW5kna6reTOCXbhKEMIcDZKid3rzLEa8/nrerIbu4ac=
+	t=1762774299; cv=none; b=TPa2xfT3ZyR5KcEiaAgVvCu8oBl+RsIKEu9rKHcP6bbUJLFi3wjQOSHfgIJUpoVfRZio44G0XFJptaKPoQil0WMClEGbZGBDVcqHniJVwoD/y8sX0D9LA9Z8/PKebDubmDTEChrQiH8V9evvRVHK8Enn4egOXj27LQkkP+LnAFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762773485; c=relaxed/simple;
-	bh=yTNk15ujPUZN4tCu3ROJSJZtUjZoH00ykxCOtBE7gmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kA1oOCfHAXm4tgJ2uYkIKroUvOLRCaBsfIdVJCiCy+OgXunYH2XSWSeZE6S4l3SMIhAHmENSG0aYleSGnMCLME68PtxHehtdCv92pao8+S1TlF5ARGjXah86kWYzZ60ISz5qLgpJ58bv9ju7hL/ArKCxHlXvPzK8vY4y6V81e/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVmxM9s2; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762774299; c=relaxed/simple;
+	bh=KtbcQuiFp8d7IkC2vqgRHkSHD/7Ct0/C86WkZt3s+bY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iVB5cwIy1JKRhIbeN6nmHyVy2P5sKJmfxDxcOHzA1BGkc381poFaPLo8wjjoh9vJ8JiXkK20ebefZUmljLUj4RoaA5TRdVAiT2cSGpoMLX/bgWbVGERAg7uuK6oxF40v8fPxHVsIeuetGv6Zw0LWePoQb/gJT5Hz18xvEZckFWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=j/H7FSWq; arc=none smtp.client-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVmxM9s2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762773483; x=1794309483;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yTNk15ujPUZN4tCu3ROJSJZtUjZoH00ykxCOtBE7gmA=;
-  b=XVmxM9s2WQMB7z5mVjFMqasvzgUn9b5YKATOKGmqgx2p3/W6zUK/074K
-   iy8oAEzzi7aC8w6uU7bCrV5JbztbZ4zfNeobuqdreUfSqo2Cy10ZDdcXt
-   7FSl444YPOK3qrevtf28mSJ/OUfZDBDOpv2b6sc5qX5tF6SVnERZKJTfA
-   1tjwOC96M7TjkkcpWuMKeQYjEZ/pwiz+AZFbXPaWKw+/tWc9ZP1g9544z
-   zl1nLbq+5rTe81ZlN5wQImBvjzJG3BI1I4QecLbwGKkRTpSx05QyIANCq
-   YyQGdHnnXCyL6vE0TC4a1pYyK9Ism+XjecaIx6M9T64l43pAeL+62VIrz
-   w==;
-X-CSE-ConnectionGUID: HLp32CkSS8qjbPpwlow59A==
-X-CSE-MsgGUID: bKSDZADwTOuffJ1BQy7qgA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="82448422"
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="82448422"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:18:03 -0800
-X-CSE-ConnectionGUID: wdIRu+1bT2e+/HoY4UdvvA==
-X-CSE-MsgGUID: NUr6m8N+Tr+XXURuyaZPTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="212045271"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:18:01 -0800
-Date: Mon, 10 Nov 2025 12:17:58 +0100
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aRHJ5gnMaWeJmQzc@black.igk.intel.com>
-References: <20251110052728.383339-1-raag.jadav@intel.com>
- <20251110052728.383339-2-raag.jadav@intel.com>
- <aRGTVguXqO2oNCCW@smile.fi.intel.com>
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="j/H7FSWq"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id D44E45E4B1
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:29 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 777965E5A1
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:28 +0200 (EET)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 6FB36200BAA
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:27 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1762774287;
+	bh=IeSnBNotDjw3R7VnmJhVdPttuuVGctIrZk+RSexiM1c=;
+	h=Received:From:Subject:To;
+	b=j/H7FSWqmVYo+dOsASexO+N1mwvwoUh923MVphpZecZHMa5plAG8OJB2GlvI+GR5v
+	 uhN+4V62HZoqr6RMkkG5Ox+JOhw3ieklOb+W8ZTlUxbttlFw0JyrloAmuIGNFHS4vd
+	 JwIKcbGTzoHdSxNYTKk9lDkj0LcxutuU46oY1LJKRVgVqOQvc+/94OQak+CbSZUqYy
+	 uiGBdRNfCj0kcLrIiyGv51KWIDJcUfXZmD7MMjygmfdX1pq9io6fikd4Sgqf3o2Yho
+	 WceHUDETJGpGJ+gFaoSORqDTFoXOmFESSI+GVRH1sMMRxmTBu5PIr4DNMqwHdm32qJ
+	 9aSW0I4X0hZKw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-37a415a22ecso28034181fa.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 10 Nov 2025 03:31:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCWW2yS5d71nHbu0R9nRkmx6mZtNbOgUG6U1B7eIEnY52r6sV3oJd8Hb8WmMxfrzqaPiQtiYJ1HpxfeRZ5wXr4Lg5fyh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/9RieFhVI8+65eDX/jx0BypyC3ZBlfA7femu0hiX5cJlJYg6H
+	hL7bEgWqIiM1ajiqj/RUtkt+xvV4dmehTeICYkAZepCPE6VqZTZ3Vu/rN3zIpsIyqkLTRCxKDET
+	zjoeQhlOFp5yMnP13HUpThN/6cdnBPSQ=
+X-Google-Smtp-Source: 
+ AGHT+IHwlop8iQyLf816B5t3NJ+WnCUY4vjIic/wmY4CcU7fAIzaPagQklkeFNoOWwBy7j0dz/kU76Es7zzx4EJY/P0=
+X-Received: by 2002:a05:651c:1307:b0:37a:421c:cc4f with SMTP id
+ 38308e7fff4ca-37a7b24a069mr13366291fa.16.1762774286862; Mon, 10 Nov 2025
+ 03:31:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRGTVguXqO2oNCCW@smile.fi.intel.com>
+References: <20251110111253.16204-1-W_Armin@gmx.de>
+In-Reply-To: <20251110111253.16204-1-W_Armin@gmx.de>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 10 Nov 2025 12:31:15 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
+X-Gm-Features: AWmQ_bkyaZ6Slz3nV5eHZccE7lAPxm6A9KqGQn76MiECU2M-muGX1JVUobXSJxI
+Message-ID: 
+ <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] platform/x86: msi-wmi-platform: Fix autoloading
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <176277428768.2201215.746594159317056361@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Mon, Nov 10, 2025 at 09:25:10AM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 10, 2025 at 10:56:40AM +0530, Raag Jadav wrote:
-> > Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
-> > devices that expose two different capabilities of GPIO and Timed I/O
-> > as a single PCI function through shared MMIO with below layout.
-> > 
-> > GPIO: 0x0000 - 0x1000
-> > TIO:  0x1000 - 0x2000
-> > 
-> > This driver enumerates the PCI parent device and creates auxiliary child
-> > devices for these capabilities. The actual functionalities are provided
-> > by their respective auxiliary drivers.
-> 
-> ...
-> 
-> > +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
-> > +{
-> > +	struct auxiliary_device *aux_dev;
-> > +	struct device *dev = &pci->dev;
-> > +	struct ehl_pse_io_dev *io_dev;
-> > +	resource_size_t start, offset;
-> > +	int ret;
-> > +
-> > +	io_dev = devm_kzalloc(dev, sizeof(*io_dev), GFP_KERNEL);
-> > +	if (!io_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	start = pci_resource_start(pci, 0);
-> > +	offset = EHL_PSE_IO_DEV_SIZE * idx;
-> > +
-> > +	io_dev->irq = pci_irq_vector(pci, idx);
-> > +	io_dev->mem = DEFINE_RES_MEM(start + offset, EHL_PSE_IO_DEV_SIZE);
-> > +
-> > +	aux_dev = &io_dev->aux_dev;
-> > +	aux_dev->name = name;
-> > +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
-> > +	aux_dev->dev.parent = dev;
-> > +	aux_dev->dev.release = ehl_pse_io_dev_release;
-> > +
-> > +	ret = auxiliary_device_init(aux_dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = auxiliary_device_add(aux_dev);
-> > +	if (ret) {
-> > +		auxiliary_device_uninit(aux_dev);
-> > +		return ret;
-> > +	}
-> 
-> Can it be now auxiliary_device_create() ?
+On Mon, 10 Nov 2025 at 12:13, Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> As already noted by Antheas Kapenekakis back in May, the
+> msi-wmi-platform driver fails to automatically load on MSI Claw
+> devices. Back then i suspected an issue with the device firmware,
+> however i just found out that i made a silly mistake when specifying
+> the GUID string of the driver, preventing the WMI driver core from
+> matching it to its WMI device.
 
-Could be. With that perhaps we won't even need the 'intel' prefix.
+Can you add a closes with a link to that discussion and a reported by?
 
-> > +	return devm_add_action_or_reset(dev, ehl_pse_io_dev_destroy, aux_dev);
-> > +}
-> 
-> ...
-> 
-> > +#define auxiliary_dev_to_ehl_pse_io_dev(auxiliary_dev) \
-> > +	container_of(auxiliary_dev, struct ehl_pse_io_dev, aux_dev)
-> 
-> Wondering if we may use container_of_const()
+> Additionally i noticed that said GUID was copied from the Windows
+> driver samples, meaning that it might be shared across different
+> vendors. Because of this we have to prevent this driver from loading
+> on non-MSI devices.
+>
+> Compile-tested only.
 
-Or just use platdata instead? Let me send out a v3.
+I will try to test this in one to two days and will add a tested by.
 
-Raag
+Thanks,
+Antheas
+
+> Armin Wolf (2):
+>   platform/x86: msi-wmi-platform: Only load on MSI devices
+>   platform/x86: msi-wmi-platform: Fix typo in WMI GUID
+>
+>  .../wmi/driver-development-guide.rst          |  1 +
+>  drivers/platform/x86/Kconfig                  |  1 +
+>  drivers/platform/x86/msi-wmi-platform.c       | 43 ++++++++++++++++++-
+>  3 files changed, 43 insertions(+), 2 deletions(-)
+>
+> --
+> 2.39.5
+>
+>
+
