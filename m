@@ -1,138 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AB1F4CB3;
-	Mon, 10 Nov 2025 07:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A6623B60A;
+	Mon, 10 Nov 2025 10:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762759518; cv=none; b=r+ceRTXpPzfgknrmPiTKsKGcaRfSJKVQeg0vOa42tNsVP+1cTPAAHXlveu19w9GYbE46/Pcucg+1xj8mc8UP8eKQ3tqaUUr6QGAo0feCM10xKbn/Aip0L/akIRKY64kn/8tvYioy2iHcU+FFpJQKstC7u8EYaNnz1z4kk23l6n0=
+	t=1762772079; cv=none; b=FESYJVqIJ9QI45AHCRJRLHbW1eN17hzVXwtgiG8XJ2tN+EUIWAIwJvlv3BMrUBQisFB/t6PfRJ599csKYG+Swwug97hT5F3t1RHI8poKIW6+orGutqUwd3fAWHkutUM/p2gipwjJw1ST9s403CIjz+7WRkygJY9NPgxG4GTF1l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762759518; c=relaxed/simple;
-	bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ikr3P9vdLkPfZclkLCaVlrp8kxu/rsPSpEW1kyontLG6uWIMIl0CHIZHWC/ZHTTtox+a6BNq7qzS2YtVzIv8Jv1+VXciAxJUEAO2NoaR1iw29jzfTRiFQexjo2auBkBs3cF7iNZw09/sZNbk3i92mmLpKFdT65P0ZRPgOPXZ3hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOwOJrBO; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1762772079; c=relaxed/simple;
+	bh=xfHWXZ5U+Nf/hxvBKohYTokiVQ1v9bOujNlt/FgRHyA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=m9GnyRB00hn74o4195nNilW0OCHEzXbG9VIh7OOlcnW7uVqlacd9mEbI37C+Bc5BD/PHCdQEMMJ21vIfJplvL8zx7hDkAUVoA2q5AiyyC9TYcS2yvtP6WGaOYqHHp+sHLM8CTBruCpQvGzTmBg+kiPzwD2J2SLTj63SWRHiWs58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkLxrBqA; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOwOJrBO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkLxrBqA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762759516; x=1794295516;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
-  b=ZOwOJrBOUguOffWw8rs4HuPPS6naQj4R+o6NS+hfjzwTt5iJgMlKPD0x
-   7oELdRkrKVmZAgBIIOZo7psCSsrv+GJTHpbkOPg2PU3MTWjRGtTppoH81
-   Z12H531NWZAY4jOnMplu8i17ck2xxXnl1FzSBpwtyp6KTn3EUkzEicTZ4
-   ZhYOAJF3YBxPCGtK5AGfcF/ZbSc6WH4p5c+QcGXXLHjmj7ZHPDTKML6Ka
-   X7xe+dbKjHOYOownd8HsPAOQPgiEPLJiHwgD2TGRBnu0grnEoNvJIXIiE
-   4h/9PIq4bWS0lzKpzz7MjtHUhKrYoYQ1Z+egX4pMghh1z2duen7B08ZMG
-   g==;
-X-CSE-ConnectionGUID: FAmmRx7iQr6biIo1J1T56A==
-X-CSE-MsgGUID: lxIyMJghThm9MZ/XIXzhCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="82203042"
+  t=1762772077; x=1794308077;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xfHWXZ5U+Nf/hxvBKohYTokiVQ1v9bOujNlt/FgRHyA=;
+  b=hkLxrBqA4+VsVFFg0tZZCBIqujjEijo8YJERqLxzxj0+2l9ewrrH8rKC
+   MlE0oHx8V07aozPAfGGmL8SvWTEMZrZa7UQit3go/bbX00y9PbEYvRv13
+   MmuUdKDGHVUQuf8y91/BN2BJv7jphMJRcrKAoAoyKO55mZRAhNLSUjICV
+   cd+jpt+F9jtvgU9oLazACUJdH7BgkNYxTcMXkX22wUeCIxkXZgUXcjf/a
+   199muXRfldvGpnb+gzJFLVR8hEcESmIW/KUEpa1b76+eVlAYj9q+sdnVQ
+   lrAZ4LZ+uBQiQBz8bZW1lHkOPG8LL5YdwEuWFVVJVblMZGPVhGwL41Pse
+   Q==;
+X-CSE-ConnectionGUID: AFE1l21DR0Sci64tqj1bLA==
+X-CSE-MsgGUID: NlmzAmQCR3yjDY/PCA1v9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="52377792"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="82203042"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:15 -0800
-X-CSE-ConnectionGUID: fuKwWC63QiqVT31K8ZW59A==
-X-CSE-MsgGUID: ckUc5Ax7TbygHM3AOyKOlw==
+   d="scan'208";a="52377792"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:54:37 -0800
+X-CSE-ConnectionGUID: hR0t+bTVSgebUyWMAjs7KA==
+X-CSE-MsgGUID: qO2TakuTTcmIC2Kj3pyLmg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="193783537"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:13 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vIMH0-00000007NGo-2IKU;
-	Mon, 10 Nov 2025 09:25:10 +0200
-Date: Mon, 10 Nov 2025 09:25:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aRGTVguXqO2oNCCW@smile.fi.intel.com>
-References: <20251110052728.383339-1-raag.jadav@intel.com>
- <20251110052728.383339-2-raag.jadav@intel.com>
+   d="scan'208";a="192903766"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:54:33 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Nov 2025 12:54:29 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: viro@zeniv.linux.org.uk, brauner@kernel.org, 
+    Hans de Goede <hansg@kernel.org>, jack@suse.cz, 
+    linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 4/4] platform/x86: wmi: Move WMI core code into a separate
+ directory
+In-Reply-To: <8722f933-010f-44c4-9df7-1417207a34b3@gmx.de>
+Message-ID: <92ccfd06-37e1-b465-a072-846d242c47c2@linux.intel.com>
+References: <20251104204540.13931-1-W_Armin@gmx.de> <20251104204540.13931-5-W_Armin@gmx.de> <7d0b6d80-4061-9eb5-5aa3-6a37bac3e2b1@linux.intel.com> <8722f933-010f-44c4-9df7-1417207a34b3@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251110052728.383339-2-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: multipart/mixed; boundary="8323328-2023958081-1762772069=:1060"
 
-On Mon, Nov 10, 2025 at 10:56:40AM +0530, Raag Jadav wrote:
-> Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
-> devices that expose two different capabilities of GPIO and Timed I/O
-> as a single PCI function through shared MMIO with below layout.
-> 
-> GPIO: 0x0000 - 0x1000
-> TIO:  0x1000 - 0x2000
-> 
-> This driver enumerates the PCI parent device and creates auxiliary child
-> devices for these capabilities. The actual functionalities are provided
-> by their respective auxiliary drivers.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-...
+--8323328-2023958081-1762772069=:1060
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
-> +{
-> +	struct auxiliary_device *aux_dev;
-> +	struct device *dev = &pci->dev;
-> +	struct ehl_pse_io_dev *io_dev;
-> +	resource_size_t start, offset;
-> +	int ret;
-> +
-> +	io_dev = devm_kzalloc(dev, sizeof(*io_dev), GFP_KERNEL);
-> +	if (!io_dev)
-> +		return -ENOMEM;
-> +
-> +	start = pci_resource_start(pci, 0);
-> +	offset = EHL_PSE_IO_DEV_SIZE * idx;
-> +
-> +	io_dev->irq = pci_irq_vector(pci, idx);
-> +	io_dev->mem = DEFINE_RES_MEM(start + offset, EHL_PSE_IO_DEV_SIZE);
-> +
-> +	aux_dev = &io_dev->aux_dev;
-> +	aux_dev->name = name;
-> +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
-> +	aux_dev->dev.parent = dev;
-> +	aux_dev->dev.release = ehl_pse_io_dev_release;
-> +
-> +	ret = auxiliary_device_init(aux_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = auxiliary_device_add(aux_dev);
-> +	if (ret) {
-> +		auxiliary_device_uninit(aux_dev);
-> +		return ret;
-> +	}
+On Wed, 5 Nov 2025, Armin Wolf wrote:
 
-Can it be now auxiliary_device_create() ?
+> Am 05.11.25 um 10:41 schrieb Ilpo J=C3=A4rvinen:
+>=20
+> > On Tue, 4 Nov 2025, Armin Wolf wrote:
+> >=20
+> > > Move the WMI core code into a separate directory to prepare for
+> > > future additions to the WMI driver.
+> > >=20
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   Documentation/driver-api/wmi.rst           |  2 +-
+> > >   MAINTAINERS                                |  2 +-
+> > >   drivers/platform/x86/Kconfig               | 30 +------------------
+> > >   drivers/platform/x86/Makefile              |  2 +-
+> > >   drivers/platform/x86/wmi/Kconfig           | 34 +++++++++++++++++++=
++++
+> > >   drivers/platform/x86/wmi/Makefile          |  8 +++++
+> > >   drivers/platform/x86/{wmi.c =3D> wmi/core.c} |  0
+> > >   7 files changed, 46 insertions(+), 32 deletions(-)
+> > >   create mode 100644 drivers/platform/x86/wmi/Kconfig
+> > >   create mode 100644 drivers/platform/x86/wmi/Makefile
+> > >   rename drivers/platform/x86/{wmi.c =3D> wmi/core.c} (100%)
+> > >=20
+> > > diff --git a/Documentation/driver-api/wmi.rst
+> > > b/Documentation/driver-api/wmi.rst
+> > > index 4e8dbdb1fc67..66f0dda153b0 100644
+> > > --- a/Documentation/driver-api/wmi.rst
+> > > +++ b/Documentation/driver-api/wmi.rst
+> > > @@ -16,5 +16,5 @@ which will be bound to compatible WMI devices by th=
+e
+> > > driver core.
+> > >   .. kernel-doc:: include/linux/wmi.h
+> > >      :internal:
+> > >   -.. kernel-doc:: drivers/platform/x86/wmi.c
+> > > +.. kernel-doc:: drivers/platform/x86/wmi/core.c
+> > >      :export:
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 46126ce2f968..abc0ff6769a8 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -402,7 +402,7 @@ S:=09Maintained
+> > >   F:=09Documentation/ABI/testing/sysfs-bus-wmi
+> > >   F:=09Documentation/driver-api/wmi.rst
+> > >   F:=09Documentation/wmi/
+> > > -F:=09drivers/platform/x86/wmi.c
+> > > +F:=09drivers/platform/x86/wmi/
+> > >   F:=09include/uapi/linux/wmi.h
+> > >     ACRN HYPERVISOR SERVICE MODULE
+> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+> > > index 46e62feeda3c..ef59425580f3 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -16,35 +16,7 @@ menuconfig X86_PLATFORM_DEVICES
+> > >     if X86_PLATFORM_DEVICES
+> > >   -config ACPI_WMI
+> > > -=09tristate "WMI"
+> > > -=09depends on ACPI
+> > > -=09help
+> > > -=09  This driver adds support for the ACPI-WMI (Windows Management
+> > > -=09  Instrumentation) mapper device (PNP0C14) found on some systems.
+> > > -
+> > > -=09  ACPI-WMI is a proprietary extension to ACPI to expose parts of =
+the
+> > > -=09  ACPI firmware to userspace - this is done through various vendo=
+r
+> > > -=09  defined methods and data blocks in a PNP0C14 device, which are =
+then
+> > > -=09  made available for userspace to call.
+> > > -
+> > > -=09  The implementation of this in Linux currently only exposes this=
+ to
+> > > -=09  other kernel space drivers.
+> > > -
+> > > -=09  This driver is a required dependency to build the firmware spec=
+ific
+> > > -=09  drivers needed on many machines, including Acer and HP laptops.
+> > > -
+> > > -=09  It is safe to enable this driver even if your DSDT doesn't defi=
+ne
+> > > -=09  any ACPI-WMI devices.
+> > > -
+> > > -config ACPI_WMI_LEGACY_DEVICE_NAMES
+> > > -=09bool "Use legacy WMI device naming scheme"
+> > > -=09depends on ACPI_WMI
+> > > -=09help
+> > > -=09  Say Y here to force the WMI driver core to use the old WMI devi=
+ce
+> > > naming
+> > > -=09  scheme when creating WMI devices. Doing so might be necessary f=
+or
+> > > some
+> > > -=09  userspace applications but will cause the registration of WMI
+> > > devices with
+> > > -=09  the same GUID to fail in some corner cases.
+> > > +source "drivers/platform/x86/wmi/Kconfig"
+> > >     config WMI_BMOF
+> > >   =09tristate "WMI embedded Binary MOF driver"
+> > > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Mak=
+efile
+> > > index c7db2a88c11a..c9f6e9275af8 100644
+> > > --- a/drivers/platform/x86/Makefile
+> > > +++ b/drivers/platform/x86/Makefile
+> > > @@ -5,7 +5,7 @@
+> > >   #
+> > >     # Windows Management Interface
+> > > -obj-$(CONFIG_ACPI_WMI)=09=09+=3D wmi.o
+> > > +obj-y=09=09=09=09+=3D wmi/
+> > Is there a good reason for the first part of the change?
+> > That is, do you anticipate need for something outside of what this woul=
+d
+> > cover:
+> >=20
+> > obj-$(CONFIG_ACPI_WMI)               +=3D wmi/
+> >=20
+> > Other than that, this series looks fine.
+>=20
+> The final version will look like this:
+>=20
+> wmi-y                   :=3D core.o marshalling.o string.o
+> obj-$(CONFIG_ACPI_WMI)  +=3D wmi.o
+>=20
+> # Unit tests
+> obj-y                   +=3D tests/
+>=20
+> So i think this change is necessary.
 
-> +	return devm_add_action_or_reset(dev, ehl_pse_io_dev_destroy, aux_dev);
-> +}
+Fair enough.
 
-...
+--=20
+ i.
 
-> +#define auxiliary_dev_to_ehl_pse_io_dev(auxiliary_dev) \
-> +	container_of(auxiliary_dev, struct ehl_pse_io_dev, aux_dev)
-
-Wondering if we may use container_of_const()
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--8323328-2023958081-1762772069=:1060--
