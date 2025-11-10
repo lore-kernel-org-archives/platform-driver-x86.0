@@ -1,120 +1,155 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBB230CD83
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 11:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC19630ACEE;
+	Mon, 10 Nov 2025 11:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762774299; cv=none; b=TPa2xfT3ZyR5KcEiaAgVvCu8oBl+RsIKEu9rKHcP6bbUJLFi3wjQOSHfgIJUpoVfRZio44G0XFJptaKPoQil0WMClEGbZGBDVcqHniJVwoD/y8sX0D9LA9Z8/PKebDubmDTEChrQiH8V9evvRVHK8Enn4egOXj27LQkkP+LnAFM=
+	t=1762775399; cv=none; b=HFCc6oLcin3sfiZUZi8V5EIBwePG5h4WESnUUJkoMGtSkCzPJG/VfZUAXIiPNf+BKwIm75tBrZ7hj3wD7ZIu6tlcbxeqUgd8jHJDzaNW2I9pU+/itc/gntVH3gARwEUky9i8It2mc6jjJ07H9ZtRB+uTDwc9RAdpvEroFwj8n64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762774299; c=relaxed/simple;
-	bh=KtbcQuiFp8d7IkC2vqgRHkSHD/7Ct0/C86WkZt3s+bY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iVB5cwIy1JKRhIbeN6nmHyVy2P5sKJmfxDxcOHzA1BGkc381poFaPLo8wjjoh9vJ8JiXkK20ebefZUmljLUj4RoaA5TRdVAiT2cSGpoMLX/bgWbVGERAg7uuK6oxF40v8fPxHVsIeuetGv6Zw0LWePoQb/gJT5Hz18xvEZckFWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=j/H7FSWq; arc=none smtp.client-ip=178.156.171.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1762775399; c=relaxed/simple;
+	bh=kgLvGqGW6Y2MVxPS0dVKx+QUBt0U5B7prEs50cqFkU4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cHchF+3SJs7n+nnBrL5JSJxU/LYj51e1j+Qc1y4n6t4WWiVQ05TcyGDM9JabhHMvvxvOxPpxfto4uETLWRiSjVwtqCKiHDnk4hfx6OuO6M5e5vqlAKPjbjt6mp2wFZGBjOnP3VrM1UrlSomBeCTWh3xpNaSg/iUHKbegrjZl5RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MybNDpjY; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="j/H7FSWq"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id D44E45E4B1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:29 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 777965E5A1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:28 +0200 (EET)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 6FB36200BAA
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:31:27 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1762774287;
-	bh=IeSnBNotDjw3R7VnmJhVdPttuuVGctIrZk+RSexiM1c=;
-	h=Received:From:Subject:To;
-	b=j/H7FSWqmVYo+dOsASexO+N1mwvwoUh923MVphpZecZHMa5plAG8OJB2GlvI+GR5v
-	 uhN+4V62HZoqr6RMkkG5Ox+JOhw3ieklOb+W8ZTlUxbttlFw0JyrloAmuIGNFHS4vd
-	 JwIKcbGTzoHdSxNYTKk9lDkj0LcxutuU46oY1LJKRVgVqOQvc+/94OQak+CbSZUqYy
-	 uiGBdRNfCj0kcLrIiyGv51KWIDJcUfXZmD7MMjygmfdX1pq9io6fikd4Sgqf3o2Yho
-	 WceHUDETJGpGJ+gFaoSORqDTFoXOmFESSI+GVRH1sMMRxmTBu5PIr4DNMqwHdm32qJ
-	 9aSW0I4X0hZKw==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-37a415a22ecso28034181fa.0
-        for <platform-driver-x86@vger.kernel.org>;
- Mon, 10 Nov 2025 03:31:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWW2yS5d71nHbu0R9nRkmx6mZtNbOgUG6U1B7eIEnY52r6sV3oJd8Hb8WmMxfrzqaPiQtiYJ1HpxfeRZ5wXr4Lg5fyh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/9RieFhVI8+65eDX/jx0BypyC3ZBlfA7femu0hiX5cJlJYg6H
-	hL7bEgWqIiM1ajiqj/RUtkt+xvV4dmehTeICYkAZepCPE6VqZTZ3Vu/rN3zIpsIyqkLTRCxKDET
-	zjoeQhlOFp5yMnP13HUpThN/6cdnBPSQ=
-X-Google-Smtp-Source: 
- AGHT+IHwlop8iQyLf816B5t3NJ+WnCUY4vjIic/wmY4CcU7fAIzaPagQklkeFNoOWwBy7j0dz/kU76Es7zzx4EJY/P0=
-X-Received: by 2002:a05:651c:1307:b0:37a:421c:cc4f with SMTP id
- 38308e7fff4ca-37a7b24a069mr13366291fa.16.1762774286862; Mon, 10 Nov 2025
- 03:31:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MybNDpjY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762775398; x=1794311398;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kgLvGqGW6Y2MVxPS0dVKx+QUBt0U5B7prEs50cqFkU4=;
+  b=MybNDpjYgKJzlFJE1XlpRif5sw8WHu5Oa0DPp+7PPcrvsdcoEou2DCsA
+   nquc7AEVVNrIdcfV0p8X+fVSJJ2s5K6UjkbYi5X6xyb/iRbwnVjFLa2KX
+   mUbdG6XTlJgOz7H3b1N0+b1qfvHFcpVJ40pB0DS+RgzpZrYDR/A8Ui9Bi
+   E6FGEqNksD6qGPooTKNnZsSrn3UnlOn+SMCGgisksA9sl9etTKgVAbSR4
+   zEexw75QcZkFksiEb7l+GbvPSNiK2pN0yZC3uRMTGlyIGWjwacAWEoxQF
+   fuGD/FtPIFSgzt/kofTi1XRcIY+zeOz137dj9ZqKlbQTVUbDsyOVYq1z6
+   w==;
+X-CSE-ConnectionGUID: W1fT316HSnm/TQmGTWuvYw==
+X-CSE-MsgGUID: IrTEIptmT+C0026QS1VRsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="52381235"
+X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
+   d="scan'208";a="52381235"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:49:57 -0800
+X-CSE-ConnectionGUID: Sj9MWXvmSo6S4AGtYTK6HQ==
+X-CSE-MsgGUID: q0aaSUIcTOWst/+WBvw2kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
+   d="scan'208";a="193665319"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:49:46 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Nov 2025 13:49:42 +0200 (EET)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Viresh Kumar <viresh.kumar@linaro.org>, 
+    Matthias Brugger <matthias.bgg@gmail.com>, 
+    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+    Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>, 
+    Jernej Skrabec <jernej.skrabec@gmail.com>, 
+    Samuel Holland <samuel@sholland.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    Daniel Lezcano <daniel.lezcano@linaro.org>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Nicolas Ferre <nicolas.ferre@microchip.com>, 
+    Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+    Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+    Daniel Lezcano <daniel.lezcano@kernel.org>, 
+    Thierry Reding <thierry.reding@gmail.com>, 
+    Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+    linux-sunxi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 09/13] platform: surface: Simplify with
+ of_machine_get_match_data()
+In-Reply-To: <20251106-b4-of-match-matchine-data-v1-9-d780ea1780c2@linaro.org>
+Message-ID: <4986f752-ba21-6a5f-641a-e0dadb4abd11@linux.intel.com>
+References: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org> <20251106-b4-of-match-matchine-data-v1-9-d780ea1780c2@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251110111253.16204-1-W_Armin@gmx.de>
-In-Reply-To: <20251110111253.16204-1-W_Armin@gmx.de>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 10 Nov 2025 12:31:15 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
-X-Gm-Features: AWmQ_bkyaZ6Slz3nV5eHZccE7lAPxm6A9KqGQn76MiECU2M-muGX1JVUobXSJxI
-Message-ID: 
- <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] platform/x86: msi-wmi-platform: Fix autoloading
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176277428768.2201215.746594159317056361@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: multipart/mixed; boundary="8323328-1580227820-1762775382=:1060"
 
-On Mon, 10 Nov 2025 at 12:13, Armin Wolf <W_Armin@gmx.de> wrote:
->
-> As already noted by Antheas Kapenekakis back in May, the
-> msi-wmi-platform driver fails to automatically load on MSI Claw
-> devices. Back then i suspected an issue with the device firmware,
-> however i just found out that i made a silly mistake when specifying
-> the GUID string of the driver, preventing the WMI driver core from
-> matching it to its WMI device.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Can you add a closes with a link to that discussion and a reported by?
+--8323328-1580227820-1762775382=:1060
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Additionally i noticed that said GUID was copied from the Windows
-> driver samples, meaning that it might be shared across different
-> vendors. Because of this we have to prevent this driver from loading
-> on non-MSI devices.
->
-> Compile-tested only.
+On Thu, 6 Nov 2025, Krzysztof Kozlowski wrote:
 
-I will try to test this in one to two days and will add a tested by.
+Please change the prefixes to:
 
-Thanks,
-Antheas
+platform/surface: aggregator_registry: ...
 
-> Armin Wolf (2):
->   platform/x86: msi-wmi-platform: Only load on MSI devices
->   platform/x86: msi-wmi-platform: Fix typo in WMI GUID
->
->  .../wmi/driver-development-guide.rst          |  1 +
->  drivers/platform/x86/Kconfig                  |  1 +
->  drivers/platform/x86/msi-wmi-platform.c       | 43 ++++++++++++++++++-
->  3 files changed, 43 insertions(+), 2 deletions(-)
->
-> --
-> 2.39.5
->
->
+Once that is changed,
 
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+> Replace open-coded getting root OF node, matching against it and getting
+> the match data with new of_machine_get_match_data() helper.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+> ---
+>=20
+> Depends on the first OF patch.
+> ---
+>  drivers/platform/surface/surface_aggregator_registry.c | 13 +-----------=
+-
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/dri=
+vers/platform/surface/surface_aggregator_registry.c
+> index a594d5fcfcfd..78ac3a8fbb73 100644
+> --- a/drivers/platform/surface/surface_aggregator_registry.c
+> +++ b/drivers/platform/surface/surface_aggregator_registry.c
+> @@ -491,24 +491,13 @@ static const struct of_device_id ssam_platform_hub_=
+of_match[] __maybe_unused =3D {
+>  static int ssam_platform_hub_probe(struct platform_device *pdev)
+>  {
+>  =09const struct software_node **nodes;
+> -=09const struct of_device_id *match;
+> -=09struct device_node *fdt_root;
+>  =09struct ssam_controller *ctrl;
+>  =09struct fwnode_handle *root;
+>  =09int status;
+> =20
+>  =09nodes =3D (const struct software_node **)acpi_device_get_match_data(&=
+pdev->dev);
+>  =09if (!nodes) {
+> -=09=09fdt_root =3D of_find_node_by_path("/");
+> -=09=09if (!fdt_root)
+> -=09=09=09return -ENODEV;
+> -
+> -=09=09match =3D of_match_node(ssam_platform_hub_of_match, fdt_root);
+> -=09=09of_node_put(fdt_root);
+> -=09=09if (!match)
+> -=09=09=09return -ENODEV;
+> -
+> -=09=09nodes =3D (const struct software_node **)match->data;
+> +=09=09nodes =3D (const struct software_node **)of_machine_get_match_data=
+(ssam_platform_hub_of_match);
+>  =09=09if (!nodes)
+>  =09=09=09return -ENODEV;
+>  =09}
+>=20
+>=20
+--8323328-1580227820-1762775382=:1060--
