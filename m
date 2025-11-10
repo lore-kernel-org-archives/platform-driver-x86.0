@@ -1,134 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A36221542;
-	Mon, 10 Nov 2025 11:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED030AACE;
+	Mon, 10 Nov 2025 11:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762773260; cv=none; b=UsRpbvaUcVhmmLbZt6Zn2fmx5JIvj4Wr5/7JnAEHb1lBz5kbc9AbO4Pau4TddZlUHOFeSayFE5WS/cPFoETmIk3bWtMr+RozynTBo22yMhEnwwbplCebl7L9+Ge2sefOoujsQXS0oIF5+aTK6UI8QbGeeBFbbOOy3//YDZIc778=
+	t=1762773485; cv=none; b=oo4JdF2RlU6hnVBqWkLBcW0UdBGjh67udB0G5oaTSVC9Ddnc3D9hCmoG7XWgXTdLXPVtQ1ZdSjxzwBaGNRFDFESf2SMUdy/kSDiSruOknKLZ6irFJ4KBGeOta4niNxIVnW5kna6reTOCXbhKEMIcDZKid3rzLEa8/nrerIbu4ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762773260; c=relaxed/simple;
-	bh=Tb3gGuGtl8j/1gHHLyftk/wWI4ks/TnsXd/Czi8Q01M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AiEEOg32og8bYlIIhSeUEL5WHUR+TyN+YlNBW+b2JKcCt26lpqbA6W5a7htDTiMmQakOTuy+m01CfaHMt62YAL3cqsoxNFpbULv3z36JQ/vCqe9+uZKqJOFsUtn7VZ7nIr7jb9Jdt3Y4a0gWSg8EPZDfL8ZDOI7X9xsK5PoMmDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YT1dcY47; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762773485; c=relaxed/simple;
+	bh=yTNk15ujPUZN4tCu3ROJSJZtUjZoH00ykxCOtBE7gmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kA1oOCfHAXm4tgJ2uYkIKroUvOLRCaBsfIdVJCiCy+OgXunYH2XSWSeZE6S4l3SMIhAHmENSG0aYleSGnMCLME68PtxHehtdCv92pao8+S1TlF5ARGjXah86kWYzZ60ISz5qLgpJ58bv9ju7hL/ArKCxHlXvPzK8vY4y6V81e/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVmxM9s2; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YT1dcY47"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVmxM9s2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762773258; x=1794309258;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Tb3gGuGtl8j/1gHHLyftk/wWI4ks/TnsXd/Czi8Q01M=;
-  b=YT1dcY47my/X4QLBPSbuMKIo+3Sdym2+IUzAHausngiDw5Tum/8qYPw0
-   NeMgnllVyYY1G7vjb0OpzL4hcPPnIMLqSUuYHSx91RXC0r7gt85l/CtMY
-   bFo83KLE182h9S5RQL/xkhYsaJKQQ3S6vDkyfSmWuDeq8KWq4Po9VtZ7S
-   0OY0BS10Z5j3M5VfzMyogBjeZFuM2GPRw8A6lR0WL7XJKVzxaSDLy2a7K
-   tuQsKYB7sjT/EfPYuBUe3CmipyPavK0DQ4sm4MUiUJ3ECD0ph9tZANUaX
-   oUGQjfw2WSG8luGqyU1kk0HEkEMTkJKmogYiT524bcK3ipBt+gvRaIwik
-   g==;
-X-CSE-ConnectionGUID: /eBAel49SLqPcfGyqr/c8A==
-X-CSE-MsgGUID: vINU1X54TGOxoCX7wdGuxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="75507021"
+  t=1762773483; x=1794309483;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yTNk15ujPUZN4tCu3ROJSJZtUjZoH00ykxCOtBE7gmA=;
+  b=XVmxM9s2WQMB7z5mVjFMqasvzgUn9b5YKATOKGmqgx2p3/W6zUK/074K
+   iy8oAEzzi7aC8w6uU7bCrV5JbztbZ4zfNeobuqdreUfSqo2Cy10ZDdcXt
+   7FSl444YPOK3qrevtf28mSJ/OUfZDBDOpv2b6sc5qX5tF6SVnERZKJTfA
+   1tjwOC96M7TjkkcpWuMKeQYjEZ/pwiz+AZFbXPaWKw+/tWc9ZP1g9544z
+   zl1nLbq+5rTe81ZlN5wQImBvjzJG3BI1I4QecLbwGKkRTpSx05QyIANCq
+   YyQGdHnnXCyL6vE0TC4a1pYyK9Ism+XjecaIx6M9T64l43pAeL+62VIrz
+   w==;
+X-CSE-ConnectionGUID: HLp32CkSS8qjbPpwlow59A==
+X-CSE-MsgGUID: bKSDZADwTOuffJ1BQy7qgA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="82448422"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="75507021"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:14:17 -0800
-X-CSE-ConnectionGUID: qa1zIVn6QxG/ucqV7AEW3Q==
-X-CSE-MsgGUID: bSXtiLKeRPaXy0gb8YYAEw==
+   d="scan'208";a="82448422"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:18:03 -0800
+X-CSE-ConnectionGUID: wdIRu+1bT2e+/HoY4UdvvA==
+X-CSE-MsgGUID: NUr6m8N+Tr+XXURuyaZPTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="192757513"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:14:12 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Nov 2025 13:14:07 +0200 (EET)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Mario Limonciello <superm1@kernel.org>, Hans de Goede <hansg@kernel.org>
-cc: Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] acpi: platform_profile - Add Extreme profile
- option
-In-Reply-To: <20251106212121.447030-2-derekjohn.clark@gmail.com>
-Message-ID: <701898dd-3310-e86d-7499-fca5a445447a@linux.intel.com>
-References: <20251106212121.447030-1-derekjohn.clark@gmail.com> <20251106212121.447030-2-derekjohn.clark@gmail.com>
+   d="scan'208";a="212045271"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:18:01 -0800
+Date: Mon, 10 Nov 2025 12:17:58 +0100
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
+ PSE I/O
+Message-ID: <aRHJ5gnMaWeJmQzc@black.igk.intel.com>
+References: <20251110052728.383339-1-raag.jadav@intel.com>
+ <20251110052728.383339-2-raag.jadav@intel.com>
+ <aRGTVguXqO2oNCCW@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRGTVguXqO2oNCCW@smile.fi.intel.com>
 
-On Thu, 6 Nov 2025, Derek J. Clark wrote:
-
-> Some devices, namely Lenovo Legion devices, have an "extreme" mode where
-> power draw is at the maximum limit of the cooling hardware. Add a new
-> "extreme" platform profile to properly reflect this operating mode.
+On Mon, Nov 10, 2025 at 09:25:10AM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 10, 2025 at 10:56:40AM +0530, Raag Jadav wrote:
+> > Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
+> > devices that expose two different capabilities of GPIO and Timed I/O
+> > as a single PCI function through shared MMIO with below layout.
+> > 
+> > GPIO: 0x0000 - 0x1000
+> > TIO:  0x1000 - 0x2000
+> > 
+> > This driver enumerates the PCI parent device and creates auxiliary child
+> > devices for these capabilities. The actual functionalities are provided
+> > by their respective auxiliary drivers.
 > 
-> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
->  drivers/acpi/platform_profile.c                        | 1 +
->  include/linux/platform_profile.h                       | 1 +
->  3 files changed, 4 insertions(+)
+> ...
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
-> index dc72adfb830a..9bee8deb4dc9 100644
-> --- a/Documentation/ABI/testing/sysfs-class-platform-profile
-> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
-> @@ -23,6 +23,8 @@ Description:	This file contains a space-separated list of profiles supported
->  					power consumption with a slight bias
->  					towards performance
->  		performance		High performance operation
-> +		extreme			Higher performance operation that may exceed
-> +					internal battery draw limits when on AC power
->  		custom			Driver defined custom profile
->  		====================	========================================
->  
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index b43f4459a4f6..78da17e16d9b 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -37,6 +37,7 @@ static const char * const profile_names[] = {
->  	[PLATFORM_PROFILE_BALANCED] = "balanced",
->  	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] = "balanced-performance",
->  	[PLATFORM_PROFILE_PERFORMANCE] = "performance",
-> +	[PLATFORM_PROFILE_EXTREME] = "extreme",
->  	[PLATFORM_PROFILE_CUSTOM] = "custom",
->  };
->  static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index a299225ab92e..2bf178bde2b5 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -24,6 +24,7 @@ enum platform_profile_option {
->  	PLATFORM_PROFILE_BALANCED,
->  	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
->  	PLATFORM_PROFILE_PERFORMANCE,
-> +	PLATFORM_PROFILE_EXTREME,
->  	PLATFORM_PROFILE_CUSTOM,
->  	PLATFORM_PROFILE_LAST, /*must always be last */
->  };
+> > +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
+> > +{
+> > +	struct auxiliary_device *aux_dev;
+> > +	struct device *dev = &pci->dev;
+> > +	struct ehl_pse_io_dev *io_dev;
+> > +	resource_size_t start, offset;
+> > +	int ret;
+> > +
+> > +	io_dev = devm_kzalloc(dev, sizeof(*io_dev), GFP_KERNEL);
+> > +	if (!io_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	start = pci_resource_start(pci, 0);
+> > +	offset = EHL_PSE_IO_DEV_SIZE * idx;
+> > +
+> > +	io_dev->irq = pci_irq_vector(pci, idx);
+> > +	io_dev->mem = DEFINE_RES_MEM(start + offset, EHL_PSE_IO_DEV_SIZE);
+> > +
+> > +	aux_dev = &io_dev->aux_dev;
+> > +	aux_dev->name = name;
+> > +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
+> > +	aux_dev->dev.parent = dev;
+> > +	aux_dev->dev.release = ehl_pse_io_dev_release;
+> > +
+> > +	ret = auxiliary_device_init(aux_dev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = auxiliary_device_add(aux_dev);
+> > +	if (ret) {
+> > +		auxiliary_device_uninit(aux_dev);
+> > +		return ret;
+> > +	}
 > 
+> Can it be now auxiliary_device_create() ?
 
-I wonder if "extreme" is the best name for this? Given the description you 
-gave above, perhaps "max-power" would be more descriptive (and we already 
-have "low-power" so it kind of feels fitting the theme too).
+Could be. With that perhaps we won't even need the 'intel' prefix.
 
-I don't have strong opinion on this so if you guys feel this suggestion 
-would not make things better, feel free to voice it. :-)
+> > +	return devm_add_action_or_reset(dev, ehl_pse_io_dev_destroy, aux_dev);
+> > +}
+> 
+> ...
+> 
+> > +#define auxiliary_dev_to_ehl_pse_io_dev(auxiliary_dev) \
+> > +	container_of(auxiliary_dev, struct ehl_pse_io_dev, aux_dev)
+> 
+> Wondering if we may use container_of_const()
 
--- 
- i.
+Or just use platdata instead? Let me send out a v3.
 
+Raag
