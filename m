@@ -1,155 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC19630ACEE;
-	Mon, 10 Nov 2025 11:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2DA21772A;
+	Mon, 10 Nov 2025 12:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762775399; cv=none; b=HFCc6oLcin3sfiZUZi8V5EIBwePG5h4WESnUUJkoMGtSkCzPJG/VfZUAXIiPNf+BKwIm75tBrZ7hj3wD7ZIu6tlcbxeqUgd8jHJDzaNW2I9pU+/itc/gntVH3gARwEUky9i8It2mc6jjJ07H9ZtRB+uTDwc9RAdpvEroFwj8n64=
+	t=1762776044; cv=none; b=hoCzpwKcqAIm7gF6EhBgk2gXaz7R0a626tJQ5+rKZDGl2P/zVg6u1VRNv7HveEBDiaGS6sztUDGjR8m/nYcXeKv1aqaZe6OdiJZw7XKal+enS821lU0aTeGBqWfrcNbSFxaVeK3LQw/lClAZVCqxpSOKY8n0zt3RTYiK+VNZfWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762775399; c=relaxed/simple;
-	bh=kgLvGqGW6Y2MVxPS0dVKx+QUBt0U5B7prEs50cqFkU4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cHchF+3SJs7n+nnBrL5JSJxU/LYj51e1j+Qc1y4n6t4WWiVQ05TcyGDM9JabhHMvvxvOxPpxfto4uETLWRiSjVwtqCKiHDnk4hfx6OuO6M5e5vqlAKPjbjt6mp2wFZGBjOnP3VrM1UrlSomBeCTWh3xpNaSg/iUHKbegrjZl5RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MybNDpjY; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1762776044; c=relaxed/simple;
+	bh=pLq2WM9z+voW7C5dO4LcZoazmwugdxikgQMGtcE8DjQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UZjkdfcM5HvBHp1HuGh/WW/1US41BFtV5eiIwDShVRhmVOV9K6cjQ2JwiZNmCw0D5U25DnKp5K+AO/CupheQX9RyycEOqiOV/FzOCfMPRSB0yuoO6q8Ipu463ckbn06oHvw5WZAuQlH+ZLHomdz+JcflALWBHdSQWQmjsezrKfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V56k7G7O; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MybNDpjY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V56k7G7O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762775398; x=1794311398;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kgLvGqGW6Y2MVxPS0dVKx+QUBt0U5B7prEs50cqFkU4=;
-  b=MybNDpjYgKJzlFJE1XlpRif5sw8WHu5Oa0DPp+7PPcrvsdcoEou2DCsA
-   nquc7AEVVNrIdcfV0p8X+fVSJJ2s5K6UjkbYi5X6xyb/iRbwnVjFLa2KX
-   mUbdG6XTlJgOz7H3b1N0+b1qfvHFcpVJ40pB0DS+RgzpZrYDR/A8Ui9Bi
-   E6FGEqNksD6qGPooTKNnZsSrn3UnlOn+SMCGgisksA9sl9etTKgVAbSR4
-   zEexw75QcZkFksiEb7l+GbvPSNiK2pN0yZC3uRMTGlyIGWjwacAWEoxQF
-   fuGD/FtPIFSgzt/kofTi1XRcIY+zeOz137dj9ZqKlbQTVUbDsyOVYq1z6
-   w==;
-X-CSE-ConnectionGUID: W1fT316HSnm/TQmGTWuvYw==
-X-CSE-MsgGUID: IrTEIptmT+C0026QS1VRsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="52381235"
+  t=1762776042; x=1794312042;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=pLq2WM9z+voW7C5dO4LcZoazmwugdxikgQMGtcE8DjQ=;
+  b=V56k7G7OSGAatP2OW9WlolA39d5Av7dSLAfqtlP30W4+Q9J4FK4zzOYk
+   H1P1oC8BwhrtO0+yB0dM8lK4EwvGLVjeOPe4A1y9uG6tUqSUfM/39Utzp
+   A+jyAVgnFIfdfdBe8zmNi7s0daKJ5YwHxvendq87Q13Q/R82PbgP6nKNi
+   DmIStTvZ8djPuJfbC83kzusClEWXoSTGeoL2wjhiVwq5BdF72bIgoezsi
+   +chAXmI8av6tLig7ZeOpuWGSh340tHW2n0lbdoaK+rjDuo7KM7xbA4qGk
+   ti/r77DOe6be7mo1G5qA+S9tW4t8GQ4OO+2tUZty2Bts5bGy1NWVWLLaG
+   g==;
+X-CSE-ConnectionGUID: ADTx3j8IR1mPeUQfBlWTsA==
+X-CSE-MsgGUID: zUUtL1oZSU6QR4bmzmEfBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="75433454"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="52381235"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:49:57 -0800
-X-CSE-ConnectionGUID: Sj9MWXvmSo6S4AGtYTK6HQ==
-X-CSE-MsgGUID: q0aaSUIcTOWst/+WBvw2kg==
+   d="scan'208";a="75433454"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:00:41 -0800
+X-CSE-ConnectionGUID: owNsOSTPQru/EP9H7uGOKQ==
+X-CSE-MsgGUID: cMsmrMjPT7ifZ0II32tNjg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="193665319"
+   d="scan'208";a="193839543"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 03:49:46 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:00:38 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Nov 2025 13:49:42 +0200 (EET)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Viresh Kumar <viresh.kumar@linaro.org>, 
-    Matthias Brugger <matthias.bgg@gmail.com>, 
-    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-    Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>, 
-    Jernej Skrabec <jernej.skrabec@gmail.com>, 
-    Samuel Holland <samuel@sholland.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@linaro.org>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konradybcio@kernel.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Nicolas Ferre <nicolas.ferre@microchip.com>, 
-    Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-    Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@kernel.org>, 
-    Thierry Reding <thierry.reding@gmail.com>, 
-    Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-    linux-sunxi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 09/13] platform: surface: Simplify with
- of_machine_get_match_data()
-In-Reply-To: <20251106-b4-of-match-matchine-data-v1-9-d780ea1780c2@linaro.org>
-Message-ID: <4986f752-ba21-6a5f-641a-e0dadb4abd11@linux.intel.com>
-References: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org> <20251106-b4-of-match-matchine-data-v1-9-d780ea1780c2@linaro.org>
+To: Ike Panhc <ikepanhc@gmail.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Rong Zhang <i@rong.moe>
+Cc: Jelle van der Waa <jelle@vdwaa.nl>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20251105182832.104946-1-i@rong.moe>
+References: <20251105182832.104946-1-i@rong.moe>
+Subject: Re: [PATCH v2 0/4] platform/x86: ideapad-laptop: Add
+ charge_types:Fast (Rapid Charge)
+Message-Id: <176277603234.8442.18421634997984069130.b4-ty@linux.intel.com>
+Date: Mon, 10 Nov 2025 14:00:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1580227820-1762775382=:1060"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 06 Nov 2025 02:28:23 +0800, Rong Zhang wrote:
 
---8323328-1580227820-1762775382=:1060
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The GBMD/SBMC interface on recent devices supports Rapid Charge mode
+> (charge_types: Fast) in addition to Conservation Mode (charge_types:
+> Long_Life).
+> 
+> Query the GBMD interface on probe to determine if a device supports
+> Rapid Charge. If so, expose these two modes while carefully maintaining
+> their mutually exclusive state, which aligns with the behavior of
+> manufacturer utilities on Windows.
+> 
+> [...]
 
-On Thu, 6 Nov 2025, Krzysztof Kozlowski wrote:
 
-Please change the prefixes to:
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-platform/surface: aggregator_registry: ...
+The list of commits applied:
+[1/4] platform/x86: ideapad-laptop: Use str_on_off() helper
+      commit: 06c129cac01be45e458d37534d1a6ba753cf6f13
+[2/4] platform/x86: ideapad-laptop: Protect GBMD/SBMC calls with mutex
+      commit: 85901a0d8591ecd756078e57be077f12a0ee78be
+[3/4] platform/x86: ideapad-laptop: Support multiple power_supply_ext definitions
+      commit: 5c54ece0476638f7c5fc655c655e721286a26bf1
+[4/4] platform/x86: ideapad-laptop: Add charge_types:Fast (Rapid Charge)
+      commit: 90430ea98f5585270bc185cee548154d239af8d7
 
-Once that is changed,
-
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
+--
  i.
 
-> Replace open-coded getting root OF node, matching against it and getting
-> the match data with new of_machine_get_match_data() helper.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
-> ---
->=20
-> Depends on the first OF patch.
-> ---
->  drivers/platform/surface/surface_aggregator_registry.c | 13 +-----------=
--
->  1 file changed, 1 insertion(+), 12 deletions(-)
->=20
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/dri=
-vers/platform/surface/surface_aggregator_registry.c
-> index a594d5fcfcfd..78ac3a8fbb73 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -491,24 +491,13 @@ static const struct of_device_id ssam_platform_hub_=
-of_match[] __maybe_unused =3D {
->  static int ssam_platform_hub_probe(struct platform_device *pdev)
->  {
->  =09const struct software_node **nodes;
-> -=09const struct of_device_id *match;
-> -=09struct device_node *fdt_root;
->  =09struct ssam_controller *ctrl;
->  =09struct fwnode_handle *root;
->  =09int status;
-> =20
->  =09nodes =3D (const struct software_node **)acpi_device_get_match_data(&=
-pdev->dev);
->  =09if (!nodes) {
-> -=09=09fdt_root =3D of_find_node_by_path("/");
-> -=09=09if (!fdt_root)
-> -=09=09=09return -ENODEV;
-> -
-> -=09=09match =3D of_match_node(ssam_platform_hub_of_match, fdt_root);
-> -=09=09of_node_put(fdt_root);
-> -=09=09if (!match)
-> -=09=09=09return -ENODEV;
-> -
-> -=09=09nodes =3D (const struct software_node **)match->data;
-> +=09=09nodes =3D (const struct software_node **)of_machine_get_match_data=
-(ssam_platform_hub_of_match);
->  =09=09if (!nodes)
->  =09=09=09return -ENODEV;
->  =09}
->=20
->=20
---8323328-1580227820-1762775382=:1060--
