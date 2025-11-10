@@ -1,57 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B413E30BF77;
-	Mon, 10 Nov 2025 12:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F3B30C361;
+	Mon, 10 Nov 2025 12:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762778343; cv=none; b=uxJCD8sdkVQOHj348DRmUzWmX2SAvz6FAagTvxQXsTYbFlowoNzt1Nc1eZ874wvEjWA25WcbzJQ8QnRqeA9d7QPPsbSKh9eLl/6A5PLZYVb6MISavLLcvS7VKOcwFGMfLUSMCxpVHpwbgNXsqx+IAgz1lSc2s/RWRvKlnqv0mVk=
+	t=1762778436; cv=none; b=MbxkwL2FAnihRSMOxO4uWTab9HO4078j8gI2aW9fSQDdvVGn16nOcyLKX/cHbnOvXI3UWGQTx98yNLAiWsnkDr+NTOaHbhfsWSc4mSLIXK1uq4m1Y8u0LD8zg7sO57hCD8Y0yNiou4Flb+bETiAJddrRLj4rQE/pFxPBTPzQiCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762778343; c=relaxed/simple;
-	bh=cyd/HokQ3LboIHX5k9KD1bhTFpADMt86OvrjFVV8VbM=;
+	s=arc-20240116; t=1762778436; c=relaxed/simple;
+	bh=o5s6iOHGuFplHT4BVEmvNUwBVxn0U3ZG8rddqsXhE2w=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QXqR4WFbJi0MP9l+TDIwlAwCo4qLka1VZ45zisZkW6xaV0S1ZAwSW+wt3TAhpz1NWDGNKzLmc6wbdbCRrlXp7njq4CYXHKuV0sMkTKsDlY6H7vDhX0hLacWLpMKF77Alh3YYAODHqssNIPLWsM/yBruwlqtu06hgq5239dwRTmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F1h2Bser; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=DbqGUCNpPrOiV97Yk86aGJtWc54l3zBT7oqqw6wveiGKEAF+snklGFF4gaSgoNHomrdqPgzF9XREuBKylcKJ7nfph49o7f4pBl+Gn69bnf+7lcCvW8r6qWlEocx+ptIIV9MhlQU+NQhr67SFy8Lvt8K28F2Gm8Q572v3MKwr/rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjWFX7zL; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F1h2Bser"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjWFX7zL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762778341; x=1794314341;
+  t=1762778435; x=1794314435;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=cyd/HokQ3LboIHX5k9KD1bhTFpADMt86OvrjFVV8VbM=;
-  b=F1h2BseroUk1D/hATb53ertBrSDcr6NCye8aeVEtnH5j4HHWPySTbBxP
-   Pu+oQOikgZX2nHSbab1zPNapc6NWJDQzzacleGOaPwR6l5Tc9uDVu3vZx
-   RK3/ISNimdEMytD4AKqNrJ5OiNnlAMs2OSMsO8GKOAvw+RlcGxcYB4V7g
-   XSfH6rMGm7/snJPR3LqidwksrwRYu612ijDMgzO2cCCDgq0bBgwLJ4JSY
-   otDG+64ytd7U4/3zQawrrRrnkWiDX1YVgpV0nUCdaRrMNr5UZlKSaSRlY
-   fTsBNG04xYKoKFtKF1dWyddrK8b9icNlAVefAANP/RA4DFmCSdA/uEGZq
+  bh=o5s6iOHGuFplHT4BVEmvNUwBVxn0U3ZG8rddqsXhE2w=;
+  b=jjWFX7zL8oTQ7Hesv7CLjQAeDS774dMrzuY+jqL72eFxSN54zm8B7/8P
+   C4Nu4w0iaQpcrSz12xZXb/2htYLqeR71uFnjs5UfbuGeLdn/Im4Zj5liF
+   tGArtMDCaNnXJcVRyMKVOc9xKu+FAMT9QfDXTRn5/Dr+RpLBHIR0WZq7i
+   HRE8H/EDBJHxEzwg0OycKoVJ/akckg8KBWK3q/J+fNJwT50wH97cex38P
+   tGGm7duDEIX3B7IMUXNxZkkFsPr6teyORc0AYr9Vk+PBBszJzwz4L3qmZ
+   suVnCz+IjvfcduKarrV+GA+PMdeABtJQNDbU4zs12q08yh+osQCHSxOQ+
    A==;
-X-CSE-ConnectionGUID: xyg8dhEQRiG8BomBZCgI4Q==
-X-CSE-MsgGUID: vgtzyRgvS6C+UqKe/EJwrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="64866678"
+X-CSE-ConnectionGUID: VEojoamET/iGVhtzXpP+hQ==
+X-CSE-MsgGUID: CYET8PXQT3C0KIMaxSy6Xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="68469260"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="64866678"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:39:01 -0800
-X-CSE-ConnectionGUID: kHUwkUgaRROLAKTSMeX+FQ==
-X-CSE-MsgGUID: 9p4oXBtYRHKqpaXzuY5T/A==
+   d="scan'208";a="68469260"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:40:35 -0800
+X-CSE-ConnectionGUID: aDqJRHSXQseGdVu2Nirjww==
+X-CSE-MsgGUID: dhmiP5ImSk21p6AZCrYnqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="193846944"
+   d="scan'208";a="219318608"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:38:59 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 04:40:31 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Nov 2025 14:38:55 +0200 (EET)
-To: Marcos Vega <marcosmola2@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] platform/x86: hp-wmi: Moved Omen MAX 16-ah0xx board
- name
-In-Reply-To: <20251108114739.9255-3-marcosmola2@gmail.com>
-Message-ID: <28e9526a-9f3d-7d25-4263-4da1f8933904@linux.intel.com>
-References: <63905a5b-1dc5-e0d1-6c8d-e590c7e7c7f5@linux.intel.com> <20251108114739.9255-3-marcosmola2@gmail.com>
+Date: Mon, 10 Nov 2025 14:40:27 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, lkml@antheas.dev
+Subject: Re: [PATCH 1/2] platform/x86: msi-wmi-platform: Only load on MSI
+ devices
+In-Reply-To: <20251110111253.16204-2-W_Armin@gmx.de>
+Message-ID: <3014ce29-a707-2d77-71e6-11a631221804@linux.intel.com>
+References: <20251110111253.16204-1-W_Armin@gmx.de> <20251110111253.16204-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,40 +61,99 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 8 Nov 2025, Marcos Vega wrote:
+On Mon, 10 Nov 2025, Armin Wolf wrote:
 
-> Fixed placement of board 8D41 so its categorized adequately in victus_s_thermal_profile_boards.
+> It turns out that the GUID used by the msi-wmi-platform driver
+> (ABBC0F60-8EA1-11D1-00A0-C90629100000) is not unique, but was instead
+> copied from the WIndows Driver Samples. This means that this driver
+> could load on devices from other manufacturers that also copied this
+> GUID, potentially causing hardware errors.
 
-Thanks. I've applied this now to the review-ilpo-fixes branch.
+How unclever of them to copy-paste an unique identifier from an example...
 
-I ended up fixing this changelog text myself by taking part of the text 
-you had in v1.
+I've applied this series to the review-ilpo-fixes branch.
 
---
- i.
-
-> Signed-off-by: Marcos Vega <marcosmola2@gmail.com>
+> Prevent this by only loading on devices whitelisted via DMI. The DMI
+> matches where taken from the msi-ec driver.
+> 
+> Fixes: 9c0beb6b29e7 ("platform/x86: wmi: Add MSI WMI Platform driver")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
-> Thank you for all the tips on proper kernel writing, I'll try to do it properly and learn for my next patch.
+>  drivers/platform/x86/Kconfig            |  1 +
+>  drivers/platform/x86/msi-wmi-platform.c | 41 ++++++++++++++++++++++++-
+>  2 files changed, 41 insertions(+), 1 deletion(-)
 > 
-> v4:
-> - Added trailing comma
-
->  drivers/platform/x86/hp/hp-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index e10c75d91f24..ad9d9f97960f 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -96,6 +96,7 @@ static const char * const victus_thermal_profile_boards[] = {
->  static const char * const victus_s_thermal_profile_boards[] = {
->  	"8BBE", "8BD4", "8BD5",
->  	"8C78", "8C99", "8C9C",
-> +	"8D41",
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 46e62feeda3c..d96728a0f18d 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -545,6 +545,7 @@ config MSI_WMI
+>  config MSI_WMI_PLATFORM
+>  	tristate "MSI WMI Platform features"
+>  	depends on ACPI_WMI
+> +	depends on DMI
+>  	depends on HWMON
+>  	help
+>  	  Say Y here if you want to have support for WMI-based platform features
+> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
+> index dc5e9878cb68..bd2687828a2e 100644
+> --- a/drivers/platform/x86/msi-wmi-platform.c
+> +++ b/drivers/platform/x86/msi-wmi-platform.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/device/driver.h>
+> +#include <linux/dmi.h>
+>  #include <linux/errno.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/kernel.h>
+> @@ -448,7 +449,45 @@ static struct wmi_driver msi_wmi_platform_driver = {
+>  	.probe = msi_wmi_platform_probe,
+>  	.no_singleton = true,
 >  };
+> -module_wmi_driver(msi_wmi_platform_driver);
+> +
+> +/*
+> + * MSI reused the WMI GUID from the WMI-ACPI sample code provided by Microsoft,
+> + * so other manufacturers might use it as well for their WMI-ACPI implementations.
+> + */
+> +static const struct dmi_system_id msi_wmi_platform_whitelist[] __initconst = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +static int __init msi_wmi_platform_module_init(void)
+> +{
+> +	if (!dmi_check_system(msi_wmi_platform_whitelist)) {
+> +		if (!force)
+> +			return -ENODEV;
+> +
+> +		pr_warn("Ignoring DMI whitelist\n");
+> +	}
+> +
+> +	return wmi_driver_register(&msi_wmi_platform_driver);
+> +}
+> +
+> +static void __exit msi_wmi_platform_module_exit(void)
+> +{
+> +	wmi_driver_unregister(&msi_wmi_platform_driver);
+> +}
+> +
+> +module_init(msi_wmi_platform_module_init);
+> +module_exit(msi_wmi_platform_module_exit);
+> +
 >  
->  enum hp_wmi_radio {
+>  MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
+>  MODULE_DESCRIPTION("MSI WMI platform features");
 > 
 
 -- 
