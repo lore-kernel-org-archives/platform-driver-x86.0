@@ -1,122 +1,137 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0261A704B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 13:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE48228CBC;
+	Mon, 10 Nov 2025 14:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762779851; cv=none; b=EqQWcctFJe/AR1fXJkTUhbN4AlR+MXnwqTmcKWyJQ3KqLUDW9DAJsCDdan0VzsbWVC6dzZmSMkZAcEWX8uhW6RndCydOlZbuBBefIPpcwy1Tq72bzVxJ6W25DnBAUeMI+04e1HesDpmvMgB/Kv+DOy2898Os1Uu0mJQDhYix00M=
+	t=1762783872; cv=none; b=tz8CDxOGp/kyPFqLC0A4YG+7LgFDGOGA141tESGz4ccfK2X+6cKKPUFvW/sZWF9GjHo2wY86L+8ZXxEoU28TpbEZ55Xk6EbZ8LWGG/Y+Y/eTwEHN1dVLe8tvBCxXFP/xdf++7ET/PL0HLwaGPYSr6Bems/EmB2KQbzzO6qoW3Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762779851; c=relaxed/simple;
-	bh=qSml4dR6lltRLlIdFL4qJPIWCDYHLkMfeR6SRe3/EaM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zsq6PGvLwyCMR0MfgKoO160H8xoWmpl4RJ7BP0v4N2ZhD+m2B13+bEpnOF23QPoNJFGea5i/XaUORjGoKLCurHieBqDVvWvJu0wUGY4TmvFBTh6O7kxtr/kMQJyCZR6r8rljpEYQh33nGbTB8wmBoKV+DW0B6riXH3Xa5tOdbuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6YYv8sT; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762783872; c=relaxed/simple;
+	bh=48QFvVDn/gQXwmUmio9XPnllOgtcyyXloU9GmXy3GXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LVahrcXrN4H1IioAgXAz8aTuqd7QdqUIInRoLVkmQ89upAVx5GqQEZubW93hTwX1SreSNJQfien89cZ6cBPqqN5YBVEEIw/dqTVCx22sZbsbe5FWyXjZtLMMiDScvokoN4wdvSeUgr/ZGmnW4AZ3EDV8JslaZWQ2qGZcg8/CnRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=fqaK0G2U; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6YYv8sT"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37a492d3840so29536031fa.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Nov 2025 05:04:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762779848; x=1763384648; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tyc6bfyu3NMGAozQ9Ctuh4LDZmKtgcpPgmPqOdgLGBw=;
-        b=P6YYv8sTa8Fc4D0LyTPX+T1MEmuv8ngfosGW0hu/llivlPPgEyIWYxQ7WWvV3zZ6/H
-         oJD+8UszABWmY62UFeQR2u0UAar8Imtz8JJFHISRjeGq085mvrMgbnh5KmgMCsyoyVVT
-         xT3hpgC/G/JaEknXtoFoHfPHoFnaTmZh/lsKtLoHvuc1rI0Ya3nJn5srVAjBs5HTqRz5
-         pgZMooY2ddGI2Xf3DRrzhUP2VAqMcKNKCFYoFiTbcg2DuPWKo4JiIUjNr6+ZzIZPz72d
-         WmJzouQ24kqUfYWGT4jVZIrYXIgtzUGu2I6q/LNZ93mSc7b5ZZ+JrYoVFfpVncAM4YxM
-         yQ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762779848; x=1763384648;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tyc6bfyu3NMGAozQ9Ctuh4LDZmKtgcpPgmPqOdgLGBw=;
-        b=X6ce9KOx//kKAifnij2tPnJzU0U06pwzFe0nMLVjtgUiuruytIylJgA85mcNqtxghT
-         3xTxFv6TUZRGCH0jCsjdDOw0trZRehkF2SNoJAUNxii9B4vAAeNQRMRZbnLHErbLha0c
-         q/mVck6e0aSMpCk/Ah33SaspCqJ5iVVspIZjkTz8UMRgTjUiunZSb40Ou+xmUT1jovTU
-         X15ZHrE7dxpbEIHEAaArwz4/uccx3c+ri6JnfIbCRqxGRBBokiI2qBpq204XCMKWPYPe
-         X90Tit/wfyDBe5IdNFXPBNKQQB7xYvKkk68d8N8Cx7WZGB9FVFYQgj/SKLmwX3mHT81J
-         shag==
-X-Forwarded-Encrypted: i=1; AJvYcCVgPoKv7olH/cB484TYwbtxiVASKoGc3crv6HW8/lrUiYMEzmC61/34iS/WUEVuIrwvZt61HVzIcl96Snw8TmVqcaXQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1XXk7+X3heKPJKAz+rJ2VMMANX9Egc9/ruqivPX6309rOkxAg
-	fiV2KUWvVtJlw0aBZtwlVm7OB5/6UWH16q/eaqB0l7xxzelXkEcVntlAd+udR9wtV2pVJJzgBCN
-	yfQPQoaChxFMjldM/2YQUADZrbDM4JFs=
-X-Gm-Gg: ASbGnct4FSVfZflw4NhuU/N178sJ31RFWWHI0HYOBdciRCDC2ywi9q1TZ86voXlJiNf
-	PnmyCSt23dwufqjmSx6P6E/mlfKP4Pfns8/b4J0d3uz4KEpRxoRq9zRCFK32A4lN19LOLY+UArx
-	kufdpzOsgHWfoirH0lOF8bXgQS+51AtM+wbE2rD0w3CKx5ghFQn5PaSMXDCfxq/MnB5G12p0uRb
-	jucIFAiwfgI8lHkpXDaUHCNJbv/BfnkXQ1k1B4JIeYwoiEh9DRDz5f3TsHqiHPQE1Tj5KzlmHZw
-	hx7meIS8
-X-Google-Smtp-Source: AGHT+IFfptFLjKBZdFf/9r5iFPQ/UizXxNLlZGOI8ZfHNzHB4jb8cPVVdTdeeDX920MIourK5cKt+7ct4peMYMyXZwE=
-X-Received: by 2002:a2e:8a96:0:b0:379:348:80e2 with SMTP id
- 38308e7fff4ca-37a7b18b449mr21486651fa.9.1762779847136; Mon, 10 Nov 2025
- 05:04:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fqaK0G2U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1762783871; x=1794319871;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=48QFvVDn/gQXwmUmio9XPnllOgtcyyXloU9GmXy3GXQ=;
+  b=fqaK0G2UuX2xilf+tgALA4wwHmLX2BJVjU9Cgrnf49Jfrhwg/vCwKqds
+   Oq4ZG4kgnKjEBWM13ip1XXF29R8TJlo3yGqxp9YUrEnPfllFLkpS4hs0D
+   ffXxx3ThOx/wtcSttt2NxiiW0R3ZINvncu+u0ITrTPilJYJZKYUtBk5hT
+   HS1oAUOWac689eAA2JHftXAl8NFZ7z3AdUyOFfzhZetpBHsrbeu9fIxvy
+   ENVVzf0Dn1e7JaA0kcvyrJYXbRSTgAfSIxyvoMr1kgLgR95NUWS94R5Na
+   3exCpgiKT7XlGQ5lfBz5/skC0bjkxXd1L6djneJHO9mTLXmdFF4UOhQdH
+   g==;
+X-CSE-ConnectionGUID: 7jHQAg5DRaCcnmeaPG7SRg==
+X-CSE-MsgGUID: cZ/bQKkfRpi6h9O940oGMw==
+X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
+   d="scan'208";a="280277302"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 07:11:09 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex3.mchp-main.com (10.10.87.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Mon, 10 Nov 2025 07:10:29 -0700
+Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
+ Transport; Mon, 10 Nov 2025 07:10:23 -0700
+Message-ID: <e7ddaff8-0d8a-4d79-a2b1-97aaac524a83@microchip.com>
+Date: Mon, 10 Nov 2025 15:10:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251110111253.16204-1-W_Armin@gmx.de> <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
-In-Reply-To: <CAGwozwEfSVYVWU86ibQB3Ea3sZT9HagZzhFnfkF5kEmwz1cz3A@mail.gmail.com>
-From: Antheas Kapenekakis <antheas.dk@gmail.com>
-Date: Mon, 10 Nov 2025 14:03:54 +0100
-X-Gm-Features: AWmQ_bkXT8T6DFe5CSK8FsrrAE2eMiXshrtUANklstA09fQrxADG21t1qBB1G2Q
-Message-ID: <CAGwozwGTY0DECm2OrOwrRgbAd1CdPuMe=Fg=4oOEm5of6u5Rzw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] platform/x86: msi-wmi-platform: Fix autoloading
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/13] irqchip/atmel-aic: Simplify with
+ of_machine_get_match_data()
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
+	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Yangtao Li
+	<tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec
+	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Bjorn Andersson <andersson@kernel.org>, Konrad
+ Dybcio <konradybcio@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>, Maximilian Luz <luzmaximilian@gmail.com>, Hans de
+ Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
+	<jonathanh@nvidia.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
+	<linux-arm-msm@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>
+References: <20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org>
+ <20251106-b4-of-match-matchine-data-v1-8-d780ea1780c2@linaro.org>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Content-Language: en-US, fr
+Organization: microchip
+In-Reply-To: <20251106-b4-of-match-matchine-data-v1-8-d780ea1780c2@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Nov 2025 at 12:31, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> On Mon, 10 Nov 2025 at 12:13, Armin Wolf <W_Armin@gmx.de> wrote:
-> >
-> > As already noted by Antheas Kapenekakis back in May, the
-> > msi-wmi-platform driver fails to automatically load on MSI Claw
-> > devices. Back then i suspected an issue with the device firmware,
-> > however i just found out that i made a silly mistake when specifying
-> > the GUID string of the driver, preventing the WMI driver core from
-> > matching it to its WMI device.
->
-> Can you add a closes with a link to that discussion and a reported by?
->
-> > Additionally i noticed that said GUID was copied from the Windows
-> > driver samples, meaning that it might be shared across different
-> > vendors. Because of this we have to prevent this driver from loading
-> > on non-MSI devices.
-> >
-> > Compile-tested only.
->
-> I will try to test this in one to two days and will add a tested by.
+On 06/11/2025 at 20:07, Krzysztof Kozlowski wrote:
+> Replace open-coded getting root OF node, matching against it and getting
+> the match data with new of_machine_get_match_data() helper.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hi Ilpo,
-did you receive this email? I was getting some bounces from your email
-host last week so Im sending this from my gmail
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-I can test this series later today and add a Tested-by as it's only
-compile tested.
+Thanks Krzysztof, best regards,
+   Nicolas
 
-Antheas
+> ---
+> 
+> Depends on the first OF patch.
+> ---
+>   drivers/irqchip/irq-atmel-aic-common.c | 15 +++------------
+>   1 file changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-atmel-aic-common.c b/drivers/irqchip/irq-atmel-aic-common.c
+> index 3cad30a40c19..e68853815c7a 100644
+> --- a/drivers/irqchip/irq-atmel-aic-common.c
+> +++ b/drivers/irqchip/irq-atmel-aic-common.c
+> @@ -187,20 +187,11 @@ void __init aic_common_rtt_irq_fixup(void)
+> 
+>   static void __init aic_common_irq_fixup(const struct of_device_id *matches)
+>   {
+> -       struct device_node *root = of_find_node_by_path("/");
+> -       const struct of_device_id *match;
+> +       void (*fixup)(void);
+> 
+> -       if (!root)
+> -               return;
+> -
+> -       match = of_match_node(matches, root);
+> -
+> -       if (match) {
+> -               void (*fixup)(void) = match->data;
+> +       fixup = of_machine_get_match_data(matches);
+> +       if (fixup)
+>                  fixup();
+> -       }
+> -
+> -       of_node_put(root);
+>   }
+> 
+>   struct irq_domain *__init aic_common_of_init(struct device_node *node,
+> 
+> --
+> 2.48.1
+> 
 
->
-> Thanks,
-> Antheas
->
-> > Armin Wolf (2):
-> >   platform/x86: msi-wmi-platform: Only load on MSI devices
-> >   platform/x86: msi-wmi-platform: Fix typo in WMI GUID
-> >
-> >  .../wmi/driver-development-guide.rst          |  1 +
-> >  drivers/platform/x86/Kconfig                  |  1 +
-> >  drivers/platform/x86/msi-wmi-platform.c       | 43 ++++++++++++++++++-
-> >  3 files changed, 43 insertions(+), 2 deletions(-)
-> >
-> > --
-> > 2.39.5
-> >
-> >
