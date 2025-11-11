@@ -1,355 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D04C252917;
-	Tue, 11 Nov 2025 10:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93F6328248;
+	Tue, 11 Nov 2025 13:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762857532; cv=none; b=g35QyiefB990DskDSKSslMmqrCI4xSjewFDn0Rn2BYzmxc+X7UzMEkRQrmtcRe/0ts1NeRV911x9RPW6gNfa7zqpYpjLDy9CrwsiGn0IzMPV9yZcVhRlKGsXoNYvdV03mnMvLv/HHJ7hxEbtOaA+SxmrcIBOt2AUfKPlAyaXaes=
+	t=1762866703; cv=none; b=tuLlWf8R2IDNiul/DqvvvJHuhb8aqe5SzAfe1CdJOdRE5MGsndo4z7AURclEjjBvKkERpmI64XEDQRGfg1uP4GI+65V1CnFe/If3e+jl8800BU7IsWyy8BejwcnOujk40cEraSQEQZuVJFFafgQ8NKtStDgdWa/8zfUR/gNFRBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762857532; c=relaxed/simple;
-	bh=YdsiWnkCBB1goH6A4XdlA3ptE8DHVDfuhIB0ynuqyPg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ityGqEc4Lm58OT2X45XS6FkUXQ+nwcTHBrWwymcYG0isAVv8RN+ez5U8jUZzba/3t2/4WbmlPVmW7W8ROqvxzGuPotWupiUTobKajGL1wV27ULaQxgW9GVLR/8KG/QJgbrvcXvPn/XHpmeOMhvMdxnAsjKU4rp3vwiNMEGtv5Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIuVNsFx; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762866703; c=relaxed/simple;
+	bh=l0Xp2gdUHOY3ARXkXTrD+8glhjg9MqV9gwERXhTeKBE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mcP6bQUFGYTFRURAaZVCCmioSoeTdZ5beVmUwWY818QVj59WLxz7clnl88kePvnbnr6PdaYi8mZL1UkwrkW1y81RcU4XtCw+nO3Rxra44UV6hGEOdb8TGc9ptBO9mu0hSBVckqBmsO57C6c3b2uCgjUjfRbFN5XH/91pVp8xMP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=IDwYaVQJ; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eIuVNsFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762857530; x=1794393530;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=YdsiWnkCBB1goH6A4XdlA3ptE8DHVDfuhIB0ynuqyPg=;
-  b=eIuVNsFxaT7ZNtZc5ooiIpgmAMF7333OTcl4LLRU3ytBiAjl2jJhiyXu
-   CJt8JEljqwL3eIj2tToOUXfyahEiXx0SKTK6NUKxDZpQ1iAiwPeenLDwM
-   C+VXLximActeqBGR8V3+5eOsIO3+v/4DesUkXYebthKI4RHjo6R5NuELC
-   MHY1U9WkdHZW1T6+nOzUUHhG0qIrmYp8B/fmhlD1h/f1t9RaFvqsBbWE/
-   IY2KS6WtINTxYD/glKJV9kir08EFOdNexFi1SQsK/9hlQuMODCcQW6L2+
-   rqqXKmLq1m/oyqiP/fXxxheev7UlicQFJ2RBySUUOHS6e0liElS0IyOXw
-   Q==;
-X-CSE-ConnectionGUID: k8366lvBSNeir0tAik/Llw==
-X-CSE-MsgGUID: a43ElK1rSl+rs0+sRHodSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="65008278"
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="65008278"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 02:38:50 -0800
-X-CSE-ConnectionGUID: GsI/CX2PT5yvec0D//xbAg==
-X-CSE-MsgGUID: yR5i/iNuQY6nFQt9aZ69DA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="193186574"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 02:38:45 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 11 Nov 2025 12:38:42 +0200 (EET)
-To: Denis Benato <denis.benato@linux.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hansg@kernel.org>, 
-    "Limonciello, Mario" <mario.limonciello@amd.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>, 
-    Derek John Clark <derekjohn.clark@gmail.com>, 
-    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH v17 0/9] platform/x86: Add asus-armoury driver
-In-Reply-To: <78d35771-02b6-4163-88da-ceae3146afe7@linux.dev>
-Message-ID: <e73f74b9-6147-c3ce-c81b-da52082b258b@linux.intel.com>
-References: <20251102215319.3126879-1-denis.benato@linux.dev> <6b5d7dab-1175-8096-64d0-fdf2cc693679@linux.intel.com> <78d35771-02b6-4163-88da-ceae3146afe7@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="IDwYaVQJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1762866689; x=1763471489; i=w_armin@gmx.de;
+	bh=7d5cSiuqrvKYBz/rIkG/i6IpNv3Dy66WwkCI8QqJXuI=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=IDwYaVQJomz2JlY+kjOJRDqN3zEiMsxwVBKOeK0TlWrYRH1BvBAz9Z0VNA3Z6dk4
+	 IXQ6FVJgvau0RfQWg4LvLGCbWILumH+VMEaO9O8RknBpau42rbVOFAvGSezJ4qRXx
+	 VSft1JEWAq3J2SEunwnfWkRGCKUQ0MvtlMJSVEZCWGYO8zL8Ldd5PJ79QDorPrM2k
+	 DsQGAIqkGChJdWXH6WY/GgP93TgkaYhPAiEsg3fz/CgUm0/mtugwtOAsJS5jk0sas
+	 UPaDXQOceK1jpCPTSX45cRLJXvZa87mI8yDttaDzxLc568P02N/6/gw/LCqWmCG2F
+	 +DEcRbFdK7uw0uzyOw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N7R1J-1wHBr22OmD-00y4sE; Tue, 11 Nov 2025 14:11:29 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: superm1@kernel.org,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 0/4] platform/x86: wmi: Prepare for future changes
+Date: Tue, 11 Nov 2025 14:11:21 +0100
+Message-Id: <20251111131125.3379-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-589378302-1762856692=:1002"
-Content-ID: <156e933d-a2d4-da8f-77bd-3fe7690b3267@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qlepj94tEOYfnlSLiimPoC3+SFYTX5UAcDQG6J2MG6sAsoahSzM
+ NwlARGWDEfBREuV0RRFWQNXCiC57axetd/fB8gsVi8B1aPwiepVnQpE6JNlUGD7NDoH2kd6
+ c4+8w1/olClSQsaySA0NSyJFT9GleO/h5Mb8qlayWP5hxjyz37aqYSi2k6S4gAbUn3+enpP
+ BCjqWgR2VzycKXF1foxgQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:yI6zRK1hh4Y=;2KmdeyGSE/zIaQQzJ8XYl5v/GIw
+ 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
+ 7P9uwXmbWGdiCd2XxCuEGe/yHM=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+After over a year of reverse engineering, i am finally ready to
+introduce support for WMI-ACPI marshaling inside the WMI driver core.
+Since the resulting patch series is quite large, i am planning to
+submit the necessary patches as three separate patch series.
 
---8323328-589378302-1762856692=:1002
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <dfa98b3e-fadc-9b02-ff0e-0d85fe2f1613@linux.intel.com>
+This is supposed to be the first of the three patch series. Its main
+purpose is to prepare the WMI driver core for the upcoming changes.
+The first patch fixes an issue inside the nls utf16 to utf8 conversion
+code, while the next two patches fix some minor issues inside the WMI
+driver core itself. The last patch finally moves the code of the WMI
+driver core into a separate repository to allow for future additions
+without cluttering the main directory.
 
-On Mon, 10 Nov 2025, Denis Benato wrote:
-> On 11/10/25 16:17, Ilpo J=E4rvinen wrote:
-> > On Sun, 2 Nov 2025, Denis Benato wrote:
-> >
-> >> Hi all,
-> >>
-> >> the TL;DR:
-> >> 1. Introduce new module to contain bios attributes, using fw_attribute=
-s_class
-> >> 2. Deprecate all possible attributes from asus-wmi that were added ad-=
-hoc
-> >> 3. Remove those in the next LTS cycle
-> >>
-> >> The idea for this originates from a conversation with Mario Limonciell=
-o
-> >> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4e=
-c27a945c99@amd.com/
-> >>
-> >> It is without a doubt much cleaner to use, easier to discover, and the
-> >> API is well defined as opposed to the random clutter of attributes I h=
-ad
-> >> been placing in the platform sysfs. Given that Derek is also working o=
-n a
-> >> similar approach to Lenovo in part based on my initial work I'd like t=
-o think
-> >> that the overall approach is good and may become standardised for thes=
-e types
-> >> of things.
-> >>
-> >> Regarding PPT: it is intended to add support for "custom" platform pro=
-file
-> >> soon. If it's a blocker for this patch series being accepted I will dr=
-op the=20
-> >> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that d=
-one
-> >> separately to avoid holding the bulk of the series up. Ideally I would=
- like
-> >> to get the safe limits in so users don't fully lose functionality or c=
-ontinue
-> >> to be exposed to potential instability from setting too low, or be mis=
-lead
-> >> in to thinking they can set limits higher than actual limit.
-> >>
-> >> The bulk of the PPT patch is data, the actual functional part is relat=
-ively
-> >> small and similar to the last version.
-> >>
-> >> Unfortunately I've been rather busy over the months and may not cover
-> >> everything in the v7 changelog but I've tried to be as comprehensive a=
-s I can.
-> >>
-> >> Regards,
-> >> Luke
-> >>
-> >> Changelog:
-> >> - v1
-> >>   - Initial submission
-> >> - v2
-> >>   - Too many changes to list, but all concerns raised in previous subm=
-ission addressed.
-> >>   - History: https://lore.kernel.org/platform-driver-x86/2024071605161=
-2.64842-1-luke@ljones.dev/
-> >> - v3
-> >>   - All concerns addressed.
-> >>   - History: https://lore.kernel.org/platform-driver-x86/2024080602074=
-7.365042-1-luke@ljones.dev/
-> >> - v4
-> >>   - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch =
-series
-> >>   - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
-> >>   - Split the PPT knobs out to a separate patch
-> >>   - Split the hd_panel setting out to a new patch
-> >>   - Clarify some of APU MEM configuration and convert int to hex
-> >>   - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
-> >>   - Fixup cyclic dependency in Kconfig
-> >> - v5
-> >>   - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfi=
-g detail, edit commit msg
-> >>   - cleanup ppt* tuning patch
-> >>   - proper error handling in module init, plus pr_err()
-> >>   - ppt tunables have a notice if there is no match to get defaults
-> >>   - better error handling in cpu core handling
-> >>     - don't continue if failure
-> >>   - use the mutex to gate WMI writes
-> >> - V6
-> >>   - correctly cleanup/unwind if module init fails
-> >> - V7
-> >>   - Remove review tags where the code changed significantly
-> >>   - Add auto_screen_brightness WMI attribute support
-> >>   - Move PPT patch to end
-> >>   - Add support min/max PPT values for 36 laptops (and two handhelds)
-> >>   - reword commit for "asus-wmi: export symbols used for read/write WM=
-I"
-> >>   - asus-armoury: move existing tunings to asus-armoury
-> >>     - Correction to license header
-> >>     - Remove the (initial) mutex use (added for core count only in tha=
-t patch)
-> >>     - Clarify some doc comments (attr_int_store)
-> >>     - Cleanup pr_warn in dgpu/egpu/mux functions
-> >>     - Restructure logic in asus_fw_attr_add()
-> >>     - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
-> >>   - asus-armoury: add core count control:
-> >>     - add mutex to prevent possible concurrent write to the core
-> >>       count WMI due to separated bit/little attributes
-> >>   - asus-armoury: add ppt_* and nv_* tuning knobs:
-> >>     - Move to end of series
-> >>     - Refactor to use a table of allowed min/max values to
-> >>       ensure safe settings
-> >>     - General code cleanup
-> >>   - Ensure checkpatch.pl returns clean for all
-> >> - V8
-> >>   - asus-armoury: move existing tunings to asus-armoury module
-> >>     - Further cleanup: https://lore.kernel.org/platform-driver-x86/202=
-50316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a=
-8a8e38
-> >>   - asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - Address concerns in https://lore.kernel.org/platform-driver-x86/=
-20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc0=
-6522c5e41
-> >>     - Refactor struct asus_armoury_priv to record both AC and DC setti=
-ngs
-> >>     - Tidy macros and functions affected by the above to be clearer as=
- a result
-> >>     - Move repeated strings such as "ppt_pl1_spl" to #defines
-> >>     - Split should_create_tunable_attr() in to two functions to better=
- clarify:
-> >>       - is_power_tunable_attr()
-> >>       - has_valid_limit()
-> >>     - Restructure init_rog_tunables() to initialise AC and DC in a
-> >>       way that makes more sense.
-> >>     - Ensure that if DC setting table is not available then attributes
-> >>       return -ENODEV only if on DC mode.
-> >> - V9
-> >>   - asus-armoury: move existing tunings to asus-armoury module
-> >>     - return -EBUSY when eGPU/dGPU cannot be deactivated
-> >>   - asus-armoury: add apu-mem control support
-> >>     - discard the WMI presence bit fixing the functionality
-> >>   - asus-armoury: add core count control
-> >>     - replace mutex lock/unlock with guard
-> >>     - move core count alloc for initialization in init_max_cpu_cores()
-> >> - v10
-> >>   - platform/x86: asus-wmi: export symbols used for read/write WMI
-> >>     - fix error with redefinition of asus_wmi_set_devstate
-> >>   - asus-armoury: move existing tunings to asus-armoury module
-> >>     - hwmon or other -> hwmon or others
-> >>     - fix wrong function name in documentation (attr_uint_store)
-> >>     - use kstrtouint where appropriate
-> >>     - (*) fix unreachable code warning: the fix turned out to be parti=
-al
-> >>     - improve return values in case of error in egpu_enable_current_va=
-lue_store
-> >>   - asus-armoury: asus-armoury: add screen auto-brightness toggle
-> >>     - actually register screen_auto_brightness attribute
-> >> - v11
-> >>   - cover-letter:
-> >>     - reorganize the changelog of v10
-> >>   - asus-armoury: move existing tunings to asus-armoury module
-> >>     - move the DMIs list in its own include, fixing (*) for good
-> >>   - asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - fix warning about redefinition of ppt_pl2_sppt_def for GV601R
-> >> - v12
-> >>   - asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - add min/max values for FA608WI and FX507VI
-> >> - v13
-> >>   - asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - fix a typo in a comment about _def attributes
-> >>     - add min/max values for GU605CW and G713PV
-> >>   - asus-armoury: add apu-mem control support
-> >>     - fix a possible out-of-bounds read in apu_mem_current_value_store
-> >> - v14
-> >>   - platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
-> >>     - added patch to rename the symbol for consistency
-> >>   - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - remove the unchecked usage of dmi_get_system_info while
-> >>       also increasing consistency with other messages
-> >> - v15
-> >>   - platform/x86: asus-wmi: export symbols used for read/write WMI
-> >>     - fix kernel doc
-> >>   - platform/x86: asus-armoury: move existing tunings to asus-armoury =
-module
-> >>     - avoid direct calls to asus-wmi and provide helpers instead
-> >>     - rework xg mobile activation logic
-> >>     - add helper for enum allowed attributes
-> >>     - improve mini_led_mode_current_value_store
-> >>     - improved usage of kstrtouint, kstrtou32 and kstrtobool
-> >>     - unload attributes in reverse order of loading
-> >>   - platform/x86: asus-armoury: add apu-mem control support
-> >>     - fix return value in apu_mem_current_value_show
-> >>   - platform/x86: asus-armoury: add core count control
-> >>     - put more safeguards in place against possible bricking of laptop=
-s
-> >>     - improve loading logic
-> >>   - platform/x86: asus-wmi: deprecate bios features
-> >>     - modified deprecation message
-> >>   - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - make _store(s) to interfaces unusable in DC to fail,
-> >>       instead of accepting 0 as a value (0 is also invalid)
-> >>     - make it easier to understand AC vs DC logic
-> >>     - improved init_rog_tunables() logic
-> >>     - commas after every field in the table for consistency
-> >>     - add support for RC73 handheld
-> >> -v16
-> >>   - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - add support for GU605CX
-> >> -v17
-> >>   - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
-> >>     - fix RC73 -> RC73AX as another RC73 exists
-> >>   - platform/x86: asus-armoury: add core count control
-> >>     - be more tolerant on out-or-range current CPU cores count
-> >>   - platform/x86: asus-armoury: move existing tunings to asus-armoury =
-module
-> >>     - fix usage of undeclared static functions in macros
-> > I've applied this to the review-ilpo-next branch. I'm still not entirel=
-y=20
-> > happy with how the cpu cores change does store values without arrays bu=
-t=20
-> > it's not an end of the world (and could be fixed in tree).
-> Hello and thanks.
->=20
-> You would make me very happy applying things as Luke wrote them
-> so that successive modifications are more easily compared to
-> what those were doing before I changed them...
+Changes since v1:
+- move WMI driver core to drivers/platoform/wmi to prepare for future
+AArch64 support
 
-I just took them as they were so you should be "happy" now :-)
+Armin Wolf (4):
+  fs/nls: Fix utf16 to utf8 conversion
+  platform/x86: wmi: Use correct type when populating ACPI objects
+  platform/x86: wmi: Remove extern keyword from prototypes
+  platform/x86: wmi: Move WMI core code into a separate directory
 
-=2E..Even if I didn't like having all those as separate variables requiring=
-=20
-if statements here and there, which could be avoided if core type would be=
-=20
-an array index so one could simply do:
+ Documentation/driver-api/wmi.rst           |  2 +-
+ MAINTAINERS                                |  2 +-
+ drivers/platform/Kconfig                   |  2 ++
+ drivers/platform/Makefile                  |  1 +
+ drivers/platform/wmi/Kconfig               | 34 ++++++++++++++++++++++
+ drivers/platform/wmi/Makefile              |  8 +++++
+ drivers/platform/{x86/wmi.c =3D> wmi/core.c} | 34 +++++++++++++---------
+ drivers/platform/x86/Kconfig               | 30 -------------------
+ drivers/platform/x86/Makefile              |  1 -
+ fs/nls/nls_base.c                          | 16 +++++++---
+ include/linux/wmi.h                        | 15 ++++------
+ 11 files changed, 85 insertions(+), 60 deletions(-)
+ create mode 100644 drivers/platform/wmi/Kconfig
+ create mode 100644 drivers/platform/wmi/Makefile
+ rename drivers/platform/{x86/wmi.c =3D> wmi/core.c} (98%)
 
-=09...
-=09case CPU_CORE_MAX:
-=09=09cpu_core_value =3D asus_armoury.cpu_cores[core_type]->max;
-=09=09break;
-=09...
+=2D-=20
+2.39.5
 
-Doing that transformation incrementally looks simple enough it should be=20
-low risk after a careful review.
-
-> Also if you have some more hints on how I could change that
-> interface (while avoiding bad surprises due to index mismatch)
-> I will try my best... without destroying any laptop...
-> perhaps... Hopefully? Wish me luck.
->=20
-> > I had to reorder a few includes to make the order alphabetical which=20
-> > luckily worked out without causing conflicts within the subsequent=20
-> > patches (and a need to respin the series). Please try to remember to
-> > keep those in the alphabetical order.
->=20
-> I have noticed a pair of warnings in this v17 I would like to solve:
-> one line is too long, I should break it and one macro has an
-> unused parameter.
->=20
-> No semantic changes.
->=20
-> I have seen one of those unordered includes in asus-armoury.h...
-> That branch is public in your git tree: this means I can respin
-> a v18 from a git format-path, correct?
-
-While I could replace the previous series with a new version, it would=20
-probably just be better to send incremental patches and I can see myself=20
-if I fold them into the existing patches or not.
-
-> Is your repo the one in
-> https://git.kernel.org/pub/scm/linux/kernel/git/ij/linux.git/ ?
-> I see from the web interface that the last modification was
-> 2 years ago?
-
-That's pretty much unused repo.
-
-Platform drivers repo is here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
-git
-
---=20
- i.
---8323328-589378302-1762856692=:1002--
