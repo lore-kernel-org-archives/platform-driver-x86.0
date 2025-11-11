@@ -1,85 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B7A194A73;
-	Mon, 10 Nov 2025 23:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628672798E8;
+	Tue, 11 Nov 2025 05:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762818644; cv=none; b=p50UvB7IpozEht1VKUU4YXvAR1VQzoERH6yuEL8oTM1CGJ1gWzcXRh3WWXtMWYo28sSth4fGCJvfaXgMJfzX59HkpgV8xYSgfHQYHq7hdaYdiJgbJvNZx6zL2Tu8O6dhjG1Z+j/zcYF4VeT2L6OS9ZrJAe2rQF2+SGPNUKTPkZE=
+	t=1762838235; cv=none; b=ogqes0E20S0mbA3suVkMcXxQt5ruxWY/Tq2jrKg/ucTlhEgveT8gWc4R/1kFysOkZRHti1WN8jU9o9UX6H273swvtpQGhMNMhC26uR49dbjkKYdK2B5/oisIGhGkvvvV2dpwVPoNo9DYkq2ocJ6foiZIG7COx2tAvpCKWgjFVlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762818644; c=relaxed/simple;
-	bh=29gaiYI3dWNEWIACZ9XRwKB433NzhJewEGqvUDHbs5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V91a5+cSv8Mm8dhy7iY/6YbbDhEUVKGiC90w7vXpCjASV6fFD8RuP1J3vIKeetcngjLvYcEHpZ0+cOyLDeWeYEA3OpcO+N/RREARzkFAxblQKi6FlyG5fFB0HUcfJHp+kg8BddFIj6SvWcqeqZ/hd2xHTSd94o5uNqQC1EbnXyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bdzdViAu; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762838235; c=relaxed/simple;
+	bh=hjOPFaeauwey41qsMiqTUz+prPAurghEYgN371uYvlU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jGFJsS8ndiEMoRYiI2BWtZnt4prmT8M7AIQBWrTfF5DH5l0naht91Mul7QPb/7XqjXFXGseAqNZM+UcSGg5c/uS8NyjA6gqN2ptRToaP/UtdcRVLkbvFldx3abZGVcD3gZ9fsEY1LMBI8eBJiZScK0Wwh2kO1azIqDkgKVfm8cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HML3rEDy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bdzdViAu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762818643; x=1794354643;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=29gaiYI3dWNEWIACZ9XRwKB433NzhJewEGqvUDHbs5c=;
-  b=bdzdViAuTkHv4lSsIcN5fkJ1LF0SzC7I9EEiwNqW0caoQugzNMHuaa30
-   IZ8TkgvlYLZQi2uuQP7sG/maZHLxk7v/dv0X/I0m7Ebtvbz3QIrEqz7pr
-   ko/tvGjbDMOiwElna0ZnuND2tgJ8nXW9YPHeIK1Jraa6McJcBV1Odd0AJ
-   coOC48YG6JqoXIDl65wLHHKHrlDj7VnlDa3eYaO2YWqr8ZEV9+iECqYGo
-   rJVNAn3byue7OnPVzlRyHMU9dVgCVlb6bbDe+5WWjYZDC7Om5oF/f2GVe
-   CDHpR+t6f53XCXbo9689wmpwtAmFFYh7sDZecx6qMix4Nrq54pCU3rokc
-   A==;
-X-CSE-ConnectionGUID: YJF+iwTrR/6ULUp7gLpFoQ==
-X-CSE-MsgGUID: Lpi0JM1aTiivtpFn/FnAoQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="64910716"
-X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="64910716"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 15:50:42 -0800
-X-CSE-ConnectionGUID: v0/8y6UUT1OeyU+Cf1Kd2A==
-X-CSE-MsgGUID: vDFYy77vQXaNq+urdOQq0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="188772879"
-Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by orviesa007.jf.intel.com with ESMTP; 10 Nov 2025 15:50:42 -0800
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: alexhung@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86/intel/hid: Add Nova Lake support
-Date: Mon, 10 Nov 2025 15:50:41 -0800
-Message-ID: <20251110235041.123685-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HML3rEDy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EEEC116B1;
+	Tue, 11 Nov 2025 05:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762838234;
+	bh=hjOPFaeauwey41qsMiqTUz+prPAurghEYgN371uYvlU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HML3rEDy72dEJmUBeyg5e8MGKUojvs48aZYO96aXjYU3HvJ1g58iccqkznX9EXJvV
+	 QVigw5Kgj8yBXUtnr+ccEdUdYH9XBkFcIPeH6VxG/nVcyAvQ9tCbsCO742DiTUpslg
+	 C7XCXdxmo16fbbdv4WGZX1NgqetK3WYiryeYh6rNPEy/HHF41OpBYLX5buESZqVetM
+	 3NudFI2Cp+DHvPQ3ajrTN7BFbYugJ97l2wuyYU3QAhtPczsdah3xYxF9gxUGYK/yol
+	 JMFUhUf/T3zfWodAzjzwCByM0UCfBCl+wqldFIfCvriiIeUylJ6Vrx5Cs/y8tv8GTy
+	 Xp7jWT7iFJy/w==
+Message-ID: <d660801f-8551-4940-8555-1059e9d565f7@kernel.org>
+Date: Mon, 10 Nov 2025 23:17:12 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] acpi: platform_profile - Add Extreme profile
+ option
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-acpi@vger.kernel.org
+References: <20251106212121.447030-1-derekjohn.clark@gmail.com>
+ <20251106212121.447030-2-derekjohn.clark@gmail.com>
+ <701898dd-3310-e86d-7499-fca5a445447a@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <701898dd-3310-e86d-7499-fca5a445447a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add ACPI ID for Nova Lake.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel/hid.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index f25a427cccda..9c07a7faf18f 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -55,6 +55,7 @@ static const struct acpi_device_id intel_hid_ids[] = {
- 	{ "INTC10CB" },
- 	{ "INTC10CC" },
- 	{ "INTC10F1" },
-+	{ "INTC10F2" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
--- 
-2.51.0
+On 11/10/25 5:14 AM, Ilpo Järvinen wrote:
+> On Thu, 6 Nov 2025, Derek J. Clark wrote:
+> 
+>> Some devices, namely Lenovo Legion devices, have an "extreme" mode where
+>> power draw is at the maximum limit of the cooling hardware. Add a new
+>> "extreme" platform profile to properly reflect this operating mode.
+>>
+>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>> ---
+>>   Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
+>>   drivers/acpi/platform_profile.c                        | 1 +
+>>   include/linux/platform_profile.h                       | 1 +
+>>   3 files changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
+>> index dc72adfb830a..9bee8deb4dc9 100644
+>> --- a/Documentation/ABI/testing/sysfs-class-platform-profile
+>> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
+>> @@ -23,6 +23,8 @@ Description:	This file contains a space-separated list of profiles supported
+>>   					power consumption with a slight bias
+>>   					towards performance
+>>   		performance		High performance operation
+>> +		extreme			Higher performance operation that may exceed
+>> +					internal battery draw limits when on AC power
+>>   		custom			Driver defined custom profile
+>>   		====================	========================================
+>>   
+>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+>> index b43f4459a4f6..78da17e16d9b 100644
+>> --- a/drivers/acpi/platform_profile.c
+>> +++ b/drivers/acpi/platform_profile.c
+>> @@ -37,6 +37,7 @@ static const char * const profile_names[] = {
+>>   	[PLATFORM_PROFILE_BALANCED] = "balanced",
+>>   	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] = "balanced-performance",
+>>   	[PLATFORM_PROFILE_PERFORMANCE] = "performance",
+>> +	[PLATFORM_PROFILE_EXTREME] = "extreme",
+>>   	[PLATFORM_PROFILE_CUSTOM] = "custom",
+>>   };
+>>   static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
+>> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+>> index a299225ab92e..2bf178bde2b5 100644
+>> --- a/include/linux/platform_profile.h
+>> +++ b/include/linux/platform_profile.h
+>> @@ -24,6 +24,7 @@ enum platform_profile_option {
+>>   	PLATFORM_PROFILE_BALANCED,
+>>   	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+>>   	PLATFORM_PROFILE_PERFORMANCE,
+>> +	PLATFORM_PROFILE_EXTREME,
+>>   	PLATFORM_PROFILE_CUSTOM,
+>>   	PLATFORM_PROFILE_LAST, /*must always be last */
+>>   };
+>>
+> 
+> I wonder if "extreme" is the best name for this? Given the description you
+> gave above, perhaps "max-power" would be more descriptive (and we already
+> have "low-power" so it kind of feels fitting the theme too).
+> 
+> I don't have strong opinion on this so if you guys feel this suggestion
+> would not make things better, feel free to voice it. :-)
+> 
+
+I don't feel strongly here, either sound find to me.
 
