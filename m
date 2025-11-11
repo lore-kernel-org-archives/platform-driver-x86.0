@@ -1,38 +1,38 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C240433120D;
-	Tue, 11 Nov 2025 13:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B933ADA7;
+	Tue, 11 Nov 2025 13:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762866706; cv=none; b=Tb8srWh9A52mnxsNvexP8y2xuc+Zp0zESEOhaljiQ6avy/jF3yuHuiexSNX6DWeoNw06QxRT274La+9ymXk9tAuXoa/Vlzo4IE0l4hGkYT92qHm9PlNm4nY+rBYIKv8Deuib9rY727uqxv/e5i0bCyEH52C906Z4/intnMtwBI8=
+	t=1762866709; cv=none; b=TdIy0foZ3N6ATAVbX0KV7JgEGXhxUzveTU7ZY67gbZ3QSbL6I0QP9JEvswcXYyAU5QeJPULB4sgvGc4bgAVLMXeEBEXd2CshIn1bL3b3fKk1o06JWqdD/yPGeM6NIsPkVC9pZPK/MlqfjVD54qRWl2J8JD282DBEqqC8wEj7trk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762866706; c=relaxed/simple;
-	bh=X4aJpb/kBhUJ3mq0S18GxI1BYxXrlx8ZD0KTAn6iZFw=;
+	s=arc-20240116; t=1762866709; c=relaxed/simple;
+	bh=l6dgkwVTX+nYYUEUarUe9Z8EG8LznFvBnfy7Dit+dJs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HURetroLNYT4ItumuUiE2EW7Sj6X/TY141MgzivsHen636haOQMZ3JAcdVr3d4X/Qy3HEKC8vZKWifMq7E9s766mPDlShcmM5ypedsJNqe1nWGFZ1ngtwQ2hezEUom40OEvzwj9ZGrsksQgAKTS9ME3q+opg+C/MrtXZhECINFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=j/DJBH1f; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=e346X9cFVdgzzYGiD0oK0ftVmUuZrlt7M3xbJGowf1Qm74PHNU25Gu6ECgPbAmewRvC9rT70/PxczwFmzK+tQqk9m/ip82T0ZXDq95dKnz5nMz8A7w3vzzO3TJ1ndPZOsN+mwRG/utsPyI/RnC0rwS5AprELUlKehkNwE2OxqlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ip28wqAn; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="j/DJBH1f"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ip28wqAn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1762866699; x=1763471499; i=w_armin@gmx.de;
-	bh=+DIgu2KMwjrSKPX7H24CNXucYnKkbf+BuCBZwvVExHA=;
+	s=s31663417; t=1762866694; x=1763471494; i=w_armin@gmx.de;
+	bh=0P/Z+v6CnKjg6IgFnYEQ2dxLZv6jFsLO3430lUKgxhA=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=j/DJBH1fuPLZPCZVVusg5YfJpP02pWqHA7bIKsYuwh6tP9fi7aayDUnTOWRRnTGR
-	 zzf5k9+bRPIZe9Kj3Mgwnj/+9p2w2oLU2kVrzL1HIP+UPOfsq+mg9049KVs0ExrdC
-	 RGi2kJL9nk5DItjoFBBd/dUtrEqLdDARHwy1SnpCxQf60KaU/6LcMvWrR5nmBgqG0
-	 1cj7akTbJHC42iTSYQa1qomlz8WKFY5fvgWuqKWSRnA181HpD9cYMlf/Zd1uphgbo
-	 kJwV77s7i48pIUFmDRcDXNUUtQjOm7NHj3YdQK0Am0nc9hTVEvEs7VFSE3cDHtR8m
-	 Spj1kmwfLFIUa3crRQ==
+	b=ip28wqAnXowYQDAYdSHujmBD41/wYLA4FUYeVp+xRy/Xy9KDEfpqQKkPmbWusYu/
+	 DwTG5Bhh4JPrU/V8Hgs8noIW0Rz9Ax/BdexR0wVmdHH3jgBB54aWvViZc3VGObkpX
+	 ptGxRi0Tr3cZoJqwLIaQU9fH7NNon+5/wD1jP2Sq5P96JB2iGvQZ0Kn1HzQdvtFXF
+	 6xRS/dGXeWFg3mV/2TgScjzpMMg20hw04z7CXQPGSq55Is5zTa5ldiC8xD6+bnTsg
+	 7/Cy7YnSiaWE0dY4gETx/R9fLoeWhIeNhkS8E7XAa2lkcqbl20pE45rCiAG/GtvOz
+	 fEeTwK5j6Wo3ie1F1g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
  (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1M9o21-1vFDGJ3IBx-00DuWf; Tue, 11 Nov 2025 14:11:39 +0100
+ 1MeU0q-1vtEu1452K-00ipnu; Tue, 11 Nov 2025 14:11:34 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: viro@zeniv.linux.org.uk,
 	brauner@kernel.org,
@@ -43,9 +43,9 @@ Cc: superm1@kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 4/4] platform/x86: wmi: Move WMI core code into a separate directory
-Date: Tue, 11 Nov 2025 14:11:25 +0100
-Message-Id: <20251111131125.3379-5-W_Armin@gmx.de>
+Subject: [PATCH v2 2/4] platform/x86: wmi: Use correct type when populating ACPI objects
+Date: Tue, 11 Nov 2025 14:11:23 +0100
+Message-Id: <20251111131125.3379-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251111131125.3379-1-W_Armin@gmx.de>
 References: <20251111131125.3379-1-W_Armin@gmx.de>
@@ -56,267 +56,158 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jCWzpKwCZaQFCgHU7eXuPV37SqHjsPC9wk17Sp+1lrRgcABXjVi
- JIaBb9dC4CjS0B+Yf0zdQrZ1dx2m/ZPNoLNjvQmRZE2zh2kBsbApzIfT4XF/aVFyU9eSpqo
- A4gASH/A39JbWpb7d40qDWFsOrP02+c83TNp4wNFWF/Uik5WaV8N83x3vlUYGmprY92jHfy
- EdkkPctdZ3lX/aBzoeVig==
+X-Provags-ID: V03:K1:WKzGiazRbRJEWXZ7gA3cIuv0IkVn5I2vz1LzNVsEAcenG2S3zDB
+ g1uq2aiZrBk1UJ5IGkepXXNL2icgrlHc4hBEQNfkqdMZSNO+oZg7QNSqkeykb5+b1ZsBAkm
+ 9q+T2o2c+2/7iBeBj2G57RC08zBK10iL6RKjMDAnkT6GUup5fRtONOgwu8EpabV4sVf3L11
+ xRdpU+PbA0dlUyqUVOazQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:43+4nTlfPY8=;1ai4+qIxKyZkUcgv6PIQAuP/S1A
- SVbP2YsUfOj+KuoBeE59UNRtlprHtyPMH5ic2DQWp39/5NfAIlWz2RTdcnPhFsbgaUGAsKFjz
- xXhrW941Wqp1z7L+/83Jwu/Bip7nCmWTf0onefC7LHfhQOrx3slWP3p7L4J2ygzLmHDXNe4np
- r1++Un1swLdKjMNaDNwbHBeVbUB4bbaH0WXY0EQfl7NsMdjV9X1OCO1JAFDXm06+QQpbH9oV0
- B/O3Ac8uyxmk+JX5b9wBGHE08pcQfUwRVUCIO3g0aoHwZBpjbBtJJs5Z1awcSh+hMst7jOwgG
- YfiK3CHjRCA6jsoxWMCxvPEtEV8SK7+yw5vztm38nwOg8LvEw44KQ5Ued/oCUQK1R8/l/XVxL
- 3JRX38h/NK7xsCcjWi9wqliqGiHvh0Bt2YpwhNfJkpJMZpL3vr4F/ECBxtVEcUf/S9MZuSwZo
- ZKhkzV485kK+Ls1vyjwvmYnLtO9lneHUw9jKVvvoeor3wW87XigjuNh75FjnsdUbIVrhYeMs/
- XxLTAhiFzSEagstYlBAaXVg7904Ui1srkn+4momYvSmnHekEn04/4Pi9YScK4bGVKmXHK1DR+
- MvibmW523Eo1Imrx3nySQ4xsPpxlLOwwaCUw7xrUgLfVxw7i4HWuviotR+9NMjoO5y3opeUIB
- 8eSnkSEQYt4iHN/JZdrJT8qK5edLoE04kCRq4L6ek9VZq3c65fjfj/nktGabDav0GIhQ0mzHe
- O+PxY9fHDeESi947BIAnDXZdAADCga6k19e9M4PB7dbOfTryZY5EtIEcGNxv5UzZfrTmIvhKq
- cu+XrkLQpgmBas53wr21zoImRw6jiKgCyggoAZ5DQx/esnnYJyF/k42ISuG03HZwqtbOdAyhe
- EgneyRJ8PWuAAZvHVdV45AbySvPeH5OOyrsRqgxMR9pa4OFHwObut+oKfTVwQDA1/y3OkxKSJ
- PzzmPX0s1ffUjuWMPY9bGp6WmlcGv8VOHoCa5M3f1fZYfJejIidrOV7LQmN4jbkEwD6JA5wwQ
- Z5KBXB1g7Yft19BVu3R4NniU8rYjQ0jp1WHvFTsJVLMAvStP8asljYGVuXSMSPJfUpg3ipH5a
- ZW6Q/jzAI1O/Ch/vGA3J/yXCW7Gv7DK0tbm02uv2XTyW8Wc6fTTtoG57JYms+Y1mtmFmp7U0f
- s98P7KQAR2fgQAEyZz/cmISGjVkIq3nPdjE/hRTMUnZ5zhyHLHlg3uy3/CTVpGroBdFJTZur0
- o37ZIOUogr76lT6JVit14f4sQY2Q62wuT/CQ2TW/aRr95PqJjlTD8JqGGMnPlvnvTE9StlNcm
- 8FkPd6eBLRaMxSfaGTNmG/uaydy35lnn0JMn08ueGmy/eZFuRK3A5z2WodlyFUNNwUpj+kOm/
- SJVAseckyD7rwAekY5KmEXQ5rj2FGT8WnPm90wESJ+WwURoEwplrUzKuRjs5QdC9WF4wcKA4u
- Fm4seXR75cDnSbEPla2mQHhv3z0XvRzZpolJ5x5LA8dmSwqMzZBqcNPCRpKZeClSosrYsEaPp
- Lx+ypZmMbI3GSAal6yRU1twnnI9tNMdj1sxOgKm8troTPxzkl/Dkl72aj/6PXIBKHWGMIUvMv
- KiNIROy99sqBgtdlsJ6aB64bzb9F3hX97WQl8+6XHV73mT/swzQL5FJJ69dUhlPw5XMiLy9AU
- goxBuiv1rpNt0CkjGVzyjCOzVDDgF7NRVHvKcHdqiU5XggiFgs9FApumciJGWMY7yNq1XcvjJ
- V5BtP08e6OEOwS28vEjhCqzaZUN0m5EqeGbXrOLnPYJl0rTAmyFEmCFgwHYw4UGlakw7SCFJM
- TSYqbIw6WNr1d1iCYumWs+GmJTAeUk8m+WP9IVDJ8Z9BPTUh40VHRAYXlhTc0rrPbh2dlWowI
- QBFtK/WgYw8X5v/MF0TSht4RTTGo3NfYmOiuOp9+fr23g5O+Y1PyeJFWsLyKqww0BAp1jMzjd
- fqfAQs62jYXBvRBGRxFIJ9lLZPUrS0raEHmPf2FrMfluCLY/qzDXcDvzHiENd8Ft46GGhTuph
- 4lqOU/gcmQfbTkk7bjxISo2PBRQY7gD9IzyMtJkvXvxnerAYMeGOky8wzs6MD1bfdiYk9Xki2
- zzlSGOCgYmY8athLFw8TuWM/nDlSMesBVdmZlCbJjULBBiE9qVFS+Mw0hJNjW2Cf2IHRPRJxq
- a82eN2ul7wRufiwtW1SroOQZ1m5HHZx0vxEae8zd+8Bd2lyq5RhQ5ohqy9NM9XnxnQQwTAIBD
- vFkCXo4YjfMRCdavzE1Ju+GQnW+w3TIKdu5msxQOK7QyiuS7/6BcOEDGyc/fupZbWXrB/R4rS
- HtnV9ZSniDD6ubnigVLEyGggbTc7LeJReA6nC4ERTIYUGDjxbCiIQRboyegxJtXeH7Uqy9/2N
- 8KwJ1DoQ0Gb6424/WaxsgItRBftxl4QCCRxiTr7Npr2GVf5VegsdbTX0GNPpBtbIqf4ALUvf2
- i4dlEhwLeI4K4Qk0G4DUslVBMc3r1fYjcjIugiKT1ruMbMBzpaHymgrGUVQ6AKCLUrZjU0zwj
- y12KBc5HwMSqxqF4FQIJ3HO0NJDKTq5/yu9pCwmQZW4WGIW9qSLWJXltrO5HJBFEEzCl1tq/m
- my+bY9YUZuUQYJHDicJ0ffygEVR65QQYMM4LPEExkjOLs2dG1bLr8OyhyDvoIOoCoxGc7zR7Z
- MTek9v8TlXgpQpxtTIsY9TUJn35U2TknpT0g8xBYEh3PZO3eRGOf733H3TFaWopKnWBBrMdQw
- YJwXOku60z7kZn+URaxK8nhyPq5yOgIi0drSVDEGYhhRiQE0bkMNTwoUfK6pctH12ZW9yswCm
- yVizpseJgPbA0ODfR36W45KfGtGD5eFLRCCaxQ4R6EiKp4AIgLmezaa+sIRaYTzAUtS6pZuWQ
- qQOCTBdzANynhDkhfMe3R05Zw5ZM979xU7lFPZ/M8y+w0i4fuj/XDPLGevl9b7mMVmBHn9S6U
- h6moQjquqQvEb8Ow3H15V9nWVhymBJb7F/SzcvA6hVjjYLjXHulBwfGO3ryZWcFR4216KNfeM
- Ev2zx7b69uhNYxGIxhSF94WibNmKEXDP/OjLKqKamTsp/QFc0K7XmtlbowWLmAXLZJbQm4BFp
- 8w8DQX9JKn64Zw65WDZSJ/eoIyNp8zfjet0hqUbQpElYng1BleiSB/WBc5Hb2eG27GtKpsa2s
- /2EMfIEChguUeOjNMV090xUA0gpbKW4SoPd0I/sPn8fRsFGfiC3q/NbYJK3saN21YiXBSJgu9
- KqDn6s1o3Fuu14OUB98Qj61ciYtatj3py+eyMFBL2+HvBI+VwheOgupJoP/5faJaTq8+Jhl/V
- 4wadZAfWe6DOJL/a2R7BwYe1oNFU/+cqTpYl9p68xi8ZWmV/rjHcIenUDqjZ6cOy/joLyVkJm
- RHQV3WgCOeoziplMXKQTqD4uLVzhrHX56PrJ5gcQAF44kzbPvv069VOUr4M0AuOufnbT7CALw
- pwAw1y2Zonk2jXuVRkUdfEpdboANVhLSp6hcXgbsEp2tGAX8NSGDPjrM/r0R1EupY8Kg4By5U
- LlT3LB2G42HM5oannCYIUneApHnt7CprKrO9qCpZotFGwK5Q4r1QZjjri6/dTHKDwAlxdO26T
- B1kWrdbmu40r2yp5ML38KBeUKIqUiQiFQ66h4O3XHYHy2FmNC4nDcjV4T7DSl/0ZRSRxn004g
- 81wRVKnp/z3+Ju4P5Sy/B/+LiK8NmTznHWW8P+u5OBFy6y0M6SlyCUdZ6B1J73CTcI3SFnddA
- dS3zho9RFTt+ybLluR7S/M0iG5joB1DFFzhdR0Qisa0a2WrO8FYjh6uJnAsIDlN11iwJhDDFW
- EtMXQ4kBAPuxKAMVSxADns3htQYHrQhH4ldUh6Hr/sjIlOPWwRQ7k2bBQj9YCYPpVxzZ2Qeai
- cLUCWfxUoujXwn/GXqnvZYOVGMnQqa018LTFU8TjtJf9xAnEXKROksakOO2iMxAsyWyXUJRzX
- 3t5U2crbmf//VJzF7G5j+zDYnJTsLwmy58UgawbpssU+K7PwbVa20EHMfWETAbf5EphiT6TOR
- 1DGjWPH3qATlSUtO6eyszIhLHJgmhD0FFUvWeNWYHrXIGfaA81WWntLxZzsMLwFEBqkI9Dp0H
- eZ5CRzTns9qu4Bfh2hLPwV96ZK9LBBLXMPEGwkZC+bVRpoln6vUKL6fFayPcVG2B091+u8Knb
- K1vLMBD1weYjzuO1am1lhbqNmXqcrylJBM72DiHbM356DMQkBMlqbJc4m3tcPxKrAnAJHVU+e
- uyO2IJbeahVUrk4IA00YeRllo8bNEsraY2PEzhYic94EDUt7PAKeSRi1XI5lgCkxC6fizCW3T
- YLEvOS3OvdeQAXBFB4xMI5AUYXPdDfC6TAEt8ugA3VP5MbOEA1gITuWsCeErQwrdgdLhIOciI
- tcu6Qx9FaZ+Y3wyWtqKWDUsGQUASqJewqJWlpo+IYrf/kIEs3HKjulMzcaUbf7w0xXdaHdvJo
- UA3M7efk/GVB00VBr6ZHoPxKTJ0KxY3qt7umAI1COSw3DL3dIiefJE6Wr7Fe6Kcorf5FgiTtq
- QLWGCQ8672ph+4i2JrnR5MTe8NR95wX5+lbCbrRpcaooMnfHh0OPicIVp2WWGbitPtzqW6y54
- cNpBEG8+/TenUF3k1MwCbQJ83kLbqdAL/wst8i7+cTbR353wsB1nP9XuAIZavHiTJF28iRTpX
- hkcjbvWSQGQbZIDXv17XoV7d0IJ6HD8Kneq9pBfvySpMWV8xowDxn/ckNEdPJ1Y/UGSrRQ/o+
- zEzDlc9rXb/GLNEEZydWbXGq6EdxDv6jPspvGoecxecE1xR5WhcCpxxxuaOhsV//cNqoabMI7
- xZrr+2uvwQDMcbV3H1suxocXeXUpxKZNG3SjEf4CkCZSHHdcwJtY+H55r4akzMX13g0OA0mFt
- dJIV6xVbpbd4lLnBW/gM4hX7lQsxM0xENonNu4HQyG3xR+XlqQ4NoSPuaek2m/MAogWLsuhS4
- P2kkahUbxKcPJgaYsoXTZC8R3Da2Lg4yZhgOGvDDXlfayN92TZzF6ny7avQZhf/u0k+K805q0
- pvjOHQ9RzwrCoiUYcOKPcVXjc1VuhH+WwV9YBnSalVBrdsOpSq4OxT0dsoRi56uxohc4AAtQS
- 0eunLRxUQ52oSXHxCiHZfGoz6+Z+4NWDD1PvLE
+UI-OutboundReport: notjunk:1;M01:P0:iyzTv7W2Kgc=;PDvimj3XJ1v8KGnZhdAUcQ112tk
+ KpBE44791bZKV7LFA3SnxQBjd3NN6/JNlZQApDyfzxlvr67aM7Zi4vYfa3HD2CSu555zI742A
+ AtE6WJTVqMkGAa7dYK67eboNtwaqMP1IWFEVGnd6Tk6//ScBOZ9xI1cv1iiK+7CRagqrBIkpc
+ /ynr3kQNfVIeRPA38z+3Bd/4o8rd0i5g6peJ51FJV23ICUDFjXL8sxXuOZ18UG8c6UXz1e5Xq
+ ofWCHRXm31aYurlZutRarAIiX9QTU7ytJWxgUEFRMEQ/IzzhCtFuCkpzd8UIiIrRAYn8ZkNat
+ xsuAj+z7fkBvBIXkeu6ysq9/1XqCAUiy7ksaz7ro+f81BuY1M42KrdZElphkEFW7F4+4uhWVW
+ kl3Ag/cHrdSjbj4VP8lY7oncH61Bo4CgJk7NBKA8y1i0tqQluzsMHsillo7BtIZcoaSV+78ea
+ KHfCt4JIKqiZaL81QWbkp/XziC+xfz/vEaJ5j/8GQJ2Japd8hVw3Z1RzoJiwM99CITkNV8q4w
+ QJF0CrdTnrlf1WWZwTJgToEu4hDgmIC4gTKlXb+rV9zjonY/KMVPkNhGDrRGvzJZULcAhvPBH
+ Mu9iq9TCuEv03rTWXsObLiN7x8EwVhzmgKSJDTLz5LOpHm60T5WErhz9BBigLATaSfmPwPOoY
+ BCdIeawKYnKad5TYWSLdJChExPR2PRVGP7aJiSQkSH1oD1mfFx3WLZqZ+8VStQogv9Dlx7jNF
+ IseWnH9/GHLCCky0G/26jxyi+x5xSgQXPO+g7ij7zRA2WwW3NY1rBDRYzZ0eZl/UMjN95V2E4
+ DYRCKREmReKwERrVjeJIgP60sD7dYH9IdRbZdknMoyMWttCA67RcprCplkouIFmQTLJ3HwU+Z
+ Awpa2iV3qsOGlcGSJbJwFrKI5iXqZOZWXlWh+R5cWjql2xVqSXIsEx2SuRJ/821hIbqm3xfxI
+ Pv7xuPOt4kJSWiAcmDV5+zOZvsoBYgAEI9hhAy3uWcGTxhmXQXSqoBi9cpl2KgZKwRBfGE/1u
+ JHamlGgZ0DK5a+ol4MtxMH9AdtU/JnxK89CnK+1Q2VtgLP1uNgzT8FJFW7WSG64z6ntXI1uA5
+ 4sjLnf1A4QVAUCmbk81bpXSFPldabqgF1ufZbjWU9A1uMEnta8aO8LMb3u1cTkx7g/6v9GM40
+ OJRzjvgwL+2Yl9KZUNZ5AOOfh+hZtaFrjUvey9B3QnZCzpr9EtohYG4nsFy1jFOyHhEb16lCJ
+ Ew9OY58fzvVhAslaCM2g/zAWJn9+iC6z6I8bnixi5K6EgBFrA9llNG1gR7E0ajFPmNtmj39oi
+ gE1X/Hzt7/CxJmfARmCz/c+BrDhQP2oAvycrf5MnUt4BveZ/EP2OiEzK3/CYoMtFp/IOYNkxm
+ 3+6O1bMDuo/F1UN74m1kdi0eO3oAbTieU2ltLng0wAJA3DB+cScTiFNueiaMtNrG9YEj8hcwt
+ 8k+yH0L5cNO3AOnAqVbfPjOkrWKzHTfbJOeRo9ByNSrogajhj5nHcwf+nmaaDnyYagWiXU48b
+ Idcd6740S7Wf5G8TohGTIlk16QA17YpvN77ImR9F6VVZgLhMr/CgZzeCNvdol95WiuI0NkTQV
+ 0XREU7bd12shTlxJ74GPHf/Dxe7Ui6cuT4/jvkfvueh+tJS/DE3TX7Cwm1Ds/eQivWF7j2Eg/
+ RSn7bUe5WfJF+vDMVPSDikQNEoXIY3XnueIV+rMoDppHa/0b/tdSa/CpVA/1e0cZ13CPKlf4C
+ 4l55E+Tq9zEKR2kNOKKi/08lDqo++MFPpePN0wZm77vh/4WZ+2ZJqC08Qs6xiwMMrEEjRk7Pi
+ W9mo7aL+agYob3f3v8S+PhpOvgDUopm4WGumlUI/Yv8BynlZFUbR7osMImR/UjKaQG3vmTzzD
+ fezXXj/SryaW6EXKC2NLp8SRT/feAa3O6qkfh0Hre2L0JRynXInsTXQ3J2eN+fNKb9oE3LZbf
+ 5VqVetKPb20vpSaWEXGOJlLiB8vdzlZd5wXuQRoZTuly6faJa0UOmwALyTF0yp5zGKqGEgANc
+ ywO+3judIlVOLa9TEeXYggB9Ba4qoSKVvfwbPEdiD5xmPMWwSvIh+OD20SnDmt4+mNMbG1dVS
+ pDEtzDGd3SYQhUe/FEZ5etDmCh4+hrj+vG4HU1tFxTRx2P0rQtq0mDXrKXAhRLW57RFARDr3Y
+ 0dCT/1WPLXfYpfCQoUNw5PrVcupQKaey6UeoTBJWID2go3jNCfyFIsRdtzdq6qyVW7feDQtj4
+ ZIJPr9oWto6HQvafqMT/CFLyoInHK91wr4bRh8lNv4H9fjaoj7QHipTewyEl3tBWjBUCQeitW
+ 7DQtn6Qdmer++kCJX+CQe8y21iqRbHg3O4gMPzjIPA17AG5PZXsX3Zml58TvoPTBgj6reuTby
+ kpAy11E0Oi+U9q9NQnzKEP5jeDb/LwkDuYsO5x2zhZwysMnFVECbM4W+C/WbrrWJlVAiRQbOP
+ SSZBY15o5DP4U5OlbL7Aeff8pHg5P1z8e0FqNumDtz6xlOv3UFwJO6RDbQMxwzsPlsfbfmVED
+ e03cCqGNq943HhBMjE5fQuQFb96NJJyYDnKQV2qTMN/ncKuH6d9poW8bfuMMgGEzz/lQg5EId
+ rs49x7y1J0XHKzMrTHVd2WJAhTRlfyE+fjG+hMi4TOk5ex3x5TBCS7RfvJ3+M+WhegkZX2W7L
+ 4QfJSwAxJdUDx+ieMduc5MpOTPs6XeuhQNcStyNmp2egnHg+saNnvxx3ihIYaeSv91j4DcDlW
+ 7sT701XQ/5jDYnghjuABKGiCKfRXMcoGRSf46cKBK0QEJlkQe/xuV3Bm+cnD9ztRUEGrjipKl
+ dFvdsrt4GJUqYJZbSLpoSqnE13TiGSd31q5pXCHkSN+fWuZGgBHDG3dnJVivXG7HmtPB84YvT
+ KtMskVydiR4inCXQDFOBxZtAcdFSYKDKWNBOj00rykG1YJLKR4uRcGcX4Y+UU41iwicGPfLWg
+ BHOMKWmPf7Ic/jprMjKuex39knW8PlxQaJZoxeW5pYaZme/AQavksz5jGZVAkZ9Y9MqO7Raff
+ Zp0hv+MMQJs6xqxvfczN+P0mNNiBL4cHzaA/cD97GIQByjvXJdYrZ7m9J0BkYIcQOLm1TZauE
+ GT7MQZs04XKmO1zT8FuKjik6oDTCGq3cFhFOkzJeVnW1QP9K/mTyEFMiPhWRfNWu2sPLnjyhx
+ pMcNkC8kPd2sl20pbLjldf54Nn8hB+B34ObmvcVv5tg+njGQsU3P2w2VRRqpI2hhjnN67rQOZ
+ ta9FWlbWsbnJvS+jfoZQ4uC06zggynkBb9J4eeB/2Sbum4qWGZ0iqvKvH8MGPqcJhKr99wS/E
+ BU6UPzzgCGBHmzDV2pf/5NQP74wUivGls2/tvsp7i7B95nPvlHoRMGgHTxCrFRXpJqRXF19Fb
+ 4q/JCOs01CmjLeHLH83ZnCfDr8HhiYjz0Ia6MCKVomQ3GjcZrhplfdTcOYWtJiRzOBwWjmYDU
+ MF41ZhXurQOuMXGbC9ZtIki3p/N8lJASHt975EEqq5K3R6/h9gD3WxWWgtYWnUuSvYGFEIz1I
+ 1qw6yGIk/5SaM0ugyszascI6Q1eqOMfW0WzoUJzEcpLCP0ZJLL6lsZF/a/qg3WmTXrYsVfGut
+ JYSxUU+trNJm9QfRxlm3+TugIzcnJE4fl7MqlyvI73je6/zRfP267qYPr2atXWo9AyZTLDuGj
+ cvEljjwg/Eh5J6YE73+ni9sS8zFeqn+HXB3aeBi/2gPc3d7ftkwpmlJZlsi7a0n4t5ncdione
+ 8w78+N9DnWbWwHSkY5QzwEA7gbycbOgQsjUKJ+9Y9h+wpJZJcxzZcceyWksp1xry42VUWPZ2Q
+ ONL3Ccwf7H117XKvjF8suO13IAc4tgFP/KIbPK2WG8uYJ9oMQCBpiMJQIGS4OsDsxNrhZgzll
+ YRF/YY9YI1UiNp/ciwf8OVyR81nbtmya268TvlhJitUJNF3YK3dKp/iCzjqk0O83spXVTdiXC
+ rMujcvikqbA2x+RLp38qNZBa/0nDCIt+6bowJXtBO+domIQatSZq+KeeoiPLLquJ2cAZ4VI98
+ mE5ZjVwRzvzcVj8kL7bWq7IwYmtdoDJMW4JKE+PC66qkzeAXwFyS+M+Tn9QcWl8Faf5M5W6w/
+ FpxRj31d+Fx2O9ErJiwQg/8iGZoiSWk/cLBPM+2WbzQL3YXDIoXj/IfjGM3tSoC9jimE9KDYo
+ EV5azV7o6gDQYiYV/Ct3TCW8yVaKKHvFpo6Y7Oqj8byVhfgXHS7PE7vHP1uuFDZEyi7oPSPRk
+ n+81/FdNcDwSU6AXKPsZNYS0VCaW445gsCIVglcmqzHi4LF/WoNJ8BEp87Qu/jqk50Oq07FJp
+ XK37Vl8nrblmGHWr9mbFCONUyI31/HyynXhjZuhYyxg60RMQTsxE76rTBNe7ieQ2LjR5WtleZ
+ Y1aDKIqRC6gQH8NwLO5rdKyHIhPGl1paGGLpx8+mb5O+DcOAaQzNj9D3fjADmeig30vemBqcb
+ vWMkG+CaTQdXsXAFfMCAdsBjYkOLRTNL6iM0hKKE3nbCW5JSrpc7QfT5ztw4BKmp4j9m8bAx6
+ /GId2QVpk5oGB62DGIihcCAv/nPsKeHJMDkUgwyDeqsl92azfIp9UhPq6Jh7QbVkhKnNK8NPM
+ lnN/HiZwBd+w1ZHeKZCz6SO83TGjCP7OwewV8ou2lIIPw1VzPo/uEU9a+DSSqAMFR0wG/ZPQ0
+ +/4r7pFnwSV2t+HzycD2/Vz+ZWI/hCzQkX3aGqmyg/lzxlg3ZAgnPpd8Ci7mZ+qaiQTBE8ing
+ r3DP3hVUk0WRVrbXbnCkqJj0vS4OI67xXO59ZTOvMCD9bg98oW6jzHZtKzI/DdaRq31+PZx12
+ 77vDUte9sXgEdZyxaDgPeO6KXbo0YBv+1fLNknu/sc+gqEkpIyARJdartGh3gtUkWlUQXsAjx
+ CEzGFe+Bcoc1gKstFeSOB3W1BMii2COVXQdE9KFKbLDHAoLs2mqu+gr5OJTByTtE1rmtPYfQP
+ SEksyLdFw8ner/UAn8t4U0rlGp3pKuHF2vD4dMbpwJ/e1PaeTe6APiR4v1wXTxkPfaLrET62m
+ hclAdDrbldU17fuxREfxtJzKv9LXEBlDtDRdC9KojnaJLPWNh/4XJ+gojvGO6LDB7pqsaQKr1
+ o+SaHmQ8H+tjkO3fi5UyhEaOrRVuAGfGZnGKqht+9tkZJzflYltjgmp0B+OA==
 
-Move the WMI core code into a separate directory to prepare for
-future additions to the WMI driver. Also update the description
-of the Kconfig entry to better fit with the other subsystem
-Kconfig entries.
+When evaluating a WMxx/WSxx ACPI control method, the data buffer
+either needs to be passed as an ACPI buffer or as an ACPI string.
+Use the correct type (buffer/string) when populating the associated
+ACPI object.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- Documentation/driver-api/wmi.rst           |  2 +-
- MAINTAINERS                                |  2 +-
- drivers/platform/Kconfig                   |  2 ++
- drivers/platform/Makefile                  |  1 +
- drivers/platform/wmi/Kconfig               | 34 ++++++++++++++++++++++
- drivers/platform/wmi/Makefile              |  8 +++++
- drivers/platform/{x86/wmi.c =3D> wmi/core.c} |  0
- drivers/platform/x86/Kconfig               | 30 -------------------
- drivers/platform/x86/Makefile              |  1 -
- 9 files changed, 47 insertions(+), 33 deletions(-)
- create mode 100644 drivers/platform/wmi/Kconfig
- create mode 100644 drivers/platform/wmi/Makefile
- rename drivers/platform/{x86/wmi.c =3D> wmi/core.c} (100%)
+ drivers/platform/x86/wmi.c | 34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/w=
-mi.rst
-index 4e8dbdb1fc67..db835b43c937 100644
-=2D-- a/Documentation/driver-api/wmi.rst
-+++ b/Documentation/driver-api/wmi.rst
-@@ -16,5 +16,5 @@ which will be bound to compatible WMI devices by the dri=
-ver core.
- .. kernel-doc:: include/linux/wmi.h
-    :internal:
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 4e86a422f05f..6878c4fcb0b5 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -142,14 +142,6 @@ static inline void get_acpi_method_name(const struct =
+wmi_block *wblock,
+ 	buffer[4] =3D '\0';
+ }
 =20
--.. kernel-doc:: drivers/platform/x86/wmi.c
-+.. kernel-doc:: drivers/platform/wmi/core.c
-    :export:
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..2dc2e6cd58df 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -402,7 +402,7 @@ S:	Maintained
- F:	Documentation/ABI/testing/sysfs-bus-wmi
- F:	Documentation/driver-api/wmi.rst
- F:	Documentation/wmi/
--F:	drivers/platform/x86/wmi.c
-+F:	drivers/platform/wmi/
- F:	include/uapi/linux/wmi.h
-=20
- ACRN HYPERVISOR SERVICE MODULE
-diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-index 960fd6a82450..6bb645aed3d1 100644
-=2D-- a/drivers/platform/Kconfig
-+++ b/drivers/platform/Kconfig
-@@ -18,3 +18,5 @@ source "drivers/platform/surface/Kconfig"
- source "drivers/platform/x86/Kconfig"
-=20
- source "drivers/platform/arm64/Kconfig"
-+
-+source "drivers/platform/wmi/Kconfig"
-diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
-index 19ac54648586..533f500dfcff 100644
-=2D-- a/drivers/platform/Makefile
-+++ b/drivers/platform/Makefile
-@@ -13,3 +13,4 @@ obj-$(CONFIG_CHROME_PLATFORMS)	+=3D chrome/
- obj-$(CONFIG_CZNIC_PLATFORMS)	+=3D cznic/
- obj-$(CONFIG_SURFACE_PLATFORMS)	+=3D surface/
- obj-$(CONFIG_ARM64_PLATFORM_DEVICES)	+=3D arm64/
-+obj-$(CONFIG_ACPI_WMI)		+=3D wmi/
-diff --git a/drivers/platform/wmi/Kconfig b/drivers/platform/wmi/Kconfig
-new file mode 100644
-index 000000000000..77fcbb18746b
-=2D-- /dev/null
-+++ b/drivers/platform/wmi/Kconfig
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# ACPI WMI Core
-+#
-+
-+menuconfig ACPI_WMI
-+	tristate "ACPI-WMI support"
-+	depends on ACPI && X86
-+	help
-+	  This option enables support for the ACPI-WMI driver core.
-+
-+	  The ACPI-WMI interface is a proprietary extension of ACPI allowing
-+	  the platform firmware to expose WMI (Windows Management Instrumentatio=
-n)
-+	  objects used for managing various aspects of the underlying system.
-+	  Mapping between ACPI control methods and WMI objects happens through
-+	  special mapper devices (PNP0C14) defined inside the ACPI tables.
-+
-+	  Enabling this option is necessary for building the vendor specific
-+	  ACPI-WMI client drivers for Acer, Dell an HP machines (among others).
-+
-+	  It is safe to enable this option even for machines that do not contain
-+	  any ACPI-WMI mapper devices at all.
-+
-+if ACPI_WMI
-+
-+config ACPI_WMI_LEGACY_DEVICE_NAMES
-+	bool "Use legacy WMI device naming scheme"
-+	help
-+	  Say Y here to force the WMI driver core to use the old WMI device nami=
-ng
-+	  scheme when creating WMI devices. Doing so might be necessary for some
-+	  userspace applications but will cause the registration of WMI devices =
-with
-+	  the same GUID to fail in some corner cases.
-+
-+endif # ACPI_WMI
-diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefile
-new file mode 100644
-index 000000000000..98393d7391ec
-=2D-- /dev/null
-+++ b/drivers/platform/wmi/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# Makefile for linux/drivers/platform/wmi
-+# ACPI WMI core
-+#
-+
-+wmi-y			:=3D core.o
-+obj-$(CONFIG_ACPI_WMI)	+=3D wmi.o
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/wmi/core.c
-similarity index 100%
-rename from drivers/platform/x86/wmi.c
-rename to drivers/platform/wmi/core.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 46e62feeda3c..8c13430366ae 100644
-=2D-- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -16,36 +16,6 @@ menuconfig X86_PLATFORM_DEVICES
-=20
- if X86_PLATFORM_DEVICES
-=20
--config ACPI_WMI
--	tristate "WMI"
--	depends on ACPI
--	help
--	  This driver adds support for the ACPI-WMI (Windows Management
--	  Instrumentation) mapper device (PNP0C14) found on some systems.
+-static inline acpi_object_type get_param_acpi_type(const struct wmi_block=
+ *wblock)
+-{
+-	if (wblock->gblock.flags & ACPI_WMI_STRING)
+-		return ACPI_TYPE_STRING;
+-	else
+-		return ACPI_TYPE_BUFFER;
+-}
 -
--	  ACPI-WMI is a proprietary extension to ACPI to expose parts of the
--	  ACPI firmware to userspace - this is done through various vendor
--	  defined methods and data blocks in a PNP0C14 device, which are then
--	  made available for userspace to call.
--
--	  The implementation of this in Linux currently only exposes this to
--	  other kernel space drivers.
--
--	  This driver is a required dependency to build the firmware specific
--	  drivers needed on many machines, including Acer and HP laptops.
--
--	  It is safe to enable this driver even if your DSDT doesn't define
--	  any ACPI-WMI devices.
--
--config ACPI_WMI_LEGACY_DEVICE_NAMES
--	bool "Use legacy WMI device naming scheme"
--	depends on ACPI_WMI
--	help
--	  Say Y here to force the WMI driver core to use the old WMI device nami=
-ng
--	  scheme when creating WMI devices. Doing so might be necessary for some
--	  userspace applications but will cause the registration of WMI devices =
-with
--	  the same GUID to fail in some corner cases.
--
- config WMI_BMOF
- 	tristate "WMI embedded Binary MOF driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c7db2a88c11a..978cb55672da 100644
-=2D-- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -5,7 +5,6 @@
- #
+ static int wmidev_match_guid(struct device *dev, const void *data)
+ {
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+@@ -351,9 +343,16 @@ acpi_status wmidev_evaluate_method(struct wmi_device =
+*wdev, u8 instance, u32 met
+ 	params[0].integer.value =3D instance;
+ 	params[1].type =3D ACPI_TYPE_INTEGER;
+ 	params[1].integer.value =3D method_id;
+-	params[2].type =3D get_param_acpi_type(wblock);
+-	params[2].buffer.length =3D in->length;
+-	params[2].buffer.pointer =3D in->pointer;
++
++	if (wblock->gblock.flags & ACPI_WMI_STRING) {
++		params[2].type =3D ACPI_TYPE_STRING;
++		params[2].string.length =3D in->length;
++		params[2].string.pointer =3D in->pointer;
++	} else {
++		params[2].type =3D ACPI_TYPE_BUFFER;
++		params[2].buffer.length =3D in->length;
++		params[2].buffer.pointer =3D in->pointer;
++	}
 =20
- # Windows Management Interface
--obj-$(CONFIG_ACPI_WMI)		+=3D wmi.o
- obj-$(CONFIG_WMI_BMOF)		+=3D wmi-bmof.o
+ 	get_acpi_method_name(wblock, 'M', method);
 =20
- # WMI drivers
+@@ -519,9 +518,16 @@ acpi_status wmidev_block_set(struct wmi_device *wdev,=
+ u8 instance, const struct
+ 	input.pointer =3D params;
+ 	params[0].type =3D ACPI_TYPE_INTEGER;
+ 	params[0].integer.value =3D instance;
+-	params[1].type =3D get_param_acpi_type(wblock);
+-	params[1].buffer.length =3D in->length;
+-	params[1].buffer.pointer =3D in->pointer;
++
++	if (wblock->gblock.flags & ACPI_WMI_STRING) {
++		params[1].type =3D ACPI_TYPE_STRING;
++		params[1].string.length =3D in->length;
++		params[1].string.pointer =3D in->pointer;
++	} else {
++		params[1].type =3D ACPI_TYPE_BUFFER;
++		params[1].buffer.length =3D in->length;
++		params[1].buffer.pointer =3D in->pointer;
++	}
+=20
+ 	get_acpi_method_name(wblock, 'S', method);
+=20
 =2D-=20
 2.39.5
 
