@@ -1,298 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4627D331229;
-	Tue, 11 Nov 2025 13:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF322E62AC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2025 19:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762868490; cv=none; b=FbWUBBHv1Yd+2d03tnOxol0IgeY7v1TSU7A6d7z9jxph8+R/VWBdB1V4GUvupnmt2JCj6/A+8MXW+IIkkkz8z11k3X5pYdJQu8/CGjZCvy5dkLZwL7T3i+O1UF8YgyH5RTMUGDNKbTfjiUo9/caCGYwV78Dd5FyszpI8rqqCb3s=
+	t=1762888275; cv=none; b=hN9WNRLWpvLqYXB6Ywm7S3jbObjWZ2DPPDOINPc7+70vKUH8Gv3zIEKwd2gsb5KjWGladXoCXF3Rg7IIxc1ITrypCkNJnSYpldOvJ71viCKyjhEC1LMcTFHKcNjDK+HRlyAGI2oqMg0Kqz1j6ZjfK57S1gn+SERIkbTySW6krAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762868490; c=relaxed/simple;
-	bh=vdt4eEniWQ6G5tvEkGqmg4Yt5wxYS0asG/VShfWg9Zw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lMVzD11GdVl5wkVGHeZGDZj/rdWtNouBfdp2dCo5Q1wnpsklROIwg7X6DNIeYJTbPcfMkwYM0yY9DCYaT0ZqBrJ9Tx+15mKutYLbBBBuKfD/i8/aIVv0CJAXU2CRt6fdbz3GH4PfYNAf7krmqvT2WKS3+F67gSHzZrldpfR4oDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sc3RuWAb; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762888275; c=relaxed/simple;
+	bh=+wvMnVxHrApSqeHBeS6IfxE1DB64obJH6I/jWS//pGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZM5Kelaq2UDjJYLQf8Z6mpSakG6F4xMEHxiSGxR2MNuuxrsQR2+AZFJmDKIMlxa5OPXCbe+RE7vJgdblNTa1b97Ge3bp+We17+PddmPBiMnCj1/HyuN/OlErMU18dois35Zc4z1o6nlOjE4DUCHvrHMcA7sbcJteki61MLV9sZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xs5okY7N; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sc3RuWAb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762868488; x=1794404488;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=vdt4eEniWQ6G5tvEkGqmg4Yt5wxYS0asG/VShfWg9Zw=;
-  b=Sc3RuWAbZEOF8uT2+d2wCp4SPvnuTdtDeHsq7a3yOkPV/RgwD5Nc1j/m
-   LobJJQC4Z4fl8y08iQ9zX5XMoJMkvfI8xPT2lzPkUNIcKw72gZiP8s9T8
-   gRcXdAZyF+k+yaifmIAG9q2IEL1zk+msYZQ36Bu33sU2CRUQVDMcoFrp7
-   eMUiHsncgR4mlGFRP/BRwS+/A2drVt37eM0UpTPY+kED1p8Ah4Sl+SEJh
-   PpHMXipuj/38Lb7tTEvqw6IIpbP4tMuZbVgflAuKp0vsYrZwWPdnZLSLh
-   q6Fcp/3dN9JLzbaKymKnsCIXh3O+P3pkVb8nSZNRugsgKk5ceVDasEnPt
-   w==;
-X-CSE-ConnectionGUID: prS+p5g+RmKt86kEp725bg==
-X-CSE-MsgGUID: 48fJ7igLTdy+KpvKYTzgRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="64969587"
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="64969587"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:41:27 -0800
-X-CSE-ConnectionGUID: h65u1Nz+TKSismXQpctPDg==
-X-CSE-MsgGUID: zEpZ/kokSP+pPfBxx9mU3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="189225225"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:41:23 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 11 Nov 2025 15:41:19 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    Derek John Clark <derekjohn.clark@gmail.com>, 
-    =?ISO-8859-15?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>, 
-    Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-    Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v4 4/6] platform/x86: ayaneo-ec: Add controller power
- and modules attributes
-In-Reply-To: <20251110180846.1490726-5-lkml@antheas.dev>
-Message-ID: <888ff0d3-c613-b5a7-3b84-37ff3036e0a4@linux.intel.com>
-References: <20251110180846.1490726-1-lkml@antheas.dev> <20251110180846.1490726-5-lkml@antheas.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xs5okY7N"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762888270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9CURJ2PNGNX1D25vJOg69mo8wMy4VTwdK2/mBMrUWVI=;
+	b=Xs5okY7N4/7/PhBZmE2pVszYChbkIrUmdpew2AlgFZuvrk7rZx1t0KK8gAWxvwFjEh0k/R
+	EvuE0q53veobLwiZqkLQr+GipHxBRo0NunDDm7WLda8oRD/0Tb4OYo6u3tEZV0ZbkafSgH
+	0/E4V5qvF7YvotE1W1LYlVypI2A5dxo=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Alok Tiwari" <alok.a.tiwari@oracle.com>,
+	"Derek John Clark" <derekjohn.clark@gmail.com>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	porfet828@gmail.com,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH 1/2] platform/x86: asus-armoury: remove unused macro parameter
+Date: Tue, 11 Nov 2025 20:11:03 +0100
+Message-ID: <20251111191104.1401105-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 10 Nov 2025, Antheas Kapenekakis wrote:
+Increase consistency of macros used to get/set uint attributes: remove the unused _fmt macro parameter.
 
-> The Ayaneo 3 features hot-swappable controller modules. The ejection
-> and management is done through HID. However, after ejecting the modules,
-> the controller needs to be power cycled via the EC to re-initialize.
-> 
-> For this, the EC provides a variable that holds whether the left or
-> right modules are connected, and a power control register to turn
-> the controller on or off. After ejecting the modules, the controller
-> should be turned off. Then, after both modules are reinserted,
-> the controller may be powered on again to re-initialize.
-> 
-> This patch introduces two new sysfs attributes:
->  - `controller_modules`: a read-only attribute that indicates whether
->    the left and right modules are connected (none, left, right, both).
->  - `controller_power`: a read-write attribute that allows the user
->    to turn the controller on or off (with '1'/'0').
-> 
-> Therefore, after ejection is complete, userspace can power off the
-> controller, then wait until both modules have been reinserted
-> (`controller_modules` will return 'both') to turn on the controller.
-> 
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
->  MAINTAINERS                                   |   1 +
->  drivers/platform/x86/ayaneo-ec.c              | 106 ++++++++++++++++++
->  3 files changed, 126 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> new file mode 100644
-> index 000000000000..4cffbf5fc7ca
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> @@ -0,0 +1,19 @@
-> +What:		/sys/devices/platform/ayaneo-ec/controller_power
-> +Date:		Nov 2025
-> +KernelVersion:	6.19
-> +Contact:	"Antheas Kapenekakis" <lkml@antheas.dev>
-> +Description:
-> +		Current controller power state. Allows turning on and off
-> +		the controller power (e.g. for power savings). Write 1 to
-> +		turn on, 0 to turn off. File is readable and writable.
-> +
-> +What:		/sys/devices/platform/ayaneo-ec/controller_modules
-> +Date:		Nov 2025
-> +KernelVersion:	6.19
-> +Contact:	"Antheas Kapenekakis"  <lkml@antheas.dev>
-> +Description:
-> +		Shows which controller modules are currently connected to
-> +		the device. Possible values are "left", "right" and "both".
-> +		File is read-only. The Windows software for this device
-> +		will only set controller power to 1 if both module sides
-> +		are connected (i.e. this file returns "both").
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c5bf7207c45f..f8ab009b6224 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
->  M:	Antheas Kapenekakis <lkml@antheas.dev>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-platform-ayaneo
->  F:	drivers/platform/x86/ayaneo-ec.c
->  
->  AZ6007 DVB DRIVER
-> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
-> index 697bb053a7d6..0652c044ad76 100644
-> --- a/drivers/platform/x86/ayaneo-ec.c
-> +++ b/drivers/platform/x86/ayaneo-ec.c
-> @@ -8,6 +8,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/bits.h>
->  #include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/hwmon.h>
-> @@ -16,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/power_supply.h>
-> +#include <linux/sysfs.h>
->  #include <acpi/battery.h>
->  
->  #define AYANEO_PWM_ENABLE_REG	 0x4A
-> @@ -32,9 +34,17 @@
->  #define AYANEO_CHARGE_VAL_AUTO		0xaa
->  #define AYANEO_CHARGE_VAL_INHIBIT	0x55
->  
-> +#define AYANEO_POWER_REG	0x2d
-> +#define AYANEO_POWER_OFF	0xfe
-> +#define AYANEO_POWER_ON		0xff
-> +#define AYANEO_MODULE_REG	0x2f
-> +#define AYANEO_MODULE_LEFT	BIT(0)
-> +#define AYANEO_MODULE_RIGHT	BIT(1)
-> +
->  struct ayaneo_ec_quirk {
->  	bool has_fan_control;
->  	bool has_charge_control;
-> +	bool has_magic_modules;
->  };
->  
->  struct ayaneo_ec_platform_data {
-> @@ -46,6 +56,7 @@ struct ayaneo_ec_platform_data {
->  static const struct ayaneo_ec_quirk quirk_ayaneo3 = {
->  	.has_fan_control = true,
->  	.has_charge_control = true,
-> +	.has_magic_modules = true,
->  };
->  
->  static const struct dmi_system_id dmi_table[] = {
-> @@ -266,6 +277,100 @@ static int ayaneo_remove_battery(struct power_supply *battery,
->  	return 0;
->  }
->  
-> +static ssize_t controller_power_store(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf,
-> +				      size_t count)
-> +{
-> +	bool value;
-> +	int ret;
-> +
-> +	ret = kstrtobool(buf, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : AYANEO_POWER_OFF);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t controller_power_show(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     char *buf)
-> +{
-> +	int ret;
-> +	u8 val;
-> +
-> +	ret = ec_read(AYANEO_POWER_REG, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sysfs_emit(buf, "%d\n", val == AYANEO_POWER_ON);
-> +}
-> +
-> +static DEVICE_ATTR_RW(controller_power);
-> +
-> +static ssize_t controller_modules_show(struct device *dev,
-> +				       struct device_attribute *attr, char *buf)
-> +{
-> +	char *out;
-> +	int ret;
-> +	u8 val;
-> +
-> +	ret = ec_read(AYANEO_MODULE_REG, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (~val & (AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT)) {
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
+---
+ drivers/platform/x86/asus-armoury.c | 4 ++--
+ drivers/platform/x86/asus-armoury.h | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-This too is constructing mask still here which is ugly.
-
-> +	case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
-> +		out = "both";
-> +		break;
-> +	case AYANEO_MODULE_LEFT:
-> +		out = "left";
-> +		break;
-> +	case AYANEO_MODULE_RIGHT:
-> +		out = "right";
-> +		break;
-> +	default:
-> +		out = "none";
-> +		break;
-> +	}
-> +
-> +	return sysfs_emit(buf, "%s\n", out);
-> +}
-> +
-> +static DEVICE_ATTR_RO(controller_modules);
-> +
-> +static struct attribute *aya_mm_attrs[] = {
-> +	&dev_attr_controller_power.attr,
-> +	&dev_attr_controller_modules.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t aya_mm_is_visible(struct kobject *kobj,
-> +				 struct attribute *attr, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
-> +
-> +	if (data->quirks->has_magic_modules)
-> +		return attr->mode;
-> +	return 0;
-> +}
-> +
-> +static const struct attribute_group aya_mm_attribute_group = {
-> +	.is_visible = aya_mm_is_visible,
-> +	.attrs = aya_mm_attrs,
-> +};
-> +
-> +static const struct attribute_group *ayaneo_ec_groups[] = {
-> +	&aya_mm_attribute_group,
-> +	NULL
-> +};
-> +
->  static int ayaneo_ec_probe(struct platform_device *pdev)
->  {
->  	const struct dmi_system_id *dmi_entry;
-> @@ -307,6 +412,7 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
->  static struct platform_driver ayaneo_platform_driver = {
->  	.driver = {
->  		.name = "ayaneo-ec",
-> +		.dev_groups = ayaneo_ec_groups,
->  	},
->  	.probe = ayaneo_ec_probe,
->  };
-> 
-
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index d57fbb5dc3d3..9f67218ecd14 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -527,7 +527,7 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+ 
+ 	return count;
+ }
+-ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, "%u\n", asus_armoury.gpu_mux_dev_id);
++ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, asus_armoury.gpu_mux_dev_id);
+ ASUS_ATTR_GROUP_BOOL(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
+ 
+ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+@@ -561,7 +561,7 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 
+ 	return count;
+ }
+-ASUS_WMI_SHOW_INT(dgpu_disable_current_value, "%d\n", ASUS_WMI_DEVID_DGPU);
++ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
+ ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
+ 
+ /* Values map for eGPU activation requests. */
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index 5e1ab729277a..8f7e5da087a6 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -81,7 +81,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+ 					_max, NULL, _wmi);			\
+ 	}
+ 
+-#define ASUS_WMI_SHOW_INT(_attr, _fmt, _wmi)					\
++#define ASUS_WMI_SHOW_INT(_attr, _wmi)						\
+ 	static ssize_t _attr##_show(struct kobject *kobj,			\
+ 				    struct kobj_attribute *attr, char *buf)	\
+ 	{									\
+@@ -101,7 +101,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+ 		__ASUS_ATTR_RO(_attrname, _prop)
+ 
+ #define __ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)\
+-	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
++	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);		\
+ 	static struct kobj_attribute attr_##_attrname##_current_value =		\
+ 		__ASUS_ATTR_RO(_attrname, current_value);			\
+ 	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
+@@ -122,7 +122,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+ #define __ATTR_RW_INT_GROUP_ENUM(_attrname, _minv, _maxv, _wmi, _fsname,\
+ 				 _possible, _dispname)			\
+ 	__WMI_STORE_INT(_attrname##_current_value, _minv, _maxv, _wmi);	\
+-	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);	\
++	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);	\
+ 	static struct kobj_attribute attr_##_attrname##_current_value =	\
+ 		__ASUS_ATTR_RW(_attrname, current_value);		\
+ 	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
+@@ -227,7 +227,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+ 	}
+ 
+ #define ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname)	\
+-	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
++	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);		\
+ 	static struct kobj_attribute attr_##_attrname##_current_value =		\
+ 		__ASUS_ATTR_RO(_attrname, current_value);			\
+ 	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
 -- 
- i.
+2.51.2
 
