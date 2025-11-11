@@ -1,213 +1,298 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B933ADA7;
-	Tue, 11 Nov 2025 13:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4627D331229;
+	Tue, 11 Nov 2025 13:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762866709; cv=none; b=TdIy0foZ3N6ATAVbX0KV7JgEGXhxUzveTU7ZY67gbZ3QSbL6I0QP9JEvswcXYyAU5QeJPULB4sgvGc4bgAVLMXeEBEXd2CshIn1bL3b3fKk1o06JWqdD/yPGeM6NIsPkVC9pZPK/MlqfjVD54qRWl2J8JD282DBEqqC8wEj7trk=
+	t=1762868490; cv=none; b=FbWUBBHv1Yd+2d03tnOxol0IgeY7v1TSU7A6d7z9jxph8+R/VWBdB1V4GUvupnmt2JCj6/A+8MXW+IIkkkz8z11k3X5pYdJQu8/CGjZCvy5dkLZwL7T3i+O1UF8YgyH5RTMUGDNKbTfjiUo9/caCGYwV78Dd5FyszpI8rqqCb3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762866709; c=relaxed/simple;
-	bh=l6dgkwVTX+nYYUEUarUe9Z8EG8LznFvBnfy7Dit+dJs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e346X9cFVdgzzYGiD0oK0ftVmUuZrlt7M3xbJGowf1Qm74PHNU25Gu6ECgPbAmewRvC9rT70/PxczwFmzK+tQqk9m/ip82T0ZXDq95dKnz5nMz8A7w3vzzO3TJ1ndPZOsN+mwRG/utsPyI/RnC0rwS5AprELUlKehkNwE2OxqlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ip28wqAn; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1762868490; c=relaxed/simple;
+	bh=vdt4eEniWQ6G5tvEkGqmg4Yt5wxYS0asG/VShfWg9Zw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lMVzD11GdVl5wkVGHeZGDZj/rdWtNouBfdp2dCo5Q1wnpsklROIwg7X6DNIeYJTbPcfMkwYM0yY9DCYaT0ZqBrJ9Tx+15mKutYLbBBBuKfD/i8/aIVv0CJAXU2CRt6fdbz3GH4PfYNAf7krmqvT2WKS3+F67gSHzZrldpfR4oDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sc3RuWAb; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ip28wqAn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1762866694; x=1763471494; i=w_armin@gmx.de;
-	bh=0P/Z+v6CnKjg6IgFnYEQ2dxLZv6jFsLO3430lUKgxhA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ip28wqAnXowYQDAYdSHujmBD41/wYLA4FUYeVp+xRy/Xy9KDEfpqQKkPmbWusYu/
-	 DwTG5Bhh4JPrU/V8Hgs8noIW0Rz9Ax/BdexR0wVmdHH3jgBB54aWvViZc3VGObkpX
-	 ptGxRi0Tr3cZoJqwLIaQU9fH7NNon+5/wD1jP2Sq5P96JB2iGvQZ0Kn1HzQdvtFXF
-	 6xRS/dGXeWFg3mV/2TgScjzpMMg20hw04z7CXQPGSq55Is5zTa5ldiC8xD6+bnTsg
-	 7/Cy7YnSiaWE0dY4gETx/R9fLoeWhIeNhkS8E7XAa2lkcqbl20pE45rCiAG/GtvOz
-	 fEeTwK5j6Wo3ie1F1g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MeU0q-1vtEu1452K-00ipnu; Tue, 11 Nov 2025 14:11:34 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: superm1@kernel.org,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 2/4] platform/x86: wmi: Use correct type when populating ACPI objects
-Date: Tue, 11 Nov 2025 14:11:23 +0100
-Message-Id: <20251111131125.3379-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251111131125.3379-1-W_Armin@gmx.de>
-References: <20251111131125.3379-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sc3RuWAb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762868488; x=1794404488;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vdt4eEniWQ6G5tvEkGqmg4Yt5wxYS0asG/VShfWg9Zw=;
+  b=Sc3RuWAbZEOF8uT2+d2wCp4SPvnuTdtDeHsq7a3yOkPV/RgwD5Nc1j/m
+   LobJJQC4Z4fl8y08iQ9zX5XMoJMkvfI8xPT2lzPkUNIcKw72gZiP8s9T8
+   gRcXdAZyF+k+yaifmIAG9q2IEL1zk+msYZQ36Bu33sU2CRUQVDMcoFrp7
+   eMUiHsncgR4mlGFRP/BRwS+/A2drVt37eM0UpTPY+kED1p8Ah4Sl+SEJh
+   PpHMXipuj/38Lb7tTEvqw6IIpbP4tMuZbVgflAuKp0vsYrZwWPdnZLSLh
+   q6Fcp/3dN9JLzbaKymKnsCIXh3O+P3pkVb8nSZNRugsgKk5ceVDasEnPt
+   w==;
+X-CSE-ConnectionGUID: prS+p5g+RmKt86kEp725bg==
+X-CSE-MsgGUID: 48fJ7igLTdy+KpvKYTzgRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="64969587"
+X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
+   d="scan'208";a="64969587"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:41:27 -0800
+X-CSE-ConnectionGUID: h65u1Nz+TKSismXQpctPDg==
+X-CSE-MsgGUID: zEpZ/kokSP+pPfBxx9mU3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
+   d="scan'208";a="189225225"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:41:23 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 11 Nov 2025 15:41:19 +0200 (EET)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    =?ISO-8859-15?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>, 
+    Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+    Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 4/6] platform/x86: ayaneo-ec: Add controller power
+ and modules attributes
+In-Reply-To: <20251110180846.1490726-5-lkml@antheas.dev>
+Message-ID: <888ff0d3-c613-b5a7-3b84-37ff3036e0a4@linux.intel.com>
+References: <20251110180846.1490726-1-lkml@antheas.dev> <20251110180846.1490726-5-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WKzGiazRbRJEWXZ7gA3cIuv0IkVn5I2vz1LzNVsEAcenG2S3zDB
- g1uq2aiZrBk1UJ5IGkepXXNL2icgrlHc4hBEQNfkqdMZSNO+oZg7QNSqkeykb5+b1ZsBAkm
- 9q+T2o2c+2/7iBeBj2G57RC08zBK10iL6RKjMDAnkT6GUup5fRtONOgwu8EpabV4sVf3L11
- xRdpU+PbA0dlUyqUVOazQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:iyzTv7W2Kgc=;PDvimj3XJ1v8KGnZhdAUcQ112tk
- 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
+Content-Type: text/plain; charset=US-ASCII
 
-When evaluating a WMxx/WSxx ACPI control method, the data buffer
-either needs to be passed as an ACPI buffer or as an ACPI string.
-Use the correct type (buffer/string) when populating the associated
-ACPI object.
+On Mon, 10 Nov 2025, Antheas Kapenekakis wrote:
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+> The Ayaneo 3 features hot-swappable controller modules. The ejection
+> and management is done through HID. However, after ejecting the modules,
+> the controller needs to be power cycled via the EC to re-initialize.
+> 
+> For this, the EC provides a variable that holds whether the left or
+> right modules are connected, and a power control register to turn
+> the controller on or off. After ejecting the modules, the controller
+> should be turned off. Then, after both modules are reinserted,
+> the controller may be powered on again to re-initialize.
+> 
+> This patch introduces two new sysfs attributes:
+>  - `controller_modules`: a read-only attribute that indicates whether
+>    the left and right modules are connected (none, left, right, both).
+>  - `controller_power`: a read-write attribute that allows the user
+>    to turn the controller on or off (with '1'/'0').
+> 
+> Therefore, after ejection is complete, userspace can power off the
+> controller, then wait until both modules have been reinserted
+> (`controller_modules` will return 'both') to turn on the controller.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
+>  MAINTAINERS                                   |   1 +
+>  drivers/platform/x86/ayaneo-ec.c              | 106 ++++++++++++++++++
+>  3 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+> new file mode 100644
+> index 000000000000..4cffbf5fc7ca
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+> @@ -0,0 +1,19 @@
+> +What:		/sys/devices/platform/ayaneo-ec/controller_power
+> +Date:		Nov 2025
+> +KernelVersion:	6.19
+> +Contact:	"Antheas Kapenekakis" <lkml@antheas.dev>
+> +Description:
+> +		Current controller power state. Allows turning on and off
+> +		the controller power (e.g. for power savings). Write 1 to
+> +		turn on, 0 to turn off. File is readable and writable.
+> +
+> +What:		/sys/devices/platform/ayaneo-ec/controller_modules
+> +Date:		Nov 2025
+> +KernelVersion:	6.19
+> +Contact:	"Antheas Kapenekakis"  <lkml@antheas.dev>
+> +Description:
+> +		Shows which controller modules are currently connected to
+> +		the device. Possible values are "left", "right" and "both".
+> +		File is read-only. The Windows software for this device
+> +		will only set controller power to 1 if both module sides
+> +		are connected (i.e. this file returns "both").
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c5bf7207c45f..f8ab009b6224 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
+>  M:	Antheas Kapenekakis <lkml@antheas.dev>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-platform-ayaneo
+>  F:	drivers/platform/x86/ayaneo-ec.c
+>  
+>  AZ6007 DVB DRIVER
+> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
+> index 697bb053a7d6..0652c044ad76 100644
+> --- a/drivers/platform/x86/ayaneo-ec.c
+> +++ b/drivers/platform/x86/ayaneo-ec.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/bits.h>
+>  #include <linux/dmi.h>
+>  #include <linux/err.h>
+>  #include <linux/hwmon.h>
+> @@ -16,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+> +#include <linux/sysfs.h>
+>  #include <acpi/battery.h>
+>  
+>  #define AYANEO_PWM_ENABLE_REG	 0x4A
+> @@ -32,9 +34,17 @@
+>  #define AYANEO_CHARGE_VAL_AUTO		0xaa
+>  #define AYANEO_CHARGE_VAL_INHIBIT	0x55
+>  
+> +#define AYANEO_POWER_REG	0x2d
+> +#define AYANEO_POWER_OFF	0xfe
+> +#define AYANEO_POWER_ON		0xff
+> +#define AYANEO_MODULE_REG	0x2f
+> +#define AYANEO_MODULE_LEFT	BIT(0)
+> +#define AYANEO_MODULE_RIGHT	BIT(1)
+> +
+>  struct ayaneo_ec_quirk {
+>  	bool has_fan_control;
+>  	bool has_charge_control;
+> +	bool has_magic_modules;
+>  };
+>  
+>  struct ayaneo_ec_platform_data {
+> @@ -46,6 +56,7 @@ struct ayaneo_ec_platform_data {
+>  static const struct ayaneo_ec_quirk quirk_ayaneo3 = {
+>  	.has_fan_control = true,
+>  	.has_charge_control = true,
+> +	.has_magic_modules = true,
+>  };
+>  
+>  static const struct dmi_system_id dmi_table[] = {
+> @@ -266,6 +277,100 @@ static int ayaneo_remove_battery(struct power_supply *battery,
+>  	return 0;
+>  }
+>  
+> +static ssize_t controller_power_store(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      const char *buf,
+> +				      size_t count)
+> +{
+> +	bool value;
+> +	int ret;
+> +
+> +	ret = kstrtobool(buf, &value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : AYANEO_POWER_OFF);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t controller_power_show(struct device *dev,
+> +				     struct device_attribute *attr,
+> +				     char *buf)
+> +{
+> +	int ret;
+> +	u8 val;
+> +
+> +	ret = ec_read(AYANEO_POWER_REG, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return sysfs_emit(buf, "%d\n", val == AYANEO_POWER_ON);
+> +}
+> +
+> +static DEVICE_ATTR_RW(controller_power);
+> +
+> +static ssize_t controller_modules_show(struct device *dev,
+> +				       struct device_attribute *attr, char *buf)
+> +{
+> +	char *out;
+> +	int ret;
+> +	u8 val;
+> +
+> +	ret = ec_read(AYANEO_MODULE_REG, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (~val & (AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT)) {
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 4e86a422f05f..6878c4fcb0b5 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -142,14 +142,6 @@ static inline void get_acpi_method_name(const struct =
-wmi_block *wblock,
- 	buffer[4] =3D '\0';
- }
-=20
--static inline acpi_object_type get_param_acpi_type(const struct wmi_block=
- *wblock)
--{
--	if (wblock->gblock.flags & ACPI_WMI_STRING)
--		return ACPI_TYPE_STRING;
--	else
--		return ACPI_TYPE_BUFFER;
--}
--
- static int wmidev_match_guid(struct device *dev, const void *data)
- {
- 	struct wmi_block *wblock =3D dev_to_wblock(dev);
-@@ -351,9 +343,16 @@ acpi_status wmidev_evaluate_method(struct wmi_device =
-*wdev, u8 instance, u32 met
- 	params[0].integer.value =3D instance;
- 	params[1].type =3D ACPI_TYPE_INTEGER;
- 	params[1].integer.value =3D method_id;
--	params[2].type =3D get_param_acpi_type(wblock);
--	params[2].buffer.length =3D in->length;
--	params[2].buffer.pointer =3D in->pointer;
-+
-+	if (wblock->gblock.flags & ACPI_WMI_STRING) {
-+		params[2].type =3D ACPI_TYPE_STRING;
-+		params[2].string.length =3D in->length;
-+		params[2].string.pointer =3D in->pointer;
-+	} else {
-+		params[2].type =3D ACPI_TYPE_BUFFER;
-+		params[2].buffer.length =3D in->length;
-+		params[2].buffer.pointer =3D in->pointer;
-+	}
-=20
- 	get_acpi_method_name(wblock, 'M', method);
-=20
-@@ -519,9 +518,16 @@ acpi_status wmidev_block_set(struct wmi_device *wdev,=
- u8 instance, const struct
- 	input.pointer =3D params;
- 	params[0].type =3D ACPI_TYPE_INTEGER;
- 	params[0].integer.value =3D instance;
--	params[1].type =3D get_param_acpi_type(wblock);
--	params[1].buffer.length =3D in->length;
--	params[1].buffer.pointer =3D in->pointer;
-+
-+	if (wblock->gblock.flags & ACPI_WMI_STRING) {
-+		params[1].type =3D ACPI_TYPE_STRING;
-+		params[1].string.length =3D in->length;
-+		params[1].string.pointer =3D in->pointer;
-+	} else {
-+		params[1].type =3D ACPI_TYPE_BUFFER;
-+		params[1].buffer.length =3D in->length;
-+		params[1].buffer.pointer =3D in->pointer;
-+	}
-=20
- 	get_acpi_method_name(wblock, 'S', method);
-=20
-=2D-=20
-2.39.5
+This too is constructing mask still here which is ugly.
+
+> +	case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
+> +		out = "both";
+> +		break;
+> +	case AYANEO_MODULE_LEFT:
+> +		out = "left";
+> +		break;
+> +	case AYANEO_MODULE_RIGHT:
+> +		out = "right";
+> +		break;
+> +	default:
+> +		out = "none";
+> +		break;
+> +	}
+> +
+> +	return sysfs_emit(buf, "%s\n", out);
+> +}
+> +
+> +static DEVICE_ATTR_RO(controller_modules);
+> +
+> +static struct attribute *aya_mm_attrs[] = {
+> +	&dev_attr_controller_power.attr,
+> +	&dev_attr_controller_modules.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t aya_mm_is_visible(struct kobject *kobj,
+> +				 struct attribute *attr, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct ayaneo_ec_platform_data *data = platform_get_drvdata(pdev);
+> +
+> +	if (data->quirks->has_magic_modules)
+> +		return attr->mode;
+> +	return 0;
+> +}
+> +
+> +static const struct attribute_group aya_mm_attribute_group = {
+> +	.is_visible = aya_mm_is_visible,
+> +	.attrs = aya_mm_attrs,
+> +};
+> +
+> +static const struct attribute_group *ayaneo_ec_groups[] = {
+> +	&aya_mm_attribute_group,
+> +	NULL
+> +};
+> +
+>  static int ayaneo_ec_probe(struct platform_device *pdev)
+>  {
+>  	const struct dmi_system_id *dmi_entry;
+> @@ -307,6 +412,7 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
+>  static struct platform_driver ayaneo_platform_driver = {
+>  	.driver = {
+>  		.name = "ayaneo-ec",
+> +		.dev_groups = ayaneo_ec_groups,
+>  	},
+>  	.probe = ayaneo_ec_probe,
+>  };
+> 
+
+-- 
+ i.
 
