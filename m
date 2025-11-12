@@ -1,67 +1,67 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380C134CFBA
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 19:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CB4337B9D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 19:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762975581; cv=none; b=hC+0N31eOqtfUm3oKOB8D3kWHVAcMXgMW0zIUTG9sU4hQxlWkIbKlvyQCp9X79Y6OplNK7eIfUqS/lKsWW0RhgbvwHSttNC4qUaWHlNdv/ZWuHJdu6+Op14mhr8FDvSiJ28ZHBa1LqC8yXVCuvO6phdkvODrx7S1SBaNOGxnpAc=
+	t=1762975844; cv=none; b=b+OMCl/5CIGbeIw12sggj4aQnW4zsbw+ilCZBaFBzOXaSp+izhWE5P0RZb2V/6XqoBoKI8wPSWbeeWDJWzMnD6MIf4uk6XrOrvW6jt2H1APweZbLoUn2beq/N61Y2pRVtD+AZxELC+JH/niVtnijIwsbg4YuseyJQ2VFg301IJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762975581; c=relaxed/simple;
-	bh=7+aqrc7gxrvbg0zoPLO/qVZC3fC6KwrV7sIZ7rdS2Xk=;
+	s=arc-20240116; t=1762975844; c=relaxed/simple;
+	bh=YnO4Zpvk4D2Lhjey57B3mBlxCAckQFE25wivCgdwG0g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CrSTZA5kHgyETK6/rUMdEJGaxRLerO0eZJITGwsyatNJGA8JxrPC5+ioRTXoZvJopSpx5CA8NbnxcHqx8ZqUSSeJ9Rbo4S31MwFltLcYpj2OEJFjVcyCjUt5QRfAH2tNpiu87BWwRghozQ+dKlLO6pfJHQYHAdbarbm4JX8CPz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBjwEVbM; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:Content-Type; b=mJVGgCJPzVTYfl8ZjLI2nfVhj/vcrZiCeShlqLP6RWLN/KvB9l8V43BymwhoNYzKkyXBc04eDO8OR9vpdtaqWaXCgx+PCBqZyle7Ih/g14NdH300tDphODe0YqkdJi7Bl88iJiGn5Wwrf/2B3jHLHPrm5fM0Qng9eLo5wfN1oCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mghGsiEL; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBjwEVbM"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-477775d3728so450595e9.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 11:26:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mghGsiEL"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42b312a089fso18162f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 11:30:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762975577; x=1763580377; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762975840; x=1763580640; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rOvdwmjF3vj/wtjElLtlYhjlH8fqcUEkQXd8Ow1Ngqc=;
-        b=fBjwEVbMHSRk7tDYsximaakAae2OZYK12OZHFgssbGIRbzEZOqB4Nu+i5fG/JqNfIk
-         SBRAMgXycWrX+0zClzuGBnhFtK3YvqbvbO2PLJJ6G9Syp5ZTsjK7aBEL1SiFlQky/n0e
-         7DG72PYNmec9H119fnE/VS9J+EGTzrT0xQYAsYoh6H0JUasGWV8Y56xPPYDpVXYE1MNc
-         vD03TF6zI2Gk0suTbfbWujEPkSK4XTP50YJDozbmKmZ1VC1o+0WibDsxobglXNFykjCK
-         gMR4YmRMWHpTRrg/vcBQUPdD85onGcScniTUAuOn7WDg1uFOtu0lmTfxdueDuICSXqyU
-         Ul4Q==
+        bh=YnO4Zpvk4D2Lhjey57B3mBlxCAckQFE25wivCgdwG0g=;
+        b=mghGsiEL8tLcChR8gnMbaXF9RC/UvqKk4SZak9rq8nij/DJeZuiWYtf3O5WNFocFTp
+         cWR4dSsAZCFidlQl0YrY2zvR4CHEJvrUECAONUCzFWBVFB1IrLEPelWdox1VTX82bvFN
+         SLYLlrIgMg9S1RYj7zxLbhZAgVEqQg7egb8QiR8Pm/UwxCF7MSBr/ispxd7NGLIO+6T4
+         7Yg8+Pz0e7TlhxeB75EavLof1JgNZjlYAbh2hxdDu7xWvUzRkCj39XR/C0Yh7+3WnAdj
+         Rgua2pvviJVl6IEKlvRXYefRwG+QrpCoUdwvLN7QvPLMOiVjDFoaqD7zjXJjhEHj8sNZ
+         HUkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762975577; x=1763580377;
+        d=1e100.net; s=20230601; t=1762975840; x=1763580640;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rOvdwmjF3vj/wtjElLtlYhjlH8fqcUEkQXd8Ow1Ngqc=;
-        b=Ns5Q/6vcMV7/jCaosqRWCS+XezOuKJ4oowqpjI3UDBUSAY2XseMfwP/GPw7NcEjDuz
-         yblKVhgdjw8fS27swOELsmZONfb/lJb1Dq8jW4yBdJXUfwRJBG50BPlimGqnXQv50IEz
-         PFd2CQ/m74uvPCIHIRgJht4Sp9FjFHYGnEnXju1uL8ZHaOWqVCRe4ued2/OpuuKOWWwF
-         3Igbwq0Rwa8xcwEVG1r7WBml5atCZGe+jjHyDMn1RCAYvlA4DcnXUfVI5Vmim4afPKjr
-         f8m2+JEyjZoDkCOxu88iWbMkSzhSl1AJuM3XNar95k8CuPhQzKTfMREAoCHxAh7bVcN0
-         xx/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWgSYCO/ouOON4HCUCeJtI4qMTQ4zAJSCqUtgMpqF8lICoTS9hDvowRJFr4YL3AtrtLcSr2nbourEI52ccjR24ScpNM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNqbXSurWfPNwxv1/voCcZB9wt6a+U7iVstPr2J973Z5y0XkEe
-	sWAJ/ZU/6MV06ucMslq0/UCVr8W8NSbXVYcriAndduUnK1uV2oJXJOiB
-X-Gm-Gg: ASbGncvLx59VEt1BUg39pDS6fxlTwBe5xx6UUg8PlkloW5RWf84Q0JttkzEFq0S3Upx
-	p38X+XhC5Y1wL8GBxlsglWPiDD1v9YG824fyby0kk0pViclQs8FeT0qIE51IIrzZf2qznkm0/+u
-	ZVFtWbLG+NHhm0DFZNtHGUVubg6q6ItMSXprvvTam+55NWPFrkR24ypGX07KLkV8irEiobT01Tf
-	EjlWfDBPRh0bStGOZIHtGzyxMYO7CioGKRdJuno0iKAdmC5631O+uA3YrAMYk5E7zqAjBUmagFl
-	PO/gzoF5mifGuKGHmPIKwrXJXqjNdLQR0PjFf+zkJQjECLc4zaXCWvUVx5pGhDP5rYaw9k4uzWS
-	RDCXR3kWJlPl04z6Zvoi5zjgbUT1IEt9xwMT+2uP0nYmiam6pmOMa8bp1Bh1v8p62l2kDYtSkss
-	QvTv7j2ff14/WU
-X-Google-Smtp-Source: AGHT+IGI0yaeZ/Z25ZuhwdvsHgYCdSxi9R5gy1iKkdGjcDReF/a2PryusG5lOqIA755v9T/eszRQLw==
-X-Received: by 2002:a05:600c:1553:b0:475:da1a:5418 with SMTP id 5b1f17b1804b1-4778703e886mr43755065e9.1.1762975577353;
-        Wed, 12 Nov 2025 11:26:17 -0800 (PST)
+        bh=YnO4Zpvk4D2Lhjey57B3mBlxCAckQFE25wivCgdwG0g=;
+        b=Upv3CqAp4GTYARjAHUs+svOFwJVCEdtZ/0AJyG0C76lpJ3izvoXlzytefOOmHyGBNI
+         UNszsPb8OUcnnLeIvh/1gV7ovIZsYqS0OpiLajH6DxelVo1EUvXqPgT+Hb0g1futWGx3
+         zw+NNIA1yELssXgrHjNP/JalMVLh5m726mkZxuR2VOfq6KIAnGkzcibmayuHCbDFdzNl
+         6L6p5FCR66kdP7E7zryRafdHXMu/hY9RB7u7FgeN4IvN4bhTUYSfpg+afiHsmobalg0q
+         fa8fXPlcw/RlCL3vGsDL3rGgNysjIihMFSR6Ts1rvr27jqWm5hQXCZDVDgXlTaXmJq7j
+         sXBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFpgamrwjk1uqdYYZ1MhB/B4b0eFUMesv6CkibaQLgysv1PcrXgREnejcJYJJ5ksp84kIeSeGufKCfZBcHHxFhuhnp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/mscGWjk3dPmswVrUhoB1piUlk+AAxekKkaVTPMEY+8A6LTci
+	IZIiU+3zCrSvE578LaVXy2wRmsy/duRAAipdjkTh+iwThZZ2+ojf2I36
+X-Gm-Gg: ASbGncsdlx2a2Nh+ft81vTnXUnfvXP0lnbRmszLBLVYbD60gS61LdMqUncsgw3zW86W
+	Kp+8PjFO4VyitEdYEWxWZu4JG0/v8hhymWUXGIfuxRdsNsTc3+rKPlUhGKDgFRQoWyFVTXNp80D
+	cCwL+MsbOi1LbrqZQlm+yooF2TaSd8QW992CNmvcObSaWch2ifccoBKygOLWd06mFTYoBaPd9gp
+	GyDRTdc/asFzTJQMCMZuyJPfHqjznhA9RqsVM0j5Fx3CEQgsmJEmxlB1lYKiuLeEyXrSYQH7Q8M
+	XF26Bo8PtKfJ5Rd83zfmTlz1EyOsV9jfVlfGaQ6ICWIj54RAo6cg+jyHie8zQoXs1R0tqiFiRm3
+	wuPGOVgw69GSBq1k8ixyH9oe1kalYtVsUQH2olfMJ55rIrcpoLTiY+o8Dr3L6Ofur3JLgoQKgAD
+	mOqVu1WOgF4TlE
+X-Google-Smtp-Source: AGHT+IEXrys3yJyy+EItZsES8VkJ65hhqjQkO05BKh12zp3zncs0vBv2bebPlbgN3Kg/5K+hkU40ug==
+X-Received: by 2002:a05:6000:2483:b0:42b:3252:14c5 with SMTP id ffacd0b85a97d-42b4bba11c1mr3775339f8f.28.1762975840061;
+        Wed, 12 Nov 2025 11:30:40 -0800 (PST)
 Received: from [192.168.1.121] ([176.206.83.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b314dae4bsm26087760f8f.34.2025.11.12.11.26.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b322d533dsm24778730f8f.0.2025.11.12.11.30.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Nov 2025 11:26:17 -0800 (PST)
-Message-ID: <83e65d27-73c7-465c-a5c8-861608ea93e7@gmail.com>
-Date: Wed, 12 Nov 2025 20:26:16 +0100
+        Wed, 12 Nov 2025 11:30:39 -0800 (PST)
+Message-ID: <e73f3301-51b2-4273-8e9e-63e4c6b1916b@gmail.com>
+Date: Wed, 12 Nov 2025 20:30:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,59 +70,314 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v17 0/9] platform/x86: Add asus-armoury driver
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Denis Benato <denis.benato@linux.dev>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+To: Mario Limonciello <superm1@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Denis Benato <denis.benato@linux.dev>, LKML
+ <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
  Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  "Limonciello, Mario" <mario.limonciello@amd.com>,
  "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>,
  Derek John Clark <derekjohn.clark@gmail.com>,
  Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
 References: <20251102215319.3126879-1-denis.benato@linux.dev>
- <aRSdHcO1WCPmG63W@black.igk.intel.com>
+ <6b5d7dab-1175-8096-64d0-fdf2cc693679@linux.intel.com>
+ <78d35771-02b6-4163-88da-ceae3146afe7@linux.dev>
+ <e73f74b9-6147-c3ce-c81b-da52082b258b@linux.intel.com>
+ <fe18a2f1-3e7b-423a-86ac-fd5abd994fa3@gmail.com>
+ <b6a234b6-7e16-24fc-760f-0e2a43fed84f@linux.intel.com>
+ <c36142f7-fee6-43be-b3b4-495f74872a75@kernel.org>
+ <cff6d090-f697-494c-8275-063839e76ebb@gmail.com>
+ <362f2353-8529-47a0-9cfb-d54015e7f9f3@kernel.org>
 Content-Language: en-US, it-IT, en-US-large
 From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <aRSdHcO1WCPmG63W@black.igk.intel.com>
+In-Reply-To: <362f2353-8529-47a0-9cfb-d54015e7f9f3@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
-On 11/12/25 15:43, Andy Shevchenko wrote:
-> On Sun, Nov 02, 2025 at 10:53:10PM +0100, Denis Benato wrote:
->> Hi all,
+On 11/12/25 20:24, Mario Limonciello wrote:
+> On 11/12/25 1:23 PM, Denis Benato wrote:
 >>
->> the TL;DR:
->> 1. Introduce new module to contain bios attributes, using fw_attributes_class
->> 2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
->> 3. Remove those in the next LTS cycle
+>> On 11/12/25 14:44, Mario Limonciello wrote:
+>>>
+>>>
+>>> On 11/12/25 6:42 AM, Ilpo Järvinen wrote:
+>>>> On Tue, 11 Nov 2025, Denis Benato wrote:
+>>>>> On 11/11/25 11:38, Ilpo Järvinen wrote:
+>>>>>> On Mon, 10 Nov 2025, Denis Benato wrote:
+>>>>>>> On 11/10/25 16:17, Ilpo Järvinen wrote:
+>>>>>>>> On Sun, 2 Nov 2025, Denis Benato wrote:
+>>>>>>>>
+>>>>>>>>> the TL;DR:
+>>>>>>>>> 1. Introduce new module to contain bios attributes, using fw_attributes_class
+>>>>>>>>> 2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+>>>>>>>>> 3. Remove those in the next LTS cycle
+>>>>>>>>>
+>>>>>>>>> The idea for this originates from a conversation with Mario Limonciello
+>>>>>>>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
+>>>>>>>>>
+>>>>>>>>> It is without a doubt much cleaner to use, easier to discover, and the
+>>>>>>>>> API is well defined as opposed to the random clutter of attributes I had
+>>>>>>>>> been placing in the platform sysfs. Given that Derek is also working on a
+>>>>>>>>> similar approach to Lenovo in part based on my initial work I'd like to think
+>>>>>>>>> that the overall approach is good and may become standardised for these types
+>>>>>>>>> of things.
+>>>>>>>>>
+>>>>>>>>> Regarding PPT: it is intended to add support for "custom" platform profile
+>>>>>>>>> soon. If it's a blocker for this patch series being accepted I will drop the
+>>>>>>>>> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+>>>>>>>>> separately to avoid holding the bulk of the series up. Ideally I would like
+>>>>>>>>> to get the safe limits in so users don't fully lose functionality or continue
+>>>>>>>>> to be exposed to potential instability from setting too low, or be mislead
+>>>>>>>>> in to thinking they can set limits higher than actual limit.
+>>>>>>>>>
+>>>>>>>>> The bulk of the PPT patch is data, the actual functional part is relatively
+>>>>>>>>> small and similar to the last version.
+>>>>>>>>>
+>>>>>>>>> Unfortunately I've been rather busy over the months and may not cover
+>>>>>>>>> everything in the v7 changelog but I've tried to be as comprehensive as I can.
+>>>>>>>>>
+>>>>>>>>> Regards,
+>>>>>>>>> Luke
+>>>>>>>>>
+>>>>>>>>> Changelog:
+>>>>>>>>> - v1
+>>>>>>>>>     - Initial submission
+>>>>>>>>> - v2
+>>>>>>>>>     - Too many changes to list, but all concerns raised in previous submission addressed.
+>>>>>>>>>     - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+>>>>>>>>> - v3
+>>>>>>>>>     - All concerns addressed.
+>>>>>>>>>     - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+>>>>>>>>> - v4
+>>>>>>>>>     - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch series
+>>>>>>>>>     - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+>>>>>>>>>     - Split the PPT knobs out to a separate patch
+>>>>>>>>>     - Split the hd_panel setting out to a new patch
+>>>>>>>>>     - Clarify some of APU MEM configuration and convert int to hex
+>>>>>>>>>     - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+>>>>>>>>>     - Fixup cyclic dependency in Kconfig
+>>>>>>>>> - v5
+>>>>>>>>>     - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig detail, edit commit msg
+>>>>>>>>>     - cleanup ppt* tuning patch
+>>>>>>>>>     - proper error handling in module init, plus pr_err()
+>>>>>>>>>     - ppt tunables have a notice if there is no match to get defaults
+>>>>>>>>>     - better error handling in cpu core handling
+>>>>>>>>>       - don't continue if failure
+>>>>>>>>>     - use the mutex to gate WMI writes
+>>>>>>>>> - V6
+>>>>>>>>>     - correctly cleanup/unwind if module init fails
+>>>>>>>>> - V7
+>>>>>>>>>     - Remove review tags where the code changed significantly
+>>>>>>>>>     - Add auto_screen_brightness WMI attribute support
+>>>>>>>>>     - Move PPT patch to end
+>>>>>>>>>     - Add support min/max PPT values for 36 laptops (and two handhelds)
+>>>>>>>>>     - reword commit for "asus-wmi: export symbols used for read/write WMI"
+>>>>>>>>>     - asus-armoury: move existing tunings to asus-armoury
+>>>>>>>>>       - Correction to license header
+>>>>>>>>>       - Remove the (initial) mutex use (added for core count only in that patch)
+>>>>>>>>>       - Clarify some doc comments (attr_int_store)
+>>>>>>>>>       - Cleanup pr_warn in dgpu/egpu/mux functions
+>>>>>>>>>       - Restructure logic in asus_fw_attr_add()
+>>>>>>>>>       - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
+>>>>>>>>>     - asus-armoury: add core count control:
+>>>>>>>>>       - add mutex to prevent possible concurrent write to the core
+>>>>>>>>>         count WMI due to separated bit/little attributes
+>>>>>>>>>     - asus-armoury: add ppt_* and nv_* tuning knobs:
+>>>>>>>>>       - Move to end of series
+>>>>>>>>>       - Refactor to use a table of allowed min/max values to
+>>>>>>>>>         ensure safe settings
+>>>>>>>>>       - General code cleanup
+>>>>>>>>>     - Ensure checkpatch.pl returns clean for all
+>>>>>>>>> - V8
+>>>>>>>>>     - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - Further cleanup: https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a8a8e38
+>>>>>>>>>     - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - Address concerns in https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc06522c5e41
+>>>>>>>>>       - Refactor struct asus_armoury_priv to record both AC and DC settings
+>>>>>>>>>       - Tidy macros and functions affected by the above to be clearer as a result
+>>>>>>>>>       - Move repeated strings such as "ppt_pl1_spl" to #defines
+>>>>>>>>>       - Split should_create_tunable_attr() in to two functions to better clarify:
+>>>>>>>>>         - is_power_tunable_attr()
+>>>>>>>>>         - has_valid_limit()
+>>>>>>>>>       - Restructure init_rog_tunables() to initialise AC and DC in a
+>>>>>>>>>         way that makes more sense.
+>>>>>>>>>       - Ensure that if DC setting table is not available then attributes
+>>>>>>>>>         return -ENODEV only if on DC mode.
+>>>>>>>>> - V9
+>>>>>>>>>     - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - return -EBUSY when eGPU/dGPU cannot be deactivated
+>>>>>>>>>     - asus-armoury: add apu-mem control support
+>>>>>>>>>       - discard the WMI presence bit fixing the functionality
+>>>>>>>>>     - asus-armoury: add core count control
+>>>>>>>>>       - replace mutex lock/unlock with guard
+>>>>>>>>>       - move core count alloc for initialization in init_max_cpu_cores()
+>>>>>>>>> - v10
+>>>>>>>>>     - platform/x86: asus-wmi: export symbols used for read/write WMI
+>>>>>>>>>       - fix error with redefinition of asus_wmi_set_devstate
+>>>>>>>>>     - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - hwmon or other -> hwmon or others
+>>>>>>>>>       - fix wrong function name in documentation (attr_uint_store)
+>>>>>>>>>       - use kstrtouint where appropriate
+>>>>>>>>>       - (*) fix unreachable code warning: the fix turned out to be partial
+>>>>>>>>>       - improve return values in case of error in egpu_enable_current_value_store
+>>>>>>>>>     - asus-armoury: asus-armoury: add screen auto-brightness toggle
+>>>>>>>>>       - actually register screen_auto_brightness attribute
+>>>>>>>>> - v11
+>>>>>>>>>     - cover-letter:
+>>>>>>>>>       - reorganize the changelog of v10
+>>>>>>>>>     - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - move the DMIs list in its own include, fixing (*) for good
+>>>>>>>>>     - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - fix warning about redefinition of ppt_pl2_sppt_def for GV601R
+>>>>>>>>> - v12
+>>>>>>>>>     - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - add min/max values for FA608WI and FX507VI
+>>>>>>>>> - v13
+>>>>>>>>>     - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - fix a typo in a comment about _def attributes
+>>>>>>>>>       - add min/max values for GU605CW and G713PV
+>>>>>>>>>     - asus-armoury: add apu-mem control support
+>>>>>>>>>       - fix a possible out-of-bounds read in apu_mem_current_value_store
+>>>>>>>>> - v14
+>>>>>>>>>     - platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
+>>>>>>>>>       - added patch to rename the symbol for consistency
+>>>>>>>>>     - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - remove the unchecked usage of dmi_get_system_info while
+>>>>>>>>>         also increasing consistency with other messages
+>>>>>>>>> - v15
+>>>>>>>>>     - platform/x86: asus-wmi: export symbols used for read/write WMI
+>>>>>>>>>       - fix kernel doc
+>>>>>>>>>     - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - avoid direct calls to asus-wmi and provide helpers instead
+>>>>>>>>>       - rework xg mobile activation logic
+>>>>>>>>>       - add helper for enum allowed attributes
+>>>>>>>>>       - improve mini_led_mode_current_value_store
+>>>>>>>>>       - improved usage of kstrtouint, kstrtou32 and kstrtobool
+>>>>>>>>>       - unload attributes in reverse order of loading
+>>>>>>>>>     - platform/x86: asus-armoury: add apu-mem control support
+>>>>>>>>>       - fix return value in apu_mem_current_value_show
+>>>>>>>>>     - platform/x86: asus-armoury: add core count control
+>>>>>>>>>       - put more safeguards in place against possible bricking of laptops
+>>>>>>>>>       - improve loading logic
+>>>>>>>>>     - platform/x86: asus-wmi: deprecate bios features
+>>>>>>>>>       - modified deprecation message
+>>>>>>>>>     - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - make _store(s) to interfaces unusable in DC to fail,
+>>>>>>>>>         instead of accepting 0 as a value (0 is also invalid)
+>>>>>>>>>       - make it easier to understand AC vs DC logic
+>>>>>>>>>       - improved init_rog_tunables() logic
+>>>>>>>>>       - commas after every field in the table for consistency
+>>>>>>>>>       - add support for RC73 handheld
+>>>>>>>>> -v16
+>>>>>>>>>     - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - add support for GU605CX
+>>>>>>>>> -v17
+>>>>>>>>>     - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>>>>       - fix RC73 -> RC73AX as another RC73 exists
+>>>>>>>>>     - platform/x86: asus-armoury: add core count control
+>>>>>>>>>       - be more tolerant on out-or-range current CPU cores count
+>>>>>>>>>     - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+>>>>>>>>>       - fix usage of undeclared static functions in macros
+>>>>>>>> I've applied this to the review-ilpo-next branch. I'm still not entirely
+>>>>>>>> happy with how the cpu cores change does store values without arrays but
+>>>>>>>> it's not an end of the world (and could be fixed in tree).
+>>>>>>> Hello and thanks.
+>>>>>>>
+>>>>>>> You would make me very happy applying things as Luke wrote them
+>>>>>>> so that successive modifications are more easily compared to
+>>>>>>> what those were doing before I changed them...
+>>>>>> I just took them as they were so you should be "happy" now :-)
+>>>>>>
+>>>>>> ...Even if I didn't like having all those as separate variables requiring
+>>>>>> if statements here and there, which could be avoided if core type would be
+>>>>>> an array index so one could simply do:
+>>>>>>
+>>>>>>      ...
+>>>>>>      case CPU_CORE_MAX:
+>>>>>>          cpu_core_value = asus_armoury.cpu_cores[core_type]->max;
+>>>>>>          break;
+>>>>>>      ...
+>>>>>>
+>>>>>> Doing that transformation incrementally looks simple enough it should be
+>>>>>> low risk after a careful review.
+>>>>>>
+>>>>>>
+>>>>> Apparently one of the two new handhelds from asus reports
+>>>>> weird numbers for core count so that area requires a bit of work
+>>>>> anyway. I will soon move to investigate that hardware.
+>>>>>
+>>>>>>> Also if you have some more hints on how I could change that
+>>>>>>> interface (while avoiding bad surprises due to index mismatch)
+>>>>>>> I will try my best... without destroying any laptop...
+>>>>>>> perhaps... Hopefully? Wish me luck.
+>>>>>>>
+>>>>>>>> I had to reorder a few includes to make the order alphabetical which
+>>>>>>>> luckily worked out without causing conflicts within the subsequent
+>>>>>>>> patches (and a need to respin the series). Please try to remember to
+>>>>>>>> keep those in the alphabetical order.
+>>>>>>> I have noticed a pair of warnings in this v17 I would like to solve:
+>>>>>>> one line is too long, I should break it and one macro has an
+>>>>>>> unused parameter.
+>>>>>>>
+>>>>>>> No semantic changes.
+>>>>>>>
+>>>>>>> I have seen one of those unordered includes in asus-armoury.h...
+>>>>>>> That branch is public in your git tree: this means I can respin
+>>>>>>> a v18 from a git format-path, correct?
+>>>>>>
+>>>>>> While I could replace the previous series with a new version, it would
+>>>>>> probably just be better to send incremental patches and I can see myself
+>>>>>> if I fold them into the existing patches or not.
+>>>>>
+>>>>> Ah forgive me, I am not used to the process and understood
+>>>>> something totally different. All good, patches sent, thanks!
+>>>>>
+>>>>> Would you also want to break the long assignment line?
+>>>>> Is it better if it's just one long line for clarity?
+>>>>>
+>>>>> ```
+>>>>> const struct rog_tunables *const ac_rog_runables = ....
+>>>>> ```
+>>>>
+>>>> I'm not sure what that second const gains us here so I'd prefer removing
+>>>> it.
+>>>>
+>>>> It's a local variable so it doesn't look like protecting the variable
+>>>> itself with const is that important (in contrast to things which are in
+>>>> global scope where const for the variable too is good).
+>>>>
+>>>> Are you aware of scripts/checkpatch.pl? I think it would have caught this
+>>>> (if one remembers to run it before sending patches, which is the hardest
+>>>> part with that tool :-)).
+>>>>
+>>> In case you aren't aware, two other quality of life improvements I want to share to look into:
+>>>
+>>> 1) There is a vscode extension for checkpatch
+>>>
+>>> It can be configured to automatically run when you save the file and then will underline all the failures with blue squiggly lines.
+>>>
+>>> https://marketplace.visualstudio.com/items?itemName=idanp.checkpatch
+>>>
+>> It has been in place since the first time you recommended it to me,
+>> but apparently it's only highlighting errors? In blue color?
 >>
->> The idea for this originates from a conversation with Mario Limonciello
->> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
->>
->> It is without a doubt much cleaner to use, easier to discover, and the
->> API is well defined as opposed to the random clutter of attributes I had
->> been placing in the platform sysfs. Given that Derek is also working on a
->> similar approach to Lenovo in part based on my initial work I'd like to think
->> that the overall approach is good and may become standardised for these types
->> of things.
->>
->> Regarding PPT: it is intended to add support for "custom" platform profile
->> soon. If it's a blocker for this patch series being accepted I will drop the 
->> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
->> separately to avoid holding the bulk of the series up. Ideally I would like
->> to get the safe limits in so users don't fully lose functionality or continue
->> to be exposed to potential instability from setting too low, or be mislead
->> in to thinking they can set limits higher than actual limit.
->>
->> The bulk of the PPT patch is data, the actual functional part is relatively
->> small and similar to the last version.
->>
->> Unfortunately I've been rather busy over the months and may not cover
->> everything in the v7 changelog but I've tried to be as comprehensive as I can.
-> This is more files starter with asus in PDx86.
-> Perhaps it's a time to have drivers/platform/x86/asus/ ?
+>> Why isn't it telling me about warnings? :(
 >
-I will leave the decision to you PDx86 maintainers: I'm fine either way.
-Just drop me a note and I'll move asus drivers if you decide it's the best
-course of action :)
+> Make sure that you set the path for checkpatch.pl properly in the extension settings and that you set it to run on every save. 
+>
+I have these settings:
+
+Checkpatch Path: checkpatch.pl (I have a link in /usr/bin)
+Diagnostic level: Information (but I can only see errors in blue)
+Run: onSave
+
+Not sure If I am doing something wrong, but it is working for sure because
+errors are reported.
+>>> 2) There is a pre-commit hook for checkpatch
+>>>
+>>> This will help make sure that it's "automatically" run on every code commit you do at the right time you make the patch (ie on a per-patch basis).
+>>>
+>>> https://github.com/dloidolt/pre-commit-checkpatch
+>> I am going to check this as well, thanks!
+>
