@@ -1,339 +1,114 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB72D326951
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2025 21:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6BD186294;
+	Wed, 12 Nov 2025 03:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762897427; cv=none; b=T7mk68KLG1BQBYkYl5zRLxEJ7PsRgXls5MkKnvlZ8wGclIGLOa7NYbt0149eHBgxJiw/GyB3NdbnxZFmuYecpIeDb8j4D15+GvdPSQRQQbX/LfOj40Gbv50QCMqny8p6nD+NubVW1WehyNlFXpr3WqgHt27WyJPSmQx4RejPbPY=
+	t=1762918895; cv=none; b=pVEPV4XfwQ+AhvI89faGo84TouKSUCIv2KT89b45MiUc13LhP20orz8cQ9ihjjdKezofj9L6hwcBo4jmriCnyDxKnQPqFzSEwAKZqMcjDDSH0OZ9SjGcpqjBpCrpPSmYtBd8WvvfQYwKqJoIh5pGy/6fVk5qnJKi8Dxi7vhAgqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762897427; c=relaxed/simple;
-	bh=O/SuGiAzHSSRRKVxWeuyO8lLFqaT1aW144KUCX0TpTE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQiR7FgxkU/KTPiZgA7DkCaPxOIgvtbrBDHjmHMFOdxSlRmVFCAxiAePLDCs5eIjpGKJzp+n6r3RJdeg6TLtEtax5MiRnpxGyFiJPW2mQ3gt3rWkbPYzpW4I6aHeSKnf6ooMsekKRurmZXKuZlJLHA+++bg0V11aGl5TicqHdzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=e9HtC7vu; arc=none smtp.client-ip=88.99.38.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1762918895; c=relaxed/simple;
+	bh=T42eE12u3XVrKV71P8xxkrfCYFqv7/xEaRVP4p0b3RE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KjFOxG5q9xJQ4/IKkxQnbY9s7EGiY65qwR3yo3B/ylm3PVKAmicDmEhl2BQjgJxmg4GbKerHlAc/NZEPPj08WsvBEQUzFS7213Tyb46G94XmRcqbfkNm9asyitG2I5rWdMS3cURJ0La0J8WZmcPry1FIY9FUmECUSL4tCKE/SAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DCBwMn1H; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="e9HtC7vu"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id BB8ACBDA2E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2025 23:43:35 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id C23DBBDA18
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2025 23:43:34 +0200 (EET)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 307CE201CE0
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2025 23:43:34 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1762897414;
-	bh=58N4AkF/62rPzXyucAbag0c8oNPiWsFpePIz6U6wsgI=;
-	h=Received:From:Subject:To;
-	b=e9HtC7vu0KicGRLZ81LKQpjo8awz7l3fIfXgT7xpdHciWTAhGtTLTiGbUv299knwz
-	 71TtJnrF8jnMnLpDtcYieC6H/KWcSGSEiIxoZpvkHXH5LiRcOPRZNxiC1T88/9jW+6
-	 E6Q4+TQ4VvJY+r071yv2pEVyD0+H5PyZAW9VY+UIQ3mEbsc0WBdVN0demoYqH6JNGF
-	 Q75x8b/8f6Qe6t5FKiNSjYLC/D+x9T0tfzY12HOveoCWEPA3EOuZfOGZcQqm8NFaZm
-	 YDvT/7hICNIc+KLylbJRKTwyckW4acI5EfjMUIUyR3T/9+v+bYClIxxQeL6ABcGaKd
-	 Ud2HGo9E0imSg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f181.google.com with SMTP id
- 38308e7fff4ca-378cffe5e1aso1229251fa.2
-        for <platform-driver-x86@vger.kernel.org>;
- Tue, 11 Nov 2025 13:43:34 -0800 (PST)
-X-Gm-Message-State: AOJu0YzZHkuO4etLuoRejA0cyeRkWPtgY3e9cxiFcfMDlglHkLnOIkza
-	BUa1JgGmiKcZ4yXDADf48QGVUeBJ1BXEKBeHuihmGqXzmtRHArbmzOcTYxoVmf0ajw6C+nZElTv
-	5vib7IcLYy94lnboGkchnyBJAzjGFinU=
-X-Google-Smtp-Source: 
- AGHT+IGjfVwzo/NpSCS45EieYVk2quw1vfmQyvqD3hNZwEOU/CQRP2qOp3AJ0hd3wDCrSVybTShJ9ZiZS//r21Qvqc0=
-X-Received: by 2002:a2e:3a08:0:b0:37a:323c:3641 with SMTP id
- 38308e7fff4ca-37b8c2e1713mr1783491fa.1.1762897413619; Tue, 11 Nov 2025
- 13:43:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DCBwMn1H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762918894; x=1794454894;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=T42eE12u3XVrKV71P8xxkrfCYFqv7/xEaRVP4p0b3RE=;
+  b=DCBwMn1Hi1fwo9JMh7JuINAN1XW0HZyS9SIi/zUMvXHBJFpTOYEZZXd3
+   TWk+Hyv5kMfCgmV6x+m1q1lDU13AC9lgl9cnacbzDW9luXyWroFnSbI2p
+   nOos2eaGcLp91b0mGXZM7gBt50dq3I6LxDbdSmmk3y/5smo15tGJfcfMc
+   iBup3aOe2QluVUDmlO0Gc06VnC8MiXO8q1IMA20FrYDCYu6BPZDPQvbXl
+   zBPPA6Q5O/8RLeq0m8qmrMaSiwlfaFCXR69Fr/V+RpZHNF3Z32EEupOyv
+   9GEcvmOwDlZPrBbImxXaSBLywQhbVbRGRyrnVHdPKa9l/h22J9yH5esZW
+   w==;
+X-CSE-ConnectionGUID: ddKYBrnIQJmEFfdbn/6Vqw==
+X-CSE-MsgGUID: d+G7LL47QymRQNMR+cVe4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="90450214"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="90450214"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 19:41:33 -0800
+X-CSE-ConnectionGUID: 8JSUtPyMSC+9lFOLoFpktg==
+X-CSE-MsgGUID: 9fdCvmgtQkKr5HJMuNTBPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="188752285"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa007.fm.intel.com with ESMTP; 11 Nov 2025 19:41:30 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v3 0/2] Introduce Intel Elkhart Lake PSE I/O
+Date: Wed, 12 Nov 2025 09:10:09 +0530
+Message-ID: <20251112034040.457801-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251110180846.1490726-1-lkml@antheas.dev>
- <20251110180846.1490726-5-lkml@antheas.dev>
- <888ff0d3-c613-b5a7-3b84-37ff3036e0a4@linux.intel.com>
-In-Reply-To: <888ff0d3-c613-b5a7-3b84-37ff3036e0a4@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Tue, 11 Nov 2025 22:43:22 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwE7rSw43tKoStmcmwR3mup5bS0Btk0R3hr0XTwSus4A-w@mail.gmail.com>
-X-Gm-Features: AWmQ_bn4UUWv7X6aph3NasS4pQ4HaEu1rsbZ0ni5h-plq3WZBhJwb6QSU0Encm8
-Message-ID: 
- <CAGwozwE7rSw43tKoStmcmwR3mup5bS0Btk0R3hr0XTwSus4A-w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] platform/x86: ayaneo-ec: Add controller power and
- modules attributes
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Armin Wolf <W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176289741438.2183685.15297292698681681318@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Nov 2025 at 14:41, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Mon, 10 Nov 2025, Antheas Kapenekakis wrote:
->
-> > The Ayaneo 3 features hot-swappable controller modules. The ejection
-> > and management is done through HID. However, after ejecting the modules=
-,
-> > the controller needs to be power cycled via the EC to re-initialize.
-> >
-> > For this, the EC provides a variable that holds whether the left or
-> > right modules are connected, and a power control register to turn
-> > the controller on or off. After ejecting the modules, the controller
-> > should be turned off. Then, after both modules are reinserted,
-> > the controller may be powered on again to re-initialize.
-> >
-> > This patch introduces two new sysfs attributes:
-> >  - `controller_modules`: a read-only attribute that indicates whether
-> >    the left and right modules are connected (none, left, right, both).
-> >  - `controller_power`: a read-write attribute that allows the user
-> >    to turn the controller on or off (with '1'/'0').
-> >
-> > Therefore, after ejection is complete, userspace can power off the
-> > controller, then wait until both modules have been reinserted
-> > (`controller_modules` will return 'both') to turn on the controller.
-> >
-> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
-> >  MAINTAINERS                                   |   1 +
-> >  drivers/platform/x86/ayaneo-ec.c              | 106 ++++++++++++++++++
-> >  3 files changed, 126 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Docum=
-entation/ABI/testing/sysfs-platform-ayaneo-ec
-> > new file mode 100644
-> > index 000000000000..4cffbf5fc7ca
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> > @@ -0,0 +1,19 @@
-> > +What:                /sys/devices/platform/ayaneo-ec/controller_power
-> > +Date:                Nov 2025
-> > +KernelVersion:       6.19
-> > +Contact:     "Antheas Kapenekakis" <lkml@antheas.dev>
-> > +Description:
-> > +             Current controller power state. Allows turning on and off
-> > +             the controller power (e.g. for power savings). Write 1 to
-> > +             turn on, 0 to turn off. File is readable and writable.
-> > +
-> > +What:                /sys/devices/platform/ayaneo-ec/controller_module=
-s
-> > +Date:                Nov 2025
-> > +KernelVersion:       6.19
-> > +Contact:     "Antheas Kapenekakis"  <lkml@antheas.dev>
-> > +Description:
-> > +             Shows which controller modules are currently connected to
-> > +             the device. Possible values are "left", "right" and "both=
-".
-> > +             File is read-only. The Windows software for this device
-> > +             will only set controller power to 1 if both module sides
-> > +             are connected (i.e. this file returns "both").
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c5bf7207c45f..f8ab009b6224 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
-> >  M:   Antheas Kapenekakis <lkml@antheas.dev>
-> >  L:   platform-driver-x86@vger.kernel.org
-> >  S:   Maintained
-> > +F:   Documentation/ABI/testing/sysfs-platform-ayaneo
-> >  F:   drivers/platform/x86/ayaneo-ec.c
-> >
-> >  AZ6007 DVB DRIVER
-> > diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ay=
-aneo-ec.c
-> > index 697bb053a7d6..0652c044ad76 100644
-> > --- a/drivers/platform/x86/ayaneo-ec.c
-> > +++ b/drivers/platform/x86/ayaneo-ec.c
-> > @@ -8,6 +8,7 @@
-> >   */
-> >
-> >  #include <linux/acpi.h>
-> > +#include <linux/bits.h>
-> >  #include <linux/dmi.h>
-> >  #include <linux/err.h>
-> >  #include <linux/hwmon.h>
-> > @@ -16,6 +17,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/power_supply.h>
-> > +#include <linux/sysfs.h>
-> >  #include <acpi/battery.h>
-> >
-> >  #define AYANEO_PWM_ENABLE_REG         0x4A
-> > @@ -32,9 +34,17 @@
-> >  #define AYANEO_CHARGE_VAL_AUTO               0xaa
-> >  #define AYANEO_CHARGE_VAL_INHIBIT    0x55
-> >
-> > +#define AYANEO_POWER_REG     0x2d
-> > +#define AYANEO_POWER_OFF     0xfe
-> > +#define AYANEO_POWER_ON              0xff
-> > +#define AYANEO_MODULE_REG    0x2f
-> > +#define AYANEO_MODULE_LEFT   BIT(0)
-> > +#define AYANEO_MODULE_RIGHT  BIT(1)
-> > +
-> >  struct ayaneo_ec_quirk {
-> >       bool has_fan_control;
-> >       bool has_charge_control;
-> > +     bool has_magic_modules;
-> >  };
-> >
-> >  struct ayaneo_ec_platform_data {
-> > @@ -46,6 +56,7 @@ struct ayaneo_ec_platform_data {
-> >  static const struct ayaneo_ec_quirk quirk_ayaneo3 =3D {
-> >       .has_fan_control =3D true,
-> >       .has_charge_control =3D true,
-> > +     .has_magic_modules =3D true,
-> >  };
-> >
-> >  static const struct dmi_system_id dmi_table[] =3D {
-> > @@ -266,6 +277,100 @@ static int ayaneo_remove_battery(struct power_sup=
-ply *battery,
-> >       return 0;
-> >  }
-> >
-> > +static ssize_t controller_power_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf,
-> > +                                   size_t count)
-> > +{
-> > +     bool value;
-> > +     int ret;
-> > +
-> > +     ret =3D kstrtobool(buf, &value);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : AYAN=
-EO_POWER_OFF);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static ssize_t controller_power_show(struct device *dev,
-> > +                                  struct device_attribute *attr,
-> > +                                  char *buf)
-> > +{
-> > +     int ret;
-> > +     u8 val;
-> > +
-> > +     ret =3D ec_read(AYANEO_POWER_REG, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return sysfs_emit(buf, "%d\n", val =3D=3D AYANEO_POWER_ON);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(controller_power);
-> > +
-> > +static ssize_t controller_modules_show(struct device *dev,
-> > +                                    struct device_attribute *attr, cha=
-r *buf)
-> > +{
-> > +     char *out;
-> > +     int ret;
-> > +     u8 val;
-> > +
-> > +     ret =3D ec_read(AYANEO_MODULE_REG, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     switch (~val & (AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT)) {
->
-> This too is constructing mask still here which is ugly.
+This series adds Intel Elkhart Lake PSE I/O driver which enumerates the
+PCI parent device and splits two child I/O devices (GPIO and Timed I/O
+which are available as a single PCI function through shared MMIO) to their
+respective I/O drivers.
 
-I can bring back the bools :-)
+In spirit, it is a continuation of PSE TIO series[1] which received
+objection from Greg for abusing platform device and has now been reworked
+to use auxiliary device instead.
 
-I agree but that's what I came up with to remove them
+Currently TIO driver[2] falls under PPS subsystem supporting generator
+functionality and will be coming up in a separate follow-up series for
+its independent design changes as per below roadmap.
 
-> > +     case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
-> > +             out =3D "both";
-> > +             break;
-> > +     case AYANEO_MODULE_LEFT:
-> > +             out =3D "left";
-> > +             break;
-> > +     case AYANEO_MODULE_RIGHT:
-> > +             out =3D "right";
-> > +             break;
-> > +     default:
-> > +             out =3D "none";
-> > +             break;
-> > +     }
-> > +
-> > +     return sysfs_emit(buf, "%s\n", out);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RO(controller_modules);
-> > +
-> > +static struct attribute *aya_mm_attrs[] =3D {
-> > +     &dev_attr_controller_power.attr,
-> > +     &dev_attr_controller_modules.attr,
-> > +     NULL
-> > +};
-> > +
-> > +static umode_t aya_mm_is_visible(struct kobject *kobj,
-> > +                              struct attribute *attr, int n)
-> > +{
-> > +     struct device *dev =3D kobj_to_dev(kobj);
-> > +     struct platform_device *pdev =3D to_platform_device(dev);
-> > +     struct ayaneo_ec_platform_data *data =3D platform_get_drvdata(pde=
-v);
-> > +
-> > +     if (data->quirks->has_magic_modules)
-> > +             return attr->mode;
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct attribute_group aya_mm_attribute_group =3D {
-> > +     .is_visible =3D aya_mm_is_visible,
-> > +     .attrs =3D aya_mm_attrs,
-> > +};
-> > +
-> > +static const struct attribute_group *ayaneo_ec_groups[] =3D {
-> > +     &aya_mm_attribute_group,
-> > +     NULL
-> > +};
-> > +
-> >  static int ayaneo_ec_probe(struct platform_device *pdev)
-> >  {
-> >       const struct dmi_system_id *dmi_entry;
-> > @@ -307,6 +412,7 @@ static int ayaneo_ec_probe(struct platform_device *=
-pdev)
-> >  static struct platform_driver ayaneo_platform_driver =3D {
-> >       .driver =3D {
-> >               .name =3D "ayaneo-ec",
-> > +             .dev_groups =3D ayaneo_ec_groups,
-> >       },
-> >       .probe =3D ayaneo_ec_probe,
-> >  };
-> >
->
-> --
->  i.
->
->
+=> Extend TIO driver[2] to support PPS client functionality.
+=> Develop a PPS common driver which hooks to both generator and client
+   counterparts.
+=> Develop an auxiliary glue driver for PPS common driver.
+
+[1] https://lore.kernel.org/r/20250307052231.551737-1-raag.jadav@intel.com
+[2] https://lore.kernel.org/r/20250219040618.70962-1-subramanian.mohan@intel.com
+
+v2:
+- Consolidate OFFSET and SIZE macros (Andy)
+- Make child device objects parent managed (Andy)
+- Fix double free on error path (Andy)
+- Shorten child device names to fit id string length (Andy)
+
+v3:
+- Use auxiliary_device_create() (Andy)
+
+Raag Jadav (2):
+  platform/x86/intel: Introduce Intel Elkhart Lake PSE I/O
+  gpio: elkhartlake: Convert to auxiliary driver
+
+ MAINTAINERS                             |  7 ++
+ drivers/gpio/Kconfig                    |  2 +-
+ drivers/gpio/gpio-elkhartlake.c         | 36 ++++++-----
+ drivers/platform/x86/intel/Kconfig      | 13 ++++
+ drivers/platform/x86/intel/Makefile     |  1 +
+ drivers/platform/x86/intel/ehl_pse_io.c | 86 +++++++++++++++++++++++++
+ include/linux/ehl_pse_io_aux.h          | 24 +++++++
+ 7 files changed, 151 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/ehl_pse_io.c
+ create mode 100644 include/linux/ehl_pse_io_aux.h
+
+-- 
+2.43.0
 
