@@ -1,237 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693812DC791
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A227FB37
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762981663; cv=none; b=EAtlrmD7V4bo4gulzWXS8XokU4zw6nRLc+7KBsQXJpn92zrvgrynjIZYiqCKKvOIwdFqYgq+qpKa5bWHxiz/0EA94LlHYaJ+ss3lEjGqB4104qNbRslh9tDRmdcYpJQM5/ABjCm6furbAc+6yncWQxrl4pamsDQi6SICRVHG42Q=
+	t=1762981808; cv=none; b=m4vgaQrGVFDvco7+9UZVZlUBUJqc1+fTJq6q4VXrjfQ4UDW9t9PBy3dO5/hg8+oQOUU5XHeW+ffYRUOFLmLCC3raot/Ai+8FITyn2nuRb4Y/Pg5Vtq0V+qw2Zr9SMx5J7UiPcJvGaHG5jisrYjaoMNEgEsfW08WNjlqJz8+2fqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762981663; c=relaxed/simple;
-	bh=u8q2TZF20ibeYFuY8h4yCLkgQDj7Xrhx2gKQ62/nSkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dppwb/zwk80tr58MbWKqJQGeBRpYkyQxLHuh1DBMKWIUXAotSo+AMNiQT9/h6+QeulMuQeI+JpwDzcMZKlaGmmpo90nAqgtSiuhzTFxhhoy2f2pG5ss4cRFcMN1zV2/f9Oy3X9CO6pk4TzeF/GFH7bWJvWI/v+xOgsMhsl+YE8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpapdDNA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762981808; c=relaxed/simple;
+	bh=3KeLYpoxQunGwePMrGw9Ag8kDi0pL6I47mlzQXLbZbo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=WpTavogueEh+Uorl6uW/HcQkeMl4VCFt7YR63gkp6jI1/X7beHw9F59kyLFdPVYC8JC/vCfbHG4Eweqc+pOFbvHg+dwzY9AMjzCrwBYL/+JMUZ+eL+RLaZvG5WkbaAgLO+pDshzZSQtv5V3Jr/HnmleTRnJV/CB3OY60efy5l30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzXaEggd; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpapdDNA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFEAC19424
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762981663;
-	bh=u8q2TZF20ibeYFuY8h4yCLkgQDj7Xrhx2gKQ62/nSkk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OpapdDNACSR267OhJbCyOl0GSq+kEctnyi539mp5A4flj8Ce7BO61hi/+/0SJpSUM
-	 uVXtO38jP7N/CfC2ZCzyJB5mebDwIfaWtEBUyYmlym08Qtwb1yOzbaa9nHSVkXYPIY
-	 sQ83RtymazNV4l6Zu7K9C97kbdPYBAwkrbqJZVzJDUqSw0wHsJP8/MB5KCotDKpl5V
-	 7e6l4aMpnMO1PuUhdldqzMOTgmU+xS/sH68Dh355JbLnZjoOb+fcyiq4xLp97EOaB5
-	 dMuwj1YiVxJ0AruPNEd0bwOhZTZCtiGoeS0BZhu4z2BG+jClzJDtNfBgMr+H91qFgl
-	 lZLhx5z41+Dow==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6417313bddaso160117a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 13:07:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4v2NfHQoTekFPA43I+2qMjd0mPszhW//4GTepSto1eFxq1BRc9aggNdvJuC+fune2hnDUlOq9B4HAVY3ncGIcQfXZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzivW/G9ToHQHNqy/YsyX2Nbqwt/9rrrNRBMUqJlic1nZtj6+Rt
-	UgeEFNzpgeLD6vQWBo7KfOZ7ERJ4/AEIMoiw3grv3sRMya/Qyi60KpC5InosSQpb+NKECeqcvNQ
-	xJJFn27Ma16fvEC6OSYGiNIZZKO/6gw==
-X-Google-Smtp-Source: AGHT+IEIy21Sb3B7FBrgAI8SVidk1uSmlkEpW+/mXMU6zQinRFFusx79rk2YkYD+SPkgL7pLFxsxRVnlBhzaVvKVnfk=
-X-Received: by 2002:a05:6402:2106:b0:641:27d8:ec72 with SMTP id
- 4fb4d7f45d1cf-6431a39656dmr3803888a12.4.1762981660959; Wed, 12 Nov 2025
- 13:07:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzXaEggd"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-34372216275so105805a91.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 13:10:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762981805; x=1763586605; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iK9hwywVCoA1owwArThQ0iGrOFP6QXJhSt+mBhrCefg=;
+        b=bzXaEggdBF7zyHCMWT9uYGuMR0WlMBzNddiJbxsn8vBUEO5LFZv2I3PE3h+FAOZggs
+         N/quX5dU4ouADzl5u8VfMOfsOV2BoWhsG7+W+dz7RK0lyz4kdzYwRDENYM0H38lpgXdU
+         R60c/AVrGUF5bp9xRi+XwKAgDftXozHw3MguFIHw01l/LtrAG10mNt8qbnnLRLAhHpLY
+         hxFsHOOv9BdOl0B4gzHhJx6EbXIbdXXa0ZqnorNVkegtKufksgPE4ipIV2ONVzbv8xdU
+         f6OY/X7niYfEvjuoMKgoZf1AsdE1qxq1Rfs2I2ZlTA9XX7/90gE4lM2eMyxHNUr56hJi
+         sn+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762981805; x=1763586605;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iK9hwywVCoA1owwArThQ0iGrOFP6QXJhSt+mBhrCefg=;
+        b=fm1+9AEEOU0SRpKViGqvnrVFUcLPgCuIivektwzdlwlm39+pfeYporWgXpRJ8Z5a27
+         iILpwCFm5p5PtD/IJTc0v+Vqf1bjog2yvFWaCGP+fB//WU3UdwcrOlIw/LyA6IxavgiF
+         tYirTWoOriJ1MlNi2KuTGpigArqje9msPF01eXiL5951XAxaPqA4AWYR2TaBCxim/JFM
+         ASNRERLbZ7aEnTLGOcOlBJdyzTb5+npK5fAXaO1BgJJ3cgDb50a5egDQWGaKy5+OHWWV
+         Qk5zDZbmRNdQoNdOauicGjmkSZ6GvbVXrK30tjbm8DXAKis8mn1sFxN7C9ku6vmYDpb7
+         KUVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmZv+JKMQKCqVsd+8uCTk26+X2grEbr/cn22dWtwPEqGl4BhcAs1wRYnm1ifJQUNeJgqzULkr9U9KkZX41tJ9wC961@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb/aYrwi4JYo9cdMKIVLmktnxLqedQ+67HFMzGbUge1FNxmtUk
+	cy3qeh6qOZ2aDqQUqzSa23jDl4DQW0Ci+D4pi/34qpZAtgA8t3Dt48JqyjIlocF/
+X-Gm-Gg: ASbGncuhdBpMuZJUS4fNSsseC2slqsYZPNaDiwxi9v7yVrBSGsNxoUgz+Km6coX2dXz
+	eDNtTcayaPrHx+xFBXL4kXo1cZuJtMNXFhBBsbEBBn9Hi4XL0D45Vs9FMlu6pbBXE8ulZw7bON0
+	F9UZ8VaoNpFTJ1QRQ6Dos6l9V+NMP4L8ELpr+VIGcQoLK61fPw/Brlin89dApXDBFgDMKNy5WSi
+	XwUSqzcurakKovz09chQrwCRmHxzKG0oeJ+VaANt4H/aAM+RrJmktifn04wFZGkBpjmnqRDg+ka
+	gqAd9W+GqSJF3oJyXiz5I7IWlhUMuTGhB75izHbZwjTCjI+cEVC8wXWYfgeNkOa5RFV2LwKy5RR
+	XPoJP61eV0j5n8Cxhytz5e8n6glxdCoBBYpeY7W+ICoC/u3XO7IkeOWG7RRLjjhv0LSCWHX2zIX
+	rIDOdl8aJ0Hl1dAxjy/6iYPo9uUtLIEHBpeZ9yWF++F19+1yL7jd9nT9WORjfovmtwgiaiFhI=
+X-Google-Smtp-Source: AGHT+IHGmuARPThpnwcferH+2Fz0BRD/2zZnyupg6Za/IMYh6KBq2OjFyv6xSKw5IW/55mxOopvWyw==
+X-Received: by 2002:a17:90a:8c10:b0:341:194:5e7c with SMTP id 98e67ed59e1d1-343dde6f7ebmr4302109a91.24.1762981805360;
+        Wed, 12 Nov 2025 13:10:05 -0800 (PST)
+Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0c9635007sm19900217b3a.2.2025.11.12.13.10.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Nov 2025 13:10:04 -0800 (PST)
+Date: Wed, 12 Nov 2025 13:10:04 -0800
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+CC: Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-acpi@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/3=5D_acpi=3A_platform=5Fp?=
+ =?US-ASCII?Q?rofile_-_Add_Extreme_profile_option?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <d660801f-8551-4940-8555-1059e9d565f7@kernel.org>
+References: <20251106212121.447030-1-derekjohn.clark@gmail.com> <20251106212121.447030-2-derekjohn.clark@gmail.com> <701898dd-3310-e86d-7499-fca5a445447a@linux.intel.com> <d660801f-8551-4940-8555-1059e9d565f7@kernel.org>
+Message-ID: <1558D575-0F14-418E-ACD7-7B7420C622BF@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
-In-Reply-To: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 12 Nov 2025 15:07:29 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rOGUETwhPuzSsC6bhq1Q10k=pCRnZrnoDbCxVYV91YA@mail.gmail.com>
-X-Gm-Features: AWmQ_bkhxcdj-NsfzZ0QRxOltuG2xQHMKmcPZ2R7l6HHsGWU07rxfsx54qGm66Y
-Message-ID: <CAL_Jsq+rOGUETwhPuzSsC6bhq1Q10k=pCRnZrnoDbCxVYV91YA@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Add support for handling PCIe M.2 Key E connectors in devicetree
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2025 at 8:45=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+On November 10, 2025 9:17:12 PM PST, Mario Limonciello <superm1@kernel=2Eor=
+g> wrote:
 >
-> Hi,
 >
-> This series is the continuation of the series [1] that added the initial =
-support
-> for the PCIe M.2 connectors. This series extends it by adding support for=
- Key E
-> connectors. These connectors are used to connect the Wireless Connectivit=
-y
-> devices such as WiFi, BT, NFC and GNSS devices to the host machine over
-> interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support =
-for
-> connectors that expose PCIe interface for WiFi and UART interface for BT.=
- Other
-> interfaces are left for future improvements.
+>On 11/10/25 5:14 AM, Ilpo J=C3=A4rvinen wrote:
+>> On Thu, 6 Nov 2025, Derek J=2E Clark wrote:
+>>=20
+>>> Some devices, namely Lenovo Legion devices, have an "extreme" mode whe=
+re
+>>> power draw is at the maximum limit of the cooling hardware=2E Add a ne=
+w
+>>> "extreme" platform profile to properly reflect this operating mode=2E
+>>>=20
+>>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel=2Eorg>
+>>> Acked-by: Rafael J=2E Wysocki (Intel) <rafael@kernel=2Eorg>
+>>> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>>> ---
+>>>   Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
+>>>   drivers/acpi/platform_profile=2Ec                        | 1 +
+>>>   include/linux/platform_profile=2Eh                       | 1 +
+>>>   3 files changed, 4 insertions(+)
+>>>=20
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/=
+Documentation/ABI/testing/sysfs-class-platform-profile
+>>> index dc72adfb830a=2E=2E9bee8deb4dc9 100644
+>>> --- a/Documentation/ABI/testing/sysfs-class-platform-profile
+>>> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
+>>> @@ -23,6 +23,8 @@ Description:	This file contains a space-separated li=
+st of profiles supported
+>>>   					power consumption with a slight bias
+>>>   					towards performance
+>>>   		performance		High performance operation
+>>> +		extreme			Higher performance operation that may exceed
+>>> +					internal battery draw limits when on AC power
+>>>   		custom			Driver defined custom profile
+>>>   		=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>   diff --git a/drivers/acpi/platform_profile=2Ec b/drivers/acpi/platfo=
+rm_profile=2Ec
+>>> index b43f4459a4f6=2E=2E78da17e16d9b 100644
+>>> --- a/drivers/acpi/platform_profile=2Ec
+>>> +++ b/drivers/acpi/platform_profile=2Ec
+>>> @@ -37,6 +37,7 @@ static const char * const profile_names[] =3D {
+>>>   	[PLATFORM_PROFILE_BALANCED] =3D "balanced",
+>>>   	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] =3D "balanced-performance",
+>>>   	[PLATFORM_PROFILE_PERFORMANCE] =3D "performance",
+>>> +	[PLATFORM_PROFILE_EXTREME] =3D "extreme",
+>>>   	[PLATFORM_PROFILE_CUSTOM] =3D "custom",
+>>>   };
+>>>   static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE_LAST=
+);
+>>> diff --git a/include/linux/platform_profile=2Eh b/include/linux/platfo=
+rm_profile=2Eh
+>>> index a299225ab92e=2E=2E2bf178bde2b5 100644
+>>> --- a/include/linux/platform_profile=2Eh
+>>> +++ b/include/linux/platform_profile=2Eh
+>>> @@ -24,6 +24,7 @@ enum platform_profile_option {
+>>>   	PLATFORM_PROFILE_BALANCED,
+>>>   	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+>>>   	PLATFORM_PROFILE_PERFORMANCE,
+>>> +	PLATFORM_PROFILE_EXTREME,
+>>>   	PLATFORM_PROFILE_CUSTOM,
+>>>   	PLATFORM_PROFILE_LAST, /*must always be last */
+>>>   };
+>>>=20
+>>=20
+>> I wonder if "extreme" is the best name for this? Given the description =
+you
+>> gave above, perhaps "max-power" would be more descriptive (and we alrea=
+dy
+>> have "low-power" so it kind of feels fitting the theme too)=2E
+>>=20
+>> I don't have strong opinion on this so if you guys feel this suggestion
+>> would not make things better, feel free to voice it=2E :-)
+>>=20
 >
-> Serdev device support for BT
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
+>I don't feel strongly here, either sound find to me=2E
 >
-> Adding support for the PCIe interface was mostly straightforward and a lo=
-t
-> similar to the previous Key M connector. But adding UART interface has pr=
-oved to
-> be tricky. This is mostly because of the fact UART is a non-discoverable =
-bus,
-> unlike PCIe which is discoverable. So this series relied on the PCI notif=
-ier to
-> create the serdev device for UART/BT. This means the PCIe interface will =
-be
-> brought up first and after the PCIe device enumeration, the serdev device=
- will
-> be created by the pwrseq driver. This logic is necessary since the connec=
-tor
-> driver and DT node don't describe the device, but just the connector. So =
-to make
-> the connector interface Plug and Play, the connector driver uses the PCIe=
- device
-> ID to identify the card and creates the serdev device. This logic could b=
-e
-> extended in the future to support more M.2 cards. Even if the M.2 card us=
-es SDIO
-> interface for connecting WLAN, a SDIO notifier could be added to create t=
-he
-> serdev device.
->
-> Open questions
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> Though this series adds the relevant functionality for handling the M.2 K=
-ey M
-> connectors, there are still a few open questions exists on the design.
->
-> 1. I've used the M.2 card model name as the serdev device name. This is f=
-ound
-> out by comparing the PCIe VID:PID in the notifier. Is this approach accep=
-table?
-> I did not use the PID as the serdev name since it will vary if the SDIO
-> interface is used in the future.
->
-> 2. PCIe client drivers of some M.2 WLAN cards like the Qcom QCA6390, rely=
- on
-> the PCIe device DT node to extract properties such as
-> 'qcom,calibration-variant', 'firmware-name', etc... For those drivers, sh=
-ould we
-> add the PCIe DT node in the Root Port in conjunction with the Port node a=
-s
-> below?
->
-> pcie@0 {
->         wifi@0 {
->                 compatible =3D "pci17cb,1103";
->                 ...
->                 qcom,calibration-variant =3D "LE_X13S";
->         };
->
->         port {
->                 pcie4_port0_ep: endpoint {
->                         remote-endpoint =3D <&m2_e_pcie_ep>;
->                 };
->         };
-> };
->
-> This will also require marking the PMU supplies optional in the relevant =
-ath
-> bindings for M.2 cards.
->
-> 3. Some M.2 cards require specific power up sequence like delays between
-> regulator/GPIO and such. For instance, the WCN7850 card supported in this=
- series
-> requires 50ms delay between powering up an interface and driving it. I've=
- just
-> hardcoded the delay in the driver, but it is a pure hack. Since the pwrse=
-q
-> driver doesn't know anything about the device it is dealing with before p=
-owering
-> it ON, how should it handle the device specific power requirements? Shoul=
-d we
-> hardcode the device specific property in the connector node? But then, it=
- will
-> no longer become a generic M.2 connector and sort of defeats the purpose =
-of the
-> connector binding.
->
-> I hope to address these questions with the help of the relevant subsystem
-> maintainers and the community. Until then, this series is *not* mergeable=
- as a
-> whole.
->
-> Testing
-> =3D=3D=3D=3D=3D=3D=3D
->
-> This series, together with the devicetree changes [2] was tested on the
-> Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the WCN7850 WLAN=
-/BT M.2
-> card connected over PCIe and UART.
->
-> [1] https://lore.kernel.org/linux-pci/20251108-pci-m2-v2-0-e8bc4d7bf42d@o=
-ss.qualcomm.com
-> [2] https://github.com/Mani-Sadhasivam/linux/commit/d39b81b3ff1ecfb0d423b=
-4da0771925d41648b5a
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
-> ---
-> Manivannan Sadhasivam (9):
->       serdev: Convert to_serdev_device() and to_serdev_controller() helpe=
-rs to macros
->       serdev: Add serdev device based driver match support
->       serdev: Allow passing the serdev device name to serdev_device_add()
->       serdev: Add an API to find the serdev controller associated with th=
-e devicetree node
->       serdev: Add modalias support for serdev client devices
->       serdev: Skip registering serdev devices from DT is external connect=
-or is used
->       dt-bindings: connector: Add PCIe M.2 Mechanical Key E connector
->       Bluetooth: hci_qca: Add support for WCN7850 PCIe M.2 card
->       power: sequencing: pcie-m2: Add support for PCIe M.2 Key E connecto=
-rs
->
->  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++
->  MAINTAINERS                                        |   1 +
->  drivers/bluetooth/hci_qca.c                        |  20 ++
->  drivers/platform/x86/dell/dell-uart-backlight.c    |   2 +-
->  .../x86/lenovo/yoga-tab2-pro-1380-fastcharger.c    |   2 +-
->  drivers/platform/x86/x86-android-tablets/core.c    |   2 +-
->  drivers/power/sequencing/Kconfig                   |   1 +
->  drivers/power/sequencing/pwrseq-pcie-m2.c          | 218 +++++++++++++++=
-+++++-
->  drivers/tty/serdev/core.c                          |  77 +++++++-
->  include/linux/mod_devicetable.h                    |   8 +
->  include/linux/serdev.h                             |  25 ++-
->  scripts/mod/devicetable-offsets.c                  |   3 +
->  scripts/mod/file2alias.c                           |   8 +
->  13 files changed, 494 insertions(+), 27 deletions(-)
-> ---
-> base-commit: db81ec30672bb228cd7cd809edeeae661d621f2d
+Fine with me=2E Extreme is the vendor (marketing) specific phrase but the =
+low/max-power symmetry is nicer=2E I'll try to spin a v3 today or tomorrow=
+=2E
 
-git show db81ec30672bb228cd7cd80
-fatal: ambiguous argument 'db81ec30672bb228cd7cd80': unknown revision
-or path not in the working tree.
-Use '--' to separate paths from revisions, like this:
-'git <command> [<revision>...] -- [<file>...]'
-
-This series doesn't apply.
-
-Rob
+Thanks,
+Derek
