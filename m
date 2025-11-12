@@ -1,340 +1,323 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68491218AAF
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 19:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08B92857FA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 20:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762977093; cv=none; b=eAl5YZutElpYeyVnLcfzdvW6LU4Mpl+OlvWQIWg/1UD62TCDKiqd7TU5B8CyvPpZotsxJdv/IzAn23NXjMR/NWYsxExtT5CoQucAqCVFrdwj2d5+xhhIvlhRvewj6hxK9X2UX2zsIOcUE38qmy7/M00+Q8VxcS4nhVfAk81sZZk=
+	t=1762978145; cv=none; b=cmFgGTctul3j6Sq4k2W4023nyanXmKquzeD/juHVRyTLc/UlIa3PKGjetdC+CZIGnABvz3Gzfa1xxFpdseFzmbrUTdfueChDg/zXfRfP13UeMyuX09GiJanxFD3MWEr54Xa1FZ8qjUf3tyDKnbv4IogCJ1EATkAzQIcoFW1TblE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762977093; c=relaxed/simple;
-	bh=d7YE5jWwJXiiBgZ3dZLfK33AUrpCZCGUh0ISnB6wXvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rPIY5ijSVpKOeshhvlIG6dk0spmZrHvhiqH3B0qWcm8vR4AjXicAj4l7SFLIYuAczHk47Gw5ps22+yjA3QvRBrB3GaIYXNw5lJMLRgvL1ekTQnjqMvairL6qMCDy3zYHYBpG4hFs/Sm57hnzAJCUglFKjY1CeXB8ZN9HqQFQ1kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xj9vWThh; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762978145; c=relaxed/simple;
+	bh=pSfKi7QofeeoxWFt8fE1EwS0eMKYDkQjsuOeDlY4hz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZ70UFL8/NjclbWqbEw9QCSDOBz2vIX2jYKQNDNtnkKVr4WWOwOLR8KU+1FItA+ESqOf1OZXDtQAAK7CqO59knL5BLI1w1Sws1qjCXxQHZBylPf8qxohIGVUb0MAT0eY8T/0SoODLp4aBvDCCIa5LcKBgtxrxJ3hyJD8Uwg9Klw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cV7ndr+i; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VXud9P+v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xj9vWThh"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477632b0621so530155e9.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 11:51:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cV7ndr+i";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VXud9P+v"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5ACF2QpS1614630
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 20:09:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=oU1WjTceS7iEoYjqJu8Zbfc7
+	OQIDw2FU/7LRg8xG76s=; b=cV7ndr+icjg3VVH2aCSd81MsxEv0yfiNC+8vpfgO
+	mvw8wdCt8mv3e5e6hervyN/igo5bv/dqpg3+1p0g8v9OkvcZsB6Buwbrxl/6G5s2
+	4s6b6nlMTooBQdWDqPBBRpYN4OcY4tskLBiHKKSCNS8HNJHS6wGjpEI+iQA3DDSr
+	o4hOr3A16UH40y3yDwVJwY5dXxAkEpB6qAXtldovfyCJ/q4XYgAA05wtIisKi9Am
+	OaYHAku795OwAn8nH1E16CVpY5E3ee81XYwQNlP6XmDI+sQ8Hn9ccveF7VHvK3Zt
+	PYf/0EDdNNPrOlECgdJ33rTOlMnAoly/qfD2cdCZ+mzEEg==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4acvhfry9t-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 20:09:01 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4e8984d8833so1248521cf.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 12:09:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762977090; x=1763581890; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L78LaQDMvDi3z+MQkhTM0pyXoQQ32IYJk408/ne+O6w=;
-        b=Xj9vWThhoB+yKqH+VP+BVD+eRkIiBG5r/e8Mwmg+VgCCtSH0pQCvcOfZOC8lzTfI+b
-         /ZxB4Vcx3zmgs9PwOETi0R3K6qYyGTSPyHP0zYCD2lbwEQbndLq2ulP/ejPDHLl6fNjn
-         9NqzgqJo8oeb1nNETiOCX9sE6Qo6kwuyWM9qavgeD4zmUDNP3Yh6utszwgo2G1oV7xo3
-         mMg/Ey64+zxzCw+u+v4YrgYpB3Zw3NRDGx6O7fG5O8gaGGIv07SQ7dN1MQEVX1RjnC/b
-         qa9GGIEsFC3tLR00xrkO7xWTwdlTkHndoxhg1YTmVag+Nt54kuI5PGx3sQFz9/O/ed0f
-         Jc3g==
+        d=oss.qualcomm.com; s=google; t=1762978140; x=1763582940; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oU1WjTceS7iEoYjqJu8Zbfc7OQIDw2FU/7LRg8xG76s=;
+        b=VXud9P+veE9XHHD78ZGEMZQCjnLHntn0126KMpEWMRfRfh/M/vWMOOsCMEN8mTY73C
+         I76qvEKS+PETy85PZE3OR5w6w01XpY9WGxdxnP1M0RU802YGvpBGLgc+0jHb2l5lc4gU
+         CjbFjDrLrF/hLc+/sSH677wTNDccbdArjlNsPCJAPcFgfY4Vz4T9Vg4a9l5Du4xUtK2g
+         GtfCrXuePCQxfdZ4l6z/+rANatxc8Q/2qdDZKGi3fycBrZhxkiBmtfm2iAljbnLF7FrV
+         HRp1xbiq4sBCIa9xiGaoJ4Lx1loGXc+9ssMxWBezW9CyVjhj1nTdSwhlF7UxRHhjgndD
+         juAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762977090; x=1763581890;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L78LaQDMvDi3z+MQkhTM0pyXoQQ32IYJk408/ne+O6w=;
-        b=YrV3B9w+7QKc80SZaXykjPVP9adxBOd++QtUJTdHFCd4uRp9lpViWJUUU23IUKHDv/
-         IAAphu+wJFgIYVsIQ2g8XRMKarPUsx9eTcTjJIcTC9FsjXUcuo/yyexpmIoIngz4s6YU
-         uDx/BMOJD8Y2EmiyuVAEIDnt73V96hkSuyfxmRyz/VCjqnL/sNvEdTG1bBKtcs9qBDx3
-         JHtXWqXaeRI7mpH+Of8h1AruTzn/c8EttoRSrjnyAxw4syHtEsy50s/8AgN2YnUJeNgJ
-         La6aySMR1EI3UJdQoR7RcV7Iy3pAvPMkdMJSM38WNDbzLZ3kkaLhyO2+ZsN8jTZqRJdG
-         eQCA==
-X-Gm-Message-State: AOJu0Yzhv1GwcRchmFMNXoelZRvYvUFK0fiXc7fXGxtDX16amkM9DAmw
-	FXDUd+AGQcxdlV97BVaK0Ng9l4M0cvT+VkfFOextc0TZyIeTpZYcZ4/u
-X-Gm-Gg: ASbGncuzHpZPrJSuuE4hwHxUPhfqZCOIdJDtXH4l+AIPscRVuUtEf/NYXu7eSIs2jpm
-	PXga2mnmuMBZeOoPGjqbyoaV6KjVUxV3QWmCBVaaYM2xlivKn4d8ZlCmuVCbd+tVHZgjaQUE5iH
-	Yh/0IXWNf2u3bvs343i7vGV+gHU6VQT3mIUEhkMuiZzJEnkmv2/DYf6ZXsHgDz3Hj1FF1VqmNM5
-	CZqQlb7pCKzzJY5BJ8GCD/AGzjzP7/16jIG6UPF3NQsHf5wePN1e8V+IXPjGHJGEyu+tAMUXp7U
-	EKZUwNFgGt1SnM4DNWgriELrXAbEdFIY4eY3dDXkTx8QKSobkRSZ6zWQ+kzcM6Q/JWZkmo6EwBM
-	7wiLnAYWC1p/UMj090oY+fE+eZGmRkYElaD3shAwcyq8mBbrfmxyJO9DX+yXu01Qo/0jrWkVgPi
-	w5cAPvN7/On8fp
-X-Google-Smtp-Source: AGHT+IFq2tch/thXW4nGgWqvY9HlY5yH+EPE2tLXG86TV1JZW7PGK1KWgNu1jEY2HwmFDyUV+j2KIA==
-X-Received: by 2002:a05:600c:3546:b0:475:dae5:d972 with SMTP id 5b1f17b1804b1-47787095cc8mr39145765e9.23.1762977089390;
-        Wed, 12 Nov 2025 11:51:29 -0800 (PST)
-Received: from [192.168.1.121] ([176.206.83.235])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4778bb30eacsm4357725e9.2.2025.11.12.11.51.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Nov 2025 11:51:29 -0800 (PST)
-Message-ID: <74f91d3c-6494-4754-a10f-4d8c1d45f7ff@gmail.com>
-Date: Wed, 12 Nov 2025 20:51:27 +0100
+        d=1e100.net; s=20230601; t=1762978140; x=1763582940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oU1WjTceS7iEoYjqJu8Zbfc7OQIDw2FU/7LRg8xG76s=;
+        b=W3B3fnNg5gnOUmUg+1chw+NX321/FYnkORG23DlhloZgNYWGitkapAc+0D+DBP9oeB
+         T/WbWMtIBZ+WCH+5sRkmhjGQCkHYqUeljJlT4pSUh/L5CL6lG2kGcIFHYuTGUj5qG38F
+         IgSDSRYQcSvt+fUDMxZLbVEyVbl4rayUUjfxhQWy3siIBDFZD76P1a33ICMad35/IAvy
+         IusSnQL6fR6uSauh2AuMRBYDOH/jVBFbGBVORK1fBXfysoMgAq5G4wzCJ2Rt3U3hS6z5
+         EQS9R9Cj8SwiMiRLuJCJxoQeDCchP8BMnmYPM7CC6m2rwBBCGiIS5QIblqoFlYCfxAYN
+         be5w==
+X-Forwarded-Encrypted: i=1; AJvYcCX7rwW6PJnmk9Zg+z9GpK346GrRmkISJuUNtSOVj/IGPhCGLRIPzNlHBZHyL9LOjH89jtmNvPUOOPKbAjxMcSwD9SAJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJU7PDA7s4qd3PDrP2WdhMj0LG8lDeJf8w1B4ON+IThR5Ir1Kz
+	ILsqdSyIVBpxVmvM46sJlaphe8BQ5bSOcvEvGHYMMuzmoK8WxO6btULL+MvxXgvxaM0uy+FrDka
+	g0CRiX+WjXv5VF/iXgWm3cdPF3AeC4EKI7eGHSKJQq9MBjinNsEjJ4t9ncfySahzddJNRTg8E2C
+	g/
+X-Gm-Gg: ASbGnctBwj4PS8gEAe9gxDNcEQ8Rx15Ifkjjfcret2nB4Yq2kGn+gpdqAdNm3UBfNit
+	otQL+4VWTbX2Ustw2uT+xd6JL5PGuEULl/3vnSMtsUtc4q86CrKqKwXCKsUSUHgvIjwMxp9cbQb
+	fBjaLoU0FFMlHAZSQDq6kXAvyrFsMdVXz52ebx1uHHg6JO/k/LHR2z+2SOg5v+NlEAj2iggIIIP
+	8L7eTh+3dEBuaMjElWwhvXKRnvjI1qfRXKb6mi7dJznvdeN/qSG9GscWxtJXca8THSG7e5MyKZ/
+	uduoFjCyuzX3D+qXfuQ0WvB7EXslvW31t7fjcaXohe5OWv/F6PeR5bJWPOoh473+8JLmKkJ980m
+	p21ZQzWCtdFl35eNJTreP9eukZf2RAWD/NXIUN5X5EwZLRyWeWEExVtiEasxXYEiPcxnRjLadWd
+	RDB4GTXOSfi1Gv
+X-Received: by 2002:ac8:7f8e:0:b0:4eb:a2f0:356d with SMTP id d75a77b69052e-4eddbde1df0mr57234821cf.84.1762978140453;
+        Wed, 12 Nov 2025 12:09:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEY6kyZf9KAmfvVo/gfYCdU4m5A6XRB2OqUqHhgGCiTF3Gq4+27j12k14c35oXTx6DcTf1+mQ==
+X-Received: by 2002:ac8:7f8e:0:b0:4eb:a2f0:356d with SMTP id d75a77b69052e-4eddbde1df0mr57234011cf.84.1762978139807;
+        Wed, 12 Nov 2025 12:08:59 -0800 (PST)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5944a0b75bbsm6061720e87.61.2025.11.12.12.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 12:08:59 -0800 (PST)
+Date: Wed, 12 Nov 2025 22:08:57 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas.schier@linux.dev>,
+        Hans de Goede <hansg@kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+        Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: Re: [PATCH 7/9] dt-bindings: connector: Add PCIe M.2 Mechanical Key
+ E connector
+Message-ID: <t45yq2cqj2t7lv4ifnvv556ewznjtzhdvvmofzgb5kcsarydqe@hxtonnejw6t7>
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
+ <20251112-pci-m2-e-v1-7-97413d6bf824@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/10] HID: asus: Fix ASUS ROG Laptop's Keyboard
- backlight handling
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
-References: <20251101104712.8011-1-lkml@antheas.dev>
- <CAGwozwE+3vkm0-amRqnNJBzxTvXabgBF9h_G_vG_L7OJj91LBg@mail.gmail.com>
- <27a74ecc-bff7-f3ae-b23e-a8362ac3a6b3@linux.intel.com>
- <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251112-pci-m2-e-v1-7-97413d6bf824@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=D49K6/Rj c=1 sm=1 tr=0 ts=6914e95d cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=gEfo2CItAAAA:8 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=9n3VPyBaaxcwdMvd-aYA:9
+ a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-ORIG-GUID: wJGr7M5uGINj0kNZlDhLWeyhSIvD9ml6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDE2MiBTYWx0ZWRfXwL/ndtFL2DQu
+ dOrwUDecWC1GXn+nHqAFMFjD4brDrUw4L0VcriDkUZqgW7p37BD6BpESaka6vKioUrSh5ddhCPu
+ 2PckOPFTxJouN+GCzhrWw3b0x9kjvII1uuRr4sG38HWrlInp3xQXNzD2ArR8nFnC6kZ3mHWcRE7
+ PjWhohlDFjfLSam/BGzbOf/hLz6RtJBq9lT/81SRxHNSJi0OSyQfoZCmdGxNMdP5f4N79VH3rGJ
+ ldIo6TuPdbrCLnzmVpDQk1VQRsHs0KPihen9NYLqple0UQou63gs1c1LRZSAWisiU9UmE8IXMAU
+ yM+IfG4s9eFOAp/k7piOoJQCN89De6BdBquukeD5IRhn36Zrt1TGNRvNWXYhrtP4owxrMrmfmYD
+ irGLBOn1EdBP3fK47me112r8DbZXDA==
+X-Proofpoint-GUID: wJGr7M5uGINj0kNZlDhLWeyhSIvD9ml6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-12_06,2025-11-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 phishscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511120162
 
+On Wed, Nov 12, 2025 at 08:15:19PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> 
+> Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
+> in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
+> provides interfaces like PCIe or SDIO to attach the WiFi devices to the
+> host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
+> devices along with additional interfaces like I2C for NFC solution. At any
+> point of time, the connector can only support either PCIe or SDIO as the
+> WiFi interface and USB or UART as the BT interface.
+> 
+> The connector provides a primary power supply of 3.3v, along with an
+> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> 1.8v sideband signaling.
+> 
+> The connector also supplies optional signals in the form of GPIOs for fine
+> grained power management.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 155 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..91cb56b1a75b7e3de3b9fe9a7537089f96875746
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCIe M.2 Mechanical Key E Connector
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> +
+> +description:
+> +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
+> +  connector. Mechanical Key E connectors are used to connect Wireless
+> +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
+> +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
+> +
+> +properties:
+> +  compatible:
+> +    const: pcie-m2-e-connector
+> +
+> +  vpcie3v3-supply:
+> +    description: A phandle to the regulator for 3.3v supply.
+> +
+> +  vpcie1v8-supply:
+> +    description: A phandle to the regulator for VIO 1.8v supply.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    description: OF graph bindings modeling the interfaces exposed on the
+> +      connector. Since a single connector can have multiple interfaces, every
+> +      interface has an assigned OF graph port number as described below.
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: PCIe/SDIO interface
 
-On 11/12/25 14:41, Antheas Kapenekakis wrote:
-> On Wed, 12 Nov 2025 at 14:22, Ilpo Järvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
->> On Wed, 12 Nov 2025, Antheas Kapenekakis wrote:
->>
->>> On Sat, 1 Nov 2025 at 11:47, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->>>> This is a two part series which does the following:
->>>>   - Clean-up init sequence
->>>>   - Unify backlight handling to happen under asus-wmi so that all Aura
->>>>     devices have synced brightness controls and the backlight button works
->>>>     properly when it is on a USB laptop keyboard instead of one w/ WMI.
->>>>
->>>> For more context, see cover letter of V1. Since V5, I removed some patches
->>>> to make this easier to merge.
->>> Small bump for this.
->> I looked at v8 earlier but then got an impression some of Denis' comments
->> against v7 were not taken into account in v8, which implies there will be
->> delay until I've time to delve into the details (I need to understand
->> things pretty deeply in such a case, which does take lots of time).
->>
->> Alternatively, if Denis says v8 is acceptable, then I don't need to spend
->> so much time on it, but somehow I've a feeling he isn't happy with v8
->> but just hasn't voiced it again...
->>
->> Please do realize that ignoring reviewer feedback without a very very good
->> reason always risks adding delay or friction into getting things
->> upstreamed. Especially, when the review comes from a person who has been
->> around for me to learn to trust their reviews or from a maintainer of the
->> code in question.
-> Sure, sorry if it came out this way. Dennis had two comments on the V7
-> version of the series.
->
-> The first one was that asusctl has a hang bug, which he hasn't had
-> time to look into yet. This should have been fixed by dropping the
-> HID_QUIRK_INPUT_PER_APP. I retested the series and that QUIRK was a
-> bit of a NOOP that does not need to be added in the future.
-So it is supposed to not regress it now, correct?
-> The second is he is concerned with dropping the 0x5d/0x5e inits. Luke
-> said (back in March) that it is fine to drop 0x5e because it is only
-> used for ANIME displays. However, for 0x5d, it is hard to verify some
-> of the older laptops because they have only been tested with 0x5d and
-> we do not have the hardware in question to test.
->
-> For this series, I re-added "initialize LED endpoint early for old
-> NKEY keyboards" that re-adds 0x5d for the keyboards that cannot be
-> tested again so this comment should be resolved too. With that in
-> mind, we do end up with an additional quirk/command that may be
-> unneeded and will remain there forever, but since it was a point of
-> contention, it is not worth arguing over.
->
-> So both comments should be resolved
-The driver should also not late-initialize anything.
+The same comment as for the M-key bindings: please describe endpoints.
 
-Windows doesn't do it and the official asus application
-can freely send LEDs changing commands to either WMI or USB
-so I don't see any reason to do things differently [than windows]
-and not prepare every USB endpoint to receive commands,
-this has not been addressed unless I confused v7 and v8?
-> @Denis: can give an ack if this is the case?
->
-> As for Derek's comment, he has a PR for his project where he removes
-> the name match for Ally devices with ample time for it to be merged
-> until kernel 6.19 is released. In addition, that specific software for
-> full functionality relies on OOT drivers on the distros it ships with,
-> so it is minimally affected in either case.
-The part we are talking about depends on this driver (hid-asus)
-and there are people on asus-linux community using inputplumber
-for non-ally devices (the OOT driver is only for ally devices)
-therefore it is very important to us (and various other distributions)
-not to break that software in any way.
+> +  led1-gpios:
+> +    description: GPIO controlled connection to LED_1# signal. This signal is
+> +      used by the M.2 card to indicate the card status via the system mounted
+> +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
+> +      details.
 
-Weighting pros and cons of changing the name I am not sure
-changing name brings any benefit? Or am I missing something here?
-It's simply used by userspace so the hardware should be loading
-regardless of the name...
+How are we supposed to handle these LEDs? I have been assuming that
+these pins should go striaght to the LED driver.
 
-Along with IP and your tool and asusctl there is also openrgb,
-and a newborn application for asus devices (I don't have contacts
-with that dev nor I remember the name of the tool)
-and I am not even that sure these are all asus-related
-applications.
+> +    maxItems: 1
+> +
+> +  led2-gpios:
+> +    description: GPIO controlled connection to LED_2# signal. This signal is
+> +      used by the M.2 card to indicate the card status via the system mounted
+> +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
+> +      details.
+> +    maxItems: 1
+> +
+> +  viocfg-gpios:
+> +    description: GPIO controlled connection to IO voltage configuration
+> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
+> +      host system that the card supports an independent IO voltage domain for
+> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
+> +      3.1.15.1 for more details.
+> +    maxItems: 1
 
-Excercise EXTRA care touching this area as these are enough changes
-to make it difficult to understand what exactly is the problem if
-someone shows up with LEDs malfunctioning, laptop not entering sleep
-anymore or something else entirely. Plus over time
-ASUS has used various workarounds for windows problems
-and I am not eager to find out what those are since there is only
-a realistic way it's going to happen....
-> Moreover, that specific commit is needed for Xbox Ally devices anyway,
-> as the kernel kicks one of the RGB endpoints because it does not
-> register an input device (the check skipped by early return) so
-> userspace becomes unable to control RGB on a stock kernel
-> (hidraw/hiddev nodes are gone). For more context here, this specific
-> endpoint implements the RGB Lamparray protocol for Windows dynamic
-> lighting, and I think in an attempt to make it work properly in
-> Windows, Asus made it so Windows has to first disable dynamic lighting
-> for armoury crate RGB commands to work (the 0x5a ones over the 0xff31
-> hid page).
-Yes once ASUS introduces something new it sticks with that for
-future models so it's expected more and more laptops will have
-the same problem: I am not questioning if these patches are needed
-as they very clearly are; I am questioning if everything that these
-patches are doing are worth doing and aren't breaking/regressing
-either tools or the flow of actions between the EC and these USB devices.
-> Hopefully this clears things up
->
-> Antheas
->
->>> Unrelated but I was b4ing this series on Ubuntu 24 and got BADSIG:
->>> DKIM/antheas.dev. Is there a reference for fixing this on my host?
->>> Perhaps it would help with spam
->> I see BADSIG very often these days from b4 (thanks to gmail expiring
->> things after 7 days or so, I recall hearing somewhere), I just ignore them
->> entirely.
->>
->> AFAIK, that has never caused any delay to any patch in pdx86 domain so if
->> that is what you thought is happening here, it's not the case.
->> If your patch does appear in the pdx86 patchwork, there's even less reason
->> to worry as I mostly pick patches to process using patchwork's list.
-> Turns out I had to update my DNS records. It should be good now.
->
->> --
->>  i.
->>
->>> Antheas
->>>
->>>> ---
->>>> V7: https://lore.kernel.org/all/20251018101759.4089-1-lkml@antheas.dev/
->>>> V6: https://lore.kernel.org/all/20251013201535.6737-1-lkml@antheas.dev/
->>>> V5: https://lore.kernel.org/all/20250325184601.10990-1-lkml@antheas.dev/
->>>> V4: https://lore.kernel.org/lkml/20250324210151.6042-1-lkml@antheas.dev/
->>>> V3: https://lore.kernel.org/lkml/20250322102804.418000-1-lkml@antheas.dev/
->>>> V2: https://lore.kernel.org/all/20250320220924.5023-1-lkml@antheas.dev/
->>>> V1: https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.dev/
->>>>
->>>> Changes since V7:
->>>>   - Readd legacy init quirk for Dennis
->>>>   - Remove HID_QUIRK_INPUT_PER_APP as a courtesy to asusctl
->>>>   - Fix warning due to enum_backlight receiving negative values
->>>>
->>>> Changes since V6:
->>>>   - Split initialization refactor into three patches, update commit text
->>>>     to be clearer in what it does
->>>>   - Replace spinlock accesses with guard and scoped guard in all patches
->>>>   - Add missing includes mentioned by Ilpo
->>>>   - Reflow, tweak comment in prevent binding to all HID devices on ROG
->>>>   - Replace asus_ref.asus with local reference in all patches
->>>>   - Add missing kernel doc comments
->>>>   - Other minor nits from Ilpo
->>>>   - User reported warning due to scheduling work while holding a spinlock.
->>>>     Restructure patch for multiple handlers to limit when spinlock is held to
->>>>     variable access only. In parallel, setup a workqueue to handle registration
->>>>     of led device and setting brightness. This is required as registering the
->>>>     led device triggers kbd_led_get which needs to hold the spinlock to
->>>>     protect the led_wk value. The workqueue is also required for the hid
->>>>     event passthrough to avoid scheduling work while holding the spinlock.
->>>>     Apply the workqueue to wmi brightness buttons as well, as that was
->>>>     omitted before this series and WMI access was performed.
->>>>   - On "HID: asus: prevent binding to all HID devices on ROG", rename
->>>>     quirk HANDLE_GENERIC to SKIP_REPORT_FIXUP and only skip report fixup.
->>>>     This allows other quirks to apply (applies quirk that fixes keyboard
->>>>     being named as a pointer device).
->>>>
->>>> Changes since V5:
->>>>   - It's been a long time
->>>>   - Remove addition of RGB as that had some comments I need to work on
->>>>   - Remove folio patch (already merged)
->>>>   - Remove legacy fix patch 11 from V4. There is a small chance that
->>>>     without this patch, some old NKEY keyboards might not respond to
->>>>     RGB commands according to Luke, but the kernel driver does not do
->>>>     RGB currently. The 0x5d init is done by Armoury crate software in
->>>>     Windows. If an issue is found, we can re-add it or just remove patches
->>>>     1/2 before merging. However, init could use the cleanup.
->>>>
->>>> Changes since V4:
->>>>   - Fix KConfig (reported by kernel robot)
->>>>   - Fix Ilpo's nits, if I missed anything lmk
->>>>
->>>> Changes since V3:
->>>>   - Add initializer for 0x5d for old NKEY keyboards until it is verified
->>>>     that it is not needed for their media keys to function.
->>>>   - Cover init in asus-wmi with spinlock as per Hans
->>>>   - If asus-wmi registers WMI handler with brightness, init the brightness
->>>>     in USB Asus keyboards, per Hans.
->>>>   - Change hid handler name to asus-UNIQ:rgb:peripheral to match led class
->>>>   - Fix oops when unregistering asus-wmi by moving unregister outside of
->>>>     the spin lock (but after the asus reference is set to null)
->>>>
->>>> Changes since V2:
->>>>   - Check lazy init succeds in asus-wmi before setting register variable
->>>>   - make explicit check in asus_hid_register_listener for listener existing
->>>>     to avoid re-init
->>>>   - rename asus_brt to asus_hid in most places and harmonize everything
->>>>   - switch to a spinlock instead of a mutex to avoid kernel ooops
->>>>   - fixup hid device quirks to avoid multiple RGB devices while still exposing
->>>>     all input vendor devices. This includes moving rgb init to probe
->>>>     instead of the input_configured callbacks.
->>>>   - Remove fan key (during retest it appears to be 0xae that is already
->>>>     supported by hid-asus)
->>>>   - Never unregister asus::kbd_backlight while asus-wmi is active, as that
->>>>   - removes fds from userspace and breaks backlight functionality. All
->>>>   - current mainline drivers do not support backlight hotplugging, so most
->>>>     userspace software (e.g., KDE, UPower) is built with that assumption.
->>>>     For the Ally, since it disconnects its controller during sleep, this
->>>>     caused the backlight slider to not work in KDE.
->>>>
->>>> Changes since V1:
->>>>   - Add basic RGB support on hid-asus, (Z13/Ally) tested in KDE/Z13
->>>>   - Fix ifdef else having an invalid signature (reported by kernel robot)
->>>>   - Restore input arguments to init and keyboard function so they can
->>>>     be re-used for RGB controls.
->>>>   - Remove Z13 delay (it did not work to fix the touchpad) and replace it
->>>>     with a HID_GROUP_GENERIC quirk to allow hid-multitouch to load. Squash
->>>>     keyboard rename into it.
->>>>   - Unregister brightness listener before removing work queue to avoid
->>>>     a race condition causing corruption
->>>>   - Remove spurious mutex unlock in asus_brt_event
->>>>   - Place mutex lock in kbd_led_set after LED_UNREGISTERING check to avoid
->>>>     relocking the mutex and causing a deadlock when unregistering leds
->>>>   - Add extra check during unregistering to avoid calling unregister when
->>>>     no led device is registered.
->>>>   - Temporarily HID_QUIRK_INPUT_PER_APP from the ROG endpoint as it causes
->>>>     the driver to create 4 RGB handlers per device. I also suspect some
->>>>     extra events sneak through (KDE had the @@@@@@).
->>>>
->>>> Antheas Kapenekakis (10):
->>>>   HID: asus: simplify RGB init sequence
->>>>   HID: asus: use same report_id in response
->>>>   HID: asus: fortify keyboard handshake
->>>>   HID: asus: prevent binding to all HID devices on ROG
->>>>   HID: asus: initialize LED endpoint early for old NKEY keyboards
->>>>   platform/x86: asus-wmi: Add support for multiple kbd led handlers
->>>>   HID: asus: listen to the asus-wmi brightness device instead of
->>>>     creating one
->>>>   platform/x86: asus-wmi: remove unused keyboard backlight quirk
->>>>   platform/x86: asus-wmi: add keyboard brightness event handler
->>>>   HID: asus: add support for the asus-wmi brightness handler
->>>>
->>>>  drivers/hid/hid-asus.c                     | 222 +++++++++++----------
->>>>  drivers/platform/x86/asus-wmi.c            | 214 +++++++++++++++++---
->>>>  include/linux/platform_data/x86/asus-wmi.h |  70 +++----
->>>>  3 files changed, 331 insertions(+), 175 deletions(-)
->>>>
->>>>
->>>> base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
->>>> --
->>>> 2.51.2
->>>>
->>>>
+This more looks like viocfg-supply. Looking at this one and several
+other pins, it's more like a GPIO controller, providing those pins for
+the system, rather than a GPIO consumer.
+
+> +
+> +  uim_power_src-gpios:
+> +    description: GPIO controlled connection to UIM_POWER_SRC signal. This signal
+> +      is used when the NFC solution is implemented and receives the power output
+> +      from WWAN_UIM_PWR signal of the another WWAN M.2 card. Refer, PCI Express
+> +      M.2 Specification r4.0, sec 3.1.11.1 for more details.
+> +    maxItems: 1
+> +
+> +  uim_power_snk-gpios:
+> +    description: GPIO controlled connection to UIM_POWER_SNK signal. This signal
+> +      is used when the NFC solution is implemented and supplies power to the
+> +      Universal Integrated Circuit Card (UICC). Refer, PCI Express M.2
+> +      Specification r4.0, sec 3.1.11.2 for more details.
+> +    maxItems: 1
+> +
+> +  uim_swp-gpios:
+> +    description: GPIO controlled connection to UIM_SWP signal. This signal is
+> +      used when the NFC solution is implemented and implements the Single Wire
+> +      Protocol (SWP) interface to the UICC. Refer, PCI Express M.2 Specification
+> +      r4.0, sec 3.1.11.3 for more details.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - vpcie3v3-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # PCI M.2 Key E connector for WLAN/BT with PCIe/UART interfaces
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    connector {
+> +        compatible = "pcie-m2-e-connector";
+> +        vpcie3v3-supply = <&vreg_wcn_3p3>;
+> +        vpcie1v8-supply = <&vreg_l15b_1p8>;
+> +        w_disable1-gpios = <&tlmm 117 GPIO_ACTIVE_LOW>;
+> +        w_disable2-gpios = <&tlmm 116 GPIO_ACTIVE_LOW>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                reg = <0>;
+> +
+> +                endpoint {
+> +                    remote-endpoint = <&pcie4_port0_ep>;
+> +                };
+> +            };
+> +
+> +            port@3 {
+> +                reg = <3>;
+> +
+> +                endpoint {
+> +                    remote-endpoint = <&uart14_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9b3f689d1f50c62afa3772a0c6802f99a98ac2de..f707f29d0a37f344d8dd061b7e49dbb807933c9f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20478,6 +20478,7 @@ PCIE M.2 POWER SEQUENCING
+>  M:	Manivannan Sadhasivam <mani@kernel.org>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+>  F:	Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+>  F:	drivers/power/sequencing/pwrseq-pcie-m2.c
+>  
+> 
+> -- 
+> 2.48.1
+> 
+> 
+
+-- 
+With best wishes
+Dmitry
