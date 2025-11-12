@@ -1,60 +1,60 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+Received: from relay14.grserver.gr (relay14.grserver.gr [46.224.16.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAD0257841
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 22:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A009A278E63
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 23:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.224.16.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762985744; cv=none; b=r6Y5g4+FBOzMBO8/O0smr502lALWVYtqk/o8Is2mteNuxIu7EzAfvzw7n2CRTXkRojjYZwSZXPDiuuKvQdBNJlsEb+W98O9kOekpxRZVfN6y8rvB6iau9nxIlRR/wYpv9dz0dlNKwOU1z3YKTyHiRR8RzrErRy5ddbcJWCrLk0Y=
+	t=1762989749; cv=none; b=Qxf8JVbJQwC7j3U7PxLWYfcoxVm/EZCqdCfT7NiOPEJZjYpyrPCWTjUF9iamS5Lu2AAIhbEptsZaFmipm5Uh5FGNKEIu09gSBz/Qg8W89llkjcvZxOCfWt9uAYO0LftWZcbMyJ/wjFJKydF4j5HG9uintStSHberE53wAcBRPIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762985744; c=relaxed/simple;
-	bh=nFj3MPgKD8wiHxkzQl5+mK9jnuyJd5CVMF7U4hGoMuI=;
+	s=arc-20240116; t=1762989749; c=relaxed/simple;
+	bh=Cjg9r3WZ/i7ppJWoMpiePl6JCsg0XryGZ5ebTtSLeR4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KekUTJblIt96Rnko6WdKdtTOf2jAlxZkvd49IXYBgHHoMUA5870ZnaYnQowje092ZOVzEew2ZvDZ8+Y176TFxmqeVyxaCqTwiohZwcYCBl40daOpX+noJyrP/4a4VJtBTl+1jAALWzrrNCT7Ertog8JgC1DVG2dmgJ8FWw1vjt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=MpU+aMbr; arc=none smtp.client-ip=78.46.171.57
+	 To:Cc:Content-Type; b=iFptiLWPOUQRt8RPDnTO+PKmr05Ci44eLOfhQNLN1Ok+E6OI+M8Int3fZ7g0Jl2Tvbk9Fo+7HEnmUkZPzQwrragI67ZwCXCVrgOCq3Pq5nxd2NwLaOlKOveKJv651IN0vcFbxVlgnQrkNSu8XBuHjPM0iCuawE46M+zffSvgUUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Y5j3EZRQ; arc=none smtp.client-ip=46.224.16.114
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="MpU+aMbr"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 9E0E8BCED1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 00:08:14 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Y5j3EZRQ"
+Received: from relay14 (localhost [127.0.0.1])
+	by relay14.grserver.gr (Proxmox) with ESMTP id B2E0243F78
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 23:22:25 +0000 (UTC)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 8E45ABCEFC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 00:08:13 +0200 (EET)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id ED89F201CA6
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 00:08:12 +0200 (EET)
+	by relay14.grserver.gr (Proxmox) with ESMTPS id 06A7643F4A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 23:22:25 +0000 (UTC)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 7CA86201CB2
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 01:22:24 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1762985293;
-	bh=c263bVvypwdJeCaEVKrF3CaExbc+ogtgqHDqResTArk=;
+	s=default; t=1762989744;
+	bh=Cjg9r3WZ/i7ppJWoMpiePl6JCsg0XryGZ5ebTtSLeR4=;
 	h=Received:From:Subject:To;
-	b=MpU+aMbriC8Yc0UWEYtbHNcZyxdccX+xbjWJGnaHkjWaiBfzTq4pDXuQSndPAHHWM
-	 rh6DqLOsu+qr6LTJ19n06AihEap2DSnL3gVqWArz/1aQrMdWSVI3znGH/sV9IILObT
-	 xkYmsayzphheWL4ZnoszObfNOT2lTDd9XNk3egvjIp9Pgg1vb4vvXiC1NvOix+r8Uj
-	 zkGF30yxPayOr31mQ7t8gQUbhYe2rHSUxzeVhO9AgXeNLJzljjtCWnY3p1TSb4MCbW
-	 VR8AyoYkUQyijJla628h+CCNfj3KcAjerA7qQ1VsQg67vNfq0wMjEe3wiOvbtu13UV
-	 RMbK65pd5j3oQ==
+	b=Y5j3EZRQ4lLoKc3T0VuYpI+xpz4M0VNMFi/qLHsKJajCINA1Z8tlp/jf7aijjcmJW
+	 q3GRHRsyPTH8XiIBz5h0lsR+Rqsq+iNlbFFBcvySsZlJqTHFXVF2gzRLvFmpLthz2i
+	 nb3KU5vuSjx7UDiMF5zneciZSs696YEEoKwF2z5D0rIeg/NHFP9Hg/PslYNLRpydCF
+	 8g26gnqot3NWEE+HA3LrTgf/FEIlUDRL2yvyk2AVNQAJrXZlQwvNDp1UZKU7UhIBHS
+	 fgTRHV1EeeliOoM1bnAO644YHBcCujbK/rhJza3DWkh9e23dUzHwnKm2uyvHEQAtFH
+	 ys6bu1MA5lCwQ==
 Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f177.google.com
+        spf=pass (sender IP is 209.85.208.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f171.google.com
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f177.google.com with SMTP id
- 38308e7fff4ca-37a875e3418so1001111fa.1
+Received: by mail-lj1-f171.google.com with SMTP id
+ 38308e7fff4ca-37a49389deeso1489191fa.0
         for <platform-driver-x86@vger.kernel.org>;
- Wed, 12 Nov 2025 14:08:12 -0800 (PST)
+ Wed, 12 Nov 2025 15:22:24 -0800 (PST)
 X-Forwarded-Encrypted: i=1;
- AJvYcCXYhrecHtLLNk2oQEjrb+e6HEeEQos80vHUiNdCjDR2lbvBa4lT7Ztfynen0HUUSl/3tV5jmZ36G+LLTP4i1F8sGgq0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNyGGm5KWXG3I4PE1wLG502rMp3cWc5SyTR4hNgnLVoqEY3JaA
-	6mSUuUXJ+iZZkKQ2rpbR+qovFURbuXnnugUlmMg4Hi+HlEwRNJ0B79TZ8hMdGiW6gRjg8w4Z51P
-	bmj/aqxUmgLtgS0JSyWAQB1xkCEh+9Ck=
+ AJvYcCWUM3ouphnh2otD6ZCEm8oIJ/aRnUEVKjkZurcKCWd6LEcQdhVGiabm3h6POuCVs+cEGtWPBfSELaiJS+q9hfCPfhJW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9qcoGueOLFawgSCmCnNkN/Eeervmsse5SFPJ5LCRU3AKzvFdo
+	FPM+Res1zIVrn4f3hzwqlJW9nKnglU5wGDvM6wd7rUSoxzNnFfVPK5pUkNP5oyDTXUoeV2FaQAt
+	K10UkKnQXLmyJvJb2bQFNyA0Na1bnTBw=
 X-Google-Smtp-Source: 
- AGHT+IGXgf+Lg0zEIPk/X5mf+uIHdsxnZGSlMH0aQHJGRVatz9TeHp1WXTXEyQ7PZHafLS09vgos3ZnaawMfkbsTS/E=
-X-Received: by 2002:a05:651c:e18:b0:37a:2f0b:ef24 with SMTP id
- 38308e7fff4ca-37b8c2dc2d4mr12431381fa.16.1762985292419; Wed, 12 Nov 2025
- 14:08:12 -0800 (PST)
+ AGHT+IFzo0UQ2X0XeTaQ/vFn5AfS3fybl/9nUp79VKRGvV+mQFMkl4jU4PPuHpP24Q+67epYQDDJ2v60oWc39pMohd8=
+X-Received: by 2002:a2e:9e52:0:b0:36b:be8:a4f with SMTP id
+ 38308e7fff4ca-37b8c423d26mr9334121fa.37.1762989743900;
+ Wed, 12 Nov 2025 15:22:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,14 +66,16 @@ References: <20251101104712.8011-1-lkml@antheas.dev>
  <27a74ecc-bff7-f3ae-b23e-a8362ac3a6b3@linux.intel.com>
  <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
  <74f91d3c-6494-4754-a10f-4d8c1d45f7ff@gmail.com>
-In-Reply-To: <74f91d3c-6494-4754-a10f-4d8c1d45f7ff@gmail.com>
+ <CAGwozwEKqqJxxmtjJhy2MzNVhmBTMmy8xG5TZGkKJqJCgK=X5w@mail.gmail.com>
+In-Reply-To: 
+ <CAGwozwEKqqJxxmtjJhy2MzNVhmBTMmy8xG5TZGkKJqJCgK=X5w@mail.gmail.com>
 From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 12 Nov 2025 23:08:00 +0100
+Date: Thu, 13 Nov 2025 00:22:12 +0100
 X-Gmail-Original-Message-ID: 
- <CAGwozwEKqqJxxmtjJhy2MzNVhmBTMmy8xG5TZGkKJqJCgK=X5w@mail.gmail.com>
-X-Gm-Features: AWmQ_bmAQVWsWS4B-rX0eFbpNfOxE54_DKqNtQJOsmT14pR81ypehUOlMWctnCk
+ <CAGwozwH4_5LnJ4kt-sbdwzL5Ezt74ddPOpGqvTvKiiVzkorSMQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bnGc0vo3CyW2S_WuAXCYSRAPV4hs0Z0cxqv3HZyCqIFThkvFCBngajNLCw
 Message-ID: 
- <CAGwozwEKqqJxxmtjJhy2MzNVhmBTMmy8xG5TZGkKJqJCgK=X5w@mail.gmail.com>
+ <CAGwozwH4_5LnJ4kt-sbdwzL5Ezt74ddPOpGqvTvKiiVzkorSMQ@mail.gmail.com>
 Subject: Re: [PATCH v8 00/10] HID: asus: Fix ASUS ROG Laptop's Keyboard
  backlight handling
 To: Denis Benato <benato.denis96@gmail.com>
@@ -84,189 +86,36 @@ Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Corentin Chary <corentin.chary@gmail.com>,
 	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-PPP-Message-ID: 
- <176298529327.3647657.18220012697498265345@linux3247.grserver.gr>
+ <176298974469.3888705.11505698685419990609@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-On Wed, 12 Nov 2025 at 20:51, Denis Benato <benato.denis96@gmail.com> wrote=
-:
+On Wed, 12 Nov 2025 at 23:08, Antheas Kapenekakis <lkml@antheas.dev> wrote:
 >
->
-> On 11/12/25 14:41, Antheas Kapenekakis wrote:
-> > On Wed, 12 Nov 2025 at 14:22, Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> >> On Wed, 12 Nov 2025, Antheas Kapenekakis wrote:
-> >>
-> >>> On Sat, 1 Nov 2025 at 11:47, Antheas Kapenekakis <lkml@antheas.dev> w=
-rote:
-> >>>> This is a two part series which does the following:
-> >>>>   - Clean-up init sequence
-> >>>>   - Unify backlight handling to happen under asus-wmi so that all Au=
-ra
-> >>>>     devices have synced brightness controls and the backlight button=
- works
-> >>>>     properly when it is on a USB laptop keyboard instead of one w/ W=
-MI.
-> >>>>
-> >>>> For more context, see cover letter of V1. Since V5, I removed some p=
-atches
-> >>>> to make this easier to merge.
-> >>> Small bump for this.
-> >> I looked at v8 earlier but then got an impression some of Denis' comme=
-nts
-> >> against v7 were not taken into account in v8, which implies there will=
- be
-> >> delay until I've time to delve into the details (I need to understand
-> >> things pretty deeply in such a case, which does take lots of time).
-> >>
-> >> Alternatively, if Denis says v8 is acceptable, then I don't need to sp=
-end
-> >> so much time on it, but somehow I've a feeling he isn't happy with v8
-> >> but just hasn't voiced it again...
-> >>
-> >> Please do realize that ignoring reviewer feedback without a very very =
-good
-> >> reason always risks adding delay or friction into getting things
-> >> upstreamed. Especially, when the review comes from a person who has be=
-en
-> >> around for me to learn to trust their reviews or from a maintainer of =
-the
-> >> code in question.
-> > Sure, sorry if it came out this way. Dennis had two comments on the V7
-> > version of the series.
-> >
-> > The first one was that asusctl has a hang bug, which he hasn't had
-> > time to look into yet. This should have been fixed by dropping the
-> > HID_QUIRK_INPUT_PER_APP. I retested the series and that QUIRK was a
-> > bit of a NOOP that does not need to be added in the future.
-> So it is supposed to not regress it now, correct?
-> > The second is he is concerned with dropping the 0x5d/0x5e inits. Luke
-> > said (back in March) that it is fine to drop 0x5e because it is only
-> > used for ANIME displays. However, for 0x5d, it is hard to verify some
-> > of the older laptops because they have only been tested with 0x5d and
-> > we do not have the hardware in question to test.
-> >
-> > For this series, I re-added "initialize LED endpoint early for old
-> > NKEY keyboards" that re-adds 0x5d for the keyboards that cannot be
-> > tested again so this comment should be resolved too. With that in
-> > mind, we do end up with an additional quirk/command that may be
-> > unneeded and will remain there forever, but since it was a point of
-> > contention, it is not worth arguing over.
-> >
-> > So both comments should be resolved
-> The driver should also not late-initialize anything.
->
-> Windows doesn't do it and the official asus application
-> can freely send LEDs changing commands to either WMI or USB
-> so I don't see any reason to do things differently [than windows]
-> and not prepare every USB endpoint to receive commands,
-> this has not been addressed unless I confused v7 and v8?
+> snip
+> > > Sure, sorry if it came out this way. Dennis had two comments on the V7
+> > > version of the series.
+> > >
+> > > The first one was that asusctl has a hang bug, which he hasn't had
+> > > time to look into yet. This should have been fixed by dropping the
+> > > HID_QUIRK_INPUT_PER_APP. I retested the series and that QUIRK was a
+> > > bit of a NOOP that does not need to be added in the future.
+> > So it is supposed to not regress it now, correct?
 
-Yes, it's been added on v8. 0x5d is init for the laptops it is
-problematic for. Not because it does not work, but because it has not
-been verified to work for those laptops.
-
-> > @Denis: can give an ack if this is the case?
-> >
-> > As for Derek's comment, he has a PR for his project where he removes
-> > the name match for Ally devices with ample time for it to be merged
-> > until kernel 6.19 is released. In addition, that specific software for
-> > full functionality relies on OOT drivers on the distros it ships with,
-> > so it is minimally affected in either case.
-> The part we are talking about depends on this driver (hid-asus)
-> and there are people on asus-linux community using inputplumber
-> for non-ally devices (the OOT driver is only for ally devices)
-> therefore it is very important to us (and various other distributions)
-> not to break that software in any way.
-
-This driver is only used for Ally devices. If you mean that people
-remap their keyboards using inputplumber I guess they could but I have
-not seen it.
-
-> Weighting pros and cons of changing the name I am not sure
-> changing name brings any benefit? Or am I missing something here?
-> It's simply used by userspace so the hardware should be loading
-> regardless of the name...
-
-Users see the name of their devices in their settings menu. They
-should be accurate. Also, the early entry needs to be added anyway to
-prevent kicking devices.
-
-> Along with IP and your tool and asusctl there is also openrgb,
-> and a newborn application for asus devices (I don't have contacts
-> with that dev nor I remember the name of the tool)
-> and I am not even that sure these are all asus-related
-> applications.
-
-My tool never checked for names, it briefly did for around a month
-after its creation for some devices until capability matches. Around
-6.1 and 6.7 the kernel changed the names of most USB devices and that
-caused issues. It currently only uses name matches for VID/PID 0/0
-devices created by the kernel. Specifically, WMI and AT Keyboards. I
-am not sure there is a workaround for those. Asusctl also does not use
-names either.
-
-> Excercise EXTRA care touching this area as these are enough changes
-> to make it difficult to understand what exactly is the problem if
-> someone shows up with LEDs malfunctioning, laptop not entering sleep
-> anymore or something else entirely. Plus over time
-> ASUS has used various workarounds for windows problems
-> and I am not eager to find out what those are since there is only
-> a realistic way it's going to happen....
-
-These changes are not doing something extraordinary. It's just a minor clea=
-nup.
-
-> > Moreover, that specific commit is needed for Xbox Ally devices anyway,
-> > as the kernel kicks one of the RGB endpoints because it does not
-> > register an input device (the check skipped by early return) so
-> > userspace becomes unable to control RGB on a stock kernel
-> > (hidraw/hiddev nodes are gone). For more context here, this specific
-> > endpoint implements the RGB Lamparray protocol for Windows dynamic
-> > lighting, and I think in an attempt to make it work properly in
-> > Windows, Asus made it so Windows has to first disable dynamic lighting
-> > for armoury crate RGB commands to work (the 0x5a ones over the 0xff31
-> > hid page).
-> Yes once ASUS introduces something new it sticks with that for
-> future models so it's expected more and more laptops will have
-> the same problem: I am not questioning if these patches are needed
-> as they very clearly are; I am questioning if everything that these
-> patches are doing are worth doing and aren't breaking/regressing
-> either tools or the flow of actions between the EC and these USB devices.
-
-Well, this series is needed to account for that. Sending the disable
-command is out of scope for now though.
+I missed this. Spaces. Yes, quirk input per app created around 3 more
+input devices per USB device, plus the dynamic lighting one, so you
+went from 2 to 6, and there seems to be an issue with asusctl and a
+large number of event devices, that caused some intermittent freezing
+when the user typed on certain keyboards. I removed it. Although, not
+a problem with the kernel itself, per say.
 
 Antheas
 
-> > Hopefully this clears things up
+> > > The second is he is concerned with dropping the 0x5d/0x5e inits. Luke
+> > > said (back in March) that it is fine to drop 0x5e because it is only
+> > > > snip
+> > >>>>
 > >
-> > Antheas
-> >
-> >>> Unrelated but I was b4ing this series on Ubuntu 24 and got BADSIG:
-> >>> DKIM/antheas.dev. Is there a reference for fixing this on my host?
-> >>> Perhaps it would help with spam
-> >> I see BADSIG very often these days from b4 (thanks to gmail expiring
-> >> things after 7 days or so, I recall hearing somewhere), I just ignore =
-them
-> >> entirely.
-> >>
-> >> AFAIK, that has never caused any delay to any patch in pdx86 domain so=
- if
-> >> that is what you thought is happening here, it's not the case.
-> >> If your patch does appear in the pdx86 patchwork, there's even less re=
-ason
-> >> to worry as I mostly pick patches to process using patchwork's list.
-> > Turns out I had to update my DNS records. It should be good now.
-> >
-> >> --
-> >>  i.
-> snipp
-> >>>> 2.51.2
-> >>>>
-> >>>>
->
 
