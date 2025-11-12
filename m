@@ -1,65 +1,64 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012061.outbound.protection.outlook.com [52.101.43.61])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012053.outbound.protection.outlook.com [52.101.43.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE6B27B50C
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 18:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D4833B97B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 18:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762970615; cv=fail; b=s4QGiK98Rl35Znvj6GVi5Vyz+kmw1lPXL4yjJwP7sM7+4NwKHfUNEBXZIJxClVj+whMS+doyTBVzrrkOv2/cWJaUwgdjGBfSOnRNm7Hc/o/tRVJ6rm8pcz4O2N5X+k/xxqQjiFOY7a5isM1mOUrPgdyU/1DNKrPYsSEBklzZXF4=
+	t=1762970837; cv=fail; b=JLGwDYr+WL01f6c1a8pdCFItkl3KZg59R7kQJYAcm6dhUq4x7rY0SnngeKjdKH2LfE2mnDhuhs5Gec7LkPgd63Xv1NZr0oXYAu/EmVwMqMpYEutVs2+bfi+CeIYJW3kqTxkc4Ne0XkFjeA0g/Z4QIrWfY956ja/vx9HtnzuVD5c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762970615; c=relaxed/simple;
-	bh=uuiuf7NDvfRYhx9luZxgcp9CqkMtYUpKAVHUhObHVjA=;
+	s=arc-20240116; t=1762970837; c=relaxed/simple;
+	bh=Mirc10wLSSpJfz2k3lt1xCYvQkIg9FuSj3eDTKWrruw=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jq8jkME3N3x/GxdIt294Rh0J3T+vyTte4V2RXCCpm8ulT78YEvd6tyfGAa2kq6mkeNHrtRl7wWwJUk7g05TIPIJAQZSKMZWq8Bky3KU48IM5NpsGD+dvmJgBQuMXpXsT2wbN3fGFNqyb3InKWOiQxHM+vQ3ngzMhmqWGePTfTBU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XqbCbdZs; arc=fail smtp.client-ip=52.101.43.61
+	 Content-Type:MIME-Version; b=Latbj6u+gwACCQroBrSDYKJ5XwJwykVukFLJeBb1Q3umsEMTI9z1azhCEhXX44gz+destPQYP4nrIwNZcUkskyKe5BU4dfeGNSH9LyzK5aAK9Jn8CCPy6nKmisvZ5FJ1SihpgS/+WFiFlfgNmEmUnsVw3fWCySMaFmGjWxxANLc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WPhHGpWe; arc=fail smtp.client-ip=52.101.43.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XqbCbdZs"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WPhHGpWe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cc1wbCv1A2ISpM+1PnnrurQ+LNwh/LF6ogVtVsytWVygmMVis5AnrpWoUYoYzLRQoJLOXrNbV5S8EWGjDs08oJSc/s2Oz+pAiZNILADVr2r4pGGwJGcAfxe/kRF/w55eymyXvGct0xYaZ8/8LlXgo2sIoGUuyr2Skt87wUidGqypY7DuEf7SyUgn5l537EeBkTYM2buimIoVq2s0NJd3mz0lfSQ/LrOZYFNhwiZ3HAH7BM6TBEhC7MJLlmHJ3OgnYzsCChz8VsqPH1wImQ+i92JqNPwAFCmpblvptqxFHrGlAEBHDG+AGHIlWpydSmfpM41H1X0lL2fzxmouT3bHiA==
+ b=KRBC6w+Oxo2LkLsWCHwKVHhQTcYnlIG2r7qDUgOPQ1UwC3HfDosGKpThpTQC96tsb9sCnw7frp6OYBBeUFglHdqKp+wv7ZuD13/Fnb64Agwjmfak0zoAVh3gGnQ7Ky9xoLuR4cmMSndUWThCIsDxb47rnhqhTFACpktdV8hgoGrD/YLV+gBWsorx2jLIp2F52gKuViLGjpBx53hisjbcOTE2MH/vY6ALh9hkH4kd1K4Bzl+0jxINAe0Zr/RTF7I9vpjxHQt/NMV0YXGWE6jBjPZkF7xWV4ufjK6yYVsTOj0YeOqUb6IWzpJAtqTVsI+H+3bSiel8cBVCpFfGCoyVJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+o6JLz5/JxO+ijYUfqAMoBQcogQxyAbKL1Dg5UJg7Ko=;
- b=pGWH3TYURLucGGQ+sQrqgEYfc5zmGAwlwpNrQ9O1sIUcYR9kFCk+IGBXOh0ZUSSalCZITcrz0MWJJ+h4wusfR//p8cH+hpqAfxAoCK1mb9TuMkAK+RaHK5NZR2qeSvFbVrSPOrqg+NDW8/7EuoSeykMOCFxL5+PEUGXiGZ+POpr3zWer70jh5Ewl4lfQ+UFIip7cjA5IC2oVA3ZYj7AeBRwwXwiSMpekvFj0odjJrVu1MjyzsQL1tU/gxW6QfjYSxhm2NBYb+TcoQI5FoVmhRcPfx39K3peobpAL5+DvqaPq0dkNWaLQsgsckzfHiGb3jHrZ/xGnlNz2gd/rtAc4sg==
+ bh=DkqPZXT1nb0gdnXI1OmhgMRdc8b/1wbUEpiNrGqPLNE=;
+ b=ZjDPJ1TxykLrseCtvKjBmmV+XueLvni/uERnvhBduhcYls5OxEWaY+13Qu7dPwhF/dWONUcqg7zI3YfTqULqZdVFGvDnpJxB59JascU2iLNrxBuH5Hpl0XrenfwFcO48E0zza1X9r2IprqkqC83xonBw57onAcQ95DIpvUrnRNBLVL03ZOjz9uQAkT59f9YEZnK6M0bZpQYHzUlHMcOlU5twyqmJVDEFLLs4d7dlBBrQFgGnBLX1SWmyZ8G8pG847y4og4JtLv0pdCnR/3E2DK5rcwYgjubSxkorHcejTfpyRHc0oecyxXt8F4HEdPclOqPQ23xeO9K4Ura1Pao44A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+o6JLz5/JxO+ijYUfqAMoBQcogQxyAbKL1Dg5UJg7Ko=;
- b=XqbCbdZs9Teyb/MdQmVlD0Hf9wTQpituHsLp1E3tM2t7IjKkzcGZDWV/KngYGrIdpXIbUZRFY+rAmGw613wGCCIRRgoHOOrtJiXxixhQk52O+kImPoWVd/TzyQug+gGZ+cA72SfRgdBb8MCtpKbPSFTg5A3PLhD+nnyqeFMZ+5I=
+ bh=DkqPZXT1nb0gdnXI1OmhgMRdc8b/1wbUEpiNrGqPLNE=;
+ b=WPhHGpWehDh8H7L/UrXAWeaWPlrogvAMwd4sozVgjdu0Qcgfsi9rTS1ztxA5sdbUc1404kDOKiuleMkxvtxIF3fUWms9vI9wB1QYxsmw4zYNZKUEHvm7vnaAVhtzjnsk7DPHYo/FR5dW2eUhk3Yq0NsifG+12L0VRvOUKVruf08=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CYXPR12MB9444.namprd12.prod.outlook.com (2603:10b6:930:d6::20) with
+ by IA1PR12MB6042.namprd12.prod.outlook.com (2603:10b6:208:3d6::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Wed, 12 Nov
- 2025 18:03:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.16; Wed, 12 Nov
+ 2025 18:07:10 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9298.010; Wed, 12 Nov 2025
- 18:03:31 +0000
-Message-ID: <7034fae1-4096-4cdb-a46f-5e23e7accfa0@amd.com>
-Date: Wed, 12 Nov 2025 12:03:25 -0600
+ 18:07:10 +0000
+Message-ID: <be3da5a3-c4a5-40e1-8509-f1c47f90cc02@amd.com>
+Date: Wed, 12 Nov 2025 12:07:06 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] accel/amdxdna: Provide real-time NPU power
- estimate via AMD PMF
+Subject: Re: [PATCH v2 5/5] platform/x86/amd/pmf: Introduce AMD PMF testing
+ tool for driver metrics and features
 To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- lizhi.hou@amd.com, VinitKumar Shukla <VinitKumar.Shukla@amd.com>
-References: <20251111063737.4156385-1-Shyam-sundar.S-k@amd.com>
- <20251111063737.4156385-6-Shyam-sundar.S-k@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, Yijun.Shen@Dell.com,
+ Sanket.Goswami@amd.com
+References: <20251111071010.4179492-1-Shyam-sundar.S-k@amd.com>
+ <20251111071010.4179492-6-Shyam-sundar.S-k@amd.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20251111063737.4156385-6-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20251111071010.4179492-6-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DSZP220CA0001.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:5:280::15) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+X-ClientProxiedBy: DSZP220CA0007.NAMP220.PROD.OUTLOOK.COM (2603:10b6:5:280::8)
+ To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,157 +66,542 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CYXPR12MB9444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 124e11d8-0359-43fc-5479-08de2215c9bc
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB6042:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0aa3b82a-399c-4614-add4-08de22164c88
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QWVvRG0vTXorOGxEa2hEY2NEWSswZVZOTWZWYWxlSVFlUDQ0cGpQbG5LNE9w?=
- =?utf-8?B?bjRYNVYvT3dRVk80NVNlQjJWUndNSmxjbGEzMTg5R1BFVFlteGVrOEV0WHky?=
- =?utf-8?B?K2dzTytaN2VVNFhtc0pYT2x3MG9rcnVjQkp2UFphZDJMaUtUQUpUdU95K2Iz?=
- =?utf-8?B?Vlg0aGJyWXJ2RnJGZlExbmNTcjZOdURNZDhBbEFySFVvSDRUUnBmMlo0dEZZ?=
- =?utf-8?B?VDdLRmwyWTNkNnhjL1puSnR5K1hBMUNyNS9naWk0TXduR1pSNWIxY1JvYkFs?=
- =?utf-8?B?VFBTSVpkM3M2RHVJcHJ5b2FZWk5ZV2VTMmpqaEhLQTg0U2ZqOU5Yc2xqbUFU?=
- =?utf-8?B?UEZoZGhKamUyM0VJWmNDbmdTMldUU1pPdURTbnZ3YlpMSE1FQnhVNnJoVnFu?=
- =?utf-8?B?VFhoeTR3NDhpT25YY0V1cWJZQktFODVpZ1kyMjNUUGdkMW1qVlh4ZGgzN24v?=
- =?utf-8?B?MEo2eUdkaVBHMEZLLzdXZ0hjUG04VnNDUGtuYXFrWWpwQ0wyUmVJV096bUh2?=
- =?utf-8?B?ZUtic1pwRDRqSktPd1lMOFBBNHNNSmxLT3FSbW5DY1Y0QVQxeENHZlV6VHVH?=
- =?utf-8?B?cnB5aDVKUXBocGRjVHJ5RkQ3UFo5Ulhjb1BIL3djQWhLcVNlaEZNSEZET05I?=
- =?utf-8?B?Zm5iU0J2eE5JUDQxYmNFcVNWaHZteWU5MHFuRVhEazFSL2Y1U3gvRG43L1Rt?=
- =?utf-8?B?TWdpdE1KNTlwMXkzM1NIVndzbjRrVGIyK1pGRjhpenNoUGc1MkU0UzNHMW80?=
- =?utf-8?B?OFBFOEFJanFMN3NZRHZpR0RMY1lsSHdBYWNDcTRMeGFobjBsMFI0Vk1hM2tv?=
- =?utf-8?B?eHlsQzRJbU40NGN3cXJsT29zRittN0FxMGphcC9XY1ZJRXRaS09IYS90WE0z?=
- =?utf-8?B?OEE5R1hlaFozNzlKb09nc2M4ZVgvREtDUnhBSENCVUpzMnZqZ2hvOW85MXZi?=
- =?utf-8?B?TERkTlRWdFV6OXg3ZzZNTkJ1c1dkWEs4cU9JUG02YVdSeVVMWC81SUxCZDRK?=
- =?utf-8?B?N1Y3SGpBaURneGxHY1dCSlRIVjAwSExMQnFuS3pxZ3BzM0lDc2c0WXlHY1NF?=
- =?utf-8?B?ek1EVVV5RUVqVDFDV1pxSlpKdFVEVWdDSGpCVFY3UWF4Q3l1dFJKMnpFUHR0?=
- =?utf-8?B?OVM1UVNESTlKaHBCUlNGVDNNek0xM2xkOGk4cEc3YVZJNWF1MlJZdzgxTThY?=
- =?utf-8?B?eVZ1VTRXSml2Q3dad29WUHhEUnJidDJwOUU4ZGJ3TEhpalVXV0ZWUFVabDhW?=
- =?utf-8?B?UjJ4b0t2c3UvNEhsV3lxMC9relJ0UXVSSFlqNStxOWRCM3NDbDN3YjVmUEFH?=
- =?utf-8?B?R3RpQkgvMkpiVjQ4YU9mSEFINGN2Qy9tV1JzMEhuVzAvTXFOejZVSmpWb0pn?=
- =?utf-8?B?bVRuNTJxV21qS1FQUHdmUnAzTXc4UjlnYkJUS2VkNWthSC9mMlFzc0dWZ0Iy?=
- =?utf-8?B?WGxXMDZEeVVHdUlrWlJhRTI0T3o1WnBFbEh2TFZDL1hUbnc1bWs2OXhaWmpp?=
- =?utf-8?B?L3ZjUHU1VklmV1N5Sk8xeGNtREw0ak1YeEhWVWQyR0QwTTR1NWlGSEJ2aW5k?=
- =?utf-8?B?WW5qaHBRTkIyMVEwV1hQNlR5a1J2STlUcEFuU1F6Z0JwUWpOSVUwekp1MStv?=
- =?utf-8?B?eDRNay9JNjZmbDRLTjBkU2FNd2g2TjVBb3R6aERCb3o2OVVrSDFrY1h1L2tP?=
- =?utf-8?B?OGVldWlva3pBb2pXVGx6SC8ycS9DMzBpME5URkkrelk3cEo5UWFpbTcyZThR?=
- =?utf-8?B?RkRjbmdQenRSZFp5OFNXZldxYUd3TEtGZEVMTjMzRVNLekpNM3MzdlRXVk1C?=
- =?utf-8?B?aWNWdEpoWE1FM0VyL3p4UnpoTkhxSTJDdFFxTlRqMGFXSGtqU2xPK3FCNU44?=
- =?utf-8?B?VkVTMnFiVzFSQzhvWmlHL3dPVGlQUHB3U0hCVi9WVG9CWDEzWXpSdk9CY1Mv?=
- =?utf-8?Q?v00IYW/reveN8JBlEb0GUxVpC1RYcyHW?=
+	=?utf-8?B?Ui9xMXA4N1Q1THdpelZxK2NmS3FuMklEbzNsV0ZJSjROaDMvcHRNR3I3WVlO?=
+ =?utf-8?B?d0pZOHRpMURPc1R1R1J1L0prdFE2SWFwU3F5NEVDSFlEZHhkbVd3ZnZXb1lo?=
+ =?utf-8?B?bTRkZWlxdEMwWWJPdzAzdUo3T2hWbU05K1Q2Rit4ZXhkZkxOVVZpZUk2STJU?=
+ =?utf-8?B?Q2trcnUyZ0RLMmIyZFFpNnRJRlVKdUxOVTJGN255ZFJnT3VscFdvU3Q2TEhD?=
+ =?utf-8?B?K3cwbWFSdk91TENMa0NDWGZtNjFCWUp5UmFpL1lQWXpqNmJCNXl4dGFlU203?=
+ =?utf-8?B?WUdNOGlFa0R2NStmWUFtWGM5NE9BejdzcVNpNFM1MGVYeG56YlVTYjFNV01R?=
+ =?utf-8?B?aTFsMXhCUnNRWXU0VEVSOFA1clZHMjB4M0xpV1ZTbHRrL3p5WHd2VEF5NWZC?=
+ =?utf-8?B?cnVJeENNN2ZnZS95STllOStNNlVHR2FyZU5oWGFlOW5LaDV2NzdHUnFnY3Mw?=
+ =?utf-8?B?akljbk1rVlorU1pWL3h3dHBmS2YwN29FMktZbzNGb0dKTkw3OHB3b0tpVWcy?=
+ =?utf-8?B?aDQ5YWdoNHc3N3ZIWlg1UDFCdWZMbGQrdEtaK2NTTkZxdXhGZERWV3RGUkJ6?=
+ =?utf-8?B?bFNueHRyclFzSnRTdm5SSncwYlVsTzlNdm0zTUlNRjRnbjh5Mk9SVlhjdWts?=
+ =?utf-8?B?M0xmUVNKRzBzTXBjMTlod2xwdDN3YmxXSzZTeTRrd3pDT0FoUGNsaS9qN0M3?=
+ =?utf-8?B?ZDRIcFRXV2wrY0ZMTmQ4T091WWtYVENzbE5Ea1h2TWQwSzIvUlVkYmE0WnVw?=
+ =?utf-8?B?SzAzWVBKOHdtQTlIdndZVW0zK1N5S0Fmb29oSVhOZ0xhSHdNWXBVbU5XZVp0?=
+ =?utf-8?B?c2VZa1pYNTlSTUJhUlE5UjZnMlhocG5mRlpBZ0hSSy9ZZ3FtZmhFUlhqd3ly?=
+ =?utf-8?B?bXVYMWhjN1BuY2tMYVcrYS9Ya1o5bnhKcFQrZG1KVm9lZlBKRUV1UGJMZFY4?=
+ =?utf-8?B?Y3pIZUFIdUZnQXoxcDVtWVV4ZjV5R2hkSDljWEVGMDYxbDlHYkNmTG9UQnE3?=
+ =?utf-8?B?akpsVGgwUjNwOHlyUW53OEQzeHMzQ2xoVDN6clQwL0dlZ2xZdzNJMmdPL2ph?=
+ =?utf-8?B?SGxsZjVGMG04MkxoOFhPWTd2akhESStnb0l2WTBkTDZlV1VUd1g5cDBiZm9E?=
+ =?utf-8?B?aDViUGRLT0VxYW1zUVErdnV2UHZkNldFbFFiN2VycmZhenZ0Z2tWWlJFWnNB?=
+ =?utf-8?B?eWdKc2RJZ1RuaEd1dkpST1U1UDlGWDRDMjZ1dkhDK1B5Z3ZqczBBMWdXRGpw?=
+ =?utf-8?B?T0ZDNWNqVVdjQVA1UUFNejNEUEMxSzU4SmsxVzlGSHBpenNRV09QYzZkSkUy?=
+ =?utf-8?B?Zmcyc1FqWnV3Y0Nlc0U2VmhQRVpveUVhRHU4b2xodk0yNk93ZjFSbXhVZHZZ?=
+ =?utf-8?B?MHRwaW5DajFTeVNLRDFLRTYvbU9qcTJlY1hwTWJyc3Y3QnlnbjNpQWpjTXBY?=
+ =?utf-8?B?TC8wOXNMR0V2MllvMUh0eEdhdFBXYzhsRGVBaFVtTVlKNTcwWlRZY2ZlRnYx?=
+ =?utf-8?B?cUMzSFJveU1EZTFiYnFyOWF4TFhpYkZXVjQwRk1IbmhFVEZDclJDNWp6NWtk?=
+ =?utf-8?B?ZG1Fa25lbjlMdzZVUnR4c2pFMWtFdjhsbUxZOXNleWsrZTZyV2FUT0FLRFVh?=
+ =?utf-8?B?RWNDRkZxM2c2OWNZVzJqVDZNRXBsQ1Y0SE1nNzN3dUtkNk1Ub1hNOXN6STd0?=
+ =?utf-8?B?aVo0eS9zNUIzMC8wbUs3WVllcWY4Z01BcjJVWnZ0MWd6dy9GOGgvcHpWWWdR?=
+ =?utf-8?B?Y2hVV01mV0ZaUDFoU2JMekFPTjB6bUdzNUJxR1N4TWJDTzFhUVBqclhLN3Nu?=
+ =?utf-8?B?RHNXbzhhQW04RXIwQTBRajVmNDBWZDk2UVRlTTN0cE9obEFCYW41bm1zemFI?=
+ =?utf-8?B?L05CYkZ2Q2FYbElmVWRLUmtNbVh1aWNXWU84emQwT09LcUlLMUtPR0tqcVdD?=
+ =?utf-8?Q?FCMCNOKHzrB5EsSSYYqLinOjF8vSw0m2?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Um9XcTd0eWxTV0FhTnYzN1RpODZUMkR4WmNtNDVYUUg1Qi9kSjJsTDN5YUZK?=
- =?utf-8?B?TFlDbWEzYzIyTjYxUm13WkViUUpvdVlrUTBFdEt2SlZ6RmF5aFdQemwydWJX?=
- =?utf-8?B?S1l1L1BSdlp4aXhSQytQenRmemRKNUpvWGkzUW04VUFVQ3ZkTDZFU1JKUTY2?=
- =?utf-8?B?emNzdUhPK0ZnekVMd3RyWkljWElpdExueVNEM0RkRmY5dEcwNmdpUG5tMm41?=
- =?utf-8?B?WHd6L09YTy9JYmNYd0ZVZFB6NjhQMnJhNkgyQ3RxaDI1a0NMRXNQaDVRdU4x?=
- =?utf-8?B?R2N6YUM4UGRFMzBjcGh2OVZLdVpoVnl4dGlvdDdqSWp3ZXJXVVZ4RmlIY0tB?=
- =?utf-8?B?em9wdzAyWkQxZVVYclJoWFEzcUxUUTFwcm1PMVJmd0pvdnF2VXk3OUtIT2hZ?=
- =?utf-8?B?K3UwbHdVYTV6Y0MyRzZaUWExT2J3TGhkQTgybjEwRTdlTlEvTzZNdGFFMzRJ?=
- =?utf-8?B?N0EwZ2NicG5FVFk2WVo5YXZUQ1FMRm5GQjViSFZjZkd4cDRqODZ6dTZhRDFj?=
- =?utf-8?B?TitDdlJOTXRTSWtkdTJjd1NIT01uVTVjUFM4clBPSnlXRHNQNWwwZXhwK3dx?=
- =?utf-8?B?ZjdsbWQrd0RhOVAwOVl4c0VHS0dYZVNKY0l5cGwraVF2bVRTR1JiaURNZXRO?=
- =?utf-8?B?cC9KWkltREloalN4MlhXVTNWOGNQQkw4d3pTYUxnSFJSMWc0VVRka1ZnUHh6?=
- =?utf-8?B?VzFhYlk1WFlTcnRaZ3ZLcTY0U2oxSG9RSjBTMjBkb1hrODdBeHJxTHdETVBS?=
- =?utf-8?B?ZGNrbzdrRnlTUHl1Y3JxTzIxR3ZqOXM1QWk5NmJkM0Q1S0xHR01tSDYxQTZI?=
- =?utf-8?B?WTBYVlhNd0ZnUkpMdXhaK1d1UytPaU50SGl3OVY3L1hWUzJKRXNSSVVuRWh0?=
- =?utf-8?B?a1A1VmdUWlNVZUwrcFJ1UzN2bStSQU5UWE10TVNJazRzWWJxdFRBc0FlRjdm?=
- =?utf-8?B?WmpBbUJEd0tpMitqclFDOFBWeVc5bjBBSUlnYWxIb3pYNCsrRFFzb25vcUxN?=
- =?utf-8?B?SnFhOVlMWFBLMTBPa0JQVzZ1ejA5Ujh3Qjc4VFNsZ0kyODJ6VFBSVWJXN3Jp?=
- =?utf-8?B?ZXpwVzE4TFFGZGg5SHZkNGtqQThxMjNWL0pKMUd3TCtIYXBtOVZnWnY0U3ZM?=
- =?utf-8?B?UG10d2ZwcHRTT25jdHRvd2hmMEo1ejhraldzNkUweTBGNnB2Qm5QZFpod1lK?=
- =?utf-8?B?NFZTNUN2QU1kMCtndXZzTnQ5ZEtHbHhieWhBMklzTzhiRzZacHhaa0pudUdF?=
- =?utf-8?B?ZWtrSG5pWDZodFlQZnlTMFcwanVtWWNLWitQUFFsKzFCKzB3NjlSVjBBeW9Z?=
- =?utf-8?B?R0s0T2oxaXdBdDFxb0I4clJzWEpWdXVNVmtXL1ptVmRIWDI2bjV0T0F3Z09J?=
- =?utf-8?B?MURlUGhKWFppMWJNZHhZd1RiT0c1bmNQcTNXY2h6ZW5KL0dzYmdiWFIyZWN4?=
- =?utf-8?B?QVpSQVlWbHNPd1BteE5CUTZXK1ZPVzBVV1NiaEVoeUtEVmZpL2lpRnZZMmNL?=
- =?utf-8?B?a3JFNHFacnJIbHAxaEJtNXV0T3JCVk1UUmQxWmJFRDNvRDc3RC9hbHc5V3U2?=
- =?utf-8?B?VXQvUkMyVGJkdVVra3EwdGdIajRzeU1TcnE0SXdjM2ZaajZWZlM3Z3hFaXQ5?=
- =?utf-8?B?UHNVVmVzOE1vWWVjOWZPVW1PaVNncVRpYitrMjVaOUNkRlkxamhlZDNNSGNK?=
- =?utf-8?B?K1pVdmtuelZ3M3d1M3Y1dDFnOEdVeG5OU3dEd3dDaHY4MWVaam4zdkdPZkJF?=
- =?utf-8?B?ZkNjYzRkVm80enBiMEg3QVRWTW1zTEJHYjNEempMU2xxdUlSWTdoZzFUeHpZ?=
- =?utf-8?B?S29UVkltaThxRTk5bjhnSmJNTEtBRmQ0UnVoNUYxdjN5V3NvSnhlQm1QMUFG?=
- =?utf-8?B?aC9Bb2Nta3Y3aUVMK2dVWFZvZS9ucDlMQlRJN2dma3YyY2d4c2wxZWpqUCt4?=
- =?utf-8?B?U0R1aXFvUk9MYXMvcjhGMTlNaFltaFZkRWptcmcyVEFqTDJYaG00M2krVXZW?=
- =?utf-8?B?NXcreHVoc3IxZ1E2cDFaVlFjV3k0V3FqRGE3Y1lrSmNVVEdPK3FwY3g2NHJ3?=
- =?utf-8?B?aVByM2dzd2NpN3JCalVIUXFBZE03R2crOWFlL1l4aUJyTVV3RGprNmdSQW5Q?=
- =?utf-8?Q?TqrfFV/ldr7CLCiHfsHBInusn?=
+	=?utf-8?B?SHU1M1pGazd6cE5WNmVaYlJ3czdVR1pHRXU5VEpNZWxhcDF2cUU5dDNSQjU1?=
+ =?utf-8?B?REppQVM1UDQrL1EzM0pDQTFQRWpsUi9lTWNHb283OER0UDlrQm9DcDB3OUhr?=
+ =?utf-8?B?bFNaTEpkTkVQb1J0UmJjVy9pNjJVOG04VHlra0ZyS0ZKSHo2Y2hLZXdxLyt2?=
+ =?utf-8?B?OHVtekUvNHpGaVZMMWhGRXd6NFhSY1c4REdQcHErSWxkZHRUMnZvRzBsTmp0?=
+ =?utf-8?B?a3FXMW9VcWFTVTZaN2t6dnJrMEpEZ1A0SFY0bUdoejhmcDUyYSs0Ryt6RHlw?=
+ =?utf-8?B?SHFOV0QzdmZEdE03Y0VabWJOOUw5M1MvZnRwWlVhM1psMnlrZnNQY0g1ZHFt?=
+ =?utf-8?B?bkhHSDltcU56RUdpTzJ4bi9yYjBaaFZLOE9pZUxocVViN0w2T2pRU3EyS1g0?=
+ =?utf-8?B?bk0yL0dodnN2cEprUmVSWGdqWlBwdllHZTZnQXdra0lLdHpLSHYyU1dBRXdv?=
+ =?utf-8?B?cHA4cGg2bmx4eUtMdDZYRFFSM05RakFRc2gzVU1ORWRnOVhXN3Z2NHlNRERO?=
+ =?utf-8?B?WnAwT3hkekE2K1RQbm03TVBpb29vWEVWWmNqWmtnMWtNWHQybGovOFhnYXlt?=
+ =?utf-8?B?NUNmTVRjc2U0eG1OaVZjTXBuOGU2RURxU1J1ZXhRSjZsYWNRRXR4Z05lM1Nw?=
+ =?utf-8?B?ZjlSWU9YOHppZVdGdGJGWTh5RmtHZnEzaCtOU1p0VHJrL3RsVVJXU2MzQ09H?=
+ =?utf-8?B?ZnpIUzlOMlBOVGhmQ0JIVGN1eVRPbW1Hd3FaVVlkOHNxbEpDV0R4K0JTQ2tv?=
+ =?utf-8?B?LzZSZE1NRHZSMWp4MlpYSlRCNTFlODFDQ3BUOFlSMmMxRDdmYXVaNitDSFV6?=
+ =?utf-8?B?UWE0eTRQZ0tDcndQVGtYRVBRZ3I1emFTakdZUjNVMkFwR0tSMVRlS2RxU2tl?=
+ =?utf-8?B?b1R1Q01tMC9tQnJjcFhOakFKNi9tcDhmUkRzT0pjTmpvTllMUUhhTy9qMTNl?=
+ =?utf-8?B?Qy8zZ3FteFY4a213TTE3aFFBSWp6NlJSYVlUR0Jwa3E0UTZSYnZUMTV1QjlF?=
+ =?utf-8?B?Lzd4ZFZvYVVhQlBsVThvWnByL01QZXhkbW1jRmR6eEs5MktNTXhUMWhUa1Ri?=
+ =?utf-8?B?elRteElWbnFtTDMrcy9vUVFUVjE1NFd1UCtLWDBmT2gxbkNObm44Y09scEV1?=
+ =?utf-8?B?NWRrNC9pZk8vMmtCVDNTTUYzbGlHQmhwRUZtSmQ2NXJzd0pYbDVnMDRNazhM?=
+ =?utf-8?B?VXV0cHdic1g5dm9EM2FrYWdHdUh5QjY2ZVNISk96cXErdXFHL3hiMVZ4WG5Y?=
+ =?utf-8?B?b3MweWZKYnBFakFETFBnUTlBYjlsa0dJTTRwbHpXMVdMUGlLZnFkVEhQUk5k?=
+ =?utf-8?B?OUZmTTlSa0F1bDI2RWFtRy9lTk5EOSt3UlVScWhVSnV4SWNwOVg2ZTBJYzZQ?=
+ =?utf-8?B?RnVDNHpQQ2hWNkdocTJQdGVHSEpzR2JGVDNNNHNLZndacVIyY3ZWbDFmbXlw?=
+ =?utf-8?B?V0EvWEk0RStKSXlOK1Z1V2ZMeXBaYmtvWEJzSFFGNGJkcDFJZUdkUUtuS2ND?=
+ =?utf-8?B?ejJaTlRnak1SWDQ5R2dOUmZTTUNPdzhTVU9qYjY3WjJ6N0tTTHMvWFFQMlNh?=
+ =?utf-8?B?THhIWGdud0szOWM3RG5SSFNvS0lLVmVxa0gxdC9KUU05UGJQbFdKaDRURVdw?=
+ =?utf-8?B?RFZjZW9Ea01SZEM1UlhxOVR0M0QrNzhOdkxQMFdjSFVnTlE4cGlzMDNwZjZG?=
+ =?utf-8?B?VktldkZBZjlqQnREVkNTdi9CeU54OFluTlozeDdmaUV5NndNTURZWmppRHRv?=
+ =?utf-8?B?aWpkNllrbUFsczFrYXprRDNOL0xoMHpaa1lsUTFXaklhNUJ2MFpJTHZPNWFM?=
+ =?utf-8?B?THlPTm9uU2thNytHdkZ1RmtpejJwYzJMdXFMN3Vzc1VnemlIR1BqNXlob3JP?=
+ =?utf-8?B?SExLNUZZOVQ1NGZiOElRUWFYTHJpTWVUc2NMMzBPWFJ2alFPbXVBclU1WEp2?=
+ =?utf-8?B?Q2prL2NKbjVwbDhRcVA0R0djc0krVXhsUFFYMnFPRHNuTk82dGF5bWFPWXdH?=
+ =?utf-8?B?Mm5YZlNPYXFrc2pzQ2pFMWptdndSZlZ2MXBaYXBMbW1FM3hCbGN6RkNIY3lL?=
+ =?utf-8?B?OEI1Qy9yTzlVUGhZV1lJekRhRFVDaU9hL1BXV3VsbDRENVhoTDN3dVlsdFd6?=
+ =?utf-8?Q?2qb3PtkABo1H3A1PUshwUpr2+?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 124e11d8-0359-43fc-5479-08de2215c9bc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa3b82a-399c-4614-add4-08de22164c88
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 18:03:30.9407
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 18:07:10.3193
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /AgHqFMNiHbY9ywgqlS5s8sd/ZFZLk59sfTByn5QxniIlbGxpri7czlY5el3E3IhtN6sq+CBrSsx7tSmsWDscQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9444
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4DHtIum3kc3tohEViLsxc0hV12HAz3Ijlz3Q3BWDf9LmPIAUuBkiC8KJnXsIA9SgZfZnwAuHRIQyV8x+O6mLiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6042
 
-On 11/11/25 12:37 AM, Shyam Sundar S K wrote:
-> From: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+On 11/11/25 1:10 AM, Shyam Sundar S K wrote:
+> This tool development adds selftests for the AMD PMF driver, allowing
+> validation of its newly integrated util layer and /dev/amdpmf_interface.
+> It includes a user-space test application, test_pmf, designed to interact
+> with the PMF driver and retrieve relevant metrics for the testing and
+> analysis.
 > 
-> Add aie2_smu_get_power_estimate() to obtain NPU power readings from the
-> AMD PMF driver. This xdna interface enables user space to reflect current
-> workload power consumption in real time.
-
-But.. it doesn't.  It just adds a new function that could potentially do 
-this job.  The actual gluing it to userspace in some way to use this 
-function will be another patch.
-
+> It provides definitions for test metrics, feature IDs, and device states,
+> and includes tests for various AMD PMF metrics such as power source, skin
+> temperature, battery state, and custom BIOS inputs/outputs. It also
+> enables the testing of PMF telemetry data and feature support reporting.
 > 
-> Signed-off-by: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->   drivers/accel/amdxdna/aie2_pci.h |  2 ++
->   drivers/accel/amdxdna/aie2_smu.c | 12 ++++++++++++
->   2 files changed, 14 insertions(+)
+>   tools/testing/selftests/Makefile              |   1 +
+>   .../drivers/platform/x86/amd/pmf/Makefile     |   8 +
+>   .../drivers/platform/x86/amd/pmf/test_pmf.c   | 388 ++++++++++++++++++
+>   3 files changed, 397 insertions(+)
+>   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+>   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
 > 
-> diff --git a/drivers/accel/amdxdna/aie2_pci.h b/drivers/accel/amdxdna/aie2_pci.h
-> index 91a8e948f82a..5601de841b5b 100644
-> --- a/drivers/accel/amdxdna/aie2_pci.h
-> +++ b/drivers/accel/amdxdna/aie2_pci.h
-> @@ -8,6 +8,7 @@
->   
->   #include <drm/amdxdna_accel.h>
->   #include <linux/semaphore.h>
-> +#include <linux/amd-pmf-io.h>
->   
->   #include "amdxdna_mailbox.h"
->   
-> @@ -240,6 +241,7 @@ int aie2_smu_init(struct amdxdna_dev_hdl *ndev);
->   void aie2_smu_fini(struct amdxdna_dev_hdl *ndev);
->   int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
->   int npu4_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
-> +int aie2_smu_get_power_estimate(void);
->   
->   /* aie2_pm.c */
->   int aie2_pm_init(struct amdxdna_dev_hdl *ndev);
-> diff --git a/drivers/accel/amdxdna/aie2_smu.c b/drivers/accel/amdxdna/aie2_smu.c
-> index d303701b0ded..7b5e2c383dd3 100644
-> --- a/drivers/accel/amdxdna/aie2_smu.c
-> +++ b/drivers/accel/amdxdna/aie2_smu.c
-> @@ -54,6 +54,18 @@ static int aie2_smu_exec(struct amdxdna_dev_hdl *ndev, u32 reg_cmd,
->   	return 0;
->   }
->   
-> +int aie2_smu_get_power_estimate(void)
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index c46ebdb9b8ef..6dd2549b5feb 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -25,6 +25,7 @@ TARGETS += drivers/net/bonding
+>   TARGETS += drivers/net/team
+>   TARGETS += drivers/net/virtio_net
+>   TARGETS += drivers/platform/x86/intel/ifs
+> +TARGETS += drivers/platform/x86/amd/pmf
+>   TARGETS += dt
+>   TARGETS += efivarfs
+>   TARGETS += exec
+> diff --git a/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile b/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+> new file mode 100644
+> index 000000000000..876424941e83
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+> @@ -0,0 +1,8 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +CFLAGS += $(KHDR_INCLUDES)
+> +
+> +TEST_GEN_PROGS := test_pmf
+> +
+> +top_srcdir ?=../../../../..
+> +
+> +include ../../../../../lib.mk
+> diff --git a/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c b/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> new file mode 100644
+> index 000000000000..f376bc6f18e1
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> @@ -0,0 +1,388 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD Platform Management Framework Test Tool
+> + *
+> + * Copyright (c) 2025, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
+> + */
+> +
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <inttypes.h>
+> +#include <stdbool.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +#include <unistd.h>
+> +#include <linux/amd-pmf.h>
+> +
+> +#include "../../../../../kselftest.h"
+> +
+> +#define DEVICE_NODE		"/dev/amdpmf_interface"
+> +
+> +#define BIOS_INPUT_START			9
+> +#define BIOS_OUTPUT_START			51
+> +
+> +struct feature_map {
+> +	unsigned long id;
+> +	const char *name;
+> +};
+> +
+> +static const struct feature_map feature_table[] = {
+> +	{ PMF_FEATURE_AUTO_MODE,			"Auto Mode" },
+> +	{ PMF_FEATURE_STATIC_POWER_SLIDER,		"Static Power Slider" },
+> +	{ PMF_FEATURE_POLICY_BUILDER,		"Policy Builder" },
+> +	{ PMF_FEATURE_DYNAMIC_POWER_SLIDER_AC,	"Dynamic Power Slider AC" },
+> +	{ PMF_FEATURE_DYNAMIC_POWER_SLIDER_DC,	"Dynamic Power Slider DC" },
+> +};
+> +
+> +enum laptop_placement {
+> +	LP_UNKNOWN,
+> +	ON_TABLE,
+> +	ON_LAP_MOTION,
+> +	IN_BAG,
+> +	OUT_OF_BAG,
+> +	LP_UNDEFINED,
+> +};
+
+Can't you include amd-pmf-io.h and then use the define from that for 
+enum laptop_placement?
+
+> +
+> +static const char *platform_type_as_str(unsigned int platform_type)
 > +{
-> +	struct amd_pmf_npu_metrics npu_metrics;
-> +	int ret;
-> +
-> +	ret = amd_pmf_get_npu_data(&npu_metrics);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return npu_metrics.npu_power;
+> +	switch (platform_type) {
+> +	case CLAMSHELL:
+> +		return "CLAMSHELL";
+> +	case FLAT:
+> +		return "FLAT";
+> +	case TENT:
+> +		return "TENT";
+> +	case STAND:
+> +		return "STAND";
+> +	case TABLET:
+> +		return "TABLET";
+> +	case BOOK:
+> +		return "BOOK";
+> +	case PRESENTATION:
+> +		return "PRESENTATION";
+> +	case PULL_FWD:
+> +		return "PULL_FWD";
+> +	case LID_CLOSE:
+> +		return "LID_CLOSE";
+> +	case PTYPE_UNKNOWN:
+> +	default:
+> +		return "UNKNOWN";
+> +	}
 > +}
 > +
->   int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level)
->   {
->   	u32 freq;
+> +static const char *laptop_placement_as_str(unsigned int device_state)
+> +{
+> +	switch (device_state) {
+> +	case ON_TABLE:
+> +		return "ON_TABLE";
+> +	case ON_LAP_MOTION:
+> +		return "ON_LAP_MOTION";
+> +	case IN_BAG:
+> +		return "IN_BAG";
+> +	case OUT_OF_BAG:
+> +		return "OUT_OF_BAG";
+> +	default:
+> +		return "UNKNOWN";
+> +	}
+> +}
+> +
+> +static const char *ta_slider_as_str(unsigned int state)
+> +{
+> +	switch (state) {
+> +	case TA_BEST_PERFORMANCE:
+> +		return "PERFORMANCE";
+> +	case TA_BETTER_PERFORMANCE:
+> +		return "BALANCED";
+> +	case TA_BEST_BATTERY:
+> +		return "POWER_SAVER";
+> +	case TA_BETTER_BATTERY:
+> +		return "BETTER_BATTERY";
+> +	default:
+> +		return "UNKNOWN";
+> +	}
+> +}
+> +
+> +static int pmf_open_device(void)
+> +{
+> +	int fd;
+> +
+> +	fd = open(DEVICE_NODE, O_RDONLY);
+> +	if (fd < 0)
+> +		fprintf(stderr, "opening PMF Device Node failed: %s\n", strerror(errno));
+> +
+> +	return fd;
+> +}
+> +
+> +/* Helper to run IOCTL_PMF_GET_METRICS_DATA for one control code and return 0 on success. */
+> +static int pmf_get_metrics_fd(int fd, enum pmf_metrics_id code, struct amd_pmf_metrics_key *out)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	if (!out)
+> +		return -EINVAL;
+> +
+> +	info.control_code = code;
+> +
+> +	ret = ioctl(fd, IOCTL_PMF_GET_METRICS_DATA, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (out)
+> +		*out = info;
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_metrics(enum pmf_metrics_id code, struct amd_pmf_metrics_key *out)
+> +{
+> +	int fd, ret;
+> +
+> +	fd = pmf_open_device();
+> +	if (fd < 0)
+> +		return fd;
+> +
+> +	ret = pmf_get_metrics_fd(fd, code, out);
+> +
+> +	close(fd);
+> +	return ret;
+> +}
+> +
+> +static int pmf_get_feature_status(unsigned long feature_id)
+> +{
+> +	struct amd_pmf_feature_support info = {0};
+> +	const char *name = NULL;
+> +	static char buf[32];
+> +	int i, fd, ret;
+> +
+> +	fd = pmf_open_device();
+> +	if (fd < 0)
+> +		return fd;
+> +
+> +	info.feature_id = feature_id;
+> +
+> +	ret = ioctl(fd, IOCTL_PMF_QUERY_FEATURE_SUPPORT, &info);
+> +	if (ret < 0)
+> +		goto exit_err;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(feature_table); i++) {
+> +		if (feature_table[i].id == feature_id) {
+> +			name = feature_table[i].name;
+> +			break;
+> +		}
+> +	}
+> +	if (!name) {
+> +		snprintf(buf, sizeof(buf), "Feature %lu", feature_id);
+> +		name = buf;
+> +	}
+> +
+> +	printf("%-24s %s\n", name, info.feature_supported ? "Yes" : "No");
+> +
+> +exit_err:
+> +	close(fd);
+> +	return ret;
+> +}
+> +
+> +static int pmf_get_device_state(unsigned int code)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_metrics(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_PLATFORM_TYPE:
+> +		printf("Platform Type: %s\n", platform_type_as_str(info.val));
+> +		break;
+> +	case IOCTL_LAPTOP_PLACEMENT:
+> +		printf("Laptop placement: %s\n", laptop_placement_as_str(info.val));
+> +		break;
+> +	case IOCTL_LID_STATE:
+> +		printf("Lid State: %s\n", info.val ? "Close" : "Open");
+> +		break;
+> +	case IOCTL_USER_PRESENCE:
+> +		printf("User Presence: %s\n", info.val ? "Present" : "Away");
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_battery_state(unsigned int code)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_metrics(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_POWER_SOURCE:
+> +		printf("Power Source: %s\n", info.val ? "DC" : "AC");
+> +		break;
+> +	case IOCTL_BATTERY_PERCENTAGE:
+> +		printf("Battery Percentage: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_DESIGNED_BATTERY_CAPACITY:
+> +		printf("Designed Battery Capacity: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_FULLY_CHARGED_BATTERY_CAPACITY:
+> +		printf("Fully Charged Capacity: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_BATTERY_DRAIN_RATE:
+> +		printf("Battery Drain Rate: %ld\n", (int64_t)info.val);
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_custom_bios_input(unsigned int code)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_metrics(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_BIOS_INPUT_1:
+> +	case IOCTL_BIOS_INPUT_2:
+> +	case IOCTL_BIOS_INPUT_3:
+> +	case IOCTL_BIOS_INPUT_4:
+> +	case IOCTL_BIOS_INPUT_5:
+> +	case IOCTL_BIOS_INPUT_6:
+> +	case IOCTL_BIOS_INPUT_7:
+> +	case IOCTL_BIOS_INPUT_8:
+> +	case IOCTL_BIOS_INPUT_9:
+> +	case IOCTL_BIOS_INPUT_10:
+> +		printf("Custom BIOS input%u: %lu\n", code - BIOS_INPUT_START, (int64_t)info.val);
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_bios_output(unsigned int code)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_metrics(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_BIOS_OUTPUT_1:
+> +	case IOCTL_BIOS_OUTPUT_2:
+> +	case IOCTL_BIOS_OUTPUT_3:
+> +	case IOCTL_BIOS_OUTPUT_4:
+> +	case IOCTL_BIOS_OUTPUT_5:
+> +	case IOCTL_BIOS_OUTPUT_6:
+> +	case IOCTL_BIOS_OUTPUT_7:
+> +	case IOCTL_BIOS_OUTPUT_8:
+> +	case IOCTL_BIOS_OUTPUT_9:
+> +	case IOCTL_BIOS_OUTPUT_10:
+> +		printf("BIOS output%u: %lu\n", code - BIOS_OUTPUT_START, (int64_t)info.val);
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_misc_info(unsigned int code)
+> +{
+> +	struct amd_pmf_metrics_key info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_metrics(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_POWER_SLIDER_POSITION:
+> +		printf("Slider Position: %s\n", ta_slider_as_str(info.val));
+> +		break;
+> +	case IOCTL_SKIN_TEMP:
+> +		printf("Skin Temperature: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_GFX_WORKLOAD:
+> +		printf("GFX Busy: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_AMBIENT_LIGHT:
+> +		printf("Ambient Light: %ld\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_AVG_C0_RES:
+> +		printf("Avg C0 Residency: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_MAX_C0_RES:
+> +		printf("Max C0 Residency: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_SOCKET_POWER:
+> +		printf("Socket Power: %lu\n", (int64_t)info.val);
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int main(void)
+> +{
+> +	unsigned int idx;
+> +
+> +	printf("Feature Name          Supported\n");
+> +	printf("---------------------------------\n");
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(feature_table); idx++)
+> +		pmf_get_feature_status(feature_table[idx].id);
+> +
+> +	printf("\nDevice State\n---------------\n");
+> +	for (idx = IOCTL_PLATFORM_TYPE; idx <= IOCTL_USER_PRESENCE; idx++)
+> +		pmf_get_device_state(idx);
+> +
+> +	printf("\nBattery\n--------\n");
+> +	pmf_get_battery_state(IOCTL_POWER_SOURCE);
+> +	pmf_get_battery_state(IOCTL_BATTERY_PERCENTAGE);
+> +	pmf_get_battery_state(IOCTL_DESIGNED_BATTERY_CAPACITY);
+> +	pmf_get_battery_state(IOCTL_FULLY_CHARGED_BATTERY_CAPACITY);
+> +	pmf_get_battery_state(IOCTL_BATTERY_DRAIN_RATE);
+> +
+> +	printf("\nCustom BIOS Inputs\n-------------------\n");
+> +	for (idx = IOCTL_BIOS_INPUT_1; idx <= IOCTL_BIOS_INPUT_10; idx++)
+> +		pmf_get_custom_bios_input(idx);
+> +
+> +	printf("\nBIOS Outputs\n--------------\n");
+> +	for (idx = IOCTL_BIOS_OUTPUT_1; idx <= IOCTL_BIOS_OUTPUT_10; idx++)
+> +		pmf_get_bios_output(idx);
+> +
+> +	printf("\nMisc\n------\n");
+> +	pmf_get_misc_info(IOCTL_SKIN_TEMP);
+> +	pmf_get_misc_info(IOCTL_GFX_WORKLOAD);
+> +	pmf_get_misc_info(IOCTL_AMBIENT_LIGHT);
+> +	pmf_get_misc_info(IOCTL_AVG_C0_RES);
+> +	pmf_get_misc_info(IOCTL_MAX_C0_RES);
+> +	pmf_get_misc_info(IOCTL_SOCKET_POWER);
+> +	pmf_get_misc_info(IOCTL_POWER_SLIDER_POSITION);
+> +
+> +	return 0;
+> +}
 
