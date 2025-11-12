@@ -1,373 +1,328 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA415316184
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 13:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4EB2C08BA;
+	Wed, 12 Nov 2025 13:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762954907; cv=none; b=KncbabXlDZLsAx/zM17NpERSI6OdxdCJJaGP47F7p66kw4Z/efz9Wl9Ksach488hMTRH2Bi9cotjETLYKjPIjqqVXZjn/LJDatBuVrlOGyVrlPjxlC0DyMw2ANzExQQSeE6LUynOtUYyMviEmszFmX3+LsSKRK5UKkrVAd7INic=
+	t=1762955049; cv=none; b=QAdHgHxJIn0hEoa7hC4Bu21/jVoJAE+77rC/2NRLgPdJ+rNS3oWeNxdl2tuZF1xF1O9JokZcHa2S+S7iwqKeq5bdGvYsIe523q9ysTMowFTOIWdIqU65nKja3U0RTrTe4tZKbRBjuj6IZTL7Bx4IXknYW64R1Qnjp31LQ37VVOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762954907; c=relaxed/simple;
-	bh=snGukgKDd0ZOENnTPyMTpQjDKOicTO1gh58IoyeYJwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WmNQoh7UxuIsjwA9F751AdzSuUdtPLpcO0RUNELpp5BZTe++ajKzl4QH1IpELLUswXNx/uTJZ/xLHX8ETM6DOBk0nI797yt7eLnPIK5myYQcT0RyJ3jWcZBO02pTYQrlF2jiN3P6yfdZATkrxgeSiFaeIdRri20LBGlhasqEUXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QD1WQHnh; arc=none smtp.client-ip=88.99.38.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1762955049; c=relaxed/simple;
+	bh=sOqJj1L9GcvMXOuOfSQcJXtgwoUy1QSRhcLqrmRtr7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BPW6PLjrw8c2GKLgjTgE0u5oQRpk+Q4+LUOFjkoQ0jI7UCoKwQIhQQu3yC4ZBR72Z+CJZOfzDorKoRhyQ4oZ8uRfuuAHA54FRIXdmfzE1srJkVqTmhVGXP5V9vAcZvvP9vQnj6qE3979QsiD+EBQ5ScLx5llH8lXQ+adYds9mDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=incPXUBI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QD1WQHnh"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id 0A93CBDCBD
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 15:41:42 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id D3241BDD23
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 15:41:39 +0200 (EET)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 5CF57201C99
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 15:41:39 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1762954899;
-	bh=1urL3KViALhCHxxOQ0g8ur01mPq/PivXTD/CCgnDU7M=;
-	h=Received:From:Subject:To;
-	b=QD1WQHnhRUhEorM4wOcdGBgh0pRK+hHfI5V/tOnruhS5xAZq5Vq+uM7RMNYosIXjV
-	 L8P30l7CvB6MT4nFbftUkUrmCc9xQ0lkWbCQT+EcW38N7Q62/qHXuMFPKABwQHPhsN
-	 0JWl3U4gNfsfQ6mGZlGIjai+PvjAIKgffEQDpWQHnbs+vWRtnI8p3QlHAjPc1xADip
-	 K5eE+bBrGeEjHqnkBK5i1Mnd3olTP4Hb7BcHoz9ox7l2fc1JDOx1//tzt2L3oIk3Rr
-	 94/dzbkUsMaMcjg+3kNONun7sHTqfp+YIYQ/8jqW+bkMNoFUoIX2vIv5SPdCl/NbBb
-	 s8YH1BIjRCMoQ==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.172) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f172.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f172.google.com with SMTP id
- 38308e7fff4ca-37902f130e1so6602711fa.1
-        for <platform-driver-x86@vger.kernel.org>;
- Wed, 12 Nov 2025 05:41:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU2qpW2qzhJmc0kw6PivSaQzPtHt1WlLDGhvmjoTCK36RmYL4G6pS9H2JozXncrCh3PmVKFKPB8EPBMf9kqF/dtFlAG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF0LoL3xYA7HbQs3/QlPv0ESGVgXeQwRkQB3I8O7EOz1Z6E4qa
-	9bJZo7C0tAhmorRK3QehKVZIAlukIb8adowPfUyG+t5sKOY1HsR4bruBeSCM/t5SzLOr6fC3qCk
-	H8l0GtjKWB4WvYOONsUARyI0xIba5rCM=
-X-Google-Smtp-Source: 
- AGHT+IGlEAUb7k7LyJn76WoIhlrA+Fy8632uwlH8TSDHOW7/YRf7L3kX7nWEIvxlP9M5ctiO0I3g5M5s4aTacQ4ryTU=
-X-Received: by 2002:a2e:3e02:0:b0:338:8:7275 with SMTP id
- 38308e7fff4ca-37b8c3cd1aemr6844781fa.25.1762954898745;
- Wed, 12 Nov 2025 05:41:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="incPXUBI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 157CDC116B1;
+	Wed, 12 Nov 2025 13:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762955049;
+	bh=sOqJj1L9GcvMXOuOfSQcJXtgwoUy1QSRhcLqrmRtr7c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=incPXUBI4Poax0L10idSRGIYlQ3eZ2hdzhrudNOePuZ/Zey1/8ZA3DQc6ZZdkHQwN
+	 uTpii2KT/MWdTu/3YZTbDGG8NIkT7k5RzwBt+8OpT/H7rwXHYRUgpC+4RH0OQQpex7
+	 BYxHkrTkNr4aiL4z6boLCt9hBFSwHFeK5ib66ElW7/vedboDgFbkGHgFiAh9q4dmlF
+	 mgCgenLmvNsC+Q9nQo2VGnWHBhjdWuC5zav0CgjOl38eiOIWkFka9EVXAe83rpwpAT
+	 nzKadDTjMp+K9wccLBNL/+sSXn9J6NyqxTmdHh2Oh5cf+M4ZRJ9xLZ3CieHSucvTiu
+	 CjonuypXQtQAg==
+Message-ID: <c36142f7-fee6-43be-b3b4-495f74872a75@kernel.org>
+Date: Wed, 12 Nov 2025 07:44:06 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251101104712.8011-1-lkml@antheas.dev>
- <CAGwozwE+3vkm0-amRqnNJBzxTvXabgBF9h_G_vG_L7OJj91LBg@mail.gmail.com>
- <27a74ecc-bff7-f3ae-b23e-a8362ac3a6b3@linux.intel.com>
-In-Reply-To: <27a74ecc-bff7-f3ae-b23e-a8362ac3a6b3@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 12 Nov 2025 14:41:27 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
-X-Gm-Features: AWmQ_bkzitAgz3w0OWz9tzRJbZshqAZFNIHewQ7Z62l7u2mAnnRl0sokBmHXqGU
-Message-ID: 
- <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] HID: asus: Fix ASUS ROG Laptop's Keyboard
- backlight handling
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>,
- platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176295489958.1819211.3369036247227441688@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 0/9] platform/x86: Add asus-armoury driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Denis Benato <benato.denis96@gmail.com>
+Cc: Denis Benato <denis.benato@linux.dev>, LKML
+ <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com
+References: <20251102215319.3126879-1-denis.benato@linux.dev>
+ <6b5d7dab-1175-8096-64d0-fdf2cc693679@linux.intel.com>
+ <78d35771-02b6-4163-88da-ceae3146afe7@linux.dev>
+ <e73f74b9-6147-c3ce-c81b-da52082b258b@linux.intel.com>
+ <fe18a2f1-3e7b-423a-86ac-fd5abd994fa3@gmail.com>
+ <b6a234b6-7e16-24fc-760f-0e2a43fed84f@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <b6a234b6-7e16-24fc-760f-0e2a43fed84f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Nov 2025 at 14:22, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Wed, 12 Nov 2025, Antheas Kapenekakis wrote:
->
-> > On Sat, 1 Nov 2025 at 11:47, Antheas Kapenekakis <lkml@antheas.dev> wro=
-te:
-> > >
-> > > This is a two part series which does the following:
-> > >   - Clean-up init sequence
-> > >   - Unify backlight handling to happen under asus-wmi so that all Aur=
-a
-> > >     devices have synced brightness controls and the backlight button =
-works
-> > >     properly when it is on a USB laptop keyboard instead of one w/ WM=
-I.
-> > >
-> > > For more context, see cover letter of V1. Since V5, I removed some pa=
-tches
-> > > to make this easier to merge.
-> >
-> > Small bump for this.
->
-> I looked at v8 earlier but then got an impression some of Denis' comments
-> against v7 were not taken into account in v8, which implies there will be
-> delay until I've time to delve into the details (I need to understand
-> things pretty deeply in such a case, which does take lots of time).
->
-> Alternatively, if Denis says v8 is acceptable, then I don't need to spend
-> so much time on it, but somehow I've a feeling he isn't happy with v8
-> but just hasn't voiced it again...
->
-> Please do realize that ignoring reviewer feedback without a very very goo=
-d
-> reason always risks adding delay or friction into getting things
-> upstreamed. Especially, when the review comes from a person who has been
-> around for me to learn to trust their reviews or from a maintainer of the
-> code in question.
 
-Sure, sorry if it came out this way. Dennis had two comments on the V7
-version of the series.
 
-The first one was that asusctl has a hang bug, which he hasn't had
-time to look into yet. This should have been fixed by dropping the
-HID_QUIRK_INPUT_PER_APP. I retested the series and that QUIRK was a
-bit of a NOOP that does not need to be added in the future.
+On 11/12/25 6:42 AM, Ilpo Järvinen wrote:
+> On Tue, 11 Nov 2025, Denis Benato wrote:
+>> On 11/11/25 11:38, Ilpo Järvinen wrote:
+>>> On Mon, 10 Nov 2025, Denis Benato wrote:
+>>>> On 11/10/25 16:17, Ilpo Järvinen wrote:
+>>>>> On Sun, 2 Nov 2025, Denis Benato wrote:
+>>>>>
+>>>>>> the TL;DR:
+>>>>>> 1. Introduce new module to contain bios attributes, using fw_attributes_class
+>>>>>> 2. Deprecate all possible attributes from asus-wmi that were added ad-hoc
+>>>>>> 3. Remove those in the next LTS cycle
+>>>>>>
+>>>>>> The idea for this originates from a conversation with Mario Limonciello
+>>>>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
+>>>>>>
+>>>>>> It is without a doubt much cleaner to use, easier to discover, and the
+>>>>>> API is well defined as opposed to the random clutter of attributes I had
+>>>>>> been placing in the platform sysfs. Given that Derek is also working on a
+>>>>>> similar approach to Lenovo in part based on my initial work I'd like to think
+>>>>>> that the overall approach is good and may become standardised for these types
+>>>>>> of things.
+>>>>>>
+>>>>>> Regarding PPT: it is intended to add support for "custom" platform profile
+>>>>>> soon. If it's a blocker for this patch series being accepted I will drop the
+>>>>>> platform-x86-asus-armoury-add-ppt_-and-nv_-tuning.patch and get that done
+>>>>>> separately to avoid holding the bulk of the series up. Ideally I would like
+>>>>>> to get the safe limits in so users don't fully lose functionality or continue
+>>>>>> to be exposed to potential instability from setting too low, or be mislead
+>>>>>> in to thinking they can set limits higher than actual limit.
+>>>>>>
+>>>>>> The bulk of the PPT patch is data, the actual functional part is relatively
+>>>>>> small and similar to the last version.
+>>>>>>
+>>>>>> Unfortunately I've been rather busy over the months and may not cover
+>>>>>> everything in the v7 changelog but I've tried to be as comprehensive as I can.
+>>>>>>
+>>>>>> Regards,
+>>>>>> Luke
+>>>>>>
+>>>>>> Changelog:
+>>>>>> - v1
+>>>>>>    - Initial submission
+>>>>>> - v2
+>>>>>>    - Too many changes to list, but all concerns raised in previous submission addressed.
+>>>>>>    - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+>>>>>> - v3
+>>>>>>    - All concerns addressed.
+>>>>>>    - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+>>>>>> - v4
+>>>>>>    - Use EXPORT_SYMBOL_NS_GPL() for the symbols required in this patch series
+>>>>>>    - Add patch for hid-asus due to the use of EXPORT_SYMBOL_NS_GPL()
+>>>>>>    - Split the PPT knobs out to a separate patch
+>>>>>>    - Split the hd_panel setting out to a new patch
+>>>>>>    - Clarify some of APU MEM configuration and convert int to hex
+>>>>>>    - Rename deprecated Kconfig option to ASUS_WMI_DEPRECATED_ATTRS
+>>>>>>    - Fixup cyclic dependency in Kconfig
+>>>>>> - v5
+>>>>>>    - deprecate patch: cleanup ``#if`, ``#endif` statements, edit kconfig detail, edit commit msg
+>>>>>>    - cleanup ppt* tuning patch
+>>>>>>    - proper error handling in module init, plus pr_err()
+>>>>>>    - ppt tunables have a notice if there is no match to get defaults
+>>>>>>    - better error handling in cpu core handling
+>>>>>>      - don't continue if failure
+>>>>>>    - use the mutex to gate WMI writes
+>>>>>> - V6
+>>>>>>    - correctly cleanup/unwind if module init fails
+>>>>>> - V7
+>>>>>>    - Remove review tags where the code changed significantly
+>>>>>>    - Add auto_screen_brightness WMI attribute support
+>>>>>>    - Move PPT patch to end
+>>>>>>    - Add support min/max PPT values for 36 laptops (and two handhelds)
+>>>>>>    - reword commit for "asus-wmi: export symbols used for read/write WMI"
+>>>>>>    - asus-armoury: move existing tunings to asus-armoury
+>>>>>>      - Correction to license header
+>>>>>>      - Remove the (initial) mutex use (added for core count only in that patch)
+>>>>>>      - Clarify some doc comments (attr_int_store)
+>>>>>>      - Cleanup pr_warn in dgpu/egpu/mux functions
+>>>>>>      - Restructure logic in asus_fw_attr_add()
+>>>>>>      - Check gpu_mux_dev_id and mini_led_dev_id before remove attrs
+>>>>>>    - asus-armoury: add core count control:
+>>>>>>      - add mutex to prevent possible concurrent write to the core
+>>>>>>        count WMI due to separated bit/little attributes
+>>>>>>    - asus-armoury: add ppt_* and nv_* tuning knobs:
+>>>>>>      - Move to end of series
+>>>>>>      - Refactor to use a table of allowed min/max values to
+>>>>>>        ensure safe settings
+>>>>>>      - General code cleanup
+>>>>>>    - Ensure checkpatch.pl returns clean for all
+>>>>>> - V8
+>>>>>>    - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - Further cleanup: https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m72e203f64a5a28c9c21672406b2e9f554a8a8e38
+>>>>>>    - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - Address concerns in https://lore.kernel.org/platform-driver-x86/20250316230724.100165-2-luke@ljones.dev/T/#m77971b5c1e7f018954c16354e623fc06522c5e41
+>>>>>>      - Refactor struct asus_armoury_priv to record both AC and DC settings
+>>>>>>      - Tidy macros and functions affected by the above to be clearer as a result
+>>>>>>      - Move repeated strings such as "ppt_pl1_spl" to #defines
+>>>>>>      - Split should_create_tunable_attr() in to two functions to better clarify:
+>>>>>>        - is_power_tunable_attr()
+>>>>>>        - has_valid_limit()
+>>>>>>      - Restructure init_rog_tunables() to initialise AC and DC in a
+>>>>>>        way that makes more sense.
+>>>>>>      - Ensure that if DC setting table is not available then attributes
+>>>>>>        return -ENODEV only if on DC mode.
+>>>>>> - V9
+>>>>>>    - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - return -EBUSY when eGPU/dGPU cannot be deactivated
+>>>>>>    - asus-armoury: add apu-mem control support
+>>>>>>      - discard the WMI presence bit fixing the functionality
+>>>>>>    - asus-armoury: add core count control
+>>>>>>      - replace mutex lock/unlock with guard
+>>>>>>      - move core count alloc for initialization in init_max_cpu_cores()
+>>>>>> - v10
+>>>>>>    - platform/x86: asus-wmi: export symbols used for read/write WMI
+>>>>>>      - fix error with redefinition of asus_wmi_set_devstate
+>>>>>>    - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - hwmon or other -> hwmon or others
+>>>>>>      - fix wrong function name in documentation (attr_uint_store)
+>>>>>>      - use kstrtouint where appropriate
+>>>>>>      - (*) fix unreachable code warning: the fix turned out to be partial
+>>>>>>      - improve return values in case of error in egpu_enable_current_value_store
+>>>>>>    - asus-armoury: asus-armoury: add screen auto-brightness toggle
+>>>>>>      - actually register screen_auto_brightness attribute
+>>>>>> - v11
+>>>>>>    - cover-letter:
+>>>>>>      - reorganize the changelog of v10
+>>>>>>    - asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - move the DMIs list in its own include, fixing (*) for good
+>>>>>>    - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - fix warning about redefinition of ppt_pl2_sppt_def for GV601R
+>>>>>> - v12
+>>>>>>    - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - add min/max values for FA608WI and FX507VI
+>>>>>> - v13
+>>>>>>    - asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - fix a typo in a comment about _def attributes
+>>>>>>      - add min/max values for GU605CW and G713PV
+>>>>>>    - asus-armoury: add apu-mem control support
+>>>>>>      - fix a possible out-of-bounds read in apu_mem_current_value_store
+>>>>>> - v14
+>>>>>>    - platform/x86: asus-wmi: rename ASUS_WMI_DEVID_PPT_FPPT
+>>>>>>      - added patch to rename the symbol for consistency
+>>>>>>    - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - remove the unchecked usage of dmi_get_system_info while
+>>>>>>        also increasing consistency with other messages
+>>>>>> - v15
+>>>>>>    - platform/x86: asus-wmi: export symbols used for read/write WMI
+>>>>>>      - fix kernel doc
+>>>>>>    - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - avoid direct calls to asus-wmi and provide helpers instead
+>>>>>>      - rework xg mobile activation logic
+>>>>>>      - add helper for enum allowed attributes
+>>>>>>      - improve mini_led_mode_current_value_store
+>>>>>>      - improved usage of kstrtouint, kstrtou32 and kstrtobool
+>>>>>>      - unload attributes in reverse order of loading
+>>>>>>    - platform/x86: asus-armoury: add apu-mem control support
+>>>>>>      - fix return value in apu_mem_current_value_show
+>>>>>>    - platform/x86: asus-armoury: add core count control
+>>>>>>      - put more safeguards in place against possible bricking of laptops
+>>>>>>      - improve loading logic
+>>>>>>    - platform/x86: asus-wmi: deprecate bios features
+>>>>>>      - modified deprecation message
+>>>>>>    - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - make _store(s) to interfaces unusable in DC to fail,
+>>>>>>        instead of accepting 0 as a value (0 is also invalid)
+>>>>>>      - make it easier to understand AC vs DC logic
+>>>>>>      - improved init_rog_tunables() logic
+>>>>>>      - commas after every field in the table for consistency
+>>>>>>      - add support for RC73 handheld
+>>>>>> -v16
+>>>>>>    - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - add support for GU605CX
+>>>>>> -v17
+>>>>>>    - platform/x86: asus-armoury: add ppt_* and nv_* tuning knobs
+>>>>>>      - fix RC73 -> RC73AX as another RC73 exists
+>>>>>>    - platform/x86: asus-armoury: add core count control
+>>>>>>      - be more tolerant on out-or-range current CPU cores count
+>>>>>>    - platform/x86: asus-armoury: move existing tunings to asus-armoury module
+>>>>>>      - fix usage of undeclared static functions in macros
+>>>>> I've applied this to the review-ilpo-next branch. I'm still not entirely
+>>>>> happy with how the cpu cores change does store values without arrays but
+>>>>> it's not an end of the world (and could be fixed in tree).
+>>>> Hello and thanks.
+>>>>
+>>>> You would make me very happy applying things as Luke wrote them
+>>>> so that successive modifications are more easily compared to
+>>>> what those were doing before I changed them...
+>>> I just took them as they were so you should be "happy" now :-)
+>>>
+>>> ...Even if I didn't like having all those as separate variables requiring
+>>> if statements here and there, which could be avoided if core type would be
+>>> an array index so one could simply do:
+>>>
+>>> 	...
+>>> 	case CPU_CORE_MAX:
+>>> 		cpu_core_value = asus_armoury.cpu_cores[core_type]->max;
+>>> 		break;
+>>> 	...
+>>>
+>>> Doing that transformation incrementally looks simple enough it should be
+>>> low risk after a careful review.
+>>>
+>>>
+>> Apparently one of the two new handhelds from asus reports
+>> weird numbers for core count so that area requires a bit of work
+>> anyway. I will soon move to investigate that hardware.
+>>
+>>>> Also if you have some more hints on how I could change that
+>>>> interface (while avoiding bad surprises due to index mismatch)
+>>>> I will try my best... without destroying any laptop...
+>>>> perhaps... Hopefully? Wish me luck.
+>>>>
+>>>>> I had to reorder a few includes to make the order alphabetical which
+>>>>> luckily worked out without causing conflicts within the subsequent
+>>>>> patches (and a need to respin the series). Please try to remember to
+>>>>> keep those in the alphabetical order.
+>>>> I have noticed a pair of warnings in this v17 I would like to solve:
+>>>> one line is too long, I should break it and one macro has an
+>>>> unused parameter.
+>>>>
+>>>> No semantic changes.
+>>>>
+>>>> I have seen one of those unordered includes in asus-armoury.h...
+>>>> That branch is public in your git tree: this means I can respin
+>>>> a v18 from a git format-path, correct?
+>>>
+>>> While I could replace the previous series with a new version, it would
+>>> probably just be better to send incremental patches and I can see myself
+>>> if I fold them into the existing patches or not.
+>>
+>> Ah forgive me, I am not used to the process and understood
+>> something totally different. All good, patches sent, thanks!
+>>
+>> Would you also want to break the long assignment line?
+>> Is it better if it's just one long line for clarity?
+>>
+>> ```
+>> const struct rog_tunables *const ac_rog_runables = ....
+>> ```
+> 
+> I'm not sure what that second const gains us here so I'd prefer removing
+> it.
+> 
+> It's a local variable so it doesn't look like protecting the variable
+> itself with const is that important (in contrast to things which are in
+> global scope where const for the variable too is good).
+> 
+> Are you aware of scripts/checkpatch.pl? I think it would have caught this
+> (if one remembers to run it before sending patches, which is the hardest
+> part with that tool :-)).
+> 
+In case you aren't aware, two other quality of life improvements I want 
+to share to look into:
 
-The second is he is concerned with dropping the 0x5d/0x5e inits. Luke
-said (back in March) that it is fine to drop 0x5e because it is only
-used for ANIME displays. However, for 0x5d, it is hard to verify some
-of the older laptops because they have only been tested with 0x5d and
-we do not have the hardware in question to test.
+1) There is a vscode extension for checkpatch
 
-For this series, I re-added "initialize LED endpoint early for old
-NKEY keyboards" that re-adds 0x5d for the keyboards that cannot be
-tested again so this comment should be resolved too. With that in
-mind, we do end up with an additional quirk/command that may be
-unneeded and will remain there forever, but since it was a point of
-contention, it is not worth arguing over.
+It can be configured to automatically run when you save the file and 
+then will underline all the failures with blue squiggly lines.
 
-So both comments should be resolved
+https://marketplace.visualstudio.com/items?itemName=idanp.checkpatch
 
-@Denis: can give an ack if this is the case?
+2) There is a pre-commit hook for checkpatch
 
-As for Derek's comment, he has a PR for his project where he removes
-the name match for Ally devices with ample time for it to be merged
-until kernel 6.19 is released. In addition, that specific software for
-full functionality relies on OOT drivers on the distros it ships with,
-so it is minimally affected in either case.
+This will help make sure that it's "automatically" run on every code 
+commit you do at the right time you make the patch (ie on a per-patch 
+basis).
 
-Moreover, that specific commit is needed for Xbox Ally devices anyway,
-as the kernel kicks one of the RGB endpoints because it does not
-register an input device (the check skipped by early return) so
-userspace becomes unable to control RGB on a stock kernel
-(hidraw/hiddev nodes are gone). For more context here, this specific
-endpoint implements the RGB Lamparray protocol for Windows dynamic
-lighting, and I think in an attempt to make it work properly in
-Windows, Asus made it so Windows has to first disable dynamic lighting
-for armoury crate RGB commands to work (the 0x5a ones over the 0xff31
-hid page).
-
-Hopefully this clears things up
-
-Antheas
-
-> > Unrelated but I was b4ing this series on Ubuntu 24 and got BADSIG:
-> > DKIM/antheas.dev. Is there a reference for fixing this on my host?
-> > Perhaps it would help with spam
->
-> I see BADSIG very often these days from b4 (thanks to gmail expiring
-> things after 7 days or so, I recall hearing somewhere), I just ignore the=
-m
-> entirely.
->
-> AFAIK, that has never caused any delay to any patch in pdx86 domain so if
-> that is what you thought is happening here, it's not the case.
-> If your patch does appear in the pdx86 patchwork, there's even less reaso=
-n
-> to worry as I mostly pick patches to process using patchwork's list.
-
-Turns out I had to update my DNS records. It should be good now.
-
-> --
->  i.
->
-> >
-> > Antheas
-> >
-> > > ---
-> > > V7: https://lore.kernel.org/all/20251018101759.4089-1-lkml@antheas.de=
-v/
-> > > V6: https://lore.kernel.org/all/20251013201535.6737-1-lkml@antheas.de=
-v/
-> > > V5: https://lore.kernel.org/all/20250325184601.10990-1-lkml@antheas.d=
-ev/
-> > > V4: https://lore.kernel.org/lkml/20250324210151.6042-1-lkml@antheas.d=
-ev/
-> > > V3: https://lore.kernel.org/lkml/20250322102804.418000-1-lkml@antheas=
-.dev/
-> > > V2: https://lore.kernel.org/all/20250320220924.5023-1-lkml@antheas.de=
-v/
-> > > V1: https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.d=
-ev/
-> > >
-> > > Changes since V7:
-> > >   - Readd legacy init quirk for Dennis
-> > >   - Remove HID_QUIRK_INPUT_PER_APP as a courtesy to asusctl
-> > >   - Fix warning due to enum_backlight receiving negative values
-> > >
-> > > Changes since V6:
-> > >   - Split initialization refactor into three patches, update commit t=
-ext
-> > >     to be clearer in what it does
-> > >   - Replace spinlock accesses with guard and scoped guard in all patc=
-hes
-> > >   - Add missing includes mentioned by Ilpo
-> > >   - Reflow, tweak comment in prevent binding to all HID devices on RO=
-G
-> > >   - Replace asus_ref.asus with local reference in all patches
-> > >   - Add missing kernel doc comments
-> > >   - Other minor nits from Ilpo
-> > >   - User reported warning due to scheduling work while holding a spin=
-lock.
-> > >     Restructure patch for multiple handlers to limit when spinlock is=
- held to
-> > >     variable access only. In parallel, setup a workqueue to handle re=
-gistration
-> > >     of led device and setting brightness. This is required as registe=
-ring the
-> > >     led device triggers kbd_led_get which needs to hold the spinlock =
-to
-> > >     protect the led_wk value. The workqueue is also required for the =
-hid
-> > >     event passthrough to avoid scheduling work while holding the spin=
-lock.
-> > >     Apply the workqueue to wmi brightness buttons as well, as that wa=
-s
-> > >     omitted before this series and WMI access was performed.
-> > >   - On "HID: asus: prevent binding to all HID devices on ROG", rename
-> > >     quirk HANDLE_GENERIC to SKIP_REPORT_FIXUP and only skip report fi=
-xup.
-> > >     This allows other quirks to apply (applies quirk that fixes keybo=
-ard
-> > >     being named as a pointer device).
-> > >
-> > > Changes since V5:
-> > >   - It's been a long time
-> > >   - Remove addition of RGB as that had some comments I need to work o=
-n
-> > >   - Remove folio patch (already merged)
-> > >   - Remove legacy fix patch 11 from V4. There is a small chance that
-> > >     without this patch, some old NKEY keyboards might not respond to
-> > >     RGB commands according to Luke, but the kernel driver does not do
-> > >     RGB currently. The 0x5d init is done by Armoury crate software in
-> > >     Windows. If an issue is found, we can re-add it or just remove pa=
-tches
-> > >     1/2 before merging. However, init could use the cleanup.
-> > >
-> > > Changes since V4:
-> > >   - Fix KConfig (reported by kernel robot)
-> > >   - Fix Ilpo's nits, if I missed anything lmk
-> > >
-> > > Changes since V3:
-> > >   - Add initializer for 0x5d for old NKEY keyboards until it is verif=
-ied
-> > >     that it is not needed for their media keys to function.
-> > >   - Cover init in asus-wmi with spinlock as per Hans
-> > >   - If asus-wmi registers WMI handler with brightness, init the brigh=
-tness
-> > >     in USB Asus keyboards, per Hans.
-> > >   - Change hid handler name to asus-UNIQ:rgb:peripheral to match led =
-class
-> > >   - Fix oops when unregistering asus-wmi by moving unregister outside=
- of
-> > >     the spin lock (but after the asus reference is set to null)
-> > >
-> > > Changes since V2:
-> > >   - Check lazy init succeds in asus-wmi before setting register varia=
-ble
-> > >   - make explicit check in asus_hid_register_listener for listener ex=
-isting
-> > >     to avoid re-init
-> > >   - rename asus_brt to asus_hid in most places and harmonize everythi=
-ng
-> > >   - switch to a spinlock instead of a mutex to avoid kernel ooops
-> > >   - fixup hid device quirks to avoid multiple RGB devices while still=
- exposing
-> > >     all input vendor devices. This includes moving rgb init to probe
-> > >     instead of the input_configured callbacks.
-> > >   - Remove fan key (during retest it appears to be 0xae that is alrea=
-dy
-> > >     supported by hid-asus)
-> > >   - Never unregister asus::kbd_backlight while asus-wmi is active, as=
- that
-> > >   - removes fds from userspace and breaks backlight functionality. Al=
-l
-> > >   - current mainline drivers do not support backlight hotplugging, so=
- most
-> > >     userspace software (e.g., KDE, UPower) is built with that assumpt=
-ion.
-> > >     For the Ally, since it disconnects its controller during sleep, t=
-his
-> > >     caused the backlight slider to not work in KDE.
-> > >
-> > > Changes since V1:
-> > >   - Add basic RGB support on hid-asus, (Z13/Ally) tested in KDE/Z13
-> > >   - Fix ifdef else having an invalid signature (reported by kernel ro=
-bot)
-> > >   - Restore input arguments to init and keyboard function so they can
-> > >     be re-used for RGB controls.
-> > >   - Remove Z13 delay (it did not work to fix the touchpad) and replac=
-e it
-> > >     with a HID_GROUP_GENERIC quirk to allow hid-multitouch to load. S=
-quash
-> > >     keyboard rename into it.
-> > >   - Unregister brightness listener before removing work queue to avoi=
-d
-> > >     a race condition causing corruption
-> > >   - Remove spurious mutex unlock in asus_brt_event
-> > >   - Place mutex lock in kbd_led_set after LED_UNREGISTERING check to =
-avoid
-> > >     relocking the mutex and causing a deadlock when unregistering led=
-s
-> > >   - Add extra check during unregistering to avoid calling unregister =
-when
-> > >     no led device is registered.
-> > >   - Temporarily HID_QUIRK_INPUT_PER_APP from the ROG endpoint as it c=
-auses
-> > >     the driver to create 4 RGB handlers per device. I also suspect so=
-me
-> > >     extra events sneak through (KDE had the @@@@@@).
-> > >
-> > > Antheas Kapenekakis (10):
-> > >   HID: asus: simplify RGB init sequence
-> > >   HID: asus: use same report_id in response
-> > >   HID: asus: fortify keyboard handshake
-> > >   HID: asus: prevent binding to all HID devices on ROG
-> > >   HID: asus: initialize LED endpoint early for old NKEY keyboards
-> > >   platform/x86: asus-wmi: Add support for multiple kbd led handlers
-> > >   HID: asus: listen to the asus-wmi brightness device instead of
-> > >     creating one
-> > >   platform/x86: asus-wmi: remove unused keyboard backlight quirk
-> > >   platform/x86: asus-wmi: add keyboard brightness event handler
-> > >   HID: asus: add support for the asus-wmi brightness handler
-> > >
-> > >  drivers/hid/hid-asus.c                     | 222 +++++++++++--------=
---
-> > >  drivers/platform/x86/asus-wmi.c            | 214 +++++++++++++++++--=
--
-> > >  include/linux/platform_data/x86/asus-wmi.h |  70 +++----
-> > >  3 files changed, 331 insertions(+), 175 deletions(-)
-> > >
-> > >
-> > > base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
-> > > --
-> > > 2.51.2
-> > >
-> > >
-> >
->
-
+https://github.com/dloidolt/pre-commit-checkpatch
