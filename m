@@ -1,164 +1,147 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A512C313E3B;
-	Wed, 12 Nov 2025 11:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275AB31A7EF;
+	Wed, 12 Nov 2025 12:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762948374; cv=none; b=XhUqL9+KLF+FTfL7/ua0uJWP+fEgQZhhTw+gIvs9bp1LKAQULtzLOVbLaigeC/4FCIwHgR2kv4RSxfePMiWhiGWrAv+vddZvIqKr5HWOaFKCg1AZXNgl6Npv2/CldRtE+ZPlZ37/WZnK/BNMzNokjoBUBPPTGuqQqzvj48LMhDw=
+	t=1762950753; cv=none; b=aeSbxbaANdNEHEce8a8Nre0cZOBHxbSSM1J7hCV/5P5vCgbWCBU4BZocU6J21yO7OrKv6pYkszf9cqt3Rb8kUqelywHJ9H//bVOWkL/j4BAZPA1/Rpv+kQwqH4wpPCloEdccWPqYPi49v7JvgLZUVdYjJnKIrHHHGc/niGB6kXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762948374; c=relaxed/simple;
-	bh=E6HjezHpr/eYmZXi+/xXABXVhexayoEiHe9ZqY+Gpng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AOqqs+7yRe58tAOdB+hz/lRnprsSquQ02skg2M0QpmR455jXRQij/H/wa44+FKworA8KKPY6okOTHPImkp3eopaBcZD26OCzzxkKOFuzsqo7a50bQJbYQBmiesg4uzjI9uDD1oZNiFyph4E+dQErZ6+6ISgmb0e55UtCzt+xOWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TeTaT22D; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1762950753; c=relaxed/simple;
+	bh=NCzqZWCk0yEyq1hkf1ySho141jZpTXPjv/dbqkj15qY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=giwnhSVu650bPVT8fWyyI7KwQ84jemqgsd3hD1/9fMiSG0PJPnqu7B1yIXlloob8NOCm3b+je2RYDm+4/ypVZeZFgaDp5j35lrxyqtsZHf3YzBXI2PTOMQgEmvIXF7/ryepJsfuHq+tLRy2dVzBDCDWXC6cHsa8FmL4C+GqD6Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ybk00gx5; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TeTaT22D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1762948370;
-	bh=E6HjezHpr/eYmZXi+/xXABXVhexayoEiHe9ZqY+Gpng=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TeTaT22DJTm759f0/H9mXM+ubPyd1ePNPC1034/JqWtk8+Ga8tZzX2DDXUl/OmEW0
-	 9uHGrXsWuZmuxiVXmJwyON/tW+f7tC1lHjzhqPkEQk0louODcdoLLg2jUDyUsqTyRo
-	 4TPplTsIhtGitO6e2Nm6J29fZCUzstP3RqeNwDTSQvbzkgQn/l7O/9bFEB6jItD65z
-	 TvtPwEuZ54R8f3ATabV1XzPjjQBx2P6EZhfxlCXhhXxKi9/j//3OYe20L+g+3DRReZ
-	 +VBEERL8iaTc2uzfml+vXq82jk/UlrA+1Gx4VYtNAJeeXsp7hbCD0J5zgOc0jRcoOw
-	 TdYfTH8d9BmGg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D5D7B17E0927;
-	Wed, 12 Nov 2025 12:52:48 +0100 (CET)
-Message-ID: <f949c2a6-df24-41bb-aac7-f5567d03c5f5@collabora.com>
-Date: Wed, 12 Nov 2025 12:52:48 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ybk00gx5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762950752; x=1794486752;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=NCzqZWCk0yEyq1hkf1ySho141jZpTXPjv/dbqkj15qY=;
+  b=Ybk00gx5rZOQSUGXWDD19OP//BUtmOvCrYukqt/0HfOHmjHyIO35mZKn
+   lmPSqGzUNoXFXpjgryw1bE7r4J1mzmNv1xUF7KkekXLKTN/XKv3i/3xML
+   4K9tzAHJ04X+cvNZoARyysgwghSumvmLVQXlZG68O1DowTeD2TY7qrz6g
+   cgDcTIDdGK2B9NMPD6xt21zRY2iEtdrwAIXtoex898mx6HJoVZwaqdvmC
+   xNXcmlnAYLEotrymFnLQmHatwnymRPAp6MjcC//nui+60oX7mDlqfbI+t
+   CCMaXx2UlGNMgQ4BiDgK0MZ38u374W9mKnHg3Q4tH6IpotDpiDpVmAxnu
+   w==;
+X-CSE-ConnectionGUID: 5SkU8W2ORx2XYDc/2qHREw==
+X-CSE-MsgGUID: pZ4HN6gtSXSe+SfzOKDw0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64937627"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64937627"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 04:32:31 -0800
+X-CSE-ConnectionGUID: Ryin6FFnToq3HVrNrRmCRQ==
+X-CSE-MsgGUID: c7cPIlz1Sqm4uqKNnXFAaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
+   d="scan'208";a="194403759"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 04:32:26 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 12 Nov 2025 14:32:22 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hansg@kernel.org>, 
+    "Limonciello, Mario" <mario.limonciello@amd.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com, 
+    Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: asus-armoury: remove unused macro
+ parameter
+In-Reply-To: <20251111191104.1401105-1-denis.benato@linux.dev>
+Message-ID: <a488f1e9-11f2-d6ca-49a6-91eac3c3a053@linux.intel.com>
+References: <20251111191104.1401105-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/11] of: Add wrappers to match root node with OF
- device ID tables
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Yangtao Li
- <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-tegra@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Il 12/11/25 11:28, Krzysztof Kozlowski ha scritto:
-> Changes in v2:
+On Tue, 11 Nov 2025, Denis Benato wrote:
 
-Note:
-
-Looks ok based on code and based on testing on the following platforms:
-  - tegra: Jetson Xavier NX Development Kit
-  - qcom: sdm630 Sony Xperia XA2 (Nile), sc7180 Trogdor Lazor Chromebook
-  - mediatek: MT6795 Xperia M5 (midstream kernel), MT8173 Elm Chromebook
-              MT8365 Genio 350 (mt8365-evk)
-
-Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Cheers,
-Angelo
-
-> - Drop cpufreq/ti change: not correct.
-> - Drop soc/qcom/qcom_pd_mapper.c - objections from Dmitry and I think
->    better to drop the patch in such case.
-> - I did not implement feedback for first patch to make the
->    of_machine_compatible_match() matching machines in arbitrary nodes,
->    because there is no such use case possible and no arguments were provided.
->    I also did not use cleanup.h in first patch because existing code
->    of_device_get_match_data() does not use it and I prefer uniformity.
+> Increase consistency of macros used to get/set uint attributes: remove the unused _fmt macro parameter.
 > 
-> - Add Ack/Rb tags.
-> - Link to v1: https://patch.msgid.link/20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org
-> 
-> Dependency/merging
-> ==================
-> All patches depend on the first patch, thus everything could go via
-> Rob's tree with people's acks.
-> 
-> Description
-> ===========
-> Several drivers duplicate same code for getting reference to the root
-> node, matching it against 'struct of_device_id' table and getting out
-> the match data from the table entry.
-> 
-> There is a of_machine_compatible_match() wrapper but it takes array of
-> strings, which is not suitable for many drivers since they want the
-> driver data associated with each compatible.
-> 
-> Add two wrappers, similar to existing of_device_get_match_data():
-> 1. of_machine_device_match() doing only matching against 'struct
->     of_device_id' and returning bool.
-> 2. of_machine_get_match_data() doing the matching and returning
->     associated driver data for found compatible.
-> 
-> Best regards,
-> Krzysztof
-> 
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
 > ---
-> Krzysztof Kozlowski (11):
->        of: Add wrappers to match root node with OF device ID tables
->        cpufreq: dt-platdev: Simplify with of_machine_get_match_data()
->        cpufreq: mediatek: Simplify with of_machine_get_match_data()
->        cpufreq: sun50i: Simplify with of_machine_device_match()
->        cpuidle: big_little: Simplify with of_machine_device_match()
->        firmware: qcom: scm: Simplify with of_machine_device_match()
->        irqchip/atmel-aic: Simplify with of_machine_get_match_data()
->        platform: surface: Simplify with of_machine_get_match_data()
->        powercap: dtpm: Simplify with of_machine_get_match_data()
->        soc: qcom: ubwc: Simplify with of_machine_get_match_data()
->        soc: tegra: Simplify with of_machine_device_match()
+>  drivers/platform/x86/asus-armoury.c | 4 ++--
+>  drivers/platform/x86/asus-armoury.h | 8 ++++----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
->   drivers/cpufreq/cpufreq-dt-platdev.c               | 15 ++-----
->   drivers/cpufreq/mediatek-cpufreq.c                 | 12 +-----
->   drivers/cpufreq/sun50i-cpufreq-nvmem.c             | 11 +----
->   drivers/cpuidle/cpuidle-big_little.c               | 11 +----
->   drivers/firmware/qcom/qcom_scm.c                   | 17 +-------
->   drivers/irqchip/irq-atmel-aic-common.c             | 15 ++-----
->   drivers/of/base.c                                  | 47 ++++++++++++++++++++++
->   .../platform/surface/surface_aggregator_registry.c | 13 +-----
->   drivers/powercap/dtpm.c                            | 16 +-------
->   drivers/soc/qcom/ubwc_config.c                     | 14 ++-----
->   drivers/soc/tegra/common.c                         | 12 +-----
->   include/linux/of.h                                 | 13 ++++++
->   12 files changed, 79 insertions(+), 117 deletions(-)
-> ---
-> base-commit: a4ebba34e722123f1c09ce3282e26f052fc8b27f
-> change-id: 20251106-b4-of-match-matchine-data-4a64bf046814
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index d57fbb5dc3d3..9f67218ecd14 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -527,7 +527,7 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+>  
+>  	return count;
+>  }
+> -ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, "%u\n", asus_armoury.gpu_mux_dev_id);
+> +ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, asus_armoury.gpu_mux_dev_id);
+>  ASUS_ATTR_GROUP_BOOL(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
+>  
+>  static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+> @@ -561,7 +561,7 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+>  
+>  	return count;
+>  }
+> -ASUS_WMI_SHOW_INT(dgpu_disable_current_value, "%d\n", ASUS_WMI_DEVID_DGPU);
+> +ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
+>  ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
+>  
+>  /* Values map for eGPU activation requests. */
+> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+> index 5e1ab729277a..8f7e5da087a6 100644
+> --- a/drivers/platform/x86/asus-armoury.h
+> +++ b/drivers/platform/x86/asus-armoury.h
+> @@ -81,7 +81,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+>  					_max, NULL, _wmi);			\
+>  	}
+>  
+> -#define ASUS_WMI_SHOW_INT(_attr, _fmt, _wmi)					\
+> +#define ASUS_WMI_SHOW_INT(_attr, _wmi)						\
+>  	static ssize_t _attr##_show(struct kobject *kobj,			\
+>  				    struct kobj_attribute *attr, char *buf)	\
+>  	{									\
+> @@ -101,7 +101,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+>  		__ASUS_ATTR_RO(_attrname, _prop)
+>  
+>  #define __ATTR_RO_INT_GROUP_ENUM(_attrname, _wmi, _fsname, _possible, _dispname)\
+> -	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
+> +	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);		\
+>  	static struct kobj_attribute attr_##_attrname##_current_value =		\
+>  		__ASUS_ATTR_RO(_attrname, current_value);			\
+>  	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
+> @@ -122,7 +122,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+>  #define __ATTR_RW_INT_GROUP_ENUM(_attrname, _minv, _maxv, _wmi, _fsname,\
+>  				 _possible, _dispname)			\
+>  	__WMI_STORE_INT(_attrname##_current_value, _minv, _maxv, _wmi);	\
+> -	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);	\
+> +	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);	\
+>  	static struct kobj_attribute attr_##_attrname##_current_value =	\
+>  		__ASUS_ATTR_RW(_attrname, current_value);		\
+>  	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
+> @@ -227,7 +227,7 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
+>  	}
+>  
+>  #define ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname)	\
+> -	ASUS_WMI_SHOW_INT(_attrname##_current_value, "%d\n", _wmi);		\
+> +	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);		\
+>  	static struct kobj_attribute attr_##_attrname##_current_value =		\
+>  		__ASUS_ATTR_RO(_attrname, current_value);			\
+>  	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);		\
 > 
-> Best regards,
+
+I've folded these into the the original commits (to the 2nd & 9th change).
+
+-- 
+ i.
 
