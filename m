@@ -1,175 +1,109 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A227FB37
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38BF2DC77F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762981808; cv=none; b=m4vgaQrGVFDvco7+9UZVZlUBUJqc1+fTJq6q4VXrjfQ4UDW9t9PBy3dO5/hg8+oQOUU5XHeW+ffYRUOFLmLCC3raot/Ai+8FITyn2nuRb4Y/Pg5Vtq0V+qw2Zr9SMx5J7UiPcJvGaHG5jisrYjaoMNEgEsfW08WNjlqJz8+2fqs=
+	t=1762982048; cv=none; b=Pc2zB+9BNv9E8w5ijQv9iCnr9XAipSs8vK8J47TejFnusW722Bj27Ov0vIQjCuXfBDLz75Zsb1k3Zr/5t4rm++VoRSU1Ddl0YsAag6XERknRSJcQh/NemBvJHwjDFIg5nPrEiXhrku7qotaYO1BtfPzBi2DWr3QPoLuTm6PKmm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762981808; c=relaxed/simple;
-	bh=3KeLYpoxQunGwePMrGw9Ag8kDi0pL6I47mlzQXLbZbo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=WpTavogueEh+Uorl6uW/HcQkeMl4VCFt7YR63gkp6jI1/X7beHw9F59kyLFdPVYC8JC/vCfbHG4Eweqc+pOFbvHg+dwzY9AMjzCrwBYL/+JMUZ+eL+RLaZvG5WkbaAgLO+pDshzZSQtv5V3Jr/HnmleTRnJV/CB3OY60efy5l30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzXaEggd; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762982048; c=relaxed/simple;
+	bh=d9CscdDYoao8HLVGid7qesd5VVIUGE3ZUvy4CEqb3i4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OfJn3hHmHmTKErJ6WUO1QZTQr8EsPchT35nwDR5Tz6XTyaAmIrDIYuNXjAXPmvbLFREN25bTagJlbyx5EVkTtFBLKTxCAaK8iKNlO4Uk8rVOYlPYP185LFias4WDrop4yxb9Q3BDcJse5bM8oT93NGHOMaFzRojq9WJ27AiCoeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMbd1t3d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzXaEggd"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-34372216275so105805a91.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 13:10:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762981805; x=1763586605; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iK9hwywVCoA1owwArThQ0iGrOFP6QXJhSt+mBhrCefg=;
-        b=bzXaEggdBF7zyHCMWT9uYGuMR0WlMBzNddiJbxsn8vBUEO5LFZv2I3PE3h+FAOZggs
-         N/quX5dU4ouADzl5u8VfMOfsOV2BoWhsG7+W+dz7RK0lyz4kdzYwRDENYM0H38lpgXdU
-         R60c/AVrGUF5bp9xRi+XwKAgDftXozHw3MguFIHw01l/LtrAG10mNt8qbnnLRLAhHpLY
-         hxFsHOOv9BdOl0B4gzHhJx6EbXIbdXXa0ZqnorNVkegtKufksgPE4ipIV2ONVzbv8xdU
-         f6OY/X7niYfEvjuoMKgoZf1AsdE1qxq1Rfs2I2ZlTA9XX7/90gE4lM2eMyxHNUr56hJi
-         sn+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762981805; x=1763586605;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iK9hwywVCoA1owwArThQ0iGrOFP6QXJhSt+mBhrCefg=;
-        b=fm1+9AEEOU0SRpKViGqvnrVFUcLPgCuIivektwzdlwlm39+pfeYporWgXpRJ8Z5a27
-         iILpwCFm5p5PtD/IJTc0v+Vqf1bjog2yvFWaCGP+fB//WU3UdwcrOlIw/LyA6IxavgiF
-         tYirTWoOriJ1MlNi2KuTGpigArqje9msPF01eXiL5951XAxaPqA4AWYR2TaBCxim/JFM
-         ASNRERLbZ7aEnTLGOcOlBJdyzTb5+npK5fAXaO1BgJJ3cgDb50a5egDQWGaKy5+OHWWV
-         Qk5zDZbmRNdQoNdOauicGjmkSZ6GvbVXrK30tjbm8DXAKis8mn1sFxN7C9ku6vmYDpb7
-         KUVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmZv+JKMQKCqVsd+8uCTk26+X2grEbr/cn22dWtwPEqGl4BhcAs1wRYnm1ifJQUNeJgqzULkr9U9KkZX41tJ9wC961@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb/aYrwi4JYo9cdMKIVLmktnxLqedQ+67HFMzGbUge1FNxmtUk
-	cy3qeh6qOZ2aDqQUqzSa23jDl4DQW0Ci+D4pi/34qpZAtgA8t3Dt48JqyjIlocF/
-X-Gm-Gg: ASbGncuhdBpMuZJUS4fNSsseC2slqsYZPNaDiwxi9v7yVrBSGsNxoUgz+Km6coX2dXz
-	eDNtTcayaPrHx+xFBXL4kXo1cZuJtMNXFhBBsbEBBn9Hi4XL0D45Vs9FMlu6pbBXE8ulZw7bON0
-	F9UZ8VaoNpFTJ1QRQ6Dos6l9V+NMP4L8ELpr+VIGcQoLK61fPw/Brlin89dApXDBFgDMKNy5WSi
-	XwUSqzcurakKovz09chQrwCRmHxzKG0oeJ+VaANt4H/aAM+RrJmktifn04wFZGkBpjmnqRDg+ka
-	gqAd9W+GqSJF3oJyXiz5I7IWlhUMuTGhB75izHbZwjTCjI+cEVC8wXWYfgeNkOa5RFV2LwKy5RR
-	XPoJP61eV0j5n8Cxhytz5e8n6glxdCoBBYpeY7W+ICoC/u3XO7IkeOWG7RRLjjhv0LSCWHX2zIX
-	rIDOdl8aJ0Hl1dAxjy/6iYPo9uUtLIEHBpeZ9yWF++F19+1yL7jd9nT9WORjfovmtwgiaiFhI=
-X-Google-Smtp-Source: AGHT+IHGmuARPThpnwcferH+2Fz0BRD/2zZnyupg6Za/IMYh6KBq2OjFyv6xSKw5IW/55mxOopvWyw==
-X-Received: by 2002:a17:90a:8c10:b0:341:194:5e7c with SMTP id 98e67ed59e1d1-343dde6f7ebmr4302109a91.24.1762981805360;
-        Wed, 12 Nov 2025 13:10:05 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0c9635007sm19900217b3a.2.2025.11.12.13.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Nov 2025 13:10:04 -0800 (PST)
-Date: Wed, 12 Nov 2025 13:10:04 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-CC: Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-acpi@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/3=5D_acpi=3A_platform=5Fp?=
- =?US-ASCII?Q?rofile_-_Add_Extreme_profile_option?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <d660801f-8551-4940-8555-1059e9d565f7@kernel.org>
-References: <20251106212121.447030-1-derekjohn.clark@gmail.com> <20251106212121.447030-2-derekjohn.clark@gmail.com> <701898dd-3310-e86d-7499-fca5a445447a@linux.intel.com> <d660801f-8551-4940-8555-1059e9d565f7@kernel.org>
-Message-ID: <1558D575-0F14-418E-ACD7-7B7420C622BF@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMbd1t3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781BAC4AF09
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 21:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762982047;
+	bh=d9CscdDYoao8HLVGid7qesd5VVIUGE3ZUvy4CEqb3i4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rMbd1t3dQAZKvP1P+dl/+/3pkuELjMN3JotqSxAuKEXEwr2f4ewnMB+CBjX6PxESq
+	 GH2G1wovl8X6X42l6xFChpTx5r8Ih4yMC25kq490tyji5qE6bWnqzjoR0zVTeRbzJQ
+	 dPM1vLivzxV//UxW7dpJ673mNpOSzeh7DufOyG81nC4ehBgiCiRD76lRaPR4IVUsnh
+	 2a2GE4WZfa1T7ih5lKTCY1w9EBEwK5ifNWXpMSZ40mOKxRJEzGfTOivqLr376LT0Xo
+	 DJh2uVA/E42QWsh12WOL/BkyQ21kHuQD4815fmmDSlkfoDhtTPO6pwsPN0PXEASTqy
+	 GLFuxizjryb9A==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b3e7cc84b82so11152066b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Nov 2025 13:14:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVFsSSKQMWvTxb3r1LmVzlHnHRURwUxvAAcdUeg/G1OSa/mQmTYFh/7fopaPwVinO4lQPPiQHhmhB7LWsYJzMOVOkct@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLwfKiRbdwA7oWRsA/+BskR+QhyDtr8Qr9iYAtRi2vIc+euiDe
+	+u1VnSjddRiTxxjCAwtz8xoxv0LctDFW+LdX7xJR6eoDOLrIPzjigxqnBL6fAeGq4ulhF63Wjot
+	9igS1TcdG2hLBroS8E+DHYeFcFEO1KQ==
+X-Google-Smtp-Source: AGHT+IGoTsQoCL6ji1eL4R4EPErqkBB9/ZPpkzWQ7QknL5cqA3ACnTP5l2VR8ru+GLXFcCnF3dsP1vre7ovgV9UMEbI=
+X-Received: by 2002:a17:906:38ce:b0:b73:4006:1882 with SMTP id
+ a640c23a62f3a-b7340063656mr148670166b.38.1762982045993; Wed, 12 Nov 2025
+ 13:14:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com> <20251112-pci-m2-e-v1-1-97413d6bf824@oss.qualcomm.com>
+In-Reply-To: <20251112-pci-m2-e-v1-1-97413d6bf824@oss.qualcomm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 12 Nov 2025 15:13:54 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+dZOUCosma1QJ-aqtjWs4NDLRkAdB3Aaro=8_Ep7Y0Rg@mail.gmail.com>
+X-Gm-Features: AWmQ_bn9JcCoc3dA8k21kD5vpGQMTEoPaksSR81OwmvZvJ9jTIsLpoNTgRKEaZo
+Message-ID: <CAL_Jsq+dZOUCosma1QJ-aqtjWs4NDLRkAdB3Aaro=8_Ep7Y0Rg@mail.gmail.com>
+Subject: Re: [PATCH 1/9] serdev: Convert to_serdev_device() and
+ to_serdev_controller() helpers to macros
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On November 10, 2025 9:17:12 PM PST, Mario Limonciello <superm1@kernel=2Eor=
-g> wrote:
+On Wed, Nov 12, 2025 at 8:45=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
 >
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 >
->On 11/10/25 5:14 AM, Ilpo J=C3=A4rvinen wrote:
->> On Thu, 6 Nov 2025, Derek J=2E Clark wrote:
->>=20
->>> Some devices, namely Lenovo Legion devices, have an "extreme" mode whe=
-re
->>> power draw is at the maximum limit of the cooling hardware=2E Add a ne=
-w
->>> "extreme" platform profile to properly reflect this operating mode=2E
->>>=20
->>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel=2Eorg>
->>> Acked-by: Rafael J=2E Wysocki (Intel) <rafael@kernel=2Eorg>
->>> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->>> ---
->>>   Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
->>>   drivers/acpi/platform_profile=2Ec                        | 1 +
->>>   include/linux/platform_profile=2Eh                       | 1 +
->>>   3 files changed, 4 insertions(+)
->>>=20
->>> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/=
-Documentation/ABI/testing/sysfs-class-platform-profile
->>> index dc72adfb830a=2E=2E9bee8deb4dc9 100644
->>> --- a/Documentation/ABI/testing/sysfs-class-platform-profile
->>> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
->>> @@ -23,6 +23,8 @@ Description:	This file contains a space-separated li=
-st of profiles supported
->>>   					power consumption with a slight bias
->>>   					towards performance
->>>   		performance		High performance operation
->>> +		extreme			Higher performance operation that may exceed
->>> +					internal battery draw limits when on AC power
->>>   		custom			Driver defined custom profile
->>>   		=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>   diff --git a/drivers/acpi/platform_profile=2Ec b/drivers/acpi/platfo=
-rm_profile=2Ec
->>> index b43f4459a4f6=2E=2E78da17e16d9b 100644
->>> --- a/drivers/acpi/platform_profile=2Ec
->>> +++ b/drivers/acpi/platform_profile=2Ec
->>> @@ -37,6 +37,7 @@ static const char * const profile_names[] =3D {
->>>   	[PLATFORM_PROFILE_BALANCED] =3D "balanced",
->>>   	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] =3D "balanced-performance",
->>>   	[PLATFORM_PROFILE_PERFORMANCE] =3D "performance",
->>> +	[PLATFORM_PROFILE_EXTREME] =3D "extreme",
->>>   	[PLATFORM_PROFILE_CUSTOM] =3D "custom",
->>>   };
->>>   static_assert(ARRAY_SIZE(profile_names) =3D=3D PLATFORM_PROFILE_LAST=
-);
->>> diff --git a/include/linux/platform_profile=2Eh b/include/linux/platfo=
-rm_profile=2Eh
->>> index a299225ab92e=2E=2E2bf178bde2b5 100644
->>> --- a/include/linux/platform_profile=2Eh
->>> +++ b/include/linux/platform_profile=2Eh
->>> @@ -24,6 +24,7 @@ enum platform_profile_option {
->>>   	PLATFORM_PROFILE_BALANCED,
->>>   	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
->>>   	PLATFORM_PROFILE_PERFORMANCE,
->>> +	PLATFORM_PROFILE_EXTREME,
->>>   	PLATFORM_PROFILE_CUSTOM,
->>>   	PLATFORM_PROFILE_LAST, /*must always be last */
->>>   };
->>>=20
->>=20
->> I wonder if "extreme" is the best name for this? Given the description =
-you
->> gave above, perhaps "max-power" would be more descriptive (and we alrea=
-dy
->> have "low-power" so it kind of feels fitting the theme too)=2E
->>=20
->> I don't have strong opinion on this so if you guys feel this suggestion
->> would not make things better, feel free to voice it=2E :-)
->>=20
+> If these helpers receive the 'const struct device' pointer, then the cons=
+t
+> qualifier will get dropped, leading to below warning:
 >
->I don't feel strongly here, either sound find to me=2E
+> warning: passing argument 1 of =E2=80=98to_serdev_device_driver=E2=80=99 =
+discards 'const'
+> qualifier from pointer target type [-Wdiscarded-qualifiers]
 >
-Fine with me=2E Extreme is the vendor (marketing) specific phrase but the =
-low/max-power symmetry is nicer=2E I'll try to spin a v3 today or tomorrow=
-=2E
+> This is not an issue as of now, but with the future commits adding serdev
+> device based driver matching, this warning will get triggered. Hence,
+> convert these helpers to macros so that the qualifier get preserved.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
+com>
+> ---
+>  include/linux/serdev.h | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+>
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index 34562eb99931d808e885ce5022b8aa4577566885..ab185cac556380dfa3cdf94b7=
+af6ee168b677587 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -49,10 +49,7 @@ struct serdev_device {
+>         struct mutex write_lock;
+>  };
+>
+> -static inline struct serdev_device *to_serdev_device(struct device *d)
+> -{
+> -       return container_of(d, struct serdev_device, dev);
 
-Thanks,
-Derek
+See container_of_const()
+
+> -}
+> +#define to_serdev_device(d) container_of(d, struct serdev_device, dev)
