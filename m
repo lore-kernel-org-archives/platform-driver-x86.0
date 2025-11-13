@@ -1,741 +1,383 @@
-Received: from sender3-op-o15.zoho.com (sender3-op-o15.zoho.com [136.143.184.15])
+Received: from outbound.mr.icloud.com (p-west2-cluster1-host6-snip4-3.eps.apple.com [57.103.68.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6898431D72C;
-	Thu, 13 Nov 2025 19:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763061166; cv=pass; b=WHCkI7kzE/CCfmYnEbSuCdvvEpeoK2btCzC7KfShMzc52QrjMtzBTQcnn64wNQgssglKExNoiraUddKUBLSPqJe7ampPkewqh/mMDF6kDYC0jL4DOvZMpMEwdbeA9yDo8Y9VYda198rvjhw0tEsVbRr+cDrcTwejBRgBZXrISYE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763061166; c=relaxed/simple;
-	bh=dwk0g61liSCshe1lGHJL5z7TgcGPuXF6x1876Yj9pF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kCrNC4KHgXt78oxa/+Dme7PZ0NssJfx8fO6dJ8o3fBtGevqC8I+LCCxUH9Td0kKmADXAtos9rTBfJFUVuJkhcEEPKsphp+yaxiYFZ2Y3pc5bNYiWpNYg9gCn7rm6ixqeR+6PKEhGks9YZhDwl5dNAjyn+NpWhnkr6JrUcvlahL0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=eUTLYcdx; arc=pass smtp.client-ip=136.143.184.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9639A314D1D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 20:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.68.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763065408; cv=none; b=EpL8i6BF8vGxG23gITVnmAYfme4sLJF0qcbp8XPcX4CHJTVXuv5O1yQtZ81Z3G0SCW+0BHt3R/5qafpZ18uaFsMtcJgqy6kaRtmw6BdflmHm7JxSqC+lu6MFTAS5QU5YIR7ZgceZrmaKtm/HZxFXrLnc+d+0Tvl/hojBFvWefE8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763065408; c=relaxed/simple;
+	bh=tTePGnP2FsfF0H75pZJ59/pPABv2PbYRLOMNptruRdE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Lizaj6TjROozgpwNktfVDeKyBgtNFHAif7KPdtOk7bx3XoV4oJYn9rRo40vxwNG0TAI1l9/cSZUbhUdiB0YkD/72ULejl61NQOScAyzncSTnTzv+kiTjeqRp6c62lz3DiwtYhb2Q+ma7jF+2dUaSBSL5i9vFUU7iqBYqvd5c1BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=pass smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=F5QWGDci; arc=none smtp.client-ip=57.103.68.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="eUTLYcdx"
-ARC-Seal: i=1; a=rsa-sha256; t=1763061140; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bfF7TNOEqdnvXR/l+ZpxH3XI++NmxjyvkBR1mHBy8klR40Lue4wsl3Pq3As+5TiEi8PjVF05oFcSttW5UT3CrUbVj4n1wehhx/Ewu3eVzNl7wCM1eQoDOIvvmZy4kT0nnUR335tKYmmpZ96tw+Pb29oApxxQUxtgi1KsXnzTDkc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1763061140; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Pi5nVuZUVIQegvHoCmCVaD8EPVDgPsbm2ZFGkN5PHbQ=; 
-	b=a39/Rg/6oD/nZ9koiGfcRz9RGOI5vs3Wc0+akW5pd1aK2Xw7PWXCKIKHmS92kyVWtvMHs2gqu4dB7JzsPbqs11BucPY8TNxRzBpPr0wq56dAyPCk281EN8o4NlOSj+NL3r2ozuyUSI6aDibAQj58v9rZwisq+3eYU/W6jdOpR8Q=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1763061140;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Pi5nVuZUVIQegvHoCmCVaD8EPVDgPsbm2ZFGkN5PHbQ=;
-	b=eUTLYcdxdrtGMwLrognvK5MGt0nwohSZ1AqBC0grOdWc89xXI0xzKgZgrhjfFJJg
-	YeSbBuV49vR64tpRfmfwcB+tA7TrLwbNAlN2Xn9w3kjUNmI+yXsiOzTQ9BKUF43arm8
-	kvJHg7rhGNKA970m03+cpA6+Pvb3R0KHmBQqT7Ms=
-Received: by mx.zohomail.com with SMTPS id 1763061139112100.29108477199611;
-	Thu, 13 Nov 2025 11:12:19 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Rong Zhang <i@rong.moe>,
-	Guenter Roeck <linux@roeck-us.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH v4 7/7] platform/x86: lenovo-wmi-other: Add HWMON for fan reporting/tuning
-Date: Fri, 14 Nov 2025 03:11:50 +0800
-Message-ID: <20251113191152.96076-8-i@rong.moe>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251113191152.96076-1-i@rong.moe>
-References: <20251113191152.96076-1-i@rong.moe>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="F5QWGDci"
+Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-2a-100-percent-7 (Postfix) with ESMTPS id 693D51800199;
+	Thu, 13 Nov 2025 20:23:23 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; s=sig1; bh=kWVxRhc5GlGP3Gkwa0DPiGhwd16yKTW0G4g0T+zRyvU=; h=Content-Type:Mime-Version:Subject:From:Date:Message-Id:To:x-icloud-hme; b=F5QWGDci7vs9pAXYHyi6OW3MulAftRklHkK7hAO1TqAwS95FUVqlXU4MUselMgzyK0qAoA182SC0xQAardmwlxYaErQYmJ/6jdB1gC6fgJ+VyFLs1t9F818A+7O8pj4M3p7zw60hVoa7y4qLRBUFz7apwmJmQYpnmLJZqEB09eX/RFWGUJg+xed36yLZ9pZmVqZyJkNRn1190jt2UusWPwgry85+sdc+vJoNDtDLJ+AVUXeflxbH+QRCrdQu60FP+3VfHF8RLCsaGDVnN17/vD+/XZ6i0l3QKpCfPP2P7O6B0dBsCeTmhfULl+/c4ZgqgsdfU13SYVI3ecBgaDCLVg==
+mail-alias-created-date: 1566896761000
+Received: from smtpclient.apple (unknown [17.57.152.38])
+	by p00-icloudmta-asmtp-us-west-2a-100-percent-7 (Postfix) with ESMTPSA id 186DB18000D9;
+	Thu, 13 Nov 2025 20:23:20 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.22\))
+Subject: Re: [PATCH v8 00/10] HID: asus: Fix ASUS ROG Laptop's Keyboard
+ backlight handling
+From: luke@ljones.dev
+In-Reply-To: <CAGwozwFDm80YuC9AfES2d7Xk2bnCNPjHtgXCz5gZuh7fuajHgg@mail.gmail.com>
+Date: Fri, 14 Nov 2025 09:23:08 +1300
+Cc: Denis Benato <benato.denis96@gmail.com>,
+ =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org,
+ linux-input@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Hans de Goede <hansg@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AC058796-5255-41AE-93A1-1D5382F8FDDE@ljones.dev>
+References: <20251101104712.8011-1-lkml@antheas.dev>
+ <CAGwozwE+3vkm0-amRqnNJBzxTvXabgBF9h_G_vG_L7OJj91LBg@mail.gmail.com>
+ <27a74ecc-bff7-f3ae-b23e-a8362ac3a6b3@linux.intel.com>
+ <CAGwozwGpacR=wYXpf3vOiwWNxaV6pJ6CdE-E-G1gRRpO4VHVMg@mail.gmail.com>
+ <74f91d3c-6494-4754-a10f-4d8c1d45f7ff@gmail.com>
+ <CAGwozwEKqqJxxmtjJhy2MzNVhmBTMmy8xG5TZGkKJqJCgK=X5w@mail.gmail.com>
+ <4671d267-d823-4bf7-af30-b587e67dec49@gmail.com>
+ <CAGwozwFDm80YuC9AfES2d7Xk2bnCNPjHtgXCz5gZuh7fuajHgg@mail.gmail.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+X-Mailer: Apple Mail (2.3864.300.22)
+X-Proofpoint-ORIG-GUID: hevf9eAkCqu91jND5dEcUHnCUxZRs0v8
+X-Authority-Info: v=2.4 cv=K7Qv3iWI c=1 sm=1 tr=0 ts=69163e3b cx=c_apl:c_pps
+ a=9OgfyREA4BUYbbCgc0Y0oA==:117 a=9OgfyREA4BUYbbCgc0Y0oA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=NEAV23lmAAAA:8 a=pGLkceISAAAA:8 a=QyXUC8HyAAAA:8 a=61NuoqEztHM5y537MDoA:9
+ a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: hevf9eAkCqu91jND5dEcUHnCUxZRs0v8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEzMDE1OSBTYWx0ZWRfX9EguYZxHyZHA
+ bntI9jcMg8zobmNT0KD/yB7ydO6V/GDiNWWbY5ZgzRqyHStusrf30k/oBEwMw6MH7GQixn6YEPh
+ SXkqAADtYCo+S8e1dx3D+xtQpQ/khfW51TrFZt8kLtULCb7FBJJIEljoNYdeUAU38g8emmG0zfg
+ 3z7cvnnvsdsaFWUQOiaq6hewdBg6LVqgzb7/oHh+2i9vptPj3vzkZUeBHJxIAp8pBThff5cs1kv
+ FROZsg5Qd8lSO8aa/MKS13K4giu+GFSsN0wAaidYYMcNBGU4uZIdkArYKLYBMhDK5Ig8ssTkrkG
+ o/kyxPf/0cEuxdo1o0E
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-13_05,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
+ adultscore=0 bulkscore=0 spamscore=0 clxscore=1030 mlxscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 classifier=spam authscore=0 adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2510240001 definitions=main-2511130159
+X-JNJ: AAAAAAABas01V76HgeVDulefSDSrTn+YVsLYZiThreRqbP+yiperoOXiXNSPWbcF/l+KeuLt8wtScmy34XOB4bbbUnQ16ZKRgqUVMjVEjoe18cigDRjWu4ta/iTtoHNYFWfplXCp1gB6sxgudrmdwIKg8DdMFxSQbIGIFnPIXhrzr4DYhtGzGzETrjHfL8HS0Tjam/vF/1pBbJ6gjrdxPZ01HJV4O2MlrW8hkzfnlYGxrLhcysVDGhAxu4j0H3XmYUa+y8SB3uhK+GjVIiVjd8gmBuAiV45zaHqaioHGs4pedZuJEHn2tbp6qKgFZJSVLY5pniytduZ6Cy7DPHoaBB1RoJ2xdAh08kvz2aalTY8srBwoeGoJHHtfpdomKQKJP51V1hSTKPhnggNSpBTmy4eOwL5Ih5HnD5lAwcrqU1Swry1J52C1dkkQRrhLTSnvH7GH1dOsHsZlneI2ThmZo3oblHZaCyt3CIzOo3vD4aE4cETDdGdFobmOL/9Tdlzdpg86WXBLPlxUGGJoZX64k4GQd5ifeRKigPPKfs7Rrz8t8UCHPyTZEzRxjSGZBqMk/i+RNzSBCVkpiM7rQIHEWp5mS/szkCxnJt8IZ3gGjF7HkykaA9ALSTdU90+O+gEbY+/IRAHxR7m/sr5XiABCxdiDoc7irJMx4sFqp+Sni/QxiLeevKDahpJbAozIsJk8Edg/VVeJZ5J0vZQsYjTxI/EfIYNo/eSOuAPUJkZWCVhs04v1ri37G8IhPQ==
 
-Register an HWMON device for fan reporting/tuning according to
-Capability Data 00 (capdata00) and Fan Test Data (capdata_fan) provided
-by lenovo-wmi-capdata. The corresponding HWMON nodes are:
 
- - fanX_enable: enable/disable the fan (tunable)
- - fanX_input: current RPM
- - fanX_max: maximum RPM
- - fanX_min: minimum RPM
- - fanX_target: target RPM (tunable)
+> On 13 Nov 2025, at 21:44, Antheas Kapenekakis <lkml@antheas.dev> =
+wrote:
+>=20
+> On Thu, 13 Nov 2025 at 02:14, Denis Benato <benato.denis96@gmail.com> =
+wrote:
+>>=20
+>>=20
+>> On 11/12/25 23:08, Antheas Kapenekakis wrote:
+>>> On Wed, 12 Nov 2025 at 20:51, Denis Benato =
+<benato.denis96@gmail.com> wrote:
+>>>>=20
+>>>> On 11/12/25 14:41, Antheas Kapenekakis wrote:
+>>>>> On Wed, 12 Nov 2025 at 14:22, Ilpo J=C3=A4rvinen
+>>>>> <ilpo.jarvinen@linux.intel.com> wrote:
+>>>>>> On Wed, 12 Nov 2025, Antheas Kapenekakis wrote:
+>>>>>>=20
+>>>>>>> On Sat, 1 Nov 2025 at 11:47, Antheas Kapenekakis =
+<lkml@antheas.dev> wrote:
+>>>>>>>> This is a two part series which does the following:
+>>>>>>>>  - Clean-up init sequence
+>>>>>>>>  - Unify backlight handling to happen under asus-wmi so that =
+all Aura
+>>>>>>>>    devices have synced brightness controls and the backlight =
+button works
+>>>>>>>>    properly when it is on a USB laptop keyboard instead of one =
+w/ WMI.
+>>>>>>>>=20
+>>>>>>>> For more context, see cover letter of V1. Since V5, I removed =
+some patches
+>>>>>>>> to make this easier to merge.
+>>>>>>> Small bump for this.
+>>>>>> I looked at v8 earlier but then got an impression some of Denis' =
+comments
+>>>>>> against v7 were not taken into account in v8, which implies there =
+will be
+>>>>>> delay until I've time to delve into the details (I need to =
+understand
+>>>>>> things pretty deeply in such a case, which does take lots of =
+time).
+>>>>>>=20
+>>>>>> Alternatively, if Denis says v8 is acceptable, then I don't need =
+to spend
+>>>>>> so much time on it, but somehow I've a feeling he isn't happy =
+with v8
+>>>>>> but just hasn't voiced it again...
+>>>>>>=20
+>>>>>> Please do realize that ignoring reviewer feedback without a very =
+very good
+>>>>>> reason always risks adding delay or friction into getting things
+>>>>>> upstreamed. Especially, when the review comes from a person who =
+has been
+>>>>>> around for me to learn to trust their reviews or from a =
+maintainer of the
+>>>>>> code in question.
+>>>>> Sure, sorry if it came out this way. Dennis had two comments on =
+the V7
+>>>>> version of the series.
+>>>>>=20
+>>>>> The first one was that asusctl has a hang bug, which he hasn't had
+>>>>> time to look into yet. This should have been fixed by dropping the
+>>>>> HID_QUIRK_INPUT_PER_APP. I retested the series and that QUIRK was =
+a
+>>>>> bit of a NOOP that does not need to be added in the future.
+>>>> So it is supposed to not regress it now, correct?
+>>>>> The second is he is concerned with dropping the 0x5d/0x5e inits. =
+Luke
+>>>>> said (back in March) that it is fine to drop 0x5e because it is =
+only
+>>>>> used for ANIME displays. However, for 0x5d, it is hard to verify =
+some
+>>>>> of the older laptops because they have only been tested with 0x5d =
+and
+>>>>> we do not have the hardware in question to test.
+>>>>>=20
+>>>>> For this series, I re-added "initialize LED endpoint early for old
+>>>>> NKEY keyboards" that re-adds 0x5d for the keyboards that cannot be
+>>>>> tested again so this comment should be resolved too. With that in
+>>>>> mind, we do end up with an additional quirk/command that may be
+>>>>> unneeded and will remain there forever, but since it was a point =
+of
+>>>>> contention, it is not worth arguing over.
+>>>>>=20
+>>>>> So both comments should be resolved
+>>>> The driver should also not late-initialize anything.
+>>>>=20
+>>>> Windows doesn't do it and the official asus application
+>>>> can freely send LEDs changing commands to either WMI or USB
+>>>> so I don't see any reason to do things differently [than windows]
+>>>> and not prepare every USB endpoint to receive commands,
+>>>> this has not been addressed unless I confused v7 and v8?
+>>> Yes, it's been added on v8. 0x5d is init for the laptops it is
+>>> problematic for. Not because it does not work, but because it has =
+not
+>>> been verified to work for those laptops.
+>> I am not sure I am reading this right:
+>> are you telling me that on recent models the windows driver
+>> doesn't issue 0x5d?
+>=20
+> Try to add spaces in your replies. This is hard to follow.
+>=20
+> Do not conflate driver with software. 0x5a (over the application
+> 0xff310076) has traditionally been used by a driver in Windows to
+> control the backlight level, as it is done in this driver. 0x5d (over
+> the application 0xff310079) is only used by laptops with RGB by
+> Armoury crate. But this driver does not do RGB. No device
+> functionality relies on it being sent for any device I've seen. The
+> device remembers its Windows settings, incl. the backlight color, in
+> the absence of a driver.
+>=20
+> Laptops without RGB such as the Duo series which I would like to add
+> support for next only have a 0x5a endpoint. But, they are sent garbage
+> inits for 0x5d and 0x5e currently. This should be fixed.
+>=20
+> Moreso, it seems that Armoury crate on the Xbox Ally series uses
+> exclusively 0x5a commands and if you use 0x5d it ignores them (perhaps
+> RGB still works though). With the previous generation, commands worked
+> for either report id.
+>=20
+>>>>> @Denis: can give an ack if this is the case?
+>>>>>=20
+>>>>> As for Derek's comment, he has a PR for his project where he =
+removes
+>>>>> the name match for Ally devices with ample time for it to be =
+merged
+>>>>> until kernel 6.19 is released. In addition, that specific software =
+for
+>>>>> full functionality relies on OOT drivers on the distros it ships =
+with,
+>>>>> so it is minimally affected in either case.
+>>>> The part we are talking about depends on this driver (hid-asus)
+>>>> and there are people on asus-linux community using inputplumber
+>>>> for non-ally devices (the OOT driver is only for ally devices)
+>>>> therefore it is very important to us (and various other =
+distributions)
+>>>> not to break that software in any way.
+>>> This driver is only used for Ally devices. If you mean that people
+>>> remap their keyboards using inputplumber I guess they could but I =
+have
+>>> not seen it.
+>> I meant people remap keyboards using IP. I am sure there were
+>> (and very probably still are) people doing that.
+>>>> Weighting pros and cons of changing the name I am not sure
+>>>> changing name brings any benefit? Or am I missing something here?
+>>>> It's simply used by userspace so the hardware should be loading
+>>>> regardless of the name...
+>>> Users see the name of their devices in their settings menu. They
+>>> should be accurate. Also, the early entry needs to be added anyway =
+to
+>>> prevent kicking devices.
+>> If it's just aesthetics I don't see much reasons in changing the =
+name.
+>>=20
+>> "the early entry needs to be added anyway ...." has no meaning to me,
+>> please rephrase. Sorry.
+>=20
+> Early exit-
+>=20
+>>>> Along with IP and your tool and asusctl there is also openrgb,
+>>>> and a newborn application for asus devices (I don't have contacts
+>>>> with that dev nor I remember the name of the tool)
+>>>> and I am not even that sure these are all asus-related
+>>>> applications.
+>>> My tool never checked for names, it briefly did for around a month
+>>> after its creation for some devices until capability matches. Around
+>>> 6.1 and 6.7 the kernel changed the names of most USB devices and =
+that
+>>> caused issues. It currently only uses name matches for VID/PID 0/0
+>>> devices created by the kernel. Specifically, WMI and AT Keyboards. I
+>>> am not sure there is a workaround for those. Asusctl also does not =
+use
+>>> names either.
+>> But IP does, so I would like to hear confirmation from at least Derek
+>> before the merge that there won't be future issues.
+>>=20
+>> Interpret what I say here as a broad topic, not just name/PER_APP =
+flag:
+>> avoid changing data flow on older models...
+>=20
+> In [1] Derek removes the name matches
+>=20
+> There are no other name matches concerning this driver in it.
+>=20
+> The data flow is not changed in this series; you should go through the
+> patches once again if you think that. The only difference is 0x5e is
+> not sent, and 0x5d is not sent for newer devices.
+>=20
+> [1] https://github.com/ShadowBlip/InputPlumber/pull/453
+>=20
+>>>> Excercise EXTRA care touching this area as these are enough changes
+>>>> to make it difficult to understand what exactly is the problem if
+>>>> someone shows up with LEDs malfunctioning, laptop not entering =
+sleep
+>>>> anymore or something else entirely. Plus over time
+>>>> ASUS has used various workarounds for windows problems
+>>>> and I am not eager to find out what those are since there is only
+>>>> a realistic way it's going to happen....
+>>> These changes are not doing something extraordinary. It's just a =
+minor cleanup.
+>>>=20
+>>>>> Moreover, that specific commit is needed for Xbox Ally devices =
+anyway,
+>>>>> as the kernel kicks one of the RGB endpoints because it does not
+>>>>> register an input device (the check skipped by early return) so
+>>>>> userspace becomes unable to control RGB on a stock kernel
+>>>>> (hidraw/hiddev nodes are gone). For more context here, this =
+specific
+>>>>> endpoint implements the RGB Lamparray protocol for Windows dynamic
+>>>>> lighting, and I think in an attempt to make it work properly in
+>>>>> Windows, Asus made it so Windows has to first disable dynamic =
+lighting
+>>>>> for armoury crate RGB commands to work (the 0x5a ones over the =
+0xff31
+>>>>> hid page).
+>>>> Yes once ASUS introduces something new it sticks with that for
+>>>> future models so it's expected more and more laptops will have
+>>>> the same problem: I am not questioning if these patches are needed
+>>>> as they very clearly are; I am questioning if everything that these
+>>>> patches are doing are worth doing and aren't breaking/regressing
+>>>> either tools or the flow of actions between the EC and these USB =
+devices.
+>>> Well, this series is needed to account for that. Sending the disable
+>>> command is out of scope for now though.
+>> Here I apologize for confusion: my comments were mostly about
+>> older models: I absolutely don't want to break those, but if you find =
+a way
+>> to distinguish them from newer models that would give you more =
+freedom with those.
+>=20
+> Yes, we know their specific PIDs, so if you see the patch that adds
+> the 0x5d init, it is only added for those models.
 
-Information from capdata00 and capdata_fan are used to control the
-visibility and constraints of HWMON attributes. Fan info from capdata00
-is collected on bind, while fan info from capdata_fan is collected in a
-callback. Once all fan info is collected, register the HWMON device.
+I=E2=80=99m only half keeping up to date on this. I do recall however =
+that the 0x5D init was definitely required for the first ASUS laptop I =
+worked on, and old GX502 - the PID for keyboard is 0x1866 and I think =
+that was the last of that generation MCU. All the previous MCU also =
+required it.
 
-Signed-off-by: Rong Zhang <i@rong.moe>
----
-Changes in v4:
-- Rework HWMON registration due to the introduction of [PATCH v4 6/7]
-  - Collect fan into from capdata00 and capdata_fan separately
-  - Use a callback to collect fan info from capdata_fan
-  - Trigger HWMON registration only if all fan info is collected
-  - Do not check 0x04050000.supported, implied by the presense of
-    capdata_fan
-- Drop Reviewed-by & Tested-by due to the changes, please review & test
+I saw some messages in perhaps another thread where it was mentioned =
+that 0x5E init should be removed? That I agreed with that?
+I know there are AniMe and Slash versions that use that init, and they =
+are on the same MCU as the keyboard. I had expected that just one init =
+(on 0x5A or whatever) would work but it doesn=E2=80=99t - what I don=E2=80=
+=99t recall is if an incomplete init affected the keyboard features.
 
-Changes in v3:
-- Reword documentation (thanks Derek J. Clark)
+In all reality unless the full set of init is causing issues it=E2=80=99s =
+best to leave them in. If it is then I guess this driver is going to =
+become a little more complex and have a few more quirks.
 
-Changes in v2:
-- Define 4 fan channels instead of 2 (thanks Derek J. Clark)
-- Squash min/max reporting patch into this one (ditto)
-- Query 0x04050000 for interface availability (ditto)
-  - New parameter "expose_all_fans" to skip this check
-- Enforce min/max RPM constraint on set (ditto)
-  - New parameter "relax_fan_constraint" to disable this behavior
-  - Drop parameter "ignore_fan_cap", superseded by the next one
-  - New parameter "expose_all_fans" to expose fans w/o such data
-- Assume auto mode on probe (ditto)
-- Reword documentation (ditto)
-- Do not register HWMON device if no fan can be exposed
-- fanX_target: Return -EBUSY instead of raw target value when fan stops
----
- .../wmi/devices/lenovo-wmi-other.rst          |  11 +
- drivers/platform/x86/lenovo/Kconfig           |   1 +
- drivers/platform/x86/lenovo/wmi-other.c       | 485 +++++++++++++++++-
- 3 files changed, 487 insertions(+), 10 deletions(-)
+Unfortunately I didn=E2=80=99t keep good records of my findings on this =
+so it=E2=80=99s just my remembered observations that you=E2=80=99ll have =
+to take at my word.
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
-index 821282e07d93..bd1d733ff286 100644
---- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-@@ -31,6 +31,8 @@ under the following path:
- 
-   /sys/class/firmware-attributes/lenovo-wmi-other/attributes/<attribute>/
- 
-+Additionally, this driver also exports attributes to HWMON.
-+
- LENOVO_CAPABILITY_DATA_00
- -------------------------
- 
-@@ -39,6 +41,11 @@ WMI GUID ``362A3AFE-3D96-4665-8530-96DAD5BB300E``
- The LENOVO_CAPABILITY_DATA_00 interface provides various information that
- does not rely on the gamezone thermal mode.
- 
-+The following HWMON attributes are implemented:
-+ - fanX_enable: enable/disable the fan (tunable)
-+ - fanX_input: current RPM
-+ - fanX_target: target RPM (tunable)
-+
- LENOVO_CAPABILITY_DATA_01
- -------------------------
- 
-@@ -70,6 +77,10 @@ WMI GUID ``B642801B-3D21-45DE-90AE-6E86F164FB21``
- The LENOVO_FAN_TEST_DATA interface provides reference data for self-test of
- cooling fans.
- 
-+The following HWMON attributes are implemented:
-+ - fanX_max: maximum RPM
-+ - fanX_min: minimum RPM
-+
- WMI interface description
- =========================
- 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index fb96a0f908f0..be9af0451146 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -263,6 +263,7 @@ config LENOVO_WMI_GAMEZONE
- config LENOVO_WMI_TUNING
- 	tristate "Lenovo Other Mode WMI Driver"
- 	depends on ACPI_WMI
-+	select HWMON
- 	select FW_ATTR_CLASS
- 	select LENOVO_WMI_DATA
- 	select LENOVO_WMI_EVENTS
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index b3adcc2804fa..b811a2fbdb60 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -14,7 +14,16 @@
-  * These attributes typically don't fit anywhere else in the sysfs and are set
-  * in Windows using one of Lenovo's multiple user applications.
-  *
-+ * Additionally, this driver also exports tunable fan speed RPM to HWMON.
-+ * Min/max RPM are also provided for reference.
-+ *
-  * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-+ *   - fw_attributes
-+ *   - binding to Capability Data 01
-+ *
-+ * Copyright (C) 2025 Rong Zhang <i@rong.moe>
-+ *   - HWMON
-+ *   - binding to Capability Data 00 and Fan
-  */
- 
- #include <linux/acpi.h>
-@@ -25,6 +34,7 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/gfp_types.h>
-+#include <linux/hwmon.h>
- #include <linux/idr.h>
- #include <linux/kdev_t.h>
- #include <linux/kobject.h>
-@@ -49,12 +59,26 @@
- #define LWMI_FEATURE_ID_CPU_SPL 0x02
- #define LWMI_FEATURE_ID_CPU_FPPT 0x03
- 
-+#define LWMI_FEATURE_ID_FAN_RPM 0x03
-+
- #define LWMI_TYPE_ID_NONE 0x00
- 
- #define LWMI_FEATURE_VALUE_GET 17
- #define LWMI_FEATURE_VALUE_SET 18
- 
-+#define LWMI_FAN_ID_BASE 1
-+#define LWMI_FAN_NR 4
-+#define LWMI_FAN_ID(x) ((x) + LWMI_FAN_ID_BASE)
-+
-+#define LWMI_ATTR_ID_FAN_RPM(x)						\
-+	(FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, LWMI_DEVICE_ID_FAN) |	\
-+	 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, LWMI_FEATURE_ID_FAN_RPM) |	\
-+	 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, LWMI_FAN_ID(x)))
-+
-+#define LWMI_FAN_STOP_RPM 1
-+
- #define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
-+#define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
- 
- static BLOCKING_NOTIFIER_HEAD(om_chain_head);
- static DEFINE_IDA(lwmi_om_ida);
-@@ -71,15 +95,439 @@ struct lwmi_om_priv {
- 	struct component_master_ops *ops;
- 
- 	/* only valid after capdata bind */
-+	struct cd_list *cd00_list;
- 	struct cd_list *cd01_list;
- 
-+	struct device *hwmon_dev;
- 	struct device *fw_attr_dev;
- 	struct kset *fw_attr_kset;
- 	struct notifier_block nb;
- 	struct wmi_device *wdev;
- 	int ida_id;
-+
-+	struct fan_info {
-+		u32 supported;
-+		u32 last_target;
-+		long min_rpm;
-+		long max_rpm;
-+	} fan_info[LWMI_FAN_NR];
-+	struct {
-+		bool capdata00_collected : 1;
-+		bool capdata_fan_collected : 1;
-+	} fan_flags;
-+};
-+
-+/*
-+ * Visibility of fan channels:
-+ *
-+ * +---------------------+---------+------------------+-----------------------+------------+
-+ * |                     | default | +expose_all_fans | +relax_fan_constraint | +both      |
-+ * +---------------------+---------+------------------+-----------------------+------------+
-+ * | canonical           | RW      | RW               | RW+relaxed            | RW+relaxed |
-+ * +---------------------+---------+------------------+-----------------------+------------+
-+ * | -capdata_fan[idx]   | N       | RO               | N                     | RW+relaxed |
-+ * +---------------------+---------+------------------+-----------------------+------------+
-+ *
-+ * Note:
-+ * 1. LWMI_ATTR_ID_FAN_RPM[idx].supported is always checked before exposing a channel.
-+ * 2. -capdata_fan implies -capdata_fan[idx].
-+ */
-+static bool expose_all_fans;
-+module_param(expose_all_fans, bool, 0444);
-+MODULE_PARM_DESC(expose_all_fans,
-+	"This option skips some capability checks and solely relies on per-channel ones "
-+	"to expose fan attributes. Use with caution.");
-+
-+static bool relax_fan_constraint;
-+module_param(relax_fan_constraint, bool, 0444);
-+MODULE_PARM_DESC(relax_fan_constraint,
-+	"Do not enforce fan RPM constraint (min/max RPM) "
-+	"and enables fan tuning when such data is missing. "
-+	"Enabling this may results in HWMON attributes being out-of-sync. Use with caution.");
-+
-+/* ======== HWMON (component: lenovo-wmi-capdata 00 & fan) ======== */
-+
-+/**
-+ * lwmi_om_fan_get_set() - Get or set fan RPM value of specified fan
-+ * @priv: Driver private data structure
-+ * @channel: Fan channel index (0-based)
-+ * @val: Pointer to value (input for set, output for get)
-+ * @set: True to set value, false to get value
-+ *
-+ * Communicates with WMI interface to either retrieve current fan RPM
-+ * or set target fan RPM.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_fan_get_set(struct lwmi_om_priv *priv, int channel, u32 *val, bool set)
-+{
-+	struct wmi_method_args_32 args;
-+	u32 method_id, retval;
-+	int err;
-+
-+	method_id = set ? LWMI_FEATURE_VALUE_SET : LWMI_FEATURE_VALUE_GET;
-+	args.arg0 = LWMI_ATTR_ID_FAN_RPM(channel);
-+	args.arg1 = set ? *val : 0;
-+
-+	err = lwmi_dev_evaluate_int(priv->wdev, 0x0, method_id,
-+				    (unsigned char *)&args, sizeof(args), &retval);
-+	if (err)
-+		return err;
-+
-+	if (!set)
-+		*val = retval;
-+	else if (retval != 1)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+/**
-+ * lwmi_om_hwmon_is_visible() - Determine visibility of HWMON attributes
-+ * @drvdata: Driver private data
-+ * @type: Sensor type
-+ * @attr: Attribute identifier
-+ * @channel: Channel index
-+ *
-+ * Determines whether an HWMON attribute should be visible in sysfs
-+ * based on hardware capabilities and current configuration.
-+ *
-+ * Return: permission mode, or 0 if invisible.
-+ */
-+static umode_t lwmi_om_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+					u32 attr, int channel)
-+{
-+	struct lwmi_om_priv *priv = (struct lwmi_om_priv *)drvdata;
-+	bool visible = false;
-+
-+	if (type == hwmon_fan) {
-+		if (!(priv->fan_info[channel].supported & LWMI_SUPP_VALID))
-+			return 0;
-+
-+		switch (attr) {
-+		case hwmon_fan_enable:
-+		case hwmon_fan_target:
-+			if (!(priv->fan_info[channel].supported & LWMI_SUPP_MAY_SET))
-+				return 0;
-+
-+			if (relax_fan_constraint ||
-+			    (priv->fan_info[channel].min_rpm >= 0 &&
-+			     priv->fan_info[channel].max_rpm >= 0))
-+				return 0644;
-+
-+			/*
-+			 * Reaching here implies expose_all_fans is set.
-+			 * See lwmi_om_hwmon_add().
-+			 */
-+			dev_warn_once(&priv->wdev->dev,
-+				      "fan tuning disabled due to missing RPM constraint\n");
-+			return 0;
-+		case hwmon_fan_input:
-+			visible = priv->fan_info[channel].supported & LWMI_SUPP_MAY_GET;
-+			break;
-+		case hwmon_fan_min:
-+			visible = priv->fan_info[channel].min_rpm >= 0;
-+			break;
-+		case hwmon_fan_max:
-+			visible = priv->fan_info[channel].max_rpm >= 0;
-+			break;
-+		}
-+	}
-+
-+	return visible ? 0444 : 0;
-+}
-+
-+/**
-+ * lwmi_om_hwmon_read() - Read HWMON sensor data
-+ * @dev: Device pointer
-+ * @type: Sensor type
-+ * @attr: Attribute identifier
-+ * @channel: Channel index
-+ * @val: Pointer to store value
-+ *
-+ * Reads current sensor values from hardware through WMI interface.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			      u32 attr, int channel, long *val)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+	u32 retval = 0;
-+	int err;
-+
-+	if (type == hwmon_fan) {
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			err = lwmi_om_fan_get_set(priv, channel, &retval, false);
-+			if (err)
-+				return err;
-+
-+			*val = retval;
-+			return 0;
-+		case hwmon_fan_enable:
-+			*val = priv->fan_info[channel].last_target != LWMI_FAN_STOP_RPM;
-+			return 0;
-+		case hwmon_fan_target:
-+			if (priv->fan_info[channel].last_target == LWMI_FAN_STOP_RPM)
-+				return -EBUSY;
-+
-+			*val = priv->fan_info[channel].last_target;
-+			return 0;
-+		case hwmon_fan_min:
-+			*val = priv->fan_info[channel].min_rpm;
-+			return 0;
-+		case hwmon_fan_max:
-+			*val = priv->fan_info[channel].max_rpm;
-+			return 0;
-+		}
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+/**
-+ * lwmi_om_hwmon_write() - Write HWMON sensor data
-+ * @dev: Device pointer
-+ * @type: Sensor type
-+ * @attr: Attribute identifier
-+ * @channel: Channel index
-+ * @val: Value to write
-+ *
-+ * Writes configuration values to hardware through WMI interface.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			       u32 attr, int channel, long val)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+	u32 raw, min_rpm, max_rpm;
-+	int err;
-+
-+	if (type == hwmon_fan) {
-+		switch (attr) {
-+		case hwmon_fan_enable:
-+			if (val == 0)
-+				raw = LWMI_FAN_STOP_RPM;
-+			else if (val == 1)
-+				raw = 0; /* auto */
-+			else
-+				return -EINVAL;
-+
-+			goto fan_set;
-+		case hwmon_fan_target:
-+			if (val == 0) {
-+				raw = 0;
-+				goto fan_set;
-+			}
-+
-+			min_rpm = relax_fan_constraint
-+					? LWMI_FAN_STOP_RPM + 1
-+					: priv->fan_info[channel].min_rpm;
-+			max_rpm = relax_fan_constraint
-+					? U16_MAX
-+					: priv->fan_info[channel].max_rpm;
-+
-+			if (val < min_rpm || val > max_rpm)
-+				return -EDOM;
-+
-+			raw = val;
-+fan_set:
-+			err = lwmi_om_fan_get_set(priv, channel, &raw, true);
-+			if (err)
-+				return err;
-+
-+			priv->fan_info[channel].last_target = raw;
-+			return 0;
-+		}
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_channel_info * const lwmi_om_hwmon_info[] = {
-+	/* Must match LWMI_FAN_NR. */
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TARGET |
-+			   HWMON_F_MIN | HWMON_F_MAX,
-+			   HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TARGET |
-+			   HWMON_F_MIN | HWMON_F_MAX,
-+			   HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TARGET |
-+			   HWMON_F_MIN | HWMON_F_MAX,
-+			   HWMON_F_ENABLE | HWMON_F_INPUT | HWMON_F_TARGET |
-+			   HWMON_F_MIN | HWMON_F_MAX),
-+	NULL
- };
- 
-+static const struct hwmon_ops lwmi_om_hwmon_ops = {
-+	.is_visible = lwmi_om_hwmon_is_visible,
-+	.read = lwmi_om_hwmon_read,
-+	.write = lwmi_om_hwmon_write,
-+};
-+
-+static const struct hwmon_chip_info lwmi_om_hwmon_chip_info = {
-+	.ops = &lwmi_om_hwmon_ops,
-+	.info = lwmi_om_hwmon_info,
-+};
-+
-+/**
-+ * lwmi_om_hwmon_add() - Register HWMON device if all info is collected
-+ * @priv: Driver private data
-+ */
-+static void lwmi_om_hwmon_add(struct lwmi_om_priv *priv)
-+{
-+	int i, valid;
-+
-+	if (WARN_ON(priv->hwmon_dev))
-+		return;
-+
-+	if (!priv->fan_flags.capdata00_collected || !priv->fan_flags.capdata_fan_collected) {
-+		dev_dbg(&priv->wdev->dev, "HWMON registration pending (00: %d, fan: %d)\n",
-+			priv->fan_flags.capdata00_collected,
-+			priv->fan_flags.capdata_fan_collected);
-+		return;
-+	}
-+
-+	if (expose_all_fans)
-+		dev_warn(&priv->wdev->dev, "all fans exposed. Use with caution\n");
-+
-+	if (relax_fan_constraint)
-+		dev_warn(&priv->wdev->dev, "fan RPM constraint relaxed. Use with caution\n");
-+
-+	valid = 0;
-+	for (i = 0; i < LWMI_FAN_NR; i++) {
-+		if (!(priv->fan_info[i].supported & LWMI_SUPP_VALID))
-+			continue;
-+
-+		valid++;
-+
-+		if (!expose_all_fans &&
-+		    (priv->fan_info[i].min_rpm < 0 || priv->fan_info[i].max_rpm < 0)) {
-+			dev_dbg(&priv->wdev->dev, "missing RPM constraint for fan%d, hiding\n",
-+				LWMI_FAN_ID(i));
-+			priv->fan_info[i].supported = 0;
-+			valid--;
-+		}
-+	}
-+
-+	if (valid == 0) {
-+		dev_warn(&priv->wdev->dev,
-+			 "fan reporting/tuning is unsupported on this device\n");
-+		return;
-+	}
-+
-+	priv->hwmon_dev = hwmon_device_register_with_info(&priv->wdev->dev,
-+							  LWMI_OM_HWMON_NAME, priv,
-+							  &lwmi_om_hwmon_chip_info,
-+							  NULL);
-+	if (IS_ERR(priv->hwmon_dev)) {
-+		dev_warn(&priv->wdev->dev, "failed to register HWMON device: %ld\n",
-+			 PTR_ERR(priv->hwmon_dev));
-+		priv->hwmon_dev = NULL;
-+		return;
-+	}
-+
-+	dev_dbg(&priv->wdev->dev, "registered HWMON device\n");
-+}
-+
-+/**
-+ * lwmi_om_hwmon_remove() - Unregister HWMON device
-+ * @priv: Driver private data
-+ *
-+ * Unregisters the HWMON device if applicable.
-+ */
-+static void lwmi_om_hwmon_remove(struct lwmi_om_priv *priv)
-+{
-+	if (!priv->hwmon_dev)
-+		return;
-+
-+	hwmon_device_unregister(priv->hwmon_dev);
-+	priv->hwmon_dev = NULL;
-+}
-+
-+/**
-+ * lwmi_om_fan_info_init() - Initialzie fan info
-+ * @priv: Driver private data
-+ *
-+ * lwmi_om_fan_info_collect_cd00() and lwmi_om_fan_info_collect_cd_fan() may be
-+ * called in an arbitrary order. Hence, initializion must be done before.
-+ */
-+static void lwmi_om_fan_info_init(struct lwmi_om_priv *priv)
-+{
-+	int i;
-+
-+	for (i = 0; i < LWMI_FAN_NR; i++) {
-+		priv->fan_info[i] = (struct fan_info) {
-+			.supported = 0,
-+			/*
-+			 * Assume 0 on probe as the EC resets all fans to auto mode on (re)boot.
-+			 *
-+			 * Note that S0ix (s2idle) preserves the RPM target, so we don't need
-+			 * suspend/resume callbacks. This behavior has not been tested on S3-
-+			 * capable devices, but I doubt if such devices even have this interface.
-+			 */
-+			.last_target = 0,
-+			.min_rpm = -ENODATA,
-+			.max_rpm = -ENODATA,
-+		};
-+	}
-+
-+	priv->fan_flags.capdata00_collected = false;
-+	priv->fan_flags.capdata_fan_collected = false;
-+}
-+
-+/**
-+ * lwmi_om_fan_info_collect_cd00() - Collect fan info from capdata 00
-+ * @priv: Driver private data
-+ */
-+static void lwmi_om_fan_info_collect_cd00(struct lwmi_om_priv *priv)
-+{
-+	struct capdata00 capdata00;
-+	int i, err;
-+
-+	dev_dbg(&priv->wdev->dev, "Collecting fan info from capdata00\n");
-+
-+	for (i = 0; i < LWMI_FAN_NR; i++) {
-+		err = lwmi_cd00_get_data(priv->cd00_list, LWMI_ATTR_ID_FAN_RPM(i), &capdata00);
-+		priv->fan_info[i].supported = err ? 0 : capdata00.supported;
-+	}
-+
-+	priv->fan_flags.capdata00_collected = true;
-+	lwmi_om_hwmon_add(priv);
-+}
-+
-+/**
-+ * lwmi_om_fan_info_collect_cd_fan() - Collect fan info from capdata fan
-+ * @dev: Pointer to the lenovo-wmi-other device
-+ * @cd_fan_list: Pointer to the capdata fan list
-+ */
-+static void lwmi_om_fan_info_collect_cd_fan(struct device *dev, struct cd_list *cd_fan_list)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+	struct capdata_fan capdata_fan;
-+	int i, err;
-+
-+	dev_dbg(dev, "Collecting fan info from capdata_fan\n");
-+
-+	if (!cd_fan_list)
-+		goto out;
-+
-+	for (i = 0; i < LWMI_FAN_NR; i++) {
-+		err = lwmi_cd_fan_get_data(cd_fan_list, LWMI_FAN_ID(i), &capdata_fan);
-+		if (err)
-+			continue;
-+
-+		priv->fan_info[i].min_rpm = capdata_fan.min_rpm;
-+		priv->fan_info[i].max_rpm = capdata_fan.max_rpm;
-+	}
-+out:
-+	priv->fan_flags.capdata_fan_collected = true;
-+	lwmi_om_hwmon_add(priv);
-+}
-+
-+/* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
-+
- struct tunable_attr_01 {
- 	struct capdata01 *capdata;
- 	struct device *dev;
-@@ -559,32 +1007,45 @@ static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
- 	device_unregister(priv->fw_attr_dev);
- }
- 
-+/* ======== Self (master: lenovo-wmi-other) ======== */
-+
- /**
-  * lwmi_om_master_bind() - Bind all components of the other mode driver
-  * @dev: The lenovo-wmi-other driver basic device.
-  *
-- * Call component_bind_all to bind the lenovo-wmi-capdata01 driver to the
-- * lenovo-wmi-other master driver. On success, assign the capability data 01
-- * list pointer to the driver data struct for later access. This pointer
-- * is only valid while the capdata01 interface exists. Finally, register all
-- * firmware attribute groups.
-+ * Call component_bind_all to bind the lenovo-wmi-capdata devices to the
-+ * lenovo-wmi-other master driver, with a callback to collect fan info from
-+ * capdata_fan. On success, assign the capability data list pointers to the
-+ * driver data struct for later access. These pointers are only valid while the
-+ * capdata interfaces exist. Finally, collect fan info from capdata00 and
-+ * register all firmware attribute groups. Note that the HWMON device is
-+ * registered only if all fan info is collected. Hence, it is not registered
-+ * here. See lwmi_om_fan_info_collect_cd00() and
-+ * lwmi_om_fan_info_collect_cd_fan().
-  *
-  * Return: 0 on success, or an error code.
-  */
- static int lwmi_om_master_bind(struct device *dev)
- {
- 	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
--	struct lwmi_cd_binder binder = { 0 };
-+	struct lwmi_cd_binder binder = {
-+		.cd_fan_list_cb = lwmi_om_fan_info_collect_cd_fan,
-+	};
- 	int ret;
- 
-+	lwmi_om_fan_info_init(priv);
-+
- 	ret = component_bind_all(dev, &binder);
- 	if (ret)
- 		return ret;
- 
-+	priv->cd00_list = binder.cd00_list;
- 	priv->cd01_list = binder.cd01_list;
--	if (!priv->cd01_list)
-+	if (!priv->cd00_list || !priv->cd01_list)
- 		return -ENODEV;
- 
-+	lwmi_om_fan_info_collect_cd00(priv);
-+
- 	return lwmi_om_fw_attr_add(priv);
- }
- 
-@@ -592,15 +1053,18 @@ static int lwmi_om_master_bind(struct device *dev)
-  * lwmi_om_master_unbind() - Unbind all components of the other mode driver
-  * @dev: The lenovo-wmi-other driver basic device
-  *
-- * Unregister all capability data attribute groups. Then call
-- * component_unbind_all to unbind the lenovo-wmi-capdata01 driver from the
-- * lenovo-wmi-other master driver. Finally, free the IDA for this device.
-+ * Unregister all firmware attribute groups and the HWMON device. Then call
-+ * component_unbind_all to unbind lenovo-wmi-capdata devices from the
-+ * lenovo-wmi-other master driver.
-  */
- static void lwmi_om_master_unbind(struct device *dev)
- {
- 	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
- 
- 	lwmi_om_fw_attr_remove(priv);
-+
-+	lwmi_om_hwmon_remove(priv);
-+
- 	component_unbind_all(dev, NULL);
- }
- 
-@@ -665,5 +1129,6 @@ MODULE_IMPORT_NS("LENOVO_WMI_CD");
- MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
- MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
- MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-+MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
- MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
- MODULE_LICENSE("GPL");
--- 
-2.51.0
+It would be a good idea for you both to perhaps collaborate with Sergei =
+from ghelper, he has put a huge amount of effort in to that tool and due =
+to it being windows he gets a hell of a lot more use and bug =
+reports/data than this driver does. There=E2=80=99s no shame in looking =
+to others for inspiration, ideas, or guidance.
+
+Cheers,
+Luke.
+
+>=20
+>> No disable commands unless we find hard evidence those are strictly =
+needed.
+>=20
+> They are needed for the Xbox Ally series, but since this driver does
+> not do RGB it is out of scope.
+>=20
+>>> Antheas
+>>>=20
+>>>>> Hopefully this clears things up
+>>>>>=20
+>>>>> Antheas
+>>>>>=20
+>>>>>>> Unrelated but I was b4ing this series on Ubuntu 24 and got =
+BADSIG:
+>>>>>>> DKIM/antheas.dev. Is there a reference for fixing this on my =
+host?
+>>>>>>> Perhaps it would help with spam
+>>>>>> I see BADSIG very often these days from b4 (thanks to gmail =
+expiring
+>>>>>> things after 7 days or so, I recall hearing somewhere), I just =
+ignore them
+>>>>>> entirely.
+>>>>>>=20
+>>>>>> AFAIK, that has never caused any delay to any patch in pdx86 =
+domain so if
+>>>>>> that is what you thought is happening here, it's not the case.
+>>>>>> If your patch does appear in the pdx86 patchwork, there's even =
+less reason
+>>>>>> to worry as I mostly pick patches to process using patchwork's =
+list.
+>>>>> Turns out I had to update my DNS records. It should be good now.
+>>>>>=20
+>>>>>> --
+>>>>>> i.
+>>>> snipp
+>>>>>>>> 2.51.2
+
 
