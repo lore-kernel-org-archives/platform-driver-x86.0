@@ -1,62 +1,62 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7221B322DD1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 21:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A6B324703
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 21:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763069207; cv=none; b=rp3vIFiZph6NMwt5l8K/vWJ8+EU2TyuFDdEk09ULIhuC4lRRJxRFv3jHcyBYRhVscmbP3F8JOYYotxmkmS8r5R710kyzSmZxcUMqwJwap8QtQ4+49gL++uKzS+5//EzAO9y+SEUYE5O6ApsYyoOrgujDURotpwOJfozLpkgLph0=
+	t=1763069207; cv=none; b=MtIcdNDLNoTUd0mQyEfWKVEzdcdC+qdHOz8aNIu5ne5Ck7KAN8cCBCmHvz/G0Rlj6B0xh0yA5h4R9nS5Ane6NoXV1JvoVIPwqvBH6A+pUGIR1Xpo0vTbya+IvKs3uT7o0u3h/+0CmZEEaAl63OTkVNkz8w6UlDhxS/jY9o39elg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763069207; c=relaxed/simple;
-	bh=bINqTcYBnpMiA8eKDMIKE2dhokiXwzdMKmoocGJBxvY=;
+	bh=EAYHD0uflfQd6sszqckCoZM9plV9potl4DoHq6i9A4c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IoN4X2dHDH0Zl5uVJiJq6j+WMjyzq5S6G93l/nY9gCiSn5/s2NPcJPjHa7WDC1dlgT34UD0HB7+zP5YbaXgmiTE2dLqA0SAq+o0FFTQEMAf9WBV+OEp8cpiDuZlIn2xVurslck+Qs92sPLebLzAeBFD5QhKOJi/ctDr/6sm6MD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tm/zOQpQ; arc=none smtp.client-ip=209.85.215.180
+	 MIME-Version; b=JGkCfqBLLwmAAl+dliSgdU8p2ho6lZaj6jz7KFIg3pqAhcAe4wz45aCYJ+6TxfdvPM5v+U8wHMmEO0EPLbThXBwc2x30ijURt+n8QliQOOjojNaf8Mr1LDpLZoUNj7yMGC7ptbwco7ti+Ys6OXeVhZFBLu3vTrCT1Wh/C/XUm54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLeo9aAX; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm/zOQpQ"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-ba599137cf8so862231a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 13:26:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLeo9aAX"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-bc2abdcfc6fso780342a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 13:26:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763069204; x=1763674004; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763069205; x=1763674005; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ETZ2FAyy2v+yzymxyjsZFHVgNltj1Cngjn3GryQ+ajM=;
-        b=Tm/zOQpQlcIUrmG0+jB8yc4M8iTsTuc8qRK1RnyS+fcLs4P+5RVKq7laD5rI14Xdq6
-         MkGNF5nD+bsi4tDZM6qzotwBAqcJvuompcQG6GzAn75Izac3+mpkBvPpgGRKsAyK6FVh
-         JpA4hPrr+ihhxD+elLGZRa3qmPS71kV+rZqRPU/I8u28UG+V+nm1RpWPG6YEDxLt85hB
-         yZd4XCmh99WIxQSufm1HQ5E7kE3pNlMftiRTq1cY/c1UQWKBz00LsjP/VUzG8AEPszOZ
-         WL6dxvIJrD2d2TmmoPfs9TN/kW5nfPK7EYXZcuqbr0VdS01aPtMNfLgLEla2lez2XJ5s
-         qNtQ==
+        bh=2SI5IT2ccA/LcmNZQUHmcdI+iq0zqrTHDtVhV8fx+VI=;
+        b=SLeo9aAXvz8+jnJn+Ek+oV6/IpdfpReJeK6ysMpgYnJH5+YGaMaPuaU7pRv161/0fH
+         6cD5fybdcAOoQnIFr1sP66XKYxAJNwq2OFRZzsrLpUZvbY7E1JWx1oV9NCFkaQzW03cR
+         g144UbZXLtBsqwtilem+qzxqRJ1JcFGou6vU8XH5MdW8vm+KNXeCJURweMjcy6kSCVGt
+         drzF539RFvBIWkUynQrjuKVrwi6x6O6kmtmLBwhdKRptbwlbAzPmzdJ/btdQNcsauhiy
+         F+vTKj7XaLjBd6I4FnG6h7/xqEwHcV5porkrSeKftdFATtZp8mj4Rvz9wvPG9t66y5m/
+         i+JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763069204; x=1763674004;
+        d=1e100.net; s=20230601; t=1763069205; x=1763674005;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ETZ2FAyy2v+yzymxyjsZFHVgNltj1Cngjn3GryQ+ajM=;
-        b=Rcx4PnGYzgylixIQGRDNimJKT6jzRxADCVaSxlEp1C3QAV4nx+n47w34fh9f7nG7K9
-         H+9e5fTGLfoXg8UIMWwVXHwq2m26WGcSyERlLVnFUjGE42EeI7MhrlMkNK9dj3ItK5Z1
-         wNeNzG/hjj0O5ZxTYCM9AsqtTvCild/XiOMqzBFWB3y9/I1zt7K7laRjrQ2+z9QsMrfm
-         c1j87ugmzGNmBRDV2udvcHO3lgJ2NZqwGwFF2Om51vMdfGxHYSMcX+ZRSQprt2M1zWVu
-         P75moqn1en2dLPIWkgrkQbITrfhuKOsrtTaML7XouBaDwxWv+FjlRTb86YjwkDgAtIWe
-         bwTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWN3TqauGIxIqAHJRBiGG2XIqueNxDjoxbIJDKxY7pbBN1rjiUR6Ls5FaO2PWeodZjG+Q3HQU4HoqPRcrMejup+k85@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmTJVlSkdrGzxCydW27pMqKIJ5lA4G5bC5ggjH1QYy+REBKgay
-	FoDiiIVlEe5+99Ayn7RLwjIw3RSQxXWLRNlJivqTksIhVnH4ME+AaRT8
-X-Gm-Gg: ASbGncteLwNJdaubMHteZIdhS6DuiVFXbFUEvz1T+tDEjRfCHhP7DXosGtFHD6lOnPq
-	YxksuQ2J8rL02vyhdmAqYxFfXhH/S/8ueIv/pXN+1tO+tLJgnEk1ENX9LidkdzWx0lNC5/Qpqcg
-	cmNru/4FYdL79yG8IbDLoi2I9sw8RgdOXsRet01YIhmquH6FruQX/gz/zGmG8/O8ZfRuqW8AwPn
-	0v+el5Q03YDAsDF4UAA7BsuOn9JZUbyztuTFpgQWhanIW2G8+vxXkiZ1ZhmHjpmuaGbjue7wkh9
-	5R1aOK/lHw16oeoOAJfPRglQCFi2cye/cSTzASm7sNRIBIoaiBmARzRmKXV/0BdtMwK+fqTJVnx
-	SifRZuL49lCWgzSNL9upQ/ofuckAzSWW91FnudYXyNfnLzZ8UCcVd9ww9P8Yo8TgNn9RQUaKx2u
-	dtWGoLErBcKScpW87EONS8pJh8ZvOisBpzuuZ7uVkAKK0vFYeklKvDADq4
-X-Google-Smtp-Source: AGHT+IGlGHa64m4FUlNTDBrkTzOJTPv1hG5OJIfDH4dSktE6GCpD7ccEQGk4etzbj8JDAyYp5jdCUQ==
-X-Received: by 2002:a05:7022:925:b0:119:e569:f866 with SMTP id a92af1059eb24-11b40e8ad2dmr366548c88.3.1763069204472;
-        Thu, 13 Nov 2025 13:26:44 -0800 (PST)
+        bh=2SI5IT2ccA/LcmNZQUHmcdI+iq0zqrTHDtVhV8fx+VI=;
+        b=lUCsX0ENewzv4lqFOeGvYveArhO3KDCMR5KDmSLLgnG1oy6Fbb2hWlBZUifESKtvFo
+         SDlOwo3HvQ0ome0egwUG8xybV/TwPPKilBLG/ZsdpmW2U4ktIj39lVmTG6NPW8bHN48g
+         wcTp4NVWL6WNYSqIG+1N4yrJMK5eYh3VY7XvC24XxmjYz4gTuDTu6U9YwhA0c8mPLebm
+         r8iAWSjghc+9lN8NDp5n2AondUMiY2MnP1bZNFQ/RVZ82dsj6ew2MESCrazXsaAKUzq7
+         WgqjErcxQHpinHoKCx+qZjf9veNMG/DYPxK/DanzO0U4Pquheu3YRtyVSzDc0qHajxMv
+         gS7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXWh1USgq8zeDUy6aqGq+Ugi5r5SBjGC0BVYUlTo1Uws5T4wSFJ/GV9C8VYYNYnPJhXd8wBDAdtGqo7ipZknw7hamaE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdJ05EnCcCBCXUbhVfLlkuz4NPJr28Jl1RdVPZgWZvrBKXakAG
+	M44B+nwObg/LQP8tz5FvL3hmoDNr0L7C4DMqwL81QmT85hqCQiqYc5iE
+X-Gm-Gg: ASbGncttVJN47YB8/F4OX6m2HoegXrMAW5iuOjbxAwz6UX2ZuFDGbYE9txSJltbRgXn
+	7GeQVZDPfvdQm0shkIMbMZP34/jekSqysxsqM0CZy8QHyAl+WjM8xCL0WX97ygIbZXh+tywFkwc
+	3d+1pO13mDPOUE3awias6rsDK0CTq8QJ37NewqSqtKBv2BeCpAcMdjpQa/PyfOomhSxqHvzMfQM
+	8CZqhK/LEfo/kZur5tbYVZEVCUpIAkXYRaPc2ImUAKYNKPlQkQu/wp5i2PNi2mFwUN5XUMppWsB
+	r8yWwWsa4A0+jJ6hhWHAHqTf/A7eCTqKi9K1/EIfKLd4L2cx7js1AxzJrJ1AneBYDHq06Crrpj8
+	nPhZKpsG6PSDkIGO7PgEzK/25b7KZShfvUXiZEiVaSSHkvXC1++XQhyoQntkexwT9CpsR1h4VD7
+	tbGflUAre8KBi1IVauvXWz+g+oOGfQd3HmKdAQyhS3Ua6r2r4gSIcbtrd66xG1BPnecVA=
+X-Google-Smtp-Source: AGHT+IE4bqe47dgeG8a0SwzrDMd8To6AhA03KdcpEfj8eolNH4fytB9FGHHkvfol2Cp158xttn8Vgw==
+X-Received: by 2002:a05:7022:1581:b0:11b:65e:f6f with SMTP id a92af1059eb24-11b40f98007mr318605c88.14.1763069205472;
+        Thu, 13 Nov 2025 13:26:45 -0800 (PST)
 Received: from bliptop (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b060885eesm1811414c88.1.2025.11.13.13.26.43
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b060885eesm1811414c88.1.2025.11.13.13.26.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 13 Nov 2025 13:26:44 -0800 (PST)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
@@ -76,9 +76,9 @@ Cc: Mario Limonciello <superm1@kernel.org>,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH v3 2/3] platform/x86: lenovo-wmi-gamezone Use max-power rather than balanced-performance
-Date: Thu, 13 Nov 2025 13:26:16 -0800
-Message-ID: <20251113212639.459896-3-derekjohn.clark@gmail.com>
+Subject: [PATCH v3 3/3] platform/x86: wmi-gamezone: Add Legion Go 2 Quirks
+Date: Thu, 13 Nov 2025 13:26:17 -0800
+Message-ID: <20251113212639.459896-4-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20251113212639.459896-1-derekjohn.clark@gmail.com>
 References: <20251113212639.459896-1-derekjohn.clark@gmail.com>
@@ -90,122 +90,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When developing the gamezone WMI drivers, "extreme mode" was matched to
-the performance platform profile and "performance" was matched to the
-balanced-performance platform profile, but only if extreme mode was
-fully supported; otherwise performance was matched to the "performance"
-platform profile. This has led to quite a bit of confusion with users
-not understanding why the LED color indicating the platform profile
-doesn't match their expectations.
-
-To solve this, replace the confusing convention by using the new
-max-power profile to represent "extreme mode". While add it, update the
-documentation to reflect the expected LED colors in each operating mode.
+Add Legion Go 2 SKU's to the Extreme Mode quirks table.
 
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-
-driver
 ---
- .../wmi/devices/lenovo-wmi-gamezone.rst       | 31 +++++++++----------
- drivers/platform/x86/lenovo/wmi-gamezone.c    | 18 +++--------
- 2 files changed, 20 insertions(+), 29 deletions(-)
+ drivers/platform/x86/lenovo/wmi-gamezone.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-index 997263e51a7d..1769ad3d57b9 100644
---- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-@@ -19,27 +19,26 @@ WMI GUID ``887B54E3-DDDC-4B2C-8B88-68A26A8835D0``
- The Gamezone Data WMI interface provides platform-profile and fan curve
- settings for devices that fall under the "Gaming Series" of Lenovo devices.
- It uses a notifier chain to inform other Lenovo WMI interface drivers of the
--current platform profile when it changes.
-+current platform profile when it changes. The currently set profile can be
-+determined by the user on the hardware by looking at the color of the power
-+or profile LED, depending on the model.
- 
- The following platform profiles are supported:
-- - low-power
-- - balanced
-- - balanced-performance
-- - performance
-- - custom
-+ - low-power, blue LED
-+ - balanced, white LED
-+ - performance, red LED
-+ - max-power, purple LED
-+ - custom, purple LED
- 
--Balanced-Performance
-+Extreme Mode
- ~~~~~~~~~~~~~~~~~~~~
- Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
--enabled in their BIOS. For these devices, the performance platform profile
--corresponds to the BIOS Extreme Mode, while the balanced-performance
--platform profile corresponds to the BIOS Performance mode. For legacy
--devices, the performance platform profile will correspond with the BIOS
--Performance mode.
--
--For some newer devices the "Extreme Mode" profile is incomplete in the BIOS
--and setting it will cause undefined behavior. A BIOS bug quirk table is
--provided to ensure these devices cannot set "Extreme Mode" from the driver.
-+enabled in their BIOS. When available, this mode will be represented by the
-+max-power platform profile.
-+
-+For a subset of these devices the "Extreme Mode" profile is incomplete in
-+the BIOS and setting it will cause undefined behavior. A BIOS bug quirk table
-+is provided to ensure these devices cannot set "Extreme Mode" from the driver.
- 
- Custom Profile
- ~~~~~~~~~~~~~~
 diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
-index 0eb7fe8222f4..df475e52f79d 100644
+index df475e52f79d..381836d29a96 100644
 --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
 +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
-@@ -171,14 +171,10 @@ static int lwmi_gz_profile_get(struct device *dev,
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
- 	case LWMI_GZ_THERMAL_MODE_PERFORMANCE:
--		if (priv->extreme_supported) {
--			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
--			break;
--		}
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		break;
- 	case LWMI_GZ_THERMAL_MODE_EXTREME:
--		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		*profile = PLATFORM_PROFILE_MAX_POWER;
- 		break;
- 	case LWMI_GZ_THERMAL_MODE_CUSTOM:
- 		*profile = PLATFORM_PROFILE_CUSTOM;
-@@ -218,16 +214,12 @@ static int lwmi_gz_profile_set(struct device *dev,
- 	case PLATFORM_PROFILE_BALANCED:
- 		mode = LWMI_GZ_THERMAL_MODE_BALANCED;
- 		break;
--	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
--		mode = LWMI_GZ_THERMAL_MODE_PERFORMANCE;
--		break;
- 	case PLATFORM_PROFILE_PERFORMANCE:
--		if (priv->extreme_supported) {
--			mode = LWMI_GZ_THERMAL_MODE_EXTREME;
--			break;
--		}
- 		mode = LWMI_GZ_THERMAL_MODE_PERFORMANCE;
- 		break;
-+	case PLATFORM_PROFILE_MAX_POWER:
-+		mode = LWMI_GZ_THERMAL_MODE_EXTREME;
-+		break;
- 	case PLATFORM_PROFILE_CUSTOM:
- 		mode = LWMI_GZ_THERMAL_MODE_CUSTOM;
- 		break;
-@@ -338,7 +330,7 @@ static int lwmi_gz_platform_profile_probe(void *drvdata, unsigned long *choices)
+@@ -266,8 +266,23 @@ static const struct dmi_system_id fwbug_list[] = {
+ 		},
+ 		.driver_data = &quirk_no_extreme_bug,
+ 	},
++	{
++		.ident = "Legion Go 8ASP2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8ASP2"),
++		},
++		.driver_data = &quirk_no_extreme_bug,
++	},
++	{
++		.ident = "Legion Go 8AHP2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8AHP2"),
++		},
++		.driver_data = &quirk_no_extreme_bug,
++	},
+ 	{},
+-
+ };
  
- 	priv->extreme_supported = lwmi_gz_extreme_supported(profile_support_ver);
- 	if (priv->extreme_supported)
--		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+		set_bit(PLATFORM_PROFILE_MAX_POWER, choices);
- 
- 	return 0;
- }
+ /**
 -- 
 2.51.2
 
