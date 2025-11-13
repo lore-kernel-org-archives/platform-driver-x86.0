@@ -1,65 +1,64 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012025.outbound.protection.outlook.com [52.101.48.25])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012036.outbound.protection.outlook.com [40.107.200.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B636B328B53
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 07:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A20C32939A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Nov 2025 07:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763019213; cv=fail; b=jB/gTRd+MR5qOO2sICMLYHmYM9oXXPJgW8k6VQ1+6nxmd1nadAVVNodp+PHD+2MKXuzFxmJ2WRKmdSBF59StL8GNmOWiXEfK6LcWYcLdTy9WBkcE2CWnrcRyhLN2v8XAfrRrZmFj1ySoEEcSYjiHMmMxOWWyU3HhKiit0xrP2fc=
+	t=1763019462; cv=fail; b=JSGmErRwm+Dpu+/jVK94Oqbqf7sych4yrDv65+W9pOlgXN4UYQQxsgiBuD0hdMSMlse1aYLbuHOmQ04UcM/ST/BPyu6kbIABbYyYddEvmwlXB6JEwRu9LntqkzPTIWSj6489wakVRrkxPYXisbmDEOEcrzGTsiszZP+IB9Po1KU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763019213; c=relaxed/simple;
-	bh=u03XSoDAfGNFohU9UTlsN4atTSADuwNwcTY3pt3G/gI=;
+	s=arc-20240116; t=1763019462; c=relaxed/simple;
+	bh=fjVUxfHOq1hH3o7wC0s4zHtb8s6lpa09dUZicD4a6tk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NvxJjfZjjyyiImNbCQFQ2NdtZpiZDMiyX1lfnUmIIcazF15j/hF/pgTS1p4exX3eK2nEjdZ0bocYNLAzsL01ZDlx6ghiNxB5vtb2JBVQV0S3P/ntT3vMphduAbbZEwP5QS5F0+qcrXmnQJmKF0Y0ip5YIp6mkxO3LbKYBjWmH8M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bLIVTgbX; arc=fail smtp.client-ip=52.101.48.25
+	 Content-Type:MIME-Version; b=kJjjIy3i8aWig+ZVMfm/bsusHFDpq4aogRRQADVCY8tXSvlqRT4EgjtOxNTq7iwQJgv6Ep6pomMeefLDk7TlKWE2A758VVpT7l7QRXA/fGwq4qZqGbBkpQEfMIh5pV4M3qUZH0pIAJCk2cPzlfcOBlm//1/nOrlfBQ6ZHTaY7Lo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4tmrvM+q; arc=fail smtp.client-ip=40.107.200.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bLIVTgbX"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4tmrvM+q"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yc4/fera8eq6yp7szVdzN7ZNkwmSABkTVHEmWUzKr/Sy6lFrM/49mXHNVXrmp49LKaUtvN/hpzfO6qyAgL5wTjex42Q085snEayX0mnbBBFj6BLE5RAp/phf1VcxPfG6nCroSdrCnymd4fxAMMjhD8pWR+W3cVvUU65fJNk+Kif3bpxWwaJ8/Etm312/vBL/ryFsflMifZRcWW9IsngcXHAKAxgtVxILZ+CqPFzVh+XGaRE7iPWO6VfxPo8mhxF2M8sl+Sl2HYfofdfuymICkIQPd8zZeDWIjWh8tLeroeU+TNX0vNUkCLWwS5IwOIm7vdSHMoaYLzRbshdHG2wROA==
+ b=qyDfAqxsqWHFifhUHPCqSThMU4Akj8cHPjD7V6smRZWiwtzLyIY8isBXvPtN0nmAx1VOrC3aGZrf+Yyp2r2jGPMndImaIVbcbguIQETzPlJoKIZZex8BNR2WpQwTF1SmqT6IdxChVnJERxLWyBaILttMIj3kqHYHrPjIq3mMlTwLHssJvP6HoqH9Yg1vKva79plAmN9gZrWsRwtS9G3pQO6nrSKkqFTc9tBFJ/bUIadjUR4jCLot/R5Ww21rzIbFPaozAOi6wvhvr2ZHOqb9rqPTbgrFwpSxqpqBBlS0I3vqXMcxMjSYox5Wy0JaxWFAi+1x0O+OE1vbqdOw6DrqqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uM4ew8D9v9jWkqUfFHhqXI3NUr72j4Ri0UsBzF6dz8Y=;
- b=kIyRFeGQrKF/haIP5A8LtsbwucUg8hW4e8DsnRPQ/YQC0rauWHRviUO2MJna4FgmLUYQO/vhyltBdyTuBRXBnxXUyINETG2uR/jEC2g9V9+LzBzwuKdMYX7SscArNCQKm3E+nGTd9Jz5eux40riMeK7Yf56JQN2Z1M0R4oJp4YmTVU3ena1o1zdbDvaSjN1BWagziQc+q2O1WwblRWcdjr1k9xIDlyBM+jsiW5tqtRAYrc2oUcWtusTNcup//e+CzNqoA4wcz3+IfNGW4gaknQHx30Owu33sE459apSjUcbYxha+OPVj/IrXChwOY4T8k2Hbhsxgv+3WmbKUYKhPUw==
+ bh=rXjyUmQxz2xH7yJkZzuWKistYkBvDlAGyznaHlBkwDg=;
+ b=JIkiFcswRPMXQ4knA8YHOq3cDKjfwD3PtYZRjPEL9lCsgbHqU//Tu8mweYX414HA3tgGZ6U3+m84Gj1Se8Eq9s5dQX88JLrmivCQHc1b7UhmjvVet8dCsGgtz0tawGRlIRF2sAoHHirG5oS6+ySFw2jj22I5mKPee8cewXiZR8igBhCUqwN6PUa1atXX+pevlh0xcOJqAcxE/N3g6nWXjKWqmwT7+Eklv7mK82fkp2+bvdeqopPYJpkW940tfGmCShT2NW/fDixLJqwHTNUn6ivz2v4Bd3qwztUcj/2Y/6meK9M93U9mC5EhscbnckCzV4HGQAGmPdT4bfFNjQDtow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uM4ew8D9v9jWkqUfFHhqXI3NUr72j4Ri0UsBzF6dz8Y=;
- b=bLIVTgbXYoGY4XucK+UBXqtpgEO70BJ+/kM0nRewSse9K7PamwdtPPEfXW5BsI8S6mtxTYd6ZAscSQbsNgBJgdOJcooVB2DwQOtkv7cZQ6TG19luuMHUJDn3rjMu+dPBgqPDB2GaCk3bOkuniASXfSFws7dqPNbkT7h3OdhOqjQ=
+ bh=rXjyUmQxz2xH7yJkZzuWKistYkBvDlAGyznaHlBkwDg=;
+ b=4tmrvM+qm+2hao3T8dXPLoE64bxWooVHoBhNjBFaOUCSizTeTOIFfdvTEQtMDKtIeQaXFBa4HXEDZnp8dM3Ya+65SL2I2RMprIs62XRkvUP1qe8C+5d2b58hqBZWPpaDfqV7CzeTzZrSghVAKWd5LcyLAPSeHQeu6FUrH9X5uV4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
  by MW4PR12MB7119.namprd12.prod.outlook.com (2603:10b6:303:220::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Thu, 13 Nov
- 2025 07:33:23 +0000
+ 2025 07:37:28 +0000
 Received: from BL1PR12MB5176.namprd12.prod.outlook.com
  ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
  ([fe80::ed5b:dd2f:995a:bcf4%6]) with mapi id 15.20.9320.013; Thu, 13 Nov 2025
- 07:33:23 +0000
-Message-ID: <b8f2d8a0-3131-45cc-8c55-8fbf4ca06cfc@amd.com>
-Date: Thu, 13 Nov 2025 13:03:17 +0530
+ 07:37:28 +0000
+Message-ID: <fe736663-0d7a-49da-ba8b-c4a5df8fb38e@amd.com>
+Date: Thu, 13 Nov 2025 13:07:22 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] accel/amdxdna: Provide real-time NPU power
- estimate via AMD PMF
+Subject: Re: [PATCH v2 0/5] PMF NPU metrics cleanup, command flag cleanup, and
+ amdxdna integration
 To: Mario Limonciello <mario.limonciello@amd.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- lizhi.hou@amd.com, VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+ lizhi.hou@amd.com
 References: <20251111063737.4156385-1-Shyam-sundar.S-k@amd.com>
- <20251111063737.4156385-6-Shyam-sundar.S-k@amd.com>
- <7034fae1-4096-4cdb-a46f-5e23e7accfa0@amd.com>
+ <e451a128-cd81-4ec9-909a-47b960f3946c@amd.com>
 Content-Language: en-US
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <7034fae1-4096-4cdb-a46f-5e23e7accfa0@amd.com>
+In-Reply-To: <e451a128-cd81-4ec9-909a-47b960f3946c@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0241.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:21a::12) To BL1PR12MB5176.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN4P287CA0015.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:269::7) To BL1PR12MB5176.namprd12.prod.outlook.com
  (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,170 +68,165 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|MW4PR12MB7119:EE_
-X-MS-Office365-Filtering-Correlation-Id: e86c26bf-3a90-428a-c5a8-08de2286ece8
+X-MS-Office365-Filtering-Correlation-Id: e33f8e24-2db1-474a-f2f7-08de22877f0c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L3M1TzNwc0gzNGRCajJZWjQrQVFHODVKeUJLUWNpNWFqY1ZFNHpWdHJxRVF6?=
- =?utf-8?B?V1FKVlhaUS9RQndlTENsUEVrK1lmNlZaQzZTd0lkZFg0VkFSbHNQYitFWmh3?=
- =?utf-8?B?NWUyeW5CQTF3V0xVWW4zNE0xN2g2ZHdYbEgzMVQ0cUF4WUQ2aDFSL0tDU1JY?=
- =?utf-8?B?dWhzbE9PSnN0cFVrekRIaWNPQ0F5K1BvMWZwaVVtKzJ2TTJ5MldzbG14Ty91?=
- =?utf-8?B?L2RVSmFJaUR4ZjRWVDFFS2NUWitmL0NGTGQweGVlN1NORkpmOFA3bkdsUmRu?=
- =?utf-8?B?NHE1SUxieFJpaGUwUEpKZzlKYkN2dy9ad2NJRVNOK0hXVStYZnZpMjIxdHM2?=
- =?utf-8?B?dndBSjB5c2d6SGk1VHh2V05GMzVnVnpzV0RQQkhzMUdFOCszRUpzL2h4UzBV?=
- =?utf-8?B?T0Fqak4vazZla3NQQk9FeGtqVlk4YklpVFZEYTM3ZGRVYzdRZGQxd1VKSmhw?=
- =?utf-8?B?VEJOejc5Ym5ycTJGSzBkd1d5L2JmRVE2Wmc0TGFJNU92SlMvZ05wdkM3aFZq?=
- =?utf-8?B?S0Y4KzdYeVZCQ00waUhyZVA1S3BnU1o1d1ZMOC9OY2lSTDl3QlNIaHlaT0E3?=
- =?utf-8?B?b3NlQ3JueUhNU0NsQU5IeHMyUGs1QTF3V2ZaVW9pTENidGdsZUpobk0rVENI?=
- =?utf-8?B?YWJ1ZldUTHhsVVIwaVE5bzZlaVNmdjVOMmlOaFpLeWtDMkh0QitZMkdPVnZR?=
- =?utf-8?B?UTVSWUxVU0EvYjUvOWpsQzdZOEw1REFXQUZJWHdlUXZCd2drcmkrMWNIU2V0?=
- =?utf-8?B?R3VPVlYxanNESVAxOXpaekMweFRORWw2b1AwSTdia29oVXVPTlhXUlJLVTFR?=
- =?utf-8?B?VW9QKzZLWW1OTjBvYUV3Tzl3Mk9hUnRvb0hDM3NyUEhCa3E3cHAvcm5WYitw?=
- =?utf-8?B?MzhPQkRtOXNVMUVnR0tOM1BYNDBoRlpBWUJueTN3WHoyWHJ3Mk9rNHdXYXhw?=
- =?utf-8?B?SDNnTVhyUUkrdFo2RldtbWhjUHJpdlhpRDQ2M0x5R0JmczVYRjRnOXdtN0VN?=
- =?utf-8?B?K3VZa2hDYUpYem5oOXpsMTNpbjQrUit2TTYvVVN1Y3dMYUczSDRTQlZRaHNz?=
- =?utf-8?B?UGlTSlJaYTN5YW5EYTBZRmw2aXd6WGVuY2l1TmRLMi9FcHMyOTFiOUlZb05x?=
- =?utf-8?B?R2RIZHd2enZUZVlyWGpwZGh5d1o1ZExabmsyb09mUjVLWlRRcXRtcHcvUXE2?=
- =?utf-8?B?RiswaFpJaWFWYXhjQzVGQi8venhBVm13UzN5ckRJVGpwZ3NWR1dYYjJ6S09X?=
- =?utf-8?B?N0RpM1FHak9ZS3hNS3owS3ZnTFZnM1dDUHpFUVJTNEdwT3VJOTlVUUUrck83?=
- =?utf-8?B?aDFxckRMYVZxbHJncXNmd01kVDBoWXlYL1FPcTV1bVpVSmRKMDlneEtZVGVq?=
- =?utf-8?B?disrVWxobnpwamMyT0ZKbUt0WGF3SHo0OTdsTXZHMjdKYjdLaHc0c0FlcFll?=
- =?utf-8?B?My8xcFpkMHh1b3pEMlpJYitPYW9RS2ZRRDdueEx4c01pajdIOTg4NnZMbXJI?=
- =?utf-8?B?cytIUHduOG1SQW85aU84VnF5VmFiekRHS3VaRU03NC96TU1pRFIvekMyZXk1?=
- =?utf-8?B?cC9ReURqMVV1d3c2UGpQTTVxWWY0UXVwb0Myem9WMWx1a0tlQW83Y01lU2xS?=
- =?utf-8?B?L01lV3JwUFpsRzVZTXlMWVk4eDhqdVIxd1E5MEZwMEdBVVlaamFVTEFmOEh4?=
- =?utf-8?B?aW9rWXNnYVpIcmRvUFErK1ZhQ1VSZkYzWWFUbi9jSEFBTy84ekZuV05Tb0d2?=
- =?utf-8?B?MHFOY05qQTZwOWdzbExNUkZDZ0gxT2ZmMkx4UEJnOFFJQkJ0Z1M4cGtZNnNB?=
- =?utf-8?B?T0hBajM3YUNXL2F0LzZleDFqVTF1MmZxQVBtUTBXVFdOenVpcTNqazZ4Qm1h?=
- =?utf-8?B?ai9aY1FCMkVxMzNZTlBtQkw5dFh1L2FwZ3hkaisyOGYxV3o4L0FuSC9MZHAy?=
- =?utf-8?Q?YFClzDKzDYC001RLC/jCBMb1Oupz5CPs?=
+	=?utf-8?B?aHNRTkhzZnppSXBUVEZHRllmaTB0MStJejNHWTU2UytKTDV6SStwcXNGQVRI?=
+ =?utf-8?B?OUNiZHE4RUFpaXl4b2JMOVJjZ0tUQVV1NUZXalJZMzgzNlo5RDhSUlVlOGQ4?=
+ =?utf-8?B?Y3B6a1B5UllNUGl6Qm9yY0dDRUJuZkJYUythVWFSdy9DanZ5RzNicER1cUVY?=
+ =?utf-8?B?UEc4VEN5dmFqNTJubDA5ZVFRY2x2enNxWDhqcHJpWjd3ckNQQS9qcnVTcitq?=
+ =?utf-8?B?Q1VJTjZqSWgrcU00MmRuQUVrSnZBbVV2MkJHdC9oZFQ1MUlnaUVINDIrYzJu?=
+ =?utf-8?B?eVdSbzJmQlZsaGwzVHpHb1ZDZ0EyYWduNmp2VWMxRnBEWm5HcWNCaUpTRCtN?=
+ =?utf-8?B?VldibEQwaU00SWpHL0pmcmVaOVptVEZENkRPTGFsRSt6cHY5V3p5UXVWbk00?=
+ =?utf-8?B?ZkJRWm10NGRXaU5nc0tzK1BUWjIwWFl4REZMcW1iZVpoaGM0bGFrT01ieU81?=
+ =?utf-8?B?VEVpbUU2My9JbGJEUzg4Qnp6MkhieUkyN2owOE9ZRXNza1RDS2hlbk1oRER5?=
+ =?utf-8?B?d0Q4NW5GdFd6Z1docHJLaGpWWmF6RVlMNyt2QytkZDdjSjRzZU1DdlBOUFlO?=
+ =?utf-8?B?ZFQ3YkxyZEpYRzVSMVFKWmliaGdxQm5paWtUMDA5ZjhsdnVObi9tSVdNOHl2?=
+ =?utf-8?B?dUdKa29ZS2gzaEZJRnUwdlh4cGlyeG0xbGgxYnc1RWFiaDk5ZFFYaFJVb2E0?=
+ =?utf-8?B?dVNobGc2eEpSWTYrTHZmSEZJemJaS3hnMEFSUUI4RXJhdzU5YklycU9pcFdY?=
+ =?utf-8?B?ZXBsV2xaZ1NEYnE0cGRKcnc2S0x5SiswSUl4enhSM2Y5RjFVei9QaEZGN3pM?=
+ =?utf-8?B?VDQyZ1VHemhjU2dPWC9hRG9FMXkvMUZNQ1lESm5rQ20zR0JOcnlmYVAwQzZ6?=
+ =?utf-8?B?Z1orSWZwLzMyWFVWa2haUHVHbEYzdWJFRElBdnVIZk8waGg0cmtYNW9KRUVG?=
+ =?utf-8?B?TDlibXdlSnR6TzNsUmkxMFloWEl5Z1ByQ1J4bGJtNXVhVk5ocm9nWmRGOWdr?=
+ =?utf-8?B?VnRkU2tabUFzdlRtRlhxMDNuTllua0c3UlNTbnRXU3ZWVXNxYUd1NlRiT25N?=
+ =?utf-8?B?dng0TlJGZnJZSWpydmpTMUswbVJ0b2tRUnJvMjQxQXQxZzB1T0ZXMVBQNGdm?=
+ =?utf-8?B?MFVWQjJLMFRqMTV4OG9zTmgyc0lmTXoza3BSa3pWYTgzQmxoQUlVYnZsR2Nr?=
+ =?utf-8?B?enhIVEhRN1lGbVowTnlwVEdnVldnTDlLQ1FxNjFXSExlazNjcDdTS1VTZkVy?=
+ =?utf-8?B?WEFnMjVjQ2h1ekxMbWd0VDgvUTQ5T2hMR21VR2M0TmtZKytRS3hWVzNtVmNR?=
+ =?utf-8?B?TVk0eEdsdjY3MitPem54bUgxZ01tWVplTE5neUVrUkp6a0xBY0NLSnMwSTR3?=
+ =?utf-8?B?cHoxd1VSN3cwa0E3N0hvTUVwaGZqQUNVOEhlVnJ0UWVRQmVkRUJDQmRLSkNI?=
+ =?utf-8?B?aVB4Y1NKTHlRemFPU2VsNTZZTEFJLzhjYTVrdjZOdkFnYzJORzhCWlBjOThx?=
+ =?utf-8?B?V3ZvN0ovK0pjSWFoZEowRHJKWDBld3EwdlBDZ0NFR1Nkck1BU3Jxak5uOWxB?=
+ =?utf-8?B?d1hLRytsbWo2RU4zaUNCbU1MeEhMRHpvaGowb1hSSnNPV0hRQXIyYzA5UlNy?=
+ =?utf-8?B?azFCaEZRYVlPMm10QnZndWtXYjlBazNtMzg0dkhxNjN1VmxkS2JwUHhEYVZB?=
+ =?utf-8?B?ZmtJUTdpWDRnU1lQZ04vNWZxRWxvU2NZVjZwMVk2Y3NMRHowOTQ5V3VrNEJV?=
+ =?utf-8?B?NmpKVVRWVDdyS21UQ0JWNThFTXZBeElLeTlwSzcyUEVVb29Pc0tOWUxuT3Np?=
+ =?utf-8?B?ak1qQ2xBN20xSDk4V2g2ejh4ZFpXaUV1cDAyOVJuZFBXY3dFeFphc1dUM2wx?=
+ =?utf-8?B?c0cxV1VYcGtWdHdwSWZaa1A2Wm5EWHBrZENDYWVqRFhGVkRDSzMzQk1seGp3?=
+ =?utf-8?Q?N6Yus0Qq+CaWquDsIf1Vk1gefXzVuYZW?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MElsRnY0OUxsQ1ExUXYxd3JrQm80T2FYQlBpT3dMaW1udFVhdmlFSE91R0xt?=
- =?utf-8?B?NHhoM0pCRENVYUxjOG5ZamxzNnoxZXNBMDlnL3Y1c1E0eHpXWWszL3JkaUxE?=
- =?utf-8?B?WVRqZTNSOXEzWTQvcTN0Y2pNMTNtUHdXTThKTlVGdjI5cXV3T29FTGYrWHhH?=
- =?utf-8?B?TXlzVzFtdUlWVHR3UnpFZHBQbnVYNkR2ZWkxSi9jWmdGNUtkVktTUjB1MGNK?=
- =?utf-8?B?NWxFRlVXUk1oQS90V1NmSHJxU3lPcmJyWEZyblh0S2tydXZaeHlFMU9NYWx1?=
- =?utf-8?B?NFJOemw5TXRLdy85dGJ4RlNPaEFTUWZ6aFRzWnA4YzltZkVpYmpLYUhHN1cv?=
- =?utf-8?B?NVhwUU1BbEgvN2cxS3MzakpvSGM2UGt2dWg3QmZMVnh5ZGhvWUhnbWl0aFNH?=
- =?utf-8?B?WllLR01BbGpTTWhIVW1HTzdZbTF5NGk3bkU0ZVlQNXU2WGUvUmVQRzJ5YzR0?=
- =?utf-8?B?bHJja2ZVV01sT3p1WGI0ZDhqYkg2MEZsY2p4eUJQRlR3bXh2U0JvTlM5eFVy?=
- =?utf-8?B?eXlsWHJ6d2lYOTF1SldFeFpVSDBldFpGbjdNbkwzemYrV1JNTUJRLzRHa1BV?=
- =?utf-8?B?WUw2eHowb2hVa1A4cTl1NkE3d0tyODR3cXV1dWJleUpXbXR0aG0zcDlyWm84?=
- =?utf-8?B?aW1yYWNRSEZBSXBHdlI0VStiR0Uxd1B5M2R1U25IU2JaSW5zcTBoUjR5WU5B?=
- =?utf-8?B?Y2tqMXI5dVN1UjJyODJaUE5HSmw3QXRFMlRHcitKL1lPVVRINGwrelpXaHM1?=
- =?utf-8?B?VUYzMXZKWkpUWDF4NjdudnpwNEhCeXpLeGJIeXp1K3p6d0pKcURGTzNoWHNx?=
- =?utf-8?B?ajdXaE5IdjVnejNqbjBXNEtCOTNQOHpTdnF2UE1XblFpWm9zRTllODcyblRH?=
- =?utf-8?B?VmgzNEpGQXNRQXp3RFVYQ0YrVjhxUkZZSmdMa1VsZWJJN1hrUnRkY0FtQ2dW?=
- =?utf-8?B?enhVSVBOTXI0WDRWWVYvdEgxNktuUm93Y3RmZjJyUW04Nkx6SHJQMVUvTk0y?=
- =?utf-8?B?M2NIUi9paXVxMkdhalhTVUM5WE05dXpoMDVFeFA0Q0hpUjdUWHh6K0x0NzBK?=
- =?utf-8?B?dC9zRnB0Mms3MGNaVWRFMkFld0FVZ3M3OEp2LzVlTGM1a3V1N1cvaUtCNzRB?=
- =?utf-8?B?VHROTll6NUliemRrNnRaQjBxaXc4L2g5L0YwUWQ0K1JEYXRGcFJzaGJUYWRW?=
- =?utf-8?B?bnZ1SHRMdW9DdXRjSlhaQllXWDB4a3NvZ2ZBeG1tZDFwWEVLUmdtQmRVZ1VZ?=
- =?utf-8?B?bUR5UUcrbUVIUjJac0dPZVpnMWlNSHl0bUk1VjhmaTF5d2dEcmJ3a1pmaHc0?=
- =?utf-8?B?dVhMMW8xNzcxZ3FXUGxFOUpqSVp5TlJTZGE1SG1BQjJFS3VoZ1pkalhuNlNp?=
- =?utf-8?B?eTQyTDdHeldnakZQaVhBWjExaVRKNEFBODY1T0VkQ3IvWVYzU0twcmdGTUcz?=
- =?utf-8?B?RThRVW5VeVpmZGdZd1BReGg3bzBjZHprSml2VFNlSnIyNGgxZk5DTWVjZGxI?=
- =?utf-8?B?Z0wwRGNIV0xWaDRDYmJMVTI0dXh2cUVkVFpSSWI2VVRCVmRyMlcvSE9XTFds?=
- =?utf-8?B?Tm91M3NWSjliYzhUMGVSR2xrV3dDY3pUbld5R3VqbTFsODV6d0RFZnMrREx5?=
- =?utf-8?B?L2hodytzZlFUM0lpOEtlclE2ckZ4b0FONUhhRUF0RkR6MWw5dEFaaU42eGxV?=
- =?utf-8?B?ejNHdTU1NjdpRzhVNWpaUnBmeUZVSDZ6TVp0L0dzN2lDcWdwRnY1V2pSc01I?=
- =?utf-8?B?ajZVckxwbkFEYXdaTFhPd1BsSTh6bEdVeHJQdk9KdjByZy9xNm1QM2hZNm1m?=
- =?utf-8?B?eXM2Nk1sQXQvVjFiNDRuTEg5dHU2aXFRZ0pPVk82YVp3VGRiWG1ubnQ3VTRU?=
- =?utf-8?B?RmJFTmVjSlE4STBrRzA2QzdMcFhmTkdsQVhnSkljVmRzNzJNdG0yZHpObXl6?=
- =?utf-8?B?aTBhRkptNldtSTNORVZWc2ZtN1lhcFdQMEJOanV4ZG9yNmFUTG9CQnhuVHBE?=
- =?utf-8?B?OVJDY3BWSEpJeG1LYUZtYUttODROd283cDlkVjd6SVE1L1Zpa2FpMnh6c1JQ?=
- =?utf-8?B?NExHc2JxZFdNeVdIaHQzbXJEOVEwRTRGdW52TlduVjFJZmZSTE5MTDMrbUho?=
- =?utf-8?Q?fdT0/mt4Y0XwYWxRRrCvzBNms?=
+	=?utf-8?B?Y3lsaTJvZkhqS3VQV1liYWhQU0g0S3R5S0dla25ITjQrMWQzM3htNEZsMGQx?=
+ =?utf-8?B?eFJOb0NWV0ZsaEJUdmNWNUlOUlI0SHg4T0FXTTVDODUxZk1FR3NuaXo1aHFp?=
+ =?utf-8?B?Q20vZmRQZkpQUk8vdXRYcW1FTTR3cWZQQit6SXljcWRNajJ5Qk1PS3E2QkZG?=
+ =?utf-8?B?TnNnaHhoSkd5Zmk5NEVCaVFZSVFnbjU4ckdES0pqVUg5SjZsdGZKdTBuM0Y5?=
+ =?utf-8?B?eU8vMFkyQlBUWnhiNXNnNGx3ejIyeTN4alVtc05NRldMZ1RIRGJsaWszN0sx?=
+ =?utf-8?B?NTVqYm82Q3ZwYS9VY3RENmhpSWkyUC8rc0FHZE5hNW81SXR4d1pBT3VJNTRC?=
+ =?utf-8?B?WnoyM2VJNThwcWpjMnFQRnZ2QVJQM3NxTkxBdFo2NzVod3pmcDhPYUJ4Yklv?=
+ =?utf-8?B?R001cjJ0MC9PWTNwZG8rVWxON1dza1Q0TGhGaFByRWhGSWhKYW94LzMyZXNp?=
+ =?utf-8?B?YUdJclpEQk9XVldFelY1RlhueFlBTUh2VllDcjFneW1qTDgrMW93REpGZS9o?=
+ =?utf-8?B?QVNlelRIdDVJZ1hrOUt2K1FmRG1DWFhYcHBXY0hHMStQc2lFejF0dFlrWXBh?=
+ =?utf-8?B?TjdkQXdzdjJkOXBIOEloZGROb3dTalNpUWZRT0dnMDF1VGJtQ3RwRjJrMVhH?=
+ =?utf-8?B?aXd5TERRRmlQWWhCVEx1TWVzZjFHcGxQQWk5TnRNc2FzSHhzYXMwSFQzaU1F?=
+ =?utf-8?B?dlhuQjQxckU4Tnl4TjRIbnlJMVp2aWZqTWdPYzdYd3dueGxVVFZ5ZHk0Nld3?=
+ =?utf-8?B?Zjg1bkpUOGpJVDFkWGUzaVcxZVZ4QkllRTc3SXhaMlVOYkZLUVhWWFl2eGF3?=
+ =?utf-8?B?eEhjUzZ6Q0c5aVR5WWhFaXIwZGNrZ1MrSHJHUyt4eDZ3VE1PWDRJeEk4UFhw?=
+ =?utf-8?B?T3MxRWcwT0szUEJhRmd6UHRvWXEwYXhEbEZ1eStQbitaZXVJSlVnS3FCWjcw?=
+ =?utf-8?B?TmJMWmdkVFh2MTk5WS9EQkx1cWdZTWQvZFdzZ3djZTV2cEgybnlGU0ZSNVhO?=
+ =?utf-8?B?L0krVXZYZm1wRE9BNUlnaTJLRmduWUpOaE50V1RONzZlT1VZcUJsb2VkUk1w?=
+ =?utf-8?B?V0hCMzdWYndpaFpKUDdiYWw1T0NaNGxjSEd2Sy91S1lUbGZhNm1JZ00yam9v?=
+ =?utf-8?B?a2oydVAvbTFEMDVGQ0pnZVEzaGlRM3ZPcC8yQzY1R01XeTRFRVdXV2JoenF1?=
+ =?utf-8?B?WnVxLzJsUDVzcnR0TUZQRS95VzhsR0Vsb0htVUF4eG9LOTF5MnlZTEppc2RC?=
+ =?utf-8?B?alZqMWwzYnpJT0lnV2VGK2E4RFpXVTE1RkZRcDMwUWlCWTJqd09kOWhmY2Fa?=
+ =?utf-8?B?SnFnVlVma3ZGd2tPN1BlMmZEU2tMblhaUnV2OVFvbGRWOGJMOVIxQnQyVStJ?=
+ =?utf-8?B?OE1YVjRleG9lMUp0MlRsbkxCOWhIWEN4MytERnlrdHRtbEtqRktFWGxlK28z?=
+ =?utf-8?B?WTh6SWtFNGdHTWx2RFVVdDh0MlYwOWMrVnpXSU82R1M3UTRiN1hzdmFHZ3RX?=
+ =?utf-8?B?aTFxazNsMzVHWXFHVUYyZXpIM21JcjFFSzlrZWdpUkx0WVdJYms2bTZaN1FS?=
+ =?utf-8?B?VVp5bm8ybTNIUmZsMEZpcytIMnhCcXl3YzZTK3YrS0s3Nnl5c2RIakJxWW9i?=
+ =?utf-8?B?emc2RVZXK2pldHJROEJXYjZsckZNUFd3VVRJMjFFeEtId0pKZjFBZ2ErWVd2?=
+ =?utf-8?B?eTJpM1QzL1hwZC9saGhUYlQ4ZEpvWldSaVJIUE9LMmlFQUl5Z0o1bjdBQlhD?=
+ =?utf-8?B?MzdadEtmbC9CakVueGJoampFSXAwU2JCanhsMkl3dTkyNGZaL3Q0THRucXFD?=
+ =?utf-8?B?clhCWjgxb1ZkMjRlSWRsWk4vTXdPUExaVkVSaHhnSWoySjBpRnFJZUQwUnE5?=
+ =?utf-8?B?VlpMNmFRUDB2dlQ1ZXJGaFp4cDFldDh2VHB4MkJ5L1REcWZneVJTcVFxaE0y?=
+ =?utf-8?B?R3VYMDU1Uks0dDNFZEVWUHFuRGV1bGZZZERjbE5MZE5vTUszUzU0cHFreGNQ?=
+ =?utf-8?B?ZnRzblM1MFFqWnZTdkxxVU4vQVJoU0hheXNPZ2JoR1p0OTdqN1pMWXg1TTFk?=
+ =?utf-8?B?ZUJ6MjI1RlM5NHZRbDEwL1IzazcyUm9xakdTQWd6SU9XSytoT1ZZYmo4ZWRq?=
+ =?utf-8?Q?Vn90vWQoAqzUJ9oUgbdPrXGfM?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e86c26bf-3a90-428a-c5a8-08de2286ece8
+X-MS-Exchange-CrossTenant-Network-Message-Id: e33f8e24-2db1-474a-f2f7-08de22877f0c
 X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 07:33:23.2848
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 07:37:28.1988
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8uu6BQii7hGtvyBfK/tXBxkVwPN55KXt9hPd2N1ZmoPH5rWnTLg1Oi75zZ+qmqLM+IIV9nyx7s/asjbDnKgghA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: gkzayi1yN78ig8LaXt4WtCnyYa4xP4CapqylggCtAW6SmLELM2jJClLYrJvd8pWbU4Rs7SCMf/GPOpVWaklyfw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7119
 
 
 
-On 11/12/2025 23:33, Mario Limonciello wrote:
+On 11/12/2025 22:51, Mario Limonciello wrote:
 > On 11/11/25 12:37 AM, Shyam Sundar S K wrote:
->> From: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+>> This series streamlines NPU-related handling in AMD PMF, adds a
+>> lightweight in-kernel interface for fetching NPU metrics from PMF, and
+>> hooks AMD XDNA to that interface to expose real-time NPU power data to
+>> user space.
 >>
->> Add aie2_smu_get_power_estimate() to obtain NPU power readings from the
->> AMD PMF driver. This xdna interface enables user space to reflect
->> current
->> workload power consumption in real time.
+>> Changes include renaming legacy IPU fields to NPU in the metrics
+>> structure
+>> replacing ambiguous booleans and magic values with explicit
+>> SET_CMD/GET_CMD and METRICS_TABLE_ID constants, introducing an exported
+>> amd_pmf_get_npu_data() API (guarded by a mutex and platform checks) to
+>> pull NPU metrics from the SMU, and wiring those metrics into the
+>> amdxdna
+>> driver.
+>>
+>> v2:
+>> ----
+>>   - Split the series into multiple patches per v1 feedback
+>>   - Added preliminary PMF driver cleanups as preparatory patches
+>>   - Introduced an initial amd_xdna patch that consumes PMF-provided
+>> data to
+>>     establish the plumbing; additional logic can be layered on in
+>> future
+>>     patches as more PMF metrics are utilized.
+>>
+>> Shyam Sundar S K (4):
+>>    platform/x86/amd/pmf: Rename IPU metrics fields to NPU for
+>> consistency
+>>    platform/x86/amd/pmf: Use explicit SET_CMD/GET_CMD flags in
+>>      amd_pmf_send_cmd()
+>>    platform/x86/amd/pmf: replace magic table id with METRICS_TABLE_ID
+>>    platform/x86/amd/pmf: Introduce new interface to export NPU metrics
+>>
+>> VinitKumar Shukla (1):
+>>    accel/amdxdna: Provide real-time NPU power estimate via AMD PMF
+>>
+>>   drivers/accel/amdxdna/aie2_pci.h         |  2 +
+>>   drivers/accel/amdxdna/aie2_smu.c         | 12 ++++
+>>   drivers/platform/x86/amd/pmf/auto-mode.c | 14 ++---
+>>   drivers/platform/x86/amd/pmf/cnqf.c      | 14 ++---
+>>   drivers/platform/x86/amd/pmf/core.c      | 71 ++++++++++++++++++++
+>> +++-
+>>   drivers/platform/x86/amd/pmf/pmf.h       | 18 ++++--
+>>   drivers/platform/x86/amd/pmf/spc.c       |  2 +-
+>>   drivers/platform/x86/amd/pmf/sps.c       | 38 ++++++-------
+>>   drivers/platform/x86/amd/pmf/tee-if.c    | 20 +++----
+>>   include/linux/amd-pmf-io.h               | 21 +++++++
+>>   10 files changed, 159 insertions(+), 53 deletions(-)
+>>
 > 
-> But.. it doesn't.  It just adds a new function that could potentially
-> do this job.  The actual gluing it to userspace in some way to use
-> this function will be another patch.
+> Which tree do you think this should merge through?
+> drm-misc or platform-x86?
+> 
+> I tried and the series cleanly applies to both and compiles on both. 
+> So I think it can go either way.
 
-For now, yes.. that's right. XDNA team will add more support on it
-that goes via the accel tree. But this patch is meant to have a
-minimal change on the xdna side so that there is a  consumer of the
-pmf symbol that is getting exported to the kernel.
+this series can apply on the latest mainline 6.18-rc5 with
+4a0c9b339199 commit as the tip.
 
-So, there is more support coming on the way. If you think, its worth
-to rephrase the commit?
+there are 3 series out from me on the pdx86 tree, and since I am not
+sure which one will go first, all of them are based on the
+4a0c9b339199 commit as the tip. So, I can rebase and respin based on
+what goes in first.
+
+w.r.t to this series, would like Ilpo's help to take via pdx86 if he
+is comfortable (as the last patch in xdna has very minimal changes)
 
 Thanks,
 Shyam
-> 
->>
->> Signed-off-by: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->>   drivers/accel/amdxdna/aie2_pci.h |  2 ++
->>   drivers/accel/amdxdna/aie2_smu.c | 12 ++++++++++++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/accel/amdxdna/aie2_pci.h b/drivers/accel/
->> amdxdna/aie2_pci.h
->> index 91a8e948f82a..5601de841b5b 100644
->> --- a/drivers/accel/amdxdna/aie2_pci.h
->> +++ b/drivers/accel/amdxdna/aie2_pci.h
->> @@ -8,6 +8,7 @@
->>     #include <drm/amdxdna_accel.h>
->>   #include <linux/semaphore.h>
->> +#include <linux/amd-pmf-io.h>
->>     #include "amdxdna_mailbox.h"
->>   @@ -240,6 +241,7 @@ int aie2_smu_init(struct amdxdna_dev_hdl *ndev);
->>   void aie2_smu_fini(struct amdxdna_dev_hdl *ndev);
->>   int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
->>   int npu4_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
->> +int aie2_smu_get_power_estimate(void);
->>     /* aie2_pm.c */
->>   int aie2_pm_init(struct amdxdna_dev_hdl *ndev);
->> diff --git a/drivers/accel/amdxdna/aie2_smu.c b/drivers/accel/
->> amdxdna/aie2_smu.c
->> index d303701b0ded..7b5e2c383dd3 100644
->> --- a/drivers/accel/amdxdna/aie2_smu.c
->> +++ b/drivers/accel/amdxdna/aie2_smu.c
->> @@ -54,6 +54,18 @@ static int aie2_smu_exec(struct amdxdna_dev_hdl
->> *ndev, u32 reg_cmd,
->>       return 0;
->>   }
->>   +int aie2_smu_get_power_estimate(void)
->> +{
->> +    struct amd_pmf_npu_metrics npu_metrics;
->> +    int ret;
->> +
->> +    ret = amd_pmf_get_npu_data(&npu_metrics);
->> +    if (ret)
->> +        return ret;
->> +
->> +    return npu_metrics.npu_power;
->> +}
->> +
->>   int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level)
->>   {
->>       u32 freq;
-> 
-
