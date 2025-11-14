@@ -1,147 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF313313E2B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 12:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCBA3126A5
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 13:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763122406; cv=none; b=j1tRreM1Owe7Aobe2AxhVBaulzaW5s4ZrxJPkCU5Y2dinCe1o84/XQ3mtxAfuKdu82XY7+/UGVkWNqH0QoUT+FeKgiw/bmNdjeQzE++3vP4UQ9IaW03aS8cUZba1ST808ci5MygpDPYOuPBzslsD3MQHYiTteWOb5UdZN0u58rE=
+	t=1763126244; cv=none; b=e7fI7Uqy719lHFOhaytxTkbEYWIAbHYga9LePZ/gQJbUY2ZVxX9K8ZBngllHaxJswkdJuXTZvSu37L4OIzPWWDcYEdVhjPLdwd1/Uf7SnFroJofiP2u/REZEEBgNe7/LuPdDigkpUe5QMutUw38SqlcUW0t+lsRdBeFaffSQ8/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763122406; c=relaxed/simple;
-	bh=5I0F7Lk270HlfQS3v6Sw31jwqLfCir/VQOrCBc5zdi4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PAdp2YJMiOpb8Ml8JQem7MPSvjSnRzaICSBSRoOX/HnzdRZ4YsXzzR/m+3h1te8oMOoMbFHO8OWNJ7ZmYtaxek/ohIFl116tTxse7J1ghmWSQSdvxUVipKo+fekQefOwq4df/5Q1D8+zEYb1HHYkzquLefWYKI06wG9mQ/zFPW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFCyGJ9I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763126244; c=relaxed/simple;
+	bh=l14bAdG7sSenVgnTvQe0fC1UGWAoSkEFo21BRNcbNGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rHTqRsXLpwMih7SZYwakaveCEsvyeoX5f0GGIoqHKLMQTg4O719ZtRTLVPsyq6M9iwuQ7Rx19oYxKf0kn3E1rijfD9p7epU4kTQrawP93L1pejH4WQnyLVkBKlii0NVPCv/zqtqdTeXPpXscpWPwGvJfGuE2oYrilookBd5tvUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/kVW6YL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFCyGJ9I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4FCC2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 12:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763122405;
-	bh=5I0F7Lk270HlfQS3v6Sw31jwqLfCir/VQOrCBc5zdi4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=vFCyGJ9IK/JNHwvQFMCw/BHNieBWTmjv3dMBHLRUH1QVfPIBEzFEMhp5fNPszRCwG
-	 IbOoJOmHcisOHy9lMOxQYQblP+DEh4AMnkzfZwncdrkbiyCN70ch4rBq0E1amHMSVI
-	 NwDzxls2anQR7oz9FHl1gCC2WMkkz5URK0GYhUs+4grlDF5lADeLEb20ht3BCP6vY0
-	 BbZxQkmX2t0fOJcwHav8XJpFXUW57J007LRZA6wSO7C52lX+Zj9bCXKbp5vIqwCjUX
-	 c++cAw3Cn5mdagh04K1BxhoAbdHiKEpEnupju0k+iLBLJZhOlkBF4/w9gQ2vF7fdGX
-	 lFSOt4sDo9xQg==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-3e2f4c5b26dso445927fac.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 04:13:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV3KGauepsmF2LJMwz+QV4qbjQALgIIoHfAJh739VIBs3D8gu0wTUjG2Ll8WPYop/dX1vxMaEcg+cQiOFEEdPEmEZ/2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBxBTqcrhdDdLjj5LKUrGsRknHLWlUHG9KE8ixDNwq+wHimLBm
-	PsNQiKMLIiRa3BtueiGbhWNMRXTbER5I5/iIiEUQMmbasXHQndjpFIcOEwVi0QL9eXRF4pwD+nN
-	Or6y8Zyh3d4jayvhbeDctxtuAuslzYHk=
-X-Google-Smtp-Source: AGHT+IGrNkWHSVx3CmYADKr0S6TGq/XxOF6zay1uOoUOn8a60tpM1BgphUydUyCNyc9Vh0GmlV+21RabCzXA2tdcTXs=
-X-Received: by 2002:a05:6870:30f:b0:375:db59:20e4 with SMTP id
- 586e51a60fabf-3e868ef8743mr1267901fac.13.1763122404195; Fri, 14 Nov 2025
- 04:13:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/kVW6YL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477632b0621so12564865e9.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 05:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763126241; x=1763731041; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N0TpL/uQKcXjj/1P0tKp0hA2j+bgPUGaGAw/0f/W2wM=;
+        b=Y/kVW6YLdkdywKyhIM5phM1gGda9DINj9qS4DXw30LQ5eYeEqHRgChAK8ONNgwR5QF
+         JOUz0yZwVm1lm5HJARQotOK1y0f55d/vjXWNuBBzy+tW8bSUoog0PwPejhIaMBNQewQ9
+         ygEsmjiKo/RcO++um/7Y1DsF9DuOn/WXzKETFNrPyi+SNFKoHUeP2+BxnG1tNL2U9fT7
+         LExRYh9WvHgmd++CD1yIIp6YaHK07phureTHNU7tUxQhj3FjCwtJU7q4ZPSKOL8o9Zt8
+         PC94lG1dDPrtL95xWuRgoInTytnsJ7Xvl2qh5yAtYnJkfHzRIZtpLn8p3+lRFCboFRVD
+         ShLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763126241; x=1763731041;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N0TpL/uQKcXjj/1P0tKp0hA2j+bgPUGaGAw/0f/W2wM=;
+        b=ZCqeGPCNbrYeRHKfECJga2MsJMXfa+1NMVF516S/N+1c9aYvEDlGRZgKiUmTsVEylJ
+         1JT80rwO+pjqG20NqHE3aBIAJd1xlChH0Lcd6vwGW87aPWG3+OFs3caF8WaOHZzthBT+
+         OC+EnVGcSW++Fek52gHYmLNxfo8bl14NvHGt1fEFjnXgehX8SKSLqdHgxg5wBzwszsRI
+         8/mcLtDMwHavuZV0cMy7pwPhoKkDq4ti2Yu7E5gpTl8mzCaSlL5nlWwAHgTWP1dKYCRh
+         24kECM8MjFknXIyVMQk+yj5qzacEqzwDlFUdAig58aD6obyzDbES2Vvg32RQX138Lqzh
+         RGmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzH8hmhXThOSe7IQfpuIqOTApd6XedXH9tr74AvGuOmsZjbr+HnH1FtS+rhc+KWem4EGcu8/Jyt02qhdqwEB+7Yhf1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwbrgHsJvr3+GR5iGzh1g5M6cXiKHqGq4QtWv+qfNhdfuRVo/Z
+	YK0nE+tO7cD4yH6LNQEcu5dfkQOowa4LkI5awRW2DCT7W23z7+XCKWI2
+X-Gm-Gg: ASbGncsDXbGLYnd7Oteqb7LapuDecdaEVEkmg8ENVH8Q0byk981POBVTn9N/KBFZ5ZG
+	DVrthOugfniF1zWqzMpvk8DuS0gRgtFPKdWQYI7JFXQbDf9NojGsBxU0cuH6jKmy6TtC3gla43t
+	yVs/rqj90/KX0kBO4Re4gBgZXDLpT+wdkRozTbTU65Ig8IoPZQveV0CiYHcIsqwZZHzfAUtPXLK
+	AWAk4CEntunPqyX5hMfInj9i1hb237L/TdzIDvWh0E8KlnG16mZCZx/liJXfLRAyDnjVngCNXNv
+	n0naViqjvRqoVOez4LvFk7ckgGSeHrJYSC+9mMsOvTcTkrVR/0Vw8ZGLo7JuenUAABnqiqWvgt4
+	gT1OfOUA4SizDdui+sIHw7l7YJywGDlx6gerkU5IcdHWUEt/mfVtDbXQglhwBwmAjvQ4NPVhMQf
+	d6Elb4ZOYDWCHOPTB54/7jc+XUJPnNNKdOf7NII6J2R7W9a8v6e+Z8Syk2uhZdblc=
+X-Google-Smtp-Source: AGHT+IE9bBUs5+fK/teaotf1hwhzAkTnpdK+HO3WDqdKR+mWJDdDdywb+mQyN3FtSPr5SthQHUQsmA==
+X-Received: by 2002:a05:600c:4695:b0:477:7b9a:bb1b with SMTP id 5b1f17b1804b1-4778fea681fmr33855485e9.32.1763126240242;
+        Fri, 14 Nov 2025 05:17:20 -0800 (PST)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47787e43c2fsm141848115e9.6.2025.11.14.05.17.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 05:17:19 -0800 (PST)
+Date: Fri, 14 Nov 2025 14:17:16 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yangtao Li <tiny.windzz@gmail.com>, 
+	Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 11/11] soc: tegra: Simplify with
+ of_machine_device_match()
+Message-ID: <jhrvha3ytpt3wqvyfrlt5zirfnnnijssrufzg6bc4cfah7ahln@wxnnrdv3qbid>
+References: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org>
+ <20251112-b4-of-match-matchine-data-v2-11-d46b72003fd6@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251114-thermal-device-v1-0-d8b442aae38b@gmx.de>
-In-Reply-To: <20251114-thermal-device-v1-0-d8b442aae38b@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 14 Nov 2025 13:13:12 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gZ7+i+irhaq2jQpTt++HuVRjqz8==Ov9VmQ9Q1J1TM0w@mail.gmail.com>
-X-Gm-Features: AWmQ_bm6idj_L4n1xVkRGWkVqmFdJz-PXS5UU4gyN5tQNhsjMISGTiEJyqtTR8w
-Message-ID: <CAJZ5v0gZ7+i+irhaq2jQpTt++HuVRjqz8==Ov9VmQ9Q1J1TM0w@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/8] thermal: core: Allow setting the parent device of
- thermal zone/cooling devices
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Lucas Stach <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>, 
-	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Amit Daniel Kachhap <amit.kachhap@gmail.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jeff Johnson <jjohnson@kernel.org>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Peter Kaestle <peter@piie.net>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Potnuri Bharat Teja <bharat@chelsio.com>, Sebastian Reichel <sre@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Support Opensource <support.opensource@diasemi.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
-	ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, imx@lists.linux.dev, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3uqy45lsar5fgfon"
+Content-Disposition: inline
+In-Reply-To: <20251112-b4-of-match-matchine-data-v2-11-d46b72003fd6@linaro.org>
+
+
+--3uqy45lsar5fgfon
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 11/11] soc: tegra: Simplify with
+ of_machine_device_match()
+MIME-Version: 1.0
 
-On Fri, Nov 14, 2025 at 4:24=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Drivers registering thermal zone/cooling devices are currently unable
-> to tell the thermal core what parent device the new thermal zone/
-> cooling device should have, potentially causing issues with suspend
-> ordering
-
-Do you have any examples of this?
-
-> and making it impossible for user space appications to
-> associate a given thermal zone device with its parent device.
->
-> This patch series aims to fix this issue by extending the functions
-> used to register thermal zone/cooling devices to also accept a parent
-> device pointer. The first six patches convert all functions used for
-> registering cooling devices, while the functions used for registering
-> thermal zone devices are converted by the remaining two patches.
->
-> I tested this series on various devices containing (among others):
-> - ACPI thermal zones
-> - ACPI processor devices
-> - PCIe cooling devices
-> - Intel Wifi card
-> - Intel powerclamp
-> - Intel TCC cooling
->
-> I also compile-tested the remaining affected drivers, however i would
-> still be happy if the relevant maintainers (especially those of the
-> mellanox ethernet switch driver) could take a quick glance at the
-> code and verify that i am using the correct device as the parent
-> device.
->
-> This work is also necessary for extending the ACPI thermal zone driver
-> to support the _TZD ACPI object in the future.
-
-Can you please elaborate a bit here?
-
-_TZD is a list of devices that belong to the given thermal zone, so
-how is it connected to the thermal zone parent?
-
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+On Wed, Nov 12, 2025 at 11:28:56AM +0100, Krzysztof Kozlowski wrote:
+> Replace open-coded getting root OF node and matching against it with
+> new of_machine_device_match() helper.
+>=20
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> Armin Wolf (8):
->       thermal: core: Allow setting the parent device of cooling devices
->       thermal: core: Set parent device in thermal_of_cooling_device_regis=
-ter()
->       ACPI: processor: Stop creating "device" sysfs link
->       ACPI: fan: Stop creating "device" sysfs link
->       ACPI: video: Stop creating "device" sysfs link
->       thermal: core: Set parent device in thermal_cooling_device_register=
-()
->       ACPI: thermal: Stop creating "device" sysfs link
->       thermal: core: Allow setting the parent device of thermal zone devi=
-ces
+>=20
+> Depends on the first OF patch.
+> ---
+>  drivers/soc/tegra/common.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
 
-I can only see the first three patches in the series ATM as per
+I assume that you'd want to take this through the DT (or some other)
+tree, so:
 
-https://lore.kernel.org/linux-pm/20251114-thermal-device-v1-0-d8b442aae38b@=
-gmx.de/T/#r605b23f2e27e751d8406e7949dad6f5b5b112067
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--3uqy45lsar5fgfon
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkXK9wACgkQ3SOs138+
+s6GJEg/+Lvwv/Uc4dUYUzG/6oY2h1PdiGuJvJA9YspnmST4S0yhN92w4uF7VktO8
+48OfDwxqJHwx3SDbrqTyuzmBBpk+vUOVyILkxEFHIHHfU3FSie3o3o8xQ1reITF5
+xRkKWVj4drW/J3lr7dXETpSnaq8ASU9LbXzjA5V5WEZIjvOwEDTOiUtjycoL+dJN
+EZcP60yEeH9WZqPvBNJcDpppUFwZINIUJ41aLebwav40cxSOr9AWGyaIoirg0hAC
+4B5FfUrlvpG6uToKYAI+F8onTpuhbY7ucFNx420eOkY1MfcBDx6CxL2rATwe0wso
+U9+7SRCF59hiIZLQVvPj76JtLjAVrvmfanOKa5J2/Y/2vUG/3PfSdzCzqXykmv3i
+fCsdqHqur0RkWwjayS76p/QSldpOQszoGL4Uio2k7u+RM5SXEA+E1im8qq7ed2+N
+0XjgaZjOoGP24Gn+V1UUyD04j/IjPm36o1hHwa27wJnEf33rp932nOQch3/T0fA+
+3MERBRP+Px+jXOgg3D3F/gzJa3Ps7rRNp3XRHmv4EwjSMU1Hoq9ePdT38fW1Xl0o
+x+gIeNWpWoVeI7D+3OfAoJTthFdmNVUznKco4qxwigLQnoGo1s0Id7hRygTsz1fC
+MGSxHO88pn2zCtJqXCByFHjVRYA+y5zQx0zB6IX5ndliVu/HM3k=
+=GzNq
+-----END PGP SIGNATURE-----
+
+--3uqy45lsar5fgfon--
