@@ -1,223 +1,143 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53992DC795
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 18:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3862E03FD
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 18:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763145564; cv=none; b=Vmsh58LkRG8qUBT9txAlMh+8p+fm2nxe3uPDa72R/0yzyLQ9Z8VPlZeTcm4J6cSuFCLQcSTEsshKelA7MmAyajZdLdkHYjm8+McjhaS3c6G49fBzQ/h+TGcFMKT7Mi4YO7zcSVdT/w/85buXrh3Tf6Z5v9o1Jkw5FnvkPSbub/U=
+	t=1763146426; cv=none; b=t1fpL0Ov9dGbvUuEDkmAYrJqihrMO/FNdED8R+jRfS0bEHr0ob1PRBiXkAjhXls1NpgUg7e8yVq7DTnPcxYcIzCko6H9oBBKnFWAMU9jr+qrNF9/V01OjemJJA4Gjv+DKTJ4O8/zju8YQqZa79xnd6bfVxZlXqmOXJW9D6i1StQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763145564; c=relaxed/simple;
-	bh=sCM5CZHDJgyl2q1jrA6chqTv1b4sZr5EAHWs+3qHbg0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=iIdvOUUCE+8rlSuwu0Xe7ZLSeqM5zaTqQ0U7XZu/fH3mY1sW9M44CaVotv6SRPwPQ5uGvIkuK3kc3w4BpNgbgdLNI4XEKyuSe8p1qVuxKI3mD7e2IKdTyFSUCzE90mhqz5Cv5B2j3/Zj2MQTT002Ml3AtFP1eRHLn9BFHBqVl6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLOvsTha; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763146426; c=relaxed/simple;
+	bh=Z1KI1c9HE6KmH41eHNkiwd0JeitvaLgIx/2SEZ1HDBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QdDxrZJd9H+AjhdujMOr5GK0kPWg6jXLzWeJkGDDC50p8dS5UB35VaX+qY5qgjSY/6RDILzpDLLWDst46vWsiDKfPcLD/LSzCXja5D4pfh6kAtER6AVONHWX3y1DAth7RCdCWPnrD63UX3O+q7oXx0k/Y48mK1sxbAzqzYM1HxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ex8IEGWx; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLOvsTha"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-29808a9a96aso22572555ad.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 10:39:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763145562; x=1763750362; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NlxMrLXPrBCU+jO2UaTPbpl/IwecL0/VlFyK5yk0EgQ=;
-        b=LLOvsThajzHRXzrnTogleokRg7gdT8jpYbQp212oKGuBDcADyTNTD6P5ZbKjjPPVEv
-         vKz9nI3ikWgR9IPKq3IimV8hWyKMVGwniLgypWQ1eyhiKDWUIA0rUkC+15B8VmCA+TYF
-         J07GHbVsvr4QztgZMGLAb+EpUGMY/NFXfnk5rVHuquwvwlLihAZthZJePvchZXTja8Zs
-         RNFn1vCZkdXts3xtG3Q633AS6jIGv/fozGjiB+f1A+SbM0nQU5ebKDArPBL72pmyUpqX
-         Hw2HHbbFuGg/haU1wN4FCKBYMSO+nu2+LbLopVshkfF/WKomRSDSlxzT8M4DhjML4Vgr
-         nopg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763145562; x=1763750362;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NlxMrLXPrBCU+jO2UaTPbpl/IwecL0/VlFyK5yk0EgQ=;
-        b=Ox9ohQuQaFD9dkTmk0ekZBj9F4tB5rE/UxtF+uAKwOhfzQp7fn3frU4LwDgmx2CVId
-         LHzbl7goe7Qy4NmfMjRdOx3Yj5UK9mbmF6Jq5IBI6u6SzMjHxA4/N8TL5bSfc3BSIEhy
-         i/vdJ6p7KYH1c4TLdsasgpVEAjqWTUls1D1nL7FQHHuUfubYAwiRu88CPjCAGyp1gK4e
-         HD5l3kuuqiDUyAmKRHkPz0CzTmZvxiOXj7MKNSCw0MOp72aeTascqcvxRQMsBlGw53qb
-         irEirwc/QMSmMZUyhALlDHiwp5NiidGH8Z1816y+ZOwApr/nsiBVUOF0zdXyhScqWDiz
-         PWVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8FXgbORUQ4YTGviSp1DLDn7aDGIkZXQEQ8bOxfCCs1qBr0irxjbqpSN3cH8BYkKuPezApxM51GuNvchuETrA2DGoo@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWJSjkR29kkgyRef49bGeNJ/p/T/0t1PR2ntl0FDbCtqMoGhgW
-	z8FYuKPmnR6LTvWSqAeb4XFBzx1he/HC7OOBew/wPBveuS/dtEZZzDdu
-X-Gm-Gg: ASbGnct3pHdHqyixo6Aqql3VBFnsIATIHgKH4PsmOqux37rmoaJbTWdSxL9q5w6Lqm6
-	/5u9ykMAZoPw0XlCm3Xk05mxPt7CN4rXgZU8nzkniuHvrZqKnu/Bm4SHdjtTCp8h0EXFrrOd5C5
-	+1x95vLlxPrN5+qK3DwRaVV4PEt6K+rURVXRlpXswKeYM4GYfYmS+txqEVVVDXoLLWrdw28yMCN
-	a78nFLVTz3uVRDlsfHF/0XsQWXhCBMGPH/lzvw/7E5eFcYpX1O8pUpqXfG+O+6Z8kCM6XPuuhvk
-	NG5CAoidWBFticwzmv+onVKMpkuM2OXSAxCJuNZmDwhHd4uHEZuGfaSPL30euC27KLoutJi+1sH
-	PFf75CxkSvf7VO9UgzJuOFCCTf8FIx7rV2dFWWL/7fVHKdzNc+QB8mwXtl4X+7IjeBD6IQYWrAf
-	RLJPQkB6KpatWqEE61QbmWlnCTsR+Lvu/sHmed2ytMjtSh+ZKn/5h6porq33ctIBZcZ9bHx4XmQ
-	IkKDL1zqw==
-X-Google-Smtp-Source: AGHT+IF1cAptumORDftaftQhtRmfE70v3gTNtStBR9Wa3ZnIqnTjvq3Q6xjWxNHyknDfcBM12ABbKA==
-X-Received: by 2002:a05:7022:7e06:b0:11a:2e9c:1119 with SMTP id a92af1059eb24-11b410f599cmr970592c88.19.1763145561798;
-        Fri, 14 Nov 2025 10:39:21 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b06088604sm13030798c88.7.2025.11.14.10.39.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Nov 2025 10:39:21 -0800 (PST)
-Date: Fri, 14 Nov 2025 10:39:19 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_0/7=5D_platform/x86=3A_lenovo-wm?=
- =?US-ASCII?Q?i-=7Bcapdata=2Cother=7D=3A_Add_HWMON_for_fan_speed?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20251114175927.52533-1-i@rong.moe>
-References: <20251114175927.52533-1-i@rong.moe>
-Message-ID: <9E2AB845-08A5-4579-9055-1C8B10244247@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ex8IEGWx"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763146422;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=F7X+TXzz6yIsYy6VK9GhVIkXx5eCXlbgBNwS3nhB3Rc=;
+	b=ex8IEGWx/W7K4QbrrN/Dehv1WtYeXbdjKnIndNigKeo851KgPzGhxFZjY6PpuB/z0/J5I7
+	YVLRY2dMA/iBVXiByrZyu0RId12PLwB+xoyCJMPmuAA5aw/UmKmIJHOSlKVzXuAtA+h/9M
+	3+d0Hsaszbfop0VwHPheV/wlY7H5ZEo=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Alok Tiwari" <alok.a.tiwari@oracle.com>,
+	"Derek John Clark" <derekjohn.clark@gmail.com>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	porfet828@gmail.com,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH] platform/x86: asus-armoury: do not abort probe on unexpected CPU cores count
+Date: Fri, 14 Nov 2025 19:53:37 +0100
+Message-ID: <20251114185337.578959-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On November 14, 2025 9:59:12 AM PST, Rong Zhang <i@rong=2Emoe> wrote:
->Lenovo WMI Other Mode interface also supports querying or setting fan
->speed RPM=2E This capability is decribed by LENOVO_CAPABILITY_DATA_00=2E
->Besides, LENOVO_FAN_TEST_DATA provides reference data for self-test of
->cooling fans, including minimum and maximum fan speed RPM=2E
->
->This patchset turns lenovo-wmi-capdata01 into a unified driver (now
->named lenovo-wmi-capdata) for LENOVO_CAPABILITY_DATA_{00,01} and
->LENOVO_FAN_TEST_DATA; then adds HWMON support for lenovo-wmi-other:
->
-> - fanX_enable: enable/disable the fan (tunable)
-> - fanX_input: current RPM
-> - fanX_max: maximum RPM
-> - fanX_min: minimum RPM
-> - fanX_target: target RPM (tunable)
->
->LENOVO_CAPABILITY_DATA_{00,01} presents on all devices, so
->both binds to lenovo-wmi-other=2E However, some device does not have
->LENOVO_FAN_TEST_DATA and its presence is described by
->LENOVO_CAPABILITY_DATA_00; hence, the former binds to the latter and a
->callback is used to pass the data to lenovo-wmi-other=2E
->
->The implementation does not rely on a specific binding sequence=2E This
->has been fuzz-tested using:
->
->	#!/bin/bash
->
->	DRV_DIR=3D/sys/bus/wmi/drivers/lenovo_wmi_cd
->	CAPDATA_GUIDS=3D(
->		$(find "$DRV_DIR"/ -name '*-*-*-*-*-*' -printf "%f ")
->	)
->
->	b() { sudo tee "$DRV_DIR"/bind <<<"$1"; }
->	u() { sudo tee "$DRV_DIR"/unbind <<<"$1"; }
->
->	for guid in "${CAPDATA_GUIDS[@]}"; do
->		u "$guid"
->	done
->
->	while read -rsa perm; do
->		for guid in "${perm[@]}"; do
->			b "$guid"
->		done
->		sensors | grep -A3 lenovo_wmi_other || true
->		for guid in "${perm[@]}"; do
->			u "$guid"
->		done
->	done < <(python3 -c "
->	from itertools import permutations
->	ps =3D permutations('${CAPDATA_GUIDS[*]}'=2Esplit())
->	for p in ps: print(' '=2Ejoin(p))")
->
->	for guid in "${CAPDATA_GUIDS[@]}"; do
->		b "$guid"
->	done
->
->Tested on ThinkBook 14 G7+ ASP=2E
->
->Changes in v5:
->- Do not cast pointer to non-pointer or vice versa (thanks kernel test
->  robot)
->- Fix missing include (ditto)
->- Link to v4: https://lore=2Ekernel=2Eorg/r/20251113191152=2E96076-1-i@ro=
-ng=2Emoe/
->
->Changes in v4:
->- Get rid of wmi_has_guid() (thanks Armin Wolf's inspiration)
->  - Add [PATCH v4 6/7], please review & test
->  - Rework HWMON registration
->    - Collect fan into from capdata00 and capdata_fan separately
->    - Use a callback to collect fan info from capdata_fan
->    - Trigger HWMON registration only if all fan info is collected
->    - Do not check 0x04050000=2Esupported, implied by the presense of
->      capdata_fan
->- Drop Reviewed-by & Tested-by from [PATCH v4 7/7] due to the changes,
->  please review & test
->- Link to v3: https://lore=2Ekernel=2Eorg/r/20251031155349=2E24693-1-i@ro=
-ng=2Emoe/
->
->Changes in v3:
->- Fix grammar (thanks Derek J=2E Clark)
->- Link to v2: https://lore=2Ekernel=2Eorg/r/20251030193955=2E107148-1-i@r=
-ong=2Emoe/
->
->Changes in v2:
->- Add a workaround for ACPI methods that return a 4B buffer for u32
->  (thanks Armin Wolf)
->- Fix function documentation (thanks kernel test bot)
->- Reword documentation (thanks Derek J=2E Clark)
->- Squash min/max reporting patch into the initial HWMON one (ditto)
->- Query 0x04050000 for interface availability (ditto)
->  - New parameter "expose_all_fans" to skip this check
->- Enforce min/max RPM constraint on set (ditto)
->  - New parameter "relax_fan_constraint" to disable this behavior
->  - Drop parameter "ignore_fan_cap", superseded by the next one
->  - New parameter "expose_all_fans" to expose fans w/o such data
->- Assume auto mode on probe (ditto)
->- Do not register HWMON device if no fan can be exposed
->- fanX_target: Return -EBUSY instead of raw target value when fan stops
->- Link to v1: https://lore=2Ekernel=2Eorg/r/20251019210450=2E88830-1-i@ro=
-ng=2Emoe/
->
->Rong Zhang (7):
->  platform/x86: lenovo-wmi-helpers: Convert returned buffer into u32
->  platform/x86: Rename lenovo-wmi-capdata01 to lenovo-wmi-capdata
->  platform/x86: lenovo-wmi-{capdata,other}: Support multiple Capability
->    Data
->  platform/x86: lenovo-wmi-capdata: Add support for Capability Data 00
->  platform/x86: lenovo-wmi-capdata: Add support for Fan Test Data
->  platform/x86: lenovo-wmi-capdata: Wire up Fan Test Data
->  platform/x86: lenovo-wmi-other: Add HWMON for fan reporting/tuning
->
-> =2E=2E=2E/wmi/devices/lenovo-wmi-other=2Erst          |  43 +-
-> drivers/platform/x86/lenovo/Kconfig           |   5 +-
-> drivers/platform/x86/lenovo/Makefile          |   2 +-
-> drivers/platform/x86/lenovo/wmi-capdata=2Ec     | 808 ++++++++++++++++++
-> drivers/platform/x86/lenovo/wmi-capdata=2Eh     |  65 ++
-> drivers/platform/x86/lenovo/wmi-capdata01=2Ec   | 302 -------
-> drivers/platform/x86/lenovo/wmi-capdata01=2Eh   |  25 -
-> drivers/platform/x86/lenovo/wmi-helpers=2Ec     |  22 +-
-> drivers/platform/x86/lenovo/wmi-other=2Ec       | 511 ++++++++++-
-> 9 files changed, 1426 insertions(+), 357 deletions(-)
-> create mode 100644 drivers/platform/x86/lenovo/wmi-capdata=2Ec
-> create mode 100644 drivers/platform/x86/lenovo/wmi-capdata=2Eh
-> delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01=2Ec
-> delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01=2Eh
->
->
->base-commit: 6da43bbeb6918164f7287269881a5f861ae09d7e
+Until now the CPU cores count was only available for
+Intel hardware, however a few weeks ago an AMD hardware
+that provides aforementioned interface appeared on the
+market and data read from the interface doesn't
+follow the expected format and the driver fails to probe.
 
-Rong,
+Avoid failing on invalid cores count and print out debug information.
 
-I'm out of town for the weekend, but I'll bring a Lenovo device with me=2E=
- If I get some time I'll test the changes while I'm gone, otherwise it will=
- need to wait until Monday=2E
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
+---
+ drivers/platform/x86/asus-armoury.c | 34 ++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
 
-Thanks,
-Derek
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index 9f67218ecd14..6355ec3e253f 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -818,10 +818,23 @@ static struct cpu_cores *init_cpu_cores_ctrl(void)
+ 	cores_p->min_power_cores = CPU_POWR_CORE_COUNT_MIN;
+ 	cores_p->min_perf_cores = CPU_PERF_CORE_COUNT_MIN;
+ 
++	if (cores_p->min_perf_cores > cores_p->max_perf_cores) {
++		pr_err("Invalid CPU performance cores count detected: min: %u, max: %u, current: %u\n",
++		       cores_p->min_perf_cores,
++		       cores_p->max_perf_cores,
++		       cores_p->cur_perf_cores
++		);
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	if ((cores_p->min_perf_cores > cores_p->max_perf_cores) ||
+ 	    (cores_p->min_power_cores > cores_p->max_power_cores)
+ 	) {
+-		pr_err("Invalid CPU cores count detected: interface is not safe to be used.\n");
++		pr_err("Invalid CPU efficiency cores count detected: min: %u, max: %u, current: %u\n",
++		       cores_p->min_power_cores,
++		       cores_p->max_power_cores,
++		       cores_p->cur_power_cores
++		);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -841,6 +854,11 @@ static ssize_t cores_value_show(struct kobject *kobj, struct kobj_attribute *att
+ {
+ 	u32 cpu_core_value;
+ 
++	if (asus_armoury.cpu_cores == NULL) {
++		pr_err("CPU core control interface was not initialized.\n");
++		return -ENODEV;
++	}
++
+ 	switch (core_value) {
+ 	case CPU_CORE_DEFAULT:
+ 	case CPU_CORE_MAX:
+@@ -875,6 +893,11 @@ static ssize_t cores_current_value_store(struct kobject *kobj, struct kobj_attri
+ 	if (result)
+ 		return result;
+ 
++	if (asus_armoury.cpu_cores == NULL) {
++		pr_err("CPU core control interface was not initialized.\n");
++		return -ENODEV;
++	}
++
+ 	scoped_guard(mutex, &asus_armoury.cpu_core_mutex) {
+ 		if (!asus_armoury.cpu_cores_changeable) {
+ 			pr_warn("CPU core count change not allowed until reboot\n");
+@@ -1389,16 +1412,17 @@ static int __init asus_fw_init(void)
+ 		return -ENODEV;
+ 
+ 	asus_armoury.cpu_cores_changeable = false;
++	asus_armoury.cpu_cores = NULL;
+ 	if (armoury_has_devstate(ASUS_WMI_DEVID_CORES_MAX)) {
+ 		cpu_cores_ctrl = init_cpu_cores_ctrl();
+ 		if (IS_ERR(cpu_cores_ctrl)) {
+ 			err = PTR_ERR(cpu_cores_ctrl);
+ 			pr_err("Could not initialise CPU core control: %d\n", err);
+-			return err;
++		} else {
++			pr_debug("CPU cores control available.\n");
++			asus_armoury.cpu_cores = cpu_cores_ctrl;
++			asus_armoury.cpu_cores_changeable = true;
+ 		}
+-
+-		asus_armoury.cpu_cores = cpu_cores_ctrl;
+-		asus_armoury.cpu_cores_changeable = true;
+ 	}
+ 
+ 	init_rog_tunables();
+-- 
+2.51.2
+
