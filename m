@@ -1,248 +1,188 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010017.outbound.protection.outlook.com [52.101.193.17])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC08F328242
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Nov 2025 16:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B4B3469E3;
+	Fri, 14 Nov 2025 17:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763139424; cv=fail; b=G1B5itaEPMSCebcXSqfBTfRWuQT10bdg54tIniDOgynFuFKvcFJHG9hiYWynM6bxszVtxpQNpcX2MYm1sEPoc3RZCw52JWXzJmChbbxc8BCUwKlagaHDvpizwJN5cx2xj+pt1F1FbaVdBZYNU24lEX1Fo0/975ZZWY2m9e/L6V4=
+	t=1763143204; cv=pass; b=Ftx7neuavPiPmRWxjI83GfQ76iH+YBaTd/5rsVvA3mocfbtj8QvUxfUdbF1Mi5lDM1v4qBhafJ2Og9yuDYalDwfzMe/6QKo0YZs7Qn3bmKea0srUWZqk8blNK6anNw1U5qLzrVBW15HXnLkRIyUs5Q464rYuS6BYERvxyJNKeNU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763139424; c=relaxed/simple;
-	bh=/B9nAiAAXJebCLbNIXNAyI1FPoroefkgF85QbzVFpJE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ueFCNqt3uPs2FwtigGjl+0HilxaeLr95pA730IaH1FTB1XwG0fDtugjZ973XCw6tqtWKW5lUrQwVsJZnOnnigyOkQypbIKvdTqtdMhroWm9210NyGtvlZI7KuSm6KKyuSDlXruBw00BBejOUzidTeCz9UCZTeAydDtNXwkqKWPk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k3dyx15A; arc=fail smtp.client-ip=52.101.193.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1763143204; c=relaxed/simple;
+	bh=qcX4TEGnKQsEgEl6rKyUtFhiP+TiTSQ0w1sGRY+19ek=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WmW3oEf0vISTCqqCvDvoubgEUUn2ROwKu++j/KPDPSNMLfE9JVCBgBmUkLs1SENAWXMaatlbmFH8SOgArQb/UwUfbrm9j6SyzIobP8kztT6GL+99sSqNRfnKCsRTqRir/CKZ0wUhELfXWnEDegVcB4ZDR7j824Ck4VIFhmkilJ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=1l7h7Upc; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k3dyx15A"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DCZaW1O+6+tzjHwqCgY1qb9n53Z0hWIXHCwYV5o0dK15k2TooXJZhN9U3FCXNYwJ0aS9hFMpk9nHCGf+TGjOGOtxEawI+vcnxoQx5spdAiHzMb8Ntq9sgTc5jK+3Tk/dqesxR/Mj3iUWHoIXE5VT8N7Jgjy4Ee77m1SJafM8M9xgYwJ1BxgJuYueTkzHcQL1c6vuiJ7OyXJeXcmz7fIwnnV3GCNUCxfB6x5my8kRYj0TrrQO5CB2YipjvMZks1b2kuPr65kazwZbqOg3TpQ4Zop+6d78oUrUdSWuMWya2tJTAhi5S5QsIvDhJ8IeFzhUwS3/pqRU86XMReGGMhrr+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mXGzb6HpthVIXOlKp4X15h015cU/Euz+RA+Ql+dAFQg=;
- b=Rj8kl9tWkXZ0mYewyoG9Lkx0QLJUGUQzQnvTOP/Tq5CLrIDZuG9Qij8wJGsLNRCvyA4hbg991+3K/p1j8e1vxEmiPnqWdkM6yy2cVHyqDuWikyWGdjWU2jIeKC+AWDxwr50AT/Mxvpxkk9XmYidJ18ouAhRcXLOnPKnFubMiVV8MXmapyP5mExSiaji+OWme4i9GsoHuwtGz3h91HBj0YcUEeKRFbVGlX1S0rtBoPIhZUbq2GsNmpZvMy/6Ff5c8Qj1jU2r3q5YwnQ+U6wcfEg8oWbAgruQcZcKh+jeDI4EXK6wEo6I70enJ0M55xhn42QtyGUkh5UHcBeYxY4ll5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mXGzb6HpthVIXOlKp4X15h015cU/Euz+RA+Ql+dAFQg=;
- b=k3dyx15ASdDBMR/MYtKGfKZ24R39EECIiIv2H2TLXE/ocOwOlevhpIORWafk8wwgVmPIR9o4WgmulCma4FbvV+JE8786vK0UDJeonF+tDOvCJQ79tQX0bp4xmc395lZVx2utaYjiJlpCo/eskV73v2gNnyX7xqKMaBUdwi6Keu4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CYXPR12MB9320.namprd12.prod.outlook.com (2603:10b6:930:e6::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Fri, 14 Nov
- 2025 16:57:00 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9320.013; Fri, 14 Nov 2025
- 16:57:00 +0000
-Message-ID: <e6551b53-cb89-46e6-9c3c-545d14d79642@amd.com>
-Date: Fri, 14 Nov 2025 10:56:57 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] accel/amdxdna: Provide real-time NPU power
- estimate via AMD PMF
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- lizhi.hou@amd.com, VinitKumar Shukla <VinitKumar.Shukla@amd.com>
-References: <20251111063737.4156385-1-Shyam-sundar.S-k@amd.com>
- <20251111063737.4156385-6-Shyam-sundar.S-k@amd.com>
- <7034fae1-4096-4cdb-a46f-5e23e7accfa0@amd.com>
- <b8f2d8a0-3131-45cc-8c55-8fbf4ca06cfc@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <b8f2d8a0-3131-45cc-8c55-8fbf4ca06cfc@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR10CA0030.namprd10.prod.outlook.com
- (2603:10b6:806:a7::35) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="1l7h7Upc"
+ARC-Seal: i=1; a=rsa-sha256; t=1763143176; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Ve2DDZipfJqhztDcioRXWh4+6UkK1q+Y2lYi7wIZf7z3N8tl++Zx3rU76MkfIUjYM+PC58YTCLQGgQAeR2Hc2zFSiKXxhaH4OW8qs5WU8ROAlqFthHTjxa/ZHyyOUvmEH1Z3uKhRDRiweG4H+twO1kVxezgj8ziljqwaDv93Vrg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1763143176; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2mPu4kuCypX+SWycXpmahiDL2HkmwQCNzA5l6i1Pu+E=; 
+	b=XqmWH6DRrv759aVfONPVzvzN0mtcLk07w1tCK5cfEucxpUPGNMsGlo9BrVrVpNqce5tGF5mK7HCnhT9gX8qxdp8AyjpCb1i+Bq4jChCNz4UaRfgXFI4cE806gIN+tXAiLXKGLW4XRm4U19nMlUN36LPD+5WkIJyOBAUU0lO+keY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1763143176;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=2mPu4kuCypX+SWycXpmahiDL2HkmwQCNzA5l6i1Pu+E=;
+	b=1l7h7Upcz27SlW0z5cCZ00rNHs5JbuN/NF9AbMUDripiBDWaldIpIOZele+GLQS3
+	zLayxZvsgKGRKJEySZQQqFlY8291M/FMc4UdeUNenNljFgf/WK92tjV4sfdhvTW39Ws
+	TdNhzVB2/SNobIbEG+hfGZBCfs6BoqirdN70ay+M=
+Received: by mx.zohomail.com with SMTPS id 1763143173578973.3703228044657;
+	Fri, 14 Nov 2025 09:59:33 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rong Zhang <i@rong.moe>,
+	Guenter Roeck <linux@roeck-us.net>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v5 0/7] platform/x86: lenovo-wmi-{capdata,other}: Add HWMON for fan speed
+Date: Sat, 15 Nov 2025 01:59:12 +0800
+Message-ID: <20251114175927.52533-1-i@rong.moe>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CYXPR12MB9320:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9493ff36-8630-4a1b-a4ec-08de239ed3da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dGM3QWluVmtVSTlFTE9jZGRFRHI5S3g5YnRQZ3RqRUc0b1NuaGtmSnJTUGdo?=
- =?utf-8?B?aGRvYlQreFhIVk5ZYUM2VVlXaExGS21laUlLUzZuVnptV0pvTThCTXVtRjBL?=
- =?utf-8?B?VkthTnBQQXMvL1lwZ2w3WVZjdUt0WVhkWEZkcWdEdk9pd2RvLzgxc0FmR3c3?=
- =?utf-8?B?K3R3Q0F1VnR0Z0t5VFEwTE1iVkZFTmI4YVJPdG9MaU9mK1lKNVIzdmZBTm4w?=
- =?utf-8?B?cm5Db0dVVjQ1UW9odm9yOUhuNXVtcUdhUVM4VzFxOEc0VGtkSk84MlNVck1a?=
- =?utf-8?B?bTdNMEtpZ2FqWExMV1J2STlib1ZTYzFSMXRsS2NHaFcySXJEK3BxTmlkMm9w?=
- =?utf-8?B?UDlRNFNydmJQOTJRRmJMSTQxNGpZSDJTUlRRRlRSblRaanA2RjhqYlVBalhW?=
- =?utf-8?B?VWIybmliYUt2dlUrZ053dWZFaFJkWW5oRE05QXhDcXVUVWl6NVBTN1hJWWhh?=
- =?utf-8?B?Z0JpRXVzU1pJRFBEVmVMSmM0N1lrVUdkN09TOFpaV1Rwd0dFNlc3Smk0QlB3?=
- =?utf-8?B?WVZZZkR3VTFqcUpsSFB1MTlwc2FPQ2JjSWFXWXY3bjFlS1Fsd0RWdFB0TVVm?=
- =?utf-8?B?TjBXSE1rbi9sOGFqTkRXZFB3MXowbENsbjlWQkZ3R1ptM1g3L3NNakFicWgr?=
- =?utf-8?B?aG5TOUpYcUdUNHhkOEJvbUhTOFA1QktOOHZHQzVSeCswS1Y1VzZtamFzOXk4?=
- =?utf-8?B?UkQ5L01kZ2xMeE1PSkNyVmYva05nMVNKVzNobzFQNVJjbHFoSUxZQlJ6cDI3?=
- =?utf-8?B?TWpsY0QwYkhGUWV5Wi9NakhwanNaaFRVWG9RaWNYYXdlMXJ2dUFvRzRlcmJ2?=
- =?utf-8?B?Y21ULzZxZkk1UlBtcXhvcy9BNm43ck1FYXJDRlN6eHBsOGhoN1FBYTBjRjFR?=
- =?utf-8?B?YXB0dFdYaGU5bzJpUm9wUTZKd0o0VXl1MS92TEJ1SGZrZlhHOE1MRnJmUEha?=
- =?utf-8?B?MzRjNmR2Z1V0YkFxTHFlTHBrekk3Vm1XbzFRM3N5T21XYVVxUEg2UExyRkJM?=
- =?utf-8?B?bjBKcjlFN25mWWZGMVVVT1NoR2djOFFrR2M2SkM3UlVJWFVaeHhBTCtCZDY0?=
- =?utf-8?B?QTdRaUdmOWhPT0dNRmQ5cE9KSm9MSkVGSnZLUU1IR1EzY2gwRmQ4NC9sMHdz?=
- =?utf-8?B?dXpmelM0VkZ3dzlKdEhlc2g3Vk55M3JEWkZKZGYxRWpNY1FoRVBYWVNEWk9B?=
- =?utf-8?B?a09tWUdzUHR6enhpN0R0b094NDcxNm96dkhZVEJMSkZZbktwMy9MLzdiaDRk?=
- =?utf-8?B?N25ZMWFvY2todlBCc0c3TnFRZGNJOEQvcmpWYmgyaUVuY1BXaFlMSHlHa3Ew?=
- =?utf-8?B?WUNxaG5EbHJNKytzSys4aUU1V1R6SDV1S1c3ekltRnNjZ0pKV1cycFhrMXNm?=
- =?utf-8?B?ZHk3ZE44bW1GRldWRzErK0lCNVlCb3BoVmc3VHJ5WFYwTzk5OHJ0eXNjMm1h?=
- =?utf-8?B?bmpWdGZIdnJIOHBtY1lwaWhIVTFZM0J0c2srTlZQZnUzZG03V1dVQ0ZKakdF?=
- =?utf-8?B?a1ZlTTdGcG1rUEJOSC94OFVVWnRoanpVR2djRlJ2clhNdDljR2Q2YlUyd2hC?=
- =?utf-8?B?Z0FKT3crcGxkT0EzdmorU2d6T1IyQ3M0b1QydUExS1oxVzFaK0dkS2lYSzJN?=
- =?utf-8?B?dVNnZVg5NE94NlFXL1R1NEdhWHdMVnZKeFNNOWJmNHZRU2dSMjlKUG1wTlM0?=
- =?utf-8?B?Y0laNzJjem80ZkFVTFZWTVNXUzkzSkhqcUE5ckJTZDJYYWRMYi9LeHZ3N2hs?=
- =?utf-8?B?TzFnMnhEb2FTejFyeC92ZDk4aCtZdk9LSVBpdm9HZGFLMEpWcWluNjdGZFBo?=
- =?utf-8?B?aklLVTg0bnlSWUJQTmVOcngxQW5PcDhTZUlxTFAvOHZ1TkFPRjkzeVNVTWVC?=
- =?utf-8?B?TkI2N2s2MnQvN0lISzFSRlpzZ0lzKzJUSTkyRDVSRlNXcU41MElOMWwvWHZO?=
- =?utf-8?Q?UauV/fDv68naq7NG79kOcJFKGXIdKpSP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDFEaW8yOHBiS3hvclFQUXhNWUwwS2xEYVVVdXBlaEVGM2R2WCtqUFZEUFZQ?=
- =?utf-8?B?aDhnNlhOZXFmeFJzVTdsZkU5anZNQ1UzZVRkK3dYQ1AvU0N5RklXVCtyVHZK?=
- =?utf-8?B?YkJnbVJ4ZFVtcVZmSWcyVjJDR2F2RHlydUFNMUhCazk2R3NFOWpmQVhtMzdL?=
- =?utf-8?B?UXVLNlgyemFmVmYrM2poNENHS1d6M2NtQzBxLzFXaVFwNndhbGxTTEtseWdj?=
- =?utf-8?B?QnJaMGxTWDJuTUhqZmRiaWh0Tm5kYWV1QjFVWHNxRVNqL0VUS1dZVzk4VnBo?=
- =?utf-8?B?enh5WFIzVGxuZklDY1AyV3hybVkwS3dHekYrMTFXaGNGZ3VpR0hnVDMzeFBt?=
- =?utf-8?B?blBraTZoN0lCSnRyUm92TmRZRmNzenJoMmhLZHM1cE9SQ3VHUUJJNS8zT0x4?=
- =?utf-8?B?QUFERDRGREpSM1ZBeXRhanVSZEJJZnViRHY0RHNOS2JTd1NpSkQ2RjdEbWoz?=
- =?utf-8?B?Y2YrQnRacThQeFg0cHRzV09TZTczVDhzR2crRWVFZnNtVWFoUk8wTDlKUGZH?=
- =?utf-8?B?V0lEbmNuVGRoV016RVFySjZwZHhBMGt0b2swWWFGQy93Q3lVWTcwM3Z5Ty81?=
- =?utf-8?B?VG91OGI0LytvSW4zR3BETEI5eTBOMEVIaFJMd0VkVll1bEs0cG42VU9KUWR1?=
- =?utf-8?B?TlFYS3ZaYmhQV3JzcUxhbXpTOVdDQlpTWkVrV2IyRENwVDE5cDdlUlAvWWRR?=
- =?utf-8?B?RmdVK0Z3TWNmV3FrTjN3bnJXZzBxTW5kSlVUNEFpUTl5WVhJa2tkVFZGbllk?=
- =?utf-8?B?NXhPbkNwNXdnVkFHTmJ0aW1RWG0vemt2cTZRaUlBL1VUS0ZYRHZWS0F5SmE5?=
- =?utf-8?B?U0E3RmN0eE1IR2VqTHlac3kvTC82MUN5LzNIWnUvOENzam04SHp3cnFVVGZO?=
- =?utf-8?B?Rkl6a2ZhN2lMTDRiWEtZdDBsaEFxZ1FzOWNIenYxRU5rM1ZkaVNHaUp2ZE5k?=
- =?utf-8?B?dTdmNEo2RHNuV1B3U0ZpcG8vRzg4R0F4bzJiOWkzeUo4enFCUXd0amxEQlFD?=
- =?utf-8?B?ZEtMZVFhNTcyU3RXRkErME1CLzJaeWtWS2xjWUtqdlBCTXlXUktra09Handu?=
- =?utf-8?B?SndWMFlRU2xYRHNINENWVVB6b1ZXdXV2OUtvR0JRSDFyVndhNnpBeFEvaVZh?=
- =?utf-8?B?SEhxUjRXV1MzZDd2Tk91b1NYUjFXNlJ5dGp2UEplOEdSdy9keUtYVTMyZDha?=
- =?utf-8?B?ZXd1V1dGUlBIYjlvUVk2a2l2SUhZeXdaMDlqZXFFWUdWOVVPSERUWWU2dTFL?=
- =?utf-8?B?amdVckhQaE1JUmM5Vk5wVDdPYm1jTnNqdkMwVW5oNVRRL0VCcnBJOUZ0T1R4?=
- =?utf-8?B?cXBuTXpBVWNpNVl1RlVYVVN4ZmpWRHhDOWxsQUszL0VMZVdISm1GWmlGR3hB?=
- =?utf-8?B?TElHQ0w2RG8xdC9kWkxGRFVQbWdmWHMrVW0zVjh4ZlNHbUpqdmlkTURSSm5R?=
- =?utf-8?B?enFHdkhiYUcxdWNMckQ3MXVWK0N6a1YvSWxqTDA2b1d5eFdMc1l5SGIxdG1i?=
- =?utf-8?B?bmcrdDV3YkVjWHgvTzlXTmNrYW5vMzF2V3QzajJiQVpVS0pNT0s4c3pjWTdB?=
- =?utf-8?B?ZThJVGZxemltQ0M1L2NDQkZJQmtnV0M5TFNkYTBBdWlFUy9WN2dwY0RzVDJn?=
- =?utf-8?B?REloM0FtdFdtZThpVnpuRFNzM2NLWjB4cDRzaHM3d3hLclRXTnhud1JuR1ZM?=
- =?utf-8?B?RWJCQXBzczluTTBvcFRPMmJaQ1ZQWTgyS0lQbHh5cUpSR1F5YmQ1YTFhRGRu?=
- =?utf-8?B?VUIyb1JmaDJqOFYxa3RrTUI1Njk0R01ySmo5NTRsTm9HM3M2MkdoYWRsWWhq?=
- =?utf-8?B?SllpYU80SDFwdW1NeU4yZ2FBODZwS2t4SThjNUthOUk1ZVNUa0RmREs2Y3Av?=
- =?utf-8?B?UmRpa0J4NGw1SXZaOVNtNjlLN2U1SVJSc25PTnRRR0k3L2Zrb0wya3hZUXhp?=
- =?utf-8?B?SkRsdG43b1BPWEg5MXZYS3VjcXJTK0x2ZDdPRjV3aFp4MGlLdXpJSlNDdTFF?=
- =?utf-8?B?THNXTUpCNlNKckk1Y0tjUTBhR3VzRGFjMnJVaUk2SEN1NnlDUG92dmtKRkpx?=
- =?utf-8?B?RXRMV2wxbWlLelZ5T0pyUVFhbzcyT1dObHNRU1Q0YXlDZnFkeUwwcjc4eTkw?=
- =?utf-8?Q?Gq3S4eu/+QEbkOorOdBu/j801?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9493ff36-8630-4a1b-a4ec-08de239ed3da
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 16:57:00.1408
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zqO/0LU5ch2hseuv06opKQopm72LVGKQSkIRz8kfPLwH24eOeyT/rg/R427m6kvZ62tSpzFB73nK0W5qCFy2kg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9320
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+
+Lenovo WMI Other Mode interface also supports querying or setting fan
+speed RPM. This capability is decribed by LENOVO_CAPABILITY_DATA_00.
+Besides, LENOVO_FAN_TEST_DATA provides reference data for self-test of
+cooling fans, including minimum and maximum fan speed RPM.
+
+This patchset turns lenovo-wmi-capdata01 into a unified driver (now
+named lenovo-wmi-capdata) for LENOVO_CAPABILITY_DATA_{00,01} and
+LENOVO_FAN_TEST_DATA; then adds HWMON support for lenovo-wmi-other:
+
+ - fanX_enable: enable/disable the fan (tunable)
+ - fanX_input: current RPM
+ - fanX_max: maximum RPM
+ - fanX_min: minimum RPM
+ - fanX_target: target RPM (tunable)
+
+LENOVO_CAPABILITY_DATA_{00,01} presents on all devices, so
+both binds to lenovo-wmi-other. However, some device does not have
+LENOVO_FAN_TEST_DATA and its presence is described by
+LENOVO_CAPABILITY_DATA_00; hence, the former binds to the latter and a
+callback is used to pass the data to lenovo-wmi-other.
+
+The implementation does not rely on a specific binding sequence. This
+has been fuzz-tested using:
+
+	#!/bin/bash
+
+	DRV_DIR=/sys/bus/wmi/drivers/lenovo_wmi_cd
+	CAPDATA_GUIDS=(
+		$(find "$DRV_DIR"/ -name '*-*-*-*-*-*' -printf "%f ")
+	)
+
+	b() { sudo tee "$DRV_DIR"/bind <<<"$1"; }
+	u() { sudo tee "$DRV_DIR"/unbind <<<"$1"; }
+
+	for guid in "${CAPDATA_GUIDS[@]}"; do
+		u "$guid"
+	done
+
+	while read -rsa perm; do
+		for guid in "${perm[@]}"; do
+			b "$guid"
+		done
+		sensors | grep -A3 lenovo_wmi_other || true
+		for guid in "${perm[@]}"; do
+			u "$guid"
+		done
+	done < <(python3 -c "
+	from itertools import permutations
+	ps = permutations('${CAPDATA_GUIDS[*]}'.split())
+	for p in ps: print(' '.join(p))")
+
+	for guid in "${CAPDATA_GUIDS[@]}"; do
+		b "$guid"
+	done
+
+Tested on ThinkBook 14 G7+ ASP.
+
+Changes in v5:
+- Do not cast pointer to non-pointer or vice versa (thanks kernel test
+  robot)
+- Fix missing include (ditto)
+- Link to v4: https://lore.kernel.org/r/20251113191152.96076-1-i@rong.moe/
+
+Changes in v4:
+- Get rid of wmi_has_guid() (thanks Armin Wolf's inspiration)
+  - Add [PATCH v4 6/7], please review & test
+  - Rework HWMON registration
+    - Collect fan into from capdata00 and capdata_fan separately
+    - Use a callback to collect fan info from capdata_fan
+    - Trigger HWMON registration only if all fan info is collected
+    - Do not check 0x04050000.supported, implied by the presense of
+      capdata_fan
+- Drop Reviewed-by & Tested-by from [PATCH v4 7/7] due to the changes,
+  please review & test
+- Link to v3: https://lore.kernel.org/r/20251031155349.24693-1-i@rong.moe/
+
+Changes in v3:
+- Fix grammar (thanks Derek J. Clark)
+- Link to v2: https://lore.kernel.org/r/20251030193955.107148-1-i@rong.moe/
+
+Changes in v2:
+- Add a workaround for ACPI methods that return a 4B buffer for u32
+  (thanks Armin Wolf)
+- Fix function documentation (thanks kernel test bot)
+- Reword documentation (thanks Derek J. Clark)
+- Squash min/max reporting patch into the initial HWMON one (ditto)
+- Query 0x04050000 for interface availability (ditto)
+  - New parameter "expose_all_fans" to skip this check
+- Enforce min/max RPM constraint on set (ditto)
+  - New parameter "relax_fan_constraint" to disable this behavior
+  - Drop parameter "ignore_fan_cap", superseded by the next one
+  - New parameter "expose_all_fans" to expose fans w/o such data
+- Assume auto mode on probe (ditto)
+- Do not register HWMON device if no fan can be exposed
+- fanX_target: Return -EBUSY instead of raw target value when fan stops
+- Link to v1: https://lore.kernel.org/r/20251019210450.88830-1-i@rong.moe/
+
+Rong Zhang (7):
+  platform/x86: lenovo-wmi-helpers: Convert returned buffer into u32
+  platform/x86: Rename lenovo-wmi-capdata01 to lenovo-wmi-capdata
+  platform/x86: lenovo-wmi-{capdata,other}: Support multiple Capability
+    Data
+  platform/x86: lenovo-wmi-capdata: Add support for Capability Data 00
+  platform/x86: lenovo-wmi-capdata: Add support for Fan Test Data
+  platform/x86: lenovo-wmi-capdata: Wire up Fan Test Data
+  platform/x86: lenovo-wmi-other: Add HWMON for fan reporting/tuning
+
+ .../wmi/devices/lenovo-wmi-other.rst          |  43 +-
+ drivers/platform/x86/lenovo/Kconfig           |   5 +-
+ drivers/platform/x86/lenovo/Makefile          |   2 +-
+ drivers/platform/x86/lenovo/wmi-capdata.c     | 808 ++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  65 ++
+ drivers/platform/x86/lenovo/wmi-capdata01.c   | 302 -------
+ drivers/platform/x86/lenovo/wmi-capdata01.h   |  25 -
+ drivers/platform/x86/lenovo/wmi-helpers.c     |  22 +-
+ drivers/platform/x86/lenovo/wmi-other.c       | 511 ++++++++++-
+ 9 files changed, 1426 insertions(+), 357 deletions(-)
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.h
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.c
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.h
 
 
-
-On 11/13/2025 1:33 AM, Shyam Sundar S K wrote:
-> 
-> 
-> On 11/12/2025 23:33, Mario Limonciello wrote:
->> On 11/11/25 12:37 AM, Shyam Sundar S K wrote:
->>> From: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
->>>
->>> Add aie2_smu_get_power_estimate() to obtain NPU power readings from the
->>> AMD PMF driver. This xdna interface enables user space to reflect
->>> current
->>> workload power consumption in real time.
->>
->> But.. it doesn't.  It just adds a new function that could potentially
->> do this job.  The actual gluing it to userspace in some way to use
->> this function will be another patch.
-> 
-> For now, yes.. that's right. XDNA team will add more support on it
-> that goes via the accel tree. But this patch is meant to have a
-> minimal change on the xdna side so that there is a  consumer of the
-> pmf symbol that is getting exported to the kernel.
-> 
-> So, there is more support coming on the way. If you think, its worth
-> to rephrase the commit?
-
-Yes; that other support isn't happening this kernel cycle.  So the 
-commit message should be accurate to what it's actually doing (laying 
-ground work).
-
-> 
-> Thanks,
-> Shyam
->>
->>>
->>> Signed-off-by: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
->>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>> ---
->>>    drivers/accel/amdxdna/aie2_pci.h |  2 ++
->>>    drivers/accel/amdxdna/aie2_smu.c | 12 ++++++++++++
->>>    2 files changed, 14 insertions(+)
->>>
->>> diff --git a/drivers/accel/amdxdna/aie2_pci.h b/drivers/accel/
->>> amdxdna/aie2_pci.h
->>> index 91a8e948f82a..5601de841b5b 100644
->>> --- a/drivers/accel/amdxdna/aie2_pci.h
->>> +++ b/drivers/accel/amdxdna/aie2_pci.h
->>> @@ -8,6 +8,7 @@
->>>      #include <drm/amdxdna_accel.h>
->>>    #include <linux/semaphore.h>
->>> +#include <linux/amd-pmf-io.h>
->>>      #include "amdxdna_mailbox.h"
->>>    @@ -240,6 +241,7 @@ int aie2_smu_init(struct amdxdna_dev_hdl *ndev);
->>>    void aie2_smu_fini(struct amdxdna_dev_hdl *ndev);
->>>    int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
->>>    int npu4_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level);
->>> +int aie2_smu_get_power_estimate(void);
->>>      /* aie2_pm.c */
->>>    int aie2_pm_init(struct amdxdna_dev_hdl *ndev);
->>> diff --git a/drivers/accel/amdxdna/aie2_smu.c b/drivers/accel/
->>> amdxdna/aie2_smu.c
->>> index d303701b0ded..7b5e2c383dd3 100644
->>> --- a/drivers/accel/amdxdna/aie2_smu.c
->>> +++ b/drivers/accel/amdxdna/aie2_smu.c
->>> @@ -54,6 +54,18 @@ static int aie2_smu_exec(struct amdxdna_dev_hdl
->>> *ndev, u32 reg_cmd,
->>>        return 0;
->>>    }
->>>    +int aie2_smu_get_power_estimate(void)
->>> +{
->>> +    struct amd_pmf_npu_metrics npu_metrics;
->>> +    int ret;
->>> +
->>> +    ret = amd_pmf_get_npu_data(&npu_metrics);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return npu_metrics.npu_power;
->>> +}
->>> +
->>>    int npu1_set_dpm(struct amdxdna_dev_hdl *ndev, u32 dpm_level)
->>>    {
->>>        u32 freq;
->>
-> 
+base-commit: 6da43bbeb6918164f7287269881a5f861ae09d7e
+-- 
+2.51.0
 
