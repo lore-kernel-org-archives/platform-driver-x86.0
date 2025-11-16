@@ -1,226 +1,126 @@
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017F530DD21
-	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 16:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFB72F656A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 18:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763310539; cv=none; b=s2iF6GfmY7HJkzO1vfE7lXBaeRiyWHBNlWEHrj7Oeqhwgt+m3ouHqjgCOA1VTVrcPSNxSyTA7fNJVafJ48wChd+60v8Ta8m/wE0KdixZuH52RPaiws+XUcGnYi0T8a3RneJfZAUBpumTuZtS/FM+HZqhjvuHxDNk6MrVR+8FrN4=
+	t=1763319214; cv=none; b=Ik1lD62oOnDArqEo7pDs3X391upHpGW4nmclk5NNdQ2IAM6ZzpXC0URB5dqI8WZZk6zzrkFFVJDeMc/ZUyxnrpyAlHIA5mbTzmleqbMuXh7Ukr4a4DYKC2NZOMlJbJAvG/92J9yVr+8l+mVQbTe6DHbBMjHAAAQ1GzpvsQ0/sgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763310539; c=relaxed/simple;
-	bh=WLL796Tc57/4m3daCVHgrVo9ThNutdb25sieHIF4UTc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qGZEIm3f6Jbx4HKvUQCnu6dv3LSrxNlPK6mJ8+qqcqD5h0z6/7Ef0D9cnRMtBYopr3LrjossycQjY42cD1753bkE+Ky2fdZDlnyuY0S+Z2DwarcgG3fVhsLpe3FJvCmG/AbuLBCUHpb6XTJApLEPpt1DNT0NMm3iwCvyDa8w26c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=hP9P9iEF; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1763319214; c=relaxed/simple;
+	bh=oxj1wwYxVbThvOniJHLCzFHa58TZX7NhJQv0iT0dy30=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GYYSBoqQogZLf+geh6GBMJb92PwQvwbqM/RJujtTf47Poy7FpD2SnCb+uVMLBkHaQIBO4yjSQ+wiOzGu5aE7DNDsjK+5Bk3GoCLPA/Le7DtUq1uDucAVRObuT0eyk4LXlwYvlUtzH3q67XxZ/8tihgiF8XBHcCUQnKF5cGbxooY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=EToLk8k3; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="hP9P9iEF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1763310528; x=1763569728;
-	bh=WLL796Tc57/4m3daCVHgrVo9ThNutdb25sieHIF4UTc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=hP9P9iEF+bYm/mWO1qjLvWEu4YFCL5oyT6nuSx5vC4vAfx6VWd2WWMjNEgpHUv0RN
-	 tsDUmB23wHml8B88cya3Y+huoudLen8+GqKPSOVNp9sJxcNIaQbyjXA8+Te6Jh75e6
-	 NtRInMVqGi59PQcmf4p5XRBbU7m900zAznOqC0fcyUZU4An1DekbDjzIZDZU8JdhIN
-	 Hoh2TgbMmKW2Izyti1enp9Rp5KTc/8WBFpK1jumiBh+h+cahlLhwKTuqWvA7Ex787j
-	 mPb/HypHsEKMuImIFvo8YZ0uc8Fc2YtigXdyPp79PaeSwIR4OfwDoujLMvUqB26Bjn
-	 6L42XGFIpA1WA==
-Date: Sun, 16 Nov 2025 16:28:42 +0000
-To: Hans de Goede <hansg@kernel.org>
-From: Bugaddr <Bugaddr@protonmail.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness unexpectedly
-Message-ID: <tPQumZng3Py_n2et4MLRKu_-M-xqv-nzkFCCtnVryRamgSs5020dXq67qWVdrTG6mrFCDTGVDLGvoVvvnJZ_nQszJDQ4PWYCPbflKqGlqNs=@protonmail.com>
-In-Reply-To: <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
-References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com> <1536ce4a-5844-447f-9e86-197c71c6d364@gmx.de> <0RyizLnGQaxXLOtK-q6h-mHCTA2ergYBAIS-DkF1MPD9T5nx79rlaKdIOUBRft7Ghpy11OPo2OZM4waIjDbdnv2fnafWBDxWEYL75XZKtUo=@protonmail.com> <0b485b76-fb44-44a4-afab-d35fa31043db@gmx.de> <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com> <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de> <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org> <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
-Feedback-ID: 43498376:user:proton
-X-Pm-Message-ID: 3946dc8097f696e888a6cf016d2b15044f79141c
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="EToLk8k3"
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 74DA53F520
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 18:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1763319204;
+	bh=EFJSWMgWfA/jaVDxy9rpobv57XHmTrvDqbuJ5fsLK8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=EToLk8k3TzAlOM0/+NikSDVWYcRRuAXJ9tU5I+cXgf/+iV1JzfrFMhggRBT71Cs+b
+	 xa2qGpM0390ZLJs4fVzsJKHrYe9Mvzku2mhZXhdx70yMayPlTm8a0VqmHQ3Ar5/tmE
+	 wuARu9wVyEK+7RNSleQKTeukTUAHISwiBBevLsJrqNmMsK+0DpreC+MMcNxZeHSZzV
+	 QsgmqvHnB1Rg8cJP/XHBoSC8TqTa4fGIAi7lEWG7BYL7NUfDpsOAou28HmISuhhJvc
+	 4BP1JJyn7iW/OszV57ryMJozbeqsfO0LeBbzV6xVIBuQcH/bL6a7VMGH2tKjIW7oTs
+	 Bq5DN6xJAlJtWGyns+Gm0YpUCIy6/8owX970jwzAsb/Zg8ta7SwDP/4XhKIk7Akbha
+	 Xb853V0udNkqg1aVjszEoPjXpTyl6aan2AXv8pddEQpgEK2yu7Ak3Wr5VyDz9tjIlk
+	 O39Ap0dkWUtkEvTun3N540YuH6ip2LMHt4FFPKzpvervGSwjWhJuL811gZ7cSKKrom
+	 Hw9+qvilgon9hpWWvRnS0XDW4eHFvDLfelL/x0LotEolV/P0yDwwr83z+6c/GS02YP
+	 gR5e2G1WMMmytgtUBorLXikDqR7VL15rth2ItPBtX16luRfAfCUHh++c5S3F70G8bQ
+	 N6N4qaeiXvQ4OCIqmRJbhOgE=
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-42b2ad29140so1591760f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 10:53:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763319203; x=1763924003;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EFJSWMgWfA/jaVDxy9rpobv57XHmTrvDqbuJ5fsLK8U=;
+        b=vJHLxHG+/eZw9FpBvzRFaJd4u2O60DgQf1ur8jZaEis14c7epgdzpjXyYSl+bnS8If
+         i2gz9c7jhrKXlWP8/1B6qbrcZEPBImKymwNAGsftY6XTh8n0AzGpuxqfUvxrJ9OKWbzL
+         u2BzeWhytP7jojdEl9F/tx97Q9Ypi9oa1vZtcnQbt8ZBn2RyOGEQVDTABsOU8+ZVe84y
+         H46z/QxAZX7DCqG7ElplAZkbxVVKl75NWaunNV2UC3v5o7fOVVJX9fw0kZJWGPC7XmsA
+         yGE6u2ZZ0Mofh+3yBmbq73VFUF7w+4r11Q97kFCA1NXc7iNZfy0/6rGnrjOksUEG4cGv
+         S1Tg==
+X-Gm-Message-State: AOJu0Yzhyn5hiqy5UHtH00g6CXlwdIj01ixvoGS6Gbkpj7aSSIuS4yn3
+	HWXzS4M1yX2OizRCp6G71N6nB19pkDMu1wpy3nvOcafVz6fuInr9pkSEkbAMllCDtq32FEHB/1A
+	GKWgUgdXptU43ERd5Le1AtyqM+T+0+DCMJMewQiVRD6xcDiRFYs32vlNxawVVUoLkAYXSu3HE9V
+	2Ra8cfoMImcsDPpHJNKorEx5Zi4g==
+X-Gm-Gg: ASbGncsDpQzrUD9lZPdIqC5Uu6NL4o9ENpt6Ci+njcQJUuBzdAIF1Cq9ppIWaH2TxOn
+	wI5/THZuUusv20MIERVFgLLk9MpJ9S0i+8HucP2jNKpysQMd2gJURLdmD/VJOBN/7+QXmYEtXc2
+	UO83e+of7gGLok+0KlKnwPjojHSo0wLnolfhHPNhXOCjFz9m2tBmFTap2P2GrY1OLcVXqkwBNgu
+	SMbiC8QcKNTFIPiOo4T2KHyMKxw58rjagN05Cn65qudRMZQGZ1OMDMw2D/GFhbly7uHzuiJQG5f
+	E6WgkJN+nHtTeqkC5mSUXn79qlZpJxjYWlswWmWtci+//P07xn3/KeYSDu0a+mY6QYaQpuCmrUM
+	NVPYnttGC/LMY2xjal51CuwUmMU3KKkAO3q1Npzuk/3XQ5qolwnlHaOk=
+X-Received: by 2002:a05:6000:228a:b0:42b:4223:e63c with SMTP id ffacd0b85a97d-42b5932346amr9883802f8f.11.1763319202859;
+        Sun, 16 Nov 2025 10:53:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEgmerUuR30xGULPniPQQPGkGXW3P2IBr9Bpsv9rwR6mcsU+F37iv42QtzH33o6+tHtfB95HA==
+X-Received: by 2002:a05:6000:228a:b0:42b:4223:e63c with SMTP id ffacd0b85a97d-42b5932346amr9883786f8f.11.1763319202509;
+        Sun, 16 Nov 2025 10:53:22 -0800 (PST)
+Received: from mac.home (host31-49-244-250.range31-49.btcentralplus.com. [31.49.244.250])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f206aasm22326162f8f.40.2025.11.16.10.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Nov 2025 10:53:21 -0800 (PST)
+From: Anthony Wong <anthony.wong@canonical.com>
+To: platform-driver-x86@vger.kernel.org,
+	kuurtb@gmail.com
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH v2] platform/x86: alienware-wmi-wmax: Add AWCC support to Alienware 16 Aurora
+Date: Mon, 17 Nov 2025 02:53:11 +0800
+Message-ID: <20251116185311.18074-1-anthony.wong@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Hans and Armin,
-Could you please review the logs I shared? The issue persists across all ba=
-cklight modes, and I=E2=80=99d appreciate your guidance on the next steps.
-Thanks,
-Bugaddr
+From: Anthony Wong <anthony.wong@ubuntu.com>
 
+Add AWCC support to Alienware 16 Aurora
 
-On Saturday, October 25th, 2025 at 1:11 AM, Bugaddr <Bugaddr@protonmail.com=
-> wrote:
+Cc: stable@vger.kernel.org
+Signed-off-by: Anthony Wong <anthony.wong@ubuntu.com>
+---
+v2:
+* Drop "AC16250" from product name
+* use g_series_quirks for G-mode
+v1: https://lore.kernel.org/all/20251007084734.25347-1-anthony.wong@canonical.com/
+---
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
->
->
->
-> On Wednesday, October 15th, 2025 at 3:43 PM, Hans de Goede hansg@kernel.o=
-rg wrote:
->
-> > Hi,
-> >
-> > On 11-Oct-25 5:08 PM, Armin Wolf wrote:
-> >
-> > > Am 04.10.25 um 18:33 schrieb Bugaddr:
-> > >
-> > > > Sent with Proton Mail secure email.
-> > > >
-> > > > On Thursday, October 2nd, 2025 at 3:26 AM, Armin Wolf W_Armin@gmx.d=
-e wrote:
-> > > >
-> > > > > Am 18.09.25 um 21:18 schrieb Bugaddr:
-> > > > >
-> > > > > > > Am 13.06.25 um 19:12 schrieb Bugaddr:
-> > > > > > >
-> > > > > > > > Hello,
-> > > > > > > > I'm writing to report what appears to be a bug affecting th=
-e Acer AN515-58 laptop, and I would appreciate any assistance in investigat=
-ing or resolving it.
-> > > > > > > >
-> > > > > > > > When I press Fn + F10=E2=80=94which is intended to increase=
- the keyboard backlight brightness=E2=80=94the display brightness unexpecte=
-dly decreases along with it. Furthermore, the display brightness continues =
-to lower incrementally, until I manually press Fn + Brightness Up to stop a=
-nd reverse it.
-> > > > > > > >
-> > > > > > > > After pressing Fn + Brightness Up, the display brightness b=
-ehavior returns to normal, and the issue does not reoccur=E2=80=94however, =
-from that point onward, the Brightness Down key no longer works.
-> > > > > > > >
-> > > > > > > > This behavior is consistent and reproducible. I'm happy to =
-assist with any debugging, log collection, or kernel testing as needed.
-> > > > > > > >
-> > > > > > > > Best regards,
-> > > > > > > > Bugaddr
-> > > > > > > > Hi,
-> > > > > > > > can you share the output of "acpidump"?
-> > > > > > >
-> > > > > > > Thanks,
-> > > > > > > Armin Wolf
-> > > > > > > Sorry for late reply, but checkout this:
-> > > > > > > https://paste.rs/Nqca3
-> > > > > > > Thanks,
-> > > > > > > Bugaddr
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > sorry for the late response. It seems that you forgot to paste pa=
-rts of the DSDT table. Could you please store the output
-> > > > > of acpidump inside a file (sudo acpidump > acpidump.log) and atta=
-ch it to the email? Also please put the whole mailing list
-> > > > >
-> > > > > on the CC next time.
-> > > > >
-> > > > > Thanks,
-> > > > > Armin Wolf
-> > > > > Hey, please checkout the attached acpidump
-> > > >
-> > > > Thanks,
-> > > > Bugaddr
-> > >
-> > > Alright, the following ACPI bytecode is likely responsible for sendin=
-g those brightness down events:
-> > >
-> > > Method (_Q11, 0, NotSerialized) // _Qxx: EC Query, xx=3D0x00-0xFF
-> > > {
-> > > Debug =3D "=3D=3D=3D=3D=3DQUERY_11=3D=3D=3D=3D=3D"
-> > > ^^^WMID.FEBC [Zero] =3D One /* Acer hotkey event
-> > > ^^^WMID.FEBC [One] =3D HTBN /* Hotkey scancode /
-> > > ^^^WMID.FEBC [One] =3D BRTS / Unknown, BIOS error? /
-> > > ^^^WMID.FEBC [Zero] =3D 0x04 / Unknown, BIOS error? /
-> > > Notify (WMID, 0xBC) / Notify acer-wmi driver /
-> > > If (IGDS) / Integrated GPU device state? /
-> > > {
-> > > Notify (^^^GFX0.DD1F, 0x87) / Decrease brightness on Intel iGPU /
-> > > }
-> > > Else
-> > > {
-> > > Notify (^^^PEG1.PEGP.LCD0, 0x87) / Decrease brightness on discrete GP=
-U */
-> > > }
-> > > }
-> > >
-> > > I think the brightness problems are caused by the kernel using the wr=
-ong backlight interface.
-> > > Can you please try the following things:
-> > >
-> > > 1. Unload the acer-wmi driver using "modprobe -r acer-wmi".
-> > > 2. Boot the kernel with "acpi_backlight=3Dvendor" if the problem stil=
-l occurs.
-> >
-> > Using acpi_backlight=3Dvendor on a recent laptop-model like this one is=
- unlikely
-> > to be the right thing to do. acpi_backlight=3Dvendor is for vendor spec=
-ific
-> > backlight control firmware interfaces from before things were standardi=
-zed
-> > on using the ACPI video firmware interface around Windows XP (IIRC), no=
-t
-> > sure if it was XP or some other Windows release but standardizing on
-> > the API video firmware interface happened a long long time ago and then
-> > things moved to mostly using direct hw access (acpi_backlight=3Dnative)
-> > starting with Windows Vista.
-> >
-> > acpi_backlight=3Dvideo could still be something which might be the pref=
-erred
-> > way on some devices and also goes through ACPI calls, but using
-> > acpi_backlight=3Dvendor is weird.
-> >
-> > OTOH I learned a while ago that apparently if multiple backlight interf=
-aces
-> > are present Windows simply sends the new brightness value to all interf=
-aces.
-> >
-> > Anyways Bugaddr please do give acpi_backlight=3Dvendor (and maybe also
-> > acpi_backlight=3Dvideo) a try as asked by Armin, this will still be
-> > a good data point to have.
-> >
-> > Regards,
-> >
-> > Hans
->
->
-> Here are the logs:
->
-> # Logs after setting acpi_backlight=3Dvendor & removing acer-wmi
->
-> 1. I am unable to change the display brightness either up/down
-> 2. Caps_lock light turns on automatically when pressing fn+brightness_up =
-key & turned off automatically as soon as other keys are pressed
-> 3. Was able to change the keyboard brightness
-> 4. no logs while pressing fn+keyboard_brightness_up/down
->
-> wmi PNP0C14:00 000000bc 00000000
-> video/brightnessup BRTUP 00000086 00000000
-> wmi PNP0C14:00 000000bc 00000000
-> wmi PNP0C14:00 000000bc 00000000
-> video/brightnessdown BRTDN 00000087 00000000
-> wmi PNP0C14:00 000000bc 00000000
->
-> # Logs after setting acpi_backlight=3Dvideo
->
-> ## Logs while testing the brightnes buttons first time after boot after r=
-emoving acer-wmi, was able to change the display brightness
->
-> wmi PNP0C14:00 000000bc 00000000
-> video/brightnessup BRTUP 00000086 00000000
-> wmi PNP0C14:00 000000bc 00000000
-> wmi PNP0C14:00 000000bc 00000000
-> video/brightnessdown BRTDN 00000087 00000000
-> wmi PNP0C14:00 000000bc 00000000
->
-> ## Logs after pressing fn+keyboard_brightness_up (the display brightness =
-suddenly goes to 0) & keyboard brightness also changes
->
-> video/brightnessdown BRTDN 00000087 00000000 K
->
-> ** I am on latest bios update & acpi_backlight=3Dnative also dont work
->
-> Regards,
-> Bugaddr
+diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+index f417dcc9af35..a1ff63d8dc12 100644
+--- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
++++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+@@ -89,6 +89,14 @@ static struct awcc_quirks generic_quirks = {
+ static struct awcc_quirks empty_quirks;
+ 
+ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
++	{
++		.ident = "Alienware 16 Aurora",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware 16 Aurora"),
++		},
++		.driver_data = &g_series_quirks,
++	},
+ 	{
+ 		.ident = "Alienware Area-51m",
+ 		.matches = {
+-- 
+2.43.0
+
