@@ -1,171 +1,315 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC1F2236EE
-	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 12:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02143C1F;
+	Sun, 16 Nov 2025 16:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763296843; cv=none; b=dOqh9kdrjymRuhWBSDeKBA/uVm4mETcoF2R9Sc1Rv06DIhSBR9vCxD6cwPCSagaE3WaHSIJ1UAIEZLkOB3/pPA1RhepmUaa3vSAd0FcfNQsv+i7iT/pfCz4+IdV2IkJ9n6YKfCo9hiRUzTHVVqFF8jmpMbYSClttCgGoaR2Epj4=
+	t=1763308964; cv=none; b=oUuvOBIZcNPxxev3M+a+LTaBEH8mP1UNw3Q9qGvTEW6TgIChbt5SNq1g1WDnbsROH3HcAjV2Lsx/4dc/+Xn/2SDP8or7puXHbO4WwA3OqsZHe5q+q8bU4E4u0iPa2NUjvTSNhVgBHTmt3pPvyPTMIm8KaXQTdeHRzAJsc5e7OWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763296843; c=relaxed/simple;
-	bh=IO37mf12FJq4Ef2t+nk5lLEmcczBPEY7+F8Zzv+Zj8Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=YyZnECqDglzpoh7OEDSJCBC0S94l3TJ74YSOHKd3LRRmqzWjJsxOx8FOr5xgb7AfAeXaLgFkWxnswVRuIMNIDz8mTFiCwWx4q5o/Y540zVNYXjilTIKDm853h9+bOf6nToxjr2Mxf7OraROUyBvyU7OknSheOI1CpYMSezBbW/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJXN649B; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763308964; c=relaxed/simple;
+	bh=DMwaOqkSTb4TL0rCNRqMeiD8CEtH2IzE6dJiibZWj74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=joy6BFzEJVrhI+tzUgNh1r9eprIEgW+0Y0h7ji8eD0mI9VQssW20StCWgR/XYbBprCg9hKeQG6CXtAQzgZ5mr6N4RHUa0R/w+EZq+mw9/PQAyNVBAuNJbBaAwcmq53X9ETETj00mysMOX/iMjkGP1c03qYPCXuCJRfOIXe0Gxng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nw81EhKG; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJXN649B"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-5de23ddba5eso2337149137.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Nov 2025 04:40:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763296840; x=1763901640; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQ/fyHmKV/6OJASu2MHI9fy1bw7vRJvbroTNkv2ZoaE=;
-        b=OJXN649Bw4ennxo6aZiqjewtabz/dvV3DK9josoj4bCel3OI7ppgusT2Bt0glmlLq2
-         p5nN0yTcWw0FBppbnZ3jZAKmVgKyzmuDdiu4Vmvj3fMkDS+L/Im5YpGheZfDKS4mbUdZ
-         PhdkizzNAY69gCZ4xisgbQuVh4lu82hd8Q8f8IhqgCS6jixif5gFKAi9jvjDcm+adD+X
-         56fWayKQbVxoB0XnxyyKrAAwGQfPmRkM+k7MoLv9FRpKyj5TT2inoX5miPFM3fs9BJtH
-         7e4cn7gND/E4Nz8/qpYNlLBwknUYY6pJwQB6qr0DZNsI+cw+eBu2UB6l3xrWY0WWrWYH
-         VBEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763296840; x=1763901640;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aQ/fyHmKV/6OJASu2MHI9fy1bw7vRJvbroTNkv2ZoaE=;
-        b=OOxBZH/P6wQXhPi52KlCPKzbWU3tUYGKlGf/OfNkKiljdZH3chn7i4s9xfLfHyi/zU
-         9sT8Ww0dS4WF9aAATJNE3UKXtXzFpAu/SgMIHGMrsxvEXKvoixuhW01IjJ4XbJEOEDMk
-         8oM/fk2Hc8iXdsffKpf8KUucj2siCaElyN6xpfm+9O8347/Ubb5f4bQUppKyilfsERs6
-         L63J7+74/lna3VKzhIsoxXuNUYCxfcvZuGUw90kF7mxg909nveTMKVgkzD4oILyezfMu
-         xYzrAF2iLuu1kDqpNzPXId2TfXIVrtNU/pQq3GnCmCpkspkp0SCi1iGJv9FvI5iwKueJ
-         wtng==
-X-Gm-Message-State: AOJu0YyKy7sxvhMFkBI+17glyNwMoAhagcgbqBKeVCTMxfsNIvQpvslk
-	iXsyOL85gILGdXoW/XdM/uBp4QnAbrGBA2ToEftDDt2WJ0pFdkzMhmNh
-X-Gm-Gg: ASbGncthVZJHeojlThdTiywRpssbiGUJJtU2CZF2kz4YSnOpUa43L5OhnqvmdPf59h7
-	ZoKTeKmdvevLqbLvA7nijEiSfKBQjvyd7d75VuR4fbbzUqPovGuPkfNTfUR4S5whZViPzONuel2
-	FioLBFLlSo0MaHYnNlAKMf+oxeX/QgOPoZEv3YbKcO13umuzSEuqacIj6xqQtG6lAmhSxgrGh/O
-	duMQyACoB23TXQQkJCz9BUAgnbIlBer99LtQ/I922FDObpb2xSmhJ9mFU2P6YmPm0J7JnrRv+0L
-	i2jWy7or2pcopqI/80EeWepvDHk1Msx9MOANn6qisQB9LTqWdtTziQUJpMleyzgVaP752R9HUmH
-	eK+GZ61viQ8zHO+BNM49DNTq88BAIdn7O4EbRt/YR5xUH1rC8fj+sTk07UGPr0z74xyZ/
-X-Google-Smtp-Source: AGHT+IHGeXQ9wrtVBDKSn2OrgB1bPU/GBb9m33p3oxsNRGxI4QxmC0gnj6eJICM1U5VdN90yvdCClQ==
-X-Received: by 2002:a05:6102:f0e:b0:5d5:f6ae:38ee with SMTP id ada2fe7eead31-5dfc5bcd631mr3502222137.37.1763296840096;
-        Sun, 16 Nov 2025 04:40:40 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-937611bf6fdsm3132024241.12.2025.11.16.04.40.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Nov 2025 04:40:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nw81EhKG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1763308934; x=1763913734; i=w_armin@gmx.de;
+	bh=rVIYDFYsneJPl+XSjGSbLnO/IH0bHEbQt4ILyIdQMh8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=nw81EhKGovoqkQfSyYEyBwxy2qzPE0a8ote02Jv8uqGiN4fxTgtujN0wr7gyisSA
+	 eDVbyYF97gUu7whhriqn29m0hFzMhAWsR8aKaCZ99nvl+MfskBeamnn40ixOqxnO9
+	 wW1X3It+LLXfRRO3hm50gOlExq8y1tBHPrfCPF4JRd6mTZeqjfUY7uo+jv5FtpxHW
+	 SuOsOayf1Y/Hr5oCMrrU95+aa/sysB2j42aChFnE3evymZMbBJG/83xMz0VLdHnKr
+	 WZvqYuEsV6axQSrHAUd8RY+awB2Bwhw5oXQeBuTWlZepiiCIdorvaqlpSOIuz55wr
+	 YlOHGF7aNMo33TuEKw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwwZd-1w4vCo48OB-0141t1; Sun, 16
+ Nov 2025 17:02:14 +0100
+Message-ID: <e4651da4-60e0-41d5-94aa-a53b44be5901@gmx.de>
+Date: Sun, 16 Nov 2025 17:02:11 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/6] platform/x86: ayaneo-ec: Add Ayaneo Embedded
+ Controller platform driver
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+References: <20251113212221.456875-1-lkml@antheas.dev>
+ <20251113212221.456875-2-lkml@antheas.dev>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20251113212221.456875-2-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 16 Nov 2025 07:40:38 -0500
-Message-Id: <DEA4K8Q6VE8Q.308RH28K9QD45@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Anthony Wong" <anthony.wong@ubuntu.com>, "Kurt Borja"
- <kuurtb@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, <hansg@kernel.org>,
- <ilpo.jarvinen@linux.intel.com>, <Dell.Client.Kernel@dell.com>
-Subject: Re: [PATCH] platform/x86: alieneware-wmi-wmax: Add AWCC support to
- Alienware 16 Aurora
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20251007084734.25347-1-anthony.wong@canonical.com>
- <DE91X624SV94.1C3A31K6FDMD3@gmail.com>
- <CAE7LaDCG0QSprA4LST-qp4Vv_if9gqE=0h5LCoxiEGZsBFvz0A@mail.gmail.com>
-In-Reply-To: <CAE7LaDCG0QSprA4LST-qp4Vv_if9gqE=0h5LCoxiEGZsBFvz0A@mail.gmail.com>
+X-Provags-ID: V03:K1:/U3WgmB5PKbaGQ2qMFjwBsoAf/05cy+hA7Jg0YyLKTGNNTlVv0t
+ /lzf95jeQm81NDQy6cZm5XI0yeudHy5moLDXaamXGA4r4KEy8XqQlooFoxhuLzHL5izM7b8
+ 2hmsiYwjFZ0rQZEojsmJ7tA4KtYEbpI9JdNdqEh5/BEU/DOsN5RdZbck63p6Kz2a3Qiyftm
+ MKowdLJWKqnuDgMJJ4DTg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dQNlROTUZWA=;8iQEwEPivniFsq7WK4Dukcj3477
+ 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
+ mwnIw9PE=
 
-On Sat Nov 15, 2025 at 7:44 PM -05, Anthony Wong wrote:
-> Hi Kurt,
+Am 13.11.25 um 22:22 schrieb Antheas Kapenekakis:
+
+> Recent Ayaneo devices feature an ACPI mapped Embedded Controller (EC)
+> with standard addresses across models that provides access to fan
+> speed, fan control, battery charge limits, and controller power
+> controls. Introduce a new driver stub that will handle these driver
+> features.
+
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>   MAINTAINERS                      |  6 +++
+>   drivers/platform/x86/Kconfig     | 10 ++++
+>   drivers/platform/x86/Makefile    |  3 ++
+>   drivers/platform/x86/ayaneo-ec.c | 90 ++++++++++++++++++++++++++++++++
+>   4 files changed, 109 insertions(+)
+>   create mode 100644 drivers/platform/x86/ayaneo-ec.c
 >
-> On Sat, Nov 15, 2025 at 6:23=E2=80=AFAM Kurt Borja <kuurtb@gmail.com> wro=
-te:
->>
->> On Tue Oct 7, 2025 at 3:47 AM -05, Anthony Wong wrote:
->> > From: Anthony Wong <anthony.wong@ubuntu.com>
->> >
->> > Add AWCC support to Alienware 16 Aurora AC16250.
->>
->> Hi Anthony,
->>
->> I'm very interested in getting this merged.
->>
->> Do you have access to this model? If so, either testing the
->> `force_gmode` module parameter or attaching the acpidump of this laptop
->> would be amazing.
->
-> Here's the acpidump of the machine:
-> https://people.canonical.com/~ypwong/alienware16-aurora-acpidump
->
-> I tried the `force_gmode` module parameter but it doesn't seem to do
-> anything, how to check if it's really in effect?
-
-It maps the 'performance' profile to G-Mode. In some laptops this
-toggles the led of the G-Mode/Performance key and performance may be
-better.
-
-I checked the acpidump you provided and your model does support it,
-thus we should use `g_series_quirks` instead of `generic_quirks`.
-
->
-> Once this is cleared up, I can send a v2 with the suggestions you
-> provided below.
->
-> Thanks,
-> Anthony
->
->>
->> Either way, I have a couple of comments that I missed. First there is a
->> typo in the title: alieneware-wmi-wmax -> alienware-wmi-wmax.
->>
->> >
->> > CC: stable@vger.kernel.org
->>
->> CC -> Cc.
->>
->> > Signed-off-by: Anthony Wong <anthony.wong@ubuntu.com>
->> > ---
->> >  drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
->> >  1 file changed, 8 insertions(+)
->> >
->> > diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/=
-platform/x86/dell/alienware-wmi-wmax.c
->> > index 31f9643a6a3b5..eb7c3fb6b078d 100644
->> > --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> > +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> > @@ -89,6 +89,14 @@ static struct awcc_quirks generic_quirks =3D {
->> >  static struct awcc_quirks empty_quirks;
->> >
->> >  static const struct dmi_system_id awcc_dmi_table[] __initconst =3D {
->> > +     {
->> > +             .ident =3D "Alienware 16 Aurora AC16250",
->> > +             .matches =3D {
->> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
->> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware 16 Aurora=
- AC16250"),
->>
->> I suggest we drop the "AC16250" so we won't need additional patches if
->> Dell releases Alienware 16 Aurora R1, R2, etc.
->>
->> > +             },
->> > +             .driver_data =3D &generic_quirks,
->> > +     },
->> >       {
->> >               .ident =3D "Alienware Area-51m",
->> >               .matches =3D {
->>
->> Thanks!
->>
->> --
->>  ~ Kurt
->>
-
-
---=20
- ~ Kurt
-
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ddecf1ef3bed..c5bf7207c45f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4192,6 +4192,12 @@ W:	https://ez.analog.com/linux-software-drivers
+>   F:	Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+>   F:	drivers/pwm/pwm-axi-pwmgen.c
+>  =20
+> +AYANEO PLATFORM EC DRIVER
+> +M:	Antheas Kapenekakis <lkml@antheas.dev>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/ayaneo-ec.c
+> +
+>   AZ6007 DVB DRIVER
+>   M:	Mauro Carvalho Chehab <mchehab@kernel.org>
+>   L:	linux-media@vger.kernel.org
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index c122016d82f1..8ca95536f8d9 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -316,6 +316,16 @@ config ASUS_TF103C_DOCK
+>   	  If you have an Asus TF103C tablet say Y or M here, for a generic x8=
+6
+>   	  distro config say M here.
+>  =20
+> +config AYANEO_EC
+> +	tristate "Ayaneo EC platform control"
+> +	depends on DMI
+> +	help
+> +	  Enables support for the platform EC of Ayaneo devices. This
+> +	  includes fan control, fan speed, charge limit, magic
+> +	  module detection, and controller power control.
+> +
+> +	  If you have an Ayaneo device, say Y or M here.
+> +
+>   config MERAKI_MX100
+>   	tristate "Cisco Meraki MX100 Platform Driver"
+>   	depends on GPIOLIB
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index c7db2a88c11a..274a685eb92d 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_TF103C_DOCK)	+=3D asus-tf103c-dock.o
+>   obj-$(CONFIG_EEEPC_LAPTOP)	+=3D eeepc-laptop.o
+>   obj-$(CONFIG_EEEPC_WMI)		+=3D eeepc-wmi.o
+>  =20
+> +# Ayaneo
+> +obj-$(CONFIG_AYANEO_EC)		+=3D ayaneo-ec.o
+> +
+>   # Cisco/Meraki
+>   obj-$(CONFIG_MERAKI_MX100)	+=3D meraki-mx100.o
+>  =20
+> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/aya=
+neo-ec.c
+> new file mode 100644
+> index 000000000000..2fe66c8a89f4
+> --- /dev/null
+> +++ b/drivers/platform/x86/ayaneo-ec.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Platform driver for the Embedded Controller (EC) of Ayaneo devices. =
+Handles
+> + * hwmon (fan speed, fan control), battery charge limits, and magic mod=
+ule
+> + * control (connected modules, controller disconnection).
+> + *
+> + * Copyright (C) 2025 Antheas Kapenekakis <lkml@antheas.dev>
+> + */
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct ayaneo_ec_quirk {
+> +};
+> +
+> +struct ayaneo_ec_platform_data {
+> +	struct platform_device *pdev;
+> +	struct ayaneo_ec_quirk *quirks;
+> +};
+> +
+> +static const struct ayaneo_ec_quirk quirk_ayaneo3 =3D {
+> +};
+> +
+> +static const struct dmi_system_id dmi_table[] =3D {
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
+> +		},
+> +		.driver_data =3D (void *)&quirk_ayaneo3,
+> +	},
+> +	{},
+> +};
+> +
+> +static int ayaneo_ec_probe(struct platform_device *pdev)
+> +{
+> +	const struct dmi_system_id *dmi_entry;
+> +	struct ayaneo_ec_platform_data *data;
+> +
+> +	dmi_entry =3D dmi_first_match(dmi_table);
+> +	if (!dmi_entry)
+> +		return -ENODEV;
+> +
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->pdev =3D pdev;
+> +	data->quirks =3D dmi_entry->driver_data;
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver ayaneo_platform_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "ayaneo-ec",
+> +	},
+> +	.probe =3D ayaneo_ec_probe,
+> +};
+> +
+> +static struct platform_device *ayaneo_platform_device;
+> +
+> +static int __init ayaneo_ec_init(void)
+> +{
+> +	ayaneo_platform_device =3D
+> +		platform_create_bundle(&ayaneo_platform_driver,
+> +				       ayaneo_ec_probe, NULL, 0, NULL, 0);
+> +
+> +	return PTR_ERR_OR_ZERO(ayaneo_platform_device);
+> +}
+> +
+> +static void __exit ayaneo_ec_exit(void)
+> +{
+> +	platform_device_unregister(ayaneo_platform_device);
+> +	platform_driver_unregister(&ayaneo_platform_driver);
+> +}
+> +
+> +MODULE_DEVICE_TABLE(dmi, dmi_table);
+> +
+> +module_init(ayaneo_ec_init);
+> +module_exit(ayaneo_ec_exit);
+> +
+> +MODULE_AUTHOR("Antheas Kapenekakis <lkml@antheas.dev>");
+> +MODULE_DESCRIPTION("Ayaneo Embedded Controller (EC) platform features")=
+;
+> +MODULE_LICENSE("GPL");
