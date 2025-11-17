@@ -1,373 +1,341 @@
-Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7113259CB9
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A32330337
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 14:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763386460; cv=none; b=jLjt9YAIwBVjad2TaQ9dKmetkmdsSZrY6aP3oKpJn9wtewulmZkVNItM8niM0Tzew9biTK8gPJntnkDIESE6sLokgyFXesYcga0kgWmjbEZz6dpEBYABrl73UqdPYC0blaOqy7rnH2DwcjeLS8ROheu4gkPANS7RvkNxx6ebLXk=
+	t=1763388770; cv=none; b=jH5ntZVeinEd3XMVbjk259w2GKVC+ciO+KR0fl3tJTry5LCyMNaQRqEl45momro0Std1JxQSgbFYNsy6MCoxRnQNx/4UMWAzfxcHBQfDpMXQspk4/3C/JJCc9lwonBPSfSdHMPHp8sStJJTRKeBu8LNwlxDzmQW8I67+lskz79E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763386460; c=relaxed/simple;
-	bh=1Vjn1a4D7VKA4NiJvBDV2/xLFm4Uve0euCkztkj5iIM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dYpj/CX+6mE+7h0EZCqvPK+6MBjjwViB/HQJc35R7U7O1/ymVrDZycmXqOG8erObRt3QmE4qXZrk505eRKqcqBbaf682l64Bz0qXMi5MtMW2neBrcd00314IcVO33yMbckmzBj7CKhOlgxCHj4ZsYy6vMwfrKN2msA65nkBkymM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=edC67+gc; arc=none smtp.client-ip=46.62.234.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1763388770; c=relaxed/simple;
+	bh=/4//CBHjCQKEZceL7l5i+qnk42HJKdHn2y9WJIiEExU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TAfIGgZQKvvwdvvjbZE0QWKAzZpXg53RJ77LU2W4pXyclhcEYuK5gJdWsCf8u5dbWtMTgc/HCS4Gx9WWi+qU2eQA+v22VxbH1H53HddZxewdwCptNIQwkbEegOnEROeb3zuJlYVcjIYVc1sD/IBDYkie3yjfRz/cMvebQSoIZGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=eT3HZ+iJ; arc=none smtp.client-ip=85.9.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="edC67+gc"
-Received: from relay15 (localhost [127.0.0.1])
-	by relay15.grserver.gr (Proxmox) with ESMTP id A306B43F67
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:11 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay15.grserver.gr (Proxmox) with ESMTPS id 1705C4403A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:10 +0000 (UTC)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 51812201C3D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 15:34:09 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1763386449;
-	bh=PgkQmVnGwRhbinWEfbalW9xEaoez/YXSywLyRgvCsG4=;
-	h=Received:From:Subject:To;
-	b=edC67+gcqJzKOFnxOIlZi31gjpr5OcGkujZl+5PtD8v7HXRENX28pxXHyW9myIbWW
-	 7h/dhY3q7orLLTwU+akjKD/pE7a6fa9aL2+FPeBfAg5wT+KQDMke5VIoj+UhS/gBHB
-	 iELAqlDIDXjz9WzdsaHrREDsSaBaPXYPTuB/4ehQ2R9siO5PYXuWCulsKklecPEkF1
-	 Oj89qMfZEFfijjrYk79Piwkie3MqlaPbRLFpKSktfTSgQxWtTpJMxa3gJwQVvm67b1
-	 6fkr+1atNn8xufbuEJTjIvjPOKHbO50UEy6QmHzvxaCLYDv1OkuMahq35nRXA3NWeT
-	 CXXfGVtV9qAnQ==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-37a2dcc52aeso41312301fa.0
-        for <platform-driver-x86@vger.kernel.org>;
- Mon, 17 Nov 2025 05:34:09 -0800 (PST)
-X-Gm-Message-State: AOJu0Yy5NhiU/R0Co0/L73zRacr46XpQvKV6+4tCOHYgb37K7awzr7ll
-	6AOfAKyTc1FrsftvYyyH0YkKMdAx44OZ30ISNkjTGAkIq0EQInEx4gcAVCT4izpoLLzCCLZE5AB
-	JVbhSIm/syUiFaYlJvAfEEd6cQVCi/1g=
-X-Google-Smtp-Source: 
- AGHT+IE5BHgUPXDDHFJMpYkQt3x+egxp7K3igPrrArNCO44yCQ5XSFkz/StliurHFlN8YoOooYSmCVW0riz72ZsW1wk=
-X-Received: by 2002:a2e:8a87:0:b0:360:c716:2666 with SMTP id
- 38308e7fff4ca-37babd563f4mr29291611fa.30.1763386448519; Mon, 17 Nov 2025
- 05:34:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="eT3HZ+iJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1763388757; x=1763647957;
+	bh=i3dFaCRflOsSU5vihGm6PNyWZCQDCv6s+LmKxgztzDs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=eT3HZ+iJOMzvdMu7O1lfDNgQuxkGBQTGDk3ItabzE9wsvWX4HkPG/vZzgDrmvj5QV
+	 Q4lPFkLkqvXiamce7AV9PDwHa0Utn3PLzxbtiV9yzj5FJtJo6q6VgZrnbax2kYZt0b
+	 g18Pe9A/fnGv9T93twDVTuCze5BD+4DU9h9ZMxs5cE6Nw+HHj2TrpzHwhKCYLj/ThX
+	 gg5nb0wiHQtb0BpUmt5EHIrchvlUzZ19K9w6+Xk+PJnCrHLRcs904ON/FQf9DrYV4u
+	 Ff88z5lYssavKtcoEBjV6wqH56c+KaK5bBlnraYqxfvHtP3vrEsp4IB3wJKvMHDte/
+	 KAMasMttbHHWQ==
+Date: Mon, 17 Nov 2025 14:12:31 +0000
+To: Armin Wolf <W_Armin@gmx.de>
+From: Bugaddr <Bugaddr@protonmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness unexpectedly
+Message-ID: <i02dtJC1U0Pf-yZFGOXKCBYdnbCerkuTvEkD3E0SbQt3bVvkBK8preFKHRAfgsi3_FijP8cZAu0HSNAjxEn3gAoYpDseHbUqNXRoE3fl1tw=@protonmail.com>
+In-Reply-To: <066226b0-2f4a-44b1-b084-f0ac42bd6150@gmx.de>
+References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com> <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com> <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de> <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org> <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com> <tPQumZng3Py_n2et4MLRKu_-M-xqv-nzkFCCtnVryRamgSs5020dXq67qWVdrTG6mrFCDTGVDLGvoVvvnJZ_nQszJDQ4PWYCPbflKqGlqNs=@protonmail.com> <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com> <44a8cee2-c193-4cba-b33c-e3937a9a59b6@gmx.de> <066226b0-2f4a-44b1-b084-f0ac42bd6150@gmx.de>
+Feedback-ID: 43498376:user:proton
+X-Pm-Message-ID: 0341f81368ba6b7198e80c022855d0f13087ca93
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251113212221.456875-1-lkml@antheas.dev>
- <20251113212221.456875-5-lkml@antheas.dev>
- <77b944ff-2f84-3326-3901-5942739d3c43@linux.intel.com>
-In-Reply-To: <77b944ff-2f84-3326-3901-5942739d3c43@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 17 Nov 2025 14:33:56 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGq7RiZdpBsYhKxfrTMMfzGPGML2R6q8ayjpVn_W4j=uQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bm8S2k6MmN4QsAZlRBfhT1xaGS5Jzle-QcsWSiLVqf4TPM1KAIq9GA-QBU
-Message-ID: 
- <CAGwozwGq7RiZdpBsYhKxfrTMMfzGPGML2R6q8ayjpVn_W4j=uQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] platform/x86: ayaneo-ec: Add controller power and
- modules attributes
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Armin Wolf <W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176338644963.1678958.7555998757545484566@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
 
-On Mon, 17 Nov 2025 at 11:30, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Thu, 13 Nov 2025, Antheas Kapenekakis wrote:
->
-> > The Ayaneo 3 features hot-swappable controller modules. The ejection
-> > and management is done through HID. However, after ejecting the modules=
-,
-> > the controller needs to be power cycled via the EC to re-initialize.
-> >
-> > For this, the EC provides a variable that holds whether the left or
-> > right modules are connected, and a power control register to turn
-> > the controller on or off. After ejecting the modules, the controller
-> > should be turned off. Then, after both modules are reinserted,
-> > the controller may be powered on again to re-initialize.
->
-> If wonder if the ejecting could/should be made to turn it off without nee=
-d
-> for an explicit off command?
+On Monday, November 17th, 2025 at 6:35 AM, Armin Wolf <W_Armin@gmx.de> wrot=
+e:
 
-Perhaps in the future, this driver leaves the possibility open for it.
-However, that'd require a secondary HID driver to handle the full
-ejection process, with a shared function hook for this driver.
-
-The eject sequence consists of sending a HID config command to start
-the ejection, followed by a secondary config command to turn off the
-ejection bits and then waiting for two ready bits to report that the
-ejection is finished. Then, the controller is turned off. Apart from
-turning off, all of this is done through HID (so HID ready races the
-controller_modules value).
-
-The module status of this driver is only used to check when the
-controller should be turned on again and to provide visual feedback
-about which modules are currently connected while unpowered. When
-powered, there is full status reporting over HID, including which
-specific modules are connected[1].
-
-The end-to-end sequence is currently in userspace[2]. However, the EC
-ports are shielded from userspace so these two specific accesses must
-happen through a kernel driver.
-
-Antheas
-
-[1] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10ded5718=
-e4fe3/src/hhd/device/ayaneo/base.py#L90-L117
-[2] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10ded5718=
-e4fe3/src/hhd/device/ayaneo/base.py
-
-> > This patch introduces two new sysfs attributes:
-> >  - `controller_modules`: a read-only attribute that indicates whether
-> >    the left and right modules are connected (none, left, right, both).
-> >  - `controller_power`: a read-write attribute that allows the user
-> >    to turn the controller on or off (with '1'/'0').
-> >
-> > Therefore, after ejection is complete, userspace can power off the
-> > controller, then wait until both modules have been reinserted
-> > (`controller_modules` will return 'both') to turn on the controller.
-> >
-> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
-> >  MAINTAINERS                                   |   1 +
-> >  drivers/platform/x86/ayaneo-ec.c              | 107 ++++++++++++++++++
-> >  3 files changed, 127 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Docum=
-entation/ABI/testing/sysfs-platform-ayaneo-ec
-> > new file mode 100644
-> > index 000000000000..4cffbf5fc7ca
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
-> > @@ -0,0 +1,19 @@
-> > +What:                /sys/devices/platform/ayaneo-ec/controller_power
-> > +Date:                Nov 2025
-> > +KernelVersion:       6.19
-> > +Contact:     "Antheas Kapenekakis" <lkml@antheas.dev>
-> > +Description:
-> > +             Current controller power state. Allows turning on and off
-> > +             the controller power (e.g. for power savings). Write 1 to
-> > +             turn on, 0 to turn off. File is readable and writable.
-> > +
-> > +What:                /sys/devices/platform/ayaneo-ec/controller_module=
+> Am 17.11.25 um 01:29 schrieb Armin Wolf:
+>=20
+> > Am 16.11.25 um 23:14 schrieb Bugaddr:
+> >=20
+> > > On Sunday, November 16th, 2025 at 9:58 PM, Bugaddr
+> > > Bugaddr@protonmail.com wrote:
+> > >=20
+> > > > Hi Hans and Armin,
+> > > > Could you please review the logs I shared? The issue persists acros=
 s
-> > +Date:                Nov 2025
-> > +KernelVersion:       6.19
-> > +Contact:     "Antheas Kapenekakis"  <lkml@antheas.dev>
-> > +Description:
-> > +             Shows which controller modules are currently connected to
-> > +             the device. Possible values are "left", "right" and "both=
-".
-> > +             File is read-only. The Windows software for this device
-> > +             will only set controller power to 1 if both module sides
-> > +             are connected (i.e. this file returns "both").
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c5bf7207c45f..f8ab009b6224 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
-> >  M:   Antheas Kapenekakis <lkml@antheas.dev>
-> >  L:   platform-driver-x86@vger.kernel.org
-> >  S:   Maintained
-> > +F:   Documentation/ABI/testing/sysfs-platform-ayaneo
-> >  F:   drivers/platform/x86/ayaneo-ec.c
-> >
-> >  AZ6007 DVB DRIVER
-> > diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ay=
-aneo-ec.c
-> > index 697bb053a7d6..a0747e7ee43a 100644
-> > --- a/drivers/platform/x86/ayaneo-ec.c
-> > +++ b/drivers/platform/x86/ayaneo-ec.c
-> > @@ -8,6 +8,7 @@
-> >   */
-> >
-> >  #include <linux/acpi.h>
-> > +#include <linux/bits.h>
-> >  #include <linux/dmi.h>
-> >  #include <linux/err.h>
-> >  #include <linux/hwmon.h>
-> > @@ -16,6 +17,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/power_supply.h>
-> > +#include <linux/sysfs.h>
-> >  #include <acpi/battery.h>
-> >
-> >  #define AYANEO_PWM_ENABLE_REG         0x4A
-> > @@ -32,9 +34,18 @@
-> >  #define AYANEO_CHARGE_VAL_AUTO               0xaa
-> >  #define AYANEO_CHARGE_VAL_INHIBIT    0x55
-> >
-> > +#define AYANEO_POWER_REG     0x2d
-> > +#define AYANEO_POWER_OFF     0xfe
-> > +#define AYANEO_POWER_ON              0xff
-> > +#define AYANEO_MODULE_REG    0x2f
-> > +#define AYANEO_MODULE_LEFT   BIT(0)
-> > +#define AYANEO_MODULE_RIGHT  BIT(1)
-> > +#define AYANEO_MODULE_MASK   (AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT=
-)
-> > +
-> >  struct ayaneo_ec_quirk {
-> >       bool has_fan_control;
-> >       bool has_charge_control;
-> > +     bool has_magic_modules;
-> >  };
-> >
-> >  struct ayaneo_ec_platform_data {
-> > @@ -46,6 +57,7 @@ struct ayaneo_ec_platform_data {
-> >  static const struct ayaneo_ec_quirk quirk_ayaneo3 =3D {
-> >       .has_fan_control =3D true,
-> >       .has_charge_control =3D true,
-> > +     .has_magic_modules =3D true,
-> >  };
-> >
-> >  static const struct dmi_system_id dmi_table[] =3D {
-> > @@ -266,6 +278,100 @@ static int ayaneo_remove_battery(struct power_sup=
-ply *battery,
-> >       return 0;
-> >  }
-> >
-> > +static ssize_t controller_power_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf,
-> > +                                   size_t count)
-> > +{
-> > +     bool value;
-> > +     int ret;
-> > +
-> > +     ret =3D kstrtobool(buf, &value);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : AYAN=
-EO_POWER_OFF);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +
-> > +static ssize_t controller_power_show(struct device *dev,
-> > +                                  struct device_attribute *attr,
-> > +                                  char *buf)
-> > +{
-> > +     int ret;
-> > +     u8 val;
-> > +
-> > +     ret =3D ec_read(AYANEO_POWER_REG, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return sysfs_emit(buf, "%d\n", val =3D=3D AYANEO_POWER_ON);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(controller_power);
-> > +
-> > +static ssize_t controller_modules_show(struct device *dev,
-> > +                                    struct device_attribute *attr, cha=
-r *buf)
-> > +{
-> > +     char *out;
-> > +     int ret;
-> > +     u8 val;
-> > +
-> > +     ret =3D ec_read(AYANEO_MODULE_REG, &val);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     switch (~val & AYANEO_MODULE_MASK) {
->
-> Thanks for adding the mask.
->
-> Now when reading this again, I also suggest changing variable name from
-> "val" to e.g. "unconnected_modules" as that would make the reason for
-> inversion more obvious.
->
-> > +     case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
-> > +             out =3D "both";
-> > +             break;
-> > +     case AYANEO_MODULE_LEFT:
-> > +             out =3D "left";
-> > +             break;
-> > +     case AYANEO_MODULE_RIGHT:
-> > +             out =3D "right";
-> > +             break;
-> > +     default:
-> > +             out =3D "none";
-> > +             break;
-> > +     }
-> > +
-> > +     return sysfs_emit(buf, "%s\n", out);
-> > +}
-> > +
-> > +static DEVICE_ATTR_RO(controller_modules);
-> > +
-> > +static struct attribute *aya_mm_attrs[] =3D {
-> > +     &dev_attr_controller_power.attr,
-> > +     &dev_attr_controller_modules.attr,
-> > +     NULL
-> > +};
-> > +
-> > +static umode_t aya_mm_is_visible(struct kobject *kobj,
-> > +                              struct attribute *attr, int n)
-> > +{
-> > +     struct device *dev =3D kobj_to_dev(kobj);
-> > +     struct platform_device *pdev =3D to_platform_device(dev);
-> > +     struct ayaneo_ec_platform_data *data =3D platform_get_drvdata(pde=
-v);
-> > +
-> > +     if (data->quirks->has_magic_modules)
-> > +             return attr->mode;
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct attribute_group aya_mm_attribute_group =3D {
-> > +     .is_visible =3D aya_mm_is_visible,
-> > +     .attrs =3D aya_mm_attrs,
-> > +};
-> > +
-> > +static const struct attribute_group *ayaneo_ec_groups[] =3D {
-> > +     &aya_mm_attribute_group,
-> > +     NULL
-> > +};
-> > +
-> >  static int ayaneo_ec_probe(struct platform_device *pdev)
-> >  {
-> >       const struct dmi_system_id *dmi_entry;
-> > @@ -307,6 +413,7 @@ static int ayaneo_ec_probe(struct platform_device *=
-pdev)
-> >  static struct platform_driver ayaneo_platform_driver =3D {
-> >       .driver =3D {
-> >               .name =3D "ayaneo-ec",
-> > +             .dev_groups =3D ayaneo_ec_groups,
-> >       },
-> >       .probe =3D ayaneo_ec_probe,
-> >  };
-> >
->
-> --
->  i.
->
->
+> > > > all backlight modes, and I=E2=80=99d appreciate your guidance on th=
+e next
+> > > > steps.
+> > > > Thanks,
+> > > > Bugaddr
+> > > >=20
+> > > > On Saturday, October 25th, 2025 at 1:11 AM, Bugaddr
+> > > > Bugaddr@protonmail.com wrote:
+> > > >=20
+> > > > > On Wednesday, October 15th, 2025 at 3:43 PM, Hans de Goede
+> > > > > hansg@kernel.org wrote:
+> > > > >=20
+> > > > > > Hi,
+> > > > > >=20
+> > > > > > On 11-Oct-25 5:08 PM, Armin Wolf wrote:
+> > > > > >=20
+> > > > > > > Am 04.10.25 um 18:33 schrieb Bugaddr:
+> > > > > > >=20
+> > > > > > > > Sent with Proton Mail secure email.
+> > > > > > > >=20
+> > > > > > > > On Thursday, October 2nd, 2025 at 3:26 AM, Armin Wolf
+> > > > > > > > W_Armin@gmx.de wrote:
+> > > > > > > >=20
+> > > > > > > > > Am 18.09.25 um 21:18 schrieb Bugaddr:
+> > > > > > > > >=20
+> > > > > > > > > > > Am 13.06.25 um 19:12 schrieb Bugaddr:
+> > > > > > > > > > >=20
+> > > > > > > > > > > > Hello,
+> > > > > > > > > > > > I'm writing to report what appears to be a bug affe=
+cting the
+> > > > > > > > > > > > Acer AN515-58 laptop, and I would appreciate any as=
+sistance
+> > > > > > > > > > > > in investigating or resolving it.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > When I press Fn + F10=E2=80=94which is intended to =
+increase the
+> > > > > > > > > > > > keyboard backlight brightness=E2=80=94the display b=
+rightness
+> > > > > > > > > > > > unexpectedly decreases along with it. Furthermore, =
+the
+> > > > > > > > > > > > display brightness continues to lower incrementally=
+, until I
+> > > > > > > > > > > > manually press Fn + Brightness Up to stop and rever=
+se it.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > After pressing Fn + Brightness Up, the display brig=
+htness
+> > > > > > > > > > > > behavior returns to normal, and the issue does not
+> > > > > > > > > > > > reoccur=E2=80=94however, from that point onward, th=
+e Brightness Down
+> > > > > > > > > > > > key no longer works.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > This behavior is consistent and reproducible. I'm h=
+appy to
+> > > > > > > > > > > > assist with any debugging, log collection, or kerne=
+l testing
+> > > > > > > > > > > > as needed.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > Best regards,
+> > > > > > > > > > > > Bugaddr
+> > > > > > > > > > > > Hi,
+> > > > > > > > > > > > can you share the output of "acpidump"?
+> > > > > > > > > > > > Thanks,
+> > > > > > > > > > > > Armin Wolf
+> > > > > > > > > > > > Sorry for late reply, but checkout this:
+> > > > > > > > > > > > https://paste.rs/Nqca3
+> > > > > > > > > > > > Thanks,
+> > > > > > > > > > > > Bugaddr
+> > > > > > > > > > > > Hi,
+> > > > > > > > >=20
+> > > > > > > > > sorry for the late response. It seems that you forgot to =
+paste
+> > > > > > > > > parts of the DSDT table. Could you please store the outpu=
+t
+> > > > > > > > > of acpidump inside a file (sudo acpidump > acpidump.log) =
+and
+> > > > > > > > > attach it to the email? Also please put the whole mailing=
+ list
+> > > > > > > > >=20
+> > > > > > > > > on the CC next time.
+> > > > > > > > >=20
+> > > > > > > > > Thanks,
+> > > > > > > > > Armin Wolf
+> > > > > > > > > Hey, please checkout the attached acpidump
+> > > > > > > > > Thanks,
+> > > > > > > > > Bugaddr
+> > > > > > > > > Alright, the following ACPI bytecode is likely responsibl=
+e for
+> > > > > > > > > sending those brightness down events:
+> > > > > > >=20
+> > > > > > > Method (_Q11, 0, NotSerialized) // _Qxx: EC Query, xx=3D0x00-=
+0xFF
+> > > > > > > {
+> > > > > > > Debug =3D "=3D=3D=3D=3D=3DQUERY_11=3D=3D=3D=3D=3D"
+> > > > > > > ^^^WMID.FEBC [Zero] =3D One /* Acer hotkey event
+> > > > > > > ^^^WMID.FEBC [One] =3D HTBN /* Hotkey scancode /
+> > > > > > > ^^^WMID.FEBC [One] =3D BRTS / Unknown, BIOS error? /
+> > > > > > > ^^^WMID.FEBC [Zero] =3D 0x04 / Unknown, BIOS error? /
+> > > > > > > Notify (WMID, 0xBC) / Notify acer-wmi driver /
+> > > > > > > If (IGDS) / Integrated GPU device state? /
+> > > > > > > {
+> > > > > > > Notify (^^^GFX0.DD1F, 0x87) / Decrease brightness on Intel iG=
+PU /
+> > > > > > > }
+> > > > > > > Else
+> > > > > > > {
+> > > > > > > Notify (^^^PEG1.PEGP.LCD0, 0x87) / Decrease brightness on
+> > > > > > > discrete GPU */
+> > > > > > > }
+> > > > > > > }
+> > > > > > >=20
+> > > > > > > I think the brightness problems are caused by the kernel usin=
+g
+> > > > > > > the wrong backlight interface.
+> > > > > > > Can you please try the following things:
+> > > > > > >=20
+> > > > > > > 1. Unload the acer-wmi driver using "modprobe -r acer-wmi".
+> > > > > > > 2. Boot the kernel with "acpi_backlight=3Dvendor" if the prob=
+lem
+> > > > > > > still occurs.
+> > > > > > > Using acpi_backlight=3Dvendor on a recent laptop-model like t=
+his one
+> > > > > > > is unlikely
+> > > > > > > to be the right thing to do. acpi_backlight=3Dvendor is for v=
+endor
+> > > > > > > specific
+> > > > > > > backlight control firmware interfaces from before things were
+> > > > > > > standardized
+> > > > > > > on using the ACPI video firmware interface around Windows XP
+> > > > > > > (IIRC), not
+> > > > > > > sure if it was XP or some other Windows release but standardi=
+zing on
+> > > > > > > the API video firmware interface happened a long long time ag=
+o and
+> > > > > > > then
+> > > > > > > things moved to mostly using direct hw access (acpi_backlight=
+=3Dnative)
+> > > > > > > starting with Windows Vista.
+> > > > > >=20
+> > > > > > acpi_backlight=3Dvideo could still be something which might be =
+the
+> > > > > > preferred
+> > > > > > way on some devices and also goes through ACPI calls, but using
+> > > > > > acpi_backlight=3Dvendor is weird.
+> > > > > >=20
+> > > > > > OTOH I learned a while ago that apparently if multiple backligh=
+t
+> > > > > > interfaces
+> > > > > > are present Windows simply sends the new brightness value to al=
+l
+> > > > > > interfaces.
+> > > > > >=20
+> > > > > > Anyways Bugaddr please do give acpi_backlight=3Dvendor (and may=
+be also
+> > > > > > acpi_backlight=3Dvideo) a try as asked by Armin, this will stil=
+l be
+> > > > > > a good data point to have.
+> > > > > >=20
+> > > > > > Regards,
+> > > > > >=20
+> > > > > > Hans
+> > > > > > Here are the logs:
+> > > > >=20
+> > > > > # Logs after setting acpi_backlight=3Dvendor & removing acer-wmi
+> > > > >=20
+> > > > > 1. I am unable to change the display brightness either up/down
+> > > > > 2. Caps_lock light turns on automatically when pressing
+> > > > > fn+brightness_up key & turned off automatically as soon as other
+> > > > > keys are pressed
+> > > > > 3. Was able to change the keyboard brightness
+> > > > > 4. no logs while pressing fn+keyboard_brightness_up/down
+> > > > >=20
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > video/brightnessup BRTUP 00000086 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > video/brightnessdown BRTDN 00000087 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > >=20
+> > > > > # Logs after setting acpi_backlight=3Dvideo
+> > > > >=20
+> > > > > ## Logs while testing the brightnes buttons first time after boot
+> > > > > after removing acer-wmi, was able to change the display brightnes=
+s
+> > > > >=20
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > video/brightnessup BRTUP 00000086 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > > video/brightnessdown BRTDN 00000087 00000000
+> > > > > wmi PNP0C14:00 000000bc 00000000
+> > > > >=20
+> > > > > ## Logs after pressing fn+keyboard_brightness_up (the display
+> > > > > brightness suddenly goes to 0) & keyboard brightness also changes
+> > > > >=20
+> > > > > video/brightnessdown BRTDN 00000087 00000000 K
+> > > > >=20
+> > > > > ** I am on latest bios update & acpi_backlight=3Dnative also dont=
+ work
+> > > > >=20
+> > > > > Regards,
+> > > > > Bugaddr
+> > > > > Hi everyone,
+> > >=20
+> > > I've debugged and fixed the annoying Fn+F10 bug on Acer Nitro 5
+> > > AN515-58.
+> > >=20
+> > > ROOT CAUSE:
+> > > Firmware sends wrong scancode (0xef) which Linux maps to
+> > > KEY_BRIGHTNESSDOWN instead of keyboard backlight control.
+> > >=20
+> > > SOLUTION:
+> > > Install this udev hwdb rule:
+> > >=20
+> > > sudo tee /etc/udev/hwdb.d/90-acer-nitro5-an515-58.hwdb > /dev/null <<
+> > > 'EOF'
+> > > # Acer Nitro 5 AN515-58 - Fix Fn+F10 scancode 0xef
+> > > evdev:atkbd:dmi:bvn*:bvr*:bd*:svnAcer*:pnNitroAN515-58
+> > > KEYBOARD_KEY_ef=3Dreserved
+> > > EOF
+> > >=20
+> > > sudo systemd-hwdb update && sudo udevadm trigger
+> > > --sysname-match=3D"event*"
+> > >=20
+> > > TESTED ON:
+> > > - Kernel: 6.17.8-arch1-1
+> > > - Distribution: Arch Linux
+> > > - Desktop: KDE Plasma (Wayland)
+> > >=20
+> > > I have blogged my full analysis here:
+> > > https://bugaddr.tech/posts/2025-11-16-debugging-the-acer-nitro-5-an51=
+5-58-fn-f10-keyboard-backlight-bug-on-linux/
+> > >=20
+> > > Thanks & regards,
+> > > Bugaddr
+> >=20
+> > Sorry for not responding earlier, i kind of forgot about this bug
+> > report :/.
+> >=20
+> > But thanks for figuring that out, maybe you can contribute this fix to
+> > hwdb so that other users of this device
+> > can benefit for it?
+> >=20
+> > Thanks,
+> > Armin Wolf
+>=20
+>=20
+> I just read your blog post and it seems that your device has some WMI int=
+erface issues. The warning
+> from the WMI driver regarding the missing WQ00 ACPI control method is har=
+mless, as the WMI driver core
+> will simply ignore the affected WMI device.
+>=20
+> The unknown function number 4 - 0 however can be fixed inside the acer-wm=
+i driver. It seems that all
+> we need to do is to tell the driver to ignore function number 4 - 0, as t=
+he acpi-video driver already
+> handles the brightness up/down events.
+>=20
+> Can you test the attached patch?
+>=20
+> Thanks,
+> Armin Wolf
 
+Thanks Armin for the patch, I have tested this patch on my device and yes t=
+he logs are suppressed. Well its unrelated but I am only getting this messa=
+ges when pressing fn+F9 (Keyboard backlight down) & there are no such warni=
+ngs on fn+F10 (Keyboard brightness up):
+
+[  398.153437] atkbd serio0: Unknown key pressed (translated set 2, code 0x=
+f0 on isa0060/serio0).
+[  398.153469] atkbd serio0: Use 'setkeycodes e070 <keycode>' to make it kn=
+own.
+
+Note: The hwdb overrides were still there while testing (The issue of displ=
+ay brightness came back after removing those overrides)
+
+Thanks and regards
+Bugaddr
