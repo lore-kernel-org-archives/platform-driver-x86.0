@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBC345C0B;
-	Mon, 17 Nov 2025 00:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16534A0C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 00:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763338900; cv=none; b=brxCp89ATILoH/F530qAYCqcIUN43qlpeIBu9XhF0HNE82LVwpjHBn9WrnAinz7+VkDdQnZANBl1rOYtCaskN9xHfrU/F8Xbs3HyZENTaH7SbYj19YSFcj18r8Ll6eGmsUVH2Rkd5P+ZtTa6dhstZZlPjEgudvFWN3sNHfRe21s=
+	t=1763339387; cv=none; b=pWbMXF6ybkJvIdMOSt8z4biDrsk5cHF5torjMMA/fQQe6B+jOZwNblGSgmc7MbrqXcbNyFaDve0Vf8TqrapZLYswprY7DtgNEugvagUenWvCzC4mq9JhoVuP593N/OZh8ix9l0TbpR6AT3uylLjeX2/6jldzm1FLxR1cR7La3Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763338900; c=relaxed/simple;
-	bh=K2XzxeRxAj4pQZnP5TrJovV8B20SAYmi6b+U1eqsstc=;
+	s=arc-20240116; t=1763339387; c=relaxed/simple;
+	bh=6WNXAEy11YyLP8P91Ki6LiI/D4JLZEN863ngpPTpDfY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sgr/TwoQekMbWP5KgEy9VnQumYcIb2jehDjSUCdAzWGxFTV3iuelJtM1d5R6JNIKRcFIOwJ103utIOv3ia0ByFhXWfm+xVsXIDuUvxOl9soMKvXhWU3bxGtlwQYy3P7CAOiWYC2XuKT1P/jfMfSuKAk+1TjcY1CperKm4IRIIU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=q9ETm0Ak; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=T4tIptMd7Gbq3uz4yGmcoZ/iBd0Z8pGtfzffyeVitWpVT5fgSHU+dIyZyI2FYK+fE/z3LImfZ6mVwbgidBeZ69F1as/RVWb7tlVwMkf1A4K8b46gZjIo1yfygIres3Qthy27lSDvbGNvmMENFXwpy5/2fXXVLFF8EI+TOd01Qjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Wmk1MUpF; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="q9ETm0Ak"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Wmk1MUpF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763338883; x=1763943683; i=w_armin@gmx.de;
-	bh=HyST/SII1VyW6P5EddT1+goaN9hsWo1UjQqlI8D9dEc=;
+	s=s31663417; t=1763339366; x=1763944166; i=w_armin@gmx.de;
+	bh=hU0JS4BP0KrImAt/fRUxYVgzFtDhIzfdC8urmf5ALS0=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=q9ETm0AkSASdebIeUGSOOekDqoueT6NEVb1za60PU8qAzeQftSOQ3567+XmSra7Z
-	 /MtH852whvgph3uSiMMVo43YJc0NDfRo7vyK5pm7RuxYkSu+G7B8/2DtCK7F9+iVF
-	 Ufglspy43BUg+cDxAbhHVHpbwUfNbJI8CguxDzFoVZS6uWAn0AMtPfYl+zsuw9dyX
-	 wOtOMymP8X9hPhcY9kVg4UulWdJxn+9fq1Jhz21SvodyGa5F7CAgf4P8xVDZrOrwN
-	 CshnAf5xhAw8S6D5sjPQJIOTLcdUalQH6+9Re0Fy2A49sP6sDvnRqBr9jtl3IhaKb
-	 gsL8reKqeXo59iGDnw==
+	b=Wmk1MUpFWkhsNtaRnzOmkncOgrKUIW9jU8Op1N12VwOFc67VaYXy8Iofk1dcedYc
+	 DygLW3F9tRUnhR2cfmOyWePSZlBQfnt17lf/ua0OK1ritU+0N/oyP3ozDvhEgcIfC
+	 rCmduJsWr4Mdco6Zemr0SqpyiOfPpFWTDyegKiYpZYmlOVDlN0cSen9ABwWHxsBvN
+	 0A/obl611Pj1OXi5aZlp5sOB6QCbPnYHXWmCZPk3h2Ve0yYmHnqIyolJIP9137Prv
+	 tJzq0vveVTOIJKIMS52OUgD2rGBJ4EHZVI1mDyz3H+us0JSJpiK3LfqtPv0dqRs93
+	 hvh/rbysAEquDf1hPQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MG9kC-1vO4GV1JrY-008cgE; Mon, 17
- Nov 2025 01:21:23 +0100
-Message-ID: <e801bef5-158e-4422-9c23-93dc2210f734@gmx.de>
-Date: Mon, 17 Nov 2025 01:21:19 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MIMfc-1vQGlG1ttE-006REQ; Mon, 17
+ Nov 2025 01:29:26 +0100
+Message-ID: <44a8cee2-c193-4cba-b33c-e3937a9a59b6@gmx.de>
+Date: Mon, 17 Nov 2025 01:29:25 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,179 +43,323 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] acpi: platform_profile - Add max-power profile
- option
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Len Brown <lenb@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Mario Limonciello <superm1@kernel.org>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org
-References: <20251113212639.459896-1-derekjohn.clark@gmail.com>
- <20251113212639.459896-2-derekjohn.clark@gmail.com>
- <7050cadc-9cb7-4f9b-8393-247bddb56965@gmx.de>
- <CFD27662-0044-4AF3-8E66-65229324CECF@gmail.com>
+Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness
+ unexpectedly
+To: Bugaddr <Bugaddr@protonmail.com>, Hans de Goede <hansg@kernel.org>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>
+References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com>
+ <1536ce4a-5844-447f-9e86-197c71c6d364@gmx.de>
+ <0RyizLnGQaxXLOtK-q6h-mHCTA2ergYBAIS-DkF1MPD9T5nx79rlaKdIOUBRft7Ghpy11OPo2OZM4waIjDbdnv2fnafWBDxWEYL75XZKtUo=@protonmail.com>
+ <0b485b76-fb44-44a4-afab-d35fa31043db@gmx.de>
+ <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com>
+ <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de>
+ <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org>
+ <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
+ <tPQumZng3Py_n2et4MLRKu_-M-xqv-nzkFCCtnVryRamgSs5020dXq67qWVdrTG6mrFCDTGVDLGvoVvvnJZ_nQszJDQ4PWYCPbflKqGlqNs=@protonmail.com>
+ <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CFD27662-0044-4AF3-8E66-65229324CECF@gmail.com>
+In-Reply-To: <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:CSGK0mezaJE1xhRq76VaK+U6B/Tz5/wfANA5pCeo8ZnSb5HkEji
- O0CGfYyST0Fvf5j/M7oeVeCL6yF2Au05DoxCsXuBNQfTmneaM/CzgDo0/bc8DyB9cq3Z3rB
- 7nqdL3+GYJ+pJ1xKuxwcOtozR9EfMl7SjmY1o/ejhLmq9DEAoX3vav5kr6DRdYUdxnwrB8r
- aHh3jiHnV8PxmUQaJGwQw==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RaJYbD3i3LP25L01zPb8oK6FxAqyyAZ4yjkAVIsq4OJ1b8iC6K2
+ mojbPackZSvRz+Nt08lF1t7PQSorLUrHvw6iRBFyVYqSwr32Sdx+VjZCoRonrq/CLUGbSfb
+ 1LwggXFdqZSFhJV1L/aLGi0FNQinuuASAQCYI+dvPyzSvH2vUBhJOukVDmMS0+vaI4w6BA+
+ N9mPgtvGxVmVd7VIuk/EA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SMJUWIVD0Io=;L7uUC+W5hY3sEJJfIY16w61Y1rb
- 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
+UI-OutboundReport: notjunk:1;M01:P0:UQZUiz1hzHs=;khFOKqs6xcaZ+yZOG9fnDaejLot
+ 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
 
-Am 16.11.25 um 20:01 schrieb Derek J. Clark:
+Am 16.11.25 um 23:14 schrieb Bugaddr:
 
-> On November 16, 2025 8:13:17 AM PST, Armin Wolf <W_Armin@gmx.de> wrote:
->> Am 13.11.25 um 22:26 schrieb Derek J. Clark:
->>
->>> Some devices, namely Lenovo Legion devices, have an "extreme" mode where
->>> power draw is at the maximum limit of the cooling hardware. Add a new
->>> "max-power" platform profile to properly reflect this operating mode.
->>>
->>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
->>> Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
->>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->>> ---
->>>    Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
->>>    drivers/acpi/platform_profile.c                        | 1 +
->>>    include/linux/platform_profile.h                       | 1 +
->>>    3 files changed, 4 insertions(+)
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile b/Documentation/ABI/testing/sysfs-class-platform-profile
->>> index dc72adfb830a..fcab26894ec3 100644
->>> --- a/Documentation/ABI/testing/sysfs-class-platform-profile
->>> +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
->>> @@ -23,6 +23,8 @@ Description:	This file contains a space-separated list of profiles supported
->>>    					power consumption with a slight bias
->>>    					towards performance
->>>    		performance		High performance operation
->>> +		max-power		Higher performance operation that may exceed
->>> +					internal battery draw limits when on AC power
->> I am not sure if it is a good idea to allow platform_profile_cycle() to cycle into this
->> new max-power profile. The system could encounter a brownout if it is currently operating
->> on battery power when selecting max-power.
->>
->> Maybe we should prevent platform_profile_cylce() from selecting max-power?
-> At least for Lenovo devices unplugging AC will automatically throttle the ppt values to roughly equivalent to performance. It will look at a different WMI data block for the values when switched, so there's no risk for cycling in this case. This seems like smart hardware design, but we've certainly seen bad hardware design so the concern is warranted. Perhaps it is worth visiting if another vendor implements it differently? That being said, what you're describing would match up with how the physical profile selection button works, so it would align with consumer expectation. I have no strong feelings either way, but I'm a little concerned about meeting the merge window as this series fixes a pretty disruptive bug affecting 6.17 users.
+> On Sunday, November 16th, 2025 at 9:58 PM, Bugaddr <Bugaddr@protonmail.c=
+om> wrote:
 >
-> Regards,
-> - Derek
+>> Hi Hans and Armin,
+>> Could you please review the logs I shared? The issue persists across al=
+l backlight modes, and I=E2=80=99d appreciate your guidance on the next st=
+eps.
+>> Thanks,
+>> Bugaddr
+>>
+>>
+>> On Saturday, October 25th, 2025 at 1:11 AM, Bugaddr Bugaddr@protonmail.=
+com wrote:
+>>
+>>> On Wednesday, October 15th, 2025 at 3:43 PM, Hans de Goede hansg@kerne=
+l.org wrote:
+>>>
+>>>> Hi,
+>>>>
+>>>> On 11-Oct-25 5:08 PM, Armin Wolf wrote:
+>>>>
+>>>>> Am 04.10.25 um 18:33 schrieb Bugaddr:
+>>>>>
+>>>>>> Sent with Proton Mail secure email.
+>>>>>>
+>>>>>> On Thursday, October 2nd, 2025 at 3:26 AM, Armin Wolf W_Armin@gmx.d=
+e wrote:
+>>>>>>
+>>>>>>> Am 18.09.25 um 21:18 schrieb Bugaddr:
+>>>>>>>
+>>>>>>>>> Am 13.06.25 um 19:12 schrieb Bugaddr:
+>>>>>>>>>
+>>>>>>>>>> Hello,
+>>>>>>>>>> I'm writing to report what appears to be a bug affecting the Ac=
+er AN515-58 laptop, and I would appreciate any assistance in investigating=
+ or resolving it.
+>>>>>>>>>>
+>>>>>>>>>> When I press Fn + F10=E2=80=94which is intended to increase the=
+ keyboard backlight brightness=E2=80=94the display brightness unexpectedly=
+ decreases along with it. Furthermore, the display brightness continues to=
+ lower incrementally, until I manually press Fn + Brightness Up to stop an=
+d reverse it.
+>>>>>>>>>>
+>>>>>>>>>> After pressing Fn + Brightness Up, the display brightness behav=
+ior returns to normal, and the issue does not reoccur=E2=80=94however, fro=
+m that point onward, the Brightness Down key no longer works.
+>>>>>>>>>>
+>>>>>>>>>> This behavior is consistent and reproducible. I'm happy to assi=
+st with any debugging, log collection, or kernel testing as needed.
+>>>>>>>>>>
+>>>>>>>>>> Best regards,
+>>>>>>>>>> Bugaddr
+>>>>>>>>>> Hi,
+>>>>>>>>>> can you share the output of "acpidump"?
+>>>>>>>>> Thanks,
+>>>>>>>>> Armin Wolf
+>>>>>>>>> Sorry for late reply, but checkout this:
+>>>>>>>>> https://paste.rs/Nqca3
+>>>>>>>>> Thanks,
+>>>>>>>>> Bugaddr
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> sorry for the late response. It seems that you forgot to paste par=
+ts of the DSDT table. Could you please store the output
+>>>>>>> of acpidump inside a file (sudo acpidump > acpidump.log) and attac=
+h it to the email? Also please put the whole mailing list
+>>>>>>>
+>>>>>>> on the CC next time.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Armin Wolf
+>>>>>>> Hey, please checkout the attached acpidump
+>>>>>> Thanks,
+>>>>>> Bugaddr
+>>>>> Alright, the following ACPI bytecode is likely responsible for sendi=
+ng those brightness down events:
+>>>>>
+>>>>> Method (_Q11, 0, NotSerialized) // _Qxx: EC Query, xx=3D0x00-0xFF
+>>>>> {
+>>>>> Debug =3D "=3D=3D=3D=3D=3DQUERY_11=3D=3D=3D=3D=3D"
+>>>>> ^^^WMID.FEBC [Zero] =3D One /* Acer hotkey event
+>>>>> ^^^WMID.FEBC [One] =3D HTBN /* Hotkey scancode /
+>>>>> ^^^WMID.FEBC [One] =3D BRTS / Unknown, BIOS error? /
+>>>>> ^^^WMID.FEBC [Zero] =3D 0x04 / Unknown, BIOS error? /
+>>>>> Notify (WMID, 0xBC) / Notify acer-wmi driver /
+>>>>> If (IGDS) / Integrated GPU device state? /
+>>>>> {
+>>>>> Notify (^^^GFX0.DD1F, 0x87) / Decrease brightness on Intel iGPU /
+>>>>> }
+>>>>> Else
+>>>>> {
+>>>>> Notify (^^^PEG1.PEGP.LCD0, 0x87) / Decrease brightness on discrete G=
+PU */
+>>>>> }
+>>>>> }
+>>>>>
+>>>>> I think the brightness problems are caused by the kernel using the w=
+rong backlight interface.
+>>>>> Can you please try the following things:
+>>>>>
+>>>>> 1. Unload the acer-wmi driver using "modprobe -r acer-wmi".
+>>>>> 2. Boot the kernel with "acpi_backlight=3Dvendor" if the problem sti=
+ll occurs.
+>>>> Using acpi_backlight=3Dvendor on a recent laptop-model like this one =
+is unlikely
+>>>> to be the right thing to do. acpi_backlight=3Dvendor is for vendor sp=
+ecific
+>>>> backlight control firmware interfaces from before things were standar=
+dized
+>>>> on using the ACPI video firmware interface around Windows XP (IIRC), =
+not
+>>>> sure if it was XP or some other Windows release but standardizing on
+>>>> the API video firmware interface happened a long long time ago and th=
+en
+>>>> things moved to mostly using direct hw access (acpi_backlight=3Dnativ=
+e)
+>>>> starting with Windows Vista.
+>>>>
+>>>> acpi_backlight=3Dvideo could still be something which might be the pr=
+eferred
+>>>> way on some devices and also goes through ACPI calls, but using
+>>>> acpi_backlight=3Dvendor is weird.
+>>>>
+>>>> OTOH I learned a while ago that apparently if multiple backlight inte=
+rfaces
+>>>> are present Windows simply sends the new brightness value to all inte=
+rfaces.
+>>>>
+>>>> Anyways Bugaddr please do give acpi_backlight=3Dvendor (and maybe als=
+o
+>>>> acpi_backlight=3Dvideo) a try as asked by Armin, this will still be
+>>>> a good data point to have.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>> Here are the logs:
+>>>
+>>> # Logs after setting acpi_backlight=3Dvendor & removing acer-wmi
+>>>
+>>> 1. I am unable to change the display brightness either up/down
+>>> 2. Caps_lock light turns on automatically when pressing fn+brightness_=
+up key & turned off automatically as soon as other keys are pressed
+>>> 3. Was able to change the keyboard brightness
+>>> 4. no logs while pressing fn+keyboard_brightness_up/down
+>>>
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> video/brightnessup BRTUP 00000086 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> video/brightnessdown BRTDN 00000087 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>>
+>>> # Logs after setting acpi_backlight=3Dvideo
+>>>
+>>> ## Logs while testing the brightnes buttons first time after boot afte=
+r removing acer-wmi, was able to change the display brightness
+>>>
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> video/brightnessup BRTUP 00000086 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>> video/brightnessdown BRTDN 00000087 00000000
+>>> wmi PNP0C14:00 000000bc 00000000
+>>>
+>>> ## Logs after pressing fn+keyboard_brightness_up (the display brightne=
+ss suddenly goes to 0) & keyboard brightness also changes
+>>>
+>>> video/brightnessdown BRTDN 00000087 00000000 K
+>>>
+>>> ** I am on latest bios update & acpi_backlight=3Dnative also dont work
+>>>
+>>> Regards,
+>>> Bugaddr
+> Hi everyone,
 >
-If the physical platform selection button does not automatically select the max-power profile under Windows, then we should copy this behavior i think.
-The changes necessary for that are fairly small, basically you only have to extend the handling of PLATFORM_PROFILE_CUSTOM inside platform_profile_cycle()
-to also include the max-power profile. So i would prefer if we modify platform_profile_cycle() now has doing this later might be seen as a regression.
+> I've debugged and fixed the annoying Fn+F10 bug on Acer Nitro 5 AN515-58=
+.
+>
+> ROOT CAUSE:
+> Firmware sends wrong scancode (0xef) which Linux maps to KEY_BRIGHTNESSD=
+OWN instead of keyboard backlight control.
+>
+> SOLUTION:
+> Install this udev hwdb rule:
+>
+> sudo tee /etc/udev/hwdb.d/90-acer-nitro5-an515-58.hwdb > /dev/null << 'E=
+OF'
+> # Acer Nitro 5 AN515-58 - Fix Fn+F10 scancode 0xef
+> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnAcer*:pnNitro*AN515-58*
+>   KEYBOARD_KEY_ef=3Dreserved
+> EOF
+>
+> sudo systemd-hwdb update && sudo udevadm trigger --sysname-match=3D"even=
+t*"
+>
+> TESTED ON:
+> - Kernel: 6.17.8-arch1-1
+> - Distribution: Arch Linux
+> - Desktop: KDE Plasma (Wayland)
+>
+> I have blogged my full analysis here: https://bugaddr.tech/posts/2025-11=
+-16-debugging-the-acer-nitro-5-an515-58-fn-f10-keyboard-backlight-bug-on-l=
+inux/
+>
+> Thanks & regards,
+> Bugaddr
+
+Sorry for not responding earlier, i kind of forgot about this bug report :=
+/.
+
+But thanks for figuring that out, maybe you can contribute this fix to hwd=
+b so that other users of this device
+can benefit for it?
 
 Thanks,
 Armin Wolf
 
->> Other than that:
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->>
->>>    		custom			Driver defined custom profile
->>>    		====================	========================================
->>>    diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
->>> index b43f4459a4f6..aa1dce05121b 100644
->>> --- a/drivers/acpi/platform_profile.c
->>> +++ b/drivers/acpi/platform_profile.c
->>> @@ -37,6 +37,7 @@ static const char * const profile_names[] = {
->>>    	[PLATFORM_PROFILE_BALANCED] = "balanced",
->>>    	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] = "balanced-performance",
->>>    	[PLATFORM_PROFILE_PERFORMANCE] = "performance",
->>> +	[PLATFORM_PROFILE_MAX_POWER] = "max-power",
->>>    	[PLATFORM_PROFILE_CUSTOM] = "custom",
->>>    };
->>>    static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
->>> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
->>> index a299225ab92e..855b28340e95 100644
->>> --- a/include/linux/platform_profile.h
->>> +++ b/include/linux/platform_profile.h
->>> @@ -24,6 +24,7 @@ enum platform_profile_option {
->>>    	PLATFORM_PROFILE_BALANCED,
->>>    	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
->>>    	PLATFORM_PROFILE_PERFORMANCE,
->>> +	PLATFORM_PROFILE_MAX_POWER,
->>>    	PLATFORM_PROFILE_CUSTOM,
->>>    	PLATFORM_PROFILE_LAST, /*must always be last */
->>>    };
->
