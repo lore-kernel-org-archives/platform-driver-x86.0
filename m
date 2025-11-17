@@ -1,24 +1,24 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E5F30F95C;
-	Mon, 17 Nov 2025 13:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C531B800;
+	Mon, 17 Nov 2025 13:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763385947; cv=none; b=F+wh2P3wRCzw1fKYSEq7NygBXX2OUsWj4RVznpaEgNpab8RyfhrRicekS1hcpU7++i6HBJQQGau57ONRcMroV9qosj2tUA31PqYLAIw+Yg+/PhHfLs2S85lRbIkikX9ElnGm7FtYJZY8ir4mFhHOkG/pUB6gV6AA1rb3MbzDgSI=
+	t=1763385948; cv=none; b=HYOTGGWXvBltQFxyHMcqKIqu+sXPLIAWc7gXFjZadgj0wrc0fCjf8KjZwcRkERJ4i8m3SAC2yBsd46sq0zt17LWr8q/itlbWJzvXE/cJnrtcKE23jBTYMvbSCwfupJoEcM/WBRtYxYHh8poLsUbOYnqzrjhChXCMWlw0mJ+rygk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763385947; c=relaxed/simple;
-	bh=hlH+KvaPy/VjPwiEu76WnqNwzWyPH7nBkUMXCJ3W/fM=;
+	s=arc-20240116; t=1763385948; c=relaxed/simple;
+	bh=mRi0c3eb2KVaNB4Q2bWYRwwZMqDzT2vDSZO6+/DOU38=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tym17xF6+xMGN/oiic/PwYq2+qUogjZopV03PitcDFk1qmOyyJJcgaI/rL8DRSVkieBKcz2Co/iPYLN0kPK9zihtleeTqmdXBa5cQm3/Y2vUI5j5gVvS0FWqGQR9MIBtHs4zclOzonRRb165EOesvoEe+4qiixQJt5+kXfL4OGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=E7W304++; arc=none smtp.client-ip=157.90.84.7
+	 MIME-Version; b=ZNvm9kh17OhMwFLPbLwv7wEazhIwOyOlsH+jjzB0lJfINesieKMqEFPb60QC3bYemizXs5hbcXIZVxyO+bNYRQ4kcz9s3iUqEIGj0VwfzdPcUmd3ivlO3ykCQ1Q4EoupMHoYt1cX/cftnC+CvJpqPAzwVhKjdDkfCRfeIPhJJCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VGj6+7EZ; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="E7W304++"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VGj6+7EZ"
 Received: from wse-pc.fritz.box (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 097782FC004D;
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id A46D02FC0050;
 	Mon, 17 Nov 2025 14:25:38 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
 	s=default; t=1763385938;
@@ -26,10 +26,10 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hXn+frxogInMKvOCjn1sSvGq7CtT3So54J/i0Q8mibQ=;
-	b=E7W304++5ZOGeaU5/NZqafyZnyeejZZW4RbBa1B8hPk12Ytw9KT41sD9OHaLv9Sb4BufEo
-	K7zdLRRN9Ouh7Kf2OGypJR5DoOtq0eRjShPPsOI/fU2891MYOI7RwMg1o3MYXmd2GH/LlX
-	HibSjZpHYCK3lTUkU0iw8mgz+RVlkuA=
+	bh=M3XmbCeF9L/64I/m2ReedbQ6L8IgDryt/5k2nqVG2oU=;
+	b=VGj6+7EZEOahZEeWGDEFapvtcIw8N3KeEFoYn9Zxrdeztjg6GWBdYP0vpZ8FEd4ah+Y2+R
+	GGqNUl4NLCNa6dffc4fg7iMg0jsmE1mUk5hdvXOSVfi8Z8Ge2j6WZg0jabeezcvxHOVqgi
+	q2F42k0x1Y3LYB58KmVTwxUn9WeMijE=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
@@ -39,9 +39,9 @@ To: W_Armin@gmx.de,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Werner Sembach <wse@tuxedocomputers.com>
-Subject: [PATCH 1/6] platform/x86/uniwill: Add TUXEDO devices
-Date: Mon, 17 Nov 2025 14:23:58 +0100
-Message-ID: <20251117132530.32460-2-wse@tuxedocomputers.com>
+Subject: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required for TUXEDO devices
+Date: Mon, 17 Nov 2025 14:23:59 +0100
+Message-ID: <20251117132530.32460-3-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251117132530.32460-1-wse@tuxedocomputers.com>
 References: <20251117132530.32460-1-wse@tuxedocomputers.com>
@@ -53,339 +53,85 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add all TUXEDO devices that can make use of this driver.
+Handle some more WMI events that are triggered on TUXEDO devices.
 
 Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
- drivers/platform/x86/uniwill/uniwill-acpi.c | 308 ++++++++++++++++++++
- 1 file changed, 308 insertions(+)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
+ drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 014960d16211b..29bb3709bfcc8 100644
+index 29bb3709bfcc8..0cb86a701b2e1 100644
 --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -1478,6 +1478,20 @@ static struct platform_driver uniwill_driver = {
+@@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] = {
+ 
+ 	/* Reported in manual mode when toggling the airplane mode status */
+ 	{ KE_KEY,       UNIWILL_OSD_RFKILL,                     { KEY_RFKILL }},
++	{ KE_IGNORE,    UNIWILL_OSD_RADIOON,                    { KEY_UNKNOWN }},
++	{ KE_IGNORE,    UNIWILL_OSD_RADIOOFF,                   { KEY_UNKNOWN }},
+ 
+ 	/* Reported when user wants to cycle the platform profile */
+-	{ KE_IGNORE,    UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_UNKNOWN }},
++	{ KE_KEY,       UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_F14 }},
+ 
+ 	/* Reported when the user wants to adjust the brightness of the keyboard */
+ 	{ KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN,               { KEY_KBDILLUMDOWN }},
+@@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] = {
+ 	/* Reported when the user wants to toggle the microphone mute status */
+ 	{ KE_KEY,       UNIWILL_OSD_MIC_MUTE,                   { KEY_MICMUTE }},
+ 
++	/* Reported when the user wants to toggle the mute status */
++	{ KE_IGNORE,    UNIWILL_OSD_MUTE,                       { KEY_MUTE }},
++
+ 	/* Reported when the user locks/unlocks the Fn key */
+ 	{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC }},
+ 
+ 	/* Reported when the user wants to toggle the brightness of the keyboard */
+ 	{ KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE,             { KEY_KBDILLUMTOGGLE }},
++	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0,              { KEY_KBDILLUMTOGGLE }},
++	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1,              { KEY_KBDILLUMTOGGLE }},
++	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2,              { KEY_KBDILLUMTOGGLE }},
++	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3,              { KEY_KBDILLUMTOGGLE }},
++	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4,              { KEY_KBDILLUMTOGGLE }},
+ 
+ 	/* FIXME: find out the exact meaning of those events */
+ 	{ KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H,       { KEY_UNKNOWN }},
+@@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] = {
+ 	/* Reported when the user wants to toggle the benchmark mode status */
+ 	{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN }},
+ 
++	/* Reported when the user wants to toggle the webcam */
++	{ KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE,              { KEY_UNKNOWN }},
++
+ 	{ KE_END }
  };
  
- static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
-+	{
-+		.ident = "XMG FUSION 15",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71A"),
-+		},
-+	},
-+	{
-+		.ident = "XMG FUSION 15",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71B"),
-+		},
-+	},
- 	{
- 		.ident = "Intel NUC x15",
- 		.matches = {
-@@ -1503,6 +1517,300 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
- 					UNIWILL_FEATURE_BATTERY |
- 					UNIWILL_FEATURE_HWMON),
- 	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTxX1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTQx1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore Omnia-Book Pro Gen 7",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6AG01_PH6AQ71_PH6AQI1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/16 Gen8 Intel/Commodore Omnia-Book Pro Gen 8",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14 Gen8 Intel/Commodore Omnia-Book Pro Gen 8",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PG31"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 16 Gen8 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6PG01_PH6PG71"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/15 Gen9 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxHRXx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia-Book 15 Gen9",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxMRXx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxHP4NAx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxKK4NAx_XxSP4NAx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO InfinityBook Pro 15 Gen10 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxAR4NAx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A1650TI"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A2060"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 17 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A1650TI"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 17 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A2060"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15 Gen1 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I1650TI"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15 Gen1 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I2060"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 17 Gen1 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I1650TI"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 17 Gen1 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I2060"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Trinity 15 Intel Gen1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1501I"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Trinity 17 Intel Gen1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1701I"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15/17 Gen2 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxMGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15/17 Gen2 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxTGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris/Polaris 15/17 Gen4 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 15 Gen4 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxAGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Polaris 15/17 Gen5 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxXGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen5 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16/17 Gen5 Intel/Commodore ORION Gen 5",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxPXxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris Slim 15 Gen6 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris Slim 15 Gen6 Intel/Commodore ORION Slim 15 Gen6",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM5IXxA"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB1"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB2"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 17 Gen6 Intel/Commodore ORION 17 Gen6",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen7 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen7 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Stellaris 16 Gen7 Intel",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Pulse 14 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1401"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Pulse 15 Gen1 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1501"),
-+		},
-+	},
-+	{
-+		.ident = "TUXEDO Pulse 15 Gen2 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PF5LUXG"),
-+		},
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(dmi, uniwill_dmi_table);
+@@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
+ 		}
+ 		mutex_unlock(&data->battery_lock);
+ 
++		return NOTIFY_OK;
++	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
++		// noop for the time being
++
+ 		return NOTIFY_OK;
+ 	default:
+ 		mutex_lock(&data->input_lock);
+diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platform/x86/uniwill/uniwill-wmi.h
+index 2bf69f2d80381..48783b2e9ffb9 100644
+--- a/drivers/platform/x86/uniwill/uniwill-wmi.h
++++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+@@ -113,6 +113,8 @@
+ 
+ #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE	0xC0
+ 
++#define UNIWILL_OSD_WEBCAM_TOGGLE		0xCF
++
+ #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
+ 
+ struct device;
 -- 
 2.43.0
 
