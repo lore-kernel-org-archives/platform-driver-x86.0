@@ -1,279 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FFE329E5C;
-	Mon, 17 Nov 2025 10:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4F9246BD8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 10:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763374629; cv=none; b=W5WgQeL+lDN7N9b8EBUVp8IEna1THbdkztP/9mOX+twDC1F/I4VUARmLonwdK8OB2HBIyOXPDGas4FcK+3pEbdAmXoyJVagyfhMFbnViBGEpquTFGhsXR4pA+hPKkjd6sxxLiXEGcG24sC82BTjVspGOiOqAHZsi7ekKtKXpWVg=
+	t=1763374717; cv=none; b=lgq2n1VeM3vgKkgQy4ihwijzeCivuxRlgZvKBF2m1ow+30krYmy455dY58fCggpQG7c54ZYi1Fh3q+k6pFNfpPiyOoqILz4X1EzejMlAgZSlQuAdP13cPRS5P3IMBRenH5ji0in4p5t1q2CSkkbHsTgwM/FK0dea32KlHjfKgp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763374629; c=relaxed/simple;
-	bh=gBH39t87qFoQP+24Ic1lNQsEfJEUAyWteDWnd2xX9Q0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TGFmLJea0l4jjTJrrtpzC42HET05WE14vDd651O5EW2gOKc8Zar5biVBXbncIFMoO456fRW+HM5lToOrgb2B81Ug80/+fuoVNdG3PjNcLA7b5Ulk/A37ZOZOME8B0CZbVVcfzvEasD6ZgL0yFKdrWzcBsQDQSQq+7PrPn/55mC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UvlLlTHP; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763374717; c=relaxed/simple;
+	bh=QyS6BL30qh3TIy2KoeEVDD4nfZ7JSIzcxOHHGUGmkgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LTB/g+/i+5cFqS/2RlSOyvoM5QPY8vcwQ21WtKCbcAAjMvrOYbsdUuMmyeyrs9fpDVCKZmRDQAq+tMssRTjGBmKYcLijgx1eLAz9LVEiaJaVU1rsSL52gcTVsEjWxeKDRZMSaRUpwqZtG3bd90UV1hUZdQ9kiCGBCNlM01hmrYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMLZZ12E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UvlLlTHP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763374627; x=1794910627;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gBH39t87qFoQP+24Ic1lNQsEfJEUAyWteDWnd2xX9Q0=;
-  b=UvlLlTHPfbT2Pg6V1sPWuKMRFXxgyOjSyBbOE0ikQT2PdYlstKQHTrjj
-   TGo8KnEEhr1iBsiXmwkjC0SxvuYVWrBH/6yxDsSzmODW2Cbe2fsIEgPP9
-   Nv4UMHvd/6VhYheS6LmIVezcinIp50GUHQRHRnLsvI4uLDYR6Jd2NPmUT
-   LDWDUUwEH47lip5S/cbeNIiVxMpSQ4RR34xicXBDlKHiCLUBQ+Nigm92I
-   yFSbRWFAPW7DLwolYypH/N3+Pvt7oV8mLsznSbiEQJweRFeXjckXARVpZ
-   trKsyg0S67cOnSj0eRFa4sBHj6vjW2SiW0vshju/2lA0evdPFw4EtJM81
-   w==;
-X-CSE-ConnectionGUID: dg6f7/ZBRaWrrUteiXBasQ==
-X-CSE-MsgGUID: 5k3bmtrKQWWDGSZ9WYYp4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="90847484"
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="90847484"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 02:17:03 -0800
-X-CSE-ConnectionGUID: n/yur2xRQQ6QlXEjKEDfVA==
-X-CSE-MsgGUID: sxspl0iqS0K69ZV4ICzC2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="189713335"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.239])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 02:17:00 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 17 Nov 2025 12:16:56 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    Derek John Clark <derekjohn.clark@gmail.com>, 
-    =?ISO-8859-15?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>, 
-    Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-    Armin-Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v5 2/6] platform/x86: ayaneo-ec: Add hwmon support
-In-Reply-To: <20251113212221.456875-3-lkml@antheas.dev>
-Message-ID: <3bc1c368-0045-a8db-c557-b86ebf01ac5d@linux.intel.com>
-References: <20251113212221.456875-1-lkml@antheas.dev> <20251113212221.456875-3-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMLZZ12E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC96C2BC86;
+	Mon, 17 Nov 2025 10:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763374715;
+	bh=QyS6BL30qh3TIy2KoeEVDD4nfZ7JSIzcxOHHGUGmkgI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZMLZZ12EYn9E35UUkXNXFTCWGUPHRG60xQi3s7IjRgTCLCJ4APQ/i/blGZxi5Km/1
+	 Om/ZGsI7/vZpVzEqYBSWkIaY4/ceuivWvC3vMqCpiObfSNXT6RmRdyPVD25cpQaiSM
+	 c6U/ZU6Q0sllbo438cMClXWWiOZkSiK403uaZra30L6RNk+rgsZ5pABH+kV0YdDkPd
+	 PNJrF9TO+ZE1R4G+dzLna6cRbJTrbr2GB+6U12OBMDDD4X5wjggb6fRXfymzMs+Ghr
+	 nPx9sO3qcAcrq8X/LZpLIkxfvx9cpL015U4aRM9kEVL6twyQetZW2LqhDQTm8Q9kyj
+	 aVlwc2V6WxUsQ==
+Message-ID: <b32efcf0-9e15-4ece-bf1c-6327b49f6aa5@kernel.org>
+Date: Mon, 17 Nov 2025 11:18:31 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness
+ unexpectedly
+To: Bugaddr <Bugaddr@protonmail.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com>
+ <1536ce4a-5844-447f-9e86-197c71c6d364@gmx.de>
+ <0RyizLnGQaxXLOtK-q6h-mHCTA2ergYBAIS-DkF1MPD9T5nx79rlaKdIOUBRft7Ghpy11OPo2OZM4waIjDbdnv2fnafWBDxWEYL75XZKtUo=@protonmail.com>
+ <0b485b76-fb44-44a4-afab-d35fa31043db@gmx.de>
+ <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com>
+ <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de>
+ <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org>
+ <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
+ <tPQumZng3Py_n2et4MLRKu_-M-xqv-nzkFCCtnVryRamgSs5020dXq67qWVdrTG6mrFCDTGVDLGvoVvvnJZ_nQszJDQ4PWYCPbflKqGlqNs=@protonmail.com>
+ <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Nov 2025, Antheas Kapenekakis wrote:
+Hi,
 
-> Add hwmon single fan sensor reads and control for Ayaneo devices.
-> The register and method of access is the same for all devices.
+On 16-Nov-25 23:14, Bugaddr wrote:
+> Hi everyone,
 > 
-> Reviewed-by: Armin-Wolf <W_Armin@gmx.de>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/Kconfig     |   2 +
->  drivers/platform/x86/ayaneo-ec.c | 136 +++++++++++++++++++++++++++++++
->  2 files changed, 138 insertions(+)
+> I've debugged and fixed the annoying Fn+F10 bug on Acer Nitro 5 AN515-58.
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 8ca95536f8d9..e19850bd2609 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -319,6 +319,8 @@ config ASUS_TF103C_DOCK
->  config AYANEO_EC
->  	tristate "Ayaneo EC platform control"
->  	depends on DMI
-> +	depends on ACPI_EC
-> +	depends on HWMON
->  	help
->  	  Enables support for the platform EC of Ayaneo devices. This
->  	  includes fan control, fan speed, charge limit, magic
-> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ayaneo-ec.c
-> index 2fe66c8a89f4..108a23458a4f 100644
-> --- a/drivers/platform/x86/ayaneo-ec.c
-> +++ b/drivers/platform/x86/ayaneo-ec.c
-> @@ -7,14 +7,24 @@
->   * Copyright (C) 2025 Antheas Kapenekakis <lkml@antheas.dev>
->   */
->  
-> +#include <linux/acpi.h>
->  #include <linux/dmi.h>
->  #include <linux/err.h>
-> +#include <linux/hwmon.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  
-> +#define AYANEO_PWM_ENABLE_REG	 0x4A
-> +#define AYANEO_PWM_REG		 0x4B
-> +#define AYANEO_PWM_MODE_AUTO	 0x00
-> +#define AYANEO_PWM_MODE_MANUAL	 0x01
-> +
-> +#define AYANEO_FAN_REG		 0x76
-> +
->  struct ayaneo_ec_quirk {
-> +	bool has_fan_control;
->  };
->  
->  struct ayaneo_ec_platform_data {
-> @@ -23,6 +33,7 @@ struct ayaneo_ec_platform_data {
->  };
->  
->  static const struct ayaneo_ec_quirk quirk_ayaneo3 = {
-> +	.has_fan_control = true,
->  };
->  
->  static const struct dmi_system_id dmi_table[] = {
-> @@ -36,10 +47,128 @@ static const struct dmi_system_id dmi_table[] = {
->  	{},
->  };
->  
-> +/* Callbacks for hwmon interface */
-> +static umode_t ayaneo_ec_hwmon_is_visible(const void *drvdata,
-> +					  enum hwmon_sensor_types type, u32 attr,
-> +					  int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		return 0444;
-> +	case hwmon_pwm:
-> +		return 0644;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static int ayaneo_ec_read(struct device *dev, enum hwmon_sensor_types type,
-> +			  u32 attr, int channel, long *val)
-> +{
-> +	u8 tmp;
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			ret = ec_read(AYANEO_FAN_REG, &tmp);
-> +			if (ret)
-> +				return ret;
-> +			*val = tmp << 8;
-> +			ret = ec_read(AYANEO_FAN_REG + 1, &tmp);
-> +			if (ret)
-> +				return ret;
-> +			*val += tmp;
-
-|= as this is combining two u8?
-
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_input:
-> +			ret = ec_read(AYANEO_PWM_REG, &tmp);
-> +			if (ret)
-> +				return ret;
-> +			if (tmp > 100)
-> +				return -EIO;
-> +			*val = (255 * tmp) / 100;
-> +			return 0;
-> +		case hwmon_pwm_enable:
-> +			ret = ec_read(AYANEO_PWM_ENABLE_REG, &tmp);
-> +			if (ret)
-> +				return ret;
-> +			if (tmp == AYANEO_PWM_MODE_MANUAL)
-> +				*val = 1;
-> +			else if (tmp == AYANEO_PWM_MODE_AUTO)
-> +				*val = 2;
-> +			else
-> +				return -EIO;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int ayaneo_ec_write(struct device *dev, enum hwmon_sensor_types type,
-> +			   u32 attr, int channel, long val)
-> +{
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_enable:
-> +			switch (val) {
-> +			case 1:
-> +				return ec_write(AYANEO_PWM_ENABLE_REG,
-> +						AYANEO_PWM_MODE_MANUAL);
-> +			case 2:
-> +				return ec_write(AYANEO_PWM_ENABLE_REG,
-> +						AYANEO_PWM_MODE_AUTO);
-> +			default:
-> +				return -EINVAL;
-> +			}
-> +		case hwmon_pwm_input:
-> +			if (val < 0 || val > 255)
-> +				return -EINVAL;
-> +			return ec_write(AYANEO_PWM_REG, (val * 100) / 255);
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static const struct hwmon_ops ayaneo_ec_hwmon_ops = {
-> +	.is_visible = ayaneo_ec_hwmon_is_visible,
-> +	.read = ayaneo_ec_read,
-> +	.write = ayaneo_ec_write,
-> +};
-> +
-> +static const struct hwmon_channel_info *const ayaneo_ec_sensors[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
-> +	NULL,
-> +};
-> +
-> +static const struct hwmon_chip_info ayaneo_ec_chip_info = {
-> +	.ops = &ayaneo_ec_hwmon_ops,
-> +	.info = ayaneo_ec_sensors,
-> +};
-> +
->  static int ayaneo_ec_probe(struct platform_device *pdev)
->  {
->  	const struct dmi_system_id *dmi_entry;
->  	struct ayaneo_ec_platform_data *data;
-> +	struct device *hwdev;
->  
->  	dmi_entry = dmi_first_match(dmi_table);
->  	if (!dmi_entry)
-> @@ -53,6 +182,13 @@ static int ayaneo_ec_probe(struct platform_device *pdev)
->  	data->quirks = dmi_entry->driver_data;
->  	platform_set_drvdata(pdev, data);
->  
-> +	if (data->quirks->has_fan_control) {
-> +		hwdev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +			"ayaneo_ec", NULL, &ayaneo_ec_chip_info, NULL);
-> +		if (IS_ERR(hwdev))
-> +			return PTR_ERR(hwdev);
-> +	}
-> +
->  	return 0;
->  }
->  
+> ROOT CAUSE:
+> Firmware sends wrong scancode (0xef) which Linux maps to KEY_BRIGHTNESSDOWN instead of keyboard backlight control.
 > 
+> SOLUTION:
+> Install this udev hwdb rule:
+> 
+> sudo tee /etc/udev/hwdb.d/90-acer-nitro5-an515-58.hwdb > /dev/null << 'EOF'
+> # Acer Nitro 5 AN515-58 - Fix Fn+F10 scancode 0xef
+> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnAcer*:pnNitro*AN515-58*
+>  KEYBOARD_KEY_ef=reserved
+> EOF
+> 
+> sudo systemd-hwdb update && sudo udevadm trigger --sysname-match="event*"
+> 
+> TESTED ON:
+> - Kernel: 6.17.8-arch1-1
+> - Distribution: Arch Linux
+> - Desktop: KDE Plasma (Wayland)
+> 
+> I have blogged my full analysis here: https://bugaddr.tech/posts/2025-11-16-debugging-the-acer-nitro-5-an515-58-fn-f10-keyboard-backlight-bug-on-linux/
 
--- 
- i.
+Good work on debugging this and nice blogpost.
+
+Question do the brightness up/down hotkeys still work after the hwdb fix ?
+
+As Armin mentioned you really should submit a pull-request to systemd to get
+this added to distros so the next Acer Nitro 5 AN515-58 will not be hit by
+this issue. See e.g.:
+
+https://github.com/systemd/systemd/pull/39392/commits
+
+which makes some slightly different changes to hwdb.d/60-keyboard.hwdb
+
+Regards,
+
+Hans
+
 
