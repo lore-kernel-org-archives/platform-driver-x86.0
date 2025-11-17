@@ -1,121 +1,373 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1293328F2;
-	Mon, 17 Nov 2025 13:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7113259CB9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763385951; cv=none; b=rHybAgs4RDDOujByaslqmJhi8TwOzEsHx0P+dzU1mJcGw3o5MVq6qSQssVEj0QLn2CTERjZoEbB27ckqW8Ee8O3+Ry73u54bWzbQiz1tyqfwJSkhC69M9whL49lFvlNXp05mw86pjw65t4L+CbgZMd2WXrt6DO6wtWcQdq/dtik=
+	t=1763386460; cv=none; b=jLjt9YAIwBVjad2TaQ9dKmetkmdsSZrY6aP3oKpJn9wtewulmZkVNItM8niM0Tzew9biTK8gPJntnkDIESE6sLokgyFXesYcga0kgWmjbEZz6dpEBYABrl73UqdPYC0blaOqy7rnH2DwcjeLS8ROheu4gkPANS7RvkNxx6ebLXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763385951; c=relaxed/simple;
-	bh=Bdt0IJ6GEEdDiqtpNpi4fK/5Aim/c3WyMcOKp4lt9Rc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ClGsu4MxKa62Dkt93YZ/EmzukTMDWgWpAY3F8bqgFUcWvjQIZVvt3e5oyE+XRP2cihArCTqdZXj9reBLtrGg/yVp2EPQdDQLlJQKkymr2M4izGCjsFz60YLkwz66IlosdTce2JX9wHFXOvAev3GQcKHBWaidFBvhhOHc6RpmOYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=LeDMzBpP; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1763386460; c=relaxed/simple;
+	bh=1Vjn1a4D7VKA4NiJvBDV2/xLFm4Uve0euCkztkj5iIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dYpj/CX+6mE+7h0EZCqvPK+6MBjjwViB/HQJc35R7U7O1/ymVrDZycmXqOG8erObRt3QmE4qXZrk505eRKqcqBbaf682l64Bz0qXMi5MtMW2neBrcd00314IcVO33yMbckmzBj7CKhOlgxCHj4ZsYy6vMwfrKN2msA65nkBkymM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=edC67+gc; arc=none smtp.client-ip=46.62.234.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="LeDMzBpP"
-Received: from wse-pc.fritz.box (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1949E2FC005D;
-	Mon, 17 Nov 2025 14:25:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1763385941;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6LxhFjiKunbhiTXLOed3Qvlv9XVkd1JWfBr4qSjK2eg=;
-	b=LeDMzBpPMui/bskTjZM38waAenArLqWn5KrLn2Ddg+f20lyg9QtjLJXCHCfqocklfs8KdF
-	J5f7r8S5wdgBi2V75L2qhCtuw0Q4NSC6Ypt0ycSHKLMO0sG2soeIRdJt0eeZ0N01xOcMOL
-	wgBeJ1Pp0OQA9UhFgD23cYX6/Qwu+aU=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: W_Armin@gmx.de,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>
-Subject: [PATCH 6/6] platform/x86/uniwill: Set cTGP support based on EC for TUXEDO IBP Gen7 MK1
-Date: Mon, 17 Nov 2025 14:24:03 +0100
-Message-ID: <20251117132530.32460-7-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251117132530.32460-1-wse@tuxedocomputers.com>
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="edC67+gc"
+Received: from relay15 (localhost [127.0.0.1])
+	by relay15.grserver.gr (Proxmox) with ESMTP id A306B43F67
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:11 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay15.grserver.gr (Proxmox) with ESMTPS id 1705C4403A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 13:34:10 +0000 (UTC)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 51812201C3D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 15:34:09 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1763386449;
+	bh=PgkQmVnGwRhbinWEfbalW9xEaoez/YXSywLyRgvCsG4=;
+	h=Received:From:Subject:To;
+	b=edC67+gcqJzKOFnxOIlZi31gjpr5OcGkujZl+5PtD8v7HXRENX28pxXHyW9myIbWW
+	 7h/dhY3q7orLLTwU+akjKD/pE7a6fa9aL2+FPeBfAg5wT+KQDMke5VIoj+UhS/gBHB
+	 iELAqlDIDXjz9WzdsaHrREDsSaBaPXYPTuB/4ehQ2R9siO5PYXuWCulsKklecPEkF1
+	 Oj89qMfZEFfijjrYk79Piwkie3MqlaPbRLFpKSktfTSgQxWtTpJMxa3gJwQVvm67b1
+	 6fkr+1atNn8xufbuEJTjIvjPOKHbO50UEy6QmHzvxaCLYDv1OkuMahq35nRXA3NWeT
+	 CXXfGVtV9qAnQ==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-37a2dcc52aeso41312301fa.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 17 Nov 2025 05:34:09 -0800 (PST)
+X-Gm-Message-State: AOJu0Yy5NhiU/R0Co0/L73zRacr46XpQvKV6+4tCOHYgb37K7awzr7ll
+	6AOfAKyTc1FrsftvYyyH0YkKMdAx44OZ30ISNkjTGAkIq0EQInEx4gcAVCT4izpoLLzCCLZE5AB
+	JVbhSIm/syUiFaYlJvAfEEd6cQVCi/1g=
+X-Google-Smtp-Source: 
+ AGHT+IE5BHgUPXDDHFJMpYkQt3x+egxp7K3igPrrArNCO44yCQ5XSFkz/StliurHFlN8YoOooYSmCVW0riz72ZsW1wk=
+X-Received: by 2002:a2e:8a87:0:b0:360:c716:2666 with SMTP id
+ 38308e7fff4ca-37babd563f4mr29291611fa.30.1763386448519; Mon, 17 Nov 2025
+ 05:34:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251113212221.456875-1-lkml@antheas.dev>
+ <20251113212221.456875-5-lkml@antheas.dev>
+ <77b944ff-2f84-3326-3901-5942739d3c43@linux.intel.com>
+In-Reply-To: <77b944ff-2f84-3326-3901-5942739d3c43@linux.intel.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 17 Nov 2025 14:33:56 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGq7RiZdpBsYhKxfrTMMfzGPGML2R6q8ayjpVn_W4j=uQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bm8S2k6MmN4QsAZlRBfhT1xaGS5Jzle-QcsWSiLVqf4TPM1KAIq9GA-QBU
+Message-ID: 
+ <CAGwozwGq7RiZdpBsYhKxfrTMMfzGPGML2R6q8ayjpVn_W4j=uQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] platform/x86: ayaneo-ec: Add controller power and
+ modules attributes
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Armin Wolf <W_Armin@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <176338644963.1678958.7555998757545484566@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-The TUXEDO InfinityBook 14 Gen7 shares a boardname between the variant with
-and without an NVIDIA GPU.
+On Mon, 17 Nov 2025 at 11:30, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 13 Nov 2025, Antheas Kapenekakis wrote:
+>
+> > The Ayaneo 3 features hot-swappable controller modules. The ejection
+> > and management is done through HID. However, after ejecting the modules=
+,
+> > the controller needs to be power cycled via the EC to re-initialize.
+> >
+> > For this, the EC provides a variable that holds whether the left or
+> > right modules are connected, and a power control register to turn
+> > the controller on or off. After ejecting the modules, the controller
+> > should be turned off. Then, after both modules are reinserted,
+> > the controller may be powered on again to re-initialize.
+>
+> If wonder if the ejecting could/should be made to turn it off without nee=
+d
+> for an explicit off command?
 
-Dynamically read which variant is present from EC to determine cTGP
-support.
+Perhaps in the future, this driver leaves the possibility open for it.
+However, that'd require a secondary HID driver to handle the full
+ejection process, with a shared function hook for this driver.
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
----
- drivers/platform/x86/uniwill/uniwill-acpi.c | 22 ++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+The eject sequence consists of sending a HID config command to start
+the ejection, followed by a secondary config command to turn off the
+ejection bits and then waiting for two ready bits to report that the
+ejection is finished. Then, the controller is turned off. Apart from
+turning off, all of this is done through HID (so HID ready races the
+controller_modules value).
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 15a94c256f728..f6b24d2c28b89 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -88,6 +88,9 @@
- 
- #define EC_ADDR_GPU_TEMP		0x044F
- 
-+#define EC_ADDR_SYSTEM_ID		0x0456
-+#define HAS_GPU				BIT(7)
-+
- #define EC_ADDR_MAIN_FAN_RPM_1		0x0464
- 
- #define EC_ADDR_MAIN_FAN_RPM_2		0x0465
-@@ -1406,6 +1409,23 @@ static int uniwill_ec_init(struct uniwill_data *data)
- 	return devm_add_action_or_reset(data->dev, uniwill_disable_manual_control, data);
- }
- 
-+static int quirk_ibp_gen7_ctgp_supported(const struct dmi_system_id *d)
-+{
-+	struct uniwill_data *data = container_of(d, struct uniwill_data, id);
-+	unsigned int value;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, EC_ADDR_SYSTEM_ID, &value);
-+	if (ret < 0)
-+		return ret;
-+	if (value & HAS_GPU) {
-+		data->id.driver_data =
-+			(void *)((unsigned long)data->id.driver_data |
-+				 UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL);
-+	}
-+	return 0;
-+}
-+
- static const struct dmi_system_id uniwill_dmi_table[] = {
- 	{
- 		.ident = "XMG FUSION 15",
-@@ -1462,12 +1482,12 @@ static const struct dmi_system_id uniwill_dmi_table[] = {
- 		.driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
- 	},
- 	{
-+		.callback = quirk_ibp_gen7_ctgp_supported,
- 		.ident = "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
- 		},
--		.driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
- 	},
- 	{
- 		.ident = "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore Omnia-Book Pro Gen 7",
--- 
-2.43.0
+The module status of this driver is only used to check when the
+controller should be turned on again and to provide visual feedback
+about which modules are currently connected while unpowered. When
+powered, there is full status reporting over HID, including which
+specific modules are connected[1].
+
+The end-to-end sequence is currently in userspace[2]. However, the EC
+ports are shielded from userspace so these two specific accesses must
+happen through a kernel driver.
+
+Antheas
+
+[1] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10ded5718=
+e4fe3/src/hhd/device/ayaneo/base.py#L90-L117
+[2] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10ded5718=
+e4fe3/src/hhd/device/ayaneo/base.py
+
+> > This patch introduces two new sysfs attributes:
+> >  - `controller_modules`: a read-only attribute that indicates whether
+> >    the left and right modules are connected (none, left, right, both).
+> >  - `controller_power`: a read-write attribute that allows the user
+> >    to turn the controller on or off (with '1'/'0').
+> >
+> > Therefore, after ejection is complete, userspace can power off the
+> > controller, then wait until both modules have been reinserted
+> > (`controller_modules` will return 'both') to turn on the controller.
+> >
+> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >  .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
+> >  MAINTAINERS                                   |   1 +
+> >  drivers/platform/x86/ayaneo-ec.c              | 107 ++++++++++++++++++
+> >  3 files changed, 127 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Docum=
+entation/ABI/testing/sysfs-platform-ayaneo-ec
+> > new file mode 100644
+> > index 000000000000..4cffbf5fc7ca
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+> > @@ -0,0 +1,19 @@
+> > +What:                /sys/devices/platform/ayaneo-ec/controller_power
+> > +Date:                Nov 2025
+> > +KernelVersion:       6.19
+> > +Contact:     "Antheas Kapenekakis" <lkml@antheas.dev>
+> > +Description:
+> > +             Current controller power state. Allows turning on and off
+> > +             the controller power (e.g. for power savings). Write 1 to
+> > +             turn on, 0 to turn off. File is readable and writable.
+> > +
+> > +What:                /sys/devices/platform/ayaneo-ec/controller_module=
+s
+> > +Date:                Nov 2025
+> > +KernelVersion:       6.19
+> > +Contact:     "Antheas Kapenekakis"  <lkml@antheas.dev>
+> > +Description:
+> > +             Shows which controller modules are currently connected to
+> > +             the device. Possible values are "left", "right" and "both=
+".
+> > +             File is read-only. The Windows software for this device
+> > +             will only set controller power to 1 if both module sides
+> > +             are connected (i.e. this file returns "both").
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c5bf7207c45f..f8ab009b6224 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
+> >  M:   Antheas Kapenekakis <lkml@antheas.dev>
+> >  L:   platform-driver-x86@vger.kernel.org
+> >  S:   Maintained
+> > +F:   Documentation/ABI/testing/sysfs-platform-ayaneo
+> >  F:   drivers/platform/x86/ayaneo-ec.c
+> >
+> >  AZ6007 DVB DRIVER
+> > diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86/ay=
+aneo-ec.c
+> > index 697bb053a7d6..a0747e7ee43a 100644
+> > --- a/drivers/platform/x86/ayaneo-ec.c
+> > +++ b/drivers/platform/x86/ayaneo-ec.c
+> > @@ -8,6 +8,7 @@
+> >   */
+> >
+> >  #include <linux/acpi.h>
+> > +#include <linux/bits.h>
+> >  #include <linux/dmi.h>
+> >  #include <linux/err.h>
+> >  #include <linux/hwmon.h>
+> > @@ -16,6 +17,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/power_supply.h>
+> > +#include <linux/sysfs.h>
+> >  #include <acpi/battery.h>
+> >
+> >  #define AYANEO_PWM_ENABLE_REG         0x4A
+> > @@ -32,9 +34,18 @@
+> >  #define AYANEO_CHARGE_VAL_AUTO               0xaa
+> >  #define AYANEO_CHARGE_VAL_INHIBIT    0x55
+> >
+> > +#define AYANEO_POWER_REG     0x2d
+> > +#define AYANEO_POWER_OFF     0xfe
+> > +#define AYANEO_POWER_ON              0xff
+> > +#define AYANEO_MODULE_REG    0x2f
+> > +#define AYANEO_MODULE_LEFT   BIT(0)
+> > +#define AYANEO_MODULE_RIGHT  BIT(1)
+> > +#define AYANEO_MODULE_MASK   (AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT=
+)
+> > +
+> >  struct ayaneo_ec_quirk {
+> >       bool has_fan_control;
+> >       bool has_charge_control;
+> > +     bool has_magic_modules;
+> >  };
+> >
+> >  struct ayaneo_ec_platform_data {
+> > @@ -46,6 +57,7 @@ struct ayaneo_ec_platform_data {
+> >  static const struct ayaneo_ec_quirk quirk_ayaneo3 =3D {
+> >       .has_fan_control =3D true,
+> >       .has_charge_control =3D true,
+> > +     .has_magic_modules =3D true,
+> >  };
+> >
+> >  static const struct dmi_system_id dmi_table[] =3D {
+> > @@ -266,6 +278,100 @@ static int ayaneo_remove_battery(struct power_sup=
+ply *battery,
+> >       return 0;
+> >  }
+> >
+> > +static ssize_t controller_power_store(struct device *dev,
+> > +                                   struct device_attribute *attr,
+> > +                                   const char *buf,
+> > +                                   size_t count)
+> > +{
+> > +     bool value;
+> > +     int ret;
+> > +
+> > +     ret =3D kstrtobool(buf, &value);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : AYAN=
+EO_POWER_OFF);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return count;
+> > +}
+> > +
+> > +static ssize_t controller_power_show(struct device *dev,
+> > +                                  struct device_attribute *attr,
+> > +                                  char *buf)
+> > +{
+> > +     int ret;
+> > +     u8 val;
+> > +
+> > +     ret =3D ec_read(AYANEO_POWER_REG, &val);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return sysfs_emit(buf, "%d\n", val =3D=3D AYANEO_POWER_ON);
+> > +}
+> > +
+> > +static DEVICE_ATTR_RW(controller_power);
+> > +
+> > +static ssize_t controller_modules_show(struct device *dev,
+> > +                                    struct device_attribute *attr, cha=
+r *buf)
+> > +{
+> > +     char *out;
+> > +     int ret;
+> > +     u8 val;
+> > +
+> > +     ret =3D ec_read(AYANEO_MODULE_REG, &val);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     switch (~val & AYANEO_MODULE_MASK) {
+>
+> Thanks for adding the mask.
+>
+> Now when reading this again, I also suggest changing variable name from
+> "val" to e.g. "unconnected_modules" as that would make the reason for
+> inversion more obvious.
+>
+> > +     case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
+> > +             out =3D "both";
+> > +             break;
+> > +     case AYANEO_MODULE_LEFT:
+> > +             out =3D "left";
+> > +             break;
+> > +     case AYANEO_MODULE_RIGHT:
+> > +             out =3D "right";
+> > +             break;
+> > +     default:
+> > +             out =3D "none";
+> > +             break;
+> > +     }
+> > +
+> > +     return sysfs_emit(buf, "%s\n", out);
+> > +}
+> > +
+> > +static DEVICE_ATTR_RO(controller_modules);
+> > +
+> > +static struct attribute *aya_mm_attrs[] =3D {
+> > +     &dev_attr_controller_power.attr,
+> > +     &dev_attr_controller_modules.attr,
+> > +     NULL
+> > +};
+> > +
+> > +static umode_t aya_mm_is_visible(struct kobject *kobj,
+> > +                              struct attribute *attr, int n)
+> > +{
+> > +     struct device *dev =3D kobj_to_dev(kobj);
+> > +     struct platform_device *pdev =3D to_platform_device(dev);
+> > +     struct ayaneo_ec_platform_data *data =3D platform_get_drvdata(pde=
+v);
+> > +
+> > +     if (data->quirks->has_magic_modules)
+> > +             return attr->mode;
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct attribute_group aya_mm_attribute_group =3D {
+> > +     .is_visible =3D aya_mm_is_visible,
+> > +     .attrs =3D aya_mm_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *ayaneo_ec_groups[] =3D {
+> > +     &aya_mm_attribute_group,
+> > +     NULL
+> > +};
+> > +
+> >  static int ayaneo_ec_probe(struct platform_device *pdev)
+> >  {
+> >       const struct dmi_system_id *dmi_entry;
+> > @@ -307,6 +413,7 @@ static int ayaneo_ec_probe(struct platform_device *=
+pdev)
+> >  static struct platform_driver ayaneo_platform_driver =3D {
+> >       .driver =3D {
+> >               .name =3D "ayaneo-ec",
+> > +             .dev_groups =3D ayaneo_ec_groups,
+> >       },
+> >       .probe =3D ayaneo_ec_probe,
+> >  };
+> >
+>
+> --
+>  i.
+>
+>
 
