@@ -1,173 +1,417 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1A929D268;
-	Mon, 17 Nov 2025 15:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3062C0293
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Nov 2025 16:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763395195; cv=none; b=o58mV1zvlmC6pgU5SgE4bzKjVSD+A5AgMzMu/U1d/jyVXX0MdcgIP+/xey8bp6DmHbOhwA2q/IQbEU5POnhJ8ON4Mr/IfDfmm6BGNnlDZM9JkF8/fl+ytWJTeSiN24fCg3XIiIdg882opUQlfz7b8/dJ88MS1OCUx+OiE3uxXkg=
+	t=1763395429; cv=none; b=LY7c1dtgFSkCbioU7TltCa4ly+DeaZh7sBmNN6VPNQVGGTZNFNGVVKizUfStcQW15Kjf3FHdrfvc1Bb8hm+elCq66qeKkKnFubVQY/lcXaM+copOPlI+/zJ+BgnR+Md4QhVnlB1JemPPEmbczBvXfPDls04VAlFDcIb4dDQYOq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763395195; c=relaxed/simple;
-	bh=8n1LL5gZKOCxgaaYc1LSzqjgYBCSzLi7M0r+M7qOq5g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ob6nX3hjVQLc7iF4Zk9O7zzAxa/CpeIeMvm8fXTSlJYpmX1bWnKim1Y23AcRBaM9tulAyw87Nq9hVyVsoJAGOrXxlQHx6+Rtutcxa0jnZwKn/gt31dTtvZeDLegwWtV9mASncm3VlWbfNQrPt5gYtXO6Pub/IbeW27DJf0oRfy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tthKcL9i; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1763395429; c=relaxed/simple;
+	bh=c27Qk5yu42H7t7acHkQ4d/LomT9W4cLIreUXiEboGLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LSli3fnKOMgENWXMLHDbwxO0EamRKWRaB04wxQPlIrD+hJbNTgnloFsvoiJQAep+LXCNrwNbCS8b35o0WQFi6h1Pw/83PPVHu22dd5nYCywfFU9j/0EDE3KnSRNUlI975Q+OECGNYLjw8F4BWiPo2kRMg9Mp3JA/Qco3u8mxZXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=TXr0dKVX; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tthKcL9i"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="TXr0dKVX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763395182; x=1763999982; i=w_armin@gmx.de;
-	bh=96diJ2evE6gKAFj69VVHsvT1C06yUf7SYVovtRvOcj0=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tthKcL9ia2S0NEdhHZKnrSJHecvxnBH3CRJh/X9Kmhjc/+GOlt5ThxX4WCwp/Lfs
-	 k/JY8BYKP359Q+DAeb8TePjl8Eo6Jdjm9HdpHwzOSVtey1Zd1wysd3BqK2BnWt+dF
-	 zYDiUmpxCUDvO7VT8urGxn0Ce/xKX0/KnjaHiTjkgM0sY3JZh+R9MMtPRlmpsE1nz
-	 yi4mzVVmnwliR041UNRJFIH7nAbNREzFtXPd7NXKsDIiSMukaNgtK0fbXhDfkKWHQ
-	 79y2OtLOEJfaUjvoGeP+PrF5sNRKLz6KlKSKUtIGjGWNlDv/SXTslNmlWFab5sKfw
-	 jMKUzUerM8aPBUFqFA==
+	s=s31663417; t=1763395423; x=1764000223; i=w_armin@gmx.de;
+	bh=NKo+NjwU1ySaozyzQ2M1YEWwJiRxndwUD6uPCkConUk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=TXr0dKVX10od1LiLzbhfx9qVqb0aqv8FDHNbxCG2QBf0BP22UbWHPXH/KWAzEQob
+	 bGgnrpK6+iSHxBSHeWGL2Ozm+PYmgHjDTNqH/pqQ+kqZ4GVrFjltNf7aA8TxIf2U4
+	 RqnvchnTLEsRRbefv82RTW0C3Nd32xC0LrJZNN2i32t9focPpK1ae+PGhgqi+6vNG
+	 bZkm5TbaJheuNDEYrbNwj6XK2yIUiudqRagHIxKwaoitIkG7hj0Jzs6d1VkN76gxG
+	 uyRd28AH9a3kmAdZjob1qbk9rj7ni4j3f0PY0tHJ43JfknKZDlWVRoyfaVCVxeVd0
+	 4rJVZ7h2/b4kCv7R0Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-inspiron.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1McpJq-1vtoE80ZnO-00gxfx; Mon, 17 Nov 2025 16:59:42 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: jlee@suse.com,
-	Bugaddr@protonmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: acer-wmi: Ignore backlight event
-Date: Mon, 17 Nov 2025 16:59:38 +0100
-Message-Id: <20251117155938.3030-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+Received: from [192.168.0.24] ([93.202.247.91]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MulmF-1wB41c18qJ-00zlW2; Mon, 17
+ Nov 2025 17:03:43 +0100
+Message-ID: <2c733a76-a622-48f5-ba0f-01773f6a7a7a@gmx.de>
+Date: Mon, 17 Nov 2025 17:03:42 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug] Acer AN515-58: Fn+F10 affects display brightness
+ unexpectedly
+To: Bugaddr <Bugaddr@protonmail.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <cwCuSGwTSU4nQ_hM-qWPNAzJwU2x4qLe_eo0tkxIFIycTeRWmDKjX7IzxJHcOVUPx_xAwjYC3GOV7MSk_LIqPs4HElFbPoSzYIZV5BHWe8Q=@protonmail.com>
+ <UyWxc6DtIYzBAkoHTnMQqR6ZTP_TVtFKEpJ1kFmuTP7jKLXmh5MJxU-qD7zLFosJPBpmpLN6Cl79prEADSrrvBQX4Wi6sltWot-u6i-RigI=@protonmail.com>
+ <1854119a-c257-4954-81e0-6aa07538d0c5@gmx.de>
+ <43a0661f-f70d-4a02-a89a-9686190ed3de@kernel.org>
+ <xEdzYmxBwMOpzb0oiIr1q-SXgVMntKFDOqeoW1Q1wshnw7o-MZjLstwuSkj2Bc6E8DSEIMghxzhAKLbO8FtY4ABQHjYxG8SreVDidptyg2k=@protonmail.com>
+ <tPQumZng3Py_n2et4MLRKu_-M-xqv-nzkFCCtnVryRamgSs5020dXq67qWVdrTG6mrFCDTGVDLGvoVvvnJZ_nQszJDQ4PWYCPbflKqGlqNs=@protonmail.com>
+ <1szuDGB7r2yubTWirjmsulWXtSkOdmTU2dmYrMbB6Wp2Y2PzBxbJ63OT4BWW_zDRp8QnPhH0VGKG7UyjWzEnFITEo1QjD10ksXtTG44K7Ts=@protonmail.com>
+ <44a8cee2-c193-4cba-b33c-e3937a9a59b6@gmx.de>
+ <066226b0-2f4a-44b1-b084-f0ac42bd6150@gmx.de>
+ <i02dtJC1U0Pf-yZFGOXKCBYdnbCerkuTvEkD3E0SbQt3bVvkBK8preFKHRAfgsi3_FijP8cZAu0HSNAjxEn3gAoYpDseHbUqNXRoE3fl1tw=@protonmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <i02dtJC1U0Pf-yZFGOXKCBYdnbCerkuTvEkD3E0SbQt3bVvkBK8preFKHRAfgsi3_FijP8cZAu0HSNAjxEn3gAoYpDseHbUqNXRoE3fl1tw=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IXzUsm+dBWbWYzLdR9aL2JkPDW3xj1BHgcB1u4qQm1vQ3xnuMLj
- QORxOhR3ZMrMe4rd+LXLjoET4UQz6QsxnMnjHjoChZysjVvj9Gt30BXb9WC7M7dmivEReUc
- yymAjQmcvGW2lDVQsXbIIyhXmcJIGS5bQ9gwjBxmJiTiyBWA6fKIuSB2NTQlICmcGjnWVpc
- Z2ok2wx4y6B/HQgLkPozw==
+X-Provags-ID: V03:K1:F8dF6RIKGr4DGzqzdIUSZux4dyDUaGt19wqukiU2FC4v5qX27Jo
+ q3sTruxCq9Q+B++tFNEqP7VO9Evi9wZOG8V1deYlpBIImDLhuloe7HHFZ1AeBird38M6Hvx
+ 2HebKbeoc06RLT2UVaGI+zOR8aWd2xI91tGFBDr4Q9hyJQ61LS7gfyez8dKySILzacd5E98
+ 0pj/RZesCdk0sc3mBtSMQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2UZs1tPrw2w=;44pJ58VNfNG6INsLTWoZhV/eM0H
- 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
+UI-OutboundReport: notjunk:1;M01:P0:vMls/yIiKJc=;3zqi33621ZIFs0sIxDtxblFXszk
+ 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
 
-On the Acer Nitro AN515-58, the event 4 - 0 is send by the ACPI
-firmware when the backlight up/down keys are pressed. Ignore this
-event to avoid spamming the kernel log with error messages, as the
-acpi-video driver already handles brightness up/down events.
+Am 17.11.25 um 15:12 schrieb Bugaddr:
 
-Reported-by: Bugaddr <Bugaddr@protonmail.com>
-Closes: https://bugaddr.tech/posts/2025-11-16-debugging-the-acer-nitro-5-a=
-n515-58-fn-f10-keyboard-backlight-bug-on-linux/#wmi-interface-issues
-Tested-by: Reported-by: Bugaddr <Bugaddr@protonmail.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/acer-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> On Monday, November 17th, 2025 at 6:35 AM, Armin Wolf <W_Armin@gmx.de> w=
+rote:
+>
+>> Am 17.11.25 um 01:29 schrieb Armin Wolf:
+>>
+>>> Am 16.11.25 um 23:14 schrieb Bugaddr:
+>>>
+>>>> On Sunday, November 16th, 2025 at 9:58 PM, Bugaddr
+>>>> Bugaddr@protonmail.com wrote:
+>>>>
+>>>>> Hi Hans and Armin,
+>>>>> Could you please review the logs I shared? The issue persists across
+>>>>> all backlight modes, and I=E2=80=99d appreciate your guidance on the=
+ next
+>>>>> steps.
+>>>>> Thanks,
+>>>>> Bugaddr
+>>>>>
+>>>>> On Saturday, October 25th, 2025 at 1:11 AM, Bugaddr
+>>>>> Bugaddr@protonmail.com wrote:
+>>>>>
+>>>>>> On Wednesday, October 15th, 2025 at 3:43 PM, Hans de Goede
+>>>>>> hansg@kernel.org wrote:
+>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 11-Oct-25 5:08 PM, Armin Wolf wrote:
+>>>>>>>
+>>>>>>>> Am 04.10.25 um 18:33 schrieb Bugaddr:
+>>>>>>>>
+>>>>>>>>> Sent with Proton Mail secure email.
+>>>>>>>>>
+>>>>>>>>> On Thursday, October 2nd, 2025 at 3:26 AM, Armin Wolf
+>>>>>>>>> W_Armin@gmx.de wrote:
+>>>>>>>>>
+>>>>>>>>>> Am 18.09.25 um 21:18 schrieb Bugaddr:
+>>>>>>>>>>
+>>>>>>>>>>>> Am 13.06.25 um 19:12 schrieb Bugaddr:
+>>>>>>>>>>>>
+>>>>>>>>>>>>> Hello,
+>>>>>>>>>>>>> I'm writing to report what appears to be a bug affecting the
+>>>>>>>>>>>>> Acer AN515-58 laptop, and I would appreciate any assistance
+>>>>>>>>>>>>> in investigating or resolving it.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> When I press Fn + F10=E2=80=94which is intended to increase =
+the
+>>>>>>>>>>>>> keyboard backlight brightness=E2=80=94the display brightness
+>>>>>>>>>>>>> unexpectedly decreases along with it. Furthermore, the
+>>>>>>>>>>>>> display brightness continues to lower incrementally, until I
+>>>>>>>>>>>>> manually press Fn + Brightness Up to stop and reverse it.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> After pressing Fn + Brightness Up, the display brightness
+>>>>>>>>>>>>> behavior returns to normal, and the issue does not
+>>>>>>>>>>>>> reoccur=E2=80=94however, from that point onward, the Brightn=
+ess Down
+>>>>>>>>>>>>> key no longer works.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> This behavior is consistent and reproducible. I'm happy to
+>>>>>>>>>>>>> assist with any debugging, log collection, or kernel testing
+>>>>>>>>>>>>> as needed.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Best regards,
+>>>>>>>>>>>>> Bugaddr
+>>>>>>>>>>>>> Hi,
+>>>>>>>>>>>>> can you share the output of "acpidump"?
+>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>> Armin Wolf
+>>>>>>>>>>>>> Sorry for late reply, but checkout this:
+>>>>>>>>>>>>> https://paste.rs/Nqca3
+>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>> Bugaddr
+>>>>>>>>>>>>> Hi,
+>>>>>>>>>> sorry for the late response. It seems that you forgot to paste
+>>>>>>>>>> parts of the DSDT table. Could you please store the output
+>>>>>>>>>> of acpidump inside a file (sudo acpidump > acpidump.log) and
+>>>>>>>>>> attach it to the email? Also please put the whole mailing list
+>>>>>>>>>>
+>>>>>>>>>> on the CC next time.
+>>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Armin Wolf
+>>>>>>>>>> Hey, please checkout the attached acpidump
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Bugaddr
+>>>>>>>>>> Alright, the following ACPI bytecode is likely responsible for
+>>>>>>>>>> sending those brightness down events:
+>>>>>>>> Method (_Q11, 0, NotSerialized) // _Qxx: EC Query, xx=3D0x00-0xFF
+>>>>>>>> {
+>>>>>>>> Debug =3D "=3D=3D=3D=3D=3DQUERY_11=3D=3D=3D=3D=3D"
+>>>>>>>> ^^^WMID.FEBC [Zero] =3D One /* Acer hotkey event
+>>>>>>>> ^^^WMID.FEBC [One] =3D HTBN /* Hotkey scancode /
+>>>>>>>> ^^^WMID.FEBC [One] =3D BRTS / Unknown, BIOS error? /
+>>>>>>>> ^^^WMID.FEBC [Zero] =3D 0x04 / Unknown, BIOS error? /
+>>>>>>>> Notify (WMID, 0xBC) / Notify acer-wmi driver /
+>>>>>>>> If (IGDS) / Integrated GPU device state? /
+>>>>>>>> {
+>>>>>>>> Notify (^^^GFX0.DD1F, 0x87) / Decrease brightness on Intel iGPU /
+>>>>>>>> }
+>>>>>>>> Else
+>>>>>>>> {
+>>>>>>>> Notify (^^^PEG1.PEGP.LCD0, 0x87) / Decrease brightness on
+>>>>>>>> discrete GPU */
+>>>>>>>> }
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> I think the brightness problems are caused by the kernel using
+>>>>>>>> the wrong backlight interface.
+>>>>>>>> Can you please try the following things:
+>>>>>>>>
+>>>>>>>> 1. Unload the acer-wmi driver using "modprobe -r acer-wmi".
+>>>>>>>> 2. Boot the kernel with "acpi_backlight=3Dvendor" if the problem
+>>>>>>>> still occurs.
+>>>>>>>> Using acpi_backlight=3Dvendor on a recent laptop-model like this =
+one
+>>>>>>>> is unlikely
+>>>>>>>> to be the right thing to do. acpi_backlight=3Dvendor is for vendo=
+r
+>>>>>>>> specific
+>>>>>>>> backlight control firmware interfaces from before things were
+>>>>>>>> standardized
+>>>>>>>> on using the ACPI video firmware interface around Windows XP
+>>>>>>>> (IIRC), not
+>>>>>>>> sure if it was XP or some other Windows release but standardizing=
+ on
+>>>>>>>> the API video firmware interface happened a long long time ago an=
+d
+>>>>>>>> then
+>>>>>>>> things moved to mostly using direct hw access (acpi_backlight=3Dn=
+ative)
+>>>>>>>> starting with Windows Vista.
+>>>>>>> acpi_backlight=3Dvideo could still be something which might be the
+>>>>>>> preferred
+>>>>>>> way on some devices and also goes through ACPI calls, but using
+>>>>>>> acpi_backlight=3Dvendor is weird.
+>>>>>>>
+>>>>>>> OTOH I learned a while ago that apparently if multiple backlight
+>>>>>>> interfaces
+>>>>>>> are present Windows simply sends the new brightness value to all
+>>>>>>> interfaces.
+>>>>>>>
+>>>>>>> Anyways Bugaddr please do give acpi_backlight=3Dvendor (and maybe =
+also
+>>>>>>> acpi_backlight=3Dvideo) a try as asked by Armin, this will still b=
+e
+>>>>>>> a good data point to have.
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>>
+>>>>>>> Hans
+>>>>>>> Here are the logs:
+>>>>>> # Logs after setting acpi_backlight=3Dvendor & removing acer-wmi
+>>>>>>
+>>>>>> 1. I am unable to change the display brightness either up/down
+>>>>>> 2. Caps_lock light turns on automatically when pressing
+>>>>>> fn+brightness_up key & turned off automatically as soon as other
+>>>>>> keys are pressed
+>>>>>> 3. Was able to change the keyboard brightness
+>>>>>> 4. no logs while pressing fn+keyboard_brightness_up/down
+>>>>>>
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> video/brightnessup BRTUP 00000086 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> video/brightnessdown BRTDN 00000087 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>>
+>>>>>> # Logs after setting acpi_backlight=3Dvideo
+>>>>>>
+>>>>>> ## Logs while testing the brightnes buttons first time after boot
+>>>>>> after removing acer-wmi, was able to change the display brightness
+>>>>>>
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> video/brightnessup BRTUP 00000086 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>> video/brightnessdown BRTDN 00000087 00000000
+>>>>>> wmi PNP0C14:00 000000bc 00000000
+>>>>>>
+>>>>>> ## Logs after pressing fn+keyboard_brightness_up (the display
+>>>>>> brightness suddenly goes to 0) & keyboard brightness also changes
+>>>>>>
+>>>>>> video/brightnessdown BRTDN 00000087 00000000 K
+>>>>>>
+>>>>>> ** I am on latest bios update & acpi_backlight=3Dnative also dont w=
+ork
+>>>>>>
+>>>>>> Regards,
+>>>>>> Bugaddr
+>>>>>> Hi everyone,
+>>>> I've debugged and fixed the annoying Fn+F10 bug on Acer Nitro 5
+>>>> AN515-58.
+>>>>
+>>>> ROOT CAUSE:
+>>>> Firmware sends wrong scancode (0xef) which Linux maps to
+>>>> KEY_BRIGHTNESSDOWN instead of keyboard backlight control.
+>>>>
+>>>> SOLUTION:
+>>>> Install this udev hwdb rule:
+>>>>
+>>>> sudo tee /etc/udev/hwdb.d/90-acer-nitro5-an515-58.hwdb > /dev/null <<
+>>>> 'EOF'
+>>>> # Acer Nitro 5 AN515-58 - Fix Fn+F10 scancode 0xef
+>>>> evdev:atkbd:dmi:bvn*:bvr*:bd*:svnAcer*:pnNitroAN515-58
+>>>> KEYBOARD_KEY_ef=3Dreserved
+>>>> EOF
+>>>>
+>>>> sudo systemd-hwdb update && sudo udevadm trigger
+>>>> --sysname-match=3D"event*"
+>>>>
+>>>> TESTED ON:
+>>>> - Kernel: 6.17.8-arch1-1
+>>>> - Distribution: Arch Linux
+>>>> - Desktop: KDE Plasma (Wayland)
+>>>>
+>>>> I have blogged my full analysis here:
+>>>> https://bugaddr.tech/posts/2025-11-16-debugging-the-acer-nitro-5-an51=
+5-58-fn-f10-keyboard-backlight-bug-on-linux/
+>>>>
+>>>> Thanks & regards,
+>>>> Bugaddr
+>>> Sorry for not responding earlier, i kind of forgot about this bug
+>>> report :/.
+>>>
+>>> But thanks for figuring that out, maybe you can contribute this fix to
+>>> hwdb so that other users of this device
+>>> can benefit for it?
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>
+>> I just read your blog post and it seems that your device has some WMI i=
+nterface issues. The warning
+>> from the WMI driver regarding the missing WQ00 ACPI control method is h=
+armless, as the WMI driver core
+>> will simply ignore the affected WMI device.
+>>
+>> The unknown function number 4 - 0 however can be fixed inside the acer-=
+wmi driver. It seems that all
+>> we need to do is to tell the driver to ignore function number 4 - 0, as=
+ the acpi-video driver already
+>> handles the brightness up/down events.
+>>
+>> Can you test the attached patch?
+>>
+>> Thanks,
+>> Armin Wolf
+> Thanks Armin for the patch, I have tested this patch on my device and ye=
+s the logs are suppressed. Well its unrelated but I am only getting this m=
+essages when pressing fn+F9 (Keyboard backlight down) & there are no such =
+warnings on fn+F10 (Keyboard brightness up):
+>
+> [  398.153437] atkbd serio0: Unknown key pressed (translated set 2, code=
+ 0xf0 on isa0060/serio0).
+> [  398.153469] atkbd serio0: Use 'setkeycodes e070 <keycode>' to make it=
+ known.
+>
+> Note: The hwdb overrides were still there while testing (The issue of di=
+splay brightness came back after removing those overrides)
+>
+> Thanks and regards
+> Bugaddr
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-w=
-mi.c
-index 18cb18e98e5d..bf97381faf58 100644
-=2D-- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -121,6 +121,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026=
-");
-=20
- enum acer_wmi_event_ids {
- 	WMID_HOTKEY_EVENT =3D 0x1,
-+	WMID_BACKLIGHT_EVENT =3D 0x4,
- 	WMID_ACCEL_OR_KBD_DOCK_EVENT =3D 0x5,
- 	WMID_GAMING_TURBO_KEY_EVENT =3D 0x7,
- 	WMID_AC_EVENT =3D 0x8,
-@@ -2512,6 +2513,9 @@ static void acer_wmi_notify(union acpi_object *obj, =
-void *context)
- 			sparse_keymap_report_event(acer_wmi_input_dev, scancode, 1, true);
- 		}
- 		break;
-+	case WMID_BACKLIGHT_EVENT:
-+		/* Already handled by acpi-video */
-+		break;
- 	case WMID_ACCEL_OR_KBD_DOCK_EVENT:
- 		acer_gsensor_event();
- 		acer_kbd_dock_event(&return_value);
-=2D-=20
-2.39.5
+Strange, seems to me that the atkbd driver simply has no default mapping f=
+or keycode 0xf0. I honestly have no
+experience regarding the atkbd driver, so i can can only suggest that you =
+map this key code to KEY_IGNORE/KEY_UNKNOWN.
+
+Thanks,
+Armin Wolf
 
