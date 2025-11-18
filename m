@@ -1,467 +1,123 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97F61FF7C8;
-	Tue, 18 Nov 2025 13:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029702FFDEC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 13:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763470902; cv=none; b=JFGLqNF7gCr3EYKt9uS0XlA5h6FlNmBpcdyQCYNuM4vwPqE0B+avzjOl+9x+8zxY+SwEj2AZ+eMyMfxNXOfrOiJ3dqHSgXCwhdrObLjIEc1unx0bLml5bUmcaC7SEy4ABiJXhNpYjdeeZMq5IPxypm6pEMkDUPRTuYURnSGYvBM=
+	t=1763471048; cv=none; b=YvBWmHZMMC8oyQDlRD6WRe5/8xyrfeXEZB1LoVmKwDIMF5M5gWGXCbzhbYKLyKUEr8qULe0mV050Ch9x3WcPxe+LI7QurzkSojIl/cerThRvtYXaZYtaHHNA0QjhJCAMOePyZxtj/XfRK1n6hO2vyAz4P8hQJozgi8gtwwRN4PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763470902; c=relaxed/simple;
-	bh=pwmdAU1eAvGv8wnKdD5wsoHq+mVPJCZsXljcVljHJ1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dF4EiS4VII5ZL+g407+CNyY5oGMGmJXA50ziwE1EVU95PA38QNckGkVG5caUkpyFhTKZzGH8Sfqnpbm+Z5KCBj/4zdU2ly4A5l6oWnUcIZXLP8NZT1bNH4rTRyo52cjkzmyBxa9OxiDdphgZMCpO20rM9xWWucrTpxLNdAGQEzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=PX8S9BtC; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1763471048; c=relaxed/simple;
+	bh=QY1OIrfV7wJNhoLm6jftQrdDzbys+UOJ7sTIBabxKQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yc6ayQPAy/wNhyFNtFWvW9myCbTDCghtH/A8NfhHnvg9WvcxpAqE3pehzMrH8bBqcZq9MRWjwZRgZXU/a2NsYqUCH0xnAJnzXwdG49mgzw8RnKGMFbVNoIXqi2fJk/kn7YUk2oCdUHm9c2W8pagJ3reS4EiRBfHSRD9xIWZm/NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2GlKoIt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="PX8S9BtC"
-Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id BE47A2FC0057;
-	Tue, 18 Nov 2025 14:01:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1763470896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gBxPDOlzY62v7zkikn5mJlZeXk8A1WJY2Q0ZRxsOoFs=;
-	b=PX8S9BtCLNbUpdICi9fJp6UT0OJnN3zLsxLeSDaDpHVj+owkqJHSq/P1jHt2eY7RIakpK5
-	BP2PLJewFd7kBIjKuyadXTDVJQuYRY1TFgs82bx7kVITPNVLz2gkxRE/JgA+aH9BNa6s0b
-	0boUgK2sQJypfKBzQM1Z2gg6PCjEvW4=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <dc086fb7-073d-4368-a122-ec4d7cb0da3f@tuxedocomputers.com>
-Date: Tue, 18 Nov 2025 14:01:36 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2GlKoIt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7466EC4CEFB
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 13:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763471047;
+	bh=QY1OIrfV7wJNhoLm6jftQrdDzbys+UOJ7sTIBabxKQU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u2GlKoItMJmHaVMk+xJCWjri/h/6DT5jmQV2tSOURUiQsiO6d8zkZKxsPH20AW6sV
+	 5Z1joZBBDOh5nVs0ntTpZ7ZYgqOHDnMrBdBJI/2DUKWJZwWOdNbvuhy5UcGCcRYPrW
+	 N++dHysn+E4rzbOYqoE9ytuG/iPqk9TlCpoVZSnC1sE88o684eUdrrhlnDOPzIcr9f
+	 +Zlt8n7JI8twIlapfNkdv7j43z8ZC7ylPX5TvoDYyWJLTDVVUGS6peDV1WQk3zr8/5
+	 3ThuQ6GqlhxrDnmsslarDFpOg1IMAv/HA9U/lczrx3FUPkSS/OKwMh5Bc1mS2pcjgE
+	 lg6+KfxLIY8mA==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6418b55f86dso8761223a12.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 05:04:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxZtieS+bwukxzQgkQ20obpmMFJpyCv2BVszw65VunhY31Jri3UKazVoG7PytT2rLeJioiFXa5Ftv3CkcTMbFQMr5B@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX/2Ws/qt526JpmNTtM+2Gken66HZ+aB79mHtvVLZHM5S90EqW
+	ooWAkZ8+GE6YacWoTD6rFEmz9UccKthaTjnCrNCIc+LNzKGisBNfgCgw4B8EMxt28RDKxNiYF5Q
+	35rbc4mxHpwVMKuQcRozAmayiZpZuhQ==
+X-Google-Smtp-Source: AGHT+IGzaPWs9CO2/QqJ2lcK3lJrPrwRYsH8Qm8HjBS/YlxbWZYRORJiSB2uoxSx80hvbGBnIei2bDGhcwM4UJKc8fE=
+X-Received: by 2002:a05:6402:2809:b0:63c:2d72:56e3 with SMTP id
+ 4fb4d7f45d1cf-64350e8e003mr14781379a12.23.1763471043426; Tue, 18 Nov 2025
+ 05:04:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] platform/x86/uniwill: Make uniwill_dmi_table
- accessible in probe
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-5-wse@tuxedocomputers.com>
- <627e6759-3062-42b1-aaa0-3fe4dbcdf680@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <627e6759-3062-42b1-aaa0-3fe4dbcdf680@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com> <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com>
+In-Reply-To: <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 18 Nov 2025 07:03:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
+X-Gm-Features: AWmQ_blGP-_XDvdtj3MDVFdTuQEWnKJrtZXKQUPHlGxcSMsdX4Hk0jJFpfTnlMY
+Message-ID: <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
+Subject: Re: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
+ external connector is used
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 12, 2025 at 8:45=E2=80=AFAM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+> If an external connector like M.2 is connected to the serdev controller
+> in DT, then the serdev devices will be created dynamically by the connect=
+or
+> driver. So skip registering devices from DT node as there will be no
+> statically defined devices.
 
-Am 18.11.25 um 12:16 schrieb Armin Wolf:
-> Am 17.11.25 um 14:24 schrieb Werner Sembach:
+You could still have statically defined devices. You are just choosing
+to probe them later from the connector driver.
+
 >
->> Move uniwill_dmi_table up and remove __intconst to make it also accessible
->> in the probe function.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
+com>
+> ---
+>  drivers/tty/serdev/core.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
-> NAK, i expect the DMI table to become very large in the future, so not marking it
-> as __initconst will waste a sizeable amount of memory.
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 8c2a40a537d93f4b9353a2f128cdf51b521929b1..1378587d386356ca4415fa455=
+b2ee722b5e44d3e 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_graph.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/pm_runtime.h>
+> @@ -560,6 +561,15 @@ static int of_serdev_register_devices(struct serdev_=
+controller *ctrl)
+>         int err;
+>         bool found =3D false;
 >
-> Luckily i am also currently working on extending the DMI table to contain 
-> additional
-> configuration data like power limits and callbacks for device-specific 
-> initialization.
->
-> I can share the patch with you if you want. It would allow us to discard the 
-> DMI table
-> after module initialization while still allowing for device-specific 
-> initialization
-> callbacks.
-this callback needs a way to probe for presence of a Nvidia card e.g. by reading 
-the ec
->
-> Thanks,
-> Armin Wolf
->
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->>   drivers/platform/x86/uniwill/uniwill-acpi.c | 344 ++++++++++----------
->>   1 file changed, 172 insertions(+), 172 deletions(-)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> index de3417d9d1ac0..9412783698685 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -1405,178 +1405,7 @@ static int uniwill_ec_init(struct uniwill_data *data)
->>       return devm_add_action_or_reset(data->dev, 
->> uniwill_disable_manual_control, data);
->>   }
->>   -static int uniwill_probe(struct platform_device *pdev)
->> -{
->> -    struct uniwill_data *data;
->> -    struct regmap *regmap;
->> -    acpi_handle handle;
->> -    int ret;
->> -
->> -    handle = ACPI_HANDLE(&pdev->dev);
->> -    if (!handle)
->> -        return -ENODEV;
->> -
->> -    data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> -    if (!data)
->> -        return -ENOMEM;
->> -
->> -    data->dev = &pdev->dev;
->> -    data->handle = handle;
->> -    platform_set_drvdata(pdev, data);
->> -
->> -    regmap = devm_regmap_init(&pdev->dev, &uniwill_ec_bus, data, 
->> &uniwill_ec_config);
->> -    if (IS_ERR(regmap))
->> -        return PTR_ERR(regmap);
->> -
->> -    data->regmap = regmap;
->> -    ret = devm_mutex_init(&pdev->dev, &data->super_key_lock);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_ec_init(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_battery_init(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_led_init(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_hwmon_init(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_nvidia_ctgp_init(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    return uniwill_input_init(data);
->> -}
->> -
->> -static void uniwill_shutdown(struct platform_device *pdev)
->> -{
->> -    struct uniwill_data *data = platform_get_drvdata(pdev);
->> -
->> -    regmap_clear_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL);
->> -}
->> -
->> -static int uniwill_suspend_keyboard(struct uniwill_data *data)
->> -{
->> -    if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->> -        return 0;
->> -
->> -    /*
->> -     * The EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to 
->> restore it
->> -     * ourselves.
->> -     */
->> -    return regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, 
->> &data->last_switch_status);
->> -}
->> -
->> -static int uniwill_suspend_battery(struct uniwill_data *data)
->> -{
->> -    if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->> -        return 0;
->> -
->> -    /*
->> -     * Save the current charge limit in order to restore it during resume.
->> -     * We cannot use the regmap code for that since this register needs to
->> -     * be declared as volatile due to CHARGE_CTRL_REACHED.
->> -     */
->> -    return regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, 
->> &data->last_charge_ctrl);
->> -}
->> -
->> -static int uniwill_suspend(struct device *dev)
->> -{
->> -    struct uniwill_data *data = dev_get_drvdata(dev);
->> -    int ret;
->> -
->> -    ret = uniwill_suspend_keyboard(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_suspend_battery(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    regcache_cache_only(data->regmap, true);
->> -    regcache_mark_dirty(data->regmap);
->> -
->> -    return 0;
->> -}
->> -
->> -static int uniwill_resume_keyboard(struct uniwill_data *data)
->> -{
->> -    unsigned int value;
->> -    int ret;
->> -
->> -    if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->> -        return 0;
->> -
->> -    ret = regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    if ((data->last_switch_status & SUPER_KEY_LOCK_STATUS) == (value & 
->> SUPER_KEY_LOCK_STATUS))
->> -        return 0;
->> -
->> -    return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, 
->> TRIGGER_SUPER_KEY_LOCK,
->> -                 TRIGGER_SUPER_KEY_LOCK);
->> -}
->> -
->> -static int uniwill_resume_battery(struct uniwill_data *data)
->> -{
->> -    if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->> -        return 0;
->> -
->> -    return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, 
->> CHARGE_CTRL_MASK,
->> -                  data->last_charge_ctrl);
->> -}
->> -
->> -static int uniwill_resume(struct device *dev)
->> -{
->> -    struct uniwill_data *data = dev_get_drvdata(dev);
->> -    int ret;
->> -
->> -    regcache_cache_only(data->regmap, false);
->> -
->> -    ret = regcache_sync(data->regmap);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    ret = uniwill_resume_keyboard(data);
->> -    if (ret < 0)
->> -        return ret;
->> -
->> -    return uniwill_resume_battery(data);
->> -}
->> -
->> -static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, 
->> uniwill_resume);
->> -
->> -/*
->> - * We only use the DMI table for auoloading because the ACPI device itself
->> - * does not guarantee that the underlying EC implementation is supported.
->> - */
->> -static const struct acpi_device_id uniwill_id_table[] = {
->> -    { "INOU0000" },
->> -    { },
->> -};
->> -
->> -static struct platform_driver uniwill_driver = {
->> -    .driver = {
->> -        .name = DRIVER_NAME,
->> -        .dev_groups = uniwill_groups,
->> -        .probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> -        .acpi_match_table = uniwill_id_table,
->> -        .pm = pm_sleep_ptr(&uniwill_pm_ops),
->> -    },
->> -    .probe = uniwill_probe,
->> -    .shutdown = uniwill_shutdown,
->> -};
->> -
->> -static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
->> +static const struct dmi_system_id uniwill_dmi_table[] = {
->>       {
->>           .ident = "XMG FUSION 15",
->>           .matches = {
->> @@ -1936,6 +1765,177 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>   };
->>   MODULE_DEVICE_TABLE(dmi, uniwill_dmi_table);
->>   +static int uniwill_probe(struct platform_device *pdev)
->> +{
->> +    struct uniwill_data *data;
->> +    struct regmap *regmap;
->> +    acpi_handle handle;
->> +    int ret;
->> +
->> +    handle = ACPI_HANDLE(&pdev->dev);
->> +    if (!handle)
->> +        return -ENODEV;
->> +
->> +    data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +    if (!data)
->> +        return -ENOMEM;
->> +
->> +    data->dev = &pdev->dev;
->> +    data->handle = handle;
->> +    platform_set_drvdata(pdev, data);
->> +
->> +    regmap = devm_regmap_init(&pdev->dev, &uniwill_ec_bus, data, 
->> &uniwill_ec_config);
->> +    if (IS_ERR(regmap))
->> +        return PTR_ERR(regmap);
->> +
->> +    data->regmap = regmap;
->> +    ret = devm_mutex_init(&pdev->dev, &data->super_key_lock);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_ec_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_battery_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_led_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_hwmon_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_nvidia_ctgp_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return uniwill_input_init(data);
->> +}
->> +
->> +static void uniwill_shutdown(struct platform_device *pdev)
->> +{
->> +    struct uniwill_data *data = platform_get_drvdata(pdev);
->> +
->> +    regmap_clear_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL);
->> +}
->> +
->> +static int uniwill_suspend_keyboard(struct uniwill_data *data)
->> +{
->> +    if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->> +        return 0;
->> +
->> +    /*
->> +     * The EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to 
->> restore it
->> +     * ourselves.
->> +     */
->> +    return regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, 
->> &data->last_switch_status);
->> +}
->> +
->> +static int uniwill_suspend_battery(struct uniwill_data *data)
->> +{
->> +    if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->> +        return 0;
->> +
->> +    /*
->> +     * Save the current charge limit in order to restore it during resume.
->> +     * We cannot use the regmap code for that since this register needs to
->> +     * be declared as volatile due to CHARGE_CTRL_REACHED.
->> +     */
->> +    return regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, 
->> &data->last_charge_ctrl);
->> +}
->> +
->> +static int uniwill_suspend(struct device *dev)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    int ret;
->> +
->> +    ret = uniwill_suspend_keyboard(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_suspend_battery(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    regcache_cache_only(data->regmap, true);
->> +    regcache_mark_dirty(data->regmap);
->> +
->> +    return 0;
->> +}
->> +
->> +static int uniwill_resume_keyboard(struct uniwill_data *data)
->> +{
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->> +        return 0;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    if ((data->last_switch_status & SUPER_KEY_LOCK_STATUS) == (value & 
->> SUPER_KEY_LOCK_STATUS))
->> +        return 0;
->> +
->> +    return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, 
->> TRIGGER_SUPER_KEY_LOCK,
->> +                 TRIGGER_SUPER_KEY_LOCK);
->> +}
->> +
->> +static int uniwill_resume_battery(struct uniwill_data *data)
->> +{
->> +    if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->> +        return 0;
->> +
->> +    return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, 
->> CHARGE_CTRL_MASK,
->> +                  data->last_charge_ctrl);
->> +}
->> +
->> +static int uniwill_resume(struct device *dev)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    int ret;
->> +
->> +    regcache_cache_only(data->regmap, false);
->> +
->> +    ret = regcache_sync(data->regmap);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = uniwill_resume_keyboard(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return uniwill_resume_battery(data);
->> +}
->> +
->> +static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, 
->> uniwill_resume);
->> +
->> +/*
->> + * We only use the DMI table for auoloading because the ACPI device itself
->> + * does not guarantee that the underlying EC implementation is supported.
->> + */
->> +static const struct acpi_device_id uniwill_id_table[] = {
->> +    { "INOU0000" },
->> +    { },
->> +};
->> +
->> +static struct platform_driver uniwill_driver = {
->> +    .driver = {
->> +        .name = DRIVER_NAME,
->> +        .dev_groups = uniwill_groups,
->> +        .probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> +        .acpi_match_table = uniwill_id_table,
->> +        .pm = pm_sleep_ptr(&uniwill_pm_ops),
->> +    },
->> +    .probe = uniwill_probe,
->> +    .shutdown = uniwill_shutdown,
->> +};
->> +
->>   static int __init uniwill_init(void)
->>   {
->>       const struct dmi_system_id *id;
+> +       /*
+> +        * When the serdev controller is connected to an external connect=
+or like
+> +        * M.2 in DT, then the serdev devices will be created dynamically=
+ by the
+> +        * connector driver. So skip looking for devices in DT node as th=
+ere will
+> +        * be no statically defined devices.
+> +        */
+> +       if (of_graph_is_present(ctrl->dev.of_node))
+> +               return 0;
+
+Where's the schema that allows graph nodes?
+
+Rob
