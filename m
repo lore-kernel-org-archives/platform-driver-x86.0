@@ -1,39 +1,39 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA0D1FA859;
-	Tue, 18 Nov 2025 14:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EDE35A94F;
+	Tue, 18 Nov 2025 14:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763475901; cv=none; b=E4O91dGCpokNmojIbVRIEJGY2z9AGDfF55+7KAfeDSVRmYtEEJzgdVHHlGEmNeHimFFE8cy98s2EF7UgxZi0f6xgFN6JA8Hxg4B/NVvtoIVRxjqN5YYtQJptW/06ncBVp+zqR/Og9o3oCEjdAicMio9m5Dn35wsHXEm9oj/f/3U=
+	t=1763476081; cv=none; b=fxL3rn89AtO578qxJ0/H5bZsEsBYyABzkhIqx3Wfh8dSaKBrBv14R1cBCnhpTD6dYS+jgtiQKMGrk1J2ouAW2wrY0tIE+EAHyyPbC3xqKjWYr/dJIAjIZcFbzvtv326/SamvO4zF904HZ0acVhzWluyApm8PzTsKRyutSVAxRPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763475901; c=relaxed/simple;
-	bh=nhbtbR3scTNMLVSIGND7YCGwHi25oS7vCqAEExbxdTU=;
+	s=arc-20240116; t=1763476081; c=relaxed/simple;
+	bh=WnC8x06sEqqj2Tq7EEEHY5CBDEBuuJr/DJLgaZb4HvQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FesPCE1KTmZTxlaUUoAA9fQ0AVr+PhBlWZDVj6qKgf7ZnKVUS9puavXTDHwjYFdSSoCLCHF2GBV40BADaVS26vXMYzkYdvztZPNfYk4JGBskekDqzvWhUwxYg7r6TDUyNe0BRG5pv8B9w9rIGEdqH16IFF2Wem2is7QeDI2rWUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=WmABnLwU; arc=none smtp.client-ip=157.90.84.7
+	 In-Reply-To:Content-Type; b=WOyuARsR7L8dEws56U3lmGR2vpEC/ZqzEnjgggoZgu2Xw9BivbYlc3M9jaBWWs05Pxg2xCP8NLYHMa8zuZ6RYEbtgRi3rqzFYyEZP2KyEBTth4vORmr7B/pJ1Vx8B5JbuL0NmCuaWyni2YHH1hzu4EVfu7EFrGGcM2WIFpI5Nxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Y9jjOVbJ; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="WmABnLwU"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Y9jjOVbJ"
 Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 970452FC0057;
-	Tue, 18 Nov 2025 15:24:55 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 45F5E2FC0057;
+	Tue, 18 Nov 2025 15:27:55 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1763475895;
+	s=default; t=1763476075;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yncKwMUU16WX0tnb0ala5Go9+yrhpM9eZPP7JRXN4To=;
-	b=WmABnLwUuLQ10Kh7VwAg13mejWFUDkIk8LAyjl+tvDbYLWJQ4I2ZpnMugMYXVq+6jV4nDw
-	l21toBfuA2EKW54svfjF51iPCTL68h8oD82kUxYzoaPumjLUF2KpiUQsWQFqQvT/thK8dx
-	LUVejk90oE6CEEhUlzKZfM6eECp6UV4=
+	bh=j7KyG+kgI/kl2uCptX3ipNNjqpGwPkEA9kuiA6gLQ6E=;
+	b=Y9jjOVbJHoAkEp47G0HmnnohwejS2QXGKEQHUo5yyMJNrmf5elXUdPHpxhLh4G/HCErGS8
+	kEcn5pq890o+FtDGRfPwTHXbvUoQZ676xMoZzLhX+Y2WQYcHM5uIsOdVphbuL8qFFkQ0XA
+	NlGI5BBoFQ2ha4WIQXwDnJTqMJx0iIQ=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <13ef3a6e-2489-4c42-9412-7a8680d13087@tuxedocomputers.com>
-Date: Tue, 18 Nov 2025 15:24:55 +0100
+Message-ID: <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
+Date: Tue, 18 Nov 2025 15:27:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,103 +41,177 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Start of Upstream Support for TUXEDO NB02 devices
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
 To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <1ce9d218-d5cd-4821-b224-b52e314b7027@gmx.de>
- <a2ad4642-cc69-419e-b599-d8f7a2e8097e@tuxedocomputers.com>
- <c6c423da-e640-40ff-a35c-8e2493e4d631@gmx.de>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
+ <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+ <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
+ <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
+ <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+ <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
 Content-Language: en-US
 From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <c6c423da-e640-40ff-a35c-8e2493e4d631@gmx.de>
+In-Reply-To: <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-Am 18.11.25 um 14:42 schrieb Armin Wolf:
-> Am 18.11.25 um 14:17 schrieb Werner Sembach:
+Am 18.11.25 um 14:48 schrieb Armin Wolf:
+> Am 18.11.25 um 14:29 schrieb Werner Sembach:
 >
 >>
->> Am 18.11.25 um 12:31 schrieb Armin Wolf:
->>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>> Am 18.11.25 um 14:12 schrieb Armin Wolf:
+>>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
 >>>
->>>> With the Uniwill driver from Armin now accepted I want to push the first
->>>> big addon to it that I worked on in parallel.
 >>>>
->>>> First this adds all current Tuxedo devices to use at least the input part
->>>> of the new driver.
+>>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
+>>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>>>>>
+>>>>>> Handle some more WMI events that are triggered on TUXEDO devices.
+>>>>>>
+>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>> ---
+>>>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
+>>>>>>   drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
+>>>>>>   2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
+>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>         /* Reported in manual mode when toggling the airplane mode status */
+>>>>>>       { KE_KEY,       UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
+>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOON, { KEY_UNKNOWN }},
+>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOOFF, { KEY_UNKNOWN }},
+>>>>>>         /* Reported when user wants to cycle the platform profile */
+>>>>>> -    { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_UNKNOWN }},
+>>>>>> +    { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_F14 }},
+>>>>>
+>>>>> I am currently working a patch adding platform profile support, so this 
+>>>>> event would
+>>>>> be handled inside the kernel on models with platform profile support.
 >>>>
->>>> Second it adds a new feature for cTGP control on Uniwill devices with
->>>> NVIDIA GPUs and enables that on the TUXEDO devices.
+>>>> For tuxedo devices we have profiles managed in userspace that do additional 
+>>>> things. So we need a way to handle this in userspace.
 >>>>
->>>> I have not yet enabled the other features in this driver for TUXEDO devices
->>>> as they either don't apply (Uniwill did a line with Intel that behaves a
->>>> little different to the rest of their ECs and that line is what the features
->>>> Armin added are based on) or are, as of now, untested.
->>>>
->>>> There are plenty more features currently implemented in the out of tree
->>>> tuxedo-drivers dkms package that I plan to port over one by one, but as
->>>> always: No ETA given.
+>>> Do these things have something to do with the uniwill EC? If so then we 
+>>> should implement those inside the driver
+>>> itself. The control center can then poll the platform profile sysfs file to 
+>>> get notified when platform_profile_cycle()
+>>> is executed to perform additional actions.
+>> Not exclusively, e.g. one thing is display brightness.
+>
+> And you cannot poll the sysfs interface?
+I can't follow you atm?
+>
 >>>
->>> Very nice, i think that especially the cTGP control feature will be very 
->>> popular with users.
->>> I am also currently working to add fan table (aka "universal fan control"), 
->>> PL1/PL2 power limit
->>> and platform profile support to the driver, so you might be able to reuse 
->>> some of that
->>> functionality for your devices.
->>>
->>> I think that we can merge the first two patches in the near future, but the 
->>> remaining ones
->>> dealing with the DMI table and cTGP support need some more work. What kind 
->>> of control does
->>> your software (Tuxedo control center) need over the cTGP values? I am asking 
->>> because Intel
->>> devices have fixed cTGP values for each platform profile. If your software 
->>> does something
->>> similar, then maybe we can integrate this into the platform profile mechanism.
+>>>> The 2 things I can spontaneously think of would be a sysfs toggle or 2 
+>>>> different UNIWILL_FEATURE_* defines.
+>>>>
+>>> TPH i would love to have an ordinary keycode allocated for that if the above 
+>>> does not work for you. There already
+>>> exists KEY_PERFORMANCE, so adding something like KEY_PERFORMANCE_CYCLE 
+>>> should be possible.
 >>
->> On some newer Uniwill devices all the platform profile register does is 
->> changing a led, the actual TDP, cTGP, Fan Curves, etc. are set in other 
->> registers. We currently expose this flexibility to userspace and need to keep 
->> it that way.
+>> New keycodes won't work on X11, I don't know the reason, but X11 only 
+>> supports a max of 248 keycodes
 >>
-> The power mode LED i assume? The same thing happens on Intel devices, Fan 
-> curves and power limits are independent
-> settings. Perhaps the "custom" platform profile would be suitable here? When 
-> selecting the custom platform
-> profile, your userspace application can modify the fan curves and power limits 
-> as desired.
-
-Ah ok,
-
-There are however uniwill devices where the register does more.
-
-But when there is a custom profile i think TCC could fit into that.
-
+>> That's why for example touchpad toggle is bound to F21 e.g. here 
+>> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-laptop.c#L106 
+>> .
+>>
+> Oh no. In this case using F14 is fine.
+>
 >
 > Thanks,
 > Armin Wolf
 >
 >>>
+>>>>>
+>>>>>>         /* Reported when the user wants to adjust the brightness of the 
+>>>>>> keyboard */
+>>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
+>>>>>> @@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>       /* Reported when the user wants to toggle the microphone mute 
+>>>>>> status */
+>>>>>>       { KE_KEY,       UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
+>>>>>>   +    /* Reported when the user wants to toggle the mute status */
+>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_MUTE, { KEY_MUTE }},
+>>>>>
+>>>>> Why is this event being ignored?
+>>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute key 
+>>>> event, so not ignoring it here would result in a double trigger.
+>>>
+>>> I understand.
+>>>
+>>>>>
+>>>>>> +
+>>>>>>       /* Reported when the user locks/unlocks the Fn key */
+>>>>>>       { KE_IGNORE,    UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
+>>>>>>         /* Reported when the user wants to toggle the brightness of the 
+>>>>>> keyboard */
+>>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
+>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0, { KEY_KBDILLUMTOGGLE }},
+>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1, { KEY_KBDILLUMTOGGLE }},
+>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2, { KEY_KBDILLUMTOGGLE }},
+>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3, { KEY_KBDILLUMTOGGLE }},
+>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4, { KEY_KBDILLUMTOGGLE }},
+>>>>>>         /* FIXME: find out the exact meaning of those events */
+>>>>>>       { KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H, { KEY_UNKNOWN }},
+>>>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>       /* Reported when the user wants to toggle the benchmark mode status */
+>>>>>>       { KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE, { KEY_UNKNOWN }},
+>>>>>>   +    /* Reported when the user wants to toggle the webcam */
+>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE, { KEY_UNKNOWN }},
+>>>>>
+>>>>> Same as above.
+>>>>
+>>>> Same as above ;)
+>>>>
+>>>> At least iirc, would have to double check
+>>>>
+>>> Ok.
+>>>
 >>> Thanks,
 >>> Armin Wolf
 >>>
+>>>>>
+>>>>>> +
+>>>>>>       { KE_END }
+>>>>>>   };
+>>>>>>   @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct 
+>>>>>> notifier_block *nb, unsigned long action
+>>>>>>           }
+>>>>>>           mutex_unlock(&data->battery_lock);
+>>>>>>   +        return NOTIFY_OK;
+>>>>>> +    case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>>>> +        // noop for the time being
+>>>>>
+>>>>> Wrong comment style, please use /* */.
+>>>> ack
+>>>>>
+>>>>> Thanks,
+>>>>> Armin Wolf
+>>>>>
+>>>>>> +
+>>>>>>           return NOTIFY_OK;
+>>>>>>       default:
+>>>>>>           mutex_lock(&data->input_lock);
+>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h 
+>>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
+>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>> @@ -113,6 +113,8 @@
+>>>>>>     #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE    0xC0
+>>>>>>   +#define UNIWILL_OSD_WEBCAM_TOGGLE        0xCF
+>>>>>> +
+>>>>>>   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED    0xF0
+>>>>>>     struct device;
 >>>>
->>>> Werner Sembach (6):
->>>>    platform/x86/uniwill: Add TUXEDO devices
->>>>    platform/x86/uniwill: Handle more WMI events required for TUXEDO
->>>>      devices
->>>>    platform/x86/uniwill: Implement cTGP setting
->>>>    platform/x86/uniwill: Make uniwill_dmi_table accessible in probe
->>>>    platform/x86/uniwill: Run callbacks of uniwill_dmi_table
->>>>    platform/x86/uniwill: Set cTGP support based on EC for TUXEDO IBP Gen7
->>>>      MK1
->>>>
->>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 546 ++++++++++++++++++--
->>>>   drivers/platform/x86/uniwill/uniwill-wmi.h  |   2 +
->>>>   2 files changed, 502 insertions(+), 46 deletions(-)
->>>>
->>
