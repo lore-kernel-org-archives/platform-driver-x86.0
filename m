@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ADA262FED;
-	Tue, 18 Nov 2025 13:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E24E3559C6;
+	Tue, 18 Nov 2025 14:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763473711; cv=none; b=AumDg80Q2GGzJPLMH255VO71HdcHRfW5xQq7gnhUVftKqQs+9K7Tw6yqVf8PVhQYhxcW5QcUb87BIfd6nJqHDht2GbpT7TSKosp7enq9FI0/glcwGo2tqnzJOgC3wKeSbDUU4PDlPkJ/ZKS/41msLI9OAUr/PmzJ5//hUlZ7IyE=
+	t=1763474812; cv=none; b=tHEY6gFjwyj6EmMKeo7pv2kDBz1qNZWHx9al3U4weQBIK4Hjbr/Em8slAZ5oMiYuyzaA8JAbVDhVjXb4+aEyJTPZNzNlnlOogjPcdBtoVTkHaBRwncV4rdxmxa0aO7zE7pWVZ3VckXzbLy9k0y63aJIZXjadHPpKEgZPUJn/LNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763473711; c=relaxed/simple;
-	bh=VMUpRyHUOTjCuF5qFfq5xGcxjjl5XhYuial2lAX6myM=;
+	s=arc-20240116; t=1763474812; c=relaxed/simple;
+	bh=4znXK4wTx2JU1LW5XKqcIlv9glnDLDcmMZBFWTJTkQc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cljcDOe8g8UoeOSieV5fSiRywbgsiUGbLlaaMYl3hxy/RmWxsvWBoFU0yb/vtbped20lapa2Zab6inaZm3iRoCd5R1FDm+EQeqhYqNuMXmqhki8BtrDCPFx6NlwyFSdBi6OF0YsvAuVWMsl8hJO+ROBAGHF00jpDpRe1kaiZyx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=V7YY9AL2; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=k+rqTNrhxmFUNrDYOY7MfB8eF8Wv2duEow8lIO5egb6rd+2thDbDBK0LKpsp5JvC3GRijIGGstrFKleojb4orZVsiMYVHCQW/elDtGCsUZywHujE5cSNY0l9wvcgkU7DNkXOIg5pHb4c/wqXLZa3iVCAdVl1Lm33jGBIzIECQ/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VUxWlKMT; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="V7YY9AL2"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VUxWlKMT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763473685; x=1764078485; i=w_armin@gmx.de;
-	bh=VMUpRyHUOTjCuF5qFfq5xGcxjjl5XhYuial2lAX6myM=;
+	s=s31663417; t=1763474788; x=1764079588; i=w_armin@gmx.de;
+	bh=bCWcWyjrMr9/dsF/FyBDWmRkUO8dEa97RIIKknmrt5o=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=V7YY9AL2hLuVOp7T+rauRgsnEdR5h5daJCEqcHNuwVJR5GJsWP059POeM5BDz+KT
-	 DtAn9KecN2lTMNCY/6w5n6MkahpUJckBP43k1mz5noiPRzDFomBl6VtDoxUrpDWP3
-	 R/PvntrswumXa3BH+ykz6TsZD1Fpekbx6dnhOJngpC1CKr/pHVTx+sdyvjb9eDOMP
-	 dQ+kEgF9eP0rqcJ5geqQbjXqNnf3mxx2ReqBcWD2HM2XyxALXY84QXJU6vrXLiLpn
-	 m830O/m5ek32jAoTazgRjQQLn0vwOcKcBctd81F664kuHbwq6PAHgQYr5W5WAplON
-	 kQDd7Ii0j5K/vuL0bA==
+	b=VUxWlKMTuJj9h0USBLC4V2ZAL5/QsVbTPayuSlK6xnD6zk8+5gNmugB4RAE2jWGI
+	 QsRh4gbcPHqDJ3yYfbOWNOEDEM/6D+tJGlbReaDmp6XjQOd0Kqo6i9iS5heGu3khN
+	 xgYm6rwL6ksK8UR9sjd91N1Wc87/6AEvYmhSuU16751pP5hfIYyv8NjcefF5KdcrY
+	 gqQDZwl1KYWJoNK/7ljZhlkHcVtB5AYoTfosoxEpXfnUnuT4Eixzw4sBv8ExwFy46
+	 7z8uFdJyfNRsq2T7vLrPbqUNZfwZMVAySqPJ9xNE7Z/Hr0xe5bDirjcXMMa/5pxu6
+	 bOSRMiXnJe4IUbu28Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [172.16.23.146] ([141.76.8.178]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQ5vW-1vYT5x2ETY-00Xzgu; Tue, 18
- Nov 2025 14:48:05 +0100
-Message-ID: <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
-Date: Tue, 18 Nov 2025 14:48:04 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUosN-1vlvbp0O49-00KVQa; Tue, 18
+ Nov 2025 15:06:28 +0100
+Message-ID: <0daff739-f8a7-4042-af6d-e7dbe5aa6720@gmx.de>
+Date: Tue, 18 Nov 2025 15:06:23 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,308 +43,429 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
- for TUXEDO devices
-To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-3-wse@tuxedocomputers.com>
- <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
- <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
- <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
- <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+Subject: Re: [PATCH v5 4/6] platform/x86: ayaneo-ec: Add controller power and
+ modules attributes
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ Derek John Clark <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+References: <20251113212221.456875-1-lkml@antheas.dev>
+ <20251113212221.456875-5-lkml@antheas.dev>
+ <77b944ff-2f84-3326-3901-5942739d3c43@linux.intel.com>
+ <CAGwozwGq7RiZdpBsYhKxfrTMMfzGPGML2R6q8ayjpVn_W4j=uQ@mail.gmail.com>
+ <f66159f7-2811-c093-4871-5a7153398e79@linux.intel.com>
+ <CAGwozwHPeWEk+MGjf39obC9dCNfpkk=zcr6--gux1fDjeZGu-A@mail.gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+In-Reply-To: <CAGwozwHPeWEk+MGjf39obC9dCNfpkk=zcr6--gux1fDjeZGu-A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qorI9acQRm/g9wzqjFtVj2Zodb5vzTABeHtajqlZ5F76wwta+4O
- yMloaWX90PwQOGJnG6vRm0VfpmhFNqLw2S8WxtlGZAqmdjebQKZo8eCPIGTnIhfcwu98HSj
- X585hvhPMf8uZXMGq7usJ7AoODpR1I8y3xryL3cIEnntWDZVCUIzsrFsjuUet24qxxrk+KZ
- IJu0S1lDtFGSzR9Q49xbA==
+X-Provags-ID: V03:K1:SfxIqi8r07YvfTKOmFujSx31glQLJSrX/C5u7aUcdIfhWFvSHP0
+ Z6V1UEMRUHojLX9c98GWYN9/1wUoYAgemPf73iPwUJiui0y6+/mJKB5SLvEWCtx90cNNyud
+ NBasAs7QI4GsYSCwD4mvY0o/MgyKNwcwFsRGzTO+/kubecGbN22GWvkryDopv9KPmp+9qud
+ hwS9mJYyLIFwcLMgizKrA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:X+A5T8ZfYqE=;uo9Uo697DEAPRYWmggWRQ5s7zYD
- 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
+UI-OutboundReport: notjunk:1;M01:P0:YDvyIgsB538=;eDXek/95NCQIFKT/sCBB3dki+fp
+ bq3QRHZX3u+r90EdhSBgFzguftzqv5kI6OHiCTgYhd1zAqab4/FJYxo47a/EtKgZAnmkAjXCB
+ +gJqazhWiuKUUA1sPbm8iMFXNW6/wwxz/JWNyz3/NhEaLs9IYmYkKZKwWrhaLQ3Y+tOu6DXQZ
+ 3ej3ZkDy20BGRe3Bzc3WN1LHr72ANd2m8Sf6ealccQxNRlwJlOYAhzefGsSwnXFhTm/kESYPx
+ jNSdida7CJjEREP9cjVFp1bRY3Ge539Nu/4qwn8KUW+04FCuB8BX1Uc/WD6JcWuAg3t8TWdfB
+ 6dg3pyVJ+sgkaY0zGxbipuxoJ3lnL6brTEm1W2leXNtu7jHrlzSKTs4YyJn1ToDvRDuddUmnU
+ yocNpTb0T9cb656SkM6DV7uvMQeLUT+lR8xM5H699/VPoUgQhFLiY4tw2i142uWCnKQCZKFyE
+ 8NfX3ruIr/mvHJLDfrPFhBogFuf3aFccJDKKzS/z24A+fCipyUyz4TTeER1WZvtCRpn7E4yrq
+ y6KKRnvhbWinOS7zbNQHM8Ib3rPlEk1eofO3jhyFg870Lbu/qRzTlnX69k0fjppnfSugGPQ43
+ w0HmssYRL7cJWgtf95XHcUavRYS84XQeSlLQgPSHPOM0whx+G3kEk18zSK2LBKp14QR6tz7MU
+ skqf+SD0cErtEN5MonMQnehtIt1uKxchY2FZ4O6jolRSdy1eGuecCihlpbAK9Ow5MEUCtPYy4
+ 9fb4+Zvk5w2kqb5A7gP95V6j85QK+R4hCfC4jwj7kMeoij77zOibQa06fI2NC9RQqbOZN65+/
+ AVgpbAGUsUY2i9Vvxf6MlCWxpeo67lxDhLVNi0jG9tCyJxKcfl1jqfCZvqcCnskIoiOJO0AFT
+ X4A/NRUAQ7chIRJ4i1Wmd8XiMe1/xjHlervA0VTPzuDeJNf0vKOXHow1Rsdh1naphwg4Prdqf
+ eX967ppwpkq93o/QNCm9i4vr4caWN5H/hcAveH8wE4T9y5NnpPKsk+YAkTjMbBn8AKa7zL2OA
+ OqSGBbp1IAorGoiyxaH+3YVH03rbSycRICfYEZczzhTFA9/e7nS46widmIpz8ZH2+3sBM1LIR
+ GXgIj6gXqhx6s0x6FJONXlSA2SvT/Q4I7lJ7GujnRU0grGQOTOJ5dn/eO0XR1jU/LB+WY9j8Y
+ 9y2dHwEAyuHa+LpVdBonzoAg4QPfxyfZkvZSycA/H6MwpuSNeeEPFeuGQdM0kfzCyKIcNbMyn
+ kO3pbutDTrcVfCcIJGZr+WVNSjgUez1dK48gQjLgeXrwqj2+Uyu3P1tyIeZzmZ6H1GN3lKdFw
+ t9DHBUa0orgA3ud/Wp3+CUKkFjhbmJX97FWFrT0tIo6io1nuMMCCA/OIRDB3S6id35R4LmYoU
+ WReizbdg6u2gnFNuukKD1C2G8MmWoe83EmpWaBWamB6AVRRW02w1kBmGvv2idzeDlFXkH0jCb
+ zxInlWRpiQ4TDnI8J9aXxAprVMXK6/qAld35r/zKyy6tVHNgZ7i46UunsAMvczltg6M4iAFxI
+ 9PkUgFL/CiqGgXe9j/uSdQ37TKxRaRaLTUKu9AY8g+/k0PN6b6m4t8ITEINpSGcjEtd8PKJVu
+ Te96m0uZIKIs8BXMe/4GlpZWxRuL9oGtMKz0uXYGaD/PBmuwQH4wrHhNKby6BByVuXC1SDDhM
+ YAEyeggj4l/5jAEPgbTMgv9Dl+NxB+ONUdH14HZcn2tllkCe/nhf86CkngXxz0M1Qb5pxlPEc
+ f70Oln9QSVOV/Wyp6PMr/bXbf2PksmvSenuHOjvS10nWcQeVwY2JidQ2W0l4XjSXDZNoRp2AE
+ iedxzeINfJqQqKzKUT9XCcA6ZhT7SgTvG6fkZuVrGSZJ98C9dBw+4bSXjWijjuG+kna63AIEG
+ hB9NVgd+y/aA1bZzocL/5neG2R8WliVI+t6PxHtqvo9Cb8Eg1aJUydz8RKmYt31L67aMlP6iV
+ 3PionLV3VWXuzRDKOu3cnDVvaBvhV0PG0tB71xhmWVukP4AlK8r/c6bkIIvYcu9iWP2GdI6Xc
+ ISoqUQKZufdJCg2fcUo6Y5F9c32/zfKS0clHfK/2dfYfve/Noi61xQReeZbDbLgqQSwaoketS
+ XelBBLGj19VTdYF4prlYfYgewzPcQj6NlWmDqZ2fn9as/EzHy0Y6O0LkOaRejswaznKnYTGCN
+ UdxoQVMSCkjJPEEsBl2WtRG9uIaH4jtiBN9LXAfk9xumEEUVcJEf4c2wnzImc/8G1Bu+x1R5p
+ V004Qr+DXT6anEVOjzJH1AuHBS/BCsQC2KxzQcfnDkY56bzfQLx4cHhqGyTRBIM3F17cxUoE0
+ 6w8UPqDpdf6zTrne03LtH0813fc0OULW75ugQkb0Gai97Ujn5B99N0nmf2shDsfNEu4kz4fSX
+ 7oohjgsKCpus6Ru3pm6wWPKS/Z3y7pZR+GRTk5Ad0audhLIOWcYp9tLcwP/UubmxwGYPPW5ZL
+ 4MePxvl3CLvEM9+N9YRLCdLjAru5drp0RdOg+DE+16tImdJa7oHCWbkcSRPChdHDNdw6gUMIx
+ iTQXXNPhXMX9Ujlvbx/bTd53+xDPQT42a6tmAPEg8dBLi884npe7svhaz5u5a6CeIDPnbivxn
+ nMixylWU6IVzq4qCSxM8kFDvEtisGdKMAA3HfcM3YCQonAFH5+ns4tzEb9BpunwUDG/OG/sgt
+ GLZgA0ImaWATynW7BjWlDunCWY9XgNmoPnRK+rUzMraewwXdkGfB62mfnzLzylaea4L2ghmXa
+ 1J9bd62CrZQYV59nqpPW3n3qcLeHUeVJFrHak07M+AjaL99cuYEl46ULMN9rooKKHj0ideDyL
+ SZr4LGTwtOyqShpHrJEQRP7dqsWhDGSb2Zxt1Iu6Blj9M+EXtwD+xoBiu+AIAxSpgzo4Bgv6p
+ HNNIqWrvp98r+pSt4fDono1er/dxMIvrckJ3SqilyaOncLd4TVS/+NqVhSzBDbgrOwqmuACwF
+ Ptti8KXTnqmNVRCiDBfk63a3Y3JhKsAa8UA3ZIO2w3q5HWJmzPEVNBgFT5m1GoG7Ttqu287VT
+ yVmA8X2+wMcpBunrWza/dPAJS5B2n5MU/Eyza96StbguhE/ISdi8OcX3S/lIPKJmXltX1lVv+
+ ztAWcGlg5gOM7kidQBX0fZYdK7L+Xf0jxQgb0vAbpPP8on1mIkXtEgb9xpwlKLa+8tMZyGU91
+ I6JQb8tlnD4uw1qfjxxVQOObREV/Wt9qQY08TH1brLW4WOmu4ak98qpUDrQKQUrbpZFA+d0aX
+ cgkBl1d4aki0XG1UDFoH0CZ4vIDQDTHojfXC2JPThnQpeTDgiOIyFIGfgShf87dXJs+SNVb6R
+ sZzmJMKx9fSxM6wPaC7ras2OWkeFkg0dPPqPwXwZg3WcjmbKyxvQrZ67iU5GCWP1Rj+qUh1Bp
+ KCb79OtQ8puqZuT9xjjTUeNsPNfjqf5qOxt9rhcWFl6nf+Glo9JIcFvC/ZbQI9ndxfxsu2SK2
+ SpbyX0r1oJvwjgCvV2gOsCuVKouMG9DJgYPEeOE8t2zSFrcosgCSEhfOGlCa4LqbWGJ33b3T0
+ 2cE/ATHjtREFRi/qBwyaCWrk96Z00VN/2xYj3yWtMRUJo/YPnPb7OqLCm3H9nIXljUYh6wAOY
+ 7WRY6tze49c6Y86g05DER3b18BjIi2s/aoiclX4/gOmwvKFB1DKV9raWrfcUpZyNwa5unsoKz
+ pNIYB2d5eQ6cA+9n3a39+KxI7ueaYGq0bCMCsS7Bgr/1vcI6mdh4hFFdzRcOLS8pHqqhGkgqZ
+ hcrTDRxytfBe4I+akvjzo/K9tjo8S2d9zYRqzn9fxAU+UBHlT1MKK7gwco8Q1isjlGozmnbaP
+ 4XF4ORYvsfYtsR/cnY25NUheL4VHjvWjzU/OECIs5lfu9jI6MbCtowXJqIT07AFZVfwrBt/2x
+ nszHr6YppnU4m0g+NpWHkHuqs5ADpSTk/zay4jHRsvwwxLh7NEkleLK3K84I2n99vmyOrSoAa
+ O9D6GmcC+EJ23Mgu7YiHML2ZrQQxrXbIy5B/yp1ed/4O8FBBV9/mYky+2tBCLQOXFqo+7EIEy
+ 2iE0quRcuf/682Wl3u9uFmL6pZwklgMeye20+QTYNTpSeMAFgZfktN7L8mfmY2T8faVmzg6/u
+ iwAMXsPkaLXWVcGkB7iXXcJM17asgf9PyFJFnnxxynV2RBrGw3932D/TIpUv3h60Les3ncrjp
+ 1cmivz+Zz9+PJW70uyU2/PAZsIXtmX6klwahPCvBZMrCcysIeMz3tfnVLtm4kxDQezpDfSLsk
+ Q5mPk30NM8sfS4YktoSm//dvQma0WNyyia2UNayQ1DsFluzSgFRzz07r2OjWIx0+ACvniOYSr
+ jVJWKXAM1i9O6Acny4ed028BCfOXOpjwqavw2oWGDSfs7AwS0eDUfpiDby3vGuJH4Ute1ps2/
+ Ptqgb2109nEeA+iygn+wpY8vJbnbGFS3864Bz5wPfkg4vRQvwQTTAe9dA1mP2npbXdP4U92jQ
+ p7TrIYJH9/F+GQ8Wsxi77UEoPPtXMQbh+YlAJBOIoZfQCbzv/GWXTcrUSnv5s5nYzQB5+AuzR
+ zxhRZcMul4PskCsWe2hvGtKTd2kekH2/Xf0qiD6N+1qlOVGiuTkVpkRPq9H6f+D980oJzzRBF
+ jwFgmlKm2zTPVC+6fSC8zVoAcyfj3k4CKOjmoospvDKACSv64Sh05mrzapAdS+M3lFq/awy2R
+ 06Oh3WLSMk1MK0Fd3Q3WcMG9DF3EsnEIZUupwuv/hdPrJydZG0Rzxtgqfutumo1gAgt0UJmoQ
+ KiHTUzschQtReXMCWXQpdlz8QB8xs6OV5sC1YzMoiJHRsAPThFycjAtXBK2np26RkzpZnfM7q
+ kuxfsZDqPq1YspLlB6q/+bYtUOSUy+3mXI1+X70wP+aoU5XiPBSKWifRtfH97lVFEOe7+f+p1
+ GoddacdwG+vgpfjaIBOkFjJHOSNf1yGgexZpBAd+g9xvk+ffFR/0+o/o81QuJ5cByfRZJ+gcp
+ ACMxyx3lW70X8o3Ni+JR1v9wElDEaOS1xreYxkOJDnqs66s6EGx107FXlrpBr5FrLE9cJ+uFK
+ jHHFn5j9Ohbn225Eotajy2BCkSlbWuL7HNOUkEm/uTxv83JHLERZzWoAA5AtAX8nGSeyTh6pn
+ KggN8nli2KeJvinuBZAhOsAzfBfT1PFbHojbjkgg1BA4m1pLreObp9kGGoxlJP1u1lOOimbpC
+ dC2q2uQa8/CNCqU4/ebx8N0F7TGT5Ob4FJfEgXR2y3W0zGvgLwQEYQvw9h2LhO/pcIAsxxd3g
+ CLv5iEipWEojCbInZ+cDpm5IqcyJPIQ5OTyu2e6gW4FWly6qtFCxJrKFhd72UE68cLuETyj7C
+ kUX8nuj72HjMNs/FjIBHV8cG8tqoiA3Cg==
 
-Am 18.11.25 um 14:29 schrieb Werner Sembach:
+Am 18.11.25 um 13:58 schrieb Antheas Kapenekakis:
 
->
-> Am 18.11.25 um 14:12 schrieb Armin Wolf:
->> Am 18.11.25 um 13:45 schrieb Werner Sembach:
->>
->>>
->>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
->>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+> On Tue, 18 Nov 2025 at 13:32, Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+>> On Mon, 17 Nov 2025, Antheas Kapenekakis wrote:
+>>> On Mon, 17 Nov 2025 at 11:30, Ilpo J=C3=A4rvinen
+>>> <ilpo.jarvinen@linux.intel.com> wrote:
+>>>> On Thu, 13 Nov 2025, Antheas Kapenekakis wrote:
 >>>>
->>>>> Handle some more WMI events that are triggered on TUXEDO devices.
+>>>>> The Ayaneo 3 features hot-swappable controller modules. The ejection
+>>>>> and management is done through HID. However, after ejecting the modu=
+les,
+>>>>> the controller needs to be power cycled via the EC to re-initialize.
 >>>>>
->>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>>> ---
->>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 19=20
->>>>> ++++++++++++++++++-
->>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-wmi.h=C2=A0 |=C2=A0 2 ++
->>>>> =C2=A0 2 files changed, 20 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
->>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
->>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>> @@ -371,9 +371,11 @@ static const struct key_entry=20
->>>>> uniwill_keymap[] =3D {
->>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported in manual mode whe=
-n toggling the airplane mode=20
->>>>> status */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_RADIO=
-ON, { KEY_UNKNOWN }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_RADIO=
-OFF, { KEY_UNKNOWN }},
->>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when user wants to=
- cycle the platform profile */
->>>>> -=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_PERFO=
-RMANCE_MODE_TOGGLE, {=20
->>>>> KEY_UNKNOWN }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_PERFORMANCE_MODE_TOGGLE, {=20
->>>>> KEY_F14 }},
->>>>
->>>> I am currently working a patch adding platform profile support, so=20
->>>> this event would
->>>> be handled inside the kernel on models with platform profile support.
+>>>>> For this, the EC provides a variable that holds whether the left or
+>>>>> right modules are connected, and a power control register to turn
+>>>>> the controller on or off. After ejecting the modules, the controller
+>>>>> should be turned off. Then, after both modules are reinserted,
+>>>>> the controller may be powered on again to re-initialize.
+>>>> If wonder if the ejecting could/should be made to turn it off without=
+ need
+>>>> for an explicit off command?
+>>> Perhaps in the future, this driver leaves the possibility open for it.
+>>> However, that'd require a secondary HID driver to handle the full
+>>> ejection process, with a shared function hook for this driver.
 >>>
->>> For tuxedo devices we have profiles managed in userspace that do=20
->>> additional things. So we need a way to handle this in userspace.
+>>> The eject sequence consists of sending a HID config command to start
+>>> the ejection, followed by a secondary config command to turn off the
+>>> ejection bits and then waiting for two ready bits to report that the
+>>> ejection is finished. Then, the controller is turned off. Apart from
+>>> turning off, all of this is done through HID (so HID ready races the
+>>> controller_modules value).
 >>>
->> Do these things have something to do with the uniwill EC? If so then=20
->> we should implement those inside the driver
->> itself. The control center can then poll the platform profile sysfs=20
->> file to get notified when platform_profile_cycle()
->> is executed to perform additional actions.
-> Not exclusively, e.g. one thing is display brightness.
-
-And you cannot poll the sysfs interface?
-
->>
->>> The 2 things I can spontaneously think of would be a sysfs toggle or=
-=20
->>> 2 different UNIWILL_FEATURE_* defines.
+>>> The module status of this driver is only used to check when the
+>>> controller should be turned on again and to provide visual feedback
+>>> about which modules are currently connected while unpowered. When
+>>> powered, there is full status reporting over HID, including which
+>>> specific modules are connected[1].
 >>>
->> TPH i would love to have an ordinary keycode allocated for that if=20
->> the above does not work for you. There already
->> exists KEY_PERFORMANCE, so adding something like=20
->> KEY_PERFORMANCE_CYCLE should be possible.
+>>> The end-to-end sequence is currently in userspace[2]. However, the EC
+>>> ports are shielded from userspace so these two specific accesses must
+>>> happen through a kernel driver.
+>> So can the other features be used without this part?
+> Yes. The patches are independent.
 >
-> New keycodes won't work on X11, I don't know the reason, but X11 only=20
-> supports a max of 248 keycodes
+>> I'd prefer to
+>> postpone this power/modules thing and have the ejection done properly.
+> The ejection process is done over vendor HID commands, not through the
+> EC, so it would need a new driver. This new driver would not conflict
+> with this patch, perhaps a new "auto" value for controller_power could
+> be added to have that HID driver control this.
 >
-> That's why for example touchpad toggle is bound to F21 e.g. here=20
-> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-=
-laptop.c#L106=20
-> .
+> But, I do not personally have plans to develop such a driver. I will
+> not oppose one of course but I cannot justify the engineer effort on
+> it. The userspace implementation works quite well and this is a niche
+> device.
 >
-Oh no. In this case using F14 is fine.
+> Since these two registers are in protected ACPI space, they need to be
+> accessed through this driver, so this patch is necessary for that.
+>
+> Antheas
 
+I am OK with using a userspace application to connect the HID interface
+with the EC, as the ejection process already requires userspace interventi=
+on.
 
 Thanks,
 Armin Wolf
 
+>> --
+>>   i.
 >>
->>>>
->>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user want=
-s to adjust the brightness=20
->>>>> of the keyboard */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN=20
->>>>> }},
->>>>> @@ -382,11 +384,19 @@ static const struct key_entry=20
->>>>> uniwill_keymap[] =3D {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to to=
-ggle the microphone=20
->>>>> mute status */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
->>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to toggle=
- the mute status */
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_MUTE,=
- { KEY_MUTE }},
->>>>
->>>> Why is this event being ignored?
->>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute=20
->>> key event, so not ignoring it here would result in a double trigger.
->>
->> I understand.
->>
->>>>
->>>>> +
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user locks/unloc=
-ks the Fn key */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
-L_OSD_FN_LOCK, { KEY_FN_ESC }},
->>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user want=
-s to toggle the brightness=20
->>>>> of the keyboard */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_KBDILLUMTOGGLE, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_KB_LED_LEVEL0, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_KB_LED_LEVEL1, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_KB_LED_LEVEL2, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_KB_LED_LEVEL3, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
-IWILL_OSD_KB_LED_LEVEL4, {=20
->>>>> KEY_KBDILLUMTOGGLE }},
->>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FIXME: find out the exact m=
-eaning of those events */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
-L_OSD_BAT_CHARGE_FULL_24_H, {=20
->>>>> KEY_UNKNOWN }},
->>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[]=
-=20
->>>>> =3D {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to to=
-ggle the benchmark mode=20
->>>>> status */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
-L_OSD_BENCHMARK_MODE_TOGGLE, {=20
->>>>> KEY_UNKNOWN }},
->>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to toggle=
- the webcam */
->>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_WEBCA=
-M_TOGGLE, { KEY_UNKNOWN }},
->>>>
->>>> Same as above.
+>>> Antheas
 >>>
->>> Same as above ;)
+>>> [1] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10de=
+d5718e4fe3/src/hhd/device/ayaneo/base.py#L90-L117
+>>> [2] https://github.com/hhd-dev/hhd/blob/8d842e547441600b8adc806bfb10de=
+d5718e4fe3/src/hhd/device/ayaneo/base.py
 >>>
->>> At least iirc, would have to double check
->>>
->> Ok.
->>
->> Thanks,
->> Armin Wolf
->>
->>>>
+>>>>> This patch introduces two new sysfs attributes:
+>>>>>   - `controller_modules`: a read-only attribute that indicates wheth=
+er
+>>>>>     the left and right modules are connected (none, left, right, bot=
+h).
+>>>>>   - `controller_power`: a read-write attribute that allows the user
+>>>>>     to turn the controller on or off (with '1'/'0').
+>>>>>
+>>>>> Therefore, after ejection is complete, userspace can power off the
+>>>>> controller, then wait until both modules have been reinserted
+>>>>> (`controller_modules` will return 'both') to turn on the controller.
+>>>>>
+>>>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>>>> ---
+>>>>>   .../ABI/testing/sysfs-platform-ayaneo-ec      |  19 ++++
+>>>>>   MAINTAINERS                                   |   1 +
+>>>>>   drivers/platform/x86/ayaneo-ec.c              | 107 ++++++++++++++=
+++++
+>>>>>   3 files changed, 127 insertions(+)
+>>>>>   create mode 100644 Documentation/ABI/testing/sysfs-platform-ayaneo=
+-ec
+>>>>>
+>>>>> diff --git a/Documentation/ABI/testing/sysfs-platform-ayaneo-ec b/Do=
+cumentation/ABI/testing/sysfs-platform-ayaneo-ec
+>>>>> new file mode 100644
+>>>>> index 000000000000..4cffbf5fc7ca
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+>>>>> @@ -0,0 +1,19 @@
+>>>>> +What:                /sys/devices/platform/ayaneo-ec/controller_pow=
+er
+>>>>> +Date:                Nov 2025
+>>>>> +KernelVersion:       6.19
+>>>>> +Contact:     "Antheas Kapenekakis" <lkml@antheas.dev>
+>>>>> +Description:
+>>>>> +             Current controller power state. Allows turning on and =
+off
+>>>>> +             the controller power (e.g. for power savings). Write 1=
+ to
+>>>>> +             turn on, 0 to turn off. File is readable and writable.
 >>>>> +
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_END }
->>>>> =C2=A0 };
->>>>> =C2=A0 @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struc=
-t=20
->>>>> notifier_block *nb, unsigned long action
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(=
-&data->battery_lock);
->>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // noop for the time bei=
-ng
->>>>
->>>> Wrong comment style, please use /* */.
->>> ack
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>>>
+>>>>> +What:                /sys/devices/platform/ayaneo-ec/controller_mod=
+ules
+>>>>> +Date:                Nov 2025
+>>>>> +KernelVersion:       6.19
+>>>>> +Contact:     "Antheas Kapenekakis"  <lkml@antheas.dev>
+>>>>> +Description:
+>>>>> +             Shows which controller modules are currently connected=
+ to
+>>>>> +             the device. Possible values are "left", "right" and "b=
+oth".
+>>>>> +             File is read-only. The Windows software for this devic=
+e
+>>>>> +             will only set controller power to 1 if both module sid=
+es
+>>>>> +             are connected (i.e. this file returns "both").
+>>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>>> index c5bf7207c45f..f8ab009b6224 100644
+>>>>> --- a/MAINTAINERS
+>>>>> +++ b/MAINTAINERS
+>>>>> @@ -4196,6 +4196,7 @@ AYANEO PLATFORM EC DRIVER
+>>>>>   M:   Antheas Kapenekakis <lkml@antheas.dev>
+>>>>>   L:   platform-driver-x86@vger.kernel.org
+>>>>>   S:   Maintained
+>>>>> +F:   Documentation/ABI/testing/sysfs-platform-ayaneo
+>>>>>   F:   drivers/platform/x86/ayaneo-ec.c
+>>>>>
+>>>>>   AZ6007 DVB DRIVER
+>>>>> diff --git a/drivers/platform/x86/ayaneo-ec.c b/drivers/platform/x86=
+/ayaneo-ec.c
+>>>>> index 697bb053a7d6..a0747e7ee43a 100644
+>>>>> --- a/drivers/platform/x86/ayaneo-ec.c
+>>>>> +++ b/drivers/platform/x86/ayaneo-ec.c
+>>>>> @@ -8,6 +8,7 @@
+>>>>>    */
+>>>>>
+>>>>>   #include <linux/acpi.h>
+>>>>> +#include <linux/bits.h>
+>>>>>   #include <linux/dmi.h>
+>>>>>   #include <linux/err.h>
+>>>>>   #include <linux/hwmon.h>
+>>>>> @@ -16,6 +17,7 @@
+>>>>>   #include <linux/module.h>
+>>>>>   #include <linux/platform_device.h>
+>>>>>   #include <linux/power_supply.h>
+>>>>> +#include <linux/sysfs.h>
+>>>>>   #include <acpi/battery.h>
+>>>>>
+>>>>>   #define AYANEO_PWM_ENABLE_REG         0x4A
+>>>>> @@ -32,9 +34,18 @@
+>>>>>   #define AYANEO_CHARGE_VAL_AUTO               0xaa
+>>>>>   #define AYANEO_CHARGE_VAL_INHIBIT    0x55
+>>>>>
+>>>>> +#define AYANEO_POWER_REG     0x2d
+>>>>> +#define AYANEO_POWER_OFF     0xfe
+>>>>> +#define AYANEO_POWER_ON              0xff
+>>>>> +#define AYANEO_MODULE_REG    0x2f
+>>>>> +#define AYANEO_MODULE_LEFT   BIT(0)
+>>>>> +#define AYANEO_MODULE_RIGHT  BIT(1)
+>>>>> +#define AYANEO_MODULE_MASK   (AYANEO_MODULE_LEFT | AYANEO_MODULE_RI=
+GHT)
 >>>>> +
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY=
-_OK;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&d=
-ata->input_lock);
->>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h=20
->>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
->>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>> @@ -113,6 +113,8 @@
->>>>> =C2=A0 =C2=A0 #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE=C2=A0=C2=A0=
-=C2=A0 0xC0
->>>>> =C2=A0 +#define UNIWILL_OSD_WEBCAM_TOGGLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0xCF
+>>>>>   struct ayaneo_ec_quirk {
+>>>>>        bool has_fan_control;
+>>>>>        bool has_charge_control;
+>>>>> +     bool has_magic_modules;
+>>>>>   };
+>>>>>
+>>>>>   struct ayaneo_ec_platform_data {
+>>>>> @@ -46,6 +57,7 @@ struct ayaneo_ec_platform_data {
+>>>>>   static const struct ayaneo_ec_quirk quirk_ayaneo3 =3D {
+>>>>>        .has_fan_control =3D true,
+>>>>>        .has_charge_control =3D true,
+>>>>> +     .has_magic_modules =3D true,
+>>>>>   };
+>>>>>
+>>>>>   static const struct dmi_system_id dmi_table[] =3D {
+>>>>> @@ -266,6 +278,100 @@ static int ayaneo_remove_battery(struct power_=
+supply *battery,
+>>>>>        return 0;
+>>>>>   }
+>>>>>
+>>>>> +static ssize_t controller_power_store(struct device *dev,
+>>>>> +                                   struct device_attribute *attr,
+>>>>> +                                   const char *buf,
+>>>>> +                                   size_t count)
+>>>>> +{
+>>>>> +     bool value;
+>>>>> +     int ret;
 >>>>> +
->>>>> =C2=A0 #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED=C2=A0=C2=A0=C2=A0 0=
-xF0
->>>>> =C2=A0 =C2=A0 struct device;
->>>
+>>>>> +     ret =3D kstrtobool(buf, &value);
+>>>>> +     if (ret)
+>>>>> +             return ret;
+>>>>> +
+>>>>> +     ret =3D ec_write(AYANEO_POWER_REG, value ? AYANEO_POWER_ON : A=
+YANEO_POWER_OFF);
+>>>>> +     if (ret)
+>>>>> +             return ret;
+>>>>> +
+>>>>> +     return count;
+>>>>> +}
+>>>>> +
+>>>>> +static ssize_t controller_power_show(struct device *dev,
+>>>>> +                                  struct device_attribute *attr,
+>>>>> +                                  char *buf)
+>>>>> +{
+>>>>> +     int ret;
+>>>>> +     u8 val;
+>>>>> +
+>>>>> +     ret =3D ec_read(AYANEO_POWER_REG, &val);
+>>>>> +     if (ret)
+>>>>> +             return ret;
+>>>>> +
+>>>>> +     return sysfs_emit(buf, "%d\n", val =3D=3D AYANEO_POWER_ON);
+>>>>> +}
+>>>>> +
+>>>>> +static DEVICE_ATTR_RW(controller_power);
+>>>>> +
+>>>>> +static ssize_t controller_modules_show(struct device *dev,
+>>>>> +                                    struct device_attribute *attr, =
+char *buf)
+>>>>> +{
+>>>>> +     char *out;
+>>>>> +     int ret;
+>>>>> +     u8 val;
+>>>>> +
+>>>>> +     ret =3D ec_read(AYANEO_MODULE_REG, &val);
+>>>>> +     if (ret)
+>>>>> +             return ret;
+>>>>> +
+>>>>> +     switch (~val & AYANEO_MODULE_MASK) {
+>>>> Thanks for adding the mask.
+>>>>
+>>>> Now when reading this again, I also suggest changing variable name fr=
+om
+>>>> "val" to e.g. "unconnected_modules" as that would make the reason for
+>>>> inversion more obvious.
+>>>>
+>>>>> +     case AYANEO_MODULE_LEFT | AYANEO_MODULE_RIGHT:
+>>>>> +             out =3D "both";
+>>>>> +             break;
+>>>>> +     case AYANEO_MODULE_LEFT:
+>>>>> +             out =3D "left";
+>>>>> +             break;
+>>>>> +     case AYANEO_MODULE_RIGHT:
+>>>>> +             out =3D "right";
+>>>>> +             break;
+>>>>> +     default:
+>>>>> +             out =3D "none";
+>>>>> +             break;
+>>>>> +     }
+>>>>> +
+>>>>> +     return sysfs_emit(buf, "%s\n", out);
+>>>>> +}
+>>>>> +
+>>>>> +static DEVICE_ATTR_RO(controller_modules);
+>>>>> +
+>>>>> +static struct attribute *aya_mm_attrs[] =3D {
+>>>>> +     &dev_attr_controller_power.attr,
+>>>>> +     &dev_attr_controller_modules.attr,
+>>>>> +     NULL
+>>>>> +};
+>>>>> +
+>>>>> +static umode_t aya_mm_is_visible(struct kobject *kobj,
+>>>>> +                              struct attribute *attr, int n)
+>>>>> +{
+>>>>> +     struct device *dev =3D kobj_to_dev(kobj);
+>>>>> +     struct platform_device *pdev =3D to_platform_device(dev);
+>>>>> +     struct ayaneo_ec_platform_data *data =3D platform_get_drvdata(=
+pdev);
+>>>>> +
+>>>>> +     if (data->quirks->has_magic_modules)
+>>>>> +             return attr->mode;
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static const struct attribute_group aya_mm_attribute_group =3D {
+>>>>> +     .is_visible =3D aya_mm_is_visible,
+>>>>> +     .attrs =3D aya_mm_attrs,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct attribute_group *ayaneo_ec_groups[] =3D {
+>>>>> +     &aya_mm_attribute_group,
+>>>>> +     NULL
+>>>>> +};
+>>>>> +
+>>>>>   static int ayaneo_ec_probe(struct platform_device *pdev)
+>>>>>   {
+>>>>>        const struct dmi_system_id *dmi_entry;
+>>>>> @@ -307,6 +413,7 @@ static int ayaneo_ec_probe(struct platform_devic=
+e *pdev)
+>>>>>   static struct platform_driver ayaneo_platform_driver =3D {
+>>>>>        .driver =3D {
+>>>>>                .name =3D "ayaneo-ec",
+>>>>> +             .dev_groups =3D ayaneo_ec_groups,
+>>>>>        },
+>>>>>        .probe =3D ayaneo_ec_probe,
+>>>>>   };
+>>>>>
+>>>> --
+>>>>   i.
+>>>>
+>>>>
+>
