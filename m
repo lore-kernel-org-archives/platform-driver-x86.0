@@ -1,151 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0518834165F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 10:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C3C2D4B66;
+	Tue, 18 Nov 2025 10:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763461099; cv=none; b=LQo+pqxTmoDptm6YsGN+XPxh2JHY+uZzh7mt73lh/epZ8UZXhcB2LEyVvDI1ykKm3aYo7xAI6346Z73oKGwy5WpYk2ry/6GOmR+XrlPpAXQ2F/0UBqM3Lf9X6MxLTYwB56Pefmx29PjAAUJsAPdVAPTYlnKQ+lU47o3YMefgv9w=
+	t=1763462354; cv=none; b=Vyd6f8jb41JlmqmS6HdgvfJqUAU7+L0oyr4W83amxq7duDKj1ZOJlVm4PjS5JyB7VHkp5EvLW4bnmwF82o26leRu07uJfJoI3mXCXdkf95KCHDBJqEt7ew6oNDViHpEojo5222G4ga+DhwMf604OzEKtcTcfj445Ny2OR+5EafM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763461099; c=relaxed/simple;
-	bh=Fgtagc1Nzgw/qnCR6hDAtveAVFKq9fyFWPTRqal/oe0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BGxnUM9ifYdkJWHkuajHSotDPp9TAyBT5vp0AutyQrONvhmATTOGwzaNohMavIXVDvRlmLP4107psJtUUx2BpB1wv5Guy28KzeMmqwpS5lL4HG1Wr5Q/vAAhUtz7m687+i9cU+vkc6GOEanL4Qgnw40aNMfuDi9W8woRfFI0DlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z969R9sJ; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763462354; c=relaxed/simple;
+	bh=/3PEokETu7g4To3HJvjeMYpIzfzyoI0y5Y3cWQkxgn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwS1YHlt7yz+Ri3FPlzwaNiI2egaaq3CizE1qaypSZbVqzdHfdfd/C+F/szycot3JaTqgEznGKB4gicMzP5m7sR5LVaq5BvgnFXb+UjHhYpzQj2EJAQKTZtgakf1yZWMoo9fETJg7pMNTzQh3FMMhBEKWImlHlpkU8f2PsLyQNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bk2HixRP; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z969R9sJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763461096; x=1794997096;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Fgtagc1Nzgw/qnCR6hDAtveAVFKq9fyFWPTRqal/oe0=;
-  b=Z969R9sJVSZo0fC/DsEo9mqQAbzF8Qmu7BG97Lr19/WW64b1sPreo2SE
-   fiZJEs4twN5r49qtS7SiPdlsZH9iRHrTYTiB/PDsy4y8wRVSsFKA1dIOG
-   xPVE9lOx5DOmobniTwrkKipAHx8bEN4TvFLeoN3A/pQnYNmEZlHkTymed
-   +R1ZklfLGm/cBuvrPhWoyO//SzsQhQhq67DDBI63xKOdw8iyjDMsXZYr2
-   kIgv1nWmGo0h2cb90dILpmL9sDNtXHO0tiG97mOuW514MVCJ6uPdv3QVa
-   2tRoCgNufLALdJKVaAMwFili7ectrAUSV4PGSMaiHyJw7v1WhhIIR+ECQ
-   g==;
-X-CSE-ConnectionGUID: 6vYRHdmvTq6qqQgFMnjNgw==
-X-CSE-MsgGUID: DNu2VATpQ92hPQAQ+v4x3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="69347408"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="69347408"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 02:18:12 -0800
-X-CSE-ConnectionGUID: 3MWPa/TvTmWTSJy5kAurAA==
-X-CSE-MsgGUID: ziXLr6BXQMeWMJRdnW9KGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="195033549"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.74])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 02:18:10 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Nov 2025 12:18:06 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com, Mario Limonciello <superm1@kernel.org>, 
-    Yijun Shen <Yijun.Shen@Dell.com>
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmf: Add BIOS_INPUTS_MAX macro
- to replace hardcoded array size
-In-Reply-To: <20251107110105.4010694-1-Shyam-sundar.S-k@amd.com>
-Message-ID: <42ca4926-2d23-c1f8-c999-b7746cc33b16@linux.intel.com>
-References: <20251107110105.4010694-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bk2HixRP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1763462308; x=1764067108; i=w_armin@gmx.de;
+	bh=pw7O7ZJadSd40btK5BLk1DU3v9/iXP91OKWYFkg78e8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=bk2HixRPQ/wylmSyDHyUHUyXjsjmJiY2e5ck3V4gjqnizhw3ATV7cOMudYM7y0rq
+	 t6NaW+nP0yocQ63rbyb2SNmomMGspOxT/yLFMj3y6k2a59mtQy1WO9tpyPp0EnTQs
+	 T9P1YbMz79X2GTlbMmDPrvj/w+NwioBDRNRzog/Rn8RWQM30MwFfJzUtcephgbgW4
+	 LKhabSjvzdD8Wgqx8QlPZP8SlM/hy/KMIPp04adF5eNNkNAqy7y4wXUwNonHQ8e6l
+	 xvMCEUku8WVG+LSmDKa0aN4fRvo7DqSZYFyRVxlPhrXz02aX8ZsNf5foNHS+16b8x
+	 gSRHhSvL++a0iu+Gdw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.23.146] ([141.76.8.146]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRCKC-1vXLoO1c3A-00PekM; Tue, 18
+ Nov 2025 11:38:28 +0100
+Message-ID: <d4ce47e0-cae6-4410-a9b2-e2fce571d019@gmx.de>
+Date: Tue, 18 Nov 2025 11:38:24 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-630730872-1763461086=:1205"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: acer-wmi: Ignore backlight event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ jlee@suse.com, Bugaddr@protonmail.com, hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251117155938.3030-1-W_Armin@gmx.de>
+ <176345348327.8636.1554023632757663812.b4-ty@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <176345348327.8636.1554023632757663812.b4-ty@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7NnDZfHw64iHcg2wT4ZzJD1qp5sXMVJ2wXMimOhlT/KD2XKhIh1
+ AbQUswdQCYSh0LVKlunHOsrtnhgi+K+fEZhGcYVUwAGxCk6td50yOcKu2S0rRSFFl23317A
+ e5/7QVWLC/X5pBEeUo65OsMqruTe6PMHd64Jdht7XWXU42p3G4uKMW/vs5bQClxpf+guhE0
+ NxQIa2gRbsQM7HXCiA8yA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ac4R0W9CE2o=;wxLXKOTRauNO8LBFRxV4g/2CSgZ
+ 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
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Am 18.11.25 um 09:11 schrieb Ilpo J=C3=A4rvinen:
 
---8323328-630730872-1763461086=:1205
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> On Mon, 17 Nov 2025 16:59:38 +0100, Armin Wolf wrote:
+>
+>> On the Acer Nitro AN515-58, the event 4 - 0 is send by the ACPI
+>> firmware when the backlight up/down keys are pressed. Ignore this
+>> event to avoid spamming the kernel log with error messages, as the
+>> acpi-video driver already handles brightness up/down events.
+>>
+>>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-fixes branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+> local branch there, which might take a while.
 
-On Fri, 7 Nov 2025, Shyam Sundar S K wrote:
+Thank you. I just noticed that i made a slight error inside the patch desc=
+ription:
+Tested-by: Reported-by: Bugaddr<Bugaddr@protonmail.com>
 
-> Define a new macro BIOS_INPUTS_MAX, to represent the maximum number of
-> BIOS input values. Replace hardcoded array sizes in relevant structures
-> with this macro to improve readability and maintainability.
->=20
-> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-> v3:
->  - No change
->=20
-> v2:
->  - New patch spinned from v1
->  - Add new BIOS_INPUTS_MAX macro and replace hardcoded values
->=20
->  drivers/platform/x86/amd/pmf/pmf.h | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/am=
-d/pmf/pmf.h
-> index bd19f2a6bc78..2145df4128cd 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -119,6 +119,7 @@ struct cookie_header {
-> =20
->  #define APTS_MAX_STATES=09=0916
->  #define CUSTOM_BIOS_INPUT_BITS=09GENMASK(16, 7)
-> +#define BIOS_INPUTS_MAX=09=0910
-> =20
->  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void=
- *data);
-> =20
-> @@ -204,7 +205,7 @@ struct apmf_sbios_req_v1 {
->  =09u8 skin_temp_apu;
->  =09u8 skin_temp_hs2;
->  =09u8 enable_cnqf;
-> -=09u32 custom_policy[10];
-> +=09u32 custom_policy[BIOS_INPUTS_MAX];
->  } __packed;
-> =20
->  struct apmf_sbios_req_v2 {
-> @@ -216,7 +217,7 @@ struct apmf_sbios_req_v2 {
->  =09u32 stt_min_limit;
->  =09u8 skin_temp_apu;
->  =09u8 skin_temp_hs2;
-> -=09u32 custom_policy[10];
-> +=09u32 custom_policy[BIOS_INPUTS_MAX];
->  } __packed;
-> =20
->  struct apmf_fan_idx {
-> @@ -355,7 +356,7 @@ enum power_modes_v2 {
->  };
-> =20
->  struct pmf_bios_inputs_prev {
-> -=09u32 custom_bios_inputs[10];
-> +=09u32 custom_bios_inputs[BIOS_INPUTS_MAX];
->  };
-> =20
->  struct amd_pmf_dev {
-> @@ -451,7 +452,7 @@ struct os_power_slider {
->  struct amd_pmf_notify_smart_pc_update {
->  =09u16 size;
->  =09u32 pending_req;
-> -=09u32 custom_bios[10];
-> +=09u32 custom_bios[BIOS_INPUTS_MAX];
+Could you fix that up inside your branch?
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Thank,
+Armin Wolf
 
-Unrelated to the patch, I'm not entirely sure though why the naming=20
-differs for custom_bios_inputs vs custom_bios.
-
-
---=20
- i.
-
---8323328-630730872-1763461086=:1205--
+> The list of commits applied:
+> [1/1] platform/x86: acer-wmi: Ignore backlight event
+>        commit: 444a9256f8d106e08a6bc2dc8ef28a8699e4b3ba
+>
+> --
+>   i.
+>
+>
