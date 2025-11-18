@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1574E30F93D;
-	Tue, 18 Nov 2025 11:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387F432C95C;
+	Tue, 18 Nov 2025 11:08:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763463803; cv=none; b=EaK+uqCPPeDEkq4bizmD3QnWfxdGf0H1YLJKh/BCov10nRmhxMS3g0Ahhg4JnbcL32FVNd0rTZngtiYSbe+vt2bfl9QtTwKgFOMKvrs/di2lizTAP70J0FPyt6RF6ZGFLEZoY1N1O4CTsUSgCK6k2UughNIuH1KNPyHNuYokzRk=
+	t=1763464125; cv=none; b=r3gJ1yCvi2h7ddWMq2nrT8eoN2AR8F5cT4P0c3RV38CEusLSLdE2olo/6v7PvwTBabBS6VQsLMaJOVG0pqh38/6tLsQIchnBgWQXzZJutpilo2r8Es+rPwZFS1Hxib+zhyXDdDMGG5kZzwR4NVyTbD9FAU6VIYoK5nXV2dsPiEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763463803; c=relaxed/simple;
-	bh=RUAy7MI1fFps+nEbncqYhrplExeHw/QcfU0C/kJ9x90=;
+	s=arc-20240116; t=1763464125; c=relaxed/simple;
+	bh=Uz/END3rnsVSx6za0ixmsunhFnZtW3ELW0kCioQzOWg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3tnNag/uw7Pu/85MfsswJOex3Ai6n3hVnwthr1BsOu4sn2ltx2DVktpV46uv2FQIh3itv9sqiaZEmDuX7vRqLp+iiARk7k1qHOZ+Xql6jLh/EVyjr5BkMSjnIPha0M8+fVvO8gQrFokqBuDpfkWgNv99lEB3f2JASLw26I/Zts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ibKD3BaZ; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=RF7iUtGbDj7QnBvRG1Vp9Yfx6mlPKjfGfHpx7gFcV/8vZhKOTm9XhvO4+G7LlpqCw0LsEXD4BUtpjU6em5chYuRRRYmxjqHQMWjTEAxwNgDn5RdmAkp1X2MozGG5DhOnO+TN7PzLqWryN3jYBvVqte72cj/mVG6XJmsGl90m96c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=N2jULlgg; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ibKD3BaZ"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="N2jULlgg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763463797; x=1764068597; i=w_armin@gmx.de;
-	bh=FsXdmoN1znYusKZyzJX9JMyuiVdZrWVRYl3rZyChOfE=;
+	s=s31663417; t=1763464101; x=1764068901; i=w_armin@gmx.de;
+	bh=+2ok1Ma+hA9ROIpny5fpG79ZR5gzM05TIJ0av3f3ark=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=ibKD3BaZbkQs8/bWTjSSUxuRb9bjsNRXoyP9ZbCki9fHjADlZZbFqevVf4hRGbXc
-	 RIJBVCTEdZNK5Aqzi6MxxJLEqqG2kU8NsIqSUF8FYX4mFiYznku6hu26sjr7+1+x4
-	 xH8zna28W2RmjjZDdYzSedoeCGOk+IYFW9Gc/3e9WMJ6c9UhtUmDVrKJybp+w4lI2
-	 MAedlw0tjabFMKH9BPx0kgH3THZGQ6EqRIqvTUPuO+PW7aYFhbnHuyqQeLLlXghY2
-	 6iLt/XW06FsKvC/GSXxWDPzJUGQWP1gk+KqbIbHimZRxDUgr9jaIG+7QD0++7qUMH
-	 RuMRhLL0HVbIvuxwBA==
+	b=N2jULlgg0knLdoMHa7emaEg6ffFaym3fe8iw3o2yLwV062nVp0j8qCY/vPbzMnEc
+	 a7peaLyLKHdFIqGJDJCU2+LKhOw+0oY9k6GPRMR1kdI+Am8vfGnpyXQ0P3rxcth/X
+	 xQCFEbXNQH1KC1cqOve1htdlmgMAtgJ+AcmERcmPWRiKiNFg74ToAzNGgb//ikimU
+	 wThmCP8G+zZlcbYYRsBLEO17Az/JKD1t1jfxKu8r4nTrvcsXHAf5riYP/Gw/zWpDd
+	 hzhdXZbKiuzaO90e/ILuLP8O1FP8W4poIS2BXpuAAjlfb5x0euJuV45cJ3YB8YJvz
+	 EW+XEgrc+hRzjFNjNw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.23.146] ([141.76.8.146]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wPh-1vFWrW2cZP-003UX4; Tue, 18
- Nov 2025 12:03:17 +0100
-Message-ID: <7f0e3a37-48bf-473e-86d9-c88620206a04@gmx.de>
-Date: Tue, 18 Nov 2025 12:03:13 +0100
+Received: from [172.16.23.146] ([141.76.8.146]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N3siA-1wL0tR0TQW-00tpkR; Tue, 18
+ Nov 2025 12:08:21 +0100
+Message-ID: <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+Date: Tue, 18 Nov 2025 12:08:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,444 +43,218 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] platform/x86/uniwill: Add TUXEDO devices
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
 To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-2-wse@tuxedocomputers.com>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20251117132530.32460-2-wse@tuxedocomputers.com>
+In-Reply-To: <20251117132530.32460-3-wse@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GsySNC0mt94nyJJSPRHbDUAhyObVtjZJ9ENIj0clmYtfCVMDAV1
- QxdCUDSUJBsp1UnBg+6PZuMjv8PJ3OWuu4h51q4I7yeRd91ByyL7Y2gHqsRw6LEypFYv4gV
- pPyxTXBOdNPIdyGiDYsqjQi6bI70MUDJrYncbOph4w9JnONNOWevqnQdDEYQdUltYghnqfR
- 72jn9R1jl7y0E6rPPrdKQ==
+X-Provags-ID: V03:K1:kzZvQbcSI0Odz8WcCzXmznW41vDyPf/2xOW6JbWz7ALcxCMDFVd
+ pmeGSJOAh6JlgPJQR0dNWd7vy3rFpkm/89jKI0wFfnIl4nq1DbBmJIqmBVujYSwi5b2L4xQ
+ 7eE9sorWBABKmqamsPGBkSS8rT2m9f24uQYflIX11O6/MRn+5BlnhZhv/CBWGSJOlw3BL0l
+ FW4cBA+EtQhT8ieRH1Wyw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sH00bNOcTdQ=;h1jEQHB0oOJI8mnprvJgMuiG4RV
- 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
+UI-OutboundReport: notjunk:1;M01:P0:khGPN/Iamww=;EZf5rIr0q6C2v3kjDlkW8jujmJE
+ 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
 
 Am 17.11.25 um 14:23 schrieb Werner Sembach:
 
-> Add all TUXEDO devices that can make use of this driver.
-
-I think it would make sense to place this patch behind the patch for the a=
-dditional
-WMI events. Other than that:
-
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
+> Handle some more WMI events that are triggered on TUXEDO devices.
+>
 > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 > ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 308 ++++++++++++++++++++
->   1 file changed, 308 insertions(+)
+>   drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
+>   drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
+>   2 files changed, 20 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
 orm/x86/uniwill/uniwill-acpi.c
-> index 014960d16211b..29bb3709bfcc8 100644
+> index 29bb3709bfcc8..0cb86a701b2e1 100644
 > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -1478,6 +1478,20 @@ static struct platform_driver uniwill_driver =3D =
+> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] =3D =
 {
+>  =20
+>   	/* Reported in manual mode when toggling the airplane mode status */
+>   	{ KE_KEY,       UNIWILL_OSD_RFKILL,                     { KEY_RFKILL =
+}},
+> +	{ KE_IGNORE,    UNIWILL_OSD_RADIOON,                    { KEY_UNKNOWN =
+}},
+> +	{ KE_IGNORE,    UNIWILL_OSD_RADIOOFF,                   { KEY_UNKNOWN =
+}},
+>  =20
+>   	/* Reported when user wants to cycle the platform profile */
+> -	{ KE_IGNORE,    UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_UNKNOWN =
+}},
+> +	{ KE_KEY,       UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_F14 }},
+
+I am currently working a patch adding platform profile support, so this ev=
+ent would
+be handled inside the kernel on models with platform profile support.
+
+>  =20
+>   	/* Reported when the user wants to adjust the brightness of the keybo=
+ard */
+>   	{ KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN,               { KEY_KBDILLU=
+MDOWN }},
+> @@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] =3D=
+ {
+>   	/* Reported when the user wants to toggle the microphone mute status =
+*/
+>   	{ KE_KEY,       UNIWILL_OSD_MIC_MUTE,                   { KEY_MICMUTE=
+ }},
+>  =20
+> +	/* Reported when the user wants to toggle the mute status */
+> +	{ KE_IGNORE,    UNIWILL_OSD_MUTE,                       { KEY_MUTE }},
+
+Why is this event being ignored?
+
+> +
+>   	/* Reported when the user locks/unlocks the Fn key */
+>   	{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC =
+}},
+>  =20
+>   	/* Reported when the user wants to toggle the brightness of the keybo=
+ard */
+>   	{ KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE,             { KEY_KBDILLU=
+MTOGGLE }},
+> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0,              { KEY_KBDILLUM=
+TOGGLE }},
+> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1,              { KEY_KBDILLUM=
+TOGGLE }},
+> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2,              { KEY_KBDILLUM=
+TOGGLE }},
+> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3,              { KEY_KBDILLUM=
+TOGGLE }},
+> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4,              { KEY_KBDILLUM=
+TOGGLE }},
+>  =20
+>   	/* FIXME: find out the exact meaning of those events */
+>   	{ KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H,       { KEY_UNKNOWN=
+ }},
+> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] =3D {
+>   	/* Reported when the user wants to toggle the benchmark mode status *=
+/
+>   	{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN=
+ }},
+>  =20
+> +	/* Reported when the user wants to toggle the webcam */
+> +	{ KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE,              { KEY_UNKNOWN =
+}},
+
+Same as above.
+
+> +
+>   	{ KE_END }
 >   };
 >  =20
->   static const struct dmi_system_id uniwill_dmi_table[] __initconst =3D =
-{
-> +	{
-> +		.ident =3D "XMG FUSION 15",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71A"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "XMG FUSION 15",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71B"),
-> +		},
-> +	},
->   	{
->   		.ident =3D "Intel NUC x15",
->   		.matches =3D {
-> @@ -1503,6 +1517,300 @@ static const struct dmi_system_id uniwill_dmi_ta=
-ble[] __initconst =3D {
->   					UNIWILL_FEATURE_BATTERY |
->   					UNIWILL_FEATURE_HWMON),
->   	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTxX1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTQx1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore Omnia-Boo=
-k Pro Gen 7",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6AG01_PH6AQ71_PH6AQI1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/16 Gen8 Intel/Commodore Omnia-=
-Book Pro Gen 8",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14 Gen8 Intel/Commodore Omnia-Boo=
-k Pro Gen 8",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PG31"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 16 Gen8 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6PG01_PH6PG71"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen9 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxHRXx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia-=
-Book 15 Gen9",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxMRXx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxHP4NAx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxKK4NAx_XxSP4NAx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO InfinityBook Pro 15 Gen10 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxAR4NAx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A1650TI"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A2060"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 17 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A1650TI"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 17 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A2060"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15 Gen1 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I1650TI"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15 Gen1 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I2060"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 17 Gen1 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I1650TI"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 17 Gen1 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I2060"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Trinity 15 Intel Gen1",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1501I"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Trinity 17 Intel Gen1",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1701I"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15/17 Gen2 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxMGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15/17 Gen2 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen3 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen3 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxTGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen4 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 15 Gen4 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxAGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Polaris 15/17 Gen5 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxXGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen5 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16/17 Gen5 Intel/Commodore ORION Gen 5",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxPXxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris Slim 15 Gen6 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris Slim 15 Gen6 Intel/Commodore ORION Slim =
-15 Gen6",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM5IXxA"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB1"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB2"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 17 Gen6 Intel/Commodore ORION 17 Gen6",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen7 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen7 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Stellaris 16 Gen7 Intel",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Pulse 14 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1401"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Pulse 15 Gen1 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1501"),
-> +		},
-> +	},
-> +	{
-> +		.ident =3D "TUXEDO Pulse 15 Gen2 AMD",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PF5LUXG"),
-> +		},
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(dmi, uniwill_dmi_table);
+> @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct notifier_=
+block *nb, unsigned long action
+>   		}
+>   		mutex_unlock(&data->battery_lock);
+>  =20
+> +		return NOTIFY_OK;
+> +	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+> +		// noop for the time being
+
+Wrong comment style, please use /* */.
+
+Thanks,
+Armin Wolf
+
+> +
+>   		return NOTIFY_OK;
+>   	default:
+>   		mutex_lock(&data->input_lock);
+> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platfo=
+rm/x86/uniwill/uniwill-wmi.h
+> index 2bf69f2d80381..48783b2e9ffb9 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+> @@ -113,6 +113,8 @@
+>  =20
+>   #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE	0xC0
+>  =20
+> +#define UNIWILL_OSD_WEBCAM_TOGGLE		0xCF
+> +
+>   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
+>  =20
+>   struct device;
