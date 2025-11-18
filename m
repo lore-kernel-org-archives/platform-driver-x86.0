@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD63F353889;
-	Tue, 18 Nov 2025 13:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ADA262FED;
+	Tue, 18 Nov 2025 13:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763473391; cv=none; b=PJifXV+dSRzMHImnRhGN4kRvBo0EqY+IPvdJCtFMDWwOuOpLLaL2ykH2aCXJfrhyPMYzI1RleUu4+IMhmpxb6qzLaqoePC5sjeo6RvOjtECHYCV01aGznHXhBzFfUKEdaHZ4jgocZp5YKUpp88RPy3flcuARk8AMJvQHg4wkaAM=
+	t=1763473711; cv=none; b=AumDg80Q2GGzJPLMH255VO71HdcHRfW5xQq7gnhUVftKqQs+9K7Tw6yqVf8PVhQYhxcW5QcUb87BIfd6nJqHDht2GbpT7TSKosp7enq9FI0/glcwGo2tqnzJOgC3wKeSbDUU4PDlPkJ/ZKS/41msLI9OAUr/PmzJ5//hUlZ7IyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763473391; c=relaxed/simple;
-	bh=zVH5hU74VwWd8epWChFsIrph4BBzwzDlxygLeW3/5vI=;
+	s=arc-20240116; t=1763473711; c=relaxed/simple;
+	bh=VMUpRyHUOTjCuF5qFfq5xGcxjjl5XhYuial2lAX6myM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfPK++gvkTjoV6yAP6HgnyTfl3JB/aBfePTa5e8KRgIRh4H4+WXKzAiNqM6u5xLU/kjzERK/lUaJdORpEwoDrV9UnP+72Ie1wP9NyEwUKBKLtp1PtaoHHnantmUOFmsHeUd6IrGdbjQB3Ob9+OYQ09PuJduiw0ldm2pBWM1EkqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=IpLhaSgH; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=cljcDOe8g8UoeOSieV5fSiRywbgsiUGbLlaaMYl3hxy/RmWxsvWBoFU0yb/vtbped20lapa2Zab6inaZm3iRoCd5R1FDm+EQeqhYqNuMXmqhki8BtrDCPFx6NlwyFSdBi6OF0YsvAuVWMsl8hJO+ROBAGHF00jpDpRe1kaiZyx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=V7YY9AL2; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="IpLhaSgH"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="V7YY9AL2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763473385; x=1764078185; i=w_armin@gmx.de;
-	bh=zVH5hU74VwWd8epWChFsIrph4BBzwzDlxygLeW3/5vI=;
+	s=s31663417; t=1763473685; x=1764078485; i=w_armin@gmx.de;
+	bh=VMUpRyHUOTjCuF5qFfq5xGcxjjl5XhYuial2lAX6myM=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=IpLhaSgH60TVMwjDX5lONCGU8qmHWqEtDEHuIa6VqsgJVkEdU3fDKDWY0Wu4egAi
-	 djR0U7YJeCl6zxZ5G/mbHbJPx+LIO8bvcqBMRekHAqE1KdrOsauwREot0URMp/Lif
-	 VIt/d9AyMppEC24dNrOSQ0z3SunlgByYqakmeYddICA6tLmaJp2ovXAoCrwACjYgG
-	 hH+JcyUkzLesv84/QKtVz7NRr0/lSttc/0HarG26flvwTdc0FJUYYpeDBaQZ0z3k2
-	 0q03qUCd/K4CvmnSRk6qeZSJLucOOvdK0tMXznfssFmQNqVItP9ZLY1IdZNy0MGI9
-	 e4DtT5NzHZNUzWuLhQ==
+	b=V7YY9AL2hLuVOp7T+rauRgsnEdR5h5daJCEqcHNuwVJR5GJsWP059POeM5BDz+KT
+	 DtAn9KecN2lTMNCY/6w5n6MkahpUJckBP43k1mz5noiPRzDFomBl6VtDoxUrpDWP3
+	 R/PvntrswumXa3BH+ykz6TsZD1Fpekbx6dnhOJngpC1CKr/pHVTx+sdyvjb9eDOMP
+	 dQ+kEgF9eP0rqcJ5geqQbjXqNnf3mxx2ReqBcWD2HM2XyxALXY84QXJU6vrXLiLpn
+	 m830O/m5ek32jAoTazgRjQQLn0vwOcKcBctd81F664kuHbwq6PAHgQYr5W5WAplON
+	 kQDd7Ii0j5K/vuL0bA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.23.146] ([141.76.8.178]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MS3mz-1vkHLe1dSF-00YJGr; Tue, 18
- Nov 2025 14:43:05 +0100
-Message-ID: <9f03a5e9-405e-4f14-bb1c-d9ac9b6d920a@gmx.de>
-Date: Tue, 18 Nov 2025 14:43:04 +0100
+Received: from [172.16.23.146] ([141.76.8.178]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQ5vW-1vYT5x2ETY-00Xzgu; Tue, 18
+ Nov 2025 14:48:05 +0100
+Message-ID: <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
+Date: Tue, 18 Nov 2025 14:48:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,179 +43,308 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Start of Upstream Support for TUXEDO NB02 devices
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
 To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <1ce9d218-d5cd-4821-b224-b52e314b7027@gmx.de>
- <1a4d41a9-c3e9-48ad-a47f-661f38a1c443@tuxedocomputers.com>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
+ <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+ <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
+ <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
+ <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <1a4d41a9-c3e9-48ad-a47f-661f38a1c443@tuxedocomputers.com>
+In-Reply-To: <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dYnB6ZxkLKEwCBjJBKdByE3W3t6CfHmnevJL6uxGMQPICJWmLSx
- oo8y4silhrymm/xFTbLoB2HH1XronyJlX8i58No021U1kHXpEtuMIj4htyH2FoQAtDPytGh
- ZTCyGjc7nGMowQTFtX7Dgmsl8Uy7ugxWUzvZ5TbSVMkkk0aDD6fJfGYupmfAgufTCJoXmKU
- pSfrYF3vc36Tcluw+j1Mg==
+X-Provags-ID: V03:K1:qorI9acQRm/g9wzqjFtVj2Zodb5vzTABeHtajqlZ5F76wwta+4O
+ yMloaWX90PwQOGJnG6vRm0VfpmhFNqLw2S8WxtlGZAqmdjebQKZo8eCPIGTnIhfcwu98HSj
+ X585hvhPMf8uZXMGq7usJ7AoODpR1I8y3xryL3cIEnntWDZVCUIzsrFsjuUet24qxxrk+KZ
+ IJu0S1lDtFGSzR9Q49xbA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:f4Y/7q/c9Rs=;6i7KVJlxR4VWEyndo+szTfa877I
- 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
- +ZCQPst0=
+UI-OutboundReport: notjunk:1;M01:P0:X+A5T8ZfYqE=;uo9Uo697DEAPRYWmggWRQ5s7zYD
+ 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
 
-Am 18.11.25 um 14:42 schrieb Werner Sembach:
+Am 18.11.25 um 14:29 schrieb Werner Sembach:
 
 >
-> Am 18.11.25 um 12:31 schrieb Armin Wolf:
->> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+> Am 18.11.25 um 14:12 schrieb Armin Wolf:
+>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
 >>
->>> With the Uniwill driver from Armin now accepted I want to push the=20
->>> first
->>> big addon to it that I worked on in parallel.
 >>>
->>> First this adds all current Tuxedo devices to use at least the input=
-=20
->>> part
->>> of the new driver.
+>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
+>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>>>>
+>>>>> Handle some more WMI events that are triggered on TUXEDO devices.
+>>>>>
+>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>> ---
+>>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 19=20
+>>>>> ++++++++++++++++++-
+>>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-wmi.h=C2=A0 |=C2=A0 2 ++
+>>>>> =C2=A0 2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
+>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
+>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>> @@ -371,9 +371,11 @@ static const struct key_entry=20
+>>>>> uniwill_keymap[] =3D {
+>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported in manual mode whe=
+n toggling the airplane mode=20
+>>>>> status */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_RADIO=
+ON, { KEY_UNKNOWN }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_RADIO=
+OFF, { KEY_UNKNOWN }},
+>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when user wants to=
+ cycle the platform profile */
+>>>>> -=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_PERFO=
+RMANCE_MODE_TOGGLE, {=20
+>>>>> KEY_UNKNOWN }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_PERFORMANCE_MODE_TOGGLE, {=20
+>>>>> KEY_F14 }},
+>>>>
+>>>> I am currently working a patch adding platform profile support, so=20
+>>>> this event would
+>>>> be handled inside the kernel on models with platform profile support.
 >>>
->>> Second it adds a new feature for cTGP control on Uniwill devices with
->>> NVIDIA GPUs and enables that on the TUXEDO devices.
+>>> For tuxedo devices we have profiles managed in userspace that do=20
+>>> additional things. So we need a way to handle this in userspace.
 >>>
->>> I have not yet enabled the other features in this driver for TUXEDO=20
->>> devices
->>> as they either don't apply (Uniwill did a line with Intel that=20
->>> behaves a
->>> little different to the rest of their ECs and that line is what the=20
->>> features
->>> Armin added are based on) or are, as of now, untested.
->>>
->>> There are plenty more features currently implemented in the out of tre=
-e
->>> tuxedo-drivers dkms package that I plan to port over one by one, but a=
-s
->>> always: No ETA given.
->>
->> Very nice, i think that especially the cTGP control feature will be=20
->> very popular with users.
->> I am also currently working to add fan table (aka "universal fan=20
->> control"), PL1/PL2 power limit
->> and platform profile support to the driver, so you might be able to=20
->> reuse some of that
->> functionality for your devices.
->>
->> I think that we can merge the first two patches in the near future,=20
->> but the remaining ones
->> dealing with the DMI table and cTGP support need some more work.
-> After reading through everything i will resend the first 2 patches=20
-> reordered as v2 and work on the cTGP stuff as a separate patchset
+>> Do these things have something to do with the uniwill EC? If so then=20
+>> we should implement those inside the driver
+>> itself. The control center can then poll the platform profile sysfs=20
+>> file to get notified when platform_profile_cycle()
+>> is executed to perform additional actions.
+> Not exclusively, e.g. one thing is display brightness.
 
-Fine with me.
+And you cannot poll the sysfs interface?
+
+>>
+>>> The 2 things I can spontaneously think of would be a sysfs toggle or=
+=20
+>>> 2 different UNIWILL_FEATURE_* defines.
+>>>
+>> TPH i would love to have an ordinary keycode allocated for that if=20
+>> the above does not work for you. There already
+>> exists KEY_PERFORMANCE, so adding something like=20
+>> KEY_PERFORMANCE_CYCLE should be possible.
+>
+> New keycodes won't work on X11, I don't know the reason, but X11 only=20
+> supports a max of 248 keycodes
+>
+> That's why for example touchpad toggle is bound to F21 e.g. here=20
+> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-=
+laptop.c#L106=20
+> .
+>
+Oh no. In this case using F14 is fine.
+
 
 Thanks,
 Armin Wolf
 
->> What kind of control does
->> your software (Tuxedo control center) need over the cTGP values? I am=
+>>
+>>>>
+>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user want=
+s to adjust the brightness=20
+>>>>> of the keyboard */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN=20
+>>>>> }},
+>>>>> @@ -382,11 +384,19 @@ static const struct key_entry=20
+>>>>> uniwill_keymap[] =3D {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to to=
+ggle the microphone=20
+>>>>> mute status */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
+>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to toggle=
+ the mute status */
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_MUTE,=
+ { KEY_MUTE }},
+>>>>
+>>>> Why is this event being ignored?
+>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute=20
+>>> key event, so not ignoring it here would result in a double trigger.
+>>
+>> I understand.
+>>
+>>>>
+>>>>> +
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user locks/unloc=
+ks the Fn key */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
+L_OSD_FN_LOCK, { KEY_FN_ESC }},
+>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user want=
+s to toggle the brightness=20
+>>>>> of the keyboard */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_OSD_KBDILLUMTOGGLE, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_KB_LED_LEVEL0, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_KB_LED_LEVEL1, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_KB_LED_LEVEL2, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_KB_LED_LEVEL3, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UN=
+IWILL_OSD_KB_LED_LEVEL4, {=20
+>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FIXME: find out the exact m=
+eaning of those events */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
+L_OSD_BAT_CHARGE_FULL_24_H, {=20
+>>>>> KEY_UNKNOWN }},
+>>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[]=
 =20
->> asking because Intel
->> devices have fixed cTGP values for each platform profile. If your=20
->> software does something
->> similar, then maybe we can integrate this into the platform profile=20
->> mechanism.
+>>>>> =3D {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to to=
+ggle the benchmark mode=20
+>>>>> status */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWIL=
+L_OSD_BENCHMARK_MODE_TOGGLE, {=20
+>>>>> KEY_UNKNOWN }},
+>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to toggle=
+ the webcam */
+>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_WEBCA=
+M_TOGGLE, { KEY_UNKNOWN }},
+>>>>
+>>>> Same as above.
+>>>
+>>> Same as above ;)
+>>>
+>>> At least iirc, would have to double check
+>>>
+>> Ok.
 >>
 >> Thanks,
 >> Armin Wolf
 >>
->>>
->>> Werner Sembach (6):
->>> =C2=A0=C2=A0 platform/x86/uniwill: Add TUXEDO devices
->>> =C2=A0=C2=A0 platform/x86/uniwill: Handle more WMI events required for=
- TUXEDO
->>> =C2=A0=C2=A0=C2=A0=C2=A0 devices
->>> =C2=A0=C2=A0 platform/x86/uniwill: Implement cTGP setting
->>> =C2=A0=C2=A0 platform/x86/uniwill: Make uniwill_dmi_table accessible i=
-n probe
->>> =C2=A0=C2=A0 platform/x86/uniwill: Run callbacks of uniwill_dmi_table
->>> =C2=A0=C2=A0 platform/x86/uniwill: Set cTGP support based on EC for TU=
-XEDO IBP=20
->>> Gen7
->>> =C2=A0=C2=A0=C2=A0=C2=A0 MK1
->>>
->>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 546=20
->>> ++++++++++++++++++--
->>> =C2=A0 drivers/platform/x86/uniwill/uniwill-wmi.h=C2=A0 |=C2=A0=C2=A0 =
-2 +
->>> =C2=A0 2 files changed, 502 insertions(+), 46 deletions(-)
+>>>>
+>>>>> +
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_END }
+>>>>> =C2=A0 };
+>>>>> =C2=A0 @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struc=
+t=20
+>>>>> notifier_block *nb, unsigned long action
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(=
+&data->battery_lock);
+>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
+>>>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // noop for the time bei=
+ng
+>>>>
+>>>> Wrong comment style, please use /* */.
+>>> ack
+>>>>
+>>>> Thanks,
+>>>> Armin Wolf
+>>>>
+>>>>> +
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY=
+_OK;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&d=
+ata->input_lock);
+>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h=20
+>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
+>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>> @@ -113,6 +113,8 @@
+>>>>> =C2=A0 =C2=A0 #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE=C2=A0=C2=A0=
+=C2=A0 0xC0
+>>>>> =C2=A0 +#define UNIWILL_OSD_WEBCAM_TOGGLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 0xCF
+>>>>> +
+>>>>> =C2=A0 #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED=C2=A0=C2=A0=C2=A0 0=
+xF0
+>>>>> =C2=A0 =C2=A0 struct device;
 >>>
