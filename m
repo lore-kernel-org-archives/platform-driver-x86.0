@@ -1,217 +1,188 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EDE35A94F;
-	Tue, 18 Nov 2025 14:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C035C1AE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 14:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763476081; cv=none; b=fxL3rn89AtO578qxJ0/H5bZsEsBYyABzkhIqx3Wfh8dSaKBrBv14R1cBCnhpTD6dYS+jgtiQKMGrk1J2ouAW2wrY0tIE+EAHyyPbC3xqKjWYr/dJIAjIZcFbzvtv326/SamvO4zF904HZ0acVhzWluyApm8PzTsKRyutSVAxRPA=
+	t=1763476206; cv=none; b=V4NWCgvGYw5KMr/X7bYOiNTsmkUJbqyJKdaRQwzBd9U4+128jKLk3Cmbzgdr89B9VB6kLokbhfLucD5HPaTZ8L/G2rQzp64A+BxTM6LzveJ6f+X3eGdB3BgQQ+MS9U5m1gCYHTEykClbMY1jdV5ZyYkSmsdTDSpxgufCSppMEEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763476081; c=relaxed/simple;
-	bh=WnC8x06sEqqj2Tq7EEEHY5CBDEBuuJr/DJLgaZb4HvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WOyuARsR7L8dEws56U3lmGR2vpEC/ZqzEnjgggoZgu2Xw9BivbYlc3M9jaBWWs05Pxg2xCP8NLYHMa8zuZ6RYEbtgRi3rqzFYyEZP2KyEBTth4vORmr7B/pJ1Vx8B5JbuL0NmCuaWyni2YHH1hzu4EVfu7EFrGGcM2WIFpI5Nxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Y9jjOVbJ; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1763476206; c=relaxed/simple;
+	bh=812u0/kE8U6KIifXA4o4gTvauRi/MWbHZ1WwZdLX1Rs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U7eBykUMRwC5oe5zz9g4tKGCPd0IRUDWZWOeRYfynNAH05IDWV/G2pMJn2dZgFheyRslc5W9LUqpJo8UGDCg0yaJVgRPzr6YBbGPQdAawQ/wCoTmprVS2Yy9kiZKvr730hSrogA1j17LfOOp25H+sCPmVTCRkc+7pFUVCtmd9JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Lq4z7uIo; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Y9jjOVbJ"
-Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 45F5E2FC0057;
-	Tue, 18 Nov 2025 15:27:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1763476075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j7KyG+kgI/kl2uCptX3ipNNjqpGwPkEA9kuiA6gLQ6E=;
-	b=Y9jjOVbJHoAkEp47G0HmnnohwejS2QXGKEQHUo5yyMJNrmf5elXUdPHpxhLh4G/HCErGS8
-	kEcn5pq890o+FtDGRfPwTHXbvUoQZ676xMoZzLhX+Y2WQYcHM5uIsOdVphbuL8qFFkQ0XA
-	NlGI5BBoFQ2ha4WIQXwDnJTqMJx0iIQ=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
-Date: Tue, 18 Nov 2025 15:27:55 +0100
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Lq4z7uIo"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5943b62c47dso5538723e87.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 06:30:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763476202; x=1764081002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JPuRb3+haxxFSoGOZ/Vv3ClCGfszWqWGAZKDKrczFMg=;
+        b=Lq4z7uIoHwX+T0oZpnQeE7Sgq9N1okHHPsxFDCimKWGvAYYyd1L3RkOxAFX6qqwgAK
+         n7bdZ81LqGV1aeevTqZ8wYxo8zm2fcmodj9xNDXKeQJspHWeAezhpEaV3ItXy5cPjLX4
+         6lleapZWGYLkpOGJxS/+B70xq3sqzhS76pnHvh3KpwGhTjAk0fG5Bfaevs8HoAynZMpF
+         6Y9f9b3Bef5JuVIba38qaCDqJwveVXQ19CNrRhMaBrwVBCOxUcjdGZbK08iPRuO8sCQ+
+         nlyYi9cr1Cu3HHRMrga2WbosxHKUD2ZvZJFSImC9bw3VIP1RTXdGahqstC5GX3Xx94Lo
+         LSYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763476202; x=1764081002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JPuRb3+haxxFSoGOZ/Vv3ClCGfszWqWGAZKDKrczFMg=;
+        b=MhUBQSmEJLwLOmb0gXeag+FPGNPt+4HzT453aJvZCXYeNWL7IypuEUtZ1k6P/C0CZz
+         ADskEGhvAMrPU2Rj6pTVvk2D2Pj90td60DrG9d8YlJ/lR7zgyH2JcsYlFEnTqDonsesQ
+         rZ8YERWc++CRaUxfdjG5NpDKTlP01rnbv77hsjP8hMW8w0XB2tK+KcT/+h9lzCr6bCFE
+         fBOE5/US7t3owb+ZGmo2vsMcPxAcM8Yp45P96dXH0MdY7GnsG3+syQ67TmOHJ5MbYckD
+         ne1NOELpbxFBtBAuDoSOnO2mSA3s5+QRI5LFngCtvsGmIpoPfgKCv8EoLIjLTrmp9Bem
+         Ds9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXwJkWYMCJ1Dv1FDLg/hzvpydtjhv7KqEmv/DyEd1nTWNThboq4DP5Uj0pVfp5ZlDDUyQQGw/keLTPS5GYV5hqQPAZD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY2fcq9rEwCTaxOFLv0AIGITkUmWzZmqhIN3/ALNLGZlxGxWXZ
+	BWUw21uUfg26CXSvE6moQamvvJiXIhJWFMkRKrDA7Wg52/vogX3x/uVlLdPNApqY0bQNLsEPFtE
+	6ubnFojSiZjj7XvJz9ruR37dNfGSF5ybWHIdeM/sv4w==
+X-Gm-Gg: ASbGncsw0ygtyUQ3wm7P42Gnl7xPljN77OYa5PPFSVp71oBBryDqnzcw0UJxWUnlONo
+	8KMmXmhcOpySfnrrwzvf/LAukerUDx+DOiABkXLrNnmfHiLxYsC58W3EH2Bdws549Y+7YYZ4bOi
+	4tZ0Q/TWMgxN/yi5bBYQBovk20cRsmd3NvoJIlTm1A4hJ88Zh1weg6JAGLcd77kydqCRGUZZ8WV
+	JCrCxXsiBSeQPj04me8VfhJpqm/c38917PNRB/WljdzKCRDqohWKOwPTUEPcv8inMoQziwFikus
+	IuSdvNkJKwTNbWbovdo+kr10RBLenhgHmr0F
+X-Google-Smtp-Source: AGHT+IG/8x599leRbcc55AKG5x7ewC54AAGqLK2r1ZPyGFLtbdnyvhRmFu7yQc8cTfZdSXpR6fRtj7AIKLBehJrw2m0=
+X-Received: by 2002:a05:6512:3ca2:b0:57a:2be1:d779 with SMTP id
+ 2adb3069b0e04-595841febd2mr6716947e87.31.1763476201587; Tue, 18 Nov 2025
+ 06:30:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
- for TUXEDO devices
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-3-wse@tuxedocomputers.com>
- <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
- <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
- <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
- <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
- <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com> <20251112-pci-m2-e-v1-8-97413d6bf824@oss.qualcomm.com>
+In-Reply-To: <20251112-pci-m2-e-v1-8-97413d6bf824@oss.qualcomm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Nov 2025 15:29:49 +0100
+X-Gm-Features: AWmQ_bnS7J2LiofnEnjv4l_cFHHTAIWcbKZPMExzLrGKBD6vTSaTLBGi1oU52Ic
+Message-ID: <CAMRc=MdRw+spjN0ySJ7We_GJ8GaDU2Nb4unaxcnr2ZLjLOeSrA@mail.gmail.com>
+Subject: Re: [PATCH 8/9] Bluetooth: hci_qca: Add support for WCN7850 PCIe M.2 card
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 12, 2025 at 3:45=E2=80=AFPM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+> The WCN7850 PCIe M.2 card connected to the UART controller exposes the
+> 'WCN7850' serdev device and is controlled using the pwrseq framework.
+>
+> Hence, add support for it in the driver. It reuses the existing
+> 'qca_soc_data_wcn7850' driver data.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
+com>
+> ---
+>  drivers/bluetooth/hci_qca.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 4cff4d9be3132561ee9bae4ddf2c8ac0bc13ecd7..09bfb3bba93698f496947775b=
+f6b31f2f20279f1 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_graph.h>
+>  #include <linux/acpi.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwrseq/consumer.h>
+> @@ -2344,6 +2345,9 @@ static int qca_serdev_probe(struct serdev_device *s=
+erdev)
+>
+>         qcadev->serdev_hu.serdev =3D serdev;
+>         data =3D device_get_match_data(&serdev->dev);
+> +       if (!data && serdev->id)
+> +               data =3D (const struct qca_device_data *) serdev->id->dri=
+ver_data;
+> +
+>         serdev_device_set_drvdata(serdev, qcadev);
+>         device_property_read_string_array(&serdev->dev, "firmware-name",
+>                                          qcadev->firmware_name, ARRAY_SIZ=
+E(qcadev->firmware_name));
+> @@ -2384,6 +2388,15 @@ static int qca_serdev_probe(struct serdev_device *=
+serdev)
+>         case QCA_WCN6855:
+>         case QCA_WCN7850:
+>         case QCA_WCN6750:
+> +               if (of_graph_is_present(dev_of_node(&serdev->ctrl->dev)))=
+ {
+> +                       qcadev->bt_power->pwrseq =3D devm_pwrseq_get(&ser=
+dev->ctrl->dev,
+> +                                                                  "uart"=
+);
+> +                       if (IS_ERR(qcadev->bt_power->pwrseq))
+> +                               qcadev->bt_power->pwrseq =3D NULL;
+> +                       else
+> +                               break;
+> +               }
 
-Am 18.11.25 um 14:48 schrieb Armin Wolf:
-> Am 18.11.25 um 14:29 schrieb Werner Sembach:
+Did you by any chance copy this logic from commit: db0ff7e15923
+("driver: bluetooth: hci_qca:fix unable to load the BT driver")? This
+commit is wrong and it flew under my radar during the summer and I
+never got around to fixing it. It doesn't take into account probe
+deferral.
+
+Bartosz
+
+> +
+>                 if (!device_property_present(&serdev->dev, "enable-gpios"=
+)) {
+>                         /*
+>                          * Backward compatibility with old DT sources. If=
+ the
+> @@ -2740,6 +2753,12 @@ static const struct acpi_device_id qca_bluetooth_a=
+cpi_match[] =3D {
+>  MODULE_DEVICE_TABLE(acpi, qca_bluetooth_acpi_match);
+>  #endif
 >
->>
->> Am 18.11.25 um 14:12 schrieb Armin Wolf:
->>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
->>>
->>>>
->>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
->>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
->>>>>
->>>>>> Handle some more WMI events that are triggered on TUXEDO devices.
->>>>>>
->>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>>>> ---
->>>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
->>>>>>   drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
->>>>>>   2 files changed, 20 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
->>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] = {
->>>>>>         /* Reported in manual mode when toggling the airplane mode status */
->>>>>>       { KE_KEY,       UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
->>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOON, { KEY_UNKNOWN }},
->>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOOFF, { KEY_UNKNOWN }},
->>>>>>         /* Reported when user wants to cycle the platform profile */
->>>>>> -    { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_UNKNOWN }},
->>>>>> +    { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_F14 }},
->>>>>
->>>>> I am currently working a patch adding platform profile support, so this 
->>>>> event would
->>>>> be handled inside the kernel on models with platform profile support.
->>>>
->>>> For tuxedo devices we have profiles managed in userspace that do additional 
->>>> things. So we need a way to handle this in userspace.
->>>>
->>> Do these things have something to do with the uniwill EC? If so then we 
->>> should implement those inside the driver
->>> itself. The control center can then poll the platform profile sysfs file to 
->>> get notified when platform_profile_cycle()
->>> is executed to perform additional actions.
->> Not exclusively, e.g. one thing is display brightness.
+> +static const struct serdev_device_id qca_bluetooth_serdev_match[] =3D {
+> +       { "WCN7850", (kernel_ulong_t)&qca_soc_data_wcn7850 },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(serdev, qca_bluetooth_serdev_match);
+> +
+>  #ifdef CONFIG_DEV_COREDUMP
+>  static void hciqca_coredump(struct device *dev)
+>  {
+> @@ -2756,6 +2775,7 @@ static void hciqca_coredump(struct device *dev)
+>  static struct serdev_device_driver qca_serdev_driver =3D {
+>         .probe =3D qca_serdev_probe,
+>         .remove =3D qca_serdev_remove,
+> +       .id_table =3D qca_bluetooth_serdev_match,
+>         .driver =3D {
+>                 .name =3D "hci_uart_qca",
+>                 .of_match_table =3D of_match_ptr(qca_bluetooth_of_match),
 >
-> And you cannot poll the sysfs interface?
-I can't follow you atm?
->
->>>
->>>> The 2 things I can spontaneously think of would be a sysfs toggle or 2 
->>>> different UNIWILL_FEATURE_* defines.
->>>>
->>> TPH i would love to have an ordinary keycode allocated for that if the above 
->>> does not work for you. There already
->>> exists KEY_PERFORMANCE, so adding something like KEY_PERFORMANCE_CYCLE 
->>> should be possible.
->>
->> New keycodes won't work on X11, I don't know the reason, but X11 only 
->> supports a max of 248 keycodes
->>
->> That's why for example touchpad toggle is bound to F21 e.g. here 
->> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-laptop.c#L106 
->> .
->>
-> Oh no. In this case using F14 is fine.
+> --
+> 2.48.1
 >
 >
-> Thanks,
-> Armin Wolf
->
->>>
->>>>>
->>>>>>         /* Reported when the user wants to adjust the brightness of the 
->>>>>> keyboard */
->>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
->>>>>> @@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] = {
->>>>>>       /* Reported when the user wants to toggle the microphone mute 
->>>>>> status */
->>>>>>       { KE_KEY,       UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
->>>>>>   +    /* Reported when the user wants to toggle the mute status */
->>>>>> +    { KE_IGNORE,    UNIWILL_OSD_MUTE, { KEY_MUTE }},
->>>>>
->>>>> Why is this event being ignored?
->>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute key 
->>>> event, so not ignoring it here would result in a double trigger.
->>>
->>> I understand.
->>>
->>>>>
->>>>>> +
->>>>>>       /* Reported when the user locks/unlocks the Fn key */
->>>>>>       { KE_IGNORE,    UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
->>>>>>         /* Reported when the user wants to toggle the brightness of the 
->>>>>> keyboard */
->>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
->>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0, { KEY_KBDILLUMTOGGLE }},
->>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1, { KEY_KBDILLUMTOGGLE }},
->>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2, { KEY_KBDILLUMTOGGLE }},
->>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3, { KEY_KBDILLUMTOGGLE }},
->>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4, { KEY_KBDILLUMTOGGLE }},
->>>>>>         /* FIXME: find out the exact meaning of those events */
->>>>>>       { KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H, { KEY_UNKNOWN }},
->>>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] = {
->>>>>>       /* Reported when the user wants to toggle the benchmark mode status */
->>>>>>       { KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE, { KEY_UNKNOWN }},
->>>>>>   +    /* Reported when the user wants to toggle the webcam */
->>>>>> +    { KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE, { KEY_UNKNOWN }},
->>>>>
->>>>> Same as above.
->>>>
->>>> Same as above ;)
->>>>
->>>> At least iirc, would have to double check
->>>>
->>> Ok.
->>>
->>> Thanks,
->>> Armin Wolf
->>>
->>>>>
->>>>>> +
->>>>>>       { KE_END }
->>>>>>   };
->>>>>>   @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct 
->>>>>> notifier_block *nb, unsigned long action
->>>>>>           }
->>>>>>           mutex_unlock(&data->battery_lock);
->>>>>>   +        return NOTIFY_OK;
->>>>>> +    case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->>>>>> +        // noop for the time being
->>>>>
->>>>> Wrong comment style, please use /* */.
->>>> ack
->>>>>
->>>>> Thanks,
->>>>> Armin Wolf
->>>>>
->>>>>> +
->>>>>>           return NOTIFY_OK;
->>>>>>       default:
->>>>>>           mutex_lock(&data->input_lock);
->>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h 
->>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
->>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>> @@ -113,6 +113,8 @@
->>>>>>     #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE    0xC0
->>>>>>   +#define UNIWILL_OSD_WEBCAM_TOGGLE        0xCF
->>>>>> +
->>>>>>   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED    0xF0
->>>>>>     struct device;
->>>>
