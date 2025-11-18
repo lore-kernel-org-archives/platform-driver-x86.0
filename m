@@ -1,179 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1211F151C;
-	Tue, 18 Nov 2025 14:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95D328619;
+	Tue, 18 Nov 2025 15:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763477040; cv=none; b=pUEx9+RdCXYmiEDHG8N8UhtayA5BIFLO945AG61oeaJsnXpthcxcN2p55L4GIR7P1RmIdu4zbLNE579xyCmKNnnK6vPBBT6C1TqBRr3k42px8XFXcspMe3JkuQi0Utj/meI6l1l7fSLxomGZ2yybLrzUmSONgeThFzNHYjvUFhI=
+	t=1763478353; cv=none; b=IY0aZcBCd2rJq8vInDzlFBDS0j7hza7SNvI/G8yEWPa9O3nD+daZHl3pJcNlzoQKkHROa+vXnk3wimjVK7FixXvsLD1KnCDAcXbXWACpaT0oLAooGNbq+DPxb7ewHO5O56OO3vOkSuysaEZs4zNc6S73fV5TI2IqU00CaZUT838=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763477040; c=relaxed/simple;
-	bh=RiThrz8w6bDvWcfHrEOQJmpj/jC91d/Sn99gSt3NnIs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=n1n+dlvW+Zg02RrmiWTYXV6CBog7R7hlMJj6h12uvqPwVcRtJdyqCN07UPjaCZ9+ym+0fwZNMF9GZm1BQFL9MiuKOsqBbYry21nPbDvHtlzOgvpnUboEeYxIEz2TELJA3zwH9Qq877eABexlCk3OZ4Fq2PJz90h8z7TgReRk6kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/2q9jMy; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763478353; c=relaxed/simple;
+	bh=9XwcmuJ/UMeB2cRHDiy18Y7k5I5sWkMMWeOWPaGF7cc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F+uOdwGxZu+/YFk81F/ZylzTLJ8zRENrzy9BLMv3FVQtr76bFpCDTslZMWfi2EKt7pdh0w0Na6SUjnqk5KcRHIecfI3ZqdRzxM147IYfHivF5SCrFjM2c4215oKijvHgKVwVb891MkZx5Z783vKiSBvSP0q3KtVfe0XU6KwZDus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=ZY8KPMFU; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/2q9jMy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763477038; x=1795013038;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=RiThrz8w6bDvWcfHrEOQJmpj/jC91d/Sn99gSt3NnIs=;
-  b=X/2q9jMya49+wYvgddsKahRcansjCiZCQX13G0FqjxlxoZP1NeRq2S7R
-   ki3ad6WM4lJOcVpk3iKYWc7zWs7OKvrsBQ5N0M/OwUZpxMz/MgA0O0d5y
-   ESt3bAE0NVEmLpxT1zYhCTuyLExF5gUGAHUM/N3k6VeoFbJVbwIVR5VFF
-   /hSCMSV140q8N3YMmsqh2lA6dkswCBS5xUwcHPMcKnw7OSW7rDUwulY0o
-   pMdbDKHOpdoP1TNErf93juRUqEaRs56+w2ES6P1to6h93G1Lko8NXJhkR
-   c1DZqSkp+76ZOzixKEprXHXsxRKFYPlIfP6LED6osXjp2AlgYcZsIdPAH
-   g==;
-X-CSE-ConnectionGUID: Msfu2/WJSnClQo6wDeTbag==
-X-CSE-MsgGUID: rgcrlCsFS7eQiKSj9jkdrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="88149308"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="88149308"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 06:43:57 -0800
-X-CSE-ConnectionGUID: qUTelZCySKushkc1NKaxSQ==
-X-CSE-MsgGUID: UJI0rN6jSheJivVY/rvh2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="190807291"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.74])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 06:43:53 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Nov 2025 16:43:50 +0200 (EET)
-To: Marco Crivellari <marco.crivellari@suse.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-    Michal Hocko <mhocko@suse.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH] platform/surface: acpi-notify: add WQ_PERCPU to
- alloc_workqueue users
-In-Reply-To: <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com>
-Message-ID: <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com>
-References: <20251107143837.247085-1-marco.crivellari@suse.com> <88c0ecd8-0d61-f4bc-ae13-cce971b9c69c@linux.intel.com> <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="ZY8KPMFU"
+Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 9B59D2FC0057;
+	Tue, 18 Nov 2025 16:05:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1763478347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2T4y/hKAsuA+4CIfXaSAob/blm6BLWgnd0eBmXLJEz4=;
+	b=ZY8KPMFUMgtYMDVE5JLNe0jGoh/agal0wXLhy+ZqN7nTHfC8dcQyndmXa9mqeV7eesctJT
+	HT1Zg8RVzfnomlTsHW1MiAH+FLcCX9VCrM1gLebQ20eGcUhO5nUa+5OMirpu+3KFkA2QBg
+	hLVMazQEkTMwCYbX0Z5exSKVFs2yess=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <d4c7b31b-1335-47d5-992a-beace78614e5@tuxedocomputers.com>
+Date: Tue, 18 Nov 2025 16:05:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1381590036-1763476046=:1205"
-Content-ID: <5c0647be-dc7d-64ea-9a1b-b02ae52b864e@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1381590036-1763476046=:1205
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <ee7c5b79-f61e-9176-78cb-8ada7d91f7d9@linux.intel.com>
-
-On Tue, 18 Nov 2025, Marco Crivellari wrote:
-
-> Hi,
->=20
-> On Tue, Nov 18, 2025 at 12:30=E2=80=AFPM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> > [...]
-> > Hi,
-> >
-> > There's lots of words in this but it's extremely confusingly written.
-> >
-> > On one hand, you're saying "most workloads benefit from unbound queues"
-> > but then end up using percpu anyway in the actual diff!?!
->=20
-> Yes, to keep the same behavior.
-> There are subsystems who are asked to convert the workqueue to unbound.
-> So in this case I will send the v2 with the change.
->=20
-> > If this is to support refactoring efforts, start the
-> > description/justification in the changelog with that, with only a conci=
-se
-> > explanation of the refactoring goal (you don't need to explain everythi=
-ng
-> > that is already in the changelogs of the commits you refer above).
->=20
-> It makes sense.
->=20
-> > And I'd expect explanation to the forementioned inconsistency, it might=
- be
-> > because of the refactoring in steps. But if that's the case, you should
-> > instead mention that either a) there will be a follow-up to migrate to
-> > unbound where applicable (assuming it cannot be done now) or b) state
-> > that this change is just to keep behavior the same and each case needs =
-to
-> > be evaluated once the refactoring is complete whether unbound could be
-> > used or not.
->=20
-> What do you think, is it better in this way?
-
-Still quite non-specific to this particular change.
-
-> "
-> This continues the effort to refactor workqueue APIs, which began with
-> the introduction of new workqueues and a new alloc_workqueue flag in:
->=20
-> commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
-> commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
->=20
-
-The refactoring is going to alter the default behavior of ...
-[*].
-
-> For more details see the Link tag below.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251117132530.32460-1-wse@tuxedocomputers.com>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
+ <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+ <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
+ <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
+ <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+ <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
+ <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
+ <2d5d88fe-cd54-4311-b5cd-b1c435ff973d@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <2d5d88fe-cd54-4311-b5cd-b1c435ff973d@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-
-> This change adds a new WQ_PERCPU flag to explicitly request
-
-This change doesn't add a new flag, "explicitly request" part is correct=20
-though but as written things are mixed up.
-
-I'd just replace this paragraph and the next with something much simpler=20
-and more to the point:
-
-"In order to keep alloc_workqueue() behavior identical, explicitly request=
-=20
-WQ_PERCPU."
-
-> alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
+Am 18.11.25 um 15:41 schrieb Armin Wolf:
+> Am 18.11.25 um 15:27 schrieb Werner Sembach:
 >
-> With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
-> any alloc_workqueue() caller that doesn=E2=80=99t explicitly specify WQ_U=
-NBOUND
-> must now use WQ_PERCPU.
-
-This belongs earlier to description of the refactoring (to [*]).
-
-> Once migration is complete, WQ_UNBOUND can be removed and unbound will
-> become the implicit default.
-
-This is irrelevant detail about refactoring since WQ_PERCPU is used here.
-
-> Suggested-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> Link: https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de/
-> "
->=20
-> The Link is the original upstream discussion with all the details.
-> I think adding more details here will be too much (and unrelated with the
-> work itself).
->=20
-> > Also, there's one copy-pasted typo "worqueue" in the other patches
-> > relating to pdx86 (and likely all your other copy-pasted
-> > descriptions to other subsystems than pdx86 ;-)).
->=20
-> Uh, I completely missed that!
->=20
-> Thanks!
->=20
-
---=20
- i.
---8323328-1381590036-1763476046=:1205--
+>>
+>> Am 18.11.25 um 14:48 schrieb Armin Wolf:
+>>> Am 18.11.25 um 14:29 schrieb Werner Sembach:
+>>>
+>>>>
+>>>> Am 18.11.25 um 14:12 schrieb Armin Wolf:
+>>>>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
+>>>>>
+>>>>>>
+>>>>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
+>>>>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>>>>>>>
+>>>>>>>> Handle some more WMI events that are triggered on TUXEDO devices.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>>>> ---
+>>>>>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
+>>>>>>>>   drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
+>>>>>>>>   2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
+>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>>>         /* Reported in manual mode when toggling the airplane mode 
+>>>>>>>> status */
+>>>>>>>>       { KE_KEY,       UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
+>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOON, { KEY_UNKNOWN }},
+>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOOFF, { KEY_UNKNOWN }},
+>>>>>>>>         /* Reported when user wants to cycle the platform profile */
+>>>>>>>> -    { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_UNKNOWN }},
+>>>>>>>> +    { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_F14 }},
+>>>>>>>
+>>>>>>> I am currently working a patch adding platform profile support, so this 
+>>>>>>> event would
+>>>>>>> be handled inside the kernel on models with platform profile support.
+>>>>>>
+>>>>>> For tuxedo devices we have profiles managed in userspace that do 
+>>>>>> additional things. So we need a way to handle this in userspace.
+>>>>>>
+>>>>> Do these things have something to do with the uniwill EC? If so then we 
+>>>>> should implement those inside the driver
+>>>>> itself. The control center can then poll the platform profile sysfs file 
+>>>>> to get notified when platform_profile_cycle()
+>>>>> is executed to perform additional actions.
+>>>> Not exclusively, e.g. one thing is display brightness.
+>>>
+>>> And you cannot poll the sysfs interface?
+>> I can't follow you atm?
+>
+> I meant to ask whether or not your application could poll the platform profile 
+> sysfs interface for changes instead of
+> listing for the F14 key.
+But the platform profiles are a fixed number? TCC currently allows an arbitrary 
+amount of profiles being created.
+>
+> Thanks,
+> Armin Wolf
+>
+>>>
+>>>>>
+>>>>>> The 2 things I can spontaneously think of would be a sysfs toggle or 2 
+>>>>>> different UNIWILL_FEATURE_* defines.
+>>>>>>
+>>>>> TPH i would love to have an ordinary keycode allocated for that if the 
+>>>>> above does not work for you. There already
+>>>>> exists KEY_PERFORMANCE, so adding something like KEY_PERFORMANCE_CYCLE 
+>>>>> should be possible.
+>>>>
+>>>> New keycodes won't work on X11, I don't know the reason, but X11 only 
+>>>> supports a max of 248 keycodes
+>>>>
+>>>> That's why for example touchpad toggle is bound to F21 e.g. here 
+>>>> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-laptop.c#L106 
+>>>> .
+>>>>
+>>> Oh no. In this case using F14 is fine.
+>>>
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>>>
+>>>>>>>
+>>>>>>>>         /* Reported when the user wants to adjust the brightness of the 
+>>>>>>>> keyboard */
+>>>>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
+>>>>>>>> @@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>>>       /* Reported when the user wants to toggle the microphone mute 
+>>>>>>>> status */
+>>>>>>>>       { KE_KEY,       UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
+>>>>>>>>   +    /* Reported when the user wants to toggle the mute status */
+>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_MUTE, { KEY_MUTE }},
+>>>>>>>
+>>>>>>> Why is this event being ignored?
+>>>>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute key 
+>>>>>> event, so not ignoring it here would result in a double trigger.
+>>>>>
+>>>>> I understand.
+>>>>>
+>>>>>>>
+>>>>>>>> +
+>>>>>>>>       /* Reported when the user locks/unlocks the Fn key */
+>>>>>>>>       { KE_IGNORE,    UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
+>>>>>>>>         /* Reported when the user wants to toggle the brightness of the 
+>>>>>>>> keyboard */
+>>>>>>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>> +    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>         /* FIXME: find out the exact meaning of those events */
+>>>>>>>>       { KE_IGNORE, UNIWILL_OSD_BAT_CHARGE_FULL_24_H, { KEY_UNKNOWN }},
+>>>>>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>>>       /* Reported when the user wants to toggle the benchmark mode 
+>>>>>>>> status */
+>>>>>>>>       { KE_IGNORE, UNIWILL_OSD_BENCHMARK_MODE_TOGGLE, { KEY_UNKNOWN }},
+>>>>>>>>   +    /* Reported when the user wants to toggle the webcam */
+>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE, { KEY_UNKNOWN }},
+>>>>>>>
+>>>>>>> Same as above.
+>>>>>>
+>>>>>> Same as above ;)
+>>>>>>
+>>>>>> At least iirc, would have to double check
+>>>>>>
+>>>>> Ok.
+>>>>>
+>>>>> Thanks,
+>>>>> Armin Wolf
+>>>>>
+>>>>>>>
+>>>>>>>> +
+>>>>>>>>       { KE_END }
+>>>>>>>>   };
+>>>>>>>>   @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct 
+>>>>>>>> notifier_block *nb, unsigned long action
+>>>>>>>>           }
+>>>>>>>>           mutex_unlock(&data->battery_lock);
+>>>>>>>>   +        return NOTIFY_OK;
+>>>>>>>> +    case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>>>>>> +        // noop for the time being
+>>>>>>>
+>>>>>>> Wrong comment style, please use /* */.
+>>>>>> ack
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Armin Wolf
+>>>>>>>
+>>>>>>>> +
+>>>>>>>>           return NOTIFY_OK;
+>>>>>>>>       default:
+>>>>>>>>           mutex_lock(&data->input_lock);
+>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h 
+>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
+>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>> @@ -113,6 +113,8 @@
+>>>>>>>>     #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE 0xC0
+>>>>>>>>   +#define UNIWILL_OSD_WEBCAM_TOGGLE        0xCF
+>>>>>>>> +
+>>>>>>>>   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED    0xF0
+>>>>>>>>     struct device;
+>>>>>>
+>>
