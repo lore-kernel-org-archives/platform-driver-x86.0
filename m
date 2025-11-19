@@ -1,172 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959D53148C6;
-	Wed, 19 Nov 2025 07:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1280A3191C3
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 07:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763536971; cv=none; b=HdGT1n+M02bDl/u011jI9sKvTbY71nvVgE0Tyvgnyw6lU/SdODZ7DNlLcpb6siL04KgqHc43mArxzLXtHKnly5UUUDaRCJi7ISvy5AEp1edc9iImsT1rkrGPddM1/ZDDUY/TO+p8qUdRBU77x6DVMIi/LDKwiQQXYBhqKMYIK4Y=
+	t=1763537283; cv=none; b=i+ijZimrMg76d5Doku5roG0ypDXCLrNvtYObYW7tmLQ+0cTISg3WRTeMoCpNFH8uBgLlzGofd6b693E8nyVSp1BFU6pzXDYC2MI0/ErHnpny4xSE971lhN8qGqiCO6IsGYUUzmU8WuIYcMGzquxFK8brQivpJgqryKQGHIe+cWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763536971; c=relaxed/simple;
-	bh=fTEcAtImu1AQ33yjEfylz194/R9WItwhckwedB6Q01M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KiFmBHuZTfG8CJRSXaxuIo1uU3Nh66pBvp8ShTCKIxucoxudKAB2kNLJpCk7Hmbo65XP59GgMclYX4qJBubiCt9Qhd69T1oE7YFVGunoEYq363MEO4sdcnKYhZhDApcF+yj6a8xaYImVw21NkuDsoCRdARclZjQ25x64iSofin0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UV72ZJap; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763537283; c=relaxed/simple;
+	bh=lZWqRmzRlms5ziI0QgrTEu7VnsK9aS0LJffeH+0gdzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=X0jpjKsZN5opnbCVpWYFmzPxT/V32LPRA76HYWnL6ou2Rlex3f1mi8FjjuNULXVWsBZqT8QK4FCjI6whWYaqeWEfP2eLcCqdquMmq3cxdfsOisGPxbQYKzFN0IdgxvAmY2AkK1fiWbUNjt1EfTV9O5JLKApMJ3+gEXlHIpPbgPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cxXJJUPq; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UV72ZJap"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763536969; x=1795072969;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fTEcAtImu1AQ33yjEfylz194/R9WItwhckwedB6Q01M=;
-  b=UV72ZJapV+lkoVYgDMqjHYHd8+sygZ/mB5UrQr0nLg6xI+VJKIqlZkvG
-   m79MRrz+/3hRFdS3vz9rcDR8dhSoZwsGZp2hpNzjh8FLRhH1MP/s5pj6A
-   hg5sYp23tffIzdZ5XmJLT/ExvEMQ2okFFmhb3l4eHdJ9LSVg4R/e+odr/
-   5ROvb9qZWB6DMZ6kohEozOpgWsi8vbHnuHy0fiR1TdzcSqUvWVrunXhDm
-   N/b1s5BxgyX552sd9+JNWH0Lw4GbcAhMpZCpE/HdH+JHn+ZyliCaZv7/E
-   jzkU02kk+g4TOctroQxrxl6xu6VSFz4YrEtbnd3PmU2fUn3lYlRrghznK
-   A==;
-X-CSE-ConnectionGUID: mlEXbHuPSB2WCS7yDCgakg==
-X-CSE-MsgGUID: bhscuBmNSvaJpp+zQ6EdXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="77028608"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="77028608"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 23:22:34 -0800
-X-CSE-ConnectionGUID: qPPu+cbvQ5uzuSAm+mvZWg==
-X-CSE-MsgGUID: D27S7VT7T+C9M34iErODCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="221620037"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 23:22:30 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 19 Nov 2025 09:22:27 +0200 (EET)
-To: Denis Benato <benato.denis96@gmail.com>
-cc: Antheas Kapenekakis <lkml@antheas.dev>, 
-    platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v8 03/10] HID: asus: fortify keyboard handshake
-In-Reply-To: <75fe4c0f-3303-4f3d-adc5-45487df3c80a@gmail.com>
-Message-ID: <3f310d76-d9cf-5635-d7fb-0da885f49871@linux.intel.com>
-References: <20251101104712.8011-1-lkml@antheas.dev> <20251101104712.8011-4-lkml@antheas.dev> <75fe4c0f-3303-4f3d-adc5-45487df3c80a@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cxXJJUPq"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42b3ad51fecso4620222f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 23:28:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763537279; x=1764142079; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GTdftNsqB4P1rjr+it1aXyp4e6K6zbkOVHD0wnIr8bA=;
+        b=cxXJJUPqLeWkmz2cgt4wOLaoonsvSrwA3Bo35YrV28FAJ3c+l3GuilfleT20GJFsDi
+         UocW/JM8tFbMi2DXZEDvSxkRWhWT8cZEXH/P5pi+yD0G46m6jhdtLAgUNw+lo3U1zHqR
+         k8nujOPpvjlhQ5u7AOCRLqVMWU6BuXTh1XHCPl9NfAwJKbej1a11LC8gEZjxNQDED98w
+         IjdLVNM2ct8myQgOtjYp+FhddNf5Bk4K6/yxR+LUbdQY8RJOIAqb9zgTAjIizjzqA2OS
+         WtLSUDwIEgC4FuOkACwzapZUmCLfNn2swbBPOseLtBlsK5UlyC9qFdgWfiVICYmQzMHI
+         pS+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763537279; x=1764142079;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GTdftNsqB4P1rjr+it1aXyp4e6K6zbkOVHD0wnIr8bA=;
+        b=BgPubFhZ8qLpc5SYafnIRtWFGRbt+8xcI87fVnPlvfpTuuyTgksOYAbp0eMb/vcGbb
+         Bw5hLw2c82Ab2KzLLSIjashffLbRu+Hqdcv4IGqoSWQ+sGzYZSlixA2TShXRR1FRJrkG
+         lV+3OI/C0qqCy2ax1VEzq7nmd/OqYqJM8XgkKM0Q6O8DcR6m/ZAMj5szZ3hIfHi7rW1F
+         GT4egVO1j2h+4MxJxtDpvyHLWBCD3L0DxSXtNCr1A0yZOgHcyMVdaLbtJQGKoJTnjJTo
+         n7sAOnnHtSShEfxIe/a4Lk0dniufmNDEt4l/ibrvBu2yHxD7RuErqSnS0i/W2SarDZo2
+         taoQ==
+X-Gm-Message-State: AOJu0YzGu2vJdpOUaqDc3vlpjDD1aOPdYf0KOr/QUulReYIyiKHb2LXM
+	+bdB94hp8AU1kotJUWr6qOOXJWJWDr6FDHEjcRuVg8qNE0QZu7UnELyCqJVRqAuleiE=
+X-Gm-Gg: ASbGncvByPMXzc2V46dO0Pqf3YFcHni5Zw7J4nHsEBNIQ9nV0iedbj0prXTmQiu4XNB
+	A12JfxNBS/qrOQi539msfPQSkKNb1Q+wum0QoU6T6+XiDhr4q+S79944aOcOMI29N7TeXSJu5Ba
+	oDaLkdC7NeEtuBbHYV6bpwQtUtAE3ZYg4LPcMDXm4J1iTtPcnZfICA9QtczjddfL7MsiDuKYpJM
+	ygIYwLPz4DiflhtroU2JmUBCnX2ORLcxg/f29cCtLLXrqMKakdyQYHMvE+3PmyXKucH0Lda3ygd
+	TBrypoqh8v2u0FLJUdXx5mG7qaKXFqR6waMzKTVpMK9jEM2VG3HhsdPL3zIs0Bs4nbmFS6aB9Ik
+	soknSiUg5GH81K7b+39gzCZEV7/pj6BZ77QekWbIFhyE7YPN5g4g5pvtpZndYOb8CQevs4rcMxK
+	AIVFP2xuhig3x/OjVm
+X-Google-Smtp-Source: AGHT+IGvO3yVi9UJ5VH9q0WOvNCloA4RYWiuz2ArhLGsiXU8XIrCeBOAbca374CDSz4rEqzTmdZQ6g==
+X-Received: by 2002:a05:6000:230d:b0:42b:2e94:5a8f with SMTP id ffacd0b85a97d-42b5939dc13mr17631476f8f.52.1763537279263;
+        Tue, 18 Nov 2025 23:27:59 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42b53f0b622sm35606272f8f.29.2025.11.18.23.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 23:27:58 -0800 (PST)
+Date: Wed, 19 Nov 2025 10:27:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Luke D. Jones" <luke@ljones.dev>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [bug report] platform/x86: asus-armoury: move existing tunings to
+ asus-armoury module
+Message-ID: <aR1xbxEQyQPEvB9o@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 19 Nov 2025, Denis Benato wrote:
-> On 11/1/25 11:47, Antheas Kapenekakis wrote:
-> > Handshaking with an Asus device involves sending it a feature report
-> > with the string "ASUS Tech.Inc." and then reading it back to verify the
-> > handshake was successful, under the feature ID the interaction will
-> > take place.
-> >
-> > Currently, the driver only does the first part. Add the readback to
-> > verify the handshake was successful. As this could cause breakages,
-> > allow the verification to fail with a dmesg error until we verify
-> > all devices work with it (they seem to).
-> >
-> > Since the response is more than 16 bytes, increase the buffer size
-> > to 64 as well to avoid overflow errors.
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/hid/hid-asus.c | 32 +++++++++++++++++++++++++++++---
-> >  1 file changed, 29 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 4676b7f20caf..03f0d86936fc 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> >  #define FEATURE_REPORT_ID 0x0d
-> >  #define INPUT_REPORT_ID 0x5d
-> >  #define FEATURE_KBD_REPORT_ID 0x5a
-> > -#define FEATURE_KBD_REPORT_SIZE 16
-> > +#define FEATURE_KBD_REPORT_SIZE 64
-> >  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
-> >  #define FEATURE_KBD_LED_REPORT_ID2 0x5e
-> >  
-> > @@ -393,14 +393,40 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
-> >  
-> >  static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
-> >  {
-> > +	/*
-> > +	 * The handshake is first sent as a set_report, then retrieved
-> > +	 * from a get_report. They should be equal.
-> > +	 */
-> >  	const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
-> >  		     0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-> > +	u8 *readbuf;
-> 
-> __free(kfree) = NULL here? Would simplify the code.
+Hello Luke D. Jones,
 
-Yes, but see below.
+Commit f99eb098090e ("platform/x86: asus-armoury: move existing
+tunings to asus-armoury module") from Nov 2, 2025 (linux-next), leads
+to the following Smatch static checker warning:
 
-> >  	int ret;
-> >  
-> >  	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
-> > -	if (ret < 0)
-> > -		hid_err(hdev, "Asus failed to send init command: %d\n", ret);
-> > +	if (ret < 0) {
-> > +		hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
+	drivers/platform/x86/asus-armoury.c:429 mini_led_mode_current_value_show()
+	warn: iterator 'i' not incremented
 
-The preferred approach for using __free() is to have the whole variable 
-declaration here as it ensures tear down order of the auto-variables 
-is the reverse of the init order.
+drivers/platform/x86/asus-armoury.c
+    399 static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
+    400                                                 struct kobj_attribute *attr, char *buf)
+    401 {
+    402         u32 *mini_led_mode_map;
+    403         size_t mini_led_mode_map_size;
+    404         u32 i, mode;
+    405         int err;
+    406 
+    407         switch (asus_armoury.mini_led_dev_id) {
+    408         case ASUS_WMI_DEVID_MINI_LED_MODE:
+    409                 mini_led_mode_map = mini_led_mode1_map;
+    410                 mini_led_mode_map_size = ARRAY_SIZE(mini_led_mode1_map);
+    411                 break;
+    412 
+    413         case ASUS_WMI_DEVID_MINI_LED_MODE2:
+    414                 mini_led_mode_map = mini_led_mode2_map;
+    415                 mini_led_mode_map_size = ARRAY_SIZE(mini_led_mode2_map);
+    416                 break;
+    417 
+    418         default:
+    419                 pr_err("Unrecognized mini-LED device: %u\n", asus_armoury.mini_led_dev_id);
+    420                 return -ENODEV;
+    421         }
+    422 
+    423         err = armoury_get_devstate(attr, &mode, asus_armoury.mini_led_dev_id);
+    424         if (err)
+    425                 return err;
+    426 
+    427         mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
+    428 
+--> 429         for (i = 0; i < mini_led_mode_map_size; i++)
+    430                 return sysfs_emit(buf, "%u\n", mini_led_mode_map[i]);
 
-It would be safe to do in this case also in the top block but if something 
-gets added in between, the ordering could become wrong. Also, each 
-correctly done example helps to form a pattern in the mind of those 
-reading this code so they'd be more likely to get the placement right in 
-some other place.
+This loop doesn't make sense.  It just prints the first element in
+the mini_led_mode_map[] array and returns.
 
--- 
- i.
+    431 
+    432         pr_warn("Unrecognized mini-LED mode: %u", mode);
+    433         return -EINVAL;
+    434 }
 
-
-> > +	if (!readbuf)
-> > +		return -ENOMEM;
-> > +
-> > +	ret = hid_hw_raw_request(hdev, report_id, readbuf,
-> > +				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
-> > +				 HID_REQ_GET_REPORT);
-> See comments on patch 1 (also reported below): not sure if others
-> report_id are going to answer, my guess is that we will have to try
-> if you choose to go that route.
-> > +	if (ret < 0) {
-> > +		hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
-> > +	} else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
-> > +		hid_warn(hdev, "Asus handshake returned invalid response: %*ph\n",
-> > +			FEATURE_KBD_REPORT_SIZE, readbuf);
-> > +		/*
-> > +		 * Do not return error if handshake is wrong until this is
-> > +		 * verified to work for all devices.
-> > +		 */
-> In review of patch 1 I requested this function to be called with more report_id
-> than just 0x5a so this will have to be checked against those values too.
-> 
-> In alternative you can fork based on the report_id, but having confirmation that
-> this is valid with those ids too would be of great help. Perhaps I can help you
-> with this asking to asus-linux users.
-> > +	}
-> >  
-> > +	kfree(readbuf);
-> >  	return ret;
-> >  }
-> >  
-> 
+regards,
+dan carpenter
