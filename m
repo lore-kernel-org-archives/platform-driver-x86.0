@@ -1,115 +1,222 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43BC2D77E5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 21:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7180BCA52;
+	Wed, 19 Nov 2025 23:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763586472; cv=none; b=efH4jZAQYIdkSuFl1S5177aCR+tiaewZlvFt2XHQ44t/XlcVtEvwtU8k9kvPFUzuCGKqIvK8eVSUDCngebIWvviUPog6FSCMFZPZtamtolFhizJIadSNCq8sexO3O9db8KfwBjSr6eh4XzRi3k8BmvzdIMDwcqWR43fhVAq0vvI=
+	t=1763596748; cv=none; b=LmlP9EIQrdRoxWWAL9wbIVAZepC3lAhR9ScBQ8fOBHL4l4EUV1fvQzP9+s7Ydse6V2nH1i+s37PIx4CtuMmOGiQMd7bBQB2WOjonA0sncBWVMghoKq6Yb8puNpEqx0/TOTbHgot9PGHlWlumim1sltQYZGLZi3z1op6oahkCsPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763586472; c=relaxed/simple;
-	bh=iREFdzzJysrp3Et3JAuedcKCYlfWShY8Y9Y5wPCsl0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LzLIcBXBive1rfsZxbDFJ+8Nro+2fR7ka3TLaQEHS7WSMTImGzoNKZrl+lYXn0DPZtsF+ZxGHBWmSUxPrUnSKz890DvhYOlDwaU1WJoH3dBWgvFVEuSAboX/CAUeFIFMh7y2wIO0EKxrCucdze1JVsYY1J9lu4eDtRoQoOHjqkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iANflv5L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763596748; c=relaxed/simple;
+	bh=aMfWom2YqMjywxvhE2wFwmB5PmpGzL00uN54+jIPqgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W5CIMmwHn9o7zrwkXZrOXZJ5mxGzKn0L7IDAfzSqrOnSB5w6FG7RNOMJPP6kFsGdc648izAUcaf3ggFhseOYENWCEWbLYnNN/FsDxqIJM1Jc3O8EsgOY9iXtiEvGAqG8hSqUIAeSlWnZIqUzff3VMSQdCcW0ipQ/nX0uhh3Vnog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4iKVDWi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iANflv5L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C04C116B1;
-	Wed, 19 Nov 2025 21:07:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4iKVDWi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29638C4CEF5;
+	Wed, 19 Nov 2025 23:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763586471;
-	bh=iREFdzzJysrp3Et3JAuedcKCYlfWShY8Y9Y5wPCsl0E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iANflv5LsAwXhCO7fduWiAtvzGvLBcKRetRojorZXQaYx4Vxen/wqZ4MHGY7c8yqv
-	 kCLO+zxje7pYPke5768QDUMZayt3cqPGZTijSjN9dEGsksh2hfWfQULFhxfmznsfLU
-	 lM9xaiZVoRsKYdqnLUHF8nAuERzv0P+hw5Ax2VM/1VEUi5oLY/HkrkLNAjoD+eNU29
-	 l9vM96R9bihKwW/ZEl8dqSmBnCPJM0s5voDbNztiW1vxvxxMLSK8y3kY5R9Fj+FdYX
-	 XZoquYMInpcyVqLDl/LYZHRud1wKM0nWuv6PEukahyXRW6dcfnSO+OJXwLhFt4hNnm
-	 ZzY65A8f04aLQ==
-Message-ID: <240e27f2-29ba-4b4c-b8b0-0534eed005c2@kernel.org>
-Date: Wed, 19 Nov 2025 15:07:50 -0600
+	s=k20201202; t=1763596747;
+	bh=aMfWom2YqMjywxvhE2wFwmB5PmpGzL00uN54+jIPqgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V4iKVDWikOrKp8hiVqz7Okp9Q1q3wFuIqlNEPISzAxRKkGlABp3eSp+Q323D3HozF
+	 WQovlJ6kDkd1iVz/X6E3BuADT96viHLBJ7t0DQqIMu0W2U4TzTk/Py116HXU2jWkNa
+	 qdzNhgGXEtQ4zt9knAMOkL7xksapBqYXZmJERU27xjOqcHNjcHg5YUTlmcsrX6G3XC
+	 tceGSYW6Roc2HnSvfiJUQJere5z2Bk3CrTyV2sV9MvwNGqupZN9jMnrpfcC2hL8URJ
+	 mVU1CXqlhnfTXBnt83idwbEra5CVbSFhTWeLRTWsvxW7s1GEz1PusdHV6R537Gv57b
+	 4zMtgEWnlvIaQ==
+Date: Wed, 19 Nov 2025 17:59:05 -0600
+From: Rob Herring <robh@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH 7/9] dt-bindings: connector: Add PCIe M.2 Mechanical Key
+ E connector
+Message-ID: <20251119235905.GA3575788-robh@kernel.org>
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
+ <20251112-pci-m2-e-v1-7-97413d6bf824@oss.qualcomm.com>
+ <aRS/3OTerCBGlmBm@lizhi-Precision-Tower-5810>
+ <qiwgnela4b6gbwuuq7xaqjong47c2ix6caagjl6ryqukzqkswn@6l7rvkf4dfyx>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: AMD PMF: CCP PSP fails to reinitialize after hibernation causing
- TEE errors
-To: Lars Francke <lars.francke@gmail.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
- platform-driver-x86@vger.kernel.org, Patil Rajesh <Patil.Reddy@amd.com>,
- "Shen, Yijun" <Yijun.Shen@dell.com>
-References: <CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com>
- <CAD-Ua_hYxHWa_rQWC6-2kMw4pXWt1fkdJT06AWeTZUbBFT-HDA@mail.gmail.com>
- <98d440b0-92b5-45aa-a42b-89dd5a243bae@kernel.org>
- <CAD-Ua_g+ifUOoJORoBiypgk3v4ynTjw=nvmoK6DJg2h-e7aXEQ@mail.gmail.com>
- <b6462189-5de6-4297-8d10-fce795c38ceb@amd.com>
- <2146bd06-a1ef-4668-ab34-f00172257424@kernel.org>
- <CAD-Ua_ixbf1ApMPMMSner28-fRg7BuhTu3QSw1U=ozqgS9fUjQ@mail.gmail.com>
- <6f81529b-7ae6-4d63-b0f3-7787a668698e@kernel.org>
- <CAD-Ua_hAxj5PskiFdiEA7Qt1bWEhKRvCNAyQj0BQmZ2vDnV4aQ@mail.gmail.com>
- <089b2cca-4c84-47b0-a96a-0363ffd642d7@amd.com>
- <CAD-Ua_gxPsTbG_3shtqAZX_E4ns5hHPZbTszQAXH2jbfLxP_Rg@mail.gmail.com>
- <eee498d1-6c12-4988-9a70-1e108848da62@kernel.org>
- <CAD-Ua_hX_PYxYUfFDcTv3R4pV0s5ninRSK+-1zxtttMhSPoQtg@mail.gmail.com>
- <c31b5a46-5dea-48c6-bfe9-b3efc989f0de@kernel.org>
- <9885395c-fbf0-447e-a9b5-2231a3071dc7@kernel.org>
- <CAD-Ua_j=GiO9yjy1rg99xQXdTxV2Vp+3qjiUoMomLWZEEe0tyw@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAD-Ua_j=GiO9yjy1rg99xQXdTxV2Vp+3qjiUoMomLWZEEe0tyw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <qiwgnela4b6gbwuuq7xaqjong47c2ix6caagjl6ryqukzqkswn@6l7rvkf4dfyx>
 
-> Sorry for the long silence, just back from vacation.
+On Thu, Nov 13, 2025 at 10:30:42AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Nov 12, 2025 at 12:11:56PM -0500, Frank Li wrote:
+> > On Wed, Nov 12, 2025 at 08:15:19PM +0530, Manivannan Sadhasivam wrote:
+> > > Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
+> > > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
+> > > provides interfaces like PCIe or SDIO to attach the WiFi devices to the
+> > > host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
+> > > devices along with additional interfaces like I2C for NFC solution. At any
+> > > point of time, the connector can only support either PCIe or SDIO as the
+> > > WiFi interface and USB or UART as the BT interface.
+> > >
+> > > The connector provides a primary power supply of 3.3v, along with an
+> > > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> > > 1.8v sideband signaling.
+> > >
+> > > The connector also supplies optional signals in the form of GPIOs for fine
+> > > grained power management.
+> > >
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > > ---
+> > >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
+> > >  MAINTAINERS                                        |   1 +
+> > >  2 files changed, 155 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..91cb56b1a75b7e3de3b9fe9a7537089f96875746
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> > > @@ -0,0 +1,154 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: PCIe M.2 Mechanical Key E Connector
+> > > +
+> > > +maintainers:
+> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > > +
+> > > +description:
+> > > +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
+> > > +  connector. Mechanical Key E connectors are used to connect Wireless
+> > > +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
+> > > +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: pcie-m2-e-connector
+> > > +
+> > > +  vpcie3v3-supply:
+> > > +    description: A phandle to the regulator for 3.3v supply.
+> > > +
+> > > +  vpcie1v8-supply:
+> > > +    description: A phandle to the regulator for VIO 1.8v supply.
+> > > +
+> > > +  ports:
+> > > +    $ref: /schemas/graph.yaml#/properties/ports
+> > > +    description: OF graph bindings modeling the interfaces exposed on the
+> > > +      connector. Since a single connector can have multiple interfaces, every
+> > > +      interface has an assigned OF graph port number as described below.
+> > > +
+> > > +    properties:
+> > > +      port@0:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: PCIe/SDIO interface
+> > 
+> > 
+> > PCIe and SDIO is difference signal at key E. why combine to one port? The
+> > similar case is USB2.0/UART
+> > 
 > 
-> I have now tried these three patches on 6.18-rc5:
+> They will be defined as separate endpoints in the next version.
 > 
-> * 0001-crypto-ccp-Add-an-S4-restore-flow.patch
-> * 0001-crypto-ccp-Prevent-calling-psp_tee_process_cmd-with-.patch
-> * 0002-platform-x86-amd-pmf-Prevent-TEE-errors-after-hibern.patch
+> > > +
+> > > +      port@1:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: USB 2.0/UART interface
+> > > +
+> > > +      port@2:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: PCM/I2S interface
+> > > +
+> > > +      port@3:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: I2C interface
+> > > +
+> > > +    oneOf:
+> > > +      - required:
+> > > +          - port@0
+> > > +
+> > > +  clocks:
+> > > +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
+> > > +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
+> > > +      more details.
+> > > +    maxItems: 1
+> > 
+> > Do we need add pciref clock here?
+> > 
+> > > +
+> > > +  w_disable1-gpios:
+> > 
+> > use "-"
+> > 
+> > w-disable1-gpios
+> > 
 > 
-> The good news: The original error (TEE enact cmd) is gone after hibernate.
-> The bad news:
-> * I tried four hibernate cycles
-> * Two of them did shut down the laptop, two did not
-> * After resuming from hibernate I could not reenter hibernate, reboot
-> or shutdown at all on one occasion
-> * I don't have logs for any of these :(
-
-I think you are seeing an unrelated problem those other two cycles.
-
-I've done testing myself (on top of 6.18-rc6) and they are testing solid 
-for me.  I've posted the patches to the mailing list for review.
-
-Link: 
-https://lore.kernel.org/platform-driver-x86/20251119205942.3411155-1-superm1@kernel.org/
-
+> I just went with the spec that defines the signal as W_DISABLE.
 > 
-> I assume these two are unrelated:
-> * On boot I now get a message "RDSEED32 is broken. Disabling
-> corresponding CPUID bit." before I enter my LUKS password
-
-Yes; this is AMD SB-7055.  There is an updated linux-firmware microcode 
-available for it.
-
-> * Twice WiFi failed to reconnect after boot ("send auth to" followed
-> by "authentication timed out") - I'm 100% sure this is not an issue
-> with my home setup
-
-Yes, should be unrelated to the PMF/CCP S4 issue.
-
+> > > +    description: GPIO controlled connection to W_DISABLE1# signal. This signal
+> > > +      is used by the system to disable WiFi radio in the M.2 card. Refer, PCI
+> > > +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
+> > > +    maxItems: 1
+> > > +
+> > > +  w_disable2-gpios:
+> > > +    description: GPIO controlled connection to W_DISABLE2# signal. This signal
+> > > +      is used by the system to disable BT radio in the M.2 card. Refer, PCI
+> > > +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
+> > > +    maxItems: 1
+> > > +
+> > > +  led1-gpios:
+> > > +    description: GPIO controlled connection to LED_1# signal. This signal is
+> > > +      used by the M.2 card to indicate the card status via the system mounted
+> > > +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
+> > > +      details.
+> > > +    maxItems: 1
+> > > +
+> > > +  led2-gpios:
+> > > +    description: GPIO controlled connection to LED_2# signal. This signal is
+> > > +      used by the M.2 card to indicate the card status via the system mounted
+> > > +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
+> > > +      details.
+> > > +    maxItems: 1
+> > > +
+> > > +  viocfg-gpios:
+> > > +    description: GPIO controlled connection to IO voltage configuration
+> > > +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
+> > > +      host system that the card supports an independent IO voltage domain for
+> > > +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
+> > > +      3.1.15.1 for more details.
+> > > +    maxItems: 1
+> > > +
+> > > +  uim_power_src-gpios:
+> > 
+> > property use -
+> > 
 > 
-> I have not tried to debug any of these yet as I'm just back at my
-> laptop but I can try to look into them a bit more if there's interest.
-> 
-> Thanks,
-> Lars
+> Again, this is as per the spec. If DT maintainers object to it, I'll change it.
 
-I think if you can revisit on 6.18-rc6 with some more testing we can see 
-how things are going.  FYI - the second patch for psp_tee_process_cmd 
-appears to be unnecessary.  I couldn't reproduce any failures that 
-required it.
+Use '-'.
+
+Rob
