@@ -1,125 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481AC1F94A;
-	Wed, 19 Nov 2025 13:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0545F35E551
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 13:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763559398; cv=none; b=JzIMlmdPZe7Dc3NI5z5aJ6V3t/UZINJpMfGIe6uqKkHv6MY8Xmk4zQ3gRY4inDt9SCMd5kWb/Npf74IwEwEpalWLzFpMtP4N/SP+HZUhzrwlFTToHJeC0CJyZPuw0LpdGyvUW6MCmbScy2hervmKWeLUSP7MivFxnSmLGEiHgZs=
+	t=1763560118; cv=none; b=dauwxoERNxrspq9kfeqY/WBEEu3PZEFEu0qvFVS/uUE6zbAghOVbR+CKocXzGMPKAGpYvoHWlORzYdygIkHmPMcmhF1kC1+fMfgOPZeFKdPdUeehbsLNcugGJoZJCVU2IAYI3SvX5zYY+kF7yXpSfirf3PyHpi2dur0Zpaz6EIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763559398; c=relaxed/simple;
-	bh=b4C1zi6pPGP3ojQqok735+h12MiBEDngE+oY7+3CFSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FF3lObWnkZtAf33hV2M+B5i+/AbVa/LkPaZLPFxpfKbGOgnGFJ+65St3CaDK0axQe1gGZQZ81h0lj7xfw49vVrBDC8y4i3ZV6ElnJSAg5FvUBN8T+kDBz1G3W43oTwwvDMoN6E8Lw28/YA8USYtf5XLL74z9s+HmjZnK6h11dYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uo6UkyRg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763560118; c=relaxed/simple;
+	bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pQMfrfLv+dVkqZQ5Xno3n2ln0yGWFLXDSa/+jrvhQavofUQknSAvNF8oSiSQfcmq6qjJ+p9BxH/kUCeBBLiMr6vYS5yZp8flvbx23XbhiXmYcR4Gh3P4rjAjTirCCc56pXuTOGHlZr87WNzr/ONT7nQViY1mVyP5eMYb1otNmQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DA9Lh4Hw; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uo6UkyRg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22433C2BCC4;
-	Wed, 19 Nov 2025 13:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763559397;
-	bh=b4C1zi6pPGP3ojQqok735+h12MiBEDngE+oY7+3CFSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uo6UkyRgc0Zk2iPBMqAqLRLAXbaw0YpbdMj6flIYDdvUYMHqk9Vy5rK0Ld4F48ejH
-	 +fHrpi1PzLlxkpAhxk9K9vjdnbrqT37MghMDLLAuA3cKauq0ZxCn/xOHgXaVLTulUv
-	 gVMm2rG9Pu3uvTqao2u2WZWdxkqMj3Do8vJIDPoDWXQL1pfgI5OhTDtfWTBfMn0QUn
-	 IGv5J947K2ac5hwdCyUOH7CG6CMvS4OI22KGhQUTB34FWqvuhSAzvG3dNsCX89QFaa
-	 /rJq1CJHklHndrvU7v57l9odNuAoP/dxKhS6jph6/oWv1YrLZhFk2eiC9/ABohEkRc
-	 2fsd60dFEuDGA==
-Date: Wed, 19 Nov 2025 19:06:17 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH 8/9] Bluetooth: hci_qca: Add support for WCN7850 PCIe M.2
- card
-Message-ID: <ncylcv227tpe574pj3yxpbsqx2rdmzf55zejschws56h6herdt@pck2vnhpmehq>
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
- <20251112-pci-m2-e-v1-8-97413d6bf824@oss.qualcomm.com>
- <CAMRc=MdRw+spjN0ySJ7We_GJ8GaDU2Nb4unaxcnr2ZLjLOeSrA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DA9Lh4Hw"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-591c9934e0cso9167289e87.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 05:48:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1763560114; x=1764164914; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
+        b=DA9Lh4Hw+oY+bqEe6h8b5kGQrOj8RARuXnZQK3gIXJca0FXwV/f/d9i7S0L2CNcLtD
+         TiBHnFwDyRtSlLyX4OtBfrdnBQ3eKrR+yup0jceUVVSIpta9x+BRbGmmp6s0AVvlm61h
+         EYabgtefdM/EGNNGFLYjqmQb/Tkc/jPXUAtSJLTNUd/suh8pwa4kX3giB11Xi8nxX0QZ
+         Jkr0DrrM8uT2r8L1qCwT9L4OcVpmTn9w3hnjRfp4bq0bKbDj1dvXmjsc4jFfxOnLEAeB
+         g6BayuXADxD0MV18D4o0YiDWXh8ke/We5UmVY9BL3gqc16L0IUXaml5ayyp+i75OUlEB
+         briQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763560114; x=1764164914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
+        b=oQaqlHmZQ5JrvYyqo5D8GSSPK8cDYS3kiSfebknhQF68E3Pk1BbeSpfLk8aNhSpAla
+         4p+Zc1xpYIQcgLtgI52xrbAVK/fuJ5YDz54Gn6xLLxx02gbcgbY6TgUdbXecSCOlOg/8
+         CIgiwICqnFOKd2igV6UYtp9Wf0Y0bppErKGcIr+fV6Dfgv6MLEfBJjmFPJFs0gYvgA9N
+         OjxlGUlzfpv94xmzEiUVBfiL8vYC/H58n5uXyZEyCE/KMT/PYvrtmu4MViP60wuuU0mi
+         weZxXGhkMFgHn8TP5erEuJOtF9+2wtBXwQXwyjNhtlvG/gaawpHalS28idI6aBeQeAPS
+         wUsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmMSbLZw8kZWSq2+StvogsPEr+sv45v5VmhdwD98nqlDH5+oo4A/25Bcvi3NGVi3gD3Nudxb/RSo98UtU+cttIkaJ7@vger.kernel.org
+X-Gm-Message-State: AOJu0YydK6aU7Qy9Tf9cZH/3wTcWNywU8KZoIKO8c5YkvOJixcdq6UjT
+	/ZDdIBNSwFvo24UC+rt+YItorEttmfpy6hSNL5RjdhJkwAp+6EphN48RIiHv1k5nh4bltBN9HFH
+	MEO7JR/aB/5PtvuVWuRuvD7LCJcQ9DqDo8Ncq2ZFz6w==
+X-Gm-Gg: ASbGnctzvak/8Qs4xhKs/ar8kYz2qbkCpRM6zpvdjHfG8Ar6n2bATMskg9fh9xWZayg
+	ZZd6t3C+2iEM0zBwwi/H20DGnp1P4KF4FqLz1A/ep1LgRoJhcqD9G4CUiVQWwVxB3szAU2qQVPN
+	LeV6y1xwlwGjxQ+UMHC6tN0rK0k6dTXx3BEQ+ZHvR7gT/H2DIfnW5PgqBrivMV74mXWTElovdoo
+	Yv9eX/c1k2TW1AoGpx7ga3POUVR4+saequJEBjGhOjyiK0uJGJRVF/xs8ofNCcpWwLeFjEWhbT8
+	/ywB6sMGLedq5oBI43XFBItDshZe6gAWti/OXZo=
+X-Google-Smtp-Source: AGHT+IESnidjOfk95weQJ+gd72JHAqgirD6KxoFmOMXwiEt1mJNX+SXg4B4jwVkMQBKp1H6PiYO2XjPlHniXQxEtguI=
+X-Received: by 2002:a05:6512:b87:b0:595:7e9c:cdfa with SMTP id
+ 2adb3069b0e04-59584198675mr6713392e87.6.1763560114155; Wed, 19 Nov 2025
+ 05:48:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdRw+spjN0ySJ7We_GJ8GaDU2Nb4unaxcnr2ZLjLOeSrA@mail.gmail.com>
+References: <20251107143837.247085-1-marco.crivellari@suse.com>
+ <88c0ecd8-0d61-f4bc-ae13-cce971b9c69c@linux.intel.com> <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com>
+ <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com> <CAAofZF7GhnQ6nQyvLSbTPOv-k4Y=nM9BvoRNRJOA53bbWLo70g@mail.gmail.com>
+ <bc69382e-c409-11f8-a278-d93d0f68ab1b@linux.intel.com> <CAAofZF7GwRKQcNAUK9=j4mqnz+HX_ONG9YKs4PLztbjvJxrxZg@mail.gmail.com>
+ <324dfca8-8f16-158c-8fb9-8efb52eff4ac@linux.intel.com>
+In-Reply-To: <324dfca8-8f16-158c-8fb9-8efb52eff4ac@linux.intel.com>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Wed, 19 Nov 2025 14:48:22 +0100
+X-Gm-Features: AWmQ_bnJkvhics4c12KNJpyTqJ8PdxWV-g0F6zlS9s6AGYAux-Ork3g2QeB9VPY
+Message-ID: <CAAofZF7AbQ12-3DzpN9Ai49VzOHa3VqyfZnXSpfVq7qijO1GRQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/surface: acpi-notify: add WQ_PERCPU to
+ alloc_workqueue users
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Michal Hocko <mhocko@suse.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 03:29:49PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Nov 12, 2025 at 3:45 PM Manivannan Sadhasivam via B4 Relay
-> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> >
-> > The WCN7850 PCIe M.2 card connected to the UART controller exposes the
-> > 'WCN7850' serdev device and is controlled using the pwrseq framework.
-> >
-> > Hence, add support for it in the driver. It reuses the existing
-> > 'qca_soc_data_wcn7850' driver data.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/bluetooth/hci_qca.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> > index 4cff4d9be3132561ee9bae4ddf2c8ac0bc13ecd7..09bfb3bba93698f496947775bf6b31f2f20279f1 100644
-> > --- a/drivers/bluetooth/hci_qca.c
-> > +++ b/drivers/bluetooth/hci_qca.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_graph.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pwrseq/consumer.h>
-> > @@ -2344,6 +2345,9 @@ static int qca_serdev_probe(struct serdev_device *serdev)
-> >
-> >         qcadev->serdev_hu.serdev = serdev;
-> >         data = device_get_match_data(&serdev->dev);
-> > +       if (!data && serdev->id)
-> > +               data = (const struct qca_device_data *) serdev->id->driver_data;
-> > +
-> >         serdev_device_set_drvdata(serdev, qcadev);
-> >         device_property_read_string_array(&serdev->dev, "firmware-name",
-> >                                          qcadev->firmware_name, ARRAY_SIZE(qcadev->firmware_name));
-> > @@ -2384,6 +2388,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
-> >         case QCA_WCN6855:
-> >         case QCA_WCN7850:
-> >         case QCA_WCN6750:
-> > +               if (of_graph_is_present(dev_of_node(&serdev->ctrl->dev))) {
-> > +                       qcadev->bt_power->pwrseq = devm_pwrseq_get(&serdev->ctrl->dev,
-> > +                                                                  "uart");
-> > +                       if (IS_ERR(qcadev->bt_power->pwrseq))
-> > +                               qcadev->bt_power->pwrseq = NULL;
-> > +                       else
-> > +                               break;
-> > +               }
-> 
-> Did you by any chance copy this logic from commit: db0ff7e15923
-> ("driver: bluetooth: hci_qca:fix unable to load the BT driver")? This
-> commit is wrong and it flew under my radar during the summer and I
-> never got around to fixing it. It doesn't take into account probe
-> deferral.
-> 
+Hi,
+On Wed, Nov 19, 2025 at 12:12=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>[...]
+>
+> For those system_wq changes you can follow a similar structure but alter
+> it to match what is changed in the other interface.
+>
+> This seems already okay:
+>
+> "Replace system_wq with system_percpu_wq, keeping the same behavior."
 
-Ah, yes. I think there is no point in continuing if devm_pwrseq_get() errors
-out.
+Sorry it's just to check with you before sending a useless series.
+Sounds good this, for the 2 system_percpu_wq commit logs?
+I don't think there is more to add here, because it is a wq rename.
 
-- Mani
 
--- 
-மணிவண்ணன் சதாசிவம்
+This patch continues the effort to refactor worqueue APIs, which has begun
+with the change introducing new workqueues and a new alloc_workqueue flag:
+
+commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
+commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+
+For more details see the Link tag below. Replace system_wq with
+system_percpu_wq, keeping the same behavior.
+
+
+Thanks!
+
+--=20
+
+Marco Crivellari
+
+L3 Support Engineer, Technology & Product
