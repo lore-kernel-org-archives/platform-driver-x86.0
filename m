@@ -1,163 +1,180 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3666B336EC4
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 10:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167BE346FA4;
+	Wed, 19 Nov 2025 10:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763547979; cv=none; b=hUlOf3nnrigBwS954y4iFOGbiXNzisQDAy68RFEA56zMkO6ZTOT+uWDZ6a98eI3a757+qT8bNDOuG9AfJLE/C+DeVDyrmcaQxbx6wN0d0t1N0I1ENaFs4ivirFD9PtN58OwpnPW6Gvm6o1kWsrFwSTDJIYXIH1IYk3HluMzJGNw=
+	t=1763548739; cv=none; b=uo2sWxToyzdLH+e0VzIEBn+oU+FEOVIEQTUKkBCcBxlHiUF0vod1O6qeyX6D7M9BlqLZNosgqC/+NXoghieX+i5n0Bpr50jL0yomRDK2VEcyyrPoxoolk0Sh169dyWvGRsBKZ5GFVOjs44dwnzuZRJg43Y9ruPtj7vVJWZNwd78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763547979; c=relaxed/simple;
-	bh=RZmhTimbN4j6tZfDc+bp0lAvHFl++RwtjO3rsNfrIJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q64ywx3iaGzLMhMAzx/Qo9QplH1CaBriAynov+nl5RqAL0oixqMaZT1d8lEuyP7NOQka1eilSVSRpXOFwY/AuSPT1emxQBZ7STS+t+miD/ALE/rupu7HlMO+mqtXPTr3QNq6bYOFiqKkb8fjhcdzSPItdvwkM1FE/pAm6+Kjmto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OcfrsC1L; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1763548739; c=relaxed/simple;
+	bh=0RhvFd+zRNc/rXZ4YeZPNgBoDkHRYlDmuRsepA5UXL8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=b3f0k1wSXXc7LSZBo5Ne5SeKq7GBl5BPB/hpJ4Rrbc5NvKbHjSt+vtJgv9NSJCm17sZcviMHEmAeM29h5DIg6ppA+sSA73uo+EyGB7NvyKuPFxpAAUn8wfxPSpPwCbBD05JP+FiiJG190hmxq7OIUa66M/G3V07TqYYnZoRT8Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QNWBzlv1; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OcfrsC1L"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-37a33b06028so58980561fa.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 02:26:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1763547975; x=1764152775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RZmhTimbN4j6tZfDc+bp0lAvHFl++RwtjO3rsNfrIJo=;
-        b=OcfrsC1LXGi7++FN7ZD7DhLktrN92hf6YOHawSbOeTjw7Ur+HyxWyqftl6WBgYz8gc
-         7hAHB64Rna8Aj/HYe+331GK4rGADQTQ2qejsDCga9VTwJs224FfYS9gQpQj19Ukbul5h
-         iYWF6fUs2h2L4nH3utiIRgKbaWoRXuFwFNsN5HEpZKzz2hjWPyx/1KPhftLhXrkxzq7P
-         O6d1hG47uqjmazw9d9NR3yQIIjmEZt2F/BJ7Jpa+UlqDzoWasiRx43YODz2NjVwZC1W0
-         HWJAFRw+cSLfuEbuG4yLzVokCma34PIR+Lt9fqv5fPVnc31FXL7y7TX5BD1gAhMFqKAz
-         0cWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763547975; x=1764152775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RZmhTimbN4j6tZfDc+bp0lAvHFl++RwtjO3rsNfrIJo=;
-        b=Wwyp+R3Tik74n1QVLqJ3Bet7C3BQOpFsDs8S9aqELPZHLDbm3uajb8+kiXDGc+7L+O
-         Xwym3Bwv6P+vr6zImhpAemPjeVCoJaCjBYvhut6wq0ZUagZqV9/ENcaXyoF4K8scAWPl
-         Tpc/IJA9tREYP6l0ydfnSN9iCAjUp35Fk6nUh17bGCclzDAFsXfi3fS7GxC3iCEgYrSq
-         JbRLKTrnbVkRPG4J2c5oRNqqFz7mS67IBqvBPdtsIxh7seTPoYm1L78+f6o3aR4GeEgB
-         1fMyc6V7ShGWQWN5nB+vXEgIfMoZ24jf5pBiKQYXFXMlEu8yPrTQSV1SFLk+LTTO5Pkc
-         dv+w==
-X-Forwarded-Encrypted: i=1; AJvYcCX/UQLgKb7vjsQDZJA/ijGBaYskYWMaR103Rt4Jvfz78pUK9BBVeLTsa2TEbWxK6Dp5RMs3iAkieaXI8LnUshZOKkLe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD99QbwVZx0pDJt3p2Jk00I6h+fpwkDm5S+ORe6fbTjeE+N2rg
-	YjoHUNlZYvKAby0AskdLFxnegmbok0GcOlb/gZSKkXa4wL6mIbHPozf5JSwtEps37HV0Zm8D73m
-	epLrA7ZoSFau0D5f+1WuTcnifrpl4mEBfRNQbIDPkyA==
-X-Gm-Gg: ASbGnctz+WlxdJJNK3H2EZDdt22wjB72PJ4mfzHAXM+Eo+hyVRCkaQxjPyIakxRxe2q
-	crtgzUBHUfJpcH/vgBSwjRobSEi1mp3Ne9wqDP8i92tsss9dLs9dMXS++w8wf4gnTmjlbXeBXlK
-	lJT2lRpL7E4rIWjyfFMmYbrijD7C+fAOvXLQaX+8V+jLpZfeJiCfaaoj4DXqvPaUmKAtPHX0+ty
-	FRs5Iqe8+TrCnYxyJaK3P29NENJSwKtQyhtqgcoVnDWoEQqA9LZ38xtBT0QOzm9GolLR1zAWfkT
-	Szvav013quvPJQyJD6AQcasf868q2kz7E1EVXGA=
-X-Google-Smtp-Source: AGHT+IE3JbcxhEiA7McipXOJXF9Xod3OqPQDw7fs10365Css5CtDUdgjA17S4uu6xg7AgIqlK8KiT9ynUc5xgtSkCDM=
-X-Received: by 2002:a2e:8a98:0:b0:37b:af78:5901 with SMTP id
- 38308e7fff4ca-37baf785d7bmr48562751fa.6.1763547975292; Wed, 19 Nov 2025
- 02:26:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QNWBzlv1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763548738; x=1795084738;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=0RhvFd+zRNc/rXZ4YeZPNgBoDkHRYlDmuRsepA5UXL8=;
+  b=QNWBzlv1hEQGQDhHkcFXpQnQZ+YWXM1zV0TCBL9hmFu9uUBTGvDhayo7
+   TuGDDfue7mSXOioDIVtpRl+3CvfCg9L1lMXP0D8bFeTyqTOdOpEPqsTMH
+   Eucru7AONIzzSY72NjFL8hm0fojqc9al3X01zcuddhfSdzUOwpgDo8PKJ
+   QZD6JnEBWYHO1y//yKQXda7HjRT31VDqSllwwjOK/+z8M1+aLRmz/tH3e
+   vw+ZaZgLaxwSmaWTuj9z1lMUhOqVVGH7OH7Wybo092f5qOp9nja8xqPUx
+   IskNxqXN7OADUOgPnWCJH8mVsR8wjelkKTKBx5xxSjxSILQgj4ZfEl91u
+   g==;
+X-CSE-ConnectionGUID: vumdRNE6R8SNmAlaYFULBQ==
+X-CSE-MsgGUID: HbjQo4jORiey/c59pxjkHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="88238675"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="88238675"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 02:38:57 -0800
+X-CSE-ConnectionGUID: eNZmq1SqRZevuYwO8PvJfQ==
+X-CSE-MsgGUID: I6IagunqSVO0uxG+TQZ8Og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="196151872"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 02:38:54 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 19 Nov 2025 12:38:49 +0200 (EET)
+To: Marco Crivellari <marco.crivellari@suse.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+    Frederic Weisbecker <frederic@kernel.org>, 
+    Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+    Michal Hocko <mhocko@suse.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH] platform/surface: acpi-notify: add WQ_PERCPU to
+ alloc_workqueue users
+In-Reply-To: <CAAofZF7GhnQ6nQyvLSbTPOv-k4Y=nM9BvoRNRJOA53bbWLo70g@mail.gmail.com>
+Message-ID: <bc69382e-c409-11f8-a278-d93d0f68ab1b@linux.intel.com>
+References: <20251107143837.247085-1-marco.crivellari@suse.com> <88c0ecd8-0d61-f4bc-ae13-cce971b9c69c@linux.intel.com> <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com> <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com>
+ <CAAofZF7GhnQ6nQyvLSbTPOv-k4Y=nM9BvoRNRJOA53bbWLo70g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251107143837.247085-1-marco.crivellari@suse.com>
- <88c0ecd8-0d61-f4bc-ae13-cce971b9c69c@linux.intel.com> <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com>
- <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com>
-In-Reply-To: <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Wed, 19 Nov 2025 11:26:04 +0100
-X-Gm-Features: AWmQ_bl_OVb6zwsNjtmzNiMl0Wq-OlVeuuT5qGdebtTxoi8pflw5J1yrIGXcBGo
-Message-ID: <CAAofZF7GhnQ6nQyvLSbTPOv-k4Y=nM9BvoRNRJOA53bbWLo70g@mail.gmail.com>
-Subject: Re: [PATCH] platform/surface: acpi-notify: add WQ_PERCPU to
- alloc_workqueue users
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal Hocko <mhocko@suse.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323328-1225671626-1763548374=:970"
+Content-ID: <23dfe394-c2a0-fdfa-cec1-03e0baa55893@linux.intel.com>
 
-On Tue, Nov 18, 2025 at 3:43=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
-> [...]
-> > What do you think, is it better in this way?
->
-> Still quite non-specific to this particular change.
->
-> > "
-> > This continues the effort to refactor workqueue APIs, which began with
-> > the introduction of new workqueues and a new alloc_workqueue flag in:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1225671626-1763548374=:970
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e267fb8e-83fd-634d-abdf-5d764bca7f6e@linux.intel.com>
+
+On Wed, 19 Nov 2025, Marco Crivellari wrote:
+
+> On Tue, Nov 18, 2025 at 3:43=E2=80=AFPM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> > [...]
+> > > What do you think, is it better in this way?
 > >
-> > commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq=
-")
-> > commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+> > Still quite non-specific to this particular change.
 > >
->
-> The refactoring is going to alter the default behavior of ...
-> [*].
->
-> > For more details see the Link tag below.
->
->
->
-> > This change adds a new WQ_PERCPU flag to explicitly request
->
-> This change doesn't add a new flag, "explicitly request" part is correct
-> though but as written things are mixed up.
->
-> I'd just replace this paragraph and the next with something much simpler
-> and more to the point:
->
-> "In order to keep alloc_workqueue() behavior identical, explicitly reques=
+> > > "
+> > > This continues the effort to refactor workqueue APIs, which began wit=
+h
+> > > the introduction of new workqueues and a new alloc_workqueue flag in:
+> > >
+> > > commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_=
+wq")
+> > > commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+> > >
+> >
+> > The refactoring is going to alter the default behavior of ...
+> > [*].
+> >
+> > > For more details see the Link tag below.
+> >
+> >
+> >
+> > > This change adds a new WQ_PERCPU flag to explicitly request
+> >
+> > This change doesn't add a new flag, "explicitly request" part is correc=
 t
-> WQ_PERCPU."
->
-> > alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
+> > though but as written things are mixed up.
 > >
-> > With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND)=
-,
-> > any alloc_workqueue() caller that doesn=E2=80=99t explicitly specify WQ=
-_UNBOUND
-> > must now use WQ_PERCPU.
->
-> This belongs earlier to description of the refactoring (to [*]).
->
-> > Once migration is complete, WQ_UNBOUND can be removed and unbound will
-> > become the implicit default.
->
-> This is irrelevant detail about refactoring since WQ_PERCPU is used here.
+> > I'd just replace this paragraph and the next with something much simple=
+r
+> > and more to the point:
+> >
+> > "In order to keep alloc_workqueue() behavior identical, explicitly requ=
+est
+> > WQ_PERCPU."
+> >
+> > > alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specifie=
+d.
+> > >
+> > > With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUN=
+D),
+> > > any alloc_workqueue() caller that doesn=E2=80=99t explicitly specify =
+WQ_UNBOUND
+> > > must now use WQ_PERCPU.
+> >
+> > This belongs earlier to description of the refactoring (to [*]).
+> >
+> > > Once migration is complete, WQ_UNBOUND can be removed and unbound wil=
+l
+> > > become the implicit default.
+> >
+> > This is irrelevant detail about refactoring since WQ_PERCPU is used her=
+e.
+>=20
+> Thanks for the suggestions, I think it should be ok now:
+>=20
+> This continues the effort to refactor workqueue APIs, which began with
+> the introduction of new workqueues and a new alloc_workqueue flag in:
+>=20
+> commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
+> commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+=20
 
-Thanks for the suggestions, I think it should be ok now:
 
-This continues the effort to refactor workqueue APIs, which began with
-the introduction of new workqueues and a new alloc_workqueue flag in:
+> The refactoring is going to alter the default behavior of
+> alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
 
-commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
-commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+This looks still wrong! In 930c2ea566af ("workqueue: Add new WQ_PERCPU=20
+flag") you write: "WQ_UNBOUND can be removed and unbound will become the=20
+implicit default".
 
-The refactoring is going to alter the default behavior of
-alloc_workqueue() to be per-cpu when WQ_UNBOUND has not been specified.
+So after refactoring, WQ_UNBOUND cannot be specified as it has been
+removed AND the default behavior is "unbound", not "per-cpu", right?
 
-With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
-any alloc_workqueue() caller that doesn=E2=80=99t explicitly specify WQ_UNB=
-OUND
-must now use WQ_PERCPU.
-For more details see the Link tag below.
+So it should be other way around, e.g.:
 
-In order to keep alloc_workqueue() behavior identical, explicitly request
-WQ_PERCPU.
+The refactoring is going to alter the behavior of alloc_workqueue() to be
+unbound by default.
 
 
-If it sounds good I will send the v2.
+> With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
+> any alloc_workqueue() caller that doesn=E2=80=99t explicitly specify WQ_U=
+NBOUND
+> must now use WQ_PERCPU.
+> For more details see the Link tag below.
 
-Thanks!
+Please reflow the paragraphs normally (no mid-paragraph short lines).
+
+>=20
+> In order to keep alloc_workqueue() behavior identical, explicitly request
+> WQ_PERCPU.
+>=20
+>=20
+> If it sounds good I will send the v2.
 
 
 --=20
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
+ i.
+--8323328-1225671626-1763548374=:970--
