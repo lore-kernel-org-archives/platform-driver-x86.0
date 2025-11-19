@@ -1,337 +1,480 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010040.outbound.protection.outlook.com [52.101.193.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A6A199935
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 02:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763519616; cv=none; b=X8mqe/F/JotmaYHcDJfJyr8rj0JNt8++zzEuB0H9Ti2PYApiapK0qEwGp28+2Op84hTp73r1lC6LDySPa6ksOwPeHpYToEdV/DMDH4ST5tdTPr4Qt+hJa+5i2UvesulKTc/tpcAK3xX106gsWbzioqScJuU7+jpJTu7nLh/gPSM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763519616; c=relaxed/simple;
-	bh=cj7FS8n0vColyVy+W47qxt0G7QShMPu5Ad8Rthb2Iic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mptaJn7x1iBy92WK7yI43sVLkzZga6cYR4GHig5ABuZVs3ORsnNtOWqLQpW9OSc0Tmu8MC5UJOHcaKH40cGTm7rqRrLV2+uVPBKiW3f04KQU1Iz4/ef8BZAZv5qNxb9AOq3V4EiCrOsDCQf5s4izniR4W18t8rDJejJckfEVH38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P2qMt2Ka; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B592EBDFB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 05:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763531994; cv=fail; b=ZVGW3NZNwetLkXN6EQg8MKTT72xNtpDux8kT04vJf66HQvu34HVT7zenQlGyV+hRdp9P5rOnrSiVGctnBjjPA/kWI8OP4vIUVJj/uBtrbzDk2ADzybwj97sIQpFkW4JbWgMpdSEhE1pkIh9NoDQ3nMRMb5Xv+nOKUDL1Ff4anK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763531994; c=relaxed/simple;
+	bh=9i/zdtWKgzmvIIPIY9CwomtL1LD6VqCWX0KSNZZ5BWI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GuVy7IApQYDo9IhuyPl2vPZHJNBgqtsz3oXsV+w5uQP70k+cBZsNejDVAoLivPbGKvq4d0n5Gm8N1tQ9vL8w5TWId8gv0t3Sz1sqT8X9Nun4LbsDZ2/7dQlfdXJ4TRDxD+ahJyB4lANFKyulQXaxdQdkKsUDdT1rm7Mz5a9TtaQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SMOK2lT4; arc=fail smtp.client-ip=52.101.193.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2qMt2Ka"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-47118259fd8so45818535e9.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Nov 2025 18:33:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763519611; x=1764124411; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n8jsLdIIjIqBVqgB66W4xg7i//zbDwyz5yoMrl38a0M=;
-        b=P2qMt2KarGJag7t9hLcfioJBK40ZGPZQ4PNCDhyb9qT0wEIY4aeSwCZN6JY6ilfIak
-         BJ/nZl8TnUha/eBs/TfCFcbbRG+EACMQgaxMSnhw8PVGCygRCId0E8UrOhUEhc/FgBrX
-         Tcsxeowgh+pqBLcjDn3NMLYCeyrvHAQjLk/1/9w1qtkgZVaUeu+DTYCzs3bTohxJL+MR
-         7Czhv8V8okjM7zwXgTja5FPK5TukQnLT+Cpmf3e0EFM8SZazPhzaCeMVSDtpYHbfv8tf
-         axH4yd8lD8OyRgfjqSaI65+fCh43KM8kl+d9PTHVcywVCpa8+uqPTiawTV93KC7okZrf
-         X8eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763519611; x=1764124411;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n8jsLdIIjIqBVqgB66W4xg7i//zbDwyz5yoMrl38a0M=;
-        b=Ro8tKw6bgHTot8lzA0hnKWKCASut6nYpCAs1qaOYCuoUZLK76cGWspJ6YGaXeJOmZD
-         j8sdm9zUrqCCDU52+N8uSlLeEXGyMIgLa28kKUjx2MsxuD1b7qwtdSTmZOsngOnec1DC
-         k71rQG7G2yUNnDYlkBmMJZtt089L8ikSTmWSTCCZlGYulLuldFd0pTj43pff4Rgp9A+u
-         CEuYOJB7eGIOHXcYIeUzkQvQFEpshvtnEXbVqNAsaBYDKvwfCHscKce3pmnVYXSuAjrE
-         ZSiK+dKsah0lhNabB4pq8wGtDNBdPLVn6p4cTT0NPtb+VaB2X53Gkr5dOs9sNW0wMsSV
-         ME+g==
-X-Gm-Message-State: AOJu0YyozbsPfRu/OlwDMA9blhkfCJyf6x/gDw4HRTLrR/AqzCB8rnsw
-	QPMqhykA2UNFqrFXpO3/wJhLSuvam7W5kynuZ0AMMQMr+aYs2LImZBIQ
-X-Gm-Gg: ASbGncvHxe2kBk5Kx3oHzWdLaJiHqTliviDY852D7Kmqe/2cG0i212HS/9loKu72FFV
-	tnvtCCw/6xDQdAJeKCwd/rUgEr4yLCyJg8rkP2KVBmF0iW2cQu3NiqwVX9MJDVkJ4OYZ3tzTiM+
-	ujjxZeutuZSwgciezGSu1pl5U98QwbiuIGXbs0gZLZH7YtYnkp0RLKsYl2xoNzXdmpd9mCWUrlK
-	r8y5XlvTw3P2kWVORpmbqvBkVgm06h6+hXWG7fkf+831XvrNKRbeq0FNO2dCrjjzRtenSRCJl3Z
-	F/mn2/EdKqxs0nW1laqj7NlSfskQqx2CwFRqq3BTQUupTo5hQEir3BrOdUWcWHt7u6gF5S4W0H1
-	axS2v5AgGTqXcAVd1Kor4NESRNwpOwcx4lV6DI2Lzw2GeWxJl6mkk9Q/K/+g9Vb1nt7yuv5BwSb
-	wSU1SQBbXgaakIFRmVH7A2VOAc9xk4QmC3ig==
-X-Google-Smtp-Source: AGHT+IEZJ3D/pCi3DZzhgnvyPk7IaXvHpngSBiwAv0Oh08N0QMYfGotDsV2MxMC+qCTTfeW5HP9umw==
-X-Received: by 2002:a05:600c:5249:b0:477:af07:dd22 with SMTP id 5b1f17b1804b1-477af07dfbcmr25262555e9.28.1763519611240;
-        Tue, 18 Nov 2025 18:33:31 -0800 (PST)
-Received: from [192.168.1.121] ([176.206.93.222])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f206e2sm35623122f8f.41.2025.11.18.18.33.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Nov 2025 18:33:30 -0800 (PST)
-Message-ID: <a68f0dff-0a29-4dc2-ae41-12d646578749@gmail.com>
-Date: Wed, 19 Nov 2025 03:33:29 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SMOK2lT4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n8cuat1616VqvJm/B3vX5P22qDLj7ftewSVHa4HCbM8HyvzBtj0zdpzty8qM9ZIONZS7r+5sejxbwyQtiuWwWnzgHov6izAn1JHDXs8Nou3lApBBEGf/ci11ZDCOH5NiMW8mzq7SNtUE2mUPhAkBYtxCeW2r+SW+aaUC8uu1fYQCjBCsAuwUHg2ajiVEryHQyHGaQ3hiPihRkcoPx++gyH5wcyTGHRNHiOAZXxkk2FuDBdFmkpKsjzPBOI2agxmHXr8dfSphETqKwsLnHbJrjzRtiK7DHEZeVL7IxNpqiO0yRig+CLEel8oWYyWZ4TQEAhitWicr4ixerTgsxByK4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gIR4wjema92nB0tfmIac3/L1AjIxrhPM4PiEeTIhKQY=;
+ b=E7igWbb38TOTSFrNokQgJ95zJsCODIvLbJpnhtHklunBKazdO9e9V7L+sPjcuraifRIIGDTGhWKSIu+I3+xqHsDXFfxg0uHnWjMuNya03fzfpu+YWntPDlgnfhnYiGOh7h9L4vwtqbTPF5PITydp9HS8z1U9nFzc/XK31+RAdU1YRwxK7UkyhOUlQluf7GZzTUFch7Y0I8l8hgMzEkkFZyVr4wfUkiXMPSMc8SabW88IlRoDcIgwtdsYRJ+o1461gaBLKXoN6bO0yIH/z15yb7Yrlx6iCB/QT6upkHeohJ4+uILqFX2DYnOrX8ceIXWK3+XVoiBFWvyghr2EUmU/Ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gIR4wjema92nB0tfmIac3/L1AjIxrhPM4PiEeTIhKQY=;
+ b=SMOK2lT4598k6SeRHJI2a9YXuOp1Vuer55czTPN/+WOyu5YJ8h5R66ctG0Sr590W+2GSvpG3Xs9Sy+3lMWzI9LK7grA/fjlN5Cad8fhdGh0ap1vgcQbHyVFZF2WLYe3v36vdrZxzeMnvbre3MBKC2As8AsL2eQHVxiQyp65FLLA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by SA5PPF50009C446.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8c8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
+ 2025 05:59:47 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%6]) with mapi id 15.20.9343.009; Wed, 19 Nov 2025
+ 05:59:47 +0000
+Message-ID: <835b845a-d658-4d41-8cdf-c473b6804913@amd.com>
+Date: Wed, 19 Nov 2025 11:29:42 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] platform/x86/amd/pmf: Use ring buffer to store
+ custom BIOS input values
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ Patil.Reddy@amd.com, Mario Limonciello <superm1@kernel.org>,
+ Yijun Shen <Yijun.Shen@Dell.com>
+References: <20251107110105.4010694-1-Shyam-sundar.S-k@amd.com>
+ <20251107110105.4010694-2-Shyam-sundar.S-k@amd.com>
+ <73a254aa-465c-f6c8-c51e-e462da9acba6@linux.intel.com>
+Content-Language: en-US
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <73a254aa-465c-f6c8-c51e-e462da9acba6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0189.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::11) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/10] HID: asus: prevent binding to all HID devices on
- ROG
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>
-References: <20251101104712.8011-1-lkml@antheas.dev>
- <20251101104712.8011-5-lkml@antheas.dev>
- <abeecb3b-8d51-4625-8743-1cfff355c0e9@gmail.com>
- <CAGwozwEj94txMhgXPigbJxVxw4c=9vSTHNEjpmCXs_fKeSQcXQ@mail.gmail.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <CAGwozwEj94txMhgXPigbJxVxw4c=9vSTHNEjpmCXs_fKeSQcXQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|SA5PPF50009C446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 762d1caa-96bb-44f9-39e8-08de2730d7fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z1plTFFzendhMDNNZXFMa09iTG5wR2p6NkI3a25wb29kcmxXQlF6Tml6QU9x?=
+ =?utf-8?B?UzhWdlpIY01XbHkzWmIwa3BZcGxLa2hqY1l6MGViUEYrMHd6Wmg1WHlhcDFu?=
+ =?utf-8?B?bkM2NlhrMUhBdEMyVm43ZUQ0Nnc4alFRUllOTFcyWW85ODVBbGdhQ0llaFNY?=
+ =?utf-8?B?Um9sRzBRS1hycVEyQVVETEVQbFJJYzdwSG9XRlRIdnduWVBLeWFoVjdRY3VP?=
+ =?utf-8?B?akxsa2hYNjJ2UVUxUm5pSkJZTGs3aXdvZHdEb3hXSWpLc0ErUEVEdyt0ZndU?=
+ =?utf-8?B?V3loZkk4a2VmYVpyOG9FQnZhSVBub1hGVFBva0dYeG1yV1E2dmRzMFRLcWd0?=
+ =?utf-8?B?V0QzKzVqSis2SzhRS3hOMUR4YXl0STJ6QU1MWG5sUWxZV1grUVBKemJzVmFv?=
+ =?utf-8?B?QU5Wb05SanhFVk5sTXFCdFdraUpiY0t4WXNXaWZWUHkwU1hOUWkyQkR1R1JQ?=
+ =?utf-8?B?ampiYzM2SlZHTU03d3ZoTmoveFB2ekFqeXR6eHlkamVRaUwwekxkeGtxemdM?=
+ =?utf-8?B?NFBJODFlM2ZnOWU3SnBad2xqdHBFb09pWVpzYzNJZmNzZmJ3TEYydkNsSEQ5?=
+ =?utf-8?B?VjRtWHlUZ0NSRHFDeWdzaG9PRnRzNHdsYmwyYzBSRzFRNzV6dHJ3ODlwVXM3?=
+ =?utf-8?B?M1Z2VWpNTDhsazI5MWJlSGZHblBUbS9JL3J0alFoYVZhVkxtMVN2UzY1QmVK?=
+ =?utf-8?B?M3ZpYXlvVkpaREdQeFdLcHZ3N0hTcVdKR3lzcVpQYzlqRkhrZHlNK2FPM2o4?=
+ =?utf-8?B?NnFOYlh5RjVUZ0kxSDV3dll0aEl3YUxia3NvZS9yVmFCcSs1Q0E1bGg5QTdK?=
+ =?utf-8?B?ZEdnUUpsL1BueHVTWWMza28yNUZYZ1hDUnFHdWkxWmlFRzNnYmJUeVM0MUpM?=
+ =?utf-8?B?a1VVV0lIZWN0WU1BUjVaTTZoS1hTMmNtNFNmQ2IyMUZLbERzTisrTUdRVjRR?=
+ =?utf-8?B?cUE1RzZnM3FINFRyUEQ3WlYxdHhibFJpQ3FXT1hEVlRzK2sydlgzcnBUZlRD?=
+ =?utf-8?B?QmFvcTBlT2ozT0oxMXVkdW05ckliVGx4RVJPYW1Ja0VIenk1SWcyMENMLzBi?=
+ =?utf-8?B?aGQzeG1ocFh3cExjZlBldkZKT0NhYkhEZWZ1a1V3Y2JJVnVNWWFibzhBKzl3?=
+ =?utf-8?B?K3JTOG5ocEwzRzNrb1I4anNpZkVGTGNoVzcwREdYcWh2VFpGME4yMjRDVW12?=
+ =?utf-8?B?cGVLREkrNENBZ1d2UmFjWmptRzFuL09scWVXN0IxbWNtbVQ0WmFvemdHZEUv?=
+ =?utf-8?B?U3JqSGhCSktYMkM0Uk5tazBlWmpuekJGUTZrblZVV3I1U0pXZXBhbDZWeWU4?=
+ =?utf-8?B?UGN3SXJrTk9weFQrclNkMGEvUWZjdU9NOUUrN0RjZS82a0JIalI0MHhTTllF?=
+ =?utf-8?B?NjJhc1U0OGduczNKdXhkNFhSTmNwRDRndVBBZ0p0ZmlNd1JYYkRWUE4xM2t0?=
+ =?utf-8?B?R2J3a1NCMks3YVdybmRRakluWWJXQ1pqeWJWY2liaDFjK0NHNUkrcTVwWlk4?=
+ =?utf-8?B?NHZEeklkWHJROXhHd1BJQjJlaW53VUR2MHMydXZCbS9XbjZyd0VEU1RTdU11?=
+ =?utf-8?B?NkdLUnJYNEhLU3F6TWh2ekVrdktaZlppSkpqcSs0UDZGR2VUSEFObklsVGZa?=
+ =?utf-8?B?bGFUU3Y2ckI4cGpmUFlVdXNNZkxlUEhnK3h0ckFjczM1OUx5cFpYWUtnelVw?=
+ =?utf-8?B?cHFnVjNFVHp3ZU5Vekw4MTYzQ045MjRuRzFoQVIvczBBWDQzUnZxWWZtU2c3?=
+ =?utf-8?B?anYzMnRVR3g4emFmcWxvR3pGRlZrdDdkUFlLU00vdm91ZVFpYUx1TUtIZTh6?=
+ =?utf-8?B?dEE2bFhWdmdLRWd6VWR0N0VJL29mU29BeVQrM1I5KzRUWVVrbWt5SlY5dEor?=
+ =?utf-8?B?NlJYRkFUMFdPZWo3Y2ExZkczYVZJOU1QU3ZrbzAyWHdqOEhiU01QOG8wVi9U?=
+ =?utf-8?Q?bd9o3Ptu1ajZ5MrdLgI6iUoDI0LNs4L6?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUNMT0lYM2NlNVZVM3MrUkJjNjI1VXNWNzZ2dm1zTHh2OStVZmZxbFUxWnBp?=
+ =?utf-8?B?eWhHRWcxeUpWbi83ZElWRVd6K2FkTXhscER6QU9lMUp5TjExYXV2dWswSVlD?=
+ =?utf-8?B?NkNiZ01oWktLc1AzeUFrRHpKa2RqbThEVEMyWGxIZXUrOFZFYVNBQlovYzVm?=
+ =?utf-8?B?dDByb3lmbjNURFNQNmRmOEpBbDdTUGdsYzZ2YkhTVnJ1eXB4OHJzV2VlUjFy?=
+ =?utf-8?B?N3dTUGx4a3gyckNUMTZGTDhST2lQSFd6MFZMUDVVRXlRblladXlPeldqaTRr?=
+ =?utf-8?B?NlBpSjc4bjZQMG9xOGtXL056TStxM2doMWdvUWU3ZTg0Yi9RMzVhUmFDOEl2?=
+ =?utf-8?B?TEZRajhtWkVKbHVEekl3ZEEvc3hhU1NzVUl3ejNxR2V2VkVsSkVoYlhRYTkr?=
+ =?utf-8?B?VHB6K3ZtdGh4WDVhZXhaOVNDOU0za3c0VG5JYUNPQnVIaE9DL3Q4Wjg3NnFk?=
+ =?utf-8?B?TjZSVzY5VVBrVHlQNlZpb1g5cDBxcXFaT0dtSTB1K0dmZzlJRTk4dVZPSmND?=
+ =?utf-8?B?SThqQVBQdDdDUW1RNTFOV2RqdVlUWEhzMmZkOU5pODZSMlc0T0FPaWpheW56?=
+ =?utf-8?B?VjR1bGNJejBJSzhHZTBsRGExeUNpZk1ad3l3YWFuY05SMG01T2RZTk5nNGlh?=
+ =?utf-8?B?NjBYN2ovdFcyYlQ3T0l2RnNUaEErQTdEUFVrV3hYMGtnbmlPQnY4T3NFU2lT?=
+ =?utf-8?B?dUl5QmFPRzZ6ZTBKNzdHQ0FDMlgxVit3TDRDS3VWK295ZTVYYmVNVG1wMWdG?=
+ =?utf-8?B?bjhad3grMnBiTlhScFJUdnlGWDNmQi8yN3lmemhQeFhQR0RCSkxqM2JLT3Jl?=
+ =?utf-8?B?MlE4OEFZbmhCZnNUNUxPaGxHcUwzOHVxMEx0TldxODVqNzUrRCttRzVzYXBN?=
+ =?utf-8?B?cWlTQS9WUHpsai9BUHNqWnA3VE0wUE51Rmt6d3dQS0Nxd055eXdGVGx0d3RL?=
+ =?utf-8?B?Z0FPOG93K0IyRXhORit3OXJBem9DaTFmdlZIVkJEYWY3RldsRUxxK0hRSXFJ?=
+ =?utf-8?B?c2pPMG16QUZESFFzSGFCMFFjNTR3ZWo4OERlenlMSk40UW8vUmYyT3krK2ZO?=
+ =?utf-8?B?Zlg2ZXFLMWRNdFBNalVwd2hmajRTc1pDb0VpMFBHRGsvZ1NaaGYzb05qNzlT?=
+ =?utf-8?B?TWNmU3V5MFV6cElscWdFK243bUtwYnFhR0RuV1U4V24yaFdBcFZlNjFaa3dw?=
+ =?utf-8?B?dm9WOWJjWHRYcXlnNG82ZEwrZ2dGMkx5UjNXK3pkZ1NyU05JMUU2cXhZUDFi?=
+ =?utf-8?B?K2FxcXdxR0VTUUFaNGF1c3c4SkZ0Vmtic21QeFpubTZ1TDdMNHAwZ0VFd0FP?=
+ =?utf-8?B?NkFwY25YWTBBNHhWZ0s4RmJBdlB3d1RqVjE4VFRRME9KY1poVTZNa3k4MDFX?=
+ =?utf-8?B?N0kyMTk2M3ZJejZOZXMvMnpYZndoTEdnd2E1TWVFSE12OEo2dU5EUjVqWFRI?=
+ =?utf-8?B?cmRGWmpXOXRtQTlyd1dOcTBLNC9VUW1KLzliR0F0U1NTOXJOYUIxaHowVjM4?=
+ =?utf-8?B?WXM4dUx5MENVd1FLN2JTOG50QVdFejlFSVhWc29CeWxIRFBCdjZmSmdnOFZ4?=
+ =?utf-8?B?a1FxNW55ME1XK2FCTnYzaWdVV3hZdDA3c0tTNkkyZitEdUFoZ0pqdUlWdkwy?=
+ =?utf-8?B?cGE5SXlHOEo2TG9ySkVBdlNwSC8vVVpQYldmUDdNc1pjVVdkc2R2eCtqUjRt?=
+ =?utf-8?B?dWVkei9EV1RjdEhJRm5KTE01WXUrTXdhdTVYYkdvZ2lVc1NKZGg1b1FaVVlN?=
+ =?utf-8?B?WUtiU2hneHM2MFQwVitLd1RiVkJlRXF6T1JEUzR4U1hJVkNScm9qSWgvWWpu?=
+ =?utf-8?B?R1RrNFNuVjBTOU5jRGRYcDNDU1gycnFiOHpTNWRacmZVNFBjUWVWRHpVSHhz?=
+ =?utf-8?B?RmpZTDlsaVN6Ti9WV2p0RW55RjdWZG1URFdCdkI2cDE5QVdhaGZUTEVkLzE2?=
+ =?utf-8?B?MVdpdFBYUW5IZDZxMkQvZ2FqUXpZMDJ2cHlwUFJvdHNTMExQTGFFTGM4Z01m?=
+ =?utf-8?B?YXNXNWFweFRzaWM0bGpBVWF5cldYRTQwejNCa1p2TStDVzdUclJTbEpmeXhW?=
+ =?utf-8?B?UFdWRkxnMW9Wa2Ura21oUlV6QXBOalBnSjkzbTFuUmxIcjVzRVV1WGIvZENY?=
+ =?utf-8?Q?HCfLSx/rmRhrbtYPIvQYrdmbd?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 762d1caa-96bb-44f9-39e8-08de2730d7fd
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2025 05:59:47.1094
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bwQ5pU34FF8cAqZH1O6uc4XgJofAnZybP8sBUj6qQU/EjoVi/UmcUzIogjbkJdaRCW9xLRI6XQ71RGR/715gVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF50009C446
 
 
-On 11/19/25 02:45, Antheas Kapenekakis wrote:
-> On Wed, 19 Nov 2025 at 01:38, Denis Benato <benato.denis96@gmail.com> wrote:
->>
->> On 11/1/25 11:47, Antheas Kapenekakis wrote:
->>> Currently, when hid-asus is not loaded, NKEY keyboards load as ~6
->>> event devices with a pretty ASUSTEK name. When it loads, it concatenates
->>> all applications per HID endpoint, renames them, and prints errors
->>> when some of them do not have an input device.
->>>
->>> Therefore, change probe so that this is no longer the case. Stop
->>> renaming the devices, omit the check for .input which causes errors
->>> on e.g., the Z13 for some hiddev only devices, and move RGB checks
->>> into probe.
->> I have an issue with this "therefore" related to the renaming of device:
->> you are basically doing here:
->>
->> state a matter of fact.
->> Therefore, change that.
->>
->> Why? the check for .input is clear why, the rename not so much.
->>
->> I have a few more comments below about the rename.
->>> Reviewed-by: Luke D. Jones <luke@ljones.dev>
->>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->>> ---
->>>  drivers/hid/hid-asus.c | 52 ++++++++++++++++++++++++++++--------------
->>>  1 file changed, 35 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
->>> index 03f0d86936fc..726f5d8e22d1 100644
->>> --- a/drivers/hid/hid-asus.c
->>> +++ b/drivers/hid/hid-asus.c
->>> @@ -47,6 +47,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
->>>  #define T100CHI_MOUSE_REPORT_ID 0x06
->>>  #define FEATURE_REPORT_ID 0x0d
->>>  #define INPUT_REPORT_ID 0x5d
->>> +#define HID_USAGE_PAGE_VENDOR 0xff310000
->>>  #define FEATURE_KBD_REPORT_ID 0x5a
->>>  #define FEATURE_KBD_REPORT_SIZE 64
->>>  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
->>> @@ -89,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
->>>  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
->>>  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
->>>  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
->>> +#define QUIRK_SKIP_REPORT_FIXUP              BIT(14)
->>>
->>>  #define I2C_KEYBOARD_QUIRKS                  (QUIRK_FIX_NOTEBOOK_REPORT | \
->>>                                                QUIRK_NO_INIT_REPORTS | \
->>> @@ -125,7 +127,6 @@ struct asus_drvdata {
->>>       struct input_dev *tp_kbd_input;
->>>       struct asus_kbd_leds *kbd_backlight;
->>>       const struct asus_touchpad_info *tp;
->>> -     bool enable_backlight;
->>>       struct power_supply *battery;
->>>       struct power_supply_desc battery_desc;
->>>       int battery_capacity;
->>> @@ -316,7 +317,7 @@ static int asus_e1239t_event(struct asus_drvdata *drvdat, u8 *data, int size)
->>>  static int asus_event(struct hid_device *hdev, struct hid_field *field,
->>>                     struct hid_usage *usage, __s32 value)
->>>  {
->>> -     if ((usage->hid & HID_USAGE_PAGE) == 0xff310000 &&
->>> +     if ((usage->hid & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR &&
->>>           (usage->hid & HID_USAGE) != 0x00 &&
->>>           (usage->hid & HID_USAGE) != 0xff && !usage->type) {
->>>               hid_warn(hdev, "Unmapped Asus vendor usagepage code 0x%02x\n",
->>> @@ -931,11 +932,6 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
->>>
->>>       drvdata->input = input;
->>>
->>> -     if (drvdata->enable_backlight &&
->>> -         !asus_kbd_wmi_led_control_present(hdev) &&
->>> -         asus_kbd_register_leds(hdev))
->>> -             hid_warn(hdev, "Failed to initialize backlight.\n");
->>> -
->>>       return 0;
->>>  }
->>>
->>> @@ -1008,15 +1004,6 @@ static int asus_input_mapping(struct hid_device *hdev,
->>>                       return -1;
->>>               }
->>>
->>> -             /*
->>> -              * Check and enable backlight only on devices with UsagePage ==
->>> -              * 0xff31 to avoid initializing the keyboard firmware multiple
->>> -              * times on devices with multiple HID descriptors but same
->>> -              * PID/VID.
->>> -              */
->>> -             if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
->>> -                     drvdata->enable_backlight = true;
->>> -
->>>               set_bit(EV_REP, hi->input->evbit);
->>>               return 1;
->>>       }
->>> @@ -1133,8 +1120,10 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
->>>
->>>  static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
->>>  {
->>> -     int ret;
->>> +     struct hid_report_enum *rep_enum;
->>>       struct asus_drvdata *drvdata;
->>> +     struct hid_report *rep;
->>> +     int ret, is_vendor = 0;
->>>
->> Why is is_vendor an int? Don't we have bools?
->>>       drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
->>>       if (drvdata == NULL) {
->>> @@ -1218,12 +1207,37 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
->>>               return ret;
->>>       }
->>>
->>> +     /* Check for vendor for RGB init and handle generic devices properly. */
->>> +     rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
->>> +     list_for_each_entry(rep, &rep_enum->report_list, list) {
->>> +             if ((rep->application & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR)
->>> +                     is_vendor = true;
->>> +     }
->>> +
->>> +     /*
->>> +      * For ROG keyboards, disable fixups except vendor devices.
->>> +      */
->> multiline comment for no reason. Comma doesn't provide any value here.
->>> +     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && !is_vendor)
->>> +             drvdata->quirks |= QUIRK_SKIP_REPORT_FIXUP;
->>> +
->> Doing this will skip the report fixup entirely while before
->> it was called in every case: are we really sure we want this?
->> Or do we want it only for specific devices?
->>
->> It's my understanding that function is only useful on
->> keyboard devices, so before keyboard devices (all)
->> while now is_vendor keyboard devices, right?
-> ROG Keyboard devices have multiple HID endpoints. This driver only
-> hooks to the 0xff31 endpoint. So the rest of the endpoints should not
-> be modified. Except for minor fixups, see below.
->
->> What about keyboard devices that are not is_vendor
->> for which function isn't called anymore?
->>>       ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
->>>       if (ret) {
->>>               hid_err(hdev, "Asus hw start failed: %d\n", ret);
->>>               return ret;
->>>       }
->>>
->>> +     if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
->>> +         !asus_kbd_wmi_led_control_present(hdev) &&
->>> +         asus_kbd_register_leds(hdev))
->>> +             hid_warn(hdev, "Failed to initialize backlight.\n");
->>> +
->>> +     /*
->>> +      * For ROG keyboards, skip rename for consistency and ->input check as
->>> +      * some devices do not have inputs.
->>> +      */
->>> +     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
->>> +             return 0;
->>> +
->> This is a moot point: I have yet to see the real benefit of doing this,
->> but one thing is sure... having for the same driver multiple name
->> to basically the same interface across different lineups of
->> hardware is not something I would call "consistency".
-> The reason the rename exists here is because the devices this driver
-> applied to originally did not have proper names (e.g. I2C). The new
-> ROG devices do have proper names, so there is no reason to deviate
-> from those. It also eliminates a point of failure in which the
-> hid-asus driver is not loaded, if your point is consistency. Ie, as we
-> add more keyboard IDs, those would then not be renamed when hid-asus
-> starts to load them.
-I understand you don't see a reason to rename them,
-but I am also not seeing any reason not to rename them.
 
-Removing a theoretically possible failure in the load path
-that nobody has ever reported once IMHO is not a strong
-enough motivation to change the name of a device.
-
-Just for clarity I am telling you that I am not particularly
-happy but I won't oppose if the userspace won't suffer
-from this change.
-> As for affected software (per your other email), yes it is only
-> Inputplumber when running on its fallback mode without access to its
-> OOT modules that disable this driver. Because it had an architectural
-> decision to rely on hardcoded evdev/phys names for most devices
-> instead of more canonical vid/pid/capability matches. The phys part is
-> especially problematic as it also hardcodes the bus node of a lot of
-> devices. There is a PR open to remove the matches for the Ally units
-> though.
-I asked what's the path forward, and for you two to decide how to not
-break the "we don't break userspace" rule causing troubles to
-users/distro maintainers/valve/whoever.
-
-Have you two reached an agreement yet?
-> If you want to know about other software that relies on names, SDL is
-> the main one. And the reason for that is so that it matches the kernel
-> driver. E.g., when a playstation 5 controller loads using
-> hid_playstation, it has a different mapping and name than when it
-> loads through hid core. My software also relies on it for WMI
-> keyboards, as those have a vid:pid of 0:0 so it is unavoidable.
->
-> SDL does not map keyboards so it is not affected. Moreover, as this
-> series makes it so the device has the same name as with the driver not
-> loaded, software such as SDL would have a fallback mapping for that
-> name already.
->
->> As I said already I want you to either drop this or to present
->> a list of pros of doing this and to hear from Derek the plan
->> going forward to avoid breaking anything.
->>>       /*
->>>        * Check that input registration succeeded. Checking that
->>>        * HID_CLAIMED_INPUT is set prevents a UAF when all input devices
->>> @@ -1352,6 +1366,10 @@ static const __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
->>>               rdesc = new_rdesc;
->>>       }
->>>
->>> +     /* Vendor fixups should only apply to NKEY vendor devices. */
->>> +     if (drvdata->quirks & QUIRK_SKIP_REPORT_FIXUP)
->>> +             return rdesc;
->>> +
->> Uhm... no? Or at least it's not obvious why.
+On 11/18/2025 15:45, Ilpo Järvinen wrote:
+> On Fri, 7 Nov 2025, Shyam Sundar S K wrote:
+> 
+>> Custom BIOS input values can be updated by multiple sources, such as power
+>> mode changes and sensor events, each triggering a custom BIOS input event.
+>> When these events occur in rapid succession, new data may overwrite
+>> previous values before they are processed, resulting in lost updates.
 >>
->> If this is the case why is the check not at the top of the function?
-> Because the checks above apply to e.g., touchpad devices. This was
-> actually a bug with this series in previous versions. Only the report
-> fixups should be skipped. Specifically, with previous versions a HID
-> application mute was skipped, which caused certain keyboards to show
-> up as range finders if I recall (there is a comment for it in this
-> driver).
-I see... honestly I would insert a summary of this in a comment
-somewhere. Probably before that if.
-> The report fixups that are below this check are only applicable to the
-> 0xff31 devices that emit 0x5a events. Specifically, this driver
-> "abuses" the HID subsystem a bit to make the vendor report, which is
-> not a HID input device, appear as an input device, by mutating its
-> descriptor. But refactoring that would be too painful. At least with
-> this we make the fixup apply more precisely to only those devices.
-You can put a TL;DR of this as a comment too in the code.
-> I kindly ask you finish your comments until tomorrow evening, so I can
-> resend this series.
-I will try to do what I can, but until I hear an approval from Derek
-I can't give my approval knowing this can break a tool in use
-and we know it.
-> Thanks,
-> Antheas
->
->> Beside please refrain from using "should" in this context unless
->> backed up by evidence or it's otherwise obvious as "should"
->> can have many different interpretations.
->>>       if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD &&
->>>                       *rsize == 331 && rdesc[190] == 0x85 && rdesc[191] == 0x5a &&
->>>                       rdesc[204] == 0x95 && rdesc[205] == 0x05) {
+>> To address this, introduce a fixed-size, power-of-two ring buffer to
+>> capture every custom BIOS input event, storing both the pending request
+>> and its associated input values. Access to the ring buffer is synchronized
+>> using a mutex.
+>>
+>> The previous use of memset() to clear the pending request structure after
+>> each event is removed, as each BIOS input value is now copied into the
+>> buffer as a snapshot. Consumers now process entries directly from the ring
+>> buffer, making explicit clearing of the pending request structure
+>> unnecessary.
+>>
+>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>> v3:
+>>  - include headers wherever missing
+>>  - use dev_warn() instead of dev_WARN_ONCE()
+>>  - remove generic struct names
+>>  - enhance ringbuffer mechanism to handle common path
+>>  - other cosmetic remarks
+>>
+>> v2:
+>>  - Add dev_WARN_ONCE()
+>>  - Change variable name rb_mutex to cbi_mutex
+>>  - Move tail increment logic above pending request check
+>>
+>>  drivers/platform/x86/amd/pmf/acpi.c   | 42 +++++++++++++++++++++++++++
+>>  drivers/platform/x86/amd/pmf/core.c   |  3 ++
+>>  drivers/platform/x86/amd/pmf/pmf.h    | 21 ++++++++++++++
+>>  drivers/platform/x86/amd/pmf/spc.c    | 36 +++++++++++++----------
+>>  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
+>>  5 files changed, 89 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+>> index 13c4fec2c7ef..4750ae6d70b0 100644
+>> --- a/drivers/platform/x86/amd/pmf/acpi.c
+>> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+>> @@ -9,6 +9,9 @@
+>>   */
+>>  
+>>  #include <linux/acpi.h>
+>> +#include <linux/array_size.h>
+>> +#include <linux/cleanup.h>
+>> +#include <linux/dev_printk.h>
+>>  #include "pmf.h"
+>>  
+>>  #define APMF_CQL_NOTIFICATION  2
+>> @@ -331,6 +334,41 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
+>>  									 req, sizeof(*req));
+>>  }
+>>  
+>> +/* Store custom BIOS inputs data in ring buffer */
+>> +static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev)
+>> +{
+>> +	struct pmf_cbi_ring_buffer *rb = &pmf_dev->cbi_buf;
+>> +	struct pmf_bios_input_entry entry = { };
+>> +	int i;
+>> +
+>> +	guard(mutex)(&pmf_dev->cbi_mutex);
+>> +
+>> +	switch (pmf_dev->cpu_id) {
+>> +	case AMD_CPU_ID_PS:
+>> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
+>> +			entry.val[i] = pmf_dev->req1.custom_policy[i];
+>> +		entry.preq = pmf_dev->req1.pending_req;
+>> +		break;
+>> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+>> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+>> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+>> +			entry.val[i] = pmf_dev->req.custom_policy[i];
+>> +		entry.preq = pmf_dev->req.pending_req;
+>> +		break;
+>> +	default:
+>> +		return;
+>> +	}
+>> +
+>> +	if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0) {
+>> +		/* Rare case: ensures the newest BIOS input value is kept */
+>> +		dev_warn(pmf_dev->dev, "Overwriting BIOS input value, data may be lost\n");
+>> +		rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
+>> +	}
+>> +
+>> +	rb->data[rb->head] = entry;
+> 
+> I'd prefer the entry is construct in place.
+> 
+>> +	rb->head = (rb->head + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
+>> +}
+>> +
+>>  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
+>>  {
+>>  	if (!pdev->cb_flag)
+>> @@ -356,6 +394,8 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
+>>  	dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->req.pending_req);
+>>  
+>>  	amd_pmf_handle_early_preq(pmf_dev);
+>> +
+>> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
+>>  }
+>>  
+>>  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
+>> @@ -374,6 +414,8 @@ static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
+>>  	dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->req1.pending_req);
+>>  
+>>  	amd_pmf_handle_early_preq(pmf_dev);
+>> +
+>> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
+>>  }
+>>  
+>>  static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index bc544a4a5266..8d5ac84ae025 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -11,6 +11,7 @@
+>>  #include <linux/debugfs.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/module.h>
+>> +#include <linux/mutex.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/power_supply.h>
+>> @@ -468,6 +469,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>  	mutex_init(&dev->lock);
+>>  	mutex_init(&dev->update_mutex);
+>>  	mutex_init(&dev->cb_mutex);
+>> +	mutex_init(&dev->cbi_mutex);
+> 
+> devm_mutex_init() + add a patch to convert the existing once to use it 
+> too. And don't forget the error handling as devm_*() can fail.
+> 
+>>  	apmf_acpi_init(dev);
+>>  	platform_set_drvdata(pdev, dev);
+>> @@ -494,6 +496,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>>  	mutex_destroy(&dev->lock);
+>>  	mutex_destroy(&dev->update_mutex);
+>>  	mutex_destroy(&dev->cb_mutex);
+>> +	mutex_destroy(&dev->cbi_mutex);
+>>  }
+>>  
+>>  static const struct attribute_group *amd_pmf_driver_groups[] = {
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index 2145df4128cd..5a18b3604b6e 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -12,7 +12,9 @@
+>>  #define PMF_H
+>>  
+>>  #include <linux/acpi.h>
+>> +#include <linux/circ_buf.h>
+>>  #include <linux/input.h>
+>> +#include <linux/mutex_types.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/platform_profile.h>
+>>  
+>> @@ -120,6 +122,7 @@ struct cookie_header {
+>>  #define APTS_MAX_STATES		16
+>>  #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
+>>  #define BIOS_INPUTS_MAX		10
+>> +#define CUSTOM_BIOS_INPUT_RING_ENTRIES	64	/* Must be power of two for CIRC_* macros */
+>>  
+>>  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
+>>  
+>> @@ -359,6 +362,22 @@ struct pmf_bios_inputs_prev {
+>>  	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
+>>  };
+>>  
+>> +/**
+>> + * struct pmf_bios_input_entry - Snapshot of custom BIOS input event
+>> + * @val: Array of custom BIOS input values
+>> + * @preq: Pending request value associated with this event
+>> + */
+>> +struct pmf_bios_input_entry {
+>> +	u32 val[BIOS_INPUTS_MAX];
+>> +	u32 preq;
+>> +};
+>> +
+>> +struct pmf_cbi_ring_buffer {
+>> +	struct pmf_bios_input_entry data[CUSTOM_BIOS_INPUT_RING_ENTRIES];
+>> +	int head;
+>> +	int tail;
+>> +};
+>> +
+>>  struct amd_pmf_dev {
+>>  	void __iomem *regbase;
+>>  	void __iomem *smu_virt_addr;
+>> @@ -407,6 +426,8 @@ struct amd_pmf_dev {
+>>  	struct apmf_sbios_req_v1 req1;
+>>  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
+>>  	bool cb_flag;			     /* To handle first custom BIOS input */
+>> +	struct pmf_cbi_ring_buffer cbi_buf;
+>> +	struct mutex cbi_mutex;		     /* Protects ring buffer access */
+>>  };
+>>  
+>>  struct apmf_sps_prop_granular_v2 {
+>> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+>> index 85192c7536b8..7c6bbfaa785a 100644
+>> --- a/drivers/platform/x86/amd/pmf/spc.c
+>> +++ b/drivers/platform/x86/amd/pmf/spc.c
+>> @@ -11,6 +11,7 @@
+>>  
+>>  #include <acpi/button.h>
+>>  #include <linux/amd-pmf-io.h>
+>> +#include <linux/cleanup.h>
+>>  #include <linux/power_supply.h>
+>>  #include <linux/units.h>
+>>  #include "pmf.h"
+>> @@ -132,30 +133,41 @@ static void amd_pmf_set_ta_custom_bios_input(struct ta_pmf_enact_table *in, int
+>>  	}
+>>  }
+>>  
+>> -static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pending_req,
+>> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, struct pmf_bios_input_entry *data,
+>>  				       const struct amd_pmf_pb_bitmap *inputs,
+>> -				       const u32 *custom_policy, struct ta_pmf_enact_table *in)
+>> +				       struct ta_pmf_enact_table *in)
+>>  {
+>>  	unsigned int i;
+>>  
+>>  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+>> -		if (!(pending_req & inputs[i].bit_mask))
+>> +		if (!(data->preq & inputs[i].bit_mask))
+>>  			continue;
+>> -		amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
+>> -		pdev->cb_prev.custom_bios_inputs[i] = custom_policy[i];
+>> -		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, custom_policy[i]);
+>> +		amd_pmf_set_ta_custom_bios_input(in, i, data->val[i]);
+>> +		pdev->cb_prev.custom_bios_inputs[i] = data->val[i];
+>> +		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, data->val[i]);
+>>  	}
+>>  }
+>>  
+>>  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+>>  					   struct ta_pmf_enact_table *in)
+>>  {
+>> +	struct pmf_cbi_ring_buffer *rb = &pdev->cbi_buf;
+>> +	struct pmf_bios_input_entry entry = { };
+>>  	unsigned int i;
+>>  
+>> +	guard(mutex)(&pdev->cbi_mutex);
+>> +
+>>  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+>>  		amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bios_inputs[i]);
+>>  
+>> -	if (!(pdev->req.pending_req || pdev->req1.pending_req))
+>> +	if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0)
+>> +		return;	/* return if ring buffer is empty */
+>> +
+>> +	entry = rb->data[rb->tail];
+>> +	rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
+>> +
+>> +	/* If no active custom BIOS input pending request, do not consume further work */
+>> +	if (!entry.preq)
+>>  		return;
+> 
+> Should this function empty the whole ring, not just process one entry?
+
+Yes. This function should drain the entire ring buffer - but not all
+at once (i.e. process one entry for each invocation)
+
+Ack for other comments.
+
+Thanks,
+Shyam
+
+> 
+>>  	if (!pdev->smart_pc_enabled)
+>> @@ -165,20 +177,14 @@ static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+>>  	case PMF_IF_V1:
+>>  		if (!is_apmf_bios_input_notifications_supported(pdev))
+>>  			return;
+>> -		amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bios_inputs_v1,
+>> -					   pdev->req1.custom_policy, in);
+>> +		amd_pmf_update_bios_inputs(pdev, &entry, custom_bios_inputs_v1, in);
+>>  		break;
+>>  	case PMF_IF_V2:
+>> -		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bios_inputs,
+>> -					   pdev->req.custom_policy, in);
+>> +		amd_pmf_update_bios_inputs(pdev, &entry, custom_bios_inputs, in);
+>>  		break;
+>>  	default:
+>>  		break;
+>>  	}
+>> -
+>> -	/* Clear pending requests after handling */
+>> -	memset(&pdev->req, 0, sizeof(pdev->req));
+>> -	memset(&pdev->req1, 0, sizeof(pdev->req1));
+>>  }
+>>  
+>>  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
+>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+>> index 6e8116bef4f6..add742e33e1e 100644
+>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>> @@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>>  		status = ret == TA_PMF_TYPE_SUCCESS;
+>>  		if (status) {
+>>  			dev->cb_flag = true;
+>> +			dev->cbi_buf.head = 0;
+>> +			dev->cbi_buf.tail = 0;
+>>  			break;
+>>  		}
+>>  		amd_pmf_tee_deinit(dev);
+>>
+> 
+
