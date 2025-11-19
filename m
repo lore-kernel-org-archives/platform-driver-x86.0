@@ -1,118 +1,216 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0545F35E551
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 13:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E574C366575;
+	Wed, 19 Nov 2025 13:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763560118; cv=none; b=dauwxoERNxrspq9kfeqY/WBEEu3PZEFEu0qvFVS/uUE6zbAghOVbR+CKocXzGMPKAGpYvoHWlORzYdygIkHmPMcmhF1kC1+fMfgOPZeFKdPdUeehbsLNcugGJoZJCVU2IAYI3SvX5zYY+kF7yXpSfirf3PyHpi2dur0Zpaz6EIc=
+	t=1763560471; cv=none; b=WFw5dQUAwTSsjfsPmvwdogIx+l2aBKHEdZ9Ki+y2kLc9FyTTC65ZWq9XP63cL4LUWSwwtQpPoO0YyIZ/yC+7hHVpYHsAWS/zB7T0bRoCZCJr5q5W2MuzlfV8xZrv8bYViAFPHqw9qrEi9YPC3GUo5uMhWYWIEB+ndIyfBjT3ajU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763560118; c=relaxed/simple;
-	bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pQMfrfLv+dVkqZQ5Xno3n2ln0yGWFLXDSa/+jrvhQavofUQknSAvNF8oSiSQfcmq6qjJ+p9BxH/kUCeBBLiMr6vYS5yZp8flvbx23XbhiXmYcR4Gh3P4rjAjTirCCc56pXuTOGHlZr87WNzr/ONT7nQViY1mVyP5eMYb1otNmQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DA9Lh4Hw; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1763560471; c=relaxed/simple;
+	bh=H2MmjTun/d2cwMOlmdoW2i7WyqB09cABdEW/N90tSjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2vheI8Tz9DnmedoyLf6OmuZxhy1fZeGHrRGlEoLjdeQuR4J6rn4VNzbx/nN2/4tfvPizToI/nR71nbpyLsa9a6MbV2yI+P9yTIje36ttbNSlSWHkTZXgSIBVJaDR6D2AGsWKTBhl57MmEulzHpiq1I9DeLHYVOr5XwABhG81HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiwsSHVB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DA9Lh4Hw"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-591c9934e0cso9167289e87.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Nov 2025 05:48:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1763560114; x=1764164914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
-        b=DA9Lh4Hw+oY+bqEe6h8b5kGQrOj8RARuXnZQK3gIXJca0FXwV/f/d9i7S0L2CNcLtD
-         TiBHnFwDyRtSlLyX4OtBfrdnBQ3eKrR+yup0jceUVVSIpta9x+BRbGmmp6s0AVvlm61h
-         EYabgtefdM/EGNNGFLYjqmQb/Tkc/jPXUAtSJLTNUd/suh8pwa4kX3giB11Xi8nxX0QZ
-         Jkr0DrrM8uT2r8L1qCwT9L4OcVpmTn9w3hnjRfp4bq0bKbDj1dvXmjsc4jFfxOnLEAeB
-         g6BayuXADxD0MV18D4o0YiDWXh8ke/We5UmVY9BL3gqc16L0IUXaml5ayyp+i75OUlEB
-         briQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763560114; x=1764164914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=T2Bhlhd2OjAV6rBSTTQrw8tWFeX7IcMgFCiQuNxL4lY=;
-        b=oQaqlHmZQ5JrvYyqo5D8GSSPK8cDYS3kiSfebknhQF68E3Pk1BbeSpfLk8aNhSpAla
-         4p+Zc1xpYIQcgLtgI52xrbAVK/fuJ5YDz54Gn6xLLxx02gbcgbY6TgUdbXecSCOlOg/8
-         CIgiwICqnFOKd2igV6UYtp9Wf0Y0bppErKGcIr+fV6Dfgv6MLEfBJjmFPJFs0gYvgA9N
-         OjxlGUlzfpv94xmzEiUVBfiL8vYC/H58n5uXyZEyCE/KMT/PYvrtmu4MViP60wuuU0mi
-         weZxXGhkMFgHn8TP5erEuJOtF9+2wtBXwQXwyjNhtlvG/gaawpHalS28idI6aBeQeAPS
-         wUsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmMSbLZw8kZWSq2+StvogsPEr+sv45v5VmhdwD98nqlDH5+oo4A/25Bcvi3NGVi3gD3Nudxb/RSo98UtU+cttIkaJ7@vger.kernel.org
-X-Gm-Message-State: AOJu0YydK6aU7Qy9Tf9cZH/3wTcWNywU8KZoIKO8c5YkvOJixcdq6UjT
-	/ZDdIBNSwFvo24UC+rt+YItorEttmfpy6hSNL5RjdhJkwAp+6EphN48RIiHv1k5nh4bltBN9HFH
-	MEO7JR/aB/5PtvuVWuRuvD7LCJcQ9DqDo8Ncq2ZFz6w==
-X-Gm-Gg: ASbGnctzvak/8Qs4xhKs/ar8kYz2qbkCpRM6zpvdjHfG8Ar6n2bATMskg9fh9xWZayg
-	ZZd6t3C+2iEM0zBwwi/H20DGnp1P4KF4FqLz1A/ep1LgRoJhcqD9G4CUiVQWwVxB3szAU2qQVPN
-	LeV6y1xwlwGjxQ+UMHC6tN0rK0k6dTXx3BEQ+ZHvR7gT/H2DIfnW5PgqBrivMV74mXWTElovdoo
-	Yv9eX/c1k2TW1AoGpx7ga3POUVR4+saequJEBjGhOjyiK0uJGJRVF/xs8ofNCcpWwLeFjEWhbT8
-	/ywB6sMGLedq5oBI43XFBItDshZe6gAWti/OXZo=
-X-Google-Smtp-Source: AGHT+IESnidjOfk95weQJ+gd72JHAqgirD6KxoFmOMXwiEt1mJNX+SXg4B4jwVkMQBKp1H6PiYO2XjPlHniXQxEtguI=
-X-Received: by 2002:a05:6512:b87:b0:595:7e9c:cdfa with SMTP id
- 2adb3069b0e04-59584198675mr6713392e87.6.1763560114155; Wed, 19 Nov 2025
- 05:48:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiwsSHVB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC790C2BC86;
+	Wed, 19 Nov 2025 13:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763560470;
+	bh=H2MmjTun/d2cwMOlmdoW2i7WyqB09cABdEW/N90tSjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DiwsSHVBC8qiiXtRWrusuo5cDlObMGrhdRWLjmLPRgS4nIF0Ah28evTGM27AXSHTF
+	 04qeDfXp4+4oodk7nmggYhcHB9dKxFmRPFi7elkpqBQbTsSec8RvcwKeKV8efzfDnE
+	 ogXEpEcK9QZVDNmB/KgT4GjzDtLdSDUmqGMM6e1OhwI8nRyBdxGIx5VGLizR+t+lLi
+	 L+C/Zjb6VmeyUwFMMM4PyGlHqxJCFxYAPA2//qkd0QM8NMiNKGaRqwg7pSrfdiYuf9
+	 TsZFno8dCh1P2jHQwkfL/wic7WkP1WzmZuok3IGPlak5KTijO5CRCk4mCDWCL8QTdf
+	 gIEmTteUmlZFw==
+Date: Wed, 19 Nov 2025 19:24:12 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH 9/9] power: sequencing: pcie-m2: Add support for PCIe M.2
+ Key E connectors
+Message-ID: <igtegc4wgi3xiolpbilr3jw7c4xlyrj2d4bqb4b4m2yxcxutjh@4evsl2w6taud>
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
+ <20251112-pci-m2-e-v1-9-97413d6bf824@oss.qualcomm.com>
+ <CAMRc=MeyeyuNVP6CWcxNp8XSCT+P9ZNmgSj6Hktrv8ZYNN5kMg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251107143837.247085-1-marco.crivellari@suse.com>
- <88c0ecd8-0d61-f4bc-ae13-cce971b9c69c@linux.intel.com> <CAAofZF52hxs_UbA+WkaugNceotzPMisziBj0+AKoL+X0pNrQbg@mail.gmail.com>
- <1db6c690-ca7b-5b68-c2f6-0d8b79c31880@linux.intel.com> <CAAofZF7GhnQ6nQyvLSbTPOv-k4Y=nM9BvoRNRJOA53bbWLo70g@mail.gmail.com>
- <bc69382e-c409-11f8-a278-d93d0f68ab1b@linux.intel.com> <CAAofZF7GwRKQcNAUK9=j4mqnz+HX_ONG9YKs4PLztbjvJxrxZg@mail.gmail.com>
- <324dfca8-8f16-158c-8fb9-8efb52eff4ac@linux.intel.com>
-In-Reply-To: <324dfca8-8f16-158c-8fb9-8efb52eff4ac@linux.intel.com>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Wed, 19 Nov 2025 14:48:22 +0100
-X-Gm-Features: AWmQ_bnJkvhics4c12KNJpyTqJ8PdxWV-g0F6zlS9s6AGYAux-Ork3g2QeB9VPY
-Message-ID: <CAAofZF7AbQ12-3DzpN9Ai49VzOHa3VqyfZnXSpfVq7qijO1GRQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/surface: acpi-notify: add WQ_PERCPU to
- alloc_workqueue users
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal Hocko <mhocko@suse.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeyeyuNVP6CWcxNp8XSCT+P9ZNmgSj6Hktrv8ZYNN5kMg@mail.gmail.com>
 
-Hi,
-On Wed, Nov 19, 2025 at 12:12=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->[...]
->
-> For those system_wq changes you can follow a similar structure but alter
-> it to match what is changed in the other interface.
->
-> This seems already okay:
->
-> "Replace system_wq with system_percpu_wq, keeping the same behavior."
+On Wed, Nov 19, 2025 at 02:28:00PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Nov 12, 2025 at 3:45 PM Manivannan Sadhasivam via B4 Relay
+> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+> >
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> >
+> > Add support for handling the power sequence of the PCIe M.2 Key E
+> > connectors. These connectors are used to attach the Wireless Connectivity
+> > devices to the host machine including combinations of WiFi, BT, NFC using
+> > interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
+> >
+> > Currently, this driver supports only the PCIe interface for WiFi and UART
+> > interface for BT. The driver also only supports driving the 3.3v/1.8v power
+> > supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
+> > connectors are not currently supported.
+> >
+> > For supporting Bluetooth over the non-discoverable UART interface, the
+> > driver currently creates the serdev interface after enumerating the PCIe
+> > interface. This is mandatory since the device ID is only known after the
+> > PCIe enumeration and the ID is used for creating the serdev device.
+> >
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > ---
+> >
+> > +static int pwrseq_pci_m2_e_uart_enable(struct pwrseq_device *pwrseq)
+> > +{
+> > +       struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> > +
+> > +       gpiod_set_value_cansleep(ctx->w_disable2_gpio, 0);
+> 
+> Since this is new code and gpiod_set_value_cansleep() now returns an
+> integer, can you do
+> 
 
-Sorry it's just to check with you before sending a useless series.
-Sounds good this, for the 2 system_percpu_wq commit logs?
-I don't think there is more to add here, because it is a wq rename.
+Ack
 
+>   return gpiod_set_value_cansleep()?
+> 
+> Same elsewhere.
+> 
+> >
+> > +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
+> > +                             void *data)
+> > +{
+> > +       struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
+> > +       struct pci_dev *pdev = to_pci_dev(data);
+> > +       struct device_node *remote;
+> > +       struct serdev_controller *serdev_ctrl;
+> > +       struct serdev_device *serdev;
+> > +       struct device *dev = ctx->dev;
+> > +       int ret;
+> > +
+> > +       /*
+> > +        * Check whether the PCI device is associated with this M.2 connector or
+> > +        * not, by comparing the OF node of the PCI device parent and the Port 0
+> > +        * (PCIe) remote node parent OF node.
+> > +        */
+> > +       remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, -1);
+> > +       if (!remote || (remote != pdev->dev.parent->of_node)) {
+> > +               of_node_put(remote);
+> 
+> You could really use some __free(device_node) here. It would simplify
+> the code below quite a bit and make sure you don't miss anything.
+> 
 
-This patch continues the effort to refactor worqueue APIs, which has begun
-with the change introducing new workqueues and a new alloc_workqueue flag:
+Ack. I'm still trying to get used to the scope based cleanup :)
 
-commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
-commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
+> > +               return NOTIFY_DONE;
+> > +       }
+> > +       of_node_put(remote);
+> > +
+> > +       switch (action) {
+> > +       case BUS_NOTIFY_ADD_DEVICE:
+> > +               /* Create serdev device for WCN7850 */
+> > +               if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
+> > +                       remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 1, -1);
+> > +                       if (!remote) {
+> > +                               of_node_put(remote);
+> > +                               return NOTIFY_DONE;
+> > +                       }
+> > +
+> > +                       serdev_ctrl = of_find_serdev_controller_by_node(remote);
+> > +                       of_node_put(remote);
+> > +                       if (!serdev_ctrl)
+> > +                               return NOTIFY_DONE;
+> > +
+> > +                       serdev = serdev_device_alloc(serdev_ctrl);
+> > +                       if (!serdev)
+> > +                               return NOTIFY_DONE;
+> > +
+> > +                       ret = serdev_device_add(serdev, "WCN7850");
+> > +                       if (ret) {
+> > +                               dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
+> > +                               serdev_device_put(serdev);
+> > +                               return NOTIFY_DONE;
+> > +                       }
+> > +               }
+> > +               break;
+> > +       }
+> > +
+> > +       return NOTIFY_DONE;
+> > +}
+> > +
+> > +static bool pwrseq_pcie_m2_check_remote_node(struct device *dev, u8 port, const char *node)
+> > +{
+> > +       struct device_node *remote;
+> 
+> Same here.
+> 
+> > +
+> > +       remote = of_graph_get_remote_node(dev_of_node(dev), port, -1);
+> > +       if (remote && of_node_name_eq(remote, node)) {
+> > +               of_node_put(remote);
+> > +               return true;
+> > +       }
+> > +
+> > +       of_node_put(remote);
+> > +
+> > +       return false;
+> > +}
+> > +
+> > +/*
+> > + * If the connector exposes a non-discoverable bus like UART, the respective
+> > + * protocol device needs to be created manually with the help of the notifier
+> > + * of the discoverable bus like PCIe.
+> > + */
+> 
+> I really like this idea BTW!
+> 
+> > +static void pwrseq_pcie_m2_register_notifier(struct pwrseq_pcie_m2_ctx *ctx, struct device *dev)
+> > +{
+> > +       int ret;
+> > +
+> > +       /*
+> > +        * Register a PCI notifier for Key E connector that has PCIe as Port 0
+> > +        * interface and Serial as Port 1 interface.
+> > +        */
+> > +       if (pwrseq_pcie_m2_check_remote_node(dev, 1, "serial")) {
+> > +               if (pwrseq_pcie_m2_check_remote_node(dev, 0, "pcie")) {
+> > +                       ctx->dev = dev;
+> > +                       ctx->nb.notifier_call = pwrseq_m2_pcie_notify;
+> > +                       ret = (bus_register_notifier(&pci_bus_type, &ctx->nb));
+> > +                       if (ret) {
+> > +                               dev_err_probe(dev, ret, "Failed to register notifier for serdev\n");
+> 
+> If this is optional and we don't handle the error, should we really
+> print it as one? I'd say a dev_dbg() would suffice unless the failure
+> here impacts the driver's behavior (which it does, so maybe the
+> notifier should not be optional?).
+> 
 
-For more details see the Link tag below. Replace system_wq with
-system_percpu_wq, keeping the same behavior.
+Fair enough. I was on double mind tbh. But it makes sense to return failure.
 
+- Mani
 
-Thanks!
-
---=20
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
+-- 
+மணிவண்ணன் சதாசிவம்
