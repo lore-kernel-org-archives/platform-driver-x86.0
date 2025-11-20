@@ -1,96 +1,278 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDE12874F5;
-	Thu, 20 Nov 2025 16:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8523426E71E;
+	Thu, 20 Nov 2025 16:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763657688; cv=none; b=nQkNr8b/SeBmWR9nNJs/4q+MLjh8bLlMWsdYtP1MOOZzVEYWrG5v/rTIUxJ8WmfkT5/u65cPVb003gG6GmpBlvKsZjLBROEjgrXWqRaVLY9MJEzGPRycbqSyh0gSMofFAzZJXKL2BCixFN6+TT/EvONsz24XnqyG12y48XMLMLE=
+	t=1763657701; cv=none; b=ix9moWfNZVqF4POEuGIIZkRSGdYMIGlz8N1UUDg34Tcj1tZbiJ01C8lUWo5ftgNEZ7waoFE7oS+dqLTsCNam4OGcocpkVNb67oXX1odgeSBo2jGmGfajkvmkldkO/RSDZOEjQdhCarYuzLIDMcCOHvJl4TA6Z0rbKK66uqF3js8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763657688; c=relaxed/simple;
-	bh=7RlJgO0bn3IQUwfaWF5A5gBBgoG4DUcrllB7yObH7KY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UjN7Hqoe+pMesYYl59SHEntNwfZYOVitWNTMLuvlKYzaWUgyMe/ktib/t1TNEKXLG4CWBh1H5dBZ8MSwXzT6jJvtfd7YlH1w+UKoAZJfenNfWuZJUfHy2zNd0zWa8LrmMZrbwGZXgYjmEbvlIayEHHaY0dQBOygiVmfFnaa6N2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oK/ZXygo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763657701; c=relaxed/simple;
+	bh=ClwOe5Ry6bJbfKPAv+MEIxQ5fmn1ZsLOPEOdC9nJIK0=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=AQQblLCCHN7VKKkOwta/vKJ5YTUrTSgPjLaSbnChNiuvXq8b3FEfY7gXTi/f4GAD6elSIr73Yf8bIE6YUVqtt2u9XNoVcNK+ssmst+tEhQZZ2aeQap4Ex0ogwT06trGwsuvuB1tzbgLYBch+IvFSvPGPT1vyABkJbyZiEPG0Frw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXrYZ3Wm; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oK/ZXygo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51418C4CEF1;
-	Thu, 20 Nov 2025 16:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763657687;
-	bh=7RlJgO0bn3IQUwfaWF5A5gBBgoG4DUcrllB7yObH7KY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oK/ZXygo0+HJVRL1dGc2x1xDyykr2qJuxy9hlNMyPRPzGG+8NMayKfzWmw+R6Bks7
-	 zyojuibYxSUmBoBY9wjhfb43NO9giDXA7vx8gBMfjr/8LQIaYvRMvZ6ACsHiMbgzjq
-	 NJDFuGV9RKFcdQSEb1JDDEnFUjd6YM3rGWae0hwPLnbeyaa9wGYyYQLhF03Umc4WFb
-	 PW2ADyTK72HpLutxMVJhk+HkKz5au0EeujP3qdGrmz/HHsPtUrYEgxIe5LPgjDlp6q
-	 S1ZWqQPLybPUdcut5h8hQjJWD3waRP3UuCTKe4LWXvgHNEg+YNEh8YNZwLZ8v4xnk7
-	 S8RktxhAFysUw==
-Date: Thu, 20 Nov 2025 22:24:24 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
- external connector is used
-Message-ID: <blqs5xugab5kumljzrt26dvyhnun2pmpeu4y727xoz3vrponrt@bbxqnl55zhky>
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
- <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com>
- <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
- <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
- <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXrYZ3Wm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763657699; x=1795193699;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ClwOe5Ry6bJbfKPAv+MEIxQ5fmn1ZsLOPEOdC9nJIK0=;
+  b=lXrYZ3WmG8YrJr+Xzn2a2eJOVX9oR0U4ipgLxpNOoSeTJyBtwCKHWpjF
+   Ewi5a7NnNQFNGalL/FijjJ2bRWQi/Y+9sjJKcSmH6McsF/FKkn0A0R+HR
+   odRL+LSjV6bx1Ui+Uf2CLzhwl9Hiq6AgKAyiC5jnLgqtb7Q0t4McBvGlF
+   M/SNjBh7MwNdHjFn5p+bqDNRFYtokzgE4Z3oL8o3tVfayWFxtj4Lp7ehW
+   F2zlgFi7F6JiXl5qd8bLNEF8wrTk2Y9+fDRau6UWmoD5H7kErVNgFSw5+
+   BH+4FnDWX8N5WWxeTDgz7/jypFQbg4FWYby1PM23VW+3oZX5oQduWCA97
+   Q==;
+X-CSE-ConnectionGUID: 4/uzL6JpTjO6MdYHg8c8pQ==
+X-CSE-MsgGUID: 5EHEluUXQBSYkFcy6lk5tQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="65667345"
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="65667345"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 08:54:59 -0800
+X-CSE-ConnectionGUID: LyVXGLVWTXW8DsehTl8kSw==
+X-CSE-MsgGUID: l5rfn0TcQzKIOgSkENwmNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="222078482"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.161])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 08:54:56 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 20 Nov 2025 18:49:42 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.18-4
+Message-ID: <pdx86-pr-20251120184942-68786761@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
 
-On Thu, Nov 20, 2025 at 10:22:16AM -0600, Rob Herring wrote:
-> On Wed, Nov 19, 2025 at 7:33 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Tue, Nov 18, 2025 at 07:03:51AM -0600, Rob Herring wrote:
-> > > On Wed, Nov 12, 2025 at 8:45 AM Manivannan Sadhasivam via B4 Relay
-> > > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
-> > > >
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > >
-> > > > If an external connector like M.2 is connected to the serdev controller
-> > > > in DT, then the serdev devices will be created dynamically by the connector
-> > > > driver. So skip registering devices from DT node as there will be no
-> > > > statically defined devices.
-> > >
-> > > You could still have statically defined devices. You are just choosing
-> > > to probe them later from the connector driver.
-> > >
-> >
-> > The point of coming up with the M.2 binding is to avoid hardcoding the devices
-> > in DT. So static devices are ruled out IMO.
-> 
-> Until you have any one of the reasons we have PCIe devices described
-> even when in a standard slot. Take your pick. An ethernet adapter that
-> omits an EEPROM for the MAC address.
-> 
+Hi Linus,
 
-Hmm, I didn't envision the need to have static and dynamic devices at the same
-time. So you are suggesting to first look for the static devices and then look
-for graph port at the end?
+Here is a platform-drivers-x86 fixes PR for v6.18. This one has lots of new
+HW entries which adds to the size in diffstat but the individual changes are
+simple.
 
-- Mani
 
--- 
-மணிவண்ணன் சதாசிவம்
+Fixes
+
+- acer-wmi: Ignore backlight event
+
+- alienware-wmi-wmax: Fix quirk match table order & drop redundant entries
+
+- amd/pmc:
+  - Add Xbox Ally to spurious 8042 quirk list
+  - Quirk list Lenovo Legion Go 2 NVMe resume
+
+- msi-wmi-platform:
+  - Correct GUID to uppercase
+  - GUID is uncleverly copy-pasted from an example so add a DMI whitelist
+
+- intel/speed_select_if: PCIBIOS_* return code conversion
+
+- intel-uncore-freq & ISST: Fix kernel doc warnings
+
+
+New HW support
+
+- alienware-wmi-wmax:
+  - Alienware 16 Aurora support
+  - Alienware M support
+  - Alienware X support
+  - Dell G support
+
+- amd/pmc:
+  - ROG Xbox Ally (non-X) support
+
+- huaway-wmi: HONOR MagicBoox X16/X14 PrintScreen & YOYO keys
+
+- hp-wmi:
+  - Omen 16-wf1xxx fan support
+  - Omen MAX 16-ah0xx fan + thermal profile support
+  - Victus 16-r0 and 16-s0 fan + thermal profile support
+
+- intel/hid: Intel Nova Lake support
+
+- intel-uncore-freq:
+  - Intel Panther Lake support
+  - Intel Wildcat Lake support
+  - Intel Nova Lake support
+
+Regards, i.
+
+
+The following changes since commit bd34bf518a5ffeb8eb7c8b9907ba97b606166f7b:
+
+  platform: x86: Kconfig: fix minor typo in help for WIRELESS_HOTKEY (2025-10-28 20:13:21 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.18-4
+
+for you to fetch changes up to db30233361f94e1a84450c607989bdb671100fb6:
+
+  platform/x86: intel-uncore-freq: fix all header kernel-doc warnings (2025-11-18 09:37:21 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.18-4
+
+Fixes
+
+- acer-wmi: Ignore backlight event
+
+- alienware-wmi-wmax: Fix quirk match table order & drop redundant entries
+
+- amd/pmc:
+  - Add Xbox Ally to spurious 8042 quirk list
+  - Quirk list Lenovo Legion Go 2 NVMe resume
+
+- msi-wmi-platform:
+  - Correct GUID to uppercase
+  - GUID is uncleverly copy-pasted from an example so add a DMI whitelist
+
+- intel/speed_select_if: PCIBIOS_* return code conversion
+
+- intel-uncore-freq & ISST: Fix kernel doc warnings
+
+New HW support
+
+- alienware-wmi-wmax:
+  - Alienware 16 Aurora support
+  - Alienware M support
+  - Alienware X support
+  - Dell G support
+
+- amd/pmc:
+  - ROG Xbox Ally (non-X) support
+
+- huaway-wmi: HONOR MagicBoox X16/X14 PrintScreen & YOYO keys
+
+- hp-wmi:
+  - Omen 16-wf1xxx fan support
+  - Omen MAX 16-ah0xx fan + thermal profile support
+  - Victus 16-r0 and 16-s0 fan + thermal profile support
+
+- intel/hid: Intel Nova Lake support
+
+- intel-uncore-freq:
+  - Intel Panther Lake support
+  - Intel Wildcat Lake support
+  - Intel Nova Lake support
+
+The following is an automated shortlog grouped by driver:
+
+acer-wmi:
+ -  Ignore backlight event
+
+alienware-wmi-wmax:
+ -  Add AWCC support to Alienware 16 Aurora
+ -  Add support for the whole "G" family
+ -  Add support for the whole "M" family
+ -  Add support for the whole "X" family
+ -  Drop redundant DMI entries
+ -  Fix "Alienware m16 R1 AMD" quirk order
+
+amd: pmc:
+ -  Add Lenovo Legion Go 2 to pmc quirk list
+
+amd/pmc:
+ -  Add spurious_8042 to Xbox Ally
+ -  Add support for Van Gogh SoC
+
+hp-wmi:
+ -  Add Omen 16-wf1xxx fan support
+ -  Add Omen MAX 16-ah0xx fan support and thermal profile
+ -  mark Victus 16-r0 and 16-s0 for victus_s fan and thermal profile support
+
+huawei-wmi:
+ -  add keys for HONOR models
+
+intel/hid:
+ -  Add Nova Lake support
+
+intel/speed_select_if:
+ -  Convert PCIBIOS_* return codes to errnos
+
+intel-uncore-freq:
+ -  Add additional client processors
+ -  fix all header kernel-doc warnings
+
+ISST: isst_if.h:
+ -  fix all kernel-doc warnings
+
+msi-wmi-platform:
+ -  Fix typo in WMI GUID
+ -  Only load on MSI devices
+
+----------------------------------------------------------------
+Antheas Kapenekakis (3):
+      platform/x86/amd/pmc: Add support for Van Gogh SoC
+      platform/x86/amd/pmc: Add spurious_8042 to Xbox Ally
+      platform/x86/amd: pmc: Add Lenovo Legion Go 2 to pmc quirk list
+
+Anthony Wong (1):
+      platform/x86: alienware-wmi-wmax: Add AWCC support to Alienware 16 Aurora
+
+Armin Wolf (3):
+      platform/x86: msi-wmi-platform: Only load on MSI devices
+      platform/x86: msi-wmi-platform: Fix typo in WMI GUID
+      platform/x86: acer-wmi: Ignore backlight event
+
+Edip Hazuri (1):
+      platform/x86: hp-wmi: mark Victus 16-r0 and 16-s0 for victus_s fan and thermal profile support
+
+Haotian Zhang (1):
+      platform/x86/intel/speed_select_if: Convert PCIBIOS_* return codes to errnos
+
+Jia Ston (1):
+      platform/x86: huawei-wmi: add keys for HONOR models
+
+Krishna Chomal (1):
+      platform/x86: hp-wmi: Add Omen 16-wf1xxx fan support
+
+Kuppuswamy Sathyanarayanan (1):
+      platform/x86: intel-uncore-freq: Add additional client processors
+
+Kurt Borja (5):
+      platform/x86: alienware-wmi-wmax: Fix "Alienware m16 R1 AMD" quirk order
+      platform/x86: alienware-wmi-wmax: Drop redundant DMI entries
+      platform/x86: alienware-wmi-wmax: Add support for the whole "M" family
+      platform/x86: alienware-wmi-wmax: Add support for the whole "X" family
+      platform/x86: alienware-wmi-wmax: Add support for the whole "G" family
+
+Marcos Vega (1):
+      platform/x86: hp-wmi: Add Omen MAX 16-ah0xx fan support and thermal profile
+
+Randy Dunlap (2):
+      platform/x86: ISST: isst_if.h: fix all kernel-doc warnings
+      platform/x86: intel-uncore-freq: fix all header kernel-doc warnings
+
+Srinivas Pandruvada (1):
+      platform/x86/intel/hid: Add Nova Lake support
+
+ Documentation/wmi/driver-development-guide.rst     |   1 +
+ drivers/platform/x86/Kconfig                       |   1 +
+ drivers/platform/x86/acer-wmi.c                    |   4 +
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |  25 +++++
+ drivers/platform/x86/amd/pmc/pmc.c                 |   3 +
+ drivers/platform/x86/amd/pmc/pmc.h                 |   1 +
+ drivers/platform/x86/dell/alienware-wmi-wmax.c     | 106 +++++----------------
+ drivers/platform/x86/hp/hp-wmi.c                   |   6 +-
+ drivers/platform/x86/huawei-wmi.c                  |   4 +
+ drivers/platform/x86/intel/hid.c                   |   1 +
+ .../x86/intel/speed_select_if/isst_if_mmio.c       |   4 +-
+ .../uncore-frequency/uncore-frequency-common.h     |   9 +-
+ .../x86/intel/uncore-frequency/uncore-frequency.c  |   4 +
+ drivers/platform/x86/msi-wmi-platform.c            |  43 ++++++++-
+ include/uapi/linux/isst_if.h                       |  50 +++++-----
+ 15 files changed, 148 insertions(+), 114 deletions(-)
