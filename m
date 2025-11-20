@@ -1,41 +1,67 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2236633F380;
-	Thu, 20 Nov 2025 13:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1001341AD7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 13:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763646059; cv=none; b=SbMa9xiQerL0RZUhoby9/jXHtCp9UfloAcwf+WPh8J1D2kZ7DgotLqtiVFk9eY0kIIV5lmerMce5n5qzg7wZ12vHBRV9pXb/2wUABL/Iw+QD1OfyyDooiUF8k0c/3Etamylohse/+CxD/b0hLuZe/7ZBvauWt2EYD7Dk38n+lnc=
+	t=1763646384; cv=none; b=GR6nM7wtX8/7cA2TXbkJFaUo/4nznNjJRPceA2o6R0vNY5ICb2dXhZik64dxsbg7AHWCk6Ha2l1mLXvkJAm4zp4luyhY7Qb1BRSh/tc/9BBv2RFqaDYgy8ed+4EYGmqXnfL95RT7Qmnnqpd90tFFGv2PLbp/Ae+edhOBJstb3cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763646059; c=relaxed/simple;
-	bh=eavknlgNKfHrP4DZliXYcSB3sukFz2ofn03ReMQMgPE=;
+	s=arc-20240116; t=1763646384; c=relaxed/simple;
+	bh=q/RzBBbR54geLjeRNuaXzOcu82NADgBW77czlX0svY8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=raoXpNfZi83bsfjxcX0/9lU9FnbT14k6bF8/3RNHAACTxYTzg3Gyog+TQY0OTzheaZbyWHN3J4CBWCYRyY1pM/PIaUtv6860mvhTErHS+d2P4JHObCqYizUmZ9/OP3NbiL2KF4mL/pZIEUqkLMofRUFw0GpXPG76FRwvcDYlfq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=S8ghEXp+; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=tGKdnuPcHaeqW92Cvz0RQdZpmhcgTNZ+OT4yjDNBaWn9bwyvyKRrSiuGJThM/RFa9+senNf1//B7v7fEaoafDBA7RrMBDX30n5nHKIQCejj6eY2VSFs724sSfZv5i4eVU4nu9LmnHbx7VEBt4YOwXIAm+rclAwlDbev7X/BTt8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaJhT+yj; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="S8ghEXp+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763646052; x=1764250852; i=w_armin@gmx.de;
-	bh=eavknlgNKfHrP4DZliXYcSB3sukFz2ofn03ReMQMgPE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=S8ghEXp+rHoEu8Pptrq9hBxnGnD6HO/AZnF3Lj7vvJocdnJy+8SpcbDiuuULy8d5
-	 L1lY2t+6zcLWeyiXJ5Njo0fM6934ASusc+0DaZFsACminLj5x4R8GDklCxsxp3wZR
-	 veiSplGCgoLVp1k4gVLndX+jExH8RxBxT1IhWbu1o1Uz5b1n5S7itqmnEb2c2tjr3
-	 TZomxUPf+uJVehbr2rrkn/6mIUM8MD2tSISE5U67p6iBOVS2MohTGcyA3f55nyNOt
-	 p+fCZvqcmOJcHCjd1LXlP0lHokHM4wUTvoKEAdGnOxUJuzURC7qZqXsfZ8k3xDiv5
-	 1pTOhzxtvsJ6uKOggw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.70.236] ([141.76.8.172]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MXp9i-1verGx3Dci-00SOEY; Thu, 20
- Nov 2025 14:40:51 +0100
-Message-ID: <aa69ac42-8578-4fbb-a35c-d0a556aa394d@gmx.de>
-Date: Thu, 20 Nov 2025 14:40:49 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaJhT+yj"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-477b5e0323bso10605335e9.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 05:46:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763646379; x=1764251179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yRrYlyq6MB+LPm+0vyKrUlMEhZx2nqZlo8Y6ClpRSzU=;
+        b=MaJhT+yjzkiy+2f2VUIOZJsSxcWJqSRUvjwLPhrjiWfIizQdSvytG0RBwVHPL2i28i
+         xIfj2FWP7quCVZWt7s/gvQxKve9PkiABEed0m4ouzZrVevxJ1L6FeOFx5BdU7jlntvww
+         XyySiO4ymsa+VcIhHNhHyHxEIz/X5OICggM+DOGtCoGORGGa10ZuOKS/1d3Xy21HmMhM
+         CmsOwjGInnQrFBB8GeNajCB85KmsZfBKYwcSv+VtI4XoM1WYCB8tYPdK+ta7KiwZ+BBD
+         NZfzwQ6w6PplEnuDy4yhZXjVbm3FHRRLah9AwA1yKL+c+dayuRlD76KrBb0mcELGz2n9
+         QE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763646379; x=1764251179;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yRrYlyq6MB+LPm+0vyKrUlMEhZx2nqZlo8Y6ClpRSzU=;
+        b=i3FHTr1uhfhDCFBkcHuiiibN66kbV7RLuG8pEACQYUkZoZLE3nLnYgDaxoE8VCnrae
+         85dTAlcO2uEmMI+6jskuaHfI+vtoxVBZgFoedtBXYhXnfINVZjJjHCe/CqMx5PW4Lcnu
+         EpwjgYziozYd69kVCROhh656Zfh6la7NiMLP+m2wExalVDZnzB5zpz9uqAy1qpHoKU1h
+         f/WUYrVHpNO5B28d3rsfVsfUM+M7/NgRVZhiSNZCQW8XNABU36BwyGJQM69HeTHhnqh/
+         m1b72UgbSdq8v4MFd+cZxzoYSrrLddgBy0BtcR2kdKwFyAk1TN1lOqMUfSbnBdCD+BO0
+         6YGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5e0h1lZDmQkuzzeOtDAQm3xrSr15fHdhi7a7fbUcf54HR60BEnuIIbJdiMUg1XhzHhits/rvAY8KyDCxJ96XlTPEj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP6slfcSQqsObX45vuaU3KQzKK3PluGA4r79L4SQ2wT+cLMPT5
+	wCxd2f6npviw3PC3tVhQKGoGluIdH82VvMZw3vbFuR2J0cMBkZOedHnF
+X-Gm-Gg: ASbGncuuAtruKubp898gsxus7otZmpuH47qKKayNS/I670q5OHYxYkWssvGwoVe+7iE
+	4D5YYLDnFbg2mtEs4gpxwcCNM3D6jS1ckUfN/iCdc+pY757C5sDlb6DziL8Ed5QZrRBPZc7aO/Y
+	CwTrE5fIYqMao6PvLt4ZuLspmTI5d5ZZgzQrfyH9omNTB9mzjA2CwkspumCZSvXxW71fpZI42wf
+	l4aZQbCT94uINcuSFCnD8NRY8/R7SPMd9RdmnTe84+lNN1zreFJBRVRl3Mqk5hHaHmRKhAwn9++
+	o/SMhVK8rNMIiI+XnC3YLEpKIw7/ifU7b5wlnKrlV0W3Nu06ok2CxyOQeTnSH+YauUxuFzGEYfy
+	4jXdkL1BbqHT2CVCOzzKbZlxqrqDn2yOZWxWgOeKxacOD5zLIfRkjwf47BtKZaQ7rQwEopaLVgx
+	ImdfB4WBO1WJPSffBM2DMetko=
+X-Google-Smtp-Source: AGHT+IG5/2Ikkjw/vr6wXTuTkwLWPs4ogZfGqpr0ADQ2PD/Dkry8UtpsxQtWjV2Sct4EJWv+54FTXQ==
+X-Received: by 2002:a05:600c:1ca5:b0:477:bf1:8c82 with SMTP id 5b1f17b1804b1-477b9ecec4amr35464215e9.15.1763646379214;
+        Thu, 20 Nov 2025 05:46:19 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b10804c8sm110277045e9.15.2025.11.20.05.46.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Nov 2025 05:46:18 -0800 (PST)
+Message-ID: <89dd8c0f-dfe2-4209-af38-01a3ef6df7ba@gmail.com>
+Date: Thu, 20 Nov 2025 14:46:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,387 +69,373 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
- for TUXEDO devices
-To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-3-wse@tuxedocomputers.com>
- <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
- <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
- <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
- <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
- <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
- <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
- <2d5d88fe-cd54-4311-b5cd-b1c435ff973d@gmx.de>
- <d4c7b31b-1335-47d5-992a-beace78614e5@tuxedocomputers.com>
- <f0161676-fde7-4c6f-8774-25d176265716@gmx.de>
- <59b75eb5-59f8-472f-ad98-5d333eebebe5@tuxedocomputers.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <59b75eb5-59f8-472f-ad98-5d333eebebe5@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3VmafSc5bxAG7NV9rrzQwE7Gsctx4o8QLFv80xVzF+j7wsV/ni0
- n/+2qZuFi7heI0Avp3OnOuzGOeOcec42aSVxuqqt3KYtksRAivhNJO/saI/3WgdATM/gDet
- IyZT3PE3q9iGQfxjgHaP+ESD4F2JikvH46VUXNXGnpNN02jgeGZz3s30+ZjO0jQFLTsnc3f
- Uxs6J7dpFgyw4YkgAN0yA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cTUG7N/IqSk=;06K/vwjwI2MjXDYXnM6FJMj94TX
- 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
+Subject: Re: [PATCH v9 07/11] platform/x86: asus-wmi: Add support for multiple
+ kbd led handlers
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20251120094617.11672-1-lkml@antheas.dev>
+ <20251120094617.11672-8-lkml@antheas.dev>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <20251120094617.11672-8-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 20.11.25 um 11:42 schrieb Werner Sembach:
 
+On 11/20/25 10:46, Antheas Kapenekakis wrote:
+> Some devices, such as the Z13 have multiple Aura devices connected
+> to them by USB. In addition, they might have a WMI interface for
+> RGB. In Windows, Armoury Crate exposes a unified brightness slider
+> for all of them, with 3 brightness levels.
 >
-> Am 20.11.25 um 01:53 schrieb Armin Wolf:
->> Am 18.11.25 um 16:05 schrieb Werner Sembach:
->>
->>>
->>> Am 18.11.25 um 15:41 schrieb Armin Wolf:
->>>> Am 18.11.25 um 15:27 schrieb Werner Sembach:
->>>>
->>>>>
->>>>> Am 18.11.25 um 14:48 schrieb Armin Wolf:
->>>>>> Am 18.11.25 um 14:29 schrieb Werner Sembach:
->>>>>>
->>>>>>>
->>>>>>> Am 18.11.25 um 14:12 schrieb Armin Wolf:
->>>>>>>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
->>>>>>>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
->>>>>>>>>>
->>>>>>>>>>> Handle some more WMI events that are triggered on TUXEDO=20
->>>>>>>>>>> devices.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>>>>>>>>> ---
->>>>>>>>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 19=20
->>>>>>>>>>> ++++++++++++++++++-
->>>>>>>>>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-wmi.h | 2 ++
->>>>>>>>>>> =C2=A0 2 files changed, 20 insertions(+), 1 deletion(-)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
->>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>>>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
->>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>>>>>>> @@ -371,9 +371,11 @@ static const struct key_entry=20
->>>>>>>>>>> uniwill_keymap[] =3D {
->>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported in manual mo=
-de when toggling the=20
->>>>>>>>>>> airplane mode status */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD=
-_RADIOON, { KEY_UNKNOWN }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD=
-_RADIOOFF, { KEY_UNKNOWN }},
->>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when user wa=
-nts to cycle the platform=20
->>>>>>>>>>> profile */
->>>>>>>>>>> -=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MODE_=
-TOGGLE, {=20
->>>>>>>>>>> KEY_UNKNOWN }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_TOG=
-GLE, {=20
->>>>>>>>>>> KEY_F14 }},
->>>>>>>>>>
->>>>>>>>>> I am currently working a patch adding platform profile=20
->>>>>>>>>> support, so this event would
->>>>>>>>>> be handled inside the kernel on models with platform profile=20
->>>>>>>>>> support.
->>>>>>>>>
->>>>>>>>> For tuxedo devices we have profiles managed in userspace that=20
->>>>>>>>> do additional things. So we need a way to handle this in=20
->>>>>>>>> userspace.
->>>>>>>>>
->>>>>>>> Do these things have something to do with the uniwill EC? If so=
-=20
->>>>>>>> then we should implement those inside the driver
->>>>>>>> itself. The control center can then poll the platform profile=20
->>>>>>>> sysfs file to get notified when platform_profile_cycle()
->>>>>>>> is executed to perform additional actions.
->>>>>>> Not exclusively, e.g. one thing is display brightness.
->>>>>>
->>>>>> And you cannot poll the sysfs interface?
->>>>> I can't follow you atm?
->>>>
->>>> I meant to ask whether or not your application could poll the=20
->>>> platform profile sysfs interface for changes instead of
->>>> listing for the F14 key.
->>> But the platform profiles are a fixed number? TCC currently allows=20
->>> an arbitrary amount of profiles being created.
->>
->> With "poll the platform profile sysfs interface" i meant that you=20
->> could use poll() (https://linux.die.net/man/2/poll)
->> or epoll() on the sysfs file containing the current platform profile.
-> Sorry i think i still don't completely get what you mean with platform=
-=20
-> profile. I assume you have a poc on github? If not can you give me a=20
-> short overview?
-
-Example code, might not work:
-
-from select import poll, POLLPRI
-
-fd =3D open("|/sys/firmware/acpi/platform_profile", "r") p =3D poll()=20
-p.register(fd.fileno(), POLLPRI) # Wait till platform profile changes=20
-p.poll() print("Platform profile changed") This however comes with the=20
-drawback that you cannot prevent the platform profile from cycling. If=20
-you want to do that manually depending on the settings inside your=20
-custom profiles, then maybe we can keep the F14 hack for now. I will=20
-then add a module option when adding platform profile support to select=20
-between platform_profile_cycle() and the F14 keycode. Does this sound OK?|
-
->>
->> Anyway, i attached the patch with the device descriptor=20
->> infrastructure. The callback called during probe cannot modify
->> the feature bitmap anymore, but i suggest that you simply set the=20
->> limit for cTGP to zero. The code responsible for
->> initializing cTGP support can then check if the cTGP limit is zero=20
->> and return early.
+> Therefore, to be synergistic in Linux, and support existing tooling
+> such as UPower, allow adding listeners to the RGB device of the WMI
+> interface. If WMI does not exist, lazy initialize the interface.
 >
-> I wonder if we should directly put that into a formal quirk list.=20
-> Opinions?
+> Since hid-asus and asus-wmi can both interact with the led objects
+> including from an atomic context, protect the brightness access with a
+> spinlock and update the values from a workqueue. Use this workqueue to
+> also process WMI keyboard events, so they are handled asynchronously.
 >
-> Best regards,
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 174 ++++++++++++++++++---
+>  include/linux/platform_data/x86/asus-wmi.h |  17 ++
+>  2 files changed, 167 insertions(+), 24 deletions(-)
 >
-> Werner
->
-The problem is that the quirk list will become RO before the driver can ac=
-cess the EC, so we have to use uniwill_data
-for storing this information.
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index e72a2b5d158e..5f23aedbf34f 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/rfkill.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/types.h>
+>  #include <linux/units.h>
+>  
+> @@ -258,6 +259,9 @@ struct asus_wmi {
+>  	int tpd_led_wk;
+>  	struct led_classdev kbd_led;
+>  	int kbd_led_wk;
+> +	bool kbd_led_notify;
+> +	bool kbd_led_avail;
+> +	bool kbd_led_registered;
+>  	struct led_classdev lightbar_led;
+>  	int lightbar_led_wk;
+>  	struct led_classdev micmute_led;
+> @@ -266,6 +270,7 @@ struct asus_wmi {
+>  	struct work_struct tpd_led_work;
+>  	struct work_struct wlan_led_work;
+>  	struct work_struct lightbar_led_work;
+> +	struct work_struct kbd_led_work;
+>  
+>  	struct asus_rfkill wlan;
+>  	struct asus_rfkill bluetooth;
+> @@ -1530,6 +1535,99 @@ static void asus_wmi_battery_exit(struct asus_wmi *asus)
+>  
+>  /* LEDs ***********************************************************************/
+>  
+> +struct asus_hid_ref {
+> +	struct list_head listeners;
+> +	struct asus_wmi *asus;
+> +	/* Protects concurrent access from hid-asus and asus-wmi to leds */
+> +	spinlock_t lock;
+> +};
+> +
+> +static struct asus_hid_ref asus_ref = {
+> +	.listeners = LIST_HEAD_INIT(asus_ref.listeners),
+> +	.asus = NULL,
+> +	/*
+> +	 * Protects .asus, .asus.kbd_led_{wk,notify}, and .listener refs. Other
+> +	 * asus variables are read-only after .asus is set. Except the led cdev
+> +	 * device if not kbd_led_avail. That becomes read-only after the
+> +	 * first hid-asus listener registers and triggers the work queue. It is
+> +	 * then not referenced again until unregistering, which happens after
+> +	 * .asus ref is dropped. Since .asus needs to be accessed by hid-asus
+> +	 * IRQs to check if forwarding events is possible, a spinlock is used.
+> +	 */
+What are "That" and "It" referring to in this context?
 
-Thanks,
-Armin Wolf
+Are you absolutely sure you want to begin a sentence with "Except"?
 
->>
->> Thanks,
->> Armin Wolf
->>
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>>>
->>>>>>
->>>>>>>>
->>>>>>>>> The 2 things I can spontaneously think of would be a sysfs=20
->>>>>>>>> toggle or 2 different UNIWILL_FEATURE_* defines.
->>>>>>>>>
->>>>>>>> TPH i would love to have an ordinary keycode allocated for that=
-=20
->>>>>>>> if the above does not work for you. There already
->>>>>>>> exists KEY_PERFORMANCE, so adding something like=20
->>>>>>>> KEY_PERFORMANCE_CYCLE should be possible.
->>>>>>>
->>>>>>> New keycodes won't work on X11, I don't know the reason, but X11=
-=20
->>>>>>> only supports a max of 248 keycodes
->>>>>>>
->>>>>>> That's why for example touchpad toggle is bound to F21 e.g. here=
-=20
->>>>>>> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x=
-86/lg-laptop.c#L106=20
->>>>>>> .
->>>>>>>
->>>>>> Oh no. In this case using F14 is fine.
->>>>>>
->>>>>>
->>>>>> Thanks,
->>>>>> Armin Wolf
->>>>>>
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the use=
-r wants to adjust the=20
->>>>>>>>>>> brightness of the keyboard */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KBDILLUMD=
-OWN, { KEY_KBDILLUMDOWN=20
->>>>>>>>>>> }},
->>>>>>>>>>> @@ -382,11 +384,19 @@ static const struct key_entry=20
->>>>>>>>>>> uniwill_keymap[] =3D {
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants=
- to toggle the=20
->>>>>>>>>>> microphone mute status */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
->>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to =
-toggle the mute=20
->>>>>>>>>>> status */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD=
-_MUTE, { KEY_MUTE }},
->>>>>>>>>>
->>>>>>>>>> Why is this event being ignored?
->>>>>>>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the=20
->>>>>>>>> mute key event, so not ignoring it here would result in a=20
->>>>>>>>> double trigger.
->>>>>>>>
->>>>>>>> I understand.
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> +
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user locks=
-/unlocks the Fn key */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 =
-UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
->>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the use=
-r wants to toggle the=20
->>>>>>>>>>> brightness of the keyboard */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KBDILLUMT=
-OGGLE, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL0, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL1, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL2, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL3, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL4, {=20
->>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
->>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FIXME: find out the e=
-xact meaning of those events */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_BAT_CH=
-ARGE_FULL_24_H, {=20
->>>>>>>>>>> KEY_UNKNOWN }},
->>>>>>>>>>> @@ -395,6 +405,9 @@ static const struct key_entry=20
->>>>>>>>>>> uniwill_keymap[] =3D {
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants=
- to toggle the=20
->>>>>>>>>>> benchmark mode status */
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_BENCHM=
-ARK_MODE_TOGGLE, {=20
->>>>>>>>>>> KEY_UNKNOWN }},
->>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to =
-toggle the webcam */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_WEBCAM_TOGGLE, { =
-KEY_UNKNOWN }},
->>>>>>>>>>
->>>>>>>>>> Same as above.
->>>>>>>>>
->>>>>>>>> Same as above ;)
->>>>>>>>>
->>>>>>>>> At least iirc, would have to double check
->>>>>>>>>
->>>>>>>> Ok.
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Armin Wolf
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> +
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_END }
->>>>>>>>>>> =C2=A0 };
->>>>>>>>>>> =C2=A0 @@ -1247,6 +1260,10 @@ static int=20
->>>>>>>>>>> uniwill_notifier_call(struct notifier_block *nb, unsigned=20
->>>>>>>>>>> long action
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>> mutex_unlock(&data->battery_lock);
->>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTI=
-FY_OK;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // noop for the ti=
-me being
->>>>>>>>>>
->>>>>>>>>> Wrong comment style, please use /* */.
->>>>>>>>> ack
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>> Armin Wolf
->>>>>>>>>>
->>>>>>>>>>> +
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return =
-NOTIFY_OK;
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
->>>>>>>>>>> mutex_lock(&data->input_lock);
->>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h=20
->>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>>>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
->>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
->>>>>>>>>>> @@ -113,6 +113,8 @@
->>>>>>>>>>> =C2=A0 =C2=A0 #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE 0xC0
->>>>>>>>>>> =C2=A0 +#define UNIWILL_OSD_WEBCAM_TOGGLE 0xCF
->>>>>>>>>>> +
->>>>>>>>>>> =C2=A0 #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED 0xF0
->>>>>>>>>>> =C2=A0 =C2=A0 struct device;
->>>>>>>>>
->>>>>
->>>
->
+On "ref is dropped" I would continue with ": since .asus .....".
+> +	.lock = __SPIN_LOCK_UNLOCKED(asus_ref.lock),
+> +};
+> +
+> +/*
+> + * Allows registering hid-asus listeners that want to be notified of
+> + * keyboard backlight changes.
+> + */
+> +int asus_hid_register_listener(struct asus_hid_listener *bdev)
+> +{
+> +	struct asus_wmi *asus;
+> +
+> +	guard(spinlock_irqsave)(&asus_ref.lock);
+> +	list_add_tail(&bdev->list, &asus_ref.listeners);
+> +	asus = asus_ref.asus;
+> +	if (asus)
+> +		queue_work(asus->led_workqueue, &asus->kbd_led_work);
+Are you sure this has to be protected by the guard too?
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(asus_hid_register_listener);
+> +
+> +/*
+> + * Allows unregistering hid-asus listeners that were added with
+> + * asus_hid_register_listener().
+> + */
+> +void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
+> +{
+> +	guard(spinlock_irqsave)(&asus_ref.lock);
+> +	list_del(&bdev->list);
+> +}
+> +EXPORT_SYMBOL_GPL(asus_hid_unregister_listener);
+> +
+> +static void do_kbd_led_set(struct led_classdev *led_cdev, int value);
+> +
+> +static void kbd_led_update_all(struct work_struct *work)
+> +{
+> +	struct asus_wmi *asus;
+> +	bool registered, notify;
+> +	int ret, value;
+> +
+> +	asus = container_of(work, struct asus_wmi, kbd_led_work);
+> +
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> +		registered = asus->kbd_led_registered;
+> +		value = asus->kbd_led_wk;
+> +		notify = asus->kbd_led_notify;
+> +	}
+> +
+> +	if (!registered) {
+> +		/*
+> +		 * This workqueue runs under asus-wmi, which means probe has
+> +		 * completed and asus-wmi will keep running until it finishes.
+> +		 * Therefore, we can safely register the LED without holding
+> +		 * a spinlock.
+> +		 */
+> +		ret = devm_led_classdev_register(&asus->platform_device->dev,
+> +					    &asus->kbd_led);
+> +		if (!ret) {
+> +			scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +				asus->kbd_led_registered = true;
+> +		} else {
+> +			pr_warn("Failed to register keyboard backlight LED: %d\n", ret);
+> +			return;
+> +		}
+> +	}
+> +
+> +	if (value >= 0)
+> +		do_kbd_led_set(&asus->kbd_led, value);
+> +	if (notify) {
+> +		scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +			asus->kbd_led_notify = false;
+> +		led_classdev_notify_brightness_hw_changed(&asus->kbd_led, value);
+> +	}
+> +}
+> +
+>  /*
+>   * These functions actually update the LED's, and are called from a
+>   * workqueue. By doing this as separate work rather than when the LED
+> @@ -1576,7 +1674,8 @@ static void kbd_led_update(struct asus_wmi *asus)
+>  {
+>  	int ctrl_param = 0;
+>  
+> -	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+>  	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+>  }
+>  
+> @@ -1609,14 +1708,23 @@ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+>  
+>  static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+>  {
+> +	struct asus_hid_listener *listener;
+>  	struct asus_wmi *asus;
+>  	int max_level;
+>  
+>  	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>  	max_level = asus->kbd_led.max_brightness;
+>  
+> -	asus->kbd_led_wk = clamp_val(value, 0, max_level);
+> -	kbd_led_update(asus);
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +		asus->kbd_led_wk = clamp_val(value, 0, max_level);
+> +
+> +	if (asus->kbd_led_avail)
+> +		kbd_led_update(asus);
+> +
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> +		list_for_each_entry(listener, &asus_ref.listeners, list)
+> +			listener->brightness_set(listener, asus->kbd_led_wk);
+> +	}
+>  }
+>  
+>  static void kbd_led_set(struct led_classdev *led_cdev,
+> @@ -1631,10 +1739,11 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+>  
+>  static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_brightness value)
+>  {
+> -	struct led_classdev *led_cdev = &asus->kbd_led;
+> -
+> -	do_kbd_led_set(led_cdev, value);
+> -	led_classdev_notify_brightness_hw_changed(led_cdev, asus->kbd_led_wk);
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> +		asus->kbd_led_wk = value;
+> +		asus->kbd_led_notify = true;
+> +	}
+> +	queue_work(asus->led_workqueue, &asus->kbd_led_work);
+>  }
+>  
+>  static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+> @@ -1644,10 +1753,18 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+>  
+>  	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>  
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> +		if (!asus->kbd_led_avail)
+> +			return asus->kbd_led_wk;
+> +	}
+> +
+>  	retval = kbd_led_read(asus, &value, NULL);
+>  	if (retval < 0)
+>  		return retval;
+>  
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +		asus->kbd_led_wk = value;
+> +
+>  	return value;
+>  }
+>  
+> @@ -1759,7 +1876,9 @@ static int camera_led_set(struct led_classdev *led_cdev,
+>  
+>  static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  {
+> -	led_classdev_unregister(&asus->kbd_led);
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +		asus_ref.asus = NULL;
+> +
+>  	led_classdev_unregister(&asus->tpd_led);
+>  	led_classdev_unregister(&asus->wlan_led);
+>  	led_classdev_unregister(&asus->lightbar_led);
+> @@ -1797,22 +1916,25 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  			goto error;
+>  	}
+>  
+> -	if (!kbd_led_read(asus, &led_val, NULL) && !dmi_check_system(asus_use_hid_led_dmi_ids)) {
+> -		pr_info("using asus-wmi for asus::kbd_backlight\n");
+> -		asus->kbd_led_wk = led_val;
+> -		asus->kbd_led.name = "asus::kbd_backlight";
+> -		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+> -		asus->kbd_led.brightness_set = kbd_led_set;
+> -		asus->kbd_led.brightness_get = kbd_led_get;
+> -		asus->kbd_led.max_brightness = 3;
+> +	asus->kbd_led.name = "asus::kbd_backlight";
+> +	asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+> +	asus->kbd_led.brightness_set = kbd_led_set;
+> +	asus->kbd_led.brightness_get = kbd_led_get;
+> +	asus->kbd_led.max_brightness = 3;
+> +	asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
+> +	INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
+>  
+> +	if (asus->kbd_led_avail) {
+> +		asus->kbd_led_wk = led_val;
+>  		if (num_rgb_groups != 0)
+>  			asus->kbd_led.groups = kbd_rgb_mode_groups;
+> +	} else
+> +		asus->kbd_led_wk = -1;
+>  
+> -		rv = led_classdev_register(&asus->platform_device->dev,
+> -					   &asus->kbd_led);
+> -		if (rv)
+> -			goto error;
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+> +		asus_ref.asus = asus;
+> +		if (asus->kbd_led_avail || !list_empty(&asus_ref.listeners))
+> +			queue_work(asus->led_workqueue, &asus->kbd_led_work);
+>  	}
+>  
+>  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_WIRELESS_LED)
+> @@ -4272,6 +4394,7 @@ static int asus_wmi_get_event_code(union acpi_object *obj)
+>  
+>  static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>  {
+> +	enum led_brightness led_value;
+>  	unsigned int key_value = 1;
+>  	bool autorelease = 1;
+>  
+> @@ -4288,19 +4411,22 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>  		return;
+>  	}
+>  
+> +	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> +		led_value = asus->kbd_led_wk;
+> +
+>  	if (code == NOTIFY_KBD_BRTUP) {
+> -		kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+> +		kbd_led_set_by_kbd(asus, led_value + 1);
+>  		return;
+>  	}
+>  	if (code == NOTIFY_KBD_BRTDWN) {
+> -		kbd_led_set_by_kbd(asus, asus->kbd_led_wk - 1);
+> +		kbd_led_set_by_kbd(asus, led_value - 1);
+>  		return;
+>  	}
+>  	if (code == NOTIFY_KBD_BRTTOGGLE) {
+> -		if (asus->kbd_led_wk == asus->kbd_led.max_brightness)
+> +		if (led_value == asus->kbd_led.max_brightness)
+>  			kbd_led_set_by_kbd(asus, 0);
+>  		else
+> -			kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+> +			kbd_led_set_by_kbd(asus, led_value + 1);
+>  		return;
+>  	}
+>  
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 8a515179113d..1165039013b1 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -163,11 +163,20 @@ enum asus_ally_mcu_hack {
+>  	ASUS_WMI_ALLY_MCU_HACK_DISABLED,
+>  };
+>  
+> +/* Used to notify hid-asus when asus-wmi changes keyboard backlight */
+> +struct asus_hid_listener {
+> +	struct list_head list;
+> +	void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
+> +};
+> +
+>  #if IS_REACHABLE(CONFIG_ASUS_WMI)
+>  void set_ally_mcu_hack(enum asus_ally_mcu_hack status);
+>  void set_ally_mcu_powersave(bool enabled);
+>  int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval);
+>  int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+> +
+> +int asus_hid_register_listener(struct asus_hid_listener *cdev);
+> +void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
+>  #else
+>  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+>  {
+> @@ -184,6 +193,14 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+>  {
+>  	return -ENODEV;
+>  }
+> +
+> +static inline int asus_hid_register_listener(struct asus_hid_listener *bdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +static inline void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
+> +{
+> +}
+>  #endif
+>  
+>  /* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
