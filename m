@@ -1,161 +1,102 @@
-Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F94C2D739F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 14:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295183644D7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 16:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763649828; cv=none; b=i3q9z9qC0pNSH5wTJbYZDzWLwOziJRnl9cGhNl20dsfp6kH2ooPfAJECDR46XCe0/QjPXi9vsD7TnLfbeLRdg/Wnm/0rd55+MRE67742Bocpw1hv1U5B7cAQjG4TiyrK5qMUk0DZk/fZrHusHONUFNHeBrB8A4C4mkN9SUT22zE=
+	t=1763655751; cv=none; b=YqPo2Ce+Zt80rHRxd+Ll7TJLKtdQK0vKiDzZHWVymGbmVD9EGnr4tIOCrBopy8bRbgyubxD3aWQbr5y98gI3sVqZdCd/N5gbQRpHxSVRwUJAdhhrvpOD8LSPIunr1CbfxtPgb6wqH8VDXXTISMQ7U+CRGYlg2BFUr6xjSex6QcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763649828; c=relaxed/simple;
-	bh=FUPJaikyvTNFMdDAh9pNbdy/D97pILhqpShUgWWPWQI=;
+	s=arc-20240116; t=1763655751; c=relaxed/simple;
+	bh=bi/Po0AgpnEbGaYHxKxOmZ9YXa7BiIdYeqc0S3my3Xo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ip33R7E7mk7K2GFa41NquMZhtwwQX5sCpYmoWXwPvs1m/XNZNI7vi1sVmbuRYRvnQ951ii02KGyIFP3zWGM55ObZoK25xCFNXEsgk/Cj1mYbTCuJGFFHgPjQ7lbdnXt9cp5zYpgcEWneB4FgQECkOT5egv96AaKj2mlRs6mLZc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=I6VeK2TJ; arc=none smtp.client-ip=46.62.234.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	 To:Cc:Content-Type; b=MlCHvOSj+eSgtja8UDQGx4Rx4RAT9YMTH9vOLLlBJBBnYe/qteceJaE5P1xVbj9CmggZjt9zpAFzY1EJrANu2eevqo7QFiJixlFmcPt7T7ByA0JeVbqak2sgGkpup33Z1zQHhKuZzcNT0JMyJGHl4rIKLKG6qH09xe7WVntArqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJqg5gsj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="I6VeK2TJ"
-Received: from relay15 (localhost [127.0.0.1])
-	by relay15.grserver.gr (Proxmox) with ESMTP id 4FE994402B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 14:43:44 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay15.grserver.gr (Proxmox) with ESMTPS id 5491944065
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 14:43:42 +0000 (UTC)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 9C005200BA9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 16:43:41 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1763649821;
-	bh=uNXx3SZpCCx8TEuTVeaXqrcI+RiUfDY5+1Cbf9d71c0=;
-	h=Received:From:Subject:To;
-	b=I6VeK2TJ5RcS/yUEq+BDOV0Dgwl+U80Q9P4S8sSV0KEOjWCeuaTjznwFoCejLVpJy
-	 NkiNF/wrTNU68xTU8iB48+5kz0vVDMeszUx4CYG6XyrMAUgCwV1Y9Mm3Rug/XObwUm
-	 PG9eIevCMJrCuru53TUHxsba2gq/DUWIhvojeKM7F9+9crpXm3UfUe5tDSQ1RIlpnM
-	 KBvtFUS1hJd7LDG7zUGFfuXzgE5H6/b0aoaHf7sDGIoGGuWm3OwGwhdBM+KgYs94oL
-	 Y83cNh7pWa4eyB5vWMjBMqh9UgtdDYrceiF9dvts3IG3E+qyehjRjCPqZYIcqj7n6Y
-	 3BveOBel7XdKQ==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f169.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f169.google.com with SMTP id
- 38308e7fff4ca-37ba5af5951so10211901fa.1
-        for <platform-driver-x86@vger.kernel.org>;
- Thu, 20 Nov 2025 06:43:41 -0800 (PST)
-X-Gm-Message-State: AOJu0Yw0ENrhNmBCNjO4GpV9f5vfwbpJQoGHJIHHUAzjVQynw7uiCbbi
-	rY1ZvOX+e0xBTvgr5ihSVc8xeVGSK04B/SuNdFktTnXyIfYd5cP/lPcrLYZEXsQgczRoGtHEdF6
-	84ZmLZDENlHmUNq8ijQz1eRqGLKlf0oQ=
-X-Google-Smtp-Source: 
- AGHT+IH7O2zNRtI1BwkhDbiifNEMFiR+UhgZJK1bVk1+Pn+GW/vm2DfG0R/nqnKUYNfqF9r2p0XdAQa3Bfum9zq9b4g=
-X-Received: by 2002:a2e:8749:0:b0:37b:971a:211f with SMTP id
- 38308e7fff4ca-37cc67b2f0bmr8655471fa.44.1763649821145; Thu, 20 Nov 2025
- 06:43:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJqg5gsj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A8FC2BCB1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 16:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763655750;
+	bh=bi/Po0AgpnEbGaYHxKxOmZ9YXa7BiIdYeqc0S3my3Xo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OJqg5gsj68ksFZN0GbvCUrDOmfrmRxVknpZNcMdToGVZVvl4EawqQiK/RQ7e58ifU
+	 vwvTkArvsYgKhaFbPDYTNrAswmZJS94eTfPRPPhrE1hIJ7kn6kr7CgGow1eRsLVwh+
+	 Ubqao6grr+Ox/P33v8nvayEXUjcRzbzY/otv9qQWV46zE7hCP268zEkixGSjcQLuT1
+	 OM/SURl1hDHKSZYhO5shJ+N0LjpXKnP9vMougYMgUBNotoEzcNREMrmw3cuW13QsDJ
+	 nodPtUgFwQD7zQ1PbtHPPWCL9CX+kRLzBEnh0p3TRHH7doP1PaMme5cuOgaUtzKZJQ
+	 QD3VK61BRe7rg==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64312565c10so1505850a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 08:22:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVMNrXX3fafE5a5cfh24Cm3nJbs6dmIfVTo2kYWu+xZphv08FTspxHCeQWReqU7J8mOzC0qd167QTFGRVsCxAAMntcz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLAItTHl65edx1WaifhK6TtvnS7eKNWbQ9RaiRv/iYaRfT86Us
+	Zl8K/NVQ0o/9Qdbgt1TFiAbQ2VwlclY6RrbHPT/GxS5yi9rkV6Qy+9Hd1nZcwqexRkhJ59RPw31
+	6jvTi5v/E85ijFncOerlYpvabG+9j3w==
+X-Google-Smtp-Source: AGHT+IEWkCgWatcHpdXr/OIRJiRj/QCEmSn/C4yEQfCtXou2e73E372BAB9bX3hhR6qzcGe6jCZ9JRVO/S+7C6PFF8E=
+X-Received: by 2002:a17:907:db16:b0:b72:d001:7653 with SMTP id
+ a640c23a62f3a-b7654de0b58mr374078966b.19.1763655748985; Thu, 20 Nov 2025
+ 08:22:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120094617.11672-1-lkml@antheas.dev>
- <20251120094617.11672-7-lkml@antheas.dev>
- <f13a53d9-e5b8-4380-b134-16aa81eb0a88@gmail.com>
- <CAGwozwEk0k3K8v2GOX2+9Rrcx_pp4xAmiJExzoRNADeridRTfA@mail.gmail.com>
- <5e577dcf-995e-441b-9351-11d6da097fcc@gmail.com>
-In-Reply-To: <5e577dcf-995e-441b-9351-11d6da097fcc@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 20 Nov 2025 15:43:29 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHNK3VFxeo2wNfW02+gp2EkU6g=kSi1_5ZYRAdW_swd_g@mail.gmail.com>
-X-Gm-Features: AWmQ_bkElZlX56dRRqtB0UKz9VbctOCWxKWfJGFMYPMw9N2y4vZc2yX4XTs4p4A
-Message-ID: 
- <CAGwozwHNK3VFxeo2wNfW02+gp2EkU6g=kSi1_5ZYRAdW_swd_g@mail.gmail.com>
-Subject: Re: [PATCH v9 06/11] HID: asus: early return for ROG devices
-To: Denis Benato <benato.denis96@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
+ <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com> <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
+ <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
+In-Reply-To: <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 20 Nov 2025 10:22:16 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
+X-Gm-Features: AWmQ_blvWXZ3OwaL5ikiIPwr7cVeDcTz_uslr7dP8flZZyL49YRBC5MiFZDf9vA
+Message-ID: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
+Subject: Re: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
+ external connector is used
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176364982182.2736027.18303426991144369631@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Nov 2025 at 15:29, Denis Benato <benato.denis96@gmail.com> wrote:
+On Wed, Nov 19, 2025 at 7:33=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
 >
->
-> On 11/20/25 15:15, Antheas Kapenekakis wrote:
-> > On Thu, 20 Nov 2025 at 14:29, Denis Benato <benato.denis96@gmail.com> wrote:
-> >>
-> >> On 11/20/25 10:46, Antheas Kapenekakis wrote:
-> >>> Some ROG devices have a new dynamic backlight interface for control by
-> >>> Windows. This interface does not create an ->input device, causing the
-> >>> kernel to print an error message and to eject it. In addition, ROG
-> >>> devices have proper HID names in their descriptors so renaming them is
-> >>> not necessary.
-> >> Is this patchset supposed to work without the renaming, correct?
-> >>
-> >> If so consider dropping the drop of renames, taking required time
-> >> to organize with Derek and resubmit when things are ready:
-> >> there is no point for the rename to stall the rest and quit renaming
-> >> is not urgent at all.
-> > I feel like two months is enough of a timeframe for a simple rename
-> > fix to go in.
+> On Tue, Nov 18, 2025 at 07:03:51AM -0600, Rob Herring wrote:
+> > On Wed, Nov 12, 2025 at 8:45=E2=80=AFAM Manivannan Sadhasivam via B4 Re=
+lay
+> > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+> > >
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > >
+> > > If an external connector like M.2 is connected to the serdev controll=
+er
+> > > in DT, then the serdev devices will be created dynamically by the con=
+nector
+> > > driver. So skip registering devices from DT node as there will be no
+> > > statically defined devices.
 > >
-> > I do not want to have to reorder the checks just so the rename can
-> > stay in _for now_. Skipping the ->input check is important for both
-> > Xbox Ally/Z13 as it causes errors and the device to stay partially
-> > uninitialized.
+> > You could still have statically defined devices. You are just choosing
+> > to probe them later from the connector driver.
 > >
-> >>> Therefore, if a device is identified as ROG, early return from probe to
-> >>> skip renaming and ->input checks.
-> >>>
-> >>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >>> ---
-> >>>  drivers/hid/hid-asus.c | 7 +++++++
-> >>>  1 file changed, 7 insertions(+)
-> >>>
-> >>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> >>> index 3047bc54bf2e..6193c9483bec 100644
-> >>> --- a/drivers/hid/hid-asus.c
-> >>> +++ b/drivers/hid/hid-asus.c
-> >>> @@ -1236,6 +1236,13 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >>>           asus_kbd_register_leds(hdev))
-> >>>               hid_warn(hdev, "Failed to initialize backlight.\n");
-> >>>
-> >>> +     /*
-> >>> +      * For ROG keyboards, skip rename for consistency and ->input check as
-> >>> +      * some devices do not have inputs.
-> >>> +      */
-> >>> +     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
-> >>> +             return 0;
-> >>> +
-> >>>       /*
-> >>>        * Check that input registration succeeded. Checking that
-> >>>        * HID_CLAIMED_INPUT is set prevents a UAF when all input devices
-> >> Just for clarity is this supposed to fix this: https://gitlab.com/asus-linux/asusctl/-/issues/700 ?
-> >> This model works once in windows users disable  that new feature.
-> >>
-> >> Note: that kernel the person submitting the bug is using contains your v8
-> >> and asus-armoury.
-> >>
-> > No. This user has a laptop that has at least a WMI implementation of
-> > RGB controls (this is why you can see rgb settings). Since you did not
-> > ask for logs, it is not clear if it also has a HID implementation that
-> > is skipped due to e.g., a missing product ID. Very likely it is a bug
-> > on the WMI implementation that is out of scope for this series.
-> I will ask for logs, but I recall someone with the same model sent dmesg already,
-> I'll try to find it, but if this is true... Are we lending control of LEDs to a bugged WMI
-> implementation for this laptop?
 >
+> The point of coming up with the M.2 binding is to avoid hardcoding the de=
+vices
+> in DT. So static devices are ruled out IMO.
 
-Yes, the asus-wmi driver is bugged in certain laptops. This does not
-mean it should not be activated-the device has RGB. It means that it
-should be fixed eventually.
+Until you have any one of the reasons we have PCIe devices described
+even when in a standard slot. Take your pick. An ethernet adapter that
+omits an EEPROM for the MAC address.
 
+Rob
