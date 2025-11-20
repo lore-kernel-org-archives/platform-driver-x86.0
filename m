@@ -1,558 +1,163 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013006.outbound.protection.outlook.com [40.93.196.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC2B32D45E;
-	Thu, 20 Nov 2025 10:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763635633; cv=none; b=oMXVZgobl2a+QWEDWv6d4EF5gjWJ6ke3RkAPz27619GQfP/Zh9rjyOdy5t7VpXo13XsQJ7EWv/Q2O7uGsY7frYDb9N5iNCEhnornJxN67SHdP+lQfY8wBc2eTxynIx0Wq1+mhYEuAlHHU1fwQszCQprGlQ1Q2pk+gj8Jap1doZs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763635633; c=relaxed/simple;
-	bh=N3tRjrA3NmY7mNdaiAGPNh0T8lqQKSKOle5jEouTLD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBDryMNf6x9b5i6Nd0c69JtMNvxwHEodyhErDAyhoLrwpNAjG3YM6Lz6pRFev9KvgxvLI+06seXRqwQktVjNPIs9zSK6fPt6NpJvWIyP2EEaveF4F9RcnWjKI6KzlbyWoGrghmyIOlOTyAZYFoEHsYPgo8V8rmamA5KvgkH0/s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=YSU0wqQH; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9185832E137
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 10:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763636078; cv=fail; b=N2dm3Xv1XILwm9waFCMIdo98+Pm7DLcHhF+O8C6arZi+NaTpNjurE2pmzY7c5Bst6jS5SEZwA2gNuGLGstUz1vAXTkLkUkkSbC6VXep2NcIzsrGm6n5EUdyoIFC0ayKCKliJgl+t2QPQgFRg9uS1fIzAiWZ3Sqg8hXsJjBe5ONc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763636078; c=relaxed/simple;
+	bh=BAFjehbxjHQ4kjwcDdAgtfoDbEPNb35pjH93EAHYOk8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VIxgm1GUKGyvZlhZnSCmlHdmqGOGNxkGUknD3mXrqq0c4TlRiUrnMYdNLWHfPEUse0tmJQJGd2mLIhno4+grp3eMolKYIfoDDCXmvmQfl7mStbt6gk4crqysUio8D/pgeMxXz17Jv6875aJst547DDkpV89Dohtbc1ggC0mosxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bUonI9PS; arc=fail smtp.client-ip=40.93.196.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="YSU0wqQH"
-Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id D7A972FC0055;
-	Thu, 20 Nov 2025 11:47:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1763635627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lGaiie2zO5iFccnCeRceXAyG5eJE/cRxqZShxoleu94=;
-	b=YSU0wqQHup/ZtNRDzlsS4MvC/olTz9c6ARL1jHIs4c+SThW+fm8PsMAn6Efp+xRsGETumP
-	Pii1rOPe/EhQCLoblJhvoyNf8IE1OUZRmDGgKVo7omDFiOkVH+NOL48lsEf1Fth6XyHqJV
-	AXcIwciQvGRL0UGNR/Q0f7IMOzWcE2c=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <9dd0d4ab-4095-4f93-a545-e078243ad8ef@tuxedocomputers.com>
-Date: Thu, 20 Nov 2025 11:47:06 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bUonI9PS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wroeTADv0vHur01mmuzgu69D0eW8fvcafbnHusKLjQLQcIzJYRlEtVdzvmoFFN85rxkQW3Vh7qsDMrm15+iy7H/4+scj43cZVge6sA+SAl/EPGx42FLTuXYzxFksyzZt/5uuZfgBIWyClKhS1y/OL1AVIoiKobMzaeNldln46nHiA1vR+3A88RMUtGwHZJ7OeEPNRzAzFfsbbvwdP8f+oz2Nxjx7kiWLRM5zHGKoMW3rqCTLEJdOovUVnMKWs1yFWaxswC999oMAfqf+37eHVI2oVm6YKKwpTF+m3z+ecva++aGhGIxBhcTq13J+E5gNAtSVILrSB9lbUI9Vk88AMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L2r1lcmVReVHTxPffap4M2QibqngmplgRg4RLqj6p80=;
+ b=jj/gQCqOeG145ibSXJv3CPUX+pzTlzP6IOg9MryidQmiy0EW9ObOG0cN+dyq/9kwZROuadx04WuFru1rZaiV/GxbmXKHoqcWp9yFN9W8Z/GGsS4HwIXMnj/QNob1UJBw4wVQ7ADOJoX22pfrZcbTY5nTuBEiRBPhqeXN9Z6ZfWOY2PZkgqCR1YVK2moYDY/2hoCxcx2j1EveGclnZ8DHQ2BztBmGss5J4Kd2xdDfI6pSs5A811YObBNCQrGgdaWj5fj/vWihScHPOUxVB3Qi8/EH2o+giwXpg48o4Bx9PRvzuilmf9Du5kcpmpjPDqH0n6oV0IQkCByc3OqsbTZn0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L2r1lcmVReVHTxPffap4M2QibqngmplgRg4RLqj6p80=;
+ b=bUonI9PSKdb4Zm2HUpMvOAqHJYAJFwpFA7DT9/91GC2iTyfK6ueGjUquiq+cymN0lyk17LiZ8RMXQqrBWWUgSjK1ILqoJUYCtmWsLQU3hy8EO3qnSRePmkaGlpN2tDmnHxfdAUZqav0rL+ulAl0plAugf0yoiItZW4wCzJTK9uM=
+Received: from SA9P221CA0022.NAMP221.PROD.OUTLOOK.COM (2603:10b6:806:25::27)
+ by SJ2PR12MB8883.namprd12.prod.outlook.com (2603:10b6:a03:538::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Thu, 20 Nov
+ 2025 10:54:32 +0000
+Received: from SN1PEPF00036F43.namprd05.prod.outlook.com
+ (2603:10b6:806:25:cafe::c9) by SA9P221CA0022.outlook.office365.com
+ (2603:10b6:806:25::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.10 via Frontend Transport; Thu,
+ 20 Nov 2025 10:54:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF00036F43.mail.protection.outlook.com (10.167.248.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9343.9 via Frontend Transport; Thu, 20 Nov 2025 10:54:32 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 20 Nov
+ 2025 02:54:29 -0800
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v3 0/3] PMF Cleanup series
+Date: Thu, 20 Nov 2025 16:22:07 +0530
+Message-ID: <20251120105210.3945710-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] platform/x86/uniwill: Implement cTGP setting
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117132530.32460-1-wse@tuxedocomputers.com>
- <20251117132530.32460-4-wse@tuxedocomputers.com>
- <9c5205e8-d3f2-4dbd-8863-5347bb5e77c9@gmx.de>
- <9a4ff777-f786-4d59-8c36-c7b6eab9e3d1@tuxedocomputers.com>
- <811e260b-7805-4ec6-8bf3-1b6a73af891a@gmx.de>
- <24109992-05ae-4da1-9a34-26838ffc71c7@tuxedocomputers.com>
- <77862c22-174b-4ca1-bcb5-8dbf2d3c48a3@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <77862c22-174b-4ca1-bcb5-8dbf2d3c48a3@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F43:EE_|SJ2PR12MB8883:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca4ffe26-495a-4c0e-4dc6-08de28232fad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3veRXl4byKcXe0EzonMhoQ0hRBElRXgmM1Xxc3VQpvFkseiNYRhek4PI3mkE?=
+ =?us-ascii?Q?QZOM9slKpk8NFXKj9FBEapK2qLPXJQ3z3uF0tzwaY+TGnACwW8fJw4CIZCcO?=
+ =?us-ascii?Q?/7p44g0zQ4bPfcRU9+EbNtZH7z1ZDa/ak9CVx3xqHj25rCpX1h6h2vgbBwTi?=
+ =?us-ascii?Q?dL5qo5mN92xwUSfyAIOmhmRhWwIUKHis4CwaNl4Dj3x08Xs6ulUCH5jP2E/i?=
+ =?us-ascii?Q?oYRBslOLs3mDQ258OZD3OIS1rg1ZC4mhPADJ7mUcEk492uma4y/uNQhXkV9x?=
+ =?us-ascii?Q?Ei5TiOiywEsoKjSZOPub3UpaT8LDnWeFkbkwAt4AWlxmfYo9jaRDbgn9JweQ?=
+ =?us-ascii?Q?x5X1xm7atmvSIFxvSWqYlbvGIHMWWOJA4Pde9NrjOQEaSG9B3xa++Ja97Ij7?=
+ =?us-ascii?Q?o/AHAH3RgMIO+CSXiXn+HzWOXAr1K6ESOSsxwTYkTVx1iKaqylDAwRYJrlJX?=
+ =?us-ascii?Q?NvEuh4sIlx7bZmvTrzP6JmPypasaeWS/DLeaYhfJeuzmPXF96fi5paCuZ5Bl?=
+ =?us-ascii?Q?MR+lCj6hrisxxYAAV6y5sjBLjy2RDCsV4KI7nbiQiggXFvX6IR0HlivvdtJD?=
+ =?us-ascii?Q?rOnM4DUCiFVqmus9MaScBx454hOAOuf6Ta8ziQ7FUmbWENl0V92nn9PY5Fmh?=
+ =?us-ascii?Q?kVWskx2iuU72hFT7rZmSKTqVQJOO9GEbTpwh1LrwYj6RMiF3F8sYKeFAfsFZ?=
+ =?us-ascii?Q?Slv7vgNCI5qlGfaRvSM9nBsyeXgKFE6UruJ9hRLDvsLcStqrwWOUJo4cbgHf?=
+ =?us-ascii?Q?V7OcjEDeG/jazN+QUmtcLyBZmGeAMTcIjpajfgsXOCUSMEZ1yMAWKuT7v2Jd?=
+ =?us-ascii?Q?bxXUXyjpF0nkG2e0mP9e5A5X1GfZYFgTJvUULjJyFB44kLrf6Ym+aG4x1itY?=
+ =?us-ascii?Q?6WEz1Trxjt+bXLWdAwn5S1wV/RJNXM/MWa+F/hY8OwGzEFB745Zj3qvYb4G9?=
+ =?us-ascii?Q?2wEUG8IfYRp/cKTX/nNAaKJu7twdf37sTTDdnjhTyR02peY11JBx9XCbFqfV?=
+ =?us-ascii?Q?kpwmYuu9DZ27PE7f/3W5Bl1sNP5ei82dxT45u3Z0MManECD9V/f8J8wEo9yv?=
+ =?us-ascii?Q?Eor6NCI5yLnEgRnwsoV5LZ5vUUE8PWNAyaicA+BxyCJCi57W7dpPsZlbt6wh?=
+ =?us-ascii?Q?iPMy3oNQaQdqc+DAvgY9ve0OIueF5LtYiFfnFjyTX6KfWn804Fokeq2qjwXx?=
+ =?us-ascii?Q?unILZcB2aHRbvnxXFhRrJ5qm7KhZiNIJ4gqmreJFt+qW3g+dMNcnKv/gpZlK?=
+ =?us-ascii?Q?6zAfvhfFbZk0sZFzEKBxP/89RivMIFz0XPlLx0zimhLpGaz2adh64Kanbvd8?=
+ =?us-ascii?Q?b6l9jhSrI4M5WI3MK0tiIAsTqIZdqED2IOFNHJ0tkglxwqdKzWDn77rFO80C?=
+ =?us-ascii?Q?OTse6HZ2HYGRp1QfLjuBcUae0hXIiJJDE5r9ocur9hEN89/eItULFOPkImAr?=
+ =?us-ascii?Q?by99uBglkCZborkiGGJybZS0UZan9IQmFMk6uAf0fBiHPXPRVDdk/4xIcJm0?=
+ =?us-ascii?Q?gpbTgu7iKz+4j8gWxS3qp4o6ASO4oK2ElwYMeQFU2MCDSvBUt/U0p3MV9tlX?=
+ =?us-ascii?Q?Pv5XqSoSe5muPMTBZ2o=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 10:54:32.1426
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca4ffe26-495a-4c0e-4dc6-08de28232fad
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00036F43.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8883
 
+Changes include renaming legacy IPU fields to NPU in the metrics structure
+replacing ambiguous booleans and magic values with explicit
+SET_CMD/GET_CMD and METRICS_TABLE_ID constants.
 
-Am 20.11.25 um 02:16 schrieb Armin Wolf:
-> Am 19.11.25 um 16:34 schrieb Werner Sembach:
->
->>
->> Am 18.11.25 um 14:29 schrieb Armin Wolf:
->>> Am 18.11.25 um 13:58 schrieb Werner Sembach:
->>>
->>>>
->>>> Am 18.11.25 um 12:12 schrieb Armin Wolf:
->>>>> Am 17.11.25 um 14:24 schrieb Werner Sembach:
->>>>>
->>>>>> Uniwill offers user setable cTGP for their EC on devices using NVIDIA 3000
->>>>>> Series and newer GPUs. This patch implements this setting as a sysfs
->>>>>> attribute.
->>>>>>
->>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>>>> ---
->>>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 110 +++++++++++++++++++-
->>>>>>   1 file changed, 107 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> index 0cb86a701b2e1..de3417d9d1ac0 100644
->>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>>>> @@ -122,11 +122,11 @@
->>>>>>   #define CTGP_DB_DB_ENABLE        BIT(1)
->>>>>>   #define CTGP_DB_CTGP_ENABLE        BIT(2)
->>>>>>   -#define EC_ADDR_CTGP_OFFSET        0x0744
->>>>>> +#define EC_ADDR_CTGP_DB_CTGP_OFFSET    0x0744
->>>>>>   -#define EC_ADDR_TPP_OFFSET        0x0745
->>>>>> +#define EC_ADDR_CTGP_DB_TPP_OFFSET    0x0745
->>>>>>   -#define EC_ADDR_MAX_TGP            0x0746
->>>>>> +#define EC_ADDR_CTGP_DB_DB_OFFSET    0x0746
->>>>>>     #define EC_ADDR_LIGHTBAR_AC_CTRL    0x0748
->>>>>>   #define LIGHTBAR_APP_EXISTS        BIT(0)
->>>>>> @@ -317,6 +317,7 @@
->>>>>>   #define UNIWILL_FEATURE_LIGHTBAR        BIT(3)
->>>>>>   #define UNIWILL_FEATURE_BATTERY            BIT(4)
->>>>>>   #define UNIWILL_FEATURE_HWMON            BIT(5)
->>>>>> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(6)
->>>>>>     struct uniwill_data {
->>>>>>       struct device *dev;
->>>>>> @@ -498,6 +499,10 @@ static bool uniwill_writeable_reg(struct device 
->>>>>> *dev, unsigned int reg)
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_RED:
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_GREEN:
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_BLUE:
->>>>>> +    case EC_ADDR_CTGP_DB_CTRL:
->>>>>> +    case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>>>>> +    case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>>>>> +    case EC_ADDR_CTGP_DB_DB_OFFSET:
->>>>>>           return true;
->>>>>>       default:
->>>>>>           return false;
->>>>>> @@ -531,6 +536,10 @@ static bool uniwill_readable_reg(struct device *dev, 
->>>>>> unsigned int reg)
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_RED:
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_GREEN:
->>>>>>       case EC_ADDR_LIGHTBAR_BAT_BLUE:
->>>>>> +    case EC_ADDR_CTGP_DB_CTRL:
->>>>>> +    case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>>>>> +    case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>>>>> +    case EC_ADDR_CTGP_DB_DB_OFFSET:
->>>>>>           return true;
->>>>>>       default:
->>>>>>           return false;
->>>>>> @@ -786,6 +795,68 @@ static ssize_t breathing_in_suspend_show(struct 
->>>>>> device *dev, struct device_attri
->>>>>>     static DEVICE_ATTR_RW(breathing_in_suspend);
->>>>>>   +static ssize_t ctgp_offset_store(struct device *dev, struct 
->>>>>> device_attribute *attr,
->>>>>> +                 const char *buf, size_t count)
->>>>>> +{
->>>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
->>>>>> +    unsigned int value;
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    ret = kstrtouint(buf, 0, &value);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, value);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    return count;
->>>>>> +}
->>>>>> +
->>>>>> +static ssize_t ctgp_offset_show(struct device *dev, struct 
->>>>>> device_attribute *attr,
->>>>>> +                char *buf)
->>>>>> +{
->>>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
->>>>>> +    unsigned int value;
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    ret = regmap_read(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, &value);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    return sysfs_emit(buf, "%u\n", value);
->>>>>> +}
->>>>>> +
->>>>>> +DEVICE_ATTR_RW(ctgp_offset);
->>>>>> +
->>>>>> +static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
->>>>>> +{
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    if (!(supported_features & UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
->>>>>> +        return 0;
->>>>>> +
->>>>>> +    ret = regmap_update_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
->>>>>> +                 CTGP_DB_GENERAL_ENABLE | CTGP_DB_DB_ENABLE | 
->>>>>> CTGP_DB_CTGP_ENABLE,
->>>>>> +                 CTGP_DB_GENERAL_ENABLE | CTGP_DB_DB_ENABLE | 
->>>>>> CTGP_DB_CTGP_ENABLE);
->>>>>
->>>>> I think we should initialize the power limits before enabling them, otherwise
->>>>> the relevant registers might still contain invalid data.
->>>> from boot they are all just 0, but ofc i can shuffle things around
->>>
->>> Please do, i prefer to play it safe here as we are dealing with power limits.
->>>
->>>>>
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, 0);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_TPP_OFFSET, 255);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_DB_OFFSET, 25);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>
->>>>> Are those values the maximum values supported by the platform? If yes then
->>>>> we should enforce them for sysfs writes.
->>>>>
->>>>> Also, why is only cTGP accessible from user space?
->>>>
->>>> Because that is the only one that should be settable by the user according 
->>>> to NVIDIA, the rest should be set by the ODM.
->>>>
->>>> EC_ADDR_CTGP_DB_TPP_OFFSET max value is just max u8 and would be another 
->>>> way to cap cpu + gpu power but there are already other ways to do that 
->>>> (e.g. the power profiles) so i don't see a value in capping them here in 
->>>> any way.
->>>>
->>>> EC_ADDR_CTGP_DB_DB_OFFSET max value 25 is just the maximum value for 
->>>> dynamic boost defined by NVIDIA, bigger values are just being ignored 
->>>> (behave the same as having set 25): again the same story: devices that 
->>>> don't support 25 W dynamic boost are already capped elsewhere so i don't 
->>>> see value in capping it here.
->>>>
->>>> EC_ADDR_CTGP_DB_CTGP_OFFSET is the only one intented to be set by the user, 
->>>> problem: the max value is different from device to device, and i only know 
->>>> how to probe it using nvidia smi from userspace. Good news: nothing bad 
->>>> happens when you set a higher value (same as for dynamic boost)
->>>>
->>> I see, do you know the max. value for cTGP for the devices you added in 
->>> patch 1? The intel notebooks use a similar
->>> setup, but they limit the max. value of cTGP depending on the GPU module.
->>>
->>> I think that extending uniwill_data to contain a upper limit for cTGP would 
->>> be nice for usability. We can use a default
->>> value (U8_MAX) for devices where the upper limit is unknown. For devices 
->>> where the limit is known, userspace application
->>> can use the limit for showing it in the UI. Additionally i am planning to 
->>> integrate cTGP into the platform profile, as it
->>> is done on Intel machines. For this i will add the ability to define cTGP 
->>> values for each platform profile, with the
->>> max value being used for the upcoming max-power platform profile (also 
->>> called "benchmark mode" on intel platforms).
->>
->> cTGP is a little bit complicated
->>
->> cTGP can be set between a Base TGP and a Max TGP (what you see here in the 
->> driver is actually only the offset from the base TGP).
->>
->> The Dynamic Boost setting here give the max width of the dynamic boost 
->> windows, however this is still affected by the max TGP.
->>
->> Say cTGP is 100W Max TGP is 115W and Dynamic Boost setting is 25W -> The 
->> Dynamic Boost window is actually just 15W because it can't go over Max TGP.
->>
->> Now setting the cTGP to 80W, the Dynamic Boost window becomes 25W and the GPU 
->> will never clock above 105W.
->>
->> What does this mean? Setting cTGP between 80W and 90W actually changes the 
->> overall power consumption, while setting it between 90W and 115W does not, it 
->> just reduces the drivers automatic power allocation window in favor of the 
->> gpu. -> At a certain point more cTGP does not bring more performance, it 
->> actually can hurt performance for CPU heavy tasks.
->>
->> In addition: Most Uniwill devies don't even have a window between Base TGP 
->> and Max TGP that is bigger then the allowed Dynamic Boost window. -> There is 
->> no power saving in setting cTGP on most Uniwill devices and the "more 
->> performance" window of cTGP has a witdh of 0.
->>
->> And all Uniwill devices that i have seen have the GPU locked at a Watt level 
->> below the Base TGP level on Battery. -> There is no battery saving in setting 
->> cTGP on all Uniwill devices
->>
-> Thank you for explaining the meaning of cTGP and dynamic boost for me. I would 
-> still like to mirror the behavior of the OEM software
-> regarding the integration of cTGP into the platform profile, however it is 
-> totally fine if not all devices enable this.
+Note: This series can be applied on mainline with 6fb7433c7b8e
+("platform/x86/amd/pmf: Use ring buffer to store custom BIOS input
+values") as the tip.
 
-The intel oem software is different from the one of the other uniwill devices iirc.
+v3:
+----
+ - Drop NPU-XDNA interface
+ - Address Ilpo v2 remarks
 
-The one we ship for windows has the cTGP slider completly seperate from the 
-profiles iirc.
+v2:
+----
+ - Split the series into multiple patches per v1 feedback
+ - Added preliminary PMF driver cleanups as preparatory patches
+ - Introduced an initial amd_xdna patch that consumes PMF-provided data to
+   establish the plumbing; additional logic can be layered on in future
+   patches as more PMF metrics are utilized.
 
-I still lean towards implementing all of this just in userspace.
+Shyam Sundar S K (3):
+  platform/x86/amd/pmf: Rename IPU metrics fields to NPU for consistency
+  platform/x86/amd/pmf: Use explicit SET_CMD/GET_CMD flags in
+    amd_pmf_send_cmd()
+  platform/x86/amd/pmf: Replace magic table id with METRICS_TABLE_ID
 
->
->>>
->>> To put it short please add an additional sysfs attribute (maybe called 
->>> ctgp_offset_max?) add just return U8_MAX for now.
->>> We can then add the individual limits for each device later if desired.
->> I don't think a placeholder sysfs attribute that is not used by anything is 
->> sensefull. I would wait with including it until it is actually used.
->
-> Alright, fine. I will add this additional sysfs attribute when i upstream the 
-> cTGP handling for Intel notebooks.
->
->>>
->>> Thanks,
->>> Armin Wolf
->> On a different note, leaving the one device out that needs the qurik 
->> callback, the patch should allready be usefull and ready?
->
-> Not really, you still need to rework the DMI table. I already sent you the 
-> patch with the device descriptor infrastructure, i am sure
-> that you can build the cTGP support atop of that.
+ drivers/platform/x86/amd/pmf/auto-mode.c | 14 ++++-----
+ drivers/platform/x86/amd/pmf/cnqf.c      | 14 ++++-----
+ drivers/platform/x86/amd/pmf/core.c      |  6 ++--
+ drivers/platform/x86/amd/pmf/pmf.h       | 18 +++++++----
+ drivers/platform/x86/amd/pmf/spc.c       |  2 +-
+ drivers/platform/x86/amd/pmf/sps.c       | 38 ++++++++++++------------
+ drivers/platform/x86/amd/pmf/tee-if.c    | 20 ++++++-------
+ 7 files changed, 59 insertions(+), 53 deletions(-)
 
-I will look into it, thanks.
+-- 
+2.34.1
 
-Best regards,
-
-Werner
-
->
-> Thanks,
-> Armin Wolf
->
->>>
->>>>>
->>>>> Thanks,
->>>>> Armin Wolf
->>>>>
->>>>>> +
->>>>>> +    return 0;
->>>>>> +}
->>>>>> +
->>>>>>   static struct attribute *uniwill_attrs[] = {
->>>>>>       /* Keyboard-related */
->>>>>>       &dev_attr_fn_lock_toggle_enable.attr,
->>>>>> @@ -794,6 +865,8 @@ static struct attribute *uniwill_attrs[] = {
->>>>>>       /* Lightbar-related */
->>>>>>       &dev_attr_rainbow_animation.attr,
->>>>>>       &dev_attr_breathing_in_suspend.attr,
->>>>>> +    /* Power-management-related */
->>>>>> +    &dev_attr_ctgp_offset.attr,
->>>>>>       NULL
->>>>>>   };
->>>>>>   @@ -820,6 +893,11 @@ static umode_t uniwill_attr_is_visible(struct 
->>>>>> kobject *kobj, struct attribute *a
->>>>>>               return attr->mode;
->>>>>>       }
->>>>>>   +    if (attr == &dev_attr_ctgp_offset.attr) {
->>>>>> +        if (supported_features & UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL)
->>>>>> +            return attr->mode;
->>>>>> +    }
->>>>>> +
->>>>>>       return 0;
->>>>>>   }
->>>>>>   @@ -1371,6 +1449,10 @@ static int uniwill_probe(struct platform_device 
->>>>>> *pdev)
->>>>>>       if (ret < 0)
->>>>>>           return ret;
->>>>>>   +    ret = uniwill_nvidia_ctgp_init(data);
->>>>>> +    if (ret < 0)
->>>>>> +        return ret;
->>>>>> +
->>>>>>       return uniwill_input_init(data);
->>>>>>   }
->>>>>>   @@ -1547,6 +1629,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTQx1"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
->>>>>> @@ -1554,6 +1637,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore 
->>>>>> Omnia-Book Pro Gen 7",
->>>>>> @@ -1561,6 +1645,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6AG01_PH6AQ71_PH6AQI1"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO InfinityBook Pro 14/16 Gen8 Intel/Commodore 
->>>>>> Omnia-Book Pro Gen 8",
->>>>>> @@ -1575,6 +1660,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PG31"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO InfinityBook Pro 16 Gen8 Intel",
->>>>>> @@ -1582,6 +1668,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6PG01_PH6PG71"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO InfinityBook Pro 14/15 Gen9 AMD",
->>>>>> @@ -1694,6 +1781,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxMGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Polaris 15/17 Gen2 Intel",
->>>>>> @@ -1701,6 +1789,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 AMD",
->>>>>> @@ -1708,6 +1797,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 Intel",
->>>>>> @@ -1715,6 +1805,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxTGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen4 AMD",
->>>>>> @@ -1722,6 +1813,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 15 Gen4 Intel",
->>>>>> @@ -1729,6 +1821,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxAGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Polaris 15/17 Gen5 AMD",
->>>>>> @@ -1736,6 +1829,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxXGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen5 AMD",
->>>>>> @@ -1743,6 +1837,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16/17 Gen5 Intel/Commodore ORION Gen 
->>>>>> 5",
->>>>>> @@ -1750,6 +1845,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxPXxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris Slim 15 Gen6 AMD",
->>>>>> @@ -1757,6 +1853,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris Slim 15 Gen6 Intel/Commodore ORION 
->>>>>> Slim 15 Gen6",
->>>>>> @@ -1764,6 +1861,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM5IXxA"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
->>>>>> @@ -1771,6 +1869,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB1"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
->>>>>> @@ -1778,6 +1877,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB2"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 17 Gen6 Intel/Commodore ORION 17 Gen6",
->>>>>> @@ -1785,6 +1885,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen7 AMD",
->>>>>> @@ -1792,6 +1893,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen7 Intel",
->>>>>> @@ -1799,6 +1901,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Stellaris 16 Gen7 Intel",
->>>>>> @@ -1806,6 +1909,7 @@ static const struct dmi_system_id 
->>>>>> uniwill_dmi_table[] __initconst = {
->>>>>>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>>>>>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
->>>>>>           },
->>>>>> +        .driver_data = (void *)(UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL),
->>>>>>       },
->>>>>>       {
->>>>>>           .ident = "TUXEDO Pulse 14 Gen1 AMD",
->>>>
->>
