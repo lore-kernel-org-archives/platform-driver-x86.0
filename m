@@ -1,177 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1D933D6E8;
-	Thu, 20 Nov 2025 16:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDE12874F5;
+	Thu, 20 Nov 2025 16:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763656884; cv=none; b=PMeXmCdbhDktbvY1UdwW1KhZOCnVdIQeB1hUwsTIHd0NEDgmIZ1cv3W5Bf+bzENrlHIN4nDdhPx4tBE9KsvUo/kbIKYyZW/gzfaqbJDA53429USvU9UKNSuXn518X4eAqTDzEJXi/N5AOClItOZXFDrh0XfCCQia2XvDFvxf9+w=
+	t=1763657688; cv=none; b=nQkNr8b/SeBmWR9nNJs/4q+MLjh8bLlMWsdYtP1MOOZzVEYWrG5v/rTIUxJ8WmfkT5/u65cPVb003gG6GmpBlvKsZjLBROEjgrXWqRaVLY9MJEzGPRycbqSyh0gSMofFAzZJXKL2BCixFN6+TT/EvONsz24XnqyG12y48XMLMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763656884; c=relaxed/simple;
-	bh=QdTN/sry0XEs+XUYxMEXo1t3BCrOPbZtrXT5JZbbz8Y=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MgDNMBcdvtnnv0r/FkVGAze1qpRHgwz38UKuJaZnLE0HyUn9TWtJb/mbwiEEmi+YgoUx9SinNYThK4gDhQsaWXrro183DM+73NgvHqD4BsymQ+tTXfK6cyHGBseCCh+6OrJF6b6PXG86QhOTREwO1jVDNE4UuNpHr6/x2I9nTxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDtUlSoI; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763657688; c=relaxed/simple;
+	bh=7RlJgO0bn3IQUwfaWF5A5gBBgoG4DUcrllB7yObH7KY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjN7Hqoe+pMesYYl59SHEntNwfZYOVitWNTMLuvlKYzaWUgyMe/ktib/t1TNEKXLG4CWBh1H5dBZ8MSwXzT6jJvtfd7YlH1w+UKoAZJfenNfWuZJUfHy2zNd0zWa8LrmMZrbwGZXgYjmEbvlIayEHHaY0dQBOygiVmfFnaa6N2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oK/ZXygo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDtUlSoI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763656883; x=1795192883;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QdTN/sry0XEs+XUYxMEXo1t3BCrOPbZtrXT5JZbbz8Y=;
-  b=PDtUlSoIs86Hm2VAvmW0NENbEiZrDYPbTSlJ2oVcCWEvPZLWIYpbMSGB
-   aU6jdCbF1EN2X2vYfZ966SjZMFk8R5nEItrftzDBZg4S2iIhB9VDz5u0y
-   ikyFT6O3HXFku1wKr7Ylixe0funSxiJ8q40SRISZ+LZmDWd1aFz7Dov6q
-   knISZbF1jqEOawf/teyWn/tWnGFsVDqgO8koqvh8f6AElSp7OX9RjRlFJ
-   BPiU+0pOI7kldkeZmJ+kJPyoAEXoEmX88xnnfK04wotAeypZbQI+OSEpw
-   JCasnK37o8qyrV96WSGS3b2h5IsdHpiM/imeT4jAX0K1p4z6oVmxb7UuU
-   Q==;
-X-CSE-ConnectionGUID: 3OxGtj2IQ/SiwvhKCfKYtQ==
-X-CSE-MsgGUID: aLtVty60RLS/vi0Pt+bCGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="76413789"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="76413789"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 08:41:22 -0800
-X-CSE-ConnectionGUID: m/TXxdt+TW6B76e9kpB+/Q==
-X-CSE-MsgGUID: 08yf9o4mTcyWdPyIw0hGlg==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.161])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 08:41:18 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 20 Nov 2025 18:41:14 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: Denis Benato <benato.denis96@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v9 04/11] HID: asus: fortify keyboard handshake
-In-Reply-To: <CAGwozwF6wegwHy=W1zaTEVksQYaw4L7V27w2aaZBMMoDjUjRYg@mail.gmail.com>
-Message-ID: <04075ef3-3fba-c308-871f-619972ffe5ff@linux.intel.com>
-References: <20251120094617.11672-1-lkml@antheas.dev> <20251120094617.11672-5-lkml@antheas.dev> <967761fb-3f55-4d51-be0b-23ad03258eff@gmail.com> <CAGwozwF6wegwHy=W1zaTEVksQYaw4L7V27w2aaZBMMoDjUjRYg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oK/ZXygo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51418C4CEF1;
+	Thu, 20 Nov 2025 16:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763657687;
+	bh=7RlJgO0bn3IQUwfaWF5A5gBBgoG4DUcrllB7yObH7KY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oK/ZXygo0+HJVRL1dGc2x1xDyykr2qJuxy9hlNMyPRPzGG+8NMayKfzWmw+R6Bks7
+	 zyojuibYxSUmBoBY9wjhfb43NO9giDXA7vx8gBMfjr/8LQIaYvRMvZ6ACsHiMbgzjq
+	 NJDFuGV9RKFcdQSEb1JDDEnFUjd6YM3rGWae0hwPLnbeyaa9wGYyYQLhF03Umc4WFb
+	 PW2ADyTK72HpLutxMVJhk+HkKz5au0EeujP3qdGrmz/HHsPtUrYEgxIe5LPgjDlp6q
+	 S1ZWqQPLybPUdcut5h8hQjJWD3waRP3UuCTKe4LWXvgHNEg+YNEh8YNZwLZ8v4xnk7
+	 S8RktxhAFysUw==
+Date: Thu, 20 Nov 2025 22:24:24 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
+ external connector is used
+Message-ID: <blqs5xugab5kumljzrt26dvyhnun2pmpeu4y727xoz3vrponrt@bbxqnl55zhky>
+References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
+ <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com>
+ <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
+ <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
+ <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
 
-On Thu, 20 Nov 2025, Antheas Kapenekakis wrote:
-
-> On Thu, 20 Nov 2025 at 15:15, Denis Benato <benato.denis96@gmail.com> wrote:
+On Thu, Nov 20, 2025 at 10:22:16AM -0600, Rob Herring wrote:
+> On Wed, Nov 19, 2025 at 7:33 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
 > >
+> > On Tue, Nov 18, 2025 at 07:03:51AM -0600, Rob Herring wrote:
+> > > On Wed, Nov 12, 2025 at 8:45 AM Manivannan Sadhasivam via B4 Relay
+> > > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+> > > >
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > > >
+> > > > If an external connector like M.2 is connected to the serdev controller
+> > > > in DT, then the serdev devices will be created dynamically by the connector
+> > > > driver. So skip registering devices from DT node as there will be no
+> > > > statically defined devices.
+> > >
+> > > You could still have statically defined devices. You are just choosing
+> > > to probe them later from the connector driver.
+> > >
 > >
-> > On 11/20/25 10:46, Antheas Kapenekakis wrote:
-> > > Handshaking with an Asus device involves sending it a feature report
-> > > with the string "ASUS Tech.Inc." and then reading it back to verify the
-> > > handshake was successful, under the feature ID the interaction will
-> > > take place.
-> > >
-> > > Currently, the driver only does the first part. Add the readback to
-> > > verify the handshake was successful. As this could cause breakages,
-> > > allow the verification to fail with a dmesg error until we verify
-> > > all devices work with it (they seem to).
-> > >
-> > > Since the response is more than 16 bytes, increase the buffer size
-> > > to 64 as well to avoid overflow errors.
-> > >
-> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > ---
-> > >  drivers/hid/hid-asus.c | 32 +++++++++++++++++++++++++++++---
-> > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > > index 6de402d215d0..5149dc7edfc5 100644
-> > > --- a/drivers/hid/hid-asus.c
-> > > +++ b/drivers/hid/hid-asus.c
-> > > @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> > >  #define FEATURE_REPORT_ID 0x0d
-> > >  #define INPUT_REPORT_ID 0x5d
-> > >  #define FEATURE_KBD_REPORT_ID 0x5a
-> > > -#define FEATURE_KBD_REPORT_SIZE 16
-> > > +#define FEATURE_KBD_REPORT_SIZE 64
-> > >  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
-> > >  #define FEATURE_KBD_LED_REPORT_ID2 0x5e
-> > >
-> > > @@ -394,14 +394,40 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
-> > >
-> > >  static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
-> > >  {
-> > > +     /*
-> > > +      * The handshake is first sent as a set_report, then retrieved
-> > > +      * from a get_report. They should be equal.
-> > > +      */
-> > >       const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
-> > >                    0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-> > > +     u8 *readbuf;
-> > >       int ret;
-> > >
-> > >       ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
-> > > -     if (ret < 0)
-> > > -             hid_err(hdev, "Asus failed to send init command: %d\n", ret);
-> > > +     if (ret < 0) {
-> > > +             hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-> > I see my suggestion to use __free here didn't materialize in code using
-> > it even after Ilpo kindly wrote how to correctly use it.
-> >
-> > I think you can move the readbuf assignment right below buf and
-> > take into account what Ilpo said.
-> >
-> > I don't expect new variables will be added here ever again,
-
-It's also about always doing the right thing so others will pick up the 
-pattern (for the cases when it's needed).
-
-> > but I agree with Ilpo that it's a good idea here to write code
-> > accounting for that possibility.
-> >
-> > It is my understanding that who proposes patches is expected to
-> > resolve discussions when changes are proposed or to take into
-> > account requested changes and submit a modified version.
+> > The point of coming up with the M.2 binding is to avoid hardcoding the devices
+> > in DT. So static devices are ruled out IMO.
 > 
-> It was ambiguous. I interpreted Ilpo's email as a dismissal
-
-I tried to explain how to use it, not to suggest cleanup.h shouldn't be 
-used.
-
-> I will try to incorporate it if I do another revision. Although I do
-> not think it improves things in this case as the function does not
-> have multiple return statements.
+> Until you have any one of the reasons we have PCIe devices described
+> even when in a standard slot. Take your pick. An ethernet adapter that
+> omits an EEPROM for the MAC address.
 > 
-> > > +     if (!readbuf)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     ret = hid_hw_raw_request(hdev, report_id, readbuf,
-> > > +                              FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
-> > > +                              HID_REQ_GET_REPORT);
-> > > +     if (ret < 0) {
-> > > +             hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
-> > > +     } else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
-> > > +             hid_warn(hdev, "Asus handshake returned invalid response: %*ph\n",
-> > > +                     FEATURE_KBD_REPORT_SIZE, readbuf);
-> > > +             /*
-> > > +              * Do not return error if handshake is wrong until this is
-> > > +              * verified to work for all devices.
-> > > +              */
-> > > +     }
-> > >
-> > > +     kfree(readbuf);
-> > >       return ret;
-> > >  }
-> > >
-> >
-> 
+
+Hmm, I didn't envision the need to have static and dynamic devices at the same
+time. So you are suggesting to first look for the static devices and then look
+for graph port at the end?
+
+- Mani
 
 -- 
- i.
-
+மணிவண்ணன் சதாசிவம்
