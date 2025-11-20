@@ -1,416 +1,250 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012004.outbound.protection.outlook.com [40.107.209.4])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013048.outbound.protection.outlook.com [40.93.196.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BA532E753
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 10:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E5521ABC1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 10:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763636085; cv=fail; b=WMNkseaC/kBnz7JbDZYBrocBjjTHbVLOce7DR/oaOj7meHLxVOfFWPmYLfDfNVRq4sZh5oNGgc5sAx3/UfHkFvyJXLndcTkoauTQp6MkjFKEWoTIcqQJD32IhtyWssMHtzNzHz64u81JNPqsqPGygsBGWO9JVEGP3O0ATgMXLTQ=
+	t=1763636128; cv=fail; b=E1YiL5AebweOk5DkvkMxFxtQ7/3XkYEdoBXmm+k9RrJaPHvW5wQaKw7YOUs/zsP0c9PvnIf79YoLgodl69FtItGclzyp48QXwI8l7AqkZ96nWr0Gd9rFc80BHhgiMkoZ20z4+gYXsS41DPYGqwziaZnUSZz1JotccC3uADlmJoU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763636085; c=relaxed/simple;
-	bh=WZ3nNB6qIs52eqhTgp5JCqvslm59ByOAqFm1Aex/XJY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L+ylBJX0fNMpmmVS2mGCZNNf0EJAyDI7N5oa18+YdI+nEJfKGtxgab1LPDHnkuv0evI7mRUydpLbKFeh1aPgfSku3t7X1RFPMKpwMv3dZiGWGwixAJ97sBexPb1DPDcPBT7AyJ8T9BUVwmajbJjEsFWI684dnpV12BK73SVX348=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LAgC1RG8; arc=fail smtp.client-ip=40.107.209.4
+	s=arc-20240116; t=1763636128; c=relaxed/simple;
+	bh=3djuavPeHMoAtnkde+mhjV3/mLUUd6H/zds2lpFSK78=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ewsWEPRezhJi8d52+9fFb/v+ecwKI2RUVIz6xWj0d/F1SEiXaSn4S8c55T+U7rIsIN4WN9YtGjQwXVEQOh7fafALEHbAP4jgx53HD2hwSU9LgsjxJ5lqSlQvXgXJvt7/KFKQezRVImsKGQ0zLvei8cpMf/VHJ52QpGv4VKDs8vE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wWis0DxG; arc=fail smtp.client-ip=40.93.196.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LAgC1RG8"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wWis0DxG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wgp+r/YoCB6CpGx//WbfCeMhhlil5FiFveQ76HdWBt6hFuKlOOuy16kItXCNsg9Qnzh/g7kNrwNgQ/kuiVx5EfWFFz6Y3XjgoRvSulkUKce/2H/7A3U7v3MF1uM2v0t20id1zzjzFb/6PRMTnRY5tGaIbiNyFghjzwHDm3n6X40ASgfbBNaBpiEJagyKRp7DRnaOcGfScPfBKRFyB1bDr8N57LO1K986zQ4+1Q3vs1ielctTnEEI6O9IeTiL65OKIWyO2N2FzjS2185jebYjN8Q7tEeGn1aM+XtFf+oMareKmTGkGZIgtzA+WLIuykdJ6FS25SpqrnZzEPODaBhA6A==
+ b=eQmbEZ6l9luV5lVwzRUt8pD0DUBtcqo1XOZwiDhOd5a/iOPRz28GH/nDn1SPjfWeovPD8gF3fds2SkCpz1h/KFcU9aTwlPAwQZenHkz9yFjhOgpFpJ0U0z2lvNxrJxaUl869QbRx1ASU6ilGnw7hgRvMAGYZ01CCicNxHS/QkMzgRpfb/6ShBHqg89KHWK3Vh7JuGV303+9Mx9U79jZKekbtso8B/uuNkoOEX06W35fES+O9J7zbib27Zdzi36IwWch3T8/HHCptKH/E/B7x8HtfF9f5VjxI/ErPcCrRbM7Hgo34Fq/8uP8KIvSc8DDzgPkjjEHQ1vTH3YoZ/9Pfpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YAjqcm4E8mTOg75j1aBzwUPww6eTmxV/8+vEc4UAGCQ=;
- b=SWW+FLgAiRRaiI2xr7VMUZ9Po6YTft9Xt9/+vpemMreHDpThBr5XP1URhKcLy2SqRz9ey/PUD9t8/yfEPAgnwbIiWXOOUbqqU3lnJvAuy9124Iq/2BFF4jf+W2A9/426dI6z2i4E4K+y5wGHAyKrOvlBH7pojsHoRKf8riTNAcQ/5r86rPvx2gfrc12pioSEL48mYqHXZ7H8zjQDTm0umWnA8cp7yrs7D9n+Dez06nRVnHWXkjUR62s/gEwXxUyUMAvnriPjSIMESowjBISzXGB/AzH6O6J7HlvNr1r0HqZWg39wEwaWRFb/Fwkh5EyObmwBqwC6ibcHmAcC5SuS1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=6XrFnSDqQS/BeqBwOSxTdoRJrT4HxsKfq3lufXfIhFY=;
+ b=QwBkxzeEfZ1tMpcTVbP2WsEX6TuDxHl9qaXoDY5vYCsDvBaoJsyLQCQNBx1ZnAahFEWRKfYklC27GI9WenxsFx+oytq5YiYmqMt2Iw9U7Cw5I5SQV8h2oiofpnVVngcd+3bBbKp1BCpVmwrP46D73qGqMkOwwvh82jhlrx2ztvj6oSu3ZLe9gH8S6AmQk0NUXCKoyCjZxeSnrWLd+5LuVwTlEeMlsScxGnTPmtbhneRgDPNoywE7+ksY/jBigplhDK5Vkq8HTMoQjmS4Nf+j8pw0vugDxViSGDz1PFNKCB+1wZwd5W1rjQSWdj7zuYgnSxIilySOrgafKo7DS7Rg2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YAjqcm4E8mTOg75j1aBzwUPww6eTmxV/8+vEc4UAGCQ=;
- b=LAgC1RG8bi1ZVn8hPkVk5Tr30eZ4mYIkR4f9a3+B2bPGGjwOZB0U98NLbdRNTHAjYDg1LmRh4gN2RFKtXilBFa+ulqiLJXNU6FTKhraCkQO6tS4w8d55a9YxZ1Kxzh57z4p6+ThYmkRPcKKO8jslA2P/Ed4N4Ismp6XzOKs3TQ4=
-Received: from SA9P221CA0001.NAMP221.PROD.OUTLOOK.COM (2603:10b6:806:25::6) by
- DS7PR12MB6119.namprd12.prod.outlook.com (2603:10b6:8:99::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.11; Thu, 20 Nov 2025 10:54:36 +0000
-Received: from SN1PEPF00036F43.namprd05.prod.outlook.com
- (2603:10b6:806:25:cafe::48) by SA9P221CA0001.outlook.office365.com
- (2603:10b6:806:25::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.20 via Frontend Transport; Thu,
- 20 Nov 2025 10:54:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF00036F43.mail.protection.outlook.com (10.167.248.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.9 via Frontend Transport; Thu, 20 Nov 2025 10:54:36 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 20 Nov
- 2025 02:54:33 -0800
+ bh=6XrFnSDqQS/BeqBwOSxTdoRJrT4HxsKfq3lufXfIhFY=;
+ b=wWis0DxGDyGTuJ/MNRyDeGuKjFdt5NiJHrtdBzGBgStKAqk017yTO1R2Q2QD6QgpZKvJ2hxD+NT+0RI5nCbR6j12tYwLiNm0HhDnzvrkhkrY/GdtGpEGO/CYCABXYIv+tDETqLe0uLaDP7m6NpZJZHHyZO//caGLIWaoyVOE7tc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by PH7PR12MB6953.namprd12.prod.outlook.com (2603:10b6:510:1ac::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Thu, 20 Nov
+ 2025 10:55:24 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%6]) with mapi id 15.20.9343.011; Thu, 20 Nov 2025
+ 10:55:24 +0000
+Message-ID: <9a4e8e95-583c-4307-a8bc-cd8168bd5f10@amd.com>
+Date: Thu, 20 Nov 2025 16:25:18 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] accel/amdxdna: Provide real-time NPU power
+ estimate via AMD PMF
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ Patil.Reddy@amd.com, lizhi.hou@amd.com,
+ VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+References: <20251111063737.4156385-1-Shyam-sundar.S-k@amd.com>
+ <20251111063737.4156385-6-Shyam-sundar.S-k@amd.com>
+ <7034fae1-4096-4cdb-a46f-5e23e7accfa0@amd.com>
+ <b8f2d8a0-3131-45cc-8c55-8fbf4ca06cfc@amd.com>
+ <e6551b53-cb89-46e6-9c3c-545d14d79642@amd.com>
+ <8349468a-79ac-dc1c-d484-b9c9dd340e1e@linux.intel.com>
+ <09397827-4233-77d6-ab17-dfe0ae5f1cfe@linux.intel.com>
+ <bb72ff10-b9e0-47a6-8985-a68efcf204ae@amd.com>
+ <d344b850-f68d-f9a5-f0dc-55af4b48b714@linux.intel.com>
+Content-Language: en-US
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v3 2/3] platform/x86/amd/pmf: Use explicit SET_CMD/GET_CMD flags in amd_pmf_send_cmd()
-Date: Thu, 20 Nov 2025 16:22:09 +0530
-Message-ID: <20251120105210.3945710-3-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251120105210.3945710-1-Shyam-sundar.S-k@amd.com>
-References: <20251120105210.3945710-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <d344b850-f68d-f9a5-f0dc-55af4b48b714@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0161.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:c8::17) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F43:EE_|DS7PR12MB6119:EE_
-X-MS-Office365-Filtering-Correlation-Id: fddb8a4b-ecf4-473f-3222-08de2823326f
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|PH7PR12MB6953:EE_
+X-MS-Office365-Filtering-Correlation-Id: 961974d2-ce8f-403b-8669-08de28234e49
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aMRAeiugIcDzVDl32aGTXvQvkY251LYtECGpNSIh1uu9qNf+0/r8c/MnqeWM?=
- =?us-ascii?Q?aTqE6NumL5TohDiqnneDJf17Hm4FEFri1jGLywpM4kcZjfqdiYmNwed38QEm?=
- =?us-ascii?Q?SeBE5fbFRxJTylv2FzxnKZV330zP3e6cic/6hF1NoiPkQ0tJz6OWz0IT0Vsj?=
- =?us-ascii?Q?Um9ui+iTcJyDHSy2o86e5dnosHunXrCHLjGtcu6bk2HX02d1d9WiUoZfj29J?=
- =?us-ascii?Q?jWmbwsyrDihvJHIBujfmZ1XAUYKfXt0p4D6eesHz+cF/zFRDV1p5Hdlsv/jC?=
- =?us-ascii?Q?yfkwUOmfrYwTjQd2W0l2B4Z0yK0I/JPFJHORolyWnD2OE7lDpF+rFNjWTQqm?=
- =?us-ascii?Q?pRH2eVT8dlVZ/Q4qe6uycDg1PmO/mNtDhtAW7IaSGcNC/X3uWMTWMRnu4szz?=
- =?us-ascii?Q?gCwOrEknZ5lLh1m28LFsc7xbw9pCfQztDQNDaj31T7oq68Qr/c3gGqWNgX1+?=
- =?us-ascii?Q?MswSI0gJ8eFTXIKZ8uuxrD47ZF5Ynk2PsmqCTer1vnyF1iyhDbs6Ud4Maq7O?=
- =?us-ascii?Q?9lIm73+nw1ME4uafpx3CSFGEZjW+8PL0M7MMmrW+SW+4n4xBsrbkxS9JQLbd?=
- =?us-ascii?Q?SXq96bL9tAYBoydD9puVewgCAiAp2M/2Yj+uc0rONOCNHv4UYWl707pOqAjr?=
- =?us-ascii?Q?RRWAGucFSU72FxgZk8LRfaj+0fM5Gg/LA165Iwn65tWNgSAnDq2Izg7Oq9no?=
- =?us-ascii?Q?rKIoSGatpBuN7HULfYMa5wS+Pf1vO5YQ9gX6KVqxJ1p+aEyGZLrVlJjbtn74?=
- =?us-ascii?Q?VrQmLqA71+mN+0edXhLcQ1yij4wm2fSlLanhqkp5pWPhlZPfqfluCujcWnvW?=
- =?us-ascii?Q?RLk+l8Ph0e0JWYNwfTfpaGkovQKZBhZ7Q/9qHxvLGEXp5ttZu/bDtZVepP7c?=
- =?us-ascii?Q?6cdqy0OHBdY/CMed5KVS1oAxMaN37MENdwjp2K3ZxJ2klpQ//sVPnQtJwj9h?=
- =?us-ascii?Q?JsUAwvGzwjXGe1YhmVNuWqIrORexFTVIk5NV1TwRbBnKimuygR9FzjQ7GZJn?=
- =?us-ascii?Q?aP84Iv9kTm1jGPNA+EGyEF1eNYMIWeVBigAlwyY5yeLTpJDmOW42Wz/JEUn5?=
- =?us-ascii?Q?VkPs2droODI/rbdq0rGl50XssgDlDG1EVnGBRI+jvLmcN0aC2KhdtzHsv+9r?=
- =?us-ascii?Q?vgwOyGcafbUOJbhS2ilYeqwbxZUTnx1rcK0IIuteiToY8nHcWWewCFDBvvJA?=
- =?us-ascii?Q?XAxs/6O71NW/us5UvAx2fXnxHpQ040vD54yBPWUL4AuPdD+71avZQtEZOizE?=
- =?us-ascii?Q?4wHNuXDCaGPfdwOHaV5n+8AK+1VcByWDSDWUBzPx5YlodBivxsIxsj8ta21p?=
- =?us-ascii?Q?i65YBDwVNBjnVmfmxUdDMy609CtB5djzJr3lfW6cvmFLh8kfy2WZJ2oDBuMU?=
- =?us-ascii?Q?H2/HZvsrPaEfE7yFr1l8YDUdlloZuGcMYbf1ipwWuOCp0/3g1V4hujLgsg9q?=
- =?us-ascii?Q?2it9vSXJLxfoOnFmJr3hDpOl+4LvH41gtwVe6WJjB1mDfFwcOizNlEjwM0JB?=
- =?us-ascii?Q?Em/OUA3Z0IyubG1P3CmAvuiQ2ANO8pUtKqyVXYz2uTjijCEUj8FoLZWxuqQM?=
- =?us-ascii?Q?D1I0g/sbD+6XDP5Gmio=3D?=
+	=?utf-8?B?dDhwdmlOL3pqazAxTTVTM29uemgxd0g5K2t3RnBib0hwbW52SUl3b05FMUd6?=
+ =?utf-8?B?M25YUVE1RFFxZWp3eElPMXViSzBxY3RWN0wydHd2Z1VyMWJ4WVdEWFNWdFNs?=
+ =?utf-8?B?dDZocG43M3NPT1Q2TFJrMU9HWUkzd1RyejJLajNQS25ZWlV1OEVsTFNNOEFP?=
+ =?utf-8?B?UXNYRzJxckFEK2k4UjZ6QXNaYVA4c2QzWkRaYUd3MUdBS0NXT2NseW5WaVF3?=
+ =?utf-8?B?VHpCS2JOZy9FaHN2eFFNNzMrQWVjbmRqVUNNRDB6L2laN211aFFrbU1NbEQ1?=
+ =?utf-8?B?VTA5NTJOZ1N3VmlPMDdPaVU0WVBNTnFhTFg3RHdzems4cFB2WXpqSGRlZUQ1?=
+ =?utf-8?B?T1hjb1BCK2lGNk9YZ0xlTmkySkJORGlXbjNGamp2K0xYaGpURFFzeFN6aWIx?=
+ =?utf-8?B?c3RvLzJ5cmlnRGg3VVFCbUJhY2o3SXVjR09HQ0k3Z25xQnpONnQ4aVdZWGE0?=
+ =?utf-8?B?L0JoZ2N3K3FabDJJTDZUSEhKM1BxV04vbk82YUFkTjBtWnM4d3F4a3U2dTRB?=
+ =?utf-8?B?THViWHhZQzg3c2hFL2trOUZTNU1lcmZSN0tFdmtVVDNOQzNVUVIySm9HVkVp?=
+ =?utf-8?B?T2JHdXZWcHlJbDBsNDJOajJNUitZdzduZzlrNnh4YTQzN005aFlhMFRYWlRT?=
+ =?utf-8?B?cHB3VDJtVUdOVGxyTkZjanBQaHE0ZjVSUjNacHZLeitrLzQ5Zit5dlVIbGhh?=
+ =?utf-8?B?eWpSbmVySTBHNXJ5cXU2Y0xINTNHRGFnazVUempGWnE3UlRmQ3lpWjVBc3JQ?=
+ =?utf-8?B?ZnU1dS9rVERGRGdOc1pOWlVuZ0h6L3ZhaGZrNjNHTSs3TE54V3lIL2lZdGNr?=
+ =?utf-8?B?aStDdWgwQVZSNnluQTB6Tm9TU3Fid01aVzNZbzNpbXBoMTh0RDllVWtCdzZj?=
+ =?utf-8?B?b0tRTXVTRjFvT2dheW1hWUZZZWJ6L29XelNyamRMN0xrL21vbE1rajVyMXFO?=
+ =?utf-8?B?THljTW1aVk9TV3gxVk11U25OaVk3Ni9pL1VlbXJDWmFBWFZUb2VGU0QwOTlo?=
+ =?utf-8?B?RXJjZDFnQVBrUHZoZDRGak42ckNvSURQUmk1ZmlrWktXNldrb2hQb3lGTFQ0?=
+ =?utf-8?B?cGN3YWlJQ05WQk53RWdZL3FIS0xmT3hGTmd3bWpzVXE4Q1NZRnNRTWRRM3lW?=
+ =?utf-8?B?Y1VDRkpQNkNHenNrdVVUQ05wbUJ1emFpT2pwVm9sbGhsMDhEajBMRWlta0M1?=
+ =?utf-8?B?WS9YTVA1TVFGV3RGK2FwcWlueVVacXE2K1pMZVdlZElPZG9IVGhaalh2b2ZG?=
+ =?utf-8?B?Y1IwNWlid1ZabWF4OUdqUWV5WEpvR2xZTktmejZic0JDUktLL2hscVVGWGVh?=
+ =?utf-8?B?NFZqZW00alM4SW53OTZMbSthZDhIeTZJSEluMGVZblpJVExvRkZiaVhMNHB4?=
+ =?utf-8?B?MnZRSU5WS1ZuZllselhnZUVUdnNPcENSNmd2RlJKQ3JZdlo1STc3N2FuSzdE?=
+ =?utf-8?B?Yk0wc3E3L2IyeFBRenFFaE1WalA0dlhHbVRTMHRnT2h4dkZZdHRQbmE0RDFu?=
+ =?utf-8?B?SVUvNVFWSjY5KzZMYmVRMGRVL3V1MzZJR2Z1UTZZWktscmd6NDdxTzhpOW9z?=
+ =?utf-8?B?UFg1VlIyL3dOb1EzN1FyQ3JBcjJvYmhZbkRWcU9qRnhuUytDM2x1cDJrYWZU?=
+ =?utf-8?B?OXlpa3A1eFgvYlFENllDVHhNelB4MDFoNW82aldlc3J1MGpDSU5XNEt5Mlds?=
+ =?utf-8?B?by9xVysycnNxMUtOaG9OYlFnQUhMMmVkcnRsaVBMUlNKbHZuazNYRmI0YUpn?=
+ =?utf-8?B?NnJoMHRka2hsR3NOclhNOVpJamJja1IyRUgzYnI3MVVWQmZaZ2NVKzBlWEdn?=
+ =?utf-8?B?a2plMXV4YTNLZHV3RVhHU2Q5OEwyWEhBUkIveHZBT1VkUWNtMHNZTUhZcGJ0?=
+ =?utf-8?B?S0pGVFhmSXdTYUYzMjR5WDFFN0lUL01DUkJIMXhyNUJsSlQ1SjhwNmVVL05J?=
+ =?utf-8?Q?PH/UmzGW0FqszAEuxHfA1UuWJrphyESR?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NkZnNWcwMzZkWnpqZkk5Q0lWMkFEdmpRMU5TLy9VTnVHWXFJdkw5VUx6ZWU0?=
+ =?utf-8?B?MHlDWEpoZmphQzFuRTdkTEl3T1BsdVh2L2gwWUNqb2U0QjVJZ2J5QzZtOTRF?=
+ =?utf-8?B?RFdoK09wTVN2NHZtYlBIaVRRQndvZWNnQjlpL0NYQk05TEtkaWxoSlN2RHlD?=
+ =?utf-8?B?V2tCRUZhaTQ0OS9PaHpPNU1QUEF0YkFDU1MxVkpLT0x1Ykt1MjRQQ3ExaEhn?=
+ =?utf-8?B?WGtabUFjNWdnYmlSL043bVByWUtLZnZLT2puUE54SFJZSEJlUE1HUEFiU0Vl?=
+ =?utf-8?B?ZEl0aHRQZHhCZFRlSnliSDgzSHRRVTN2bEJrbHF3TSttdmJ5UTR6dWJiRU1O?=
+ =?utf-8?B?TnRRNnhmV2p0RmVKbC9SNlRYWXJvWG4xdTZObUdUS0c2VUs4eHFiQjZiL3B6?=
+ =?utf-8?B?YUtNYWp4djVBTFRzWWNvUzk5Vk8rMm9XN1pXUndXRE5xSENaMFc0ZmhlYjdR?=
+ =?utf-8?B?NUpwMS8waGlxbFYxdDYyZHY4b0xMRUZMTjFOeDY0SkVCZFNyN09kNVZxdmtq?=
+ =?utf-8?B?QTNYSjJ0QUtVckpSSVB1TlJRc2s2MXdGTVhaU010RmJQUi9MV2h1OFlzalhv?=
+ =?utf-8?B?TjVyam5IUXN3ZnFqMHJvVDlnVVErdVBWL1IybjljSW0vTy9ETjBNdG03Vk1o?=
+ =?utf-8?B?V0lCZHNKWUlYUmx2K2VVY0VUV08rSFBQYXlvbzV5TUsxbmtRNlhoUXAvRU5V?=
+ =?utf-8?B?TWNmQUp6UmY0Qm9wdCtKOFJCZmpYU2RneWtHS096ek9rNVVsQ2RLc1FFb1lN?=
+ =?utf-8?B?WVlPVmZUZTQ4TlRlc0FPUGRlc3lRV2xBaWQ2ayt6eC9DNDNINll6ZHlRQm43?=
+ =?utf-8?B?MFAwbTZsM0hYRUpSQTlRMVRLajh4SVZ2RUtVekZOMWtSWmsxMk8vRkk4NXB5?=
+ =?utf-8?B?bDFRSEJzOTJsSVIybkZGUGIvQzMwUHc5KzV4M09scnloNTA5UUV1anFjUDFi?=
+ =?utf-8?B?dVNjTE1LRFF2cFVyYmR2TkhSdlJiYXVXc3hDcktpVmRubDAvOWlaOEJyOWpl?=
+ =?utf-8?B?WTJiV2lna0tiVGJWM2xxYU9MQWtyQ0EzLzBzd25SY1NlaDFNMVNXT2QraDcr?=
+ =?utf-8?B?RUdQSDVkdnZ6NlppbzFKK3oraitydjRWWmQ3UDE3QnNJbDFyaUp6cElaSkhE?=
+ =?utf-8?B?U280dWFkSXhEdVBxS3p4b2dTMHg3OWpOR1pBSkxxRUJ4bCtackR5cVpwLzFo?=
+ =?utf-8?B?Z040bkIzRld5bnd4QlpRV1JJREhydlpyQVRadTJPdmRRbXkwY1QwQUViVDVu?=
+ =?utf-8?B?Mkg5TzIvRk9MalZFV3hQRzZ5eEJWenllZVlGQkRKelNqZG5CbloxL1dkVGx6?=
+ =?utf-8?B?UUc1c2dwdkRIUExnb3pjMmVUbGNzcy94Yis0ZkQ0RU9rdkdrRDllVW5kUmQ5?=
+ =?utf-8?B?dnZHNnRMYjZISXIrd1VsN2NGdWNFU1JjTDRuWXM5VGJjY0tQUmIrQ0dTQW5m?=
+ =?utf-8?B?OHRFNXd1OG5Nanpiam9PM3hvNXF4K0hHNk1HUTAybUpaY1VpQ3hMbE1tanR4?=
+ =?utf-8?B?K3NxVCtLZXc4SFkzTTVRVlNqVmtlMmRjMGpIOWs2TVFLWHFsOVI0cXRFblN0?=
+ =?utf-8?B?UmVTZVNpZHNtQlk0azBqNFNZRGk3NjhReUpJM1NSdFdmTkh1ZGI5WHhkdGtR?=
+ =?utf-8?B?ampZelpZd1labFNtMjFuNHdwYms5c3c1WUNZYmY3L2VXb1VrQXNZbFZiMkZp?=
+ =?utf-8?B?cEdEZ0dCUVBpdTFrSWxjME8xME9nVy9FSFRFbHh5Q2xhcTBLTzVEMkVkRkoz?=
+ =?utf-8?B?QkJBS2k0NG14MnViWmUyMFpLMFZuYlFidmRxampPL005MDV0RjNIdEZQQmV4?=
+ =?utf-8?B?NkNyMyt2SnpuZVExL1VtbDlhZzdEL3BrNDF4UjBTWHc4Z1M5OGtpWHZ0RGl0?=
+ =?utf-8?B?akdKanR4YVl6RnRLbjhIOEFYNEd4SklQcWhESDFZQS9WVTBrbWI3dHZCdllM?=
+ =?utf-8?B?NlFaS2QyeFRJdGo1aEsyeS95TkFaenNUMGdXTDJwaVR2UVorK0F4dmRoK0lG?=
+ =?utf-8?B?MG11WFl4UjNFdTQ3a01kTy9HS3gwWEw5MkRhNHFPOGp2eTNoSWNZS0Jaampr?=
+ =?utf-8?B?T1lxMHJHcndENUVWekM0aldDMHNYV1dSQzRkejFxcUJtczcwaFU5azFMbGw2?=
+ =?utf-8?Q?zAJqqb5FYbu8iV4HcJJwnhQrb?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 10:54:36.7693
+X-MS-Exchange-CrossTenant-Network-Message-Id: 961974d2-ce8f-403b-8669-08de28234e49
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 10:55:24.0963
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fddb8a4b-ecf4-473f-3222-08de2823326f
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F43.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6119
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4RkCPl/NRd4S5hPK9SKIGbrHSeMZVYbEv5Tj8kxB/4TXM41hBmsx58ZhWz0EAHiXWE86c7zLUE+FVrKfH1P+Mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6953
 
-Add SET_CMD and GET_CMD constants and replace boolean values passed as the
-get/set argument to amd_pmf_send_cmd() with the new explicit flags. This
-improves readability, avoids ambiguity around true/false and 0/1 usage.
-There is no functional change.
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/auto-mode.c | 14 ++++-----
- drivers/platform/x86/amd/pmf/cnqf.c      | 14 ++++-----
- drivers/platform/x86/amd/pmf/core.c      |  6 ++--
- drivers/platform/x86/amd/pmf/pmf.h       |  4 +++
- drivers/platform/x86/amd/pmf/spc.c       |  2 +-
- drivers/platform/x86/amd/pmf/sps.c       | 38 ++++++++++++------------
- drivers/platform/x86/amd/pmf/tee-if.c    | 20 ++++++-------
- 7 files changed, 51 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-index a184922bba8d..faf15a8f74bb 100644
---- a/drivers/platform/x86/amd/pmf/auto-mode.c
-+++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-@@ -114,14 +114,14 @@ static void amd_pmf_set_automode(struct amd_pmf_dev *dev, int idx,
- {
- 	struct power_table_control *pwr_ctrl = &config_store.mode_set[idx].power_control;
- 
--	amd_pmf_send_cmd(dev, SET_SPL, false, pwr_ctrl->spl, NULL);
--	amd_pmf_send_cmd(dev, SET_FPPT, false, pwr_ctrl->fppt, NULL);
--	amd_pmf_send_cmd(dev, SET_SPPT, false, pwr_ctrl->sppt, NULL);
--	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pwr_ctrl->sppt_apu_only, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pwr_ctrl->stt_min, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-+	amd_pmf_send_cmd(dev, SET_SPL, SET_CMD, pwr_ctrl->spl, NULL);
-+	amd_pmf_send_cmd(dev, SET_FPPT, SET_CMD, pwr_ctrl->fppt, NULL);
-+	amd_pmf_send_cmd(dev, SET_SPPT, SET_CMD, pwr_ctrl->sppt, NULL);
-+	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, SET_CMD, pwr_ctrl->sppt_apu_only, NULL);
-+	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, SET_CMD, pwr_ctrl->stt_min, NULL);
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, SET_CMD,
- 			 fixp_q88_fromint(pwr_ctrl->stt_skin_temp[STT_TEMP_APU]), NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, SET_CMD,
- 			 fixp_q88_fromint(pwr_ctrl->stt_skin_temp[STT_TEMP_HS2]), NULL);
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
-diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-index 207a0b33d8d3..5469fefb6001 100644
---- a/drivers/platform/x86/amd/pmf/cnqf.c
-+++ b/drivers/platform/x86/amd/pmf/cnqf.c
-@@ -76,14 +76,14 @@ static int amd_pmf_set_cnqf(struct amd_pmf_dev *dev, int src, int idx,
- 
- 	pc = &config_store.mode_set[src][idx].power_control;
- 
--	amd_pmf_send_cmd(dev, SET_SPL, false, pc->spl, NULL);
--	amd_pmf_send_cmd(dev, SET_FPPT, false, pc->fppt, NULL);
--	amd_pmf_send_cmd(dev, SET_SPPT, false, pc->sppt, NULL);
--	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, pc->sppt_apu_only, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, pc->stt_min, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-+	amd_pmf_send_cmd(dev, SET_SPL, SET_CMD, pc->spl, NULL);
-+	amd_pmf_send_cmd(dev, SET_FPPT, SET_CMD, pc->fppt, NULL);
-+	amd_pmf_send_cmd(dev, SET_SPPT, SET_CMD, pc->sppt, NULL);
-+	amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, SET_CMD, pc->sppt_apu_only, NULL);
-+	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, SET_CMD, pc->stt_min, NULL);
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, SET_CMD,
- 			 fixp_q88_fromint(pc->stt_skin_temp[STT_TEMP_APU]), NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, SET_CMD,
- 			 fixp_q88_fromint(pc->stt_skin_temp[STT_TEMP_HS2]), NULL);
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_SET_FAN_IDX))
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 71421a5d7afd..e9dbf328d17b 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -132,7 +132,7 @@ static void amd_pmf_get_metrics(struct work_struct *work)
- 
- 	/* Transfer table contents */
- 	memset(dev->buf, 0, sizeof(dev->m_table));
--	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
-+	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, 7, NULL);
- 	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
- 
- 	time_elapsed_ms = ktime_to_ms(ktime_get()) - dev->start_time;
-@@ -290,8 +290,8 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 	hi = phys_addr >> 32;
- 	low = phys_addr & GENMASK(31, 0);
- 
--	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
--	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
-+	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, SET_CMD, hi, NULL);
-+	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, SET_CMD, low, NULL);
- 
- 	return 0;
- }
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 387e37ea3608..4478947385f7 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -124,6 +124,10 @@ struct cookie_header {
- #define BIOS_INPUTS_MAX		10
- #define CUSTOM_BIOS_INPUT_RING_ENTRIES	64	/* Must be power of two for CIRC_* macros */
- 
-+/* amd_pmf_send_cmd() set/get */
-+#define SET_CMD		false
-+#define GET_CMD		true
-+
- typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
- 
- /* APTS PMF BIOS Interface */
-diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index 34fff41b86fe..b81ab58f1a80 100644
---- a/drivers/platform/x86/amd/pmf/spc.c
-+++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -206,7 +206,7 @@ static void amd_pmf_get_smu_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_ta
- {
- 	/* Get the updated metrics table data */
- 	memset(dev->buf, 0, dev->mtable_size);
--	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
-+	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, 7, NULL);
- 
- 	switch (dev->cpu_id) {
- 	case AMD_CPU_ID_PS:
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index c28f3c5744c2..0b70a5153f46 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -192,15 +192,15 @@ static void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev)
- 
- static void amd_pmf_update_slider_v2(struct amd_pmf_dev *dev, int idx)
- {
--	amd_pmf_send_cmd(dev, SET_PMF_PPT, false, apts_config_store.val[idx].pmf_ppt, NULL);
--	amd_pmf_send_cmd(dev, SET_PMF_PPT_APU_ONLY, false,
-+	amd_pmf_send_cmd(dev, SET_PMF_PPT, SET_CMD, apts_config_store.val[idx].pmf_ppt, NULL);
-+	amd_pmf_send_cmd(dev, SET_PMF_PPT_APU_ONLY, SET_CMD,
- 			 apts_config_store.val[idx].ppt_pmf_apu_only, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
-+	amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, SET_CMD,
- 			 apts_config_store.val[idx].stt_min_limit, NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, SET_CMD,
- 			 fixp_q88_fromint(apts_config_store.val[idx].stt_skin_temp_limit_apu),
- 			 NULL);
--	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-+	amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, SET_CMD,
- 			 fixp_q88_fromint(apts_config_store.val[idx].stt_skin_temp_limit_hs2),
- 			 NULL);
- }
-@@ -211,30 +211,30 @@ void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
- 	int src = amd_pmf_get_power_source();
- 
- 	if (op == SLIDER_OP_SET) {
--		amd_pmf_send_cmd(dev, SET_SPL, false, config_store.prop[src][idx].spl, NULL);
--		amd_pmf_send_cmd(dev, SET_FPPT, false, config_store.prop[src][idx].fppt, NULL);
--		amd_pmf_send_cmd(dev, SET_SPPT, false, config_store.prop[src][idx].sppt, NULL);
--		amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false,
-+		amd_pmf_send_cmd(dev, SET_SPL, SET_CMD, config_store.prop[src][idx].spl, NULL);
-+		amd_pmf_send_cmd(dev, SET_FPPT, SET_CMD, config_store.prop[src][idx].fppt, NULL);
-+		amd_pmf_send_cmd(dev, SET_SPPT, SET_CMD, config_store.prop[src][idx].sppt, NULL);
-+		amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, SET_CMD,
- 				 config_store.prop[src][idx].sppt_apu_only, NULL);
--		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false,
-+		amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, SET_CMD,
- 				 config_store.prop[src][idx].stt_min, NULL);
--		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-+		amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, SET_CMD,
- 				 fixp_q88_fromint(config_store.prop[src][idx].stt_skin_temp[STT_TEMP_APU]),
- 				 NULL);
--		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-+		amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, SET_CMD,
- 				 fixp_q88_fromint(config_store.prop[src][idx].stt_skin_temp[STT_TEMP_HS2]),
- 				 NULL);
- 	} else if (op == SLIDER_OP_GET) {
--		amd_pmf_send_cmd(dev, GET_SPL, true, ARG_NONE, &table->prop[src][idx].spl);
--		amd_pmf_send_cmd(dev, GET_FPPT, true, ARG_NONE, &table->prop[src][idx].fppt);
--		amd_pmf_send_cmd(dev, GET_SPPT, true, ARG_NONE, &table->prop[src][idx].sppt);
--		amd_pmf_send_cmd(dev, GET_SPPT_APU_ONLY, true, ARG_NONE,
-+		amd_pmf_send_cmd(dev, GET_SPL, GET_CMD, ARG_NONE, &table->prop[src][idx].spl);
-+		amd_pmf_send_cmd(dev, GET_FPPT, GET_CMD, ARG_NONE, &table->prop[src][idx].fppt);
-+		amd_pmf_send_cmd(dev, GET_SPPT, GET_CMD, ARG_NONE, &table->prop[src][idx].sppt);
-+		amd_pmf_send_cmd(dev, GET_SPPT_APU_ONLY, GET_CMD, ARG_NONE,
- 				 &table->prop[src][idx].sppt_apu_only);
--		amd_pmf_send_cmd(dev, GET_STT_MIN_LIMIT, true, ARG_NONE,
-+		amd_pmf_send_cmd(dev, GET_STT_MIN_LIMIT, GET_CMD, ARG_NONE,
- 				 &table->prop[src][idx].stt_min);
--		amd_pmf_send_cmd(dev, GET_STT_LIMIT_APU, true, ARG_NONE,
-+		amd_pmf_send_cmd(dev, GET_STT_LIMIT_APU, GET_CMD, ARG_NONE,
- 				 (u32 *)&table->prop[src][idx].stt_skin_temp[STT_TEMP_APU]);
--		amd_pmf_send_cmd(dev, GET_STT_LIMIT_HS2, true, ARG_NONE,
-+		amd_pmf_send_cmd(dev, GET_STT_LIMIT_HS2, GET_CMD, ARG_NONE,
- 				 (u32 *)&table->prop[src][idx].stt_skin_temp[STT_TEMP_HS2]);
- 	}
- }
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index add742e33e1e..2c74ba2a0b51 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -83,7 +83,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 		switch (out->actions_list[idx].action_index) {
- 		case PMF_POLICY_SPL:
- 			if (dev->prev_data->spl != val) {
--				amd_pmf_send_cmd(dev, SET_SPL, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_SPL, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update SPL: %u\n", val);
- 				dev->prev_data->spl = val;
- 			}
-@@ -91,7 +91,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_SPPT:
- 			if (dev->prev_data->sppt != val) {
--				amd_pmf_send_cmd(dev, SET_SPPT, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_SPPT, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update SPPT: %u\n", val);
- 				dev->prev_data->sppt = val;
- 			}
-@@ -99,7 +99,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_FPPT:
- 			if (dev->prev_data->fppt != val) {
--				amd_pmf_send_cmd(dev, SET_FPPT, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_FPPT, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update FPPT: %u\n", val);
- 				dev->prev_data->fppt = val;
- 			}
-@@ -107,7 +107,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_SPPT_APU_ONLY:
- 			if (dev->prev_data->sppt_apuonly != val) {
--				amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_SPPT_APU_ONLY, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update SPPT_APU_ONLY: %u\n", val);
- 				dev->prev_data->sppt_apuonly = val;
- 			}
-@@ -115,7 +115,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_STT_MIN:
- 			if (dev->prev_data->stt_minlimit != val) {
--				amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_STT_MIN_LIMIT, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update STT_MIN: %u\n", val);
- 				dev->prev_data->stt_minlimit = val;
- 			}
-@@ -123,7 +123,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_STT_SKINTEMP_APU:
- 			if (dev->prev_data->stt_skintemp_apu != val) {
--				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, false,
-+				amd_pmf_send_cmd(dev, SET_STT_LIMIT_APU, SET_CMD,
- 						 fixp_q88_fromint(val), NULL);
- 				dev_dbg(dev->dev, "update STT_SKINTEMP_APU: %u\n", val);
- 				dev->prev_data->stt_skintemp_apu = val;
-@@ -132,7 +132,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_STT_SKINTEMP_HS2:
- 			if (dev->prev_data->stt_skintemp_hs2 != val) {
--				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, false,
-+				amd_pmf_send_cmd(dev, SET_STT_LIMIT_HS2, SET_CMD,
- 						 fixp_q88_fromint(val), NULL);
- 				dev_dbg(dev->dev, "update STT_SKINTEMP_HS2: %u\n", val);
- 				dev->prev_data->stt_skintemp_hs2 = val;
-@@ -141,7 +141,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_P3T:
- 			if (dev->prev_data->p3t_limit != val) {
--				amd_pmf_send_cmd(dev, SET_P3T, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_P3T, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update P3T: %u\n", val);
- 				dev->prev_data->p3t_limit = val;
- 			}
-@@ -149,7 +149,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_PMF_PPT:
- 			if (dev->prev_data->pmf_ppt != val) {
--				amd_pmf_send_cmd(dev, SET_PMF_PPT, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_PMF_PPT, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update PMF PPT: %u\n", val);
- 				dev->prev_data->pmf_ppt = val;
- 			}
-@@ -157,7 +157,7 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 
- 		case PMF_POLICY_PMF_PPT_APU_ONLY:
- 			if (dev->prev_data->pmf_ppt_apu_only != val) {
--				amd_pmf_send_cmd(dev, SET_PMF_PPT_APU_ONLY, false, val, NULL);
-+				amd_pmf_send_cmd(dev, SET_PMF_PPT_APU_ONLY, SET_CMD, val, NULL);
- 				dev_dbg(dev->dev, "update PMF PPT APU ONLY: %u\n", val);
- 				dev->prev_data->pmf_ppt_apu_only = val;
- 			}
--- 
-2.34.1
+On 11/19/2025 18:14, Ilpo Järvinen wrote:
+> On Tue, 18 Nov 2025, Shyam Sundar S K wrote:
+>> On 11/18/2025 21:31, Ilpo Järvinen wrote:
+>>> On Tue, 18 Nov 2025, Ilpo Järvinen wrote:
+>>>
+>>>> On Fri, 14 Nov 2025, Mario Limonciello wrote:
+>>>>> On 11/13/2025 1:33 AM, Shyam Sundar S K wrote:
+>>>>>> On 11/12/2025 23:33, Mario Limonciello wrote:
+>>>>>>> On 11/11/25 12:37 AM, Shyam Sundar S K wrote:
+>>>>>>>> From: VinitKumar Shukla <VinitKumar.Shukla@amd.com>
+>>>>>>>>
+>>>>>>>> Add aie2_smu_get_power_estimate() to obtain NPU power readings from the
+>>>>>>>> AMD PMF driver. This xdna interface enables user space to reflect
+>>>>>>>> current
+>>>>>>>> workload power consumption in real time.
+>>>>>>>
+>>>>>>> But.. it doesn't.  It just adds a new function that could potentially
+>>>>>>> do this job.  The actual gluing it to userspace in some way to use
+>>>>>>> this function will be another patch.
+>>>>>>
+>>>>>> For now, yes.. that's right. XDNA team will add more support on it
+>>>>>> that goes via the accel tree. But this patch is meant to have a
+>>>>>> minimal change on the xdna side so that there is a  consumer of the
+>>>>>> pmf symbol that is getting exported to the kernel.
+>>>>>>
+>>>>>> So, there is more support coming on the way. If you think, its worth
+>>>>>> to rephrase the commit?
+>>>>>
+>>>>> Yes; that other support isn't happening this kernel cycle.  So the commit
+>>>>> message should be accurate to what it's actually doing (laying ground work).
+>>>>
+>>>> To me it looks this and patch 4 should be submitted with the actual user 
+>>>> instead of trying to justify things with far in the future changes. I've 
+>>>> no problem with creating immutable branch if necessary when multiple trees 
+>>>> are involved.
+>>>
+>>> In case it wasn't obvious, I'm fine with taking patches 1-3 in earlier.
+>>>
+>>
+>> The context for this series is that the XDNA driver needs
+>> power-related information, which is only available from the PMF
+>> driver. We’re providing that information via an exported symbol.
+>> Patch 4 exports the data and patch 5 begins consuming it. The goal is
+>> to establish the channel through which power-related information can flow.
+> 
+> It doesn't consume anything, it just adds function without apparent 
+> purpose (and this will remain so until the other work is submitted).
+> 
+>> Creating an immutable branch is a reasonable idea, but in this case
+>> all further PMF-side work stops after this patch. The subsequent
+>> activity is primarily on the XDNA side — for example, passing the
+>> power data into the XRT environment via IOCTLs. If both trees had
+>> active development or large, simultaneous changes, an immutable branch
+>> would make sense, but given the current situation it doesn’t seem
+>> worth the added complexity.
+>>
+>> The XDNA changes are distributed and will be implemented gradually;
+>> they depend on this exported power information from PMF. So my
+>> proposal is for PMF to export the information now with minimal changes
+>> on the XDNA side, and land that upstream. The XDNA team can then build
+>> on top of the exported interface, and their changes can be submitted
+>> via the misc-drm tree.
+>>
+>> Ilpo, does this approach work for you?
+> 
+> Lets just wait with these two patches until have real consumer changes 
+> ready to be submitted, these patches can appear at the head of such a 
+> series.
+> 
 
+OK, I get your point. Thank you. Will have an internal discussion on
+this and come back on what could be a best approach for this.
+
+For now, I have dropped the patch 4 and 5 and sent out the rest for
+review and they can be applied on mainline with 6fb7433c7b8e
+("platform/x86/amd/pmf: Use ring buffer to store custom BIOS input
+values") as the git tip.
+
+Thanks,
+Shyam
