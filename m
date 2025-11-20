@@ -1,239 +1,322 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86991182B7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 21:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF92314A7E;
+	Thu, 20 Nov 2025 22:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763675690; cv=none; b=OGkUW06cz2ZP1WyxFqNG1uoYt/qUM4bjppvvN+IiDGNu0ZEUb+C4jIIY/wdrgIFHnNAfQcCATM55KOkPobZKG4xUDP4JM1GHGz4PxhlP10nQ2/qkTtOUtCoAnSr5W+fJDakRb/YjPV790oy4PH86DHETG4Xy0i+zdLKnnFTIBNw=
+	t=1763676372; cv=none; b=akFZgdutsyQQYOqvq05myg82sdenAx7IxbOIxQr4s5mqucks6a7itw8p2LpQyWZbdPZw+I0KgspULcwFot2d6WSxG7SU5H/dawFEtBSq0bxRyx5GI+GnH9gHbtZo0OwJfaWf4JTNwsPNhZjPQhEHu1Lfb5UkpbYKjcf+9XBGS7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763675690; c=relaxed/simple;
-	bh=nfMO8pUP9Ey5B+YHBoF+agg+SQTz6j9xdJ3R4PUCmXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jBxxLV+XLKkjSZ+miPJqQbysFSzx8Ekipft5kSdBagriJqZnTWdthcPPlbACBmJaufV6ycyV0wernfieh7f9UWWAhZkFYVc0A5HpoXKrwL24borWuItQ4qZlrHYC70o8C2JIZfs7yE5QuNgBXgLNSUoQU+w/MyNt+eYU8P9m15U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=RAJMQHMT; arc=none smtp.client-ip=78.46.171.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1763676372; c=relaxed/simple;
+	bh=1yKD73cEiCxQ/b2VbRgcmoD/mq8Xrk8VgAtNmPkW65s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BUW2SToaEcqW8t+iEleNVdKFH2fdo28aIjctFGQ7y495d/LsqXsFaJPTH/kIh73fSmOl5q0wj4bSipxeRuZ8RY71qbKVXj+ue/y0IlaN0TtkZjy2Ms6bzB9yG0qKjGitMWhlraszG5CDeqicRRRdRuYKhiH4qwlnT3qg0OMfKa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=TgGmfMmb; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="RAJMQHMT"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 51F69C5D7F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 23:54:41 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 98627C5D48
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 23:54:40 +0200 (EET)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 976D3200E53
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Nov 2025 23:54:39 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1763675680;
-	bh=/yw/fa3PteFsFrN1xLwNloCfH0V5obbkxZaxM5gP44A=;
-	h=Received:From:Subject:To;
-	b=RAJMQHMT+oswRgE+NbZqAnZCNmHFAjYOUYS65qcf5XVJeqaWqkD3VRmsLZupJmnkS
-	 0ghM9KZodwCdW59pNWZqjpzDSA10m5YRtB74vyhOtnd8EeNJp/xopAcZHpxyEG7puo
-	 QpoFd2dIC9yWGOv2OyaxKubHj1KkG4h7zAN9Xw8ufoQz9JSy06Dy3dyjfbyHKjf+TF
-	 P9CwHyWcMWRG95DnIucWXaOfmu+1B26+yvQ8j+P1pCivK//XAW47zeFnRp85C+Blhx
-	 8GrGW9hja10x1Mun+UCmyKNWP7eBD35bbbaYjAQdjUEfQyu+CZrmD/VA8J0TBFHN7N
-	 dyckrVuKYy/Fg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f178.google.com with SMTP id
- 38308e7fff4ca-37b996f6b28so11898401fa.3
-        for <platform-driver-x86@vger.kernel.org>;
- Thu, 20 Nov 2025 13:54:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXjTLyHJdo7jJLdDRCrTD4KfzK4Y/xW5nzrYGJWfFcHGjOwtdqhRfSw+88kWa5lSOwuy9UEzZGLO2Gr1GBH3n1n6N0t@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyCU1xd+aQotgsWQ2s9NIdw02bSUUyP0OaNrc/TWjqcnBCunqf
-	0XOhKXFowuEgHsvkEykkCMbnSs873DMNaDu7sW545DrYlfqDFZUnDS6EIo6SHiT52tJm91pnwaQ
-	8Hq+2wocL9Avj0jYreej/F+txXZa3BwQ=
-X-Google-Smtp-Source: 
- AGHT+IF9hvpa1HsFfWLrTQ6u/i9/ip89gLjUNUcnWnLCv0cUEBAfa/UMeR9EMkoLb1HsYzbf+8AMmIYi301n9PS6QaU=
-X-Received: by 2002:a05:651c:239:b0:37a:5bc6:ab9f with SMTP id
- 38308e7fff4ca-37cc6797c70mr10108011fa.26.1763675678991; Thu, 20 Nov 2025
- 13:54:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="TgGmfMmb"
+Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id B13462FC0055;
+	Thu, 20 Nov 2025 23:06:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1763676364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GIWmjcyRAYMasdcopWpoiWkZzgBBLJOQKcYP114Epl8=;
+	b=TgGmfMmbg1nehQWLesP/Vt0Bpab3Tv62B0wPsFb1r9a8xpBD3bAIvlTuedcu8pePftpgJZ
+	OnTpXw2kTO63D6AJZrZGqsGcOFYp3vY1BpOgvlIY9AUYntXhAx1A0JVYJjDrlMjcD/En1V
+	za6BEr08wQ8wK3ik6PpH0T0gxYejVpQ=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <7dcf2e21-209d-42ad-8541-52eac5c77049@tuxedocomputers.com>
+Date: Thu, 20 Nov 2025 23:06:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120094617.11672-1-lkml@antheas.dev>
- <20251120094617.11672-5-lkml@antheas.dev>
- <967761fb-3f55-4d51-be0b-23ad03258eff@gmail.com>
- <CAGwozwF6wegwHy=W1zaTEVksQYaw4L7V27w2aaZBMMoDjUjRYg@mail.gmail.com>
- <04075ef3-3fba-c308-871f-619972ffe5ff@linux.intel.com>
-In-Reply-To: <04075ef3-3fba-c308-871f-619972ffe5ff@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 20 Nov 2025 22:54:27 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHSFy6UhbEGBSvYewoFXozd8=MrbpKv5qexeo0yA+4NkQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bmrBP8fJB7SIc26H6mb3erCLu569uoPPUKzqGbxjSsVryGq5oQAuETh0_8
-Message-ID: 
- <CAGwozwHSFy6UhbEGBSvYewoFXozd8=MrbpKv5qexeo0yA+4NkQ@mail.gmail.com>
-Subject: Re: [PATCH v9 04/11] HID: asus: fortify keyboard handshake
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>,
- platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176367567986.94435.1365348579287569641@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251117132530.32460-1-wse@tuxedocomputers.com>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
+ <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+ <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
+ <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
+ <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+ <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
+ <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
+ <2d5d88fe-cd54-4311-b5cd-b1c435ff973d@gmx.de>
+ <d4c7b31b-1335-47d5-992a-beace78614e5@tuxedocomputers.com>
+ <f0161676-fde7-4c6f-8774-25d176265716@gmx.de>
+ <59b75eb5-59f8-472f-ad98-5d333eebebe5@tuxedocomputers.com>
+ <aa69ac42-8578-4fbb-a35c-d0a556aa394d@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <aa69ac42-8578-4fbb-a35c-d0a556aa394d@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Nov 2025 at 17:41, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Thu, 20 Nov 2025, Antheas Kapenekakis wrote:
->
-> > On Thu, 20 Nov 2025 at 15:15, Denis Benato <benato.denis96@gmail.com> w=
-rote:
-> > >
-> > >
-> > > On 11/20/25 10:46, Antheas Kapenekakis wrote:
-> > > > Handshaking with an Asus device involves sending it a feature repor=
-t
-> > > > with the string "ASUS Tech.Inc." and then reading it back to verify=
- the
-> > > > handshake was successful, under the feature ID the interaction will
-> > > > take place.
-> > > >
-> > > > Currently, the driver only does the first part. Add the readback to
-> > > > verify the handshake was successful. As this could cause breakages,
-> > > > allow the verification to fail with a dmesg error until we verify
-> > > > all devices work with it (they seem to).
-> > > >
-> > > > Since the response is more than 16 bytes, increase the buffer size
-> > > > to 64 as well to avoid overflow errors.
-> > > >
-> > > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > > ---
-> > > >  drivers/hid/hid-asus.c | 32 +++++++++++++++++++++++++++++---
-> > > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > > > index 6de402d215d0..5149dc7edfc5 100644
-> > > > --- a/drivers/hid/hid-asus.c
-> > > > +++ b/drivers/hid/hid-asus.c
-> > > > @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPa=
-d");
-> > > >  #define FEATURE_REPORT_ID 0x0d
-> > > >  #define INPUT_REPORT_ID 0x5d
-> > > >  #define FEATURE_KBD_REPORT_ID 0x5a
-> > > > -#define FEATURE_KBD_REPORT_SIZE 16
-> > > > +#define FEATURE_KBD_REPORT_SIZE 64
-> > > >  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
-> > > >  #define FEATURE_KBD_LED_REPORT_ID2 0x5e
-> > > >
-> > > > @@ -394,14 +394,40 @@ static int asus_kbd_set_report(struct hid_dev=
-ice *hdev, const u8 *buf, size_t bu
-> > > >
-> > > >  static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
-> > > >  {
-> > > > +     /*
-> > > > +      * The handshake is first sent as a set_report, then retrieve=
-d
-> > > > +      * from a get_report. They should be equal.
-> > > > +      */
-> > > >       const u8 buf[] =3D { report_id, 0x41, 0x53, 0x55, 0x53, 0x20,=
- 0x54,
-> > > >                    0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, =
-0x00 };
-> > > > +     u8 *readbuf;
-> > > >       int ret;
-> > > >
-> > > >       ret =3D asus_kbd_set_report(hdev, buf, sizeof(buf));
-> > > > -     if (ret < 0)
-> > > > -             hid_err(hdev, "Asus failed to send init command: %d\n=
-", ret);
-> > > > +     if (ret < 0) {
-> > > > +             hid_err(hdev, "Asus failed to send handshake: %d\n", =
-ret);
-> > > > +             return ret;
-> > > > +     }
-> > > > +
-> > > > +     readbuf =3D kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-> > > I see my suggestion to use __free here didn't materialize in code usi=
-ng
-> > > it even after Ilpo kindly wrote how to correctly use it.
-> > >
-> > > I think you can move the readbuf assignment right below buf and
-> > > take into account what Ilpo said.
-> > >
-> > > I don't expect new variables will be added here ever again,
->
-> It's also about always doing the right thing so others will pick up the
-> pattern (for the cases when it's needed).
->
-> > > but I agree with Ilpo that it's a good idea here to write code
-> > > accounting for that possibility.
-> > >
-> > > It is my understanding that who proposes patches is expected to
-> > > resolve discussions when changes are proposed or to take into
-> > > account requested changes and submit a modified version.
-> >
-> > It was ambiguous. I interpreted Ilpo's email as a dismissal
->
-> I tried to explain how to use it, not to suggest cleanup.h shouldn't be
-> used.
 
-Ok, I'll wait a few days and do another revision, doing some rewording
-as well. Hopefully that will cover everything. To that extent, try to
-finish reviewing the latter part of the series before that revision.
-
-I'm a bit concerned with introducing kfree here because I do not know
-how to use it and it might regress, but it should be ok.
-
-I'd rather push the init down instead of pulling it up. Referencing
-other code samples for kfree it is acceptable to push the variable
-definition down, right?
-
-Antheas
-
-> > I will try to incorporate it if I do another revision. Although I do
-> > not think it improves things in this case as the function does not
-> > have multiple return statements.
-> >
-> > > > +     if (!readbuf)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     ret =3D hid_hw_raw_request(hdev, report_id, readbuf,
-> > > > +                              FEATURE_KBD_REPORT_SIZE, HID_FEATURE=
-_REPORT,
-> > > > +                              HID_REQ_GET_REPORT);
-> > > > +     if (ret < 0) {
-> > > > +             hid_err(hdev, "Asus failed to receive handshake ack: =
-%d\n", ret);
-> > > > +     } else if (memcmp(readbuf, buf, sizeof(buf)) !=3D 0) {
-> > > > +             hid_warn(hdev, "Asus handshake returned invalid respo=
-nse: %*ph\n",
-> > > > +                     FEATURE_KBD_REPORT_SIZE, readbuf);
-> > > > +             /*
-> > > > +              * Do not return error if handshake is wrong until th=
-is is
-> > > > +              * verified to work for all devices.
-> > > > +              */
-> > > > +     }
-> > > >
-> > > > +     kfree(readbuf);
-> > > >       return ret;
-> > > >  }
-> > > >
-> > >
-> >
+Am 20.11.25 um 14:40 schrieb Armin Wolf:
+> Am 20.11.25 um 11:42 schrieb Werner Sembach:
 >
-> --
->  i.
+>>
+>> Am 20.11.25 um 01:53 schrieb Armin Wolf:
+>>> Am 18.11.25 um 16:05 schrieb Werner Sembach:
+>>>
+>>>>
+>>>> Am 18.11.25 um 15:41 schrieb Armin Wolf:
+>>>>> Am 18.11.25 um 15:27 schrieb Werner Sembach:
+>>>>>
+>>>>>>
+>>>>>> Am 18.11.25 um 14:48 schrieb Armin Wolf:
+>>>>>>> Am 18.11.25 um 14:29 schrieb Werner Sembach:
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Am 18.11.25 um 14:12 schrieb Armin Wolf:
+>>>>>>>>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
+>>>>>>>>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>>>>>>>>>>>
+>>>>>>>>>>>> Handle some more WMI events that are triggered on TUXEDO devices.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>> drivers/platform/x86/uniwill/uniwill-acpi.c | 19 ++++++++++++++++++-
+>>>>>>>>>>>>   drivers/platform/x86/uniwill/uniwill-wmi.h | 2 ++
+>>>>>>>>>>>>   2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
+>>>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] 
+>>>>>>>>>>>> = {
+>>>>>>>>>>>>         /* Reported in manual mode when toggling the airplane mode 
+>>>>>>>>>>>> status */
+>>>>>>>>>>>>       { KE_KEY,       UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
+>>>>>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOON, { KEY_UNKNOWN }},
+>>>>>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_RADIOOFF, { KEY_UNKNOWN }},
+>>>>>>>>>>>>         /* Reported when user wants to cycle the platform profile */
+>>>>>>>>>>>> -    { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { 
+>>>>>>>>>>>> KEY_UNKNOWN }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE, { KEY_F14 }},
+>>>>>>>>>>>
+>>>>>>>>>>> I am currently working a patch adding platform profile support, so 
+>>>>>>>>>>> this event would
+>>>>>>>>>>> be handled inside the kernel on models with platform profile support.
+>>>>>>>>>>
+>>>>>>>>>> For tuxedo devices we have profiles managed in userspace that do 
+>>>>>>>>>> additional things. So we need a way to handle this in userspace.
+>>>>>>>>>>
+>>>>>>>>> Do these things have something to do with the uniwill EC? If so then 
+>>>>>>>>> we should implement those inside the driver
+>>>>>>>>> itself. The control center can then poll the platform profile sysfs 
+>>>>>>>>> file to get notified when platform_profile_cycle()
+>>>>>>>>> is executed to perform additional actions.
+>>>>>>>> Not exclusively, e.g. one thing is display brightness.
+>>>>>>>
+>>>>>>> And you cannot poll the sysfs interface?
+>>>>>> I can't follow you atm?
+>>>>>
+>>>>> I meant to ask whether or not your application could poll the platform 
+>>>>> profile sysfs interface for changes instead of
+>>>>> listing for the F14 key.
+>>>> But the platform profiles are a fixed number? TCC currently allows an 
+>>>> arbitrary amount of profiles being created.
+>>>
+>>> With "poll the platform profile sysfs interface" i meant that you could use 
+>>> poll() (https://linux.die.net/man/2/poll)
+>>> or epoll() on the sysfs file containing the current platform profile.
+>> Sorry i think i still don't completely get what you mean with platform 
+>> profile. I assume you have a poc on github? If not can you give me a short 
+>> overview?
 >
+> Example code, might not work:
 >
+> from select import poll, POLLPRI
+>
+> fd = open("|/sys/firmware/acpi/platform_profile", "r") p = poll() 
+> p.register(fd.fileno(), POLLPRI) # Wait till platform profile changes p.poll() 
+> print("Platform profile changed") This however comes with the drawback that 
+> you cannot prevent the platform profile from cycling. If you want to do that 
+> manually depending on the settings inside your custom profiles, then maybe we 
+> can keep the F14 hack for now. I will then add a module option when adding 
+> platform profile support to select between platform_profile_cycle() and the 
+> F14 keycode. Does this sound OK?|
 
+a sorry i was imprecise, i wanted to know the kernelspace implementation.
+
+But let me sum up what i think you mean:
+
+Platform profiles are in driver predefined profiles like: Power Save, Balanced, 
+Performance, and Custom.
+
+When you press the button you want to cycle through the profiles (except custom 
+I guess?).
+
+Only in Custom things like cTGP can be directly controlled by userspace via 
+sysfs (otherwise the sysfs value is ignored?)
+
+
+Maybe an elegant solution would be that upon boot for example "Balanced" is 
+selected and when being in one of the predefined profiles the button cycles 
+them. But once Custom get selected via sysfs the button starts sending a button 
+press as the driver now expects everything to be handled by userspace. Bonus 
+points if userspace can read out what the predefined profiles actually set to, 
+for example, use that as initialization for custom profiles.
+
+>
+>>>
+>>> Anyway, i attached the patch with the device descriptor infrastructure. The 
+>>> callback called during probe cannot modify
+>>> the feature bitmap anymore, but i suggest that you simply set the limit for 
+>>> cTGP to zero. The code responsible for
+>>> initializing cTGP support can then check if the cTGP limit is zero and 
+>>> return early.
+>>
+>> I wonder if we should directly put that into a formal quirk list. Opinions?
+>>
+>> Best regards,
+>>
+>> Werner
+>>
+> The problem is that the quirk list will become RO before the driver can access 
+> the EC, so we have to use uniwill_data
+> for storing this information.
+>
+> Thanks,
+> Armin Wolf
+>
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>>>
+>>>>> Thanks,
+>>>>> Armin Wolf
+>>>>>
+>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> The 2 things I can spontaneously think of would be a sysfs toggle or 
+>>>>>>>>>> 2 different UNIWILL_FEATURE_* defines.
+>>>>>>>>>>
+>>>>>>>>> TPH i would love to have an ordinary keycode allocated for that if the 
+>>>>>>>>> above does not work for you. There already
+>>>>>>>>> exists KEY_PERFORMANCE, so adding something like KEY_PERFORMANCE_CYCLE 
+>>>>>>>>> should be possible.
+>>>>>>>>
+>>>>>>>> New keycodes won't work on X11, I don't know the reason, but X11 only 
+>>>>>>>> supports a max of 248 keycodes
+>>>>>>>>
+>>>>>>>> That's why for example touchpad toggle is bound to F21 e.g. here 
+>>>>>>>> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform/x86/lg-laptop.c#L106 
+>>>>>>>> .
+>>>>>>>>
+>>>>>>> Oh no. In this case using F14 is fine.
+>>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Armin Wolf
+>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>>         /* Reported when the user wants to adjust the brightness of 
+>>>>>>>>>>>> the keyboard */
+>>>>>>>>>>>>       { KE_KEY, UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
+>>>>>>>>>>>> @@ -382,11 +384,19 @@ static const struct key_entry 
+>>>>>>>>>>>> uniwill_keymap[] = {
+>>>>>>>>>>>>       /* Reported when the user wants to toggle the microphone mute 
+>>>>>>>>>>>> status */
+>>>>>>>>>>>>       { KE_KEY,       UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
+>>>>>>>>>>>>   +    /* Reported when the user wants to toggle the mute status */
+>>>>>>>>>>>> +    { KE_IGNORE,    UNIWILL_OSD_MUTE, { KEY_MUTE }},
+>>>>>>>>>>>
+>>>>>>>>>>> Why is this event being ignored?
+>>>>>>>>>> Because the UNIWILL_OSD_MUTE event is sent in addition to the mute 
+>>>>>>>>>> key event, so not ignoring it here would result in a double trigger.
+>>>>>>>>>
+>>>>>>>>> I understand.
+>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>> +
+>>>>>>>>>>>>       /* Reported when the user locks/unlocks the Fn key */
+>>>>>>>>>>>>       { KE_IGNORE,    UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
+>>>>>>>>>>>>         /* Reported when the user wants to toggle the brightness of 
+>>>>>>>>>>>> the keyboard */
+>>>>>>>>>>>>       { KE_KEY, UNIWILL_OSD_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL0, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL1, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL2, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL3, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>> +    { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL4, { KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>         /* FIXME: find out the exact meaning of those events */
+>>>>>>>>>>>>       { KE_IGNORE, UNIWILL_OSD_BAT_CHARGE_FULL_24_H, { KEY_UNKNOWN }},
+>>>>>>>>>>>> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] = {
+>>>>>>>>>>>>       /* Reported when the user wants to toggle the benchmark mode 
+>>>>>>>>>>>> status */
+>>>>>>>>>>>>       { KE_IGNORE, UNIWILL_OSD_BENCHMARK_MODE_TOGGLE, { KEY_UNKNOWN 
+>>>>>>>>>>>> }},
+>>>>>>>>>>>>   +    /* Reported when the user wants to toggle the webcam */
+>>>>>>>>>>>> +    { KE_IGNORE, UNIWILL_OSD_WEBCAM_TOGGLE, { KEY_UNKNOWN }},
+>>>>>>>>>>>
+>>>>>>>>>>> Same as above.
+>>>>>>>>>>
+>>>>>>>>>> Same as above ;)
+>>>>>>>>>>
+>>>>>>>>>> At least iirc, would have to double check
+>>>>>>>>>>
+>>>>>>>>> Ok.
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> Armin Wolf
+>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>> +
+>>>>>>>>>>>>       { KE_END }
+>>>>>>>>>>>>   };
+>>>>>>>>>>>>   @@ -1247,6 +1260,10 @@ static int uniwill_notifier_call(struct 
+>>>>>>>>>>>> notifier_block *nb, unsigned long action
+>>>>>>>>>>>>           }
+>>>>>>>>>>>> mutex_unlock(&data->battery_lock);
+>>>>>>>>>>>>   +        return NOTIFY_OK;
+>>>>>>>>>>>> +    case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>>>>>>>>>> +        // noop for the time being
+>>>>>>>>>>>
+>>>>>>>>>>> Wrong comment style, please use /* */.
+>>>>>>>>>> ack
+>>>>>>>>>>>
+>>>>>>>>>>> Thanks,
+>>>>>>>>>>> Armin Wolf
+>>>>>>>>>>>
+>>>>>>>>>>>> +
+>>>>>>>>>>>>           return NOTIFY_OK;
+>>>>>>>>>>>>       default:
+>>>>>>>>>>>> mutex_lock(&data->input_lock);
+>>>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h 
+>>>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
+>>>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>> @@ -113,6 +113,8 @@
+>>>>>>>>>>>>     #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE 0xC0
+>>>>>>>>>>>>   +#define UNIWILL_OSD_WEBCAM_TOGGLE 0xCF
+>>>>>>>>>>>> +
+>>>>>>>>>>>>   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED 0xF0
+>>>>>>>>>>>>     struct device;
+>>>>>>>>>>
+>>>>>>
+>>>>
+>>
