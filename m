@@ -1,97 +1,103 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C6234678D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Nov 2025 14:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3E933B963;
+	Fri, 21 Nov 2025 15:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763736242; cv=none; b=TX142IQT5rxHqjTkgaRK2Q4hXdEFD9Xh0fxP3ctglPuDvcWpOFyZnoRqDnh1DVcdaPEjYUB47Cim8q9OmrLkdEPfRPlBFtkCsn3eU5fmyQDxSV76i8hrXPHOxeyUKGl4i/e3cdnGY6Bv43FXqTdWmO1EMS7Du1Av1jMK6sq9q/A=
+	t=1763738915; cv=none; b=kSfvBacUAgXnxSGlSqCG68CCewKKhK5aqp23mLpkXzIPAEAxb5FNi3lhUGhDKDwEj7MlfbLTejqAss6aL3a8TCL3lyAT5CG+eLAvdxGj+/l3WYC13uHB9Sqf6Ix1u+0xQndDJYfWjCILDWwEwKT1HA5LpuQ4QeXaQBZd96fgfF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763736242; c=relaxed/simple;
-	bh=gR0Sc1czY1x+jfE9REY6i+Hfx5lmwRhGUIRtC4PlMC8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PFPc7ofhQW2daa94QRvzWfvi91dsCkw5SC17aCg6zhJSJf9TlSPHL7UH45TIEPZ9LnCkE97J7P3JfMSpgTSRqnAvrlZuX4o7QnKJkyyJH5ZT/YguvRLNXMTZu+mDU8ZJexKivJI7nvGvp+11kvpQcWfpzAknG5sn8QUI4StC7Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vMSMU-0004xo-NS; Fri, 21 Nov 2025 15:43:46 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vMSMR-001bRM-2C;
-	Fri, 21 Nov 2025 15:43:43 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vMSMR-000000008MX-2UX6;
-	Fri, 21 Nov 2025 15:43:43 +0100
-Message-ID: <821febecdbf9bdbb39749060fb514cb823388efa.camel@pengutronix.de>
-Subject: Re: [PATCH] platform/x86: intel: chtwc_int33fe: don't dereference
- swnode args
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Hans de Goede <hansg@kernel.org>, 
- Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Andy
- Shevchenko	 <andriy.shevchenko@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>,  Linus Walleij <linus.walleij@linaro.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki"	
- <rafael.j.wysocki@intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, 	stable@vger.kernel.org, Stephen Rothwell
- <sfr@canb.auug.org.au>
-Date: Fri, 21 Nov 2025 15:43:43 +0100
-In-Reply-To: <20251121-int33fe-swnode-fix-v1-1-713e7b7c6046@linaro.org>
-References: <20251121-int33fe-swnode-fix-v1-1-713e7b7c6046@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	s=arc-20240116; t=1763738915; c=relaxed/simple;
+	bh=wlTr1Mki35A1MfuvhflF/1xMlioc/TuAwLWpBi2tdzg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZbjJb0azrIRLPpMEq8gaLLE4MszVib6IH78Uq+NIe4I7eCOs290bqLDnHji2/ETuhsY/KZKqJHJAnzMYwCM3hfuoKnLFgPqvZ4/Df1aMfkiGzuWDxNkHq7v6JTzMVb3QAb1bYne5Hrm+tJUvW2oK3hGC2tMuEkgluQtlJTJ+1+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EwJbubRE; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EwJbubRE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763738914; x=1795274914;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wlTr1Mki35A1MfuvhflF/1xMlioc/TuAwLWpBi2tdzg=;
+  b=EwJbubREqG21JzUYal+IZztb137QPpiOu98UmunKFv1f2nj8YMYylnzM
+   IoL6Mn5ZNuk+x4GKH8HoJauP+CTEe2nCgmr4+uVbDiNBYdfbikCuAnL7i
+   /+dj2ovJjzIVetMiAbRc896+kl7ofdrsRDaOSOJpvwqovIC7xBW/QKGxZ
+   zgd8ttbmRzNyvOG0l5Q98V7TJ+8G/KhepUdQPgkzQ5zFImZJuCVaEX8GC
+   04l1iaojVjr7uWZDQwDBZ3D5wuilV51aCLhCwS2Y0FUuySx54CBT8vtkF
+   vlmf6hWh9H9Ya2nXM2DScVtAbWKpMxdm1ev5cHiVc7vuqhlQkR4xp9plH
+   g==;
+X-CSE-ConnectionGUID: IcjEZbxlR1mZVIoOKofpFQ==
+X-CSE-MsgGUID: i+0fSLL6TOKB0zQoKzqWMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="69699941"
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="69699941"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 07:28:31 -0800
+X-CSE-ConnectionGUID: bkpjD+V2SWCTQweg6qBeZg==
+X-CSE-MsgGUID: +9nDnJJhT1iuOVGiUjm+Aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="195884859"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.50])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 07:28:27 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 21 Nov 2025 17:28:23 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hansg@kernel.org>, 
+    "Limonciello, Mario" <mario.limonciello@amd.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, Alok Tiwari <alok.a.tiwari@oracle.com>, 
+    Derek John Clark <derekjohn.clark@gmail.com>, 
+    Mateusz Schyboll <dragonn@op.pl>, porfet828@gmail.com, 
+    Denis Benato <benato.denis96@gmail.com>, 
+    Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] platform/x86: asus-armoury: fix mini-led mode show
+In-Reply-To: <20251120024059.1341326-1-denis.benato@linux.dev>
+Message-ID: <cb77645a-8779-6a91-4fc0-4c4871c643f3@linux.intel.com>
+References: <20251120024059.1341326-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 
-On Fr, 2025-11-21 at 11:04 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> Members of struct software_node_ref_args should not be dereferenced
-> directly but set using the provided macros. Commit d7cdbbc93c56
-> ("software node: allow referencing firmware nodes") changed the name of
-> the software node member and caused a build failure. Remove all direct
-> dereferences of the ref struct as a fix.
->=20
-> However, this driver also seems to abuse the software node interface by
-> waiting for a node with an arbitrary name "intel-xhci-usb-sw" to appear
-> in the system before setting up the reference for the I2C device, while
-> the actual software node already exists in the intel-xhci-usb-role-switch
-> module and should be used to set up a static reference. Add a FIXME for
-> a future improvement.
->=20
-> Fixes: d7cdbbc93c56 ("software node: allow referencing firmware nodes")
-> Fixes: 53c24c2932e5 ("platform/x86: intel_cht_int33fe: use inline referen=
-ce properties")
-> Cc: stable@vger.kernel.org
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/all/20251121111534.7cdbfe5c@canb.auug.org=
-.au/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 20 Nov 2025, Denis Benato wrote:
+
+> Perform the actual check of the mini-led mode against supported modes and do not return the first one regardless of the WMI devstate.
+
+I've taken this patch but I had to reformat the changelog. Preferrably use 
+up to 72 character long lines in the changelog (though I might not nitpick 
+from anything up to 75).
+
+-- 
+ i.
+
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/aR1xbxEQyQPEvB9o@stanley.mountain/
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
 > ---
-> This should go into the reset tree as a fix to the regression introduced
-> by the reset-gpio driver rework.
+>  drivers/platform/x86/asus-armoury.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index d6aba68515e2..c4919f3bf4b2 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -373,7 +373,8 @@ static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
+>  	mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
+>  
+>  	for (i = 0; i < mini_led_mode_map_size; i++)
+> -		return sysfs_emit(buf, "%u\n", mini_led_mode_map[i]);
+> +		if (mode == mini_led_mode_map[i])
+> +			return sysfs_emit(buf, "%u\n", i);
+>  
+>  	pr_warn("Unrecognized mini-LED mode: %u", mode);
+>  	return -EINVAL;
+> 
 
-Applied to reset/gpio, thanks!
-
-[1/1] platform/x86: intel: chtwc_int33fe: don't dereference swnode args
-      https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D527250cd9092
-
-regards
-Philipp
