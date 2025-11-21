@@ -1,57 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399A72DEA89
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Nov 2025 17:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433622D1F5E;
+	Fri, 21 Nov 2025 17:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763744436; cv=none; b=rJ3jFzA5dwOOKupsMOMN66rIrAgVMiJIrYzFDAcj5OpYItzHJVv0Fkwd4eUkj0BCyfkL3/ak6N33lciU9PtpOZdDw3ayGRGpJXfN2fbDCYCStX6uczqywSGuggxIP096vzQ5lxFPokB4lyvm5N4CoCAzSNLeukSmVzz1saqXyNg=
+	t=1763744444; cv=none; b=RlyNcj6vhWzMKt/u7OyKAnxuZz2skki7NaZHRVKzVH8mtn3NT68evde75jl5mYSwHuAWzpMw1H12IZ4J4Nqkf/ZXQRJY8nwF7Xmh+4e+2YXxjjrN+05zTSsuXzbjWEv3yOxXMw0a7wIRsYe05cV5MYOYoCo20gzxrF+HzKHdwU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763744436; c=relaxed/simple;
-	bh=Il+qIi5G2OaVHfpPgfdTmuV4Dp/L3/JFI9W/sFTXkPc=;
+	s=arc-20240116; t=1763744444; c=relaxed/simple;
+	bh=pB2y36Hn5MVLYcX4ELMU56QzMs4V47Ht55KA15gFf0s=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=I0N3egmXv4xxk7iYbAxsxviApxo91bqBpn1O2ap2mNUChNIIPmAKOM4csUEe+ZlpXAKvpXZeiwgrlVVVBUfqmL+nI6pF4SZ+lkjAzGEbRCevcoq8dTddcGGk2Rq0WnQuwhgvWtyxmRsc2AlJYKxqrNT77w0OEmkrDQiDOWNYf1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eXs6HMNS; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version:Content-Type; b=roeIofLesQkFTglmqmqzP1SAwbyYOPx6ebLe623WayfzVhvc5K2g0zJcELU5mFQg0AGVXnOCPwhOxFJwWgdpV85HszwaBpwLBKXnuYdOWXFjwDsXktTr0rbf0earh8fR46X6KW10H9y8SFocOpboQPI6cCuvWQ/9qYdZ4RloKLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNObFts0; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eXs6HMNS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNObFts0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763744434; x=1795280434;
+  t=1763744443; x=1795280443;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=Il+qIi5G2OaVHfpPgfdTmuV4Dp/L3/JFI9W/sFTXkPc=;
-  b=eXs6HMNS3AH4juqNFV8U0AkJmv0y7v5LXdhwHkdIv8hUuVa2mIBXhXhS
-   qeVqvn2TR8Vj4IhbsaMnjx5B3O+K/EZhMBH2pcDWr5raN24JKRorDT4P4
-   dwireqO2E6VdyEpG0HyzvdWuvv4a3hPtE3Cd6k2gAn27uxP/ikSzckYLR
-   CYEormbn9yLHM1zs1mbUcw6giLz0L6Ia9YSMBqlNt7XtNKnBhAbWbEhR8
-   nmiV0/RqjXONrfot4a1XhWilkDBj/6+0j+2oaWGPYf3MQyPUoL9PUk/e2
-   8iWUcdNtBqbua9LskdVmEOzL5/Qd/9daJwTqDFR3LK2ea1mtkuaWKpO7u
-   Q==;
-X-CSE-ConnectionGUID: aJhc0xe8SP6NI2nn6Ukzkw==
-X-CSE-MsgGUID: fv906ZJVQIikBQQgjhXzhw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="69707521"
+  bh=pB2y36Hn5MVLYcX4ELMU56QzMs4V47Ht55KA15gFf0s=;
+  b=PNObFts05N4feJcwojKd3os6MG7C3JyG+USbCk6c/JDQ4GjVrD+y+nK9
+   eITWmhXm/7z2wzscR3hTTvVSI0COePSsnMPano1NgnFmJBxF2wRj6HOWL
+   sOaaDXNAhD8N0OJL76FbgyQOIQOwS48ZAytLmT3+TUu6GovElzHso/nCQ
+   v87H8/GDrb9GpHThqgL/f6hTP01kERzMi98E3GkEkt/IAdQ388g8qJvCq
+   4qyj4amOGRxaSSzA7aSykx+kHVbFGE7uJM56cXprbtY27UvZWOxJrBZhr
+   NHJ+GUNe2R7oMOKHowjsT1het2jSn/KfpSfRdzyyzMXoPCKcQahWXPIYk
+   g==;
+X-CSE-ConnectionGUID: g1aGQPRdRPOPBT55TI/fmA==
+X-CSE-MsgGUID: FnSRk1uSQYusc6XwRsuAjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="69707531"
 X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
-   d="scan'208";a="69707521"
+   d="scan'208";a="69707531"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:00:34 -0800
-X-CSE-ConnectionGUID: kVwyfOLHTR6V0HPPFK4XuQ==
-X-CSE-MsgGUID: qs0C4lF0QPS5+81iJaEp8g==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:00:42 -0800
+X-CSE-ConnectionGUID: ghVyNwl6QPedQcgtNZ28EQ==
+X-CSE-MsgGUID: exY1hzMfT+qukwGywI8KOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
-   d="scan'208";a="222692665"
+   d="scan'208";a="222692728"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.50])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:00:31 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 09:00:38 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com, 
- mario.limonciello@amd.com
-In-Reply-To: <20251120105210.3945710-1-Shyam-sundar.S-k@amd.com>
-References: <20251120105210.3945710-1-Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v3 0/3] PMF Cleanup series
-Message-Id: <176374442742.14895.10687058647755706872.b4-ty@linux.intel.com>
-Date: Fri, 21 Nov 2025 19:00:27 +0200
+To: "Luke D. Jones" <luke@ljones.dev>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, 
+ Denis Benato <benato.denis96@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <aSBqRHs256Tz7EKr@stanley.mountain>
+References: <aSBqRHs256Tz7EKr@stanley.mountain>
+Subject: Re: [PATCH next] platform/x86: asus-armoury: Fix error code in
+ mini_led_mode_current_value_store()
+Message-Id: <176374443397.14895.13710946903719696711.b4-ty@linux.intel.com>
+Date: Fri, 21 Nov 2025 19:00:33 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,17 +66,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 20 Nov 2025 16:22:07 +0530, Shyam Sundar S K wrote:
+On Fri, 21 Nov 2025 16:33:56 +0300, Dan Carpenter wrote:
 
-> Changes include renaming legacy IPU fields to NPU in the metrics structure
-> replacing ambiguous booleans and magic values with explicit
-> SET_CMD/GET_CMD and METRICS_TABLE_ID constants.
+> There are two return statements in a row here.  The first one is wrong
+> so delete that one.  This changes the return value to -ENODEV.
 > 
-> Note: This series can be applied on mainline with 6fb7433c7b8e
-> ("platform/x86/amd/pmf: Use ring buffer to store custom BIOS input
-> values") as the tip.
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -81,12 +80,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/3] platform/x86/amd/pmf: Rename IPU metrics fields to NPU for consistency
-      commit: bc3c0a3231b78589896f283d971a003761b100e5
-[2/3] platform/x86/amd/pmf: Use explicit SET_CMD/GET_CMD flags in amd_pmf_send_cmd()
-      commit: 83f0442a4012179c204d68c7f619755693ac5c2f
-[3/3] platform/x86/amd/pmf: Replace magic table id with METRICS_TABLE_ID
-      commit: 7ec374c6b8597dd23d8c2de1e4045452348cf9cd
+[1/1] platform/x86: asus-armoury: Fix error code in mini_led_mode_current_value_store()
+      commit: 0a69fe8f097f7410dc232259129d334518d4e8dc
 
 --
  i.
